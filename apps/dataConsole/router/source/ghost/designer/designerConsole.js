@@ -249,7 +249,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
     },
     {
       title: "컨텐츠 정보",
-      mode: modes[0],
+      mode: modes[1],
       position: 3,
       mobile: true,
       event: function (e) {
@@ -436,7 +436,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
           text: "<b%Designer%b> Console",
           event: {
             click: function (e) {
-              window.location.reload();
+              window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + GeneralJs.returnGet().desid + "&mode=dashboard";
             }
           },
           style: {
@@ -985,73 +985,73 @@ DesignerConsoleJs.prototype.dashboardWordings = function () {
       },
       calendar: {
         event: function (e) {
-
+          window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + returnGet().desid + "&mode=possible";
         },
         text: [ "가능 일정 관리", "Calendar" ],
       },
       request: {
         event: function (e) {
-
+          window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + returnGet().desid + "&mode=request";
         },
         text: [ "의뢰서 관리", "Request" ],
       },
       report: {
         event: function (e) {
-
+          window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + returnGet().desid + "&mode=report";
         },
         text: [ "정산 관리", "Report" ],
       },
       contents: {
         event: function (e) {
-
+          window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + returnGet().desid + "&mode=report";
         },
         text: [ "컨텐츠 관리", "Contents" ],
       },
       care: {
         event: function (e) {
-
+          window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + returnGet().desid + "&mode=project";
         },
         text: [ "프로젝트 케어", "Project" ],
       },
       web: {
         event: function (e) {
-
+          blankHref(FRONTHOST);
         },
         text: [ "HomeLiaison", "web" ],
       },
       setting: {
         event: function (e) {
-
+          blankHref(FRONTHOST + "/desdetail.php");
         },
         text: [ "Web", "setting" ],
       },
       checklist: {
         event: function (e) {
-
+          window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + returnGet().desid + "&mode=checklist";
         },
         text: [ "체크리스트", "Checklist" ],
       },
       info: {
         event: function (e) {
-
+          window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + returnGet().desid + "&mode=checklist";
         },
         text: [ "기본 정보", "Info" ],
       },
       work: {
         event: function (e) {
-
+          window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + returnGet().desid + "&mode=checklist";
         },
         text: [ "작업 정보", "Work" ],
       },
       style: {
         event: function (e) {
-
+          window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + returnGet().desid + "&mode=checklist";
         },
         text: [ "스타일 정보", "Style" ],
       },
       construct: {
         event: function (e) {
-
+          window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + returnGet().desid + "&mode=checklist";
         },
         text: [ "시공 정보", "Construct" ],
       },
@@ -2047,7 +2047,7 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
         backgroundPosition: "50% 22%",
         zIndex: String(-1),
       }
-    })
+    });
 
     createNode({
       mother: motherBox,
@@ -2089,6 +2089,7 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
 
     checklistBlock = createNode({
       mother: motherBox,
+      event: { click: wordings.checklist.event },
       style: {
         display: "inline-flex",
         verticalAlign: "top",
@@ -2124,6 +2125,7 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
 
     projectsBlock = createNode({
       mother: motherBox,
+      event: { click: wordings.care.event },
       style: {
         display: "inline-flex",
         verticalAlign: "top",
@@ -2159,6 +2161,7 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
 
     calendarBlock = createNode({
       mother: motherBox,
+      event: { click: wordings.calendar.event },
       style: {
         display: "inline-flex",
         verticalAlign: "top",
@@ -2190,6 +2193,7 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
 
     requestBlock = createNode({
       mother: motherBox,
+      event: { click: wordings.request.event },
       style: {
         display: "inline-flex",
         verticalAlign: "top",
@@ -2221,6 +2225,7 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
 
     reportBlock = createNode({
       mother: motherBox,
+      event: { click: wordings.report.event },
       style: {
         display: "inline-flex",
         verticalAlign: "top",
@@ -2251,6 +2256,7 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
 
     webBlock = createNode({
       mother: motherBox,
+      event: { click: wordings.web.event },
       style: {
         display: "inline-flex",
         verticalAlign: "top",
@@ -2285,6 +2291,7 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
 
     contentsBlock = createNode({
       mother: motherBox,
+      event: { click: wordings.contents.event },
       style: {
         display: "inline-flex",
         verticalAlign: "top",
@@ -2316,6 +2323,7 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
 
     webSettingBlock = createNode({
       mother: motherBox,
+      event: { click: wordings.setting.event },
       style: {
         display: "inline-flex",
         verticalAlign: "top",
@@ -2642,6 +2650,7 @@ DesignerConsoleJs.prototype.consoleView = async function () {
       for (let i = 0; i < this.menuMap.length; i++) {
         if (this.menuMap[i].mode === getObj.mode.trim()) {
           targetIndex = i;
+          break;
         }
       }
       if (targetIndex !== null) {
@@ -2722,6 +2731,10 @@ DesignerConsoleJs.prototype.launching = async function (loading) {
 
     if (this.desid === "d1701_aa01s") {
       window.localStorage.setItem("desid", "d1701_aa01s");
+    }
+
+    if (typeof getObj.mode !== "string") {
+      window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + returnGet().desid + "&mode=dashboard";
     }
 
     // if (window.localStorage.getItem("desid") === this.desid) {

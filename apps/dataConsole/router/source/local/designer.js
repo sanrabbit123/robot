@@ -65,7 +65,6 @@ DesignerJs.prototype.standardBar = function (standard, localMode = false, specif
   style = {
     display: desktop ? "block" : "none",
     position: "relative",
-    background: GeneralJs.colorChip.gray0,
     top: String(0),
     left: String(0),
     width: String(this.grayBarWidth) + ea,
