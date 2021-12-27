@@ -2217,7 +2217,7 @@ Clown.prototype.pureServer = async function () {
   const notifier = new NativeNotifier();
   const axios = require(`axios`);
   const os = require(`os`);
-  const PORT = 55555;
+  const PORT = 8000;
   let osType;
   if (/Darwin/gi.test(os.type().trim())) {
     osType = "mac";
@@ -2421,7 +2421,7 @@ Clown.prototype.serverSetting = async function (app) {
     for (let m of copiedModules) {
       await shellExec(`cp -r ${shellLink(process.cwd())}/apps/${m} ${shellLink(motherTong)}/${serverName}/apps;`);
     }
-    await shellExec(`cd ${motherTong}/${serverName};npm install;git add -A;git commit -m "${serverName}_${uniqueValue("string")}";git push;pm2 kill;pm2 start ./index.js;`);
+    await shellExec(`cd ${shellLink(motherTong)}/${shellLink(serverName)};npm install;git add -A;git commit -m "${serverName}_${uniqueValue("string")}";git push;pm2 kill;pm2 start ./index.js;`);
 
   } catch (e) {
     console.log(e);
