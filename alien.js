@@ -397,13 +397,13 @@ Alien.prototype.requestWhisk = async function (num) {
 
 const app = new Alien();
 if (/office/gi.test(process.argv[2])) {
-  app.wssLaunching(2);
+  app.wssLaunching(2).catch((err) => { console.log(err); });
 } else if (/home/gi.test(process.argv[2])) {
-  app.cronLaunching(0);
+  app.cronLaunching(0).catch((err) => { console.log(err); });
 } else if (/polling/gi.test(process.argv[2])) {
-  app.cronLaunching(1);
+  app.cronLaunching(1).catch((err) => { console.log(err); });
 } else if (/request/gi.test(process.argv[2])) {
-  app.requestWhisk(Number(process.argv[3]));
+  app.requestWhisk(Number(process.argv[3])).catch((err) => { console.log(err); });
 } else if (/receiveSms/gi.test(process.argv[2])) {
-  app.smsLaunching();
+  app.smsLaunching().catch((err) => { console.log(err); });
 }
