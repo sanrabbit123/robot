@@ -116,7 +116,7 @@ Alien.prototype.cronLaunching = async function (cronNumber) {
   }
 }
 
-OfficeMonitor.prototype.messageDummy = function (from, to, message, option = {}) {
+Alien.prototype.messageDummy = function (from, to, message, option = {}) {
   if (typeof from !== "string" || !Array.isArray(to) || typeof message !== "string") {
     throw new Error("invaild input");
   }
