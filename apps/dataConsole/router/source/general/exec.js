@@ -177,12 +177,7 @@ document.addEventListener("DOMContentLoaded", async function (e) {
               try {
                 const data = GeneralJs.equalJson(event.data);
                 if (data.participants.to.includes(GeneralJs.stacks.memberInfo.memid)) {
-
-                  console.log(data);
-
-                  if (data.method.alarm) {
-                    GeneralJs.stacks.ipcRenderer.send("asynchronous-message", data);
-                  }
+                  GeneralJs.stacks.ipcRenderer.send("asynchronous-message", data);
                   if (data.method.alert) {
                     window.alert(data.contents.message);
                   }

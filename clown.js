@@ -2222,7 +2222,7 @@ Clown.prototype.databaseSetting = async function () {
       await shellExec(`mkdir`, [ `${home}/.${mainFolderName}` ]);
     }
     const homeDirDir = await fileSystem(`readDir`, [ `${home}/.${mainFolderName}` ]);
-    if (!homeDirDir.includes('.' + jsonFolderName)) {
+    if (!homeDirDir.includes(jsonFolderName)) {
       await shellExec(`mkdir`, [ `${home}/.${mainFolderName}/${jsonFolderName}` ]);
     }
     const dbBase = `${home}/.${mainFolderName}/${jsonFolderName}`;
@@ -2358,13 +2358,15 @@ Clown.prototype.launching = async function () {
     });
 
     ipcMain.on("asynchronous-message", (event, arg) => {
-
-      console.log(arg);
-
-
-      // const alarm = new Notification({ title: "HomeLiaison", body: arg });
-      // alarm.show();
-      event.reply("asynchronous-reply", "done");
+      if (data.method.alarm) {
+        const alarm = new Notification({ title: "HomeLiaison", body: data.contents.message });
+        alarm.show();
+      }
+      localDb.create(data).then(() => {
+        event.reply("asynchronous-reply", "done");
+      }).catch((err) => {
+        console.log(err);
+      });
     });
 
     ipcMain.on("synchronous-message", (event, arg) => {
