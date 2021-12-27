@@ -169,6 +169,7 @@ Ghost.prototype.slackToMongo = async function (selfMongo) {
   };
   const targets = [
     "#000_master_notice",
+    "#001_designer_notice",
     "#100_service",
     "#300_designer",
     "#401_consulting",

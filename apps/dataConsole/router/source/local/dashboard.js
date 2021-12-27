@@ -86,7 +86,7 @@ DashboardJs.prototype.whiteBoards = function () {
   onlineBoxTitleTop = 2.2;
   onlineBoxLeft = 2.7;
   onlineBoxTop = 5.4;
-  onlineTextTop = isMac() ? 0 : 0.2;
+  onlineTextTop = 0;
 
   onlineBoxHeight0 = 33.2;
   onlineBoxBetween = 1;
