@@ -2212,7 +2212,7 @@ const Clown = function () {
 
 Clown.prototype.databaseSetting = async function () {
   const instance = this;
-  const { fileSystem, shellExec, uniqueValue } = this.mother;
+  const { fileSystem, shellExec, uniqueValue, equalJson } = this.mother;
   const home = process.env.HOME;
   const mainFolderName = "homeliaison";
   const jsonFolderName = "json";
@@ -2243,7 +2243,84 @@ Clown.prototype.databaseSetting = async function () {
           if (typeof whereQuery !== "object" || whereQuery === null) {
             throw new Error("invaild input");
           }
+          const wholeJson_raw = (await fileSystem(`readDir`, [ dbBase ])).filter((str) => { return !/^\./.test(str) }).map((str) => { return `${dbBase}/${str}`; });
+          let wholeJson, filteredJson;
+          let query, queryKey;
 
+          wholeJson = [];
+          for (let path of wholeJson_raw) {
+            wholeJson.push(equalJson(await fileSystem(`readString`, [ path ])));
+          }
+
+          if (Object.keys(whereQuery).length === 0) {
+            filteredJson = wholeJson;
+          } else {
+
+            queryKey = Object.keys(whereQuery)[0];
+            query = whereQuery[queryKey];
+
+            if (typeof query !== "object" || query === null) {
+              filteredJson = wholeJson.filter((obj) => {
+                let targetObj;
+                let finalValue;
+                let tempArr;
+                let finalKey;
+                targetObj = obj;
+                tempArr = queryKey.split('.');
+                finalKey = tempArr.pop();
+                for (let key of tempArr) {
+                  targetObj = targetObj[key];
+                }
+                return targetObj[finalKey] === query;
+              });
+            } else {
+
+              if (typeof query["$regex"] === "string") {
+
+                query = new RegExp(query["$regex"], "gi");
+                filteredJson = wholeJson.filter((obj) => {
+                  let targetObj;
+                  let finalValue;
+                  let tempArr;
+                  let finalKey;
+                  targetObj = obj;
+                  tempArr = queryKey.split('.');
+                  finalKey = tempArr.pop();
+                  for (let key of tempArr) {
+                    targetObj = targetObj[key];
+                  }
+                  return query.test(targetObj[finalKey]);
+                });
+
+              } else if (query["$elemMatch"] !== undefined) {
+
+                filteredJson = wholeJson.filter((obj) => {
+                  let targetObj;
+                  let finalValue;
+                  let tempArr;
+                  let finalKey;
+                  targetObj = obj;
+                  tempArr = queryKey.split('.');
+                  finalKey = tempArr.pop();
+                  for (let key of tempArr) {
+                    targetObj = targetObj[key];
+                  }
+                  return targetObj[finalKey].includes(query["$elemMatch"]);
+                });
+
+              } else {
+                throw new Error("invaild query");
+              }
+
+            }
+
+          }
+
+          filteredJson.sort((a, b) => {
+            return b.date.valueOf() - a.date.valueOf();
+          });
+
+          return filteredJson;
 
         } catch (e) {
           console.log(e);
@@ -2264,9 +2341,105 @@ Clown.prototype.databaseSetting = async function () {
             throw new Error("invaild input");
           }
           const [ whereQuery, updateQuery ] = queryArr;
+          const wholeJson_raw = (await fileSystem(`readDir`, [ dbBase ])).filter((str) => { return !/^\./.test(str) }).map((str) => { return `${dbBase}/${str}`; });
+          let wholeJson, filteredJson;
+          let query, queryKey;
+          let tempObj;
+          let finalTarget;
+          let finalTarget_json;
+          let targetObj;
+          let tempArr;
+          let finalKey;
 
+          wholeJson = [];
+          for (let path of wholeJson_raw) {
+            tempObj = equalJson(await fileSystem(`readString`, [ path ]));
+            tempObj.__path__ = path;
+            wholeJson.push(tempObj);
+          }
 
+          wholeJson.sort((a, b) => {
+            return b.date.valueOf() - a.date.valueOf();
+          });
 
+          if (Object.keys(whereQuery).length !== 0) {
+
+            queryKey = Object.keys(whereQuery)[0];
+            query = whereQuery[queryKey];
+
+            if (typeof query !== "object" || query === null) {
+              filteredJson = wholeJson.filter((obj) => {
+                let targetObj;
+                let tempArr;
+                let finalKey;
+                targetObj = obj;
+                tempArr = queryKey.split('.');
+                finalKey = tempArr.pop();
+                for (let key of tempArr) {
+                  targetObj = targetObj[key];
+                }
+                return targetObj[finalKey] === query;
+              });
+            } else {
+
+              if (typeof query["$regex"] === "string") {
+
+                query = new RegExp(query["$regex"], "gi");
+                filteredJson = wholeJson.filter((obj) => {
+                  let targetObj;
+                  let finalValue;
+                  let tempArr;
+                  let finalKey;
+                  targetObj = obj;
+                  tempArr = queryKey.split('.');
+                  finalKey = tempArr.pop();
+                  for (let key of tempArr) {
+                    targetObj = targetObj[key];
+                  }
+                  return query.test(targetObj[finalKey]);
+                });
+
+              } else if (query["$elemMatch"] !== undefined) {
+
+                filteredJson = wholeJson.filter((obj) => {
+                  let targetObj;
+                  let finalValue;
+                  let tempArr;
+                  let finalKey;
+                  targetObj = obj;
+                  tempArr = queryKey.split('.');
+                  finalKey = tempArr.pop();
+                  for (let key of tempArr) {
+                    targetObj = targetObj[key];
+                  }
+                  return targetObj[finalKey].includes(query["$elemMatch"]);
+                });
+
+              } else {
+                throw new Error("invaild query");
+              }
+
+            }
+
+            if (filteredJson.length > 0) {
+              [ finalTarget ] = filteredJson;
+
+              finalTarget_json = equalJson(await fileSystem(`readString`, [ finalTarget.__path__ ]));
+
+              queryKey = Object.keys(updateQuery)[0];
+              query = updateQuery[queryKey];
+
+              targetObj = finalTarget_json;
+              tempArr = queryKey.split('.');
+              finalKey = tempArr.pop();
+              for (let key of tempArr) {
+                targetObj = targetObj[key];
+              }
+              targetObj[finalKey] = query;
+
+              await fileSystem(`writeJson`, [ finalTarget.__path__, finalTarget_json ]);
+            }
+          }
 
         } catch (e) {
           console.log(e);
@@ -2277,8 +2450,91 @@ Clown.prototype.databaseSetting = async function () {
           if (typeof whereQuery !== "object" || whereQuery === null) {
             throw new Error("invaild input");
           }
+          const wholeJson_raw = (await fileSystem(`readDir`, [ dbBase ])).filter((str) => { return !/^\./.test(str) }).map((str) => { return `${dbBase}/${str}`; });
+          let wholeJson, filteredJson;
+          let query, queryKey;
+          let tempObj;
+          let finalTarget;
+          let finalTarget_json;
+          let targetObj;
+          let tempArr;
+          let finalKey;
 
+          wholeJson = [];
+          for (let path of wholeJson_raw) {
+            tempObj = equalJson(await fileSystem(`readString`, [ path ]));
+            tempObj.__path__ = path;
+            wholeJson.push(tempObj);
+          }
 
+          wholeJson.sort((a, b) => {
+            return b.date.valueOf() - a.date.valueOf();
+          });
+
+          if (Object.keys(whereQuery).length !== 0) {
+
+            queryKey = Object.keys(whereQuery)[0];
+            query = whereQuery[queryKey];
+
+            if (typeof query !== "object" || query === null) {
+              filteredJson = wholeJson.filter((obj) => {
+                let targetObj;
+                let tempArr;
+                let finalKey;
+                targetObj = obj;
+                tempArr = queryKey.split('.');
+                finalKey = tempArr.pop();
+                for (let key of tempArr) {
+                  targetObj = targetObj[key];
+                }
+                return targetObj[finalKey] === query;
+              });
+            } else {
+
+              if (typeof query["$regex"] === "string") {
+
+                query = new RegExp(query["$regex"], "gi");
+                filteredJson = wholeJson.filter((obj) => {
+                  let targetObj;
+                  let finalValue;
+                  let tempArr;
+                  let finalKey;
+                  targetObj = obj;
+                  tempArr = queryKey.split('.');
+                  finalKey = tempArr.pop();
+                  for (let key of tempArr) {
+                    targetObj = targetObj[key];
+                  }
+                  return query.test(targetObj[finalKey]);
+                });
+
+              } else if (query["$elemMatch"] !== undefined) {
+
+                filteredJson = wholeJson.filter((obj) => {
+                  let targetObj;
+                  let finalValue;
+                  let tempArr;
+                  let finalKey;
+                  targetObj = obj;
+                  tempArr = queryKey.split('.');
+                  finalKey = tempArr.pop();
+                  for (let key of tempArr) {
+                    targetObj = targetObj[key];
+                  }
+                  return targetObj[finalKey].includes(query["$elemMatch"]);
+                });
+
+              } else {
+                throw new Error("invaild query");
+              }
+
+            }
+
+            if (filteredJson.length > 0) {
+              [ finalTarget ] = filteredJson;
+              await shellExec(`rm`, [ `-rf`, finalTarget.__path__ ]);
+            }
+          }
 
         } catch (e) {
           console.log(e);
@@ -2357,7 +2613,7 @@ Clown.prototype.launching = async function () {
       dialog.showErrorBox("", quitAlert);
     });
 
-    ipcMain.on("asynchronous-message", (event, arg) => {
+    ipcMain.on("asynchronous-message", (event, data) => {
       if (data.method.alarm) {
         const alarm = new Notification({ title: "HomeLiaison", body: data.contents.message });
         alarm.show();

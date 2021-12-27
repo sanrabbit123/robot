@@ -363,18 +363,12 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
         event: {
           click: function (e) {
             const index = Number(this.getAttribute("index"));
-            // DEV
-            if (index === 1) {
-              window.alert("아직 서비스 오픈 전입니다!");
-            } else {
-              menuMap[index].event.call(this, e);
-              if (tabletWidth !== 0) {
-                setQueue(() => {
-                  instance.listIcon.click();
-                }, 500);
-              }
+            menuMap[index].event.call(this, e);
+            if (tabletWidth !== 0) {
+              setQueue(() => {
+                instance.listIcon.click();
+              }, 500);
             }
-            // DEV
           }
         },
         style: {
@@ -615,20 +609,14 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
             const naviHeight = Number(this.getAttribute("naviHeight"));
             let blocks;
 
-            // DEV
-            if (index === 1) {
-              window.alert("아직 서비스 오픈 전입니다!");
-            } else {
-              blocks = document.querySelector(".mainBaseTong").firstChild.children;
-              menuMap[index].event.call(this, e);
-              if (position !== 0 && blocks[position] !== undefined) {
-                scrollTo(document.querySelector(".totalMother"), blocks[position], naviHeight);
-              }
-
-              self.removeChild(document.getElementById(id1));
-              self.removeChild(document.getElementById(id0));
+            blocks = document.querySelector(".mainBaseTong").firstChild.children;
+            menuMap[index].event.call(this, e);
+            if (position !== 0 && blocks[position] !== undefined) {
+              scrollTo(document.querySelector(".totalMother"), blocks[position], naviHeight);
             }
-            // DEV
+
+            self.removeChild(document.getElementById(id1));
+            self.removeChild(document.getElementById(id0));
 
           });
         }
@@ -2648,7 +2636,7 @@ DesignerConsoleJs.prototype.consoleView = async function () {
       this.mode = this.modes[0];
     }
 
-    if (this.menuMap !== undefined && getObj.mode !== undefined && getObj.cliid !== undefined) {
+    if (this.menuMap !== undefined && getObj.mode !== undefined) {
       targetIndex = null;
       for (let i = 0; i < this.menuMap.length; i++) {
         if (this.menuMap[i].mode === getObj.mode.trim()) {
@@ -2657,15 +2645,19 @@ DesignerConsoleJs.prototype.consoleView = async function () {
       }
       if (targetIndex !== null) {
 
-        eventObject = {
-          __asyncCallBack__: () => {
-            for (let box of instance.requestBoxes) {
-              if (box.getAttribute("cliid") === getObj.cliid.trim()) {
-                box.click();
+        if (getObj.cliid !== undefined) {
+          eventObject = {
+            __asyncCallBack__: () => {
+              for (let box of instance.requestBoxes) {
+                if (box.getAttribute("cliid") === getObj.cliid.trim()) {
+                  box.click();
+                }
               }
             }
-          }
-        };
+          };
+        } else {
+          eventObject = {};
+        }
 
         if (document.querySelectorAll(".leftMenus").length > 0) {
           this.menuMap[targetIndex].event.call(document.querySelectorAll(".leftMenus")[targetIndex], eventObject);
