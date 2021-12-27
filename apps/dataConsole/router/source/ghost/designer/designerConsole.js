@@ -1900,7 +1900,7 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
         position: "relative",
         paddingTop: String(onlineBoxTop) + vh,
         display: "inline-block",
-        width: "calc(calc(100vw - " + String((outerMargin * 2) + (innerMargin * 4)) + ea + ") - calc(" + boxWidth0 + " * 4))",
+        width: "calc(calc(100vw - " + String((outerMargin * 2) + (innerMargin * 4)) + ea + ") - calc(" + boxWidth0 + " * " + String(desktopMode ? 4 : 3) + "))",
         height: "calc(calc(100vh - " + String(belowHeight + (outerMargin * 2)) + ea + ") - " + String(onlineBoxTop) + vh + ")",
         borderRadius: String(whiteRadius) + ea,
         background: colorChip.gray1,
@@ -1939,7 +1939,6 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
     noticeBlock = fourthMother;
     noticeTong = fourthMother.querySelector("." + noticeTongClassName);
 
-    /*
     for (let { text, user, date } of slackNotices) {
       createNode({
         mother: noticeTong,
@@ -1954,7 +1953,7 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
         },
         children: [
           {
-            text: "<u%" + String(date.getFullYear()).slice(2) + "." + String(date.getMonth() + 1) + "." + String(date.getDate()) + " " + String(date.getHours()) + ":" + String(date.getDate()) + "%u>\n" + "<b%" + user + "%b> : " + text.replace(/\<[^\>]+\>/g, '').trim(),
+            text: "<u%" + String(date.getFullYear()).slice(2) + "." + String(date.getMonth() + 1) + "." + String(date.getDate()) + " " + String(date.getHours()) + ":" + String(date.getDate()) + "%u>\n" + text.replace(/\<[^\>]+\>/g, '').trim(),
             style: {
               paddingTop: String(noticePaddingTop) + vh,
               paddingLeft: String(noticePaddingLeft) + vh,
@@ -1980,7 +1979,6 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
       })
 
     }
-    */
 
   } else {
 
@@ -2410,6 +2408,7 @@ DesignerConsoleJs.prototype.consoleView = async function () {
 
     this.projectMap = await ajaxJson({ method: "projectMap" }, "/getDataPatch");
     this.checklist = await ajaxJson({ kind: "checklist" }, "/getServicesByKind");
+    this.slackNotices = await ajaxJson({ channel: "000_master_notice" }, "https://" + FILEHOST + "/slackMessages", { equal: true });
 
     loading.parentNode.removeChild(loading);
 
