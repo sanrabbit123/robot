@@ -213,7 +213,7 @@ Alien.prototype.smsLaunching = async function () {
     const useragent = require("express-useragent");
     const url = "wss://stream.pushbullet.com/websocket/" + token;
     const WebSocket = require("ws");
-    const port = 8080;
+    const port = 5000;
     const ws = new WebSocket(url);
     let server;
     let pems, pemsLink;
