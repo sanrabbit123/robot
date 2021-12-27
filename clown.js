@@ -2627,8 +2627,6 @@ Clown.prototype.launching = async function () {
 
     ipcMain.on("synchronous-message", (event, raw) => {
       const { order, data } = raw;
-      console.log(order, data);
-
       if (order === "device") {
         let network;
 

@@ -2583,6 +2583,7 @@ DesignerConsoleJs.prototype.consoleView = async function () {
     this.projectMap = await ajaxJson({ method: "projectMap" }, "/getDataPatch");
     this.checklist = await ajaxJson({ kind: "checklist" }, "/getServicesByKind");
     this.slackNotices = await ajaxJson({ channel: "000_master_notice" }, "https://" + FILEHOST + "/slackMessages", { equal: true });
+    this.arrowDomTargets = [];
 
     loading.parentNode.removeChild(loading);
 
