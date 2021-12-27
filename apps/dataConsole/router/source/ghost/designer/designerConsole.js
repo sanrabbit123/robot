@@ -984,11 +984,139 @@ DesignerConsoleJs.prototype.initialLogin = function () {
 
 }
 
+DesignerConsoleJs.prototype.dashboardWordings = function () {
+  const instance = this;
+  const { returnGet, blankHref } = GeneralJs;
+  return {
+    wordings: {
+      title: {
+        event: function (e) {
+          window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + returnGet().desid + "&mode=dashboard";
+        },
+        text: [ "Designer", "console" ],
+      },
+      calendar: {
+        event: function (e) {
+
+        },
+        text: [ "가능 일정 관리", "Calendar" ],
+      },
+      request: {
+        event: function (e) {
+
+        },
+        text: [ "의뢰서 관리", "Request" ],
+      },
+      report: {
+        event: function (e) {
+
+        },
+        text: [ "정산 관리", "Report" ],
+      },
+      contents: {
+        event: function (e) {
+
+        },
+        text: [ "컨텐츠 관리", "Contents" ],
+      },
+      care: {
+        event: function (e) {
+
+        },
+        text: [ "프로젝트 케어", "Project" ],
+      },
+      web: {
+        event: function (e) {
+
+        },
+        text: [ "HomeLiaison", "web" ],
+      },
+      setting: {
+        event: function (e) {
+
+        },
+        text: [ "Web", "setting" ],
+      },
+      checklist: {
+        event: function (e) {
+
+        },
+        text: [ "체크리스트", "Checklist" ],
+      },
+      info: {
+        event: function (e) {
+
+        },
+        text: [ "기본 정보", "Info" ],
+      },
+      work: {
+        event: function (e) {
+
+        },
+        text: [ "작업 정보", "Work" ],
+      },
+      style: {
+        event: function (e) {
+
+        },
+        text: [ "스타일 정보", "Style" ],
+      },
+      construct: {
+        event: function (e) {
+
+        },
+        text: [ "시공 정보", "Construct" ],
+      },
+      notice: {
+        event: function (e) {
+
+        },
+        text: [ "공지 사항", "Notice" ],
+      },
+      ongoing: {
+        event: function (e) {
+
+        },
+        text: [ "진행 현황", "Ongoing" ],
+      },
+      proposal: {
+        event: function (e) {
+
+        },
+        text: [ "제안 현황", "Proposal" ],
+      },
+    },
+    methods: {
+      justMerge(obj) {
+        const arr = obj.text;
+        return arr.join(' ');
+      },
+      greenMerge(obj) {
+        const arr = obj.text;
+        return `${arr[0]}\n<b%${arr[1]}%b>`;
+      },
+      smallMerge(obj) {
+        const arr = obj.text;
+        let first, second, target;
+        target = arr[0].split(' ');
+        second = target.pop();
+        first = target.join(' ');
+        return `${first}\n${second}`;
+      },
+      englishMerge(obj) {
+        const arr = obj.text;
+        return arr[1];
+      }
+    }
+  }
+}
+
 DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
   const instance = this;
   const { ea, totalContents, belowHeight, grayBarWidth, totalMother } = this;
   const { members, slackNotices, media } = this;
   const { createNode, colorChip, withOut, blankHref, isMac, cleanChildren, setQueue, ajaxJson } = GeneralJs;
+  const { wordings, methods: { justMerge, greenMerge, smallMerge, englishMerge } } = this.dashboardWordings();
   const vh = "vh";
   const vw = "vw";
   const memberTongClassName = "memberTong";
@@ -1060,7 +1188,7 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
   }
 
   outerMargin = <%% 30, 30, 28, 24, 6 %%>;
-  innerMargin = <%% 5, 5, 4, 3, 1.8 %%>;
+  innerMargin = <%% 5, 5, 4, 3, 1.5 %%>;
   whiteRadius = <%% 8, 8, 7, 6, 3 %%>;
 
   if (mobile) {
@@ -1225,7 +1353,7 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
             },
             children: [
               {
-                text: "Ongoing",
+                text: englishMerge(wordings.ongoing),
                 style: {
                   position: "absolute",
                   fontSize: String(onlineWordingSize) + vh,
@@ -1324,11 +1452,11 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
               alignItems: "center",
               cursor: "pointer",
             },
-            event: { click: (e) => { blankHref(FRONTHOST, true); } },
+            event: { click: wordings.title.event },
             children: [
               {
                 class: [ "hoverDefault_lite" ],
-                text: "Designer console",
+                text: justMerge(wordings.title),
                 style: {
                   color: colorChip.green,
                   fontSize: String(title3Size) + vh,
@@ -1376,11 +1504,11 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
             marginBottom: String(innerMargin) + ea,
             cursor: "pointer",
           },
-          event: { click: (e) => { window.location.href = thisHost + "/client"; } },
+          event: { click: wordings.calendar.event },
           children: [
             {
               class: [ "hoverDefault_lite" ],
-              text: "가능 일정 관리\n<b%Calendar%b>",
+              text: greenMerge(wordings.calendar),
               style: {
                 color: colorChip.black,
                 fontSize: String(titleSize) + vh,
@@ -1411,11 +1539,11 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
             alignItems: "center",
             cursor: "pointer",
           },
-          event: { click: (e) => { window.location.href = thisHost + "/project"; } },
+          event: { click: wordings.request.event },
           children: [
             {
               class: [ "hoverDefault_lite" ],
-              text: "의뢰서 관리\n<b%Request%b>",
+              text: greenMerge(wordings.request),
               style: {
                 color: colorChip.black,
                 fontSize: String(titleSize) + vh,
@@ -1447,11 +1575,11 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
             cursor: "pointer",
             verticalAlign: "top",
           },
-          event: { click: (e) => { window.location.href = thisHost + "/proposal"; } },
+          event: { click: wordings.report.event },
           children: [
             {
               class: [ "hoverDefault_lite" ],
-              text: "정산\n관리",
+              text: smallMerge(wordings.report),
               style: {
                 color: colorChip.black,
                 fontSize: String(title2Size) + vh,
@@ -1479,11 +1607,11 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
             cursor: "pointer",
             verticalAlign: "top",
           },
-          event: { click: (e) => { window.location.href = thisHost + "/designer?mode=contents"; } },
+          event: { click: wordings.contents.event },
           children: [
             {
               class: [ "hoverDefault_lite" ],
-              text: "컨텐츠\n관리",
+              text: smallMerge(wordings.contents),
               style: {
                 color: colorChip.black,
                 fontSize: String(title2Size) + vh,
@@ -1532,11 +1660,11 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
             cursor: "pointer",
             verticalAlign: "top",
           },
-          event: { click: (e) => { window.location.href = thisHost + "/builder"; } },
+          event: { click: wordings.care.event },
           children: [
             {
               class: [ "hoverDefault_lite" ],
-              text: "프로젝트 케어\n<b%Project%b>",
+              text: greenMerge(wordings.care),
               style: {
                 color: colorChip.whiteBlack,
                 fontSize: String(titleSize) + vh,
@@ -1579,11 +1707,11 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
                 alignItems: "center",
                 cursor: "pointer",
               },
-              event: { click: (e) => { blankHref("https://" + FILEHOST + "/publicSector/estimation", true); } },
+              event: { click: wordings.web.event },
               children: [
                 {
                   class: [ "hoverDefault_lite" ],
-                  text: "HomeLiaison web",
+                  text: justMerge(wordings.web),
                   style: {
                     color: colorChip.whiteBlack,
                     fontSize: String(title3Size) + vh,
@@ -1613,11 +1741,11 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
                 alignItems: "center",
                 cursor: "pointer",
               },
-              event: { click: (e) => { blankHref(window.location.protocol + "//" + window.location.host + "/middle/console?desid=d1701_aa01s", true); } },
+              event: { click: wordings.setting.event },
               children: [
                 {
                   class: [ "hoverDefault_lite" ],
-                  text: "Web setting",
+                  text: justMerge(wordings.setting),
                   style: {
                     color: colorChip.whiteBlack,
                     fontSize: String(title3Size) + vh,
@@ -1647,11 +1775,11 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
             alignItems: "center",
             cursor: "pointer",
           },
-          event: { click: (e) => { window.location.href = thisHost + "/designer"; } },
+          event: { click: wordings.checklist.event },
           children: [
             {
               class: [ "hoverDefault_lite" ],
-              text: "체크리스트\n<b%Checklist%b>",
+              text: greenMerge(wordings.checklist),
               style: {
                 color: colorChip.black,
                 fontSize: String(titleSize) + vh,
@@ -1684,11 +1812,11 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
             cursor: "pointer",
             verticalAlign: "top",
           },
-          event: { click: (e) => { window.location.href = thisHost + "/designer?mode=aspirant"; } },
+          event: { click: wordings.info.event },
           children: [
             {
               class: [ "hoverDefault_lite" ],
-              text: "기본\n정보",
+              text: smallMerge(wordings.info),
               style: {
                 color: colorChip.black,
                 fontSize: String(title2Size) + vh,
@@ -1717,11 +1845,11 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
             cursor: "pointer",
             verticalAlign: "top",
           },
-          event: { click: (e) => { window.location.href = thisHost + "/designer?mode=checklist"; } },
+          event: { click: wordings.work.event },
           children: [
             {
               class: [ "hoverDefault_lite" ],
-              text: "작업\n정보",
+              text: smallMerge(wordings.work),
               style: {
                 color: colorChip.black,
                 fontSize: String(title2Size) + vh,
@@ -1750,11 +1878,11 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
             cursor: "pointer",
             verticalAlign: "top",
           },
-          event: { click: (e) => { window.location.href = thisHost + "/designer?mode=possible"; } },
+          event: { click: wordings.style.event },
           children: [
             {
               class: [ "hoverDefault_lite" ],
-              text: "스타일\n정보",
+              text: smallMerge(wordings.style),
               style: {
                 color: colorChip.black,
                 fontSize: String(title2Size) + vh,
@@ -1782,11 +1910,11 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
             cursor: "pointer",
             verticalAlign: "top",
           },
-          event: { click: (e) => { window.location.href = thisHost + "/designer?mode=request"; } },
+          event: { click: wordings.construct.event },
           children: [
             {
               class: [ "hoverDefault_lite" ],
-              text: "시공\n정보",
+              text: smallMerge(wordings.construct),
               style: {
                 color: colorChip.black,
                 fontSize: String(title2Size) + vh,
@@ -1822,7 +1950,7 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
       },
       children: [
         {
-          text: "Notice",
+          text: englishMerge(wordings.notice),
           style: {
             position: "absolute",
             fontSize: String(onlineWordingSize) + vh,

@@ -2003,12 +2003,429 @@ const Mother = function () {
 
     return converted;
   }
+
+  Mother.prototype.pureServer = function (mode = "class", app = null, port = 8000) {
+    const PureServer = function () {
+      this.matrix = [];
+    }
+    PureServer.prototype.get = function (path, callback) {
+      if (typeof callback !== "function") {
+        throw new Error("invaild input");
+      }
+      if (Array.isArray(path)) {
+        for (let str of path) {
+          if (typeof str !== "string") {
+            throw new Error("invaild input");
+          }
+          if (!/^\//.test(str)) {
+            str = '/' + str;
+          }
+          this.matrix.push([
+            "GET",
+            str,
+            callback
+          ]);
+        }
+      } else if (typeof path === "string") {
+        if (!/^\//.test(path)) {
+          path = '/' + path;
+        }
+        this.matrix.push([
+          "GET",
+          path,
+          callback
+        ]);
+      } else {
+        throw new Error("invaild input");
+      }
+    }
+    PureServer.prototype.post = function (path, callback) {
+      if (typeof callback !== "function") {
+        throw new Error("invaild input");
+      }
+      if (Array.isArray(path)) {
+        for (let str of path) {
+          if (typeof str !== "string") {
+            throw new Error("invaild input");
+          }
+          if (!/^\//.test(str)) {
+            str = '/' + str;
+          }
+          this.matrix.push([
+            "POST",
+            str,
+            callback
+          ]);
+        }
+      } else if (typeof path === "string") {
+        if (!/^\//.test(path)) {
+          path = '/' + path;
+        }
+        this.matrix.push([
+          "POST",
+          path,
+          callback
+        ]);
+      } else {
+        throw new Error("invaild input");
+      }
+    }
+    PureServer.prototype.server = function () {
+      const instance = this;
+      return async function (req, res) {
+        try {
+          const buffers = [];
+          for await (const chunk of req) {
+            buffers.push(chunk);
+          }
+          const data = Buffer.concat(buffers).toString();
+          try {
+            req.body = JSON.parse(data);
+          } catch (e) {
+            req.body = {};
+            if (data !== "") {
+              req.body.raw = data;
+            }
+          }
+          let boo;
+
+          res.set = function (obj) {
+            return res.writeHead(200, obj);
+          }
+          res.send = res.end;
+
+          boo = false;
+          for (let [ method, path, callback ] of instance.matrix) {
+            if (method === req.method && path === req.url.trim()) {
+              boo = true;
+              res.writeHead(200, {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+                "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+              });
+              await callback(req, res);
+            }
+          }
+          if (!boo) {
+            res.writeHead(200, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ data: 'error' }));
+          }
+        } catch (e) {
+          console.log(e);
+          res.writeHead(500, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ data: 'error' }));
+        }
+      }
+    }
+    if (mode === "class") {
+      return PureServer;
+    } else if (mode === "server" || mode === "listen" || mode === "run") {
+      if (typeof app.constructor === "function") {
+        if (app.constructor.name === "PureServer") {
+          const http = require("http");
+          const server = http.createServer();
+          server.on("request", app.server());
+          server.listen(port);
+          console.log(`\x1b[33m%s\x1b[0m`, `Pure server launching in ${String(port)}`);
+        } else {
+          throw new Error("invaild input");
+        }
+      } else {
+        throw new Error("invaild input");
+      }
+    } else {
+      throw new Error("invaild mode");
+    }
+  }
+
+  Mother.prototype.binaryRequest = function (to, port = null, headers = null) {
+    let http;
+    let target, tempArr;
+    let targetHost, targetPath;
+    let option;
+
+    if (/^https:\/\//.test(to)) {
+      http = require("https");
+      port = (port === null) ? 443 : port;
+      target = to.slice(8);
+    } else if (/^http:\/\//.test(to)) {
+      http = require("http");
+      port = (port === null) ? 80 : port;
+      target = to.slice(7);
+    } else {
+      http = require("http");
+      port = (port === null) ? 80 : port;
+      target = to;
+    }
+
+    //host and path parsing
+    tempArr = target.split('/');
+    targetHost = tempArr.shift();
+    targetPath = '/' + tempArr.join('/');
+
+    option = {
+      hostname: targetHost,
+      port: port,
+      path: targetPath,
+      method: "GET"
+    };
+
+    if (headers !== null) {
+      if (typeof headers !== "object") {
+        throw new Error("headers must be object");
+      }
+      if (typeof headers.headers === "object" && headers.headers !== null) {
+        option.headers = headers.headers;
+      } else {
+        option.headers = headers;
+      }
+    }
+
+    return new Promise((resolve, reject) => {
+      let req = http.request(option, (res) => {
+          res.setEncoding('binary');
+          let chunks = [];
+          res.on('data', (chunk) => {
+              chunks.push(Buffer.from(chunk, 'binary'));
+          });
+          res.on('end', () => {
+              let binary = Buffer.concat(chunks);
+              resolve(binary);
+          });
+          res.on('error', function (e) {
+              reject(e);
+          });
+      });
+      req.on('error', function (e) { reject(e); });
+      req.end();
+    });
+  }
+
 }
 // <<<<<<<<< MOTHER COPIED END
 
 const Clown = function () {
   this.mother = new Mother();
   this.address = ADDRESS;
+}
+
+Clown.prototype.pureServer = async function () {
+  const instance = this;
+  const { pureServer, shellExec, shellLink, fileSystem, setQueue } = this.mother;
+  const NativeNotifier = require(process.cwd() + "/apps/nativeNotifier/nativeNotifier.js");
+  const notifier = new NativeNotifier();
+  const axios = require(`axios`);
+  const os = require(`os`);
+  const PORT = 55555;
+  let osType;
+  if (/Darwin/gi.test(os.type().trim())) {
+    osType = "mac";
+  } else {
+    osType = "windows";
+  }
+  try {
+
+    const PureServer = pureServer("class");
+    const app = new PureServer();
+
+    app.get("/", async (req, res) => {
+      try {
+        res.send(JSON.stringify({ message: "It works!" }));
+      } catch (e) {
+        console.log(e);
+      }
+    });
+
+    app.get("/update", async (req, res) => {
+      try {
+        shellExec(`cd ${shellLink(process.cwd())};git pull;`).then(() => {
+          setQueue(() => { process.kill(); });
+        }).catch((err) => {
+          console.log(err);
+        });
+        res.send(JSON.stringify({ message: "will do" }));
+      } catch (e) {
+        console.log(e);
+      }
+    });
+
+    app.get("/check", async (req, res) => {
+      try {
+        let inner, result, ip;
+        inner = [];
+        tempObj = os.networkInterfaces();
+        for (let i in tempObj) {
+          inner = inner.concat(tempObj[i]);
+        }
+        inner = inner.filter((i) => { return /4/gi.test(i.family) && !/127\.0\.0\.1/gi.test(i.address); });
+        const { data } = await axios.get("https://icanhazip.com");
+        ip = data.replace(/[^0-9\.]/gi, '').trim();
+        result = { os: osType, ip, inner };
+        res.send(JSON.stringify(result));
+      } catch (e) {
+        console.log(e);
+      }
+    });
+
+    app.post("/push", async (req, res) => {
+      try {
+        if (typeof req.body.text !== "string") {
+          throw new Error("invaild post, must be text");
+        }
+        notifier.sendAlarm(String(req.body.text).trim()).catch((err) => { console.log(err); });
+        res.send(JSON.stringify({ message: "will do" }));
+      } catch (e) {
+        res.send(JSON.stringify({ message: "error" }));
+      }
+    });
+
+    app.post("/alert", async (req, res) => {
+      try {
+        if (typeof req.body.text !== "string") {
+          throw new Error("invaild post, must be text");
+        }
+        notifier.alertAlarm(String(req.body.text).trim()).catch((err) => { console.log(err); });
+        res.send(JSON.stringify({ message: "will do" }));
+      } catch (e) {
+        res.send(JSON.stringify({ message: "error" }));
+      }
+    });
+
+    app.post("/prompt", async (req, res) => {
+      try {
+        if (typeof req.body.text !== "string") {
+          throw new Error("invaild post, must be text");
+        }
+        let input;
+        input = await notifier.sendPrompt(String(req.body.text).trim());
+        if (typeof input !== "string") {
+          input = "";
+        } else {
+          input = input.trim();
+        }
+        res.send(JSON.stringify({ message: input }));
+      } catch (e) {
+        res.send(JSON.stringify({ message: "error" }));
+      }
+    });
+
+    pureServer("listen", app, PORT);
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+Clown.prototype.pureScript = function () {
+  const instance = this;
+  const deleteToken = "__delete__";
+  const motherTargets = [
+    "fileSystem",
+    "shellExec",
+    "shellLink",
+    "sleep",
+    "equalJson",
+    "copyJson",
+    "dateToString",
+    "stringToDate",
+    "pureServer",
+    "requestSystem",
+    "binaryRequest",
+    "cryptoString",
+    "decryptoHash",
+    "uniqueValue",
+    "setQueue"
+  ];
+  const deleteFilter = (str) => { return str.split("\n").map((s) => { return s.replace((new RegExp("^  " + deleteToken, "gi")), ""); }).join("\n"); }
+  let script;
+  let backMakerScript, addressScript;
+  let motherScript;
+
+  script = `const PureServer = function () {
+  ${deleteToken}  const Mother = require(process.cwd() + "/apps/mother.js");
+  ${deleteToken}  this.mother = new Mother();
+  ${deleteToken}}
+
+  ${deleteToken}PureServer.prototype.launching = ${this.pureServer.toString()}
+
+  ${deleteToken}const app = new PureServer();
+  ${deleteToken}app.launching().catch((err) => { console.log(err); });`;
+
+  backMakerScript = `const BackMaker = function () {}
+  ${deleteToken}module.exports = BackMaker;`;
+
+  addressScript = `module.exports = {};`;
+
+  motherScript = "const Mother = function () {}\n\n";
+  for (let name of motherTargets) {
+    motherScript += `Mother.prototype.${name} = ${Mother.prototype[name].toString()}\n\n`;
+  }
+  motherScript += `module.exports = Mother;`;
+
+  return {
+    script: deleteFilter(script),
+    backMakerScript: deleteFilter(backMakerScript),
+    addressScript: deleteFilter(addressScript),
+    motherScript,
+  };
+}
+
+Clown.prototype.serverSetting = async function (app) {
+  const instance = this;
+  const { fileSystem, shellExec, shellLink, equalJson, uniqueValue } = this.mother;
+  try {
+    const serverName = "homeliaisonpureserver";
+    const gitHostName = "git@gitlab.com:uragen/homeliaisonpureserver.git";
+    const { script, backMakerScript, addressScript, motherScript } = this.pureScript();
+    const copiedModules = [
+      "nativeNotifier"
+    ];
+    const motherPath = app.getPath("appData");
+    const motherName = "homeliaison";
+    const motherDir = await fileSystem(`readDir`, [ motherPath ]);
+    if (!motherDir.includes(motherName)) {
+      await shellExec(`mkdir`, [ `${motherPath}/${motherName}` ]);
+    }
+    const motherTong = `${motherPath}/${motherName}`;
+    const motherTongDir = await fileSystem(`readDir`, [ motherTong ]);
+    const package = equalJson(await fileSystem(`readString`, [ `${process.cwd()}/package.json` ]));
+
+    package.name = "pure";
+    package.main = "index.js";
+    package.scripts = {};
+    delete package.devDependencies;
+    delete package.dependencies["@babel/runtime"];
+    delete package.dependencies["@babel/runtime-corejs3"];
+    delete package.dependencies["csso"];
+    delete package.dependencies["express"];
+    delete package.dependencies["express-useragent"];
+    delete package.dependencies["multer"];
+    delete package.dependencies["shelljs"];
+
+    if (motherTongDir.includes(serverName)) {
+      await shellExec(`rm`, [ `-rf`, `${motherTong}/${serverName}` ]);
+    }
+
+    await shellExec(`cd ${shellLink(motherTong)};git clone ${gitHostName}`);
+    await shellExec(`rm`, [ `-rf`, `${motherTong}/${serverName}/apps` ]);
+    await shellExec(`mkdir`, [ `${motherTong}/${serverName}/apps` ]);
+    await shellExec(`mkdir`, [ `${motherTong}/${serverName}/apps/backMaker` ]);
+    await shellExec(`mkdir`, [ `${motherTong}/${serverName}/temp` ]);
+    await fileSystem(`write`, [ `${motherTong}/${serverName}/apps/mother.js`, motherScript ]);
+    await fileSystem(`write`, [ `${motherTong}/${serverName}/apps/infoObj.js`, addressScript ]);
+    await fileSystem(`write`, [ `${motherTong}/${serverName}/apps/backMaker/backMaker.js`, backMakerScript ]);
+    await fileSystem(`write`, [ `${motherTong}/${serverName}/index.js`, script ]);
+    await fileSystem(`write`, [ `${motherTong}/${serverName}/.gitignore`, (await fileSystem(`readString`, [ `${process.cwd()}/.gitignore` ])) ]);
+    await fileSystem(`write`, [ `${motherTong}/${serverName}/package.json`, JSON.stringify(package, null, 2) ]);
+    for (let m of copiedModules) {
+      await shellExec(`cp -r ${shellLink(process.cwd())}/apps/${m} ${shellLink(motherTong)}/${serverName}/apps;`);
+    }
+    await shellExec(`cd ${motherTong}/${serverName};npm install;git add -A;git commit -m "${serverName}_${uniqueValue("string")}";git push;pm2 kill;pm2 start ./index.js;`);
+
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 Clown.prototype.launching = async function () {
@@ -2035,6 +2452,9 @@ Clown.prototype.launching = async function () {
       return mainWindow;
     }
     let thisMainWindow;
+    let timeoutId;
+
+    timeoutId = null;
 
     app.whenReady().then(createWindow).then((mainWindow) => {
       thisMainWindow = mainWindow;
@@ -2044,13 +2464,21 @@ Clown.prototype.launching = async function () {
     });
 
     app.on("window-all-closed", () => {
-      if (process.platform !== "darwin") {
-        app.quit();
-      }
+      const alarm = new Notification({ title: "HomeLiaison", body: "20초 뒤에 다시 창이 활성화됩니다!" });
+      alarm.show();
+      timeoutId = setTimeout(() => {
+        thisMainWindow = createWindow();
+        clearTimeout(timeoutId);
+        timeoutId = null;
+      }, 20 * 1000);
     });
 
     app.on("activate", () => {
       if (BrowserWindow.getAllWindows().length === 0) {
+        if (timeoutId !== null) {
+          clearTimeout(timeoutId);
+          timeoutId = null;
+        }
         thisMainWindow = createWindow();
       }
     });
@@ -2110,6 +2538,7 @@ Clown.prototype.launching = async function () {
       }
     });
 
+    await this.serverSetting(app);
 
   } catch (e) {
     console.log(e);
