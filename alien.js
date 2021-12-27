@@ -372,7 +372,7 @@ Alien.prototype.wssLaunching = async function (cronNumber) {
           }
         }
         try {
-          const data = equalJson(raw);
+          const data = equalJson(message);
           let macArr, memid, index;
           if (data.device !== undefined && data.message === "alive") {
             macArr = data.device.networkInterfaces.map((obj) => { return obj.mac });
