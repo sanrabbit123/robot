@@ -1270,7 +1270,7 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
   mobileOngoingTitleSize = 3.5;
   mobileOngoingTitleMarginBottom = 2.7;
 
-  mobileOngoingTextTop = -0.5;
+  mobileOngoingTextTop = -0.4;
 
   mobileNoticeSize = 2.8;
   mobileNoticeLineheight = 1.5;
