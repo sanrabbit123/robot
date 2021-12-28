@@ -1598,10 +1598,26 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
     preferImages = clientPhoto.preferredPhoto;
 
     siteImages.sort((a, b) => {
-      return a.split("/")[a.split("/").length - 1] < b.split("/")[b.split("/").length - 1] ? 1 : -1;
+      const aArr = a.split("/");
+      const bArr = b.split("/");
+      const aFileWording = aArr[aArr.length - 1];
+      const bFileWording = bArr[bArr.length - 1];
+      if (/_[0-9]+/gi.test(aFileWording) && /_[0-9]+/gi.test(bFileWording)) {
+        return Number(aFileWording.split("_")[aFileWording.split("_").length - 1].replace(/[^0-9]/gi, '')) - Number(bFileWording.split("_")[bFileWording.split("_").length - 1].replace(/[^0-9]/gi, ''));
+      } else {
+        return aFileWording < bFileWording ? 1 : -1;
+      }
     });
     preferImages.sort((a, b) => {
-      return a.split("/")[a.split("/").length - 1] < b.split("/")[b.split("/").length - 1] ? 1 : -1;
+      const aArr = a.split("/");
+      const bArr = b.split("/");
+      const aFileWording = aArr[aArr.length - 1];
+      const bFileWording = bArr[bArr.length - 1];
+      if (/_[0-9]+/gi.test(aFileWording) && /_[0-9]+/gi.test(bFileWording)) {
+        return Number(aFileWording.split("_")[aFileWording.split("_").length - 1].replace(/[^0-9]/gi, '')) - Number(bFileWording.split("_")[bFileWording.split("_").length - 1].replace(/[^0-9]/gi, ''));
+      } else {
+        return aFileWording < bFileWording ? 1 : -1;
+      }
     });
 
     sum = 0;
