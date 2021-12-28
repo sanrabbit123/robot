@@ -215,22 +215,22 @@ DesignerJs.prototype.projectDetail = function (desid) {
   intend = <%% 16, 16, 16, 16, 4 %%>;
   between = <%% 8, 8, 8, 8, 1 %%>;
 
-  greenPannelBottom = 40;
-  greenPannelRight = 40;
-  greenPannelVisual = 2;
-  greenPannelHeight = 95;
-  greenPannelZIndex = 3;
+  greenPannelBottom = <%% 40, 40, 40, 40, 4 %%>;
+  greenPannelRight = <%% 40, 40, 40, 40, 4 %%>;
+  greenPannelVisual = <%% 2, 2, 2, 2, 0 %%>;
+  greenPannelHeight = <%% 95, 95, 95, 95, 9 %%>;
+  greenPannelZIndex = <%% 3, 3, 3, 3, 0 %%>;
 
-  greenPannelPaddingLeft = 12;
-  greenPannelPaddingTop = 12;
+  greenPannelPaddingLeft = <%% 12, 12, 12, 12, 1 %%>;
+  greenPannelPaddingTop = <%% 12, 12, 12, 12, 1 %%>;
 
-  greenPannelCardPaddingLeft = 20;
-  greenPannelCardHeight = 33;
-  greenPannelCardInnerMargin = 5;
+  greenPannelCardPaddingLeft = <%% 20, 20, 20, 20, 2 %%>;
+  greenPannelCardHeight = <%% 33, 33, 33, 33, 3 %%>;
+  greenPannelCardInnerMargin = <%% 5, 5, 5, 5, 1 %%>;
 
-  greenPannelCardSize = 14;
+  greenPannelCardSize = <%% 14, 14, 14, 14, 1 %%>;
   greenPannelCardWeight = 500;
-  greenPannelCardVisual = -2;
+  greenPannelCardVisual = <%% -2, -2, -2, -2, 0 %%>;
 
   grayBarWidthMinus = this.grayBarWidth;
   cards = designer.projects;
@@ -290,6 +290,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
   greenPannel = createNode({
     mother: baseTong0,
     style: {
+      display: desktop ? "block" : "none",
       position: "fixed",
       bottom: String(greenPannelBottom) + ea,
       right: String(greenPannelRight) + ea,
@@ -638,7 +639,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
         }
       },
       style: {
-        display: "inline-flex",
+        display: desktop ? "inline-flex" : "none",
         position: "relative",
         background: colorChip.white,
         paddingLeft: String(greenPannelCardPaddingLeft) + ea,
