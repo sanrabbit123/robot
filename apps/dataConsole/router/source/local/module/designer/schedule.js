@@ -1,4 +1,4 @@
-DesignerJs.prototype.requestDetailLaunching = function (desid, callback = null) {
+DesignerJs.prototype.scheduleDetailLaunching = function (desid, callback = null) {
   const instance = this;
   const { ea, belowHeight, firstTop, motherHeight, middleMode } = this;
   const totalMother = document.querySelector(".totalMother");
@@ -69,7 +69,7 @@ DesignerJs.prototype.requestDetailLaunching = function (desid, callback = null) 
     });
   }
 
-  this.requestIconSet(desid);
+  this.scheduleIconSet(desid);
   this.mother.loadingRun().then((dom) => {
     loading = dom;
     return ajaxJson({ noFlat: true, whereQuery: { desid } }, "/getProjects", { equal: true });
@@ -86,7 +86,7 @@ DesignerJs.prototype.requestDetailLaunching = function (desid, callback = null) 
   }).then((clients) => {
     loading.parentNode.removeChild(loading);
     instance.designers.setClients(clients);
-    instance.requestList(desid);
+    instance.scheduleList(desid);
     scrollTo(totalMother, pastScrollTop);
     if (callback !== null) {
       if (typeof callback === "function") {
@@ -98,7 +98,7 @@ DesignerJs.prototype.requestDetailLaunching = function (desid, callback = null) 
   });
 }
 
-DesignerJs.prototype.requestReturnStatic = function (designer, project, client, clientHistory, projectHistory, requestNumber) {
+DesignerJs.prototype.scheduleReturnStatic = function (designer, project, client, clientHistory, projectHistory, requestNumber) {
   const instance = this;
   const mother = this.mother;
   const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, autoComma } = GeneralJs;
@@ -437,7 +437,7 @@ DesignerJs.prototype.requestReturnStatic = function (designer, project, client, 
   };
 }
 
-DesignerJs.prototype.requestList = function (desid) {
+DesignerJs.prototype.scheduleList = function (desid) {
   if (desid === undefined) {
     throw new Error("invaild input");
   }
@@ -577,7 +577,7 @@ DesignerJs.prototype.requestList = function (desid) {
     requestBox = createNode({
       mother: baseTong,
       event: {
-        click: this.requestDocument(baseTong, i, designer, projects[i]),
+        click: this.scheduleDocument(baseTong, i, designer, projects[i]),
         mouseenter: function (e) {
           this.style.transition = "";
           if (desktop) {
@@ -702,7 +702,7 @@ DesignerJs.prototype.requestList = function (desid) {
   this.mainBaseTong = baseTong0;
 }
 
-DesignerJs.prototype.requestDocument = function (mother, index, designer, project) {
+DesignerJs.prototype.scheduleDocument = function (mother, index, designer, project) {
   const instance = this;
   const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, serviceParsing, setQueue, swipePatch } = GeneralJs;
   const { totalMother, ea, grayBarWidth } = this;
@@ -905,7 +905,7 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
                 marginBottom: String(motherTop) + ea,
               }
             });
-            await instance.requestContents(board, designer, project, client, clientHistory, projectHistory, requestNumber);
+            await instance.scheduleContents(board, designer, project, client, clientHistory, projectHistory, requestNumber);
             if (mobile) {
               mother.style.marginBottom = "";
             }
@@ -913,7 +913,7 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
             if (mobile) {
               swipePatch({
                 right: (e) => {
-                  instance.requestDetailLaunching(desid);
+                  instance.scheduleDetailLaunching(desid);
                 },
               });
             }
@@ -934,563 +934,7 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
   }
 }
 
-DesignerJs.prototype.requestStaticHtml = function (designer, project, client, clientHistory, projectHistory, requestNumber, clientPhoto) {
-  const instance = this;
-  const mother = this.mother;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, autoComma, downloadFile } = GeneralJs;
-  const { totalMother, grayBarWidth, middleMode } = this;
-  const mobile = this.media[4];
-  const desktop = !mobile;
-  const desid = designer.desid;
-  const proid = project.proid;
-  const cliid = project.cliid;
-  const today = new Date();
-  const ea = "px";
-  const pe = "%";
-  return async function (e) {
-    try {
-      const {
-        title,
-        initialContents,
-        emptyReload,
-        mainContents,
-        pictureContents,
-        pictureContentsSite,
-        pictureContentsPrefer,
-        pictures,
-        noticeContents,
-        divToInput,
-        matrix,
-        mergeMap,
-        callbackMap,
-        boldMap,
-        titleMap,
-        widthRatio,
-      } = instance.requestReturnStatic(designer, project, client, clientHistory, projectHistory, requestNumber);
-      for (let obj of mainContents) {
-        obj.spread = true;
-      }
-      const loading = mother.grayLoading();
-      const board = createNode({
-        mother: document.body,
-        style: {
-          display: "none",
-          position: "relative",
-        }
-      });
-      let titleArea;
-      let contentsArea;
-      let topMargin;
-      let leftMargin;
-      let titleHeight;
-      let titleSize;
-      let titleBottom;
-      let titlePaddingBottom;
-      let fontSize;
-      let sum;
-      let titleDateVisualBottom;
-      let contentsBetween;
-      let contentsClientInfo;
-      let clientInfoLeftWidth;
-      let width;
-      let wordsBetween0, wordsBetween1, wordsBetween2;
-      let leftIndent;
-      let words;
-      let arrowTop, arrowWidth, arrowLeft;
-      let tempDom;
-      let tableVisual;
-      let lineHeight;
-      let contentsClientPhoto;
-      let contentsClientPhotoTong;
-      let images, siteImages, preferImages;
-      let photoWidth;
-      let photoMargin;
-      let photoNumber;
-      let clientInfoBottom;
-      let noticeDom;
-      let finalBottom;
-      let num;
-      let whitePopupEvent;
-      let html;
-
-      topMargin = 42;
-      leftMargin = 60;
-      titleSize = 35;
-      titlePaddingLeft = 1;
-      titleBottom = 35;
-      titlePaddingBottom = (isMac() ? 18 : 15);
-      titleDateVisualBottom = (isMac() ? 2 : -3);
-
-      fontSize = 15;
-      contentsBetween = 32;
-
-      clientInfoBottom = 42;
-      clientInfoLeftWidth = 380;
-
-      wordsBetween0 = 6;
-      wordsBetween1 = 22;
-      wordsBetween2 = 10;
-
-      tableVisual = 18;
-      leftIndent = 15;
-
-      arrowTop = (isMac() ? 5.5 : 4);
-      arrowWidth = 8;
-      arrowLeft = 1;
-
-      lineHeight = 1.8;
-      photoWidth = 260;
-      photoMargin = 10;
-      finalBottom = 240;
-
-      sum = 0;
-      for (let i of widthRatio) {
-        sum += i;
-      }
-
-      board.style.paddingTop = String(topMargin) + ea;
-
-      titleArea = createNode({
-        mother: board,
-        style: {
-          marginLeft: String(leftMargin) + ea,
-          paddingLeft: String(titlePaddingLeft) + ea,
-          width: withOut((leftMargin * 2) + titlePaddingLeft, ea),
-          borderBottom: "1px solid " + colorChip.gray3,
-          marginBottom: String(titleBottom) + ea,
-          paddingBottom: String(titlePaddingBottom) + ea,
-          position: "relative",
-        },
-        children: [
-          {
-            text: title,
-            style: {
-              position: "relative",
-              fontSize: String(titleSize) + ea,
-              fontWeight: String(500),
-              color: colorChip.black,
-            }
-          },
-          {
-            text: dateToString(today),
-            style: {
-              position: "absolute",
-              fontSize: String(fontSize) + ea,
-              fontWeight: String(600),
-              color: colorChip.black,
-              right: String(titlePaddingLeft) + ea,
-              textAlign: "right",
-              bottom: String(titlePaddingBottom - titleDateVisualBottom) + ea,
-            }
-          }
-        ]
-      });
-
-      contentsArea = createNode({
-        mother: board,
-        style: {
-          marginLeft: String(leftMargin) + ea,
-          width: withOut(leftMargin * 2, ea),
-        },
-        children: [
-          {
-            text: initialContents,
-            style: {
-              position: "relative",
-              fontSize: String(fontSize) + ea,
-              fontWeight: String(400),
-              color: colorChip.black,
-              lineHeight: String(lineHeight),
-              marginBottom: String(titleBottom) + ea,
-            },
-            bold: {
-              fontWeight: String(600),
-              color: colorChip.black,
-            }
-          }
-        ]
-      });
-
-      contentsClientInfo = createNode({
-        mother: contentsArea,
-        style: {
-          position: "relative",
-          display: "block",
-          width: String(100) + '%',
-          textAlign: "right",
-          marginBottom: String(clientInfoBottom) + ea,
-        },
-        children: [
-          {
-            style: {
-              position: "relative",
-              top: String(0),
-              paddingLeft: String(leftIndent) + ea,
-              height: String(100) + '%',
-              verticalAlign: "top",
-              textAlign: "left",
-              borderBottom: "1px solid " + colorChip.gray3,
-              boxSizing: "border-box",
-            }
-          }
-        ]
-      });
-
-      contentsClientInfo.appendChild(mother.makeTable(matrix, { style: { width: 1000 }, mergeMap, callbackMap, boldMap, titleMap, widthRatio }));
-      contentsClientInfo.children[1].style.display = "block";
-      contentsClientInfo.children[1].style.verticalAlign = "top";
-      contentsClientInfo.children[1].style.width = String(100) + pe;
-      contentsClientInfo.children[1].style.marginTop = String(35) + ea;
-
-      num = 0;
-      for (let { title, className, contents, position, spread } of mainContents) {
-        words = createNode({
-          mother: contentsClientInfo.children[0],
-          class: [ className ],
-          text: title,
-          style: {
-            position: "relative",
-            fontSize: String(fontSize) + ea,
-            fontWeight: String(600),
-            color: colorChip.black,
-            marginBottom: String(wordsBetween0) + ea,
-            cursor: "pointer",
-          }
-        });
-        createNode({
-          mother: words,
-          mode: "svg",
-          source: mother.returnArrow("right", colorChip.green),
-          style: {
-            position: "absolute",
-            width: String(arrowWidth) + ea,
-            left: String((-1 * leftIndent) + arrowLeft) + ea,
-            top: String(arrowTop) + ea,
-          }
-        });
-        createNode({
-          mother: contentsClientInfo.children[0],
-          class: [ className ],
-          text: contents.map((z) => { return "<b%-%b> " + z.replace(/^\-/, '').replace(/^\- /, ''); }).map((z) => { if (z.trim() === "<b%-%b>") { return ""; } else { return z; } }).join("\n"),
-          style: {
-            position: "relative",
-            fontSize: String(fontSize) + ea,
-            fontWeight: String(400),
-            color: colorChip.black,
-            lineHeight: String(lineHeight),
-            marginBottom: String(wordsBetween1) + ea,
-            overflow: "hidden",
-            transition: "all 0s ease",
-            height: spread ? "auto" : String(0),
-          },
-          bold: {
-            color: colorChip.gray4,
-          }
-        });
-        num++;
-      }
-
-      images = pictures.map((image) => {
-        const imageLink = "/corePortfolio/listImage";
-        let pid;
-        pid = image.split('.')[0].replace(/^t[0-9]+/gi, '');
-        return "https://" + GHOSTHOST + imageLink + "/" + pid + "/" + image;
-      });
-      siteImages = clientPhoto.sitePhoto;
-      preferImages = clientPhoto.preferredPhoto;
-
-      photoNumber = 3;
-      photoWidth = "calc(calc(100% - " + String(photoMargin * (photoNumber - 1)) + ea + ") / " + String(photoNumber) + ")";
-
-      if (images.length > 0) {
-        contentsClientPhoto = createNode({
-          mother: contentsArea,
-          style: {
-            position: "relative",
-            display: "block",
-            width: String(100) + '%',
-            marginBottom: String(clientInfoBottom) + ea,
-          },
-          children: [
-            {
-              text: pictureContents,
-              style: {
-                paddingLeft: String(leftIndent) + ea,
-                position: "relative",
-                display: "block",
-                fontSize: String(fontSize) + ea,
-                fontWeight: String(600),
-                color: colorChip.black,
-                marginBottom: String(wordsBetween1) + ea,
-              },
-              children: [
-                {
-                  mode: "svg",
-                  source: mother.returnArrow("right", colorChip.green),
-                  style: {
-                    position: "absolute",
-                    width: String(arrowWidth) + ea,
-                    left: String(arrowLeft) + ea,
-                    top: String(arrowTop) + ea,
-                  }
-                }
-              ]
-            },
-            {
-              style: {
-                position: "relative",
-                display: "block",
-              },
-            }
-          ]
-        });
-        contentsClientPhotoTong = contentsClientPhoto.children[1];
-
-        for (let i = 0; i < images.length; i++) {
-          createNode({
-            mother: contentsClientPhotoTong,
-            mode: "img",
-            class: [ "hoverDefault_lite" ],
-            attribute: [
-              { src: images[i] },
-              { index: String(i) },
-              { method: /sitePhoto/g.test(images[i]) ? "site" : (/preferredPhoto/g.test(images[i]) ? "preferred" : "selected") },
-              { length: String(images.length) }
-            ],
-            style: {
-              display: "inline-block",
-              position: "relative",
-              width: photoWidth,
-              borderRadius: String(3) + "px",
-              marginRight: String(i % photoNumber === photoNumber - 1 ? 0 : photoMargin) + ea,
-              marginBottom: String(Math.floor(i / photoNumber) === Math.floor((images.length - 1) / photoNumber) ? 0 : photoMargin) + ea,
-              cursor: "pointer",
-              verticalAlign: "top",
-            }
-          });
-        }
-      }
-
-      if (siteImages.length > 0) {
-        contentsClientPhoto = createNode({
-          mother: contentsArea,
-          style: {
-            position: "relative",
-            display: "block",
-            width: String(100) + '%',
-            marginBottom: String(clientInfoBottom) + ea,
-          },
-          children: [
-            {
-              text: pictureContentsSite,
-              style: {
-                paddingLeft: String(leftIndent) + ea,
-                position: "relative",
-                display: "block",
-                fontSize: String(fontSize) + ea,
-                fontWeight: String(600),
-                color: colorChip.black,
-                marginBottom: String(wordsBetween1) + ea,
-              },
-              children: [
-                {
-                  mode: "svg",
-                  source: mother.returnArrow("right", colorChip.green),
-                  style: {
-                    position: "absolute",
-                    width: String(arrowWidth) + ea,
-                    left: String(arrowLeft) + ea,
-                    top: String(arrowTop) + ea,
-                  }
-                }
-              ]
-            },
-            {
-              style: {
-                position: "relative",
-                display: "block",
-              },
-            }
-          ]
-        });
-        contentsClientPhotoTong = contentsClientPhoto.children[1];
-
-        for (let i = 0; i < siteImages.length; i++) {
-          createNode({
-            mother: contentsClientPhotoTong,
-            mode: "img",
-            class: [ "hoverDefault_lite" ],
-            attribute: [
-              { src: siteImages[i] },
-              { index: String(i) },
-              { method: /sitePhoto/g.test(siteImages[i]) ? "site" : (/preferredPhoto/g.test(siteImages[i]) ? "preferred" : "selected") },
-              { length: String(siteImages.length) }
-            ],
-            style: {
-              display: "inline-block",
-              position: "relative",
-              width: photoWidth,
-              borderRadius: String(3) + "px",
-              marginRight: String(i % photoNumber === photoNumber - 1 ? 0 : photoMargin) + ea,
-              marginBottom: String(Math.floor(i / photoNumber) === Math.floor((siteImages.length - 1) / photoNumber) ? 0 : photoMargin) + ea,
-              cursor: "pointer",
-              verticalAlign: "top",
-            }
-          });
-        }
-      }
-
-      if (preferImages.length > 0) {
-        contentsClientPhoto = createNode({
-          mother: contentsArea,
-          style: {
-            position: "relative",
-            display: "block",
-            width: String(100) + '%',
-            marginBottom: String(clientInfoBottom) + ea,
-          },
-          children: [
-            {
-              text: pictureContentsPrefer,
-              style: {
-                paddingLeft: String(leftIndent) + ea,
-                position: "relative",
-                display: "block",
-                fontSize: String(fontSize) + ea,
-                fontWeight: String(600),
-                color: colorChip.black,
-                marginBottom: String(wordsBetween1) + ea,
-              },
-              children: [
-                {
-                  mode: "svg",
-                  source: mother.returnArrow("right", colorChip.green),
-                  style: {
-                    position: "absolute",
-                    width: String(arrowWidth) + ea,
-                    left: String(arrowLeft) + ea,
-                    top: String(arrowTop) + ea,
-                  }
-                }
-              ]
-            },
-            {
-              style: {
-                position: "relative",
-                display: "block",
-              },
-            }
-          ]
-        });
-        contentsClientPhotoTong = contentsClientPhoto.children[1];
-
-        for (let i = 0; i < preferImages.length; i++) {
-          createNode({
-            mother: contentsClientPhotoTong,
-            mode: "img",
-            class: [ "hoverDefault_lite" ],
-            attribute: [
-              { src: preferImages[i] },
-              { index: String(i) },
-              { method: /sitePhoto/g.test(preferImages[i]) ? "site" : (/preferredPhoto/g.test(preferImages[i]) ? "preferred" : "selected") },
-              { length: String(preferImages.length) }
-            ],
-            style: {
-              display: "inline-block",
-              position: "relative",
-              width: photoWidth,
-              borderRadius: String(3) + "px",
-              marginRight: String(i % photoNumber === photoNumber - 1 ? 0 : photoMargin) + ea,
-              marginBottom: String(Math.floor(i / photoNumber) === Math.floor((preferImages.length - 1) / photoNumber) ? 0 : photoMargin) + ea,
-              cursor: "pointer",
-              verticalAlign: "top",
-            }
-          });
-        }
-      }
-
-      for (let { title, contents } of noticeContents) {
-        noticeDom = createNode({
-          mother: contentsArea,
-          style: {
-            position: "relative",
-            display: "block",
-            width: String(100) + '%',
-            marginBottom: String(contentsBetween) + ea,
-          },
-          children: [
-            {
-              text: title,
-              style: {
-                paddingLeft: String(leftIndent) + ea,
-                position: "relative",
-                display: "block",
-                fontSize: String(fontSize) + ea,
-                fontWeight: String(600),
-                color: colorChip.black,
-                marginBottom: String(wordsBetween2) + ea,
-              },
-              children: [
-                {
-                  mode: "svg",
-                  source: mother.returnArrow("right", colorChip.green),
-                  style: {
-                    position: "absolute",
-                    width: String(arrowWidth) + ea,
-                    left: String(arrowLeft) + ea,
-                    top: String(arrowTop) + ea,
-                  }
-                }
-              ]
-            },
-            {
-              text: contents.map((z) => { return "<b%-%b> " + z; }).join("\n"),
-              style: {
-                position: "relative",
-                fontSize: String(fontSize) + ea,
-                fontWeight: String(400),
-                color: colorChip.black,
-                lineHeight: String(lineHeight),
-              },
-              bold: {
-                color: colorChip.gray4,
-              }
-            }
-          ]
-        });
-      }
-
-      board.style.height = "auto";
-      board.style.paddingBottom = String(finalBottom) + ea;
-
-      html = String(`<!DOCTYPE html>
-      <html lang="ko" dir="ltr">
-        <head>
-          <meta charset="utf-8">
-          <style>${String(document.querySelector("style").innerHTML.replace(/\@font-face \{[^\}]+\}/gi, ''))}</style>
-          <title></title>
-        </head>
-        <body style="padding-top:${String(leftMargin)}${ea};padding-bottom:${String(leftMargin)}${ea};">
-          ${String(board.innerHTML)}
-        </body>
-      </html>`).replace(/\=/gi, "__equal__").replace(/\&/gi, "__ampersand__").replace(/\'/gi, '');
-
-      document.body.removeChild(document.body.lastChild);
-
-      const { pdf } = await ajaxJson({ html, name: client.name + "_고객님_의뢰서" }, "/ghostPass_pdfPrint");
-      await downloadFile(pdf);
-
-      console.log("done");
-
-      loading.remove();
-
-    } catch (e) {
-      console.log(e);
-    }
-  }
-}
-
-DesignerJs.prototype.requestContents = async function (board, designer, project, client, clientHistory, projectHistory, requestNumber) {
+DesignerJs.prototype.scheduleContents = async function (board, designer, project, client, clientHistory, projectHistory, requestNumber) {
   const instance = this;
   const mother = this.mother;
   const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, autoComma } = GeneralJs;
@@ -1504,7 +948,7 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
   this.client = client;
   this.project = project;
   const today = new Date();
-  const totalStatic = this.requestReturnStatic(designer, project, client, clientHistory, projectHistory, requestNumber);
+  const totalStatic = this.scheduleReturnStatic(designer, project, client, clientHistory, projectHistory, requestNumber);
   const {
     title,
     initialContents,
@@ -1652,7 +1096,7 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
           text: "PDF 추출",
           class: [ "hoverDefault_lite" ],
           event: {
-            click: this.requestStaticHtml(designer, project, client, clientHistory, projectHistory, requestNumber, clientPhoto)
+            click: (e) => { e.preventDefault(); }
           },
           style: {
             position: "absolute",
@@ -3058,7 +2502,7 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
   }
 }
 
-DesignerJs.prototype.requestIconSet = function (desid) {
+DesignerJs.prototype.scheduleIconSet = function (desid) {
   if (desid === undefined) {
     throw new Error("invaild input");
   }
@@ -3287,7 +2731,7 @@ DesignerJs.prototype.requestIconSet = function (desid) {
           }
         }
       } while (boo);
-      instance.requestDetailLaunching(previousDesid);
+      instance.scheduleDetailLaunching(previousDesid);
     });
 
     nextIcon.addEventListener("click", function (e) {
@@ -3302,7 +2746,7 @@ DesignerJs.prototype.requestIconSet = function (desid) {
           }
         }
       } while (boo);
-      instance.requestDetailLaunching(nextDesid);
+      instance.scheduleDetailLaunching(nextDesid);
     });
 
   } else {
@@ -3348,7 +2792,7 @@ DesignerJs.prototype.requestIconSet = function (desid) {
 
       listIcon.addEventListener("click", function (e) {
         instance.mode = "request";
-        instance.requestDetailLaunching(designer.desid);
+        instance.scheduleDetailLaunching(designer.desid);
       });
 
     }
@@ -3503,7 +2947,7 @@ DesignerJs.prototype.requestIconSet = function (desid) {
 
 }
 
-DesignerJs.prototype.requestView = async function () {
+DesignerJs.prototype.scheduleView = async function () {
   const instance = this;
   try {
     const loading = await this.mother.loadingRun();
@@ -3533,7 +2977,7 @@ DesignerJs.prototype.requestView = async function () {
     this.desid = (getObj.desid !== undefined) ? getObj.desid : this.standardDoms[this.standardDoms.length - 1].getAttribute("desid");
     this.middleMode = middleMode;
     this.modes = [ "checklist", "report", "request", "possible", "project", "schedule" ];
-    this.mode = this.modes[2];
+    this.mode = this.modes[5];
     this.result = null;
     this.searchCondition = {
       mode: "or",
@@ -3557,11 +3001,11 @@ DesignerJs.prototype.requestView = async function () {
           const value = this.value.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/gi, '').replace(/[\~\@\#\$\%\^\&\*\(\)\-\=\+\[\]\{\}\<\>\/\\ \n\t]/gi, '');
           let target;
           if (value === "") {
-            instance.requestDetailLaunching(instance.standardDoms[1].getAttribute("desid"));
+            instance.scheduleDetailLaunching(instance.standardDoms[1].getAttribute("desid"));
           } else {
             searchResult = instance.designers.search(value);
             if (searchResult.length > 0) {
-              instance.requestDetailLaunching(searchResult[0].desid);
+              instance.scheduleDetailLaunching(searchResult[0].desid);
             }
           }
         }
@@ -3586,7 +3030,7 @@ DesignerJs.prototype.requestView = async function () {
         this.standardDoms[i].setAttribute("color", this.standardDoms[i].style.color);
         this.standardDoms[i].style.transition = "all 0s ease";
         this.standardDoms[i].addEventListener("click", (e) => {
-          instance.requestDetailLaunching(instance.standardDoms[i].getAttribute("desid"));
+          instance.scheduleDetailLaunching(instance.standardDoms[i].getAttribute("desid"));
         });
         children = this.standardDoms[i].children;
         childrenLength = children.length;
@@ -3613,11 +3057,11 @@ DesignerJs.prototype.requestView = async function () {
       if (instance.pageHistory.length > 1) {
         if (getObj.mode === instance.pageHistory[1].path) {
           if (instance.pageHistory[1].status === "list") {
-            instance.requestDetailLaunching(instance.pageHistory[1].desid);
+            instance.scheduleDetailLaunching(instance.pageHistory[1].desid);
             instance.pageHistory.shift();
             instance.pageHistory.shift();
           } else {
-            instance.requestDetailLaunching(instance.pageHistory[1].desid);
+            instance.scheduleDetailLaunching(instance.pageHistory[1].desid);
             instance.pageHistory.shift();
             instance.pageHistory.shift();
           }
@@ -3630,12 +3074,12 @@ DesignerJs.prototype.requestView = async function () {
     this.project = null;
     this.client = null;
     this.requestBoxes = [];
-    this.requestDetailLaunching(this.desid, async () => {
+    this.scheduleDetailLaunching(this.desid, async () => {
       if (getObj.cliid !== undefined) {
         if (getObj.desid === undefined) {
           projects = await ajaxJson({ noFlat: true, whereQuery: { $and: [ { cliid: getObj.cliid }, { desid: { $regex: "^d" } } ] } }, "/getProjects");
           if (projects.length > 0) {
-            instance.requestDetailLaunching(projects[0].desid, () => {
+            instance.scheduleDetailLaunching(projects[0].desid, () => {
               for (let box of instance.requestBoxes) {
                 if (box.getAttribute("cliid") === getObj.cliid) {
                   box.click();

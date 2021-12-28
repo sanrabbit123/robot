@@ -3982,6 +3982,15 @@ DesignerJs.prototype.launching = async function () {
       document.getElementById("moveRightArea").style.display = "none";
       document.getElementById("moveLeftArea").style.display = "none";
 
+    } else if (getObj.mode === "schedule") {
+
+      await protoPatch(instance, `${modulePath}/schedule.js`);
+      document.getElementById("grayLeftOpenButton").remove();
+      await this.scheduleView();
+      this.addTransFormEvent();
+      document.getElementById("moveRightArea").style.display = "none";
+      document.getElementById("moveLeftArea").style.display = "none";
+
     } else {
 
       tempFunction = this.cardViewMaker(true);

@@ -2832,7 +2832,7 @@ DesignerJs.prototype.reportView = async function () {
     this.desid = (getObj.desid !== undefined) ? getObj.desid : this.standardDoms[1].getAttribute("desid");
     this.result = null;
     this.middleMode = middleMode;
-    this.modes = [ "checklist", "report", "request", "possible", "project" ];
+    this.modes = [ "checklist", "report", "request", "possible", "project", "schedule" ];
     this.mode = this.modes[1];
 
     motherHeight = <%% 154, 148, 148, 148, 148 %%>;

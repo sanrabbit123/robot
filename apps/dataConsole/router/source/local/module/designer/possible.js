@@ -3292,7 +3292,7 @@ DesignerJs.prototype.possibleView = async function () {
     this.designers = new Designers(designers);
     this.desid = (getObj.desid !== undefined) ? getObj.desid : this.standardDoms[this.standardDoms.length - 1].getAttribute("desid");
     this.middleMode = middleMode;
-    this.modes = [ "checklist", "report", "request", "possible", "project" ];
+    this.modes = [ "checklist", "report", "request", "possible", "project", "schedule" ];
     this.mode = this.modes[2];
     this.result = null;
     this.searchCondition = {
