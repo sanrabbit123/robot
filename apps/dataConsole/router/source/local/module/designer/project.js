@@ -309,6 +309,8 @@ DesignerJs.prototype.projectDetail = function (desid) {
       overflow: "scroll",
     }
   });
+  this.greenPannel = greenPannel;
+  GeneralJs.stacks.greenPannel = greenPannel;
 
   numbers = new Map();
   division = new Map();
@@ -518,6 +520,10 @@ DesignerJs.prototype.projectDetail = function (desid) {
           let whiteResult;
           let mobileNavigatorHeight;
 
+          if (instance.greenPannel !== undefined && instance.greenPannel !== null) {
+            instance.greenPannel.style.bottom = String(-1 * greenPannelHeight) + "px";
+          }
+
           whiteMargin = <%% 40, 40, 40, 40, 4 %%>;
           mobileNavigatorHeight = 60;
           cancelBack = createNode({
@@ -526,6 +532,9 @@ DesignerJs.prototype.projectDetail = function (desid) {
               click: function (e) {
                 document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
                 document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
+                if (instance.greenPannel !== undefined && instance.greenPannel !== null) {
+                  instance.greenPannel.style.bottom = String(greenPannelBottom) + "px";
+                }
               }
             },
             style: {
@@ -801,8 +810,8 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
       }
       descriptionMap.set(name, { description, checklist: checklistFactor, pannel });
     }
-
-    descriptionMaker = (action) => {
+    // action, proid, cliid, requestNumber, desid
+    descriptionMaker = (action, proid, cliid, requestNumber, desid) => {
       cleanChildren(textAreaMother);
       createNode({
         mother: textAreaMother,
@@ -1005,6 +1014,9 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
           event: (function (e) {
             document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
             document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
+            if (GeneralJs.stacks.greenPannel !== undefined && GeneralJs.stacks.greenPannel !== null) {
+              GeneralJs.stacks.greenPannel.style.bottom = String(40) + "px";
+            }
           }).toString().trim().replace(/^function[^\(]*\([^\)]*\)[^\{]*\{\n?/i, '').replace(/\n?[ ]*\}$/i, '').trim()
         });
       }
@@ -1026,9 +1038,28 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
           createNode({
             mother: pannelMother,
             class: [ "hoverDefault_lite" ],
+            attribute: {
+              requestNumber: String(requestNumber),
+              action, proid, cliid, desid
+            },
             event: {
               click: function (e) {
+                const proid = this.getAttribute("proid");
+                const cliid = this.getAttribute("cliid");
+                const desid = this.getAttribute("desid");
+                const action = this.getAttribute("action");
+                const requestNumber = Number(this.getAttribute("requestNumber"));
                 const func = new Function('e', eventFunction);
+
+                e.__data__ = {
+                  proid,
+                  cliid,
+                  desid,
+                  action,
+                  requestNumber,
+                  thisUrl: window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + desid,
+                };
+
                 func.call(this, e);
               }
             },
@@ -1160,7 +1191,9 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
           createNode({
             mother: area,
             attribute: {
-              action: arr[i]
+              action: arr[i],
+              requestNumber: String(requestNumber),
+              proid, cliid, desid
             },
             event: {
               click: function (e) {
@@ -1171,6 +1204,10 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
                 const focus = grandMother.getAttribute("focus");
                 const thisIndex = Number(grandMother.getAttribute("index"));
                 const action = this.getAttribute("action");
+                const proid = this.getAttribute("proid");
+                const cliid = this.getAttribute("cliid");
+                const requestNumber = Number(this.getAttribute("requestNumber"));
+                const desid = this.getAttribute("desid");
                 let focusArr, otherArrows;
 
                 if (focus === "on") {
@@ -1195,9 +1232,8 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
                     grandMother.setAttribute("focus", "on");
                     arrow.style.opacity = String(1);
                     arrow.setAttribute("focus", "on");
-                    descriptionMaker(action);
+                    descriptionMaker(action, proid, cliid, requestNumber, desid);
                   }
-
                 } else {
 
                   for (let barChild of barChildren) {
@@ -1218,7 +1254,7 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
                   grandMother.setAttribute("focus", "on");
                   arrow.style.opacity = String(1);
                   arrow.setAttribute("focus", "on");
-                  descriptionMaker(action);
+                  descriptionMaker(action, proid, cliid, requestNumber, desid);
                 }
 
               }
@@ -1320,7 +1356,7 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
       }
     });
 
-    descriptionMaker(action);
+    descriptionMaker(action, proid, cliid, requestNumber, desid);
 
   }
 
