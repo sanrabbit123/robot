@@ -2795,9 +2795,16 @@ GeneralJs.prototype.memberView = function () {
               click: async function (e) {
                 try {
                   const option = { alarm: true };
+                  const zIndex = 3;
+                  const px = "px";
                   let targetMembers;
                   let thisMemid;
                   let message;
+                  let cancelBack, whitePrompt;
+                  let width, height;
+
+                  width = 600;
+                  height = 200;
 
                   targetMembers = [];
                   for (let dom of tong) {
@@ -2807,11 +2814,39 @@ GeneralJs.prototype.memberView = function () {
                   }
 
                   thisMemid = instance.member.id;
+
+                  cancelBack = createNode({
+                    mother: document.body,
+                    style: {
+                      position: "fixed",
+                      top: String(0),
+                      left: String(0),
+                      width: String(100) + '%',
+                      height: String(99) + "vh",
+                      background: "aqua",
+                      zIndex: String(zIndex),
+                    }
+                  });
+
+                  whitePrompt = createNode({
+                    mother: document.body,
+                    style: {
+                      position: "fixed",
+                      width: String(width) + px,
+                      height: String(height) + px,
+                      left: withOut(50, width / 2, px),
+                      top: "calc(50vh - " + String(height / 2) + px + ")",
+                      background: colorChip.white,
+                      zIndex: String(zIndex),
+                    }
+                  })
+
                   message = await GeneralJs.prompt("알람 문구를 적어주세요!");
 
-                  if (typeof message === "string") {
-                    await sendMessage(thisMemid, targetMembers, message, option);
-                  }
+                  // if (typeof message === "string") {
+                  //   await sendMessage(thisMemid, targetMembers, message, option);
+                  // }
+
                 } catch (e) {
                   console.log(e);
                 }
