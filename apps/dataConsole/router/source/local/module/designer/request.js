@@ -1597,6 +1597,13 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
     siteImages = clientPhoto.sitePhoto;
     preferImages = clientPhoto.preferredPhoto;
 
+    siteImages.sort((a, b) => {
+      return a.split("/")[a.split("/").length - 1] < b.split("/")[b.split("/").length - 1] ? 1 : -1;
+    });
+    preferImages.sort((a, b) => {
+      return a.split("/")[a.split("/").length - 1] < b.split("/")[b.split("/").length - 1] ? 1 : -1;
+    });
+
     sum = 0;
     for (let i of widthRatio) {
       sum += i;

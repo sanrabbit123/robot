@@ -96,7 +96,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, findByAttribute, uniqueValue, swipePatch } = GeneralJs;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, findByAttribute, uniqueValue, swipePatch, scrollTo } = GeneralJs;
   const { totalMother, ea, grayBarWidth, belowHeight, projectMap, middleMode } = this;
   const mobile = this.media[4];
   const desktop = !mobile;
@@ -147,6 +147,16 @@ DesignerJs.prototype.projectDetail = function (desid) {
   let requestNumber;
   let grayBarWidthMinus;
   let numbers;
+  let greenPannel;
+  let greenPannelBottom, greenPannelRight, greenPannelVisual;
+  let greenPannelHeight, greenPannelZIndex;
+  let greenPannelPaddingLeft, greenPannelPaddingTop;
+  let greenPannelCard;
+  let greenPannelCardPaddingLeft;
+  let greenPannelCardHeight;
+  let greenPannelCardInnerMargin;
+  let greenPannelCardSize, greenPannelCardWeight;
+  let greenPannelCardVisual;
 
   designer = this.designers.pick(desid);
   divisionEntireMap = projectMap.action.itemMap;
@@ -205,6 +215,23 @@ DesignerJs.prototype.projectDetail = function (desid) {
   intend = <%% 16, 16, 16, 16, 4 %%>;
   between = <%% 8, 8, 8, 8, 1 %%>;
 
+  greenPannelBottom = 40;
+  greenPannelRight = 40;
+  greenPannelVisual = 2;
+  greenPannelHeight = 95;
+  greenPannelZIndex = 3;
+
+  greenPannelPaddingLeft = 12;
+  greenPannelPaddingTop = 12;
+
+  greenPannelCardPaddingLeft = 20;
+  greenPannelCardHeight = 33;
+  greenPannelCardInnerMargin = 5;
+
+  greenPannelCardSize = 14;
+  greenPannelCardWeight = 500;
+  greenPannelCardVisual = -2;
+
   grayBarWidthMinus = this.grayBarWidth;
   cards = designer.projects;
 
@@ -257,6 +284,28 @@ DesignerJs.prototype.projectDetail = function (desid) {
       marginBottom: String(baseTongMarginBottom) + ea,
       paddingTop: String(innerPaddingTop) + ea,
       paddingBottom: String(baseTongPaddingBottom) + ea,
+    }
+  });
+
+  greenPannel = createNode({
+    mother: baseTong0,
+    style: {
+      position: "fixed",
+      bottom: String(greenPannelBottom) + ea,
+      right: String(greenPannelRight) + ea,
+      width: withOut(grayBarWidth + (greenPannelRight * 2) + (greenPannelVisual) + (greenPannelPaddingLeft * 2), ea),
+      height: String(greenPannelHeight - (greenPannelPaddingTop * 2)) + ea,
+      background: colorChip.gradientGreen3,
+      zIndex: String(greenPannelZIndex),
+      borderRadius: String(5) + "px",
+      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      opacity: String(0),
+      animation: "fadeup 0.5s ease 0.7s forwards",
+      paddingTop: String(greenPannelPaddingTop) + ea,
+      paddingBottom: String(greenPannelPaddingTop) + ea,
+      paddingLeft: String(greenPannelPaddingLeft) + ea,
+      paddingRight: String(greenPannelPaddingLeft) + ea,
+      overflow: "scroll",
     }
   });
 
@@ -561,7 +610,6 @@ DesignerJs.prototype.projectDetail = function (desid) {
         cursor: "pointer",
       }
     });
-
     idWord = createNode({
       mother: whiteCard,
       text: obj.proid,
@@ -575,6 +623,46 @@ DesignerJs.prototype.projectDetail = function (desid) {
         color: colorChip.green,
         cursor: "pointer",
       }
+    });
+
+    greenPannelCard = createNode({
+      mother: greenPannel,
+      attribute: {
+        proid: obj.proid
+      },
+      event: {
+        click: function (e) {
+          const proid = this.getAttribute("proid");
+          const target = findByAttribute(instance.whiteCards, "proid", proid);
+          scrollTo(document.querySelector(".mainBaseTong").parentElement, target, 50);
+        }
+      },
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        background: colorChip.white,
+        paddingLeft: String(greenPannelCardPaddingLeft) + ea,
+        paddingRight: String(greenPannelCardPaddingLeft) + ea,
+        height: String(greenPannelCardHeight) + ea,
+        marginRight: String(greenPannelCardInnerMargin) + ea,
+        marginBottom: String(greenPannelCardInnerMargin) + ea,
+        borderRadius: String(5) + "px",
+        justifyContent: "center",
+        alignItems: "center",
+        cursor: "pointer",
+      },
+      children: [
+        {
+          text: obj.name,
+          style: {
+            fontSize: String(greenPannelCardSize) + ea,
+            fontWeight: String(greenPannelCardWeight),
+            color: colorChip.green,
+            position: "relative",
+            top: String(greenPannelCardVisual) + ea,
+          }
+        }
+      ]
     });
 
     this.whiteCards.push(whiteCard);

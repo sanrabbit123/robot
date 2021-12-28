@@ -4543,6 +4543,9 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             num = 0;
             num2 = 0;
             tempArr = [];
+            images.sort((a, b) => {
+              return a.split("/")[a.split("/").length - 1] < b.split("/")[b.split("/").length - 1] ? 1 : -1;
+            });
             for (let image of images) {
               tempImage = createNode({
                 mother: scrollTong,
