@@ -1151,19 +1151,19 @@ Ghost.prototype.ghostRouter = function (needs) {
   funcObj.get_slackSync = {
     link: [ "/slackSync" ],
     func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
       try {
         instance.slackToMongo(MONGOLOCALC).catch((err) => {
           errorLog("slackToMongo error : " + err.message).catch((e) => { console.log(e); });
         });
-        res.set({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": '*',
-          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-          "Access-Control-Allow-Headers": '*',
-        });
         res.send(JSON.stringify({ message: "hello?" }));
       } catch (e) {
-        console.log(e);
+        res.send(JSON.stringify({ message: "error : " + e.message }));
       }
     }
   };
