@@ -176,8 +176,8 @@ DesignerJs.prototype.projectDetail = function (desid) {
   titleHeight = <%% 62, 58, 56, 52, 10.5 %%>;
 
   areaPaddingTop = <%% (isMac() ? 48 : 47), (isMac() ? 48 : 47), (isMac() ? 46 : 45), (isMac() ? 44 : 43), 7.5 %%>;
-  areaPaddingLeft = <%% 15, 15, 15, 15, 0 %%>;
-  areaPaddingBottom = <%% 15, 15, 15, 15, 0 %%>;
+  areaPaddingLeft = 0;
+  areaPaddingBottom = 0;
 
   areaTitleTop = <%% (isMac() ? 13 : 15), (isMac() ? 13 : 15), (isMac() ? 13 : 15), (isMac() ? 13 : 15), 1.7 %%>;
   areaTitleLeft = <%% 20, 20, 20, 20, 3 %%>;

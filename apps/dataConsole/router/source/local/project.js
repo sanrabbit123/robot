@@ -2425,8 +2425,8 @@ ProjectJs.prototype.makeBoard = function (cases) {
   between = 8;
   tongMarginTop = margin * 1.6;
   tongPaddingTop = (margin * 1.5) + 35;
-  tongPaddingBottom = margin * 1.5;
-  tongPaddingRight = margin * 1.5;
+  tongPaddingBottom = 0;
+  tongPaddingRight = 0;
   tongMargin = margin * 1.5;
 
   totalTitleSize = 17;
@@ -2713,7 +2713,8 @@ ProjectJs.prototype.makeBoard = function (cases) {
           minHeight: String(fixedHeightSize + margin) + ea,
           background: GeneralJs.colorChip.gray1,
           height: withOut(margin, ea),
-          borderRadius: String(5) + "px",
+          borderBottomRightRadius: String(5) + "px",
+          borderBottomLeftRadius: String(5) + "px",
         }
       });
 
@@ -8361,7 +8362,7 @@ ProjectJs.prototype.sseCardParsing = function (raw) {
   margin = 10;
   fixedHeightSize = 40;
   tongPaddingTop = (margin * 1.5) + 35;
-  tongPaddingBottom = margin * 1.5;
+  tongPaddingBottom = 0;
 
   if (document.querySelector(".totalFather") !== null) {
     if (this.divisionMap !== null) {
