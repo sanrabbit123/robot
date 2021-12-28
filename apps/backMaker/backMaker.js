@@ -3373,6 +3373,28 @@ BackMaker.prototype.createHistory = async function (method, updateQuery, option 
             },
           }
         },
+        schedule: {
+          analytics: {
+            make: [],
+            page: [],
+            update: [],
+            send: [],
+          },
+          progress: {
+            start: new Date(1800, 0, 1),
+            complete: new Date(1800, 0, 1),
+            send: new Date(1800, 0, 1),
+          },
+          contents: {
+            title: "",
+            description: "",
+          },
+          date: {
+            start: new Date(1800, 0, 1),
+            end: new Date(1800, 0, 1),
+          },
+          children: []
+        },
         manager: projectManager
       };
     } else if (/contents/gi.test(method)) {

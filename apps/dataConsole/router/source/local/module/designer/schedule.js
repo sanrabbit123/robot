@@ -8,9 +8,9 @@ DesignerJs.prototype.scheduleDetailLaunching = function (desid, callback = null)
   let loading;
 
   if (!middleMode) {
-    this.pageHistory.unshift({ path: "request", status: "list", desid });
+    this.pageHistory.unshift({ path: "schedule", status: "list", desid });
   }
-  window.history.pushState({ path: "request", status: "list", desid }, '');
+  window.history.pushState({ path: "schedule", status: "list", desid }, '');
 
   pastScrollTop = totalMother.scrollTop;
   this.desid = desid;
@@ -58,7 +58,7 @@ DesignerJs.prototype.scheduleDetailLaunching = function (desid, callback = null)
 
   if (middleMode) {
     ajaxJson({
-      page: "request",
+      page: "schedule",
       mode: "page",
       who: instance.designer.information.phone,
       desid,
@@ -918,8 +918,8 @@ DesignerJs.prototype.scheduleDocument = function (mother, index, designer, proje
               });
             }
 
-            instance.pageHistory.unshift({ path: "request", status: "card", desid, cliid });
-            window.history.pushState({ path: "request", status: "list", desid }, '');
+            instance.pageHistory.unshift({ path: "schedule", status: "card", desid, cliid });
+            window.history.pushState({ path: "schedule", status: "list", desid }, '');
 
           } catch (e) {
             console.log(e);
@@ -2898,7 +2898,7 @@ DesignerJs.prototype.scheduleIconSet = function (desid) {
           }
         }, "/alimTalk").then(() => {
           return GeneralJs.ajaxJson({
-            page: "request",
+            page: "schedule",
             mode: "send",
             who: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
             desid: designer.desid,
@@ -2928,7 +2928,7 @@ DesignerJs.prototype.scheduleIconSet = function (desid) {
           }
         }, "/alimTalk").then(() => {
           return GeneralJs.ajaxJson({
-            page: "request",
+            page: "schedule",
             mode: "send",
             who: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
             desid: designer.desid,
