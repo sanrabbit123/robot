@@ -571,7 +571,7 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
         {
           mother: -1,
           mode: "textarea",
-          text: detail.replace(/\<br\>/gi, "\n"),
+          text: aspirant.information.career.detail.replace(/\<br\>/gi, "\n"),
           events: [
             {
               type: "click",
@@ -592,6 +592,7 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
                     const cookies = GeneralJs.getCookiesAll();
 
                     (mother.querySelectorAll('b'))[0].textContent = value.trim().split("\n")[0].slice(0, 40);
+                    aspirant.information.career.detail = value.trim();
                     await GeneralJs.ajaxJson({
                       whereQuery: { aspid: aspirant.aspid },
                       updateQuery: { "information.career.detail": value.trim() }
