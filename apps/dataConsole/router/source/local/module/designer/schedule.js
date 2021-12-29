@@ -6,6 +6,7 @@ DesignerJs.prototype.scheduleDetailLaunching = function (desid, callback = null)
   const { scrollTo, ajaxJson, colorChip } = GeneralJs;
   let target, pastScrollTop;
   let loading;
+  let projects;
 
   if (!middleMode) {
     this.pageHistory.unshift({ path: "schedule", status: "list", desid });
@@ -73,10 +74,16 @@ DesignerJs.prototype.scheduleDetailLaunching = function (desid, callback = null)
   this.mother.loadingRun().then((dom) => {
     loading = dom;
     return ajaxJson({ noFlat: true, whereQuery: { desid } }, "/getProjects", { equal: true });
-  }).then((projects) => {
+  }).then((raw) => {
+    projects = raw;
+    return ajaxJson({ method: "project", idArr: projects.map((obj) => { return obj.proid }) }, "/getHistoryTotal", { equal: true });
+  }).then((histories) => {
     if (projects.length === 0) {
       return [];
     } else {
+      for (let project of projects) {
+        project.history = histories[project.proid];
+      }
       instance.designers.setProjects(projects);
       return ajaxJson({
         noFlat: true,
@@ -109,7 +116,7 @@ DesignerJs.prototype.scheduleReturnStatic = function (designer, project, client,
   const proid = project.proid;
   const cliid = project.cliid;
 
-  const title = "홈스타일링 의뢰서";
+  const title = client.name + "님 상세 일정표";
   const initialContents = "안녕하세요, <b%" + designer.designer + "%b> 실장님!\n홈리에종에 의뢰하신 " + client.name +  " 고객님 관련 정보를 보내드립니다. <b%" + GeneralJs.serviceParsing(project.service) + "%b>를 진행합니다.";
   const emptyReload = (originalArr, reloadArr) => {
     if (originalArr.map((a) => { return a.trim(); }).filter((a) => { return a !== ""; }).length > 0) {
@@ -443,8 +450,26 @@ DesignerJs.prototype.scheduleList = function (desid) {
   }
   const instance = this;
   const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, getCookiesAll, dateToString } = GeneralJs;
-  const { totalMother, ea, grayBarWidth } = this;
+  const { totalMother, ea, grayBarWidth, belowHeight } = this;
   const cookies = getCookiesAll();
+  const statusColors = [
+    {
+      color: colorChip.gray3,
+      name: "미작성"
+    },
+    {
+      color: colorChip.red,
+      name: "작성중"
+    },
+    {
+      color: colorChip.purple,
+      name: "작성 완료"
+    },
+    {
+      color: colorChip.green,
+      name: "전송 완료"
+    },
+  ]
   const mobile = this.media[4];
   const desktop = !mobile;
   let designer;
@@ -483,6 +508,20 @@ DesignerJs.prototype.scheduleList = function (desid) {
   let mobileOuterMargin;
   let borderRadius;
   let secondFont;
+  let statusNumber;
+  let colorInfo;
+  let colorInfoIndent;
+  let colorInfoPaddingLeft;
+  let colorInfoPaddingTop;
+  let colorInfoPaddingBottom;
+  let colorBlockHeight;
+  let colorMarkWidth;
+  let colorMarkHeight;
+  let colorMarkBetween;
+  let colorBlockSize;
+  let colorBlockWeight;
+  let colorBlockTextTop;
+  let colorBlockIndex;
 
   designer = this.designers.pick(desid);
   projects = designer.projects;
@@ -528,6 +567,22 @@ DesignerJs.prototype.scheduleList = function (desid) {
 
   borderRadius = <%% 10, 10, 10, 10, 8 %%>;
 
+  colorInfoIndent = 35;
+  colorBlockHeight = 24;
+
+  colorInfoPaddingLeft = 17;
+  colorInfoPaddingTop = 11;
+  colorInfoPaddingBottom = 12;
+
+  colorMarkWidth = 32;
+  colorMarkHeight = 10;
+  colorMarkBetween = 7;
+
+  colorBlockSize = 13;
+  colorBlockWeight = 500;
+
+  colorBlockTextTop = -1;
+
   if (mobile) {
     totalMother.style.background = colorChip.gray2;
   }
@@ -568,6 +623,17 @@ DesignerJs.prototype.scheduleList = function (desid) {
   boxNumberArr = [];
   for (let i = 0; i < maxBoxNumber; i++) {
 
+    statusNumber = 0;
+    if (projects[i].history.schedule.progress.start.valueOf() > (new Date(2000, 0, 1)).valueOf()) {
+      statusNumber = 1;
+    }
+    if (projects[i].history.schedule.progress.complete.valueOf() > (new Date(2000, 0, 1)).valueOf()) {
+      statusNumber = 2;
+    }
+    if (projects[i].history.schedule.progress.send.valueOf() > (new Date(2000, 0, 1)).valueOf()) {
+      statusNumber = 3;
+    }
+
     if (/없음/gi.test(dateToString(projects[i].process.contract.form.date.from)) || /예정/gi.test(dateToString(projects[i].process.contract.form.date.from))) {
       dateString = "00.00.00";
     } else {
@@ -587,8 +653,9 @@ DesignerJs.prototype.scheduleList = function (desid) {
           }
         },
         mouseleave: function (e) {
+          const statusNumber = Number(this.getAttribute("status"));
           if (desktop) {
-            this.children[0].style.background = colorChip.gray3;
+            this.children[0].style.background = statusColors[statusNumber].color;
             this.children[1].firstChild.style.color = colorChip.black;
             this.style.transform = "translateY(0px)";
           }
@@ -597,6 +664,7 @@ DesignerJs.prototype.scheduleList = function (desid) {
       attribute: [
         { cliid: projects[i].cliid },
         { proid: projects[i].proid },
+        { status: String(statusNumber) },
       ],
       style: {
         position: "relative",
@@ -625,7 +693,7 @@ DesignerJs.prototype.scheduleList = function (desid) {
             width: String(100) + '%',
             left: String(0),
             height: String(desktop ? borderRadius : 2) + ea,
-            background: colorChip.gray3,
+            background: statusColors[statusNumber].color,
             borderTopRightRadius: String(borderRadius / 2) + "px",
             borderTopLeftRadius: String(borderRadius / 2) + "px",
           }
@@ -699,6 +767,150 @@ DesignerJs.prototype.scheduleList = function (desid) {
     }
   }
 
+  colorInfo = createNode({
+    mother: baseTong,
+    style: {
+      position: "fixed",
+      background: colorChip.white,
+      bottom: String(belowHeight + colorInfoIndent) + ea,
+      right: String(colorInfoIndent) + ea,
+      boxShadow: "0px 4px 18px -9px " + colorChip.shadow,
+      borderRadius: String(5) + "px",
+      opacity: String(0),
+      animation: "fadeuplite 0.5s ease 0.3s forwards",
+      paddingTop: String(colorInfoPaddingTop) + ea,
+      paddingBottom: String(colorInfoPaddingBottom) + ea,
+
+    }
+  });
+
+  createNode({
+    mother: colorInfo,
+    attribute: {
+      index: String(-1),
+    },
+    style: {
+      display: "flex",
+      flexDirection: "row",
+      width: String(100) + '%',
+      height: String(colorBlockHeight) + ea,
+      alignItems: "center",
+    },
+    children: [
+      {
+        style: {
+          marginLeft: String(colorInfoPaddingLeft) + ea,
+          marginRight: String(colorMarkBetween) + ea,
+          display: "inline-block",
+          width: String(colorMarkWidth) + ea,
+          height: String(colorMarkHeight) + ea,
+          background: colorChip.black,
+          borderRadius: String(1) + "px",
+        }
+      },
+      {
+        text: "전체",
+        attribute: {
+          index: String(-1),
+        },
+        event: {
+          click: function (e) {
+            let num;
+
+            num = 0;
+            for (let box of instance.requestBoxes) {
+              if (num % boxNumber === 0) {
+                box.style.marginLeft = String(boxMargin * 1.5) + ea;
+              } else {
+                box.style.marginLeft = String(0) + ea;
+              }
+              box.style.display = "inline-block";
+              num++;
+            }
+          }
+        },
+        class: [ "hoverDefault_lite" ],
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(colorBlockTextTop) + ea,
+          fontSize: String(colorBlockSize) + ea,
+          fontWeight: String(colorBlockWeight),
+          color: colorChip.black,
+          marginRight: String(colorInfoPaddingLeft) + ea,
+        }
+      }
+    ]
+  });
+
+  colorBlockIndex = 0;
+  for (let { color, name } of statusColors) {
+    createNode({
+      mother: colorInfo,
+      attribute: {
+        index: String(colorBlockIndex),
+      },
+      style: {
+        display: "flex",
+        flexDirection: "row",
+        width: String(100) + '%',
+        height: String(colorBlockHeight) + ea,
+        alignItems: "center",
+      },
+      children: [
+        {
+          style: {
+            marginLeft: String(colorInfoPaddingLeft) + ea,
+            marginRight: String(colorMarkBetween) + ea,
+            display: "inline-block",
+            width: String(colorMarkWidth) + ea,
+            height: String(colorMarkHeight) + ea,
+            background: color,
+            borderRadius: String(1) + "px",
+          }
+        },
+        {
+          text: name,
+          attribute: {
+            index: String(colorBlockIndex),
+          },
+          event: {
+            click: function (e) {
+              const statusIndex = Number(this.getAttribute("index"));
+              let num;
+
+              num = 0;
+              for (let box of instance.requestBoxes) {
+                if (Number(box.getAttribute("status")) === statusIndex) {
+                  if (num % boxNumber === 0) {
+                    box.style.marginLeft = String(boxMargin * 1.5) + ea;
+                  } else {
+                    box.style.marginLeft = String(0) + ea;
+                  }
+                  box.style.display = "inline-block";
+                  num++;
+                } else {
+                  box.style.display = "none";
+                }
+              }
+            }
+          },
+          class: [ "hoverDefault_lite" ],
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(colorBlockTextTop) + ea,
+            fontSize: String(colorBlockSize) + ea,
+            fontWeight: String(colorBlockWeight),
+            color: colorChip.black,
+            marginRight: String(colorInfoPaddingLeft) + ea,
+          }
+        }
+      ]
+    });
+    colorBlockIndex++;
+  }
+
   this.mainBaseTong = baseTong0;
 }
 
@@ -717,14 +929,6 @@ DesignerJs.prototype.scheduleDocument = function (mother, index, designer, proje
   this.client = null;
   return async function (e) {
     try {
-      if (instance.middleMode) {
-        const designerHistory = await ajaxJson({ method: "designer", idArr: [ desid ], rawMode: true }, "/getHistoryTotal", { equal: true });
-        if (!designerHistory[desid].request.analytics.send.some((obj) => { return obj.cliid === cliid })) {
-          window.alert("의뢰서가 발송된 기록이 없습니다! 홈리에종에 문의해주세요!");
-          return;
-        }
-      }
-
       const [ client ] = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getClients", { equal: true });
       let clientHistory, projectHistory;
       let thisBlock, motherTop;

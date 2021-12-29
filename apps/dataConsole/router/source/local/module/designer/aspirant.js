@@ -7,6 +7,7 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
   const { aspid, designer, phone, email, address, portfolio, meeting: { date, status }, information, submit } = aspirant;
   const { firstRequest: { date: request }, comeFrom } = submit;
   const { career, company, channel: { web, sns, cloud } } = information;
+  const { detail } = career;
   const { businessNumber, classification, name, representative } = company;
   const zeroAddition = (num) => { return (num < 10) ? `0${String(num)}` : String(num); }
   const textMaker = (title, value, color, column) => {
@@ -74,12 +75,6 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
         values: [],
         chain: null
       },
-      email: {
-        title: "이메일",
-        position: "email",
-        values: [],
-        chain: null
-      },
       status: {
         title: "미팅 상태",
         position: "meeting.status",
@@ -115,7 +110,13 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
         position: "submit.comeFrom",
         values: [],
         chain: null
-      }
+      },
+      detail: {
+        title: "메모 및 경력",
+        position: "information.career.detail",
+        values: [],
+        chain: null
+      },
     };
 
     calendarEvent = function (thisCase) {
@@ -158,13 +159,6 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
     });
 
     stringArr.push(textMaker(map["phone"].title, phone, "black", "phone"));
-    updateArr.push(function (e, option, cancelBox, parent) {
-      const mother = this;
-      cancelBox.parentNode.removeChild(cancelBox);
-      resetWidthEvent();
-    });
-
-    stringArr.push(textMaker(map["email"].title, email, "black", "email"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       cancelBox.parentNode.removeChild(cancelBox);
@@ -521,12 +515,120 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
       resetWidthEvent();
     });
 
-    stringArr.push(textMaker(map["address"].title, address, "black", "address"));
+    stringArr.push(textMaker(map["address"].title, address.slice(0, 25), "black", "address"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       cancelBox.parentNode.removeChild(cancelBox);
       resetWidthEvent();
     });
+
+    stringArr.push(textMaker(map["detail"].title, detail.trim().split("\n")[0].slice(0, 40), "black", "detail"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "status";
+      let startLeft, width, margin, background;
+      let values, updateEvent;
+      let whereQuery, updateQuery, chainQuery;
+      let historyHeight;
+      let historyMargin;
+
+      updateQuery = {};
+      whereQuery = { aspid: aspirant.aspid };
+      startLeft = -20;
+      width = 560;
+      historyHeight = 400;
+      margin = 4;
+      historyMargin = 15;
+
+      this.style.overflow = "visible";
+
+      background = colorChip.white;
+
+      createNodes([
+        {
+          mother: this,
+          mode: "aside",
+          events: [
+            {
+              type: "click",
+              event: function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+              }
+            }
+          ],
+          style: {
+            position: "absolute",
+            top: String(top + 1) + ea,
+            left: String(startLeft) + ea,
+            width: String(width) + ea,
+            height: String(historyHeight) + ea,
+            background: colorChip.white,
+            zIndex, boxShadow, borderRadius, animation,
+          }
+        },
+        {
+          mother: -1,
+          mode: "textarea",
+          text: detail.replace(/\<br\>/gi, "\n"),
+          events: [
+            {
+              type: "click",
+              event: function (e) {
+                e.stopPropagation();
+              }
+            },
+            {
+              type: "keydown",
+              event: async function (e) {
+                try {
+                  if (e.key === "Tab") {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const removeTargets = mother.querySelectorAll("aside");
+                    const value = this.value;
+                    const cookies = GeneralJs.getCookiesAll();
+
+                    (mother.querySelectorAll('b'))[0].textContent = value.trim().split("\n")[0].slice(0, 40);
+                    await GeneralJs.ajaxJson({
+                      whereQuery: { aspid: aspirant.aspid },
+                      updateQuery: { "information.career.detail": value.trim() }
+                    }, "/rawUpdateAspirant");
+
+                    for (let dom of removeTargets) {
+                      mother.removeChild(dom);
+                    }
+
+                    resetWidthEvent();
+                  }
+                } catch (e) {
+                  console.log(e);
+                }
+              }
+            }
+          ],
+          style: {
+            position: "absolute",
+            top: String(historyMargin) + ea,
+            left: String(historyMargin + 3) + ea,
+            width: withOut(100, (historyMargin + 3) * 2, ea),
+            height: withOut(100, historyMargin * 2, ea),
+            fontSize: String(size) + ea,
+            fontWeight: String(400),
+            background: colorChip.white,
+            lineHeight: String(1.7),
+            color: colorChip.black,
+            border: String(0),
+            outline: String(0),
+          }
+        }
+      ]);
+
+    });
+
+
 
   } else if (this.type === "portfolio") {
 

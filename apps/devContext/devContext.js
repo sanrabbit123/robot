@@ -95,7 +95,186 @@ DevContext.prototype.launching = async function () {
     // });
 
 
-    // console.log(await requestSystem("https://home-liaison.serveftp.com/officeMonitor/status"))
+
+    /*
+
+    const scheduleDummyDataPatch = async () => {
+      let dummy, dummyCopied;
+      let whereQuery, updateQuery;
+
+      dummy = {
+        analytics: {
+          make: [],
+          page: [],
+          update: [],
+          send: [],
+        },
+        progress: {
+          start: new Date(),
+          complete: new Date(1800, 0, 1),
+          send: new Date(1800, 0, 1),
+        },
+        contents: {
+          title: "배창규 고객님 상세 일정표",
+          description: "",
+        },
+        date: {
+          start: new Date(),
+          end: new Date(2022, 0, 20),
+        },
+        children: [
+          {
+            contents: {
+              title: "상세 일정 1",
+              description: "상세 일정 1의 설명 내용",
+            },
+            date: {
+              start: new Date(2022, 0, 1),
+              end: new Date(2022, 0, 6),
+            },
+          },
+          {
+            contents: {
+              title: "상세 일정 2",
+              description: "상세 일정 2의 설명 내용",
+            },
+            date: {
+              start: new Date(2022, 0, 7),
+              end: new Date(2022, 0, 13),
+            },
+          },
+          {
+            contents: {
+              title: "상세 일정 3",
+              description: "상세 일정 3의 설명 내용",
+            },
+            date: {
+              start: new Date(2022, 0, 14),
+              end: new Date(2022, 0, 20),
+            },
+          },
+          {
+            contents: {
+              title: "상세 일정 4",
+              description: "상세 일정 4의 설명 내용",
+            },
+            date: {
+              start: new Date(2022, 0, 21),
+              end: new Date(2022, 0, 28),
+            },
+          },
+          {
+            contents: {
+              title: "상세 일정 5",
+              description: "상세 일정 5의 설명 내용",
+            },
+            date: {
+              start: new Date(2022, 1, 1),
+              end: new Date(2022, 1, 6),
+            },
+          },
+          {
+            contents: {
+              title: "상세 일정 6",
+              description: "상세 일정 6의 설명 내용",
+            },
+            date: {
+              start: new Date(2022, 1, 7),
+              end: new Date(2022, 1, 13),
+            },
+          },
+          {
+            contents: {
+              title: "상세 일정 7",
+              description: "상세 일정 7의 설명 내용",
+            },
+            date: {
+              start: new Date(2022, 1, 14),
+              end: new Date(2022, 1, 20),
+            },
+          },
+          {
+            contents: {
+              title: "상세 일정 8",
+              description: "상세 일정 8의 설명 내용",
+            },
+            date: {
+              start: new Date(2022, 1, 21),
+              end: new Date(2022, 1, 28),
+            },
+          },
+          {
+            contents: {
+              title: "상세 일정 9",
+              description: "상세 일정 9의 설명 내용",
+            },
+            date: {
+              start: new Date(2022, 2, 1),
+              end: new Date(2022, 2, 6),
+            },
+          },
+          {
+            contents: {
+              title: "상세 일정 10",
+              description: "상세 일정 10의 설명 내용",
+            },
+            date: {
+              start: new Date(2022, 2, 7),
+              end: new Date(2022, 2, 13),
+            },
+          },
+        ]
+      };
+
+      await instance.MONGOCONSOLEC.connect();
+
+      whereQuery = { proid: "p1801_aa01s" }
+      dummyCopied = equalJson(JSON.stringify(dummy));
+      updateQuery = {};
+      updateQuery["schedule"] = dummyCopied;
+      console.log(whereQuery, updateQuery);
+      await instance.MONGOCONSOLEC.db(`miro81`).collection(`projectHistory`).updateOne(whereQuery, { $set: updateQuery });
+
+      whereQuery = { proid: "p1801_aa02s" }
+      dummyCopied = equalJson(JSON.stringify(dummy));
+      dummyCopied.progress.complete = new Date(2021, 11, 30);
+      dummyCopied.contents.title = "리에종 고객님 상세 일정표";
+      updateQuery = {};
+      updateQuery["schedule"] = dummyCopied;
+      console.log(whereQuery, updateQuery);
+      await instance.MONGOCONSOLEC.db(`miro81`).collection(`projectHistory`).updateOne(whereQuery, { $set: updateQuery });
+
+      whereQuery = { proid: "p1902_aa01s" }
+      dummyCopied = equalJson(JSON.stringify(dummy));
+      dummyCopied.progress.complete = new Date(2021, 11, 30);
+      dummyCopied.progress.send = new Date(2021, 11, 31);
+      dummyCopied.contents.title = "임경원 고객님 상세 일정표";
+      updateQuery = {};
+      updateQuery["schedule"] = dummyCopied;
+      console.log(whereQuery, updateQuery);
+      await instance.MONGOCONSOLEC.db(`miro81`).collection(`projectHistory`).updateOne(whereQuery, { $set: updateQuery });
+
+      await instance.MONGOCONSOLEC.close();
+    }
+    await scheduleDummyDataPatch();
+
+    */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1563,9 +1742,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "오두경",
-    //     designer: "김윤진",
-    //     link: "https://drive.google.com/drive/folders/17JkzdbrLSl3BYDBaOnF27bBzyx90FsiE",
+    //     client: "이재우",
+    //     designer: "호지희",
+    //     link: "https://drive.google.com/drive/folders/19bh0HivGuJmjZ6H2qLfGBdoCoOiQXQ1c",
     //     pay: true
     //   },
     // ]);
@@ -1586,7 +1765,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p150");
+    // await this.getCorePortfolio("p151");
 
 
     // aspirant to designer
@@ -1642,8 +1821,8 @@ DevContext.prototype.launching = async function () {
     // send sms
     // const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
     // const human = new HumanPacket();
-    // const name = "배창규";
-    // const amount = 1800000;
+    // const name = "강혜진";
+    // const amount = 330000;
     // await human.sendSms({
     //   name: "",
     //   phone: "01021993403",

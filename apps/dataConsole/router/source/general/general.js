@@ -2802,6 +2802,9 @@ GeneralJs.prototype.memberView = function () {
                   let message;
                   let cancelBack, whitePrompt;
                   let width, height;
+                  let greenBarHeight;
+
+                  greenBarHeight = document.getElementById("greenBar") !== null ? Number(document.getElementById("greenBar").style.height.replace(/[^0-9\.\-]/gi, '')) : 0;
 
                   width = 600;
                   height = 200;
@@ -2817,31 +2820,52 @@ GeneralJs.prototype.memberView = function () {
 
                   cancelBack = createNode({
                     mother: document.body,
+                    event: {
+                      click: (e) => { e.stopPropagation(); },
+                      contextmenu: (e) => { e.stopPropagation(); },
+                      dblclick: (e) => { e.stopPropagation(); },
+                      drop: (e) => { e.stopPropagation(); },
+                      keyup: (e) => { e.stopPropagation(); },
+                      keydown: (e) => { e.stopPropagation(); },
+                      keypress: (e) => { e.stopPropagation(); },
+                    },
                     style: {
                       position: "fixed",
                       top: String(0),
                       left: String(0),
                       width: String(100) + '%',
                       height: String(99) + "vh",
-                      background: "aqua",
+                      background: "transparent",
                       zIndex: String(zIndex),
                     }
                   });
 
                   whitePrompt = createNode({
                     mother: document.body,
+                    event: {
+                      click: (e) => { e.stopPropagation(); },
+                      contextmenu: (e) => { e.stopPropagation(); },
+                      dblclick: (e) => { e.stopPropagation(); },
+                      drop: (e) => { e.stopPropagation(); },
+                      keyup: (e) => { e.stopPropagation(); },
+                      keydown: (e) => { e.stopPropagation(); },
+                      keypress: (e) => { e.stopPropagation(); },
+                    },
                     style: {
                       position: "fixed",
                       width: String(width) + px,
                       height: String(height) + px,
                       left: withOut(50, width / 2, px),
-                      top: "calc(50vh - " + String(height / 2) + px + ")",
+                      top: "calc(calc(50vh - " + String(greenBarHeight) + ea + ") - " + String(height / 2) + px + ")",
                       background: colorChip.white,
+                      borderRadius: String(5) + "px",
+                      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                      animation: "fadeuplite 0.4s ease forwards",
                       zIndex: String(zIndex),
                     }
-                  })
+                  });
 
-                  message = await GeneralJs.prompt("알람 문구를 적어주세요!");
+                  // message = await GeneralJs.prompt("알람 문구를 적어주세요!");
 
                   // if (typeof message === "string") {
                   //   await sendMessage(thisMemid, targetMembers, message, option);
