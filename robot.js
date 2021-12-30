@@ -125,8 +125,6 @@ Robot.prototype.aliveTest = async function () {
 
     targets = [
       { name: "python", protocol: "https:", host: address.pythoninfo.host, port: generalPort, },
-      { name: "console", protocol: "https:", host: address.backinfo.host, port: generalPort, },
-      { name: "bridge", protocol: "https:", host: address.bridgeinfo.host, port: generalPort, },
       { name: "home", protocol: "https:", host: address.homeinfo.ghost.host, port: generalPort, },
       { name: "office", protocol: "https:", host: address.officeinfo.ghost.host, port: ghostPort, },
       { name: "officeGraphic", protocol: "https:", host: address.officeinfo.ghost.host, port: address.homeinfo.ghost.graphic.port[0], },

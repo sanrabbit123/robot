@@ -2701,7 +2701,7 @@ Ghost.prototype.ghostRouter = function (needs) {
           address = data.entire.find((obj) => { return /주소/gi.test(obj.name) });
           if (address !== undefined) {
             if (address.value.trim().slice(0, 1) === data.raw.trim().slice(0, 1)) {
-              await requestSystem("https://" + instance.address.bridgeinfo.host + ":3000/apartment", { data }, { headers: { "Content-Type": "application/json" } });
+              await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/apartment", { data }, { headers: { "Content-Type": "application/json" } });
             } else {
               await errorLog("주소 찾을 수 없음 2 : \n" + "https://" + instance.address.backinfo.host + "/client?cliid=" + data.cliid);
             }

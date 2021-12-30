@@ -787,7 +787,7 @@ GraphicBot.prototype.botRouter = function () {
     } else if (/back/gi.test(to)) {
       return "https://" + address.backinfo.host + ":3000";
     } else if (/bridge/gi.test(to)) {
-      return "https://" + address.bridgeinfo.host + ":3000";
+      return "https://" + address.officeinfo.ghost.host + ":3000";
     } else if (/office/gi.test(to)) {
       return "https://" + address.officeinfo.ghost.host;
     } else if (/home/gi.test(to)) {

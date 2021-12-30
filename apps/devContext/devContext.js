@@ -231,7 +231,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-
+    await findCode("bridgeinfo");
 
 
 

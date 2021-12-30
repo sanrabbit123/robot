@@ -66,7 +66,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
   const GHOSTHOST = this.address.homeinfo.ghost.host;
   const FILEHOST = this.address.officeinfo.ghost.host;
   const PYTHONHOST = "https://" + this.address.pythoninfo.host + ":3000";
-  const BRIDGEHOST = "https://" + this.address.bridgeinfo.host + ":3000";
+  const BRIDGEHOST = "https://" + this.address.officeinfo.ghost.host + ":3000";
   const FRONTHOST = "https://" + this.address.frontinfo.host;
   const OFFICEHOST = "https://" + this.address.officeinfo.ghost.host + ":" + String(this.address.officeinfo.ghost.port);
   const classException = {
@@ -275,7 +275,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
   const GHOSTHOST = this.address.homeinfo.ghost.host;
   const FILEHOST = this.address.officeinfo.ghost.host;
   const PYTHONHOST = "https://" + this.address.pythoninfo.host + ":3000";
-  const BRIDGEHOST = "https://" + this.address.bridgeinfo.host + ":3000";
+  const BRIDGEHOST = "https://" + this.address.officeinfo.ghost.host + ":3000";
   const FRONTHOST = "https://" + this.address.frontinfo.host;
   const OFFICEHOST = "https://" + this.address.officeinfo.ghost.host + ":" + String(this.address.officeinfo.ghost.port);
   try {
@@ -766,8 +766,6 @@ DataConsole.prototype.connect = async function (noStatic = false) {
             instance.address.backinfo.host + ":3000",
             instance.address.homeinfo.ghost.host,
             instance.address.homeinfo.ghost.host + ":3000",
-            instance.address.bridgeinfo.host,
-            instance.address.bridgeinfo.host + ":3000",
             instance.address.pythoninfo.host,
             instance.address.pythoninfo.host + ":3000",
             instance.address.officeinfo.ghost.host,

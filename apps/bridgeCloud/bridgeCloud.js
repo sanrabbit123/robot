@@ -7,7 +7,7 @@ const BridgeCloud = function () {
   this.back = new BackMaker();
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.dir = process.cwd() + "/apps/bridgeCloud";
-  this.cloudHost = { inner: this.address.bridgeinfo.ip.inner, outer: this.mother.bridgeinfoObj.host, port: 3000 };
+  this.cloudHost = { inner: this.address.officeinfo.ghost.inner, outer: this.address.officeinfo.ghost.host, port: 3000 };
   this.formidable = require("formidable");
   this.ignorePhone = [ "010-2747-3403" ];
   this.frontHost = "https://" + this.address.frontinfo.host;
@@ -150,7 +150,7 @@ BridgeCloud.prototype.bridgeToOffice = async function (obj, option = { selfMongo
           position: "requests.0.analytics.picture.space.boo",
           pastValue: client.requests[0].analytics.picture.space.boo,
           finalValue: true
-        }, { headers: { "origin": "https://" + instance.address.bridgeinfo.host, "Content-Type": "application/json" } });
+        }, { headers: { "origin": "https://" + instance.address.backinfo.host, "Content-Type": "application/json" } });
       }).then(() => {
         return ghostRequest("/voice", { text: obj.name + " 고객님의 새로운 파일이 전송되었어요!" });
       }).catch((err) => {

@@ -44,7 +44,7 @@ AddressParser.prototype.createApartment = async function (updateQuery, option = 
     throw new Error("invalid input");
   }
   const instance = this;
-  const { mongo, mongobridgeinfo } = this.mother;
+  const { mongo, mongolocalinfo } = this.mother;
   const collection = "apartInfo";
   const map = require(`${this.mapDir}/${collection}.js`);
   let MONGOC;
@@ -60,7 +60,7 @@ AddressParser.prototype.createApartment = async function (updateQuery, option = 
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongobridgeinfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -96,7 +96,7 @@ AddressParser.prototype.updateApartment = async function (queryArr, option = { s
     throw new Error("invaild arguments : query object must be Array: [ Object: whereQuery, Object: updateQuery ]");
   }
   const instance = this;
-  const { mongo, mongobridgeinfo } = this.mother;
+  const { mongo, mongolocalinfo } = this.mother;
   const collection = "apartInfo";
   const map = require(`${this.mapDir}/${collection}.js`);
   const [ whereQuery, updateQuery ] = queryArr;
@@ -112,7 +112,7 @@ AddressParser.prototype.updateApartment = async function (queryArr, option = { s
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongobridgeinfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -137,7 +137,7 @@ AddressParser.prototype.readApartment = async function (whereQuery, option = { s
     throw new Error("input must be Object: whereQuery, Object: option");
   }
   const instance = this;
-  const { mongo, mongobridgeinfo } = this.mother;
+  const { mongo, mongolocalinfo } = this.mother;
   const collection = "apartInfo";
   const map = require(`${this.mapDir}/${collection}.js`);
   const { alive, wrap } = map;
@@ -157,7 +157,7 @@ AddressParser.prototype.readApartment = async function (whereQuery, option = { s
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongobridgeinfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -185,7 +185,7 @@ AddressParser.prototype.rawToApartment = async function (data, option = { selfMo
     throw new Error("invalid input");
   }
   const instance = this;
-  const { mongo, mongobridgeinfo } = this.mother;
+  const { mongo, mongolocalinfo } = this.mother;
   const collection = "apartInfo";
   const map = require(`${this.mapDir}/${collection}.js`);
   let MONGOC;
@@ -208,7 +208,7 @@ AddressParser.prototype.rawToApartment = async function (data, option = { selfMo
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongobridgeinfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
