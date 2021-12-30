@@ -350,6 +350,12 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 
   //POST - submit
   funcObj.post_submit = async function (req, res) {
+    res.set({
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       //request
       const resultObj = req.body;
@@ -555,22 +561,23 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       }
 
       //end
-      res.set({
-        "Content-Type": "text/plain",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
       res.send("success");
 
     } catch (e) {
       await errorLog("Bridge 서버 문제 생김 (submit) : " + e.message);
       console.log(e);
+      res.send("fail");
     }
   }
 
   //POST - designer submit
   funcObj.post_designerSubmit = async function (req, res) {
+    res.set({
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       //request
       const resultObj = req.body;
@@ -903,17 +910,12 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       }
 
       //end
-      res.set({
-        "Content-Type": "text/plain",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
       res.send("success");
 
     } catch (e) {
       await errorLog("Bridge 서버 문제 생김 (designerSumbit) : " + e.message);
       console.log(e);
+      res.send("fail");
     }
   }
 
