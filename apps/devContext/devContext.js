@@ -58,7 +58,7 @@ DevContext.prototype.launching = async function () {
   const instance = this;
   const rethink = new RethinkAccess();
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
-  const { fileSystem, shellExec, shellLink, orderSystem, ghostFileUpload, ghostFileList, curlRequest, webpackSystem, requestSystem, ajaxJson, uniqueValue, getDateMatrix, ghostRequest, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, statusReading, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage } = this.mother;
+  const { fileSystem, shellExec, shellLink, orderSystem, ghostFileUpload, ghostFileList, curlRequest, requestSystem, ajaxJson, uniqueValue, getDateMatrix, ghostRequest, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, statusReading, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage } = this.mother;
   try {
     await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
@@ -231,7 +231,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await findCode("homeliaison-bridge.xyz");
+    await findCode("webpackSystem");
 
 
 
@@ -1596,7 +1596,7 @@ DevContext.prototype.launching = async function () {
     // resultObj["spotspec"] = "방 3개 / 화장실 2개 / 발코니 확장";
     // resultObj["description"] = "공사 시작시 해외 체류 예정. 디자이너가 담당하여 스타일링 해주셨으면 합니다.";
     // resultObj["wayto"] = "인터넷 검색";
-    // res = await requestSystem("https://homeliaison-bridge.xyz:3000/submit", resultObj, { "Content-Type": "application/json" });
+    // res = await requestSystem("https://home-liaison.serveftp.com:3000/submit", resultObj, { "Content-Type": "application/json" });
     // console.log(res);
 
 

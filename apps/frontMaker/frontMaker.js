@@ -179,7 +179,7 @@ FrontMaker.prototype.cssOut = function (code) {
   return { code: code, css: resultCssResult };
 }
 
-FrontMaker.prototype.jsToPoo = async function (dayString, webpack = false) {
+FrontMaker.prototype.jsToPoo = async function (dayString) {
   const instance = this;
   try {
     let code, generalCode, result, svg_result, async_result, temp_string, exec_string, css_code, css_string, css_string_general, css_string_final, svgTong, svgDirBoo;
@@ -247,14 +247,11 @@ FrontMaker.prototype.jsToPoo = async function (dayString, webpack = false) {
       });
 
       code = generalCode + "\n\n" + code;
-      if (!webpack) {
-        code = (await this.mother.fileSystem(`readString`, [ `${this.links.source}/jsGeneral/polyfill.js` ])) + "\n\n" + code;
-      }
       exec_string = (await this.mother.fileSystem(`readString`, [ `${this.links.source}/jsGeneral/exec.js` ])).replace(/\/<%name%>\//g, (i.replace(/\.js$/g, '').charAt(0).toUpperCase() + i.replace(/\.js$/g, '').slice(1)));
       code = code + "\n\n" + exec_string;
 
       //babel compile
-      result = await this.mother.babelSystem(code, webpack);
+      result = code;
 
       //css general
       css_code = require(`${this.links.source}/cssGeneral/general.js`);
@@ -274,10 +271,10 @@ FrontMaker.prototype.jsToPoo = async function (dayString, webpack = false) {
         svgDirBoo = true;
       }}
 
-      svg_result = await this.mother.babelSystem(css_string_final + this.strings.svgTongString + "\n\n" + "const SvgTongGeneral = {};", false, true);
+      svg_result = css_string_final + this.strings.svgTongString + "\n\n" + "const SvgTongGeneral = {};";
       svg_result += "\n\n";
 
-      async_result = await this.mother.babelSystem(this.strings.svgTongString, false, true);
+      async_result = this.strings.svgTongString;
       async_result = async_result.replace(/SvgTong/g, "SvgTongAsync");
       async_result += "\n\n";
 
@@ -306,12 +303,8 @@ FrontMaker.prototype.jsToPoo = async function (dayString, webpack = false) {
       }
 
       //final
-      if (webpack) {
-        await this.mother.fileSystem(`write`, [ `${process.cwd()}/temp/${i}`, result ]);
-        await this.mother.webpackSystem(`${i.replace(/\.js$/g, '')}.js`, `${this.links.server}/js/${i.replace(/\.js$/g, '')}_${dayString}.js`);
-      } else {
-        await this.mother.fileSystem(`write`, [ `${this.links.server}/js/${i.replace(/\.js$/g, '')}_${dayString}.js`, result ]);
-      }
+      await this.mother.fileSystem(`write`, [ `${this.links.server}/js/${i.replace(/\.js$/g, '')}_${dayString}.js`, result ]);
+
       console.log(`js ${i} success`);
     }}
   } catch (e) {
@@ -470,14 +463,14 @@ FrontMaker.prototype.staticSetting = async function () {
   }
 }
 
-FrontMaker.prototype.totalLaunching = async function (webpack, update = false) {
+FrontMaker.prototype.totalLaunching = async function () {
   const instance = this;
   try {
     const dayString = this.mother.todayMaker();
 
     await this.setStrings();
     await this.staticSetting();
-    await this.jsToPoo(dayString, webpack);
+    await this.jsToPoo(dayString);
     await this.phpFunctionToPoo();
     await this.phpExecToPoo();
     await this.phpGeneralToPoo(dayString);
@@ -497,7 +490,7 @@ FrontMaker.prototype.totalUpdate = async function (test = true) {
     let binaryTarget, binaryTargetDir;
     let input;
 
-    await this.totalLaunching(!test, true);
+    await this.totalLaunching();
 
     //make shellScript
     totalOrder = '';

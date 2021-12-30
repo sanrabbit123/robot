@@ -6,7 +6,6 @@
   "scripts": {
     "robot": "node robot.js",
     "source": "node robot.js frontsource --entire",
-    "pack": "node robot.js front --webpack",
     "app": "electron ./apps/nativeNotifier/app.js",
     "build": "electron-builder"
   },
@@ -38,7 +37,6 @@
     "@babel/preset-env": "^7.12.11",
     "babel-loader": "^8.2.2",
     "babel-preset-minify": "^0.5.1",
-    "webpack": "^5.39.1",
     "electron": "^16.0.2",
     "electron-builder": "^22.14.5"
   },

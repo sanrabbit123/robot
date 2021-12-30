@@ -396,9 +396,8 @@ Mother.prototype.fileSystem = function (sw, arr) {
   }
 }
 
-Mother.prototype.babelSystem = function (code, webpack = false, minify = false) {
+Mother.prototype.babelSystem = function (code, minify = false) {
   const babel = require("@babel/core");
-  if (webpack) { minify = false; }
   let babelOptions = {
     presets: [
       [ "@babel/preset-env", { targets: { browsers : [ "last 2 versions", "ie >= 11" ] } }, ],
@@ -409,10 +408,6 @@ Mother.prototype.babelSystem = function (code, webpack = false, minify = false) 
       mangle: false,
       simplify: false,
     }]);
-  }
-  if (webpack) {
-    babelOptions.plugins = [];
-    babelOptions.plugins.push([ "@babel/plugin-transform-runtime", { corejs: 3, } ]);
   }
   return new Promise(function(resolve, reject) {
     babel.transform(code, babelOptions, function(err, result) {
@@ -425,52 +420,6 @@ Mother.prototype.babelSystem = function (code, webpack = false, minify = false) 
       }
       code = result.code;
       resolve(code);
-    });
-  });
-}
-
-Mother.prototype.webpackSystem = function (from, to, customOpt = null) {
-  const webpack = require('webpack');
-  let resultRaw, resultPath, resultFile, options;
-  resultRaw = to.split('/');
-  resultFile = resultRaw[resultRaw.length - 1];
-  resultPath = '';
-  for (let i = 1; i < resultRaw.length - 1; i++) {
-    resultPath += '/' + resultRaw[i];
-  }
-
-  if (customOpt === null) {
-    options = {
-      mode: "production",
-      entry: process.cwd() + '/temp/' + from,
-      output: { path: resultPath, filename: resultFile },
-      module: {
-        rules: [
-          {
-            test: /\.js$/,
-            include: [
-              `${process.cwd()}/temp`
-            ],
-            exclude: /node_modules/,
-            use: {
-              loader: 'babel-loader',
-              options: {
-                presets: ['@babel/preset-env'],
-              }
-            }
-          }
-        ]
-      },
-    }
-  } else {
-    options = customOpt;
-  }
-
-  return new Promise(function (resolve, reject) {
-    webpack(options, (err, stats) => {
-      if (err) { reject(err); }
-      console.log(stats.toString({ chunks: false, colors: true }));
-      resolve(to + " pack success");
     });
   });
 }
