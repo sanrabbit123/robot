@@ -3388,6 +3388,7 @@ BackMaker.prototype.createHistory = async function (method, updateQuery, option 
           contents: {
             title: "",
             description: "",
+            color: "",
           },
           date: {
             start: new Date(1800, 0, 1),

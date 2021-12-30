@@ -94,10 +94,7 @@ DevContext.prototype.launching = async function () {
     //   })
     // });
 
-
-
     /*
-
     const scheduleDummyDataPatch = async () => {
       let dummy, dummyCopied;
       let whereQuery, updateQuery;
@@ -117,116 +114,89 @@ DevContext.prototype.launching = async function () {
         contents: {
           title: "배창규 고객님 상세 일정표",
           description: "",
+          color: "",
         },
         date: {
           start: new Date(),
-          end: new Date(2022, 0, 20),
+          end: new Date(2022, 1, 7),
         },
         children: [
           {
-            contents: {
-              title: "상세 일정 1",
-              description: "상세 일정 1의 설명 내용",
-            },
             date: {
-              start: new Date(2022, 0, 1),
-              end: new Date(2022, 0, 6),
+              start: new Date(2021, 11, 31),
+              end: new Date(2022, 0, 20)
             },
+            contents: {
+              title: "1차 제안",
+              description: "평균 2주의 작업 시간이 소요됩니다. 배치도, 제품 리스트 등의 기본 제공 사항은 동일하지만, 각 디자이너가 가장 잘할 수 있는 방식으로 일합니다.",
+              color: "#f05a24",
+            }
           },
           {
-            contents: {
-              title: "상세 일정 2",
-              description: "상세 일정 2의 설명 내용",
-            },
             date: {
-              start: new Date(2022, 0, 7),
-              end: new Date(2022, 0, 13),
+              start: new Date(2021, 0, 11),
+              end: new Date(2022, 0, 20)
             },
+            contents: {
+              title: "수정 제안",
+              description: "1~2회 정도 수정을 거쳐 고객님만의 맞춤 디자인이 확정됩니다. 고객님의 의견을 솔직하고 명확하게 공유해주세요!",
+              color: "#29aae1",
+            }
           },
           {
-            contents: {
-              title: "상세 일정 3",
-              description: "상세 일정 3의 설명 내용",
-            },
             date: {
-              start: new Date(2022, 0, 14),
-              end: new Date(2022, 0, 20),
+              start: new Date(2021, 0, 21),
+              end: new Date(2022, 1, 5)
             },
+            contents: {
+              title: "구매 리스트 제공",
+              description: "제품 스펙과 함께 금액과 구매처를 안내드립니다. 구매처는 온라인 링크 또는 쇼룸 방문에 대한 정보를 제공합니다",
+              color: "#8bc53f",
+            }
           },
           {
-            contents: {
-              title: "상세 일정 4",
-              description: "상세 일정 4의 설명 내용",
-            },
             date: {
-              start: new Date(2022, 0, 21),
-              end: new Date(2022, 0, 28),
+              start: new Date(2021, 1, 7),
+              end: new Date(2022, 1, 10)
             },
-          },
-          {
             contents: {
-              title: "상세 일정 5",
-              description: "상세 일정 5의 설명 내용",
-            },
-            date: {
-              start: new Date(2022, 1, 1),
-              end: new Date(2022, 1, 6),
-            },
-          },
-          {
-            contents: {
-              title: "상세 일정 6",
-              description: "상세 일정 6의 설명 내용",
-            },
-            date: {
-              start: new Date(2022, 1, 7),
-              end: new Date(2022, 1, 13),
-            },
-          },
-          {
-            contents: {
-              title: "상세 일정 7",
-              description: "상세 일정 7의 설명 내용",
-            },
-            date: {
-              start: new Date(2022, 1, 14),
-              end: new Date(2022, 1, 20),
-            },
-          },
-          {
-            contents: {
-              title: "상세 일정 8",
-              description: "상세 일정 8의 설명 내용",
-            },
-            date: {
-              start: new Date(2022, 1, 21),
-              end: new Date(2022, 1, 28),
-            },
-          },
-          {
-            contents: {
-              title: "상세 일정 9",
-              description: "상세 일정 9의 설명 내용",
-            },
-            date: {
-              start: new Date(2022, 2, 1),
-              end: new Date(2022, 2, 6),
-            },
-          },
-          {
-            contents: {
-              title: "상세 일정 10",
-              description: "상세 일정 10의 설명 내용",
-            },
-            date: {
-              start: new Date(2022, 2, 7),
-              end: new Date(2022, 2, 13),
-            },
+              title: "제작 가구 발주",
+              description: "패브릭과 가구를 제작하실 때에는 디자이너님이 직접 발주합니다. 결제는 상황에 따라 고객님이 업체로 지불하시거나 디자이너가 수령하여 발주와 함께 진행합니다.",
+              color: "#faaf3b",
+            }
           },
         ]
       };
 
       await instance.MONGOCONSOLEC.connect();
+
+      await instance.MONGOCONSOLEC.db(`miro81`).collection(`projectHistory`).updateMany({}, {
+        $set: {
+          schedule: {
+            analytics: {
+              make: [],
+              page: [],
+              update: [],
+              send: [],
+            },
+            progress: {
+              start: new Date(1800, 0, 1),
+              complete: new Date(1800, 0, 1),
+              send: new Date(1800, 0, 1),
+            },
+            contents: {
+              title: "",
+              description: "",
+              color: "",
+            },
+            date: {
+              start: new Date(1800, 0, 1),
+              end: new Date(1800, 0, 1),
+            },
+            children: []
+          }
+        }
+      });
 
       whereQuery = { proid: "p1801_aa01s" }
       dummyCopied = equalJson(JSON.stringify(dummy));
@@ -257,7 +227,6 @@ DevContext.prototype.launching = async function () {
       await instance.MONGOCONSOLEC.close();
     }
     await scheduleDummyDataPatch();
-
     */
 
 

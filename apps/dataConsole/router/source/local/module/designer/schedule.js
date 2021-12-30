@@ -118,329 +118,12 @@ DesignerJs.prototype.scheduleReturnStatic = function (designer, project, client,
 
   const title = client.name + "님 상세 일정표";
   const initialContents = "안녕하세요, <b%" + designer.designer + "%b> 실장님!\n홈리에종에 의뢰하신 " + client.name +  " 고객님 관련 정보를 보내드립니다. <b%" + GeneralJs.serviceParsing(project.service) + "%b>를 진행합니다.";
-  const emptyReload = (originalArr, reloadArr) => {
-    if (originalArr.map((a) => { return a.trim(); }).filter((a) => { return a !== ""; }).length > 0) {
-      return originalArr;
-    } else {
-      return reloadArr;
-    }
-  }
-  const mainContents = [
-    {
-      title: "현장 미팅",
-      className: "mainContents_when",
-      position: "request.about.when",
-      contents: emptyReload(projectHistory.request.about.when, [ dateToString(project.process.contract.meeting.date, true, true) ]),
-      spread: true,
-    },
-    {
-      title: "현장 주소",
-      className: "mainContents_where",
-      position: "request.about.where",
-      contents: emptyReload(projectHistory.request.about.where, [ client.requests[requestNumber].request.space.address ]),
-      spread: true,
-    },
-    {
-      title: "현장 관련",
-      className: "mainContents_site",
-      position: "request.about.site",
-      contents: emptyReload(projectHistory.request.about.site, [ "현장 관련 상세 사항 없음" ]),
-      spread: true,
-    },
-    {
-      title: "시공 관련",
-      className: "mainContents_construct",
-      position: "request.about.construct",
-      contents: emptyReload(projectHistory.request.about.construct, [ "시공 관련 상세 사항 없음" ]),
-      spread: true,
-    },
-    {
-      title: "스타일링 관련",
-      className: "mainContents_styling",
-      position: "request.about.styling",
-      contents: emptyReload(projectHistory.request.about.styling, [ "스타일링 관련 상세 사항 없음" ]),
-      spread: true,
-    },
-    {
-      title: "예산 관련",
-      className: "mainContents_budget",
-      position: "request.about.budget",
-      contents: emptyReload(projectHistory.request.about.budget, [ "예산 관련 상세 사항 없음" ]),
-      spread: true,
-    },
-    {
-      title: "기타 사항",
-      className: "mainContents_progress",
-      position: "request.about.progress",
-      contents: emptyReload(projectHistory.request.about.progress, [ "기타 관련 상세 사항 없음" ]),
-      spread: true,
-    }
-  ];
-  const pictureContents = "고객님이 선택한 사진";
-  const pictureContentsSite = "고객님의 현장 사진";
-  const pictureContentsPrefer = "고객님의 선호 사진";
-  const pictures = clientHistory.curation.image;
-  const noticeContents = [
-    {
-      title: "서비스비 안내",
-      contents: [
-        "이번 현장의 서비스비는 " + autoComma(project.process.contract.remain.calculation.amount.supply) + "원(VAT별도)으로 책정되어 있습니다.",
-        "홈리에종의 계약금은 300,000원(VAT별도)으로 책정되어 있습니다.",
-        "현재 고객은 홈리에종에 계약금 330,000원을 입금한 상태며, 현장 미팅 후 계약금을 제외한 서비스비를 전액 입금할 경우 서비스가 계속 진행됩니다.",
-        "★ 현장 미팅 후 서비스비 지불 전에는 디자이너와 스타일링 논의를 할 수 없는 것이 원칙입니다.(고객에게도 필요시 안내해주세요)",
-        "★ 서비스 진행중 타 공간에 대한 전체적인 스타일링이 추가되는 경우 꼭! 홈리에종을 통해 디자인비 조정이 될 수 있도록 해주세요.",
-        "법인/개인사업자(일반과세), 개인사업자(간이과세), 프리랜서 정산 중에 정산 방식을 알려주시면 수수료를 제외한 정확한 정산액은 계산하여 말씀드리겠습니다.",
-      ]
-    },
-    {
-      title: "고객 안내 사항과 서비스 구성",
-      contents: [
-        "디자이너와 카톡(문자)/전화/메일 등의 채널을 통해 커뮤니케이션 하면서 전체 스타일링을 완성합니다. 커뮤니케이션에 적극적으로 참여해주시면 더 좋은 결과물을 얻으실 수 있습니다.",
-        "디자이너와 현장 미팅을 진행하며 집컨디션/취향/생활특징/예산을 고려하여 컨설팅 해드립니다.",
-        "시공팀은 추천하는 시공팀 외에 고객이 개별적으로 알아본 시공팀과 진행 가능합니다.",
-        "시공 진행시 디자이너는 시공 방향 제시 및 전체 마감재를 셀렉해드립니다.",
-        "기존에 사용하시는 가구들 중 가져갈 가구와 버릴가구 선택 및 배치/활용 제안 드립니다. 새로 구매하실 가구, 조명, 패브릭(커튼, 베딩, 러그, 쿠션), 소품(식물, 액자, 시계 등)을 제안해드립니다.",
-        "디자이너의 제안에 따라 패브릭 및 가구의 맞춤 제작이 가능합니다.",
-        "생활용품, 식기, 가전은 스타일링 제안 범위에 포함되지 않습니다. 다만 선택하신 후 제품 외관의 디자인 옵션(컬러 등)을 의논하실 경우 전체 디자인을 고려하여 골라드립니다. 생활용품과 식기의 경우, 고객님께서 찾으신 3~4품목중에서 셀렉은 가능합니다.",
-        "디자이너 제안 후 고객 컨펌이 완료된 구매제품은 고객이 구매하실 수 있도록 안내드립니다. 연계 업체의 제품 구매시에는 할인혜택을 받으실 수 있습니다. 모든 제품이 해당되는 것은 아니며 업체마다 차이가 있습니다.",
-        "제품 구매에 소요되는 배송비, 조립 및 설치비는 고객님께서 부담하시게 됩니다. 배송된 제품의 수령, 언박싱, 조립, 1차배치는 고객님께서 진행하시게 됩니다. 구매 및 물품배치가 완료되면 디자이너의 마무리터치 후 인터뷰와 촬영을 진행합니다.",
-      ]
-    },
-    {
-      title: "시공 연계수수료 안내",
-      contents: [
-        "고객이 시공 계약을 체결한 곳에 공사진행과 A/S에 대한 책임이 있습니다. (고객에게 동일하게 안내합니다.)",
-        "고객이 데려온 시공팀과 진행할 경우 디자이너는 시공자재 셀렉과 필요시 시공관련 커뮤니케이션 업무가 있을 수 있습니다.",
-        "고객이 실장님 또는 실장님과 협업하시는 시공사와 시공 계약을 체결할 경우 전체 계약 금액의 5%가 시공 연계 수수료 입니다.",
-        "홈리에종은 적법한 방식의 시공계약을 권장하며, (세금 없는) 현금 거래로 시공을 진행했을 경우에도 시공 연계 수수료는 공급가에 VAT 10%를 더한 금액으로 전자세금계산서를 발행합니다. 입금하실 때에도 공급가에 VAT10% 더한 금액을 입금해주셔야합니다.",
-      ]
-    },
-    {
-      title: "정산 안내",
-      contents: [
-        "홈리에종에서 받은 서비스비는 수수료를 제하고 스타일링 시작 후 실장님께 선금 50%를 먼저 정산하고",
-        "스타일링이 마무리되면 나머지 50%를 정산합니다.",
-        "스타일링 마무리는",
-        "1) 스타일링 제안이 마무리되어 제품들이 배송단계에 있고",
-        "2) 촬영일이 (변동되더라도) 어느정도 정해지고",
-        "3) 실장님께서 디자이너의 디자인 의도가 담긴 글(폼을 따로 드립니다) 저희쪽에 주시면",
-        "4) 홈리에종에서 고객님께 정산 여부를 확인 후 정산을 진행합니다.",
-      ]
-    }
-  ];
-  const divToInput = function (position) {
-    return async function (e) {
-      try {
-        if (!middleMode) {
-          const { ajaxJson, createNode, withOut, colorChip, equalJson } = GeneralJs;
-          const removeClassName = "divToInputRemove";
-          const target = this.firstChild.firstChild;
-          const text = target.textContent;
-          const mother = this.firstChild;
-          const proid = project.proid;
-          let styleCopied, styleRaw, style;
-          let input, cancel;
-          let updateEvent;
-
-          if (this.querySelector("input") === null) {
-
-            styleRaw = equalJson(JSON.stringify(target.style));
-            styleCopied = {};
-            for (let i in styleRaw) {
-              if (styleRaw[i] !== '' && !/^[0-9]+$/.test(i)) {
-                styleCopied[i] = styleRaw[i];
-              }
-            }
-            style = equalJson(JSON.stringify(styleCopied));
-            styleCopied.outline = String(0);
-            styleCopied.border = String(0);
-            styleCopied.background = "transparent";
-            styleCopied.color = colorChip.green;
-            styleCopied.zIndex = String(2);
-
-            updateEvent = async function (column, value) {
-              try {
-                const targets = document.querySelectorAll('.' + removeClassName);
-                await ajaxJson({
-                  id: proid,
-                  column,
-                  value,
-                  email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail
-                }, "/updateProjectHistory");
-                for (let dom of targets) {
-                  dom.parentElement.removeChild(dom);
-                }
-                createNode({ mother, text: value, style });
-              } catch (e) {
-                console.log(e);
-              }
-            }
-
-            cancel = createNode({
-              mother,
-              class: [ removeClassName ],
-              events: [
-                {
-                  type: "click",
-                  event: (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const targets = document.querySelectorAll('.' + removeClassName);
-                    for (let dom of targets) {
-                      dom.parentElement.removeChild(dom);
-                    }
-                    createNode({ mother, text, style });
-                  }
-                }
-              ],
-              style: {
-                position: "fixed",
-                top: String(0),
-                left: String(0),
-                width: String(100) + '%',
-                height: String(100) + '%',
-                background: "transparent",
-                zIndex: String(2),
-              }
-            });
-
-            input = createNode({
-              mother,
-              class: [ removeClassName ],
-              attribute: [
-                { column: position },
-                { value: text }
-              ],
-              mode: "input",
-              events: [
-                {
-                  type: "click",
-                  event: (e) => { e.preventDefault(); e.stopPropagation(); }
-                },
-                {
-                  type: "keydown",
-                  event: function (e) {
-                    if (e.key === "Tab") {
-                      e.preventDefault();
-                    }
-                  }
-                },
-                {
-                  type: "keyup",
-                  event: async function (e) {
-                    try {
-                      const column = this.getAttribute("column");
-                      if (e.key === "Tab") {
-                        await updateEvent(column, this.value);
-                      }
-                    } catch (e) {
-                      console.log(e);
-                    }
-                  }
-                },
-                {
-                  type: "keypress",
-                  event: async function (e) {
-                    try {
-                      const column = this.getAttribute("column");
-                      if (e.key === "Enter") {
-                        await updateEvent(column, this.value);
-                      }
-                    } catch (e) {
-                      console.log(e);
-                    }
-                  }
-                }
-              ],
-              style: styleCopied
-            });
-
-            mother.removeChild(target);
-            input.focus();
-
-          }
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  }
-  const matrix = [
-    [ "고객 정보", "", "공간 정보", "" ],
-    [ (desktop ? "고객명" : "성함"), projectHistory.request.client.name, (desktop ? "계약 형태" : "계약"), projectHistory.request.space.contract ],
-    [ "연락처", projectHistory.request.client.phone, (desktop ? "사전 점검일" : "사전점검"), projectHistory.request.space.precheck ],
-    [ (desktop ? "가족 구성원" : "가족"), projectHistory.request.client.family, (desktop ? "집 비는 날" : "비는 날"), projectHistory.request.space.empty ],
-    [ "주소", projectHistory.request.client.address, (desktop ? "입주 예정일" : "입주일"), projectHistory.request.space.movein ],
-    [ "", "", (desktop ? "특이 사항" : "기타"), projectHistory.request.space.special ],
-    [ "예산", projectHistory.request.client.budget, (desktop ? "공간구성" : "구성"), projectHistory.request.space.composition ],
-    [ "서비스 정보", "", "고객 요청", "" ],
-    [ "서비스", projectHistory.request.service.service, projectHistory.request.client.etc, "" ],
-    [ (desktop ? "선호 컨셉" : "컨셉"), projectHistory.request.service.concept, "", "" ],
-    [ "시공", projectHistory.request.service.construct, "", "" ],
-    [ "스타일링", projectHistory.request.service.styling, "", "" ],
-  ];
-  const mergeMap = [
-    [ null, [ 0, 0 ], null, [ 0, 2 ] ],
-    [ null, null, null, null ],
-    [ null, null, null, null ],
-    [ null, null, null, null ],
-    [ null, null, null, null ],
-    [ [ 4, 0 ], [ 4, 1 ], null, null ],
-    [ null, null, null, null ],
-    [ null, [ 7, 0 ], null, [ 7, 2 ] ],
-    [ null, null, null, [ 8, 2 ] ],
-    [ null, null, null, [ 9, 2 ] ],
-    [ null, null, null, [ 10, 2 ] ],
-    [ null, null, [ 8, 2 ], [ 11, 2 ] ],
-  ];
-  const callbackMap = [
-    [ null, null, null, null ],
-    [ null, divToInput("request.client.name"), null, divToInput("request.space.contract") ],
-    [ null, divToInput("request.client.phone"), null, divToInput("request.space.precheck") ],
-    [ null, divToInput("request.client.family"), null, divToInput("request.space.empty") ],
-    [ null, divToInput("request.client.address"), null, divToInput("request.space.movein") ],
-    [ null, divToInput("request.client.address"), null, divToInput("request.space.special") ],
-    [ null, divToInput("request.client.budget"), null, divToInput("request.space.composition") ],
-    [ null, null, null, null ],
-    [ null, divToInput("request.service.service"), divToInput("request.client.etc"), null ],
-    [ null, divToInput("request.service.concept"), null, null ],
-    [ null, divToInput("request.service.construct"), null, null ],
-    [ null, divToInput("request.service.styling"), null, null ],
-  ];
-  const boldMap = [
-    [ 0, 0, 0, 0 ],
-    [ 1, 0, 1, 0 ],
-    [ 1, 0, 1, 0 ],
-    [ 1, 0, 1, 0 ],
-    [ 1, 0, 1, 0 ],
-    [ 1, 0, 1, 0 ],
-    [ 1, 0, 1, 0 ],
-    [ 0, 0, 0, 0 ],
-    [ 1, 0, 0, 0 ],
-    [ 1, 0, 0, 0 ],
-    [ 1, 0, 0, 0 ],
-    [ 1, 0, 0, 0 ],
-  ];
-  const titleMap = [ 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0 ];
-  const widthRatio = desktop ? [ 1, 3, 1, 3 ] : [ 1, 2, 1, 2 ];
+  const weekWordings = [ '월', '화', '수', '목', '금', '토', '일' ];
 
   return {
     title,
     initialContents,
-    emptyReload,
-    mainContents,
-    pictureContents,
-    pictureContentsSite,
-    pictureContentsPrefer,
-    pictures,
-    noticeContents,
-    divToInput,
-    matrix,
-    mergeMap,
-    callbackMap,
-    boldMap,
-    titleMap,
-    widthRatio,
+    weekWordings,
   };
 }
 
@@ -475,14 +158,12 @@ DesignerJs.prototype.scheduleList = function (desid) {
   let designer;
   let margin;
   let baseTong0, baseTong;
-  let matrix;
   let tempArr;
   let tempObj, nodeArr, subNodeArr;
   let eachTotalTong, eachNameTong, eachValueTong;
   let level1Width, level1Left;
   let topMargin, leftMargin, bottomMargin;
   let size;
-  let tempMatrix;
   let alphabetWidth;
   let temp;
   let factorHeight, factorWidth;
@@ -938,7 +619,6 @@ DesignerJs.prototype.scheduleDocument = function (mother, index, designer, proje
       let construct;
       let styling;
       let budget;
-      let reloadBoo;
       let progress;
 
       requestNumber = 0;
@@ -950,78 +630,8 @@ DesignerJs.prototype.scheduleDocument = function (mother, index, designer, proje
       }
       thisRequest = client.requests[requestNumber];
 
-      clientHistory = await ajaxJson({ id: client.cliid, rawMode: true }, "/getClientHistory");
-      projectHistory = await ajaxJson({ id: project.proid, rawMode: true }, "/getProjectHistory");
-
-      reloadBoo = (JSON.stringify(projectHistory.request).replace(/[\{\}\[\]\"\' ]/gi, '').trim().replace(/[a-z]/gi, '').trim().replace(/[\:\,]/gi, '').trim().length === 0);
-      if (e.altKey) {
-        reloadBoo = window.confirm("정보를 다시 로드할 경우, 기존에 의뢰서 콘솔에서 적었던 내용이 없어질 수 있습니다! 초기화가 확실한가요?");
-      }
-
-      if (reloadBoo) {
-        site = clientHistory.space.split("\n").map((i) => { return i.trim(); }).filter((i) => { return i !== ''; });
-        construct = clientHistory.construct.split("\n").map((i) => { return i.trim(); }).filter((i) => { return i !== ''; });
-        styling = clientHistory.styling.split("\n").map((i) => { return i.trim(); }).filter((i) => { return i !== ''; });
-        budget = clientHistory.budget.split("\n").map((i) => { return i.trim(); }).filter((i) => { return i !== ''; });
-        progress = clientHistory.progress.split("\n").map((i) => { return i.trim(); }).filter((i) => { return i !== ''; });
-
-        if (site.length === 0) {
-          site = [ "현장 관련 상세 사항 없음" ];
-        }
-        if (construct.length === 0) {
-          construct = [ "시공 관련 상세 사항 없음" ];
-        }
-        if (styling.length === 0) {
-          styling = [ "스타일링 관련 상세 사항 없음" ];
-        }
-        if (budget.length === 0) {
-          budget = [ "예산 관련 상세 사항 없음" ];
-        }
-        if (progress.length === 0) {
-          progress = [ "기타 관련 상세 사항 없음" ];
-        }
-
-        projectHistory.request = {
-          client: {
-            name: client.name,
-            phone: client.phone,
-            family: thisRequest.request.family,
-            address: thisRequest.request.space.address,
-            budget: thisRequest.request.budget,
-            etc: thisRequest.request.etc.comment
-          },
-          space: {
-            contract: thisRequest.request.space.contract,
-            precheck: dateToString(thisRequest.analytics.date.space.precheck) === "해당 없음" ? '-' : dateToString(thisRequest.analytics.date.space.precheck),
-            empty: dateToString(thisRequest.analytics.date.space.empty) === "해당 없음" ? '-' : dateToString(thisRequest.analytics.date.space.empty),
-            movein: (thisRequest.request.space.resident.expected.valueOf() <= (new Date()).valueOf() ? "거주중" : dateToString(thisRequest.request.space.resident.expected)),
-            special: "",
-            composition: "<" + String(thisRequest.request.space.pyeong) + "평> " + "방 " + String(thisRequest.request.space.spec.room) + "개, 화장실 " + String(thisRequest.request.space.spec.bathroom) + "개, 발코니 확장" + (thisRequest.request.space.spec.valcony ? "" : " 없음"),
-          },
-          service: {
-            service: serviceParsing(project.service),
-            concept: "모던 그레이",
-            construct: clientHistory.curation.construct.items.length === 0 ? "시공 없음" : clientHistory.curation.construct.items.join(", "),
-            styling: "전체 구매 또는 재배치"
-          },
-          about: {
-            when: [ dateToString(project.process.contract.meeting.date, true, true) ],
-            where: [ thisRequest.request.space.address ],
-            site: site,
-            construct: construct,
-            styling: styling,
-            budget: budget,
-            progress: progress
-          }
-        };
-
-        await ajaxJson({
-          id: proid,
-          column: "request",
-          value: projectHistory.request,
-          email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail
-        }, "/updateProjectHistory");
-      }
+      clientHistory = await ajaxJson({ id: client.cliid, rawMode: true }, "/getClientHistory", { equal: true });
+      projectHistory = await ajaxJson({ id: project.proid, rawMode: true }, "/getProjectHistory", { equal: true });
 
       if (desktop) {
 
@@ -1141,7 +751,7 @@ DesignerJs.prototype.scheduleDocument = function (mother, index, designer, proje
 DesignerJs.prototype.scheduleContents = async function (board, designer, project, client, clientHistory, projectHistory, requestNumber) {
   const instance = this;
   const mother = this.mother;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, autoComma } = GeneralJs;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, autoComma, serviceParsing, getDateMatrix } = GeneralJs;
   const { totalMother, ea, grayBarWidth, middleMode } = this;
   const mobile = this.media[4];
   const desktop = !mobile;
@@ -1156,20 +766,7 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
   const {
     title,
     initialContents,
-    emptyReload,
-    mainContents,
-    pictureContents,
-    pictureContentsSite,
-    pictureContentsPrefer,
-    pictures,
-    noticeContents,
-    divToInput,
-    matrix,
-    mergeMap,
-    callbackMap,
-    boldMap,
-    titleMap,
-    widthRatio,
+    weekWordings,
   } = totalStatic;
   try {
     let titleArea;
@@ -1181,34 +778,44 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
     let titleBottom;
     let titlePaddingBottom;
     let fontSize;
-    let sum;
     let titleDateVisualBottom;
-    let contentsBetween;
-    let contentsClientInfo;
-    let clientInfoLeftWidth;
     let width;
-    let wordsBetween0, wordsBetween1, wordsBetween2;
-    let leftIndent;
-    let words;
-    let arrowTop, arrowWidth, arrowLeft;
     let tempDom;
-    let tableVisual;
     let lineHeight;
-    let contentsClientPhoto;
-    let contentsClientPhotoTong;
-    let images, siteImages, preferImages;
-    let photoWidth;
-    let photoMargin;
-    let photoNumber;
-    let clientInfoBottom;
-    let noticeDom;
     let finalBottom;
     let num;
-    let whitePopupEvent;
-    let clientPhoto;
-    let positionArr;
-    let imageTong;
-    let tempImage;
+    let blockArea;
+    let blockFactor;
+    let blockOuterPadding;
+    let blockFactorHeight;
+    let blockFactorMarginBottom;
+    let blockWhite0, blockWhite1, blockWhite2;
+    let blockInnerMargin;
+    let blockSecondRatio;
+    let numberSize, numberTextTop, numberWeight;
+    let dateStart, dateEnd;
+    let dateSize, dateWeight;
+    let dateTop, dateLeft, dateBottom, datePadding;
+    let dateLineBottom;
+    let wordingTitle, wordingDescription;
+    let barColor;
+    let colorBarWidth, colorBarVisual;
+    let wordingSize, wordingLeft, wordingWeight0, wordingWeight1, wordingTop;
+    let descriptionPaddingLeft, descriptionPaddingRight, descriptionPaddingTop;
+    let descriptionLineHeight;
+    let plusSize, plusWeight, plusTextTop;
+    let blockAreaMarginBottom;
+    let bigCalendar;
+    let bigCalendarTitleZone, bigCalendarContentsZone;
+    let calendarVisualLeft;
+    let dateMatrix;
+    let bigCalendarTitleBottom;
+    let bigCalendarTitleSize, bigCalendarTitleWeight;
+    let weekBlockHeight;
+    let weekBlockSize, weekBlockWeight, weekBlockTextTop;
+    let dateBlockHeight, dateBlockWeight;
+    let datePositionTop, datePositionLeft;
+    let arrowWidth, arrowTop;
 
     topMargin = <%% 42, 38, 32, 30, 5.8 %%>;
     leftMargin = <%% 50, 46, 38, 32, 5.8 %%>;
@@ -1220,58 +827,66 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
     titleDateVisualBottom = <%% (isMac() ? 2 : -3), (isMac() ? 2 : -3), (isMac() ? 2 : -3), (isMac() ? 2 : -3), 0.5 %%>;
 
     fontSize = <%% 15, 14, 13, 12, 3.5 %%>;
-    contentsBetween = <%% 32, 28, 25, 22, 6 %%>;
-
-    clientInfoBottom = <%% 42, 42, 42, 42, 7 %%>;
-    clientInfoLeftWidth = <%% 380, 260, 215, 130, 20 %%>;
-
-    wordsBetween0 = <%% 6, 6, 6, 6, 1 %%>;
-    wordsBetween1 = <%% 22, 22, 22, 22, 4 %%>;
-    wordsBetween2 = <%% 10, 10, 10, 10, 1 %%>;
-
-    tableVisual = <%% 18, 18, 16, 10, 2 %%>;
-    leftIndent = <%% 15, 14, 13, 12, 2.8 %%>;
-
-    arrowTop = <%% (isMac() ? 5.5 : 4), (isMac() ? 5.5 : 4), (isMac() ? 5.5 : 4), (isMac() ? 5.5 : 4), 1.6 %%>;
-    arrowWidth = <%% 8, 8, 7, 6, 1.6 %%>;
-    arrowLeft = <%% 1, 1, 1, 1, 0 %%>;
 
     lineHeight = 1.8;
-    photoWidth = <%% 260, 260, 260, 260, 20 %%>;
-    photoMargin = <%% 10, 10, 10, 10, 1.5 %%>;
-    finalBottom = <%% 240, 240, 240, 240, 10 %%>;
+    finalBottom = <%% 60, 60, 60, 60, 10 %%>;
 
-    clientPhoto = await ajaxJson({ cliid }, "/ghostPass_clientPhoto");
-    siteImages = clientPhoto.sitePhoto;
-    preferImages = clientPhoto.preferredPhoto;
+    blockOuterPadding = 10;
+    blockFactorHeight = 90;
+    blockInnerMargin = 6;
+    blockFactorMarginBottom = 6;
 
-    siteImages.sort((a, b) => {
-      const aArr = a.split("/");
-      const bArr = b.split("/");
-      const aFileWording = aArr[aArr.length - 1];
-      const bFileWording = bArr[bArr.length - 1];
-      if (/_[0-9]+/gi.test(aFileWording) && /_[0-9]+/gi.test(bFileWording)) {
-        return Number(aFileWording.split("_")[aFileWording.split("_").length - 1].replace(/[^0-9]/gi, '')) - Number(bFileWording.split("_")[bFileWording.split("_").length - 1].replace(/[^0-9]/gi, ''));
-      } else {
-        return aFileWording < bFileWording ? 1 : -1;
-      }
-    });
-    preferImages.sort((a, b) => {
-      const aArr = a.split("/");
-      const bArr = b.split("/");
-      const aFileWording = aArr[aArr.length - 1];
-      const bFileWording = bArr[bArr.length - 1];
-      if (/_[0-9]+/gi.test(aFileWording) && /_[0-9]+/gi.test(bFileWording)) {
-        return Number(aFileWording.split("_")[aFileWording.split("_").length - 1].replace(/[^0-9]/gi, '')) - Number(bFileWording.split("_")[bFileWording.split("_").length - 1].replace(/[^0-9]/gi, ''));
-      } else {
-        return aFileWording < bFileWording ? 1 : -1;
-      }
-    });
+    numberSize = 36;
+    numberTextTop = -4;
+    numberWeight = 400;
 
-    sum = 0;
-    for (let i of widthRatio) {
-      sum += i;
-    }
+    blockSecondRatio = 2.4;
+    dateSize = 15;
+    dateWeight = 400;
+    dateTop = 11;
+    dateBottom = dateTop + 5;
+    dateLeft = 18;
+    datePadding = 8;
+    dateLineBottom = 24.5;
+
+    colorBarWidth = 6;
+    colorBarVisual = 1;
+
+    wordingSize = 14;
+    wordingLeft = 34;
+    wordingWeight0 = 600;
+    wordingWeight1 = 400;
+    wordingTop = 13;
+
+    descriptionPaddingLeft = wordingLeft;
+    descriptionPaddingRight = dateLeft;
+    descriptionPaddingTop = 34;
+    descriptionLineHeight = 1.6;
+
+    plusSize = 48;
+    plusWeight = 500;
+    plusTextTop = -5;
+
+    blockAreaMarginBottom = 50;
+
+    calendarVisualLeft = 1;
+
+    bigCalendarTitleBottom = 22;
+    bigCalendarTitleSize = 36;
+    bigCalendarTitleWeight = 300;
+    weekBlockHeight = 48;
+    weekBlockSize = 15;
+    weekBlockWeight = 600;
+    weekBlockTextTop = -2;
+
+    dateBlockHeight = 120;
+    dateBlockWeight = 300;
+
+    datePositionTop = 10;
+    datePositionLeft = 18;
+
+    arrowWidth = 12;
+    arrowTop = 21;
 
     board.style.paddingTop = String(topMargin) + ea;
 
@@ -1297,7 +912,7 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
           }
         },
         {
-          text: "PDF 추출",
+          text: serviceParsing(project.service),
           class: [ "hoverDefault_lite" ],
           event: {
             click: (e) => { e.preventDefault(); }
@@ -1318,6 +933,7 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
     contentsArea = createNode({
       mother: board,
       style: {
+        position: "relative",
         marginLeft: String(leftMargin) + ea,
         width: withOut(leftMargin * 2, ea),
       },
@@ -1340,1362 +956,365 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
       ]
     });
 
-    contentsClientInfo = createNode({
+    blockArea = createNode({
       mother: contentsArea,
       style: {
-        position: "relative",
         display: "block",
-        width: String(100) + '%',
-        textAlign: "right",
-        marginBottom: String(clientInfoBottom) + ea,
+        position: "relative",
+        marginBottom: String(blockAreaMarginBottom) + ea,
+      }
+    });
+
+    if (projectHistory.schedule.children.length > 0) {
+      for (let i = 0; i < projectHistory.schedule.children.length; i++) {
+
+        ({ date: { start: dateStart, end: dateEnd }, contents: { title: wordingTitle, description: wordingDescription, color: barColor } } = projectHistory.schedule.children[i]);
+        dateStart = dateToString(dateStart).replace(/-/gi, ". ").slice(2);
+        dateEnd = dateToString(dateEnd).replace(/-/gi, ". ").slice(2);
+
+        blockFactor = createNode({
+          mother: blockArea,
+          style: {
+            display: "block",
+            position: "relative",
+            padding: String(blockOuterPadding) + ea,
+            width: withOut(blockOuterPadding * 2, ea),
+            height: String(blockFactorHeight - (blockOuterPadding * 2)) + ea,
+            borderRadius: String(5) + "px",
+            background: colorChip.gray2,
+            marginBottom: String(blockFactorMarginBottom) + ea,
+          }
+        });
+        blockWhite0 = createNode({
+          mother: blockFactor,
+          style: {
+            verticalAlign: "top",
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            position: "relative",
+            width: String(blockFactorHeight - (blockOuterPadding * 2)) + ea,
+            height: String(blockFactorHeight - (blockOuterPadding * 2)) + ea,
+            background: colorChip.white,
+            borderRadius: String(5) + "px",
+            marginRight: String(blockInnerMargin) + ea,
+          },
+          children: [
+            {
+              text: String(i + 1),
+              style: {
+                position: "relative",
+                fontSize: String(numberSize) + ea,
+                fontWeight: String(numberWeight),
+                fontFamily: "graphik",
+                top: String(numberTextTop) + ea,
+                color: colorChip.black,
+              }
+            }
+          ]
+        });
+        blockWhite1 = createNode({
+          mother: blockFactor,
+          style: {
+            verticalAlign: "top",
+            display: "inline-block",
+            position: "relative",
+            width: String((blockFactorHeight - (blockOuterPadding * 2)) * blockSecondRatio) + ea,
+            height: String(blockFactorHeight - (blockOuterPadding * 2)) + ea,
+            background: colorChip.white,
+            borderRadius: String(5) + "px",
+            marginRight: String(blockInnerMargin) + ea,
+          },
+          children: [
+            {
+              style: {
+                position: "absolute",
+                width: withOut(dateLeft * 2, ea),
+                bottom: String(dateLineBottom) + ea,
+                left: String(dateLeft) + ea,
+                borderBottom: "1px solid " + colorChip.green,
+              }
+            },
+            {
+              text: dateStart,
+              style: {
+                position: "absolute",
+                fontSize: String(dateSize) + ea,
+                fontWeight: String(dateWeight),
+                fontFamily: "graphik",
+                color: colorChip.black,
+                top: String(dateTop) + ea,
+                left: String(dateLeft) + ea,
+                background: colorChip.white,
+                paddingRight: String(datePadding) + ea,
+              }
+            },
+            {
+              text: dateEnd,
+              style: {
+                position: "absolute",
+                fontSize: String(dateSize) + ea,
+                fontWeight: String(dateWeight),
+                fontFamily: "graphik",
+                color: colorChip.black,
+                bottom: String(dateBottom) + ea,
+                right: String(dateLeft) + ea,
+                background: colorChip.white,
+                paddingLeft: String(datePadding) + ea,
+              }
+            },
+          ]
+        });
+        blockWhite2 = createNode({
+          mother: blockFactor,
+          style: {
+            verticalAlign: "top",
+            display: "inline-block",
+            position: "relative",
+            width: withOut(((blockFactorHeight - (blockOuterPadding * 2)) * (1 + blockSecondRatio) + (blockInnerMargin * 2) + descriptionPaddingLeft + descriptionPaddingRight), ea),
+            height: String(blockFactorHeight - (blockOuterPadding * 2) - descriptionPaddingTop) + ea,
+            paddingTop: String(descriptionPaddingTop) + ea,
+            paddingLeft: String(descriptionPaddingLeft) + ea,
+            paddingRight: String(descriptionPaddingRight) + ea,
+            background: colorChip.white,
+            borderRadius: String(5) + "px",
+          },
+          children: [
+            {
+              style: {
+                position: "absolute",
+                left: String(dateLeft) + ea,
+                top: String(dateBottom) + ea,
+                width: String(colorBarWidth) + ea,
+                height: withOut((dateBottom * 2) + colorBarVisual, ea),
+                borderRadius: String(colorBarWidth) + ea,
+                background: barColor,
+              }
+            },
+            {
+              text: wordingTitle,
+              style: {
+                position: "absolute",
+                left: String(wordingLeft) + ea,
+                top: String(wordingTop) + ea,
+                fontSize: String(wordingSize) + ea,
+                fontWeight: String(wordingWeight0),
+                color: colorChip.black,
+              }
+            },
+            {
+              style: {
+                position: "relative",
+                width: String(100) + '%',
+                height: String(100) + '%',
+                background: "transparent",
+                overflow: "scroll"
+              },
+              children: [
+                {
+                  text: wordingDescription,
+                  style: {
+                    fontSize: String(wordingSize) + ea,
+                    fontWeight: String(wordingWeight1),
+                    color: colorChip.black,
+                    lineHeight: String(descriptionLineHeight),
+                  }
+                }
+              ]
+            }
+          ]
+        });
+      }
+    }
+
+    // plus
+    blockFactor = createNode({
+      mother: blockArea,
+      style: {
+        verticalAlign: "top",
+        display: "block",
+        position: "relative",
+        padding: String(blockOuterPadding) + ea,
+        width: withOut(blockOuterPadding * 2, ea),
+        height: String(blockFactorHeight - (blockOuterPadding * 2)) + ea,
+        borderRadius: String(5) + "px",
+        background: colorChip.gray2,
       },
       children: [
         {
           style: {
-            position: desktop ? "absolute" : "relative",
-            top: String(0),
-            paddingLeft: String(desktop ? leftIndent : 0) + ea,
-            width: desktop ? String(clientInfoLeftWidth) + ea : String(100) + '%',
-            height: String(100) + '%',
             verticalAlign: "top",
-            textAlign: "left",
-            overflow: "scroll",
-            borderBottom: "1px solid " + colorChip.gray3,
-            boxSizing: "border-box",
-            paddingBottom: desktop ? "" : String(titleBottom) + ea
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            position: "relative",
+            width: String(blockFactorHeight - (blockOuterPadding * 2)) + ea,
+            height: String(blockFactorHeight - (blockOuterPadding * 2)) + ea,
+            background: colorChip.gray3,
+            borderRadius: String(5) + "px",
+            marginRight: String(blockInnerMargin) + ea,
+          },
+          children: [
+            {
+              text: '+',
+              style: {
+                position: "relative",
+                fontSize: String(plusSize) + ea,
+                fontWeight: String(plusWeight),
+                fontFamily: "graphik",
+                top: String(plusTextTop) + ea,
+                color: colorChip.white,
+              }
+            }
+          ]
+        },
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String((blockFactorHeight - (blockOuterPadding * 2)) * blockSecondRatio) + ea,
+            height: String(blockFactorHeight - (blockOuterPadding * 2)) + ea,
+            background: colorChip.gray3,
+            borderRadius: String(5) + "px",
+            marginRight: String(blockInnerMargin) + ea,
+          }
+        },
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: withOut(((blockFactorHeight - (blockOuterPadding * 2)) * (1 + blockSecondRatio) + (blockInnerMargin * 2)), ea),
+            height: String(blockFactorHeight - (blockOuterPadding * 2)) + ea,
+            background: colorChip.gray3,
+            borderRadius: String(5) + "px",
           }
         }
       ]
     });
 
-    if (desktop) {
-      width = (contentsClientInfo.getBoundingClientRect().width - clientInfoLeftWidth - contentsBetween - leftIndent - tableVisual) / sum;
-      contentsClientInfo.appendChild(mother.makeTable(matrix, { style: { width }, mergeMap, callbackMap, boldMap, titleMap, widthRatio }));
-      contentsClientInfo.children[1].style.display = "inline-block";
-      contentsClientInfo.children[1].style.verticalAlign = "top";
-      this.fixTargets.push(contentsClientInfo.lastChild);
-    } else {
-      width = (100 - (Number(board.style.left.replace(/[^0-9\-\.]/gi, '')) * 2) - (leftMargin * 2)) / sum;
-      contentsClientInfo.insertBefore(mother.makeTable(matrix, { style: { width }, mergeMap, callbackMap, boldMap, titleMap, widthRatio }), contentsClientInfo.firstChild);
-      contentsClientInfo.children[0].style.marginBottom = String(contentsBetween) + ea;
-      this.fixTargets.push(contentsClientInfo.firstChild);
-    }
-
-    whitePopupEvent = async function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      try {
-        if (!middleMode) {
-          const self = this;
-          const index = Number(this.getAttribute("index"));
-          const { title, contents } = mainContents[index];
-          const position = this.getAttribute("position");
-          const proid = this.getAttribute("proid");
-          const className = this.getAttribute("className");
-          const whiteCardClassName = "mainContentsWhiteCardClass";
-          const widthStandard = this.parentElement.parentElement.parentElement.parentElement.getBoundingClientRect().width;
-          const heightStandard = this.parentElement.parentElement.parentElement.parentElement.parentElement.getBoundingClientRect().height;
-          const [ titleDom, contentsDom ] = document.querySelectorAll('.' + className);
-          let width, height;
-          let topVisual;
-          let frame;
-          let textArea;
-          let innerMargin, innerTopMargin;
-          let base;
-          let lineHeight, updateEvent;
-
-          innerMargin = 38;
-          innerTopMargin = 30;
-          width = widthStandard * (3 / 4);
-          height = heightStandard * (3 / 4);
-          topVisual = 10;
-          lineHeight = 1.7;
-
-          updateEvent = async function (value) {
-            try {
-              let tempArr, doms;
-              tempArr = value.split("\n").map((i) => { return i.trim(); });
-              await ajaxJson({
-                id: proid,
-                column: position,
-                value: tempArr,
-                email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail
-              }, "/updateProjectHistory");
-              mainContents[index].contents = tempArr;
-              value = tempArr.map((i) => { return (i === '' ? "" : `<b style="${colorChip.gray4}">-</b> ${i}`); }).join("<br>");
-              GeneralJs.cleanChildren(contentsDom);
-              contentsDom.insertAdjacentHTML("beforeend", value);
-              doms = document.querySelectorAll('.' + whiteCardClassName);
-              for (let dom of doms) {
-                dom.remove();
-              }
-            } catch (e) {
-              console.log(e);
-            }
-          }
-
-          GeneralJs.scrollTo(this.parentElement.parentElement.parentElement.parentElement.parentElement, 0);
-
-          createNode({
-            mother: this,
-            class: [ whiteCardClassName ],
-            events: [
-              {
-                type: "click",
-                event: function (e) {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  const doms = document.querySelectorAll('.' + whiteCardClassName);
-                  for (let dom of doms) {
-                    dom.remove();
-                  }
-                }
-              },
-            ],
-            style: {
-              position: "fixed",
-              top: String(0),
-              left: String(0),
-              width: String(100) + '%',
-              height: String(100) + '%',
-              background: colorChip.shadow,
-              zIndex: String(2),
-              animation: "justfadein 0.3s ease forwards",
-            }
-          });
-
-          base = createNode({
-            mother: this,
-            class: [ whiteCardClassName ],
-            events: [
-              {
-                type: "click",
-                event: function (e) {
-                  e.preventDefault();
-                  e.stopPropagation();
-                }
-              },
-            ],
-            style: {
-              position: "fixed",
-              top: String((heightStandard * (1 / 4) * (1 / 2)) - topVisual) + ea,
-              left: withOut(50, width / 2, ea),
-              width: String(width) + ea,
-              height: String(height) + ea,
-              background: colorChip.white,
-              borderRadius: String(3) + "px",
-              zIndex: String(2),
-              animation: "fadeup 0.3s ease forwards",
-              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-              fontSize: String(fontSize) + ea,
-              fontWeight: String(500),
-              color: colorChip.black,
-            }
-          });
-          frame = createNode({
-            mother: base,
-            style: {
-              position: "relative",
-              top: String(innerTopMargin) + ea,
-              left: String(innerMargin) + ea,
-              width: withOut(100, innerMargin * 2, ea),
-              height: withOut(100, innerTopMargin * 2, ea),
-            }
-          });
-          textArea = createNode({
-            mother: frame,
-            mode: "textarea",
-            text: contents.join("\n"),
-            events: [
-              {
-                type: "click",
-                event: (e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                }
-              },
-              {
-                type: "keydown",
-                event: async function (e) {
-                  try {
-                    if (e.key === "Tab") {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      await updateEvent(this.value);
-                    }
-                  } catch (e) {
-                    console.log(e);
-                  }
-                }
-              },
-            ],
-            style: {
-              position: "absolute",
-              top: String(0),
-              left: String(0),
-              width: String(100) + '%',
-              height: String(100) + '%',
-              fontSize: String(fontSize) + ea,
-              overflow: "scroll",
-              border: String(0),
-              outline: String(0),
-              lineHeight: String(lineHeight),
-              background: "transparent",
-            }
-          });
-
-          textArea.focus();
-        }
-      } catch (e) {
-        console.log(e);
+    dateMatrix = getDateMatrix(today);
+    bigCalendar = createNode({
+      mother: contentsArea,
+      style: {
+        display: "block",
+        position: "relative",
+        paddingLeft: String(calendarVisualLeft) + ea,
+        paddingRight: String(calendarVisualLeft) + ea,
       }
-    }
-    num = 0;
-    for (let { title, className, contents, position, spread } of mainContents) {
-      words = createNode({
-        mother: contentsClientInfo.children[desktop ? 0 : 1],
-        attribute: [
-          { index: String(num) },
-          { position },
-          { proid },
-          { className },
-          { toggle: spread ? "off" : "on" }
-        ],
-        events: [
-          {
-            type: "contextmenu",
-            event: whitePopupEvent
-          },
-          {
-            type: "click",
-            event: function (e) {
-              const toggle = this.getAttribute("toggle");
-              if (toggle === "off") {
-                this.nextElementSibling.style.height = String(0);
-                this.querySelector("svg").style.transform = "rotate(0deg)";
-                this.setAttribute("toggle", "on");
-              } else {
-                this.nextElementSibling.style.height = "auto";
-                this.querySelector("svg").style.transform = "rotate(90deg)";
-                this.setAttribute("toggle", "off");
-              }
-            }
-          }
-        ],
-        class: [ className ],
-        text: title,
-        style: {
-          position: "relative",
-          fontSize: String(fontSize) + ea,
-          fontWeight: String(600),
-          color: colorChip.black,
-          marginBottom: String(wordsBetween0) + ea,
-          paddingLeft: mobile ? String(leftIndent) + ea : "",
-          cursor: "pointer",
-        }
-      });
-      createNode({
-        mother: words,
-        mode: "svg",
-        source: mother.returnArrow("right", colorChip.green),
-        style: {
-          position: "absolute",
-          width: String(arrowWidth) + ea,
-          left: String(desktop ? (-1 * leftIndent) + arrowLeft : 0) + ea,
-          top: String(arrowTop) + ea,
-          transform: spread ? "rotate(90deg)" : "rotate(0deg)",
-        }
-      });
-      createNode({
-        mother: contentsClientInfo.children[desktop ? 0 : 1],
-        attribute: [
-          { index: String(num) },
-          { position },
-          { proid },
-          { className }
-        ],
-        class: [ className ],
-        events: [
-          {
-            type: "click",
-            event: whitePopupEvent
-          }
-        ],
-        text: contents.map((z) => { return "<b%-%b> " + z.replace(/^\-/, '').replace(/^\- /, ''); }).map((z) => { if (z.trim() === "<b%-%b>") { return ""; } else { return z; } }).join("\n"),
-        style: {
-          position: "relative",
-          fontSize: String(fontSize) + ea,
-          fontWeight: String(400),
-          color: colorChip.black,
-          lineHeight: String(lineHeight),
-          marginBottom: String(wordsBetween1) + ea,
-          overflow: "hidden",
-          transition: "all 0s ease",
-          height: spread ? "auto" : String(0),
-        },
-        bold: {
-          color: colorChip.gray4,
-        }
-      });
-      num++;
-    }
-
-    images = pictures.map((image) => {
-      const imageLink = "/corePortfolio/listImage";
-      let pid;
-      pid = image.split('.')[0].replace(/^t[0-9]+/gi, '');
-      return "https://" + GHOSTHOST + imageLink + "/" + pid + "/" + image;
     });
-
-    if (images.length > 0) {
-      contentsClientPhoto = createNode({
-        mother: contentsArea,
-        style: {
-          position: "relative",
-          display: "block",
-          width: String(100) + '%',
-          marginBottom: String(clientInfoBottom) + ea,
-        },
-        children: [
-          {
-            text: pictureContents,
-            style: {
-              paddingLeft: String(leftIndent) + ea,
-              position: "relative",
-              display: "block",
-              fontSize: String(fontSize) + ea,
-              fontWeight: String(600),
-              color: colorChip.black,
-              marginBottom: String(wordsBetween1) + ea,
-            },
-            children: [
-              {
-                mode: "svg",
-                source: mother.returnArrow("right", colorChip.green),
-                style: {
-                  position: "absolute",
-                  width: String(arrowWidth) + ea,
-                  left: String(arrowLeft) + ea,
-                  top: String(arrowTop) + ea,
-                }
-              }
-            ]
-          },
-          {
-            style: {
-              position: "relative",
-              display: "block",
-            },
-          }
-        ]
-      });
-      contentsClientPhotoTong = contentsClientPhoto.children[1];
-      if (desktop) {
-        photoNumber = Math.floor((contentsClientPhotoTong.getBoundingClientRect().width + photoMargin) / (photoWidth + photoMargin));
-        photoWidth = (contentsClientPhotoTong.getBoundingClientRect().width - (photoMargin * (photoNumber - 1))) / photoNumber;
-      } else {
-        photoNumber = 2;
-        photoWidth = (100 - (Number(board.style.left.replace(/[^0-9\-\.]/gi, '')) * 2) - (leftMargin * 2) - photoMargin) / photoNumber;
-        photoMargin = photoMargin - 0.1;
-      }
-
-      positionArr = [];
-      for (let i = 0; i < photoNumber; i++) {
-        positionArr.push(createNode({
-          mother: contentsClientPhotoTong,
+    bigCalendarTitleZone = createNode({
+      mother: bigCalendar,
+      style: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        position: "relative",
+        marginBottom: String(bigCalendarTitleBottom) + ea,
+      },
+      children: [
+        {
+          text: dateToString(today).split('-').slice(0, 2).join(". "),
           style: {
-            position: "relative",
-            display: "inline-block",
-            width: "calc(calc(100% - " + String(photoMargin * (photoNumber - 1)) + ea + ") / " + String(photoNumber) + ")",
-            height: "auto",
-            marginRight: String(i === photoNumber - 1 ? 0 : photoMargin) + ea,
-            verticalAlign: "top",
+            fontSize: String(bigCalendarTitleSize) + ea,
+            fontWeight: String(bigCalendarTitleWeight),
+            fontFamily: "graphik",
+            color: colorChip.black,
           }
-        }));
-      }
-
-      num = 0;
-      imageTong = [];
-      for (let i = 0; i < images.length; i++) {
-        tempImage = createNode({
-          mother: contentsClientPhotoTong,
-          mode: "img",
+        },
+        {
+          mode: "svg",
           class: [ "hoverDefault_lite" ],
-          attribute: [
-            { src: images[i] },
-            { index: String(i) },
-            { method: /sitePhoto/g.test(images[i]) ? "site" : (/preferredPhoto/g.test(images[i]) ? "preferred" : "selected") },
-            { length: String(images.length) }
-          ],
-          events: [
-            {
-              type: "click",
-              event: function (e) {
-                if (desktop) {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  const { createNode, withOut, colorChip, equalJson, downloadFile } = GeneralJs;
-                  const totalImages = equalJson(JSON.stringify(images));
-                  const mother = document.getElementById("totalcontents");
-                  const className = "photoSelectedTarget";
-                  const length = Number(this.getAttribute("length"));
-                  const zIndex = 3;
-                  const wordDictionary = {
-                    selected: "고객님이 선택한 사진",
-                    site: "고객님이 보낸 현장",
-                    preferred: "고객님의 선호 사진"
-                  };
-                  let img, height, imgBox;
-                  let title, titleSize, bottom;
-                  let titleBox;
-                  let leftArrow, rightArrow;
-                  let leftArrowBox, rightArrowBox;
-                  let arrowHeight;
-                  let arrowMargin;
-                  let index, method, src;
-                  let convertEvent;
-
-                  index = Number(this.getAttribute("index"));
-                  method = this.getAttribute("method");
-                  src = this.getAttribute("src");
-
-                  convertEvent = () => {};
-
-                  height = 78;
-                  titleSize = 2;
-                  bottom = 6.6;
-                  arrowHeight = 1.7;
-                  arrowMargin = 78;
-
-                  createNode({
-                    mother,
-                    class: [ className ],
-                    events: [
-                      {
-                        type: "click",
-                        event: function (e) {
-                          const removeTargets = document.querySelectorAll('.' + className);
-                          for (let dom of removeTargets) {
-                            mother.removeChild(dom);
-                          }
-                        }
-                      }
-                    ],
-                    style: {
-                      position: "fixed",
-                      top: String(0),
-                      left: String(0),
-                      width: String(100) + '%',
-                      height: String(100) + '%',
-                      background: colorChip.darkDarkShadow,
-                      zIndex: String(zIndex),
-                      animation: "justfadeineight 0.2s ease forwards",
-                    }
-                  });
-
-                  img = createNode({
-                    mother,
-                    class: [ className ],
-                    mode: "img",
-                    attribute: [
-                      { src },
-                      { direction: "right" }
-                    ],
-                    style: {
-                      position: "fixed",
-                      top: String(0),
-                      left: String(0),
-                      height: String(height) + '%',
-                      width: "auto",
-                      zIndex: String(zIndex),
-                      transition: "all 0s ease",
-                      animation: "fadeuplite 0.2s ease forwards",
-                      borderRadius: String(3) + "px",
-                    }
-                  });
-                  imgBox = img.getBoundingClientRect();
-                  img.style.top = withOut(50, imgBox.height / 2, ea);
-                  img.style.left = withOut(50, imgBox.width / 2, ea);
-
-                  title = createNode({
-                    mother,
-                    events: [
-                      {
-                        type: [ "click", "dblclick", "selectstart" ],
-                        event: (e) => {
-                          e.stopPropagation();
-                          e.preventDefault();
-                        }
-                      }
-                    ],
-                    class: [ className ],
-                    text: wordDictionary[method],
-                    style: {
-                      position: "fixed",
-                      bottom: String(bottom) + '%',
-                      fontSize: String(titleSize) + "vh",
-                      fontWeight: String(600),
-                      color: colorChip.whiteBlack,
-                      left: String(50) + '%',
-                      zIndex: String(zIndex),
-                      transition: "all 0s ease",
-                      animation: "fadeuplite 0.2s ease forwards",
-                    }
-                  });
-                  titleBox = title.getBoundingClientRect();
-                  title.style.left = withOut(50, titleBox.width / 2, ea);
-
-                  leftArrow = createNode({
-                    mother,
-                    events: [
-                      {
-                        type: [ "dblclick", "selectstart" ],
-                        event: (e) => {
-                          e.stopPropagation();
-                          e.preventDefault();
-                        }
-                      }
-                    ],
-                    attribute: [
-                      { direction: "left" }
-                    ],
-                    class: [ className ],
-                    mode: "svg",
-                    source: instance.mother.returnArrow("left", colorChip.whiteBlack),
-                    style: {
-                      position: "fixed",
-                      top: String(0),
-                      left: String(0),
-                      height: String(arrowHeight) + "vh",
-                      zIndex: String(zIndex),
-                      transition: "all 0s ease",
-                      animation: "fadeuplite 0.2s ease forwards",
-                      cursor: "pointer"
-                    }
-                  });
-                  leftArrowBox = leftArrow.getBoundingClientRect();
-                  leftArrow.style.top = withOut(50, leftArrowBox.height / 2, ea);
-                  leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
-
-                  rightArrow = createNode({
-                    mother,
-                    events: [
-                      {
-                        type: [ "dblclick", "selectstart" ],
-                        event: (e) => {
-                          e.stopPropagation();
-                          e.preventDefault();
-                        }
-                      }
-                    ],
-                    attribute: [
-                      { direction: "right" }
-                    ],
-                    class: [ className ],
-                    mode: "svg",
-                    source: instance.mother.returnArrow("right", colorChip.whiteBlack),
-                    style: {
-                      position: "fixed",
-                      top: String(0),
-                      left: String(0),
-                      height: String(arrowHeight) + "vh",
-                      zIndex: String(zIndex),
-                      transition: "all 0s ease",
-                      animation: "fadeuplite 0.2s ease forwards",
-                      cursor: "pointer"
-                    }
-                  });
-                  rightArrowBox = rightArrow.getBoundingClientRect();
-                  rightArrow.style.top = withOut(50, rightArrowBox.height / 2, ea);
-                  rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
-
-                  convertEvent = function (e) {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    const direction = this.getAttribute("direction");
-                    let targetIndex, targetImage;
-                    if (direction === "left") {
-                      targetIndex = index - 1;
-                      if (totalImages[targetIndex] === undefined) {
-                        targetIndex = length - 1;
-                      }
-                    } else {
-                      targetIndex = index + 1;
-                      if (totalImages[targetIndex] === undefined) {
-                        targetIndex = 0;
-                      }
-                    }
-                    targetImage = totalImages[targetIndex];
-                    img.setAttribute("src", targetImage);
-                    imgBox = img.getBoundingClientRect();
-                    img.style.left = withOut(50, imgBox.width / 2, ea);
-                    leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
-                    rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
-
-                    index = targetIndex;
-                    src = targetImage;
-                    method = /sitePhoto/g.test(targetImage) ? "site" : (/preferredPhoto/g.test(targetImage) ? "preferred" : "selected");
-
-                    title.textContent = wordDictionary[method];
-                    titleBox = title.getBoundingClientRect();
-                    title.style.left = withOut(50, titleBox.width / 2, ea);
-                  }
-                  leftArrow.addEventListener("click", convertEvent);
-                  rightArrow.addEventListener("click", convertEvent);
-                  img.addEventListener("click", convertEvent);
-                }
-              }
-            }
-          ],
+          source: this.mother.returnArrow("left", colorChip.green),
           style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(photoWidth) + ea,
-            borderRadius: String(3) + "px",
-            marginRight: String(i % photoNumber === photoNumber - 1 ? 0 : photoMargin) + ea,
-            marginBottom: String(Math.floor(i / photoNumber) === Math.floor((images.length - 1) / photoNumber) ? 0 : photoMargin) + ea,
-            cursor: "pointer",
-            verticalAlign: "top",
+            position: "absolute",
+            top: String(arrowTop) + ea,
+            left: String(0) + ea,
+            width: String(arrowWidth) + ea,
           }
-        });
-
-        imageTong.push(tempImage);
-        if (imageTong.length === photoNumber) {
-          positionArr.sort((a, b) => { return a.getBoundingClientRect().height - b.getBoundingClientRect().height; });
-          imageTong.sort((a, b) => { return b.getBoundingClientRect().height - a.getBoundingClientRect().height; });
-          for (let i = 0; i < imageTong.length; i++) {
-            positionArr[i].appendChild(imageTong[i]);
-          }
-          imageTong = [];
-          num = -1;
-        }
-
-        num++;
-      }
-
-      positionArr.sort((a, b) => { return a.getBoundingClientRect().height - b.getBoundingClientRect().height; });
-      imageTong.sort((a, b) => { return b.getBoundingClientRect().height - a.getBoundingClientRect().height; });
-      for (let i = 0; i < imageTong.length; i++) {
-        positionArr[i].appendChild(imageTong[i]);
-      }
-
-    }
-
-    if (siteImages.length > 0) {
-      contentsClientPhoto = createNode({
-        mother: contentsArea,
-        style: {
-          position: "relative",
-          display: "block",
-          width: String(100) + '%',
-          marginBottom: String(clientInfoBottom) + ea,
         },
-        children: [
-          {
-            text: pictureContentsSite,
-            style: {
-              paddingLeft: String(leftIndent) + ea,
-              position: "relative",
-              display: "block",
-              fontSize: String(fontSize) + ea,
-              fontWeight: String(600),
-              color: colorChip.black,
-              marginBottom: String(wordsBetween1) + ea,
-            },
-            children: [
-              {
-                mode: "svg",
-                source: mother.returnArrow("right", colorChip.green),
-                style: {
-                  position: "absolute",
-                  width: String(arrowWidth) + ea,
-                  left: String(arrowLeft) + ea,
-                  top: String(arrowTop) + ea,
-                }
-              }
-            ]
-          },
-          {
-            style: {
-              position: "relative",
-              display: "block",
-            },
-          }
-        ]
-      });
-      contentsClientPhotoTong = contentsClientPhoto.children[1];
-      if (desktop) {
-        photoNumber = Math.floor((contentsClientPhotoTong.getBoundingClientRect().width + photoMargin) / (photoWidth + photoMargin));
-        photoWidth = (contentsClientPhotoTong.getBoundingClientRect().width - (photoMargin * (photoNumber - 1))) / photoNumber;
-      } else {
-        photoNumber = 2;
-        photoWidth = (100 - (Number(board.style.left.replace(/[^0-9\-\.]/gi, '')) * 2) - (leftMargin * 2) - photoMargin) / photoNumber;
-      }
-
-      positionArr = [];
-      for (let i = 0; i < photoNumber; i++) {
-        positionArr.push(createNode({
-          mother: contentsClientPhotoTong,
-          style: {
-            position: "relative",
-            display: "inline-block",
-            width: "calc(calc(100% - " + String(photoMargin * (photoNumber - 1)) + ea + ") / " + String(photoNumber) + ")",
-            height: "auto",
-            marginRight: String(i === photoNumber - 1 ? 0 : photoMargin) + ea,
-            verticalAlign: "top",
-          }
-        }));
-      }
-
-      num = 0;
-      imageTong = [];
-      for (let i = 0; i < siteImages.length; i++) {
-        tempImage = createNode({
-          mother: contentsClientPhotoTong,
-          mode: "img",
+        {
+          mode: "svg",
           class: [ "hoverDefault_lite" ],
-          attribute: [
-            { src: siteImages[i] },
-            { index: String(i) },
-            { method: /sitePhoto/g.test(siteImages[i]) ? "site" : (/preferredPhoto/g.test(siteImages[i]) ? "preferred" : "selected") },
-            { length: String(siteImages.length) }
-          ],
-          events: [
-            {
-              type: "click",
-              event: function (e) {
-                if (desktop) {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  const { createNode, withOut, colorChip, equalJson, downloadFile } = GeneralJs;
-                  const totalImages = equalJson(JSON.stringify(siteImages));
-                  const mother = document.getElementById("totalcontents");
-                  const className = "photoSelectedTarget";
-                  const length = Number(this.getAttribute("length"));
-                  const zIndex = 3;
-                  const wordDictionary = {
-                    selected: "고객님이 선택한 사진",
-                    site: "고객님이 보낸 현장",
-                    preferred: "고객님의 선호 사진"
-                  };
-                  let img, height, imgBox;
-                  let title, titleSize, bottom;
-                  let titleBox;
-                  let leftArrow, rightArrow;
-                  let leftArrowBox, rightArrowBox;
-                  let arrowHeight;
-                  let arrowMargin;
-                  let index, method, src;
-                  let convertEvent;
-
-                  index = Number(this.getAttribute("index"));
-                  method = this.getAttribute("method");
-                  src = this.getAttribute("src");
-
-                  convertEvent = () => {};
-
-                  height = 78;
-                  titleSize = 2;
-                  bottom = 6.6;
-                  arrowHeight = 1.7;
-                  arrowMargin = 78;
-
-                  createNode({
-                    mother,
-                    class: [ className ],
-                    events: [
-                      {
-                        type: "click",
-                        event: function (e) {
-                          const removeTargets = document.querySelectorAll('.' + className);
-                          for (let dom of removeTargets) {
-                            mother.removeChild(dom);
-                          }
-                        }
-                      }
-                    ],
-                    style: {
-                      position: "fixed",
-                      top: String(0),
-                      left: String(0),
-                      width: String(100) + '%',
-                      height: String(100) + '%',
-                      background: colorChip.darkDarkShadow,
-                      zIndex: String(zIndex),
-                      animation: "justfadeineight 0.2s ease forwards",
-                    }
-                  });
-
-                  img = createNode({
-                    mother,
-                    class: [ className ],
-                    mode: "img",
-                    attribute: [
-                      { src },
-                      { direction: "right" }
-                    ],
-                    style: {
-                      position: "fixed",
-                      top: String(0),
-                      left: String(0),
-                      height: String(height) + '%',
-                      width: "auto",
-                      zIndex: String(zIndex),
-                      transition: "all 0s ease",
-                      animation: "fadeuplite 0.2s ease forwards",
-                      borderRadius: String(3) + "px",
-                    }
-                  });
-                  imgBox = img.getBoundingClientRect();
-                  img.style.top = withOut(50, imgBox.height / 2, ea);
-                  img.style.left = withOut(50, imgBox.width / 2, ea);
-
-                  title = createNode({
-                    mother,
-                    events: [
-                      {
-                        type: [ "click", "dblclick", "selectstart" ],
-                        event: (e) => {
-                          e.stopPropagation();
-                          e.preventDefault();
-                        }
-                      }
-                    ],
-                    class: [ className ],
-                    text: wordDictionary[method],
-                    style: {
-                      position: "fixed",
-                      bottom: String(bottom) + '%',
-                      fontSize: String(titleSize) + "vh",
-                      fontWeight: String(600),
-                      color: colorChip.whiteBlack,
-                      left: String(50) + '%',
-                      zIndex: String(zIndex),
-                      transition: "all 0s ease",
-                      animation: "fadeuplite 0.2s ease forwards",
-                    }
-                  });
-                  titleBox = title.getBoundingClientRect();
-                  title.style.left = withOut(50, titleBox.width / 2, ea);
-
-                  leftArrow = createNode({
-                    mother,
-                    events: [
-                      {
-                        type: [ "dblclick", "selectstart" ],
-                        event: (e) => {
-                          e.stopPropagation();
-                          e.preventDefault();
-                        }
-                      }
-                    ],
-                    attribute: [
-                      { direction: "left" }
-                    ],
-                    class: [ className ],
-                    mode: "svg",
-                    source: instance.mother.returnArrow("left", colorChip.whiteBlack),
-                    style: {
-                      position: "fixed",
-                      top: String(0),
-                      left: String(0),
-                      height: String(arrowHeight) + "vh",
-                      zIndex: String(zIndex),
-                      transition: "all 0s ease",
-                      animation: "fadeuplite 0.2s ease forwards",
-                      cursor: "pointer"
-                    }
-                  });
-                  leftArrowBox = leftArrow.getBoundingClientRect();
-                  leftArrow.style.top = withOut(50, leftArrowBox.height / 2, ea);
-                  leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
-
-                  rightArrow = createNode({
-                    mother,
-                    events: [
-                      {
-                        type: [ "dblclick", "selectstart" ],
-                        event: (e) => {
-                          e.stopPropagation();
-                          e.preventDefault();
-                        }
-                      }
-                    ],
-                    attribute: [
-                      { direction: "right" }
-                    ],
-                    class: [ className ],
-                    mode: "svg",
-                    source: instance.mother.returnArrow("right", colorChip.whiteBlack),
-                    style: {
-                      position: "fixed",
-                      top: String(0),
-                      left: String(0),
-                      height: String(arrowHeight) + "vh",
-                      zIndex: String(zIndex),
-                      transition: "all 0s ease",
-                      animation: "fadeuplite 0.2s ease forwards",
-                      cursor: "pointer"
-                    }
-                  });
-                  rightArrowBox = rightArrow.getBoundingClientRect();
-                  rightArrow.style.top = withOut(50, rightArrowBox.height / 2, ea);
-                  rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
-
-                  convertEvent = function (e) {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    const direction = this.getAttribute("direction");
-                    let targetIndex, targetImage;
-                    if (direction === "left") {
-                      targetIndex = index - 1;
-                      if (totalImages[targetIndex] === undefined) {
-                        targetIndex = length - 1;
-                      }
-                    } else {
-                      targetIndex = index + 1;
-                      if (totalImages[targetIndex] === undefined) {
-                        targetIndex = 0;
-                      }
-                    }
-                    targetImage = totalImages[targetIndex];
-                    img.setAttribute("src", targetImage);
-                    imgBox = img.getBoundingClientRect();
-                    img.style.left = withOut(50, imgBox.width / 2, ea);
-                    leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
-                    rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
-
-                    index = targetIndex;
-                    src = targetImage;
-                    method = /sitePhoto/g.test(targetImage) ? "site" : (/preferredPhoto/g.test(targetImage) ? "preferred" : "selected");
-
-                    title.textContent = wordDictionary[method];
-                    titleBox = title.getBoundingClientRect();
-                    title.style.left = withOut(50, titleBox.width / 2, ea);
-                  }
-                  leftArrow.addEventListener("click", convertEvent);
-                  rightArrow.addEventListener("click", convertEvent);
-                  img.addEventListener("click", convertEvent);
-                }
-              }
-            }
-          ],
+          source: this.mother.returnArrow("right", colorChip.green),
           style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(photoWidth) + ea,
-            borderRadius: String(3) + "px",
-            marginRight: String(i % photoNumber === photoNumber - 1 ? 0 : photoMargin) + ea,
-            marginBottom: String(Math.floor(i / photoNumber) === Math.floor((siteImages.length - 1) / photoNumber) ? 0 : photoMargin) + ea,
-            cursor: "pointer",
-            verticalAlign: "top",
+            position: "absolute",
+            top: String(arrowTop) + ea,
+            right: String(0) + ea,
+            width: String(arrowWidth) + ea,
           }
-        });
-
-        imageTong.push(tempImage);
-        if (imageTong.length === photoNumber) {
-          positionArr.sort((a, b) => { return a.getBoundingClientRect().height - b.getBoundingClientRect().height; });
-          imageTong.sort((a, b) => { return b.getBoundingClientRect().height - a.getBoundingClientRect().height; });
-          for (let i = 0; i < imageTong.length; i++) {
-            positionArr[i].appendChild(imageTong[i]);
-          }
-          imageTong = [];
-          num = -1;
-        }
-
-        num++;
-      }
-
-      positionArr.sort((a, b) => { return a.getBoundingClientRect().height - b.getBoundingClientRect().height; });
-      imageTong.sort((a, b) => { return b.getBoundingClientRect().height - a.getBoundingClientRect().height; });
-      for (let i = 0; i < imageTong.length; i++) {
-        positionArr[i].appendChild(imageTong[i]);
-      }
-
-    }
-
-    if (preferImages.length > 0) {
-      contentsClientPhoto = createNode({
-        mother: contentsArea,
+        },
+      ]
+    });
+    bigCalendarContentsZone = createNode({
+      mother: bigCalendar,
+      style: {
+        display: "block",
+        position: "relative",
+        border: "1px solid " + colorChip.gray3,
+        borderRadius: String(5) + "px",
+        width: String(100) + '%',
+        overflow: "hidden",
+        boxSizing: "border-box",
+      },
+    })
+    for (let j = 0; j < weekWordings.length; j++) {
+      createNode({
+        mother: bigCalendarContentsZone,
         style: {
-          position: "relative",
-          display: "block",
-          width: String(100) + '%',
-          marginBottom: String(clientInfoBottom) + ea,
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "calc(100% / " + String(weekWordings.length) + ")",
+          height: String(weekBlockHeight) + ea,
+          background: colorChip.gray1,
+          boxSizing: "border-box",
+          borderRight: j !== weekWordings.length - 1 ? "1px solid " + colorChip.gray3 : "",
+          borderBottom: "1px solid " + colorChip.gray3,
         },
         children: [
           {
-            text: pictureContentsPrefer,
+            text: weekWordings[j],
             style: {
-              paddingLeft: String(leftIndent) + ea,
+              fontSize: String(weekBlockSize) + ea,
+              fontWeight: String(weekBlockWeight),
+              color: j < 5 ? colorChip.black : colorChip.red,
               position: "relative",
-              display: "block",
-              fontSize: String(fontSize) + ea,
-              fontWeight: String(600),
-              color: colorChip.black,
-              marginBottom: String(wordsBetween1) + ea,
-            },
-            children: [
-              {
-                mode: "svg",
-                source: mother.returnArrow("right", colorChip.green),
-                style: {
-                  position: "absolute",
-                  width: String(arrowWidth) + ea,
-                  left: String(arrowLeft) + ea,
-                  top: String(arrowTop) + ea,
-                }
-              }
-            ]
-          },
-          {
-            style: {
-              position: "relative",
-              display: "block",
-            },
-          }
-        ]
-      });
-      contentsClientPhotoTong = contentsClientPhoto.children[1];
-      if (desktop) {
-        photoNumber = Math.floor((contentsClientPhotoTong.getBoundingClientRect().width + photoMargin) / (photoWidth + photoMargin));
-        photoWidth = (contentsClientPhotoTong.getBoundingClientRect().width - (photoMargin * (photoNumber - 1))) / photoNumber;
-      } else {
-        photoNumber = 2;
-        photoWidth = (100 - (Number(board.style.left.replace(/[^0-9\-\.]/gi, '')) * 2) - (leftMargin * 2) - photoMargin) / photoNumber;
-      }
-
-      positionArr = [];
-      for (let i = 0; i < photoNumber; i++) {
-        positionArr.push(createNode({
-          mother: contentsClientPhotoTong,
-          style: {
-            position: "relative",
-            display: "inline-block",
-            width: "calc(calc(100% - " + String(photoMargin * (photoNumber - 1)) + ea + ") / " + String(photoNumber) + ")",
-            height: "auto",
-            marginRight: String(i === photoNumber - 1 ? 0 : photoMargin) + ea,
-            verticalAlign: "top",
-          }
-        }));
-      }
-
-      num = 0;
-      imageTong = [];
-      for (let i = 0; i < preferImages.length; i++) {
-        tempImage = createNode({
-          mother: contentsClientPhotoTong,
-          mode: "img",
-          class: [ "hoverDefault_lite" ],
-          attribute: [
-            { src: preferImages[i] },
-            { index: String(i) },
-            { method: /sitePhoto/g.test(preferImages[i]) ? "site" : (/preferredPhoto/g.test(preferImages[i]) ? "preferred" : "selected") },
-            { length: String(preferImages.length) }
-          ],
-          events: [
-            {
-              type: "click",
-              event: function (e) {
-                if (desktop) {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  const { createNode, withOut, colorChip, equalJson, downloadFile } = GeneralJs;
-                  const totalImages = equalJson(JSON.stringify(preferImages));
-                  const mother = document.getElementById("totalcontents");
-                  const className = "photoSelectedTarget";
-                  const length = Number(this.getAttribute("length"));
-                  const zIndex = 3;
-                  const wordDictionary = {
-                    selected: "고객님이 선택한 사진",
-                    site: "고객님이 보낸 현장",
-                    preferred: "고객님의 선호 사진"
-                  };
-                  let img, height, imgBox;
-                  let title, titleSize, bottom;
-                  let titleBox;
-                  let leftArrow, rightArrow;
-                  let leftArrowBox, rightArrowBox;
-                  let arrowHeight;
-                  let arrowMargin;
-                  let index, method, src;
-                  let convertEvent;
-
-                  index = Number(this.getAttribute("index"));
-                  method = this.getAttribute("method");
-                  src = this.getAttribute("src");
-
-                  convertEvent = () => {};
-
-                  height = 78;
-                  titleSize = 2;
-                  bottom = 6.6;
-                  arrowHeight = 1.7;
-                  arrowMargin = 78;
-
-                  createNode({
-                    mother,
-                    class: [ className ],
-                    events: [
-                      {
-                        type: "click",
-                        event: function (e) {
-                          const removeTargets = document.querySelectorAll('.' + className);
-                          for (let dom of removeTargets) {
-                            mother.removeChild(dom);
-                          }
-                        }
-                      }
-                    ],
-                    style: {
-                      position: "fixed",
-                      top: String(0),
-                      left: String(0),
-                      width: String(100) + '%',
-                      height: String(100) + '%',
-                      background: colorChip.darkDarkShadow,
-                      zIndex: String(zIndex),
-                      animation: "justfadeineight 0.2s ease forwards",
-                    }
-                  });
-
-                  img = createNode({
-                    mother,
-                    class: [ className ],
-                    mode: "img",
-                    attribute: [
-                      { src },
-                      { direction: "right" }
-                    ],
-                    style: {
-                      position: "fixed",
-                      top: String(0),
-                      left: String(0),
-                      height: String(height) + '%',
-                      width: "auto",
-                      zIndex: String(zIndex),
-                      transition: "all 0s ease",
-                      animation: "fadeuplite 0.2s ease forwards",
-                      borderRadius: String(3) + "px",
-                    }
-                  });
-                  imgBox = img.getBoundingClientRect();
-                  img.style.top = withOut(50, imgBox.height / 2, ea);
-                  img.style.left = withOut(50, imgBox.width / 2, ea);
-
-                  title = createNode({
-                    mother,
-                    events: [
-                      {
-                        type: [ "click", "dblclick", "selectstart" ],
-                        event: (e) => {
-                          e.stopPropagation();
-                          e.preventDefault();
-                        }
-                      }
-                    ],
-                    class: [ className ],
-                    text: wordDictionary[method],
-                    style: {
-                      position: "fixed",
-                      bottom: String(bottom) + '%',
-                      fontSize: String(titleSize) + "vh",
-                      fontWeight: String(600),
-                      color: colorChip.whiteBlack,
-                      left: String(50) + '%',
-                      zIndex: String(zIndex),
-                      transition: "all 0s ease",
-                      animation: "fadeuplite 0.2s ease forwards",
-                    }
-                  });
-                  titleBox = title.getBoundingClientRect();
-                  title.style.left = withOut(50, titleBox.width / 2, ea);
-
-                  leftArrow = createNode({
-                    mother,
-                    events: [
-                      {
-                        type: [ "dblclick", "selectstart" ],
-                        event: (e) => {
-                          e.stopPropagation();
-                          e.preventDefault();
-                        }
-                      }
-                    ],
-                    attribute: [
-                      { direction: "left" }
-                    ],
-                    class: [ className ],
-                    mode: "svg",
-                    source: instance.mother.returnArrow("left", colorChip.whiteBlack),
-                    style: {
-                      position: "fixed",
-                      top: String(0),
-                      left: String(0),
-                      height: String(arrowHeight) + "vh",
-                      zIndex: String(zIndex),
-                      transition: "all 0s ease",
-                      animation: "fadeuplite 0.2s ease forwards",
-                      cursor: "pointer"
-                    }
-                  });
-                  leftArrowBox = leftArrow.getBoundingClientRect();
-                  leftArrow.style.top = withOut(50, leftArrowBox.height / 2, ea);
-                  leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
-
-                  rightArrow = createNode({
-                    mother,
-                    events: [
-                      {
-                        type: [ "dblclick", "selectstart" ],
-                        event: (e) => {
-                          e.stopPropagation();
-                          e.preventDefault();
-                        }
-                      }
-                    ],
-                    attribute: [
-                      { direction: "right" }
-                    ],
-                    class: [ className ],
-                    mode: "svg",
-                    source: instance.mother.returnArrow("right", colorChip.whiteBlack),
-                    style: {
-                      position: "fixed",
-                      top: String(0),
-                      left: String(0),
-                      height: String(arrowHeight) + "vh",
-                      zIndex: String(zIndex),
-                      transition: "all 0s ease",
-                      animation: "fadeuplite 0.2s ease forwards",
-                      cursor: "pointer"
-                    }
-                  });
-                  rightArrowBox = rightArrow.getBoundingClientRect();
-                  rightArrow.style.top = withOut(50, rightArrowBox.height / 2, ea);
-                  rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
-
-                  convertEvent = function (e) {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    const direction = this.getAttribute("direction");
-                    let targetIndex, targetImage;
-                    if (direction === "left") {
-                      targetIndex = index - 1;
-                      if (totalImages[targetIndex] === undefined) {
-                        targetIndex = length - 1;
-                      }
-                    } else {
-                      targetIndex = index + 1;
-                      if (totalImages[targetIndex] === undefined) {
-                        targetIndex = 0;
-                      }
-                    }
-                    targetImage = totalImages[targetIndex];
-                    img.setAttribute("src", targetImage);
-                    imgBox = img.getBoundingClientRect();
-                    img.style.left = withOut(50, imgBox.width / 2, ea);
-                    leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
-                    rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
-
-                    index = targetIndex;
-                    src = targetImage;
-                    method = /sitePhoto/g.test(targetImage) ? "site" : (/preferredPhoto/g.test(targetImage) ? "preferred" : "selected");
-
-                    title.textContent = wordDictionary[method];
-                    titleBox = title.getBoundingClientRect();
-                    title.style.left = withOut(50, titleBox.width / 2, ea);
-                  }
-                  leftArrow.addEventListener("click", convertEvent);
-                  rightArrow.addEventListener("click", convertEvent);
-                  img.addEventListener("click", convertEvent);
-                }
-              }
-            }
-          ],
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(photoWidth) + ea,
-            borderRadius: String(3) + "px",
-            marginRight: String(i % photoNumber === photoNumber - 1 ? 0 : photoMargin) + ea,
-            marginBottom: String(Math.floor(i / photoNumber) === Math.floor((preferImages.length - 1) / photoNumber) ? 0 : photoMargin) + ea,
-            cursor: "pointer",
-            verticalAlign: "top",
-          }
-        });
-
-        imageTong.push(tempImage);
-        if (imageTong.length === photoNumber) {
-          positionArr.sort((a, b) => { return a.getBoundingClientRect().height - b.getBoundingClientRect().height; });
-          imageTong.sort((a, b) => { return b.getBoundingClientRect().height - a.getBoundingClientRect().height; });
-          for (let i = 0; i < imageTong.length; i++) {
-            positionArr[i].appendChild(imageTong[i]);
-          }
-          imageTong = [];
-          num = -1;
-        }
-
-        num++;
-      }
-
-      positionArr.sort((a, b) => { return a.getBoundingClientRect().height - b.getBoundingClientRect().height; });
-      imageTong.sort((a, b) => { return b.getBoundingClientRect().height - a.getBoundingClientRect().height; });
-      for (let i = 0; i < imageTong.length; i++) {
-        positionArr[i].appendChild(imageTong[i]);
-      }
-
-    }
-
-    for (let { title, contents } of noticeContents) {
-      noticeDom = createNode({
-        mother: contentsArea,
-        style: {
-          position: "relative",
-          display: "block",
-          width: String(100) + '%',
-          marginBottom: String(contentsBetween) + ea,
-        },
-        children: [
-          {
-            text: title,
-            style: {
-              paddingLeft: String(leftIndent) + ea,
-              position: "relative",
-              display: "block",
-              fontSize: String(fontSize) + ea,
-              fontWeight: String(600),
-              color: colorChip.black,
-              marginBottom: String(wordsBetween2) + ea,
-            },
-            children: [
-              {
-                mode: "svg",
-                source: mother.returnArrow("right", colorChip.green),
-                style: {
-                  position: "absolute",
-                  width: String(arrowWidth) + ea,
-                  left: String(arrowLeft) + ea,
-                  top: String(arrowTop) + ea,
-                }
-              }
-            ]
-          },
-          {
-            text: contents.map((z) => { return "<b%-%b> " + z; }).join("\n"),
-            style: {
-              position: "relative",
-              fontSize: String(fontSize) + ea,
-              fontWeight: String(400),
-              color: colorChip.black,
-              lineHeight: String(lineHeight),
-            },
-            bold: {
-              color: colorChip.gray4,
+              top: String(weekBlockTextTop) + ea,
             }
           }
         ]
       });
+    }
+    for (let i = 0; i < dateMatrix.matrix.length; i++) {
+      for (let j = 0; j < dateMatrix.matrix[i].length; j++) {
+        createNode({
+          mother: bigCalendarContentsZone,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: "calc(100% / " + String(dateMatrix.matrix[i].length) + ")",
+            height: String(dateBlockHeight) + ea,
+            background: dateMatrix.matrix[i][j] !== null ? colorChip.white : colorChip.gray0,
+            boxSizing: "border-box",
+            borderRight: j !== dateMatrix.matrix[i].length - 1 ? "1px solid " + colorChip.gray3 : "",
+            borderBottom: i !== dateMatrix.matrix.length - 1 ? "1px solid " + colorChip.gray3 : "",
+          },
+          children: [
+            {
+              text: dateMatrix.matrix[i][j] !== null ? String(dateMatrix.matrix[i][j].date) : "",
+              style: {
+                fontSize: String(weekBlockSize) + ea,
+                fontWeight: String(dateBlockWeight),
+                fontFamily: "graphik",
+                color: j < 5 ? colorChip.black : colorChip.red,
+                position: "absolute",
+                top: String(datePositionTop) + ea,
+                left: String(datePositionLeft) + ea,
+              }
+            }
+          ]
+        });
+      }
     }
 
     board.style.height = "auto";
