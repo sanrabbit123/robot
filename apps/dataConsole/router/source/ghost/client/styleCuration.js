@@ -5552,6 +5552,6 @@ StyleCurationJs.prototype.launching = async function (loading) {
 
   } catch (err) {
     console.log(err);
-    await GeneralJs.ajaxJson({ message: "StyleCurationJs.launching : " + this.client.name + " 에러 일어남 => " + err.message }, "/errorLog");
+    await GeneralJs.ajaxJson({ message: "StyleCurationJs.launching 에러 일어남 => " + err.message }, "/errorLog");
   }
 }
