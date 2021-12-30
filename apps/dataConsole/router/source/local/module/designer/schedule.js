@@ -878,11 +878,11 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
     wordingLeft = 34;
     wordingWeight0 = 600;
     wordingWeight1 = 400;
-    wordingTop = 13;
+    wordingTop = isMac() ? 13 : 14;
 
     descriptionPaddingLeft = wordingLeft;
     descriptionPaddingRight = dateLeft;
-    descriptionPaddingTop = 34;
+    descriptionPaddingTop = isMac() ? 34 : 35;
     descriptionLineHeight = 1.6;
 
     plusSize = 48;
@@ -899,7 +899,7 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
     weekBlockHeight = 48;
     weekBlockSize = 15;
     weekBlockWeight = 600;
-    weekBlockTextTop = -2;
+    weekBlockTextTop = isMac() ? -2 : -1;
 
     dateBlockHeight = 120;
     dateBlockPaddingTop = 40;
