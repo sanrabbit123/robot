@@ -9,7 +9,7 @@ const MongoReflection = function () {
   this.address = ADDRESS;
   this.dir = process.cwd() + "/apps/mongoReflection";
   this.servers = mongoTargets;
-  this.dropExceptionList = [ "slackMessages" ];
+  this.dropExceptionList = [ "slackMessages", "apartInfo" ];
 }
 
 MongoReflection.prototype.showTables = async function (location = "local") {
