@@ -167,7 +167,7 @@ ConsultingJs.prototype.certificationBox = function (name, phone, mother, boo, ca
   }
 
   randomValueAjaxData = "name=" + name + "&phone=" + phone + "&certification=" + randomValue;
-  GeneralJs.ajax(randomValueAjaxData, "https://homeliaison-bridge.xyz:3000/certification", function (data) {});
+  GeneralJs.ajax(randomValueAjaxData, "https://home-liaison.serveftp.com:3000/certification", function (data) {});
 
   let div_back, div_clone, div_clone2, svg_clone;
   let input_back, input_clone;
@@ -549,7 +549,7 @@ ConsultingJs.prototype.submitEvent = function (boo) {
           ajaxdata += "&googleId=" + window.ga.getAll()[0].get('clientId');
         }
 
-        GeneralJs.ajax(ajaxdata, "https://homeliaison-bridge.xyz:3000/submit", (data) => {});
+        GeneralJs.ajax(ajaxdata, "https://home-liaison.serveftp.com:3000/submit", (data) => {});
         GeneralJs.ajax(ajaxdata, "/engine/Submit.php", instance.thankyouPage(boo, submitNamePhone));
       });
 
@@ -1386,7 +1386,7 @@ ConsultingJs.prototype.thankyouLoad = function (boo, valuesTong) {
           }
         }
 
-        GeneralJs.ajaxForm(formData, "https://homeliaison-bridge.xyz:3000/binary").then(function (data) {
+        GeneralJs.ajaxForm(formData, "https://home-liaison.serveftp.com:3000/binary").then(function (data) {
           if (data === "success") {
             instance.pendingBox(document.getElementById(toggle ? "consultingbox" : "moconsultingbox"), (toggle ? "desktop" : "mobile"), true, true);
             instance.completeBox(document.getElementById(toggle ? "consultingbox" : "moconsultingbox"), (toggle ? "desktop" : "mobile"));

@@ -1280,7 +1280,7 @@ GeneralJs.isClient = function (name, phone) {
   }
 
   return new Promise(function(resolve, reject) {
-    GeneralJs.ajax("name=" + n + "&phone=" + p, "https://homeliaison-bridge.xyz:3000/namephone", function (data) {
+    GeneralJs.ajax("name=" + n + "&phone=" + p, "https://home-liaison.serveftp.com:3000/namephone", function (data) {
       if (data === "success") {
         resolve({ boo: true, name: n, phone: p });
       } else {
