@@ -229,7 +229,7 @@ DevContext.prototype.launching = async function () {
     await scheduleDummyDataPatch();
     */
 
-    
+
 
 
 
@@ -2489,9 +2489,9 @@ DevContext.prototype.certRefreshing = async function () {
     for (let c of certbotFolderList) {
       await certSetting(certbotFolder + "/" + c);
     }
-    for (let s of scpCommands) {
-      shell.exec(s);
-    }
+    // for (let s of scpCommands) {
+    //   shell.exec(s);
+    // }
 
   } catch (e) {
     console.log(e);
