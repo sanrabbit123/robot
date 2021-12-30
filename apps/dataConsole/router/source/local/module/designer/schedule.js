@@ -763,6 +763,15 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
   this.project = project;
   const today = new Date();
   const totalStatic = this.scheduleReturnStatic(designer, project, client, clientHistory, projectHistory, requestNumber);
+  const dateToNumber = (date) => { return (date.getFullYear() * 100000) + ((date.getMonth() + 1) * 100) + date.getDate() }
+  const calendarMethods = [
+    "start",
+    "end",
+    "middle",
+    "none",
+    "startend",
+    "blank"
+  ];
   const {
     title,
     initialContents,
@@ -813,10 +822,22 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
     let bigCalendarTitleSize, bigCalendarTitleWeight;
     let weekBlockHeight;
     let weekBlockSize, weekBlockWeight, weekBlockTextTop;
+    let dateBlockPaddingTop, dateBlockPaddingBottom;
     let dateBlockHeight, dateBlockWeight;
     let datePositionTop, datePositionLeft;
     let arrowWidth, arrowTop;
     let blockInsert;
+    let scheduleTargets;
+    let tempArr;
+    let tempNumber;
+    let barMatrix, barMatrix_final;
+    let dateBlocks;
+    let block;
+    let noneDeleteArr;
+    let barMother;
+    let barMotherHeight;
+    let colorSqureTop, colorSqureHeight;
+    let colorSqureIndent;
 
     topMargin = <%% 42, 38, 32, 30, 5.8 %%>;
     leftMargin = <%% 50, 46, 38, 32, 5.8 %%>;
@@ -881,6 +902,8 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
     weekBlockTextTop = -2;
 
     dateBlockHeight = 120;
+    dateBlockPaddingTop = 40;
+    dateBlockPaddingBottom = 20;
     dateBlockWeight = 300;
 
     datePositionTop = 10;
@@ -888,6 +911,11 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
 
     arrowWidth = 12;
     arrowTop = 22;
+
+    barMotherHeight = 20;
+    colorSqureTop = 4;
+    colorSqureHeight = 12;
+    colorSqureIndent = 25;
 
     blockInsert = () => {}
 
@@ -968,166 +996,163 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
       }
     });
 
-    if (projectHistory.schedule.children.length > 0) {
-      for (let i = 0; i < projectHistory.schedule.children.length; i++) {
+    for (let i = 0; i < projectHistory.schedule.children.length; i++) {
+      ({ date: { start: dateStart, end: dateEnd }, contents: { title: wordingTitle, description: wordingDescription, color: barColor } } = projectHistory.schedule.children[i]);
+      dateStart = dateToString(dateStart).replace(/-/gi, ". ").slice(2);
+      dateEnd = dateToString(dateEnd).replace(/-/gi, ". ").slice(2);
 
-        ({ date: { start: dateStart, end: dateEnd }, contents: { title: wordingTitle, description: wordingDescription, color: barColor } } = projectHistory.schedule.children[i]);
-        dateStart = dateToString(dateStart).replace(/-/gi, ". ").slice(2);
-        dateEnd = dateToString(dateEnd).replace(/-/gi, ". ").slice(2);
-
-        blockFactor = createNode({
-          mother: blockArea,
-          style: {
-            display: "block",
-            position: "relative",
-            padding: String(blockOuterPadding) + ea,
-            width: withOut(blockOuterPadding * 2, ea),
-            height: String(blockFactorHeight - (blockOuterPadding * 2)) + ea,
-            borderRadius: String(5) + "px",
-            background: colorChip.gray2,
-            marginBottom: String(blockFactorMarginBottom) + ea,
+      blockFactor = createNode({
+        mother: blockArea,
+        style: {
+          display: "block",
+          position: "relative",
+          padding: String(blockOuterPadding) + ea,
+          width: withOut(blockOuterPadding * 2, ea),
+          height: String(blockFactorHeight - (blockOuterPadding * 2)) + ea,
+          borderRadius: String(5) + "px",
+          background: colorChip.gray2,
+          marginBottom: String(blockFactorMarginBottom) + ea,
+        }
+      });
+      blockWhite0 = createNode({
+        mother: blockFactor,
+        style: {
+          verticalAlign: "top",
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          position: "relative",
+          width: String(blockFactorHeight - (blockOuterPadding * 2)) + ea,
+          height: String(blockFactorHeight - (blockOuterPadding * 2)) + ea,
+          background: colorChip.white,
+          borderRadius: String(5) + "px",
+          marginRight: String(blockInnerMargin) + ea,
+        },
+        children: [
+          {
+            text: String(i + 1),
+            style: {
+              position: "relative",
+              fontSize: String(numberSize) + ea,
+              fontWeight: String(numberWeight),
+              fontFamily: "graphik",
+              top: String(numberTextTop) + ea,
+              color: colorChip.black,
+            }
           }
-        });
-        blockWhite0 = createNode({
-          mother: blockFactor,
-          style: {
-            verticalAlign: "top",
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            position: "relative",
-            width: String(blockFactorHeight - (blockOuterPadding * 2)) + ea,
-            height: String(blockFactorHeight - (blockOuterPadding * 2)) + ea,
-            background: colorChip.white,
-            borderRadius: String(5) + "px",
-            marginRight: String(blockInnerMargin) + ea,
-          },
-          children: [
-            {
-              text: String(i + 1),
-              style: {
-                position: "relative",
-                fontSize: String(numberSize) + ea,
-                fontWeight: String(numberWeight),
-                fontFamily: "graphik",
-                top: String(numberTextTop) + ea,
-                color: colorChip.black,
-              }
+        ]
+      });
+      blockWhite1 = createNode({
+        mother: blockFactor,
+        style: {
+          verticalAlign: "top",
+          display: "inline-block",
+          position: "relative",
+          width: String((blockFactorHeight - (blockOuterPadding * 2)) * blockSecondRatio) + ea,
+          height: String(blockFactorHeight - (blockOuterPadding * 2)) + ea,
+          background: colorChip.white,
+          borderRadius: String(5) + "px",
+          marginRight: String(blockInnerMargin) + ea,
+        },
+        children: [
+          {
+            style: {
+              position: "absolute",
+              width: withOut(dateLeft * 2, ea),
+              bottom: String(dateLineBottom) + ea,
+              left: String(dateLeft) + ea,
+              borderBottom: "1px solid " + colorChip.green,
             }
-          ]
-        });
-        blockWhite1 = createNode({
-          mother: blockFactor,
-          style: {
-            verticalAlign: "top",
-            display: "inline-block",
-            position: "relative",
-            width: String((blockFactorHeight - (blockOuterPadding * 2)) * blockSecondRatio) + ea,
-            height: String(blockFactorHeight - (blockOuterPadding * 2)) + ea,
-            background: colorChip.white,
-            borderRadius: String(5) + "px",
-            marginRight: String(blockInnerMargin) + ea,
           },
-          children: [
-            {
-              style: {
-                position: "absolute",
-                width: withOut(dateLeft * 2, ea),
-                bottom: String(dateLineBottom) + ea,
-                left: String(dateLeft) + ea,
-                borderBottom: "1px solid " + colorChip.green,
-              }
-            },
-            {
-              text: dateStart,
-              style: {
-                position: "absolute",
-                fontSize: String(dateSize) + ea,
-                fontWeight: String(dateWeight),
-                fontFamily: "graphik",
-                color: colorChip.black,
-                top: String(dateTop) + ea,
-                left: String(dateLeft) + ea,
-                background: colorChip.white,
-                paddingRight: String(datePadding) + ea,
-              }
-            },
-            {
-              text: dateEnd,
-              style: {
-                position: "absolute",
-                fontSize: String(dateSize) + ea,
-                fontWeight: String(dateWeight),
-                fontFamily: "graphik",
-                color: colorChip.black,
-                bottom: String(dateBottom) + ea,
-                right: String(dateLeft) + ea,
-                background: colorChip.white,
-                paddingLeft: String(datePadding) + ea,
-              }
-            },
-          ]
-        });
-        blockWhite2 = createNode({
-          mother: blockFactor,
-          style: {
-            verticalAlign: "top",
-            display: "inline-block",
-            position: "relative",
-            width: withOut(((blockFactorHeight - (blockOuterPadding * 2)) * (1 + blockSecondRatio) + (blockInnerMargin * 2) + descriptionPaddingLeft + descriptionPaddingRight), ea),
-            height: String(blockFactorHeight - (blockOuterPadding * 2) - descriptionPaddingTop) + ea,
-            paddingTop: String(descriptionPaddingTop) + ea,
-            paddingLeft: String(descriptionPaddingLeft) + ea,
-            paddingRight: String(descriptionPaddingRight) + ea,
-            background: colorChip.white,
-            borderRadius: String(5) + "px",
+          {
+            text: dateStart,
+            style: {
+              position: "absolute",
+              fontSize: String(dateSize) + ea,
+              fontWeight: String(dateWeight),
+              fontFamily: "graphik",
+              color: colorChip.black,
+              top: String(dateTop) + ea,
+              left: String(dateLeft) + ea,
+              background: colorChip.white,
+              paddingRight: String(datePadding) + ea,
+            }
           },
-          children: [
-            {
-              style: {
-                position: "absolute",
-                left: String(dateLeft) + ea,
-                top: String(dateBottom) + ea,
-                width: String(colorBarWidth) + ea,
-                height: withOut((dateBottom * 2) + colorBarVisual, ea),
-                borderRadius: String(colorBarWidth) + ea,
-                background: barColor,
-              }
+          {
+            text: dateEnd,
+            style: {
+              position: "absolute",
+              fontSize: String(dateSize) + ea,
+              fontWeight: String(dateWeight),
+              fontFamily: "graphik",
+              color: colorChip.black,
+              bottom: String(dateBottom) + ea,
+              right: String(dateLeft) + ea,
+              background: colorChip.white,
+              paddingLeft: String(datePadding) + ea,
+            }
+          },
+        ]
+      });
+      blockWhite2 = createNode({
+        mother: blockFactor,
+        style: {
+          verticalAlign: "top",
+          display: "inline-block",
+          position: "relative",
+          width: withOut(((blockFactorHeight - (blockOuterPadding * 2)) * (1 + blockSecondRatio) + (blockInnerMargin * 2) + descriptionPaddingLeft + descriptionPaddingRight), ea),
+          height: String(blockFactorHeight - (blockOuterPadding * 2) - descriptionPaddingTop) + ea,
+          paddingTop: String(descriptionPaddingTop) + ea,
+          paddingLeft: String(descriptionPaddingLeft) + ea,
+          paddingRight: String(descriptionPaddingRight) + ea,
+          background: colorChip.white,
+          borderRadius: String(5) + "px",
+        },
+        children: [
+          {
+            style: {
+              position: "absolute",
+              left: String(dateLeft) + ea,
+              top: String(dateBottom) + ea,
+              width: String(colorBarWidth) + ea,
+              height: withOut((dateBottom * 2) + colorBarVisual, ea),
+              borderRadius: String(colorBarWidth) + ea,
+              background: barColor,
+            }
+          },
+          {
+            text: wordingTitle,
+            style: {
+              position: "absolute",
+              left: String(wordingLeft) + ea,
+              top: String(wordingTop) + ea,
+              fontSize: String(wordingSize) + ea,
+              fontWeight: String(wordingWeight0),
+              color: colorChip.black,
+            }
+          },
+          {
+            style: {
+              position: "relative",
+              width: String(100) + '%',
+              height: String(100) + '%',
+              background: "transparent",
+              overflow: "scroll"
             },
-            {
-              text: wordingTitle,
-              style: {
-                position: "absolute",
-                left: String(wordingLeft) + ea,
-                top: String(wordingTop) + ea,
-                fontSize: String(wordingSize) + ea,
-                fontWeight: String(wordingWeight0),
-                color: colorChip.black,
-              }
-            },
-            {
-              style: {
-                position: "relative",
-                width: String(100) + '%',
-                height: String(100) + '%',
-                background: "transparent",
-                overflow: "scroll"
-              },
-              children: [
-                {
-                  text: wordingDescription,
-                  style: {
-                    fontSize: String(wordingSize) + ea,
-                    fontWeight: String(wordingWeight1),
-                    color: colorChip.black,
-                    lineHeight: String(descriptionLineHeight),
-                  }
+            children: [
+              {
+                text: wordingDescription,
+                style: {
+                  fontSize: String(wordingSize) + ea,
+                  fontWeight: String(wordingWeight1),
+                  color: colorChip.black,
+                  lineHeight: String(descriptionLineHeight),
                 }
-              ]
-            }
-          ]
-        });
-      }
+              }
+            ]
+          }
+        ]
+      });
     }
 
     // plus
@@ -1278,7 +1303,19 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
 
     blockInsert = () => {
       cleanChildren(bigCalendarContentsZone);
-      for (let j = 0; j < weekWordings.length; j++) {
+
+      scheduleTargets = [];
+      for (let i = 0; i < projectHistory.schedule.children.length; i++) {
+        ({ date: { start: dateStart, end: dateEnd }, contents: { title: wordingTitle, description: wordingDescription, color: barColor } } = projectHistory.schedule.children[i]);
+        scheduleTargets.push({
+          start: new Date(JSON.stringify(dateStart).slice(1, -1)),
+          end: new Date(JSON.stringify(dateEnd).slice(1, -1)),
+          title: wordingTitle,
+          color: barColor,
+        });
+      }
+
+      for (let i = 0; i < weekWordings.length; i++) {
         createNode({
           mother: bigCalendarContentsZone,
           style: {
@@ -1289,16 +1326,16 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
             height: String(weekBlockHeight) + ea,
             background: colorChip.gray1,
             boxSizing: "border-box",
-            borderRight: j !== weekWordings.length - 1 ? "1px solid " + colorChip.gray3 : "",
+            borderRight: i !== weekWordings.length - 1 ? "1px solid " + colorChip.gray3 : "",
             borderBottom: "1px solid " + colorChip.gray3,
           },
           children: [
             {
-              text: weekWordings[j],
+              text: weekWordings[i],
               style: {
                 fontSize: String(weekBlockSize) + ea,
                 fontWeight: String(weekBlockWeight),
-                color: j < 5 ? colorChip.black : colorChip.red,
+                color: i < 5 ? colorChip.black : colorChip.red,
                 position: "relative",
                 top: String(weekBlockTextTop) + ea,
               }
@@ -1306,15 +1343,42 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
           ]
         });
       }
+
+      barMatrix = [];
+      dateBlocks = [];
       for (let i = 0; i < dateMatrix.matrix.length; i++) {
         for (let j = 0; j < dateMatrix.matrix[i].length; j++) {
-          createNode({
+
+          tempArr = [];
+          for (let k = 0; k < scheduleTargets.length; k++) {
+            if (dateMatrix.matrix[i][j] === null) {
+              tempArr.push(calendarMethods[3]);
+            } else {
+              tempNumber = dateToNumber(new Date(dateMatrix.year, dateMatrix.month, dateMatrix.matrix[i][j].date));
+              if (dateToNumber(scheduleTargets[k].start) === tempNumber) {
+                if (dateToNumber(scheduleTargets[k].end) === tempNumber) {
+                  tempArr.push(calendarMethods[4]);
+                } else {
+                  tempArr.push(calendarMethods[0]);
+                }
+              } else if (dateToNumber(scheduleTargets[k].start) < tempNumber && tempNumber < dateToNumber(scheduleTargets[k].end)) {
+                tempArr.push(calendarMethods[2]);
+              } else if (dateToNumber(scheduleTargets[k].end) === tempNumber) {
+                tempArr.push(calendarMethods[1]);
+              } else {
+                tempArr.push(calendarMethods[3]);
+              }
+            }
+          }
+
+          block = createNode({
             mother: bigCalendarContentsZone,
             style: {
               display: "inline-block",
               position: "relative",
               width: "calc(100% / " + String(dateMatrix.matrix[i].length) + ")",
-              height: String(dateBlockHeight) + ea,
+              paddingTop: String(dateBlockPaddingTop) + ea,
+              paddingBottom: String(dateBlockPaddingBottom) + ea,
               background: dateMatrix.matrix[i][j] !== null ? colorChip.white : colorChip.gray0,
               boxSizing: "border-box",
               borderRight: j !== dateMatrix.matrix[i].length - 1 ? "1px solid " + colorChip.gray3 : "",
@@ -1335,8 +1399,116 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
               }
             ]
           });
+          dateBlocks.push(block);
+
+          if (barMatrix.length > 0) {
+            for (let z = 0; z < barMatrix[barMatrix.length - 1].length; z++) {
+              for (let k = 0; k < barMatrix[barMatrix.length - 1].length; k++) {
+                if (tempArr[k] === calendarMethods[3] && (tempArr[k + 1] === calendarMethods[2] || tempArr[k + 1] === calendarMethods[1] || tempArr[k + 1] === calendarMethods[5])) {
+                  if (barMatrix[barMatrix.length - 1][k] !== calendarMethods[3] && barMatrix[barMatrix.length - 1][k] !== calendarMethods[4]) {
+                    tempArr[k] = calendarMethods[5];
+                  }
+                }
+              }
+            }
+          }
+          barMatrix.push(tempArr);
+
         }
       }
+
+      noneDeleteArr = (new Array(scheduleTargets.length)).fill(0, 0);
+      for (let arr of barMatrix) {
+        for (let i = 0; i < arr.length; i++) {
+          if (arr[i] !== calendarMethods[3]) {
+            noneDeleteArr[i] = noneDeleteArr[i] + 1;
+          }
+          arr[i] = arr[i] + "_" + scheduleTargets[i].color + "_" + scheduleTargets[i].title;
+        }
+      }
+
+      barMatrix_final = [];
+      for (let arr of barMatrix) {
+        for (let i = 0; i < arr.length; i++) {
+          arr[i] = arr[i] + "_" + String(noneDeleteArr[i]);
+        }
+        barMatrix_final.push(arr.filter((str) => { return Number(str.split("_")[str.split("_").length - 1]) !== 0 }));
+      }
+
+      for (let i = 0; i < barMatrix_final.length; i++) {
+        for (let j = 0; j < barMatrix_final[i].length; j++) {
+          const [ method, color, title ] = barMatrix_final[i][j].split('_');
+          barMother = createNode({
+            mother: dateBlocks[i],
+            style: {
+              position: "relative",
+              display: "block",
+              height: String(barMotherHeight) + ea,
+              width: String(100) + '%',
+            }
+          });
+
+          if (method === "start") {
+            createNode({
+              mother: barMother,
+              attribute: { title, color, method },
+              style: {
+                position: "absolute",
+                top: String(colorSqureTop) + ea,
+                height: String(colorSqureHeight) + ea,
+                width: String(100 - colorSqureIndent) + '%',
+                right: String(0) + ea,
+                background: color,
+                borderTopLeftRadius: String(colorSqureHeight) + "px",
+                borderBottomLeftRadius: String(colorSqureHeight) + "px",
+              }
+            });
+          } else if (method === "end") {
+            createNode({
+              mother: barMother,
+              attribute: { title, color, method },
+              style: {
+                position: "absolute",
+                top: String(colorSqureTop) + ea,
+                height: String(colorSqureHeight) + ea,
+                width: String(100 - colorSqureIndent) + '%',
+                left: String(0) + ea,
+                background: color,
+                borderTopRightRadius: String(colorSqureHeight) + "px",
+                borderBottomRightRadius: String(colorSqureHeight) + "px",
+              }
+            });
+          } else if (method === "middle") {
+            createNode({
+              mother: barMother,
+              attribute: { title, color, method },
+              style: {
+                position: "absolute",
+                top: String(colorSqureTop) + ea,
+                height: String(colorSqureHeight) + ea,
+                width: "calc(100% + " + String(1 * 2) + ea + ")",
+                left: String(-1) + ea,
+                background: color,
+              }
+            });
+          } else if (method === "startend") {
+            createNode({
+              mother: barMother,
+              attribute: { title, color, method },
+              style: {
+                position: "absolute",
+                top: String(colorSqureTop) + ea,
+                height: String(colorSqureHeight) + ea,
+                width: String(100 - (colorSqureIndent * 2)) + '%',
+                left: String(colorSqureIndent) + '%',
+                background: color,
+                borderRadius: String(colorSqureHeight) + "px",
+              }
+            });
+          }
+        }
+      }
+
     }
     blockInsert();
 

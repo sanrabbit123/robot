@@ -123,8 +123,8 @@ DevContext.prototype.launching = async function () {
         children: [
           {
             date: {
-              start: new Date(2021, 11, 31),
-              end: new Date(2022, 0, 20)
+              start: new Date(2021, 11, 2),
+              end: new Date(2021, 11, 10)
             },
             contents: {
               title: "1차 제안",
@@ -134,8 +134,8 @@ DevContext.prototype.launching = async function () {
           },
           {
             date: {
-              start: new Date(2021, 0, 11),
-              end: new Date(2022, 0, 20)
+              start: new Date(2021, 11, 6),
+              end: new Date(2021, 11, 15)
             },
             contents: {
               title: "수정 제안",
@@ -145,8 +145,8 @@ DevContext.prototype.launching = async function () {
           },
           {
             date: {
-              start: new Date(2021, 0, 21),
-              end: new Date(2022, 1, 5)
+              start: new Date(2021, 11, 12),
+              end: new Date(2021, 11, 25)
             },
             contents: {
               title: "구매 리스트 제공",
@@ -156,8 +156,8 @@ DevContext.prototype.launching = async function () {
           },
           {
             date: {
-              start: new Date(2021, 1, 7),
-              end: new Date(2022, 1, 10)
+              start: new Date(2021, 11, 30),
+              end: new Date(2022, 0, 10)
             },
             contents: {
               title: "제작 가구 발주",
