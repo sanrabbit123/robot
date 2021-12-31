@@ -127,7 +127,7 @@ Robot.prototype.aliveTest = async function () {
       { name: "python", protocol: "https:", host: address.pythoninfo.host, port: generalPort, },
       { name: "home", protocol: "https:", host: address.homeinfo.ghost.host, port: generalPort, },
       { name: "office", protocol: "https:", host: address.officeinfo.ghost.host, port: ghostPort, },
-      { name: "officeGraphic", protocol: "https:", host: address.officeinfo.ghost.host, port: address.homeinfo.ghost.graphic.port[0], },
+      { name: "officeGraphic", protocol: "https:", host: address.homeinfo.ghost.host, port: address.homeinfo.ghost.graphic.port[0], },
     ];
 
     targetNumber = targets.length;
@@ -408,7 +408,7 @@ Robot.prototype.taxBill = async function () {
 Robot.prototype.cashReceipt = async function () {
   try {
     const { shell, shellLink } = this.mother;
-    const url = "https://" + this.address.officeinfo.ghost.host + ":" + String(this.address.officeinfo.ghost.graphic.port[0]) + "/cash";
+    const url = "https://" + this.address.homeinfo.ghost.host + ":" + String(this.address.homeinfo.ghost.graphic.port[0]) + "/cash";
     shell.exec(`curl ${url}`);
   } catch (e) {
     console.log(e);

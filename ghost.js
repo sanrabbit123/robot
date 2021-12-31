@@ -2283,7 +2283,7 @@ Ghost.prototype.ghostRouter = function (needs) {
         const pdfName = htmlName.replace(/\.html$/i, ".pdf");
 
         await fileSystem("write", [ `${static}/${htmlName}`, req.body.html.replace(/__equal__/gi, '=').replace(/__ampersand__/gi, '&') ]);
-        const r = await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(instance.address.officeinfo.ghost.graphic.port[0]) + "/pdf", { link: "https://" + instance.address.officeinfo.ghost.host + "/" + htmlName, name: pdfName }, { headers: { "Content-Type": "application/json" } });
+        const r = await requestSystem("https://" + instance.address.homeinfo.ghost.host + ":" + String(instance.address.homeinfo.ghost.graphic.port[0]) + "/pdf", { link: "https://" + instance.address.officeinfo.ghost.host + "/" + htmlName, name: pdfName }, { headers: { "Content-Type": "application/json" } });
         console.log(r)
         setQueue(() => {
           shell.exec(`rm -rf ${shellLink(static)}/${htmlName};rm -rf ${shellLink(static)}/${shellLink(pdfName)}`);
@@ -2669,7 +2669,7 @@ Ghost.prototype.ghostRouter = function (needs) {
           throw new Error("invalid post");
         }
         const { data } = equalJson(req.body);
-        await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(instance.address.officeinfo.ghost.graphic.port[0]) + "/apartment", data, { headers: { "Content-Type": "application/json" } });
+        await requestSystem("https://" + instance.address.homeinfo.ghost.host + ":" + String(instance.address.homeinfo.ghost.graphic.port[0]) + "/apartment", data, { headers: { "Content-Type": "application/json" } });
         res.send(JSON.stringify({ message: "done" }));
       } catch (e) {
         res.send(JSON.stringify({ message: "error : " + e.message }));

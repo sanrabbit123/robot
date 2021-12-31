@@ -271,7 +271,7 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
           }
         }
 
-        url = "https://" + address.officeinfo.ghost.host + ":" + String(address.officeinfo.ghost.graphic.port[0]) + "/form";
+        url = "https://" + address.homeinfo.ghost.host + ":" + String(address.homeinfo.ghost.graphic.port[0]) + "/form";
 
         await requestSystem(url, { requestNumber, client: client.toNormal(), designer: designer.toNormal(), project: project.toNormal(), contractName, contractAddress }, { headers: { "Content-type": "application/json" } });
       } else {
@@ -414,7 +414,7 @@ ReceiptRouter.prototype.rou_post_createConstructContract = function () {
                 }
               }
 
-              url = "https://" + address.officeinfo.ghost.host + ":" + String(address.officeinfo.ghost.graphic.port[0]) + "/constructForm";
+              url = "https://" + address.homeinfo.ghost.host + ":" + String(address.homeinfo.ghost.graphic.port[0]) + "/constructForm";
               await requestSystem(url, { summary, requestNumber, client: client.toNormal(), designer: designer.toNormal(), project: project.toNormal() }, { headers: { "Content-type": "application/json" } });
 
             } else {
@@ -716,7 +716,7 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
           }).then(() => {
             errorLog("현금 영수증 관련 핸드폰 번호 감지 => " + phone).catch((e) => { console.log(e); });
             if (/^010/.test(phone)) {
-              return requestSystem(`https://${instance.address.officeinfo.ghost.host}:${String(instance.address.officeinfo.ghost.graphic.port[0])}/receiptSend`, {
+              return requestSystem(`https://${instance.address.homeinfo.ghost.host}:${String(instance.address.homeinfo.ghost.graphic.port[0])}/receiptSend`, {
                 amount: String(amount),
                 phone,
               }, { headers: { "Content-Type": "application/json" } });
