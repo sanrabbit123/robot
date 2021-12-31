@@ -1398,7 +1398,10 @@ GraphicBot.prototype.botRouter = function () {
         "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
       try {
-        await shellExec(`wkhtmltopdf ${req.body.link} /Users/uragen/pdf/${shellLink(req.body.name)};`);
+        const home = "/Users/uragen";
+        const appName = "pdfConverter/app.js";
+        const staticFolder = "pdf";
+        await shellExec(`node ${shellLink(home)}/${shellLink(appName)} ${req.body.link} ${shellLink(home)}/${shellLink(staticFolder)}/${shellLink(req.body.name)};`);
         res.send({ link: `https://${instance.address.homeinfo.ghost.host}:${String(instance.address.homeinfo.ghost.pdf.port[0])}/` + shellLink(req.body.name) });
       } catch (e) {
         console.log(e);
