@@ -762,6 +762,8 @@ DataConsole.prototype.connect = async function (noStatic = false) {
           let __wallLogicBoo, __vailHosts, __authorization, __originTarget, __headers, __slackMessage;
 
           __vailHosts = [
+            instance.address.frontinfo.host,
+            instance.address.frontinfo.host + ":3000",
             instance.address.homeinfo.ghost.host,
             instance.address.homeinfo.ghost.host + ":3000",
             instance.address.pythoninfo.host,
@@ -785,7 +787,7 @@ DataConsole.prototype.connect = async function (noStatic = false) {
             __originTarget = req.headers["host"] || "invaild";
           }
           for (let host of __vailHosts) {
-            __wallLogicBoo = ((__originTarget.trim().replace(/\/$/, '') === ("https://" + host)) || (__originTarget.trim().replace(/\/$/, '') === host));
+            __wallLogicBoo = (new RegExp(host, "gi")).test(__originTarget.trim().replace(/\/$/, ''));
             if (__wallLogicBoo) {
               break;
             }
