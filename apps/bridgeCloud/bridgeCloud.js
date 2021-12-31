@@ -660,26 +660,38 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       filteredObj.cloudChannel = [];
       if (filteredObj.channel !== undefined) {
         tempArr = filteredObj.channel.split("__input__");
-        tempArr0 = tempArr[0].split("__split__");
-        tempArr1 = tempArr[1].split("__split__");
-        tempArr2 = tempArr[2].split("__split__");
 
-        if (tempArr0.length === 1 && tempArr0[0] === '') {
+        if (tempArr.length > 0) {
+          tempArr0 = tempArr[0].split("__split__");
+          if (tempArr0.length === 1 && tempArr0[0] === '') {
+            filteredObj.webChannel = [];
+          } else {
+            filteredObj.webChannel = tempArr0;
+          }
+        } else {
           filteredObj.webChannel = [];
-        } else {
-          filteredObj.webChannel = tempArr0;
         }
 
-        if (tempArr1.length === 1 && tempArr1[0] === '') {
+        if (tempArr.length > 1) {
+          tempArr1 = tempArr[1].split("__split__");
+          if (tempArr1.length === 1 && tempArr1[0] === '') {
+            filteredObj.snsChannel = [];
+          } else {
+            filteredObj.snsChannel = tempArr1;
+          }
+        } else {
           filteredObj.snsChannel = [];
-        } else {
-          filteredObj.snsChannel = tempArr1;
         }
 
-        if (tempArr2.length === 1 && tempArr2[0] === '') {
-          filteredObj.cloudChannel = [];
+        if (tempArr.length > 2) {
+          tempArr2 = tempArr[2].split("__split__");
+          if (tempArr2.length === 1 && tempArr2[0] === '') {
+            filteredObj.cloudChannel = [];
+          } else {
+            filteredObj.cloudChannel = tempArr2;
+          }
         } else {
-          filteredObj.cloudChannel = tempArr2;
+          filteredObj.cloudChannel = [];
         }
 
         delete filteredObj.channel;
@@ -1374,8 +1386,59 @@ BridgeCloud.prototype.serverLaunching = async function (toss = false) {
 
     //set router
     const { get, post } = this.bridgeServer([ MONGOC, MONGOLOCALC, kakaoInstance, humanInstance, addressInstance ]);
-    for (let obj of get) { app.get(obj.link, obj.func); }
-    for (let obj of post) { app.post(obj.link, obj.func); }
+    for (let obj of get) {
+      app.get(obj.link, obj.func);
+    }
+    for (let obj of post) {
+      app.post(obj.link, function (req, res) {
+        let __wallLogicBoo, __vailHosts, __authorization, __originTarget, __headers, __slackMessage;
+        __vailHosts = [
+          instance.address.frontinfo.host,
+          instance.address.frontinfo.host + ":3000",
+          instance.address.homeinfo.ghost.host,
+          instance.address.homeinfo.ghost.host + ":3000",
+          instance.address.pythoninfo.host,
+          instance.address.pythoninfo.host + ":3000",
+          instance.address.officeinfo.ghost.host,
+          instance.address.officeinfo.ghost.host + ":" + String(TESTINBOUND),
+          "localhost:3000",
+          "localhost:8080",
+          "stdpay.inicis.com",
+          "fcstdpay.inicis.com",
+          "ksstdpay.inicis.com",
+          "stgmobile.inicis.com",
+          "ksmobile.inicis.com",
+          "fcmobile.inicis.com"
+        ];
+
+        __wallLogicBoo = false;
+
+        __originTarget = req.headers["origin"] || "invaild";
+        if (__originTarget === "invaild") {
+          __originTarget = req.headers["host"] || "invaild";
+        }
+        for (let host of __vailHosts) {
+          __wallLogicBoo = (new RegExp(host, "gi")).test(__originTarget.trim().replace(/\/$/, ''));
+          if (__wallLogicBoo) {
+            break;
+          }
+        }
+        if (!__wallLogicBoo) {
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ message: "OK" }));
+          __headers = req.headers;
+          __headers = JSON.parse(JSON.stringify(__headers));
+          __slackMessage = JSON.stringify(__headers, null, 2);
+          if (req.body !== null && req.body !== undefined) {
+            __slackMessage += "\n\n";
+            __slackMessage += JSON.stringify(req.body, null, 2);
+          }
+          errorLog({ text: "잘못된 보안 접근 감지 : (BridgeCloud) \n" + JSON.stringify(__headers, null, 2), channel: "#error_log" }).catch((e) => { console.log(e); });
+        } else {
+          obj.func(req, res);
+        }
+      });
+    }
 
     //server on
     https.createServer(pems, app).listen(this.cloudHost.port, this.cloudHost.inner, () => {

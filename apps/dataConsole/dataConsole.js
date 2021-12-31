@@ -762,8 +762,6 @@ DataConsole.prototype.connect = async function (noStatic = false) {
           let __wallLogicBoo, __vailHosts, __authorization, __originTarget, __headers, __slackMessage;
 
           __vailHosts = [
-            instance.address.backinfo.host,
-            instance.address.backinfo.host + ":3000",
             instance.address.homeinfo.ghost.host,
             instance.address.homeinfo.ghost.host + ":3000",
             instance.address.pythoninfo.host,
