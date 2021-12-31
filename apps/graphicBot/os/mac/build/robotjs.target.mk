@@ -25,7 +25,7 @@ CFLAGS_Debug := \
 	-O0 \
 	-gdwarf-2 \
 	-mmacosx-version-min=10.13 \
-	-arch arm64 \
+	-arch x86_64 \
 	-Wall \
 	-Wendif-labels \
 	-W \
@@ -50,13 +50,13 @@ CFLAGS_OBJC_Debug :=
 CFLAGS_OBJCC_Debug :=
 
 INCS_Debug := \
-	-I/Users/baechang-gyu/Library/Caches/node-gyp/17.0.1/include/node \
-	-I/Users/baechang-gyu/Library/Caches/node-gyp/17.0.1/src \
-	-I/Users/baechang-gyu/Library/Caches/node-gyp/17.0.1/deps/openssl/config \
-	-I/Users/baechang-gyu/Library/Caches/node-gyp/17.0.1/deps/openssl/openssl/include \
-	-I/Users/baechang-gyu/Library/Caches/node-gyp/17.0.1/deps/uv/include \
-	-I/Users/baechang-gyu/Library/Caches/node-gyp/17.0.1/deps/zlib \
-	-I/Users/baechang-gyu/Library/Caches/node-gyp/17.0.1/deps/v8/include \
+	-I/Users/uragen/Library/Caches/node-gyp/17.3.0/include/node \
+	-I/Users/uragen/Library/Caches/node-gyp/17.3.0/src \
+	-I/Users/uragen/Library/Caches/node-gyp/17.3.0/deps/openssl/config \
+	-I/Users/uragen/Library/Caches/node-gyp/17.3.0/deps/openssl/openssl/include \
+	-I/Users/uragen/Library/Caches/node-gyp/17.3.0/deps/uv/include \
+	-I/Users/uragen/Library/Caches/node-gyp/17.3.0/deps/zlib \
+	-I/Users/uragen/Library/Caches/node-gyp/17.3.0/deps/v8/include \
 	-I$(srcdir)/../nan \
 	-I$(srcdir)/System/Library/Frameworks/CoreFoundation.Framework/Headers \
 	-I$(srcdir)/System/Library/Frameworks/Carbon.Framework/Headers \
@@ -83,7 +83,7 @@ CFLAGS_Release := \
 	-O3 \
 	-gdwarf-2 \
 	-mmacosx-version-min=10.13 \
-	-arch arm64 \
+	-arch x86_64 \
 	-Wall \
 	-Wendif-labels \
 	-W \
@@ -108,13 +108,13 @@ CFLAGS_OBJC_Release :=
 CFLAGS_OBJCC_Release :=
 
 INCS_Release := \
-	-I/Users/baechang-gyu/Library/Caches/node-gyp/17.0.1/include/node \
-	-I/Users/baechang-gyu/Library/Caches/node-gyp/17.0.1/src \
-	-I/Users/baechang-gyu/Library/Caches/node-gyp/17.0.1/deps/openssl/config \
-	-I/Users/baechang-gyu/Library/Caches/node-gyp/17.0.1/deps/openssl/openssl/include \
-	-I/Users/baechang-gyu/Library/Caches/node-gyp/17.0.1/deps/uv/include \
-	-I/Users/baechang-gyu/Library/Caches/node-gyp/17.0.1/deps/zlib \
-	-I/Users/baechang-gyu/Library/Caches/node-gyp/17.0.1/deps/v8/include \
+	-I/Users/uragen/Library/Caches/node-gyp/17.3.0/include/node \
+	-I/Users/uragen/Library/Caches/node-gyp/17.3.0/src \
+	-I/Users/uragen/Library/Caches/node-gyp/17.3.0/deps/openssl/config \
+	-I/Users/uragen/Library/Caches/node-gyp/17.3.0/deps/openssl/openssl/include \
+	-I/Users/uragen/Library/Caches/node-gyp/17.3.0/deps/uv/include \
+	-I/Users/uragen/Library/Caches/node-gyp/17.3.0/deps/zlib \
+	-I/Users/uragen/Library/Caches/node-gyp/17.3.0/deps/v8/include \
 	-I$(srcdir)/../nan \
 	-I$(srcdir)/System/Library/Frameworks/CoreFoundation.Framework/Headers \
 	-I$(srcdir)/System/Library/Frameworks/Carbon.Framework/Headers \
@@ -171,7 +171,7 @@ LDFLAGS_Debug := \
 	-undefined dynamic_lookup \
 	-Wl,-search_paths_first \
 	-mmacosx-version-min=10.13 \
-	-arch arm64 \
+	-arch x86_64 \
 	-L$(builddir) \
 	-stdlib=libc++
 
@@ -183,7 +183,7 @@ LDFLAGS_Release := \
 	-undefined dynamic_lookup \
 	-Wl,-search_paths_first \
 	-mmacosx-version-min=10.13 \
-	-arch arm64 \
+	-arch x86_64 \
 	-L$(builddir) \
 	-stdlib=libc++
 
