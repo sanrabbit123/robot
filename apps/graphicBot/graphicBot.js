@@ -1512,6 +1512,7 @@ GraphicBot.prototype.getChromeSize = async function () {
 GraphicBot.prototype.botServer = async function () {
   const instance = this;
   const { fileSystem, shell, shellLink } = this.mother;
+  const https = require("https");
   const express = require("express");
   const multer = require("multer");
   const multiForms = multer();
@@ -1528,14 +1529,7 @@ GraphicBot.prototype.botServer = async function () {
     let front, routerObj;
     let pems, pemsLink, certDir, keyDir, caDir;
     let tongItems;
-    let https;
     let isGhost;
-
-    if (this.os === "mac") {
-      https = require("http");
-    } else {
-      https = require("https");
-    }
 
     await this.back.setInfoObj({ getMode: false });
 
@@ -1568,11 +1562,6 @@ GraphicBot.prototype.botServer = async function () {
         this.port = address.ghost.graphic.port;
         this.localhost = "https://" + address.ghost.host + ":" + String(address.ghost.graphic.port);
       }
-    }
-
-    if (this.os === "mac") {
-      this.localhost = "http://localhost:3000";
-      this.port = 3000;
     }
 
     certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
@@ -1617,15 +1606,9 @@ GraphicBot.prototype.botServer = async function () {
 
     await this.getChromeSize();
 
-    if (this.os === "mac") {
-      https.createServer(app).listen(this.port, () => {
-        console.log(`\x1b[33m%s\x1b[0m`, `Server running in ${String(this.port)}`);
-      });
-    } else {
-      https.createServer(pems, app).listen(this.port, () => {
-        console.log(`\x1b[33m%s\x1b[0m`, `Server running in ${String(this.port)}`);
-      });
-    }
+    https.createServer(pems, app).listen(this.port, () => {
+      console.log(`\x1b[33m%s\x1b[0m`, `Server running in ${String(this.port)}`);
+    });
 
   } catch (e) {
     console.log(e);
