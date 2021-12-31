@@ -1467,7 +1467,7 @@ DesignerJs.prototype.requestStaticHtml = function (designer, project, client, cl
       <html lang="ko" dir="ltr">
         <head>
           <meta charset="utf-8">
-          <style>${String(document.querySelector("style").innerHTML)}</style>
+          <style>${String(document.querySelector("style").innerHTML.replace(/'/gi, "__quotes__"))}</style>
           <title></title>
         </head>
         <body style="padding-top:${String(leftMargin)}${ea};padding-bottom:${String(leftMargin)}${ea};">
