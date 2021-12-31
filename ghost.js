@@ -2283,13 +2283,13 @@ Ghost.prototype.ghostRouter = function (needs) {
         const pdfName = htmlName.replace(/\.html$/i, ".pdf");
 
         await fileSystem("write", [ `${static}/${htmlName}`, req.body.html.replace(/__equal__/gi, '=').replace(/__ampersand__/gi, '&') ]);
-        const r = await requestSystem("https://" + instance.address.homeinfo.ghost.host + ":" + String(instance.address.homeinfo.ghost.graphic.port[0]) + "/pdf", { link: "https://" + instance.address.officeinfo.ghost.host + "/" + htmlName, name: pdfName }, { headers: { "Content-Type": "application/json" } });
-        console.log(r)
+        const graphicResponse = await requestSystem("https://" + instance.address.homeinfo.ghost.host + ":" + String(instance.address.homeinfo.ghost.graphic.port[0]) + "/pdf", { link: "https://" + instance.address.officeinfo.ghost.host + "/" + htmlName, name: pdfName }, { headers: { "Content-Type": "application/json" } });
+
         setQueue(() => {
-          shell.exec(`rm -rf ${shellLink(static)}/${htmlName};rm -rf ${shellLink(static)}/${shellLink(pdfName)}`);
+          shell.exec(`rm -rf ${shellLink(static)}/${htmlName};`);
         }, 15 * 60 * 1000);
 
-        res.send(JSON.stringify({ pdf: `https://${instance.address.officeinfo.ghost.host}/${global.encodeURIComponent(pdfName)}` }));
+        res.send(JSON.stringify({ pdf: graphicResponse.data.link }));
 
       } catch (e) {
         console.log(e);

@@ -1398,15 +1398,9 @@ GraphicBot.prototype.botRouter = function () {
         "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
       try {
-        const coreTarget = instance.address.officeinfo.map.find((obj) => { return obj.name === "core" });
-        if (coreTarget === undefined) {
-          throw new Error("invaild infoObj");
-        }
-        const scpConst = `${coreTarget.user}@${coreTarget.ip}:${instance.address.officeinfo.ghost.file.static}`;
-        await shellExec(`wkhtmltopdf ${req.body.link} /home/homeliaison/${shellLink(req.body.name)};`);
-        await shellExec(`scp /home/homeliaison/${shellLink(req.body.name)} ${scpConst};`);
-        await shellExec(`rm -rf /home/homeliaison/${shellLink(req.body.name)};`);
-        res.send({ message: "done" });
+        const staticConst = "/Users/uragen/pdf";
+        await shellExec(`wkhtmltopdf ${req.body.link} ${shellLink(staticConst)}/${shellLink(req.body.name)};`);
+        res.send({ link: `https://${instance.address.homeinfo.ghost.host}:${String(instance.address.homeinfo.ghost.pdf.port[0])}/` + shellLink(req.body.name) });
       } catch (e) {
         console.log(e);
         res.send({ message: "error : " + e.message });
