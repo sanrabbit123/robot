@@ -74,6 +74,7 @@ module.exports = {
         description: "",
         color: "#000000",
         period: 0,
+        order: 0
       };
     }
     return dummy;

@@ -87,6 +87,7 @@ const ScheduleTask = function (json) {
   this.description = json.description;
   this.color = json.color;
   this.period = json.period;
+  this.order = json.order;
 }
 
 ScheduleTask.prototype.toNormal = function () {
@@ -95,6 +96,7 @@ ScheduleTask.prototype.toNormal = function () {
   obj.description = this.description;
   obj.color = this.color;
   obj.period = this.period;
+  obj.order = this.order;
   return obj;
 }
 
