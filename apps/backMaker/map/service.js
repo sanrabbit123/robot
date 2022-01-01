@@ -30,6 +30,7 @@ module.exports = {
               },
             },
             period: 0,
+            schedule: [],
           },
         }
       };
@@ -66,6 +67,13 @@ module.exports = {
       dummy = {
         title: "",
         contents: "",
+      };
+    } else if (subject === "setting.schedule") {
+      dummy = {
+        title: "",
+        description: "",
+        color: "#000000",
+        period: 0,
       };
     }
     return dummy;

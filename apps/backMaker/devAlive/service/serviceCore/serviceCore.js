@@ -82,9 +82,42 @@ Coordinates.prototype.toNormal = function () {
   return obj;
 }
 
+const ScheduleTask = function (json) {
+  this.title = json.title;
+  this.description = json.description;
+  this.color = json.color;
+  this.period = json.period;
+}
+
+ScheduleTask.prototype.toNormal = function () {
+  let obj = {};
+  obj.title = this.title;
+  obj.description = this.description;
+  obj.color = this.color;
+  obj.period = this.period;
+  return obj;
+}
+
+class Schedule extends Array {
+  constructor(json) {
+    super();
+    for (let i of json) {
+      this.push(new ScheduleTask(i));
+    }
+  }
+  toNormal() {
+    let arr = [];
+    for (let i of this) {
+      arr.push(i.toNormal());
+    }
+    return arr;
+  }
+}
+
 const CoreSetting = function (json) {
   this.coordinates = new Coordinates(json.coordinates);
   this.period = new Period(json.period);
+  this.schedule = new Schedule(json.schedule);
 }
 
 CoreSetting.prototype.toNormal = function () {
@@ -92,6 +125,7 @@ CoreSetting.prototype.toNormal = function () {
   obj = {};
   obj.coordinates = this.coordinates.toNormal();
   obj.period = this.period.toNormal();
+  obj.schedule = this.schedule.toNormal();
   return obj;
 }
 
