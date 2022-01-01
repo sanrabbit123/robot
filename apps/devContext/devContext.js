@@ -85,7 +85,10 @@ DevContext.prototype.launching = async function () {
     // await this.pureSpawn();
 
 
-
+    // await this.printSpotsGraph([
+    //   [ 3, 10 ],
+    //   [ 40, 50 ]
+    // ])
 
 
 
@@ -1859,6 +1862,39 @@ DevContext.prototype.launching = async function () {
     await this.MONGOLOCALC.close();
     // await rethink.close();
     console.log(`done`);
+  }
+}
+
+DevContext.prototype.printSpotsGraph = async function (matrix) {
+  if (!Array.isArray(matrix)) {
+    throw new Error("invaild input");
+  }
+  if (!matrix.every((arr) => { return Array.isArray(arr) })) {
+    throw new Error("invaild input");
+  }
+  if (!matrix.every((arr) => { return arr.length === 2 })) {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  const { fileSystem, shellLink, shellExec, uniqueValue } = this.mother;
+  try {
+    const first = `<head><meta charset="utf-8"><style media="screen">*{margin:0;padding:0}</style></head><body><script src="https://www.desmos.com/api/v1.6/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script><div id="calculator" style="width: 100vw; height: 100vh;"></div><script>const calculator = Desmos.GraphingCalculator(document.getElementById('calculator'));\n`;
+    const end = `\n</script></body>`;
+    let middle, fileName, num;
+
+    middle = '';
+    num = 0;
+    for (let arr of matrix) {
+      middle += `calculator.setExpression({ id: 'spot${String(num)}', latex: '(${String(arr[0])}, ${String(arr[1])})' });\n`;
+      num++;
+    }
+
+    fileName = "graph_" + uniqueValue("hex") + ".html";
+    await fileSystem(`write`, [ process.cwd() + "/temp/" + fileName, (first + middle + end) ]);
+    await shellExec(`open ${shellLink(process.cwd() + "/temp/" + fileName)}`);
+
+  } catch (e) {
+    console.log(e);
   }
 }
 
