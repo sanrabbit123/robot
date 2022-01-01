@@ -2,6 +2,7 @@ const GraphicBot = function () {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
+  const GoogleChrome = require(`${process.cwd()}/apps/googleAPIs/googleChrome.js`);
   const { exec } = require(`child_process`);
   const os = require(`os`);
   const thisOs = os.type();
@@ -24,6 +25,7 @@ const GraphicBot = function () {
   }
   this.mother = new Mother();
   this.back = new BackMaker();
+  this.chromeGhost = new GoogleChrome();
 
   if (/Linux/gi.test(thisOs)) {
     this.bot = require(`${process.cwd()}/apps/graphicBot/os/linux/build/Release/robotjs.node`);
@@ -777,7 +779,8 @@ GraphicBot.prototype.startWork = function () {
 GraphicBot.prototype.botRouter = function () {
   const instance = this;
   const back = this.back;
-  const { fileSystem, shell, shellExec, shellLink, equalJson, requestSystem, sleep, stringToDate, getDateMatrix, statusReading } = this.mother;
+  const chromeGhost = this.chromeGhost;
+  const { fileSystem, shell, shellExec, shellLink, equalJson, requestSystem, sleep, stringToDate, getDateMatrix, statusReading, setQueue } = this.mother;
   const orderConst = 'g';
   const tong = this.tong;
   const address = this.address;
@@ -1399,9 +1402,15 @@ GraphicBot.prototype.botRouter = function () {
       });
       try {
         const home = "/Users/uragen";
-        const appName = "pdfConverter/app.js";
         const staticFolder = "pdf";
-        await shellExec(`node ${shellLink(home)}/${shellLink(appName)} ${req.body.link} ${shellLink(home)}/${shellLink(staticFolder)}/${shellLink(req.body.name)};`);
+        await chromeGhost.pdfPrint(req.body.link, `${home}/${staticFolder}/${req.body.name}`);
+        setQueue(async () => {
+          try {
+            await shellExec(`rm`, [ `-rf`, `${home}/${staticFolder}/${req.body.name}` ]);
+          } catch (e) {
+            console.log(e);
+          }
+        }, 15 * 60 * 1000);
         res.send({ link: `https://${instance.address.homeinfo.ghost.host}:${String(instance.address.homeinfo.ghost.pdf.port[0])}/` + shellLink(req.body.name) });
       } catch (e) {
         console.log(e);

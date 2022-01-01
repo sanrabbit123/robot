@@ -12,7 +12,7 @@ const GoogleDrive = require(APP_PATH + "/googleAPIs/googleDrive.js");
 const GoogleCalendar = require(APP_PATH + "/googleAPIs/googleCalendar.js");
 const GoogleMail = require(APP_PATH + "/googleAPIs/googleMail.js");
 const GoogleDocs = require(APP_PATH + "/googleAPIs/googleDocs.js");
-const GoogleChrome = require(`${process.cwd()}/apps/googleAPIs/googleChrome.js`);
+const GoogleChrome = require(APP_PATH + "/googleAPIs/googleChrome.js");
 const AiGraph = require(APP_PATH + "/contentsMaker/aiGraph.js");
 const AiConsole = require(APP_PATH + "/contentsMaker/aiConsole.js");
 const AiContents = require(APP_PATH + "/contentsMaker/aiContents.js");
@@ -85,7 +85,12 @@ DevContext.prototype.launching = async function () {
     // await this.pureSpawn();
 
 
-    await this.findCode("graphic.port");
+
+  
+
+
+
+
 
 
     // const WebSocket = require("ws");

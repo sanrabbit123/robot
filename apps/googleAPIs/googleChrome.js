@@ -1,8 +1,13 @@
-const GoogleChrome = function (credentials = "default") {
-  const GoogleAPIs = require(process.cwd() + "/apps/googleAPIs/googleAPIs.js");
-  this.general = new GoogleAPIs(credentials);
+const GoogleChrome = function () {
+  const Mother = require(process.cwd() + "/apps/mother.js");
+  const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
+  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
+  this.mother = new Mother();
+  this.back = new BackMaker();
+  this.address = ADDRESS;
   this.dir = process.cwd() + "/apps/googleAPIs";
   this.module = this.dir + "/module";
+  this.puppeteer = require("puppeteer");
 }
 
 GoogleChrome.prototype.frontRender = async function (func) {
@@ -10,14 +15,14 @@ GoogleChrome.prototype.frontRender = async function (func) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const { fileSystem } = this.general;
+  const { fileSystem } = this.mother;
   try {
     let generalString;
     let finalFunc;
 
     generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
-    generaString = generalString.replace(/\/<%generalMap%>\//, "{}");
-    finalFunc = generaString;
+    generalString = generalString.replace(/\/<%generalMap%>\//, "{}");
+    finalFunc = generalString;
     finalFunc += "\n\n";
     finalFunc += "const print = function (input) {\n";
     finalFunc += "if (typeof input === 'object') { console.log(JSON.stringify(input, null, 2) + '\\n'); }\n";
@@ -28,8 +33,6 @@ GoogleChrome.prototype.frontRender = async function (func) {
     finalFunc += "const printHtml = " + '() => { console.log("<html><head>" + document.head.innerHTML + "</head><body>" + document.body.innerHTML + "</body></html>\\n"); }\n';
     finalFunc += "\n\n";
     finalFunc += "const main = async function () {\n";
-    finalFunc += "\n\n";
-    finalFunc += "await GeneralJs.sleep(1500);\n";
     finalFunc += "\n\n";
     finalFunc += func.toString().trim().replace(/^(async)? *(function[^\(]*\([^\)]*\)|\([^\)]*\)[^\=]+\=\>)[^\{]*\{/i, '').replace(/\}$/i, '');
     finalFunc += "\n\n";
@@ -51,7 +54,7 @@ GoogleChrome.prototype.scriptRequest = async function (url, frontCodeArr) {
   }
 
   const instance = this;
-  const { sleep } = this.general;
+  const { sleep } = this.mother;
   const { chromeLauncher, chromeRemote } = require(this.module + "/index.js");
   try {
     // const chrome = await chromeLauncher.launch({ chromeFlags: [] });
@@ -87,6 +90,116 @@ GoogleChrome.prototype.scriptRequest = async function (url, frontCodeArr) {
     return result;
   } catch (e) {
     console.log(e);
+  }
+}
+
+GoogleChrome.prototype.pdfPrint = async function (link, filePath = null) {
+  if (typeof link !== "string") {
+    throw new Error("invalid input => { link, filePath }");
+  }
+  if (!/^http/.test(link)) {
+    throw new Error("invalid link");
+  }
+  if (typeof filePath === "string") {
+    if (!/^\//.test(filePath)) {
+      throw new Error("must be absolute path");
+    }
+  }
+  const instance = this;
+  const { shellLink, shellExec, uniqueValue } = this.mother;
+  const { puppeteer } = this;
+  const tempDir = process.cwd() + "/temp";
+  try {
+    if (filePath === null) {
+      filePath = tempDir + "/" + uniqueValue("hex") + ".pdf";
+    }
+    const browser = await puppeteer.launch({
+      args: [ "--no-sandbox", "--disable-setuid-sandbox" ],
+    });
+    const page = await browser.newPage();
+    await page.goto(link, { waitUntil: "networkidle2" });
+    await page.evaluateHandle("document.fonts.ready");
+    await page.pdf({
+      path: filePath,
+      format: "a4",
+      printBackground: true,
+      timeout: 0,
+      scale: 0.8,
+      margin: {
+        top: 30,
+        bottom: 30
+      }
+    });
+    await browser.close();
+
+    await shellExec(`open ${shellLink(filePath)}`);
+
+    return { file: filePath };
+  } catch (e) {
+    console.log(e);
+    return { message: "error : " + e.message };
+  }
+}
+
+GoogleChrome.prototype.getHtml = async function (link) {
+  if (typeof link !== "string") {
+    throw new Error("invalid input => { link }");
+  }
+  if (!/^http/.test(link)) {
+    throw new Error("invalid link");
+  }
+  const instance = this;
+  const { puppeteer, fileSystem } = this;
+  try {
+    const browser = await puppeteer.launch({
+      args: [ "--no-sandbox", "--disable-setuid-sandbox" ],
+    });
+    const page = await browser.newPage();
+    await page.goto(link, { waitUntil: "networkidle2" });
+    const frontHtml = await page.evaluate(() => {
+      return `<html><head>${document.head.innerHTML}</head><body>${document.body.innerHTML}</body></html>`;
+    });
+    await browser.close();
+    return frontHtml;
+  } catch (e) {
+    console.log(e);
+    return { message: "error : " + e.message };
+  }
+}
+
+GoogleChrome.prototype.frontScript = async function (link, func) {
+  if (typeof link !== "string" || typeof func !== "function") {
+    throw new Error("invalid input => { link, async func }");
+  }
+  if (!/^http/.test(link)) {
+    throw new Error("invalid link");
+  }
+  const instance = this;
+  const { equalJson, fileSystem } = this.mother;
+  const { puppeteer } = this;
+  const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
+  try {
+    const browser = await puppeteer.launch({ args: [ "--no-sandbox", "--disable-setuid-sandbox" ] });
+    const page = await browser.newPage();
+    let funcScript, generalString, frontResponse;
+
+    await page.goto(link, { waitUntil: "networkidle2" });
+
+    generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
+    generalString = generalString.replace(/\/<%generalMap%>\//, "{}");
+    funcScript = generalString + "\n\n" + func.toString().trim().replace(/^(async)? *(function[^\(]*\([^\)]*\)|\([^\)]*\)[^\=]+\=\>)[^\{]*\{/i, '').replace(/\}$/i, '');
+    frontResponse = await page.evaluate(new AsyncFunction(funcScript));
+
+    await browser.close();
+
+    try {
+      return equalJson(frontResponse);
+    } catch {
+      return frontResponse;
+    }
+  } catch (e) {
+    console.log(e);
+    return { message: "error : " + e.message };
   }
 }
 

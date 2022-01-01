@@ -27,7 +27,8 @@
     "mysql2": "^2.2.5",
     "shelljs": "^0.8.4",
     "terser": "^4.8.0",
-    "ws": "^7.4.6"
+    "ws": "^7.4.6",
+    "puppeteer": "^13.0.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.1",
