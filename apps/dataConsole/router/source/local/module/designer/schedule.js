@@ -838,6 +838,11 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
     let barMotherHeight;
     let colorSqureTop, colorSqureHeight;
     let colorSqureIndent;
+    let thisService;
+    let scheduleTasks;
+    let scheduleStart, scheduleEnd;
+    let pastOrder;
+    let periodArr;
 
     topMargin = <%% 42, 38, 32, 30, 5.8 %%>;
     leftMargin = <%% 50, 46, 38, 32, 5.8 %%>;
@@ -918,6 +923,45 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
     colorSqureIndent = 25;
 
     blockInsert = () => {}
+
+
+
+    [ thisService ] = await ajaxJson({
+      whereQuery: {
+        serid: project.service.serid
+      }
+    }, "/getServices", { equal: true });
+    thisService.setting.schedule.sort((a, b) => {
+      return a.order - b.order;
+    });
+    scheduleStart = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
+    scheduleTasks = [];
+    pastOrder = -1;
+    periodArr = [ 0 ];
+    thisService.setting.schedule.forEach((obj) => {
+      const { title, description, color, order, period } = obj;
+      if (pastOrder !== order) {
+        periodArr.sort((a, b) => { return b - a; });
+        scheduleStart.setDate(scheduleStart.getDate() + periodArr[0]);
+        periodArr = [];
+      }
+      scheduleEnd = new Date(JSON.stringify(scheduleStart).slice(1, -1));
+      scheduleEnd.setDate(scheduleEnd.getDate() + period);
+      scheduleTasks.push({
+        contents: { title, description, color },
+        date: {
+          start: new Date(JSON.stringify(scheduleStart).slice(1, -1)),
+          end: scheduleEnd
+        }
+      });
+      pastOrder = order;
+      periodArr.push(period);
+    });
+    if (projectHistory.schedule.children.length < scheduleTasks.length / 2) {
+      projectHistory.schedule.children = scheduleTasks;
+    }
+
+
 
     board.style.paddingTop = String(topMargin) + ea;
 
