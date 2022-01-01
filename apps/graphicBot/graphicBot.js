@@ -1403,7 +1403,7 @@ GraphicBot.prototype.botRouter = function () {
       try {
         const home = "/Users/uragen";
         const staticFolder = "pdf";
-        await chromeGhost.pdfPrint(req.body.link, `${home}/${staticFolder}/${req.body.name}`);
+        await chromeGhost.pdfPrint(req.body.link, `${home}/${staticFolder}/${req.body.name}`, false);
         setQueue(async () => {
           try {
             await shellExec(`rm`, [ `-rf`, `${home}/${staticFolder}/${req.body.name}` ]);

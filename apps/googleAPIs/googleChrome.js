@@ -93,7 +93,7 @@ GoogleChrome.prototype.scriptRequest = async function (url, frontCodeArr) {
   }
 }
 
-GoogleChrome.prototype.pdfPrint = async function (link, filePath = null) {
+GoogleChrome.prototype.pdfPrint = async function (link, filePath = null, openMode = true) {
   if (typeof link !== "string") {
     throw new Error("invalid input => { link, filePath }");
   }
@@ -132,7 +132,9 @@ GoogleChrome.prototype.pdfPrint = async function (link, filePath = null) {
     });
     await browser.close();
 
-    await shellExec(`open ${shellLink(filePath)}`);
+    if (openMode) {
+      await shellExec(`open ${shellLink(filePath)}`);
+    }
 
     return { file: filePath };
   } catch (e) {
