@@ -1400,7 +1400,6 @@ BridgeCloud.prototype.serverLaunching = async function (toss = false) {
           instance.address.pythoninfo.host,
           instance.address.pythoninfo.host + ":3000",
           instance.address.officeinfo.ghost.host,
-          instance.address.officeinfo.ghost.host + ":" + String(TESTINBOUND),
           "localhost:3000",
           "localhost:8080",
           "stdpay.inicis.com",
