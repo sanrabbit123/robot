@@ -8,6 +8,16 @@ DesignerJs.prototype.scheduleDetailLaunching = function (desid, callback = null)
   let loading;
   let projects;
 
+  this.classNames = {
+    base: "taskBlock",
+    start: "taskDateStart",
+    end: "taskDateEnd",
+    title: "taskContentsTitle",
+    description: "taskContentsDescription",
+    color: "taskContentsColor"
+  };
+  this.taskBlocks = [];
+
   if (!middleMode) {
     this.pageHistory.unshift({ path: "schedule", status: "list", desid });
   }
@@ -800,6 +810,7 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
     initialContents,
     weekWordings,
   } = totalStatic;
+  const classNames = this.classNames;
   try {
     let titleArea;
     let contentsArea;
@@ -1077,6 +1088,7 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
         marginBottom: String(blockAreaMarginBottom) + ea,
       }
     });
+    this.taskBlocks = [];
     for (let i = 0; i < projectHistory.schedule.children.length; i++) {
       ({ date: { start: dateStart, end: dateEnd }, contents: { title: wordingTitle, description: wordingDescription, color: barColor } } = projectHistory.schedule.children[i]);
       dateStart = dateToString(dateStart).replace(/-/gi, ". ").slice(2);
@@ -1084,6 +1096,7 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
 
       blockFactor = createNode({
         mother: blockArea,
+        class: [ classNames.base ],
         style: {
           display: "block",
           position: "relative",
@@ -1097,6 +1110,7 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
       });
       blockWhite0 = createNode({
         mother: blockFactor,
+        class: [ "hoverDefault_lite" ],
         style: {
           verticalAlign: "top",
           display: "inline-flex",
@@ -1147,6 +1161,7 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
           },
           {
             text: dateStart,
+            class: [ classNames.start ],
             attribute: {
               value: String(20) + dateStart.replace(/\. /gi, "-"),
             },
@@ -1230,6 +1245,7 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
           },
           {
             text: dateEnd,
+            class: [ classNames.end ],
             attribute: {
               value: String(20) + dateEnd.replace(/\. /gi, "-"),
             },
@@ -1329,6 +1345,10 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
         },
         children: [
           {
+            attribute: {
+              value: barColor,
+            },
+            class: [ classNames.color ],
             style: {
               position: "absolute",
               left: String(dateLeft) + ea,
@@ -1341,6 +1361,10 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
           },
           {
             text: wordingTitle,
+            attribute: {
+              value: wordingTitle,
+            },
+            class: [ classNames.title ],
             style: {
               position: "absolute",
               left: String(wordingLeft) + ea,
@@ -1361,6 +1385,10 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
             children: [
               {
                 text: wordingDescription,
+                attribute: {
+                  value: wordingDescription.replace(/[\"\=\&\+]/gi, ''),
+                },
+                class: [ classNames.description ],
                 style: {
                   fontSize: String(wordingSize) + ea,
                   fontWeight: String(wordingWeight1),
@@ -1372,6 +1400,8 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
           }
         ]
       });
+
+      this.taskBlocks.push(blockFactor);
     }
     blockFactor = createNode({
       mother: blockArea,
