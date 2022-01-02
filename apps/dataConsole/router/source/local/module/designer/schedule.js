@@ -780,7 +780,6 @@ DesignerJs.prototype.scheduleChildrenUpdate = async function (proid, children) {
   }
 }
 
-
 DesignerJs.prototype.scheduleContents = async function (board, designer, project, client, clientHistory, projectHistory, requestNumber) {
   const instance = this;
   const mother = this.mother;
@@ -1362,7 +1361,72 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
           {
             text: wordingTitle,
             attribute: {
-              value: wordingTitle,
+              value: wordingTitle.replace(/[\"\=\&\+]/gi, ''),
+            },
+            event: {
+              click: function (e) {
+                const thisBox = this.getBoundingClientRect();
+                const thisValue = this.getAttribute("value");
+                const self = this;
+                let calendarBase, calendarCancelBack;
+                let greenInput;
+
+                calendarCancelBack = createNode({
+                  mother: self.parentElement,
+                  event: {
+                    click: function (e) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      self.parentElement.removeChild(self.parentElement.lastChild);
+                      self.parentElement.removeChild(self.parentElement.lastChild);
+                    }
+                  },
+                  style: {
+                    position: "fixed",
+                    top: String(calendarCancelBackPadding * -1) + ea,
+                    left: String(calendarCancelBackPadding * -1) + ea,
+                    width: "calc(100% + " + String(calendarCancelBackPadding * 2) + ea + ")",
+                    height: "calc(100% + " + String(calendarCancelBackPadding * 2) + ea + ")",
+                    background: "transparent",
+                    zIndex: String(1),
+                  }
+                });
+
+                greenInput = createNode({
+                  mother: self.parentElement,
+                  mode: "input",
+                  attribute: {
+                    type: "text",
+                  },
+                  event: {
+                    keypress: function (e) {
+                      if (e.key === "Enter") {
+                        this.value = this.value.trim().replace(/[\"\=\&\+]/gi, '');
+                        self.textContent = this.value;
+                        self.setAttribute("value", this.value);
+                        self.parentElement.removeChild(self.parentElement.lastChild);
+                        self.parentElement.removeChild(self.parentElement.lastChild);
+                      }
+                    }
+                  },
+                  style: {
+                    position: "absolute",
+                    left: String(wordingLeft) + ea,
+                    top: String(wordingTop) + ea,
+                    fontSize: String(wordingSize) + ea,
+                    fontWeight: String(wordingWeight0),
+                    width: withOut(wordingLeft, ea),
+                    outline: String(0),
+                    border: String(0),
+                    zIndex: String(1),
+                    color: colorChip.green,
+                    background: colorChip.white,
+                  }
+                });
+
+                greenInput.value = thisValue;
+                greenInput.focus();
+              }
             },
             class: [ classNames.title ],
             style: {
@@ -1387,6 +1451,72 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
                 text: wordingDescription,
                 attribute: {
                   value: wordingDescription.replace(/[\"\=\&\+]/gi, ''),
+                },
+                event: {
+                  click: function (e) {
+                    const thisBox = this.getBoundingClientRect();
+                    const thisValue = this.getAttribute("value");
+                    const self = this;
+                    let calendarBase, calendarCancelBack;
+                    let greenInput;
+
+                    calendarCancelBack = createNode({
+                      mother: self.parentElement,
+                      event: {
+                        click: function (e) {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          self.parentElement.removeChild(self.parentElement.lastChild);
+                          self.parentElement.removeChild(self.parentElement.lastChild);
+                        }
+                      },
+                      style: {
+                        position: "fixed",
+                        top: String(calendarCancelBackPadding * -1) + ea,
+                        left: String(calendarCancelBackPadding * -1) + ea,
+                        width: "calc(100% + " + String(calendarCancelBackPadding * 2) + ea + ")",
+                        height: "calc(100% + " + String(calendarCancelBackPadding * 2) + ea + ")",
+                        background: "transparent",
+                        zIndex: String(1),
+                      }
+                    });
+
+                    greenInput = createNode({
+                      mother: self.parentElement,
+                      mode: "input",
+                      attribute: {
+                        type: "text",
+                      },
+                      event: {
+                        keypress: function (e) {
+                          if (e.key === "Enter") {
+                            this.value = this.value.trim().replace(/[\"\=\&\+]/gi, '');
+                            self.textContent = this.value;
+                            self.setAttribute("value", this.value);
+                            self.parentElement.removeChild(self.parentElement.lastChild);
+                            self.parentElement.removeChild(self.parentElement.lastChild);
+                          }
+                        }
+                      },
+                      style: {
+                        position: "absolute",
+                        left: String(0) + ea,
+                        top: String(0) + ea,
+                        fontSize: String(wordingSize) + ea,
+                        fontWeight: String(wordingWeight1),
+                        width: withOut(0, ea),
+                        outline: String(0),
+                        border: String(0),
+                        zIndex: String(1),
+                        color: colorChip.green,
+                        background: colorChip.white,
+                        lineHeight: String(1.6),
+                      }
+                    });
+
+                    greenInput.value = thisValue;
+                    greenInput.focus();
+                  }
                 },
                 class: [ classNames.description ],
                 style: {
