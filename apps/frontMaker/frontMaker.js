@@ -181,6 +181,7 @@ FrontMaker.prototype.cssOut = function (code) {
 
 FrontMaker.prototype.jsToPoo = async function (dayString) {
   const instance = this;
+  const { minify } = require("terser");
   try {
     let code, generalCode, result, svg_result, async_result, temp_string, exec_string, css_code, css_string, css_string_general, css_string_final, svgTong, svgDirBoo;
     let list = await this.mother.fileSystem(`readDir`, [ `${this.links.source}/javascript` ]);
@@ -251,7 +252,10 @@ FrontMaker.prototype.jsToPoo = async function (dayString) {
       code = code + "\n\n" + exec_string;
 
       //babel compile
-      result = code;
+      result = (await minify(code, {
+        keep_classnames: true,
+        keep_fnames: true
+      })).code;
 
       //css general
       css_code = require(`${this.links.source}/cssGeneral/general.js`);

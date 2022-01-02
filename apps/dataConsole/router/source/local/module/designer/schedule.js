@@ -748,10 +748,33 @@ DesignerJs.prototype.scheduleDocument = function (mother, index, designer, proje
   }
 }
 
+DesignerJs.prototype.scheduleChildrenUpdate = async function (proid, children) {
+  if (typeof proid !== "string" || !Array.isArray(children)) {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  try {
+    const { ajaxJson, getCookiesAll } = GeneralJs;
+    const cookies = getCookiesAll();
+
+    await ajaxJson({
+      method: "project",
+      id: proid,
+      column: "schedule.children",
+      value: children,
+      email: cookies.homeliaisonConsoleLoginedEmail
+    }, "/updateHistory").catch((err) => { console.log(err); });
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+
 DesignerJs.prototype.scheduleContents = async function (board, designer, project, client, clientHistory, projectHistory, requestNumber) {
   const instance = this;
   const mother = this.mother;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, autoComma, serviceParsing, getDateMatrix, cleanChildren } = GeneralJs;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, stringToDate, autoComma, serviceParsing, getDateMatrix, cleanChildren } = GeneralJs;
   const { totalMother, ea, grayBarWidth, middleMode } = this;
   const mobile = this.media[4];
   const desktop = !mobile;
@@ -804,7 +827,8 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
     let numberSize, numberTextTop, numberWeight;
     let dateStart, dateEnd;
     let dateSize, dateWeight;
-    let dateTop, dateLeft, dateBottom, datePadding;
+    let dateTop, dateLeft, dateBottom, datePadding, dateTop2;
+    let dateCalendarWidth, dateCalendarIndent;
     let dateLineBottom;
     let wordingTitle, wordingDescription;
     let barColor;
@@ -843,6 +867,8 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
     let scheduleStart, scheduleEnd;
     let pastOrder;
     let periodArr;
+    let calendarCancelBackPadding;
+    let dateCalendarVisual;
 
     topMargin = <%% 42, 38, 32, 30, 5.8 %%>;
     leftMargin = <%% 50, 46, 38, 32, 5.8 %%>;
@@ -871,10 +897,16 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
     dateSize = 15;
     dateWeight = 400;
     dateTop = 11;
+    dateTop2 = 34;
     dateBottom = dateTop + 5;
     dateLeft = 18;
     datePadding = 8;
     dateLineBottom = 24.5;
+
+    dateCalendarWidth = 260;
+    dateCalendarIndent = 6;
+    dateCalendarVisual = 2;
+    calendarCancelBackPadding = 24;
 
     colorBarWidth = 6;
     colorBarVisual = 1;
@@ -924,8 +956,6 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
 
     blockInsert = () => {}
 
-
-
     [ thisService ] = await ajaxJson({
       whereQuery: {
         serid: project.service.serid
@@ -959,12 +989,14 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
     });
     if (projectHistory.schedule.children.length < scheduleTasks.length / 2) {
       projectHistory.schedule.children = scheduleTasks;
+      await this.scheduleChildrenUpdate(proid, scheduleTasks);
     }
-
-
 
     board.style.paddingTop = String(topMargin) + ea;
 
+
+    // title area
+    // =================================================================================================================================================================
     titleArea = createNode({
       mother: board,
       style: {
@@ -1005,6 +1037,9 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
       ]
     });
 
+
+    // contents base
+    // =================================================================================================================================================================
     contentsArea = createNode({
       mother: board,
       style: {
@@ -1031,6 +1066,9 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
       ]
     });
 
+
+    // task blocks
+    // =================================================================================================================================================================
     blockArea = createNode({
       mother: contentsArea,
       style: {
@@ -1039,7 +1077,6 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
         marginBottom: String(blockAreaMarginBottom) + ea,
       }
     });
-
     for (let i = 0; i < projectHistory.schedule.children.length; i++) {
       ({ date: { start: dateStart, end: dateEnd }, contents: { title: wordingTitle, description: wordingDescription, color: barColor } } = projectHistory.schedule.children[i]);
       dateStart = dateToString(dateStart).replace(/-/gi, ". ").slice(2);
@@ -1110,6 +1147,74 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
           },
           {
             text: dateStart,
+            attribute: {
+              value: String(20) + dateStart.replace(/\. /gi, "-"),
+            },
+            event: {
+              click: function (e) {
+                const dateStart = stringToDate(this.getAttribute("value"));
+                const thisBox = this.getBoundingClientRect();
+                const self = this;
+                let calendarBase, calendarCancelBack;
+
+                this.style.color = colorChip.green;
+                calendarCancelBack = createNode({
+                  mother: self.parentElement,
+                  event: {
+                    click: function (e) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      self.parentElement.removeChild(self.parentElement.lastChild);
+                      self.parentElement.removeChild(self.parentElement.lastChild);
+                      self.style.color = colorChip.black;
+                    }
+                  },
+                  style: {
+                    position: "fixed",
+                    top: String(calendarCancelBackPadding * -1) + ea,
+                    left: String(calendarCancelBackPadding * -1) + ea,
+                    width: "calc(100% + " + String(calendarCancelBackPadding * 2) + ea + ")",
+                    height: "calc(100% + " + String(calendarCancelBackPadding * 2) + ea + ")",
+                    background: "transparent",
+                    zIndex: String(1),
+                  }
+                });
+                calendarBase = createNode({
+                  mother: self.parentElement,
+                  event: {
+                    click: (e) => { e.stopPropagation() },
+                    contextmenu: (e) => { e.stopPropagation() },
+                  },
+                  style: {
+                    position: "absolute",
+                    width: String(dateCalendarWidth) + ea,
+                    transition: "all 0s ease",
+                    background: colorChip.white,
+                    borderRadius: String(5) + "px",
+                    zIndex: String(1),
+                    boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                    animation: "fadeuphard 0.3s ease forwards",
+                    top: String(dateTop + thisBox.height + dateCalendarIndent) + ea,
+                    left: String(dateLeft + ((thisBox.width - datePadding) / 2) - (dateCalendarWidth / 2) - dateCalendarVisual) + ea,
+                  }
+                });
+                const calendar = instance.mother.makeCalendar(dateStart, async function (e) {
+                  try {
+                    e.stopPropagation();
+                    const thisDate = stringToDate(this.getAttribute("buttonValue"));
+                    const updatedString = dateToString(thisDate).replace(/-/gi, ". ").slice(2);
+                    self.textContent = updatedString;
+                    self.parentElement.removeChild(self.parentElement.lastChild);
+                    self.parentElement.removeChild(self.parentElement.lastChild);
+                    self.style.color = colorChip.black;
+                  } catch (e) {
+                    console.log(e);
+                  }
+                });
+                calendarBase.appendChild(calendar.calendarBase);
+
+              }
+            },
             style: {
               position: "absolute",
               fontSize: String(dateSize) + ea,
@@ -1120,20 +1225,90 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
               left: String(dateLeft) + ea,
               background: colorChip.white,
               paddingRight: String(datePadding) + ea,
+              cursor: "pointer",
             }
           },
           {
             text: dateEnd,
+            attribute: {
+              value: String(20) + dateEnd.replace(/\. /gi, "-"),
+            },
+            event: {
+              click: function (e) {
+                const dateEnd = stringToDate(this.getAttribute("value"));
+                const thisBox = this.getBoundingClientRect();
+                const self = this;
+                let calendarBase, calendarCancelBack;
+
+                this.style.color = colorChip.green;
+                calendarCancelBack = createNode({
+                  mother: self.parentElement,
+                  event: {
+                    click: function (e) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      self.parentElement.removeChild(self.parentElement.lastChild);
+                      self.parentElement.removeChild(self.parentElement.lastChild);
+                      self.style.color = colorChip.black;
+                    }
+                  },
+                  style: {
+                    position: "fixed",
+                    top: String(calendarCancelBackPadding * -1) + ea,
+                    left: String(calendarCancelBackPadding * -1) + ea,
+                    width: "calc(100% + " + String(calendarCancelBackPadding * 2) + ea + ")",
+                    height: "calc(100% + " + String(calendarCancelBackPadding * 2) + ea + ")",
+                    background: "transparent",
+                    zIndex: String(1),
+                  }
+                });
+                calendarBase = createNode({
+                  mother: self.parentElement,
+                  event: {
+                    click: (e) => { e.stopPropagation() },
+                    contextmenu: (e) => { e.stopPropagation() },
+                  },
+                  style: {
+                    position: "absolute",
+                    width: String(dateCalendarWidth) + ea,
+                    transition: "all 0s ease",
+                    background: colorChip.white,
+                    borderRadius: String(5) + "px",
+                    zIndex: String(1),
+                    boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                    animation: "fadeuphard 0.3s ease forwards",
+                    top: String(dateTop2 + thisBox.height + dateCalendarIndent) + ea,
+                    right: String(dateLeft + ((thisBox.width - datePadding) / 2) - (dateCalendarWidth / 2) - dateCalendarVisual) + ea,
+                  }
+                });
+                const calendar = instance.mother.makeCalendar(dateEnd, async function (e) {
+                  try {
+                    e.stopPropagation();
+                    const thisDate = stringToDate(this.getAttribute("buttonValue"));
+                    const updatedString = dateToString(thisDate).replace(/-/gi, ". ").slice(2);
+                    self.textContent = updatedString;
+                    self.parentElement.removeChild(self.parentElement.lastChild);
+                    self.parentElement.removeChild(self.parentElement.lastChild);
+                    self.style.color = colorChip.black;
+                  } catch (e) {
+                    console.log(e);
+                  }
+                });
+                calendarBase.appendChild(calendar.calendarBase);
+
+              }
+            },
             style: {
               position: "absolute",
               fontSize: String(dateSize) + ea,
               fontWeight: String(dateWeight),
               fontFamily: "graphik",
               color: colorChip.black,
-              bottom: String(dateBottom) + ea,
+              top: String(dateTop2) + ea,
               right: String(dateLeft) + ea,
               background: colorChip.white,
               paddingLeft: String(datePadding) + ea,
+              cursor: "pointer",
             }
           },
         ]
@@ -1198,8 +1373,6 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
         ]
       });
     }
-
-    // plus
     blockFactor = createNode({
       mother: blockArea,
       style: {
@@ -1264,6 +1437,9 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
       ]
     });
 
+
+    // calendar
+    // =================================================================================================================================================================
     dateMatrix = getDateMatrix(today);
 
     bigCalendar = createNode({
@@ -1556,6 +1732,9 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
     }
     blockInsert();
 
+
+    // end
+    // =================================================================================================================================================================
     board.style.height = "auto";
     board.style.paddingBottom = String(finalBottom) + ea;
 

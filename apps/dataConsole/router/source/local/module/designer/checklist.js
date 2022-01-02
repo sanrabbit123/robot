@@ -3682,18 +3682,26 @@ DesignerJs.prototype.checkListDesignerMemo = function (desid) {
               {
                 type: "blur",
                 event: function (e) {
-                  const cookies = GeneralJs.getCookiesAll();
-                  const ajaxData = "method=designer&id=" + desid + "&column=career&value=" + this.value + "&email=" + cookies.homeliaisonConsoleLoginedEmail;
-                  GeneralJs.ajax(ajaxData, "/updateHistory", function () {});
+                  GeneralJs.ajaxPromise({
+                    method: "designer",
+                    id: desid,
+                    column: "career",
+                    value: this.value,
+                    email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail
+                  }, "/updateHistory").catch((err) => { console.log(err); });
                 }
               },
               {
                 type: "keypress",
                 event: function (e) {
                   if (e.key === "Enter") {
-                    const cookies = GeneralJs.getCookiesAll();
-                    const ajaxData = "method=designer&id=" + desid + "&column=career&value=" + this.value + "&email=" + cookies.homeliaisonConsoleLoginedEmail;
-                    GeneralJs.ajax(ajaxData, "/updateHistory", function () {});
+                    GeneralJs.ajaxPromise({
+                      method: "designer",
+                      id: desid,
+                      column: "career",
+                      value: this.value,
+                      email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail
+                    }, "/updateHistory").catch((err) => { console.log(err); });
                   }
                 }
               },
