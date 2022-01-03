@@ -269,7 +269,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       },
     },
     {
-      title: "의뢰서 정보",
+      title: "의뢰서 관리",
       mode: modes[2],
       position: 0,
       mobile: true,
@@ -277,6 +277,24 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
         totalMother.style.background = "transparent";
         instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
         instance.requestDetailLaunching(desid, () => {
+          scrollTo(document.querySelector(".totalMother"), 0);
+          if (typeof e.__asyncCallBack__ === "function") {
+            e.__asyncCallBack__();
+          }
+        });
+        instance.mode = modes[2];
+        colorFunc.call(this);
+      },
+    },
+    {
+      title: "상세 일정 관리",
+      mode: modes[5],
+      position: 0,
+      mobile: true,
+      event: function (e) {
+        totalMother.style.background = "transparent";
+        instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
+        instance.scheduleDetailLaunching(desid, () => {
           scrollTo(document.querySelector(".totalMother"), 0);
           if (typeof e.__asyncCallBack__ === "function") {
             e.__asyncCallBack__();
@@ -2713,6 +2731,7 @@ DesignerConsoleJs.prototype.launching = async function (loading) {
       "request.js",
       "possible.js",
       "project.js",
+      "schedule.js",
     ];
 
     await protoPatch(instance, moduleList.map((m) => { return `${modulePath}/${m}`; }), `DesignerJs`);
@@ -2729,7 +2748,7 @@ DesignerConsoleJs.prototype.launching = async function (loading) {
     this.grayBarWidth = <%% 210, 180, 0, 0, 0 %%>;
     this.tabletWidth = <%% 0, 0, 148, 140, 0 %%>;
     this.belowHeight = 0;
-    this.modes = [ "checklist", "report", "request", "possible", "project" ];
+    this.modes = [ "checklist", "report", "request", "possible", "project", "schedule" ];
     this.mode = "console";
     this.desid = getObj.desid;
 

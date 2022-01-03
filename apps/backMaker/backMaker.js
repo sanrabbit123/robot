@@ -3259,6 +3259,13 @@ BackMaker.prototype.createHistory = async function (method, updateQuery, option 
             send: [],
           },
         },
+        schedule: {
+          analytics: {
+            page: [],
+            update: [],
+            send: [],
+          },
+        },
       };
     } else if (/project/gi.test(method)) {
       collection = "projectHistory";
