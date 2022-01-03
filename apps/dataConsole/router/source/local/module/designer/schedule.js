@@ -758,6 +758,60 @@ DesignerJs.prototype.scheduleDocument = function (mother, index, designer, proje
   }
 }
 
+DesignerJs.prototype.scheduleChildrenParse = async function () {
+  const instance = this;
+  const { taskBlocks, ea } = this;
+  const {
+    base,
+    start,
+    end,
+    title,
+    description,
+    color
+  } = this.classNames;
+  try {
+    let children;
+
+
+    children = [];
+
+    // "date" : {
+    //     "start" : ISODate("2021-12-01T15:00:00.000Z"),
+    //     "end" : ISODate("2021-12-09T15:00:00.000Z")
+    // },
+    // "contents" : {
+    //     "title" : "1차 제안",
+    //     "description" : "평균 2주의 작업 시간이 소요됩니다. 배치도, 제품 리스트 등의 기본 제공 사항은 동일하지만, 각 디자이너가 가장 잘할 수 있는 방식으로 일합니다.",
+    //     "color" : "#f05a24"
+    // }
+
+
+    console.log(taskBlocks);
+    for (let block of taskBlocks) {
+      children.push({
+        date: {
+          start: new Date(),
+          end: new Date()
+        },
+        contents: {
+          title: "",
+          description: "",
+          color: ""
+        }
+      })
+
+
+    }
+
+
+
+
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DesignerJs.prototype.scheduleChildrenUpdate = async function (proid, children) {
   if (typeof proid !== "string" || !Array.isArray(children)) {
     throw new Error("invaild input");
@@ -1217,7 +1271,9 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
                     e.stopPropagation();
                     const thisDate = stringToDate(this.getAttribute("buttonValue"));
                     const updatedString = dateToString(thisDate).replace(/-/gi, ". ").slice(2);
+                    self.setAttribute("value", dateToString(thisDate));
                     self.textContent = updatedString;
+                    instance.scheduleChildrenParse().catch((err) => { console.log(err); });
                     self.parentElement.removeChild(self.parentElement.lastChild);
                     self.parentElement.removeChild(self.parentElement.lastChild);
                     self.style.color = colorChip.black;
@@ -1301,7 +1357,9 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
                     e.stopPropagation();
                     const thisDate = stringToDate(this.getAttribute("buttonValue"));
                     const updatedString = dateToString(thisDate).replace(/-/gi, ". ").slice(2);
+                    self.setAttribute("value", dateToString(thisDate));
                     self.textContent = updatedString;
+                    instance.scheduleChildrenParse().catch((err) => { console.log(err); });
                     self.parentElement.removeChild(self.parentElement.lastChild);
                     self.parentElement.removeChild(self.parentElement.lastChild);
                     self.style.color = colorChip.black;

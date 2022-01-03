@@ -111,9 +111,9 @@ module.exports = function (proid, info) {
           }
 
           if (document.getElementById(idId) !== null) {
-            await injectionInput(document.getElementById(idId), "info.eform.id");
-            await clickElement(document.querySelector("footer"));
-            await injectionInput(document.getElementById(passwordId), "info.eform.pwd");
+            // await injectionInput(document.getElementById(idId), "info.eform.id");
+            // await clickElement(document.querySelector("footer"));
+            // await injectionInput(document.getElementById(passwordId), "info.eform.pwd");
             await clickElement(document.querySelector(loginReturn));
           }
 
