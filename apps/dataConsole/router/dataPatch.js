@@ -4563,8 +4563,6 @@ DataPatch.prototype.projectMap = function () {
                 }
               }
 
-              mother.grayLoading();
-
               report = await GeneralJs.ajaxJson(ajaxData, PYTHONHOST + "/serviceConverting");
               if (typeof report.error === "string") {
                 window.alert(report.error);
