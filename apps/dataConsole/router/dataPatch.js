@@ -5771,7 +5771,7 @@ DataPatch.prototype.projectMap = function () {
             event: (function (e) {
               const { proid, cliid, desid, action, requestNumber, thisUrl } = e.__data__;
               const { blankHref } = GeneralJs;
-              blankHref(thisUrl + "&mode=detail&cliid=" + cliid);
+              blankHref(thisUrl + "&mode=schedule&cliid=" + cliid);
             }).toString().trim().replace(/^function[^\(]*\([^\)]*\)[^\{]*\{\n?/i, '').replace(/\n?[ ]*\}$/i, '').trim()
           }
         ]
