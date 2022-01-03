@@ -528,6 +528,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
           mobileNavigatorHeight = 60;
           cancelBack = createNode({
             mother: totalMother,
+            mode: "aside",
             event: {
               click: function (e) {
                 document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
@@ -550,6 +551,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
           });
           whiteBox = createNode({
             mother: totalMother,
+            mode: "aside",
             class: [ detailWhitePopupConst ],
             style: {
               position: "fixed",

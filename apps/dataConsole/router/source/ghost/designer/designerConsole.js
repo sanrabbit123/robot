@@ -151,6 +151,12 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       }
     }
   }
+  const popupDelete = function () {
+    const targets = [ ...document.querySelector(".totalMother").children ].filter((dom) => { return /ASIDE/gi.test(dom.nodeName) });
+    for (let dom of targets) {
+      dom.remove();
+    }
+  }
   const menuMap = [
     {
       title: "기본 정보",
@@ -158,6 +164,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       position: 0,
       mobile: true,
       event: function (e) {
+        popupDelete();
         totalMother.style.background = "transparent";
         instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
         if (instance.mode === modes[0]) {
@@ -177,6 +184,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       position: 0,
       mobile: true,
       event: function (e) {
+        popupDelete();
         totalMother.style.background = "transparent";
         instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
         instance.possibleDetailLaunching(desid, () => {
@@ -192,6 +200,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       position: 4,
       mobile: true,
       event: function (e) {
+        popupDelete();
         totalMother.style.background = "transparent";
         instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
         const blocks = document.querySelector(".mainBaseTong").firstChild.children;
@@ -213,6 +222,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       position: 5,
       mobile: true,
       event: function (e) {
+        popupDelete();
         totalMother.style.background = "transparent";
         instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
         const blocks = document.querySelector(".mainBaseTong").firstChild.children;
@@ -234,6 +244,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       position: 0,
       mobile: true,
       event: function (e) {
+        popupDelete();
         totalMother.style.background = "transparent";
         instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
         if (instance.mode === modes[1]) {
@@ -253,6 +264,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       position: 3,
       mobile: true,
       event: function (e) {
+        popupDelete();
         totalMother.style.background = "transparent";
         instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
         const blocks = document.querySelector(".mainBaseTong").firstChild.children;
@@ -274,6 +286,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       position: 0,
       mobile: true,
       event: function (e) {
+        popupDelete();
         totalMother.style.background = "transparent";
         instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
         instance.requestDetailLaunching(desid, () => {
@@ -292,6 +305,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       position: 0,
       mobile: true,
       event: function (e) {
+        popupDelete();
         totalMother.style.background = "transparent";
         instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
         instance.scheduleDetailLaunching(desid, () => {
@@ -310,6 +324,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       position: 0,
       mobile: true,
       event: function (e) {
+        popupDelete();
         totalMother.style.background = "transparent";
         instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
         instance.projectDetailLaunching(desid, () => {
