@@ -1018,7 +1018,7 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
 
     calendarTitleTop = <%% -32, -32, -32, -32, -32 %%>;
     calendarTitleSize = <%% 13, 13, 12, 11, 13 %%>;
-    calendarTitlePaddingTop = <%% 5, 5, 5, 5, 5 %%>;
+    calendarTitlePaddingTop = <%% (isMac() ? 5 : 7), (isMac() ? 5 : 7), (isMac() ? 5 : 7), (isMac() ? 5 : 7), 5 %%>;
     calendarTitlePaddingBottom = <%% 6, 6, 6, 6, 6 %%>;
     calendarTitlePaddingLeft = <%% 12, 12, 12, 12, 12 %%>;
     calendarTitlePaddingRight = <%% 12, 12, 12, 12, 12 %%>;
@@ -1626,7 +1626,7 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
 
                     greenInput = createNode({
                       mother: self.parentElement,
-                      mode: "input",
+                      mode: "textarea",
                       attribute: {
                         type: "text",
                       },
@@ -1650,12 +1650,13 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
                         fontSize: String(wordingSize) + ea,
                         fontWeight: String(wordingWeight1),
                         width: withOut(0, ea),
+                        height: String(thisBox.height) + ea,
                         outline: String(0),
                         border: String(0),
                         zIndex: String(1),
                         color: colorChip.green,
                         background: colorChip.white,
-                        lineHeight: String(1.6),
+                        lineHeight: String(descriptionLineHeight),
                       }
                     });
 
