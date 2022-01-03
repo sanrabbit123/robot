@@ -57,7 +57,7 @@ const GraphicBot = function () {
       y: 210,
     },
     mac: {
-      x: 1294,
+      x: 1142,
       y: 200,
     }
   };
