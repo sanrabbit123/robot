@@ -354,8 +354,8 @@ GraphicBot.prototype.chromeHistoryClean = async function () {
     let consoleX, consoleY;
     let buttonX, buttonY;
     if (os === "mac") {
-      buttonX = -50;
-      buttonY = 32;
+      buttonX = 50;
+      buttonY = 36;
     } else {
       buttonX = 50;
       buttonY = 36;
