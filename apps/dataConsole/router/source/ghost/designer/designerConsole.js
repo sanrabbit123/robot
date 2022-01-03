@@ -287,7 +287,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       },
     },
     {
-      title: "상세 일정 관리",
+      title: "상세 일정 기입",
       mode: modes[5],
       position: 0,
       mobile: true,
