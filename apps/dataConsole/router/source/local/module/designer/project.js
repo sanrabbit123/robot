@@ -534,7 +534,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
                 document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
                 document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
                 if (instance.greenPannel !== undefined && instance.greenPannel !== null) {
-                  instance.greenPannel.style.bottom = String(greenPannelBottom) + "px";
+                  instance.greenPannel.style.bottom = String(belowHeight + greenPannelBottom) + "px";
                 }
               }
             },
@@ -1360,6 +1360,8 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
 
     descriptionMaker(action, proid, cliid, requestNumber, desid);
 
+  } else {
+    window.alert("해당 고객의 상태를 변경하셔야 팝업을 열 수 있습니다!");
   }
 
   return (pIndex !== -1 && cIndex !== -1 && action !== "해당 없음");
@@ -1908,20 +1910,27 @@ DesignerJs.prototype.projectView = async function () {
         searchInput = this.searchInput;
         searchInput.addEventListener("keypress", function (e) {
           if (e.key === "Enter") {
-            if (instance.totalFather !== null) {
-              document.getElementById("totalcontents").removeChild(document.querySelector(".totalFather"));
-              instance.totalFather = null;
-              instance.totalMother.classList.remove("justfadeoutoriginal");
-              instance.totalMother.classList.add("justfadeinoriginal");
-            }
-            const value = this.value.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/gi, '').replace(/[\~\@\#\$\%\^\&\*\(\)\-\=\+\[\]\{\}\<\>\/\\ \n\t]/gi, '');
-            let target;
-            if (value === "") {
-              instance.projectDetailLaunching(instance.standardDoms[1].getAttribute("desid"));
-            } else {
-              searchResult = instance.designers.search(value);
-              if (searchResult.length > 0) {
-                instance.projectDetailLaunching(searchResult[0].desid);
+            if (this.value.trim() !== '') {
+              const value = this.value.trim();
+              if (document.querySelector(".detailWhitePopupConst") === null) {
+                const targets = instance.whiteCards.map((dom) => { return dom.textContent });
+                const index = targets.findIndex((str) => { return (new RegExp(value, "gi")).test(str); });
+                if (index !== -1) {
+                  GeneralJs.setQueue(() => {
+                    instance.whiteCards[index].click();
+                  });
+                }
+              } else {
+                document.querySelector(".totalMother").querySelector("aside").click();
+                GeneralJs.setQueue(() => {
+                  const targets = instance.whiteCards.map((dom) => { return dom.textContent });
+                  const index = targets.findIndex((str) => { return (new RegExp(value, "gi")).test(str); });
+                  if (index !== -1) {
+                    GeneralJs.setQueue(() => {
+                      instance.whiteCards[index].click();
+                    });
+                  }
+                }, 501);
               }
             }
           }
