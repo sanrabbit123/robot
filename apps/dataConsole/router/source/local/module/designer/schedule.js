@@ -1939,92 +1939,94 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
       dateEnd = dateToString(dateEnd).replace(/-/gi, ". ").slice(2);
       this.taskBlocks.push(blockMake(i, dateStart, dateEnd, wordingTitle, wordingDescription, barColor));
     }
-    blockFactor = createNode({
-      mother: blockArea,
-      style: {
-        verticalAlign: "top",
-        display: "block",
-        position: "relative",
-        padding: String(blockOuterPadding) + ea,
-        width: withOut(blockOuterPadding * 2, ea),
-        height: String(blockFactorHeight - (blockOuterPadding * 2)) + ea,
-        borderRadius: String(5) + "px",
-        background: colorChip.gray2,
-      },
-      children: [
-        {
-          class: [ "hoverDefault_lite" ],
-          event: {
-            click: function (e) {
-              const children = [ ...this.parentElement.parentElement.children ];
-              children.pop();
+    if (desktop) {
+      blockFactor = createNode({
+        mother: blockArea,
+        style: {
+          verticalAlign: "top",
+          display: "block",
+          position: "relative",
+          padding: String(blockOuterPadding) + ea,
+          width: withOut(blockOuterPadding * 2, ea),
+          height: String(blockFactorHeight - (blockOuterPadding * 2)) + ea,
+          borderRadius: String(5) + "px",
+          background: colorChip.gray2,
+        },
+        children: [
+          {
+            class: [ "hoverDefault_lite" ],
+            event: {
+              click: function (e) {
+                const children = [ ...this.parentElement.parentElement.children ];
+                children.pop();
 
-              const index = Number(children[children.length - 1].firstChild.firstChild.textContent) - 1;
-              const lastDate = stringToDate(children[children.length - 1].querySelector('.' + classNames.end).getAttribute("value"));
-              let startDate, endDate;
+                const index = Number(children[children.length - 1].firstChild.firstChild.textContent) - 1;
+                const lastDate = stringToDate(children[children.length - 1].querySelector('.' + classNames.end).getAttribute("value"));
+                let startDate, endDate;
 
-              startDate = dateToString(lastDate)
-              lastDate.setDate(lastDate.getDate() + 7);
-              endDate = dateToString(lastDate)
+                startDate = dateToString(lastDate)
+                lastDate.setDate(lastDate.getDate() + 7);
+                endDate = dateToString(lastDate)
 
-              startDate = startDate.replace(/-/gi, ". ").slice(2);
-              endDate = endDate.replace(/-/gi, ". ").slice(2);
+                startDate = startDate.replace(/-/gi, ". ").slice(2);
+                endDate = endDate.replace(/-/gi, ". ").slice(2);
 
-              blockMake(index + 1, startDate, endDate, "작업명 입력", "작업명에 대해서 상세한 설명을 적어주세요.", colorChip.green);
-              this.parentElement.parentElement.appendChild(this.parentElement);
+                blockMake(index + 1, startDate, endDate, "작업명 입력", "작업명에 대해서 상세한 설명을 적어주세요.", colorChip.green);
+                this.parentElement.parentElement.appendChild(this.parentElement);
 
-              blocksReload(this.parentElement.parentElement);
-            }
-          },
-          style: {
-            verticalAlign: "top",
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            position: "relative",
-            width: String(blockFactorHeight - (blockOuterPadding * 2)) + ea,
-            height: String(blockFactorHeight - (blockOuterPadding * 2)) + ea,
-            background: colorChip.gray3,
-            borderRadius: String(5) + "px",
-            marginRight: String(blockInnerMargin) + ea,
-          },
-          children: [
-            {
-              text: '+',
-              style: {
-                position: "relative",
-                fontSize: String(plusSize) + ea,
-                fontWeight: String(plusWeight),
-                fontFamily: "graphik",
-                top: String(plusTextTop) + ea,
-                color: colorChip.white,
+                blocksReload(this.parentElement.parentElement);
               }
+            },
+            style: {
+              verticalAlign: "top",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              position: "relative",
+              width: String(blockFactorHeight - (blockOuterPadding * 2)) + ea,
+              height: String(blockFactorHeight - (blockOuterPadding * 2)) + ea,
+              background: colorChip.gray3,
+              borderRadius: String(5) + "px",
+              marginRight: String(blockInnerMargin) + ea,
+            },
+            children: [
+              {
+                text: '+',
+                style: {
+                  position: "relative",
+                  fontSize: String(plusSize) + ea,
+                  fontWeight: String(plusWeight),
+                  fontFamily: "graphik",
+                  top: String(plusTextTop) + ea,
+                  color: colorChip.white,
+                }
+              }
+            ]
+          },
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String((blockFactorHeight - (blockOuterPadding * 2)) * blockSecondRatio) + ea,
+              height: String(blockFactorHeight - (blockOuterPadding * 2)) + ea,
+              background: colorChip.gray3,
+              borderRadius: String(5) + "px",
+              marginRight: String(blockInnerMargin) + ea,
             }
-          ]
-        },
-        {
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: String((blockFactorHeight - (blockOuterPadding * 2)) * blockSecondRatio) + ea,
-            height: String(blockFactorHeight - (blockOuterPadding * 2)) + ea,
-            background: colorChip.gray3,
-            borderRadius: String(5) + "px",
-            marginRight: String(blockInnerMargin) + ea,
+          },
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: withOut(((blockFactorHeight - (blockOuterPadding * 2)) * (1 + blockSecondRatio) + (blockInnerMargin * 2)), ea),
+              height: String(blockFactorHeight - (blockOuterPadding * 2)) + ea,
+              background: colorChip.gray3,
+              borderRadius: String(5) + "px",
+            }
           }
-        },
-        {
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: withOut(((blockFactorHeight - (blockOuterPadding * 2)) * (1 + blockSecondRatio) + (blockInnerMargin * 2)), ea),
-            height: String(blockFactorHeight - (blockOuterPadding * 2)) + ea,
-            background: colorChip.gray3,
-            borderRadius: String(5) + "px",
-          }
-        }
-      ]
-    });
+        ]
+      });
+    }
 
     // calendar
     // =================================================================================================================================================================
