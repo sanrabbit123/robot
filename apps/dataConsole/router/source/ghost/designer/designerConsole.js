@@ -2633,13 +2633,6 @@ DesignerConsoleJs.prototype.consoleView = async function () {
     loading.parentNode.removeChild(loading);
 
     this.pageHistory = [];
-    if (desktop) {
-      if (!dashBoardMode) {
-        window.addEventListener("resize", (e) => {
-          window.location.reload();
-        });
-      }
-    }
     window.addEventListener("popstate", (e) => {
       let targets, targetIndex;
       e.preventDefault();

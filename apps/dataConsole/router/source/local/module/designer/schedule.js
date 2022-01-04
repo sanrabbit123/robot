@@ -3063,9 +3063,6 @@ DesignerJs.prototype.scheduleView = async function () {
     loading.parentNode.removeChild(loading);
 
     this.pageHistory = [];
-    window.addEventListener("resize", (e) => {
-      window.location.reload();
-    });
     window.addEventListener("popstate", (e) => {
       e.preventDefault();
       if (instance.pageHistory.length > 1) {
