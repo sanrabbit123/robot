@@ -942,7 +942,7 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
     fontSize = <%% 15, 14, 13, 12, 3 %%>;
 
     lineHeight = 1.7;
-    finalBottom = <%% 60, 60, 60, 60, 10 %%>;
+    finalBottom = <%% 60, 60, 60, 60, 8 %%>;
 
     blockOuterPadding = <%% 10, 10, 10, 10, 1.5 %%>;
     blockFactorHeight = <%% 90, 90, 90, 90, 13 %%>;
@@ -993,29 +993,29 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
 
     calendarVisualLeft = <%% 1, 1, 1, 1, 1 %%>;
 
-    bigCalendarTitleBottom = <%% 22, 20, 18, 16, 22 %%>;
+    bigCalendarTitleBottom = <%% 22, 20, 18, 16, 3 %%>;
     bigCalendarTitleSize = <%% 36, 34, 32, 30, 5 %%>;
     bigCalendarTitleWeight = <%% 300, 300, 300, 300, 300 %%>;
-    weekBlockHeight = <%% 48, 48, 48, 48, 48 %%>;
-    weekBlockSize = <%% 15, 15, 15, 15, 15 %%>;
+    weekBlockHeight = <%% 48, 48, 48, 48, 8 %%>;
+    weekBlockSize = <%% 15, 15, 15, 15, 2.8 %%>;
     weekBlockWeight = <%% 600, 600, 600, 600, 600 %%>;
-    weekBlockTextTop = <%% (isMac() ? -2 : -1), (isMac() ? -2 : -1), (isMac() ? -2 : -1), (isMac() ? -2 : -1), (isMac() ? -2 : -1) %%>;
+    weekBlockTextTop = <%% (isMac() ? -2 : -1), (isMac() ? -2 : -1), (isMac() ? -2 : -1), (isMac() ? -2 : -1), 0 %%>;
 
     dateBlockHeight = <%% 120, 120, 120, 120, 12 %%>;
-    dateBlockPaddingTop = <%% 40, 40, 40, 40, 4 %%>;
-    dateBlockPaddingBottom = <%% 20, 20, 20, 20, 2 %%>;
+    dateBlockPaddingTop = <%% 40, 40, 40, 40, 5.5 %%>;
+    dateBlockPaddingBottom = <%% 20, 20, 20, 20, 1.5 %%>;
     dateBlockWeight = <%% 300, 300, 300, 300, 300 %%>;
 
     datePositionTop = <%% 10, 10, 10, 10, 1 %%>;
     datePositionLeft = <%% 18, 18, 18, 18, 1 %%>;
 
     arrowWidth = <%% 12, 12, 12, 12, 2 %%>;
-    arrowTop = <%% 22, 22, 18, 18, 2 %%>;
+    arrowTop = <%% 22, 22, 18, 18, 2.4 %%>;
 
-    barMotherHeight = <%% 20, 16, 14, 12, 2 %%>;
-    colorSqureTop = <%% 4, 4, 4, 4, 4 %%>;
-    colorSqureHeight = <%% 12, 10, 10, 8, 12 %%>;
-    colorSqureIndent = <%% 25, 25, 25, 25, 25 %%>;
+    barMotherHeight = <%% 20, 16, 14, 12, 1.5 %%>;
+    colorSqureTop = <%% 4, 4, 4, 4, 0.25 %%>;
+    colorSqureHeight = <%% 12, 10, 10, 8, 1 %%>;
+    colorSqureIndent = <%% 25, 25, 25, 25, 20 %%>;
 
     calendarTitleTop = <%% -32, -32, -32, -32, -3.2 %%>;
     calendarTitleSize = <%% 13, 13, 12, 11, 3 %%>;
@@ -1211,68 +1211,151 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
             },
             event: {
               click: function (e) {
-                const dateStart = stringToDate(this.getAttribute("value"));
-                const thisBox = this.getBoundingClientRect();
-                const self = this;
-                let calendarBase, calendarCancelBack;
+                if (desktop) {
+                  const dateStart = stringToDate(this.getAttribute("value"));
+                  const thisBox = this.getBoundingClientRect();
+                  const self = this;
+                  let calendarBase, calendarCancelBack;
 
-                this.style.color = colorChip.green;
-                calendarCancelBack = createNode({
-                  mother: self.parentElement,
-                  event: {
-                    click: function (e) {
-                      e.preventDefault();
+                  this.style.color = colorChip.green;
+                  calendarCancelBack = createNode({
+                    mother: self.parentElement,
+                    event: {
+                      click: function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        self.parentElement.removeChild(self.parentElement.lastChild);
+                        self.parentElement.removeChild(self.parentElement.lastChild);
+                        self.style.color = colorChip.black;
+                      }
+                    },
+                    style: {
+                      position: "fixed",
+                      top: String(calendarCancelBackPadding * -1) + ea,
+                      left: String(calendarCancelBackPadding * -1) + ea,
+                      width: "calc(100% + " + String(calendarCancelBackPadding * 2) + ea + ")",
+                      height: "calc(100% + " + String(calendarCancelBackPadding * 2) + ea + ")",
+                      background: "transparent",
+                      zIndex: String(1),
+                    }
+                  });
+                  calendarBase = createNode({
+                    mother: self.parentElement,
+                    event: {
+                      click: (e) => { e.stopPropagation() },
+                      contextmenu: (e) => { e.stopPropagation() },
+                    },
+                    style: {
+                      position: "absolute",
+                      width: String(dateCalendarWidth) + ea,
+                      transition: "all 0s ease",
+                      background: colorChip.white,
+                      borderRadius: String(5) + "px",
+                      zIndex: String(1),
+                      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                      animation: "fadeuphard 0.3s ease forwards",
+                      top: String(dateTop + thisBox.height + dateCalendarIndent) + ea,
+                      left: String(dateLeft + ((thisBox.width - datePadding) / 2) - (dateCalendarWidth / 2) - dateCalendarVisual) + ea,
+                    }
+                  });
+                  const calendar = instance.mother.makeCalendar(dateStart, async function (e) {
+                    try {
                       e.stopPropagation();
+                      const thisDate = stringToDate(this.getAttribute("buttonValue"));
+                      const updatedString = dateToString(thisDate).replace(/-/gi, ". ").slice(2);
+                      self.setAttribute("value", dateToString(thisDate));
+                      self.textContent = updatedString;
+                      instance.scheduleChildrenParse().catch((err) => { console.log(err); });
                       self.parentElement.removeChild(self.parentElement.lastChild);
                       self.parentElement.removeChild(self.parentElement.lastChild);
                       self.style.color = colorChip.black;
+                    } catch (e) {
+                      console.log(e);
                     }
-                  },
-                  style: {
-                    position: "fixed",
-                    top: String(calendarCancelBackPadding * -1) + ea,
-                    left: String(calendarCancelBackPadding * -1) + ea,
-                    width: "calc(100% + " + String(calendarCancelBackPadding * 2) + ea + ")",
-                    height: "calc(100% + " + String(calendarCancelBackPadding * 2) + ea + ")",
-                    background: "transparent",
-                    zIndex: String(1),
-                  }
-                });
-                calendarBase = createNode({
-                  mother: self.parentElement,
-                  event: {
-                    click: (e) => { e.stopPropagation() },
-                    contextmenu: (e) => { e.stopPropagation() },
-                  },
-                  style: {
-                    position: "absolute",
-                    width: String(dateCalendarWidth) + ea,
-                    transition: "all 0s ease",
-                    background: colorChip.white,
-                    borderRadius: String(5) + "px",
-                    zIndex: String(1),
-                    boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-                    animation: "fadeuphard 0.3s ease forwards",
-                    top: String(dateTop + thisBox.height + dateCalendarIndent) + ea,
-                    left: String(dateLeft + ((thisBox.width - datePadding) / 2) - (dateCalendarWidth / 2) - dateCalendarVisual) + ea,
-                  }
-                });
-                const calendar = instance.mother.makeCalendar(dateStart, async function (e) {
-                  try {
-                    e.stopPropagation();
-                    const thisDate = stringToDate(this.getAttribute("buttonValue"));
-                    const updatedString = dateToString(thisDate).replace(/-/gi, ". ").slice(2);
-                    self.setAttribute("value", dateToString(thisDate));
-                    self.textContent = updatedString;
-                    instance.scheduleChildrenParse().catch((err) => { console.log(err); });
-                    self.parentElement.removeChild(self.parentElement.lastChild);
-                    self.parentElement.removeChild(self.parentElement.lastChild);
-                    self.style.color = colorChip.black;
-                  } catch (e) {
-                    console.log(e);
-                  }
-                });
-                calendarBase.appendChild(calendar.calendarBase);
+                  });
+                  calendarBase.appendChild(calendar.calendarBase);
+                } else {
+                  const thisBox = this.getBoundingClientRect();
+                  const thisValue = this.getAttribute("value");
+                  const self = this;
+                  let calendarBase, calendarCancelBack;
+                  let greenInput;
+
+                  self.parentElement.parentElement.setAttribute("draggable", "false");
+
+                  calendarCancelBack = createNode({
+                    mother: self.parentElement,
+                    event: {
+                      click: function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        self.parentElement.parentElement.setAttribute("draggable", "true");
+                        self.parentElement.removeChild(self.parentElement.lastChild);
+                        self.parentElement.removeChild(self.parentElement.lastChild);
+                      }
+                    },
+                    style: {
+                      position: "fixed",
+                      top: String(calendarCancelBackPadding * -1) + ea,
+                      left: String(calendarCancelBackPadding * -1) + ea,
+                      width: "calc(100% + " + String(calendarCancelBackPadding * 2) + ea + ")",
+                      height: "calc(100% + " + String(calendarCancelBackPadding * 2) + ea + ")",
+                      background: "transparent",
+                      zIndex: String(1),
+                    }
+                  });
+
+                  greenInput = createNode({
+                    mother: self.parentElement,
+                    mode: "input",
+                    attribute: {
+                      type: "text",
+                    },
+                    event: {
+                      keypress: function (e) {
+                        if (e.key === "Enter") {
+                          this.value = this.value.trim().replace(/[\"\=\&\+]/gi, '');
+                          if (/^[0-9][0-9](\. |\.|\-| )[0-9][0-9](\. |\.|\-| )[0-9][0-9]$/.test(this.value)) {
+                            const numberArr = this.value.replace(/(\. |\.|\-| )/g, '-').split('-');
+                            if (numberArr.length === 3) {
+                              self.textContent = `${numberArr[0]}. ${numberArr[1]}. ${numberArr[2]}`;
+                              self.setAttribute("value", `20${numberArr[0]}-${numberArr[1]}-${numberArr[2]}`);
+                              instance.scheduleChildrenParse().catch((err) => { console.log(err); });
+                              self.parentElement.parentElement.setAttribute("draggable", "true");
+                              self.parentElement.removeChild(self.parentElement.lastChild);
+                              self.parentElement.removeChild(self.parentElement.lastChild);
+                            } else {
+                              window.alert("yy-mm-dd의 형식으로 적어주세요!");
+                              this.value = self.textContent;
+                              self.focus();
+                            }
+                          } else {
+                            window.alert("yy-mm-dd의 형식으로 적어주세요!");
+                            this.value = self.textContent;
+                            self.focus();
+                          }
+                        }
+                      }
+                    },
+                    style: {
+                      position: "absolute",
+                      fontSize: String(dateSize) + ea,
+                      fontWeight: String(dateWeight),
+                      fontFamily: "graphik",
+                      color: colorChip.green,
+                      top: String(dateTop) + ea,
+                      left: String(dateLeft) + ea,
+                      background: colorChip.white,
+                      width: String(thisBox.width) + "px",
+                      outline: String(0),
+                      border: String(0),
+                      zIndex: String(1),
+                    }
+                  });
+
+                  greenInput.value = this.textContent;
+                  greenInput.focus();
+                }
               }
             },
             style: {
@@ -1296,69 +1379,152 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
             },
             event: {
               click: function (e) {
-                const dateEnd = stringToDate(this.getAttribute("value"));
-                const thisBox = this.getBoundingClientRect();
-                const self = this;
-                let calendarBase, calendarCancelBack;
+                if (desktop) {
+                  const dateEnd = stringToDate(this.getAttribute("value"));
+                  const thisBox = this.getBoundingClientRect();
+                  const self = this;
+                  let calendarBase, calendarCancelBack;
 
-                this.style.color = colorChip.green;
-                calendarCancelBack = createNode({
-                  mother: self.parentElement,
-                  event: {
-                    click: function (e) {
-                      e.preventDefault();
+                  this.style.color = colorChip.green;
+                  calendarCancelBack = createNode({
+                    mother: self.parentElement,
+                    event: {
+                      click: function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        self.parentElement.removeChild(self.parentElement.lastChild);
+                        self.parentElement.removeChild(self.parentElement.lastChild);
+                        self.style.color = colorChip.black;
+                      }
+                    },
+                    style: {
+                      position: "fixed",
+                      top: String(calendarCancelBackPadding * -1) + ea,
+                      left: String(calendarCancelBackPadding * -1) + ea,
+                      width: "calc(100% + " + String(calendarCancelBackPadding * 2) + ea + ")",
+                      height: "calc(100% + " + String(calendarCancelBackPadding * 2) + ea + ")",
+                      background: "transparent",
+                      zIndex: String(1),
+                    }
+                  });
+                  calendarBase = createNode({
+                    mother: self.parentElement,
+                    event: {
+                      click: (e) => { e.stopPropagation() },
+                      contextmenu: (e) => { e.stopPropagation() },
+                    },
+                    style: {
+                      position: "absolute",
+                      width: String(dateCalendarWidth) + ea,
+                      transition: "all 0s ease",
+                      background: colorChip.white,
+                      borderRadius: String(5) + "px",
+                      zIndex: String(1),
+                      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                      animation: "fadeuphard 0.3s ease forwards",
+                      top: String(dateTop2 + thisBox.height + dateCalendarIndent) + ea,
+                      right: String(dateLeft + ((thisBox.width - datePadding) / 2) - (dateCalendarWidth / 2) - dateCalendarVisual) + ea,
+                    }
+                  });
+                  const calendar = instance.mother.makeCalendar(dateEnd, async function (e) {
+                    try {
                       e.stopPropagation();
+                      const thisDate = stringToDate(this.getAttribute("buttonValue"));
+                      const updatedString = dateToString(thisDate).replace(/-/gi, ". ").slice(2);
+                      self.setAttribute("value", dateToString(thisDate));
+                      self.textContent = updatedString;
+                      instance.scheduleChildrenParse().catch((err) => { console.log(err); });
                       self.parentElement.removeChild(self.parentElement.lastChild);
                       self.parentElement.removeChild(self.parentElement.lastChild);
                       self.style.color = colorChip.black;
+                    } catch (e) {
+                      console.log(e);
                     }
-                  },
-                  style: {
-                    position: "fixed",
-                    top: String(calendarCancelBackPadding * -1) + ea,
-                    left: String(calendarCancelBackPadding * -1) + ea,
-                    width: "calc(100% + " + String(calendarCancelBackPadding * 2) + ea + ")",
-                    height: "calc(100% + " + String(calendarCancelBackPadding * 2) + ea + ")",
-                    background: "transparent",
-                    zIndex: String(1),
-                  }
-                });
-                calendarBase = createNode({
-                  mother: self.parentElement,
-                  event: {
-                    click: (e) => { e.stopPropagation() },
-                    contextmenu: (e) => { e.stopPropagation() },
-                  },
-                  style: {
-                    position: "absolute",
-                    width: String(dateCalendarWidth) + ea,
-                    transition: "all 0s ease",
-                    background: colorChip.white,
-                    borderRadius: String(5) + "px",
-                    zIndex: String(1),
-                    boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-                    animation: "fadeuphard 0.3s ease forwards",
-                    top: String(dateTop2 + thisBox.height + dateCalendarIndent) + ea,
-                    right: String(dateLeft + ((thisBox.width - datePadding) / 2) - (dateCalendarWidth / 2) - dateCalendarVisual) + ea,
-                  }
-                });
-                const calendar = instance.mother.makeCalendar(dateEnd, async function (e) {
-                  try {
-                    e.stopPropagation();
-                    const thisDate = stringToDate(this.getAttribute("buttonValue"));
-                    const updatedString = dateToString(thisDate).replace(/-/gi, ". ").slice(2);
-                    self.setAttribute("value", dateToString(thisDate));
-                    self.textContent = updatedString;
-                    instance.scheduleChildrenParse().catch((err) => { console.log(err); });
-                    self.parentElement.removeChild(self.parentElement.lastChild);
-                    self.parentElement.removeChild(self.parentElement.lastChild);
-                    self.style.color = colorChip.black;
-                  } catch (e) {
-                    console.log(e);
-                  }
-                });
-                calendarBase.appendChild(calendar.calendarBase);
+                  });
+                  calendarBase.appendChild(calendar.calendarBase);
+                } else {
+                  const thisBox = this.getBoundingClientRect();
+                  const thisValue = this.getAttribute("value");
+                  const self = this;
+                  let calendarBase, calendarCancelBack;
+                  let greenInput;
 
+                  self.parentElement.parentElement.setAttribute("draggable", "false");
+
+                  calendarCancelBack = createNode({
+                    mother: self.parentElement,
+                    event: {
+                      click: function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        self.parentElement.parentElement.setAttribute("draggable", "true");
+                        self.parentElement.removeChild(self.parentElement.lastChild);
+                        self.parentElement.removeChild(self.parentElement.lastChild);
+                      }
+                    },
+                    style: {
+                      position: "fixed",
+                      top: String(calendarCancelBackPadding * -1) + ea,
+                      left: String(calendarCancelBackPadding * -1) + ea,
+                      width: "calc(100% + " + String(calendarCancelBackPadding * 2) + ea + ")",
+                      height: "calc(100% + " + String(calendarCancelBackPadding * 2) + ea + ")",
+                      background: "transparent",
+                      zIndex: String(1),
+                    }
+                  });
+
+                  greenInput = createNode({
+                    mother: self.parentElement,
+                    mode: "input",
+                    attribute: {
+                      type: "text",
+                    },
+                    event: {
+                      keypress: function (e) {
+                        if (e.key === "Enter") {
+                          this.value = this.value.trim().replace(/[\"\=\&\+]/gi, '');
+                          if (/^[0-9][0-9](\. |\.|\-| )[0-9][0-9](\. |\.|\-| )[0-9][0-9]$/.test(this.value)) {
+                            const numberArr = this.value.replace(/(\. |\.|\-| )/g, '-').split('-');
+                            if (numberArr.length === 3) {
+                              self.textContent = `${numberArr[0]}. ${numberArr[1]}. ${numberArr[2]}`;
+                              self.setAttribute("value", `20${numberArr[0]}-${numberArr[1]}-${numberArr[2]}`);
+                              instance.scheduleChildrenParse().catch((err) => { console.log(err); });
+                              self.parentElement.parentElement.setAttribute("draggable", "true");
+                              self.parentElement.removeChild(self.parentElement.lastChild);
+                              self.parentElement.removeChild(self.parentElement.lastChild);
+                            } else {
+                              window.alert("yy-mm-dd의 형식으로 적어주세요!");
+                              this.value = self.textContent;
+                              self.focus();
+                            }
+                          } else {
+                            window.alert("yy-mm-dd의 형식으로 적어주세요!");
+                            this.value = self.textContent;
+                            self.focus();
+                          }
+                        }
+                      }
+                    },
+                    style: {
+                      position: "absolute",
+                      fontSize: String(dateSize) + ea,
+                      fontWeight: String(dateWeight),
+                      fontFamily: "graphik",
+                      color: colorChip.green,
+                      top: String(dateTop2) + ea,
+                      right: String(dateLeft) + ea,
+                      background: colorChip.white,
+                      width: String(thisBox.width) + "px",
+                      paddingLeft: String(datePadding) + ea,
+                      outline: String(0),
+                      border: String(0),
+                      zIndex: String(1),
+                    }
+                  });
+
+                  greenInput.value = this.textContent;
+                  greenInput.focus();
+                }
               }
             },
             style: {
@@ -1398,90 +1564,92 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
             },
             event: {
               click: function (e) {
-                const thisBox = this.getBoundingClientRect();
-                const self = this;
-                let colorBoxBase, colorBoxCancelBack;
+                if (desktop) {
+                  const thisBox = this.getBoundingClientRect();
+                  const self = this;
+                  let colorBoxBase, colorBoxCancelBack;
 
-                colorBoxCancelBack = createNode({
-                  mother: self.parentElement,
-                  event: {
-                    click: function (e) {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      self.parentElement.removeChild(self.parentElement.lastChild);
-                      self.parentElement.removeChild(self.parentElement.lastChild);
-                    }
-                  },
-                  style: {
-                    position: "fixed",
-                    top: String(calendarCancelBackPadding * -1) + ea,
-                    left: String(calendarCancelBackPadding * -1) + ea,
-                    width: "calc(100% + " + String(calendarCancelBackPadding * 2) + ea + ")",
-                    height: "calc(100% + " + String(calendarCancelBackPadding * 2) + ea + ")",
-                    background: "transparent",
-                    zIndex: String(1),
-                  }
-                });
-
-                colorBoxBase = createNode({
-                  mother: self.parentElement,
-                  event: {
-                    click: (e) => { e.stopPropagation() },
-                    contextmenu: (e) => { e.stopPropagation() },
-                  },
-                  style: {
-                    position: "absolute",
-                    width: String(dateCalendarWidth) + ea,
-                    transition: "all 0s ease",
-                    background: colorChip.white,
-                    borderRadius: String(5) + "px",
-                    zIndex: String(1),
-                    boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-                    animation: "fadeuphard 0.3s ease forwards",
-                    top: String(dateTop + thisBox.height + colorBoxIndent) + ea,
-                    left: String(dateLeft + ((thisBox.width) / 2) - ((dateCalendarWidth + (colorBoxPadding * 2)) / 2)) + ea,
-                    padding: String(colorBoxPadding) + ea,
-                  }
-                });
-
-                for (let i = 0; i < instance.colors.length; i++) {
-                  createNode({
-                    mother: colorBoxBase,
-                    style: {
-                      display: "inline-flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      width: String(dateCalendarWidth / 10) + ea,
-                      height: String(dateCalendarWidth / 10) + ea,
-                    },
-                    children: [
-                      {
-                        class: [ "hoverDefault_lite" ],
-                        attribute: { value: instance.colors[i] },
-                        event: {
-                          click: function (e) {
-                            const thisColor = this.getAttribute("value");
-                            const blocksMother = this.parentElement.parentElement.parentElement.parentElement.parentElement;
-                            e.preventDefault();
-                            e.stopPropagation();
-                            self.style.background = thisColor;
-                            self.setAttribute("value", thisColor);
-                            self.parentElement.removeChild(self.parentElement.lastChild);
-                            self.parentElement.removeChild(self.parentElement.lastChild);
-                            blocksReload(blocksMother);
-                          }
-                        },
-                        style: {
-                          position: "relative",
-                          display: "inline-block",
-                          width: String(80) + '%',
-                          height: String(80) + '%',
-                          background: instance.colors[i],
-                          borderRadius: String(2) + "px",
-                        }
+                  colorBoxCancelBack = createNode({
+                    mother: self.parentElement,
+                    event: {
+                      click: function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        self.parentElement.removeChild(self.parentElement.lastChild);
+                        self.parentElement.removeChild(self.parentElement.lastChild);
                       }
-                    ]
+                    },
+                    style: {
+                      position: "fixed",
+                      top: String(calendarCancelBackPadding * -1) + ea,
+                      left: String(calendarCancelBackPadding * -1) + ea,
+                      width: "calc(100% + " + String(calendarCancelBackPadding * 2) + ea + ")",
+                      height: "calc(100% + " + String(calendarCancelBackPadding * 2) + ea + ")",
+                      background: "transparent",
+                      zIndex: String(1),
+                    }
                   });
+
+                  colorBoxBase = createNode({
+                    mother: self.parentElement,
+                    event: {
+                      click: (e) => { e.stopPropagation() },
+                      contextmenu: (e) => { e.stopPropagation() },
+                    },
+                    style: {
+                      position: "absolute",
+                      width: String(dateCalendarWidth) + ea,
+                      transition: "all 0s ease",
+                      background: colorChip.white,
+                      borderRadius: String(5) + "px",
+                      zIndex: String(1),
+                      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                      animation: "fadeuphard 0.3s ease forwards",
+                      top: String(dateTop + thisBox.height + colorBoxIndent) + ea,
+                      left: String(dateLeft + ((thisBox.width) / 2) - ((dateCalendarWidth + (colorBoxPadding * 2)) / 2)) + ea,
+                      padding: String(colorBoxPadding) + ea,
+                    }
+                  });
+
+                  for (let i = 0; i < instance.colors.length; i++) {
+                    createNode({
+                      mother: colorBoxBase,
+                      style: {
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: String(dateCalendarWidth / 10) + ea,
+                        height: String(dateCalendarWidth / 10) + ea,
+                      },
+                      children: [
+                        {
+                          class: [ "hoverDefault_lite" ],
+                          attribute: { value: instance.colors[i] },
+                          event: {
+                            click: function (e) {
+                              const thisColor = this.getAttribute("value");
+                              const blocksMother = this.parentElement.parentElement.parentElement.parentElement.parentElement;
+                              e.preventDefault();
+                              e.stopPropagation();
+                              self.style.background = thisColor;
+                              self.setAttribute("value", thisColor);
+                              self.parentElement.removeChild(self.parentElement.lastChild);
+                              self.parentElement.removeChild(self.parentElement.lastChild);
+                              blocksReload(blocksMother);
+                            }
+                          },
+                          style: {
+                            position: "relative",
+                            display: "inline-block",
+                            width: String(80) + '%',
+                            height: String(80) + '%',
+                            background: instance.colors[i],
+                            borderRadius: String(2) + "px",
+                          }
+                        }
+                      ]
+                    });
+                  }
                 }
               }
             },
@@ -2067,8 +2235,8 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
                   width: String(100 - colorSqureIndent) + '%',
                   right: String(0) + ea,
                   background: color,
-                  borderTopLeftRadius: String(colorSqureHeight) + "px",
-                  borderBottomLeftRadius: String(colorSqureHeight) + "px",
+                  borderTopLeftRadius: String(colorSqureHeight) + ea,
+                  borderBottomLeftRadius: String(colorSqureHeight) + ea,
                   cursor: "pointer",
                 }
               });
@@ -2127,8 +2295,8 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
                   width: String(100 - colorSqureIndent) + '%',
                   left: String(0) + ea,
                   background: color,
-                  borderTopRightRadius: String(colorSqureHeight) + "px",
-                  borderBottomRightRadius: String(colorSqureHeight) + "px",
+                  borderTopRightRadius: String(colorSqureHeight) + ea,
+                  borderBottomRightRadius: String(colorSqureHeight) + ea,
                   cursor: "pointer",
                 }
               });
@@ -2184,8 +2352,8 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
                   position: "absolute",
                   top: String(colorSqureTop) + ea,
                   height: String(colorSqureHeight) + ea,
-                  width: "calc(100% + " + String(1 * 2) + ea + ")",
-                  left: String(-1) + ea,
+                  width: "calc(100% + " + String(1 * 2) + "px" + ")",
+                  left: String(-1) + "px",
                   background: color,
                   cursor: "pointer",
                 }
@@ -2245,7 +2413,7 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
                   width: String(100 - (colorSqureIndent * 2)) + '%',
                   left: String(colorSqureIndent) + '%',
                   background: color,
-                  borderRadius: String(colorSqureHeight) + "px",
+                  borderRadius: String(colorSqureHeight) + ea,
                   cursor: "pointer",
                 }
               });
