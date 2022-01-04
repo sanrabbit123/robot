@@ -1571,7 +1571,7 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
     titlePaddingBottom = <%% (isMac() ? 18 : 15), (isMac() ? 18 : 15), (isMac() ? 18 : 15), (isMac() ? 18 : 15), 3.2 %%>;
     titleDateVisualBottom = <%% (isMac() ? 2 : -3), (isMac() ? 2 : -3), (isMac() ? 2 : -3), (isMac() ? 2 : -3), 0.5 %%>;
 
-    fontSize = <%% 15, 14, 13, 12, 3.5 %%>;
+    fontSize = <%% 15, 14, 13, 12, 3 %%>;
     contentsBetween = <%% 32, 28, 25, 22, 6 %%>;
 
     clientInfoBottom = <%% 42, 42, 42, 42, 7 %%>;
@@ -1588,7 +1588,7 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
     arrowWidth = <%% 8, 8, 7, 6, 1.6 %%>;
     arrowLeft = <%% 1, 1, 1, 1, 0 %%>;
 
-    lineHeight = 1.8;
+    lineHeight = 1.7;
     photoWidth = <%% 260, 260, 260, 260, 20 %%>;
     photoMargin = <%% 10, 10, 10, 10, 1.5 %%>;
     finalBottom = <%% 240, 240, 240, 240, 10 %%>;

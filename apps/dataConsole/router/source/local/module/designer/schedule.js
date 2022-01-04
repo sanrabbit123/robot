@@ -127,7 +127,7 @@ DesignerJs.prototype.scheduleReturnStatic = function (designer, project, client,
   const proid = project.proid;
   const cliid = project.cliid;
 
-  const title = client.name + "님 상세 일정표";
+  const title = desktop ? client.name + "님 상세 일정표" : "상세 일정표";
   const initialContents = "안녕하세요, <b%" + designer.designer + "%b> 실장님!\n홈리에종에 의뢰하신 " + client.name +  " 고객님 관련 정보를 보내드립니다. <b%" + GeneralJs.serviceParsing(project.service) + "%b>를 진행합니다.";
   const weekWordings = [ '월', '화', '수', '목', '금', '토', '일' ];
 
@@ -259,21 +259,21 @@ DesignerJs.prototype.scheduleList = function (desid) {
 
   borderRadius = <%% 10, 10, 10, 10, 8 %%>;
 
-  colorInfoIndent = 35;
-  colorBlockHeight = 24;
+  colorInfoIndent = <%% 35, 35, 35, 35, 7.2 %%>;
+  colorBlockHeight = <%% 24, 24, 24, 24, 3.8 %%>;
 
-  colorInfoPaddingLeft = 17;
-  colorInfoPaddingTop = 11;
-  colorInfoPaddingBottom = 12;
+  colorInfoPaddingLeft = <%% 17, 17, 17, 17, 3 %%>;
+  colorInfoPaddingTop = <%% 11, 11, 11, 11, 1.9 %%>;
+  colorInfoPaddingBottom = <%% 12, 12, 12, 12, 2.2 %%>;
 
-  colorMarkWidth = 32;
-  colorMarkHeight = 10;
-  colorMarkBetween = 7;
+  colorMarkWidth = <%% 32, 32, 32, 32, 3.2 %%>;
+  colorMarkHeight = <%% 10, 10, 10, 10, 1.0 %%>;
+  colorMarkBetween = <%% 7, 7, 7, 7, 0.7 %%>;
 
-  colorBlockSize = 13;
-  colorBlockWeight = 500;
+  colorBlockSize = <%% 13, 13, 13, 13, 1.3 %%>;
+  colorBlockWeight = <%% 500, 500, 500, 500, 500 %%>;
 
-  colorBlockTextTop = -1;
+  colorBlockTextTop = <%% -1, -1, -1, -1, 0 %%>;
 
   if (mobile) {
     totalMother.style.background = colorChip.gray2;
@@ -465,7 +465,8 @@ DesignerJs.prototype.scheduleList = function (desid) {
       position: "fixed",
       background: colorChip.white,
       bottom: String(belowHeight + colorInfoIndent) + ea,
-      right: String(colorInfoIndent) + ea,
+      right: desktop ? String(colorInfoIndent) + ea : "",
+      left: mobile ? String(colorInfoIndent) + ea : "",
       boxShadow: "0px 4px 18px -9px " + colorChip.shadow,
       borderRadius: String(5) + "px",
       opacity: String(0),
@@ -938,90 +939,90 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
     titlePaddingBottom = <%% (isMac() ? 18 : 15), (isMac() ? 18 : 15), (isMac() ? 18 : 15), (isMac() ? 18 : 15), 3.2 %%>;
     titleDateVisualBottom = <%% (isMac() ? 2 : -3), (isMac() ? 2 : -3), (isMac() ? 2 : -3), (isMac() ? 2 : -3), 0.5 %%>;
 
-    fontSize = <%% 15, 14, 13, 12, 3.5 %%>;
+    fontSize = <%% 15, 14, 13, 12, 3 %%>;
 
-    lineHeight = 1.8;
+    lineHeight = 1.7;
     finalBottom = <%% 60, 60, 60, 60, 10 %%>;
 
-    blockOuterPadding = <%% 10, 10, 10, 10, 10 %%>;
-    blockFactorHeight = <%% 90, 90, 90, 90, 90 %%>;
-    blockInnerMargin = <%% 6, 6, 6, 6, 6 %%>;
-    blockFactorMarginBottom = <%% 6, 6, 6, 6, 6 %%>;
+    blockOuterPadding = <%% 10, 10, 10, 10, 1.5 %%>;
+    blockFactorHeight = <%% 90, 90, 90, 90, 13 %%>;
+    blockInnerMargin = <%% 6, 6, 6, 6, 1 %%>;
+    blockFactorMarginBottom = <%% 6, 6, 6, 6, 1.5 %%>;
 
-    numberSize = <%% 36, 36, 36, 36, 36 %%>;
-    numberTextTop = <%% -4, -4, -4, -4, -4 %%>;
+    numberSize = <%% 36, 36, 36, 36, 4.8 %%>;
+    numberTextTop = <%% -4, -4, -4, -4, -0.6 %%>;
     numberWeight = <%% 400, 400, 400, 400, 400 %%>;
 
     blockSecondRatio = <%% 2.4, 2.1, 1.8, 1.5, 2.4 %%>;
-    dateSize = <%% 15, 15, 15, 14, 15 %%>;
+    dateSize = <%% 15, 15, 15, 14, 3.6 %%>;
     dateWeight = <%% 400, 400, 400, 400, 400 %%>;
-    dateTop = <%% 11, 11, 11, 14, 11 %%>;
-    dateTop2 = <%% 34, 34, 34, 34, 34 %%>;
-    dateBottom = <%% dateTop + 5, dateTop + 5, dateTop + 5, dateTop + 3, dateTop + 5 %%>;
-    dateLeft = <%% 18, 18, 18, 18, 18 %%>;
-    datePadding = <%% 8, 8, 8, 8, 8 %%>;
-    dateLineBottom = <%% 24.5, 24.5, 24.5, 25, 24.5 %%>;
+    dateTop = <%% 11, 11, 11, 14, 2 %%>;
+    dateTop2 = <%% 34, 34, 34, 34, 2 %%>;
+    dateBottom = <%% dateTop + 5, dateTop + 5, dateTop + 5, dateTop + 3, dateTop %%>;
+    dateLeft = <%% 18, 18, 18, 18, 4.2 %%>;
+    datePadding = <%% 8, 8, 8, 8, 2 %%>;
+    dateLineBottom = <%% 24.5, 24.5, 24.5, 25, 5.3 %%>;
 
-    dateCalendarWidth = <%% 260, 260, 260, 260, 260 %%>;
-    dateCalendarIndent = <%% 6, 6, 6, 6, 6 %%>;
-    dateCalendarVisual = <%% 2, 2, 2, 2, 2 %%>;
-    calendarCancelBackPadding = <%% 24, 24, 24, 24, 24 %%>;
+    dateCalendarWidth = <%% 260, 260, 260, 260, 80 %%>;
+    dateCalendarIndent = <%% 6, 6, 6, 6, 0 %%>;
+    dateCalendarVisual = <%% 2, 2, 2, 2, 0 %%>;
+    calendarCancelBackPadding = <%% 24, 24, 24, 24, 2.4 %%>;
     colorBoxIndent = <%% 12, 12, 12, 12, 12 %%>;
     colorBoxPadding = <%% 12, 12, 12, 12, 12 %%>;
 
-    colorBarWidth = <%% 6, 6, 6, 5, 6 %%>;
-    colorBarVisual = <%% 1, 1, 1, 0, 1 %%>;
+    colorBarWidth = <%% 6, 6, 6, 5, 1 %%>;
+    colorBarVisual = <%% 1, 1, 1, 0, 0 %%>;
 
-    wordingSize = <%% 14, 14, 13, 12, 14 %%>;
-    wordingLeft = <%% 34, 34, 34, 34, 34 %%>;
+    wordingSize = <%% 14, 14, 13, 12, 2.8 %%>;
+    wordingLeft = <%% 34, 34, 34, 34, 8 %%>;
     wordingWeight0 = <%% 600, 600, 600, 600, 600 %%>;
     wordingWeight1 = <%% 400, 400, 400, 400, 400 %%>;
-    wordingTop = <%% (isMac() ? 13 : 14), (isMac() ? 13 : 14), (isMac() ? 13 : 14), (isMac() ? 13 : 14), (isMac() ? 13 : 14) %%>;
+    wordingTop = <%% (isMac() ? 13 : 14), (isMac() ? 13 : 14), (isMac() ? 13 : 14), (isMac() ? 13 : 14), 3.4 %%>;
 
     descriptionPaddingLeft = wordingLeft;
     descriptionPaddingRight = dateLeft;
-    descriptionPaddingTop = <%% (isMac() ? 34 : 35), (isMac() ? 35 : 36), (isMac() ? 36 : 37), (isMac() ? 35 : 36), (isMac() ? 34 : 35) %%>;
-    descriptionPaddingBottom = <%% 15, 14, 13, 14, 3 %%>;
+    descriptionPaddingTop = <%% (isMac() ? 34 : 35), (isMac() ? 35 : 36), (isMac() ? 36 : 37), (isMac() ? 35 : 36), 8.2 %%>;
+    descriptionPaddingBottom = <%% 15, 14, 13, 14, 3.8 %%>;
     descriptionLineHeight = 1.5;
 
-    plusSize = <%% 48, 48, 48, 48, 48 %%>;
+    plusSize = <%% 48, 48, 48, 48, 4.8 %%>;
     plusWeight = <%% 500, 500, 500, 500, 500 %%>;
     plusTextTop = <%% -5, -5, -5, -5, -5 %%>;
 
-    blockAreaMarginBottom = <%% 50, 50, 50, 50, 50 %%>;
+    blockAreaMarginBottom = <%% 50, 50, 50, 50, 5 %%>;
 
     calendarVisualLeft = <%% 1, 1, 1, 1, 1 %%>;
 
     bigCalendarTitleBottom = <%% 22, 20, 18, 16, 22 %%>;
-    bigCalendarTitleSize = <%% 36, 34, 32, 30, 3.6 %%>;
+    bigCalendarTitleSize = <%% 36, 34, 32, 30, 5 %%>;
     bigCalendarTitleWeight = <%% 300, 300, 300, 300, 300 %%>;
     weekBlockHeight = <%% 48, 48, 48, 48, 48 %%>;
     weekBlockSize = <%% 15, 15, 15, 15, 15 %%>;
     weekBlockWeight = <%% 600, 600, 600, 600, 600 %%>;
     weekBlockTextTop = <%% (isMac() ? -2 : -1), (isMac() ? -2 : -1), (isMac() ? -2 : -1), (isMac() ? -2 : -1), (isMac() ? -2 : -1) %%>;
 
-    dateBlockHeight = <%% 120, 120, 120, 120, 120 %%>;
-    dateBlockPaddingTop = <%% 40, 40, 40, 40, 40 %%>;
-    dateBlockPaddingBottom = <%% 20, 20, 20, 20, 20 %%>;
+    dateBlockHeight = <%% 120, 120, 120, 120, 12 %%>;
+    dateBlockPaddingTop = <%% 40, 40, 40, 40, 4 %%>;
+    dateBlockPaddingBottom = <%% 20, 20, 20, 20, 2 %%>;
     dateBlockWeight = <%% 300, 300, 300, 300, 300 %%>;
 
-    datePositionTop = <%% 10, 10, 10, 10, 10 %%>;
-    datePositionLeft = <%% 18, 18, 18, 18, 18 %%>;
+    datePositionTop = <%% 10, 10, 10, 10, 1 %%>;
+    datePositionLeft = <%% 18, 18, 18, 18, 1 %%>;
 
-    arrowWidth = <%% 12, 12, 12, 12, 12 %%>;
-    arrowTop = <%% 22, 22, 18, 18, 22 %%>;
+    arrowWidth = <%% 12, 12, 12, 12, 2 %%>;
+    arrowTop = <%% 22, 22, 18, 18, 2 %%>;
 
-    barMotherHeight = <%% 20, 16, 14, 12, 20 %%>;
+    barMotherHeight = <%% 20, 16, 14, 12, 2 %%>;
     colorSqureTop = <%% 4, 4, 4, 4, 4 %%>;
     colorSqureHeight = <%% 12, 10, 10, 8, 12 %%>;
     colorSqureIndent = <%% 25, 25, 25, 25, 25 %%>;
 
-    calendarTitleTop = <%% -32, -32, -32, -32, -32 %%>;
-    calendarTitleSize = <%% 13, 13, 12, 11, 13 %%>;
-    calendarTitlePaddingTop = <%% (isMac() ? 5 : 7), (isMac() ? 5 : 7), (isMac() ? 5 : 7), (isMac() ? 5 : 7), 5 %%>;
+    calendarTitleTop = <%% -32, -32, -32, -32, -3.2 %%>;
+    calendarTitleSize = <%% 13, 13, 12, 11, 3 %%>;
+    calendarTitlePaddingTop = <%% (isMac() ? 5 : 7), (isMac() ? 5 : 7), (isMac() ? 5 : 7), (isMac() ? 5 : 7), 1 %%>;
     calendarTitlePaddingBottom = <%% 6, 6, 6, 6, 6 %%>;
-    calendarTitlePaddingLeft = <%% 12, 12, 12, 12, 12 %%>;
-    calendarTitlePaddingRight = <%% 12, 12, 12, 12, 12 %%>;
+    calendarTitlePaddingLeft = <%% 12, 12, 12, 12, 1.2 %%>;
+    calendarTitlePaddingRight = <%% 12, 12, 12, 12, 1.2 %%>;
 
     blockInsert = () => {}
     bigCalendarContentsZone = {};
@@ -1186,11 +1187,11 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
           verticalAlign: "top",
           display: "inline-block",
           position: "relative",
-          width: String((blockFactorHeight - (blockOuterPadding * 2)) * blockSecondRatio) + ea,
+          width: desktop ? String((blockFactorHeight - (blockOuterPadding * 2)) * blockSecondRatio) + ea : withOut(blockFactorHeight - (blockOuterPadding * 2) + blockInnerMargin, ea),
           height: String(blockFactorHeight - (blockOuterPadding * 2)) + ea,
           background: colorChip.white,
           borderRadius: String(5) + "px",
-          marginRight: String(blockInnerMargin) + ea,
+          marginRight: desktop ? String(blockInnerMargin) + ea : "",
         },
         children: [
           {
@@ -1379,15 +1380,16 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
         mother: blockFactor,
         style: {
           verticalAlign: "top",
-          display: "inline-block",
+          display: desktop ? "inline-block" : "block",
           position: "relative",
-          width: withOut(((blockFactorHeight - (blockOuterPadding * 2)) * (1 + blockSecondRatio) + (blockInnerMargin * 2) + descriptionPaddingLeft + descriptionPaddingRight), ea),
+          width: desktop ? withOut(((blockFactorHeight - (blockOuterPadding * 2)) * (1 + blockSecondRatio) + (blockInnerMargin * 2) + descriptionPaddingLeft + descriptionPaddingRight), ea) : "",
           paddingTop: String(descriptionPaddingTop) + ea,
           paddingLeft: String(descriptionPaddingLeft) + ea,
           paddingRight: String(descriptionPaddingRight) + ea,
           paddingBottom: String(descriptionPaddingBottom) + ea,
           background: colorChip.white,
           borderRadius: String(5) + "px",
+          marginTop: mobile ? String(blockInnerMargin) + ea : "",
         },
         children: [
           {
@@ -1487,9 +1489,9 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
             style: {
               position: "absolute",
               left: String(dateLeft) + ea,
-              top: String(dateBottom) + ea,
+              top: String((desktop ? dateBottom : 4.2)) + ea,
               width: String(colorBarWidth) + ea,
-              height: withOut((dateBottom * 2) + colorBarVisual, ea),
+              height: withOut(((desktop ? dateBottom : 4.4) * 2) + colorBarVisual, ea),
               borderRadius: String(colorBarWidth) + ea,
               background: barColor,
             }
@@ -1650,7 +1652,7 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
                         fontSize: String(wordingSize) + ea,
                         fontWeight: String(wordingWeight1),
                         width: withOut(0, ea),
-                        height: String(thisBox.height) + ea,
+                        height: String(thisBox.height) + "px",
                         outline: String(0),
                         border: String(0),
                         zIndex: String(1),
