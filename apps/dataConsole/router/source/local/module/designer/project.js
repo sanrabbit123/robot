@@ -1911,18 +1911,21 @@ DesignerJs.prototype.projectView = async function () {
         searchInput.addEventListener("keypress", function (e) {
           if (e.key === "Enter") {
             if (this.value.trim() !== '') {
-              const value = this.value.trim();
-              if (document.querySelector(".detailWhitePopupConst") === null) {
-                const targets = instance.whiteCards.map((dom) => { return dom.textContent });
+              let value;
+
+              value = this.value.trim();
+
+              if (/\:/gi.test(value)) {
+                value = value.split(':')[1];
+                const targets = instance.standardDoms.map((dom) => { return dom.textContent });
                 const index = targets.findIndex((str) => { return (new RegExp(value, "gi")).test(str); });
                 if (index !== -1) {
                   GeneralJs.setQueue(() => {
-                    instance.whiteCards[index].click();
+                    instance.standardDoms[index].click();
                   });
                 }
               } else {
-                document.querySelector(".totalMother").querySelector("aside").click();
-                GeneralJs.setQueue(() => {
+                if (document.querySelector(".detailWhitePopupConst") === null) {
                   const targets = instance.whiteCards.map((dom) => { return dom.textContent });
                   const index = targets.findIndex((str) => { return (new RegExp(value, "gi")).test(str); });
                   if (index !== -1) {
@@ -1930,8 +1933,20 @@ DesignerJs.prototype.projectView = async function () {
                       instance.whiteCards[index].click();
                     });
                   }
-                }, 501);
+                } else {
+                  document.querySelector(".totalMother").querySelector("aside").click();
+                  GeneralJs.setQueue(() => {
+                    const targets = instance.whiteCards.map((dom) => { return dom.textContent });
+                    const index = targets.findIndex((str) => { return (new RegExp(value, "gi")).test(str); });
+                    if (index !== -1) {
+                      GeneralJs.setQueue(() => {
+                        instance.whiteCards[index].click();
+                      });
+                    }
+                  }, 501);
+                }
               }
+
             }
           }
         });
