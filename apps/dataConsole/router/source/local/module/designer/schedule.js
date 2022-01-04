@@ -270,7 +270,7 @@ DesignerJs.prototype.scheduleList = function (desid) {
   colorMarkHeight = <%% 10, 10, 10, 10, 1.0 %%>;
   colorMarkBetween = <%% 7, 7, 7, 7, 0.7 %%>;
 
-  colorBlockSize = <%% 13, 13, 13, 13, 1.3 %%>;
+  colorBlockSize = <%% 13, 13, 13, 13, 2.8 %%>;
   colorBlockWeight = <%% 500, 500, 500, 500, 500 %%>;
 
   colorBlockTextTop = <%% -1, -1, -1, -1, 0 %%>;
