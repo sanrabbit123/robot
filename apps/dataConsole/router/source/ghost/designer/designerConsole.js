@@ -165,7 +165,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       mobile: true,
       event: function (e) {
         popupDelete();
-        totalMother.style.background = "transparent";
+        totalMother.style.background = desktop ? "transparent" : colorChip.gray2;
         instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
         if (instance.mode === modes[0]) {
           scrollTo(document.querySelector(".totalMother"), 0);
@@ -185,7 +185,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       mobile: true,
       event: function (e) {
         popupDelete();
-        totalMother.style.background = "transparent";
+        totalMother.style.background = desktop ? "transparent" : colorChip.gray2;
         instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
         instance.possibleDetailLaunching(desid, () => {
           scrollTo(document.querySelector(".totalMother"), 0);
@@ -201,7 +201,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       mobile: true,
       event: function (e) {
         popupDelete();
-        totalMother.style.background = "transparent";
+        totalMother.style.background = desktop ? "transparent" : colorChip.gray2;
         instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
         const blocks = document.querySelector(".mainBaseTong").firstChild.children;
         if (instance.mode === modes[0]) {
@@ -223,7 +223,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       mobile: true,
       event: function (e) {
         popupDelete();
-        totalMother.style.background = "transparent";
+        totalMother.style.background = desktop ? "transparent" : colorChip.gray2;
         instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
         const blocks = document.querySelector(".mainBaseTong").firstChild.children;
         if (instance.mode === modes[0]) {
@@ -245,7 +245,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       mobile: true,
       event: function (e) {
         popupDelete();
-        totalMother.style.background = "transparent";
+        totalMother.style.background = desktop ? "transparent" : colorChip.gray2;
         instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
         if (instance.mode === modes[1]) {
           scrollTo(document.querySelector(".totalMother"), 0);
@@ -265,7 +265,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       mobile: true,
       event: function (e) {
         popupDelete();
-        totalMother.style.background = "transparent";
+        totalMother.style.background = desktop ? "transparent" : colorChip.gray2;
         instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
         const blocks = document.querySelector(".mainBaseTong").firstChild.children;
         if (instance.mode === modes[1]) {
@@ -287,7 +287,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       mobile: true,
       event: function (e) {
         popupDelete();
-        totalMother.style.background = "transparent";
+        totalMother.style.background = desktop ? "transparent" : colorChip.gray2;
         instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
         instance.requestDetailLaunching(desid, () => {
           scrollTo(document.querySelector(".totalMother"), 0);
@@ -306,7 +306,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       mobile: true,
       event: function (e) {
         popupDelete();
-        totalMother.style.background = "transparent";
+        totalMother.style.background = desktop ? "transparent" : colorChip.gray2;
         instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
         instance.scheduleDetailLaunching(desid, () => {
           scrollTo(document.querySelector(".totalMother"), 0);
@@ -325,7 +325,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       mobile: true,
       event: function (e) {
         popupDelete();
-        totalMother.style.background = "transparent";
+        totalMother.style.background = desktop ? "transparent" : colorChip.gray2;
         instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
         instance.projectDetailLaunching(desid, () => {
           scrollTo(document.querySelector(".totalMother"), 0);
@@ -690,7 +690,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
         text: "Designer",
         event: {
           click: function (e) {
-            window.location.reload();
+            window.location.href = window.location.protocol + "//" + window.location.host + "/middle/console?desid=" + GeneralJs.returnGet().desid + "&mode=dashboard";
           }
         },
         style: {
@@ -710,7 +710,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
         text: "console",
         event: {
           click: function (e) {
-            window.location.reload();
+            window.location.href = window.location.protocol + "//" + window.location.host + "/middle/console?desid=" + GeneralJs.returnGet().desid + "&mode=dashboard";
           }
         },
         style: {
@@ -2611,26 +2611,10 @@ DesignerConsoleJs.prototype.consoleView = async function () {
       blocks: [],
     };
 
-    this.projects = await ajaxJson({ noFlat: true, whereQuery: { desid: this.desid } }, "/getProjects", { equal: true });
-    if (this.projects.length === 0) {
-      this.clients = [];
-    } else {
-      this.clients = await ajaxJson({ noFlat: true, whereQuery: { $or: [ ...new Set(this.projects.map((obj) => { return obj.cliid; })) ].map((cliid) => { return { cliid }; }) } }, "/getClients", { equal: true })
-    }
-    this.designers.setProjects(this.projects);
-    this.designers.setClients(this.clients);
-
     motherHeight = <%% 154, 148, 148, 148, 148 %%>;
 
     this.firstTop = this.standardDoms[1].getBoundingClientRect().top;
     this.motherHeight = motherHeight;
-
-    this.projectMap = await ajaxJson({ method: "projectMap" }, "/getDataPatch");
-    this.checklist = await ajaxJson({ kind: "checklist" }, "/getServicesByKind");
-    this.slackNotices = await ajaxJson({ channel: "001_designer_notice" }, "https://" + FILEHOST + "/slackMessages", { equal: true });
-    this.arrowDomTargets = [];
-
-    loading.parentNode.removeChild(loading);
 
     this.pageHistory = [];
     window.addEventListener("popstate", (e) => {
@@ -2666,51 +2650,110 @@ DesignerConsoleJs.prototype.consoleView = async function () {
       }
     });
 
-    //launching
-    if (dashBoardMode) {
-      this.consoleDashboard(this.desid);
-    } else {
-      this.navigatorLaunching();
-      await this.checkListDetailLaunching(desid);
-      this.mode = this.modes[0];
+    this.arrowDomTargets = [];
+    if (mobile) {
+      this.totalMother.style.background = colorChip.gray2;
     }
 
-    if (this.menuMap !== undefined && getObj.mode !== undefined) {
-      targetIndex = null;
-      for (let i = 0; i < this.menuMap.length; i++) {
-        if (this.menuMap[i].mode === getObj.mode.trim()) {
-          targetIndex = i;
-          break;
-        }
-      }
-      if (targetIndex !== null) {
+    if (dashBoardMode) {
 
-        if (getObj.cliid !== undefined) {
-          eventObject = {
-            __asyncCallBack__: () => {
-              for (let box of instance.requestBoxes) {
-                if (box.getAttribute("cliid") === getObj.cliid.trim()) {
-                  box.click();
+      ajaxJson({ method: "projectMap" }, "/getDataPatch").then((projectMap) => {
+        instance.projectMap = projectMap;
+        return ajaxJson({ kind: "checklist" }, "/getServicesByKind");
+      }).then((checklist) => {
+        instance.checklist = checklist;
+      }).catch((err) => {
+        console.log(err);
+      });
+
+      ajaxJson({ noFlat: true, whereQuery: { desid: this.desid } }, "/getProjects", { equal: true }).then((projects) => {
+        instance.projects = projects;
+        if (projects.length === 0) {
+          return [];
+        } else {
+          return ajaxJson({ noFlat: true, whereQuery: { $or: [ ...new Set(projects.map((obj) => { return obj.cliid; })) ].map((cliid) => { return { cliid }; }) } }, "/getClients", { equal: true });
+        }
+      }).then((clients) => {
+        instance.clients = clients;
+        instance.designers.setProjects(instance.projects);
+        instance.designers.setClients(instance.clients);
+        return ajaxJson({ channel: "001_designer_notice" }, "https://" + FILEHOST + "/slackMessages", { equal: true });
+      }).then((slackNotices) => {
+        instance.slackNotices = slackNotices;
+        loading.parentNode.removeChild(loading);
+        this.consoleDashboard(this.desid);
+      }).catch((err) => {
+        console.log(err);
+      });
+
+    } else {
+
+      ajaxJson({ channel: "001_designer_notice" }, "https://" + FILEHOST + "/slackMessages", { equal: true }).then((slackNotices) => {
+        instance.slackNotices = slackNotices;
+      }).catch((err) => {
+        console.log(err);
+      });
+
+      this.projects = await ajaxJson({ noFlat: true, whereQuery: { desid: this.desid } }, "/getProjects", { equal: true });
+      if (this.projects.length === 0) {
+        this.clients = [];
+      } else {
+        this.clients = await ajaxJson({ noFlat: true, whereQuery: { $or: [ ...new Set(this.projects.map((obj) => { return obj.cliid; })) ].map((cliid) => { return { cliid }; }) } }, "/getClients", { equal: true })
+      }
+      this.designers.setProjects(this.projects);
+      this.designers.setClients(this.clients);
+
+      loading.parentNode.removeChild(loading);
+
+      this.navigatorLaunching();
+      if (getObj.mode === undefined) {
+        await this.checkListDetailLaunching(desid);
+        this.mode = this.modes[0];
+      }
+    }
+
+    ajaxJson({ method: "projectMap" }, "/getDataPatch").then((projectMap) => {
+      instance.projectMap = projectMap;
+      return ajaxJson({ kind: "checklist" }, "/getServicesByKind");
+    }).then((checklist) => {
+      instance.checklist = checklist;
+    }).then(() => {
+      if (instance.menuMap !== undefined && getObj.mode !== undefined) {
+        targetIndex = null;
+        for (let i = 0; i < instance.menuMap.length; i++) {
+          if (instance.menuMap[i].mode === getObj.mode.trim()) {
+            targetIndex = i;
+            break;
+          }
+        }
+        if (targetIndex !== null) {
+          if (getObj.cliid !== undefined) {
+            eventObject = {
+              __asyncCallBack__: () => {
+                for (let box of instance.requestBoxes) {
+                  if (box.getAttribute("cliid") === getObj.cliid.trim()) {
+                    box.click();
+                  }
                 }
               }
-            }
-          };
-        } else {
-          eventObject = {};
+            };
+          } else {
+            eventObject = {};
+          }
+          if (document.querySelectorAll(".leftMenus").length > 0) {
+            instance.menuMap[targetIndex].event.call(document.querySelectorAll(".leftMenus")[targetIndex], eventObject);
+          } else {
+            instance.menuMap[targetIndex].event.call({
+              getAttribute: (index) => {
+                return targetIndex;
+              }
+            }, eventObject);
+          }
         }
-
-        if (document.querySelectorAll(".leftMenus").length > 0) {
-          this.menuMap[targetIndex].event.call(document.querySelectorAll(".leftMenus")[targetIndex], eventObject);
-        } else {
-          this.menuMap[targetIndex].event.call({
-            getAttribute: (index) => {
-              return targetIndex;
-            }
-          }, eventObject);
-        }
-
       }
-    }
+    }).catch((err) => {
+      console.log(err);
+    });
 
     if (!dashBoardMode) {
       if (tabletWidth !== 0) {
