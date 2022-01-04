@@ -224,13 +224,13 @@ DesignerJs.prototype.projectDetail = function (desid) {
   greenPannelPaddingLeft = <%% 12, 12, 12, 12, 1 %%>;
   greenPannelPaddingTop = <%% 12, 12, 12, 12, 1 %%>;
 
-  greenPannelCardPaddingLeft = <%% 20, 20, 20, 20, 2 %%>;
+  greenPannelCardPaddingLeft = <%% 16, 16, 16, 16, 2 %%>;
   greenPannelCardHeight = <%% 33, 33, 33, 33, 3 %%>;
   greenPannelCardInnerMargin = <%% 5, 5, 5, 5, 1 %%>;
 
-  greenPannelCardSize = <%% 14, 14, 14, 14, 1 %%>;
+  greenPannelCardSize = <%% 13, 13, 13, 13, 1 %%>;
   greenPannelCardWeight = 500;
-  greenPannelCardVisual = <%% -2, -2, -2, -2, 0 %%>;
+  greenPannelCardVisual = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), 0 %%>;
 
   grayBarWidthMinus = this.grayBarWidth;
   cards = designer.projects;
@@ -292,7 +292,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
     style: {
       display: desktop ? "block" : "none",
       position: "fixed",
-      bottom: String(greenPannelBottom) + ea,
+      bottom: String(belowHeight + greenPannelBottom) + ea,
       right: String(greenPannelRight) + ea,
       width: withOut(grayBarWidth + (greenPannelRight * 2) + (greenPannelVisual) + (greenPannelPaddingLeft * 2), ea),
       height: String(greenPannelHeight - (greenPannelPaddingTop * 2)) + ea,
