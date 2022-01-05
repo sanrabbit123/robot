@@ -559,7 +559,7 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
   paddingLeft =  <%% 46, 46, 40, 32, 5.6 %%>;
   paddingBottom =  <%% 46, 46, 40, 32, 8.5 %%>;
 
-  whiteBottomMargin = <%% 58, 58, 58, 58, 0 %%>;
+  whiteBottomMargin = <%% 58, 56, 52, 42, 0 %%>;
 
   titleFontSize = <%% 21, 21, 21, 19, 4.3 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
@@ -567,7 +567,7 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
-  titleBottom = <%% (isMac() ? 23 : 21), (isMac() ? 23 : 21), (isMac() ? 23 : 21), (isMac() ? 20 : 18), 0 %%>;
+  titleBottom = <%% (isMac() ? 23 : 21), (isMac() ? 21 : 19), (isMac() ? 19 : 17), (isMac() ? 16 : 14), 0 %%>;
 
   mobileTitleLeft = 1.5;
   mobileTitleTop = -8.7;
@@ -654,7 +654,7 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
   calendarTitlePaddingLeft = <%% 12, 12, 12, 12, 1.2 %%>;
   calendarTitlePaddingRight = <%% 12, 12, 12, 12, 1.2 %%>;
 
-  bigCalendarMarginTop = <%% 60, 60, 54, 54, 10 %%>;
+  bigCalendarMarginTop = <%% 60, 50, 36, 28, 10 %%>;
 
   this.whiteMargin = (desktop ? margin : 0);
 
