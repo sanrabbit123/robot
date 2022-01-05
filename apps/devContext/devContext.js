@@ -1646,7 +1646,7 @@ DevContext.prototype.launching = async function () {
 
 
     // certbot
-    // await this.certRefreshing();
+    await this.certRefreshing();
 
 
     // get sheets
@@ -2494,34 +2494,34 @@ DevContext.prototype.certRefreshing = async function () {
         console.log(e);
       }
     }
-    const scpCommands = certbotFolderList.map((host) => {
-      const address = Object.values(instance.address);
-      let target, scpTarget;
-      target = null;
-      for (let obj of address) {
-        if (obj.host === host) {
-          target = obj;
-        }
-      }
-      if (target === null) {
-        for (let obj of address) {
-          if (obj.ghost !== undefined) {
-            if (obj.ghost.host === host) {
-              target = obj.ghost;
-            }
-          }
-        }
-      }
-      if (target === null) {
-        throw new Error("invaild host");
-      }
-      if (target.port !== 27017) {
-        scpTarget = `${target.user}@${target.host}:/home/${target.user}/robot`;
-      } else {
-        scpTarget = `ubuntu@${target.host}:/home/ubuntu/robot`;
-      }
-      return `scp -r ${shellLink(process.cwd())}/pems/${target.host} ${scpTarget}/pems;scp -r ${shellLink(process.cwd())}/pems/${target.host}_nginx ${scpTarget}/pems;`;
-    });
+    // const scpCommands = certbotFolderList.map((host) => {
+    //   const address = Object.values(instance.address);
+    //   let target, scpTarget;
+    //   target = null;
+    //   for (let obj of address) {
+    //     if (obj.host === host) {
+    //       target = obj;
+    //     }
+    //   }
+    //   if (target === null) {
+    //     for (let obj of address) {
+    //       if (obj.ghost !== undefined) {
+    //         if (obj.ghost.host === host) {
+    //           target = obj.ghost;
+    //         }
+    //       }
+    //     }
+    //   }
+    //   if (target === null) {
+    //     throw new Error("invaild host");
+    //   }
+    //   if (target.port !== 27017) {
+    //     scpTarget = `${target.user}@${target.host}:/home/${target.user}/robot`;
+    //   } else {
+    //     scpTarget = `ubuntu@${target.host}:/home/ubuntu/robot`;
+    //   }
+    //   return `scp -r ${shellLink(process.cwd())}/pems/${target.host} ${scpTarget}/pems;scp -r ${shellLink(process.cwd())}/pems/${target.host}_nginx ${scpTarget}/pems;`;
+    // });
 
     console.log(certbotFolderList);
     for (let c of certbotFolderList) {

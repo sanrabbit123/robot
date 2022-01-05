@@ -349,6 +349,16 @@ Robot.prototype.frontUpdate = async function (testMode) {
   }
 }
 
+Robot.prototype.playgroundConnect = async function () {
+  try {
+    const GtagPlayground = require(process.cwd() + "/apps/gtagPlayground/gtagPlayground.js");
+    const app = new GtagPlayground();
+    await app.playgroundConnect();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.consoleSource = function () {
   const AiConsole = require(process.cwd() + "/apps/contentsMaker/aiConsole.js");
   let cobot = new AiConsole();
@@ -1230,6 +1240,13 @@ const MENU = {
   cronServer: async function () {
     try {
       await robot.cronServer();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  playgroundConnect: async function () {
+    try {
+      await robot.playgroundConnect();
     } catch (e) {
       console.log(e);
     }
