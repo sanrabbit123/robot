@@ -84,7 +84,7 @@ GtagPlayground.prototype.playgroundConnect = async function () {
 
     this.routerSetting(app);
 
-    https.createServer(pems, app).listen(PORT, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
+    https.createServer(pems, app).listen(port, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
 
   } catch (e) {
     console.log(e);
