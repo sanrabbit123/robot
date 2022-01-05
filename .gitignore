@@ -15,6 +15,5 @@ include/
 lib/
 pyvenv.cfg
 apps/dataConsole/log/
-apps/dataConsole/router/dataRouter.js
 apps/cronGhost/cronGhost.py
 apps/mirrorWhisk/mirrorWhisk.py
