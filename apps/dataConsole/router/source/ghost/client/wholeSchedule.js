@@ -588,7 +588,7 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
   dateWeight = <%% 400, 400, 400, 400, 400 %%>;
   dateTop = <%% 11, 11, 11, 14, 2 %%>;
   dateTop2 = <%% 34, 34, 34, 34, 2 %%>;
-  dateBottom = <%% dateTop + 5, dateTop + 5, dateTop + 5, dateTop + 3, dateTop %%>;
+  dateBottom = <%% dateTop + (isMac() ? 5 : 4), dateTop + (isMac() ? 5 : 4), dateTop + (isMac() ? 5 : 4), dateTop + (isMac() ? 3 : 2), dateTop %%>;
   dateLeft = <%% 18, 18, 18, 18, 4.2 %%>;
   datePadding = <%% 8, 8, 8, 8, 2 %%>;
   dateLineBottom = <%% 24.5, 24.5, 24.5, 25, 5.3 %%>;
@@ -611,7 +611,7 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
 
   descriptionPaddingLeft = wordingLeft;
   descriptionPaddingRight = dateLeft;
-  descriptionPaddingTop = <%% (isMac() ? 34 : 36), (isMac() ? 35 : 37), (isMac() ? 36 : 38), (isMac() ? 35 : 37), 8.2 %%>;
+  descriptionPaddingTop = <%% (isMac() ? 34 : 35), (isMac() ? 35 : 36), (isMac() ? 36 : 37), (isMac() ? 35 : 36), 8.2 %%>;
   descriptionPaddingBottom = <%% 15, 14, 13, 14, 3.8 %%>;
   descriptionLineHeight = 1.5;
 

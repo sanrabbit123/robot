@@ -958,7 +958,7 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
     dateWeight = <%% 400, 400, 400, 400, 400 %%>;
     dateTop = <%% 11, 11, 11, 14, 2 %%>;
     dateTop2 = <%% 34, 34, 34, 34, 2 %%>;
-    dateBottom = <%% dateTop + 5, dateTop + 5, dateTop + 5, dateTop + 3, dateTop %%>;
+    dateBottom = <%% dateTop + (isMac() ? 5 : 4), dateTop + (isMac() ? 5 : 4), dateTop + (isMac() ? 5 : 4), dateTop + (isMac() ? 3 : 2), dateTop %%>;
     dateLeft = <%% 18, 18, 18, 18, 4.2 %%>;
     datePadding = <%% 8, 8, 8, 8, 2 %%>;
     dateLineBottom = <%% 24.5, 24.5, 24.5, 25, 5.3 %%>;
@@ -977,7 +977,7 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
     wordingLeft = <%% 34, 34, 34, 34, 8 %%>;
     wordingWeight0 = <%% 600, 600, 600, 600, 600 %%>;
     wordingWeight1 = <%% 400, 400, 400, 400, 400 %%>;
-    wordingTop = <%% (isMac() ? 13 : 14), (isMac() ? 13 : 14), (isMac() ? 13 : 14), (isMac() ? 13 : 14), 3.4 %%>;
+    wordingTop = <%% (isMac() ? 13 : 15), (isMac() ? 13 : 15), (isMac() ? 13 : 15), (isMac() ? 13 : 15), 3.4 %%>;
 
     descriptionPaddingLeft = wordingLeft;
     descriptionPaddingRight = dateLeft;
