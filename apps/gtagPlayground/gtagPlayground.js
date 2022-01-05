@@ -12,21 +12,43 @@ GtagPlayground.prototype.staticStore = function () {
   const instance = this;
   const host = "homeliaison-playground.xyz";
   const port = 3000;
+  const gtag = "GTM-TQS6Q3C";
+  const analytics = "G-QBLBSWF1Q6";
   return {
     host,
-    port
+    port,
+    gtag,
+    analytics
   };
 }
 
 GtagPlayground.prototype.routerSetting = function (app) {
   const instance = this;
   const { fileSystem, shellExec, shellLink, equalJson } = this.mother;
+  const {
+    gtag,
+    analytics
+  } = this.staticStore();
 
   app.get("/", function (req, res) {
     res.set("Content-Type", "text/html");
     res.send(`
       <html>
         <head>
+        <!-- Google Tag Manager -->
+        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','${gtag}');</script>
+        <!-- End Google Tag Manager -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){window.dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${analytics}');
+        </script>
         </head>
         <body>
           hi
