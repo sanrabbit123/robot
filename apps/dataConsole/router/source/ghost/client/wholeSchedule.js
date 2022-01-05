@@ -141,6 +141,7 @@ WholeScheduleJs.prototype.insertInitBox = function () {
   let initNumberSize;
   let dateRangeBetween;
   let pictureMobileHeight;
+  let imageNode;
 
   pictureNumber = 3;
 
@@ -155,17 +156,17 @@ WholeScheduleJs.prototype.insertInitBox = function () {
   titleHeight = <%% 38, 38, 38, 38, 10 %%>;
 
   picturePaddingTop = <%% 4, 3, 3, 2, 0 %%>;
-  pictureBetweenMargin = <%% 10, 6, 5, 4, 1 %%>;
+  pictureBetweenMargin = <%% 10, 6, 5, 4, 0 %%>;
   pictureMobileHeight = 25;
 
   secondBlockWidth = <%% 320, 240, 225, 160, 33 %%>;
   secondBlockMargin = <%% 50, 45, 40, 39, 2.5 %%>;
 
-  initWordingSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
+  initWordingSize = <%% 14.5, 14, 14, 13, 3.2 %%>;
   initTitleMarginTop = <%% 18, 18, 12, 28, 2.5 %%>;
 
   dateRangeWidth = <%% 200, 190, 180, 160, 20 %%>;
-  dateRangeMarginTop = <%% (isMac() ? 46 : 48), 62, 44, 48, 5.5 %%>;
+  dateRangeMarginTop = <%% (isMac() ? 46 : 48), 62, 44, 48, 6 %%>;
   dateRangeSize = <%% 28, 27, 24, 22, 5 %%>;
   dateRangeLineTop = <%% 19, 18, 16, 15, 3.6 %%>;
   dateRangeIndent = <%% 10, 10, 8, 6, 1.4 %%>;
@@ -321,7 +322,7 @@ WholeScheduleJs.prototype.insertInitBox = function () {
                   }
                 },
                 {
-                  text: "2021. 08. 16",
+                  text: dateToString(schedule.date.start).replace(/\-/g, ". "),
                   class: [ initDateClassName.start ],
                   style: {
                     display: "inline-block",
@@ -336,7 +337,7 @@ WholeScheduleJs.prototype.insertInitBox = function () {
                   }
                 },
                 {
-                  text: "2021. 09. 16",
+                  text: dateToString(schedule.date.end).replace(/\-/g, ". "),
                   class: [ initDateClassName.end ],
                   style: {
                     display: "inline-block",
@@ -392,9 +393,9 @@ WholeScheduleJs.prototype.insertInitBox = function () {
       style: {
         display: desktop ? "inline-block" : "block",
         position: "relative",
-        width: desktop ? withOut(secondBlockWidth + secondBlockMargin, ea) : String(100) + '%',
+        width: desktop ? withOut(secondBlockWidth + secondBlockMargin, ea) : withOut(1 * 2, ea),
         verticalAlign: "top",
-        marginLeft: desktop ? String(secondBlockMargin) + ea : "",
+        marginLeft: desktop ? String(secondBlockMargin) + ea : String(1) + ea,
         paddingTop: String(picturePaddingTop) + ea,
         height: desktop ? withOut(picturePaddingTop, ea) : String(pictureMobileHeight) + ea,
         marginTop: desktop ? "" : String(2) + ea,
@@ -408,7 +409,7 @@ WholeScheduleJs.prototype.insertInitBox = function () {
   }
 
   for (let i = 0; i < pictureNumber; i++) {
-    createNode({
+    imageNode = createNode({
       mother: secondBlock,
       style: {
         display: "inline-flex",
@@ -416,7 +417,7 @@ WholeScheduleJs.prototype.insertInitBox = function () {
         width: "calc(calc(100% - " + String(pictureBetweenMargin * (pictureNumber - 1)) + ea + ") / " + String(pictureNumber) + ")",
         height: String(100) + '%',
         background: colorChip.gray3,
-        borderRadius: String(desktop ? 8 : 2) + "px",
+        borderRadius: String(desktop ? 8 : 0) + "px",
         marginRight: String(i !== pictureNumber - 1 ? pictureBetweenMargin : 0) + ea,
         overflow: "hidden",
         verticalAlign: "top",
@@ -437,6 +438,16 @@ WholeScheduleJs.prototype.insertInitBox = function () {
         }
       ]
     });
+    if (mobile) {
+      if (i === 0) {
+        imageNode.style.borderTopLeftRadius = String(5) + "px";
+        imageNode.style.borderBottomLeftRadius = String(5) + "px";
+      }
+      if (i === pictureNumber - 1) {
+        imageNode.style.borderTopRightRadius = String(5) + "px";
+        imageNode.style.borderBottomRightRadius = String(5) + "px";
+      }
+    }
   }
 
 }
@@ -557,7 +568,7 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
   margin = <%% 52, 52, 44, 36, 4.7 %%>;
   paddingTop =  <%% 46, 46, 40, 32, 5.5 %%>;
   paddingLeft =  <%% 46, 46, 40, 32, 5.6 %%>;
-  paddingBottom =  <%% 46, 46, 40, 32, 8.5 %%>;
+  paddingBottom =  <%% 46, 46, 40, 32, 6.7 %%>;
 
   whiteBottomMargin = <%% 58, 56, 52, 42, 0 %%>;
 
@@ -654,7 +665,7 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
   calendarTitlePaddingLeft = <%% 12, 12, 12, 12, 1.2 %%>;
   calendarTitlePaddingRight = <%% 12, 12, 12, 12, 1.2 %%>;
 
-  bigCalendarMarginTop = <%% 60, 50, 36, 28, 10 %%>;
+  bigCalendarMarginTop = <%% 60, 50, 36, 28, 5.5 %%>;
 
   this.whiteMargin = (desktop ? margin : 0);
 

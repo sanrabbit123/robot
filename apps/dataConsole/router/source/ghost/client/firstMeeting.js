@@ -331,7 +331,7 @@ FirstMeetingJs.prototype.insertInitBox = function () {
   secondBlockWidth = <%% 300, 250, 220, 200, 33 %%>;
   secondBlockMargin = <%% 36, 35, 34, 34, 2.5 %%>;
 
-  initWordingSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
+  initWordingSize = <%% 14.5, 14, 14, 13, 3.2 %%>;
 
   zeroWordingSize = <%% 21, 21, 21, 21, 21 %%>;
   zeroWordingTop = <%% -3, -3, -3, -3, -3 %%>;
@@ -445,7 +445,7 @@ FirstMeetingJs.prototype.insertInitBox = function () {
         display: desktop ? "inline-flex" : "flex",
         position: "relative",
         width: desktop ? String(secondBlockWidth) + ea : withOut(secondBlockMargin * 2, ea),
-        paddingTop: desktop ? String(titleHeight + titleMargin) + ea : String(5.5) + ea,
+        paddingTop: desktop ? String(titleHeight + titleMargin) + ea : String(6) + ea,
         height: desktop ? withOut(titleHeight + titleMargin, ea) : "",
         verticalAlign: "top",
         textAlign: desktop ? "" : "center",
