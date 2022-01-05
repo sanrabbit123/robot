@@ -762,9 +762,11 @@ ResourceMaker.prototype.launching = async function () {
         }
       }
       if (cliid === null) {
+        console.log(namesArr);
         throw new Error("can not find client");
       }
       if (proid === null) {
+        console.log(namesArr);
         throw new Error("can not find project");
       }
     } else {
