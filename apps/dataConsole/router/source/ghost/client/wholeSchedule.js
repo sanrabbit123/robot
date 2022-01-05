@@ -607,11 +607,11 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
   wordingLeft = <%% 34, 34, 34, 34, 8 %%>;
   wordingWeight0 = <%% 600, 600, 600, 600, 600 %%>;
   wordingWeight1 = <%% 400, 400, 400, 400, 400 %%>;
-  wordingTop = <%% (isMac() ? 13 : 14), (isMac() ? 13 : 14), (isMac() ? 13 : 14), (isMac() ? 13 : 14), 3.4 %%>;
+  wordingTop = <%% (isMac() ? 13 : 15), (isMac() ? 13 : 15), (isMac() ? 13 : 15), (isMac() ? 13 : 15), 3.4 %%>;
 
   descriptionPaddingLeft = wordingLeft;
   descriptionPaddingRight = dateLeft;
-  descriptionPaddingTop = <%% (isMac() ? 34 : 35), (isMac() ? 35 : 36), (isMac() ? 36 : 37), (isMac() ? 35 : 36), 8.2 %%>;
+  descriptionPaddingTop = <%% (isMac() ? 34 : 36), (isMac() ? 35 : 37), (isMac() ? 36 : 38), (isMac() ? 35 : 37), 8.2 %%>;
   descriptionPaddingBottom = <%% 15, 14, 13, 14, 3.8 %%>;
   descriptionLineHeight = 1.5;
 
