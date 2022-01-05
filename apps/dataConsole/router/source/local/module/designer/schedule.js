@@ -2503,7 +2503,7 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
           overflow: "hidden",
           boxSizing: "border-box",
         },
-      })
+      });
       blockInsert();
     }
     this.calendarMake(projectHistory.schedule.children);
