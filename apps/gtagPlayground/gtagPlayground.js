@@ -12,7 +12,10 @@ GtagPlayground.prototype.staticStore = function () {
   const instance = this;
   const host = "homeliaison-playground.xyz";
   const port = 3000;
-
+  return {
+    host,
+    port
+  };
 }
 
 GtagPlayground.prototype.routerSetting = function (app) {
