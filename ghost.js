@@ -1047,10 +1047,12 @@ Ghost.prototype.ghostRouter = function (needs) {
   const querystring = require("querystring");
   const PlayAudio = require(process.cwd() + "/apps/playAudio/playAudio.js");
   const ParsingHangul = require(process.cwd() + "/apps/parsingHangul/parsingHangul.js");
+  const ImageReader = require(process.cwd() + "/apps/imageReader/imageReader.js");
   const jsdom = require("jsdom");
   const { JSDOM } = jsdom;
   const audio = new PlayAudio();
   const hangul = new ParsingHangul();
+  const imageReader = new ImageReader(this.mother, this.back, this.address);
   let funcObj = {};
 
   //GET - redirect
@@ -1272,12 +1274,15 @@ Ghost.prototype.ghostRouter = function (needs) {
               for (let i = 0; i < tempArr.length - 1; i++) {
                 tempDir = await fileSystem(`readDir`, [ tempString ]);
                 if (!tempDir.includes(tempArr[i]) && tempArr[i] !== "") {
-                  shell.exec(`mkdir ${shellLink(tempString + "/" + tempArr[i])}`);
+                  await shellExec(`mkdir ${shellLink(tempString + "/" + tempArr[i])}`);
                 }
                 tempString += '/';
                 tempString += tempArr[i];
               }
-              shell.exec(`mv ${shellLink(path)} ${shellLink(staticFolder + "/" + toArr[num])}`);
+              await shellExec(`mv ${shellLink(path)} ${shellLink(staticFolder + "/" + toArr[num])}`);
+              if (/\.pdf$/i.test(toArr[num])) {
+                imageReader.pdfToJpg(staticFolder + "/" + toArr[num]).catch((err) => { console.log(err); });
+              }
               num++;
             }
 

@@ -93,8 +93,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const image = new ImageReader();
-    await image.recursivePdfConvert(process.env.HOME + "/samba/photo/고객 전송 사진");
 
 
 
