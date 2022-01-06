@@ -41,6 +41,7 @@ const NativeNotifier = require(APP_PATH + "/nativeNotifier/nativeNotifier.js");
 const RethinkAccess = require(APP_PATH + "/rethinkAccess/rethinkAccess.js");
 const AppleCalendar = require(APP_PATH + "/appleAPIs/appleCalendar.js");
 const ExcelReader = require(APP_PATH + "/excelReader/excelReader.js");
+const ImageReader = require(APP_PATH + "/imageReader/imageReader.js");
 
 const DevContext = function () {
   this.mother = new Mother();
@@ -89,6 +90,12 @@ DevContext.prototype.launching = async function () {
     //   [ 3, 10 ],
     //   [ 40, 50 ]
     // ])
+
+
+
+    const image = new ImageReader();
+    await image.recursivePdfConvert(process.env.HOME + "/samba/photo/고객 전송 사진");
+
 
 
 
