@@ -668,9 +668,9 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
 
   bigCalendarMarginTop = <%% 60, 50, 36, 28, 5.5 %%>;
 
-  colorSqureWordingSize = <%% 11, 11, 11, 9, 1.8 %%>;
+  colorSqureWordingSize = <%% 11, 11, 11, 9, 2 %%>;
   colorSqureWordingTop = <%% 2, 2, 2, 1, 0 %%>;
-  colorSqureWordingLeft = <%% 7, 7, 7, 6, 1.5 %%>;
+  colorSqureWordingLeft = <%% 7, 7, 7, 6, 1.4 %%>;
   colorSqureWordingWeight = 800;
 
   this.whiteMargin = (desktop ? margin : 0);
