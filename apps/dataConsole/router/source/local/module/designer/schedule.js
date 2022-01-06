@@ -128,7 +128,7 @@ DesignerJs.prototype.scheduleReturnStatic = function (designer, project, client,
   const cliid = project.cliid;
 
   const title = desktop ? client.name + "님 상세 일정표" : "상세 일정표";
-  const initialContents = "안녕하세요, <b%" + designer.designer + "%b> 실장님!\n홈리에종에 의뢰하신 " + client.name +  " 고객님 관련 정보를 보내드립니다. <b%" + GeneralJs.serviceParsing(project.service) + "%b>를 진행합니다.";
+  const initialContents = "안녕하세요, <b%" + designer.designer + "%b> 실장님!\n" + client.name +  " 고객님 <b%상세 일정 사항 기입%b>을 부탁드립니다. 해당 사항을 클릭하여 수정하실 수 있으며,\n수정된 내용을 바탕으로 고객님께 안내될 페이지는 다음 페이지 링크에서 보실 수 있습니다!\n<u%https://" + GHOSTHOST + "/middle/schedule?proid=" + proid + "%u>";
   const weekWordings = [ '월', '화', '수', '목', '금', '토', '일' ];
 
   return {
@@ -826,7 +826,7 @@ DesignerJs.prototype.scheduleChildrenUpdate = async function (proid, children) {
 DesignerJs.prototype.scheduleContents = async function (board, designer, project, client, clientHistory, projectHistory, requestNumber) {
   const instance = this;
   const mother = this.mother;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, stringToDate, autoComma, serviceParsing, getDateMatrix, cleanChildren, uniqueValue, setQueue } = GeneralJs;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, stringToDate, autoComma, serviceParsing, getDateMatrix, cleanChildren, uniqueValue, setQueue, blankHref } = GeneralJs;
   const { totalMother, ea, grayBarWidth, middleMode } = this;
   const mobile = this.media[4];
   const desktop = !mobile;
@@ -1018,6 +1018,11 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
     colorSqureTop = <%% 4, 4, 4, 4, 0.25 %%>;
     colorSqureHeight = <%% 20, 20, 20, 18, 3.5 %%>;
     colorSqureIndent = <%% 25, 25, 25, 25, 20 %%>;
+
+    colorSqureWordingSize = <%% 11, 11, 11, 9, 2.1 %%>;
+    colorSqureWordingTop = <%% (isMac() ? 2 : 3), (isMac() ? 2 : 3), (isMac() ? 2 : 3), (isMac() ? 1 : 2), 0 %%>;
+    colorSqureWordingLeft = <%% 7, 7, 7, 6, 1.4 %%>;
+    colorSqureWordingWeight = 800;
 
     calendarTitleTop = <%% -32, -32, -32, -32, -3.2 %%>;
     calendarTitleSize = <%% 13, 13, 12, 11, 3 %%>;
@@ -1918,11 +1923,19 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
           bold: {
             fontWeight: String(600),
             color: colorChip.black,
-          }
+          },
+          under: {
+            fontWeight: String(600),
+            color: colorChip.green,
+            cursor: "pointer",
+          },
         }
       ]
     });
 
+    contentsArea.querySelectorAll("b")[contentsArea.querySelectorAll("b").length - 1].addEventListener("click", function (e) {
+      blankHref(this.textContent);
+    });
 
     // task blocks
     // =================================================================================================================================================================
@@ -2262,16 +2275,32 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
                   },
                 },
                 style: {
-                  position: "absolute",
+                  position: "relative",
                   top: String(colorSqureTop) + ea,
                   height: String(colorSqureHeight) + ea,
                   width: String(100 - colorSqureIndent) + '%',
-                  right: String(0) + ea,
+                  marginLeft: String(colorSqureIndent) + '%',
                   background: color,
                   borderTopLeftRadius: String(5) + "px",
                   borderBottomLeftRadius: String(5) + "px",
                   cursor: "pointer",
-                }
+                },
+                children: [
+                  {
+                    text: title,
+                    style: {
+                      position: "absolute",
+                      top: String(colorSqureWordingTop) + ea,
+                      textAlign: "left",
+                      left: String(colorSqureWordingLeft) + ea,
+                      fontSize: String(colorSqureWordingSize) + ea,
+                      fontWeight: String(colorSqureWordingWeight),
+                      color: colorChip.white,
+                      width: String(200) + '%',
+                      zIndex: String(1),
+                    }
+                  }
+                ]
               });
             } else if (method === "end") {
               createNode({
@@ -2322,7 +2351,7 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
                   },
                 },
                 style: {
-                  position: "absolute",
+                  position: "relative",
                   top: String(colorSqureTop) + ea,
                   height: String(colorSqureHeight) + ea,
                   width: String(100 - colorSqureIndent) + '%',
@@ -2331,7 +2360,23 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
                   borderTopRightRadius: String(5) + "px",
                   borderBottomRightRadius: String(5) + "px",
                   cursor: "pointer",
-                }
+                },
+                children: [
+                  {
+                    text: title,
+                    style: {
+                      position: "absolute",
+                      top: String(colorSqureWordingTop) + ea,
+                      right: String(colorSqureWordingLeft) + ea,
+                      textAlign: "right",
+                      fontSize: String(colorSqureWordingSize) + ea,
+                      fontWeight: String(colorSqureWordingWeight),
+                      color: colorChip.white,
+                      width: String(200) + '%',
+                      zIndex: String(1),
+                    }
+                  }
+                ]
               });
             } else if (method === "middle") {
               createNode({
