@@ -929,6 +929,8 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
     let calendarMake;
     let calendarTitleTop, calendarTitleSize;
     let calendarTitlePaddingTop, calendarTitlePaddingBottom, calendarTitlePaddingLeft, calendarTitlePaddingRight;
+    let sevenArr, sevenLength, sevenIndex;
+    let colorSqureWordingSize, colorSqureWordingTop, colorSqureWordingLeft, colorSqureWordingWeight;
 
     topMargin = <%% 42, 38, 32, 30, 5.8 %%>;
     leftMargin = <%% 50, 46, 38, 32, 5.8 %%>;
@@ -1012,9 +1014,9 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
     arrowWidth = <%% 12, 12, 12, 12, 2 %%>;
     arrowTop = <%% 22, 22, 18, 18, 2.4 %%>;
 
-    barMotherHeight = <%% 20, 16, 14, 12, 1.5 %%>;
+    barMotherHeight = <%% 25, 25, 25, 21, 5 %%>;
     colorSqureTop = <%% 4, 4, 4, 4, 0.25 %%>;
-    colorSqureHeight = <%% 12, 10, 10, 8, 1 %%>;
+    colorSqureHeight = <%% 20, 20, 20, 18, 3.5 %%>;
     colorSqureIndent = <%% 25, 25, 25, 25, 20 %%>;
 
     calendarTitleTop = <%% -32, -32, -32, -32, -3.2 %%>;
@@ -2169,6 +2171,35 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
           barMatrix_final.push(arr.filter((str) => { return Number(str.split("_")[str.split("_").length - 1]) !== 0 }));
         }
 
+        for (let z = 0; z < (barMatrix_final.length / 7); z++) {
+          sevenArr = [];
+          for (let i = 0; i < 7; i++) {
+            sevenArr.push(barMatrix_final[(7 * z) + i]);
+          }
+
+          sevenArr = sevenArr.map((arr) => { return arr.reverse(); });
+          sevenLength = sevenArr[0].length;
+          sevenIndex = 0;
+          for (let i = 0; i < sevenLength; i++) {
+            if (sevenArr.every((arr) => { return (new RegExp("^" + calendarMethods[3], 'i')).test(arr[sevenIndex]) })) {
+              sevenArr = sevenArr.map((arr) => { arr.shift(); return arr; });
+            } else {
+              sevenIndex = sevenIndex + 1;
+            }
+          }
+
+          sevenArr = sevenArr.map((arr) => { return arr.reverse(); });
+          sevenLength = sevenArr[0].length;
+          sevenIndex = 0;
+          for (let i = 0; i < sevenLength; i++) {
+            if (sevenArr.every((arr) => { return (new RegExp("^" + calendarMethods[3] + '|' + calendarMethods[5], 'i')).test(arr[sevenIndex]) })) {
+              sevenArr = sevenArr.map((arr) => { arr.shift(); return arr; });
+            } else {
+              sevenIndex = sevenIndex + 1;
+            }
+          }
+        }
+
         for (let i = 0; i < barMatrix_final.length; i++) {
           for (let j = 0; j < barMatrix_final[i].length; j++) {
             const [ method, color, title ] = barMatrix_final[i][j].split('_');
@@ -2237,8 +2268,8 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
                   width: String(100 - colorSqureIndent) + '%',
                   right: String(0) + ea,
                   background: color,
-                  borderTopLeftRadius: String(colorSqureHeight) + ea,
-                  borderBottomLeftRadius: String(colorSqureHeight) + ea,
+                  borderTopLeftRadius: String(5) + "px",
+                  borderBottomLeftRadius: String(5) + "px",
                   cursor: "pointer",
                 }
               });
@@ -2297,8 +2328,8 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
                   width: String(100 - colorSqureIndent) + '%',
                   left: String(0) + ea,
                   background: color,
-                  borderTopRightRadius: String(colorSqureHeight) + ea,
-                  borderBottomRightRadius: String(colorSqureHeight) + ea,
+                  borderTopRightRadius: String(5) + "px",
+                  borderBottomRightRadius: String(5) + "px",
                   cursor: "pointer",
                 }
               });
@@ -2415,7 +2446,7 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
                   width: String(100 - (colorSqureIndent * 2)) + '%',
                   left: String(colorSqureIndent) + '%',
                   background: color,
-                  borderRadius: String(colorSqureHeight) + ea,
+                  borderRadius: String(5) + "px",
                   cursor: "pointer",
                 }
               });

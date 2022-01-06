@@ -459,7 +459,6 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, getDateMatrix, equalJson } = GeneralJs;
-  const blank = "&nbsp;&nbsp;";
   const weekWordings = [ '월', '화', '수', '목', '금', '토', '일' ];
   const calendarMethods = [
     "start",
@@ -563,6 +562,8 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
   let children;
   let blockInsert;
   let bigCalendarMarginTop;
+  let sevenArr, sevenLength, sevenIndex;
+  let colorSqureWordingSize, colorSqureWordingTop, colorSqureWordingLeft, colorSqureWordingWeight;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 52, 52, 44, 36, 4.7 %%>;
@@ -653,9 +654,9 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
   arrowWidth = <%% 12, 12, 12, 12, 2 %%>;
   arrowTop = <%% 22, 22, 18, 18, 2.4 %%>;
 
-  barMotherHeight = <%% 20, 16, 14, 12, 1.5 %%>;
+  barMotherHeight = <%% 25, 25, 25, 21, 5 %%>;
   colorSqureTop = <%% 4, 4, 4, 4, 0.25 %%>;
-  colorSqureHeight = <%% 12, 10, 10, 8, 1 %%>;
+  colorSqureHeight = <%% 21, 21, 21, 18, 3.5 %%>;
   colorSqureIndent = <%% 25, 25, 25, 25, 20 %%>;
 
   calendarTitleTop = <%% -32, -32, -32, -32, -3.2 %%>;
@@ -666,6 +667,11 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
   calendarTitlePaddingRight = <%% 12, 12, 12, 12, 1.2 %%>;
 
   bigCalendarMarginTop = <%% 60, 50, 36, 28, 5.5 %%>;
+
+  colorSqureWordingSize = <%% 11, 11, 11, 9, 1.8 %%>;
+  colorSqureWordingTop = <%% 2, 2, 2, 1, 0 %%>;
+  colorSqureWordingLeft = <%% 7, 7, 7, 6, 1.5 %%>;
+  colorSqureWordingWeight = 800;
 
   this.whiteMargin = (desktop ? margin : 0);
 
@@ -1080,9 +1086,38 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
       barMatrix_final.push(arr.filter((str) => { return Number(str.split("_")[str.split("_").length - 1]) !== 0 }));
     }
 
+    for (let z = 0; z < (barMatrix_final.length / 7); z++) {
+      sevenArr = [];
+      for (let i = 0; i < 7; i++) {
+        sevenArr.push(barMatrix_final[(7 * z) + i]);
+      }
+
+      sevenArr = sevenArr.map((arr) => { return arr.reverse(); });
+      sevenLength = sevenArr[0].length;
+      sevenIndex = 0;
+      for (let i = 0; i < sevenLength; i++) {
+        if (sevenArr.every((arr) => { return (new RegExp("^" + calendarMethods[3], 'i')).test(arr[sevenIndex]) })) {
+          sevenArr = sevenArr.map((arr) => { arr.shift(); return arr; });
+        } else {
+          sevenIndex = sevenIndex + 1;
+        }
+      }
+
+      sevenArr = sevenArr.map((arr) => { return arr.reverse(); });
+      sevenLength = sevenArr[0].length;
+      sevenIndex = 0;
+      for (let i = 0; i < sevenLength; i++) {
+        if (sevenArr.every((arr) => { return (new RegExp("^" + calendarMethods[3] + '|' + calendarMethods[5], 'i')).test(arr[sevenIndex]) })) {
+          sevenArr = sevenArr.map((arr) => { arr.shift(); return arr; });
+        } else {
+          sevenIndex = sevenIndex + 1;
+        }
+      }
+    }
+
     for (let i = 0; i < barMatrix_final.length; i++) {
       for (let j = 0; j < barMatrix_final[i].length; j++) {
-        const [ method, color, title ] = barMatrix_final[i][j].split('_');
+        const [ method, color, title, deleteNum ] = barMatrix_final[i][j].split('_');
         barMother = createNode({
           mother: dateBlocks[i],
           style: {
@@ -1142,16 +1177,32 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
               },
             },
             style: {
-              position: "absolute",
+              position: "relative",
               top: String(colorSqureTop) + ea,
               height: String(colorSqureHeight) + ea,
               width: String(100 - colorSqureIndent) + '%',
-              right: String(0) + ea,
+              marginLeft: String(colorSqureIndent) + '%',
               background: color,
-              borderTopLeftRadius: String(colorSqureHeight) + ea,
-              borderBottomLeftRadius: String(colorSqureHeight) + ea,
+              borderTopLeftRadius: String(5) + "px",
+              borderBottomLeftRadius: String(5) + "px",
               cursor: "pointer",
-            }
+            },
+            children: [
+              {
+                text: title,
+                style: {
+                  position: "absolute",
+                  top: String(colorSqureWordingTop) + ea,
+                  textAlign: "left",
+                  left: String(colorSqureWordingLeft) + ea,
+                  fontSize: String(colorSqureWordingSize) + ea,
+                  fontWeight: String(colorSqureWordingWeight),
+                  color: colorChip.white,
+                  width: String(200) + '%',
+                  zIndex: String(1),
+                }
+              }
+            ]
           });
         } else if (method === "end") {
           createNode({
@@ -1202,16 +1253,32 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
               },
             },
             style: {
-              position: "absolute",
+              position: "relative",
               top: String(colorSqureTop) + ea,
               height: String(colorSqureHeight) + ea,
               width: String(100 - colorSqureIndent) + '%',
               left: String(0) + ea,
               background: color,
-              borderTopRightRadius: String(colorSqureHeight) + ea,
-              borderBottomRightRadius: String(colorSqureHeight) + ea,
+              borderTopRightRadius: String(5) + "px",
+              borderBottomRightRadius: String(5) + "px",
               cursor: "pointer",
-            }
+            },
+            children: [
+              {
+                text: title,
+                style: {
+                  position: "absolute",
+                  top: String(colorSqureWordingTop) + ea,
+                  right: String(colorSqureWordingLeft) + ea,
+                  textAlign: "right",
+                  fontSize: String(colorSqureWordingSize) + ea,
+                  fontWeight: String(colorSqureWordingWeight),
+                  color: colorChip.white,
+                  width: String(200) + '%',
+                  zIndex: String(1),
+                }
+              }
+            ]
           });
         } else if (method === "middle") {
           createNode({
@@ -1326,7 +1393,7 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
               width: String(100 - (colorSqureIndent * 2)) + '%',
               left: String(colorSqureIndent) + '%',
               background: color,
-              borderRadius: String(colorSqureHeight) + ea,
+              borderRadius: String(5) + "px",
               cursor: "pointer",
             }
           });
