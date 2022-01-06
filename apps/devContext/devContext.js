@@ -91,7 +91,7 @@ DevContext.prototype.launching = async function () {
     // ])
 
 
-    
+
 
 
 
@@ -1646,7 +1646,7 @@ DevContext.prototype.launching = async function () {
 
 
     // certbot
-    await this.certRefreshing();
+    // await this.certRefreshing();
 
 
     // get sheets
@@ -1794,8 +1794,8 @@ DevContext.prototype.launching = async function () {
     // send sms
     // const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
     // const human = new HumanPacket();
-    // const name = "장기호";
-    // const amount = 3850000;
+    // const name = "성현지";
+    // const amount = 5200000;
     // await human.sendSms({
     //   name: "",
     //   phone: "01021993403",
