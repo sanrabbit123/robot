@@ -673,40 +673,20 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
       resetWidthEvent();
     });
 
-    stringArr.push(textMaker(map["portfolio"].title, (portfolio.length > 0 ? "제출" : "미제출"), "black", "portfolio"));
+    stringArr.push(textMaker(map["portfolio"].title, "보기", "black", "portfolio"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
-      let folderName, fileName, loading;
-      if (window.confirm("다운로드를 진행할까요?")) {
-        loading = instance.mother.grayLoading();
-        GeneralJs.ajaxJson({ aspid: parent.id, mode: "download" }, "/ghostPass_designerPhoto").then((data) => {
-          if (data.list === undefined || data.folder === undefined || data.file === undefined) {
-            throw new Error("error occur");
-          }
-          const { list, folder, file } = data;
-          folderName = folder;
-          fileName = file;
-          if (list.length > 0) {
-            return GeneralJs.downloadFile(list[0]);
-          } else {
-            return new Promise((resolve, reject) => { resolve(null); });
-          }
-        }).then(() => {
-          return GeneralJs.ajaxJson({ aspid: parent.id, mode: "delete", folder: folderName, file: fileName }, "/ghostPass_designerPhoto");
-        }).then((data) => {
-          if (data.message === "done") {
-            loading.remove();
-          } else {
-            throw new Error("file download error");
-          }
-        }).catch((err) => {
-          window.alert("파일이 없거나 오류가 발생했습니다!");
-          loading.remove();
-          console.log(err);
-        });
-      }
-      cancelBox.parentNode.removeChild(cancelBox);
-      resetWidthEvent();
+      let folderName, fileName;
+
+      GeneralJs.ajaxJson({ aspid: parent.id, mode: "list" }, "/ghostPass_designerPhoto").then((data) => {
+        console.log(data);
+
+      }).catch((err) => {
+        console.log(err);
+      });
+
+      // cancelBox.parentNode.removeChild(cancelBox);
+      // resetWidthEvent();
     });
 
     stringArr.push(textMaker(map["web"].title, web.map((str) => { return str.replace(/https?\:?\/\//gi, '').trim().replace(/\/$/, ''); }).join(token), "black", "web"));

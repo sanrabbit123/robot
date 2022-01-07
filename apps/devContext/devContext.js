@@ -94,8 +94,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const image = new ImageReader();
-    await image.recursivePdfConvert("/home/homeliaison/samba/photo/디자이너 포트폴리오");
+
 
 
 
