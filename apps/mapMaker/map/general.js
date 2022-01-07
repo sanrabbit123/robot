@@ -681,6 +681,9 @@ module.exports = {
       },
       "constructEstimation": {
         "behaviors": []
+      },
+      "purchaseList": {
+        "behaviors": []
       }
     },
     "login": {
