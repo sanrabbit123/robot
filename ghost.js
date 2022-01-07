@@ -1824,7 +1824,11 @@ Ghost.prototype.ghostRouter = function (needs) {
           middleList = [];
           for (let t of totalList) {
             if (t !== ".DS_Store") {
-              tempArr = await fileSystem(`readDir`, [ root + "/" + t ]);
+              try {
+                tempArr = await fileSystem(`readDir`, [ root + "/" + t ]);
+              } catch {
+                tempArr = [];
+              }
               tempArr = tempArr.filter((i) => { return i !== ".DS_Store" }).filter((i) => { return !/^\.\_/.test(i); }).map((i) => { return `${root}/${t}/${i}`; });
               middleList = middleList.concat(tempArr);
             }
@@ -1836,6 +1840,10 @@ Ghost.prototype.ghostRouter = function (needs) {
             tempArr = tempArr.filter((i) => { return i !== ".DS_Store" }).filter((i) => { return !/^\.\_/.test(i); }).map((i) => { return `${path}/${i}`; });
             list = list.concat(tempArr);
           }
+
+          list = list.map((str) => {
+            return `https://${instance.address.officeinfo.ghost.host}/${global.encodeURI(str.replace(new RegExp('^' + instance.address.officeinfo.ghost.file.static), ''))}`;
+          });
 
           res.send(JSON.stringify({ list }));
 
