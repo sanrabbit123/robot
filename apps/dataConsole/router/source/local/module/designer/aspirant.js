@@ -679,14 +679,29 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
       let folderName, fileName;
 
       GeneralJs.ajaxJson({ aspid: parent.id, mode: "list" }, "/ghostPass_designerPhoto").then((data) => {
-        console.log(data);
+        let photoList;
+        if (Array.isArray(data.list)) {
+          photoList = data.list;
+        } else {
+          photoList = [];
+        }
+
+        console.log(photoList);
+
+        
+
+
+
+
+
+
+
+        cancelBox.parentNode.removeChild(cancelBox);
+        resetWidthEvent();
 
       }).catch((err) => {
         console.log(err);
       });
-
-      // cancelBox.parentNode.removeChild(cancelBox);
-      // resetWidthEvent();
     });
 
     stringArr.push(textMaker(map["web"].title, web.map((str) => { return str.replace(/https?\:?\/\//gi, '').trim().replace(/\/$/, ''); }).join(token), "black", "web"));

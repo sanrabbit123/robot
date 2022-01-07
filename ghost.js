@@ -1836,11 +1836,16 @@ Ghost.prototype.ghostRouter = function (needs) {
 
           list = [];
           for (let path of middleList) {
-            tempArr = await fileSystem(`readDir`, [ path ]);
-            tempArr = tempArr.filter((i) => { return i !== ".DS_Store" }).filter((i) => { return !/^\.\_/.test(i); }).map((i) => { return `${path}/${i}`; });
-            list = list.concat(tempArr);
+            try {
+              tempArr = await fileSystem(`readDir`, [ path ]);
+              tempArr = tempArr.filter((i) => { return i !== ".DS_Store" }).filter((i) => { return !/^\.\_/.test(i); }).map((i) => { return `${path}/${i}`; });
+              list = list.concat(tempArr);
+            } catch {
+              list.push(path);
+            }
           }
 
+          list = list.filter((path) => { return /\.(jpg|jpeg|png|JPG|JPEG|PNG)$/i.test(path); });
           list = list.map((str) => {
             return `https://${instance.address.officeinfo.ghost.host}${global.encodeURI(str.replace(new RegExp('^' + instance.address.officeinfo.ghost.file.static), ''))}`;
           });
