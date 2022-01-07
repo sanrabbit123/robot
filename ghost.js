@@ -1842,7 +1842,7 @@ Ghost.prototype.ghostRouter = function (needs) {
           }
 
           list = list.map((str) => {
-            return `https://${instance.address.officeinfo.ghost.host}/${global.encodeURI(str.replace(new RegExp('^' + instance.address.officeinfo.ghost.file.static), ''))}`;
+            return `https://${instance.address.officeinfo.ghost.host}${global.encodeURI(str.replace(new RegExp('^' + instance.address.officeinfo.ghost.file.static), ''))}`;
           });
 
           res.send(JSON.stringify({ list }));
