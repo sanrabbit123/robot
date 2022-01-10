@@ -8,7 +8,6 @@ module.exports = function (proid, info) {
         const today = new Date();
         const idId = "sign-in-id";
         const passwordId = "sign-in-pw";
-        const loginReturn = ".sc-hOGjNT";
         const menuId = "btnMenuMyForms";
         const buttonQuery = ".sc-hZpJuv";
         const popupQuery = ".sc-jWUzTF";
@@ -104,12 +103,7 @@ module.exports = function (proid, info) {
             }
           }
 
-          if (document.getElementById(idId) !== null) {
-            // await injectionInput(document.getElementById(idId), "info.eform.id");
-            // await clickElement(document.querySelector("footer"));
-            // await injectionInput(document.getElementById(passwordId), "info.eform.pwd");
-            await clickElement(document.querySelector(loginReturn));
-          }
+          document.querySelector('.jss367').nextElementSibling.click();
 
           while (document.getElementById(menuId) === null) {
             await sleep(500);

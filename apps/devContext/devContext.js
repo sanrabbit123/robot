@@ -92,12 +92,19 @@ DevContext.prototype.launching = async function () {
     // ])
 
 
+    const res = await requestSystem("https://ohou.se/productions/710531/selling?utm_source=google_shop&utm_medium=cpc&utm_campaign=commerce&utm_content=ssc&utm_term=710531&source=14&affect_type=UtmUrl&gclid=CjwKCAiArOqOBhBmEiwAsgeLmb2Xv6nylL3YjHdWzl4eKXWnFTfIFI5XADTVoOsP2L_Lb4DqGfuGCBoCpusQAvD_BwE");
+    const targets = [ ...res.data.matchAll(/\<meta[^\>]+property=\"og\:image\"[^\>]+\>/gi) ].map((arr) => { return arr[0] });
+    let middleTarget, target;
+    middleTarget = [];
+    target = null;
+    if (targets.length > 0) {
+      middleTarget = [ ...targets[targets.length - 1].matchAll(/content\=\"[^\"]+\"/gi) ];
+      if (middleTarget.length > 0) {
+        target = middleTarget[0][0].trim().replace(/^content\=\"/gi, '').slice(0, -1);
+      }
+    }
 
-
-
-
-
-
+    console.log(target);
 
 
 
@@ -1731,17 +1738,8 @@ DevContext.prototype.launching = async function () {
     //     pay: true
     //   },
     // ]);
-    const photoRequest = ghostRequest().bind("photo");
 
-    const zipLinks = await photoRequest("zip", { pid: "p174", pay: 1 });
-    console.log(zipLinks)
 
-    // const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
-    // const kakaoInstance = new KakaoTalk();
-    // await kakaoInstance.ready();
-    //
-    // await kakaoInstance.sendTalk("photoShareClient", "정준호", "010-2291-7617", { client: "정준호", file: "https://drive.google.com/file/d/undefined/view?usp=sharing" });
-    // await kakaoInstance.sendTalk("photoShareDesigner", "이미영", "https://drive.google.com/file/d/undefined/view?usp=sharing", { client: "정준호", designer: "이미영", file: "https://drive.google.com/file/d/undefined/view?usp=sharing" });
 
 
 

@@ -491,23 +491,13 @@ PurchaseListJs.prototype.insertInitBox = function () {
 
 }
 
-PurchaseListJs.prototype.insertPurchaseBox = function (indexNumber) {
+PurchaseListJs.prototype.insertPurchaseBox = async function (indexNumber) {
   const instance = this;
   const mother = this.mother;
   const { client, project, ea, baseTong, media, initDateClassName } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, getDateMatrix, equalJson } = GeneralJs;
-  const weekWordings = [ '월', '화', '수', '목', '금', '토', '일' ];
-  const calendarMethods = [
-    "start",
-    "end",
-    "middle",
-    "none",
-    "startend",
-    "blank"
-  ];
-  const dateToNumber = (date) => { return (date.getFullYear() * 100000) + ((date.getMonth() + 1) * 100) + date.getDate() }
   // const { purchase } = this.projectHistory;
   const purchase = {
     analysis: {
@@ -544,15 +534,7 @@ PurchaseListJs.prototype.insertPurchaseBox = function (indexNumber) {
               consumer: 99000,
               delivery: 6000,
             },
-          }
-        ]
-      },
-      {
-        id: "R" + GeneralJs.uniqueValue("hex"),
-        date: new Date(),
-        name: "제품 구매 리스트_220110",
-        description: "* 액자 설치는 못과 와이어 중 선택한 후 별도 준비해야 합니다\n* 의자 업체에 전화문의 결과 - 배송박스에 2개씩 들어가며 한박스씩 배송비 발생된다고 합니다\n* 의자는 간단한 조립제품입니다\n* 가능한 전체 물품이 12/10일 까지 배송되면 좋을듯 합니다",
-        items: [
+          },
           {
             id: "I" + GeneralJs.uniqueValue("hex"),
             name: "발디 패브릭 식탁의자",
@@ -573,15 +555,7 @@ PurchaseListJs.prototype.insertPurchaseBox = function (indexNumber) {
               consumer: 99000,
               delivery: 6000,
             },
-          }
-        ]
-      },
-      {
-        id: "R" + GeneralJs.uniqueValue("hex"),
-        date: new Date(),
-        name: "제품 구매 리스트_220110",
-        description: "* 액자 설치는 못과 와이어 중 선택한 후 별도 준비해야 합니다\n* 의자 업체에 전화문의 결과 - 배송박스에 2개씩 들어가며 한박스씩 배송비 발생된다고 합니다\n* 의자는 간단한 조립제품입니다\n* 가능한 전체 물품이 12/10일 까지 배송되면 좋을듯 합니다",
-        items: [
+          },
           {
             id: "I" + GeneralJs.uniqueValue("hex"),
             name: "발디 패브릭 식탁의자",
@@ -602,15 +576,7 @@ PurchaseListJs.prototype.insertPurchaseBox = function (indexNumber) {
               consumer: 99000,
               delivery: 6000,
             },
-          }
-        ]
-      },
-      {
-        id: "R" + GeneralJs.uniqueValue("hex"),
-        date: new Date(),
-        name: "제품 구매 리스트_220110",
-        description: "* 액자 설치는 못과 와이어 중 선택한 후 별도 준비해야 합니다\n* 의자 업체에 전화문의 결과 - 배송박스에 2개씩 들어가며 한박스씩 배송비 발생된다고 합니다\n* 의자는 간단한 조립제품입니다\n* 가능한 전체 물품이 12/10일 까지 배송되면 좋을듯 합니다",
-        items: [
+          },
           {
             id: "I" + GeneralJs.uniqueValue("hex"),
             name: "발디 패브릭 식탁의자",
@@ -631,22 +597,14 @@ PurchaseListJs.prototype.insertPurchaseBox = function (indexNumber) {
               consumer: 99000,
               delivery: 6000,
             },
-          }
-        ]
-      },
-      {
-        id: "R" + GeneralJs.uniqueValue("hex"),
-        date: new Date(),
-        name: "제품 구매 리스트_220110",
-        description: "* 액자 설치는 못과 와이어 중 선택한 후 별도 준비해야 합니다\n* 의자 업체에 전화문의 결과 - 배송박스에 2개씩 들어가며 한박스씩 배송비 발생된다고 합니다\n* 의자는 간단한 조립제품입니다\n* 가능한 전체 물품이 12/10일 까지 배송되면 좋을듯 합니다",
-        items: [
+          },
           {
             id: "I" + GeneralJs.uniqueValue("hex"),
             name: "발디 패브릭 식탁의자",
             description: "1~4일 소요, 1박스에 2개씩 포장, 박스당 착불 6,000원",
             detail: {
               link: "https://www.minimaxmall.co.kr/shop/goods/goods_view.php?goodsno=5447",
-              location: "거실",
+              location: "주방",
               option: "다크그레이",
             },
             unit: {
@@ -660,319 +618,327 @@ PurchaseListJs.prototype.insertPurchaseBox = function (indexNumber) {
               consumer: 99000,
               delivery: 6000,
             },
-          }
+          },
+          {
+            id: "I" + GeneralJs.uniqueValue("hex"),
+            name: "발디 패브릭 식탁의자",
+            description: "1~4일 소요, 1박스에 2개씩 포장, 박스당 착불 6,000원",
+            detail: {
+              link: "https://www.minimaxmall.co.kr/shop/goods/goods_view.php?goodsno=5447",
+              location: "주방",
+              option: "다크그레이",
+            },
+            unit: {
+              ea: null,
+              price: 45000,
+              number: 2,
+            },
+            amount: {
+              supply: 90000,
+              vat: 9000,
+              consumer: 99000,
+              delivery: 6000,
+            },
+          },
+          {
+            id: "I" + GeneralJs.uniqueValue("hex"),
+            name: "발디 패브릭 식탁의자",
+            description: "1~4일 소요, 1박스에 2개씩 포장, 박스당 착불 6,000원",
+            detail: {
+              link: "https://www.minimaxmall.co.kr/shop/goods/goods_view.php?goodsno=5447",
+              location: "주방",
+              option: "다크그레이",
+            },
+            unit: {
+              ea: null,
+              price: 45000,
+              number: 2,
+            },
+            amount: {
+              supply: 90000,
+              vat: 9000,
+              consumer: 99000,
+              delivery: 6000,
+            },
+          },
+          {
+            id: "I" + GeneralJs.uniqueValue("hex"),
+            name: "발디 패브릭 식탁의자",
+            description: "1~4일 소요, 1박스에 2개씩 포장, 박스당 착불 6,000원",
+            detail: {
+              link: "https://www.minimaxmall.co.kr/shop/goods/goods_view.php?goodsno=5447",
+              location: "주방",
+              option: "다크그레이",
+            },
+            unit: {
+              ea: null,
+              price: 45000,
+              number: 2,
+            },
+            amount: {
+              supply: 90000,
+              vat: 9000,
+              consumer: 99000,
+              delivery: 6000,
+            },
+          },
+          {
+            id: "I" + GeneralJs.uniqueValue("hex"),
+            name: "발디 패브릭 식탁의자",
+            description: "1~4일 소요, 1박스에 2개씩 포장, 박스당 착불 6,000원",
+            detail: {
+              link: "https://www.minimaxmall.co.kr/shop/goods/goods_view.php?goodsno=5447",
+              location: "안방",
+              option: "다크그레이",
+            },
+            unit: {
+              ea: null,
+              price: 45000,
+              number: 2,
+            },
+            amount: {
+              supply: 90000,
+              vat: 9000,
+              consumer: 99000,
+              delivery: 6000,
+            },
+          },
+          {
+            id: "I" + GeneralJs.uniqueValue("hex"),
+            name: "발디 패브릭 식탁의자",
+            description: "1~4일 소요, 1박스에 2개씩 포장, 박스당 착불 6,000원",
+            detail: {
+              link: "https://www.minimaxmall.co.kr/shop/goods/goods_view.php?goodsno=5447",
+              location: "안방",
+              option: "다크그레이",
+            },
+            unit: {
+              ea: null,
+              price: 45000,
+              number: 2,
+            },
+            amount: {
+              supply: 90000,
+              vat: 9000,
+              consumer: 99000,
+              delivery: 6000,
+            },
+          },
+          {
+            id: "I" + GeneralJs.uniqueValue("hex"),
+            name: "발디 패브릭 식탁의자",
+            description: "1~4일 소요, 1박스에 2개씩 포장, 박스당 착불 6,000원",
+            detail: {
+              link: "https://www.minimaxmall.co.kr/shop/goods/goods_view.php?goodsno=5447",
+              location: "안방",
+              option: "다크그레이",
+            },
+            unit: {
+              ea: null,
+              price: 45000,
+              number: 2,
+            },
+            amount: {
+              supply: 90000,
+              vat: 9000,
+              consumer: 99000,
+              delivery: 6000,
+            },
+          },
+          {
+            id: "I" + GeneralJs.uniqueValue("hex"),
+            name: "발디 패브릭 식탁의자",
+            description: "1~4일 소요, 1박스에 2개씩 포장, 박스당 착불 6,000원",
+            detail: {
+              link: "https://www.minimaxmall.co.kr/shop/goods/goods_view.php?goodsno=5447",
+              location: "안방",
+              option: "다크그레이",
+            },
+            unit: {
+              ea: null,
+              price: 45000,
+              number: 2,
+            },
+            amount: {
+              supply: 90000,
+              vat: 9000,
+              consumer: 99000,
+              delivery: 6000,
+            },
+          },
         ]
       },
     ]
   };
   const today = new Date();
-  let paddingTop;
-  let block;
-  let whiteBlock, whiteTong;
-  let bottomMargin;
-  let titleFontSize;
-  let num;
-  let numberRight;
-  let titleTop, titleTopNumber;
-  let titleBottom;
-  let index;
-  let mobileTitleLeft, mobileTitleTop;
-  let tong;
-  let whiteBottomMargin;
-  let dateTong;
-  let paddingLeft;
-  let paddingBottom;
-  let lineHeight;
-  let blockOuterPadding;
-  let blockFactorHeight;
-  let blockInnerMargin;
-  let blockFactorMarginBottom;
-  let numberSize;
-  let numberTextTop;
-  let numberWeight;
-  let blockSecondRatio;
-  let dateSize;
-  let dateWeight;
-  let dateTop;
-  let dateTop2;
-  let dateBottom;
-  let dateLeft;
-  let datePadding;
-  let dateLineBottom;
-  let dateCalendarWidth;
-  let dateCalendarIndent;
-  let dateCalendarVisual;
-  let calendarCancelBackPadding;
-  let colorBoxIndent;
-  let colorBoxPadding;
-  let colorBarWidth;
-  let colorBarVisual;
-  let wordingSize;
-  let wordingLeft;
-  let wordingWeight0;
-  let wordingWeight1;
-  let wordingTop;
-  let descriptionPaddingLeft;
-  let descriptionPaddingRight;
-  let descriptionPaddingTop;
-  let descriptionPaddingBottom;
-  let descriptionLineHeight;
-  let plusSize;
-  let plusWeight;
-  let plusTextTop;
-  let blockAreaMarginBottom;
-  let calendarVisualLeft;
-  let bigCalendarTitleBottom;
-  let bigCalendarTitleSize;
-  let bigCalendarTitleWeight;
-  let weekBlockHeight;
-  let weekBlockSize;
-  let weekBlockWeight;
-  let weekBlockTextTop;
-  let dateBlockHeight;
-  let dateBlockPaddingTop;
-  let dateBlockPaddingBottom;
-  let dateBlockWeight;
-  let datePositionTop;
-  let datePositionLeft;
-  let arrowWidth;
-  let arrowTop;
-  let barMotherHeight;
-  let colorSqureTop;
-  let colorSqureHeight;
-  let colorSqureIndent;
-  let calendarTitleTop;
-  let calendarTitleSize;
-  let calendarTitlePaddingTop;
-  let calendarTitlePaddingBottom;
-  let calendarTitlePaddingLeft;
-  let calendarTitlePaddingRight;
-  let dateStart, dateEnd, wordingTitle, wordingDescription, barColor;
-  let bigCalendar, bigCalendarTitleZone, bigCalendarContentsZone;
-  let scheduleTargets;
-  let barMatrix;
-  let dateBlocks;
-  let noneDeleteArr;
-  let barMatrix_final;
-  let children;
-  let blockInsert;
-  let bigCalendarMarginTop;
-  let sevenArr, sevenLength, sevenIndex;
-  let colorSqureWordingSize, colorSqureWordingTop, colorSqureWordingLeft, colorSqureWordingWeight;
+  try {
+    let paddingTop;
+    let block;
+    let whiteBlock, whiteTong;
+    let bottomMargin;
+    let titleFontSize;
+    let num;
+    let numberRight;
+    let titleTop, titleTopNumber;
+    let titleBottom;
+    let index;
+    let mobileTitleLeft, mobileTitleTop;
+    let tong;
+    let whiteBottomMargin;
+    let dateTong;
+    let paddingLeft;
+    let paddingBottom;
+    let lineHeight;
+    let request;
+    let locationTargets;
+    let targets;
+    let itemsArr;
 
-  console.log(purchase)
+    bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+    margin = <%% 52, 52, 44, 36, 4.7 %%>;
+    paddingTop =  <%% 46, 46, 40, 32, 5.5 %%>;
+    paddingLeft =  <%% 46, 46, 40, 32, 5.6 %%>;
+    paddingBottom =  <%% 46, 46, 40, 32, 6.7 %%>;
 
-  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 52, 52, 44, 36, 4.7 %%>;
-  paddingTop =  <%% 46, 46, 40, 32, 5.5 %%>;
-  paddingLeft =  <%% 46, 46, 40, 32, 5.6 %%>;
-  paddingBottom =  <%% 46, 46, 40, 32, 6.7 %%>;
+    whiteBottomMargin = <%% 58, 56, 52, 42, 0 %%>;
 
-  whiteBottomMargin = <%% 58, 56, 52, 42, 0 %%>;
+    titleFontSize = <%% 21, 21, 21, 19, 4.3 %%>;
+    numberRight = <%% 12, 12, 12, 12, 3 %%>;
 
-  titleFontSize = <%% 21, 21, 21, 19, 4.3 %%>;
-  numberRight = <%% 12, 12, 12, 12, 3 %%>;
+    titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
+    titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
-  titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
-  titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
+    titleBottom = <%% (isMac() ? 23 : 21), (isMac() ? 21 : 19), (isMac() ? 19 : 17), (isMac() ? 16 : 14), 0 %%>;
 
-  titleBottom = <%% (isMac() ? 23 : 21), (isMac() ? 21 : 19), (isMac() ? 19 : 17), (isMac() ? 16 : 14), 0 %%>;
+    mobileTitleLeft = 1.5;
+    mobileTitleTop = -8.7;
 
-  mobileTitleLeft = 1.5;
-  mobileTitleTop = -8.7;
+    lineHeight = 1.7;
 
-  lineHeight = 1.7;
+    this.whiteMargin = (desktop ? margin : 0);
 
-  blockOuterPadding = <%% 10, 10, 10, 10, 1.5 %%>;
-  blockFactorHeight = <%% 90, 90, 90, 90, 13 %%>;
-  blockInnerMargin = <%% 6, 6, 6, 6, 1 %%>;
-  blockFactorMarginBottom = <%% 6, 6, 6, 6, 1.5 %%>;
-
-  numberSize = <%% 36, 36, 36, 36, 4.8 %%>;
-  numberTextTop = <%% -4, -4, -4, -4, -0.6 %%>;
-  numberWeight = <%% 400, 400, 400, 400, 400 %%>;
-
-  blockSecondRatio = <%% 2.4, 2.1, 1.8, 1.5, 2.4 %%>;
-  dateSize = <%% 15, 15, 15, 14, 3.6 %%>;
-  dateWeight = <%% 400, 400, 400, 400, 400 %%>;
-  dateTop = <%% 11, 11, 11, 14, 2 %%>;
-  dateTop2 = <%% 34, 34, 34, 34, 2 %%>;
-  dateBottom = <%% dateTop + (isMac() ? 5 : 6), dateTop + (isMac() ? 5 : 6), dateTop + (isMac() ? 5 : 6), dateTop + (isMac() ? 3 : 4), dateTop %%>;
-  dateLeft = <%% 18, 18, 18, 18, 4.2 %%>;
-  datePadding = <%% 8, 8, 8, 8, 2 %%>;
-  dateLineBottom = <%% 24.5, 24.5, 24.5, 25, 5.3 %%>;
-
-  dateCalendarWidth = <%% 260, 260, 260, 260, 80 %%>;
-  dateCalendarIndent = <%% 6, 6, 6, 6, 0 %%>;
-  dateCalendarVisual = <%% 2, 2, 2, 2, 0 %%>;
-  calendarCancelBackPadding = <%% 24, 24, 24, 24, 2.4 %%>;
-  colorBoxIndent = <%% 12, 12, 12, 12, 12 %%>;
-  colorBoxPadding = <%% 12, 12, 12, 12, 12 %%>;
-
-  colorBarWidth = <%% 6, 6, 6, 5, 1 %%>;
-  colorBarVisual = <%% 1, 1, 1, 0, 0 %%>;
-
-  wordingSize = <%% 14, 14, 13, 12, 2.8 %%>;
-  wordingLeft = <%% 34, 34, 34, 34, 8 %%>;
-  wordingWeight0 = <%% 600, 600, 600, 600, 600 %%>;
-  wordingWeight1 = <%% 400, 400, 400, 400, 400 %%>;
-  wordingTop = <%% (isMac() ? 13 : 15), (isMac() ? 13 : 15), (isMac() ? 13 : 15), (isMac() ? 13 : 15), 3.4 %%>;
-
-  descriptionPaddingLeft = wordingLeft;
-  descriptionPaddingRight = dateLeft;
-  descriptionPaddingTop = <%% (isMac() ? 34 : 36), (isMac() ? 35 : 37), (isMac() ? 36 : 38), (isMac() ? 35 : 37), 8.2 %%>;
-  descriptionPaddingBottom = <%% (isMac() ? 15 : 13), (isMac() ? 14 : 12), (isMac() ? 13 : 11), (isMac() ? 14 : 12), 3.8 %%>;
-  descriptionLineHeight = 1.5;
-
-  plusSize = <%% 48, 48, 48, 48, 4.8 %%>;
-  plusWeight = <%% 500, 500, 500, 500, 500 %%>;
-  plusTextTop = <%% -5, -5, -5, -5, -5 %%>;
-
-  blockAreaMarginBottom = <%% 50, 50, 50, 50, 5 %%>;
-
-  calendarVisualLeft = <%% 1, 1, 1, 1, 1 %%>;
-
-  bigCalendarTitleBottom = <%% 22, 20, 18, 16, 3 %%>;
-  bigCalendarTitleSize = <%% 36, 34, 32, 30, 5 %%>;
-  bigCalendarTitleWeight = <%% 300, 300, 300, 300, 300 %%>;
-  weekBlockHeight = <%% 48, 48, 48, 48, 8 %%>;
-  weekBlockSize = <%% 15, 15, 15, 15, 2.8 %%>;
-  weekBlockWeight = <%% 600, 600, 600, 600, 600 %%>;
-  weekBlockTextTop = <%% (isMac() ? -2 : -1), (isMac() ? -2 : -1), (isMac() ? -2 : -1), (isMac() ? -2 : -1), 0 %%>;
-
-  dateBlockHeight = <%% 120, 120, 120, 120, 12 %%>;
-  dateBlockPaddingTop = <%% 40, 40, 40, 40, 5.5 %%>;
-  dateBlockPaddingBottom = <%% 20, 20, 20, 20, 1.5 %%>;
-  dateBlockWeight = <%% 300, 300, 300, 300, 300 %%>;
-
-  datePositionTop = <%% 10, 10, 10, 10, 1 %%>;
-  datePositionLeft = <%% 18, 18, 18, 18, 1 %%>;
-
-  arrowWidth = <%% 12, 12, 12, 12, 2 %%>;
-  arrowTop = <%% 22, 22, 18, 18, 2.4 %%>;
-
-  barMotherHeight = <%% 25, 25, 25, 21, 5 %%>;
-  colorSqureTop = <%% 4, 4, 4, 4, 0.25 %%>;
-  colorSqureHeight = <%% 21, 21, 21, 18, 3.5 %%>;
-  colorSqureIndent = <%% 25, 25, 25, 25, 20 %%>;
-
-  calendarTitleTop = <%% -32, -32, -32, -32, -3.2 %%>;
-  calendarTitleSize = <%% 13, 13, 12, 11, 3 %%>;
-  calendarTitlePaddingTop = <%% (isMac() ? 5 : 7), (isMac() ? 5 : 7), (isMac() ? 5 : 7), (isMac() ? 5 : 7), 1 %%>;
-  calendarTitlePaddingBottom = <%% 6, 6, 6, 6, 6 %%>;
-  calendarTitlePaddingLeft = <%% 12, 12, 12, 12, 1.2 %%>;
-  calendarTitlePaddingRight = <%% 12, 12, 12, 12, 1.2 %%>;
-
-  bigCalendarMarginTop = <%% 60, 50, 36, 28, 5.5 %%>;
-
-  colorSqureWordingSize = <%% 11, 11, 11, 9, 2.1 %%>;
-  colorSqureWordingTop = <%% (isMac() ? 2 : 3), (isMac() ? 2 : 3), (isMac() ? 2 : 3), (isMac() ? 1 : 2), 0 %%>;
-  colorSqureWordingLeft = <%% 7, 7, 7, 6, 1.4 %%>;
-  colorSqureWordingWeight = 800;
-
-  this.whiteMargin = (desktop ? margin : 0);
-
-  whiteBlock = createNode({
-    mother: baseTong,
-    style: {
-      position: "relative",
-      borderRadius: String(desktop ? 8 : 1) + ea,
-      width: String(100) + '%',
-      background: desktop ? colorChip.white : "",
-      paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
-      paddingBottom: desktop ? String(whiteBottomMargin) + ea : "",
-      marginBottom: String(bottomMargin) + ea,
-      boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
-    },
-    children: [
-      {
-        display: "block",
-        position: "relative",
-        width: desktop ? withOut(margin * 2, ea) : String(100) + '%',
-        height: String(100) + '%',
-        marginLeft: String(desktop ? margin : 0) + ea,
+    [ request ] = purchase.requests;
+    locationTargets = [ ...new Set(request.items.map((obj) => { return obj.detail.location })) ];
+    targets = [];
+    for (let str of locationTargets) {
+      itemsArr = request.items.filter((obj) => { return obj.detail.location === str });
+      for (let obj of itemsArr) {
+        console.log(obj.detail.link);
       }
-    ]
-  });
-  whiteTong = whiteBlock.firstChild;
+      targets.push({
+        title: str,
+        children: itemsArr,
+      });
+    }
 
-  block = createNode({
-    mother: whiteTong,
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(100) + '%',
-    },
-    children: [
-      {
-        style: {
-          display: "block",
-          position: mobile ? "absolute" : "relative",
-          left: desktop ? "" : String(mobileTitleLeft) + ea,
-          top: desktop ? "" : String(mobileTitleTop) + ea,
-          width: desktop ? String(100) + '%' : withOut((mobileTitleLeft * 2), ea),
-          marginBottom: String(titleBottom) + ea,
-          zIndex: mobile ? String(1) : "",
-        },
-        children: [
-          {
-            text: "일정표",
-            style: {
-              position: "relative",
-              display: "inline-block",
-              top: String(titleTopNumber) + ea,
-              fontSize: String(titleFontSize) + ea,
-              fontWeight: String(600),
-              background: desktop ? colorChip.white : colorChip.gray1,
-              paddingRight: String(numberRight) + ea,
-              color: colorChip.black,
-            }
-          },
-          {
-            text: String(indexNumber),
-            style: {
-              position: "absolute",
-              right: String(0),
-              top: String(titleTop) + ea,
-              fontSize: String(titleFontSize) + ea,
-              fontWeight: String(200),
-              background: desktop ? colorChip.white : colorChip.gray1,
-              paddingLeft: String(numberRight) + ea,
-              color: desktop ? colorChip.black : colorChip.green,
-            }
-          },
-        ]
+    console.log(targets);
+
+
+
+    whiteBlock = createNode({
+      mother: baseTong,
+      style: {
+        position: "relative",
+        borderRadius: String(desktop ? 8 : 1) + ea,
+        width: String(100) + '%',
+        background: desktop ? colorChip.white : "",
+        paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
+        paddingBottom: desktop ? String(whiteBottomMargin) + ea : "",
+        marginBottom: String(bottomMargin) + ea,
+        boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
       },
-      {
-        style: {
+      children: [
+        {
           display: "block",
           position: "relative",
-          width: desktop ? String(100) + '%' : withOut(paddingLeft * 2, ea),
-          background: desktop ? "" : colorChip.white,
-          boxShadow: mobile ? "0px 5px 12px -10px " + colorChip.gray5 : "",
-          borderRadius: mobile ? String(1) + ea : "",
-          overflow: "hidden",
-          marginBottom: String(0) + ea,
-          marginTop: desktop ? "" : String(14) + ea,
-          paddingLeft: desktop ? "" : String(paddingLeft) + ea,
-          paddingRight: desktop ? "" : String(paddingLeft) + ea,
-          paddingTop: desktop ? "" : String(paddingTop) + ea,
-          paddingBottom: desktop ? "" : String(paddingBottom) + ea,
+          width: desktop ? withOut(margin * 2, ea) : String(100) + '%',
+          height: String(100) + '%',
+          marginLeft: String(desktop ? margin : 0) + ea,
         }
+      ]
+    });
+    whiteTong = whiteBlock.firstChild;
+
+    block = createNode({
+      mother: whiteTong,
+      style: {
+        display: "block",
+        position: "relative",
+        width: String(100) + '%',
       },
-    ]
-  });
-  tong = block.lastChild;
+      children: [
+        {
+          style: {
+            display: "block",
+            position: mobile ? "absolute" : "relative",
+            left: desktop ? "" : String(mobileTitleLeft) + ea,
+            top: desktop ? "" : String(mobileTitleTop) + ea,
+            width: desktop ? String(100) + '%' : withOut((mobileTitleLeft * 2), ea),
+            marginBottom: String(titleBottom) + ea,
+            zIndex: mobile ? String(1) : "",
+          },
+          children: [
+            {
+              text: "일정표",
+              style: {
+                position: "relative",
+                display: "inline-block",
+                top: String(titleTopNumber) + ea,
+                fontSize: String(titleFontSize) + ea,
+                fontWeight: String(600),
+                background: desktop ? colorChip.white : colorChip.gray1,
+                paddingRight: String(numberRight) + ea,
+                color: colorChip.black,
+              }
+            },
+            {
+              text: String(indexNumber),
+              style: {
+                position: "absolute",
+                right: String(0),
+                top: String(titleTop) + ea,
+                fontSize: String(titleFontSize) + ea,
+                fontWeight: String(200),
+                background: desktop ? colorChip.white : colorChip.gray1,
+                paddingLeft: String(numberRight) + ea,
+                color: desktop ? colorChip.black : colorChip.green,
+              }
+            },
+          ]
+        },
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            width: desktop ? String(100) + '%' : withOut(paddingLeft * 2, ea),
+            background: desktop ? "" : colorChip.white,
+            boxShadow: mobile ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+            borderRadius: mobile ? String(1) + ea : "",
+            overflow: "hidden",
+            marginBottom: String(0) + ea,
+            marginTop: desktop ? "" : String(14) + ea,
+            paddingLeft: desktop ? "" : String(paddingLeft) + ea,
+            paddingRight: desktop ? "" : String(paddingLeft) + ea,
+            paddingTop: desktop ? "" : String(paddingTop) + ea,
+            paddingBottom: desktop ? "" : String(paddingBottom) + ea,
+          }
+        },
+      ]
+    });
+    tong = block.lastChild;
 
-  dateTong = createNode({
-    mother: tong,
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(100) + '%',
-    }
-  });
+    dateTong = createNode({
+      mother: tong,
+      style: {
+        display: "block",
+        position: "relative",
+        width: String(100) + '%',
+      }
+    });
 
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 PurchaseListJs.prototype.insertChecklistBox = function (indexNumber) {
@@ -1350,7 +1316,7 @@ PurchaseListJs.prototype.launching = async function (loading) {
       local: async () => {
         try {
           instance.insertInitBox();
-          instance.insertPurchaseBox(1);
+          await instance.insertPurchaseBox(1);
           instance.insertChecklistBox(2);
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "PurchaseListJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
