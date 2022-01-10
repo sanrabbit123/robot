@@ -8123,7 +8123,7 @@ ProjectJs.prototype.communicationRender = function () {
     function () {
       const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
       let boo;
-      let date0, date1, date2, date3;
+      let date0, date1, date2;
       boo = true;
       if (instance.whiteBox === null) {
         boo = false;
@@ -8144,8 +8144,7 @@ ProjectJs.prototype.communicationRender = function () {
           date0 = stringToDate(thisCase.firstDate);
           date1 = stringToDate(thisCase.formDateFrom);
           date2 = stringToDate(thisCase.formDateTo);
-          date3 = stringToDate(thisCase.paymentsRemainDate);
-          if (date0.valueOf() > emptyDateValue && date1.valueOf() > emptyDateValue && date2.valueOf() > emptyDateValue && date3.valueOf() < emptyDateValue) {
+          if (date0.valueOf() > emptyDateValue && date1.valueOf() > emptyDateValue && date2.valueOf() > emptyDateValue) {
             boo = true;
           } else {
             boo = false;
