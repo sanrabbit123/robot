@@ -99,17 +99,11 @@ module.exports = function (proid, info) {
           firstDateId = '';
 
           document.querySelector('form').children[0].children[2].children[4].click();
-          while (document.querySelectorAll("button").length <= 1) {
-            await sleep(500);
-          }
+          await sleep(3000);
           document.querySelectorAll("button")[1].click();
-          while (document.querySelectorAll(".MuiButtonGroup-root").length <= 3) {
-            await sleep(500);
-          }
+          await sleep(3000);
           document.querySelectorAll('.MuiButtonGroup-root')[contractOrder].querySelector("button").click();
-          while (document.querySelectorAll(".MuiButton-label").length <= 3) {
-            await sleep(500);
-          }
+          await sleep(3000);
           document.querySelectorAll('.MuiButton-label')[document.querySelectorAll('.MuiButton-label').length - 1].click();
           await sleep(1000);
 
