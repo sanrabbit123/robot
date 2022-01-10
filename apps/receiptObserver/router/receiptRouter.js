@@ -246,20 +246,33 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
   let obj = {};
   obj.link = "/createStylingContract";
   obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       if (req.body.proid === undefined || req.body.contractName === undefined || req.body.contractAddress === undefined) {
         throw new Error("invaild post");
       }
       const { proid, contractName, contractAddress } = req.body;
-
       const rows = await back.mongoRead("stylingForm", { proid }, { selfMongo: instance.mongolocal });
-
       if (rows.length === 0) {
         const selfMongo = instance.mongo;
+        const { officeinfo: { widsign: { id, key, endPoint } } } = address;
+        const title = "홈스타일링계약서_000고객님_주홈리에종_YYMMDD";
         const project = await back.getProjectById(proid, { selfMongo });
         const client = await back.getClientById(project.cliid, { selfMongo });
         const designer = await back.getDesignerById(project.desid, { selfMongo });
+        const today = new Date();
         let url, requestNumber, proposalDate;
+        let res, token, target, targetFormId, safeNum;
+        let titleName, titleAddress, formTitle;
+        let request, analytics;
+        let tempArr;
+        let map;
+        let data;
 
         proposalDate = project.proposal.date.valueOf();
 
@@ -271,24 +284,112 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
           }
         }
 
-        url = "https://" + address.homeinfo.ghost.host + ":" + String(address.homeinfo.ghost.graphic.port[0]) + "/form";
+        ({ request, analytics } = client.requests[requestNumber]);
+        request = request.toNormal();
+        analytics = analytics.toNormal();
 
-        await requestSystem(url, { requestNumber, client: client.toNormal(), designer: designer.toNormal(), project: project.toNormal(), contractName, contractAddress }, { headers: { "Content-type": "application/json" } });
+        res = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
+
+        if (res.data.result_code !== 200) {
+          throw new Error("access token error");
+        } else {
+          token = res.data.access_token;
+          num = 1;
+          safeNum = 0;
+          do {
+            res = await requestSystem(endPoint + "/v2/form", { page: num, page_size: 30, title }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+            target = res.data.result.filter((obj) => { return obj.title === title });
+            num++;
+            safeNum++;
+            if (safeNum > 1000) {
+              throw new Error("title name error");
+            }
+          } while (target.length === 0);
+
+          [ { id: targetFormId } ] = target;
+
+          titleName = client.name;
+          if (contractName.trim() !== "") {
+            titleName = contractName;
+          }
+
+          titleAddress = request.space.address;
+          if (contractAddress.trim() !== "") {
+            titleAddress = contractAddress;
+          }
+
+          tempArr = dateToString(today).split('-');
+          formTitle = "홈스타일링계약서_" + titleName + "고객님_주홈리에종_";
+          formTitle = formTitle + tempArr[0].slice(2) + tempArr[1] + tempArr[2];
+          map = [
+            { id: "5faa618f9da73962a9050ef4", value: titleName },
+            { id: "5faa6196b3c0673961000001", value: titleAddress },
+            { id: "5faa618f9da73962a9050ef6", value: client.phone },
+            { id: "5faa618f9da73962a9050ef7", value: dateToString(project.process.contract.first.date) },
+            { id: "5faa618f9da73962a9050ef9", value: dateToString(project.process.contract.form.date.from) },
+            { id: "5faa618f9da73962a9050efa", value: dateToString(project.process.contract.form.date.to) },
+            { id: "5faa618f9da73962a9050ef5", value: titleName },
+            { id: "5faa618f9da73962a9050ef8", value: request.family === '' ? "알 수 없음" : request.family },
+            { id: "5faa618f9da73962a9050f04", value: titleAddress },
+            { id: "5faa618f9da73962a9050f01", value: request.budget + " (디자이너 논의 및 조정)" },
+            { id: "5faa618f9da73962a9050f02", value: designer.designer + ", " + designer.information.phone },
+            { id: "5faa618f9da73962a9050efb", value: request.space.contract },
+            { id: "5faa618f9da73962a9050efd", value: (/없/gi.test(dateToString(analytics.date.space.precheck)) ? '-' : dateToString(analytics.date.space.precheck)) },
+            { id: "5faa618f9da73962a9050efe", value: (/없/gi.test(dateToString(analytics.date.space.empty)) ? '-' : dateToString(analytics.date.space.empty)) },
+            { id: "5faa618f9da73962a9050efc", value: (/없/gi.test(dateToString(request.space.resident.expected)) ? '-' : dateToString(request.space.resident.expected)) },
+            { id: "5faa618f9da73962a9050eff", value: String(request.space.pyeong) + "평" },
+            { id: "5faa618f9da73962a9050f00", value: "방 " + String(request.space.spec.room) + "개 / 화장실 " + String(request.space.spec.bathroom) + "개" },
+            { id: "5faa618f9da73962a9050f03", value: instance.mother.serviceParsing(project.service) },
+            { id: "5faa618f9da73962a9050f05", value: autoComma(project.process.contract.remain.calculation.amount.consumer - project.process.contract.first.calculation.amount) },
+            { id: "5faa618f9da73962a9050f06", value: autoComma(project.process.contract.remain.calculation.amount.consumer) },
+            { id: "5faa618f9da73962a9050f16", value: titleName },
+            { id: "5faa618f9da73962a9050f1a", value: client.phone },
+            { id: "5faa61beb3c0673961000002", value: titleAddress },
+            { id: "5faa618f9da73962a9050f19", value: titleName },
+          ];
+
+          data = {
+            form_id: targetFormId,
+            title: formTitle,
+            send_type: "SAMETIME",
+            auth_phone: "N",
+            mail_title: "안녕하세요, " + client.name + " 고객님! 홈리에종입니다. 홈스타일링 계약서 보내드립니다.",
+            receiver_list: [
+              {
+                name: client.name,
+                email: client.email,
+                mobile: client.phone.replace(/\-/gi, '')
+              }
+            ],
+            items: map
+          }
+
+          res = await requestSystem(endPoint + "/v2/form/send", data, { headers: { "x-api-key": key, "x-access-token": token, "Content-Type": "application/json" } });
+
+          await bill.createBill("stylingForm", [ {
+            name: res.data.result[0].doc_name,
+            id: res.data.result[0].form_id,
+            time: new Date(),
+            requestNumber: 0,
+            cliid: client.cliid,
+            proid: project.proid
+          } ], { selfMongo: instance.mongolocal });
+
+          await kakao.sendTalk("stylingForm", client.name, client.phone, { client: client.name });
+          messageSend({ text: client.name + " 계약서를 작성하고 알림톡을 전송했어요!", channel: "#400_customer", voice: true }).catch((err) => {
+            console.log(err);
+          });
+
+        }
+
+        res.send(JSON.stringify({ message: "OK" }));
       } else {
-        console.log("styling form cancel : " + proid);
         await messageSend({ text: "프로젝트 " + proid + "의 스타일링 계약서는 이미 만들어졌기에, 중복해서 만들지 않았습니다!", channel: "#400_customer", voice: true });
+        res.send(JSON.stringify({ message: "ERROR" }));
       }
-
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      res.send(JSON.stringify({ message: "OK" }));
     } catch (e) {
       instance.mother.errorLog("Python 서버 문제 생김 (rou_post_createStylingContract): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
+      res.send(JSON.stringify({ message: "ERROR" }));
     }
   }
   return obj;

@@ -8187,9 +8187,14 @@ ProjectJs.prototype.communicationRender = function () {
           }
           contractAddress = contractAddress.replace(/[ㄱ-ㅎㅏ-ㅣ]/gi, '');
 
-          await GeneralJs.ajaxJson({ proid, contractName, contractAddress }, PYTHONHOST + "/createStylingContract");
+          const response = await GeneralJs.ajaxJson({ proid, contractName, contractAddress }, PYTHONHOST + "/createStylingContract");
 
-          window.alert(`계약서 알림톡 요청을 완료하였습니다!`);
+          if (response.message === "OK") {
+            window.alert(`계약서 알림톡 요청을 완료하였습니다!`);
+          } else {
+            window.alert(`오류가 발생하였습니다! 다시 시도해주세요!`);
+          }
+
         }
       } catch (e) {
         console.log(e);
