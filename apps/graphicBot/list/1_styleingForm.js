@@ -101,6 +101,8 @@ module.exports = function (proid, info) {
           document.querySelectorAll('.MuiButton-label')[document.querySelectorAll('.MuiButton-label').length - 1].click();
           await sleep(500);
 
+          await sleep(60 * 1000 * 10);
+
           if (dateBoo) {
             scrollTo(document.querySelectorAll('header')[document.querySelectorAll('header').length - 1].nextElementSibling.lastChild.children[1].firstChild.firstChild, document.getElementById(firstDateId), document.querySelectorAll('header')[document.querySelectorAll('header').length - 1].getBoundingClientRect().height * 3);
             await clickElement(document.getElementById(firstDateId));
@@ -128,7 +130,6 @@ module.exports = function (proid, info) {
               await injectionInput(document.getElementById(id), value, true);
             }
           }
-
 
           inputs.filter((dom) => { return dom.getAttribute("type") === "text" })[2]
 
