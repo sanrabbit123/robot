@@ -84,7 +84,7 @@ module.exports = function (proid, info) {
             { id: "field_61a6f7c667ddfb605cdf7b1d", value: titleName },
             { id: "field_61a6f7c667ddfb605cdf7b22", value: contractPhone },
             { id: "field_61a6f7c667ddfb605cdf7b23", value: contractAddress },
-            { id: "field_61a6f7c667ddfb605cdf7b20", value: clientPhone },
+            { id: "field_61a6f7c667ddfb605cdf7b20", value: client.phone },
           ];
 
           sendMap = [

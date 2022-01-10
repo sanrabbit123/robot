@@ -372,7 +372,7 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
             name: widsignRes.data.result[0].doc_name,
             id: widsignRes.data.result[0].receiver_meta_id,
             time: new Date(),
-            requestNumber: 0,
+            requestNumber: requestNumber,
             cliid: client.cliid,
             proid: project.proid
           } ], { selfMongo: instance.mongolocal });
@@ -397,70 +397,38 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
   return obj;
 }
 
-ReceiptRouter.prototype.rou_post_receiveStylingContract = function () {
-  const instance = this;
-  const back = this.back;
-  const bill = this.bill;
-  const kakao = this.kakao;
-  const { equalJson, fileSystem, dateToString, autoComma, ghostRequest, messageSend, errorLog } = this.mother;
-  let obj = {};
-  obj.link = "/receiveStylingContract";
-  obj.func = async function (req, res) {
-    try {
-      if (req.body.json === undefined) {
-        throw new Error("must be json");
-      }
-      const json = equalJson(req.body.json);
-      const collection = "stylingForm";
-      const selfMongo = instance.mongolocal;
-      let client;
-
-      await bill.createBill(collection, [ json ], { selfMongo: instance.mongolocal });
-      client = await back.getClientById(json.cliid, { selfMongo: instance.mongo });
-      if (client !== null) {
-        await kakao.sendTalk(collection, client.name, client.phone, { client: client.name });
-        messageSend({ text: client.name + " 계약서를 작성하고 알림톡을 전송했어요!", channel: "#400_customer", voice: true }).catch((err) => {
-          console.log(err);
-        });
-      }
-
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      res.send(JSON.stringify({ message: "OK" }));
-    } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_receiveStylingContract): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
-    }
-  }
-  return obj;
-}
-
 ReceiptRouter.prototype.rou_post_createConstructContract = function () {
   const instance = this;
   const back = this.back;
   const bill = this.bill;
+  const kakao = this.kakao;
   const address = this.address;
-  const { requestSystem, messageSend, messageLog, errorLog } = this.mother;
+  const { requestSystem, messageSend, messageLog, errorLog, dateToString, serviceParsing, autoComma } = this.mother;
   let obj = {};
   obj.link = "/createConstructContract";
   obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       if (req.body.proid === undefined || req.body.summary === undefined) {
         throw new Error("invaild post");
       }
       const { proid, summary } = req.body;
-
+      const { contractName, contractAddress, contractPhone } = summary;
       const rows = await back.mongoRead("constructForm", { proid }, { selfMongo: instance.mongolocal });
 
       if (rows.length === 0) {
         const selfMongo = instance.mongo;
+        const { officeinfo: { widsign: { id, key, endPoint } } } = address;
+        const title = "시공계약서new_000고객님_주홈리에종_YYMMDD";
         const project = await back.getProjectById(proid, { selfMongo: instance.mongo });
         const client = await back.getClientById(project.cliid, { selfMongo: instance.mongo });
         const designer = await back.getDesignerById(project.desid, { selfMongo: instance.mongo });
+        const today = new Date();
         const thisBills = await bill.getBillsByQuery({
           $and: [
             { "links.proid": project.proid },
@@ -476,6 +444,12 @@ ReceiptRouter.prototype.rou_post_createConstructContract = function () {
           let tempArr;
           let projectNormal;
           let builders;
+          let widsignRes, token, target, targetFormId, safeNum;
+          let titleName, titleAddress, formTitle;
+          let request, analytics;
+          let tempArr;
+          let map;
+          let data;
 
           projectNormal = project.toNormal();
 
@@ -517,33 +491,128 @@ ReceiptRouter.prototype.rou_post_createConstructContract = function () {
                 }
               }
 
-              url = "https://" + address.homeinfo.ghost.host + ":" + String(address.homeinfo.ghost.graphic.port[0]) + "/constructForm";
-              await requestSystem(url, { summary, requestNumber, client: client.toNormal(), designer: designer.toNormal(), project: project.toNormal() }, { headers: { "Content-type": "application/json" } });
+              ({ request, analytics } = client.requests[requestNumber]);
+              request = request.toNormal();
+              analytics = analytics.toNormal();
+
+              widsignRes = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
+
+              if (widsignRes.data.result_code !== 200) {
+                throw new Error("access token error");
+              } else {
+                token = widsignRes.data.access_token;
+                num = 1;
+                safeNum = 0;
+                do {
+                  widsignRes = await requestSystem(endPoint + "/v2/form", { page: num, page_size: 30, title }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+                  target = widsignRes.data.result.filter((obj) => { return obj.title === title });
+                  num++;
+                  safeNum++;
+                  if (safeNum > 1000) {
+                    throw new Error("title name error");
+                  }
+                } while (target.length === 0);
+
+                [ { id: targetFormId } ] = target;
+
+                titleName = client.name;
+                if (contractName.trim() !== "") {
+                  titleName = contractName;
+                }
+
+                titleAddress = request.space.address;
+                if (contractAddress.trim() !== "") {
+                  titleAddress = contractAddress;
+                }
+
+                tempArr = dateToString(today).split('-');
+                formTitle = "시공계약서_" + titleName + "고객님_주홈리에종_";
+                formTitle = formTitle + tempArr[0].slice(2) + tempArr[1] + tempArr[2];
+                map = [
+                  { id: "61a6f7c667ddfb605cdf7b06", value: titleName },
+                  { id: "61a6f7c667ddfb605cdf7b13", value: summary.name },
+                  { id: "61a6f7c667ddfb605cdf7b07", value: summary.address },
+                  { id: "61a6f7c667ddfb605cdf7b12", value: summary.date.start },
+                  { id: "61a6f7c667ddfb605cdf7b08", value: summary.date.end },
+                  { id: "61a6f7c667ddfb605cdf7b0e", value: summary.hangul },
+                  { id: "61a6f7c667ddfb605cdf7b1a", value: autoComma(summary.total) },
+                  { id: "61a6f7c667ddfb605cdf7b1b", value: String(summary.first.percentage) + '%' },
+                  { id: "61a6f7c667ddfb605cdf7b14", value: autoComma(summary.first.amount) },
+                  { id: "61a6f7c667ddfb605cdf7b0f", value: summary.first.date },
+                  { id: "61a6f7c667ddfb605cdf7b10", value: summary.first.etc },
+                  { id: "61a6f7c667ddfb605cdf7b18", value: String(summary.start.percentage) + '%' },
+                  { id: "61a6f7c667ddfb605cdf7b16", value: autoComma(summary.start.amount) },
+                  { id: "61a6f7c667ddfb605cdf7b1c", value: summary.start.date },
+                  { id: "61a6f7c667ddfb605cdf7b0d", value: summary.start.etc },
+                  { id: "61a6f7c667ddfb605cdf7b09", value: String(summary.middle.percentage) + '%' },
+                  { id: "61a6f7c667ddfb605cdf7b19", value: autoComma(summary.middle.amount) },
+                  { id: "61a6f7c667ddfb605cdf7b17", value: summary.middle.date },
+                  { id: "61a6f7c667ddfb605cdf7b0a", value: summary.middle.etc },
+                  { id: "61a6f7c667ddfb605cdf7b15", value: String(summary.remain.percentage) + '%' },
+                  { id: "61a6f7c667ddfb605cdf7b11", value: autoComma(summary.remain.amount) },
+                  { id: "61a6f7c667ddfb605cdf7b0c", value: summary.remain.date },
+                  { id: "61a6f7c667ddfb605cdf7b0b", value: summary.remain.etc },
+                  { id: "61a6f7c667ddfb605cdf7b1d", value: titleName },
+                  { id: "61a6f7c667ddfb605cdf7b22", value: contractPhone },
+                  { id: "61a6f7c667ddfb605cdf7b23", value: contractAddress },
+                  { id: "61a6f7c667ddfb605cdf7b20", value: client.phone },
+                ];
+
+                data = {
+                  form_id: targetFormId,
+                  title: formTitle,
+                  send_type: "SAMETIME",
+                  auth_phone: "N",
+                  mail_title: "안녕하세요, " + client.name + " 고객님! 홈리에종입니다. 시공 계약서 보내드립니다.",
+                  receiver_list: [
+                    {
+                      name: client.name,
+                      email: client.email,
+                      mobile: client.phone.replace(/\-/gi, '')
+                    }
+                  ],
+                  items: map
+                }
+
+                widsignRes = await requestSystem(endPoint + "/v2/form/send", data, { headers: { "x-api-key": key, "x-access-token": token, "Content-Type": "application/json" } });
+
+                await bill.createBill("constructForm", [ {
+                  name: widsignRes.data.result[0].doc_name,
+                  id: widsignRes.data.result[0].receiver_meta_id,
+                  time: new Date(),
+                  requestNumber: requestNumber,
+                  cliid: client.cliid,
+                  proid: project.proid
+                } ], { selfMongo: instance.mongolocal });
+
+                await kakao.sendTalk("constructForm", client.name, client.phone, { client: client.name });
+                messageSend({ text: client.name + " 시공 계약서를 작성하고 알림톡을 전송했어요!", channel: "#400_customer", voice: true }).catch((err) => {
+                  console.log(err);
+                });
+
+                res.send(JSON.stringify({ message: "OK" }));
+              }
 
             } else {
               await messageSend({ text: "프로젝트 " + proid + "에서 지정된 파트서 시공사가 등록된 파트너가 아니에요. 계약서를 쓸 수가 없어요.", channel: "#400_customer", voice: true });
+              res.send(JSON.stringify({ message: "ERROR" }));
             }
           } else {
             await messageSend({ text: "프로젝트 " + proid + "는 파트서 시공사가 지정되지 않았어요. 계약서를 쓸 수가 없어요.", channel: "#400_customer", voice: true });
+            res.send(JSON.stringify({ message: "ERROR" }));
           }
         } else {
           await messageSend({ text: "프로젝트 " + proid + "의 영수증을 찾을 수 없어요. 계약서를 쓸 수가 없어요.", channel: "#400_customer", voice: true });
+          res.send(JSON.stringify({ message: "ERROR" }));
         }
       } else {
         console.log("styling form cancel : " + proid);
         await messageSend({ text: "프로젝트 " + proid + "의 시공 계약서는 이미 만들어졌기에, 중복해서 만들지 않았습니다!", channel: "#400_customer", voice: true });
+        res.send(JSON.stringify({ message: "ERROR" }));
       }
-
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      res.send(JSON.stringify({ message: "OK" }));
     } catch (e) {
       errorLog("Python 서버 문제 생김 (rou_post_createConstructContract): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
+      res.send(JSON.stringify({ message: "ERROR" }));
     }
   }
   return obj;
