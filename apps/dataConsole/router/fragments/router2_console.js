@@ -4253,3 +4253,69 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
   }
   return obj;
 }
+
+DataRouter.prototype.rou_post_getOpenGraph = function () {
+  const instance = this;
+  const { errorLog, equalJson, requestSystem } = this.mother;
+  let obj = {};
+  obj.link = [ "/getOpenGraph" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (typeof req.body.mode !== "string" || typeof req.body.url !== "string") {
+        throw new Error("invaild post");
+      }
+      const mode = req.body.mode;
+      let url;
+      let result;
+      let urlArr;
+      let resOpen, targets;
+      let middleTarget, target;
+
+      url = global.decodeURI(req.body.url);
+      urlArr = url.split("");
+      urlArr = urlArr.map((char) => {
+        if (/[가-힣]/i.test(char)) {
+          return global.encodeURI(char);
+        } else if (char.trim() === '') {
+          return global.encodeURI(char);
+        } else {
+          return char;
+        }
+      });
+      url = urlArr.join("");
+
+      if (mode === "image") {
+        try {
+          resOpen = await requestSystem(url);
+          targets = [ ...resOpen.data.matchAll(/\<meta[^\>]+property=\"og\:image\"[^\>]+\>/gi) ].map((arr) => { return arr[0] });
+        } catch (e) {
+          targets = [];
+        }
+
+        middleTarget = [];
+        target = null;
+
+        if (targets.length > 0) {
+          middleTarget = [ ...targets[targets.length - 1].matchAll(/content\=\"[^\"]+\"/gi) ];
+          if (middleTarget.length > 0) {
+            target = middleTarget[0][0].trim().replace(/^content\=\"/gi, '').slice(0, -1);
+          }
+        }
+
+        result = { image: target };
+      }
+
+      res.send(JSON.stringify(result));
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_getOpenGraph): " + e.message);
+      res.send(JSON.stringify({ message: "error" }));
+    }
+  }
+  return obj;
+}

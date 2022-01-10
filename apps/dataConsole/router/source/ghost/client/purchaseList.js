@@ -497,7 +497,7 @@ PurchaseListJs.prototype.insertPurchaseBox = async function (indexNumber) {
   const { client, project, ea, baseTong, media, initDateClassName } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, getDateMatrix, equalJson } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, getDateMatrix, equalJson, uniqueValue, imageParsing } = GeneralJs;
   // const { purchase } = this.projectHistory;
   const purchase = {
     analysis: {
@@ -540,7 +540,7 @@ PurchaseListJs.prototype.insertPurchaseBox = async function (indexNumber) {
             name: "발디 패브릭 식탁의자",
             description: "1~4일 소요, 1박스에 2개씩 포장, 박스당 착불 6,000원",
             detail: {
-              link: "https://www.minimaxmall.co.kr/shop/goods/goods_view.php?goodsno=5447",
+              link: "https://nanoobile.com/product/detail.html?product_no=18&cate_no=1&display_group=2#none",
               location: "거실",
               option: "다크그레이",
             },
@@ -561,7 +561,7 @@ PurchaseListJs.prototype.insertPurchaseBox = async function (indexNumber) {
             name: "발디 패브릭 식탁의자",
             description: "1~4일 소요, 1박스에 2개씩 포장, 박스당 착불 6,000원",
             detail: {
-              link: "https://www.minimaxmall.co.kr/shop/goods/goods_view.php?goodsno=5447",
+              link: "http://mall.hanssem.com/goods/goodsDetailMall.do?gdsNo=274649&searchdetail=gds_view&searchPagelist=1&searchKey=%EB%9D%BC%EC%83%98%20%EB%A0%8C%EC%A7%80%EB%8C%80",
               location: "거실",
               option: "다크그레이",
             },
@@ -582,7 +582,7 @@ PurchaseListJs.prototype.insertPurchaseBox = async function (indexNumber) {
             name: "발디 패브릭 식탁의자",
             description: "1~4일 소요, 1박스에 2개씩 포장, 박스당 착불 6,000원",
             detail: {
-              link: "https://www.minimaxmall.co.kr/shop/goods/goods_view.php?goodsno=5447",
+              link: "https://smartstore.naver.com/royalblueartshop/products/5697567986",
               location: "거실",
               option: "다크그레이",
             },
@@ -603,7 +603,7 @@ PurchaseListJs.prototype.insertPurchaseBox = async function (indexNumber) {
             name: "발디 패브릭 식탁의자",
             description: "1~4일 소요, 1박스에 2개씩 포장, 박스당 착불 6,000원",
             detail: {
-              link: "https://www.minimaxmall.co.kr/shop/goods/goods_view.php?goodsno=5447",
+              link: "https://smartstore.naver.com/carda/products/4801351178",
               location: "주방",
               option: "다크그레이",
             },
@@ -624,7 +624,7 @@ PurchaseListJs.prototype.insertPurchaseBox = async function (indexNumber) {
             name: "발디 패브릭 식탁의자",
             description: "1~4일 소요, 1박스에 2개씩 포장, 박스당 착불 6,000원",
             detail: {
-              link: "https://www.minimaxmall.co.kr/shop/goods/goods_view.php?goodsno=5447",
+              link: "https://shopping.naver.com/living/homeliving/stores/100004003/products/5819922532?NaPm=ct%3Dkwnis9w8%7Cci%3D44fdd31487afff5ca090cebe30d844ca51222647%7Ctr%3Dslsc%7Csn%3D468597%7Chk%3Da60a6739105c04ba791c6a1ae5b3b23daae68ece",
               location: "주방",
               option: "다크그레이",
             },
@@ -645,7 +645,7 @@ PurchaseListJs.prototype.insertPurchaseBox = async function (indexNumber) {
             name: "발디 패브릭 식탁의자",
             description: "1~4일 소요, 1박스에 2개씩 포장, 박스당 착불 6,000원",
             detail: {
-              link: "https://www.minimaxmall.co.kr/shop/goods/goods_view.php?goodsno=5447",
+              link: "https://smartstore.naver.com/nomia/products/4770773838?NaPm=ct%3Dkwrepwu0%7Cci%3Da554173e0bb067353325093613a4b3c950f4ed10%7Ctr%3Dsls%7Csn%3D1043157%7Chk%3D731e8c53ab04b2e3d6859dfb1af9222f2424f508",
               location: "주방",
               option: "다크그레이",
             },
@@ -666,7 +666,7 @@ PurchaseListJs.prototype.insertPurchaseBox = async function (indexNumber) {
             name: "발디 패브릭 식탁의자",
             description: "1~4일 소요, 1박스에 2개씩 포장, 박스당 착불 6,000원",
             detail: {
-              link: "https://www.minimaxmall.co.kr/shop/goods/goods_view.php?goodsno=5447",
+              link: "https://www.decoview.co.kr/product/detail.html?product_no=15894&cate_no=921&display_group=1",
               location: "주방",
               option: "다크그레이",
             },
@@ -687,7 +687,7 @@ PurchaseListJs.prototype.insertPurchaseBox = async function (indexNumber) {
             name: "발디 패브릭 식탁의자",
             description: "1~4일 소요, 1박스에 2개씩 포장, 박스당 착불 6,000원",
             detail: {
-              link: "https://www.minimaxmall.co.kr/shop/goods/goods_view.php?goodsno=5447",
+              link: "https://www.hellenstein.co.kr/product/%ED%81%B4%EB%9E%98%EC%8B%9D-80%EC%88%98-%EC%B9%A8%EA%B5%AC%EC%84%B8%ED%8A%B8sqk/4474/category/556/display/1/",
               location: "안방",
               option: "다크그레이",
             },
@@ -708,7 +708,7 @@ PurchaseListJs.prototype.insertPurchaseBox = async function (indexNumber) {
             name: "발디 패브릭 식탁의자",
             description: "1~4일 소요, 1박스에 2개씩 포장, 박스당 착불 6,000원",
             detail: {
-              link: "https://www.minimaxmall.co.kr/shop/goods/goods_view.php?goodsno=5447",
+              link: "https://www.hellenstein.co.kr/product/%EB%94%94%EB%9F%AD%EC%8A%A4-%EB%8B%A4%EC%9A%B4%ED%95%84-%EC%9D%B4%EB%B6%88sqk/5063/category/586/display/1/",
               location: "안방",
               option: "다크그레이",
             },
@@ -729,7 +729,7 @@ PurchaseListJs.prototype.insertPurchaseBox = async function (indexNumber) {
             name: "발디 패브릭 식탁의자",
             description: "1~4일 소요, 1박스에 2개씩 포장, 박스당 착불 6,000원",
             detail: {
-              link: "https://www.minimaxmall.co.kr/shop/goods/goods_view.php?goodsno=5447",
+              link: "https://www.hellenstein.co.kr/product/%EB%94%94%EB%9F%AD%EC%8A%A4-%EB%8B%A4%EC%9A%B4%ED%95%84-%EB%B2%A0%EA%B0%9C50x70/90/category/589/display/1/",
               location: "안방",
               option: "다크그레이",
             },
@@ -750,7 +750,70 @@ PurchaseListJs.prototype.insertPurchaseBox = async function (indexNumber) {
             name: "발디 패브릭 식탁의자",
             description: "1~4일 소요, 1박스에 2개씩 포장, 박스당 착불 6,000원",
             detail: {
-              link: "https://www.minimaxmall.co.kr/shop/goods/goods_view.php?goodsno=5447",
+              link: "https://www.hellenstein.co.kr/product/%EB%A3%A8%EC%84%BC%ED%8A%B8-%EC%9D%B4%EC%A7%91%ED%8A%B8-%EC%BD%94%ED%8A%BC-%ED%8C%A8%EB%93%9Csqk/6471/category/320/display/1/",
+              location: "안방",
+              option: "다크그레이",
+            },
+            unit: {
+              ea: null,
+              price: 45000,
+              number: 2,
+            },
+            amount: {
+              supply: 90000,
+              vat: 9000,
+              consumer: 99000,
+              delivery: 6000,
+            },
+          },
+          {
+            id: "I" + GeneralJs.uniqueValue("hex"),
+            name: "발디 패브릭 식탁의자",
+            description: "1~4일 소요, 1박스에 2개씩 포장, 박스당 착불 6,000원",
+            detail: {
+              link: "https://smartstore.naver.com/royalblueartshop/products/5914849546?NaPm=ct%3Dkwge83kw%7Cci%3D3c113e3b5c1594ff5dd31ea1b1db468f058fd3c5%7Ctr%3Dsls%7Csn%3D795612%7Chk%3De5b3f2a666d23d511de48874fb35e9a284fcad2b",
+              location: "안방",
+              option: "다크그레이",
+            },
+            unit: {
+              ea: null,
+              price: 45000,
+              number: 2,
+            },
+            amount: {
+              supply: 90000,
+              vat: 9000,
+              consumer: 99000,
+              delivery: 6000,
+            },
+          },
+          {
+            id: "I" + GeneralJs.uniqueValue("hex"),
+            name: "발디 패브릭 식탁의자",
+            description: "1~4일 소요, 1박스에 2개씩 포장, 박스당 착불 6,000원",
+            detail: {
+              link: "https://ohou.se/productions/444987/selling?affect_type=StoreSearchResult&affect_id=41",
+              location: "안방",
+              option: "다크그레이",
+            },
+            unit: {
+              ea: null,
+              price: 45000,
+              number: 2,
+            },
+            amount: {
+              supply: 90000,
+              vat: 9000,
+              consumer: 99000,
+              delivery: 6000,
+            },
+          },
+          {
+            id: "I" + GeneralJs.uniqueValue("hex"),
+            name: "발디 패브릭 식탁의자",
+            description: "1~4일 소요, 1박스에 2개씩 포장, 박스당 착불 6,000원",
+            detail: {
+              link: "https://www.ikea.com/kr/ko/p/knopare-hook-green-50503838/",
               location: "안방",
               option: "다크그레이",
             },
@@ -793,6 +856,9 @@ PurchaseListJs.prototype.insertPurchaseBox = async function (indexNumber) {
     let locationTargets;
     let targets;
     let itemsArr;
+    let imageObject;
+    let imageTong;
+    let imageId;
 
     bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
     margin = <%% 52, 52, 44, 36, 4.7 %%>;
@@ -823,13 +889,34 @@ PurchaseListJs.prototype.insertPurchaseBox = async function (indexNumber) {
     for (let str of locationTargets) {
       itemsArr = request.items.filter((obj) => { return obj.detail.location === str });
       for (let obj of itemsArr) {
-        console.log(obj.detail.link);
+        imageId = "M" + uniqueValue("hex");
+        obj.imageId = imageId;
       }
       targets.push({
         title: str,
         children: itemsArr,
       });
     }
+
+    (async function () {
+      imageTong = [];
+      for (let str of locationTargets) {
+        itemsArr = request.items.filter((obj) => { return obj.detail.location === str });
+        for (let obj of itemsArr) {
+          imageObject = await ajaxJson({ mode: "image", url: window.encodeURIComponent(obj.detail.link) }, "/getOpenGraph");
+          if (imageObject.image !== null) {
+            imageTong.push({ id: request.items.find((obj2) => { return obj2.id === obj.id }).imageId, src: imageObject.image });
+          }
+        }
+      }
+      return imageParsing(imageTong);
+    })().then((imageTong) => {
+      
+      console.log(imageTong);
+
+    }).catch((err) => {
+      console.log(err);
+    });
 
     console.log(targets);
 
@@ -935,6 +1022,9 @@ PurchaseListJs.prototype.insertPurchaseBox = async function (indexNumber) {
         width: String(100) + '%',
       }
     });
+
+
+
 
   } catch (e) {
     console.log(e);

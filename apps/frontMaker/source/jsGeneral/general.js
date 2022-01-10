@@ -2635,6 +2635,84 @@ GeneralJs.prompt = function (message) {
   });
 }
 
+GeneralJs.imageParsing = function (imageArr) {
+  if (!Array.isArray(imageArr)) {
+    throw new Error("invaild input");
+  }
+  if (imageArr.length === 0) {
+    throw new Error("invaild input");
+  }
+  if (!imageArr.every((obj) => { return typeof obj === "object" })) {
+    throw new Error("invaild input");
+  }
+  if (!imageArr.every((obj) => { return typeof obj.src === "string" && typeof obj.id === "string" })) {
+    throw new Error("invaild input");
+  }
+  let div, img;
+  let time;
+  let width, height;
+  let imgTong;
+  let num;
+  let loadedNum;
+  let loadNeedsNum;
+
+  width = 100;
+  time = 300;
+
+  div = GeneralJs.nodes.div.cloneNode(true);
+  document.body.insertBefore(div, document.body.firstChild);
+  div.style.position = "fixed";
+  div.style.opacity = String(0);
+  div.style.zIndex = String(-1);
+
+  loadedNum = 0;
+  loadNeedsNum = imageArr.length;
+
+  return new Promise((resolve, reject) => {
+
+    imgTong = [];
+    for (let obj of imageArr) {
+      img = GeneralJs.createNode({
+        mother: div,
+        mode: "img",
+        attribute: { src: obj.src },
+        event: {
+          load: (e) => {
+            loadedNum = loadedNum + 1;
+            if (loadedNum === loadNeedsNum) {
+              setTimeout(() => {
+                num = 0;
+                for (let obj of imageArr) {
+                  img = imgTong[num];
+                  height = img.getBoundingClientRect().height;
+                  obj.ratio = width / height;
+                  if (obj.ratio < 1) {
+                    obj.gs = 's';
+                  } else {
+                    obj.gs = 'g'
+                  }
+                  num++;
+                }
+                imageArr = GeneralJs.equalJson(JSON.stringify(imageArr));
+                document.body.removeChild(document.body.firstChild);
+                resolve(imageArr);
+              }, time);
+            }
+          }
+        },
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: String(width) + "px",
+          height: "auto"
+        }
+      });
+      imgTong.push(img);
+    }
+
+  });
+}
+
 GeneralJs.prototype.resizeLaunching = function (callback) {
   const instance = this;
   this.resizeStack = 0;
