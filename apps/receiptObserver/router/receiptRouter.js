@@ -241,8 +241,10 @@ ReceiptRouter.prototype.rou_post_cashReceipt = function () {
 ReceiptRouter.prototype.rou_post_createStylingContract = function () {
   const instance = this;
   const back = this.back;
+  const bill = this.bill;
+  const kakao = this.kakao;
   const address = this.address;
-  const { requestSystem, messageSend } = this.mother;
+  const { requestSystem, messageSend, dateToString, serviceParsing, autoComma } = this.mother;
   let obj = {};
   obj.link = "/createStylingContract";
   obj.func = async function (req, res) {
@@ -339,7 +341,7 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
             { id: "5faa618f9da73962a9050efc", value: (/없/gi.test(dateToString(request.space.resident.expected)) ? '-' : dateToString(request.space.resident.expected)) },
             { id: "5faa618f9da73962a9050eff", value: String(request.space.pyeong) + "평" },
             { id: "5faa618f9da73962a9050f00", value: "방 " + String(request.space.spec.room) + "개 / 화장실 " + String(request.space.spec.bathroom) + "개" },
-            { id: "5faa618f9da73962a9050f03", value: instance.mother.serviceParsing(project.service) },
+            { id: "5faa618f9da73962a9050f03", value: serviceParsing(project.service) },
             { id: "5faa618f9da73962a9050f05", value: autoComma(project.process.contract.remain.calculation.amount.consumer - project.process.contract.first.calculation.amount) },
             { id: "5faa618f9da73962a9050f06", value: autoComma(project.process.contract.remain.calculation.amount.consumer) },
             { id: "5faa618f9da73962a9050f16", value: titleName },
