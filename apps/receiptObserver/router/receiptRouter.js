@@ -269,7 +269,7 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
         const designer = await back.getDesignerById(project.desid, { selfMongo });
         const today = new Date();
         let url, requestNumber, proposalDate;
-        let res, token, target, targetFormId, safeNum;
+        let widsignRes, token, target, targetFormId, safeNum;
         let titleName, titleAddress, formTitle;
         let request, analytics;
         let tempArr;
@@ -290,17 +290,17 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
         request = request.toNormal();
         analytics = analytics.toNormal();
 
-        res = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
+        widsignRes = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
 
-        if (res.data.result_code !== 200) {
+        if (widsignRes.data.result_code !== 200) {
           throw new Error("access token error");
         } else {
-          token = res.data.access_token;
+          token = widsignRes.data.access_token;
           num = 1;
           safeNum = 0;
           do {
-            res = await requestSystem(endPoint + "/v2/form", { page: num, page_size: 30, title }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
-            target = res.data.result.filter((obj) => { return obj.title === title });
+            widsignRes = await requestSystem(endPoint + "/v2/form", { page: num, page_size: 30, title }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+            target = widsignRes.data.result.filter((obj) => { return obj.title === title });
             num++;
             safeNum++;
             if (safeNum > 1000) {
@@ -366,11 +366,11 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
             items: map
           }
 
-          res = await requestSystem(endPoint + "/v2/form/send", data, { headers: { "x-api-key": key, "x-access-token": token, "Content-Type": "application/json" } });
+          widsignRes = await requestSystem(endPoint + "/v2/form/send", data, { headers: { "x-api-key": key, "x-access-token": token, "Content-Type": "application/json" } });
 
           await bill.createBill("stylingForm", [ {
-            name: res.data.result[0].doc_name,
-            id: res.data.result[0].form_id,
+            name: widsignRes.data.result[0].doc_name,
+            id: widsignRes.data.result[0].receiver_meta_id,
             time: new Date(),
             requestNumber: 0,
             cliid: client.cliid,
