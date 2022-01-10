@@ -58,33 +58,33 @@ module.exports = function (proid, info) {
           clientPhone = client.phone;
 
           map = [
-            { id: "field_TEXT_61a6f7c667ddfb605cdf7b06", value: titleName },
-            { id: "field_TEXT_61a6f7c667ddfb605cdf7b13", value: summary.name },
-            { id: "field_TEXT_61a6f7c667ddfb605cdf7b07", value: summary.address },
-            { id: "field_TEXT_61a6f7c667ddfb605cdf7b12", value: summary.date.start },
-            { id: "field_TEXT_61a6f7c667ddfb605cdf7b08", value: summary.date.end },
-            { id: "field_TEXT_61a6f7c667ddfb605cdf7b0e", value: summary.hangul },
-            { id: "field_TEXT_61a6f7c667ddfb605cdf7b1a", value: autoComma(summary.total) },
-            { id: "field_TEXT_61a6f7c667ddfb605cdf7b1b", value: String(summary.first.percentage) + '%' },
-            { id: "field_TEXT_61a6f7c667ddfb605cdf7b14", value: autoComma(summary.first.amount) },
-            { id: "field_TEXT_61a6f7c667ddfb605cdf7b0f", value: summary.first.date },
-            { id: "field_TEXT_61a6f7c667ddfb605cdf7b10", value: summary.first.etc },
-            { id: "field_TEXT_61a6f7c667ddfb605cdf7b18", value: String(summary.start.percentage) + '%' },
-            { id: "field_TEXT_61a6f7c667ddfb605cdf7b16", value: autoComma(summary.start.amount) },
-            { id: "field_TEXT_61a6f7c667ddfb605cdf7b1c", value: summary.start.date },
-            { id: "field_TEXT_61a6f7c667ddfb605cdf7b0d", value: summary.start.etc },
-            { id: "field_TEXT_61a6f7c667ddfb605cdf7b09", value: String(summary.middle.percentage) + '%' },
-            { id: "field_TEXT_61a6f7c667ddfb605cdf7b19", value: autoComma(summary.middle.amount) },
-            { id: "field_TEXT_61a6f7c667ddfb605cdf7b17", value: summary.middle.date },
-            { id: "field_TEXT_61a6f7c667ddfb605cdf7b0a", value: summary.middle.etc },
-            { id: "field_TEXT_61a6f7c667ddfb605cdf7b15", value: String(summary.remain.percentage) + '%' },
-            { id: "field_TEXT_61a6f7c667ddfb605cdf7b11", value: autoComma(summary.remain.amount) },
-            { id: "field_TEXT_61a6f7c667ddfb605cdf7b0c", value: summary.remain.date },
-            { id: "field_TEXT_61a6f7c667ddfb605cdf7b0b", value: summary.remain.etc },
-            { id: "field_TEXT_61a6f7c667ddfb605cdf7b1d", value: titleName },
-            { id: "field_TEXT_61a6f7c667ddfb605cdf7b22", value: contractPhone },
-            { id: "field_TEXT_61a6f7c667ddfb605cdf7b23", value: contractAddress },
-            { id: "field_TEXT_61a6f7c667ddfb605cdf7b20", value: clientPhone },
+            { id: "field_61a6f7c667ddfb605cdf7b06", value: titleName },
+            { id: "field_61a6f7c667ddfb605cdf7b13", value: summary.name },
+            { id: "field_61a6f7c667ddfb605cdf7b07", value: summary.address },
+            { id: "field_61a6f7c667ddfb605cdf7b12", value: summary.date.start },
+            { id: "field_61a6f7c667ddfb605cdf7b08", value: summary.date.end },
+            { id: "field_61a6f7c667ddfb605cdf7b0e", value: summary.hangul },
+            { id: "field_61a6f7c667ddfb605cdf7b1a", value: autoComma(summary.total) },
+            { id: "field_61a6f7c667ddfb605cdf7b1b", value: String(summary.first.percentage) + '%' },
+            { id: "field_61a6f7c667ddfb605cdf7b14", value: autoComma(summary.first.amount) },
+            { id: "field_61a6f7c667ddfb605cdf7b0f", value: summary.first.date },
+            { id: "field_61a6f7c667ddfb605cdf7b10", value: summary.first.etc },
+            { id: "field_61a6f7c667ddfb605cdf7b18", value: String(summary.start.percentage) + '%' },
+            { id: "field_61a6f7c667ddfb605cdf7b16", value: autoComma(summary.start.amount) },
+            { id: "field_61a6f7c667ddfb605cdf7b1c", value: summary.start.date },
+            { id: "field_61a6f7c667ddfb605cdf7b0d", value: summary.start.etc },
+            { id: "field_61a6f7c667ddfb605cdf7b09", value: String(summary.middle.percentage) + '%' },
+            { id: "field_61a6f7c667ddfb605cdf7b19", value: autoComma(summary.middle.amount) },
+            { id: "field_61a6f7c667ddfb605cdf7b17", value: summary.middle.date },
+            { id: "field_61a6f7c667ddfb605cdf7b0a", value: summary.middle.etc },
+            { id: "field_61a6f7c667ddfb605cdf7b15", value: String(summary.remain.percentage) + '%' },
+            { id: "field_61a6f7c667ddfb605cdf7b11", value: autoComma(summary.remain.amount) },
+            { id: "field_61a6f7c667ddfb605cdf7b0c", value: summary.remain.date },
+            { id: "field_61a6f7c667ddfb605cdf7b0b", value: summary.remain.etc },
+            { id: "field_61a6f7c667ddfb605cdf7b1d", value: titleName },
+            { id: "field_61a6f7c667ddfb605cdf7b22", value: contractPhone },
+            { id: "field_61a6f7c667ddfb605cdf7b23", value: contractAddress },
+            { id: "field_61a6f7c667ddfb605cdf7b20", value: clientPhone },
           ];
 
           sendMap = [
@@ -96,13 +96,7 @@ module.exports = function (proid, info) {
           // logic
 
           dateBoo = false;
-          for (let obj of map) {
-            if (/_DATE_/gi.test(obj.id)) {
-              dateBoo = true;
-              firstDateId = obj.id;
-              break;
-            }
-          }
+          firstDateId = '';
 
           document.querySelector('form').children[0].children[2].children[4].click();
           await sleep(500);
@@ -114,7 +108,7 @@ module.exports = function (proid, info) {
           await sleep(500);
 
           if (dateBoo) {
-            scrollTo(document.getElementById("canvasBox"), document.getElementById(firstDateId), document.getElementById("header").getBoundingClientRect().height * 3);
+            scrollTo(document.querySelectorAll('header')[document.querySelectorAll('header').length - 1].nextElementSibling.lastChild.children[1].firstChild.firstChild, document.getElementById(firstDateId), document.querySelectorAll('header')[document.querySelectorAll('header').length - 1].getBoundingClientRect().height * 3);
             await clickElement(document.getElementById(firstDateId));
             await sleep(200);
             while (document.querySelector('.MuiPickersCalendar-week') === null) {
@@ -128,13 +122,13 @@ module.exports = function (proid, info) {
             };
             calendarBox = JSON.parse(JSON.stringify(calendarBox));
             await sleep(200);
-            document.querySelectorAll('.MuiButton-textPrimary')[1].click();
+            document.querySelectorAll('.MuiButton-textPrimary')[3].click();
             await sleep(500);
           }
 
-          for (let { id, value } of map) {
-            scrollTo(document.getElementById("canvasBox"), document.getElementById(id), document.getElementById("header").getBoundingClientRect().height * 3);
-            if (/_DATE_/gi.test(id)) {
+          for (let { id, value, date } of map) {
+            scrollTo(document.querySelectorAll('header')[document.querySelectorAll('header').length - 1].nextElementSibling.lastChild.children[1].firstChild.firstChild, document.getElementById(id), document.getElementById("header").getBoundingClientRect().height * 3);
+            if (date) {
               await calendarInput(document.getElementById(id), value, calendarBox);
             } else {
               await injectionInput(document.getElementById(id), value, true);

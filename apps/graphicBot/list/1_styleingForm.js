@@ -54,30 +54,30 @@ module.exports = function (proid, info) {
           finalRouter = "/receiveStylingContract";
 
           map = [
-            { id: "field_TEXT_5faa618f9da73962a9050ef4", value: titleName },
-            { id: "field_TEXT_5faa6196b3c0673961000001", value: titleAddress },
-            { id: "field_TEXT_5faa618f9da73962a9050ef6", value: client.phone },
-            { id: "field_DATE_5faa618f9da73962a9050ef7", value: dateToString(project.process.contract.first.date) },
-            { id: "field_DATE_5faa618f9da73962a9050ef9", value: dateToString(project.process.contract.form.date.from) },
-            { id: "field_DATE_5faa618f9da73962a9050efa", value: dateToString(project.process.contract.form.date.to) },
-            { id: "field_TEXT_5faa618f9da73962a9050ef5", value: titleName },
-            { id: "field_TEXT_AREA_5faa618f9da73962a9050ef8", value: request.family },
-            { id: "field_TEXT_AREA_5faa618f9da73962a9050f04", value: titleAddress },
-            { id: "field_TEXT_5faa618f9da73962a9050f01", value: request.budget + " (디자이너 논의 및 조정)" },
-            { id: "field_TEXT_5faa618f9da73962a9050f02", value: designer.designer + ", " + designer.information.phone },
-            { id: "field_TEXT_5faa618f9da73962a9050efb", value: request.space.contract },
-            { id: "field_TEXT_5faa618f9da73962a9050efd", value: (/없/gi.test(dateToString(analytics.date.space.precheck)) ? '-' : dateToString(analytics.date.space.precheck)) },
-            { id: "field_TEXT_5faa618f9da73962a9050efe", value: (/없/gi.test(dateToString(analytics.date.space.empty)) ? '-' : dateToString(analytics.date.space.empty)) },
-            { id: "field_TEXT_5faa618f9da73962a9050efc", value: (/없/gi.test(dateToString(request.space.resident.expected)) ? '-' : dateToString(request.space.resident.expected)) },
-            { id: "field_TEXT_5faa618f9da73962a9050eff", value: String(request.space.pyeong) + "평" },
-            { id: "field_TEXT_AREA_5faa618f9da73962a9050f00", value: "방 " + String(request.space.spec.room) + "개 / 화장실 " + String(request.space.spec.bathroom) + "개" },
-            { id: "field_TEXT_5faa618f9da73962a9050f03", value: serviceParsing(project.service) },
-            { id: "field_TEXT_5faa618f9da73962a9050f05", value: autoComma(project.process.contract.remain.calculation.amount.consumer - project.process.contract.first.calculation.amount) },
-            { id: "field_TEXT_5faa618f9da73962a9050f06", value: autoComma(project.process.contract.remain.calculation.amount.consumer) },
-            { id: "field_TEXT_5faa618f9da73962a9050f16", value: titleName },
-            { id: "field_TEXT_5faa618f9da73962a9050f1a", value: client.phone },
-            { id: "field_TEXT_5faa61beb3c0673961000002", value: titleAddress },
-            { id: "field_TEXT_5faa618f9da73962a9050f19", value: titleName },
+            { id: "field_5faa618f9da73962a9050ef4", value: titleName },
+            { id: "field_5faa6196b3c0673961000001", value: titleAddress },
+            { id: "field_5faa618f9da73962a9050ef6", value: client.phone },
+            { id: "field_5faa618f9da73962a9050ef7", value: dateToString(project.process.contract.first.date), date: true },
+            { id: "field_5faa618f9da73962a9050ef9", value: dateToString(project.process.contract.form.date.from), date: true },
+            { id: "field_5faa618f9da73962a9050efa", value: dateToString(project.process.contract.form.date.to), date: true },
+            { id: "field_5faa618f9da73962a9050ef5", value: titleName },
+            { id: "field_5faa618f9da73962a9050ef8", value: request.family },
+            { id: "field_5faa618f9da73962a9050f04", value: titleAddress },
+            { id: "field_5faa618f9da73962a9050f01", value: request.budget + " (디자이너 논의 및 조정)" },
+            { id: "field_5faa618f9da73962a9050f02", value: designer.designer + ", " + designer.information.phone },
+            { id: "field_5faa618f9da73962a9050efb", value: request.space.contract },
+            { id: "field_5faa618f9da73962a9050efd", value: (/없/gi.test(dateToString(analytics.date.space.precheck)) ? '-' : dateToString(analytics.date.space.precheck)) },
+            { id: "field_5faa618f9da73962a9050efe", value: (/없/gi.test(dateToString(analytics.date.space.empty)) ? '-' : dateToString(analytics.date.space.empty)) },
+            { id: "field_5faa618f9da73962a9050efc", value: (/없/gi.test(dateToString(request.space.resident.expected)) ? '-' : dateToString(request.space.resident.expected)) },
+            { id: "field_5faa618f9da73962a9050eff", value: String(request.space.pyeong) + "평" },
+            { id: "field_5faa618f9da73962a9050f00", value: "방 " + String(request.space.spec.room) + "개 / 화장실 " + String(request.space.spec.bathroom) + "개" },
+            { id: "field_5faa618f9da73962a9050f03", value: serviceParsing(project.service) },
+            { id: "field_5faa618f9da73962a9050f05", value: autoComma(project.process.contract.remain.calculation.amount.consumer - project.process.contract.first.calculation.amount) },
+            { id: "field_5faa618f9da73962a9050f06", value: autoComma(project.process.contract.remain.calculation.amount.consumer) },
+            { id: "field_5faa618f9da73962a9050f16", value: titleName },
+            { id: "field_5faa618f9da73962a9050f1a", value: client.phone },
+            { id: "field_5faa61beb3c0673961000002", value: titleAddress },
+            { id: "field_5faa618f9da73962a9050f19", value: titleName },
           ];
 
           sendMap = [
@@ -89,14 +89,8 @@ module.exports = function (proid, info) {
 
           // logic
 
-          dateBoo = false;
-          for (let obj of map) {
-            if (/_DATE_/gi.test(obj.id)) {
-              dateBoo = true;
-              firstDateId = obj.id;
-              break;
-            }
-          }
+          dateBoo = true;
+          firstDateId = "field_5faa618f9da73962a9050ef7";
 
           document.querySelector('form').children[0].children[2].children[4].click();
           await sleep(500);
@@ -108,7 +102,7 @@ module.exports = function (proid, info) {
           await sleep(500);
 
           if (dateBoo) {
-            scrollTo(document.getElementById("canvasBox"), document.getElementById(firstDateId), document.getElementById("header").getBoundingClientRect().height * 3);
+            scrollTo(document.querySelectorAll('header')[document.querySelectorAll('header').length - 1].nextElementSibling.lastChild.children[1].firstChild.firstChild, document.getElementById(firstDateId), document.querySelectorAll('header')[document.querySelectorAll('header').length - 1].getBoundingClientRect().height * 3);
             await clickElement(document.getElementById(firstDateId));
             await sleep(200);
             while (document.querySelector('.MuiPickersCalendar-week') === null) {
@@ -122,18 +116,21 @@ module.exports = function (proid, info) {
             };
             calendarBox = JSON.parse(JSON.stringify(calendarBox));
             await sleep(200);
-            document.querySelectorAll('.MuiButton-textPrimary')[1].click();
+            document.querySelectorAll('.MuiButton-textPrimary')[3].click();
             await sleep(500);
           }
 
-          for (let { id, value } of map) {
-            scrollTo(document.getElementById("canvasBox"), document.getElementById(id), document.getElementById("header").getBoundingClientRect().height * 3);
-            if (/_DATE_/gi.test(id)) {
+          for (let { id, value, date } of map) {
+            scrollTo(document.querySelectorAll('header')[document.querySelectorAll('header').length - 1].nextElementSibling.lastChild.children[1].firstChild.firstChild, document.getElementById(id), document.querySelectorAll('header')[document.querySelectorAll('header').length - 1].getBoundingClientRect().height * 3);
+            if (date) {
               await calendarInput(document.getElementById(id), value, calendarBox);
             } else {
               await injectionInput(document.getElementById(id), value, true);
             }
           }
+
+
+          inputs.filter((dom) => { return dom.getAttribute("type") === "text" })[2]
 
           tempArr = dateToString(today).split('-');
           await injectionInput(document.getElementById("sendFormName"), (formTitle + tempArr[0].slice(2) + tempArr[1] + tempArr[2]));
