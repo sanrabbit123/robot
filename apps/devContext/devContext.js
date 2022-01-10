@@ -1725,12 +1725,23 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "유미희",
-    //     designer: "고윤미",
-    //     link: "https://drive.google.com/drive/folders/1sLoVDQ-_pjefFQ3yCE1WtElsLENCb67O",
+    //     client: "정준호",
+    //     designer: "이미영",
+    //     link: "https://drive.google.com/drive/folders/1oCsa7Ia0nQBhoOzA8TBs0WAjMWrBySSW",
     //     pay: true
     //   },
     // ]);
+    const photoRequest = ghostRequest().bind("photo");
+
+    const zipLinks = await photoRequest("zip", { pid: "p174", pay: 1 });
+    console.log(zipLinks)
+
+    // const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
+    // const kakaoInstance = new KakaoTalk();
+    // await kakaoInstance.ready();
+    //
+    // await kakaoInstance.sendTalk("photoShareClient", "정준호", "010-2291-7617", { client: "정준호", file: "https://drive.google.com/file/d/undefined/view?usp=sharing" });
+    // await kakaoInstance.sendTalk("photoShareDesigner", "이미영", "https://drive.google.com/file/d/undefined/view?usp=sharing", { client: "정준호", designer: "이미영", file: "https://drive.google.com/file/d/undefined/view?usp=sharing" });
 
 
 

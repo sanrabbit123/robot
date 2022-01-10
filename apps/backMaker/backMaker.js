@@ -3139,6 +3139,43 @@ BackMaker.prototype.deleteHistory = async function (method, id, option = { fromC
   }
 }
 
+BackMaker.prototype.returnHistoryDummies = function (subject) {
+  const instance = this;
+  let dummy;
+  if (subject === "project.purchase.requests") {
+    dummy = {
+      id: "",
+      date: new Date(),
+      name: "",
+      description: "",
+      items: []
+    }
+  } else if (subject === "project.purchase.requests.items") {
+    dummy = {
+      id: "",
+      name: "",
+      description: "",
+      detail: {
+        link: "",
+        location: "",
+        option: "",
+      },
+      unit: {
+        ea: null,
+        price: 0,
+        number: 0,
+      },
+      amount: {
+        supply: 0,
+        vat: 0,
+        consumer: 0,
+        delivery: 0,
+      },
+    }
+  }
+  return dummy;
+}
+
 BackMaker.prototype.createHistory = async function (method, updateQuery, option = { fromConsole: false, selfMongo: null, secondMongo: null }) {
   const instance = this;
   const { mongo, mongolocalinfo, mongoconsoleinfo } = this.mother;
@@ -3401,6 +3438,16 @@ BackMaker.prototype.createHistory = async function (method, updateQuery, option 
             end: new Date(1800, 0, 1),
           },
           children: []
+        },
+        purchase: {
+          analytics: {
+            make: [],
+            page: [],
+            update: [],
+            send: [],
+          },
+          date: new Date(1800, 0, 1),
+          requests: []
         },
         manager: projectManager
       };

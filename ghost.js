@@ -3240,18 +3240,18 @@ Ghost.prototype.photoRouter = function (needs) {
   funcObj.post_zip = {
     link: [ "/zip" ],
     func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
       try {
-        res.set({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": '*',
-          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-          "Access-Control-Allow-Headers": '*',
-        });
         if (req.body.pid === undefined || req.body.pay === undefined) {
           res.send(JSON.stringify({ message: "invaild body : must be 'pid' and 'pay'" }));
         } else {
           const GoogleDrive = require(process.cwd() + "/apps/googleAPIs/googleDrive.js");
-          const targetFolderId = "1oxsJCy_7OKZa5gysCo5VlbLbmuKMFr7y";
+          const targetFolderId = "1rSIKIL-jjmXU-D2Zdmf9ElXFmH2Htycl";
           const googleDrive = new GoogleDrive();
           const { pid } = req.body;
           const pay = (Number(req.body.pay) === 1);
@@ -3336,7 +3336,7 @@ Ghost.prototype.photoRouter = function (needs) {
 
         }
       } catch (e) {
-        console.log(e);
+        res.send(JSON.stringify({ message: "error : " + e.message }));
       }
     }
   };

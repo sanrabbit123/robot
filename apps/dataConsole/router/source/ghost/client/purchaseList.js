@@ -115,7 +115,7 @@ PurchaseListJs.prototype.insertInitBox = function () {
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
-  const { schedule } = this.projectHistory;
+  const { purchase } = this.projectHistory;
   let whiteBlock, whiteTong;
   let blockHeight, bottomMargin;
   let margin;
@@ -347,7 +347,7 @@ PurchaseListJs.prototype.insertInitBox = function () {
                   }
                 },
                 {
-                  text: dateToString(schedule.date.start).replace(/\-/g, ". "),
+                  text: `30 <b%items%b>`,
                   class: [ initDateClassName.start ],
                   style: {
                     display: "inline-block",
@@ -359,10 +359,17 @@ PurchaseListJs.prototype.insertInitBox = function () {
                     background: colorChip.white,
                     paddingRight: String(dateRangeIndent) + ea,
                     marginRight: String(dateRangeBetween) + ea,
+                  },
+                  bold: {
+                    display: "inline-block",
+                    fontSize: String(dateRangeSize * smallWordingRatio) + ea,
+                    fontWeight: String(400),
+                    fontFamily: "graphik",
+                    color: colorChip.green,
                   }
                 },
                 {
-                  text: dateToString(schedule.date.end).replace(/\-/g, ". "),
+                  text: `${autoComma(20000000)} <b%won%b>`,
                   class: [ initDateClassName.end ],
                   style: {
                     display: "inline-block",
@@ -373,6 +380,13 @@ PurchaseListJs.prototype.insertInitBox = function () {
                     color: colorChip.green,
                     background: colorChip.white,
                     paddingLeft: String(dateRangeIndent) + ea,
+                  },
+                  bold: {
+                    display: "inline-block",
+                    fontSize: String(dateRangeSize * smallWordingRatio) + ea,
+                    fontWeight: String(400),
+                    fontFamily: "graphik",
+                    color: colorChip.green,
                   }
                 }
               ]
@@ -477,7 +491,7 @@ PurchaseListJs.prototype.insertInitBox = function () {
 
 }
 
-PurchaseListJs.prototype.insertScheduleBox = function (indexNumber) {
+PurchaseListJs.prototype.insertPurchaseBox = function (indexNumber) {
   const instance = this;
   const mother = this.mother;
   const { client, project, ea, baseTong, media, initDateClassName } = this;
@@ -494,7 +508,163 @@ PurchaseListJs.prototype.insertScheduleBox = function (indexNumber) {
     "blank"
   ];
   const dateToNumber = (date) => { return (date.getFullYear() * 100000) + ((date.getMonth() + 1) * 100) + date.getDate() }
-  const { schedule } = this.projectHistory;
+  // const { purchase } = this.projectHistory;
+  const purchase = {
+    analysis: {
+      make: [],
+      page: [],
+      update: [],
+      send: [],
+    },
+    date: new Date(),
+    requests: [
+      {
+        id: "R" + GeneralJs.uniqueValue("hex"),
+        date: new Date(),
+        name: "제품 구매 리스트_220110",
+        description: "* 액자 설치는 못과 와이어 중 선택한 후 별도 준비해야 합니다\n* 의자 업체에 전화문의 결과 - 배송박스에 2개씩 들어가며 한박스씩 배송비 발생된다고 합니다\n* 의자는 간단한 조립제품입니다\n* 가능한 전체 물품이 12/10일 까지 배송되면 좋을듯 합니다",
+        items: [
+          {
+            id: "I" + GeneralJs.uniqueValue("hex"),
+            name: "발디 패브릭 식탁의자",
+            description: "1~4일 소요, 1박스에 2개씩 포장, 박스당 착불 6,000원",
+            detail: {
+              link: "https://www.minimaxmall.co.kr/shop/goods/goods_view.php?goodsno=5447",
+              location: "거실",
+              option: "다크그레이",
+            },
+            unit: {
+              ea: null,
+              price: 45000,
+              number: 2,
+            },
+            amount: {
+              supply: 90000,
+              vat: 9000,
+              consumer: 99000,
+              delivery: 6000,
+            },
+          }
+        ]
+      },
+      {
+        id: "R" + GeneralJs.uniqueValue("hex"),
+        date: new Date(),
+        name: "제품 구매 리스트_220110",
+        description: "* 액자 설치는 못과 와이어 중 선택한 후 별도 준비해야 합니다\n* 의자 업체에 전화문의 결과 - 배송박스에 2개씩 들어가며 한박스씩 배송비 발생된다고 합니다\n* 의자는 간단한 조립제품입니다\n* 가능한 전체 물품이 12/10일 까지 배송되면 좋을듯 합니다",
+        items: [
+          {
+            id: "I" + GeneralJs.uniqueValue("hex"),
+            name: "발디 패브릭 식탁의자",
+            description: "1~4일 소요, 1박스에 2개씩 포장, 박스당 착불 6,000원",
+            detail: {
+              link: "https://www.minimaxmall.co.kr/shop/goods/goods_view.php?goodsno=5447",
+              location: "거실",
+              option: "다크그레이",
+            },
+            unit: {
+              ea: null,
+              price: 45000,
+              number: 2,
+            },
+            amount: {
+              supply: 90000,
+              vat: 9000,
+              consumer: 99000,
+              delivery: 6000,
+            },
+          }
+        ]
+      },
+      {
+        id: "R" + GeneralJs.uniqueValue("hex"),
+        date: new Date(),
+        name: "제품 구매 리스트_220110",
+        description: "* 액자 설치는 못과 와이어 중 선택한 후 별도 준비해야 합니다\n* 의자 업체에 전화문의 결과 - 배송박스에 2개씩 들어가며 한박스씩 배송비 발생된다고 합니다\n* 의자는 간단한 조립제품입니다\n* 가능한 전체 물품이 12/10일 까지 배송되면 좋을듯 합니다",
+        items: [
+          {
+            id: "I" + GeneralJs.uniqueValue("hex"),
+            name: "발디 패브릭 식탁의자",
+            description: "1~4일 소요, 1박스에 2개씩 포장, 박스당 착불 6,000원",
+            detail: {
+              link: "https://www.minimaxmall.co.kr/shop/goods/goods_view.php?goodsno=5447",
+              location: "거실",
+              option: "다크그레이",
+            },
+            unit: {
+              ea: null,
+              price: 45000,
+              number: 2,
+            },
+            amount: {
+              supply: 90000,
+              vat: 9000,
+              consumer: 99000,
+              delivery: 6000,
+            },
+          }
+        ]
+      },
+      {
+        id: "R" + GeneralJs.uniqueValue("hex"),
+        date: new Date(),
+        name: "제품 구매 리스트_220110",
+        description: "* 액자 설치는 못과 와이어 중 선택한 후 별도 준비해야 합니다\n* 의자 업체에 전화문의 결과 - 배송박스에 2개씩 들어가며 한박스씩 배송비 발생된다고 합니다\n* 의자는 간단한 조립제품입니다\n* 가능한 전체 물품이 12/10일 까지 배송되면 좋을듯 합니다",
+        items: [
+          {
+            id: "I" + GeneralJs.uniqueValue("hex"),
+            name: "발디 패브릭 식탁의자",
+            description: "1~4일 소요, 1박스에 2개씩 포장, 박스당 착불 6,000원",
+            detail: {
+              link: "https://www.minimaxmall.co.kr/shop/goods/goods_view.php?goodsno=5447",
+              location: "거실",
+              option: "다크그레이",
+            },
+            unit: {
+              ea: null,
+              price: 45000,
+              number: 2,
+            },
+            amount: {
+              supply: 90000,
+              vat: 9000,
+              consumer: 99000,
+              delivery: 6000,
+            },
+          }
+        ]
+      },
+      {
+        id: "R" + GeneralJs.uniqueValue("hex"),
+        date: new Date(),
+        name: "제품 구매 리스트_220110",
+        description: "* 액자 설치는 못과 와이어 중 선택한 후 별도 준비해야 합니다\n* 의자 업체에 전화문의 결과 - 배송박스에 2개씩 들어가며 한박스씩 배송비 발생된다고 합니다\n* 의자는 간단한 조립제품입니다\n* 가능한 전체 물품이 12/10일 까지 배송되면 좋을듯 합니다",
+        items: [
+          {
+            id: "I" + GeneralJs.uniqueValue("hex"),
+            name: "발디 패브릭 식탁의자",
+            description: "1~4일 소요, 1박스에 2개씩 포장, 박스당 착불 6,000원",
+            detail: {
+              link: "https://www.minimaxmall.co.kr/shop/goods/goods_view.php?goodsno=5447",
+              location: "거실",
+              option: "다크그레이",
+            },
+            unit: {
+              ea: null,
+              price: 45000,
+              number: 2,
+            },
+            amount: {
+              supply: 90000,
+              vat: 9000,
+              consumer: 99000,
+              delivery: 6000,
+            },
+          }
+        ]
+      },
+    ]
+  };
   const today = new Date();
   let paddingTop;
   let block;
@@ -589,6 +759,8 @@ PurchaseListJs.prototype.insertScheduleBox = function (indexNumber) {
   let bigCalendarMarginTop;
   let sevenArr, sevenLength, sevenIndex;
   let colorSqureWordingSize, colorSqureWordingTop, colorSqureWordingLeft, colorSqureWordingWeight;
+
+  console.log(purchase)
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 52, 52, 44, 36, 4.7 %%>;
@@ -800,715 +972,6 @@ PurchaseListJs.prototype.insertScheduleBox = function (indexNumber) {
       width: String(100) + '%',
     }
   });
-
-  children = schedule.children;
-  for (let i = 0; i < children.length; i++) {
-    ({ date: { start: dateStart, end: dateEnd }, contents: { title: wordingTitle, description: wordingDescription, color: barColor } } = children[i]);
-    dateStart = dateToString(dateStart).replace(/-/gi, ". ").slice(2);
-    dateEnd = dateToString(dateEnd).replace(/-/gi, ". ").slice(2);
-
-    createNode({
-      mother: dateTong,
-      style: {
-        display: "block",
-        position: "relative",
-        padding: String(blockOuterPadding) + ea,
-        width: withOut(blockOuterPadding * 2, ea),
-        borderRadius: String(5) + "px",
-        background: colorChip.gray2,
-        marginBottom: String(blockFactorMarginBottom) + ea,
-      },
-      children: [
-        {
-          style: {
-            verticalAlign: "top",
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            position: "relative",
-            width: String(blockFactorHeight - (blockOuterPadding * 2)) + ea,
-            height: String(blockFactorHeight - (blockOuterPadding * 2)) + ea,
-            background: colorChip.white,
-            borderRadius: String(5) + "px",
-            marginRight: String(blockInnerMargin) + ea,
-          },
-          children: [
-            {
-              text: String(i + 1),
-              style: {
-                position: "relative",
-                fontSize: String(numberSize) + ea,
-                fontWeight: String(numberWeight),
-                fontFamily: "graphik",
-                top: String(numberTextTop) + ea,
-                color: colorChip.black,
-              }
-            }
-          ]
-        },
-        {
-          style: {
-            verticalAlign: "top",
-            display: "inline-block",
-            position: "relative",
-            width: desktop ? String((blockFactorHeight - (blockOuterPadding * 2)) * blockSecondRatio) + ea : withOut(blockFactorHeight - (blockOuterPadding * 2) + blockInnerMargin, ea),
-            height: String(blockFactorHeight - (blockOuterPadding * 2)) + ea,
-            background: colorChip.white,
-            borderRadius: String(5) + "px",
-            marginRight: desktop ? String(blockInnerMargin) + ea : "",
-          },
-          children: [
-            {
-              style: {
-                position: "absolute",
-                width: withOut(dateLeft * 2, ea),
-                bottom: String(dateLineBottom) + ea,
-                left: String(dateLeft) + ea,
-                borderBottom: "1px solid " + colorChip.green,
-              }
-            },
-            {
-              text: dateStart,
-              attribute: {
-                value: String(20) + dateStart.replace(/\. /gi, "-"),
-              },
-              style: {
-                position: "absolute",
-                fontSize: String(dateSize) + ea,
-                fontWeight: String(dateWeight),
-                fontFamily: "graphik",
-                color: colorChip.black,
-                top: String(dateTop) + ea,
-                left: String(dateLeft) + ea,
-                background: colorChip.white,
-                paddingRight: String(datePadding) + ea,
-                cursor: "pointer",
-              }
-            },
-            {
-              text: dateEnd,
-              attribute: {
-                value: String(20) + dateEnd.replace(/\. /gi, "-"),
-              },
-              style: {
-                position: "absolute",
-                fontSize: String(dateSize) + ea,
-                fontWeight: String(dateWeight),
-                fontFamily: "graphik",
-                color: colorChip.black,
-                top: String(dateTop2) + ea,
-                right: String(dateLeft) + ea,
-                background: colorChip.white,
-                paddingLeft: String(datePadding) + ea,
-                cursor: "pointer",
-              }
-            },
-          ]
-        },
-        {
-          style: {
-            verticalAlign: "top",
-            display: desktop ? "inline-block" : "block",
-            position: "relative",
-            width: desktop ? withOut(((blockFactorHeight - (blockOuterPadding * 2)) * (1 + blockSecondRatio) + (blockInnerMargin * 2) + descriptionPaddingLeft + descriptionPaddingRight), ea) : "",
-            paddingTop: String(descriptionPaddingTop) + ea,
-            paddingLeft: String(descriptionPaddingLeft) + ea,
-            paddingRight: String(descriptionPaddingRight) + ea,
-            paddingBottom: String(descriptionPaddingBottom) + ea,
-            background: colorChip.white,
-            borderRadius: String(5) + "px",
-            marginTop: mobile ? String(blockInnerMargin) + ea : "",
-          },
-          children: [
-            {
-              attribute: {
-                value: barColor,
-              },
-              style: {
-                position: "absolute",
-                left: String(dateLeft) + ea,
-                top: String((desktop ? dateBottom : 4.2)) + ea,
-                width: String(colorBarWidth) + ea,
-                height: withOut(((desktop ? dateBottom : 4.4) * 2) + colorBarVisual, ea),
-                borderRadius: String(colorBarWidth) + ea,
-                background: barColor,
-              }
-            },
-            {
-              text: wordingTitle,
-              attribute: {
-                value: wordingTitle.replace(/[\"\=\&\+]/gi, ''),
-              },
-              style: {
-                position: "absolute",
-                left: String(wordingLeft) + ea,
-                top: String(wordingTop) + ea,
-                fontSize: String(wordingSize) + ea,
-                fontWeight: String(wordingWeight0),
-                color: colorChip.black,
-              }
-            },
-            {
-              style: {
-                position: "relative",
-                width: String(100) + '%',
-                height: String(100) + '%',
-                background: "transparent",
-              },
-              children: [
-                {
-                  text: wordingDescription,
-                  attribute: {
-                    value: wordingDescription.replace(/[\"\=\&\+]/gi, ''),
-                  },
-                  style: {
-                    fontSize: String(wordingSize) + ea,
-                    fontWeight: String(wordingWeight1),
-                    color: colorChip.black,
-                    lineHeight: String(descriptionLineHeight),
-                  }
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    });
-  }
-
-  //calendar
-  blockInsert = () => {
-    cleanChildren(bigCalendarContentsZone);
-
-    scheduleTargets = [];
-    for (let i = 0; i < children.length; i++) {
-      ({ date: { start: dateStart, end: dateEnd }, contents: { title: wordingTitle, description: wordingDescription, color: barColor } } = children[i]);
-      scheduleTargets.push({
-        start: new Date(JSON.stringify(dateStart).slice(1, -1)),
-        end: new Date(JSON.stringify(dateEnd).slice(1, -1)),
-        title: wordingTitle,
-        color: barColor,
-      });
-    }
-
-    for (let i = 0; i < weekWordings.length; i++) {
-      createNode({
-        mother: bigCalendarContentsZone,
-        style: {
-          display: "inline-flex",
-          alignItems: "center",
-          justifyContent: "center",
-          width: "calc(100% / " + String(weekWordings.length) + ")",
-          height: String(weekBlockHeight) + ea,
-          background: colorChip.gray1,
-          boxSizing: "border-box",
-          borderRight: i !== weekWordings.length - 1 ? "1px solid " + colorChip.gray3 : "",
-          borderBottom: "1px solid " + colorChip.gray3,
-        },
-        children: [
-          {
-            text: weekWordings[i],
-            style: {
-              fontSize: String(weekBlockSize) + ea,
-              fontWeight: String(weekBlockWeight),
-              color: i < 5 ? colorChip.black : colorChip.red,
-              position: "relative",
-              top: String(weekBlockTextTop) + ea,
-            }
-          }
-        ]
-      });
-    }
-
-    barMatrix = [];
-    dateBlocks = [];
-    for (let i = 0; i < dateMatrix.matrix.length; i++) {
-      for (let j = 0; j < dateMatrix.matrix[i].length; j++) {
-
-        tempArr = [];
-        for (let k = 0; k < scheduleTargets.length; k++) {
-          if (dateMatrix.matrix[i][j] === null) {
-            tempArr.push(calendarMethods[3]);
-          } else {
-            tempNumber = dateToNumber(new Date(dateMatrix.year, dateMatrix.month, dateMatrix.matrix[i][j].date));
-            if (dateToNumber(scheduleTargets[k].start) === tempNumber) {
-              if (dateToNumber(scheduleTargets[k].end) === tempNumber) {
-                tempArr.push(calendarMethods[4]);
-              } else {
-                tempArr.push(calendarMethods[0]);
-              }
-            } else if (dateToNumber(scheduleTargets[k].start) < tempNumber && tempNumber < dateToNumber(scheduleTargets[k].end)) {
-              tempArr.push(calendarMethods[2]);
-            } else if (dateToNumber(scheduleTargets[k].end) === tempNumber) {
-              tempArr.push(calendarMethods[1]);
-            } else {
-              tempArr.push(calendarMethods[3]);
-            }
-          }
-        }
-
-        block = createNode({
-          mother: bigCalendarContentsZone,
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: "calc(100% / " + String(dateMatrix.matrix[i].length) + ")",
-            paddingTop: String(dateBlockPaddingTop) + ea,
-            paddingBottom: String(dateBlockPaddingBottom) + ea,
-            background: dateMatrix.matrix[i][j] !== null ? colorChip.white : colorChip.gray0,
-            boxSizing: "border-box",
-            borderRight: j !== dateMatrix.matrix[i].length - 1 ? "1px solid " + colorChip.gray3 : "",
-            borderBottom: i !== dateMatrix.matrix.length - 1 ? "1px solid " + colorChip.gray3 : "",
-          },
-          children: [
-            {
-              text: dateMatrix.matrix[i][j] !== null ? String(dateMatrix.matrix[i][j].date) : "",
-              style: {
-                fontSize: String(weekBlockSize) + ea,
-                fontWeight: String(dateBlockWeight),
-                fontFamily: "graphik",
-                color: j < 5 ? colorChip.black : colorChip.red,
-                position: "absolute",
-                top: String(datePositionTop) + ea,
-                left: String(datePositionLeft) + ea,
-              }
-            }
-          ]
-        });
-        dateBlocks.push(block);
-
-        if (barMatrix.length > 0) {
-          for (let z = 0; z < barMatrix[barMatrix.length - 1].length; z++) {
-            for (let k = 0; k < barMatrix[barMatrix.length - 1].length; k++) {
-              if (tempArr[k] === calendarMethods[3] && (tempArr[k + 1] === calendarMethods[2] || tempArr[k + 1] === calendarMethods[1] || tempArr[k + 1] === calendarMethods[5])) {
-                if (barMatrix[barMatrix.length - 1][k] !== calendarMethods[3] && barMatrix[barMatrix.length - 1][k] !== calendarMethods[4]) {
-                  tempArr[k] = calendarMethods[5];
-                }
-              }
-            }
-          }
-        }
-        barMatrix.push(tempArr);
-
-      }
-    }
-
-    noneDeleteArr = (new Array(scheduleTargets.length)).fill(0, 0);
-    for (let arr of barMatrix) {
-      for (let i = 0; i < arr.length; i++) {
-        if (arr[i] !== calendarMethods[3]) {
-          noneDeleteArr[i] = noneDeleteArr[i] + 1;
-        }
-        arr[i] = arr[i] + "_" + scheduleTargets[i].color + "_" + scheduleTargets[i].title;
-      }
-    }
-
-    barMatrix_final = [];
-    for (let arr of barMatrix) {
-      for (let i = 0; i < arr.length; i++) {
-        arr[i] = arr[i] + "_" + String(noneDeleteArr[i]);
-      }
-      barMatrix_final.push(arr.filter((str) => { return Number(str.split("_")[str.split("_").length - 1]) !== 0 }));
-    }
-
-    for (let z = 0; z < (barMatrix_final.length / 7); z++) {
-      sevenArr = [];
-      for (let i = 0; i < 7; i++) {
-        sevenArr.push(barMatrix_final[(7 * z) + i]);
-      }
-
-      sevenArr = sevenArr.map((arr) => { return arr.reverse(); });
-      sevenLength = sevenArr[0].length;
-      sevenIndex = 0;
-      for (let i = 0; i < sevenLength; i++) {
-        if (sevenArr.every((arr) => { return (new RegExp("^" + calendarMethods[3], 'i')).test(arr[sevenIndex]) })) {
-          sevenArr = sevenArr.map((arr) => { arr.shift(); return arr; });
-        } else {
-          sevenIndex = sevenIndex + 1;
-        }
-      }
-
-      sevenArr = sevenArr.map((arr) => { return arr.reverse(); });
-      sevenLength = sevenArr[0].length;
-      sevenIndex = 0;
-      for (let i = 0; i < sevenLength; i++) {
-        if (sevenArr.every((arr) => { return (new RegExp("^" + calendarMethods[3] + '|' + calendarMethods[5], 'i')).test(arr[sevenIndex]) })) {
-          sevenArr = sevenArr.map((arr) => { arr.shift(); return arr; });
-        } else {
-          sevenIndex = sevenIndex + 1;
-        }
-      }
-    }
-
-    for (let i = 0; i < barMatrix_final.length; i++) {
-      for (let j = 0; j < barMatrix_final[i].length; j++) {
-        const [ method, color, title, deleteNum ] = barMatrix_final[i][j].split('_');
-        barMother = createNode({
-          mother: dateBlocks[i],
-          style: {
-            position: "relative",
-            display: "block",
-            height: String(barMotherHeight) + ea,
-            width: String(100) + '%',
-          }
-        });
-
-        if (method === "start") {
-          createNode({
-            mother: barMother,
-            attribute: { title, color, method },
-            event: {
-              mouseenter: function (e) {
-                e.stopPropagation();
-                createNode({
-                  mode: "aside",
-                  mother: this.parentElement,
-                  text: title,
-                  style: {
-                    position: "absolute",
-                    top: String(calendarTitleTop) + ea,
-                    width: String(100) + '%',
-                    textAlign: "center",
-                    zIndex: String(1),
-                  },
-                  children: [
-                    {
-                      text: title,
-                      style: {
-                        display: "inline-block",
-                        position: "relative",
-                        fontSize: String(calendarTitleSize) + ea,
-                        fontWeight: String(600),
-                        paddingTop: String(calendarTitlePaddingTop) + ea,
-                        paddingBottom: String(calendarTitlePaddingBottom) + ea,
-                        paddingLeft: String(calendarTitlePaddingLeft) + ea,
-                        paddingRight: String(calendarTitlePaddingRight) + ea,
-                        background: colorChip.white,
-                        borderRadius: String(5) + "px",
-                        boxShadow: "0px 3px 16px -9px " + colorChip.darkShadow,
-                        color,
-                        zIndex: String(1),
-                      }
-                    }
-                  ]
-                })
-              },
-              mouseleave: function (e) {
-                e.stopPropagation();
-                const targets = [ ...this.parentElement.querySelectorAll("aside") ];
-                for (let target of targets) {
-                  this.parentElement.removeChild(target);
-                }
-              },
-            },
-            style: {
-              position: "relative",
-              top: String(colorSqureTop) + ea,
-              height: String(colorSqureHeight) + ea,
-              width: String(100 - colorSqureIndent) + '%',
-              marginLeft: String(colorSqureIndent) + '%',
-              background: color,
-              borderTopLeftRadius: String(5) + "px",
-              borderBottomLeftRadius: String(5) + "px",
-              cursor: "pointer",
-            },
-            children: [
-              {
-                text: title,
-                style: {
-                  position: "absolute",
-                  top: String(colorSqureWordingTop) + ea,
-                  textAlign: "left",
-                  left: String(colorSqureWordingLeft) + ea,
-                  fontSize: String(colorSqureWordingSize) + ea,
-                  fontWeight: String(colorSqureWordingWeight),
-                  color: colorChip.white,
-                  width: String(200) + '%',
-                  zIndex: String(1),
-                }
-              }
-            ]
-          });
-        } else if (method === "end") {
-          createNode({
-            mother: barMother,
-            attribute: { title, color, method },
-            event: {
-              mouseenter: function (e) {
-                e.stopPropagation();
-                createNode({
-                  mode: "aside",
-                  mother: this.parentElement,
-                  text: title,
-                  style: {
-                    position: "absolute",
-                    top: String(calendarTitleTop) + ea,
-                    width: String(100) + '%',
-                    textAlign: "center",
-                    zIndex: String(1),
-                  },
-                  children: [
-                    {
-                      text: title,
-                      style: {
-                        display: "inline-block",
-                        position: "relative",
-                        fontSize: String(calendarTitleSize) + ea,
-                        fontWeight: String(600),
-                        paddingTop: String(calendarTitlePaddingTop) + ea,
-                        paddingBottom: String(calendarTitlePaddingBottom) + ea,
-                        paddingLeft: String(calendarTitlePaddingLeft) + ea,
-                        paddingRight: String(calendarTitlePaddingRight) + ea,
-                        background: colorChip.white,
-                        borderRadius: String(5) + "px",
-                        boxShadow: "0px 3px 16px -9px " + colorChip.darkShadow,
-                        color,
-                        zIndex: String(1),
-                      }
-                    }
-                  ]
-                })
-              },
-              mouseleave: function (e) {
-                e.stopPropagation();
-                const targets = [ ...this.parentElement.querySelectorAll("aside") ];
-                for (let target of targets) {
-                  this.parentElement.removeChild(target);
-                }
-              },
-            },
-            style: {
-              position: "relative",
-              top: String(colorSqureTop) + ea,
-              height: String(colorSqureHeight) + ea,
-              width: String(100 - colorSqureIndent) + '%',
-              left: String(0) + ea,
-              background: color,
-              borderTopRightRadius: String(5) + "px",
-              borderBottomRightRadius: String(5) + "px",
-              cursor: "pointer",
-            },
-            children: [
-              {
-                text: title,
-                style: {
-                  position: "absolute",
-                  top: String(colorSqureWordingTop) + ea,
-                  right: String(colorSqureWordingLeft) + ea,
-                  textAlign: "right",
-                  fontSize: String(colorSqureWordingSize) + ea,
-                  fontWeight: String(colorSqureWordingWeight),
-                  color: colorChip.white,
-                  width: String(200) + '%',
-                  zIndex: String(1),
-                }
-              }
-            ]
-          });
-        } else if (method === "middle") {
-          createNode({
-            mother: barMother,
-            attribute: { title, color, method },
-            event: {
-              mouseenter: function (e) {
-                e.stopPropagation();
-                createNode({
-                  mode: "aside",
-                  mother: this.parentElement,
-                  text: title,
-                  style: {
-                    position: "absolute",
-                    top: String(calendarTitleTop) + ea,
-                    width: String(100) + '%',
-                    textAlign: "center",
-                    zIndex: String(1),
-                  },
-                  children: [
-                    {
-                      text: title,
-                      style: {
-                        display: "inline-block",
-                        position: "relative",
-                        fontSize: String(calendarTitleSize) + ea,
-                        fontWeight: String(600),
-                        paddingTop: String(calendarTitlePaddingTop) + ea,
-                        paddingBottom: String(calendarTitlePaddingBottom) + ea,
-                        paddingLeft: String(calendarTitlePaddingLeft) + ea,
-                        paddingRight: String(calendarTitlePaddingRight) + ea,
-                        background: colorChip.white,
-                        borderRadius: String(5) + "px",
-                        boxShadow: "0px 3px 16px -9px " + colorChip.darkShadow,
-                        color,
-                        zIndex: String(1),
-                      }
-                    }
-                  ]
-                })
-              },
-              mouseleave: function (e) {
-                e.stopPropagation();
-                const targets = [ ...this.parentElement.querySelectorAll("aside") ];
-                for (let target of targets) {
-                  this.parentElement.removeChild(target);
-                }
-              },
-            },
-            style: {
-              position: "absolute",
-              top: String(colorSqureTop) + ea,
-              height: String(colorSqureHeight) + ea,
-              width: "calc(100% + " + String(1 * 2) + "px" + ")",
-              left: String(-1) + "px",
-              background: color,
-              cursor: "pointer",
-            }
-          });
-        } else if (method === "startend") {
-          createNode({
-            mother: barMother,
-            attribute: { title, color, method },
-            event: {
-              mouseenter: function (e) {
-                e.stopPropagation();
-                createNode({
-                  mode: "aside",
-                  mother: this.parentElement,
-                  text: title,
-                  style: {
-                    position: "absolute",
-                    top: String(calendarTitleTop) + ea,
-                    width: String(100) + '%',
-                    textAlign: "center",
-                    zIndex: String(1),
-                  },
-                  children: [
-                    {
-                      text: title,
-                      style: {
-                        display: "inline-block",
-                        position: "relative",
-                        fontSize: String(calendarTitleSize) + ea,
-                        fontWeight: String(600),
-                        paddingTop: String(calendarTitlePaddingTop) + ea,
-                        paddingBottom: String(calendarTitlePaddingBottom) + ea,
-                        paddingLeft: String(calendarTitlePaddingLeft) + ea,
-                        paddingRight: String(calendarTitlePaddingRight) + ea,
-                        background: colorChip.white,
-                        borderRadius: String(5) + "px",
-                        boxShadow: "0px 3px 16px -9px " + colorChip.darkShadow,
-                        color,
-                        zIndex: String(1),
-                      }
-                    }
-                  ]
-                })
-              },
-              mouseleave: function (e) {
-                e.stopPropagation();
-                const targets = [ ...this.parentElement.querySelectorAll("aside") ];
-                for (let target of targets) {
-                  this.parentElement.removeChild(target);
-                }
-              },
-            },
-            style: {
-              position: "absolute",
-              top: String(colorSqureTop) + ea,
-              height: String(colorSqureHeight) + ea,
-              width: String(100 - (colorSqureIndent * 2)) + '%',
-              left: String(colorSqureIndent) + '%',
-              background: color,
-              borderRadius: String(5) + "px",
-              cursor: "pointer",
-            }
-          });
-        }
-      }
-    }
-
-  }
-
-  dateMatrix = getDateMatrix(today);
-  bigCalendar = createNode({
-    mother: dateTong,
-    style: {
-      display: "block",
-      position: "relative",
-      paddingLeft: String(calendarVisualLeft) + ea,
-      paddingRight: String(calendarVisualLeft) + ea,
-      marginTop: String(bigCalendarMarginTop) + ea,
-    }
-  });
-  bigCalendarTitleZone = createNode({
-    mother: bigCalendar,
-    style: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      position: "relative",
-      marginBottom: String(bigCalendarTitleBottom) + ea,
-    },
-    children: [
-      {
-        text: dateToString(today).split('-').slice(0, 2).join(". "),
-        style: {
-          fontSize: String(bigCalendarTitleSize) + ea,
-          fontWeight: String(bigCalendarTitleWeight),
-          fontFamily: "graphik",
-          color: colorChip.black,
-        }
-      },
-      {
-        mode: "svg",
-        class: [ "hoverDefault_lite" ],
-        source: this.mother.returnArrow("left", colorChip.green),
-        event: {
-          click: function (e) {
-            dateMatrix = dateMatrix.previousMatrix();
-            this.parentElement.firstChild.textContent = String(dateMatrix.year) + ". " + String(dateMatrix.month + 1)
-            blockInsert();
-          }
-        },
-        style: {
-          position: "absolute",
-          top: String(arrowTop) + ea,
-          left: String(0) + ea,
-          width: String(arrowWidth) + ea,
-        }
-      },
-      {
-        mode: "svg",
-        class: [ "hoverDefault_lite" ],
-        source: this.mother.returnArrow("right", colorChip.green),
-        event: {
-          click: function (e) {
-            dateMatrix = dateMatrix.nextMatrix();
-            this.parentElement.firstChild.textContent = String(dateMatrix.year) + ". " + String(dateMatrix.month + 1)
-            blockInsert();
-          }
-        },
-        style: {
-          position: "absolute",
-          top: String(arrowTop) + ea,
-          right: String(0) + ea,
-          width: String(arrowWidth) + ea,
-        }
-      },
-    ]
-  });
-  bigCalendarContentsZone = createNode({
-    mother: bigCalendar,
-    style: {
-      display: "block",
-      position: "relative",
-      border: "1px solid " + colorChip.gray3,
-      borderRadius: String(5) + "px",
-      width: String(100) + '%',
-      overflow: "hidden",
-      boxSizing: "border-box",
-    },
-  });
-  blockInsert();
 
 }
 
@@ -1887,7 +1350,7 @@ PurchaseListJs.prototype.launching = async function (loading) {
       local: async () => {
         try {
           instance.insertInitBox();
-          instance.insertScheduleBox(1);
+          instance.insertPurchaseBox(1);
           instance.insertChecklistBox(2);
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "PurchaseListJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
