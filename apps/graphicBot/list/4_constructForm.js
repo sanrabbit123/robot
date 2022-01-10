@@ -98,13 +98,13 @@ module.exports = function (proid, info) {
           dateBoo = false;
           firstDateId = '';
 
-          document.querySelector('form').children[0].children[2].children[4].click();
+          await clickElement(document.querySelector('form').children[0].children[2].children[4]);
           await sleep(3000);
-          document.querySelectorAll("button")[1].click();
+          await clickElement(document.querySelectorAll("button")[1]);
           await sleep(3000);
-          document.querySelectorAll('.MuiButtonGroup-root')[contractOrder].querySelector("button").click();
+          await clickElement(document.querySelectorAll('.MuiButtonGroup-root')[contractOrder].querySelector("button"));
           await sleep(3000);
-          document.querySelectorAll('.MuiButton-label')[document.querySelectorAll('.MuiButton-label').length - 1].click();
+          await clickElement(document.querySelectorAll('.MuiButton-label')[document.querySelectorAll('.MuiButton-label').length - 1]);
           await sleep(1000);
 
           if (dateBoo) {
