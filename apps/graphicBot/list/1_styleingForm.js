@@ -6,11 +6,6 @@ module.exports = function (proid, info) {
         const { requestNumber, client, project, designer, contractName, contractAddress } = equalJson(JSON.stringify(POSTCONST));
         const { request, analytics } = client.requests[requestNumber];
         const today = new Date();
-        const idId = "sign-in-id";
-        const passwordId = "sign-in-pw";
-        const menuId = "btnMenuMyForms";
-        const buttonQuery = ".sc-hZpJuv";
-        const popupQuery = ".sc-jWUzTF";
         let map, sendMap;
         let tempArr;
         let data, raw;
@@ -103,27 +98,14 @@ module.exports = function (proid, info) {
             }
           }
 
-          document.querySelector('.jss367').nextElementSibling.click();
-
-          while (document.getElementById(menuId) === null) {
-            await sleep(500);
-          }
-          document.getElementById(menuId).click();
-
-          while (document.querySelector(buttonQuery) === null) {
-            await sleep(500);
-          }
-          let buttons;
-          buttons = document.querySelectorAll(buttonQuery);
-          await sleep(1000);
-          await clickElement(buttons[contractOrder]);
-
-          while (document.querySelector(popupQuery) === null) {
-            await sleep(500);
-          }
-          document.querySelector(popupQuery).querySelector("button").click();
-
-          await sleep(3000);
+          document.querySelector('form').children[0].children[2].children[4].click();
+          await sleep(500);
+          document.querySelectorAll("button")[1].click();
+          await sleep(500);
+          document.querySelectorAll('.MuiButtonGroup-root')[contractOrder].querySelector("button").click();
+          await sleep(500);
+          document.querySelectorAll('.MuiButton-label')[document.querySelectorAll('.MuiButton-label').length - 1].click();
+          await sleep(500);
 
           if (dateBoo) {
             scrollTo(document.getElementById("canvasBox"), document.getElementById(firstDateId), document.getElementById("header").getBoundingClientRect().height * 3);
