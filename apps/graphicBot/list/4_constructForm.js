@@ -99,13 +99,19 @@ module.exports = function (proid, info) {
           firstDateId = '';
 
           document.querySelector('form').children[0].children[2].children[4].click();
-          await sleep(500);
+          while (document.querySelectorAll("button").length <= 1) {
+            await sleep(500);
+          }
           document.querySelectorAll("button")[1].click();
-          await sleep(500);
+          while (document.querySelectorAll(".MuiButtonGroup-root").length <= 3) {
+            await sleep(500);
+          }
           document.querySelectorAll('.MuiButtonGroup-root')[contractOrder].querySelector("button").click();
-          await sleep(500);
+          while (document.querySelectorAll(".MuiButton-label").length <= 3) {
+            await sleep(500);
+          }
           document.querySelectorAll('.MuiButton-label')[document.querySelectorAll('.MuiButton-label').length - 1].click();
-          await sleep(500);
+          await sleep(1000);
 
           if (dateBoo) {
             scrollTo(document.querySelectorAll('header')[document.querySelectorAll('header').length - 1].nextElementSibling.lastChild.children[1].firstChild.firstChild, document.getElementById(firstDateId), document.querySelectorAll('header')[document.querySelectorAll('header').length - 1].getBoundingClientRect().height * 3);
