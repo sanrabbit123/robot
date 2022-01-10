@@ -447,7 +447,6 @@ ReceiptRouter.prototype.rou_post_createConstructContract = function () {
           let widsignRes, token, target, targetFormId, safeNum;
           let titleName, titleAddress, formTitle;
           let request, analytics;
-          let tempArr;
           let map;
           let data;
 
