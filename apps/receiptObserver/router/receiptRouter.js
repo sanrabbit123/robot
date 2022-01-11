@@ -584,9 +584,16 @@ ReceiptRouter.prototype.rou_post_createConstructContract = function () {
                 } ], { selfMongo: instance.mongolocal });
 
                 await kakao.sendTalk("constructForm", client.name, client.phone, { client: client.name });
-                messageSend({ text: client.name + " 시공 계약서를 작성하고 알림톡을 전송했어요!", channel: "#400_customer", voice: true }).catch((err) => {
+                messageSend({ text: client.name + " 시공 계약서를 작성하고 알림톡을 전송했어요!", channel: "#400_customer", voice: true }).then(() => {
+                  return requestSystem("https://" + instance.address.backinfo.host + ":3000/constructInteraction", {
+                    mode: "chargeGuide",
+                    proid: project.proid,
+                    method: "first",
+                  }, { headers: { "Content-Type": "application/json", "origin": instance.address.pythoninfo.host } });
+                }).catch((err) => {
                   console.log(err);
                 });
+
 
                 res.send(JSON.stringify({ message: "OK" }));
               }
