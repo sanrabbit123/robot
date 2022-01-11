@@ -572,7 +572,7 @@ ReceiptRouter.prototype.rou_post_createConstructContract = function () {
                   ],
                   items: map
                 }
-
+                errorLog(JSON.stringify(data, null, 2)).catch((e) => { console.log(e); });
                 widsignRes = await requestSystem(endPoint + "/v2/form/send", data, { headers: { "x-api-key": key, "x-access-token": token, "Content-Type": "application/json" } });
 
                 await bill.createBill("constructForm", [ {
