@@ -848,7 +848,7 @@ PurchaseListJs.prototype.insertPurchaseBox = async function (indexNumber) {
     let mobileTitleLeft, mobileTitleTop;
     let tong;
     let whiteBottomMargin;
-    let dateTong;
+    let totalTong;
     let paddingLeft;
     let paddingBottom;
     let lineHeight;
@@ -859,6 +859,12 @@ PurchaseListJs.prototype.insertPurchaseBox = async function (indexNumber) {
     let imageObject;
     let imageTong;
     let imageId;
+    let middleTong;
+    let middleFontSize;
+    let totalTongPaddingTop;
+    let listTable;
+    let listTableMarginTop;
+    let listTabelMarginBottom;
 
     bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
     margin = <%% 52, 52, 44, 36, 4.7 %%>;
@@ -869,6 +875,7 @@ PurchaseListJs.prototype.insertPurchaseBox = async function (indexNumber) {
     whiteBottomMargin = <%% 58, 56, 52, 42, 0 %%>;
 
     titleFontSize = <%% 21, 21, 21, 19, 4.3 %%>;
+    middleFontSize = <%% 18, 18, 18, 16, 3.8 %%>;
     numberRight = <%% 12, 12, 12, 12, 3 %%>;
 
     titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
@@ -880,6 +887,11 @@ PurchaseListJs.prototype.insertPurchaseBox = async function (indexNumber) {
     mobileTitleTop = -8.7;
 
     lineHeight = 1.7;
+
+    totalTongPaddingTop = 20;
+
+    listTableMarginTop = 10;
+    listTabelMarginBottom = 36;
 
     this.whiteMargin = (desktop ? margin : 0);
 
@@ -911,16 +923,10 @@ PurchaseListJs.prototype.insertPurchaseBox = async function (indexNumber) {
       }
       return imageParsing(imageTong);
     })().then((imageTong) => {
-      
       console.log(imageTong);
-
     }).catch((err) => {
       console.log(err);
     });
-
-    console.log(targets);
-
-
 
     whiteBlock = createNode({
       mother: baseTong,
@@ -966,7 +972,7 @@ PurchaseListJs.prototype.insertPurchaseBox = async function (indexNumber) {
           },
           children: [
             {
-              text: "일정표",
+              text: "구매 리스트",
               style: {
                 position: "relative",
                 display: "inline-block",
@@ -1014,16 +1020,79 @@ PurchaseListJs.prototype.insertPurchaseBox = async function (indexNumber) {
     });
     tong = block.lastChild;
 
-    dateTong = createNode({
+    totalTong = createNode({
       mother: tong,
       style: {
         display: "block",
         position: "relative",
         width: String(100) + '%',
+        paddingTop: String(totalTongPaddingTop) + ea,
       }
     });
 
 
+
+
+
+
+
+
+
+
+
+
+    for (let { title, children } of targets) {
+
+      listTable = createNode({
+        mother: totalTong,
+        style: {
+          display: "block",
+          position: "relative",
+          width: String(100) + '%',
+        },
+        children: [
+          {
+            style: {
+              position: "absolute",
+              width: String(100) + '%',
+              height: String(11) + ea,
+              top: String(0),
+              left: String(0),
+              borderBottom: "1px dashed " + colorChip.gray3,
+            }
+          },
+          {
+            text: title,
+            style: {
+              position: "relative",
+              display: "inline-block",
+              top: String(titleTopNumber) + ea,
+              fontSize: String(middleFontSize) + ea,
+              fontWeight: String(600),
+              paddingRight: String(numberRight) + ea,
+              background: colorChip.white,
+              color: colorChip.black,
+            }
+          },
+          {
+            style: {
+              display: "block",
+              border: "1px solid " + colorChip.gray3,
+              boxSizing: "border-box",
+              width: String(100) + '%',
+              height: String(100) + ea,
+              marginTop: String(listTableMarginTop) + ea,
+              marginBottom: String(listTabelMarginBottom) + ea,
+              borderRadius: String(5) + "px",
+              overflow: "hidden",
+            }
+          }
+        ]
+      }).lastChild;
+
+      console.log(children);
+
+    }
 
 
   } catch (e) {

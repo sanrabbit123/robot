@@ -162,6 +162,8 @@ DataRouter.prototype.rou_get_First = function () {
           if (32 <= Number(ip.split('.')[1]) && 63 >= Number(ip.split('.')[1])) {
             pass = true;
           }
+        } else if ([ 5822475162 ].includes(Number(ip.trim().replace(/[^0-9]/g, '')))) {
+          pass = true;
         } else {
           pass = false;
         }
