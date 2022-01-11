@@ -469,6 +469,7 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
     "blank"
   ];
   const dateToNumber = (date) => { return (date.getFullYear() * 100000) + ((date.getMonth() + 1) * 100) + date.getDate() }
+  const zeroAddition = (num) => { return num < 10 ? `0${String(num)}` : String(num) }
   const { schedule } = this.projectHistory;
   const today = new Date();
   let paddingTop;
@@ -1403,7 +1404,7 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
 
   }
 
-  dateMatrix = getDateMatrix(today);
+  dateMatrix = getDateMatrix(project.process.contract.form.date.from);
   bigCalendar = createNode({
     mother: dateTong,
     style: {
@@ -1425,7 +1426,7 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
     },
     children: [
       {
-        text: dateToString(today).split('-').slice(0, 2).join(". "),
+        text: dateToString(project.process.contract.form.date.from).split('-').slice(0, 2).join(". "),
         style: {
           fontSize: String(bigCalendarTitleSize) + ea,
           fontWeight: String(bigCalendarTitleWeight),
@@ -1440,7 +1441,7 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
         event: {
           click: function (e) {
             dateMatrix = dateMatrix.previousMatrix();
-            this.parentElement.firstChild.textContent = String(dateMatrix.year) + ". " + String(dateMatrix.month + 1)
+            this.parentElement.firstChild.textContent = String(dateMatrix.year) + ". " + zeroAddition(dateMatrix.month + 1)
             blockInsert();
           }
         },
@@ -1458,7 +1459,7 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
         event: {
           click: function (e) {
             dateMatrix = dateMatrix.nextMatrix();
-            this.parentElement.firstChild.textContent = String(dateMatrix.year) + ". " + String(dateMatrix.month + 1)
+            this.parentElement.firstChild.textContent = String(dateMatrix.year) + ". " + zeroAddition(dateMatrix.month + 1)
             blockInsert();
           }
         },

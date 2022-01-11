@@ -869,6 +869,72 @@ KakaoTalk.prototype.templateTong = function (target) {
         ];
       },
     },
+    designerSchedule: {
+      name: "디자이너 상세 일정 기입",
+      id: "TH_1452",
+      needs: [
+        "designer",
+        "client",
+        "date",
+        "host",
+        "path",
+        "desid",
+        "mode",
+        "cliid",
+      ],
+      convert: function (obj) {
+        return [
+          { from: "designer", to: obj.designer },
+          { from: "client", to: obj.client },
+          { from: "date", to: obj.date },
+          { from: "host", to: obj.host },
+          { from: "path", to: obj.path },
+          { from: "desid", to: obj.desid },
+          { from: "mode", to: obj.mode },
+          { from: "cliid", to: obj.cliid },
+        ];
+      },
+    },
+    clientSchedule: {
+      name: "고객 상세 일정 전송",
+      id: "TH_1450",
+      needs: [
+        "client",
+        "date",
+        "host",
+        "path",
+        "proid",
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "date", to: obj.date },
+          { from: "host", to: obj.host },
+          { from: "path", to: obj.path },
+          { from: "proid", to: obj.proid },
+        ];
+      },
+    },
+    clientScheduleNow: {
+      name: "고객 상세 일정 전송 당일",
+      id: "TH_1451",
+      needs: [
+        "client",
+        "date",
+        "host",
+        "path",
+        "proid",
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "date", to: obj.date },
+          { from: "host", to: obj.host },
+          { from: "path", to: obj.path },
+          { from: "proid", to: obj.proid },
+        ];
+      },
+    },
   };
   if (target === "$all") {
     return tong;

@@ -839,6 +839,7 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
   const today = new Date();
   const totalStatic = this.scheduleReturnStatic(designer, project, client, clientHistory, projectHistory, requestNumber);
   const dateToNumber = (date) => { return (date.getFullYear() * 100000) + ((date.getMonth() + 1) * 100) + date.getDate() }
+  const zeroAddition = (num) => { return num < 10 ? `0${String(num)}` : String(num) }
   const calendarMethods = [
     "start",
     "end",
@@ -931,6 +932,12 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
     let calendarTitlePaddingTop, calendarTitlePaddingBottom, calendarTitlePaddingLeft, calendarTitlePaddingRight;
     let sevenArr, sevenLength, sevenIndex;
     let colorSqureWordingSize, colorSqureWordingTop, colorSqureWordingLeft, colorSqureWordingWeight;
+    let greenButtonPaddingTop, greenButtonPaddingBottom;
+    let greenButtonPaddingLeft;
+    let greenButtonMargin;
+    let greenButtonSize;
+    let greenButtonBaseTop;
+    let greenButtonBaseWidth;
 
     topMargin = <%% 42, 38, 32, 30, 5.8 %%>;
     leftMargin = <%% 50, 46, 38, 32, 5.8 %%>;
@@ -1031,6 +1038,14 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
     calendarTitlePaddingLeft = <%% 12, 12, 12, 12, 1.2 %%>;
     calendarTitlePaddingRight = <%% 12, 12, 12, 12, 1.2 %%>;
 
+    greenButtonPaddingTop = <%% (isMac() ? 6 : 7), (isMac() ? 6 : 7), (isMac() ? 6 : 7), (isMac() ? 6 : 7), 2 %%>;
+    greenButtonPaddingBottom = <%% (isMac() ? 8 : 7), (isMac() ? 8 : 7), (isMac() ? 8 : 7), (isMac() ? 8 : 7), 2 %%>;
+    greenButtonPaddingLeft = <%% 13, 13, 13, 13, 13 %%>;
+    greenButtonMargin = <%% 4, 4, 4, 4, 4 %%>;
+    greenButtonSize = <%% 13, 13, 13, 13, 13 %%>;
+    greenButtonBaseTop = <%% 8, 8, 8, 8, 8 %%>;
+    greenButtonBaseWidth = <%% 270, 270, 270, 270, 60 %%>;
+
     blockInsert = () => {}
     bigCalendarContentsZone = {};
 
@@ -1065,6 +1080,8 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
       pastOrder = order;
       periodArr.push(period);
     });
+    this.samples = scheduleTasks.map((obj) => { return obj.contents; });
+
     if (projectHistory.schedule.children.length < scheduleTasks.length / 2) {
       projectHistory.schedule.children = scheduleTasks;
       await this.scheduleChildrenUpdate(proid, scheduleTasks);
@@ -1682,7 +1699,7 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
                 const thisValue = this.getAttribute("value");
                 const self = this;
                 let calendarBase, calendarCancelBack;
-                let greenInput;
+                let greenBase;
 
                 self.parentElement.parentElement.setAttribute("draggable", "false");
 
@@ -1708,42 +1725,56 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
                   }
                 });
 
-                greenInput = createNode({
+                greenBase = createNode({
                   mother: self.parentElement,
-                  mode: "input",
-                  attribute: {
-                    type: "text",
-                  },
-                  event: {
-                    keypress: function (e) {
-                      if (e.key === "Enter") {
-                        this.value = this.value.trim().replace(/[\"\=\&\+]/gi, '');
-                        self.textContent = this.value;
-                        self.setAttribute("value", this.value);
-                        instance.scheduleChildrenParse().catch((err) => { console.log(err); });
-                        self.parentElement.parentElement.setAttribute("draggable", "true");
-                        self.parentElement.removeChild(self.parentElement.lastChild);
-                        self.parentElement.removeChild(self.parentElement.lastChild);
-                      }
-                    }
-                  },
                   style: {
                     position: "absolute",
                     left: String(wordingLeft) + ea,
-                    top: String(wordingTop) + ea,
-                    fontSize: String(wordingSize) + ea,
-                    fontWeight: String(wordingWeight0),
-                    width: withOut(wordingLeft, ea),
-                    outline: String(0),
-                    border: String(0),
+                    top: String(wordingTop + wordingSize + greenButtonBaseTop) + ea,
+                    width: String(greenButtonBaseWidth) + ea,
                     zIndex: String(1),
-                    color: colorChip.green,
-                    background: colorChip.white,
                   }
                 });
 
-                greenInput.value = thisValue;
-                greenInput.focus();
+                for (let { title, description } of instance.samples) {
+                  createNode({
+                    mother: greenBase,
+                    text: title,
+                    attribute: { title, description },
+                    event: {
+                      click: function (e) {
+                        const title = this.getAttribute("title");
+                        const description = this.getAttribute("description");
+                        self.textContent = title;
+                        self.nextElementSibling.firstChild.textContent = description;
+                        self.setAttribute("value", title);
+                        self.nextElementSibling.firstChild.setAttribute("value", description);
+                        instance.scheduleChildrenParse().catch((err) => { console.log(err); });
+                        self.parentElement.parentElement.parentElement.setAttribute("draggable", "true");
+                        self.parentElement.removeChild(self.parentElement.lastChild);
+                        self.parentElement.removeChild(self.parentElement.lastChild);
+                      }
+                    },
+                    style: {
+                      display: "inline-block",
+                      paddingTop: String(greenButtonPaddingTop) + ea,
+                      paddingBottom: String(greenButtonPaddingBottom) + ea,
+                      paddingLeft: String(greenButtonPaddingLeft) + ea,
+                      paddingRight: String(greenButtonPaddingLeft) + ea,
+                      marginRight: String(greenButtonMargin) + ea,
+                      marginBottom: String(greenButtonMargin) + ea,
+                      fontSize: String(greenButtonSize) + ea,
+                      fontWeight: String(wordingWeight0),
+                      color: colorChip.white,
+                      background: colorChip.gradientGreen3,
+                      borderRadius: String(5) + "px",
+                      animation: "fadeuphard 0.3s ease forwards",
+                      cursor: "pointer",
+                      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                    }
+                  });
+                }
+
               }
             },
             class: [ classNames.title ],
@@ -1754,6 +1785,7 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
               fontSize: String(wordingSize) + ea,
               fontWeight: String(wordingWeight0),
               color: colorChip.black,
+              cursor: "pointer",
             }
           },
           {
@@ -2501,7 +2533,7 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
 
       }
 
-      dateMatrix = getDateMatrix(today);
+      dateMatrix = getDateMatrix(project.process.contract.form.date.from);
       bigCalendar = createNode({
         mother: contentsArea,
         style: {
@@ -2522,7 +2554,7 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
         },
         children: [
           {
-            text: dateToString(today).split('-').slice(0, 2).join(". "),
+            text: dateToString(project.process.contract.form.date.from).split('-').slice(0, 2).join(". "),
             style: {
               fontSize: String(bigCalendarTitleSize) + ea,
               fontWeight: String(bigCalendarTitleWeight),
@@ -2537,7 +2569,7 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
             event: {
               click: function (e) {
                 dateMatrix = dateMatrix.previousMatrix();
-                this.parentElement.firstChild.textContent = String(dateMatrix.year) + ". " + String(dateMatrix.month + 1)
+                this.parentElement.firstChild.textContent = String(dateMatrix.year) + ". " + zeroAddition(dateMatrix.month + 1)
                 blockInsert();
               }
             },
@@ -2555,7 +2587,7 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
             event: {
               click: function (e) {
                 dateMatrix = dateMatrix.nextMatrix();
-                this.parentElement.firstChild.textContent = String(dateMatrix.year) + ". " + String(dateMatrix.month + 1)
+                this.parentElement.firstChild.textContent = String(dateMatrix.year) + ". " + zeroAddition(dateMatrix.month + 1)
                 blockInsert();
               }
             },
@@ -3004,7 +3036,7 @@ DesignerJs.prototype.scheduleIconSet = function (desid) {
         instance.mother.greenAlert("알림톡 전송을 취소하였습니다.");
       }
     } else {
-      if (window.confirm(designer.designer + " 디자이너님에게 " + instance.client.name + " 고객님 홈스타일링 의뢰서 알림톡을 전송합니다. 확실합니까?")) {
+      if (window.confirm(designer.designer + " 디자이너님에게 " + instance.client.name + " 고객님 상세 일정 안내 작성 알림톡을 전송합니다. 확실합니까?")) {
         GeneralJs.ajaxJson({
           method: "designerConsoleRequest",
           name: designer.designer,
