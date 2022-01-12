@@ -6862,308 +6862,240 @@ ProjectJs.prototype.returnValueEventMaker = function () {
 
 ProjectJs.prototype.reportScrollBox = function (data, motherWidth) {
   const instance = this;
-  const report = JSON.parse(data);
-
-  let div_clone, div_clone2;
+  const { createNode, colorChip, withOut, blankHref, isMac } = GeneralJs;
+  const ea = "px";
+  const wordings = [ "홈퍼니싱", "홈스타일링", "토탈 스타일링", "엑스트라 스타일링" ];
+  const blank = "&nbsp;&nbsp;&nbsp;"
+  let div_clone;
   let style;
-  let ea = "px";
   let entireMargin;
   let margin;
-  let scrollBox, boxTop, boxWidth, boxHeight, boxNumber;
-  let titleBox, titleTop;
-  let matrixWidth, matrixBoxMargin;
-  let grayBar;
-  let boxTitles;
-  let contentsBox;
-  let contentsBoxMargin;
-  let summaryBox, summaryBoxArr;
-  let contentsBoxDetail;
-  let contentsBoxDetailMargin;
-  let contentsBoxDetailProid, contentsBoxDetailName, contentsBoxDetailBar, contentsBoxDetailDate, contentsBoxDetailAmount;
-  let contentsBoxDetailProidStyle, contentsBoxDetailNameStyle, contentsBoxDetailBarStyle, contentsBoxDetailDateStyle, contentsBoxDetailAmountStyle;
-  let contentsBoxDetailFontSize, contentsBoxDetailContentsMargin;
-  let people, money;
-  let widthDomTargets, widthDomTargetsObj, widthDomTargetsObjDetail;
-
-  boxTitles = [
-    { title: "디자인비 대기", date: false, },
-    { title: "디자인비 입금", date: true, },
-    { title: "디자인비 환불", date: true, },
-    { title: "정산 대기", date: false, },
-    { title: "정산 내역", date: true, },
-    { title: "정산 환수", date: true, },
-  ];
+  let scrollBox, boxTop, boxNumber;
+  let titleTop;
+  let innerMargin;
+  let summaryHeight;
+  let factorSummaryHeight;
+  let boxInnerMargin;
+  let boxTitleTop;
+  let blockBoxTop;
+  let blockTong, summaryTong;
+  let blockGrayTong, summaryWhiteTong;
+  let totalSummaryTong;
+  let whiteBlock;
+  let whiteInnerMargin;
+  let whiteInnerPaddingTop;
+  let whiteInnerPaddingBottom;
+  let whiteInnerPaddingLeft;
+  let whiteInnerSize, whiteInnerWeight;
+  let whiteInnerSize2, whiteInnerWeight2;
+  let whiteWordsBetween;
+  let whiteSumTop, whiteSumSize, whiteSumWeight;
 
   margin = 12;
-  boxNumber = 3;
-  boxHeight = "calc(50% - " + String(margin * 1.6) + ea + ")";
-  boxWidth = (motherWidth - (margin * (boxNumber + 1 + 4))) / boxNumber;
+  entireMargin = margin * 3;
   boxTop = 90;
+  innerMargin = 8;
+  summaryHeight = 100;
+  boxNumber = 4;
+  factorSummaryHeight = 75;
+  boxInnerMargin = 20;
+  boxTitleTop = 16;
+  blockBoxTop = 45;
+  whiteInnerMargin = 5;
+  whiteInnerPaddingTop = isMac() ? 5 : 6;
+  whiteInnerPaddingBottom = isMac() ? 7 : 6;
+  whiteInnerPaddingLeft = 12;
+  whiteInnerSize = 13;
+  whiteInnerWeight = 600;
+  whiteInnerSize2 = 8;
+  whiteInnerWeight2 = 400;
+  whiteWordsBetween = 4;
+  whiteSumTop = 17;
+  whiteSumSize = 24;
+  whiteSumWeight = 200;
 
   //entire scroll box
   scrollBox = GeneralJs.nodes.div.cloneNode(true);
   scrollBox.classList.add("noScrollBar");
-  entireMargin = margin * 3;
   style = {
     position: "relative",
     top: String(boxTop) + ea,
-    paddingLeft: String(entireMargin) + ea,
-    paddingBottom: String(margin) + ea,
-    width: String(motherWidth - entireMargin) + ea,
-    height: "calc(100% - " + String(boxTop + margin) + ea + ")",
+    marginLeft: String(entireMargin) + ea,
+    width: withOut(entireMargin * 2, ea),
+    height: withOut(boxTop + entireMargin, ea),
     overflow: "scroll",
   };
   for (let z in style) {
     scrollBox.style[z] = style[z];
   }
 
-  widthDomTargets = [];
-  summaryBoxArr = [];
-  for (let i = 0; i < boxTitles.length; i++) {
-
-    widthDomTargetsObj = {};
-    widthDomTargetsObj.boxNum = i;
-
-    //numbers
-    titleTop = 18;
-    titleFontSize = 17;
-    contentsBoxMargin = 17;
-    contentsBoxDetailMargin = 10;
-    matrixBoxMargin = 23;
-    matrixWidth = boxWidth - (matrixBoxMargin * 2) - 3;
-    contentsBoxDetailFontSize = 14;
-    contentsBoxDetailContentsMargin = 13;
-
-    //gray card
-    div_clone = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      display: "inline-block",
-      position: "relative",
-      width: String(boxWidth) + ea,
-      height: boxHeight,
-      overflow: "scroll",
-      marginRight: String(margin) + ea,
-      marginBottom: String(margin) + ea,
-      fontSize: String(15) + ea,
-      background: GeneralJs.colorChip.gray0,
-      borderRadius: String(5) + ea,
-    };
-    for (let z in style) {
-      div_clone.style[z] = style[z];
-    }
-
-    //title gray bar
-    grayBar = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "absolute",
-      width: String(matrixWidth) + ea,
-      right: String(matrixBoxMargin + 1) + ea,
-      top: String(titleTop + 11) + ea,
-      height: String(0),
-      borderTop: "1px solid " + GeneralJs.colorChip.gray3,
-    };
-    for (let z in style) {
-      grayBar.style[z] = style[z];
-    }
-    div_clone.appendChild(grayBar);
-
-    //title
-    titleBox = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "absolute",
-      paddingRight: String(12) + ea,
-      fontSize: String(titleFontSize) + ea,
-      left: String(matrixBoxMargin + 1) + ea,
-      top: String(titleTop + (GeneralJs.isMac() ? 0 : 3)) + ea,
-      fontWeight: String(600),
-      background: GeneralJs.colorChip.gray0,
-    };
-    for (let z in style) {
-      titleBox.style[z] = style[z];
-    }
-    titleBox.textContent = boxTitles[i].title;
-    div_clone.appendChild(titleBox);
-
-    //contents box
-    contentsBox = GeneralJs.nodes.div.cloneNode(true);
-    contentsBox.classList.add("noScrollBar");
-    style = {
-      position: "absolute",
-      left: String(matrixBoxMargin + 1) + ea,
-      top: String(titleTop + titleFontSize + contentsBoxMargin) + ea,
-      width: String(matrixWidth) + ea,
-      paddingTop: String(contentsBoxDetailMargin) + ea,
-      height: "calc(100% - " + String(((titleTop + titleFontSize + contentsBoxMargin) * 2) + 11 + contentsBoxDetailMargin) + ea + ")",
-      border: "1px solid " + GeneralJs.colorChip.gray3,
-      borderRadius: String(5) + ea,
-      overflow: "scroll",
-    };
-    for (let z in style) {
-      contentsBox.style[z] = style[z];
-    }
-
-    people = 0;
-    money = 0;
-    widthDomTargetsObj.items = [];
-    for (let { proid, name, date, amount } of report.projects[i]) {
-      widthDomTargetsObjDetail = { proid: null, name: null, bar: null, date: null, amount: null };
-      contentsBoxDetail = GeneralJs.nodes.div.cloneNode(true);
-      contentsBoxDetail.classList.add("hoverDefault_lite");
-      style = {
+  blockTong = [];
+  summaryTong = [];
+  for (let i = 0; i < boxNumber; i++) {
+    blockGrayTong = createNode({
+      mother: scrollBox,
+      style: {
+        display: "inline-block",
         position: "relative",
-        background: GeneralJs.colorChip.white,
-        width: "calc(100% - " + String(contentsBoxDetailMargin * 2) + ea + ")",
-        height: String(contentsBoxDetailMargin * 3.5) + ea,
-        borderRadius: String(5) + ea,
-        marginBottom: String(contentsBoxDetailMargin) + ea,
-        marginLeft: String(contentsBoxDetailMargin) + ea,
-        cursor: "pointer",
-      };
-      for (let z in style) {
-        contentsBoxDetail.style[z] = style[z];
-      }
-
-      //proid
-      contentsBoxDetailProid = GeneralJs.nodes.div.cloneNode(true);
-      contentsBoxDetailProidStyle = {
-        position: "absolute",
-        top: String(6.5 + (GeneralJs.isMac() ? 0 : 2)) + ea,
-        left: String(contentsBoxDetailContentsMargin) + ea,
-        fontSize: String(contentsBoxDetailFontSize) + ea,
-        fontWeight: String(200),
-        color: GeneralJs.colorChip.green,
-      };
-      for (let z in contentsBoxDetailProidStyle) {
-        contentsBoxDetailProid.style[z] = contentsBoxDetailProidStyle[z];
-      }
-      contentsBoxDetailProid.textContent = proid;
-      contentsBoxDetail.appendChild(contentsBoxDetailProid);
-      widthDomTargetsObjDetail.proid = contentsBoxDetailProid;
-
-      //name
-      contentsBoxDetailName = GeneralJs.nodes.div.cloneNode(true);
-      contentsBoxDetailNameStyle = {
-        position: "absolute",
-        top: String(6.5 + (GeneralJs.isMac() ? 0 : 2)) + ea,
-        left: String((GeneralJs.calculationWordWidth(contentsBoxDetailFontSize, proid) * 0.65) + (contentsBoxDetailContentsMargin * 2)) + ea,
-        fontSize: String(contentsBoxDetailFontSize) + ea,
-        fontWeight: String(500),
-      };
-      for (let z in contentsBoxDetailNameStyle) {
-        contentsBoxDetailName.style[z] = contentsBoxDetailNameStyle[z];
-      }
-      contentsBoxDetailName.textContent = name;
-      contentsBoxDetail.appendChild(contentsBoxDetailName);
-      widthDomTargetsObjDetail.name = contentsBoxDetailName;
-
-      //bar
-      contentsBoxDetailBar = GeneralJs.nodes.div.cloneNode(true);
-      contentsBoxDetailBarStyle = {
-        position: "absolute",
-        top: String(16.5) + ea,
-        left: String((GeneralJs.calculationWordWidth(contentsBoxDetailFontSize, proid) * 0.65) + (GeneralJs.calculationWordWidth(contentsBoxDetailFontSize, name) * 0.58) + (contentsBoxDetailContentsMargin * 3)) + ea,
-        height: String(0),
-        width: "calc(100% - " + String((GeneralJs.calculationWordWidth(contentsBoxDetailFontSize, proid) * 0.65) + (GeneralJs.calculationWordWidth(contentsBoxDetailFontSize, name) * 0.58) + (GeneralJs.calculationWordWidth(contentsBoxDetailFontSize, date) * 0.72) + (GeneralJs.calculationWordWidth(contentsBoxDetailFontSize, amount) * 0.81) + (contentsBoxDetailContentsMargin * 5)) + ea + ")",
-        borderBottom: "1px solid " + GeneralJs.colorChip.gray2,
-      };
-      for (let z in contentsBoxDetailBarStyle) {
-        contentsBoxDetailBar.style[z] = contentsBoxDetailBarStyle[z];
-      }
-      contentsBoxDetail.appendChild(contentsBoxDetailBar);
-      widthDomTargetsObjDetail.bar = contentsBoxDetailBar;
-
-      //date
-      contentsBoxDetailDate = GeneralJs.nodes.div.cloneNode(true);
-      contentsBoxDetailDateStyle = {
-        position: "absolute",
-        top: String(6.5 + (GeneralJs.isMac() ? 0 : 2)) + ea,
-        right: String((GeneralJs.calculationWordWidth(contentsBoxDetailFontSize, amount) * 0.81) + (contentsBoxDetailContentsMargin * 2)) + ea,
-        fontSize: String(contentsBoxDetailFontSize) + ea,
-        fontWeight: String(200),
-        opacity: (boxTitles[i].date ? String(1) : String(0.2)),
-      };
-      for (let z in contentsBoxDetailDateStyle) {
-        contentsBoxDetailDate.style[z] = contentsBoxDetailDateStyle[z];
-      }
-      contentsBoxDetailDate.textContent = date;
-      contentsBoxDetail.appendChild(contentsBoxDetailDate);
-      widthDomTargetsObjDetail.date = contentsBoxDetailDate;
-
-      //amount
-      contentsBoxDetailAmount = GeneralJs.nodes.div.cloneNode(true);
-      contentsBoxDetailAmountStyle = {
-        position: "absolute",
-        top: String(6.5 + (GeneralJs.isMac() ? 0 : 2)) + ea,
-        right: String(contentsBoxDetailContentsMargin) + ea,
-        fontSize: String(contentsBoxDetailFontSize) + ea,
-        fontWeight: String(500),
-      };
-      for (let z in contentsBoxDetailAmountStyle) {
-        contentsBoxDetailAmount.style[z] = contentsBoxDetailAmountStyle[z];
-      }
-      contentsBoxDetailAmount.textContent = amount;
-      contentsBoxDetail.appendChild(contentsBoxDetailAmount);
-      widthDomTargetsObjDetail.amount = contentsBoxDetailAmount;
-
-      contentsBoxDetail.addEventListener("click", function (e) {
-        window.open(window.location.protocol + "//" + window.location.host + "/project" + "?proid=" + proid, "_blank");
-      });
-      contentsBox.appendChild(contentsBoxDetail);
-
-      money = money + Number(amount.replace(/[^0-9]/g, ''));
-      people++;
-      widthDomTargetsObj.items.push(widthDomTargetsObjDetail);
-    }
-
-    div_clone.appendChild(contentsBox);
-
-    //summary
-    summaryBox = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "absolute",
-      fontSize: String(titleFontSize + 4) + ea,
-      right: String(matrixBoxMargin) + ea,
-      bottom: String(titleTop + (margin / 2) - 2 +  + (GeneralJs.isMac() ? 0 : -4)) + ea,
-      fontWeight: String(200),
-      background: GeneralJs.colorChip.gray0,
-    };
-    for (let z in style) {
-      summaryBox.style[z] = style[z];
-    }
-    summaryBox.textContent = String(people) + "명 / " + GeneralJs.autoComma(money) + "원";
-    summaryBoxArr.push({ dom: summaryBox, people: people, money: money });
-    div_clone.appendChild(summaryBox);
-
-    scrollBox.appendChild(div_clone);
-
-    widthDomTargets.push(widthDomTargetsObj);
+        width: "calc(calc(100% - " + String(innerMargin * (boxNumber - 1)) + ea + ") / " + String(boxNumber) + ")",
+        height: withOut(summaryHeight + innerMargin, ea),
+        background: colorChip.gray1,
+        borderRadius: String(5) + "px",
+        marginRight: String(i === boxNumber - 1 ? 0 : innerMargin) + ea,
+        marginBottom: String(innerMargin) + ea,
+      },
+      children: [
+        {
+          text: wordings[i],
+          style: {
+            fontSize: String(15) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+            position: "absolute",
+            top: String(boxTitleTop) + ea,
+            left: String(boxInnerMargin) + ea,
+          }
+        },
+        {
+          style: {
+            position: "absolute",
+            top: String(blockBoxTop) + ea,
+            left: String(boxInnerMargin) + ea,
+            width: withOut(boxInnerMargin * 2, ea),
+            height: withOut((boxInnerMargin / 2) + blockBoxTop + boxInnerMargin + factorSummaryHeight, ea),
+            borderRadius: String(5) + "px",
+            background: colorChip.gray5,
+            overflow: "scroll",
+          },
+          children: [
+            {
+              style: {
+                position: "relative",
+                top: String(boxInnerMargin / 2) + ea,
+                left: String(boxInnerMargin / 2) + ea,
+                width: withOut(boxInnerMargin, ea),
+                paddingBottom: String(boxInnerMargin * 10) + ea,
+                height: "auto",
+              }
+            }
+          ]
+        },
+        {
+          style: {
+            position: "absolute",
+            bottom: String(boxInnerMargin) + ea,
+            left: String(boxInnerMargin) + ea,
+            width: withOut(boxInnerMargin * 2, ea),
+            height: String(factorSummaryHeight) + ea,
+            borderRadius: String(5) + "px",
+            background: colorChip.white,
+          }
+        }
+      ]
+    }).children[1];
+    summaryWhiteTong = blockGrayTong.nextElementSibling;
+    blockGrayTong = blockGrayTong.firstChild;
+    blockTong.push(blockGrayTong);
+    summaryTong.push(summaryWhiteTong);
   }
 
-  //summary calculation
-  summaryBoxArr[1].dom.textContent = String(summaryBoxArr[1].people) + "명 / " + GeneralJs.autoComma(summaryBoxArr[1].money - summaryBoxArr[2].money) + "원";
-  summaryBoxArr[4].dom.textContent = String(summaryBoxArr[4].people) + "명 / " + GeneralJs.autoComma(summaryBoxArr[4].money - summaryBoxArr[5].money) + "원";
-
-  GeneralJs.timeouts["projectReportDomWidthTimeout"] = setTimeout(function () {
-    let temp;
-    let ea = "px";
-    let visualSpecific = 3;
-    let tempWidth;
-    let margin;
-    for (let i = 0; i < widthDomTargets.length; i++) {
-      for (let { amount, bar, date, name, proid } of widthDomTargets[i].items) {
-        margin = Number(proid.style.left.replace(/px/gi, ''));
-        name.style.left = String((margin * 2) + proid.getBoundingClientRect().width - visualSpecific) + ea;
-        date.style.right = String((margin * 2) + amount.getBoundingClientRect().width - visualSpecific) + ea;
-        tempWidth = 0;
-        tempWidth += Number(name.style.left.replace(/px/gi, '')) + name.getBoundingClientRect().width;
-        tempWidth += Number(date.style.right.replace(/px/gi, '')) + date.getBoundingClientRect().width;
-        bar.style.width = "calc(100% - " + String(tempWidth + (margin * 2)) + ea + ")";
-        bar.style.left = String(Number(name.style.left.replace(/px/gi, '')) + name.getBoundingClientRect().width + margin) + ea;
-      }
+  totalSummaryTong = createNode({
+    mother: scrollBox,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      background: colorChip.gray1,
+      borderRadius: String(5) + "px",
+      height: String(summaryHeight) + ea,
     }
-    clearTimeout(GeneralJs.timeouts["projectReportDomWidthTimeout"]);
-    GeneralJs.timeouts["projectReportDomWidthTimeout"] = null;
-  }, 0);
+  });
+
+  for (let i = 0; i < boxNumber; i++) {
+    for (let { proid, cliid, name } of data.serviceArr[i]) {
+      whiteBlock = createNode({
+        mother: blockTong[i],
+        class: [ "hoverDefault_lite" ],
+        attribute: { proid, cliid, name },
+        event: {
+          click: function (e) {
+            const proid = this.getAttribute("proid");
+            blankHref(window.location.protocol + "//" + window.location.host + "/project?proid=" + proid);
+          }
+        },
+        style: {
+          display: "inline-block",
+          width: String(1000) + ea,
+          background: colorChip.white,
+          borderRadius: String(5) + ea,
+          marginRight: String(whiteInnerMargin) + ea,
+          marginBottom: String(whiteInnerMargin) + ea,
+          paddingTop: String(whiteInnerPaddingTop) + ea,
+          paddingBottom: String(whiteInnerPaddingBottom) + ea,
+          paddingLeft: String(whiteInnerPaddingLeft) + ea,
+          paddingRight: String(whiteInnerPaddingLeft) + ea,
+        }
+      });
+      createNode({
+        mother: whiteBlock,
+        text: name,
+        style: {
+          display: "inline-block",
+          fontSize: String(whiteInnerSize) + ea,
+          fontWeight: String(whiteInnerWeight),
+          color: colorChip.black,
+          marginRight: String(whiteWordsBetween) + ea,
+        }
+      })
+      createNode({
+        mother: whiteBlock,
+        text: proid,
+        style: {
+          display: "inline-block",
+          fontSize: String(whiteInnerSize2) + ea,
+          fontWeight: String(whiteInnerWeight2),
+          color: colorChip.green,
+        }
+      });
+      whiteBlock.style.width = "auto";
+    }
+
+    createNode({
+      mother: summaryTong[i],
+      text: `${String(data.serviceArr[i].length)}<u%명%u>${blank}<b%/%b>${blank}${String(Math.round((data.serviceArr[i].length / data.numbers.client) * 10000) / 100)}<u%%%u>${blank}<b%/%b>${blank}${String(Math.round((data.serviceArr[i].length / data.numbers.project) * 10000) / 100)}<u%%%u>`,
+      style: {
+        position: "absolute",
+        textAlign: "center",
+        width: String(100) + '%',
+        top: String(whiteSumTop) + ea,
+        fontSize: String(whiteSumSize) + ea,
+        fontWeight: String(whiteSumWeight),
+        color: colorChip.black,
+      },
+      bold: {
+        fontSize: String(whiteSumSize) + ea,
+        fontWeight: String(whiteSumWeight),
+        color: colorChip.green,
+      },
+      under: {
+        fontSize: String(whiteSumSize) + ea,
+        fontWeight: String(whiteSumWeight),
+        color: colorChip.deactive,
+      },
+    })
+
+
+  }
+
+
+  totalSummaryTong
+
+
+
+  console.log(data);
+
+
+
 
   return scrollBox;
 }
@@ -7218,9 +7150,9 @@ ProjectJs.prototype.reportContents = function (data, mother, loadingIcon) {
 
     GeneralJs.stacks.reportBoxStartDayInputValue = target.value;
   }
-  const response = JSON.parse(data);
-  const todayString = response.today;
-
+  const response = data;
+  const { stringToDate, ajaxJson, dateToString } = GeneralJs;
+  const todayString = dateToString(new Date());
   let todayArr = todayString.split('-');
   let todayRange;
   let div_clone, div_clone2, input_clone;
@@ -7230,7 +7162,7 @@ ProjectJs.prototype.reportContents = function (data, mother, loadingIcon) {
   const scrollBox = this.reportScrollBox(data, motherWidth);
   let top, height, margin;
 
-  todayRange = response.startDay.slice(2) + " ~ " + response.endDay.slice(2);
+  todayRange = dateToString(response.start).slice(2) + " ~ " + dateToString(response.end).slice(2);
 
   //numbers
   top = 0;
@@ -7279,8 +7211,6 @@ ProjectJs.prototype.reportContents = function (data, mother, loadingIcon) {
   input_clone.addEventListener("keyup", function (e) {
     if (e.key === "Enter") {
       vaildValue(this);
-      const today = new Date();
-      const todayString = String(today.getFullYear()) + '-' + zeroAddition(today.getMonth() + 1) + '-' + zeroAddition(today.getDate());
       const dateArr = this.value.split(" ~ ");
       const startDay = '20' + dateArr[0];
       const endDay = '20' + dateArr[1];
@@ -7288,11 +7218,18 @@ ProjectJs.prototype.reportContents = function (data, mother, loadingIcon) {
       mother.removeChild(mother.lastChild);
       loadingIcon.style.animation = "loadingrotate 1.7s linear infinite";
       loadingIcon.style.opacity = "1";
-      GeneralJs.ajax("today=" + todayString + "&start=" + startDay + "&end=" + endDay, "/getProjectReport", function (data) {
+
+      ajaxJson({
+        start: stringToDate(startDay),
+        end: stringToDate(endDay),
+      }, "/getProjectReport", { equal: true }).then((data) => {
         loadingIcon.style.opacity = "0";
         const scrollBox = instance.reportScrollBox(data, motherWidth);
         mother.appendChild(scrollBox);
+      }).catch((err) => {
+        console.log(err);
       });
+
     }
   });
 
@@ -7331,7 +7268,7 @@ ProjectJs.prototype.reportViewMakerDetail = function (recycle = false) {
     }
   }
   const today = new Date();
-  const todayString = String(today.getFullYear()) + '-' + zeroAddition(today.getMonth() + 1) + '-' + zeroAddition(today.getDate());
+  const { stringToDate, ajaxJson, dateToString } = GeneralJs;
   try {
     return function () {
       let div_clone, svg_icon;
@@ -7342,11 +7279,14 @@ ProjectJs.prototype.reportViewMakerDetail = function (recycle = false) {
       let motherBoo;
       let width;
       let defaultWeek;
-      let startDay, endDay;
+      let ago, agoDate;
 
       motherBoo = (instance.onView === "mother") ? true : false;
 
       margin = 30;
+      ago = 30;
+      agoDate = new Date();
+      agoDate.setDate(agoDate.getDate() - ago);
 
       if (!recycle) {
 
@@ -7410,20 +7350,14 @@ ProjectJs.prototype.reportViewMakerDetail = function (recycle = false) {
       instance.whiteBox.contentsBox = div_clone;
       instance.totalContents.appendChild(div_clone);
 
-      defaultWeek = [];
-      if (today.getDay() !== 0) {
-        defaultWeek.push(today.getDate() - today.getDay() + 1 < 1 ? 1 : today.getDate() - today.getDay() + 1);
-      } else {
-        defaultWeek.push(today.getDate() - 7 + 1 < 1 ? 1 : today.getDate() - 7 + 1);
-      }
-      defaultWeek.push((today.getDay() !== 0) ? today.getDate() + (7 - today.getDay()) : today.getDate());
-
-      startDay = String(today.getFullYear()) + '-' + zeroAddition(today.getMonth() + 1) + '-' + zeroAddition(defaultWeek[0]);
-      endDay = String(today.getFullYear()) + '-' + zeroAddition(today.getMonth() + 1) + '-' + zeroAddition(defaultWeek[1]);
-
-      GeneralJs.ajax("today=" + todayString + "&start=" + startDay + "&end=" + endDay, "/getProjectReport", function (data) {
+      ajaxJson({
+        start: agoDate,
+        end: today
+      }, "/getProjectReport", { equal: true }).then((data) => {
         svg_icon.style.opacity = "0";
         instance.reportContents(data, div_clone, svg_icon);
+      }).catch((err) => {
+        console.log(err);
       });
 
       GeneralJs.stacks.whiteBox = 0;

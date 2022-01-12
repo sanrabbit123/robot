@@ -985,182 +985,63 @@ DataRouter.prototype.rou_post_getClientReport = function () {
 DataRouter.prototype.rou_post_getProjectReport = function () {
   const instance = this;
   const back = this.back;
-  const zeroAddition = function (number) {
-    if (number < 10) {
-      return `0${String(number)}`;
-    } else {
-      return String(number);
-    }
-  }
-
+  const { equalJson } = this.mother;
   let obj = {};
   obj.link = "/getProjectReport";
   obj.func = async function (req, res) {
     try {
-      let target;
+      const { start, end } = equalJson(req.body);
       let resultObj;
-      let temp, temp2;
-      let tempObj, tempArr;
-      let startDay;
-      let endDay;
-      let searchQuery0, searchQuery1, searchQuery2, searchQuery3, searchQuery4, searchQuery5, projects;
-      let cliidArr, desidArr;
-      let tempAmount;
+      let clients;
+      let projects;
+      let serviceArr;
 
-      resultObj = {};
-      resultObj.today = req.body.today;
-      startDay = new Date(Number(req.body.start.split("-")[0]), Number(req.body.start.split("-")[1].replace(/^0/, '')) - 1, Number(req.body.start.split("-")[2].replace(/^0/, '')));
-      endDay = new Date(Number(req.body.end.split("-")[0]), Number(req.body.end.split("-")[1].replace(/^0/, '')) - 1, Number(req.body.end.split("-")[2].replace(/^0/, '')));
-      resultObj.startDay = req.body.start;
-      resultObj.endDay = req.body.end;
+      serviceArr = new Array(4);
 
-      resultObj.projects = [];
-      for (let i = 0; i < 6; i++) {
-
-        if (i === 0) {
-          searchQuery0 = { "process.contract.remain.date": { "$lt": new Date(2000, 0, 1) } };
-          searchQuery1 = { "desid": { "$regex": "^d" } };
-          searchQuery2 = { "$and": [ searchQuery0, searchQuery1 ] };
-        } else if (i === 1) {
-          searchQuery0 = { "process.contract.remain.date": { "$gte": startDay, "$lt": endDay } };
-          searchQuery1 = { "desid": { "$regex": "^d" } };
-          searchQuery2 = { "$and": [ searchQuery0, searchQuery1 ] };
-        } else if (i === 2) {
-          searchQuery0 = { "process.contract.remain.cancel": { "$gte": startDay, "$lt": endDay } };
-          searchQuery1 = { "desid": { "$regex": "^d" } };
-          searchQuery2 = { "$and": [ searchQuery0, searchQuery1 ] };
-        } else if (i === 3) {
-          searchQuery3 = { "process.contract.remain.date": { "$gte": new Date(2000, 0, 1) } };
-          searchQuery4 = { "process.calculation.payments.first.date": { "$lt": new Date(2000, 0, 1) } };
-          searchQuery0 = { "process.calculation.payments.remain.date": { "$lt": new Date(2000, 0, 1) } };
-          searchQuery5 = { "$or": [ searchQuery4, searchQuery0 ] };
-          searchQuery1 = { "desid": { "$regex": "^d" } };
-          searchQuery2 = { "$and": [ searchQuery5, searchQuery1, searchQuery3 ] };
-        } else if (i === 4) {
-          searchQuery0 = { "process.calculation.payments.first.date": { "$gte": startDay, "$lt": endDay } };
-          searchQuery1 = { "process.calculation.payments.remain.date": { "$gte": startDay, "$lt": endDay } };
-          searchQuery4 = { "$or": [ searchQuery0, searchQuery1 ] };
-          searchQuery3 = { "desid": { "$regex": "^d" } };
-          searchQuery2 = { "$and": [ searchQuery4, searchQuery3 ] };
-        } else if (i === 5) {
-          searchQuery0 = { "process.calculation.payments.first.cancel": { "$gte": startDay, "$lt": endDay } };
-          searchQuery1 = { "process.calculation.payments.remain.cancel": { "$gte": startDay, "$lt": endDay } };
-          searchQuery4 = { "$or": [ searchQuery0, searchQuery1 ] };
-          searchQuery3 = { "desid": { "$regex": "^d" } };
-          searchQuery2 = { "$and": [ searchQuery4, searchQuery3 ] };
-        }
-
-        searchQuery2["$and"].push({ "process.status": { "$not": { "$regex": "^[홀드]" } } });
-
-        temp = await back.getProjectsByQuery(searchQuery2, { selfMongo: instance.mongo });
-
-        cliidArr = [];
-        desidArr = [];
-        for (let j = 0; j < temp.length; j++) {
-          cliidArr.push({ cliid: temp[j].cliid });
-          desidArr.push({ desid: temp[j].desid });
-        }
-
-        if (i < 3) {
-          if (cliidArr.length > 0) {
-            temp2 = await back.getClientsByQuery({ "$or": cliidArr }, { selfMongo: instance.mongo });
-          } else {
-            temp2 = [];
+      resultObj = { start, end };
+      clients = await back.getClientsByQuery({
+        $and: [
+          {
+            requests: {
+              $elemMatch: {
+                "request.timeline": { $gte: start }
+              }
+            }
+          },
+          {
+            requests: {
+              $elemMatch: {
+                "request.timeline": { $lt: end }
+              }
+            }
           }
-        } else {
-          if (desidArr.length > 0) {
-            temp2 = await back.getDesignersByQuery({ "$or": desidArr }, { selfMongo: instance.mongo });
-          } else {
-            temp2 = [];
-          }
+        ]
+      }, { selfMongo: instance.mongo });
+
+      if (clients.length === 0) {
+        projects = [];
+      } else {
+        projects = (await back.getProjectsByQuery({
+          $and: [
+            { $or: clients.toNormal().map((obj) => { return { cliid: obj.cliid } }) },
+            { desid: { $regex: "^d" } }
+          ]
+        })).toNormal();
+      }
+
+      serviceArr[0] = projects.filter((obj) => { return /1/gi.test(obj.service.serid.split('_')[1]) }).map((obj) => { return { proid: obj.proid, cliid: obj.cliid } });
+      serviceArr[1] = projects.filter((obj) => { return /2/gi.test(obj.service.serid.split('_')[1]) }).map((obj) => { return { proid: obj.proid, cliid: obj.cliid } });
+      serviceArr[2] = projects.filter((obj) => { return /3/gi.test(obj.service.serid.split('_')[1]) }).map((obj) => { return { proid: obj.proid, cliid: obj.cliid } });
+      serviceArr[3] = projects.filter((obj) => { return /4/gi.test(obj.service.serid.split('_')[1]) }).map((obj) => { return { proid: obj.proid, cliid: obj.cliid } });
+
+      for (let arr of serviceArr) {
+        for (let obj of arr) {
+          obj.name = clients.toNormal().find((c) => { return c.cliid === obj.cliid }).name;
         }
-
-        tempArr = [];
-        for (let j = 0; j < temp.length; j++) {
-          tempObj = {};
-          tempObj.date = "1001-01-01";
-          tempObj.proid = temp[j].proid;
-
-          if (i === 0) {
-            for (let z = 0; z < temp2.length; z++) {
-              if (temp2[z].cliid === temp[j].cliid) {
-                tempObj.name = temp2[z].name;
-              }
-            }
-            tempObj.amount = DataRouter.autoComma(temp[j].process.contract.remain.calculation.amount.consumer) + "만원";
-          } else if (i === 1) {
-            for (let z = 0; z < temp2.length; z++) {
-              if (temp2[z].cliid === temp[j].cliid) {
-                tempObj.name = temp2[z].name;
-              }
-            }
-            tempObj.date = DataRouter.dateToString(temp[j].process.contract.remain.date);
-            tempObj.amount = DataRouter.autoComma(temp[j].process.contract.remain.calculation.amount.consumer) + "만원";
-          } else if (i === 2) {
-            for (let z = 0; z < temp2.length; z++) {
-              if (temp2[z].cliid === temp[j].cliid) {
-                tempObj.name = temp2[z].name;
-              }
-            }
-            tempObj.date = DataRouter.dateToString(temp[j].process.contract.remain.cancel);
-            tempObj.amount = DataRouter.autoComma(temp[j].process.contract.remain.calculation.refund) + "만원";
-          } else if (i === 3) {
-            for (let z = 0; z < temp2.length; z++) {
-              if (temp2[z].desid === temp[j].desid) {
-                tempObj.name = temp2[z].designer;
-              }
-            }
-
-            tempAmount = 0;
-            if ((new Date(2000, 0, 1)).valueOf() >= temp[j].process.calculation.payments.remain.date.valueOf()) {
-              tempAmount = 0.5;
-            }
-            if ((new Date(2000, 0, 1)).valueOf() >= temp[j].process.calculation.payments.first.date.valueOf()) {
-              tempAmount = 1;
-            }
-
-            tempObj.amount = DataRouter.autoComma(Math.floor(temp[j].process.calculation.payments.totalAmount * tempAmount)) + "만원";
-          } else if (i === 4) {
-
-            for (let z = 0; z < temp2.length; z++) {
-              if (temp2[z].desid === temp[j].desid) {
-                tempObj.name = temp2[z].designer;
-              }
-            }
-
-            tempAmount = 0;
-            if (startDay.valueOf() <= temp[j].process.calculation.payments.first.date.valueOf() && endDay.valueOf() >= temp[j].process.calculation.payments.first.date.valueOf()) {
-              tempAmount += temp[j].process.calculation.payments.first.amount;
-            }
-            if (startDay.valueOf() <= temp[j].process.calculation.payments.remain.date.valueOf() && endDay.valueOf() >= temp[j].process.calculation.payments.remain.date.valueOf()) {
-              tempAmount += temp[j].process.calculation.payments.remain.amount;
-            }
-
-            tempObj.amount = DataRouter.autoComma(Math.floor(tempAmount)) + "만원";
-          } else if (i === 5) {
-            for (let z = 0; z < temp2.length; z++) {
-              if (temp2[z].desid === temp[j].desid) {
-                tempObj.name = temp2[z].designer;
-              }
-            }
-
-            tempAmount = 0;
-            if (startDay.valueOf() <= temp[j].process.calculation.payments.first.cancel.valueOf() && endDay.valueOf() >= temp[j].process.calculation.payments.first.cancel.valueOf()) {
-              tempAmount += temp[j].process.calculation.payments.first.refund;
-            }
-            if (startDay.valueOf() <= temp[j].process.calculation.payments.remain.cancel.valueOf() && endDay.valueOf() >= temp[j].process.calculation.payments.remain.cancel.valueOf()) {
-              tempAmount += temp[j].process.calculation.payments.remain.refund;
-            }
-
-            tempObj.amount = DataRouter.autoComma(Math.floor(tempAmount)) + "만원";
-          }
-          tempArr.push(tempObj);
-        }
-        resultObj.projects.push(tempArr);
       }
 
       res.set("Content-Type", "application/json");
-      res.send(JSON.stringify(resultObj));
+      res.send(JSON.stringify({ start, end, numbers: { client: clients.length, project: projects.length }, serviceArr }));
     } catch (e) {
       instance.mother.errorLog("Console 서버 문제 생김 (rou_post_getProjectReport): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
