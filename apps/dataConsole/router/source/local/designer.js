@@ -3418,6 +3418,562 @@ DesignerJs.prototype.returnValueEventMaker = function () {
   }
 }
 
+DesignerJs.prototype.reportScrollBox = function (data, motherWidth) {
+  const instance = this;
+  const { createNode, colorChip, withOut, blankHref, isMac } = GeneralJs;
+  const ea = "px";
+  const wordings = [ "홈퍼니싱", "홈스타일링", "토탈 스타일링", "엑스트라 스타일링" ];
+  const blank = "&nbsp;&nbsp;&nbsp;"
+  let div_clone;
+  let style;
+  let entireMargin;
+  let margin;
+  let scrollBox, boxTop, boxNumber;
+  let titleTop;
+  let innerMargin;
+  let summaryHeight;
+  let factorSummaryHeight;
+  let boxInnerMargin;
+  let boxTitleTop;
+  let blockBoxTop;
+  let blockTong, summaryTong;
+  let blockGrayTong, summaryWhiteTong;
+  let totalSummaryTong;
+  let whiteBlock;
+  let whiteInnerMargin;
+  let whiteInnerPaddingTop;
+  let whiteInnerPaddingBottom;
+  let whiteInnerPaddingLeft;
+  let whiteInnerSize, whiteInnerWeight;
+  let whiteInnerSize2, whiteInnerWeight2;
+  let whiteWordsBetween;
+  let whiteSumTop, whiteSumSize, whiteSumWeight;
+  let summaryText;
+  let whiteSumTotalTop;
+
+  margin = 12;
+  entireMargin = margin * 3;
+  boxTop = 90;
+  innerMargin = 8;
+  summaryHeight = 100;
+  boxNumber = 4;
+  factorSummaryHeight = 75;
+  boxInnerMargin = 20;
+  boxTitleTop = 16;
+  blockBoxTop = 45;
+  whiteInnerMargin = 5;
+  whiteInnerPaddingTop = isMac() ? 6 : 7;
+  whiteInnerPaddingBottom = isMac() ? 8 : 7;
+  whiteInnerPaddingLeft = 13;
+  whiteInnerSize = 13;
+  whiteInnerWeight = 600;
+  whiteInnerSize2 = 8;
+  whiteInnerWeight2 = 400;
+  whiteWordsBetween = 4;
+  whiteSumTop = 18;
+  whiteSumSize = 24;
+  whiteSumWeight = 200;
+  whiteSumTotalTop = 31;
+
+  if (data.numbers.client === 0) {
+    data.numbers.client = 1;
+  }
+
+  //entire scroll box
+  scrollBox = GeneralJs.nodes.div.cloneNode(true);
+  scrollBox.classList.add("noScrollBar");
+  style = {
+    position: "relative",
+    top: String(boxTop) + ea,
+    marginLeft: String(entireMargin) + ea,
+    width: withOut(entireMargin * 2, ea),
+    height: withOut(boxTop + entireMargin, ea),
+    overflow: "scroll",
+  };
+  for (let z in style) {
+    scrollBox.style[z] = style[z];
+  }
+
+  blockTong = [];
+  summaryTong = [];
+  for (let i = 0; i < boxNumber; i++) {
+    blockGrayTong = createNode({
+      mother: scrollBox,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: "calc(calc(100% - " + String(innerMargin * (boxNumber - 1)) + ea + ") / " + String(boxNumber) + ")",
+        height: withOut(summaryHeight + innerMargin, ea),
+        background: colorChip.gray1,
+        borderRadius: String(5) + "px",
+        marginRight: String(i === boxNumber - 1 ? 0 : innerMargin) + ea,
+        marginBottom: String(innerMargin) + ea,
+      },
+      children: [
+        {
+          text: wordings[i],
+          style: {
+            fontSize: String(15) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+            position: "absolute",
+            top: String(boxTitleTop) + ea,
+            left: String(boxInnerMargin) + ea,
+          }
+        },
+        {
+          style: {
+            position: "absolute",
+            top: String(blockBoxTop) + ea,
+            left: String(boxInnerMargin) + ea,
+            width: withOut(boxInnerMargin * 2, ea),
+            height: withOut((boxInnerMargin / 2) + blockBoxTop + boxInnerMargin + factorSummaryHeight, ea),
+            borderRadius: String(5) + "px",
+            background: colorChip.gray5,
+            overflow: "scroll",
+          },
+          children: [
+            {
+              style: {
+                position: "relative",
+                top: String(boxInnerMargin / 2) + ea,
+                left: String(boxInnerMargin / 2) + ea,
+                width: withOut(boxInnerMargin, ea),
+                paddingBottom: String(boxInnerMargin * 10) + ea,
+                height: "auto",
+              }
+            }
+          ]
+        },
+        {
+          style: {
+            position: "absolute",
+            bottom: String(boxInnerMargin) + ea,
+            left: String(boxInnerMargin) + ea,
+            width: withOut(boxInnerMargin * 2, ea),
+            height: String(factorSummaryHeight) + ea,
+            borderRadius: String(5) + "px",
+            background: colorChip.white,
+          }
+        }
+      ]
+    }).children[1];
+    summaryWhiteTong = blockGrayTong.nextElementSibling;
+    blockGrayTong = blockGrayTong.firstChild;
+    blockTong.push(blockGrayTong);
+    summaryTong.push(summaryWhiteTong);
+  }
+
+  totalSummaryTong = createNode({
+    mother: scrollBox,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      background: colorChip.gray1,
+      borderRadius: String(5) + "px",
+      height: String(summaryHeight) + ea,
+    }
+  });
+
+  for (let i = 0; i < boxNumber; i++) {
+    for (let { proid, cliid, name } of data.serviceArr[i]) {
+      whiteBlock = createNode({
+        mother: blockTong[i],
+        class: [ "hoverDefault_lite" ],
+        attribute: { proid, cliid, name },
+        event: {
+          click: function (e) {
+            const proid = this.getAttribute("proid");
+            blankHref(window.location.protocol + "//" + window.location.host + "/project?proid=" + proid);
+          }
+        },
+        style: {
+          display: "inline-block",
+          width: String(1000) + ea,
+          background: colorChip.white,
+          borderRadius: String(5) + ea,
+          marginRight: String(whiteInnerMargin) + ea,
+          marginBottom: String(whiteInnerMargin) + ea,
+          paddingTop: String(whiteInnerPaddingTop) + ea,
+          paddingBottom: String(whiteInnerPaddingBottom) + ea,
+          paddingLeft: String(whiteInnerPaddingLeft) + ea,
+          paddingRight: String(whiteInnerPaddingLeft) + ea,
+        }
+      });
+      createNode({
+        mother: whiteBlock,
+        text: name,
+        style: {
+          display: "inline-block",
+          fontSize: String(whiteInnerSize) + ea,
+          fontWeight: String(whiteInnerWeight),
+          color: colorChip.black,
+          marginRight: String(whiteWordsBetween) + ea,
+        }
+      })
+      createNode({
+        mother: whiteBlock,
+        text: proid,
+        style: {
+          display: "inline-block",
+          fontSize: String(whiteInnerSize2) + ea,
+          fontWeight: String(whiteInnerWeight2),
+          color: colorChip.green,
+        }
+      });
+      whiteBlock.style.width = "auto";
+    }
+
+    createNode({
+      mother: summaryTong[i],
+      text: `${String(data.serviceArr[i].length)}<u%명%u>${blank}<b%/%b>${blank}${String(Math.round((data.serviceArr[i].length / data.numbers.client) * 10000) / 100)}<u%%%u>${blank}<b%/%b>${blank}${String(Math.round((data.serviceArr[i].length / data.numbers.project) * 10000) / 100)}<u%%%u>`,
+      style: {
+        position: "absolute",
+        textAlign: "center",
+        width: String(100) + '%',
+        top: String(whiteSumTop) + ea,
+        fontSize: String(whiteSumSize) + ea,
+        fontWeight: String(whiteSumWeight),
+        color: colorChip.black,
+      },
+      bold: {
+        fontSize: String(whiteSumSize) + ea,
+        fontWeight: String(whiteSumWeight),
+        color: colorChip.green,
+      },
+      under: {
+        fontSize: String(whiteSumSize) + ea,
+        fontWeight: String(whiteSumWeight),
+        color: colorChip.deactive,
+      },
+    });
+
+  }
+
+  summaryText = '';
+  summaryText += "<u%문의%u> ";
+  summaryText += String(data.numbers.client) + "<u%명%u>";
+  summaryText += blank;
+  summaryText += "<b%/%b>";
+  summaryText += blank;
+  summaryText += "<u%계약%u> ";
+  summaryText += String(data.numbers.project) + "<u%명 (%u>";
+  for (let i = 0; i < data.serviceArr.length; i++) {
+    summaryText += String(data.serviceArr[i].length) + "<u%명%u>";
+    summaryText += "<u%, %u>";
+  }
+  summaryText = summaryText.slice(0, -8);
+  summaryText += "<u%)%u>";
+  summaryText += blank;
+  summaryText += "<b%/%b>";
+  summaryText += blank;
+  summaryText += "<u%계약율%u> ";
+  summaryText += String(Math.round((data.numbers.project / data.numbers.client) * 10000) / 100) + "<u%% (%u>";
+  for (let i = 0; i < data.serviceArr.length; i++) {
+    summaryText += String(data.serviceArr[i].length) + "<u%%%u>";
+    summaryText += "<u%, %u>";
+  }
+  summaryText = summaryText.slice(0, -8);
+  summaryText += "<u%)%u>";
+
+  createNode({
+    mother: totalSummaryTong,
+    text: summaryText,
+    style: {
+      position: "absolute",
+      textAlign: "center",
+      width: String(100) + '%',
+      top: String(whiteSumTotalTop) + ea,
+      fontSize: String(whiteSumSize) + ea,
+      fontWeight: String(whiteSumWeight),
+      color: colorChip.black,
+    },
+    bold: {
+      fontSize: String(whiteSumSize) + ea,
+      fontWeight: String(whiteSumWeight),
+      color: colorChip.green,
+    },
+    under: {
+      fontSize: String(whiteSumSize) + ea,
+      fontWeight: String(whiteSumWeight),
+      color: colorChip.deactive,
+    },
+  });
+
+
+  return scrollBox;
+}
+
+DesignerJs.prototype.reportContents = function (data, mother, loadingIcon) {
+  const instance = this;
+  const zeroAddition = function (number) {
+    if (typeof number === 'string') {
+      number = Number(number);
+    }
+    if (number < 10) {
+      return "0" + String(number);
+    } else {
+      return String(number);
+    }
+  }
+  const vaildValue = function (target) {
+    const today = new Date();
+    let valueArr0, valueArr1, valueArr2;
+    input_clone.style.color = GeneralJs.colorChip.black;
+    if (!/[0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] \~ [0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/.test(target.value)) {
+      valueArr0 = target.value.split(" ~ ");
+      valueArr1 = valueArr0[0].split("-");
+      if (valueArr0[1] !== undefined) {
+        valueArr2 = valueArr0[1].split("-");
+        if (valueArr1.length === 3 && valueArr2.length === 3) {
+          target.value = String(valueArr1[0]) + '-' + zeroAddition(valueArr1[1]) + '-' + zeroAddition(valueArr1[2]) + ' ~ ' + String(valueArr2[0]) + '-' + zeroAddition(valueArr2[1]) + '-' + zeroAddition(valueArr2[2]);
+        } else {
+          target.value = GeneralJs.stacks.reportBoxStartDayInputValue;
+        }
+      } else {
+        target.value = GeneralJs.stacks.reportBoxStartDayInputValue;
+      }
+    }
+    target.value = (/[0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] \~ [0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/.exec(target.value))[0];
+
+    valueArr0 = target.value.split(" ~ ");
+    valueArr1 = valueArr0[0].split("-");
+    valueArr2 = valueArr0[1].split("-");
+    if ((Number(valueArr1[0]) * 12) + Number(valueArr1[1].replace(/^0/, '')) > (Number(valueArr2[0]) * 12) + Number(valueArr2[1].replace(/^0/, ''))) {
+      target.value = GeneralJs.stacks.reportBoxStartDayInputValue;
+    }
+    if (Number(valueArr1[1].replace(/^0/, '')) > 12 || Number(valueArr1[1].replace(/^0/, '')) < 1) {
+      target.value = GeneralJs.stacks.reportBoxStartDayInputValue;
+    }
+    if (Number(valueArr2[1].replace(/^0/, '')) > 12 || Number(valueArr2[1].replace(/^0/, '')) < 1) {
+      target.value = GeneralJs.stacks.reportBoxStartDayInputValue;
+    }
+    if (Number(valueArr1[0]) < 19) {
+      target.value = GeneralJs.stacks.reportBoxStartDayInputValue;
+    }
+
+    GeneralJs.stacks.reportBoxStartDayInputValue = target.value;
+  }
+  const response = data;
+  const { stringToDate, ajaxJson, dateToString } = GeneralJs;
+  const todayString = dateToString(new Date());
+  let todayArr = todayString.split('-');
+  let todayRange;
+  let div_clone, div_clone2, input_clone;
+  let style, inputStyle;
+  let ea = "px";
+  let motherWidth = Number(mother.style.width.replace((new RegExp(ea + '$')), ''));
+  const scrollBox = this.reportScrollBox(data, motherWidth);
+  let top, height, margin;
+
+  todayRange = dateToString(response.start).slice(2) + " ~ " + dateToString(response.end).slice(2);
+
+  //numbers
+  top = 0;
+  margin = 36;
+  height = 90;
+
+  //search box
+  div_clone = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "absolute",
+    top: String(top) + ea,
+    left: String(margin) + ea,
+    width: String(motherWidth - (margin * 2)) + ea,
+    height: String(height) + ea,
+  };
+  for (let i in style) {
+    div_clone.style[i] = style[i];
+  }
+
+  //start day
+  input_clone = GeneralJs.nodes.input.cloneNode(true);
+  inputStyle = {
+    position: "absolute",
+    left: String(0) + ea,
+    top: String(40 + (GeneralJs.isMac() ? 0 : 5)) + ea,
+    width: String(500) + ea,
+    height: String(30) + ea,
+    fontSize: String(29) + ea,
+    fontWeight: String(200),
+    border: String(0) + ea,
+    outline: String(0) + ea,
+    color: GeneralJs.colorChip.black,
+  };
+  for (let i in inputStyle) {
+    input_clone.style[i] = inputStyle[i];
+  }
+  input_clone.setAttribute("type", "text");
+  input_clone.setAttribute("value", todayRange);
+  input_clone.addEventListener("focus", function (e) {
+    input_clone.style.color = GeneralJs.colorChip.green;
+    GeneralJs.stacks.reportBoxStartDayInputValue = this.value;
+  });
+  input_clone.addEventListener("blur", function (e) {
+    vaildValue(this);
+  });
+  input_clone.addEventListener("keyup", function (e) {
+    if (e.key === "Enter") {
+      vaildValue(this);
+      const dateArr = this.value.split(" ~ ");
+      const startDay = '20' + dateArr[0];
+      const endDay = '20' + dateArr[1];
+      input_clone.blur();
+      mother.removeChild(mother.lastChild);
+      loadingIcon.style.animation = "loadingrotate 1.7s linear infinite";
+      loadingIcon.style.opacity = "1";
+
+      ajaxJson({
+        start: stringToDate(startDay),
+        end: stringToDate(endDay),
+      }, "/getProjectReport", { equal: true }).then((data) => {
+        loadingIcon.style.opacity = "0";
+        const scrollBox = instance.reportScrollBox(data, motherWidth);
+        mother.appendChild(scrollBox);
+      }).catch((err) => {
+        console.log(err);
+      });
+
+    }
+  });
+
+  div_clone.appendChild(input_clone);
+
+  //today box
+  div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "absolute",
+    fontSize: String(14) + ea,
+    fontWeight: String(500) + ea,
+    right: String(1) + ea,
+    top: String(58) + ea,
+    color: GeneralJs.colorChip.green,
+  };
+  for (let i in style) {
+    div_clone2.style[i] = style[i];
+  }
+  div_clone2.textContent = "today : " + todayString;
+  div_clone.appendChild(div_clone2);
+
+  //end
+  mother.appendChild(div_clone);
+
+  //scroll box
+  mother.appendChild(scrollBox);
+}
+
+DesignerJs.prototype.reportViewMakerDetail = function (recycle = false) {
+  const instance = this;
+  const zeroAddition = function (number) {
+    if (number < 10) {
+      return "0" + String(number);
+    } else {
+      return String(number);
+    }
+  }
+  const today = new Date();
+  const { stringToDate, ajaxJson, dateToString } = GeneralJs;
+  try {
+    return function () {
+      let div_clone, svg_icon;
+      let style;
+      let ea = "px";
+      let margin;
+      let domTargets;
+      let motherBoo;
+      let width;
+      let defaultWeek;
+      let ago, agoDate;
+
+      motherBoo = (instance.onView === "mother") ? true : false;
+
+      margin = 30;
+      ago = 30;
+      agoDate = new Date();
+      agoDate.setDate(agoDate.getDate() - ago);
+
+      if (!recycle) {
+
+        instance.whiteBox = {};
+
+        //cancel box
+        div_clone = GeneralJs.nodes.div.cloneNode(true);
+        div_clone.classList.add("justfadein");
+        style = {
+          position: "fixed",
+          background: GeneralJs.colorChip.cancelBlack,
+          top: String(0) + ea,
+          left: String(motherBoo ? instance.grayBarWidth : 0) + ea,
+          width: "calc(100% - " + String(motherBoo ? instance.grayBarWidth : 0) + ea + ")",
+          height: "calc(100% - " + String(instance.belowHeight) + ea + ")",
+          zIndex: String(2),
+        };
+        for (let i in style) {
+          div_clone.style[i] = style[i];
+        }
+
+        div_clone.addEventListener("click", instance.whiteCancelMaker());
+
+        instance.whiteBox.cancelBox = div_clone;
+        instance.totalContents.appendChild(div_clone);
+
+      }
+
+      div_clone = GeneralJs.nodes.div.cloneNode(true);
+      div_clone.classList.add("fadeup");
+      div_clone.classList.add("totalWhite");
+      style = {
+        position: "fixed",
+        background: GeneralJs.colorChip.white,
+        top: String(margin) + ea,
+        left: String((motherBoo ? instance.grayBarWidth : 0) + margin) + ea,
+        borderRadius: String(5) + ea,
+        boxShadow: "0 2px 10px -6px " + GeneralJs.colorChip.shadow,
+        width: String(window.innerWidth - (motherBoo ? instance.grayBarWidth : 0) - (margin * 2)) + ea,
+        height: String(window.innerHeight - instance.belowHeight - (margin * 2) - 10) + ea,
+        zIndex: String(2),
+      };
+      for (let i in style) {
+        div_clone.style[i] = style[i];
+      }
+
+      width = 50;
+
+      svg_icon = instance.mother.returnLoadingIcon();
+      style = {
+        width: String(width) + ea,
+        height: String(width) + ea,
+        top: 'calc(50% - ' + String(width / 2) + ea + ')',
+        left: 'calc(50% - ' + String(width / 2) + ea + ')',
+      }
+      for (let i in style) {
+        svg_icon.style[i] = style[i];
+      }
+      div_clone.appendChild(svg_icon);
+
+      instance.whiteBox.contentsBox = div_clone;
+      instance.totalContents.appendChild(div_clone);
+
+      ajaxJson({
+        mode: "designer",
+        start: agoDate,
+        end: today
+      }, "/getProjectReport", { equal: true }).then((data) => {
+        svg_icon.style.opacity = "0";
+        instance.reportContents(data, div_clone, svg_icon);
+      }).catch((err) => {
+        console.log(err);
+      });
+
+      GeneralJs.stacks.whiteBox = 0;
+    }
+  } catch (e) {
+    GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
+    console.log(e);
+  }
+}
+
 DesignerJs.prototype.reportViewMaker = function () {
   const instance = this;
   return function (e) {

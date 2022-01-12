@@ -7267,6 +7267,7 @@ ProjectJs.prototype.reportContents = function (data, mother, loadingIcon) {
       loadingIcon.style.opacity = "1";
 
       ajaxJson({
+        mode: "service",
         start: stringToDate(startDay),
         end: stringToDate(endDay),
       }, "/getProjectReport", { equal: true }).then((data) => {
@@ -7398,6 +7399,7 @@ ProjectJs.prototype.reportViewMakerDetail = function (recycle = false) {
       instance.totalContents.appendChild(div_clone);
 
       ajaxJson({
+        mode: "service",
         start: agoDate,
         end: today
       }, "/getProjectReport", { equal: true }).then((data) => {
