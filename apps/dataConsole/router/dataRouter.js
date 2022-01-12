@@ -1593,62 +1593,114 @@ DataRouter.prototype.rou_post_getProjectReport = function () {
   let obj = {};
   obj.link = "/getProjectReport";
   obj.func = async function (req, res) {
+    res.set("Content-Type", "application/json");
     try {
-      const { start, end } = equalJson(req.body);
-      let resultObj;
+      const { mode, start, end } = equalJson(req.body);
       let clients;
-      let projects;
+      let projects, projects2;
       let serviceArr;
+      let designers;
 
-      serviceArr = new Array(4);
+      if (mode === "service") {
 
-      resultObj = { start, end };
-      clients = await back.getClientsByQuery({
-        $and: [
-          {
-            requests: {
-              $elemMatch: {
-                "request.timeline": { $gte: start }
-              }
-            }
-          },
-          {
-            requests: {
-              $elemMatch: {
-                "request.timeline": { $lt: end }
-              }
-            }
-          }
-        ]
-      }, { selfMongo: instance.mongo });
+        serviceArr = new Array(4);
 
-      if (clients.length === 0) {
-        projects = [];
-      } else {
-        projects = (await back.getProjectsByQuery({
+        projects = await back.getProjectsByQuery({
           $and: [
-            { $or: clients.toNormal().map((obj) => { return { cliid: obj.cliid } }) },
-            { desid: { $regex: "^d" } }
+            {
+              "process.contract.first.date": { $gte: start }
+            },
+            {
+              "process.contract.first.date": { $lt: end }
+            },
+            {
+              "desid": { $regex: "^d" }
+            }
           ]
-        })).toNormal();
-      }
+        }, { selfMongo: instance.mongo });
 
-      serviceArr[0] = projects.filter((obj) => { return /1/gi.test(obj.service.serid.split('_')[1]) }).map((obj) => { return { proid: obj.proid, cliid: obj.cliid } });
-      serviceArr[1] = projects.filter((obj) => { return /2/gi.test(obj.service.serid.split('_')[1]) }).map((obj) => { return { proid: obj.proid, cliid: obj.cliid } });
-      serviceArr[2] = projects.filter((obj) => { return /3/gi.test(obj.service.serid.split('_')[1]) }).map((obj) => { return { proid: obj.proid, cliid: obj.cliid } });
-      serviceArr[3] = projects.filter((obj) => { return /4/gi.test(obj.service.serid.split('_')[1]) }).map((obj) => { return { proid: obj.proid, cliid: obj.cliid } });
+        clients = await back.getClientsByQuery({
+          $or: [
+            {
+              $and: [
+                {
+                  requests: {
+                    $elemMatch: {
+                      "request.timeline": { $gte: start }
+                    }
+                  }
+                },
+                {
+                  requests: {
+                    $elemMatch: {
+                      "request.timeline": { $lt: end }
+                    }
+                  }
+                }
+              ]
+            },
+            ...projects.toNormal().map((obj) => { return { cliid: obj.cliid } }),
+          ]
+        }, { selfMongo: instance.mongo });
 
-      for (let arr of serviceArr) {
-        for (let obj of arr) {
-          obj.name = clients.toNormal().find((c) => { return c.cliid === obj.cliid }).name;
+        serviceArr[0] = projects.filter((obj) => { return /1/gi.test(obj.service.serid.split('_')[1]) }).map((obj) => { return { proid: obj.proid, cliid: obj.cliid } });
+        serviceArr[1] = projects.filter((obj) => { return /2/gi.test(obj.service.serid.split('_')[1]) }).map((obj) => { return { proid: obj.proid, cliid: obj.cliid } });
+        serviceArr[2] = projects.filter((obj) => { return /3/gi.test(obj.service.serid.split('_')[1]) }).map((obj) => { return { proid: obj.proid, cliid: obj.cliid } });
+        serviceArr[3] = projects.filter((obj) => { return /4/gi.test(obj.service.serid.split('_')[1]) }).map((obj) => { return { proid: obj.proid, cliid: obj.cliid } });
+
+        for (let arr of serviceArr) {
+          for (let obj of arr) {
+            obj.name = clients.toNormal().find((c) => { return c.cliid === obj.cliid }).name;
+          }
         }
+
+        res.send(JSON.stringify({ start, end, numbers: { client: clients.length, project: projects.length }, serviceArr }));
+
+      } else if (mode === "designer") {
+
+        designers = await back.getDesignersByQuery({}, { selfMongo: instance.mongo });
+        projects = await back.getProjectsByQuery({
+          $and: [
+            {
+              "proposal.date": { $gte: start }
+            },
+            {
+              "proposal.date": { $lt: end }
+            },
+            {
+              "desid": { $regex: "^d" }
+            }
+          ]
+        }, { selfMongo: instance.mongo });
+        projects2 = await back.getProjectsByQuery({
+          $and: [
+            {
+              "process.contract.first.date": { $gte: start }
+            },
+            {
+              "process.contract.first.date": { $lt: end }
+            },
+            {
+              "desid": { $regex: "^d" }
+            }
+          ]
+        }, { selfMongo: instance.mongo });
+
+        console.log(projects.length, projects2.length);
+        for (let p of projects2) {
+          console.log(p.process.contract.first.date);
+        }
+
+        res.send(JSON.stringify({ start, end }));
+
+      } else {
+        throw new Error("invaild mode");
       }
 
-      res.set("Content-Type", "application/json");
-      res.send(JSON.stringify({ start, end, numbers: { client: clients.length, project: projects.length }, serviceArr }));
     } catch (e) {
       instance.mother.errorLog("Console 서버 문제 생김 (rou_post_getProjectReport): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
   return obj;
