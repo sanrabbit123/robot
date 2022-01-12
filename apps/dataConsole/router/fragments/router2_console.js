@@ -989,62 +989,74 @@ DataRouter.prototype.rou_post_getProjectReport = function () {
   let obj = {};
   obj.link = "/getProjectReport";
   obj.func = async function (req, res) {
+    res.set("Content-Type", "application/json");
     try {
-      const { start, end } = equalJson(req.body);
-      let resultObj;
+      const { mode, start, end } = equalJson(req.body);
       let clients;
       let projects;
       let serviceArr;
 
-      serviceArr = new Array(4);
+      if (mode === "service") {
 
-      resultObj = { start, end };
-      clients = await back.getClientsByQuery({
-        $and: [
-          {
-            requests: {
-              $elemMatch: {
-                "request.timeline": { $gte: start }
-              }
-            }
-          },
-          {
-            requests: {
-              $elemMatch: {
-                "request.timeline": { $lt: end }
-              }
-            }
-          }
-        ]
-      }, { selfMongo: instance.mongo });
-
-      if (clients.length === 0) {
-        projects = [];
-      } else {
-        projects = (await back.getProjectsByQuery({
+        serviceArr = new Array(4);
+        clients = await back.getClientsByQuery({
           $and: [
-            { $or: clients.toNormal().map((obj) => { return { cliid: obj.cliid } }) },
-            { desid: { $regex: "^d" } }
+            {
+              requests: {
+                $elemMatch: {
+                  "request.timeline": { $gte: start }
+                }
+              }
+            },
+            {
+              requests: {
+                $elemMatch: {
+                  "request.timeline": { $lt: end }
+                }
+              }
+            }
           ]
-        })).toNormal();
-      }
+        }, { selfMongo: instance.mongo });
 
-      serviceArr[0] = projects.filter((obj) => { return /1/gi.test(obj.service.serid.split('_')[1]) }).map((obj) => { return { proid: obj.proid, cliid: obj.cliid } });
-      serviceArr[1] = projects.filter((obj) => { return /2/gi.test(obj.service.serid.split('_')[1]) }).map((obj) => { return { proid: obj.proid, cliid: obj.cliid } });
-      serviceArr[2] = projects.filter((obj) => { return /3/gi.test(obj.service.serid.split('_')[1]) }).map((obj) => { return { proid: obj.proid, cliid: obj.cliid } });
-      serviceArr[3] = projects.filter((obj) => { return /4/gi.test(obj.service.serid.split('_')[1]) }).map((obj) => { return { proid: obj.proid, cliid: obj.cliid } });
-
-      for (let arr of serviceArr) {
-        for (let obj of arr) {
-          obj.name = clients.toNormal().find((c) => { return c.cliid === obj.cliid }).name;
+        if (clients.length === 0) {
+          projects = [];
+        } else {
+          projects = (await back.getProjectsByQuery({
+            $and: [
+              { $or: clients.toNormal().map((obj) => { return { cliid: obj.cliid } }) },
+              { desid: { $regex: "^d" } }
+            ]
+          })).toNormal();
         }
+
+        serviceArr[0] = projects.filter((obj) => { return /1/gi.test(obj.service.serid.split('_')[1]) }).map((obj) => { return { proid: obj.proid, cliid: obj.cliid } });
+        serviceArr[1] = projects.filter((obj) => { return /2/gi.test(obj.service.serid.split('_')[1]) }).map((obj) => { return { proid: obj.proid, cliid: obj.cliid } });
+        serviceArr[2] = projects.filter((obj) => { return /3/gi.test(obj.service.serid.split('_')[1]) }).map((obj) => { return { proid: obj.proid, cliid: obj.cliid } });
+        serviceArr[3] = projects.filter((obj) => { return /4/gi.test(obj.service.serid.split('_')[1]) }).map((obj) => { return { proid: obj.proid, cliid: obj.cliid } });
+
+        for (let arr of serviceArr) {
+          for (let obj of arr) {
+            obj.name = clients.toNormal().find((c) => { return c.cliid === obj.cliid }).name;
+          }
+        }
+
+        res.send(JSON.stringify({ start, end, numbers: { client: clients.length, project: projects.length }, serviceArr }));
+
+      } else if (mode === "designer") {
+
+        
+
+
+        res.send(JSON.stringify({ start, end }));
+
+      } else {
+        throw new Error("invaild mode");
       }
 
-      res.set("Content-Type", "application/json");
-      res.send(JSON.stringify({ start, end, numbers: { client: clients.length, project: projects.length }, serviceArr }));
     } catch (e) {
       instance.mother.errorLog("Console 서버 문제 생김 (rou_post_getProjectReport): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
   return obj;
