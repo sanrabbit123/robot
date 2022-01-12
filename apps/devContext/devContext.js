@@ -97,6 +97,7 @@ DevContext.prototype.launching = async function () {
 
 
 
+
     // const WebSocket = require("ws");
     // const url = "wss://" + this.address.officeinfo.ghost.host + ":5000/general";
     // const ws = new WebSocket(url);
@@ -1717,9 +1718,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "정준호",
-    //     designer: "이미영",
-    //     link: "https://drive.google.com/drive/folders/1oCsa7Ia0nQBhoOzA8TBs0WAjMWrBySSW",
+    //     client: "유영란",
+    //     designer: "박정훈",
+    //     link: "https://drive.google.com/drive/folders/1Q2264Bczfmzg6yZo8csUMYdJKn9mmxGp",
     //     pay: true
     //   },
     // ]);
