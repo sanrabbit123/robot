@@ -6890,6 +6890,8 @@ ProjectJs.prototype.reportScrollBox = function (data, motherWidth) {
   let whiteInnerSize2, whiteInnerWeight2;
   let whiteWordsBetween;
   let whiteSumTop, whiteSumSize, whiteSumWeight;
+  let summaryText;
+  let whiteSumTotalTop;
 
   margin = 12;
   entireMargin = margin * 3;
@@ -6902,17 +6904,22 @@ ProjectJs.prototype.reportScrollBox = function (data, motherWidth) {
   boxTitleTop = 16;
   blockBoxTop = 45;
   whiteInnerMargin = 5;
-  whiteInnerPaddingTop = isMac() ? 5 : 6;
-  whiteInnerPaddingBottom = isMac() ? 7 : 6;
-  whiteInnerPaddingLeft = 12;
+  whiteInnerPaddingTop = isMac() ? 6 : 7;
+  whiteInnerPaddingBottom = isMac() ? 8 : 7;
+  whiteInnerPaddingLeft = 13;
   whiteInnerSize = 13;
   whiteInnerWeight = 600;
   whiteInnerSize2 = 8;
   whiteInnerWeight2 = 400;
   whiteWordsBetween = 4;
-  whiteSumTop = 17;
+  whiteSumTop = 18;
   whiteSumSize = 24;
   whiteSumWeight = 200;
+  whiteSumTotalTop = 31;
+
+  if (data.numbers.client === 0) {
+    data.numbers.client = 1;
+  }
 
   //entire scroll box
   scrollBox = GeneralJs.nodes.div.cloneNode(true);
@@ -7082,19 +7089,59 @@ ProjectJs.prototype.reportScrollBox = function (data, motherWidth) {
         fontWeight: String(whiteSumWeight),
         color: colorChip.deactive,
       },
-    })
-
+    });
 
   }
 
+  summaryText = '';
+  summaryText += "<u%문의%u> ";
+  summaryText += String(data.numbers.client) + "<u%명%u>";
+  summaryText += blank;
+  summaryText += "<b%/%b>";
+  summaryText += blank;
+  summaryText += "<u%계약%u> ";
+  summaryText += String(data.numbers.project) + "<u%명 (%u>";
+  for (let i = 0; i < data.serviceArr.length; i++) {
+    summaryText += String(data.serviceArr[i].length) + "<u%명%u>";
+    summaryText += "<u%, %u>";
+  }
+  summaryText = summaryText.slice(0, -8);
+  summaryText += "<u%)%u>";
+  summaryText += blank;
+  summaryText += "<b%/%b>";
+  summaryText += blank;
+  summaryText += "<u%계약율%u> ";
+  summaryText += String(Math.round((data.numbers.project / data.numbers.client) * 10000) / 100) + "<u%% (%u>";
+  for (let i = 0; i < data.serviceArr.length; i++) {
+    summaryText += String(data.serviceArr[i].length) + "<u%%%u>";
+    summaryText += "<u%, %u>";
+  }
+  summaryText = summaryText.slice(0, -8);
+  summaryText += "<u%)%u>";
 
-  totalSummaryTong
-
-
-
-  console.log(data);
-
-
+  createNode({
+    mother: totalSummaryTong,
+    text: summaryText,
+    style: {
+      position: "absolute",
+      textAlign: "center",
+      width: String(100) + '%',
+      top: String(whiteSumTotalTop) + ea,
+      fontSize: String(whiteSumSize) + ea,
+      fontWeight: String(whiteSumWeight),
+      color: colorChip.black,
+    },
+    bold: {
+      fontSize: String(whiteSumSize) + ea,
+      fontWeight: String(whiteSumWeight),
+      color: colorChip.green,
+    },
+    under: {
+      fontSize: String(whiteSumSize) + ea,
+      fontWeight: String(whiteSumWeight),
+      color: colorChip.deactive,
+    },
+  });
 
 
   return scrollBox;
