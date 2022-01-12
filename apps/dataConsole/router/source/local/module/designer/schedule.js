@@ -960,7 +960,7 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
     blockAreaMarginBottom = <%% 50, 50, 50, 50, 5 %%>;
 
     greenButtonPaddingTop = <%% (isMac() ? 6 : 7), (isMac() ? 6 : 7), (isMac() ? 6 : 7), (isMac() ? 6 : 7), 1.5 %%>;
-    greenButtonPaddingBottom = <%% (isMac() ? 8 : 7), (isMac() ? 8 : 7), (isMac() ? 8 : 7), (isMac() ? 8 : 7), 1.8 %%>;
+    greenButtonPaddingBottom = <%% (isMac() ? 8 : 7), (isMac() ? 8 : 7), (isMac() ? 8 : 7), (isMac() ? 8 : 7), 2 %%>;
     greenButtonPaddingLeft = <%% 13, 13, 13, 13, 3 %%>;
     greenButtonMargin = <%% 4, 4, 4, 4, 1 %%>;
     greenButtonSize = <%% 13, 13, 12, 11, 3 %%>;
@@ -1806,7 +1806,6 @@ DesignerJs.prototype.scheduleContents = async function (board, designer, project
       return blockFactor;
     }
 
-
     // title area
     titleArea = createNode({
       mother: board,
@@ -2014,7 +2013,7 @@ DesignerJs.prototype.scheduleIconSet = function (desid) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const { createNode, createNodes, colorChip, withOut, blankHref, scrollTo } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, blankHref, scrollTo, dateToString } = GeneralJs;
   const { totalMother, ea, grayBarWidth, belowHeight, motherHeight } = this;
   const mobile = this.media[4];
   const desktop = !mobile;
@@ -2421,17 +2420,18 @@ DesignerJs.prototype.scheduleIconSet = function (desid) {
     } else {
       if (window.confirm(designer.designer + " 디자이너님에게 " + instance.client.name + " 고객님 상세 일정 안내 작성 알림톡을 전송합니다. 확실합니까?")) {
         GeneralJs.ajaxJson({
-          method: "designerConsoleRequest",
+          method: "designerSchedule",
           name: designer.designer,
           phone: designer.information.phone,
           option: {
             desid: designer.desid,
             designer: designer.designer,
             client: instance.client.name,
+            cliid: instance.client.cliid,
             host: GHOSTHOST,
             path: "console",
-            mode: "request",
-            cliid: instance.client.cliid,
+            mode: "schedule",
+            date: dateToString(instance.project.process.contract.form.date.from).replace(/\-/gi, ".").slice(2),
           }
         }, "/alimTalk").then(() => {
           return GeneralJs.ajaxJson({

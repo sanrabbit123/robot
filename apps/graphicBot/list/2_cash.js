@@ -123,14 +123,14 @@ module.exports = function (arg, info) {
             business: textArr[index + 2],
             from: textArr[index + 3],
             item: textArr[index + 5],
-            supply: Number(textArr[index + 6].replace(/[^0-9\-]/g, '')),
-            vat: Number(textArr[index + 7].replace(/[^0-9\-]/g, '')),
-            service: Number(textArr[index + 8].replace(/[^0-9\-]/g, '')),
-            total: Number(textArr[index + 9].replace(/[^0-9\-]/g, '')),
-            id: textArr[index + 10],
-            issuance: textArr[index + 11],
-            deal: /승인/gi.test(textArr[index + 12]),
-            etc: textArr[index + 15],
+            supply: Number(textArr[index + 7].replace(/[^0-9\-]/g, '')),
+            vat: Number(textArr[index + 8].replace(/[^0-9\-]/g, '')),
+            service: Number(textArr[index + 9].replace(/[^0-9\-]/g, '')),
+            total: Number(textArr[index + 10].replace(/[^0-9\-]/g, '')),
+            id: textArr[index + 11],
+            issuance: textArr[index + 12],
+            deal: /승인/gi.test(textArr[index + 13]),
+            etc: textArr[index + 16],
           });
         }
 

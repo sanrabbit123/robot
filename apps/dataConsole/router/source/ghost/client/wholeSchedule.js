@@ -257,7 +257,7 @@ WholeScheduleJs.prototype.insertInitBox = function () {
               },
               children: [
                 {
-                  text: dateToString(schedule.date.start).replace(/\-/g, ". "),
+                  text: dateToString(schedule.date.start.valueOf() < (new Date(2000, 0, 1)).valueOf() ? instance.project.process.contract.form.date.from : schedule.date.start).replace(/\-/g, ". "),
                   class: [ initDateClassName.start ],
                   style: {
                     display: "inline-block",
@@ -288,7 +288,7 @@ WholeScheduleJs.prototype.insertInitBox = function () {
                   }
                 },
                 {
-                  text: dateToString(schedule.date.end).replace(/\-/g, ". "),
+                  text: dateToString(schedule.date.end.valueOf() < (new Date(2000, 0, 1)).valueOf() ? instance.project.process.contract.form.date.to : schedule.date.end).replace(/\-/g, ". "),
                   class: [ initDateClassName.end ],
                   style: {
                     display: "inline-block",
@@ -515,6 +515,10 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
   let dateStart, dateEnd, wordingTitle, wordingDescription, barColor;
   let children;
   let bigCalendarMarginTop;
+  let scheduleStart, scheduleEnd;
+  let scheduleTasks;
+  let pastOrder;
+  let periodArr;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 52, 52, 44, 36, 4.7 %%>;
@@ -677,6 +681,37 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
   });
 
   children = schedule.children;
+  if (children.length === 0) {
+    this.service.setting.schedule.sort((a, b) => {
+      return a.order - b.order;
+    });
+    scheduleStart = new Date(JSON.stringify(this.project.process.contract.form.date.from).slice(1, -1));
+    scheduleTasks = [];
+    pastOrder = -1;
+    periodArr = [ 0 ];
+    this.service.setting.schedule.forEach((obj) => {
+      const { title, description, color, order, period } = obj;
+      if (pastOrder !== order) {
+        periodArr.sort((a, b) => { return b - a; });
+        scheduleStart.setDate(scheduleStart.getDate() + periodArr[0]);
+        periodArr = [];
+      }
+      scheduleEnd = new Date(JSON.stringify(scheduleStart).slice(1, -1));
+      scheduleEnd.setDate(scheduleEnd.getDate() + period);
+      scheduleTasks.push({
+        contents: { title, description, color },
+        date: {
+          start: new Date(JSON.stringify(scheduleStart).slice(1, -1)),
+          end: scheduleEnd
+        }
+      });
+      pastOrder = order;
+      periodArr.push(period);
+    });
+    schedule.children = scheduleTasks;
+    children = schedule.children;
+  }
+
   for (let i = 0; i < children.length; i++) {
     ({ date: { start: dateStart, end: dateEnd }, contents: { title: wordingTitle, description: wordingDescription, color: barColor } } = children[i]);
     dateStart = dateToString(dateStart).replace(/-/gi, ". ").slice(2);
@@ -1205,6 +1240,13 @@ WholeScheduleJs.prototype.launching = async function (loading) {
     [ client ] = clients;
     this.client = client;
     this.clientHistory = await ajaxJson({ id: client.cliid, rawMode: true }, "/getClientHistory", { equal: true });
+
+    [ thisService ] = await ajaxJson({
+      whereQuery: {
+        serid: project.service.serid
+      }
+    }, "/getServices", { equal: true });
+    this.service = thisService;
 
     document.querySelector("title").textContent = client.name + " 고객님 전체 일정 안내 | 홈리에종";
 
