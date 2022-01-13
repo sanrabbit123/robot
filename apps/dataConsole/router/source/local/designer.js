@@ -3420,64 +3420,43 @@ DesignerJs.prototype.returnValueEventMaker = function () {
 
 DesignerJs.prototype.reportScrollBox = function (data, motherWidth) {
   const instance = this;
-  const { createNode, colorChip, withOut, blankHref, isMac } = GeneralJs;
+  const { createNode, colorChip, withOut, blankHref, isMac, autoComma, ajaxJson, uniqueValue } = GeneralJs;
   const ea = "px";
-  const wordings = [ "홈퍼니싱", "홈스타일링", "토탈 스타일링", "엑스트라 스타일링" ];
-  const blank = "&nbsp;&nbsp;&nbsp;"
+  const blank = "&nbsp;&nbsp;&nbsp;";
+  const { designers } = data;
   let div_clone;
   let style;
   let entireMargin;
   let margin;
-  let scrollBox, boxTop, boxNumber;
-  let titleTop;
-  let innerMargin;
-  let summaryHeight;
-  let factorSummaryHeight;
-  let boxInnerMargin;
-  let boxTitleTop;
-  let blockBoxTop;
-  let blockTong, summaryTong;
-  let blockGrayTong, summaryWhiteTong;
-  let totalSummaryTong;
-  let whiteBlock;
-  let whiteInnerMargin;
-  let whiteInnerPaddingTop;
-  let whiteInnerPaddingBottom;
-  let whiteInnerPaddingLeft;
-  let whiteInnerSize, whiteInnerWeight;
-  let whiteInnerSize2, whiteInnerWeight2;
-  let whiteWordsBetween;
-  let whiteSumTop, whiteSumSize, whiteSumWeight;
-  let summaryText;
-  let whiteSumTotalTop;
+  let scrollBox, boxTop;
+  let base;
+  let basePaddingTop, basePaddingBottom;
+  let divideNumber;
+  let tong;
+  let area;
+  let lineBetween;
+  let linePaddingLeft;
+  let wordingSize;
+  let linePaddingTop, linePaddingBottom;
+  let designerSize, desidSize;
+  let subTitleLeft, subTitleBottom;
+  let matrix, tempArr;
 
   margin = 12;
   entireMargin = margin * 3;
   boxTop = 90;
-  innerMargin = 8;
-  summaryHeight = 100;
-  boxNumber = 4;
-  factorSummaryHeight = 75;
-  boxInnerMargin = 20;
-  boxTitleTop = 16;
-  blockBoxTop = 45;
-  whiteInnerMargin = 5;
-  whiteInnerPaddingTop = isMac() ? 6 : 7;
-  whiteInnerPaddingBottom = isMac() ? 8 : 7;
-  whiteInnerPaddingLeft = 13;
-  whiteInnerSize = 13;
-  whiteInnerWeight = 600;
-  whiteInnerSize2 = 8;
-  whiteInnerWeight2 = 400;
-  whiteWordsBetween = 4;
-  whiteSumTop = 18;
-  whiteSumSize = 24;
-  whiteSumWeight = 200;
-  whiteSumTotalTop = 31;
-
-  if (data.numbers.client === 0) {
-    data.numbers.client = 1;
-  }
+  basePaddingTop = 12;
+  basePaddingBottom = 8;
+  divideNumber = 4;
+  lineBetween = 4;
+  linePaddingLeft = 20;
+  wordingSize = 14;
+  linePaddingTop = isMac() ? 14 : 15;
+  linePaddingBottom = isMac() ? 16 : 15;
+  designerSize = 17;
+  desidSize = 11;
+  subTitleLeft = 1;
+  subTitleBottom = 7;
 
   //entire scroll box
   scrollBox = GeneralJs.nodes.div.cloneNode(true);
@@ -3494,212 +3473,388 @@ DesignerJs.prototype.reportScrollBox = function (data, motherWidth) {
     scrollBox.style[z] = style[z];
   }
 
-  blockTong = [];
-  summaryTong = [];
-  for (let i = 0; i < boxNumber; i++) {
-    blockGrayTong = createNode({
+  matrix = [ [ "디자이너", "제안 횟수", "제안액 누계", "제안액 평균", "평단가 평균", "계약 횟수", "디자인비 누계", "디자인비 평균", "디자인비 평단가", "선금 정산 횟수", "선금 정산 누계", "선금 정산 평균", "잔금 정산 횟수", "잔금 정산 누계", "잔금 정산 평균" ] ];
+
+  for (let designer of designers) {
+
+    tempArr = [];
+    tempArr.push(designer.designer);
+
+    designer.proposal = designer.proposal.filter((obj) => { return obj.amount !== 0 });
+    designer.process = designer.process.filter((obj) => { return obj.amount !== 0 });
+    designer.first = designer.first.filter((obj) => { return obj.amount !== 0 });
+    designer.remain = designer.remain.filter((obj) => { return obj.amount !== 0 });
+
+    base = createNode({
       mother: scrollBox,
       style: {
-        display: "inline-block",
+        display: "block",
         position: "relative",
-        width: "calc(calc(100% - " + String(innerMargin * (boxNumber - 1)) + ea + ") / " + String(boxNumber) + ")",
-        height: withOut(summaryHeight + innerMargin, ea),
-        background: colorChip.gray1,
-        borderRadius: String(5) + "px",
-        marginRight: String(i === boxNumber - 1 ? 0 : innerMargin) + ea,
-        marginBottom: String(innerMargin) + ea,
-      },
-      children: [
-        {
-          text: wordings[i],
-          style: {
-            fontSize: String(15) + ea,
-            fontWeight: String(600),
-            color: colorChip.black,
-            position: "absolute",
-            top: String(boxTitleTop) + ea,
-            left: String(boxInnerMargin) + ea,
-          }
-        },
-        {
-          style: {
-            position: "absolute",
-            top: String(blockBoxTop) + ea,
-            left: String(boxInnerMargin) + ea,
-            width: withOut(boxInnerMargin * 2, ea),
-            height: withOut((boxInnerMargin / 2) + blockBoxTop + boxInnerMargin + factorSummaryHeight, ea),
-            borderRadius: String(5) + "px",
-            background: colorChip.gray5,
-            overflow: "scroll",
-          },
-          children: [
-            {
-              style: {
-                position: "relative",
-                top: String(boxInnerMargin / 2) + ea,
-                left: String(boxInnerMargin / 2) + ea,
-                width: withOut(boxInnerMargin, ea),
-                paddingBottom: String(boxInnerMargin * 10) + ea,
-                height: "auto",
-              }
-            }
-          ]
-        },
-        {
-          style: {
-            position: "absolute",
-            bottom: String(boxInnerMargin) + ea,
-            left: String(boxInnerMargin) + ea,
-            width: withOut(boxInnerMargin * 2, ea),
-            height: String(factorSummaryHeight) + ea,
-            borderRadius: String(5) + "px",
-            background: colorChip.white,
-          }
-        }
-      ]
-    }).children[1];
-    summaryWhiteTong = blockGrayTong.nextElementSibling;
-    blockGrayTong = blockGrayTong.firstChild;
-    blockTong.push(blockGrayTong);
-    summaryTong.push(summaryWhiteTong);
-  }
-
-  totalSummaryTong = createNode({
-    mother: scrollBox,
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(100) + '%',
-      background: colorChip.gray1,
-      borderRadius: String(5) + "px",
-      height: String(summaryHeight) + ea,
-    }
-  });
-
-  for (let i = 0; i < boxNumber; i++) {
-    for (let { proid, cliid, name } of data.serviceArr[i]) {
-      whiteBlock = createNode({
-        mother: blockTong[i],
-        class: [ "hoverDefault_lite" ],
-        attribute: { proid, cliid, name },
-        event: {
-          click: function (e) {
-            const proid = this.getAttribute("proid");
-            blankHref(window.location.protocol + "//" + window.location.host + "/project?proid=" + proid);
-          }
-        },
-        style: {
-          display: "inline-block",
-          width: String(1000) + ea,
-          background: colorChip.white,
-          borderRadius: String(5) + ea,
-          marginRight: String(whiteInnerMargin) + ea,
-          marginBottom: String(whiteInnerMargin) + ea,
-          paddingTop: String(whiteInnerPaddingTop) + ea,
-          paddingBottom: String(whiteInnerPaddingBottom) + ea,
-          paddingLeft: String(whiteInnerPaddingLeft) + ea,
-          paddingRight: String(whiteInnerPaddingLeft) + ea,
-        }
-      });
-      createNode({
-        mother: whiteBlock,
-        text: name,
-        style: {
-          display: "inline-block",
-          fontSize: String(whiteInnerSize) + ea,
-          fontWeight: String(whiteInnerWeight),
-          color: colorChip.black,
-          marginRight: String(whiteWordsBetween) + ea,
-        }
-      })
-      createNode({
-        mother: whiteBlock,
-        text: proid,
-        style: {
-          display: "inline-block",
-          fontSize: String(whiteInnerSize2) + ea,
-          fontWeight: String(whiteInnerWeight2),
-          color: colorChip.green,
-        }
-      });
-      whiteBlock.style.width = "auto";
-    }
-
-    createNode({
-      mother: summaryTong[i],
-      text: `${String(data.serviceArr[i].length)}<u%명%u>${blank}<b%/%b>${blank}${String(Math.round((data.serviceArr[i].length / data.numbers.client) * 10000) / 100)}<u%%%u>${blank}<b%/%b>${blank}${String(Math.round((data.serviceArr[i].length / data.numbers.project) * 10000) / 100)}<u%%%u>`,
-      style: {
-        position: "absolute",
-        textAlign: "center",
         width: String(100) + '%',
-        top: String(whiteSumTop) + ea,
-        fontSize: String(whiteSumSize) + ea,
-        fontWeight: String(whiteSumWeight),
-        color: colorChip.black,
-      },
-      bold: {
-        fontSize: String(whiteSumSize) + ea,
-        fontWeight: String(whiteSumWeight),
-        color: colorChip.green,
-      },
-      under: {
-        fontSize: String(whiteSumSize) + ea,
-        fontWeight: String(whiteSumWeight),
-        color: colorChip.deactive,
-      },
+        paddingTop: String(basePaddingTop) + ea,
+        paddingBottom: String(basePaddingBottom) + ea,
+      }
     });
 
+    createNode({
+      mother: base,
+      class: [ "hoverDefault_lite" ],
+      text: `${designer.designer}&nbsp;&nbsp;<b%${designer.desid}%b>`,
+      event: {
+        click: (e) => {
+          ajaxJson({
+            values: matrix,
+            newMake: true,
+            parentId: "1JcUBOu9bCrFBQfBAG-yXFcD9gqYMRC1c",
+            sheetName: "designerReport_" + uniqueValue("hex"),
+          }, "/sendSheets").then((res) => {
+            const { link } = res;
+            blankHref(link);
+          }).catch((err) => {
+            console.log(err);
+          });
+          instance.mother.greenAlert("제안서 제작이 요청되었습니다. 잠시만 기다려주세요!");
+        }
+      },
+      style: {
+        display: "inline-block",
+        fontSize: String(designerSize) + ea,
+        fontWeight: String(600),
+        color: colorChip.black,
+        marginLeft: String(subTitleLeft) + ea,
+        marginBottom: String(subTitleBottom) + ea,
+      },
+      bold: {
+        fontSize: String(desidSize) + ea,
+        fontWeight: String(300),
+        color: colorChip.green
+      }
+    });
+
+    tong = createNode({
+      mother: base,
+      style: {
+        display: "block",
+        borderRadius: String(5) + "px",
+        border: "1px solid " + colorChip.gray3,
+        boxSizing: "border-box",
+        width: String(100) + '%',
+      }
+    });
+
+    for (let i = 0; i < divideNumber; i++) {
+      area = createNode({
+        mother: tong,
+        style: {
+          display: "inline-block",
+          width: String(100 / divideNumber) + '%',
+          borderRight: i === divideNumber - 1 ? "" : "1px dashed " + colorChip.gray3,
+          verticalAlign: "top",
+          paddingTop: String(linePaddingTop) + ea,
+          paddingBottom: String(linePaddingBottom) + ea,
+          boxSizing: "border-box",
+        }
+      });
+      if (i === 0) {
+
+        createNode({
+          mother: area,
+          text: `<b%제안 횟수%b> : ${String(designer.proposal.length)}회`,
+          style: {
+            fontSize: String(wordingSize) + ea,
+            fontWeight: String(300),
+            color: colorChip.black,
+            marginBottom: String(lineBetween) + ea,
+            paddingLeft: String(linePaddingLeft) + ea,
+          },
+          bold: {
+            fontSize: String(wordingSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+          }
+        });
+        tempArr.push(designer.proposal.length);
+
+        createNode({
+          mother: area,
+          text: `<b%제안액 누계%b> : ${autoComma(designer.proposal.reduce((acc, curr) => { return acc + curr.amount }, 0))}원`,
+          style: {
+            fontSize: String(wordingSize) + ea,
+            fontWeight: String(300),
+            color: colorChip.black,
+            marginBottom: String(lineBetween) + ea,
+            paddingLeft: String(linePaddingLeft) + ea,
+          },
+          bold: {
+            fontSize: String(wordingSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+          }
+        });
+        tempArr.push(designer.proposal.reduce((acc, curr) => { return acc + curr.amount }, 0));
+
+        createNode({
+          mother: area,
+          text: `<b%제안액 평균%b> : ${designer.proposal.length === 0 ? String(0) : autoComma(Math.floor((designer.proposal.reduce((acc, curr) => { return acc + curr.amount }, 0) / designer.proposal.length) / 1000) * 1000)}원`,
+          style: {
+            fontSize: String(wordingSize) + ea,
+            fontWeight: String(300),
+            color: colorChip.black,
+            marginBottom: String(lineBetween) + ea,
+            paddingLeft: String(linePaddingLeft) + ea,
+          },
+          bold: {
+            fontSize: String(wordingSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+          }
+        });
+        tempArr.push(designer.proposal.length === 0 ? (0) : (Math.floor((designer.proposal.reduce((acc, curr) => { return acc + curr.amount }, 0) / designer.proposal.length) / 1000) * 1000));
+
+        createNode({
+          mother: area,
+          text: `<b%평단가 평균%b> : ${designer.proposal.length === 0 ? String(0) : autoComma(Math.floor((designer.proposal.reduce((acc, curr) => { return acc + curr.per }, 0) / designer.proposal.length) / 1000) * 1000)}원`,
+          style: {
+            fontSize: String(wordingSize) + ea,
+            fontWeight: String(300),
+            color: colorChip.black,
+            paddingLeft: String(linePaddingLeft) + ea,
+          },
+          bold: {
+            fontSize: String(wordingSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+          }
+        });
+        tempArr.push(designer.proposal.length === 0 ? (0) : (Math.floor((designer.proposal.reduce((acc, curr) => { return acc + curr.per }, 0) / designer.proposal.length) / 1000) * 1000));
+
+      } else if (i === 1) {
+
+        createNode({
+          mother: area,
+          text: `<b%계약 횟수%b> : ${String(designer.process.length)}회`,
+          style: {
+            fontSize: String(wordingSize) + ea,
+            fontWeight: String(300),
+            color: colorChip.black,
+            marginBottom: String(lineBetween) + ea,
+            paddingLeft: String(linePaddingLeft) + ea,
+          },
+          bold: {
+            fontSize: String(wordingSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+          }
+        });
+        tempArr.push(designer.process.length);
+
+        createNode({
+          mother: area,
+          text: `<b%디자인비 누계%b> : ${autoComma(designer.process.reduce((acc, curr) => { return acc + curr.amount }, 0))}원`,
+          style: {
+            fontSize: String(wordingSize) + ea,
+            fontWeight: String(300),
+            color: colorChip.black,
+            marginBottom: String(lineBetween) + ea,
+            paddingLeft: String(linePaddingLeft) + ea,
+          },
+          bold: {
+            fontSize: String(wordingSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+          }
+        });
+        tempArr.push(designer.process.reduce((acc, curr) => { return acc + curr.amount }, 0));
+
+        createNode({
+          mother: area,
+          text: `<b%디자인비 평균%b> : ${designer.process.length === 0 ? String(0) : autoComma(Math.floor((designer.process.reduce((acc, curr) => { return acc + curr.amount }, 0) / designer.process.length) / 1000) * 1000)}원`,
+          style: {
+            fontSize: String(wordingSize) + ea,
+            fontWeight: String(300),
+            color: colorChip.black,
+            marginBottom: String(lineBetween) + ea,
+            paddingLeft: String(linePaddingLeft) + ea,
+          },
+          bold: {
+            fontSize: String(wordingSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+          }
+        });
+        tempArr.push(designer.process.length === 0 ? (0) : (Math.floor((designer.process.reduce((acc, curr) => { return acc + curr.amount }, 0) / designer.process.length) / 1000) * 1000));
+
+        createNode({
+          mother: area,
+          text: `<b%디자인비 평단가%b> : ${designer.process.length === 0 ? String(0) : autoComma(Math.floor((designer.process.reduce((acc, curr) => { return acc + curr.per }, 0) / designer.process.length) / 1000) * 1000)}원`,
+          style: {
+            fontSize: String(wordingSize) + ea,
+            fontWeight: String(300),
+            color: colorChip.black,
+            paddingLeft: String(linePaddingLeft) + ea,
+          },
+          bold: {
+            fontSize: String(wordingSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+          }
+        });
+        tempArr.push(designer.process.length === 0 ? (0) : (Math.floor((designer.process.reduce((acc, curr) => { return acc + curr.per }, 0) / designer.process.length) / 1000) * 1000));
+
+
+      } else if (i === 2) {
+
+        createNode({
+          mother: area,
+          text: `<b%선금 정산 횟수%b> : ${String(designer.first.length)}회`,
+          style: {
+            fontSize: String(wordingSize) + ea,
+            fontWeight: String(300),
+            color: colorChip.black,
+            marginBottom: String(lineBetween) + ea,
+            paddingLeft: String(linePaddingLeft) + ea,
+          },
+          bold: {
+            fontSize: String(wordingSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+          }
+        });
+        tempArr.push(designer.first.length);
+
+        createNode({
+          mother: area,
+          text: `<b%선금 정산 누계%b> : ${autoComma(designer.first.reduce((acc, curr) => { return acc + curr.amount }, 0))}원`,
+          style: {
+            fontSize: String(wordingSize) + ea,
+            fontWeight: String(300),
+            color: colorChip.black,
+            marginBottom: String(lineBetween) + ea,
+            paddingLeft: String(linePaddingLeft) + ea,
+          },
+          bold: {
+            fontSize: String(wordingSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+          }
+        });
+        tempArr.push(designer.first.reduce((acc, curr) => { return acc + curr.amount }, 0));
+
+        createNode({
+          mother: area,
+          text: `<b%선금 정산 평균%b> : ${designer.first.length === 0 ? String(0) : autoComma(Math.floor((designer.first.reduce((acc, curr) => { return acc + curr.amount }, 0) / designer.first.length) / 1000) * 1000)}원`,
+          style: {
+            fontSize: String(wordingSize) + ea,
+            fontWeight: String(300),
+            color: colorChip.black,
+            marginBottom: String(lineBetween) + ea,
+            paddingLeft: String(linePaddingLeft) + ea,
+          },
+          bold: {
+            fontSize: String(wordingSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+          }
+        });
+        tempArr.push(designer.first.length === 0 ? (0) : (Math.floor((designer.first.reduce((acc, curr) => { return acc + curr.amount }, 0) / designer.first.length) / 1000) * 1000));
+
+        createNode({
+          mother: area,
+          text: `<b%평균 평수%b> : ${designer.first.length === 0 ? String(0) : autoComma(Math.floor((designer.first.reduce((acc, curr) => { return acc + curr.pyeong }, 0) / designer.first.length) / 1) * 1)}평`,
+          style: {
+            fontSize: String(wordingSize) + ea,
+            fontWeight: String(300),
+            color: colorChip.black,
+            paddingLeft: String(linePaddingLeft) + ea,
+          },
+          bold: {
+            fontSize: String(wordingSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+          }
+        });
+
+      } else {
+
+        createNode({
+          mother: area,
+          text: `<b%잔금 정산 횟수%b> : ${String(designer.remain.length)}회`,
+          style: {
+            fontSize: String(wordingSize) + ea,
+            fontWeight: String(300),
+            color: colorChip.black,
+            marginBottom: String(lineBetween) + ea,
+            paddingLeft: String(linePaddingLeft) + ea,
+          },
+          bold: {
+            fontSize: String(wordingSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+          }
+        });
+        tempArr.push(designer.remain.length);
+
+        createNode({
+          mother: area,
+          text: `<b%잔금 정산 누계%b> : ${autoComma(designer.remain.reduce((acc, curr) => { return acc + curr.amount }, 0))}원`,
+          style: {
+            fontSize: String(wordingSize) + ea,
+            fontWeight: String(300),
+            color: colorChip.black,
+            marginBottom: String(lineBetween) + ea,
+            paddingLeft: String(linePaddingLeft) + ea,
+          },
+          bold: {
+            fontSize: String(wordingSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+          }
+        });
+        tempArr.push(designer.remain.reduce((acc, curr) => { return acc + curr.amount }, 0));
+
+        createNode({
+          mother: area,
+          text: `<b%잔금 정산 평균%b> : ${designer.remain.length === 0 ? String(0) : autoComma(Math.floor((designer.remain.reduce((acc, curr) => { return acc + curr.amount }, 0) / designer.remain.length) / 1000) * 1000)}원`,
+          style: {
+            fontSize: String(wordingSize) + ea,
+            fontWeight: String(300),
+            color: colorChip.black,
+            marginBottom: String(lineBetween) + ea,
+            paddingLeft: String(linePaddingLeft) + ea,
+          },
+          bold: {
+            fontSize: String(wordingSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+          }
+        });
+        tempArr.push(designer.remain.length === 0 ? (0) : (Math.floor((designer.remain.reduce((acc, curr) => { return acc + curr.amount }, 0) / designer.remain.length) / 1000) * 1000));
+
+        createNode({
+          mother: area,
+          text: `<b%평균 평수%b> : ${designer.remain.length === 0 ? String(0) : autoComma(Math.floor((designer.remain.reduce((acc, curr) => { return acc + curr.pyeong }, 0) / designer.remain.length) / 1) * 1)}평`,
+          style: {
+            fontSize: String(wordingSize) + ea,
+            fontWeight: String(300),
+            color: colorChip.black,
+            paddingLeft: String(linePaddingLeft) + ea,
+          },
+          bold: {
+            fontSize: String(wordingSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+          }
+        });
+
+      }
+    }
+
+    matrix.push(tempArr);
   }
 
-  summaryText = '';
-  summaryText += "<u%문의%u> ";
-  summaryText += String(data.numbers.client) + "<u%명%u>";
-  summaryText += blank;
-  summaryText += "<b%/%b>";
-  summaryText += blank;
-  summaryText += "<u%계약%u> ";
-  summaryText += String(data.numbers.project) + "<u%명 (%u>";
-  for (let i = 0; i < data.serviceArr.length; i++) {
-    summaryText += String(data.serviceArr[i].length) + "<u%명%u>";
-    summaryText += "<u%, %u>";
-  }
-  summaryText = summaryText.slice(0, -8);
-  summaryText += "<u%)%u>";
-  summaryText += blank;
-  summaryText += "<b%/%b>";
-  summaryText += blank;
-  summaryText += "<u%계약율%u> ";
-  summaryText += String(Math.round((data.numbers.project / data.numbers.client) * 10000) / 100) + "<u%% (%u>";
-  for (let i = 0; i < data.serviceArr.length; i++) {
-    summaryText += String(data.serviceArr[i].length) + "<u%%%u>";
-    summaryText += "<u%, %u>";
-  }
-  summaryText = summaryText.slice(0, -8);
-  summaryText += "<u%)%u>";
 
-  createNode({
-    mother: totalSummaryTong,
-    text: summaryText,
-    style: {
-      position: "absolute",
-      textAlign: "center",
-      width: String(100) + '%',
-      top: String(whiteSumTotalTop) + ea,
-      fontSize: String(whiteSumSize) + ea,
-      fontWeight: String(whiteSumWeight),
-      color: colorChip.black,
-    },
-    bold: {
-      fontSize: String(whiteSumSize) + ea,
-      fontWeight: String(whiteSumWeight),
-      color: colorChip.green,
-    },
-    under: {
-      fontSize: String(whiteSumSize) + ea,
-      fontWeight: String(whiteSumWeight),
-      color: colorChip.deactive,
-    },
-  });
+
+
 
 
   return scrollBox;
@@ -3825,6 +3980,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon) {
       loadingIcon.style.opacity = "1";
 
       ajaxJson({
+        mode: "designer",
         start: stringToDate(startDay),
         end: stringToDate(endDay),
       }, "/getProjectReport", { equal: true }).then((data) => {
@@ -4274,7 +4430,7 @@ DesignerJs.prototype.addExtractEvent = function () {
       data += "&parentId=";
       data += parentId;
       data += "&sheetName=";
-      data += "fromDB_client_" + String(today.getFullYear()) + instance.mother.todayMaker();
+      data += "fromDB_designer_" + String(today.getFullYear()) + instance.mother.todayMaker();
 
       div_clone = GeneralJs.nodes.div.cloneNode(true);
       div_clone.classList.add("justfadein");

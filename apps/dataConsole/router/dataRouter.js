@@ -1589,17 +1589,20 @@ DataRouter.prototype.rou_post_getClientReport = function () {
 DataRouter.prototype.rou_post_getProjectReport = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson } = this.mother;
+  const { equalJson, serviceParsing } = this.mother;
   let obj = {};
   obj.link = "/getProjectReport";
   obj.func = async function (req, res) {
     res.set("Content-Type", "application/json");
     try {
       const { mode, start, end } = equalJson(req.body);
-      let clients;
+      let clients, clients2;
       let projects, projects2;
       let serviceArr;
       let designers;
+      let designerArr;
+      let tempClient;
+      let requestNumber;
 
       if (mode === "service") {
 
@@ -1659,39 +1662,85 @@ DataRouter.prototype.rou_post_getProjectReport = function () {
       } else if (mode === "designer") {
 
         designers = await back.getDesignersByQuery({}, { selfMongo: instance.mongo });
-        projects = await back.getProjectsByQuery({
-          $and: [
-            {
-              "proposal.date": { $gte: start }
-            },
-            {
-              "proposal.date": { $lt: end }
-            },
-            {
-              "desid": { $regex: "^d" }
+        projects = await back.getProjectsByQuery({}, { selfMongo: instance.mongo });
+        if (projects.length === 0) {
+          clients = [];
+        } else {
+          clients = (await back.getClientsByQuery({
+            $or: projects.toNormal().map((p) => { return { cliid: p.cliid } })
+          })).toNormal();
+        }
+        for (let p of projects) {
+          tempClient = clients.find((c) => { return p.cliid === c.cliid });
+          requestNumber = 0;
+          for (let i = 0; i < tempClient.requests.length; i++) {
+            if (tempClient.requests[i].request.timeline.valueOf() < p.proposal.date.valueOf()) {
+              requestNumber = i;
+              break;
             }
-          ]
-        }, { selfMongo: instance.mongo });
-        projects2 = await back.getProjectsByQuery({
-          $and: [
-            {
-              "process.contract.first.date": { $gte: start }
-            },
-            {
-              "process.contract.first.date": { $lt: end }
-            },
-            {
-              "desid": { $regex: "^d" }
-            }
-          ]
-        }, { selfMongo: instance.mongo });
-
-        console.log(projects.length, projects2.length);
-        for (let p of projects2) {
-          console.log(p.process.contract.first.date);
+          }
+          p.name = tempClient.name;
+          p.pyeong = tempClient.requests[requestNumber].request.space.pyeong;
         }
 
-        res.send(JSON.stringify({ start, end }));
+        designerArr = designers.toNormal().map((obj) => { return { desid: obj.desid, designer: obj.designer } });
+        for (let obj of designerArr) {
+
+          // proposal
+          obj.proposal = projects.filter((p) => {
+            return (p.proposal.detail.findIndex((z) => { return z.desid === obj.desid }) !== -1 && p.proposal.date.valueOf() >= start.valueOf() && p.proposal.date.valueOf() < end.valueOf());
+          }).map((p) => {
+            const thisProposal = p.proposal.detail.find((d) => { return d.desid === obj.desid });
+            let amount, thisFee;
+            if (thisProposal === undefined) {
+              amount = 0;
+            } else {
+              thisFee = thisProposal.fee.toNormal().findIndex((k) => { return k.method === (p.service.online ? "online" : "offline"); });
+              if (thisFee !== -1) {
+                amount = thisProposal.fee.toNormal()[thisFee].amount;
+              } else {
+                amount = 0;
+              }
+            }
+            return { proid: p.proid, status: (p.desid !== '' ? p.process.status.value : "드랍"), service: serviceParsing(p.service.toNormal()), date: p.proposal.date, name: p.name, pyeong: p.pyeong, amount, per: Math.floor((amount / p.pyeong) / 1000) * 1000 };
+          });
+
+          // process
+          obj.process = projects.filter((p) => {
+            return (p.desid === obj.desid && p.process.contract.first.date.valueOf() >= start.valueOf() && p.process.contract.first.date.valueOf() < end.valueOf());
+          }).map((p) => {
+            const thisProposal = p.proposal.detail.find((d) => { return d.desid === obj.desid });
+            let amount, thisFee;
+            if (thisProposal === undefined) {
+              amount = 0;
+            } else {
+              thisFee = thisProposal.fee.toNormal().findIndex((k) => { return k.method === (p.service.online ? "online" : "offline"); });
+              if (thisFee !== -1) {
+                amount = thisProposal.fee.toNormal()[thisFee].amount;
+              } else {
+                amount = 0;
+              }
+            }
+            return { proid: p.proid, status: p.process.status.value, service: serviceParsing(p.service.toNormal()), date: p.process.contract.first.date, name: p.name, pyeong: p.pyeong, amount, per: Math.floor((amount / p.pyeong) / 1000) * 1000 };
+          });
+
+          // calculation first
+          obj.first = projects.filter((p) => {
+            return (p.desid === obj.desid && p.process.calculation.payments.first.date.valueOf() >= start.valueOf() && p.process.calculation.payments.first.date.valueOf() < end.valueOf());
+          }).map((p) => {
+            return { proid: p.proid, service: serviceParsing(p.service.toNormal()), date: p.process.calculation.payments.first.date, name: p.name, pyeong: p.pyeong, amount: p.process.calculation.payments.first.amount - p.process.calculation.payments.first.refund };
+          });
+
+          // calculation remain
+          obj.remain = projects.filter((p) => {
+            return (p.desid === obj.desid && p.process.calculation.payments.remain.date.valueOf() >= start.valueOf() && p.process.calculation.payments.remain.date.valueOf() < end.valueOf());
+          }).map((p) => {
+            return { proid: p.proid, service: serviceParsing(p.service.toNormal()), date: p.process.calculation.payments.remain.date, name: p.name, pyeong: p.pyeong, amount: p.process.calculation.payments.remain.amount - p.process.calculation.payments.remain.refund };
+          });
+
+        }
+
+        res.send(JSON.stringify({ start, end, designers: designerArr }));
 
       } else {
         throw new Error("invaild mode");

@@ -742,6 +742,13 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
   let pannelBlockMargin;
   let pannelBlockHeight;
   let pannelBlockVisual;
+  let checklistBase;
+  let checklistWidthRatio;
+  let baseMargin, baseMargin2;
+  let belowButtonsMotherHeight;
+  let belowButtonsMother;
+  let rightPannelMother;
+  let baseVisual;
 
   pIndex = projects.findIndex((obj) => { return obj.proid === proid; });
   cIndex = clients.findIndex((obj) => { return obj.cliid === cliid; });
@@ -766,7 +773,7 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
     areaTitleBottom = <%% 13, 13, 13, 13, 1 %%>;
     barHeight = <%% 34, 34, 34, 34, 9 %%>;
     factorSize = <%% 13, 12, 12, 10, 2 %%>;
-    detailBoxMarginTop = <%% 50, 40, 35, 30, 6 %%>;
+    detailBoxMarginTop = <%% 36, 36, 30, 30, 6 %%>;
 
     arrowTop = <%% (isMac() ? 8 : 9), (isMac() ? 8 : 9), (isMac() ? 8 : 9), (isMac() ? 8 : 9), 1 %%>;
     arrowWidth = <%% 9, 8, 8, 8, 1.5 %%>;
@@ -777,7 +784,7 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
     noticeTextTop = <%% (isMac() ? 18 : 20), (isMac() ? 18 : 20), (isMac() ? 18 : 20), (isMac() ? 18 : 20), 1 %%>;
     noticeTextLeft = <%% 24, 24, 24, 24, 3 %%>;
 
-    accumulate = titleHeight + titlePaddingBottom + ((rowMarginTop + subTitleHeight + areaTitleBottom + barHeight) * (divisionEntireMap.length - 1)) + rowFirstMarginTop - rowMarginTop + detailBoxMarginTop;
+    accumulate = ((rowMarginTop + subTitleHeight + areaTitleBottom + barHeight) * (divisionEntireMap.length - 1)) + rowFirstMarginTop - rowMarginTop + detailBoxMarginTop;
 
     textAreaPaddingTop = <%% 22, 22, 22, 22, 3.8 %%>;
     textAreaPaddingLeft = <%% 26, 26, 26, 26, 4.5 %%>;
@@ -794,6 +801,13 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
     pannelBlockMargin = <%% 6, 6, 6, 6, 1 %%>;
     pannelBlockHeight = <%% 33, 33, 33, 33, 7.2 %%>;
     pannelBlockVisual = <%% (isMac() ? 2 : 0), (isMac() ? 2 : 0), (isMac() ? 2 : 0), (isMac() ? 2 : 0), 0.3 %%>;
+
+    checklistWidthRatio = 64;
+
+    baseVisual = 2;
+    baseMargin = 18;
+    baseMargin2 = 10;
+    belowButtonsMotherHeight = 280;
 
     lengthArr = divisionEntireMap.map((arr) => { return arr[1].flat().length; });
     lengthArr.sort((a, b) => { return b - a; });
@@ -812,6 +826,7 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
       }
       descriptionMap.set(name, { description, checklist: checklistFactor, pannel });
     }
+
     // action, proid, cliid, requestNumber, desid
     descriptionMaker = (action, proid, cliid, requestNumber, desid) => {
       cleanChildren(textAreaMother);
@@ -1010,6 +1025,7 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
         }
       }
 
+      /*
       if (descriptionMap.get(action).pannel.length === 0 || descriptionMap.get(action).pannel[descriptionMap.get(action).pannel.length - 1].name !== "목록으로") {
         descriptionMap.get(action).pannel.push({
           name: "목록으로",
@@ -1024,7 +1040,6 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
       }
 
       if (descriptionMap.get(action).pannel.length > 0) {
-
         pannelMother = createNode({
           mother: textAreaMother,
           style: {
@@ -1093,10 +1108,11 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
             ]
           });
         }
-
       }
+      */
     }
 
+    // base
     base = createNode({
       mother,
       style: {
@@ -1111,6 +1127,7 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
       }
     });
 
+    // title
     createNode({
       mother: base,
       style: {
@@ -1143,13 +1160,25 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
       ]
     });
 
+    // checklist base
+    checklistBase = createNode({
+      mother: base,
+      style: {
+        verticalAlign: "top",
+        display: "inline-block",
+        position: "relative",
+        width: String(checklistWidthRatio) + '%',
+        height: withOut(titleHeight + titlePaddingBottom + baseVisual, ea),
+      }
+    });
+
     barChildren = [];
     num = 0;
     for (let [ title, arr ] of divisionEntireMap) {
       if (num !== divisionEntireMap.length - 1) {
         arr = arr.flat();
         areaMother = createNode({
-          mother: base,
+          mother: checklistBase,
           attribute: {
             toggle: arr.includes(action) ? "on" : "off",
             focus: "off",
@@ -1188,7 +1217,6 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
         });
         area = areaMother.children[1];
         barChildren.push(areaMother);
-
         for (let i = 0; i < arr.length; i++) {
           createNode({
             mother: area,
@@ -1343,13 +1371,13 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
     }
 
     textAreaMother = createNode({
-      mother: base,
+      mother: checklistBase,
       style: {
         display: "block",
         position: "relative",
         marginTop: String(detailBoxMarginTop) + ea,
         width: String(100) + '%',
-        height: desktop ? withOut(accumulate, ea) : "",
+        height: desktop ? withOut(accumulate + belowButtonsMotherHeight + baseMargin2, ea) : "",
         background: colorChip.gray0,
         borderRadius: String(5) + "px",
         paddingTop: desktop ? "" : String(2.5) + ea,
@@ -1359,6 +1387,52 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
     });
 
     descriptionMaker(action, proid, cliid, requestNumber, desid);
+
+    belowButtonsMother = createNode({
+      mother: checklistBase,
+      style: {
+        display: "block",
+        width: String(100) + '%',
+        borderRadius: String(5) + "px",
+        background: colorChip.gray0,
+        height: String(belowButtonsMotherHeight) + ea,
+        marginTop: String(baseMargin2) + ea,
+      }
+    })
+
+    rightPannelMother = createNode({
+      mother: base,
+      style: {
+        verticalAlign: "top",
+        display: "inline-block",
+        position: "relative",
+        marginLeft: String(baseMargin) + ea,
+        width: "calc(" + String(100 - checklistWidthRatio) + '%' + " - " + String(baseMargin) + ea + ")",
+        height: withOut(titleHeight + titlePaddingBottom + baseVisual, ea),
+      },
+      children: [
+        {
+          style: {
+            display: "block",
+            width: String(100) + '%',
+            borderRadius: String(5) + "px",
+            background: colorChip.gray0,
+            height: String(((subTitleHeight + areaTitleBottom + barHeight) * (divisionEntireMap.length - 1)) + rowMarginTop + detailBoxMarginTop - baseMargin2) + ea,
+            marginTop: String(rowFirstMarginTop) + ea,
+          }
+        },
+        {
+          style: {
+            marginTop: String(baseMargin2) + ea,
+            display: "block",
+            width: String(100) + '%',
+            borderRadius: String(5) + "px",
+            background: colorChip.gray0,
+            height: withOut(((subTitleHeight + areaTitleBottom + barHeight) * (divisionEntireMap.length - 1)) + rowMarginTop + detailBoxMarginTop + rowFirstMarginTop, ea)
+          }
+        }
+      ]
+    })
 
   } else {
     window.alert("해당 고객의 상태를 변경하셔야 팝업을 열 수 있습니다!");

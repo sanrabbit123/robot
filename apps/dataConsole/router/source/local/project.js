@@ -7113,7 +7113,7 @@ ProjectJs.prototype.reportScrollBox = function (data, motherWidth) {
   summaryText += "<u%계약율%u> ";
   summaryText += String(Math.round((data.numbers.project / data.numbers.client) * 10000) / 100) + "<u%% (%u>";
   for (let i = 0; i < data.serviceArr.length; i++) {
-    summaryText += String(data.serviceArr[i].length) + "<u%%%u>";
+    summaryText += String(Math.round((data.serviceArr[i].length / data.numbers.client) * 10000) / 100) + "<u%%%u>";
     summaryText += "<u%, %u>";
   }
   summaryText = summaryText.slice(0, -8);

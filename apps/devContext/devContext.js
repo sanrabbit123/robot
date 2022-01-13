@@ -91,9 +91,10 @@ DevContext.prototype.launching = async function () {
     //   [ 40, 50 ]
     // ])
 
+    
 
 
-    await messageSend({ text: "안녕하세요", channel: "#general", voice: true });
+
 
 
 
