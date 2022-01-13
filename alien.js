@@ -356,6 +356,8 @@ Alien.prototype.wssLaunching = async function (cronNumber) {
     let certDir, keyDir, caDir;
     let memberAlive;
 
+    /*
+
     app.use(useragent.express());
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
@@ -453,6 +455,8 @@ Alien.prototype.wssLaunching = async function (cronNumber) {
         socket.destroy();
       }
     });
+
+    */
 
     cronScript = await cron.scriptReady(cronNumber);
     shell.exec(`python3 ${shellLink(cronScript)}`, { async: true });
