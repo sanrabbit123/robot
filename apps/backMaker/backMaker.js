@@ -3487,7 +3487,7 @@ BackMaker.prototype.createHistory = async function (method, updateQuery, option 
 
 BackMaker.prototype.mongoCreate = async function (collection, json, option = { local: null, console: null, home: null, python: null, selfMongo: null }) {
   const instance = this;
-  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, mongopythoninfo, mongohomeinfo } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, mongopythoninfo, mongohomeinfo, hexaJson } = this.mother;
   try {
 
     let MONGOC;
@@ -3505,6 +3505,9 @@ BackMaker.prototype.mongoCreate = async function (collection, json, option = { l
         MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
       }
       await MONGOC.connect();
+      if (option.hexaMode === true) {
+        json = await hexaJson(json, true);
+      }
       await MONGOC.db(`miro81`).collection(collection).insertOne(json);
       await MONGOC.close();
     } else {
@@ -3519,7 +3522,7 @@ BackMaker.prototype.mongoCreate = async function (collection, json, option = { l
 
 BackMaker.prototype.mongoRead = async function (collection, query, option = { local: null, console: null, home: null, python: null, selfMongo: null }) {
   const instance = this;
-  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, mongopythoninfo, mongohomeinfo } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, mongopythoninfo, mongohomeinfo, hexaJson } = this.mother;
   try {
     let MONGOC;
     let tong;
@@ -3556,6 +3559,10 @@ BackMaker.prototype.mongoRead = async function (collection, query, option = { lo
       } else {
         tong = await option.selfMongo.db(`miro81`).collection(collection).find(query).sort(sortQuery).toArray();
       }
+    }
+
+    if (option.hexaMode === true) {
+      tong = await hexaJson(JSON.stringify(tong));
     }
 
     return tong;

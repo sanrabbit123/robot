@@ -2662,6 +2662,200 @@ GeneralJs.equalJson = function (jsonString) {
   return equal(jsonString);
 }
 
+GeneralJs.hexaJson = async function (input, middleMode = false) {
+  const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
+  const tokenStart = "__hexaFunctionStart__<<<";
+  const tokenEnd = ">>>__hexaFunctionEnd__";
+  const hexaFunction = async function (input) {
+    try {
+      const crypto = require("crypto");
+      const password = "homeliaison";
+      const algorithm = "aes-192-cbc";
+      const iv = Buffer.alloc(16, 0);
+      const digest = "hex";
+      const toHex = (string) => {
+        return new Promise((resolve, reject) => {
+          crypto.scrypt(password, "salt", 24, (err, key) => {
+            if (err) {
+              reject(err);
+            } else {
+              const cipher = crypto.createCipheriv(algorithm, key, iv);
+              let encrypted = '';
+              cipher.setEncoding(digest);
+              cipher.on("data", (chunk) => { encrypted += chunk; });
+              cipher.on("end", () => { resolve(encrypted); });
+              cipher.write(string);
+              cipher.end();
+            }
+          });
+        });
+      }
+      const toFunction = (hash) => {
+        return new Promise((resolve, reject) => {
+          crypto.scrypt(password, "salt", 24, (err, key) => {
+            if (err) {
+              reject(err);
+            } else {
+              const decipher = crypto.createDecipheriv(algorithm, key, iv);
+              let decrypted = '';
+              decipher.on("readable", () => {
+                let chunk;
+                chunk = decipher.read();
+                while (chunk !== null) {
+                  decrypted += chunk.toString("utf8");
+                  chunk = decipher.read();
+                }
+              });
+              decipher.on("end", () => { resolve(decrypted); });
+              decipher.write(hash, digest);
+              decipher.end();
+            }
+          });
+        });
+      }
+      let functionString, functionString_copied;
+      let argString;
+      let argArr;
+      let decodeFunction;
+      let asyncBoo;
+
+      if (typeof input === "function") {
+
+        return tokenStart + (await toHex(input.toString())) + tokenEnd;
+
+      } else if (typeof input === "string") {
+
+        if ((new RegExp('^' + tokenStart)).test(input) && (new RegExp(tokenEnd + '$')).test(input)) {
+          input = input.replace(new RegExp('^' + tokenStart), '').replace(new RegExp(tokenEnd + '$'), '');
+          functionString = await toFunction(input);
+          functionString_copied = String(functionString).trim();
+          argString = '';
+          asyncBoo = /^async/.test(functionString_copied);
+          if (/^(async function|function)/i.test(functionString_copied)) {
+            functionString_copied.replace(/^(async function|function) [^\(]*\(([^\)]*)\)[ ]*\{/, (match, p1, p2) => {
+              argString = p2.trim();
+              return '';
+            });
+          } else {
+            functionString_copied.replace(/^(async \(|\()([^\)]*)\)[ ]*\=\>[ ]*\{/, (match, p1, p2) => {
+              argString = p2.trim();
+              return '';
+            });
+          }
+          argString = argString.replace(/[ ]*\=[ ]*[\{\[][^\=]*[\}\]]/gi, '');
+          argString = argString.replace(/[ ]*\=[ ]*[^,]+/gi, '');
+          argArr = argString.split(',').map((str) => { return str.trim(); });
+          if (argArr.some((str) => { return / /gi.test(str); })) {
+            throw new Error("invaild argument name");
+          }
+          if (asyncBoo) {
+            decodeFunction = new AsyncFunction(...argArr, functionString.trim().replace(/^(async function [^\(]*\([^\)]*\)[ ]*\{|async \([^\)]*\)[ ]*\=\>[ ]*\{)/, '').replace(/\}$/, ''));
+          } else {
+            decodeFunction = new Function(...argArr, functionString.trim().replace(/^(function [^\(]*\([^\)]*\)[ ]*\{|\([^\)]*\)[ ]*\=\>[ ]*\{)/, '').replace(/\}$/, ''));
+          }
+          return decodeFunction;
+        } else {
+          return input;
+        }
+
+      } else {
+        throw new Error("invaild input");
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  const equalJson = function (jsonString) {
+    const equal = function (jsonString) {
+      if (typeof jsonString === "object") {
+        jsonString = JSON.stringify(jsonString);
+      }
+      if (typeof jsonString !== "string") {
+        jsonString = String(jsonString);
+      }
+      const filtered = jsonString.replace(/(\"[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z\")/g, function (match, p1, offset, string) { return "new Date(" + p1 + ")"; });
+      const tempFunc = new Function("const obj = " + filtered + "; return obj;");
+      const json = tempFunc();
+      let temp, boo;
+      if (typeof json === "object") {
+        for (let i in json) {
+          if (typeof json[i] === "string") {
+            if (/^[\{\[]/.test(json[i].trim()) && /[\}\]]$/.test(json[i].trim())) {
+              try {
+                temp = JSON.parse(json[i]);
+                boo = true;
+              } catch (e) {
+                boo = false;
+              }
+              if (boo) {
+                json[i] = equal(json[i]);
+              }
+            }
+          }
+        }
+        return json;
+      } else {
+        return jsonString;
+      }
+    }
+    return equal(jsonString);
+  }
+  try {
+    if (typeof input === "function") {
+      return await hexaFunction(input);
+    } else if (typeof input === "object") {
+      if (input === null) {
+        return null;
+      } else {
+        const toJson = async function (obj) {
+          try {
+            for (let i in obj) {
+              if (typeof obj[i] === "function") {
+                obj[i] = await hexaFunction(obj[i]);
+              } else if (typeof obj[i] === "object" && obj[i] !== null) {
+                obj[i] = await toJson(obj[i]);
+              }
+            }
+            return obj;
+          } catch (e) {
+            return obj;
+          }
+        }
+        if (!middleMode) {
+          return JSON.stringify(await toJson(input));
+        } else {
+          return await toJson(input);
+        }
+      }
+    } else if (typeof input === "string") {
+      if ((new RegExp('^' + tokenStart)).test(input)) {
+        return await hexaFunction(input);
+      } else {
+        const toObj = async function (obj) {
+          try {
+            for (let i in obj) {
+              if (typeof obj[i] === "string" && (new RegExp('^' + tokenStart)).test(obj[i])) {
+                obj[i] = await hexaFunction(obj[i]);
+              } else if (typeof obj[i] === "object" && obj[i] !== null) {
+                obj[i] = await toObj(obj[i]);
+              }
+            }
+            return obj;
+          } catch (e) {
+            return obj;
+          }
+        }
+        return await toObj(equalJson(input));
+      }
+    } else {
+      return null;
+    }
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
 GeneralJs.autoComma = function (str) {
   let minus;
   let count, countArr;

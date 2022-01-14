@@ -189,7 +189,7 @@ ReceiptRouter.prototype.rou_post_cashReceipt = function () {
   const instance = this;
   const back = this.back;
   const bill = this.bill;
-  const { equalJson } = this.mother;
+  const { equalJson, messageLog } = this.mother;
   let obj = {};
   obj.link = "/cashReceipt";
   obj.func = async function (req, res) {
@@ -205,12 +205,14 @@ ReceiptRouter.prototype.rou_post_cashReceipt = function () {
       rows = [];
       if (json.cashOut !== undefined) {
         const { cashOut: cashOut_raw } = json;
+        await messageLog("cashout receive");
         for (let arr of cashOut_raw) {
           for (let obj of arr) {
             rows.push(obj);
           }
         }
       } else if (json.cashIn !== undefined) {
+        await messageLog("cashin receive");
         const { cashIn: cashIn_raw } = json;
         for (let arr of cashIn_raw) {
           for (let obj of arr) {

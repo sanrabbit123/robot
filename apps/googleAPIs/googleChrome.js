@@ -205,4 +205,41 @@ GoogleChrome.prototype.frontScript = async function (link, func) {
   }
 }
 
+GoogleChrome.prototype.scriptChain = async function (map) {
+  if (!Array.isArray(map)) {
+    throw new Error("invalid input => [ { link, async func } ]");
+  }
+  const instance = this;
+  const { equalJson, fileSystem, sleep } = this.mother;
+  const { puppeteer } = this;
+  const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
+  const between = 3000;
+  try {
+    const browser = await puppeteer.launch({ args: [ "--no-sandbox", "--disable-setuid-sandbox" ] });
+    const page = await browser.newPage();
+    let funcScript, generalString, frontResponse, frontResponses;
+
+    generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
+    generalString = generalString.replace(/\/<%generalMap%>\//, "{}");
+    returnScript = (func) => {
+      return generalString + "\n\n" + func.toString().trim().replace(/^(async)? *(function[^\(]*\([^\)]*\)|\([^\)]*\)[^\=]+\=\>)[^\{]*\{/i, '').replace(/\}$/i, '');
+    }
+
+    frontResponses = [];
+    for (let { link, func } of map) {
+      await page.goto(link, { waitUntil: "networkidle2" });
+      frontResponse = await page.evaluate(new AsyncFunction(returnScript(func)));
+      frontResponses.push(frontResponse);
+      await sleep(between);
+    }
+
+    await browser.close();
+
+    return frontResponses;
+  } catch (e) {
+    console.log(e);
+    return { message: "error : " + e.message };
+  }
+}
+
 module.exports = GoogleChrome;
