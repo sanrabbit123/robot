@@ -524,7 +524,11 @@ DesignerJs.prototype.projectDetail = function (desid) {
             instance.greenPannel.style.bottom = String(-1 * greenPannelHeight) + "px";
           }
 
-          whiteMargin = <%% 40, 40, 40, 40, 4 %%>;
+          if (desktop) {
+            whiteMargin = Math.floor(totalMother.getBoundingClientRect().height * (1 / 27));
+          } else {
+            whiteMargin = 4;
+          }
           mobileNavigatorHeight = 60;
           cancelBack = createNode({
             mother: totalMother,
@@ -567,30 +571,25 @@ DesignerJs.prototype.projectDetail = function (desid) {
             }
           });
 
-          whiteResult = instance.projectWhiteDetail(whiteBox, action, proid, cliid, requestNumber, desid, divisionEntireMap);
+          instance.projectWhiteDetail(whiteBox, action, proid, cliid, requestNumber, desid);
 
-          if (!whiteResult) {
-            cancelBack.click();
-          } else {
-
-            if (mobile) {
-              swipePatch({
-                left: (e) => {
-                  if (document.querySelector('.' + detailWhitePopupConst) !== null) {
-                    document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
-                    document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
-                  }
-                },
-                right: (e) => {
-                  if (document.querySelector('.' + detailWhitePopupConst) !== null) {
-                    document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
-                    document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
-                  }
-                },
-              });
-            }
-
+          if (mobile) {
+            swipePatch({
+              left: (e) => {
+                if (document.querySelector('.' + detailWhitePopupConst) !== null) {
+                  document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
+                  document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
+                }
+              },
+              right: (e) => {
+                if (document.querySelector('.' + detailWhitePopupConst) !== null) {
+                  document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
+                  document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
+                }
+              },
+            });
           }
+
         }
       },
       style: {
@@ -689,11 +688,10 @@ DesignerJs.prototype.projectDetail = function (desid) {
   this.mainBaseTong = baseTong0;
 }
 
-DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid, requestNumber, desid, divisionEntireMap) {
+DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid, requestNumber, desid, entireAction) {
   const instance = this;
   const { createNode, colorChip, withOut, ajaxJson, setQueue, cleanChildren, isMac, scrollTo } = GeneralJs;
-  const { ea, projects, clients, designers, projectMap, checklist } = this;
-  const { action: { itemDescription } } = projectMap;
+  const { ea, projects, clients, designers, projectMap, checklist, totalMother } = this;
   const mobile = this.media[4];
   const desktop = !mobile;
   let pIndex, cIndex;
@@ -705,48 +703,14 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
   let titleTextBetween;
   let titlePaddingBottom;
   let areaMother, area;
-  let areaTitleSize;
-  let maxLength;
-  let lengthArr;
-  let areaTitleBottom;
-  let rowMarginTop;
   let barHeight;
   let factorSize;
-  let rowFirstMarginTop;
   let num;
   let titleHeight;
-  let subTitleHeight;
-  let accumulate;
-  let detailBoxMarginTop;
-  let whiteBoxTop, whiteBoxLeft;
-  let noticeTextSize;
-  let noticeTextTop, noticeTextLeft;
-  let arrowTop, arrowWidth;
-  let barChildren;
   let descriptionMap;
   let textArea;
-  let textAreaPaddingTop;
-  let textAreaPaddingLeft;
   let checklistFactor;
-  let lineHeightMargin;
-  let contentsPaddingLeft;
-  let arrowTop2, arrowWidth2;
-  let checkCircleTop;
-  let checkCircleWidth;
-  let checkCircleVisual;
-  let textAreaMother;
-  let pannelBoxPaddingBottom, pannelBoxPaddingRight;
-  let pannelMother;
-  let pannelBlockPadding;
-  let pannelBlockMargin;
-  let pannelBlockHeight;
-  let pannelBlockVisual;
   let contentsBase;
-  let checklistWidthRatio;
-  let baseMargin, baseMargin2;
-  let belowButtonsMotherHeight;
-  let belowButtonsMother;
-  let baseVisual;
   let contentsBasePaddingTop;
   let contentsBetween;
   let contentsHeightBetween;
@@ -767,355 +731,341 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
   let blockColor;
   let blockFontColor;
   let blockFontSize, blockFontTop;
+  let blockNameSize;
+
+  entireAction = [
+    { name: null, },
+    { name: "현장 미팅 조율", },
+    { name: "현장 미팅 확정", },
+    { name: "현장 미팅 피드백", },
+    { name: "잔금 대기", },
+    { name: "시작 대기", },
+    { name: "1차 디자인", },
+    { name: "수정 디자인", },
+    { name: "시공 의뢰서", },
+    { name: "시공 견적서", },
+    { name: "시공 공정표", },
+    { name: "제품 구매", },
+    { name: "추가 제안서", },
+    { name: "세팅 안내", },
+    { name: "촬영 및 인터뷰", },
+    { name: "사진 업로드", },
+    { name: "디자이너글 업로드", },
+    { name: "증빙 처리", },
+    { name: "정산 대기", },
+    { name: null, },
+    { name: null, },
+    { name: null, },
+    { name: null, },
+    { name: null, },
+  ];
 
   pIndex = projects.findIndex((obj) => { return obj.proid === proid; });
   cIndex = clients.findIndex((obj) => { return obj.cliid === cliid; });
 
-  if (pIndex !== -1 && cIndex !== -1 && action !== "해당 없음") {
-    project = projects[pIndex];
-    client = clients[cIndex];
-    designer = designers.pick(desid);
-    const { request, analytics } = client.requests[requestNumber];
+  project = projects[pIndex];
+  client = clients[cIndex];
+  designer = designers.pick(desid);
+  const { request, analytics } = client.requests[requestNumber];
 
-    baseTop = <%% 40, 33, 30, 22, 6 %%>;
-    baseLeft = <%% 45, 38, 35, 25, 6.1 %%>;
-    baseBottom = <%% 48, 41, 38, 28, 6.1 %%>;
-    titleSize = <%% 21, 20, 19, 18, 4 %%>;
-    titleHeight = <%% 30, 30, 30, 30, 5 %%>;
-    subTitleHeight = <%% 20, 20, 20, 20, 2 %%>;
-    titleTextBetween = <%% 10, 10, 10, 10, 1 %%>;
-    titlePaddingBottom = <%% 13, 13, 13, 13, 2.5 %%>;
-    areaTitleSize = <%% 15, 14, 14, 13, 3.4 %%>;
-    rowMarginTop = <%% 22, 16, 11, 10, 3 %%>;
-    rowFirstMarginTop = <%% 32, 27, 22, 17, 5 %%>;
-    areaTitleBottom = <%% 13, 13, 13, 13, 1 %%>;
-    barHeight = <%% 34, 34, 34, 34, 9 %%>;
-    factorSize = <%% 13, 12, 12, 10, 2 %%>;
-    detailBoxMarginTop = <%% 36, 36, 30, 30, 6 %%>;
+  if (desktop) {
+    baseTop = totalMother.getBoundingClientRect().height * (40 / 1080);
+    baseLeft = totalMother.getBoundingClientRect().height * (45 / 1080);
+    baseBottom = totalMother.getBoundingClientRect().height * (48 / 1080);
+    titleSize = totalMother.getBoundingClientRect().height * (22 / 1080);
+    titleHeight = totalMother.getBoundingClientRect().height * (31 / 1080);
+    titleTextBetween = totalMother.getBoundingClientRect().height * (10 / 1080);
+    titlePaddingBottom = totalMother.getBoundingClientRect().height * (13 / 1080);
+    contentsBasePaddingTop = totalMother.getBoundingClientRect().height * (24 / 1080);
+  } else {
+    baseTop = 6;
+    baseLeft = 6.1;
+    baseBottom = 6.1;
+    titleSize = 4;
+    titleHeight = 5;
+    titleTextBetween = 1;
+    titlePaddingBottom = 2.5;
+    contentsBasePaddingTop = 4;
+  }
 
-    arrowTop = <%% (isMac() ? 8 : 9), (isMac() ? 8 : 9), (isMac() ? 8 : 9), (isMac() ? 8 : 9), 1 %%>;
-    arrowWidth = <%% 9, 8, 8, 8, 1.5 %%>;
+  percentage = 0.01;
+  borderSize = 1;
+  contentsBetween = 1.8;
+  firstContentsWidth = 40;
+  secondContentsWidth = 64;
+  thirdContentsWidth = 24;
+  buttonsNumber = 8;
+  contentsHeightBetweenRatio = 2;
+  contentsCalendarHeight = 61;
+  blockHeightNumber = 10;
+  blockWidth = 88;
+  blockLeft = 11;
+  blockHeight = 8;
+  blockInnerMargin = 0.8;
+  blockFontSize = 2.6;
+  blockFontTop = 1.2;
+  blockNameSize = 2.2;
 
-    whiteBoxTop = <%% 48, 46, 44, 42, 4 %%>;
-    whiteBoxLeft = <%% 20, 18, 16, 14, 2 %%>;
-    noticeTextSize = <%% 14, 13, 13, 12, 3 %%>;
-    noticeTextTop = <%% (isMac() ? 18 : 20), (isMac() ? 18 : 20), (isMac() ? 18 : 20), (isMac() ? 18 : 20), 1 %%>;
-    noticeTextLeft = <%% 24, 24, 24, 24, 3 %%>;
+  // base
+  base = createNode({
+    mother,
+    style: {
+      display: "block",
+      position: "relative",
+      top: String(baseTop) + ea,
+      left: String(baseLeft) + ea,
+      width: withOut(baseLeft * 2, ea),
+      height: withOut(baseTop + (desktop ? baseBottom : 0), ea),
+      overflowY: "scroll",
+      overflowX: "hidden",
+    }
+  });
 
-    accumulate = ((rowMarginTop + subTitleHeight + areaTitleBottom + barHeight) * (divisionEntireMap.length - 1)) + rowFirstMarginTop - rowMarginTop + detailBoxMarginTop;
-
-    textAreaPaddingTop = <%% 22, 22, 22, 22, 3.8 %%>;
-    textAreaPaddingLeft = <%% 26, 26, 26, 26, 4.5 %%>;
-    lineHeightMargin = <%% 8, 8, 8, 8, 1 %%>;
-    contentsPaddingLeft = <%% 14, 14, 13, 12, 2 %%>;
-    arrowTop2 = <%% (isMac() ? 7 : 5), (isMac() ? 7 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), 1.5 %%>;
-    arrowWidth2 = <%% 8, 8, 7, 7, 1.4 %%>;
-    checkCircleTop = <%% (isMac() ? 7 : 5), (isMac() ? 7 : 5), (isMac() ? 6 : 5), (isMac() ? 5 : 5), 1.4 %%>;
-    checkCircleWidth = <%% 10, 10, 9, 8, 2 %%>;
-    checkCircleVisual = <%% 1, 1, 1, 1, 1 %%>;
-    pannelBoxPaddingBottom = <%% 13, 13, 13, 13, 3 %%>;
-    pannelBoxPaddingRight = <%% 15, 15, 15, 15, 3 %%>;
-    pannelBlockPadding = <%% 15, 15, 15, 15, 3 %%>;
-    pannelBlockMargin = <%% 6, 6, 6, 6, 1 %%>;
-    pannelBlockHeight = <%% 33, 33, 33, 33, 7.2 %%>;
-    pannelBlockVisual = <%% (isMac() ? 2 : 0), (isMac() ? 2 : 0), (isMac() ? 2 : 0), (isMac() ? 2 : 0), 0.3 %%>;
-
-    checklistWidthRatio = 64;
-
-    baseVisual = 2;
-    baseMargin = 18;
-    baseMargin2 = 10;
-    belowButtonsMotherHeight = 280;
-
-    contentsBasePaddingTop = 24;
-
-    percentage = 0.01;
-    borderSize = 1;
-    contentsBetween = 1.8;
-    firstContentsWidth = 40;
-    secondContentsWidth = 64;
-    thirdContentsWidth = 24;
-    buttonsNumber = 8;
-    contentsHeightBetweenRatio = 2;
-    contentsCalendarHeight = 61;
-    blockHeightNumber = 10;
-    blockWidth = 88;
-    blockLeft = 11;
-    blockHeight = 8;
-    blockInnerMargin = 0.8;
-    blockFontSize = 2.8;
-    blockFontTop = 1.1;
-
-    lengthArr = divisionEntireMap.map((arr) => { return arr[1].flat().length; });
-    lengthArr.sort((a, b) => { return b - a; });
-    maxLength = desktop ? lengthArr[0] : 3;
-
-    textAreaMother = {};
-
-    descriptionMap = new Map();
-    for (let { name, description, pannel } of itemDescription) {
-      checklistFactor = null;
-      for (let check of checklist) {
-        if (check.setting.target.action.includes(name)) {
-          checklistFactor = check.setting.contents;
-          break;
+  // title
+  createNode({
+    mother: base,
+    style: {
+      display: "block",
+      position: "relative",
+      height: String(titleHeight) + ea,
+      paddingBottom: String(titlePaddingBottom) + ea,
+      borderBottom: "1px solid " + colorChip.gray3
+    },
+    children: [
+      {
+        text: "프로젝트 관리 :",
+        style: {
+          display: "inline-block",
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(600),
+          color: colorChip.black,
+        }
+      },
+      {
+        text: client.name,
+        style: {
+          display: "inline-block",
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(300),
+          color: colorChip.green,
+          marginLeft: String(titleTextBetween) + ea,
         }
       }
-      descriptionMap.set(name, { description, checklist: checklistFactor, pannel });
+    ]
+  });
+
+  // contents base
+  contentsBase = createNode({
+    mother: base,
+    style: {
+      verticalAlign: "top",
+      display: "block",
+      position: "relative",
+      marginTop: String(contentsBasePaddingTop) + ea,
+      height: withOut(titleHeight + titlePaddingBottom + contentsBasePaddingTop, ea),
+      overflow: "hidden",
+    }
+  });
+
+  baseHeight = contentsBase.getBoundingClientRect().height;
+  contentsBetween = Math.floor(baseHeight * contentsBetween * percentage);
+  firstContentsWidth = baseHeight * firstContentsWidth * percentage;
+  secondContentsWidth = baseHeight * secondContentsWidth * percentage;
+  thirdContentsWidth = baseHeight * thirdContentsWidth * percentage;
+  contentsHeightBetween = Math.floor(contentsBetween / contentsHeightBetweenRatio);
+  blockHeight = Math.floor(baseHeight * blockHeight * percentage);
+  blockInnerMargin = Math.floor(baseHeight * blockInnerMargin * percentage);
+  blockFontSize = Math.round(baseHeight * blockFontSize * percentage);
+  blockFontTop = Math.round(baseHeight * blockFontTop * percentage);
+  blockNameSize = Math.round(baseHeight * blockNameSize * percentage);
+
+  // first
+  firstContents = createNode({
+    mother: contentsBase,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      verticalAlign: "top",
+      width: String(firstContentsWidth) + ea,
+      height: String(baseHeight) + ea,
+      marginRight: String(contentsBetween) + ea,
+      top: String(borderSize) + ea,
+      height: String(baseHeight - (borderSize * 4)) + ea,
+      borderTop: String(borderSize) + "px solid " + colorChip.deactive,
+      borderBottom: String(borderSize) + "px solid " + colorChip.deactive,
+    }
+  });
+
+  blockScrollBox = createNode({
+    mother: firstContents,
+    style: {
+      display: "block",
+      width: String(blockWidth) + '%',
+      marginLeft: String(blockLeft) + '%',
+      paddingTop: String(contentsHeightBetween) + ea,
+      height: withOut(contentsHeightBetween, ea),
+      overflow: "scroll",
+    }
+  });
+
+  num = 0;
+  for (let { name } of entireAction) {
+
+    if (name === null) {
+      blockColor = colorChip.gray1;
+      blockFontColor = colorChip.gray3;
+    } else {
+      blockColor = colorChip.white;
+      blockFontColor = colorChip.black;
     }
 
-    // base
-    base = createNode({
-      mother,
-      style: {
-        display: "block",
-        position: "relative",
-        top: String(baseTop) + ea,
-        left: String(baseLeft) + ea,
-        width: withOut(baseLeft * 2, ea),
-        height: withOut(baseTop + (desktop ? baseBottom : 0), ea),
-        overflowY: "scroll",
-        overflowX: "hidden",
-      }
-    });
-
-    // title
     createNode({
-      mother: base,
+      mother: blockScrollBox,
       style: {
         display: "block",
-        position: "relative",
-        height: String(titleHeight) + ea,
-        paddingBottom: String(titlePaddingBottom) + ea,
-        borderBottom: "1px solid " + colorChip.gray3
+        width: withOut(blockInnerMargin * 2, ea),
+        height: String(blockHeight - (blockInnerMargin * 2)) + ea,
+        paddingTop: String(blockInnerMargin) + ea,
+        paddingBottom: String(blockInnerMargin) + ea,
+        paddingLeft: String(blockInnerMargin) + ea,
+        borderRadius: String(5) + "px",
+        background: colorChip.gray2,
+        marginBottom: String(contentsHeightBetween) + ea,
       },
       children: [
         {
-          text: "프로젝트 관리 :",
           style: {
             display: "inline-block",
-            fontSize: String(titleSize) + ea,
-            fontWeight: String(600),
-            color: colorChip.black,
-          }
+            width: String(blockHeight - (blockInnerMargin * 2)) + ea,
+            height: String(blockHeight - (blockInnerMargin * 2)) + ea,
+            position: "relative",
+            borderRadius: String(5) + "px",
+            background: blockColor,
+            marginRight: String(blockInnerMargin) + ea,
+          },
+          children: [
+            {
+              text: String(num),
+              style: {
+                fontSize: String(blockFontSize) + ea,
+                fontWeight: String(400),
+                color: blockFontColor,
+                fontFamily: "graphik",
+                position: "absolute",
+                top: String(blockFontTop) + ea,
+                left: String(0) + ea,
+                width: String(100) + '%',
+                textAlign: "center",
+              }
+            }
+          ]
         },
         {
-          text: client.name,
           style: {
             display: "inline-block",
-            fontSize: String(titleSize) + ea,
-            fontWeight: String(300),
-            color: colorChip.green,
-            marginLeft: String(titleTextBetween) + ea,
-          }
-        }
+            width: withOut(blockHeight, ea),
+            height: String(blockHeight - (blockInnerMargin * 2)) + ea,
+            position: "relative",
+            borderRadius: String(5) + "px",
+            background: blockColor,
+          },
+          children: [
+            {
+              text: name,
+              style: {
+                display: "inline-block",
+                fontSize: String(blockNameSize) + ea,
+                fontWeight: String(600),
+                color: blockFontColor,
+                position: "absolute",
+                top: String(10) + ea,
+                left: String(10) + ea,
+                textAlign: "left",
+              }
+            }
+          ]
+        },
       ]
     });
 
-    // contents base
-    contentsBase = createNode({
-      mother: base,
-      style: {
-        verticalAlign: "top",
-        display: "block",
-        position: "relative",
-        marginTop: String(contentsBasePaddingTop) + ea,
-        height: withOut(titleHeight + titlePaddingBottom + baseVisual + contentsBasePaddingTop, ea),
-        overflow: "hidden",
-      }
-    });
-
-    baseHeight = contentsBase.getBoundingClientRect().height;
-    contentsBetween = Math.floor(baseHeight * contentsBetween * percentage);
-    firstContentsWidth = baseHeight * firstContentsWidth * percentage;
-    secondContentsWidth = baseHeight * secondContentsWidth * percentage;
-    thirdContentsWidth = baseHeight * thirdContentsWidth * percentage;
-    contentsHeightBetween = Math.floor(contentsBetween / contentsHeightBetweenRatio);
-    blockHeight = Math.floor(baseHeight * blockHeight * percentage);
-    blockInnerMargin = Math.floor(baseHeight * blockInnerMargin * percentage);
-    blockFontSize = Math.round(baseHeight * blockFontSize * percentage);
-    blockFontTop = Math.round(baseHeight * blockFontTop * percentage);
-
-    // first
-    firstContents = createNode({
-      mother: contentsBase,
-      style: {
-        display: "inline-block",
-        position: "relative",
-        verticalAlign: "top",
-        width: String(firstContentsWidth) + ea,
-        height: String(baseHeight) + ea,
-        marginRight: String(contentsBetween) + ea,
-        top: String(borderSize) + ea,
-        height: String(baseHeight - (borderSize * 4)) + ea,
-        borderTop: String(borderSize) + "px solid " + colorChip.deactive,
-        borderBottom: String(borderSize) + "px solid " + colorChip.deactive,
-      }
-    });
-
-    blockScrollBox = createNode({
-      mother: firstContents,
-      style: {
-        display: "block",
-        width: String(blockWidth) + '%',
-        marginLeft: String(blockLeft) + '%',
-        paddingTop: String(contentsHeightBetween) + ea,
-        height: withOut(contentsHeightBetween, ea),
-        overflow: "scroll",
-      }
-    });
-
-    for (let i = 0; i < 20; i++) {
-
-      if (i === 0 || i > 16) {
-        blockColor = colorChip.gray1;
-        blockFontColor = colorChip.gray3;
-      } else {
-        blockColor = colorChip.white;
-        blockFontColor = colorChip.black;
-      }
-
-      createNode({
-        mother: blockScrollBox,
-        style: {
-          display: "block",
-          width: withOut(blockInnerMargin * 2, ea),
-          height: String(blockHeight - (blockInnerMargin * 2)) + ea,
-          paddingTop: String(blockInnerMargin) + ea,
-          paddingBottom: String(blockInnerMargin) + ea,
-          paddingLeft: String(blockInnerMargin) + ea,
-          borderRadius: String(5) + "px",
-          background: colorChip.gray2,
-          marginBottom: String(contentsHeightBetween) + ea,
-        },
-        children: [
-          {
-            style: {
-              display: "inline-block",
-              width: String(blockHeight - (blockInnerMargin * 2)) + ea,
-              height: String(blockHeight - (blockInnerMargin * 2)) + ea,
-              position: "relative",
-              borderRadius: String(5) + "px",
-              background: blockColor,
-              marginRight: String(blockInnerMargin) + ea,
-            },
-            children: [
-              {
-                text: String(i),
-                style: {
-                  fontSize: String(blockFontSize) + ea,
-                  fontWeight: String(400),
-                  color: blockFontColor,
-                  fontFamily: "graphik",
-                  position: "absolute",
-                  top: String(blockFontTop) + ea,
-                  left: String(0) + ea,
-                  width: String(100) + '%',
-                  textAlign: "center",
-                }
-              }
-            ]
-          },
-          {
-            style: {
-              display: "inline-block",
-              width: withOut(blockHeight, ea),
-              height: String(blockHeight - (blockInnerMargin * 2)) + ea,
-              position: "relative",
-              borderRadius: String(5) + "px",
-              background: blockColor,
-            }
-          },
-        ]
-      });
-    }
-
-    scrollTo(blockScrollBox, (blockHeight / 2) + contentsHeightBetween);
-
-    // second
-    secondContents = createNode({
-      mother: contentsBase,
-      style: {
-        display: "inline-block",
-        position: "relative",
-        verticalAlign: "top",
-        width: String(secondContentsWidth) + ea,
-        height: String(baseHeight) + ea,
-        marginRight: String(contentsBetween) + ea,
-      }
-    });
-    createNode({
-      mother: secondContents,
-      style: {
-        display: "block",
-        position: "relative",
-        height: "calc(calc(100% - " + String(contentsHeightBetween) + ea + ") * " + String((contentsCalendarHeight * percentage)) + ")",
-        marginBottom: String(contentsHeightBetween) + ea,
-        background: colorChip.gray1,
-        borderRadius: String(5) + "px",
-      }
-    });
-    createNode({
-      mother: secondContents,
-      style: {
-        display: "block",
-        position: "relative",
-        height: "calc(calc(100% - " + String(contentsHeightBetween) + ea + ") * " + String(1 - (contentsCalendarHeight * percentage)) + ")",
-        background: colorChip.gray1,
-        borderRadius: String(5) + "px",
-      }
-    });
-
-    // third
-    thirdContents = createNode({
-      mother: contentsBase,
-      style: {
-        display: "inline-block",
-        position: "relative",
-        verticalAlign: "top",
-        width: String(thirdContentsWidth) + ea,
-        height: String(baseHeight) + ea,
-        marginRight: String(contentsBetween) + ea,
-      }
-    });
-    for (let i = 0; i < buttonsNumber; i++) {
-      createNode({
-        mother: thirdContents,
-        style: {
-          display: "block",
-          position: "relative",
-          height: "calc(calc(100% - " + String(contentsHeightBetween * (buttonsNumber - 1)) + ea + ") / " + String(buttonsNumber) + ")",
-          marginBottom: String(i !== buttonsNumber - 1 ? contentsHeightBetween : 0) + ea,
-          background: colorChip.gray3,
-          borderRadius: String(5) + "px",
-        }
-      })
-    }
-
-
-    // fourth
-    fourthContents = createNode({
-      mother: contentsBase,
-      style: {
-        display: "inline-block",
-        position: "relative",
-        verticalAlign: "top",
-        width: withOut(firstContentsWidth + secondContentsWidth + thirdContentsWidth + (contentsBetween * 3), ea),
-        height: String(baseHeight) + ea,
-        borderRadius: String(5) + "px",
-        background: colorChip.gray1,
-      }
-    });
-
-
-
-
-
-  } else {
-    window.alert("해당 고객의 상태를 변경하셔야 팝업을 열 수 있습니다!");
+    num++;
   }
 
-  return (pIndex !== -1 && cIndex !== -1 && action !== "해당 없음");
+  scrollTo(blockScrollBox, (blockHeight / 2) + contentsHeightBetween);
+
+  // second
+  secondContents = createNode({
+    mother: contentsBase,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      verticalAlign: "top",
+      width: String(secondContentsWidth) + ea,
+      height: String(baseHeight) + ea,
+      marginRight: String(contentsBetween) + ea,
+    }
+  });
+  createNode({
+    mother: secondContents,
+    style: {
+      display: "block",
+      position: "relative",
+      height: "calc(calc(100% - " + String(contentsHeightBetween) + ea + ") * " + String((contentsCalendarHeight * percentage)) + ")",
+      marginBottom: String(contentsHeightBetween) + ea,
+      background: colorChip.gray1,
+      borderRadius: String(5) + "px",
+    }
+  });
+  createNode({
+    mother: secondContents,
+    style: {
+      display: "block",
+      position: "relative",
+      height: "calc(calc(100% - " + String(contentsHeightBetween) + ea + ") * " + String(1 - (contentsCalendarHeight * percentage)) + ")",
+      background: colorChip.gray1,
+      borderRadius: String(5) + "px",
+    }
+  });
+
+  // third
+  thirdContents = createNode({
+    mother: contentsBase,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      verticalAlign: "top",
+      width: String(thirdContentsWidth) + ea,
+      height: String(baseHeight) + ea,
+      marginRight: String(contentsBetween) + ea,
+    }
+  });
+  for (let i = 0; i < buttonsNumber; i++) {
+    createNode({
+      mother: thirdContents,
+      style: {
+        display: "block",
+        position: "relative",
+        height: "calc(calc(100% - " + String(contentsHeightBetween * (buttonsNumber - 1)) + ea + ") / " + String(buttonsNumber) + ")",
+        marginBottom: String(i !== buttonsNumber - 1 ? contentsHeightBetween : 0) + ea,
+        background: colorChip.gray3,
+        borderRadius: String(5) + "px",
+      }
+    })
+  }
+
+  // fourth
+  fourthContents = createNode({
+    mother: contentsBase,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      verticalAlign: "top",
+      width: withOut(firstContentsWidth + secondContentsWidth + thirdContentsWidth + (contentsBetween * 3), ea),
+      height: String(baseHeight) + ea,
+      borderRadius: String(5) + "px",
+      background: colorChip.gray1,
+    }
+  });
 }
 
 DesignerJs.prototype.projectIconSet = function (desid) {
