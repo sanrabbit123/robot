@@ -691,7 +691,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
 
 DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid, requestNumber, desid, divisionEntireMap) {
   const instance = this;
-  const { createNode, colorChip, withOut, ajaxJson, setQueue, cleanChildren, isMac } = GeneralJs;
+  const { createNode, colorChip, withOut, ajaxJson, setQueue, cleanChildren, isMac, scrollTo } = GeneralJs;
   const { ea, projects, clients, designers, projectMap, checklist } = this;
   const { action: { itemDescription } } = projectMap;
   const mobile = this.media[4];
@@ -735,20 +735,38 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
   let checkCircleWidth;
   let checkCircleVisual;
   let textAreaMother;
-  let descriptionMaker;
   let pannelBoxPaddingBottom, pannelBoxPaddingRight;
   let pannelMother;
   let pannelBlockPadding;
   let pannelBlockMargin;
   let pannelBlockHeight;
   let pannelBlockVisual;
-  let checklistBase;
+  let contentsBase;
   let checklistWidthRatio;
   let baseMargin, baseMargin2;
   let belowButtonsMotherHeight;
   let belowButtonsMother;
-  let rightPannelMother;
   let baseVisual;
+  let contentsBasePaddingTop;
+  let contentsBetween;
+  let contentsHeightBetween;
+  let contentsHeightBetweenRatio;
+  let firstContents, secondContents, thirdContents, fourthContents;
+  let firstContentsWidth, secondContentsWidth, thirdContentsWidth;
+  let baseHeight;
+  let percentage;
+  let borderSize;
+  let buttonsNumber;
+  let contentsCalendarHeight;
+  let blockHeightNumber;
+  let blockHeight;
+  let blockScrollBox;
+  let blockWidth;
+  let blockLeft;
+  let blockInnerMargin;
+  let blockColor;
+  let blockFontColor;
+  let blockFontSize, blockFontTop;
 
   pIndex = projects.findIndex((obj) => { return obj.proid === proid; });
   cIndex = clients.findIndex((obj) => { return obj.cliid === cliid; });
@@ -809,6 +827,25 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
     baseMargin2 = 10;
     belowButtonsMotherHeight = 280;
 
+    contentsBasePaddingTop = 24;
+
+    percentage = 0.01;
+    borderSize = 1;
+    contentsBetween = 1.8;
+    firstContentsWidth = 40;
+    secondContentsWidth = 64;
+    thirdContentsWidth = 24;
+    buttonsNumber = 8;
+    contentsHeightBetweenRatio = 2;
+    contentsCalendarHeight = 61;
+    blockHeightNumber = 10;
+    blockWidth = 88;
+    blockLeft = 11;
+    blockHeight = 8;
+    blockInnerMargin = 0.8;
+    blockFontSize = 2.8;
+    blockFontTop = 1.1;
+
     lengthArr = divisionEntireMap.map((arr) => { return arr[1].flat().length; });
     lengthArr.sort((a, b) => { return b - a; });
     maxLength = desktop ? lengthArr[0] : 3;
@@ -825,291 +862,6 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
         }
       }
       descriptionMap.set(name, { description, checklist: checklistFactor, pannel });
-    }
-
-    // action, proid, cliid, requestNumber, desid
-    descriptionMaker = (action, proid, cliid, requestNumber, desid) => {
-      cleanChildren(textAreaMother);
-      createNode({
-        mother: textAreaMother,
-        text: "<b%" + action + "%b>&nbsp;&nbsp;check list",
-        style: {
-          position: desktop ? "absolute" : "relative",
-          top: String(desktop ? noticeTextTop : 0) + ea,
-          left: String(noticeTextLeft) + ea,
-          fontSize: String(noticeTextSize) + ea,
-          fontWeight: String(400),
-          color: colorChip.green,
-          marginBottom: desktop ? "" : String(1.5) + ea,
-        },
-        bold: {
-          fontSize: String(noticeTextSize) + ea,
-          fontWeight: String(600),
-          color: colorChip.black,
-        }
-      });
-      textArea = createNode({
-        mother: textAreaMother,
-        style: {
-          position: desktop ? "absolute" : "relative",
-          top: String(desktop ? whiteBoxTop : 0) + ea,
-          left: String(whiteBoxLeft) + ea,
-          width: withOut(whiteBoxLeft * 2, ea),
-          height: desktop ? withOut(whiteBoxTop + whiteBoxLeft, ea) : "",
-          background: colorChip.white,
-          borderRadius: String(5) + "px",
-          boxShadow: "0px 2px 11px -9px " + colorChip.shadow
-        },
-        children: [
-          {
-            style: {
-              position: "relative",
-              paddingTop: String(textAreaPaddingTop) + ea,
-              paddingLeft: String(textAreaPaddingLeft) + ea,
-              paddingBottom: String(textAreaPaddingTop) + ea,
-              paddingRight: String(textAreaPaddingLeft) + ea,
-              width: withOut(textAreaPaddingLeft * 2, ea),
-              height: withOut(textAreaPaddingTop * 2, ea),
-              overflow: "scroll",
-            },
-            children: [
-              {
-                style: {
-                  position: "relative",
-                  width: String(100) + '%',
-                },
-                children: [
-                  {
-                    text: descriptionMap.get(action).description,
-                    style: {
-                      fontSize: String(noticeTextSize) + ea,
-                      lineHeight: String(1.6),
-                      fontWeight: String(400),
-                      marginBottom: String(lineHeightMargin) + ea,
-                      color: colorChip.black,
-                      position: "relative",
-                      paddingLeft: String(contentsPaddingLeft) + ea,
-                    },
-                    children: [
-                      {
-                        mode: "svg",
-                        source: instance.mother.returnArrow("right", colorChip.green),
-                        style: {
-                          position: "absolute",
-                          width: String(arrowWidth2) + ea,
-                          top: String(arrowTop2) + ea,
-                          left: String(0),
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    text: "체크리스트 여부 : <b%" + (descriptionMap.get(action).checklist === null ? "없음" : "있음") + "%b>",
-                    style: {
-                      fontSize: String(noticeTextSize) + ea,
-                      lineHeight: String(1.6),
-                      fontWeight: String(400),
-                      marginBottom: String(lineHeightMargin) + ea,
-                      color: colorChip.black,
-                      position: "relative",
-                      paddingLeft: String(contentsPaddingLeft) + ea,
-                    },
-                    bold: {
-                      fontSize: String(noticeTextSize) + ea,
-                      fontWeight: String(400),
-                      color: colorChip.green
-                    },
-                    children: [
-                      {
-                        mode: "svg",
-                        source: instance.mother.returnArrow("right", colorChip.green),
-                        style: {
-                          position: "absolute",
-                          width: String(arrowWidth2) + ea,
-                          top: String(arrowTop2) + ea,
-                          left: String(0),
-                        }
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }).children[0].children[0];
-      if (descriptionMap.get(action).checklist !== null) {
-        createNode({
-          mother: textArea,
-          text: descriptionMap.get(action).checklist.title,
-          style: {
-            fontSize: String(noticeTextSize) + ea,
-            lineHeight: String(1.6),
-            fontWeight: String(400),
-            marginBottom: String(lineHeightMargin) + ea,
-            color: colorChip.black,
-            paddingLeft: String(contentsPaddingLeft) + ea,
-            position: "relative",
-          },
-          children: [
-            {
-              mode: "svg",
-              source: instance.mother.returnArrow("right", colorChip.green),
-              style: {
-                position: "absolute",
-                width: String(arrowWidth2) + ea,
-                top: String(arrowTop2) + ea,
-                left: String(0),
-              }
-            }
-          ]
-        });
-        num = 1;
-        for (let { title, children } of descriptionMap.get(action).checklist.checklist) {
-          createNode({
-            mother: textArea,
-            text: "<b%" + String(num) + ".&nbsp;&nbsp;%b>" + title,
-            style: {
-              fontSize: String(noticeTextSize) + ea,
-              lineHeight: String(1.6),
-              fontWeight: String(600),
-              marginBottom: String(lineHeightMargin) + ea,
-              color: colorChip.black,
-              paddingLeft: String(contentsPaddingLeft) + ea,
-              position: "relative",
-            },
-            bold: {
-              lineHeight: String(1.6),
-              fontWeight: String(600),
-              color: colorChip.green
-            }
-          });
-          for (let { title, contents } of children) {
-            createNode({
-              mother: textArea,
-              text: "<u%" + title + " :&nbsp;&nbsp;%u>" + contents,
-              style: {
-                fontSize: String(noticeTextSize) + ea,
-                lineHeight: String(1.6),
-                fontWeight: String(400),
-                marginBottom: String(lineHeightMargin) + ea,
-                color: colorChip.black,
-                paddingLeft: String(contentsPaddingLeft * 3) + ea,
-                position: "relative",
-              },
-              bold: {
-                fontSize: String(noticeTextSize) + ea,
-                fontWeight: String(400),
-                color: colorChip.green
-              },
-              under: {
-                fontSize: String(noticeTextSize) + ea,
-                fontWeight: String(600),
-                color: colorChip.black
-              },
-              children: [
-                {
-                  mode: "svg",
-                  source: instance.mother.returnCheckCircle(colorChip.green),
-                  style: {
-                    position: "absolute",
-                    top: String(checkCircleTop) + ea,
-                    left: String((contentsPaddingLeft * 2) - checkCircleVisual) + ea,
-                    width: String(checkCircleWidth) + ea,
-                  }
-                }
-              ]
-            });
-          }
-          num++;
-        }
-      }
-
-      /*
-      if (descriptionMap.get(action).pannel.length === 0 || descriptionMap.get(action).pannel[descriptionMap.get(action).pannel.length - 1].name !== "목록으로") {
-        descriptionMap.get(action).pannel.push({
-          name: "목록으로",
-          event: (function (e) {
-            document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
-            document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
-            if (GeneralJs.stacks.greenPannel !== undefined && GeneralJs.stacks.greenPannel !== null) {
-              GeneralJs.stacks.greenPannel.style.bottom = String(40) + "px";
-            }
-          }).toString().trim().replace(/^function[^\(]*\([^\)]*\)[^\{]*\{\n?/i, '').replace(/\n?[ ]*\}$/i, '').trim()
-        });
-      }
-
-      if (descriptionMap.get(action).pannel.length > 0) {
-        pannelMother = createNode({
-          mother: textAreaMother,
-          style: {
-            display: "flex",
-            flexDirection: "column",
-            position: "fixed",
-            bottom: String(desktop ? baseBottom + textAreaPaddingLeft + pannelBoxPaddingBottom - pannelBlockMargin : baseBottom - pannelBlockMargin) + ea,
-            right: String(desktop ? baseLeft + textAreaPaddingLeft + pannelBoxPaddingRight : baseLeft) + ea,
-          }
-        });
-
-        for (let { name, event: eventFunction } of descriptionMap.get(action).pannel) {
-          createNode({
-            mother: pannelMother,
-            class: [ "hoverDefault_lite" ],
-            attribute: {
-              requestNumber: String(requestNumber),
-              action, proid, cliid, desid
-            },
-            event: {
-              click: function (e) {
-                const proid = this.getAttribute("proid");
-                const cliid = this.getAttribute("cliid");
-                const desid = this.getAttribute("desid");
-                const action = this.getAttribute("action");
-                const requestNumber = Number(this.getAttribute("requestNumber"));
-                const func = new Function('e', eventFunction);
-
-                e.__data__ = {
-                  proid,
-                  cliid,
-                  desid,
-                  action,
-                  requestNumber,
-                  thisUrl: window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + desid,
-                };
-
-                func.call(this, e);
-              }
-            },
-            style: {
-              position: "relative",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              background: colorChip.gradientGreen3,
-              borderRadius: String(5) + "px",
-              boxShadow: "0px 3px 12px -9px " + colorChip.shadow,
-              height: String(pannelBlockHeight) + ea,
-              textAlign: "center",
-              paddingLeft: String(pannelBlockPadding) + ea,
-              paddingRight: String(pannelBlockPadding) + ea,
-              marginBottom: String(pannelBlockMargin) + ea,
-            },
-            children: [
-              {
-                text: name,
-                style: {
-                  position: "relative",
-                  top: String(pannelBlockVisual * -1) + ea,
-                  fontSize: String(noticeTextSize) + ea,
-                  fontWeight: String(500),
-                  color: colorChip.whiteBlack,
-                }
-              }
-            ]
-          });
-        }
-      }
-      */
     }
 
     // base
@@ -1160,64 +912,204 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
       ]
     });
 
-    // checklist base
-    checklistBase = createNode({
+    // contents base
+    contentsBase = createNode({
       mother: base,
       style: {
         verticalAlign: "top",
+        display: "block",
+        position: "relative",
+        marginTop: String(contentsBasePaddingTop) + ea,
+        height: withOut(titleHeight + titlePaddingBottom + baseVisual + contentsBasePaddingTop, ea),
+        overflow: "hidden",
+      }
+    });
+
+    baseHeight = contentsBase.getBoundingClientRect().height;
+    contentsBetween = Math.floor(baseHeight * contentsBetween * percentage);
+    firstContentsWidth = baseHeight * firstContentsWidth * percentage;
+    secondContentsWidth = baseHeight * secondContentsWidth * percentage;
+    thirdContentsWidth = baseHeight * thirdContentsWidth * percentage;
+    contentsHeightBetween = Math.floor(contentsBetween / contentsHeightBetweenRatio);
+    blockHeight = Math.floor(baseHeight * blockHeight * percentage);
+    blockInnerMargin = Math.floor(baseHeight * blockInnerMargin * percentage);
+    blockFontSize = Math.round(baseHeight * blockFontSize * percentage);
+    blockFontTop = Math.round(baseHeight * blockFontTop * percentage);
+
+    // first
+    firstContents = createNode({
+      mother: contentsBase,
+      style: {
         display: "inline-block",
         position: "relative",
-        width: String(checklistWidthRatio) + '%',
-        height: withOut(titleHeight + titlePaddingBottom + baseVisual, ea),
+        verticalAlign: "top",
+        width: String(firstContentsWidth) + ea,
+        height: String(baseHeight) + ea,
+        marginRight: String(contentsBetween) + ea,
+        top: String(borderSize) + ea,
+        height: String(baseHeight - (borderSize * 4)) + ea,
+        borderTop: String(borderSize) + "px solid " + colorChip.deactive,
+        borderBottom: String(borderSize) + "px solid " + colorChip.deactive,
+      }
+    });
+
+    blockScrollBox = createNode({
+      mother: firstContents,
+      style: {
+        display: "block",
+        width: String(blockWidth) + '%',
+        marginLeft: String(blockLeft) + '%',
+        paddingTop: String(contentsHeightBetween) + ea,
+        height: withOut(contentsHeightBetween, ea),
+        overflow: "scroll",
+      }
+    });
+
+    for (let i = 0; i < 20; i++) {
+
+      if (i === 0 || i > 16) {
+        blockColor = colorChip.gray1;
+        blockFontColor = colorChip.gray3;
+      } else {
+        blockColor = colorChip.white;
+        blockFontColor = colorChip.black;
+      }
+
+      createNode({
+        mother: blockScrollBox,
+        style: {
+          display: "block",
+          width: withOut(blockInnerMargin * 2, ea),
+          height: String(blockHeight - (blockInnerMargin * 2)) + ea,
+          paddingTop: String(blockInnerMargin) + ea,
+          paddingBottom: String(blockInnerMargin) + ea,
+          paddingLeft: String(blockInnerMargin) + ea,
+          borderRadius: String(5) + "px",
+          background: colorChip.gray2,
+          marginBottom: String(contentsHeightBetween) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: "inline-block",
+              width: String(blockHeight - (blockInnerMargin * 2)) + ea,
+              height: String(blockHeight - (blockInnerMargin * 2)) + ea,
+              position: "relative",
+              borderRadius: String(5) + "px",
+              background: blockColor,
+              marginRight: String(blockInnerMargin) + ea,
+            },
+            children: [
+              {
+                text: String(i),
+                style: {
+                  fontSize: String(blockFontSize) + ea,
+                  fontWeight: String(400),
+                  color: blockFontColor,
+                  fontFamily: "graphik",
+                  position: "absolute",
+                  top: String(blockFontTop) + ea,
+                  left: String(0) + ea,
+                  width: String(100) + '%',
+                  textAlign: "center",
+                }
+              }
+            ]
+          },
+          {
+            style: {
+              display: "inline-block",
+              width: withOut(blockHeight, ea),
+              height: String(blockHeight - (blockInnerMargin * 2)) + ea,
+              position: "relative",
+              borderRadius: String(5) + "px",
+              background: blockColor,
+            }
+          },
+        ]
+      });
+    }
+
+    scrollTo(blockScrollBox, (blockHeight / 2) + contentsHeightBetween);
+
+    // second
+    secondContents = createNode({
+      mother: contentsBase,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        verticalAlign: "top",
+        width: String(secondContentsWidth) + ea,
+        height: String(baseHeight) + ea,
+        marginRight: String(contentsBetween) + ea,
+      }
+    });
+    createNode({
+      mother: secondContents,
+      style: {
+        display: "block",
+        position: "relative",
+        height: "calc(calc(100% - " + String(contentsHeightBetween) + ea + ") * " + String((contentsCalendarHeight * percentage)) + ")",
+        marginBottom: String(contentsHeightBetween) + ea,
+        background: colorChip.gray1,
+        borderRadius: String(5) + "px",
+      }
+    });
+    createNode({
+      mother: secondContents,
+      style: {
+        display: "block",
+        position: "relative",
+        height: "calc(calc(100% - " + String(contentsHeightBetween) + ea + ") * " + String(1 - (contentsCalendarHeight * percentage)) + ")",
+        background: colorChip.gray1,
+        borderRadius: String(5) + "px",
+      }
+    });
+
+    // third
+    thirdContents = createNode({
+      mother: contentsBase,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        verticalAlign: "top",
+        width: String(thirdContentsWidth) + ea,
+        height: String(baseHeight) + ea,
+        marginRight: String(contentsBetween) + ea,
+      }
+    });
+    for (let i = 0; i < buttonsNumber; i++) {
+      createNode({
+        mother: thirdContents,
+        style: {
+          display: "block",
+          position: "relative",
+          height: "calc(calc(100% - " + String(contentsHeightBetween * (buttonsNumber - 1)) + ea + ") / " + String(buttonsNumber) + ")",
+          marginBottom: String(i !== buttonsNumber - 1 ? contentsHeightBetween : 0) + ea,
+          background: colorChip.gray3,
+          borderRadius: String(5) + "px",
+        }
+      })
+    }
+
+
+    // fourth
+    fourthContents = createNode({
+      mother: contentsBase,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        verticalAlign: "top",
+        width: withOut(firstContentsWidth + secondContentsWidth + thirdContentsWidth + (contentsBetween * 3), ea),
+        height: String(baseHeight) + ea,
+        borderRadius: String(5) + "px",
+        background: colorChip.gray1,
       }
     });
 
 
-    belowButtonsMother = createNode({
-      mother: checklistBase,
-      style: {
-        display: "block",
-        width: String(100) + '%',
-        borderRadius: String(5) + "px",
-        background: colorChip.gray0,
-        height: String(belowButtonsMotherHeight) + ea,
-        marginTop: String(baseMargin2) + ea,
-      }
-    })
 
-    rightPannelMother = createNode({
-      mother: base,
-      style: {
-        verticalAlign: "top",
-        display: "inline-block",
-        position: "relative",
-        marginLeft: String(baseMargin) + ea,
-        width: "calc(" + String(100 - checklistWidthRatio) + '%' + " - " + String(baseMargin) + ea + ")",
-        height: withOut(titleHeight + titlePaddingBottom + baseVisual, ea),
-      },
-      children: [
-        {
-          style: {
-            display: "block",
-            width: String(100) + '%',
-            borderRadius: String(5) + "px",
-            background: colorChip.gray0,
-            height: String(((subTitleHeight + areaTitleBottom + barHeight) * (divisionEntireMap.length - 1)) + rowMarginTop + detailBoxMarginTop - baseMargin2) + ea,
-            marginTop: String(rowFirstMarginTop) + ea,
-          }
-        },
-        {
-          style: {
-            marginTop: String(baseMargin2) + ea,
-            display: "block",
-            width: String(100) + '%',
-            borderRadius: String(5) + "px",
-            background: colorChip.gray0,
-            height: withOut(((subTitleHeight + areaTitleBottom + barHeight) * (divisionEntireMap.length - 1)) + rowMarginTop + detailBoxMarginTop + rowFirstMarginTop, ea)
-          }
-        }
-      ]
-    })
+
 
   } else {
     window.alert("해당 고객의 상태를 변경하셔야 팝업을 열 수 있습니다!");
