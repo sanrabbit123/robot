@@ -732,6 +732,8 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
   let blockFontColor;
   let blockFontSize, blockFontTop;
   let blockNameSize;
+  let blockNameTop;
+  let blockNameLeft;
 
   entireAction = [
     { name: null, },
@@ -805,6 +807,8 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
   blockFontSize = 2.6;
   blockFontTop = 1.2;
   blockNameSize = 2.2;
+  blockNameTop = 1.5;
+  blockNameLeft = 1.7;
 
   // base
   base = createNode({
@@ -878,6 +882,8 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
   blockFontSize = Math.round(baseHeight * blockFontSize * percentage);
   blockFontTop = Math.round(baseHeight * blockFontTop * percentage);
   blockNameSize = Math.round(baseHeight * blockNameSize * percentage);
+  blockNameTop = Math.round(baseHeight * blockNameTop * percentage);
+  blockNameLeft = Math.round(baseHeight * blockNameLeft * percentage);
 
   // first
   firstContents = createNode({
@@ -978,8 +984,8 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
                 fontWeight: String(600),
                 color: blockFontColor,
                 position: "absolute",
-                top: String(10) + ea,
-                left: String(10) + ea,
+                top: String(blockNameTop) + ea,
+                left: String(blockNameLeft) + ea,
                 textAlign: "left",
               }
             }

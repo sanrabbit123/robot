@@ -3985,10 +3985,12 @@ DesignerJs.prototype.contentsView = async function () {
       "수정 제안",
       "시공 진행",
       "제품 구매",
+      "추가 제안",
       "배송중",
       "세팅 마무리",
     ];
     this.photoActionList = [
+      "촬영 컨택",
       "촬영 대기",
       "원본 요청 요망",
       "원본 요청 완료",

@@ -732,9 +732,15 @@ const ProjectProcess = function (json) {
     "수정 제안",
     "시공 진행",
     "제품 구매",
+    "추가 제안",
     "배송중",
     "세팅 마무리",
     "촬영 컨택",
+    "사진 업로드",
+    "디자이너글 업로드",
+    "증빙 처리",
+    "정산 대기",
+    "프로젝트 완료",
     "해당 없음"
   ], false);
   this.outreason = new Menu(json.outreason, [
