@@ -1643,6 +1643,8 @@ DevContext.prototype.launching = async function () {
     //   console.log(whereQuery);
     // }
 
+    const reflection = new MongoReflection();
+    await reflection.mongoMigration("local", "pythoninfo");
 
 
 
