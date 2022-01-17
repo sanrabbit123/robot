@@ -392,6 +392,7 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
         res.send(JSON.stringify({ message: "ERROR" }));
       }
     } catch (e) {
+      console.log(e);
       instance.mother.errorLog("Python 서버 문제 생김 (rou_post_createStylingContract): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "ERROR" }));
     }

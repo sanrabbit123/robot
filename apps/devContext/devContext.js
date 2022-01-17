@@ -1643,9 +1643,10 @@ DevContext.prototype.launching = async function () {
     //   console.log(whereQuery);
     // }
 
-    const reflection = new MongoReflection();
-    await reflection.mongoMigration("local", "pythoninfo");
 
+
+    // const reflection = new MongoReflection();
+    // await reflection.mongoMigration("local", "pythoninfo");
 
 
 
@@ -1749,7 +1750,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p172");
+    // await this.getRawPortfolio("p131");
 
 
     // get corePortfolio by pid

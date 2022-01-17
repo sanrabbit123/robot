@@ -1904,8 +1904,8 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
     arrowWidth = Math.floor(1.8 * (0.01 * option.height));
     arrowTop = Math.floor(2.7 * (0.01 * option.height));
     dateBlockHeight = Math.floor(12 * (0.01 * option.height));
-    dateBlockPaddingTop = Math.floor(6.7 * (0.01 * option.height));
-    dateBlockPaddingBottom = Math.floor(4.7 * (0.01 * option.height));
+    dateBlockPaddingTop = Math.floor(6.5 * (0.01 * option.height));
+    dateBlockPaddingBottom = Math.floor(4.5 * (0.01 * option.height));
     dateBlockWeight = 300;
     datePositionTop = Math.floor(1 * (0.01 * option.height));
     datePositionLeft = Math.floor(1.8 * (0.01 * option.height));
