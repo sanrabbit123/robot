@@ -571,7 +571,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
             }
           });
 
-          instance.projectWhiteDetail(whiteBox, action, proid, cliid, requestNumber, desid);
+          instance.projectWhiteDetail(whiteBox, action, proid, cliid, requestNumber, desid, divisionEntireMap);
 
           if (mobile) {
             swipePatch({
@@ -688,9 +688,9 @@ DesignerJs.prototype.projectDetail = function (desid) {
   this.mainBaseTong = baseTong0;
 }
 
-DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid, requestNumber, desid, entireAction) {
+DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid, requestNumber, desid, projectWhiteDetail) {
   const instance = this;
-  const { createNode, colorChip, withOut, ajaxJson, setQueue, cleanChildren, isMac, scrollTo } = GeneralJs;
+  const { createNode, colorChip, withOut, ajaxJson, setQueue, cleanChildren, isMac, scrollTo, copyJson, colorCalendar } = GeneralJs;
   const { ea, projects, clients, designers, projectMap, checklist, totalMother } = this;
   const mobile = this.media[4];
   const desktop = !mobile;
@@ -734,33 +734,30 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
   let blockNameSize;
   let blockNameTop;
   let blockNameLeft;
+  let blockIconHeight;
+  let entireActionRaw, entireAction;
+  let nullObject, nullNumber;
+  let blockIconTop;
+  let iconFillColor;
+  let blockBackColor;
+  let secondContentsCalendar, secondContentsTable;
+  let calendarIndent;
+  let calendarMarginTop, calendarMarginBottom;
 
-  entireAction = [
-    { name: null, },
-    { name: "현장 미팅 조율", },
-    { name: "현장 미팅 확정", },
-    { name: "현장 미팅 피드백", },
-    { name: "잔금 대기", },
-    { name: "시작 대기", },
-    { name: "1차 디자인", },
-    { name: "수정 디자인", },
-    { name: "시공 의뢰서", },
-    { name: "시공 견적서", },
-    { name: "시공 공정표", },
-    { name: "제품 구매", },
-    { name: "추가 제안서", },
-    { name: "세팅 안내", },
-    { name: "촬영 및 인터뷰", },
-    { name: "사진 업로드", },
-    { name: "디자이너글 업로드", },
-    { name: "증빙 처리", },
-    { name: "정산 대기", },
-    { name: null, },
-    { name: null, },
-    { name: null, },
-    { name: null, },
-    { name: null, },
-  ];
+  nullObject = { name: null };
+  nullNumber = 5;
+  entireActionRaw = projectWhiteDetail.map((arr) => { return arr[1]; });
+  entireAction = [ copyJson(nullObject) ];
+  for (let arr of entireActionRaw) {
+    for (let arr2 of arr) {
+      for (let str of arr2) {
+        entireAction.push({ name: str });
+      }
+    }
+  }
+  for (let i = 0; i < nullNumber; i++) {
+    entireAction.push(copyJson(nullObject));
+  }
 
   pIndex = projects.findIndex((obj) => { return obj.proid === proid; });
   cIndex = clients.findIndex((obj) => { return obj.cliid === cliid; });
@@ -798,17 +795,22 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
   thirdContentsWidth = 24;
   buttonsNumber = 8;
   contentsHeightBetweenRatio = 2;
-  contentsCalendarHeight = 61;
+  contentsCalendarHeight = 65;
   blockHeightNumber = 10;
   blockWidth = 88;
   blockLeft = 11;
-  blockHeight = 8;
+  blockHeight = 7.4;
   blockInnerMargin = 0.8;
-  blockFontSize = 2.6;
-  blockFontTop = 1.2;
-  blockNameSize = 2.2;
+  blockFontSize = 2.3;
+  blockFontTop = 1.1;
+  blockNameSize = 1.9;
   blockNameTop = 1.5;
   blockNameLeft = 1.7;
+  blockIconHeight = 1.8;
+  blockIconTop = 1.8;
+  calendarIndent = 2.41;
+  calendarMarginTop = 0.1;
+  calendarMarginBottom = 6;
 
   // base
   base = createNode({
@@ -884,6 +886,11 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
   blockNameSize = Math.round(baseHeight * blockNameSize * percentage);
   blockNameTop = Math.round(baseHeight * blockNameTop * percentage);
   blockNameLeft = Math.round(baseHeight * blockNameLeft * percentage);
+  blockIconHeight = Math.round(baseHeight * blockIconHeight * percentage);
+  blockIconTop = Math.round(baseHeight * blockIconTop * percentage);
+  calendarIndent = Math.round(baseHeight * calendarIndent * percentage);
+  calendarMarginTop = Math.round(baseHeight * calendarMarginTop * percentage);
+  calendarMarginBottom = Math.round(baseHeight * calendarMarginBottom * percentage);
 
   // first
   firstContents = createNode({
@@ -918,11 +925,20 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
   for (let { name } of entireAction) {
 
     if (name === null) {
+      blockBackColor = colorChip.gray2;
       blockColor = colorChip.gray1;
       blockFontColor = colorChip.gray3;
+      iconFillColor = colorChip.gray4;
+    } else if (name === action) {
+      blockBackColor = colorChip.gradientGreen2;
+      blockColor = colorChip.white;
+      blockFontColor = colorChip.darkGreen;
+      iconFillColor = colorChip.green;
     } else {
+      blockBackColor = colorChip.gray2;
       blockColor = colorChip.white;
       blockFontColor = colorChip.black;
+      iconFillColor = colorChip.green;
     }
 
     createNode({
@@ -935,13 +951,14 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
         paddingBottom: String(blockInnerMargin) + ea,
         paddingLeft: String(blockInnerMargin) + ea,
         borderRadius: String(5) + "px",
-        background: colorChip.gray2,
+        background: blockBackColor,
         marginBottom: String(contentsHeightBetween) + ea,
       },
       children: [
         {
           style: {
             display: "inline-block",
+            verticalAlign: "top",
             width: String(blockHeight - (blockInnerMargin * 2)) + ea,
             height: String(blockHeight - (blockInnerMargin * 2)) + ea,
             position: "relative",
@@ -969,24 +986,35 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
         {
           style: {
             display: "inline-block",
+            verticalAlign: "top",
             width: withOut(blockHeight, ea),
-            height: String(blockHeight - (blockInnerMargin * 2)) + ea,
+            height: String(blockHeight - (blockInnerMargin * 2) - blockNameTop) + ea,
             position: "relative",
             borderRadius: String(5) + "px",
             background: blockColor,
+            paddingTop: String(blockNameTop) + ea,
           },
           children: [
             {
               text: name,
               style: {
                 display: "inline-block",
+                position: "relative",
                 fontSize: String(blockNameSize) + ea,
                 fontWeight: String(600),
                 color: blockFontColor,
-                position: "absolute",
-                top: String(blockNameTop) + ea,
-                left: String(blockNameLeft) + ea,
+                marginLeft: String(blockNameLeft) + ea,
                 textAlign: "left",
+              }
+            },
+            {
+              mode: "svg",
+              source: instance.mother.returnDownload(iconFillColor, true),
+              style: {
+                position: "absolute",
+                height: String(blockIconHeight) + ea,
+                right: String(blockNameLeft) + ea,
+                top: String(blockIconTop) + ea,
               }
             }
           ]
@@ -1011,7 +1039,7 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
       marginRight: String(contentsBetween) + ea,
     }
   });
-  createNode({
+  secondContentsCalendar = createNode({
     mother: secondContents,
     style: {
       display: "block",
@@ -1020,17 +1048,113 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
       marginBottom: String(contentsHeightBetween) + ea,
       background: colorChip.gray1,
       borderRadius: String(5) + "px",
-    }
+      paddingTop: String(calendarIndent) + ea,
+      paddingBottom: String(calendarIndent) + ea,
+      overflow: "hidden",
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: "relative",
+          marginLeft: String(calendarIndent) + ea,
+          marginRight: String(calendarIndent) + ea,
+          width: withOut(calendarIndent * 2, ea),
+          height: withOut(0, ea),
+          overflow: "scroll",
+        }
+      },
+      {
+        style: {
+          position: "absolute",
+          bottom: String(0),
+          left: String(0),
+          height: String(calendarIndent) + ea,
+          width: String(100) + '%',
+          background: colorChip.gray2,
+          borderTop: "1px dashed " + colorChip.gray3,
+          boxSizing: "border-box",
+        }
+      }
+    ]
+  }).firstChild;
+
+  colorCalendar(secondContentsCalendar, [
+    {
+      date: {
+        start: new Date(2022, 0, 10),
+        end: new Date(2022, 0, 18),
+      },
+      contents: {
+        title: "안녕하세요",
+        description: "test",
+        color: colorChip.green
+      }
+    },
+    {
+      date: {
+        start: new Date(2022, 0, 19),
+        end: new Date(2022, 0, 30),
+      },
+      contents: {
+        title: "안녕하세요",
+        description: "test",
+        color: colorChip.green
+      }
+    },
+    {
+      date: {
+        start: new Date(2022, 0, 19),
+        end: new Date(2022, 0, 30),
+      },
+      contents: {
+        title: "안녕하세요",
+        description: "test",
+        color: colorChip.green
+      }
+    },
+    {
+      date: {
+        start: new Date(2022, 0, 19),
+        end: new Date(2022, 0, 30),
+      },
+      contents: {
+        title: "안녕하세요",
+        description: "test",
+        color: colorChip.green
+      }
+    },
+  ], {
+    heightMode: true,
+    height: secondContentsCalendar.getBoundingClientRect().height
   });
-  createNode({
+  secondContentsCalendar.firstChild.style.marginTop = String(calendarMarginTop) + ea;
+  secondContentsCalendar.firstChild.style.marginBottom = String(calendarMarginBottom) + ea;
+
+  secondContentsTable = createNode({
     mother: secondContents,
     style: {
       display: "block",
       position: "relative",
-      height: "calc(calc(100% - " + String(contentsHeightBetween) + ea + ") * " + String(1 - (contentsCalendarHeight * percentage)) + ")",
+      height: "calc(calc(calc(100% - " + String(contentsHeightBetween) + ea + ") * " + String(1 - (contentsCalendarHeight * percentage)) + ") - " + String((calendarIndent * 2) + 1) + ea + ")",
       background: colorChip.gray1,
       borderRadius: String(5) + "px",
-    }
+      overflow: "hidden",
+    },
+    children: [
+      {
+        style: {
+          position: "absolute",
+          bottom: String(0),
+          left: String(0),
+          height: String(calendarIndent) + ea,
+          width: String(100) + '%',
+          background: colorChip.gray2,
+          borderTop: "1px dashed " + colorChip.gray3,
+          boxSizing: "border-box",
+        }
+      },
+    ]
   });
 
   // third
