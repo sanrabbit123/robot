@@ -496,6 +496,8 @@ ConsultingJs.prototype.submitEvent = function (boo) {
       GeneralJs.inputBackward(mother.querySelector(queryId + "blocks_family > input"), "가족 구성원을 알려주세요!");
     } else if (obj.area === '') {
       GeneralJs.inputBackward(mother.querySelector(queryId + "blocks_pyeong > input"), "평수를 알려주세요!");
+    } else if (obj.email === '') {
+      GeneralJs.inputBackward(mother.querySelector(queryId + "blocks_email > input"), "이메일 주소를 입력해주세요!");
     } else {
 
       //make ajax data

@@ -1904,8 +1904,8 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
     arrowWidth = Math.floor(1.8 * (0.01 * option.height));
     arrowTop = Math.floor(2.7 * (0.01 * option.height));
     dateBlockHeight = Math.floor(12 * (0.01 * option.height));
-    dateBlockPaddingTop = Math.floor(6.5 * (0.01 * option.height));
-    dateBlockPaddingBottom = Math.floor(4.5 * (0.01 * option.height));
+    dateBlockPaddingTop = Math.floor(6.3 * (0.01 * option.height));
+    dateBlockPaddingBottom = Math.floor(4.3 * (0.01 * option.height));
     dateBlockWeight = 300;
     datePositionTop = Math.floor(1 * (0.01 * option.height));
     datePositionLeft = Math.floor(1.8 * (0.01 * option.height));
@@ -1914,7 +1914,7 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
     colorSqureHeight = Math.floor(3.3 * (0.01 * option.height));
     colorSqureIndent = Math.floor(2.5 * (0.01 * option.height));
     colorSqureWordingSize = Math.floor(1.5 * (0.01 * option.height));
-    colorSqureWordingTop = 0;
+    colorSqureWordingTop = Math.floor(0.1 * (0.01 * option.height));
     colorSqureWordingLeft = Math.floor(1.1 * (0.01 * option.height));
     colorSqureWordingWeight = 800;
     calendarTitleTop = Math.floor(-3.2 * (0.01 * option.height));
