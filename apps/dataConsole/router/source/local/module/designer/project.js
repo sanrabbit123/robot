@@ -798,28 +798,28 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
 
   customButtons = [
     {
-      name: "선호 사진 다시 선택",
+      name: "선호 사진\n다시 선택",
     },
     {
-      name: "추가 현장 사진 전송",
+      name: "추가 현장\n사진 전송",
     },
     {
-      name: "디자이너 제안서 다시보기",
+      name: "디자이너 제안서\n다시보기",
     },
     {
-      name: "현장 미팅 안내 다시보기",
+      name: "현장 미팅 안내\n다시보기",
     },
     {
-      name: "선호 사진 다시 선택",
+      name: "선호 사진\n다시 선택",
     },
     {
-      name: "추가 현장 사진 전송",
+      name: "추가 현장\n사진 전송",
     },
     {
-      name: "디자이너 제안서 다시보기",
+      name: "디자이너 제안서\n다시보기",
     },
     {
-      name: "현장 미팅 안내 다시보기",
+      name: "현장 미팅 안내\n다시보기",
     },
   ];
   buttonsNumber = customButtons.length;
@@ -874,7 +874,7 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
   contentsBetween = 1.8;
   firstContentsWidth = 40;
   secondContentsWidth = 64;
-  thirdContentsWidth = 24;
+  thirdContentsWidth = 20;
   contentsHeightBetweenRatio = 2;
   contentsCalendarHeight = 61;
   blockHeightNumber = 10;
@@ -1239,27 +1239,26 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
                 fontSize: String(13) + ea,
                 fontWeight: String(400),
                 fontFamily: "graphik",
-                color: colorChip.shadow,
+                color: colorChip.deactive,
               }
             },
             {
               style: {
                 position: "absolute",
                 bottom: String(9) + ea,
-                right: String(13) + ea,
+                right: String(14) + ea,
                 width: String(120) + ea,
-                height: String(50) + ea,
-                background: "aqua",
+                height: String(47) + ea,
+                textAlign: "right",
               },
               children: [
                 {
                   text: customButtons[i].name,
                   style: {
-                    top: String(9) + ea,
-                    left: String(13) + ea,
-                    fontSize: String(13) + ea,
+                    fontSize: String(15) + ea,
                     fontWeight: String(500),
                     color: colorChip.black,
+                    lineHeight: String(1.4),
                   }
                 }
               ]
