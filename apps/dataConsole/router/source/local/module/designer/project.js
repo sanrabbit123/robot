@@ -744,6 +744,8 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
   let calendarIndent;
   let calendarMarginTop, calendarMarginBottom;
   let customButtons;
+  let customButtonNumberTop, customButtonNumberLeft, customButtonNumberSize;
+  let customButtonTitleBottom, customButtonTitleRight, customButtonTitleWidth, customButtonTitleHeight, customButtonTitleSize;
 
   // DEV ===============================================================================================
 
@@ -893,6 +895,15 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
   calendarMarginTop = 0.1;
   calendarMarginBottom = 6;
 
+  customButtonNumberTop = 9 / 8.33;
+  customButtonNumberLeft = 13 / 8.33;
+  customButtonNumberSize = 13 / 8.33;
+  customButtonTitleBottom = 9 / 8.33;
+  customButtonTitleRight = 14 / 8.33;
+  customButtonTitleWidth = 120 / 8.33;
+  customButtonTitleHeight = 47 / 8.33;
+  customButtonTitleSize = 15 / 8.33;
+
   // base
   base = createNode({
     mother,
@@ -972,6 +983,14 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
   calendarIndent = Math.round(baseHeight * calendarIndent * percentage);
   calendarMarginTop = Math.round(baseHeight * calendarMarginTop * percentage);
   calendarMarginBottom = Math.round(baseHeight * calendarMarginBottom * percentage);
+  customButtonNumberTop = Math.round(baseHeight * customButtonNumberTop * percentage);
+  customButtonNumberLeft = Math.round(baseHeight * customButtonNumberLeft * percentage);
+  customButtonNumberSize = Math.round(baseHeight * customButtonNumberSize * percentage);
+  customButtonTitleBottom = Math.round(baseHeight * customButtonTitleBottom * percentage);
+  customButtonTitleRight = Math.round(baseHeight * customButtonTitleRight * percentage);
+  customButtonTitleWidth = Math.round(baseHeight * customButtonTitleWidth * percentage);
+  customButtonTitleHeight = Math.round(baseHeight * customButtonTitleHeight * percentage);
+  customButtonTitleSize = Math.round(baseHeight * customButtonTitleSize * percentage);
 
   // first
   firstContents = createNode({
@@ -1220,6 +1239,20 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
       },
       children: [
         {
+          event: {
+            mouseenter: function (e) {
+              this.style.transform = "translateY(-1px)";
+              this.style.boxShadow = "0px 2px 17px -9px " + colorChip.black;
+              this.children[0].style.color = colorChip.whiteGreen;
+              this.children[1].children[0].style.color = colorChip.green;
+            },
+            mouseleave: function (e) {
+              this.style.transform = "translateY(0px)";
+              this.style.boxShadow = "0px 2px 13px -9px " + colorChip.shadow;
+              this.children[0].style.color = colorChip.deactive;
+              this.children[1].children[0].style.color = colorChip.black;
+            }
+          },
           style: {
             display: "block",
             position: "relative",
@@ -1228,15 +1261,16 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
             background: colorChip.white,
             borderRadius: String(5) + "px",
             boxShadow: "0px 2px 13px -9px " + colorChip.shadow,
+            cursor: "pointer",
           },
           children: [
             {
               text: 'A' + String(i + 1),
               style: {
                 position: "absolute",
-                top: String(9) + ea,
-                left: String(13) + ea,
-                fontSize: String(13) + ea,
+                top: String(customButtonNumberTop) + ea,
+                left: String(customButtonNumberLeft) + ea,
+                fontSize: String(customButtonNumberSize) + ea,
                 fontWeight: String(400),
                 fontFamily: "graphik",
                 color: colorChip.deactive,
@@ -1245,17 +1279,17 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
             {
               style: {
                 position: "absolute",
-                bottom: String(9) + ea,
-                right: String(14) + ea,
-                width: String(120) + ea,
-                height: String(47) + ea,
+                bottom: String(customButtonTitleBottom) + ea,
+                right: String(customButtonTitleRight) + ea,
+                width: String(customButtonTitleWidth) + ea,
+                height: String(customButtonTitleHeight) + ea,
                 textAlign: "right",
               },
               children: [
                 {
                   text: customButtons[i].name,
                   style: {
-                    fontSize: String(15) + ea,
+                    fontSize: String(customButtonTitleSize) + ea,
                     fontWeight: String(500),
                     color: colorChip.black,
                     lineHeight: String(1.4),
