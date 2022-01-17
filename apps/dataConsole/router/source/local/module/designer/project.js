@@ -743,6 +743,88 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
   let secondContentsCalendar, secondContentsTable;
   let calendarIndent;
   let calendarMarginTop, calendarMarginBottom;
+  let customButtons;
+
+  // DEV ===============================================================================================
+
+  let dummySchedule;
+
+  dummySchedule = [
+    {
+      date: {
+        start: new Date(2022, 0, 10),
+        end: new Date(2022, 0, 18),
+      },
+      contents: {
+        title: "안녕하세요",
+        description: "test",
+        color: colorChip.green
+      }
+    },
+    {
+      date: {
+        start: new Date(2022, 0, 19),
+        end: new Date(2022, 0, 30),
+      },
+      contents: {
+        title: "안녕하세요",
+        description: "test",
+        color: colorChip.green
+      }
+    },
+    {
+      date: {
+        start: new Date(2022, 0, 19),
+        end: new Date(2022, 0, 30),
+      },
+      contents: {
+        title: "안녕하세요",
+        description: "test",
+        color: colorChip.green
+      }
+    },
+    {
+      date: {
+        start: new Date(2022, 0, 19),
+        end: new Date(2022, 0, 30),
+      },
+      contents: {
+        title: "안녕하세요",
+        description: "test",
+        color: colorChip.green
+      }
+    },
+  ];
+
+  customButtons = [
+    {
+      name: "선호 사진 다시 선택",
+    },
+    {
+      name: "추가 현장 사진 전송",
+    },
+    {
+      name: "디자이너 제안서 다시보기",
+    },
+    {
+      name: "현장 미팅 안내 다시보기",
+    },
+    {
+      name: "선호 사진 다시 선택",
+    },
+    {
+      name: "추가 현장 사진 전송",
+    },
+    {
+      name: "디자이너 제안서 다시보기",
+    },
+    {
+      name: "현장 미팅 안내 다시보기",
+    },
+  ];
+  buttonsNumber = customButtons.length;
+
+  // DEV ===============================================================================================
 
   nullObject = { name: null };
   nullNumber = 5;
@@ -793,7 +875,6 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
   firstContentsWidth = 40;
   secondContentsWidth = 64;
   thirdContentsWidth = 24;
-  buttonsNumber = 8;
   contentsHeightBetweenRatio = 2;
   contentsCalendarHeight = 61;
   blockHeightNumber = 10;
@@ -1078,53 +1159,7 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
       }
     ]
   }).firstChild;
-
-  colorCalendar(secondContentsCalendar, [
-    {
-      date: {
-        start: new Date(2022, 0, 10),
-        end: new Date(2022, 0, 18),
-      },
-      contents: {
-        title: "안녕하세요",
-        description: "test",
-        color: colorChip.green
-      }
-    },
-    {
-      date: {
-        start: new Date(2022, 0, 19),
-        end: new Date(2022, 0, 30),
-      },
-      contents: {
-        title: "안녕하세요",
-        description: "test",
-        color: colorChip.green
-      }
-    },
-    {
-      date: {
-        start: new Date(2022, 0, 19),
-        end: new Date(2022, 0, 30),
-      },
-      contents: {
-        title: "안녕하세요",
-        description: "test",
-        color: colorChip.green
-      }
-    },
-    {
-      date: {
-        start: new Date(2022, 0, 19),
-        end: new Date(2022, 0, 30),
-      },
-      contents: {
-        title: "안녕하세요",
-        description: "test",
-        color: colorChip.green
-      }
-    },
-  ], {
+  colorCalendar(secondContentsCalendar, dummySchedule, {
     heightMode: true,
     height: secondContentsCalendar.getBoundingClientRect().height
   });
@@ -1175,12 +1210,64 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
       style: {
         display: "block",
         position: "relative",
-        height: "calc(calc(100% - " + String(contentsHeightBetween * (buttonsNumber - 1)) + ea + ") / " + String(buttonsNumber) + ")",
+        width: withOut(blockInnerMargin, ea),
+        height: "calc(calc(calc(100% - " + String(contentsHeightBetween * (buttonsNumber - 1)) + ea + ") / " + String(buttonsNumber) + ") - " + String(blockInnerMargin) + ea + ")",
         marginBottom: String(i !== buttonsNumber - 1 ? contentsHeightBetween : 0) + ea,
         background: colorChip.gray3,
         borderRadius: String(5) + "px",
-      }
-    })
+        paddingTop: String(blockInnerMargin) + ea,
+        paddingLeft: String(blockInnerMargin) + ea,
+      },
+      children: [
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            height: withOut(blockInnerMargin, ea),
+            width: withOut(blockInnerMargin, ea),
+            background: colorChip.white,
+            borderRadius: String(5) + "px",
+            boxShadow: "0px 2px 13px -9px " + colorChip.shadow,
+          },
+          children: [
+            {
+              text: 'A' + String(i + 1),
+              style: {
+                position: "absolute",
+                top: String(9) + ea,
+                left: String(13) + ea,
+                fontSize: String(13) + ea,
+                fontWeight: String(400),
+                fontFamily: "graphik",
+                color: colorChip.shadow,
+              }
+            },
+            {
+              style: {
+                position: "absolute",
+                bottom: String(9) + ea,
+                right: String(13) + ea,
+                width: String(120) + ea,
+                height: String(50) + ea,
+                background: "aqua",
+              },
+              children: [
+                {
+                  text: customButtons[i].name,
+                  style: {
+                    top: String(9) + ea,
+                    left: String(13) + ea,
+                    fontSize: String(13) + ea,
+                    fontWeight: String(500),
+                    color: colorChip.black,
+                  }
+                }
+              ]
+            },
+          ]
+        }
+      ]
+    });
   }
 
   // fourth

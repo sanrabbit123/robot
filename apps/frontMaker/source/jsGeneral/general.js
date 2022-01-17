@@ -1891,7 +1891,6 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
     if (typeof option.height !== "number") {
       throw new Error("in height mode, must be standard height");
     }
-
     ea = "px";
     calendarVisualLeft = Math.floor(0.1 * (0.01 * option.height));
     bigCalendarTitleBottom = Math.floor(2.8 * (0.01 * option.height));
