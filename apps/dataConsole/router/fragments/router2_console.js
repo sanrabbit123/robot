@@ -942,7 +942,7 @@ DataRouter.prototype.rou_post_getClientReport = function () {
           obj.proid.proposal = process.map((obj) => { return obj.cliid });
 
           //recommend
-          proposals = motherProjects.filter((obj) => { return obj.proposal.date >= arr[0].valueOf() && obj.proposal.date < arr[2].valueOf() });
+          proposals = motherProjects_raw.filter((obj) => { return obj.proposal.date >= arr[0].valueOf() && obj.proposal.date < arr[2].valueOf() });
           pastTong = [];
           proposalsTong = [];
           for (let i of proposals) {

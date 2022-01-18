@@ -901,8 +901,8 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
   customButtonTitleBottom = 9 / 8.33;
   customButtonTitleRight = 14 / 8.33;
   customButtonTitleWidth = 120 / 8.33;
-  customButtonTitleHeight = 47 / 8.33;
-  customButtonTitleSize = 15 / 8.33;
+  customButtonTitleHeight = 44 / 8.33;
+  customButtonTitleSize = 14 / 8.33;
 
   // base
   base = createNode({
