@@ -4159,7 +4159,8 @@ StyleCurationJs.prototype.insertPannelBox = function () {
           {
             type: "click",
             event: function (e) {
-              if (instance.testMode === true && GeneralJs.returnGet().cliid === "c1801_aa01s") {
+              // if (instance.testMode === true && GeneralJs.returnGet().cliid === "c1801_aa01s") {
+              if (false) {
                 window.location.href = window.location.protocol + "//" + window.location.host + "/middle/proposal?proid=" + "p1801_aa01s";
               } else {
                 let pass;
