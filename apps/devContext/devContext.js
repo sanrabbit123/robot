@@ -1759,7 +1759,7 @@ DevContext.prototype.launching = async function () {
 
     // aspirant to designer
     // await this.aspirantToDesigner([
-    //   [ "조원숙", "2021-12-16" ],
+    //   [ "서해인", "2022-01-11" ],
     // ]);
 
 
@@ -1768,16 +1768,16 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2112_aa01s", [
-    //   { porlid: "ghost", index: 1 },
+    // await this.setProposalSettingForDesigner("d2201_aa02s", [
     //   { porlid: "ghost", index: 6 },
-    //   { porlid: "ghost", index: 3 },
     //   { porlid: "ghost", index: 8 },
+    //   { porlid: "ghost", index: 3 },
+    //   { porlid: "ghost", index: 7 },
     //   { porlid: "ghost", index: 9 },
     // ], [
-    //   "무몰딩, 히든도어 등 심플하고 미니멀한 공간 스타일을 지향합니다.",
-    //   "정리 수납을 매우 중요하게 생각하며 공간을 디자인 합니다.",
-    //   "플라워를 통한 홈스타일링 마무리를 중요시하며, 플랜테리어 컨설팅도 가능합니다."
+    //   "미팅 전에 준비한 라이프스타일 체크지를 통해 생활 습간들을 전판적으로 파악합니다.",
+    //   "고객님만의 드림 하우스, 고객님만의 낭만적인 공간 요소를 찾아보려 노력합니다.",
+    //   "고객님을 잘 표현할 수 있는 컬러, 무드, 소재, 브랜드를 고려하고 제안합니다."
     // ]);
 
 

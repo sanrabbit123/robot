@@ -3513,7 +3513,7 @@ DesignerJs.prototype.reportScrollBox = function (data, motherWidth) {
           }).catch((err) => {
             console.log(err);
           });
-          instance.mother.greenAlert("제안서 제작이 요청되었습니다. 잠시만 기다려주세요!");
+          instance.mother.greenAlert("시트 추출이 요청되었습니다. 잠시만 기다려주세요!");
         }
       },
       style: {

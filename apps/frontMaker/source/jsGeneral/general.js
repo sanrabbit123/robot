@@ -1894,14 +1894,14 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
     ea = "px";
     calendarVisualLeft = Math.floor(0.1 * (0.01 * option.height));
     bigCalendarTitleBottom = Math.floor(2.8 * (0.01 * option.height));
-    bigCalendarTitleSize = Math.floor(5 * (0.01 * option.height));
+    bigCalendarTitleSize = Math.floor(4.7 * (0.01 * option.height));
     bigCalendarTitleWeight = 300;
     weekBlockHeight = Math.floor(7 * (0.01 * option.height));
     weekBlockSize = Math.floor(2.5 * (0.01 * option.height));
     weekBlockWeight = 600;
     weekBlockTextTop = Math.floor((GeneralJs.isMac() ? -0.1 : 0) * (0.01 * option.height));
-    arrowWidth = Math.floor(1.8 * (0.01 * option.height));
-    arrowTop = Math.floor(2.7 * (0.01 * option.height));
+    arrowWidth = Math.floor(1.7 * (0.01 * option.height));
+    arrowTop = Math.floor(2.6 * (0.01 * option.height));
     dateBlockHeight = Math.floor(12 * (0.01 * option.height));
     dateBlockPaddingTop = Math.floor(6.6 * (0.01 * option.height));
     dateBlockPaddingBottom = Math.floor(4.5 * (0.01 * option.height));

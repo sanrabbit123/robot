@@ -508,88 +508,91 @@ DesignerJs.prototype.projectDetail = function (desid) {
         dragleave: function (e) {
           e.preventDefault();
         },
-        click: function (e) {
+        click: async function (e) {
           const proid = this.getAttribute("proid");
           const action = this.getAttribute("action");
           const requestNumber = Number(this.getAttribute("request"));
           const cliid = this.getAttribute("cliid");
           const totalMother = document.querySelector(".totalMother");
           const zIndex = 2;
-          let cancelBack, whiteBox;
-          let whiteMargin;
-          let whiteResult;
-          let mobileNavigatorHeight;
+          try {
+            let cancelBack, whiteBox;
+            let whiteMargin;
+            let whiteResult;
+            let mobileNavigatorHeight;
 
-          if (instance.greenPannel !== undefined && instance.greenPannel !== null) {
-            instance.greenPannel.style.bottom = String(-1 * greenPannelHeight) + "px";
-          }
+            if (instance.greenPannel !== undefined && instance.greenPannel !== null) {
+              instance.greenPannel.style.bottom = String(-1 * greenPannelHeight) + "px";
+            }
 
-          if (desktop) {
-            whiteMargin = Math.floor(totalMother.getBoundingClientRect().height * (1 / 27));
-          } else {
-            whiteMargin = 4;
-          }
-          mobileNavigatorHeight = 60;
-          cancelBack = createNode({
-            mother: totalMother,
-            mode: "aside",
-            event: {
-              click: function (e) {
-                document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
-                document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
-                if (instance.greenPannel !== undefined && instance.greenPannel !== null) {
-                  instance.greenPannel.style.bottom = String(belowHeight + greenPannelBottom) + "px";
+            if (desktop) {
+              whiteMargin = Math.floor(totalMother.getBoundingClientRect().height * (1 / 27));
+            } else {
+              whiteMargin = 4;
+            }
+            mobileNavigatorHeight = 60;
+            cancelBack = createNode({
+              mother: totalMother,
+              mode: "aside",
+              event: {
+                click: function (e) {
+                  document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
+                  document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
+                  if (instance.greenPannel !== undefined && instance.greenPannel !== null) {
+                    instance.greenPannel.style.bottom = String(belowHeight + greenPannelBottom) + "px";
+                  }
                 }
+              },
+              style: {
+                position: "fixed",
+                top: String(0),
+                left: String(instance.grayBarWidth) + ea,
+                width: withOut(instance.grayBarWidth, ea),
+                height: desktop ? withOut(belowHeight, ea) : String(100) + "%",
+                background: colorChip.shadow,
+                zIndex: String(zIndex),
+                animation: "justfadeinmiddle 0.3s ease forwards",
               }
-            },
-            style: {
-              position: "fixed",
-              top: String(0),
-              left: String(instance.grayBarWidth) + ea,
-              width: withOut(instance.grayBarWidth, ea),
-              height: desktop ? withOut(belowHeight, ea) : String(100) + "%",
-              background: colorChip.shadow,
-              zIndex: String(zIndex),
-              animation: "justfadeinmiddle 0.3s ease forwards",
-            }
-          });
-          whiteBox = createNode({
-            mother: totalMother,
-            mode: "aside",
-            class: [ detailWhitePopupConst ],
-            style: {
-              position: "fixed",
-              top: desktop ? String(whiteMargin) + ea : "calc(" + String(whiteMargin) + ea + " + " + String(mobileNavigatorHeight) + "px" + ")",
-              left: String(instance.grayBarWidth + whiteMargin) + ea,
-              width: withOut(instance.grayBarWidth + (whiteMargin * 2), ea),
-              height: desktop ? withOut(belowHeight + (whiteMargin * 2), ea) : "calc(calc(100% - " + String(whiteMargin * 2) + ea + ") - " + String(belowHeight + mobileNavigatorHeight) + "px)",
-              background: colorChip.white,
-              borderRadius: String(5) + "px",
-              zIndex: String(zIndex),
-              boxShadow: "0px 3px 15px -9px " + colorChip.darkDarkShadow,
-              animation: "fadeup 0.3s ease forwards",
-            }
-          });
-
-          instance.projectWhiteDetail(whiteBox, action, proid, cliid, requestNumber, desid, divisionEntireMap);
-
-          if (mobile) {
-            swipePatch({
-              left: (e) => {
-                if (document.querySelector('.' + detailWhitePopupConst) !== null) {
-                  document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
-                  document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
-                }
-              },
-              right: (e) => {
-                if (document.querySelector('.' + detailWhitePopupConst) !== null) {
-                  document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
-                  document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
-                }
-              },
             });
-          }
+            whiteBox = createNode({
+              mother: totalMother,
+              mode: "aside",
+              class: [ detailWhitePopupConst ],
+              style: {
+                position: "fixed",
+                top: desktop ? String(whiteMargin) + ea : "calc(" + String(whiteMargin) + ea + " + " + String(mobileNavigatorHeight) + "px" + ")",
+                left: String(instance.grayBarWidth + whiteMargin) + ea,
+                width: withOut(instance.grayBarWidth + (whiteMargin * 2), ea),
+                height: desktop ? withOut(belowHeight + (whiteMargin * 2), ea) : "calc(calc(100% - " + String(whiteMargin * 2) + ea + ") - " + String(belowHeight + mobileNavigatorHeight) + "px)",
+                background: colorChip.white,
+                borderRadius: String(5) + "px",
+                zIndex: String(zIndex),
+                boxShadow: "0px 3px 15px -9px " + colorChip.darkDarkShadow,
+                animation: "fadeup 0.3s ease forwards",
+              }
+            });
 
+            await instance.projectWhiteDetail(whiteBox, action, proid, cliid, requestNumber, desid, divisionEntireMap);
+
+            if (mobile) {
+              swipePatch({
+                left: (e) => {
+                  if (document.querySelector('.' + detailWhitePopupConst) !== null) {
+                    document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
+                    document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
+                  }
+                },
+                right: (e) => {
+                  if (document.querySelector('.' + detailWhitePopupConst) !== null) {
+                    document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
+                    document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
+                  }
+                },
+              });
+            }
+          } catch (e) {
+            console.log(e);
+          }
         }
       },
       style: {
@@ -688,634 +691,1054 @@ DesignerJs.prototype.projectDetail = function (desid) {
   this.mainBaseTong = baseTong0;
 }
 
-DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid, requestNumber, desid, projectWhiteDetail) {
+DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid, requestNumber, desid, divisionEntireMap) {
   const instance = this;
   const { createNode, colorChip, withOut, ajaxJson, setQueue, cleanChildren, isMac, scrollTo, copyJson, colorCalendar } = GeneralJs;
   const { ea, projects, clients, designers, projectMap, checklist, totalMother } = this;
   const mobile = this.media[4];
   const desktop = !mobile;
-  let pIndex, cIndex;
-  let project, client, designer;
-  let base;
-  let baseTop;
-  let baseLeft;
-  let titleSize;
-  let titleTextBetween;
-  let titlePaddingBottom;
-  let areaMother, area;
-  let barHeight;
-  let factorSize;
-  let num;
-  let titleHeight;
-  let descriptionMap;
-  let textArea;
-  let checklistFactor;
-  let contentsBase;
-  let contentsBasePaddingTop;
-  let contentsBetween;
-  let contentsHeightBetween;
-  let contentsHeightBetweenRatio;
-  let firstContents, secondContents, thirdContents, fourthContents;
-  let firstContentsWidth, secondContentsWidth, thirdContentsWidth;
-  let baseHeight;
-  let percentage;
-  let borderSize;
-  let buttonsNumber;
-  let contentsCalendarHeight;
-  let blockHeightNumber;
-  let blockHeight;
-  let blockScrollBox;
-  let blockWidth;
-  let blockLeft;
-  let blockInnerMargin;
-  let blockColor;
-  let blockFontColor;
-  let blockFontSize, blockFontTop;
-  let blockNameSize;
-  let blockNameTop;
-  let blockNameLeft;
-  let blockIconHeight;
-  let entireActionRaw, entireAction;
-  let nullObject, nullNumber;
-  let blockIconTop;
-  let iconFillColor;
-  let blockBackColor;
-  let secondContentsCalendar, secondContentsTable;
-  let calendarIndent;
-  let calendarMarginTop, calendarMarginBottom;
-  let customButtons;
-  let customButtonNumberTop, customButtonNumberLeft, customButtonNumberSize;
-  let customButtonTitleBottom, customButtonTitleRight, customButtonTitleWidth, customButtonTitleHeight, customButtonTitleSize;
+  try {
+    let pIndex, cIndex;
+    let project, client, designer;
+    let base;
+    let baseTop;
+    let baseLeft;
+    let titleSize;
+    let titleTextBetween;
+    let titlePaddingBottom;
+    let areaMother, area;
+    let barHeight;
+    let factorSize;
+    let num;
+    let titleHeight;
+    let descriptionMap;
+    let textArea;
+    let checklistFactor;
+    let contentsBase;
+    let contentsBasePaddingTop;
+    let contentsBetween;
+    let contentsHeightBetween;
+    let contentsHeightBetweenRatio;
+    let firstContents, secondContents, thirdContents, fourthContents;
+    let firstContentsWidth, secondContentsWidth, thirdContentsWidth;
+    let baseHeight;
+    let percentage;
+    let borderSize;
+    let buttonsNumber;
+    let contentsCalendarHeight;
+    let blockHeightNumber;
+    let blockHeight;
+    let blockScrollBox;
+    let blockWidth;
+    let blockLeft;
+    let blockInnerMargin;
+    let blockColor;
+    let blockFontColor;
+    let blockFontSize, blockFontTop;
+    let blockNameSize;
+    let blockNameTop;
+    let blockNameLeft;
+    let blockIconHeight;
+    let entireActionRaw, entireAction;
+    let nullObject, nullNumber;
+    let blockIconTop;
+    let iconFillColor;
+    let blockBackColor;
+    let secondContentsCalendar, secondContentsTable;
+    let calendarIndent;
+    let calendarMarginTop, calendarMarginBottom;
+    let customButtons;
+    let customButtonNumberTop, customButtonNumberLeft, customButtonNumberSize;
+    let customButtonTitleBottom, customButtonTitleRight, customButtonTitleWidth, customButtonTitleHeight, customButtonTitleSize;
+    let secondContentsTableBase;
+    let secondContentsTableContentsTitle, secondContentsTableContentsBase;
+    let secondContentsSize;
+    let secondContentsMarginTop;
+    let secondContentsMarginLeft;
+    let secondContentsMarginBetween;
+    let secondContentsTableInnerPaddingTop, secondContentsTableInnerPaddingLeft;
+    let secondContentsTableInnerContentsHeight, secondContentsTableInnerContentsBetween;
+    let secondContentsTableInnerContentsLineHeight;
+    let secondContentsTableInnerContentsTitleWeight;
+    let secondContentsTableInnerContentsValueWeight;
+    let secondContentsTableInnerContentsWidthRatio;
+    let secondContentsTableInnerContentsHeightRatio;
 
-  // DEV ===============================================================================================
+    // DEV ===============================================================================================
 
-  let dummySchedule;
+    let dummySchedule;
 
-  dummySchedule = [
-    {
-      date: {
-        start: new Date(2022, 0, 10),
-        end: new Date(2022, 0, 18),
-      },
-      contents: {
-        title: "안녕하세요",
-        description: "test",
-        color: colorChip.green
-      }
-    },
-    {
-      date: {
-        start: new Date(2022, 0, 19),
-        end: new Date(2022, 0, 30),
-      },
-      contents: {
-        title: "안녕하세요",
-        description: "test",
-        color: colorChip.green
-      }
-    },
-    {
-      date: {
-        start: new Date(2022, 0, 19),
-        end: new Date(2022, 0, 30),
-      },
-      contents: {
-        title: "안녕하세요",
-        description: "test",
-        color: colorChip.green
-      }
-    },
-    {
-      date: {
-        start: new Date(2022, 0, 19),
-        end: new Date(2022, 0, 30),
-      },
-      contents: {
-        title: "안녕하세요",
-        description: "test",
-        color: colorChip.green
-      }
-    },
-  ];
-
-  customButtons = [
-    {
-      name: "선호 사진\n다시 선택",
-    },
-    {
-      name: "추가 현장\n사진 전송",
-    },
-    {
-      name: "디자이너 제안서\n다시보기",
-    },
-    {
-      name: "현장 미팅 안내\n다시보기",
-    },
-    {
-      name: "선호 사진\n다시 선택",
-    },
-    {
-      name: "추가 현장\n사진 전송",
-    },
-    {
-      name: "디자이너 제안서\n다시보기",
-    },
-    {
-      name: "현장 미팅 안내\n다시보기",
-    },
-  ];
-  buttonsNumber = customButtons.length;
-
-  // DEV ===============================================================================================
-
-  nullObject = { name: null };
-  nullNumber = 5;
-  entireActionRaw = projectWhiteDetail.map((arr) => { return arr[1]; });
-  entireAction = [ copyJson(nullObject) ];
-  for (let arr of entireActionRaw) {
-    for (let arr2 of arr) {
-      for (let str of arr2) {
-        entireAction.push({ name: str });
-      }
-    }
-  }
-  for (let i = 0; i < nullNumber; i++) {
-    entireAction.push(copyJson(nullObject));
-  }
-
-  pIndex = projects.findIndex((obj) => { return obj.proid === proid; });
-  cIndex = clients.findIndex((obj) => { return obj.cliid === cliid; });
-
-  project = projects[pIndex];
-  client = clients[cIndex];
-  designer = designers.pick(desid);
-  const { request, analytics } = client.requests[requestNumber];
-
-  if (desktop) {
-    baseTop = totalMother.getBoundingClientRect().height * (40 / 1080);
-    baseLeft = totalMother.getBoundingClientRect().height * (45 / 1080);
-    baseBottom = totalMother.getBoundingClientRect().height * (48 / 1080);
-    titleSize = totalMother.getBoundingClientRect().height * (22 / 1080);
-    titleHeight = totalMother.getBoundingClientRect().height * (31 / 1080);
-    titleTextBetween = totalMother.getBoundingClientRect().height * (10 / 1080);
-    titlePaddingBottom = totalMother.getBoundingClientRect().height * (13 / 1080);
-    contentsBasePaddingTop = totalMother.getBoundingClientRect().height * (24 / 1080);
-  } else {
-    baseTop = 6;
-    baseLeft = 6.1;
-    baseBottom = 6.1;
-    titleSize = 4;
-    titleHeight = 5;
-    titleTextBetween = 1;
-    titlePaddingBottom = 2.5;
-    contentsBasePaddingTop = 4;
-  }
-
-  percentage = 0.01;
-  borderSize = 1;
-  contentsBetween = 1.8;
-  firstContentsWidth = 40;
-  secondContentsWidth = 64;
-  thirdContentsWidth = 20;
-  contentsHeightBetweenRatio = 2;
-  contentsCalendarHeight = 61;
-  blockHeightNumber = 10;
-  blockWidth = 88;
-  blockLeft = 11;
-  blockHeight = 7.4;
-  blockInnerMargin = 0.8;
-  blockFontSize = 2.3;
-  blockFontTop = 1.1;
-  blockNameSize = 1.9;
-  blockNameTop = 1.5;
-  blockNameLeft = 1.7;
-  blockIconHeight = 1.8;
-  blockIconTop = 1.8;
-  calendarIndent = 2.41;
-  calendarMarginTop = 0.1;
-  calendarMarginBottom = 6;
-
-  customButtonNumberTop = 9 / 8.33;
-  customButtonNumberLeft = 13 / 8.33;
-  customButtonNumberSize = 13 / 8.33;
-  customButtonTitleBottom = 9 / 8.33;
-  customButtonTitleRight = 14 / 8.33;
-  customButtonTitleWidth = 120 / 8.33;
-  customButtonTitleHeight = 44 / 8.33;
-  customButtonTitleSize = 14 / 8.33;
-
-  // base
-  base = createNode({
-    mother,
-    style: {
-      display: "block",
-      position: "relative",
-      top: String(baseTop) + ea,
-      left: String(baseLeft) + ea,
-      width: withOut(baseLeft * 2, ea),
-      height: withOut(baseTop + (desktop ? baseBottom : 0), ea),
-      overflowY: "scroll",
-      overflowX: "hidden",
-    }
-  });
-
-  // title
-  createNode({
-    mother: base,
-    style: {
-      display: "block",
-      position: "relative",
-      height: String(titleHeight) + ea,
-      paddingBottom: String(titlePaddingBottom) + ea,
-      borderBottom: "1px solid " + colorChip.gray3
-    },
-    children: [
+    dummySchedule = [
       {
-        text: "프로젝트 관리 :",
-        style: {
-          display: "inline-block",
-          fontSize: String(titleSize) + ea,
-          fontWeight: String(600),
-          color: colorChip.black,
+        date: {
+          start: new Date(2022, 0, 10),
+          end: new Date(2022, 0, 18),
+        },
+        contents: {
+          title: "안녕하세요",
+          description: "test",
+          color: colorChip.green
         }
       },
       {
-        text: client.name,
-        style: {
-          display: "inline-block",
-          fontSize: String(titleSize) + ea,
-          fontWeight: String(300),
-          color: colorChip.green,
-          marginLeft: String(titleTextBetween) + ea,
+        date: {
+          start: new Date(2022, 0, 19),
+          end: new Date(2022, 0, 30),
+        },
+        contents: {
+          title: "안녕하세요",
+          description: "test",
+          color: colorChip.green
+        }
+      },
+      {
+        date: {
+          start: new Date(2022, 0, 19),
+          end: new Date(2022, 0, 30),
+        },
+        contents: {
+          title: "안녕하세요",
+          description: "test",
+          color: colorChip.green
+        }
+      },
+      {
+        date: {
+          start: new Date(2022, 0, 19),
+          end: new Date(2022, 0, 30),
+        },
+        contents: {
+          title: "안녕하세요",
+          description: "test",
+          color: colorChip.green
+        }
+      },
+    ];
+    customButtons = [
+      {
+        name: "선호 사진\n다시 선택",
+      },
+      {
+        name: "추가 현장\n사진 전송",
+      },
+      {
+        name: "디자이너 제안서\n다시보기",
+      },
+      {
+        name: "현장 미팅 안내\n다시보기",
+      },
+      {
+        name: "선호 사진\n다시 선택",
+      },
+      {
+        name: "추가 현장\n사진 전송",
+      },
+      {
+        name: "디자이너 제안서\n다시보기",
+      },
+      {
+        name: "현장 미팅 안내\n다시보기",
+      },
+    ];
+    buttonsNumber = customButtons.length;
+
+    // DEV ===============================================================================================
+
+    nullObject = { name: null };
+    nullNumber = 5;
+    entireActionRaw = divisionEntireMap.map((arr) => { return arr[1]; });
+    entireAction = [ copyJson(nullObject) ];
+    for (let arr of entireActionRaw) {
+      for (let arr2 of arr) {
+        for (let str of arr2) {
+          entireAction.push({ name: str });
         }
       }
-    ]
-  });
-
-  // contents base
-  contentsBase = createNode({
-    mother: base,
-    style: {
-      verticalAlign: "top",
-      display: "block",
-      position: "relative",
-      marginTop: String(contentsBasePaddingTop) + ea,
-      height: withOut(titleHeight + titlePaddingBottom + contentsBasePaddingTop, ea),
-      overflow: "hidden",
     }
-  });
-
-  baseHeight = contentsBase.getBoundingClientRect().height;
-  contentsBetween = Math.floor(baseHeight * contentsBetween * percentage);
-  firstContentsWidth = baseHeight * firstContentsWidth * percentage;
-  secondContentsWidth = baseHeight * secondContentsWidth * percentage;
-  thirdContentsWidth = baseHeight * thirdContentsWidth * percentage;
-  contentsHeightBetween = Math.floor(contentsBetween / contentsHeightBetweenRatio);
-  blockHeight = Math.floor(baseHeight * blockHeight * percentage);
-  blockInnerMargin = Math.floor(baseHeight * blockInnerMargin * percentage);
-  blockFontSize = Math.round(baseHeight * blockFontSize * percentage);
-  blockFontTop = Math.round(baseHeight * blockFontTop * percentage);
-  blockNameSize = Math.round(baseHeight * blockNameSize * percentage);
-  blockNameTop = Math.round(baseHeight * blockNameTop * percentage);
-  blockNameLeft = Math.round(baseHeight * blockNameLeft * percentage);
-  blockIconHeight = Math.round(baseHeight * blockIconHeight * percentage);
-  blockIconTop = Math.round(baseHeight * blockIconTop * percentage);
-  calendarIndent = Math.round(baseHeight * calendarIndent * percentage);
-  calendarMarginTop = Math.round(baseHeight * calendarMarginTop * percentage);
-  calendarMarginBottom = Math.round(baseHeight * calendarMarginBottom * percentage);
-  customButtonNumberTop = Math.round(baseHeight * customButtonNumberTop * percentage);
-  customButtonNumberLeft = Math.round(baseHeight * customButtonNumberLeft * percentage);
-  customButtonNumberSize = Math.round(baseHeight * customButtonNumberSize * percentage);
-  customButtonTitleBottom = Math.round(baseHeight * customButtonTitleBottom * percentage);
-  customButtonTitleRight = Math.round(baseHeight * customButtonTitleRight * percentage);
-  customButtonTitleWidth = Math.round(baseHeight * customButtonTitleWidth * percentage);
-  customButtonTitleHeight = Math.round(baseHeight * customButtonTitleHeight * percentage);
-  customButtonTitleSize = Math.round(baseHeight * customButtonTitleSize * percentage);
-
-  // first
-  firstContents = createNode({
-    mother: contentsBase,
-    style: {
-      display: "inline-block",
-      position: "relative",
-      verticalAlign: "top",
-      width: String(firstContentsWidth) + ea,
-      height: String(baseHeight) + ea,
-      marginRight: String(contentsBetween) + ea,
-      top: String(borderSize) + ea,
-      height: String(baseHeight - (borderSize * 4)) + ea,
-      borderTop: String(borderSize) + "px solid " + colorChip.deactive,
-      borderBottom: String(borderSize) + "px solid " + colorChip.deactive,
+    for (let i = 0; i < nullNumber; i++) {
+      entireAction.push(copyJson(nullObject));
     }
-  });
 
-  blockScrollBox = createNode({
-    mother: firstContents,
-    style: {
-      display: "block",
-      width: String(blockWidth) + '%',
-      marginLeft: String(blockLeft) + '%',
-      paddingTop: String(contentsHeightBetween) + ea,
-      height: withOut(contentsHeightBetween, ea),
-      overflow: "scroll",
-    }
-  });
+    pIndex = projects.findIndex((obj) => { return obj.proid === proid; });
+    cIndex = clients.findIndex((obj) => { return obj.cliid === cliid; });
 
-  num = 0;
-  for (let { name } of entireAction) {
+    project = projects[pIndex];
+    client = clients[cIndex];
+    designer = designers.pick(desid);
+    const { request, analytics } = client.requests[requestNumber];
 
-    if (name === null) {
-      blockBackColor = colorChip.gray2;
-      blockColor = colorChip.gray1;
-      blockFontColor = colorChip.gray3;
-      iconFillColor = colorChip.gray4;
-    } else if (name === action) {
-      blockBackColor = colorChip.gradientGreen2;
-      blockColor = colorChip.white;
-      blockFontColor = colorChip.darkGreen;
-      iconFillColor = colorChip.green;
+    if (desktop) {
+      baseTop = totalMother.getBoundingClientRect().height * (40 / 1080);
+      baseLeft = totalMother.getBoundingClientRect().height * (45 / 1080);
+      baseBottom = totalMother.getBoundingClientRect().height * (48 / 1080);
+      titleSize = totalMother.getBoundingClientRect().height * (22 / 1080);
+      titleHeight = totalMother.getBoundingClientRect().height * (31 / 1080);
+      titleTextBetween = totalMother.getBoundingClientRect().height * (10 / 1080);
+      titlePaddingBottom = totalMother.getBoundingClientRect().height * (13 / 1080);
+      contentsBasePaddingTop = totalMother.getBoundingClientRect().height * (24 / 1080);
     } else {
-      blockBackColor = colorChip.gray2;
-      blockColor = colorChip.white;
-      blockFontColor = colorChip.black;
-      iconFillColor = colorChip.green;
+      baseTop = 6;
+      baseLeft = 6.1;
+      baseBottom = 6.1;
+      titleSize = 4;
+      titleHeight = 5;
+      titleTextBetween = 1;
+      titlePaddingBottom = 2.5;
+      contentsBasePaddingTop = 4;
     }
 
-    createNode({
-      mother: blockScrollBox,
-      style: {
-        display: "block",
-        width: withOut(blockInnerMargin * 2, ea),
-        height: String(blockHeight - (blockInnerMargin * 2)) + ea,
-        paddingTop: String(blockInnerMargin) + ea,
-        paddingBottom: String(blockInnerMargin) + ea,
-        paddingLeft: String(blockInnerMargin) + ea,
-        borderRadius: String(5) + "px",
-        background: blockBackColor,
-        marginBottom: String(contentsHeightBetween) + ea,
-      },
-      children: [
-        {
-          style: {
-            display: "inline-block",
-            verticalAlign: "top",
-            width: String(blockHeight - (blockInnerMargin * 2)) + ea,
-            height: String(blockHeight - (blockInnerMargin * 2)) + ea,
-            position: "relative",
-            borderRadius: String(5) + "px",
-            background: blockColor,
-            marginRight: String(blockInnerMargin) + ea,
-          },
-          children: [
-            {
-              text: String(num),
-              style: {
-                fontSize: String(blockFontSize) + ea,
-                fontWeight: String(400),
-                color: blockFontColor,
-                fontFamily: "graphik",
-                position: "absolute",
-                top: String(blockFontTop) + ea,
-                left: String(0) + ea,
-                width: String(100) + '%',
-                textAlign: "center",
-              }
-            }
-          ]
-        },
-        {
-          style: {
-            display: "inline-block",
-            verticalAlign: "top",
-            width: withOut(blockHeight, ea),
-            height: String(blockHeight - (blockInnerMargin * 2) - blockNameTop) + ea,
-            position: "relative",
-            borderRadius: String(5) + "px",
-            background: blockColor,
-            paddingTop: String(blockNameTop) + ea,
-          },
-          children: [
-            {
-              text: name,
-              style: {
-                display: "inline-block",
-                position: "relative",
-                fontSize: String(blockNameSize) + ea,
-                fontWeight: String(600),
-                color: blockFontColor,
-                marginLeft: String(blockNameLeft) + ea,
-                textAlign: "left",
-              }
-            },
-            {
-              mode: "svg",
-              source: instance.mother.returnDownload(iconFillColor, true),
-              style: {
-                position: "absolute",
-                height: String(blockIconHeight) + ea,
-                right: String(blockNameLeft) + ea,
-                top: String(blockIconTop) + ea,
-              }
-            }
-          ]
-        },
-      ]
-    });
+    percentage = 0.01;
+    borderSize = 1;
+    contentsBetween = 1.8;
+    firstContentsWidth = 40;
+    secondContentsWidth = 64;
+    thirdContentsWidth = 20;
+    contentsHeightBetweenRatio = 2;
+    contentsCalendarHeight = 61;
+    blockHeightNumber = 10;
+    blockWidth = 88;
+    blockLeft = 11;
+    blockHeight = 7.4;
+    blockInnerMargin = 0.8;
+    blockFontSize = 2.3;
+    blockFontTop = 1.1;
+    blockNameSize = 1.9;
+    blockNameTop = 1.5;
+    blockNameLeft = 1.7;
+    blockIconHeight = 1.8;
+    blockIconTop = 1.8;
+    calendarIndent = 2.41;
+    calendarMarginTop = 0.1;
+    calendarMarginBottom = 6;
 
-    num++;
-  }
+    customButtonNumberTop = 9 / 8.33;
+    customButtonNumberLeft = 13 / 8.33;
+    customButtonNumberSize = 13 / 8.33;
+    customButtonTitleBottom = 9 / 8.33;
+    customButtonTitleRight = 14 / 8.33;
+    customButtonTitleWidth = 120 / 8.33;
+    customButtonTitleHeight = 44 / 8.33;
+    customButtonTitleSize = 14 / 8.33;
 
-  scrollTo(blockScrollBox, (blockHeight / 2) + contentsHeightBetween);
+    secondContentsSize = 13 / 8.33;
+    secondContentsMarginTop = 14 / 8.33;
+    secondContentsMarginLeft = 18 / 8.33;
+    secondContentsMarginBetween = 8 / 8.33;
+    secondContentsTableInnerPaddingTop = 15 / 8.33;
+    secondContentsTableInnerPaddingLeft = 20 / 8.33;
+    secondContentsTableInnerContentsHeight = 26 / 8.33;
+    secondContentsTableInnerContentsBetween = 10 / 8.33;
 
-  // second
-  secondContents = createNode({
-    mother: contentsBase,
-    style: {
-      display: "inline-block",
-      position: "relative",
-      verticalAlign: "top",
-      width: String(secondContentsWidth) + ea,
-      height: String(baseHeight) + ea,
-      marginRight: String(contentsBetween) + ea,
-    }
-  });
-  secondContentsCalendar = createNode({
-    mother: secondContents,
-    style: {
-      display: "block",
-      position: "relative",
-      height: "calc(calc(100% - " + String(contentsHeightBetween) + ea + ") * " + String((contentsCalendarHeight * percentage)) + ")",
-      marginBottom: String(contentsHeightBetween) + ea,
-      background: colorChip.gray1,
-      borderRadius: String(5) + "px",
-      paddingTop: String(calendarIndent) + ea,
-      paddingBottom: String(calendarIndent) + ea,
-      overflow: "hidden",
-    },
-    children: [
-      {
-        style: {
-          display: "block",
-          position: "relative",
-          marginLeft: String(calendarIndent) + ea,
-          marginRight: String(calendarIndent) + ea,
-          width: withOut(calendarIndent * 2, ea),
-          height: withOut(0, ea),
-          overflow: "scroll",
-        }
-      },
-      {
-        style: {
-          position: "absolute",
-          bottom: String(0),
-          left: String(0),
-          height: String(calendarIndent) + ea,
-          width: String(100) + '%',
-          background: colorChip.gray2,
-          borderTop: "1px dashed " + colorChip.gray3,
-          boxSizing: "border-box",
-        }
-      }
-    ]
-  }).firstChild;
-  colorCalendar(secondContentsCalendar, dummySchedule, {
-    heightMode: true,
-    height: secondContentsCalendar.getBoundingClientRect().height
-  });
-  secondContentsCalendar.firstChild.style.marginTop = String(calendarMarginTop) + ea;
-  secondContentsCalendar.firstChild.style.marginBottom = String(calendarMarginBottom) + ea;
+    secondContentsTableInnerContentsLineHeight = 1.4;
+    secondContentsTableInnerContentsTitleWeight = 700;
+    secondContentsTableInnerContentsValueWeight = 300;
+    secondContentsTableInnerContentsWidthRatio = 85;
+    secondContentsTableInnerContentsHeightRatio = 76;
 
-  secondContentsTable = createNode({
-    mother: secondContents,
-    style: {
-      display: "block",
-      position: "relative",
-      height: "calc(calc(calc(100% - " + String(contentsHeightBetween) + ea + ") * " + String(1 - (contentsCalendarHeight * percentage)) + ") - " + String((calendarIndent * 2) + 1) + ea + ")",
-      background: colorChip.gray1,
-      borderRadius: String(5) + "px",
-      overflow: "hidden",
-    },
-    children: [
-      {
-        style: {
-          position: "absolute",
-          bottom: String(0),
-          left: String(0),
-          height: String(calendarIndent) + ea,
-          width: String(100) + '%',
-          background: colorChip.gray2,
-          borderTop: "1px dashed " + colorChip.gray3,
-          boxSizing: "border-box",
-        }
-      },
-    ]
-  });
-
-  // third
-  thirdContents = createNode({
-    mother: contentsBase,
-    style: {
-      display: "inline-block",
-      position: "relative",
-      verticalAlign: "top",
-      width: String(thirdContentsWidth) + ea,
-      height: String(baseHeight) + ea,
-      marginRight: String(contentsBetween) + ea,
-    }
-  });
-  for (let i = 0; i < buttonsNumber; i++) {
-    createNode({
-      mother: thirdContents,
+    // base
+    base = createNode({
+      mother,
       style: {
         display: "block",
         position: "relative",
-        width: withOut(blockInnerMargin, ea),
-        height: "calc(calc(calc(100% - " + String(contentsHeightBetween * (buttonsNumber - 1)) + ea + ") / " + String(buttonsNumber) + ") - " + String(blockInnerMargin) + ea + ")",
-        marginBottom: String(i !== buttonsNumber - 1 ? contentsHeightBetween : 0) + ea,
-        background: colorChip.gray3,
-        borderRadius: String(5) + "px",
-        paddingTop: String(blockInnerMargin) + ea,
-        paddingLeft: String(blockInnerMargin) + ea,
+        top: String(baseTop) + ea,
+        left: String(baseLeft) + ea,
+        width: withOut(baseLeft * 2, ea),
+        height: withOut(baseTop + (desktop ? baseBottom : 0), ea),
+        overflowY: "scroll",
+        overflowX: "hidden",
+      }
+    });
+
+    // title
+    createNode({
+      mother: base,
+      style: {
+        display: "block",
+        position: "relative",
+        height: String(titleHeight) + ea,
+        paddingBottom: String(titlePaddingBottom) + ea,
+        borderBottom: "1px solid " + colorChip.gray3
       },
       children: [
         {
-          event: {
-            mouseenter: function (e) {
-              this.style.transform = "translateY(-1px)";
-              this.style.boxShadow = "0px 2px 17px -9px " + colorChip.black;
-              this.children[0].style.color = colorChip.whiteGreen;
-              this.children[1].children[0].style.color = colorChip.green;
+          text: "프로젝트 관리 :",
+          style: {
+            display: "inline-block",
+            fontSize: String(titleSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+          }
+        },
+        {
+          text: client.name,
+          style: {
+            display: "inline-block",
+            fontSize: String(titleSize) + ea,
+            fontWeight: String(300),
+            color: colorChip.green,
+            marginLeft: String(titleTextBetween) + ea,
+          }
+        }
+      ]
+    });
+
+    // contents base
+    contentsBase = createNode({
+      mother: base,
+      style: {
+        verticalAlign: "top",
+        display: "block",
+        position: "relative",
+        marginTop: String(contentsBasePaddingTop) + ea,
+        height: withOut(titleHeight + titlePaddingBottom + contentsBasePaddingTop, ea),
+        overflow: "hidden",
+      }
+    });
+
+    baseHeight = contentsBase.getBoundingClientRect().height;
+    contentsBetween = Math.floor(baseHeight * contentsBetween * percentage);
+    firstContentsWidth = baseHeight * firstContentsWidth * percentage;
+    secondContentsWidth = baseHeight * secondContentsWidth * percentage;
+    thirdContentsWidth = baseHeight * thirdContentsWidth * percentage;
+    contentsHeightBetween = Math.floor(contentsBetween / contentsHeightBetweenRatio);
+    blockHeight = Math.floor(baseHeight * blockHeight * percentage);
+    blockInnerMargin = Math.floor(baseHeight * blockInnerMargin * percentage);
+    blockFontSize = Math.round(baseHeight * blockFontSize * percentage);
+    blockFontTop = Math.round(baseHeight * blockFontTop * percentage);
+    blockNameSize = Math.round(baseHeight * blockNameSize * percentage);
+    blockNameTop = Math.round(baseHeight * blockNameTop * percentage);
+    blockNameLeft = Math.round(baseHeight * blockNameLeft * percentage);
+    blockIconHeight = Math.round(baseHeight * blockIconHeight * percentage);
+    blockIconTop = Math.round(baseHeight * blockIconTop * percentage);
+    calendarIndent = Math.round(baseHeight * calendarIndent * percentage);
+    calendarMarginTop = Math.round(baseHeight * calendarMarginTop * percentage);
+    calendarMarginBottom = Math.round(baseHeight * calendarMarginBottom * percentage);
+    customButtonNumberTop = Math.round(baseHeight * customButtonNumberTop * percentage);
+    customButtonNumberLeft = Math.round(baseHeight * customButtonNumberLeft * percentage);
+    customButtonNumberSize = Math.round(baseHeight * customButtonNumberSize * percentage);
+    customButtonTitleBottom = Math.round(baseHeight * customButtonTitleBottom * percentage);
+    customButtonTitleRight = Math.round(baseHeight * customButtonTitleRight * percentage);
+    customButtonTitleWidth = Math.round(baseHeight * customButtonTitleWidth * percentage);
+    customButtonTitleHeight = Math.round(baseHeight * customButtonTitleHeight * percentage);
+    customButtonTitleSize = Math.round(baseHeight * customButtonTitleSize * percentage);
+    secondContentsSize = Math.round(baseHeight * secondContentsSize * percentage);
+    secondContentsMarginTop = Math.round(baseHeight * secondContentsMarginTop * percentage);
+    secondContentsMarginLeft = Math.round(baseHeight * secondContentsMarginLeft * percentage);
+    secondContentsMarginBetween = Math.round(baseHeight * secondContentsMarginBetween * percentage);
+    secondContentsTableInnerPaddingTop = Math.round(baseHeight * secondContentsTableInnerPaddingTop * percentage);
+    secondContentsTableInnerPaddingLeft = Math.round(baseHeight * secondContentsTableInnerPaddingLeft * percentage);
+    secondContentsTableInnerContentsHeight = Math.round(baseHeight * secondContentsTableInnerContentsHeight * percentage);
+    secondContentsTableInnerContentsBetween = Math.round(baseHeight * secondContentsTableInnerContentsBetween * percentage);
+
+    // first
+    firstContents = createNode({
+      mother: contentsBase,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        verticalAlign: "top",
+        width: String(firstContentsWidth) + ea,
+        height: String(baseHeight) + ea,
+        marginRight: String(contentsBetween) + ea,
+        top: String(borderSize) + ea,
+        height: String(baseHeight - (borderSize * 4)) + ea,
+        borderTop: String(borderSize) + "px solid " + colorChip.deactive,
+        borderBottom: String(borderSize) + "px solid " + colorChip.deactive,
+      }
+    });
+
+    blockScrollBox = createNode({
+      mother: firstContents,
+      style: {
+        display: "block",
+        width: String(blockWidth) + '%',
+        marginLeft: String(blockLeft) + '%',
+        paddingTop: String(contentsHeightBetween) + ea,
+        height: withOut(contentsHeightBetween, ea),
+        overflow: "scroll",
+      }
+    });
+
+    num = 0;
+    for (let { name } of entireAction) {
+
+      if (name === null) {
+        blockBackColor = colorChip.gray2;
+        blockColor = colorChip.gray1;
+        blockFontColor = colorChip.gray3;
+        iconFillColor = colorChip.gray4;
+      } else if (name === action) {
+        blockBackColor = colorChip.gradientGreen2;
+        blockColor = colorChip.white;
+        blockFontColor = colorChip.darkGreen;
+        iconFillColor = colorChip.green;
+      } else {
+        blockBackColor = colorChip.gray2;
+        blockColor = colorChip.white;
+        blockFontColor = colorChip.black;
+        iconFillColor = colorChip.green;
+      }
+
+      createNode({
+        mother: blockScrollBox,
+        style: {
+          display: "block",
+          width: withOut(blockInnerMargin * 2, ea),
+          height: String(blockHeight - (blockInnerMargin * 2)) + ea,
+          paddingTop: String(blockInnerMargin) + ea,
+          paddingBottom: String(blockInnerMargin) + ea,
+          paddingLeft: String(blockInnerMargin) + ea,
+          borderRadius: String(5) + "px",
+          background: blockBackColor,
+          marginBottom: String(contentsHeightBetween) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: "inline-block",
+              verticalAlign: "top",
+              width: String(blockHeight - (blockInnerMargin * 2)) + ea,
+              height: String(blockHeight - (blockInnerMargin * 2)) + ea,
+              position: "relative",
+              borderRadius: String(5) + "px",
+              background: blockColor,
+              marginRight: String(blockInnerMargin) + ea,
             },
-            mouseleave: function (e) {
-              this.style.transform = "translateY(0px)";
-              this.style.boxShadow = "0px 2px 13px -9px " + colorChip.shadow;
-              this.children[0].style.color = colorChip.deactive;
-              this.children[1].children[0].style.color = colorChip.black;
-            }
+            children: [
+              {
+                text: String(num),
+                style: {
+                  fontSize: String(blockFontSize) + ea,
+                  fontWeight: String(400),
+                  color: blockFontColor,
+                  fontFamily: "graphik",
+                  position: "absolute",
+                  top: String(blockFontTop) + ea,
+                  left: String(0) + ea,
+                  width: String(100) + '%',
+                  textAlign: "center",
+                }
+              }
+            ]
           },
+          {
+            style: {
+              display: "inline-block",
+              verticalAlign: "top",
+              width: withOut(blockHeight, ea),
+              height: String(blockHeight - (blockInnerMargin * 2) - blockNameTop) + ea,
+              position: "relative",
+              borderRadius: String(5) + "px",
+              background: blockColor,
+              paddingTop: String(blockNameTop) + ea,
+            },
+            children: [
+              {
+                text: name,
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(blockNameSize) + ea,
+                  fontWeight: String(600),
+                  color: blockFontColor,
+                  marginLeft: String(blockNameLeft) + ea,
+                  textAlign: "left",
+                }
+              },
+              {
+                mode: "svg",
+                source: instance.mother.returnDownload(iconFillColor, true),
+                style: {
+                  position: "absolute",
+                  height: String(blockIconHeight) + ea,
+                  right: String(blockNameLeft) + ea,
+                  top: String(blockIconTop) + ea,
+                }
+              }
+            ]
+          },
+        ]
+      });
+
+      num++;
+    }
+
+    scrollTo(blockScrollBox, (blockHeight / 2) + contentsHeightBetween);
+
+    // second
+    secondContents = createNode({
+      mother: contentsBase,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        verticalAlign: "top",
+        width: String(secondContentsWidth) + ea,
+        height: String(baseHeight) + ea,
+        marginRight: String(contentsBetween) + ea,
+      }
+    });
+    secondContentsCalendar = createNode({
+      mother: secondContents,
+      style: {
+        display: "block",
+        position: "relative",
+        height: "calc(calc(100% - " + String(contentsHeightBetween) + ea + ") * " + String((contentsCalendarHeight * percentage)) + ")",
+        marginBottom: String(contentsHeightBetween) + ea,
+        background: colorChip.gray1,
+        borderRadius: String(5) + "px",
+        paddingTop: String(calendarIndent) + ea,
+        paddingBottom: String(calendarIndent) + ea,
+        overflow: "hidden",
+      },
+      children: [
+        {
           style: {
             display: "block",
             position: "relative",
-            height: withOut(blockInnerMargin, ea),
-            width: withOut(blockInnerMargin, ea),
+            marginLeft: String(calendarIndent) + ea,
+            marginRight: String(calendarIndent) + ea,
+            width: withOut(calendarIndent * 2, ea),
+            height: withOut(0, ea),
+            overflow: "scroll",
+          }
+        },
+        {
+          style: {
+            position: "absolute",
+            bottom: String(0),
+            left: String(0),
+            height: String(calendarIndent) + ea,
+            width: String(100) + '%',
+            background: colorChip.gray2,
+            borderTop: "1px dashed " + colorChip.gray3,
+            boxSizing: "border-box",
+          }
+        }
+      ]
+    }).firstChild;
+    colorCalendar(secondContentsCalendar, dummySchedule, {
+      heightMode: true,
+      height: secondContentsCalendar.getBoundingClientRect().height
+    });
+    secondContentsCalendar.firstChild.style.marginTop = String(calendarMarginTop) + ea;
+    secondContentsCalendar.firstChild.style.marginBottom = String(calendarMarginBottom) + ea;
+
+    secondContentsTable = createNode({
+      mother: secondContents,
+      style: {
+        display: "block",
+        position: "relative",
+        height: "calc(calc(calc(100% - " + String(contentsHeightBetween) + ea + ") * " + String(1 - (contentsCalendarHeight * percentage)) + ") - " + String((calendarIndent * (2 + 2)) + 1) + ea + ")",
+        background: colorChip.gray1,
+        borderRadius: String(5) + "px",
+        paddingTop: String(calendarIndent) + ea,
+        paddingBottom: String(calendarIndent) + ea,
+        overflow: "hidden",
+      },
+      children: [
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            marginLeft: String(calendarIndent) + ea,
+            marginRight: String(calendarIndent) + ea,
+            width: withOut(calendarIndent * 2, ea),
+            height: withOut(0, ea),
+            overflow: "hidden",
             background: colorChip.white,
-            borderRadius: String(5) + "px",
-            boxShadow: "0px 2px 13px -9px " + colorChip.shadow,
-            cursor: "pointer",
+            borderTopLeftRadius: String(5) + "px",
+            borderTopRightRadius: String(5) + "px",
+          }
+        },
+        {
+          style: {
+            position: "absolute",
+            bottom: String(0),
+            left: String(0),
+            height: String(calendarIndent) + ea,
+            width: String(100) + '%',
+            background: colorChip.gray2,
+            borderTop: "1px dashed " + colorChip.gray3,
+            boxSizing: "border-box",
+          }
+        },
+      ]
+    });
+    secondContentsTableBase = secondContentsTable.firstChild;
+
+    secondContentsTableContentsTitle = createNode({
+      mother: secondContentsTableBase,
+      text: "기본 정보",
+      style: {
+        fontSize: String(secondContentsSize) + ea,
+        fontWeight: String(600),
+        color: colorChip.black,
+        marginTop: String(secondContentsMarginTop) + ea,
+        marginLeft: String(secondContentsMarginLeft) + ea,
+      }
+    });
+
+    secondContentsTableContentsBase = createNode({
+      mother: secondContentsTableBase,
+      style: {
+        display: "block",
+        position: "relative",
+        marginTop: String(secondContentsMarginBetween) + ea,
+        marginLeft: String(secondContentsMarginLeft) + ea,
+        paddingTop: String(secondContentsTableInnerPaddingTop) + ea,
+        paddingBottom: String(secondContentsTableInnerPaddingTop) + ea,
+        paddingLeft: String(secondContentsTableInnerPaddingLeft) + ea,
+        paddingRight: String(secondContentsTableInnerPaddingLeft) + ea,
+        width: withOut((secondContentsMarginLeft * 2), ea),
+        height: withOut(secondContentsMarginTop + secondContentsTableContentsTitle.getBoundingClientRect().height + secondContentsMarginBetween + secondContentsMarginLeft, ea),
+        border: "1px solid " + colorChip.gray3,
+        boxSizing: "border-box",
+        borderRadius: String(3) + "px",
+      }
+    });
+
+    createNode({
+      mother: secondContentsTableContentsBase,
+      style: {
+        display: "block",
+        position: "relative",
+        height: String(secondContentsTableInnerContentsHeight) + ea,
+        width: String(100) + '%',
+      },
+      children: [
+        {
+          text: "성함",
+          style: {
+            position: "absolute",
+            textAlign: "left",
+            fontSize: String(secondContentsSize) + ea,
+            fontWeight: String(secondContentsTableInnerContentsTitleWeight),
+            color: colorChip.darkDarkShadow,
+            left: String(0),
+            top: String(0),
+            lineHeight: String(secondContentsTableInnerContentsLineHeight),
+          }
+        },
+        {
+          text: client.name,
+          style: {
+            position: "absolute",
+            textAlign: "right",
+            fontSize: String(secondContentsSize) + ea,
+            fontWeight: String(secondContentsTableInnerContentsValueWeight),
+            color: colorChip.black,
+            right: "calc(50% + " + String(secondContentsTableInnerContentsBetween) + ea + ")",
+            top: String(0) + ea,
+            lineHeight: String(secondContentsTableInnerContentsLineHeight),
+          }
+        }
+      ]
+    });
+
+    createNode({
+      mother: secondContentsTableContentsBase,
+      style: {
+        display: "block",
+        position: "relative",
+        height: String(secondContentsTableInnerContentsHeight) + ea,
+        width: String(100) + '%',
+      },
+      children: [
+        {
+          text: "연락처",
+          style: {
+            position: "absolute",
+            textAlign: "left",
+            fontSize: String(secondContentsSize) + ea,
+            fontWeight: String(secondContentsTableInnerContentsTitleWeight),
+            color: colorChip.darkDarkShadow,
+            left: String(0),
+            top: String(0),
+            lineHeight: String(secondContentsTableInnerContentsLineHeight),
+          }
+        },
+        {
+          text: client.phone,
+          style: {
+            position: "absolute",
+            textAlign: "right",
+            fontSize: String(secondContentsSize) + ea,
+            fontWeight: String(secondContentsTableInnerContentsValueWeight),
+            color: colorChip.black,
+            right: "calc(50% + " + String(secondContentsTableInnerContentsBetween) + ea + ")",
+            top: String(0) + ea,
+            lineHeight: String(secondContentsTableInnerContentsLineHeight),
+          }
+        },
+        {
+          text: "이메일",
+          style: {
+            position: "absolute",
+            textAlign: "left",
+            fontSize: String(secondContentsSize) + ea,
+            fontWeight: String(secondContentsTableInnerContentsTitleWeight),
+            color: colorChip.darkDarkShadow,
+            left: "calc(50% + " + String(secondContentsTableInnerContentsBetween) + ea + ")",
+            top: String(0),
+            lineHeight: String(secondContentsTableInnerContentsLineHeight),
+          }
+        },
+        {
+          text: client.email,
+          style: {
+            position: "absolute",
+            textAlign: "right",
+            fontSize: String(secondContentsSize) + ea,
+            fontWeight: String(secondContentsTableInnerContentsValueWeight),
+            color: colorChip.black,
+            right: String(0),
+            top: String(0) + ea,
+            lineHeight: String(secondContentsTableInnerContentsLineHeight),
+          }
+        },
+      ]
+    });
+
+    createNode({
+      mother: secondContentsTableContentsBase,
+      style: {
+        display: "block",
+        position: "relative",
+        height: String(secondContentsTableInnerContentsHeight) + ea,
+        width: String(100) + '%',
+      },
+      children: [
+        {
+          text: "주소",
+          style: {
+            position: "absolute",
+            textAlign: "left",
+            fontSize: String(secondContentsSize) + ea,
+            fontWeight: String(secondContentsTableInnerContentsTitleWeight),
+            color: colorChip.darkDarkShadow,
+            left: String(0),
+            top: String(0),
+            lineHeight: String(secondContentsTableInnerContentsLineHeight),
+          }
+        },
+        {
+          style: {
+            position: "absolute",
+            textAlign: "right",
+            right: String(0),
+            top: String(0),
+            width: String(secondContentsTableInnerContentsWidthRatio) + '%',
+            height: String(secondContentsTableInnerContentsHeightRatio) + '%',
+            overflow: "scroll",
           },
           children: [
             {
-              text: 'A' + String(i + 1),
+              text: request.space.address,
               style: {
                 position: "absolute",
-                top: String(customButtonNumberTop) + ea,
-                left: String(customButtonNumberLeft) + ea,
-                fontSize: String(customButtonNumberSize) + ea,
-                fontWeight: String(400),
-                fontFamily: "graphik",
-                color: colorChip.deactive,
-              }
-            },
-            {
-              style: {
-                position: "absolute",
-                bottom: String(customButtonTitleBottom) + ea,
-                right: String(customButtonTitleRight) + ea,
-                width: String(customButtonTitleWidth) + ea,
-                height: String(customButtonTitleHeight) + ea,
                 textAlign: "right",
-              },
-              children: [
-                {
-                  text: customButtons[i].name,
-                  style: {
-                    fontSize: String(customButtonTitleSize) + ea,
-                    fontWeight: String(500),
-                    color: colorChip.black,
-                    lineHeight: String(1.4),
-                  }
-                }
-              ]
-            },
+                fontSize: String(secondContentsSize) + ea,
+                fontWeight: String(secondContentsTableInnerContentsValueWeight),
+                color: colorChip.black,
+                right: String(0),
+                top: String(0),
+                lineHeight: String(secondContentsTableInnerContentsLineHeight),
+              }
+            }
           ]
         }
       ]
     });
-  }
 
-  // fourth
-  fourthContents = createNode({
-    mother: contentsBase,
-    style: {
-      display: "inline-block",
-      position: "relative",
-      verticalAlign: "top",
-      width: withOut(firstContentsWidth + secondContentsWidth + thirdContentsWidth + (contentsBetween * 3), ea),
-      height: String(baseHeight) + ea,
-      borderRadius: String(5) + "px",
-      background: colorChip.gray1,
+    createNode({
+      mother: secondContentsTableContentsBase,
+      style: {
+        display: "block",
+        position: "relative",
+        height: String(secondContentsTableInnerContentsHeight) + ea,
+        width: String(100) + '%',
+      },
+      children: [
+        {
+          text: "평수",
+          style: {
+            position: "absolute",
+            textAlign: "left",
+            fontSize: String(secondContentsSize) + ea,
+            fontWeight: String(secondContentsTableInnerContentsTitleWeight),
+            color: colorChip.darkDarkShadow,
+            left: String(0),
+            top: String(0),
+            lineHeight: String(secondContentsTableInnerContentsLineHeight),
+          }
+        },
+        {
+          text: String(request.space.pyeong) + "평",
+          style: {
+            position: "absolute",
+            textAlign: "right",
+            fontSize: String(secondContentsSize) + ea,
+            fontWeight: String(secondContentsTableInnerContentsValueWeight),
+            color: colorChip.black,
+            right: "calc(50% + " + String(secondContentsTableInnerContentsBetween) + ea + ")",
+            top: String(0) + ea,
+            lineHeight: String(secondContentsTableInnerContentsLineHeight),
+          }
+        },
+        {
+          text: "계약 형태",
+          style: {
+            position: "absolute",
+            textAlign: "left",
+            fontSize: String(secondContentsSize) + ea,
+            fontWeight: String(secondContentsTableInnerContentsTitleWeight),
+            color: request.space.contract,
+            left: "calc(50% + " + String(secondContentsTableInnerContentsBetween) + ea + ")",
+            top: String(0),
+            lineHeight: String(secondContentsTableInnerContentsLineHeight),
+          }
+        },
+        {
+          text: request.space.contract,
+          style: {
+            position: "absolute",
+            textAlign: "right",
+            fontSize: String(secondContentsSize) + ea,
+            fontWeight: String(secondContentsTableInnerContentsValueWeight),
+            color: colorChip.black,
+            right: String(0),
+            top: String(0) + ea,
+            lineHeight: String(secondContentsTableInnerContentsLineHeight),
+          }
+        },
+      ]
+    });
+
+    createNode({
+      mother: secondContentsTableContentsBase,
+      style: {
+        display: "block",
+        position: "relative",
+        height: String(secondContentsTableInnerContentsHeight) + ea,
+        width: String(100) + '%',
+      },
+      children: [
+        {
+          text: "방",
+          style: {
+            position: "absolute",
+            textAlign: "left",
+            fontSize: String(secondContentsSize) + ea,
+            fontWeight: String(secondContentsTableInnerContentsTitleWeight),
+            color: colorChip.darkDarkShadow,
+            left: String(0),
+            top: String(0),
+            lineHeight: String(secondContentsTableInnerContentsLineHeight),
+          }
+        },
+        {
+          text: String(request.space.spec.room) + "개",
+          style: {
+            position: "absolute",
+            textAlign: "right",
+            fontSize: String(secondContentsSize) + ea,
+            fontWeight: String(secondContentsTableInnerContentsValueWeight),
+            color: colorChip.black,
+            right: "calc(50% + " + String(secondContentsTableInnerContentsBetween) + ea + ")",
+            top: String(0) + ea,
+            lineHeight: String(secondContentsTableInnerContentsLineHeight),
+          }
+        },
+        {
+          text: "화장실",
+          style: {
+            position: "absolute",
+            textAlign: "left",
+            fontSize: String(secondContentsSize) + ea,
+            fontWeight: String(secondContentsTableInnerContentsTitleWeight),
+            color: request.space.contract,
+            left: "calc(50% + " + String(secondContentsTableInnerContentsBetween) + ea + ")",
+            top: String(0),
+            lineHeight: String(secondContentsTableInnerContentsLineHeight),
+          }
+        },
+        {
+          text: String(request.space.spec.bathroom) + "개",
+          style: {
+            position: "absolute",
+            textAlign: "right",
+            fontSize: String(secondContentsSize) + ea,
+            fontWeight: String(secondContentsTableInnerContentsValueWeight),
+            color: colorChip.black,
+            right: String(0),
+            top: String(0) + ea,
+            lineHeight: String(secondContentsTableInnerContentsLineHeight),
+          }
+        },
+      ]
+    });
+
+    createNode({
+      mother: secondContentsTableContentsBase,
+      style: {
+        display: "block",
+        position: "relative",
+        height: String(secondContentsTableInnerContentsHeight) + ea,
+        width: String(100) + '%',
+      },
+      children: [
+        {
+          text: "요청 사항",
+          style: {
+            position: "absolute",
+            textAlign: "left",
+            fontSize: String(secondContentsSize) + ea,
+            fontWeight: String(secondContentsTableInnerContentsTitleWeight),
+            color: colorChip.darkDarkShadow,
+            left: String(0),
+            top: String(0),
+            lineHeight: String(secondContentsTableInnerContentsLineHeight),
+          }
+        },
+        {
+          style: {
+            position: "absolute",
+            textAlign: "right",
+            right: String(0),
+            top: String(0),
+            width: String(secondContentsTableInnerContentsWidthRatio) + '%',
+            height: String(secondContentsTableInnerContentsHeightRatio) + '%',
+            overflow: "scroll",
+          },
+          children: [
+            {
+              text: request.etc.comment,
+              style: {
+                position: "absolute",
+                textAlign: "right",
+                fontSize: String(secondContentsSize) + ea,
+                fontWeight: String(secondContentsTableInnerContentsValueWeight),
+                color: colorChip.black,
+                right: String(0),
+                top: String(0),
+                lineHeight: String(secondContentsTableInnerContentsLineHeight),
+              }
+            }
+          ]
+        }
+      ]
+    });
+
+    // third
+    thirdContents = createNode({
+      mother: contentsBase,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        verticalAlign: "top",
+        width: String(thirdContentsWidth) + ea,
+        height: String(baseHeight) + ea,
+        marginRight: String(contentsBetween) + ea,
+      }
+    });
+    for (let i = 0; i < buttonsNumber; i++) {
+      createNode({
+        mother: thirdContents,
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(blockInnerMargin, ea),
+          height: "calc(calc(calc(100% - " + String(contentsHeightBetween * (buttonsNumber - 1)) + ea + ") / " + String(buttonsNumber) + ") - " + String(blockInnerMargin) + ea + ")",
+          marginBottom: String(i !== buttonsNumber - 1 ? contentsHeightBetween : 0) + ea,
+          background: colorChip.gray3,
+          borderRadius: String(5) + "px",
+          paddingTop: String(blockInnerMargin) + ea,
+          paddingLeft: String(blockInnerMargin) + ea,
+        },
+        children: [
+          {
+            event: {
+              mouseenter: function (e) {
+                this.style.transform = "translateY(-1px)";
+                this.style.boxShadow = "0px 2px 17px -9px " + colorChip.black;
+                this.children[0].style.color = colorChip.whiteGreen;
+                this.children[1].children[0].style.color = colorChip.green;
+              },
+              mouseleave: function (e) {
+                this.style.transform = "translateY(0px)";
+                this.style.boxShadow = "0px 2px 13px -9px " + colorChip.shadow;
+                this.children[0].style.color = colorChip.deactive;
+                this.children[1].children[0].style.color = colorChip.black;
+              }
+            },
+            style: {
+              display: "block",
+              position: "relative",
+              height: withOut(blockInnerMargin, ea),
+              width: withOut(blockInnerMargin, ea),
+              background: colorChip.white,
+              borderRadius: String(5) + "px",
+              boxShadow: "0px 2px 13px -9px " + colorChip.shadow,
+              cursor: "pointer",
+            },
+            children: [
+              {
+                text: 'A' + String(i + 1),
+                style: {
+                  position: "absolute",
+                  top: String(customButtonNumberTop) + ea,
+                  left: String(customButtonNumberLeft) + ea,
+                  fontSize: String(customButtonNumberSize) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "graphik",
+                  color: colorChip.deactive,
+                }
+              },
+              {
+                style: {
+                  position: "absolute",
+                  bottom: String(customButtonTitleBottom) + ea,
+                  right: String(customButtonTitleRight) + ea,
+                  width: String(customButtonTitleWidth) + ea,
+                  height: String(customButtonTitleHeight) + ea,
+                  textAlign: "right",
+                },
+                children: [
+                  {
+                    text: customButtons[i].name,
+                    style: {
+                      fontSize: String(customButtonTitleSize) + ea,
+                      fontWeight: String(500),
+                      color: colorChip.black,
+                      lineHeight: String(1.4),
+                    }
+                  }
+                ]
+              },
+            ]
+          }
+        ]
+      });
     }
-  });
+
+    // fourth
+    fourthContents = createNode({
+      mother: contentsBase,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        verticalAlign: "top",
+        width: withOut(firstContentsWidth + secondContentsWidth + thirdContentsWidth + (contentsBetween * 3), ea),
+        height: String(baseHeight) + ea,
+        borderRadius: String(5) + "px",
+        background: colorChip.gray1,
+      }
+    });
+
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 DesignerJs.prototype.projectIconSet = function (desid) {
