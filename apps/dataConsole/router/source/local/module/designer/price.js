@@ -684,6 +684,13 @@ DesignerJs.prototype.priceAllCase = function (remove = false) {
               attribute: {
                 type: "text",
               },
+              event: {
+                keypress: function (e) {
+                  if (e.key === "Enter") {
+                    
+                  }
+                }
+              },
               style: {
                 position: "absolute",
                 fontSize: String(size) + ea,
