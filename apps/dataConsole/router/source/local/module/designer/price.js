@@ -587,7 +587,7 @@ DesignerJs.prototype.priceNumbers = function () {
 DesignerJs.prototype.priceAllCase = function (remove = false) {
   const instance = this;
   const { ea, doms, price: pricePast } = this;
-  const { createNode, createNodes, colorChip, withOut, isMac } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, isMac, ajaxJson } = GeneralJs;
   const { price, standard } = pricePast.allCase(...this.key);
   const className = "caseTarget";
   let subSize;
@@ -609,8 +609,6 @@ DesignerJs.prototype.priceAllCase = function (remove = false) {
   this.premium.boo = false;
   document.getElementById("newcomerBoo").textContent = 'N';
   document.getElementById("premiumBoo").textContent = 'N';
-
-  console.log(price);
 
   for (let i = 0; i < doms.length; i++) {
     x = Number(doms[i].getAttribute('x'));
@@ -646,6 +644,7 @@ DesignerJs.prototype.priceAllCase = function (remove = false) {
         },
         event: {
           click: function (e) {
+            const self = this;
             const tempTargetClassName = "tempTargetClassName";
             const key = Number(this.getAttribute("key"));
             const x = Number(this.getAttribute("x"));
@@ -676,7 +675,6 @@ DesignerJs.prototype.priceAllCase = function (remove = false) {
                 zIndex: String(1),
               }
             });
-
             input = createNode({
               mother: doms[i],
               class: [ tempTargetClassName ],
@@ -685,9 +683,36 @@ DesignerJs.prototype.priceAllCase = function (remove = false) {
                 type: "text",
               },
               event: {
-                keypress: function (e) {
+                keypress: async function (e) {
                   if (e.key === "Enter") {
-                    
+                    try {
+                      if (this.value.replace(/[^0-9]/gi, '') === '') {
+                        this.value = String(0);
+                      } else {
+                        this.value = this.value.replace(/[^0-9]/gi, '');
+                      }
+                      const finalValue = Number(this.value);
+                      const removeTargets = document.querySelectorAll('.' + tempTargetClassName);
+                      let updateQuery;
+
+                      updateQuery = {};
+                      updateQuery["matrix." + String(x) + '.' + String(y)] = finalValue;
+                      await ajaxJson({
+                        mode: "update",
+                        db: "console",
+                        collection: "designerPrice",
+                        whereQuery: { key: key },
+                        updateQuery
+                      }, "/generalMongo");
+                      instance.price.pick(Math.floor(key / 10), key % 10).matrix[x][y] = finalValue;
+                      self.setAttribute("value", String(finalValue));
+                      self.textContent = String(finalValue);
+                      for (let dom of removeTargets) {
+                        dom.remove();
+                      }
+                    } catch (e) {
+                      console.log(e);
+                    }
                   }
                 }
               },
@@ -710,6 +735,9 @@ DesignerJs.prototype.priceAllCase = function (remove = false) {
 
             input.value = String(value);
             input.focus();
+
+
+
 
           }
         },
