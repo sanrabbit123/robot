@@ -93,6 +93,125 @@ DevContext.prototype.launching = async function () {
 
 
 
+    /*
+
+    const sheetsId = "1MBd0Z9W6-T9WzEpIZ1EGevOZOWUAA_MxpFRaDfHVor4";
+    const zeroAddition = num => (num < 10 ? `0${String(num)}` : String(num));
+    const selfMongo = this.MONGOLOCALC;
+    const clientHistories = await back.mongoRead("clientHistory", {}, { selfMongo });
+    const clients = await back.getClientsByQuery({}, { selfMongo, withTools: true });
+    const projects = await back.getProjectsByQuery({}, { selfMongo, withTools: true });
+    let target;
+    let timeline, sendTime, betweenLength;
+    let tempArr;
+    let targetClients;
+    let startDate, endDate;
+    let matrix, matrixFactor;
+    let proposalClient;
+    let tempTime, timeSum;
+    let thisProject;
+    let firstDate;
+    let totalLength;
+    let totalSum;
+    let contractClient;
+
+    for (let client of clients) {
+      for (let history of clientHistories) {
+        if (history.cliid === client.cliid) {
+          client.history = history;
+        }
+      }
+    }
+
+    for (let z = 7; z < 12; z++) {
+
+      startDate = new Date(2021, z, 1);
+      endDate = new Date(2021, z + 1, 1);
+
+      targetClients = [];
+      for (let client of clients) {
+        if (client.requests[0].request.timeline >= startDate && client.requests[0].request.timeline < endDate) {
+          targetClients.push(client);
+        }
+      }
+
+      matrix = [ [ "성함", "아이디", "문의일", "제안일", "제안 시간 (단위: 시간)", "성공 여부", "성공일", "과정 시간 (단위: 시간)" ] ];
+      proposalClient = [];
+      timeSum = 0;
+      contractClient = [];
+      totalSum = 0;
+      for (let target of targetClients) {
+        timeline = target.requests[0].request.timeline;
+        sendTime = null;
+        if (target.history !== undefined) {
+          if (target.history.curation.analytics.send.length !== 0) {
+            tempArr = copyJson(target.history.curation.analytics.send);
+            tempArr = tempArr.filter((obj) => { return obj.page === "designerProposal" });
+            if (tempArr.length !== 0) {
+              tempArr.sort((a, b) => { return a.date.valueOf() - b.date.valueOf() });
+              sendTime = tempArr[0].date;
+            }
+          }
+        }
+
+        betweenLength = null;
+        if (sendTime !== null) {
+          betweenLength = sendTime.valueOf() - timeline.valueOf();
+        }
+
+        if (betweenLength !== null) {
+          if (betweenLength >= 0) {
+
+            tempTime = Math.round(((betweenLength / 1000) / 60) / 60);
+            timeSum += tempTime;
+            proposalClient.push(target);
+
+            thisProject = projects.searchByCliid(target.cliid, true);
+            if (thisProject.length === 0) {
+              thisProject = null;
+              firstDate = null;
+              totalLength = null;
+            } else {
+              contractClient.push(target);
+              thisProject = thisProject[0];
+              firstDate = thisProject.process.contract.first.date;
+              totalLength = firstDate.valueOf() - timeline.valueOf();
+              totalLength = Math.round(((totalLength / 1000) / 60) / 60);
+              totalSum += totalLength;
+            }
+
+            matrix.push([ target.name, target.cliid, dateToString(timeline, true), dateToString(sendTime, true), tempTime, (thisProject !== null ? 'O' : 'X'), (firstDate !== null ? dateToString(firstDate, true) : '-'), (totalLength !== null ? totalLength : '-') ]);
+
+          }
+        }
+      }
+
+      matrix.push([ '', '', '', '', '', '', '', '' ]);
+
+      if (targetClients.length !== 0) {
+        matrix.push([ "제안률", "단위: %", '', Math.floor((proposalClient.length / targetClients.length) * 10000) / 100, '', '', '', '' ])
+        matrix.push([ "제안 시간 평균", "단위: 시간", '', Math.floor((timeSum / proposalClient.length) * 100) / 100, '', '', '', '' ])
+        matrix.push([ "성공률", "단위: %", '', Math.floor((contractClient.length / targetClients.length) * 10000) / 100, '', '', '', '' ])
+        matrix.push([ "과정 시간 평균", "단위: 시간", '', Math.floor((totalSum / contractClient.length) * 100) / 100, '', '', '', '' ])
+      }
+
+      await sheets.update_value_inPython(sheetsId, String(startDate.getFullYear()) + zeroAddition(startDate.getMonth() + 1), matrix);
+      console.log(matrix);
+
+    }
+
+    */
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1723,15 +1842,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "박창욱",
-    //     designer: "김은정",
-    //     link: "https://drive.google.com/drive/folders/1DbTLepzeQo6GgN8P4LxhFluAL3vfSdil",
-    //     pay: false
-    //   },
-    //   {
-    //     client: "이은주",
-    //     designer: "김소영",
-    //     link: "https://drive.google.com/drive/folders/1ZUIcFMuLtqkKOo5Nu732xbspPyseIgkj",
+    //     client: null,
+    //     designer: "조원숙",
+    //     link: "https://drive.google.com/drive/folders/1L7Tad_nvzK7-cEiSp1UBUnDBu-8luRP2",
     //     pay: true
     //   },
     // ]);

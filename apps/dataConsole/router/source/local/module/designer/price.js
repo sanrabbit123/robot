@@ -341,8 +341,8 @@ DesignerJs.prototype.priceBase = function () {
 
   this.doms = new PriceDoms(createNodes(nodeArr));
   this.belowPannel = belowPannel;
-  this.priceNumbers();
   this.pricePannel();
+  this.priceAllCase();
 }
 
 DesignerJs.prototype.priceNumbers = function () {
@@ -596,71 +596,133 @@ DesignerJs.prototype.priceAllCase = function (remove = false) {
   let removeTargets;
   let topStart, between;
   let lineHeight;
+  let leftPadding;
 
   subSize = <%% 5, 4, 4, 4, 4 %%>;
   size = <%% 18, 15, 15, 15, 15 %%>;
   topStart = isMac() ? 10 : 11;
   between = isMac() ? 7 : 6;
   lineHeight = 29;
+  leftPadding = 16;
 
   this.newcomer.boo = false;
   this.premium.boo = false;
   document.getElementById("newcomerBoo").textContent = 'N';
   document.getElementById("premiumBoo").textContent = 'N';
 
-  removeTargets = document.querySelectorAll('.' + className);
-  for (let dom of removeTargets) {
-    dom.parentElement.removeChild(dom);
-  }
+  console.log(price);
 
-  if (!remove) {
-    for (let i = 0; i < doms.length; i++) {
-      x = Number(doms[i].getAttribute('x'));
-      y = Number(doms[i].getAttribute('y'));
-      for (let j = 0; j < price.length; j++) {
+  for (let i = 0; i < doms.length; i++) {
+    x = Number(doms[i].getAttribute('x'));
+    y = Number(doms[i].getAttribute('y'));
+    for (let j = 0; j < price.length; j++) {
 
-        if (j === 4) {
-          doms[i].firstChild.textContent = String(price[j].matrix[x][y]);
-          continue;
+      createNode({
+        mother: doms[i],
+        class: [ className ],
+        text: standard[i][j],
+        style: {
+          position: "absolute",
+          fontSize: String(subSize) + ea,
+          fontWeight: String(700),
+          textAlign: "center",
+          color: colorChip.green,
+          width: "calc(calc(100% - " + String(leftPadding * 2) + ea + ") / 3)",
+          top: "calc(" + String(topStart) + "% + calc(" + String(lineHeight) + "% * " + String(Math.floor(j / 3)) + "))",
+          left: "calc(" + String(leftPadding) + ea + " + calc(calc(calc(100% - " + String(leftPadding * 2) + ea + ") / 3) * " + String(j % 3) + "))",
         }
+      });
 
-        createNode({
-          mother: doms[i],
-          class: [ className ],
-          text: standard[i][j],
-          style: {
-            position: "absolute",
-            fontSize: String(subSize) + ea,
-            fontWeight: String(700),
-            textAlign: "center",
-            color: colorChip.green,
-            width: "calc(100% / 3)",
-            top: "calc(" + String(topStart) + "% + calc(" + String(lineHeight) + "% * " + String(Math.floor(j / 3)) + "))",
-            left: "calc(calc(100% / 3) * " + String(j % 3) + ")",
+      createNode({
+        mother: doms[i],
+        class: [ className ],
+        attribute: {
+          key: String(price[j].key),
+          x: String(x),
+          y: String(y),
+          i: String(i),
+          j: String(j),
+          value: String(price[j].matrix[x][y]),
+        },
+        event: {
+          click: function (e) {
+            const tempTargetClassName = "tempTargetClassName";
+            const key = Number(this.getAttribute("key"));
+            const x = Number(this.getAttribute("x"));
+            const y = Number(this.getAttribute("y"));
+            const i = Number(this.getAttribute("i"));
+            const j = Number(this.getAttribute("j"));
+            const value = Number(this.getAttribute("value"));
+            let cancelBack, input;
+
+            cancelBack = createNode({
+              mother: doms[i],
+              class: [ tempTargetClassName ],
+              event: {
+                click: function (e) {
+                  const removeTargets = document.querySelectorAll('.' + tempTargetClassName);
+                  for (let dom of removeTargets) {
+                    dom.remove();
+                  }
+                }
+              },
+              style: {
+                position: "fixed",
+                top: String(0),
+                left: String(0),
+                width: String(100) + '%',
+                height: String(100) + '%',
+                background: "transparent",
+                zIndex: String(1),
+              }
+            });
+
+            input = createNode({
+              mother: doms[i],
+              class: [ tempTargetClassName ],
+              mode: "input",
+              attribute: {
+                type: "text",
+              },
+              style: {
+                position: "absolute",
+                fontSize: String(size) + ea,
+                fontWeight: String(300),
+                fontFamily: "graphik",
+                textAlign: "center",
+                color: colorChip.green,
+                width: "calc(calc(100% - " + String(leftPadding * 2) + ea + ") / 3)",
+                top: "calc(" + String(topStart + between) + "% + calc(" + String(lineHeight) + "% * " + String(Math.floor(j / 3)) + "))",
+                left: "calc(" + String(leftPadding) + ea + " + calc(calc(calc(100% - " + String(leftPadding * 2) + ea + ") / 3) * " + String(j % 3) + "))",
+                border: String(0),
+                outline: String(0),
+                background: colorChip.white,
+                zIndex: String(1),
+              }
+            });
+
+            input.value = String(value);
+            input.focus();
+
           }
-        });
+        },
+        text: String(price[j].matrix[x][y]),
+        style: {
+          position: "absolute",
+          fontSize: String(size) + ea,
+          fontWeight: String(300),
+          fontFamily: "graphik",
+          textAlign: "center",
+          color: colorChip.black,
+          width: "calc(calc(100% - " + String(leftPadding * 2) + ea + ") / 3)",
+          top: "calc(" + String(topStart + between) + "% + calc(" + String(lineHeight) + "% * " + String(Math.floor(j / 3)) + "))",
+          left: "calc(" + String(leftPadding) + ea + " + calc(calc(calc(100% - " + String(leftPadding * 2) + ea + ") / 3) * " + String(j % 3) + "))",
+        }
+      });
 
-        createNode({
-          mother: doms[i],
-          class: [ className ],
-          text: String(price[j].matrix[x][y]),
-          style: {
-            position: "absolute",
-            fontSize: String(size) + ea,
-            fontWeight: String(200),
-            fontFamily: "graphik",
-            textAlign: "center",
-            color: colorChip.green,
-            width: "calc(100% / 3)",
-            top: "calc(" + String(topStart + between) + "% + calc(" + String(lineHeight) + "% * " + String(Math.floor(j / 3)) + "))",
-            left: "calc(calc(100% / 3) * " + String(j % 3) + ")",
-          }
-        });
-
-      }
     }
-
   }
+
 
 }
 
@@ -705,7 +767,6 @@ DesignerJs.prototype.pricePannel = function () {
   let accumulate;
   let betweenWords;
   let price;
-  let caseEvent;
   let premiumEvent;
   let newcomerEvent;
   let premiumRatioEvent;
@@ -742,18 +803,6 @@ DesignerJs.prototype.pricePannel = function () {
     target.textContent = standard[num - 1];
     price = instance.price.pick(...instance.key);
     instance.priceNumbers();
-  }
-  caseEvent = function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    if (/디자이너/gi.test(document.getElementById(priceTravelButton).textContent)) {
-      instance.priceTravel().call(document.getElementById(priceTravelButton));
-    }
-    if (document.querySelector('.' + "caseTarget") === null) {
-      instance.priceAllCase(false);
-    } else {
-      instance.priceAllCase(true);
-    }
   }
   premiumEvent = function (e) {
     e.preventDefault();
@@ -866,97 +915,6 @@ DesignerJs.prototype.pricePannel = function () {
 
   accumulate = margin;
   title0 = createNode({
-    mother: belowPannel,
-    attribute: [ { key: String(0) } ],
-    class: [ "hoverDefault_lite" ],
-    events: [ { type: [ "click", "contextmenu" ], event: clickEvent }, { type: "selectstart", event: (e) => { e.preventDefault(); } } ],
-    text: "시공 능력 단계",
-    style: {
-      position: "absolute",
-      fontSize: String(size) + ea,
-      fontWeight: String(500),
-      top: String(top) + ea,
-      left: String(accumulate) + ea,
-      color: colorChip.black,
-      cursor: "pointer",
-    }
-  });
-
-  accumulate += widthSpec.left[0] + between;
-  value0 = createNode({
-    mother: belowPannel,
-    id: "key" + String(0),
-    attribute: [ { key: String(0) } ],
-    class: [ "hoverDefault_lite" ],
-    events: [ { type: [ "click", "contextmenu" ], event: clickEvent }, { type: "selectstart", event: (e) => { e.preventDefault(); } } ],
-    text: standard[this.key[0] - 1],
-    style: {
-      position: "absolute",
-      fontSize: String(size) + ea,
-      fontWeight: String(600),
-      top: String(top) + ea,
-      left: String(accumulate) + ea,
-      color: colorChip.green,
-      cursor: "pointer",
-    }
-  });
-
-  accumulate += widthSpec.left[1] + betweenWords;
-  title1 = createNode({
-    mother: belowPannel,
-    attribute: [ { key: String(1) } ],
-    class: [ "hoverDefault_lite" ],
-    events: [ { type: [ "click", "contextmenu" ], event: clickEvent }, { type: "selectstart", event: (e) => { e.preventDefault(); } } ],
-    text: "스타일링 능력 단계",
-    style: {
-      position: "absolute",
-      fontSize: String(size) + ea,
-      fontWeight: String(500),
-      top: String(top) + ea,
-      left: String(accumulate) + ea,
-      color: colorChip.black,
-      cursor: "pointer",
-    }
-  });
-
-  accumulate += widthSpec.left[2] + between;
-  value1 = createNode({
-    mother: belowPannel,
-    id: "key" + String(1),
-    attribute: [ { key: String(1) } ],
-    class: [ "hoverDefault_lite" ],
-    events: [ { type: [ "click", "contextmenu" ], event: clickEvent }, { type: "selectstart", event: (e) => { e.preventDefault(); } } ],
-    text: standard[this.key[1] - 1],
-    style: {
-      position: "absolute",
-      fontSize: String(size) + ea,
-      fontWeight: String(600),
-      top: String(top) + ea,
-      left: String(accumulate) + ea,
-      color: colorChip.green,
-      cursor: "pointer",
-    }
-  });
-
-  accumulate += widthSpec.left[3] + betweenWords;
-  title2 = createNode({
-    mother: belowPannel,
-    class: [ "hoverDefault_lite" ],
-    text: "모든 경우 보기",
-    events: [ { type: "click", event: caseEvent } ],
-    style: {
-      position: "absolute",
-      fontSize: String(size) + ea,
-      fontWeight: String(500),
-      top: String(top) + ea,
-      left: String(accumulate) + ea,
-      color: colorChip.black,
-      cursor: "pointer",
-    }
-  });
-
-  accumulate += widthSpec.left[4] + betweenWords;
-  title2 = createNode({
     mother: belowPannel,
     class: [ "hoverDefault_lite" ],
     text: "디자이너 판단",
