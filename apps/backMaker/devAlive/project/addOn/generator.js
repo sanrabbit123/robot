@@ -19,6 +19,7 @@ class Projects extends Array {
       for (let j of i.proposal.detail) {
         j.proid = i.proid;
         j.cliid = i.cliid;
+        j.service = i.service;
         tong.push(j);
       }
     }

@@ -202,18 +202,32 @@ DevContext.prototype.launching = async function () {
 
     */
 
+    await this.MONGOCONSOLEC.connect();
+
+    const selfMongo = this.MONGOC;
+    const selfLocalMongo = this.MONGOCONSOLEC;
+    const projects = await back.getProjectsByQuery({
+      $and: [
+        { "proposal.date": { $gte: new Date(2021, 11, 1) } },
+        { "proposal.date": { $lt: new Date(2022, 1, 1) } },
+      ]
+    }, { selfMongo, withTools: true });
+    const proposals = projects.getProposals();
+    let feeObject;
+    let index;
+
+
+    index = 100;
+
+
+    feeObject = await work.getDesignerFee(proposals[index].desid, proposals[index].cliid, proposals[index].service.serid, proposals[index].service.xValue);
+    console.log(proposals[index].fee[0]);
+    console.log(feeObject);
+    console.log((proposals[index].fee[0].amount - feeObject.fee) / ((feeObject.detail.alpha + 100) / 100));
 
 
 
-
-
-
-
-
-
-
-
-
+    await this.MONGOCONSOLEC.close();
 
 
 

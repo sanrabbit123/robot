@@ -736,9 +736,6 @@ DesignerJs.prototype.priceAllCase = function (remove = false) {
             input.value = String(value);
             input.focus();
 
-
-
-
           }
         },
         text: String(price[j].matrix[x][y]),
