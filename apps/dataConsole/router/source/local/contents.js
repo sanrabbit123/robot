@@ -3308,7 +3308,7 @@ ContentsJs.prototype.cardViewMaker = function () {
           icon_clone.addEventListener("click", proidArrMaker(0));
           iconStyle.height = String(1.7) + 'vh';
         } else if (z === 1) {
-          icon_clone = SvgTong.stringParsing(instance.mother.returnCalendar(GeneralJs.colorChip.gray5));
+          icon_clone = SvgTong.stringParsing(GeneralJs.svgMaker.calendarIcon(GeneralJs.colorChip.gray5));
           icon_clone.addEventListener("click", forcePhotoAdjustEvent);
           iconStyle.height = String(1.7) + 'vh';
         } else {

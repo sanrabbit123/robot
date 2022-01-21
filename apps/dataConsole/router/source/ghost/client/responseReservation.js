@@ -49,7 +49,7 @@ ResponseReservationJs.prototype.insertInitBox = async function () {
   const { client, ea, baseTong, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, svgMaker } = GeneralJs;
   try {
     let whiteBlock, whiteTong;
     let blockHeight, bottomMargin;
@@ -145,7 +145,7 @@ ResponseReservationJs.prototype.insertInitBox = async function () {
         children: [
           {
             mode: "svg",
-            source: this.mother.returnQuotes(colorChip.green),
+            source: svgMaker.doubleQuote(colorChip.green),
             style: {
               position: "absolute",
               top: String(quoteTop) + ea,
