@@ -20,6 +20,55 @@ GeneralJs.boos = {
   scroll: true,
 };
 
+GeneralJs.svgMaker = {
+  horizontalArrow: function (width, height, color = GeneralJs.colorChip.green) {
+    if (typeof width !== "number" || typeof height !== "number" || typeof color !== "string") {
+      throw new Error("input must be { width, height, color }");
+    }
+    if (height === 0) {
+      throw new Error("zero height ban");
+    }
+    const ratio = width / height;
+    const y = 6.721;
+    const x = (ratio * y);
+    const calcul = (num) => { return String(Math.round(num * 1000) / 1000); }
+    const constValues = [ 3.095, 1.655, 3.626, 0.042 ];
+    return `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${calcul(x)} ${calcul(y)}" xml:space="preserve"><path fill="${color}" d="M${calcul(x)},3.36c0-0.103-0.042-0.196-0.109-0.263c0,0,0-0.001-0.001-0.002L${calcul(x - constValues[0])},0.11c-0.146-0.146-0.385-0.146-0.531,0c-0.146,0.146-0.146,0.384,0,0.53l2.346,2.345H0.375C0.168,2.985,0,3.153,0,3.36s0.168,0.375,0.375,0.375h${calcul(x - constValues[1])}L${calcul(x - constValues[2])},6.08c-0.146,0.146-0.146,0.385,0,0.531c0.073,0.073,0.17,0.109,0.266,0.109s0.192-0.036,0.266-0.109l2.985-2.986c0,0,0-0.001,0.001-0.002C${calcul(x - constValues[3])},3.556,${calcul(x)},3.463,${calcul(x)},3.36z"/></svg>`;
+  },
+  verticalArrow: function (width, height, color = GeneralJs.colorChip.green) {
+    if (typeof width !== "number" || typeof height !== "number" || typeof color !== "string") {
+      throw new Error("input must be { width, height, color }");
+    }
+    if (width === 0) {
+      throw new Error("zero width ban");
+    }
+    const ratio = height / width;
+    const y = 6.72;
+    const x = (ratio * y);
+    const calcul = (num) => { return String(Math.round(num * 1000) / 1000); }
+    const constValues = [ 1.655, 3.553, 3.456, 3.36, 0.042 ]
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${calcul(y)} ${calcul(x)}" xml:space="preserve"><path fill="${color}" d="M3.36,${calcul(x)}c0.103,0,0.196-0.042,0.263-0.109c0,0,0.001,0,0.002-0.001l2.985-2.985c0.146-0.146,0.146-0.385,0-0.531s-0.384-0.146-0.53,0l-2.345,2.346V0.375C3.735,0.168,3.567,0,3.36,0S2.985,0.168,2.985,0.375v${calcul(x - constValues[0])}l-2.345-2.346c-0.146-0.146-0.385-0.146-0.531,0C0.036,${calcul(x - constValues[1])},0,${calcul(x - constValues[2])},0,${calcul(x - constValues[3])}c0,0.096,0.036,0.192,0.109,0.266l2.986,2.985c0,0,0.001,0,0.002,0.001C3.164,${calcul(x - constValues[4])},3.257,${calcul(x)},3.36,${calcul(x)}z"/></svg>`;
+  },
+  bentArrow: function (width, height, zMultiple = 1, color = GeneralJs.colorChip.green) {
+    if (typeof width !== "number" || typeof height !== "number" || typeof zMultiple !== "number" || typeof color !== "string") {
+      throw new Error("input must be { width, height, zMultiple, color }");
+    }
+    if (height === 0) {
+      throw new Error("zero height ban");
+    }
+    const ratio = width / height;
+    const y = 6.721 * zMultiple;
+    const x = (ratio * y);
+    const calcul = (num) => { return String(Math.round(num * 1000) / 1000); }
+    const constXValues = [ 0.029, 4.156, 0.01, 0.029 ];
+    const constYValues = [ 3.506, 5.862, 3.411, 3.461, 3.506 ];
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${calcul(x)} ${calcul(y)}" xml:space="preserve"><path d="M${calcul(x - constXValues[0])},${calcul(y - constYValues[0])}c-0.019-0.045-0.046-0.086-0.081-0.121l-2.983-2.984c-0.146-0.146-0.384-0.146-0.53,0s-0.146,0.384,0,0.53l2.344,2.344H2.876c-1.172,0-2.126-0.954-2.126-2.126V0H0v${calcul(y - constYValues[1])}c0,1.586,1.29,2.876,2.876,2.876h${calcul(x - constXValues[1])}l-2.344,2.343c-0.146,0.146-0.146,0.385,0,0.531c0.073,0.073,0.169,0.109,0.265,0.109s0.192-0.036,0.265-0.109l2.984-2.984c0.034-0.034,0.062-0.075,0.081-0.121c0.019-0.045,0.029-0.094,0.029-0.144C${calcul(x)},${calcul(y - constYValues[2])},${calcul(x - constXValues[2])},${calcul(y - constYValues[3])},${calcul(x - constXValues[3])},${calcul(y - constYValues[4])}z"/></svg>`;
+  },
+  doubleQuote: function (color) {
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56.785 49.482"><path d="M1.404 41.51C-3.883 27.672 6.229 7.036 23.924 0l1.608 2.581c-8.272 4.924-13.097 10.083-14.936 15.947 -1.379 4.22 0.69 6.799 3.446 7.034 6.205 0.47 10.8 5.862 10.8 11.492 0 6.801-5.054 12.428-11.718 12.428C7.837 49.482 3.242 46.2 1.404 41.51zM32.657 41.51C27.37 27.672 37.482 7.036 55.177 0l1.608 2.581c-8.272 4.924-13.097 10.083-14.936 15.947 -1.379 4.22 0.69 6.799 3.446 7.034 6.205 0.47 10.802 5.862 10.802 11.492 0 6.801-5.056 12.428-11.72 12.428C39.09 49.482 34.495 46.2 32.657 41.51z" fill="${color}"/></svg>`;
+  }
+}
+
 GeneralJs.colorSet = {
   light: {
     white: "#ffffff",
