@@ -572,502 +572,544 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
         }
       };
       this.wordings.center = [];
-      if (!liteMode) {
-        this.wordings.center.push({
-          name: "space",
-          title: "공간",
-          callback: "blockCheck",
-          children: [
-            {
-              name: "address",
-              type: "address",
-              half: false,
-              required: true,
-              rewind: "스타일링 받으실 곳의 주소를 정확히 입력해주세요 :)",
-              question: [
-                "<b%스타일링 받으실 곳의 주소가 맞나요?%b>",
-                "아니라면, 스타일링 받을 곳으로 고쳐주세요!"
-              ],
-              value: function (request, history, self) {
-                return request.request.space.address;
-              },
-              update: function (value, siblings, client) {
-                if (value === null) {
+      this.wordings.center.push({
+        name: "space",
+        title: "공간",
+        callback: "blockCheck",
+        children: [
+          {
+            name: "address",
+            type: "address",
+            half: false,
+            required: false,
+            rewind: "스타일링 받으실 곳의 주소를 정확히 입력해주세요 :)",
+            question: [
+              "<b%스타일링 받으실 곳의 주소가 맞나요?%b>",
+              "아니라면, 스타일링 받을 곳으로 고쳐주세요!"
+            ],
+            value: function (request, history, self) {
+              return request.request.space.address;
+            },
+            update: function (value, siblings, client) {
+              if (value === null) {
+                return { history: null, core: null };
+              } else {
+                let updateQuery;
+                updateQuery = {};
+                updateQuery["requests.0.request.space.address"] = value;
+                return {
+                  history: null,
+                  core: updateQuery
+                };
+              }
+            }
+          },
+          {
+            name: "pyeong",
+            type: "pyeong",
+            half: false,
+            required: false,
+            rewind: "평수를 정확히 입력해주세요 :)",
+            question: [
+              "<b%분양 평수로 적으신 평이 맞나요?%b>",
+              "평을 정확히 적으셔야 금액이 올바로 안내됩니다!"
+            ],
+            value: function (request, history, self) {
+              return String(Math.round(request.request.space.pyeong)) + '평';
+            },
+            update: function (value, siblings, client) {
+              if (value === null) {
+                return { history: null, core: null };
+              } else {
+                let updateQuery;
+                updateQuery = {};
+                if (typeof value === "number") {
+                  updateQuery["requests.0.request.space.pyeong"] = value;
+                } else if (typeof value === "string") {
+                  value = Number(value.replace(/[^0-9\-\.]/gi, ''));
+                  if (Number.isNaN(value)) {
+                    return {
+                      history: null,
+                      core: null
+                    };
+                  } else {
+                    updateQuery["requests.0.request.space.pyeong"] = value;
+                  }
+                } else {
+                  return {
+                    history: null,
+                    core: null
+                  };
+                }
+                return {
+                  history: null,
+                  core: updateQuery
+                };
+              }
+            }
+          },
+          // {
+          //   name: "precheck",
+          //   type: "calendar",
+          //   half: true,
+          //   required: false,
+          //   question: [
+          //     "<b%사전 점검일%b>이 있다면, 날짜를 알려주세요!"
+          //   ],
+          //   item: "사전 점검일",
+          //   value: function (request, history, self) {
+          //     if (request.analytics.date.space.precheck.valueOf() < (new Date(2000, 0, 1)).valueOf()) {
+          //       return null;
+          //     } else {
+          //       return request.analytics.date.space.precheck;
+          //     }
+          //   },
+          //   update: function (value, siblings, client) {
+          //     if (value === null) {
+          //       return { history: null, core: null };
+          //     } else {
+          //       let updateQuery;
+          //       updateQuery = {};
+          //       updateQuery["requests.0.analytics.date.space.precheck"] = value;
+          //       return {
+          //         history: null,
+          //         core: updateQuery
+          //       };
+          //     }
+          //   }
+          // },
+          // {
+          //   name: "empty",
+          //   type: "calendar",
+          //   half: true,
+          //   required: false,
+          //   question: [
+          //     "공실이 아니라면, <b%집 비는 날짜%b>를 알려주세요!"
+          //   ],
+          //   item: "집 비는 날",
+          //   value: function (request, history, self) {
+          //     if (request.analytics.date.space.empty.valueOf() < (new Date(2000, 0, 1)).valueOf()) {
+          //       return null;
+          //     } else {
+          //       return request.analytics.date.space.empty;
+          //     }
+          //   },
+          //   update: function (value, siblings, client) {
+          //     if (value === null) {
+          //       return { history: null, core: null };
+          //     } else {
+          //       let updateQuery;
+          //       updateQuery = {};
+          //       updateQuery["requests.0.analytics.date.space.empty"] = value;
+          //       return {
+          //         history: null,
+          //         core: updateQuery
+          //       };
+          //     }
+          //   }
+          // },
+          // {
+          //   name: "buildingType",
+          //   type: "checkbox",
+          //   half: true,
+          //   required: true,
+          //   rewind: "건물 유형을 체크해주세요! (상가일 시, 오피스텔로 체크해주세요!)",
+          //   question: [
+          //     "해당 거주지의 <b%건물 유형%b>을 알려주세요!"
+          //   ],
+          //   items: [
+          //     "아파트",
+          //     "오피스텔",
+          //     "타운하우스",
+          //     "빌라",
+          //     "단독 주택"
+          //   ],
+          //   realItems: [
+          //     100 / 75,
+          //     100 / 50,
+          //     100 / 70,
+          //     100 / 65,
+          //     100 / 70
+          //   ],
+          //   multiple: false,
+          //   exception: function (items, media) {
+          //     const ea = "px";
+          //     const mobile = media[4];
+          //     const desktop = !mobile;
+          //     let padding, subtract;
+          //     let paddingLeft, left;
+          //     if (desktop) {
+          //       padding = Number(items[4].style.paddingLeft.replace(/[^0-9\.\-]/g, ''));
+          //       subtract = items[2].getBoundingClientRect().width - items[4].getBoundingClientRect().width;
+          //       items[4].style.width = String(items[2].getBoundingClientRect().width - padding) + ea;
+          //       items[4].children[1].style.left = String(Number(items[4].children[1].style.left.replace(/[^0-9\.\-]/g, '')) + subtract) + ea;
+          //     } else {
+          //       paddingLeft = 5.6;
+          //       left = paddingLeft - 1.2 - 1;
+          //       for (let dom of items) {
+          //         dom.style.paddingLeft = String(paddingLeft) + "vw";
+          //         dom.lastChild.style.left = String(left) + "vw";
+          //         items[4].children[0].textContent = "주택";
+          //       }
+          //     }
+          //   },
+          //   value: function (request, history, self) {
+          //     if (history.curation.building.type === "") {
+          //       return null;
+          //     } else {
+          //       return history.curation.building.type;
+          //     }
+          //   },
+          //   siblings: [ "pyeongStandard" ],
+          //   update: function (value, siblings, client) {
+          //     if (value === null) {
+          //       return { history: null, core: null };
+          //     } else {
+          //       const { items, realItems, selected } = value;
+          //       if (selected === null) {
+          //         return { history: null, core: null };
+          //       } else {
+          //         const apartStandard = 75;
+          //         let historyQuery, coreQuery;
+          //         let pyeong, pyeongTarget;
+          //
+          //         historyQuery = {};
+          //         historyQuery["curation.building.type"] = items[selected];
+          //
+          //         pyeong = client.requests[0].request.space.pyeong;
+          //
+          //         pyeongTarget = siblings.space.find((obj) => { return obj.name === "pyeongStandard"; }).value;
+          //         if (pyeongTarget === null || pyeongTarget === undefined) {
+          //           pyeong = realItems[selected] * pyeong;
+          //         } else if (typeof pyeongTarget === "object" && pyeongTarget.realItems !== undefined && pyeongTarget.realItems) {
+          //           if (pyeongTarget.realItems[pyeongTarget.selected]) {
+          //             pyeong = realItems[selected] * pyeong;
+          //           } else {
+          //             pyeong = (((1 / realItems[selected]) * 100) / apartStandard) * pyeong;
+          //           }
+          //         } else {
+          //           pyeong = realItems[selected] * pyeong;
+          //         }
+          //
+          //         coreQuery = {};
+          //         coreQuery["requests.0.request.space.pyeong"] = pyeong;
+          //
+          //         return {
+          //           history: historyQuery,
+          //           core: coreQuery
+          //         };
+          //       }
+          //     }
+          //   }
+          // },
+          // {
+          //   name: "pyeongStandard",
+          //   type: "checkbox",
+          //   half: true,
+          //   required: true,
+          //   rewind: "평형 기준을 체크해주세요!",
+          //   question: [
+          //     "적어주신 <b%평수가 분양 면적 기준%b>이 맞나요?"
+          //   ],
+          //   items: [
+          //     "분양 면적 (공급 면적)",
+          //     "전용 면적",
+          //   ],
+          //   value: function (request, history, self) {
+          //     return self.items[0];
+          //   },
+          //   realItems: [
+          //     false,
+          //     true,
+          //   ],
+          //   multiple: false,
+          //   siblings: [ "buildingType" ],
+          //   update: function (value, siblings, client) {
+          //     if (value === null) {
+          //       return { history: null, core: null };
+          //     }
+          //     const { items, realItems, selected } = value;
+          //     if (selected === null) {
+          //       return { history: null, core: null };
+          //     } else {
+          //       const apartStandard = 75;
+          //       let coreQuery;
+          //       let pyeong;
+          //       let calcValue;
+          //       let calcTarget;
+          //
+          //       pyeong = client.requests[0].request.space.pyeong;
+          //       calcTarget = siblings.space.find((obj) => { return obj.name === "buildingType"; }).value;
+          //       if (calcTarget === null || calcTarget === undefined) {
+          //         pyeong = pyeong;
+          //       } else if (typeof calcTarget === "object" && calcTarget.realItems !== undefined && calcTarget.realItems) {
+          //         calcValue = calcTarget.realItems[calcTarget.selected];
+          //         if (realItems[selected]) {
+          //           pyeong = calcValue * pyeong;
+          //         } else {
+          //           pyeong = (((1 / calcValue) * 100) / apartStandard) * pyeong;
+          //         }
+          //       } else {
+          //         pyeong = pyeong;
+          //       }
+          //
+          //       coreQuery = {};
+          //       coreQuery["requests.0.request.space.pyeong"] = pyeong;
+          //
+          //       return {
+          //         history: null,
+          //         core: coreQuery
+          //       };
+          //     }
+          //   }
+          // },
+        ]
+      });
+      this.wordings.center.push({
+        name: "construct",
+        title: "시공",
+        callback: "blockCheck",
+        children: [
+          {
+            name: "service",
+            type: "checkbox",
+            half: false,
+            required: true,
+            rewind: "시공 정도를 체크해주세요!",
+            question: [
+              "<b%생각하는 시공 정도%b>를 알려주세요!",
+            ],
+            multiple: false,
+            items: [
+              "시공 없이 홈퍼니싱만",
+              "5개 이내의 부분 시공과 홈스타일링",
+              "전체 리모델링의 토탈 스타일링",
+              "구조 변경을 포함한 고급 시공"
+            ],
+            realItems: [
+              "s2011_aa01s",
+              "s2011_aa02s",
+              "s2011_aa03s",
+              "s2011_aa04s",
+            ],
+            exception: function (items, media) {
+              const mother = items[0].parentNode;
+              const grandMother = mother.parentNode;
+              const mobile = media[4];
+              const desktop = !mobile;
+              let ratio = 30;
+              if (media[3]) {
+                ratio = 40;
+              }
+              if (desktop) {
+                grandMother.firstChild.style.width = String(ratio) + '%';
+                grandMother.lastChild.style.width = String(100 - ratio) + '%';
+              } else {
+                mother.style.textAlign = "left";
+                mother.style.left = String(-0.4) + "vw";
+                mother.style.paddingTop = String(0.5) + "vw";
+                for (let i of items) {
+                  i.style.display = "block";
+                }
+              }
+            },
+            value: function (request, history, self) {
+              if (history.curation.service.serid.length === 0) {
+                return null;
+              } else {
+                if (self.realItems.findIndex((i) => { return i === history.curation.service.serid[0]; }) === -1) {
+                  return null;
+                } else {
+                  return self.items[self.realItems.findIndex((i) => { return i === history.curation.service.serid[0]; })];
+                }
+              }
+            },
+            update: function (value, siblings, client) {
+              if (value === null) {
+                return { history: null, core: null };
+              }
+              const { items, realItems, selected } = value;
+              if (selected === null) {
+                return { history: null, core: null };
+              } else {
+                let historyQuery, coreQuery;
+                let selectedSerid;
+                selectedSerid = [ realItems[selected] ];
+                historyQuery = {};
+                historyQuery["curation.service.serid"] = selectedSerid;
+                coreQuery = {};
+                coreQuery["requests.0.analytics.response.service.serid"] = realItems[selected];
+                return {
+                  history: historyQuery,
+                  core: coreQuery
+                };
+              }
+            },
+            chain: function (siblings) {
+              const thisValue = siblings.construct.find((obj) => { return obj.name === "service"; }).value.map((obj) => { return obj.index; });
+              const target = siblings.construct.find((obj) => { return obj.name === "constructList"; });
+              if (target.dom !== null) {
+                const items = target.dom.children;
+                let children;
+                if (thisValue.length === 0 || thisValue.includes(0) || thisValue.includes(1)) {
+                  for (let s of items) {
+                    children = s.firstChild.children;
+                    for (let dom of children) {
+                      dom.style.color = dom.getAttribute("deactive");
+                    }
+                    s.setAttribute("toggle", "off");
+                  }
+                }
+              }
+            },
+            freeze: function () {
+              window.alert("시공 정도 변경을 희망하신다면, 홈리에종 카카오 채널로 직접 문의부탁드립니다!");
+            }
+          },
+          {
+            name: "constructList",
+            type: "list",
+            half: false,
+            required: false,
+            question: [
+              "생각하고 있는 <b%시공이 있으시다면 체크%b>해주세요!"
+            ],
+            items: [
+              { name: "철거", count: false, half: false, extra: false, contents: "마감재, 가구 철거" },
+              { name: "설비", count: false, half: false, extra: false, contents: "배관, 난방, 에어컨 설비 등" },
+              { name: "창호 공사", count: true, half: false, extra: false, contents: "방문, 중문 교체" },
+              { name: "조명 공사", count: true, half: false, extra: false, contents: "조명기기 교체" },
+              { name: "도장 공사", count: true, half: false, extra: false, contents: "페인팅, 탄성코트 등" },
+              { name: "타일 공사", count: true, half: false, extra: false, contents: "현관, 주방, 발코니 등" },
+              { name: "가구 공사", count: true, half: false, extra: false, contents: "붙박이장 등 제작 가구" },
+              { name: "필름 공사", count: true, half: false, extra: false, contents: "면적, 난이도에 따라 상이" },
+              { name: "도배 공사", count: true, half: false, extra: false, contents: "밑작업 난이도 상이" },
+              { name: "목공사", count: true, half: false, extra: false, contents: "간접등 박스, 웨인스 코팅, 가벽 등" },
+              { name: "발코니 확장", count: true, half: false, extra: true, contents: "거실, 주방 등 확장 발코니", alert: "발코니 확장은 토탈 스타일링 이상부터 가능합니다." },
+              { name: "기타 공사", count: true, half: false, extra: true, contents: "샤시 교체, 금속 공사 등", alert: "기타 공사는 토탈 스타일링 이상부터 가능합니다." },
+              { name: "전기 공사", count: true, half: true, extra: false, contents: "배선, 이동 추가 등", alert: "배선 전체의 공사인 경우, 토탈 스타일링으로 선택해주세요!", from: "공사", to: "일부" },
+              { name: "욕실 공사", count: true, half: true, extra: false, contents: "도기 교체 등", alert: "욕실 전체의 공사인 경우, 토탈 스타일링으로 선택해주세요!", from: "공사", to: "일부" },
+              { name: "주방 공사", count: true, half: true, extra: false, contents: "싱크 등 주방 가구 교체", alert: "주방 전체의 공사인 경우, 토탈 스타일링으로 선택해주세요!", from: "공사", to: "일부" },
+              { name: "바닥 공사", count: true, half: true, extra: false, contents: "마루, 타일, 장판 등", alert: "바닥 전체의 공사인 경우, 토탈 스타일링으로 선택해주세요!", from: "공사", to: "일부" },
+            ],
+            multiple: true,
+            value: function (request, history, self) {
+              if (history.curation.construct.items.length === 0) {
+                return null;
+              } else {
+                return history.curation.construct.items;
+              }
+            },
+            update: function (value, siblings, client) {
+              if (value === null) {
+                return { history: null, core: null };
+              } else {
+                const { items, realItems, selected } = value;
+                if (selected.length === 0) {
                   return { history: null, core: null };
                 } else {
                   let updateQuery;
                   updateQuery = {};
-                  updateQuery["requests.0.request.space.address"] = value;
+                  updateQuery["curation.construct.items"] = selected.map((i) => { return items[i].name; });
                   return {
-                    history: null,
-                    core: updateQuery
+                    history: updateQuery,
+                    core: null
                   };
                 }
               }
             },
-            // {
-            //   name: "precheck",
-            //   type: "calendar",
-            //   half: true,
-            //   required: false,
-            //   question: [
-            //     "<b%사전 점검일%b>이 있다면, 날짜를 알려주세요!"
-            //   ],
-            //   item: "사전 점검일",
-            //   value: function (request, history, self) {
-            //     if (request.analytics.date.space.precheck.valueOf() < (new Date(2000, 0, 1)).valueOf()) {
-            //       return null;
-            //     } else {
-            //       return request.analytics.date.space.precheck;
-            //     }
-            //   },
-            //   update: function (value, siblings, client) {
-            //     if (value === null) {
-            //       return { history: null, core: null };
-            //     } else {
-            //       let updateQuery;
-            //       updateQuery = {};
-            //       updateQuery["requests.0.analytics.date.space.precheck"] = value;
-            //       return {
-            //         history: null,
-            //         core: updateQuery
-            //       };
-            //     }
-            //   }
-            // },
-            // {
-            //   name: "empty",
-            //   type: "calendar",
-            //   half: true,
-            //   required: false,
-            //   question: [
-            //     "공실이 아니라면, <b%집 비는 날짜%b>를 알려주세요!"
-            //   ],
-            //   item: "집 비는 날",
-            //   value: function (request, history, self) {
-            //     if (request.analytics.date.space.empty.valueOf() < (new Date(2000, 0, 1)).valueOf()) {
-            //       return null;
-            //     } else {
-            //       return request.analytics.date.space.empty;
-            //     }
-            //   },
-            //   update: function (value, siblings, client) {
-            //     if (value === null) {
-            //       return { history: null, core: null };
-            //     } else {
-            //       let updateQuery;
-            //       updateQuery = {};
-            //       updateQuery["requests.0.analytics.date.space.empty"] = value;
-            //       return {
-            //         history: null,
-            //         core: updateQuery
-            //       };
-            //     }
-            //   }
-            // },
-            // {
-            //   name: "buildingType",
-            //   type: "checkbox",
-            //   half: true,
-            //   required: true,
-            //   rewind: "건물 유형을 체크해주세요! (상가일 시, 오피스텔로 체크해주세요!)",
-            //   question: [
-            //     "해당 거주지의 <b%건물 유형%b>을 알려주세요!"
-            //   ],
-            //   items: [
-            //     "아파트",
-            //     "오피스텔",
-            //     "타운하우스",
-            //     "빌라",
-            //     "단독 주택"
-            //   ],
-            //   realItems: [
-            //     100 / 75,
-            //     100 / 50,
-            //     100 / 70,
-            //     100 / 65,
-            //     100 / 70
-            //   ],
-            //   multiple: false,
-            //   exception: function (items, media) {
-            //     const ea = "px";
-            //     const mobile = media[4];
-            //     const desktop = !mobile;
-            //     let padding, subtract;
-            //     let paddingLeft, left;
-            //     if (desktop) {
-            //       padding = Number(items[4].style.paddingLeft.replace(/[^0-9\.\-]/g, ''));
-            //       subtract = items[2].getBoundingClientRect().width - items[4].getBoundingClientRect().width;
-            //       items[4].style.width = String(items[2].getBoundingClientRect().width - padding) + ea;
-            //       items[4].children[1].style.left = String(Number(items[4].children[1].style.left.replace(/[^0-9\.\-]/g, '')) + subtract) + ea;
-            //     } else {
-            //       paddingLeft = 5.6;
-            //       left = paddingLeft - 1.2 - 1;
-            //       for (let dom of items) {
-            //         dom.style.paddingLeft = String(paddingLeft) + "vw";
-            //         dom.lastChild.style.left = String(left) + "vw";
-            //         items[4].children[0].textContent = "주택";
-            //       }
-            //     }
-            //   },
-            //   value: function (request, history, self) {
-            //     if (history.curation.building.type === "") {
-            //       return null;
-            //     } else {
-            //       return history.curation.building.type;
-            //     }
-            //   },
-            //   siblings: [ "pyeongStandard" ],
-            //   update: function (value, siblings, client) {
-            //     if (value === null) {
-            //       return { history: null, core: null };
-            //     } else {
-            //       const { items, realItems, selected } = value;
-            //       if (selected === null) {
-            //         return { history: null, core: null };
-            //       } else {
-            //         const apartStandard = 75;
-            //         let historyQuery, coreQuery;
-            //         let pyeong, pyeongTarget;
-            //
-            //         historyQuery = {};
-            //         historyQuery["curation.building.type"] = items[selected];
-            //
-            //         pyeong = client.requests[0].request.space.pyeong;
-            //
-            //         pyeongTarget = siblings.space.find((obj) => { return obj.name === "pyeongStandard"; }).value;
-            //         if (pyeongTarget === null || pyeongTarget === undefined) {
-            //           pyeong = realItems[selected] * pyeong;
-            //         } else if (typeof pyeongTarget === "object" && pyeongTarget.realItems !== undefined && pyeongTarget.realItems) {
-            //           if (pyeongTarget.realItems[pyeongTarget.selected]) {
-            //             pyeong = realItems[selected] * pyeong;
-            //           } else {
-            //             pyeong = (((1 / realItems[selected]) * 100) / apartStandard) * pyeong;
-            //           }
-            //         } else {
-            //           pyeong = realItems[selected] * pyeong;
-            //         }
-            //
-            //         coreQuery = {};
-            //         coreQuery["requests.0.request.space.pyeong"] = pyeong;
-            //
-            //         return {
-            //           history: historyQuery,
-            //           core: coreQuery
-            //         };
-            //       }
-            //     }
-            //   }
-            // },
-            // {
-            //   name: "pyeongStandard",
-            //   type: "checkbox",
-            //   half: true,
-            //   required: true,
-            //   rewind: "평형 기준을 체크해주세요!",
-            //   question: [
-            //     "적어주신 <b%평수가 분양 면적 기준%b>이 맞나요?"
-            //   ],
-            //   items: [
-            //     "분양 면적 (공급 면적)",
-            //     "전용 면적",
-            //   ],
-            //   value: function (request, history, self) {
-            //     return self.items[0];
-            //   },
-            //   realItems: [
-            //     false,
-            //     true,
-            //   ],
-            //   multiple: false,
-            //   siblings: [ "buildingType" ],
-            //   update: function (value, siblings, client) {
-            //     if (value === null) {
-            //       return { history: null, core: null };
-            //     }
-            //     const { items, realItems, selected } = value;
-            //     if (selected === null) {
-            //       return { history: null, core: null };
-            //     } else {
-            //       const apartStandard = 75;
-            //       let coreQuery;
-            //       let pyeong;
-            //       let calcValue;
-            //       let calcTarget;
-            //
-            //       pyeong = client.requests[0].request.space.pyeong;
-            //       calcTarget = siblings.space.find((obj) => { return obj.name === "buildingType"; }).value;
-            //       if (calcTarget === null || calcTarget === undefined) {
-            //         pyeong = pyeong;
-            //       } else if (typeof calcTarget === "object" && calcTarget.realItems !== undefined && calcTarget.realItems) {
-            //         calcValue = calcTarget.realItems[calcTarget.selected];
-            //         if (realItems[selected]) {
-            //           pyeong = calcValue * pyeong;
-            //         } else {
-            //           pyeong = (((1 / calcValue) * 100) / apartStandard) * pyeong;
-            //         }
-            //       } else {
-            //         pyeong = pyeong;
-            //       }
-            //
-            //       coreQuery = {};
-            //       coreQuery["requests.0.request.space.pyeong"] = pyeong;
-            //
-            //       return {
-            //         history: null,
-            //         core: coreQuery
-            //       };
-            //     }
-            //   }
-            // },
-          ]
-        });
-        this.wordings.center.push({
-          name: "construct",
-          title: "시공",
-          callback: "blockCheck",
-          children: [
-            {
-              name: "service",
-              type: "checkbox",
-              half: false,
-              required: true,
-              rewind: "시공 정도를 체크해주세요!",
-              question: [
-                "<b%생각하는 시공 정도%b>를 알려주세요!",
-              ],
-              multiple: false,
-              items: [
-                "시공 없이 홈퍼니싱만",
-                "5개 이내의 부분 시공과 홈스타일링",
-                "전체 리모델링의 토탈 스타일링",
-                "구조 변경을 포함한 고급 시공"
-              ],
-              realItems: [
-                "s2011_aa01s",
-                "s2011_aa02s",
-                "s2011_aa03s",
-                "s2011_aa04s",
-              ],
-              exception: function (items, media) {
-                const mother = items[0].parentNode;
-                const grandMother = mother.parentNode;
-                const mobile = media[4];
-                const desktop = !mobile;
-                let ratio = 30;
-                if (media[3]) {
-                  ratio = 40;
-                }
-                if (desktop) {
-                  grandMother.firstChild.style.width = String(ratio) + '%';
-                  grandMother.lastChild.style.width = String(100 - ratio) + '%';
-                } else {
-                  mother.style.textAlign = "left";
-                  mother.style.left = String(-0.4) + "vw";
-                  mother.style.paddingTop = String(0.5) + "vw";
-                  for (let i of items) {
-                    i.style.display = "block";
-                  }
-                }
-              },
-              value: function (request, history, self) {
-                if (history.curation.service.serid.length === 0) {
+            limit: function (siblings) {
+              const standard = siblings.construct.find((obj) => { return obj.name === "service"; });
+              if (standard.value !== null) {
+                const button = standard.value.map((obj) => { return obj.index; })[0];
+                if (button === 0) {
                   return null;
-                } else {
-                  if (self.realItems.findIndex((i) => { return i === history.curation.service.serid[0]; }) === -1) {
-                    return null;
-                  } else {
-                    return self.items[self.realItems.findIndex((i) => { return i === history.curation.service.serid[0]; })];
-                  }
+                } else if (button === 1) {
+                  return { limit: 5, extra: true };
+                } else if (button === 2) {
+                  return { limit: 90000, extra: false };
+                } else if (button === 3) {
+                  return { limit: 90000, extra: false };
                 }
-              },
-              update: function (value, siblings, client) {
-                if (value === null) {
-                  return { history: null, core: null };
+              } else {
+                return null;
+              }
+            }
+          },
+          {
+            name: "spotStatus",
+            type: "checkbox",
+            half: false,
+            required: false,
+            question: [
+              "시공 당일에 예상되는 <b%주거 환경을 알려주세요!%b>"
+            ],
+            items: [
+              "거주중, 가구가 있는 상태",
+              "거주중이지만 보관 이사 예정",
+              "거주중 아님, 공실 상태",
+            ],
+            multiple: false,
+            notice: "거주중일 경우 시공에 한계가 있습니다.",
+            exception: function (items, media) {
+              const mother = items[0].parentNode;
+              const grandMother = mother.parentNode;
+              const mobile = media[4];
+              const desktop = !mobile;
+              if (mobile) {
+                mother.style.textAlign = "left";
+                mother.style.left = String(-0.4) + "vw";
+                mother.style.paddingTop = String(0.5) + "vw";
+                for (let i of items) {
+                  i.style.display = "block";
                 }
+              }
+            },
+            value: function (request, history, self) {
+              return history.curation.construct.living ? self.items[0] : self.items[2];
+            },
+            update: function (value, siblings, client) {
+              if (value === null) {
+                return { history: null, core: null };
+              } else {
                 const { items, realItems, selected } = value;
                 if (selected === null) {
                   return { history: null, core: null };
                 } else {
-                  let historyQuery, coreQuery;
-                  let selectedSerid;
-                  selectedSerid = [ realItems[selected] ];
-                  historyQuery = {};
-                  historyQuery["curation.service.serid"] = selectedSerid;
-                  coreQuery = {};
-                  coreQuery["requests.0.analytics.response.service.serid"] = realItems[selected];
+                  let updateQuery;
+                  updateQuery = {};
+                  updateQuery["curation.construct.living"] = (selected === 0);
                   return {
-                    history: historyQuery,
-                    core: coreQuery
+                    history: updateQuery,
+                    core: null
                   };
                 }
-              },
-              chain: function (siblings) {
-                const thisValue = siblings.construct.find((obj) => { return obj.name === "service"; }).value.map((obj) => { return obj.index; });
-                const target = siblings.construct.find((obj) => { return obj.name === "constructList"; });
-                if (target.dom !== null) {
-                  const items = target.dom.children;
-                  let children;
-                  if (thisValue.length === 0 || thisValue.includes(0) || thisValue.includes(1)) {
-                    for (let s of items) {
-                      children = s.firstChild.children;
-                      for (let dom of children) {
-                        dom.style.color = dom.getAttribute("deactive");
-                      }
-                      s.setAttribute("toggle", "off");
-                    }
-                  }
-                }
-              },
-              freeze: function () {
-                window.alert("시공 정도 변경을 희망하신다면, 홈리에종 카카오 채널로 직접 문의부탁드립니다!");
               }
             },
-            {
-              name: "constructList",
-              type: "list",
-              half: false,
-              required: false,
-              question: [
-                "생각하고 있는 <b%시공이 있으시다면 체크%b>해주세요!"
-              ],
-              items: [
-                { name: "철거", count: false, half: false, extra: false, contents: "마감재, 가구 철거" },
-                { name: "설비", count: false, half: false, extra: false, contents: "배관, 난방, 에어컨 설비 등" },
-                { name: "창호 공사", count: true, half: false, extra: false, contents: "방문, 중문 교체" },
-                { name: "조명 공사", count: true, half: false, extra: false, contents: "조명기기 교체" },
-                { name: "도장 공사", count: true, half: false, extra: false, contents: "페인팅, 탄성코트 등" },
-                { name: "타일 공사", count: true, half: false, extra: false, contents: "현관, 주방, 발코니 등" },
-                { name: "가구 공사", count: true, half: false, extra: false, contents: "붙박이장 등 제작 가구" },
-                { name: "필름 공사", count: true, half: false, extra: false, contents: "면적, 난이도에 따라 상이" },
-                { name: "도배 공사", count: true, half: false, extra: false, contents: "밑작업 난이도 상이" },
-                { name: "목공사", count: true, half: false, extra: false, contents: "간접등 박스, 웨인스 코팅, 가벽 등" },
-                { name: "발코니 확장", count: true, half: false, extra: true, contents: "거실, 주방 등 확장 발코니", alert: "발코니 확장은 토탈 스타일링 이상부터 가능합니다." },
-                { name: "기타 공사", count: true, half: false, extra: true, contents: "샤시 교체, 금속 공사 등", alert: "기타 공사는 토탈 스타일링 이상부터 가능합니다." },
-                { name: "전기 공사", count: true, half: true, extra: false, contents: "배선, 이동 추가 등", alert: "배선 전체의 공사인 경우, 토탈 스타일링으로 선택해주세요!", from: "공사", to: "일부" },
-                { name: "욕실 공사", count: true, half: true, extra: false, contents: "도기 교체 등", alert: "욕실 전체의 공사인 경우, 토탈 스타일링으로 선택해주세요!", from: "공사", to: "일부" },
-                { name: "주방 공사", count: true, half: true, extra: false, contents: "싱크 등 주방 가구 교체", alert: "주방 전체의 공사인 경우, 토탈 스타일링으로 선택해주세요!", from: "공사", to: "일부" },
-                { name: "바닥 공사", count: true, half: true, extra: false, contents: "마루, 타일, 장판 등", alert: "바닥 전체의 공사인 경우, 토탈 스타일링으로 선택해주세요!", from: "공사", to: "일부" },
-              ],
-              multiple: true,
-              value: function (request, history, self) {
-                if (history.curation.construct.items.length === 0) {
-                  return null;
-                } else {
-                  return history.curation.construct.items;
-                }
-              },
-              update: function (value, siblings, client) {
-                if (value === null) {
-                  return { history: null, core: null };
-                } else {
-                  const { items, realItems, selected } = value;
-                  if (selected.length === 0) {
-                    return { history: null, core: null };
-                  } else {
-                    let updateQuery;
-                    updateQuery = {};
-                    updateQuery["curation.construct.items"] = selected.map((i) => { return items[i].name; });
-                    return {
-                      history: updateQuery,
-                      core: null
-                    };
-                  }
-                }
-              },
-              limit: function (siblings) {
-                const standard = siblings.construct.find((obj) => { return obj.name === "service"; });
-                if (standard.value !== null) {
-                  const button = standard.value.map((obj) => { return obj.index; })[0];
-                  if (button === 0) {
-                    return null;
-                  } else if (button === 1) {
-                    return { limit: 5, extra: true };
-                  } else if (button === 2) {
-                    return { limit: 90000, extra: false };
-                  } else if (button === 3) {
-                    return { limit: 90000, extra: false };
-                  }
-                } else {
-                  return null;
-                }
-              }
-            },
-            {
-              name: "spotStatus",
-              type: "checkbox",
-              half: false,
-              required: false,
-              question: [
-                "시공 당일에 예상되는 <b%주거 환경을 알려주세요!%b>"
-              ],
-              items: [
-                "거주중, 가구가 있는 상태",
-                "거주중이지만 보관 이사 예정",
-                "거주중 아님, 공실 상태",
-              ],
-              multiple: false,
-              notice: "거주중일 경우 시공에 한계가 있습니다.",
-              exception: function (items, media) {
-                const mother = items[0].parentNode;
-                const grandMother = mother.parentNode;
-                const mobile = media[4];
-                const desktop = !mobile;
-                if (mobile) {
-                  mother.style.textAlign = "left";
-                  mother.style.left = String(-0.4) + "vw";
-                  mother.style.paddingTop = String(0.5) + "vw";
-                  for (let i of items) {
-                    i.style.display = "block";
-                  }
-                }
-              },
-              value: function (request, history, self) {
-                return history.curation.construct.living ? self.items[0] : self.items[2];
-              },
-              update: function (value, siblings, client) {
-                if (value === null) {
-                  return { history: null, core: null };
-                } else {
-                  const { items, realItems, selected } = value;
-                  if (selected === null) {
-                    return { history: null, core: null };
-                  } else {
-                    let updateQuery;
-                    updateQuery = {};
-                    updateQuery["curation.construct.living"] = (selected === 0);
-                    return {
-                      history: updateQuery,
-                      core: null
-                    };
-                  }
-                }
-              },
-              chain: function (siblings) {
-                const self = siblings.construct.find((obj) => { return obj.name === "spotStatus"; });
-                const thisValue = self.value.map((obj) => { return obj.index; });
-                const target = siblings.construct.find((obj) => { return obj.name === "service"; });
-                let valueCopied;
-                if (target.dom !== null) {
-                  if (thisValue.includes(0)) {
-                    if (Array.isArray(target.value)) {
-                      valueCopied = JSON.parse(JSON.stringify(target.value)).map((obj) => { return obj.index; });
-                      if (valueCopied.includes(1) || valueCopied.includes(2) || valueCopied.includes(3)) {
-                        window.alert("거주중일 경우, 시공에 한계가 있습니다!");
-                        if (valueCopied.includes(2)) {
-                          target.dom.children[1].click();
-                        } else if (valueCopied.includes(3)) {
-                          target.dom.children[1].click();
-                        }
+            chain: function (siblings) {
+              const self = siblings.construct.find((obj) => { return obj.name === "spotStatus"; });
+              const thisValue = self.value.map((obj) => { return obj.index; });
+              const target = siblings.construct.find((obj) => { return obj.name === "service"; });
+              let valueCopied;
+              if (target.dom !== null) {
+                if (thisValue.includes(0)) {
+                  if (Array.isArray(target.value)) {
+                    valueCopied = JSON.parse(JSON.stringify(target.value)).map((obj) => { return obj.index; });
+                    if (valueCopied.includes(1) || valueCopied.includes(2) || valueCopied.includes(3)) {
+                      window.alert("거주중일 경우, 시공에 한계가 있습니다!");
+                      if (valueCopied.includes(2)) {
+                        target.dom.children[1].click();
+                      } else if (valueCopied.includes(3)) {
+                        target.dom.children[1].click();
                       }
                     }
                   }
                 }
               }
-            },
-          ]
-        });
-      }
+            }
+          },
+        ]
+      });
       this.wordings.center.push({
         name: "style",
         title: "스타일",
@@ -2844,6 +2886,86 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
         ]
       });
 
+    } else if (obj.type === "pyeong") {
+      if (mobile) {
+        answerArea.style.marginTop = String(2) + ea;
+        answerArea.style.marginLeft = String(qWidth) + ea;
+        answerArea.style.width = withOut(qWidth, ea);
+      }
+      createNodes([
+        {
+          mother: answerArea,
+          style: {
+            position: "absolute",
+            width: String(100) + '%',
+            height: String(addressBottomLineHeight) + ea,
+            top: String(0) + ea,
+            left: String(0) + ea,
+            borderBottom: "1px solid " + colorChip.gray3,
+          }
+        },
+        {
+          mother: answerArea,
+          mode: "input",
+          attribute: [
+            { type: "text" },
+            { value: updateValue },
+            { x: name },
+            { y: String(y) },
+          ],
+          event: {
+            focus: function (e) {
+              this.value = this.value.replace(/[^0-9\.]/gi, '');
+            },
+            blur: async function (e) {
+              const self = this;
+              try {
+                e.preventDefault();
+                e.stopPropagation();
+                const x = this.getAttribute("x");
+                const y = Number(this.getAttribute("y"));
+                let thisValue;
+
+                thisValue = Number(self.value.replace(/[^0-9\.]/gi, ''));
+                if (Number.isNaN(thisValue) || thisValue === 0) {
+                  self.value = updateValue;
+                } else {
+                  instance.values[x][y].value = thisValue;
+                  self.value = String(thisValue) + '평';
+                  await ajaxJson({
+                    page: "styleCuration",
+                    mode: "update",
+                    cliid: instance.client.cliid,
+                    update: { x, y, value: instance.values[x][y].value },
+                    updateQuery: obj.update(instance.values[x][y].value, instance.values, instance.client)
+                  }, "/ghostClient_updateAnalytics");
+                }
+              } catch (e) {
+                await GeneralJs.ajaxJson({ message: "StyleCurationJs.numberEvent.blur : " + e.message }, "/errorLog");
+              }
+            },
+            keypress: function (e) {
+              if (e.type === "keypress" && e.key === "Enter") {
+                e.preventDefault();
+                e.stopPropagation();
+                this.blur();
+              }
+            }
+          },
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(addressWordingSize) + ea,
+            fontWeight: String(200),
+            color: colorChip.green,
+            top: String(addressWordingTextTop) + ea,
+            border: String(0),
+            outline: String(0),
+            background: "transparent",
+            width: String(100) + '%',
+          }
+        }
+      ]);
     }
 
     y++;
