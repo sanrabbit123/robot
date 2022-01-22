@@ -3953,6 +3953,607 @@ StyleCurationJs.prototype.insertInitBox = function () {
 
 }
 
+StyleCurationJs.prototype.insertFirstService = function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
+  const { client, ea, media, osException, testMode } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  let whiteBlock;
+  let style;
+  let blockHeight, bottomMargin;
+  let leftBox, rightBox;
+  let titleBox, barBox, indexBox;
+  let margin;
+  let leftRatio;
+  let wordSpacing;
+  let titleFont, titleLeft, titleFontWeight;
+  let barWidth, barLeft;
+  let indexFont, indexFontWeight;
+  let doubleQuote;
+  let quoteTop, quoteLeft, quoteHeight, quoteWidth, quoteMarginBottom;
+  let initWordingSize, initWordingHeight, initWordingWordSpacing, initWordingLineHeight;
+  let indexNumberBottom;
+  let initWording0, initWording1;
+  let grayBox;
+  let grayBoxMarginTop;
+  let grayBoxTitleSize, grayBoxTitleWeight, grayBoxTitleTop, grayBoxTitleLeft;
+  let grayBoxUp, grayBoxDown;
+  let grayBoxHeight, grayBoxTop;
+  let grayBoxUpWidth0, grayBoxUpWidth1, grayBoxUpWidth2, grayBoxUpWidth3;
+  let grayBoxUpRight1, grayBoxUpRight2, grayBoxUpRight3;
+  let grayBoxDownWidth0, grayBoxDownWidth1, grayBoxDownWidth2;
+  let grayBoxDownRight1, grayBoxDownRight2;
+  let grayBoxArrowTop, grayBoxArrowHeight;
+  let overlappingWidth;
+  let grayInnerWordingSize;
+  let grayInnerWordingWeight;
+  let grayInnerWordingTextTop;
+  let grayUpWordings, grayDownWordings;
+
+  blockHeight = <%% this.backHeight - 460, this.backHeight - 470, this.backHeight - 490, this.backHeight - 540, this.backHeight - 460 %%>;
+  bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
+  margin = <%% 52, 52, 44, 32, 52 %%>;
+  leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
+
+  titleFont = <%% 31, 30, 27.5, 23, 5.7 %%>;
+  titleLeft = <%% 6, 6, 6, 6, 0 %%>;
+
+  titleFontWeight = <%% 500, 500, 500, 500, 500 %%>;
+  wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
+
+  barWidth = <%% 120, 80, 80, 80, 80 %%>;
+  barLeft = <%% 190, titleLeft + 234, titleLeft + 234, titleLeft + 234, titleLeft + 234 %%>;
+
+  indexFont = <%% 19, 19, 19, 19, 19 %%>;
+  indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
+
+  quoteTop = <%% 8, 8, 8, 8, -0.6 %%>;
+  quoteHeight = <%% 12, 12, 12, 9, 2.5 %%>;
+  quoteMarginBottom = <%% 7, 7, 7, 6, 7 %%>;
+  quoteLeft = <%% 2, 2, 2, 2, 1.6 %%>;
+
+  initWordingHeight = <%% 20, 20, 20, 20, 9 %%>;
+  initWordingSize = <%% 15.5, 15.5, 15.5, 13.5, 3.5 %%>;
+  initWordingWordSpacing = <%% -1, -1, -1, -1, -1 %%>;
+  initWordingLineHeight = <%% 9, 9, 9, 9, 9 %%>;
+
+  indexNumberBottom = <%% 3, 4, 6, 4, 0 %%>;
+
+  grayBoxMarginTop = <%% 102, 96, 92, 79, 10 %%>;
+
+  grayBoxTitleSize = 14;
+  grayBoxTitleWeight = 700;
+  grayBoxTitleTop = 36;
+  grayBoxTitleLeft = 40;
+  grayBoxHeight = 36;
+  grayBoxTop = 30;
+
+  grayBoxUpWidth0 = 280;
+  grayBoxUpWidth1 = 230;
+  grayBoxUpWidth2 = 72;
+  grayBoxUpWidth3 = 130;
+
+  grayBoxUpRight1 = 310;
+  grayBoxUpRight2 = 550;
+  grayBoxUpRight3 = 622;
+
+  grayBoxDownWidth0 = 280;
+  grayBoxDownWidth1 = 277;
+  grayBoxDownWidth2 = 175;
+
+  grayBoxDownRight1 = 310;
+  grayBoxDownRight2 = 577;
+
+  grayBoxArrowTop = 42;
+  grayBoxArrowHeight = 11;
+
+  overlappingWidth = 10;
+  grayInnerWordingSize = 13;
+  grayInnerWordingTextTop = -1;
+  grayInnerWordingWeight = 600;
+
+  grayUpWordings = [ "프로세스", "후 시공 / 구매", "디자이너와 함께 선 디자인 / 기획", "디자이너 선택" ];
+  grayDownWordings = [ "비용 구성", "시공 비용", "제품 구매 비용", "디자인비" ];
+
+  if (media[0]) {
+    initWording0 = "홈리에종의 인테리어 프로세스는 일반적인 리모델링 회사 또는 스튜디오와 다릅니다. 시공 견적부터 제시하는 방법과 달리,";
+  } else if (media[1]) {
+    initWording0 = "홈리에종 프로세스는 리모델링 회사와 다릅니다. 시공부터 제시하는 방법과 달리,";
+  } else {
+    initWording0 = "홈리에종 프로세스는 리모델링 회사와 다릅니다. 시공부터 제시하는 방법과 달리,";
+  }
+
+  if (media[0]) {
+    initWording1 = "<b%디자이너를 먼저 만난 이후 인테리어를 순차적으로 진행%b>하며, 디자이너 매칭 및 디자인비 지불 과정이 선행됩니다.";
+  } else if (media[1]) {
+    initWording1 = "<b%디자이너를 만나 인테리어를 진행%b>하며, 디자이너 매칭과 디자인비 지불이 선행됩니다.";
+  } else {
+    initWording1 = "<b%디자이너를 만나 인테리어를 진행%b>하며, 디자이너 매칭과 디자인비 지불이 선행됩니다.";
+  }
+
+  whiteBlock = createNode({
+    mother: this.baseTong,
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      height: String(blockHeight) + ea,
+      background: colorChip.white,
+      marginBottom: String(bottomMargin) + ea,
+      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+    }
+  });
+
+  leftBox = createNode({
+    mother: whiteBlock,
+    style: {
+      display: desktop ? "inline-block" : "block",
+      position: "relative",
+      width: desktop ? "calc(calc(100% - " + String(margin * 2) + ea + ") * " + String(leftRatio) + ")" : String(100) + '%',
+      height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : String(29) + ea,
+      marginTop: desktop ? String(margin) + ea : "",
+      marginBottom: desktop ? String(margin) + ea : "",
+      marginLeft: desktop ? String(margin) + ea : "",
+    }
+  });
+
+  //main title
+  createNode({
+    mother: leftBox,
+    text: (media[0] || media[4]) ? "홈리에종 진행 프로세스와" : "홈리에종의",
+    style: {
+      position: "absolute",
+      fontSize: String(titleFont) + ea,
+      fontWeight: String(titleFontWeight),
+      wordSpacing: String(wordSpacing) + "px",
+      top: desktop ? (String((media[0] ? 0 : media[1] ? 1 : 3) + (isMac() || mobile ? 0 : 4)) + ea) : String(9) + ea,
+      left: String(titleLeft) + ea,
+      color: colorChip.black,
+      width: desktop ? "" : String(100) + '%',
+      textAlign: desktop ? "" : "center",
+    }
+  });
+
+  if (media[1] || media[2] || media[3]) {
+    createNode({
+      mother: leftBox,
+      text: "진행 프로세스와",
+      style: {
+        position: "absolute",
+        fontSize: String(titleFont) + ea,
+        fontWeight: String(titleFontWeight),
+        wordSpacing: String(wordSpacing) + ea,
+        top: String((media[0] ? 0 : media[1] ? 1 : 3) + (titleFont * (media[0] ? 1.45 : 1.47)) + (isMac() || mobile ? 0 : 4)) + ea,
+        left: String(titleLeft) + ea,
+        color: colorChip.black,
+      }
+    });
+  }
+
+  createNode({
+    mother: leftBox,
+    text: "예산 사용 안내",
+    style: {
+      position: "absolute",
+      fontSize: String(titleFont) + ea,
+      fontWeight: String(titleFontWeight),
+      wordSpacing: String(wordSpacing) + "px",
+      top: desktop ? (String((media[0] ? 0 : media[1] ? 1 : 3) + (titleFont * (media[0] ? 1.45 : 1.47) * (media[0] ? 1 : 2)) + (isMac() || mobile ? 0 : 4)) + ea) : String(17) + ea,
+      left: String(titleLeft) + ea,
+      width: desktop ? "" : String(100) + '%',
+      textAlign: desktop ? "" : "center",
+      color: colorChip.black,
+    }
+  });
+
+  if (desktop) {
+
+    if (media[0]) {
+      createNode({
+        mother: leftBox,
+        style: {
+          position: "absolute",
+          borderBottom: "1px solid " + colorChip.gray3,
+          top: String(titleFont * (63 / 30)) + ea,
+          left: String(barLeft) + ea,
+          width: String(barWidth) + ea,
+        }
+      });
+    }
+
+    createNode({
+      mother: leftBox,
+      text: String(0),
+      style: {
+        position: "absolute",
+        fontSize: String(indexFont) + ea,
+        fontWeight: String(indexFontWeight),
+        wordSpacing: String(wordSpacing) + ea,
+        bottom: String(indexNumberBottom) + ea,
+        left: String(titleLeft) + ea,
+        color: colorChip.gray4,
+      }
+    });
+
+  }
+
+  rightBox = createNode({
+    mother: whiteBlock,
+    style: {
+      display: desktop ? "inline-block" : "block",
+      position: desktop ? "absolute" : "relative",
+      top: String(0) + ea,
+      width: desktop ? "calc(calc(100% - " + String(margin * 2) + ea + ") * " + String(1 - leftRatio) + ")" : String(100) + '%',
+      height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : String(80) + ea,
+      marginTop: desktop ? String(margin) + ea : "",
+      marginBottom: desktop ? String(margin) + ea : "",
+      marginRight: desktop ? String(margin) + ea : "",
+    }
+  });
+
+  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
+  createNode({
+    mother: rightBox,
+    mode: "svg",
+    source: svgMaker.doubleQuote(colorChip.green),
+    style: {
+      position: "absolute",
+      top: String(quoteTop) + ea,
+      left: desktop ? String(quoteLeft) + ea : "calc(50% - " + String(quoteWidth / 2) + ea + ")",
+      width: String(quoteWidth) + ea,
+      height: String(quoteHeight) + ea,
+    }
+  });
+
+  createNode({
+    mother: rightBox,
+    text: initWording0,
+    style: {
+      position: "absolute",
+      top: String(desktop ? quoteTop + quoteHeight + quoteMarginBottom : 3.7) + ea,
+      left: String(desktop ? 0 : 13) + ea,
+      width: String(desktop ? 100 : 74) + '%',
+      height: String(initWordingHeight) + ea,
+      fontSize: String(initWordingSize) + ea,
+      fontWeight: String(400),
+      color: colorChip.black,
+      wordSpacing: String(initWordingWordSpacing) + "px",
+      lineHeight: desktop ? "" : String(1.6),
+      textAlign: desktop ? "" : "center",
+    }
+  });
+
+  createNode({
+    mother: rightBox,
+    text: initWording1,
+    style: {
+      position: "absolute",
+      top: String(desktop ? quoteTop + quoteHeight + quoteMarginBottom + initWordingSize + initWordingLineHeight : 15.5) + ea,
+      left: String(desktop ? 0 : 11) + ea,
+      width: String(desktop ? 100 : 78) + '%',
+      height: String(initWordingHeight) + ea,
+      fontSize: String(initWordingSize) + ea,
+      fontWeight: String(400),
+      color: colorChip.black,
+      wordSpacing: String(initWordingWordSpacing) + "px",
+      lineHeight: desktop ? "" : String(1.6),
+      textAlign: desktop ? "" : "center",
+    },
+    bold: {
+      fontWeight: String(600),
+      color: colorChip.green,
+    }
+  });
+
+  grayBox = createNode({
+    mother: rightBox,
+    style: {
+      display: "block",
+      position: "relative",
+      marginTop: String(grayBoxMarginTop) + ea,
+      height: withOut(grayBoxMarginTop, ea),
+      width: withOut(0, ea),
+      borderRadius: String(5) + "px",
+      overflow: "hidden",
+    }
+  });
+
+  grayBoxUp = createNode({
+    mother: grayBox,
+    style: {
+      display: "block",
+      position: "relative",
+      height: String(50) + '%',
+      width: String(100) + '%',
+      background: colorChip.gray0,
+    },
+    children: [
+      {
+        text: grayUpWordings[0],
+        style: {
+          position: "absolute",
+          fontSize: String(grayBoxTitleSize) + ea,
+          fontWeight: String(grayBoxTitleWeight),
+          color: colorChip.black,
+          top: String(grayBoxTitleTop) + ea,
+          left: String(grayBoxTitleLeft) + ea,
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: grayBoxUp,
+    style: {
+      position: "absolute",
+      right: String(grayBoxTitleLeft) + ea,
+      top: String(grayBoxTop) + ea,
+      height: String(grayBoxHeight) + ea,
+      width: String(grayBoxUpWidth0) + ea,
+      background: colorChip.gray2,
+      borderRadius: String(5) + "px",
+    },
+    children: [
+      {
+        style: {
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          position: "relative",
+          width: withOut(overlappingWidth, ea),
+          height: String(100) + '%',
+          marginLeft: String(overlappingWidth) + ea,
+        },
+        children: [
+          {
+            text: grayUpWordings[1],
+            style: {
+              position: "relative",
+              fontSize: String(grayInnerWordingSize) + ea,
+              top: String(grayInnerWordingTextTop) + ea,
+              fontWeight: String(grayInnerWordingWeight),
+              color: colorChip.liteBlack,
+            }
+          }
+        ]
+      }
+    ]
+  })
+
+  createNode({
+    mother: grayBoxUp,
+    style: {
+      position: "absolute",
+      right: String(grayBoxUpRight1) + ea,
+      top: String(grayBoxTop) + ea,
+      height: String(grayBoxHeight) + ea,
+      width: String(grayBoxUpWidth1) + ea,
+      background: colorChip.gradientGreen4,
+      borderRadius: String(5) + "px",
+      boxShadow: "4px 3px 20px -9px " + colorChip.shadow,
+    },
+    children: [
+      {
+        style: {
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          position: "relative",
+          width: withOut(0, ea),
+          height: String(100) + '%',
+          marginLeft: String(0) + ea,
+        },
+        children: [
+          {
+            text: grayUpWordings[2],
+            style: {
+              position: "relative",
+              fontSize: String(grayInnerWordingSize) + ea,
+              top: String(grayInnerWordingTextTop) + ea,
+              fontWeight: String(grayInnerWordingWeight),
+              color: colorChip.white,
+            }
+          }
+        ]
+      }
+    ]
+  })
+
+  createNode({
+    mother: grayBoxUp,
+    mode: "svg",
+    source: svgMaker.horizontalArrow(grayBoxUpWidth2, grayBoxArrowHeight),
+    style: {
+      position: "absolute",
+      right: String(grayBoxUpRight2) + ea,
+      top: String(grayBoxArrowTop) + ea,
+      height: String(grayBoxArrowHeight) + ea,
+      width: String(grayBoxUpWidth2) + ea,
+    }
+  });
+
+  createNode({
+    mother: grayBoxUp,
+    style: {
+      position: "absolute",
+      right: String(grayBoxUpRight3) + ea,
+      top: String(grayBoxTop) + ea,
+      height: String(grayBoxHeight) + ea,
+      width: String(grayBoxUpWidth3) + ea,
+      background: colorChip.white,
+      borderRadius: String(5) + "px",
+      boxShadow: "3px 2px 13px -9px " + colorChip.shadow,
+    },
+    children: [
+      {
+        style: {
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          position: "relative",
+          width: withOut(0, ea),
+          height: String(100) + '%',
+          marginLeft: String(0) + ea,
+        },
+        children: [
+          {
+            text: grayUpWordings[3],
+            style: {
+              position: "relative",
+              fontSize: String(grayInnerWordingSize) + ea,
+              top: String(grayInnerWordingTextTop) + ea,
+              fontWeight: String(grayInnerWordingWeight),
+              color: colorChip.green,
+            }
+          }
+        ]
+      }
+    ]
+  })
+
+  grayBoxDown = createNode({
+    mother: grayBox,
+    style: {
+      display: "block",
+      position: "relative",
+      height: String(50) + '%',
+      width: String(100) + '%',
+      background: colorChip.gray3,
+    },
+    children: [
+      {
+        text: grayDownWordings[0],
+        style: {
+          position: "absolute",
+          fontSize: String(grayBoxTitleSize) + ea,
+          fontWeight: String(grayBoxTitleWeight),
+          color: colorChip.black,
+          top: String(grayBoxTitleTop) + ea,
+          left: String(grayBoxTitleLeft) + ea,
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: grayBoxDown,
+    style: {
+      position: "absolute",
+      right: String(grayBoxTitleLeft) + ea,
+      top: String(grayBoxTop) + ea,
+      height: String(grayBoxHeight) + ea,
+      width: String(grayBoxDownWidth0) + ea,
+      background: colorChip.gray0,
+      borderRadius: String(5) + "px",
+    },
+    children: [
+      {
+        style: {
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          position: "relative",
+          width: withOut(overlappingWidth, ea),
+          height: String(100) + '%',
+          marginLeft: String(overlappingWidth) + ea,
+        },
+        children: [
+          {
+            text: grayDownWordings[1],
+            style: {
+              position: "relative",
+              fontSize: String(grayInnerWordingSize) + ea,
+              top: String(grayInnerWordingTextTop) + ea,
+              fontWeight: String(grayInnerWordingWeight),
+              color: colorChip.liteBlack,
+            }
+          }
+        ]
+      }
+    ]
+  })
+
+  createNode({
+    mother: grayBoxDown,
+    style: {
+      position: "absolute",
+      right: String(grayBoxDownRight1) + ea,
+      top: String(grayBoxTop) + ea,
+      height: String(grayBoxHeight) + ea,
+      width: String(grayBoxDownWidth1) + ea,
+      background: colorChip.white,
+      borderRadius: String(5) + "px",
+      boxShadow: "3px 2px 13px -9px " + colorChip.shadow,
+    },
+    children: [
+      {
+        style: {
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          position: "relative",
+          width: withOut(overlappingWidth, ea),
+          height: String(100) + '%',
+          marginLeft: String(overlappingWidth) + ea,
+        },
+        children: [
+          {
+            text: grayDownWordings[2],
+            style: {
+              position: "relative",
+              fontSize: String(grayInnerWordingSize) + ea,
+              top: String(grayInnerWordingTextTop) + ea,
+              fontWeight: String(grayInnerWordingWeight),
+              color: colorChip.shadow,
+            }
+          }
+        ]
+      }
+    ]
+  })
+
+  createNode({
+    mother: grayBoxDown,
+    style: {
+      position: "absolute",
+      right: String(grayBoxDownRight2) + ea,
+      top: String(grayBoxTop) + ea,
+      height: String(grayBoxHeight) + ea,
+      width: String(grayBoxDownWidth2) + ea,
+      background: colorChip.gradientGreen4,
+      borderRadius: String(5) + "px",
+      boxShadow: "4px 3px 20px -9px " + colorChip.shadow,
+    },
+    children: [
+      {
+        style: {
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          position: "relative",
+          width: withOut(0, ea),
+          height: String(100) + '%',
+          marginLeft: String(0) + ea,
+        },
+        children: [
+          {
+            text: grayDownWordings[3],
+            style: {
+              position: "relative",
+              fontSize: String(grayInnerWordingSize) + ea,
+              top: String(grayInnerWordingTextTop) + ea,
+              fontWeight: String(grayInnerWordingWeight),
+              color: colorChip.white,
+            }
+          }
+        ]
+      }
+    ]
+  })
+
+}
+
 StyleCurationJs.prototype.insertCenterBox = function () {
   const instance = this;
   const { client, ea, baseTong, media } = this;
@@ -5854,7 +6455,7 @@ StyleCurationJs.prototype.serviceConverting = async function (seridObj) {
     GeneralJs.setTimeout(() => {
       baseTong.style.opacity = String(0);
       cleanChildren(baseTong);
-      instance.insertInitBox(false);
+      instance.insertInitBox();
       instance.insertServiceBox(seridObj);
       instance.insertAdditionBox();
       baseTong.style.height = "";
@@ -6028,7 +6629,8 @@ StyleCurationJs.prototype.launching = async function (loading) {
       },
       local: async () => {
         try {
-          instance.insertInitBox(true);
+          instance.insertInitBox();
+          instance.insertFirstService();
           instance.insertCenterBox();
           instance.insertPhotoBox();
           instance.insertPannelBox();
