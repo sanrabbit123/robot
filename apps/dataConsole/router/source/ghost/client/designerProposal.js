@@ -958,6 +958,7 @@ DesignerProposalJs.prototype.insertInitBox = function () {
       wordSpacing: String(initWordingWordSpacing) + "px",
       lineHeight: desktop ? "" : String(1.6),
       textAlign: desktop ? "" : "center",
+      color: colorChip.black,
     }
   });
 
@@ -975,6 +976,7 @@ DesignerProposalJs.prototype.insertInitBox = function () {
       wordSpacing: String(initWordingWordSpacing) + "px",
       lineHeight: desktop ? "" : String(1.6),
       textAlign: desktop ? "" : "center",
+      color: colorChip.black,
     }
   });
 
