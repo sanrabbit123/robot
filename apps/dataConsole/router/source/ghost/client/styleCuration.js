@@ -3372,39 +3372,7 @@ StyleCurationJs.prototype.insertInitBox = function () {
   let doubleQuote;
   let quoteTop, quoteLeft, quoteHeight, quoteWidth, quoteMarginBottom;
   let initWordingSize, initWordingHeight, initWordingWordSpacing, initWordingLineHeight;
-  let factorBox, clientFactor, factorStyle;
-  let factorBoxWidth, factorBoxTop, factorBoxTopVisual;
-  let factorPaddingLeft, factorPaddingTop;
-  let factorTitle, factorTitleStyle;
-  let factors;
-  let factorSize;
-  let factorBar, factorBarStyle;
-  let factorBarWidth, factorBarTop;
-  let factorArrowHead, factorArrowHeadStyle;
-  let factorArrowHeadWidth;
-  let factorArrowHeadTop, factorArrowHeadLeft;
-  let factorValue, factorValueStyle;
-  let factorValueBottom, factorValueRight;
-  let factorsValueDoms;
-  let factorValueMargin, factorValueHeadMargin;
-  let designerBox;
-  let desigerBoxWidth, desigerBoxHeight;
-  let targetDesignerBoxTop, targetDesignerBoxIndent;
-  let designerFactorTitleTop;
-  let designerFactor;
-  let designerBar;
-  let designerFactorTitleSize, designerFactorSize, designerFactorHeight;
-  let topBox;
-  let topBoxSize, topBoxWidth, topBoxHeight, topBoxRight;
-  let whiteWording;
-  let pastBlocks;
-  let designerBarBottom, designerBarLeft;
-  let factorBarWhiteMargin;
-  let serviceBar;
-  let barStyle;
-  let serviceBarTop, serviceBarLeft, serviceBarWidth;
   let indexNumberBottom;
-  let factorMarginBottom;
   let initWording0, initWording1;
   let grayBox;
   let grayBoxMarginTop;
@@ -3449,65 +3417,6 @@ StyleCurationJs.prototype.insertInitBox = function () {
   initWordingWordSpacing = <%% -1, -1, -1, -1, -1 %%>;
   initWordingLineHeight = <%% 9, 9, 9, 9, 9 %%>;
 
-  factorBoxWidth = <%% 940, 672, 576, 478, 630 %%>;
-  factorBoxTop = <%% 100, 100, 100, 82, 9 %%>;
-  factorBoxTopVisual = <%% 12, 11, 9, 1, 3 %%>;
-
-  factorPaddingLeft = <%% 10, 10, 11, 10, 16 %%>;
-  factorPaddingTop = <%% 10, 10, 10, 2, 5.5 %%>;
-  factorSize = <%% 17.5, 17.5, 17.5, 14, 3.5 %%>;
-  factorMarginBottom = <%% 40, 40, 40, 0, 0 %%>;
-
-  factorBarWidth = <%% 200, 200, 200, 200, 200 %%>;
-  factorBarTop = <%% 12, 11, 11, 26 + (GeneralJs.isMac() ? 0 : 1), 8.5 %%>;
-  factorArrowHeadWidth = <%% 8, 8, 8, 6, 0 %%>;
-  factorArrowHeadTop = <%% 39, 37, 39, 23 + (GeneralJs.isMac() ? 0 : 1), 7 %%>;
-  factorArrowHeadLeft = <%% 188, 188, 188, 188, 188 %%>;
-
-  if (desktop) {
-    factorBarTop = factorBarTop + (GeneralJs.isMac() ? 0 : -3);
-    factorArrowHeadTop = factorArrowHeadTop + (GeneralJs.isMac() ? 0 : -3);
-  }
-
-  factorValueBottom = <%% 11, 13, 13, 3, 2.5 %%>;
-  factorValueRight = <%% 36, 36, 36, 36, 4.5 %%>;
-
-  factorValueMargin = <%% 46, 46, 46, 46, 30 %%>;
-  factorValueHeadMargin = <%% 10, 10, 10, 7, 10 %%>;
-
-  factorBarWhiteMargin = <%% 11, 11, 10, 8, 2 %%>;
-
-  desigerBoxWidth = <%% 240, 240, 240, 240, 240 %%>;
-  desigerBoxHeight = <%% 52, 52, 52, 52, 52 %%>;
-
-
-  pastBlocks = [];
-  designerFactorTitleTop = <%% 4, 4, 4, 4, 4 %%>;
-  targetDesignerBoxTop = <%% 24, 24, 24, 24, 24 %%>;
-  if (desktop) {
-    targetDesignerBoxTop = targetDesignerBoxTop + (GeneralJs.isMac() ? 0 : 2);
-  }
-  targetDesignerBoxIndent = <%% 34, 36, 36, 36, 36 %%>;
-
-  designerFactorTitleSize = <%% 13, 13, 13, 13, 13 %%>;
-  designerFactorSize = <%% 22, 22, 22, 22, 22 %%>;
-  designerFactorHeight = <%% 20, 20, 20, 20, 20 %%>;
-
-  topBoxSize = <%% 14, 14, 14, 14, 14 %%>;
-  topBoxWidth = <%% 700, 700, 700, 700, 700 %%>;
-  topBoxHeight = <%% 28, 28, 28, 28, 28 %%>;
-  topBoxRight = <%% 1, 1, 1, 1, 1 %%>;
-
-  designerBarBottom = <%% 2, 2, 2, 2, 2 %%>;
-  if (desktop) {
-    designerBarBottom = designerBarBottom + (GeneralJs.isMac() ? 0 : 3);
-  }
-  designerBarLeft = <%% 6, 6, 6, 6, 6 %%>;
-
-  serviceBarTop = <%% 56, 55, 54, 56, 56 %%>;
-  serviceBarTop = serviceBarTop + (GeneralJs.isMac() ? 0 : -2);
-  serviceBarLeft = <%% 0, 1, 0, 0, 0 %%>;
-  serviceBarWidth = <%% 66, 38, 37, 39, 39 %%>;
   indexNumberBottom = <%% 3, 4, 6, 4, 0 %%>;
 
   grayBoxMarginTop = <%% 102, 96, 92, 79, 10 %%>;
