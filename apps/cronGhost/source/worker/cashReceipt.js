@@ -170,6 +170,7 @@ const worker = async function (package) {
       }
     ];
     const results = await chrome.scriptChain(map);
+    console.log(results);
     const logView = JSON.stringify(await hexaJson(results, true), null, 2);
     let res;
     console.log(logView);
