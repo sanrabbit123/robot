@@ -249,7 +249,7 @@ DevContext.prototype.launching = async function () {
     ];
     const results = await chrome.scriptChain(map);
     console.log(results);
-    const logView = JSON.stringify(await hexaJson(results, true), null, 2);
+    const logView = JSON.stringify(results, null, 2);
     let res;
     res = await requestSystem("https://" + address.pythoninfo.host + ":3000/cashReceipt", results[1], { headers: { "Content-Type": "application/json" } });
     console.log(res.data);
