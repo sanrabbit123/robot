@@ -3,7 +3,7 @@ module.exports = [
     name: "designerCalculation",
     time: {
       day_of_week: "mon",
-      hour: 17,
+      hour: 12,
       minute: 58,
       second: 30,
     }
