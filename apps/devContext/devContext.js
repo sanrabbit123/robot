@@ -160,7 +160,7 @@ DevContext.prototype.launching = async function () {
             for (let index of timeIndex) {
               middle.push({
                 method: textArr[index - 1],
-                time: JSON.stringify(stringToDate(textArr[index].trim())),
+                time: JSON.stringify(stringToDate(textArr[index].trim())).slice(1, -1),
                 supply: Number(textArr[index + 1].replace(/[^0-9\-]/g, '')),
                 vat: Number(textArr[index + 2].replace(/[^0-9\-]/g, '')),
                 service: Number(textArr[index + 3].replace(/[^0-9\-]/g, '')),
@@ -224,7 +224,7 @@ DevContext.prototype.launching = async function () {
             middle = [];
             for (let index of timeIndex) {
               middle.push({
-                time: JSON.stringify(stringToDate(textArr[index].trim())),
+                time: JSON.stringify(stringToDate(textArr[index].trim())).slice(1, -1),
                 business: textArr[index + 2],
                 from: textArr[index + 3],
                 item: textArr[index + 5],
