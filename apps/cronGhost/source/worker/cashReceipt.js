@@ -15,7 +15,7 @@ const worker = async function (package) {
     mongo, mongoconsole, mongolocal,
     rethink,
   } = package;
-  const { messageLog, errorLog, hexaJson, requestSystem } = mother;
+  const { messageLog, errorLog, hexaJson, requestSystem, equalJson } = mother;
   try {
     const GoogleChrome = require(process.cwd() + "/apps/googleAPIs/googleChrome.js");
     const chrome = new GoogleChrome();
@@ -82,7 +82,7 @@ const worker = async function (package) {
             for (let index of timeIndex) {
               middle.push({
                 method: textArr[index - 1],
-                time: stringToDate(textArr[index].trim()),
+                time: JSON.stringify(stringToDate(textArr[index].trim())).slice(1, -1),
                 supply: Number(textArr[index + 1].replace(/[^0-9\-]/g, '')),
                 vat: Number(textArr[index + 2].replace(/[^0-9\-]/g, '')),
                 service: Number(textArr[index + 3].replace(/[^0-9\-]/g, '')),
@@ -146,7 +146,7 @@ const worker = async function (package) {
             middle = [];
             for (let index of timeIndex) {
               middle.push({
-                time: stringToDate(textArr[index].trim()),
+                time: JSON.stringify(stringToDate(textArr[index].trim())).slice(1, -1),
                 business: textArr[index + 2],
                 from: textArr[index + 3],
                 item: textArr[index + 5],
@@ -169,14 +169,16 @@ const worker = async function (package) {
         }
       }
     ];
-    const results = await chrome.scriptChain(map);
-    const logView = JSON.stringify(await hexaJson(results, true), null, 2);
+    const results = equalJson(JSON.stringify(await chrome.scriptChain(map)));
+    console.log(results);
+    const logView = JSON.stringify(results, null, 2);
+    console.log(logView)
     let res;
-    console.log(logView);
     res = await requestSystem("https://" + address.pythoninfo.host + ":3000/cashReceipt", results[1], { headers: { "Content-Type": "application/json" } });
     console.log(res.data);
     res = await requestSystem("https://" + address.pythoninfo.host + ":3000/cashReceipt", results[2], { headers: { "Content-Type": "application/json" } });
     console.log(res.data);
+
 
     await messageLog("cash receipt sync done");
     return true;
