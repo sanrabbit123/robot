@@ -247,7 +247,7 @@ DevContext.prototype.launching = async function () {
         }
       }
     ];
-    const results = await chrome.scriptChain(map);
+    const results = equalJson(JSON.stringify(await chrome.scriptChain(map)));
     console.log(results);
     const logView = JSON.stringify(results, null, 2);
     console.log(logView)
