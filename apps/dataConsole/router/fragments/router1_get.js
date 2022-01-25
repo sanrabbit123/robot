@@ -130,7 +130,7 @@ DataRouter.prototype.rou_get_First = function () {
   let obj = {};
   let ipTong, tempIpTong;
   ipTong = [ 1, 127001, 172301254 ];
-  tempIpTong = [ 5822475162 ];
+  tempIpTong = [];
   for (let info in instance.address) {
     if (instance.address[info].ip.outer.length > 0) {
       ipTong.push(Number(instance.address[info].ip.outer.replace(/[^0-9]/g, '')));

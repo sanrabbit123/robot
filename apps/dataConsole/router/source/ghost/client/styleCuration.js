@@ -3395,7 +3395,7 @@ StyleCurationJs.prototype.insertInitBox = function () {
   margin = <%% 52, 52, 44, 32, 52 %%>;
   leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
 
-  titleFont = <%% 31, 30, 27.5, 23, 5.7 %%>;
+  titleFont = <%% 31, 29, 27, 23, 5.7 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
 
   titleFontWeight = <%% 500, 500, 500, 500, 500 %%>;
@@ -3408,12 +3408,12 @@ StyleCurationJs.prototype.insertInitBox = function () {
   indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
 
   quoteTop = <%% 8, 8, 8, 8, -0.6 %%>;
-  quoteHeight = <%% 12, 12, 12, 9, 2.5 %%>;
+  quoteHeight = <%% 12, 11, 10, 9, 2.5 %%>;
   quoteMarginBottom = <%% 7, 7, 7, 6, 7 %%>;
   quoteLeft = <%% 2, 2, 2, 2, 1.6 %%>;
 
   initWordingHeight = <%% 20, 20, 20, 20, 9 %%>;
-  initWordingSize = <%% 15.5, 15.5, 15.5, 13.5, 3.5 %%>;
+  initWordingSize = <%% 15.5, 15, 14.5, 13.5, 3.5 %%>;
   initWordingWordSpacing = <%% -1, -1, -1, -1, -1 %%>;
   initWordingLineHeight = <%% 9, 9, 9, 9, 9 %%>;
 
@@ -3421,39 +3421,42 @@ StyleCurationJs.prototype.insertInitBox = function () {
 
   grayBoxMarginTop = <%% 102, 96, 92, 79, 10 %%>;
 
-  grayBoxTitleSize = 14;
-  grayBoxTitleWeight = 700;
-  grayBoxTitleTop = 36;
-  grayBoxTitleLeft = 40;
-  grayBoxHeight = 36;
-  grayBoxTop = 30;
+  grayBoxTitleSize = <%% 14, 14, 13, 11, 3 %%>;
+  grayBoxTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+  grayBoxTitleTop = <%% 36, 36, 36, 20, 3 %%>;
+  grayBoxTitleLeft = <%% 40, 32, 30, 16, 40 %%>;
+  grayBoxHeight = <%% 36, 36, 34, 28, 36 %%>;
+  grayBoxTop = <%% 30, 30, 30, 15, 30 %%>;
 
-  grayBoxUpWidth0 = 280;
-  grayBoxUpWidth1 = 230;
-  grayBoxUpWidth2 = 72;
-  grayBoxUpWidth3 = 130;
 
-  grayBoxUpRight1 = 310;
-  grayBoxUpRight2 = 550;
-  grayBoxUpRight3 = 622;
+  grayBoxUpWidth0 = <%% 280, 180, 140, 120, 28 %%>;
+  grayBoxUpWidth1 = <%% 230, 160, 130, 110, 23 %%>;
+  grayBoxUpWidth2 = <%% 72, 72, 72, 72, 7 %%>;
+  grayBoxUpWidth3 = <%% 130, 112, 108, 90, 13 %%>;
 
-  grayBoxDownWidth0 = 280;
-  grayBoxDownWidth1 = 277;
-  grayBoxDownWidth2 = 175;
+  grayBoxUpRight1 = <%% 310, 200, 160, 125, 31 %%>;
+  grayBoxUpRight2 = <%% 550, 370, 300, 244, 55 %%>;
+  grayBoxUpRight3 = <%% 622, 422, 341, 285, 62 %%>;
 
-  grayBoxDownRight1 = 310;
-  grayBoxDownRight2 = 577;
+  grayBoxDownWidth0 = <%% 280, 242, 195, 175, 28 %%>;
+  grayBoxDownWidth1 = <%% 277, 170, 142, 120, 27 %%>;
+  grayBoxDownWidth2 = <%% 175, 112, 108, 90, 13 %%>;
 
-  grayBoxArrowTop = 42;
-  grayBoxArrowHeight = 11;
+  grayBoxDownRight1 = <%% 310, 264, 210, 179, 31 %%>;
+  grayBoxDownRight2 = <%% 577, 422, 341, 285, 57 %%>;
 
-  overlappingWidth = 10;
-  grayInnerWordingSize = 13;
+
+
+  grayBoxArrowTop = <%% 42, 42, 42, 24, 42 %%>;
+  grayBoxArrowHeight = <%% 11, 11, 11, 9, 11 %%>;
+
+  overlappingWidth = <%% 10, 10, 10, 10, 10 %%>;
+  grayInnerWordingSize = <%% 13, 13, 13, 11, 2.8 %%>;
   grayInnerWordingTextTop = -1;
   grayInnerWordingWeight = 600;
 
-  grayUpWordings = [ "프로세스", "후 시공 / 구매", "디자이너와 함께 선 디자인 / 기획", "디자이너 선택" ];
-  grayDownWordings = [ "비용 구성", "시공 비용", "제품 구매 비용", "디자인비" ];
+  grayUpWordings = [ "프로세스", "후 시공 / 구매", "선 디자인 / 기획", "디자이너 선택" ];
+  grayDownWordings = [ "비용 구성", "시공 비용", "구매 비용", "디자인비" ];
 
   if (media[0]) {
     initWording0 = "홈리에종의 인테리어 프로세스는 일반적인 리모델링 회사 또는 스튜디오와 다릅니다. 시공 견적부터 제시하는 방법과 달리,";
@@ -3523,7 +3526,7 @@ StyleCurationJs.prototype.insertInitBox = function () {
         fontSize: String(titleFont) + ea,
         fontWeight: String(titleFontWeight),
         wordSpacing: String(wordSpacing) + ea,
-        top: String((media[0] ? 0 : media[1] ? 1 : 3) + (titleFont * (media[0] ? 1.45 : 1.47)) + (isMac() || mobile ? 0 : 4)) + ea,
+        top: String((media[0] ? 0 : media[1] ? 1 : 3) + (titleFont * (media[0] ? 1.45 : 1.45)) + (isMac() || mobile ? 0 : 4)) + ea,
         left: String(titleLeft) + ea,
         color: colorChip.black,
       }
@@ -3538,7 +3541,7 @@ StyleCurationJs.prototype.insertInitBox = function () {
       fontSize: String(titleFont) + ea,
       fontWeight: String(titleFontWeight),
       wordSpacing: String(wordSpacing) + "px",
-      top: desktop ? (String((media[0] ? 0 : media[1] ? 1 : 3) + (titleFont * (media[0] ? 1.45 : 1.47) * (media[0] ? 1 : 2)) + (isMac() || mobile ? 0 : 4)) + ea) : String(17) + ea,
+      top: desktop ? (String((media[0] ? 0 : media[1] ? 1 : 3) + (titleFont * (media[0] ? 1.45 : 1.45) * (media[0] ? 1 : 2)) + (isMac() || mobile ? 0 : 4)) + ea) : String(17) + ea,
       left: String(titleLeft) + ea,
       width: desktop ? "" : String(100) + '%',
       textAlign: desktop ? "" : "center",
@@ -3996,16 +3999,16 @@ StyleCurationJs.prototype.insertFirstService = function () {
   let contentsBlockSize, contentsBlockBottom;
   let wordings;
 
-  blockHeight = <%% 640, 640, 640, 640, 60 %%>;
+  blockHeight = <%% 645, 645, 620, 533, 60 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
   margin = <%% 52, 52, 44, 32, 52 %%>;
   leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
 
-  titleFont = <%% 31, 30, 27.5, 23, 5.7 %%>;
+  titleFont = <%% 31, 28, 25, 22, 5.7 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
   titleFontWeight = <%% 600, 600, 600, 600, 600 %%>;
-  titleSecondTop = <%% 55, 55, 55, 55, 5 %%>;
-  titleSecondLeft = <%% 125, 125, 125, 125, 0 %%>;
+  titleSecondTop = <%% 55, 50, 44, 39, 5 %%>;
+  titleSecondLeft = <%% 125, 6, 6, 6, 0 %%>;
   titleSecondWeight = <%% 200, 200, 200, 200, 200 %%>;
 
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
@@ -4016,62 +4019,62 @@ StyleCurationJs.prototype.insertFirstService = function () {
   indexFont = <%% 19, 19, 19, 19, 19 %%>;
   indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
 
-  indexNumberBottom = <%% 7, 7, 7, 7, 0 %%>;
+  indexNumberBottom = <%% 7, 4, 2, 2, 0 %%>;
 
-  circleWidth0 = 72;
-  circleWidth1 = 90;
-  circleWidth2 = 120;
-  circleWidth3 = 108;
+  circleWidth0 = <%% 72, 72, 72, 60, 7 %%>;
+  circleWidth1 = <%% 90, 90, 90, 80, 9 %%>;
+  circleWidth2 = <%% 120, 120, 120, 108, 12 %%>;
+  circleWidth3 = <%% 108, 108, 108, 100, 10 %%>;
 
-  circleLeft0 = 162;
-  circleLeft1 = 63;
-  circleLeft2 = 0;
-  circleLeft3 = 7;
+  circleLeft0 = <%% 162, 162, 162, 138, 162 %%>;
+  circleLeft1 = <%% 63, 63, 63, 56, 63 %%>;
+  circleLeft2 = <%% 0, 0, 0, 0, 0 %%>;
+  circleLeft3 = <%% 7, 7, 7, 5, 7 %%>;
 
-  circleTop0 = 0;
-  circleTop1 = 58;
-  circleTop2 = 158;
-  circleTop3 = 165;
+  circleTop0 = <%% 0, 0, 0, 0, 0 %%>;
+  circleTop1 = <%% 58, 58, 58, 48, 58 %%>;
+  circleTop2 = <%% 158, 158, 158, 138, 158 %%>;
+  circleTop3 = <%% 165, 165, 165, 143, 165 %%>;
 
-  circleTextTop0 = 24;
-  circleTextTop1 = 34;
-  circleTextTop3 = 38;
+  circleTextTop0 = <%% 24, 24, 24, 24, 24 %%>;
+  circleTextTop1 = <%% 34, 34, 34, 34, 34 %%>;
+  circleTextTop3 = <%% 38, 38, 38, 36, 38 %%>;
 
-  circleTextLeft0 = 85;
-  circleTextLeft1 = 103;
-  circleTextLeft3 = 128;
+  circleTextLeft0 = <%% 85, 85, 85, 85, 85 %%>;
+  circleTextLeft1 = <%% 103, 103, 103, 103, 103 %%>;
+  circleTextLeft3 = <%% 128, 128, 128, 115, 128 %%>;
 
-  circleTextSize0 = 10;
-  circleTextSize1 = 13;
-  circleTextSize3 = 15;
+  circleTextSize0 = <%% 10, 10, 10, 10, 10 %%>;
+  circleTextSize1 = <%% 13, 13, 13, 13, 13 %%>;
+  circleTextSize3 = <%% 15, 15, 15, 14, 15 %%>;
 
-  circleTextWidth = 100;
-  circleTextWeight = 400;
-  circleTextFocus = 500;
+  circleTextWidth = <%% 100, 100, 100, 100, 100 %%>;
+  circleTextWeight = <%% 300, 300, 300, 300, 300 %%>;
+  circleTextFocus = <%% 500, 500, 500, 500, 500 %%>;
 
-  circleArrowWidth = 110;
-  circlrArrowHeight = 14;
-  circleArrowTop = 207;
-  circlrArrowLeft = 225;
+  circleArrowWidth = <%% 110, 82, 26, 15, 11 %%>;
+  circlrArrowHeight = <%% 14, 14, 12, 9, 14 %%>;
+  circleArrowTop = <%% 207, 207, 208, 184, 207 %%>;
+  circlrArrowLeft = <%% 225, 225, 225, 200, 225 %%>;
 
-  contentsBoxLeft = 350;
-  contentsBoxPadding = 20;
+  contentsBoxLeft = <%% 350, 322, 266, 226, 32 %%>;
+  contentsBoxPadding = <%% 20, 20, 20, 10, 20 %%>;
 
-  contentsWhiteHeight = 212;
-  contentsBlockHeight = 40;
-  contentsBlockMarginTop = 8;
-  contentsBlockMarginTopArrow = 11;
-  contentsBlockArrowWidth = 12;
+  contentsWhiteHeight = <%% 212, 212, 212, 182, 21 %%>;
+  contentsBlockHeight = <%% 40, 40, 40, 40, 40 %%>;
+  contentsBlockMarginTop = <%% 8, 8, 8, 8, 8 %%>;
+  contentsBlockMarginTopArrow = <%% 11, 11, 11, 11, 11 %%>;
+  contentsBlockArrowWidth = <%% 12, 12, 12, 10, 12 %%>;
   contentsBlockHeightArrow = contentsBlockHeight + contentsBlockMarginTop - (contentsBlockMarginTopArrow * 2);
 
-  contentsBlockSize = 12;
-  contentsBlockBottom = 12.5;
+  contentsBlockSize = <%% 12, 12, 12, 12, 12 %%>;
+  contentsBlockBottom = <%% 12.5, 12.5, 12.5, 12.5, 12.5 %%>;
 
-  descriptionHeight = 60;
-  descriptionMarginTop = 40;
-  descriptionTitleWidth = 90;
-  descriptionTitleMargin = 40;
-  descriptionSize = 15;
+  descriptionHeight = <%% 60, 60, 60, 60, 6 %%>;
+  descriptionMarginTop = <%% 45, 45, 45, 35, 4 %%>;
+  descriptionTitleWidth = <%% 90, 90, 90, 72, 9 %%>;
+  descriptionTitleMargin = <%% 40, 40, 30, 3, 4 %%>;
+  descriptionSize = <%% 15, 15, 14, 13, 1 %%>;
   descriptionWeight = 300;
   descriptionLineHeight = 1.6;
   descriptionTitleWeight = 700;
@@ -4092,11 +4095,11 @@ StyleCurationJs.prototype.insertFirstService = function () {
       "E designer"
     ],
     box: {
-      design: "디자이너와 함께 <b%선 디자인 / 기획%b>",
+      design: "<b%선 디자인 / 기획%b>",
       etc: [
-        "디자인 기획에 따른 시공 범위 조정과 <b%그에 따른 시공%b> 진행",
-        "라이프 스타일과 취향을 고려해 디자인 후 구매 리스트 작성 및 구매",
-        "완벽한 완성을 위한 부가 서비스 이용",
+        "디자인에 따른 <b%시공 범위 조정 및 진행%b>",
+        "구매 리스트 작성 및 구매",
+        "부가 서비스 이용",
       ]
     },
     contents: {
@@ -4104,10 +4107,19 @@ StyleCurationJs.prototype.insertFirstService = function () {
         "홈리에종의",
         "인테리어"
       ],
-      description: [
-        "홈리에종의 인테리어 프로세스는 일반적인 리모델링 회사 또는 스튜디오와 다릅니다. 일단 시공 견적부터 제시하는 회사들과적부터 제시하는 회사들과는 달리, 달리, 디자이너를 먼저 만나 이후 과정을 진행하는 방식으로 되어 있으며, 디자이너",
-      ]
     }
+  }
+
+  if (media[0]) {
+    wordings.contents.description = [ "홈리에종은 먼저 고객님의 상황을 분석하여 그에 맞는 적합한 디자이너 3명 ~ 6명을 추천드립니다. 디자이너를 선택하게 되면 해당 디자이너가 인테리어 전 과정을 케어하며, 선 디자인 후 시공/구매 방식으로 진행하게 됩니다." ]
+  } else if (media[1]) {
+    wordings.contents.description = [ "홈리에종은 고객님의 상황을 분석하여 적합한 디자이너를 추천드립니다. 해당 디자이너는 인테리어 전 과정을 케어하며, 선 디자인 후 시공 방식으로 진행하게 됩니다." ]
+  } else if (media[2]) {
+    wordings.contents.description = [ "홈리에종은 고객님의 상황을 분석하여 적합한 디자이너를 추천드립니다. 해당 디자이너는 전 과정을 케어하며, 선 디자인 후 시공 방식으로 진행하게 됩니다." ]
+  } else if (media[3]) {
+    wordings.contents.description = [ "홈리에종은 고객님의 상황을 분석하여 디자이너를 추천드립니다. 해당 디자이너는 전 과정을 케어하며, 선 디자인 후 시공 방식으로 진행하게 됩니다." ]
+  } else {
+    wordings.contents.description = [ "홈리에종은 고객님의 상황을 분석하여 적합한 디자이너를 추천드립니다. 해당 디자이너는 인테리어 전 과정을 케어하며, 선 디자인 후 시공 방식으로 진행하게 됩니다." ]
   }
 
   whiteBlock = createNode({
@@ -4145,7 +4157,7 @@ StyleCurationJs.prototype.insertFirstService = function () {
       fontSize: String(titleFont) + ea,
       fontWeight: String(titleFontWeight),
       wordSpacing: String(wordSpacing) + "px",
-      top: desktop ? (String((media[0] ? 0 : media[1] ? 1 : 3) + (isMac() || mobile ? 0 : 4)) + ea) : String(9) + ea,
+      top: desktop ? (String((media[0] ? 0 : media[1] ? 0 : 0) + (isMac() || mobile ? 0 : 4)) + ea) : String(9) + ea,
       left: String(titleLeft) + ea,
       color: colorChip.black,
       width: desktop ? "" : String(100) + '%',
@@ -4164,7 +4176,7 @@ StyleCurationJs.prototype.insertFirstService = function () {
       top: String(titleSecondTop) + ea,
       left: String(titleSecondLeft) + ea,
       width: desktop ? "" : String(100) + '%',
-      textAlign: desktop ? "right" : "center",
+      textAlign: desktop ? (media[0] ? "right" : "left") : "center",
       color: colorChip.black,
       lineHeight: String(1.35),
     },
@@ -4176,16 +4188,18 @@ StyleCurationJs.prototype.insertFirstService = function () {
 
   if (desktop) {
 
-    createNode({
-      mother: leftBox,
-      style: {
-        position: "absolute",
-        borderBottom: "1px solid " + colorChip.green,
-        top: String(barTop) + ea,
-        left: String(titleLeft) + ea,
-        width: String(barWidth) + ea,
-      }
-    });
+    if (media[0]) {
+      createNode({
+        mother: leftBox,
+        style: {
+          position: "absolute",
+          borderBottom: "1px solid " + colorChip.green,
+          top: String(barTop) + ea,
+          left: String(titleLeft) + ea,
+          width: String(barWidth) + ea,
+        }
+      });
+    }
 
     createNode({
       mother: leftBox,
@@ -4242,6 +4256,7 @@ StyleCurationJs.prototype.insertFirstService = function () {
           {
             text: wordings.pick[0],
             style: {
+              display: (media[2] || media[3]) ? "none" : "block",
               position: "absolute",
               top: String(circleTextTop0) + ea,
               left: String(circleTextLeft0) + ea,
@@ -4281,6 +4296,7 @@ StyleCurationJs.prototype.insertFirstService = function () {
           {
             text: wordings.pick[1],
             style: {
+              display: (media[2] || media[3]) ? "none" : "block",
               position: "absolute",
               top: String(circleTextTop1) + ea,
               left: String(circleTextLeft1) + ea,
@@ -4372,6 +4388,7 @@ StyleCurationJs.prototype.insertFirstService = function () {
           {
             text: wordings.pick[3],
             style: {
+              display: (media[2] || media[3]) ? "none" : "block",
               position: "absolute",
               top: String(circleTextTop1) + ea,
               left: String(circleTextLeft1) + ea,
@@ -4411,6 +4428,7 @@ StyleCurationJs.prototype.insertFirstService = function () {
           {
             text: wordings.pick[4],
             style: {
+              display: (media[2] || media[3]) ? "none" : "block",
               position: "absolute",
               top: String(circleTextTop0) + ea,
               left: String(circleTextLeft0) + ea,
@@ -4678,16 +4696,16 @@ StyleCurationJs.prototype.insertSecondService = function () {
   let grayTextSize;
   let grayDeactiveTextSize;
 
-  blockHeight = <%% 400, 400, 400, 400, 60 %%>;
+  blockHeight = <%% 406, 406, 384, 295, 60 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
   margin = <%% 52, 52, 44, 32, 52 %%>;
   leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
 
-  titleFont = <%% 31, 30, 27.5, 23, 5.7 %%>;
+  titleFont = <%% 31, 28, 25, 22, 5.7 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
   titleFontWeight = <%% 600, 600, 600, 600, 600 %%>;
-  titleSecondTop = <%% 55, 55, 55, 55, 5 %%>;
-  titleSecondLeft = <%% 125, 125, 125, 125, 0 %%>;
+  titleSecondTop = <%% 55, 50, 44, 39, 5 %%>;
+  titleSecondLeft = <%% 125, 6, 6, 6, 0 %%>;
   titleSecondWeight = <%% 200, 200, 200, 200, 200 %%>;
 
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
@@ -4698,30 +4716,30 @@ StyleCurationJs.prototype.insertSecondService = function () {
   indexFont = <%% 19, 19, 19, 19, 19 %%>;
   indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
 
-  indexNumberBottom = <%% 7, 7, 7, 7, 0 %%>;
+  indexNumberBottom = <%% 7, 4, 2, 5, 0 %%>;
 
-  grayBoxHeight = 210;
-  grayBoxWidth = 320;
-  grayTextBottom = 20;
-  grayTextSize = 11;
-  grayDeactiveTextSize = 16;
-  grayArrowWidth = 100;
-  grayArrowMargin = 20;
-  grayArrowHeight = 12;
-  grayBoxInnerMargin = 24;
+  grayBoxHeight = <%% 210, 210, 210, 155, 21 %%>;
+  grayBoxWidth = <%% 320, 290, 260, 210, 32 %%>;
+  grayTextBottom = <%% 20, 20, 20, 20, 2 %%>;
+  grayTextSize = <%% 14, 12, 11, 11, 1 %%>;
+  grayDeactiveTextSize = <%% 16, 14, 13, 11, 1 %%>;
+  grayArrowWidth = <%% 100, 45, 39, 39, 10 %%>;
+  grayArrowMargin = <%% 20, 16, 12, 10, 2 %%>;
+  grayArrowHeight = <%% 12, 12, 12, 12, 1 %%>;
+  grayBoxInnerMargin = <%% 24, 20, 12, 10, 2 %%>;
 
-  descriptionHeight = 60;
-  descriptionMarginTop = 30;
-  descriptionTitleWidth = 90;
-  descriptionTitleMargin = 40;
-  descriptionSize = 15;
+  descriptionHeight = <%% 60, 60, 60, 60, 6 %%>;
+  descriptionMarginTop = <%% 36, 36, 36, 25, 3 %%>;
+  descriptionTitleWidth = <%% 90, 90, 90, 72, 9 %%>;
+  descriptionTitleMargin = <%% 40, 40, 30, 3, 4 %%>;
+  descriptionSize = <%% 15, 15, 14, 13, 1 %%>;
   descriptionWeight = 300;
   descriptionLineHeight = 1.6;
   descriptionTitleWeight = 700;
 
   wordings = {
     title: {
-      main: "자세한 우리집 견적은,",
+      main: "우리집 상세 견적은,",
       sub: [
         "디자이너와 함께",
         "조정해보세요!"
@@ -4729,9 +4747,7 @@ StyleCurationJs.prototype.insertSecondService = function () {
     },
     gray: {
       main: [
-        "디자인에 따른",
-        "시공 범위와",
-        "구매 리스트에 맞추어",
+        "디자인비",
       ],
       sub: [
         "시공비",
@@ -4741,13 +4757,22 @@ StyleCurationJs.prototype.insertSecondService = function () {
     },
     contents: {
       title: [
-        "최적의",
-        "예산 운영"
+        "홈리에종의",
+        "비용 구성"
       ],
-      description: [
-        "홈리에종의 인테리어 프로세스는 일반적인 리모델링 회사 또는 스튜디오와 다릅니다. 일단 시공 견적부터 제시하는 회사들과적부터 제시하는 회사들과는 달리, 달리, 디자이너를 먼저 만나 이후 과정을 진행하는 방식으로 되어 있으며, 디자이너",
-      ]
     }
+  }
+
+  if (media[0]) {
+    wordings.contents.description = [ "홈리에종은 선 디자인이 필수이기 때문에, 시공 견적을 드리는 것이 아니라 디자이너의 인건비 개념인 디자인비를 먼저 받는 구조로 되어 있습니다. 우리집을 담당해 줄 전문가를 먼저 만나 함께 인테리어를 진행해보세요!" ];
+  } else if (media[1]) {
+    wordings.contents.description = [ "홈리에종은 일단 시공 견적을 드리는 것이 아니라 디자이너의 인건비 개념인 디자인비를 먼저 받는 구조로 되어 있습니다. 우리집을 담당해 줄 전문가를 만나 함께 진행해보세요!" ];
+  } else if (media[2]) {
+    wordings.contents.description = [ "홈리에종은 시공 견적부터 드리는 것이 아니라 인건비 개념인 디자인비를 먼저 받는 구조입니다. 우리집을 담당해 줄 전문가를 만나 함께 진행해보세요!" ];
+  } else if (media[3]) {
+    wordings.contents.description = [ "홈리에종은 시공 견적부터 드리는 것이 아니라 인건비 개념인 디자인비를 먼저 받는 구조입니다. 우리집을 담당해 줄 전문가를 만나 함께 진행해보세요!" ];
+  } else {
+    wordings.contents.description = [ "홈리에종은 일단 시공 견적을 드리는 것이 아니라 디자이너의 인건비 개념인 디자인비를 먼저 받는 구조로 되어 있습니다. 우리집을 담당해 줄 전문가를 만나 함께 진행해보세요!" ];
   }
 
   whiteBlock = createNode({
@@ -4785,7 +4810,7 @@ StyleCurationJs.prototype.insertSecondService = function () {
       fontSize: String(titleFont) + ea,
       fontWeight: String(titleFontWeight),
       wordSpacing: String(wordSpacing) + "px",
-      top: desktop ? (String((media[0] ? 0 : media[1] ? 1 : 3) + (isMac() || mobile ? 0 : 4)) + ea) : String(9) + ea,
+      top: desktop ? (String((media[0] ? 0 : media[1] ? 0 : 0) + (isMac() || mobile ? 0 : 4)) + ea) : String(9) + ea,
       left: String(titleLeft) + ea,
       color: colorChip.black,
       width: desktop ? "" : String(100) + '%',
@@ -4804,7 +4829,7 @@ StyleCurationJs.prototype.insertSecondService = function () {
       top: String(titleSecondTop) + ea,
       left: String(titleSecondLeft) + ea,
       width: desktop ? "" : String(100) + '%',
-      textAlign: desktop ? "right" : "center",
+      textAlign: desktop ? (media[0] ? "right" : "left") : "center",
       color: colorChip.black,
       lineHeight: String(1.35),
     }
@@ -4812,16 +4837,18 @@ StyleCurationJs.prototype.insertSecondService = function () {
 
   if (desktop) {
 
-    createNode({
-      mother: leftBox,
-      style: {
-        position: "absolute",
-        borderBottom: "1px solid " + colorChip.green,
-        top: String(barTop) + ea,
-        left: String(titleLeft) + ea,
-        width: String(barWidth) + ea,
-      }
-    });
+    if (media[0]) {
+      createNode({
+        mother: leftBox,
+        style: {
+          position: "absolute",
+          borderBottom: "1px solid " + colorChip.green,
+          top: String(barTop) + ea,
+          left: String(titleLeft) + ea,
+          width: String(barWidth) + ea,
+        }
+      });
+    }
 
     createNode({
       mother: leftBox,
@@ -4873,7 +4900,7 @@ StyleCurationJs.prototype.insertSecondService = function () {
       height: String(grayBoxHeight) + ea,
       width: String(grayBoxWidth) + ea,
       backgroundImage: "url('" + StyleCurationJs.binaryPath + "/3dsample.jpg" + "')",
-      backgroundSize: "100% auto",
+      backgroundSize: (media[2] || media[3]) ? "auto 100%" : "100% auto",
       backgroundPosition: "50% 50%",
       borderRadius: String(5) + "px",
       boxShadow: "5px 2px 21px -9px " + colorChip.shadow,
@@ -5041,6 +5068,141 @@ StyleCurationJs.prototype.insertSecondService = function () {
 
 }
 
+StyleCurationJs.prototype.insertPendingProposal = function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
+  const { client, ea, media, osException, testMode } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  let whiteBlock;
+  let bottomMargin;
+  let margin;
+  let leftRatio;
+  let textBoxHeight, textBoxSize;
+  let wording, wording2;
+  let quotePaddingTop, quoteMarginBottom;
+  let quoteWidth;
+  let titleSize;
+  let subTitleSize;
+  let subTitlePaddingTop, subTitlePaddingBottom;
+
+  bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
+  margin = <%% 52, 52, 44, 32, 52 %%>;
+  leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
+
+  textBoxHeight = <%% 90, 90, 90, 90, 90 %%>;
+  textBoxSize = <%% 17, 17, 17, 17, 17 %%>;
+
+  quotePaddingTop = <%% 60, 60, 60, 60, 60 %%>;
+  quoteMarginBottom = <%% 5, 5, 5, 5, 5 %%>;
+  quoteWidth = <%% 20, 20, 20, 16, 20 %%>;
+
+  titleSize = <%% 30, 30, 29, 27, 30 %%>;
+  subTitleSize = <%% 14, 14, 14, 14, 14 %%>;
+  subTitlePaddingTop = <%% 8, 8, 8, 8, 8 %%>;
+  subTitlePaddingBottom = <%% 80, 80, 80, 80, 80 %%>;
+
+  wording = "제안서가 완료되는 대로,\n<b%알림톡을 통해 보내드리겠습니다.%b>";
+  wording2 = "제안서 제작에는 영업일 기준 1~2일 정도 소요될 수 있습니다.";
+
+  whiteBlock = createNode({
+    mother: this.baseTong,
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      background: colorChip.white,
+      marginBottom: String(bottomMargin) + ea,
+      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+    }
+  });
+
+  createNode({
+    mother: whiteBlock,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: desktop ? withOut(margin * 2, ea) : String(100) + '%',
+      paddingTop: String(quotePaddingTop) + ea,
+      marginLeft: desktop ? String(margin) + ea : "",
+      marginBottom: String(quoteMarginBottom) + ea,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    children: [
+      {
+        mode: "svg",
+        source: svgMaker.doubleQuote(colorChip.green),
+        style: {
+          position: "relative",
+          width: String(quoteWidth) + ea,
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: whiteBlock,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: desktop ? withOut(margin * 2, ea) : String(100) + '%',
+      marginLeft: desktop ? String(margin) + ea : "",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    children: [
+      {
+        text: wording,
+        style: {
+          position: "relative",
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(300),
+          color: colorChip.black,
+          textAlign: "center",
+          lineHeight: String(1.4),
+        },
+        bold: {
+          fontWeight: String(600),
+          color: colorChip.black,
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: whiteBlock,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: desktop ? withOut(margin * 2, ea) : String(100) + '%',
+      marginLeft: desktop ? String(margin) + ea : "",
+      justifyContent: "center",
+      alignItems: "center",
+      paddingTop: String(subTitlePaddingTop) + ea,
+      paddingBottom: String(subTitlePaddingBottom) + ea,
+    },
+    children: [
+      {
+        text: wording2,
+        style: {
+          position: "relative",
+          fontSize: String(subTitleSize) + ea,
+          fontWeight: String(300),
+          color: colorChip.black,
+          textAlign: "center",
+          lineHeight: String(1.6),
+        },
+        bold: {
+          fontWeight: String(600),
+          color: colorChip.black,
+        }
+      }
+    ]
+  });
+
+}
+
 StyleCurationJs.prototype.insertCenterBox = function () {
   const instance = this;
   const { client, ea, baseTong, media } = this;
@@ -5107,15 +5269,17 @@ StyleCurationJs.prototype.insertCenterBox = function () {
     },
     children: [
       {
-        display: "block",
-        position: "relative",
-        width: desktop ? withOut(margin * 2, ea) : String(100) + '%',
-        height: String(100) + '%',
-        marginLeft: String(desktop ? margin : 0) + ea,
+        style: {
+          display: "block",
+          position: "relative",
+          width: desktop ? withOut(margin * 2, ea) : String(100) + '%',
+          height: String(100) + '%',
+          marginLeft: String(desktop ? margin : 0) + ea,
+        }
       }
     ]
   });
-  whiteTong = whiteBlock.firstChild;
+  whiteTong = whiteBlock.children[0];
 
   num = 1;
   for (let { name, contents } of wordings) {
@@ -6942,7 +7106,7 @@ StyleCurationJs.prototype.serviceConverting = async function (seridObj) {
     GeneralJs.setTimeout(() => {
       baseTong.style.opacity = String(0);
       cleanChildren(baseTong);
-      instance.insertInitBox();
+      instance.insertPendingProposal();
       instance.insertServiceBox(seridObj);
       instance.insertAdditionBox();
       baseTong.style.height = "";
@@ -6962,7 +7126,9 @@ StyleCurationJs.prototype.forceConverting = async function () {
     if (Array.isArray(clientHistory.curation.analytics.send)) {
       if (clientHistory.curation.analytics.send.length > 0) {
         if (clientHistory.curation.analytics.send.every((o) => { return typeof o === "object"; })) {
+
           let boo, feeArr, thisProjects, thisProject, finalSerid;
+
           boo = false;
           for (let obj of clientHistory.curation.analytics.send) {
             if (obj.page === "designerProposal") {
@@ -6970,6 +7136,7 @@ StyleCurationJs.prototype.forceConverting = async function () {
               break;
             }
           }
+
           if (boo) {
             thisProjects = await ajaxJson({ noFlat: true, whereQuery: { cliid: client.cliid } }, "/getProjects", { equal: true });
             if (thisProjects.length > 0) {
