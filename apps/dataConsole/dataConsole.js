@@ -645,7 +645,7 @@ DataConsole.prototype.setBinary = async function () {
   }
 }
 
-DataConsole.prototype.connect = async function (noStatic = false) {
+DataConsole.prototype.connect = async function () {
   const instance = this;
   const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, errorLog } = this.mother;
   const PORT = 3000;

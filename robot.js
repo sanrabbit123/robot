@@ -350,8 +350,8 @@ Robot.prototype.frontUpdate = async function (testMode) {
 
 Robot.prototype.playgroundConnect = async function () {
   try {
-    const GtagPlayground = require(process.cwd() + "/apps/gtagPlayground/gtagPlayground.js");
-    const app = new GtagPlayground();
+    const LogConsole = require(process.cwd() + "/apps/logConsole/logConsole.js");
+    const app = new LogConsole();
     await app.playgroundConnect();
   } catch (e) {
     console.log(e);
@@ -1243,7 +1243,7 @@ const MENU = {
       console.log(e);
     }
   },
-  playgroundConnect: async function () {
+  log: async function () {
     try {
       await robot.playgroundConnect();
     } catch (e) {
