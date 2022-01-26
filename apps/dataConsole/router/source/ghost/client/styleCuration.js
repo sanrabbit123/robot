@@ -4028,7 +4028,7 @@ StyleCurationJs.prototype.insertFirstService = function () {
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
 
   barWidth = <%% 106, 106, 106, 106, 19.5 %%>;
-  barTop = <%% 73, 73, 73, 73, 10.5 %%>;
+  barTop = <%% (isMac() ? 73 : 71), (isMac() ? 73 : 71), (isMac() ? 73 : 71), (isMac() ? 73 : 71), 10.5 %%>;
   barLeft = 12;
 
   indexFont = <%% 19, 19, 19, 19, 5.7 %%>;
@@ -4086,7 +4086,7 @@ StyleCurationJs.prototype.insertFirstService = function () {
   contentsBlockHeightArrow = contentsBlockHeight + contentsBlockMarginTop - (contentsBlockMarginTopArrow * 2);
 
   contentsBlockSize = <%% 12, 12, 12, 12, 2.8 %%>;
-  contentsBlockBottom = <%% 12.5, 12.5, 12.5, 12.5, 3 %%>;
+  contentsBlockBottom = <%% (isMac() ? 12.5 : 10.5), (isMac() ? 12.5 : 10.5), (isMac() ? 12.5 : 10.5), (isMac() ? 12.5 : 10.5), 3 %%>;
 
   descriptionHeight = <%% 60, 60, 60, 60, 6 %%>;
   descriptionMarginTop = <%% 45, 45, 45, 35, 4 %%>;
@@ -4751,7 +4751,7 @@ StyleCurationJs.prototype.insertSecondService = function () {
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
 
   barWidth = <%% 106, 106, 106, 106, 24 %%>;
-  barTop = <%% 73, 73, 73, 73, 10.5 %%>;
+  barTop = <%% (isMac() ? 73 : 71), (isMac() ? 73 : 71), (isMac() ? 73 : 71), (isMac() ? 73 : 71), 10.5 %%>;
   barLeft = 12.5;
 
   indexFont = <%% 19, 19, 19, 19, 5.7 %%>;
