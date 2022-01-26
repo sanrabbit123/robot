@@ -671,7 +671,7 @@ DataConsole.prototype.connect = async function (noStatic = false) {
       throw new Error("invalid address");
     }
     console.log(``);
-    console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching console in ${name} ${isTest ? " (test) " : ""}==============`);
+    console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching console in ${name} ${isTest ? "(test mode) " : ""}==============`);
     console.log(``);
 
     //set mongo connetion
