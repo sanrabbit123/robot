@@ -4616,6 +4616,7 @@ StyleCurationJs.prototype.insertFirstService = function () {
               textAlign: "center",
               left: String(0),
               bottom: desktop ? String(contentsBlockBottom) + ea : "",
+              top: desktop ? "" : String(0.2) + ea,
               fontSize: String(contentsBlockSize) + ea,
               fontWeight: String(500),
               color: colorChip.shadow
@@ -4648,6 +4649,7 @@ StyleCurationJs.prototype.insertFirstService = function () {
               textAlign: "center",
               left: String(0),
               bottom: desktop ? String(contentsBlockBottom) + ea : "",
+              top: desktop ? "" : String(0.5) + ea,
               fontSize: String(contentsBlockSize) + ea,
               fontWeight: String(500),
               color: colorChip.shadow
