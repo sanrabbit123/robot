@@ -4565,6 +4565,9 @@ StyleCurationJs.prototype.insertFirstService = function () {
       },
       {
         style: {
+          display: desktop ? "block" : "flex",
+          justifyContent: desktop ? "" : "center",
+          alignItems: desktop ? "" : "center",
           position: "relative",
           width: String(100) + '%',
           height: String(contentsBlockHeight) + ea,
@@ -4576,11 +4579,11 @@ StyleCurationJs.prototype.insertFirstService = function () {
           {
             text: wordings.box.etc[0],
             style: {
-              position: "absolute",
+              position: desktop ? "absolute" : "relative",
               width: String(100) + '%',
               textAlign: "center",
               left: String(0),
-              bottom: String(contentsBlockBottom) + ea,
+              bottom: desktop ? String(contentsBlockBottom) + ea : "",
               fontSize: String(contentsBlockSize) + ea,
               fontWeight: String(500),
               color: colorChip.shadow
@@ -4594,6 +4597,9 @@ StyleCurationJs.prototype.insertFirstService = function () {
       },
       {
         style: {
+          display: desktop ? "block" : "flex",
+          justifyContent: desktop ? "" : "center",
+          alignItems: desktop ? "" : "center",
           position: "relative",
           width: String(100) + '%',
           height: String(contentsBlockHeight) + ea,
@@ -4605,11 +4611,11 @@ StyleCurationJs.prototype.insertFirstService = function () {
           {
             text: wordings.box.etc[1],
             style: {
-              position: "absolute",
+              position: desktop ? "absolute" : "relative",
               width: String(100) + '%',
               textAlign: "center",
               left: String(0),
-              bottom: String(contentsBlockBottom) + ea,
+              bottom: desktop ? String(contentsBlockBottom) + ea : "",
               fontSize: String(contentsBlockSize) + ea,
               fontWeight: String(500),
               color: colorChip.shadow
@@ -4623,6 +4629,9 @@ StyleCurationJs.prototype.insertFirstService = function () {
       },
       {
         style: {
+          display: desktop ? "block" : "flex",
+          justifyContent: desktop ? "" : "center",
+          alignItems: desktop ? "" : "center",
           position: "relative",
           width: String(100) + '%',
           height: String(contentsBlockHeight) + ea,
@@ -4634,11 +4643,11 @@ StyleCurationJs.prototype.insertFirstService = function () {
           {
             text: wordings.box.etc[2],
             style: {
-              position: "absolute",
+              position: desktop ? "absolute" : "relative",
               width: String(100) + '%',
               textAlign: "center",
               left: String(0),
-              bottom: String(contentsBlockBottom) + ea,
+              bottom: desktop ? String(contentsBlockBottom) + ea : "",
               fontSize: String(contentsBlockSize) + ea,
               fontWeight: String(500),
               color: colorChip.shadow
