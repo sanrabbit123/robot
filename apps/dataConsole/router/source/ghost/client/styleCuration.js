@@ -3389,6 +3389,8 @@ StyleCurationJs.prototype.insertInitBox = function () {
   let grayInnerWordingWeight;
   let grayInnerWordingTextTop;
   let grayUpWordings, grayDownWordings;
+  let mobileGrayUpHeight;
+  let mobileRightBoxHeight;
 
   blockHeight = <%% this.backHeight - 460, this.backHeight - 470, this.backHeight - 490, this.backHeight - 540, this.backHeight - 460 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
@@ -3419,41 +3421,41 @@ StyleCurationJs.prototype.insertInitBox = function () {
 
   indexNumberBottom = <%% 3, 4, 6, 4, 0 %%>;
 
-  grayBoxMarginTop = <%% 102, 96, 92, 79, 10 %%>;
+  grayBoxMarginTop = <%% 102, 96, 92, 79, 33 %%>;
 
-  grayBoxTitleSize = <%% 14, 14, 13, 11, 3 %%>;
+  grayBoxTitleSize = <%% 14, 14, 13, 11, 3.2 %%>;
   grayBoxTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
-  grayBoxTitleTop = <%% 36, 36, 36, 20, 3 %%>;
-  grayBoxTitleLeft = <%% 40, 32, 30, 16, 40 %%>;
-  grayBoxHeight = <%% 36, 36, 34, 28, 36 %%>;
-  grayBoxTop = <%% 30, 30, 30, 15, 30 %%>;
+  grayBoxTitleTop = <%% 36, 36, 36, 20, 0 %%>;
+  grayBoxTitleLeft = <%% 40, 32, 30, 16, 6 %%>;
+  grayBoxHeight = <%% 36, 36, 34, 28, 7 %%>;
+  grayBoxTop = <%% 30, 30, 30, 15, 6.6 %%>;
 
+  grayBoxUpWidth0 = <%% 280, 180, 140, 120, 24 %%>;
+  grayBoxUpWidth1 = <%% 230, 160, 130, 110, 24 %%>;
+  grayBoxUpWidth2 = <%% 72, 72, 72, 72, 9 %%>;
+  grayBoxUpWidth3 = <%% 130, 112, 108, 90, 20 %%>;
 
-  grayBoxUpWidth0 = <%% 280, 180, 140, 120, 28 %%>;
-  grayBoxUpWidth1 = <%% 230, 160, 130, 110, 23 %%>;
-  grayBoxUpWidth2 = <%% 72, 72, 72, 72, 7 %%>;
-  grayBoxUpWidth3 = <%% 130, 112, 108, 90, 13 %%>;
-
-  grayBoxUpRight1 = <%% 310, 200, 160, 125, 31 %%>;
-  grayBoxUpRight2 = <%% 550, 370, 300, 244, 55 %%>;
+  grayBoxUpRight1 = <%% 310, 200, 160, 125, 28.5 %%>;
+  grayBoxUpRight2 = <%% 550, 370, 300, 244, 54 %%>;
   grayBoxUpRight3 = <%% 622, 422, 341, 285, 62 %%>;
 
-  grayBoxDownWidth0 = <%% 280, 242, 195, 175, 28 %%>;
-  grayBoxDownWidth1 = <%% 277, 170, 142, 120, 27 %%>;
-  grayBoxDownWidth2 = <%% 175, 112, 108, 90, 13 %%>;
+  grayBoxDownWidth0 = <%% 280, 242, 195, 175, 30 %%>;
+  grayBoxDownWidth1 = <%% 277, 170, 142, 120, 29 %%>;
+  grayBoxDownWidth2 = <%% 175, 112, 108, 90, 20 %%>;
 
-  grayBoxDownRight1 = <%% 310, 264, 210, 179, 31 %%>;
-  grayBoxDownRight2 = <%% 577, 422, 341, 285, 57 %%>;
+  grayBoxDownRight1 = <%% 310, 264, 210, 179, 34 %%>;
+  grayBoxDownRight2 = <%% 577, 422, 341, 285, 62 %%>;
 
+  grayBoxArrowTop = <%% 42, 42, 42, 24, 8.8 %%>;
+  grayBoxArrowHeight = <%% 11, 11, 11, 9, 2 %%>;
 
-
-  grayBoxArrowTop = <%% 42, 42, 42, 24, 42 %%>;
-  grayBoxArrowHeight = <%% 11, 11, 11, 9, 11 %%>;
-
-  overlappingWidth = <%% 10, 10, 10, 10, 10 %%>;
+  overlappingWidth = <%% 10, 10, 10, 10, 0 %%>;
   grayInnerWordingSize = <%% 13, 13, 13, 11, 2.8 %%>;
-  grayInnerWordingTextTop = -1;
+  grayInnerWordingTextTop = desktop ? -1 : -0.1;
   grayInnerWordingWeight = 600;
+
+  mobileGrayUpHeight = 18;
+  mobileRightBoxHeight = 78;
 
   grayUpWordings = [ "프로세스", "후 시공 / 구매", "선 디자인 / 기획", "디자이너 선택" ];
   grayDownWordings = [ "비용 구성", "시공 비용", "구매 비용", "디자인비" ];
@@ -3503,7 +3505,7 @@ StyleCurationJs.prototype.insertInitBox = function () {
   //main title
   createNode({
     mother: leftBox,
-    text: (media[0] || media[4]) ? "홈리에종 진행 프로세스와" : "홈리에종의",
+    text: desktop ? ((media[0] || media[4]) ? "홈리에종 진행 프로세스와" : "홈리에종의") : "홈리에종 프로세스와",
     style: {
       position: "absolute",
       fontSize: String(titleFont) + ea,
@@ -3588,7 +3590,7 @@ StyleCurationJs.prototype.insertInitBox = function () {
       verticalAlign: "top",
       top: String(0) + ea,
       width: desktop ? "calc(calc(100% - " + String(margin * 2) + ea + ") * " + String(1 - leftRatio) + ")" : String(100) + '%',
-      height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : String(80) + ea,
+      height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : String(mobileRightBoxHeight) + ea,
       marginTop: desktop ? String(margin) + ea : "",
       marginBottom: desktop ? String(margin) + ea : "",
       marginRight: desktop ? String(margin) + ea : "",
@@ -3617,7 +3619,7 @@ StyleCurationJs.prototype.insertInitBox = function () {
       top: String(desktop ? quoteTop + quoteHeight + quoteMarginBottom : 3.7) + ea,
       left: String(desktop ? 0 : 13) + ea,
       width: String(desktop ? 100 : 74) + '%',
-      height: String(initWordingHeight) + ea,
+      height: desktop ? String(initWordingHeight) + ea : "",
       fontSize: String(initWordingSize) + ea,
       fontWeight: String(400),
       color: colorChip.black,
@@ -3635,7 +3637,7 @@ StyleCurationJs.prototype.insertInitBox = function () {
       top: String(desktop ? quoteTop + quoteHeight + quoteMarginBottom + initWordingSize + initWordingLineHeight : 15.5) + ea,
       left: String(desktop ? 0 : 11) + ea,
       width: String(desktop ? 100 : 78) + '%',
-      height: String(initWordingHeight) + ea,
+      height: desktop ? String(initWordingHeight) + ea : "",
       fontSize: String(initWordingSize) + ea,
       fontWeight: String(400),
       color: colorChip.black,
@@ -3654,7 +3656,8 @@ StyleCurationJs.prototype.insertInitBox = function () {
     style: {
       display: "block",
       position: "relative",
-      marginTop: String(grayBoxMarginTop) + ea,
+      marginTop: desktop ? String(grayBoxMarginTop) + ea : "",
+      paddingTop: desktop ? "" : String(grayBoxMarginTop) + ea,
       height: withOut(grayBoxMarginTop, ea),
       width: withOut(0, ea),
       borderRadius: String(5) + "px",
@@ -3667,9 +3670,9 @@ StyleCurationJs.prototype.insertInitBox = function () {
     style: {
       display: "block",
       position: "relative",
-      height: String(50) + '%',
+      height: desktop ? String(50) + '%' : String(mobileGrayUpHeight) + ea,
       width: String(100) + '%',
-      background: colorChip.gray0,
+      background: desktop ? colorChip.gray0 : "",
     },
     children: [
       {
@@ -3678,9 +3681,11 @@ StyleCurationJs.prototype.insertInitBox = function () {
           position: "absolute",
           fontSize: String(grayBoxTitleSize) + ea,
           fontWeight: String(grayBoxTitleWeight),
-          color: colorChip.black,
+          color: desktop ? colorChip.black : colorChip.green,
           top: String(grayBoxTitleTop) + ea,
           left: String(grayBoxTitleLeft) + ea,
+          width: desktop ? "" : withOut(grayBoxTitleLeft * 2, ea),
+          textAlign: desktop ? "" : "center",
         }
       }
     ]
@@ -3722,7 +3727,7 @@ StyleCurationJs.prototype.insertInitBox = function () {
         ]
       }
     ]
-  })
+  });
 
   createNode({
     mother: grayBoxUp,
@@ -3761,7 +3766,7 @@ StyleCurationJs.prototype.insertInitBox = function () {
         ]
       }
     ]
-  })
+  });
 
   createNode({
     mother: grayBoxUp,
@@ -3786,7 +3791,7 @@ StyleCurationJs.prototype.insertInitBox = function () {
       width: String(grayBoxUpWidth3) + ea,
       background: colorChip.white,
       borderRadius: String(5) + "px",
-      boxShadow: "3px 2px 13px -9px " + colorChip.shadow,
+      boxShadow: String(desktop ? 3 : 0) + "px 2px " + String(desktop ? 13 : 18) + "px -9px " + colorChip.shadow,
     },
     children: [
       {
@@ -3813,16 +3818,16 @@ StyleCurationJs.prototype.insertInitBox = function () {
         ]
       }
     ]
-  })
+  });
 
   grayBoxDown = createNode({
     mother: grayBox,
     style: {
       display: "block",
       position: "relative",
-      height: String(50) + '%',
+      height: desktop ? String(50) + '%' : String(mobileGrayUpHeight) + ea,
       width: String(100) + '%',
-      background: colorChip.gray3,
+      background: desktop ? colorChip.gray3 : "",
     },
     children: [
       {
@@ -3831,9 +3836,11 @@ StyleCurationJs.prototype.insertInitBox = function () {
           position: "absolute",
           fontSize: String(grayBoxTitleSize) + ea,
           fontWeight: String(grayBoxTitleWeight),
-          color: colorChip.black,
+          color: desktop ? colorChip.black : colorChip.green,
           top: String(grayBoxTitleTop) + ea,
           left: String(grayBoxTitleLeft) + ea,
+          width: desktop ? "" : withOut(grayBoxTitleLeft * 2, ea),
+          textAlign: desktop ? "" : "center",
         }
       }
     ]
@@ -3998,90 +4005,107 @@ StyleCurationJs.prototype.insertFirstService = function () {
   let descriptionTitleWeight;
   let contentsBlockSize, contentsBlockBottom;
   let wordings;
+  let mobileTitleLeft;
+  let mobileTitleTop;
+  let mobileTitleMarginBottom;
+  let barLeft;
+  let circleLeft4, circleLeft5;
+  let mobileRightBoxPaddingTop;
+  let whiteBlockPaddingBottom;
 
-  blockHeight = <%% 645, 645, 620, 533, 60 %%>;
+  blockHeight = <%% 645, 645, 620, 533, 160 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
   margin = <%% 52, 52, 44, 32, 52 %%>;
   leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
 
   titleFont = <%% 31, 28, 25, 22, 5.7 %%>;
-  titleLeft = <%% 6, 6, 6, 6, 0 %%>;
+  titleLeft = <%% 6, 6, 6, 6, 6 %%>;
   titleFontWeight = <%% 600, 600, 600, 600, 600 %%>;
-  titleSecondTop = <%% 55, 50, 44, 39, 5 %%>;
-  titleSecondLeft = <%% 125, 6, 6, 6, 0 %%>;
+  titleSecondTop = <%% 55, 50, 44, 39, 2 %%>;
+  titleSecondLeft = <%% 125, 6, 6, 6, 6 %%>;
   titleSecondWeight = <%% 200, 200, 200, 200, 200 %%>;
 
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
 
-  barWidth = <%% 106, 106, 106, 106, 10 %%>;
-  barTop = <%% 73, 73, 73, 73, 7 %%>;
+  barWidth = <%% 106, 106, 106, 106, 19.5 %%>;
+  barTop = <%% 73, 73, 73, 73, 10.5 %%>;
+  barLeft = 12;
 
-  indexFont = <%% 19, 19, 19, 19, 19 %%>;
+  indexFont = <%% 19, 19, 19, 19, 5.7 %%>;
   indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
 
   indexNumberBottom = <%% 7, 4, 2, 2, 0 %%>;
 
-  circleWidth0 = <%% 72, 72, 72, 60, 7 %%>;
-  circleWidth1 = <%% 90, 90, 90, 80, 9 %%>;
-  circleWidth2 = <%% 120, 120, 120, 108, 12 %%>;
-  circleWidth3 = <%% 108, 108, 108, 100, 10 %%>;
+  circleWidth0 = <%% 72, 72, 72, 60, 12 %%>;
+  circleWidth1 = <%% 90, 90, 90, 80, 18 %%>;
+  circleWidth2 = <%% 120, 120, 120, 108, 0 %%>;
+  circleWidth3 = <%% 108, 108, 108, 100, 24 %%>;
 
-  circleLeft0 = <%% 162, 162, 162, 138, 162 %%>;
-  circleLeft1 = <%% 63, 63, 63, 56, 63 %%>;
+  circleLeft0 = <%% 162, 162, 162, 138, 6 %%>;
+  circleLeft1 = <%% 63, 63, 63, 56, 14 %%>;
   circleLeft2 = <%% 0, 0, 0, 0, 0 %%>;
-  circleLeft3 = <%% 7, 7, 7, 5, 7 %%>;
+  circleLeft3 = <%% 7, 7, 7, 5, 32 %%>;
 
-  circleTop0 = <%% 0, 0, 0, 0, 0 %%>;
-  circleTop1 = <%% 58, 58, 58, 48, 58 %%>;
-  circleTop2 = <%% 158, 158, 158, 138, 158 %%>;
-  circleTop3 = <%% 165, 165, 165, 143, 165 %%>;
+  circleLeft4 = 56.5;
+  circleLeft5 = 70.5;
 
-  circleTextTop0 = <%% 24, 24, 24, 24, 24 %%>;
-  circleTextTop1 = <%% 34, 34, 34, 34, 34 %%>;
-  circleTextTop3 = <%% 38, 38, 38, 36, 38 %%>;
+  circleTop0 = <%% 0, 0, 0, 0, 31 %%>;
+  circleTop1 = <%% 58, 58, 58, 48, 14 %%>;
+  circleTop2 = <%% 158, 158, 158, 138, 0 %%>;
+  circleTop3 = <%% 165, 165, 165, 143, 0 %%>;
 
-  circleTextLeft0 = <%% 85, 85, 85, 85, 85 %%>;
-  circleTextLeft1 = <%% 103, 103, 103, 103, 103 %%>;
-  circleTextLeft3 = <%% 128, 128, 128, 115, 128 %%>;
+  circleTextTop0 = <%% 24, 24, 24, 24, 25 %%>;
+  circleTextTop1 = <%% 34, 34, 34, 34, 25 %%>;
+  circleTextTop3 = <%% 38, 38, 38, 36, 25 %%>;
 
-  circleTextSize0 = <%% 10, 10, 10, 10, 10 %%>;
-  circleTextSize1 = <%% 13, 13, 13, 13, 13 %%>;
-  circleTextSize3 = <%% 15, 15, 15, 14, 15 %%>;
+  circleTextLeft0 = <%% 85, 85, 85, 85, 0 %%>;
+  circleTextLeft1 = <%% 103, 103, 103, 103, 0 %%>;
+  circleTextLeft3 = <%% 128, 128, 128, 115, 0 %%>;
 
-  circleTextWidth = <%% 100, 100, 100, 100, 100 %%>;
+  circleTextSize0 = <%% 10, 10, 10, 10, 2.7 %%>;
+  circleTextSize1 = <%% 13, 13, 13, 13, 2.7 %%>;
+  circleTextSize3 = <%% 15, 15, 15, 14, 2.7 %%>;
+
+  circleTextWidth = <%% 100, 100, 100, 100, 24 %%>;
   circleTextWeight = <%% 300, 300, 300, 300, 300 %%>;
   circleTextFocus = <%% 500, 500, 500, 500, 500 %%>;
 
-  circleArrowWidth = <%% 110, 82, 26, 15, 11 %%>;
-  circlrArrowHeight = <%% 14, 14, 12, 9, 14 %%>;
-  circleArrowTop = <%% 207, 207, 208, 184, 207 %%>;
-  circlrArrowLeft = <%% 225, 225, 225, 200, 225 %%>;
+  circleArrowWidth = <%% 110, 82, 26, 15, 2 %%>;
+  circlrArrowHeight = <%% 14, 14, 12, 9, 12 %%>;
+  circleArrowTop = <%% 207, 207, 208, 184, 30 %%>;
+  circlrArrowLeft = <%% 225, 225, 225, 200, 43 %%>;
 
-  contentsBoxLeft = <%% 350, 322, 266, 226, 32 %%>;
-  contentsBoxPadding = <%% 20, 20, 20, 10, 20 %%>;
+  contentsBoxLeft = <%% 350, 322, 266, 226, 6 %%>;
+  contentsBoxPadding = <%% 20, 20, 20, 10, 3 %%>;
 
-  contentsWhiteHeight = <%% 212, 212, 212, 182, 21 %%>;
-  contentsBlockHeight = <%% 40, 40, 40, 40, 40 %%>;
-  contentsBlockMarginTop = <%% 8, 8, 8, 8, 8 %%>;
-  contentsBlockMarginTopArrow = <%% 11, 11, 11, 11, 11 %%>;
-  contentsBlockArrowWidth = <%% 12, 12, 12, 10, 12 %%>;
+  contentsWhiteHeight = <%% 212, 212, 212, 182, 38 %%>;
+  contentsBlockHeight = <%% 40, 40, 40, 40, 9 %%>;
+  contentsBlockMarginTop = <%% 8, 8, 8, 8, 1 %%>;
+  contentsBlockMarginTopArrow = <%% 11, 11, 11, 11, 2 %%>;
+  contentsBlockArrowWidth = <%% 12, 12, 12, 10, 2 %%>;
   contentsBlockHeightArrow = contentsBlockHeight + contentsBlockMarginTop - (contentsBlockMarginTopArrow * 2);
 
-  contentsBlockSize = <%% 12, 12, 12, 12, 12 %%>;
-  contentsBlockBottom = <%% 12.5, 12.5, 12.5, 12.5, 12.5 %%>;
+  contentsBlockSize = <%% 12, 12, 12, 12, 2.8 %%>;
+  contentsBlockBottom = <%% 12.5, 12.5, 12.5, 12.5, 3 %%>;
 
   descriptionHeight = <%% 60, 60, 60, 60, 6 %%>;
   descriptionMarginTop = <%% 45, 45, 45, 35, 4 %%>;
-  descriptionTitleWidth = <%% 90, 90, 90, 72, 9 %%>;
-  descriptionTitleMargin = <%% 40, 40, 30, 3, 4 %%>;
-  descriptionSize = <%% 15, 15, 14, 13, 1 %%>;
-  descriptionWeight = 300;
+  descriptionTitleWidth = <%% 90, 90, 90, 72, 6 %%>;
+  descriptionTitleMargin = <%% 40, 40, 30, 3, 6 %%>;
+  descriptionSize = <%% 15, 15, 14, 13, 3 %%>;
+  descriptionWeight = desktop ? 300 : 400;
   descriptionLineHeight = 1.6;
   descriptionTitleWeight = 700;
 
+  mobileTitleLeft = 7;
+  mobileTitleTop = 7;
+  mobileTitleMarginBottom = 7;
+  mobileRightBoxPaddingTop = 48.5;
+  whiteBlockPaddingBottom = 9;
+
   wordings = {
     title: {
-      main: "디자이너를 먼저 선택,",
+      main: desktop ? "디자이너를 먼저 선택," : "디자이너를 먼저 선택",
       sub: [
         "디자이너와 함께",
         "<b%선%b> 기획 <b%후%b> 시공"
@@ -4128,10 +4152,11 @@ StyleCurationJs.prototype.insertFirstService = function () {
       position: "relative",
       borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
-      height: String(blockHeight) + ea,
+      height: desktop ? String(blockHeight) + ea : "",
       background: colorChip.white,
       marginBottom: String(bottomMargin) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      paddingBottom: desktop ? "" : String(whiteBlockPaddingBottom) + ea,
     }
   });
 
@@ -4141,9 +4166,9 @@ StyleCurationJs.prototype.insertFirstService = function () {
       display: desktop ? "inline-block" : "block",
       position: "relative",
       width: desktop ? "calc(calc(100% - " + String(margin * 2) + ea + ") * " + String(leftRatio) + ")" : String(100) + '%',
-      height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : String(29) + ea,
+      height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : "",
       marginTop: desktop ? String(margin) + ea : "",
-      marginBottom: desktop ? String(margin) + ea : "",
+      marginBottom: desktop ? String(margin) + ea : String(mobileTitleMarginBottom) + ea,
       marginLeft: desktop ? String(margin) + ea : "",
     }
   });
@@ -4153,15 +4178,17 @@ StyleCurationJs.prototype.insertFirstService = function () {
     mother: leftBox,
     text: wordings.title.main,
     style: {
-      position: "absolute",
+      position: desktop ? "absolute" : "relative",
       fontSize: String(titleFont) + ea,
       fontWeight: String(titleFontWeight),
       wordSpacing: String(wordSpacing) + "px",
-      top: desktop ? (String((media[0] ? 0 : media[1] ? 0 : 0) + (isMac() || mobile ? 0 : 4)) + ea) : String(9) + ea,
-      left: String(titleLeft) + ea,
+      top: desktop ? (String((media[0] ? 0 : media[1] ? 0 : 0) + (isMac() || mobile ? 0 : 4)) + ea) : "",
+      paddingTop: desktop ? "" : String(mobileTitleTop) + ea,
+      left: desktop ? String(titleLeft) + ea : "",
+      marginLeft: desktop ? "" : String(mobileTitleLeft) + ea,
       color: colorChip.black,
-      width: desktop ? "" : String(100) + '%',
-      textAlign: desktop ? "" : "center",
+      width: desktop ? "" : withOut(mobileTitleLeft * 2, ea),
+      textAlign: desktop ? "" : "right",
     }
   });
 
@@ -4169,16 +4196,18 @@ StyleCurationJs.prototype.insertFirstService = function () {
     mother: leftBox,
     text: wordings.title.sub.join("\n"),
     style: {
-      position: "absolute",
+      position: desktop ? "absolute" : "relative",
       fontSize: String(titleFont) + ea,
       fontWeight: String(titleSecondWeight),
       wordSpacing: String(wordSpacing) + "px",
-      top: String(titleSecondTop) + ea,
-      left: String(titleSecondLeft) + ea,
-      width: desktop ? "" : String(100) + '%',
-      textAlign: desktop ? (media[0] ? "right" : "left") : "center",
+      top: desktop ? String(titleSecondTop) + ea : "",
+      marginTop: desktop ? "" : String(titleSecondTop) + ea,
+      left: desktop ? String(titleSecondLeft) + ea : "",
+      marginLeft: desktop ? "" : String(mobileTitleLeft) + ea,
+      width: desktop ? "" : withOut(mobileTitleLeft * 2, ea),
+      textAlign: desktop ? (media[0] ? "right" : "left") : "right",
       color: colorChip.black,
-      lineHeight: String(1.35),
+      lineHeight: String(desktop ? 1.35 : 1.3),
     },
     bold: {
       fontWeight: String(titleFontWeight),
@@ -4186,36 +4215,33 @@ StyleCurationJs.prototype.insertFirstService = function () {
     }
   });
 
-  if (desktop) {
-
-    if (media[0]) {
-      createNode({
-        mother: leftBox,
-        style: {
-          position: "absolute",
-          borderBottom: "1px solid " + colorChip.green,
-          top: String(barTop) + ea,
-          left: String(titleLeft) + ea,
-          width: String(barWidth) + ea,
-        }
-      });
-    }
-
+  if (media[0] || media[4]) {
     createNode({
       mother: leftBox,
-      text: String(1),
       style: {
         position: "absolute",
-        fontSize: String(indexFont) + ea,
-        fontWeight: String(indexFontWeight),
-        wordSpacing: String(wordSpacing) + ea,
-        bottom: String(indexNumberBottom) + ea,
-        left: String(titleLeft) + ea,
-        color: colorChip.gray4,
+        borderBottom: "1px " + (desktop ? "solid" : "dashed") + " " + (desktop ? colorChip.green : colorChip.whiteGreen),
+        top: String(barTop) + ea,
+        left: String(desktop ? titleLeft : barLeft) + ea,
+        width: String(barWidth) + ea,
       }
     });
-
   }
+
+  createNode({
+    mother: leftBox,
+    text: String(1),
+    style: {
+      position: "absolute",
+      fontSize: String(indexFont) + ea,
+      fontWeight: String(indexFontWeight),
+      wordSpacing: String(wordSpacing) + ea,
+      bottom: desktop ? String(indexNumberBottom) + ea : "",
+      top: desktop ? "" : String(mobileTitleTop) + ea,
+      left: desktop ? String(titleLeft) + ea : String(mobileTitleLeft) + ea,
+      color: desktop ? colorChip.gray4 : colorChip.black,
+    }
+  });
 
   rightBox = createNode({
     mother: whiteBlock,
@@ -4225,10 +4251,11 @@ StyleCurationJs.prototype.insertFirstService = function () {
       verticalAlign: "top",
       top: String(0) + ea,
       width: desktop ? "calc(calc(100% - " + String(margin * 2) + ea + ") * " + String(1 - leftRatio) + ")" : String(100) + '%',
-      height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : String(80) + ea,
+      height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : "",
       marginTop: desktop ? String(margin) + ea : "",
       marginBottom: desktop ? String(margin) + ea : "",
       marginRight: desktop ? String(margin) + ea : "",
+      paddingTop: desktop ? "" : String(mobileRightBoxPaddingTop) + ea,
     }
   });
 
@@ -4236,7 +4263,7 @@ StyleCurationJs.prototype.insertFirstService = function () {
     mother: rightBox,
     style: {
       position: "absolute",
-      top: String(circleTop0),
+      top: String(circleTop0) + ea,
       left: String(circleLeft0) + ea,
       width: String(circleWidth0) + ea,
       height: String(circleWidth0) + ea,
@@ -4256,7 +4283,7 @@ StyleCurationJs.prototype.insertFirstService = function () {
           {
             text: wordings.pick[0],
             style: {
-              display: (media[2] || media[3]) ? "none" : "block",
+              display: (media[2] || media[3] || media[4]) ? "none" : "block",
               position: "absolute",
               top: String(circleTextTop0) + ea,
               left: String(circleTextLeft0) + ea,
@@ -4296,7 +4323,7 @@ StyleCurationJs.prototype.insertFirstService = function () {
           {
             text: wordings.pick[1],
             style: {
-              display: (media[2] || media[3]) ? "none" : "block",
+              display: (media[2] || media[3] || media[4]) ? "none" : "block",
               position: "absolute",
               top: String(circleTextTop1) + ea,
               left: String(circleTextLeft1) + ea,
@@ -4312,18 +4339,20 @@ StyleCurationJs.prototype.insertFirstService = function () {
     ]
   });
 
-  createNode({
-    mother: rightBox,
-    style: {
-      position: "absolute",
-      top: String(circleTop2) + ea,
-      left: String(circleLeft2) + ea,
-      width: String(circleWidth2) + ea,
-      height: String(circleWidth2) + ea,
-      borderRadius: String(circleWidth2) + ea,
-      border: "1px dashed " + colorChip.green
-    }
-  });
+  if (desktop) {
+    createNode({
+      mother: rightBox,
+      style: {
+        position: "absolute",
+        top: String(circleTop2) + ea,
+        left: String(circleLeft2) + ea,
+        width: String(circleWidth2) + ea,
+        height: String(circleWidth2) + ea,
+        borderRadius: String(circleWidth2) + ea,
+        border: "1px dashed " + colorChip.green
+      }
+    });
+  }
 
   createNode({
     mother: rightBox,
@@ -4337,6 +4366,7 @@ StyleCurationJs.prototype.insertFirstService = function () {
       backgroundImage: "url('" + StyleCurationJs.binaryPath + "/profile2.jpg" + "')",
       backgroundSize: "100% 100%",
       backgroundPosition: "50% 50%",
+      border: desktop ? "" : "1px dashed " + colorChip.green
     },
     children: [
       {
@@ -4357,6 +4387,7 @@ StyleCurationJs.prototype.insertFirstService = function () {
               fontWeight: String(circleTextFocus),
               color: colorChip.green,
               fontFamily: "graphik",
+              textAlign: desktop ? "left" : "center",
             }
           }
         ]
@@ -4368,8 +4399,8 @@ StyleCurationJs.prototype.insertFirstService = function () {
     mother: rightBox,
     style: {
       position: "absolute",
-      top: String(((circleTop3 + (circleWidth3 / 2)) * 2) - (circleTop1 + circleWidth1)) + ea,
-      left: String(circleLeft1) + ea,
+      top: desktop ? String(((circleTop3 + (circleWidth3 / 2)) * 2) - (circleTop1 + circleWidth1)) + ea : String(circleTop1) + ea,
+      left: String(desktop ? circleLeft1 : circleLeft4) + ea,
       width: String(circleWidth1) + ea,
       height: String(circleWidth1) + ea,
       borderRadius: String(circleWidth1) + ea,
@@ -4388,7 +4419,7 @@ StyleCurationJs.prototype.insertFirstService = function () {
           {
             text: wordings.pick[3],
             style: {
-              display: (media[2] || media[3]) ? "none" : "block",
+              display: (media[2] || media[3] || media[4]) ? "none" : "block",
               position: "absolute",
               top: String(circleTextTop1) + ea,
               left: String(circleTextLeft1) + ea,
@@ -4408,8 +4439,8 @@ StyleCurationJs.prototype.insertFirstService = function () {
     mother: rightBox,
     style: {
       position: "absolute",
-      top: String(((circleTop3 + (circleWidth3 / 2)) * 2) - (circleTop0 + circleWidth0)) + ea,
-      left: String(circleLeft0) + ea,
+      top: desktop ? String(((circleTop3 + (circleWidth3 / 2)) * 2) - (circleTop0 + circleWidth0)) + ea : String(circleTop0) + ea,
+      left: String(desktop ? circleLeft0 : circleLeft5) + ea,
       width: String(circleWidth0) + ea,
       height: String(circleWidth0) + ea,
       borderRadius: String(circleWidth0) + ea,
@@ -4428,7 +4459,7 @@ StyleCurationJs.prototype.insertFirstService = function () {
           {
             text: wordings.pick[4],
             style: {
-              display: (media[2] || media[3]) ? "none" : "block",
+              display: (media[2] || media[3] || media[4]) ? "none" : "block",
               position: "absolute",
               top: String(circleTextTop0) + ea,
               left: String(circleTextLeft0) + ea,
@@ -4447,7 +4478,7 @@ StyleCurationJs.prototype.insertFirstService = function () {
   createNode({
     mother: rightBox,
     mode: "svg",
-    source: svgMaker.horizontalArrow(circleArrowWidth, circlrArrowHeight),
+    source: desktop ? svgMaker.horizontalArrow(circleArrowWidth, circlrArrowHeight) : svgMaker.verticalArrow(circleArrowWidth, circlrArrowHeight),
     style: {
       position: "absolute",
       top: String(circleArrowTop) + ea,
@@ -4462,8 +4493,8 @@ StyleCurationJs.prototype.insertFirstService = function () {
     style: {
       position: "relative",
       display: "inline-block",
-      width: withOut(contentsBoxLeft + (contentsBoxPadding * 2), ea),
-      height: String(((circleTop3 + (circleWidth3 / 2)) * 2) - (contentsBoxPadding * 2)) + ea,
+      width: desktop ? withOut(contentsBoxLeft + (contentsBoxPadding * 2), ea) : withOut((contentsBoxLeft * 2) + (contentsBoxPadding * 2), ea),
+      height: desktop ? String(((circleTop3 + (circleWidth3 / 2)) * 2) - (contentsBoxPadding * 2)) + ea : "",
       marginLeft: String(contentsBoxLeft) + ea,
       borderRadius: String(5) + "px",
       background: colorChip.gray1,
@@ -4627,14 +4658,14 @@ StyleCurationJs.prototype.insertFirstService = function () {
     style: {
       display: "block",
       position: "relative",
-      height: String(descriptionHeight) + ea,
+      height: desktop ? String(descriptionHeight) + ea : "",
       marginTop: String(descriptionMarginTop) + ea,
     },
     children: [
       {
         text: wordings.contents.title.join("\n"),
         style: {
-          display: "inline-block",
+          display: desktop ? "inline-block" : "none",
           width: String(descriptionTitleWidth) + ea,
           fontSize: String(descriptionSize) + ea,
           fontWeight: String(descriptionTitleWeight),
@@ -4645,17 +4676,18 @@ StyleCurationJs.prototype.insertFirstService = function () {
       {
         text: wordings.contents.description.join("\n"),
         style: {
-          display: "inline-block",
+          display: desktop ? "inline-block" : "block",
           marginLeft: String(descriptionTitleMargin) + ea,
           width: withOut(descriptionTitleWidth + descriptionTitleMargin, ea),
           fontSize: String(descriptionSize) + ea,
           fontWeight: String(descriptionWeight),
           color: colorChip.black,
           lineHeight: String(descriptionLineHeight),
+          textAlign: desktop ? "" : "center",
         }
       },
     ]
-  })
+  });
 
 }
 
@@ -4695,8 +4727,16 @@ StyleCurationJs.prototype.insertSecondService = function () {
   let grayTextBottom;
   let grayTextSize;
   let grayDeactiveTextSize;
+  let barLeft;
+  let mobileTitleLeft;
+  let mobileTitleTop;
+  let mobileTitleMarginBottom;
+  let mobileRightBoxPaddingTop;
+  let whiteBlockPaddingBottom;
+  let mobileGrayMarginTop, mobileGrayMarginLeft;
+  let mobilePictureBetween;
 
-  blockHeight = <%% 406, 406, 384, 295, 60 %%>;
+  blockHeight = <%% 406, 406, 384, 295, 160 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
   margin = <%% 52, 52, 44, 32, 52 %%>;
   leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
@@ -4704,42 +4744,53 @@ StyleCurationJs.prototype.insertSecondService = function () {
   titleFont = <%% 31, 28, 25, 22, 5.7 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
   titleFontWeight = <%% 600, 600, 600, 600, 600 %%>;
-  titleSecondTop = <%% 55, 50, 44, 39, 5 %%>;
-  titleSecondLeft = <%% 125, 6, 6, 6, 0 %%>;
+  titleSecondTop = <%% 55, 50, 44, 39, 2 %%>;
+  titleSecondLeft = <%% 125, 6, 6, 6, 6 %%>;
   titleSecondWeight = <%% 200, 200, 200, 200, 200 %%>;
 
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
 
-  barWidth = <%% 106, 106, 106, 106, 10 %%>;
-  barTop = <%% 73, 73, 73, 73, 7 %%>;
+  barWidth = <%% 106, 106, 106, 106, 24 %%>;
+  barTop = <%% 73, 73, 73, 73, 10.5 %%>;
+  barLeft = 12.5;
 
-  indexFont = <%% 19, 19, 19, 19, 19 %%>;
+  indexFont = <%% 19, 19, 19, 19, 5.7 %%>;
   indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
 
   indexNumberBottom = <%% 7, 4, 2, 5, 0 %%>;
 
-  grayBoxHeight = <%% 210, 210, 210, 155, 21 %%>;
+  grayBoxHeight = <%% 210, 210, 210, 155, 24 %%>;
   grayBoxWidth = <%% 320, 290, 260, 210, 32 %%>;
   grayTextBottom = <%% 20, 20, 20, 20, 2 %%>;
-  grayTextSize = <%% 14, 12, 11, 11, 1 %%>;
-  grayDeactiveTextSize = <%% 16, 14, 13, 11, 1 %%>;
-  grayArrowWidth = <%% 100, 45, 39, 39, 10 %%>;
+  grayTextSize = <%% 14, 12, 11, 11, 3 %%>;
+  grayDeactiveTextSize = <%% 16, 14, 13, 11, 3 %%>;
+  grayArrowWidth = <%% 100, 45, 39, 39, 2 %%>;
   grayArrowMargin = <%% 20, 16, 12, 10, 2 %%>;
-  grayArrowHeight = <%% 12, 12, 12, 12, 1 %%>;
+  grayArrowHeight = <%% 12, 12, 12, 12, 3.5 %%>;
   grayBoxInnerMargin = <%% 24, 20, 12, 10, 2 %%>;
 
   descriptionHeight = <%% 60, 60, 60, 60, 6 %%>;
-  descriptionMarginTop = <%% 36, 36, 36, 25, 3 %%>;
-  descriptionTitleWidth = <%% 90, 90, 90, 72, 9 %%>;
-  descriptionTitleMargin = <%% 40, 40, 30, 3, 4 %%>;
-  descriptionSize = <%% 15, 15, 14, 13, 1 %%>;
-  descriptionWeight = 300;
+  descriptionMarginTop = <%% 36, 36, 36, 25, 4 %%>;
+  descriptionTitleWidth = <%% 90, 90, 90, 72, 6 %%>;
+  descriptionTitleMargin = <%% 40, 40, 30, 3, 6 %%>;
+  descriptionSize = <%% 15, 15, 14, 13, 3 %%>;
+  descriptionWeight = desktop ? 300 : 400;
   descriptionLineHeight = 1.6;
   descriptionTitleWeight = 700;
 
+  mobileTitleLeft = 7;
+  mobileTitleTop = 7;
+  mobileTitleMarginBottom = 7;
+  mobileRightBoxPaddingTop = 49;
+  whiteBlockPaddingBottom = 9;
+
+  mobileGrayMarginTop = 43;
+  mobileGrayMarginLeft = 6;
+  mobilePictureBetween = 12;
+
   wordings = {
     title: {
-      main: "우리집 상세 견적은,",
+      main: desktop ? "우리집 상세 견적은," : "우리집 상세 견적은",
       sub: [
         "디자이너와 함께",
         "조정해보세요!"
@@ -4781,10 +4832,11 @@ StyleCurationJs.prototype.insertSecondService = function () {
       position: "relative",
       borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
-      height: String(blockHeight) + ea,
+      height: desktop ? String(blockHeight) + ea : "",
       background: colorChip.white,
       marginBottom: String(bottomMargin) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      paddingBottom: desktop ? "" : String(whiteBlockPaddingBottom) + ea,
     }
   });
 
@@ -4794,7 +4846,7 @@ StyleCurationJs.prototype.insertSecondService = function () {
       display: desktop ? "inline-block" : "block",
       position: "relative",
       width: desktop ? "calc(calc(100% - " + String(margin * 2) + ea + ") * " + String(leftRatio) + ")" : String(100) + '%',
-      height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : String(29) + ea,
+      height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : "",
       marginTop: desktop ? String(margin) + ea : "",
       marginBottom: desktop ? String(margin) + ea : "",
       marginLeft: desktop ? String(margin) + ea : "",
@@ -4806,15 +4858,17 @@ StyleCurationJs.prototype.insertSecondService = function () {
     mother: leftBox,
     text: wordings.title.main,
     style: {
-      position: "absolute",
+      position: desktop ? "absolute" : "relative",
       fontSize: String(titleFont) + ea,
       fontWeight: String(titleFontWeight),
       wordSpacing: String(wordSpacing) + "px",
-      top: desktop ? (String((media[0] ? 0 : media[1] ? 0 : 0) + (isMac() || mobile ? 0 : 4)) + ea) : String(9) + ea,
-      left: String(titleLeft) + ea,
+      top: desktop ? (String((media[0] ? 0 : media[1] ? 0 : 0) + (isMac() || mobile ? 0 : 4)) + ea) : "",
+      paddingTop: desktop ? "" : String(mobileTitleTop) + ea,
+      left: desktop ? String(titleLeft) + ea : "",
+      marginLeft: desktop ? "" : String(mobileTitleLeft) + ea,
       color: colorChip.black,
-      width: desktop ? "" : String(100) + '%',
-      textAlign: desktop ? "" : "center",
+      width: desktop ? "" : withOut(mobileTitleLeft * 2, ea),
+      textAlign: desktop ? "" : "right",
     }
   });
 
@@ -4822,49 +4876,52 @@ StyleCurationJs.prototype.insertSecondService = function () {
     mother: leftBox,
     text: wordings.title.sub.join("\n"),
     style: {
-      position: "absolute",
+      position: desktop ? "absolute" : "relative",
       fontSize: String(titleFont) + ea,
       fontWeight: String(titleSecondWeight),
       wordSpacing: String(wordSpacing) + "px",
-      top: String(titleSecondTop) + ea,
-      left: String(titleSecondLeft) + ea,
-      width: desktop ? "" : String(100) + '%',
-      textAlign: desktop ? (media[0] ? "right" : "left") : "center",
+      top: desktop ? String(titleSecondTop) + ea : "",
+      marginTop: desktop ? "" : String(titleSecondTop) + ea,
+      left: desktop ? String(titleSecondLeft) + ea : "",
+      marginLeft: desktop ? "" : String(mobileTitleLeft) + ea,
+      width: desktop ? "" : withOut(mobileTitleLeft * 2, ea),
+      textAlign: desktop ? (media[0] ? "right" : "left") : "right",
       color: colorChip.black,
-      lineHeight: String(1.35),
+      lineHeight: String(desktop ? 1.35 : 1.3),
+    },
+    bold: {
+      fontWeight: String(titleFontWeight),
+      color: colorChip.black,
     }
   });
 
-  if (desktop) {
-
-    if (media[0]) {
-      createNode({
-        mother: leftBox,
-        style: {
-          position: "absolute",
-          borderBottom: "1px solid " + colorChip.green,
-          top: String(barTop) + ea,
-          left: String(titleLeft) + ea,
-          width: String(barWidth) + ea,
-        }
-      });
-    }
-
+  if (media[0] || media[4]) {
     createNode({
       mother: leftBox,
-      text: String(2),
       style: {
         position: "absolute",
-        fontSize: String(indexFont) + ea,
-        fontWeight: String(indexFontWeight),
-        wordSpacing: String(wordSpacing) + ea,
-        bottom: String(indexNumberBottom) + ea,
-        left: String(titleLeft) + ea,
-        color: colorChip.gray4,
+        borderBottom: "1px " + (desktop ? "solid" : "dashed") + " " + (desktop ? colorChip.green : colorChip.whiteGreen),
+        top: String(barTop) + ea,
+        left: String(desktop ? titleLeft : barLeft) + ea,
+        width: String(barWidth) + ea,
       }
     });
-
   }
+
+  createNode({
+    mother: leftBox,
+    text: String(2),
+    style: {
+      position: "absolute",
+      fontSize: String(indexFont) + ea,
+      fontWeight: String(indexFontWeight),
+      wordSpacing: String(wordSpacing) + ea,
+      bottom: desktop ? String(indexNumberBottom) + ea : "",
+      top: desktop ? "" : String(mobileTitleTop) + ea,
+      left: desktop ? String(titleLeft) + ea : String(mobileTitleLeft) + ea,
+      color: desktop ? colorChip.gray4 : colorChip.black,
+    }
+  });
 
   rightBox = createNode({
     mother: whiteBlock,
@@ -4874,7 +4931,7 @@ StyleCurationJs.prototype.insertSecondService = function () {
       verticalAlign: "top",
       top: String(0) + ea,
       width: desktop ? "calc(calc(100% - " + String(margin * 2) + ea + ") * " + String(1 - leftRatio) + ")" : String(100) + '%',
-      height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : String(80) + ea,
+      height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : "",
       marginTop: desktop ? String(margin) + ea : "",
       marginBottom: desktop ? String(margin) + ea : "",
       marginRight: desktop ? String(margin) + ea : "",
@@ -4889,43 +4946,50 @@ StyleCurationJs.prototype.insertSecondService = function () {
       height: String(grayBoxHeight) + ea,
       background: colorChip.gray1,
       borderRadius: String(5) + "px",
+      left: desktop ? "" : String(mobileGrayMarginLeft) + ea,
+      width: desktop ? "" : withOut(mobileGrayMarginLeft * 2, ea),
+      marginTop: desktop ? "" : String(mobileGrayMarginTop) + ea,
     }
   });
 
   createNode({
     mother: grayBox,
     style: {
-      display: "inline-block",
-      position: "relative",
+      display: desktop ? "inline-block" : "block",
+      position: desktop ? "relative" : "absolute",
       height: String(grayBoxHeight) + ea,
-      width: String(grayBoxWidth) + ea,
+      width: desktop ? String(grayBoxWidth) + ea : String(100) + '%',
       backgroundImage: "url('" + StyleCurationJs.binaryPath + "/3dsample.jpg" + "')",
       backgroundSize: (media[2] || media[3]) ? "auto 100%" : "100% auto",
       backgroundPosition: "50% 50%",
       borderRadius: String(5) + "px",
       boxShadow: "5px 2px 21px -9px " + colorChip.shadow,
+      top: desktop ? "" : String(-1 * (grayBoxHeight + mobilePictureBetween)) + ea,
     }
   });
 
   createNode({
     mother: grayBox,
     style: {
-      display: "inline-flex",
-      position: "relative",
+      display: desktop ? "inline-flex" : "flex",
+      position: desktop ? "relative" : "absolute",
       verticalAlign: "top",
-      height: String(grayBoxHeight) + ea,
-      width: String(grayArrowWidth) + ea,
-      marginLeft: String(grayArrowMargin) + ea,
+      height: String(desktop ? grayBoxHeight : mobilePictureBetween) + ea,
+      width: desktop ? String(grayArrowWidth) + ea : String(100) + '%',
+      marginLeft: desktop ? String(grayArrowMargin) + ea : "",
       justifyContent: "center",
       alignItems: "center",
+      top: desktop ? "" : String(-1 * mobilePictureBetween) + ea,
     },
     children: [
       {
         mode: "svg",
-        source: svgMaker.horizontalArrow(grayArrowWidth, grayArrowHeight),
+        source: desktop ? svgMaker.horizontalArrow(grayArrowWidth, grayArrowHeight) : svgMaker.verticalArrow(grayArrowWidth, grayArrowHeight),
         style: {
+          position: desktop ? "relative" : "absolute",
           width: String(grayArrowWidth) + ea,
           height: String(grayArrowHeight) + ea,
+          bottom: desktop ? "" : String(2) + ea,
         }
       },
       {
@@ -4935,10 +4999,12 @@ StyleCurationJs.prototype.insertSecondService = function () {
           fontSize: String(grayTextSize) + ea,
           fontWeight: String(600),
           color: colorChip.green,
-          bottom: String(grayTextBottom) + ea,
-          textAlign: "left",
+          bottom: desktop ? String(grayTextBottom) + ea : "",
+          top: desktop ? "" : String(1.2) + ea,
+          textAlign: desktop ? "left" : "center",
           left: String(0) + ea,
           lineHeight: String(1.5),
+          width: desktop ? "" : String(100) + '%',
         }
       }
     ]
@@ -4951,7 +5017,7 @@ StyleCurationJs.prototype.insertSecondService = function () {
       position: "relative",
       verticalAlign: "top",
       height: String(grayBoxHeight) + ea,
-      width: withOut(grayBoxWidth + grayArrowWidth + (grayArrowMargin * 2), ea),
+      width: desktop ? withOut(grayBoxWidth + grayArrowWidth + (grayArrowMargin * 2), ea) : withOut(grayArrowMargin, ea),
       marginLeft: String(grayArrowMargin) + ea,
       alignItems: "center",
     },
@@ -5030,20 +5096,19 @@ StyleCurationJs.prototype.insertSecondService = function () {
     ]
   });
 
-
   createNode({
     mother: rightBox,
     style: {
       display: "block",
       position: "relative",
-      height: String(descriptionHeight) + ea,
+      height: desktop ? String(descriptionHeight) + ea : "",
       marginTop: String(descriptionMarginTop) + ea,
     },
     children: [
       {
         text: wordings.contents.title.join("\n"),
         style: {
-          display: "inline-block",
+          display: desktop ? "inline-block" : "none",
           width: String(descriptionTitleWidth) + ea,
           fontSize: String(descriptionSize) + ea,
           fontWeight: String(descriptionTitleWeight),
@@ -5054,13 +5119,14 @@ StyleCurationJs.prototype.insertSecondService = function () {
       {
         text: wordings.contents.description.join("\n"),
         style: {
-          display: "inline-block",
+          display: desktop ? "inline-block" : "block",
           marginLeft: String(descriptionTitleMargin) + ea,
           width: withOut(descriptionTitleWidth + descriptionTitleMargin, ea),
           fontSize: String(descriptionSize) + ea,
           fontWeight: String(descriptionWeight),
           color: colorChip.black,
           lineHeight: String(descriptionLineHeight),
+          textAlign: desktop ? "" : "center",
         }
       },
     ]
@@ -5086,21 +5152,21 @@ StyleCurationJs.prototype.insertPendingProposal = function () {
   let subTitleSize;
   let subTitlePaddingTop, subTitlePaddingBottom;
 
-  bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
+  bottomMargin = <%% 16, 16, 16, 12, 1 %%>;
   margin = <%% 52, 52, 44, 32, 52 %%>;
   leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
 
-  textBoxHeight = <%% 90, 90, 90, 90, 90 %%>;
+  textBoxHeight = <%% 90, 90, 90, 90, 9 %%>;
   textBoxSize = <%% 17, 17, 17, 17, 17 %%>;
 
-  quotePaddingTop = <%% 60, 60, 60, 60, 60 %%>;
-  quoteMarginBottom = <%% 5, 5, 5, 5, 5 %%>;
-  quoteWidth = <%% 20, 20, 20, 16, 20 %%>;
+  quotePaddingTop = <%% 60, 60, 60, 60, 9 %%>;
+  quoteMarginBottom = <%% 5, 5, 5, 5, 1 %%>;
+  quoteWidth = <%% 20, 20, 20, 16, 3 %%>;
 
-  titleSize = <%% 30, 30, 29, 27, 30 %%>;
-  subTitleSize = <%% 14, 14, 14, 14, 14 %%>;
-  subTitlePaddingTop = <%% 8, 8, 8, 8, 8 %%>;
-  subTitlePaddingBottom = <%% 80, 80, 80, 80, 80 %%>;
+  titleSize = <%% 30, 30, 29, 27, 5 %%>;
+  subTitleSize = <%% 14, 14, 14, 14, 3 %%>;
+  subTitlePaddingTop = <%% 8, 8, 8, 8, 1 %%>;
+  subTitlePaddingBottom = <%% 80, 80, 80, 80, 12 %%>;
 
   wording = "제안서가 완료되는 대로,\n<b%알림톡을 통해 보내드리겠습니다.%b>";
   wording2 = "제안서 제작에는 영업일 기준 1~2일 정도 소요될 수 있습니다.";
@@ -7126,7 +7192,6 @@ StyleCurationJs.prototype.forceConverting = async function () {
     if (Array.isArray(clientHistory.curation.analytics.send)) {
       if (clientHistory.curation.analytics.send.length > 0) {
         if (clientHistory.curation.analytics.send.every((o) => { return typeof o === "object"; })) {
-
           let boo, feeArr, thisProjects, thisProject, finalSerid;
 
           boo = false;
