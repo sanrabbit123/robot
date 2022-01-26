@@ -3411,7 +3411,7 @@ StyleCurationJs.prototype.insertInitBox = function () {
 
   quoteTop = <%% 8, 8, 8, 8, -0.6 %%>;
   quoteHeight = <%% 12, 11, 10, 9, 2.5 %%>;
-  quoteMarginBottom = <%% 7, 7, 7, 6, 7 %%>;
+  quoteMarginBottom = <%% (isMac() ? 7 : 8), (isMac() ? 7 : 8), (isMac() ? 7 : 8), (isMac() ? 6 : 7), 7 %%>;
   quoteLeft = <%% 2, 2, 2, 2, 1.6 %%>;
 
   initWordingHeight = <%% 20, 20, 20, 20, 9 %%>;
