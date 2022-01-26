@@ -3425,7 +3425,7 @@ StyleCurationJs.prototype.insertInitBox = function () {
 
   grayBoxTitleSize = <%% 14, 14, 13, 11, 3.2 %%>;
   grayBoxTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
-  grayBoxTitleTop = <%% 36, 36, 36, 20, 0 %%>;
+  grayBoxTitleTop = <%% (isMac() ? 36 : 37), (isMac() ? 36 : 37), (isMac() ? 36 : 37), (isMac() ? 20 : 21), 0 %%>;
   grayBoxTitleLeft = <%% 40, 32, 30, 16, 6 %%>;
   grayBoxHeight = <%% 36, 36, 34, 28, 7 %%>;
   grayBoxTop = <%% 30, 30, 30, 15, 6.6 %%>;
@@ -3451,7 +3451,7 @@ StyleCurationJs.prototype.insertInitBox = function () {
 
   overlappingWidth = <%% 10, 10, 10, 10, 0 %%>;
   grayInnerWordingSize = <%% 13, 13, 13, 11, 2.8 %%>;
-  grayInnerWordingTextTop = desktop ? -1 : -0.1;
+  grayInnerWordingTextTop = desktop ? (isMac() ? -1 : 0) : -0.1;
   grayInnerWordingWeight = 600;
 
   mobileGrayUpHeight = 18;
