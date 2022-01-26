@@ -1029,6 +1029,12 @@ Mother.prototype.ipCheck = function () {
         obj.name = target;
         obj.rawObj = values[targetNum];
 
+        if (target === "test") {
+          obj.isTest = true;
+        } else {
+          obj.isTest = false;
+        }
+
         if (target === "home" || target === "office") {
           networkInterfaces = require("os").networkInterfaces();
           macList = [];
