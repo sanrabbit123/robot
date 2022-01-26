@@ -85,7 +85,6 @@ DevContext.prototype.launching = async function () {
 
     // await this.pureSpawn();
 
-
     // await this.printSpotsGraph([
     //   [ 3, 10 ],
     //   [ 40, 50 ]
@@ -93,7 +92,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    console.log(await ipCheck())
+
 
 
 
@@ -1812,8 +1811,8 @@ DevContext.prototype.launching = async function () {
 
 
     // kakao token
-    // const app = new KakaoTalk();
-    // await app.generateToken();
+    const app = new KakaoTalk();
+    await app.generateToken();
 
 
     // kakao test

@@ -649,9 +649,6 @@ DataConsole.prototype.connect = async function (noStatic = false) {
   const instance = this;
   const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, errorLog } = this.mother;
   const PORT = 3000;
-  const TESTINBOUND = 55555;
-  const TESTOUTBOUND = 55556;
-
   const https = require("https");
   const express = require("express");
   const app = express();
@@ -674,7 +671,7 @@ DataConsole.prototype.connect = async function (noStatic = false) {
       throw new Error("invalid address");
     }
     console.log(``);
-    console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching console in ${name.replace(/info/i, '')} ==============`);
+    console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching console in ${name} ==============`);
     console.log(``);
 
     //set mongo connetion
@@ -717,13 +714,6 @@ DataConsole.prototype.connect = async function (noStatic = false) {
 
     pems = {};
     pemsLink = process.cwd() + "/pems/" + address.host;
-
-    if (process.argv.length > 3) {
-      if (process.argv[3] === "--test") {
-        pemsLink = process.cwd() + "/pems/" + this.address.officeinfo.ghost.host;
-        console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `test mode from window to port => ${String(TESTINBOUND)}`);
-      }
-    }
 
     certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
     keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
@@ -768,8 +758,9 @@ DataConsole.prototype.connect = async function (noStatic = false) {
             instance.address.homeinfo.ghost.host + ":3000",
             instance.address.pythoninfo.host,
             instance.address.pythoninfo.host + ":3000",
+            instance.address.testinfo.host,
+            instance.address.testinfo.host + ":3000",
             instance.address.officeinfo.ghost.host,
-            instance.address.officeinfo.ghost.host + ":" + String(TESTINBOUND),
             "localhost:3000",
             "localhost:8080",
             "stdpay.inicis.com",
@@ -834,15 +825,8 @@ DataConsole.prototype.connect = async function (noStatic = false) {
     // await this.setBinary();
 
     //server on
-    if (process.argv.length > 3) {
-      if (process.argv[3] === "--test") {
-        https.createServer(pems, app).listen(TESTOUTBOUND, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
-      } else {
-        https.createServer(pems, app).listen(PORT, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
-      }
-    } else {
-      https.createServer(pems, app).listen(PORT, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
-    }
+    https.createServer(pems, app).listen(PORT, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
+
 
   } catch (e) {
     console.log(e);
