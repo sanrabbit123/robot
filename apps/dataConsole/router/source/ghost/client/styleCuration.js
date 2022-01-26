@@ -4086,7 +4086,7 @@ StyleCurationJs.prototype.insertFirstService = function () {
   contentsBlockHeightArrow = contentsBlockHeight + contentsBlockMarginTop - (contentsBlockMarginTopArrow * 2);
 
   contentsBlockSize = <%% 12, 12, 12, 12, 2.8 %%>;
-  contentsBlockBottom = <%% (isMac() ? 12.5 : 10.5), (isMac() ? 12.5 : 10.5), (isMac() ? 12.5 : 10.5), (isMac() ? 12.5 : 10.5), 3 %%>;
+  contentsBlockBottom = <%% (isMac() ? 12.5 : 11), (isMac() ? 12.5 : 11), (isMac() ? 12.5 : 11), (isMac() ? 12.5 : 11), 3 %%>;
 
   descriptionHeight = <%% 60, 60, 60, 60, 6 %%>;
   descriptionMarginTop = <%% 45, 45, 45, 35, 4 %%>;
