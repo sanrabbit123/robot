@@ -71,10 +71,10 @@ LogConsole.prototype.renderStatic = async function (staticFolder, address) {
   try {
 
     //set static
-    const moduleName = "module";
+    const moduleName = "log";
     const staticDir = `${this.dir}/router/source/local`;
     const staticDirList_raw = await fileSystem(`readDir`, [ staticDir ]);
-    const staticDirList = staticDirList_raw.filter((fileName) => { return !(([ ".DS_Store", moduleName ]).includes(fileName)); });
+    const staticDirList = staticDirList_raw.filter((fileName) => { return !(([ ".DS_Store" ]).includes(fileName)); });
     const homeDirList = await fileSystem(`readDir`, [ process.env.HOME ]);
     let folderSize, tempScriptString;
     let tempMediaResult;
@@ -83,7 +83,9 @@ LogConsole.prototype.renderStatic = async function (staticFolder, address) {
     if (!homeDirList.includes(staticFolder.split('/')[staticFolder.split('/').length - 1])) {
       shell.exec(`mkdir ${shellLink(staticFolder)}`);
     }
-
+    if (!await fileSystem(`exist`, [ `${shellLink(staticFolder)}/log` ])) {
+      shell.exec(`mkdir ${shellLink(staticFolder)}/log`);
+    }
     console.log(`set static`);
 
     let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, sseString, sseConsoleString, polyfillString, classString, pythonString, bridgeString, frontWebString, trapString, officeString;
@@ -152,8 +154,8 @@ LogConsole.prototype.renderStatic = async function (staticFolder, address) {
       result += "\n\n";
 
       console.log(`${i} merge success`);
-      await fileSystem(`write`, [ `${staticFolder}/${i}`, result ]);
-      resultFromArr.push(`${staticFolder}/${i}`);
+      await fileSystem(`write`, [ `${staticFolder}/log/${i}`, result ]);
+      resultFromArr.push(`${staticFolder}/log/${i}`);
 
     }
 
