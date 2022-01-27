@@ -56,7 +56,7 @@ LogRouter.prototype.rou_get_First = function () {
   const instance = this;
   const { statusReading } = this.mother;
   let obj = {};
-  obj.link = "/:id";
+  obj.link = "/log/:id";
   obj.func = function (req, res) {
     try {
       let target;
