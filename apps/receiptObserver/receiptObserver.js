@@ -176,13 +176,6 @@ ReceiptObserver.prototype.taxServerLaunching = async function () {
     const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
     const humanInstance = new HumanPacket();
 
-    //set cron
-    const CronGhost = require(process.cwd() + "/apps/cronGhost/cronGhost.js");
-    const cron = new CronGhost();
-    const cronScript = await cron.scriptReady(3);
-    shell.exec(`python3 ${shellLink(cronScript)}`, { async: true });
-    console.log(`set cron`);
-
     //set pem key
     let pems = {};
     let pemsLink = process.cwd() + "/pems/" + this.address.pythoninfo.host;

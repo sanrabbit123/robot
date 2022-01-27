@@ -16,8 +16,11 @@ const worker = async function (package) {
   } = package;
   const { requestSystem, messageLog, errorLog } = mother;
   try {
-    await requestSystem("https://" + address.pythoninfo.host + ":" + String(3000) + "/weeklyCalculation");
-    await messageLog("weekly calculation done");
+    const today = new Date();
+    if (today.getDay() === 1) {
+      await requestSystem("https://" + address.pythoninfo.host + ":" + String(3000) + "/weeklyCalculation");
+      await messageLog("weekly calculation done");
+    }
     return true;
   } catch (e) {
     await errorLog("weekly calculation error : " + e.message);

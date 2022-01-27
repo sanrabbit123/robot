@@ -93,8 +93,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const res = await requestSystem("https://home-liaison.xyz:3000/weeklyCalculation", { data: null }, { headers: { "Content-Type": "application/json" } });
-
 
 
 
