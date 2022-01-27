@@ -555,15 +555,6 @@ ConsultingJs.prototype.submitEvent = function (boo) {
         GeneralJs.ajax(ajaxdata, "/engine/Submit.php", instance.thankyouPage(boo, submitNamePhone));
       });
 
-      //test
-      /*
-      console.log(ajaxdata);
-      let tempFunc = instance.thankyouPage(boo, [ obj.pretext.trim().replace(/[ \n]/g, ''), obj.cellphone ]);
-      setTimeout(function () {
-        tempFunc();
-      }, 1000);
-      */
-
     }
   }
 }
@@ -1478,6 +1469,14 @@ ConsultingJs.prototype.thankyouPage = function (boo, valuesTong) {
       history.pushState({}, "", "?submit=true");
       instance.pendingBox(document.getElementById((boo === "desktop") ? "consultingbox" : "moconsultingbox"), boo, true);
       window.scrollTo({ top: 0, behavior: "smooth" });
+
+
+      // DEV =========================================================================================
+
+      window.location.href = "https://home-liaison.info/middle/curation/?cliid=c1801_aa01s";
+
+      /*
+
       document.getElementById("consultinggrayback").style.cssText = "height:1600px";
       document.getElementById(mo + "consultingbox").style.animation = "fadedown 1s ease forwards";
       document.getElementById(mo + "consultingtitle").style.animation = "fadedown 1s ease forwards";
@@ -1486,11 +1485,18 @@ ConsultingJs.prototype.thankyouPage = function (boo, valuesTong) {
         back.style.opacity = "0";
         let mother = document.getElementById(mo + "consultingbox");
         mother.style.cssText = "";
-        while (mother.firstChild) { mother.removeChild(mother.lastChild); }
+        while (mother.firstChild) {
+          mother.removeChild(mother.lastChild);
+        }
         let thankyouFunc = instance.thankyouLoad(boo, valuesTong);
         mother.appendChild(thankyouFunc());
         clearTimeout(fadeout);
       }, 1100);
+
+      */
+
+      // DEV =========================================================================================
+
     }
   }
 }
