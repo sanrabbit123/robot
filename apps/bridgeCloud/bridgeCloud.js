@@ -1399,6 +1399,8 @@ BridgeCloud.prototype.serverLaunching = async function (toss = false) {
           instance.address.homeinfo.ghost.host + ":3000",
           instance.address.pythoninfo.host,
           instance.address.pythoninfo.host + ":3000",
+          instance.address.testinfo.host,
+          instance.address.testinfo.host + ":3000",
           instance.address.officeinfo.ghost.host,
           "localhost:3000",
           "localhost:8080",
