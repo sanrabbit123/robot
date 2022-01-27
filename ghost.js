@@ -2332,6 +2332,8 @@ Ghost.prototype.ghostRouter = function (needs) {
         await fileSystem("write", [ `${static}/${htmlName}`, req.body.html.replace(/__equal__/gi, '=').replace(/__ampersand__/gi, '&').replace(/__quotes__/gi, "'") ]);
         const graphicResponse = await requestSystem("https://" + instance.address.homeinfo.ghost.host + ":" + String(instance.address.homeinfo.ghost.graphic.port[0]) + "/pdf", { link: "https://" + instance.address.officeinfo.ghost.host + "/" + htmlName, name: pdfName }, { headers: { "Content-Type": "application/json" } });
 
+        console.log(graphicResponse);
+
         setQueue(() => {
           shell.exec(`rm -rf ${shellLink(static)}/${htmlName};`);
         }, 15 * 60 * 1000);
