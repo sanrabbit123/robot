@@ -31,8 +31,6 @@ Koala.prototype.spawnSector = async function (install = false) {
   }
 }
 
-// EXE --------------------------------------------------------------------------------------
-
 const koala = new Koala();
 const MENU = {
   spawnSector: async function () {

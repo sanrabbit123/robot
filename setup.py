@@ -21,11 +21,13 @@ class RobotInstall:
             [ "aiohttp" ],
             [ "cloudconvert" ],
         ]
+
         self.upgrade = [
             [ "google-api-core" ],
             [ "google-api-python-client", "google-auth-httplib2", "google-auth-oauthlib" ],
             [ "oauth2client" ],
         ]
+        
         self.homeDir = str(Path.home())
 
         now = time.gmtime(time.time())

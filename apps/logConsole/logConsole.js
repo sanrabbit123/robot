@@ -340,7 +340,21 @@ LogConsole.prototype.playgroundConnect = async function () {
     //set cron
     setInterval(async () => {
       try {
+        const now = new Date();
+        const hour = now.getHours();
+        const minute = now.getMinutes();
+
         await instance.aliveTest();
+
+        if (hour === 7 || hour === 13 || hour === 21) {
+          if (minute < 30) {
+            const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
+            const reflection = new MongoReflection();
+            await reflection.ultimateReflection();
+            await reflection.mysqlReflection();
+            await reflection.frontReflection();
+          }
+        }
       } catch (e) {
         console.log(e);
       }
