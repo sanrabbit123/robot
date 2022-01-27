@@ -127,7 +127,6 @@ Clown.prototype.aliveTest = async function () {
       { name: "python", protocol: "https:", host: address.pythoninfo.host, port: generalPort, },
       { name: "home", protocol: "https:", host: address.homeinfo.ghost.host, port: generalPort, },
       { name: "office", protocol: "https:", host: address.officeinfo.ghost.host, port: ghostPort, },
-      { name: "officeGraphic", protocol: "https:", host: address.homeinfo.ghost.host, port: address.homeinfo.ghost.graphic.port[0], },
     ];
 
     targetNumber = targets.length;
@@ -344,6 +343,16 @@ Clown.prototype.frontUpdate = async function (testMode) {
     const FrontMaker = require(process.cwd() + "/apps/frontMaker/frontMaker.js");
     let fobot = new FrontMaker();
     await fobot.totalUpdate(testMode);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+Clown.prototype.playgroundConnect = async function () {
+  try {
+    const LogConsole = require(process.cwd() + "/apps/logConsole/logConsole.js");
+    const app = new LogConsole();
+    await app.playgroundConnect();
   } catch (e) {
     console.log(e);
   }
@@ -1230,6 +1239,13 @@ const MENU = {
   cronServer: async function () {
     try {
       await robot.cronServer();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  log: async function () {
+    try {
+      await robot.playgroundConnect();
     } catch (e) {
       console.log(e);
     }
