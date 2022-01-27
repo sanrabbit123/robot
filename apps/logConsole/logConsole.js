@@ -56,6 +56,78 @@ LogConsole.prototype.mediaQuery = function (code) {
   return { conditions: updateProto, code: code.replace(matchReg, replacer) };
 }
 
+LogConsole.prototype.aliveTest = async function () {
+  const instance = this;
+  const address = this.address;
+  const { requestSystem, messageLog, errorLog } = this.mother;
+  const generalPort = 3000;
+  const ghostPort = 8080;
+  const controlPath = "/ssl";
+  let res, targets, targetNumber, successNum, failNum, message;
+  try {
+
+    targets = [
+      { name: "python", protocol: "https:", host: address.pythoninfo.host, port: generalPort, },
+      { name: "home", protocol: "https:", host: address.homeinfo.ghost.host, port: generalPort, },
+      { name: "office", protocol: "https:", host: address.officeinfo.ghost.host, port: ghostPort, },
+    ];
+
+    targetNumber = targets.length;
+    successNum = 0;
+    failNum = 0;
+    message = '';
+
+    await requestSystem("https://" + address.pythoninfo.host + ":" + String(generalPort) + "/taxBill", { data: null }, { headers: { "Content-Type": "application/json" } });
+
+    for (let { name, protocol, host, port } of targets) {
+
+      boo = false;
+      try {
+        res = await requestSystem(protocol + "//" + host + ':' + String(port) + controlPath);
+      } catch {
+        res = null;
+      }
+
+      if (typeof res === "object" && res !== null) {
+        if (res.status !== undefined && typeof res.status === "number") {
+          if (res.status === 200) {
+            console.log("\x1b[32m%s\x1b[0m", name + " server alive");
+            successNum = successNum + 1;
+            message += "\n" +  name + " server alive";
+            boo = true;
+            if (successNum === targetNumber) {
+              console.log("\x1b[33m%s\x1b[0m", "all alive");
+              message = "server all alive";
+              await messageLog(message);
+            } else if (successNum + failNum === targetNumber) {
+              console.log("\x1b[33m%s\x1b[0m", "something death");
+              message += "\n======================================";
+              message += "\nsomething death";
+              await errorLog(message);
+            }
+          }
+        }
+      }
+
+      if (!boo) {
+        failNum = failNum + 1;
+        console.log("\x1b[32m%s\x1b[0m", name + " server death");
+        message += "\n" +  name + " server death";
+        if (successNum + failNum === targetNumber) {
+          console.log("\x1b[33m%s\x1b[0m", "something death");
+          message += "\n======================================";
+          message += "\nsomething death";
+          await errorLog(message);
+        }
+      }
+
+    }
+
+  } catch (e) {
+    await errorLog("alive test error : " + e.message);
+  }
+}
+
 LogConsole.prototype.renderStatic = async function (staticFolder, address) {
   const instance = this;
   const { fileSystem, shell, shellLink, sleep } = this.mother;
@@ -264,6 +336,15 @@ LogConsole.prototype.playgroundConnect = async function () {
     }).catch((err) => {
       console.log(err);
     });
+
+    //set cron
+    setInterval(async () => {
+      try {
+        await instance.aliveTest();
+      } catch (e) {
+        console.log(e);
+      }
+    }, 30 * 60 * 1000);
 
     //server on
     https.createServer(pems, app).listen(PORT, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });

@@ -5,12 +5,14 @@ const ReceiptRouter = function (MONGOC, MONGOLOCALC, kakaoInstance, humanInstanc
   this.dir = process.cwd() + "/apps/receiptObserver";
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
+  const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`);
   const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
   const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
   const GoogleCalendar = require(`${process.cwd()}/apps/googleAPIs/googleCalendar.js`);
   this.mother = new Mother();
   this.back = new BackMaker();
+  this.work = new BackWorker();
   this.bill = new BillMaker();
   this.sheets = new GoogleSheet();
   this.drive = new GoogleDrive();
@@ -2531,6 +2533,41 @@ ReceiptRouter.prototype.rou_post_taxBill = function () {
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
       instance.mother.errorLog("Python 서버 문제 생김 (rou_post_taxBill): " + e.message).catch((e) => { console.log(e); });
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify({ message: "error" }));
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+ReceiptRouter.prototype.rou_post_weeklyCalculation = function () {
+  const instance = this;
+  const work = this.work;
+  const { equalJson } = this.mother;
+  let obj = {};
+  obj.link = "/weeklyCalculation";
+  obj.func = async function (req, res) {
+    try {
+      work.designerCalculation().then(() => {
+        console.log("weeklyCalculation success");
+      }).catch((e) => {
+        throw new Error(e);
+      });
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_weeklyCalculation): " + e.message).catch((e) => { console.log(e); });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
