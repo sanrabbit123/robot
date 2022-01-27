@@ -63,59 +63,6 @@ Alien.prototype.setTimer = function (callback, timeObj) {
   });
 }
 
-Alien.prototype.objectToCron = function (obj = {}) {
-  let properties, target, cron;
-
-  properties = [ "seconds", "minutes", "hours", "date", "month", "day" ];
-  target = {};
-
-  for (let i of properties) {
-    if (obj[i] !== undefined) {
-      if (typeof obj[i] !== "number" && typeof obj[i] !== "string") {
-        throw new Error("invaild input");
-      } else {
-        target[i] = String(obj[i]);
-      }
-    } else {
-      target[i] = '*';
-    }
-  }
-
-  cron = '';
-  for (let i of properties) {
-    cron += target[i];
-    cron += ' ';
-  }
-  cron = cron.slice(0, -1);
-
-  return cron;
-}
-
-Alien.prototype.cronLaunching = async function (cronNumber) {
-  const instance = this;
-  const { fileSystem, shell, shellLink } = this.mother;
-  const http = require("http");
-  const express = require("express");
-  const app = express();
-  const CronGhost = require(process.cwd() + "/apps/cronGhost/cronGhost.js");
-  const cron = new CronGhost();
-  try {
-    let cronScript;
-
-    app.get("/", function (req, res) {
-      const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-      res.send(String(ip).replace(/[^0-9\.]/gi, ''));
-    });
-
-    cronScript = await cron.scriptReady(cronNumber);
-    shell.exec(`python3 ${shellLink(cronScript)}`, { async: true });
-    console.log(`\x1b[33m%s\x1b[0m`, `Cron running`);
-    http.createServer(app).listen(5000, () => {});
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 Alien.prototype.messageDummy = function (from, to, message, option = {}) {
   if (typeof from !== "string" || !Array.isArray(to) || typeof message !== "string") {
     throw new Error("invaild input");
@@ -334,7 +281,7 @@ Alien.prototype.routerPatch = function (app) {
 
 }
 
-Alien.prototype.wssLaunching = async function (cronNumber) {
+Alien.prototype.wssLaunching = async function () {
   const instance = this;
   const address = this.address;
   const { fileSystem, shell, shellLink, errorLog, equalJson } = this.mother;
@@ -345,11 +292,8 @@ Alien.prototype.wssLaunching = async function (cronNumber) {
     const useragent = require("express-useragent");
     const WebSocket = require("ws");
     const url = require("url");
-    const CronGhost = require(process.cwd() + "/apps/cronGhost/cronGhost.js");
     const members = require(`${process.cwd()}/apps/memberObj.js`);
-    const cron = new CronGhost();
     const port = 5000;
-    let cronScript;
     let generalSocket;
     let sockets, server;
     let pems, pemsLink;
@@ -453,10 +397,6 @@ Alien.prototype.wssLaunching = async function (cronNumber) {
         socket.destroy();
       }
     });
-
-    cronScript = await cron.scriptReady(cronNumber);
-    shell.exec(`python3 ${shellLink(cronScript)}`, { async: true });
-    console.log(`\x1b[33m%s\x1b[0m`, `Cron running`);
 
     server.listen(port, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nWss server running\n`); });
 
@@ -665,10 +605,6 @@ Alien.prototype.requestWhisk = async function (num) {
 const app = new Alien();
 if (/office/gi.test(process.argv[2])) {
   app.wssLaunching(2).catch((err) => { console.log(err); });
-} else if (/home/gi.test(process.argv[2])) {
-  app.cronLaunching(0).catch((err) => { console.log(err); });
-} else if (/polling/gi.test(process.argv[2])) {
-  app.cronLaunching(1).catch((err) => { console.log(err); });
 } else if (/request/gi.test(process.argv[2])) {
   app.requestWhisk(Number(process.argv[3])).catch((err) => { console.log(err); });
 } else if (/receiveSms/gi.test(process.argv[2])) {
