@@ -179,7 +179,7 @@ FrontMaker.prototype.cssOut = function (code) {
   return { code: code, css: resultCssResult };
 }
 
-FrontMaker.prototype.jsToPoo = async function (dayString) {
+FrontMaker.prototype.jsToPoo = async function (dayString, test = false) {
   const instance = this;
   const { minify } = require("terser");
   try {
@@ -355,21 +355,18 @@ FrontMaker.prototype.phpFunctionToPoo = async function () {
   }
 }
 
-FrontMaker.prototype.phpGeneralToPoo = async function (dayString) {
+FrontMaker.prototype.phpGeneralToPoo = async function (dayString, test = false) {
   const instance = this;
   const infoObj = require(`${process.cwd()}/apps/infoObj.js`);
   const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
   const { fileSystem } = this.mother;
   try {
-    const exceptions = [ 'Alimtalk' ];
-
-    //general php
     let code, result, list;
     list = await fileSystem(`readDir`, [ `${this.links.source}/phpGeneral` ]);
     for (let i of list) {
-      if (i !== ".DS_Store" && !exceptions.includes(i.replace(/\.js$/g, ''))) {
+      if (i !== ".DS_Store") {
         code = require(`${this.links.source}/phpGeneral/${i}`);
-        result = code(dayString);
+        result = code(dayString, test);
         await fileSystem(`write`, [ `${this.links.server}/engine/${i.replace(/\.js$/g, '')}.php`, result ]);
         console.log(`phpGeneral ${i} success`);
       }
@@ -404,7 +401,7 @@ FrontMaker.prototype.tokenToPoo = async function () {
 
 FrontMaker.prototype.staticSetting = async function () {
   const instance = this;
-  const { fileSystem, shell, shellLink } = this.mother;
+  const { fileSystem, shellExec, shellLink } = this.mother;
   try {
 
     console.log(`staticSetting...`);
@@ -418,14 +415,14 @@ FrontMaker.prototype.staticSetting = async function () {
     home = await fileSystem(`readDir`, [ process.env.HOME ]);
 
     if (home.includes(gitLabRepositName)) {
-      shell.exec(`rm -rf ${process.env.HOME}/${gitLabRepositName}`);
+      await shellExec(`rm -rf ${process.env.HOME}/${gitLabRepositName}`);
     }
 
     if (home.includes("www")) {
-      shell.exec(`rm -rf ${process.env.HOME}/www`);
+      await shellExec(`rm -rf ${process.env.HOME}/www`);
     }
 
-    shell.exec(`git clone ${gitLabReposit} ${process.env.HOME}/${gitLabRepositName}`);
+    await shellExec(`git clone ${gitLabReposit} ${process.env.HOME}/${gitLabRepositName}`);
 
     this.links.server = `${process.env.HOME}/${gitLabRepositName}`;
 
@@ -435,17 +432,17 @@ FrontMaker.prototype.staticSetting = async function () {
   }
 }
 
-FrontMaker.prototype.totalLaunching = async function () {
+FrontMaker.prototype.totalLaunching = async function (test = false) {
   const instance = this;
   try {
     const dayString = this.mother.todayMaker();
 
     await this.setStrings();
     await this.staticSetting();
-    await this.jsToPoo(dayString);
+    await this.jsToPoo(dayString, test);
     await this.phpFunctionToPoo();
     await this.phpExecToPoo();
-    await this.phpGeneralToPoo(dayString);
+    await this.phpGeneralToPoo(dayString, test);
     await this.tokenToPoo();
 
   } catch (e) {
@@ -454,56 +451,73 @@ FrontMaker.prototype.totalLaunching = async function () {
   }
 }
 
-FrontMaker.prototype.totalUpdate = async function (test = true) {
-  const { fileSystem, shell, shellLink, frontinfo: { host, user } } = this.mother;
-  const dayString = this.mother.todayMaker();
+FrontMaker.prototype.totalUpdate = async function (test = false) {
+  const { todayMaker, fileSystem, shellExec, shellLink, uniqueValue, frontinfo: { host, user } } = this.mother;
+  const address = this.address;
+  const dayString = todayMaker();
   try {
     let totalOrder;
     let binaryTarget, binaryTargetDir;
     let input;
+    let user, host, path, www, static;
+    let uniqueFolder;
 
-    await this.totalLaunching();
+    www = "www";
+    static = "static";
+    uniqueFolder = "unique" + uniqueValue("hex");
+    if (test) {
+      user = "ubuntu";
+      host = address.testinfo.host;
+      path = "/home/ubuntu/";
+    } else {
+      user = "miro81";
+      host = address.frontinfo.host;
+      path = "/miro81/";
+    }
 
-    //make shellScript
+    await this.totalLaunching(test);
+
     totalOrder = '';
     totalOrder += "cd " + shellLink(this.links.server) + ";";
     totalOrder += "git add -A" + ";";
     totalOrder += "git commit -m \"Butterfly_Autoupdate" + dayString + "\"" + ";";
     totalOrder += "git push" + ";";
+    await shellExec(totalOrder);
 
-    //execute
-    shell.exec(totalOrder);
+    binaryTarget = await fileSystem(`readDir`, [ this.links.binary ]);
+    totalOrder = '';
+    if (binaryTarget.includes("binary")) {
+      await shellExec(`mkdir ${shellLink(this.links.server)}/list_image;`);
+      binaryTargetDir = await fileSystem(`readDir`, [ this.links.binary + "/binary" ]);
+      for (let i of binaryTargetDir) {
+        if (i !== `.DS_Store`) {
+          totalOrder += `cp -r ${shellLink(this.links.binary)}/binary/${i} ${shellLink(this.links.server)}/list_image;`;
+        }
+      }
+      if (binaryTargetDir.length > 0) {
+        await shellExec(totalOrder);
+      }
+    }
+
+    await shellExec(`rm`, [ `-rf`, `${this.links.server}/.git` ]);
 
     if (!test) {
 
-      //binary setting
-      binaryTarget = await fileSystem(`readDir`, [ this.links.binary ]);
-      totalOrder = '';
-
-      if (binaryTarget.includes("binary")) {
-        shell.exec(`mkdir ${shellLink(this.links.server)}/list_image;`);
-        binaryTargetDir = await fileSystem(`readDir`, [ this.links.binary + "/binary" ]);
-        for (let i of binaryTargetDir) {
-          if (i !== `.DS_Store`) {
-            totalOrder += `cp -r ${shellLink(this.links.binary)}/binary/${i} ${shellLink(this.links.server)}/list_image;`;
-          }
-        }
-        if (binaryTargetDir.length > 0) {
-          shell.exec(totalOrder);
-        }
-      }
-
-      shell.exec(`mv ${shellLink(this.links.server)} ${shellLink(process.env.HOME)}/www;`);
-
+      await shellExec(`mv ${shellLink(this.links.server)} ${shellLink(process.env.HOME)}/${www};`);
       input = await this.consoleQ(`is it OK? : (if no problem, press 'ok')\n`);
       if (input === "done" || input === "a" || input === "o" || input === "ok" || input === "OK" || input === "Ok" || input === "oK" || input === "yes" || input === "y" || input === "yeah" || input === "Y") {
-        shell.exec(`scp -r ${shellLink(process.env.HOME)}/www miro81@home-liaison.com:/miro81/`);
+        await shellExec(`scp -r ${shellLink(process.env.HOME)}/${www} ${user}@${host}:${path}`);
         console.log(`front update all done`);
       }
 
     } else {
 
-      shell.exec(`rm -rf ${shellLink(this.links.server)}`);
+      await fileSystem(`mkdir`, [ `${process.env.HOME}/${uniqueFolder}` ]);
+      await shellExec(`mv ${shellLink(this.links.server)} ${shellLink(process.env.HOME)}/${uniqueFolder};`);
+      await shellExec(`mv ${shellLink(process.env.HOME)}/${uniqueFolder}/${this.links.server_name} ${shellLink(process.env.HOME)}/${uniqueFolder}/${static};`);
+      await shellExec(`scp -r ${shellLink(process.env.HOME)}/${uniqueFolder}/${static} ${user}@${host}:${path}`);
+      console.log(`front update all done (test)`);
+      await shellExec(`rm`, [ `-rf`, `${process.env.HOME}/${uniqueFolder}` ]);
 
     }
 

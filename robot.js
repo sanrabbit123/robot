@@ -334,17 +334,21 @@ Robot.prototype.frontSource = function (argv) {
   fobot.front_maker(argv);
 }
 
-Robot.prototype.frontMaker = function (webpack) {
-  const FrontMaker = require(process.cwd() + "/apps/frontMaker/frontMaker.js");
-  let fobot = new FrontMaker();
-  fobot.totalLaunching(webpack);
-}
-
-Robot.prototype.frontUpdate = async function (testMode) {
+Robot.prototype.frontTest = async function () {
   try {
     const FrontMaker = require(process.cwd() + "/apps/frontMaker/frontMaker.js");
     let fobot = new FrontMaker();
-    await fobot.totalUpdate(testMode);
+    await fobot.totalUpdate(true);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+Robot.prototype.frontUpdate = async function () {
+  try {
+    const FrontMaker = require(process.cwd() + "/apps/frontMaker/frontMaker.js");
+    let fobot = new FrontMaker();
+    await fobot.totalUpdate(false);
   } catch (e) {
     console.log(e);
   }
@@ -861,10 +865,6 @@ Robot.prototype.launching = async function () {
       re2 = await consoleQ(`Choose commands : 1.token 2.analytics\n`);
       this.googleAPIs(re2);
 
-    //front
-    } else if (re === "front" || re === "6") {
-      this.frontMaker(false);
-
     //exit
     } else if (re === "exit" || re === "10") {
       process.exit();
@@ -919,7 +919,7 @@ const MENU = {
   },
   front: async function () {
     try {
-      robot.frontMaker(process.argv[3] === "--webpack");
+      await robot.frontTest();
     } catch (e) {
       console.log(e);
     }
@@ -935,13 +935,9 @@ const MENU = {
       console.log(e);
     }
   },
-  frontupdate: async function () {
+  frontUpdate: async function () {
     try {
-      if (process.argv[3] !== undefined) {
-        robot.frontUpdate(true);
-      } else {
-        robot.frontUpdate(false);
-      }
+      await robot.frontUpdate();
     } catch (e) {
       console.log(e);
     }

@@ -7,6 +7,8 @@ DesignerJs.prototype.reportDataRendering = async function (desid) {
     const { ajaxJson, dateToString, autoComma } = GeneralJs;
     const today = new Date();
     const yearsAgo = new Date(today.getFullYear() - 10, today.getMonth(), today.getDate());
+    const tenYearsAgo = new Date(today.getFullYear() - 10, today.getMonth(), today.getDate());
+    const fourYearsAgo = new Date(today.getFullYear() - 4, today.getMonth(), today.getDate());
     const emptyDate = new Date(1800, 0, 1);
     const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
     const reverseMatrix = function (matrix) {
@@ -47,7 +49,6 @@ DesignerJs.prototype.reportDataRendering = async function (desid) {
       { serid: "s2011_aa04s", column: "architecture", name: "설계 변경", id: 'XT' }
     ];
     const xValueMap = { "M": "mini", "B": "basic", "P": "premium" };
-    const relationItems = [ "지속가능성 높음", "그냥 평범", "확인중", "좋지 않음" ];
     const { projects: allProjects, clients, contentsArr, price } = await ajaxJson({ desid }, "/getDesignerReport", { equal: true });
     class DesignerReports extends Array {
       constructor(arr, projects, price) {
@@ -1267,6 +1268,7 @@ DesignerJs.prototype.reportDataRendering = async function (desid) {
     let boo;
     let contents;
     let tempArr;
+    let thisDesignerCareerStart;
 
     allDesigners = [ this.designers.pick(desid) ];
 
@@ -1361,12 +1363,14 @@ DesignerJs.prototype.reportDataRendering = async function (desid) {
       entireTong.proposal = proposals;
       entireTong.contract = contract;
 
+      thisDesignerCareerStart = new Date(designer.information.business.career.startY, designer.information.business.career.startM - 1, 1);
+
       alpha = 0;
-      alpha += ((new Date(designer.information.business.career.startY, designer.information.business.career.startM - 1, 1)).valueOf() <= yearsAgo.valueOf()) ? 2 : 0;
-      alpha += (designer.analytics.project.paperWork.length >= 4) ? 2 : 0;
-      alpha += designer.analytics.purchase.agencies ? (1 / 3) : 0;
-      alpha += designer.analytics.purchase.setting.install ? (1 / 3) : 0;
-      alpha += designer.analytics.purchase.setting.storage ? (1 / 3) : 0;
+      alpha += (designer.information.business.career.relatedY >= 4 ? 0.5 : 0);
+      alpha += thisDesignerCareerStart.valueOf() <= tenYearsAgo.valueOf() ? 1 : (thisDesignerCareerStart.valueOf() <= fourYearsAgo.valueOf() ? 0.5 : 0);
+      alpha += (designer.analytics.project.paperWork.includes("3D") ? 0.5 : 0);
+      alpha += (designer.analytics.project.paperWork.includes("콜라주") ? 0.5 : 0);
+      alpha += (designer.analytics.project.paperWork.length >= 4 ? 0.5 : 0);
 
       homeliaison = 0;
       for (let { value } of designer.analytics.etc.personality) {
@@ -1374,11 +1378,16 @@ DesignerJs.prototype.reportDataRendering = async function (desid) {
           homeliaison = homeliaison + 1;
         }
       }
+      relationItems = [ "지속가능성 높음", "그냥 평범", "확인중", "좋지 않음" ];
       homeliaison += 2 - relationItems.indexOf(designer.analytics.etc.relation);
 
-      alpha += (homeliaison * (2 / 7));
-      //인기도
+      alpha += (homeliaison * (4.5 / 7));
+
+      //고객 평가 (2점 만점)
       alpha += 1;
+      //인기도 (0.5점 만점)
+      alpha += 0.5;
+
       alphaPercentage = (alpha / 100) + 1;
       alpha = (Math.floor(alpha * 100) / 100);
 

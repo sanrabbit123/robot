@@ -1,4 +1,16 @@
-module.exports = function (dayString) {
+module.exports = function (dayString, test = false) {
+  let host, gaId, gtagId;
+
+  if (!test) {
+    host = "home-liaison.com";
+    gaId = "UA-97880990-1";
+    gtagId = "GTM-W6FSR8M";
+  } else {
+    host = "home-liaison.info";
+    gaId = "UA-164287695-1";
+    gtagId = "GTM-KNW7SPD";
+  }
+
   return `<?php
 class Blockstyle {
 
@@ -12,11 +24,11 @@ class Blockstyle {
     $html .= "<title>".$titleinfo[0]."</title>\\n";
     $html .= '<meta name="referrer" content="same-origin">';
     $html .= '<meta name="description" content="'.$titleinfo[1].'">';
-    $html .= '<link rel="canonical" href="https://home-liaison.com'.$titleinfo[2].'">';
+    $html .= '<link rel="canonical" href="https://${host}'.$titleinfo[2].'">';
     $html .= '<meta content="'.$titleinfo[0].'" property="og:title">';
     $html .= '<meta content="'.$titleinfo[1].'" property="og:description">';
-    $html .= '<meta content="https://home-liaison.com'.$titleinfo[2].'" property="og:url">'.'<meta content="website" property="og:type">';
-    $html .= '<meta content="https://home-liaison.com'.$titleinfo[3].'" property="og:image">';
+    $html .= '<meta content="https://${host}'.$titleinfo[2].'" property="og:url">'.'<meta content="website" property="og:type">';
+    $html .= '<meta content="https://${host}'.$titleinfo[3].'" property="og:image">';
     $html .= '<meta name="google-site-verification" content="YRxCc6xhQlM3qTygta5Qw0CObJJrLDYmUE8_wCR0AQc">'.'<meta name="twitter:card" content="summary_large_image">'.'<meta content="855866308109037" property="fb:app_id">';
     $html .= '<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no,user-scalable=no">';
     $html .= '<meta name="robots" content="index,follow">';
@@ -26,19 +38,19 @@ class Blockstyle {
     $html .= '<link rel="manifest" href="/manifest.json">';
     $html .= '<meta name="keywords" content="홈스타일링, 홈리에종, 주거인테리어">';
     if ($cssself === "index") {
-      $html .= '<script type="application/ld+json">{"@context": "http:\\/\\/schema.org","@id": "http:\\/\\/home-liaison.com#","@type": "ProfessionalService","url": "https:\\/\\/home-liaison.com","name": "홈리에종 | 디자이너와 함께하는 홈스타일링 플랫폼","description": "홈리에종은 홈스타일링 플랫폼으로, 집을 디자인하는 새로운 방법을 제안합니다.","sameAs": ["https:\\/\\/www.facebook.com\\/homeliaison","https:\\/\\/blog.naver.com\\/homeliaison","https:\\/\\/www.instagram.com\\/homeliaison"],"address": {"@type": "PostalAddress","streetAddress": "279, Dongmak-ro","addressLocality": "Seoul","addressRegion": "Mapo-gu","postalCode": "04151","addressCountry": "KR"},"telephone": "02-2039-2252","image": "https:\\/\\/home-liaison.com\\/share\\/lb-image-0.jpg","openingHoursSpecification": {"@type": "OpeningHoursSpecification","dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens": "09:00","closes": "18:00"}}</script>';
+      $html .= '<script type="application/ld+json">{"@context": "http:\\/\\/schema.org","@id": "http:\\/\\/${host}#","@type": "ProfessionalService","url": "https:\\/\\/${host}","name": "홈리에종 | 디자이너와 함께하는 홈스타일링 플랫폼","description": "홈리에종은 홈스타일링 플랫폼으로, 집을 디자인하는 새로운 방법을 제안합니다.","sameAs": ["https:\\/\\/www.facebook.com\\/homeliaison","https:\\/\\/blog.naver.com\\/homeliaison","https:\\/\\/www.instagram.com\\/homeliaison"],"address": {"@type": "PostalAddress","streetAddress": "279, Dongmak-ro","addressLocality": "Seoul","addressRegion": "Mapo-gu","postalCode": "04151","addressCountry": "KR"},"telephone": "02-2039-2252","image": "https:\\/\\/${host}\\/share\\/lb-image-0.jpg","openingHoursSpecification": {"@type": "OpeningHoursSpecification","dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens": "09:00","closes": "18:00"}}</script>';
     }
     $html .= "<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':\\n";
     $html .= "new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],\\n";
     $html .= "j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=\\n";
     $html .= "'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);\\n";
-    $html .= "})(window,document,'script','dataLayer','GTM-W6FSR8M');</script>\\n";
-    $html .= '<script async src="https://www.googletagmanager.com/gtag/js?id=UA-97880990-1"></script>';
+    $html .= "})(window,document,'script','dataLayer','${gtagId}');</script>\\n";
+    $html .= '<script async src="https://www.googletagmanager.com/gtag/js?id=${gaId}"></script>';
     $html .= "<script>\\n";
     $html .= "window.dataLayer = window.dataLayer || [];\\n";
     $html .= "function gtag(){dataLayer.push(arguments);}\\n";
     $html .= "gtag('js', new Date());\\n";
-    $html .= "gtag('config', 'UA-97880990-1');\\n";
+    $html .= "gtag('config', '${gaId}');\\n";
     $html .= "</script>\\n";
     return $html;
   }
