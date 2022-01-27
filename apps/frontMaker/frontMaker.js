@@ -375,38 +375,6 @@ FrontMaker.prototype.phpGeneralToPoo = async function (dayString) {
       }
     }
 
-    /*
-
-    //set alimtalk
-    let template;
-    const kakao = new KakaoTalk();
-    await kakao.ready();
-    template = await kakao.setTalk("complete", "\".$name.\"", "$phone");
-    code = require(`${this.links.source}/phpGeneral/Alimtalk.js`);
-    result = code(dayString, template);
-    await fileSystem(`write`, [ `${this.links.server}/engine/Alimtalk.php`, result ]);
-    console.log(`alimtalk success`);
-
-    //set alphasector
-    const whereis = await this.mother.ipCheck();
-    let alpha = {};
-    alpha.name = `Alphasector`;
-    alpha.code = `<?php\n`;
-    alpha.code += `class Alphasector {\n\n`;
-    alpha.code += `\tprotected $dbarr = array(\n`;
-    alpha.code += `\t\t"dbhost" => "${whereis.rawObj.mysql.inner}",\n`;
-    alpha.code += `\t\t"dbid" => "${whereis.rawObj.user}",\n`;
-    alpha.code += `\t\t"dbpw" => "${whereis.rawObj.password}",\n`;
-    alpha.code += `\t\t"dbname" => "${whereis.rawObj.database}",\n`;
-    alpha.code += `\t);\n\n`;
-    alpha.code += `\tfunction __construct() {}\n\n`;
-    alpha.code += `}\n`;
-    alpha.code += `?>`;
-    await fileSystem(`write`, [ `${this.links.server}/engine/${alpha.name}.php`, alpha.code ]);
-    console.log(`alpha success`);
-
-    */
-
   } catch (e) {
     console.log(e);
     process.exit();

@@ -408,7 +408,6 @@ Robot.prototype.taxBill = async function () {
     const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
     const app = new BillMaker();
     await app.taxBill();
-    await this.aliveTest();
   } catch (e) {
     console.log(e);
   }
