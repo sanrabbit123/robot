@@ -198,6 +198,8 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
               console.log(err);
               messageSend({ text: client.name + " 제안서 제작 문제 생김" + err.message, channel: "#404_curation" }).catch((e) => { console.log(e) });
             });
+          } else {
+            instance.kakao.sendTalk("complete", client.name, client.phone).catch((err) => { console.log(err); });
           }
 
           res.set({ "Content-Type": "application/json" });
