@@ -6001,16 +6001,21 @@ StyleCurationJs.prototype.insertPannelBox = function () {
                   }
                 }
                 if (pass) {
-                  instance.mother.certificationBox(instance.client.name, instance.client.phone, async function (back, box) {
-                    try {
-                      await GeneralJs.sleep(500);
-                      document.body.removeChild(box);
-                      document.body.removeChild(back);
-                      instance.parsingValues();
-                    } catch (e) {
-                      await GeneralJs.ajaxJson({ message: "StyleCurationJs.certificationBox : " + e.message }, "/errorLog");
-                    }
-                  });
+
+                  await GeneralJs.sleep(500);
+                  instance.parsingValues();
+
+                  // instance.mother.certificationBox(instance.client.name, instance.client.phone, async function (back, box) {
+                  //   try {
+                  //     await GeneralJs.sleep(500);
+                  //     document.body.removeChild(box);
+                  //     document.body.removeChild(back);
+                  //     instance.parsingValues();
+                  //   } catch (e) {
+                  //     await GeneralJs.ajaxJson({ message: "StyleCurationJs.certificationBox : " + e.message }, "/errorLog");
+                  //   }
+                  // });
+
                 }
               }
             }
@@ -6027,7 +6032,7 @@ StyleCurationJs.prototype.insertPannelBox = function () {
         },
         children: [
           {
-            text: "금액 알아보기",
+            text: "신청 완료하기",
             style: {
               position: "absolute",
               top: String(buttonTextTop) + ea,

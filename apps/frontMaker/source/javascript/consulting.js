@@ -539,21 +539,21 @@ ConsultingJs.prototype.submitEvent = function (boo) {
         icon.parentNode.lastChild.style.display = "none";
       }
 
-      //view certificationBox
-      instance.certificationBox(submitNamePhone[0], submitNamePhone[1], mother, boo, () => {
-        //send google analytics
-        if (obj.cellphone !== "010-2747-3403") {
-          window.gtag('event', 'login');
-        }
-        //submit
+      // DEV =========================================================================================================================================
 
-        if (typeof window.ga.getAll()[0].get('clientId') === "string") {
-          ajaxdata += "&googleId=" + window.ga.getAll()[0].get('clientId');
-        }
+      GeneralJs.ajax(ajaxdata, "https://home-liaison.serveftp.com:3000/submit", instance.thankyouPage(boo, submitNamePhone));
 
-        GeneralJs.ajax(ajaxdata, "https://home-liaison.serveftp.com:3000/submit", (data) => {});
-        GeneralJs.ajax(ajaxdata, "/engine/Submit.php", instance.thankyouPage(boo, submitNamePhone));
-      });
+      // instance.certificationBox(submitNamePhone[0], submitNamePhone[1], mother, boo, () => {
+      //   if (obj.cellphone !== "010-2747-3403") {
+      //     window.gtag('event', 'login');
+      //   }
+      //   if (typeof window.ga.getAll()[0].get('clientId') === "string") {
+      //     ajaxdata += "&googleId=" + window.ga.getAll()[0].get('clientId');
+      //   }
+      //   GeneralJs.ajax(ajaxdata, "https://home-liaison.serveftp.com:3000/submit", instance.thankyouPage(boo, submitNamePhone));
+      // });
+
+      // DEV =========================================================================================================================================
 
     }
   }
@@ -1462,21 +1462,18 @@ ConsultingJs.prototype.thankyouPage = function (boo, valuesTong) {
   const instance = this;
   let mo = (boo === "desktop") ? "" : "mo";
   return function (data) {
-    if (data === "error") {
+    if (data === "error" || data === "null") {
+
+      window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
       window.location.href = "https://home-liaison.com/consulting.php";
       return false;
-    } else {
+
+    } else if (data === "photo") {
+
       history.pushState({}, "", "?submit=true");
       instance.pendingBox(document.getElementById((boo === "desktop") ? "consultingbox" : "moconsultingbox"), boo, true);
+
       window.scrollTo({ top: 0, behavior: "smooth" });
-
-
-      // DEV =========================================================================================
-
-      window.location.href = "https://home-liaison.info/middle/curation/?cliid=c1801_aa01s";
-
-      /*
-
       document.getElementById("consultinggrayback").style.cssText = "height:1600px";
       document.getElementById(mo + "consultingbox").style.animation = "fadedown 1s ease forwards";
       document.getElementById(mo + "consultingtitle").style.animation = "fadedown 1s ease forwards";
@@ -1493,7 +1490,14 @@ ConsultingJs.prototype.thankyouPage = function (boo, valuesTong) {
         clearTimeout(fadeout);
       }, 1100);
 
-      */
+    } else {
+
+      history.pushState({}, "", "?submit=true");
+      instance.pendingBox(document.getElementById((boo === "desktop") ? "consultingbox" : "moconsultingbox"), boo, true);
+
+      // DEV =========================================================================================
+
+      window.location.href = "https://home-liaison.info/middle/curation/?cliid=" + data;
 
       // DEV =========================================================================================
 
@@ -4029,7 +4033,7 @@ ConsultingJs.prototype.launching = async function () {
         name = GeneralJs.escapeString(getObj.name, { hangul: true, noSpace: true });
         phone = GeneralJs.escapeString(getObj.phone, { noSpace: true });
         tempFunc = instance.thankyouPage(flatform, [ name, phone ]);
-        tempFunc();
+        tempFunc("photo");
 
         interaction.lastChild.style.animation = "justfadeout 0.5s ease forwards";
         icon.removeEventListener("click", GeneralJs.events["iconClickEvent"][toggle]);

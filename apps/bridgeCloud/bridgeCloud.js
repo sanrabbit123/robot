@@ -364,26 +364,26 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       //ban bad data
       const ifOverlap = await instance.back.getClientsByQuery({ phone: filterAll(resultObj.cellphone) }, { withTools: false, selfMongo: MONGOC });
       let pastInfo_boo = false;
+      let requestObj;
+      let requestArr;
+      let pastRequests;
+      let tempArr;
+      let message;
+      let thisClientArr, thisClient;
+      let defaultPyeong;
+      let cliid;
+      let future;
+
+      defaultPyeong = 34;
+      requestObj = {};
+      cliid = "null";
 
       if (/[ㄱ-ㅎㅏ-ㅣ]/g.test(resultObj.pretext) || /[a-zA-Z]/g.test(resultObj.pretext) || resultObj.pretext === '') {
 
         await messageSend({ text: "불량 데이터 확인, 직접 확인해주세요. : " + resultObj.pretext + ' ' + resultObj.cellphone, channel: "#401_consulting" });
+        throw new Error("invaild request");
 
       } else {
-
-        let requestObj;
-        let requestArr;
-        let pastRequests;
-        let tempArr;
-        let message;
-        let thisClientArr, thisClient;
-        let defaultPyeong;
-        let cliid;
-        let future;
-
-        defaultPyeong = 34;
-
-        requestObj = {};
 
         requestObj["name"] = filterAll(filterName(resultObj["pretext"]));
         requestObj["phone"] = filterAll(resultObj["cellphone"]);
@@ -537,11 +537,6 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           //send alimtalk and print
           KAKAO.sendTalk("complete", requestObj["name"], requestObj["phone"]).then(() => {
             return ghostRequest("/print", { cliid });
-          // }).then(() => {
-          //   return ADDRESS.apartNameSearch(requestObj["requests.0.request.space.address"]);
-          // }).then((data) => {
-          //   data.cliid = cliid;
-          //   return ghostRequest("/apartment", { data });
           }).catch((err) => {
             errorLog("Bridge 서버 문제 생김 (submit, ghost 전달) : " + err.message).catch((e) => { console.log(e); });
           });
@@ -561,7 +556,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       }
 
       //end
-      res.send("success");
+      res.send(cliid);
 
     } catch (e) {
       await errorLog("Bridge 서버 문제 생김 (submit) : " + e.message);
