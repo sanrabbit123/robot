@@ -1489,6 +1489,7 @@ ConsultingJs.prototype.thankyouPage = function (boo, valuesTong) {
       history.pushState({}, "", "?submit=true");
       instance.pendingBox(document.getElementById((boo === "desktop") ? "consultingbox" : "moconsultingbox"), boo, true);
 
+      // DEV
       window.location.href = "https://home-liaison.servehttp.com/middle/curation/?cliid=" + data;
 
     }

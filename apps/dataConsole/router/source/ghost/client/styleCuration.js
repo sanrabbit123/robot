@@ -6002,7 +6002,6 @@ StyleCurationJs.prototype.insertPannelBox = function () {
                 }
                 if (pass) {
 
-                  await GeneralJs.sleep(500);
                   instance.parsingValues();
 
                   // instance.mother.certificationBox(instance.client.name, instance.client.phone, async function (back, box) {
