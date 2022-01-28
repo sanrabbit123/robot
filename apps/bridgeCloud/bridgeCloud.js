@@ -531,24 +531,28 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           }
           await messageSend({ text: message, channel: "#401_consulting" });
 
-          //send alimtalk and print
-          KAKAO.sendTalk("complete", requestObj["name"], requestObj["phone"]).then(() => {
-            return ghostRequest("/print", { cliid });
-          }).catch((err) => {
-            errorLog("Bridge 서버 문제 생김 (submit, ghost 전달) : " + err.message).catch((e) => { console.log(e); });
-          });
+          // //send alimtalk and print
+          // KAKAO.sendTalk("complete", requestObj["name"], requestObj["phone"]).then(() => {
+          //   return ghostRequest("/print", { cliid });
+          // }).catch((err) => {
+          //   errorLog("Bridge 서버 문제 생김 (submit, ghost 전달) : " + err.message).catch((e) => { console.log(e); });
+          // });
 
         } else {
           message = '';
           message += JSON.stringify(requestObj, null, 2);
           await messageSend({ text: message, channel: "#error_log" });
 
-          //send alimtalk and print
-          KAKAO.sendTalk("complete", requestObj["name"], requestObj["phone"]).catch((err) => {
-            errorLog("Bridge 서버 문제 생김 (submit, kakao) : " + err.message).catch((e) => { console.log(e); });
-          });
+          // //send alimtalk and print
+          // KAKAO.sendTalk("complete", requestObj["name"], requestObj["phone"]).catch((err) => {
+          //   errorLog("Bridge 서버 문제 생김 (submit, kakao) : " + err.message).catch((e) => { console.log(e); });
+          // });
 
         }
+
+        ghostRequest("/print", { cliid }).catch((err) => {
+          errorLog("Bridge 서버 문제 생김 (submit, kakao) : " + err.message).catch((e) => { console.log(e); });
+        });
 
       }
 
