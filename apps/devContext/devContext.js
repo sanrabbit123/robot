@@ -92,11 +92,18 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
 
-
-
-
+    // const RETHINKC = await rethink.connect();
+    // let messages;
+    //
+    // messages = await rethink.rethinkRead("messageLog", {}, { selfRethink: RETHINKC });
+    // messages.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+    // messages = messages.slice(0, 10).map((obj) => { const { channel, date, text } = obj; return { channel, date, text } })
+    //
+    // console.log(messages);
+    //
+    //
+    // await RETHINKC.close();
 
 
 

@@ -310,7 +310,7 @@ BridgeCloud.prototype.parsingAddress = async function (id, rawString, MONGOC) {
 
 BridgeCloud.prototype.bridgeServer = function (needs) {
   const instance = this;
-  const { fileSystem, requestSystem, shell, shellLink, todayMaker, ghostRequest, headRequest, sleep, statusReading, equalJson, messageSend, errorLog, messageLog } = this.mother;
+  const { fileSystem, requestSystem, shell, shellLink, todayMaker, ghostRequest, headRequest, sleep, equalJson, messageSend, errorLog, messageLog } = this.mother;
   const GoogleCalendar = require(process.cwd() + "/apps/googleAPIs/googleCalendar.js");
   const { filterAll, filterName, filterDate, filterCont, filterNull } = BridgeCloud.clientFilters;
   const [ MONGOC, MONGOLOCALC, KAKAO, HUMAN, ADDRESS ] = needs;
@@ -321,9 +321,6 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
   funcObj.get_ssl = async function (req, res) {
     res.set({ "Content-Type": "text/plain" });
     try {
-      statusReading().catch((err) => {
-        console.log(err);
-      });
       res.send("this is new bridge cloud");
     } catch (e) {
       await errorLog("bridge 서버 문제 생김 (get_ssl): " + e.message);

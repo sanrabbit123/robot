@@ -49,14 +49,10 @@ ReceiptRouter.prototype.rou_get_Root = function () {
 
 ReceiptRouter.prototype.rou_get_Ssl = function () {
   const instance = this;
-  const { statusReading } = this.mother;
   let obj = {};
   obj.link = '/ssl';
   obj.func = async function (req, res) {
     try {
-      statusReading().catch((err) => {
-        console.log(err);
-      });
       res.set({
         "Content-Type": "text/plain",
         "Access-Control-Allow-Origin": "*",

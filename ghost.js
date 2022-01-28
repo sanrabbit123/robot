@@ -1043,7 +1043,7 @@ Ghost.prototype.ghostRouter = function (needs) {
   const address = this.address;
   const { webHook, serverTempFolder } = this;
   const [ MONGOC, MONGOLOCALC, MONGOCONSOLEC, rethink ] = needs;
-  const { fileSystem, headRequest, requestSystem, shell, shellExec, shellLink, ghostRequest, dateToString, todayMaker, mongo, mongoinfo, mongolocalinfo, sleep, equalJson, leafParsing, statusReading, uniqueValue, setQueue, ipParsing, errorLog, messageSend, messageLog } = this.mother;
+  const { fileSystem, headRequest, requestSystem, shell, shellExec, shellLink, ghostRequest, dateToString, todayMaker, mongo, mongoinfo, mongolocalinfo, sleep, equalJson, leafParsing, uniqueValue, setQueue, ipParsing, errorLog, messageSend, messageLog } = this.mother;
   const querystring = require("querystring");
   const PlayAudio = require(process.cwd() + "/apps/playAudio/playAudio.js");
   const ParsingHangul = require(process.cwd() + "/apps/parsingHangul/parsingHangul.js");
@@ -1081,8 +1081,6 @@ Ghost.prototype.ghostRouter = function (needs) {
     func: async function (req, res) {
       try {
         instance.stylingFormSync(MONGOC).then(() => {
-          return statusReading();
-        }).then(() => {
           return instance.insyncCheck();
         }).then(() => {
           return instance.callHistory(MONGOC, MONGOCONSOLEC);

@@ -780,7 +780,7 @@ GraphicBot.prototype.botRouter = function () {
   const instance = this;
   const back = this.back;
   const chromeGhost = this.chromeGhost;
-  const { fileSystem, shell, shellExec, shellLink, equalJson, requestSystem, sleep, stringToDate, getDateMatrix, statusReading, setQueue } = this.mother;
+  const { fileSystem, shell, shellExec, shellLink, equalJson, requestSystem, sleep, stringToDate, getDateMatrix, setQueue } = this.mother;
   const orderConst = 'g';
   const tong = this.tong;
   const address = this.address;
@@ -1238,9 +1238,6 @@ GraphicBot.prototype.botRouter = function () {
   funcObj.get_ssl = {
     link: [ "/ssl" ],
     func: function (req, res) {
-      statusReading().catch((err) => {
-        console.log(err);
-      });
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ message: "hi" }));
     }

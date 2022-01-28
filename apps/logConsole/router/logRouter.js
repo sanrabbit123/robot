@@ -54,16 +54,12 @@ LogRouter.prototype.baseMaker = function (target, req = null) {
 
 LogRouter.prototype.rou_get_First = function () {
   const instance = this;
-  const { statusReading } = this.mother;
   let obj = {};
   obj.link = "/log/:id";
   obj.func = function (req, res) {
     try {
       let target;
       if (req.params.id === "ssl") {
-        statusReading().catch((err) => {
-          console.log(err);
-        });
         res.set({ "Content-Type": "text/plain" });
         res.send("hi");
       } else {

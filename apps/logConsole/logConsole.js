@@ -269,11 +269,13 @@ LogConsole.prototype.playgroundConnect = async function () {
 
     //set mongo connetion
     let MONGOC, MONGOLOCALC;
-    isLocal = true;
-    MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
-    console.log(`\x1b[33m%s\x1b[0m`, `set DB server => 127.0.0.1`);
+    await this.back.setInfoObj({ getMode: false });
+    isLocal = false;
+    MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+    console.log(`\x1b[33m%s\x1b[0m`, `set DB server => ${this.address.mongoinfo.host}`);
     MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
-    console.log(`\x1b[33m%s\x1b[0m`, `set SSE server => 127.0.0.1`);
+    console.log(`\x1b[33m%s\x1b[0m`, `set SSE server => ${this.address.backinfo.host}`);
+
     console.log(``);
 
     await MONGOC.connect();

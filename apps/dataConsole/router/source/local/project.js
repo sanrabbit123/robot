@@ -4879,6 +4879,159 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           });
           scroll = createNode({
             mother: tong,
+            attribute: { proid, desid, cliid, method },
+            events: {
+              contextmenu: function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const thisRect = this.getBoundingClientRect();
+                const proid = this.getAttribute("proid");
+                const desid = this.getAttribute("desid");
+                const cliid = this.getAttribute("cliid");
+                const method = this.getAttribute("method");
+                let x, y;
+
+                x = e.x - thisRect.x;
+                y = e.y - thisRect.y;
+
+                const menuClass = "billMenu";
+                const menuContents = [
+                  {
+                    text: "출장 견적 추가",
+                    eventFunction: async function (e) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      try {
+                        let number, bill, tempObj, removeTargets, promptValue;
+                        promptValue = window.prompt("출장비를 몇 회로 설정할까요?");
+                        if (promptValue !== null) {
+                          number = promptValue.trim();
+                          number = Number(String(number).replace(/[^0-9]/gi, ''));
+                          if (Number.isNaN(number)) {
+                            number = 2;
+                          }
+                          bill = await ajaxJson({ injectionCase: "request", proid, method, number }, PYTHONHOST + "/travelInjection", { equal: true });
+                          GeneralJs.stacks[thisProjectBill] = bill;
+                          cleanChildren(scrollTong);
+                          requestArrMake();
+                          responseArrMake();
+                          requestLoad();
+                          removeTargets = document.querySelectorAll('.' + menuClass);
+                          for (let dom of removeTargets) {
+                            dom.remove();
+                          }
+                        }
+                      } catch (e) {
+                        console.log(e);
+                      }
+                    }
+                  },
+                  {
+                    text: "촬영 견적 추가",
+                    eventFunction: function (e) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }
+                  },
+                ];
+                let menuFontSize;
+                let menuPaddingTop, menuPaddingBottom, menuPaddingLeft;
+                let menuMargin;
+                let menuTong;
+                let num;
+
+                menuFontSize = fontSize - 1;
+                menuPaddingTop = innerPaddingTop - 2;
+                menuPaddingBottom = innerPaddingBottom - 2;
+                menuPaddingLeft = innerPaddingLeft - 1;
+                menuMargin = imageMargin / 2;
+
+                createNode({
+                  mother: this,
+                  class: [ menuClass ],
+                  events: [
+                    {
+                      type: "click",
+                      event: function (e) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        const targets = document.querySelectorAll('.' + menuClass);
+                        for (let dom of targets) {
+                          dom.remove();
+                        }
+                      }
+                    },
+                    {
+                      type: "contextmenu",
+                      event: function (e) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                      }
+                    }
+                  ],
+                  style: {
+                    position: "fixed",
+                    top: String(0),
+                    left: String(0),
+                    width: String(100) + '%',
+                    height: String(100) + '%',
+                    background: "transparent",
+                    zIndex: String(1),
+                  }
+                });
+
+                menuTong = createNode({
+                  mother: this,
+                  class: [ menuClass ],
+                  events: [
+                    {
+                      type: "click",
+                      event: (e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                      }
+                    }
+                  ],
+                  style: {
+                    position: "absolute",
+                    top: String(y) + ea,
+                    left: String(x) + ea,
+                    zIndex: String(1),
+                    animation: "fadeuplite 0.2s ease",
+                  }
+                });
+
+                for (let { text, eventFunction } of menuContents) {
+                  createNode({
+                    mother: menuTong,
+                    events: [
+                      {
+                        type: "click",
+                        event: eventFunction
+                      }
+                    ],
+                    text,
+                    style: {
+                      position: "relative",
+                      fontSize: String(menuFontSize) + ea,
+                      fontWeight: String(500),
+                      color: colorChip.whiteBlack,
+                      background: colorChip.greenGray,
+                      paddingTop: String(menuPaddingTop) + ea,
+                      paddingBottom: String(menuPaddingBottom) + ea,
+                      paddingLeft: String(menuPaddingLeft) + ea,
+                      paddingRight: String(menuPaddingLeft) + ea,
+                      borderRadius: String(3) + "px",
+                      marginBottom: String(menuMargin) + ea,
+                      cursor: "pointer",
+                      textAlign: "center",
+                      boxShadow: "0px 2px 12px -9px " + colorChip.shadow,
+                    }
+                  });
+                }
+
+              }
+            },
             style: {
               position: "relative",
               width: String(100) + '%',
@@ -4900,10 +5053,6 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
           requestLoad = () => {
             scrollTong.style.height = String(8000) + ea;
-            scrollTong.parentElement.setAttribute("proid", proid);
-            scrollTong.parentElement.setAttribute("desid", desid);
-            scrollTong.parentElement.setAttribute("cliid", cliid);
-            scrollTong.parentElement.setAttribute("method", method);
             let num;
             num = 0;
             for (let { text, id, deactive } of requestArr) {
