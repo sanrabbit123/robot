@@ -539,21 +539,15 @@ ConsultingJs.prototype.submitEvent = function (boo) {
         icon.parentNode.lastChild.style.display = "none";
       }
 
-      // DEV =========================================================================================================================================
-
-      GeneralJs.ajax(ajaxdata, "https://home-liaison.serveftp.com:3000/submit", instance.thankyouPage(boo, submitNamePhone));
-
-      // instance.certificationBox(submitNamePhone[0], submitNamePhone[1], mother, boo, () => {
-      //   if (obj.cellphone !== "010-2747-3403") {
-      //     window.gtag('event', 'login');
-      //   }
-      //   if (typeof window.ga.getAll()[0].get('clientId') === "string") {
-      //     ajaxdata += "&googleId=" + window.ga.getAll()[0].get('clientId');
-      //   }
-      //   GeneralJs.ajax(ajaxdata, "https://home-liaison.serveftp.com:3000/submit", instance.thankyouPage(boo, submitNamePhone));
-      // });
-
-      // DEV =========================================================================================================================================
+      instance.certificationBox(submitNamePhone[0], submitNamePhone[1], mother, boo, () => {
+        if (obj.cellphone !== "010-2747-3403") {
+          window.gtag('event', 'login');
+        }
+        if (typeof window.ga.getAll()[0].get('clientId') === "string") {
+          ajaxdata += "&googleId=" + window.ga.getAll()[0].get('clientId');
+        }
+        GeneralJs.ajax(ajaxdata, "https://home-liaison.serveftp.com:3000/submit", instance.thankyouPage(boo, submitNamePhone));
+      });
 
     }
   }
@@ -1495,11 +1489,7 @@ ConsultingJs.prototype.thankyouPage = function (boo, valuesTong) {
       history.pushState({}, "", "?submit=true");
       instance.pendingBox(document.getElementById((boo === "desktop") ? "consultingbox" : "moconsultingbox"), boo, true);
 
-      // DEV =========================================================================================
-
-      window.location.href = "https://home-liaison.info/middle/curation/?cliid=" + data;
-
-      // DEV =========================================================================================
+      window.location.href = "https://home-liaison.servehttp.com/middle/curation/?cliid=" + data;
 
     }
   }
@@ -1526,6 +1516,7 @@ ConsultingJs.prototype.returnBlocks = function () {
             let input = dom.children[0];
             input.style.textAlign = "center";
             input.setAttribute("placeholder", "성함");
+
             return dom;
           }
         },
@@ -1547,6 +1538,7 @@ ConsultingJs.prototype.returnBlocks = function () {
             input.addEventListener("keyup", function (e) {
               this.value = GeneralJs.autoHypenPhone(this.value);
             });
+
             return dom;
           }
         },
@@ -1758,6 +1750,7 @@ ConsultingJs.prototype.returnBlocks = function () {
             input.style.textAlign = "left";
             input.style.textIndent = "10px";
             input.setAttribute("placeholder", "가족 구성원 (예) 부부, 딸 0명, 아들 0명, 딸 0세");
+
             return dom;
           }
         },
@@ -1776,6 +1769,7 @@ ConsultingJs.prototype.returnBlocks = function () {
             input.style.textAlign = "left";
             input.style.textIndent = "10px";
             input.setAttribute("placeholder", "example@home-liaison.com");
+
             return dom;
           }
         },
@@ -1795,6 +1789,7 @@ ConsultingJs.prototype.returnBlocks = function () {
             let input = dom.children[0];
             input.style.textAlign = "center";
             input.setAttribute("placeholder", "성함");
+
             return dom;
           }
         },
@@ -1816,6 +1811,7 @@ ConsultingJs.prototype.returnBlocks = function () {
             input.addEventListener("keyup", function (e) {
               this.value = GeneralJs.autoHypenPhone(this.value);
             });
+
             return dom;
           }
         },
