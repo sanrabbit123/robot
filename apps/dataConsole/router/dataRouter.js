@@ -296,7 +296,7 @@ DataRouter.prototype.rou_get_First = function () {
   const instance = this;
   let obj = {};
   let ipTong, tempIpTong;
-  ipTong = [ 1, 127001, 172301254 ];
+  ipTong = [ 1, 127001, 172301254, 2112071995 ];
   tempIpTong = [];
   for (let info in instance.address) {
     if (instance.address[info].ip.outer.length > 0) {
@@ -5343,11 +5343,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
               if (newProid === null) {
                 newProid = proid;
               }
-              if (req.body.silent === undefined) {
-                return instance.kakao.sendTalk("curationComplete", client.name, client.phone, { client: client.name });
-              } else {
-                return passPromise();
-              }
+              return instance.kakao.sendTalk("curationComplete", client.name, client.phone, { client: client.name });
             }).then(() => {
 
               if (newProid === null) {
@@ -5393,6 +5389,8 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
               console.log(err);
               messageSend({ text: client.name + " 제안서 제작 문제 생김" + err.message, channel: "#404_curation" }).catch((e) => { console.log(e) });
             });
+          } else {
+            instance.kakao.sendTalk("complete", client.name, client.phone).catch((err) => { console.log(err); });
           }
 
           res.set({ "Content-Type": "application/json" });

@@ -648,223 +648,110 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
               }
             }
           },
-          // {
-          //   name: "precheck",
-          //   type: "calendar",
-          //   half: true,
-          //   required: false,
-          //   question: [
-          //     "<b%사전 점검일%b>이 있다면, 날짜를 알려주세요!"
-          //   ],
-          //   item: "사전 점검일",
-          //   value: function (request, history, self) {
-          //     if (request.analytics.date.space.precheck.valueOf() < (new Date(2000, 0, 1)).valueOf()) {
-          //       return null;
-          //     } else {
-          //       return request.analytics.date.space.precheck;
-          //     }
-          //   },
-          //   update: function (value, siblings, client) {
-          //     if (value === null) {
-          //       return { history: null, core: null };
-          //     } else {
-          //       let updateQuery;
-          //       updateQuery = {};
-          //       updateQuery["requests.0.analytics.date.space.precheck"] = value;
-          //       return {
-          //         history: null,
-          //         core: updateQuery
-          //       };
-          //     }
-          //   }
-          // },
-          // {
-          //   name: "empty",
-          //   type: "calendar",
-          //   half: true,
-          //   required: false,
-          //   question: [
-          //     "공실이 아니라면, <b%집 비는 날짜%b>를 알려주세요!"
-          //   ],
-          //   item: "집 비는 날",
-          //   value: function (request, history, self) {
-          //     if (request.analytics.date.space.empty.valueOf() < (new Date(2000, 0, 1)).valueOf()) {
-          //       return null;
-          //     } else {
-          //       return request.analytics.date.space.empty;
-          //     }
-          //   },
-          //   update: function (value, siblings, client) {
-          //     if (value === null) {
-          //       return { history: null, core: null };
-          //     } else {
-          //       let updateQuery;
-          //       updateQuery = {};
-          //       updateQuery["requests.0.analytics.date.space.empty"] = value;
-          //       return {
-          //         history: null,
-          //         core: updateQuery
-          //       };
-          //     }
-          //   }
-          // },
-          // {
-          //   name: "buildingType",
-          //   type: "checkbox",
-          //   half: true,
-          //   required: true,
-          //   rewind: "건물 유형을 체크해주세요! (상가일 시, 오피스텔로 체크해주세요!)",
-          //   question: [
-          //     "해당 거주지의 <b%건물 유형%b>을 알려주세요!"
-          //   ],
-          //   items: [
-          //     "아파트",
-          //     "오피스텔",
-          //     "타운하우스",
-          //     "빌라",
-          //     "단독 주택"
-          //   ],
-          //   realItems: [
-          //     100 / 75,
-          //     100 / 50,
-          //     100 / 70,
-          //     100 / 65,
-          //     100 / 70
-          //   ],
-          //   multiple: false,
-          //   exception: function (items, media) {
-          //     const ea = "px";
-          //     const mobile = media[4];
-          //     const desktop = !mobile;
-          //     let padding, subtract;
-          //     let paddingLeft, left;
-          //     if (desktop) {
-          //       padding = Number(items[4].style.paddingLeft.replace(/[^0-9\.\-]/g, ''));
-          //       subtract = items[2].getBoundingClientRect().width - items[4].getBoundingClientRect().width;
-          //       items[4].style.width = String(items[2].getBoundingClientRect().width - padding) + ea;
-          //       items[4].children[1].style.left = String(Number(items[4].children[1].style.left.replace(/[^0-9\.\-]/g, '')) + subtract) + ea;
-          //     } else {
-          //       paddingLeft = 5.6;
-          //       left = paddingLeft - 1.2 - 1;
-          //       for (let dom of items) {
-          //         dom.style.paddingLeft = String(paddingLeft) + "vw";
-          //         dom.lastChild.style.left = String(left) + "vw";
-          //         items[4].children[0].textContent = "주택";
-          //       }
-          //     }
-          //   },
-          //   value: function (request, history, self) {
-          //     if (history.curation.building.type === "") {
-          //       return null;
-          //     } else {
-          //       return history.curation.building.type;
-          //     }
-          //   },
-          //   siblings: [ "pyeongStandard" ],
-          //   update: function (value, siblings, client) {
-          //     if (value === null) {
-          //       return { history: null, core: null };
-          //     } else {
-          //       const { items, realItems, selected } = value;
-          //       if (selected === null) {
-          //         return { history: null, core: null };
-          //       } else {
-          //         const apartStandard = 75;
-          //         let historyQuery, coreQuery;
-          //         let pyeong, pyeongTarget;
-          //
-          //         historyQuery = {};
-          //         historyQuery["curation.building.type"] = items[selected];
-          //
-          //         pyeong = client.requests[0].request.space.pyeong;
-          //
-          //         pyeongTarget = siblings.space.find((obj) => { return obj.name === "pyeongStandard"; }).value;
-          //         if (pyeongTarget === null || pyeongTarget === undefined) {
-          //           pyeong = realItems[selected] * pyeong;
-          //         } else if (typeof pyeongTarget === "object" && pyeongTarget.realItems !== undefined && pyeongTarget.realItems) {
-          //           if (pyeongTarget.realItems[pyeongTarget.selected]) {
-          //             pyeong = realItems[selected] * pyeong;
-          //           } else {
-          //             pyeong = (((1 / realItems[selected]) * 100) / apartStandard) * pyeong;
-          //           }
-          //         } else {
-          //           pyeong = realItems[selected] * pyeong;
-          //         }
-          //
-          //         coreQuery = {};
-          //         coreQuery["requests.0.request.space.pyeong"] = pyeong;
-          //
-          //         return {
-          //           history: historyQuery,
-          //           core: coreQuery
-          //         };
-          //       }
-          //     }
-          //   }
-          // },
-          // {
-          //   name: "pyeongStandard",
-          //   type: "checkbox",
-          //   half: true,
-          //   required: true,
-          //   rewind: "평형 기준을 체크해주세요!",
-          //   question: [
-          //     "적어주신 <b%평수가 분양 면적 기준%b>이 맞나요?"
-          //   ],
-          //   items: [
-          //     "분양 면적 (공급 면적)",
-          //     "전용 면적",
-          //   ],
-          //   value: function (request, history, self) {
-          //     return self.items[0];
-          //   },
-          //   realItems: [
-          //     false,
-          //     true,
-          //   ],
-          //   multiple: false,
-          //   siblings: [ "buildingType" ],
-          //   update: function (value, siblings, client) {
-          //     if (value === null) {
-          //       return { history: null, core: null };
-          //     }
-          //     const { items, realItems, selected } = value;
-          //     if (selected === null) {
-          //       return { history: null, core: null };
-          //     } else {
-          //       const apartStandard = 75;
-          //       let coreQuery;
-          //       let pyeong;
-          //       let calcValue;
-          //       let calcTarget;
-          //
-          //       pyeong = client.requests[0].request.space.pyeong;
-          //       calcTarget = siblings.space.find((obj) => { return obj.name === "buildingType"; }).value;
-          //       if (calcTarget === null || calcTarget === undefined) {
-          //         pyeong = pyeong;
-          //       } else if (typeof calcTarget === "object" && calcTarget.realItems !== undefined && calcTarget.realItems) {
-          //         calcValue = calcTarget.realItems[calcTarget.selected];
-          //         if (realItems[selected]) {
-          //           pyeong = calcValue * pyeong;
-          //         } else {
-          //           pyeong = (((1 / calcValue) * 100) / apartStandard) * pyeong;
-          //         }
-          //       } else {
-          //         pyeong = pyeong;
-          //       }
-          //
-          //       coreQuery = {};
-          //       coreQuery["requests.0.request.space.pyeong"] = pyeong;
-          //
-          //       return {
-          //         history: null,
-          //         core: coreQuery
-          //       };
-          //     }
-          //   }
-          // },
+          {
+            name: "precheck",
+            type: "calendar",
+            half: true,
+            required: false,
+            question: [
+              "<b%사전 점검일%b>이 있다면, 날짜를 알려주세요!"
+            ],
+            item: "사전 점검일",
+            value: function (request, history, self) {
+              if (request.analytics.date.space.precheck.valueOf() < (new Date(2000, 0, 1)).valueOf()) {
+                return null;
+              } else {
+                return request.analytics.date.space.precheck;
+              }
+            },
+            update: function (value, siblings, client) {
+              if (value === null) {
+                return { history: null, core: null };
+              } else {
+                let updateQuery;
+                updateQuery = {};
+                updateQuery["requests.0.analytics.date.space.precheck"] = value;
+                return {
+                  history: null,
+                  core: updateQuery
+                };
+              }
+            }
+          },
+          {
+            name: "empty",
+            type: "calendar",
+            half: true,
+            required: false,
+            question: [
+              "공실이 아니라면, <b%집 비는 날짜%b>를 알려주세요!"
+            ],
+            item: "집 비는 날",
+            value: function (request, history, self) {
+              if (request.analytics.date.space.empty.valueOf() < (new Date(2000, 0, 1)).valueOf()) {
+                return null;
+              } else {
+                return request.analytics.date.space.empty;
+              }
+            },
+            update: function (value, siblings, client) {
+              if (value === null) {
+                return { history: null, core: null };
+              } else {
+                let updateQuery;
+                updateQuery = {};
+                updateQuery["requests.0.analytics.date.space.empty"] = value;
+                return {
+                  history: null,
+                  core: updateQuery
+                };
+              }
+            }
+          },
         ]
       });
+
+      this.wordings.center.push({
+        name: "furniture",
+        title: "가구",
+        callback: "blockCheck",
+        children: [
+          {
+            name: "purchaseRatio",
+            type: "opposite",
+            half: false,
+            required: false,
+            question: [
+              "가구와 소품의 <b%기존 제품 구매와 재사용의%b>",
+              "<b%비율%b>을 알려주세요!"
+            ],
+            items: [
+              "재사용",
+              "새로 구입",
+            ],
+            total: 100,
+            ea: '%',
+            value: function (request, history, self) {
+              return history.curation.furniture.ratio;
+            },
+            update: function (value, siblings, client) {
+              if (value !== null) {
+                let updateQuery;
+                updateQuery = {};
+                updateQuery["curation.furniture.ratio"] = value.value;
+                return {
+                  history: updateQuery,
+                  core: null
+                };
+              } else {
+                return { history: null, core: null };
+              }
+            }
+          }
+        ]
+      });
+
+
       this.wordings.center.push({
         name: "construct",
         title: "시공",
