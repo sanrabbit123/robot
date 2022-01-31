@@ -449,7 +449,7 @@ ClientFlowJs.prototype.svgRender = function (dom) {
   const fill = "fill";
   const { ea, client, requestNumber } = this;
   const { colorChip, equalJson } = GeneralJs;
-  const { history, projects } = equalJson(JSON.stringify(client));
+  const { history, projects, cliid } = equalJson(JSON.stringify(client));
   const { curation } = history;
   const { analytics: { send, page } } = curation;
   const { request, analytics } = client.requests[requestNumber];
@@ -457,6 +457,7 @@ ClientFlowJs.prototype.svgRender = function (dom) {
   const emptyDateValue = (new Date(2000, 0, 1)).valueOf()
   let target;
   let progressProject, progressIndex;
+  let toggleOnoff;
 
   progressIndex = -1;
   progressProject = null;
@@ -464,6 +465,41 @@ ClientFlowJs.prototype.svgRender = function (dom) {
   progressIndex = projects.findIndex((obj) => { return obj.desid !== '' });
   if (progressIndex !== -1) {
     progressProject = projects[progressIndex];
+  }
+
+  toggleOnoff = function (index, cliid) {
+    return function (e) {
+      if (this.children[1].getAttribute("toggle") === "on") {
+        this.children[1].setAttribute("fill", colorChip.whiteBlack);
+        this.children[1].setAttribute("toggle", "off");
+        window.localStorage.setItem(cliid + "_" + String(index), "off");
+      } else {
+        this.children[1].setAttribute("fill", colorChip.green);
+        this.children[1].setAttribute("toggle", "on");
+        window.localStorage.setItem(cliid + "_" + String(index), "on");
+      }
+    }
+  }
+
+  document.querySelector(".response0").style.cursor = "pointer";
+  document.querySelector(".response0").addEventListener("click", toggleOnoff(0, cliid));
+  if (window.localStorage.getItem(cliid + "_" + String(0)) === "on") {
+    document.querySelector(".response0").children[1].setAttribute("fill", colorChip.green);
+    document.querySelector(".response0").children[1].setAttribute("toggle", "on");
+  }
+
+  document.querySelector(".response1").style.cursor = "pointer";
+  document.querySelector(".response1").addEventListener("click", toggleOnoff(1, cliid));
+  if (window.localStorage.getItem(cliid + "_" + String(1)) === "on") {
+    document.querySelector(".response1").children[1].setAttribute("fill", colorChip.green);
+    document.querySelector(".response1").children[1].setAttribute("toggle", "on");
+  }
+
+  document.querySelector(".response2").style.cursor = "pointer";
+  document.querySelector(".response2").addEventListener("click", toggleOnoff(2, cliid));
+  if (window.localStorage.getItem(cliid + "_" + String(2)) === "on") {
+    document.querySelector(".response2").children[1].setAttribute("fill", colorChip.green);
+    document.querySelector(".response2").children[1].setAttribute("toggle", "on");
   }
 
   // 1
