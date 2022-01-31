@@ -271,10 +271,10 @@ LogConsole.prototype.playgroundConnect = async function () {
     let MONGOC, MONGOLOCALC;
     await this.back.setInfoObj({ getMode: false });
     isLocal = false;
-    MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
-    console.log(`\x1b[33m%s\x1b[0m`, `set DB server => ${this.address.mongoinfo.host}`);
+    MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+    console.log(`\x1b[33m%s\x1b[0m`, `set DB server => 127.0.0.1`);
     MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
-    console.log(`\x1b[33m%s\x1b[0m`, `set SSE server => ${this.address.backinfo.host}`);
+    console.log(`\x1b[33m%s\x1b[0m`, `set SSE server => 127.0.0.1`);
 
     console.log(``);
 
@@ -348,7 +348,7 @@ LogConsole.prototype.playgroundConnect = async function () {
 
         await instance.aliveTest();
 
-        if (hour === 7 || hour === 13 || hour === 21) {
+        if (hour === 7 || hour === 10 || hour === 13 || hour === 15 || hour === 18 || hour === 21) {
           if (minute < 30) {
             const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
             const reflection = new MongoReflection();
@@ -364,7 +364,6 @@ LogConsole.prototype.playgroundConnect = async function () {
 
     //server on
     https.createServer(pems, app).listen(PORT, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
-
 
   } catch (e) {
     console.log(e);

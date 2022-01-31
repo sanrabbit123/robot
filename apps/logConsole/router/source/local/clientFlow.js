@@ -1,7 +1,7 @@
 const ClientFlowJs = function () {
   this.mother = new GeneralJs();
   this.totalContents = this.mother.totalContents;
-  this.ea = "px";
+  this.ea = "vw";
 }
 
 ClientFlowJs.prototype.returnMap = function () {
@@ -9,13 +9,12 @@ ClientFlowJs.prototype.returnMap = function () {
   const { ea, totalContents } = this;
   const { colorChip } = GeneralJs;
   let blockSvg;
-
   blockSvg = `<svg xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 218.292 102.044">
     <g class="process7">
       <path class="box" fill="${colorChip.gray4}" d="M215.725,93.474H184.03
         c-1.419,0-2.569-1.15-2.569-2.569v-8.469c0-1.419,1.15-2.569,2.569-2.569h31.695c1.419,0,2.569,1.15,2.569,2.569v8.469
         C218.294,92.324,217.144,93.474,215.725,93.474z"/>
-      <path fill="${colorChip.white}" d="M186.26,85.188v-0.36h2.427v0.36H186.26z M187.521,86.91c-0.593,0-1.033-0.309-1.033-0.77
+      <path fill="${colorChip.whiteBlack}" d="M186.26,85.188v-0.36h2.427v0.36H186.26z M187.521,86.91c-0.593,0-1.033-0.309-1.033-0.77
         s0.436-0.765,1.033-0.765c0.588,0,1.034,0.304,1.034,0.765C188.554,86.597,188.109,86.91,187.521,86.91z M186.878,84.52v-0.365
         h1.282v0.365H186.878z M187.521,85.725c-0.319,0-0.593,0.168-0.593,0.416c0,0.243,0.274,0.42,0.593,0.42
         c0.314,0,0.588-0.177,0.588-0.42C188.109,85.893,187.835,85.725,187.521,85.725z M187.004,88.309v-1.175h0.446v0.815h2.528v0.359
@@ -51,7 +50,7 @@ ClientFlowJs.prototype.returnMap = function () {
         c-1.808,0-3.273,1.465-3.273,3.273v0c0,1.808,1.465,3.273,3.273,3.273h18.515C164.739,102.044,166.204,100.579,166.204,98.771z
          M192.597,98.771L192.597,98.771c0-1.808-1.465-3.273-3.273-3.273h-18.515c-1.808,0-3.273,1.465-3.273,3.273v0
         c0,1.808,1.465,3.273,3.273,3.273h18.515C191.131,102.044,192.597,100.579,192.597,98.771z"/>
-      <path fill="${colorChip.white}" d="M145.935,85.188v-0.36h2.427v0.36H145.935z M147.197,86.91c-0.593,0-1.033-0.309-1.033-0.77
+      <path fill="${colorChip.whiteBlack}" d="M145.935,85.188v-0.36h2.427v0.36H145.935z M147.197,86.91c-0.593,0-1.033-0.309-1.033-0.77
         s0.436-0.765,1.033-0.765c0.588,0,1.034,0.304,1.034,0.765C148.23,86.597,147.784,86.91,147.197,86.91z M146.553,84.52v-0.365
         h1.282v0.365H146.553z M147.197,85.725c-0.319,0-0.593,0.168-0.593,0.416c0,0.243,0.274,0.42,0.593,0.42
         c0.314,0,0.588-0.177,0.588-0.42C147.784,85.893,147.511,85.725,147.197,85.725z M146.68,88.309v-1.175h0.446v0.815h2.528v0.359
@@ -121,7 +120,7 @@ ClientFlowJs.prototype.returnMap = function () {
         C186.481,98.244,185.976,98.697,185.38,98.849z M185.594,99.728v-0.788h0.324v0.532h1.31v0.256H185.594z M187.168,98.312v0.811
         h-0.324v-1.771h0.324v0.697h0.349v0.264H187.168z"/>
     </g>
-    <path class="arrow3" fill="${colorChip.darkDarkShadow}" d="M138.791,86.582l-1.272-1.272c-0.049-0.049-0.128-0.049-0.177,0s-0.049,0.129,0,0.178
+    <path class="arrow3" fill="${colorChip.black}" d="M138.791,86.582l-1.272-1.272c-0.049-0.049-0.128-0.049-0.177,0s-0.049,0.129,0,0.178
       l1.059,1.059H79.593c-0.069,0-0.125,0.056-0.125,0.125s0.056,0.125,0.125,0.125h58.808l-1.059,1.061
       c-0.049,0.049-0.049,0.128,0,0.177c0.024,0.024,0.057,0.036,0.088,0.036c0.032,0,0.064-0.013,0.088-0.037l1.271-1.272
       c0.023-0.023,0.038-0.054,0.038-0.089c0,0,0,0,0,0C138.827,86.639,138.815,86.607,138.791,86.582z"/>
@@ -129,7 +128,7 @@ ClientFlowJs.prototype.returnMap = function () {
       <path class="box" fill="${colorChip.gray4}" d="M74.589,93.474H42.894
         c-1.419,0-2.569-1.15-2.569-2.569v-8.469c0-1.419,1.15-2.569,2.569-2.569h31.695c1.419,0,2.569,1.15,2.569,2.569v8.469
         C77.158,92.324,76.008,93.474,74.589,93.474z"/>
-      <path fill="${colorChip.white}" d="M47.534,87.533l-0.304-0.329c0.912-0.531,1.413-1.383,1.489-2.284h-1.297v-0.37h1.743
+      <path fill="${colorChip.whiteBlack}" d="M47.534,87.533l-0.304-0.329c0.912-0.531,1.413-1.383,1.489-2.284h-1.297v-0.37h1.743
         C49.15,85.862,48.623,86.81,47.534,87.533z M49.768,88.228v-1.53h-0.669v-0.364h0.669v-0.745h-0.567v-0.364h0.567v-1.104h0.425
         v4.108H49.768z M50.614,88.445v-4.428h0.431v4.428H50.614z M54.087,85.33c0,0.633-0.522,1.043-1.175,1.043
         c-0.644,0-1.175-0.405-1.175-1.043c0-0.628,0.527-1.064,1.175-1.064S54.087,84.696,54.087,85.33z M52.198,85.325
@@ -148,7 +147,7 @@ ClientFlowJs.prototype.returnMap = function () {
       <path class="box" fill="${colorChip.gray4}" d="M34.265,93.474H2.57
         c-1.419,0-2.569-1.15-2.569-2.569v-8.469c0-1.419,1.15-2.569,2.569-2.569h31.694c1.419,0,2.569,1.15,2.569,2.569v8.469
         C36.833,92.324,35.683,93.474,34.265,93.474z"/>
-      <path fill="${colorChip.white}" d="M7.485,86.819l0.061,0.37c-0.456,0.096-1.231,0.151-2.036,0.151H5.012v-2.893H7.13v0.365H5.453
+      <path fill="${colorChip.whiteBlack}" d="M7.485,86.819l0.061,0.37c-0.456,0.096-1.231,0.151-2.036,0.151H5.012v-2.893H7.13v0.365H5.453
         v2.143C6.101,86.956,6.922,86.931,7.485,86.819z M7.971,88.445v-4.428h0.451v4.428H7.971z M11.52,87.412
         c-0.431-0.243-0.932-0.796-1.074-1.287c-0.137,0.502-0.577,1.069-1.109,1.398l-0.289-0.329c0.684-0.391,1.165-1.14,1.165-1.98
         v-0.365H9.215v-0.37h2.437v0.37h-0.978v0.359c0,0.856,0.481,1.525,1.109,1.875L11.52,87.412z M12.594,86.161v2.284h-0.446v-4.428
@@ -164,7 +163,7 @@ ClientFlowJs.prototype.returnMap = function () {
         v0.355h-1.221v0.517H28.771z M31.785,86.875v1.57h-0.446v-1.2h-2.568v-0.37H31.785z M31.354,86.667v-1.154h-0.506v1.119h-0.426
         v-2.533h0.426v1.049h0.506v-1.13h0.431v2.649H31.354z"/>
     </g>
-    <path class="arrow2" fill="${colorChip.darkDarkShadow}" d="M78.211,50.452H19.239c-0.675,0-1.224,0.549-1.224,1.224v25.456l-1.06-1.06
+    <path class="arrow2" fill="${colorChip.black}" d="M78.211,50.452H19.239c-0.675,0-1.224,0.549-1.224,1.224v25.456l-1.06-1.06
       c-0.049-0.049-0.128-0.049-0.177,0s-0.049,0.129,0,0.178l1.272,1.272c0.024,0.024,0.056,0.036,0.088,0.036c0,0,0,0,0,0c0,0,0,0,0,0
       c0.018,0,0.03-0.012,0.045-0.019c0.015-0.006,0.031-0.006,0.043-0.018l0,0c0,0,0,0,0,0l1.272-1.272c0.049-0.049,0.049-0.128,0-0.177
       c-0.049-0.048-0.128-0.05-0.177-0.001l-1.059,1.059V51.676c0-0.537,0.437-0.974,0.974-0.974h58.972c0.069,0,0.125-0.056,0.125-0.125
@@ -176,7 +175,7 @@ ClientFlowJs.prototype.returnMap = function () {
         c-1.808,0-3.273,1.465-3.273,3.273v0c0,1.808,1.465,3.273,3.273,3.273h18.515C104.248,65.95,105.713,64.484,105.713,62.676z
          M132.106,62.676L132.106,62.676c0-1.808-1.465-3.273-3.273-3.273h-18.515c-1.808,0-3.273,1.465-3.273,3.273v0
         c0,1.808,1.465,3.273,3.273,3.273h18.515C130.64,65.95,132.106,64.484,132.106,62.676z"/>
-      <path fill="${colorChip.white}" d="M90.463,51.12c-0.309,0.045-0.815,0.091-1.353,0.116c-0.501,0.025-1.018,0.046-1.438,0.046
+      <path fill="${colorChip.whiteBlack}" d="M90.463,51.12c-0.309,0.045-0.815,0.091-1.353,0.116c-0.501,0.025-1.018,0.046-1.438,0.046
         l-0.061-0.381c0.208,0,0.42,0,0.633-0.005l-0.147-1.803l0.446-0.051l0.117,1.844l0.456-0.021c0.056,0,0.106-0.005,0.167-0.01
         l0.116-1.818l0.441,0.05l-0.162,1.748c0.304-0.021,0.567-0.046,0.75-0.076L90.463,51.12z M87.738,48.729v-0.364h2.482v0.364H87.738
         z M90.802,52.351v-4.428h0.446v4.428H90.802z M92.011,51.753v-0.365h3.997v0.365H92.011z M92.528,50.456v-2.098h2.963v0.365h-2.518
@@ -232,7 +231,7 @@ ClientFlowJs.prototype.returnMap = function () {
         h1.626v0.903H126.347z M127.652,63.018h-0.986v0.406h0.986V63.018z M127.652,62.652v-0.547h-0.362v-0.258h0.362v-0.591h0.321v1.396
         H127.652z"/>
     </g>
-    <path class="arrow1" fill="${colorChip.darkDarkShadow}" d="M138.702,50.452h-18.489l1.059-1.059c0.049-0.049,0.049-0.128,0-0.177
+    <path class="arrow1" fill="${colorChip.black}" d="M138.702,50.452h-18.489l1.059-1.059c0.049-0.049,0.049-0.128,0-0.177
       c-0.049-0.051-0.128-0.05-0.177-0.001l-1.273,1.272c-0.023,0.023-0.037,0.056-0.037,0.089s0.013,0.065,0.037,0.089l1.273,1.272
       c0.024,0.024,0.056,0.036,0.088,0.036s0.064-0.013,0.088-0.037c0.049-0.049,0.049-0.128,0-0.177l-1.059-1.059h18.489
       c0.069,0,0.125-0.056,0.125-0.125S138.771,50.452,138.702,50.452z"/>
@@ -240,7 +239,7 @@ ClientFlowJs.prototype.returnMap = function () {
       <path class="box" fill="${colorChip.gray4}" d="M175.401,57.38h-31.695
         c-1.419,0-2.569-1.15-2.569-2.569v-8.469c0-1.419,1.15-2.569,2.569-2.569h31.695c1.419,0,2.569,1.15,2.569,2.569v8.469
         C177.97,56.23,176.82,57.38,175.401,57.38z"/>
-      <path fill="${colorChip.white}" d="M150.108,51.332c-0.309-0.202-0.775-0.709-0.897-1.149c-0.096,0.466-0.486,0.968-0.892,1.241
+      <path fill="${colorChip.whiteBlack}" d="M150.108,51.332c-0.309-0.202-0.775-0.709-0.897-1.149c-0.096,0.466-0.486,0.968-0.892,1.241
         l-0.284-0.31c0.552-0.354,0.958-1.023,0.958-1.89V48.81h-0.861V48.45h2.118v0.359h-0.815v0.4c0,0.906,0.461,1.51,0.942,1.804
         L150.108,51.332z M150.554,52.133v-2.249h-0.659v-0.37h0.659v-1.489h0.425v4.108H150.554z M151.425,52.351v-4.428h0.431v4.428
         H151.425z M154.933,49.362c0,0.653-0.501,1.094-1.18,1.094c-0.689,0-1.19-0.44-1.19-1.089c0-0.653,0.501-1.125,1.185-1.125
@@ -261,7 +260,7 @@ ClientFlowJs.prototype.returnMap = function () {
       <path class="box" fill="${colorChip.gray4}" d="M215.726,57.38h-31.695
         c-1.419,0-2.569-1.15-2.569-2.569v-8.469c0-1.419,1.15-2.569,2.569-2.569h31.695c1.419,0,2.569,1.15,2.569,2.569v8.469
         C218.295,56.23,217.145,57.38,215.726,57.38z"/>
-      <path fill="${colorChip.white}" d="M190.432,51.332c-0.309-0.202-0.775-0.709-0.897-1.149c-0.096,0.466-0.486,0.968-0.892,1.241
+      <path fill="${colorChip.whiteBlack}" d="M190.432,51.332c-0.309-0.202-0.775-0.709-0.897-1.149c-0.096,0.466-0.486,0.968-0.892,1.241
         l-0.284-0.31c0.552-0.354,0.958-1.023,0.958-1.89V48.81h-0.861V48.45h2.118v0.359h-0.815v0.4c0,0.906,0.461,1.51,0.942,1.804
         L190.432,51.332z M190.878,52.133v-2.249h-0.659v-0.37h0.659v-1.489h0.425v4.108H190.878z M191.749,52.351v-4.428h0.431v4.428
         H191.749z M195.258,49.362c0,0.653-0.501,1.094-1.18,1.094c-0.689,0-1.19-0.44-1.19-1.089c0-0.653,0.501-1.125,1.186-1.125
@@ -279,7 +278,7 @@ ClientFlowJs.prototype.returnMap = function () {
         c0,0.278,0.411,0.436,1.064,0.436c0.664,0,1.074-0.157,1.074-0.436c0-0.273-0.41-0.44-1.074-0.44
         C208.656,51.12,208.245,51.287,208.245,51.561z"/>
     </g>
-    <path class="arrow0" fill="${colorChip.darkDarkShadow}" d="M201.239,39.979c-0.049-0.049-0.128-0.049-0.177,0l-1.059,1.06V16.777
+    <path class="arrow0" fill="${colorChip.black}" d="M201.239,39.979c-0.049-0.049-0.128-0.049-0.177,0l-1.059,1.06V16.777
       c0-0.854-0.695-1.549-1.549-1.549h-38.212c-0.069,0-0.125,0.056-0.125,0.125s0.056,0.125,0.125,0.125h38.212
       c0.716,0,1.299,0.583,1.299,1.299v24.261l-1.059-1.06c-0.049-0.049-0.128-0.049-0.177,0s-0.049,0.129,0,0.178l1.272,1.272
       c0.024,0.024,0.056,0.036,0.088,0.036s0.064-0.012,0.088-0.036l1.272-1.272C201.287,40.107,201.287,40.027,201.239,39.979z"/>
@@ -290,7 +289,7 @@ ClientFlowJs.prototype.returnMap = function () {
         c-1.808,0-3.273,1.465-3.273,3.273v0c0,1.808,1.465,3.273,3.273,3.273h18.515C144.57,30.726,146.035,29.26,146.035,27.453z
          M172.428,27.453L172.428,27.453c0-1.808-1.465-3.273-3.273-3.273H150.64c-1.808,0-3.273,1.465-3.273,3.273v0
         c0,1.808,1.465,3.273,3.273,3.273h18.515C170.962,30.726,172.428,29.26,172.428,27.453z"/>
-      <path fill="${colorChip.white}" d="M132.073,13.601l-0.618,0.137v-0.258l0.82-0.38h0.243v3.48h-0.446V13.601z M135.179,12.978h-1.307
+      <path fill="${colorChip.whiteBlack}" d="M132.073,13.601l-0.618,0.137v-0.258l0.82-0.38h0.243v3.48h-0.446V13.601z M135.179,12.978h-1.307
         v0.37h1.307V12.978z M134.764,14.219v-0.106h0.978v-0.365h-2.426v0.365h0.988v0.111c0,0.851-0.532,1.495-1.145,1.809l0.289,0.324
         c0.492-0.258,0.968-0.815,1.089-1.282c0.137,0.456,0.613,0.953,1.054,1.175l0.264-0.339
         C135.291,15.657,134.764,15.07,134.764,14.219z M136.689,14.877h0.694v-0.375h-0.694v-1.803h-0.446v4.427h0.446V14.877z
@@ -381,7 +380,7 @@ ClientFlowJs.prototype.returnMap = function () {
       <path class="box" fill="${colorChip.gray4}" d="M114.914,13.606H83.219
         c-1.419,0-2.569-1.15-2.569-2.569V2.569C80.65,1.15,81.8,0,83.219,0h31.695c1.419,0,2.569,1.15,2.569,2.569v8.469
         C117.482,12.456,116.332,13.606,114.914,13.606z"/>
-      <path fill="${colorChip.white}" d="M89.621,7.559c-0.309-0.203-0.775-0.709-0.897-1.15c-0.096,0.466-0.486,0.967-0.892,1.241
+      <path fill="${colorChip.whiteBlack}" d="M89.621,7.559c-0.309-0.203-0.775-0.709-0.897-1.15c-0.096,0.466-0.486,0.967-0.892,1.241
         l-0.284-0.309c0.552-0.354,0.958-1.023,0.958-1.89V5.036h-0.861v-0.36h2.118v0.36h-0.815v0.4c0,0.907,0.461,1.509,0.942,1.803
         L89.621,7.559z M90.067,8.359V6.11h-0.659V5.74h0.659V4.251h0.425v4.108H90.067z M90.938,8.577V4.15h0.431v4.427H90.938z
          M94.447,5.588c0,0.653-0.501,1.094-1.18,1.094c-0.689,0-1.19-0.441-1.19-1.089c0-0.653,0.501-1.125,1.185-1.125
@@ -405,7 +404,7 @@ ClientFlowJs.prototype.returnMap = function () {
       <path class="box" fill="${colorChip.gray4}" d="M74.59,22.156H42.894
         c-1.419,0-2.569-1.15-2.569-2.569v-8.469c0-1.419,1.15-2.569,2.569-2.569H74.59c1.419,0,2.569,1.15,2.569,2.569v8.469
         C77.158,21.006,76.008,22.156,74.59,22.156z"/>
-      <path fill="${colorChip.white}" d="M47.306,16.529v-0.365h3.997v0.365H47.306z M50.938,15.298c-0.694-0.198-1.429-0.76-1.636-1.256
+      <path fill="${colorChip.whiteBlack}" d="M47.306,16.529v-0.365h3.997v0.365H47.306z M50.938,15.298c-0.694-0.198-1.429-0.76-1.636-1.256
         c-0.177,0.501-0.917,1.064-1.636,1.251l-0.228-0.365c0.725-0.126,1.636-0.77,1.636-1.515v-0.344h0.461v0.344
         c0,0.74,0.968,1.398,1.646,1.53L50.938,15.298z M54.315,15.566l0.04,0.365c-0.476,0.096-1.246,0.147-2.087,0.157h-0.416v-2.979
         h2.118v0.359h-1.672v0.892h1.561v0.365h-1.561v0.988C53.033,15.713,53.849,15.678,54.315,15.566z M55.11,14.426h0.689v0.375H55.11
@@ -423,7 +422,7 @@ ClientFlowJs.prototype.returnMap = function () {
     <g class="process0">
       <path class="box" fill="${colorChip.gray4}" d="M34.264,22.156H2.569C1.15,22.156,0,21.006,0,19.588v-8.469C0,9.7,1.15,8.55,2.569,8.55
         h31.696c1.419,0,2.569,1.15,2.569,2.569v8.469C36.833,21.006,35.683,22.156,34.264,22.156z"/>
-      <path fill="${colorChip.white}" d="M11.423,15.05c-0.4-0.183-0.816-0.547-1.003-0.978c-0.132,0.466-0.583,0.881-1.064,1.109
+      <path fill="${colorChip.whiteBlack}" d="M11.423,15.05c-0.4-0.183-0.816-0.547-1.003-0.978c-0.132,0.466-0.583,0.881-1.064,1.109
         l-0.274-0.354c0.633-0.269,1.1-0.8,1.1-1.5v-0.42h0.456v0.405c0,0.699,0.542,1.21,1.048,1.383L11.423,15.05z M11.159,17.126
         c-0.937,0-1.494-0.329-1.494-0.866c0-0.532,0.557-0.866,1.494-0.866c0.938,0,1.495,0.334,1.495,0.866
         C12.654,16.797,12.097,17.126,11.159,17.126z M10.131,16.26c0,0.314,0.39,0.501,1.028,0.501c0.639,0,1.034-0.188,1.034-0.501
@@ -441,18 +440,100 @@ ClientFlowJs.prototype.returnMap = function () {
         C26.853,16.012,26.457,15.835,25.779,15.835z M27.293,15.47h-0.451v-0.978h-0.821v-0.37h0.821v-1.423h0.451V15.47z"/>
     </g>
   </svg>`;
-
   return blockSvg;
+}
+
+ClientFlowJs.prototype.svgRender = function (dom) {
+  const instance = this;
+  const box = ".box";
+  const fill = "fill";
+  const { ea, client, requestNumber } = this;
+  const { colorChip, equalJson } = GeneralJs;
+  const { history, projects } = equalJson(JSON.stringify(client));
+  const { curation } = history;
+  const { analytics: { send, page } } = curation;
+  const { request, analytics } = client.requests[requestNumber];
+  const { response } = analytics;
+  const emptyDateValue = (new Date(2000, 0, 1)).valueOf()
+  let target;
+  let progressProject, progressIndex;
+
+  progressIndex = -1;
+  progressProject = null;
+
+  progressIndex = projects.findIndex((obj) => { return obj.desid !== '' });
+  if (progressIndex !== -1) {
+    progressProject = projects[progressIndex];
+  }
+
+  // 1
+  target = dom.querySelector(".process0").querySelector(box);
+  target.setAttribute(fill, colorChip.green);
+
+  // 2
+  if (curation.image.length > 0) {
+    target = dom.querySelector(".process1").querySelector(box);
+    target.setAttribute(fill, colorChip.green);
+  }
+
+  // 3
+  if (projects.length > 0) {
+    target = dom.querySelector(".process2").querySelector(box);
+    target.setAttribute(fill, colorChip.green);
+  }
+
+  // error
+
+  // 4
+  if (send.findIndex((obj) => { return /designerProposal/gi.test(obj.page) }) !== -1) {
+    target = dom.querySelector(".process3").querySelector(box);
+    target.setAttribute(fill, colorChip.green);
+  }
+
+  // 5
+  if (page.findIndex((obj) => { return /designerProposal/gi.test(obj.page) }) !== -1) {
+    target = dom.querySelector(".process4").querySelector(box);
+    target.setAttribute(fill, colorChip.green);
+  }
+
+  // 6
+  if (progressProject !== null) {
+    target = dom.querySelector(".process5").querySelector(box);
+    target.setAttribute(fill, colorChip.green);
+
+    // 7
+    if (progressProject.process.contract.first.date.valueOf() > emptyDateValue) {
+      target = dom.querySelector(".process6").querySelector(box);
+      target.setAttribute(fill, colorChip.green);
+
+      // 8
+      if (progressProject.process.contract.meeting.date.valueOf() > emptyDateValue) {
+        target = dom.querySelector(".process7").querySelector(box);
+        target.setAttribute(fill, colorChip.green);
+      }
+    }
+  }
 }
 
 ClientFlowJs.prototype.baseBlock = function () {
   const instance = this;
-  const { ea, totalContents, client } = this;
+  const { ea, totalContents, client, requestNumber } = this;
   const { colorChip, createNode, withOut } = GeneralJs;
+  const { request, analytics } = client.requests[requestNumber];
+  const { response } = analytics;
   let base;
   let padding;
+  let size0, size1;
+  let top, between;
+  let marginBottom, paddingBottom;
 
-  padding = 40;
+  padding = 4;
+  size0 = 2;
+  size1 = 1.3;
+  top = 0.9;
+  between = 0.5;
+  marginBottom = 3;
+  paddingBottom = 0.7;
 
   base = createNode({
     mother: totalContents,
@@ -460,23 +541,48 @@ ClientFlowJs.prototype.baseBlock = function () {
       position: "relative",
       paddingTop: String(padding) + ea,
       paddingLeft: String(padding) + ea,
-      width: withOut(padding, ea),
+      width: withOut(padding * 2, ea),
     },
     children: [
       {
         style: {
           position: "relative",
           display: "block",
+          borderBottom: "1px solid " + colorChip.black,
+          paddingBottom: String(paddingBottom) + ea,
+          marginBottom: String(marginBottom) + ea,
         },
         children: [
           {
             text: client.name,
             style: {
-              fontSize: String(14) + ea,
-              fontWeight: String(500),
+              display: "inline-block",
+              fontSize: String(size0) + ea,
+              fontWeight: String(600),
               color: colorChip.black,
             }
-          }
+          },
+          {
+            text: client.cliid,
+            style: {
+              display: "inline-block",
+              fontSize: String(size1) + ea,
+              marginLeft: String(between) + ea,
+              fontWeight: String(600),
+              color: colorChip.green,
+            }
+          },
+          {
+            text: response.status,
+            style: {
+              position: "absolute",
+              right: String(0),
+              top: String(top) + ea,
+              fontSize: String(size1) + ea,
+              fontWeight: String(600),
+              color: colorChip.green,
+            }
+          },
         ]
       },
       {
@@ -484,14 +590,15 @@ ClientFlowJs.prototype.baseBlock = function () {
         source: this.returnMap(),
         style: {
           position: "relative",
-          width: withOut(padding, ea),
+          width: withOut(0, ea),
         }
       }
     ]
   });
 
-}
+  this.svgRender(base.children[1]);
 
+}
 
 ClientFlowJs.prototype.launching = async function () {
   const instance = this;
@@ -499,16 +606,34 @@ ClientFlowJs.prototype.launching = async function () {
     const { returnGet, ajaxJson, colorChip } = GeneralJs;
     let getObj, checkResult;
     let client;
+    let colorMode;
     getObj = returnGet();
+    if (getObj.cliid === undefined || getObj.requestNumber === undefined) {
+      throw new Error("invaild getObj");
+    }
     checkResult = await ajaxJson({}, "/log/ipCheck", { equal: true });
     if (checkResult.message === 1) {
       if (typeof getObj.cliid === "string") {
-        client = await ajaxJson({ noFlat: true, whereQuery: { cliid: getObj.cliid } }, "/log/getClients");
-        if (typeof client.error === "string") {
-          throw new Error("invaild clients");
+        if (!Number.isNaN(Number(getObj.requestNumber))) {
+
+          colorMode = "light";
+          if (typeof getObj.colorMode === "string") {
+            colorMode = getObj.colorMode;
+          }
+          GeneralJs.colorChip = GeneralJs.colorSet[colorMode];
+          document.body.style.backgroundColor = GeneralJs.colorChip.white;
+          document.getElementById("totalcontents").style.backgroundColor = GeneralJs.colorChip.white;
+
+          client = await ajaxJson({ noFlat: true, whereQuery: { cliid: getObj.cliid } }, "/log/getClients");
+          if (typeof client.error === "string") {
+            throw new Error("invaild clients");
+          }
+          this.client = client;
+          this.requestNumber = Number(getObj.requestNumber);
+          this.baseBlock();
+        } else {
+          throw new Error("invaild request number");
         }
-        this.client = client;
-        this.baseBlock();
       } else {
         throw new Error("invaild id");
       }

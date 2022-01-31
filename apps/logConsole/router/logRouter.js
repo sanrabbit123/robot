@@ -192,6 +192,7 @@ LogRouter.prototype.rou_post_getClients = function () {
         let clients, clientHistory;
         let client;
         let result;
+        let projects;
 
         if (typeof whereQuery !== "object" || typeof cliid !== "string") {
           throw new Error("invaild whereQuery");
@@ -205,6 +206,13 @@ LogRouter.prototype.rou_post_getClients = function () {
         clientHistory = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
         result = client.toNormal();
         result.history = clientHistory;
+
+        projects = await back.getProjectsByQuery({ cliid }, { selfMongo: instance.mongo });
+        if (projects.length > 0) {
+          result.projects = projects.toNormal();
+        } else {
+          result.projects = [];
+        }
 
         res.send(JSON.stringify(result));
       }
