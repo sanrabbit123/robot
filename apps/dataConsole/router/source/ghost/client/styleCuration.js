@@ -648,66 +648,66 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
               }
             }
           },
-          {
-            name: "precheck",
-            type: "calendar",
-            half: true,
-            required: false,
-            question: [
-              "<b%사전 점검일%b>이 있다면, 날짜를 알려주세요!"
-            ],
-            item: "사전 점검일",
-            value: function (request, history, self) {
-              if (request.analytics.date.space.precheck.valueOf() < (new Date(2000, 0, 1)).valueOf()) {
-                return null;
-              } else {
-                return request.analytics.date.space.precheck;
-              }
-            },
-            update: function (value, siblings, client) {
-              if (value === null) {
-                return { history: null, core: null };
-              } else {
-                let updateQuery;
-                updateQuery = {};
-                updateQuery["requests.0.analytics.date.space.precheck"] = value;
-                return {
-                  history: null,
-                  core: updateQuery
-                };
-              }
-            }
-          },
-          {
-            name: "empty",
-            type: "calendar",
-            half: true,
-            required: false,
-            question: [
-              "공실이 아니라면, <b%집 비는 날짜%b>를 알려주세요!"
-            ],
-            item: "집 비는 날",
-            value: function (request, history, self) {
-              if (request.analytics.date.space.empty.valueOf() < (new Date(2000, 0, 1)).valueOf()) {
-                return null;
-              } else {
-                return request.analytics.date.space.empty;
-              }
-            },
-            update: function (value, siblings, client) {
-              if (value === null) {
-                return { history: null, core: null };
-              } else {
-                let updateQuery;
-                updateQuery = {};
-                updateQuery["requests.0.analytics.date.space.empty"] = value;
-                return {
-                  history: null,
-                  core: updateQuery
-                };
-              }
-            }
-          },
+          // {
+          //   name: "precheck",
+          //   type: "calendar",
+          //   half: true,
+          //   required: false,
+          //   question: [
+          //     "<b%사전 점검일%b>이 있다면, 날짜를 알려주세요!"
+          //   ],
+          //   item: "사전 점검일",
+          //   value: function (request, history, self) {
+          //     if (request.analytics.date.space.precheck.valueOf() < (new Date(2000, 0, 1)).valueOf()) {
+          //       return null;
+          //     } else {
+          //       return request.analytics.date.space.precheck;
+          //     }
+          //   },
+          //   update: function (value, siblings, client) {
+          //     if (value === null) {
+          //       return { history: null, core: null };
+          //     } else {
+          //       let updateQuery;
+          //       updateQuery = {};
+          //       updateQuery["requests.0.analytics.date.space.precheck"] = value;
+          //       return {
+          //         history: null,
+          //         core: updateQuery
+          //       };
+          //     }
+          //   }
+          // },
+          // {
+          //   name: "empty",
+          //   type: "calendar",
+          //   half: true,
+          //   required: false,
+          //   question: [
+          //     "공실이 아니라면, <b%집 비는 날짜%b>를 알려주세요!"
+          //   ],
+          //   item: "집 비는 날",
+          //   value: function (request, history, self) {
+          //     if (request.analytics.date.space.empty.valueOf() < (new Date(2000, 0, 1)).valueOf()) {
+          //       return null;
+          //     } else {
+          //       return request.analytics.date.space.empty;
+          //     }
+          //   },
+          //   update: function (value, siblings, client) {
+          //     if (value === null) {
+          //       return { history: null, core: null };
+          //     } else {
+          //       let updateQuery;
+          //       updateQuery = {};
+          //       updateQuery["requests.0.analytics.date.space.empty"] = value;
+          //       return {
+          //         history: null,
+          //         core: updateQuery
+          //       };
+          //     }
+          //   }
+          // },
         ]
       });
 
