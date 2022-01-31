@@ -50,6 +50,40 @@ LogRouter.prototype.baseMaker = function (target, req = null) {
   });
 }
 
+LogRouter.prototype.hostCheck = function (req) {
+  const instance = this;
+  let __wallLogicBoo, __originTarget, __vailHosts;
+
+  __vailHosts = [
+    instance.address.frontinfo.host,
+    instance.address.frontinfo.host + ":3000",
+    instance.address.homeinfo.ghost.host,
+    instance.address.homeinfo.ghost.host + ":3000",
+    instance.address.pythoninfo.host,
+    instance.address.pythoninfo.host + ":3000",
+    instance.address.testinfo.host,
+    instance.address.testinfo.host + ":3000",
+    instance.address.testinfo.host + ":30000",
+    instance.address.officeinfo.ghost.host,
+    instance.address.officeinfo.ghost.host + ":3000",
+    "localhost:3000",
+    "localhost:30000",
+  ];
+  __wallLogicBoo = false;
+  __originTarget = req.headers["origin"] || "invaild";
+  if (__originTarget === "invaild") {
+    __originTarget = req.headers["host"] || "invaild";
+  }
+  for (let host of __vailHosts) {
+    __wallLogicBoo = (new RegExp(host, "gi")).test(__originTarget.trim().replace(/\/$/, ''));
+    if (__wallLogicBoo) {
+      break;
+    }
+  }
+
+  return __wallLogicBoo;
+}
+
 //GET ---------------------------------------------------------------------------------------------
 
 LogRouter.prototype.rou_get_First = function () {
@@ -113,121 +147,22 @@ LogRouter.prototype.rou_get_Address = function () {
 
 //POST ---------------------------------------------------------------------------------------------
 
-LogRouter.prototype.rou_post_getDocuments = function () {
+LogRouter.prototype.rou_post_ipCheck = function () {
   const instance = this;
   const back = this.back;
   const { equalJson } = this.mother;
   let obj = {};
-  obj.link = [ "/getClients", "/getDesigners", "/getProjects", "/getContents", "/getBuilders" ];
+  obj.link = [ "/log/ipCheck" ];
   obj.func = async function (req, res) {
     try {
-      let standard, raw_data, data, optionQuery, whereQuery;
-      if (req.body.where === undefined && req.body.whereQuery !== undefined) {
-        req.body.where = req.body.whereQuery;
-      }
-      if (req.url === "/getClients") {
-        standard = instance.patch.clientStandard();
-        optionQuery = { withTools: true, selfMongo: instance.mongo };
-        if (req.body.sort !== undefined) {
-          optionQuery.sort = equalJson(req.body.sort);
-        }
-        if (req.body.where === undefined) {
-          if (req.body.limit !== undefined) {
-            raw_data = await back.getClientsByQuery({}, { withTools: true, selfMongo: instance.mongo, limit: Number(req.body.limit) });
-          } else {
-            raw_data = await back.getClientsByQuery({}, { withTools: true, selfMongo: instance.mongo });
-          }
-        } else {
-          if (req.body.limit !== undefined) {
-            optionQuery.limit = Number(req.body.limit);
-          }
-          raw_data = await back.getClientsByQuery(equalJson(req.body.where), optionQuery);
-        }
-      } else if (req.url === "/getDesigners") {
-        standard = instance.patch.designerStandard();
-        optionQuery = { withTools: true, selfMongo: instance.mongo };
-        if (req.body.sort !== undefined) {
-          optionQuery.sort = equalJson(req.body.sort);
-        }
-        if (req.body.where === undefined) {
-          if (req.body.limit !== undefined) {
-            raw_data = await back.getDesignersByQuery({}, { withTools: true, selfMongo: instance.mongo, limit: Number(req.body.limit) });
-          } else {
-            raw_data = await back.getDesignersByQuery({}, { withTools: true, selfMongo: instance.mongo });
-          }
-        } else {
-          if (req.body.limit !== undefined) {
-            optionQuery.limit = Number(req.body.limit);
-          }
-          raw_data = await back.getDesignersByQuery(equalJson(req.body.where), optionQuery);
-        }
-      } else if (req.url === "/getProjects") {
-        standard = instance.patch.projectStandard();
-        optionQuery = { withTools: true, selfMongo: instance.mongo };
-        if (req.body.sort !== undefined) {
-          optionQuery.sort = equalJson(req.body.sort);
-        }
-        if (req.body.where === undefined) {
-          if (req.body.limit !== undefined) {
-            raw_data = await back.getProjectsByQuery({}, { withTools: true, selfMongo: instance.mongo, limit: Number(req.body.limit) });
-          } else {
-            raw_data = await back.getProjectsByQuery({}, { withTools: true, selfMongo: instance.mongo });
-          }
-        } else {
-          if (req.body.limit !== undefined) {
-            optionQuery.limit = Number(req.body.limit);
-          }
-          whereQuery = equalJson(req.body.where);
-          raw_data = await back.getProjectsByQuery(whereQuery, optionQuery);
-        }
-      } else if (req.url === "/getContents") {
-        standard = instance.patch.contentsStandard();
-        optionQuery = { withTools: true, selfMongo: instance.mongo };
-        if (req.body.sort !== undefined) {
-          optionQuery.sort = equalJson(req.body.sort);
-        }
-        if (req.body.where === undefined) {
-          if (req.body.limit !== undefined) {
-            raw_data = await back.getContentsArrByQuery({}, { withTools: true, selfMongo: instance.mongo, limit: Number(req.body.limit) });
-          } else {
-            raw_data = await back.getContentsArrByQuery({}, { withTools: true, selfMongo: instance.mongo });
-          }
-        } else {
-          if (req.body.limit !== undefined) {
-            optionQuery.limit = Number(req.body.limit);
-          }
-          raw_data = await back.getContentsArrByQuery(equalJson(req.body.where), optionQuery);
-        }
-      } else if (req.url === "/getBuilders") {
-        standard = null;
-        optionQuery = { withTools: true, selfMongo: instance.mongo };
-        if (req.body.sort !== undefined) {
-          optionQuery.sort = equalJson(req.body.sort);
-        }
-        if (req.body.where === undefined) {
-          if (req.body.limit !== undefined) {
-            raw_data = await back.getBuildersByQuery({}, { withTools: true, selfMongo: instance.mongo, limit: Number(req.body.limit) });
-          } else {
-            raw_data = await back.getBuildersByQuery({}, { withTools: true, selfMongo: instance.mongo });
-          }
-        } else {
-          if (req.body.limit !== undefined) {
-            optionQuery.limit = Number(req.body.limit);
-          }
-          raw_data = await back.getBuildersByQuery(equalJson(req.body.where), optionQuery);
-        }
-      }
-
-      if (req.body.noFlat === undefined) {
-        data = raw_data.flatDeath();
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ standard, data }));
+      res.set("Content-Type", "application/json");
+      if (!instance.hostCheck(req)) {
+        res.send(JSON.stringify({ message: -1 }));
       } else {
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify(raw_data.toNormal()));
+        res.send(JSON.stringify({ message: 1 }));
       }
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_getDocuments): " + e.message).catch((e) => { console.log(e); });
+      instance.mother.errorLog("Log Console 서버 문제 생김 (rou_post_ipCheck): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }

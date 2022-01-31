@@ -448,12 +448,22 @@ ClientFlowJs.prototype.pageRender = function () {
 ClientFlowJs.prototype.launching = async function () {
   const instance = this;
   try {
-    const { returnGet, colorChip } = GeneralJs;
-    let getObj;
+    const { returnGet, ajaxJson, colorChip } = GeneralJs;
+    let getObj, checkResult;
+    getObj = returnGet();
+    checkResult = await ajaxJson({}, "/log/ipCheck", { equal: true });
+    if (checkResult.message === 1) {
+      
 
-    this.pageRender();
+      this.pageRender();
+
+
+    } else {
+      window.alert("invaild ip");
+      window.location.href = "https://google.com";
+    }
 
   } catch (e) {
-    console.log(e);
+    window.location.href = "https://google.com";
   }
 }
