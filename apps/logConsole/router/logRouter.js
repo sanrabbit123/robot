@@ -154,8 +154,8 @@ LogRouter.prototype.rou_post_ipCheck = function () {
   let obj = {};
   obj.link = [ "/log/ipCheck" ];
   obj.func = async function (req, res) {
+    res.set("Content-Type", "application/json");
     try {
-      res.set("Content-Type", "application/json");
       if (!instance.hostCheck(req)) {
         res.send(JSON.stringify({ message: -1 }));
       } else {
@@ -163,7 +163,54 @@ LogRouter.prototype.rou_post_ipCheck = function () {
       }
     } catch (e) {
       instance.mother.errorLog("Log Console 서버 문제 생김 (rou_post_ipCheck): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+LogRouter.prototype.rou_post_getClients = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson } = this.mother;
+  let obj = {};
+  obj.link = [ "/log/getClients" ];
+  obj.func = async function (req, res) {
+    res.set("Content-Type", "application/json");
+    try {
+      if (req.body.noFlat === undefined) {
+        throw new Error("invaild post");
+      }
+      if (req.body.whereQuery === undefined) {
+        throw new Error("invaild post");
+      }
+      if (!instance.hostCheck(req)) {
+        throw new Error("invaild host");
+      } else {
+        const { whereQuery } = equalJson(req.body);
+        const { cliid } = whereQuery;
+        let clients, clientHistory;
+        let client;
+        let result;
+
+        if (typeof whereQuery !== "object" || typeof cliid !== "string") {
+          throw new Error("invaild whereQuery");
+        }
+
+        clients = await back.getClientsByQuery(whereQuery, { selfMongo: instance.mongo });
+        if (clients.length === 0) {
+          throw new Error("invaild cliid");
+        }
+        [ client ] = clients;
+        clientHistory = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
+        result = client.toNormal();
+        result.history = clientHistory;
+
+        res.send(JSON.stringify(result));
+      }
+    } catch (e) {
+      instance.mother.errorLog("Log Console 서버 문제 생김 (rou_post_getClients): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;

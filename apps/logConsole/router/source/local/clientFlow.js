@@ -4,7 +4,7 @@ const ClientFlowJs = function () {
   this.ea = "px";
 }
 
-ClientFlowJs.prototype.pageRender = function () {
+ClientFlowJs.prototype.returnMap = function () {
   const instance = this;
   const { ea, totalContents } = this;
   const { colorChip } = GeneralJs;
@@ -442,28 +442,81 @@ ClientFlowJs.prototype.pageRender = function () {
     </g>
   </svg>`;
 
-  totalContents.insertAdjacentHTML("beforeend", blockSvg);
+  return blockSvg;
 }
+
+ClientFlowJs.prototype.baseBlock = function () {
+  const instance = this;
+  const { ea, totalContents, client } = this;
+  const { colorChip, createNode, withOut } = GeneralJs;
+  let base;
+  let padding;
+
+  padding = 40;
+
+  base = createNode({
+    mother: totalContents,
+    style: {
+      position: "relative",
+      paddingTop: String(padding) + ea,
+      paddingLeft: String(padding) + ea,
+      width: withOut(padding, ea),
+    },
+    children: [
+      {
+        style: {
+          position: "relative",
+          display: "block",
+        },
+        children: [
+          {
+            text: client.name,
+            style: {
+              fontSize: String(14) + ea,
+              fontWeight: String(500),
+              color: colorChip.black,
+            }
+          }
+        ]
+      },
+      {
+        mode: "svg",
+        source: this.returnMap(),
+        style: {
+          position: "relative",
+          width: withOut(padding, ea),
+        }
+      }
+    ]
+  });
+
+}
+
 
 ClientFlowJs.prototype.launching = async function () {
   const instance = this;
   try {
     const { returnGet, ajaxJson, colorChip } = GeneralJs;
     let getObj, checkResult;
+    let client;
     getObj = returnGet();
     checkResult = await ajaxJson({}, "/log/ipCheck", { equal: true });
     if (checkResult.message === 1) {
-      
-
-      this.pageRender();
-
-
+      if (typeof getObj.cliid === "string") {
+        client = await ajaxJson({ noFlat: true, whereQuery: { cliid: getObj.cliid } }, "/log/getClients");
+        if (typeof client.error === "string") {
+          throw new Error("invaild clients");
+        }
+        this.client = client;
+        this.baseBlock();
+      } else {
+        throw new Error("invaild id");
+      }
     } else {
-      window.alert("invaild ip");
-      window.location.href = "https://google.com";
+      throw new Error("invaild id");
     }
-
   } catch (e) {
+    window.alert(e.message);
     window.location.href = "https://google.com";
   }
 }
