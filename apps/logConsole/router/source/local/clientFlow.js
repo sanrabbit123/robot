@@ -1,7 +1,7 @@
 const ClientFlowJs = function () {
   this.mother = new GeneralJs();
   this.totalContents = this.mother.totalContents;
-  this.ea = "vw";
+  this.ea = "px";
 }
 
 ClientFlowJs.prototype.returnMap = function () {
@@ -562,17 +562,32 @@ ClientFlowJs.prototype.baseBlock = function () {
   let size0, size1;
   let top, between;
   let marginBottom, paddingBottom;
+  let motherBase;
+  let motherBaseWidth;
 
-  padding = 4;
-  size0 = 2;
-  size1 = 1.3;
-  top = 0.9;
-  between = 0.5;
-  marginBottom = 3;
-  paddingBottom = 0.7;
+  padding = 25;
+  size0 = 15;
+  size1 = 10;
+  top = 4;
+  between = 6;
+  marginBottom = 25;
+  paddingBottom = 8;
+  motherBaseWidth = 600;
+
+  motherBase = createNode({
+    mother: totalContents,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      width: String(motherBaseWidth) + ea,
+      paddingBottom: String(padding) + ea,
+      border: "1px solid " + colorChip.black,
+      borderRadius: String(5) + "px",
+    }
+  })
 
   base = createNode({
-    mother: totalContents,
+    mother: motherBase,
     style: {
       position: "relative",
       paddingTop: String(padding) + ea,
