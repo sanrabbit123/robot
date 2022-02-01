@@ -443,11 +443,11 @@ ClientFlowJs.prototype.returnMap = function () {
   return blockSvg;
 }
 
-ClientFlowJs.prototype.svgRender = function (dom) {
+ClientFlowJs.prototype.svgRender = function (dom, client, requestNumber) {
   const instance = this;
   const box = ".box";
   const fill = "fill";
-  const { ea, client, requestNumber } = this;
+  const { ea } = this;
   const { colorChip, equalJson } = GeneralJs;
   const { history, projects, cliid } = equalJson(JSON.stringify(client));
   const { curation } = history;
@@ -551,9 +551,9 @@ ClientFlowJs.prototype.svgRender = function (dom) {
   }
 }
 
-ClientFlowJs.prototype.baseBlock = function () {
+ClientFlowJs.prototype.baseBlock = function (client, requestNumber) {
   const instance = this;
-  const { ea, totalContents, client, requestNumber } = this;
+  const { ea, totalContents } = this;
   const { colorChip, createNode, withOut } = GeneralJs;
   const { request, analytics } = client.requests[requestNumber];
   const { response } = analytics;
@@ -647,7 +647,7 @@ ClientFlowJs.prototype.baseBlock = function () {
     ]
   });
 
-  this.svgRender(base.children[1]);
+  this.svgRender(base.children[1], client, requestNumber);
 
 }
 
@@ -656,40 +656,36 @@ ClientFlowJs.prototype.launching = async function () {
   try {
     const { returnGet, ajaxJson, colorChip } = GeneralJs;
     let getObj, checkResult;
-    let client;
+    let clients;
     let colorMode;
     getObj = returnGet();
-    if (getObj.cliid === undefined || getObj.requestNumber === undefined) {
-      throw new Error("invaild getObj");
-    }
     checkResult = await ajaxJson({}, "/log/ipCheck", { equal: true });
     if (checkResult.message === 1) {
-      if (typeof getObj.cliid === "string") {
-        if (!Number.isNaN(Number(getObj.requestNumber))) {
 
-          colorMode = "light";
-          if (typeof getObj.colorMode === "string") {
-            colorMode = getObj.colorMode;
-          }
-          GeneralJs.colorChip = GeneralJs.colorSet[colorMode];
-          document.body.style.backgroundColor = GeneralJs.colorChip.white;
-          document.getElementById("totalcontents").style.backgroundColor = GeneralJs.colorChip.white;
-
-          client = await ajaxJson({ noFlat: true, whereQuery: { cliid: getObj.cliid } }, "/log/getClients");
-          if (typeof client.error === "string") {
-            throw new Error("invaild clients");
-          }
-          this.client = client;
-          this.requestNumber = Number(getObj.requestNumber);
-          this.baseBlock();
-        } else {
-          throw new Error("invaild request number");
-        }
-      } else {
-        throw new Error("invaild id");
+      colorMode = "light";
+      if (typeof getObj.colorMode === "string") {
+        colorMode = getObj.colorMode;
       }
+      GeneralJs.colorChip = GeneralJs.colorSet[colorMode];
+      document.body.style.backgroundColor = GeneralJs.colorChip.white;
+      document.getElementById("totalcontents").style.backgroundColor = GeneralJs.colorChip.white;
+
+      clients = await ajaxJson({}, "/log/logClients");
+      if (typeof clients.error === "string") {
+        throw new Error("invaild clients");
+      }
+      this.clients = clients;
+
+      for (let client of clients) {
+        for (let i = 0; i < client.requests.length; i++) {
+          if (client.history !== null && client.history !== undefined) {
+            this.baseBlock(client, i);
+          }
+        }
+      }
+
     } else {
-      throw new Error("invaild id");
+      throw new Error("invaild ip");
     }
   } catch (e) {
     window.alert(e.message);

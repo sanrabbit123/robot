@@ -169,55 +169,72 @@ LogRouter.prototype.rou_post_ipCheck = function () {
   return obj;
 }
 
-LogRouter.prototype.rou_post_getClients = function () {
+LogRouter.prototype.rou_post_logClients = function () {
   const instance = this;
   const back = this.back;
   const { equalJson } = this.mother;
   let obj = {};
-  obj.link = [ "/log/getClients" ];
+  obj.link = [ "/log/logClients" ];
   obj.func = async function (req, res) {
     res.set("Content-Type", "application/json");
     try {
-      if (req.body.noFlat === undefined) {
-        throw new Error("invaild post");
-      }
-      if (req.body.whereQuery === undefined) {
-        throw new Error("invaild post");
-      }
       if (!instance.hostCheck(req)) {
         throw new Error("invaild host");
       } else {
-        const { whereQuery } = equalJson(req.body);
-        const { cliid } = whereQuery;
-        let clients, clientHistory;
-        let client;
-        let result;
+        let clients, clientHistories;
+        let ago;
         let projects;
+        let result;
+        let temp;
 
-        if (typeof whereQuery !== "object" || typeof cliid !== "string") {
-          throw new Error("invaild whereQuery");
-        }
+        ago = new Date();
+        ago.setDate(ago.getDate() - 30);
 
-        clients = await back.getClientsByQuery(whereQuery, { selfMongo: instance.mongo });
-        if (clients.length === 0) {
-          throw new Error("invaild cliid");
-        }
-        [ client ] = clients;
-        clientHistory = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
-        result = client.toNormal();
-        result.history = clientHistory;
+        clients = await back.getClientsByQuery({
+          $or: [
+            {
+              requests: {
+                $elemMatch: {
+                  "request.timeline": { $gte: ago }
+                }
+              }
+            },
+            {
+              requests: {
+                $elemMatch: {
+                  "analytics.response.status": { $regex: "^[응장]" }
+                }
+              }
+            }
+          ]
+        }, { selfMongo: instance.mongo });
 
-        projects = await back.getProjectsByQuery({ cliid }, { selfMongo: instance.mongo });
-        if (projects.length > 0) {
-          result.projects = projects.toNormal();
-        } else {
-          result.projects = [];
+        clientHistories = await back.getHistoriesByQuery("client", {
+          $or: clients.toNormal().map((obj) => { return { cliid: obj.cliid } })
+        }, { selfMongo: instance.mongolocal });
+
+        projects = await back.getProjectsByQuery({
+          $or: clients.toNormal().map((obj) => { return { cliid: obj.cliid } })
+        }, { selfMongo: instance.mongo });
+
+
+        result = [];
+        for (let client of clients) {
+          temp = client.toNormal();
+          temp.history = (clientHistories.findIndex((obj) => { return obj.cliid === client.cliid }) !== -1 ? clientHistories.find((obj) => { return obj.cliid === client.cliid }) : null);
+          temp.projects = [];
+          for (let project of projects) {
+            if (client.cliid === project.cliid) {
+              temp.projects.push(project.toNormal());
+            }
+          }
+          result.push(temp);
         }
 
         res.send(JSON.stringify(result));
       }
     } catch (e) {
-      instance.mother.errorLog("Log Console 서버 문제 생김 (rou_post_getClients): " + e.message).catch((e) => { console.log(e); });
+      instance.mother.errorLog("Log Console 서버 문제 생김 (rou_post_logClients): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
