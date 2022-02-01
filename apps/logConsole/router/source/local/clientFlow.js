@@ -551,7 +551,7 @@ ClientFlowJs.prototype.svgRender = function (dom, client, requestNumber) {
   }
 }
 
-ClientFlowJs.prototype.baseBlock = function (client, requestNumber) {
+ClientFlowJs.prototype.blockMaker = function (totalBase, client, requestNumber) {
   const instance = this;
   const { ea, totalContents } = this;
   const { colorChip, createNode, withOut } = GeneralJs;
@@ -564,7 +564,11 @@ ClientFlowJs.prototype.baseBlock = function (client, requestNumber) {
   let marginBottom, paddingBottom;
   let motherBase;
   let motherBaseWidth;
+  let blockBetween;
+  let blockNumber;
+  let totalPadding;
 
+  blockBetween = 10;
   padding = 25;
   size0 = 15;
   size1 = 10;
@@ -573,16 +577,23 @@ ClientFlowJs.prototype.baseBlock = function (client, requestNumber) {
   marginBottom = 25;
   paddingBottom = 8;
   motherBaseWidth = 600;
+  totalPadding = 40;
+
+  blockNumber = Math.floor((window.innerWidth - totalPadding) / (motherBaseWidth + blockBetween));
+  motherBaseWidth = (window.innerWidth - (totalPadding * 2) - (blockBetween * (blockNumber - 1))) / blockNumber;
+
 
   motherBase = createNode({
-    mother: totalContents,
+    mother: totalBase,
     style: {
       display: "inline-block",
       position: "relative",
       width: String(motherBaseWidth) + ea,
       paddingBottom: String(padding) + ea,
-      border: "1px solid " + colorChip.black,
+      border: "1px solid " + colorChip.gray4,
       borderRadius: String(5) + "px",
+      marginRight: String(blockBetween) + ea,
+      marginBottom: String(blockBetween) + ea,
     }
   })
 
@@ -651,6 +662,35 @@ ClientFlowJs.prototype.baseBlock = function (client, requestNumber) {
 
 }
 
+ClientFlowJs.prototype.baseMaker = function () {
+  const instance = this;
+  const { ea, clients, totalContents } = this;
+  const { createNode, colorChip, withOut } = GeneralJs;
+  let padding;
+  let totalBase;
+
+  padding = 40;
+
+  totalBase = createNode({
+    mother: totalContents,
+    style: {
+      display: "block",
+      paddingTop: String(padding) + ea,
+      paddingLeft: String(padding) + ea,
+      width: withOut(padding, ea),
+    }
+  });
+
+  for (let client of clients) {
+    for (let i = 0; i < client.requests.length; i++) {
+      if (client.history !== null && client.history !== undefined) {
+        this.blockMaker(totalBase, client, i);
+      }
+    }
+  }
+
+}
+
 ClientFlowJs.prototype.launching = async function () {
   const instance = this;
   try {
@@ -676,13 +716,7 @@ ClientFlowJs.prototype.launching = async function () {
       }
       this.clients = clients;
 
-      for (let client of clients) {
-        for (let i = 0; i < client.requests.length; i++) {
-          if (client.history !== null && client.history !== undefined) {
-            this.baseBlock(client, i);
-          }
-        }
-      }
+      this.baseMaker();
 
     } else {
       throw new Error("invaild ip");

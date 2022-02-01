@@ -4288,20 +4288,6 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           date = dateToString(obj.date, true).slice(2, -3);
           if (/curation/gi.test(obj.page)) {
             pageName = "스타일 체크";
-            if (typeof obj.referrer === "string") {
-              if (/mode\=lite/gi.test(obj.referrer)) {
-                pageName = "스타일 체크";
-              } else {
-                pageName = "부재중 알림";
-              }
-            }
-            if (typeof obj.mode === "string") {
-              if (/lite/gi.test(obj.mode)) {
-                pageName = "스타일 체크";
-              } else {
-                pageName = "부재중 알림";
-              }
-            }
           } else if (/proposal/gi.test(obj.page)) {
             pageName = "제안서";
           } else if (/estimation/gi.test(obj.page)) {
