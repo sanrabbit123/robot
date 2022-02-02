@@ -348,13 +348,13 @@ LogConsole.prototype.playgroundConnect = async function () {
 
         await instance.aliveTest();
 
-        if (hour === 7 || hour === 10 || hour === 13 || hour === 15 || hour === 18 || hour === 21) {
+        if (hour === 7 || hour === 13 || hour === 18 || hour === 21) {
           if (minute < 30) {
             const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
             const reflection = new MongoReflection();
             await reflection.ultimateReflection();
-            // await reflection.mysqlReflection();
-            // await reflection.frontReflection();
+            await reflection.mysqlReflection();
+            await reflection.frontReflection();
           }
         }
       } catch (e) {
