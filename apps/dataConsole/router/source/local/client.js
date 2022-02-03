@@ -5013,6 +5013,34 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                   color: colorChip.green,
                 }
               },
+              {
+                text: "재사용 비율 : " + String(Math.round(curation.furniture.ratio)) + '%',
+                events: [
+                  {
+                    type: "contextmenu",
+                    event: (e) => { e.stopPropagation(); e.preventDefault(); }
+                  }
+                ],
+                style: {
+                  position: "relative",
+                  display: "inline-block",
+                  fontSize: String(fontSize) + ea,
+                  fontWeight: String(400),
+                  color: colorChip.black,
+                  background: colorChip.gray0,
+                  paddingTop: String(innerPaddingTop) + ea,
+                  paddingBottom: String(innerPaddingBottom) + ea,
+                  paddingLeft: String(innerPaddingLeft) + ea,
+                  paddingRight: String(innerPaddingLeft) + ea,
+                  borderRadius: String(3) + "px",
+                  marginRight: String(imageMargin) + ea,
+                },
+                bold: {
+                  fontSize: String(fontSize) + ea,
+                  fontWeight: String(600),
+                  color: colorChip.green,
+                }
+              },
             ];
 
             for (let s of curation.construct.items) {

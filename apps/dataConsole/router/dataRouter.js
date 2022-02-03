@@ -5390,17 +5390,19 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
               messageSend({ text: client.name + " 제안서 제작 문제 생김" + err.message, channel: "#404_curation" }).catch((e) => { console.log(e) });
             });
           } else {
-            instance.kakao.sendTalk("complete", client.name, client.phone).catch((err) => { console.log(err); });
+            detailUpdate = [];
+            instance.kakao.sendTalk("curationComplete", client.name, client.phone, { client: client.name }).catch((err) => { console.log(err); });
           }
 
           res.set({ "Content-Type": "application/json" });
-          res.send(JSON.stringify({ service: detailUpdate, client, history }));
+          res.send(JSON.stringify({ service: detailUpdate, client: client.toNormal(), history }));
 
         } else {
 
           await messageSend({ text: client.name + " 제안서를 제작하려고 했으나 매칭되는 경우가 없어요!", channel: "#404_curation", voice: true });
+          await instance.kakao.sendTalk("curationComplete", client.name, client.phone, { client: client.name });
           res.set({ "Content-Type": "application/json" });
-          res.send(JSON.stringify({ service: [], client, history }));
+          res.send(JSON.stringify({ service: [], client: client.toNormal(), history }));
 
         }
 
