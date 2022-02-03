@@ -3172,19 +3172,21 @@ StyleCurationJs.prototype.parsingValues = function () {
     } else {
       const { service, client, history } = obj;
 
+      instance.client = client;
+      instance.clientHistory = history;
+
       if (service.length === 0) {
-        if (returnGet().mode === "lite") {
-          window.alert("매칭되는 경우가 없어 진행할 수 없습니다. 홈리에종에 카카오 채널 또는 전화를 통해 문의해주세요!");
-        } else {
-          window.alert("매칭되는 경우가 없습니다, 생각하는 시공 정도를 조정해주세요!");
-        }
+        finalSerid = [
+          {
+            serid: history.curation.service.serid,
+            min: Math.floor((client.requests[0].request.space.pyeong * 60000) / 100000) / 10,
+            max: Math.ceil((client.requests[0].request.space.pyeong * 100000) / 1000000)
+          }
+        ]
         return new Promise((resolve, reject) => { resolve({ promisePass: true }); });
       }
 
-      instance.client = client;
-      instance.clientHistory = history;
       finalSerid = history.curation.service.serid;
-
       finalSerid = finalSerid.map((serid) => {
         let feeArr;
         let min, max;
@@ -3213,15 +3215,7 @@ StyleCurationJs.prototype.parsingValues = function () {
       }
     }
   }).then((obj) => {
-    if (obj.message !== "done") {
-      grayLoading.remove();
-      GeneralJs.scrollTo(window, 0);
-      return new Promise((resolve, reject) => {
-        resolve("done");
-      });
-    } else {
-      return instance.serviceConverting(finalSerid);
-    }
+    return instance.serviceConverting(finalSerid);
   }).then((message) => {
     if (message !== "done") {
       throw new Error("promise error 2");
