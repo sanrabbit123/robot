@@ -3185,6 +3185,8 @@ StyleCurationJs.prototype.parsingValues = function () {
             max: Math.ceil((client.requests[0].request.space.pyeong * 100000) / 1000000)
           }
         ]
+        grayLoading.remove();
+        GeneralJs.scrollTo(window, 0);
         return new Promise((resolve, reject) => { resolve({ promisePass: true }); });
       }
 
