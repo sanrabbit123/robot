@@ -93,6 +93,8 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
     // const RETHINKC = await rethink.connect();
     // let messages;
     //
@@ -1872,7 +1874,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p152");
+    // await this.getRawPortfolio("p168");
 
 
     // get corePortfolio by pid

@@ -402,7 +402,7 @@ AddressParser.prototype.convertXY = function (x, y, reverse = false) {
   }
 }
 
-AddressParser.prototype.getAddress = async function (address, pointMode = false) {
+AddressParser.prototype.getAddress = async function (address, pointMode = false, defaultGeneralSpotsNameIndex = 0) {
   if (typeof address !== "string") {
     throw new Error("invaild input, address must be string");
   }
@@ -411,6 +411,17 @@ AddressParser.prototype.getAddress = async function (address, pointMode = false)
   const { url: vworldUrl, key: vworldKey } = this.token.vworld;
   const { url: roadUrl, key: roadKey } = this.token.jusoRoad;
   const { url: locationUrl, key: locationKey } = this.token.jusoLocation;
+  const defaultGeneralSpotsName = [
+    "공원",
+    "초등학교",
+    "중학교",
+    "고등학교",
+    "학교",
+    "1",
+    "사거리",
+    "삼거리",
+    "보건소",
+  ];
   try {
     let data, res, res2, result;
     let tempArr, roadBoo;
@@ -566,6 +577,17 @@ AddressParser.prototype.getAddress = async function (address, pointMode = false)
           }
         }
       }
+    }
+
+    //third search
+    if (result === null) {
+      tempArr = address.split(' ');
+      tempArr = tempArr.slice(0, index + 1);
+      if (defaultGeneralSpotsName[defaultGeneralSpotsNameIndex] === undefined) {
+        return null;
+      }
+      tempArr.push(defaultGeneralSpotsName[defaultGeneralSpotsNameIndex]);
+      result = await this.getAddress(tempArr.join(" "), false, defaultGeneralSpotsNameIndex + 1);
     }
 
     if (result !== null && pointMode) {
