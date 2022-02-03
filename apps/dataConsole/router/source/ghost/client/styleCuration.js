@@ -3176,6 +3176,9 @@ StyleCurationJs.prototype.parsingValues = function () {
       instance.clientHistory = history;
 
       if (service.length === 0) {
+
+        console.log(client);
+
         finalSerid = [
           {
             serid: history.curation.service.serid,
