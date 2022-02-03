@@ -3177,7 +3177,7 @@ StyleCurationJs.prototype.parsingValues = function () {
 
       if (service.length === 0) {
 
-        console.log(client);
+        console.log(client.requests[0]);
 
         finalSerid = [
           {
