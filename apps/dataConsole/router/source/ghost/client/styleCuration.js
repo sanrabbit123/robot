@@ -3178,10 +3178,9 @@ StyleCurationJs.prototype.parsingValues = function () {
       if (service.length === 0) {
 
         console.log(client.requests[0]);
-
         finalSerid = [
           {
-            serid: history.curation.service.serid,
+            serid: history.curation.service.serid.length > 0 ? history.curation.service.serid[0] : "s2011_aa02s",
             min: Math.floor((client.requests[0].request.space.pyeong * 60000) / 100000) / 10,
             max: Math.ceil((client.requests[0].request.space.pyeong * 100000) / 1000000)
           }
