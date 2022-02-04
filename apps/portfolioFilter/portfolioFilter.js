@@ -777,7 +777,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         for (let item of folderPathList) {
           await appleScript(`compress_${item.replace(/\./g, '')}`, photoshopScript(shellLink(`${folderPath}/${item}`), adobe), null, false);
         }
-        forecast = await garoseroParser.queryDirectory(folderPath, true);
+        forecast = await garoseroParser.queryDirectory(folderPath);
         for (let obj of forecast) {
           obj.file = foreCastContant + "/" + obj.file.split("/").slice(-2).join("/");
         }
