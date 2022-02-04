@@ -1,3 +1,38 @@
+class Distance {
+  constructor(m, s, from, to) {
+    if (typeof m !== "number" || typeof s !== "number" || from === undefined || to === undefined) {
+      throw new Error("invaild input");
+    }
+    this.meters = m;
+    this.seconds = s;
+    this.from = from;
+    this.to = to;
+  }
+  toNormal() {
+    let obj = {};
+    obj.meters = this.meters;
+    obj.seconds = this.seconds;
+    obj.from = this.from;
+    obj.to = this.to;
+    return obj;
+  }
+  get m() {
+    return this.meters;
+  }
+  get s() {
+    return this.seconds;
+  }
+  get meter() {
+    return this.meters;
+  }
+  get metre() {
+    return this.meters;
+  }
+  get second() {
+    return this.seconds;
+  }
+}
+
 const AddressParser = function () {
   const Mother = require(process.cwd() + "/apps/mother.js");
   const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
@@ -608,41 +643,6 @@ AddressParser.prototype.getDistance = async function (from, to, option = { selfM
   const { requestSystem, stringToDate, mongo, mongoconsoleinfo } = this.mother;
   const { url, key } = this.token.tMap;
   try {
-    class Distance {
-      constructor(m, s, from, to) {
-        if (typeof m !== "number" || typeof s !== "number" || from === undefined || to === undefined) {
-          throw new Error("invaild input");
-        }
-        this.meters = m;
-        this.seconds = s;
-        this.from = from;
-        this.to = to;
-      }
-      toNormal() {
-        let obj = {};
-        obj.meters = this.meters;
-        obj.seconds = this.seconds;
-        obj.from = this.from;
-        obj.to = this.to;
-        return obj;
-      }
-      get m() {
-        return this.meters;
-      }
-      get s() {
-        return this.seconds;
-      }
-      get meter() {
-        return this.meters;
-      }
-      get metre() {
-        return this.meters;
-      }
-      get second() {
-        return this.seconds;
-      }
-    }
-
     let origin, destination, res, result;
     let meters, seconds;
     let data;
@@ -784,6 +784,110 @@ AddressParser.prototype.getDistance = async function (from, to, option = { selfM
     return result;
   } catch (e) {
     console.log(e);
+  }
+}
+
+AddressParser.prototype.getDistanceLite = async function (from, to) {
+  const instance = this;
+  const encodeUrl = (obj) => {
+    let str;
+    str = '';
+    for (let i in obj) {
+      str += i;
+      str += '=';
+      str += global.encodeURI(obj[i]);
+      str += '&';
+    }
+    if (str.length > 0) {
+      str = str.slice(0, -1);
+    }
+    return str;
+  }
+  const GoogleChrome = require(process.cwd() + "/apps/googleAPIs/googleChrome.js");
+  const chrome = new GoogleChrome();
+  let url;
+  let queries;
+  let res;
+  try {
+    queries = {
+      map_type: "TYPE_MAP",
+      target: "car",
+      rt: ",,523953,1084098",
+      rt1: from,
+      rt2: to
+    };
+    url = "https://map.kakao.com/?" + encodeUrl(queries);
+
+    res = await chrome.frontScript(url, async function () {
+      const sleep = function (time) {
+        let timeoutId = null;
+        return new Promise(function (resolve, reject) {
+          timeoutId = setTimeout(function () {
+            resolve('awake');
+            clearTimeout(timeoutId);
+            timeoutId = null;
+          }, time);
+        });
+      }
+      try {
+        let distance, time;
+        let meters, seconds;
+        let tempArr;
+        let targets;
+
+        targets = document.querySelectorAll("span.distance");
+        while (targets.length === 0) {
+          await sleep(100);
+          targets = document.querySelectorAll("span.distance");
+        }
+        for (let dom of targets) {
+          if (dom.getAttribute("data-id") === "distance") {
+            distance = dom;
+            break;
+          }
+        }
+
+        targets = document.querySelectorAll("span.time");
+        while (targets.length === 0) {
+          await sleep(100);
+          targets = document.querySelectorAll("span.time");
+        }
+        for (let dom of targets) {
+          if (dom.getAttribute("data-id") === "time") {
+            time = dom;
+            break;
+          }
+        }
+
+        meters = Number(distance.querySelector(".num").textContent.trim()) * (distance.querySelector(".text").textContent.trim() === "km" ? 1000 : 1);
+
+        if (/시간/gi.test(time.textContent)) {
+          if (/분/gi.test(time.textContent)) {
+            tempArr = time.textContent.split("시간").map((str) => { return Number(str.replace(/[^0-9]/gi, '')) });
+            seconds = (tempArr[0] * 60 * 60) + (tempArr[1] * 60);
+          } else {
+            seconds = Number(time.textContent.replace(/[^0-9]/gi, '')) * 60 * 60;
+          }
+        } else {
+          if (/분/gi.test(time.textContent)) {
+            seconds = Number(time.textContent.replace(/[^0-9]/gi, '')) * 60;
+          } else {
+            seconds = Number(time.textContent.replace(/[^0-9]/gi, ''));
+          }
+        }
+
+        return { meters, seconds }
+      } catch (e) {
+        return e.message;
+      }
+    });
+
+    res.from = from;
+    res.to = to;
+    return new Distance(res.meters, res.seconds, res.from, res.to);
+  } catch (e) {
+    console.log(e);
+    return null;
   }
 }
 

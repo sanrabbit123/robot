@@ -90,7 +90,9 @@ DevContext.prototype.launching = async function () {
     //   [ 40, 50 ]
     // ])
 
-    await findCode("jpegDecode")
+    
+
+
 
 
     // const RETHINKC = await rethink.connect();
