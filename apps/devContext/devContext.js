@@ -94,7 +94,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
     // const RETHINKC = await rethink.connect();
     // let messages;
     //

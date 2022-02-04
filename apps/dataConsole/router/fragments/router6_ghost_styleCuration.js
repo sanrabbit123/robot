@@ -96,7 +96,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
         res.send(JSON.stringify({}));
       } else {
         const service = clientCase.caseService();
-        const detail = await work.designerCuration(cliid, 6, history.curation.service.serid, { selfMongo: instance.mongo, selfLocalMongo: instance.mongolocal });
+        const detail = await work.designerCuration(cliid, 4, history.curation.service.serid, { selfMongo: instance.mongo, selfLocalMongo: instance.mongolocal });
         let detailUpdate, updateQuery;
         let newProid;
         let requestNumber;
