@@ -1462,8 +1462,8 @@ ConsultingJs.prototype.thankyouPage = function (boo, valuesTong) {
       window.location.href = "https://home-liaison.com/consulting.php";
       return false;
 
-    // } else if (data === "photo") {
-    } else {
+    } else if (data === "photo") {
+    // } else {
 
       history.pushState({}, "", "?submit=true");
       instance.pendingBox(document.getElementById((boo === "desktop") ? "consultingbox" : "moconsultingbox"), boo, true);
@@ -1485,12 +1485,12 @@ ConsultingJs.prototype.thankyouPage = function (boo, valuesTong) {
         clearTimeout(fadeout);
       }, 1100);
 
-    // } else {
-    //
-    //   history.pushState({}, "", "?submit=true");
-    //   instance.pendingBox(document.getElementById((boo === "desktop") ? "consultingbox" : "moconsultingbox"), boo, true);
-    //
-    //   window.location.href = "https://home-liaison.servehttp.com/middle/curation/?cliid=" + data;
+    } else {
+
+      history.pushState({}, "", "?submit=true");
+      instance.pendingBox(document.getElementById((boo === "desktop") ? "consultingbox" : "moconsultingbox"), boo, true);
+
+      window.location.href = "https://home-liaison.servehttp.com/middle/curation/?cliid=" + data;
 
     }
   }
