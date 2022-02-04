@@ -1341,46 +1341,6 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
     paddingBottom = isMac() ? 13 : 10;
     titleVisual = 1;
 
-    if (distance === 0) {
-      travel.limit = 0;
-      ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.travel.limit = 0;
-      if (offline !== 0) {
-        if (offline * firstDiscount >= firstLimit) {
-          temp = offline - firstLimit;
-        } else {
-          temp = offline * (1 - firstDiscount);
-        }
-        if (temp <= onlineMinimum) {
-          temp = onlineMinimum;
-        }
-      } else if (online !== 0) {
-        if (online * firstDiscount >= firstLimit) {
-          temp = online - firstLimit;
-        } else {
-          temp = online * (1 - firstDiscount);
-        }
-        if (temp <= onlineMinimum) {
-          temp = onlineMinimum;
-        }
-      } else if (offline === 0 && online === 0) {
-        temp = 0;
-      }
-      online = temp;
-      ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.online = online;
-      if (thisOnOff === "online") {
-        onlineTarget = null;
-        for (let dom of mother.parentElement.parentElement.querySelectorAll("input")) {
-          if (/온/gi.test(dom.previousElementSibling.textContent)) {
-            onlineTarget = dom;
-          }
-        }
-        if (onlineTarget !== null) {
-          onlineTarget.value = GeneralJs.autoComma(online);
-          input_widthSet(onlineTarget);
-        }
-      }
-    }
-
     createNode({
       mother,
       class: [ removeClassName ],
@@ -1626,16 +1586,19 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                     const number = Number(this.getAttribute("number"));
                     const distanceBoo = this.getAttribute("distanceBoo") === "true";
                     const thisOnOff = this.getAttribute("thisOnOff");
+                    const onlinePosition = 7;
                     const offlinePosition = 8;
                     const totalPosition = 9;
                     let doing;
                     let newNumber, newDistance;
-                    let offline, final;
+                    let offline, final, online;
+                    let temp;
+                    let onlineTarget;
                     if (e.type === "click") {
                       newNumber = number + 1;
                       doing = true;
                     } else {
-                      if (number > 1) {
+                      if (number > 0) {
                         newNumber = number - 1;
                         doing = true;
                       } else {
@@ -1650,6 +1613,35 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                         offline = Number(this.parentElement.children[offlinePosition].lastChild.textContent.replace(/[^0-9]/gi, ''));
                         final = offline + (distance * newNumber);
                         this.parentElement.children[totalPosition].lastChild.textContent = GeneralJs.autoComma(final) + "원";
+                        if (offline !== 0) {
+                          online = offline;
+                          if (newNumber === 0) {
+                            if (offline * firstDiscount >= firstLimit) {
+                              temp = offline - firstLimit;
+                            } else {
+                              temp = offline * (1 - firstDiscount);
+                            }
+                            if (temp <= onlineMinimum) {
+                              temp = onlineMinimum;
+                            }
+                            online = temp;
+                          } else if (newNumber === 1) {
+                            online = offline * (1 - secondDiscount);
+                          }
+                        }
+                        this.parentElement.children[onlinePosition].lastChild.textContent = GeneralJs.autoComma(online) + "원";
+                        onlineTarget = null;
+                        for (let dom of this.parentElement.parentElement.parentElement.parentElement.querySelectorAll("input")) {
+                          if (/온/gi.test(dom.previousElementSibling.textContent)) {
+                            onlineTarget = dom;
+                          }
+                        }
+                        if (onlineTarget !== null) {
+                          onlineTarget.value = GeneralJs.autoComma(online);
+                          input_widthSet(onlineTarget);
+                        }
+                        ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.online = online;
+
                       }
                     }
 
@@ -1729,37 +1721,6 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                       this.lastChild.textContent = String(!distanceBoo ? 0 : newNumber) + "회";
                       this.setAttribute("number", String(!distanceBoo ? 0 : newNumber));
                       ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.travel.limit = (!distanceBoo ? 0 : newNumber);
-                      if (distanceBoo) {
-                        offline = ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.offline;
-                        if (offline !== 0) {
-                          online = offline;
-                          if (newNumber === 0) {
-                            if (offline * firstDiscount >= firstLimit) {
-                              temp = offline - firstLimit;
-                            } else {
-                              temp = offline * (1 - firstDiscount);
-                            }
-                            if (temp <= onlineMinimum) {
-                              temp = onlineMinimum;
-                            }
-                            online = temp;
-                          } else if (newNumber === 1) {
-                            online = offline * (1 - secondDiscount);
-                          }
-                        }
-                        this.parentElement.children[onlinePosition].lastChild.textContent = GeneralJs.autoComma(online) + "원";
-                        onlineTarget = null;
-                        for (let dom of this.parentElement.parentElement.parentElement.parentElement.querySelectorAll("input")) {
-                          if (/온/gi.test(dom.previousElementSibling.textContent)) {
-                            onlineTarget = dom;
-                          }
-                        }
-                        if (onlineTarget !== null) {
-                          onlineTarget.value = GeneralJs.autoComma(online);
-                          input_widthSet(onlineTarget);
-                        }
-                        ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.online = online;
-                      }
                     }
 
                   }
@@ -2744,7 +2705,9 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
             node.addEventListener("click", fourth.events.service);
           }
         }
-        for (let node of target2) { node.addEventListener("click", fourth.events.popup); }
+        for (let node of target2) {
+          node.addEventListener("click", fourth.events.popup);
+        }
         for (let node of target3) {
           node.addEventListener("keyup", fourth.events.money);
           node.addEventListener("blur", fourth.events.money);
@@ -2813,7 +2776,6 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
     instance.toggleSetting.fourth = 1;
 
     let removeAll = function (e) {
-      //------------------------------------------------------------------------
       if (instance.fourthChildren instanceof Map) {
         instance.below_launching("fourth", "off");
         instance.pastMaps.unshift(new Map());
@@ -2845,12 +2807,12 @@ ProposalJs.prototype.fourthProcess = async function (num) {
   let setTimeout_func;
   try {
     for (let i = 0; i < 3; i++) {
-      this.thirdChildren.get("box" + String(i)).style.opacity = "0";
+      this.thirdChildren.get("box" + String(i)).style.opacity = String(0);
     }
     setTimeout_func = await this.fourthsetTimeout(num, {}, false);
     ProposalJs.toggleTimeout.fourth = setTimeout(setTimeout_func, 550);
   } catch (e) {
-    GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
+    GeneralJs.ajax("message=" + JSON.stringify(e.message).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
     console.log(e);
   }
 }
