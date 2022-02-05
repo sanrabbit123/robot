@@ -7250,7 +7250,7 @@ StyleCurationJs.prototype.launching = async function (loading) {
         try {
           instance.insertInitBox();
           instance.insertFirstService();
-          // instance.insertSecondService();
+          instance.insertSecondService();
           instance.insertCenterBox();
           instance.insertPhotoBox();
           instance.insertPannelBox();

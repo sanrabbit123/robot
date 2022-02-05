@@ -4046,6 +4046,449 @@ DesignerProposalJs.prototype.submitEvent = function (desid, designer, method) {
   }
 }
 
+DesignerProposalJs.prototype.insertSecondService = function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
+  const { client, ea, media, osException, testMode } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  let whiteBlock;
+  let style;
+  let blockHeight, bottomMargin;
+  let leftBox, rightBox;
+  let titleBox, barBox, indexBox;
+  let margin;
+  let leftRatio;
+  let wordSpacing;
+  let titleFont, titleLeft, titleFontWeight, titleSecondLeft, titleSecondWeight;
+  let titleSecondTop;
+  let barWidth, barTop;
+  let indexFont, indexFontWeight;
+  let indexNumberBottom;
+  let initWording0, initWording1;
+  let descriptionHeight, descriptionMarginTop;
+  let descriptionTitleWidth, descriptionTitleMargin;
+  let descriptionSize, descriptionWeight, descriptionLineHeight;
+  let descriptionTitleWeight;
+  let contentsBlockSize, contentsBlockBottom;
+  let wordings;
+  let grayBox;
+  let grayBoxHeight;
+  let grayBoxWidth;
+  let grayArrowWidth;
+  let grayArrowMargin;
+  let grayArrowHeight;
+  let grayBoxInnerMargin;
+  let grayTextBottom;
+  let grayTextSize;
+  let grayDeactiveTextSize;
+  let barLeft;
+  let mobileTitleLeft;
+  let mobileTitleTop;
+  let mobileTitleMarginBottom;
+  let mobileRightBoxPaddingTop;
+  let whiteBlockPaddingBottom;
+  let mobileGrayMarginTop, mobileGrayMarginLeft;
+  let mobilePictureBetween;
+
+  blockHeight = <%% 406, 406, 384, 295, 160 %%>;
+  bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
+  margin = <%% 52, 52, 44, 32, 52 %%>;
+  leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
+
+  titleFont = <%% 31, 28, 25, 22, 5.7 %%>;
+  titleLeft = <%% 6, 6, 6, 6, 0 %%>;
+  titleFontWeight = <%% 600, 600, 600, 600, 600 %%>;
+  titleSecondTop = <%% 55, 50, 44, 39, 2 %%>;
+  titleSecondLeft = <%% 125, 6, 6, 6, 6 %%>;
+  titleSecondWeight = <%% 200, 200, 200, 200, 200 %%>;
+
+  wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
+
+  barWidth = <%% 106, 106, 106, 106, 24 %%>;
+  barTop = <%% (isMac() ? 73 : 71), (isMac() ? 73 : 71), (isMac() ? 73 : 71), (isMac() ? 73 : 71), 10.5 %%>;
+  barLeft = 12.5;
+
+  indexFont = <%% 19, 19, 19, 19, 5.7 %%>;
+  indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
+
+  indexNumberBottom = <%% 7, 4, 2, 5, 0 %%>;
+
+  grayBoxHeight = <%% 210, 210, 210, 155, 24 %%>;
+  grayBoxWidth = <%% 320, 290, 260, 210, 32 %%>;
+  grayTextBottom = <%% 20, 20, 20, 20, 2 %%>;
+  grayTextSize = <%% 14, 12, 11, 11, 3 %%>;
+  grayDeactiveTextSize = <%% 16, 14, 13, 11, 3 %%>;
+  grayArrowWidth = <%% 100, 45, 39, 39, 2 %%>;
+  grayArrowMargin = <%% 20, 16, 12, 10, 2 %%>;
+  grayArrowHeight = <%% 12, 12, 12, 12, 3.5 %%>;
+  grayBoxInnerMargin = <%% 24, 20, 12, 10, 2 %%>;
+
+  descriptionHeight = <%% 60, 60, 60, 60, 6 %%>;
+  descriptionMarginTop = <%% 36, 36, 36, 25, 4 %%>;
+  descriptionTitleWidth = <%% 90, 90, 90, 72, 6 %%>;
+  descriptionTitleMargin = <%% 40, 40, 30, 3, 6 %%>;
+  descriptionSize = <%% 15, 15, 14, 13, 3 %%>;
+  descriptionWeight = desktop ? 300 : 400;
+  descriptionLineHeight = 1.6;
+  descriptionTitleWeight = 700;
+
+  mobileTitleLeft = 7;
+  mobileTitleTop = 7;
+  mobileTitleMarginBottom = 7;
+  mobileRightBoxPaddingTop = 49;
+  whiteBlockPaddingBottom = 9;
+
+  mobileGrayMarginTop = 43;
+  mobileGrayMarginLeft = 6;
+  mobilePictureBetween = 12;
+
+  wordings = {
+    title: {
+      main: desktop ? "우리집 상세 견적은," : "우리집 상세 견적은",
+      sub: [
+        "디자이너와 함께",
+        "조정해보세요!"
+      ]
+    },
+    gray: {
+      main: [
+        "디자인비",
+      ],
+      sub: [
+        "시공비",
+        "제품\n구매비",
+        "부가\n서비스비"
+      ]
+    },
+    contents: {
+      title: [
+        "디자인비",
+        "선불 안내"
+      ],
+    }
+  }
+
+  if (media[0]) {
+    wordings.contents.description = [ "홈리에종은 선 디자인이 필수이기 때문에, 시공 견적을 드리는 것이 아니라 디자이너의 인건비 개념인 디자인비를 먼저 받는 구조로 되어 있습니다. 우리집을 담당해 줄 전문가를 먼저 만나 함께 인테리어를 진행해보세요!" ];
+  } else if (media[1]) {
+    wordings.contents.description = [ "홈리에종은 일단 시공 견적을 드리는 것이 아니라 디자이너의 인건비 개념인 디자인비를 먼저 받는 구조로 되어 있습니다. 우리집을 담당해 줄 전문가를 만나 함께 진행해보세요!" ];
+  } else if (media[2]) {
+    wordings.contents.description = [ "홈리에종은 시공 견적부터 드리는 것이 아니라 인건비 개념인 디자인비를 먼저 받는 구조입니다. 우리집을 담당해 줄 전문가를 만나 함께 진행해보세요!" ];
+  } else if (media[3]) {
+    wordings.contents.description = [ "홈리에종은 시공 견적부터 드리는 것이 아니라 인건비 개념인 디자인비를 먼저 받는 구조입니다. 우리집을 담당해 줄 전문가를 만나 함께 진행해보세요!" ];
+  } else {
+    wordings.contents.description = [ "홈리에종은 일단 시공 견적을 드리는 것이 아니라 디자이너의 인건비 개념인 디자인비를 먼저 받는 구조로 되어 있습니다. 우리집을 담당해 줄 전문가를 만나 함께 진행해보세요!" ];
+  }
+
+  whiteBlock = createNode({
+    mother: this.baseTong,
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      height: desktop ? String(blockHeight) + ea : "",
+      background: colorChip.white,
+      marginBottom: String(bottomMargin) + ea,
+      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      paddingBottom: desktop ? "" : String(whiteBlockPaddingBottom) + ea,
+    }
+  });
+
+  leftBox = createNode({
+    mother: whiteBlock,
+    style: {
+      display: desktop ? "inline-block" : "block",
+      position: "relative",
+      width: desktop ? "calc(calc(100% - " + String(margin * 2) + ea + ") * " + String(leftRatio) + ")" : String(100) + '%',
+      height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : "",
+      marginTop: desktop ? String(margin) + ea : "",
+      marginBottom: desktop ? String(margin) + ea : "",
+      marginLeft: desktop ? String(margin) + ea : "",
+    }
+  });
+
+  //main title
+  createNode({
+    mother: leftBox,
+    text: wordings.title.main,
+    style: {
+      position: desktop ? "absolute" : "relative",
+      fontSize: String(titleFont) + ea,
+      fontWeight: String(titleFontWeight),
+      wordSpacing: String(wordSpacing) + "px",
+      top: desktop ? (String((media[0] ? 0 : media[1] ? 0 : 0) + (isMac() || mobile ? 0 : 4)) + ea) : "",
+      paddingTop: desktop ? "" : String(mobileTitleTop) + ea,
+      left: desktop ? String(titleLeft) + ea : "",
+      marginLeft: desktop ? "" : String(mobileTitleLeft) + ea,
+      color: colorChip.black,
+      width: desktop ? "" : withOut(mobileTitleLeft * 2, ea),
+      textAlign: desktop ? "" : "right",
+    }
+  });
+
+  createNode({
+    mother: leftBox,
+    text: wordings.title.sub.join("\n"),
+    style: {
+      position: desktop ? "absolute" : "relative",
+      fontSize: String(titleFont) + ea,
+      fontWeight: String(titleSecondWeight),
+      wordSpacing: String(wordSpacing) + "px",
+      top: desktop ? String(titleSecondTop) + ea : "",
+      marginTop: desktop ? "" : String(titleSecondTop) + ea,
+      left: desktop ? String(titleSecondLeft) + ea : "",
+      marginLeft: desktop ? "" : String(mobileTitleLeft) + ea,
+      width: desktop ? "" : withOut(mobileTitleLeft * 2, ea),
+      textAlign: desktop ? (media[0] ? "right" : "left") : "right",
+      color: colorChip.black,
+      lineHeight: String(desktop ? 1.35 : 1.3),
+    },
+    bold: {
+      fontWeight: String(titleFontWeight),
+      color: colorChip.black,
+    }
+  });
+
+  if (media[0] || media[4]) {
+    createNode({
+      mother: leftBox,
+      style: {
+        position: "absolute",
+        borderBottom: "1px " + (desktop ? "solid" : "dashed") + " " + (desktop ? colorChip.green : colorChip.whiteGreen),
+        top: String(barTop) + ea,
+        left: String(desktop ? titleLeft : barLeft) + ea,
+        width: String(barWidth) + ea,
+      }
+    });
+  }
+
+  createNode({
+    mother: leftBox,
+    text: String(1),
+    style: {
+      position: "absolute",
+      fontSize: String(indexFont) + ea,
+      fontWeight: String(indexFontWeight),
+      wordSpacing: String(wordSpacing) + ea,
+      bottom: desktop ? String(indexNumberBottom) + ea : "",
+      top: desktop ? "" : String(mobileTitleTop) + ea,
+      left: desktop ? String(titleLeft) + ea : String(mobileTitleLeft) + ea,
+      color: desktop ? colorChip.gray4 : colorChip.black,
+    }
+  });
+
+  rightBox = createNode({
+    mother: whiteBlock,
+    style: {
+      display: desktop ? "inline-block" : "block",
+      position: "relative",
+      verticalAlign: "top",
+      top: String(0) + ea,
+      width: desktop ? "calc(calc(100% - " + String(margin * 2) + ea + ") * " + String(1 - leftRatio) + ")" : String(100) + '%',
+      height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : "",
+      marginTop: desktop ? String(margin) + ea : "",
+      marginBottom: desktop ? String(margin) + ea : "",
+      marginRight: desktop ? String(margin) + ea : "",
+    }
+  });
+
+  grayBox = createNode({
+    mother: rightBox,
+    style: {
+      display: "block",
+      position: "relative",
+      height: String(grayBoxHeight) + ea,
+      background: colorChip.gray1,
+      borderRadius: String(5) + "px",
+      left: desktop ? "" : String(mobileGrayMarginLeft) + ea,
+      width: desktop ? "" : withOut(mobileGrayMarginLeft * 2, ea),
+      marginTop: desktop ? "" : String(mobileGrayMarginTop) + ea,
+    }
+  });
+
+  createNode({
+    mother: grayBox,
+    style: {
+      display: desktop ? "inline-block" : "block",
+      position: desktop ? "relative" : "absolute",
+      height: String(grayBoxHeight) + ea,
+      width: desktop ? String(grayBoxWidth) + ea : String(100) + '%',
+      backgroundImage: "url('" + DesignerProposalJs.binaryPath + "/3dsample.jpg" + "')",
+      backgroundSize: (media[2] || media[3]) ? "auto 100%" : "100% auto",
+      backgroundPosition: "50% 50%",
+      borderRadius: String(5) + "px",
+      boxShadow: "5px 2px 21px -9px " + colorChip.shadow,
+      top: desktop ? "" : String(-1 * (grayBoxHeight + mobilePictureBetween)) + ea,
+    }
+  });
+
+  createNode({
+    mother: grayBox,
+    style: {
+      display: desktop ? "inline-flex" : "flex",
+      position: desktop ? "relative" : "absolute",
+      verticalAlign: "top",
+      height: String(desktop ? grayBoxHeight : mobilePictureBetween) + ea,
+      width: desktop ? String(grayArrowWidth) + ea : String(100) + '%',
+      marginLeft: desktop ? String(grayArrowMargin) + ea : "",
+      justifyContent: "center",
+      alignItems: "center",
+      top: desktop ? "" : String(-1 * mobilePictureBetween) + ea,
+    },
+    children: [
+      {
+        mode: "svg",
+        source: desktop ? svgMaker.horizontalArrow(grayArrowWidth, grayArrowHeight) : svgMaker.verticalArrow(grayArrowWidth, grayArrowHeight),
+        style: {
+          position: desktop ? "relative" : "absolute",
+          width: String(grayArrowWidth) + ea,
+          height: String(grayArrowHeight) + ea,
+          bottom: desktop ? "" : String(2) + ea,
+        }
+      },
+      {
+        text: wordings.gray.main.join("\n"),
+        style: {
+          position: "absolute",
+          fontSize: String(grayTextSize) + ea,
+          fontWeight: String(600),
+          color: colorChip.green,
+          bottom: desktop ? String(grayTextBottom) + ea : "",
+          top: desktop ? "" : String(1.5) + ea,
+          textAlign: desktop ? "left" : "center",
+          left: String(0) + ea,
+          lineHeight: String(1.5),
+          width: desktop ? "" : String(100) + '%',
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: grayBox,
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      verticalAlign: "top",
+      height: String(grayBoxHeight) + ea,
+      width: desktop ? withOut(grayBoxWidth + grayArrowWidth + (grayArrowMargin * 2), ea) : withOut(grayArrowMargin, ea),
+      marginLeft: String(grayArrowMargin) + ea,
+      alignItems: "center",
+    },
+    children: [
+      {
+        style: {
+          position: "relative",
+          width: withOut(grayBoxInnerMargin, ea),
+          left: String(0),
+          height: withOut(grayBoxInnerMargin * 2, ea),
+          background: colorChip.white,
+          borderRadius: String(5) + "px",
+        }
+      },
+      {
+        style: {
+          position: "absolute",
+          width: "calc(" + withOut(grayBoxInnerMargin, ea) + " * calc(2 / 3)",
+          left: String(0),
+          height: withOut(grayBoxInnerMargin * 2, ea),
+          background: colorChip.white,
+          borderRadius: String(5) + "px",
+          boxShadow: "6px 1px 13px -9px " + colorChip.shadow,
+        }
+      },
+      {
+        style: {
+          position: "absolute",
+          width: "calc(" + withOut(grayBoxInnerMargin, ea) + " * calc(1 / 3)",
+          left: String(0),
+          height: withOut(grayBoxInnerMargin * 2, ea),
+          background: colorChip.white,
+          borderRadius: String(5) + "px",
+          boxShadow: "6px 1px 13px -9px " + colorChip.shadow,
+        }
+      },
+      {
+        text: wordings.gray.sub[0],
+        style: {
+          position: "absolute",
+          width: "calc(" + withOut(grayBoxInnerMargin, ea) + " * calc(1 / 3)",
+          left: String(0),
+          fontSize: String(grayDeactiveTextSize) + ea,
+          fontWeight: String(600),
+          color: colorChip.liteBlack,
+          lineHeight: String(1.4),
+          textAlign: "center",
+        }
+      },
+      {
+        text: wordings.gray.sub[1],
+        style: {
+          position: "absolute",
+          width: "calc(" + withOut(grayBoxInnerMargin, ea) + " * calc(1 / 3)",
+          left: "calc(" + withOut(grayBoxInnerMargin, ea) + " * calc(1 / 3)",
+          fontSize: String(grayDeactiveTextSize) + ea,
+          fontWeight: String(600),
+          color: colorChip.liteBlack,
+          lineHeight: String(1.4),
+          textAlign: "center",
+        }
+      },
+      {
+        text: wordings.gray.sub[2],
+        style: {
+          position: "absolute",
+          width: "calc(" + withOut(grayBoxInnerMargin, ea) + " * calc(1 / 3)",
+          left: "calc(" + withOut(grayBoxInnerMargin, ea) + " * calc(2 / 3)",
+          fontSize: String(grayDeactiveTextSize) + ea,
+          fontWeight: String(600),
+          color: colorChip.liteBlack,
+          lineHeight: String(1.4),
+          textAlign: "center",
+        }
+      },
+    ]
+  });
+
+  createNode({
+    mother: rightBox,
+    style: {
+      display: "block",
+      position: "relative",
+      height: desktop ? String(descriptionHeight) + ea : "",
+      marginTop: String(descriptionMarginTop) + ea,
+    },
+    children: [
+      {
+        text: wordings.contents.title.join("\n"),
+        style: {
+          display: desktop ? "inline-block" : "none",
+          width: String(descriptionTitleWidth) + ea,
+          fontSize: String(descriptionSize) + ea,
+          fontWeight: String(descriptionTitleWeight),
+          color: colorChip.black,
+          lineHeight: String(descriptionLineHeight),
+        }
+      },
+      {
+        text: wordings.contents.description.join("\n"),
+        style: {
+          display: desktop ? "inline-block" : "block",
+          marginLeft: String(descriptionTitleMargin) + ea,
+          width: withOut(descriptionTitleWidth + descriptionTitleMargin, ea),
+          fontSize: String(descriptionSize) + ea,
+          fontWeight: String(descriptionWeight),
+          color: colorChip.black,
+          lineHeight: String(descriptionLineHeight),
+          textAlign: desktop ? "" : "center",
+        }
+      },
+    ]
+  });
+
+}
+
 DesignerProposalJs.prototype.launching = async function (loading) {
   const instance = this;
   const { returnGet, ajaxJson, sleep } = GeneralJs;
@@ -4159,6 +4602,7 @@ DesignerProposalJs.prototype.launching = async function (loading) {
       local: async () => {
         try {
           instance.insertInitBox();
+          instance.insertSecondService();
           instance.insertDesignerBoxes();
           instance.insertServiceBox();
           instance.insertWordBox();
