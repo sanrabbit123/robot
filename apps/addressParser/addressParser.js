@@ -787,7 +787,22 @@ AddressParser.prototype.getDistance = async function (from, to, option = { selfM
   }
 }
 
-AddressParser.prototype.getDistanceLite = async function (from, to) {
+AddressParser.prototype.chainDistance = async function (from, to) {
+  if (typeof from !== "string" && !Array.isArray(from)) {
+    throw new Error("invaild input");
+  }
+  if (typeof from === "string") {
+    if (typeof to !== "string") {
+      throw new Error("invaild input");
+    }
+  } else {
+    if (!from.every((f) => { return Array.isArray(f); })) {
+      throw new Error("invaild input");
+    }
+    if (!from.every((f) => { return f.length === 2 })) {
+      throw new Error("invaild input");
+    }
+  }
   const instance = this;
   const encodeUrl = (obj) => {
     let str;
@@ -808,27 +823,13 @@ AddressParser.prototype.getDistanceLite = async function (from, to) {
   let url;
   let queries;
   let res;
+  let map;
+  let tempObj;
+  let frontScript;
   try {
-    queries = {
-      map_type: "TYPE_MAP",
-      target: "car",
-      rt: ",,523953,1084098",
-      rt1: from,
-      rt2: to
-    };
-    url = "https://map.kakao.com/?" + encodeUrl(queries);
 
-    res = await chrome.frontScript(url, async function () {
-      const sleep = function (time) {
-        let timeoutId = null;
-        return new Promise(function (resolve, reject) {
-          timeoutId = setTimeout(function () {
-            resolve('awake');
-            clearTimeout(timeoutId);
-            timeoutId = null;
-          }, time);
-        });
-      }
+    frontScript = async function () {
+      const { sleep } = GeneralJs;
       try {
         let distance, time;
         let meters, seconds;
@@ -880,11 +881,57 @@ AddressParser.prototype.getDistanceLite = async function (from, to) {
       } catch (e) {
         return e.message;
       }
-    });
+    }
 
-    res.from = from;
-    res.to = to;
-    return new Distance(res.meters, res.seconds, res.from, res.to);
+    if (typeof from === "string" && typeof to === "string") {
+
+      queries = {
+        map_type: "TYPE_MAP",
+        target: "car",
+        rt: ",,523953,1084098",
+        rt1: from,
+        rt2: to
+      };
+      url = "https://map.kakao.com/?" + encodeUrl(queries);
+
+      res = await chrome.frontScript(url, frontScript);
+
+      res.from = from;
+      res.to = to;
+      return new Distance(res.meters, res.seconds, res.from, res.to);
+
+    } else if (Array.isArray(from)) {
+
+      if (!from.every((f) => { return Array.isArray(f) && f.length === 2 })) {
+        throw new Error("invaild input");
+      }
+
+      map = [];
+      for (let [ f, t ] of from) {
+        tempObj = {};
+        queries = {
+          map_type: "TYPE_MAP",
+          target: "car",
+          rt: ",,523953,1084098",
+          rt1: f,
+          rt2: t
+        };
+        tempObj.link = "https://map.kakao.com/?" + encodeUrl(queries);
+        tempObj.func = frontScript;
+        map.push(tempObj);
+      }
+
+      res = await chrome.scriptChain(map, 100);
+      res = res.map((obj, index) => {
+        return new Distance(obj.meters, obj.seconds, from[index][0], from[index][1]);
+      });
+
+      return res;
+
+    } else {
+      throw new Error("invaild input");
+    }
+
   } catch (e) {
     console.log(e);
     return null;

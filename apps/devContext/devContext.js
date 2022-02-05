@@ -90,7 +90,27 @@ DevContext.prototype.launching = async function () {
     //   [ 40, 50 ]
     // ])
 
+
+    const app = new AddressParser();
+    let res;
+
+    res = await app.chainDistance([
+      [ "부산역", "카카오" ],
+      [ "대전역", "카카오" ],
+      [ "제천역", "카카오" ],
+    ]);
+
+    if (!Array.isArray(res)) {
+      throw new Error("please do update");
+    }
+    if (res.length !== 3) {
+      throw new Error("please do update");
+    }
+    if (!res.every((obj) => { return typeof obj.meters === "number" && typeof obj.seconds === "number" })) {
+      throw new Error("please do update");
+    }
     
+    console.log(res);
 
 
 

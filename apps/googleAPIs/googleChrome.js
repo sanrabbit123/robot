@@ -205,7 +205,7 @@ GoogleChrome.prototype.frontScript = async function (link, func) {
   }
 }
 
-GoogleChrome.prototype.scriptChain = async function (map) {
+GoogleChrome.prototype.scriptChain = async function (map, between = 3000) {
   if (!Array.isArray(map)) {
     throw new Error("invalid input => [ { link, async func } ]");
   }
@@ -213,7 +213,6 @@ GoogleChrome.prototype.scriptChain = async function (map) {
   const { equalJson, fileSystem, sleep } = this.mother;
   const { puppeteer } = this;
   const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
-  const between = 3000;
   try {
     const browser = await puppeteer.launch({ args: [ "--no-sandbox", "--disable-setuid-sandbox" ] });
     const page = await browser.newPage();
