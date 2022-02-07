@@ -946,6 +946,24 @@ KakaoTalk.prototype.templateTong = function (target) {
         ];
       },
     },
+    pushClient: {
+      name: "상담 신청 완료 쪼기",
+      id: "TH_5028",
+      needs: [
+        "client",
+        "host",
+        "path",
+        "cliid",
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "host", to: obj.host },
+          { from: "path", to: obj.path },
+          { from: "cliid", to: obj.cliid },
+        ];
+      },
+    },
   };
   if (target === "$all") {
     return tong;

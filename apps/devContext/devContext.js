@@ -96,6 +96,12 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
+
+
+
+
     // const cliid = "c1801_aa01s";
     // const designers = await back.getDesignersByQuery({}, { selfMongo: this.MONGOLOCALC, withTools: true });
     // let res, view;
@@ -1869,9 +1875,6 @@ DevContext.prototype.launching = async function () {
     // ]);
 
 
-
-
-
     // get photo folder
     // const drive = new GoogleDrive();
     // await drive.get_folder("https://drive.google.com/drive/folders/1RD8A65ghQe4oPruXYJ4Koieny0n3jYO9", "test");
@@ -1882,7 +1885,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p168");
+    // await this.getRawPortfolio("p139");
 
 
     // get corePortfolio by pid
