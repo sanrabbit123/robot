@@ -114,6 +114,9 @@ DevContext.prototype.launching = async function () {
         await GeneralJs.sleep(100);
       }
       firstValue = window.location.search;
+      while (window.location.search === firstValue) {
+        await GeneralJs.sleep(100);
+      }
       return window.location;
     });
 
