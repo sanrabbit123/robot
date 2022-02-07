@@ -1300,6 +1300,8 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
     throw new Error("invaild input");
   }
   try {
+    const AddressParser = require(`${process.cwd()}/apps/addressParser/addressParser.js`);
+    const addressApp = new AddressParser();
     const designers = await back.getDesignersByQuery({}, { selfMongo: option.selfMongo, withTools: true });
     const clientCase = await back.getCaseProidById(cliid, { selfMongo: option.selfMongo });
     const realTimes = await back.mongoRead("realtimeDesigner", {}, { selfMongo: option.selfLocalMongo });
@@ -1329,6 +1331,10 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
     let possibleTempArr;
     let possibleBoo;
     let realPossible;
+    let selectedResult;
+    let designerAddress;
+
+    selectNumber = selectNumber * 2;
 
     serid = null;
     xValue = null;
@@ -1491,6 +1497,7 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
     }
 
     //option.noCalculation
+    selectedResult = null;
     if (preferBoo) {
       selectedDesigner = [];
       for (let desid of preferDesigners) {
@@ -1504,21 +1511,39 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
           selected = await feeCalculation(selected);
         }
         selected = selected.slice(0, selectNumber);
-        return selected;
+        selectedResult = selected;
       } else {
         if (option.noCalculation !== true) {
           selectedDesigner = await feeCalculation(selectedDesigner);
         }
         selectedDesigner = selectedDesigner.slice(0, selectNumber);
-        return selectedDesigner;
+        selectedResult = selectedDesigner;
       }
     } else {
       if (option.noCalculation !== true) {
         selected = await feeCalculation(selected);
       }
       selected = selected.slice(0, selectNumber);
-      return selected;
+      selectedResult = selected;
     }
+
+    designerAddress = selectedResult.map((obj) => {
+      const thisDesigner = designers.search(obj.desid);
+      return {
+        desid: obj.desid,
+        designer: thisDesigner.designer,
+        address:thisDesigner.information.address[0].value,
+      };
+    });
+
+    console.log(await addressApp.chainDistance(designerAddress.map((obj) => {
+      return [ client.toNormal().requests[0].request.space.address, obj.address ];
+    })))
+
+
+
+    return selectedResult;
+
 
   } catch (e) {
     console.log(e);
@@ -1585,7 +1610,7 @@ BackWorker.prototype.proposalReset = async function (cliid, option = { selfMongo
       const project = projects[0];
       const { proid, cliid: id, service: { serid } } = project;
 
-      detail = await this.designerCuration(id, 6, [ serid ], { selfMongo, selfLocalMongo });
+      detail = await this.designerCuration(id, 4, [ serid ], { selfMongo, selfLocalMongo });
       for (let d of detail) {
         update.push(d.toNormal());
       }
