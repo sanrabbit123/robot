@@ -7135,6 +7135,9 @@ StyleCurationJs.prototype.forceConverting = async function () {
       }
     }
 
+    if (client.requests[0].analytics.response.action !== "1차 응대 예정" || client.requests[0].analytics.response.status !== "응대중") {
+      firstBoo = false;
+    }
     if (firstBoo) {
       await ajaxJson({ cliid: client.cliid, name: client.name, phone: client.phone }, "/styleCuration_pageInitComplete");
     }
