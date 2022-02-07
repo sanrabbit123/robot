@@ -1832,11 +1832,13 @@ DevContext.prototype.launching = async function () {
     // kakao test
     // const kakao = new KakaoTalk();
     // await kakao.ready();
-    // await kakao.sendTalk("pureOutOfClient", "배창규", "010-2747-3403", {
+    // await kakao.sendTalk("curationComplete", "배창규", "010-2747-3403", {
     //   client: "배창규",
-    //   emoji0: "(미소)",
-    //   emoji1: "(콜)",
+    //   host: instance.address.homeinfo.ghost.host,
+    //   path: "curation",
+    //   cliid: "c1801_aa01s",
     // });
+
 
     // const kakao = new KakaoTalk();
     // await kakao.ready();

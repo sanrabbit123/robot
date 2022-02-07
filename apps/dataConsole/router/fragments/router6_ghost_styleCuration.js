@@ -217,8 +217,12 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
           messageSend({ text: client.name + " 제안서 제작 문제 생김" + err.message, channel: "#404_curation" }).catch((e) => { console.log(e) });
         });
 
-
-        await instance.kakao.sendTalk("curationComplete", client.name, client.phone, { client: client.name });
+        await instance.kakao.sendTalk("curationComplete", client.name, client.phone, {
+          client: client.name,
+          host: instance.address.homeinfo.ghost.host,
+          path: "curation",
+          cliid: client.cliid,
+        });
         res.set({ "Content-Type": "application/json" });
         res.send(JSON.stringify({ service: [], client: client.toNormal(), history }));
 
