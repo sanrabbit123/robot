@@ -280,7 +280,7 @@ DataRouter.prototype.rou_post_styleCuration_styleCheckComplete = function () {
             "origin": instance.address.homeinfo.ghost.host,
           }
         })
-      }, 15 * 60 * 1000);
+      }, 30 * 60 * 1000);
 
       res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify({ message: "done" }));

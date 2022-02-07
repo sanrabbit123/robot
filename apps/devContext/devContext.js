@@ -92,6 +92,38 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const kakao = new KakaoTalk();
+    await kakao.ready();
+
+    const clients = await back.getClientsByQuery({}, { selfMongo: this.MONGOC, withTools: true });
+    let today, ago;
+    let requests;
+
+    today = new Date();
+    today.setHours(today.getHours() - 1);
+
+    ago = new Date();
+    ago.setDate(ago.getDate() - 3);
+
+    requests = clients.getRequestsTong().filter((request) => {
+      return request.analytics.response.status.value === "응대중" && request.analytics.response.action.value === "1차 응대 예정";
+    }).filter((request) => {
+      return request.request.timeline.valueOf() < today.valueOf() && request.request.timeline.valueOf() >= ago.valueOf();
+    })
+
+    for (let request of requests) {
+      if (request.name === "권지영") {
+        console.log(request.name, request.phone, request.cliid, address.homeinfo.ghost.host, "curation");
+        await kakao.sendTalk("pushClient", request.name, request.phone, {
+          client: request.name,
+          host: address.homeinfo.ghost.host,
+          path: "curation",
+          cliid: request.cliid,
+        });
+        await messageSend({ text: request.name + " 고객님께 신청 완료하라고 쪼았어요.", channel: "#404_curation", voice: true });
+        await sleep(1000);
+      }
+    }
 
 
 
