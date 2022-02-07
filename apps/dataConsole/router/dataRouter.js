@@ -296,7 +296,7 @@ DataRouter.prototype.rou_get_First = function () {
   const instance = this;
   let obj = {};
   let ipTong, tempIpTong;
-  ipTong = [ 1, 127001, 172301254, 2112071995 ];
+  ipTong = [ 1, 127001, 172301254, 2114624145 ];
   tempIpTong = [];
   for (let info in instance.address) {
     if (instance.address[info].ip.outer.length > 0) {
@@ -5282,11 +5282,9 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
 
       const clientCase = await back.getCaseProidById(cliid, { selfMongo: instance.mongo });
       if (clientCase === null) {
-        res.set({ "Content-Type": "application/json" });
-        res.send(JSON.stringify({}));
+        throw new Error("invaild client case");
       } else {
         const service = clientCase.caseService();
-        const detail = await work.designerCuration(cliid, 4, history.curation.service.serid, { selfMongo: instance.mongo, selfLocalMongo: instance.mongolocal });
         let detailUpdate, updateQuery;
         let newProid;
         let requestNumber;
@@ -5300,14 +5298,19 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
           action = "제안 발송 예정";
         }
 
-        if (detail.length !== 0) {
+        detailUpdate = [];
+        updateQuery = {};
+        newProid = null;
 
-          detailUpdate = [];
+        work.designerCuration(cliid, 4, history.curation.service.serid, { selfMongo: instance.mongo, selfLocalMongo: instance.mongolocal }).then((detail) => {
+
           for (let obj of detail) {
             detailUpdate.push(obj.toNormal());
           }
+          if (client.phone === "010-2747-3403") {
+            detailUpdate = [];
+          }
 
-          updateQuery = {};
           updateQuery["desid"] = "";
           updateQuery["proposal.status"] = "작성중";
           updateQuery["proposal.date"] = new Date();
@@ -5328,87 +5331,93 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
           }
           updateQuery["service.online"] = false;
           updateQuery["proposal.detail"] = detailUpdate;
+          return back.getProjectsByQuery({ cliid }, { selfMongo: instance.mongo });
 
-          if (client.phone.trim() !== "010-2747-3403") {
-            newProid = null;
-            back.getProjectsByQuery({ cliid }, { selfMongo: instance.mongo }).then((rows) => {
-              if (rows.length > 0) {
-                newProid = rows[0].proid;
-                return back.updateProject([ { proid: newProid }, updateQuery ], { selfMongo: instance.mongo });
-              } else {
-                return back.createProject(updateQuery, { selfMongo: instance.mongo });
-              }
-            }).then((proid) => {
-              if (newProid === null) {
-                newProid = proid;
-              }
-              return instance.kakao.sendTalk("curationComplete", client.name, client.phone, { client: client.name });
-            }).then(() => {
+        }).then((rows) => {
 
-              if (newProid === null) {
-                throw new Error("promise error");
-              }
-              return requestSystem("https://" + address.backinfo.host + ":3000/updateLog", {
-                id: cliid,
-                column: "action",
-                position: "requests." + String(requestNumber) + ".analytics.response.action",
-                pastValue: client.requests[requestNumber].analytics.response.action.value,
-                finalValue: action
-              }, { headers: { "origin": "https://" + address.homeinfo.ghost.host, "Content-Type": "application/json" } });
-
-            }).then(() => {
-
-              return requestSystem("https://" + address.backinfo.host + ":3000/generalMongo", {
-                mode: "sse",
-                db: "console",
-                collection: "sse_clientCard",
-                log: true,
-                who: "autoBot",
-                updateQuery: {
-                  cliid,
-                  requestNumber,
-                  mode: "action",
-                  from: client.requests[requestNumber].analytics.response.action.value,
-                  to: action,
-                  randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
-                }
-              }, { headers: { "origin": "https://" + address.homeinfo.ghost.host, "Content-Type": "application/json" } });
-
-            }).then(() => {
-
-              let updateObj;
-              updateObj = {};
-              updateObj["requests." + String(requestNumber) + ".analytics.response.action"] = action;
-              return back.updateClient([ { cliid }, updateObj ], { selfMongo: instance.mongo });
-
-            }).then(() => {
-              return messageSend({ text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다!", channel: "#404_curation", voice: true });
-
-            }).catch((err) => {
-              console.log(err);
-              messageSend({ text: client.name + " 제안서 제작 문제 생김" + err.message, channel: "#404_curation" }).catch((e) => { console.log(e) });
-            });
+          if (detailUpdate.length > 0) {
+            if (rows.length > 0) {
+              newProid = rows[0].proid;
+              return back.updateProject([ { proid: newProid }, updateQuery ], { selfMongo: instance.mongo });
+            } else {
+              return back.createProject(updateQuery, { selfMongo: instance.mongo });
+            }
           } else {
-            detailUpdate = [];
-            instance.kakao.sendTalk("curationComplete", client.name, client.phone, { client: client.name }).catch((err) => { console.log(err); });
+            return passPromise();
           }
 
-          res.set({ "Content-Type": "application/json" });
-          res.send(JSON.stringify({ service: detailUpdate, client: client.toNormal(), history }));
+        }).then((proid) => {
 
-        } else {
+          if (detailUpdate.length > 0) {
+            if (newProid === null) {
+              newProid = proid;
+            }
+            return requestSystem("https://" + address.backinfo.host + ":3000/updateLog", {
+              id: cliid,
+              column: "action",
+              position: "requests." + String(requestNumber) + ".analytics.response.action",
+              pastValue: client.requests[requestNumber].analytics.response.action.value,
+              finalValue: action
+            }, { headers: { "origin": "https://" + address.homeinfo.ghost.host, "Content-Type": "application/json" } });
+          } else {
+            return passPromise();
+          }
 
-          await messageSend({ text: client.name + " 제안서를 제작하려고 했으나 매칭되는 경우가 없어요!", channel: "#404_curation", voice: true });
-          await instance.kakao.sendTalk("curationComplete", client.name, client.phone, { client: client.name });
-          res.set({ "Content-Type": "application/json" });
-          res.send(JSON.stringify({ service: [], client: client.toNormal(), history }));
+        }).then(() => {
 
-        }
+          if (detailUpdate.length > 0) {
+            return requestSystem("https://" + address.backinfo.host + ":3000/generalMongo", {
+              mode: "sse",
+              db: "console",
+              collection: "sse_clientCard",
+              log: true,
+              who: "autoBot",
+              updateQuery: {
+                cliid,
+                requestNumber,
+                mode: "action",
+                from: client.requests[requestNumber].analytics.response.action.value,
+                to: action,
+                randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
+              }
+            }, { headers: { "origin": "https://" + address.homeinfo.ghost.host, "Content-Type": "application/json" } });
+          } else {
+            return passPromise();
+          }
+
+        }).then(() => {
+
+          if (detailUpdate.length > 0) {
+            let updateObj;
+            updateObj = {};
+            updateObj["requests." + String(requestNumber) + ".analytics.response.action"] = action;
+            return back.updateClient([ { cliid }, updateObj ], { selfMongo: instance.mongo });
+          } else {
+            return passPromise();
+          }
+
+        }).then(() => {
+          if (detailUpdate.length > 0) {
+            return messageSend({ text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다!", channel: "#404_curation", voice: true });
+          } else {
+            return messageSend({ text: client.name + " 고객님의 제안서가 자동으로 제작하려 했으나 매칭되는 경우가 없어요!", channel: "#404_curation", voice: true });
+          }
+        }).catch((err) => {
+          console.log(err);
+          messageSend({ text: client.name + " 제안서 제작 문제 생김" + err.message, channel: "#404_curation" }).catch((e) => { console.log(e) });
+        });
+
+
+        await instance.kakao.sendTalk("curationComplete", client.name, client.phone, { client: client.name });
+        res.set({ "Content-Type": "application/json" });
+        res.send(JSON.stringify({ service: [], client: client.toNormal(), history }));
 
       }
     } catch (e) {
       await errorLog("GhostClient 서버 문제 생김 (rou_post_styleCuration_updateCalculation) : " + e.message);
       console.log(e);
+      res.set({ "Content-Type": "application/json" });
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
