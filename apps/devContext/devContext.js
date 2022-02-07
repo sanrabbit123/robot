@@ -100,7 +100,7 @@ DevContext.prototype.launching = async function () {
     let requests;
 
     today = new Date();
-    today.setHours(today.getHours() - 1);
+    today.setHours(today.getHours());
 
     ago = new Date();
     ago.setDate(ago.getDate() - 3);

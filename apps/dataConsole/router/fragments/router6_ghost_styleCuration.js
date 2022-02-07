@@ -313,9 +313,11 @@ DataRouter.prototype.rou_post_styleCuration_pageInitComplete = function () {
       text = name + " 고객님이 스타일 찾기 페이지에 진입하셨어요.";
       channel = "#404_curation";
 
-      messageSend({ text, channel, voice: true }).catch((e) => {
-        console.log(e);
-      });
+      if (phone !== "010-2747-3403") {
+        messageSend({ text, channel, voice: true }).catch((e) => {
+          console.log(e);
+        });
+      }
 
       if (DataRouter.timeouts["styleCuration_pageInitComplete_" + cliid] !== undefined && DataRouter.timeouts["styleCuration_pageInitComplete_" + cliid] !== null) {
         clearTimeout(DataRouter.timeouts["styleCuration_pageInitComplete_" + cliid]);
@@ -328,7 +330,7 @@ DataRouter.prototype.rou_post_styleCuration_pageInitComplete = function () {
           path: "curation",
           cliid: cliid,
         });
-        await messageSend({ text: name + " 고객님께 신청 완료하라고 쪼았어요.", channel: "#404_curation", voice: true });
+        await messageSend({ text: name + " 고객님께 신청 완료하라고 독촉했어요.", channel: "#404_curation", voice: true });
       }, 60 * 60 * 1000);
 
       res.set({ "Content-Type": "application/json" });
