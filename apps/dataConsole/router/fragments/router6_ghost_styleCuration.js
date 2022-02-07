@@ -324,13 +324,16 @@ DataRouter.prototype.rou_post_styleCuration_pageInitComplete = function () {
         DataRouter.timeouts["styleCuration_pageInitComplete_" + cliid] = null;
       }
       DataRouter.timeouts["styleCuration_pageInitComplete_" + cliid] = setTimeout(async () => {
-        await kakao.sendTalk("pushClient", name, phone, {
-          client: name,
-          host: address.homeinfo.ghost.host,
-          path: "curation",
-          cliid: cliid,
-        });
-        await messageSend({ text: name + " 고객님께 신청 완료하라고 독촉했어요.", channel: "#404_curation", voice: true });
+        const client = await back.getClientById(cliid, { selfMongo: instance.mongo });
+        if (client.requests[0].request.analytics.response.status.value === "응대중" && client.requests[0].request.analytics.response.action.value === "1차 응대 예정") {
+          await kakao.sendTalk("pushClient", client.name, client.phone, {
+            client: client.name,
+            host: address.homeinfo.ghost.host,
+            path: "curation",
+            cliid: cliid,
+          });
+          await messageSend({ text: client.name + " 고객님께 신청 완료하라고 독촉했어요.", channel: "#404_curation", voice: true });
+        }
       }, 60 * 60 * 1000);
 
       res.set({ "Content-Type": "application/json" });
