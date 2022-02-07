@@ -264,7 +264,7 @@ DataRouter.prototype.rou_post_styleCuration_styleCheckComplete = function () {
         console.log(e);
       });
 
-      DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] = setTimeout(() => {
+      DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] = setTimeout(async () => {
         await requestSystem("https://" + instance.address.homeinfo.ghost.host + "/styleCuration_updateCalculation", { cliid, coreQuery: {}, historyQuery: {}, mode: "" }, {
           headers: {
             "Content-Type": "application/json",
