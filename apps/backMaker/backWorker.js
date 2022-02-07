@@ -1332,7 +1332,7 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
     let possibleBoo;
     let realPossible;
     let selectedResult;
-    let designerAddress;
+    let onlyOnlineCase;
 
     selectNumber = selectNumber * 2;
 
@@ -1364,6 +1364,7 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
           newArr = [];
           for (let obj of arr) {
             feeObject = await instance.getDesignerFee(obj.desid, cliid, serid, xValue, { selfMongo: option.selfMongo, selfLocalMongo: option.selfLocalMongo });
+
             obj.resetFee();
 
             if (feeObject.detail.offline !== 0) {
@@ -1527,23 +1528,27 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
       selectedResult = selected;
     }
 
-    designerAddress = selectedResult.map((obj) => {
-      const thisDesigner = designers.search(obj.desid);
-      return {
-        desid: obj.desid,
-        designer: thisDesigner.designer,
-        address:thisDesigner.information.address[0].value,
-      };
+    selectedResult.sort((a, b) => {
+      return a.fee[0].distance.amount - b.fee[0].distance.amount;
     });
+    onlyOnlineCase = [];
+    for (let p of selectedResult) {
+      if (p.fee.every((obj) => { return obj.method === "online" })) {
+        onlyOnlineCase.push(p);
+      }
+    }
 
-    console.log(await addressApp.chainDistance(designerAddress.map((obj) => {
-      return [ client.toNormal().requests[0].request.space.address, obj.address ];
-    })))
+    console.log(onlyOnlineCase);
 
+    for (let p of onlyOnlineCase) {
+      selectedResult.push(p);
+    }
 
+    // for (let p of selectedResult) {
+    //   console.log(p.fee, p.desid);
+    // }
 
-    return selectedResult;
-
+    return selectedResult.slice(0, selectNumber / 2);
 
   } catch (e) {
     console.log(e);

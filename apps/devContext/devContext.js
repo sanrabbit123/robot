@@ -93,35 +93,13 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const cliid = "c1801_aa01s";
-    // const designers = await back.getDesignersByQuery({}, { selfMongo: this.MONGOLOCALC, withTools: true });
-    // let res, view;
-    //
-    // res = await work.designerCuration(cliid, 4, [ "s2011_aa02s" ], { selfMongo: instance.MONGOLOCALC, selfLocalMongo: instance.MONGOLOCALC })
+    const cliid = "c1801_aa01s";
+    const designers = await back.getDesignersByQuery({}, { selfMongo: this.MONGOLOCALC, withTools: true });
+    let res, view;
 
+    res = await work.designerCuration(cliid, 4, [ "s2011_aa02s" ], { selfMongo: instance.MONGOLOCALC, selfLocalMongo: instance.MONGOLOCALC })
 
-
-    const AddressParser = require(`${process.cwd()}/apps/addressParser/addressParser.js`);
-    const addressApp = new AddressParser();
-    let from, to;
-
-    from = "부산광역시 동구 초량동 중앙대로 206";
-    to = "충청북도 제천시 영천동 의림대로 1";
-
-    const res = await chrome.frontScript("https://map.naver.com/v5/search/" + global.encodeURI(from), async function () {
-      let firstValue;
-      while (window.location.search === '') {
-        await GeneralJs.sleep(100);
-      }
-      firstValue = window.location.search;
-      while (window.location.search === firstValue) {
-        await GeneralJs.sleep(100);
-      }
-      return window.location;
-    });
-
-    console.log(res);
-
+    console.log(res.map((obj) => { return designers.search(obj.desid).designer }))
 
 
 
