@@ -77,6 +77,11 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
       const mode = req.body.mode;
       let client, history;
 
+      if (DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] !== undefined && DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] !== null) {
+        clearTimeout(DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid]);
+        DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] = null;
+      }
+
       history = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
       if (history === null) {
         await back.createHistory("client", { cliid }, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
@@ -257,7 +262,16 @@ DataRouter.prototype.rou_post_styleCuration_styleCheckComplete = function () {
 
       messageSend({ text, channel, voice: true }).catch((e) => {
         console.log(e);
-      })
+      });
+
+      DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] = setTimeout(() => {
+        await requestSystem("https://" + instance.address.homeinfo.ghost.host + "/styleCuration_updateCalculation", { cliid, coreQuery: {}, historyQuery: {}, mode: "" }, {
+          headers: {
+            "Content-Type": "application/json",
+            "origin": instance.address.homeinfo.ghost.host,
+          }
+        })
+      }, 15 * 60 * 1000);
 
       res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify({ message: "done" }));

@@ -33,6 +33,8 @@ const DataRouter = function (DataPatch, DataMiddle, MONGOC, MONGOLOCALC, kakaoIn
 
 //STATIC FUNCTIONS --------------------------------------------------------------------------
 
+DataRouter.timeouts = {};
+
 DataRouter.cookieParsing = function (req) {
   if (req.headers.cookie === undefined) {
     return null;
