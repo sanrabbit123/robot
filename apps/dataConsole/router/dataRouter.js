@@ -296,7 +296,7 @@ DataRouter.prototype.rou_get_First = function () {
   const instance = this;
   let obj = {};
   let ipTong, tempIpTong;
-  ipTong = [ 1, 127001, 172301254, 2114624145 ];
+  ipTong = [ 1, 127001, 172301254, 59666109 ];
   tempIpTong = [];
   for (let info in instance.address) {
     if (instance.address[info].ip.outer.length > 0) {
@@ -5400,7 +5400,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
           if (detailUpdate.length > 0) {
             return messageSend({ text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다!", channel: "#404_curation", voice: true });
           } else {
-            return messageSend({ text: client.name + " 고객님의 제안서가 자동으로 제작하려 했으나 매칭되는 경우가 없어요!", channel: "#404_curation", voice: true });
+            return messageSend({ text: client.name + " 고객님의 제안서를 자동으로 제작하려 했으나 매칭되는 경우가 없어요!", channel: "#404_curation", voice: true });
           }
         }).catch((err) => {
           console.log(err);
