@@ -77,15 +77,16 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
       const mode = req.body.mode;
       let client, history;
 
+      history = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
+      if (history === null) {
+        await back.createHistory("client", { cliid }, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
+      }
+
       if (Object.keys(coreQuery).length > 0) {
         await back.updateClient([ { cliid }, coreQuery ], { selfMongo: instance.mongo });
       }
 
       if (Object.keys(historyQuery).length > 0) {
-        history = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
-        if (history === null) {
-          await back.createHistory("client", { cliid }, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
-        }
         await back.updateHistory("client", [ { cliid }, historyQuery ], { selfMongo: instance.mongolocal });
         history = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
       }

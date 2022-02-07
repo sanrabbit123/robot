@@ -91,6 +91,19 @@ DevContext.prototype.launching = async function () {
     // ])
 
 
+    await requestSystem("https://home-liaison.servehttp.com/styleCuration_updateCalculation", {
+      cliid: "c2202_aa25s",
+      coreQuery: {},
+      historyQuery: {},
+      mode: "", 
+    }, {
+      headers: {
+        "Content-Type": "application/json",
+        "origin": "home-liaison.servehttp.com",
+      }
+    })
+
+
 
 
     // const cliid = "c1801_aa01s";
