@@ -25,7 +25,7 @@ const worker = async function (package) {
     today.setHours(today.getHours() - 1);
 
     ago = new Date();
-    ago.setDate(ago.getDate() - 3);
+    ago.setDate(ago.getDate() - 2);
 
     requests = clients.getRequestsTong().filter((request) => {
       return request.analytics.response.status.value === "응대중" && request.analytics.response.action.value === "1차 응대 예정";
