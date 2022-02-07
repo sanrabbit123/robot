@@ -93,13 +93,13 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const cliid = "c1801_aa01s";
-    const designers = await back.getDesignersByQuery({}, { selfMongo: this.MONGOLOCALC, withTools: true });
-    let res, view;
-
-    res = await work.designerCuration(cliid, 4, [ "s2011_aa02s" ], { selfMongo: instance.MONGOLOCALC, selfLocalMongo: instance.MONGOLOCALC })
-
-    console.log(res.map((obj) => { return designers.search(obj.desid).designer }))
+    // const cliid = "c1801_aa01s";
+    // const designers = await back.getDesignersByQuery({}, { selfMongo: this.MONGOLOCALC, withTools: true });
+    // let res, view;
+    //
+    // res = await work.designerCuration(cliid, 4, [ "s2011_aa02s" ], { selfMongo: instance.MONGOLOCALC, selfLocalMongo: instance.MONGOLOCALC })
+    //
+    // console.log(res.map((obj) => { return designers.search(obj.desid).designer }))
 
 
 
