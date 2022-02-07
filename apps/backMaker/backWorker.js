@@ -1309,6 +1309,11 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
     const { client, cases } = clientCase;
     const ytoken = 'y';
     const mtoken = 'm';
+    const pyeongStandards = [
+      [ 0, 22 ],
+      [ 23, 34 ],
+      [ 34, 99999 ]
+    ];
     let contract, proposal, final;
     let project;
     let temp;
@@ -1334,8 +1339,9 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
     let selectedResult;
     let onlyOnlineCase;
     let offlineOnlineCase;
+    let pyeongIndex;
 
-    selectNumber = selectNumber * 2;
+    selectNumber = selectNumber * 3;
 
     serid = null;
     xValue = null;
@@ -1529,6 +1535,7 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
       selectedResult = selected;
     }
 
+    // distance priority
     selectedResult.sort((a, b) => {
       return a.fee[0].distance.amount - b.fee[0].distance.amount;
     });
@@ -1541,8 +1548,43 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
         offlineOnlineCase.push(p);
       }
     }
-
     selectedResult = offlineOnlineCase.concat(onlyOnlineCase);
+    selectedResult = selectedResult.slice(0, selectNumber / 1.5);
+    selectNumber = selectNumber / 1.5;
+
+    // pyeong priority
+    pyeongIndex = pyeongStandards.findIndex((arr) => {
+      return arr[0] <= client.requests[0].request.space.pyeong.value && arr[1] >= client.requests[0].request.space.pyeong.value;
+    }) + 1
+    if (Number(serid.split('_')[1].replace(/[^0-9]/gi, '')) < 3) {
+      if (pyeongIndex === 1) {
+        selectedResult.sort((a, b) => {
+          return (designers.search(a.desid).analytics.styling.level - pyeongIndex) - (designers.search(b.desid).analytics.styling.level - pyeongIndex)
+        });
+      } else if (pyeongIndex === 2) {
+        selectedResult.sort((a, b) => {
+          return (designers.search(a.desid).analytics.styling.level - pyeongIndex < 0 ? 0.5 : designers.search(a.desid).analytics.styling.level - pyeongIndex) - (designers.search(b.desid).analytics.styling.level - pyeongIndex < 0 ? 0.5 : designers.search(b.desid).analytics.styling.level - pyeongIndex)
+        });
+      } else {
+        selectedResult.sort((a, b) => {
+          return (pyeongIndex - designers.search(a.desid).analytics.styling.level) - (pyeongIndex - designers.search(b.desid).analytics.styling.level)
+        });
+      }
+    } else {
+      if (pyeongIndex === 1) {
+        selectedResult.sort((a, b) => {
+          return (designers.search(a.desid).analytics.construct.level - pyeongIndex) - (designers.search(b.desid).analytics.construct.level - pyeongIndex)
+        });
+      } else if (pyeongIndex === 2) {
+        selectedResult.sort((a, b) => {
+          return (designers.search(a.desid).analytics.construct.level - pyeongIndex < 0 ? 0.5 : designers.search(a.desid).analytics.construct.level - pyeongIndex) - (designers.search(b.desid).analytics.construct.level - pyeongIndex < 0 ? 0.5 : designers.search(b.desid).analytics.construct.level - pyeongIndex)
+        });
+      } else {
+        selectedResult.sort((a, b) => {
+          return (pyeongIndex - designers.search(a.desid).analytics.construct.level) - (pyeongIndex - designers.search(b.desid).analytics.construct.level)
+        });
+      }
+    }
 
     return selectedResult.slice(0, selectNumber / 2);
 
