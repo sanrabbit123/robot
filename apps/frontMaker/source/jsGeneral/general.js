@@ -2608,6 +2608,20 @@ GeneralJs.blankHref = function (link, newWindow = false) {
   }
 }
 
+GeneralJs.selfHref = function (link) {
+  if (link === undefined) {
+    throw new Error("must be link");
+  }
+  let a;
+  a = document.createElement("A");
+  a.style.display = "none";
+  a.href = link;
+  a.setAttribute("target", "_self");
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
 GeneralJs.styleInjection = function (dom, styleObj) {
   if (dom === undefined || styleObj === undefined) {
     throw new Error("arguments must be dom, style object");
