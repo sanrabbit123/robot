@@ -1333,6 +1333,7 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
     let realPossible;
     let selectedResult;
     let onlyOnlineCase;
+    let offlineOnlineCase;
 
     selectNumber = selectNumber * 2;
 
@@ -1532,21 +1533,16 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
       return a.fee[0].distance.amount - b.fee[0].distance.amount;
     });
     onlyOnlineCase = [];
+    offlineOnlineCase = [];
     for (let p of selectedResult) {
       if (p.fee.every((obj) => { return obj.method === "online" })) {
         onlyOnlineCase.push(p);
+      } else {
+        offlineOnlineCase.push(p);
       }
     }
 
-    console.log(onlyOnlineCase);
-
-    for (let p of onlyOnlineCase) {
-      selectedResult.push(p);
-    }
-
-    // for (let p of selectedResult) {
-    //   console.log(p.fee, p.desid);
-    // }
+    selectedResult = offlineOnlineCase.concat(onlyOnlineCase);
 
     return selectedResult.slice(0, selectNumber / 2);
 
