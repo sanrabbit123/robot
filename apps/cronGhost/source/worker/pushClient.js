@@ -41,7 +41,7 @@ const worker = async function (package) {
         path: "curation",
         cliid: request.cliid,
       });
-      await messageSend({ text: request.name + " 고객님께 상담 신청 완료 빨리 하라는 알림톡과 신청 링크를 보냈어요.", channel: "#404_curation", voice: true });
+      await messageSend({ text: request.name + " 고객님께 신청 완료하라고 쪼았어요.", channel: "#404_curation", voice: true });
       await sleep(1000);
     }
 
