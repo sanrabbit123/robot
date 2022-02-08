@@ -2153,6 +2153,9 @@ DataRouter.prototype.rou_post_parsingProposal = function () {
         throw new Error("must be cliid");
       }
       const selected = await work.designerCuration(req.body.id, 4, [ `s2011_aa0${req.body.serid}s` ], { selfMongo: instance.mongo, selfLocalMongo: instance.mongolocal, noCalculation: true });
+      if (!Array.isArray(selected)) {
+        throw new Error(selected);
+      }
       res.set("Content-Type", "application/json");
       if (selected.length === 0) {
         res.send(JSON.stringify({ result: null }));

@@ -1590,6 +1590,7 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
 
   } catch (e) {
     console.log(e);
+    return e.message;
   }
 }
 
