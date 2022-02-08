@@ -1044,7 +1044,7 @@ ProposalJs.prototype.secondToggle = function (button, domBox) {
           document.querySelector(".pp_designer_question_press").classList.add("pp_designer_question_press_add");
 
           if (instance.firstDo_secondToggle) {
-            GeneralJs.ajaxJson({ id: instance.domBox.get("고객 선택").querySelector('b').getAttribute("cus_id") }, "/parsingProposal", { equal: true }).then((obj) => {
+            GeneralJs.ajaxJson({ id: instance.domBox.get("고객 선택").querySelector('b').getAttribute("cus_id"), serid }, "/parsingProposal", { equal: true }).then((obj) => {
               const { result } = obj;
               if (result !== null) {
                 result.client = instance.domBox.get("고객 선택").querySelector('b').textContent.replace(/[\: ]/g, '').trim();
