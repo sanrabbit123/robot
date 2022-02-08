@@ -2149,10 +2149,10 @@ DataRouter.prototype.rou_post_parsingProposal = function () {
   obj.link = "/parsingProposal";
   obj.func = async function (req, res) {
     try {
-      if (req.body.id === undefined) {
-        throw new Error("must be cliid");
+      if (req.body.id === undefined || req.body.serid === undefined) {
+        throw new Error("must be cliid, seridNumber");
       }
-      const selected = await work.designerCuration(req.body.id, 4, [ `s2011_aa0${req.body.serid}s` ], { selfMongo: instance.mongo, selfLocalMongo: instance.mongolocal, noCalculation: true });
+      const selected = await work.designerCuration(req.body.id, 4, [ `s2011_aa0${req.body.serid}s` ], { selfMongo: instance.mongo, selfLocalMongo: instance.mongolocal });
       if (!Array.isArray(selected)) {
         throw new Error(selected);
       }

@@ -2754,7 +2754,11 @@ DataRouter.prototype.rou_post_parsingProposal = function () {
       if (req.body.id === undefined) {
         throw new Error("must be cliid");
       }
-      const selected = await work.designerCuration(req.body.id, 4, [], { selfMongo: instance.mongo, selfLocalMongo: instance.mongolocal, noCalculation: true });
+      console.log(req.body.serid);
+      const selected = await work.designerCuration(req.body.id, 4, [ `s2011_aa0${req.body.serid}s` ], { selfMongo: instance.mongo, selfLocalMongo: instance.mongolocal });
+      if (!Array.isArray(selected)) {
+        throw new Error(selected);
+      }
       res.set("Content-Type", "application/json");
       if (selected.length === 0) {
         res.send(JSON.stringify({ result: null }));
@@ -2763,7 +2767,8 @@ DataRouter.prototype.rou_post_parsingProposal = function () {
       }
     } catch (e) {
       instance.mother.errorLog("Console 서버 문제 생김 (rou_post_parsingProposal): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ result: null }));
     }
   }
   return obj;
