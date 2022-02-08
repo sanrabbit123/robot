@@ -4592,6 +4592,7 @@ DesignerProposalJs.prototype.launching = async function (loading) {
     // TEST Center ==================================================================================================
 
     await this.mother.ghostClientLaunching({
+      mode: "ghost",
       name: "designerProposal",
       client: client,
       base: {

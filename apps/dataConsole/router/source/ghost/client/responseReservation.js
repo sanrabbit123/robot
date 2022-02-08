@@ -688,6 +688,7 @@ ResponseReservationJs.prototype.launching = async function (loading) {
     this.client = client;
 
     await this.mother.ghostClientLaunching({
+      mode: "ghost",
       name: "responseReservation",
       client: client,
       base: {

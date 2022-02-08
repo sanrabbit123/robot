@@ -1641,7 +1641,6 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                           input_widthSet(onlineTarget);
                         }
                         ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.online = online;
-
                       }
                     }
 
@@ -4560,9 +4559,10 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
       break;
     case "delete":
       return_func = async function (e) {
-        await GeneralJs.ajaxPromise("id=" + proid, "/deleteProject");
-        mother.parentElement.remove();
-        reset_event(this);
+        if (window.confirm("정말로 삭제하시겠습니까?")) {
+          mother.parentElement.remove();
+          reset_event(this);
+        }
       }
       break;
   }

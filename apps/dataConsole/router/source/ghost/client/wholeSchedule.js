@@ -1271,6 +1271,7 @@ WholeScheduleJs.prototype.launching = async function (loading) {
     this.wordings = this.scheduleWordings(service);
 
     await this.mother.ghostClientLaunching({
+      mode: "ghost",
       name: "wholeSchedule",
       client: this.client,
       base: {

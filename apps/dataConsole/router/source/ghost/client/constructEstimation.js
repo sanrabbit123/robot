@@ -775,6 +775,7 @@ ConstructEstimationJs.prototype.launching = async function (loading) {
     this.invid = invoice.invid;
 
     await this.mother.ghostClientLaunching({
+      mode: "ghost",
       name: "constructEstimation",
       client: this.client,
       base: {

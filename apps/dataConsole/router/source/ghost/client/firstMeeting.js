@@ -1781,6 +1781,7 @@ FirstMeetingJs.prototype.launching = async function (loading) {
     this.wordings = this.meetingWordings(service);
 
     await this.mother.ghostClientLaunching({
+      mode: "ghost",
       name: "firstMeeting",
       client: this.client,
       base: {

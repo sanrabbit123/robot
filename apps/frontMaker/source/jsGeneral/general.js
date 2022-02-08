@@ -4004,10 +4004,10 @@ GeneralJs.prototype.navigatorMake = function () {
   logo.src = src.logo;
   GeneralJs.addHrefEvent(logo, "http://home-liaison.com");
   logo.style.position = "absolute";
-  logo.style.left = "6.05vw";
-  logo.style.top = "18px";
-  logo.style.width = "136px";
-  logo.style.height = "19px";
+  logo.style.left = "6.1vw";
+  logo.style.top = "20px";
+  logo.style.width = "123px";
+  logo.style.height = "16px";
   logo.style.cursor = "pointer";
   mobileNavigator.appendChild(SvgTong.parsing(logo));
 
@@ -4068,10 +4068,10 @@ GeneralJs.prototype.navigatorMake = function () {
   hamburger = SvgTong.tongMaker();
   hamburger.src = src.icons.hamburger;
   hamburger.style.position = "absolute";
-  hamburger.style.right = "6.05vw";
-  hamburger.style.top = "18px";
-  hamburger.style.width = "21px";
-  hamburger.style.height = "18px";
+  hamburger.style.right = "6.1vw";
+  hamburger.style.top = "21px";
+  hamburger.style.width = "20px";
+  hamburger.style.height = "13px";
   hamburger.style.cursor = "pointer";
   hamburger.addEventListener("click", function (e) {
     let open = menuTong.getAttribute("cus_open");

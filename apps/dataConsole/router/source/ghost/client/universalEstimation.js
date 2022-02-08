@@ -1807,6 +1807,7 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
     }
 
     await this.mother.ghostClientLaunching({
+      mode: "ghost",
       name: "universalEstimation",
       client: client,
       background: 3,
