@@ -1005,7 +1005,7 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
             name: "curation",
             type: "style",
             half: false,
-            required: false,
+            required: true,
             rewind: "사진을 더 선택해주셔야 고객님께 맞는 디자이너를 추천드릴 수 있습니다! 스타일 체크를 완료해주세요 :)",
             question: [
               "마음에 드는 사진을 <b%3장%b> 골라주세요!",
