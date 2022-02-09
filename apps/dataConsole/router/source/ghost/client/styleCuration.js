@@ -7080,6 +7080,14 @@ StyleCurationJs.prototype.serviceConverting = async function (seridObj) {
       instance.insertAdditionBox();
       baseTong.style.height = "";
       baseTong.style.animation = "fadeupdelay 0.5s ease forwards";
+
+      GeneralJs.gtagEvent({
+        category: "styleCuration",
+        action: "submit",
+        label: "submit_styleCuration",
+        value: (new Date()).valueOf() - instance.firstPageViewTimeValue,
+      });
+      
     }, 500);
     return "done";
   } catch (e) {

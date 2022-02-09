@@ -5422,3 +5422,19 @@ GeneralJs.orderSystem = function (type, number) {
     throw new Error("orderSystem type must be 'encode' or 'decode'");
   }
 }
+
+GeneralJs.gtagEvent = function (obj) {
+  if (typeof window.gtag === "function") {
+    if (typeof obj === "object" && obj !== null) {
+      if (typeof obj.category === "string" && typeof obj.action === "string" && typeof obj.label === "string" && typeof obj.value === "number") {
+        window.gtag("event", obj.action, {
+          "event_category": obj.category,
+          "event_label": obj.label,
+          "value": obj.value
+        });
+      } else {
+        throw new Error("input must be { category: String, action: String, label: String, value: Number }");
+      }
+    }
+  }
+}

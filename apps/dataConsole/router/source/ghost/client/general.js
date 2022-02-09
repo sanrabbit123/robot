@@ -41,6 +41,9 @@ GeneralJs.prototype.setGeneralProperties = function (instance) {
 
   this.media = GeneralJs.stacks.updateMiddleMedialQueryConditions;
   instance.media = this.media;
+
+  instance.firstPageViewTime = new Date();
+  instance.firstPageViewTimeValue = instance.firstPageViewTime.valueOf();
 }
 
 GeneralJs.prototype.setBackground = function (binaryPath, second = false, random = 0) {

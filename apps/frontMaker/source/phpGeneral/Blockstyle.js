@@ -93,7 +93,7 @@ class Blockstyle {
     $html .= "\\n";
     $html .= '<p class="hiddenobject">CEO : 박혜연</p>';
     $html .= "\\n";
-    $html .= '<p class="hiddenobject">서울특별시 성동구 성수이로22길 37, 4층 408C</p>';
+    $html .= '<p class="hiddenobject">서울특별시 성동구 성수이로22길 37, 4층 408A</p>';
     $html .= "\\n";
     $html .= '<p class="hiddenobject">사업자등록번호 : 221 - 81 - 49759</p>';
     $html .= "\\n";

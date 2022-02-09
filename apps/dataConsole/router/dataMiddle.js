@@ -4,6 +4,7 @@ const MiddleCommunication = function () {
   const DataPatch = require(`${process.cwd()}/apps/dataConsole/router/dataPatch.js`);
   this.mother = new Mother();
   this.back = new BackMaker();
+  this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.dir = `${process.cwd()}/apps/dataConsole/router`;
   this.sourceDir = `${this.dir}/source/middle`;
   this.generalJs = `${process.env.HOME}/static/general.js`;
@@ -23,6 +24,7 @@ MiddleCommunication.prototype.setNamedata = function (property, value) {
 MiddleCommunication.prototype.baseHtml = async function (target, req, selfMongo, selfLocalMongo) {
   const instance = this;
   const back = this.back;
+  const address = this.address;
   const { fileSystem } = this.mother;
   try {
     const invaildCode = `<!DOCTYPE html><html><head><title>Permission denied</title></head><body>error<script>alert("잘못된 접근입니다!");window.location.href = "https://home-liaison.com";</script></body></html>`;
@@ -33,6 +35,7 @@ MiddleCommunication.prototype.baseHtml = async function (target, req, selfMongo,
     let descriptionString, metaDescription;
     let imageString, metaImage;
     let designerOnly;
+    let gtagId;
 
     const name = this.name[target.trim().replace(/\.js/gi, '')];
     const meta = this.meta[target.trim().replace(/\.js/gi, '')];
@@ -77,21 +80,33 @@ MiddleCommunication.prototype.baseHtml = async function (target, req, selfMongo,
     }
 
     html = `<!DOCTYPE html>
-    <html lang="ko" dir="ltr">
-      <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="${designerOnly}">
-        <meta content="${titleString}" property="og:title">
-        <meta content="${descriptionString}" property="og:description">
-        <meta content="${imageString.replace(/__thisHost__/g, req.get("host"))}" property="og:image">
-        <meta name="description" content="${descriptionString}">
-        <title>${titleString}</title>
-        <style></style>
-      </head>
-      <body>
-        <div style="display: none;position: absolute;opacity: 0;font-size: 0px;">${descriptionString}</div>
-        <div id="totalcontents"></div>
-        <script src="/middle/${name}.js"></script>`
+    <html lang="ko" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="${designerOnly}">
+    <meta content="${titleString}" property="og:title">
+    <meta content="${descriptionString}" property="og:description">
+    <meta content="${imageString.replace(/__thisHost__/g, req.get("host"))}" property="og:image">
+    <meta name="description" content="${descriptionString}">
+    <title>${titleString}</title><style></style>`;
+
+    if (/localhost/gi.test(req.get("host"))) {
+      gtagId = "G-6KYB6YEQLS";
+    } else if (req.get("host").trim() === address.homeinfo.ghost.host.trim()) {
+      gtagId = "G-N81TTVHYK4";
+    } else {
+      gtagId = "G-GGGZ2JRC2C";
+    }
+
+    html += `<script async src="https://www.googletagmanager.com/gtag/js?id=${gtagId}"></script><script>
+    window.dataLayer = window.dataLayer || [];
+    window.gtagId = "${gtagId}";
+    window.gtag = function () { window.dataLayer.push(arguments); }
+    window.gtag("js", new Date());
+    window.gtag("config", "${gtagId}");
+    window.gtagPage = function () {
+      window.gtag("config", "${gtagId}");
+    }
+    </script>`;
+
+    html += `</head><body><div style="display: none;position: absolute;opacity: 0;font-size: 0px;">${descriptionString}</div><div id="totalcontents"></div><script src="/middle/${name}.js"></script>`;
 
     if (meta.module) {
       html += `<script type="module" src="/middle/${name}.mjs"></script>`;
