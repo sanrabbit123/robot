@@ -86,7 +86,7 @@ DevContext.prototype.launching = async function () {
     // await this.pureSpawn();
 
 
-    
+
 
 
 
@@ -1893,7 +1893,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p171");
+    // await this.getCorePortfolio("p139");
 
 
     // aspirant to designer

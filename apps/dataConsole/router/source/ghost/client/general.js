@@ -515,7 +515,7 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
     this.totalContents.style.height = "auto";
 
     getObj = returnGet();
-    if (getObj.mode !== "test" && getObj.view !== "test") {
+    if (getObj.mode !== "test" && getObj.view !== "test" && client !== null) {
       await ajaxJson({
         page: name,
         mode: "page",
