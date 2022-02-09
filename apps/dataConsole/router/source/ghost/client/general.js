@@ -43,7 +43,6 @@ GeneralJs.prototype.setGeneralProperties = function (instance) {
   instance.media = this.media;
 
   instance.firstPageViewTime = new Date();
-  instance.firstPageViewTimeValue = instance.firstPageViewTime.valueOf();
 }
 
 GeneralJs.prototype.setBackground = function (binaryPath, second = false, random = 0) {
@@ -492,7 +491,7 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
     if (typeof obj.name !== "string" || typeof obj.client !== "object" || typeof obj.base !== "object" || typeof obj.local !== "function") {
       throw new Error("must be object => { name, client, base, local }");
     }
-    const { ajaxJson, returnGet } = GeneralJs;
+    const { ajaxJson, returnGet, gtagEvent } = GeneralJs;
     const { mode, name, client, base, local } = obj;
     let belowTarget, removeTargets, getObj;
 
@@ -524,6 +523,18 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
         cliid: client.cliid,
       }, "/ghostClient_updateAnalytics");
     }
+    gtagEvent({
+      page: base.instance.pageName,
+      standard: base.instance.firstPageViewTime,
+      action: "page",
+      data: {
+        cliid: client !== null ? client.cliid : "null",
+      },
+    }).then((id) => {
+      base.instance.googleClientId = id;
+    }).catch((err) => {
+      console.log(err);
+    });
 
   } catch (e) {
     await GeneralJs.ajaxJson({ message: "GeneralJs.ghostClientLaunching : " + e.message }, "/errorLog");

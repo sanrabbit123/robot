@@ -543,8 +543,12 @@ ConsultingJs.prototype.submitEvent = function (boo) {
         if (obj.cellphone !== "010-2747-3403") {
           window.gtag('event', 'login');
         }
-        if (typeof window.ga.getAll()[0].get('clientId') === "string") {
-          ajaxdata += "&googleId=" + window.ga.getAll()[0].get('clientId');
+        if (window.ga !== undefined) {
+          if (typeof window.ga.getAll === "function") {
+            if (typeof window.ga.getAll()[0].get('clientId') === "string") {
+              ajaxdata += "&googleId=" + window.ga.getAll()[0].get('clientId');
+            }
+          }
         }
         GeneralJs.ajaxPromise(ajaxdata, "https://home-liaison.serveftp.com:3000/submit").then(instance.thankyouPage(boo, submitNamePhone)).catch((err) => {
           window.alert("오류가 발생하였습니다! 다시 시도해주세요 :)");

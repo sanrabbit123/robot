@@ -7059,7 +7059,7 @@ StyleCurationJs.prototype.serviceConverting = async function (seridObj) {
   const instance = this;
   const { ea, baseTong } = this;
   const { backgroundImageBox, backgroundImageBox2 } = this.mother;
-  const { cleanChildren, ajaxJson, returnGet } = GeneralJs;
+  const { cleanChildren, ajaxJson, returnGet, setQueue, gtagEvent } = GeneralJs;
   const children = baseTong.children;
   try {
     await ajaxJson({
@@ -7072,7 +7072,7 @@ StyleCurationJs.prototype.serviceConverting = async function (seridObj) {
     backgroundImageBox.style.animation = "justfadeoutoriginal 1s ease forwards";
     baseTong.style.height = String(baseTong.getBoundingClientRect().height) + ea;
     baseTong.style.animation = "fadedownmiddle 0.4s ease forwards";
-    GeneralJs.setTimeout(() => {
+    setQueue(() => {
       baseTong.style.opacity = String(0);
       cleanChildren(baseTong);
       instance.insertPendingProposal();
@@ -7081,13 +7081,15 @@ StyleCurationJs.prototype.serviceConverting = async function (seridObj) {
       baseTong.style.height = "";
       baseTong.style.animation = "fadeupdelay 0.5s ease forwards";
 
-      GeneralJs.gtagEvent({
-        category: instance.pageName,
+      gtagEvent({
+        page: instance.pageName,
+        standard: instance.firstPageViewTime,
         action: "submit",
         data: {
-          time: (new Date()).valueOf() - instance.firstPageViewTimeValue,
           cliid: instance.client.cliid,
         },
+      }).catch((err) => {
+        console.log(err);
       });
 
     }, 500);

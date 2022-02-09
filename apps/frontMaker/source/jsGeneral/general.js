@@ -5424,16 +5424,28 @@ GeneralJs.orderSystem = function (type, number) {
 }
 
 GeneralJs.gtagEvent = function (obj) {
-  if (typeof window.gtag === "function") {
-    if (typeof obj === "object" && obj !== null) {
-      if (typeof obj.page === "string" && typeof obj.action === "string" && typeof obj.data === "object" && obj.data !== null) {
-        window.gtag("event", obj.action, {
-          "event_category": obj.page,
-          "event_label": JSON.stringify(obj.data),
-        });
-      } else {
-        throw new Error("input must be { page: String, action: String, data: Object }");
+  return new Promise((resolve, reject) => {
+    if (typeof window.gtag === "function") {
+      if (typeof obj === "object" && obj !== null) {
+        if (typeof obj.page === "string" && obj.standard instanceof Date && typeof obj.action === "string" && typeof obj.data === "object" && obj.data !== null) {
+          window.gtag('get', window.gtagId, 'client_id', (client_id) => {
+            obj.data.page = obj.page;
+            obj.data.action = obj.action;
+            obj.data.standard = obj.standard.valueOf();
+            obj.data.time = (new Date()).valueOf() - obj.standard.valueOf();
+            obj.data.id = client_id;
+            window.gtag("event", obj.action, {
+              "event_category": obj.page,
+              "event_label": JSON.stringify(obj.data),
+            });
+            resolve(client_id);
+          })
+        } else {
+          reject("input must be { page: String, standard: Date, action: String, data: Object } }");
+        }
       }
+    } else {
+      reject("there is no gtag");
     }
-  }
+  });
 }

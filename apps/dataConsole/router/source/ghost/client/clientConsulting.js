@@ -111,13 +111,13 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   rightBoxPaddingTop = 115;
 
   circleRadius = 2.5;
-  circleTop = 13;
+  circleTop = 12;
   circleBetween = 6;
 
-  mainSize = 21;
+  mainSize = 20;
   mainWeight = 500;
 
-  grayTop = 1;
+  grayTop = 0;
   grayHeight = 32;
 
   moduleHeight = grayTop + grayHeight;
