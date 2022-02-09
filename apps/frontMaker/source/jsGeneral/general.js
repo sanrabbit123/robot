@@ -5426,14 +5426,13 @@ GeneralJs.orderSystem = function (type, number) {
 GeneralJs.gtagEvent = function (obj) {
   if (typeof window.gtag === "function") {
     if (typeof obj === "object" && obj !== null) {
-      if (typeof obj.category === "string" && typeof obj.action === "string" && typeof obj.label === "string" && typeof obj.value === "number") {
+      if (typeof obj.page === "string" && typeof obj.action === "string" && typeof obj.data === "object" && obj.data !== null) {
         window.gtag("event", obj.action, {
-          "event_category": obj.category,
-          "event_label": obj.label,
-          "value": obj.value
+          "event_category": obj.page,
+          "event_label": JSON.stringify(obj.data),
         });
       } else {
-        throw new Error("input must be { category: String, action: String, label: String, value: Number }");
+        throw new Error("input must be { page: String, action: String, data: Object }");
       }
     }
   }

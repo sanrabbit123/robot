@@ -7082,12 +7082,14 @@ StyleCurationJs.prototype.serviceConverting = async function (seridObj) {
       baseTong.style.animation = "fadeupdelay 0.5s ease forwards";
 
       GeneralJs.gtagEvent({
-        category: "styleCuration",
+        category: instance.pageName,
         action: "submit",
-        label: "submit_styleCuration",
-        value: (new Date()).valueOf() - instance.firstPageViewTimeValue,
+        data: {
+          time: (new Date()).valueOf() - instance.firstPageViewTimeValue,
+          cliid: instance.client.cliid,
+        },
       });
-      
+
     }, 500);
     return "done";
   } catch (e) {
