@@ -197,8 +197,8 @@ KakaoTalk.prototype.templateTong = function (target) {
       },
     },
     designerProposal: {
-      name: "제안서 발송 수정",
-      id: "TF_0587",
+      name: "제안서 발송 수정 수정 수정",
+      id: "TH_5245",
       needs: [
         "client",
         "host",
