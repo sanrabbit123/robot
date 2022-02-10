@@ -4576,15 +4576,7 @@ DesignerProposalJs.prototype.launching = async function (loading) {
     }
 
     // TEST Center ==================================================================================================
-    if (proid === "p1806_aa01s" && getObj.mode !== "test") {
-      window.location.href = this.frontPage;
-    }
-    if (proid === "p1806_aa01s" && getObj.mode === "test") {
-      this.client.name = "홍길동";
-      this.testMode = true;
-    }
     if (proid === "p1801_aa01s") {
-      this.client.name = "임혜령";
       for (let d of designers) {
         d.end = false;
       }
@@ -4603,7 +4595,7 @@ DesignerProposalJs.prototype.launching = async function (loading) {
       local: async () => {
         try {
           instance.insertInitBox();
-          instance.insertSecondService();
+          // instance.insertSecondService();
           instance.insertDesignerBoxes();
           instance.insertServiceBox();
           instance.insertWordBox();
