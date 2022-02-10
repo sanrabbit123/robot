@@ -88,7 +88,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await findCode("gtagEvent")
+
 
 
 
@@ -159,7 +159,7 @@ DevContext.prototype.launching = async function () {
     // }
     //
     // sheetsId = "1pfzymPAEjz6Q2G_QIMwQlc7e6Q_FYQkSw4tYIxAkWDk";
-    // await sheets.update_value_inPython(sheetsId, "", matrix);
+    // await sheets.update_value_inPython(sheetsId, "default", matrix);
     // console.log(matrix);
 
 
