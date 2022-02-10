@@ -97,6 +97,7 @@ LogRouter.prototype.rou_post_receiveLog = function () {
   const instance = this;
   const back = this.back;
   const { equalJson, ipParsing } = this.mother;
+  const ignoreList = [ 121130214221, 2201171312 ];
   let obj = {};
   obj.link = [ "/receiveLog" ];
   obj.func = async function (req, res) {
@@ -147,7 +148,11 @@ LogRouter.prototype.rou_post_receiveLog = function () {
         }
       };
 
-      await back.mongoCreate(collection, json, { selfMongo });
+      if (typeof ip === "string") {
+        if (!ignoreList.includes(Number(ip.replace(/[^0-9]/gi, '')))) {
+          await back.mongoCreate(collection, json, { selfMongo });
+        }
+      }
       res.send(JSON.stringify(json));
 
     } catch (e) {
