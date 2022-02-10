@@ -6,6 +6,8 @@ const GeneralJs = function () {
   this.talkIcon = null;
 }
 
+GeneralJs.homeliaisonAnalyticsHost = "home-liaison.info";
+
 GeneralJs.sourceLink = "/list_image/general";
 
 GeneralJs.universalLink = "/list_image/universal";
@@ -5424,21 +5426,25 @@ GeneralJs.orderSystem = function (type, number) {
 }
 
 GeneralJs.gtagEvent = function (obj) {
+  const logHostPath = "https://" + GeneralJs.homeliaisonAnalyticsHost + "/receiveLog";
   return new Promise((resolve, reject) => {
     if (typeof window.gtag === "function") {
       if (typeof obj === "object" && obj !== null) {
         if (typeof obj.page === "string" && obj.standard instanceof Date && typeof obj.action === "string" && typeof obj.data === "object" && obj.data !== null) {
           window.gtag('get', window.gtagId, 'client_id', (client_id) => {
-            obj.data.page = obj.page;
-            obj.data.action = obj.action;
-            obj.data.standard = obj.standard.valueOf();
-            obj.data.time = (new Date()).valueOf() - obj.standard.valueOf();
-            obj.data.id = client_id;
-            window.gtag("event", obj.action, {
-              "event_category": obj.page,
-              "event_label": JSON.stringify(obj.data),
-            });
-            resolve(client_id);
+            GeneralJs.ajaxJson({
+              data: {
+                page: obj.page,
+                action: obj.action,
+                standard: obj.standard,
+                id: client_id,
+                value: obj.data
+              }
+            }, logHostPath, { equal: true }).then((json) => {
+              resolve(json);
+            }).catch((err) => {
+              reject(err);
+            })
           });
         } else {
           reject("input must be { page: String, standard: Date, action: String, data: Object } }");

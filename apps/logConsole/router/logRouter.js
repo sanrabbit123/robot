@@ -107,7 +107,7 @@ LogRouter.prototype.rou_post_receiveLog = function () {
       }
       const collection = "homeliaisonAnalytics";
       const { data } = equalJson(req.body);
-      const { page, action, standard, time, id, value } = data;
+      const { page, action, standard, id, value } = data;
       const selfMongo = instance.mongo;
       const ip = String(req.headers['x-forwarded-for'] === undefined ? req.connection.remoteAddress : req.headers['x-forwarded-for']).trim().replace(/[^0-9\.]/gi, '');
       const rawUserAgent = req.useragent;
