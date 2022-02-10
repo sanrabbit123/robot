@@ -128,12 +128,12 @@ LogConsole.prototype.aliveTest = async function () {
   }
 }
 
-LogConsole.prototype.renderStatic = async function (staticFolder, address) {
+LogConsole.prototype.renderStatic = async function (staticFolder) {
   const instance = this;
   const { fileSystem, shell, shellLink, sleep } = this.mother;
   const S3HOST = this.address.homeinfo.ghost.protocol + "://" + this.address.homeinfo.ghost.host;
-  const SSEHOST = address.host;
-  const SSEHOST_CONSOLE = this.address.backinfo.host;
+  const SSEHOST = this.address.testinfo.host;
+  const SSEHOST_CONSOLE = this.address.testinfo.host;
   const GHOSTHOST = this.address.homeinfo.ghost.host;
   const FILEHOST = this.address.officeinfo.ghost.host;
   const PYTHONHOST = "https://" + this.address.pythoninfo.host + ":3000";
@@ -238,10 +238,10 @@ LogConsole.prototype.renderStatic = async function (staticFolder, address) {
   }
 }
 
-LogConsole.prototype.playgroundConnect = async function () {
+LogConsole.prototype.logConnect = async function () {
   const instance = this;
   const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, errorLog } = this.mother;
-  const PORT = 30000;
+  const PORT = 3000;
   const https = require("https");
   const express = require("express");
   const app = express();
@@ -257,45 +257,24 @@ LogConsole.prototype.playgroundConnect = async function () {
   app.use(express.static(staticFolder));
 
   try {
-    //set address info
-    const { name, rawObj: address, isTest } = await this.mother.ipCheck();
-    let isLocal;
-    if (name === "unknown") {
-      throw new Error("invalid address");
-    }
     console.log(``);
-    console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching console in ${name} ==============`);
+    console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching log console ==============`);
     console.log(``);
 
     //set mongo connetion
-    let MONGOC, MONGOLOCALC;
-    await this.back.setInfoObj({ getMode: false });
-    isLocal = false;
+    let MONGOC;
     MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
     console.log(`\x1b[33m%s\x1b[0m`, `set DB server => 127.0.0.1`);
-    MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
-    console.log(`\x1b[33m%s\x1b[0m`, `set SSE server => 127.0.0.1`);
-
     console.log(``);
 
     await MONGOC.connect();
-    await MONGOLOCALC.connect();
-
-    //set kakao
-    const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
-    const kakaoInstance = new KakaoTalk();
-    await kakaoInstance.ready();
-
-    //set human
-    const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
-    const humanInstance = new HumanPacket();
 
     //set pem key
     let pems, pemsLink;
     let certDir, keyDir, caDir;
 
     pems = {};
-    pemsLink = process.cwd() + "/pems/" + address.host;
+    pemsLink = process.cwd() + "/pems/" + this.address.testinfo.host;
 
     certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
     keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
@@ -321,7 +300,7 @@ LogConsole.prototype.playgroundConnect = async function () {
 
     //set router
     const LogRouter = require(`${this.dir}/router/logRouter.js`);
-    const router = new LogRouter(MONGOC, MONGOLOCALC, kakaoInstance, humanInstance, isLocal);
+    const router = new LogRouter(MONGOC);
 
     const rouObj = router.getAll();
     for (let obj of rouObj.get) {
@@ -333,7 +312,7 @@ LogConsole.prototype.playgroundConnect = async function () {
     console.log(`set router`);
 
     //set static
-    this.renderStatic(staticFolder, address).then(() => {
+    this.renderStatic(staticFolder).then(() => {
       console.log(`static done`);
     }).catch((err) => {
       console.log(err);
@@ -342,21 +321,7 @@ LogConsole.prototype.playgroundConnect = async function () {
     //set cron
     setInterval(async () => {
       try {
-        const now = new Date();
-        const hour = now.getHours();
-        const minute = now.getMinutes();
-
         await instance.aliveTest();
-
-        if (hour === 7 || hour === 13 || hour === 18 || hour === 21) {
-          if (minute < 30) {
-            const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
-            const reflection = new MongoReflection();
-            await reflection.ultimateReflection();
-            await reflection.mysqlReflection();
-            await reflection.frontReflection();
-          }
-        }
       } catch (e) {
         console.log(e);
       }

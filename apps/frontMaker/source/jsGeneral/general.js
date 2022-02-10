@@ -5439,7 +5439,7 @@ GeneralJs.gtagEvent = function (obj) {
               "event_label": JSON.stringify(obj.data),
             });
             resolve(client_id);
-          })
+          });
         } else {
           reject("input must be { page: String, standard: Date, action: String, data: Object } }");
         }

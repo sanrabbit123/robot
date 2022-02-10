@@ -90,35 +90,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const { BetaAnalyticsDataClient } = require('@google-analytics/data');
-    const analyticsDataClient = new BetaAnalyticsDataClient();
-    const credentials = `${process.cwd()}/apps/googleAPIs/tokens/analyticsCredentials.json`;
-    await shellExec(`export GOOGLE_APPLICATION_CREDENTIALS="${credentials}"`);
-    const [ response ] = await analyticsDataClient.runReport({
-      property: `properties/227717726`,
-      dateRanges: [
-        {
-          startDate: '2022-02-08',
-          endDate: 'today',
-        },
-      ],
-      dimensions: [
-        {
-          name: 'eventName',
-        },
-      ],
-      metrics: [
-        {
-          name: 'activeUsers',
-        },
-      ],
-    });
-
-    for (let { dimensionValues: [ { value } ] } of response.rows) {
-      console.log(value);
-    }
-
-
 
 
 

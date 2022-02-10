@@ -354,11 +354,11 @@ Robot.prototype.frontUpdate = async function () {
   }
 }
 
-Robot.prototype.playgroundConnect = async function () {
+Robot.prototype.logConnect = async function () {
   try {
     const LogConsole = require(process.cwd() + "/apps/logConsole/logConsole.js");
     const app = new LogConsole();
-    await app.playgroundConnect();
+    await app.logConnect();
   } catch (e) {
     console.log(e);
   }
@@ -1242,7 +1242,7 @@ const MENU = {
   },
   log: async function () {
     try {
-      await robot.playgroundConnect();
+      await robot.logConnect();
     } catch (e) {
       console.log(e);
     }

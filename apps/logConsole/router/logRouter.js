@@ -1,30 +1,10 @@
-const LogRouter = function (MONGOC, MONGOLOCALC, kakaoInstance, humanInstance, isLocal = false) {
-  if (MONGOC === undefined || MONGOC === null || MONGOLOCALC === undefined || MONGOLOCALC === null) {
-    throw new Error("must be mongo, mongo_local connection");
-  }
-  this.dir = process.cwd() + "/apps/dataConsole";
-  this.module = this.dir + "/module";
+const LogRouter = function (MONGOC) {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
-  const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`);
-  const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
-  const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
-  const GoogleCalendar = require(`${process.cwd()}/apps/googleAPIs/googleCalendar.js`);
   this.mother = new Mother();
   this.back = new BackMaker();
-  this.work = new BackWorker();
-  this.sheets = new GoogleSheet();
-  this.drive = new GoogleDrive();
-  this.calendar = new GoogleCalendar();
   this.mongo = MONGOC;
-  this.mongolocal = MONGOLOCALC;
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
-  this.members = {};
-  this.kakao = kakaoInstance;
-  this.human = humanInstance;
-  if (isLocal) {
-    this.back.bindDev();
-  }
 }
 
 LogRouter.prototype.baseMaker = function (target, req = null) {
@@ -48,40 +28,6 @@ LogRouter.prototype.baseMaker = function (target, req = null) {
   return new Promise(function(resolve, reject) {
     resolve(html);
   });
-}
-
-LogRouter.prototype.hostCheck = function (req) {
-  const instance = this;
-  let __wallLogicBoo, __originTarget, __vailHosts;
-
-  __vailHosts = [
-    instance.address.frontinfo.host,
-    instance.address.frontinfo.host + ":3000",
-    instance.address.homeinfo.ghost.host,
-    instance.address.homeinfo.ghost.host + ":3000",
-    instance.address.pythoninfo.host,
-    instance.address.pythoninfo.host + ":3000",
-    instance.address.testinfo.host,
-    instance.address.testinfo.host + ":3000",
-    instance.address.testinfo.host + ":30000",
-    instance.address.officeinfo.ghost.host,
-    instance.address.officeinfo.ghost.host + ":3000",
-    "localhost:3000",
-    "localhost:30000",
-  ];
-  __wallLogicBoo = false;
-  __originTarget = req.headers["origin"] || "invaild";
-  if (__originTarget === "invaild") {
-    __originTarget = req.headers["host"] || "invaild";
-  }
-  for (let host of __vailHosts) {
-    __wallLogicBoo = (new RegExp(host, "gi")).test(__originTarget.trim().replace(/\/$/, ''));
-    if (__wallLogicBoo) {
-      break;
-    }
-  }
-
-  return __wallLogicBoo;
 }
 
 //GET ---------------------------------------------------------------------------------------------
@@ -147,99 +93,27 @@ LogRouter.prototype.rou_get_Address = function () {
 
 //POST ---------------------------------------------------------------------------------------------
 
-LogRouter.prototype.rou_post_ipCheck = function () {
-  const instance = this;
-  const back = this.back;
-  const { equalJson } = this.mother;
-  let obj = {};
-  obj.link = [ "/log/ipCheck" ];
-  obj.func = async function (req, res) {
-    res.set("Content-Type", "application/json");
-    try {
-      if (!instance.hostCheck(req)) {
-        res.send(JSON.stringify({ message: -1 }));
-      } else {
-        res.send(JSON.stringify({ message: 1 }));
-      }
-    } catch (e) {
-      instance.mother.errorLog("Log Console 서버 문제 생김 (rou_post_ipCheck): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ error: e.message }));
-    }
-  }
-  return obj;
-}
-
-LogRouter.prototype.rou_post_logClients = function () {
-  const instance = this;
-  const back = this.back;
-  const { equalJson } = this.mother;
-  let obj = {};
-  obj.link = [ "/log/logClients" ];
-  obj.func = async function (req, res) {
-    res.set("Content-Type", "application/json");
-    try {
-      if (!instance.hostCheck(req)) {
-        throw new Error("invaild host");
-      } else {
-        let clients, clientHistories;
-        let ago;
-        let projects;
-        let result;
-        let temp;
-
-        ago = new Date();
-        ago.setDate(ago.getDate() - 30);
-
-        clients = await back.getClientsByQuery({
-          $or: [
-            {
-              requests: {
-                $elemMatch: {
-                  "request.timeline": { $gte: ago }
-                }
-              }
-            },
-            {
-              requests: {
-                $elemMatch: {
-                  "analytics.response.status": { $regex: "^[응장]" }
-                }
-              }
-            }
-          ]
-        }, { selfMongo: instance.mongo });
-
-        clientHistories = await back.getHistoriesByQuery("client", {
-          $or: clients.toNormal().map((obj) => { return { cliid: obj.cliid } })
-        }, { selfMongo: instance.mongolocal });
-
-        projects = await back.getProjectsByQuery({
-          $or: clients.toNormal().map((obj) => { return { cliid: obj.cliid } })
-        }, { selfMongo: instance.mongo });
-
-
-        result = [];
-        for (let client of clients) {
-          temp = client.toNormal();
-          temp.history = (clientHistories.findIndex((obj) => { return obj.cliid === client.cliid }) !== -1 ? clientHistories.find((obj) => { return obj.cliid === client.cliid }) : null);
-          temp.projects = [];
-          for (let project of projects) {
-            if (client.cliid === project.cliid) {
-              temp.projects.push(project.toNormal());
-            }
-          }
-          result.push(temp);
-        }
-
-        res.send(JSON.stringify(result));
-      }
-    } catch (e) {
-      instance.mother.errorLog("Log Console 서버 문제 생김 (rou_post_logClients): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ error: e.message }));
-    }
-  }
-  return obj;
-}
+// LogRouter.prototype.rou_post_ipCheck = function () {
+//   const instance = this;
+//   const back = this.back;
+//   const { equalJson } = this.mother;
+//   let obj = {};
+//   obj.link = [ "/log/ipCheck" ];
+//   obj.func = async function (req, res) {
+//     res.set("Content-Type", "application/json");
+//     try {
+//       if (!instance.hostCheck(req)) {
+//         res.send(JSON.stringify({ message: -1 }));
+//       } else {
+//         res.send(JSON.stringify({ message: 1 }));
+//       }
+//     } catch (e) {
+//       instance.mother.errorLog("Log Console 서버 문제 생김 (rou_post_ipCheck): " + e.message).catch((e) => { console.log(e); });
+//       res.send(JSON.stringify({ error: e.message }));
+//     }
+//   }
+//   return obj;
+// }
 
 //ROUTING ----------------------------------------------------------------------
 
