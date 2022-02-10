@@ -93,27 +93,65 @@ LogRouter.prototype.rou_get_Address = function () {
 
 //POST ---------------------------------------------------------------------------------------------
 
-// LogRouter.prototype.rou_post_ipCheck = function () {
-//   const instance = this;
-//   const back = this.back;
-//   const { equalJson } = this.mother;
-//   let obj = {};
-//   obj.link = [ "/log/ipCheck" ];
-//   obj.func = async function (req, res) {
-//     res.set("Content-Type", "application/json");
-//     try {
-//       if (!instance.hostCheck(req)) {
-//         res.send(JSON.stringify({ message: -1 }));
-//       } else {
-//         res.send(JSON.stringify({ message: 1 }));
-//       }
-//     } catch (e) {
-//       instance.mother.errorLog("Log Console 서버 문제 생김 (rou_post_ipCheck): " + e.message).catch((e) => { console.log(e); });
-//       res.send(JSON.stringify({ error: e.message }));
-//     }
-//   }
-//   return obj;
-// }
+LogRouter.prototype.rou_post_receiveLog = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, ipParsing } = this.mother;
+  let obj = {};
+  obj.link = [ "/receiveLog" ];
+  obj.func = async function (req, res) {
+    res.set("Content-Type", "application/json");
+    try {
+      if (req.body.data === undefined) {
+        throw new Error("invaild post");
+      }
+      const collection = "homeliaisonAnalytics";
+      const { data } = equalJson(req.body);
+      const { page, action, standard, time, id, value } = data;
+      const selfMongo = instance.mongo;
+      const ip = String(req.headers['x-forwarded-for'] === undefined ? req.connection.remoteAddress : req.headers['x-forwarded-for']).trim().replace(/[^0-9\.]/gi, '');
+      const rawUserAgent = req.useragent;
+      const { source: userAgent, browser, os, platform } = rawUserAgent;
+      const referrer = (req.headers.referer === undefined ? "" : req.headers.referer);
+      let ipObj, json;
+
+      ipObj = await ipParsing(ip);
+      if (ipObj === null) {
+        ipObj = { ip };
+      }
+
+      json = {
+        network: {
+          referrer,
+          userAgent,
+          browser,
+          os,
+          platform,
+          mobile: rawUserAgent.isMobile,
+          ...ipObj
+        },
+        date: {
+          standard,
+          now: new Date(),
+        },
+        data: {
+          page,
+          action,
+          id,
+          value
+        }
+      };
+
+      await back.mongoCreate(collection, json, { selfMongo });
+      res.send(JSON.stringify(json));
+
+    } catch (e) {
+      instance.mother.errorLog("Log Console 서버 문제 생김 (rou_post_receiveLog): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
 
 //ROUTING ----------------------------------------------------------------------
 
