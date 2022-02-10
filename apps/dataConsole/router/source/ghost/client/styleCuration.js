@@ -7059,7 +7059,7 @@ StyleCurationJs.prototype.serviceConverting = async function (seridObj) {
   const instance = this;
   const { ea, baseTong } = this;
   const { backgroundImageBox, backgroundImageBox2 } = this.mother;
-  const { cleanChildren, ajaxJson, returnGet, setQueue, gtagEvent } = GeneralJs;
+  const { cleanChildren, ajaxJson, returnGet, setQueue, homeliaisonAnalytics } = GeneralJs;
   const children = baseTong.children;
   try {
     await ajaxJson({
@@ -7081,7 +7081,7 @@ StyleCurationJs.prototype.serviceConverting = async function (seridObj) {
       baseTong.style.height = "";
       baseTong.style.animation = "fadeupdelay 0.5s ease forwards";
 
-      gtagEvent({
+      homeliaisonAnalytics({
         page: instance.pageName,
         standard: instance.firstPageViewTime,
         action: "submitForm",

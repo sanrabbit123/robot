@@ -6,8 +6,6 @@ const GeneralJs = function () {
   this.talkIcon = null;
 }
 
-GeneralJs.homeliaisonAnalyticsHost = "home-liaison.info";
-
 GeneralJs.sourceLink = "/list_image/general";
 
 GeneralJs.universalLink = "/list_image/universal";
@@ -5425,7 +5423,9 @@ GeneralJs.orderSystem = function (type, number) {
   }
 }
 
-GeneralJs.gtagEvent = function (obj) {
+GeneralJs.homeliaisonAnalyticsHost = "home-liaison.info";
+
+GeneralJs.homeliaisonAnalytics = function (obj) {
   const logHostPath = "https://" + GeneralJs.homeliaisonAnalyticsHost + "/receiveLog";
   return new Promise((resolve, reject) => {
     if (typeof window.gtag === "function") {

@@ -370,6 +370,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       let defaultPyeong;
       let cliid;
       let future;
+      let expectedStart;
 
       defaultPyeong = 34;
       requestObj = {};
@@ -421,7 +422,10 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           requestObj["requests.0.analytics.date.space.movein"] = future;
         }
 
-        if (filterAll(filterDate(resultObj["movingdate"])) !== "거주중" && requestObj["requests.0.request.space.resident.expected"].valueOf() <= (new Date()).valueOf()) {
+        expectedStart = new Date(future.getFullYear(), future.getMonth(), future.getDate(), future.getHours(), future.getMinutes(), future.getSeconds());
+        expectedStart = expectedStart.setDate(expectedStart.getDate() - 60);
+
+        if (filterAll(filterDate(resultObj["movingdate"])) !== "거주중" && expectedStart.valueOf() <= (new Date()).valueOf()) {
           requestObj["requests.0.request.space.resident.living"] = true;
           requestObj["requests.0.request.space.resident.expected"] = new Date();
           future = new Date();
