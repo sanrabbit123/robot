@@ -7084,7 +7084,7 @@ StyleCurationJs.prototype.serviceConverting = async function (seridObj) {
       gtagEvent({
         page: instance.pageName,
         standard: instance.firstPageViewTime,
-        action: "submit",
+        action: "submitForm",
         data: {
           cliid: instance.client.cliid,
         },
@@ -7163,7 +7163,7 @@ StyleCurationJs.prototype.launching = async function (loading) {
   try {
     this.mother.setGeneralProperties(this);
 
-    const { returnGet, ajaxJson, requestPromise } = GeneralJs;
+    const { returnGet, ajaxJson, requestPromise, setDebounce } = GeneralJs;
     const getObj = returnGet();
     let cliid;
     let clients, client;

@@ -325,7 +325,7 @@ DataRouter.prototype.rou_post_styleCuration_pageInitComplete = function () {
       }
       DataRouter.timeouts["styleCuration_pageInitComplete_" + cliid] = setTimeout(async () => {
         const client = await back.getClientById(cliid, { selfMongo: instance.mongo });
-        if (client.requests[0].request.analytics.response.status.value === "응대중" && client.requests[0].request.analytics.response.action.value === "1차 응대 예정") {
+        if (client.requests[0].analytics.response.status.value === "응대중" && client.requests[0].analytics.response.action.value === "1차 응대 예정") {
           await kakao.sendTalk("pushClient", client.name, client.phone, {
             client: client.name,
             host: address.homeinfo.ghost.host,

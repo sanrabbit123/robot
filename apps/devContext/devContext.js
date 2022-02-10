@@ -86,6 +86,42 @@ DevContext.prototype.launching = async function () {
     // await this.pureSpawn();
 
 
+    // const propertyId = "227717726";
+    // const { BetaAnalyticsDataClient } = require('@google-analytics/data');
+    // const analyticsDataClient = new BetaAnalyticsDataClient();
+    // const credentials = `${process.cwd()}/apps/googleAPIs/tokens/analyticsCredentials.json`;
+    //
+    // await shellExec(`export GOOGLE_APPLICATION_CREDENTIALS="${credentials}"`);
+    //
+    // const [ response ] = await analyticsDataClient.runReport({
+    //   property: `properties/${propertyId}`,
+    //   dateRanges: [
+    //     {
+    //       startDate: '2020-03-31',
+    //       endDate: 'today',
+    //     },
+    //   ],
+    //   dimensions: [
+    //     {
+    //       name: 'eventName',
+    //     },
+    //   ],
+    //   metrics: [
+    //     {
+    //       name: 'activeUsers',
+    //     },
+    //   ],
+    // });
+    //
+    // for (let { dimensionValues, metricValues } of response.rows) {
+    //   console.log(dimensionValues, metricValues);
+    // }
+
+
+
+
+    
+
 
 
 
@@ -1943,7 +1979,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p139");
+    // await this.getRawPortfolio("p173");
 
 
     // get corePortfolio by pid

@@ -1081,7 +1081,7 @@ GeneralJs.willDo = function (func) {
   GeneralJs.setTimeout(func, 0);
 }
 
-GeneralJs.setDebounce = function (callback, name, delay = 300) {
+GeneralJs.setDebounce = function (callback, name = "__null__", delay = 300) {
   if (typeof callback !== "function" || typeof name !== "string" || typeof delay !== "number") {
     throw new Error("invaild input");
   }
@@ -5429,15 +5429,14 @@ GeneralJs.gtagEvent = function (obj) {
       if (typeof obj === "object" && obj !== null) {
         if (typeof obj.page === "string" && obj.standard instanceof Date && typeof obj.action === "string" && typeof obj.data === "object" && obj.data !== null) {
           window.gtag('get', window.gtagId, 'client_id', (client_id) => {
-            obj.data.page = obj.page;
-            obj.data.action = obj.action;
-            obj.data.standard = obj.standard.valueOf();
-            obj.data.time = (new Date()).valueOf() - obj.standard.valueOf();
-            obj.data.id = client_id;
-            window.gtag("event", obj.action, {
-              "event_category": obj.page,
-              "event_label": JSON.stringify(obj.data),
-            });
+            window.gtag("event", JSON.stringify({
+              page: obj.page,
+              action: obj.action,
+              standard: obj.standard.valueOf(),
+              time: (new Date()).valueOf() - obj.standard.valueOf(),
+              id: client_id,
+              data: obj.data
+            }));
             resolve(client_id);
           })
         } else {

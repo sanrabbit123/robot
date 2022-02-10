@@ -491,7 +491,7 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
     if (typeof obj.name !== "string" || typeof obj.client !== "object" || typeof obj.base !== "object" || typeof obj.local !== "function") {
       throw new Error("must be object => { name, client, base, local }");
     }
-    const { ajaxJson, returnGet, gtagEvent } = GeneralJs;
+    const { ajaxJson, returnGet, gtagEvent, setDebounce } = GeneralJs;
     const { mode, name, client, base, local } = obj;
     let belowTarget, removeTargets, getObj;
 
@@ -526,14 +526,30 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
     gtagEvent({
       page: base.instance.pageName,
       standard: base.instance.firstPageViewTime,
-      action: "page",
+      action: "pageInit",
       data: {
         cliid: client !== null ? client.cliid : "null",
+        scroll: window.scrollY,
       },
     }).then((id) => {
       base.instance.googleClientId = id;
     }).catch((err) => {
       console.log(err);
+    });
+    window.addEventListener("scroll", (e) => {
+      setDebounce(() => {
+        gtagEvent({
+          page: base.instance.pageName,
+          standard: base.instance.firstPageViewTime,
+          action: "scrollStop",
+          data: {
+            cliid: client !== null ? client.cliid : "null",
+            scroll: window.scrollY,
+          },
+        }).catch((err) => {
+          console.log(err);
+        });
+      }, "__topLevelScrollDebounceEvent__");
     });
 
   } catch (e) {
