@@ -64,7 +64,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   let quoteTop, quoteLeft, quoteHeight, quoteWidth, quoteMarginBottom;
   let initWordingSize, initWordingHeight, initWordingWordSpacing;
   let indexNumberBottom;
-  let initWording0;
+  let initWording0, initWording1;
   let mobileRightBoxHeight;
   let rightBoxPaddingTop;
   let blockMarginBottom;
@@ -89,8 +89,10 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   let inputIndent;
   let grayTextAreaTop;
   let blank;
+  let marginRatio;
+  let initWordingLineHeight;
 
-  blockHeight = <%% 900, 900, 900, 900, 90 %%>;
+  blockHeight = <%% 906, 906, 906, 906, 90 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
   margin = <%% 52, 52, 44, 32, 52 %%>;
   leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
@@ -115,12 +117,13 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   initWordingHeight = <%% 20, 20, 20, 20, 9 %%>;
   initWordingSize = <%% 15.5, 15, 14.5, 13.5, 3.5 %%>;
   initWordingWordSpacing = <%% -1, -1, -1, -1, -1 %%>;
+  initWordingLineHeight = <%% 9, 9, 9, 9, 9 %%>;
 
   indexNumberBottom = <%% 3, 4, 6, 4, 0 %%>;
 
   mobileRightBoxHeight = 78;
 
-  rightBoxPaddingTop = 115;
+  rightBoxPaddingTop = 136;
 
   circleRadius = 2.5;
   circleTop = 12;
@@ -149,14 +152,16 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   leftGrayType3 = 481;
 
   widthGrayType0 = 160;
-  widthGrayType1 = 447;
-  widthGrayType2 = 740
-  widthGrayType3 = 384;
+  widthGrayType1 = 455;
+  widthGrayType2 = 748;
+  widthGrayType3 = 392;
 
   addressWidth = 54;
   addressSize = 13;
   addressWeight = 600;
   addressTop = 5;
+
+  marginRatio = 1.5;
 
   blank = "&nbsp;&nbsp;&nbsp;";
 
@@ -166,6 +171,14 @@ ClientConsultingJs.prototype.insertInitBox = function () {
     initWording0 = "홈리에종 프로세스는 리모델링 회사와 다릅니다. 시공부터 제시하는 방법과 달리,";
   } else {
     initWording0 = "홈리에종 프로세스는 리모델링 회사와 다릅니다. 시공부터 제시하는 방법과 달리,";
+  }
+
+  if (media[0]) {
+    initWording1 = "담당 디자이너가 고객님의 전체 가용 예산을 시공 / 제작가구 / 구매가구 / 패브릭 소품 등을 위해 적절히 분배하여 제안합니다.";
+  } else if (media[1]) {
+    initWording1 = "담당 디자이너가 고객님의 전체 가용 예산을 현장 조건에 맞게 적절히 분배하여 스타일링을 진행합니다.";
+  } else {
+    initWording1 = "담당 디자이너가 고객님의 예산을 현장에 맞게 분배하여 스타일링을 진행합니다.";
   }
 
   whiteBlock = createNode({
@@ -322,6 +335,23 @@ ClientConsultingJs.prototype.insertInitBox = function () {
     }
   });
 
+  createNode({
+    mother: rightBox,
+    text: initWording1,
+    style: {
+      position: "absolute",
+      top: String(desktop ? quoteTop + quoteHeight + quoteMarginBottom + initWordingSize + initWordingLineHeight : 15.5) + ea,
+      left: String(desktop ? 0 : 11) + ea,
+      width: String(desktop ? 100 : 78) + '%',
+      height: String(initWordingHeight) + ea,
+      fontSize: String(initWordingSize) + ea,
+      fontWeight: String(400),
+      wordSpacing: String(initWordingWordSpacing) + "px",
+      lineHeight: desktop ? "" : String(1.6),
+      textAlign: desktop ? "" : "center",
+      color: colorChip.black,
+    }
+  });
 
   // block start
 
@@ -740,7 +770,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       display: "block",
       position: "relative",
       marginBottom: String(blockMarginBottom) + ea,
-      height: String(moduleHeight * 1.5) + ea,
+      height: String(moduleHeight * marginRatio) + ea,
     }
   });
 
@@ -794,7 +824,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         mode: "input",
         attribute: {
           type: "text",
-          placeholder: "00평",
+          placeholder: "00평 (분양 평수)",
           property: "pyeong",
           value: "",
         },
@@ -1035,7 +1065,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       display: "block",
       position: "relative",
       marginBottom: String(blockMarginBottom) + ea,
-      height: String(moduleHeight * 1.5) + ea,
+      height: String(moduleHeight * marginRatio) + ea,
     }
   });
 
@@ -1079,7 +1109,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
           position: "absolute",
           top: String(grayTop) + ea,
           left: String(leftGrayType0) + ea,
-          width: String(764) + ea,
+          width: String(772) + ea,
           height: String(12) + ea,
           borderBottom: "1px solid " + colorChip.gray4
         }
@@ -1091,7 +1121,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
           top: String(7) + ea,
           color: colorChip.black,
           verticalAlign: "top",
-          width: String(101) + ea,
+          width: String(105) + ea,
           borderRight: "1px solid " + colorChip.gray4,
           height: String(12) + ea,
         },
@@ -1294,7 +1324,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       display: "block",
       position: "relative",
       marginBottom: String(blockMarginBottom) + ea,
-      height: String(moduleHeight * 1.5) + ea,
+      height: String(moduleHeight * marginRatio) + ea,
     }
   });
 
@@ -1401,7 +1431,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         text: "화장실 개수" + blank + "<b%|%b>",
         style: {
           position: "absolute",
-          left: String(372) + ea,
+          left: String(406) + ea,
           top: String(0) + ea,
           fontSize: String(mainSize) + ea,
           fontWeight: String(300),
@@ -1416,7 +1446,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       {
         style: {
           position: "absolute",
-          left: String(505) + ea,
+          left: String(531) + ea,
           top: String(4) + ea,
         },
         children: [
@@ -1456,7 +1486,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         text: "발코니" + blank + "<b%|%b>",
         style: {
           position: "absolute",
-          left: String(666) + ea,
+          left: String(696) + ea,
           top: String(0) + ea,
           fontSize: String(mainSize) + ea,
           fontWeight: String(300),
@@ -1471,7 +1501,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       {
         style: {
           position: "absolute",
-          left: String(774) + ea,
+          left: String(780) + ea,
           top: String(4) + ea,
         },
         children: [
