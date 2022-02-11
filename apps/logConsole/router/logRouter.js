@@ -5,6 +5,7 @@ const LogRouter = function (MONGOC) {
   this.back = new BackMaker();
   this.mongo = MONGOC;
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
+  this.host = this.address.testinfo.host;
 }
 
 LogRouter.prototype.baseMaker = function (target, req = null) {

@@ -42,6 +42,7 @@ const RethinkAccess = require(APP_PATH + "/rethinkAccess/rethinkAccess.js");
 const AppleCalendar = require(APP_PATH + "/appleAPIs/appleCalendar.js");
 const ExcelReader = require(APP_PATH + "/excelReader/excelReader.js");
 const ImageReader = require(APP_PATH + "/imageReader/imageReader.js");
+const LogConsole = require(APP_PATH + "/logConsole/logConsole.js");
 
 const DevContext = function () {
   this.mother = new Mother();
@@ -101,6 +102,14 @@ DevContext.prototype.launching = async function () {
     //   });
     //   await messageSend({ text: client.name + " 고객님께 신청 완료하라고 독촉했어요.", channel: "#404_curation", voice: true });
     // }
+
+
+
+
+
+
+
+
 
 
 
