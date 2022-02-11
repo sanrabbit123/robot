@@ -104,84 +104,102 @@ DevContext.prototype.launching = async function () {
 
 
 
+    /*
+    setTimeout(async () => {
+      await this.MONGOCONSOLEC.connect();
+      const standard = new Date(2022, 0, 28, 16, 0, 0);
+      const clients = await back.getClientsByQuery({}, { withTools: true });
+      const projects = await back.getProjectsByQuery({}, { withTools: true });
+      const clientHistory = await back.mongoRead("clientHistory", {}, { selfMongo: this.MONGOCONSOLEC });
+      const requests = clients.getRequestsTong();
+      const exceptions = [ "c2202_aa08s", "c2202_aa09s", "c2202_aa10s", "c2202_aa11s", "c2202_aa12s" ];
+      const parentId = "1RDgKLfqrlLyJtRRc0T3a6nYOakCqmnBe";
+      let targets;
+      let matrix;
+      let tempArr;
+      let tempBoo;
+      let tempBoo2;
+      let sheetsId;
+      let callArray;
+      let proposalArray;
 
-    
+      targets = [];
+      for (let { request, cliid, name } of requests) {
+        if (request.timeline.valueOf() >= standard.valueOf()) {
+          if (!exceptions.includes(cliid)) {
+            targets.push(cliid)
+          }
+        }
+      }
 
+      targets = targets.map((cliid) => { return clients.search(cliid); });
+      for (let client of targets) {
+        for (let history of clientHistory) {
+          if (client.cliid === history.cliid) {
+            client.manager = history.manager;
+            client.history = history.curation;
+            client.analytics = history.curation.analytics;
+          }
+        }
+      }
 
+      matrix = [ [ "아이디", "성함", "담당자", "진행 상태", "응대 단계", "스타일 체크 여부", "제안서 제작 여부", "제안서 1차 전송", "제안서 열람", "통화 연결 여부", "제안서 수정 전송", "수정후 통화 연결", "드랍 사유" ] ]
 
+      for (let target of targets) {
+        tempArr = [];
+        tempArr.push(target.cliid);
+        tempArr.push(target.name);
+        tempArr.push(target.manager);
+        tempArr.push(target.requests[0].analytics.response.status.value);
+        tempArr.push(target.requests[0].analytics.response.action.value);
 
+        tempBoo = target.history.image.length > 0;
+        tempArr.push(tempBoo ? "진행" : "안 함");
 
+        tempBoo = projects.findIndex((obj) => { return obj.cliid === target.cliid }) !== -1;
+        tempArr.push(tempBoo ? "제작" : "안 됨");
 
+        tempBoo = target.analytics.send.findIndex((obj) => { return obj.page === "designerProposal" }) !== -1;
+        tempArr.push(tempBoo ? "전송" : "안 함");
 
+        tempBoo = target.analytics.page.findIndex((obj) => { return obj.page === "designerProposal" }) !== -1;
+        tempArr.push(tempBoo ? "열람" : "안 함");
 
+        callArray = target.analytics.call.out.concat(target.analytics.call.in);
+        callArray.sort((a, b) => { return a.date.valueOf() - b.date.valueOf() });
 
+        tempBoo = callArray.findIndex((obj) => { return obj.success }) !== -1;
+        tempArr.push(tempBoo ? "성공" : "실패");
 
-
-    // const standard = new Date(2022, 0, 28, 16, 0, 0);
-    // const clients = await back.getClientsByQuery({}, { selfMongo: this.MONGOLOCALC, withTools: true });
-    // const projects = await back.getProjectsByQuery({}, { selfMongo: this.MONGOLOCALC, withTools: true });
-    // const clientHistory = await back.mongoRead("clientHistory", {}, { selfMongo: this.MONGOLOCALC });
-    // const requests = clients.getRequestsTong();
-    // const exceptions = [ "c2202_aa08s", "c2202_aa09s", "c2202_aa10s", "c2202_aa11s", "c2202_aa12s" ];
-    // const parentId = "1RDgKLfqrlLyJtRRc0T3a6nYOakCqmnBe";
-    // let targets;
-    // let matrix;
-    // let tempArr;
-    // let tempBoo;
-    // let tempBoo2;
-    // let sheetsId;
-    //
-    // targets = [];
-    // for (let { request, cliid, name } of requests) {
-    //   if (request.timeline.valueOf() >= standard.valueOf()) {
-    //     if (!exceptions.includes(cliid)) {
-    //       targets.push(cliid)
-    //     }
-    //   }
-    // }
-    //
-    // targets = targets.map((cliid) => { return clients.search(cliid); });
-    // for (let client of targets) {
-    //   for (let history of clientHistory) {
-    //     if (client.cliid === history.cliid) {
-    //       client.history = history.curation;
-    //       client.analytics = history.curation.analytics;
-    //     }
-    //   }
-    // }
-    //
-    // matrix = [ [ "아이디", "성함", "스타일 체크 여부", "제안서 자동 제작 여부", "제안서 열람", "이후 통화 연결 여부", "진행 상태", "드랍 사유" ] ]
-    //
-    // for (let target of targets) {
-    //   tempArr = [];
-    //   tempArr.push(target.cliid);
-    //   tempArr.push(target.name);
-    //
-    //   tempBoo = target.history.image.length > 0;
-    //   tempArr.push(tempBoo ? "진행" : "안 함");
-    //
-    //   tempBoo = projects.findIndex((obj) => { return obj.cliid === target.cliid }) !== -1;
-    //   tempArr.push(tempBoo ? "제작" : "안 됨");
-    //
-    //   tempBoo = target.analytics.page.findIndex((obj) => { return obj.page === "designerProposal" }) !== -1;
-    //   tempArr.push(tempBoo ? "열람" : "안 함");
-    //
-    //   tempBoo = target.analytics.call.out.findIndex((obj) => { return obj.success }) !== -1;
-    //   tempBoo2 = target.analytics.call.in.findIndex((obj) => { return obj.success }) !== -1;
-    //
-    //   tempArr.push((tempBoo || tempBoo2) ? "성공" : "실패");
-    //   tempArr.push(target.requests[0].analytics.response.status.value);
-    //   tempArr.push(target.requests[0].analytics.response.outreason.values.join(", "));
-    //
-    //   matrix.push(tempArr);
-    // }
-    //
-    // sheetsId = "1pfzymPAEjz6Q2G_QIMwQlc7e6Q_FYQkSw4tYIxAkWDk";
-    // await sheets.update_value_inPython(sheetsId, "default", matrix);
-    // console.log(matrix);
+        proposalArray = target.analytics.send.filter((obj) => { return obj.page === "designerProposal" });
+        tempBoo = proposalArray.length > 1;
+        tempArr.push(tempBoo ? "전송" : "안 함");
 
 
+        proposalArray.reverse();
+        callArray.reverse();
+        callArray = callArray.filter((obj) => { return obj.success });
+        if (proposalArray.length > 1 && callArray.length > 1) {
+          tempArr.push("성공");
+        } else {
+          tempArr.push("실패");
+        }
 
+        tempArr.push(target.requests[0].analytics.response.outreason.values.join(", "));
+
+        matrix.push(tempArr);
+      }
+
+      sheetsId = "1pfzymPAEjz6Q2G_QIMwQlc7e6Q_FYQkSw4tYIxAkWDk";
+      await sheets.update_value_inPython(sheetsId, "default", matrix);
+      console.log(matrix);
+
+      await this.MONGOC.close();
+      await this.MONGOCONSOLEC.close();
+
+      console.log("donedone");
+    }, 3 * 1000);
+    */
 
 
 
@@ -2088,13 +2106,17 @@ DevContext.prototype.launching = async function () {
 
     */
 
-  } catch (e) {
-    console.log(e);
-  } finally {
     await this.MONGOC.close();
     await this.MONGOLOCALC.close();
     // await rethink.close();
     console.log(`done`);
+
+  } catch (e) {
+    console.log(e);
+    await this.MONGOC.close();
+    await this.MONGOLOCALC.close();
+    // await rethink.close();
+    console.log(`error`);
   }
 }
 

@@ -45,7 +45,7 @@ ClientConsultingJs.binaryPath = "/middle/consulting";
 
 ClientConsultingJs.prototype.insertInitBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing, dateToString, stringToDate } = GeneralJs;
   const { ea, media, osException, testMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -76,7 +76,19 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   let circleBetween;
   let grayHeight;
   let grayTop;
+  let grayInputTop;
   let moduleHeight;
+  let leftGrayType0, leftGrayType1, leftGrayType2, leftGrayType3;
+  let widthGrayType0, widthGrayType1, widthGrayType2, widthGrayType3;
+  let inputSize, inputWeight;
+  let grayBigHeight;
+  let secondPointLeft;
+  let addressWidth;
+  let addressSize, addressWeight;
+  let addressTop;
+  let inputIndent;
+  let grayTextAreaTop;
+  let blank;
 
   blockHeight = <%% 900, 900, 900, 900, 90 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
@@ -116,13 +128,37 @@ ClientConsultingJs.prototype.insertInitBox = function () {
 
   mainSize = 20;
   mainWeight = 500;
+  inputSize = 13;
+  inputWeight = 400;
+  inputIndent = 10;
+
+  secondPointLeft = 315;
 
   grayTop = 0;
+  grayInputTop = -2;
   grayHeight = 32;
+  grayBigHeight = 115;
+  grayTextAreaTop = 3;
 
   moduleHeight = grayTop + grayHeight;
   blockMarginBottom = 12;
 
+  leftGrayType0 = 101;
+  leftGrayType1 = 418;
+  leftGrayType2 = 125;
+  leftGrayType3 = 481;
+
+  widthGrayType0 = 160;
+  widthGrayType1 = 447;
+  widthGrayType2 = 740
+  widthGrayType3 = 384;
+
+  addressWidth = 54;
+  addressSize = 13;
+  addressWeight = 600;
+  addressTop = 5;
+
+  blank = "&nbsp;&nbsp;&nbsp;";
 
   if (media[0]) {
     initWording0 = "홈리에종의 인테리어 프로세스는 일반적인 리모델링 회사 또는 스튜디오와 다릅니다. 시공 견적부터 제시하는 방법과 달리,";
@@ -328,11 +364,34 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         style: {
           position: "absolute",
           top: String(grayTop) + ea,
-          left: String(101) + ea,
-          width: String(160) + ea,
+          left: String(leftGrayType0) + ea,
+          width: String(widthGrayType0) + ea,
           height: String(grayHeight) + ea,
           background: colorChip.gray1,
           borderRadius: String(3) + "px",
+        }
+      },
+      {
+        mode: "input",
+        attribute: {
+          type: "text",
+          placeholder: "성함",
+          property: "name",
+          value: "",
+        },
+        style: {
+          position: "absolute",
+          top: String(grayInputTop) + ea,
+          left: String(leftGrayType0) + ea,
+          width: String(widthGrayType0) + ea,
+          height: String(grayHeight) + ea,
+          outline: String(0),
+          border: String(0),
+          fontSize: String(inputSize) + ea,
+          fontWeight: String(inputWeight),
+          color: colorChip.black,
+          textAlign: "center",
+          background: "transparent",
         }
       },
       {
@@ -340,7 +399,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         source: instance.mother.returnRound(circleRadius, colorChip.green),
         style: {
           position: "absolute",
-          left: String(315) + ea,
+          left: String(secondPointLeft) + ea,
           width: String(circleRadius * 2) + ea,
           height: String(circleRadius * 2) + ea,
           top: String(circleTop) + ea,
@@ -351,7 +410,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         text: "주소",
         style: {
           position: "absolute",
-          left: String(315 + (circleRadius * 2) + circleBetween) + ea,
+          left: String(secondPointLeft + (circleRadius * 2) + circleBetween) + ea,
           top: String(0) + ea,
           fontSize: String(mainSize) + ea,
           fontWeight: String(mainWeight),
@@ -363,11 +422,61 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         style: {
           position: "absolute",
           top: String(grayTop) + ea,
-          left: String(418) + ea,
-          width: String(447) + ea,
+          left: String(leftGrayType1) + ea,
+          width: String(addressWidth) + ea,
+          height: String(grayHeight) + ea,
+          background: colorChip.gradientGreen,
+          borderRadius: String(3) + "px",
+          cursor: "pointer",
+        },
+        children: [
+          {
+            text: "검색",
+            style: {
+              width: String(100) + '%',
+              textAlign: "center",
+              fontSize: String(addressSize) + ea,
+              fontWeight: String(addressWeight),
+              color: colorChip.white,
+              position: "relative",
+              top: String(addressTop) + ea,
+            }
+          }
+        ]
+      },
+      {
+        style: {
+          position: "absolute",
+          top: String(grayTop) + ea,
+          left: String(leftGrayType3) + ea,
+          width: String(widthGrayType3) + ea,
           height: String(grayHeight) + ea,
           background: colorChip.gray1,
           borderRadius: String(3) + "px",
+        }
+      },
+      {
+        mode: "input",
+        attribute: {
+          type: "text",
+          placeholder: "인테리어 받을 곳의 주소",
+          property: "address0",
+          value: "",
+        },
+        style: {
+          position: "absolute",
+          top: String(grayInputTop) + ea,
+          left: String(leftGrayType3) + ea,
+          width: String(widthGrayType3) + ea,
+          height: String(grayHeight) + ea,
+          outline: String(0),
+          border: String(0),
+          fontSize: String(inputSize) + ea,
+          fontWeight: String(inputWeight),
+          color: colorChip.black,
+          textAlign: "left",
+          background: "transparent",
+          textIndent: String(inputIndent) + ea,
         }
       },
     ]
@@ -412,22 +521,69 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         style: {
           position: "absolute",
           top: String(grayTop) + ea,
-          left: String(101) + ea,
-          width: String(160) + ea,
+          left: String(leftGrayType0) + ea,
+          width: String(widthGrayType0) + ea,
           height: String(grayHeight) + ea,
           background: colorChip.gray1,
           borderRadius: String(3) + "px",
         }
       },
       {
+        mode: "input",
+        attribute: {
+          type: "text",
+          placeholder: "010-0000-0000",
+          property: "phone",
+          value: "",
+        },
+        style: {
+          position: "absolute",
+          top: String(grayInputTop) + ea,
+          left: String(leftGrayType0) + ea,
+          width: String(widthGrayType0) + ea,
+          height: String(grayHeight) + ea,
+          outline: String(0),
+          border: String(0),
+          fontSize: String(inputSize) + ea,
+          fontWeight: String(inputWeight),
+          color: colorChip.black,
+          textAlign: "center",
+          background: "transparent",
+        }
+      },
+      {
         style: {
           position: "absolute",
           top: String(grayTop) + ea,
-          left: String(418) + ea,
-          width: String(447) + ea,
+          left: String(leftGrayType1) + ea,
+          width: String(widthGrayType1) + ea,
           height: String(grayHeight) + ea,
           background: colorChip.gray1,
           borderRadius: String(3) + "px",
+        }
+      },
+      {
+        mode: "input",
+        attribute: {
+          type: "text",
+          placeholder: "상세 주소",
+          property: "address1",
+          value: "",
+        },
+        style: {
+          position: "absolute",
+          top: String(grayInputTop) + ea,
+          left: String(leftGrayType1) + ea,
+          width: String(widthGrayType1) + ea,
+          height: String(grayHeight) + ea,
+          outline: String(0),
+          border: String(0),
+          fontSize: String(inputSize) + ea,
+          fontWeight: String(inputWeight),
+          color: colorChip.black,
+          textAlign: "left",
+          background: "transparent",
+          textIndent: String(inputIndent) + ea,
         }
       },
     ]
@@ -448,7 +604,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         source: instance.mother.returnRound(circleRadius, colorChip.green),
         style: {
           position: "absolute",
-          left: String(315) + ea,
+          left: String(secondPointLeft) + ea,
           width: String(circleRadius * 2) + ea,
           height: String(circleRadius * 2) + ea,
           top: String(circleTop) + ea,
@@ -459,7 +615,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         text: "구성원",
         style: {
           position: "absolute",
-          left: String(315 + (circleRadius * 2) + circleBetween) + ea,
+          left: String(secondPointLeft + (circleRadius * 2) + circleBetween) + ea,
           top: String(0) + ea,
           fontSize: String(mainSize) + ea,
           fontWeight: String(mainWeight),
@@ -471,11 +627,35 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         style: {
           position: "absolute",
           top: String(grayTop) + ea,
-          left: String(418) + ea,
-          width: String(447) + ea,
+          left: String(leftGrayType1) + ea,
+          width: String(widthGrayType1) + ea,
           height: String(grayHeight) + ea,
           background: colorChip.gray1,
           borderRadius: String(3) + "px",
+        }
+      },
+      {
+        mode: "input",
+        attribute: {
+          type: "text",
+          placeholder: "가족 구성원 (예) 부부, 딸 0명, 아들 0명",
+          property: "family",
+          value: "",
+        },
+        style: {
+          position: "absolute",
+          top: String(grayInputTop) + ea,
+          left: String(leftGrayType1) + ea,
+          width: String(widthGrayType1) + ea,
+          height: String(grayHeight) + ea,
+          outline: String(0),
+          border: String(0),
+          fontSize: String(inputSize) + ea,
+          fontWeight: String(inputWeight),
+          color: colorChip.black,
+          textAlign: "left",
+          background: "transparent",
+          textIndent: String(inputIndent) + ea,
         }
       },
     ]
@@ -496,7 +676,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         source: instance.mother.returnRound(circleRadius, colorChip.green),
         style: {
           position: "absolute",
-          left: String(315) + ea,
+          left: String(secondPointLeft) + ea,
           width: String(circleRadius * 2) + ea,
           height: String(circleRadius * 2) + ea,
           top: String(circleTop) + ea,
@@ -507,7 +687,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         text: "이메일",
         style: {
           position: "absolute",
-          left: String(315 + (circleRadius * 2) + circleBetween) + ea,
+          left: String(secondPointLeft + (circleRadius * 2) + circleBetween) + ea,
           top: String(0) + ea,
           fontSize: String(mainSize) + ea,
           fontWeight: String(mainWeight),
@@ -519,11 +699,35 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         style: {
           position: "absolute",
           top: String(grayTop) + ea,
-          left: String(418) + ea,
-          width: String(447) + ea,
+          left: String(leftGrayType1) + ea,
+          width: String(widthGrayType1) + ea,
           height: String(grayHeight) + ea,
           background: colorChip.gray1,
           borderRadius: String(3) + "px",
+        }
+      },
+      {
+        mode: "input",
+        attribute: {
+          type: "text",
+          placeholder: "example@home-liaison.com",
+          property: "email",
+          value: "",
+        },
+        style: {
+          position: "absolute",
+          top: String(grayInputTop) + ea,
+          left: String(leftGrayType1) + ea,
+          width: String(widthGrayType1) + ea,
+          height: String(grayHeight) + ea,
+          outline: String(0),
+          border: String(0),
+          fontSize: String(inputSize) + ea,
+          fontWeight: String(inputWeight),
+          color: colorChip.black,
+          textAlign: "left",
+          background: "transparent",
+          textIndent: String(inputIndent) + ea,
         }
       },
     ]
@@ -579,11 +783,34 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         style: {
           position: "absolute",
           top: String(grayTop) + ea,
-          left: String(101) + ea,
-          width: String(160) + ea,
+          left: String(leftGrayType0) + ea,
+          width: String(widthGrayType0) + ea,
           height: String(grayHeight) + ea,
           background: colorChip.gray1,
           borderRadius: String(3) + "px",
+        }
+      },
+      {
+        mode: "input",
+        attribute: {
+          type: "text",
+          placeholder: "00평",
+          property: "pyeong",
+          value: "",
+        },
+        style: {
+          position: "absolute",
+          top: String(grayInputTop) + ea,
+          left: String(leftGrayType0) + ea,
+          width: String(widthGrayType0) + ea,
+          height: String(grayHeight) + ea,
+          outline: String(0),
+          border: String(0),
+          fontSize: String(inputSize) + ea,
+          fontWeight: String(inputWeight),
+          color: colorChip.black,
+          textAlign: "center",
+          background: "transparent",
         }
       },
       {
@@ -591,7 +818,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         source: instance.mother.returnRound(circleRadius, colorChip.green),
         style: {
           position: "absolute",
-          left: String(315) + ea,
+          left: String(secondPointLeft) + ea,
           width: String(circleRadius * 2) + ea,
           height: String(circleRadius * 2) + ea,
           top: String(circleTop) + ea,
@@ -602,10 +829,56 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         text: "계약 형태",
         style: {
           position: "absolute",
-          left: String(315 + (circleRadius * 2) + circleBetween) + ea,
+          left: String(secondPointLeft + (circleRadius * 2) + circleBetween) + ea,
           top: String(0) + ea,
           fontSize: String(mainSize) + ea,
           fontWeight: String(mainWeight),
+          color: colorChip.black,
+          verticalAlign: "top",
+        }
+      },
+      {
+        mode: "svg",
+        source: instance.mother.returnCheckBox(colorChip.gray3),
+        style: {
+          position: "absolute",
+          left: String(439) + ea,
+          width: String(9) + ea,
+          top: String(9) + ea,
+          verticalAlign: "top",
+        }
+      },
+      {
+        text: "자가",
+        style: {
+          position: "absolute",
+          left: String(456) + ea,
+          top: String(0) + ea,
+          fontSize: String(mainSize) + ea,
+          fontWeight: String(300),
+          color: colorChip.black,
+          verticalAlign: "top",
+        }
+      },
+      {
+        mode: "svg",
+        source: instance.mother.returnCheckBox(colorChip.gray3),
+        style: {
+          position: "absolute",
+          left: String(511) + ea,
+          width: String(9) + ea,
+          top: String(9) + ea,
+          verticalAlign: "top",
+        }
+      },
+      {
+        text: "전월세",
+        style: {
+          position: "absolute",
+          left: String(528) + ea,
+          top: String(0) + ea,
+          fontSize: String(mainSize) + ea,
+          fontWeight: String(300),
           color: colorChip.black,
           verticalAlign: "top",
         }
@@ -652,11 +925,34 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         style: {
           position: "absolute",
           top: String(grayTop) + ea,
-          left: String(101) + ea,
-          width: String(160) + ea,
+          left: String(leftGrayType0) + ea,
+          width: String(widthGrayType0) + ea,
           height: String(grayHeight) + ea,
           background: colorChip.gray1,
           borderRadius: String(3) + "px",
+        }
+      },
+      {
+        mode: "input",
+        attribute: {
+          type: "text",
+          placeholder: dateToString(new Date()),
+          property: "movein",
+          value: "",
+        },
+        style: {
+          position: "absolute",
+          top: String(grayInputTop) + ea,
+          left: String(leftGrayType0) + ea,
+          width: String(widthGrayType0) + ea,
+          height: String(grayHeight) + ea,
+          outline: String(0),
+          border: String(0),
+          fontSize: String(inputSize) + ea,
+          fontWeight: String(inputWeight),
+          color: colorChip.black,
+          textAlign: "center",
+          background: "transparent",
         }
       },
       {
@@ -664,7 +960,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         source: instance.mother.returnRound(circleRadius, colorChip.green),
         style: {
           position: "absolute",
-          left: String(315) + ea,
+          left: String(secondPointLeft) + ea,
           width: String(circleRadius * 2) + ea,
           height: String(circleRadius * 2) + ea,
           top: String(circleTop) + ea,
@@ -675,10 +971,56 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         text: "거주 여부",
         style: {
           position: "absolute",
-          left: String(315 + (circleRadius * 2) + circleBetween) + ea,
+          left: String(secondPointLeft + (circleRadius * 2) + circleBetween) + ea,
           top: String(0) + ea,
           fontSize: String(mainSize) + ea,
           fontWeight: String(mainWeight),
+          color: colorChip.black,
+          verticalAlign: "top",
+        }
+      },
+      {
+        mode: "svg",
+        source: instance.mother.returnCheckBox(colorChip.gray3),
+        style: {
+          position: "absolute",
+          left: String(439) + ea,
+          width: String(9) + ea,
+          top: String(9) + ea,
+          verticalAlign: "top",
+        }
+      },
+      {
+        text: "이사",
+        style: {
+          position: "absolute",
+          left: String(456) + ea,
+          top: String(0) + ea,
+          fontSize: String(mainSize) + ea,
+          fontWeight: String(300),
+          color: colorChip.black,
+          verticalAlign: "top",
+        }
+      },
+      {
+        mode: "svg",
+        source: instance.mother.returnCheckBox(colorChip.gray3),
+        style: {
+          position: "absolute",
+          left: String(511) + ea,
+          width: String(9) + ea,
+          top: String(9) + ea,
+          verticalAlign: "top",
+        }
+      },
+      {
+        text: "거주중",
+        style: {
+          position: "absolute",
+          left: String(528) + ea,
+          top: String(0) + ea,
+          fontSize: String(mainSize) + ea,
+          fontWeight: String(300),
           color: colorChip.black,
           verticalAlign: "top",
         }
@@ -732,6 +1074,216 @@ ClientConsultingJs.prototype.insertInitBox = function () {
           verticalAlign: "top",
         }
       },
+      {
+        style: {
+          position: "absolute",
+          top: String(grayTop) + ea,
+          left: String(leftGrayType0) + ea,
+          width: String(764) + ea,
+          height: String(12) + ea,
+          borderBottom: "1px solid " + colorChip.gray4
+        }
+      },
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(7) + ea,
+          color: colorChip.black,
+          verticalAlign: "top",
+          width: String(101) + ea,
+          borderRight: "1px solid " + colorChip.gray4,
+          height: String(12) + ea,
+        },
+        children: [
+          {
+            text: "500만원 이하",
+            style: {
+              position: "absolute",
+              fontSize: String(14) + ea,
+              fontWeight: String(400),
+              color: colorChip.deactive,
+              right: String(-37) + ea,
+              top: String(15) + ea,
+            }
+          }
+        ]
+      },
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(7) + ea,
+          color: colorChip.black,
+          verticalAlign: "top",
+          width: String(95) + ea,
+          borderRight: "1px solid " + colorChip.gray4,
+          height: String(12) + ea,
+        },
+        children: [
+          {
+            text: "1,000만원",
+            style: {
+              position: "absolute",
+              fontSize: String(14) + ea,
+              fontWeight: String(400),
+              color: colorChip.deactive,
+              right: String(-31) + ea,
+              top: String(15) + ea,
+            }
+          }
+        ]
+      },
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(7) + ea,
+          color: colorChip.black,
+          verticalAlign: "top",
+          width: String(92) + ea,
+          borderRight: "1px solid " + colorChip.gray4,
+          height: String(12) + ea,
+        },
+        children: [
+          {
+            text: "1,500만원",
+            style: {
+              position: "absolute",
+              fontSize: String(14) + ea,
+              fontWeight: String(400),
+              color: colorChip.deactive,
+              right: String(-31) + ea,
+              top: String(15) + ea,
+            }
+          }
+        ]
+      },
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(7) + ea,
+          color: colorChip.black,
+          verticalAlign: "top",
+          width: String(92) + ea,
+          borderRight: "1px solid " + colorChip.gray4,
+          height: String(12) + ea,
+        },
+        children: [
+          {
+            text: "2,000만원",
+            style: {
+              position: "absolute",
+              fontSize: String(14) + ea,
+              fontWeight: String(400),
+              color: colorChip.deactive,
+              right: String(-32) + ea,
+              top: String(15) + ea,
+            }
+          }
+        ]
+      },
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(7) + ea,
+          color: colorChip.black,
+          verticalAlign: "top",
+          width: String(92) + ea,
+          borderRight: "1px solid " + colorChip.gray4,
+          height: String(12) + ea,
+        },
+        children: [
+          {
+            text: "2,500만원",
+            style: {
+              position: "absolute",
+              fontSize: String(14) + ea,
+              fontWeight: String(400),
+              color: colorChip.deactive,
+              right: String(-32) + ea,
+              top: String(15) + ea,
+            }
+          }
+        ]
+      },
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(7) + ea,
+          color: colorChip.black,
+          verticalAlign: "top",
+          width: String(92) + ea,
+          borderRight: "1px solid " + colorChip.gray4,
+          height: String(12) + ea,
+        },
+        children: [
+          {
+            text: "3,000만원",
+            style: {
+              position: "absolute",
+              fontSize: String(14) + ea,
+              fontWeight: String(400),
+              color: colorChip.deactive,
+              right: String(-32) + ea,
+              top: String(15) + ea,
+            }
+          }
+        ]
+      },
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(7) + ea,
+          color: colorChip.black,
+          verticalAlign: "top",
+          width: String(92) + ea,
+          borderRight: "1px solid " + colorChip.gray4,
+          height: String(12) + ea,
+        },
+        children: [
+          {
+            text: "4,000만원",
+            style: {
+              position: "absolute",
+              fontSize: String(14) + ea,
+              fontWeight: String(400),
+              color: colorChip.deactive,
+              right: String(-32) + ea,
+              top: String(15) + ea,
+            }
+          }
+        ]
+      },
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(7) + ea,
+          color: colorChip.black,
+          verticalAlign: "top",
+          width: String(106) + ea,
+          borderRight: "1px solid " + colorChip.gray4,
+          height: String(12) + ea,
+        },
+        children: [
+          {
+            text: "5,000만원 이상",
+            style: {
+              position: "absolute",
+              fontSize: String(14) + ea,
+              fontWeight: String(400),
+              color: colorChip.deactive,
+              right: String(-45) + ea,
+              top: String(15) + ea,
+            }
+          }
+        ]
+      },
     ]
   });
 
@@ -781,6 +1333,170 @@ ClientConsultingJs.prototype.insertInitBox = function () {
           verticalAlign: "top",
         }
       },
+      {
+        text: "방 개수" + blank + "<b%|%b>",
+        style: {
+          position: "absolute",
+          left: String(leftGrayType2) + ea,
+          top: String(0) + ea,
+          fontSize: String(mainSize) + ea,
+          fontWeight: String(300),
+          color: colorChip.black,
+          verticalAlign: "top",
+        },
+        bold: {
+          fontWeight: String(200),
+          color: colorChip.green,
+        }
+      },
+      {
+        style: {
+          position: "absolute",
+          left: String(215) + ea,
+          top: String(4) + ea,
+        },
+        children: [
+          {
+            text: "1개",
+            style: {
+              display: "inline-block",
+              fontSize: String(15) + ea,
+              fontWeight: String(300),
+              color: colorChip.deactive,
+              marginRight: String(10) + ea,
+            }
+          },
+          {
+            text: "2개",
+            style: {
+              display: "inline-block",
+              fontSize: String(15) + ea,
+              fontWeight: String(300),
+              color: colorChip.deactive,
+              marginRight: String(10) + ea,
+            }
+          },
+          {
+            text: "3개",
+            style: {
+              display: "inline-block",
+              fontSize: String(15) + ea,
+              fontWeight: String(300),
+              color: colorChip.deactive,
+              marginRight: String(10) + ea,
+            }
+          },
+          {
+            text: "4개 이상",
+            style: {
+              display: "inline-block",
+              fontSize: String(15) + ea,
+              fontWeight: String(300),
+              color: colorChip.deactive,
+            }
+          },
+        ]
+      },
+      {
+        text: "화장실 개수" + blank + "<b%|%b>",
+        style: {
+          position: "absolute",
+          left: String(372) + ea,
+          top: String(0) + ea,
+          fontSize: String(mainSize) + ea,
+          fontWeight: String(300),
+          color: colorChip.black,
+          verticalAlign: "top",
+        },
+        bold: {
+          fontWeight: String(200),
+          color: colorChip.green,
+        }
+      },
+      {
+        style: {
+          position: "absolute",
+          left: String(505) + ea,
+          top: String(4) + ea,
+        },
+        children: [
+          {
+            text: "1개",
+            style: {
+              display: "inline-block",
+              fontSize: String(15) + ea,
+              fontWeight: String(300),
+              color: colorChip.deactive,
+              marginRight: String(10) + ea,
+            }
+          },
+          {
+            text: "2개",
+            style: {
+              display: "inline-block",
+              fontSize: String(15) + ea,
+              fontWeight: String(300),
+              color: colorChip.deactive,
+              marginRight: String(10) + ea,
+            }
+          },
+          {
+            text: "3개 이상",
+            style: {
+              display: "inline-block",
+              fontSize: String(15) + ea,
+              fontWeight: String(300),
+              color: colorChip.deactive,
+              marginRight: String(10) + ea,
+            }
+          }
+        ]
+      },
+      {
+        text: "발코니" + blank + "<b%|%b>",
+        style: {
+          position: "absolute",
+          left: String(666) + ea,
+          top: String(0) + ea,
+          fontSize: String(mainSize) + ea,
+          fontWeight: String(300),
+          color: colorChip.black,
+          verticalAlign: "top",
+        },
+        bold: {
+          fontWeight: String(200),
+          color: colorChip.green,
+        }
+      },
+      {
+        style: {
+          position: "absolute",
+          left: String(774) + ea,
+          top: String(4) + ea,
+        },
+        children: [
+          {
+            text: "확장 없음",
+            style: {
+              display: "inline-block",
+              fontSize: String(15) + ea,
+              fontWeight: String(300),
+              color: colorChip.deactive,
+              marginRight: String(10) + ea,
+            }
+          },
+          {
+            text: "확장",
+            style: {
+              display: "inline-block",
+              fontSize: String(15) + ea,
+              fontWeight: String(300),
+              color: colorChip.deactive,
+              marginRight: String(10) + ea,
+            }
+          }
+        ]
+      },
     ]
   });
 
@@ -822,10 +1538,10 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       {
         style: {
           position: "absolute",
-          top: String(grayTop) + ea,
-          left: String(125) + ea,
-          width: String(740) + ea,
-          height: String(115) + ea,
+          top: String(grayTextAreaTop) + ea,
+          left: String(leftGrayType2) + ea,
+          width: String(widthGrayType2) + ea,
+          height: String(grayBigHeight) + ea,
           background: colorChip.gray1,
           borderRadius: String(3) + "px",
         }
@@ -1062,9 +1778,7 @@ ClientConsultingJs.prototype.insertPannelBox = function () {
                   }
                 }
                 if (pass) {
-
                   instance.parsingValues();
-
                 }
               }
             }
@@ -1081,7 +1795,7 @@ ClientConsultingJs.prototype.insertPannelBox = function () {
         },
         children: [
           {
-            text: "신청 완료하기",
+            text: "신청 계속하기",
             style: {
               position: "absolute",
               top: String(buttonTextTop) + ea,
