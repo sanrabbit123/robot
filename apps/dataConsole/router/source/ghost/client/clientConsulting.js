@@ -111,7 +111,8 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   let spaceStatusBoxTop;
   let spaceStatusBoxFactorSize, spaceStatusBoxFactorWeight, spaceStatusBoxFactorMargin;
   let textareaTop, textareaLeft;
-  let checkboxClickEvent0;
+  let checkboxClickEvent0, checkboxClickEvent1;
+  let budgetTriangleTop, budgetTriangleWidth;
 
   blockHeight = <%% 906, 906, 906, 906, 90 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
@@ -226,6 +227,9 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   textareaTop = 10;
   textareaLeft = 15;
 
+  budgetTriangleTop = -11;
+  budgetTriangleWidth = 8;
+
   checkboxClickEvent0 = async function (e) {
     try {
       const property = this.getAttribute("property");
@@ -244,6 +248,30 @@ ClientConsultingJs.prototype.insertInitBox = function () {
             dom.children[0].style.opacity = String(1);
             dom.children[1].style.opacity = String(0);
             dom.children[2].style.color = colorChip.black;
+          }
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  checkboxClickEvent1 = async function (e) {
+    try {
+      const property = this.getAttribute("property");
+      const toggle = this.getAttribute("toggle");
+      const targetsAll = [ ...document.querySelectorAll("." + inputClassName) ];
+      const targets = targetsAll.filter((dom) => { return dom.getAttribute("property") === property });
+      if (toggle === "off") {
+        for (let dom of targets) {
+          if (dom === this) {
+            dom.setAttribute("toggle", "on");
+            dom.style.color = colorChip.green;
+            dom.parentElement.children[0].style.opacity = String(1);
+          } else {
+            dom.setAttribute("toggle", "off");
+            dom.style.color = colorChip.deactive;
+            dom.parentElement.children[0].style.opacity = String(0);
           }
         }
       }
@@ -1374,14 +1402,36 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         },
         children: [
           {
+            mode: "svg",
+            source: this.mother.returnTriangle(colorChip.green),
+            style: {
+              position: "absolute",
+              top: String(budgetTriangleTop) + ea,
+              right: String(-1 * ((budgetTriangleWidth / 2) + (1 / 2))) + ea,
+              width: String(budgetTriangleWidth) + ea,
+              opacity: String(1),
+              transition: "all 0s ease",
+            }
+          },
+          {
+            class: [ inputClassName ],
+            attribute: {
+              toggle: "on",
+              property: "budget",
+            },
+            event: {
+              click: checkboxClickEvent1,
+            },
             text: "500만원 이하",
             style: {
               position: "absolute",
               fontSize: String(grayLineBlockFontSize) + ea,
               fontWeight: String(grayLineBlockFontWeight),
-              color: colorChip.deactive,
+              color: colorChip.green,
               right: String(grayLineBlockFontRight0) + ea,
               top: String(grayLineBlockFontTop) + ea,
+              cursor: "pointer",
+              transition: "all 0.5s ease",
             }
           }
         ]
@@ -1399,6 +1449,26 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         },
         children: [
           {
+            mode: "svg",
+            source: this.mother.returnTriangle(colorChip.green),
+            style: {
+              position: "absolute",
+              top: String(budgetTriangleTop) + ea,
+              right: String(-1 * ((budgetTriangleWidth / 2) + (1 / 2))) + ea,
+              width: String(budgetTriangleWidth) + ea,
+              opacity: String(0),
+              transition: "all 0s ease",
+            }
+          },
+          {
+            class: [ inputClassName ],
+            attribute: {
+              toggle: "off",
+              property: "budget",
+            },
+            event: {
+              click: checkboxClickEvent1,
+            },
             text: "1,000만원",
             style: {
               position: "absolute",
@@ -1407,6 +1477,8 @@ ClientConsultingJs.prototype.insertInitBox = function () {
               color: colorChip.deactive,
               right: String(grayLineBlockFontRight1) + ea,
               top: String(grayLineBlockFontTop) + ea,
+              cursor: "pointer",
+              transition: "all 0.5s ease",
             }
           }
         ]
@@ -1424,6 +1496,26 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         },
         children: [
           {
+            mode: "svg",
+            source: this.mother.returnTriangle(colorChip.green),
+            style: {
+              position: "absolute",
+              top: String(budgetTriangleTop) + ea,
+              right: String(-1 * ((budgetTriangleWidth / 2) + (1 / 2))) + ea,
+              width: String(budgetTriangleWidth) + ea,
+              opacity: String(0),
+              transition: "all 0s ease",
+            }
+          },
+          {
+            class: [ inputClassName ],
+            attribute: {
+              toggle: "off",
+              property: "budget",
+            },
+            event: {
+              click: checkboxClickEvent1,
+            },
             text: "1,500만원",
             style: {
               position: "absolute",
@@ -1432,6 +1524,8 @@ ClientConsultingJs.prototype.insertInitBox = function () {
               color: colorChip.deactive,
               right: String(grayLineBlockFontRight1) + ea,
               top: String(grayLineBlockFontTop) + ea,
+              cursor: "pointer",
+              transition: "all 0.5s ease",
             }
           }
         ]
@@ -1449,14 +1543,36 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         },
         children: [
           {
+            mode: "svg",
+            source: this.mother.returnTriangle(colorChip.green),
+            style: {
+              position: "absolute",
+              top: String(budgetTriangleTop) + ea,
+              right: String(-1 * ((budgetTriangleWidth / 2) + (1 / 2))) + ea,
+              width: String(budgetTriangleWidth) + ea,
+              opacity: String(0),
+              transition: "all 0s ease",
+            }
+          },
+          {
+            class: [ inputClassName ],
+            attribute: {
+              toggle: "off",
+              property: "budget",
+            },
+            event: {
+              click: checkboxClickEvent1,
+            },
             text: "2,000만원",
             style: {
+              cursor: "pointer",
               position: "absolute",
               fontSize: String(grayLineBlockFontSize) + ea,
               fontWeight: String(grayLineBlockFontWeight),
               color: colorChip.deactive,
               right: String(grayLineBlockFontRight2) + ea,
               top: String(grayLineBlockFontTop) + ea,
+              transition: "all 0.5s ease",
             }
           }
         ]
@@ -1474,14 +1590,36 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         },
         children: [
           {
+            mode: "svg",
+            source: this.mother.returnTriangle(colorChip.green),
+            style: {
+              position: "absolute",
+              top: String(budgetTriangleTop) + ea,
+              right: String(-1 * ((budgetTriangleWidth / 2) + (1 / 2))) + ea,
+              width: String(budgetTriangleWidth) + ea,
+              opacity: String(0),
+              transition: "all 0s ease",
+            }
+          },
+          {
+            class: [ inputClassName ],
+            attribute: {
+              toggle: "off",
+              property: "budget",
+            },
+            event: {
+              click: checkboxClickEvent1,
+            },
             text: "2,500만원",
             style: {
+              cursor: "pointer",
               position: "absolute",
               fontSize: String(grayLineBlockFontSize) + ea,
               fontWeight: String(grayLineBlockFontWeight),
               color: colorChip.deactive,
               right: String(grayLineBlockFontRight2) + ea,
               top: String(grayLineBlockFontTop) + ea,
+              transition: "all 0.5s ease",
             }
           }
         ]
@@ -1499,14 +1637,36 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         },
         children: [
           {
+            mode: "svg",
+            source: this.mother.returnTriangle(colorChip.green),
+            style: {
+              position: "absolute",
+              top: String(budgetTriangleTop) + ea,
+              right: String(-1 * ((budgetTriangleWidth / 2) + (1 / 2))) + ea,
+              width: String(budgetTriangleWidth) + ea,
+              opacity: String(0),
+              transition: "all 0s ease",
+            }
+          },
+          {
+            class: [ inputClassName ],
+            attribute: {
+              toggle: "off",
+              property: "budget",
+            },
+            event: {
+              click: checkboxClickEvent1,
+            },
             text: "3,000만원",
             style: {
+              cursor: "pointer",
               position: "absolute",
               fontSize: String(grayLineBlockFontSize) + ea,
               fontWeight: String(grayLineBlockFontWeight),
               color: colorChip.deactive,
               right: String(grayLineBlockFontRight2) + ea,
               top: String(grayLineBlockFontTop) + ea,
+              transition: "all 0.5s ease",
             }
           }
         ]
@@ -1524,14 +1684,36 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         },
         children: [
           {
+            mode: "svg",
+            source: this.mother.returnTriangle(colorChip.green),
+            style: {
+              position: "absolute",
+              top: String(budgetTriangleTop) + ea,
+              right: String(-1 * ((budgetTriangleWidth / 2) + (1 / 2))) + ea,
+              width: String(budgetTriangleWidth) + ea,
+              opacity: String(0),
+              transition: "all 0s ease",
+            }
+          },
+          {
+            class: [ inputClassName ],
+            attribute: {
+              toggle: "off",
+              property: "budget",
+            },
+            event: {
+              click: checkboxClickEvent1,
+            },
             text: "4,000만원",
             style: {
+              cursor: "pointer",
               position: "absolute",
               fontSize: String(grayLineBlockFontSize) + ea,
               fontWeight: String(grayLineBlockFontWeight),
               color: colorChip.deactive,
               right: String(grayLineBlockFontRight2) + ea,
               top: String(grayLineBlockFontTop) + ea,
+              transition: "all 0.5s ease",
             }
           }
         ]
@@ -1549,14 +1731,36 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         },
         children: [
           {
+            mode: "svg",
+            source: this.mother.returnTriangle(colorChip.green),
+            style: {
+              position: "absolute",
+              top: String(budgetTriangleTop) + ea,
+              right: String(-1 * ((budgetTriangleWidth / 2) + (1 / 2))) + ea,
+              width: String(budgetTriangleWidth) + ea,
+              opacity: String(0),
+              transition: "all 0s ease",
+            }
+          },
+          {
+            class: [ inputClassName ],
+            attribute: {
+              toggle: "off",
+              property: "budget",
+            },
+            event: {
+              click: checkboxClickEvent1,
+            },
             text: "5,000만원 이상",
             style: {
+              cursor: "pointer",
               position: "absolute",
               fontSize: String(grayLineBlockFontSize) + ea,
               fontWeight: String(grayLineBlockFontWeight),
               color: colorChip.deactive,
               right: String(grayLineBlockFontRight3) + ea,
               top: String(grayLineBlockFontTop) + ea,
+              transition: "all 0.5s ease",
             }
           }
         ]
