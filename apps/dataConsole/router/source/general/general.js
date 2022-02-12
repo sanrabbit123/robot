@@ -621,6 +621,7 @@ GeneralJs.prototype.generalCss = function () {
   *::-webkit-scrollbar{display:none;}
   body{transition:all 0s ease;}
   input::placeholder {color:${GeneralJs.colorChip.black};opacity:0.5;}
+  textarea::placeholder {color:${GeneralJs.colorChip.black};opacity:0.5;}
   body,div{font-size:0;color:${GeneralJs.colorChip.black};margin:0;}
   a{text-decoration:inherit;color:inherit;-webkit-tap-highlight-color:rgba(0,0,0,0);background:0 0;outline:0}
   textarea{resize:none}

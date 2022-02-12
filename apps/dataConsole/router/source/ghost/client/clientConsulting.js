@@ -49,6 +49,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   const { ea, media, osException, testMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const inputClassName = "consultingInput";
   let whiteBlock;
   let style;
   let blockHeight, bottomMargin;
@@ -91,6 +92,26 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   let blank;
   let marginRatio;
   let initWordingLineHeight;
+  let leftCheck0, leftCheck1;
+  let checkboxWidth;
+  let checkboxTop;
+  let checkboxBetween;
+  let checkboxWeight;
+  let grayLineWidth;
+  let grayLineTop;
+  let grayLineBlockTop;
+  let grayLineBlockHeight;
+  let grayLineBlockWidth0, grayLineBlockWidth1, grayLineBlockWidth2;
+  let grayLineBlockFontSize, grayLineBlockFontWeight;
+  let grayLineBlockFontTop;
+  let grayLineBlockFontRight0, grayLineBlockFontRight1, grayLineBlockFontRight2, grayLineBlockFontRight3;
+  let spaceStatusLeft0, spaceStatusLeft1;
+  let spaceStatusWeight, spaceStatusBarWeight;
+  let spaceStatusBoxLeft0, spaceStatusBoxLeft1, spaceStatusBoxLeft2;
+  let spaceStatusBoxTop;
+  let spaceStatusBoxFactorSize, spaceStatusBoxFactorWeight, spaceStatusBoxFactorMargin;
+  let textareaTop, textareaLeft;
+  let checkboxClickEvent0;
 
   blockHeight = <%% 906, 906, 906, 906, 90 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
@@ -140,7 +161,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   grayTop = 0;
   grayInputTop = -2;
   grayHeight = 32;
-  grayBigHeight = 115;
+  grayBigHeight = 114;
   grayTextAreaTop = 3;
 
   moduleHeight = grayTop + grayHeight;
@@ -161,7 +182,75 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   addressWeight = 600;
   addressTop = 5;
 
+  leftCheck0 = 439;
+  leftCheck1 = 514;
+  checkboxWidth = 9;
+  checkboxTop = 9;
+  checkboxBetween = 8;
+  checkboxWeight = 300;
+
   marginRatio = 1.5;
+
+  grayLineWidth = 772;
+  grayLineTop = 12;
+  grayLineBlockTop = 7;
+
+  grayLineBlockHeight = 12;
+  grayLineBlockWidth0 = 105;
+  grayLineBlockWidth1 = 92;
+  grayLineBlockWidth2 = 106;
+
+  grayLineBlockFontSize = 14;
+  grayLineBlockFontWeight = 400;
+  grayLineBlockFontTop = 15;
+
+  grayLineBlockFontRight0 = -37;
+  grayLineBlockFontRight1 = -31;
+  grayLineBlockFontRight2 = -32;
+  grayLineBlockFontRight3 = -45;
+
+  spaceStatusLeft0 = 406;
+  spaceStatusLeft1 = 696;
+  spaceStatusWeight = 300;
+  spaceStatusBarWeight = 200;
+
+  spaceStatusBoxLeft0 = 215;
+  spaceStatusBoxLeft1 = 531;
+  spaceStatusBoxLeft2 = 780;
+  spaceStatusBoxTop = 4;
+
+  spaceStatusBoxFactorSize = 15;
+  spaceStatusBoxFactorWeight = 300;
+  spaceStatusBoxFactorMargin = 10;
+
+  textareaTop = 10;
+  textareaLeft = 15;
+
+  checkboxClickEvent0 = async function (e) {
+    try {
+      const property = this.getAttribute("property");
+      const toggle = this.getAttribute("toggle");
+      const targetsAll = [ ...document.querySelectorAll("." + inputClassName) ];
+      const targets = targetsAll.filter((dom) => { return dom.getAttribute("property") === property });
+      if (toggle === "off") {
+        for (let dom of targets) {
+          if (dom === this) {
+            dom.setAttribute("toggle", "on");
+            dom.children[0].style.opacity = String(0);
+            dom.children[1].style.opacity = String(1);
+            dom.children[2].style.color = colorChip.green;
+          } else {
+            dom.setAttribute("toggle", "off");
+            dom.children[0].style.opacity = String(1);
+            dom.children[1].style.opacity = String(0);
+            dom.children[2].style.color = colorChip.black;
+          }
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   blank = "&nbsp;&nbsp;&nbsp;";
 
@@ -180,6 +269,8 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   } else {
     initWording1 = "담당 디자이너가 고객님의 예산을 현장에 맞게 분배하여 스타일링을 진행합니다.";
   }
+
+
 
   whiteBlock = createNode({
     mother: this.baseTong,
@@ -403,6 +494,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       },
       {
         mode: "input",
+        class: [ inputClassName ],
         attribute: {
           type: "text",
           placeholder: "성함",
@@ -487,6 +579,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       },
       {
         mode: "input",
+        class: [ inputClassName ],
         attribute: {
           type: "text",
           placeholder: "인테리어 받을 곳의 주소",
@@ -560,6 +653,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       },
       {
         mode: "input",
+        class: [ inputClassName ],
         attribute: {
           type: "text",
           placeholder: "010-0000-0000",
@@ -594,6 +688,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       },
       {
         mode: "input",
+        class: [ inputClassName ],
         attribute: {
           type: "text",
           placeholder: "상세 주소",
@@ -666,6 +761,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       },
       {
         mode: "input",
+        class: [ inputClassName ],
         attribute: {
           type: "text",
           placeholder: "가족 구성원 (예) 부부, 딸 0명, 아들 0명",
@@ -738,6 +834,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       },
       {
         mode: "input",
+        class: [ inputClassName ],
         attribute: {
           type: "text",
           placeholder: "example@home-liaison.com",
@@ -822,6 +919,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       },
       {
         mode: "input",
+        class: [ inputClassName ],
         attribute: {
           type: "text",
           placeholder: "00평 (분양 평수)",
@@ -868,50 +966,124 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         }
       },
       {
-        mode: "svg",
-        source: instance.mother.returnCheckBox(colorChip.gray3),
+        class: [ inputClassName ],
+        attribute: {
+          toggle: "on",
+          property: "contract",
+        },
+        event: {
+          click: checkboxClickEvent0
+        },
         style: {
           position: "absolute",
-          left: String(439) + ea,
-          width: String(9) + ea,
-          top: String(9) + ea,
+          top: String(0),
+          left: String(leftCheck0) + ea,
+          height: String(100) + '%',
           verticalAlign: "top",
-        }
+          cursor: "pointer",
+        },
+        children: [
+          {
+            mode: "svg",
+            source: instance.mother.returnCheckBox(colorChip.gray3),
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(checkboxWidth) + ea,
+              top: String(checkboxTop) + ea,
+              verticalAlign: "top",
+              cursor: "pointer",
+              opacity: String(0),
+            }
+          },
+          {
+            mode: "svg",
+            source: instance.mother.returnCheckBox(colorChip.green),
+            style: {
+              position: "absolute",
+              width: String(checkboxWidth) + ea,
+              top: String(checkboxTop) + ea,
+              left: String(0),
+              verticalAlign: "top",
+              cursor: "pointer",
+              opacity: String(1),
+            }
+          },
+          {
+            text: "자가",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              marginLeft: String(checkboxBetween) + ea,
+              top: String(0) + ea,
+              fontSize: String(mainSize) + ea,
+              fontWeight: String(checkboxWeight),
+              color: colorChip.green,
+              verticalAlign: "top",
+              cursor: "pointer",
+            }
+          },
+        ]
       },
       {
-        text: "자가",
+        class: [ inputClassName ],
+        attribute: {
+          toggle: "off",
+          property: "contract",
+        },
+        event: {
+          click: checkboxClickEvent0
+        },
         style: {
           position: "absolute",
-          left: String(456) + ea,
-          top: String(0) + ea,
-          fontSize: String(mainSize) + ea,
-          fontWeight: String(300),
-          color: colorChip.black,
+          top: String(0),
+          left: String(leftCheck1) + ea,
+          height: String(100) + '%',
           verticalAlign: "top",
-        }
-      },
-      {
-        mode: "svg",
-        source: instance.mother.returnCheckBox(colorChip.gray3),
-        style: {
-          position: "absolute",
-          left: String(511) + ea,
-          width: String(9) + ea,
-          top: String(9) + ea,
-          verticalAlign: "top",
-        }
-      },
-      {
-        text: "전월세",
-        style: {
-          position: "absolute",
-          left: String(528) + ea,
-          top: String(0) + ea,
-          fontSize: String(mainSize) + ea,
-          fontWeight: String(300),
-          color: colorChip.black,
-          verticalAlign: "top",
-        }
+          cursor: "pointer",
+        },
+        children: [
+          {
+            mode: "svg",
+            source: instance.mother.returnCheckBox(colorChip.gray3),
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(checkboxWidth) + ea,
+              top: String(checkboxTop) + ea,
+              verticalAlign: "top",
+              cursor: "pointer",
+              opacity: String(1),
+            }
+          },
+          {
+            mode: "svg",
+            source: instance.mother.returnCheckBox(colorChip.green),
+            style: {
+              position: "absolute",
+              width: String(checkboxWidth) + ea,
+              top: String(checkboxTop) + ea,
+              left: String(0),
+              verticalAlign: "top",
+              cursor: "pointer",
+              opacity: String(0),
+            }
+          },
+          {
+            text: "전월세",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              marginLeft: String(checkboxBetween) + ea,
+              top: String(0) + ea,
+              fontSize: String(mainSize) + ea,
+              fontWeight: String(checkboxWeight),
+              color: colorChip.black,
+              verticalAlign: "top",
+              cursor: "pointer",
+            }
+          },
+        ]
       },
     ]
   });
@@ -964,6 +1136,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       },
       {
         mode: "input",
+        class: [ inputClassName ],
         attribute: {
           type: "text",
           placeholder: dateToString(new Date()),
@@ -1010,50 +1183,124 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         }
       },
       {
-        mode: "svg",
-        source: instance.mother.returnCheckBox(colorChip.gray3),
+        class: [ inputClassName ],
+        attribute: {
+          toggle: "on",
+          property: "living",
+        },
+        event: {
+          click: checkboxClickEvent0
+        },
         style: {
           position: "absolute",
-          left: String(439) + ea,
-          width: String(9) + ea,
-          top: String(9) + ea,
+          top: String(0),
+          left: String(leftCheck0) + ea,
+          height: String(100) + '%',
           verticalAlign: "top",
-        }
+          cursor: "pointer",
+        },
+        children: [
+          {
+            mode: "svg",
+            source: instance.mother.returnCheckBox(colorChip.gray3),
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(checkboxWidth) + ea,
+              top: String(checkboxTop) + ea,
+              verticalAlign: "top",
+              cursor: "pointer",
+              opacity: String(0),
+            }
+          },
+          {
+            mode: "svg",
+            source: instance.mother.returnCheckBox(colorChip.green),
+            style: {
+              position: "absolute",
+              width: String(checkboxWidth) + ea,
+              top: String(checkboxTop) + ea,
+              left: String(0),
+              verticalAlign: "top",
+              cursor: "pointer",
+              opacity: String(1),
+            }
+          },
+          {
+            text: "이사",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              marginLeft: String(checkboxBetween) + ea,
+              top: String(0) + ea,
+              fontSize: String(mainSize) + ea,
+              fontWeight: String(checkboxWeight),
+              color: colorChip.green,
+              verticalAlign: "top",
+              cursor: "pointer",
+            }
+          },
+        ]
       },
       {
-        text: "이사",
+        class: [ inputClassName ],
+        attribute: {
+          toggle: "off",
+          property: "living",
+        },
+        event: {
+          click: checkboxClickEvent0
+        },
         style: {
           position: "absolute",
-          left: String(456) + ea,
-          top: String(0) + ea,
-          fontSize: String(mainSize) + ea,
-          fontWeight: String(300),
-          color: colorChip.black,
+          top: String(0),
+          left: String(leftCheck1) + ea,
+          height: String(100) + '%',
           verticalAlign: "top",
-        }
-      },
-      {
-        mode: "svg",
-        source: instance.mother.returnCheckBox(colorChip.gray3),
-        style: {
-          position: "absolute",
-          left: String(511) + ea,
-          width: String(9) + ea,
-          top: String(9) + ea,
-          verticalAlign: "top",
-        }
-      },
-      {
-        text: "거주중",
-        style: {
-          position: "absolute",
-          left: String(528) + ea,
-          top: String(0) + ea,
-          fontSize: String(mainSize) + ea,
-          fontWeight: String(300),
-          color: colorChip.black,
-          verticalAlign: "top",
-        }
+          cursor: "pointer",
+        },
+        children: [
+          {
+            mode: "svg",
+            source: instance.mother.returnCheckBox(colorChip.gray3),
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(checkboxWidth) + ea,
+              top: String(checkboxTop) + ea,
+              verticalAlign: "top",
+              cursor: "pointer",
+              opacity: String(1),
+            }
+          },
+          {
+            mode: "svg",
+            source: instance.mother.returnCheckBox(colorChip.green),
+            style: {
+              position: "absolute",
+              width: String(checkboxWidth) + ea,
+              top: String(checkboxTop) + ea,
+              left: String(0),
+              verticalAlign: "top",
+              cursor: "pointer",
+              opacity: String(0),
+            }
+          },
+          {
+            text: "거주중",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              marginLeft: String(checkboxBetween) + ea,
+              top: String(0) + ea,
+              fontSize: String(mainSize) + ea,
+              fontWeight: String(checkboxWeight),
+              color: colorChip.black,
+              verticalAlign: "top",
+              cursor: "pointer",
+            }
+          },
+        ]
       },
     ]
   });
@@ -1109,8 +1356,8 @@ ClientConsultingJs.prototype.insertInitBox = function () {
           position: "absolute",
           top: String(grayTop) + ea,
           left: String(leftGrayType0) + ea,
-          width: String(772) + ea,
-          height: String(12) + ea,
+          width: String(grayLineWidth) + ea,
+          height: String(grayLineTop) + ea,
           borderBottom: "1px solid " + colorChip.gray4
         }
       },
@@ -1118,23 +1365,23 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         style: {
           display: "inline-block",
           position: "relative",
-          top: String(7) + ea,
+          top: String(grayLineBlockTop) + ea,
           color: colorChip.black,
           verticalAlign: "top",
-          width: String(105) + ea,
+          width: String(grayLineBlockWidth0) + ea,
           borderRight: "1px solid " + colorChip.gray4,
-          height: String(12) + ea,
+          height: String(grayLineBlockHeight) + ea,
         },
         children: [
           {
             text: "500만원 이하",
             style: {
               position: "absolute",
-              fontSize: String(14) + ea,
-              fontWeight: String(400),
+              fontSize: String(grayLineBlockFontSize) + ea,
+              fontWeight: String(grayLineBlockFontWeight),
               color: colorChip.deactive,
-              right: String(-37) + ea,
-              top: String(15) + ea,
+              right: String(grayLineBlockFontRight0) + ea,
+              top: String(grayLineBlockFontTop) + ea,
             }
           }
         ]
@@ -1143,23 +1390,23 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         style: {
           display: "inline-block",
           position: "relative",
-          top: String(7) + ea,
+          top: String(grayLineBlockTop) + ea,
           color: colorChip.black,
           verticalAlign: "top",
-          width: String(95) + ea,
+          width: String(grayLineBlockWidth1) + ea,
           borderRight: "1px solid " + colorChip.gray4,
-          height: String(12) + ea,
+          height: String(grayLineBlockHeight) + ea,
         },
         children: [
           {
             text: "1,000만원",
             style: {
               position: "absolute",
-              fontSize: String(14) + ea,
-              fontWeight: String(400),
+              fontSize: String(grayLineBlockFontSize) + ea,
+              fontWeight: String(grayLineBlockFontWeight),
               color: colorChip.deactive,
-              right: String(-31) + ea,
-              top: String(15) + ea,
+              right: String(grayLineBlockFontRight1) + ea,
+              top: String(grayLineBlockFontTop) + ea,
             }
           }
         ]
@@ -1168,23 +1415,23 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         style: {
           display: "inline-block",
           position: "relative",
-          top: String(7) + ea,
+          top: String(grayLineBlockTop) + ea,
           color: colorChip.black,
           verticalAlign: "top",
-          width: String(92) + ea,
+          width: String(grayLineBlockWidth1) + ea,
           borderRight: "1px solid " + colorChip.gray4,
-          height: String(12) + ea,
+          height: String(grayLineBlockHeight) + ea,
         },
         children: [
           {
             text: "1,500만원",
             style: {
               position: "absolute",
-              fontSize: String(14) + ea,
-              fontWeight: String(400),
+              fontSize: String(grayLineBlockFontSize) + ea,
+              fontWeight: String(grayLineBlockFontWeight),
               color: colorChip.deactive,
-              right: String(-31) + ea,
-              top: String(15) + ea,
+              right: String(grayLineBlockFontRight1) + ea,
+              top: String(grayLineBlockFontTop) + ea,
             }
           }
         ]
@@ -1193,23 +1440,23 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         style: {
           display: "inline-block",
           position: "relative",
-          top: String(7) + ea,
+          top: String(grayLineBlockTop) + ea,
           color: colorChip.black,
           verticalAlign: "top",
-          width: String(92) + ea,
+          width: String(grayLineBlockWidth1) + ea,
           borderRight: "1px solid " + colorChip.gray4,
-          height: String(12) + ea,
+          height: String(grayLineBlockHeight) + ea,
         },
         children: [
           {
             text: "2,000만원",
             style: {
               position: "absolute",
-              fontSize: String(14) + ea,
-              fontWeight: String(400),
+              fontSize: String(grayLineBlockFontSize) + ea,
+              fontWeight: String(grayLineBlockFontWeight),
               color: colorChip.deactive,
-              right: String(-32) + ea,
-              top: String(15) + ea,
+              right: String(grayLineBlockFontRight2) + ea,
+              top: String(grayLineBlockFontTop) + ea,
             }
           }
         ]
@@ -1218,23 +1465,23 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         style: {
           display: "inline-block",
           position: "relative",
-          top: String(7) + ea,
+          top: String(grayLineBlockTop) + ea,
           color: colorChip.black,
           verticalAlign: "top",
-          width: String(92) + ea,
+          width: String(grayLineBlockWidth1) + ea,
           borderRight: "1px solid " + colorChip.gray4,
-          height: String(12) + ea,
+          height: String(grayLineBlockHeight) + ea,
         },
         children: [
           {
             text: "2,500만원",
             style: {
               position: "absolute",
-              fontSize: String(14) + ea,
-              fontWeight: String(400),
+              fontSize: String(grayLineBlockFontSize) + ea,
+              fontWeight: String(grayLineBlockFontWeight),
               color: colorChip.deactive,
-              right: String(-32) + ea,
-              top: String(15) + ea,
+              right: String(grayLineBlockFontRight2) + ea,
+              top: String(grayLineBlockFontTop) + ea,
             }
           }
         ]
@@ -1243,23 +1490,23 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         style: {
           display: "inline-block",
           position: "relative",
-          top: String(7) + ea,
+          top: String(grayLineBlockTop) + ea,
           color: colorChip.black,
           verticalAlign: "top",
-          width: String(92) + ea,
+          width: String(grayLineBlockWidth1) + ea,
           borderRight: "1px solid " + colorChip.gray4,
-          height: String(12) + ea,
+          height: String(grayLineBlockHeight) + ea,
         },
         children: [
           {
             text: "3,000만원",
             style: {
               position: "absolute",
-              fontSize: String(14) + ea,
-              fontWeight: String(400),
+              fontSize: String(grayLineBlockFontSize) + ea,
+              fontWeight: String(grayLineBlockFontWeight),
               color: colorChip.deactive,
-              right: String(-32) + ea,
-              top: String(15) + ea,
+              right: String(grayLineBlockFontRight2) + ea,
+              top: String(grayLineBlockFontTop) + ea,
             }
           }
         ]
@@ -1268,23 +1515,23 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         style: {
           display: "inline-block",
           position: "relative",
-          top: String(7) + ea,
+          top: String(grayLineBlockTop) + ea,
           color: colorChip.black,
           verticalAlign: "top",
-          width: String(92) + ea,
+          width: String(grayLineBlockWidth1) + ea,
           borderRight: "1px solid " + colorChip.gray4,
-          height: String(12) + ea,
+          height: String(grayLineBlockHeight) + ea,
         },
         children: [
           {
             text: "4,000만원",
             style: {
               position: "absolute",
-              fontSize: String(14) + ea,
-              fontWeight: String(400),
+              fontSize: String(grayLineBlockFontSize) + ea,
+              fontWeight: String(grayLineBlockFontWeight),
               color: colorChip.deactive,
-              right: String(-32) + ea,
-              top: String(15) + ea,
+              right: String(grayLineBlockFontRight2) + ea,
+              top: String(grayLineBlockFontTop) + ea,
             }
           }
         ]
@@ -1293,23 +1540,23 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         style: {
           display: "inline-block",
           position: "relative",
-          top: String(7) + ea,
+          top: String(grayLineBlockTop) + ea,
           color: colorChip.black,
           verticalAlign: "top",
-          width: String(106) + ea,
+          width: String(grayLineBlockWidth2) + ea,
           borderRight: "1px solid " + colorChip.gray4,
-          height: String(12) + ea,
+          height: String(grayLineBlockHeight) + ea,
         },
         children: [
           {
             text: "5,000만원 이상",
             style: {
               position: "absolute",
-              fontSize: String(14) + ea,
-              fontWeight: String(400),
+              fontSize: String(grayLineBlockFontSize) + ea,
+              fontWeight: String(grayLineBlockFontWeight),
               color: colorChip.deactive,
-              right: String(-45) + ea,
-              top: String(15) + ea,
+              right: String(grayLineBlockFontRight3) + ea,
+              top: String(grayLineBlockFontTop) + ea,
             }
           }
         ]
@@ -1370,58 +1617,58 @@ ClientConsultingJs.prototype.insertInitBox = function () {
           left: String(leftGrayType2) + ea,
           top: String(0) + ea,
           fontSize: String(mainSize) + ea,
-          fontWeight: String(300),
+          fontWeight: String(spaceStatusWeight),
           color: colorChip.black,
           verticalAlign: "top",
         },
         bold: {
-          fontWeight: String(200),
+          fontWeight: String(spaceStatusBarWeight),
           color: colorChip.green,
         }
       },
       {
         style: {
           position: "absolute",
-          left: String(215) + ea,
-          top: String(4) + ea,
+          left: String(spaceStatusBoxLeft0) + ea,
+          top: String(spaceStatusBoxTop) + ea,
         },
         children: [
           {
             text: "1개",
             style: {
               display: "inline-block",
-              fontSize: String(15) + ea,
-              fontWeight: String(300),
+              fontSize: String(spaceStatusBoxFactorSize) + ea,
+              fontWeight: String(spaceStatusBoxFactorWeight),
               color: colorChip.deactive,
-              marginRight: String(10) + ea,
+              marginRight: String(spaceStatusBoxFactorMargin) + ea,
             }
           },
           {
             text: "2개",
             style: {
               display: "inline-block",
-              fontSize: String(15) + ea,
-              fontWeight: String(300),
+              fontSize: String(spaceStatusBoxFactorSize) + ea,
+              fontWeight: String(spaceStatusBoxFactorWeight),
               color: colorChip.deactive,
-              marginRight: String(10) + ea,
+              marginRight: String(spaceStatusBoxFactorMargin) + ea,
             }
           },
           {
             text: "3개",
             style: {
               display: "inline-block",
-              fontSize: String(15) + ea,
-              fontWeight: String(300),
+              fontSize: String(spaceStatusBoxFactorSize) + ea,
+              fontWeight: String(spaceStatusBoxFactorWeight),
               color: colorChip.deactive,
-              marginRight: String(10) + ea,
+              marginRight: String(spaceStatusBoxFactorMargin) + ea,
             }
           },
           {
             text: "4개 이상",
             style: {
               display: "inline-block",
-              fontSize: String(15) + ea,
-              fontWeight: String(300),
+              fontSize: String(spaceStatusBoxFactorSize) + ea,
+              fontWeight: String(spaceStatusBoxFactorWeight),
               color: colorChip.deactive,
             }
           },
@@ -1431,53 +1678,53 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         text: "화장실 개수" + blank + "<b%|%b>",
         style: {
           position: "absolute",
-          left: String(406) + ea,
+          left: String(spaceStatusLeft0) + ea,
           top: String(0) + ea,
           fontSize: String(mainSize) + ea,
-          fontWeight: String(300),
+          fontWeight: String(spaceStatusWeight),
           color: colorChip.black,
           verticalAlign: "top",
         },
         bold: {
-          fontWeight: String(200),
+          fontWeight: String(spaceStatusBarWeight),
           color: colorChip.green,
         }
       },
       {
         style: {
           position: "absolute",
-          left: String(531) + ea,
-          top: String(4) + ea,
+          left: String(spaceStatusBoxLeft1) + ea,
+          top: String(spaceStatusBoxTop) + ea,
         },
         children: [
           {
             text: "1개",
             style: {
               display: "inline-block",
-              fontSize: String(15) + ea,
-              fontWeight: String(300),
+              fontSize: String(spaceStatusBoxFactorSize) + ea,
+              fontWeight: String(spaceStatusBoxFactorWeight),
               color: colorChip.deactive,
-              marginRight: String(10) + ea,
+              marginRight: String(spaceStatusBoxFactorMargin) + ea,
             }
           },
           {
             text: "2개",
             style: {
               display: "inline-block",
-              fontSize: String(15) + ea,
-              fontWeight: String(300),
+              fontSize: String(spaceStatusBoxFactorSize) + ea,
+              fontWeight: String(spaceStatusBoxFactorWeight),
               color: colorChip.deactive,
-              marginRight: String(10) + ea,
+              marginRight: String(spaceStatusBoxFactorMargin) + ea,
             }
           },
           {
             text: "3개 이상",
             style: {
               display: "inline-block",
-              fontSize: String(15) + ea,
-              fontWeight: String(300),
+              fontSize: String(spaceStatusBoxFactorSize) + ea,
+              fontWeight: String(spaceStatusBoxFactorWeight),
               color: colorChip.deactive,
-              marginRight: String(10) + ea,
+              marginRight: String(spaceStatusBoxFactorMargin) + ea,
             }
           }
         ]
@@ -1486,43 +1733,43 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         text: "발코니" + blank + "<b%|%b>",
         style: {
           position: "absolute",
-          left: String(696) + ea,
+          left: String(spaceStatusLeft1) + ea,
           top: String(0) + ea,
           fontSize: String(mainSize) + ea,
-          fontWeight: String(300),
+          fontWeight: String(spaceStatusWeight),
           color: colorChip.black,
           verticalAlign: "top",
         },
         bold: {
-          fontWeight: String(200),
+          fontWeight: String(spaceStatusBarWeight),
           color: colorChip.green,
         }
       },
       {
         style: {
           position: "absolute",
-          left: String(780) + ea,
-          top: String(4) + ea,
+          left: String(spaceStatusBoxLeft2) + ea,
+          top: String(spaceStatusBoxTop) + ea,
         },
         children: [
           {
             text: "확장 없음",
             style: {
               display: "inline-block",
-              fontSize: String(15) + ea,
-              fontWeight: String(300),
+              fontSize: String(spaceStatusBoxFactorSize) + ea,
+              fontWeight: String(spaceStatusBoxFactorWeight),
               color: colorChip.deactive,
-              marginRight: String(10) + ea,
+              marginRight: String(spaceStatusBoxFactorMargin) + ea,
             }
           },
           {
             text: "확장",
             style: {
               display: "inline-block",
-              fontSize: String(15) + ea,
-              fontWeight: String(300),
+              fontSize: String(spaceStatusBoxFactorSize) + ea,
+              fontWeight: String(spaceStatusBoxFactorWeight),
               color: colorChip.deactive,
-              marginRight: String(10) + ea,
+              marginRight: String(spaceStatusBoxFactorMargin) + ea,
             }
           }
         ]
@@ -1576,6 +1823,28 @@ ClientConsultingJs.prototype.insertInitBox = function () {
           borderRadius: String(3) + "px",
         }
       },
+      {
+        mode: "textarea",
+        class: [ inputClassName ],
+        attribute: {
+          placeholder: "선호하는 스타일 + 공간의 특이 사항을 적어주세요!\n(예) 모던 프렌치 + 코지한 홈스타일링을 원해요.\n(예) 팬트리가 있어요.\n(예) 복층 공간입니다.",
+        },
+        style: {
+          position: "absolute",
+          top: String(grayTextAreaTop + textareaTop) + ea,
+          left: String(leftGrayType2 + textareaLeft) + ea,
+          width: String(widthGrayType2 - (textareaLeft * 2)) + ea,
+          height: String(grayBigHeight - (textareaTop * 1)) + ea,
+          fontSize: String(grayLineBlockFontSize) + ea,
+          fontWeight: String(grayLineBlockFontWeight),
+          border: String(0),
+          background: "transparent",
+          outline: String(0),
+          overflow: "scroll",
+          lineHeight: String(1.6),
+          color: colorChip.black,
+        }
+      }
     ]
   });
 
