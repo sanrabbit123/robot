@@ -45,7 +45,7 @@ ClientConsultingJs.binaryPath = "/middle/consulting";
 
 ClientConsultingJs.prototype.insertInitBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing, dateToString, stringToDate } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute } = GeneralJs;
   const { ea, media, osException, testMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -111,10 +111,12 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   let spaceStatusBoxTop;
   let spaceStatusBoxFactorSize, spaceStatusBoxFactorWeight, spaceStatusBoxFactorMargin;
   let textareaTop, textareaLeft;
-  let checkboxClickEvent0, checkboxClickEvent1;
+  let checkboxClickEvent0, checkboxClickEvent1, checkboxClickEvent2;
   let budgetTriangleTop, budgetTriangleWidth;
+  let spaceTriangleTop, spaceTriangleWidth;
+  let addressPromptWidth, addressPromptHeight;
 
-  blockHeight = <%% 906, 906, 906, 906, 90 %%>;
+  blockHeight = <%% 918, 918, 918, 918, 90 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
   margin = <%% 52, 52, 44, 32, 52 %%>;
   leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
@@ -190,7 +192,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   checkboxBetween = 8;
   checkboxWeight = 300;
 
-  marginRatio = 1.5;
+  marginRatio = 1.6;
 
   grayLineWidth = 772;
   grayLineTop = 12;
@@ -229,6 +231,12 @@ ClientConsultingJs.prototype.insertInitBox = function () {
 
   budgetTriangleTop = -11;
   budgetTriangleWidth = 8;
+
+  spaceTriangleTop = -5;
+  spaceTriangleWidth = 6;
+
+  addressPromptWidth = 900;
+  addressPromptHeight = 450;
 
   checkboxClickEvent0 = async function (e) {
     try {
@@ -280,10 +288,34 @@ ClientConsultingJs.prototype.insertInitBox = function () {
     }
   }
 
+  checkboxClickEvent2 = async function (e) {
+    try {
+      const property = this.getAttribute("property");
+      const toggle = this.getAttribute("toggle");
+      const targetsAll = [ ...document.querySelectorAll("." + inputClassName) ];
+      const targets = targetsAll.filter((dom) => { return dom.getAttribute("property") === property });
+      if (toggle === "off") {
+        for (let dom of targets) {
+          if (dom === this) {
+            dom.setAttribute("toggle", "on");
+            dom.style.color = colorChip.green;
+            dom.children[0].style.opacity = String(1);
+          } else {
+            dom.setAttribute("toggle", "off");
+            dom.style.color = colorChip.deactive;
+            dom.children[0].style.opacity = String(0);
+          }
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   blank = "&nbsp;&nbsp;&nbsp;";
 
   if (media[0]) {
-    initWording0 = "홈리에종의 인테리어 프로세스는 일반적인 리모델링 회사 또는 스튜디오와 다릅니다. 시공 견적부터 제시하는 방법과 달리,";
+    initWording0 = "홈스타일링 진행을 위해 다음 기본 정보가 필요합니다. 간단히 작성 후, 디자이너와의 1:1 상담을 받아보세요!";
   } else if (media[1]) {
     initWording0 = "홈리에종 프로세스는 리모델링 회사와 다릅니다. 시공부터 제시하는 방법과 달리,";
   } else {
@@ -291,11 +323,11 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   }
 
   if (media[0]) {
-    initWording1 = "담당 디자이너가 고객님의 전체 가용 예산을 시공 / 제작가구 / 구매가구 / 패브릭 소품 등을 위해 적절히 분배하여 제안합니다.";
+    initWording1 = "<u%*%u> 주소는 <b%홈스타일링을 받으실 곳%b>으로, 평은 <b%분양 평수%b>로 적어 주셔야 합니다.";
   } else if (media[1]) {
-    initWording1 = "담당 디자이너가 고객님의 전체 가용 예산을 현장 조건에 맞게 적절히 분배하여 스타일링을 진행합니다.";
+    initWording1 = "<u%*%u> 주소는 <b%홈스타일링을 받으실 곳%b>으로, 평은 <b%분양 평수%b>로 적어 주셔야 합니다.";
   } else {
-    initWording1 = "담당 디자이너가 고객님의 예산을 현장에 맞게 분배하여 스타일링을 진행합니다.";
+    initWording1 = "<u%*%u> 주소는 <b%홈스타일링을 받으실 곳%b>으로, 평은 <b%분양 평수%b>로 적어 주셔야 합니다.";
   }
 
 
@@ -469,6 +501,14 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       lineHeight: desktop ? "" : String(1.6),
       textAlign: desktop ? "" : "center",
       color: colorChip.black,
+    },
+    bold: {
+      fontWeight: String(700),
+      color: colorChip.black,
+    },
+    under: {
+      fontWeight: String(400),
+      color: colorChip.green,
     }
   });
 
@@ -569,6 +609,96 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         }
       },
       {
+        event: {
+          click: async function (e) {
+            try {
+              const totalContents = document.getElementById("totalcontents");
+              const removeTargets = "removeTargets";
+              const zIndex = 4;
+              let cancelBack, whitePrompt;
+
+              GeneralJs.stacks["addressEvent"] = async function (e) {
+                try {
+                  findByAttribute(document.querySelectorAll('.' + inputClassName), "property", "address0").value = e.data.trim();
+                  findByAttribute(document.querySelectorAll('.' + inputClassName), "property", "address1").value = '';
+                  findByAttribute(document.querySelectorAll('.' + inputClassName), "property", "address1").focus();
+                  const targets = document.querySelectorAll('.' + removeTargets);
+                  for (let dom of targets) {
+                    dom.remove();
+                  }
+                  window.removeEventListener("message", GeneralJs.stacks["addressEvent"]);
+                  GeneralJs.stacks["addressEvent"] = null;
+                } catch (e) {
+                  await GeneralJs.ajaxJson({ message: "ClientConsultingJs.addressEvent : " + e.message }, "/errorLog");
+                }
+              }
+              window.addEventListener("message", GeneralJs.stacks["addressEvent"]);
+
+              cancelBack = createNode({
+                mother: totalContents,
+                class: [ removeTargets ],
+                event: {
+                  click: (e) => {
+                    const targets = document.querySelectorAll('.' + removeTargets);
+                    for (let dom of targets) {
+                      dom.remove();
+                    }
+                    if (GeneralJs.stacks["addressEvent"] !== null && GeneralJs.stacks["addressEvent"] !== undefined) {
+                      window.removeEventListener('message', GeneralJs.stacks["addressEvent"]);
+                      GeneralJs.stacks["addressEvent"] = null;
+                    }
+                  }
+                },
+                style: {
+                  position: "fixed",
+                  top: String(0),
+                  left: String(0),
+                  zIndex: String(zIndex),
+                  width: String(100) + '%',
+                  height: String(100) + '%',
+                  background: "transparent",
+                }
+              });
+
+              whitePrompt = createNode({
+                mother: totalContents,
+                class: [ removeTargets ],
+                style: {
+                  position: "fixed",
+                  left: "calc(50% - " + String(addressPromptWidth / 2) + ea + ")",
+                  top: "calc(50% - " + String(addressPromptHeight / 2) + ea + ")",
+                  width: String(addressPromptWidth) + ea,
+                  height: String(addressPromptHeight) + ea,
+                  zIndex: String(zIndex),
+                  background: colorChip.white,
+                  borderRadius: String(3) + "px",
+                  boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                  animation: "fadeuphard 0.3s ease forwards",
+                  overflow: "hidden",
+                },
+                children: [
+                  {
+                    mode: "iframe",
+                    attribute: [
+                      { src: window.location.protocol + "//" + window.location.host + "/tools/addressLite" },
+                      { width: String(100) + '%' },
+                      { height: String(100) + '%' },
+                    ],
+                    style: {
+                      position: "absolute",
+                      top: String(0) + ea,
+                      left: String(0) + ea,
+                      border: String(0),
+                    }
+                  }
+                ]
+              });
+
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        },
         style: {
           position: "absolute",
           top: String(grayTop) + ea,
@@ -719,7 +849,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         class: [ inputClassName ],
         attribute: {
           type: "text",
-          placeholder: "상세 주소",
+          placeholder: "인테리어 받을 곳의 상세 주소",
           property: "address1",
           value: "",
         },
@@ -1838,43 +1968,187 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         },
         children: [
           {
+            class: [ inputClassName ],
+            attribute: {
+              toggle: "on",
+              property: "room",
+            },
+            event: {
+              click: checkboxClickEvent2,
+            },
             text: "1개",
             style: {
               display: "inline-block",
+              position: "relative",
               fontSize: String(spaceStatusBoxFactorSize) + ea,
               fontWeight: String(spaceStatusBoxFactorWeight),
-              color: colorChip.deactive,
+              color: colorChip.green,
               marginRight: String(spaceStatusBoxFactorMargin) + ea,
-            }
+              cursor: "pointer",
+              transition: "all 0.5s ease",
+            },
+            children: [
+              {
+                style: {
+                  position: "absolute",
+                  width: String(100) + '%',
+                  top: String(spaceTriangleTop) + ea,
+                  left: String(0),
+                  textAlign: "center",
+                  opacity: String(1),
+                  transition: "all 0s ease",
+                },
+                children: [
+                  {
+                    mode: "svg",
+                    source: this.mother.returnTriangle(colorChip.green),
+                    style: {
+                      position: "relative",
+                      display: "inline-block",
+                      width: String(spaceTriangleWidth) + ea,
+                      transition: "all 0s ease",
+                    }
+                  },
+                ]
+              },
+            ]
           },
           {
+            class: [ inputClassName ],
+            attribute: {
+              toggle: "off",
+              property: "room",
+            },
+            event: {
+              click: checkboxClickEvent2,
+            },
             text: "2개",
             style: {
               display: "inline-block",
+              position: "relative",
               fontSize: String(spaceStatusBoxFactorSize) + ea,
               fontWeight: String(spaceStatusBoxFactorWeight),
               color: colorChip.deactive,
               marginRight: String(spaceStatusBoxFactorMargin) + ea,
-            }
+              cursor: "pointer",
+              transition: "all 0.5s ease",
+            },
+            children: [
+              {
+                style: {
+                  position: "absolute",
+                  width: String(100) + '%',
+                  top: String(spaceTriangleTop) + ea,
+                  left: String(0),
+                  textAlign: "center",
+                  opacity: String(0),
+                  transition: "all 0s ease",
+                },
+                children: [
+                  {
+                    mode: "svg",
+                    source: this.mother.returnTriangle(colorChip.green),
+                    style: {
+                      position: "relative",
+                      display: "inline-block",
+                      width: String(spaceTriangleWidth) + ea,
+                      transition: "all 0s ease",
+                    }
+                  },
+                ]
+              },
+            ]
           },
           {
+            class: [ inputClassName ],
+            attribute: {
+              toggle: "off",
+              property: "room",
+            },
+            event: {
+              click: checkboxClickEvent2,
+            },
             text: "3개",
             style: {
               display: "inline-block",
+              position: "relative",
               fontSize: String(spaceStatusBoxFactorSize) + ea,
               fontWeight: String(spaceStatusBoxFactorWeight),
               color: colorChip.deactive,
               marginRight: String(spaceStatusBoxFactorMargin) + ea,
-            }
+              cursor: "pointer",
+              transition: "all 0.5s ease",
+            },
+            children: [
+              {
+                style: {
+                  position: "absolute",
+                  width: String(100) + '%',
+                  top: String(spaceTriangleTop) + ea,
+                  left: String(0),
+                  textAlign: "center",
+                  opacity: String(0),
+                  transition: "all 0s ease",
+                },
+                children: [
+                  {
+                    mode: "svg",
+                    source: this.mother.returnTriangle(colorChip.green),
+                    style: {
+                      position: "relative",
+                      display: "inline-block",
+                      width: String(spaceTriangleWidth) + ea,
+                      transition: "all 0s ease",
+                    }
+                  },
+                ]
+              },
+            ]
           },
           {
+            class: [ inputClassName ],
+            attribute: {
+              toggle: "off",
+              property: "room",
+            },
+            event: {
+              click: checkboxClickEvent2,
+            },
             text: "4개 이상",
             style: {
               display: "inline-block",
+              position: "relative",
               fontSize: String(spaceStatusBoxFactorSize) + ea,
               fontWeight: String(spaceStatusBoxFactorWeight),
               color: colorChip.deactive,
-            }
+              cursor: "pointer",
+              transition: "all 0.5s ease",
+            },
+            children: [
+              {
+                style: {
+                  position: "absolute",
+                  width: String(100) + '%',
+                  top: String(spaceTriangleTop) + ea,
+                  left: String(0),
+                  textAlign: "center",
+                  opacity: String(0),
+                  transition: "all 0s ease",
+                },
+                children: [
+                  {
+                    mode: "svg",
+                    source: this.mother.returnTriangle(colorChip.green),
+                    style: {
+                      position: "relative",
+                      display: "inline-block",
+                      width: String(spaceTriangleWidth) + ea,
+                      transition: "all 0s ease",
+                    }
+                  },
+                ]
+              },
+            ]
           },
         ]
       },
@@ -1902,34 +2176,142 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         },
         children: [
           {
+            class: [ inputClassName ],
+            attribute: {
+              toggle: "on",
+              property: "bathroom",
+            },
+            event: {
+              click: checkboxClickEvent2,
+            },
             text: "1개",
             style: {
               display: "inline-block",
+              position: "relative",
               fontSize: String(spaceStatusBoxFactorSize) + ea,
               fontWeight: String(spaceStatusBoxFactorWeight),
-              color: colorChip.deactive,
+              color: colorChip.green,
               marginRight: String(spaceStatusBoxFactorMargin) + ea,
-            }
+              cursor: "pointer",
+              transition: "all 0.5s ease",
+            },
+            children: [
+              {
+                style: {
+                  position: "absolute",
+                  width: String(100) + '%',
+                  top: String(spaceTriangleTop) + ea,
+                  left: String(0),
+                  textAlign: "center",
+                  opacity: String(1),
+                  transition: "all 0s ease",
+                },
+                children: [
+                  {
+                    mode: "svg",
+                    source: this.mother.returnTriangle(colorChip.green),
+                    style: {
+                      position: "relative",
+                      display: "inline-block",
+                      width: String(spaceTriangleWidth) + ea,
+                      transition: "all 0s ease",
+                    }
+                  },
+                ]
+              },
+            ]
           },
           {
+            class: [ inputClassName ],
+            attribute: {
+              toggle: "off",
+              property: "bathroom",
+            },
+            event: {
+              click: checkboxClickEvent2,
+            },
             text: "2개",
             style: {
               display: "inline-block",
+              position: "relative",
               fontSize: String(spaceStatusBoxFactorSize) + ea,
               fontWeight: String(spaceStatusBoxFactorWeight),
               color: colorChip.deactive,
               marginRight: String(spaceStatusBoxFactorMargin) + ea,
-            }
+              cursor: "pointer",
+              transition: "all 0.5s ease",
+            },
+            children: [
+              {
+                style: {
+                  position: "absolute",
+                  width: String(100) + '%',
+                  top: String(spaceTriangleTop) + ea,
+                  left: String(0),
+                  textAlign: "center",
+                  opacity: String(0),
+                  transition: "all 0s ease",
+                },
+                children: [
+                  {
+                    mode: "svg",
+                    source: this.mother.returnTriangle(colorChip.green),
+                    style: {
+                      position: "relative",
+                      display: "inline-block",
+                      width: String(spaceTriangleWidth) + ea,
+                      transition: "all 0s ease",
+                    }
+                  },
+                ]
+              },
+            ]
           },
           {
+            class: [ inputClassName ],
+            attribute: {
+              toggle: "off",
+              property: "bathroom",
+            },
+            event: {
+              click: checkboxClickEvent2,
+            },
             text: "3개 이상",
             style: {
               display: "inline-block",
+              position: "relative",
               fontSize: String(spaceStatusBoxFactorSize) + ea,
               fontWeight: String(spaceStatusBoxFactorWeight),
               color: colorChip.deactive,
               marginRight: String(spaceStatusBoxFactorMargin) + ea,
-            }
+              cursor: "pointer",
+              transition: "all 0.5s ease",
+            },
+            children: [
+              {
+                style: {
+                  position: "absolute",
+                  width: String(100) + '%',
+                  top: String(spaceTriangleTop) + ea,
+                  left: String(0),
+                  textAlign: "center",
+                  opacity: String(0),
+                  transition: "all 0s ease",
+                },
+                children: [
+                  {
+                    mode: "svg",
+                    source: this.mother.returnTriangle(colorChip.green),
+                    style: {
+                      position: "relative",
+                      display: "inline-block",
+                      width: String(spaceTriangleWidth) + ea,
+                      transition: "all 0s ease",
+                    }
+                  },
+                ]
+              },
+            ]
           }
         ]
       },
@@ -1957,24 +2339,96 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         },
         children: [
           {
+            class: [ inputClassName ],
+            attribute: {
+              toggle: "on",
+              property: "balcony",
+            },
+            event: {
+              click: checkboxClickEvent2,
+            },
             text: "확장 없음",
             style: {
               display: "inline-block",
+              position: "relative",
               fontSize: String(spaceStatusBoxFactorSize) + ea,
               fontWeight: String(spaceStatusBoxFactorWeight),
-              color: colorChip.deactive,
+              color: colorChip.green,
               marginRight: String(spaceStatusBoxFactorMargin) + ea,
-            }
+              cursor: "pointer",
+              transition: "all 0.5s ease",
+            },
+            children: [
+              {
+                style: {
+                  position: "absolute",
+                  width: String(100) + '%',
+                  top: String(spaceTriangleTop) + ea,
+                  left: String(0),
+                  textAlign: "center",
+                  opacity: String(1),
+                  transition: "all 0s ease",
+                },
+                children: [
+                  {
+                    mode: "svg",
+                    source: this.mother.returnTriangle(colorChip.green),
+                    style: {
+                      position: "relative",
+                      display: "inline-block",
+                      width: String(spaceTriangleWidth) + ea,
+                      transition: "all 0s ease",
+                    }
+                  },
+                ]
+              },
+            ]
           },
           {
+            class: [ inputClassName ],
+            attribute: {
+              toggle: "off",
+              property: "balcony",
+            },
+            event: {
+              click: checkboxClickEvent2,
+            },
             text: "확장",
             style: {
               display: "inline-block",
+              position: "relative",
               fontSize: String(spaceStatusBoxFactorSize) + ea,
               fontWeight: String(spaceStatusBoxFactorWeight),
               color: colorChip.deactive,
               marginRight: String(spaceStatusBoxFactorMargin) + ea,
-            }
+              cursor: "pointer",
+              transition: "all 0.5s ease",
+            },
+            children: [
+              {
+                style: {
+                  position: "absolute",
+                  width: String(100) + '%',
+                  top: String(spaceTriangleTop) + ea,
+                  left: String(0),
+                  textAlign: "center",
+                  opacity: String(0),
+                  transition: "all 0s ease",
+                },
+                children: [
+                  {
+                    mode: "svg",
+                    source: this.mother.returnTriangle(colorChip.green),
+                    style: {
+                      position: "relative",
+                      display: "inline-block",
+                      width: String(spaceTriangleWidth) + ea,
+                      transition: "all 0s ease",
+                    }
+                  },
+                ]
+              },
+            ]
           }
         ]
       },
