@@ -91,7 +91,7 @@ MiddleCommunication.prototype.baseHtml = async function (target, req, selfMongo,
       gtagId = "G-6KYB6YEQLS";
       gtagManagerId = "GTM-KWJRN5N";
     } else if (req.get("host").trim() === address.homeinfo.ghost.host.trim()) {
-      gtagId = "UA-97880990-1";
+      gtagId = "G-N81TTVHYK4";
       gtagManagerId = "GTM-W6FSR8M";
     } else {
       gtagId = "G-GGGZ2JRC2C";
