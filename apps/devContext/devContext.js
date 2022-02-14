@@ -87,9 +87,22 @@ DevContext.prototype.launching = async function () {
     // await this.pureSpawn();
 
 
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
     // push client
-    // const cliid = "c2202_aa36s";
-    //
+    // const cliid = "c2202_aa44s";
     // const kakao = new KakaoTalk();
     // await kakao.ready();
     // const client = await back.getClientById(cliid, { selfMongo: this.MONGOC });
@@ -102,14 +115,6 @@ DevContext.prototype.launching = async function () {
     //   });
     //   await messageSend({ text: client.name + " 고객님께 신청 완료하라고 독촉했어요.", channel: "#404_curation", voice: true });
     // }
-
-
-
-
-
-
-
-
 
 
 
