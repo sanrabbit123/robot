@@ -5432,6 +5432,7 @@ GeneralJs.homeliaisonAnalytics = function (obj) {
       if (typeof obj === "object" && obj !== null) {
         if (typeof obj.page === "string" && obj.standard instanceof Date && typeof obj.action === "string" && typeof obj.data === "object" && obj.data !== null) {
           window.gtag('get', window.gtagId, 'client_id', (client_id) => {
+            console.log(client_id);
             GeneralJs.ajaxJson({
               data: {
                 page: obj.page,
