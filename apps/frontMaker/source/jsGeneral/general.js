@@ -5423,30 +5423,26 @@ GeneralJs.orderSystem = function (type, number) {
   }
 }
 
-GeneralJs.homeliaisonAnalyticsHost = "home-liaison.info";
-
 GeneralJs.homeliaisonAnalytics = function (obj) {
-  const logHostPath = "https://" + GeneralJs.homeliaisonAnalyticsHost + "/receiveLog";
   return new Promise((resolve, reject) => {
     if (typeof window.gtag === "function") {
       if (typeof obj === "object" && obj !== null) {
         if (typeof obj.page === "string" && obj.standard instanceof Date && typeof obj.action === "string" && typeof obj.data === "object" && obj.data !== null) {
-          window.gtag('get', window.gtagId, 'client_id', (client_id) => {
-            console.log(client_id);
-            GeneralJs.ajaxJson({
-              data: {
+          if (typeof window.fbq === "function") {
+            window.gtag('get', window.gtagId, 'client_id', (client_id) => {
+              const json = {
                 page: obj.page,
                 action: obj.action,
-                standard: obj.standard,
+                standard: obj.standard.valueOf(),
+                date: (new Date()).valueOf(),
+                googleId: client_id,
                 id: client_id,
-                value: obj.data
-              }
-            }, logHostPath, { equal: true }).then((json) => {
-              resolve(json);
-            }).catch((err) => {
-              reject(err);
-            })
-          });
+                ...obj.data
+              };
+              window.fbq("trackCustom", obj.action, json);
+              resolve(json)
+            });
+          }
         } else {
           reject("input must be { page: String, standard: Date, action: String, data: Object } }");
         }
