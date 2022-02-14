@@ -115,11 +115,12 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   let budgetTriangleTop, budgetTriangleWidth;
   let spaceTriangleTop, spaceTriangleWidth;
   let addressPromptWidth, addressPromptHeight;
+  let mainTop;
 
-  blockHeight = <%% 918, 918, 918, 918, 90 %%>;
+  blockHeight = <%% 918, 901, 817, 817, 90 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
   margin = <%% 52, 52, 44, 32, 52 %%>;
-  leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
+  leftRatio = <%% 0.32, 0.26, 0.26, 0.26, 0.32 %%>;
 
   titleFont = <%% 31, 29, 27, 23, 5.7 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
@@ -145,98 +146,99 @@ ClientConsultingJs.prototype.insertInitBox = function () {
 
   indexNumberBottom = <%% 3, 4, 6, 4, 0 %%>;
 
-  mobileRightBoxHeight = 78;
+  mobileRightBoxHeight = <%% 78, 78, 78, 78, 78 %%>;
 
-  rightBoxPaddingTop = 136;
+  rightBoxPaddingTop = <%% 136, 126, 116, 116, 116 %%>;
 
-  circleRadius = 2.5;
-  circleTop = 12;
-  circleBetween = 6;
+  circleRadius = <%% 2.5, 2.5, 2, 2, 2 %%>;
+  circleTop = <%% 12, 12, 12, 12, 12 %%>;
+  circleBetween = <%% 6, 6, 5, 5, 5 %%>;
 
-  mainSize = 20;
-  mainWeight = 500;
-  inputSize = 13;
-  inputWeight = 400;
-  inputIndent = 10;
+  mainSize = <%% 20, 18, 17, 16, 3 %%>;
+  mainWeight = <%% 500, 500, 500, 500, 500 %%>;
+  mainTop = <%% 0, 2, 2, 2, 2 %%>;
+  inputSize = <%% 13, 13, 12, 12, 2.8 %%>;
+  inputWeight = <%% 400, 400, 400, 400, 400 %%>;
+  inputIndent = <%% 10, 10, 10, 10, 10 %%>;
 
-  secondPointLeft = 315;
+  secondPointLeft = <%% 315, 270, 240, 240, 250 %%>;
 
-  grayTop = 0;
-  grayInputTop = -2;
-  grayHeight = 32;
-  grayBigHeight = 114;
-  grayTextAreaTop = 3;
+  grayTop = <%% 0, 0, 0, 0, 0 %%>;
+  grayInputTop = <%% -1.5, -1.5, -1.5, -1.5, -1.5 %%>;
+  grayHeight = <%% 32, 32, 31, 31, 31 %%>;
+  grayBigHeight = <%% 114, 114, 114, 114, 114 %%>;
+  grayTextAreaTop = <%% 3, 3, 3, 3, 3 %%>;
 
   moduleHeight = grayTop + grayHeight;
-  blockMarginBottom = 12;
+  blockMarginBottom = <%% 12, 12, 9, 9, 9 %%>;
 
-  leftGrayType0 = 101;
-  leftGrayType1 = 418;
-  leftGrayType2 = 125;
-  leftGrayType3 = 481;
+  leftGrayType0 = <%% 101, 90, 78, 78, 78 %%>;
+  leftGrayType1 = <%% 418, 361, 318, 318, 318 %%>;
+  leftGrayType2 = <%% 125, 112, 98, 98, 98 %%>;
+  leftGrayType3 = <%% 481, 422, 370, 378, 378 %%>;
 
-  widthGrayType0 = 160;
-  widthGrayType1 = 455;
-  widthGrayType2 = 748;
-  widthGrayType3 = 392;
+  widthGrayType0 = <%% 160, 140, 130, 130, 130 %%>;
+  widthGrayType1 = <%% 455, 329, 283, 283, 283 %%>;
+  widthGrayType2 = <%% 748, 578, 503, 503, 503 %%>;
+  widthGrayType3 = <%% 392, 268, 231, 223, 223 %%>;
 
-  addressWidth = 54;
-  addressSize = 13;
-  addressWeight = 600;
-  addressTop = 5;
+  addressWidth = <%% 54, 54, 46, 46, 46 %%>;
+  addressSize = <%% 13, 13, 12, 12, 12 %%>;
+  addressWeight = <%% 600, 600, 600, 600, 600 %%>;
+  addressTop = <%% 5, 5, 5, 5, 5 %%>;
 
-  leftCheck0 = 439;
-  leftCheck1 = 514;
-  checkboxWidth = 9;
-  checkboxTop = 9;
-  checkboxBetween = 8;
-  checkboxWeight = 300;
+  leftCheck0 = <%% 439, 380, 338, 338, 338 %%>;
+  leftCheck1 = <%% 514, 448, 400, 378, 378 %%>;
+  checkboxWidth = <%% 9, 9, 9, 9, 9 %%>;
+  checkboxTop = <%% 9, 9, 9, 9, 9 %%>;
+  checkboxBetween = <%% 8, 8, 8, 8, 8 %%>;
+  checkboxWeight = <%% 300, 300, 300, 300, 300 %%>;
 
-  marginRatio = 1.6;
+  marginRatio = <%% 1.6, 1.55, 1.45, 1.45, 1.45 %%>;
 
-  grayLineWidth = 772;
-  grayLineTop = 12;
-  grayLineBlockTop = 7;
+  grayLineWidth = <%% 772, 600, 523, 523, 523 %%>;
+  grayLineTop = <%% 12, 12, 12, 12, 12 %%>;
+  grayLineBlockTop = <%% 7, 7, 7, 7, 7 %%>;
 
-  grayLineBlockHeight = 12;
-  grayLineBlockWidth0 = 105;
-  grayLineBlockWidth1 = 92;
-  grayLineBlockWidth2 = 106;
+  grayLineBlockHeight = <%% 12, 12, 12, 12, 12 %%>;
+  grayLineBlockWidth0 = <%% 105, 85, 71, 105, 105 %%>;
+  grayLineBlockWidth1 = <%% 92, 72, 63, 92, 92 %%>;
+  grayLineBlockWidth2 = <%% 106, 86, 72, 106, 106 %%>;
 
-  grayLineBlockFontSize = 14;
-  grayLineBlockFontWeight = 400;
-  grayLineBlockFontTop = 15;
+  grayLineBlockFontSize = <%% 14, 12, 12, 12, 12 %%>;
+  grayLineBlockFontWeight = <%% 400, 400, 400, 400, 400 %%>;
+  grayLineBlockFontTop = <%% 15, 15, 15, 15, 15 %%>;
 
-  grayLineBlockFontRight0 = -37;
-  grayLineBlockFontRight1 = -31;
-  grayLineBlockFontRight2 = -32;
-  grayLineBlockFontRight3 = -45;
+  grayLineBlockFontRight0 = <%% -37, -32, -32, -32, -33 %%>;
+  grayLineBlockFontRight1 = <%% -31, -26, -26, -26, -31 %%>;
+  grayLineBlockFontRight2 = <%% -32, -27, -27, -27, -32 %%>;
+  grayLineBlockFontRight3 = <%% -45, -38, -38, -38, -41 %%>;
 
-  spaceStatusLeft0 = 406;
-  spaceStatusLeft1 = 696;
-  spaceStatusWeight = 300;
-  spaceStatusBarWeight = 200;
+  spaceStatusLeft0 = <%% 406, 326, 295, 295, 295 %%>;
+  spaceStatusLeft1 = <%% 696, 546, 464, 464, 464 %%>;
+  spaceStatusWeight = <%% 300, 300, 300, 300, 300 %%>;
+  spaceStatusBarWeight = <%% 200, 200, 200, 200, 200 %%>;
 
-  spaceStatusBoxLeft0 = 215;
-  spaceStatusBoxLeft1 = 531;
-  spaceStatusBoxLeft2 = 780;
-  spaceStatusBoxTop = 4;
+  spaceStatusBoxLeft0 = <%% 215, 184, 160, 184, 184 %%>;
+  spaceStatusBoxLeft1 = <%% 531, 429, 353, 353, 353 %%>;
+  spaceStatusBoxLeft2 = <%% 780, 613, 522, 522, 522 %%>;
+  spaceStatusBoxTop = <%% 4, 5, 6, 6, 6 %%>;
 
-  spaceStatusBoxFactorSize = 15;
-  spaceStatusBoxFactorWeight = 300;
-  spaceStatusBoxFactorMargin = 10;
+  spaceStatusBoxFactorSize = <%% 15, 13, 12, 12, 12 %%>;
+  spaceStatusBoxFactorWeight = <%% 300, 300, 300, 300, 300 %%>;
+  spaceStatusBoxFactorMargin = <%% 10, 8, 7, 7, 7 %%>;
 
-  textareaTop = 10;
-  textareaLeft = 15;
+  textareaTop = <%% 10, 10, 10, 10, 10 %%>;
+  textareaLeft = <%% 15, 15, 15, 15, 15 %%>;
 
-  budgetTriangleTop = -11;
-  budgetTriangleWidth = 8;
+  budgetTriangleTop = <%% -11, -11, -11, -11, -11 %%>;
+  budgetTriangleWidth = <%% 8, 8, 8, 8, 8 %%>;
 
-  spaceTriangleTop = -5;
-  spaceTriangleWidth = 6;
+  spaceTriangleTop = <%% -5, -5, -5, -5, -5 %%>;
+  spaceTriangleWidth = <%% 6, 6, 6, 6, 6 %%>;
 
-  addressPromptWidth = 900;
-  addressPromptHeight = 450;
+  addressPromptWidth = <%% 900, 900, 900, 900, 900 %%>;
+  addressPromptHeight = <%% 450, 450, 450, 450, 450 %%>;
 
   checkboxClickEvent0 = async function (e) {
     try {
@@ -312,14 +314,14 @@ ClientConsultingJs.prototype.insertInitBox = function () {
     }
   }
 
-  blank = "&nbsp;&nbsp;&nbsp;";
+  blank = <%% "&nbsp;&nbsp;&nbsp;", "&nbsp;&nbsp;", "&nbsp;", "&nbsp;", "&nbsp;" %%>;
 
   if (media[0]) {
     initWording0 = "홈스타일링 진행을 위해 다음 기본 정보가 필요합니다. 간단히 작성 후, 디자이너와의 1:1 상담을 받아보세요!";
   } else if (media[1]) {
-    initWording0 = "홈리에종 프로세스는 리모델링 회사와 다릅니다. 시공부터 제시하는 방법과 달리,";
+    initWording0 = "홈스타일링 진행을 위해 다음 기본 정보가 필요합니다. 간단히 작성 후, 디자이너와의 상담을 받아보세요!";
   } else {
-    initWording0 = "홈리에종 프로세스는 리모델링 회사와 다릅니다. 시공부터 제시하는 방법과 달리,";
+    initWording0 = "홈스타일링 진행을 위해 다음 정보가 필요합니다. 간단히 작성 후, 디자이너와의 상담을 받아보세요!";
   }
 
   if (media[0]) {
@@ -361,7 +363,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   //main title
   createNode({
     mother: leftBox,
-    text: desktop ? ((media[0] || media[4]) ? "디자이너와의 상담을 위해" : "홈리에종의") : "홈리에종 프로세스와",
+    text: desktop ? ((media[0] || media[4]) ? "디자이너와의 상담을 위해" : "디자이너와의") : "디자이너와의 상담을 위해",
     style: {
       position: "absolute",
       fontSize: String(titleFont) + ea,
@@ -378,7 +380,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   if (media[1] || media[2] || media[3]) {
     createNode({
       mother: leftBox,
-      text: "진행 프로세스와",
+      text: "상담을 위해,",
       style: {
         position: "absolute",
         fontSize: String(titleFont) + ea,
@@ -542,7 +544,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         style: {
           display: "inline-block",
           position: "relative",
-          top: String(0),
+          top: String(mainTop) + ea,
           fontSize: String(mainSize) + ea,
           fontWeight: String(mainWeight),
           color: colorChip.black,
@@ -601,7 +603,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         style: {
           position: "absolute",
           left: String(secondPointLeft + (circleRadius * 2) + circleBetween) + ea,
-          top: String(0) + ea,
+          top: String(mainTop) + ea,
           fontSize: String(mainSize) + ea,
           fontWeight: String(mainWeight),
           color: colorChip.black,
@@ -791,7 +793,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         style: {
           display: "inline-block",
           position: "relative",
-          top: String(0),
+          top: String(mainTop) + ea,
           fontSize: String(mainSize) + ea,
           fontWeight: String(mainWeight),
           color: colorChip.black,
@@ -899,7 +901,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         style: {
           position: "absolute",
           left: String(secondPointLeft + (circleRadius * 2) + circleBetween) + ea,
-          top: String(0) + ea,
+          top: String(mainTop) + ea,
           fontSize: String(mainSize) + ea,
           fontWeight: String(mainWeight),
           color: colorChip.black,
@@ -972,7 +974,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         style: {
           position: "absolute",
           left: String(secondPointLeft + (circleRadius * 2) + circleBetween) + ea,
-          top: String(0) + ea,
+          top: String(mainTop) + ea,
           fontSize: String(mainSize) + ea,
           fontWeight: String(mainWeight),
           color: colorChip.black,
@@ -1057,7 +1059,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         style: {
           display: "inline-block",
           position: "relative",
-          top: String(0),
+          top: String(mainTop) + ea,
           fontSize: String(mainSize) + ea,
           fontWeight: String(mainWeight),
           color: colorChip.black,
@@ -1116,7 +1118,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         style: {
           position: "absolute",
           left: String(secondPointLeft + (circleRadius * 2) + circleBetween) + ea,
-          top: String(0) + ea,
+          top: String(mainTop) + ea,
           fontSize: String(mainSize) + ea,
           fontWeight: String(mainWeight),
           color: colorChip.black,
@@ -1173,7 +1175,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
               display: "inline-block",
               position: "relative",
               marginLeft: String(checkboxBetween) + ea,
-              top: String(0) + ea,
+              top: String(mainTop) + ea,
               fontSize: String(mainSize) + ea,
               fontWeight: String(checkboxWeight),
               color: colorChip.green,
@@ -1233,7 +1235,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
               display: "inline-block",
               position: "relative",
               marginLeft: String(checkboxBetween) + ea,
-              top: String(0) + ea,
+              top: String(mainTop) + ea,
               fontSize: String(mainSize) + ea,
               fontWeight: String(checkboxWeight),
               color: colorChip.black,
@@ -1274,7 +1276,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         style: {
           display: "inline-block",
           position: "relative",
-          top: String(0),
+          top: String(mainTop) + ea,
           fontSize: String(mainSize) + ea,
           fontWeight: String(mainWeight),
           color: colorChip.black,
@@ -1333,7 +1335,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         style: {
           position: "absolute",
           left: String(secondPointLeft + (circleRadius * 2) + circleBetween) + ea,
-          top: String(0) + ea,
+          top: String(mainTop) + ea,
           fontSize: String(mainSize) + ea,
           fontWeight: String(mainWeight),
           color: colorChip.black,
@@ -1390,7 +1392,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
               display: "inline-block",
               position: "relative",
               marginLeft: String(checkboxBetween) + ea,
-              top: String(0) + ea,
+              top: String(mainTop) + ea,
               fontSize: String(mainSize) + ea,
               fontWeight: String(checkboxWeight),
               color: colorChip.green,
@@ -1450,7 +1452,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
               display: "inline-block",
               position: "relative",
               marginLeft: String(checkboxBetween) + ea,
-              top: String(0) + ea,
+              top: String(mainTop) + ea,
               fontSize: String(mainSize) + ea,
               fontWeight: String(checkboxWeight),
               color: colorChip.black,
@@ -1502,7 +1504,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         style: {
           display: "inline-block",
           position: "relative",
-          top: String(0),
+          top: String(mainTop) + ea,
           fontSize: String(mainSize) + ea,
           fontWeight: String(mainWeight),
           color: colorChip.black,
@@ -1937,7 +1939,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         style: {
           display: "inline-block",
           position: "relative",
-          top: String(0),
+          top: String(mainTop) + ea,
           fontSize: String(mainSize) + ea,
           fontWeight: String(mainWeight),
           color: colorChip.black,
@@ -1945,11 +1947,11 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         }
       },
       {
-        text: "방 개수" + blank + "<b%|%b>",
+        text: "방 개수" + blank + "<b%" + ((media[0]) ? "|" : ":") + "%b>",
         style: {
           position: "absolute",
           left: String(leftGrayType2) + ea,
-          top: String(0) + ea,
+          top: String(mainTop) + ea,
           fontSize: String(mainSize) + ea,
           fontWeight: String(spaceStatusWeight),
           color: colorChip.black,
@@ -2153,11 +2155,11 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         ]
       },
       {
-        text: "화장실 개수" + blank + "<b%|%b>",
+        text: ((media[0] || media[1]) ? "화장실 개수" : "화장실") + blank + "<b%" + ((media[0]) ? "|" : ":") + "%b>",
         style: {
           position: "absolute",
           left: String(spaceStatusLeft0) + ea,
-          top: String(0) + ea,
+          top: String(mainTop) + ea,
           fontSize: String(mainSize) + ea,
           fontWeight: String(spaceStatusWeight),
           color: colorChip.black,
@@ -2316,11 +2318,11 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         ]
       },
       {
-        text: "발코니" + blank + "<b%|%b>",
+        text: "발코니" + blank + "<b%" + ((media[0]) ? "|" : ":") + "%b>",
         style: {
           position: "absolute",
           left: String(spaceStatusLeft1) + ea,
-          top: String(0) + ea,
+          top: String(mainTop) + ea,
           fontSize: String(mainSize) + ea,
           fontWeight: String(spaceStatusWeight),
           color: colorChip.black,
@@ -2463,7 +2465,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         style: {
           display: "inline-block",
           position: "relative",
-          top: String(0),
+          top: String(mainTop) + ea,
           fontSize: String(mainSize) + ea,
           fontWeight: String(mainWeight),
           color: colorChip.black,

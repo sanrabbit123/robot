@@ -796,7 +796,7 @@ GeneralJs.prototype.returnRound = function (radius, color) {
 }
 
 GeneralJs.prototype.returnPoint = function (radius, color) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30"><circle cx="${radius}" cy="${radius}" r="${radius}" fill="${color}" /></svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30"><circle cx="15" cy="15" r="15" fill="${color}" /></svg>`;
 }
 
 GeneralJs.prototype.returnBigArrow = function (color) {

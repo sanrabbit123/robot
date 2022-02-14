@@ -35,7 +35,7 @@ MiddleCommunication.prototype.baseHtml = async function (target, req, selfMongo,
     let descriptionString, metaDescription;
     let imageString, metaImage;
     let designerOnly;
-    let gtagId;
+    let gtagId, gtagManagerId;
 
     const name = this.name[target.trim().replace(/\.js/gi, '')];
     const meta = this.meta[target.trim().replace(/\.js/gi, '')];
@@ -89,13 +89,25 @@ MiddleCommunication.prototype.baseHtml = async function (target, req, selfMongo,
 
     if (/localhost/gi.test(req.get("host"))) {
       gtagId = "G-6KYB6YEQLS";
+      gtagManagerId = "GTM-KWJRN5N";
     } else if (req.get("host").trim() === address.homeinfo.ghost.host.trim()) {
       gtagId = "G-N81TTVHYK4";
+      gtagManagerId = "GTM-W6FSR8M";
     } else {
       gtagId = "G-GGGZ2JRC2C";
+      gtagManagerId = "GTM-KWJRN5N";
     }
 
-    html += `<script async src="https://www.googletagmanager.com/gtag/js?id=${gtagId}"></script><script>
+    html += `
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','${gtagManagerId}');</script>
+    <!-- End Google Tag Manager -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=${gtagId}"></script>
+    <script>
     window.dataLayer = window.dataLayer || [];
     window.gtagId = "${gtagId}";
     window.gtag = function () { window.dataLayer.push(arguments); }
@@ -105,7 +117,7 @@ MiddleCommunication.prototype.baseHtml = async function (target, req, selfMongo,
       window.gtag("config", "${gtagId}");
     }
     </script>`;
-
+    
     html += `</head><body><div style="display: none;position: absolute;opacity: 0;font-size: 0px;">${descriptionString}</div><div id="totalcontents"></div><script src="/middle/${name}.js"></script>`;
 
     if (meta.module) {
