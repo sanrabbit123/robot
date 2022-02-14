@@ -3482,6 +3482,9 @@ Mother.prototype.uniqueValue = function (type = "number") {
       hexString += hexChars[Math.floor(hexChars.length * Math.random())];
     }
     return randomKeyWords[Math.floor(randomKeyWords.length * Math.random())] + randomKeyWords[Math.floor(randomKeyWords.length * Math.random())] + hexChars[Math.floor(hexChars.length * Math.random())] + randomKeyWords[Math.floor(randomKeyWords.length * Math.random())] + String(uniqueNumber) + 'A' + hexString;
+  } else if (type === "uuid") {
+    const { v4 } = require("uuid");
+    return v4();
   } else {
     return String((new Date()).valueOf()) + String(Math.round(Math.random() * 10000));
   }
