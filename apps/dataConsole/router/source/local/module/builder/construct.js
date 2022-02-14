@@ -5426,7 +5426,7 @@ BuilderJs.prototype.constructView = async function () {
     projects = new SearchArray(projects.filter((obj) => {
       return obj.desid !== '';
     }).filter((obj) => {
-      return /^[진홀완]/gi.test(obj.process.status);
+      return /^[진홀완드]/gi.test(obj.process.status);
     }).filter((obj) => {
       return obj.process.design.construct !== null
     }));

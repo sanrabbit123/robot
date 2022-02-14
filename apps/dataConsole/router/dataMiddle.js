@@ -91,7 +91,7 @@ MiddleCommunication.prototype.baseHtml = async function (target, req, selfMongo,
       gtagId = "G-6KYB6YEQLS";
       gtagManagerId = "GTM-KWJRN5N";
     } else if (req.get("host").trim() === address.homeinfo.ghost.host.trim()) {
-      gtagId = "G-N81TTVHYK4";
+      gtagId = "UA-97880990-1";
       gtagManagerId = "GTM-W6FSR8M";
     } else {
       gtagId = "G-GGGZ2JRC2C";
@@ -117,7 +117,7 @@ MiddleCommunication.prototype.baseHtml = async function (target, req, selfMongo,
       window.gtag("config", "${gtagId}");
     }
     </script>`;
-    
+
     html += `</head><body><div style="display: none;position: absolute;opacity: 0;font-size: 0px;">${descriptionString}</div><div id="totalcontents"></div><script src="/middle/${name}.js"></script>`;
 
     if (meta.module) {
