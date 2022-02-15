@@ -203,7 +203,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   leftCheck0 = <%% 439, 380, 338, 96, 22.8 %%>;
   leftCheck1 = <%% 514, 448, 400, 150, 36.5 %%>;
   checkboxWidth = <%% 9, 9, 9, 8, 2 %%>;
-  checkboxTop = <%% 9, 9, 9, 8, 2.2 %%>;
+  checkboxTop = <%% (isMac() ? 9 : 10), (isMac() ? 9 : 10), (isMac() ? 9 : 10), (isMac() ? 8 : 9), 2.2 %%>;
   checkboxBetween = <%% 8, 8, 8, 6, 1.5 %%>;
   checkboxWeight = <%% 300, 300, 300, 300, 300 %%>;
 
@@ -235,7 +235,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   spaceStatusBoxLeft0 = <%% 215, 184, 160, 184, 184 %%>;
   spaceStatusBoxLeft1 = <%% 531, 429, 353, 353, 353 %%>;
   spaceStatusBoxLeft2 = <%% 780, 613, 522, 522, 522 %%>;
-  spaceStatusBoxTop = <%% 4, 5, 6, 6, 6 %%>;
+  spaceStatusBoxTop = <%% (isMac() ? 4 : 6), (isMac() ? 5 : 7), (isMac() ? 6 : 7), 6, 6 %%>;
 
   spaceStatusBoxFactorSize = <%% 15, 13, 12, 12, 12 %%>;
   spaceStatusBoxFactorWeight = <%% 300, 300, 300, 300, 300 %%>;
@@ -247,7 +247,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   budgetTriangleTop = <%% -11, -11, -11, -11, -11 %%>;
   budgetTriangleWidth = <%% 8, 8, 8, 8, 8 %%>;
 
-  spaceTriangleTop = <%% -5, -5, -5, -5, -5 %%>;
+  spaceTriangleTop = <%% (isMac() ? -5 : -6), (isMac() ? -5 : -6), (isMac() ? -5 : -6), -5, -5 %%>;
   spaceTriangleWidth = <%% 6, 6, 6, 6, 6 %%>;
 
   addressPromptWidth = <%% 900, 900, 900, 900, 900 %%>;
@@ -2013,7 +2013,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
           style: {
             position: "absolute",
             left: String(leftGrayType2) + ea,
-            top: String(mainTop) + ea,
+            top: String(mainTop + (isMac() ? 0 : (media[0] ? -1 : 0))) + ea,
             fontSize: String(mainSize) + ea,
             fontWeight: String(spaceStatusWeight),
             color: colorChip.black,
@@ -2221,7 +2221,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
           style: {
             position: "absolute",
             left: String(spaceStatusLeft0) + ea,
-            top: String(mainTop) + ea,
+            top: String(mainTop + (isMac() ? 0 : (media[0] ? -1 : 0))) + ea,
             fontSize: String(mainSize) + ea,
             fontWeight: String(spaceStatusWeight),
             color: colorChip.black,
@@ -2384,7 +2384,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
           style: {
             position: "absolute",
             left: String(spaceStatusLeft1) + ea,
-            top: String(mainTop) + ea,
+            top: String(mainTop + (isMac() ? 0 : (media[0] ? -1 : 0))) + ea,
             fontSize: String(mainSize) + ea,
             fontWeight: String(spaceStatusWeight),
             color: colorChip.black,
