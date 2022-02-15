@@ -162,7 +162,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   rightBoxPaddingTop = <%% 136, 126, 116, 108, 25 %%>;
   mobileRightBoxLeft = 7;
 
-  circleRadius = <%% 2.5, 2.5, 2, 2, 0.5 %%>;
+  circleRadius = <%% 2.5, 2.5, 2, 2, 0.6 %%>;
   circleTop = <%% 12, 12, 11, 12, 2.9 %%>;
   circleBetween = <%% 6, 6, 5, 5, 1.3 %%>;
 
@@ -256,7 +256,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   mobileTongPaddingTop = <%% 0.7, 0.7, 0.7, 0.7, 0.7 %%>;
   mobileFactorPaddingLeft = <%% 3, 3, 3, 15, 3 %%>;
   mobileFactorCheckWidth = <%% 1.8, 1.8, 1.8, 8, 1.8 %%>;
-  mobileFactorCheckTop = <%% 1.35, 1.35, 1.35, 6, 1.35 %%>;
+  mobileFactorCheckTop = <%% 1.35, 1.35, 1.35, 6, 1.5 %%>;
   mobileFactorBetween = <%% 4.2, 4.2, 4.2, 19, 4.2 %%>;
   mobileFactorBetween2 = <%% 3.2, 3.2, 3.2, 36.5, 3.2 %%>;
   mobileFactorBetween3 = <%% 4.6, 4.6, 4.6, 16.5, 4.6 %%>;
