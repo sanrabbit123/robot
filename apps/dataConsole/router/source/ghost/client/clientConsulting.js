@@ -162,7 +162,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   rightBoxPaddingTop = <%% 136, 126, 116, 108, 25 %%>;
   mobileRightBoxLeft = 7;
 
-  circleRadius = <%% 2.5, 2.5, 2, 2, 0.6 %%>;
+  circleRadius = <%% 2.5, 2.5, 2, 2, 0.5 %%>;
   circleTop = <%% 12, 12, 11, 12, 2.9 %%>;
   circleBetween = <%% 6, 6, 5, 5, 1.3 %%>;
 
