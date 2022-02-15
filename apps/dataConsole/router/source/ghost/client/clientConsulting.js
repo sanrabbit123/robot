@@ -203,7 +203,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   leftCheck0 = <%% 439, 380, 338, 96, 22.8 %%>;
   leftCheck1 = <%% 514, 448, 400, 150, 36.5 %%>;
   checkboxWidth = <%% 9, 9, 9, 8, 2 %%>;
-  checkboxTop = <%% (isMac() ? 9 : 10), (isMac() ? 9 : 10), (isMac() ? 9 : 10), (isMac() ? 8 : 9), 2.2 %%>;
+  checkboxTop = <%% (isMac() ? 9 : 10), (isMac() ? 9 : 9), (isMac() ? 8 : 8), (isMac() ? 8 : 9), 2.2 %%>;
   checkboxBetween = <%% 8, 8, 8, 6, 1.5 %%>;
   checkboxWeight = <%% 300, 300, 300, 300, 300 %%>;
 
