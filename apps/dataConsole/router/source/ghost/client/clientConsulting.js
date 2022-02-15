@@ -168,7 +168,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
 
   mainSize = <%% 20, 18, 17, 16, 4 %%>;
   mainWeight = <%% 500, 500, 500, 500, 500 %%>;
-  mainTop = <%% 0, 2, 2, 2, 0.5 %%>;
+  mainTop = <%% (isMac() ? 0 : 3), (isMac() ? 2 : 4), (isMac() ? 2 : 4), (isMac() ? 2 : 4), 0.5 %%>;
   inputSize = <%% 13, 13, 12, 12, 3 %%>;
   inputWeight = <%% 400, 400, 400, 400, 400 %%>;
   inputIndent = <%% 10, 10, 10, 10, 2.5 %%>;
@@ -176,7 +176,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   secondPointLeft = <%% 315, 270, 240, 240, 25 %%>;
 
   grayTop = <%% 0, 0, 0, 0, 0 %%>;
-  grayInputTop = <%% -1.5, -1.5, -1.5, -1.5, -0.3 %%>;
+  grayInputTop = <%% (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), -0.3 %%>;
   grayHeight = <%% 32, 32, 31, 31, 7 %%>;
   grayBigHeight = <%% 114, 114, 114, 114, 28 %%>;
   grayTextAreaTop = <%% 3, 3, 3, 3, 1.3 %%>;
@@ -198,7 +198,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   addressWidth = <%% 54, 54, 46, 46, 11 %%>;
   addressSize = <%% 13, 13, 12, 12, 3 %%>;
   addressWeight = <%% 600, 600, 600, 600, 600 %%>;
-  addressTop = <%% 5, 5, 5, 5, 1 %%>;
+  addressTop = <%% (isMac() ? 5 : 7), (isMac() ? 5 : 7), (isMac() ? 5 : 7), (isMac() ? 5 : 7), 1 %%>;
 
   leftCheck0 = <%% 439, 380, 338, 96, 22.8 %%>;
   leftCheck1 = <%% 514, 448, 400, 150, 36.5 %%>;
