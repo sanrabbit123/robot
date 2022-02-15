@@ -111,15 +111,24 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   let spaceStatusBoxTop;
   let spaceStatusBoxFactorSize, spaceStatusBoxFactorWeight, spaceStatusBoxFactorMargin;
   let textareaTop, textareaLeft;
-  let checkboxClickEvent0, checkboxClickEvent1, checkboxClickEvent2;
+  let checkboxClickEvent0, checkboxClickEvent1, checkboxClickEvent2, checkboxClickEvent3;
   let budgetTriangleTop, budgetTriangleWidth;
   let spaceTriangleTop, spaceTriangleWidth;
   let addressPromptWidth, addressPromptHeight;
   let mainTop;
   let addressButtonEvent;
+  let mobileRightBoxLeft;
+  let mobileTongPaddingTop;
+  let mobileFactorPaddingLeft
+  let mobileFactorCheckWidth;
+  let mobileFactorCheckTop;
+  let mobileFactorBetween, mobileFactorBetween2, mobileFactorBetween3;
+  let mobileFactorPaddingBotom;
+  let mobileCheckBoxLeft1, mobileCheckBoxLeft2, mobileCheckBoxLeft3, mobileCheckBoxLeft4;
+  let grayTextAreaWidth;
 
-  blockHeight = <%% 918, 901, 817, 817, 90 %%>;
-  bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
+  blockHeight = <%% 918, 901, 817, 817, 264 %%>;
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 52, 52, 44, 32, 52 %%>;
   leftRatio = <%% 0.32, 0.26, 0.26, 0.26, 0.32 %%>;
 
@@ -149,53 +158,55 @@ ClientConsultingJs.prototype.insertInitBox = function () {
 
   mobileRightBoxHeight = <%% 78, 78, 78, 78, 78 %%>;
 
-  rightBoxPaddingTop = <%% 136, 126, 116, 116, 32 %%>;
+  rightBoxPaddingTop = <%% 136, 126, 116, 116, 25 %%>;
+  mobileRightBoxLeft = 7;
 
-  circleRadius = <%% 2.5, 2.5, 2, 2, 2 %%>;
-  circleTop = <%% 12, 12, 12, 12, 12 %%>;
-  circleBetween = <%% 6, 6, 5, 5, 5 %%>;
+  circleRadius = <%% 2.5, 2.5, 2, 2, 0.5 %%>;
+  circleTop = <%% 12, 12, 12, 12, 2.8 %%>;
+  circleBetween = <%% 6, 6, 5, 5, 1.3 %%>;
 
-  mainSize = <%% 20, 18, 17, 16, 3 %%>;
+  mainSize = <%% 20, 18, 17, 16, 4 %%>;
   mainWeight = <%% 500, 500, 500, 500, 500 %%>;
-  mainTop = <%% 0, 2, 2, 2, 2 %%>;
-  inputSize = <%% 13, 13, 12, 12, 2.8 %%>;
+  mainTop = <%% 0, 2, 2, 2, 0.5 %%>;
+  inputSize = <%% 13, 13, 12, 12, 3 %%>;
   inputWeight = <%% 400, 400, 400, 400, 400 %%>;
-  inputIndent = <%% 10, 10, 10, 10, 10 %%>;
+  inputIndent = <%% 10, 10, 10, 10, 2.5 %%>;
 
-  secondPointLeft = <%% 315, 270, 240, 240, 250 %%>;
+  secondPointLeft = <%% 315, 270, 240, 240, 25 %%>;
 
   grayTop = <%% 0, 0, 0, 0, 0 %%>;
-  grayInputTop = <%% -1.5, -1.5, -1.5, -1.5, -1.5 %%>;
-  grayHeight = <%% 32, 32, 31, 31, 31 %%>;
-  grayBigHeight = <%% 114, 114, 114, 114, 114 %%>;
-  grayTextAreaTop = <%% 3, 3, 3, 3, 3 %%>;
+  grayInputTop = <%% -1.5, -1.5, -1.5, -1.5, -0.3 %%>;
+  grayHeight = <%% 32, 32, 31, 31, 7 %%>;
+  grayBigHeight = <%% 114, 114, 114, 114, 28 %%>;
+  grayTextAreaTop = <%% 3, 3, 3, 3, 1.3 %%>;
+  grayTextAreaWidth = <%% 51.7, 51.7, 51.7, 51.7, 51.7 %%>;
 
   moduleHeight = grayTop + grayHeight;
-  blockMarginBottom = <%% 12, 12, 9, 9, 9 %%>;
+  blockMarginBottom = <%% 12, 12, 9, 9, 2 %%>;
 
-  leftGrayType0 = <%% 101, 90, 78, 78, 78 %%>;
-  leftGrayType1 = <%% 418, 361, 318, 318, 318 %%>;
-  leftGrayType2 = <%% 125, 112, 98, 98, 98 %%>;
-  leftGrayType3 = <%% 481, 422, 370, 378, 378 %%>;
+  leftGrayType0 = <%% 101, 90, 78, 78, 18 %%>;
+  leftGrayType1 = <%% 418, 361, 318, 318, 22.8 %%>;
+  leftGrayType2 = <%% 125, 112, 98, 98, 15 %%>;
+  leftGrayType3 = <%% 481, 422, 370, 378, 30.5 %%>;
 
-  widthGrayType0 = <%% 160, 140, 130, 130, 130 %%>;
-  widthGrayType1 = <%% 455, 329, 283, 283, 283 %%>;
-  widthGrayType2 = <%% 748, 578, 503, 503, 503 %%>;
-  widthGrayType3 = <%% 392, 268, 231, 223, 223 %%>;
+  widthGrayType0 = <%% 160, 140, 130, 130, 34 %%>;
+  widthGrayType1 = <%% 455, 329, 283, 283, 56.5 %%>;
+  widthGrayType2 = <%% 748, 578, 503, 503, 60 %%>;
+  widthGrayType3 = <%% 392, 268, 231, 223, 44 %%>;
 
-  addressWidth = <%% 54, 54, 46, 46, 46 %%>;
-  addressSize = <%% 13, 13, 12, 12, 12 %%>;
+  addressWidth = <%% 54, 54, 46, 46, 11 %%>;
+  addressSize = <%% 13, 13, 12, 12, 3 %%>;
   addressWeight = <%% 600, 600, 600, 600, 600 %%>;
-  addressTop = <%% 5, 5, 5, 5, 5 %%>;
+  addressTop = <%% 5, 5, 5, 5, 1 %%>;
 
-  leftCheck0 = <%% 439, 380, 338, 338, 338 %%>;
-  leftCheck1 = <%% 514, 448, 400, 378, 378 %%>;
-  checkboxWidth = <%% 9, 9, 9, 9, 9 %%>;
-  checkboxTop = <%% 9, 9, 9, 9, 9 %%>;
-  checkboxBetween = <%% 8, 8, 8, 8, 8 %%>;
+  leftCheck0 = <%% 439, 380, 338, 338, 22.8 %%>;
+  leftCheck1 = <%% 514, 448, 400, 378, 36.5 %%>;
+  checkboxWidth = <%% 9, 9, 9, 9, 2 %%>;
+  checkboxTop = <%% 9, 9, 9, 9, 2.2 %%>;
+  checkboxBetween = <%% 8, 8, 8, 8, 1.5 %%>;
   checkboxWeight = <%% 300, 300, 300, 300, 300 %%>;
 
-  marginRatio = <%% 1.6, 1.55, 1.45, 1.45, 1.45 %%>;
+  marginRatio = <%% 1.6, 1.55, 1.45, 1.45, 1.1 %%>;
 
   grayLineWidth = <%% 772, 600, 523, 523, 523 %%>;
   grayLineTop = <%% 12, 12, 12, 12, 12 %%>;
@@ -206,7 +217,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   grayLineBlockWidth1 = <%% 92, 72, 63, 92, 92 %%>;
   grayLineBlockWidth2 = <%% 106, 86, 72, 106, 106 %%>;
 
-  grayLineBlockFontSize = <%% 14, 12, 12, 12, 12 %%>;
+  grayLineBlockFontSize = <%% 14, 12, 12, 12, 3.3 %%>;
   grayLineBlockFontWeight = <%% 400, 400, 400, 400, 400 %%>;
   grayLineBlockFontTop = <%% 15, 15, 15, 15, 15 %%>;
 
@@ -229,8 +240,8 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   spaceStatusBoxFactorWeight = <%% 300, 300, 300, 300, 300 %%>;
   spaceStatusBoxFactorMargin = <%% 10, 8, 7, 7, 7 %%>;
 
-  textareaTop = <%% 10, 10, 10, 10, 10 %%>;
-  textareaLeft = <%% 15, 15, 15, 15, 15 %%>;
+  textareaTop = <%% 10, 10, 10, 10, 2 %%>;
+  textareaLeft = <%% 15, 15, 15, 15, 2.5 %%>;
 
   budgetTriangleTop = <%% -11, -11, -11, -11, -11 %%>;
   budgetTriangleWidth = <%% 8, 8, 8, 8, 8 %%>;
@@ -240,6 +251,20 @@ ClientConsultingJs.prototype.insertInitBox = function () {
 
   addressPromptWidth = <%% 900, 900, 900, 900, 900 %%>;
   addressPromptHeight = <%% 450, 450, 450, 450, 450 %%>;
+
+  mobileTongPaddingTop = 0.7;
+  mobileFactorPaddingLeft = 3;
+  mobileFactorCheckWidth = 1.8;
+  mobileFactorCheckTop = 1.35;
+  mobileFactorBetween = 4.2;
+  mobileFactorBetween2 = 3.2;
+  mobileFactorBetween3 = 4.6;
+  mobileFactorPaddingBotom = 1.9;
+
+  mobileCheckBoxLeft1 = 34;
+  mobileCheckBoxLeft2 = 46;
+  mobileCheckBoxLeft3 = 58;
+  mobileCheckBoxLeft4 = 45;
 
   checkboxClickEvent0 = async function (e) {
     try {
@@ -307,6 +332,32 @@ ClientConsultingJs.prototype.insertInitBox = function () {
             dom.setAttribute("toggle", "off");
             dom.style.color = colorChip.deactive;
             dom.children[0].style.opacity = String(0);
+          }
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  checkboxClickEvent3 = async function (e) {
+    try {
+      const property = this.getAttribute("property");
+      const toggle = this.getAttribute("toggle");
+      const targetsAll = [ ...document.querySelectorAll("." + inputClassName) ];
+      const targets = targetsAll.filter((dom) => { return dom.getAttribute("property") === property });
+      if (toggle === "off") {
+        for (let dom of targets) {
+          if (dom === this) {
+            dom.setAttribute("toggle", "on");
+            dom.children[0].style.opacity = String(0);
+            dom.children[1].style.opacity = String(1);
+            dom.children[2].style.color = colorChip.green;
+          } else {
+            dom.setAttribute("toggle", "off");
+            dom.children[0].style.opacity = String(1);
+            dom.children[1].style.opacity = String(0);
+            dom.children[2].style.color = colorChip.deactive;
           }
         }
       }
@@ -419,7 +470,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   } else if (media[1]) {
     initWording1 = "<u%*%u>주소는 <b%홈스타일링을 받으실 곳%b>으로, 평은 <b%분양 평수%b>로 적어 주셔야 합니다.";
   } else {
-    initWording1 = "<u%*%u>주소는 <b%홈스타일링을 받으실 곳%b>으로, 평은 <b%분양 평수%b>로 적어 주셔야 합니다.";
+    initWording1 = "주소는 <b%홈스타일링을 받으실 곳%b>으로, 평은 <b%분양\n평수%b>로 적어 주셔야 합니다.";
   }
 
   whiteBlock = createNode({
@@ -535,12 +586,14 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       position: "relative",
       verticalAlign: "top",
       top: String(0) + ea,
-      width: desktop ? "calc(calc(100% - " + String(margin * 2) + ea + ") * " + String(1 - leftRatio) + ")" : String(100) + '%',
+      width: desktop ? "calc(calc(100% - " + String(margin * 2) + ea + ") * " + String(1 - leftRatio) + ")" : withOut(mobileRightBoxLeft * 2, ea),
       height: desktop ? "calc(100% - " + String((margin * 2) + rightBoxPaddingTop) + ea + ")" : String(mobileRightBoxHeight) + ea,
       paddingTop: String(rightBoxPaddingTop) + ea,
       marginTop: desktop ? String(margin) + ea : "",
       marginBottom: desktop ? String(margin) + ea : "",
       marginRight: desktop ? String(margin) + ea : "",
+      paddingLeft: mobile ? String(mobileRightBoxLeft) + ea : "",
+      paddingRight: mobile ? String(mobileRightBoxLeft) + ea : "",
     }
   });
 
@@ -560,7 +613,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
 
   createNode({
     mother: rightBox,
-    text: initWording0,
+    text: desktop ? initWording0 : initWording1,
     style: {
       position: "absolute",
       top: String(desktop ? quoteTop + quoteHeight + quoteMarginBottom : 3.7) + ea,
@@ -573,6 +626,14 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       wordSpacing: String(initWordingWordSpacing) + "px",
       lineHeight: desktop ? "" : String(1.6),
       textAlign: desktop ? "" : "center",
+    },
+    bold: {
+      fontWeight: String(700),
+      color: colorChip.black,
+    },
+    under: {
+      fontWeight: String(400),
+      color: colorChip.green,
     }
   });
 
@@ -580,6 +641,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
     mother: rightBox,
     text: initWording1,
     style: {
+      display: desktop ? "block" : "none",
       position: "absolute",
       top: String(desktop ? quoteTop + quoteHeight + quoteMarginBottom + initWordingSize + initWordingLineHeight : 15.5) + ea,
       left: String(desktop ? 0 : 11) + ea,
@@ -601,9 +663,6 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       color: colorChip.green,
     }
   });
-
-  // block start
-
 
   // block desktop start
   if (media[0] || media[1] || media[2]) {
@@ -2482,6 +2541,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
           class: [ inputClassName ],
           attribute: {
             placeholder: "선호하는 스타일 + 공간의 특이 사항을 적어주세요!\n(예) 모던 프렌치 + 코지한 홈스타일링을 원해요.\n(예) 팬트리가 있어요.\n(예) 복층 공간입니다.",
+            property: "etc",
           },
           style: {
             position: "absolute",
@@ -2504,6 +2564,2237 @@ ClientConsultingJs.prototype.insertInitBox = function () {
 
   } else {
 
+    // 1
+    createNode({
+      mother: rightBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight) + ea,
+      },
+      children: [
+        {
+          mode: "svg",
+          source: instance.mother.returnPoint(circleRadius, colorChip.green),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleRadius * 2) + ea,
+            height: String(circleRadius * 2) + ea,
+            marginRight: String(circleBetween) + ea,
+            top: String(circleTop) + ea,
+            verticalAlign: "top",
+          }
+        },
+        {
+          text: "성함",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(mainTop) + ea,
+            fontSize: String(mainSize) + ea,
+            fontWeight: String(mainWeight),
+            color: colorChip.black,
+            verticalAlign: "top",
+          }
+        },
+        {
+          style: {
+            position: "absolute",
+            top: String(grayTop) + ea,
+            left: String(leftGrayType0) + ea,
+            width: String(widthGrayType0) + ea,
+            height: String(grayHeight) + ea,
+            background: colorChip.gray1,
+            borderRadius: String(3) + "px",
+          }
+        },
+        {
+          mode: "input",
+          class: [ inputClassName ],
+          attribute: {
+            type: "text",
+            placeholder: "성함",
+            property: "name",
+            value: "",
+          },
+          style: {
+            position: "absolute",
+            top: String(grayInputTop) + ea,
+            left: String(leftGrayType0) + ea,
+            width: String(widthGrayType0) + ea,
+            height: String(grayHeight) + ea,
+            outline: String(0),
+            border: String(0),
+            fontSize: String(inputSize) + ea,
+            fontWeight: String(inputWeight),
+            color: colorChip.black,
+            textAlign: "center",
+            background: "transparent",
+          }
+        },
+      ]
+    });
+    // 2
+    createNode({
+      mother: rightBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight) + ea,
+      },
+      children: [
+        {
+          mode: "svg",
+          source: instance.mother.returnPoint(circleRadius, colorChip.green),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleRadius * 2) + ea,
+            height: String(circleRadius * 2) + ea,
+            marginRight: String(circleBetween) + ea,
+            top: String(circleTop) + ea,
+            verticalAlign: "top",
+          }
+        },
+        {
+          text: "연락처",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(mainTop) + ea,
+            fontSize: String(mainSize) + ea,
+            fontWeight: String(mainWeight),
+            color: colorChip.black,
+            verticalAlign: "top",
+          }
+        },
+        {
+          style: {
+            position: "absolute",
+            top: String(grayTop) + ea,
+            left: String(leftGrayType0) + ea,
+            width: String(widthGrayType0) + ea,
+            height: String(grayHeight) + ea,
+            background: colorChip.gray1,
+            borderRadius: String(3) + "px",
+          }
+        },
+        {
+          mode: "input",
+          class: [ inputClassName ],
+          attribute: {
+            type: "text",
+            placeholder: "010-0000-0000",
+            property: "phone",
+            value: "",
+          },
+          style: {
+            position: "absolute",
+            top: String(grayInputTop) + ea,
+            left: String(leftGrayType0) + ea,
+            width: String(widthGrayType0) + ea,
+            height: String(grayHeight) + ea,
+            outline: String(0),
+            border: String(0),
+            fontSize: String(inputSize) + ea,
+            fontWeight: String(inputWeight),
+            color: colorChip.black,
+            textAlign: "center",
+            background: "transparent",
+          }
+        },
+      ]
+    });
+    // 3
+    createNode({
+      mother: rightBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight) + ea,
+      },
+      children: [
+        {
+          mode: "svg",
+          source: instance.mother.returnPoint(circleRadius, colorChip.green),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleRadius * 2) + ea,
+            height: String(circleRadius * 2) + ea,
+            marginRight: String(circleBetween) + ea,
+            top: String(circleTop) + ea,
+            verticalAlign: "top",
+          }
+        },
+        {
+          text: "이메일",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(mainTop) + ea,
+            fontSize: String(mainSize) + ea,
+            fontWeight: String(mainWeight),
+            color: colorChip.black,
+            verticalAlign: "top",
+          }
+        },
+        {
+          style: {
+            position: "absolute",
+            top: String(grayTop) + ea,
+            left: String(leftGrayType0) + ea,
+            width: String(widthGrayType1) + ea,
+            height: String(grayHeight) + ea,
+            background: colorChip.gray1,
+            borderRadius: String(3) + "px",
+          }
+        },
+        {
+          mode: "input",
+          class: [ inputClassName ],
+          attribute: {
+            type: "text",
+            placeholder: "example@home-liaison.com",
+            property: "email",
+            value: "",
+          },
+          style: {
+            position: "absolute",
+            top: String(grayInputTop) + ea,
+            left: String(leftGrayType0) + ea,
+            width: String(widthGrayType1) + ea,
+            height: String(grayHeight) + ea,
+            outline: String(0),
+            border: String(0),
+            fontSize: String(inputSize) + ea,
+            fontWeight: String(inputWeight),
+            color: colorChip.black,
+            textAlign: "left",
+            background: "transparent",
+            textIndent: String(inputIndent) + ea,
+          }
+        },
+      ]
+    });
+    // 4
+    createNode({
+      mother: rightBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight) + ea,
+      },
+      children: [
+        {
+          mode: "svg",
+          source: instance.mother.returnPoint(circleRadius, colorChip.green),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleRadius * 2) + ea,
+            height: String(circleRadius * 2) + ea,
+            marginRight: String(circleBetween) + ea,
+            top: String(circleTop) + ea,
+            verticalAlign: "top",
+          }
+        },
+        {
+          text: "주소",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(mainTop) + ea,
+            fontSize: String(mainSize) + ea,
+            fontWeight: String(mainWeight),
+            color: colorChip.black,
+            verticalAlign: "top",
+          }
+        },
+        {
+          event: {
+            click: addressButtonEvent
+          },
+          style: {
+            position: "absolute",
+            top: String(grayTop) + ea,
+            left: String(leftGrayType0) + ea,
+            width: String(addressWidth) + ea,
+            height: String(grayHeight) + ea,
+            background: colorChip.gradientGreen,
+            borderRadius: String(3) + "px",
+            cursor: "pointer",
+          },
+          children: [
+            {
+              text: "검색",
+              style: {
+                width: String(100) + '%',
+                textAlign: "center",
+                fontSize: String(addressSize) + ea,
+                fontWeight: String(addressWeight),
+                color: colorChip.white,
+                position: "relative",
+                top: String(addressTop) + ea,
+              }
+            }
+          ]
+        },
+        {
+          style: {
+            position: "absolute",
+            top: String(grayTop) + ea,
+            left: String(leftGrayType3) + ea,
+            width: String(widthGrayType3) + ea,
+            height: String(grayHeight) + ea,
+            background: colorChip.gray1,
+            borderRadius: String(3) + "px",
+          }
+        },
+        {
+          mode: "input",
+          class: [ inputClassName ],
+          attribute: {
+            type: "text",
+            placeholder: "주소",
+            property: "address0",
+            value: "",
+          },
+          style: {
+            position: "absolute",
+            top: String(grayInputTop) + ea,
+            left: String(leftGrayType3) + ea,
+            width: String(widthGrayType3) + ea,
+            height: String(grayHeight) + ea,
+            outline: String(0),
+            border: String(0),
+            fontSize: String(inputSize) + ea,
+            fontWeight: String(inputWeight),
+            color: colorChip.black,
+            textAlign: "left",
+            background: "transparent",
+            textIndent: String(inputIndent) + ea,
+          }
+        },
+      ]
+    });
+    // 5
+    createNode({
+      mother: rightBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight) + ea,
+      },
+      children: [
+        {
+          style: {
+            position: "absolute",
+            top: String(grayTop) + ea,
+            left: String(leftGrayType0) + ea,
+            width: String(widthGrayType1) + ea,
+            height: String(grayHeight) + ea,
+            background: colorChip.gray1,
+            borderRadius: String(3) + "px",
+          }
+        },
+        {
+          mode: "input",
+          class: [ inputClassName ],
+          attribute: {
+            type: "text",
+            placeholder: "인테리어 받을 곳의 상세 주소",
+            property: "address1",
+            value: "",
+          },
+          style: {
+            position: "absolute",
+            top: String(grayInputTop) + ea,
+            left: String(leftGrayType0) + ea,
+            width: String(widthGrayType1) + ea,
+            height: String(grayHeight) + ea,
+            outline: String(0),
+            border: String(0),
+            fontSize: String(inputSize) + ea,
+            fontWeight: String(inputWeight),
+            color: colorChip.black,
+            textAlign: "left",
+            background: "transparent",
+            textIndent: String(inputIndent) + ea,
+          }
+        },
+      ]
+    });
+    // 6
+    createNode({
+      mother: rightBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight) + ea,
+      },
+      children: [
+        {
+          mode: "svg",
+          source: instance.mother.returnPoint(circleRadius, colorChip.green),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleRadius * 2) + ea,
+            height: String(circleRadius * 2) + ea,
+            marginRight: String(circleBetween) + ea,
+            top: String(circleTop) + ea,
+            verticalAlign: "top",
+          }
+        },
+        {
+          text: "구성원",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(mainTop) + ea,
+            fontSize: String(mainSize) + ea,
+            fontWeight: String(mainWeight),
+            color: colorChip.black,
+            verticalAlign: "top",
+          }
+        },
+        {
+          style: {
+            position: "absolute",
+            top: String(grayTop) + ea,
+            left: String(leftGrayType0) + ea,
+            width: String(widthGrayType1) + ea,
+            height: String(grayHeight) + ea,
+            background: colorChip.gray1,
+            borderRadius: String(3) + "px",
+          }
+        },
+        {
+          mode: "input",
+          class: [ inputClassName ],
+          attribute: {
+            type: "text",
+            placeholder: "가족 구성원 (예) 부부, 딸 0명, 아들 0명",
+            property: "family",
+            value: "",
+          },
+          style: {
+            position: "absolute",
+            top: String(grayInputTop) + ea,
+            left: String(leftGrayType0) + ea,
+            width: String(widthGrayType1) + ea,
+            height: String(grayHeight) + ea,
+            outline: String(0),
+            border: String(0),
+            fontSize: String(inputSize) + ea,
+            fontWeight: String(inputWeight),
+            color: colorChip.black,
+            textAlign: "left",
+            background: "transparent",
+            textIndent: String(inputIndent) + ea,
+          }
+        },
+      ]
+    });
+    // 7 : margin
+    createNode({
+      mother: rightBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight * marginRatio) + ea,
+      }
+    });
+    // 8
+    createNode({
+      mother: rightBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight) + ea,
+      },
+      children: [
+        {
+          mode: "svg",
+          source: instance.mother.returnPoint(circleRadius, colorChip.green),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleRadius * 2) + ea,
+            height: String(circleRadius * 2) + ea,
+            marginRight: String(circleBetween) + ea,
+            top: String(circleTop) + ea,
+            verticalAlign: "top",
+          }
+        },
+        {
+          text: "평수",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(mainTop) + ea,
+            fontSize: String(mainSize) + ea,
+            fontWeight: String(mainWeight),
+            color: colorChip.black,
+            verticalAlign: "top",
+          }
+        },
+        {
+          style: {
+            position: "absolute",
+            top: String(grayTop) + ea,
+            left: String(leftGrayType1) + ea,
+            width: String(widthGrayType0) + ea,
+            height: String(grayHeight) + ea,
+            background: colorChip.gray1,
+            borderRadius: String(3) + "px",
+          }
+        },
+        {
+          mode: "input",
+          class: [ inputClassName ],
+          attribute: {
+            type: "text",
+            placeholder: "00평 (분양 평수)",
+            property: "pyeong",
+            value: "",
+          },
+          style: {
+            position: "absolute",
+            top: String(grayInputTop) + ea,
+            left: String(leftGrayType1) + ea,
+            width: String(widthGrayType0) + ea,
+            height: String(grayHeight) + ea,
+            outline: String(0),
+            border: String(0),
+            fontSize: String(inputSize) + ea,
+            fontWeight: String(inputWeight),
+            color: colorChip.black,
+            textAlign: "center",
+            background: "transparent",
+          }
+        },
+      ]
+    });
+    // 9
+    createNode({
+      mother: rightBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight) + ea,
+      },
+      children: [
+        {
+          mode: "svg",
+          source: instance.mother.returnPoint(circleRadius, colorChip.green),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleRadius * 2) + ea,
+            height: String(circleRadius * 2) + ea,
+            marginRight: String(circleBetween) + ea,
+            top: String(circleTop) + ea,
+            verticalAlign: "top",
+          }
+        },
+        {
+          text: "계약 형태",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(mainTop) + ea,
+            fontSize: String(mainSize) + ea,
+            fontWeight: String(mainWeight),
+            color: colorChip.black,
+            verticalAlign: "top",
+          }
+        },
+        {
+          class: [ inputClassName ],
+          attribute: {
+            toggle: "on",
+            property: "contract",
+          },
+          event: {
+            click: checkboxClickEvent0
+          },
+          style: {
+            position: "absolute",
+            top: String(0),
+            left: String(leftCheck0) + ea,
+            height: String(100) + '%',
+            verticalAlign: "top",
+            cursor: "pointer",
+          },
+          children: [
+            {
+              mode: "svg",
+              source: instance.mother.returnCheckBox(colorChip.gray3),
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: String(checkboxWidth) + ea,
+                top: String(checkboxTop) + ea,
+                verticalAlign: "top",
+                cursor: "pointer",
+                opacity: String(0),
+              }
+            },
+            {
+              mode: "svg",
+              source: instance.mother.returnCheckBox(colorChip.green),
+              style: {
+                position: "absolute",
+                width: String(checkboxWidth) + ea,
+                top: String(checkboxTop) + ea,
+                left: String(0),
+                verticalAlign: "top",
+                cursor: "pointer",
+                opacity: String(1),
+              }
+            },
+            {
+              text: "자가",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                marginLeft: String(checkboxBetween) + ea,
+                top: String(mainTop) + ea,
+                fontSize: String(mainSize) + ea,
+                fontWeight: String(checkboxWeight),
+                color: colorChip.green,
+                verticalAlign: "top",
+                cursor: "pointer",
+              }
+            },
+          ]
+        },
+        {
+          class: [ inputClassName ],
+          attribute: {
+            toggle: "off",
+            property: "contract",
+          },
+          event: {
+            click: checkboxClickEvent0
+          },
+          style: {
+            position: "absolute",
+            top: String(0),
+            left: String(leftCheck1) + ea,
+            height: String(100) + '%',
+            verticalAlign: "top",
+            cursor: "pointer",
+          },
+          children: [
+            {
+              mode: "svg",
+              source: instance.mother.returnCheckBox(colorChip.gray3),
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: String(checkboxWidth) + ea,
+                top: String(checkboxTop) + ea,
+                verticalAlign: "top",
+                cursor: "pointer",
+                opacity: String(1),
+              }
+            },
+            {
+              mode: "svg",
+              source: instance.mother.returnCheckBox(colorChip.green),
+              style: {
+                position: "absolute",
+                width: String(checkboxWidth) + ea,
+                top: String(checkboxTop) + ea,
+                left: String(0),
+                verticalAlign: "top",
+                cursor: "pointer",
+                opacity: String(0),
+              }
+            },
+            {
+              text: "전월세",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                marginLeft: String(checkboxBetween) + ea,
+                top: String(mainTop) + ea,
+                fontSize: String(mainSize) + ea,
+                fontWeight: String(checkboxWeight),
+                color: colorChip.black,
+                verticalAlign: "top",
+                cursor: "pointer",
+              }
+            },
+          ]
+        },
+      ]
+    });
+    // 10
+    createNode({
+      mother: rightBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight) + ea,
+      },
+      children: [
+        {
+          mode: "svg",
+          source: instance.mother.returnPoint(circleRadius, colorChip.green),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleRadius * 2) + ea,
+            height: String(circleRadius * 2) + ea,
+            marginRight: String(circleBetween) + ea,
+            top: String(circleTop) + ea,
+            verticalAlign: "top",
+          }
+        },
+        {
+          text: "입주일",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(mainTop) + ea,
+            fontSize: String(mainSize) + ea,
+            fontWeight: String(mainWeight),
+            color: colorChip.black,
+            verticalAlign: "top",
+          }
+        },
+        {
+          style: {
+            position: "absolute",
+            top: String(grayTop) + ea,
+            left: String(leftGrayType1) + ea,
+            width: String(widthGrayType0) + ea,
+            height: String(grayHeight) + ea,
+            background: colorChip.gray1,
+            borderRadius: String(3) + "px",
+          }
+        },
+        {
+          mode: "input",
+          class: [ inputClassName ],
+          attribute: {
+            type: "text",
+            placeholder: dateToString(new Date()),
+            property: "movein",
+            value: "",
+          },
+          style: {
+            position: "absolute",
+            top: String(grayInputTop) + ea,
+            left: String(leftGrayType1) + ea,
+            width: String(widthGrayType0) + ea,
+            height: String(grayHeight) + ea,
+            outline: String(0),
+            border: String(0),
+            fontSize: String(inputSize) + ea,
+            fontWeight: String(inputWeight),
+            color: colorChip.black,
+            textAlign: "center",
+            background: "transparent",
+          }
+        },
+      ]
+    });
+    // 11
+    createNode({
+      mother: rightBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight) + ea,
+      },
+      children: [
+        {
+          mode: "svg",
+          source: instance.mother.returnPoint(circleRadius, colorChip.green),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleRadius * 2) + ea,
+            height: String(circleRadius * 2) + ea,
+            marginRight: String(circleBetween) + ea,
+            top: String(circleTop) + ea,
+            verticalAlign: "top",
+          }
+        },
+        {
+          text: "거주 여부",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(mainTop) + ea,
+            fontSize: String(mainSize) + ea,
+            fontWeight: String(mainWeight),
+            color: colorChip.black,
+            verticalAlign: "top",
+          }
+        },
+        {
+          class: [ inputClassName ],
+          attribute: {
+            toggle: "on",
+            property: "living",
+          },
+          event: {
+            click: checkboxClickEvent0
+          },
+          style: {
+            position: "absolute",
+            top: String(0),
+            left: String(leftCheck0) + ea,
+            height: String(100) + '%',
+            verticalAlign: "top",
+            cursor: "pointer",
+          },
+          children: [
+            {
+              mode: "svg",
+              source: instance.mother.returnCheckBox(colorChip.gray3),
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: String(checkboxWidth) + ea,
+                top: String(checkboxTop) + ea,
+                verticalAlign: "top",
+                cursor: "pointer",
+                opacity: String(0),
+              }
+            },
+            {
+              mode: "svg",
+              source: instance.mother.returnCheckBox(colorChip.green),
+              style: {
+                position: "absolute",
+                width: String(checkboxWidth) + ea,
+                top: String(checkboxTop) + ea,
+                left: String(0),
+                verticalAlign: "top",
+                cursor: "pointer",
+                opacity: String(1),
+              }
+            },
+            {
+              text: "이사",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                marginLeft: String(checkboxBetween) + ea,
+                top: String(mainTop) + ea,
+                fontSize: String(mainSize) + ea,
+                fontWeight: String(checkboxWeight),
+                color: colorChip.green,
+                verticalAlign: "top",
+                cursor: "pointer",
+              }
+            },
+          ]
+        },
+        {
+          class: [ inputClassName ],
+          attribute: {
+            toggle: "off",
+            property: "living",
+          },
+          event: {
+            click: checkboxClickEvent0
+          },
+          style: {
+            position: "absolute",
+            top: String(0),
+            left: String(leftCheck1) + ea,
+            height: String(100) + '%',
+            verticalAlign: "top",
+            cursor: "pointer",
+          },
+          children: [
+            {
+              mode: "svg",
+              source: instance.mother.returnCheckBox(colorChip.gray3),
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: String(checkboxWidth) + ea,
+                top: String(checkboxTop) + ea,
+                verticalAlign: "top",
+                cursor: "pointer",
+                opacity: String(1),
+              }
+            },
+            {
+              mode: "svg",
+              source: instance.mother.returnCheckBox(colorChip.green),
+              style: {
+                position: "absolute",
+                width: String(checkboxWidth) + ea,
+                top: String(checkboxTop) + ea,
+                left: String(0),
+                verticalAlign: "top",
+                cursor: "pointer",
+                opacity: String(0),
+              }
+            },
+            {
+              text: "거주중",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                marginLeft: String(checkboxBetween) + ea,
+                top: String(mainTop) + ea,
+                fontSize: String(mainSize) + ea,
+                fontWeight: String(checkboxWeight),
+                color: colorChip.black,
+                verticalAlign: "top",
+                cursor: "pointer",
+              }
+            },
+          ]
+        },
+      ]
+    });
+    // 12 : margin
+    createNode({
+      mother: rightBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight * marginRatio) + ea,
+      }
+    });
+    // 13
+    createNode({
+      mother: rightBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(24) + ea,
+      },
+      children: [
+        {
+          mode: "svg",
+          source: instance.mother.returnPoint(circleRadius, colorChip.green),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleRadius * 2) + ea,
+            height: String(circleRadius * 2) + ea,
+            marginRight: String(circleBetween) + ea,
+            top: String(circleTop) + ea,
+            verticalAlign: "top",
+          }
+        },
+        {
+          text: "예산",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(mainTop) + ea,
+            fontSize: String(mainSize) + ea,
+            fontWeight: String(mainWeight),
+            color: colorChip.black,
+            verticalAlign: "top",
+          }
+        },
+        {
+          style: {
+            position: "absolute",
+            top: String(grayTop) + ea,
+            left: String(leftGrayType2) + ea,
+            width: String(widthGrayType2) + ea,
+            borderRadius: String(3) + "px",
+            paddingTop: String(mobileTongPaddingTop) + ea,
+          },
+          children: [
+            {
+              class: [ inputClassName ],
+              attribute: {
+                toggle: "on",
+                property: "budget",
+              },
+              event: {
+                click: checkboxClickEvent3,
+              },
+              style: {
+                display: "inline-block",
+                position: "relative",
+                color: colorChip.black,
+                verticalAlign: "top",
+                paddingLeft: String(mobileFactorPaddingLeft) + ea
+              },
+              children: [
+                {
+                  mode: "svg",
+                  source: instance.mother.returnCheckBox(colorChip.gray3),
+                  style: {
+                    position: "absolute",
+                    width: String(mobileFactorCheckWidth) + ea,
+                    top: String(mobileFactorCheckTop) + ea,
+                    verticalAlign: "top",
+                    cursor: "pointer",
+                    opacity: String(0),
+                    left: String(0),
+                  }
+                },
+                {
+                  mode: "svg",
+                  source: instance.mother.returnCheckBox(colorChip.green),
+                  style: {
+                    position: "absolute",
+                    width: String(mobileFactorCheckWidth) + ea,
+                    top: String(mobileFactorCheckTop) + ea,
+                    left: String(0),
+                    verticalAlign: "top",
+                    cursor: "pointer",
+                    opacity: String(1),
+                  }
+                },
+                {
+                  text: "500만원 이하",
+                  style: {
+                    position: "relative",
+                    fontSize: String(grayLineBlockFontSize) + ea,
+                    fontWeight: String(grayLineBlockFontWeight),
+                    color: colorChip.green,
+                    cursor: "pointer",
+                    transition: "all 0.5s ease",
+                    verticalAlign: "top",
+                  }
+                }
+              ]
+            },
+            {
+              class: [ inputClassName ],
+              attribute: {
+                toggle: "off",
+                property: "budget",
+              },
+              event: {
+                click: checkboxClickEvent3,
+              },
+              style: {
+                display: "inline-block",
+                position: "relative",
+                color: colorChip.black,
+                verticalAlign: "top",
+                paddingLeft: String(mobileFactorPaddingLeft) + ea,
+                marginLeft: String(mobileFactorBetween) + ea,
+                marginRight: String(17) + ea,
+                marginBottom: String(mobileFactorPaddingBotom) + ea,
+              },
+              children: [
+                {
+                  mode: "svg",
+                  source: instance.mother.returnCheckBox(colorChip.gray3),
+                  style: {
+                    position: "absolute",
+                    width: String(mobileFactorCheckWidth) + ea,
+                    top: String(mobileFactorCheckTop) + ea,
+                    verticalAlign: "top",
+                    cursor: "pointer",
+                    opacity: String(1),
+                    left: String(0),
+                  }
+                },
+                {
+                  mode: "svg",
+                  source: instance.mother.returnCheckBox(colorChip.green),
+                  style: {
+                    position: "absolute",
+                    width: String(mobileFactorCheckWidth) + ea,
+                    top: String(mobileFactorCheckTop) + ea,
+                    left: String(0),
+                    verticalAlign: "top",
+                    cursor: "pointer",
+                    opacity: String(0),
+                  }
+                },
+                {
+                  text: "1,000만원",
+                  style: {
+                    position: "relative",
+                    fontSize: String(grayLineBlockFontSize) + ea,
+                    fontWeight: String(grayLineBlockFontWeight),
+                    color: colorChip.deactive,
+                    cursor: "pointer",
+                    transition: "all 0.5s ease",
+                    verticalAlign: "top",
+                  }
+                }
+              ]
+            },
+            {
+              class: [ inputClassName ],
+              attribute: {
+                toggle: "off",
+                property: "budget",
+              },
+              event: {
+                click: checkboxClickEvent3,
+              },
+              style: {
+                display: "inline-block",
+                position: "relative",
+                color: colorChip.black,
+                verticalAlign: "top",
+                paddingLeft: String(mobileFactorPaddingLeft) + ea,
+              },
+              children: [
+                {
+                  mode: "svg",
+                  source: instance.mother.returnCheckBox(colorChip.gray3),
+                  style: {
+                    position: "absolute",
+                    width: String(mobileFactorCheckWidth) + ea,
+                    top: String(mobileFactorCheckTop) + ea,
+                    verticalAlign: "top",
+                    cursor: "pointer",
+                    opacity: String(1),
+                    left: String(0),
+                  }
+                },
+                {
+                  mode: "svg",
+                  source: instance.mother.returnCheckBox(colorChip.green),
+                  style: {
+                    position: "absolute",
+                    width: String(mobileFactorCheckWidth) + ea,
+                    top: String(mobileFactorCheckTop) + ea,
+                    left: String(0),
+                    verticalAlign: "top",
+                    cursor: "pointer",
+                    opacity: String(0),
+                  }
+                },
+                {
+                  text: "1,500만원",
+                  style: {
+                    position: "relative",
+                    fontSize: String(grayLineBlockFontSize) + ea,
+                    fontWeight: String(grayLineBlockFontWeight),
+                    color: colorChip.deactive,
+                    cursor: "pointer",
+                    transition: "all 0.5s ease",
+                    verticalAlign: "top",
+                  }
+                }
+              ]
+            },
+            {
+              class: [ inputClassName ],
+              attribute: {
+                toggle: "off",
+                property: "budget",
+              },
+              event: {
+                click: checkboxClickEvent3,
+              },
+              style: {
+                display: "inline-block",
+                position: "relative",
+                color: colorChip.black,
+                verticalAlign: "top",
+                paddingLeft: String(mobileFactorPaddingLeft) + ea,
+                marginLeft: String(mobileFactorBetween) + ea,
+              },
+              children: [
+                {
+                  mode: "svg",
+                  source: instance.mother.returnCheckBox(colorChip.gray3),
+                  style: {
+                    position: "absolute",
+                    width: String(mobileFactorCheckWidth) + ea,
+                    top: String(mobileFactorCheckTop) + ea,
+                    verticalAlign: "top",
+                    cursor: "pointer",
+                    opacity: String(1),
+                    left: String(0),
+                  }
+                },
+                {
+                  mode: "svg",
+                  source: instance.mother.returnCheckBox(colorChip.green),
+                  style: {
+                    position: "absolute",
+                    width: String(mobileFactorCheckWidth) + ea,
+                    top: String(mobileFactorCheckTop) + ea,
+                    left: String(0),
+                    verticalAlign: "top",
+                    cursor: "pointer",
+                    opacity: String(0),
+                  }
+                },
+                {
+                  text: "2,000만원",
+                  style: {
+                    position: "relative",
+                    fontSize: String(grayLineBlockFontSize) + ea,
+                    fontWeight: String(grayLineBlockFontWeight),
+                    color: colorChip.deactive,
+                    cursor: "pointer",
+                    transition: "all 0.5s ease",
+                    verticalAlign: "top",
+                  }
+                }
+              ]
+            },
+            {
+              class: [ inputClassName ],
+              attribute: {
+                toggle: "off",
+                property: "budget",
+              },
+              event: {
+                click: checkboxClickEvent3,
+              },
+              style: {
+                display: "inline-block",
+                position: "relative",
+                color: colorChip.black,
+                verticalAlign: "top",
+                paddingLeft: String(mobileFactorPaddingLeft) + ea,
+                marginLeft: String(mobileFactorBetween) + ea,
+                marginBottom: String(mobileFactorPaddingBotom) + ea,
+              },
+              children: [
+                {
+                  mode: "svg",
+                  source: instance.mother.returnCheckBox(colorChip.gray3),
+                  style: {
+                    position: "absolute",
+                    width: String(mobileFactorCheckWidth) + ea,
+                    top: String(mobileFactorCheckTop) + ea,
+                    verticalAlign: "top",
+                    cursor: "pointer",
+                    opacity: String(1),
+                    left: String(0),
+                  }
+                },
+                {
+                  mode: "svg",
+                  source: instance.mother.returnCheckBox(colorChip.green),
+                  style: {
+                    position: "absolute",
+                    width: String(mobileFactorCheckWidth) + ea,
+                    top: String(mobileFactorCheckTop) + ea,
+                    left: String(0),
+                    verticalAlign: "top",
+                    cursor: "pointer",
+                    opacity: String(0),
+                  }
+                },
+                {
+                  text: "2,500만원",
+                  style: {
+                    position: "relative",
+                    fontSize: String(grayLineBlockFontSize) + ea,
+                    fontWeight: String(grayLineBlockFontWeight),
+                    color: colorChip.deactive,
+                    cursor: "pointer",
+                    transition: "all 0.5s ease",
+                    verticalAlign: "top",
+                  }
+                }
+              ]
+            },
+            {
+              class: [ inputClassName ],
+              attribute: {
+                toggle: "off",
+                property: "budget",
+              },
+              event: {
+                click: checkboxClickEvent3,
+              },
+              style: {
+                display: "inline-block",
+                position: "relative",
+                color: colorChip.black,
+                verticalAlign: "top",
+                paddingLeft: String(mobileFactorPaddingLeft) + ea,
+                marginBottom: String(mobileFactorPaddingBotom) + ea,
+              },
+              children: [
+                {
+                  mode: "svg",
+                  source: instance.mother.returnCheckBox(colorChip.gray3),
+                  style: {
+                    position: "absolute",
+                    width: String(mobileFactorCheckWidth) + ea,
+                    top: String(mobileFactorCheckTop) + ea,
+                    verticalAlign: "top",
+                    cursor: "pointer",
+                    opacity: String(1),
+                    left: String(0),
+                  }
+                },
+                {
+                  mode: "svg",
+                  source: instance.mother.returnCheckBox(colorChip.green),
+                  style: {
+                    position: "absolute",
+                    width: String(mobileFactorCheckWidth) + ea,
+                    top: String(mobileFactorCheckTop) + ea,
+                    left: String(0),
+                    verticalAlign: "top",
+                    cursor: "pointer",
+                    opacity: String(0),
+                  }
+                },
+                {
+                  text: "3,000만원",
+                  style: {
+                    position: "relative",
+                    fontSize: String(grayLineBlockFontSize) + ea,
+                    fontWeight: String(grayLineBlockFontWeight),
+                    color: colorChip.deactive,
+                    cursor: "pointer",
+                    transition: "all 0.5s ease",
+                    verticalAlign: "top",
+                  }
+                }
+              ]
+            },
+            {
+              class: [ inputClassName ],
+              attribute: {
+                toggle: "off",
+                property: "budget",
+              },
+              event: {
+                click: checkboxClickEvent3,
+              },
+              style: {
+                display: "inline-block",
+                position: "relative",
+                color: colorChip.black,
+                verticalAlign: "top",
+                paddingLeft: String(mobileFactorPaddingLeft) + ea,
+                marginLeft: String(mobileFactorBetween2) + ea,
+                marginBottom: String(mobileFactorPaddingBotom) + ea,
+              },
+              children: [
+                {
+                  mode: "svg",
+                  source: instance.mother.returnCheckBox(colorChip.gray3),
+                  style: {
+                    position: "absolute",
+                    width: String(mobileFactorCheckWidth) + ea,
+                    top: String(mobileFactorCheckTop) + ea,
+                    verticalAlign: "top",
+                    cursor: "pointer",
+                    opacity: String(1),
+                    left: String(0),
+                  }
+                },
+                {
+                  mode: "svg",
+                  source: instance.mother.returnCheckBox(colorChip.green),
+                  style: {
+                    position: "absolute",
+                    width: String(mobileFactorCheckWidth) + ea,
+                    top: String(mobileFactorCheckTop) + ea,
+                    left: String(0),
+                    verticalAlign: "top",
+                    cursor: "pointer",
+                    opacity: String(0),
+                  }
+                },
+                {
+                  text: "3,500만원",
+                  style: {
+                    position: "relative",
+                    fontSize: String(grayLineBlockFontSize) + ea,
+                    fontWeight: String(grayLineBlockFontWeight),
+                    color: colorChip.deactive,
+                    cursor: "pointer",
+                    transition: "all 0.5s ease",
+                    verticalAlign: "top",
+                  }
+                }
+              ]
+            },
+            {
+              class: [ inputClassName ],
+              attribute: {
+                toggle: "off",
+                property: "budget",
+              },
+              event: {
+                click: checkboxClickEvent3,
+              },
+              style: {
+                display: "inline-block",
+                position: "relative",
+                color: colorChip.black,
+                verticalAlign: "top",
+                paddingLeft: String(mobileFactorPaddingLeft) + ea,
+                marginLeft: String(mobileFactorBetween3) + ea,
+                marginBottom: String(mobileFactorPaddingBotom) + ea,
+              },
+              children: [
+                {
+                  mode: "svg",
+                  source: instance.mother.returnCheckBox(colorChip.gray3),
+                  style: {
+                    position: "absolute",
+                    width: String(mobileFactorCheckWidth) + ea,
+                    top: String(mobileFactorCheckTop) + ea,
+                    verticalAlign: "top",
+                    cursor: "pointer",
+                    opacity: String(1),
+                    left: String(0),
+                  }
+                },
+                {
+                  mode: "svg",
+                  source: instance.mother.returnCheckBox(colorChip.green),
+                  style: {
+                    position: "absolute",
+                    width: String(mobileFactorCheckWidth) + ea,
+                    top: String(mobileFactorCheckTop) + ea,
+                    left: String(0),
+                    verticalAlign: "top",
+                    cursor: "pointer",
+                    opacity: String(0),
+                  }
+                },
+                {
+                  text: "4,000만원",
+                  style: {
+                    position: "relative",
+                    fontSize: String(grayLineBlockFontSize) + ea,
+                    fontWeight: String(grayLineBlockFontWeight),
+                    color: colorChip.deactive,
+                    cursor: "pointer",
+                    transition: "all 0.5s ease",
+                    verticalAlign: "top",
+                  }
+                }
+              ]
+            },
+            {
+              class: [ inputClassName ],
+              attribute: {
+                toggle: "off",
+                property: "budget",
+              },
+              event: {
+                click: checkboxClickEvent3,
+              },
+              style: {
+                display: "inline-block",
+                position: "relative",
+                color: colorChip.black,
+                verticalAlign: "top",
+                paddingLeft: String(mobileFactorPaddingLeft) + ea,
+              },
+              children: [
+                {
+                  mode: "svg",
+                  source: instance.mother.returnCheckBox(colorChip.gray3),
+                  style: {
+                    position: "absolute",
+                    width: String(mobileFactorCheckWidth) + ea,
+                    top: String(mobileFactorCheckTop) + ea,
+                    verticalAlign: "top",
+                    cursor: "pointer",
+                    opacity: String(1),
+                    left: String(0),
+                  }
+                },
+                {
+                  mode: "svg",
+                  source: instance.mother.returnCheckBox(colorChip.green),
+                  style: {
+                    position: "absolute",
+                    width: String(mobileFactorCheckWidth) + ea,
+                    top: String(mobileFactorCheckTop) + ea,
+                    left: String(0),
+                    verticalAlign: "top",
+                    cursor: "pointer",
+                    opacity: String(0),
+                  }
+                },
+                {
+                  text: "5,000만원 이상",
+                  style: {
+                    position: "relative",
+                    fontSize: String(grayLineBlockFontSize) + ea,
+                    fontWeight: String(grayLineBlockFontWeight),
+                    color: colorChip.deactive,
+                    cursor: "pointer",
+                    transition: "all 0.5s ease",
+                    verticalAlign: "top",
+                  }
+                }
+              ]
+            },
+          ]
+        },
+
+
+
+
+
+
+      ]
+    });
+    // 14 : margin
+    createNode({
+      mother: rightBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight * marginRatio) + ea,
+      }
+    });
+    // 15
+    createNode({
+      mother: rightBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight) + ea,
+      },
+      children: [
+        {
+          mode: "svg",
+          source: instance.mother.returnPoint(circleRadius, colorChip.green),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleRadius * 2) + ea,
+            height: String(circleRadius * 2) + ea,
+            marginRight: String(circleBetween) + ea,
+            top: String(circleTop) + ea,
+            verticalAlign: "top",
+          }
+        },
+        {
+          text: "방 개수",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(mainTop) + ea,
+            fontSize: String(mainSize) + ea,
+            fontWeight: String(mainWeight),
+            color: colorChip.black,
+            verticalAlign: "top",
+          }
+        },
+        {
+          class: [ inputClassName ],
+          attribute: {
+            toggle: "on",
+            property: "room",
+          },
+          event: {
+            click: checkboxClickEvent3
+          },
+          style: {
+            position: "absolute",
+            top: String(0),
+            left: String(leftCheck0) + ea,
+            height: String(100) + '%',
+            verticalAlign: "top",
+            cursor: "pointer",
+          },
+          children: [
+            {
+              mode: "svg",
+              source: instance.mother.returnCheckBox(colorChip.gray3),
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: String(checkboxWidth) + ea,
+                top: String(checkboxTop) + ea,
+                verticalAlign: "top",
+                cursor: "pointer",
+                opacity: String(0),
+              }
+            },
+            {
+              mode: "svg",
+              source: instance.mother.returnCheckBox(colorChip.green),
+              style: {
+                position: "absolute",
+                width: String(checkboxWidth) + ea,
+                top: String(checkboxTop) + ea,
+                left: String(0),
+                verticalAlign: "top",
+                cursor: "pointer",
+                opacity: String(1),
+              }
+            },
+            {
+              text: "1개",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                marginLeft: String(checkboxBetween) + ea,
+                top: String(mainTop) + ea,
+                fontSize: String(mainSize) + ea,
+                fontWeight: String(checkboxWeight),
+                color: colorChip.green,
+                verticalAlign: "top",
+                cursor: "pointer",
+              }
+            },
+          ]
+        },
+        {
+          class: [ inputClassName ],
+          attribute: {
+            toggle: "off",
+            property: "room",
+          },
+          event: {
+            click: checkboxClickEvent3
+          },
+          style: {
+            position: "absolute",
+            top: String(0),
+            left: String(mobileCheckBoxLeft1) + ea,
+            height: String(100) + '%',
+            verticalAlign: "top",
+            cursor: "pointer",
+          },
+          children: [
+            {
+              mode: "svg",
+              source: instance.mother.returnCheckBox(colorChip.gray3),
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: String(checkboxWidth) + ea,
+                top: String(checkboxTop) + ea,
+                verticalAlign: "top",
+                cursor: "pointer",
+                opacity: String(1),
+              }
+            },
+            {
+              mode: "svg",
+              source: instance.mother.returnCheckBox(colorChip.green),
+              style: {
+                position: "absolute",
+                width: String(checkboxWidth) + ea,
+                top: String(checkboxTop) + ea,
+                left: String(0),
+                verticalAlign: "top",
+                cursor: "pointer",
+                opacity: String(0),
+              }
+            },
+            {
+              text: "2개",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                marginLeft: String(checkboxBetween) + ea,
+                top: String(mainTop) + ea,
+                fontSize: String(mainSize) + ea,
+                fontWeight: String(checkboxWeight),
+                color: colorChip.deactive,
+                verticalAlign: "top",
+                cursor: "pointer",
+              }
+            },
+          ]
+        },
+        {
+          class: [ inputClassName ],
+          attribute: {
+            toggle: "off",
+            property: "room",
+          },
+          event: {
+            click: checkboxClickEvent3
+          },
+          style: {
+            position: "absolute",
+            top: String(0),
+            left: String(mobileCheckBoxLeft2) + ea,
+            height: String(100) + '%',
+            verticalAlign: "top",
+            cursor: "pointer",
+          },
+          children: [
+            {
+              mode: "svg",
+              source: instance.mother.returnCheckBox(colorChip.gray3),
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: String(checkboxWidth) + ea,
+                top: String(checkboxTop) + ea,
+                verticalAlign: "top",
+                cursor: "pointer",
+                opacity: String(1),
+              }
+            },
+            {
+              mode: "svg",
+              source: instance.mother.returnCheckBox(colorChip.green),
+              style: {
+                position: "absolute",
+                width: String(checkboxWidth) + ea,
+                top: String(checkboxTop) + ea,
+                left: String(0),
+                verticalAlign: "top",
+                cursor: "pointer",
+                opacity: String(0),
+              }
+            },
+            {
+              text: "3개",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                marginLeft: String(checkboxBetween) + ea,
+                top: String(mainTop) + ea,
+                fontSize: String(mainSize) + ea,
+                fontWeight: String(checkboxWeight),
+                color: colorChip.deactive,
+                verticalAlign: "top",
+                cursor: "pointer",
+              }
+            },
+          ]
+        },
+        {
+          class: [ inputClassName ],
+          attribute: {
+            toggle: "off",
+            property: "room",
+          },
+          event: {
+            click: checkboxClickEvent3
+          },
+          style: {
+            position: "absolute",
+            top: String(0),
+            left: String(mobileCheckBoxLeft3) + ea,
+            height: String(100) + '%',
+            verticalAlign: "top",
+            cursor: "pointer",
+            width: String(18) + ea,
+          },
+          children: [
+            {
+              mode: "svg",
+              source: instance.mother.returnCheckBox(colorChip.gray3),
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: String(checkboxWidth) + ea,
+                top: String(checkboxTop) + ea,
+                verticalAlign: "top",
+                cursor: "pointer",
+                opacity: String(1),
+              }
+            },
+            {
+              mode: "svg",
+              source: instance.mother.returnCheckBox(colorChip.green),
+              style: {
+                position: "absolute",
+                width: String(checkboxWidth) + ea,
+                top: String(checkboxTop) + ea,
+                left: String(0),
+                verticalAlign: "top",
+                cursor: "pointer",
+                opacity: String(0),
+              }
+            },
+            {
+              text: "4개 이상",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                marginLeft: String(checkboxBetween) + ea,
+                top: String(mainTop) + ea,
+                fontSize: String(mainSize) + ea,
+                fontWeight: String(checkboxWeight),
+                color: colorChip.deactive,
+                verticalAlign: "top",
+                cursor: "pointer",
+              }
+            },
+          ]
+        },
+      ]
+    });
+    // 16
+    createNode({
+      mother: rightBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight) + ea,
+      },
+      children: [
+        {
+          mode: "svg",
+          source: instance.mother.returnPoint(circleRadius, colorChip.green),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleRadius * 2) + ea,
+            height: String(circleRadius * 2) + ea,
+            marginRight: String(circleBetween) + ea,
+            top: String(circleTop) + ea,
+            verticalAlign: "top",
+          }
+        },
+        {
+          text: "화장실",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(mainTop) + ea,
+            fontSize: String(mainSize) + ea,
+            fontWeight: String(mainWeight),
+            color: colorChip.black,
+            verticalAlign: "top",
+          }
+        },
+        {
+          class: [ inputClassName ],
+          attribute: {
+            toggle: "on",
+            property: "bathroom",
+          },
+          event: {
+            click: checkboxClickEvent3
+          },
+          style: {
+            position: "absolute",
+            top: String(0),
+            left: String(leftCheck0) + ea,
+            height: String(100) + '%',
+            verticalAlign: "top",
+            cursor: "pointer",
+          },
+          children: [
+            {
+              mode: "svg",
+              source: instance.mother.returnCheckBox(colorChip.gray3),
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: String(checkboxWidth) + ea,
+                top: String(checkboxTop) + ea,
+                verticalAlign: "top",
+                cursor: "pointer",
+                opacity: String(0),
+              }
+            },
+            {
+              mode: "svg",
+              source: instance.mother.returnCheckBox(colorChip.green),
+              style: {
+                position: "absolute",
+                width: String(checkboxWidth) + ea,
+                top: String(checkboxTop) + ea,
+                left: String(0),
+                verticalAlign: "top",
+                cursor: "pointer",
+                opacity: String(1),
+              }
+            },
+            {
+              text: "1개",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                marginLeft: String(checkboxBetween) + ea,
+                top: String(mainTop) + ea,
+                fontSize: String(mainSize) + ea,
+                fontWeight: String(checkboxWeight),
+                color: colorChip.green,
+                verticalAlign: "top",
+                cursor: "pointer",
+              }
+            },
+          ]
+        },
+        {
+          class: [ inputClassName ],
+          attribute: {
+            toggle: "off",
+            property: "bathroom",
+          },
+          event: {
+            click: checkboxClickEvent3
+          },
+          style: {
+            position: "absolute",
+            top: String(0),
+            left: String(mobileCheckBoxLeft1) + ea,
+            height: String(100) + '%',
+            verticalAlign: "top",
+            cursor: "pointer",
+          },
+          children: [
+            {
+              mode: "svg",
+              source: instance.mother.returnCheckBox(colorChip.gray3),
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: String(checkboxWidth) + ea,
+                top: String(checkboxTop) + ea,
+                verticalAlign: "top",
+                cursor: "pointer",
+                opacity: String(1),
+              }
+            },
+            {
+              mode: "svg",
+              source: instance.mother.returnCheckBox(colorChip.green),
+              style: {
+                position: "absolute",
+                width: String(checkboxWidth) + ea,
+                top: String(checkboxTop) + ea,
+                left: String(0),
+                verticalAlign: "top",
+                cursor: "pointer",
+                opacity: String(0),
+              }
+            },
+            {
+              text: "2개",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                marginLeft: String(checkboxBetween) + ea,
+                top: String(mainTop) + ea,
+                fontSize: String(mainSize) + ea,
+                fontWeight: String(checkboxWeight),
+                color: colorChip.deactive,
+                verticalAlign: "top",
+                cursor: "pointer",
+              }
+            },
+          ]
+        },
+        {
+          class: [ inputClassName ],
+          attribute: {
+            toggle: "off",
+            property: "bathroom",
+          },
+          event: {
+            click: checkboxClickEvent3
+          },
+          style: {
+            position: "absolute",
+            top: String(0),
+            left: String(mobileCheckBoxLeft2) + ea,
+            height: String(100) + '%',
+            verticalAlign: "top",
+            cursor: "pointer",
+          },
+          children: [
+            {
+              mode: "svg",
+              source: instance.mother.returnCheckBox(colorChip.gray3),
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: String(checkboxWidth) + ea,
+                top: String(checkboxTop) + ea,
+                verticalAlign: "top",
+                cursor: "pointer",
+                opacity: String(1),
+              }
+            },
+            {
+              mode: "svg",
+              source: instance.mother.returnCheckBox(colorChip.green),
+              style: {
+                position: "absolute",
+                width: String(checkboxWidth) + ea,
+                top: String(checkboxTop) + ea,
+                left: String(0),
+                verticalAlign: "top",
+                cursor: "pointer",
+                opacity: String(0),
+              }
+            },
+            {
+              text: "3개 이상",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                marginLeft: String(checkboxBetween) + ea,
+                top: String(mainTop) + ea,
+                fontSize: String(mainSize) + ea,
+                fontWeight: String(checkboxWeight),
+                color: colorChip.deactive,
+                verticalAlign: "top",
+                cursor: "pointer",
+              }
+            },
+          ]
+        }
+      ]
+    });
+    // 17
+    createNode({
+      mother: rightBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight) + ea,
+      },
+      children: [
+        {
+          mode: "svg",
+          source: instance.mother.returnPoint(circleRadius, colorChip.green),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleRadius * 2) + ea,
+            height: String(circleRadius * 2) + ea,
+            marginRight: String(circleBetween) + ea,
+            top: String(circleTop) + ea,
+            verticalAlign: "top",
+          }
+        },
+        {
+          text: "발코니",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(mainTop) + ea,
+            fontSize: String(mainSize) + ea,
+            fontWeight: String(mainWeight),
+            color: colorChip.black,
+            verticalAlign: "top",
+          }
+        },
+        {
+          class: [ inputClassName ],
+          attribute: {
+            toggle: "on",
+            property: "balcony",
+          },
+          event: {
+            click: checkboxClickEvent3
+          },
+          style: {
+            position: "absolute",
+            top: String(0),
+            left: String(leftCheck0) + ea,
+            height: String(100) + '%',
+            verticalAlign: "top",
+            cursor: "pointer",
+          },
+          children: [
+            {
+              mode: "svg",
+              source: instance.mother.returnCheckBox(colorChip.gray3),
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: String(checkboxWidth) + ea,
+                top: String(checkboxTop) + ea,
+                verticalAlign: "top",
+                cursor: "pointer",
+                opacity: String(0),
+              }
+            },
+            {
+              mode: "svg",
+              source: instance.mother.returnCheckBox(colorChip.green),
+              style: {
+                position: "absolute",
+                width: String(checkboxWidth) + ea,
+                top: String(checkboxTop) + ea,
+                left: String(0),
+                verticalAlign: "top",
+                cursor: "pointer",
+                opacity: String(1),
+              }
+            },
+            {
+              text: "확장 없음",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                marginLeft: String(checkboxBetween) + ea,
+                top: String(mainTop) + ea,
+                fontSize: String(mainSize) + ea,
+                fontWeight: String(checkboxWeight),
+                color: colorChip.green,
+                verticalAlign: "top",
+                cursor: "pointer",
+              }
+            },
+          ]
+        },
+        {
+          class: [ inputClassName ],
+          attribute: {
+            toggle: "off",
+            property: "balcony",
+          },
+          event: {
+            click: checkboxClickEvent3
+          },
+          style: {
+            position: "absolute",
+            top: String(0),
+            left: String(mobileCheckBoxLeft4) + ea,
+            height: String(100) + '%',
+            verticalAlign: "top",
+            cursor: "pointer",
+          },
+          children: [
+            {
+              mode: "svg",
+              source: instance.mother.returnCheckBox(colorChip.gray3),
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: String(checkboxWidth) + ea,
+                top: String(checkboxTop) + ea,
+                verticalAlign: "top",
+                cursor: "pointer",
+                opacity: String(1),
+              }
+            },
+            {
+              mode: "svg",
+              source: instance.mother.returnCheckBox(colorChip.green),
+              style: {
+                position: "absolute",
+                width: String(checkboxWidth) + ea,
+                top: String(checkboxTop) + ea,
+                left: String(0),
+                verticalAlign: "top",
+                cursor: "pointer",
+                opacity: String(0),
+              }
+            },
+            {
+              text: "확장",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                marginLeft: String(checkboxBetween) + ea,
+                top: String(mainTop) + ea,
+                fontSize: String(mainSize) + ea,
+                fontWeight: String(checkboxWeight),
+                color: colorChip.deactive,
+                verticalAlign: "top",
+                cursor: "pointer",
+              }
+            },
+          ]
+        },
+      ]
+    });
+
+    // 18
+    createNode({
+      mother: rightBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight) + ea,
+      },
+      children: [
+        {
+          mode: "svg",
+          source: instance.mother.returnPoint(circleRadius, colorChip.green),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleRadius * 2) + ea,
+            height: String(circleRadius * 2) + ea,
+            marginRight: String(circleBetween) + ea,
+            top: String(circleTop) + ea,
+            verticalAlign: "top",
+          }
+        },
+        {
+          text: "요청 사항",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(mainTop) + ea,
+            fontSize: String(mainSize) + ea,
+            fontWeight: String(mainWeight),
+            color: colorChip.black,
+            verticalAlign: "top",
+          }
+        },
+        {
+          style: {
+            position: "absolute",
+            top: String(grayTextAreaTop) + ea,
+            left: String(leftGrayType1) + ea,
+            width: String(grayTextAreaWidth) + ea,
+            height: String(grayBigHeight) + ea,
+            background: colorChip.gray1,
+            borderRadius: String(3) + "px",
+          }
+        },
+        {
+          mode: "textarea",
+          class: [ inputClassName ],
+          attribute: {
+            placeholder: "선호 스타일과 공간 사항을 적어주세요!\n(예) 모던 프렌치 홈스타일링을 원해요.\n(예) 팬트리가 있어요.\n(예) 복층 공간입니다.",
+            property: "etc",
+          },
+          style: {
+            position: "absolute",
+            top: String(grayTextAreaTop + textareaTop) + ea,
+            left: String(leftGrayType1 + textareaLeft) + ea,
+            width: String(grayTextAreaWidth - (textareaLeft * 2)) + ea,
+            height: String(grayBigHeight - (textareaTop * 1)) + ea,
+            fontSize: String(inputSize) + ea,
+            fontWeight: String(grayLineBlockFontWeight),
+            border: String(0),
+            background: "transparent",
+            outline: String(0),
+            overflow: "scroll",
+            lineHeight: String(1.6),
+            color: colorChip.black,
+          }
+        }
+      ]
+    });
   }
 }
 

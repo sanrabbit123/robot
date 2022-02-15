@@ -1166,7 +1166,7 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
       fee = alphaPercentage * fee;
 
       offlineFeeCase = fee;
-      onlineFeeCase = fee;
+      onlineFeeCase = fee * 0.85;
 
       if (!distanceBoo || distanceLimitBoo) {
         travelInfo.amount = 0;
