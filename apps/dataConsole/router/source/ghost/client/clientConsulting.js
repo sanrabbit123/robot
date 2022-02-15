@@ -163,7 +163,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   mobileRightBoxLeft = 7;
 
   circleRadius = <%% 2.5, 2.5, 2, 2, 0.5 %%>;
-  circleTop = <%% 12, 12, 12, 12, 2.8 %%>;
+  circleTop = <%% 12, 12, 11, 12, 2.9 %%>;
   circleBetween = <%% 6, 6, 5, 5, 1.3 %%>;
 
   mainSize = <%% 20, 18, 17, 16, 4 %%>;
@@ -176,7 +176,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   secondPointLeft = <%% 315, 270, 240, 240, 25 %%>;
 
   grayTop = <%% 0, 0, 0, 0, 0 %%>;
-  grayInputTop = <%% (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), -0.3 %%>;
+  grayInputTop = <%% (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), -0.2 %%>;
   grayHeight = <%% 32, 32, 31, 31, 7 %%>;
   grayBigHeight = <%% 114, 114, 114, 114, 28 %%>;
   grayTextAreaTop = <%% 3, 3, 3, 3, 1.3 %%>;
@@ -203,7 +203,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   leftCheck0 = <%% 439, 380, 338, 96, 22.8 %%>;
   leftCheck1 = <%% 514, 448, 400, 150, 36.5 %%>;
   checkboxWidth = <%% 9, 9, 9, 8, 2 %%>;
-  checkboxTop = <%% (isMac() ? 9 : 10), (isMac() ? 9 : 9), (isMac() ? 8 : 8), (isMac() ? 8 : 9), 2.2 %%>;
+  checkboxTop = <%% (isMac() ? 9 : 10), (isMac() ? 9 : 9), (isMac() ? 8 : 8), (isMac() ? 8 : 9), 2.4 %%>;
   checkboxBetween = <%% 8, 8, 8, 6, 1.5 %%>;
   checkboxWeight = <%% 300, 300, 300, 300, 300 %%>;
 
