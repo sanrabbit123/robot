@@ -115,7 +115,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   let budgetTriangleTop, budgetTriangleWidth;
   let spaceTriangleTop, spaceTriangleWidth;
   let addressPromptWidth, addressPromptHeight;
-  let mainTop;
+  let mainTop, mobileCheckBoxMainTop;
   let addressButtonEvent;
   let mobileRightBoxLeft;
   let mobileTongPaddingTop;
@@ -126,8 +126,9 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   let mobileFactorPaddingBotom;
   let mobileCheckBoxLeft1, mobileCheckBoxLeft2, mobileCheckBoxLeft3, mobileCheckBoxLeft4;
   let grayTextAreaWidth;
+  let mobileCheckBoxMainSize;
 
-  blockHeight = <%% 918, 901, 817, 817, 264 %%>;
+  blockHeight = <%% 918, 901, 817, 1026, 264 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 52, 52, 44, 32, 52 %%>;
   leftRatio = <%% 0.32, 0.26, 0.26, 0.26, 0.32 %%>;
@@ -158,7 +159,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
 
   mobileRightBoxHeight = <%% 78, 78, 78, 78, 78 %%>;
 
-  rightBoxPaddingTop = <%% 136, 126, 116, 116, 25 %%>;
+  rightBoxPaddingTop = <%% 136, 126, 116, 108, 25 %%>;
   mobileRightBoxLeft = 7;
 
   circleRadius = <%% 2.5, 2.5, 2, 2, 0.5 %%>;
@@ -179,34 +180,34 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   grayHeight = <%% 32, 32, 31, 31, 7 %%>;
   grayBigHeight = <%% 114, 114, 114, 114, 28 %%>;
   grayTextAreaTop = <%% 3, 3, 3, 3, 1.3 %%>;
-  grayTextAreaWidth = <%% 51.7, 51.7, 51.7, 51.7, 51.7 %%>;
+  grayTextAreaWidth = <%% 51.7, 51.7, 51.7, 390, 51.7 %%>;
 
   moduleHeight = grayTop + grayHeight;
   blockMarginBottom = <%% 12, 12, 9, 9, 2 %%>;
 
   leftGrayType0 = <%% 101, 90, 78, 78, 18 %%>;
-  leftGrayType1 = <%% 418, 361, 318, 318, 22.8 %%>;
+  leftGrayType1 = <%% 418, 361, 318, 96, 22.8 %%>;
   leftGrayType2 = <%% 125, 112, 98, 98, 15 %%>;
-  leftGrayType3 = <%% 481, 422, 370, 378, 30.5 %%>;
+  leftGrayType3 = <%% 481, 422, 370, 129, 30.5 %%>;
 
-  widthGrayType0 = <%% 160, 140, 130, 130, 34 %%>;
-  widthGrayType1 = <%% 455, 329, 283, 283, 56.5 %%>;
-  widthGrayType2 = <%% 748, 578, 503, 503, 60 %%>;
-  widthGrayType3 = <%% 392, 268, 231, 223, 44 %%>;
+  widthGrayType0 = <%% 160, 140, 130, 150, 34 %%>;
+  widthGrayType1 = <%% 455, 329, 283, 407, 56.5 %%>;
+  widthGrayType2 = <%% 748, 578, 503, 388, 60 %%>;
+  widthGrayType3 = <%% 392, 268, 231, 356, 44 %%>;
 
   addressWidth = <%% 54, 54, 46, 46, 11 %%>;
   addressSize = <%% 13, 13, 12, 12, 3 %%>;
   addressWeight = <%% 600, 600, 600, 600, 600 %%>;
   addressTop = <%% 5, 5, 5, 5, 1 %%>;
 
-  leftCheck0 = <%% 439, 380, 338, 338, 22.8 %%>;
-  leftCheck1 = <%% 514, 448, 400, 378, 36.5 %%>;
-  checkboxWidth = <%% 9, 9, 9, 9, 2 %%>;
-  checkboxTop = <%% 9, 9, 9, 9, 2.2 %%>;
-  checkboxBetween = <%% 8, 8, 8, 8, 1.5 %%>;
+  leftCheck0 = <%% 439, 380, 338, 96, 22.8 %%>;
+  leftCheck1 = <%% 514, 448, 400, 150, 36.5 %%>;
+  checkboxWidth = <%% 9, 9, 9, 8, 2 %%>;
+  checkboxTop = <%% 9, 9, 9, 8, 2.2 %%>;
+  checkboxBetween = <%% 8, 8, 8, 6, 1.5 %%>;
   checkboxWeight = <%% 300, 300, 300, 300, 300 %%>;
 
-  marginRatio = <%% 1.6, 1.55, 1.45, 1.45, 1.1 %%>;
+  marginRatio = <%% 1.6, 1.55, 1.45, 1.1, 1.1 %%>;
 
   grayLineWidth = <%% 772, 600, 523, 523, 523 %%>;
   grayLineTop = <%% 12, 12, 12, 12, 12 %%>;
@@ -217,8 +218,8 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   grayLineBlockWidth1 = <%% 92, 72, 63, 92, 92 %%>;
   grayLineBlockWidth2 = <%% 106, 86, 72, 106, 106 %%>;
 
-  grayLineBlockFontSize = <%% 14, 12, 12, 12, 3.3 %%>;
-  grayLineBlockFontWeight = <%% 400, 400, 400, 400, 400 %%>;
+  grayLineBlockFontSize = <%% 14, 12, 12, 15, 3.3 %%>;
+  grayLineBlockFontWeight = <%% 400, 400, 400, 300, 400 %%>;
   grayLineBlockFontTop = <%% 15, 15, 15, 15, 15 %%>;
 
   grayLineBlockFontRight0 = <%% -37, -32, -32, -32, -33 %%>;
@@ -252,19 +253,22 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   addressPromptWidth = <%% 900, 900, 900, 900, 900 %%>;
   addressPromptHeight = <%% 450, 450, 450, 450, 450 %%>;
 
-  mobileTongPaddingTop = 0.7;
-  mobileFactorPaddingLeft = 3;
-  mobileFactorCheckWidth = 1.8;
-  mobileFactorCheckTop = 1.35;
-  mobileFactorBetween = 4.2;
-  mobileFactorBetween2 = 3.2;
-  mobileFactorBetween3 = 4.6;
-  mobileFactorPaddingBotom = 1.9;
+  mobileTongPaddingTop = <%% 0.7, 0.7, 0.7, 0.7, 0.7 %%>;
+  mobileFactorPaddingLeft = <%% 3, 3, 3, 15, 3 %%>;
+  mobileFactorCheckWidth = <%% 1.8, 1.8, 1.8, 8, 1.8 %%>;
+  mobileFactorCheckTop = <%% 1.35, 1.35, 1.35, 6, 1.35 %%>;
+  mobileFactorBetween = <%% 4.2, 4.2, 4.2, 19, 4.2 %%>;
+  mobileFactorBetween2 = <%% 3.2, 3.2, 3.2, 36.5, 3.2 %%>;
+  mobileFactorBetween3 = <%% 4.6, 4.6, 4.6, 16.5, 4.6 %%>;
+  mobileFactorPaddingBotom = <%% 1.9, 1.9, 1.9, 6, 1.9 %%>;
 
-  mobileCheckBoxLeft1 = 34;
-  mobileCheckBoxLeft2 = 46;
-  mobileCheckBoxLeft3 = 58;
-  mobileCheckBoxLeft4 = 45;
+  mobileCheckBoxLeft1 = <%% 34, 34, 34, 145, 34 %%>;
+  mobileCheckBoxLeft2 = <%% 46, 46, 46, 197, 46 %%>;
+  mobileCheckBoxLeft3 = <%% 58, 58, 58, 250, 58 %%>;
+  mobileCheckBoxLeft4 = <%% 45, 45, 45, 181, 45 %%>;
+
+  mobileCheckBoxMainSize = <%% 3.8, 3.8, 3.8, 15, 3.8 %%>;
+  mobileCheckBoxMainTop = <%% 0.7, 0.7, 0.7, 1.5, 0.7 %%>;
 
   checkboxClickEvent0 = async function (e) {
     try {
@@ -470,7 +474,11 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   } else if (media[1]) {
     initWording1 = "<u%*%u>주소는 <b%홈스타일링을 받으실 곳%b>으로, 평은 <b%분양 평수%b>로 적어 주셔야 합니다.";
   } else {
-    initWording1 = "주소는 <b%홈스타일링을 받으실 곳%b>으로, 평은 <b%분양\n평수%b>로 적어 주셔야 합니다.";
+    if (mobile) {
+      initWording1 = "주소는 <b%홈스타일링을 받으실 곳%b>으로, 평은 <b%분양\n평수%b>로 적어 주셔야 합니다.";
+    } else {
+      initWording1 = "<u%*%u>주소는 <b%홈스타일링을 받으실 곳%b>으로, 평은 <b%분양 평수%b>로 적어 주셔야 합니다.";
+    }
   }
 
   whiteBlock = createNode({
@@ -3171,8 +3179,8 @@ ClientConsultingJs.prototype.insertInitBox = function () {
                 display: "inline-block",
                 position: "relative",
                 marginLeft: String(checkboxBetween) + ea,
-                top: String(mainTop) + ea,
-                fontSize: String(mainSize) + ea,
+                top: String(mobileCheckBoxMainTop) + ea,
+                fontSize: String(mobileCheckBoxMainSize) + ea,
                 fontWeight: String(checkboxWeight),
                 color: colorChip.green,
                 verticalAlign: "top",
@@ -3231,8 +3239,8 @@ ClientConsultingJs.prototype.insertInitBox = function () {
                 display: "inline-block",
                 position: "relative",
                 marginLeft: String(checkboxBetween) + ea,
-                top: String(mainTop) + ea,
-                fontSize: String(mainSize) + ea,
+                top: String(mobileCheckBoxMainTop) + ea,
+                fontSize: String(mobileCheckBoxMainSize) + ea,
                 fontWeight: String(checkboxWeight),
                 color: colorChip.black,
                 verticalAlign: "top",
@@ -3400,8 +3408,8 @@ ClientConsultingJs.prototype.insertInitBox = function () {
                 display: "inline-block",
                 position: "relative",
                 marginLeft: String(checkboxBetween) + ea,
-                top: String(mainTop) + ea,
-                fontSize: String(mainSize) + ea,
+                top: String(mobileCheckBoxMainTop) + ea,
+                fontSize: String(mobileCheckBoxMainSize) + ea,
                 fontWeight: String(checkboxWeight),
                 color: colorChip.green,
                 verticalAlign: "top",
@@ -3460,8 +3468,8 @@ ClientConsultingJs.prototype.insertInitBox = function () {
                 display: "inline-block",
                 position: "relative",
                 marginLeft: String(checkboxBetween) + ea,
-                top: String(mainTop) + ea,
-                fontSize: String(mainSize) + ea,
+                top: String(mobileCheckBoxMainTop) + ea,
+                fontSize: String(mobileCheckBoxMainSize) + ea,
                 fontWeight: String(checkboxWeight),
                 color: colorChip.black,
                 verticalAlign: "top",
@@ -3489,7 +3497,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         display: "block",
         position: "relative",
         marginBottom: String(blockMarginBottom) + ea,
-        height: String(24) + ea,
+        height: String(mobile ? 24 : 70) + ea,
       },
       children: [
         {
@@ -3600,7 +3608,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
                 verticalAlign: "top",
                 paddingLeft: String(mobileFactorPaddingLeft) + ea,
                 marginLeft: String(mobileFactorBetween) + ea,
-                marginRight: String(17) + ea,
+                marginRight: String(mobile ? 17 : mobileFactorBetween) + ea,
                 marginBottom: String(mobileFactorPaddingBotom) + ea,
               },
               children: [
@@ -3774,7 +3782,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
                 color: colorChip.black,
                 verticalAlign: "top",
                 paddingLeft: String(mobileFactorPaddingLeft) + ea,
-                marginLeft: String(mobileFactorBetween) + ea,
+                marginLeft: mobile ? String(mobileFactorBetween) + ea : "",
                 marginBottom: String(mobileFactorPaddingBotom) + ea,
               },
               children: [
@@ -3834,6 +3842,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
                 verticalAlign: "top",
                 paddingLeft: String(mobileFactorPaddingLeft) + ea,
                 marginBottom: String(mobileFactorPaddingBotom) + ea,
+                marginLeft: mobile ? "" : String(mobileFactorBetween2) + ea,
               },
               children: [
                 {
@@ -3891,7 +3900,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
                 color: colorChip.black,
                 verticalAlign: "top",
                 paddingLeft: String(mobileFactorPaddingLeft) + ea,
-                marginLeft: String(mobileFactorBetween2) + ea,
+                marginLeft: String(mobileFactorBetween3) + ea,
                 marginBottom: String(mobileFactorPaddingBotom) + ea,
               },
               children: [
@@ -4156,8 +4165,8 @@ ClientConsultingJs.prototype.insertInitBox = function () {
                 display: "inline-block",
                 position: "relative",
                 marginLeft: String(checkboxBetween) + ea,
-                top: String(mainTop) + ea,
-                fontSize: String(mainSize) + ea,
+                top: String(mobileCheckBoxMainTop) + ea,
+                fontSize: String(mobileCheckBoxMainSize) + ea,
                 fontWeight: String(checkboxWeight),
                 color: colorChip.green,
                 verticalAlign: "top",
@@ -4216,8 +4225,8 @@ ClientConsultingJs.prototype.insertInitBox = function () {
                 display: "inline-block",
                 position: "relative",
                 marginLeft: String(checkboxBetween) + ea,
-                top: String(mainTop) + ea,
-                fontSize: String(mainSize) + ea,
+                top: String(mobileCheckBoxMainTop) + ea,
+                fontSize: String(mobileCheckBoxMainSize) + ea,
                 fontWeight: String(checkboxWeight),
                 color: colorChip.deactive,
                 verticalAlign: "top",
@@ -4276,8 +4285,8 @@ ClientConsultingJs.prototype.insertInitBox = function () {
                 display: "inline-block",
                 position: "relative",
                 marginLeft: String(checkboxBetween) + ea,
-                top: String(mainTop) + ea,
-                fontSize: String(mainSize) + ea,
+                top: String(mobileCheckBoxMainTop) + ea,
+                fontSize: String(mobileCheckBoxMainSize) + ea,
                 fontWeight: String(checkboxWeight),
                 color: colorChip.deactive,
                 verticalAlign: "top",
@@ -4302,7 +4311,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
             height: String(100) + '%',
             verticalAlign: "top",
             cursor: "pointer",
-            width: String(18) + ea,
+            width: String(mobile ? 18 : 66) + ea,
           },
           children: [
             {
@@ -4337,8 +4346,8 @@ ClientConsultingJs.prototype.insertInitBox = function () {
                 display: "inline-block",
                 position: "relative",
                 marginLeft: String(checkboxBetween) + ea,
-                top: String(mainTop) + ea,
-                fontSize: String(mainSize) + ea,
+                top: String(mobileCheckBoxMainTop) + ea,
+                fontSize: String(mobileCheckBoxMainSize) + ea,
                 fontWeight: String(checkboxWeight),
                 color: colorChip.deactive,
                 verticalAlign: "top",
@@ -4434,8 +4443,8 @@ ClientConsultingJs.prototype.insertInitBox = function () {
                 display: "inline-block",
                 position: "relative",
                 marginLeft: String(checkboxBetween) + ea,
-                top: String(mainTop) + ea,
-                fontSize: String(mainSize) + ea,
+                top: String(mobileCheckBoxMainTop) + ea,
+                fontSize: String(mobileCheckBoxMainSize) + ea,
                 fontWeight: String(checkboxWeight),
                 color: colorChip.green,
                 verticalAlign: "top",
@@ -4494,8 +4503,8 @@ ClientConsultingJs.prototype.insertInitBox = function () {
                 display: "inline-block",
                 position: "relative",
                 marginLeft: String(checkboxBetween) + ea,
-                top: String(mainTop) + ea,
-                fontSize: String(mainSize) + ea,
+                top: String(mobileCheckBoxMainTop) + ea,
+                fontSize: String(mobileCheckBoxMainSize) + ea,
                 fontWeight: String(checkboxWeight),
                 color: colorChip.deactive,
                 verticalAlign: "top",
@@ -4554,8 +4563,8 @@ ClientConsultingJs.prototype.insertInitBox = function () {
                 display: "inline-block",
                 position: "relative",
                 marginLeft: String(checkboxBetween) + ea,
-                top: String(mainTop) + ea,
-                fontSize: String(mainSize) + ea,
+                top: String(mobileCheckBoxMainTop) + ea,
+                fontSize: String(mobileCheckBoxMainSize) + ea,
                 fontWeight: String(checkboxWeight),
                 color: colorChip.deactive,
                 verticalAlign: "top",
@@ -4651,8 +4660,8 @@ ClientConsultingJs.prototype.insertInitBox = function () {
                 display: "inline-block",
                 position: "relative",
                 marginLeft: String(checkboxBetween) + ea,
-                top: String(mainTop) + ea,
-                fontSize: String(mainSize) + ea,
+                top: String(mobileCheckBoxMainTop) + ea,
+                fontSize: String(mobileCheckBoxMainSize) + ea,
                 fontWeight: String(checkboxWeight),
                 color: colorChip.green,
                 verticalAlign: "top",
@@ -4711,8 +4720,8 @@ ClientConsultingJs.prototype.insertInitBox = function () {
                 display: "inline-block",
                 position: "relative",
                 marginLeft: String(checkboxBetween) + ea,
-                top: String(mainTop) + ea,
-                fontSize: String(mainSize) + ea,
+                top: String(mobileCheckBoxMainTop) + ea,
+                fontSize: String(mobileCheckBoxMainSize) + ea,
                 fontWeight: String(checkboxWeight),
                 color: colorChip.deactive,
                 verticalAlign: "top",
@@ -4723,7 +4732,6 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         },
       ]
     });
-
     // 18
     createNode({
       mother: rightBox,
