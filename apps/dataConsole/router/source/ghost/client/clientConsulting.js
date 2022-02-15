@@ -198,7 +198,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   addressWidth = <%% 54, 54, 46, 46, 11 %%>;
   addressSize = <%% 13, 13, 12, 12, 3 %%>;
   addressWeight = <%% 600, 600, 600, 600, 600 %%>;
-  addressTop = <%% (isMac() ? 5 : 7), (isMac() ? 5 : 7), (isMac() ? 5 : 7), (isMac() ? 5 : 7), 1 %%>;
+  addressTop = <%% (isMac() ? 5 : 7), (isMac() ? 5 : 7), (isMac() ? 5 : 7), (isMac() ? 5 : 7), 1.2 %%>;
 
   leftCheck0 = <%% 439, 380, 338, 96, 22.8 %%>;
   leftCheck1 = <%% 514, 448, 400, 150, 36.5 %%>;
@@ -2583,13 +2583,13 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       },
       children: [
         {
-          mode: "svg",
-          source: instance.mother.returnPoint(circleRadius, colorChip.green),
           style: {
             display: "inline-block",
             position: "relative",
             width: String(circleRadius * 2) + ea,
             height: String(circleRadius * 2) + ea,
+            borderRadius: String(circleRadius * 2) + ea,
+            background:  colorChip.green,
             marginRight: String(circleBetween) + ea,
             top: String(circleTop) + ea,
             verticalAlign: "top",
@@ -2655,13 +2655,13 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       },
       children: [
         {
-          mode: "svg",
-          source: instance.mother.returnPoint(circleRadius, colorChip.green),
           style: {
             display: "inline-block",
             position: "relative",
             width: String(circleRadius * 2) + ea,
             height: String(circleRadius * 2) + ea,
+            borderRadius: String(circleRadius * 2) + ea,
+            background:  colorChip.green,
             marginRight: String(circleBetween) + ea,
             top: String(circleTop) + ea,
             verticalAlign: "top",
@@ -2727,13 +2727,13 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       },
       children: [
         {
-          mode: "svg",
-          source: instance.mother.returnPoint(circleRadius, colorChip.green),
           style: {
             display: "inline-block",
             position: "relative",
             width: String(circleRadius * 2) + ea,
             height: String(circleRadius * 2) + ea,
+            borderRadius: String(circleRadius * 2) + ea,
+            background:  colorChip.green,
             marginRight: String(circleBetween) + ea,
             top: String(circleTop) + ea,
             verticalAlign: "top",
@@ -2800,13 +2800,13 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       },
       children: [
         {
-          mode: "svg",
-          source: instance.mother.returnPoint(circleRadius, colorChip.green),
           style: {
             display: "inline-block",
             position: "relative",
             width: String(circleRadius * 2) + ea,
             height: String(circleRadius * 2) + ea,
+            borderRadius: String(circleRadius * 2) + ea,
+            background:  colorChip.green,
             marginRight: String(circleBetween) + ea,
             top: String(circleTop) + ea,
             verticalAlign: "top",
@@ -2950,13 +2950,13 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       },
       children: [
         {
-          mode: "svg",
-          source: instance.mother.returnPoint(circleRadius, colorChip.green),
           style: {
             display: "inline-block",
             position: "relative",
             width: String(circleRadius * 2) + ea,
             height: String(circleRadius * 2) + ea,
+            borderRadius: String(circleRadius * 2) + ea,
+            background:  colorChip.green,
             marginRight: String(circleBetween) + ea,
             top: String(circleTop) + ea,
             verticalAlign: "top",
@@ -3033,13 +3033,13 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       },
       children: [
         {
-          mode: "svg",
-          source: instance.mother.returnPoint(circleRadius, colorChip.green),
           style: {
             display: "inline-block",
             position: "relative",
             width: String(circleRadius * 2) + ea,
             height: String(circleRadius * 2) + ea,
+            borderRadius: String(circleRadius * 2) + ea,
+            background:  colorChip.green,
             marginRight: String(circleBetween) + ea,
             top: String(circleTop) + ea,
             verticalAlign: "top",
@@ -3105,13 +3105,13 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       },
       children: [
         {
-          mode: "svg",
-          source: instance.mother.returnPoint(circleRadius, colorChip.green),
           style: {
             display: "inline-block",
             position: "relative",
             width: String(circleRadius * 2) + ea,
             height: String(circleRadius * 2) + ea,
+            borderRadius: String(circleRadius * 2) + ea,
+            background:  colorChip.green,
             marginRight: String(circleBetween) + ea,
             top: String(circleTop) + ea,
             verticalAlign: "top",
@@ -3262,13 +3262,13 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       },
       children: [
         {
-          mode: "svg",
-          source: instance.mother.returnPoint(circleRadius, colorChip.green),
           style: {
             display: "inline-block",
             position: "relative",
             width: String(circleRadius * 2) + ea,
             height: String(circleRadius * 2) + ea,
+            borderRadius: String(circleRadius * 2) + ea,
+            background:  colorChip.green,
             marginRight: String(circleBetween) + ea,
             top: String(circleTop) + ea,
             verticalAlign: "top",
@@ -3334,13 +3334,13 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       },
       children: [
         {
-          mode: "svg",
-          source: instance.mother.returnPoint(circleRadius, colorChip.green),
           style: {
             display: "inline-block",
             position: "relative",
             width: String(circleRadius * 2) + ea,
             height: String(circleRadius * 2) + ea,
+            borderRadius: String(circleRadius * 2) + ea,
+            background:  colorChip.green,
             marginRight: String(circleBetween) + ea,
             top: String(circleTop) + ea,
             verticalAlign: "top",
@@ -3501,13 +3501,13 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       },
       children: [
         {
-          mode: "svg",
-          source: instance.mother.returnPoint(circleRadius, colorChip.green),
           style: {
             display: "inline-block",
             position: "relative",
             width: String(circleRadius * 2) + ea,
             height: String(circleRadius * 2) + ea,
+            borderRadius: String(circleRadius * 2) + ea,
+            background:  colorChip.green,
             marginRight: String(circleBetween) + ea,
             top: String(circleTop) + ea,
             verticalAlign: "top",
@@ -3900,7 +3900,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
                 color: colorChip.black,
                 verticalAlign: "top",
                 paddingLeft: String(mobileFactorPaddingLeft) + ea,
-                marginLeft: String(mobileFactorBetween3) + ea,
+                marginLeft: String(mobile ? mobileFactorBetween2 : mobileFactorBetween3) + ea,
                 marginBottom: String(mobileFactorPaddingBotom) + ea,
               },
               children: [
@@ -4091,13 +4091,13 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       },
       children: [
         {
-          mode: "svg",
-          source: instance.mother.returnPoint(circleRadius, colorChip.green),
           style: {
             display: "inline-block",
             position: "relative",
             width: String(circleRadius * 2) + ea,
             height: String(circleRadius * 2) + ea,
+            borderRadius: String(circleRadius * 2) + ea,
+            background:  colorChip.green,
             marginRight: String(circleBetween) + ea,
             top: String(circleTop) + ea,
             verticalAlign: "top",
@@ -4369,13 +4369,13 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       },
       children: [
         {
-          mode: "svg",
-          source: instance.mother.returnPoint(circleRadius, colorChip.green),
           style: {
             display: "inline-block",
             position: "relative",
             width: String(circleRadius * 2) + ea,
             height: String(circleRadius * 2) + ea,
+            borderRadius: String(circleRadius * 2) + ea,
+            background:  colorChip.green,
             marginRight: String(circleBetween) + ea,
             top: String(circleTop) + ea,
             verticalAlign: "top",
@@ -4586,13 +4586,13 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       },
       children: [
         {
-          mode: "svg",
-          source: instance.mother.returnPoint(circleRadius, colorChip.green),
           style: {
             display: "inline-block",
             position: "relative",
             width: String(circleRadius * 2) + ea,
             height: String(circleRadius * 2) + ea,
+            borderRadius: String(circleRadius * 2) + ea,
+            background:  colorChip.green,
             marginRight: String(circleBetween) + ea,
             top: String(circleTop) + ea,
             verticalAlign: "top",
@@ -4743,13 +4743,13 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       },
       children: [
         {
-          mode: "svg",
-          source: instance.mother.returnPoint(circleRadius, colorChip.green),
           style: {
             display: "inline-block",
             position: "relative",
             width: String(circleRadius * 2) + ea,
             height: String(circleRadius * 2) + ea,
+            borderRadius: String(circleRadius * 2) + ea,
+            background:  colorChip.green,
             marginRight: String(circleBetween) + ea,
             top: String(circleTop) + ea,
             verticalAlign: "top",
