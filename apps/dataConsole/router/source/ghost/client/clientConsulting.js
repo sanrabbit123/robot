@@ -256,7 +256,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   mobileTongPaddingTop = <%% 0.7, 0.7, 0.7, 0.7, 0.7 %%>;
   mobileFactorPaddingLeft = <%% 3, 3, 3, 15, 3 %%>;
   mobileFactorCheckWidth = <%% 1.8, 1.8, 1.8, 8, 1.8 %%>;
-  mobileFactorCheckTop = <%% 1.35, 1.35, 1.35, 6, 1.5 %%>;
+  mobileFactorCheckTop = <%% 1.35, 1.35, 1.35, 6, 1.6 %%>;
   mobileFactorBetween = <%% 4.2, 4.2, 4.2, 19, 4.2 %%>;
   mobileFactorBetween2 = <%% 3.2, 3.2, 3.2, 36.5, 3.2 %%>;
   mobileFactorBetween3 = <%% 4.6, 4.6, 4.6, 16.5, 4.6 %%>;
@@ -268,7 +268,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   mobileCheckBoxLeft4 = <%% 45, 45, 45, 181, 45 %%>;
 
   mobileCheckBoxMainSize = <%% 3.8, 3.8, 3.8, 15, 3.8 %%>;
-  mobileCheckBoxMainTop = <%% 0.7, 0.7, 0.7, 1.5, 0.7 %%>;
+  mobileCheckBoxMainTop = <%% 0.7, 0.7, 0.7, 1.5, 0.6 %%>;
 
   checkboxClickEvent0 = async function (e) {
     try {
