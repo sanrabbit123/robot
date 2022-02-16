@@ -288,7 +288,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
 
   greenNoticeSize = <%% 12, 12, 11, 11, 2.8 %%>;
   greenNoticeWeight = <%% 600, 600, 600, 600, 600 %%>;
-  greenNoticePaddingTop = <%% (isMac() ? 8 : 9), (isMac() ? 8 : 9), (isMac() ? 7 : 8), (isMac() ? 7 : 8), 1.9 %%>;
+  greenNoticePaddingTop = <%% (isMac() ? 8 : 10), (isMac() ? 8 : 10), (isMac() ? 7 : 9), (isMac() ? 7 : 9), 1.9 %%>;
   greenNoticePaddingBottom = <%% (isMac() ? 9 : 8), (isMac() ? 9 : 8), (isMac() ? 8 : 7), (isMac() ? 8 : 7), 2.3 %%>;
   greenNoticePaddingLeft = <%% 11, 11, 10, 10, 2.4 %%>;
   greenNoticeBottom = <%% 40, 40, 40, 40, 8 %%>;
