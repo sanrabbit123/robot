@@ -286,19 +286,19 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   mobileCheckBoxMainSize = <%% 3.8, 3.8, 3.8, 15, 3.8 %%>;
   mobileCheckBoxMainTop = <%% 0.7, 0.7, 0.7, 1.5, 0.6 %%>;
 
-  greenNoticeSize = 12;
-  greenNoticeWeight = 600;
-  greenNoticePaddingTop = 8;
-  greenNoticePaddingBottom = 9;
-  greenNoticePaddingLeft = 10;
-  greenNoticeBottom = 40;
-  greenNoticeBottom2 = 36;
-  greenNoticeLineHeight = 1.4;
-  greenNoticeWidth0 = 96;
-  greenNoticeWidth1 = 120;
+  greenNoticeSize = <%% 12, 12, 11, 11, 2.8 %%>;
+  greenNoticeWeight = <%% 600, 600, 600, 600, 600 %%>;
+  greenNoticePaddingTop = <%% 8, 8, 7, 7, 1.8 %%>;
+  greenNoticePaddingBottom = <%% 9, 9, 8, 8, 2.2 %%>;
+  greenNoticePaddingLeft = <%% 11, 11, 10, 10, 2.3 %%>;
+  greenNoticeBottom = <%% 40, 40, 40, 40, 8 %%>;
+  greenNoticeBottom2 = <%% 36, 36, 36, 36, 7.2 %%>;
+  greenNoticeLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
+  greenNoticeWidth0 = <%% 96, 96, 96, 96, 28 %%>;
+  greenNoticeWidth1 = <%% 120, 120, 120, 120, 28 %%>;
 
-  calendarWidth = <%% 260, 250, 230, 210, 60 %%>;
-  calendarTop = <%% 41, 41, 41, 41, 4 %%>;
+  calendarWidth = <%% 260, 250, 230, 210, 54 %%>;
+  calendarTop = <%% 41, 41, 41, 40, 8.2 %%>;
 
   livingDownEvent = function (id) {
     GeneralJs.stacks["currentLivingAlertId"] = null;
