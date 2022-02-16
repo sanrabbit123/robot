@@ -288,16 +288,16 @@ ClientConsultingJs.prototype.insertInitBox = function () {
 
   greenNoticeSize = <%% 12, 12, 11, 11, 2.8 %%>;
   greenNoticeWeight = <%% 600, 600, 600, 600, 600 %%>;
-  greenNoticePaddingTop = <%% 8, 8, 7, 7, 1.8 %%>;
-  greenNoticePaddingBottom = <%% 9, 9, 8, 8, 2.2 %%>;
-  greenNoticePaddingLeft = <%% 11, 11, 10, 10, 2.3 %%>;
+  greenNoticePaddingTop = <%% (isMac() ? 8 : 9), (isMac() ? 8 : 9), (isMac() ? 7 : 8), (isMac() ? 7 : 8), 1.9 %%>;
+  greenNoticePaddingBottom = <%% (isMac() ? 9 : 8), (isMac() ? 9 : 8), (isMac() ? 8 : 7), (isMac() ? 8 : 7), 2.3 %%>;
+  greenNoticePaddingLeft = <%% 11, 11, 10, 10, 2.4 %%>;
   greenNoticeBottom = <%% 40, 40, 40, 40, 8 %%>;
   greenNoticeBottom2 = <%% 36, 36, 36, 36, 7.2 %%>;
   greenNoticeLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
   greenNoticeWidth0 = <%% 96, 96, 96, 96, 28 %%>;
   greenNoticeWidth1 = <%% 120, 120, 120, 120, 28 %%>;
 
-  calendarWidth = <%% 260, 250, 230, 210, 54 %%>;
+  calendarWidth = <%% 260, 250, 230, 210, 56 %%>;
   calendarTop = <%% 41, 41, 41, 40, 8.2 %%>;
 
   livingDownEvent = function (id) {
