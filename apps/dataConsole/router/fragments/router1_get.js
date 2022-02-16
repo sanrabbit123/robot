@@ -107,6 +107,40 @@ DataRouter.prototype.getCalendar = async function (length = 12) {
   }
 }
 
+DataRouter.prototype.parsingAddress = async function (id, rawString, MONGOC) {
+  if (typeof id !== "string" || typeof rawString !== "string" || MONGOC === undefined) {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  const AddressParser = require(`${process.cwd()}/apps/addressParser/addressParser.js`);
+  const app = new AddressParser();
+  const back = this.back;
+  const { messageSend, errorLog, messageLog } = this.mother;
+  try {
+    let arr;
+
+    //client
+    if (/^c/gi.test(id)) {
+      arr = await app.addressInspection([ { id, address: rawString } ]);
+      if (arr.length === 0) {
+        return { result: true, id };
+      } else {
+        const res = await app.getAddress(rawString);
+        if (res === null) {
+          return { result: false, id };
+        } else {
+          const { address: { road } } = res;
+          await back.updateClient([ { cliid: id }, { "requests.0.request.space.address": (road + " " + rawString) } ], { selfMongo: MONGOC });
+          return { result: true, id };
+        }
+      }
+    }
+  } catch (e) {
+    await errorLog("주소 연산 중 오류 생김 (parsingAddress): " + e.message);
+    console.log(e);
+  }
+}
+
 //GET ---------------------------------------------------------------------------------------------
 
 DataRouter.prototype.rou_get_Root = function () {

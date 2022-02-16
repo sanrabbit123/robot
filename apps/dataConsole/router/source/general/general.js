@@ -4503,9 +4503,10 @@ GeneralJs.prototype.certificationBox = function (name, phone, callback) {
   GeneralJs.ajaxJson({
     name,
     phone,
-    subject: "휴대폰 인증",
-    contents: "[홈리에종] 안녕하세요! " + name + "님,\n휴대폰 인증번호를 보내드립니다.\n\n인증번호 : " + randomValue + "\n\n인증번호를 팝업창에 입력해주세요!"
-  }, "/sendSms");
+    certification: randomValue
+  }, "/sendCertification").catch((err) => {
+    console.log(err);
+  })
 
   let div_back, div_clone, div_clone2, svg_clone;
   let input_back, input_clone;

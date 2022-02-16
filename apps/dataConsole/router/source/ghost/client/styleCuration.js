@@ -604,50 +604,50 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
               }
             }
           },
-          {
-            name: "pyeong",
-            type: "pyeong",
-            half: false,
-            required: false,
-            rewind: "평수를 정확히 입력해주세요 :)",
-            question: [
-              "<b%분양 평수로 적으신 평이 맞나요?%b>",
-              "평을 정확히 적으셔야 금액이 올바로 안내됩니다!"
-            ],
-            value: function (request, history, self) {
-              return String(Math.round(request.request.space.pyeong)) + '평';
-            },
-            update: function (value, siblings, client) {
-              if (value === null) {
-                return { history: null, core: null };
-              } else {
-                let updateQuery;
-                updateQuery = {};
-                if (typeof value === "number") {
-                  updateQuery["requests.0.request.space.pyeong"] = value;
-                } else if (typeof value === "string") {
-                  value = Number(value.replace(/[^0-9\-\.]/gi, ''));
-                  if (Number.isNaN(value)) {
-                    return {
-                      history: null,
-                      core: null
-                    };
-                  } else {
-                    updateQuery["requests.0.request.space.pyeong"] = value;
-                  }
-                } else {
-                  return {
-                    history: null,
-                    core: null
-                  };
-                }
-                return {
-                  history: null,
-                  core: updateQuery
-                };
-              }
-            }
-          },
+          // {
+          //   name: "pyeong",
+          //   type: "pyeong",
+          //   half: false,
+          //   required: false,
+          //   rewind: "평수를 정확히 입력해주세요 :)",
+          //   question: [
+          //     "<b%분양 평수로 적으신 평이 맞나요?%b>",
+          //     "평을 정확히 적으셔야 금액이 올바로 안내됩니다!"
+          //   ],
+          //   value: function (request, history, self) {
+          //     return String(Math.round(request.request.space.pyeong)) + '평';
+          //   },
+          //   update: function (value, siblings, client) {
+          //     if (value === null) {
+          //       return { history: null, core: null };
+          //     } else {
+          //       let updateQuery;
+          //       updateQuery = {};
+          //       if (typeof value === "number") {
+          //         updateQuery["requests.0.request.space.pyeong"] = value;
+          //       } else if (typeof value === "string") {
+          //         value = Number(value.replace(/[^0-9\-\.]/gi, ''));
+          //         if (Number.isNaN(value)) {
+          //           return {
+          //             history: null,
+          //             core: null
+          //           };
+          //         } else {
+          //           updateQuery["requests.0.request.space.pyeong"] = value;
+          //         }
+          //       } else {
+          //         return {
+          //           history: null,
+          //           core: null
+          //         };
+          //       }
+          //       return {
+          //         history: null,
+          //         core: updateQuery
+          //       };
+          //     }
+          //   }
+          // },
           {
             name: "precheck",
             type: "calendar",

@@ -2245,6 +2245,258 @@ DataRouter.prototype.rou_post_humanPacket = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_sendCertification = function () {
+  const instance = this;
+  const back = this.back;
+  const human = this.human;
+  const kakao = this.kakao;
+  let obj = {};
+  obj.link = [ "/sendCertification" ];
+  obj.func = async function (req, res) {
+    res.set({ "Content-Type": "application/json" });
+    try {
+      const { name, phone, certification } = req.body;
+      await human.sendSms({
+        name,
+        phone,
+        subject: "휴대폰 인증",
+        contents: "[홈리에종] 안녕하세요! " + name + "님,\n휴대폰 인증번호를 보내드립니다.\n\n인증번호 : " + certification + "\n\n인증번호를 팝업창에 입력해주세요!"
+      });
+      await kakao.sendTalk("certification", name, phone, {
+        company: "홈리에종",
+        name,
+        certification
+      });
+      res.send(JSON.stringify({ message: "success" }));
+    } catch (e) {
+      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_sendCertification): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_clientSubmit = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, stringToDate, errorLog, messageSend, messageLog, ghostRequest } = this.mother;
+  let obj = {};
+  obj.link = [ "/clientSubmit" ];
+  obj.func = async function (req, res) {
+    res.set({ "Content-Type": "application/json" });
+    try {
+      const selfMongo = instance.mongo;
+      const { map } = equalJson(req.body);
+      const budgetArr = [ "500만원 이하", "1,000만원", "1,500만원", "2,000만원", "2,500만원", "3,000만원", "3,500만원", "4,000만원", "4,500만원", "5,000만원 이상" ];
+      const ignorePhone = [ "010-2747-3403" ];
+      const defaultPyeong = 34;
+      const moveinConst0 = 60;
+      const moveinConst1 = 10;
+
+      let ifOverlap;
+      let requestObject;
+      let name;
+      let phone;
+      let address0;
+      let address1;
+      let family;
+      let email;
+      let pyeong;
+      let contract;
+      let movein;
+      let living;
+      let budget;
+      let room;
+      let bathroom;
+      let balcony;
+      let etc;
+      let future;
+      let expectedStart;
+      let requestArr;
+      let pastRequests;
+      let cliid;
+      let message;
+      let thisClient;
+
+      name = map.find((obj) => { return obj.property === "name" });
+      phone = map.find((obj) => { return obj.property === "phone" });
+      address0 = map.find((obj) => { return obj.property === "address0" });
+      address1 = map.find((obj) => { return obj.property === "address1" });
+      family = map.find((obj) => { return obj.property === "family" });
+      email = map.find((obj) => { return obj.property === "email" });
+      pyeong = map.find((obj) => { return obj.property === "pyeong" });
+      contract = map.find((obj) => { return obj.property === "contract" });
+      movein = map.find((obj) => { return obj.property === "movein" });
+      living = map.find((obj) => { return obj.property === "living" });
+      budget = map.find((obj) => { return obj.property === "budget" });
+      room = map.find((obj) => { return obj.property === "room" });
+      bathroom = map.find((obj) => { return obj.property === "bathroom" });
+      balcony = map.find((obj) => { return obj.property === "balcony" });
+      etc = map.find((obj) => { return obj.property === "etc" });
+
+      if (name === undefined || phone === undefined || address0 === undefined || address1 === undefined || family === undefined || email === undefined || pyeong === undefined || contract === undefined || movein === undefined || living === undefined || budget === undefined || room === undefined || bathroom === undefined || balcony === undefined || etc === undefined) {
+        throw new Error("invaild post");
+      }
+
+      name = name.value.trim();
+      phone = phone.value.trim();
+      address0 = address0.value.trim();
+      address1 = address1.value.trim();
+      family = family.value.trim();
+      email = email.value.trim();
+      pyeong = pyeong.value.trim();
+      contract = contract.value.trim();
+      movein = movein.value.trim();
+      living = living.value.trim();
+      budget = budget.value.trim();
+      room = room.value.trim();
+      bathroom = bathroom.value.trim();
+      balcony = balcony.value.trim();
+      etc = etc.value.trim();
+
+      requestObject = {};
+
+      requestObject["name"] = name.replace(/[^가-힣]/gi, '')
+      requestObject["phone"] = phone.replace(/[^0-9\-]/gi, '');
+      requestObject["email"] = email;
+
+      requestObject["requests.0.request.space.address"] = address0 + " " + address1;
+      requestObject["requests.0.request.family"] = family;
+
+      if (budgetArr.includes(budget)) {
+        requestObject["requests.0.request.budget"] = budget;
+      } else {
+        requestObject["requests.0.request.budget"] = budgetArr[0];
+      }
+
+      if (Number.isNaN(Number(pyeong.replace(/[^0-9\.]/gi, ''))) || Number(pyeong.replace(/[^0-9\.]/gi, '')) === 0) {
+        requestObject["requests.0.request.space.pyeong"] = defaultPyeong;
+      } else {
+        requestObject["requests.0.request.space.pyeong"] = Number(pyeong.replace(/[^0-9\.]/gi, ''));
+      }
+
+      if (/거주중/gi.test(living)) {
+        requestObject["requests.0.request.space.resident.living"] = true;
+        requestObject["requests.0.request.space.resident.expected"] = new Date();
+        future = new Date();
+        future.setDate(future.getDate() + moveinConst0);
+        requestObject["requests.0.analytics.date.space.movein"] = future;
+      } else {
+        requestObject["requests.0.request.space.resident.living"] = false;
+        requestObject["requests.0.request.space.resident.expected"] = stringToDate(movein);
+        future = stringToDate(movein);
+        future.setDate(future.getDate() + moveinConst1);
+        requestObject["requests.0.analytics.date.space.movein"] = future;
+      }
+
+      expectedStart = new Date(future.getFullYear(), future.getMonth(), future.getDate(), future.getHours(), future.getMinutes(), future.getSeconds());
+      expectedStart = expectedStart.setDate(expectedStart.getDate() - 60);
+      if (!requestObject["requests.0.request.space.resident.living"] && expectedStart.valueOf() <= (new Date()).valueOf()) {
+        requestObject["requests.0.request.space.resident.living"] = true;
+        requestObject["requests.0.request.space.resident.expected"] = new Date();
+        future = new Date();
+        future.setDate(future.getDate() + moveinConst0);
+        requestObject["requests.0.analytics.date.space.movein"] = future;
+      }
+
+      requestObject["requests.0.request.space.contract"] = contract;
+
+      if (Number.isNaN(Number(room.replace(/[^0-9]/gi, '')))) {
+        requestObject["requests.0.request.space.spec.room"] = 0;
+      } else {
+        requestObject["requests.0.request.space.spec.room"] = Number(room.replace(/[^0-9]/gi, ''));
+      }
+      if (Number.isNaN(Number(bathroom.replace(/[^0-9]/gi, '')))) {
+        requestObject["requests.0.request.space.spec.bathroom"] = 0;
+      } else {
+        requestObject["requests.0.request.space.spec.bathroom"] = Number(bathroom.replace(/[^0-9]/gi, ''));
+      }
+      if (/없음/gi.test(balcony)) {
+        requestObject["requests.0.request.space.spec.valcony"] = false;
+      } else {
+        requestObject["requests.0.request.space.spec.valcony"] = true;
+      }
+
+      requestObject["requests.0.request.etc.comment"] = etc;
+      requestObject["requests.0.request.etc.channel"] = "인터넷 검색";
+      requestObject["requests.0.request.timeline"] = new Date();
+
+      console.log(requestObject);
+
+      message = '';
+      ifOverlap = await back.getClientsByQuery({ phone }, { selfMongo });
+      if (ifOverlap.length > 0) {
+
+        cliid = ifOverlap[0].cliid;
+
+        requestArr = [];
+        pastRequests = (ifOverlap[0].toNormal()).requests;
+        for (let z = 0; z < pastRequests.length; z++) {
+          requestArr.push(pastRequests[z]);
+        }
+        requestArr.unshift(back.returnClientRequest());
+
+        await back.updateClient([ { cliid }, { "requests": requestArr } ], { selfMongo });
+        await back.updateClient([ { cliid }, requestObject ], { selfMongo });
+
+        message += "재문의가 왔습니다!\n";
+
+      } else {
+
+        cliid = await back.createClient(requestObject, { selfMongo });
+        await back.createHistory("client", { cliid, space: "최초 고객이 적은 주소 : " + requestObject["requests.0.request.space.address"] }, { selfMongo: instance.mongolocal });
+        message += "새로운 상담 문의가 왔습니다!\n";
+
+      }
+
+      instance.parsingAddress(cliid, requestObject["requests.0.request.space.address"], instance.mongo).then((r) => {
+        const { result, id } = r;
+        if (!result) {
+          return messageSend({ text: "표준 주소 체계 위반 사례, 바르게 고쳐주세요! : https://" + instance.address.backinfo.host + "/client?cliid=" + id, channel: "#401_consulting" });
+        }
+      }).catch((err) => {
+        errorLog("주소 연산 중 오류 생김 : " + err.message).catch((e) => { console.log(e); });
+        console.log(err);
+      });
+
+      back.getCaseProidById(cliid, { selfMongo }).then((clientCase) => {
+        if (clientCase !== null) {
+          const serviceCase = clientCase.caseService();
+          if (serviceCase !== null) {
+            const { serid, xValue } = serviceCase;
+            let whereQuery, updateQuery;
+            whereQuery = { cliid };
+            updateQuery = { "requests.0.analytics.response.service.serid": serid[0].serid, "requests.0.analytics.response.service.xValue": xValue[0].xValue };
+            return back.updateClient([ whereQuery, updateQuery ], { selfMongo });
+          } else {
+            return (new Promise((resolve, reject) => { resolve("fail"); }));
+          }
+        } else {
+          return (new Promise((resolve, reject) => { resolve("fail"); }));
+        }
+      }).then((message) => {
+        console.log(cliid, "case update " + message);
+      }).catch((err) => {
+        errorLog("Bridge 서버 문제 생김 (submit, case 연산) : " + err.message).catch((e) => { console.log(e); });
+      });
+
+      thisClient = await back.getClientById(cliid, { selfMongo, withTools: true });
+      message += thisClient.toMessage();
+      await messageSend({ text: message, channel: "#401_consulting" });
+
+      ghostRequest("/print", { cliid }).catch((err) => {
+        errorLog("Bridge 서버 문제 생김 (submit, kakao) : " + err.message).catch((e) => { console.log(e); });
+      });
+
+      res.send(JSON.stringify({ cliid }));
+    } catch (e) {
+      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_sendCertification): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 DataRouter.prototype.rou_post_getDesignerGhost = function () {
   const instance = this;
   const back = this.back;
