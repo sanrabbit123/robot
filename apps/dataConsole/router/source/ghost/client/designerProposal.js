@@ -4046,7 +4046,7 @@ DesignerProposalJs.prototype.submitEvent = function (desid, designer, method) {
   }
 }
 
-DesignerProposalJs.prototype.insertSecondService = function () {
+DesignerProposalJs.prototype.insertFeeServiceBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
   const { client, ea, media, osException, testMode } = this;
@@ -4090,18 +4090,28 @@ DesignerProposalJs.prototype.insertSecondService = function () {
   let whiteBlockPaddingBottom;
   let mobileGrayMarginTop, mobileGrayMarginLeft;
   let mobilePictureBetween;
+  let firstWidth, secondWidth;
+  let infoMargin;
+  let infoPhotoHeight;
+  let infoTextBoxHeight;
+  let infoTitleHeight;
+  let infoTitlePadding;
+  let infoTitleInnerMargin;
+  let infoTitleSize;
+  let infoTitleTextTop;
+  let infoDescriptionSize;
 
-  blockHeight = <%% 406, 406, 384, 295, 160 %%>;
+  blockHeight = <%% 517, 517, 517, 517, 160 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
   margin = <%% 52, 52, 44, 32, 52 %%>;
-  leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
+  leftRatio = <%% 0.3, 0.3, 0.3, 0.3, 0.3 %%>;
 
   titleFont = <%% 31, 28, 25, 22, 5.7 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
-  titleFontWeight = <%% 600, 600, 600, 600, 600 %%>;
-  titleSecondTop = <%% 55, 50, 44, 39, 2 %%>;
-  titleSecondLeft = <%% 125, 6, 6, 6, 6 %%>;
-  titleSecondWeight = <%% 200, 200, 200, 200, 200 %%>;
+  titleFontWeight = <%% 500, 600, 600, 600, 600 %%>;
+  titleSecondTop = <%% 43, 43, 43, 39, 2 %%>;
+  titleSecondLeft = <%% 6, 6, 6, 6, 6 %%>;
+  titleSecondWeight = <%% 500, 200, 200, 200, 200 %%>;
 
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
 
@@ -4114,7 +4124,7 @@ DesignerProposalJs.prototype.insertSecondService = function () {
 
   indexNumberBottom = <%% 7, 4, 2, 5, 0 %%>;
 
-  grayBoxHeight = <%% 210, 210, 210, 155, 24 %%>;
+  grayBoxHeight = <%% 320, 210, 210, 155, 24 %%>;
   grayBoxWidth = <%% 320, 290, 260, 210, 32 %%>;
   grayTextBottom = <%% 20, 20, 20, 20, 2 %%>;
   grayTextSize = <%% 14, 12, 11, 11, 3 %%>;
@@ -4133,22 +4143,33 @@ DesignerProposalJs.prototype.insertSecondService = function () {
   descriptionLineHeight = 1.6;
   descriptionTitleWeight = 700;
 
-  mobileTitleLeft = 7;
-  mobileTitleTop = 7;
-  mobileTitleMarginBottom = 7;
-  mobileRightBoxPaddingTop = 49;
-  whiteBlockPaddingBottom = 9;
+  mobileTitleLeft = <%% 7, 7, 7, 7, 7 %%>;
+  mobileTitleTop = <%% 7, 7, 7, 7, 7 %%>;
+  mobileTitleMarginBottom = <%% 7, 7, 7, 7, 7 %%>;
+  mobileRightBoxPaddingTop = <%% 49, 49, 49, 49, 49 %%>;
+  whiteBlockPaddingBottom = <%% 9, 9, 9, 9, 9 %%>;
 
-  mobileGrayMarginTop = 43;
-  mobileGrayMarginLeft = 6;
-  mobilePictureBetween = 12;
+  mobileGrayMarginTop = <%% 43, 43, 43, 43, 43 %%>;
+  mobileGrayMarginLeft = <%% 6, 6, 6, 6, 6 %%>;
+  mobilePictureBetween = <%% 12, 12, 12, 12, 12 %%>;
+
+  firstWidth = <%% 200, 170, 200, 200, 200 %%>;
+  secondWidth = <%% 300, 200, 300, 300, 300 %%>;
+  infoMargin = <%% 10, 10, 10, 10, 10 %%>;
+  infoPhotoHeight = <%% 170, 170, 170, 170, 170 %%>;
+  infoTextBoxHeight = <%% 96, 96, 96, 96, 96 %%>;
+  infoTitleHeight = <%% 54, 54, 54, 54, 54 %%>;
+  infoTitlePadding = <%% 12, 12, 12, 12, 12 %%>;
+  infoTitleInnerMargin = <%% 5, 5, 5, 5, 5 %%>;
+  infoTitleSize = <%% 14, 14, 14, 14, 14 %%>;
+  infoTitleTextTop = <%% -2, -2, -2, -2, -2 %%>;
+  infoDescriptionSize = <%% 12, 12, 12, 12, 12 %%>;
 
   wordings = {
     title: {
-      main: desktop ? "우리집 상세 견적은," : "우리집 상세 견적은",
+      main: "예산의 활용 방식과",
       sub: [
-        "디자이너와 함께",
-        "조정해보세요!"
+        "디자이너 비용",
       ]
     },
     gray: {
@@ -4166,11 +4187,40 @@ DesignerProposalJs.prototype.insertSecondService = function () {
         "디자인비",
         "선불 안내"
       ],
+    },
+    info: {
+      image: [
+        "fee0.jpg",
+        "fee1.jpg",
+        "fee2.jpg"
+      ],
+      description: [
+        [
+          "전체 일정 캘린더, 제품 배치도",
+          "3D, 콜라주, 구매 리스트",
+          "등등",
+        ],
+        [
+          "쇼파 구매, 거실 1인 암체어 구매",
+          "침대 매트릭스 구매, 화장대 구매, 책상 구매",
+          "등등"
+        ],
+        [
+          "주방 철거, 화장실 철거, 아일랜드형 싱크 시공",
+          "제작 가구 설치, 서재 책장 목공사, 화장실 타일 시공",
+          "등등",
+        ],
+      ],
+      title: [
+        "디자인 비용",
+        "제품 구매 비용",
+        "시공 진행 비용"
+      ]
     }
   }
 
   if (media[0]) {
-    wordings.contents.description = [ "홈리에종은 선 디자인이 필수이기 때문에, 시공 견적을 드리는 것이 아니라 디자이너의 인건비 개념인 디자인비를 먼저 받는 구조로 되어 있습니다. 우리집을 담당해 줄 전문가를 먼저 만나 함께 인테리어를 진행해보세요!" ];
+    wordings.contents.description = [ "홈리에종은 선 기획 후 시공 방식으로 인테리어를 진행하기에, 디자이너의 인건비 개념인 디자인 비용을 먼저 받고, 그 디자인에 의해 나온 구매 리스트와 시공 범위에 따라 제품 구매와 시공을 진행합니다. 앞으로 소개될 금액은 모두 디자이너의 디자인 비용입니다." ];
   } else if (media[1]) {
     wordings.contents.description = [ "홈리에종은 일단 시공 견적을 드리는 것이 아니라 디자이너의 인건비 개념인 디자인비를 먼저 받는 구조로 되어 있습니다. 우리집을 담당해 줄 전문가를 만나 함께 진행해보세요!" ];
   } else if (media[2]) {
@@ -4204,7 +4254,7 @@ DesignerProposalJs.prototype.insertSecondService = function () {
       height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : "",
       marginTop: desktop ? String(margin) + ea : "",
       marginBottom: desktop ? String(margin) + ea : "",
-      marginLeft: desktop ? String(margin) + ea : "",
+      marginRight: desktop ? String(margin) + ea : "",
     }
   });
 
@@ -4219,7 +4269,7 @@ DesignerProposalJs.prototype.insertSecondService = function () {
       wordSpacing: String(wordSpacing) + "px",
       top: desktop ? (String((media[0] ? 0 : media[1] ? 0 : 0) + (isMac() || mobile ? 0 : 4)) + ea) : "",
       paddingTop: desktop ? "" : String(mobileTitleTop) + ea,
-      left: desktop ? String(titleLeft) + ea : "",
+      right: desktop ? String(titleLeft) + ea : "",
       marginLeft: desktop ? "" : String(mobileTitleLeft) + ea,
       color: colorChip.black,
       width: desktop ? "" : withOut(mobileTitleLeft * 2, ea),
@@ -4237,7 +4287,7 @@ DesignerProposalJs.prototype.insertSecondService = function () {
       wordSpacing: String(wordSpacing) + "px",
       top: desktop ? String(titleSecondTop) + ea : "",
       marginTop: desktop ? "" : String(titleSecondTop) + ea,
-      left: desktop ? String(titleSecondLeft) + ea : "",
+      right: desktop ? String(titleSecondLeft) + ea : "",
       marginLeft: desktop ? "" : String(mobileTitleLeft) + ea,
       width: desktop ? "" : withOut(mobileTitleLeft * 2, ea),
       textAlign: desktop ? (media[0] ? "right" : "left") : "right",
@@ -4250,19 +4300,6 @@ DesignerProposalJs.prototype.insertSecondService = function () {
     }
   });
 
-  if (media[0] || media[4]) {
-    createNode({
-      mother: leftBox,
-      style: {
-        position: "absolute",
-        borderBottom: "1px " + (desktop ? "solid" : "dashed") + " " + (desktop ? colorChip.green : colorChip.whiteGreen),
-        top: String(barTop) + ea,
-        left: String(desktop ? titleLeft : barLeft) + ea,
-        width: String(barWidth) + ea,
-      }
-    });
-  }
-
   createNode({
     mother: leftBox,
     text: String(1),
@@ -4273,7 +4310,7 @@ DesignerProposalJs.prototype.insertSecondService = function () {
       wordSpacing: String(wordSpacing) + ea,
       bottom: desktop ? String(indexNumberBottom) + ea : "",
       top: desktop ? "" : String(mobileTitleTop) + ea,
-      left: desktop ? String(titleLeft) + ea : String(mobileTitleLeft) + ea,
+      right: desktop ? String(titleLeft) + ea : String(mobileTitleLeft) + ea,
       color: desktop ? colorChip.gray4 : colorChip.black,
     }
   });
@@ -4289,9 +4326,10 @@ DesignerProposalJs.prototype.insertSecondService = function () {
       height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : "",
       marginTop: desktop ? String(margin) + ea : "",
       marginBottom: desktop ? String(margin) + ea : "",
-      marginRight: desktop ? String(margin) + ea : "",
+      marginLeft: desktop ? String(margin) + ea : "",
     }
   });
+  whiteBlock.insertBefore(rightBox, whiteBlock.firstChild);
 
   grayBox = createNode({
     mother: rightBox,
@@ -4299,7 +4337,6 @@ DesignerProposalJs.prototype.insertSecondService = function () {
       display: "block",
       position: "relative",
       height: String(grayBoxHeight) + ea,
-      background: colorChip.gray1,
       borderRadius: String(5) + "px",
       left: desktop ? "" : String(mobileGrayMarginLeft) + ea,
       width: desktop ? "" : withOut(mobileGrayMarginLeft * 2, ea),
@@ -4310,57 +4347,107 @@ DesignerProposalJs.prototype.insertSecondService = function () {
   createNode({
     mother: grayBox,
     style: {
-      display: desktop ? "inline-block" : "block",
-      position: desktop ? "relative" : "absolute",
-      height: String(grayBoxHeight) + ea,
-      width: desktop ? String(grayBoxWidth) + ea : String(100) + '%',
-      backgroundImage: "url('" + DesignerProposalJs.binaryPath + "/3dsample.jpg" + "')",
-      backgroundSize: (media[2] || media[3]) ? "auto 100%" : "100% auto",
-      backgroundPosition: "50% 50%",
+      display: "inline-block",
+      position: "relative",
+      width: String(firstWidth) + ea,
+      height: String(100) + '%',
+      marginRight: String(infoMargin) + ea,
+      background: colorChip.gray1,
       borderRadius: String(5) + "px",
-      boxShadow: "5px 2px 21px -9px " + colorChip.shadow,
-      top: desktop ? "" : String(-1 * (grayBoxHeight + mobilePictureBetween)) + ea,
-    }
-  });
-
-  createNode({
-    mother: grayBox,
-    style: {
-      display: desktop ? "inline-flex" : "flex",
-      position: desktop ? "relative" : "absolute",
       verticalAlign: "top",
-      height: String(desktop ? grayBoxHeight : mobilePictureBetween) + ea,
-      width: desktop ? String(grayArrowWidth) + ea : String(100) + '%',
-      marginLeft: desktop ? String(grayArrowMargin) + ea : "",
-      justifyContent: "center",
-      alignItems: "center",
-      top: desktop ? "" : String(-1 * mobilePictureBetween) + ea,
     },
     children: [
       {
-        mode: "svg",
-        source: desktop ? svgMaker.horizontalArrow(grayArrowWidth, grayArrowHeight) : svgMaker.verticalArrow(grayArrowWidth, grayArrowHeight),
         style: {
-          position: desktop ? "relative" : "absolute",
-          width: String(grayArrowWidth) + ea,
-          height: String(grayArrowHeight) + ea,
-          bottom: desktop ? "" : String(2) + ea,
+          position: "relative",
+          background: colorChip.gray2,
+          backgroundSize: "auto 100%",
+          backgroundPosition: "50% 50%",
+          backgroundImage: "url('" + DesignerProposalJs.binaryPath + "/" + wordings.info.image[0] + "')",
+          borderRadius: String(5) + "px",
+          boxShadow: "0px 6px 20px -9px " + colorChip.darkShadow,
+          width: String(100) + '%',
+          height: String(infoPhotoHeight) + ea,
         }
       },
       {
-        text: wordings.gray.main.join("\n"),
+        text: wordings.info.description[0].join("\n"),
         style: {
-          position: "absolute",
-          fontSize: String(grayTextSize) + ea,
-          fontWeight: String(600),
-          color: colorChip.green,
-          bottom: desktop ? String(grayTextBottom) + ea : "",
-          top: desktop ? "" : String(1.5) + ea,
-          textAlign: desktop ? "left" : "center",
-          left: String(0) + ea,
+          display: "flex",
+          height: String(infoTextBoxHeight) + ea,
+          width: String(100) + '%',
+          textAlign: "center",
+          justifyContent: "center",
+          alignItems: "center",
+          fontSize: String(infoDescriptionSize) + ea,
+          fontWeight: String(500),
           lineHeight: String(1.5),
-          width: desktop ? "" : String(100) + '%',
+          color: colorChip.shadow,
         }
+      },
+      {
+        style: {
+          display: "block",
+          height: String(infoTitleHeight - infoTitlePadding) + ea,
+          width: withOut(infoTitlePadding * 2, ea),
+          paddingLeft: String(infoTitlePadding) + ea,
+          paddingRight: String(infoTitlePadding) + ea,
+          paddingBottom: String(infoTitlePadding) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: String(infoTitleHeight - infoTitlePadding) + ea,
+              height: String(infoTitleHeight - infoTitlePadding) + ea,
+              background: colorChip.white,
+              borderRadius: String(5) + "px",
+              marginRight: String(infoTitleInnerMargin) + ea,
+              justifyContent: "center",
+              alignItems: "center",
+            },
+            children: [
+              {
+                text: String(1),
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(infoTitleSize) + ea,
+                  fontWeight: String(500),
+                  color: colorChip.green,
+                  fontFamily: "graphik",
+                  top: String(infoTitleTextTop) + ea,
+                }
+              }
+            ]
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: withOut(infoTitleHeight - infoTitlePadding + infoTitleInnerMargin, ea),
+              height: String(infoTitleHeight - infoTitlePadding) + ea,
+              background: colorChip.white,
+              borderRadius: String(5) + "px",
+              justifyContent: "center",
+              alignItems: "center",
+            },
+            children: [
+              {
+                text: wordings.info.title[0],
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(infoTitleSize) + ea,
+                  fontWeight: String(600),
+                  color: colorChip.green,
+                  top: String(infoTitleTextTop) + ea,
+                }
+              }
+            ]
+          },
+        ]
       }
     ]
   });
@@ -4368,86 +4455,215 @@ DesignerProposalJs.prototype.insertSecondService = function () {
   createNode({
     mother: grayBox,
     style: {
-      display: "inline-flex",
+      display: "inline-block",
       position: "relative",
+      width: String(secondWidth) + ea,
+      height: String(100) + '%',
+      marginRight: String(infoMargin) + ea,
+      background: colorChip.gray1,
+      borderRadius: String(5) + "px",
       verticalAlign: "top",
-      height: String(grayBoxHeight) + ea,
-      width: desktop ? withOut(grayBoxWidth + grayArrowWidth + (grayArrowMargin * 2), ea) : withOut(grayArrowMargin, ea),
-      marginLeft: String(grayArrowMargin) + ea,
-      alignItems: "center",
     },
     children: [
       {
         style: {
           position: "relative",
-          width: withOut(grayBoxInnerMargin, ea),
-          left: String(0),
-          height: withOut(grayBoxInnerMargin * 2, ea),
-          background: colorChip.white,
+          background: colorChip.gray2,
+          backgroundSize: <?? "100% auto", "auto 100%", "auto 100%", "auto 100%", "auto 100%" ??>,
+          backgroundPosition: "50% 50%",
+          backgroundImage: "url('" + DesignerProposalJs.binaryPath + "/" + wordings.info.image[1] + "')",
           borderRadius: String(5) + "px",
+          boxShadow: "0px 6px 20px -9px " + colorChip.darkShadow,
+          width: String(100) + '%',
+          height: String(infoPhotoHeight) + ea,
+        }
+      },
+      {
+        text: wordings.info.description[1].join("\n"),
+        style: {
+          display: "flex",
+          height: String(infoTextBoxHeight) + ea,
+          width: String(100) + '%',
+          textAlign: "center",
+          justifyContent: "center",
+          alignItems: "center",
+          fontSize: String(infoDescriptionSize) + ea,
+          fontWeight: String(500),
+          lineHeight: String(1.5),
+          color: colorChip.shadow,
         }
       },
       {
         style: {
-          position: "absolute",
-          width: "calc(" + withOut(grayBoxInnerMargin, ea) + " * calc(2 / 3)",
-          left: String(0),
-          height: withOut(grayBoxInnerMargin * 2, ea),
-          background: colorChip.white,
+          display: "block",
+          height: String(infoTitleHeight - infoTitlePadding) + ea,
+          width: withOut(infoTitlePadding * 2, ea),
+          paddingLeft: String(infoTitlePadding) + ea,
+          paddingRight: String(infoTitlePadding) + ea,
+          paddingBottom: String(infoTitlePadding) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: String(infoTitleHeight - infoTitlePadding) + ea,
+              height: String(infoTitleHeight - infoTitlePadding) + ea,
+              background: colorChip.white,
+              borderRadius: String(5) + "px",
+              marginRight: String(infoTitleInnerMargin) + ea,
+              justifyContent: "center",
+              alignItems: "center",
+            },
+            children: [
+              {
+                text: String(2),
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(infoTitleSize) + ea,
+                  fontWeight: String(500),
+                  color: colorChip.deactive,
+                  fontFamily: "graphik",
+                  top: String(infoTitleTextTop) + ea,
+                }
+              }
+            ]
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: withOut(infoTitleHeight - infoTitlePadding + infoTitleInnerMargin, ea),
+              height: String(infoTitleHeight - infoTitlePadding) + ea,
+              background: colorChip.white,
+              borderRadius: String(5) + "px",
+              justifyContent: "center",
+              alignItems: "center",
+            },
+            children: [
+              {
+                text: wordings.info.title[1],
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(infoTitleSize) + ea,
+                  fontWeight: String(600),
+                  color: colorChip.black,
+                  top: String(infoTitleTextTop) + ea,
+                }
+              }
+            ]
+          },
+        ]
+      }
+    ]
+  });
+
+  createNode({
+    mother: grayBox,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      width: withOut(firstWidth + secondWidth + (infoMargin * 2), ea),
+      height: String(100) + '%',
+      background: colorChip.gray1,
+      borderRadius: String(5) + "px",
+      verticalAlign: "top",
+    },
+    children: [
+      {
+        style: {
+          position: "relative",
+          background: colorChip.gray2,
+          backgroundSize: <?? "100% auto", "auto 100%", "auto 100%", "auto 100%", "auto 100%" ??>,
+          backgroundPosition: "50% 50%",
+          backgroundImage: "url('" + DesignerProposalJs.binaryPath + "/" + wordings.info.image[2] + "')",
           borderRadius: String(5) + "px",
-          boxShadow: "6px 1px 13px -9px " + colorChip.shadow,
+          boxShadow: "0px 6px 20px -9px " + colorChip.darkShadow,
+          width: String(100) + '%',
+          height: String(infoPhotoHeight) + ea,
         }
       },
       {
+        text: wordings.info.description[2].join("\n"),
         style: {
-          position: "absolute",
-          width: "calc(" + withOut(grayBoxInnerMargin, ea) + " * calc(1 / 3)",
-          left: String(0),
-          height: withOut(grayBoxInnerMargin * 2, ea),
-          background: colorChip.white,
-          borderRadius: String(5) + "px",
-          boxShadow: "6px 1px 13px -9px " + colorChip.shadow,
-        }
-      },
-      {
-        text: wordings.gray.sub[0],
-        style: {
-          position: "absolute",
-          width: "calc(" + withOut(grayBoxInnerMargin, ea) + " * calc(1 / 3)",
-          left: String(0),
-          fontSize: String(grayDeactiveTextSize) + ea,
-          fontWeight: String(600),
-          color: colorChip.liteBlack,
-          lineHeight: String(1.4),
+          display: "flex",
+          height: String(infoTextBoxHeight) + ea,
+          width: String(100) + '%',
           textAlign: "center",
+          justifyContent: "center",
+          alignItems: "center",
+          fontSize: String(infoDescriptionSize) + ea,
+          fontWeight: String(500),
+          lineHeight: String(1.5),
+          color: colorChip.shadow,
         }
       },
       {
-        text: wordings.gray.sub[1],
         style: {
-          position: "absolute",
-          width: "calc(" + withOut(grayBoxInnerMargin, ea) + " * calc(1 / 3)",
-          left: "calc(" + withOut(grayBoxInnerMargin, ea) + " * calc(1 / 3)",
-          fontSize: String(grayDeactiveTextSize) + ea,
-          fontWeight: String(600),
-          color: colorChip.liteBlack,
-          lineHeight: String(1.4),
-          textAlign: "center",
-        }
-      },
-      {
-        text: wordings.gray.sub[2],
-        style: {
-          position: "absolute",
-          width: "calc(" + withOut(grayBoxInnerMargin, ea) + " * calc(1 / 3)",
-          left: "calc(" + withOut(grayBoxInnerMargin, ea) + " * calc(2 / 3)",
-          fontSize: String(grayDeactiveTextSize) + ea,
-          fontWeight: String(600),
-          color: colorChip.liteBlack,
-          lineHeight: String(1.4),
-          textAlign: "center",
-        }
-      },
+          display: "block",
+          height: String(infoTitleHeight - infoTitlePadding) + ea,
+          width: withOut(infoTitlePadding * 2, ea),
+          paddingLeft: String(infoTitlePadding) + ea,
+          paddingRight: String(infoTitlePadding) + ea,
+          paddingBottom: String(infoTitlePadding) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: String(infoTitleHeight - infoTitlePadding) + ea,
+              height: String(infoTitleHeight - infoTitlePadding) + ea,
+              background: colorChip.white,
+              borderRadius: String(5) + "px",
+              marginRight: String(infoTitleInnerMargin) + ea,
+              justifyContent: "center",
+              alignItems: "center",
+            },
+            children: [
+              {
+                text: String(3),
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(infoTitleSize) + ea,
+                  fontWeight: String(500),
+                  color: colorChip.deactive,
+                  fontFamily: "graphik",
+                  top: String(infoTitleTextTop) + ea,
+                }
+              }
+            ]
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: withOut(infoTitleHeight - infoTitlePadding + infoTitleInnerMargin, ea),
+              height: String(infoTitleHeight - infoTitlePadding) + ea,
+              background: colorChip.white,
+              borderRadius: String(5) + "px",
+              justifyContent: "center",
+              alignItems: "center",
+            },
+            children: [
+              {
+                text: wordings.info.title[2],
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(infoTitleSize) + ea,
+                  fontWeight: String(600),
+                  color: colorChip.black,
+                  top: String(infoTitleTextTop) + ea,
+                }
+              }
+            ]
+          },
+        ]
+      }
     ]
   });
 
@@ -4595,7 +4811,7 @@ DesignerProposalJs.prototype.launching = async function (loading) {
       local: async () => {
         try {
           instance.insertInitBox();
-          // instance.insertSecondService();
+          instance.insertFeeServiceBox();
           instance.insertDesignerBoxes();
           instance.insertServiceBox();
           instance.insertWordBox();
