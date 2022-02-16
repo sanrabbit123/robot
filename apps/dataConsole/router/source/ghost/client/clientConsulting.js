@@ -18,11 +18,11 @@
   "meta": {
     "title": [
       "thisPerson",
-      "return ('홈리에종 서비스 큐레이션 | 홈리에종');"
+      "return ('홈리에종 서비스 신청 | 홈리에종');"
     ],
     "description": [
       "thisPerson",
-      "return ('홈리에종 서비스 큐레이션 페이지 입니다! | 홈리에종');"
+      "return ('홈리에종 서비스 신청 페이지 입니다! | 홈리에종');"
     ],
     "image": [
       "thisPerson",
@@ -45,7 +45,7 @@ ClientConsultingJs.binaryPath = "/middle/consulting";
 
 ClientConsultingJs.prototype.insertInitBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue } = GeneralJs;
   const { ea, media, osException, testMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -127,6 +127,22 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   let mobileCheckBoxLeft1, mobileCheckBoxLeft2, mobileCheckBoxLeft3, mobileCheckBoxLeft4;
   let grayTextAreaWidth;
   let mobileCheckBoxMainSize;
+  let phoneHypenEvent;
+  let pyeongNumberEvent;
+  let pyeongBlurEvent;
+  let pyeongFocusEvent;
+  let greenNoticeSize, greenNoticeWeight;
+  let greenNoticePaddingTop, greenNoticePaddingBottom, greenNoticePaddingLeft;
+  let greenNoticeBottom, greenNoticeBottom2;
+  let greenNoticeLineHeight;
+  let greenNoticeWidth0, greenNoticeWidth1, greenNoticeWidth2;
+  let addressBlurEvent;
+  let addressFocusEvent;
+  let calendarViewEvent;
+  let calendarWidth;
+  let calendarTop;
+  let livingAlertEvent;
+  let livingDownEvent;
 
   blockHeight = <%% 918, 901, 817, 1026, 264 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
@@ -270,6 +286,79 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   mobileCheckBoxMainSize = <%% 3.8, 3.8, 3.8, 15, 3.8 %%>;
   mobileCheckBoxMainTop = <%% 0.7, 0.7, 0.7, 1.5, 0.6 %%>;
 
+  greenNoticeSize = 12;
+  greenNoticeWeight = 600;
+  greenNoticePaddingTop = 8;
+  greenNoticePaddingBottom = 9;
+  greenNoticePaddingLeft = 10;
+  greenNoticeBottom = 40;
+  greenNoticeBottom2 = 36;
+  greenNoticeLineHeight = 1.4;
+  greenNoticeWidth0 = 96;
+  greenNoticeWidth1 = 120;
+
+  calendarWidth = <%% 260, 250, 230, 210, 60 %%>;
+  calendarTop = <%% 41, 41, 41, 41, 4 %%>;
+
+  livingDownEvent = function (id) {
+    GeneralJs.stacks["currentLivingAlertId"] = null;
+    if (document.getElementById(id) !== null) {
+      document.getElementById(id).style.animation = "fadedownlite 0.3s ease forwards";
+      setQueue(() => {
+        if (document.getElementById(id) !== null) {
+          document.getElementById(id).parentElement.removeChild(document.getElementById(id));
+        }
+      }, 301);
+    }
+  }
+
+  livingAlertEvent = function (mother) {
+
+    const tempId = uniqueValue("hex");
+    createNode({
+      mode: "aside",
+      mother,
+      id: tempId,
+      style: {
+        position: "absolute",
+        top: String(0),
+        left: String(0),
+        width: String(100) + '%',
+        height: String(100) + '%',
+        textAlign: "center",
+      },
+      children: [
+        {
+          text: "거주중일 시, 보관 이사가 없다면 도배와 필름 제외 시공이 어렵습니다!",
+          style: {
+            position: "absolute",
+            width: String(greenNoticeWidth1) + ea,
+            left: "calc(50% - " + String((greenNoticeWidth1 / 2) + (greenNoticePaddingLeft / 2)) + ea + ")",
+            background: colorChip.gradientGreen,
+            fontSize: String(greenNoticeSize) + ea,
+            fontWeight: String(greenNoticeWeight),
+            color: colorChip.white,
+            paddingTop: String(greenNoticePaddingTop) + ea,
+            paddingBottom: String(greenNoticePaddingBottom) + ea,
+            paddingLeft: String(greenNoticePaddingLeft) + ea,
+            paddingRight: String(greenNoticePaddingLeft) + ea,
+            bottom: String(greenNoticeBottom2) + ea,
+            borderRadius: String(5) + "px",
+            boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
+            animation: "fadeuplite 0.3s ease forwards",
+            lineHeight: String(greenNoticeLineHeight),
+          }
+        }
+      ]
+    });
+
+    GeneralJs.stacks["currentLivingAlertId"] = tempId;
+    setQueue(() => {
+      livingDownEvent(tempId);
+    }, 5 * 1000);
+
+  }
+
   checkboxClickEvent0 = async function (e) {
     try {
       const property = this.getAttribute("property");
@@ -279,6 +368,9 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       if (toggle === "off") {
         for (let dom of targets) {
           if (dom === this) {
+            if (/거주중/gi.test(dom.children[2].textContent)) {
+              livingAlertEvent(dom);
+            }
             dom.setAttribute("toggle", "on");
             dom.children[0].style.opacity = String(0);
             dom.children[1].style.opacity = String(1);
@@ -453,6 +545,198 @@ ClientConsultingJs.prototype.insertInitBox = function () {
           }
         ]
       });
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  phoneHypenEvent = function (e) {
+    this.value = autoHypenPhone(this.value);
+  }
+
+  pyeongNumberEvent = function (e) {
+    this.value = this.value.replace(/[^0-9\.]/gi, '');
+  }
+
+  pyeongBlurEvent = function (e) {
+    const self = this;
+    const mother = this.previousElementSibling;
+    const targets = [ ...mother.children ];
+    for (let dom of targets) {
+      dom.remove();
+    }
+    if (this.value.replace(/[^0-9\.]/gi, '').trim() === '') {
+      this.value = "00평";
+    } else {
+      this.value = this.value.replace(/[^0-9\.]/gi, '') + "평";
+    }
+  }
+
+  pyeongFocusEvent = function (e) {
+    const self = this;
+    const mother = this.previousElementSibling;
+
+    this.value = this.value.replace(/[^0-9\.]/gi, '');
+
+    createNode({
+      mode: "aside",
+      mother,
+      style: {
+        position: "relative",
+        top: String(0),
+        left: String(0),
+        width: String(100) + '%',
+        height: String(100) + '%',
+        textAlign: "center",
+      },
+      children: [
+        {
+          text: "평수는 반드시 분양 평수로 적어주세요!",
+          style: {
+            position: "absolute",
+            width: String(greenNoticeWidth0) + ea,
+            left: "calc(50% - " + String((greenNoticeWidth0 / 2) + greenNoticePaddingLeft) + ea + ")",
+            background: colorChip.gradientGreen,
+            fontSize: String(greenNoticeSize) + ea,
+            fontWeight: String(greenNoticeWeight),
+            color: colorChip.white,
+            paddingTop: String(greenNoticePaddingTop) + ea,
+            paddingBottom: String(greenNoticePaddingBottom) + ea,
+            paddingLeft: String(greenNoticePaddingLeft) + ea,
+            paddingRight: String(greenNoticePaddingLeft) + ea,
+            bottom: String(greenNoticeBottom) + ea,
+            borderRadius: String(5) + "px",
+            boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
+            animation: "fadeuplite 0.3s ease forwards",
+            lineHeight: String(greenNoticeLineHeight),
+          }
+        }
+      ]
+    });
+
+  }
+
+  addressBlurEvent = function (e) {
+    const self = this;
+    const mother = this.previousElementSibling;
+    const targets = [ ...mother.children ];
+    for (let dom of targets) {
+      dom.remove();
+    }
+  }
+
+  addressFocusEvent = function (e) {
+    const self = this;
+    const mother = this.previousElementSibling;
+
+    this.value = this.value.replace(/[^0-9\.]/gi, '');
+
+    createNode({
+      mode: "aside",
+      mother,
+      style: {
+        position: "relative",
+        top: String(0),
+        left: String(0),
+        width: String(100) + '%',
+        height: String(100) + '%',
+        textAlign: "center",
+      },
+      children: [
+        {
+          text: "주소는 인테리어를 받으실 곳으로 적어주세요!",
+          style: {
+            position: "absolute",
+            width: String(greenNoticeWidth1) + ea,
+            left: "calc(50% - " + String((greenNoticeWidth1 / 2) + greenNoticePaddingLeft) + ea + ")",
+            background: colorChip.gradientGreen,
+            fontSize: String(greenNoticeSize) + ea,
+            fontWeight: String(greenNoticeWeight),
+            color: colorChip.white,
+            paddingTop: String(greenNoticePaddingTop) + ea,
+            paddingBottom: String(greenNoticePaddingBottom) + ea,
+            paddingLeft: String(greenNoticePaddingLeft) + ea,
+            paddingRight: String(greenNoticePaddingLeft) + ea,
+            bottom: String(greenNoticeBottom) + ea,
+            borderRadius: String(5) + "px",
+            boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
+            animation: "fadeuplite 0.3s ease forwards",
+            lineHeight: String(greenNoticeLineHeight),
+          }
+        }
+      ]
+    });
+
+  }
+
+  calendarViewEvent = async function (e) {
+    try {
+      const mother = this.previousElementSibling;
+      const removeTargets = "removeTargets";
+      const zIndex = 4;
+      let cancelBack, whitePrompt;
+      let calendar;
+
+      cancelBack = createNode({
+        mother,
+        class: [ removeTargets ],
+        event: {
+          click: (e) => {
+            const targets = document.querySelectorAll('.' + removeTargets);
+            for (let dom of targets) {
+              dom.remove();
+            }
+          }
+        },
+        style: {
+          position: "fixed",
+          top: String(0),
+          left: String(0),
+          zIndex: String(zIndex),
+          width: String(100) + '%',
+          height: String(100) + '%',
+          background: "transparent",
+        }
+      });
+
+      whitePrompt = createNode({
+        mother,
+        class: [ removeTargets ],
+        style: {
+          position: "relative",
+          top: String(0),
+          left: String(0),
+          width: String(100) + '%',
+          height: String(100) + '%',
+        },
+        children: [
+          {
+            style: {
+              position: "absolute",
+              left: "calc(50% - " + String(calendarWidth / 2) + ea + ")",
+              top: String(calendarTop) + ea,
+              width: String(calendarWidth) + ea,
+              zIndex: String(zIndex),
+              background: colorChip.white,
+              borderRadius: String(3) + "px",
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+              animation: "fadeuphard 0.3s ease forwards",
+              transition: "all 0s ease",
+            },
+          }
+        ]
+      }).firstChild;
+
+      calendar = instance.mother.makeCalendar(stringToDate(new Date()), function (e) {
+        let targets;
+        findByAttribute(document.querySelectorAll('.' + inputClassName), "property", "movein").value = this.getAttribute("buttonValue");
+        targets = document.querySelectorAll('.' + removeTargets);
+        for (let dom of targets) {
+          dom.remove();
+        }
+      }, { width: calendarWidth, mobile });
+      whitePrompt.appendChild(calendar.calendarBase);
 
     } catch (e) {
       console.log(e);
@@ -891,6 +1175,9 @@ ClientConsultingJs.prototype.insertInitBox = function () {
             property: "phone",
             value: "",
           },
+          event: {
+            keyup: phoneHypenEvent,
+          },
           style: {
             position: "absolute",
             top: String(grayInputTop) + ea,
@@ -925,6 +1212,10 @@ ClientConsultingJs.prototype.insertInitBox = function () {
             placeholder: "인테리어 받을 곳의 상세 주소",
             property: "address1",
             value: "",
+          },
+          event: {
+            focus: addressFocusEvent,
+            blur: addressBlurEvent,
           },
           style: {
             position: "absolute",
@@ -1153,6 +1444,11 @@ ClientConsultingJs.prototype.insertInitBox = function () {
             property: "pyeong",
             value: "",
           },
+          event: {
+            keyup: pyeongNumberEvent,
+            blur: pyeongBlurEvent,
+            focus: pyeongFocusEvent,
+          },
           style: {
             position: "absolute",
             top: String(grayInputTop) + ea,
@@ -1368,6 +1664,9 @@ ClientConsultingJs.prototype.insertInitBox = function () {
             placeholder: dateToString(new Date()),
             property: "movein",
             value: "",
+          },
+          event: {
+            click: calendarViewEvent,
           },
           style: {
             position: "absolute",
@@ -2699,6 +2998,9 @@ ClientConsultingJs.prototype.insertInitBox = function () {
             property: "phone",
             value: "",
           },
+          event: {
+            keyup: phoneHypenEvent,
+          },
           style: {
             position: "absolute",
             top: String(grayInputTop) + ea,
@@ -2921,6 +3223,10 @@ ClientConsultingJs.prototype.insertInitBox = function () {
             property: "address1",
             value: "",
           },
+          event: {
+            focus: addressFocusEvent,
+            blur: addressBlurEvent,
+          },
           style: {
             position: "absolute",
             top: String(grayInputTop) + ea,
@@ -3076,6 +3382,11 @@ ClientConsultingJs.prototype.insertInitBox = function () {
             placeholder: "00평 (분양 평수)",
             property: "pyeong",
             value: "",
+          },
+          event: {
+            keyup: pyeongNumberEvent,
+            blur: pyeongBlurEvent,
+            focus: pyeongFocusEvent,
           },
           style: {
             position: "absolute",
@@ -3305,6 +3616,9 @@ ClientConsultingJs.prototype.insertInitBox = function () {
             placeholder: dateToString(new Date()),
             property: "movein",
             value: "",
+          },
+          event: {
+            click: calendarViewEvent,
           },
           style: {
             position: "absolute",

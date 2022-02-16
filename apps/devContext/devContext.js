@@ -90,45 +90,45 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const LZString = require(process.cwd() + "/temp/module/lzstring.js");
-    const { id, pwd } = await fileSystem("readJson", [ process.cwd() + "/temp/data/set.json" ]);
-    const { keyname: encnm, hex: encpw } = equalJson(await shellExec("python3", [ process.cwd() + "/temp/app.py" ]))
-    const uuid = uniqueValue("uuid");
-    const encData = `{"a":"${uuid}-4","b":"1.3.4","d":[{"i":"id","b":{"a":["0,${id}"]},"d":"${id}","e":false,"f":false},{"i":"${pwd}","e":true,"f":false}],"h":"1f","i":{"a":"Mozilla/5.0"}}`;
-    const bvsd = JSON.stringify({ uuid, encData: LZString.compressToEncodedURIComponent(encData) });
-    const svctype = "0";
-    const enctp = "1";
-    const enc_url = "http0X0.0000000000001P-10220.0000000.000000www.naver.com";
-    const url = "www.naver.com";
-    const smart_level = "1";
-    const target = "https://nid.naver.com/nidlogin.login";
-
-    const res = await chrome.scriptChain([
-      {
-        link: "https://nid.naver.com/nidlogin.login?qqq=" + svctype + "&vdvd=" + encnm + "&zzz=" + encpw + "&id=" + id + "&pwd=" + pwd + "&aaaa=" + global.encodeURIComponent(bvsd),
-        func: async function () {
-          const { returnGet } = GeneralJs;
-          const getObj = returnGet();
-          const { qqq: svctype, vdvd: encnm, zzz: encpw, iii: id, kkk: pwd } = getObj;
-          const bvsd = window.decodeURIComponent(getObj.aaaa);
-          document.getElementById("svctype").value = svctype;
-          document.getElementById("encnm").value = encnm;
-          document.getElementById("encpw").value = encpw;
-          document.getElementById("bvsd").value = bvsd;
-          document.getElementById("id").value = id;
-          document.getElementById("pw").value = pwd;
-          document.querySelector("form").submit();
-          return 0;
-        }
-      },
-      {
-        link: "https://www.naver.com",
-        func: async function () {
-          return document.querySelector(".MY_NICKNAME")
-        }
-      }
-    ])
-    console.log(res);
+    // const LZString = require(process.cwd() + "/temp/module/lzstring.js");
+    // const { id, pwd } = await fileSystem("readJson", [ process.cwd() + "/temp/data/set.json" ]);
+    // const { keyname: encnm, hex: encpw } = equalJson(await shellExec("python3", [ process.cwd() + "/temp/app.py" ]))
+    // const uuid = uniqueValue("uuid");
+    // const encData = `{"a":"${uuid}-4","b":"1.3.4","d":[{"i":"id","b":{"a":["0,${id}"]},"d":"${id}","e":false,"f":false},{"i":"${pwd}","e":true,"f":false}],"h":"1f","i":{"a":"Mozilla/5.0"}}`;
+    // const bvsd = JSON.stringify({ uuid, encData: LZString.compressToEncodedURIComponent(encData) });
+    // const svctype = "0";
+    // const enctp = "1";
+    // const enc_url = "http0X0.0000000000001P-10220.0000000.000000www.naver.com";
+    // const url = "www.naver.com";
+    // const smart_level = "1";
+    // const target = "https://nid.naver.com/nidlogin.login";
+    //
+    // const res = await chrome.scriptChain([
+    //   {
+    //     link: "https://nid.naver.com/nidlogin.login?qqq=" + svctype + "&vdvd=" + encnm + "&zzz=" + encpw + "&id=" + id + "&pwd=" + pwd + "&aaaa=" + global.encodeURIComponent(bvsd),
+    //     func: async function () {
+    //       const { returnGet } = GeneralJs;
+    //       const getObj = returnGet();
+    //       const { qqq: svctype, vdvd: encnm, zzz: encpw, iii: id, kkk: pwd } = getObj;
+    //       const bvsd = window.decodeURIComponent(getObj.aaaa);
+    //       document.getElementById("svctype").value = svctype;
+    //       document.getElementById("encnm").value = encnm;
+    //       document.getElementById("encpw").value = encpw;
+    //       document.getElementById("bvsd").value = bvsd;
+    //       document.getElementById("id").value = id;
+    //       document.getElementById("pw").value = pwd;
+    //       document.querySelector("form").submit();
+    //       return 0;
+    //     }
+    //   },
+    //   {
+    //     link: "https://www.naver.com",
+    //     func: async function () {
+    //       return document.querySelector(".MY_NICKNAME")
+    //     }
+    //   }
+    // ])
+    // console.log(res);
 
 
 

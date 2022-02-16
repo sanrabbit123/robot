@@ -5087,14 +5087,14 @@ ProposalJs.save_init = async function (update = false) {
 
         temp_num = (temp_arr.indexOf("부분 공간") !== -1) ? temp_arr.length - 1 : temp_arr.length;
         result_obj["proposal.detail"][i].fee = new Array(temp_num);
-        methodOnlineBoo = false;
+        methodOnlineBoo = true;
         for (let f = 0; f < temp_num; f++) {
           result_obj["proposal.detail"][i].fee[f] = {};
           result_obj["proposal.detail"][i].fee[f].method = (temp_arr[f] === "오프라인") ? "offline" : "online";
           result_obj["proposal.detail"][i].fee[f].partial = (temp_arr.indexOf("부분 공간") !== -1) ? true : false;
           result_obj["proposal.detail"][i].fee[f].amount = 0;
-          if (result_obj["proposal.detail"][i].fee[f].method === "online") {
-            methodOnlineBoo = true;
+          if (result_obj["proposal.detail"][i].fee[f].method === "offline") {
+            methodOnlineBoo = false;
           }
           temp2 = temp[i].querySelectorAll(".pp_designer_selected_box_contents_money_set")[f];
           if (temp2.querySelector(".pp_designer_selected_box_contents_money_text").textContent === temp_arr[f]) {
