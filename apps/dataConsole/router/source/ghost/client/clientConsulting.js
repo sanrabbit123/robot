@@ -265,8 +265,8 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   spaceTriangleTop = <%% (isMac() ? -5 : -6), (isMac() ? -5 : -6), (isMac() ? -5 : -6), -5, -5 %%>;
   spaceTriangleWidth = <%% 6, 6, 6, 6, 6 %%>;
 
-  addressPromptWidth = <%% 900, 900, 900, 900, 900 %%>;
-  addressPromptHeight = <%% 450, 450, 450, 450, 450 %%>;
+  addressPromptWidth = <%% 900, 900, 900, 900, 80 %%>;
+  addressPromptHeight = <%% 450, 450, 450, 450, 90 %%>;
 
   mobileTongPaddingTop = <%% 0.7, 0.7, 0.7, 0.7, 0.7 %%>;
   mobileFactorPaddingLeft = <%% 3, 3, 3, 15, 3 %%>;
