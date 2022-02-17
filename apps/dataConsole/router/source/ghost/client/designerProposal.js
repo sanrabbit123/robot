@@ -4126,7 +4126,7 @@ DesignerProposalJs.prototype.insertFeeServiceBox = function () {
   infoTitleTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), 0 %%>;
   infoTitleNumberTextTop = <%% (isMac() ? -2 : -2), (isMac() ? -2 : -2), (isMac() ? -2 : -2), (isMac() ? -2 : -2), 0 %%>;
   infoDescriptionSize = <%% 12, 12, 11, 10, 2.4 %%>;
-  infoDescriptionMarginBottom = 2.7;
+  infoDescriptionMarginBottom = 2.8;
 
   wordings = {
     title: {
