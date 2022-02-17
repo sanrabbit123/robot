@@ -1080,7 +1080,6 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
   const greenClassName = "greenRemoveTarget";
   const stackName = "styleCheckNum";
   const loadingName = "loading";
-  const firstPhoto = (Math.random() < 0.5) ? [ "t22p18.jpg", "t11p58.jpg", "t13a82.jpg", "t3a81.jpg", "t1p103.jpg", "t1a79.jpg", "t5p122.jpg", "t6p94.jpg", "t14p47.jpg", "t3p146.jpg", "t7p35.jpg", "t4p123.jpg", "t6p102.jpg", "t3p41.jpg", "t6p18.jpg" ] : [ "t3p125.jpg", "t3a78.jpg", "t1p89.jpg", "t6p18.jpg", "t3a81.jpg", "t1p103.jpg", "t13p146.jpg", "t5p122.jpg", "t3p41.jpg", "t3p123.jpg", "t14p47.jpg", "t3p94.jpg", "t11p95.jpg", "t12p58.jpg", "t6p102.jpg" ]
 
   let pictureNumber, columnNumber;
   let randomPick, targetPhotos;
@@ -1099,6 +1098,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
   let arrowEvent;
   let pickupDesigners;
   let image;
+  let firstPhoto;
 
   GeneralJs.stacks[stackName] = 0;
   GeneralJs.stacks[loadingName] = false;
@@ -1122,6 +1122,8 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
   completeWording = wordings[0].question[1];
 
   image = [];
+
+  firstPhoto = <?? [ "t22p18.jpg", "t11p58.jpg", "t13a82.jpg", "t3a81.jpg", "t1p103.jpg", "t1a79.jpg", "t5p122.jpg", "t6p94.jpg", "t14p47.jpg", "t3p146.jpg", "t7p35.jpg", "t4p123.jpg", "t6p102.jpg", "t3p41.jpg", "t6p18.jpg" ] | [ "t11p58.jpg", "t13a82.jpg", "t3a81.jpg", "t1p103.jpg", "t1a79.jpg", "t5p122.jpg", "t6p94.jpg", "t14p47.jpg", "t3p146.jpg", "t7p35.jpg", "t4p123.jpg", "t6p18.jpg" ] | [ "t11p58.jpg", "t13a82.jpg", "t3a81.jpg", "t1p103.jpg", "t1a79.jpg", "t5p122.jpg", "t6p94.jpg", "t14p47.jpg", "t3p146.jpg", "t7p35.jpg", "t4p123.jpg", "t6p18.jpg" ] | [ "t11p58.jpg", "t13a82.jpg", "t3a81.jpg", "t1p103.jpg", "t1a79.jpg", "t5p122.jpg", "t6p94.jpg", "t14p47.jpg", "t3p146.jpg", "t7p35.jpg", "t4p123.jpg", "t6p18.jpg" ] | [ "t11p58.jpg", "t13a82.jpg", "t3a81.jpg", "t1p103.jpg", "t3p146.jpg", "t7p35.jpg", "t4p123.jpg", "t6p18.jpg" ] ??>
 
   // randomPick = StyleCurationJs.randomPick(photos, contentsArr, pictureNumber);
   if (Math.random() < 0.5) {
