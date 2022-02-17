@@ -5556,7 +5556,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
   const back = this.back;
   const work = this.work;
   const address = this.address;
-  const { equalJson, ghostRequest, requestSystem, errorLog, messageSend } = this.mother;
+  const { equalJson, ghostRequest, requestSystem, errorLog, messageSend, serviceParsing } = this.mother;
   let obj = {};
   obj.link = "/styleCuration_updateCalculation";
   obj.func = async function (req, res) {
@@ -5703,9 +5703,21 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
         }).then(() => {
 
           if (detailUpdate.length > 0) {
-            let updateObj;
+            let updateObj, future, nextDate;
             updateObj = {};
             updateObj["requests." + String(requestNumber) + ".analytics.response.action"] = action;
+            if (client.requests[requestNumber].request.space.resident.living) {
+              nextDate = new Date();
+              nextDate.setDate(nextDate.getDate() + 1);
+              updateObj["requests." + String(requestNumber) + ".request.space.resident.expected"] = nextDate;
+              future = new Date();
+              future.setDate(future.getDate() + serviceParsing({
+                serid: updateQuery["service.serid"],
+                xValue: updateQuery["service.xValue"],
+                online: updateQuery["service.online"],
+              }, true) + 1);
+              updateObj["requests." + String(requestNumber) + ".analytics.date.space.movein"] = future;
+            }
             return back.updateClient([ { cliid }, updateObj ], { selfMongo: instance.mongo });
           } else {
             return passPromise();

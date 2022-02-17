@@ -190,9 +190,26 @@ DevContext.prototype.launching = async function () {
     //     }
     //   },
     //   {
-    //     link: "https://www.naver.com",
+    //     link: "https://blog.naver.com/PostView.naver?blogId=homeliaison&logNo=222080367316&redirect=Dlog&widgetTypeCall=true&topReferer=https%3A%2F%2Fblog.naverblogwidget.com%2FExternalWidgetRender.naver%3FblogId%3Dhomeliaison&directAccess=false",
     //     func: async function () {
-    //       return document.querySelector(".MY_NICKNAME")
+    //       const { sleep } = GeneralJs;
+    //       let target, nextButton;
+    //       let pages;
+    //       await sleep(1000);
+    //
+    //       target = document.querySelectorAll('.blog2_paginate')[0];
+    //       while (target.querySelector(".next") !== null) {
+    //         target.querySelector(".next").click();
+    //         await sleep(500);
+    //         target = document.querySelectorAll('.blog2_paginate')[0];
+    //       }
+    //
+    //       target = document.querySelectorAll('.blog2_paginate')[0];
+    //       pages = [ ...target.querySelectorAll(".page") ].map((dom) => { return dom.textContent }).map((str) => { return Number(str.trim().replace(/[^0-9]/gi, '')) });
+    //       pages = pages.filter((num) => { return !Number.isNaN(num) && num !== 0 });
+    //       pages.sort((a, b) => { return b - a; });
+    //
+    //       return pages[0];
     //     }
     //   }
     // ])
@@ -2127,7 +2144,7 @@ DevContext.prototype.launching = async function () {
 
     // aspirant to designer
     // await this.aspirantToDesigner([
-    //   [ "이선민", "2021-10-26" ],
+    //   [ "손민선", "2021-12-13" ],
     // ]);
 
 
