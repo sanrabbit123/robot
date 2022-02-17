@@ -1020,24 +1020,6 @@ DataRouter.prototype.rou_post_getProjectReport = function () {
 
         clients = await back.getClientsByQuery({
           $or: [
-            {
-              $and: [
-                {
-                  requests: {
-                    $elemMatch: {
-                      "request.timeline": { $gte: start }
-                    }
-                  }
-                },
-                {
-                  requests: {
-                    $elemMatch: {
-                      "request.timeline": { $lt: end }
-                    }
-                  }
-                }
-              ]
-            },
             ...projects.toNormal().map((obj) => { return { cliid: obj.cliid } }),
           ]
         }, { selfMongo: instance.mongo });

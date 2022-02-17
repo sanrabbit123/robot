@@ -7062,7 +7062,7 @@ ProjectJs.prototype.reportScrollBox = function (data, motherWidth) {
   whiteInnerWeight2 = 400;
   whiteWordsBetween = 4;
   whiteSumTop = 18;
-  whiteSumSize = 24;
+  whiteSumSize = 22;
   whiteSumWeight = 200;
   whiteSumTotalTop = 31;
 
@@ -7218,7 +7218,7 @@ ProjectJs.prototype.reportScrollBox = function (data, motherWidth) {
 
     createNode({
       mother: summaryTong[i],
-      text: `${String(data.serviceArr[i].length)}<u%명%u>${blank}<b%/%b>${blank}${String(Math.round((data.serviceArr[i].length / data.numbers.client) * 10000) / 100)}<u%%%u>${blank}<b%/%b>${blank}${String(Math.round((data.serviceArr[i].length / data.numbers.project) * 10000) / 100)}<u%%%u>`,
+      text: `${String(data.serviceArr[i].length)}<u%명%u>${blank}<b%/%b>${blank}${String(Math.round((data.serviceArr[i].length / data.numbers.project) * 10000) / 100)}<u%%%u>`,
       style: {
         position: "absolute",
         textAlign: "center",
@@ -7243,30 +7243,26 @@ ProjectJs.prototype.reportScrollBox = function (data, motherWidth) {
   }
 
   summaryText = '';
-  summaryText += "<u%문의%u> ";
+  summaryText += "<u%계약%u> ";
   summaryText += String(data.numbers.client) + "<u%명%u>";
   summaryText += blank;
   summaryText += "<b%/%b>";
   summaryText += blank;
   summaryText += "<u%계약%u> ";
-  summaryText += String(data.numbers.project) + "<u%명 (%u>";
   for (let i = 0; i < data.serviceArr.length; i++) {
     summaryText += String(data.serviceArr[i].length) + "<u%명%u>";
     summaryText += "<u%, %u>";
   }
   summaryText = summaryText.slice(0, -8);
-  summaryText += "<u%)%u>";
   summaryText += blank;
   summaryText += "<b%/%b>";
   summaryText += blank;
   summaryText += "<u%계약율%u> ";
-  summaryText += String(Math.round((data.numbers.project / data.numbers.client) * 10000) / 100) + "<u%% (%u>";
   for (let i = 0; i < data.serviceArr.length; i++) {
     summaryText += String(Math.round((data.serviceArr[i].length / data.numbers.client) * 10000) / 100) + "<u%%%u>";
     summaryText += "<u%, %u>";
   }
   summaryText = summaryText.slice(0, -8);
-  summaryText += "<u%)%u>";
 
   createNode({
     mother: totalSummaryTong,
