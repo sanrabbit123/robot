@@ -677,7 +677,7 @@ DesignerProposalJs.prototype.insertInitBox = function () {
   let initWording0, initWording1;
 
   blockHeight = <%% this.backHeight - 460, this.backHeight - 470, this.backHeight - 490, this.backHeight - 540, this.backHeight - 460 %%>;
-  bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
+  bottomMargin = <%% 16, 16, 16, 12, 2 %%>;
   margin = <%% 52, 52, 44, 32, 52 %%>;
   leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
 
@@ -4057,6 +4057,8 @@ DesignerProposalJs.prototype.insertFeeServiceBox = function () {
   let infoTitleSize;
   let infoTitleTextTop;
   let infoDescriptionSize;
+  let mobileGrayMarginBottom;
+  let infoDescriptionMarginBottom;
 
   blockHeight = <%% 517, 517, 482, 388, 160 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
@@ -4066,7 +4068,7 @@ DesignerProposalJs.prototype.insertFeeServiceBox = function () {
   titleFont = <%% 31, 29, 26, 22, 5.7 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
   titleFontWeight = <%% 500, 500, 500, 500, 500 %%>;
-  titleSecondTop = <%% 43, 41, 38, 32, 1 %%>;
+  titleSecondTop = <%% 43, 41, 38, 32, 0.5 %%>;
   titleSecondLeft = <%% 6, 6, 6, 6, 6 %%>;
   titleSecondWeight = <%% 500, 500, 500, 500, 500 %%>;
 
@@ -4081,7 +4083,7 @@ DesignerProposalJs.prototype.insertFeeServiceBox = function () {
 
   indexNumberBottom = <%% 7, 4, 2, 5, 0 %%>;
 
-  grayBoxHeight = <%% 320, 320, 311, 250, 52 %%>;
+  grayBoxHeight = <%% 320, 320, 311, 250, 43 %%>;
   grayBoxWidth = <%% 320, 290, 260, 210, 32 %%>;
   grayTextBottom = <%% 20, 20, 20, 20, 2 %%>;
   grayTextSize = <%% 14, 12, 11, 11, 3 %%>;
@@ -4095,7 +4097,7 @@ DesignerProposalJs.prototype.insertFeeServiceBox = function () {
   descriptionMarginTop = <%% 36, 36, 36, 25, 4 %%>;
   descriptionTitleWidth = <%% 90, 90, 90, 72, 6 %%>;
   descriptionTitleMargin = <%% 40, 40, 30, 3, 6 %%>;
-  descriptionSize = <%% 15, 15, 14, 13, 3 %%>;
+  descriptionSize = <%% 15, 15, 14, 13, 3.2 %%>;
   descriptionWeight = desktop ? 300 : 400;
   descriptionLineHeight = 1.6;
   descriptionTitleWeight = 700;
@@ -4106,21 +4108,23 @@ DesignerProposalJs.prototype.insertFeeServiceBox = function () {
   mobileRightBoxPaddingTop = <%% 49, 49, 49, 49, 49 %%>;
   whiteBlockPaddingBottom = <%% 9, 9, 9, 9, 9 %%>;
 
-  mobileGrayMarginTop = <%% 43, 43, 43, 43, 7 %%>;
-  mobileGrayMarginLeft = <%% 6, 6, 6, 6, 0 %%>;
+  mobileGrayMarginTop = <%% 43, 43, 43, 43, 5 %%>;
+  mobileGrayMarginLeft = <%% 6, 6, 6, 6, 5 %%>;
   mobilePictureBetween = <%% 12, 12, 12, 12, 12 %%>;
+  mobileGrayMarginBottom = 10.5;
 
-  firstWidth = <%% 200, 170, 182, 146, 29 %%>;
-  secondWidth = <%% 300, 200, 182, 146, 29 %%>;
+  firstWidth = <%% 200, 170, 182, 146, 25.5 %%>;
+  secondWidth = <%% 300, 200, 182, 146, 25.5 %%>;
   infoMargin = <%% 10, 10, 10, 10, 1 %%>;
-  infoPhotoHeight = <%% 170, 170, 170, 130, 27 %%>;
-  infoTextBoxHeight = <%% 96, 96, 90, 80, 18 %%>;
+  infoPhotoHeight = <%% 170, 170, 170, 130, 26 %%>;
+  infoTextBoxHeight = <%% 96, 96, 90, 80, 16.5 %%>;
   infoTitleHeight = <%% 54, 54, 50, 40, 5 %%>;
-  infoTitlePadding = <%% 12, 12, 10, 10, 1 %%>;
-  infoTitleInnerMargin = <%% 5, 5, 5, 4, 1 %%>;
-  infoTitleSize = <%% 14, 13, 13, 11, 3 %%>;
-  infoTitleTextTop = <%% -2, -2, -2, -2, -1 %%>;
+  infoTitlePadding = <%% 12, 12, 10, 10, 3.5 %%>;
+  infoTitleInnerMargin = <%% 5, 5, 5, 4, 0.5 %%>;
+  infoTitleSize = <%% 14, 13, 13, 11, 2.8 %%>;
+  infoTitleTextTop = <%% -2, -2, -2, -2, 0 %%>;
   infoDescriptionSize = <%% 12, 12, 11, 10, 2.4 %%>;
+  infoDescriptionMarginBottom = 3;
 
   wordings = {
     title: {
@@ -4154,16 +4158,16 @@ DesignerProposalJs.prototype.insertFeeServiceBox = function () {
       description: [
         [
           <?? "전체 일정 캘린더, 제품 배치도" | "일정 캘린더, 제품 배치도" | "일정 캘린더, 제품 배치도" | "일정 캘린더, 제품 배치도" | "일정 캘린더, 배치도" ??>,
-          "3D, 콜라주, 구매 리스트",
+          <?? "3D, 콜라주, 구매 리스트" | "3D, 콜라주, 구매 리스트" | "3D, 콜라주, 구매 리스트" | "3D, 콜라주, 구매 리스트" | "3D, 콜라주, 구매표" ??>,
           "등등",
         ],
         [
-          <?? "쇼파 구매, 거실 1인 암체어 구매" | "쇼파 구매, 거실 1인 암체어 구매" | "쇼파 구매, 거실 암체어 구매" | "쇼파 구매, 거실 암체어 구매" | "쇼파 구매, 암체어 구매" ??>,
+          <?? "쇼파 구매, 거실 1인 암체어 구매" | "쇼파 구매, 거실 1인 암체어 구매" | "쇼파 구매, 거실 암체어 구매" | "쇼파 구매, 거실 암체어 구매" | "쇼파, 암체어 구매" ??>,
           <?? "침대 매트릭스 구매, 화장대 구매, 책상 구매" | "침대 매트릭스 구매, 책상 구매" | "화장대 구매, 책상 구매" | "화장대 구매, 책상 구매" | "화장대 구매, 책상 구매" ??>,
           "등등"
         ],
         [
-          <?? "주방 철거, 화장실 철거, 아일랜드형 싱크 시공" | "주방 철거, 화장실 철거, 아일랜드형 싱크 시공" | "주방 철거, 화장실 도기 시공" | "주방 철거, 화장실 도기 시공" | "주방 철거, 화장실 시공" ??>,
+          <?? "주방 철거, 화장실 철거, 아일랜드형 싱크 시공" | "주방 철거, 화장실 철거, 아일랜드형 싱크 시공" | "주방 철거, 화장실 도기 시공" | "주방 철거, 화장실 도기 시공" | "주방, 화장실 철거" ??>,
           <?? "제작 가구 설치, 서재 책장 목공사, 화장실 타일 시공" | "제작 가구 설치, 책장 목공사, 화장실 타일 시공" | "제작 가구 설치, 타일 시공" | "제작 가구 설치, 타일 시공" | "제작 가구, 타일 시공" ??>,
           "등등",
         ],
@@ -4302,6 +4306,7 @@ DesignerProposalJs.prototype.insertFeeServiceBox = function () {
       left: desktop ? "" : String(mobileGrayMarginLeft) + ea,
       width: desktop ? "" : withOut(mobileGrayMarginLeft * 2, ea),
       marginTop: desktop ? "" : String(mobileGrayMarginTop) + ea,
+      marginBottom: desktop ? "" : String(mobileGrayMarginBottom) + ea,
     }
   });
 
@@ -4313,7 +4318,7 @@ DesignerProposalJs.prototype.insertFeeServiceBox = function () {
       width: String(firstWidth) + ea,
       height: String(100) + '%',
       marginRight: String(infoMargin) + ea,
-      background: desktop ? colorChip.gray1 : colorChip.gray2,
+      background: colorChip.gray1,
       borderRadius: String(5) + "px",
       verticalAlign: "top",
     },
@@ -4323,7 +4328,7 @@ DesignerProposalJs.prototype.insertFeeServiceBox = function () {
           position: "relative",
           background: colorChip.gray2,
           backgroundSize: "auto 100%",
-          backgroundPosition: <?? "50% 50%" | "74% 50%" | "50% 50%" | "64% 50%" | "50% 50%" ??>,
+          backgroundPosition: <?? "50% 50%" | "74% 50%" | "50% 50%" | "64% 50%" | "74% 50%" ??>,
           backgroundImage: "url('" + DesignerProposalJs.binaryPath + "/" + wordings.info.image[0] + "')",
           borderRadius: String(5) + "px",
           boxShadow: "0px 6px 20px -9px " + colorChip.darkShadow,
@@ -4344,6 +4349,7 @@ DesignerProposalJs.prototype.insertFeeServiceBox = function () {
           fontWeight: String(500),
           lineHeight: String(1.5),
           color: colorChip.shadow,
+          marginBottom: desktop ? "" : String(infoDescriptionMarginBottom) + ea,
         }
       },
       {
@@ -4351,7 +4357,7 @@ DesignerProposalJs.prototype.insertFeeServiceBox = function () {
           display: "block",
           height: String(infoTitleHeight - infoTitlePadding) + ea,
           width: withOut(infoTitlePadding * 2, ea),
-          paddingLeft: String(infoTitlePadding) + ea,
+          paddingLeft: String(desktop ? infoTitlePadding : 4.8) + ea,
           paddingRight: String(infoTitlePadding) + ea,
           paddingBottom: String(infoTitlePadding) + ea,
         },
@@ -4362,9 +4368,9 @@ DesignerProposalJs.prototype.insertFeeServiceBox = function () {
               position: "relative",
               width: String(infoTitleHeight - infoTitlePadding) + ea,
               height: String(infoTitleHeight - infoTitlePadding) + ea,
-              background: colorChip.white,
+              background: desktop ? colorChip.white : "",
               borderRadius: String(5) + "px",
-              marginRight: String(infoTitleInnerMargin) + ea,
+              marginRight: String(infoTitleInnerMargin * (mobile ? -1 : 1)) + ea,
               justifyContent: "center",
               alignItems: "center",
             },
@@ -4389,7 +4395,7 @@ DesignerProposalJs.prototype.insertFeeServiceBox = function () {
               position: "relative",
               width: withOut(infoTitleHeight - infoTitlePadding + infoTitleInnerMargin, ea),
               height: String(infoTitleHeight - infoTitlePadding) + ea,
-              background: colorChip.white,
+              background: desktop ? colorChip.white : "",
               borderRadius: String(5) + "px",
               justifyContent: "center",
               alignItems: "center",
@@ -4421,7 +4427,7 @@ DesignerProposalJs.prototype.insertFeeServiceBox = function () {
       width: String(secondWidth) + ea,
       height: String(100) + '%',
       marginRight: String(infoMargin) + ea,
-      background: desktop ? colorChip.gray1 : colorChip.gray2,
+      background: colorChip.gray1,
       borderRadius: String(5) + "px",
       verticalAlign: "top",
     },
@@ -4452,6 +4458,7 @@ DesignerProposalJs.prototype.insertFeeServiceBox = function () {
           fontWeight: String(500),
           lineHeight: String(1.5),
           color: colorChip.shadow,
+          marginBottom: desktop ? "" : String(infoDescriptionMarginBottom) + ea,
         }
       },
       {
@@ -4528,7 +4535,7 @@ DesignerProposalJs.prototype.insertFeeServiceBox = function () {
       position: "relative",
       width: withOut(firstWidth + secondWidth + (infoMargin * 2), ea),
       height: String(100) + '%',
-      background: desktop ? colorChip.gray1 : colorChip.gray2,
+      background: colorChip.gray1,
       borderRadius: String(5) + "px",
       verticalAlign: "top",
     },
@@ -4559,6 +4566,7 @@ DesignerProposalJs.prototype.insertFeeServiceBox = function () {
           fontWeight: String(500),
           lineHeight: String(1.5),
           color: colorChip.shadow,
+          marginBottom: desktop ? "" : String(infoDescriptionMarginBottom) + ea,
         }
       },
       {
