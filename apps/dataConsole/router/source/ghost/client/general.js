@@ -536,21 +536,22 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
     }).catch((err) => {
       console.log(err);
     });
-    window.addEventListener("scroll", (e) => {
-      setDebounce(() => {
-        homeliaisonAnalytics({
-          page: base.instance.pageName,
-          standard: base.instance.firstPageViewTime,
-          action: "scrollStop",
-          data: {
-            cliid: client !== null ? client.cliid : "null",
-            scroll: window.scrollY,
-          },
-        }).catch((err) => {
-          console.log(err);
-        });
-      }, "__topLevelScrollDebounceEvent__");
-    });
+
+    // window.addEventListener("scroll", (e) => {
+    //   setDebounce(() => {
+    //     homeliaisonAnalytics({
+    //       page: base.instance.pageName,
+    //       standard: base.instance.firstPageViewTime,
+    //       action: "scrollStop",
+    //       data: {
+    //         cliid: client !== null ? client.cliid : "null",
+    //         scroll: window.scrollY,
+    //       },
+    //     }).catch((err) => {
+    //       console.log(err);
+    //     });
+    //   }, "__topLevelScrollDebounceEvent__");
+    // });
 
   } catch (e) {
     await GeneralJs.ajaxJson({ message: "GeneralJs.ghostClientLaunching : " + e.message }, "/errorLog");
