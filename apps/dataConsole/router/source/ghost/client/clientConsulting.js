@@ -5301,7 +5301,7 @@ ClientConsultingJs.prototype.insertPannelBox = function () {
   buttonWidth = <%% 156, 156, 156, 126, 28 %%>;
   buttonMargin = <%% 8, 8, 8, 5, 2 %%>;
 
-  buttonTextTop = <%% 9, 9, 9, 9, 1.3 %%>;
+  buttonTextTop = <%% 9, 9, 9, 9, 1.1 %%>;
   buttonTextSize = <%% 20, 20, 20, 16, 3.8 %%>;
 
   if (desktop) {
@@ -5482,7 +5482,7 @@ ClientConsultingJs.prototype.insertPannelBox = function () {
         },
         children: [
           {
-            text: "신청 계속하기",
+            text: "상담 신청하기",
             style: {
               position: "absolute",
               top: String(buttonTextTop) + ea,
