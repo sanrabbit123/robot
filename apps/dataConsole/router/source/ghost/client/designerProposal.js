@@ -4124,7 +4124,7 @@ DesignerProposalJs.prototype.insertFeeServiceBox = function () {
   infoTitleInnerMargin = <%% 5, 5, 5, 4, 0.5 %%>;
   infoTitleSize = <%% 14, 13, 13, 11, 2.8 %%>;
   infoTitleTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), 0 %%>;
-  infoTitleNumberTextTop = <%% (isMac() ? -2 : -1), (isMac() ? -2 : -1), (isMac() ? -2 : -1), (isMac() ? -2 : -1), 0 %%>;
+  infoTitleNumberTextTop = <%% (isMac() ? -2 : -2), (isMac() ? -2 : -2), (isMac() ? -2 : -2), (isMac() ? -2 : -2), 0 %%>;
   infoDescriptionSize = <%% 12, 12, 11, 10, 2.4 %%>;
   infoDescriptionMarginBottom = 3;
 
@@ -4165,7 +4165,7 @@ DesignerProposalJs.prototype.insertFeeServiceBox = function () {
         ],
         [
           <?? "쇼파 구매, 거실 1인 암체어 구매" | "쇼파 구매, 거실 1인 암체어 구매" | "쇼파 구매, 거실 암체어 구매" | "쇼파 구매, 거실 암체어 구매" | "쇼파, 암체어 구매" ??>,
-          <?? "침대 매트릭스 구매, 화장대 구매, 책상 구매" | "침대 매트릭스 구매, 책상 구매" | "화장대 구매, 책상 구매" | "화장대 구매, 책상 구매" | "화장대 구매, 책상 구매" ??>,
+          <?? "침대 매트릭스 구매, 화장대 구매, 책상 구매" | "침대 매트릭스 구매, 책상 구매" | "화장대 구매, 책상 구매" | "화장대 구매, 책상 구매" | "화장대, 책상 구매" ??>,
           "등등"
         ],
         [
@@ -4359,14 +4359,15 @@ DesignerProposalJs.prototype.insertFeeServiceBox = function () {
           display: "block",
           height: String(infoTitleHeight - infoTitlePadding) + ea,
           width: withOut(infoTitlePadding * 2, ea),
-          paddingLeft: String(desktop ? infoTitlePadding : 4.8) + ea,
+          paddingLeft: String(infoTitlePadding) + ea,
           paddingRight: String(infoTitlePadding) + ea,
           paddingBottom: String(infoTitlePadding) + ea,
+          textAlign: desktop ? "" : "center",
         },
         children: [
           {
             style: {
-              display: "inline-flex",
+              display: desktop ? "inline-flex" : "none",
               position: "relative",
               width: String(infoTitleHeight - infoTitlePadding) + ea,
               height: String(infoTitleHeight - infoTitlePadding) + ea,
@@ -4473,11 +4474,12 @@ DesignerProposalJs.prototype.insertFeeServiceBox = function () {
           paddingLeft: String(infoTitlePadding) + ea,
           paddingRight: String(infoTitlePadding) + ea,
           paddingBottom: String(infoTitlePadding) + ea,
+          textAlign: desktop ? "" : "center",
         },
         children: [
           {
             style: {
-              display: "inline-flex",
+              display: desktop ? "inline-flex" : "none",
               position: "relative",
               width: String(infoTitleHeight - infoTitlePadding) + ea,
               height: String(infoTitleHeight - infoTitlePadding) + ea,
@@ -4583,11 +4585,12 @@ DesignerProposalJs.prototype.insertFeeServiceBox = function () {
           paddingLeft: String(infoTitlePadding) + ea,
           paddingRight: String(infoTitlePadding) + ea,
           paddingBottom: String(infoTitlePadding) + ea,
+          textAlign: desktop ? "" : "center",
         },
         children: [
           {
             style: {
-              display: "inline-flex",
+              display: desktop ? "inline-flex" : "none",
               position: "relative",
               width: String(infoTitleHeight - infoTitlePadding) + ea,
               height: String(infoTitleHeight - infoTitlePadding) + ea,
