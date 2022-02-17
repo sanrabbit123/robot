@@ -448,7 +448,7 @@ IndexJs.prototype.initialDom = function () {
 
           //about box
           let list = [ "right", "left" ];
-          let href = [ "/about.php", "/consulting.php" ];
+          let href = [ "/about.php", "https://home-liaison.servehttp.com/middle/consulting?nulid=no" ];
           let sourceArr = {
             words: [ about0.words, about1.words ],
             buttons: [ about0.button, about1.button ],

@@ -211,8 +211,8 @@ GeneralJs.prototype.setNavigator = function (subTitle, blackMode = true, name) {
     },
     {
       title: "상담 신청",
-      href: "https://" + GHOSTHOST + "/middle/curation?cliid=" + "c1801_aa01s",
-      green: [ "styleCuration" ],
+      href: "https://" + GHOSTHOST + "/middle/consulting?nulid=no",
+      green: [ "clientConsulting" ],
     },
   ];
   for (let i = 0; i < naviMenu.length; i++) {
@@ -247,7 +247,7 @@ GeneralJs.prototype.setNavigator = function (subTitle, blackMode = true, name) {
     class: [ desktop ? "hoverDefault" : "hoverDefault_mobile" ],
     event: {
       click: (e) => {
-        blankHref(frontPage);
+        selfHref(frontPage);
       }
     },
     style: {

@@ -33,13 +33,13 @@ module.exports = {
         },
         "words": {
           "desktop": {
-            "main": "slideWords_3rspot633_010308.svg",
-            "sub": "slideSub_10rspot049_010308.svg"
+            "main": "slideWords_3rspot633_021712.svg",
+            "sub": "slideSub_10rspot049_021712.svg"
           },
           "mobile": {
-            "main": "slideWords_3rspot633_010308.svg",
-            "sub": "moslideSub_5rspot196_010308.svg",
-            "circles": "moslideCircles_4rspot679_010308.svg"
+            "main": "slideWords_3rspot633_021712.svg",
+            "sub": "moslideSub_5rspot196_021712.svg",
+            "circles": "moslideCircles_4rspot679_021712.svg"
           }
         }
       }
@@ -92,31 +92,31 @@ module.exports = {
       "src": {
         "desktop": {
           "left": {
-            "words": "aboutleft_1rspot791_010308.svg",
-            "button": "aboutbuttonleft_6rspot759_010308.svg",
+            "words": "aboutleft_1rspot791_021712.svg",
+            "button": "aboutbuttonleft_6rspot759_021712.svg",
             "image": "main3s1.jpg"
           },
           "right": {
-            "words": "aboutright_1rspot824_010308.svg",
-            "button": "aboutbuttonright_6rspot749_010308.svg",
+            "words": "aboutright_1rspot824_021712.svg",
+            "button": "aboutbuttonright_6rspot749_021712.svg",
             "image": "main3s2.jpg"
           }
         },
         "mobile": {
           "left": {
-            "words": "moaboutleft_2rspot746_010308.svg",
+            "words": "moaboutleft_2rspot746_021712.svg",
             "images": [
-              "moabout0_level0_1rspot378_010308.svg",
-              "moabout0_level1_1rspot378_010308.png",
-              "moabout0_level2_1rspot378_010308.svg"
+              "moabout0_level0_1rspot378_021712.svg",
+              "moabout0_level1_1rspot378_021712.png",
+              "moabout0_level2_1rspot378_021712.svg"
             ]
           },
           "right": {
-            "words": "moaboutright_2rspot721_010308.svg",
+            "words": "moaboutright_2rspot721_021712.svg",
             "images": [
-              "moabout1_level0_1rspot378_010308.svg",
-              "moabout1_level1_1rspot378_010308.png",
-              "moabout1_level2_1rspot378_010308.svg"
+              "moabout1_level0_1rspot378_021712.svg",
+              "moabout1_level1_1rspot378_021712.png",
+              "moabout1_level2_1rspot378_021712.svg"
             ]
           }
         }
@@ -125,20 +125,20 @@ module.exports = {
     "banner": {
       "words": {
         "main": "홈리에종 <b%디자이너 파트너십%b> 신청",
-        "sub": "2021 홈리에종 디자이너 설명회를 통해, 파트너 디자이너를 모집합니다!",
+        "sub": "2022 홈리에종 디자이너 설명회를 통해, 파트너 디자이너를 모집합니다!",
         "button": "자세히 보기",
         "subButton": "Partnership"
       },
       "src": {
-        "desktop": "bannerMain_6rspot996_010308.svg",
-        "mobile": "bannermoMain_8rspot116_010308.svg",
-        "button": "bannerButton_6rspot753_010308.svg",
-        "subbutton": "bannerSubButton_5rspot343_010308.svg",
-        "arrow": "bannerArrow_2rspot801_010308.svg",
+        "desktop": "bannerMain_7rspot036_021712.svg",
+        "mobile": "bannermoMain_8rspot161_021712.svg",
+        "button": "bannerButton_6rspot753_021712.svg",
+        "subbutton": "bannerSubButton_5rspot343_021712.svg",
+        "arrow": "bannerArrow_2rspot801_021712.svg",
         "shadow": [
-          "bannerShadow0_3rspot367_010308.svg",
-          "bannerShadow1_3rspot367_010308.png",
-          "bannerShadow2_3rspot367_010308.svg"
+          "bannerShadow0_3rspot367_021712.svg",
+          "bannerShadow1_3rspot367_021712.png",
+          "bannerShadow2_3rspot367_021712.svg"
         ]
       },
       "links": [
@@ -161,12 +161,12 @@ module.exports = {
         ]
       },
       "src": {
-        "portfolio": "portfolio_p_8rspot491_010308.svg",
-        "review": "portfolio_r_6rspot881_010308.svg",
-        "tags": "portfolio_tags_5rspot512_010308.svg",
+        "portfolio": "portfolio_p_8rspot491_021712.svg",
+        "review": "portfolio_r_6rspot881_021712.svg",
+        "tags": "portfolio_tags_5rspot512_021712.svg",
         "icons": {
-          "search": "portfoliosearch_0rspot945_010308.svg",
-          "circles": "portfoliocircles_4rspot679_010308.svg"
+          "search": "portfoliosearch_0rspot945_021712.svg",
+          "circles": "portfoliocircles_4rspot679_021712.svg"
         }
       }
     },
@@ -196,21 +196,21 @@ module.exports = {
       },
       "src": {
         "words": {
-          "desktop": "belowAboutWord_1rspot667_010308.svg",
-          "tablet": "tabelowAboutWord_0rspot93_010308.svg",
-          "mobile": "mobelowAboutWord_2rspot615_010308.svg"
+          "desktop": "belowAboutWord_1rspot667_021712.svg",
+          "tablet": "tabelowAboutWord_0rspot93_021712.svg",
+          "mobile": "mobelowAboutWord_2rspot615_021712.svg"
         },
-        "button": "belowAboutbutton_6rspot759_010308.svg",
+        "button": "belowAboutbutton_6rspot759_021712.svg",
         "images": {
           "desktop": [
-            "belowabout_level0_2rspot332_010308.png",
-            "belowabout_level1_2rspot332_010308.svg",
-            "belowabout_level2_2rspot332_010308.png"
+            "belowabout_level0_2rspot332_021712.png",
+            "belowabout_level1_2rspot332_021712.svg",
+            "belowabout_level2_2rspot332_021712.png"
           ],
           "mobile": [
-            "mobelowabout_level0_0rspot587_010308.png",
-            "mobelowabout_level1_0rspot587_010308.svg",
-            "mobelowabout_level2_0rspot587_010308.png"
+            "mobelowabout_level0_0rspot587_021712.png",
+            "mobelowabout_level1_0rspot587_021712.svg",
+            "mobelowabout_level2_0rspot587_021712.png"
           ]
         }
       }
@@ -225,21 +225,21 @@ module.exports = {
       ],
       "src": [
         {
-          "src": "belowButton0_6rspot65_010308.svg",
+          "src": "belowButton0_6rspot65_021712.svg",
           "link": "http://hansungidschool.com/ver02/course/course2.asp"
         },
         {
-          "src": "belowButton1_6rspot901_010308.svg",
+          "src": "belowButton1_6rspot901_021712.svg",
           "link": "/desevent.php?mode=presentation"
         },
         {
-          "src": "belowButton2_7rspot487_010308.svg",
+          "src": "belowButton2_7rspot487_021712.svg",
           "link": "/desevent.php?mode=partnership"
         }
       ]
     },
     "copyRight": {
-      "src": "copyRight_25rspot395_010308.svg"
+      "src": "copyRight_25rspot395_021712.svg"
     }
   }
 }
