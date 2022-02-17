@@ -449,7 +449,7 @@ Ghost.prototype.autoHypen = function (sender) {
 Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
   const instance = this;
   const back = this.back;
-  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, requestSystem, stringToDate } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, requestSystem, stringToDate, errorLog } = this.mother;
   const selfMongo = MONGOC;
   const selfConsoleInfo = MONGOCONSOLEC;
   try {
@@ -510,7 +510,9 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
           break;
         }
         for (let obj of data.DATAS) {
-          tong[callConst + obj.DST].in.push(JSON.parse(JSON.stringify(obj)));
+          if (tong[callConst + obj.DST] !== undefined) {
+            tong[callConst + obj.DST].in.push(JSON.parse(JSON.stringify(obj)));
+          }
         }
       } while (data.SVC_RT === '0000');
     }
@@ -655,6 +657,7 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
 
   } catch (e) {
     console.log(e);
+    await errorLog("call history fail " + e.message);
   }
 }
 
