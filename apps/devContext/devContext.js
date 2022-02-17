@@ -90,6 +90,73 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+    // const projects = await back.getProjectsByQuery({
+    //   $and: [
+    //     {
+    //       "process.contract.first.date": { $gte: new Date(2021, 0, 1) }
+    //     },
+    //     {
+    //       "process.contract.first.date": { $lt: new Date(2022, 0, 1) }
+    //     },
+    //     {
+    //       "desid": { $regex: "^d" }
+    //     }
+    //   ]
+    // }, { selfMongo: instance.MONGOC });
+    // clients = await back.getClientsByQuery({
+    //   $or: [
+    //     ...projects.toNormal().map((obj) => { return { cliid: obj.cliid } }),
+    //   ]
+    // }, { selfMongo: instance.MONGOC });
+    //
+    // const target = projects.toNormal();
+    //
+    // for (let obj of target) {
+    //   for (let client of clients) {
+    //     if (obj.cliid === client.cliid) {
+    //       obj.client = client.toNormal();
+    //       obj.pyeong = client.requests[0].request.space.pyeong.value;
+    //     }
+    //   }
+    // }
+    //
+    // const a1 = target.filter((obj) => { return /_aa01s/gi.test(obj.service.serid) });
+    // const a2 = target.filter((obj) => { return /_aa02s/gi.test(obj.service.serid) });
+    // const a3 = target.filter((obj) => { return /_aa03s/gi.test(obj.service.serid) });
+    // const a4 = target.filter((obj) => { return /_aa04s/gi.test(obj.service.serid) });
+    //
+    // const a1m = a1.map((obj) => { return obj.process.contract.remain.calculation.amount.consumer });
+    // const a2m = a2.map((obj) => { return obj.process.contract.remain.calculation.amount.consumer });
+    // const a3m = a3.map((obj) => { return obj.process.contract.remain.calculation.amount.consumer });
+    // const a4m = a4.map((obj) => { return obj.process.contract.remain.calculation.amount.consumer });
+    //
+    // const a1a = Math.floor((a1m.reduce((acc, curr) => { return acc + curr }, 0) / a1m.length) / 1000) * 1000;
+    // const a2a = Math.floor((a2m.reduce((acc, curr) => { return acc + curr }, 0) / a2m.length) / 1000) * 1000;
+    // const a3a = Math.floor((a3m.reduce((acc, curr) => { return acc + curr }, 0) / a3m.length) / 1000) * 1000;
+    // const a4a = Math.floor((a4m.reduce((acc, curr) => { return acc + curr }, 0) / a4m.length) / 1000) * 1000;
+    //
+    // const a1e = a1.map((obj) => { return obj.process.contract.remain.calculation.amount.consumer / obj.pyeong });
+    // const a2e = a2.map((obj) => { return obj.process.contract.remain.calculation.amount.consumer / obj.pyeong });
+    // const a3e = a3.map((obj) => { return obj.process.contract.remain.calculation.amount.consumer / obj.pyeong });
+    // const a4e = a4.map((obj) => { return obj.process.contract.remain.calculation.amount.consumer / obj.pyeong });
+    //
+    // const a1b = Math.floor((a1e.reduce((acc, curr) => { return acc + curr }, 0) / a1e.length) / 1000) * 1000;
+    // const a2b = Math.floor((a2e.reduce((acc, curr) => { return acc + curr }, 0) / a2e.length) / 1000) * 1000;
+    // const a3b = Math.floor((a3e.reduce((acc, curr) => { return acc + curr }, 0) / a3e.length) / 1000) * 1000;
+    // const a4b = Math.floor((a4e.reduce((acc, curr) => { return acc + curr }, 0) / a4e.length) / 1000) * 1000;
+    //
+    // console.log(a1a, a2a, a3a, a4a)
+    // console.log(a1b, a2b, a3b, a4b)
+
+
+
+
+
+
+
+
+
     // const LZString = require(process.cwd() + "/temp/module/lzstring.js");
     // const { id, pwd } = await fileSystem("readJson", [ process.cwd() + "/temp/data/set.json" ]);
     // const { keyname: encnm, hex: encpw } = equalJson(await shellExec("python3", [ process.cwd() + "/temp/app.py" ]))
