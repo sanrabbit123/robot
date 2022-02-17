@@ -5440,7 +5440,11 @@ GeneralJs.homeliaisonAnalytics = function (obj) {
                 ...obj.data
               };
               window.fbq("trackCustom", obj.action, json);
-              resolve(json)
+              window.gtag("event", obj.action, {
+                "event_category": obj.page,
+                "event_label": JSON.stringify(json),
+              });
+              resolve(json);
             });
           }
         } else {

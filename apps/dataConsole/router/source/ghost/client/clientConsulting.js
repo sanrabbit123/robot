@@ -5122,7 +5122,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
 ClientConsultingJs.prototype.finalSubmit = function () {
   const instance = this;
   const { inputClassName } = this;
-  const { ajaxJson, colorChip, findByAttribute, scrollTo, dateToString, sleep, selfHref } = GeneralJs;
+  const { ajaxJson, colorChip, findByAttribute, scrollTo, dateToString, sleep, selfHref, homeliaisonAnalytics } = GeneralJs;
   return async function (e) {
     try {
       const property = "property";
@@ -5233,6 +5233,14 @@ ClientConsultingJs.prototype.finalSubmit = function () {
         instance.mother.certificationBox(name, phone, async function (back, box) {
           try {
             const { cliid } = await ajaxJson({ map }, "/clientSubmit");
+            await homeliaisonAnalytics({
+              page: instance.pageName,
+              standard: instance.firstPageViewTime,
+              action: "login",
+              data: { cliid },
+            }).catch((err) => {
+              console.log(err);
+            });
             await sleep(500);
             document.body.removeChild(box);
             document.body.removeChild(back);
