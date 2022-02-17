@@ -4059,6 +4059,7 @@ DesignerProposalJs.prototype.insertFeeServiceBox = function () {
   let infoDescriptionSize;
   let mobileGrayMarginBottom;
   let infoDescriptionMarginBottom;
+  let infoTitleNumberTextTop;
 
   blockHeight = <%% 517, 517, 482, 388, 160 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
@@ -4068,7 +4069,7 @@ DesignerProposalJs.prototype.insertFeeServiceBox = function () {
   titleFont = <%% 31, 29, 26, 22, 5.7 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
   titleFontWeight = <%% 500, 500, 500, 500, 500 %%>;
-  titleSecondTop = <%% 43, 41, 38, 32, 0.5 %%>;
+  titleSecondTop = <%% (isMac() ? 44 : 45), 42, 38, 32, 0.5 %%>;
   titleSecondLeft = <%% 6, 6, 6, 6, 6 %%>;
   titleSecondWeight = <%% 500, 500, 500, 500, 500 %%>;
 
@@ -4122,7 +4123,8 @@ DesignerProposalJs.prototype.insertFeeServiceBox = function () {
   infoTitlePadding = <%% 12, 12, 10, 10, 3.5 %%>;
   infoTitleInnerMargin = <%% 5, 5, 5, 4, 0.5 %%>;
   infoTitleSize = <%% 14, 13, 13, 11, 2.8 %%>;
-  infoTitleTextTop = <%% -2, -2, -2, -2, 0 %%>;
+  infoTitleTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), 0 %%>;
+  infoTitleNumberTextTop = <%% (isMac() ? -2 : -1), (isMac() ? -2 : -1), (isMac() ? -2 : -1), (isMac() ? -2 : -1), 0 %%>;
   infoDescriptionSize = <%% 12, 12, 11, 10, 2.4 %%>;
   infoDescriptionMarginBottom = 3;
 
@@ -4373,6 +4375,7 @@ DesignerProposalJs.prototype.insertFeeServiceBox = function () {
               marginRight: String(infoTitleInnerMargin * (mobile ? -1 : 1)) + ea,
               justifyContent: "center",
               alignItems: "center",
+              verticalAlign: "top",
             },
             children: [
               {
@@ -4384,7 +4387,7 @@ DesignerProposalJs.prototype.insertFeeServiceBox = function () {
                   fontWeight: String(500),
                   color: colorChip.green,
                   fontFamily: "graphik",
-                  top: String(infoTitleTextTop) + ea,
+                  top: String(infoTitleNumberTextTop) + ea,
                 }
               }
             ]
@@ -4399,6 +4402,7 @@ DesignerProposalJs.prototype.insertFeeServiceBox = function () {
               borderRadius: String(5) + "px",
               justifyContent: "center",
               alignItems: "center",
+              verticalAlign: "top",
             },
             children: [
               {
@@ -4482,6 +4486,7 @@ DesignerProposalJs.prototype.insertFeeServiceBox = function () {
               marginRight: String(infoTitleInnerMargin) + ea,
               justifyContent: "center",
               alignItems: "center",
+              verticalAlign: "top",
             },
             children: [
               {
@@ -4493,7 +4498,7 @@ DesignerProposalJs.prototype.insertFeeServiceBox = function () {
                   fontWeight: String(500),
                   color: colorChip.deactive,
                   fontFamily: "graphik",
-                  top: String(infoTitleTextTop) + ea,
+                  top: String(infoTitleNumberTextTop) + ea,
                 }
               }
             ]
@@ -4508,6 +4513,7 @@ DesignerProposalJs.prototype.insertFeeServiceBox = function () {
               borderRadius: String(5) + "px",
               justifyContent: "center",
               alignItems: "center",
+              verticalAlign: "top",
             },
             children: [
               {
@@ -4590,6 +4596,7 @@ DesignerProposalJs.prototype.insertFeeServiceBox = function () {
               marginRight: String(infoTitleInnerMargin) + ea,
               justifyContent: "center",
               alignItems: "center",
+              verticalAlign: "top",
             },
             children: [
               {
@@ -4601,7 +4608,7 @@ DesignerProposalJs.prototype.insertFeeServiceBox = function () {
                   fontWeight: String(500),
                   color: colorChip.deactive,
                   fontFamily: "graphik",
-                  top: String(infoTitleTextTop) + ea,
+                  top: String(infoTitleNumberTextTop) + ea,
                 }
               }
             ]
@@ -4616,6 +4623,7 @@ DesignerProposalJs.prototype.insertFeeServiceBox = function () {
               borderRadius: String(5) + "px",
               justifyContent: "center",
               alignItems: "center",
+              verticalAlign: "top",
             },
             children: [
               {
