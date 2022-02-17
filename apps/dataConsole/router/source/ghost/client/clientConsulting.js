@@ -45,7 +45,7 @@ ClientConsultingJs.binaryPath = "/middle/consulting";
 
 ClientConsultingJs.prototype.insertInitBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media, osException, testMode, inputClassName } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -484,6 +484,15 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         }
       }
       window.addEventListener("message", GeneralJs.stacks["addressEvent"]);
+
+      homeliaisonAnalytics({
+        page: instance.pageName,
+        standard: instance.firstPageViewTime,
+        action: "addressClick",
+        data: {},
+      }).catch((err) => {
+        console.log(err);
+      });
 
       cancelBack = createNode({
         mother: totalContents,
@@ -5238,8 +5247,6 @@ ClientConsultingJs.prototype.finalSubmit = function () {
               standard: instance.firstPageViewTime,
               action: "login",
               data: { cliid },
-            }).catch((err) => {
-              console.log(err);
             });
             await sleep(500);
             document.body.removeChild(box);
