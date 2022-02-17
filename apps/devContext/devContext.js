@@ -88,8 +88,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await findCode("consulting.php")
-
+    // await findCode("consulting.php")
 
 
 
@@ -2119,7 +2118,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p173");
+    // await this.getRawPortfolio("p149");
 
 
     // get corePortfolio by pid
