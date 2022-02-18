@@ -5238,7 +5238,7 @@ ClientConsultingJs.prototype.finalSubmit = function () {
         map.push(tempObj)
       }
 
-      window.gtag('get', window.gtagId, 'client_id', (client_id) => {
+      window.gtag("get", window.gtagId, "client_id", (client_id) => {
         map.push({
           property: "googleId",
           value: client_id

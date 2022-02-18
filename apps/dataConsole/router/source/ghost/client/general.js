@@ -532,7 +532,6 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
         scroll: window.scrollY,
       },
     }).then((json) => {
-      console.log(json);
       base.instance.googleClientId = json.data.id;
       base.instance.userInfo = json;
     }).catch((err) => {
