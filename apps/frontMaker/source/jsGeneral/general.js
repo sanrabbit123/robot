@@ -5451,9 +5451,9 @@ GeneralJs.homeliaisonAnalytics = function (obj) {
                 "event_category": obj.page,
                 "event_label": JSON.stringify(json),
               });
-              GeneralJs.ajaxJson("https://" + dbHost + ':' + String(dbPort) + analyticsReceivePath, {
+              GeneralJs.ajaxJson({
                 data: { ...json, value: obj.data },
-              }).then((obj) => {
+              }, "https://" + dbHost + ':' + String(dbPort) + analyticsReceivePath).then((obj) => {
                 resolve(obj);
               }).catch((err) => {
                 reject(err.message);
