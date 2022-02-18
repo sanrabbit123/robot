@@ -5238,33 +5238,39 @@ ClientConsultingJs.prototype.finalSubmit = function () {
         map.push(tempObj)
       }
 
-      window.gtag("get", window.gtagId, "client_id", (client_id) => {
+      if (typeof instance.googleClientId === "string") {
         map.push({
           property: "googleId",
-          value: client_id
+          value: instance.googleClientId
         });
-        if (boo) {
-          instance.mother.certificationBox(name, phone, async function (back, box) {
-            try {
-              const { cliid } = await ajaxJson({ map }, "/clientSubmit");
-              homeliaisonAnalytics({
-                page: instance.pageName,
-                standard: instance.firstPageViewTime,
-                action: "login",
-                data: { cliid },
-              }).catch((err) => {
-                console.log(err);
-              });
-              await sleep(500);
-              document.body.removeChild(box);
-              document.body.removeChild(back);
-              selfHref(window.location.protocol + "//" + window.location.host + "/middle/curation/?cliid=" + cliid);
-            } catch (e) {
-              await ajaxJson({ message: "ClientConsultingJs.certificationBox : " + e.message }, "/errorLog");
-            }
-          });
-        }
-      });
+      } else {
+        map.push({
+          property: "googleId",
+          value: ""
+        });
+      }
+
+      if (boo) {
+        instance.mother.certificationBox(name, phone, async function (back, box) {
+          try {
+            const { cliid } = await ajaxJson({ map }, "/clientSubmit");
+            homeliaisonAnalytics({
+              page: instance.pageName,
+              standard: instance.firstPageViewTime,
+              action: "login",
+              data: { cliid },
+            }).catch((err) => {
+              console.log(err);
+            });
+            await sleep(500);
+            document.body.removeChild(box);
+            document.body.removeChild(back);
+            selfHref(window.location.protocol + "//" + window.location.host + "/middle/curation/?cliid=" + cliid);
+          } catch (e) {
+            await ajaxJson({ message: "ClientConsultingJs.certificationBox : " + e.message }, "/errorLog");
+          }
+        });
+      }
 
     } catch (e) {
       console.log(e);
