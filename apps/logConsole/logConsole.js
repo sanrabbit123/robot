@@ -240,7 +240,7 @@ LogConsole.prototype.renderStatic = async function (staticFolder) {
 
 LogConsole.prototype.logConnect = async function () {
   const instance = this;
-  const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, errorLog } = this.mother;
+  const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, errorLog, messageLog } = this.mother;
   const PORT = 3000;
   const https = require("https");
   const express = require("express");
@@ -326,6 +326,18 @@ LogConsole.prototype.logConnect = async function () {
         console.log(e);
       }
     }, 30 * 60 * 1000);
+
+    //set analytics
+    const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
+    const analytics = new GoogleAnalytics();
+    setInterval(async () => {
+      try {
+        await analytics.analyticsToMongo();
+        await messageLog("analytics to mongo success");
+      } catch (e) {
+        console.log(e);
+      }
+    }, 1000 * 60 * 60 * 24);
 
     //server on
     https.createServer(pems, app).listen(PORT, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
