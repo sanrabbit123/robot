@@ -26,8 +26,8 @@ MiddleCommunication.prototype.baseHtml = async function (target, req, selfMongo,
   const back = this.back;
   const address = this.address;
   const { fileSystem } = this.mother;
+  const invaildCode = `<!DOCTYPE html><html><head><title>Permission denied</title></head><body>error<script>alert("잘못된 접근입니다!");window.location.href = "https://home-liaison.com";</script></body></html>`;
   try {
-    const invaildCode = `<!DOCTYPE html><html><head><title>Permission denied</title></head><body>error<script>alert("잘못된 접근입니다!");window.location.href = "https://home-liaison.com";</script></body></html>`;
     let html;
     let idArr, id, idMethod;
     let thisPerson;
@@ -53,15 +53,10 @@ MiddleCommunication.prototype.baseHtml = async function (target, req, selfMongo,
       }
     }
 
-    if (id === null) {
-      throw new Error("There is no id, query must include id");
-      return invaildCode;
-    }
-
-    thisPerson = await (back[idMethod])(id, { selfMongo });
-    if (thisPerson === null) {
-      throw new Error("There is no data, insert vaild id");
-      return invaildCode;
+    if (id !== null) {
+      thisPerson = await (back[idMethod])(id, { selfMongo });
+    } else {
+      thisPerson = null;
     }
 
     //set meta data
@@ -131,7 +126,7 @@ MiddleCommunication.prototype.baseHtml = async function (target, req, selfMongo,
   } catch (e) {
     console.log(target);
     console.log(e.message);
-    return `<!DOCTYPE html><html><head><title>Permission denied</title></head><body>error<script>alert("잘못된 접근입니다!");window.location.href = "https://home-liaison.com";</script></body></html>`;
+    return invaildCode;
   }
 }
 
