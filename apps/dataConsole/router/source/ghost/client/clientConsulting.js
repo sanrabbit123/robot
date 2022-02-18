@@ -142,6 +142,8 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   let calendarTop;
   let livingAlertEvent;
   let livingDownEvent;
+  let nameBlurEvent;
+  let phoneBlurEvent;
 
   blockHeight = <%% 918, 901, 817, 1026, 264 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
@@ -751,6 +753,38 @@ ClientConsultingJs.prototype.insertInitBox = function () {
     }
   }
 
+  nameBlurEvent = function (e) {
+    this.value = this.value.trim();
+    if (this.value !== '') {
+      homeliaisonAnalytics({
+        page: instance.pageName,
+        standard: instance.firstPageViewTime,
+        action: "inputBlur",
+        data: {
+          name: this.value
+        },
+      }).catch((err) => {
+        console.log(err);
+      });
+    }
+  }
+
+  phoneBlurEvent = function (e) {
+    this.value = this.value.trim();
+    if (this.value !== '') {
+      homeliaisonAnalytics({
+        page: instance.pageName,
+        standard: instance.firstPageViewTime,
+        action: "inputBlur",
+        data: {
+          phone: this.value
+        },
+      }).catch((err) => {
+        console.log(err);
+      });
+    }
+  }
+
   blank = <%% "&nbsp;&nbsp;&nbsp;", "&nbsp;&nbsp;", "&nbsp;", "&nbsp;", "&nbsp;" %%>;
 
   if (media[0]) {
@@ -1022,6 +1056,9 @@ ClientConsultingJs.prototype.insertInitBox = function () {
             property: "name",
             value: "",
           },
+          event: {
+            blur: nameBlurEvent,
+          },
           style: {
             position: "absolute",
             top: String(grayInputTop) + ea,
@@ -1185,6 +1222,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
           },
           event: {
             keyup: phoneHypenEvent,
+            blur: phoneBlurEvent,
           },
           style: {
             position: "absolute",
@@ -2934,6 +2972,9 @@ ClientConsultingJs.prototype.insertInitBox = function () {
             property: "name",
             value: "",
           },
+          event: {
+            blur: nameBlurEvent,
+          },
           style: {
             position: "absolute",
             top: String(grayInputTop) + ea,
@@ -3008,6 +3049,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
           },
           event: {
             keyup: phoneHypenEvent,
+            blur: phoneBlurEvent,
           },
           style: {
             position: "absolute",

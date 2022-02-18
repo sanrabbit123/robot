@@ -3979,6 +3979,24 @@ DesignerProposalJs.prototype.submitEvent = function (desid, designer, method) {
                 designer: designer,
                 method: method,
               }, "/designerProposal_submit");
+
+              GeneralJs.homeliaisonAnalytics({
+                page: instance.pageName,
+                standard: instance.firstPageViewTime,
+                action: "designerSelect",
+                data: {
+                  cliid: instance.client.cliid,
+                  proid: instance.project.proid,
+                  desid: desid,
+                  name: name,
+                  phone: phone,
+                  designer: designer,
+                  method: method,
+                },
+              }).catch((err) => {
+                console.log(err);
+              });
+
               await GeneralJs.sleep(500);
               document.body.removeChild(box);
               document.body.removeChild(back);

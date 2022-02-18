@@ -1195,6 +1195,17 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
           name: instance.client.name,
           image: image,
         }, "/styleCuration_styleCheckComplete");
+      }).then(() => {
+        return GeneralJs.homeliaisonAnalytics({
+          page: instance.pageName,
+          standard: instance.firstPageViewTime,
+          action: "styleCheck",
+          data: {
+            cliid: instance.client.cliid,
+            name: instance.client.name,
+            image: image,
+          },
+        });
       }).catch((err) => {
         GeneralJs.ajaxJson({ message: "StyleCurationJs.styleCheck.pickupDesigners : " + err.message }, "/errorLog").catch((e) => {});
       });
