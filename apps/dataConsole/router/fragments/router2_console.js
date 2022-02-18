@@ -2337,7 +2337,11 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       bathroom = bathroom.value.trim();
       balcony = balcony.value.trim();
       etc = etc.value.trim();
-      googleId = googleId.value.trim();
+      if (googleId === undefined) {
+        googleId = "";
+      } else {
+        googleId = googleId.value.trim();
+      }
 
       requestObject = {};
 
