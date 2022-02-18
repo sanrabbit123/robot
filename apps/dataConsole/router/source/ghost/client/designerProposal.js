@@ -3980,7 +3980,7 @@ DesignerProposalJs.prototype.submitEvent = function (desid, designer, method) {
                 method: method,
               }, "/designerProposal_submit");
 
-              GeneralJs.homeliaisonAnalytics({
+              await GeneralJs.homeliaisonAnalytics({
                 page: instance.pageName,
                 standard: instance.firstPageViewTime,
                 action: "designerSelect",
@@ -3993,8 +3993,6 @@ DesignerProposalJs.prototype.submitEvent = function (desid, designer, method) {
                   designer: designer,
                   method: method,
                 },
-              }).catch((err) => {
-                console.log(err);
               });
 
               await GeneralJs.sleep(500);
