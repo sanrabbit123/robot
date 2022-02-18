@@ -631,7 +631,7 @@ GoogleAnalytics.prototype.analyticsToMongo = async function (startDate = "defaul
     let today;
     if (startDate === "default") {
       today = new Date();
-      today.setDate(today.getDate() - 1);
+      today.setDate(today.getDate() - 60);
       startDate = today;
     }
 
