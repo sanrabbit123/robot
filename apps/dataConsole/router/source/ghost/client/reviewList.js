@@ -532,7 +532,8 @@ ReviewListJs.prototype.launching = async function (loading) {
         instance: this,
         binaryPath: ReviewListJs.binaryPath,
         subTitle: "",
-        secondBackground: false
+        secondBackground: false,
+        backgroundType: 0,
       },
       local: async () => {
         try {

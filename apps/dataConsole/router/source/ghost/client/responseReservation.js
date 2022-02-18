@@ -695,6 +695,7 @@ ResponseReservationJs.prototype.launching = async function (loading) {
         instance: this,
         binaryPath: ResponseReservationJs.binaryPath,
         subTitle: (this.client.name + " 고객님 응대 예약 페이지"),
+        backgroundType: 0,
       },
       local: async () => {
         try {

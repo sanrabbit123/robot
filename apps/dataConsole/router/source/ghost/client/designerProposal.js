@@ -4787,6 +4787,7 @@ DesignerProposalJs.prototype.launching = async function (loading) {
         instance: this,
         binaryPath: DesignerProposalJs.binaryPath,
         subTitle: (this.client.name + " 고객님 제안서"),
+        backgroundType: 0,
       },
       local: async () => {
         try {

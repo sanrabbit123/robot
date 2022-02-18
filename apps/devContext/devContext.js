@@ -91,37 +91,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const propertyId = "227717726";
-    // const credentials = `${process.cwd()}/apps/googleAPIs/tokens/analyticsCredentials.json`;
-    //
-    //
-    // const { BetaAnalyticsDataClient } = require('@google-analytics/data');
-    // const analyticsDataClient = new BetaAnalyticsDataClient();
-    // process.env["GOOGLE_APPLICATION_CREDENTIALS"] = credentials;
-    //
-    // const [ response ] = await analyticsDataClient.runReport({
-    //   property: `properties/${propertyId}`,
-    //   dateRanges: [
-    //     {
-    //       startDate: '2022-01-31',
-    //       endDate: 'today',
-    //     },
-    //   ],
-    //   dimensions: [
-    //     {
-    //       name: 'eventName',
-    //     },
-    //   ],
-    //   metrics: [
-    //     {
-    //       name: 'activeUsers',
-    //     },
-    //   ],
-    // });
-    //
-    // for (let { dimensionValues, metricValues } of response.rows) {
-    //   console.log(dimensionValues, metricValues);
-    // }
 
 
 

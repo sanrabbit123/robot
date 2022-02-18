@@ -138,7 +138,7 @@ LogRouter.prototype.rou_post_receiveLog = function () {
           ...ipObj
         },
         date: {
-          standard,
+          standard: new Date(Number(standard)),
           now: new Date(),
         },
         data: {

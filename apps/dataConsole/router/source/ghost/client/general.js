@@ -531,27 +531,32 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
         cliid: client !== null ? client.cliid : "null",
         scroll: window.scrollY,
       },
-    }).then((id) => {
-      base.instance.googleClientId = id;
+    }).then((json) => {
+      base.instance.googleClientId = json.data.id;
+      base.instance.userInfo = json;
     }).catch((err) => {
       console.log(err);
     });
 
-    // window.addEventListener("scroll", (e) => {
-    //   setDebounce(() => {
-    //     homeliaisonAnalytics({
-    //       page: base.instance.pageName,
-    //       standard: base.instance.firstPageViewTime,
-    //       action: "scrollStop",
-    //       data: {
-    //         cliid: client !== null ? client.cliid : "null",
-    //         scroll: window.scrollY,
-    //       },
-    //     }).catch((err) => {
-    //       console.log(err);
-    //     });
-    //   }, "__topLevelScrollDebounceEvent__");
-    // });
+    GeneralJs.stacks["__topLevelScrollDebounceConst__"] = 0;
+    window.addEventListener("scroll", (e) => {
+      setDebounce(() => {
+        if (GeneralJs.stacks["__topLevelScrollDebounceConst__"] === 0) {
+          homeliaisonAnalytics({
+            page: base.instance.pageName,
+            standard: base.instance.firstPageViewTime,
+            action: "scrollStop",
+            data: {
+              cliid: client !== null ? client.cliid : "null",
+              scroll: window.scrollY,
+            },
+          }).catch((err) => {
+            console.log(err);
+          });
+          GeneralJs.stacks["__topLevelScrollDebounceConst__"] = 1;
+        }
+      }, "__topLevelScrollDebounceEvent__");
+    });
 
   } catch (e) {
     await GeneralJs.ajaxJson({ message: "GeneralJs.ghostClientLaunching : " + e.message }, "/errorLog");

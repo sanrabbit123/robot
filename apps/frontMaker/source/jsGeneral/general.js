@@ -5428,6 +5428,9 @@ GeneralJs.orderSystem = function (type, number) {
 }
 
 GeneralJs.homeliaisonAnalytics = function (obj) {
+  const dbHost = "home-liaison.info";
+  const analyticsReceivePath = "/receiveLog";
+  const dbPort = 3000;
   return new Promise((resolve, reject) => {
     if (typeof window.gtag === "function") {
       if (typeof obj === "object" && obj !== null) {
@@ -5448,7 +5451,13 @@ GeneralJs.homeliaisonAnalytics = function (obj) {
                 "event_category": obj.page,
                 "event_label": JSON.stringify(json),
               });
-              resolve(json);
+              GeneralJs.ajaxJson("https://" + dbHost + ':' + String(dbPort) + analyticsReceivePath, {
+                data: { ...json, value: obj.data },
+              }).then((obj) => {
+                resolve(obj);
+              }).catch((err) => {
+                reject(err.message);
+              });
             });
           }
         } else {

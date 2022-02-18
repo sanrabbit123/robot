@@ -1278,7 +1278,8 @@ WholeScheduleJs.prototype.launching = async function (loading) {
         instance: this,
         binaryPath: WholeScheduleJs.binaryPath,
         subTitle: (this.client.name + " 고객님 전체 일정 안내"),
-        secondBackground: false
+        secondBackground: false,
+        backgroundType: 0,
       },
       local: async () => {
         try {

@@ -7281,7 +7281,8 @@ StyleCurationJs.prototype.launching = async function (loading) {
         instance: this,
         binaryPath: StyleCurationJs.binaryPath,
         subTitle: (this.client.name + " 고객님 서비스 안내"),
-        secondBackground: true
+        secondBackground: true,
+        backgroundType: 0,
       },
       local: async () => {
         try {

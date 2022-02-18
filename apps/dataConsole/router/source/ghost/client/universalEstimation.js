@@ -1815,6 +1815,7 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
         instance: this,
         binaryPath: UniversalEstimationJs.binaryPath,
         subTitle: (this.client.name + " 고객님 결제 안내"),
+        backgroundType: 0,
       },
       local: async () => {
         try {

@@ -2299,6 +2299,7 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       let cliid;
       let message;
       let thisClient;
+      let googleId;
 
       name = map.find((obj) => { return obj.property === "name" });
       phone = map.find((obj) => { return obj.property === "phone" });
@@ -2315,6 +2316,7 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       bathroom = map.find((obj) => { return obj.property === "bathroom" });
       balcony = map.find((obj) => { return obj.property === "balcony" });
       etc = map.find((obj) => { return obj.property === "etc" });
+      googleId = map.find((obj) => { return obj.property === "googleId" });
 
       if (name === undefined || phone === undefined || address0 === undefined || address1 === undefined || family === undefined || email === undefined || pyeong === undefined || contract === undefined || movein === undefined || living === undefined || budget === undefined || room === undefined || bathroom === undefined || balcony === undefined || etc === undefined) {
         throw new Error("invaild post");
@@ -2335,6 +2337,7 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       bathroom = bathroom.value.trim();
       balcony = balcony.value.trim();
       etc = etc.value.trim();
+      googleId = googleId.value.trim();
 
       requestObject = {};
 
@@ -2464,6 +2467,8 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
 
       thisClient = await back.getClientById(cliid, { selfMongo, withTools: true });
       message += thisClient.toMessage();
+      message += "\n";
+      message += "구글 아이디 : " + googleId;
       await messageSend({ text: message, channel: "#401_consulting" });
 
       ghostRequest("/print", { cliid }).catch((err) => {

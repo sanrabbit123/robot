@@ -1471,7 +1471,8 @@ PurchaseListJs.prototype.launching = async function (loading) {
         instance: this,
         binaryPath: PurchaseListJs.binaryPath,
         subTitle: (this.client.name + " 고객님 제품 구매 리스트"),
-        secondBackground: false
+        secondBackground: false,
+        backgroundType: 0,
       },
       local: async () => {
         try {

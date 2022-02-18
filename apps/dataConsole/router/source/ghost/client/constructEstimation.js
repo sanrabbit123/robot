@@ -782,6 +782,7 @@ ConstructEstimationJs.prototype.launching = async function (loading) {
         instance: this,
         binaryPath: ConstructEstimationJs.binaryPath,
         subTitle: (this.client.name + " 고객님 시공 견적서"),
+        backgroundType: 0,
       },
       local: async () => {
         try {

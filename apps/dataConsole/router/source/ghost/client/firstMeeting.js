@@ -1788,7 +1788,8 @@ FirstMeetingJs.prototype.launching = async function (loading) {
         instance: this,
         binaryPath: FirstMeetingJs.binaryPath,
         subTitle: (this.client.name + " 고객님 현장 미팅 안내"),
-        secondBackground: false
+        secondBackground: false,
+        backgroundType: 0,
       },
       local: async () => {
         try {

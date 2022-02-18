@@ -5238,15 +5238,22 @@ ClientConsultingJs.prototype.finalSubmit = function () {
         map.push(tempObj)
       }
 
+      map.push({
+        property: "googleId",
+        value: instance.googleClientId
+      });
+
       if (boo) {
         instance.mother.certificationBox(name, phone, async function (back, box) {
           try {
             const { cliid } = await ajaxJson({ map }, "/clientSubmit");
-            await homeliaisonAnalytics({
+            homeliaisonAnalytics({
               page: instance.pageName,
               standard: instance.firstPageViewTime,
               action: "login",
               data: { cliid },
+            }).catch((err) => {
+              console.log(err);
             });
             await sleep(500);
             document.body.removeChild(box);
@@ -5521,7 +5528,8 @@ ClientConsultingJs.prototype.launching = async function (loading) {
         instance: this,
         binaryPath: ClientConsultingJs.binaryPath,
         subTitle: "",
-        secondBackground: false
+        secondBackground: false,
+        backgroundType: 0,
       },
       local: async () => {
         try {
