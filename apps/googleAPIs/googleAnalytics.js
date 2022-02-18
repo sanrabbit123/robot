@@ -624,11 +624,10 @@ GoogleAnalytics.prototype.getSearchData = async function (startDay = "2020-01-01
 
 GoogleAnalytics.prototype.analyticsToMongo = async function (startDate = "default", endDate = "default") {
   const instance = this;
-  const { fileSystem, shell, shellLink, mongo, mongoinfo } = this.mother;
-  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  const MONGOCHOME = new mongo(("mongodb://" + ADDRESS.homeinfo.user + ':' + ADDRESS.homeinfo.password + '@' + ADDRESS.homeinfo.ip.outer + ':' + String(ADDRESS.homeinfo.port) + "/admin"), { useUnifiedTopology: true });
+  const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo } = this.mother;
+  const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+  const collection = "googleAnalytics";
   try {
-
     let today;
     if (startDate === "default") {
       today = new Date();
@@ -728,7 +727,7 @@ GoogleAnalytics.prototype.analyticsToMongo = async function (startDate = "defaul
       console.log(`analyticsExports_${start}_${end} done`);
     }
 
-    await MONGOCHOME.connect();
+    await MONGOLOCALC.connect();
 
     for (let f of fileNameArr) {
       totalTong = [];
@@ -767,17 +766,17 @@ GoogleAnalytics.prototype.analyticsToMongo = async function (startDate = "defaul
           i.submit = "no";
         }
 
-        already = await this.back.mongoRead(`googleAnalytics_total`, { "userid": i.userid }, { selfMongo: MONGOCHOME });
+        already = await this.back.mongoRead(collection, { "userid": i.userid }, { selfMongo: MONGOLOCALC });
         if (already.length !== 0) {
-          await this.back.mongoDelete(`googleAnalytics_total`, i, { selfMongo: MONGOCHOME });
+          await this.back.mongoDelete(collection, i, { selfMongo: MONGOLOCALC });
         }
-        await this.back.mongoCreate(`googleAnalytics_total`, i, { selfMongo: MONGOCHOME });
+        await this.back.mongoCreate(collection, i, { selfMongo: MONGOLOCALC });
         console.log(i.userid + " success");
       }
 
     }
 
-    MONGOCHOME.close();
+    await MONGOLOCALC.close();
 
     for (let i of fileNameArr) {
       shell.exec(`rm -rf ${shellLink(tempDir)}/${i}`);
