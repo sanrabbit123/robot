@@ -472,9 +472,11 @@ ClientConsultingJs.prototype.insertInitBox = function () {
 
       GeneralJs.stacks["addressEvent"] = async function (e) {
         try {
-          findByAttribute(document.querySelectorAll('.' + inputClassName), "property", "address0").value = e.data.trim();
-          findByAttribute(document.querySelectorAll('.' + inputClassName), "property", "address1").value = '';
-          findByAttribute(document.querySelectorAll('.' + inputClassName), "property", "address1").focus();
+          if (typeof e.data === "string") {
+            findByAttribute(document.querySelectorAll('.' + inputClassName), "property", "address0").value = e.data.trim();
+            findByAttribute(document.querySelectorAll('.' + inputClassName), "property", "address1").value = '';
+            findByAttribute(document.querySelectorAll('.' + inputClassName), "property", "address1").focus();
+          }
           const targets = document.querySelectorAll('.' + removeTargets);
           for (let dom of targets) {
             dom.remove();
