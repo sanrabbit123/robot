@@ -661,6 +661,9 @@ module.exports = {
       "clientConsulting": {
         "behaviors": []
       },
+      "reviewList": {
+        "behaviors": []
+      },
       "universalEstimation": {
         "behaviors": [
           {

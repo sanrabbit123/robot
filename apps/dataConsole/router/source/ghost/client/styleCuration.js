@@ -5676,7 +5676,7 @@ StyleCurationJs.prototype.insertPannelBox = function () {
   const { client, ea, baseTong, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone } = GeneralJs;
   let whiteBlock;
   let style;
   let blockHeight, blockMarginBottom;
@@ -5708,7 +5708,7 @@ StyleCurationJs.prototype.insertPannelBox = function () {
   buttonWidth = <%% 156, 156, 156, 126, 28 %%>;
   buttonMargin = <%% 8, 8, 8, 5, 2 %%>;
 
-  buttonTextTop = <%% 9, 9, 9, 9, 1.3 %%>;
+  buttonTextTop = <%% 9, 9, 9, 9, (isIphone() ? 1.1 : 1.3) %%>;
   buttonTextSize = <%% 20, 20, 20, 16, 3.8 %%>;
 
   if (desktop) {

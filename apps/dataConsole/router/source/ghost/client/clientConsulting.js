@@ -45,7 +45,7 @@ ClientConsultingJs.binaryPath = "/middle/consulting";
 
 ClientConsultingJs.prototype.insertInitBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media, osException, testMode, inputClassName } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -178,7 +178,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   mobileRightBoxLeft = 7;
 
   circleRadius = <%% 2.5, 2.5, 2, 2, 0.5 %%>;
-  circleTop = <%% 12, 12, 11, 12, 2.9 %%>;
+  circleTop = <%% 12, 12, 11, 12, (isIphone() ? 2.9 : 2.7) %%>;
   circleBetween = <%% 6, 6, 5, 5, 1.3 %%>;
 
   mainSize = <%% 20, 18, 17, 16, 4 %%>;
@@ -218,7 +218,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   leftCheck0 = <%% 439, 380, 338, 96, 22.8 %%>;
   leftCheck1 = <%% 514, 448, 400, 150, 36.5 %%>;
   checkboxWidth = <%% 9, 9, 9, 8, 2 %%>;
-  checkboxTop = <%% (isMac() ? 9 : 10), (isMac() ? 9 : 9), (isMac() ? 8 : 8), (isMac() ? 8 : 9), 2.4 %%>;
+  checkboxTop = <%% (isMac() ? 9 : 10), (isMac() ? 9 : 9), (isMac() ? 8 : 8), (isMac() ? 8 : 9), (isIphone() ? 2.4 : 2.2) %%>;
   checkboxBetween = <%% 8, 8, 8, 6, 1.5 %%>;
   checkboxWeight = <%% 300, 300, 300, 300, 300 %%>;
 
@@ -271,7 +271,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   mobileTongPaddingTop = <%% 0.7, 0.7, 0.7, 0.7, 0.7 %%>;
   mobileFactorPaddingLeft = <%% 3, 3, 3, 15, 3 %%>;
   mobileFactorCheckWidth = <%% 1.8, 1.8, 1.8, 8, 1.8 %%>;
-  mobileFactorCheckTop = <%% 1.35, 1.35, 1.35, 6, 1.6 %%>;
+  mobileFactorCheckTop = <%% 1.35, 1.35, 1.35, 6, (isIphone() ? 1.6 : 1.4) %%>;
   mobileFactorBetween = <%% 4.2, 4.2, 4.2, 19, 4.2 %%>;
   mobileFactorBetween2 = <%% 3.2, 3.2, 3.2, 36.5, 3.2 %%>;
   mobileFactorBetween3 = <%% 4.6, 4.6, 4.6, 16.5, 4.6 %%>;
@@ -5269,7 +5269,7 @@ ClientConsultingJs.prototype.insertPannelBox = function () {
   const { ea, baseTong, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone } = GeneralJs;
   let whiteBlock;
   let style;
   let blockHeight, blockMarginBottom;
@@ -5301,7 +5301,7 @@ ClientConsultingJs.prototype.insertPannelBox = function () {
   buttonWidth = <%% 156, 156, 156, 126, 28 %%>;
   buttonMargin = <%% 8, 8, 8, 5, 2 %%>;
 
-  buttonTextTop = <%% 9, 9, 9, 9, 1.1 %%>;
+  buttonTextTop = <%% 9, 9, 9, 9, (isIphone() ? 1.1 : 1.3) %%>;
   buttonTextSize = <%% 20, 20, 20, 16, 3.8 %%>;
 
   if (desktop) {
