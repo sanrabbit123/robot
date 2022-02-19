@@ -164,6 +164,32 @@ LogRouter.prototype.rou_post_receiveLog = function () {
   return obj;
 }
 
+LogRouter.prototype.rou_post_extractLog = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson } = this.mother;
+  let obj = {};
+  obj.link = [ "/extractLog" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const collection = "homeliaisonAnalytics";
+      const selfMongo = instance.mongo;
+      const data = await back.mongoRead(collection, {}, { selfMongo });
+      res.send(JSON.stringify(data));
+    } catch (e) {
+      instance.mother.errorLog("Log Console 서버 문제 생김 (rou_post_extractLog): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 LogRouter.policy = function () {
