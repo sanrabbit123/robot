@@ -88,10 +88,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const { data } = await requestSystem("https://home-liaison.info:3000/extractLog", { data: null }, { headers: { "Content-Type": "application/json" } });
-
-
-    console.log(data)
 
 
 
