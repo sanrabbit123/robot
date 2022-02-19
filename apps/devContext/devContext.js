@@ -88,6 +88,11 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const { data } = await requestSystem("https://home-liaison.info:3000/extractLog", { data: null }, { headers: { "Content-Type": "application/json" } });
+
+
+    console.log(data)
+
 
 
 
@@ -2152,9 +2157,9 @@ DevContext.prototype.launching = async function () {
 
 
     // aspirant to designer
-    await this.aspirantToDesigner([
-      [ "조하음", "2022-02-03" ],
-    ]);
+    // await this.aspirantToDesigner([
+    //   [ "조하음", "2022-02-03" ],
+    // ]);
 
 
     // new designer to front web

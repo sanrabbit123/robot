@@ -180,8 +180,34 @@ LogRouter.prototype.rou_post_extractLog = function () {
     try {
       const collection = "homeliaisonAnalytics";
       const selfMongo = instance.mongo;
-      const data = await back.mongoRead(collection, {}, { selfMongo });
-      res.send(JSON.stringify(data));
+      const targets = await back.mongoRead(collection, {}, { selfMongo });
+      let tong;
+      let tempObj;
+
+      tong = {};
+      for (let { network, date, data } of targets) {
+        if (tong[data.id] === undefined) {
+          tong[data.id] = {
+            network,
+            history: []
+          };
+        }
+        tempObj = {};
+        tempObj.date = date.now;
+        tempObj.duration = (date.now.valueOf() - date.standard.valueOf())
+        tempObj.page = data.page;
+        tempObj.action = data.action;
+        tempObj.value = data.value;
+        tong[data.id].history.push(tempObj);
+      }
+
+      for (let key in tong) {
+        tong[key].history.sort((a, b) => {
+          return a.date.valueOf() - b.date.valueOf();
+        })
+      }
+
+      res.send(JSON.stringify(tong));
     } catch (e) {
       instance.mother.errorLog("Log Console 서버 문제 생김 (rou_post_extractLog): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
