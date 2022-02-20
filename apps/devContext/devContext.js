@@ -183,6 +183,8 @@ DevContext.prototype.launching = async function () {
     // const url = "www.naver.com";
     // const smart_level = "1";
     // const target = "https://nid.naver.com/nidlogin.login";
+    // const reviewCategoryNumber = 10;
+    // const blogId = "homeliaison";
     // let response;
     // let pythonScript;
     //
@@ -230,30 +232,93 @@ DevContext.prototype.launching = async function () {
     //     }
     //   },
     //   {
-    //     link: "https://blog.naver.com/PostView.naver?blogId=homeliaison&logNo=222080367316&redirect=Dlog&widgetTypeCall=true&topReferer=https%3A%2F%2Fblog.naverblogwidget.com%2FExternalWidgetRender.naver%3FblogId%3Dhomeliaison&directAccess=false",
+    //     link: "https://blog.naver.com/PostList.naver?blogId=" + blogId + "&from=postList&categoryNo=" + String(reviewCategoryNumber),
     //     func: async function () {
     //       const { sleep } = GeneralJs;
     //       let target, nextButton;
     //       let pages;
-    //       await sleep(1000);
+    //       let pageButtons;
+    //       let tempArr;
+    //       let mother;
+    //       let tong;
+    //       let tempObj;
+    //       let length;
+    //       let past, updated;
+    //       let boo;
+    //       let tongPush;
+    //       let obj;
     //
-    //       target = document.querySelectorAll('.blog2_paginate')[0];
-    //       while (target.querySelector(".next") !== null) {
-    //         target.querySelector(".next").click();
-    //         await sleep(500);
-    //         target = document.querySelectorAll('.blog2_paginate')[0];
+    //       tongPush = (tong) => {
+    //         tempArr = [ ...document.querySelector('.post_top_title_aggregate_expose').querySelectorAll("td.title") ];
+    //         for (let title of tempArr) {
+    //           mother = title.parentElement;
+    //
+    //           tempObj = {};
+    //           obj = {};
+    //           mother.querySelector(".title").querySelector("a").href.split("?")[1].replace(/\??(?:([^=]+)=([^&]*)&?)/g, (origin, name, value) => {
+    //             const decode = (str) => { return window.decodeURIComponent(str.split("+").join(" ")); }
+    //             obj[decode(name)] = decode(value);
+    //           });
+    //
+    //           tempObj.id = obj["logNo"];
+    //           tempObj.link = "https://blog.naver.com/" + obj["blogId"] + "/" + tempObj.id;
+    //           tempObj.date = mother.querySelector(".date").textContent.trim().replace(/\.$/, '').replace(/\. /gi, '-').split('-').map((str) => {
+    //             if (str.length === 1) {
+    //               return '0' + str;
+    //             } else {
+    //               return str;
+    //             }
+    //           }).join('-');
+    //           tempObj.category = obj["categoryNo"];
+    //
+    //           tong.push(tempObj);
+    //         }
     //       }
     //
-    //       target = document.querySelectorAll('.blog2_paginate')[0];
-    //       pages = [ ...target.querySelectorAll(".page") ].map((dom) => { return dom.textContent }).map((str) => { return Number(str.trim().replace(/[^0-9]/gi, '')) });
-    //       pages = pages.filter((num) => { return !Number.isNaN(num) && num !== 0 });
-    //       pages.sort((a, b) => { return b - a; });
+    //       while (!(document.querySelectorAll('.blog2_paginate').length > 0 && document.querySelectorAll('.blog2_paginate')[0].querySelectorAll("a.page").length > 0)) {
+    //         await sleep(100);
+    //       }
     //
-    //       return pages[0];
+    //       tong = [];
+    //       do {
+    //
+    //         pageButtons = document.querySelectorAll('.blog2_paginate')[0].querySelectorAll("a.page");
+    //         length = pageButtons.length;
+    //         tongPush(tong);
+    //
+    //         for (let i = 0; i < length; i++) {
+    //           past = document.querySelector('.post_top_title_aggregate_expose').querySelector("td.title");
+    //           pageButtons[i].click();
+    //           while (document.querySelector('.post_top_title_aggregate_expose').querySelector("td.title") === past) {
+    //             await sleep(10);
+    //           }
+    //           pageButtons = document.querySelectorAll('.blog2_paginate')[0].querySelectorAll("a.page");
+    //           tongPush(tong);
+    //         }
+    //
+    //         target = document.querySelectorAll('.blog2_paginate')[0];
+    //         boo = target.querySelector(".next") !== null;
+    //
+    //         if (boo) {
+    //           past = document.querySelector('.post_top_title_aggregate_expose').querySelector("td.title");
+    //           target.querySelector(".next").click();
+    //           while (document.querySelector('.post_top_title_aggregate_expose').querySelector("td.title") === past) {
+    //             await sleep(10);
+    //           }
+    //         }
+    //
+    //       } while (boo);
+    //
+    //       return tong;
     //     }
     //   }
     // ])
-    // console.log(response);
+    //
+    // for (let obj of response[1]) {
+    //   console.log(obj);
+    // }
+
+
 
 
 
