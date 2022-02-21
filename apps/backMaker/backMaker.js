@@ -278,7 +278,7 @@ BackMaker.prototype.getNothingById = async function (nulid) {
     const Nothing = function (id) {
       this.nulid = id;
     }
-    return (new Nothing(nulid));
+    return null;
   } catch (e) {
     console.log(e);
   }
