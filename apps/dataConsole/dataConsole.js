@@ -587,7 +587,7 @@ DataConsole.prototype.renderFrontPhp = async function () {
   const DataMiddle = require(`${this.dir}/router/dataMiddle.js`);
   const middleLockConst = "?cliid=c1801_aa01s";
   try {
-    await this.renderMiddleStatic(staticFolder, this.address.backinfo, DataPatch, DataMiddle);
+    await this.renderMiddleStatic(staticFolder, address.backinfo, DataPatch, DataMiddle);
     const targetMap = [
       { from: "clientConsulting", to: "consulting", path: "/middle/consulting" }
     ];
@@ -612,11 +612,11 @@ DataConsole.prototype.renderFrontPhp = async function () {
         if (/^[\"\']http/.test(p2)) {
           return original;
         } else {
-          return `ajaxJson(${p1}"https://${instance.address.backinfo.host}" + ${p2}`;
+          return `ajaxJson(${p1}"https://${address.backinfo.host}" + ${p2}`;
         }
       });
 
-      response = await requestSystem("https://" + instance.address.backinfo.host + path + middleLockConst);
+      response = await requestSystem("https://" + address.backinfo.host + path + middleLockConst);
       html = response.data;
 
       await fileSystem(`write`, [ `${process.cwd()}/temp/${from}.js`, targetScript ]);
