@@ -89,14 +89,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const con = new DataConsole();
-    await con.renderFrontPhp();
-
-
-
-
-
-
 
 
 

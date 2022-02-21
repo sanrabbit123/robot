@@ -90,8 +90,14 @@ Robot.prototype.memberUpdate = async function () {
 
 Robot.prototype.dataConsole = function (noStatic = false) {
   const DataConsole = require(process.cwd() + "/apps/dataConsole/dataConsole.js");
-  let app = new DataConsole();
-  app.connect(noStatic);
+  const app = new DataConsole();
+  app.connect(noStatic).catch((err) => { console.log(err); });
+}
+
+Robot.prototype.renderFrontPhp = async function () {
+  const DataConsole = require(process.cwd() + "/apps/dataConsole/dataConsole.js");
+  const app = new DataConsole();
+  await app.renderFrontPhp();
 }
 
 Robot.prototype.contentsMaker = function (button, arg) {
@@ -1243,6 +1249,13 @@ const MENU = {
   log: async function () {
     try {
       await robot.logConnect();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  php: async function () {
+    try {
+      await robot.renderFrontPhp();
     } catch (e) {
       console.log(e);
     }

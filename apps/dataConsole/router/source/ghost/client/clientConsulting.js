@@ -544,7 +544,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
           {
             mode: "iframe",
             attribute: [
-              { src: window.location.protocol + "//" + window.location.host + "/tools/addressLite" },
+              { src: window.location.protocol + "//" + GHOSTHOST + "/tools/addressLite" },
               { width: String(100) + '%' },
               { height: String(100) + '%' },
             ],

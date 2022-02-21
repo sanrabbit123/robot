@@ -578,8 +578,9 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
 
 DataConsole.prototype.renderFrontPhp = async function () {
   const instance = this;
-  const { fileSystem, shellLink, shellExec, equalJson, requestSystem } = this.mother;
+  const { fileSystem, shellLink, shellExec, equalJson, requestSystem, consoleQ } = this.mother;
   const { ghostdir } = this;
+  const address = this.address;
   const staticFolder = process.env.HOME + "/static";
   const staticMiddleFolder = staticFolder + "/middle";
   const DataPatch = require(`${this.dir}/router/dataPatch.js`);
@@ -598,7 +599,12 @@ DataConsole.prototype.renderFrontPhp = async function () {
       return o;
     });
     let targetScript, response, html;
+    let motherTong, middleTong;
+    let command;
+    let input;
 
+    motherTong = [];
+    middleTong = [];
     for (let { from, to, file, path } of ghostTargets) {
       targetScript = await fileSystem(`readString`, [ file ]);
       targetScript = targetScript.replace(/ajaxJson\((\{[^}]*\}[^}]*\}?, ?)(\"[^\"]+\")/gi, (original, p1, p2) => {
@@ -613,11 +619,27 @@ DataConsole.prototype.renderFrontPhp = async function () {
       html = response.data;
 
       await fileSystem(`write`, [ `${process.cwd()}/temp/${from}.js`, targetScript ]);
+      middleTong.push(`${shellLink(process.cwd())}/temp/${shellLink(from)}.js`);
       await fileSystem(`write`, [ `${process.cwd()}/temp/${to}.php`, html ]);
-
+      motherTong.push(`${shellLink(process.cwd())}/temp/${shellLink(to)}.php`);
     }
 
+    console.log("middle :", middleTong);
+    console.log("mother :", motherTong);
 
+    command = middleTong.map((path) => {
+      return `scp ${path} ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/middle/`;
+    }).concat(motherTong.map((path) => {
+      return `scp ${path} ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/`;
+    })).join(';');
+
+    console.log(command);
+
+    input = await consoleQ(`is it OK? : (if no problem, press 'ok')\n`);
+    if (input === "done" || input === "a" || input === "o" || input === "ok" || input === "OK" || input === "Ok" || input === "oK" || input === "yes" || input === "y" || input === "yeah" || input === "Y") {
+      await shellExec(command);
+      console.log(`front update done`);
+    }
 
   } catch (e) {
     console.log(e);
