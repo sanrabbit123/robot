@@ -3865,7 +3865,11 @@ DataRouter.prototype.rou_post_callTo = function () {
         const members = instance.members;
         let thisPerson, index, number, phone, who;
 
-        who = cookies.homeliaisonConsoleLoginedEmail;
+        if (cookies === null) {
+          who = null;
+        } else {
+          who = cookies.homeliaisonConsoleLoginedEmail;
+        }
         if (who === undefined || who === null) {
           who = req.body.who;
         }

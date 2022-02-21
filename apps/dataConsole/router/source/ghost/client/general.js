@@ -495,6 +495,11 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
     const { mode, name, client, base, local } = obj;
     let belowTarget, removeTargets, getObj;
 
+    if (base.backgroundType === 1) {
+      this.backHeight = <%% 430, 430, 430, 400, 80 %%>;
+      base.instance.backHeight = this.backHeight;
+    }
+
     base.instance.pageName = name;
     this.setGeneralBase(base, typeof obj.background === "number" ? obj.background : 0, mode, name);
     await local();

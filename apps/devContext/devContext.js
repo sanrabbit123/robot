@@ -166,157 +166,156 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const LZString = function(){function o(o,r){if(!t[o]){t[o]={};for(var n=0;n<o.length;n++)t[o][o.charAt(n)]=n}return t[o][r]}var r=String.fromCharCode,n="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",e="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-$",t={},i={compressToBase64:function(o){if(null==o)return"";var r=i._compress(o,6,function(o){return n.charAt(o)});switch(r.length%4){default:case 0:return r;case 1:return r+"===";case 2:return r+"==";case 3:return r+"="}},decompressFromBase64:function(r){return null==r?"":""==r?null:i._decompress(r.length,32,function(e){return o(n,r.charAt(e))})},compressToUTF16:function(o){return null==o?"":i._compress(o,15,function(o){return r(o+32)})+" "},decompressFromUTF16:function(o){return null==o?"":""==o?null:i._decompress(o.length,16384,function(r){return o.charCodeAt(r)-32})},compressToUint8Array:function(o){for(var r=i.compress(o),n=new Uint8Array(2*r.length),e=0,t=r.length;t>e;e++){var s=r.charCodeAt(e);n[2*e]=s>>>8,n[2*e+1]=s%256}return n},decompressFromUint8Array:function(o){if(null===o||void 0===o)return i.decompress(o);for(var n=new Array(o.length/2),e=0,t=n.length;t>e;e++)n[e]=256*o[2*e]+o[2*e+1];var s=[];return n.forEach(function(o){s.push(r(o))}),i.decompress(s.join(""))},compressToEncodedURIComponent:function(o){return null==o?"":i._compress(o,6,function(o){return e.charAt(o)})},decompressFromEncodedURIComponent:function(r){return null==r?"":""==r?null:(r=r.replace(/ /g,"+"),i._decompress(r.length,32,function(n){return o(e,r.charAt(n))}))},compress:function(o){return i._compress(o,16,function(o){return r(o)})},_compress:function(o,r,n){if(null==o)return"";var e,t,i,s={},p={},u="",c="",a="",l=2,f=3,h=2,d=[],m=0,v=0;for(i=0;i<o.length;i+=1)if(u=o.charAt(i),Object.prototype.hasOwnProperty.call(s,u)||(s[u]=f++,p[u]=!0),c=a+u,Object.prototype.hasOwnProperty.call(s,c))a=c;else{if(Object.prototype.hasOwnProperty.call(p,a)){if(a.charCodeAt(0)<256){for(e=0;h>e;e++)m<<=1,v==r-1?(v=0,d.push(n(m)),m=0):v++;for(t=a.charCodeAt(0),e=0;8>e;e++)m=m<<1|1&t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t>>=1}else{for(t=1,e=0;h>e;e++)m=m<<1|t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t=0;for(t=a.charCodeAt(0),e=0;16>e;e++)m=m<<1|1&t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t>>=1}l--,0==l&&(l=Math.pow(2,h),h++),delete p[a]}else for(t=s[a],e=0;h>e;e++)m=m<<1|1&t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t>>=1;l--,0==l&&(l=Math.pow(2,h),h++),s[c]=f++,a=String(u)}if(""!==a){if(Object.prototype.hasOwnProperty.call(p,a)){if(a.charCodeAt(0)<256){for(e=0;h>e;e++)m<<=1,v==r-1?(v=0,d.push(n(m)),m=0):v++;for(t=a.charCodeAt(0),e=0;8>e;e++)m=m<<1|1&t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t>>=1}else{for(t=1,e=0;h>e;e++)m=m<<1|t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t=0;for(t=a.charCodeAt(0),e=0;16>e;e++)m=m<<1|1&t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t>>=1}l--,0==l&&(l=Math.pow(2,h),h++),delete p[a]}else for(t=s[a],e=0;h>e;e++)m=m<<1|1&t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t>>=1;l--,0==l&&(l=Math.pow(2,h),h++)}for(t=2,e=0;h>e;e++)m=m<<1|1&t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t>>=1;for(;;){if(m<<=1,v==r-1){d.push(n(m));break}v++}return d.join("")},decompress:function(o){return null==o?"":""==o?null:i._decompress(o.length,32768,function(r){return o.charCodeAt(r)})},_decompress:function(o,n,e){var t,i,s,p,u,c,a,l,f=[],h=4,d=4,m=3,v="",w=[],A={val:e(0),position:n,index:1};for(i=0;3>i;i+=1)f[i]=i;for(p=0,c=Math.pow(2,2),a=1;a!=c;)u=A.val&A.position,A.position>>=1,0==A.position&&(A.position=n,A.val=e(A.index++)),p|=(u>0?1:0)*a,a<<=1;switch(t=p){case 0:for(p=0,c=Math.pow(2,8),a=1;a!=c;)u=A.val&A.position,A.position>>=1,0==A.position&&(A.position=n,A.val=e(A.index++)),p|=(u>0?1:0)*a,a<<=1;l=r(p);break;case 1:for(p=0,c=Math.pow(2,16),a=1;a!=c;)u=A.val&A.position,A.position>>=1,0==A.position&&(A.position=n,A.val=e(A.index++)),p|=(u>0?1:0)*a,a<<=1;l=r(p);break;case 2:return""}for(f[3]=l,s=l,w.push(l);;){if(A.index>o)return"";for(p=0,c=Math.pow(2,m),a=1;a!=c;)u=A.val&A.position,A.position>>=1,0==A.position&&(A.position=n,A.val=e(A.index++)),p|=(u>0?1:0)*a,a<<=1;switch(l=p){case 0:for(p=0,c=Math.pow(2,8),a=1;a!=c;)u=A.val&A.position,A.position>>=1,0==A.position&&(A.position=n,A.val=e(A.index++)),p|=(u>0?1:0)*a,a<<=1;f[d++]=r(p),l=d-1,h--;break;case 1:for(p=0,c=Math.pow(2,16),a=1;a!=c;)u=A.val&A.position,A.position>>=1,0==A.position&&(A.position=n,A.val=e(A.index++)),p|=(u>0?1:0)*a,a<<=1;f[d++]=r(p),l=d-1,h--;break;case 2:return w.join("")}if(0==h&&(h=Math.pow(2,m),m++),f[l])v=f[l];else{if(l!==d)return null;v=s+s.charAt(0)}w.push(v),f[d++]=s+v.charAt(0),h--,s=v,0==h&&(h=Math.pow(2,m),m++)}}};return i}();
-    //
-    // const publicKeyUrl = "https://nid.naver.com/login/ext/keys.nhn";
-    // const { id, password: pwd } = this.address.officeinfo.naver;
-    // const uniqueName = uniqueValue("uuid");
-    // const uniqueFolder = process.cwd() + "/temp/" + uniqueValue("hex");
-    // const { data } = await requestSystem(publicKeyUrl);
-    // const [ sessionKey, keyName, eStr, nStr ] = data.trim().split(',');
-    // const uuid = uniqueValue("uuid");
-    // const encData = `{"a":"${uuid}-4","b":"1.3.4","d":[{"i":"id","b":{"a":["0,${id}"]},"d":"${id}","e":false,"f":false},{"i":"${pwd}","e":true,"f":false}],"h":"1f","i":{"a":"Mozilla/5.0"}}`;
-    // const bvsd = JSON.stringify({ uuid, encData: LZString.compressToEncodedURIComponent(encData) });
-    // const svctype = "0";
-    // const enctp = "1";
-    // const enc_url = "http0X0.0000000000001P-10220.0000000.000000www.naver.com";
-    // const url = "www.naver.com";
-    // const smart_level = "1";
-    // const target = "https://nid.naver.com/nidlogin.login";
-    // const reviewCategoryNumber = 10;
-    // const blogId = "homeliaison";
-    // let response;
-    // let pythonScript;
-    //
-    // await shellExec(`rm`, [ `-rf`, uniqueFolder ]);
-    // await shellExec(`mkdir`, [ uniqueFolder ]);
-    // await shellExec(`pip3 install rsa --target="${shellLink(uniqueFolder)}";`);
-    //
-    // pythonScript = ``;
-    // pythonScript += `import sys\n`;
-    // pythonScript += `sys.path.append("${uniqueFolder}")\n`;
-    // pythonScript += `import rsa\n`;
-    // pythonScript += `import json\n`;
-    // pythonScript += `def naver_style_join(arr):\n`;
-    // pythonScript += `\tresult = ''\n`;
-    // pythonScript += `\tfor str in arr:\n`;
-    // pythonScript += `\t\tresult += chr(len(str)) + str\n`;
-    // pythonScript += `\treturn result\n`;
-    // pythonScript += `message = naver_style_join([ "${sessionKey}", "${id}", "${pwd}" ]).encode()\n`;
-    // pythonScript += `pubkey = rsa.PublicKey(int("${eStr}", 16), int("${nStr}", 16))\n`;
-    // pythonScript += `encrypted = rsa.encrypt(message, pubkey)\n`;
-    // pythonScript += `result = json.dumps({ "hex": encrypted.hex() })\n`;
-    // pythonScript += `print(result)`;
-    //
-    // await fileSystem(`write`, [ `${process.cwd()}/temp/${uniqueName}.py`, pythonScript ]);
-    // const { hex: encpw } = equalJson(await shellExec("python3", [ `${process.cwd()}/temp/${uniqueName}.py` ]));
-    // await shellExec(`rm`, [ `-rf`, `${process.cwd()}/temp/${uniqueName}.py` ]);
-    // await shellExec(`rm`, [ `-rf`, uniqueFolder ]);
-    //
-    // response = await chrome.scriptChain([
-    //   {
-    //     link: "https://nid.naver.com/nidlogin.login?qqq=" + svctype + "&vdvd=" + keyName + "&zzz=" + encpw + "&id=" + id + "&pwd=" + pwd + "&aaaa=" + global.encodeURIComponent(bvsd),
-    //     func: async function () {
-    //       const { returnGet } = GeneralJs;
-    //       const getObj = returnGet();
-    //       const { qqq: svctype, vdvd: encnm, zzz: encpw, iii: id, kkk: pwd } = getObj;
-    //       const bvsd = window.decodeURIComponent(getObj.aaaa);
-    //       document.getElementById("svctype").value = svctype;
-    //       document.getElementById("encnm").value = encnm;
-    //       document.getElementById("encpw").value = encpw;
-    //       document.getElementById("bvsd").value = bvsd;
-    //       document.getElementById("id").value = id;
-    //       document.getElementById("pw").value = pwd;
-    //       document.querySelector("form").submit();
-    //       return 0;
-    //     }
-    //   },
-    //   {
-    //     link: "https://blog.naver.com/PostList.naver?blogId=" + blogId + "&from=postList&categoryNo=" + String(reviewCategoryNumber),
-    //     func: async function () {
-    //       const { sleep } = GeneralJs;
-    //       let target, nextButton;
-    //       let pages;
-    //       let pageButtons;
-    //       let tempArr;
-    //       let mother;
-    //       let tong;
-    //       let tempObj;
-    //       let length;
-    //       let past, updated;
-    //       let boo;
-    //       let tongPush;
-    //       let obj;
-    //
-    //       tongPush = (tong) => {
-    //         tempArr = [ ...document.querySelector('.post_top_title_aggregate_expose').querySelectorAll("td.title") ];
-    //         for (let title of tempArr) {
-    //           mother = title.parentElement;
-    //
-    //           tempObj = {};
-    //           obj = {};
-    //           mother.querySelector(".title").querySelector("a").href.split("?")[1].replace(/\??(?:([^=]+)=([^&]*)&?)/g, (origin, name, value) => {
-    //             const decode = (str) => { return window.decodeURIComponent(str.split("+").join(" ")); }
-    //             obj[decode(name)] = decode(value);
-    //           });
-    //
-    //           tempObj.id = obj["logNo"];
-    //           tempObj.link = "https://blog.naver.com/" + obj["blogId"] + "/" + tempObj.id;
-    //           tempObj.date = mother.querySelector(".date").textContent.trim().replace(/\.$/, '').replace(/\. /gi, '-').split('-').map((str) => {
-    //             if (str.length === 1) {
-    //               return '0' + str;
-    //             } else {
-    //               return str;
-    //             }
-    //           }).join('-');
-    //           tempObj.category = obj["categoryNo"];
-    //
-    //           tong.push(tempObj);
-    //         }
-    //       }
-    //
-    //       while (!(document.querySelectorAll('.blog2_paginate').length > 0 && document.querySelectorAll('.blog2_paginate')[0].querySelectorAll("a.page").length > 0)) {
-    //         await sleep(100);
-    //       }
-    //
-    //       tong = [];
-    //       do {
-    //
-    //         pageButtons = document.querySelectorAll('.blog2_paginate')[0].querySelectorAll("a.page");
-    //         length = pageButtons.length;
-    //         tongPush(tong);
-    //
-    //         for (let i = 0; i < length; i++) {
-    //           past = document.querySelector('.post_top_title_aggregate_expose').querySelector("td.title");
-    //           pageButtons[i].click();
-    //           while (document.querySelector('.post_top_title_aggregate_expose').querySelector("td.title") === past) {
-    //             await sleep(10);
-    //           }
-    //           pageButtons = document.querySelectorAll('.blog2_paginate')[0].querySelectorAll("a.page");
-    //           tongPush(tong);
-    //         }
-    //
-    //         target = document.querySelectorAll('.blog2_paginate')[0];
-    //         boo = target.querySelector(".next") !== null;
-    //
-    //         if (boo) {
-    //           past = document.querySelector('.post_top_title_aggregate_expose').querySelector("td.title");
-    //           target.querySelector(".next").click();
-    //           while (document.querySelector('.post_top_title_aggregate_expose').querySelector("td.title") === past) {
-    //             await sleep(10);
-    //           }
-    //         }
-    //
-    //       } while (boo);
-    //
-    //       return tong;
-    //     }
-    //   }
-    // ])
-    //
-    // for (let obj of response[1]) {
-    //   console.log(obj);
-    // }
+    const LZString = function(){function o(o,r){if(!t[o]){t[o]={};for(var n=0;n<o.length;n++)t[o][o.charAt(n)]=n}return t[o][r]}var r=String.fromCharCode,n="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",e="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-$",t={},i={compressToBase64:function(o){if(null==o)return"";var r=i._compress(o,6,function(o){return n.charAt(o)});switch(r.length%4){default:case 0:return r;case 1:return r+"===";case 2:return r+"==";case 3:return r+"="}},decompressFromBase64:function(r){return null==r?"":""==r?null:i._decompress(r.length,32,function(e){return o(n,r.charAt(e))})},compressToUTF16:function(o){return null==o?"":i._compress(o,15,function(o){return r(o+32)})+" "},decompressFromUTF16:function(o){return null==o?"":""==o?null:i._decompress(o.length,16384,function(r){return o.charCodeAt(r)-32})},compressToUint8Array:function(o){for(var r=i.compress(o),n=new Uint8Array(2*r.length),e=0,t=r.length;t>e;e++){var s=r.charCodeAt(e);n[2*e]=s>>>8,n[2*e+1]=s%256}return n},decompressFromUint8Array:function(o){if(null===o||void 0===o)return i.decompress(o);for(var n=new Array(o.length/2),e=0,t=n.length;t>e;e++)n[e]=256*o[2*e]+o[2*e+1];var s=[];return n.forEach(function(o){s.push(r(o))}),i.decompress(s.join(""))},compressToEncodedURIComponent:function(o){return null==o?"":i._compress(o,6,function(o){return e.charAt(o)})},decompressFromEncodedURIComponent:function(r){return null==r?"":""==r?null:(r=r.replace(/ /g,"+"),i._decompress(r.length,32,function(n){return o(e,r.charAt(n))}))},compress:function(o){return i._compress(o,16,function(o){return r(o)})},_compress:function(o,r,n){if(null==o)return"";var e,t,i,s={},p={},u="",c="",a="",l=2,f=3,h=2,d=[],m=0,v=0;for(i=0;i<o.length;i+=1)if(u=o.charAt(i),Object.prototype.hasOwnProperty.call(s,u)||(s[u]=f++,p[u]=!0),c=a+u,Object.prototype.hasOwnProperty.call(s,c))a=c;else{if(Object.prototype.hasOwnProperty.call(p,a)){if(a.charCodeAt(0)<256){for(e=0;h>e;e++)m<<=1,v==r-1?(v=0,d.push(n(m)),m=0):v++;for(t=a.charCodeAt(0),e=0;8>e;e++)m=m<<1|1&t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t>>=1}else{for(t=1,e=0;h>e;e++)m=m<<1|t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t=0;for(t=a.charCodeAt(0),e=0;16>e;e++)m=m<<1|1&t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t>>=1}l--,0==l&&(l=Math.pow(2,h),h++),delete p[a]}else for(t=s[a],e=0;h>e;e++)m=m<<1|1&t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t>>=1;l--,0==l&&(l=Math.pow(2,h),h++),s[c]=f++,a=String(u)}if(""!==a){if(Object.prototype.hasOwnProperty.call(p,a)){if(a.charCodeAt(0)<256){for(e=0;h>e;e++)m<<=1,v==r-1?(v=0,d.push(n(m)),m=0):v++;for(t=a.charCodeAt(0),e=0;8>e;e++)m=m<<1|1&t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t>>=1}else{for(t=1,e=0;h>e;e++)m=m<<1|t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t=0;for(t=a.charCodeAt(0),e=0;16>e;e++)m=m<<1|1&t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t>>=1}l--,0==l&&(l=Math.pow(2,h),h++),delete p[a]}else for(t=s[a],e=0;h>e;e++)m=m<<1|1&t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t>>=1;l--,0==l&&(l=Math.pow(2,h),h++)}for(t=2,e=0;h>e;e++)m=m<<1|1&t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t>>=1;for(;;){if(m<<=1,v==r-1){d.push(n(m));break}v++}return d.join("")},decompress:function(o){return null==o?"":""==o?null:i._decompress(o.length,32768,function(r){return o.charCodeAt(r)})},_decompress:function(o,n,e){var t,i,s,p,u,c,a,l,f=[],h=4,d=4,m=3,v="",w=[],A={val:e(0),position:n,index:1};for(i=0;3>i;i+=1)f[i]=i;for(p=0,c=Math.pow(2,2),a=1;a!=c;)u=A.val&A.position,A.position>>=1,0==A.position&&(A.position=n,A.val=e(A.index++)),p|=(u>0?1:0)*a,a<<=1;switch(t=p){case 0:for(p=0,c=Math.pow(2,8),a=1;a!=c;)u=A.val&A.position,A.position>>=1,0==A.position&&(A.position=n,A.val=e(A.index++)),p|=(u>0?1:0)*a,a<<=1;l=r(p);break;case 1:for(p=0,c=Math.pow(2,16),a=1;a!=c;)u=A.val&A.position,A.position>>=1,0==A.position&&(A.position=n,A.val=e(A.index++)),p|=(u>0?1:0)*a,a<<=1;l=r(p);break;case 2:return""}for(f[3]=l,s=l,w.push(l);;){if(A.index>o)return"";for(p=0,c=Math.pow(2,m),a=1;a!=c;)u=A.val&A.position,A.position>>=1,0==A.position&&(A.position=n,A.val=e(A.index++)),p|=(u>0?1:0)*a,a<<=1;switch(l=p){case 0:for(p=0,c=Math.pow(2,8),a=1;a!=c;)u=A.val&A.position,A.position>>=1,0==A.position&&(A.position=n,A.val=e(A.index++)),p|=(u>0?1:0)*a,a<<=1;f[d++]=r(p),l=d-1,h--;break;case 1:for(p=0,c=Math.pow(2,16),a=1;a!=c;)u=A.val&A.position,A.position>>=1,0==A.position&&(A.position=n,A.val=e(A.index++)),p|=(u>0?1:0)*a,a<<=1;f[d++]=r(p),l=d-1,h--;break;case 2:return w.join("")}if(0==h&&(h=Math.pow(2,m),m++),f[l])v=f[l];else{if(l!==d)return null;v=s+s.charAt(0)}w.push(v),f[d++]=s+v.charAt(0),h--,s=v,0==h&&(h=Math.pow(2,m),m++)}}};return i}();
+
+    const publicKeyUrl = "https://nid.naver.com/login/ext/keys.nhn";
+    const { id, password: pwd } = this.address.officeinfo.naver;
+    const uniqueName = uniqueValue("uuid");
+    const uniqueFolder = process.cwd() + "/temp/" + uniqueValue("hex");
+    const { data } = await requestSystem(publicKeyUrl);
+    const [ sessionKey, keyName, eStr, nStr ] = data.trim().split(',');
+    const uuid = uniqueValue("uuid");
+    const encData = `{"a":"${uuid}-4","b":"1.3.4","d":[{"i":"id","b":{"a":["0,${id}"]},"d":"${id}","e":false,"f":false},{"i":"${pwd}","e":true,"f":false}],"h":"1f","i":{"a":"Mozilla/5.0"}}`;
+    const bvsd = JSON.stringify({ uuid, encData: LZString.compressToEncodedURIComponent(encData) });
+    const svctype = "0";
+    const enctp = "1";
+    const enc_url = "http0X0.0000000000001P-10220.0000000.000000www.naver.com";
+    const url = "www.naver.com";
+    const smart_level = "1";
+    const target = "https://nid.naver.com/nidlogin.login";
+    const reviewCategoryNumber = 10;
+    const blogId = "homeliaison";
+    let response;
+    let pythonScript;
+
+    await shellExec(`rm`, [ `-rf`, uniqueFolder ]);
+    await shellExec(`mkdir`, [ uniqueFolder ]);
+    await shellExec(`pip3 install rsa --target="${shellLink(uniqueFolder)}";`);
+
+    pythonScript = ``;
+    pythonScript += `import sys\n`;
+    pythonScript += `sys.path.append("${uniqueFolder}")\n`;
+    pythonScript += `import rsa\n`;
+    pythonScript += `import json\n`;
+    pythonScript += `def naver_style_join(arr):\n`;
+    pythonScript += `\tresult = ''\n`;
+    pythonScript += `\tfor str in arr:\n`;
+    pythonScript += `\t\tresult += chr(len(str)) + str\n`;
+    pythonScript += `\treturn result\n`;
+    pythonScript += `message = naver_style_join([ "${sessionKey}", "${id}", "${pwd}" ]).encode()\n`;
+    pythonScript += `pubkey = rsa.PublicKey(int("${eStr}", 16), int("${nStr}", 16))\n`;
+    pythonScript += `encrypted = rsa.encrypt(message, pubkey)\n`;
+    pythonScript += `result = json.dumps({ "hex": encrypted.hex() })\n`;
+    pythonScript += `print(result)`;
+
+    await fileSystem(`write`, [ `${process.cwd()}/temp/${uniqueName}.py`, pythonScript ]);
+    const { hex: encpw } = equalJson(await shellExec("python3", [ `${process.cwd()}/temp/${uniqueName}.py` ]));
+    await shellExec(`rm`, [ `-rf`, `${process.cwd()}/temp/${uniqueName}.py` ]);
+    await shellExec(`rm`, [ `-rf`, uniqueFolder ]);
+
+    response = await chrome.scriptChain([
+      {
+        link: "https://nid.naver.com/nidlogin.login?qqq=" + svctype + "&vdvd=" + keyName + "&zzz=" + encpw + "&id=" + id + "&pwd=" + pwd + "&aaaa=" + global.encodeURIComponent(bvsd),
+        func: async function () {
+          const { returnGet } = GeneralJs;
+          const getObj = returnGet();
+          const { qqq: svctype, vdvd: encnm, zzz: encpw, iii: id, kkk: pwd } = getObj;
+          const bvsd = window.decodeURIComponent(getObj.aaaa);
+          document.getElementById("svctype").value = svctype;
+          document.getElementById("encnm").value = encnm;
+          document.getElementById("encpw").value = encpw;
+          document.getElementById("bvsd").value = bvsd;
+          document.getElementById("id").value = id;
+          document.getElementById("pw").value = pwd;
+          document.querySelector("form").submit();
+          return 0;
+        }
+      },
+      {
+        link: "https://blog.naver.com/PostList.naver?blogId=" + blogId + "&from=postList&categoryNo=" + String(reviewCategoryNumber),
+        func: async function () {
+          const { sleep } = GeneralJs;
+          let target, nextButton;
+          let pages;
+          let pageButtons;
+          let tempArr;
+          let mother;
+          let tong;
+          let tempObj;
+          let length;
+          let past, updated;
+          let boo;
+          let tongPush;
+          let obj;
+
+          tongPush = (tong) => {
+            tempArr = [ ...document.querySelector('.post_top_title_aggregate_expose').querySelectorAll("td.title") ];
+            for (let title of tempArr) {
+              mother = title.parentElement;
+
+              tempObj = {};
+              obj = {};
+              mother.querySelector(".title").querySelector("a").href.split("?")[1].replace(/\??(?:([^=]+)=([^&]*)&?)/g, (origin, name, value) => {
+                const decode = (str) => { return window.decodeURIComponent(str.split("+").join(" ")); }
+                obj[decode(name)] = decode(value);
+              });
+
+              tempObj.id = obj["logNo"];
+              tempObj.link = "https://blog.naver.com/" + obj["blogId"] + "/" + tempObj.id;
+              tempObj.date = mother.querySelector(".date").textContent.trim().replace(/\.$/, '').replace(/\. /gi, '-').split('-').map((str) => {
+                if (str.length === 1) {
+                  return '0' + str;
+                } else {
+                  return str;
+                }
+              }).join('-');
+              tempObj.category = obj["categoryNo"];
+
+              tong.push(tempObj);
+            }
+          }
+
+          while (!(document.querySelectorAll('.blog2_paginate').length > 0 && document.querySelectorAll('.blog2_paginate')[0].querySelectorAll("a.page").length > 0)) {
+            await sleep(100);
+          }
+
+          tong = [];
+          do {
+            pageButtons = document.querySelectorAll('.blog2_paginate')[0].querySelectorAll("a.page");
+            length = pageButtons.length;
+            tongPush(tong);
+
+            for (let i = 0; i < length; i++) {
+              past = document.querySelector('.post_top_title_aggregate_expose').querySelector("td.title");
+              pageButtons[i].click();
+              while (document.querySelector('.post_top_title_aggregate_expose').querySelector("td.title") === past) {
+                await sleep(10);
+              }
+              pageButtons = document.querySelectorAll('.blog2_paginate')[0].querySelectorAll("a.page");
+              tongPush(tong);
+            }
+
+            target = document.querySelectorAll('.blog2_paginate')[0];
+            boo = target.querySelector(".next") !== null;
+
+            if (boo) {
+              past = document.querySelector('.post_top_title_aggregate_expose').querySelector("td.title");
+              target.querySelector(".next").click();
+              while (document.querySelector('.post_top_title_aggregate_expose').querySelector("td.title") === past) {
+                await sleep(10);
+              }
+            }
+
+          } while (boo);
+
+          return tong;
+        }
+      }
+    ])
+
+    for (let obj of response[1]) {
+      console.log(obj);
+    }
 
 
 
