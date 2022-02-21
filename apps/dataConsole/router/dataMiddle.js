@@ -59,6 +59,10 @@ MiddleCommunication.prototype.baseHtml = async function (target, req, selfMongo,
       thisPerson = null;
     }
 
+    if (thisPerson === null || thisPerson === undefined) {
+      throw new Error("invaild person");
+    }
+
     //set meta data
     metaTitle = new Function(...meta.title);
     metaDescription = new Function(...meta.description);

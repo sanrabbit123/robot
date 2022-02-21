@@ -2233,6 +2233,12 @@ DataRouter.prototype.rou_post_sendSlack = function () {
   let obj = {};
   obj.link = "/sendSlack";
   obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       let link;
       let link_index;
@@ -2283,7 +2289,6 @@ DataRouter.prototype.rou_post_sendSlack = function () {
         await ghostRequest("voice", { text: req.body.message });
       }
 
-      res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ message: "success" }));
 
     } catch (e) {
@@ -2901,7 +2906,12 @@ DataRouter.prototype.rou_post_sendCertification = function () {
   let obj = {};
   obj.link = [ "/sendCertification" ];
   obj.func = async function (req, res) {
-    res.set({ "Content-Type": "application/json" });
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       const { name, phone, certification } = req.body;
       await human.sendSms({
@@ -2931,7 +2941,12 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
   let obj = {};
   obj.link = [ "/clientSubmit" ];
   obj.func = async function (req, res) {
-    res.set({ "Content-Type": "application/json" });
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       const selfMongo = instance.mongo;
       const { map } = equalJson(req.body);
@@ -4663,7 +4678,7 @@ DataRouter.prototype.rou_post_errorLog = function () {
   obj.link = [ "/errorLog" ];
   obj.func = async function (req, res) {
     res.set({
-      "Content-Type": "text/plain",
+      "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
@@ -5286,6 +5301,12 @@ DataRouter.prototype.rou_post_ghostClient_updateAnalytics = function () {
   let obj = {};
   obj.link = [ "/ghostClient_updateAnalytics" ];
   obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       if (req.body.mode === undefined || req.body.cliid === undefined || req.body.page === undefined) {
         throw new Error("invaild post");
@@ -5363,7 +5384,6 @@ DataRouter.prototype.rou_post_ghostClient_updateAnalytics = function () {
         throw new Error("invaild mode");
       }
 
-      res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify({ message: "done" }));
 
     } catch (e) {
@@ -5454,8 +5474,13 @@ DataRouter.prototype.rou_post_designerProposal_policy = function () {
   let obj = {};
   obj.link = "/designerProposal_policy";
   obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
-      res.set({ "Content-Type": "application/json" });
       let resultObj;
       resultObj = {
         policy: DataRouter.policy(),
