@@ -585,6 +585,7 @@ DataConsole.prototype.renderFrontPhp = async function () {
   const staticMiddleFolder = staticFolder + "/middle";
   const DataPatch = require(`${this.dir}/router/dataPatch.js`);
   const DataMiddle = require(`${this.dir}/router/dataMiddle.js`);
+  const middleLockConst = "?cliid=c1801_aa01s";
   try {
     await this.renderMiddleStatic(staticFolder, this.address.backinfo, DataPatch, DataMiddle);
     const targetMap = [
@@ -615,7 +616,7 @@ DataConsole.prototype.renderFrontPhp = async function () {
         }
       });
 
-      response = await requestSystem("https://" + instance.address.backinfo.host + path);
+      response = await requestSystem("https://" + instance.address.backinfo.host + path + middleLockConst);
       html = response.data;
 
       await fileSystem(`write`, [ `${process.cwd()}/temp/${from}.js`, targetScript ]);
@@ -627,10 +628,10 @@ DataConsole.prototype.renderFrontPhp = async function () {
     console.log("middle :", middleTong);
     console.log("mother :", motherTong);
 
-    command = middleTong.map((path) => {
-      return `scp ${path} ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/middle/`;
-    }).concat(motherTong.map((path) => {
-      return `scp ${path} ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/`;
+    command = middleTong.map((p) => {
+      return `scp ${p} ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/middle/`;
+    }).concat(motherTong.map((p) => {
+      return `scp ${p} ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/`;
     })).join(';');
 
     console.log(command);
