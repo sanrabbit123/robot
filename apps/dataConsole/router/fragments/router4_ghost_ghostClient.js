@@ -5,6 +5,12 @@ DataRouter.prototype.rou_post_ghostClient_updateAnalytics = function () {
   let obj = {};
   obj.link = [ "/ghostClient_updateAnalytics" ];
   obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       if (req.body.mode === undefined || req.body.cliid === undefined || req.body.page === undefined) {
         throw new Error("invaild post");
@@ -82,7 +88,6 @@ DataRouter.prototype.rou_post_ghostClient_updateAnalytics = function () {
         throw new Error("invaild mode");
       }
 
-      res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify({ message: "done" }));
 
     } catch (e) {

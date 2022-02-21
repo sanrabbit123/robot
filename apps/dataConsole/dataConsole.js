@@ -7,6 +7,7 @@ const DataConsole = function () {
   this.dir = process.cwd() + "/apps/dataConsole";
   this.sourceDir = this.dir + "/router/source";
   this.middleDir = this.sourceDir + "/middle";
+  this.ghostdir = this.sourceDir + "/ghost";
   this.middleModuleDir = this.middleDir + "/module";
 }
 
@@ -575,6 +576,55 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
   }
 }
 
+DataConsole.prototype.renderFrontPhp = async function () {
+  const instance = this;
+  const { fileSystem, shellLink, shellExec, equalJson, requestSystem } = this.mother;
+  const { ghostdir } = this;
+  const staticFolder = process.env.HOME + "/static";
+  const staticMiddleFolder = staticFolder + "/middle";
+  const DataPatch = require(`${this.dir}/router/dataPatch.js`);
+  const DataMiddle = require(`${this.dir}/router/dataMiddle.js`);
+  try {
+    await this.renderMiddleStatic(staticFolder, this.address.backinfo, DataPatch, DataMiddle);
+    const targetMap = [
+      { from: "clientConsulting", to: "consulting", path: "/middle/consulting" }
+    ];
+    const ghostTargets = (await fileSystem(`readDir`, [ ghostdir + "/client" ])).filter((str) => { return str !== ".DS_Store" }).filter((str) => {
+      const fromArr = targetMap.map((obj) => { return obj.from });
+      return fromArr.includes(str.replace(/\.js$/i, ''));
+    }).map((str) => {
+      const o = targetMap.find((obj) => { return obj.from === str.replace(/\.js$/i, '') });
+      o.file = `${staticMiddleFolder}/${str}`;
+      return o;
+    });
+    let targetScript, response, html;
+
+    for (let { from, to, file, path } of ghostTargets) {
+      targetScript = await fileSystem(`readString`, [ file ]);
+      targetScript = targetScript.replace(/ajaxJson\((\{[^}]*\}[^}]*\}?, ?)(\"[^\"]+\")/gi, (original, p1, p2) => {
+        console.log(p2);
+        if (/^[\"\']http/.test(p2)) {
+          return original;
+        } else {
+          return `ajaxJson(${p1}"https://${instance.address.backinfo.host}" + ${p2}`;
+        }
+      });
+
+      response = await requestSystem("https://" + instance.address.backinfo.host + path);
+      html = response.data;
+
+      await fileSystem(`write`, [ `${process.cwd()}/temp/${from}.js`, targetScript ]);
+      await fileSystem(`write`, [ `${process.cwd()}/temp/${to}.php`, html ]);
+
+    }
+
+
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DataConsole.prototype.mergeRouter = async function (middle = true) {
   const instance = this;
   const { fileSystem, shell, shellLink } = this.mother;
@@ -712,10 +762,6 @@ DataConsole.prototype.connect = async function () {
     const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
     const humanInstance = new HumanPacket();
 
-    //set dataMiddle
-    let DataMiddle;
-    DataMiddle = require(`${this.dir}/router/dataMiddle.js`);
-
     //set pem key
     let pems, pemsLink;
     let certDir, keyDir, caDir;
@@ -747,6 +793,7 @@ DataConsole.prototype.connect = async function () {
 
     //set router
     const DataPatch = require(`${this.dir}/router/dataPatch.js`);
+    const DataMiddle = require(`${this.dir}/router/dataMiddle.js`);
     const DataRouter = await this.mergeRouter(DataMiddle !== null);
     const router = new DataRouter(DataPatch, DataMiddle, MONGOC, MONGOLOCALC, kakaoInstance, humanInstance, isLocal);
     await router.setMembers();

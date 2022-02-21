@@ -77,8 +77,13 @@ DataRouter.prototype.rou_post_designerProposal_policy = function () {
   let obj = {};
   obj.link = "/designerProposal_policy";
   obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
-      res.set({ "Content-Type": "application/json" });
       let resultObj;
       resultObj = {
         policy: DataRouter.policy(),

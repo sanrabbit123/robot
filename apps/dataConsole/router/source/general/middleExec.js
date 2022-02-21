@@ -11,11 +11,17 @@ document.addEventListener("DOMContentLoaded", function (e) {
 
 document.addEventListener("error", function (e) {
   window.localStorage.clear();
-  GeneralJs.ajax("message=" + "middleExec : " + JSON.stringify(e.message) + "&channel=#error_log", "/sendSlack", function () {});
+  GeneralJs.ajaxJson({
+    message: "middleExec : " + e.message,
+    channel: "#error_log"
+  }, "/sendSlack").catch((err) => { console.log(err); });
   window.location.href = "https://home-liaison.com";
 });
 
 document.addEventListener("error", function (e) {
-  GeneralJs.ajax("message=" + "middleExec : " + JSON.stringify(e.message) + "&channel=#error_log", "/sendSlack", function () {});
+  GeneralJs.ajaxJson({
+    message: "middleExec : " + e.message,
+    channel: "#error_log"
+  }, "/sendSlack").catch((err) => { console.log(err); });
   window.location.href = "https://home-liaison.com";
 });

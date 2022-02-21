@@ -5832,7 +5832,7 @@ StyleCurationJs.prototype.insertPannelBox = function () {
     },
   ]);
 
-  ajaxJson("/designerProposal_policy").then(function (res) {
+  ajaxJson({}, "/designerProposal_policy").then(function (res) {
     const { policy, button } = res;
     let bTags;
 
