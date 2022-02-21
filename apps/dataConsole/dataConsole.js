@@ -602,7 +602,6 @@ DataConsole.prototype.renderFrontPhp = async function () {
     for (let { from, to, file, path } of ghostTargets) {
       targetScript = await fileSystem(`readString`, [ file ]);
       targetScript = targetScript.replace(/ajaxJson\((\{[^}]*\}[^}]*\}?, ?)(\"[^\"]+\")/gi, (original, p1, p2) => {
-        console.log(p2);
         if (/^[\"\']http/.test(p2)) {
           return original;
         } else {

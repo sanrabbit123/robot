@@ -6845,7 +6845,7 @@ StyleCurationJs.prototype.insertAdditionBox = function () {
   buttonWidth = <%% 206, 206, 206, 206, 17 %%>;
   buttonMargin = <%% 8, 8, 8, 5, 2 %%>;
 
-  buttonTextTop = <%% 9, 9, 9, 9, 1.2 %%>;
+  buttonTextTop = <%% 8, 8, 8, 8, 1.2 %%>;
   buttonTextSize = <%% 20, 20, 20, 16, 3.8 %%>;
 
   if (desktop) {

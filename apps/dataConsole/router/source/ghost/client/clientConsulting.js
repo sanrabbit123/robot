@@ -5307,7 +5307,7 @@ ClientConsultingJs.prototype.finalSubmit = function () {
             await sleep(500);
             document.body.removeChild(box);
             document.body.removeChild(back);
-            selfHref(window.location.protocol + "//" + window.location.host + "/middle/curation/?cliid=" + cliid);
+            selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/curation/?cliid=" + cliid);
           } catch (e) {
             await ajaxJson({ message: "ClientConsultingJs.certificationBox : " + e.message }, "/errorLog");
           }
@@ -5358,7 +5358,7 @@ ClientConsultingJs.prototype.insertPannelBox = function () {
   buttonWidth = <%% 156, 156, 156, 126, 28 %%>;
   buttonMargin = <%% 8, 8, 8, 5, 2 %%>;
 
-  buttonTextTop = <%% 9, 9, 9, 9, (isIphone() ? 1.1 : 1.3) %%>;
+  buttonTextTop = <%% 8, 8, 8, 8, (isIphone() ? 1.1 : 1.3) %%>;
   buttonTextSize = <%% 20, 20, 20, 16, 3.8 %%>;
 
   if (desktop) {
