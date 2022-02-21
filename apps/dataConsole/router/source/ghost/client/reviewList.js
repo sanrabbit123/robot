@@ -97,7 +97,7 @@ ReviewListJs.prototype.insertInitBox = function () {
 
   quoteHeight = 10;
   quoteVisual = 2;
-  quoteMarginTop = 26;
+  quoteMarginTop = 24;
 
   titleFontSize = 33;
   titleFontWeight = 500;
