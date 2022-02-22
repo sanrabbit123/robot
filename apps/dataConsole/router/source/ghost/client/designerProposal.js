@@ -4808,7 +4808,7 @@ DesignerProposalJs.prototype.launching = async function (loading) {
       local: async () => {
         try {
           instance.insertInitBox();
-          instance.insertFeeServiceBox();
+          // instance.insertFeeServiceBox();
           instance.insertDesignerBoxes();
           instance.insertServiceBox();
           instance.insertWordBox();
