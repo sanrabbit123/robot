@@ -1305,7 +1305,7 @@ module.exports = {
           "href": [
             "/portfolio.php",
             "/designer.php",
-            "https://home-liaison.servehttp.com/middle/consulting?nulid=no"
+            "/consulting.php"
           ],
           "src": "/svg/desktopbelow_15rspot549_020409.svg"
         }
