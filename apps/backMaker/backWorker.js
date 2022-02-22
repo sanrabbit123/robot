@@ -957,6 +957,7 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
     let addressLogCollection;
     let addressRows;
     let comment;
+    let livingMatchBoo;
 
     priceStandardCollection = "designerPrice";
     addressLogCollection = "addressLog";
@@ -1060,6 +1061,16 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
     for (let designer of designers) {
 
       serviceMatchBoo = designer.analytics.project.matrix[y].some((s) => { return s === 1; });
+
+      if (client.requests[requestNumber].request.space.resident.living) {
+        if (designer.analytics.project.living) {
+          livingMatchBoo = true;
+        } else {
+          livingMatchBoo = false;
+        }
+      } else {
+        livingMatchBoo = true;
+      }
 
       price = await back.mongoRead(priceStandardCollection, { key: (designer.analytics.construct.level * 10) + designer.analytics.styling.level }, { selfMongo: MONGOLOCALC });
       if (price.length !== 1) {
@@ -1200,6 +1211,13 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
 
       if (!serviceMatchBoo) {
         comment = "Unable service";
+        fee = 0;
+        offlineFeeCase = 0;
+        onlineFeeCase = 0;
+      }
+
+      if (!livingMatchBoo) {
+        comment = "Unable in living";
         fee = 0;
         offlineFeeCase = 0;
         onlineFeeCase = 0;
