@@ -346,16 +346,121 @@ DevContext.prototype.launching = async function () {
 
 
 
-
+    // await this.MONGOCONSOLEC.connect();
+    //
+    // const selfMongo = this.MONGOCONSOLEC;
     // const res = await sheets.get_value_inPython("1pfzymPAEjz6Q2G_QIMwQlc7e6Q_FYQkSw4tYIxAkWDk", "default!A2:N77");
-    // let matrix;
+    // const collection = "clientHistory";
+    // let matrix, history, data, page;
+    // let totalHistory;
+    // let tong;
+    // let tempObj;
+    // let historyLengthTong;
+    // let historyMaxLength;
+    // let newMatrix, tempArr;
+    //
     // matrix = res.filter((arr) => { return arr.length > 13 }).map((arr) => { return [ arr[0], arr[arr.length - 1] ] });
     //
-    // console.log(matrix);
-
-
-
-
+    // tong = [];
+    // historyLengthTong = [];
+    // for (let [ cliid, googleId ] of matrix) {
+    //
+    //   ({ data } = await requestSystem("https://home-liaison.info:3000/googleLog", { id: googleId }, { headers: { "Content-Type": "application/json" } }));
+    //   ([ { curation: { analytics: { page } } } ] = await back.mongoRead(collection, { cliid }, { selfMongo }));
+    //
+    //   history = equalJson(JSON.stringify(data.history))
+    //   totalHistory = page.concat(history.map((obj) => { return { page: obj.page, date: obj.time } }));
+    //   totalHistory.sort((a, b) => {
+    //     return a.date.valueOf() - b.date.valueOf();
+    //   });
+    //   historyLengthTong.push(totalHistory.length);
+    //
+    //   for (let obj of totalHistory) {
+    //     if (obj.page.trim() === "styleCuration") {
+    //       obj.page = "스타일 찾기";
+    //     } else if (obj.page.trim() === "designerProposal") {
+    //       obj.page = "디자이너 추천서";
+    //     } else if (obj.page.trim() === "universalEstimation") {
+    //       obj.page = "계약금 결제";
+    //     } else if (obj.page.trim() === "firstMeeting") {
+    //       obj.page = "현장 미팅";
+    //     } else {
+    //       obj.page = obj.page.replace(/\| 홈리에종/gi, '').trim();
+    //     }
+    //   }
+    //
+    //   tempObj = {};
+    //   tempObj.cliid = cliid;
+    //   tempObj.googleId = googleId;
+    //   tempObj.name = (await back.getClientById(cliid, { selfMongo: this.MONGOC })).name;
+    //   tempObj.history = equalJson(JSON.stringify(totalHistory));
+    //
+    //   tong.push(tempObj);
+    // }
+    //
+    // historyMaxLength = historyLengthTong.reduce((acc, curr) => { return acc > curr ? acc : curr }, 0);
+    //
+    // newMatrix = [];
+    //
+    // tempArr = [];
+    // for (let i = 0; i < tong.length; i++) {
+    //   tempArr.push(tong[i].name);
+    // }
+    // newMatrix.push(tempArr);
+    //
+    //
+    // tempArr = [];
+    // for (let i = 0; i < tong.length; i++) {
+    //   tempArr.push(tong[i].googleId);
+    // }
+    // newMatrix.push(tempArr);
+    //
+    //
+    // tempArr = [];
+    // for (let i = 0; i < tong.length; i++) {
+    //   tempArr.push(tong[i].cliid);
+    // }
+    // newMatrix.push(tempArr);
+    //
+    //
+    // tempArr = [];
+    // for (let i = 0; i < tong.length; i++) {
+    //   tempArr.push("");
+    // }
+    // newMatrix.push(tempArr);
+    //
+    //
+    // for (let i = 0; i < historyMaxLength; i++) {
+    //
+    //
+    //   tempArr = [];
+    //   for (let j = 0; j < tong.length; j++) {
+    //     if (tong[j].history[i] !== undefined) {
+    //       tempArr.push(dateToString(tong[j].history[i].date, true));
+    //     } else {
+    //       tempArr.push("");
+    //     }
+    //   }
+    //   newMatrix.push(tempArr);
+    //
+    //
+    //
+    //   tempArr = [];
+    //   for (let j = 0; j < tong.length; j++) {
+    //     if (tong[j].history[i] !== undefined) {
+    //       tempArr.push(tong[j].history[i].page);
+    //     } else {
+    //       tempArr.push("");
+    //     }
+    //   }
+    //   newMatrix.push(tempArr);
+    //
+    // }
+    //
+    // await sheets.update_value_inPython("1pfzymPAEjz6Q2G_QIMwQlc7e6Q_FYQkSw4tYIxAkWDk", "history", newMatrix)
+    // console.log(newMatrix);
+    //
+    // await this.MONGOCONSOLEC.close();
 
 
 
