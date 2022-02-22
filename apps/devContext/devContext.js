@@ -347,6 +347,22 @@ DevContext.prototype.launching = async function () {
 
 
 
+    // const res = await sheets.get_value_inPython("1pfzymPAEjz6Q2G_QIMwQlc7e6Q_FYQkSw4tYIxAkWDk", "default!A2:N77");
+    // let matrix;
+    // matrix = res.filter((arr) => { return arr.length > 13 }).map((arr) => { return [ arr[0], arr[arr.length - 1] ] });
+    //
+    // console.log(matrix);
+
+
+
+
+
+
+
+
+
+
+
 
 
 

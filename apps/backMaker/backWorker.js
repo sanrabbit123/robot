@@ -1186,11 +1186,6 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
         travelInfo.time.string = "0시간 0분";
       }
 
-      // if (distanceBoo) {
-      //   offlineFeeCase = 0;
-      //   fee = onlineFeeCase;
-      // }
-
       if (distanceLimitBoo) {
         comment = "Out of bounds";
         if (y < 2) {
@@ -1218,6 +1213,13 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
 
       if (!livingMatchBoo) {
         comment = "Unable in living";
+        fee = 0;
+        offlineFeeCase = 0;
+        onlineFeeCase = 0;
+      }
+
+      if (y >= 2 && distanceBoo) {
+        comment = "Unable in totalStyling";
         fee = 0;
         offlineFeeCase = 0;
         onlineFeeCase = 0;

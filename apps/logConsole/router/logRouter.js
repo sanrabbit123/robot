@@ -216,6 +216,45 @@ LogRouter.prototype.rou_post_extractLog = function () {
   return obj;
 }
 
+LogRouter.prototype.rou_post_googleLog = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson } = this.mother;
+  let obj = {};
+  obj.link = [ "/googleLog" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.id === undefined) {
+        throw new Error("invaild post");
+      }
+      const collection = "googleAnalytics";
+      const selfMongo = instance.mongo;
+      const { id } = req.body;
+      let rows;
+
+      rows = await back.mongoRead(collection, { userid: id }, { selfMongo });
+
+      if (rows.length === 0) {
+        res.send(JSON.stringify({ result: null }));
+      } else {
+        res.send(JSON.stringify(rows[0]));
+      }
+
+    } catch (e) {
+      instance.mother.errorLog("Log Console 서버 문제 생김 (rou_post_extractLog): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+
 //ROUTING ----------------------------------------------------------------------
 
 LogRouter.policy = function () {
