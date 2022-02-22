@@ -5176,6 +5176,7 @@ ClientConsultingJs.prototype.finalSubmit = function () {
   const instance = this;
   const { inputClassName } = this;
   const { ajaxJson, colorChip, findByAttribute, scrollTo, dateToString, sleep, selfHref, homeliaisonAnalytics } = GeneralJs;
+  const ignorePhone = [ "010-2747-3403" ];
   return async function (e) {
     try {
       const property = "property";
@@ -5295,23 +5296,31 @@ ClientConsultingJs.prototype.finalSubmit = function () {
       }
 
       if (boo) {
-        instance.mother.certificationBox(name, phone, async function (back, box) {
-          try {
-            const { cliid } = await ajaxJson({ map }, "/clientSubmit");
-            await homeliaisonAnalytics({
-              page: instance.pageName,
-              standard: instance.firstPageViewTime,
-              action: "login",
-              data: { cliid },
-            });
-            await sleep(500);
-            document.body.removeChild(box);
-            document.body.removeChild(back);
-            selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/curation/?cliid=" + cliid);
-          } catch (e) {
-            await ajaxJson({ message: "ClientConsultingJs.certificationBox : " + e.message }, "/errorLog");
-          }
-        });
+
+        if (ignorePhone.includes(phone.trim())) {
+          const { cliid } = await ajaxJson({ map }, "/clientSubmit");
+          await sleep(500);
+          selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/curation/?cliid=" + cliid);
+        } else {
+          instance.mother.certificationBox(name, phone, async function (back, box) {
+            try {
+              const { cliid } = await ajaxJson({ map }, "/clientSubmit");
+              await homeliaisonAnalytics({
+                page: instance.pageName,
+                standard: instance.firstPageViewTime,
+                action: "login",
+                data: { cliid },
+              });
+              await sleep(500);
+              document.body.removeChild(box);
+              document.body.removeChild(back);
+              selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/curation/?cliid=" + cliid);
+            } catch (e) {
+              await ajaxJson({ message: "ClientConsultingJs.certificationBox : " + e.message }, "/errorLog");
+            }
+          });
+        }
+
       }
 
     } catch (e) {

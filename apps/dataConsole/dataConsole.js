@@ -618,6 +618,7 @@ DataConsole.prototype.renderFrontPhp = async function () {
 
       response = await requestSystem("https://" + address.backinfo.host + path + middleLockConst);
       html = response.data;
+      html = html.replace(/G-N81TTVHYK4/gi, "UA-97880990-1");
 
       await fileSystem(`write`, [ `${process.cwd()}/temp/${from}.js`, targetScript ]);
       middleTong.push(`${shellLink(process.cwd())}/temp/${shellLink(from)}.js`);
