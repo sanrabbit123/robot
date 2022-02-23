@@ -72,7 +72,7 @@ GeneralJs.prototype.setBackground = function (binaryPath, second = false, random
           left: String(0),
           width: String(100) + '%',
           height: String(100) + '%',
-          background: desktop ? colorChip.gray2 : colorChip.gray1,
+          background: desktop ? (this.backgroundType === 1 ? colorChip.gray0 : colorChip.gray2) : colorChip.gray1,
           animation: "justfadeinoriginal 0.3s ease forwards",
         }
       },
@@ -104,7 +104,7 @@ GeneralJs.prototype.setBackground = function (binaryPath, second = false, random
           left: String(0),
           width: String(100) + '%',
           height: String(100) + '%',
-          background: desktop ? colorChip.gray2 : colorChip.gray1,
+          background: desktop ? (this.backgroundType === 1 ? colorChip.gray0 : colorChip.gray2) : colorChip.gray1,
           animation: "justfadeinoriginal 0.3s ease forwards",
         }
       },
@@ -495,6 +495,7 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
     const { mode, name, client, base, local } = obj;
     let belowTarget, removeTargets, getObj;
 
+    this.backgroundType = base.backgroundType;
     if (base.backgroundType === 1) {
       this.backHeight = <%% 430, 430, 430, 400, 80 %%>;
       base.instance.backHeight = this.backHeight;

@@ -226,6 +226,7 @@ GoogleChrome.prototype.scriptChain = async function (map, between = 3000) {
 
     frontResponses = [];
     for (let { link, func } of map) {
+      console.log("go to " + link + "...");
       await page.goto(link, { waitUntil: "networkidle2" });
       frontResponse = await page.evaluate(new AsyncFunction(returnScript(func)));
       frontResponses.push(frontResponse);
