@@ -893,14 +893,14 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
             headers: { "Content-Type": "application/json" }
           }).then(() => {
             errorLog("현금 영수증 관련 핸드폰 번호 감지 => " + phone).catch((e) => { console.log(e); });
-            if (/^010/.test(phone)) {
-              return requestSystem(`https://${instance.address.homeinfo.ghost.host}:${String(instance.address.homeinfo.ghost.graphic.port[0])}/receiptSend`, {
-                amount: String(amount),
-                phone,
-              }, { headers: { "Content-Type": "application/json" } });
-            } else {
+            // if (/^010/.test(phone)) {
+            //   return requestSystem(`https://${instance.address.homeinfo.ghost.host}:${String(instance.address.homeinfo.ghost.graphic.port[0])}/receiptSend`, {
+            //     amount: String(amount),
+            //     phone,
+            //   }, { headers: { "Content-Type": "application/json" } });
+            // } else {
               return emptyPromise();
-            }
+            // }
           }).then((promiseData) => {
             if (promiseData !== null) {
               return messageSend(`${name} 고객님의 번호로 현금 영수증 발행을 완료하였어요.`, "#700_operation", false);

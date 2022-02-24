@@ -1461,6 +1461,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   }
 
   if (!this.inicisDeactive) {
+
     createNode({
       mother: greenButtonBase,
       class: [ "hoverDefault_lite" ],
@@ -1497,80 +1498,84 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
       ]
     });
 
+    createNode({
+      mother: greenButtonBase,
+      class: [ "hoverDefault_lite" ],
+      events: [
+        {
+          type: "click",
+          event: paymentEvent("vbank"),
+        }
+      ],
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: String(greenButtonWidth + 3) + ea,
+        height: String(greenButtonHeight) + ea,
+        background: colorChip.green,
+        textAlign: "center",
+        borderRadius: String(3) + "px",
+        marginLeft: String(greenButtonBetween) + ea,
+        marginRight: String(greenButtonBetween) + ea,
+      },
+      children: [
+        {
+          text: wordings.button[1],
+          style: {
+            position: "absolute",
+            top: String(greenButtonTextTop) + ea,
+            width: String(100) + '%',
+            left: String(0),
+            fontSize: String(greenButtonFontSize) + ea,
+            fontWeight: String(400),
+            color: colorChip.white,
+            textAlign: "center",
+          }
+        }
+      ]
+    });
+
+  } else {
+
+    createNode({
+      mother: greenButtonBase,
+      class: [ "hoverDefault_lite" ],
+      events: [
+        {
+          type: "click",
+          event: paymentEvent("account"),
+        }
+      ],
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: String(greenButtonWidth) + ea,
+        height: String(greenButtonHeight) + ea,
+        background: colorChip.green,
+        textAlign: "center",
+        borderRadius: String(3) + "px",
+        marginLeft: String(greenButtonBetween) + ea,
+      },
+      children: [
+        {
+          text: wordings.button[2],
+          style: {
+            position: "absolute",
+            top: String(greenButtonTextTop) + ea,
+            width: String(100) + '%',
+            left: String(0),
+            fontSize: String(greenButtonFontSize) + ea,
+            fontWeight: String(400),
+            color: colorChip.white,
+            textAlign: "center",
+          }
+        }
+      ]
+    });
+
+
   }
 
-  createNode({
-    mother: greenButtonBase,
-    class: [ "hoverDefault_lite" ],
-    events: [
-      {
-        type: "click",
-        event: paymentEvent("vbank"),
-      }
-    ],
-    style: {
-      display: "inline-block",
-      position: "relative",
-      width: String(greenButtonWidth + 3) + ea,
-      height: String(greenButtonHeight) + ea,
-      background: colorChip.green,
-      textAlign: "center",
-      borderRadius: String(3) + "px",
-      marginLeft: String(greenButtonBetween) + ea,
-      marginRight: String(greenButtonBetween) + ea,
-    },
-    children: [
-      {
-        text: wordings.button[1],
-        style: {
-          position: "absolute",
-          top: String(greenButtonTextTop) + ea,
-          width: String(100) + '%',
-          left: String(0),
-          fontSize: String(greenButtonFontSize) + ea,
-          fontWeight: String(400),
-          color: colorChip.white,
-          textAlign: "center",
-        }
-      }
-    ]
-  });
-
-  // createNode({
-  //   mother: greenButtonBase,
-  //   class: [ "hoverDefault_lite" ],
-  //   events: [
-  //     {
-  //       type: "click",
-  //       event: paymentEvent("account"),
-  //     }
-  //   ],
-  //   style: {
-  //     display: "inline-block",
-  //     position: "relative",
-  //     width: String(greenButtonWidth) + ea,
-  //     height: String(greenButtonHeight) + ea,
-  //     background: colorChip.green,
-  //     textAlign: "center",
-  //     borderRadius: String(3) + "px",
-  //     marginLeft: String(greenButtonBetween) + ea,
-  //   },
-  //   children: [
-  //     {
-  //       text: wordings.button[2],
-  //       style: {
-  //         position: "absolute",
-  //         top: String(greenButtonTextTop) + ea,
-  //         width: String(100) + '%',
-  //         left: String(0),
-  //         fontSize: String(greenButtonFontSize) + ea,
-  //         fontWeight: String(400),
-  //         color: colorChip.white,
-  //         textAlign: "center",
-  //       }
-  //     }
-  //   ]
-  // });
 
   whiteBlock.style.height = "auto";
 }
