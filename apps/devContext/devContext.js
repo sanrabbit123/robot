@@ -1212,98 +1212,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
-
-
-
-    // await chrome.scriptRequest("https://www.hometax.go.kr/websquare/websquare.wq?w2xPath=/ui/comm/a/b/UTXPPABA01.xml&w2xHome=/ui/pp/&w2xDocumentRoot=", [
-    //   async function () {
-    //     const idLoginButtonId = "anchor15";
-    //     const returnButtonId = "anchor25";
-    //     const inputs = {
-    //       id: "iptUserId",
-    //       pwd: "iptUserPw"
-    //     };
-    //     document.getElementById(idLoginButtonId).click();
-    //     document.getElementById(inputs.id).value = "homeliaison20";
-    //     document.getElementById(inputs.pwd).value = "hlofwis83!";
-    //     document.getElementById(returnButtonId).click();
-    //   },
-    //   async function () {
-    //     window.location.href = "https://tecr.hometax.go.kr/websquare/websquare.html?w2xPath=/ui/cr/c/b/UTECRCB013.xml";
-    //   },
-    //   async function () {
-    //     const { sleep } = GeneralJs;
-    //     let buttons;
-    //     let pageNumber, pageButtons;
-    //     let domTargets, textArr;
-    //     let total, middle;
-    //     let timeIndex;
-    //     let tempObj;
-    //
-    //     buttons = document.querySelectorAll('.w2radio_label');
-    //     buttons[2].click();
-    //     document.getElementById("trigger1").click();
-    //     pageButtons = document.querySelectorAll('.w2pageList_control_label');
-    //     pageNumber = pageButtons.length;
-    //
-    //     await sleep(2000);
-    //
-    //     total = [];
-    //     for (let i = 0; i < pageNumber; i++) {
-    //       pageButtons = document.querySelectorAll('.w2pageList_control_label');
-    //       pageButtons[i].click();
-    //       await sleep(2000);
-    //
-    //       domTargets = document.getElementById("grdCshpt").querySelectorAll("td");
-    //       textArr = [];
-    //       for (let dom of domTargets) {
-    //         textArr.push(dom.textContent);
-    //       }
-    //       textArr = textArr.filter((i) => { return !(/[0-9]/g.test(i) && /\:/g.test(i) && /[A-Z]/gi.test(i) && / /gi.test(i) && /,/gi.test(i)); });
-    //       textArr = textArr.map((i) => { return i.trim(); });
-    //       textArr = textArr.filter((i) => { return i !== '' });
-    //
-    //       timeIndex = [];
-    //       for (let j = 0; j < textArr.length; j++) {
-    //         if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] [0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]$/.test(textArr[j].trim())) {
-    //           timeIndex.push(j);
-    //         }
-    //       }
-    //
-    //       middle = [];
-    //       for (let index of timeIndex) {
-    //         middle.push({
-    //           method: textArr[index - 1],
-    //           time: stringToDate(textArr[index].trim()),
-    //           supply: Number(textArr[index + 1].replace(/[^0-9\-]/g, '')),
-    //           vat: Number(textArr[index + 2].replace(/[^0-9\-]/g, '')),
-    //           service: Number(textArr[index + 3].replace(/[^0-9\-]/g, '')),
-    //           total: Number(textArr[index + 4].replace(/[^0-9\-]/g, '')),
-    //           id: textArr[index + 5],
-    //           issuance: textArr[index + 6],
-    //           deal: /승인/gi.test(textArr[index + 7]),
-    //           etc: textArr[index + 8],
-    //         });
-    //       }
-    //
-    //       total.push(middle);
-    //       await sleep(500);
-    //
-    //       print(total);
-    //     }
-    //   }
-    // ]);
-
-
-
-
-
-
-
-
     // let note, targetArr;
     // let level1Index;
     // let tempArr, tempObj;
@@ -2427,8 +2335,8 @@ DevContext.prototype.launching = async function () {
     // send sms
     // const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
     // const human = new HumanPacket();
-    // const name = "성현지";
-    // const amount = 5200000;
+    // const name = "배창규";
+    // const amount = 2700000;
     // await human.sendSms({
     //   name: "",
     //   phone: "01021993403",

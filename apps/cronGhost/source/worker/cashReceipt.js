@@ -179,7 +179,6 @@ const worker = async function (package) {
     res = await requestSystem("https://" + address.pythoninfo.host + ":3000/cashReceipt", results[2], { headers: { "Content-Type": "application/json" } });
     console.log(res.data);
 
-
     await messageLog("cash receipt sync done");
     return true;
   } catch (e) {
