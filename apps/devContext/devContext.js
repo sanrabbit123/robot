@@ -2311,11 +2311,11 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p176");
+    // await this.getRawPortfolio("a91");
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p142");
+    // await this.getCorePortfolio("a92");
 
 
     // aspirant to designer
@@ -2325,20 +2325,20 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2105_aa02s" ]);
+    // await work.newDesignerToFront([ "d2202_aa04s" ]);
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2201_aa02s", [
+    // await this.setProposalSettingForDesigner("d2202_aa03s", [
+    //   { porlid: "ghost", index: 9 },
+    //   { porlid: "ghost", index: 4 },
+    //   { porlid: "ghost", index: 7 },
     //   { porlid: "ghost", index: 6 },
     //   { porlid: "ghost", index: 8 },
-    //   { porlid: "ghost", index: 3 },
-    //   { porlid: "ghost", index: 7 },
-    //   { porlid: "ghost", index: 9 },
     // ], [
-    //   "미팅 전에 준비한 라이프스타일 체크지를 통해 생활 습간들을 전판적으로 파악합니다.",
-    //   "고객님만의 드림 하우스, 고객님만의 낭만적인 공간 요소를 찾아보려 노력합니다.",
-    //   "고객님을 잘 표현할 수 있는 컬러, 무드, 소재, 브랜드를 고려하고 제안합니다."
+    //   "고객 성향에 맞추어 기존 가구들과의 조화로움을 생각하여 추천드립니다.",
+    //   "감성적인 공간 디자인과 합리적인 공간 활용으로 차별화된 스타일링을 구현합니다.",
+    //   "고객님과 가족의 이야기를 담아 우리집 속 조화로움을 찾아드립니다."
     // ]);
 
 
@@ -2375,7 +2375,7 @@ DevContext.prototype.launching = async function () {
     // const amount = 2700000;
     // await human.sendSms({
     //   name: "",
-    //   phone: "01021993403",
+    //   phone: "01055432039",
     //   subject: "",
     //   contents: `2021/11/18 13:21\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,
     // });
