@@ -164,6 +164,8 @@ DevContext.prototype.launching = async function () {
 
     /*
 
+    const jsdom = require("jsdom");
+    const { JSDOM } = jsdom;
     const reviewCategoryNumber = 10;
     const blogId = "homeliaison";
     const extractLoginInfo = async () => {
@@ -211,7 +213,7 @@ DevContext.prototype.launching = async function () {
       await shellExec(`rm`, [ `-rf`, `${process.cwd()}/temp/${uniqueName}.py` ]);
       await shellExec(`rm`, [ `-rf`, uniqueFolder ]);
 
-      return { svctype, keyName, encpw, id, pwd, bvsd };
+      return { svctype, keyName, encpw, id, pwd, bvsd, enctp, enc_url, url, smart_level };
     }
 
     let svctype;
@@ -223,8 +225,11 @@ DevContext.prototype.launching = async function () {
     let response;
     let chainArr;
     let tong;
+    let cookie;
+    let data;
+    let dom;
 
-    ({ svctype, keyName, encpw, id, pwd, bvsd } = await extractLoginInfo());
+    ({ svctype, keyName, encpw, id, pwd, bvsd, enctp, enc_url, url, smart_level } = await extractLoginInfo());
 
     [ , response ] = await chrome.scriptChain([
       {
@@ -329,7 +334,38 @@ DevContext.prototype.launching = async function () {
 
     tong = equalJson(JSON.stringify(response));
 
-    console.log(tong);
+    ({ svctype, keyName, encpw, id, pwd, bvsd, enctp, enc_url, url, smart_level } = await extractLoginInfo());
+
+    response = await requestSystem("https://nid.naver.com/nidlogin.login", {
+      svctype,
+      enctp,
+      encnm: keyName,
+      enc_url,
+      url,
+      smart_level,
+      encpw,
+      bvsd
+    }, {
+      headers: {
+        "User-agent": "Mozilla/5.0"
+      }
+    })
+
+    cookie = response.headers["set-cookie"].map((str) => { return (/\;$/.test(str) ? str : str + ";"); }).join(' ');
+
+    for (let obj of tong) {
+
+      ({ data } = await requestSystem("https://blog.naver.com/PostView.naver?blogId=" + blogId + "&logNo=" + id + "&redirect=Dlog&widgetTypeCall=true&directAccess=false", {}, { headers: { cookie } }));
+      console.log(data);
+      dom = new JSDOM(data);
+
+
+
+    }
+
+
+
+
 
     */
 
@@ -2257,9 +2293,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "김란희",
-    //     designer: "이정아",
-    //     link: "https://drive.google.com/drive/folders/1_osQbdSok75RHbXV8MeFYkyFPDaqxLhT",
+    //     client: "오희진",
+    //     designer: "김은설",
+    //     link: "https://drive.google.com/drive/folders/1BP0BbVIBCk6ymSSz8op42kczTIvn1DnB",
     //     pay: true
     //   },
     // ]);
