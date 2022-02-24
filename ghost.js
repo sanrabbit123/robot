@@ -3309,12 +3309,12 @@ Ghost.prototype.photoRouter = function (needs) {
           if (!pay) {
             commands += `cd ${shellLink(sambaDir)}/${shellLink(folderName)}/${shellLink(c780)};`;
             commands += `zip ${shellLink(process.env.HOME)}/${shellLink(tempFolderName)}/${shellLink(shareDesignerName)} ./*;`;
-            commands += `cd ${shellLink(sambaDir)}/${shellLink(folderName)}/${shellLink(c1500)};`;
+            commands += `cd ${shellLink(sambaDir)}/${shellLink(folderName)}/${shellLink(c780)};`;
             commands += `zip ${shellLink(process.env.HOME)}/${shellLink(tempFolderName)}/${shellLink(shareClientName)} ./*;`;
           } else {
             commands += `cd ${shellLink(sambaDir)}/${shellLink(folderName)}/${shellLink(c3508)};`;
             commands += `zip ${shellLink(process.env.HOME)}/${shellLink(tempFolderName)}/${shellLink(shareDesignerName)} ./*;`;
-            commands += `cd ${shellLink(sambaDir)}/${shellLink(folderName)}/${shellLink(c1500)};`;
+            commands += `cd ${shellLink(sambaDir)}/${shellLink(folderName)}/${shellLink(c780)};`;
             commands += `zip ${shellLink(process.env.HOME)}/${shellLink(tempFolderName)}/${shellLink(shareClientName)} ./*;`;
           }
           await shellExec(commands);
