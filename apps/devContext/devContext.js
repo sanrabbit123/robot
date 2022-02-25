@@ -162,7 +162,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // /*
+    /*
 
     const jsdom = require("jsdom");
     const { JSDOM } = jsdom;
@@ -348,7 +348,7 @@ DevContext.prototype.launching = async function () {
           let title, tag;
 
           title = document.getElementById("mainFrame").contentWindow.document.getElementById("postListBody").querySelector(".pcol1").textContent.trim();
-          tag = Array.from(document.getElementById("mainFrame").contentWindow.document.querySelector('.wrap_tag').querySelectorAll('a.item')).map((dom) => { return dom.textContent }).map((str) => { return str.replace(/^\#/, '') });
+          tag = Array.from(document.getElementById("mainFrame").contentWindow.document.getElementById('post_footer_contents').querySelector('.wrap_tag').querySelectorAll('a.item')).map((dom) => { return dom.textContent }).map((str) => { return str.replace(/^\#/, '') });
 
           return { title, tag }
         }
@@ -365,7 +365,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // */
+    */
 
 
 

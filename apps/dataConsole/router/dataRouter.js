@@ -5769,7 +5769,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
           }
         }).catch((err) => {
           console.log(err);
-          messageSend({ text: client.name + " 제안서 제작 문제 생김" + err.message, channel: "#404_curation" }).catch((e) => { console.log(e) });
+          messageSend({ text: client.name + " 제안서 제작 문제 생김 " + err.message, channel: "#404_curation" }).catch((e) => { console.log(e) });
         });
 
         await instance.kakao.sendTalk("curationComplete", client.name, client.phone, {
