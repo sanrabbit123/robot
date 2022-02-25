@@ -1975,12 +1975,15 @@ BackWorker.prototype.realtimeDesignerSync = async function (proid, option = { se
 
 BackWorker.prototype.realtimePossibleConverting = function (possibleArr, dateMargin = 10) {
   if (!Array.isArray(possibleArr)) {
+    console.log(possibleArr);
     throw new Error("invaild input : must be possible array");
   }
   if (!possibleArr.every((obj) => { return typeof obj === "object" })) {
+    console.log(possibleArr);
     throw new Error("invaild input : must be possible array");
   }
   if (!possibleArr.every((obj) => { return (obj.start !== undefined && obj.end !== undefined) })) {
+    console.log(possibleArr);
     throw new Error("invaild input : must be possible array");
   }
   if (typeof dateMargin !== "number") {

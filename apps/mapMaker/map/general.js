@@ -690,6 +690,9 @@ module.exports = {
       },
       "purchaseList": {
         "behaviors": []
+      },
+      "aspirantExplanation": {
+        "behaviors": []
       }
     },
     "login": {

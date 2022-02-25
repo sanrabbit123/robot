@@ -162,7 +162,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    /*
+    // /*
 
     const jsdom = require("jsdom");
     const { JSDOM } = jsdom;
@@ -215,24 +215,8 @@ DevContext.prototype.launching = async function () {
 
       return { svctype, keyName, encpw, id, pwd, bvsd, enctp, enc_url, url, smart_level };
     }
-
-    let svctype;
-    let keyName;
-    let encpw;
-    let id;
-    let pwd;
-    let bvsd;
-    let response;
-    let chainArr;
-    let tong;
-    let cookie;
-    let data;
-    let dom;
-
-    ({ svctype, keyName, encpw, id, pwd, bvsd, enctp, enc_url, url, smart_level } = await extractLoginInfo());
-
-    [ , response ] = await chrome.scriptChain([
-      {
+    const naverLogin = (svctype, keyName, encpw, id, pwd, bvsd) => {
+      return {
         link: "https://nid.naver.com/nidlogin.login?qqq=" + svctype + "&vdvd=" + keyName + "&zzz=" + encpw + "&id=" + id + "&pwd=" + pwd + "&aaaa=" + global.encodeURIComponent(bvsd),
         func: async function () {
           const { returnGet } = GeneralJs;
@@ -248,7 +232,26 @@ DevContext.prototype.launching = async function () {
           document.querySelector("form").submit();
           return 0;
         }
-      },
+      }
+    }
+
+    let svctype;
+    let keyName;
+    let encpw;
+    let id;
+    let pwd;
+    let bvsd;
+    let response;
+    let chainArr;
+    let tong;
+    let cookie;
+    let data;
+    let dom;
+    let num;
+
+    ({ svctype, keyName, encpw, id, pwd, bvsd } = await extractLoginInfo());
+    [ , response ] = await chrome.scriptChain([
+      naverLogin(svctype, keyName, encpw, id, pwd, bvsd),
       {
         link: "https://blog.naver.com/PostList.naver?blogId=" + blogId + "&from=postList&categoryNo=" + String(reviewCategoryNumber),
         func: async function () {
@@ -334,40 +337,35 @@ DevContext.prototype.launching = async function () {
 
     tong = equalJson(JSON.stringify(response));
 
-    ({ svctype, keyName, encpw, id, pwd, bvsd, enctp, enc_url, url, smart_level } = await extractLoginInfo());
+    ({ svctype, keyName, encpw, id, pwd, bvsd } = await extractLoginInfo());
+    chainArr = [ naverLogin(svctype, keyName, encpw, id, pwd, bvsd) ];
 
-    response = await requestSystem("https://nid.naver.com/nidlogin.login", {
-      svctype,
-      enctp,
-      encnm: keyName,
-      enc_url,
-      url,
-      smart_level,
-      encpw,
-      bvsd
-    }, {
-      headers: {
-        "User-agent": "Mozilla/5.0"
+    num = 0;
+    for (let { id } of tong) {
+      chainArr.push({
+        link: "https://blog.naver.com/" + blogId + "/" + id,
+        func: async function () {
+          let title, tag;
+
+          title = document.getElementById("mainFrame").contentWindow.document.getElementById("postListBody").querySelector(".pcol1").textContent.trim();
+          tag = Array.from(document.getElementById("mainFrame").contentWindow.document.querySelector('.wrap_tag').querySelectorAll('a.item')).map((dom) => { return dom.textContent }).map((str) => { return str.replace(/^\#/, '') });
+
+          return { title, tag }
+        }
+      })
+      if (num === 4) {
+        break;
       }
-    })
-
-    cookie = response.headers["set-cookie"].map((str) => { return (/\;$/.test(str) ? str : str + ";"); }).join(' ');
-
-    for (let obj of tong) {
-
-      ({ data } = await requestSystem("https://blog.naver.com/PostView.naver?blogId=" + blogId + "&logNo=" + id + "&redirect=Dlog&widgetTypeCall=true&directAccess=false", {}, { headers: { cookie } }));
-      console.log(data);
-      dom = new JSDOM(data);
-
-
-
+      num++;
     }
 
+    console.log(await chrome.scriptChain(chainArr, 500));
 
 
 
 
-    */
+
+    // */
 
 
 
@@ -2293,9 +2291,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "오희진",
-    //     designer: "김은설",
-    //     link: "https://drive.google.com/drive/folders/1BP0BbVIBCk6ymSSz8op42kczTIvn1DnB",
+    //     client: "이현아",
+    //     designer: "우다미",
+    //     link: "https://drive.google.com/drive/folders/1wTRlAP-JUAw5gGvPXFzukwWDH3jNBLDg",
     //     pay: true
     //   },
     // ]);
@@ -2315,7 +2313,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("a92");
+    // await this.getCorePortfolio("p176");
 
 
     // aspirant to designer
