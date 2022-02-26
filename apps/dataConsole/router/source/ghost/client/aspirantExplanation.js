@@ -90,7 +90,7 @@ AspirantExplanationJs.penWordings = {
 // AspirantExplanationJs.prototype.insertInitBox = function () {
 //   const instance = this;
 //   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-//   const { ea, media, osException, testMode, inputClassName } = this;
+//   const { ea, media, inputClassName, titleSize, titleWeight, titleLineHeight, titleSvgHeight } = this;
 //   const mobile = media[4];
 //   const desktop = !mobile;
 //   let blockHeight;
@@ -120,7 +120,7 @@ AspirantExplanationJs.penWordings = {
 AspirantExplanationJs.prototype.insertInitBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media, osException, testMode, inputClassName } = this;
+  const { ea, media, inputClassName, titleSize, titleWeight, titleLineHeight, titleSvgHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
   let blockHeight;
@@ -131,8 +131,7 @@ AspirantExplanationJs.prototype.insertInitBox = function () {
   let paddingTop, paddingLeft;
   let leftBoxWidth;
   let title;
-  let titleSize, titleWeight, titleLineHeight;
-  let titleSvgHeight, titleMarginTop;
+  let titleMarginTop;
   let rightBox;
   let boxMargin;
   let columns;
@@ -157,11 +156,7 @@ AspirantExplanationJs.prototype.insertInitBox = function () {
 
   title = "홈리에종과\n함께 한다면";
 
-  titleSize = 31;
-  titleWeight = 500;
-  titleLineHeight = 1.4;
   marginTopVisual = 3;
-  titleSvgHeight = 60;
   titleMarginTop = 13;
 
   boxMargin = 12;
@@ -369,7 +364,472 @@ AspirantExplanationJs.prototype.insertInitBox = function () {
 AspirantExplanationJs.prototype.insertSecondBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media, osException, testMode, inputClassName } = this;
+  const { ea, media, inputClassName, titleSize, titleWeight, titleLineHeight, titleSvgHeight } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  let blockHeight;
+  let bottomMargin;
+  let wordSpacing;
+  let whiteBlock;
+  let titleMarginTop;
+  let title;
+  let paddingTop;
+  let middleTong;
+  let middleTongMarginTop;
+  let middleTongPadding;
+  let middleTongHeight;
+  let middleTongBox0Width, middleTongBox1Width;
+  let contents;
+  let plusPaddingTop;
+  let plusWidth;
+  let middleTextSize, middleTextWeight, middleTextLineHeight;
+  let middleTextMarginTop;
+  let grayZone;
+  let boxNumber;
+  let grayTong;
+  let grayTongBox0Width, grayTongBox1Width;
+  let grayContents;
+  let grayTextSize, grayTextTop, grayPanHeight;
+  let stepLeft, stepTop, stepSize, stepWeight;
+  let grayBoxPaddingTop;
+  let arrowPaddingTop;
+  let arrowWidth;
+  let descriptionTop, descriptionSize, descriptionWeight, descriptionLineHeight;
+  let grayZoneMarginTop, grayZonePaddingTop, grayZoneHeight;
+  let grayTongHeight;
+
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+
+  wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
+
+  titleMarginTop = 13;
+  title = "홈스타일링 디자이너에 도전하세요!";
+  paddingTop = 64;
+
+  middleTongMarginTop = 58;
+  middleTongPadding = 160;
+  middleTongHeight = 260;
+
+  middleTongBox0Width = 192;
+  middleTongBox1Width = 84;
+
+  plusPaddingTop = 82;
+  plusWidth = 26;
+
+  middleTextSize = 19;
+  middleTextWeight = 500;
+  middleTextLineHeight = 1.4;
+  middleTextMarginTop = 18;
+
+  grayTongBox0Width = 210;
+  grayTongBox1Width = 40;
+
+  grayTextSize = 18;
+  grayTextTop = 11;
+  grayPanHeight = 51;
+
+  stepLeft = 21;
+  stepTop = -25;
+  stepSize = 14;
+  stepWeight = 400;
+
+  grayBoxPaddingTop = 20;
+
+  arrowPaddingTop = 38;
+  arrowWidth = 10;
+
+  descriptionTop = 64;
+  descriptionSize = 14;
+  descriptionWeight = 400;
+  descriptionLineHeight = 1.6;
+
+  grayZoneMarginTop = 120;
+  grayZonePaddingTop = 70;
+  grayZoneHeight = 225;
+  grayTongHeight = 200;
+
+  contents = [
+    [
+      "인테리어 전공자",
+      "유관 업종 경력자",
+    ],
+    [
+      "프리랜서 / 사업자 / 휴직 등",
+      "소속 무관",
+    ],
+    [
+      "만 19세 이상",
+      "성별, 나이 무관",
+    ],
+    [
+      "공유 가능한 1개 이상의",
+      "포트폴리오 보유",
+    ]
+  ];
+
+  grayContents = [
+    {
+      title: "홈페이지 신청서 접수",
+      description: [],
+    },
+    {
+      title: "1차 유선 인터뷰",
+      description: [
+        "협업 전 필수 확인 사항 체크",
+        "대면 미팅일 픽스",
+      ],
+    },
+    {
+      title: "대면 미팅",
+      description: [],
+    },
+    {
+      title: "계약",
+      description: [
+        "전자 계약서 작성",
+        "협업 매뉴얼 안내",
+      ],
+    },
+    {
+      title: "디자이너 등록",
+      description: [
+        "고객 제안용 포트폴리오 준비",
+        "페이지 개설 및 콘텐츠 오픈",
+        "디자이너 상세 체크리스트 진행",
+      ],
+    },
+  ];
+
+  whiteBlock = createNode({
+    mother: this.baseTong,
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      background: colorChip.white,
+      marginBottom: String(bottomMargin) + ea,
+      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      paddingTop: String(paddingTop) + ea,
+    }
+  });
+
+  createNode({
+    mother: whiteBlock,
+    style: {
+      display: "block",
+      position: "relative",
+      textAlign: "center",
+    },
+    children: [
+      {
+        mode: "svg",
+        source: AspirantExplanationJs.penWordings.a2(colorChip.green),
+        style: {
+          display: "inline-block",
+          height: String(titleSvgHeight) + ea,
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: whiteBlock,
+    text: title,
+    style: {
+      width: String(100) + '%',
+      display: "block",
+      textAlign: "center",
+      marginTop: String(titleMarginTop) + ea,
+      fontSize: String(titleSize) + ea,
+      fontWeight: String(titleWeight),
+      color: colorChip.black,
+      lineHeight: String(titleLineHeight),
+    }
+  });
+
+  middleTong = createNode({
+    mother: whiteBlock,
+    style: {
+      display: "block",
+      position: "relative",
+      marginTop: String(middleTongMarginTop) + ea,
+      paddingLeft: String(middleTongPadding) + ea,
+      paddingRight: String(middleTongPadding) + ea,
+    },
+    children: [
+      {
+        style: {
+          width: String(100) + '%',
+          display: "block",
+          position: "absolute",
+          top: String(0),
+          left: String(0),
+          height: String(middleTongBox0Width / 2) + ea,
+          borderBottom: "1px solid " + colorChip.gray3,
+        }
+      },
+      {
+        style: {
+          position: "relative",
+          height: String(middleTongHeight) + ea,
+          width: String(100) + '%',
+          background: colorChip.white,
+        }
+      }
+    ]
+  });
+
+  boxNumber = contents.length;
+
+  createNode({
+    mother: middleTong.children[1],
+    style: {
+      display: "inline-block",
+      width: "calc(calc(100% - " + String((middleTongBox0Width * boxNumber) + (middleTongBox1Width * (boxNumber - 1))) + ea + ") / 2)",
+      height: String(100) + '%',
+      verticalAlign: "top",
+    }
+  });
+
+  for (let i = 0; i < boxNumber; i++) {
+    createNode({
+      mother: middleTong.children[1],
+      style: {
+        display: "inline-block",
+        width: String(middleTongBox0Width) + ea,
+        height: String(100) + '%',
+        verticalAlign: "top",
+      },
+      children: [
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            width: String(middleTongBox0Width) + ea,
+            height: String(middleTongBox0Width) + ea,
+            borderRadius: String(middleTongBox0Width) + ea,
+            background: colorChip.gray2,
+            overflow: "hidden",
+          },
+          children: [
+            {
+              mode: "img",
+              attribute: {
+                src: AspirantExplanationJs.binaryPath + "/b" + String(i + 1) + ".png",
+              },
+              style: {
+                position: "absolute",
+                width: String(100) + '%',
+                height: "auto",
+                top: String(0),
+                left: String(0),
+              }
+            }
+          ]
+        },
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            marginTop: String(middleTextMarginTop) + ea,
+          },
+          children: [
+            {
+              text: contents[i].join("\n"),
+              style: {
+                position: "absolute",
+                width: String(200) + '%',
+                top: String(0),
+                left: String(-50) + '%',
+                fontSize: String(middleTextSize) + ea,
+                fontWeight: String(middleTextWeight),
+                color: colorChip.black,
+                textAlign: "center",
+                lineHeight: String(middleTextLineHeight),
+              }
+            }
+          ]
+        }
+      ]
+    });
+
+    if (i !== boxNumber - 1) {
+      createNode({
+        mother: middleTong.children[1],
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: String(middleTongBox1Width) + ea,
+          height: withOut(plusPaddingTop, ea),
+          verticalAlign: "top",
+          textAlign: "center",
+          paddingTop: String(plusPaddingTop) + ea,
+        },
+        children: [
+          {
+            mode: "svg",
+            source: this.mother.returnPlus(colorChip.gray3),
+            style: {
+              display: "inline-block",
+              width: String(plusWidth) + ea,
+            }
+          }
+        ]
+      });
+    }
+  }
+
+  createNode({
+    mother: middleTong.children[1],
+    style: {
+      display: "inline-block",
+      width: "calc(calc(100% - " + String((middleTongBox0Width * boxNumber) + (middleTongBox1Width * (boxNumber - 1))) + ea + ") / 2)",
+      height: String(100) + '%',
+      verticalAlign: "top",
+    }
+  });
+
+  grayZone = createNode({
+    mother: whiteBlock,
+    style: {
+      marginTop: String(grayZoneMarginTop) + ea,
+      width: String(100) + '%',
+      display: "block",
+      position: "relative",
+      paddingTop: String(grayZonePaddingTop) + ea,
+      height: String(grayZoneHeight) + ea,
+      background: colorChip.gray0,
+    }
+  });
+
+  grayTong = createNode({
+    mother: grayZone,
+    style: {
+      position: "relative",
+      height: String(grayTongHeight) + ea,
+      width: String(100) + '%',
+      background: colorChip.gray0,
+    }
+  });
+
+  boxNumber = grayContents.length;
+
+  createNode({
+    mother: grayTong,
+    style: {
+      display: "inline-block",
+      width: "calc(calc(100% - " + String((grayTongBox0Width * boxNumber) + (grayTongBox1Width * (boxNumber - 1))) + ea + ") / 2)",
+      height: String(100) + '%',
+      verticalAlign: "top",
+    }
+  });
+
+  for (let i = 0; i < boxNumber; i++) {
+    createNode({
+      mother: grayTong,
+      style: {
+        display: "inline-block",
+        width: String(grayTongBox0Width) + ea,
+        height: withOut(grayBoxPaddingTop, ea),
+        verticalAlign: "top",
+        paddingTop: String(grayBoxPaddingTop) + ea,
+      },
+      children: [
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            height: String(grayPanHeight) + ea,
+            background: colorChip[(i === 0 || i === boxNumber - 1 ? "gradientGreen" : "black")],
+            borderRadius: String(grayTongBox0Width) + ea,
+            width: String(100) + '%',
+          },
+          children: [
+            {
+              text: grayContents[i].title,
+              style: {
+                position: "absolute",
+                top: String(grayTextTop) + ea,
+                width: String(100) + '%',
+                fontSize: String(grayTextSize) + ea,
+                fontWeight: String(middleTextWeight),
+                color: colorChip.white,
+                textAlign: "center",
+              }
+            },
+            {
+              text: "Step " + String(i + 1),
+              style: {
+                position: "absolute",
+                left: String(stepLeft) + ea,
+                top: String(stepTop) + ea,
+                fontFamily: "graphik",
+                fontSize: String(stepSize) + ea,
+                fontWeight: String(stepWeight),
+                color: colorChip[(i === 0 || i === boxNumber - 1 ? "green" : "black")],
+              }
+            },
+            {
+              text: grayContents[i].description.join("\n"),
+              style: {
+                position: "absolute",
+                left: String(stepLeft) + ea,
+                top: String(descriptionTop) + ea,
+                fontSize: String(descriptionSize) + ea,
+                fontWeight: String(descriptionWeight),
+                color: colorChip.black,
+                lineHeight: String(descriptionLineHeight),
+              }
+            },
+          ]
+        }
+      ]
+    });
+
+    if (i !== boxNumber - 1) {
+      createNode({
+        mother: grayTong,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: String(grayTongBox1Width) + ea,
+          height: withOut(arrowPaddingTop, ea),
+          verticalAlign: "top",
+          textAlign: "center",
+          paddingTop: String(arrowPaddingTop) + ea,
+        },
+        children: [
+          {
+            mode: "svg",
+            source: this.mother.returnArrow("right", colorChip[(i === 0 || i === boxNumber - 2 ? "green" : "black")]),
+            style: {
+              display: "inline-block",
+              width: String(arrowWidth) + ea,
+            }
+          }
+        ]
+      });
+    }
+  }
+
+  createNode({
+    mother: grayTong,
+    style: {
+      display: "inline-block",
+      width: "calc(calc(100% - " + String((grayTongBox0Width * boxNumber) + (grayTongBox1Width * (boxNumber - 1))) + ea + ") / 2)",
+      height: String(100) + '%',
+      verticalAlign: "top",
+    }
+  });
+
+
+
+}
+
+AspirantExplanationJs.prototype.insertThirdBox = function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { ea, media, inputClassName, titleSize, titleWeight, titleLineHeight, titleSvgHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
   let blockHeight;
@@ -405,6 +865,10 @@ AspirantExplanationJs.prototype.launching = async function (loading) {
     const getObj = returnGet();
 
     this.inputClassName = "consultingInput";
+    this.titleSize = 31;
+    this.titleWeight = 500;
+    this.titleLineHeight = 1.4;
+    this.titleSvgHeight = 58;
 
     await this.mother.ghostClientLaunching({
       mode: "front",
@@ -421,6 +885,7 @@ AspirantExplanationJs.prototype.launching = async function (loading) {
         try {
           instance.insertInitBox();
           instance.insertSecondBox();
+          instance.insertThirdBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "AspirantExplanationJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
         }
