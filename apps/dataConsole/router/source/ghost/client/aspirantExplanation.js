@@ -608,7 +608,7 @@ AspirantExplanationJs.prototype.insertSecondBox = function () {
             width: String(middleTongBox0Width) + ea,
             height: String(middleTongBox0Width) + ea,
             borderRadius: String(middleTongBox0Width) + ea,
-            background: colorChip.gray2,
+            background: colorChip.gray1,
             overflow: "hidden",
           },
           children: [
@@ -832,6 +832,272 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
   const { ea, media, inputClassName, titleSize, titleWeight, titleLineHeight, titleSvgHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  let bottomMargin;
+  let wordSpacing;
+  let whiteBlock;
+  let title;
+  let leftBox;
+  let paddingLeft;
+  let paddingTop;
+  let leftBoxWidth;
+  let marginTopVisual;
+  let titleMarginTop;
+  let rightBox;
+  let boxMargin;
+  let boxMarginBottom;
+  let boxNumber;
+  let boxPaddingTop, boxPaddingLeft;
+  let contents;
+  let boxContentsSize, boxContentsWeight, boxContentsLineHeight;
+  let photoHeight;
+  let boxTitleBottom, boxTitleLeft, boxTitleSize, boxTitleWeight;
+  let grayTong;
+  let grayBetween;
+  let title2;
+
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+
+  wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
+
+  title = "디자이너는\n어떤 일을\n하나요?";
+  title2 = "왜 홈리에종을 추천할까요?";
+  paddingTop = 64;
+  paddingLeft = 64;
+
+  leftBoxWidth = 250;
+  marginTopVisual = 3;
+  titleMarginTop = 13;
+
+  boxMargin = 36;
+  boxMarginBottom = 36;
+  boxNumber = 5;
+
+  boxPaddingTop = 15;
+  boxPaddingLeft = 2;
+
+  boxContentsSize = 14;
+  boxContentsWeight = 400;
+  boxContentsLineHeight = 1.5;
+
+  photoHeight = 200;
+
+  boxTitleBottom = 19;
+  boxTitleLeft = 23;
+  boxTitleSize = 18;
+  boxTitleWeight = 700;
+
+  grayBetween = 30;
+
+  contents = [
+    {
+      title: "현장 미팅",
+      description: "고객의 공간을 실측하고, 라이프스타일과 예산, 공간 상태와 니즈를 파악합니다.",
+    },
+    {
+      title: "디자인 작업",
+      description: "컨셉 설정, 공간 기획, 레이아웃, 제품 리스트 등 디자인을 기획하고, 고객 피드백을 통해 맞춤 디자인을 제공합니다.",
+    },
+    {
+      title: "시공 분담",
+      description: "마감재 선정부터 시공 견적 체크, 공정 조정 등의 디자인 측면을 담당하고, 시공사는 공사 실행화, 자재 발주 등의 인프라를 제공하며 협업합니다.",
+    },
+    {
+      title: "최종 셋팅",
+      description: "고객님이 언박싱과 1차 세팅을 진행해주신 현장을 점검하여 최종적으로 정돈해드립니다.",
+    },
+    {
+      title: "촬영 및 글 작성",
+      description: "프로젝트 마무리 후, 포트폴리오 콘텐츠를 위해 디자인 의도가 담긴 글을 직접 작성합니다."
+    },
+  ];
+
+  whiteBlock = createNode({
+    mother: this.baseTong,
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      background: colorChip.white,
+      marginBottom: String(bottomMargin) + ea,
+      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+    }
+  });
+
+  leftBox = createNode({
+    mother: whiteBlock,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      paddingLeft: String(paddingLeft) + ea,
+      paddingTop: String(paddingTop) + ea,
+      width: String(leftBoxWidth) + ea,
+      verticalAlign: "top",
+    }
+  });
+
+  createNode({
+    mother: leftBox,
+    style: {
+      display: "block",
+      position: "relative",
+      textAlign: "left",
+      marginTop: String(marginTopVisual) + ea,
+    },
+    children: [
+      {
+        mode: "svg",
+        source: AspirantExplanationJs.penWordings.a3(colorChip.green),
+        style: {
+          display: "inline-block",
+          height: String(titleSvgHeight) + ea,
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: leftBox,
+    text: title,
+    style: {
+      marginTop: String(titleMarginTop) + ea,
+      fontSize: String(titleSize) + ea,
+      fontWeight: String(titleWeight),
+      color: colorChip.black,
+      lineHeight: String(titleLineHeight),
+    }
+  });
+
+  rightBox = createNode({
+    mother: whiteBlock,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      paddingRight: String(paddingLeft) + ea,
+      paddingTop: String(paddingTop) + ea,
+      width: withOut((paddingLeft * 2) + leftBoxWidth, ea),
+      verticalAlign: "top",
+    }
+  });
+
+  for (let i = 0; i < boxNumber; i++) {
+    createNode({
+      mother: rightBox,
+      style: {
+        display: "inline-block",
+        width: "calc(calc(100% - " + String(boxMargin * 2) + ea + ") / 3)",
+        marginRight: String(i === boxNumber - 1 ? 0 : boxMargin) + ea,
+        marginBottom: String(boxMarginBottom) + ea,
+        verticalAlign: "top",
+      },
+      children: [
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            width: String(100) + '%',
+            height: String(photoHeight) + ea,
+            backgroundImage: "url('" + AspirantExplanationJs.binaryPath + "/z" + String(i + 1) + ".jpg" + "')",
+            backgroundPosition: "50% 50%",
+            backgroundSize: "100% auto",
+            borderRadius: String(5) + "px",
+            overflow: "hidden",
+          },
+          children: [
+            {
+              style: {
+                position: "absolute",
+                top: String(0),
+                left: String(0),
+                width: String(100) + '%',
+                height: String(100) + '%',
+                background: "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.5) 100%",
+              }
+            },
+            {
+              text: contents[i].title,
+              style: {
+                position: "absolute",
+                bottom: String(boxTitleBottom) + ea,
+                left: String(boxTitleLeft) + ea,
+                fontSize: String(boxTitleSize) + ea,
+                fontWeight: String(boxTitleWeight),
+                color: colorChip.white,
+              }
+            }
+          ]
+        },
+        {
+          text: contents[i].description,
+          style: {
+            fontSize: String(boxContentsSize) + ea,
+            fontWeight: String(boxContentsWeight),
+            color: colorChip.black,
+            paddingTop: String(boxPaddingTop) + ea,
+            paddingLeft: String(boxPaddingLeft) + ea,
+            paddingRight: String(boxPaddingLeft) + ea,
+            lineHeight: String(boxContentsLineHeight),
+            textAlign: "center",
+          }
+        }
+      ]
+    })
+  }
+
+  grayTong = createNode({
+    mother: whiteBlock,
+    style: {
+      display: "block",
+      position: "relative",
+      marginTop: String(grayBetween) + ea,
+      paddingTop: String(paddingTop) + ea,
+      paddingLeft: String(paddingLeft) + ea,
+      paddingRight: String(paddingLeft) + ea,
+      width: withOut(paddingLeft * 2, ea),
+      background: colorChip.gray0,
+      height: String(400) + ea,
+    }
+  });
+
+  createNode({
+    mother: grayTong,
+    style: {
+      display: "block",
+      position: "relative",
+      textAlign: "left",
+      marginTop: String(marginTopVisual) + ea,
+    },
+    children: [
+      {
+        mode: "svg",
+        source: AspirantExplanationJs.penWordings.a4(colorChip.green),
+        style: {
+          display: "inline-block",
+          height: String(titleSvgHeight) + ea,
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: grayTong,
+    text: title2,
+    style: {
+      marginTop: String(titleMarginTop) + ea,
+      fontSize: String(titleSize) + ea,
+      fontWeight: String(titleWeight),
+      color: colorChip.black,
+      lineHeight: String(titleLineHeight),
+    }
+  });
+
+}
+
+AspirantExplanationJs.prototype.insertFourthBox = function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { ea, media, inputClassName, titleSize, titleWeight, titleLineHeight, titleSvgHeight } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
   let blockHeight;
   let bottomMargin;
   let wordSpacing;
@@ -886,6 +1152,7 @@ AspirantExplanationJs.prototype.launching = async function (loading) {
           instance.insertInitBox();
           instance.insertSecondBox();
           instance.insertThirdBox();
+          instance.insertFourthBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "AspirantExplanationJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
         }
