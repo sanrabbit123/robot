@@ -1054,7 +1054,7 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
       paddingRight: String(paddingLeft) + ea,
       width: withOut(paddingLeft * 2, ea),
       background: colorChip.gray0,
-      height: String(400) + ea,
+      height: String(600) + ea,
     }
   });
 
