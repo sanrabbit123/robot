@@ -854,6 +854,7 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
   let grayTong;
   let grayBetween;
   let title2;
+  let cardContents;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
 
@@ -909,6 +910,12 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
       title: "촬영 및 글 작성",
       description: "프로젝트 마무리 후, 포트폴리오 콘텐츠를 위해 디자인 의도가 담긴 글을 직접 작성합니다."
     },
+  ];
+
+  cardContents = [
+    "홈리에종만의 특별한 점이 있어요. 다른 매칭 플랫폼과 확연히 다른 홈리에종만의 성격과 결이 정말 특별하다고 생각해요. 단순히 연계만 해주는 것이 아니라 홈리에종만의 특별한 케어가 함께 한다는 점이 정말 좋은 것 같아요! 그리고 디자이너로서 새로운 그림을 그려볼 수 있는 기회가 많다는 점에서 확실한 특장점이 있구요.",
+    "오랜 회사 생활 이후 인생 2막을 준비하던 중이었어요. 주거 인테리어가 제 경력의 많은 부분을 차지하고 있기 때문에 이쪽으로 특화시키면 좋겠다 생각했던 찰나, 홈리에종의 파트너 디자이너 리크루팅 소식을 접하게 되었어요. 그 후 일사천리로 일이 진행된 것 같아요. 홈리에종과 서로 윈윈하는 관계가 되어 함께 성장해 나가고 싶어요.",
+    "인테리어만 할 때는, 수천만원 들여서 깔끔히 시공을 해도 나중에 그 모습이 거의 없더라고요. 자식같은 현장인데 아쉬움이 많이 남았어요. 그래서 홈스타일링 쪽으로 관심을 갖다 홈리에종을 만나서 홈스타일링 디자이너로 발돋움할 수 있었어요. 고객님들의 만족하고, 예쁜 현장을 보면 저도 같이 행복해져요!",
   ];
 
   whiteBlock = createNode({
@@ -1050,11 +1057,11 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
       position: "relative",
       marginTop: String(grayBetween) + ea,
       paddingTop: String(paddingTop) + ea,
+      paddingBottom: String(paddingTop) + ea,
       paddingLeft: String(paddingLeft) + ea,
       paddingRight: String(paddingLeft) + ea,
       width: withOut(paddingLeft * 2, ea),
       background: colorChip.gray0,
-      height: String(600) + ea,
     }
   });
 
@@ -1088,6 +1095,64 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
       color: colorChip.black,
       lineHeight: String(titleLineHeight),
     }
+  });
+
+  createNode({
+    mother: grayTong,
+    style: {
+      marginTop: String(40) + ea,
+      display: "block",
+      position: "relative",
+      height: String(400) + ea,
+      textAlign: "center",
+    },
+    children: [
+      {
+        style: {
+          display: "inline-block",
+          width: String(520) + ea,
+          height: String(100) + '%',
+          background: colorChip.white,
+          borderRadius: String(10) + "px",
+          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          padding: String(40) + ea,
+          textAlign: "left",
+        },
+        children: [
+          {
+            mode: "img",
+            attribute: {
+              src: AspirantExplanationJs.binaryPath + "/c" + String(1) + ".png",
+            },
+            style: {
+              display: "inline-block",
+              width: String(80) + ea,
+              height: String(80) + ea,
+              verticalAlign: "top",
+            }
+          },
+          {
+            style: {
+              display: "inline-flex",
+              height: String(80) + ea,
+              width: String(100) + ea,
+              justifyContent: "center",
+              alignItems: "center",
+              verticalAlign: "top",
+            },
+            children: [
+              {
+                mode: "svg",
+                source: AspirantExplanationJs.penWordings.b1(colorChip.black),
+                style: {
+                  height: String(40) + ea,
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
   });
 
 }
