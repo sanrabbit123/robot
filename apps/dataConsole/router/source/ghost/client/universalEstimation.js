@@ -1660,18 +1660,15 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
     const { returnGet, ajaxJson, requestPromise } = GeneralJs;
     const getObj = returnGet();
     if (getObj.needs === undefined || getObj.cliid === undefined) {
-      alert("잘못된 접근입니다!");
-      window.location.href = this.frontPage;
+      throw new Error("error spot 0 : " + JSON.stringify(getObj));
     }
     const { needs, cliid } = getObj;
     if (needs.split(',').length !== 4) {
-      alert("잘못된 접근입니다!");
-      window.location.href = this.frontPage;
+      throw new Error("error spot 1 : " + needs);
     }
     const [ kind, desid, proid, method ] = needs.split(',');
     if (!/^d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/.test(desid) || !/^p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/.test(proid)) {
-      alert("잘못된 접근입니다!");
-      window.location.href = this.frontPage;
+      throw new Error("error spot 2 : " + desid + ", " + proid);
     }
     let clients, client;
     let designers, designer;
@@ -1683,18 +1680,15 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
 
     clients = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getClients", { equal: true });
     if (clients.length === 0) {
-      alert("잘못된 접근입니다!");
-      window.location.href = this.frontPage;
+      throw new Error("error spot 3 : " + cliid);
     }
     designers = await ajaxJson({ noFlat: true, whereQuery: { desid } }, "/getDesigners", { equal: true });
     if (designers.length === 0) {
-      alert("잘못된 접근입니다!");
-      window.location.href = this.frontPage;
+      throw new Error("error spot 4 : " + desid);
     }
     projects = await ajaxJson({ noFlat: true, whereQuery: { proid } }, "/getProjects", { equal: true });
     if (projects.length === 0) {
-      alert("잘못된 접근입니다!");
-      window.location.href = this.frontPage;
+      throw new Error("error spot 5 : " + proid);
     }
 
     client = clients[0];
@@ -1730,8 +1724,7 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
       this.desid = desid;
       this.cliid = cliid;
     } else {
-      alert("잘못된 접근입니다!");
-      window.location.href = this.frontPage;
+      throw new Error("error spot 6 : " + kind);
     }
 
     this.requestNumber = 0;
@@ -1842,5 +1835,7 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
 
   } catch (e) {
     await GeneralJs.ajaxJson({ message: "UniversalEstimationJs.launching : " + e.message }, "/errorLog");
+    alert("잘못된 접근입니다!");
+    window.location.href = this.frontPage;
   }
 }
