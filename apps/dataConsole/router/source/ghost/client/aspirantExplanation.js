@@ -1254,11 +1254,98 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
   let bottomMargin;
   let wordSpacing;
   let whiteBlock;
+  let leftBox;
+  let paddingTop, paddingLeft;
+  let leftBoxWidth;
+  let title, title2;
+  let titleMarginTop;
+  let rightBox;
+  let boxMargin;
+  let backgroundRatio;
+  let boxInnerMargin;
+  let boxPaddingTop;
+  let marginTopVisual;
+  let contents;
+  let titelBlockHeight;
+  let titleBlockWidth;
+  let titleBlockMargin;
+  let titleSvgMiddleHeight, titleSvgTop;
+  let titlePaddingRight;
+  let grayTong;
+  let grayMarginTop;
+  let titleBlockMarginBottom;
+  let titleNumberSize, titleNumberWeight, titleNumberTop;
+  let descriptionSize, descriptionWeight, descriptionLineHeight, descriptionBoldWeight;
+  let paddingTop2;
+  let questions;
+  let grayRightTong;
+  let questionBlockMargin;
+  let questionBlockHeight;
+  let questionSize;
+  let questionWeight;
+  let questionTop;
 
-  blockHeight = <%% 918, 901, 817, 1026, 264 %%>;
+  blockHeight = <%% 908, 901, 817, 1026, 264 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
 
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
+
+  paddingTop = 64;
+  paddingTop2 = 58;
+  paddingLeft = 64;
+
+  leftBoxWidth = 250;
+
+  title = "서비스\n프로세스";
+  title2 = "자주 찾는\n질문";
+
+  marginTopVisual = 3;
+  titleMarginTop = 13;
+
+  titelBlockHeight = 40;
+  titleBlockWidth = 150;
+  titleBlockMargin = 40;
+
+  titleSvgMiddleHeight = 26;
+  titleSvgTop = 7;
+
+  titlePaddingRight = 10;
+
+  titleBlockMarginBottom = 30;
+
+  titleNumberSize = 16;
+  titleNumberWeight = 400;
+  titleNumberTop = -1.5;
+
+  descriptionSize = 14;
+  descriptionWeight = 400;
+  descriptionLineHeight = 1.6;
+  descriptionBoldWeight = 600;
+
+  grayMarginTop = 36;
+
+  questionBlockMargin = 16;
+  questionBlockHeight = 60;
+  questionSize = 17;
+  questionWeight = 600;
+  questionTop = -2;
+
+  contents = [
+    "고객의 공간 정보, 요청 사항 등이 기입된 서비스 신청서를 토대로 프로젝트 계약 전, 서비스에 대한 상세한 안내가 이뤄집니다.",
+    "고객과 디자이너 간의 <b%지역 / 스타일 / 예산 / 일정%b>을 고려한 홈리에종의 고객 분석 시스템을 거쳐 디자이너를 추천하고, 매칭합니다.",
+    "디자이너는 고객과 소통하며 기획된 디자인에 따라 <b%시공 및 스타일링을 제안 / 실행%b>하고 프로젝트를 운영합니다.\n시공사 선택 : 시공이 포함된 프로젝트의 경우, 디자이너는 고객 상황에 맞춰 시공사 선택에 도움을 주고, 시공 디자인에 필요한 역할을 분담합니다.",
+    "스타일링까지 마무리된 현장의 사진 촬영을 진행하여 최종 검수 후 프로젝트를 종료합니다.",
+    "촬영 완료된 포트폴리오 콘텐츠를 발행합니다. 고객님께 집의 가장 아름다운 모습을 기록해 드리고, 디자이너님께는 새로운 고객님을 만나실 수 있는 소중한 자료가 됩니다."
+  ];
+
+  questions = [
+    "다른 플랫폼과 다른 점은 무엇인가요?",
+    "최소 활동 조건이 있나요?",
+    "직접 고객 유치를 하지 않아도 되나요?",
+    "홈리에종의 홈스타일링 서비스란?",
+    "일정과 거리가 안 맞으면 어떻게 하나요?",
+    "시공사가 없어도 파트너십이 가능한가요?",
+  ];
 
   whiteBlock = createNode({
     mother: this.baseTong,
@@ -1266,12 +1353,240 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
       position: "relative",
       borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
-      height: String(blockHeight) + ea,
       background: colorChip.white,
       marginBottom: String(bottomMargin) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      overflow: "hidden",
     }
   });
+
+  leftBox = createNode({
+    mother: whiteBlock,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      paddingLeft: String(paddingLeft) + ea,
+      paddingTop: String(paddingTop) + ea,
+      width: String(leftBoxWidth) + ea,
+      verticalAlign: "top",
+    }
+  });
+
+  createNode({
+    mother: leftBox,
+    style: {
+      display: "block",
+      position: "relative",
+      textAlign: "left",
+      marginTop: String(marginTopVisual) + ea,
+    },
+    children: [
+      {
+        mode: "svg",
+        source: AspirantExplanationJs.penWordings.a5(colorChip.green),
+        style: {
+          display: "inline-block",
+          height: String(titleSvgHeight) + ea,
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: leftBox,
+    text: title,
+    style: {
+      marginTop: String(titleMarginTop) + ea,
+      fontSize: String(titleSize) + ea,
+      fontWeight: String(titleWeight),
+      color: colorChip.black,
+      lineHeight: String(titleLineHeight),
+    }
+  });
+
+  rightBox = createNode({
+    mother: whiteBlock,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      paddingRight: String(paddingLeft) + ea,
+      paddingTop: String(paddingTop) + ea,
+      width: withOut((paddingLeft * 2) + leftBoxWidth, ea),
+      verticalAlign: "top",
+    }
+  });
+
+  for (let i = 0; i < contents.length; i++) {
+    createNode({
+      mother: rightBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(titleBlockMarginBottom) + ea,
+      },
+      children: [
+        {
+          style: {
+            display: "inline-flex",
+            position: "absolute",
+            top: String(0),
+            left: String(0),
+            width: String(titelBlockHeight) + ea,
+            height: String(titelBlockHeight) + ea,
+            borderRadius: String(titelBlockHeight) + ea,
+            background: colorChip.black,
+            zIndex: String(1),
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+          },
+          children: [
+            {
+              text: String(i + 1),
+              style: {
+                display: "inline-block",
+                fontSize: String(titleNumberSize) + ea,
+                fontWeight: String(titleNumberWeight),
+                color: colorChip.white,
+                fontFamily: "graphik",
+                position: "relative",
+                top: String(titleNumberTop) + ea,
+              }
+            }
+          ]
+        },
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(titleBlockWidth) + ea,
+            height: String(titelBlockHeight) + ea,
+            background: colorChip.gray1,
+            borderRadius: String(titelBlockHeight) + ea,
+            paddingLeft: String(titelBlockHeight) + ea,
+            paddingRight: String(titlePaddingRight) + ea,
+            textAlign: "center",
+            marginRight: String(titleBlockMargin) + ea,
+            verticalAlign: "top",
+          },
+          children: [
+            {
+              mode: "svg",
+              source: AspirantExplanationJs.penWordings['c' + String(i + 1)](colorChip.black),
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(titleSvgTop) + ea,
+                height: String(titleSvgMiddleHeight) + ea,
+                verticalAlign: "top",
+              }
+            }
+          ]
+        },
+        {
+          style: {
+            display: "inline-block",
+            width: withOut(titleBlockWidth + titelBlockHeight + titlePaddingRight + titleBlockMargin, ea),
+            verticalAlign: "top",
+          },
+          children: [
+            {
+              text: contents[i],
+              style: {
+                fontSize: String(descriptionSize) + ea,
+                fontWeight: String(descriptionWeight),
+                color: colorChip.black,
+                lineHeight: String(descriptionLineHeight),
+              },
+              bold: {
+                fontWeight: String(descriptionBoldWeight),
+                color: colorChip.black,
+              }
+            }
+          ]
+        }
+      ]
+    })
+  }
+
+  grayTong = createNode({
+    mother: whiteBlock,
+    style: {
+      display: "block",
+      width: String(100) + '%',
+      height: String(600) + ea,
+      background: colorChip.gray0,
+      marginTop: String(grayMarginTop) + ea,
+    }
+  })
+
+  createNode({
+    mother: grayTong,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      paddingLeft: String(paddingLeft) + ea,
+      paddingTop: String(paddingTop2) + ea,
+      width: String(leftBoxWidth) + ea,
+      verticalAlign: "top",
+    },
+    children: [
+      {
+        text: title2,
+        style: {
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(titleWeight),
+          color: colorChip.black,
+          lineHeight: String(titleLineHeight),
+        }
+      }
+    ]
+  });
+
+  grayRightTong = createNode({
+    mother: grayTong,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      paddingRight: String(paddingLeft) + ea,
+      paddingTop: String(paddingTop2) + ea,
+      width: withOut((paddingLeft * 2) + leftBoxWidth, ea),
+      verticalAlign: "top",
+    }
+  });
+
+  for (let i = 0; i < questions.length; i++) {
+    createNode({
+      mother: grayRightTong,
+      style: {
+        display: "inline-flex",
+        alignItems: "center",
+        verticalAlign: "top",
+        justifyContent: "center",
+        width: "calc(calc(100% - " + String(questionBlockMargin * 2) + ea + ") / 3)",
+        height: String(questionBlockHeight) + ea,
+        marginRight: String(i % (questions.length / 2) === ((questions.length / 2) - 1) ? 0 : questionBlockMargin) + ea,
+        marginBottom: String(questionBlockMargin) + ea,
+        boxSizing: "border-box",
+        border: "1px solid " + colorChip.deactive,
+        borderRadius: String(10) + "px",
+        background: colorChip.white,
+      },
+      children: [
+        {
+          text: questions[i],
+          style: {
+            position: "relative",
+            fontSize: String(questionSize) + ea,
+            fontWeight: String(questionWeight),
+            top: String(questionTop) + ea,
+            color: colorChip.black,
+          }
+        }
+      ]
+    })
+  }
+
 }
 
 AspirantExplanationJs.prototype.launching = async function (loading) {
