@@ -1284,9 +1284,21 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
   let questionSize;
   let questionWeight;
   let questionTop;
+  let grayTongPaddingBottom;
+  let pictureTong;
+  let pictureHeight, pictureTongPaddingTop;
+  let pictureTongBackground;
+  let pictureTongPosition;
+  let pictureTongBlackOpacity;
+  let title3;
+  let finalButtonWording;
+  let pictureTitleSize, pictureTitleWeight, pictureTitleLineHeight;
+  let pictureButtonWidth, pictureButtonHeight;
+  let pictureButtonMarginTop;
+  let pictureButtonSize, pictureButtonWeight, pictureButtonTextTop;
 
   blockHeight = <%% 908, 901, 817, 1026, 264 %%>;
-  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  bottomMargin = 200;
 
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
 
@@ -1298,6 +1310,8 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
 
   title = "서비스\n프로세스";
   title2 = "자주 찾는\n질문";
+  title3 = "홈스타일링으로 새로운 시도를\n홈리에종과 든든하게 시작하세요";
+  finalButtonWording = "디자이너 활동 시작하기";
 
   marginTopVisual = 3;
   titleMarginTop = 13;
@@ -1329,6 +1343,26 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
   questionSize = 17;
   questionWeight = 600;
   questionTop = -2;
+
+  grayTongPaddingBottom = 55;
+
+  pictureHeight = 225;
+  pictureTongPaddingTop = 70;
+
+  pictureTongBackground = "z6.png";
+  pictureTongPosition = "50% 75%";
+  pictureTongBlackOpacity = 0.45;
+
+  pictureTitleSize = 29;
+  pictureTitleWeight = 600;
+  pictureTitleLineHeight = 1.4;
+
+  pictureButtonWidth = 185;
+  pictureButtonHeight = 40;
+  pictureButtonMarginTop = 24;
+  pictureButtonSize = 15;
+  pictureButtonWeight = 600;
+  pictureButtonTextTop = -1;
 
   contents = [
     "고객의 공간 정보, 요청 사항 등이 기입된 서비스 신청서를 토대로 프로젝트 계약 전, 서비스에 대한 상세한 안내가 이뤄집니다.",
@@ -1514,7 +1548,7 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
     style: {
       display: "block",
       width: String(100) + '%',
-      height: String(600) + ea,
+      paddingBottom: String(grayTongPaddingBottom) + ea,
       background: colorChip.gray0,
       marginTop: String(grayMarginTop) + ea,
     }
@@ -1571,6 +1605,7 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
         border: "1px solid " + colorChip.deactive,
         borderRadius: String(10) + "px",
         background: colorChip.white,
+        cursor: "pointer",
       },
       children: [
         {
@@ -1586,6 +1621,88 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
       ]
     })
   }
+
+  pictureTong = createNode({
+    mother: whiteBlock,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      height: String(pictureHeight) + ea,
+      backgroundImage: "url('" + AspirantExplanationJs.binaryPath + "/" + pictureTongBackground + "')",
+      backgroundSize: "100% auto",
+      backgroundPosition: pictureTongPosition,
+      paddingTop: String(pictureTongPaddingTop) + ea,
+    },
+    children: [
+      {
+        style: {
+          position: "absolute",
+          top: String(0),
+          left: String(0),
+          width: String(100) + '%',
+          height: String(100) + '%',
+          background: colorChip.black,
+          opacity: String(pictureTongBlackOpacity),
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: pictureTong,
+    text: title3,
+    style: {
+      position: "relative",
+      fontSize: String(pictureTitleSize) + ea,
+      fontWeight: String(pictureTitleWeight),
+      color: colorChip.white,
+      lineHeight: String(pictureTitleLineHeight),
+      left: String(0),
+      width: String(100) + '%',
+      textAlign: "center",
+    }
+  })
+
+  createNode({
+    mother: pictureTong,
+    style: {
+      position: "relative",
+      left: String(0),
+      width: String(100) + '%',
+      textAlign: "center",
+      marginTop: String(pictureButtonMarginTop) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: "inline-flex",
+          width: String(pictureButtonWidth) + ea,
+          height: String(pictureButtonHeight) + ea,
+          borderRadius: String(pictureButtonHeight) + ea,
+          background: colorChip.white,
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          cursor: "pointer",
+        },
+        children: [
+          {
+            text: finalButtonWording,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(pictureButtonSize) + ea,
+              fontWeight: String(pictureButtonWeight),
+              color: colorChip.black,
+              top: String(pictureButtonTextTop) + ea,
+            }
+          }
+        ]
+      }
+    ]
+  })
+
 
 }
 
