@@ -14,20 +14,6 @@ const ExcelReader = function (mother = null, back = null, address = null) {
   this.dir = process.cwd() + "/apps/excelReader";
 }
 
-ExcelReader.prototype.fileToMatrix_inLocal = async function (filePath) {
-  if (typeof filePath !== "string") {
-    throw new Error("invaild input");
-  }
-  const instance = this;
-  const readExcel = require(`${this.dir}/module/readExcel.js`);
-  try {
-    const matrix = await this.readExcel(filePath);
-    return matrix;
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 ExcelReader.prototype.fileToMatrix = async function (filePath, sheetsName) {
   if (typeof filePath !== "string" || typeof sheetsName !== "string") {
     throw new Error("invaild input");
