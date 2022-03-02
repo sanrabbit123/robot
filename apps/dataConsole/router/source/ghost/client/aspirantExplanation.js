@@ -960,13 +960,13 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
   buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
   buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
-  greenBoxHeight = <%% 140, 130, 130, 130, 130 %%>;
-  greenFontSize = <%% 27, 24, 24, 24, 24 %%>;
-  greenFontTop = <%% 48, 43, 43, 43, 43 %%>;
+  greenBoxHeight = <%% 148, 130, 130, 130, 130 %%>;
+  greenFontSize = <%% 26, 24, 24, 24, 24 %%>;
+  greenFontTop = <%% 53, 43, 43, 43, 43 %%>;
   greenFontWeight = <%% 600, 600, 600, 600, 600 %%>;
   greenButtonVisual = <%% -1, -1, -1, -1, -1 %%>;
 
-  plusBoxHeight = <%% 188, 165, 165, 165, 165 %%>;
+  plusBoxHeight = <%% 194, 165, 165, 165, 165 %%>;
   plusFontSize = <%% 20, 18, 18, 18, 18 %%>;
   plusFontWeight = <%% 200, 200, 200, 200, 200 %%>;
   plusFontLineHeight = <%% 1.45, 1.45, 1.45, 1.45, 1.45 %%>;
