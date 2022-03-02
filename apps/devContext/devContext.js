@@ -2291,9 +2291,15 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "이현아",
-    //     designer: "우다미",
-    //     link: "https://drive.google.com/drive/folders/1wTRlAP-JUAw5gGvPXFzukwWDH3jNBLDg",
+    //     client: "이미자",
+    //     designer: "강주현",
+    //     link: "https://drive.google.com/drive/folders/14PXyARAc5z2SJTuxNR6kq_HqYTwyvOou",
+    //     pay: true
+    //   },
+    //   {
+    //     client: "김용남",
+    //     designer: "김소영",
+    //     link: "https://drive.google.com/drive/folders/1wzUHx1VasmvseA8SXWqCUPD4NZcz7Nz-",
     //     pay: true
     //   },
     // ]);
@@ -2313,7 +2319,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p176");
+    // await this.getCorePortfolio("p174");
 
 
     // aspirant to designer

@@ -869,6 +869,28 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
   let whiteNameTongWidth;
   let whiteNameHeight;
   let whiteContentsMarginTop, whiteContentsMarginBottom, whiteContentsVisualPadding;
+  let buttonWording;
+  let buttonWidth;
+  let buttonHeight;
+  let buttonMarginTop;
+  let buttonSize;
+  let buttonWeight;
+  let buttonTextTop;
+  let greenBoxHeight;
+  let greenFontSize;
+  let plusBoxHeight;
+  let greenFontTop;
+  let greenFontWeight;
+  let greenButtonVisual;
+  let plusFontSize;
+  let plusFontWeight;
+  let plusFontLineHeight;
+  let plusFontLeft0;
+  let plusFontLeft1;
+  let plusFontLeft2;
+  let plusFontRight0;
+  let greenWording;
+  let plusWordings;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
 
@@ -901,7 +923,7 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
   boxTitleSize = 18;
   boxTitleWeight = 700;
 
-  grayBetween = 30;
+  grayBetween = 36;
 
   grayCardTongMarginTop = 50;
   grayCardTongMarginBottom = 36;
@@ -928,6 +950,38 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
   whiteContentsWeight = 400;
   whiteContentsLineHeight = 1.6;
 
+  buttonWidth = 185;
+  buttonHeight = 40;
+  buttonMarginTop = 24;
+  buttonSize = 15;
+  buttonWeight = 600;
+  buttonTextTop = -1;
+
+  greenBoxHeight = 140;
+  greenFontSize = 27;
+  greenFontTop = 48;
+  greenFontWeight = 600;
+  greenButtonVisual = -1;
+
+  plusBoxHeight = 188;
+  plusFontSize = 20;
+  plusFontWeight = 200;
+  plusFontLineHeight = 1.45;
+
+  plusFontLeft0 = 172;
+  plusFontLeft1 = 440;
+  plusFontLeft2 = 700;
+  plusFontRight0 = 140;
+
+  greenWording = "디자인에만 집중할 수 있는, 홈리에종 혜택을 누려보세요!";
+  buttonWording = "디자이너 활동 시작하기";
+
+  plusWordings = [
+    "홈스타일링\n<b%전문 플랫폼%b>",
+    "누적 문의수\n<b%3,000명 %b><u%+%u>",
+    "활동 디자이너\n<b%60명 %b><u%+%u>",
+    "홈리에종에서\n<b%안전하게 고객님을 만나보세요!%b>",
+  ];
 
   contents = [
     {
@@ -967,6 +1021,7 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
       background: colorChip.white,
       marginBottom: String(bottomMargin) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      overflow: "hidden",
     }
   });
 
@@ -1242,6 +1297,158 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
     });
   }
 
+  createNode({
+    mother: whiteBlock,
+    style: {
+      display: "block",
+      position: "relative",
+      paddingLeft: String(paddingLeft) + ea,
+      paddingRight: String(paddingLeft) + ea,
+      width: withOut(paddingLeft * 2, ea),
+      height: String(greenBoxHeight) + ea,
+      background: colorChip.gradientGreen,
+    },
+    children: [
+      {
+        text: greenWording,
+        style: {
+          position: "absolute",
+          fontSize: String(greenFontSize) + ea,
+          fontWeight: String(greenFontWeight),
+          color: colorChip.white,
+          top: String(greenFontTop) + ea,
+          left: String(paddingLeft) + ea,
+        }
+      },
+      {
+        style: {
+          position: "absolute",
+          display: "inline-flex",
+          top: String(greenFontTop + greenButtonVisual) + ea,
+          right: String(paddingLeft) + ea,
+          width: String(buttonWidth) + ea,
+          height: String(buttonHeight) + ea,
+          borderRadius: String(buttonHeight) + ea,
+          background: colorChip.white,
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          cursor: "pointer",
+        },
+        children: [
+          {
+            text: buttonWording,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(buttonSize) + ea,
+              fontWeight: String(buttonWeight),
+              color: colorChip.green,
+              top: String(buttonTextTop) + ea,
+            }
+          }
+        ]
+      }
+    ]
+  });
+
+  createNode({
+    mother: whiteBlock,
+    style: {
+      display: "block",
+      position: "relative",
+      paddingLeft: String(paddingLeft) + ea,
+      paddingRight: String(paddingLeft) + ea,
+      width: withOut(paddingLeft * 2, ea),
+      height: String(plusBoxHeight) + ea,
+      background: colorChip.white,
+    },
+    children: [
+      {
+        text: plusWordings[0],
+        style: {
+          position: "absolute",
+          fontSize: String(plusFontSize) + ea,
+          fontWeight: String(plusFontWeight),
+          color: colorChip.green,
+          top: String(greenFontTop) + ea,
+          left: String(plusFontLeft0) + ea,
+          lineHeight: String(plusFontLineHeight),
+          textAlign: "center",
+        },
+        bold: {
+          fontSize: String(greenFontSize) + ea,
+          fontWeight: String(greenFontWeight),
+          color: colorChip.black,
+        }
+      },
+      {
+        text: plusWordings[1],
+        style: {
+          position: "absolute",
+          fontSize: String(plusFontSize) + ea,
+          fontWeight: String(plusFontWeight),
+          color: colorChip.green,
+          top: String(greenFontTop) + ea,
+          left: String(plusFontLeft1) + ea,
+          lineHeight: String(plusFontLineHeight),
+          textAlign: "center",
+        },
+        bold: {
+          fontSize: String(greenFontSize) + ea,
+          fontWeight: String(greenFontWeight),
+          color: colorChip.black,
+        },
+        under: {
+          fontSize: String(greenFontSize) + ea,
+          fontWeight: String(greenFontWeight),
+          color: colorChip.green,
+        }
+      },
+      {
+        text: plusWordings[2],
+        style: {
+          position: "absolute",
+          fontSize: String(plusFontSize) + ea,
+          fontWeight: String(plusFontWeight),
+          color: colorChip.green,
+          top: String(greenFontTop) + ea,
+          left: String(plusFontLeft2) + ea,
+          lineHeight: String(plusFontLineHeight),
+          textAlign: "center",
+        },
+        bold: {
+          fontSize: String(greenFontSize) + ea,
+          fontWeight: String(greenFontWeight),
+          color: colorChip.black,
+        },
+        under: {
+          fontSize: String(greenFontSize) + ea,
+          fontWeight: String(greenFontWeight),
+          color: colorChip.green,
+        }
+      },
+      {
+        text: plusWordings[3],
+        style: {
+          position: "absolute",
+          fontSize: String(plusFontSize) + ea,
+          fontWeight: String(plusFontWeight),
+          color: colorChip.green,
+          top: String(greenFontTop) + ea,
+          right: String(plusFontRight0) + ea,
+          lineHeight: String(plusFontLineHeight),
+          textAlign: "center",
+        },
+        bold: {
+          fontSize: String(greenFontSize) + ea,
+          fontWeight: String(greenFontWeight),
+          color: colorChip.black,
+        }
+      },
+    ]
+  });
+
 }
 
 AspirantExplanationJs.prototype.insertFourthBox = function () {
@@ -1303,7 +1510,7 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
 
   paddingTop = 64;
-  paddingTop2 = 58;
+  paddingTop2 = 64;
   paddingLeft = 64;
 
   leftBoxWidth = 250;
@@ -1325,7 +1532,7 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
 
   titlePaddingRight = 10;
 
-  titleBlockMarginBottom = 30;
+  titleBlockMarginBottom = 50;
 
   titleNumberSize = 16;
   titleNumberWeight = 400;
@@ -1336,24 +1543,24 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
   descriptionLineHeight = 1.6;
   descriptionBoldWeight = 600;
 
-  grayMarginTop = 36;
+  grayMarginTop = 20;
 
   questionBlockMargin = 16;
-  questionBlockHeight = 60;
-  questionSize = 17;
+  questionBlockHeight = 64;
+  questionSize = 16;
   questionWeight = 600;
   questionTop = -2;
 
-  grayTongPaddingBottom = 55;
+  grayTongPaddingBottom = 59;
 
-  pictureHeight = 225;
+  pictureHeight = 212;
   pictureTongPaddingTop = 70;
 
   pictureTongBackground = "z6.png";
   pictureTongPosition = "50% 75%";
   pictureTongBlackOpacity = 0.45;
 
-  pictureTitleSize = 29;
+  pictureTitleSize = 27;
   pictureTitleWeight = 600;
   pictureTitleLineHeight = 1.4;
 

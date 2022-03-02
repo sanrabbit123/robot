@@ -169,7 +169,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
 
         }).then((proid) => {
 
-          if (detailUpdate.length > 0) {
+          // if (detailUpdate.length > 0) {
             if (newProid === null) {
               newProid = proid;
             }
@@ -180,13 +180,13 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
               pastValue: client.requests[requestNumber].analytics.response.action.value,
               finalValue: action
             }, { headers: { "origin": "https://" + address.homeinfo.ghost.host, "Content-Type": "application/json" } });
-          } else {
-            return passPromise();
-          }
+          // } else {
+          //   return passPromise();
+          // }
 
         }).then(() => {
 
-          if (detailUpdate.length > 0) {
+          // if (detailUpdate.length > 0) {
             return requestSystem("https://" + address.backinfo.host + ":3000/generalMongo", {
               mode: "sse",
               db: "console",
@@ -202,13 +202,13 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
                 randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
               }
             }, { headers: { "origin": "https://" + address.homeinfo.ghost.host, "Content-Type": "application/json" } });
-          } else {
-            return passPromise();
-          }
+          // } else {
+          //   return passPromise();
+          // }
 
         }).then(() => {
 
-          if (detailUpdate.length > 0) {
+          // if (detailUpdate.length > 0) {
             let updateObj, future, nextDate;
             updateObj = {};
             updateObj["requests." + String(requestNumber) + ".analytics.response.action"] = action;
@@ -225,9 +225,9 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
               updateObj["requests." + String(requestNumber) + ".analytics.date.space.movein"] = future;
             }
             return back.updateClient([ { cliid }, updateObj ], { selfMongo: instance.mongo });
-          } else {
-            return passPromise();
-          }
+          // } else {
+          //   return passPromise();
+          // }
 
         }).then(() => {
           if (detailUpdate.length > 0) {
