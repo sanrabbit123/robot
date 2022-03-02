@@ -248,6 +248,8 @@ DevContext.prototype.launching = async function () {
     let data;
     let dom;
     let num;
+    let tong2;
+    let finalTong;
 
     ({ svctype, keyName, encpw, id, pwd, bvsd } = await extractLoginInfo());
     [ , response ] = await chrome.scriptChain([
@@ -337,6 +339,10 @@ DevContext.prototype.launching = async function () {
 
     tong = equalJson(JSON.stringify(response));
 
+    // TEST
+    tong = tong.slice(0, 5);
+    // TEST
+
     ({ svctype, keyName, encpw, id, pwd, bvsd } = await extractLoginInfo());
     chainArr = [ naverLogin(svctype, keyName, encpw, id, pwd, bvsd) ];
 
@@ -345,25 +351,45 @@ DevContext.prototype.launching = async function () {
       chainArr.push({
         link: "https://blog.naver.com/" + blogId + "/" + id,
         func: async function () {
-          let title, tag;
-
+          let title, tag, sympathy, comment;
           title = document.getElementById("mainFrame").contentWindow.document.getElementById("postListBody").querySelector(".pcol1").textContent.trim();
           tag = Array.from(document.getElementById("mainFrame").contentWindow.document.getElementById('post_footer_contents').querySelector('.wrap_tag').querySelectorAll('a.item')).map((dom) => { return dom.textContent }).map((str) => { return str.replace(/^\#/, '') });
-
-          return { title, tag }
+          sympathy = Number(document.getElementById("mainFrame").contentWindow.document.getElementById('post_footer_contents').nextElementSibling.querySelector('.wrap_postcomment').querySelector('.area_sympathy').querySelector('.u_cnt').textContent.replace(/[^0-9]/gi, ''))
+          comment = Number(document.getElementById("mainFrame").contentWindow.document.getElementById('post_footer_contents').nextElementSibling.querySelector('.wrap_postcomment').querySelector('.area_comment').querySelector('._commentCount').textContent.trim().replace(/[^0-9]/gi, ''))
+          return { title, tag, sympathy, comment };
         }
       })
-      if (num === 4) {
-        break;
-      }
       num++;
     }
 
-    console.log(await chrome.scriptChain(chainArr, 500));
+    tong2 = await chrome.scriptChain(chainArr, 500);
+    tong2.shift();
 
+    for (let i = 0; i < tong.length; i++) {
+      tong[i].title = tong2[i].title;
+      tong[i].tag = tong2[i].tag;
+      tong[i].sympathy = tong2[i].sympathy;
+      tong[i].comment = tong2[i].comment;
+    }
 
+    finalTong = [];
+    for (let obj of tong) {
+      finalTong.push({
+        id: obj.id,
+        link: obj.link,
+        date: stringToDate(obj.date),
+        category: obj.category,
+        title: obj.title,
+        numbers: {
+          read: obj.read,
+          sympathy: obj.sympathy,
+          comment: obj.comment,
+        },
+        tag: obj.tag,
+      });
+    }
 
-
+    console.log(finalTong);
 
     */
 

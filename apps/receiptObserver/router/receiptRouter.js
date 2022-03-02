@@ -902,9 +902,7 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
               return emptyPromise();
             // }
           }).then((promiseData) => {
-            if (promiseData !== null) {
-              return messageSend(`${name} 고객님의 현금 영수증을 발행해주세요!\n번호 : ${phone}\n가격 : ${autoComma(amount)}원`, "#700_operation", false);
-            }
+            return messageSend(`${name} 고객님의 현금 영수증을 발행해주세요!\n번호 : ${phone}\n가격 : ${autoComma(amount)}원`, "#700_operation", false);
           }).catch((err) => {
             console.log(err);
           });
