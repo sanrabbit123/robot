@@ -922,7 +922,7 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
   photoHeight = <%% 200, 150, 150, 150, 150 %%>;
 
   boxTitleBottom = <%% 19, 19, 19, 19, 19 %%>;
-  boxTitleLeft = <%% 23, 23, 23, 23, 23 %%>;
+  boxTitleLeft = <%% 23, 19, 19, 19, 19 %%>;
   boxTitleSize = <%% 18, 16, 16, 16, 16 %%>;
   boxTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
@@ -948,7 +948,7 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
 
   whiteTitleHeight = <%% 70, 70, 70, 70, 70 %%>;
   whiteTitleSize = <%% 15, 15, 15, 15, 15 %%>;
-  whiteContentsSize = <%% 14, 14, 14, 14, 14 %%>;
+  whiteContentsSize = <%% 14, 13, 13, 13, 13 %%>;
   whiteTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
   whiteContentsWeight = <%% 400, 400, 400, 400, 400 %%>;
   whiteContentsLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
@@ -966,15 +966,15 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
   greenFontWeight = <%% 600, 600, 600, 600, 600 %%>;
   greenButtonVisual = <%% -1, -1, -1, -1, -1 %%>;
 
-  plusBoxHeight = <%% 188, 188, 188, 188, 188 %%>;
-  plusFontSize = <%% 20, 20, 20, 20, 20 %%>;
+  plusBoxHeight = <%% 188, 165, 165, 165, 165 %%>;
+  plusFontSize = <%% 20, 18, 18, 18, 18 %%>;
   plusFontWeight = <%% 200, 200, 200, 200, 200 %%>;
   plusFontLineHeight = <%% 1.45, 1.45, 1.45, 1.45, 1.45 %%>;
 
-  plusFontLeft0 = <%% 172, 172, 172, 172, 172 %%>;
-  plusFontLeft1 = <%% 440, 440, 440, 440, 440 %%>;
-  plusFontLeft2 = <%% 700, 700, 700, 700, 700 %%>;
-  plusFontRight0 = <%% 140, 140, 140, 140, 140 %%>;
+  plusFontLeft0 = <%% 172, 110, 110, 110, 110 %%>;
+  plusFontLeft1 = <%% 440, 310, 310, 310, 310 %%>;
+  plusFontLeft2 = <%% 700, 503, 503, 503, 503 %%>;
+  plusFontRight0 = <%% 140, 80, 80, 80, 80 %%>;
 
   greenWording = "디자인에만 집중할 수 있는, 홈리에종 혜택을 누려보세요!";
   buttonWording = "디자이너 활동 시작하기";
