@@ -257,7 +257,7 @@ DevContext.prototype.launching = async function () {
       {
         link: "https://blog.naver.com/PostList.naver?blogId=" + blogId + "&from=postList&categoryNo=" + String(reviewCategoryNumber),
         func: async function () {
-          const { sleep } = GeneralJs;
+          const { sleep, dateToString } = GeneralJs;
           let target, nextButton;
           let pages;
           let pageButtons;
@@ -270,6 +270,7 @@ DevContext.prototype.launching = async function () {
           let boo;
           let tongPush;
           let obj;
+          let dateArr;
 
           tongPush = (tong) => {
             tempArr = [ ...document.querySelector('.post_top_title_aggregate_expose').querySelectorAll("td.title") ];
@@ -285,13 +286,19 @@ DevContext.prototype.launching = async function () {
 
               tempObj.id = obj["logNo"];
               tempObj.link = "https://blog.naver.com/" + obj["blogId"] + "/" + tempObj.id;
-              tempObj.date = mother.querySelector(".date").textContent.trim().replace(/\.$/, '').replace(/\. /gi, '-').split('-').map((str) => {
+
+              dateArr = mother.querySelector(".date").textContent.trim().replace(/\.$/, '').replace(/\. /gi, '-').split('-').map((str) => {
                 if (str.length === 1) {
                   return '0' + str;
                 } else {
                   return str;
                 }
-              }).join('-');
+              });
+              if (dateArr.length === 3) {
+                tempObj.date = dateArr.join('-');
+              } else {
+                tempObj.date = dateToString(new Date());
+              }
               tempObj.read = Number(mother.querySelector(".read").textContent.replace(/[^0-9]/gi, ''));
               tempObj.category = obj["categoryNo"];
 
