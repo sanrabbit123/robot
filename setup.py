@@ -20,6 +20,13 @@ class RobotInstall:
             [ "apscheduler" ],
             [ "aiohttp" ],
             [ "cloudconvert" ],
+            [ "psutil" ],
+            [ "getmac" ],
+            [ "netifaces" ],
+            [ "pandas" ],
+            [ "openpyxl" ],
+            [ "numpy" ],
+            [ "pillow" ],
         ]
 
         self.upgrade = [
@@ -27,7 +34,7 @@ class RobotInstall:
             [ "google-api-python-client", "google-auth-httplib2", "google-auth-oauthlib" ],
             [ "oauth2client" ],
         ]
-        
+
         self.homeDir = str(Path.home())
 
         now = time.gmtime(time.time())
@@ -78,7 +85,6 @@ class RobotInstall:
 
     def ignoreDirs(self):
         targetList = [
-            "/binary",
             "/temp",
         ]
         for dir in targetList:
@@ -87,81 +93,17 @@ class RobotInstall:
     def returnPath(self):
         return { "robotPath": self.robotPath, "modulePath": self.modulePath, "pythonCloudPath": self.pythonCloudPath }
 
-    def installLocal(self):
+    def installServer(self):
         self.setTempDir()
         self.ignoreDirs()
         self.moduleInstall(local=True)
         self.moveModules()
-
-    def installServer(self):
-        self.installLocal()
         self.moduleInstall(local=False)
 
 try:
-    if sys.argv.__len__() == 1:
-        raise Exception("invaild arguments : 'install --local' or 'install --server' or 'local' or 'refresh'")
-    else:
-        installApps = RobotInstall()
-
-        if sys.argv[1] == 'install':
-            if sys.argv[2] == 'local' or sys.argv[2] == '--local':
-                installApps.installLocal()
-            elif sys.argv[2] == 'server' or sys.argv[2] == '--server':
-                installApps.installServer()
-
-        pathDic = installApps.returnPath()
-        robotPath = pathDic["robotPath"]
-        modulePath = pathDic["modulePath"]
-        pythonCloudPath = pathDic["pythonCloudPath"]
-        sys.path.append(modulePath)
-        sys.path.append(pythonCloudPath)
+    installApps = RobotInstall()
+    installApps.installServer()
 
 except Exception as e:
     print(e)
     sys.exit()
-
-from cryptography.fernet import Fernet
-from enDecrypt import EnDecrypt
-
-pemsName = {
-    "key": robotPath + "/pems/guguKey.pem",
-    "token": robotPath + "/pems/guguToken.pem",
-    "infoObj": robotPath + "/apps/infoObj.js"
-}
-
-if sys.argv[1] == 'local':
-    infoObjFile = open(pemsName["infoObj"], 'r')
-    infoObj = infoObjFile.read()
-    infoObjFile.close()
-
-    key = Fernet.generate_key()
-    enDecrypt = EnDecrypt(key)
-    token = enDecrypt.encrypt(infoObj)
-
-    subprocess.run([ "rm", "-rf", pemsName["key"] ], shell=False, encoding='utf8')
-    subprocess.run([ "rm", "-rf", pemsName["token"] ], shell=False, encoding='utf8')
-
-    with open(pemsName["key"], 'wb') as keyFile:
-        keyFile.write(key)
-    with open(pemsName["token"], 'wb') as tokenFile:
-        tokenFile.write(token)
-
-    print("info update done")
-
-elif sys.argv[1] == 'install' or sys.argv[1] == 'refresh':
-    if sys.argv[1] == 'refresh':
-        subprocess.run([ "rm", "-rf", pemsName["infoObj"] ], shell=False, encoding='utf8')
-
-    with open(pemsName["key"], 'rb') as keyFile:
-        infoObjKey = keyFile.read()
-    with open(pemsName["token"], 'rb') as tokenFile:
-        infoObjToken = tokenFile.read()
-
-    infoEnDecrypt = EnDecrypt(infoObjKey)
-    infoObjString = infoEnDecrypt.decrypt(infoObjToken)
-
-    with open(pemsName["infoObj"], 'w') as newInfoObj:
-        newInfoObj.write(infoObjString)
-
-    if sys.argv[1] == 'install':
-        print("install done");
