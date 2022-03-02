@@ -901,80 +901,80 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
 
   title = "디자이너는\n어떤 일을\n하나요?";
   title2 = "왜 홈리에종을 추천할까요?";
-  paddingTop = 64;
-  paddingLeft = 64;
+  paddingTop = <%% 64, 64, 64, 64, 64 %%>;
+  paddingLeft = <%% 64, 64, 64, 64, 64 %%>;
 
-  leftBoxWidth = 250;
-  marginTopVisual = 3;
-  titleMarginTop = 13;
+  leftBoxWidth = <%% 250, 190, 190, 190, 190 %%>;
+  marginTopVisual = <%% 3, 3, 3, 3, 3 %%>;
+  titleMarginTop = <%% 13, 13, 13, 13, 13 %%>;
 
-  boxMargin = 36;
-  boxMarginBottom = 36;
-  boxNumber = 5;
+  boxMargin = <%% 36, 24, 24, 24, 24 %%>;
+  boxMarginBottom = <%% 36, 30, 30, 30, 30 %%>;
+  boxNumber = <%% 5, 5, 5, 5, 5 %%>;
 
-  boxPaddingTop = 15;
-  boxPaddingLeft = 2;
+  boxPaddingTop = <%% 15, 15, 15, 15, 15 %%>;
+  boxPaddingLeft = <%% 2, 2, 2, 2, 2 %%>;
 
-  boxContentsSize = 14;
-  boxContentsWeight = 400;
-  boxContentsLineHeight = 1.5;
+  boxContentsSize = <%% 14, 12, 12, 12, 12 %%>;
+  boxContentsWeight = <%% 400, 400, 400, 400, 400 %%>;
+  boxContentsLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  photoHeight = 200;
+  photoHeight = <%% 200, 150, 150, 150, 150 %%>;
 
-  boxTitleBottom = 19;
-  boxTitleLeft = 23;
-  boxTitleSize = 18;
-  boxTitleWeight = 700;
+  boxTitleBottom = <%% 19, 19, 19, 19, 19 %%>;
+  boxTitleLeft = <%% 23, 23, 23, 23, 23 %%>;
+  boxTitleSize = <%% 18, 16, 16, 16, 16 %%>;
+  boxTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  grayBetween = 36;
+  grayBetween = <%% 36, 36, 36, 36, 36 %%>;
 
-  grayCardTongMarginTop = 50;
-  grayCardTongMarginBottom = 36;
+  grayCardTongMarginTop = <%% 50, 50, 50, 50, 50 %%>;
+  grayCardTongMarginBottom = <%% 36, 32, 32, 32, 32 %%>;
 
-  whiteCardWidth = 480;
-  whiteRadius = 16;
-  whiteCardPadding = 40;
+  whiteCardWidth = <%% 480, 480, 480, 480, 480 %%>;
+  whiteRadius = <%% 16, 16, 16, 16, 16 %%>;
+  whiteCardPadding = <%% 40, 40, 40, 40, 40 %%>;
 
   whiteScale = 0.85;
   whiteOpacity = 0.85;
 
-  whitePhotoMarginRight = 12;
-  whiteNameTongWidth = 85;
-  whiteNameHeight = 36;
+  whitePhotoMarginRight = <%% 12, 12, 12, 12, 12 %%>;
+  whiteNameTongWidth = <%% 85, 85, 85, 85, 85 %%>;
+  whiteNameHeight = <%% 36, 36, 36, 36, 36 %%>;
 
-  whiteContentsMarginTop = 22;
-  whiteContentsMarginBottom = 13;
-  whiteContentsVisualPadding = 1;
+  whiteContentsMarginTop = <%% 22, 22, 22, 22, 22 %%>;
+  whiteContentsMarginBottom = <%% 13, 13, 13, 13, 13 %%>;
+  whiteContentsVisualPadding = <%% 1, 1, 1, 1, 1 %%>;
 
-  whiteTitleHeight = 70;
-  whiteTitleSize = 15;
-  whiteContentsSize = 14;
-  whiteTitleWeight = 600;
-  whiteContentsWeight = 400;
-  whiteContentsLineHeight = 1.6;
+  whiteTitleHeight = <%% 70, 70, 70, 70, 70 %%>;
+  whiteTitleSize = <%% 15, 15, 15, 15, 15 %%>;
+  whiteContentsSize = <%% 14, 14, 14, 14, 14 %%>;
+  whiteTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
+  whiteContentsWeight = <%% 400, 400, 400, 400, 400 %%>;
+  whiteContentsLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
-  buttonWidth = 185;
-  buttonHeight = 40;
-  buttonMarginTop = 24;
-  buttonSize = 15;
-  buttonWeight = 600;
-  buttonTextTop = -1;
+  buttonWidth = <%% 185, 185, 185, 185, 185 %%>;
+  buttonHeight = <%% 40, 40, 40, 40, 40 %%>;
+  buttonMarginTop = <%% 24, 24, 24, 24, 24 %%>;
+  buttonSize = <%% 15, 14, 14, 14, 14 %%>;
+  buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
+  buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
-  greenBoxHeight = 140;
-  greenFontSize = 27;
-  greenFontTop = 48;
-  greenFontWeight = 600;
-  greenButtonVisual = -1;
+  greenBoxHeight = <%% 140, 130, 130, 130, 130 %%>;
+  greenFontSize = <%% 27, 24, 24, 24, 24 %%>;
+  greenFontTop = <%% 48, 43, 43, 43, 43 %%>;
+  greenFontWeight = <%% 600, 600, 600, 600, 600 %%>;
+  greenButtonVisual = <%% -1, -1, -1, -1, -1 %%>;
 
-  plusBoxHeight = 188;
-  plusFontSize = 20;
-  plusFontWeight = 200;
-  plusFontLineHeight = 1.45;
+  plusBoxHeight = <%% 188, 188, 188, 188, 188 %%>;
+  plusFontSize = <%% 20, 20, 20, 20, 20 %%>;
+  plusFontWeight = <%% 200, 200, 200, 200, 200 %%>;
+  plusFontLineHeight = <%% 1.45, 1.45, 1.45, 1.45, 1.45 %%>;
 
-  plusFontLeft0 = 172;
-  plusFontLeft1 = 440;
-  plusFontLeft2 = 700;
-  plusFontRight0 = 140;
+  plusFontLeft0 = <%% 172, 172, 172, 172, 172 %%>;
+  plusFontLeft1 = <%% 440, 440, 440, 440, 440 %%>;
+  plusFontLeft2 = <%% 700, 700, 700, 700, 700 %%>;
+  plusFontRight0 = <%% 140, 140, 140, 140, 140 %%>;
 
   greenWording = "디자인에만 집중할 수 있는, 홈리에종 혜택을 누려보세요!";
   buttonWording = "디자이너 활동 시작하기";
@@ -1512,67 +1512,67 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
 
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
 
-  paddingTop = 64;
-  paddingTop2 = 64;
-  paddingLeft = 64;
+  paddingTop = <%% 64, 64, 64, 64, 64 %%>;
+  paddingTop2 = <%% 64, 64, 64, 64, 64 %%>;
+  paddingLeft = <%% 64, 64, 64, 64, 64 %%>;
 
-  leftBoxWidth = 250;
+  leftBoxWidth = <%% 250, 190, 190, 190, 190 %%>;
 
   title = "서비스\n프로세스";
   title2 = "자주 찾는\n질문";
   title3 = "홈스타일링으로 새로운 시도를\n홈리에종과 든든하게 시작하세요";
   finalButtonWording = "디자이너 활동 시작하기";
 
-  marginTopVisual = 3;
-  titleMarginTop = 13;
+  marginTopVisual = <%% 3, 3, 3, 3, 3 %%>;
+  titleMarginTop = <%% 13, 13, 13, 13, 13 %%>;
 
-  titelBlockHeight = 40;
-  titleBlockWidth = 150;
-  titleBlockMargin = 40;
+  titelBlockHeight = <%% 40, 36, 40, 40, 40 %%>;
+  titleBlockWidth = <%% 150, 150, 150, 150, 150 %%>;
+  titleBlockMargin = <%% 40, 40, 40, 40, 40 %%>;
 
-  titleSvgMiddleHeight = 26;
-  titleSvgTop = 7;
+  titleSvgMiddleHeight = <%% 26, 24, 26, 26, 26 %%>;
+  titleSvgTop = <%% 7, 6, 6, 6, 6 %%>;
 
-  titlePaddingRight = 10;
+  titlePaddingRight = <%% 10, 10, 10, 10, 10 %%>;
 
-  titleBlockMarginBottom = 50;
+  titleBlockMarginBottom = <%% 50, 50, 50, 50, 50 %%>;
 
-  titleNumberSize = 16;
-  titleNumberWeight = 400;
-  titleNumberTop = -1.5;
+  titleNumberSize = <%% 16, 14, 14, 14, 14 %%>;
+  titleNumberWeight = <%% 400, 400, 400, 400, 400 %%>;
+  titleNumberTop = <%% -1.5, -1.5, -1.5, -1.5, -1.5 %%>;
 
-  descriptionSize = 14;
-  descriptionWeight = 400;
-  descriptionLineHeight = 1.6;
-  descriptionBoldWeight = 600;
+  descriptionSize = <%% 14, 13, 13, 13, 13 %%>;
+  descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+  descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+  descriptionBoldWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-  grayMarginTop = 20;
+  grayMarginTop = <%% 20, 20, 20, 20, 20 %%>;
 
-  questionBlockMargin = 16;
-  questionBlockHeight = 64;
-  questionSize = 16;
-  questionWeight = 600;
-  questionTop = -2;
+  questionBlockMargin = <%% 16, 10, 10, 10, 10 %%>;
+  questionBlockHeight = <%% 64, 50, 50, 50, 50 %%>;
+  questionSize = <%% 16, 13, 13, 13, 13 %%>;
+  questionWeight = <%% 600, 600, 600, 600, 600 %%>;
+  questionTop = <%% -2, -2, -2, -2, -2 %%>;
 
-  grayTongPaddingBottom = 59;
+  grayTongPaddingBottom = <%% 59, 59, 59, 59, 59 %%>;
 
-  pictureHeight = 212;
-  pictureTongPaddingTop = 70;
+  pictureHeight = <%% 212, 200, 200, 200, 200 %%>;
+  pictureTongPaddingTop = <%% 70, 60, 70, 70, 70 %%>;
 
   pictureTongBackground = "z6.png";
   pictureTongPosition = "50% 75%";
-  pictureTongBlackOpacity = 0.45;
+  pictureTongBlackOpacity = <%% 0.45, 0.45, 0.45, 0.45, 0.45 %%>;
 
-  pictureTitleSize = 27;
-  pictureTitleWeight = 600;
-  pictureTitleLineHeight = 1.4;
+  pictureTitleSize = <%% 27, 27, 27, 27, 27 %%>;
+  pictureTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
+  pictureTitleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
-  pictureButtonWidth = 185;
-  pictureButtonHeight = 40;
-  pictureButtonMarginTop = 24;
-  pictureButtonSize = 15;
-  pictureButtonWeight = 600;
-  pictureButtonTextTop = -1;
+  pictureButtonWidth = <%% 185, 185, 185, 185, 185 %%>;
+  pictureButtonHeight = <%% 40, 40, 40, 40, 40 %%>;
+  pictureButtonMarginTop = <%% 24, 18, 18, 18, 18 %%>;
+  pictureButtonSize = <%% 15, 14, 14, 14, 14 %%>;
+  pictureButtonWeight = <%% 600, 600, 600, 600, 600 %%>;
+  pictureButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
   contents = [
     "고객의 공간 정보, 요청 사항 등이 기입된 서비스 신청서를 토대로 프로젝트 계약 전, 서비스에 대한 상세한 안내가 이뤄집니다.",
