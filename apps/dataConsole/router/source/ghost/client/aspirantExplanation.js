@@ -143,39 +143,41 @@ AspirantExplanationJs.prototype.insertInitBox = function () {
   let contents;
   let middleTitleSize, middleTitleMarginTop, middleTitleWeight;
   let descriptionSize, descriptionWeight, descriptionLineHeight, descriptionMarginTop;
+  let descriptionLeftPercentage;
 
-  blockHeight = <%% 908, 901, 817, 1026, 264 %%>;
+  blockHeight = <%% 908, 700, 700, 700, 264 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
 
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
 
-  paddingTop = 64;
-  paddingLeft = 64;
+  paddingTop = <%% 64, 64, 64, 64, 64 %%>;
+  paddingLeft = <%% 64, 64, 64, 64, 64 %%>;
 
-  leftBoxWidth = 250;
+  leftBoxWidth = <%% 250, 190, 190, 190, 190 %%>;
 
   title = "홈리에종과\n함께 하면?";
 
-  marginTopVisual = 3;
-  titleMarginTop = 13;
+  marginTopVisual = <%% 3, 3, 3, 3, 3 %%>;
+  titleMarginTop = <%% 13, 13, 13, 13, 13 %%>;
 
-  boxMargin = 12;
+  boxMargin = <%% 12, 12, 12, 12, 12 %%>;
   columns = 3;
   rows = 2;
 
-  backgroundRatio = 85;
+  backgroundRatio = <%% 85, 85, 85, 85, 85 %%>;
 
-  boxInnerMargin = 36;
-  boxPaddingTop = 40;
+  boxInnerMargin = <%% 36, 36, 36, 36, 36 %%>;
+  boxPaddingTop = <%% 40, 30, 30, 30, 30 %%>;
 
-  middleTitleSize = 22;
+  middleTitleSize = <%% 21, 18, 18, 18, 18 %%>;
   middleTitleWeight = 600;
-  middleTitleMarginTop = 30;
+  middleTitleMarginTop = <%% 30, 22, 20, 20, 20 %%>;
 
-  descriptionSize = 14.5;
+  descriptionSize = <%% 14.5, 13, 13, 13, 13 %%>;
   descriptionWeight = 300;
-  descriptionLineHeight = 1.5;
-  descriptionMarginTop = 10;
+  descriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+  descriptionMarginTop = <%% 10, 6, 6, 6, 6 %%>;
+  descriptionLeftPercentage = <%% 15, 10, 10, 10, 10 %%>;
 
   contents = [
     {
@@ -335,9 +337,9 @@ AspirantExplanationJs.prototype.insertInitBox = function () {
         {
           style: {
             display: "block",
-            width: String(70) + '%',
+            width: String(100 - (descriptionLeftPercentage * 2)) + '%',
             marginTop: String(descriptionMarginTop) + ea,
-            marginLeft: String(15) + '%',
+            marginLeft: String(descriptionLeftPercentage) + '%',
             textAlign: "center",
           },
           children: [
@@ -402,51 +404,51 @@ AspirantExplanationJs.prototype.insertSecondBox = function () {
 
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
 
-  titleMarginTop = 13;
+  titleMarginTop = <%% 13, 13, 13, 13, 13 %%>;
   title = "홈스타일링 디자이너에 도전하세요!";
-  paddingTop = 64;
+  paddingTop = <%% 64, 64, 64, 64, 64 %%>;
 
-  middleTongMarginTop = 58;
-  middleTongPadding = 160;
-  middleTongHeight = 260;
+  middleTongMarginTop = <%% 58, 58, 58, 58, 58 %%>;
+  middleTongPadding = <%% 160, 100, 100, 100, 100 %%>;
+  middleTongHeight = <%% 260, 240, 240, 240, 240 %%>;
 
-  middleTongBox0Width = 192;
-  middleTongBox1Width = 84;
+  middleTongBox0Width = <%% 192, 160, 170, 170, 170 %%>;
+  middleTongBox1Width = <%% 84, 52, 84, 84, 84 %%>;
 
-  plusPaddingTop = 82;
-  plusWidth = 26;
+  plusPaddingTop = <%% 82, 71, 82, 82, 82 %%>;
+  plusWidth = <%% 26, 18, 26, 26, 26 %%>;
 
-  middleTextSize = 19;
+  middleTextSize = <%% 19, 17, 17, 17, 17 %%>;
   middleTextWeight = 500;
   middleTextLineHeight = 1.4;
-  middleTextMarginTop = 18;
+  middleTextMarginTop = <%% 18, 15, 15, 15, 15 %%>;
 
-  grayTongBox0Width = 210;
-  grayTongBox1Width = 40;
+  grayTongBox0Width = <%% 210, 165, 165, 165, 165 %%>;
+  grayTongBox1Width = <%% 40, 32, 30, 30, 30 %%>;
 
-  grayTextSize = 18;
-  grayTextTop = 11;
-  grayPanHeight = 51;
+  grayTextSize = <%% 18, 15, 16, 16, 16 %%>;
+  grayTextTop = <%% 11, 11, 11, 11, 11 %%>;
+  grayPanHeight = <%% 51, 47, 51, 51, 51 %%>;
 
-  stepLeft = 21;
-  stepTop = -25;
-  stepSize = 14;
+  stepLeft = <%% 21, 16, 16, 16, 16 %%>;
+  stepTop = <%% -25, -23, -23, -23, -23 %%>;
+  stepSize = <%% 14, 13, 13, 13, 13 %%>;
   stepWeight = 400;
 
-  grayBoxPaddingTop = 20;
+  grayBoxPaddingTop = <%% 20, 20, 20, 20, 20 %%>;
 
-  arrowPaddingTop = 38;
-  arrowWidth = 10;
+  arrowPaddingTop = <%% 38, 38, 38, 38, 38 %%>;
+  arrowWidth = <%% 10, 10, 10, 10, 10 %%>;
 
-  descriptionTop = 64;
-  descriptionSize = 14;
+  descriptionTop = <%% 64, 58, 58, 58, 58 %%>;
+  descriptionSize = <%% 14, 12, 12, 12, 12 %%>;
   descriptionWeight = 400;
   descriptionLineHeight = 1.6;
 
-  grayZoneMarginTop = 120;
-  grayZonePaddingTop = 70;
-  grayZoneHeight = 225;
-  grayTongHeight = 200;
+  grayZoneMarginTop = <%% 120, 90, 90, 90, 90 %%>;
+  grayZonePaddingTop = <%% 70, 60, 60, 60, 60 %%>;
+  grayZoneHeight = <%% 225, 195, 195, 195, 195 %%>;
+  grayTongHeight = <%% 200, 195, 195, 195, 195 %%>;
 
   contents = [
     [
@@ -510,6 +512,7 @@ AspirantExplanationJs.prototype.insertSecondBox = function () {
       marginBottom: String(bottomMargin) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
       paddingTop: String(paddingTop) + ea,
+      overflow: "hidden",
     }
   });
 
@@ -1922,10 +1925,10 @@ AspirantExplanationJs.prototype.launching = async function (loading) {
     const getObj = returnGet();
 
     this.inputClassName = "consultingInput";
-    this.titleSize = 30;
     this.titleWeight = 500;
     this.titleLineHeight = 1.4;
-    this.titleSvgHeight = 52;
+    this.titleSize = <%% 30, 27, 27, 27, 27 %%>;
+    this.titleSvgHeight = <%% 52, 48, 48, 48, 48 %%>;
 
     await this.mother.ghostClientLaunching({
       mode: "front",
