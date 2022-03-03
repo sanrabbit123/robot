@@ -141,7 +141,7 @@ AspirantExplanationJs.prototype.insertInitBox = function () {
 
   middleTitleSize = <%% 21, 18, 16, 14, 16 %%>;
   middleTitleWeight = 600;
-  middleTitleMarginTop = <%% 30, 22, 20, 20, 20 %%>;
+  middleTitleMarginTop = <%% (isMac() ? 30 : 32), (isMac() ? 22 : 24), (isMac() ? 20 : 21), (isMac() ? 20 : 21), 20 %%>;
 
   descriptionSize = <%% 14.5, 13, 12, 11, 12 %%>;
   descriptionWeight = 300;
@@ -391,13 +391,13 @@ AspirantExplanationJs.prototype.insertSecondBox = function () {
   middleTextSize = <%% 19, 17, 15, 14, 15 %%>;
   middleTextWeight = 500;
   middleTextLineHeight = 1.4;
-  middleTextMarginTop = <%% 18, 15, 13, 13, 13 %%>;
+  middleTextMarginTop = <%% (isMac() ? 18 : 20), (isMac() ? 15 : 16), (isMac() ? 13 : 14), 13, 13 %%>;
 
   grayTongBox0Width = <%% 210, 165, 146, 115, 146 %%>;
   grayTongBox1Width = <%% 40, 30, 20, 16, 20 %%>;
 
   grayTextSize = <%% 18, 15, 14, 13, 13 %%>;
-  grayTextTop = <%% 11, 11, 9, 7, 9 %%>;
+  grayTextTop = <%% (isMac() ? 11 : 14), (isMac() ? 11 : 12), (isMac() ? 9 : 11), 7, 9 %%>;
   grayPanHeight = <%% 51, 46, 41, 35, 41 %%>;
 
   stepLeft = <%% 21, 16, 12, 11, 12 %%>;
@@ -892,7 +892,7 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
 
   photoHeight = <%% 200, 150, 130, 107, 130 %%>;
 
-  boxTitleBottom = <%% 19, 19, 19, 15, 19 %%>;
+  boxTitleBottom = <%% (isMac() ? 19 : 17), (isMac() ? 19 : 16), (isMac() ? 19 : 16), 15, 19 %%>;
   boxTitleLeft = <%% 23, 19, 19, 16, 19 %%>;
   boxTitleSize = <%% 18, 16, 16, 14, 16 %%>;
   boxTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -929,11 +929,11 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
   buttonMarginTop = <%% 24, 24, 24, 22, 24 %%>;
   buttonSize = <%% 15, 14, 13, 12, 14 %%>;
   buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
-  buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
+  buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -1, -1 %%>;
 
   greenBoxHeight = <%% 148, 130, 120, 100, 120 %%>;
   greenFontSize = <%% 26, 24, 22, 19, 22 %%>;
-  greenFontTop = <%% 53, 43, 40, 33, 40 %%>;
+  greenFontTop = <%% (isMac() ? 53 : 57), (isMac() ? 43 : 47), (isMac() ? 40 : 45), 33, 40 %%>;
   greenFontWeight = <%% 600, 600, 600, 600, 600 %%>;
   greenButtonVisual = <%% -1, -1, -1, -1, -1 %%>;
 
@@ -1523,7 +1523,7 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
   questionBlockHeight = <%% 64, 50, 42, 42, 42 %%>;
   questionSize = <%% 16, 13, 12, 12, 12 %%>;
   questionWeight = <%% 600, 600, 600, 600, 600 %%>;
-  questionTop = <%% -2, -2, -2, -2, -2 %%>;
+  questionTop = <%% (isMac() ? -2 : 1), (isMac() ? -2 : 1), (isMac() ? -2 : 1), (isMac() ? -2 : 1), -2 %%>;
 
   grayTongPaddingBottom = <%% 59, 59, 59, 59, 59 %%>;
 
@@ -1543,7 +1543,7 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
   pictureButtonMarginTop = <%% 24, 18, 18, 18, 18 %%>;
   pictureButtonSize = <%% 15, 14, 13, 12, 14 %%>;
   pictureButtonWeight = <%% 600, 600, 600, 600, 600 %%>;
-  pictureButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
+  pictureButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -1, -1 %%>;
 
   contents = [
     "고객의 공간 정보, 요청 사항 등이 기입된 서비스 신청서를 토대로 프로젝트 계약 전, 서비스에 대한 상세한 안내가 이뤄집니다.",
