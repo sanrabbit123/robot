@@ -87,36 +87,6 @@ AspirantExplanationJs.penWordings = {
   },
 };
 
-// AspirantExplanationJs.prototype.insertInitBox = function () {
-//   const instance = this;
-//   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-//   const { ea, media, inputClassName, titleSize, titleWeight, titleLineHeight, titleSvgHeight } = this;
-//   const mobile = media[4];
-//   const desktop = !mobile;
-//   let blockHeight;
-//   let bottomMargin;
-//   let wordSpacing;
-//   let whiteBlock;
-//
-//   blockHeight = <%% 918, 901, 817, 1026, 264 %%>;
-//   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-//
-//   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
-//
-//   whiteBlock = createNode({
-//     mother: this.baseTong,
-//     style: {
-//       position: "relative",
-//       borderRadius: String(desktop ? 8 : 1) + ea,
-//       width: String(100) + '%',
-//       height: String(blockHeight) + ea,
-//       background: colorChip.white,
-//       marginBottom: String(bottomMargin) + ea,
-//       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
-//     }
-//   });
-// }
-
 AspirantExplanationJs.prototype.insertInitBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
@@ -150,10 +120,10 @@ AspirantExplanationJs.prototype.insertInitBox = function () {
 
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
 
-  paddingTop = <%% 64, 64, 52, 48, 64 %%>;
-  paddingLeft = <%% 64, 64, 52, 48, 64 %%>;
+  paddingTop = <%% 64, 64, 52, 40, 64 %%>;
+  paddingLeft = <%% 64, 64, 52, 40, 64 %%>;
 
-  leftBoxWidth = <%% 250, 190, 144, 140, 140 %%>;
+  leftBoxWidth = <%% 250, 190, 144, 130, 140 %%>;
 
   title = "홈리에종과\n함께 하면?";
 
@@ -1563,14 +1533,14 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
   pictureTongPosition = "50% 75%";
   pictureTongBlackOpacity = <%% 0.45, 0.45, 0.45, 0.45, 0.45 %%>;
 
-  pictureTitleSize = <%% 27, 27, 27, 27, 27 %%>;
+  pictureTitleSize = <%% 27, 27, 25, 25, 25 %%>;
   pictureTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
   pictureTitleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
-  pictureButtonWidth = <%% 185, 185, 185, 185, 185 %%>;
-  pictureButtonHeight = <%% 40, 40, 40, 40, 40 %%>;
+  pictureButtonWidth = <%% 185, 185, 170, 170, 185 %%>;
+  pictureButtonHeight = <%% 40, 40, 36, 36, 40 %%>;
   pictureButtonMarginTop = <%% 24, 18, 18, 18, 18 %%>;
-  pictureButtonSize = <%% 15, 14, 14, 14, 14 %%>;
+  pictureButtonSize = <%% 15, 14, 13, 13, 14 %%>;
   pictureButtonWeight = <%% 600, 600, 600, 600, 600 %%>;
   pictureButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
@@ -1587,8 +1557,8 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
     "최소 활동 조건이 있나요?",
     "직접 고객 유치를 하지 않아도 되나요?",
     "홈리에종의 홈스타일링 서비스란?",
-    "일정과 거리가 안 맞으면 어떻게 하나요?",
-    <?? "시공사가 없어도 파트너십이 가능한가요?" | "시공사가 없어도 파트너십이 가능한가요?" | "시공사 없어도 파트너십 가능한가요?" | "시공사 없어도 파트너십 가능한가요?" | "시공사가 없어도 파트너십이 가능한가요?" ??>,
+    <&& "일정과 거리가 안 맞으면 어떻게 하나요?" | "일정과 거리가 안 맞으면 어떻게 하나요?" | "일정, 거리가 안 맞으면 어떻게 해요?" | "일정, 거리가 안 맞으면 어떻게 해요?" | "일정, 거리가 안 맞으면 어떻게 해요?" &&>,
+    <&& "시공사가 없어도 파트너십이 가능한가요?" | "시공사가 없어도 파트너십이 가능한가요?" | "시공사 없어도 파트너십 가능한가요?" | "시공사 없어도 파트너십 가능한가요?" | "시공사가 없어도 파트너십이 가능한가요?" &&>,
   ];
 
   whiteBlock = createNode({
@@ -1927,8 +1897,8 @@ AspirantExplanationJs.prototype.launching = async function (loading) {
     this.inputClassName = "consultingInput";
     this.titleWeight = 500;
     this.titleLineHeight = 1.4;
-    this.titleSize = <%% 30, 27, 23, 23, 23 %%>;
-    this.titleSvgHeight = <%% 52, 48, 42, 42, 42 %%>;
+    this.titleSize = <%% 30, 27, 23, 21, 23 %%>;
+    this.titleSvgHeight = <%% 52, 48, 42, 40, 42 %%>;
 
     await this.mother.ghostClientLaunching({
       mode: "front",

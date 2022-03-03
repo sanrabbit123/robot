@@ -56,9 +56,9 @@ DataConsole.prototype.mediaQuery = function (code) {
   updateProto += "];\n";
 
   code = code.replace(matchReg, replacer);
-  code = code.replace(/\<\?\?([^\?]+)\?\?\>/g, (match, p1) => {
+  code = code.replace(/\<\&\&([^\&]+)\&\&\>/g, (match, p1) => {
     let tempValue, tempArr, tempStr;
-    tempArr = p1.replace(/\<\?\?/g, '').replace(/\?\?\>/g, '').trim().split("|");
+    tempArr = p1.replace(/\<\&\&/g, '').replace(/\&\&\>/g, '').trim().split("|");
     tempArr = tempArr.map((str) => { return str.trim(); });
     return `(${conditions[0]} ? ${tempArr[0]} : (${conditions[1]} ? ${tempArr[1]} : (${conditions[2]} ? ${tempArr[2]} : (${conditions[3]} ? ${tempArr[3]} : ${tempArr[4]}))))`;
   });
