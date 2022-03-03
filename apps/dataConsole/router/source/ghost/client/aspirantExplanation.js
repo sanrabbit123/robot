@@ -115,7 +115,7 @@ AspirantExplanationJs.prototype.insertInitBox = function () {
   let descriptionSize, descriptionWeight, descriptionLineHeight, descriptionMarginTop;
   let descriptionLeftPercentage;
 
-  blockHeight = <%% 908, 700, 620, 620, 264 %%>;
+  blockHeight = <%% 908, 700, 620, 520, 264 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
 
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
@@ -139,11 +139,11 @@ AspirantExplanationJs.prototype.insertInitBox = function () {
   boxInnerMargin = <%% 36, 36, 32, 32, 32 %%>;
   boxPaddingTop = <%% 40, 30, 28, 28, 28 %%>;
 
-  middleTitleSize = <%% 21, 18, 16, 16, 16 %%>;
+  middleTitleSize = <%% 21, 18, 16, 14, 16 %%>;
   middleTitleWeight = 600;
   middleTitleMarginTop = <%% 30, 22, 20, 20, 20 %%>;
 
-  descriptionSize = <%% 14.5, 13, 12, 12, 12 %%>;
+  descriptionSize = <%% 14.5, 13, 12, 11, 12 %%>;
   descriptionWeight = 300;
   descriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
   descriptionMarginTop = <%% 10, 6, 6, 6, 6 %%>;
@@ -156,23 +156,23 @@ AspirantExplanationJs.prototype.insertInitBox = function () {
     },
     {
       title: "디자인에만 집중",
-      description: "역할을 분담하여 세일즈, 정산,\n중재 및 관리는 홈리에종에 맡겨요",
+      description: <&& "역할을 분담하여 세일즈, 정산,\n중재 및 관리는 홈리에종에 맡겨요" | "역할을 분담하여 세일즈, 정산,\n중재 및 관리는 홈리에종에 맡겨요" | "역할을 분담하여 세일즈, 정산,\n중재 및 관리는 홈리에종에 맡겨요" | "역할을 분담하여 세일즈, 정산,\n중재 및 관리는 맡겨요" | "역할을 분담하여 세일즈, 정산,\n중재 및 관리는 맡겨요" &&>,
     },
     {
       title: "성장 지원",
       description: "홈리에종의 교육 및 제휴로\n성장을 지원해요",
     },
     {
-      title: "다양한 협업 활동 기획",
-      description: "교육, 판매 등 프로젝트를 진행하며\n부가적인 수익 모델을 창출해나가요",
+      title: <&& "다양한 협업 활동 기획" | "다양한 협업 활동 기획" | "다양한 협업 활동 기획" | "협업 활동 기획" | "협업 활동 기획" &&>,
+      description: <&& "교육, 판매 등 프로젝트를 진행하며\n부가적인 수익 모델을 창출해나가요" | "교육, 판매 등 프로젝트를 진행하며\n부가적인 수익 모델을 창출해나가요" | "교육, 판매 등 프로젝트를 진행하며\n부가적인 수익 모델을 창출해나가요" | "프로젝트를 진행하며\n수익 모델을 창출해나가요" | "프로젝트를 진행하며\n수익 모델을 창출해나가요" &&>,
     },
     {
-      title: "시공 및 부가 서비스 제공",
-      description: "역량 확장을 위해 시공사 및\n부가 서비스 인프라를 제공해요",
+      title: <&& "시공 및 부가 서비스 제공" | "시공 및 부가 서비스 제공" | "시공 및 부가 서비스 제공" | "시공, 부가 서비스 제공" | "시공, 부가 서비스 제공" &&>,
+      description: <&& "역량 확장을 위해 시공사 및\n부가 서비스 인프라를 제공해요" | "역량 확장을 위해 시공사 및\n부가 서비스 인프라를 제공해요" | "역량 확장을 위해 시공사 및\n부가 서비스 인프라를 제공해요" | "역량 확장을 위해 시공사 및\n서비스 인프라를 제공해요" | "역량 확장을 위해 시공사 및\n서비스 인프라를 제공해요" &&>,
     },
     {
       title: "디자이너 네트워크",
-      description: "홈리에종의 협업 디자이너와의\n커뮤니티를 제공해요",
+      description: "홈리에종 협업 디자이너 간\n커뮤니티를 제공해요",
     },
   ]
 
@@ -376,33 +376,33 @@ AspirantExplanationJs.prototype.insertSecondBox = function () {
 
   titleMarginTop = <%% 13, 13, 13, 13, 13 %%>;
   title = "홈스타일링 디자이너에 도전하세요!";
-  paddingTop = <%% 64, 64, 52, 48, 64 %%>;
+  paddingTop = <%% 64, 64, 52, 40, 64 %%>;
 
-  middleTongMarginTop = <%% 58, 58, 42, 42, 42 %%>;
-  middleTongPadding = <%% 160, 100, 72, 72, 72 %%>;
-  middleTongHeight = <%% 260, 240, 193, 193, 193 %%>;
+  middleTongMarginTop = <%% 58, 58, 42, 32, 42 %%>;
+  middleTongPadding = <%% 160, 100, 72, 42, 52 %%>;
+  middleTongHeight = <%% 260, 240, 193, 170, 193 %%>;
 
-  middleTongBox0Width = <%% 192, 160, 140, 140, 140 %%>;
-  middleTongBox1Width = <%% 84, 52, 48, 48, 48 %%>;
+  middleTongBox0Width = <%% 192, 160, 140, 120, 140 %%>;
+  middleTongBox1Width = <%% 84, 52, 48, 40, 48 %%>;
 
-  plusPaddingTop = <%% 82, 71, 64, 64, 64 %%>;
-  plusWidth = <%% 26, 18, 15, 15, 15 %%>;
+  plusPaddingTop = <%% 82, 71, 64, 54, 64 %%>;
+  plusWidth = <%% 26, 18, 15, 13, 15 %%>;
 
-  middleTextSize = <%% 19, 17, 15, 15, 15 %%>;
+  middleTextSize = <%% 19, 17, 15, 14, 15 %%>;
   middleTextWeight = 500;
   middleTextLineHeight = 1.4;
   middleTextMarginTop = <%% 18, 15, 13, 13, 13 %%>;
 
-  grayTongBox0Width = <%% 210, 165, 146, 146, 146 %%>;
-  grayTongBox1Width = <%% 40, 30, 20, 20, 20 %%>;
+  grayTongBox0Width = <%% 210, 165, 146, 115, 146 %%>;
+  grayTongBox1Width = <%% 40, 30, 20, 16, 20 %%>;
 
-  grayTextSize = <%% 18, 15, 14, 14, 14 %%>;
-  grayTextTop = <%% 11, 11, 9, 9, 9 %%>;
-  grayPanHeight = <%% 51, 46, 41, 41, 41 %%>;
+  grayTextSize = <%% 18, 15, 14, 13, 13 %%>;
+  grayTextTop = <%% 11, 11, 9, 7, 9 %%>;
+  grayPanHeight = <%% 51, 46, 41, 35, 41 %%>;
 
-  stepLeft = <%% 21, 16, 12, 12, 12 %%>;
-  stepTop = <%% -25, -23, -21, -21, -21 %%>;
-  stepSize = <%% 14, 13, 12, 12, 12 %%>;
+  stepLeft = <%% 21, 16, 12, 11, 12 %%>;
+  stepTop = <%% -25, -23, -21, -19, -21 %%>;
+  stepSize = <%% 14, 13, 12, 11, 12 %%>;
   stepWeight = 400;
 
   grayBoxPaddingTop = <%% 20, 20, 20, 20, 20 %%>;
@@ -415,10 +415,10 @@ AspirantExplanationJs.prototype.insertSecondBox = function () {
   descriptionWeight = 400;
   descriptionLineHeight = 1.6;
 
-  grayZoneMarginTop = <%% 120, 90, 80, 80, 80 %%>;
-  grayZonePaddingTop = <%% 70, 60, 45, 45, 45 %%>;
-  grayZoneHeight = <%% 225, 195, 175, 175, 175 %%>;
-  grayTongHeight = <%% 200, 195, 175, 175, 175 %%>;
+  grayZoneMarginTop = <%% 120, 90, 80, 72, 80 %%>;
+  grayZonePaddingTop = <%% 70, 60, 45, 25, 45 %%>;
+  grayZoneHeight = <%% 225, 195, 175, 99, 175 %%>;
+  grayTongHeight = <%% 200, 195, 175, 99, 175 %%>;
 
   contents = [
     [
@@ -441,11 +441,11 @@ AspirantExplanationJs.prototype.insertSecondBox = function () {
 
   grayContents = [
     {
-      title: "홈페이지 신청서 접수",
+      title: <&& "홈페이지 신청서 접수" | "홈페이지 신청서 접수" | "홈페이지 접수" | "홈페이지 접수" | "홈페이지 접수" &&>,
       description: [],
     },
     {
-      title: "1차 유선 인터뷰",
+      title: <&& "1차 유선 인터뷰" | "1차 유선 인터뷰" | "1차 유선 인터뷰" | "유선 인터뷰" | "유선 인터뷰" &&>,
       description: [
         "협업 전 필수 확인 사항 체크",
         "대면 미팅일 결정",
@@ -745,6 +745,7 @@ AspirantExplanationJs.prototype.insertSecondBox = function () {
             {
               text: grayContents[i].description.join("\n"),
               style: {
+                display: <&& "block" | "block" | "block" | "none" | "none" &&>,
                 position: "absolute",
                 left: String(stepLeft) + ea,
                 top: String(descriptionTop) + ea,
@@ -871,37 +872,37 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
 
   title = "디자이너는\n어떤 일을\n하나요?";
   title2 = "왜 홈리에종을 추천할까요?";
-  paddingTop = <%% 64, 64, 52, 48, 64 %%>;
-  paddingLeft = <%% 64, 64, 52, 48, 64 %%>;
+  paddingTop = <%% 64, 64, 52, 40, 64 %%>;
+  paddingLeft = <%% 64, 64, 52, 40, 64 %%>;
 
-  leftBoxWidth = <%% 250, 190, 144, 140, 140 %%>;
+  leftBoxWidth = <%% 250, 190, 144, 130, 140 %%>;
   marginTopVisual = <%% 3, 3, 3, 3, 3 %%>;
   titleMarginTop = <%% 13, 13, 13, 13, 13 %%>;
 
-  boxMargin = <%% 36, 24, 21, 21, 21 %%>;
-  boxMarginBottom = <%% 36, 30, 27, 27, 27 %%>;
+  boxMargin = <%% 36, 24, 21, 18, 21 %%>;
+  boxMarginBottom = <%% 36, 30, 27, 20, 27 %%>;
   boxNumber = <%% 5, 5, 5, 5, 5 %%>;
 
   boxPaddingTop = <%% 15, 15, 12, 12, 12 %%>;
   boxPaddingLeft = <%% 2, 2, 2, 2, 2 %%>;
 
-  boxContentsSize = <%% 14, 12, 12, 12, 12 %%>;
+  boxContentsSize = <%% 14, 12, 12, 11, 12 %%>;
   boxContentsWeight = <%% 400, 400, 400, 400, 400 %%>;
   boxContentsLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  photoHeight = <%% 200, 150, 130, 130, 130 %%>;
+  photoHeight = <%% 200, 150, 130, 107, 130 %%>;
 
-  boxTitleBottom = <%% 19, 19, 19, 19, 19 %%>;
-  boxTitleLeft = <%% 23, 19, 19, 19, 19 %%>;
-  boxTitleSize = <%% 18, 16, 16, 16, 16 %%>;
+  boxTitleBottom = <%% 19, 19, 19, 15, 19 %%>;
+  boxTitleLeft = <%% 23, 19, 19, 16, 19 %%>;
+  boxTitleSize = <%% 18, 16, 16, 14, 16 %%>;
   boxTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  grayBetween = <%% 36, 36, 36, 36, 36 %%>;
+  grayBetween = <%% 36, 36, 36, 20, 36 %%>;
 
-  grayCardTongMarginTop = <%% 50, 50, 40, 40, 40 %%>;
-  grayCardTongMarginBottom = <%% 36, 32, 26, 26, 26 %%>;
+  grayCardTongMarginTop = <%% 50, 50, 40, 30, 40 %%>;
+  grayCardTongMarginBottom = <%% 36, 32, 26, 18, 26 %%>;
 
-  whiteCardWidth = <%% 480, 480, 420, 420, 420 %%>;
+  whiteCardWidth = <%% 480, 480, 420, 310, 420 %%>;
   whiteRadius = <%% 16, 16, 16, 16, 16 %%>;
   whiteCardPadding = <%% 40, 40, 40, 40, 40 %%>;
 
@@ -923,28 +924,28 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
   whiteContentsWeight = <%% 400, 400, 400, 400, 400 %%>;
   whiteContentsLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
-  buttonWidth = <%% 185, 185, 170, 170, 185 %%>;
-  buttonHeight = <%% 40, 40, 36, 36, 40 %%>;
-  buttonMarginTop = <%% 24, 24, 24, 24, 24 %%>;
-  buttonSize = <%% 15, 14, 13, 13, 14 %%>;
+  buttonWidth = <%% 185, 185, 170, 155, 185 %%>;
+  buttonHeight = <%% 40, 40, 36, 32, 40 %%>;
+  buttonMarginTop = <%% 24, 24, 24, 22, 24 %%>;
+  buttonSize = <%% 15, 14, 13, 12, 14 %%>;
   buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
   buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
-  greenBoxHeight = <%% 148, 130, 120, 120, 120 %%>;
-  greenFontSize = <%% 26, 24, 22, 22, 22 %%>;
-  greenFontTop = <%% 53, 43, 40, 40, 40 %%>;
+  greenBoxHeight = <%% 148, 130, 120, 100, 120 %%>;
+  greenFontSize = <%% 26, 24, 22, 19, 22 %%>;
+  greenFontTop = <%% 53, 43, 40, 33, 40 %%>;
   greenFontWeight = <%% 600, 600, 600, 600, 600 %%>;
   greenButtonVisual = <%% -1, -1, -1, -1, -1 %%>;
 
-  plusBoxHeight = <%% 194, 165, 152, 152, 152 %%>;
-  plusFontSize = <%% 20, 18, 16, 16, 16 %%>;
+  plusBoxHeight = <%% 194, 165, 152, 134, 152 %%>;
+  plusFontSize = <%% 20, 18, 16, 15, 16 %%>;
   plusFontWeight = <%% 200, 200, 200, 200, 200 %%>;
   plusFontLineHeight = <%% 1.45, 1.45, 1.45, 1.45, 1.45 %%>;
 
-  plusFontLeft0 = <%% 172, 110, 93, 93, 93 %%>;
-  plusFontLeft1 = <%% 440, 310, 264, 264, 264 %%>;
-  plusFontLeft2 = <%% 700, 503, 426, 426, 426 %%>;
-  plusFontRight0 = <%% 140, 80, 68, 65, 65 %%>;
+  plusFontLeft0 = <%% 172, 110, 93, 60, 93 %%>;
+  plusFontLeft1 = <%% 440, 310, 264, 197, 264 %%>;
+  plusFontLeft2 = <%% 700, 503, 426, 327, 426 %%>;
+  plusFontRight0 = <%% 140, 80, 68, 42, 65 %%>;
 
   greenWording = "디자인에만 집중할 수 있는, 홈리에종 혜택을 누려보세요!";
   buttonWording = "디자이너 활동 시작하기";
@@ -1482,11 +1483,11 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
 
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
 
-  paddingTop = <%% 64, 64, 52, 48, 64 %%>;
-  paddingTop2 = <%% 64, 64, 52, 48, 64 %%>;
-  paddingLeft = <%% 64, 64, 52, 48, 64 %%>;
+  paddingTop = <%% 64, 64, 52, 40, 64 %%>;
+  paddingTop2 = <%% 64, 64, 52, 40, 64 %%>;
+  paddingLeft = <%% 64, 64, 52, 40, 64 %%>;
 
-  leftBoxWidth = <%% 250, 190, 160, 140, 140 %%>;
+  leftBoxWidth = <%% 250, 190, 160, 160, 140 %%>;
 
   title = "서비스\n프로세스";
   title2 = "자주 찾는\n질문";
@@ -1497,8 +1498,8 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
   titleMarginTop = <%% 13, 13, 13, 13, 13 %%>;
 
   titelBlockHeight = <%% 40, 36, 36, 36, 36 %%>;
-  titleBlockWidth = <%% 150, 150, 150, 150, 150 %%>;
-  titleBlockMargin = <%% 40, 40, 30, 30, 30 %%>;
+  titleBlockWidth = <%% 150, 150, 150, 140, 150 %%>;
+  titleBlockMargin = <%% 40, 40, 30, 24, 30 %%>;
 
   titleSvgMiddleHeight = <%% 26, 24, 24, 24, 24 %%>;
   titleSvgTop = <%% 7, 6, 6, 6, 6 %%>;
@@ -1507,11 +1508,11 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
 
   titleBlockMarginBottom = <%% 50, 50, 40, 40, 40 %%>;
 
-  titleNumberSize = <%% 16, 14, 13, 13, 13 %%>;
+  titleNumberSize = <%% 16, 14, 13, 12, 13 %%>;
   titleNumberWeight = <%% 400, 400, 400, 400, 400 %%>;
   titleNumberTop = <%% -1.5, -1.5, -1.5, -1.5, -1.5 %%>;
 
-  descriptionSize = <%% 14, 13, 13, 13, 13 %%>;
+  descriptionSize = <%% 14, 13, 13, 12, 13 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
   descriptionBoldWeight = <%% 600, 600, 600, 600, 600 %%>;
@@ -1526,21 +1527,21 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
 
   grayTongPaddingBottom = <%% 59, 59, 59, 59, 59 %%>;
 
-  pictureHeight = <%% 212, 200, 200, 200, 200 %%>;
-  pictureTongPaddingTop = <%% 70, 60, 60, 60, 60 %%>;
+  pictureHeight = <%% 212, 200, 200, 180, 200 %%>;
+  pictureTongPaddingTop = <%% 70, 60, 60, 56, 60 %%>;
 
   pictureTongBackground = "z6.png";
   pictureTongPosition = "50% 75%";
   pictureTongBlackOpacity = <%% 0.45, 0.45, 0.45, 0.45, 0.45 %%>;
 
-  pictureTitleSize = <%% 27, 27, 25, 25, 25 %%>;
+  pictureTitleSize = <%% 27, 27, 25, 23, 25 %%>;
   pictureTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
   pictureTitleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
-  pictureButtonWidth = <%% 185, 185, 170, 170, 185 %%>;
-  pictureButtonHeight = <%% 40, 40, 36, 36, 40 %%>;
+  pictureButtonWidth = <%% 185, 185, 170, 160, 185 %%>;
+  pictureButtonHeight = <%% 40, 40, 36, 32, 40 %%>;
   pictureButtonMarginTop = <%% 24, 18, 18, 18, 18 %%>;
-  pictureButtonSize = <%% 15, 14, 13, 13, 14 %%>;
+  pictureButtonSize = <%% 15, 14, 13, 12, 14 %%>;
   pictureButtonWeight = <%% 600, 600, 600, 600, 600 %%>;
   pictureButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
@@ -1726,13 +1727,13 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
   grayTong = createNode({
     mother: whiteBlock,
     style: {
-      display: "block",
+      display: <&& "block" | "block" | "block" | "none" | "block" &&>,
       width: String(100) + '%',
       paddingBottom: String(grayTongPaddingBottom) + ea,
       background: colorChip.gray0,
       marginTop: String(grayMarginTop) + ea,
     }
-  })
+  });
 
   createNode({
     mother: grayTong,
