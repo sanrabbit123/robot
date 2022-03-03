@@ -1812,7 +1812,8 @@ DataRouter.prototype.rou_post_proposalReset = function () {
                   cliid: id,
                   historyQuery: { "curation.service.serid": [ req.body.serid ] },
                   coreQuery: {},
-                  mode: "create"
+                  mode: "create",
+                  fromConsole: 1,
                 };
                 if (req.body.silent !== undefined) {
                   requestObj.silent = true;

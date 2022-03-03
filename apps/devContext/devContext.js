@@ -61,7 +61,7 @@ DevContext.prototype.launching = async function () {
   const instance = this;
   const rethink = new RethinkAccess();
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
-  const { fileSystem, shellExec, shellLink, orderSystem, ghostFileUpload, ghostFileList, curlRequest, requestSystem, ajaxJson, uniqueValue, getDateMatrix, ghostRequest, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, statusReading, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage, hexaJson } = this.mother;
+  const { fileSystem, shellExec, shellLink, orderSystem, ghostFileUpload, ghostFileList, curlRequest, requestSystem, ajaxJson, uniqueValue, getDateMatrix, ghostRequest, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, statusReading, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether } = this.mother;
   try {
     await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
@@ -89,9 +89,11 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
+    // const pro1 = (new Promise((resolve, reject) => { console.log("hi1"); resolve(null); }))
+    // const pro2 = (new Promise((resolve, reject) => { setTimeout(() => { console.log("hi2"); resolve(null); }, 5000); }))
+    // const pro3 = (new Promise((resolve, reject) => { setTimeout(() => { console.log("hi3"); resolve(null); }, 4000); }))
+    // const res = await promiseTogether([ pro1, pro2, pro3 ])
+    // console.log(res);
 
 
 

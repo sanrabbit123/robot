@@ -665,6 +665,17 @@ Robot.prototype.sayHello = async function (message = null) {
   }
 }
 
+Robot.prototype.consoleHello = async function () {
+  const instance = this;
+  try {
+    setTimeout(() => {
+      console.log("hello : " + instance.mother.uniqueValue("hex"));
+    }, 3000 + (10 * 1000 * Math.random()));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.designerCalculation = async function () {
   try {
     const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`);
@@ -1256,6 +1267,13 @@ const MENU = {
   php: async function () {
     try {
       await robot.renderFrontPhp();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  consoleHello: async function () {
+    try {
+      await robot.consoleHello();
     } catch (e) {
       console.log(e);
     }

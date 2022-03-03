@@ -3183,7 +3183,7 @@ StyleCurationJs.prototype.parsingValues = function () {
     }
   }).then((data) => {
     if (data === "success") {
-      return ajaxJson({ cliid: instance.client.cliid, historyQuery, coreQuery, mode: "calculation" }, "/styleCuration_updateCalculation");
+      return ajaxJson({ cliid: instance.client.cliid, historyQuery, coreQuery, mode: "calculation", fromConsole: 0 }, "/styleCuration_updateCalculation");
     } else {
       window.alert("사진 전송에 문제가 생겼습니다! 200MB 이하의 파일로 다시 시도해주세요!");
       return new Promise((resolve, reject) => { resolve({ promisePass: true }); });

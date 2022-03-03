@@ -3691,4 +3691,37 @@ Mother.prototype.sendMessage = function (from, to, message, option = {}) {
   });
 }
 
+Mother.prototype.promiseTogether = function (promiseArr) {
+  if (!Array.isArray(promiseArr)) {
+    throw new Error("invaild input");
+  }
+  if (!promiseArr.every((obj) => { return obj instanceof Promise })) {
+    throw new Error("invaild input");
+  }
+  return new Promise((resolve, reject) => {
+    const workLength = promiseArr.length;
+    let promiseTong, interval, timeout;
+
+    promiseTong = [];
+
+    for (let i = 0; i < workLength; i++) {
+      promiseArr[i].then(() => {
+        promiseTong.push(true);
+      }).catch((err) => {
+        reject(err);
+      })
+    }
+
+    interval = setInterval(() => {
+      if (promiseTong.length >= workLength) {
+        timeout = setTimeout(() => {
+          resolve(true);
+          clearTimeout(timeout);
+        }, 0);
+        clearInterval(interval);
+      }
+    }, 100);
+  });
+}
+
 module.exports = Mother;
