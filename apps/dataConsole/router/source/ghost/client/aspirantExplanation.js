@@ -125,7 +125,7 @@ AspirantExplanationJs.prototype.insertInitBox = function () {
 
   leftBoxWidth = <%% 250, 190, 144, 130, 140 %%>;
 
-  title = "홈리에종과\n함께 하면?";
+  title = desktop ? "홈리에종과\n함께 하면?" : "홈리에종과 함께 하면?";
 
   marginTopVisual = <%% 3, 3, 3, 3, 3 %%>;
   titleMarginTop = <%% 13, 13, 13, 13, 13 %%>;
@@ -193,11 +193,11 @@ AspirantExplanationJs.prototype.insertInitBox = function () {
   leftBox = createNode({
     mother: whiteBlock,
     style: {
-      display: "inline-block",
+      display: desktop ? "inline-block" : "block",
       position: "relative",
-      paddingLeft: String(paddingLeft) + ea,
-      paddingTop: String(paddingTop) + ea,
-      width: String(leftBoxWidth) + ea,
+      paddingLeft: desktop ? String(paddingLeft) + ea : "",
+      paddingTop: desktop ? String(paddingTop) + ea : "",
+      width: desktop ? String(leftBoxWidth) + ea : "",
       height: withOut(paddingTop, ea),
       verticalAlign: "top",
     }
@@ -1898,8 +1898,8 @@ AspirantExplanationJs.prototype.launching = async function (loading) {
     this.inputClassName = "consultingInput";
     this.titleWeight = 500;
     this.titleLineHeight = 1.4;
-    this.titleSize = <%% 30, 27, 23, 21, 23 %%>;
-    this.titleSvgHeight = <%% 52, 48, 42, 40, 42 %%>;
+    this.titleSize = <%% 30, 27, 23, 21, 5.7 %%>;
+    this.titleSvgHeight = <%% 52, 48, 42, 40, 12 %%>;
 
     await this.mother.ghostClientLaunching({
       mode: "front",

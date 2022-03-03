@@ -12,6 +12,7 @@ const ExcelReader = function (mother = null, back = null, address = null) {
     this.address = ADDRESS;
   }
   this.dir = process.cwd() + "/apps/excelReader";
+  this.pythonApp = this.dir + "/python/app.py";
 }
 
 ExcelReader.prototype.fileToMatrix = async function (filePath, sheetsName) {
@@ -19,22 +20,9 @@ ExcelReader.prototype.fileToMatrix = async function (filePath, sheetsName) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const address = this.address;
-  const { generalFileUpload, uniqueValue, requestSystem, ghostRequest } = this.mother;
-  const fileNameConst = "excel_";
+  const { pythonExecute } = this.mother;
   try {
-    let tempFileName;
-    let matrix;
-    let file;
-
-    tempFileName = fileNameConst + uniqueValue("hex") + ".xlsx";
-    file = "/tong/" + tempFileName;
-
-    await generalFileUpload("https://" + address.officeinfo.ghost.host + "/fileUpload", [ filePath ], [ file ]);
-    matrix = (await requestSystem("https://" + address.officeinfo.ghost.host + "/publicSector/excel", { file, sheetsName })).data;
-    await ghostRequest("/tongDelete");
-
-    return matrix;
+    return await pythonExecute(this.pythonApp, [ "read" ], { filePath, sheetsName });
   } catch (e) {
     console.log(e);
   }

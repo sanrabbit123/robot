@@ -104,6 +104,7 @@ DevContext.prototype.launching = async function () {
 
 
 
+
     // const projects = await back.getProjectsByQuery({
     //   $and: [
     //     {
@@ -2354,7 +2355,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p174");
+    // await this.getCorePortfolio("p141");
 
 
     // aspirant to designer
