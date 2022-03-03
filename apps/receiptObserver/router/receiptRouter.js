@@ -1117,11 +1117,13 @@ ReceiptRouter.prototype.sync_paymentProject = async function (bilid, requestNumb
     if (/홈리에종 계약금/gi.test(data.goodName.trim()) || /홈리에종 잔금/gi.test(data.goodName.trim())) {
       projectQuery = {};
       if (proposal.fee.length === 1) {
-        pureDesignFee = Math.round(proposal.fee[0].amount * (1 - proposal.fee[0].discount));
+        // pureDesignFee = Math.round(proposal.fee[0].amount * (1 - proposal.fee[0].discount));
+        pureDesignFee = Math.round(proposal.fee[0].amount);
       } else {
         for (let obj of proposal.fee) {
           if (obj.method === thisBill.links.method) {
-            pureDesignFee = Math.round(obj.amount * (1 - obj.discount));
+            // pureDesignFee = Math.round(obj.amount * (1 - obj.discount));
+            pureDesignFee = Math.round(obj.amount);
           }
         }
       }
