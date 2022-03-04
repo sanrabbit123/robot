@@ -137,7 +137,7 @@ AspirantExplanationJs.prototype.insertInitBox = function () {
   columns = desktop ? 3 : 2;
   rows = desktop ? 2 : 3;
 
-  backgroundRatio = <%% 85, 85, 85, 85, (isIphone() ? 88 : 87.7) %%>;
+  backgroundRatio = <%% 85, 85, 85, 85, (isIphone() ? 88.3 : 87.7) %%>;
 
   boxInnerMargin = <%% 36, 36, 32, 32, 3 %%>;
   boxPaddingTop = <%% 40, 30, 28, 28, 4.5 %%>;
@@ -149,7 +149,7 @@ AspirantExplanationJs.prototype.insertInitBox = function () {
   descriptionSize = <%% 14.5, 13, 12, 11, 2.6 %%>;
   descriptionWeight = 300;
   descriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
-  descriptionMarginTop = <%% 10, 6, 6, 6, (isIphone() ? 0.8 : 1) %%>;
+  descriptionMarginTop = <%% 10, 6, 6, 6, (isIphone() ? 0.7 : 1) %%>;
   descriptionLeftPercentage = <%% 15, 10, 10, 10, 10 %%>;
 
   contents = [
@@ -455,7 +455,7 @@ AspirantExplanationJs.prototype.insertSecondBox = function () {
   mobileGrayMarginBottom = 2.6;
 
   mobileWordingHeight = 7;
-  mobileWordingBottom = 4.6;
+  mobileWordingBottom = 4.5;
   mobileWordingRight = 6.4;
 
   contents = [
@@ -991,7 +991,7 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
   buttonMarginTop = <%% 24, 24, 24, 22, 24 %%>;
   buttonSize = <%% 15, 14, 13, 12, 2.6 %%>;
   buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
-  buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -1, -0.3 %%>;
+  buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -1, (isIphone() ? -0.1 : -0.3) %%>;
 
   greenBoxHeight = <%% 148, 130, 120, 100, 25.4 %%>;
   greenFontSize = <%% 26, 24, 22, 19, 3.5 %%>;
@@ -1613,7 +1613,7 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
   pictureButtonMarginTop = <%% 24, 18, 18, 18, 3 %%>;
   pictureButtonSize = <%% 15, 14, 13, 12, 2.6 %%>;
   pictureButtonWeight = <%% 600, 600, 600, 600, 600 %%>;
-  pictureButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -1, -0.3 %%>;
+  pictureButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -1, (isIphone() ? -0.1 : -0.3) %%>;
 
   contents = [
     "고객의 공간 정보, 요청 사항 등이 기입된 서비스 신청서를 토대로 프로젝트 계약 전, 서비스에 대한 상세한 안내가 이뤄집니다.",
