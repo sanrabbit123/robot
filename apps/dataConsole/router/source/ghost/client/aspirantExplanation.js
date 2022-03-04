@@ -114,39 +114,42 @@ AspirantExplanationJs.prototype.insertInitBox = function () {
   let middleTitleSize, middleTitleMarginTop, middleTitleWeight;
   let descriptionSize, descriptionWeight, descriptionLineHeight, descriptionMarginTop;
   let descriptionLeftPercentage;
+  let leftBoxHeight;
+  let boxWidth, boxHeight;
 
-  blockHeight = <%% 908, 700, 620, 520, 264 %%>;
+  blockHeight = <%% 908, 700, 620, 520, 195 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
 
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
 
-  paddingTop = <%% 64, 64, 52, 40, 64 %%>;
-  paddingLeft = <%% 64, 64, 52, 40, 64 %%>;
+  paddingTop = <%% 64, 64, 52, 40, 2 %%>;
+  paddingLeft = <%% 64, 64, 52, 40, 0 %%>;
 
-  leftBoxWidth = <%% 250, 190, 144, 130, 140 %%>;
+  leftBoxWidth = <%% 250, 190, 144, 130, 0 %%>;
+  leftBoxHeight = <%% 0, 0, 0, 0, 35 %%>;
 
   title = desktop ? "홈리에종과\n함께 하면?" : "홈리에종과 함께 하면?";
 
-  marginTopVisual = <%% 3, 3, 3, 3, 3 %%>;
-  titleMarginTop = <%% 13, 13, 13, 13, 13 %%>;
+  marginTopVisual = <%% 3, 3, 3, 3, 9 %%>;
+  titleMarginTop = <%% 13, 13, 13, 13, 1.5 %%>;
 
-  boxMargin = <%% 12, 12, 12, 12, 12 %%>;
-  columns = 3;
-  rows = 2;
+  boxMargin = <%% 12, 12, 12, 12, 2 %%>;
+  columns = desktop ? 3 : 2;
+  rows = desktop ? 2 : 3;
 
-  backgroundRatio = <%% 85, 85, 85, 85, 85 %%>;
+  backgroundRatio = <%% 85, 85, 85, 85, 87.3 %%>;
 
-  boxInnerMargin = <%% 36, 36, 32, 32, 32 %%>;
-  boxPaddingTop = <%% 40, 30, 28, 28, 28 %%>;
+  boxInnerMargin = <%% 36, 36, 32, 32, 3 %%>;
+  boxPaddingTop = <%% 40, 30, 28, 28, 4.5 %%>;
 
-  middleTitleSize = <%% 21, 18, 16, 14, 16 %%>;
+  middleTitleSize = <%% 21, 18, 16, 14, 3.5 %%>;
   middleTitleWeight = 600;
-  middleTitleMarginTop = <%% (isMac() ? 30 : 32), (isMac() ? 22 : 24), (isMac() ? 20 : 21), (isMac() ? 20 : 21), 20 %%>;
+  middleTitleMarginTop = <%% (isMac() ? 30 : 32), (isMac() ? 22 : 24), (isMac() ? 20 : 21), (isMac() ? 20 : 21), 4 %%>;
 
-  descriptionSize = <%% 14.5, 13, 12, 11, 12 %%>;
+  descriptionSize = <%% 14.5, 13, 12, 11, 2.6 %%>;
   descriptionWeight = 300;
   descriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
-  descriptionMarginTop = <%% 10, 6, 6, 6, 6 %%>;
+  descriptionMarginTop = <%% 10, 6, 6, 6, 1 %%>;
   descriptionLeftPercentage = <%% 15, 10, 10, 10, 10 %%>;
 
   contents = [
@@ -196,9 +199,9 @@ AspirantExplanationJs.prototype.insertInitBox = function () {
       display: desktop ? "inline-block" : "block",
       position: "relative",
       paddingLeft: desktop ? String(paddingLeft) + ea : "",
-      paddingTop: desktop ? String(paddingTop) + ea : "",
+      paddingTop: desktop ? String(paddingTop) + ea : String(marginTopVisual) + ea,
       width: desktop ? String(leftBoxWidth) + ea : "",
-      height: withOut(paddingTop, ea),
+      height: desktop ? withOut(paddingTop, ea) : String(leftBoxHeight - marginTopVisual) + ea,
       verticalAlign: "top",
     }
   });
@@ -208,8 +211,8 @@ AspirantExplanationJs.prototype.insertInitBox = function () {
     style: {
       display: "block",
       position: "relative",
-      textAlign: "left",
-      marginTop: String(marginTopVisual) + ea,
+      textAlign: desktop ? "left" : "center",
+      marginTop: desktop ? String(marginTopVisual) + ea : "",
     },
     children: [
       {
@@ -232,50 +235,70 @@ AspirantExplanationJs.prototype.insertInitBox = function () {
       fontWeight: String(titleWeight),
       color: colorChip.black,
       lineHeight: String(titleLineHeight),
+      textAlign: desktop ? "" : "center",
     }
   });
 
   rightBox = createNode({
     mother: whiteBlock,
     style: {
-      display: "inline-block",
+      display: desktop ? "inline-block" : "block",
       position: "relative",
-      paddingRight: String(paddingLeft) + ea,
+      paddingRight: desktop ? String(paddingLeft) + ea : "",
+      paddingLeft: desktop ? "" : String(paddingLeft) + ea,
       paddingTop: String(paddingTop) + ea,
       paddingBottom: String(paddingLeft) + ea,
       width: withOut((paddingLeft * 2) + leftBoxWidth, ea),
-      height: withOut(paddingTop + paddingLeft, ea),
+      height: withOut(paddingTop + paddingLeft + leftBoxHeight, ea),
       verticalAlign: "top",
     }
   });
 
-  createNode({
-    mother: rightBox,
-    style: {
-      position: "absolute",
-      width: String(backgroundRatio) + '%',
-      height: String(100) + '%',
-      right: String(0),
-      top: String(0),
-      background: colorChip.gray0,
-    }
-  });
+  if (desktop) {
+    createNode({
+      mother: rightBox,
+      style: {
+        position: "absolute",
+        width: String(backgroundRatio) + '%',
+        height: String(100) + '%',
+        right: String(0),
+        top: String(0),
+        background: colorChip.gray0,
+      }
+    });
+  } else {
+    createNode({
+      mother: rightBox,
+      style: {
+        position: "absolute",
+        width: "calc(100% + " + String(paddingLeft) + ea + ")",
+        height: String(backgroundRatio) + '%',
+        right: String(-1 * paddingLeft) + ea,
+        bottom: String(0),
+        background: colorChip.gray1,
+      }
+    });
+  }
 
   for (let i = 0; i < (columns * rows); i++) {
+
+    boxWidth = "calc(calc(100% - " + String(boxMargin * (columns - 1)) + ea + ") / " + String(columns) + ")";
+    boxHeight = "calc(calc(calc(100% - " + String(boxMargin * (rows - 1)) + ea + ") / " + String(rows) + ") - " + String(boxPaddingTop) + ea + ")";
+
     createNode({
       mother: rightBox,
       style: {
         display: "inline-block",
         position: "relative",
-        width: "calc(calc(100% - " + String(boxMargin * (columns - 1)) + ea + ") / " + String(columns) + ")",
-        height: "calc(calc(calc(100% - " + String(boxMargin * (rows - 1)) + ea + ") / " + String(rows) + ") - " + String(boxPaddingTop) + ea + ")",
+        width: boxWidth,
+        height: boxHeight,
         background: colorChip.white,
         borderRadius: String(5) + "px",
         marginRight: String(i % columns === (columns - 1) ? 0 : boxMargin) + ea,
         marginBottom: String(boxMargin) + ea,
         boxShadow: "0px 3px 18px -9px " + colorChip.shadow,
         opacity: String(0),
-        animation: "fadeup 0.8s ease " + String(0.3 + i * 0.2) + "s forwards",
+        animation: "fadeuporiginal 0.8s ease " + String(0.3 + i * 0.2) + "s forwards",
         paddingTop: String(boxPaddingTop) + ea,
         verticalAlign: "top",
       },
@@ -287,8 +310,8 @@ AspirantExplanationJs.prototype.insertInitBox = function () {
           },
           style: {
             display: "block",
-            marginLeft: String(boxInnerMargin) + ea,
-            width: withOut(boxInnerMargin * 2, ea),
+            marginLeft: String(desktop ? boxInnerMargin : 4) + ea,
+            width: withOut(desktop ? boxInnerMargin * 2 : 8, ea),
             height: "auto",
           }
         },
@@ -369,56 +392,71 @@ AspirantExplanationJs.prototype.insertSecondBox = function () {
   let descriptionTop, descriptionSize, descriptionWeight, descriptionLineHeight;
   let grayZoneMarginTop, grayZonePaddingTop, grayZoneHeight;
   let grayTongHeight;
+  let mobileMiddleTongMarginRight, mobileMiddleTongMarginBottom;
+  let mobileGrayMarginRight, mobileGrayMarginBottom;
+  let grayZonePaddingBottom;
+  let mobileWordingHeight, mobileWordingBottom, mobileWordingRight;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
 
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
 
-  titleMarginTop = <%% 13, 13, 13, 13, 13 %%>;
-  title = "홈스타일링 디자이너에 도전하세요!";
-  paddingTop = <%% 64, 64, 52, 40, 64 %%>;
+  titleMarginTop = <%% 13, 13, 13, 13, 1.5 %%>;
+  title = desktop ? "홈스타일링 디자이너에 도전하세요!" : "디자이너에 도전하세요!";
+  paddingTop = <%% 64, 64, 52, 40, 9 %%>;
 
-  middleTongMarginTop = <%% 58, 58, 42, 32, 42 %%>;
-  middleTongPadding = <%% 160, 100, 72, 42, 52 %%>;
-  middleTongHeight = <%% 260, 240, 193, 170, 193 %%>;
+  middleTongMarginTop = <%% 58, 58, 42, 32, 7 %%>;
+  middleTongPadding = <%% 160, 100, 72, 42, 7.5 %%>;
+  middleTongHeight = <%% 260, 240, 193, 170, 19 %%>;
 
-  middleTongBox0Width = <%% 192, 160, 140, 120, 140 %%>;
-  middleTongBox1Width = <%% 84, 52, 48, 40, 48 %%>;
+  middleTongBox0Width = <%% 192, 160, 140, 120, 33 %%>;
+  middleTongBox1Width = <%% 84, 52, 48, 40, 4 %%>;
 
-  plusPaddingTop = <%% 82, 71, 64, 54, 64 %%>;
-  plusWidth = <%% 26, 18, 15, 13, 15 %%>;
+  plusPaddingTop = <%% 82, 71, 64, 54, 6 %%>;
+  plusWidth = <%% 26, 18, 15, 13, 1 %%>;
 
-  middleTextSize = <%% 19, 17, 15, 14, 15 %%>;
+  middleTextSize = <%% 19, 17, 15, 14, 3.3 %%>;
   middleTextWeight = 500;
   middleTextLineHeight = 1.4;
-  middleTextMarginTop = <%% (isMac() ? 18 : 20), (isMac() ? 15 : 16), (isMac() ? 13 : 14), 13, 13 %%>;
+  middleTextMarginTop = <%% (isMac() ? 18 : 20), (isMac() ? 15 : 16), (isMac() ? 13 : 14), 13, 2.5 %%>;
 
-  grayTongBox0Width = <%% 210, 165, 146, 115, 146 %%>;
-  grayTongBox1Width = <%% 40, 30, 20, 16, 20 %%>;
+  mobileMiddleTongMarginRight = 7;
+  mobileMiddleTongMarginBottom = 14;
 
-  grayTextSize = <%% 18, 15, 14, 13, 13 %%>;
-  grayTextTop = <%% (isMac() ? 11 : 14), (isMac() ? 11 : 12), (isMac() ? 9 : 11), 7, 9 %%>;
-  grayPanHeight = <%% 51, 46, 41, 35, 41 %%>;
+  grayTongBox0Width = <%% 210, 165, 146, 115, 34.5 %%>;
+  grayTongBox1Width = <%% 40, 30, 20, 16, 0 %%>;
 
-  stepLeft = <%% 21, 16, 12, 11, 12 %%>;
-  stepTop = <%% -25, -23, -21, -19, -21 %%>;
-  stepSize = <%% 14, 13, 12, 11, 12 %%>;
+  grayTextSize = <%% 18, 15, 14, 13, 3.5 %%>;
+  grayTextTop = <%% (isMac() ? 11 : 14), (isMac() ? 11 : 12), (isMac() ? 9 : 11), 7, 2 %%>;
+  grayPanHeight = <%% 51, 46, 41, 35, 9.5 %%>;
+
+  stepLeft = <%% 21, 16, 12, 11, 3 %%>;
+  stepTop = <%% -25, -23, -21, -19, -4.5 %%>;
+  stepSize = <%% 14, 13, 12, 11, 2.8 %%>;
   stepWeight = 400;
 
-  grayBoxPaddingTop = <%% 20, 20, 20, 20, 20 %%>;
+  grayBoxPaddingTop = <%% 20, 20, 20, 20, 4 %%>;
 
-  arrowPaddingTop = <%% 38, 38, 36, 36, 36 %%>;
-  arrowWidth = <%% 10, 10, 7, 7, 7 %%>;
+  arrowPaddingTop = <%% 38, 38, 36, 36, 3 %%>;
+  arrowWidth = <%% 10, 10, 7, 7, 2 %%>;
 
   descriptionTop = <%% 64, 58, 50, 50, 50 %%>;
   descriptionSize = <%% 14, 12, 11, 11, 11 %%>;
   descriptionWeight = 400;
   descriptionLineHeight = 1.6;
 
-  grayZoneMarginTop = <%% 120, 90, 80, 72, 80 %%>;
-  grayZonePaddingTop = <%% 70, 60, 45, 25, 45 %%>;
-  grayZoneHeight = <%% 225, 195, 175, 99, 175 %%>;
-  grayTongHeight = <%% 200, 195, 175, 99, 175 %%>;
+  grayZoneMarginTop = <%% 120, 90, 80, 72, 25 %%>;
+  grayZonePaddingTop = <%% 70, 60, 45, 25, 8 %%>;
+  grayZonePaddingBottom = 7.5;
+  grayZoneHeight = <%% 225, 195, 175, 99, 17 %%>;
+  grayTongHeight = <%% 200, 195, 175, 99, 17 %%>;
+
+  mobileGrayMarginRight = 4;
+  mobileGrayMarginBottom = 2.6;
+
+  mobileWordingHeight = 7;
+  mobileWordingBottom = 4.6;
+  mobileWordingRight = 6.4;
 
   contents = [
     [
@@ -533,7 +571,7 @@ AspirantExplanationJs.prototype.insertSecondBox = function () {
       {
         style: {
           width: String(100) + '%',
-          display: "block",
+          display: desktop ? "block" : "none",
           position: "absolute",
           top: String(0),
           left: String(0),
@@ -543,8 +581,9 @@ AspirantExplanationJs.prototype.insertSecondBox = function () {
       },
       {
         style: {
+          display: desktop ? "block" : "none",
           position: "relative",
-          height: String(middleTongHeight) + ea,
+          height: desktop ? String(middleTongHeight) + ea : "",
           width: String(100) + '%',
           background: colorChip.white,
         }
@@ -557,7 +596,7 @@ AspirantExplanationJs.prototype.insertSecondBox = function () {
   createNode({
     mother: middleTong.children[1],
     style: {
-      display: "inline-block",
+      display: desktop ? "inline-block" : "none",
       width: "calc(calc(100% - " + String((middleTongBox0Width * boxNumber) + (middleTongBox1Width * (boxNumber - 1))) + ea + ") / 2)",
       height: String(100) + '%',
       verticalAlign: "top",
@@ -566,12 +605,14 @@ AspirantExplanationJs.prototype.insertSecondBox = function () {
 
   for (let i = 0; i < boxNumber; i++) {
     createNode({
-      mother: middleTong.children[1],
+      mother: desktop ? middleTong.children[1] : middleTong,
       style: {
         display: "inline-block",
         width: String(middleTongBox0Width) + ea,
         height: String(100) + '%',
         verticalAlign: "top",
+        marginRight: desktop ? "" : String(i % 2 === 0 ? mobileMiddleTongMarginRight : 0) + ea,
+        marginBottom: desktop ? "" : String(i < boxNumber / 2 ? mobileMiddleTongMarginBottom : 0) + ea,
       },
       children: [
         {
@@ -611,9 +652,9 @@ AspirantExplanationJs.prototype.insertSecondBox = function () {
               text: contents[i].join("\n"),
               style: {
                 position: "absolute",
-                width: String(200) + '%',
+                width: String(desktop ? 200 : 100) + '%',
                 top: String(0),
-                left: String(-50) + '%',
+                left: String(desktop ? -50 : 0) + '%',
                 fontSize: String(middleTextSize) + ea,
                 fontWeight: String(middleTextWeight),
                 color: colorChip.black,
@@ -655,7 +696,7 @@ AspirantExplanationJs.prototype.insertSecondBox = function () {
   createNode({
     mother: middleTong.children[1],
     style: {
-      display: "inline-block",
+      display: desktop ? "inline-block" : "none",
       width: "calc(calc(100% - " + String((middleTongBox0Width * boxNumber) + (middleTongBox1Width * (boxNumber - 1))) + ea + ") / 2)",
       height: String(100) + '%',
       verticalAlign: "top",
@@ -670,7 +711,8 @@ AspirantExplanationJs.prototype.insertSecondBox = function () {
       display: "block",
       position: "relative",
       paddingTop: String(grayZonePaddingTop) + ea,
-      height: String(grayZoneHeight) + ea,
+      paddingBottom: desktop ? "" : String(grayZonePaddingBottom) + ea,
+      height: desktop ? String(grayZoneHeight) + ea : "",
       background: colorChip.gray0,
     }
   });
@@ -679,8 +721,9 @@ AspirantExplanationJs.prototype.insertSecondBox = function () {
     mother: grayZone,
     style: {
       position: "relative",
-      height: String(grayTongHeight) + ea,
-      width: String(100) + '%',
+      height: desktop ? String(grayTongHeight) + ea : "",
+      paddingLeft: desktop ? "" : String(middleTongPadding) + ea,
+      width: desktop ? String(100) + '%' : withOut(middleTongPadding * 2, ea),
       background: colorChip.gray0,
     }
   });
@@ -690,7 +733,7 @@ AspirantExplanationJs.prototype.insertSecondBox = function () {
   createNode({
     mother: grayTong,
     style: {
-      display: "inline-block",
+      display: desktop ? "inline-block" : "none",
       width: "calc(calc(100% - " + String((grayTongBox0Width * boxNumber) + (grayTongBox1Width * (boxNumber - 1))) + ea + ") / 2)",
       height: String(100) + '%',
       verticalAlign: "top",
@@ -703,9 +746,11 @@ AspirantExplanationJs.prototype.insertSecondBox = function () {
       style: {
         display: "inline-block",
         width: String(grayTongBox0Width) + ea,
-        height: withOut(grayBoxPaddingTop, ea),
+        height: desktop ? withOut(grayBoxPaddingTop, ea) : "",
         verticalAlign: "top",
         paddingTop: String(grayBoxPaddingTop) + ea,
+        marginRight: desktop ? "" : String(i % 2 === 0 ? mobileGrayMarginRight : 0) + ea,
+        marginBottom: desktop ? "" : String(mobileGrayMarginBottom) + ea,
       },
       children: [
         {
@@ -764,7 +809,7 @@ AspirantExplanationJs.prototype.insertSecondBox = function () {
       createNode({
         mother: grayTong,
         style: {
-          display: "inline-block",
+          display: desktop ? "inline-block" : "none",
           position: "relative",
           width: String(grayTongBox1Width) + ea,
           height: withOut(arrowPaddingTop, ea),
@@ -789,14 +834,26 @@ AspirantExplanationJs.prototype.insertSecondBox = function () {
   createNode({
     mother: grayTong,
     style: {
-      display: "inline-block",
+      display: desktop ? "inline-block" : "none",
       width: "calc(calc(100% - " + String((grayTongBox0Width * boxNumber) + (grayTongBox1Width * (boxNumber - 1))) + ea + ") / 2)",
       height: String(100) + '%',
       verticalAlign: "top",
     }
   });
 
-
+  if (mobile) {
+    createNode({
+      mother: grayTong,
+      mode: "svg",
+      source: AspirantExplanationJs.penWordings.a6(colorChip.green),
+      style: {
+        position: "absolute",
+        height: String(mobileWordingHeight) + ea,
+        bottom: String(mobileWordingBottom) + ea,
+        right: String(mobileWordingRight) + ea,
+      }
+    })
+  }
 
 }
 
@@ -865,75 +922,80 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
   let plusFontRight0;
   let greenWording;
   let plusWordings;
+  let columns;
+  let mobilePhotoPaddingTop;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
 
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
 
-  title = "디자이너는\n어떤 일을\n하나요?";
+  title = desktop ? "디자이너는\n어떤 일을\n하나요?" : "디자이너가 하는 일은?";
   title2 = "왜 홈리에종을 추천할까요?";
-  paddingTop = <%% 64, 64, 52, 40, 64 %%>;
-  paddingLeft = <%% 64, 64, 52, 40, 64 %%>;
+  paddingTop = <%% 64, 64, 52, 40, 2 %%>;
+  paddingLeft = <%% 64, 64, 52, 40, 4.5 %%>;
 
-  leftBoxWidth = <%% 250, 190, 144, 130, 140 %%>;
-  marginTopVisual = <%% 3, 3, 3, 3, 3 %%>;
-  titleMarginTop = <%% 13, 13, 13, 13, 13 %%>;
+  mobilePhotoPaddingTop = 8;
 
-  boxMargin = <%% 36, 24, 21, 18, 21 %%>;
-  boxMarginBottom = <%% 36, 30, 27, 20, 27 %%>;
+  leftBoxWidth = <%% 250, 190, 144, 130, 0 %%>;
+  marginTopVisual = <%% 3, 3, 3, 3, 9 %%>;
+  titleMarginTop = <%% 13, 13, 13, 13, 1.5 %%>;
+
+  boxMargin = <%% 36, 24, 21, 18, 3 %%>;
+  boxMarginBottom = <%% 36, 30, 27, 20, 5 %%>;
   boxNumber = <%% 5, 5, 5, 5, 5 %%>;
+  columns = desktop ? 3 : 2;
 
-  boxPaddingTop = <%% 15, 15, 12, 12, 12 %%>;
-  boxPaddingLeft = <%% 2, 2, 2, 2, 2 %%>;
+  boxPaddingTop = <%% 15, 15, 12, 12, 2.5 %%>;
+  boxPaddingLeft = <%% 2, 2, 2, 2, 0 %%>;
 
-  boxContentsSize = <%% 14, 12, 12, 11, 12 %%>;
+  boxContentsSize = <%% 14, 12, 12, 11, 2.6 %%>;
   boxContentsWeight = <%% 400, 400, 400, 400, 400 %%>;
   boxContentsLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  photoHeight = <%% 200, 150, 130, 107, 130 %%>;
+  photoHeight = <%% 200, 150, 130, 107, 26 %%>;
 
-  boxTitleBottom = <%% (isMac() ? 19 : 17), (isMac() ? 19 : 16), (isMac() ? 19 : 16), 15, 19 %%>;
-  boxTitleLeft = <%% 23, 19, 19, 16, 19 %%>;
-  boxTitleSize = <%% 18, 16, 16, 14, 16 %%>;
+  boxTitleBottom = <%% (isMac() ? 19 : 17), (isMac() ? 19 : 16), (isMac() ? 19 : 16), 15, 2.1 %%>;
+  boxTitleLeft = <%% 23, 19, 19, 16, 2.5 %%>;
+  boxTitleSize = <%% 18, 16, 16, 14, 3 %%>;
   boxTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  grayBetween = <%% 36, 36, 36, 20, 36 %%>;
+  grayBetween = <%% 36, 36, 36, 20, 10 %%>;
 
-  grayCardTongMarginTop = <%% 50, 50, 40, 30, 40 %%>;
-  grayCardTongMarginBottom = <%% 36, 32, 26, 18, 26 %%>;
+  grayCardTongMarginTop = <%% 50, 50, 40, 30, 9 %%>;
+  grayCardTongMarginBottom = <%% 36, 32, 26, 18, 2 %%>;
 
-  whiteCardWidth = <%% 480, 480, 420, 310, 420 %%>;
-  whiteRadius = <%% 16, 16, 16, 16, 16 %%>;
-  whiteCardPadding = <%% 40, 40, 40, 40, 40 %%>;
+  whiteCardWidth = <%% 480, 480, 420, 310, 80 %%>;
+  whiteRadius = <%% 16, 16, 16, 16, 3 %%>;
+  whiteCardPadding = <%% 40, 40, 40, 40, 4 %%>;
 
   whiteScale = 0.85;
   whiteOpacity = 0.85;
 
-  whitePhotoMarginRight = <%% 12, 12, 12, 12, 12 %%>;
-  whiteNameTongWidth = <%% 85, 85, 85, 85, 85 %%>;
-  whiteNameHeight = <%% 36, 36, 36, 36, 36 %%>;
+  whitePhotoMarginRight = <%% 12, 12, 12, 12, 2 %%>;
+  whiteNameTongWidth = <%% 85, 85, 85, 85, 12 %%>;
+  whiteNameHeight = <%% 36, 36, 36, 36, 6 %%>;
 
-  whiteContentsMarginTop = <%% 22, 22, 22, 22, 22 %%>;
-  whiteContentsMarginBottom = <%% 13, 13, 13, 13, 13 %%>;
+  whiteContentsMarginTop = <%% 22, 22, 22, 22, 2 %%>;
+  whiteContentsMarginBottom = <%% 13, 13, 13, 13, 0 %%>;
   whiteContentsVisualPadding = <%% 1, 1, 1, 1, 1 %%>;
 
-  whiteTitleHeight = <%% 70, 70, 70, 64, 70 %%>;
-  whiteTitleSize = <%% 15, 15, 14, 13, 14 %%>;
-  whiteContentsSize = <%% 14, 13, 13, 11, 13 %%>;
+  whiteTitleHeight = <%% 70, 70, 70, 64, 10 %%>;
+  whiteTitleSize = <%% 15, 15, 14, 13, 2.8 %%>;
+  whiteContentsSize = <%% 14, 13, 13, 11, 2.5 %%>;
   whiteTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
   whiteContentsWeight = <%% 400, 400, 400, 400, 400 %%>;
   whiteContentsLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
-  buttonWidth = <%% 185, 185, 170, 155, 185 %%>;
-  buttonHeight = <%% 40, 40, 36, 32, 40 %%>;
+  buttonWidth = <%% 185, 185, 170, 155, 34 %%>;
+  buttonHeight = <%% 40, 40, 36, 32, 7 %%>;
   buttonMarginTop = <%% 24, 24, 24, 22, 24 %%>;
-  buttonSize = <%% 15, 14, 13, 12, 14 %%>;
+  buttonSize = <%% 15, 14, 13, 12, 2.6 %%>;
   buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
-  buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -1, -1 %%>;
+  buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -1, -0.3 %%>;
 
-  greenBoxHeight = <%% 148, 130, 120, 100, 120 %%>;
-  greenFontSize = <%% 26, 24, 22, 19, 22 %%>;
-  greenFontTop = <%% (isMac() ? 53 : 57), (isMac() ? 43 : 47), (isMac() ? 40 : 45), 33, 40 %%>;
+  greenBoxHeight = <%% 148, 130, 120, 100, 25.4 %%>;
+  greenFontSize = <%% 26, 24, 22, 19, 3.5 %%>;
+  greenFontTop = <%% (isMac() ? 53 : 57), (isMac() ? 43 : 47), (isMac() ? 40 : 45), 33, 5 %%>;
   greenFontWeight = <%% 600, 600, 600, 600, 600 %%>;
   greenButtonVisual = <%% -1, -1, -1, -1, -1 %%>;
 
@@ -1002,11 +1064,11 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
   leftBox = createNode({
     mother: whiteBlock,
     style: {
-      display: "inline-block",
+      display: desktop ? "inline-block" : "block",
       position: "relative",
-      paddingLeft: String(paddingLeft) + ea,
-      paddingTop: String(paddingTop) + ea,
-      width: String(leftBoxWidth) + ea,
+      paddingLeft: desktop ? String(paddingLeft) + ea : "",
+      paddingTop: desktop ? String(paddingTop) + ea : String(marginTopVisual) + ea,
+      width: desktop ? String(leftBoxWidth) + ea : "",
       verticalAlign: "top",
     }
   });
@@ -1016,8 +1078,8 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
     style: {
       display: "block",
       position: "relative",
-      textAlign: "left",
-      marginTop: String(marginTopVisual) + ea,
+      textAlign: desktop ? "left" : "center",
+      marginTop: desktop ? String(marginTopVisual) + ea : "",
     },
     children: [
       {
@@ -1040,16 +1102,18 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
       fontWeight: String(titleWeight),
       color: colorChip.black,
       lineHeight: String(titleLineHeight),
+      textAlign: desktop ? "" : "center",
     }
   });
 
   rightBox = createNode({
     mother: whiteBlock,
     style: {
-      display: "inline-block",
+      display: desktop ? "inline-block" : "block",
       position: "relative",
-      paddingRight: String(paddingLeft) + ea,
-      paddingTop: String(paddingTop) + ea,
+      paddingRight: desktop ? String(paddingLeft) + ea : "",
+      paddingLeft: desktop ? "" : String(paddingLeft) + ea,
+      paddingTop: desktop ? String(paddingTop) + ea : String(mobilePhotoPaddingTop) + ea,
       width: withOut((paddingLeft * 2) + leftBoxWidth, ea),
       verticalAlign: "top",
     }
@@ -1060,8 +1124,8 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
       mother: rightBox,
       style: {
         display: "inline-block",
-        width: "calc(calc(100% - " + String(boxMargin * 2) + ea + ") / 3)",
-        marginRight: String(i === boxNumber - 1 ? 0 : boxMargin) + ea,
+        width: "calc(calc(100% - " + String(boxMargin * (columns - 1)) + ea + ") / " + String(columns) + ")",
+        marginRight: desktop ? String(i === boxNumber - 1 ? 0 : boxMargin) + ea : String(i % 2 === 0 ? boxMargin : 0) + ea,
         marginBottom: String(boxMarginBottom) + ea,
         verticalAlign: "top",
       },
@@ -1125,8 +1189,8 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
       display: "block",
       position: "relative",
       marginTop: String(grayBetween) + ea,
-      paddingTop: String(paddingTop) + ea,
-      paddingBottom: String(paddingTop) + ea,
+      paddingTop: desktop ? String(paddingTop) + ea : String(marginTopVisual) + ea,
+      paddingBottom: String(desktop ? paddingTop : 9) + ea,
       paddingLeft: String(paddingLeft) + ea,
       paddingRight: String(paddingLeft) + ea,
       width: withOut(paddingLeft * 2, ea),
@@ -1139,8 +1203,8 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
     style: {
       display: "block",
       position: "relative",
-      textAlign: "left",
-      marginTop: String(marginTopVisual) + ea,
+      textAlign: desktop ? "left" : "center",
+      marginTop: desktop ? String(marginTopVisual) + ea : "",
     },
     children: [
       {
@@ -1163,6 +1227,7 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
       fontWeight: String(titleWeight),
       color: colorChip.black,
       lineHeight: String(titleLineHeight),
+      textAlign: desktop ? "" : "center",
     }
   });
 
@@ -1181,20 +1246,21 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
     createNode({
       mother: grayCardTong,
       style: {
-        display: "inline-block",
-        position: (i === 2 ? "relative" : "absolute"),
-        top: String(0),
-        left: (i === 0 ? String(0) : ""),
-        right: (i === 1 ? String(0) : ""),
-        transform: (i === 2 ? "" : "scale(" + String(whiteScale) + ")"),
-        transformOrigin: (i === 0 ? "left" : (i === 1 ? "right" : "")),
-        opacity: (i === 2 ? "" : String(whiteOpacity)),
-        width: String(whiteCardWidth) + ea,
+        display: desktop ? "inline-block" : "block",
+        position: desktop ? (i === 2 ? "relative" : "absolute") : "relative",
+        top: desktop ? String(0) : "",
+        left: desktop ? (i === 0 ? String(0) : "") : "",
+        right: desktop ? (i === 1 ? String(0) : "") : "",
+        transform: desktop ? (i === 2 ? "" : "scale(" + String(whiteScale) + ")") : "",
+        transformOrigin: desktop ? (i === 0 ? "left" : (i === 1 ? "right" : "")) : "",
+        opacity: desktop ? (i === 2 ? "" : String(whiteOpacity)) : "",
+        width: desktop ? String(whiteCardWidth) + ea : "",
         background: colorChip.white,
         borderRadius: String(whiteRadius) + "px",
         boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
         padding: String(whiteCardPadding) + ea,
         textAlign: "left",
+        marginBottom: desktop ? "" : String(2) + ea,
       },
       children: [
         {
@@ -1218,6 +1284,7 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
             justifyContent: "center",
             alignItems: "center",
             verticalAlign: "top",
+            marginRight: mobile ? String(1.5) + ea : "",
           },
           children: [
             {
@@ -1291,15 +1358,16 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
           fontWeight: String(greenFontWeight),
           color: colorChip.white,
           top: String(greenFontTop) + ea,
-          left: String(paddingLeft) + ea,
+          left: String(desktop ? paddingLeft : 6.3) + ea,
         }
       },
       {
         style: {
           position: "absolute",
           display: "inline-flex",
-          top: String(greenFontTop + greenButtonVisual) + ea,
-          right: String(paddingLeft) + ea,
+          top: String(desktop ? greenFontTop + greenButtonVisual : 12) + ea,
+          right: desktop ? String(paddingLeft) + ea : "",
+          left: String(26) + ea,
           width: String(buttonWidth) + ea,
           height: String(buttonHeight) + ea,
           borderRadius: String(buttonHeight) + ea,
@@ -1326,102 +1394,104 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
     ]
   });
 
-  createNode({
-    mother: whiteBlock,
-    style: {
-      display: "block",
-      position: "relative",
-      paddingLeft: String(paddingLeft) + ea,
-      paddingRight: String(paddingLeft) + ea,
-      width: withOut(paddingLeft * 2, ea),
-      height: String(plusBoxHeight) + ea,
-      background: colorChip.white,
-    },
-    children: [
-      {
-        text: plusWordings[0],
-        style: {
-          position: "absolute",
-          fontSize: String(plusFontSize) + ea,
-          fontWeight: String(plusFontWeight),
-          color: colorChip.green,
-          top: String(greenFontTop) + ea,
-          left: String(plusFontLeft0) + ea,
-          lineHeight: String(plusFontLineHeight),
-          textAlign: "center",
-        },
-        bold: {
-          fontSize: String(greenFontSize) + ea,
-          fontWeight: String(greenFontWeight),
-          color: colorChip.black,
-        }
+  if (desktop) {
+    createNode({
+      mother: whiteBlock,
+      style: {
+        display: "block",
+        position: "relative",
+        paddingLeft: String(paddingLeft) + ea,
+        paddingRight: String(paddingLeft) + ea,
+        width: withOut(paddingLeft * 2, ea),
+        height: String(plusBoxHeight) + ea,
+        background: colorChip.white,
       },
-      {
-        text: plusWordings[1],
-        style: {
-          position: "absolute",
-          fontSize: String(plusFontSize) + ea,
-          fontWeight: String(plusFontWeight),
-          color: colorChip.green,
-          top: String(greenFontTop) + ea,
-          left: String(plusFontLeft1) + ea,
-          lineHeight: String(plusFontLineHeight),
-          textAlign: "center",
+      children: [
+        {
+          text: plusWordings[0],
+          style: {
+            position: "absolute",
+            fontSize: String(plusFontSize) + ea,
+            fontWeight: String(plusFontWeight),
+            color: colorChip.green,
+            top: String(greenFontTop) + ea,
+            left: String(plusFontLeft0) + ea,
+            lineHeight: String(plusFontLineHeight),
+            textAlign: "center",
+          },
+          bold: {
+            fontSize: String(greenFontSize) + ea,
+            fontWeight: String(greenFontWeight),
+            color: colorChip.black,
+          }
         },
-        bold: {
-          fontSize: String(greenFontSize) + ea,
-          fontWeight: String(greenFontWeight),
-          color: colorChip.black,
+        {
+          text: plusWordings[1],
+          style: {
+            position: "absolute",
+            fontSize: String(plusFontSize) + ea,
+            fontWeight: String(plusFontWeight),
+            color: colorChip.green,
+            top: String(greenFontTop) + ea,
+            left: String(plusFontLeft1) + ea,
+            lineHeight: String(plusFontLineHeight),
+            textAlign: "center",
+          },
+          bold: {
+            fontSize: String(greenFontSize) + ea,
+            fontWeight: String(greenFontWeight),
+            color: colorChip.black,
+          },
+          under: {
+            fontSize: String(greenFontSize) + ea,
+            fontWeight: String(greenFontWeight),
+            color: colorChip.green,
+          }
         },
-        under: {
-          fontSize: String(greenFontSize) + ea,
-          fontWeight: String(greenFontWeight),
-          color: colorChip.green,
-        }
-      },
-      {
-        text: plusWordings[2],
-        style: {
-          position: "absolute",
-          fontSize: String(plusFontSize) + ea,
-          fontWeight: String(plusFontWeight),
-          color: colorChip.green,
-          top: String(greenFontTop) + ea,
-          left: String(plusFontLeft2) + ea,
-          lineHeight: String(plusFontLineHeight),
-          textAlign: "center",
+        {
+          text: plusWordings[2],
+          style: {
+            position: "absolute",
+            fontSize: String(plusFontSize) + ea,
+            fontWeight: String(plusFontWeight),
+            color: colorChip.green,
+            top: String(greenFontTop) + ea,
+            left: String(plusFontLeft2) + ea,
+            lineHeight: String(plusFontLineHeight),
+            textAlign: "center",
+          },
+          bold: {
+            fontSize: String(greenFontSize) + ea,
+            fontWeight: String(greenFontWeight),
+            color: colorChip.black,
+          },
+          under: {
+            fontSize: String(greenFontSize) + ea,
+            fontWeight: String(greenFontWeight),
+            color: colorChip.green,
+          }
         },
-        bold: {
-          fontSize: String(greenFontSize) + ea,
-          fontWeight: String(greenFontWeight),
-          color: colorChip.black,
+        {
+          text: plusWordings[3],
+          style: {
+            position: "absolute",
+            fontSize: String(plusFontSize) + ea,
+            fontWeight: String(plusFontWeight),
+            color: colorChip.green,
+            top: String(greenFontTop) + ea,
+            right: String(plusFontRight0) + ea,
+            lineHeight: String(plusFontLineHeight),
+            textAlign: "center",
+          },
+          bold: {
+            fontSize: String(greenFontSize) + ea,
+            fontWeight: String(greenFontWeight),
+            color: colorChip.black,
+          }
         },
-        under: {
-          fontSize: String(greenFontSize) + ea,
-          fontWeight: String(greenFontWeight),
-          color: colorChip.green,
-        }
-      },
-      {
-        text: plusWordings[3],
-        style: {
-          position: "absolute",
-          fontSize: String(plusFontSize) + ea,
-          fontWeight: String(plusFontWeight),
-          color: colorChip.green,
-          top: String(greenFontTop) + ea,
-          right: String(plusFontRight0) + ea,
-          lineHeight: String(plusFontLineHeight),
-          textAlign: "center",
-        },
-        bold: {
-          fontSize: String(greenFontSize) + ea,
-          fontWeight: String(greenFontWeight),
-          color: colorChip.black,
-        }
-      },
-    ]
-  });
+      ]
+    });
+  }
 
 }
 
@@ -1479,71 +1549,71 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
   let pictureButtonSize, pictureButtonWeight, pictureButtonTextTop;
 
   blockHeight = <%% 908, 901, 817, 1026, 264 %%>;
-  bottomMargin = 200;
+  bottomMargin = <%% 200, 200, 200, 180, 20 %%>;
 
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
 
-  paddingTop = <%% 64, 64, 52, 40, 64 %%>;
-  paddingTop2 = <%% 64, 64, 52, 40, 64 %%>;
-  paddingLeft = <%% 64, 64, 52, 40, 64 %%>;
+  paddingTop = <%% 64, 64, 52, 40, 2 %%>;
+  paddingTop2 = <%% 64, 64, 52, 40, 9 %%>;
+  paddingLeft = <%% 64, 64, 52, 40, 4.5 %%>;
 
-  leftBoxWidth = <%% 250, 190, 160, 160, 140 %%>;
+  leftBoxWidth = <%% 250, 190, 160, 160, 0 %%>;
 
-  title = "서비스\n프로세스";
-  title2 = "자주 찾는\n질문";
+  title = desktop ? "서비스\n프로세스" : "서비스 프로세스";
+  title2 = desktop ? "자주 찾는\n질문" : "자주 찾는 질문";
   title3 = "홈스타일링으로 새로운 시도를\n홈리에종과 든든하게 시작하세요";
   finalButtonWording = "디자이너 활동 시작하기";
 
-  marginTopVisual = <%% 3, 3, 3, 3, 3 %%>;
-  titleMarginTop = <%% 13, 13, 13, 13, 13 %%>;
+  marginTopVisual = <%% 3, 3, 3, 3, 9 %%>;
+  titleMarginTop = <%% 13, 13, 13, 13, 1.5 %%>;
 
-  titelBlockHeight = <%% 40, 36, 36, 36, 36 %%>;
-  titleBlockWidth = <%% 150, 150, 150, 140, 150 %%>;
-  titleBlockMargin = <%% 40, 40, 30, 24, 30 %%>;
+  titelBlockHeight = <%% 40, 36, 36, 36, 8 %%>;
+  titleBlockWidth = <%% 150, 150, 150, 140, 30 %%>;
+  titleBlockMargin = <%% 40, 40, 30, 24, 2 %%>;
 
-  titleSvgMiddleHeight = <%% 26, 24, 24, 24, 24 %%>;
-  titleSvgTop = <%% 7, 6, 6, 6, 6 %%>;
+  titleSvgMiddleHeight = <%% 26, 24, 24, 24, 5 %%>;
+  titleSvgTop = <%% 7, 6, 6, 6, 1.5 %%>;
 
-  titlePaddingRight = <%% 10, 10, 10, 10, 10 %%>;
+  titlePaddingRight = <%% 10, 10, 10, 10, 3 %%>;
 
-  titleBlockMarginBottom = <%% 50, 50, 40, 40, 40 %%>;
+  titleBlockMarginBottom = <%% 50, 50, 40, 40, 7 %%>;
 
-  titleNumberSize = <%% 16, 14, 13, 12, 13 %%>;
+  titleNumberSize = <%% 16, 14, 13, 12, 3 %%>;
   titleNumberWeight = <%% 400, 400, 400, 400, 400 %%>;
-  titleNumberTop = <%% -1.5, -1.5, -1.5, -1.5, -1.5 %%>;
+  titleNumberTop = <%% -1.5, -1.5, -1.5, -1.5, -0.3 %%>;
 
-  descriptionSize = <%% 14, 13, 13, 12, 13 %%>;
+  descriptionSize = <%% 14, 13, 13, 12, 2.8 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
   descriptionBoldWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-  grayMarginTop = <%% 20, 20, 20, 20, 20 %%>;
+  grayMarginTop = <%% 20, 20, 20, 20, 6 %%>;
 
-  questionBlockMargin = <%% 16, 10, 10, 10, 10 %%>;
-  questionBlockHeight = <%% 64, 50, 42, 42, 42 %%>;
-  questionSize = <%% 16, 13, 12, 12, 12 %%>;
+  questionBlockMargin = <%% 16, 10, 10, 10, 2 %%>;
+  questionBlockHeight = <%% 64, 50, 42, 42, 20 %%>;
+  questionSize = <%% 16, 13, 12, 12, 3 %%>;
   questionWeight = <%% 600, 600, 600, 600, 600 %%>;
-  questionTop = <%% (isMac() ? -2 : 1), (isMac() ? -2 : 1), (isMac() ? -2 : 1), (isMac() ? -2 : 1), -2 %%>;
+  questionTop = <%% (isMac() ? -2 : 1), (isMac() ? -2 : 1), (isMac() ? -2 : 1), (isMac() ? -2 : 1), 0 %%>;
 
-  grayTongPaddingBottom = <%% 59, 59, 59, 59, 59 %%>;
+  grayTongPaddingBottom = <%% 59, 59, 59, 59, 12 %%>;
 
-  pictureHeight = <%% 212, 200, 200, 180, 200 %%>;
-  pictureTongPaddingTop = <%% 70, 60, 60, 56, 60 %%>;
+  pictureHeight = <%% 212, 200, 200, 180, 37 %%>;
+  pictureTongPaddingTop = <%% 70, 60, 60, 56, 10 %%>;
 
   pictureTongBackground = "z6.png";
   pictureTongPosition = "50% 75%";
   pictureTongBlackOpacity = <%% 0.45, 0.45, 0.45, 0.45, 0.45 %%>;
 
-  pictureTitleSize = <%% 27, 27, 25, 23, 25 %%>;
+  pictureTitleSize = <%% 27, 27, 25, 23, 5 %%>;
   pictureTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
   pictureTitleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
-  pictureButtonWidth = <%% 185, 185, 170, 160, 185 %%>;
-  pictureButtonHeight = <%% 40, 40, 36, 32, 40 %%>;
-  pictureButtonMarginTop = <%% 24, 18, 18, 18, 18 %%>;
-  pictureButtonSize = <%% 15, 14, 13, 12, 14 %%>;
+  pictureButtonWidth = <%% 185, 185, 170, 160, 34 %%>;
+  pictureButtonHeight = <%% 40, 40, 36, 32, 7 %%>;
+  pictureButtonMarginTop = <%% 24, 18, 18, 18, 3 %%>;
+  pictureButtonSize = <%% 15, 14, 13, 12, 2.6 %%>;
   pictureButtonWeight = <%% 600, 600, 600, 600, 600 %%>;
-  pictureButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -1, -1 %%>;
+  pictureButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -1, -0.3 %%>;
 
   contents = [
     "고객의 공간 정보, 요청 사항 등이 기입된 서비스 신청서를 토대로 프로젝트 계약 전, 서비스에 대한 상세한 안내가 이뤄집니다.",
@@ -1578,11 +1648,11 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
   leftBox = createNode({
     mother: whiteBlock,
     style: {
-      display: "inline-block",
+      display: desktop ? "inline-block" : "block",
       position: "relative",
-      paddingLeft: String(paddingLeft) + ea,
-      paddingTop: String(paddingTop) + ea,
-      width: String(leftBoxWidth) + ea,
+      paddingLeft: desktop ? String(paddingLeft) + ea : "",
+      paddingTop: desktop ? String(paddingTop) + ea : String(marginTopVisual) + ea,
+      width: desktop ? String(leftBoxWidth) + ea : "",
       verticalAlign: "top",
     }
   });
@@ -1592,8 +1662,8 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
     style: {
       display: "block",
       position: "relative",
-      textAlign: "left",
-      marginTop: String(marginTopVisual) + ea,
+      textAlign: desktop ? "left" : "center",
+      marginTop: desktop ? String(marginTopVisual) + ea : "",
     },
     children: [
       {
@@ -1616,6 +1686,7 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
       fontWeight: String(titleWeight),
       color: colorChip.black,
       lineHeight: String(titleLineHeight),
+      textAlign: desktop ? "" : "center",
     }
   });
 
@@ -1624,9 +1695,11 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
     style: {
       display: "inline-block",
       position: "relative",
-      paddingRight: String(paddingLeft) + ea,
+      paddingRight: desktop ? String(paddingLeft) + ea : "",
+      paddingLeft: mobile ? String(paddingLeft) + ea : "",
       paddingTop: String(paddingTop) + ea,
       width: withOut((paddingLeft * 2) + leftBoxWidth, ea),
+      marginTop: desktop ? "" : String(7) + ea,
       verticalAlign: "top",
     }
   });
@@ -1700,9 +1773,11 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
         },
         {
           style: {
-            display: "inline-block",
-            width: withOut(titleBlockWidth + titelBlockHeight + titlePaddingRight + titleBlockMargin, ea),
+            display: desktop ? "inline-block" : "block",
+            width: desktop ? withOut(titleBlockWidth + titelBlockHeight + titlePaddingRight + titleBlockMargin, ea) : "",
             verticalAlign: "top",
+            paddingTop: desktop ? "" : String(2) + ea,
+            paddingLeft: desktop ? "" : String(8) + ea,
           },
           children: [
             {
@@ -1738,12 +1813,13 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
   createNode({
     mother: grayTong,
     style: {
-      display: "inline-block",
+      display: desktop ? "inline-block" : "block",
       position: "relative",
-      paddingLeft: String(paddingLeft) + ea,
+      paddingLeft: desktop ? String(paddingLeft) + ea : "",
       paddingTop: String(paddingTop2) + ea,
-      width: String(leftBoxWidth) + ea,
+      width: desktop ? String(leftBoxWidth) + ea : "",
       verticalAlign: "top",
+      textAlign: desktop ? "" : "center",
     },
     children: [
       {
@@ -1753,6 +1829,7 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
           fontWeight: String(titleWeight),
           color: colorChip.black,
           lineHeight: String(titleLineHeight),
+          textAlign: desktop ? "" : "center",
         }
       }
     ]
@@ -1763,8 +1840,9 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
     style: {
       display: "inline-block",
       position: "relative",
-      paddingRight: String(paddingLeft) + ea,
-      paddingTop: String(paddingTop2) + ea,
+      paddingRight: desktop ? String(paddingLeft) + ea : "",
+      paddingLeft: mobile ? String(paddingLeft) + ea : "",
+      paddingTop: String(desktop ? paddingTop2 : (paddingTop2 / 2)) + ea,
       width: withOut((paddingLeft * 2) + leftBoxWidth, ea),
       verticalAlign: "top",
     }
@@ -1797,6 +1875,8 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
             fontWeight: String(questionWeight),
             top: String(questionTop) + ea,
             color: colorChip.black,
+            textAlign: "center",
+            padding: desktop ? "" : String(3) + ea,
           }
         }
       ]
@@ -1899,7 +1979,7 @@ AspirantExplanationJs.prototype.launching = async function (loading) {
     this.titleWeight = 500;
     this.titleLineHeight = 1.4;
     this.titleSize = <%% 30, 27, 23, 21, 5.7 %%>;
-    this.titleSvgHeight = <%% 52, 48, 42, 40, 12 %%>;
+    this.titleSvgHeight = <%% 52, 48, 42, 40, 10 %%>;
 
     await this.mother.ghostClientLaunching({
       mode: "front",

@@ -99,7 +99,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
+
 
 
 
@@ -2327,15 +2327,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "이미자",
-    //     designer: "강주현",
-    //     link: "https://drive.google.com/drive/folders/14PXyARAc5z2SJTuxNR6kq_HqYTwyvOou",
-    //     pay: true
-    //   },
-    //   {
-    //     client: "김용남",
-    //     designer: "김소영",
-    //     link: "https://drive.google.com/drive/folders/1wzUHx1VasmvseA8SXWqCUPD4NZcz7Nz-",
+    //     client: "엄지영",
+    //     designer: "김지은",
+    //     link: "https://drive.google.com/drive/folders/1ZafvHT0XDQbXD0bMPqzpP3AjIP7X0RnS",
     //     pay: true
     //   },
     // ]);
