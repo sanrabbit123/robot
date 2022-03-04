@@ -117,7 +117,7 @@ AspirantExplanationJs.prototype.insertInitBox = function () {
   let leftBoxHeight;
   let boxWidth, boxHeight;
 
-  blockHeight = <%% 908, 700, 620, 520, 195 %%>;
+  blockHeight = <%% 908, 700, 620, 520, 200 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
 
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
@@ -137,7 +137,7 @@ AspirantExplanationJs.prototype.insertInitBox = function () {
   columns = desktop ? 3 : 2;
   rows = desktop ? 2 : 3;
 
-  backgroundRatio = <%% 85, 85, 85, 85, 87.3 %%>;
+  backgroundRatio = <%% 85, 85, 85, 85, (isIphone() ? 88 : 87.7) %%>;
 
   boxInnerMargin = <%% 36, 36, 32, 32, 3 %%>;
   boxPaddingTop = <%% 40, 30, 28, 28, 4.5 %%>;
@@ -149,7 +149,7 @@ AspirantExplanationJs.prototype.insertInitBox = function () {
   descriptionSize = <%% 14.5, 13, 12, 11, 2.6 %%>;
   descriptionWeight = 300;
   descriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
-  descriptionMarginTop = <%% 10, 6, 6, 6, 1 %%>;
+  descriptionMarginTop = <%% 10, 6, 6, 6, (isIphone() ? 0.8 : 1) %%>;
   descriptionLeftPercentage = <%% 15, 10, 10, 10, 10 %%>;
 
   contents = [
