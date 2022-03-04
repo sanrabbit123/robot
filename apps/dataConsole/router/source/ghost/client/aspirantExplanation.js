@@ -159,7 +159,7 @@ AspirantExplanationJs.prototype.insertInitBox = function () {
     },
     {
       title: "디자인에만 집중",
-      description: <&& "역할을 분담하여 세일즈, 정산,\n중재 및 관리는 홈리에종에 맡겨요" | "역할을 분담하여 세일즈, 정산,\n중재 및 관리는 홈리에종에 맡겨요" | "역할을 분담하여 세일즈, 정산,\n중재 및 관리는 홈리에종에 맡겨요" | "역할을 분담하여 세일즈, 정산,\n중재 및 관리는 맡겨요" | "역할을 분담하여 세일즈, 정산,\n중재 및 관리는 맡겨요" &&>,
+      description: <&& "역할을 분담하여 세일즈, 정산,\n중재 및 관리는 홈리에종에 맡겨요" | "역할을 분담하여 세일즈, 정산,\n중재 및 관리는 홈리에종에 맡겨요" | "역할을 분담하여 세일즈, 정산,\n중재 및 관리는 홈리에종에 맡겨요" | "역할을 분담하여 세일즈, 정산,\n중재는 홈리에종에 맡겨요" | "역할을 분담하여 세일즈, 정산,\n중재, 관리는 홈리에종에 맡겨요" &&>,
     },
     {
       title: "성장 지원",
@@ -1014,7 +1014,7 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
 
   plusWordings = [
     "홈스타일링\n<b%전문 플랫폼%b>",
-    "누적 문의수\n<b%3,000명 %b><u%+%u>",
+    "고객 문의수\n<b%3,000명 %b><u%+%u>",
     "활동 디자이너\n<b%60명 %b><u%+%u>",
     "홈리에종에서\n<b%안전하게 고객님을 만나보세요!%b>",
   ];
@@ -1561,7 +1561,7 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
 
   title = desktop ? "서비스\n프로세스" : "서비스 프로세스";
   title2 = desktop ? "자주 찾는\n질문" : "자주 찾는 질문";
-  title3 = "홈스타일링으로 새로운 시도를\n홈리에종과 든든하게 시작하세요";
+  title3 = "홈스타일링 디자이너,\n홈리에종과 든든하게 시작하세요";
   finalButtonWording = "디자이너 활동 시작하기";
 
   marginTopVisual = <%% 3, 3, 3, 3, 9 %%>;
