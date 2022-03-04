@@ -1367,7 +1367,7 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
           display: "inline-flex",
           top: String(desktop ? greenFontTop + greenButtonVisual : 12) + ea,
           right: desktop ? String(paddingLeft) + ea : "",
-          left: String(26) + ea,
+          left: mobile ? String(26) + ea : "",
           width: String(buttonWidth) + ea,
           height: String(buttonHeight) + ea,
           borderRadius: String(buttonHeight) + ea,
