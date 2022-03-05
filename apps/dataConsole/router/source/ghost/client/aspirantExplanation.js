@@ -1554,13 +1554,13 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
 
   paddingTop = <%% 64, 64, 52, 40, 2 %%>;
-  paddingTop2 = <%% 64, 64, 52, 40, 9 %%>;
+  paddingTop2 = <%% 36, 34, 24, 22, 7 %%>;
   paddingLeft = <%% 64, 64, 52, 40, 4.5 %%>;
 
   leftBoxWidth = <%% 250, 190, 160, 160, 0 %%>;
 
   title = desktop ? "서비스\n프로세스" : "서비스 프로세스";
-  title2 = desktop ? "자주 찾는\n질문" : "자주 찾는 질문";
+  title2 = "자주 찾는 질문";
   title3 = "홈스타일링 디자이너,\n홈리에종과 든든하게 시작하세요";
   finalButtonWording = "디자이너 활동 시작하기";
 
@@ -1589,13 +1589,13 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
 
   grayMarginTop = <%% 20, 20, 20, 20, 6 %%>;
 
-  questionBlockMargin = <%% 16, 10, 10, 10, 2 %%>;
-  questionBlockHeight = <%% 64, 50, 42, 42, 20 %%>;
-  questionSize = <%% 16, 13, 12, 12, 3 %%>;
+  questionBlockMargin = <%% 10, 10, 10, 10, 2 %%>;
+  questionBlockHeight = <%% 64, 50, 42, 42, 13 %%>;
+  questionSize = <%% 16, 13, 12, 12, 3.5 %%>;
   questionWeight = <%% 600, 600, 600, 600, 600 %%>;
-  questionTop = <%% (isMac() ? -2 : 1), (isMac() ? -2 : 1), (isMac() ? -2 : 1), (isMac() ? -2 : 1), 0 %%>;
+  questionTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isIphone() ? -0.3 : -0.6) %%>;
 
-  grayTongPaddingBottom = <%% 59, 59, 59, 59, 12 %%>;
+  grayTongPaddingBottom = <%% 69, 69, 65, 57, 9 %%>;
 
   pictureHeight = <%% 212, 200, 200, 180, 37 %%>;
   pictureTongPaddingTop = <%% 70, 60, 60, 56, 10 %%>;
@@ -1610,7 +1610,7 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
 
   pictureButtonWidth = <%% 185, 185, 170, 160, 34 %%>;
   pictureButtonHeight = <%% 40, 40, 36, 32, 7 %%>;
-  pictureButtonMarginTop = <%% 24, 18, 18, 18, 3 %%>;
+  pictureButtonMarginTop = <%% 20, 18, 18, 18, 3 %%>;
   pictureButtonSize = <%% 15, 14, 13, 12, 2.6 %%>;
   pictureButtonWeight = <%% 600, 600, 600, 600, 600 %%>;
   pictureButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -1, (isIphone() ? -0.1 : -0.3) %%>;
@@ -1802,7 +1802,7 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
   grayTong = createNode({
     mother: whiteBlock,
     style: {
-      display: <&& "block" | "block" | "block" | "none" | "block" &&>,
+      display: <&& "block" | "block" | "block" | "block" | "block" &&>,
       width: String(100) + '%',
       paddingBottom: String(grayTongPaddingBottom) + ea,
       background: colorChip.gray0,
@@ -1813,13 +1813,11 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
   createNode({
     mother: grayTong,
     style: {
-      display: desktop ? "inline-block" : "block",
+      display: "block",
       position: "relative",
-      paddingLeft: desktop ? String(paddingLeft) + ea : "",
-      paddingTop: String(paddingTop2) + ea,
-      width: desktop ? String(leftBoxWidth) + ea : "",
+      paddingTop: String(desktop ? paddingTop : paddingTop2) + ea,
       verticalAlign: "top",
-      textAlign: desktop ? "" : "center",
+      textAlign: "center",
     },
     children: [
       {
@@ -1829,7 +1827,7 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
           fontWeight: String(titleWeight),
           color: colorChip.black,
           lineHeight: String(titleLineHeight),
-          textAlign: desktop ? "" : "center",
+          textAlign: "center",
         }
       }
     ]
@@ -1840,10 +1838,9 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
     style: {
       display: "inline-block",
       position: "relative",
-      paddingRight: desktop ? String(paddingLeft) + ea : "",
-      paddingLeft: mobile ? String(paddingLeft) + ea : "",
-      paddingTop: String(desktop ? paddingTop2 : (paddingTop2 / 2)) + ea,
-      width: withOut((paddingLeft * 2) + leftBoxWidth, ea),
+      paddingLeft: String(paddingLeft) + ea,
+      paddingTop: String(desktop ? paddingTop2 : (paddingTop2 * 0.75)) + ea,
+      width: withOut((paddingLeft * 2), ea),
       verticalAlign: "top",
     }
   });
@@ -1856,9 +1853,9 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
         alignItems: "center",
         verticalAlign: "top",
         justifyContent: "center",
-        width: "calc(calc(100% - " + String(questionBlockMargin * 2) + ea + ") / 3)",
+        width: desktop ? "calc(calc(100% - " + String(questionBlockMargin * 1) + ea + ") / " + String(2) + ")" : String(100) + '%',
         height: String(questionBlockHeight) + ea,
-        marginRight: String(i % (questions.length / 2) === ((questions.length / 2) - 1) ? 0 : questionBlockMargin) + ea,
+        marginRight: desktop ? String(i % 2 === 1 ? 0 : questionBlockMargin) + ea : "",
         marginBottom: String(questionBlockMargin) + ea,
         boxSizing: "border-box",
         border: "1px solid " + colorChip.deactive,
