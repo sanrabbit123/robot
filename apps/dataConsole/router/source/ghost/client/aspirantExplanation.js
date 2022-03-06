@@ -1547,6 +1547,10 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
   let pictureButtonWidth, pictureButtonHeight;
   let pictureButtonMarginTop;
   let pictureButtonSize, pictureButtonWeight, pictureButtonTextTop;
+  let answers;
+  let answerPopupMaker;
+  let blackPopupPaddingLeft, blackPopupPaddingTop, blackPopupPaddingBottom, blackPopupSize, blackPopupWeight, blackPopupLineHeight;
+  let questionLabel;
 
   blockHeight = <%% 908, 901, 817, 1026, 264 %%>;
   bottomMargin = <%% 200, 200, 200, 180, 20 %%>;
@@ -1589,6 +1593,8 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
 
   grayMarginTop = <%% 20, 20, 20, 20, 6 %%>;
 
+  questionLabel = "questionLabel";
+
   questionBlockMargin = <%% 10, 10, 10, 10, 2 %%>;
   questionBlockHeight = <%% 64, 50, 42, 42, 13 %%>;
   questionSize = <%% 16, 13, 12, 12, 3.5 %%>;
@@ -1615,6 +1621,13 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
   pictureButtonWeight = <%% 600, 600, 600, 600, 600 %%>;
   pictureButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -1, (isIphone() ? -0.1 : -0.3) %%>;
 
+  blackPopupPaddingLeft = <%% 18, 18, 18, 18, 4 %%>;
+  blackPopupPaddingTop = <%% (isMac() ? 14 : 15), (isMac() ? 13 : 14), (isMac() ? 12 : 13), (isMac() ? 12 : 13), 2.5 %%>;
+  blackPopupPaddingBottom = <%% (isMac() ? 16 : 15), (isMac() ? 16 : 15), (isMac() ? 15 : 14), (isMac() ? 15 : 14), 3.5 %%>;
+  blackPopupSize = <%% 14, 13, 12, 12, 3 %%>;
+  blackPopupWeight = 500;
+  blackPopupLineHeight = 1.6;
+
   contents = [
     "고객의 공간 정보, 요청 사항 등이 기입된 서비스 신청서를 토대로 프로젝트 계약 전, 서비스에 대한 상세한 안내가 이뤄집니다.",
     "고객과 디자이너 간의 <b%지역 / 스타일 / 예산 / 일정%b>을 고려한 홈리에종의 고객 분석 시스템을 거쳐 디자이너를 추천하고 매칭합니다.",
@@ -1631,6 +1644,92 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
     <&& "일정과 거리가 안 맞으면 어떻게 하나요?" | "일정과 거리가 안 맞으면 어떻게 하나요?" | "일정, 거리가 안 맞으면 어떻게 해요?" | "일정, 거리가 안 맞으면 어떻게 해요?" | "일정, 거리가 안 맞으면 어떻게 해요?" &&>,
     <&& "시공사가 없어도 파트너십이 가능한가요?" | "시공사가 없어도 파트너십이 가능한가요?" | "시공사 없어도 파트너십 가능한가요?" | "시공사 없어도 파트너십 가능한가요?" | "시공사가 없어도 파트너십이 가능한가요?" &&>,
   ];
+
+  answers = [
+    "1주택과 층별로 나누어진 경우에는 입구가 중요하기에 넓어보이게 화이트컬러를 이용하였고, 계단은 대리석을 사용하여 ,고급스럽게 연출하였다. 계단을 오르는 계단실엔 크고 멋진 샹드리에를 천정에 달아 고급스러움을 연출하였다.",
+    "2주택과 층별로 나누어진 경우에는 입구가 중요하기에 넓어보이게 화이트컬러를 이용하였고, 계단은 대리석을 사용하여 ,고급스럽게 연출하였다. 계단을 오르는 계단실엔 크고 멋진 샹드리에를 천정에 달아 고급스러움을 연출하였다.",
+    "3주택과 층별로 나누어진 경우에는 입구가 중요하기에 넓어보이게 화이트컬러를 이용하였고, 계단은 대리석을 사용하여 ,고급스럽게 연출하였다. 계단을 오르는 계단실엔 크고 멋진 샹드리에를 천정에 달아 고급스러움을 연출하였다.",
+    "4주택과 층별로 나누어진 경우에는 입구가 중요하기에 넓어보이게 화이트컬러를 이용하였고, 계단은 대리석을 사용하여 ,고급스럽게 연출하였다. 계단을 오르는 계단실엔 크고 멋진 샹드리에를 천정에 달아 고급스러움을 연출하였다.",
+    "5주택과 층별로 나누어진 경우에는 입구가 중요하기에 넓어보이게 화이트컬러를 이용하였고, 계단은 대리석을 사용하여 ,고급스럽게 연출하였다. 계단을 오르는 계단실엔 크고 멋진 샹드리에를 천정에 달아 고급스러움을 연출하였다.",
+    "6주택과 층별로 나누어진 경우에는 입구가 중요하기에 넓어보이게 화이트컬러를 이용하였고, 계단은 대리석을 사용하여 ,고급스럽게 연출하였다. 계단을 오르는 계단실엔 크고 멋진 샹드리에를 천정에 달아 고급스러움을 연출하였다.",
+  ];
+
+  answerPopupMaker = function (index) {
+    const answer = answers[index];
+    return function (e) {
+      const self = this;
+      const targets = [ ...document.querySelectorAll('.' + questionLabel) ];
+      let cancelBack;
+      let blackPopup;
+
+      for (let dom of targets) {
+        if (dom === self) {
+          dom.style.opacity = String(1);
+          dom.style.border = "1px solid " + colorChip.whiteGreen;
+          dom.firstChild.style.color = colorChip.green;
+        } else {
+          dom.style.opacity = String(0.4);
+          dom.style.border = "1px solid " + colorChip.deactive;
+          dom.firstChild.style.color = colorChip.black;
+        }
+      }
+
+      cancelBack = createNode({
+        mother: this,
+        event: {
+          click: function (e) {
+            e.stopPropagation();
+            for (let dom of targets) {
+              dom.style.opacity = String(1);
+              dom.style.border = "1px solid " + colorChip.deactive;
+              dom.firstChild.style.color = colorChip.black;
+            }
+            self.removeChild(self.lastChild);
+            self.removeChild(self.lastChild);
+          }
+        },
+        style: {
+          position: "fixed",
+          top: String(0),
+          left: String(0),
+          width: String(100) + '%',
+          height: String(100) + '%',
+          background: "transparent",
+          zIndex: String(1),
+        }
+      })
+
+      blackPopup = createNode({
+        mother: this,
+        text: answer,
+        event: {
+          click: function (e) {
+            e.stopPropagation();
+          }
+        },
+        style: {
+          position: "absolute",
+          top: String(questionBlockHeight + questionBlockMargin) + ea,
+          left: String(0),
+          width: withOut(blackPopupPaddingLeft * 2, ea),
+          fontSize: String(blackPopupSize) + ea,
+          fontWeight: String(blackPopupWeight),
+          color: colorChip.white,
+          lineHeight: String(blackPopupLineHeight),
+          background: colorChip.black,
+          borderRadius: String(5) + "px",
+          paddingLeft: String(blackPopupPaddingLeft) + ea,
+          paddingRight: String(blackPopupPaddingLeft) + ea,
+          paddingTop: String(blackPopupPaddingTop) + ea,
+          paddingBottom: String(blackPopupPaddingBottom) + ea,
+          zIndex: String(1),
+          animation: "fadeuplite 0.3s ease",
+          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+        }
+      });
+
+    }
+  }
 
   whiteBlock = createNode({
     mother: this.baseTong,
@@ -1848,8 +1947,13 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
   for (let i = 0; i < questions.length; i++) {
     createNode({
       mother: grayRightTong,
+      class: [ questionLabel ],
+      event: {
+        click: answerPopupMaker(i),
+      },
       style: {
         display: "inline-flex",
+        position: "relative",
         alignItems: "center",
         verticalAlign: "top",
         justifyContent: "center",
@@ -1877,7 +1981,7 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
           }
         }
       ]
-    })
+    });
   }
 
   pictureTong = createNode({
