@@ -859,7 +859,7 @@ AspirantExplanationJs.prototype.insertSecondBox = function () {
 
 AspirantExplanationJs.prototype.insertThirdBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
   const { ea, media, inputClassName, titleSize, titleWeight, titleLineHeight, titleSvgHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -924,6 +924,8 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
   let plusWordings;
   let columns;
   let mobilePhotoPaddingTop;
+  let whiteCardLabel;
+  let whiteCardImageLabel, whiteCardNameLabel, whiteCardContentsLabel;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
 
@@ -1041,6 +1043,11 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
       description: "프로젝트 마무리 후, 포트폴리오 콘텐츠를 위해 디자인 의도가 담긴 글을 직접 작성합니다."
     },
   ];
+
+  whiteCardLabel = "whiteCardLabel";
+  whiteCardImageLabel = "whiteCardImageLabel";
+  whiteCardNameLabel = "whiteCardNameLabel";
+  whiteCardContentsLabel = "whiteCardContentsLabel";
 
   cardContents = [
     "인테리어만 할 때는, 수천만원 들여서 깔끔히 시공을 해도 나중에 그 모습이 거의 없더라고요. 자식같은 현장인데 아쉬움이 많이 남았어요. 그래서 홈스타일링 쪽으로 관심을 갖다 홈리에종을 만나서 홈스타일링 디자이너로 발돋움할 수 있었어요. 고객님들의 만족하고, 예쁜 현장을 보면 저도 같이 행복해져요!",
@@ -1245,15 +1252,88 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
   for (let i = 0; i < 3; i++) {
     createNode({
       mother: grayCardTong,
+      class: [ whiteCardLabel ],
+      attribute: {
+        index: String(i),
+        contents: String(i),
+      },
+      event: {
+        click: function (e) {
+          if (desktop) {
+            const [ left, right, center ] = [ ...document.querySelectorAll('.' + whiteCardLabel) ];
+            const [ leftNumber, rightNumber, centerNumber ] = [  Number(left.getAttribute("contents")), Number(right.getAttribute("contents")), Number(center.getAttribute("contents")) ];
+            let n0, n1, n2;
+
+            if (leftNumber === 0) {
+              n0 = 1;
+              n2 = 0;
+              n1 = 2;
+            } else if (leftNumber === 1) {
+              n0 = 2;
+              n2 = 1;
+              n1 = 0;
+            } else {
+              n0 = 0;
+              n2 = 2;
+              n1 = 1;
+            }
+
+            left.setAttribute("contents", String(n0));
+            right.setAttribute("contents", String(n1));
+            center.setAttribute("contents", String(n2));
+
+            left.querySelector('.' + whiteCardContentsLabel).textContent = cardContents[n0];
+            right.querySelector('.' + whiteCardContentsLabel).textContent = cardContents[n1];
+            center.querySelector('.' + whiteCardContentsLabel).textContent = cardContents[n2];
+
+            left.querySelector('.' + whiteCardImageLabel).src = AspirantExplanationJs.binaryPath + "/c" + String(3 - n0) + ".png";
+            right.querySelector('.' + whiteCardImageLabel).src = AspirantExplanationJs.binaryPath + "/c" + String(3 - n1) + ".png";
+            center.querySelector('.' + whiteCardImageLabel).src = AspirantExplanationJs.binaryPath + "/c" + String(3 - n2) + ".png";
+
+            left.querySelector('.' + whiteCardNameLabel).removeChild(left.querySelector('.' + whiteCardNameLabel).firstChild);
+            createNode({
+              mother: left.querySelector('.' + whiteCardNameLabel),
+              mode: "svg",
+              source: AspirantExplanationJs.penWordings["b" + String(n0 + 1)](colorChip.black),
+              style: {
+                height: String(whiteNameHeight) + ea,
+              }
+            });
+
+            right.querySelector('.' + whiteCardNameLabel).removeChild(right.querySelector('.' + whiteCardNameLabel).firstChild);
+            createNode({
+              mother: right.querySelector('.' + whiteCardNameLabel),
+              mode: "svg",
+              source: AspirantExplanationJs.penWordings["b" + String(n1 + 1)](colorChip.black),
+              style: {
+                height: String(whiteNameHeight) + ea,
+              }
+            });
+
+            center.querySelector('.' + whiteCardNameLabel).removeChild(center.querySelector('.' + whiteCardNameLabel).firstChild);
+            createNode({
+              mother: center.querySelector('.' + whiteCardNameLabel),
+              mode: "svg",
+              source: AspirantExplanationJs.penWordings["b" + String(n2 + 1)](colorChip.black),
+              style: {
+                height: String(whiteNameHeight) + ea,
+              }
+            });
+          }
+        },
+        selectstart: function (e) {
+          e.preventDefault();
+        }
+      },
       style: {
         display: desktop ? "inline-block" : "block",
         position: desktop ? (i === 2 ? "relative" : "absolute") : "relative",
         top: desktop ? String(0) : "",
         left: desktop ? (i === 0 ? String(0) : "") : "",
         right: desktop ? (i === 1 ? String(0) : "") : "",
-        transform: desktop ? (i === 2 ? "" : "scale(" + String(whiteScale) + ")") : "",
+        transform: desktop ? (i === 2 ? "scale(1)" : "scale(" + String(whiteScale) + ")") : "",
         transformOrigin: desktop ? (i === 0 ? "left" : (i === 1 ? "right" : "")) : "",
-        opacity: desktop ? (i === 2 ? "" : String(whiteOpacity)) : "",
+        opacity: desktop ? (i === 2 ? String(1) : String(whiteOpacity)) : "",
         width: desktop ? String(whiteCardWidth) + ea : "",
         background: colorChip.white,
         borderRadius: String(whiteRadius) + "px",
@@ -1261,9 +1341,11 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
         padding: String(whiteCardPadding) + ea,
         textAlign: "left",
         marginBottom: desktop ? "" : String(2) + ea,
+        cursor: "pointer",
       },
       children: [
         {
+          class: [ whiteCardImageLabel ],
           mode: "img",
           attribute: {
             src: AspirantExplanationJs.binaryPath + "/c" + String(3 - i) + ".png",
@@ -1277,6 +1359,7 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
           }
         },
         {
+          class: [ whiteCardNameLabel ],
           style: {
             display: "inline-flex",
             height: String(whiteTitleHeight) + ea,
@@ -1306,6 +1389,11 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
           },
           children: [
             {
+              event: {
+                selectstart: function (e) {
+                  e.preventDefault();
+                }
+              },
               text: "파트너 디자이너",
               style: {
                 fontSize: String(whiteTitleSize) + ea,
@@ -1324,6 +1412,12 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
           },
           children: [
             {
+              class: [ whiteCardContentsLabel ],
+              event: {
+                selectstart: function (e) {
+                  e.preventDefault();
+                }
+              },
               text: cardContents[i],
               style: {
                 fontSize: String(whiteContentsSize) + ea,
@@ -1362,6 +1456,11 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
         }
       },
       {
+        event: {
+          click: function (e) {
+            selfHref(FRONTHOST + "/desevent.php?mode=partnership");
+          }
+        },
         style: {
           position: "absolute",
           display: "inline-flex",
@@ -1497,7 +1596,7 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
 
 AspirantExplanationJs.prototype.insertFourthBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
   const { ea, media, inputClassName, titleSize, titleWeight, titleLineHeight, titleSvgHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -2037,6 +2136,11 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
     },
     children: [
       {
+        event: {
+          click: function (e) {
+            selfHref(FRONTHOST + "/desevent.php?mode=partnership");
+          }
+        },
         style: {
           display: "inline-flex",
           width: String(pictureButtonWidth) + ea,
