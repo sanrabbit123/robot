@@ -1622,8 +1622,8 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
   pictureButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -1, (isIphone() ? -0.1 : -0.3) %%>;
 
   blackPopupPaddingLeft = <%% 18, 18, 18, 18, 4 %%>;
-  blackPopupPaddingTop = <%% (isMac() ? 14 : 15), (isMac() ? 13 : 14), (isMac() ? 12 : 13), (isMac() ? 12 : 13), 2.5 %%>;
-  blackPopupPaddingBottom = <%% (isMac() ? 16 : 15), (isMac() ? 16 : 15), (isMac() ? 15 : 14), (isMac() ? 15 : 14), 3.5 %%>;
+  blackPopupPaddingTop = <%% (isMac() ? 14 : 15), (isMac() ? 13 : 14), (isMac() ? 12 : 13), (isMac() ? 12 : 13), (isIphone() ? 3 : 2.5) %%>;
+  blackPopupPaddingBottom = <%% (isMac() ? 16 : 15), (isMac() ? 16 : 15), (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isIphone() ? 3.3 : 3.5) %%>;
   blackPopupSize = <%% 14, 13, 12, 12, 3 %%>;
   blackPopupWeight = 500;
   blackPopupLineHeight = 1.6;
