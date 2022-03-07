@@ -2067,7 +2067,7 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
         marginRight: desktop ? String(i % 2 === 1 ? 0 : questionBlockMargin) + ea : "",
         marginBottom: String(questionBlockMargin) + ea,
         boxSizing: "border-box",
-        border: "1px solid " + (num === 0 ? colorChip.green : colorChip.deactive),
+        border: "1px solid " + (i === 0 ? colorChip.green : colorChip.deactive),
         borderRadius: String(10) + "px",
         background: colorChip.white,
         cursor: "pointer",
