@@ -2364,20 +2364,20 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2202_aa04s" ]);
+    // await work.newDesignerToFront([ "d2203_aa01s" ]);
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2202_aa03s", [
-    //   { porlid: "ghost", index: 9 },
-    //   { porlid: "ghost", index: 4 },
-    //   { porlid: "ghost", index: 7 },
-    //   { porlid: "ghost", index: 6 },
-    //   { porlid: "ghost", index: 8 },
+    // await this.setProposalSettingForDesigner("d2203_aa01s", [
+    //   { porlid: "a93", index: 2 },
+    //   { porlid: "a93", index: 11 },
+    //   { porlid: "a93", index: 5 },
+    //   { porlid: "a93", index: 6 },
+    //   { porlid: "a93", index: 9 },
     // ], [
-    //   "고객 성향에 맞추어 기존 가구들과의 조화로움을 생각하여 추천드립니다.",
-    //   "감성적인 공간 디자인과 합리적인 공간 활용으로 차별화된 스타일링을 구현합니다.",
-    //   "고객님과 가족의 이야기를 담아 우리집 속 조화로움을 찾아드립니다."
+    //   "무에서 유를 창조하는 작업에서 성취감을 많이 느낍니다.",
+    //   "고급 소재와 고급 자재들의 루트를 많이 알고 고객의 니즈의 맞게 디자인 하는 편입니다.",
+    //   "한 컨셉이 아닌 다양한 컨셉을 연출하는걸 좋아합니다. 그리고 잘 합니다."
     // ]);
 
 
@@ -2410,8 +2410,8 @@ DevContext.prototype.launching = async function () {
     // send sms
     // const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
     // const human = new HumanPacket();
-    // const name = "배창규";
-    // const amount = 2700000;
+    // const name = "김진아";
+    // const amount = 11552000;
     // await human.sendSms({
     //   name: "",
     //   phone: "01055432039",

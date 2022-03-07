@@ -3063,7 +3063,7 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       expectedStart = new Date(future.getFullYear(), future.getMonth(), future.getDate(), future.getHours(), future.getMinutes(), future.getSeconds());
       expectedStart = expectedStart.setDate(expectedStart.getDate() - 60);
       if (!requestObject["requests.0.request.space.resident.living"] && expectedStart.valueOf() <= (new Date()).valueOf()) {
-        requestObject["requests.0.request.space.resident.living"] = true;
+        // requestObject["requests.0.request.space.resident.living"] = true;
         requestObject["requests.0.request.space.resident.expected"] = new Date();
         future = new Date();
         future.setDate(future.getDate() + moveinConst0);

@@ -5298,16 +5298,21 @@ ClientConsultingJs.prototype.finalSubmit = function () {
         instance.mother.certificationBox(name, phone, async function (back, box) {
           try {
             const { cliid } = await ajaxJson({ map }, "/clientSubmit");
-            await homeliaisonAnalytics({
+            console.log(cliid);
+            homeliaisonAnalytics({
               page: instance.pageName,
               standard: instance.firstPageViewTime,
               action: "login",
               data: { cliid },
+            }).then(() => {
+              document.body.removeChild(box);
+              document.body.removeChild(back);
+              selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/curation/?cliid=" + cliid);
+            }).catch((err) => {
+              document.body.removeChild(box);
+              document.body.removeChild(back);
+              selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/curation/?cliid=" + cliid);
             });
-            await sleep(500);
-            document.body.removeChild(box);
-            document.body.removeChild(back);
-            selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/curation/?cliid=" + cliid);
           } catch (e) {
             await ajaxJson({ message: "ClientConsultingJs.certificationBox : " + e.message }, "/errorLog");
           }

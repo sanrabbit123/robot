@@ -1493,104 +1493,104 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
     ]
   });
 
-  if (desktop) {
-    createNode({
-      mother: whiteBlock,
-      style: {
-        display: "block",
-        position: "relative",
-        paddingLeft: String(paddingLeft) + ea,
-        paddingRight: String(paddingLeft) + ea,
-        width: withOut(paddingLeft * 2, ea),
-        height: String(plusBoxHeight) + ea,
-        background: colorChip.white,
-      },
-      children: [
-        {
-          text: plusWordings[0],
-          style: {
-            position: "absolute",
-            fontSize: String(plusFontSize) + ea,
-            fontWeight: String(plusFontWeight),
-            color: colorChip.green,
-            top: String(greenFontTop) + ea,
-            left: String(plusFontLeft0) + ea,
-            lineHeight: String(plusFontLineHeight),
-            textAlign: "center",
-          },
-          bold: {
-            fontSize: String(greenFontSize) + ea,
-            fontWeight: String(greenFontWeight),
-            color: colorChip.black,
-          }
-        },
-        {
-          text: plusWordings[1],
-          style: {
-            position: "absolute",
-            fontSize: String(plusFontSize) + ea,
-            fontWeight: String(plusFontWeight),
-            color: colorChip.green,
-            top: String(greenFontTop) + ea,
-            left: String(plusFontLeft1) + ea,
-            lineHeight: String(plusFontLineHeight),
-            textAlign: "center",
-          },
-          bold: {
-            fontSize: String(greenFontSize) + ea,
-            fontWeight: String(greenFontWeight),
-            color: colorChip.black,
-          },
-          under: {
-            fontSize: String(greenFontSize) + ea,
-            fontWeight: String(greenFontWeight),
-            color: colorChip.green,
-          }
-        },
-        {
-          text: plusWordings[2],
-          style: {
-            position: "absolute",
-            fontSize: String(plusFontSize) + ea,
-            fontWeight: String(plusFontWeight),
-            color: colorChip.green,
-            top: String(greenFontTop) + ea,
-            left: String(plusFontLeft2) + ea,
-            lineHeight: String(plusFontLineHeight),
-            textAlign: "center",
-          },
-          bold: {
-            fontSize: String(greenFontSize) + ea,
-            fontWeight: String(greenFontWeight),
-            color: colorChip.black,
-          },
-          under: {
-            fontSize: String(greenFontSize) + ea,
-            fontWeight: String(greenFontWeight),
-            color: colorChip.green,
-          }
-        },
-        {
-          text: plusWordings[3],
-          style: {
-            position: "absolute",
-            fontSize: String(plusFontSize) + ea,
-            fontWeight: String(plusFontWeight),
-            color: colorChip.green,
-            top: String(greenFontTop) + ea,
-            right: String(plusFontRight0) + ea,
-            lineHeight: String(plusFontLineHeight),
-            textAlign: "center",
-          },
-          bold: {
-            fontSize: String(greenFontSize) + ea,
-            fontWeight: String(greenFontWeight),
-            color: colorChip.black,
-          }
-        },
-      ]
-    });
-  }
+  // if (desktop) {
+  //   createNode({
+  //     mother: whiteBlock,
+  //     style: {
+  //       display: "block",
+  //       position: "relative",
+  //       paddingLeft: String(paddingLeft) + ea,
+  //       paddingRight: String(paddingLeft) + ea,
+  //       width: withOut(paddingLeft * 2, ea),
+  //       height: String(plusBoxHeight) + ea,
+  //       background: colorChip.white,
+  //     },
+  //     children: [
+  //       {
+  //         text: plusWordings[0],
+  //         style: {
+  //           position: "absolute",
+  //           fontSize: String(plusFontSize) + ea,
+  //           fontWeight: String(plusFontWeight),
+  //           color: colorChip.green,
+  //           top: String(greenFontTop) + ea,
+  //           left: String(plusFontLeft0) + ea,
+  //           lineHeight: String(plusFontLineHeight),
+  //           textAlign: "center",
+  //         },
+  //         bold: {
+  //           fontSize: String(greenFontSize) + ea,
+  //           fontWeight: String(greenFontWeight),
+  //           color: colorChip.black,
+  //         }
+  //       },
+  //       {
+  //         text: plusWordings[1],
+  //         style: {
+  //           position: "absolute",
+  //           fontSize: String(plusFontSize) + ea,
+  //           fontWeight: String(plusFontWeight),
+  //           color: colorChip.green,
+  //           top: String(greenFontTop) + ea,
+  //           left: String(plusFontLeft1) + ea,
+  //           lineHeight: String(plusFontLineHeight),
+  //           textAlign: "center",
+  //         },
+  //         bold: {
+  //           fontSize: String(greenFontSize) + ea,
+  //           fontWeight: String(greenFontWeight),
+  //           color: colorChip.black,
+  //         },
+  //         under: {
+  //           fontSize: String(greenFontSize) + ea,
+  //           fontWeight: String(greenFontWeight),
+  //           color: colorChip.green,
+  //         }
+  //       },
+  //       {
+  //         text: plusWordings[2],
+  //         style: {
+  //           position: "absolute",
+  //           fontSize: String(plusFontSize) + ea,
+  //           fontWeight: String(plusFontWeight),
+  //           color: colorChip.green,
+  //           top: String(greenFontTop) + ea,
+  //           left: String(plusFontLeft2) + ea,
+  //           lineHeight: String(plusFontLineHeight),
+  //           textAlign: "center",
+  //         },
+  //         bold: {
+  //           fontSize: String(greenFontSize) + ea,
+  //           fontWeight: String(greenFontWeight),
+  //           color: colorChip.black,
+  //         },
+  //         under: {
+  //           fontSize: String(greenFontSize) + ea,
+  //           fontWeight: String(greenFontWeight),
+  //           color: colorChip.green,
+  //         }
+  //       },
+  //       {
+  //         text: plusWordings[3],
+  //         style: {
+  //           position: "absolute",
+  //           fontSize: String(plusFontSize) + ea,
+  //           fontWeight: String(plusFontWeight),
+  //           color: colorChip.green,
+  //           top: String(greenFontTop) + ea,
+  //           right: String(plusFontRight0) + ea,
+  //           lineHeight: String(plusFontLineHeight),
+  //           textAlign: "center",
+  //         },
+  //         bold: {
+  //           fontSize: String(greenFontSize) + ea,
+  //           fontWeight: String(greenFontWeight),
+  //           color: colorChip.black,
+  //         }
+  //       },
+  //     ]
+  //   });
+  // }
 
 }
 
@@ -1730,7 +1730,7 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
   contents = [
     "고객의 공간 정보, 요청 사항 등이 기입된 서비스 신청서를 토대로 프로젝트 계약 전, 서비스에 대한 상세한 안내가 이뤄집니다.",
     "고객과 디자이너 간의 <b%지역 / 스타일 / 예산 / 일정%b>을 고려한 홈리에종의 고객 분석 시스템을 거쳐 디자이너를 추천하고 매칭합니다.",
-    "디자이너는 고객과 소통하며 기획된 디자인에 따라 <b%시공 및 스타일링을 제안 / 실행%b>하고 프로젝트를 운영합니다.\n시공사 선택 : 시공이 포함된 프로젝트의 경우, 디자이너는 고객 상황에 맞춰 시공사 선택에 도움을 주고, 시공 디자인에 필요한 역할을 담당합니다.",
+    "디자이너는 고객과 소통하며 기획된 디자인에 따라 <b%시공 및 스타일링을 제안 / 실행%b>하고 프로젝트를 운영합니다.\n(시공사 선택 : 시공이 포함된 프로젝트의 경우, 디자이너는 고객 상황에 맞춰 시공사 선택에 도움을 주고, 시공 디자인에 필요한 역할을 담당합니다.)",
     "스타일링까지 마무리된 현장의 사진 촬영을 진행하여 최종 검수 후 프로젝트를 종료합니다.",
     "촬영 완료된 포트폴리오 콘텐츠를 발행합니다. 고객님께 집의 가장 아름다운 모습을 기록해 드리고, 디자이너님께는 새로운 고객님을 만나실 수 있는 소중한 자료가 됩니다."
   ];
@@ -1745,12 +1745,12 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
   ];
 
   answers = [
-    "1주택과 층별로 나누어진 경우에는 입구가 중요하기에 넓어보이게 화이트컬러를 이용하였고, 계단은 대리석을 사용하여 ,고급스럽게 연출하였다. 계단을 오르는 계단실엔 크고 멋진 샹드리에를 천정에 달아 고급스러움을 연출하였다.",
-    "2주택과 층별로 나누어진 경우에는 입구가 중요하기에 넓어보이게 화이트컬러를 이용하였고, 계단은 대리석을 사용하여 ,고급스럽게 연출하였다. 계단을 오르는 계단실엔 크고 멋진 샹드리에를 천정에 달아 고급스러움을 연출하였다.",
-    "3주택과 층별로 나누어진 경우에는 입구가 중요하기에 넓어보이게 화이트컬러를 이용하였고, 계단은 대리석을 사용하여 ,고급스럽게 연출하였다. 계단을 오르는 계단실엔 크고 멋진 샹드리에를 천정에 달아 고급스러움을 연출하였다.",
-    "4주택과 층별로 나누어진 경우에는 입구가 중요하기에 넓어보이게 화이트컬러를 이용하였고, 계단은 대리석을 사용하여 ,고급스럽게 연출하였다. 계단을 오르는 계단실엔 크고 멋진 샹드리에를 천정에 달아 고급스러움을 연출하였다.",
-    "5주택과 층별로 나누어진 경우에는 입구가 중요하기에 넓어보이게 화이트컬러를 이용하였고, 계단은 대리석을 사용하여 ,고급스럽게 연출하였다. 계단을 오르는 계단실엔 크고 멋진 샹드리에를 천정에 달아 고급스러움을 연출하였다.",
-    "6주택과 층별로 나누어진 경우에는 입구가 중요하기에 넓어보이게 화이트컬러를 이용하였고, 계단은 대리석을 사용하여 ,고급스럽게 연출하였다. 계단을 오르는 계단실엔 크고 멋진 샹드리에를 천정에 달아 고급스러움을 연출하였다.",
+    "세상에 서비스는 많지만, 유일한 시스템을 갖춘 서비스는 다릅니다.\n홈리에종은 홈스타일링 전문 플랫폼으로 단순히 소비자 연결만 하지 않습니다. 디자이너를 위한 프로젝트 케어, 인프라 지원(직영 시공사, 교육 자료, 포트폴리오 개설) 시스템이 있습니다.",
+    "1. 인테리어 전공자 / 유관 업종 경력자 \n2. 프리랜서 / 사업자 / 휴직 등 소속 무관\n3. 성별, 나이(만 19세 이상) 무관\n4. 홈리에종과 공유할 수 있는 1개 이상의 포트폴리오 보유",
+    "네, 디자이너님은 디자인에만 집중하세요.",
+    "홈리에종은 시공 중심의 인테리어가 아니라 삶 중심의 인테리어를 지향합니다.\n디자이너 주도 하에 선기획 후시공으로 불필요한 시공은 덜어내고, 고객의 라이프 스타일과 실용성을 생각합니다.",
+    "사전에 디자이너님의 활동 반경과 가능한 일정을 홈리에종 디자이너 체크리스트에서 상호 확인하여 고객님께 추천드립니다.",
+    "가능합니다. 시공이 포함된 프로젝트를 진행하게 될 경우, 홈리에종 시공사 인프라를 제공해 드릴 수 있습니다.",
   ];
 
   answerPopupMaker = function (index) {
@@ -1760,7 +1760,9 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
       const targets = [ ...document.querySelectorAll('.' + questionLabel) ];
       let cancelBack;
       let blackPopup;
+      let num;
 
+      num = 0;
       for (let dom of targets) {
         if (dom === self) {
           dom.style.opacity = String(1);
@@ -1769,8 +1771,9 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
         } else {
           dom.style.opacity = String(0.4);
           dom.style.border = "1px solid " + colorChip.deactive;
-          dom.firstChild.style.color = colorChip.black;
+          dom.firstChild.style.color = num === 0 ? colorChip.purple : colorChip.black;
         }
+        num++;
       }
 
       cancelBack = createNode({
@@ -1778,10 +1781,14 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
         event: {
           click: function (e) {
             e.stopPropagation();
+            let num;
+
+            num = 0;
             for (let dom of targets) {
               dom.style.opacity = String(1);
               dom.style.border = "1px solid " + colorChip.deactive;
-              dom.firstChild.style.color = colorChip.black;
+              dom.firstChild.style.color = num === 0 ? colorChip.purple : colorChip.black;
+              num++;
             }
             self.removeChild(self.lastChild);
             self.removeChild(self.lastChild);
@@ -2074,7 +2081,7 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
             fontSize: String(questionSize) + ea,
             fontWeight: String(questionWeight),
             top: String(questionTop) + ea,
-            color: colorChip.black,
+            color: i === 0 ? colorChip.purple : colorChip.black,
             textAlign: "center",
             padding: desktop ? "" : String(3) + ea,
           }
