@@ -1610,37 +1610,6 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                       this.setAttribute("number", String(newNumber));
                       if (distanceBoo) {
                         ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.travel.number = newNumber;
-                        offline = Number(this.parentElement.children[offlinePosition].lastChild.textContent.replace(/[^0-9]/gi, ''));
-                        final = offline + (distance * newNumber);
-                        this.parentElement.children[totalPosition].lastChild.textContent = GeneralJs.autoComma(final) + "원";
-                        if (offline !== 0) {
-                          online = offline;
-                          if (newNumber === 0) {
-                            if (offline * firstDiscount >= firstLimit) {
-                              temp = offline - firstLimit;
-                            } else {
-                              temp = offline * (1 - firstDiscount);
-                            }
-                            if (temp <= onlineMinimum) {
-                              temp = onlineMinimum;
-                            }
-                            online = temp;
-                          } else if (newNumber === 1) {
-                            online = offline * (1 - secondDiscount);
-                          }
-                        }
-                        this.parentElement.children[onlinePosition].lastChild.textContent = GeneralJs.autoComma(online) + "원";
-                        onlineTarget = null;
-                        for (let dom of this.parentElement.parentElement.parentElement.parentElement.querySelectorAll("input")) {
-                          if (/온/gi.test(dom.previousElementSibling.textContent)) {
-                            onlineTarget = dom;
-                          }
-                        }
-                        if (onlineTarget !== null) {
-                          onlineTarget.value = GeneralJs.autoComma(online);
-                          input_widthSet(onlineTarget);
-                        }
-                        ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.online = online;
                       }
                     }
 
