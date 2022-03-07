@@ -1771,7 +1771,7 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
         } else {
           dom.style.opacity = String(0.4);
           dom.style.border = "1px solid " + colorChip.deactive;
-          dom.firstChild.style.color = num === 0 ? colorChip.purple : colorChip.black;
+          dom.firstChild.style.color = num === 0 ? colorChip.black : colorChip.black;
         }
         num++;
       }
@@ -1785,8 +1785,8 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
             num = 0;
             for (let dom of targets) {
               dom.style.opacity = String(1);
-              dom.style.border = "1px solid " + colorChip.deactive;
-              dom.firstChild.style.color = num === 0 ? colorChip.purple : colorChip.black;
+              dom.style.border = "1px solid " + (num === 0 ? colorChip.green : colorChip.deactive);
+              dom.firstChild.style.color = num === 0 ? colorChip.black : colorChip.black;
               num++;
             }
             self.removeChild(self.lastChild);
@@ -2067,7 +2067,7 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
         marginRight: desktop ? String(i % 2 === 1 ? 0 : questionBlockMargin) + ea : "",
         marginBottom: String(questionBlockMargin) + ea,
         boxSizing: "border-box",
-        border: "1px solid " + colorChip.deactive,
+        border: "1px solid " + (num === 0 ? colorChip.green : colorChip.deactive),
         borderRadius: String(10) + "px",
         background: colorChip.white,
         cursor: "pointer",
@@ -2080,7 +2080,7 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
             fontSize: String(questionSize) + ea,
             fontWeight: String(questionWeight),
             top: String(questionTop) + ea,
-            color: i === 0 ? colorChip.purple : colorChip.black,
+            color: i === 0 ? colorChip.black : colorChip.black,
             textAlign: "center",
             padding: desktop ? "" : String(3) + ea,
           }
