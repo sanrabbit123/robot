@@ -2356,14 +2356,14 @@ DesignerProposalJs.prototype.designerFeeDetail = function (mother, desid, fee) {
 
   if (online) {
     sourceArr = [
-      { title: thisDesigner.designer + " 디자이너 디자인비", amount: autoComma(amount) + "원" },
+      { title: thisDesigner.designer + " 디자이너 디자인비", amount: autoComma(Math.round(amount / 1000) * 1000) + "원" },
     ];
   }
 
   if (offline) {
     sourceArr = [
-      { title: thisDesigner.designer + " 디자이너 디자인비", amount: autoComma(amount) + "원" },
-      { title: "출장비 (거리 : " + km + " / 시간 : " + time + " / 1회당)", amount: autoComma(distance * number) + "원" }
+      { title: thisDesigner.designer + " 디자이너 디자인비", amount: autoComma(Math.round(amount / 1000) * 1000) + "원" },
+      { title: "출장비 (거리 : " + km + " / 시간 : " + time + " / 1회당)", amount: autoComma(distance * 1) + "원" }
     ];
     if (mobile) {
       sourceArr[sourceArr.length - 1].title = "출장비 (" + km + " / " + time + " / 회당)";
@@ -2375,9 +2375,9 @@ DesignerProposalJs.prototype.designerFeeDetail = function (mother, desid, fee) {
 
   if (both) {
     sourceArr = [
-      { title: thisDesigner.designer + " 디자이너 디자인비 (온라인)", amount: autoComma(amount2) + "원" },
-      { title: thisDesigner.designer + " 디자이너 디자인비 (오프라인)", amount: autoComma(amount) + "원" },
-      { title: "출장비 (거리 : " + km + " / 시간 : " + time + " / 1회당)", amount: autoComma(distance * number) + "원" }
+      { title: thisDesigner.designer + " 디자이너 디자인비 (오프라인)", amount: autoComma(Math.round(amount / 1000) * 1000) + "원" },
+      { title: thisDesigner.designer + " 디자이너 디자인비 (온라인)", amount: autoComma(Math.round(amount2 / 1000) * 1000) + "원" },
+      { title: "출장비 (거리 : " + km + " / 시간 : " + time + " / 1회당)", amount: autoComma(distance * 1) + "원" }
     ];
     if (mobile) {
       sourceArr[sourceArr.length - 1].title = "출장비 (" + km + " / " + time + " / 회당)";

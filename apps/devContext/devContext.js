@@ -104,7 +104,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
     // const projects = await back.getProjectsByQuery({
     //   $and: [
     //     {
@@ -2327,9 +2326,15 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "엄지영",
-    //     designer: "김지은",
-    //     link: "https://drive.google.com/drive/folders/1ZafvHT0XDQbXD0bMPqzpP3AjIP7X0RnS",
+    //     client: "이경숙",
+    //     designer: "권미정",
+    //     link: "https://drive.google.com/drive/folders/1CS3pFHu9rbo6sqeBTpaV2_UIACVGqxqS",
+    //     pay: true
+    //   },
+    //   {
+    //     client: "이윤지",
+    //     designer: "이미영",
+    //     link: "https://drive.google.com/drive/folders/1KA3-7AIXsK8j73xxxZYcOC8ZE_Fq34IR",
     //     pay: true
     //   },
     // ]);
