@@ -1782,7 +1782,6 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
           click: function (e) {
             e.stopPropagation();
             let num;
-
             num = 0;
             for (let dom of targets) {
               dom.style.opacity = String(1);

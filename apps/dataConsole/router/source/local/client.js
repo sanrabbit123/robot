@@ -7042,7 +7042,6 @@ ClientJs.prototype.communicationRender = function () {
               column: "curation.analytics.full",
               value: false,
               email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
-              send: "styleCuration_lite",
             }, "/updateClientHistory");
 
             await ajaxJson({ cliid, serid, silent: true }, "/proposalCreate");
