@@ -209,12 +209,14 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
         }).then(() => {
 
           // if (detailUpdate.length > 0) {
-            let updateObj, future, nextDate;
+            let updateObj, future, nextDate, nextNextDate;
             updateObj = {};
             updateObj["requests." + String(requestNumber) + ".analytics.response.action"] = action;
-            if (client.requests[requestNumber].request.space.resident.living) {
-              nextDate = new Date();
-              nextDate.setDate(nextDate.getDate() + 1);
+            nextDate = new Date();
+            nextDate.setDate(nextDate.getDate() + 1);
+            nextNextDate = new Date();
+            nextNextDate.setDate(nextNextDate.getDate() + 2);
+            if (client.requests[requestNumber].request.space.resident.living || client.requests[requestNumber].request.space.resident.expected.valueOf() <= nextNextDate.valueOf()) {
               updateObj["requests." + String(requestNumber) + ".request.space.resident.expected"] = nextDate;
               future = new Date();
               future.setDate(future.getDate() + serviceParsing({
@@ -224,6 +226,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
               }, true) + 1);
               updateObj["requests." + String(requestNumber) + ".analytics.date.space.movein"] = future;
             }
+
             return back.updateClient([ { cliid }, updateObj ], { selfMongo: instance.mongo });
           // } else {
           //   return passPromise();
