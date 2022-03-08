@@ -208,7 +208,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
 
         }).then(() => {
 
-          // if (detailUpdate.length > 0) {
+          if (Number(req.body.fromConsole) !== 1) {
             let updateObj, future, nextDate, nextNextDate;
             updateObj = {};
             updateObj["requests." + String(requestNumber) + ".analytics.response.action"] = action;
@@ -228,9 +228,9 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
             }
 
             return back.updateClient([ { cliid }, updateObj ], { selfMongo: instance.mongo });
-          // } else {
-          //   return passPromise();
-          // }
+          } else {
+            return passPromise();
+          }
 
         }).then(() => {
           if (detailUpdate.length > 0) {
