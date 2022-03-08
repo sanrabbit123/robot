@@ -100,10 +100,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
-
     // const projects = await back.getProjectsByQuery({
     //   $and: [
     //     {
@@ -410,7 +406,7 @@ DevContext.prototype.launching = async function () {
 
 
     // push client
-    // const cliid = "c2202_aa44s";
+    // const cliid = "c2203_aa28s";
     // const kakao = new KakaoTalk();
     // await kakao.ready();
     // const client = await back.getClientById(cliid, { selfMongo: this.MONGOC });
