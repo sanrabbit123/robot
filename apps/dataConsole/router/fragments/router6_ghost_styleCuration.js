@@ -288,18 +288,18 @@ DataRouter.prototype.rou_post_styleCuration_styleCheckComplete = function () {
         console.log(e);
       });
 
-      if (DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] !== undefined && DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] !== null) {
-        clearTimeout(DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid]);
-        DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] = null;
-      }
-      DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] = setTimeout(async () => {
-        await requestSystem("https://" + instance.address.homeinfo.ghost.host + "/styleCuration_updateCalculation", { cliid, coreQuery: {}, historyQuery: {}, mode: "" }, {
-          headers: {
-            "Content-Type": "application/json",
-            "origin": instance.address.homeinfo.ghost.host,
-          }
-        })
-      }, 30 * 60 * 1000);
+      // if (DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] !== undefined && DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] !== null) {
+      //   clearTimeout(DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid]);
+      //   DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] = null;
+      // }
+      // DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] = setTimeout(async () => {
+      //   await requestSystem("https://" + instance.address.homeinfo.ghost.host + "/styleCuration_updateCalculation", { cliid, coreQuery: {}, historyQuery: {}, mode: "" }, {
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //       "origin": instance.address.homeinfo.ghost.host,
+      //     }
+      //   })
+      // }, 30 * 60 * 1000);
 
       res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify({ message: "done" }));
@@ -338,22 +338,22 @@ DataRouter.prototype.rou_post_styleCuration_pageInitComplete = function () {
         });
       }
 
-      if (DataRouter.timeouts["styleCuration_pageInitComplete_" + cliid] !== undefined && DataRouter.timeouts["styleCuration_pageInitComplete_" + cliid] !== null) {
-        clearTimeout(DataRouter.timeouts["styleCuration_pageInitComplete_" + cliid]);
-        DataRouter.timeouts["styleCuration_pageInitComplete_" + cliid] = null;
-      }
-      DataRouter.timeouts["styleCuration_pageInitComplete_" + cliid] = setTimeout(async () => {
-        const client = await back.getClientById(cliid, { selfMongo: instance.mongo });
-        if (client.requests[0].analytics.response.status.value === "응대중" && client.requests[0].analytics.response.action.value === "1차 응대 예정") {
-          await kakao.sendTalk("pushClient", client.name, client.phone, {
-            client: client.name,
-            host: address.homeinfo.ghost.host,
-            path: "curation",
-            cliid: cliid,
-          });
-          await messageSend({ text: client.name + " 고객님께 신청 완료하라고 독촉했어요.", channel: "#404_curation", voice: true });
-        }
-      }, 60 * 60 * 1000);
+      // if (DataRouter.timeouts["styleCuration_pageInitComplete_" + cliid] !== undefined && DataRouter.timeouts["styleCuration_pageInitComplete_" + cliid] !== null) {
+      //   clearTimeout(DataRouter.timeouts["styleCuration_pageInitComplete_" + cliid]);
+      //   DataRouter.timeouts["styleCuration_pageInitComplete_" + cliid] = null;
+      // }
+      // DataRouter.timeouts["styleCuration_pageInitComplete_" + cliid] = setTimeout(async () => {
+      //   const client = await back.getClientById(cliid, { selfMongo: instance.mongo });
+      //   if (client.requests[0].analytics.response.status.value === "응대중" && client.requests[0].analytics.response.action.value === "1차 응대 예정") {
+      //     await kakao.sendTalk("pushClient", client.name, client.phone, {
+      //       client: client.name,
+      //       host: address.homeinfo.ghost.host,
+      //       path: "curation",
+      //       cliid: cliid,
+      //     });
+      //     await messageSend({ text: client.name + " 고객님께 신청 완료하라고 독촉했어요.", channel: "#404_curation", voice: true });
+      //   }
+      // }, 60 * 60 * 1000);
 
       res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify({ message: "done" }));
