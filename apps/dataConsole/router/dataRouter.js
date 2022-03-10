@@ -3061,7 +3061,7 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       }
 
       expectedStart = new Date(future.getFullYear(), future.getMonth(), future.getDate(), future.getHours(), future.getMinutes(), future.getSeconds());
-      expectedStart = expectedStart.setDate(expectedStart.getDate() - 60);
+      expectedStart = expectedStart.setDate(expectedStart.getDate() - moveinConst0);
       if (!requestObject["requests.0.request.space.resident.living"] && expectedStart.valueOf() <= (new Date()).valueOf()) {
         // requestObject["requests.0.request.space.resident.living"] = true;
         requestObject["requests.0.request.space.resident.expected"] = new Date();
@@ -5741,13 +5741,15 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
 
         }).then(() => {
 
-          // if (detailUpdate.length > 0) {
-            let updateObj, future, nextDate;
+          if (Number(req.body.fromConsole) !== 1) {
+            let updateObj, future, nextDate, nextNextDate;
             updateObj = {};
             updateObj["requests." + String(requestNumber) + ".analytics.response.action"] = action;
-            if (client.requests[requestNumber].request.space.resident.living) {
-              nextDate = new Date();
-              nextDate.setDate(nextDate.getDate() + 1);
+            nextDate = new Date();
+            nextDate.setDate(nextDate.getDate() + 1);
+            nextNextDate = new Date();
+            nextNextDate.setDate(nextNextDate.getDate() + 2);
+            if (client.requests[requestNumber].request.space.resident.living || client.requests[requestNumber].request.space.resident.expected.valueOf() <= nextNextDate.valueOf()) {
               updateObj["requests." + String(requestNumber) + ".request.space.resident.expected"] = nextDate;
               future = new Date();
               future.setDate(future.getDate() + serviceParsing({
@@ -5757,10 +5759,11 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
               }, true) + 1);
               updateObj["requests." + String(requestNumber) + ".analytics.date.space.movein"] = future;
             }
+
             return back.updateClient([ { cliid }, updateObj ], { selfMongo: instance.mongo });
-          // } else {
-          //   return passPromise();
-          // }
+          } else {
+            return passPromise();
+          }
 
         }).then(() => {
           if (detailUpdate.length > 0) {
@@ -5818,18 +5821,18 @@ DataRouter.prototype.rou_post_styleCuration_styleCheckComplete = function () {
         console.log(e);
       });
 
-      if (DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] !== undefined && DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] !== null) {
-        clearTimeout(DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid]);
-        DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] = null;
-      }
-      DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] = setTimeout(async () => {
-        await requestSystem("https://" + instance.address.homeinfo.ghost.host + "/styleCuration_updateCalculation", { cliid, coreQuery: {}, historyQuery: {}, mode: "" }, {
-          headers: {
-            "Content-Type": "application/json",
-            "origin": instance.address.homeinfo.ghost.host,
-          }
-        })
-      }, 30 * 60 * 1000);
+      // if (DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] !== undefined && DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] !== null) {
+      //   clearTimeout(DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid]);
+      //   DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] = null;
+      // }
+      // DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] = setTimeout(async () => {
+      //   await requestSystem("https://" + instance.address.homeinfo.ghost.host + "/styleCuration_updateCalculation", { cliid, coreQuery: {}, historyQuery: {}, mode: "" }, {
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //       "origin": instance.address.homeinfo.ghost.host,
+      //     }
+      //   })
+      // }, 30 * 60 * 1000);
 
       res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify({ message: "done" }));
