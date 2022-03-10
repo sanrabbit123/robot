@@ -1117,10 +1117,10 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
       price = price[0];
 
       matrixTong = [];
-      for (let i = 0; i < price.matrix.length; i++) {
+      for (let m = 0; m < price.matrix.length; m++) {
         matrixTong.push({
-          to: price.standard.x.value[i][1],
-          amount: price.matrix[i][y]
+          to: price.standard.x.value[m][1],
+          amount: price.matrix[m][y]
         })
       }
       thisFeeFunction = functionMaker(matrixTong);
