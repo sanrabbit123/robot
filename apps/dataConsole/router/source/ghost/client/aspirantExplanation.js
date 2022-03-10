@@ -1458,7 +1458,18 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
       {
         event: {
           click: function (e) {
-            selfHref(FRONTHOST + "/desevent.php?mode=partnership");
+
+            homeliaisonAnalytics({
+              page: instance.pageName,
+              standard: instance.firstPageViewTime,
+              action: "toPartnershipSubmit1",
+              data: {},
+            }).then(() => {
+              selfHref(FRONTHOST + "/desevent.php?mode=partnership");
+            }).catch((err) => {
+              console.log(err);
+            });
+
           }
         },
         style: {
@@ -2144,7 +2155,18 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
       {
         event: {
           click: function (e) {
-            selfHref(FRONTHOST + "/desevent.php?mode=partnership");
+
+            homeliaisonAnalytics({
+              page: instance.pageName,
+              standard: instance.firstPageViewTime,
+              action: "toPartnershipSubmit2",
+              data: {},
+            }).then(() => {
+              selfHref(FRONTHOST + "/desevent.php?mode=partnership");
+            }).catch((err) => {
+              console.log(err);
+            });
+
           }
         },
         style: {

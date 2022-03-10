@@ -5298,7 +5298,6 @@ ClientConsultingJs.prototype.finalSubmit = function () {
         instance.mother.certificationBox(name, phone, async function (back, box) {
           try {
             const { cliid } = await ajaxJson({ map }, "/clientSubmit");
-            console.log(cliid);
             homeliaisonAnalytics({
               page: instance.pageName,
               standard: instance.firstPageViewTime,
