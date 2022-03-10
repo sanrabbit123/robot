@@ -100,6 +100,9 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
+
     // const projects = await back.getProjectsByQuery({
     //   $and: [
     //     {
@@ -397,6 +400,95 @@ DevContext.prototype.launching = async function () {
     console.log(finalTong);
 
     */
+
+
+
+
+    // designer fee
+
+    let tong;
+    let functionMaker;
+    let thisFeeFunction;
+    tong = [
+      {
+        to: 8,
+        amount: 70,
+      },
+      {
+        to: 14,
+        amount: 130,
+      },
+      {
+        to: 22,
+        amount: 150,
+      },
+      {
+        to: 29,
+        amount: 200,
+      },
+      {
+        to: 33,
+        amount: 240,
+      },
+      {
+        to: 38,
+        amount: 260,
+      },
+      {
+        to: 44,
+        amount: 290,
+      },
+      {
+        to: 999,
+        amount: 320,
+      },
+    ];
+
+    functionMaker = function (tong) {
+      if (!Array.isArray(tong)) {
+        throw new Error("invaild input 1");
+      }
+      const endLimit = 900;
+      const inclinationDownConst = 2;
+      const inputName = 'x';
+      const outputName = 'y';
+      let functionScript;
+      let middle;
+      let pastMiddle;
+      let pastAmount;
+      let from;
+      let inclination;
+
+      functionScript = '';
+      pastMiddle = 0;
+      pastAmount = 0;
+      from = 0;
+      for (let { to, amount } of tong) {
+        middle = to <= endLimit ? ((from + to) / 2) : from;
+        functionScript += `} else if (${String(pastMiddle)} <= ${inputName} && ${inputName} < ${String(middle)}) {\n`;
+        functionScript += `  ${outputName} = (((${String(amount)} - ${String(pastAmount)}) / (${String(middle)} - ${String(pastMiddle)})) * ${inputName}) + (((${String(pastAmount)} * ${String(middle)}) - (${String(amount)} * ${String(pastMiddle)})) / (${String(middle)} - ${String(pastMiddle)}));\n`;
+        if (to > endLimit) {
+          functionScript += `} else {\n`;
+          functionScript += `  ${outputName} = (${String(inclination / inclinationDownConst)} * ${inputName}) + (${String(amount)} - ${String(from * (inclination / inclinationDownConst))});\n`;
+        }
+        inclination = (amount - pastAmount) / (middle - pastMiddle);
+        from = to;
+        pastMiddle = middle;
+        pastAmount = amount;
+      }
+
+      functionScript = "let " + outputName + ";\n" + functionScript.slice(String("} else ").length) + "}\nreturn Math.round(" + outputName + ");";
+      return new Function(inputName, functionScript);
+    }
+    thisFeeFunction = functionMaker(tong);
+
+    for (let i = 0; i < 56; i++) {
+      console.log(i, thisFeeFunction(i));
+    }
+
+
+
+
 
 
 
