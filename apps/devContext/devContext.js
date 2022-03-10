@@ -404,7 +404,64 @@ DevContext.prototype.launching = async function () {
 
 
 
+    // designer fee
 
+    const functionMaker = function (tong) {
+      if (!Array.isArray(tong)) {
+        throw new Error("invaild input");
+      }
+      const endLimit = 900;
+      const inclinationDownConst = 2;
+      const inputName = 'x';
+      const outputName = 'y';
+      let functionScript;
+      let middle;
+      let pastMiddle;
+      let pastAmount;
+      let from;
+      let inclination;
+
+      functionScript = '';
+      pastMiddle = 0;
+      pastAmount = 0;
+      from = 0;
+      for (let { to, amount } of tong) {
+        middle = to <= endLimit ? ((from + to) / 2) : from;
+        functionScript += `} else if (${String(pastMiddle)} <= ${inputName} && ${inputName} < ${String(middle)}) {\n`;
+        functionScript += `  ${outputName} = (((${String(amount)} - ${String(pastAmount)}) / (${String(middle)} - ${String(pastMiddle)})) * ${inputName}) + (((${String(pastAmount)} * ${String(middle)}) - (${String(amount)} * ${String(pastMiddle)})) / (${String(middle)} - ${String(pastMiddle)}));\n`;
+        if (to > endLimit) {
+          functionScript += `} else {\n`;
+          functionScript += `  ${outputName} = (${String(inclination / inclinationDownConst)} * ${inputName}) + (${String(amount)} - ${String(from * (inclination / inclinationDownConst))});\n`;
+        }
+        inclination = (amount - pastAmount) / (middle - pastMiddle);
+        from = to;
+        pastMiddle = middle;
+        pastAmount = amount;
+      }
+
+      functionScript = "let " + outputName + ";\n" + functionScript.slice(String("} else ").length) + "}\nreturn Math.round(" + outputName + ");";
+      return new Function(inputName, functionScript);
+    }
+    let tong;
+    let thisFeeFunction;
+    let price;
+    let y;
+
+    [ price ] = await back.mongoRead("designerPrice", { key: 22 }, { selfMongo: this.MONGOLOCALC });
+    y = 0;
+
+    tong = [];
+    for (let i = 0; i < price.matrix.length; i++) {
+      tong.push({
+        to: price.standard.x.value[i][1],
+        amount: price.matrix[i][y]
+      })
+    }
+    thisFeeFunction = functionMaker(tong);
+
+    for (let i = 0; i < 56; i++) {
+      console.log(i, thisFeeFunction(i));
+    }
 
 
     // push client

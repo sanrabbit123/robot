@@ -1124,7 +1124,8 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
         })
       }
       thisFeeFunction = functionMaker(matrixTong);
-      fee = thisFeeFunction(request.space.pyeong.value) * 10000;
+      // fee = thisFeeFunction(request.space.pyeong.value) * 10000;
+      fee = price.matrix[x][y] * 10000;
 
       if (mode === 0) {
         proposal = project.selectProposal(designer.desid);
