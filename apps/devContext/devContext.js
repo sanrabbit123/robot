@@ -156,6 +156,8 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
     /*
 
     const jsdom = require("jsdom");
@@ -540,12 +542,6 @@ DevContext.prototype.launching = async function () {
     */
 
 
-    
-
-
-
-
-
     // push client
     // const cliid = "c2203_aa28s";
     // const kakao = new KakaoTalk();
@@ -562,7 +558,14 @@ DevContext.prototype.launching = async function () {
     // }
 
 
-
+    // force client complete
+    // const cliid = "c2203_aa35s";
+    // await requestSystem("https://" + instance.address.homeinfo.ghost.host + "/styleCuration_updateCalculation", { cliid, coreQuery: {}, historyQuery: {}, mode: "" }, {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     "origin": instance.address.homeinfo.ghost.host,
+    //   }
+    // })
 
 
 
