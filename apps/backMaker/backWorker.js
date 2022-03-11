@@ -916,6 +916,7 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
     }
     const endLimit = 900;
     const inclinationDownConst = 2;
+    const middleConst = 0.55193;
     const inputName = 'x';
     const outputName = 'y';
     let functionScript;
@@ -930,7 +931,7 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
     pastAmount = 0;
     from = 0;
     for (let { to, amount } of tong) {
-      middle = to <= endLimit ? ((from + to) / 2) : from;
+      middle = to <= endLimit ? ((from + to) * middleConst) : from;
       functionScript += `} else if (${String(pastMiddle)} <= ${inputName} && ${inputName} < ${String(middle)}) {\n`;
       functionScript += `  ${outputName} = (((${String(amount)} - ${String(pastAmount)}) / (${String(middle)} - ${String(pastMiddle)})) * ${inputName}) + (((${String(pastAmount)} * ${String(middle)}) - (${String(amount)} * ${String(pastMiddle)})) / (${String(middle)} - ${String(pastMiddle)}));\n`;
       if (to > endLimit) {

@@ -89,13 +89,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const pro1 = (new Promise((resolve, reject) => { console.log("hi1"); resolve(null); }))
-    // const pro2 = (new Promise((resolve, reject) => { setTimeout(() => { console.log("hi2"); resolve(null); }, 5000); }))
-    // const pro3 = (new Promise((resolve, reject) => { setTimeout(() => { console.log("hi3"); resolve(null); }, 4000); }))
-    // const res = await promiseTogether([ pro1, pro2, pro3 ])
-    // console.log(res);
-
-
 
 
 
@@ -403,15 +396,20 @@ DevContext.prototype.launching = async function () {
 
 
 
-
+    /*
     // designer fee
-
+    const today = new Date();
+    const tenYearsAgo = new Date(today.getFullYear() - 10, today.getMonth(), today.getDate());
+    const fourYearsAgo = new Date(today.getFullYear() - 4, today.getMonth(), today.getDate());
+    const serviceName = [ "홈퍼니싱", "홈스타일링", "토탈 스타일링", "엑스트라 스타일링" ];
+    const levelName = [ "하", "중", "상" ];
     const functionMaker = function (tong) {
       if (!Array.isArray(tong)) {
         throw new Error("invaild input");
       }
       const endLimit = 900;
       const inclinationDownConst = 2;
+      const middleConst = 0.55193;
       const inputName = 'x';
       const outputName = 'y';
       let functionScript;
@@ -426,7 +424,7 @@ DevContext.prototype.launching = async function () {
       pastAmount = 0;
       from = 0;
       for (let { to, amount } of tong) {
-        middle = to <= endLimit ? ((from + to) / 2) : from;
+        middle = to <= endLimit ? ((from + to) * middleConst) : from;
         functionScript += `} else if (${String(pastMiddle)} <= ${inputName} && ${inputName} < ${String(middle)}) {\n`;
         functionScript += `  ${outputName} = (((${String(amount)} - ${String(pastAmount)}) / (${String(middle)} - ${String(pastMiddle)})) * ${inputName}) + (((${String(pastAmount)} * ${String(middle)}) - (${String(amount)} * ${String(pastMiddle)})) / (${String(middle)} - ${String(pastMiddle)}));\n`;
         if (to > endLimit) {
@@ -442,26 +440,110 @@ DevContext.prototype.launching = async function () {
       functionScript = "let " + outputName + ";\n" + functionScript.slice(String("} else ").length) + "}\nreturn Math.round(" + outputName + ");";
       return new Function(inputName, functionScript);
     }
+    const projects = await back.getProjectsByQuery({}, { selfMongo: this.MONGOLOCALC });
+    const [ project ] = projects;
     let tong;
     let thisFeeFunction;
     let price;
     let y;
+    let thisDesignerCareerStart;
+    let client, designer;
+    let request;
+    let pyeong;
+    let construct, styling;
+    let key;
+    let alpha;
+    let homeliaison;
+    let relationItems;
+    let alphaPercentage;
+    let newFee, oldFee;
+    let num, num2;
+    let average;
+    let subtract;
+    let matrix;
+    let sheetsId;
 
-    [ price ] = await back.mongoRead("designerPrice", { key: 22 }, { selfMongo: this.MONGOLOCALC });
-    y = 0;
+    num = 0;
+    average = 0;
+    num2 = 0;
+    subtract = [];
+    matrix = [ [ "고객", "디자이너", "서비스", "평수", "시공", "스타일링", "옛날", "새로운", "차액" ] ]
 
-    tong = [];
-    for (let i = 0; i < price.matrix.length; i++) {
-      tong.push({
-        to: price.standard.x.value[i][1],
-        amount: price.matrix[i][y]
-      })
+    for (let project of projects) {
+
+      client = await back.getClientById(project.cliid, { selfMongo: this.MONGOLOCALC });
+      [ { request } ] = client.requests;
+      pyeong = request.space.pyeong.value;
+      y = Number(project.service.serid.split('_')[1].replace(/[^0-9]/gi, '')) - 1;
+
+      for (let { desid, fee } of project.proposal.detail) {
+        designer = await back.getDesignerById(desid, { selfMongo: this.MONGOLOCALC });
+        ({ construct, styling } = designer.analytics);
+
+        key = (construct.level * 10) + styling.level;
+
+        [ price ] = await back.mongoRead("designerPrice", { key }, { selfMongo: this.MONGOLOCALC });
+        tong = [];
+        for (let i = 0; i < price.matrix.length; i++) {
+          tong.push({
+            to: price.standard.x.value[i][1],
+            amount: price.matrix[i][y]
+          })
+        }
+        thisFeeFunction = functionMaker(tong);
+
+        thisDesignerCareerStart = new Date(designer.information.business.career.startY, designer.information.business.career.startM - 1, 1);
+
+        alpha = 0;
+        alpha += (designer.information.business.career.relatedY >= 4 ? 0.5 : 0);
+        alpha += thisDesignerCareerStart.valueOf() <= tenYearsAgo.valueOf() ? 1 : (thisDesignerCareerStart.valueOf() <= fourYearsAgo.valueOf() ? 0.5 : 0);
+        alpha += (designer.analytics.project.paperWork.values.includes("3D") ? 0.5 : 0);
+        alpha += (designer.analytics.project.paperWork.values.includes("콜라주") ? 0.5 : 0);
+        alpha += (designer.analytics.project.paperWork.values.length >= 4 ? 0.5 : 0);
+
+        homeliaison = 0;
+        for (let { value } of designer.analytics.etc.personality) {
+          if (value) {
+            homeliaison = homeliaison + 1;
+          }
+        }
+        relationItems = designer.analytics.etc.relation.items;
+        homeliaison += 2 - relationItems.indexOf(designer.analytics.etc.relation.value);
+        alpha += (homeliaison * (4.5 / 7));
+        alpha += 1;
+        alpha += 0.5;
+
+        alphaPercentage = (alpha / 100) + 1;
+
+        newFee = Math.round(alphaPercentage * thisFeeFunction(pyeong) * 10) * 1000 * (1 - fee[0].discount);
+        oldFee = fee[0].amount;
+
+        matrix.push([ client.name, designer.designer, serviceName[y], pyeong, levelName[construct.level - 1], levelName[styling.level - 1], oldFee, newFee, newFee - oldFee ]);
+        subtract.push(newFee - oldFee);
+        average += newFee - oldFee;
+        num2++;
+      }
+
+      if (num === 900) {
+        break;
+      }
+      num++;
     }
-    thisFeeFunction = functionMaker(tong);
 
-    for (let i = 0; i < 56; i++) {
-      console.log(i, thisFeeFunction(i));
-    }
+    subtract = subtract.map((num) => { return Math.abs(num) });
+    subtract.sort((a, b) => { return b - a; })
+
+    // sheetsId = await sheets.create_newSheets_inPython("새로운 디자이너 비용 계산", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
+    sheetsId = "10OjyBrG75gukkUbzeV5wkjgiy9GlLgBft0QI8OvX88g";
+    await sheets.setting_cleanView_inPython(sheetsId);
+    await sheets.update_value_inPython(sheetsId, "", matrix);
+    */
+
+
+
+
+
+
 
 
     // push client
@@ -2405,7 +2487,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p141");
+    // await this.getRawPortfolio("p167");
 
 
     // get corePortfolio by pid
