@@ -434,7 +434,7 @@ DataRouter.prototype.rou_post_updateDocument = function () {
           pastFinalValue = new Date(pastValue);
           break;
         case "boolean":
-          if (/^미/.test(value) || /^비/.test(value) || /^안/.test(value) || /no/gi.test(value) || value === "false" || value === "null") {
+          if (/^미/.test(value) || /^비/.test(value) || /^안/.test(value) || /no/gi.test(value) || value === "false" || value === "null" || value === "전체") {
             pastFinalValue = false;
             finalValue = false;
           } else {

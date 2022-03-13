@@ -604,7 +604,19 @@ DataPatch.prototype.clientStandard = function () {
     channel: {
       name: "유입 채널",
       width: 100,
-    }
+    },
+    partialBoo: {
+      name: "부분 여부",
+      width: 100,
+    },
+    partialPyeong: {
+      name: "부분 평수",
+      width: 100,
+    },
+    partialDetail: {
+      name: "부분 공간",
+      width: 100,
+    },
   };
 
   targetArr = Object.keys(model.info);
@@ -670,6 +682,9 @@ DataPatch.prototype.clientWhiteViewStandard = function () {
       { name: "화장실", target: "bathroom" },
       { name: "발코니", target: "valcony" },
       { name: "가족 구성원", target: "family" },
+      { name: "부분 여부", target: "partialBoo" },
+      { name: "부분 평수", target: "partialPyeong" },
+      { name: "부분 공간", target: "partialDetail" },
     ],
   };
 
@@ -1814,6 +1829,9 @@ DataPatch.prototype.clientMap = function () {
     movein: { name: "예상 종료일", position: "requests.0.analytics.date.space.movein", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
     expected: { name: "입주 예정일", position: "requests.0.request.space.resident.expected", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
     spacePicture: { name: "사진", position: "requests.0.analytics.picture.space.boo", type: "boolean", items: [ "제출", "미제출" ], searchBoo: false },
+    partialBoo: { name: "부분 여부", position: "requests.0.request.space.partial.boo", type: "boolean", items: [ "부분", "전체" ], searchBoo: false, },
+    partialPyeong: { name: "부분 평수", position: "requests.0.request.space.partial.pyeong", type: "number", searchBoo: true, },
+    partialDetail: { name: "부분 공간", position: "requests.0.request.space.partial.detail", type: "string", searchBoo: true, },
   };
   return map;
 }
