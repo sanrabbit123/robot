@@ -34,6 +34,11 @@ module.exports = {
               living: false,
               expected: new Date(1800, 0, 1),
             },
+            partial: {
+              boo: false,
+              pyeong: 0,
+              detail: ""
+            }
           },
           etc: {
             comment: "",

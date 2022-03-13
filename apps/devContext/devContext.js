@@ -88,8 +88,30 @@ DevContext.prototype.launching = async function () {
     // await this.pureSpawn();
 
 
+    // const miro81 = `miro81`;
+    // const collection = `client`;
+    // const selfMongo = this.MONGOC;
+    // const clients = await selfMongo.db(miro81).collection(collection).find({}).toArray();
+    // let updateQuery, whereQuery;
+    // for (let { cliid, requests } of clients) {
+    //   whereQuery = { cliid };
+    //   updateQuery = {};
+    //   for (let i = 0; i < requests.length; i++) {
+    //     updateQuery["requests." + String(i) + ".request.space.partial"] = {
+    //       boo: false,
+    //       pyeong: 0,
+    //       detail: ""
+    //     };
+    //   }
+    //   await selfMongo.db(miro81).collection(collection).updateOne(whereQuery, { $set: updateQuery });
+    //   console.log(whereQuery, updateQuery);
+    // }
 
 
+    // const clients = await back.getClientsByQuery({}, { selfMongo: this.MONGOLOCALC });
+    // console.log(clients);
+    // console.log(clients[0].requests[0].request.space);
+    // console.log(clients[0].requests[0].request.toNormal());
 
 
 
