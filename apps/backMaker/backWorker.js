@@ -997,6 +997,7 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
     let livingMatchBoo;
     let matrixTong;
     let thisFeeFunction;
+    let partialMatchBoo;
 
     priceStandardCollection = "designerPrice";
     addressLogCollection = "addressLog";
@@ -1109,6 +1110,14 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
         }
       } else {
         livingMatchBoo = true;
+      }
+
+      partialMatchBoo = true;
+      if (client.requests[requestNumber].request.space.partial.boo === true) {
+        partialMatchBoo = false;
+        if (designer.analytics.project.matrix[y][0] === 1) {
+          partialMatchBoo = true;
+        }
       }
 
       price = await back.mongoRead(priceStandardCollection, { key: (designer.analytics.construct.level * 10) + designer.analytics.styling.level }, { selfMongo: MONGOLOCALC });
@@ -1262,6 +1271,13 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
 
       if (!livingMatchBoo) {
         comment = "Unable in living";
+        fee = 0;
+        offlineFeeCase = 0;
+        onlineFeeCase = 0;
+      }
+
+      if (!partialMatchBoo) {
+        comment = "Unable in partial space";
         fee = 0;
         offlineFeeCase = 0;
         onlineFeeCase = 0;
