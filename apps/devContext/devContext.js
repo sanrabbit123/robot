@@ -96,6 +96,9 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
+
     // const projects = await back.getProjectsByQuery({
     //   $and: [
     //     {
@@ -543,7 +546,7 @@ DevContext.prototype.launching = async function () {
 
 
     // push client
-    // const cliid = "c2203_aa41s";
+    // const cliid = "c2203_aa42s";
     // const kakao = new KakaoTalk();
     // await kakao.ready();
     // const client = await back.getClientById(cliid, { selfMongo: this.MONGOC });
@@ -3461,7 +3464,7 @@ DevContext.prototype.cookProperty = async function (obj) {
   }
 }
 
-DevContext.prototype.splitAi = async function splitAi(targetAi) {
+DevContext.prototype.splitAi = async function (targetAi) {
   const instance = this;
   const { fileSystem, shell, shellLink } = this.mother;
   const SvgOptimizer = require(`${process.cwd()}/apps/svgOptimizer/svgOptimizer.js`);

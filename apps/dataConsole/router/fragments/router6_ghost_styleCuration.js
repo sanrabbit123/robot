@@ -353,7 +353,7 @@ DataRouter.prototype.rou_post_styleCuration_pageInitComplete = function () {
           });
           await messageSend({ text: client.name + " 고객님께 신청 완료하라고 독촉했어요.", channel: "#404_curation", voice: true });
         }
-      }, 60 * 60 * 1000);
+      }, 40 * 60 * 1000);
 
       res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify({ message: "done" }));
