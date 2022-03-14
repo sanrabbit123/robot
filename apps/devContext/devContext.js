@@ -543,7 +543,7 @@ DevContext.prototype.launching = async function () {
 
 
     // push client
-    // const cliid = "c2203_aa28s";
+    // const cliid = "c2203_aa41s";
     // const kakao = new KakaoTalk();
     // await kakao.ready();
     // const client = await back.getClientById(cliid, { selfMongo: this.MONGOC });
