@@ -64,6 +64,8 @@ LogRouter.prototype.rou_get_First = function () {
 LogRouter.prototype.rou_get_Disk = function () {
   const instance = this;
   const { diskReading } = this.mother;
+  const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
+  const reflection = new MongoReflection();
   let obj = {};
   obj.link = "/disk";
   obj.func = async function (req, res) {
@@ -75,6 +77,7 @@ LogRouter.prototype.rou_get_Disk = function () {
     });
     try {
       const disk = await diskReading();
+      reflection.coreReflection().catch((err) => { console.log(err); });
       res.send(JSON.stringify({ disk: disk.toArray() }));
     } catch (e) {
       instance.mother.errorLog("Log Console 서버 문제 생김 (rou_get_Disk): " + e.message).catch((e) => { console.log(e); });

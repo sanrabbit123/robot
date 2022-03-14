@@ -453,7 +453,7 @@ MongoReflection.prototype.coreReflection = async function (to = "local") {
       console.log("connection success");
 
       for (let i of collection) {
-        // await MONGOC_TO.db(dbName).collection(i).drop();
+        await MONGOC_TO.db(dbName).collection(i).drop();
 
         rows = await MONGOC_FROM.db(dbName).collection(i).find({}).toArray();
         for (let j of rows) {
