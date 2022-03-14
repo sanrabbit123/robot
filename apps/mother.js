@@ -3332,6 +3332,90 @@ Mother.prototype.statusReading = function (sendLog = true) {
   });
 }
 
+Mother.prototype.diskReading = function (mode = "check", arr = []) {
+  if (typeof mode !== "string") {
+    throw new Error("invaild input");
+  }
+  if (![ "check", "view" ].includes(mode)) {
+    throw new Error("invaild input");
+  }
+
+  class Disk extends Array {
+    constructor(total, used, available) {
+      super();
+      this.push(total);
+      this.push(used);
+      this.push(available);
+      const usedPercentage = Math.round(((used / total) * 100) * 100) / 100;
+      const obj = {
+        byte: { total, used, available },
+        megaByte: {
+          total: Math.round(total / (1024)),
+          used: Math.round(used / (1024)),
+          available: Math.round(available / (1024)),
+        },
+        gigaByte: {
+          total: Math.round(total / (1024 * 1024)),
+          used: Math.round(used / (1024 * 1024)),
+          available: Math.round(available / (1024 * 1024)),
+        },
+        percentage: {
+          total: 100,
+          used: usedPercentage,
+          available: 100 - usedPercentage
+        }
+      };
+      for (let key in obj) {
+        this[key] = obj[key];
+      }
+    }
+    toNormal() {
+      let obj = {};
+      obj.byte = JSON.parse(JSON.stringify(this.byte));
+      obj.megaByte = JSON.parse(JSON.stringify(this.megaByte));
+      obj.gigaByte = JSON.parse(JSON.stringify(this.gigaByte));
+      obj.percentage = JSON.parse(JSON.stringify(this.percentage));
+      return obj;
+    }
+    toArray() {
+      return [ this[0], this[1], this[2] ];
+    }
+    toPercentage() {
+      return { gigaByte: this.gigaByte, percentage: this.percentage };
+    }
+  }
+
+  if (mode === "check") {
+    const { exec } = require("child_process");
+    const command = "df -Pk -- /";
+    return new Promise((resolve, reject) => {
+      exec(command, { cwd: process.cwd(), maxBuffer: 20 * 1024 * 1024 }, (error, stdout, stderr) => {
+        if (error) {
+          reject(error);
+        } else {
+          const [ , totalRaw, , availableRaw ] = stdout.trim().split("\n").map((str) => { return str.trim() })[1].split(' ').filter((str) => { return str.trim() !== '' });
+          const total = Number(totalRaw);
+          const available = Number(availableRaw);
+          const used = total - available;
+          resolve(new Disk(total, used, available));
+        }
+      });
+    });
+  } else if (mode === "view") {
+    if (!Array.isArray(arr)) {
+      throw new Error("invaild input 2");
+    }
+    if (arr.length !== 3) {
+      throw new Error("invaild input => arr must be [ total, used, available ]");
+    }
+    if (!arr.every((n) => { return typeof n === "number" })) {
+      throw new Error("invaild input => arr must be [ total, used, available ]");
+    }
+    const disk = new Disk(...arr);
+    console.table(disk.toPercentage());
+  }
+}
+
 Mother.prototype.errorLog = function (text) {
   if (typeof text === "object" && text !== null) {
     if (typeof text.text === "string") {

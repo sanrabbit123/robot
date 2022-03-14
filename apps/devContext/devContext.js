@@ -61,7 +61,7 @@ DevContext.prototype.launching = async function () {
   const instance = this;
   const rethink = new RethinkAccess();
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
-  const { fileSystem, shellExec, shellLink, orderSystem, ghostFileUpload, ghostFileList, curlRequest, requestSystem, ajaxJson, uniqueValue, getDateMatrix, ghostRequest, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, statusReading, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether } = this.mother;
+  const { fileSystem, shellExec, shellLink, orderSystem, ghostFileUpload, ghostFileList, curlRequest, diskReading, requestSystem, ajaxJson, uniqueValue, getDateMatrix, ghostRequest, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, statusReading, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether } = this.mother;
   try {
     await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
@@ -88,7 +88,7 @@ DevContext.prototype.launching = async function () {
     // await this.pureSpawn();
 
 
-
+    
 
 
 
@@ -2465,17 +2465,11 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "이경숙",
-    //     designer: "권미정",
-    //     link: "https://drive.google.com/drive/folders/1CS3pFHu9rbo6sqeBTpaV2_UIACVGqxqS",
+    //     client: "조남영",
+    //     designer: "박주령",
+    //     link: "https://drive.google.com/drive/folders/1CaKd2uHnrMBbUVi3TbOEq9F1aXBXyDe7",
     //     pay: true
-    //   },
-    //   {
-    //     client: "이윤지",
-    //     designer: "이미영",
-    //     link: "https://drive.google.com/drive/folders/1KA3-7AIXsK8j73xxxZYcOC8ZE_Fq34IR",
-    //     pay: true
-    //   },
+    //   }
     // ]);
 
 

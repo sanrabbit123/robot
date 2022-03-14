@@ -160,6 +160,7 @@ DataRouter.prototype.rou_get_Root = function () {
 
 DataRouter.prototype.rou_get_First = function () {
   const instance = this;
+  const { diskReading } = this.mother;
   let obj = {};
   let ipTong, tempIpTong;
   ipTong = [ 1, 127001, 172301254, 3912523211 ];
@@ -208,6 +209,15 @@ DataRouter.prototype.rou_get_First = function () {
         res.set({ "Content-Type": "text/plain" });
         res.send("hi");
 
+      } else if (req.params.id === "disk") {
+
+        diskReading().then((disk) => {
+          res.set({ "Content-Type": "application/json" });
+          res.send(JSON.stringify({ disk: disk.toArray() }));
+        }).catch((err) => {
+          throw new Error(err);
+        });
+
       } else {
 
         if (!pass) {
@@ -253,6 +263,8 @@ DataRouter.prototype.rou_get_First = function () {
     } catch (e) {
       instance.mother.errorLog("Console 서버 문제 생김 (rou_get_First): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
+      res.set({ "Content-Type": "text/plain" });
+      res.send("error");
     }
   }
   return obj;

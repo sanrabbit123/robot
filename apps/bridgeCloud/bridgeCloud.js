@@ -310,7 +310,7 @@ BridgeCloud.prototype.parsingAddress = async function (id, rawString, MONGOC) {
 
 BridgeCloud.prototype.bridgeServer = function (needs) {
   const instance = this;
-  const { fileSystem, requestSystem, shell, shellLink, todayMaker, ghostRequest, headRequest, sleep, equalJson, messageSend, errorLog, messageLog } = this.mother;
+  const { fileSystem, requestSystem, shell, shellLink, todayMaker, ghostRequest, headRequest, sleep, equalJson, diskReading, messageSend, errorLog, messageLog } = this.mother;
   const GoogleCalendar = require(process.cwd() + "/apps/googleAPIs/googleCalendar.js");
   const { filterAll, filterName, filterDate, filterCont, filterNull } = BridgeCloud.clientFilters;
   const [ MONGOC, MONGOLOCALC, KAKAO, HUMAN, ADDRESS ] = needs;
@@ -324,6 +324,18 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       res.send("this is new bridge cloud");
     } catch (e) {
       await errorLog("bridge 서버 문제 생김 (get_ssl): " + e.message);
+      res.send("error : " + e.message);
+    }
+  }
+
+  //GET - disk
+  funcObj.get_disk = async function (req, res) {
+    res.set({ "Content-Type": "application/json" });
+    try {
+      const disk = await diskReading();
+      res.send(JSON.stringify({ disk: disk.toArray() }));
+    } catch (e) {
+      await errorLog("bridge 서버 문제 생김 (get_disk): " + e.message);
       res.send("error : " + e.message);
     }
   }
@@ -961,54 +973,6 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 
     } catch (e) {
       await errorLog("Bridge 서버 문제 생김 (post_namephone): " + e.message);
-      res.send("error");
-    }
-  }
-
-  //POST - card
-  funcObj.post_card = async function (req, res) {
-    res.set({
-      "Content-Type": "text/plain",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      if (req.body.pretext === undefined || req.body.cellphone === undefined) {
-        res.send("error");
-      } else {
-        const phone = req.body.cellphone.trim().replace(/[\&\=\'\(\)\<\>\; \n\?\!\[\]\{\}\*\+]/g, '');
-        if (!/^[0-9]+-[0-9]+-[0-9]+$/.test(phone)) {
-          res.send("error");
-        } else {
-          if (instance.ignorePhone.includes(phone)) {
-            res.send(String(1001));
-          } else {
-            const clients = await instance.back.getClientsByQuery({ phone }, { withTools: false, selfMongo: MONGOC });
-            if (clients.length === 0) {
-              res.send("error");
-            } else {
-              let cliid;
-              let projects, project;
-              let first, remain;
-
-              cliid = clients[0].cliid;
-              projects = await instance.back.getProjectsByQuery({ $and: [ { cliid }, { desid: { $regex: "^d" } } ] }, { withTools: false, selfMongo: MONGOC });
-              if (projects.length === 0) {
-                res.send("error");
-              } else {
-                project = projects[0];
-                first = project.process.contract.first.calculation.amount;
-                remain = project.process.contract.remain.calculation.amount.consumer - first;
-
-                res.send(String(remain));
-              }
-            }
-          }
-        }
-      }
-    } catch (e) {
-      await errorLog("Bridge 서버 문제 생김 (post_card): " + e.message);
       res.send("error");
     }
   }

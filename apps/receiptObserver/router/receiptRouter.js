@@ -50,7 +50,7 @@ ReceiptRouter.prototype.rou_get_Root = function () {
 ReceiptRouter.prototype.rou_get_Ssl = function () {
   const instance = this;
   let obj = {};
-  obj.link = '/ssl';
+  obj.link = "/ssl";
   obj.func = async function (req, res) {
     try {
       res.set({
@@ -63,6 +63,30 @@ ReceiptRouter.prototype.rou_get_Ssl = function () {
     } catch (e) {
       instance.mother.errorLog("Python 서버 문제 생김 (rou_get_Ssl): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
+    }
+  }
+  return obj;
+}
+
+ReceiptRouter.prototype.rou_get_Disk = function () {
+  const instance = this;
+  const { diskReading } = this.mother;
+  let obj = {};
+  obj.link = "/disk";
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const disk = await diskReading();
+      res.send(JSON.stringify({ disk: disk.toArray() }));
+    } catch (e) {
+      instance.mother.errorLog("Python 서버 문제 생김 (rou_get_Disk): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
