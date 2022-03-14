@@ -56,6 +56,40 @@ Robot.prototype.mongoToJson = async function () {
   }
 }
 
+Robot.prototype.diskReading = function () {
+  const instance = this;
+  const { requestSystem, diskReading, dateToString } = this.mother;
+  const targets = [
+    { name: "home", host: instance.address.homeinfo.ghost.host },
+    { name: "office", host: instance.address.officeinfo.ghost.host },
+    { name: "python", host: instance.address.pythoninfo.host },
+    { name: "log", host: instance.address.testinfo.host },
+  ]
+  const robotPort = 3000;
+  const pathConst = "/disk";
+  const protocol = "https:";
+  let response;
+  let intervalFunc;
+
+  intervalFunc = async () => {
+    try {
+      console.clear();
+      for (let { name, host } of targets) {
+        response = await requestSystem(protocol + "//" + host + ":" + String(robotPort) + pathConst);
+        console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, name + " disk status");
+        console.log(`\x1b[33m%s\x1b[0m`, dateToString(new Date(), true));
+        diskReading("view", response.data.disk);
+        console.log("");
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  intervalFunc();
+  setInterval(intervalFunc, 2 * 60 * 60 * 1000);
+}
+
 Robot.prototype.infoObj = async function () {
   try {
     await this.back.setInfoObj({ getMode: false });
@@ -1274,6 +1308,13 @@ const MENU = {
   consoleHello: async function () {
     try {
       await robot.consoleHello();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  diskReading: async function () {
+    try {
+      await robot.diskReading();
     } catch (e) {
       console.log(e);
     }
