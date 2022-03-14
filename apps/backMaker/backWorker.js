@@ -746,7 +746,7 @@ BackWorker.prototype.designerCalculation = async function () {
         amount0 = designer.projects[i].process.calculation.payments.first.amount;
         condition0 = (designer.projects[i].process.calculation.payments.first.date.valueOf() > emptyDateValue);
         if (!condition0) {
-          tempDate = designer.projects[i].proposal.date;
+          tempDate = designer.projects[i].process.contract.meeting.date;
           tempDate.setDate(tempDate.getDate() + 1);
           infoDetail.first.push({ name, amount: amount0, proposal: tempDate, receipt: true });
         }
