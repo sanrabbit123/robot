@@ -89,14 +89,57 @@ DevContext.prototype.launching = async function () {
 
 
     const analytics = new GoogleAnalytics();
-
-    await analytics.getClients();
-
+    await analytics.getClientsHistory();
 
 
+    // const target = await fileSystem(`readJson`, [ `${process.cwd()}/temp/result.json` ]);
+    // let history;
+    // let tong, tempObj;
+    // let result;
+    // let matrix;
+    // let first, consulting, login;
+    // let index;
+    // let loginAgo;
+    // let continueFirst;
+    //
 
-
-
+    //
+    // matrix = [];
+    // for (let id in result) {
+    //
+    //   first = result[id].history[0].date;
+    //   login = result[id].history.find((obj) => { return obj.title === "login" }).date;
+    //   loginAgo = new Date(JSON.stringify(login).slice(1, -1));
+    //   loginAgo.setHours(loginAgo.getHours() - 12);
+    //
+    //   index = result[id].history.findIndex((obj) => { return obj.title === "login" });
+    //   consulting = null;
+    //   for (let i = 0; i < index; i++) {
+    //     if (/consulting/gi.test(result[id].history[i].path)) {
+    //       consulting = result[id].history[i].date;
+    //     }
+    //   }
+    //   if (consulting === null) {
+    //     consulting = login;
+    //   }
+    //   continueFirst = null;
+    //   for (let i = 0; i < index; i++) {
+    //     if (result[id].history[i].date.valueOf() >= loginAgo.valueOf()) {
+    //       continueFirst = result[id].history[i].date;
+    //       break;
+    //     }
+    //   }
+    //   if (continueFirst === null) {
+    //     continueFirst = first;
+    //   }
+    //
+    //   matrix.push([ id, dateToString(first, true), dateToString(continueFirst, true), dateToString(consulting, true), dateToString(login, true), Math.round(((login.valueOf() - first.valueOf()) / 1000) / 60), Math.round(((login.valueOf() - continueFirst.valueOf()) / 1000) / 60), Math.round(((login.valueOf() - consulting.valueOf()) / 1000) / 60) ])
+    // }
+    //
+    // matrix.sort((a, b) => { return stringToDate(a[1]).valueOf() - stringToDate(b[1]).valueOf() })
+    // matrix.unshift([ "구글 아이디", "최초 도달", "당일 도달 추정", "서비스 신청 도달", "서비스 신청", "신청 - 최초(분)", "신청 - 당일(분)", "신청 - 서비스(분)" ])
+    //
+    // await sheets.update_value_inPython("1arniWfRNu2tYTyqcRCH6Meh16LUc2DRHQQCC19WQL3o", "", matrix);
 
 
 

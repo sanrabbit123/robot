@@ -123,7 +123,7 @@ class GoogleAnalytics:
 
         return dumps(result)
 
-    def getClients(self):
+    def getClientsHistory(self, startDate, startAgoDate, endDate):
         result = self.app.reports().batchGet(
             body={
                 "reportRequests": [
@@ -131,7 +131,7 @@ class GoogleAnalytics:
                         "viewId": self.viewId,
                         "pageSize": 100000,
                         "dateRanges": [
-                            { "startDate": "yesterday", "endDate": "today" }
+                            { "startDate": startDate, "endDate": endDate }
                         ],
                         "dimensions": [
                             { "name": "ga:clientId" },
@@ -167,7 +167,7 @@ class GoogleAnalytics:
                             "viewId": self.viewId,
                             "pageSize": 100000,
                             "dateRanges": [
-                                { "startDate": "30daysAgo", "endDate": "today" }
+                                { "startDate": startAgoDate, "endDate": endDate }
                             ],
                             "dimensions": [
                                 { "name": "ga:pagePath" },
@@ -197,7 +197,7 @@ class GoogleAnalytics:
                             "viewId": self.viewId,
                             "pageSize": 100000,
                             "dateRanges": [
-                                { "startDate": "30daysAgo", "endDate": "today" }
+                                { "startDate": startAgoDate, "endDate": endDate }
                             ],
                             "dimensions": [
                                 { "name": "ga:eventAction" },
@@ -219,7 +219,6 @@ class GoogleAnalytics:
                         }
                     ]
                 }).execute()
-
             clientDic[id] = {}
             clientDic[id]["history"] = historyResult["reports"][0]["data"]["rows"]
             clientDic[id]["event"] = eventResult["reports"][0]["data"]["rows"]

@@ -116,14 +116,79 @@ GoogleAnalytics.prototype.getTodayClients = async function () {
   }
 }
 
-GoogleAnalytics.prototype.getClients = async function () {
+GoogleAnalytics.prototype.getClientsHistory = async function () {
   const instance = this;
   const mother = this.mother;
+  const { fileSystem, pythonExecute, dateToString } = this.mother;
   try {
-    const response = await mother.pythonExecute(this.pythonApp, [ "analytics", "getClients" ], {});
+    const targetEvent = "login";
+    const targetEventPath = "/consulting.php";
+    let history;
+    let tong, tempObj;
+    let result;
+    let target;
+    let totalTong;
+    let date, dateAgo, endDate
 
-    console.log(JSON.stringify(response, null, 2))
 
+    totalTong = [];
+
+
+
+    date = new Date();
+    date.setDate(date.getDate() - 1);
+
+
+
+
+    dateAgo = new Date(JSON.stringify(date).slice(1, -1));
+    dateAgo.setDate(dateAgo.getDate() - 30);
+    endDate = new Date(JSON.stringify(date).slice(1, -1));
+    endDate.setDate(endDate.getDate() + 1);
+
+    console.log(dateToString(date), dateToString(endDate))
+
+    target = await pythonExecute(this.pythonApp, [ "analytics", "getClientsHistory" ], {
+      startDate: dateToString(date),
+      startAgoDate: dateToString(dateAgo),
+      endDate: dateToString(endDate)
+    });
+    result = {};
+    for (let id in target) {
+      history = target[id].history;
+      tong = [];
+      for (let { dimensions: [ path, title, date ] } of history) {
+        tong.push({ path, title, date: Number(date) });
+      }
+      for (let obj of target[id].event) {
+        if (obj.dimensions.includes(targetEvent)) {
+          tong.push({
+            path: targetEventPath,
+            title: targetEvent,
+            date: Number(obj.dimensions[1]),
+          });
+        }
+      }
+      tong.sort((a, b) => { return a.date - b.date; });
+      tong = tong.map((obj) => {
+        let str = String(obj.date);
+        obj.date = new Date(Number(str.slice(0, 4)), Number(str.slice(4, 6)) - 1, Number(str.slice(6, 8)), Number(str.slice(8, 10)), Number(str.slice(10, 12)));
+        return obj;
+      });
+
+      result[id] = {};
+      result[id].history = tong;
+    }
+    for (let id in result) {
+      totalTong.push({
+        id,
+        history: result[id].history,
+      })
+    }
+
+    console.log(totalTong);
+
+    return result;
 
   } catch (e) {
     console.log(e);
