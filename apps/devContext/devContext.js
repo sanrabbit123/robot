@@ -87,8 +87,13 @@ DevContext.prototype.launching = async function () {
 
     // await this.pureSpawn();
 
-    const analytics = new GoogleAnalytics();
-    await analytics.historyToMongo(30);
+
+
+    // const analytics = new GoogleAnalytics();
+    // await analytics.historyToMongo(30);
+
+
+
 
 
     // const target = await fileSystem(`readJson`, [ `${process.cwd()}/temp/result.json` ]);
