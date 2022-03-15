@@ -87,9 +87,8 @@ DevContext.prototype.launching = async function () {
 
     // await this.pureSpawn();
 
-
     const analytics = new GoogleAnalytics();
-    await analytics.historyToMongo(240);
+    await analytics.historyToMongo(30);
 
 
     // const target = await fileSystem(`readJson`, [ `${process.cwd()}/temp/result.json` ]);
@@ -2535,7 +2534,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p167");
+    // await this.getRawPortfolio("p135");
 
 
     // get corePortfolio by pid
