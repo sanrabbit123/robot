@@ -89,7 +89,7 @@ DevContext.prototype.launching = async function () {
 
 
     const analytics = new GoogleAnalytics();
-    await analytics.getClientsHistory();
+    await analytics.historyToMongo(240);
 
 
     // const target = await fileSystem(`readJson`, [ `${process.cwd()}/temp/result.json` ]);
