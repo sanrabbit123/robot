@@ -116,6 +116,20 @@ GoogleAnalytics.prototype.getTodayClients = async function () {
   }
 }
 
+GoogleAnalytics.prototype.getClients = async function () {
+  const instance = this;
+  const mother = this.mother;
+  try {
+    const response = await mother.pythonExecute(this.pythonApp, [ "analytics", "getClients" ], {});
+
+    console.log(JSON.stringify(response, null, 2))
+
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 GoogleAnalytics.prototype.getClientById = async function (clientId) {
   if (clientId === undefined) {
     throw new Error("invaild arguments");

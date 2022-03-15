@@ -88,6 +88,11 @@ DevContext.prototype.launching = async function () {
     // await this.pureSpawn();
 
 
+    const analytics = new GoogleAnalytics();
+
+    await analytics.getClients();
+
+
 
 
 

@@ -123,6 +123,109 @@ class GoogleAnalytics:
 
         return dumps(result)
 
+    def getClients(self):
+        result = self.app.reports().batchGet(
+            body={
+                "reportRequests": [
+                    {
+                        "viewId": self.viewId,
+                        "pageSize": 100000,
+                        "dateRanges": [
+                            { "startDate": "yesterday", "endDate": "today" }
+                        ],
+                        "dimensions": [
+                            { "name": "ga:clientId" },
+                        ],
+                        "dimensionFilterClauses": [
+                            {
+                                "filters": [
+                                    {
+                                        "dimensionName": "ga:eventAction",
+                                        "expressions": [ "login" ],
+                                    }
+                                ]
+                            }
+                        ],
+                        "metrics": [
+                            { "expression": "ga:pageviews" },
+                        ]
+                    }
+                ]
+            }).execute()
+
+        clientIds = []
+        for obj in result["reports"][0]["data"]["rows"]:
+            for id in obj["dimensions"]:
+                clientIds.append(id)
+
+        clientDic = {}
+        for id in clientIds:
+            historyResult = self.app.reports().batchGet(
+                body={
+                    "reportRequests": [
+                        {
+                            "viewId": self.viewId,
+                            "pageSize": 100000,
+                            "dateRanges": [
+                                { "startDate": "30daysAgo", "endDate": "today" }
+                            ],
+                            "dimensions": [
+                                { "name": "ga:pagePath" },
+                                { "name": "ga:pageTitle" },
+                                { "name": "ga:dateHourMinute" }
+                            ],
+                            "dimensionFilterClauses": [
+                                {
+                                    "filters": [
+                                        {
+                                            "dimensionName": "ga:clientId",
+                                            "expressions": [ id ],
+                                        }
+                                    ]
+                                }
+                            ],
+                            "metrics": [
+                                { "expression": "ga:pageviews" },
+                            ]
+                        }
+                    ]
+                }).execute()
+            eventResult = self.app.reports().batchGet(
+                body={
+                    "reportRequests": [
+                        {
+                            "viewId": self.viewId,
+                            "pageSize": 100000,
+                            "dateRanges": [
+                                { "startDate": "30daysAgo", "endDate": "today" }
+                            ],
+                            "dimensions": [
+                                { "name": "ga:eventAction" },
+                                { "name": "ga:dateHourMinute" }
+                            ],
+                            "dimensionFilterClauses": [
+                                {
+                                    "filters": [
+                                        {
+                                            "dimensionName": "ga:clientId",
+                                            "expressions": [ id ],
+                                        }
+                                    ]
+                                }
+                            ],
+                            "metrics": [
+                                { "expression": "ga:pageviews" },
+                            ]
+                        }
+                    ]
+                }).execute()
+
+            clientDic[id] = {}
+            clientDic[id]["history"] = historyResult["reports"][0]["data"]["rows"]
+            clientDic[id]["event"] = eventResult["reports"][0]["data"]["rows"]
+
+        return dumps(clientDic)
+
     def getClientsByDate(self, startDate, endDate, dimensions, submit=False):
         dimensions.insert(0, { "name": "ga:clientId" })
         dimensions.insert(0, { "name": "ga:dateHourMinute" })

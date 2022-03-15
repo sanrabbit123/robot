@@ -916,7 +916,7 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
     }
     const endLimit = 900;
     const inclinationDownConst = 2;
-    const middleConst = 0.55193;
+    const middleConst = 0.45;
     const inputName = 'x';
     const outputName = 'y';
     let functionScript;
@@ -1134,8 +1134,8 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
         })
       }
       thisFeeFunction = functionMaker(matrixTong);
-      // fee = thisFeeFunction(request.space.pyeong.value) * 10000;
-      fee = price.matrix[x][y] * 10000;
+      fee = thisFeeFunction(request.space.pyeong.value) * 10000;
+      // fee = price.matrix[x][y] * 10000;
 
       if (mode === 0) {
         proposal = project.selectProposal(designer.desid);
