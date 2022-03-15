@@ -198,13 +198,17 @@ GoogleAnalytics.prototype.historyToMongo = async function (ago = 15) {
             console.log(`\x1b[33m%s\x1b[0m`, obj.id + " update success");
           }
         }
+
+        date = new Date(JSON.stringify(date).slice(1, -1));
+        date.setDate(date.getDate() - 1);
+        console.log(``);
+
       } catch (e) {
         console.log(e);
+        date = new Date(JSON.stringify(date).slice(1, -1));
+        ago = ago + 1;
+        console.log(``);
       }
-
-      date = new Date(JSON.stringify(date).slice(1, -1));
-      date.setDate(date.getDate() - 1);
-      console.log(``);
 
     }
 
