@@ -136,7 +136,7 @@ GoogleAnalytics.prototype.historyToMongo = async function (ago = 15) {
 
     await MONGOLOCALC.connect();
 
-    date = new Date(2022, 1, 3);
+    date = new Date();
     date.setDate(date.getDate() - 1);
 
     for (let i = 0; i < ago; i++) {

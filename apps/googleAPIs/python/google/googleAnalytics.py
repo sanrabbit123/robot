@@ -167,7 +167,7 @@ class GoogleAnalytics:
                             "viewId": self.viewId,
                             "pageSize": 100000,
                             "dateRanges": [
-                                { "startDate": startAgoDate, "endDate": endDate }
+                                { "startDate": startAgoDate, "endDate": "today" }
                             ],
                             "dimensions": [
                                 { "name": "ga:pagePath" },
@@ -197,7 +197,7 @@ class GoogleAnalytics:
                             "viewId": self.viewId,
                             "pageSize": 100000,
                             "dateRanges": [
-                                { "startDate": startAgoDate, "endDate": endDate }
+                                { "startDate": startAgoDate, "endDate": "today" }
                             ],
                             "dimensions": [
                                 { "name": "ga:eventAction" },
