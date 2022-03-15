@@ -316,6 +316,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   livingAlertEvent = function (mother) {
 
     const tempId = uniqueValue("hex");
+    const moveinTarget = [ ...document.querySelectorAll("." + inputClassName) ].find((dom) => { return dom.getAttribute("property") === "movein" });
     createNode({
       mode: "aside",
       mother,
@@ -352,7 +353,9 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         }
       ]
     });
-
+    if (moveinTarget.value.trim() === '') {
+      moveinTarget.value = dateToString(new Date());
+    }
     GeneralJs.stacks["currentLivingAlertId"] = tempId;
     setQueue(() => {
       livingDownEvent(tempId);
@@ -5245,7 +5248,7 @@ ClientConsultingJs.prototype.finalSubmit = function () {
             } else if (p === "movein") {
               firstDom.value = firstDom.value.replace(/[^0-9\-]/gi, '').trim();
               if (!/[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/gi.test(firstDom.value.trim())) {
-                firstDom.value = dateToString(new Date());
+                throw new Error("입주 예정일을 알려주세요! (정해지지 않았을 경우, 예상되는 날짜를 찍어주세요!)");
               }
             }
 
