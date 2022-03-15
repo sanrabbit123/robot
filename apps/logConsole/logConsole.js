@@ -332,7 +332,7 @@ LogConsole.prototype.logConnect = async function () {
     const analytics = new GoogleAnalytics();
     setInterval(async () => {
       try {
-        await analytics.analyticsToMongo();
+        await analytics.historyToMongo();
         await messageLog("analytics to mongo success");
       } catch (e) {
         console.log(e);

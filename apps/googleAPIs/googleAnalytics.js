@@ -150,53 +150,56 @@ GoogleAnalytics.prototype.historyToMongo = async function (ago = 15) {
 
       console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `${dateToString(date)} - ${dateToString(endDate)} parsing...`);
 
-      target = await pythonExecute(this.pythonApp, [ "analytics", "getClientsHistory" ], {
-        startDate: dateToString(date),
-        startAgoDate: dateToString(dateAgo),
-        endDate: dateToString(endDate)
-      });
-      result = {};
-      for (let id in target) {
-        history = target[id].history;
-        tong = [];
-        for (let { dimensions: [ path, title, date ] } of history) {
-          tong.push({ path, title, date: Number(date) });
+      try {
+        target = await pythonExecute(this.pythonApp, [ "analytics", "getClientsHistory" ], {
+          startDate: dateToString(date),
+          startAgoDate: dateToString(dateAgo),
+          endDate: dateToString(endDate)
+        });
+        result = {};
+        for (let id in target) {
+          history = target[id].history;
+          tong = [];
+          for (let { dimensions: [ path, title, date ] } of history) {
+            tong.push({ path, title, date: Number(date) });
+          }
+          for (let obj of target[id].event) {
+            if (obj.dimensions.includes(targetEvent)) {
+              tong.push({
+                path: targetEventPath,
+                title: targetEvent,
+                date: Number(obj.dimensions[1]),
+              });
+            }
+          }
+          tong.sort((a, b) => { return a.date - b.date; });
+          tong = tong.map((obj) => {
+            let str = String(obj.date);
+            obj.date = new Date(Number(str.slice(0, 4)), Number(str.slice(4, 6)) - 1, Number(str.slice(6, 8)), Number(str.slice(8, 10)), Number(str.slice(10, 12)));
+            return obj;
+          });
+
+          result[id] = {};
+          result[id].history = tong;
         }
-        for (let obj of target[id].event) {
-          if (obj.dimensions.includes(targetEvent)) {
-            tong.push({
-              path: targetEventPath,
-              title: targetEvent,
-              date: Number(obj.dimensions[1]),
-            });
+        for (let id in result) {
+          totalTong.push({
+            id,
+            history: result[id].history,
+          });
+        }
+        for (let obj of totalTong) {
+          rows = await back.mongoRead(collection, { id: obj.id }, { selfMongo: MONGOLOCALC });
+          if (rows.length === 0) {
+            await back.mongoCreate(collection, obj, { selfMongo: MONGOLOCALC });
+            console.log(`\x1b[33m%s\x1b[0m`, obj.id + " insert success");
+          } else {
+            await back.mongoUpdate(collection, [ { id: obj.id }, obj ], { selfMongo: MONGOLOCALC });
+            console.log(`\x1b[33m%s\x1b[0m`, obj.id + " update success");
           }
         }
-        tong.sort((a, b) => { return a.date - b.date; });
-        tong = tong.map((obj) => {
-          let str = String(obj.date);
-          obj.date = new Date(Number(str.slice(0, 4)), Number(str.slice(4, 6)) - 1, Number(str.slice(6, 8)), Number(str.slice(8, 10)), Number(str.slice(10, 12)));
-          return obj;
-        });
-
-        result[id] = {};
-        result[id].history = tong;
-      }
-      for (let id in result) {
-        totalTong.push({
-          id,
-          history: result[id].history,
-        });
-      }
-
-      for (let obj of totalTong) {
-        rows = await back.mongoRead(collection, { id: obj.id }, { selfMongo: MONGOLOCALC });
-        if (rows.length === 0) {
-          await back.mongoCreate(collection, obj, { selfMongo: MONGOLOCALC });
-          console.log(`\x1b[33m%s\x1b[0m`, obj.id + " insert success");
-        } else {
-          await back.mongoUpdate(collection, [ { id: obj.id }, obj ], { selfMongo: MONGOLOCALC });
-          console.log(`\x1b[33m%s\x1b[0m`, obj.id + " update success");
-        }
+      } catch (e) {
+        console.log(e);
       }
 
       date = new Date(JSON.stringify(date).slice(1, -1));
