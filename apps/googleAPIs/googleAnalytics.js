@@ -157,6 +157,7 @@ GoogleAnalytics.prototype.historyToMongo = async function (ago = 15) {
           startAgoDate: dateToString(dateAgo),
           endDate: dateToString(endDate)
         });
+        console.log(target);
         result = {};
         for (let id in target) {
           history = target[id].history;
