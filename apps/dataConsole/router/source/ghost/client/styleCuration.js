@@ -577,33 +577,33 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
         title: "공간",
         callback: "blockCheck",
         children: [
-          // {
-          //   name: "address",
-          //   type: "address",
-          //   half: false,
-          //   required: false,
-          //   rewind: "스타일링 받으실 곳의 주소를 정확히 입력해주세요 :)",
-          //   question: [
-          //     "<b%스타일링 받으실 곳의 주소가 맞나요?%b>",
-          //     "아니라면, 스타일링 받을 곳으로 고쳐주세요!"
-          //   ],
-          //   value: function (request, history, self) {
-          //     return request.request.space.address;
-          //   },
-          //   update: function (value, siblings, client) {
-          //     if (value === null) {
-          //       return { history: null, core: null };
-          //     } else {
-          //       let updateQuery;
-          //       updateQuery = {};
-          //       updateQuery["requests.0.request.space.address"] = value;
-          //       return {
-          //         history: null,
-          //         core: updateQuery
-          //       };
-          //     }
-          //   }
-          // },
+          {
+            name: "address",
+            type: "address",
+            half: false,
+            required: false,
+            rewind: "스타일링 받으실 곳의 주소를 정확히 입력해주세요 :)",
+            question: [
+              "<b%스타일링 받으실 곳의 주소가 맞나요?%b>",
+              "아니라면, 스타일링 받을 곳으로 고쳐주세요!"
+            ],
+            value: function (request, history, self) {
+              return request.request.space.address;
+            },
+            update: function (value, siblings, client) {
+              if (value === null) {
+                return { history: null, core: null };
+              } else {
+                let updateQuery;
+                updateQuery = {};
+                updateQuery["requests.0.request.space.address"] = value;
+                return {
+                  history: null,
+                  core: updateQuery
+                };
+              }
+            }
+          },
           // {
           //   name: "pyeong",
           //   type: "pyeong",

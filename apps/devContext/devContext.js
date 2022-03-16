@@ -96,36 +96,40 @@ DevContext.prototype.launching = async function () {
     // const MONGOLOGC = new mongo(mongotestinfo, { useUnifiedTopology: true });
     // const db = "miro81";
     // const collection = "clientFrontHistory";
-    // let tong, res;
-    //
-    // await MONGOLOGC.connect();
-    //
-    // res = await MONGOLOGC.db(db).collection(collection).find({}).toArray();
-    //
-    // tong = {};
-    // for (let { id, history } of res) {
-    //   tong[id] = { history };
-    // }
-    //
-    // await MONGOLOGC.close();
-    //
-    // await fileSystem(`writeJson`, [ `${process.cwd()}/temp/result3.json`, tong ]);
-    // console.log(tong);
-
-
-
-    // const target = await fileSystem(`readJson`, [ `${process.cwd()}/temp/result.json` ]);
+    // let result, res;
     // let history;
     // let tong, tempObj;
-    // let result;
     // let matrix;
     // let first, consulting, login;
     // let index;
     // let loginAgo;
     // let continueFirst;
+    // let historyLengthTong;
+    // let historyMaxLength;
     //
+    // await MONGOLOGC.connect();
+    //
+    // res = await MONGOLOGC.db(db).collection(collection).find({}).toArray();
+    //
+    // await MONGOLOGC.close();
+    //
+    // historyLengthTong = [];
+    // for (let { history } of res) {
+    //   historyLengthTong.push(history.length);
+    // }
+    //
+    // historyLengthTong.sort((a, b) => { return b - a; });
+    // historyMaxLength = historyLengthTong[0];
 
-    //
+
+
+
+
+
+
+
+
+
     // matrix = [];
     // for (let id in result) {
     //
@@ -162,7 +166,7 @@ DevContext.prototype.launching = async function () {
     // matrix.unshift([ "구글 아이디", "최초 도달", "당일 도달 추정", "서비스 신청 도달", "서비스 신청", "신청 - 최초(분)", "신청 - 당일(분)", "신청 - 서비스(분)" ])
     //
     // await sheets.update_value_inPython("1arniWfRNu2tYTyqcRCH6Meh16LUc2DRHQQCC19WQL3o", "", matrix);
-
+    // console.log(matrix);
 
 
 
