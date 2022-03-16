@@ -89,8 +89,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const analytics = new GoogleAnalytics();
-    // await analytics.historyToMongo(30);
+    const analytics = new GoogleAnalytics();
+    await analytics.historyToMongo(30);
 
 
 
