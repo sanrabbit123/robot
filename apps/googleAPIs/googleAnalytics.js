@@ -149,7 +149,7 @@ GoogleAnalytics.prototype.historyToMongo = async function (ago = 15) {
       endDate = new Date(JSON.stringify(date).slice(1, -1));
       endDate.setDate(endDate.getDate() + 1);
 
-      console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `${dateToString(date)}(${dateToString(dateAgo)}) - ${dateToString(endDate)} parsing...`);
+      console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `${dateToString(date)} - ${dateToString(endDate)} parsing...`);
 
       try {
         target = await pythonExecute(this.pythonApp, [ "analytics", "getClientsHistory" ], {
@@ -157,7 +157,6 @@ GoogleAnalytics.prototype.historyToMongo = async function (ago = 15) {
           startAgoDate: dateToString(dateAgo),
           endDate: dateToString(endDate)
         });
-        console.log(target);
         result = {};
         for (let id in target) {
           history = target[id].history;

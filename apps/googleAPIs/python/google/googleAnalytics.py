@@ -154,9 +154,10 @@ class GoogleAnalytics:
             }).execute()
 
         clientIds = []
-        for obj in result["reports"][0]["data"]["rows"]:
-            for id in obj["dimensions"]:
-                clientIds.append(id)
+        if "rows" in result["reports"][0]["data"]:
+            for obj in result["reports"][0]["data"]["rows"]:
+                for id in obj["dimensions"]:
+                    clientIds.append(id)
 
         clientDic = {}
         for id in clientIds:
@@ -167,7 +168,7 @@ class GoogleAnalytics:
                             "viewId": self.viewId,
                             "pageSize": 100000,
                             "dateRanges": [
-                                { "startDate": startAgoDate, "endDate": endDate }
+                                { "startDate": startAgoDate, "endDate": "today" }
                             ],
                             "dimensions": [
                                 { "name": "ga:pagePath" },
@@ -197,7 +198,7 @@ class GoogleAnalytics:
                             "viewId": self.viewId,
                             "pageSize": 100000,
                             "dateRanges": [
-                                { "startDate": startAgoDate, "endDate": endDate }
+                                { "startDate": startAgoDate, "endDate": "today" }
                             ],
                             "dimensions": [
                                 { "name": "ga:eventAction" },
