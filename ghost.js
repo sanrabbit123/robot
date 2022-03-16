@@ -2887,6 +2887,8 @@ Ghost.prototype.ghostRouter = function (needs) {
           await instance.slack_bot.chat.postMessage({ text, channel });
         }
 
+        requestSystem("http://172.30.1.58:3000/log", { message: text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
+
         res.send(JSON.stringify({ message: "done" }));
       } catch (e) {
         res.send(JSON.stringify({ message: "error : " + e.message }));
