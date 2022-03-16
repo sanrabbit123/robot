@@ -89,8 +89,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const analytics = new GoogleAnalytics();
-    // await analytics.historyToMongo(160);
 
 
     // const MONGOLOGC = new mongo(mongotestinfo, { useUnifiedTopology: true });
@@ -106,6 +104,7 @@ DevContext.prototype.launching = async function () {
     // let continueFirst;
     // let historyLengthTong;
     // let historyMaxLength;
+    // let tempArr;
     //
     // await MONGOLOGC.connect();
     //
@@ -120,12 +119,41 @@ DevContext.prototype.launching = async function () {
     //
     // historyLengthTong.sort((a, b) => { return b - a; });
     // historyMaxLength = historyLengthTong[0];
+    //
+    //
+    // res.sort((a, b) => { return a.history[0].date.valueOf() - b.history[0].date.valueOf() })
+    //
+    // matrix = [];
+    // for (let obj of res) {
+    //   tempArr = new Array(historyMaxLength + 1);
+    //   tempArr.fill('');
+    //   tempArr[0] = obj.id;
+    //   for (let i = 0; i < obj.history.length; i++) {
+    //     tempArr[i + 1] = obj.history[i].title;
+    //   }
+    //   matrix.push(JSON.parse(JSON.stringify(tempArr)));
+    //
+    //   tempArr = new Array(historyMaxLength + 1);
+    //   tempArr.fill('');
+    //   for (let i = 0; i < obj.history.length; i++) {
+    //     tempArr[i + 1] = dateToString(obj.history[i].date, true);
+    //   }
+    //   matrix.push(JSON.parse(JSON.stringify(tempArr)));
+    //
+    //   tempArr = new Array(historyMaxLength + 1);
+    //   tempArr.fill('');
+    //   matrix.push(JSON.parse(JSON.stringify(tempArr)));
+    //
+    // }
+    //
+    // matrix.unshift((new Array(historyMaxLength + 1)).fill(''))
+    // console.log(matrix);
+    // // const sheetsId = await sheets.create_newSheets_inPython("고객 히스토리 정리", "1dMgQK3f_o7J3Bg3wt_9r3hS2-tXCS2sv");
+    // // await sheets.setting_cleanView_inPython(sheetsId);
+    // await sheets.update_value_inPython("1o3cZyp10k929GYTaz-DDZFQM8sMSb0YSwZXO_l7aCd0", "", matrix);
 
 
-
-
-
-
+    
 
 
 
@@ -2561,7 +2589,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p135");
+    // await this.getRawPortfolio("p181");
 
 
     // get corePortfolio by pid
