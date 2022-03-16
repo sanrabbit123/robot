@@ -60,7 +60,7 @@ const DevContext = function () {
 DevContext.prototype.launching = async function () {
   const instance = this;
   const rethink = new RethinkAccess();
-  const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongotestinfo } = this.mother;
   const { fileSystem, shellExec, shellLink, orderSystem, ghostFileUpload, ghostFileList, curlRequest, diskReading, requestSystem, ajaxJson, uniqueValue, getDateMatrix, ghostRequest, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, statusReading, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether } = this.mother;
   try {
     await this.MONGOC.connect();
@@ -93,9 +93,24 @@ DevContext.prototype.launching = async function () {
     // await analytics.historyToMongo(160);
 
 
-
-    
-
+    // const MONGOLOGC = new mongo(mongotestinfo, { useUnifiedTopology: true });
+    // const db = "miro81";
+    // const collection = "clientFrontHistory";
+    // let tong, res;
+    //
+    // await MONGOLOGC.connect();
+    //
+    // res = await MONGOLOGC.db(db).collection(collection).find({}).toArray();
+    //
+    // tong = {};
+    // for (let { id, history } of res) {
+    //   tong[id] = { history };
+    // }
+    //
+    // await MONGOLOGC.close();
+    //
+    // await fileSystem(`writeJson`, [ `${process.cwd()}/temp/result3.json`, tong ]);
+    // console.log(tong);
 
 
 
