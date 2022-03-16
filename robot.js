@@ -803,7 +803,7 @@ Robot.prototype.cronServer = async function () {
   }
 }
 
-Robot.prototype.pureServer = async function () {
+Robot.prototype.localLog = async function () {
   const instance = this;
   const { pureServer, shellExec, shellLink, fileSystem, setQueue } = this.mother;
   try {
@@ -821,10 +821,6 @@ Robot.prototype.pureServer = async function () {
 
     app.post("/log", async (req, res) => {
       try {
-        if (typeof req.body.message !== "string" || typeof req.body.color !== "string") {
-          throw new Error("invaild post, must be text");
-        }
-
         const colorLog = function (mode, text) {
           const colors = {
             red: "\x1b[31m%s\x1b[34m > \x1b[0m%s",
@@ -851,7 +847,7 @@ Robot.prototype.pureServer = async function () {
           console.log(colors[mode], timeWording, text);
         }
 
-        colorLog(req.body.color, req.body.message);
+        colorLog("yellow", req.body.message);
 
         res.send(JSON.stringify({ message: "done" }));
       } catch (e) {
@@ -859,7 +855,7 @@ Robot.prototype.pureServer = async function () {
       }
     });
 
-    pureServer("listen", app, 8080);
+    pureServer("listen", app, 3000);
 
   } catch (e) {
     console.log(e);
@@ -1315,6 +1311,13 @@ const MENU = {
   diskReading: async function () {
     try {
       await robot.diskReading();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  localLog: async function () {
+    try {
+      await robot.localLog();
     } catch (e) {
       console.log(e);
     }
