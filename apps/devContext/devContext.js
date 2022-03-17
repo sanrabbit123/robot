@@ -88,6 +88,18 @@ DevContext.prototype.launching = async function () {
     // await this.pureSpawn();
 
 
+    const disk = await diskReading();
+    console.log(disk);
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -154,7 +166,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
+
 
 
 

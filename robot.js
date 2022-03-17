@@ -855,6 +855,17 @@ Robot.prototype.localLog = async function () {
       }
     });
 
+    app.post("/toss", async (req, res) => {
+      try {
+
+        
+
+
+      } catch (e) {
+        console.log(e);
+      }
+    });
+
     pureServer("listen", app, 3000);
 
   } catch (e) {
