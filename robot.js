@@ -858,7 +858,7 @@ Robot.prototype.localLog = async function () {
     app.post("/toss", async (req, res) => {
       try {
 
-        
+
 
 
       } catch (e) {
@@ -868,6 +868,55 @@ Robot.prototype.localLog = async function () {
 
     pureServer("listen", app, 3000);
 
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+Robot.prototype.arpScan = async function () {
+  const instance = this;
+  const { shellExec, dateToString } = this.mother;
+  try {
+    setInterval(async () => {
+      try {
+        const bar = "===============================================";
+        const self = "bc:5f:f4:93:ca:ed";
+        const interface = [
+          "enp3s0",
+          "wlx705dccfbea68"
+        ];
+        let res;
+        let targets;
+        let matrix;
+        let index;
+        let tong;
+
+        tong = {};
+        for (let obj of address.officeinfo.map) {
+          tong[obj.name] = self === obj.mac;
+        }
+
+        console.log("\x1b[33m%s\x1b[0m%s", dateToString(new Date(), true) + " " + bar, "");
+        for (let i of interface) {
+          res = await shellExec(`arp-scan --interface=${i} --localnet`);
+          targets = res.split("\n").slice(res.split("\n").findIndex((str) => { return /^1/.test(str) }), res.split("\n").findIndex((str) => { return str.trim() === '' }));
+          matrix = targets.map((str) => { return str.split("\t") });
+          for (let [ ip, mac ] of matrix) {
+            index = address.officeinfo.map.findIndex((obj) => { return obj.mac === mac })
+            if (index !== -1) {
+              tong[address.officeinfo.map[index].name] = true;
+            }
+          }
+        }
+
+        for (let name in tong) {
+          console.log(tong[name] ? "\x1b[0m%s \x1b[33m%s" : "\x1b[0m%s \x1b[31m%s", name, tong[name] ? "alive" : "death");
+        }
+        console.log("\x1b[33m%s\x1b[0m%s", dateToString(new Date(), true) + " " + bar, "");
+      } catch (e) {
+        console.log(e);
+      }
+    }, 30 * 1000);
   } catch (e) {
     console.log(e);
   }
@@ -1329,6 +1378,13 @@ const MENU = {
   localLog: async function () {
     try {
       await robot.localLog();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  arpScan: async function () {
+    try {
+      await robot.arpScan();
     } catch (e) {
       console.log(e);
     }
