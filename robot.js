@@ -875,6 +875,7 @@ Robot.prototype.localLog = async function () {
 
 Robot.prototype.arpScan = async function () {
   const instance = this;
+  const address = this.address;
   const { shellExec, dateToString } = this.mother;
   try {
     setInterval(async () => {
