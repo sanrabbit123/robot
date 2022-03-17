@@ -3351,14 +3351,14 @@ Mother.prototype.diskReading = function (mode = "check", arr = []) {
       const obj = {
         byte: { total, used, available },
         megaByte: {
-          total: Math.round(total / (1024)),
-          used: Math.round(used / (1024)),
-          available: Math.round(available / (1024)),
+          total: Math.round((total / (1024)) * 10) / 10,
+          used: Math.round((used / (1024)) * 10) / 10,
+          available: Math.round((available / (1024)) * 10) / 10,
         },
         gigaByte: {
-          total: Math.round(total / (1024 * 1024)),
-          used: Math.round(used / (1024 * 1024)),
-          available: Math.round(available / (1024 * 1024)),
+          total: Math.round((total / (1024 * 1024)) * 100) / 100,
+          used: Math.round((used / (1024 * 1024)) * 100) / 100,
+          available: Math.round((available / (1024 * 1024)) * 100) / 100,
         },
         percentage: {
           total: 100,

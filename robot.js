@@ -880,7 +880,7 @@ Robot.prototype.arpScan = async function () {
   try {
     setInterval(async () => {
       try {
-        const bar = "===============================================";
+        const bar = "=======================================";
         const self = "bc:5f:f4:93:ca:ed";
         const interface = [
           "enp3s0",
@@ -917,7 +917,7 @@ Robot.prototype.arpScan = async function () {
       } catch (e) {
         console.log(e);
       }
-    }, 30 * 1000);
+    }, 5 * 60 * 1000);
   } catch (e) {
     console.log(e);
   }
