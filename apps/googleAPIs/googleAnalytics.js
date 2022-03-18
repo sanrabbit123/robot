@@ -280,7 +280,6 @@ GoogleAnalytics.prototype.getClientById = async function (clientId) {
     return result;
 
   } catch (e) {
-    throw new Error(e.message);
     return "error";
   }
 }
