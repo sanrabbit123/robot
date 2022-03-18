@@ -134,6 +134,7 @@ GoogleAnalytics.prototype.historyToMongo = async function (ago = 15) {
     let date, dateAgo, endDate;
     let rows;
     let referrer, device;
+    let parsingObj;
 
     await MONGOLOCALC.connect();
 
@@ -184,7 +185,11 @@ GoogleAnalytics.prototype.historyToMongo = async function (ago = 15) {
           result[id].history = tong;
         }
         for (let id in result) {
-          ({ referrer, device } = await this.getClientById(id));
+          parsingObj = await this.getClientById(id);
+          if (parsingObj === "error") {
+            throw new Error("parsing error");
+          }
+          ({ referrer, device } = parsingObj);
           totalTong.push({
             id,
             history: result[id].history,
@@ -275,7 +280,8 @@ GoogleAnalytics.prototype.getClientById = async function (clientId) {
     return result;
 
   } catch (e) {
-    console.log(e);
+    throw new Error(e.message);
+    return "error";
   }
 }
 
