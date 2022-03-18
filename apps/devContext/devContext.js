@@ -147,10 +147,14 @@ DevContext.prototype.launching = async function () {
 
     for (let row of rows) {
       if (row.referrer === undefined) {
-        whereQuery = { id: row.id };
-        updateQuery = await analytics.getClientById(row.id);
-        await MONGOLOGC.db(db).collection(collection).updateOne(whereQuery, { $set: updateQuery });
-        console.log(whereQuery, updateQuery);
+        try {
+          whereQuery = { id: row.id };
+          updateQuery = await analytics.getClientById(row.id);
+          await MONGOLOGC.db(db).collection(collection).updateOne(whereQuery, { $set: updateQuery });
+          console.log(whereQuery, updateQuery);
+        } catch (e) {
+          console.log("pass");
+        }
       }
     }
 
