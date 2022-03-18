@@ -16,6 +16,22 @@ ContentsJs.prototype.baseMaker = function () {
   const { createNode, withOut, colorChip } = GeneralJs;
   let totalMother;
   let scrollTong;
+  let boxMargin;
+  let boxNumber, boxWidth;
+  let tongPaddingLeft;
+  let num;
+  let pidFontSize, pidFontWeight, pidTextTop;
+
+  tongPaddingLeft = 30;
+  boxMargin = 10;
+  boxWidth = 120;
+
+  pidFontSize = 24;
+  pidFontWeight = 400;
+  pidTextTop = -4;
+
+  boxNumber = Math.floor((window.innerWidth - (tongPaddingLeft * 2) + boxMargin) / (boxMargin + boxWidth));
+  boxWidth = (window.innerWidth - (tongPaddingLeft * 2) + boxMargin - (boxNumber * boxMargin)) / boxNumber;
 
   totalMother = createNode({
     mother: totalContents,
@@ -33,32 +49,93 @@ ContentsJs.prototype.baseMaker = function () {
   scrollTong = createNode({
     mother: totalMother,
     style: {
-      width: String(100) + '%',
+      width: withOut(tongPaddingLeft * 2, ea),
       height: "auto",
       position: "relative",
+      padding: String(tongPaddingLeft) + ea,
     }
   });
 
+  num = 0;
   for (let contents of contentsArr) {
     createNode({
       mother: scrollTong,
+      attribute: {
+        conid: contents.conid,
+        proid: contents.proid,
+        desid: contents.desid,
+        cliid: contents.cliid,
+      },
+      event: {
+        mouseenter: function (e) {
+          this.style.background = colorChip.liteGreen;
+          this.firstChild.style.color = colorChip.green;
+        },
+        mouseleave: function (e) {
+          this.style.background = colorChip.gray1;
+          this.firstChild.style.color = colorChip.deactive;
+        },
+        click: this.whitePopupEvent(contents.conid),
+      },
       style: {
         display: "inline-flex",
-        width: String(120) + ea,
-        height: String(120) + ea,
+        width: String(boxWidth) + ea,
+        height: String(boxWidth) + ea,
         background: colorChip.gray1,
-        marginRight: String(10) + ea,
-        marginBottom: String(10) + ea,
-      }
+        marginRight: String(num % boxNumber === boxNumber - 1 ? 0 : boxMargin) + ea,
+        marginBottom: String(boxMargin) + ea,
+        cursor: "pointer",
+        borderRadius: String(5) + "px",
+        verticalAlign: "top",
+        alignItems: "center",
+        justifyContent: "center",
+      },
+      children: [
+        {
+          text: contents.contents.portfolio.pid,
+          style: {
+            position: "relative",
+            fontFamily: "graphik",
+            fontSize: String(pidFontSize) + ea,
+            fontWeight: String(pidFontWeight),
+            color: colorChip.deactive,
+            top: String(pidTextTop) + ea,
+            transition: "all 0.5s ease",
+          }
+        }
+      ]
     });
+    num++;
   }
 
+}
+
+ContentsJs.prototype.whitePopupEvent = function () {
+  const instance = this;
+  const { ea, totalMother } = this;
+  const { createNode, withOut, colorChip } = GeneralJs;
+  return function (e) {
+    let cancelBack, whiteBoard;
+
+    cancelBack = createNode({
+      mother: totalMother,
+      style: {
+        position: "absolute",
+        background: colorChip.black,
+        opacity: String(0),
+        top: String(0),
+        left: String(0),
+        width: String(100) + '%',
+        height: String(100) + '%',
+        animation: "justfadein 0.3s ease forwards",
+      }
+    });
 
 
 
 
 
-
+  }
 }
 
 ContentsJs.prototype.launching = async function () {
@@ -101,6 +178,10 @@ ContentsJs.prototype.launching = async function () {
     loading.parentElement.removeChild(loading);
 
     this.baseMaker();
+
+    window.addEventListener("resize", (e) => {
+      window.location.reload();
+    })
 
   } catch (e) {
     console.log(e);
