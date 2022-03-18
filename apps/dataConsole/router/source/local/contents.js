@@ -26,7 +26,7 @@ ContentsJs.prototype.baseMaker = function () {
   boxMargin = 10;
   boxWidth = 120;
 
-  pidFontSize = 24;
+  pidFontSize = 21;
   pidFontWeight = 400;
   pidTextTop = -4;
 
@@ -110,30 +110,55 @@ ContentsJs.prototype.baseMaker = function () {
 
 }
 
-ContentsJs.prototype.whitePopupEvent = function () {
+ContentsJs.prototype.whitePopupEvent = function (conid) {
   const instance = this;
-  const { ea, totalMother } = this;
+  const { ea, totalMother, belowHeight, contentsArr } = this;
   const { createNode, withOut, colorChip } = GeneralJs;
   return function (e) {
+    const contents = contentsArr.search("conid", conid);
     let cancelBack, whiteBoard;
+    let margin;
+    let zIndex;
+
+    margin = 30;
+    zIndex = 2;
 
     cancelBack = createNode({
       mother: totalMother,
+      event: {
+        click: (e) => {
+          totalMother.removeChild(totalMother.lastChild);
+          totalMother.removeChild(totalMother.lastChild);
+        }
+      },
       style: {
-        position: "absolute",
+        position: "fixed",
         background: colorChip.black,
         opacity: String(0),
         top: String(0),
         left: String(0),
         width: String(100) + '%',
-        height: String(100) + '%',
+        height: withOut(belowHeight, ea),
         animation: "justfadein 0.3s ease forwards",
+        zIndex: String(zIndex),
       }
     });
 
-
-
-
+    whiteBoard = createNode({
+      mother: totalMother,
+      style: {
+        position: "fixed",
+        background: colorChip.white,
+        borderRadius: String(5) + ea,
+        top: String(margin) + ea,
+        left: String(margin) + ea,
+        width: withOut(margin * 2, ea),
+        height: withOut(margin * 2 + belowHeight, ea),
+        boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
+        animation: "fadeuphard 0.3s ease forwards",
+        zIndex: String(zIndex),
+      }
+    });
 
   }
 }
