@@ -123,6 +123,7 @@ class GoogleAnalytics:
 
         return dumps(result)
 
+
     def getClientsHistory(self, startDate, startAgoDate, endDate):
         result = self.app.reports().batchGet(
             body={
@@ -225,6 +226,7 @@ class GoogleAnalytics:
             clientDic[id]["event"] = eventResult["reports"][0]["data"]["rows"]
 
         return dumps(clientDic)
+
 
     def getClientsByDate(self, startDate, endDate, dimensions, submit=False):
         dimensions.insert(0, { "name": "ga:clientId" })

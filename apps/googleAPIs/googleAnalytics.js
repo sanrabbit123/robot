@@ -133,6 +133,7 @@ GoogleAnalytics.prototype.historyToMongo = async function (ago = 15) {
     let totalTong;
     let date, dateAgo, endDate;
     let rows;
+    let referrer, device;
 
     await MONGOLOCALC.connect();
 
@@ -183,9 +184,12 @@ GoogleAnalytics.prototype.historyToMongo = async function (ago = 15) {
           result[id].history = tong;
         }
         for (let id in result) {
+          ({ referrer, device } = await this.getClientById(id));
           totalTong.push({
             id,
             history: result[id].history,
+            referrer,
+            device
           });
         }
         for (let obj of totalTong) {
@@ -221,193 +225,57 @@ GoogleAnalytics.prototype.historyToMongo = async function (ago = 15) {
 }
 
 GoogleAnalytics.prototype.getClientById = async function (clientId) {
-  if (clientId === undefined) {
+  if (typeof clientId !== "string") {
     throw new Error("invaild arguments");
   }
   const instance = this;
-  const mother = this.mother;
-  const queryString = require('querystring');
-  const userSort = function (result) {
-    let users = [];
-    for (let { dimensions } of result.rows) {
-      users.push(dimensions);
-    }
-    users.sort((a, b) => { return Number(b[0]) - Number(a[0]); });
-    return users;
-  }
-
+  const { pythonApp } = this;
+  const { pythonExecute } = this.mother;
   try {
-    let users, dimensions, result;
-    let resultObj = {};
-    let questionIndex;
+    let dimensions;
+    let num;
+    let result;
+    let response;
 
-    // 1
+    result = {
+      id: clientId
+    };
+
     dimensions = [
-      { name: "ga:dateHourMinute" },
-      { name: "ga:pagePath" },
-      { name: "ga:pageTitle" },
-      { name: "ga:userDefinedValue" },
-      { name: "ga:source" },
-      { name: "ga:deviceCategory" },
-      { name: "ga:operatingSystem" },
-      { name: "ga:campaign" },
-      { name: "ga:mobileDeviceModel" },
+      [
+        { name: "ga:userDefinedValue" },
+      ],
+      [
+        { name: "ga:deviceCategory" },
+        { name: "ga:operatingSystem" },
+      ],
     ];
-    result = await mother.pythonExecute(this.pythonApp, [ "analytics", "getClientById" ], { clientId, dimensions });
-    if (Number(result.reports[0].data.totals[0].values[0]) !== 0) {
-      users = userSort(result.reports[0].data);
-    } else {
-      console.log(clientId);
-      throw new Error("invaild data in first");
-    }
 
-    resultObj = {};
-    resultObj.referrer = {};
-    resultObj.referrer.name = users[0][4];
-    resultObj.referrer.detail = {};
-    resultObj.referrer.detail.host = null;
-    resultObj.referrer.detail.queryString = {};
-
-    if (/^http/.test(users[0][3])) {
-      if (/\?/.test(users[0][3])) {
-        questionIndex = users[0][3].search(/\?/);
-        resultObj.referrer.detail.host = users[0][3].slice(0, questionIndex);
-        resultObj.referrer.detail.queryString = queryString.parse(users[0][3].slice(questionIndex + 1));
+    num = 0;
+    for (let dimension of dimensions) {
+      response = await pythonExecute(pythonApp, [ "analytics", "getClientById" ], { clientId, dimensions: dimension });
+      if (num === 0) {
+        // referrer
+        result.referrer = [];
+        for (let { dimensions } of response.reports[0].data.rows) {
+          for (let str of dimensions) {
+            result.referrer.push(str);
+          }
+        }
       } else {
-        resultObj.referrer.detail.host = users[0][3];
-        resultObj.referrer.detail.queryString = {};
+        // device
+        result.device = {
+          kind: response.reports[0].data.rows[0].dimensions[0],
+          os: response.reports[0].data.rows[0].dimensions[1]
+        };
       }
+      num++;
     }
 
-    resultObj.device = {};
-    resultObj.device.type = users[0][5];
-    resultObj.device.os = users[0][6];
-    resultObj.device.mobileDevice = users[0][8];
-
-    resultObj.campaign = users[0][7];
-    resultObj.history = [];
-
-    let temp;
-    users.sort((a, b) => { return Number(a[0]) - Number(b[0]); });
-    for (let i = 0; i < users.length; i++) {
-      temp = {};
-      temp.time = users[i][0].slice(0, 4) + "-" + users[i][0].slice(4, 6) + "-" + users[i][0].slice(6, 8) + " " + users[i][0].slice(8, 10) + ":" + users[i][0].slice(10, 12) + ":00";
-      temp.page = users[i][2];
-      temp.page_raw = users[i][1];
-      resultObj.history.push(temp);
-    }
-
-    // 2
-    dimensions = [
-      { name: "ga:dateHourMinute" },
-      { name: "ga:country" },
-      { name: "ga:city" },
-      { name: "ga:latitude" },
-      { name: "ga:longitude" },
-    ];
-    result = await mother.pythonExecute(this.pythonApp, [ "analytics", "getClientById" ], { clientId, dimensions });
-    if (Number(result.reports[0].data.totals[0].values[0]) !== 0) {
-      users = userSort(result.reports[0].data);
-    } else {
-      console.log(clientId);
-      throw new Error("invaild data in second");
-    }
-
-    resultObj.region = {};
-    resultObj.region.country = users[0][1];
-    resultObj.region.city = users[0][2];
-    resultObj.region.latitude = Number(users[0][3]);
-    resultObj.region.longitude = Number(users[0][4]);
-
-    // 4
-    dimensions = [
-      { name: "ga:userAgeBracket" },
-      { name: "ga:userGender" },
-    ];
-    result = await mother.pythonExecute(this.pythonApp, [ "analytics", "getClientById" ], { clientId, dimensions });
-    resultObj.personalInfo = {};
-    if (Number(result.reports[0].data.totals[0].values[0]) !== 0) {
-      resultObj.personalInfo.age = result.reports[0].data.rows[0][1];
-      resultObj.personalInfo.gender = result.reports[0].data.rows[0][2];
-    } else {
-      resultObj.personalInfo.age = null;
-      resultObj.personalInfo.gender = null;
-    }
-
-    // 5
-    dimensions = [
-      { name: "ga:dateHourMinute" },
-      { name: "ga:userType" },
-    ];
-    result = await mother.pythonExecute(this.pythonApp, [ "analytics", "getClientById" ], { clientId, dimensions });
-    if (Number(result.reports[0].data.totals[0].values[0]) !== 0) {
-      users = userSort(result.reports[0].data);
-    } else {
-      console.log(clientId);
-      throw new Error("invaild data in fifth");
-    }
-
-    resultObj.userType = users[0][1];
-
-    return resultObj;
+    return result;
 
   } catch (e) {
     console.log(e);
-  }
-}
-
-GoogleAnalytics.prototype.getClientsInfoByNumber = async function (number = 0, test = false) {
-  const instance = this;
-  const mother = this.mother;
-  const MongoClient = this.mother.mongo;
-  const MONGOC = new MongoClient(this.mother.mongoinfo, { useUnifiedTopology: true });
-  const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
-  try {
-    await MONGOC.connect();
-
-    const back = new BackMaker();
-    const usersObj = await this.getTodayClients();
-    let tempObj;
-    let clients;
-    let tempJson, resultObj;
-
-    if (number > usersObj.length) {
-      throw new Error("over num");
-    }
-
-    if (number === 0) {
-      number = usersObj.length;
-    }
-
-    clients = await back.getClientsByQuery({}, { withTools: true, limit: number });
-    for (let i = 0; i < number; i++) {
-      try {
-        tempObj = await this.getClientById(usersObj[i].id);
-        tempObj.timeline = this.returnTimeline(usersObj[i].time);
-        clients[i].googleAnalyticsUpdate(tempObj);
-
-        resultObj = {};
-        tempJson = clients[i].toNormal();
-        resultObj.name = tempJson.name;
-        resultObj.phone = tempJson.phone;
-        resultObj.email = tempJson.email;
-        resultObj.cliid = tempJson.cliid;
-        resultObj.request = tempJson.requests[0].request;
-        resultObj.googleAnalytics = tempJson.requests[0].analytics.googleAnalytics;
-        console.log(resultObj);
-
-      } catch (e) {
-        console.log(e);
-        console.log(usersObj);
-        console.log(usersObj[i]);
-      }
-    }
-
-    return clients;
-  } catch (e) {
-    console.log(e);
-  } finally {
-    MONGOC.close();
   }
 }
 
