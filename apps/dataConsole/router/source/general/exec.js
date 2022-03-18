@@ -29,7 +29,6 @@ document.addEventListener("DOMContentLoaded", async function (e) {
     //SSE
     const sseTarget = [
       "client",
-      "contents",
       "designer",
       "project"
     ];
