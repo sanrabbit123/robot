@@ -116,12 +116,16 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
   const { createNode, withOut, colorChip } = GeneralJs;
   return function (e) {
     const contents = contentsArr.search("conid", conid);
+    const { photos } = contents;
     let cancelBack, whiteBoard;
     let margin;
     let zIndex;
+    let innerMargin;
+    let mainTong, leftTong, rightTong;
 
     margin = 30;
     zIndex = 2;
+    innerMargin = 30;
 
     cancelBack = createNode({
       mother: totalMother,
@@ -159,6 +163,42 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
         zIndex: String(zIndex),
       }
     });
+
+    mainTong = createNode({
+      mother: whiteBoard,
+      style: {
+        padding: String(innerMargin) + ea,
+        width: withOut(innerMargin * 2, ea),
+        height: withOut(innerMargin * 2, ea),
+        position: "relative",
+        display: "block",
+      }
+    });
+
+    leftTong = createNode({
+      mother: mainTong,
+      style: {
+        display: "inline-block",
+        width: String(50) + '%',
+        height: String(100) + '%',
+        position: "relative",
+        overflow: "scroll"
+      },
+      children: [
+        {
+          style: {
+            display: "block",
+          }
+        }
+      ]
+    }).firstChild;
+
+    
+
+
+
+    console.log(contents);
+    console.log(photos);
 
   }
 }
