@@ -27,6 +27,7 @@ Robot.prototype.mongoToJson = async function () {
       [ "mongoinfo", "mongo" ],
       [ "backinfo", "console" ],
       [ "pythoninfo", "python" ],
+      [ "testinfo", "log" ],
     ];
     const robotDirArr = process.cwd().split("/");
     robotDirArr.pop();
@@ -36,15 +37,12 @@ Robot.prototype.mongoToJson = async function () {
       shell.exec(`mkdir ${shellLink(robotDirMother)}/${backFolderName}`);
     }
     const backDir = robotDirMother + "/" + backFolderName;
-    let tempObj, tempInfo, collections, order, timeString;
+    let tempObj, tempInfo, order, timeString;
     let tempMsg;
 
     timeString = `${String(today.getFullYear())}${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`;
 
     for (let [ infoName, dbName ] of mongoTargets) {
-      tempObj = {};
-      tempObj[dbName] = true;
-      collections = await back.mongoListCollections(tempObj);
       tempInfo = this.address[infoName];
       order = `mongodump --uri="mongodb://${tempInfo["host"]}/${tempInfo["database"]}" --username=${tempInfo["user"]} --password=${tempInfo["password"]} --port=${String(tempInfo["port"])} --out="${shellLink(backDir)}/${timeString}/${dbName}${timeString}.json" --authenticationDatabase admin`;
       tempMsg = shell.exec(order);
