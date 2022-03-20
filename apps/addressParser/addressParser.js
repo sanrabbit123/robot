@@ -41,16 +41,9 @@ const AddressParser = function () {
   this.back = new BackMaker();
   this.address = ADDRESS;
   this.dir = process.cwd() + "/apps/addressParser";
-  this.jsonDir = this.dir + "/json";
-  this.sampleDir = this.jsonDir + "/samples";
-  this.samples = {
-    client: this.sampleDir + "/clientAddress.json",
-    designer: this.sampleDir + "/clientAddress.json",
-    travel: this.sampleDir + "/travelExpensesSamples.json",
-    travelMin: this.sampleDir + "/travelExpensesSamples_min.json",
-  };
   this.pythonApp = this.dir + "/python/app.py";
   this.serveFolderName = "immovablesServerStaticFolder";
+  this.addressCode = this.dir + "/code/code.txt";
   this.priceStandardKey = 33;
   this.priceCollection = "designerPrice";
   this.token = {
@@ -1403,5 +1396,44 @@ AddressParser.prototype.apartNameSearch = async function (words) {
     return { raw: words, apart: words };
   }
 }
+
+AddressParser.prototype.returnAddressCodeMatrix = async function (five = true) {
+  const instance = this;
+  const { addressCode } = this;
+  const { fileSystem } = this.mother;
+  try {
+    const target = await fileSystem(`readString`, [ addressCode ]);
+    let arr, map;
+    let targetCode;
+    let targetMatrix;
+
+    arr = target.split("\n").filter((str) => { return /존재/gi.test(str); }).map((str) => {
+      return str.split("\t").slice(0, 2);
+    });
+
+    map = {};
+    for (let [ code, name ] of arr) {
+      map[code] = name;
+    }
+
+    if (five) {
+      targetCode = [ ...new Set(arr.map((a) => { return a[0].slice(0, 5) })) ]
+      targetMatrix = targetCode.map((code) => {
+        return [ code, map[code + "00000"] ];
+      });
+    } else {
+      targetCode = [ ...new Set(arr.map((a) => { return a[0]; })) ]
+      targetMatrix = targetCode.map((code) => {
+        return [ code, map[code] ];
+      });
+    }
+
+    return targetMatrix;
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 
 module.exports = AddressParser;

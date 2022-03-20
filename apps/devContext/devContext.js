@@ -104,11 +104,37 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const serviceKey = "ewq0pom2MYJ8kDlDIzUPNAgikMmk4GmPwWpJnGHaot3JtLg5ilhlUkWjsrT40EZBNJZQF6qYRT5zkmh9TWDW4g==";
+    const urlMap = {
+      apartment: {
+        trade: "http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTrade",
+        rent: "http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptRent",
+      },
+      officetel: {
+        trade: "http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcOffiTrade",
+        rent: "http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcOffiRent"
+      },
+      rowhouse: {
+        trade: "http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcRHTrade",
+        rent: "http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcRHRent"
+      },
+      singlehouse: {
+        trade: "http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcSHTrade",
+        rent: "http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcSHRent",
+      }
+    }
 
+    const url = "http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcSHTrade";
+    let response;
 
+    response = await requestSystem(url, {
+      serviceKey,
+      LAWD_CD: "11110",
+      DEAL_YMD: "201512"
+    }, { method: "get" })
 
-
-
+    console.log(response.data)
+    console.log(response.data.response.body.items.item);
 
 
 
