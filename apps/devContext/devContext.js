@@ -145,32 +145,32 @@ DevContext.prototype.launching = async function () {
 
     const analytics = new GoogleAnalytics();
 
+    // for (let row of rows) {
+    //   if (row.referrer === undefined) {
+    //     try {
+    //       whereQuery = { id: row.id };
+    //       updateQuery = await analytics.getClientById(row.id);
+    //       await MONGOLOGC.db(db).collection(collection).updateOne(whereQuery, { $set: updateQuery });
+    //       console.log(whereQuery, updateQuery);
+    //     } catch (e) {
+    //       console.log("pass");
+    //     }
+    //   }
+    // }
+    //
+    // await MONGOLOGC.close();
+
+    tong = [];
     for (let row of rows) {
       if (row.referrer === undefined) {
-        try {
-          whereQuery = { id: row.id };
-          updateQuery = await analytics.getClientById(row.id);
-          await MONGOLOGC.db(db).collection(collection).updateOne(whereQuery, { $set: updateQuery });
-          console.log(whereQuery, updateQuery);
-        } catch (e) {
-          console.log("pass");
-        }
+        tong.push(row);
       }
     }
 
     await MONGOLOGC.close();
 
-    // tong = [];
-    // for (let row of rows) {
-    //   if (row.referrer === undefined) {
-    //     tong.push(row);
-    //   }
-    // }
-    //
-    // await MONGOLOGC.close();
-    //
-    // console.log(rows.length);
-    // console.log(tong.length);
+    console.log(rows.length);
+    console.log(tong.length);
 
 
 
