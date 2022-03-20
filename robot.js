@@ -11,8 +11,7 @@ Robot.timeouts = {};
 
 Robot.prototype.mongoToJson = async function () {
   const instance = this;
-  const back = this.back;
-  const { fileSystem, shell, shellLink } = this.mother;
+  const { fileSystem, shellExec, shellLink } = this.mother;
   try {
     const today = new Date();
     const zeroAddition = function (number) {
@@ -34,19 +33,19 @@ Robot.prototype.mongoToJson = async function () {
     const robotDirMother = robotDirArr.join("/");
     const robotDirMotherDetail = await fileSystem(`readDir`, [ robotDirMother ]);
     if (!robotDirMotherDetail.includes(backFolderName)) {
-      shell.exec(`mkdir ${shellLink(robotDirMother)}/${backFolderName}`);
+      await shellExec(`mkdir ${shellLink(robotDirMother)}/${backFolderName}`);
     }
     const backDir = robotDirMother + "/" + backFolderName;
-    let tempObj, tempInfo, order, timeString;
-    let tempMsg;
+    let tempInfo, timeString;
 
     timeString = `${String(today.getFullYear())}${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`;
 
     for (let [ infoName, dbName ] of mongoTargets) {
       tempInfo = this.address[infoName];
-      order = `mongodump --uri="mongodb://${tempInfo["host"]}/${tempInfo["database"]}" --username=${tempInfo["user"]} --password=${tempInfo["password"]} --port=${String(tempInfo["port"])} --out="${shellLink(backDir)}/${timeString}/${dbName}${timeString}.json" --authenticationDatabase admin`;
-      tempMsg = shell.exec(order);
+      await shellExec(`mongodump --uri="mongodb://${tempInfo["host"]}/${tempInfo["database"]}" --username=${tempInfo["user"]} --password=${tempInfo["password"]} --port=${String(tempInfo["port"])} --out="${shellLink(backDir)}/${timeString}/${dbName}${timeString}" --authenticationDatabase admin`);
     }
+
+    await shellExec(`cd ${shellLink(backDir)};zip -r ./${timeString}.zip ./${timeString};rm -rf ${shellLink(backDir)}/${timeString}`);
 
     return `mongo exports done`;
   } catch (e) {
