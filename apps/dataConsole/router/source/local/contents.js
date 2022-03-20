@@ -114,18 +114,23 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
   const instance = this;
   const { ea, totalMother, belowHeight, contentsArr } = this;
   const { createNode, withOut, colorChip } = GeneralJs;
+  const photoChar = 't';
   return function (e) {
     const contents = contentsArr.search("conid", conid);
-    const { photos } = contents;
+    const { photos, contents: { portfolio: { pid, detailInfo: { tag } } } } = contents;
     let cancelBack, whiteBoard;
     let margin;
     let zIndex;
     let innerMargin;
     let mainTong, leftTong, rightTong;
+    let source;
+    let photoMargin;
+    let seroNum;
 
     margin = 30;
     zIndex = 2;
     innerMargin = 30;
+    photoMargin = 10;
 
     cancelBack = createNode({
       mother: totalMother,
@@ -193,12 +198,29 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
       ]
     }).firstChild;
 
-    
+    seroNum = 0;
+    for (let { index, gs } of photos.detail) {
+      source = `https://${GHOSTHOST}/corePortfolio/listImage/${pid}/${photoChar + String(index) + pid + ".jpg"}`;
+      createNode({
+        mother: leftTong,
+        mode: "img",
+        attribute: {
+          src: source,
+        },
+        style: {
+          display: "inline-block",
+          width: (gs === 'g' ? `calc(calc(calc(100% - ${String(photoMargin * 4)}${ea}) / ${String(4)}) * 2)` : `calc(calc(100% - ${String(photoMargin * 4)}${ea}) / ${String(4)})`),
+          marginRight: gs === 'g' ? String(photoMargin) + ea : (seroNum % 2 === 0 ? 0 : String(photoMargin) + ea),
+          marginBottom: String(photoMargin) + ea,
+          borderRadius: String(5) + "px",
+        }
+      });
+      if (gs === 's') {
+        seroNum++;
+      }
+     }
 
-
-
-    console.log(contents);
-    console.log(photos);
+     console.log(tag);
 
   }
 }
