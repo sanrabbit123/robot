@@ -106,7 +106,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const serviceKey = "ewq0pom2MYJ8kDlDIzUPNAgikMmk4GmPwWpJnGHaot3JtLg5ilhlUkWjsrT40EZBNJZQF6qYRT5zkmh9TWDW4g==";
+    // const serviceKey = "ewq0pom2MYJ8kDlDIzUPNAgikMmk4GmPwWpJnGHaot3JtLg5ilhlUkWjsrT40EZBNJZQF6qYRT5zkmh9TWDW4g==";
+    const serviceKey = "qYxqA/rabM2euF/V0hfK7RoH5z9vLUyj5GEsjM4U3NhiVrgIBDMKE5jfdpjeTZ176nISXMeaRl2TxefP5MrpsQ==";
     const urlMap = {
       apartment: {
         trade: "http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTrade",
@@ -126,17 +127,25 @@ DevContext.prototype.launching = async function () {
       }
     }
 
-    // const url = "http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcSHTrade";
-    // let response;
-    //
-    // response = await requestSystem(url, {
-    //   serviceKey,
-    //   LAWD_CD: "11110",
-    //   DEAL_YMD: "201512"
-    // }, { method: "get" });
-    //
-    // console.log(response.data)
-    // console.log(response.data.response.body.items.item);
+    const url = "http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcSHRent";
+    let response;
+
+    response = await requestSystem(url, {
+      serviceKey,
+      LAWD_CD: "11110",
+      DEAL_YMD: "202203"
+    }, { method: "get" });
+
+
+    console.log(response.data);
+    if (response.data.response.body === undefined || response.data.response.body.items.item === undefined) {
+      console.log(0)
+    } else {
+      console.log(response.data.response.body.items.item.length)
+    }
+
+
+
 
 
 
