@@ -262,17 +262,26 @@ GoogleAnalytics.prototype.getClientById = async function (clientId) {
       if (num === 0) {
         // referrer
         result.referrer = [];
-        for (let { dimensions } of response.reports[0].data.rows) {
-          for (let str of dimensions) {
-            result.referrer.push(str);
+        if (response.reports[0].data.rows !== undefined) {
+          for (let { dimensions } of response.reports[0].data.rows) {
+            for (let str of dimensions) {
+              result.referrer.push(str);
+            }
           }
         }
       } else {
         // device
-        result.device = {
-          kind: response.reports[0].data.rows[0].dimensions[0],
-          os: response.reports[0].data.rows[0].dimensions[1]
-        };
+        if (response.reports[0].data.rows !== undefined) {
+          result.device = {
+            kind: response.reports[0].data.rows[0].dimensions[0],
+            os: response.reports[0].data.rows[0].dimensions[1]
+          };
+        } else {
+          result.device = {
+            kind: "(not set)",
+            os: "(not set)",
+          };
+        }
       }
       num++;
     }
