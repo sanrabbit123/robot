@@ -106,71 +106,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const MONGOLOGC = new mongo(mongotestinfo, { useUnifiedTopology: true });
-    const db = "miro81";
-    const collection = "clientFrontHistory";
-    const betweenConst = 1;
-    const clients = await back.getClientsByQuery({}, { selfMongo: this.MONGOLOGC, withTools: true });
-    const requests = clients.getRequestsTong();
 
-    let rows;
-    let from, to;
-    let middle;
-    let target;
-    let tong;
-    let targetTong;
-    let whereQuery, updateQuery;
-
-    await MONGOLOGC.connect();
-
-    rows = await MONGOLOGC.db(db).collection(collection).find({}).toArray();
-    // tong = [];
-    // for (let row of rows) {
-    //   middle = row.history.find((obj) => { return obj.title === "login" }).date;
-    //   to = new Date(JSON.stringify(middle).slice(1, -1));
-    //   to.setMinutes(to.getMinutes() + betweenConst);
-    //   target = null;
-    //   targetTong = [];
-    //   for (let { request, cliid } of requests) {
-    //     if (middle.valueOf() <= request.timeline.valueOf() && request.timeline.valueOf() < to.valueOf()) {
-    //       target = request;
-    //       targetTong.push(cliid);
-    //     }
-    //   }
-    //
-    //   if (target === null) {
-    //     tong.push(row);
-    //   }
-    // }
-
-    const analytics = new GoogleAnalytics();
-
-    // for (let row of rows) {
-    //   if (row.referrer === undefined) {
-    //     try {
-    //       whereQuery = { id: row.id };
-    //       updateQuery = await analytics.getClientById(row.id);
-    //       await MONGOLOGC.db(db).collection(collection).updateOne(whereQuery, { $set: updateQuery });
-    //       console.log(whereQuery, updateQuery);
-    //     } catch (e) {
-    //       console.log("pass");
-    //     }
-    //   }
-    // }
-    //
-    // await MONGOLOGC.close();
-
-    tong = [];
-    for (let row of rows) {
-      if (row.referrer === undefined) {
-        tong.push(row);
-      }
-    }
-
-    await MONGOLOGC.close();
-
-    console.log(rows.length);
-    console.log(tong.length);
 
 
 
