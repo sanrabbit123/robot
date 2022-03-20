@@ -131,7 +131,7 @@ DevContext.prototype.launching = async function () {
       serviceKey,
       LAWD_CD: "11110",
       DEAL_YMD: "201512"
-    }, { method: "get" })
+    }, { method: "get" });
 
     console.log(response.data)
     console.log(response.data.response.body.items.item);
