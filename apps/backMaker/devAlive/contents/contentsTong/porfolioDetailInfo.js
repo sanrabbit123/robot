@@ -1,6 +1,134 @@
 const GENERAL_DIR = process.cwd() + "/apps/backMaker/alive/general";
 const CONTENTS_MODULE_DIR = process.cwd() + "/apps/backMaker/alive/contents/contentsTong";
 
+const TendencyDensity = function (json) {
+  this.maximun = json.maximun;
+  this.minimum = json.minimum;
+}
+
+TendencyDensity.prototype.toNormal = function () {
+  let obj = {};
+  obj.maximun = this.maximun;
+  obj.minimum = this.minimum;
+  return obj;
+}
+
+const TendencyColor = function (json) {
+  this.darkWood = json.darkWood;
+  this.whiteWood = json.whiteWood;
+  this.highContrast = json.highContrast;
+  this.vivid = json.vivid;
+  this.white = json.white;
+  this.mono = json.mono;
+  this.bright = json.bright;
+  this.dark = json.dark;
+}
+
+TendencyColor.prototype.toNormal = function () {
+  let obj = {};
+  obj.darkWood = this.darkWood;
+  obj.whiteWood = this.whiteWood;
+  obj.highContrast = this.highContrast;
+  obj.vivid = this.vivid;
+  obj.white = this.white;
+  obj.mono = this.mono;
+  obj.bright = this.bright;
+  obj.dark = this.dark;
+  return obj;
+}
+
+const TendencyTexture = function (json) {
+  this.darkWood = json.darkWood;
+  this.whiteWood = json.whiteWood;
+  this.coating = json.coating;
+  this.metal = json.metal;
+}
+
+TendencyTexture.prototype.toNormal = function () {
+  let obj = {};
+  obj.darkWood = this.darkWood;
+  obj.whiteWood = this.whiteWood;
+  obj.coating = this.coating;
+  obj.metal = this.metal;
+  return obj;
+}
+
+const TendencyStyle = function (json) {
+  this.modern = json.modern;
+  this.classic = json.classic;
+  this.natural = json.natural;
+  this.mixmatch = json.mixmatch;
+  this.scandinavian = json.scandinavian;
+  this.vintage = json.vintage;
+  this.oriental = json.oriental;
+  this.exotic = json.exotic;
+}
+
+TendencyStyle.prototype.toNormal = function () {
+  let obj = {};
+  obj.modern = this.modern;
+  obj.classic = this.classic;
+  obj.natural = this.natural;
+  obj.mixmatch = this.mixmatch;
+  obj.scandinavian = this.scandinavian;
+  obj.vintage = this.vintage;
+  obj.oriental = this.oriental;
+  obj.exotic = this.exotic;
+  return obj;
+}
+
+const StylingTendency = function (json) {
+  this.style = new TendencyStyle(json.style);
+  this.texture = new TendencyTexture(json.texture);
+  this.color = new TendencyColor(json.color);
+  this.density = new TendencyDensity(json.density);
+}
+
+StylingTendency.prototype.toNormal = function () {
+  let obj = {};
+  obj.style = this.style.toNormal();
+  obj.texture = this.texture.toNormal();
+  obj.color = this.color.toNormal();
+  obj.density = this.density.toNormal();
+  return obj;
+}
+
+StylingTendency.prototype.toMatrix = function () {
+  const keys = [ "style", "texture", "color", "density" ];
+  const keyArr = [
+    [
+      'modern',
+      'classic',
+      'natural',
+      'mixmatch',
+      'scandinavian',
+      'vintage',
+      'oriental',
+      'exotic'
+    ],
+    [ 'darkWood', 'whiteWood', 'coating', 'metal' ],
+    [
+      'darkWood',
+      'whiteWood',
+      'highContrast',
+      'vivid',
+      'white',
+      'mono',
+      'bright',
+      'dark'
+    ],
+    [ 'maximun', 'minimum' ]
+  ];
+  let result;
+  result = [];
+  for (let i = 0; i < keys.length; i++) {
+    for (let key of keyArr[i]) {
+      result.push(this[keys[i]][key]);
+    }
+  }
+  return result;
+}
+
 class Photodae extends Array {
   toNormal() {
     let arr = [];
@@ -80,6 +208,7 @@ const PorfolioDetailInfo = function (json) {
   this.tag = arr2;
   this.service = json.service;
   this.sort = new Sort(json.sort);
+  this.tendency = new StylingTendency(json.tendency);
 }
 
 PorfolioDetailInfo.prototype.toNormal = function () {
@@ -90,7 +219,7 @@ PorfolioDetailInfo.prototype.toNormal = function () {
   obj.tag = this.tag.toNormal();
   obj.service = this.service;
   obj.sort = this.sort.toNormal();
-
+  obj.tendency = this.tendency.toNormal();
   return obj;
 }
 

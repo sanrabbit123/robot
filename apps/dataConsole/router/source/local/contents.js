@@ -154,7 +154,7 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
     subTitleSize = 15;
     subTitleWeight = 400;
 
-    tagTongMarginTop = 15;
+    tagTongMarginTop = 16;
     tagTongPadding = 12;
 
     tagSize = 14;
@@ -319,7 +319,38 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
       })
     }
 
-
+    if (project !== null) {
+      createNode({
+        mother: rightTong,
+        style: {
+          display: "block",
+          background: colorChip.gray2,
+          borderRadius: String(5) + "px",
+          marginTop: String(tagBetween) + ea,
+          padding: String(tagTongPadding) + ea,
+          paddingBottom: String(tagTongPadding - tagBetween) + ea,
+        },
+        children: [
+          {
+            text: serviceName[Number(project.service.serid.split('_')[1].replace(/[^0-9]/gi, '')) - 1],
+            style: {
+              display: "inline-block",
+              fontSize: String(tagSize) + ea,
+              fontWeight: String(tagWeight),
+              color: colorChip.black,
+              paddingLeft: String(tagPaddingLeft) + ea,
+              paddingRight: String(tagPaddingLeft) + ea,
+              paddingTop: String(tagPaddingTop) + ea,
+              paddingBottom: String(tagPaddingBottom) + ea,
+              background: colorChip.white,
+              borderRadius: String(5) + "px",
+              marginRight: String(tagBetween) + ea,
+              marginBottom: String(tagBetween) + ea,
+            }
+          }
+        ]
+      });
+    }
 
     console.log(client, designer, project);
     console.log(tag);

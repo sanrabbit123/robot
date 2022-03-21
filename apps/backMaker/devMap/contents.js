@@ -39,6 +39,38 @@ module.exports = {
                 key8: 0,
                 key9: 0,
               },
+              tendency: {
+                style: {
+                  modern: 0,
+                  classic: 0,
+                  natural: 0,
+                  mixmatch: 0,
+                  scandinavian: 0,
+                  vintage: 0,
+                  oriental: 0,
+                  exotic: 0,
+                },
+                texture: {
+                  darkWood: 0,
+                  whiteWood: 0,
+                  coating: 0,
+                  metal: 0
+                },
+                color: {
+                  darkWood: 0,
+                  whiteWood: 0,
+                  highContrast: 0,
+                  vivid: 0,
+                  white: 0,
+                  mono: 0,
+                  bright: 0,
+                  dark: 0,
+                },
+                density: {
+                  maximun: 0,
+                  minimum: 0,
+                }
+              },
             },
             contents: {
               suggestion: "Designer's\nSuggestion",

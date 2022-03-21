@@ -146,8 +146,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
+    
 
 
 
@@ -2720,16 +2719,16 @@ DevContext.prototype.launching = async function () {
 
 
     // send sms
-    const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
-    const human = new HumanPacket();
-    const name = "김준환";
-    const amount = 10320000;
-    await human.sendSms({
-      name: "",
-      phone: "01055432039",
-      subject: "",
-      contents: `2021/11/18 13:21\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,
-    });
+    // const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
+    // const human = new HumanPacket();
+    // const name = "김준환";
+    // const amount = 10320000;
+    // await human.sendSms({
+    //   name: "",
+    //   phone: "01055432039",
+    //   subject: "",
+    //   contents: `2021/11/18 13:21\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,
+    // });
 
 
     // bill passive sync

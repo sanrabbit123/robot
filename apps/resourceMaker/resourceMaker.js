@@ -515,6 +515,7 @@ ResourceMaker.prototype.modelingMap = function () {
 
 ResourceMaker.prototype.portfolio_modeling = async function (conidArr, proid, cliid) {
   const instance = this;
+  const back = this.back;
   const { fileSystem, orderSystem } = this.mother;
   const past = this.final;
   const dateMaker = function (dateRaw) {
@@ -530,6 +531,7 @@ ResourceMaker.prototype.portfolio_modeling = async function (conidArr, proid, cl
     let tempReg, conidTargetArr;
     let garoseroObj;
     let todayString;
+    let thisDeisnger;
 
     tempObj = this.modelingMap().structure;
 
@@ -537,6 +539,8 @@ ResourceMaker.prototype.portfolio_modeling = async function (conidArr, proid, cl
     tempObj.desid = past.designer;
     tempObj.cliid = cliid;
     tempObj.proid = proid;
+
+    thisDeisnger = await back.getDesignerById(tempObj.desid);
 
     portfolio = tempObj.contents.portfolio;
 
@@ -566,6 +570,7 @@ ResourceMaker.prototype.portfolio_modeling = async function (conidArr, proid, cl
     portfolio.detailInfo.service = past.p_info.service;
     portfolio.detailInfo.sort.key8 = past.p_info.key8;
     portfolio.detailInfo.sort.key9 = past.p_info.key9;
+    portfolio.detailInfo.tendency = thisDeisnger.analytics.styling.tendency.toNormal();
 
     portfolio.contents.suggestion = past.suggestion;
     portfolio.contents.detail = [];
