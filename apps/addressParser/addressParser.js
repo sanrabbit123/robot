@@ -62,6 +62,10 @@ const AddressParser = function () {
     jusoLocation: {
       url: "https://www.juso.go.kr/addrlink/addrCoordApi.do",
       key: "U01TX0FVVEgyMDIxMDYyMTEzNDE1MzExMTMwNTI=",
+    },
+    openApi: {
+      url: "http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc",
+      key: "qYxqA/rabM2euF/V0hfK7RoH5z9vLUyj5GEsjM4U3NhiVrgIBDMKE5jfdpjeTZ176nISXMeaRl2TxefP5MrpsQ==",
     }
   };
   this.mapDir = this.dir + "/map";
@@ -1435,5 +1439,100 @@ AddressParser.prototype.returnAddressCodeMatrix = async function (five = true) {
   }
 }
 
+AddressParser.prototype.immovablesInfoByDate = async function (date) {
+  if (!(date instanceof Date)) {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  const { requestSystem } = this.mother;
+  const serviceKey = this.token.openApi.key;
+  const urlMap = {
+    apartment: {
+      trade: "http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTrade",
+      rent: "http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptRent",
+    },
+    officetel: {
+      trade: "http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcOffiTrade",
+      rent: "http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcOffiRent"
+    },
+    rowhouse: {
+      trade: "http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcRHTrade",
+      rent: "http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcRHRent"
+    },
+    singlehouse: {
+      trade: "http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcSHTrade",
+      rent: "http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcSHRent",
+    }
+  };
+  const urlTarget = [
+    urlMap.apartment.trade,
+    urlMap.apartment.rent,
+    urlMap.officetel.trade,
+    urlMap.officetel.rent,
+    urlMap.rowhouse.trade,
+    urlMap.rowhouse.rent,
+    urlMap.singlehouse.trade,
+    urlMap.singlehouse.rent,
+  ];
+  const zeroAddition = (num) => (num < 10 ? `0${String(num)}` : String(num));
+  try {
+    const targetMatrix = await this.returnAddressCodeMatrix();
+    let response;
+    let LAWD_CD, DEAL_YMD;
+    let tong;
+    let result;
+    let final;
+
+    DEAL_YMD = String(date.getFullYear()) + zeroAddition(date.getMonth() + 1);
+
+    final = [];
+    for (let [ LAWD_CD, region ] of targetMatrix) {
+
+      if (!/000$/.test(LAWD_CD)) {
+        tong = [];
+        for (let url of urlTarget) {
+          response = await requestSystem(url, { serviceKey, LAWD_CD, DEAL_YMD }, { method: "get" });
+          if (response.data.response.body === undefined || response.data.response.body.items.item === undefined) {
+            tong.push(0);
+          } else {
+            tong.push(response.data.response.body.items.item.length);
+          }
+        }
+
+        result = {
+          code: LAWD_CD,
+          region,
+          date: new Date(date.getFullYear(), date.getMonth(), 10),
+          numbers: {
+            apartment: {
+              trade: tong[0],
+              rent: tong[1],
+            },
+            officetel: {
+              trade: tong[2],
+              rent: tong[3],
+            },
+            rowhouse: {
+              trade: tong[4],
+              rent: tong[5],
+            },
+            singlehouse: {
+              trade: tong[6],
+              rent: tong[7],
+            }
+          }
+        };
+
+        final.push(result);
+      }
+
+    }
+
+    return final;
+
+  } catch (e) {
+    console.log(e);
+  }
+}
 
 module.exports = AddressParser;
