@@ -129,11 +129,13 @@ ContentsJs.prototype.baseMaker = function () {
 ContentsJs.prototype.whitePopupEvent = function (conid) {
   const instance = this;
   const { ea, totalMother, belowHeight, contentsArr, clients, designers, projects } = this;
-  const { createNode, withOut, colorChip, ajaxJson } = GeneralJs;
+  const { createNode, withOut, colorChip, ajaxJson, setQueue } = GeneralJs;
   const photoChar = 't';
   const blank = "&nbsp;&nbsp;/&nbsp;&nbsp;";
   const serviceName = [ "홈퍼니싱", "홈스타일링", "토탈 스타일링", "엑스트라 스타일링" ];
   const tendencyConst = 10;
+  const relativeConst = 10;
+  const tagMultiplyConst = 3;
   const tendencyKey = [
     {
       target: "style",
@@ -213,11 +215,24 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
     },
   ];
   const tagAmplification = (contents) => {
-    const { proid, cliid, desid, contents: { portfolio: { detailInfo: { tag } } } } = contents;
+    const { conid, proid, cliid, desid, contents: { portfolio: { detailInfo: { tag } } } } = contents;
     const filtered = [ ...new Set(tag.concat(tag.map((str) => {
       return str.replace(/한$/gi, '').replace(/적인$/gi, '').replace(/스러운$/gi, '').replace(/가구$/gi, '').replace(/인테리어$/gi, '').replace(/있는$/gi, '');
     }))) ];
+    filtered.conid = conid;
     return filtered;
+  }
+  const tendencySpread = (contents) => {
+    const { conid, proid, cliid, desid, contents: { portfolio: { detailInfo: { tendency } } } } = contents;
+    let values;
+    values = [];
+    for (let { target, order } of tendencyKey) {
+      for (let key of order) {
+        values.push(tendency[target][key]);
+      }
+    }
+    values.conid = conid;
+    return values;
   }
   return function (e) {
     const contents = contentsArr.search("conid", conid);
@@ -227,6 +242,7 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
     const designer = designers.search("desid", desid);
     const project = projects.search("proid", proid);
     let cancelBack, whiteBoard;
+    let cancelEvent;
     let margin;
     let zIndex;
     let innerMargin;
@@ -251,6 +267,16 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
     let tendencyBarMarginBottom;
     let tendencyFactorSize, tendencyFactorWeight;
     let tendencyFactorWidth;
+    let standardTag;
+    let totalTag;
+    let firstFiltered;
+    let standardTendency;
+    let totalTendency;
+    let relativeTong;
+    let relativeColumn;
+    let relativeBetween;
+    let j;
+    let relativeTitleMarginBottom;
 
     margin = 30;
     zIndex = 2;
@@ -285,13 +311,19 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
     tendencyFactorWeight = 400;
     tendencyFactorWidth = 90;
 
+    relativeColumn = 4;
+    relativeBetween = 8;
+    relativeTitleMarginBottom = 12;
+
+    cancelEvent = function (e) {
+      totalMother.removeChild(totalMother.lastChild);
+      totalMother.removeChild(totalMother.lastChild);
+    }
+
     cancelBack = createNode({
       mother: totalMother,
       event: {
-        click: (e) => {
-          totalMother.removeChild(totalMother.lastChild);
-          totalMother.removeChild(totalMother.lastChild);
-        }
+        click: cancelEvent
       },
       style: {
         position: "fixed",
@@ -684,6 +716,46 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
     }
 
     // relative
+    standardTag = tagAmplification(contents);
+
+    totalTag = instance.contentsArr.toNormal().map((obj) => {
+      return tagAmplification(obj);
+    }).map((arr) => {
+      let num;
+      num = 0;
+      for (let i of arr) {
+        if (standardTag.includes(i)) {
+          num++;
+        }
+      }
+      arr.number = num;
+      return arr;
+    });
+
+    totalTag.sort((a, b) => { return b.number - a.number });
+    firstFiltered = totalTag.slice(1).slice(0, relativeConst * tagMultiplyConst).map((arr) => { return arr.conid }).map((conid) => {
+      return instance.contentsArr.search("conid", conid);
+    });
+
+    standardTendency = tendencySpread(contents);
+    totalTendency = firstFiltered.map((obj) => {
+      return tendencySpread(obj);
+    }).map((arr) => {
+      let num;
+      num = 0;
+      for (let i = 0; i < arr.length; i++) {
+        num = num + (standardTendency[i] - arr[i]);
+      }
+      num = num / arr.length;
+      arr.number = Math.abs(num);
+      return arr;
+    });
+    totalTendency.sort((a, b) => { return a.number - b.number });
+
+    secondFiltered = totalTendency.slice(0, relativeConst).map((arr) => { return arr.conid }).map((conid) => {
+      return instance.contentsArr.search("conid", conid);
+    });
+
     createNode({
       mother: rightTong,
       text: "유사한 포트폴리오",
@@ -692,17 +764,49 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
         fontWeight: String(tendencyTitleWeight),
         color: colorChip.black,
         marginTop: String(tendencyTitleMarginTop) + ea,
-        marginBottom: String(tendencyTitleMarginBottom) + ea,
+        marginBottom: String(relativeTitleMarginBottom) + ea,
       }
     });
 
+    relativeTong = createNode({
+      mother: rightTong,
+      style: {
+        position: "relative",
+        display: "block",
+      }
+    })
 
-    tagAmplification(contents);
-
-
-
-
-
+    j = 0;
+    for (let { conid: c, contents: { portfolio: { pid, detailInfo: { photodae: [ sero, garo ] } } } } of secondFiltered) {
+      createNode({
+        mother: relativeTong,
+        mode: "img",
+        class: [ "hoverDefault_lite" ],
+        attribute: {
+          src: `https://${GHOSTHOST}/corePortfolio/listImage/${pid}/${photoChar + String(garo) + pid + ".jpg"}`,
+          pid: pid,
+          conid: c
+        },
+        event: {
+          click: function (e) {
+            const thisConid = this.getAttribute("conid");
+            setQueue(() => {
+              const func = instance.whitePopupEvent(thisConid);
+              func.call(window, e);
+            });
+            cancelEvent.call(this, e);
+          }
+        },
+        style: {
+          display: "inline-block",
+          width: "calc(calc(100% - " + String(relativeBetween * (relativeColumn - 1)) + ea + ") / " + String(relativeColumn) + ")",
+          marginRight: String(j % relativeColumn === relativeColumn - 1 ? 0 : relativeBetween) + ea,
+          marginBottom: String(relativeBetween) + ea,
+          borderRadius: String(5) + "px",
+        }
+      });
+      j++;
+    }
 
   }
 }
@@ -731,6 +835,13 @@ ContentsJs.prototype.launching = async function () {
           }
         }
         return obj;
+      }
+      toNormal() {
+        let arr = [];
+        for (let i of this) {
+          arr.push(i);
+        }
+        return arr;
       }
     }
 
