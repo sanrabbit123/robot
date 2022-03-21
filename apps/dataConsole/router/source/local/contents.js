@@ -129,7 +129,7 @@ ContentsJs.prototype.baseMaker = function () {
 ContentsJs.prototype.whitePopupEvent = function (conid) {
   const instance = this;
   const { ea, totalMother, belowHeight, contentsArr, clients, designers, projects } = this;
-  const { createNode, withOut, colorChip } = GeneralJs;
+  const { createNode, withOut, colorChip, ajaxJson } = GeneralJs;
   const photoChar = 't';
   const blank = "&nbsp;&nbsp;/&nbsp;&nbsp;";
   const serviceName = [ "홈퍼니싱", "홈스타일링", "토탈 스타일링", "엑스트라 스타일링" ];
@@ -212,6 +212,13 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
       }
     },
   ];
+  const tagAmplification = (contents) => {
+    const { proid, cliid, desid, contents: { portfolio: { detailInfo: { tag } } } } = contents;
+    const filtered = [ ...new Set(tag.concat(tag.map((str) => {
+      return str.replace(/한$/gi, '').replace(/적인$/gi, '').replace(/스러운$/gi, '').replace(/가구$/gi, '').replace(/인테리어$/gi, '').replace(/있는$/gi, '');
+    }))) ];
+    return filtered;
+  }
   return function (e) {
     const contents = contentsArr.search("conid", conid);
     const { cliid, proid, desid } = contents;
@@ -403,6 +410,82 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
     // tag
     tagTong = createNode({
       mother: rightTong,
+      attribute: {
+        conid: conid,
+      },
+      event: {
+        click: async function (e) {
+          try {
+            const conid = this.getAttribute("conid");
+            const tag = [ ...this.children ].map((dom) => { return dom.textContent });
+            const newTagName = window.prompt("태그명을 입력해주세요!");
+            let whereQuery, updateQuery;
+
+            if (newTagName !== '' && newTagName !== null) {
+
+              tag.push(newTagName);
+              instance.contentsArr.search("conid", conid).contents.portfolio.detailInfo.tag.push(newTagName);
+              whereQuery = { conid };
+              updateQuery = {};
+              updateQuery["contents.portfolio.detailInfo.tag"] = tag;
+              await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateContents");
+
+              createNode({
+                mother: this,
+                text: newTagName,
+                style: {
+                  display: "inline-block",
+                  fontSize: String(tagSize) + ea,
+                  fontWeight: String(tagWeight),
+                  color: colorChip.black,
+                  paddingLeft: String(tagPaddingLeft) + ea,
+                  paddingRight: String(tagPaddingLeft) + ea,
+                  paddingTop: String(tagPaddingTop) + ea,
+                  paddingBottom: String(tagPaddingBottom) + ea,
+                  background: colorChip.white,
+                  borderRadius: String(5) + "px",
+                  marginRight: String(tagBetween) + ea,
+                  marginBottom: String(tagBetween) + ea,
+                }
+              });
+
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        },
+        contextmenu: async function (e) {
+          try {
+            e.preventDefault();
+            const conid = this.getAttribute("conid");
+            const tag = [ ...this.children ].map((dom) => { return dom.textContent });
+            let target, targetTag, tong;
+            let whereQuery, updateQuery;
+            if (e.target !== this) {
+              if (e.target.parentElement === this) {
+                target = e.target;
+              } else {
+                target = e.target.parentElement;
+              }
+              targetTag = target.textContent.trim();
+              tong = [];
+              for (let t of tag) {
+                if (targetTag !== t) {
+                  tong.push(t);
+                }
+              }
+              instance.contentsArr.search("conid", conid).contents.portfolio.detailInfo.tag = tong;
+              whereQuery = { conid };
+              updateQuery = {};
+              updateQuery["contents.portfolio.detailInfo.tag"] = tong;
+              await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateContents");
+              target.remove();
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      },
       style: {
         display: "block",
         background: colorChip.gray2,
@@ -410,6 +493,7 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
         marginTop: String(tagTongMarginTop) + ea,
         padding: String(tagTongPadding) + ea,
         paddingBottom: String(tagTongPadding - tagBetween) + ea,
+        cursor: "pointer",
       }
     });
     for (let t of tag) {
@@ -519,12 +603,80 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
         for (let i = 0; i < tendencyConst; i++) {
           createNode({
             mother: tendencyTong,
+            class: [ target + "_" + key ],
+            attribute: {
+              conid: conid,
+              target: target,
+              key: key,
+              value: String(i + 1),
+              past: String(i < tendency[target][key] ? 1 : 0),
+            },
+            event: {
+              click: async function (e) {
+                try {
+                  const conid = this.getAttribute("conid");
+                  const target = this.getAttribute("target");
+                  const key = this.getAttribute("key");
+                  const sibling = [ ...document.querySelectorAll('.' + target + '_' + key) ];
+                  const index = Number(this.getAttribute("value"));
+                  let whereQuery, updateQuery;
+
+                  whereQuery = { conid };
+                  updateQuery = {};
+                  updateQuery["contents.portfolio.detailInfo.tendency." + target + "." + key] = index;
+                  instance.contentsArr.search("conid", conid).contents.portfolio.detailInfo.tendency[target][key] = index;
+                  await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateContents");
+
+                  for (let i = 0; i < tendencyConst; i++) {
+                    sibling[i].style.opacity = String(i < index ? 1 : 0);
+                  }
+                  this.setAttribute("past", String(1));
+
+                } catch (e) {
+                  console.log(e);
+                }
+              },
+              contextmenu: async function (e) {
+                try {
+                  e.preventDefault();
+                  const conid = this.getAttribute("conid");
+                  const target = this.getAttribute("target");
+                  const key = this.getAttribute("key");
+                  const sibling = [ ...document.querySelectorAll('.' + target + '_' + key) ];
+                  const index = 0;
+                  let whereQuery, updateQuery;
+
+                  whereQuery = { conid };
+                  updateQuery = {};
+                  updateQuery["contents.portfolio.detailInfo.tendency." + target + "." + key] = index;
+                  instance.contentsArr.search("conid", conid).contents.portfolio.detailInfo.tendency[target][key] = index;
+                  await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateContents");
+
+                  for (let i = 0; i < tendencyConst; i++) {
+                    sibling[i].style.opacity = String(i < index ? 1 : 0);
+                  }
+                  this.setAttribute("past", String(0));
+
+                } catch (e) {
+                  console.log(e);
+                }
+              },
+              mouseenter: function (e) {
+                this.setAttribute("past", this.style.opacity);
+                this.style.opacity = String(0.4);
+              },
+              mouseleave: function (e) {
+                this.style.opacity = this.getAttribute("past");
+              }
+            },
             style: {
               display: "inline-block",
               height: String(100) + '%',
               width: "calc(100% / " + String(tendencyConst) + ")",
               background: colorChip.green,
               opacity: String(i < tendency[target][key] ? 1 : 0),
+              cursor: "pointer",
+              transition: "all 0s ease",
             }
           });
         }
@@ -545,7 +697,7 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
     });
 
 
-
+    tagAmplification(contents);
 
 
 

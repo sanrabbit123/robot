@@ -88,17 +88,11 @@ DevContext.prototype.launching = async function () {
     // await this.pureSpawn();
 
 
-    // const contentsArr = await back.getContentsArrByQuery({}, { selfMongo: this.MONGOLOCALC });
-    // const target = contentsArr[0];
-    // const tagAmplification = (contents) => {
-    //   const { proid, cliid, desid, contents: { portfolio: { detailInfo: { tag } } } } = contents;
-    //   const filtered = [ ...new Set(tag.concat(tag.map((str) => {
-    //     return str.replace(/한$/gi, '').replace(/적인$/gi, '').replace(/스러운$/gi, '').replace(/가구$/gi, '').replace(/인테리어$/gi, '').replace(/있는$/gi, '');
-    //   }))) ];
-    //   console.log(filtered);
-    // }
-    //
-    // tagAmplification(target);
+
+
+
+
+
 
 
 
@@ -2620,7 +2614,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p181");
+    // await this.getRawPortfolio("p136");
 
 
     // get corePortfolio by pid
