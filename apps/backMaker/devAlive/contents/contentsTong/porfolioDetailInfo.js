@@ -93,31 +93,39 @@ StylingTendency.prototype.toNormal = function () {
   return obj;
 }
 
-StylingTendency.prototype.toMatrix = function () {
+StylingTendency.prototype.toMatrix = function (keymode = false) {
   const keys = [ "style", "texture", "color", "density" ];
   const keyArr = [
     [
-      'modern',
-      'classic',
-      'natural',
-      'mixmatch',
-      'scandinavian',
-      'vintage',
-      'oriental',
-      'exotic'
+      "modern",
+      "classic",
+      "natural",
+      "mixmatch",
+      "scandinavian",
+      "vintage",
+      "oriental",
+      "exotic",
     ],
-    [ 'darkWood', 'whiteWood', 'coating', 'metal' ],
     [
-      'darkWood',
-      'whiteWood',
-      'highContrast',
-      'vivid',
-      'white',
-      'mono',
-      'bright',
-      'dark'
+      "darkWood",
+      "whiteWood",
+      "coating",
+      "metal",
     ],
-    [ 'maximun', 'minimum' ]
+    [
+      "darkWood",
+      "whiteWood",
+      "highContrast",
+      "vivid",
+      "white",
+      "mono",
+      "bright",
+      "dark",
+    ],
+    [
+      "maximun",
+      "minimum",
+    ]
   ];
   let result;
   result = [];
@@ -126,7 +134,11 @@ StylingTendency.prototype.toMatrix = function () {
       result.push(this[keys[i]][key]);
     }
   }
-  return result;
+  if (keymode) {
+    return keyArr.flat();
+  } else {
+    return result;
+  }
 }
 
 class Photodae extends Array {

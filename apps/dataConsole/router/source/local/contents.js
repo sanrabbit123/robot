@@ -14,6 +14,7 @@ ContentsJs.prototype.baseMaker = function () {
   const { ea, totalContents, belowHeight } = this;
   const { contentsArr } = this;
   const { createNode, withOut, colorChip } = GeneralJs;
+  const photoChar = 't';
   let totalMother;
   let scrollTong;
   let boxMargin;
@@ -21,14 +22,18 @@ ContentsJs.prototype.baseMaker = function () {
   let tongPaddingLeft;
   let num;
   let pidFontSize, pidFontWeight, pidTextTop;
+  let pidPaddingLeft, pidPaddingTop, pidPaddingBottom;
 
   tongPaddingLeft = 30;
   boxMargin = 10;
-  boxWidth = 120;
+  boxWidth = 250;
 
-  pidFontSize = 21;
+  pidFontSize = 15;
   pidFontWeight = 400;
   pidTextTop = -4;
+  pidPaddingLeft = 13;
+  pidPaddingTop = 9;
+  pidPaddingBottom = 6;
 
   boxNumber = Math.floor((window.innerWidth - (tongPaddingLeft * 2) + boxMargin) / (boxMargin + boxWidth));
   boxWidth = (window.innerWidth - (tongPaddingLeft * 2) + boxMargin - (boxNumber * boxMargin)) / boxNumber;
@@ -78,17 +83,15 @@ ContentsJs.prototype.baseMaker = function () {
         click: this.whitePopupEvent(contents.conid),
       },
       style: {
-        display: "inline-flex",
+        display: "inline-block",
         width: String(boxWidth) + ea,
-        height: String(boxWidth) + ea,
         background: colorChip.gray1,
         marginRight: String(num % boxNumber === boxNumber - 1 ? 0 : boxMargin) + ea,
         marginBottom: String(boxMargin) + ea,
         cursor: "pointer",
         borderRadius: String(5) + "px",
         verticalAlign: "top",
-        alignItems: "center",
-        justifyContent: "center",
+        overflow: "hidden",
       },
       children: [
         {
@@ -101,6 +104,19 @@ ContentsJs.prototype.baseMaker = function () {
             color: colorChip.deactive,
             top: String(pidTextTop) + ea,
             transition: "all 0.5s ease",
+            paddingLeft: String(pidPaddingLeft) + ea,
+            paddingTop: String(pidPaddingTop) + ea,
+            paddingBottom: String(pidPaddingBottom) + ea
+          }
+        },
+        {
+          mode: "img",
+          attribute: {
+            src: `https://${GHOSTHOST}/corePortfolio/listImage/${contents.contents.portfolio.pid}/${photoChar + String(contents.contents.portfolio.detailInfo.photodae[1]) + contents.contents.portfolio.pid + ".jpg"}`,
+          },
+          style: {
+            position: "relative",
+            width: String(100) + '%',
           }
         }
       ]
@@ -117,10 +133,89 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
   const photoChar = 't';
   const blank = "&nbsp;&nbsp;/&nbsp;&nbsp;";
   const serviceName = [ "홈퍼니싱", "홈스타일링", "토탈 스타일링", "엑스트라 스타일링" ];
+  const tendencyConst = 10;
+  const tendencyKey = [
+    {
+      target: "style",
+      name: "스타일 경향성",
+      order: [
+        "modern",
+        "classic",
+        "natural",
+        "mixmatch",
+        "scandinavian",
+        "vintage",
+        "oriental",
+        "exotic",
+      ],
+      map: {
+        modern: "모던",
+        classic: "클래식",
+        natural: "내추럴",
+        mixmatch: "믹스매치",
+        scandinavian: "북유럽",
+        vintage: "빈티지",
+        oriental: "오리엔탈",
+        exotic: "이그저틱",
+      }
+    },
+    {
+      target: "texture",
+      name: "텍스처 경향성",
+      order: [
+        "darkWood",
+        "whiteWood",
+        "coating",
+        "metal",
+      ],
+      map: {
+        darkWood: "진한 우드",
+        whiteWood: "연한 우드",
+        coating: "도장",
+        metal: "금속",
+      }
+    },
+    {
+      target: "color",
+      name: "컬러톤 경향성",
+      order: [
+        "darkWood",
+        "whiteWood",
+        "highContrast",
+        "vivid",
+        "white",
+        "mono",
+        "bright",
+        "dark",
+      ],
+      map: {
+        darkWood: "다크 우드",
+        whiteWood: "밝은 우드",
+        highContrast: "고대비",
+        vivid: "비비드",
+        white: "화이트",
+        mono: "모노톤",
+        bright: "밝은톤",
+        dark: "어두운톤",
+      }
+    },
+    {
+      target: "density",
+      name: "밀도 경향성",
+      order: [
+        "maximun",
+        "minimum",
+      ],
+      map: {
+        maximun: "맥시멈",
+        minimum: "미니멈",
+      }
+    },
+  ];
   return function (e) {
     const contents = contentsArr.search("conid", conid);
     const { cliid, proid, desid } = contents;
-    const { photos, contents: { portfolio: { pid, detailInfo: { tag } } } } = contents;
+    const { photos, contents: { portfolio: { pid, detailInfo: { tag, tendency } } } } = contents;
     const client = clients.search("cliid", cliid);
     const designer = designers.search("desid", desid);
     const project = projects.search("proid", proid);
@@ -141,10 +236,18 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
     let tagPaddingLeft;
     let tagBetween;
     let tagPaddingTop, tagPaddingBottom;
+    let tendencyTong;
+    let tendencyTitleWeight;
+    let tendencyTitleMarginTop;
+    let tendencyTitleMarginBottom;
+    let tendencyBarHeight;
+    let tendencyBarMarginBottom;
+    let tendencyFactorSize, tendencyFactorWeight;
+    let tendencyFactorWidth;
 
     margin = 30;
     zIndex = 2;
-    innerMargin = 30;
+    innerMargin = 40;
     photoMargin = 10;
 
     titleSize = 28;
@@ -154,15 +257,26 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
     subTitleSize = 15;
     subTitleWeight = 400;
 
-    tagTongMarginTop = 16;
-    tagTongPadding = 12;
+    tagTongMarginTop = 18;
+    tagTongPadding = 16;
 
-    tagSize = 14;
+    tagSize = 13;
     tagWeight = 400;
     tagPaddingLeft = 12;
     tagBetween = 4;
     tagPaddingTop = 6;
     tagPaddingBottom = 8;
+
+    tendencyTitleWeight = 600;
+    tendencyTitleMarginTop = 26;
+    tendencyTitleMarginBottom = 8;
+
+    tendencyBarHeight = 14;
+    tendencyBarMarginBottom = 3;
+
+    tendencyFactorSize = 12;
+    tendencyFactorWeight = 400;
+    tendencyFactorWidth = 90;
 
     cancelBack = createNode({
       mother: totalMother,
@@ -286,6 +400,7 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
       }
     });
 
+    // tag
     tagTong = createNode({
       mother: rightTong,
       style: {
@@ -297,7 +412,6 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
         paddingBottom: String(tagTongPadding - tagBetween) + ea,
       }
     });
-
     for (let t of tag) {
       createNode({
         mother: tagTong,
@@ -318,7 +432,6 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
         }
       })
     }
-
     if (project !== null) {
       createNode({
         mother: rightTong,
@@ -352,8 +465,92 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
       });
     }
 
-    console.log(client, designer, project);
-    console.log(tag);
+    // tendency
+    for (let { target, name, order, map } of tendencyKey) {
+      createNode({
+        mother: rightTong,
+        text: name,
+        style: {
+          fontSize: String(subTitleSize) + ea,
+          fontWeight: String(tendencyTitleWeight),
+          color: colorChip.black,
+          marginTop: String(tendencyTitleMarginTop) + ea,
+          marginBottom: String(tendencyTitleMarginBottom) + ea,
+        }
+      });
+      for (let key of order) {
+        tendencyTong = createNode({
+          mother: rightTong,
+          style: {
+            display: "block",
+            height: String(tendencyBarHeight) + ea,
+            marginBottom: String(tendencyBarMarginBottom) + ea,
+          },
+          children: [
+            {
+              text: map[key],
+              style: {
+                display: "inline-flex",
+                fontSize: String(tendencyFactorSize) + ea,
+                fontWeight: String(tendencyFactorWeight),
+                color: colorChip.black,
+                width: String(tendencyFactorWidth) + ea,
+                height: String(100) + '%',
+                textAlign: "left",
+                alignItems: "center",
+                verticalAlign: "top",
+              }
+            },
+            {
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: withOut(tendencyFactorWidth, ea),
+                height: String(100) + '%',
+                verticalAlign: "top",
+                overflow: "hidden",
+                background: colorChip.gray1,
+                borderRadius: String(3) + "px",
+              }
+            }
+          ]
+        }).children[1];
+
+        for (let i = 0; i < tendencyConst; i++) {
+          createNode({
+            mother: tendencyTong,
+            style: {
+              display: "inline-block",
+              height: String(100) + '%',
+              width: "calc(100% / " + String(tendencyConst) + ")",
+              background: colorChip.green,
+              opacity: String(i < tendency[target][key] ? 1 : 0),
+            }
+          });
+        }
+      }
+    }
+
+    // relative
+    createNode({
+      mother: rightTong,
+      text: "유사한 포트폴리오",
+      style: {
+        fontSize: String(subTitleSize) + ea,
+        fontWeight: String(tendencyTitleWeight),
+        color: colorChip.black,
+        marginTop: String(tendencyTitleMarginTop) + ea,
+        marginBottom: String(tendencyTitleMarginBottom) + ea,
+      }
+    });
+
+
+
+
+
+
+
+
 
   }
 }

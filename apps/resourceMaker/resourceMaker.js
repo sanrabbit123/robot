@@ -4,10 +4,13 @@ const ResourceMaker = function (p_id) {
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   this.mother = new Mother();
   this.back = new BackMaker();
+  this.address = ADDRESS;
   this.s3Host = `${ADDRESS.homeinfo.ghost.protocol}://${ADDRESS.homeinfo.ghost.host}`;
   for (let i = 0; i < 5; i++) {
     p_id = p_id.replace(/^ /g, '').replace(/ $/g, '').toLowerCase();
   }
+  this.frontHost = `${ADDRESS["frontinfo"]["user"]}@${ADDRESS["frontinfo"]["host"]}:/${ADDRESS["frontinfo"]["user"]}/www`;
+
   this.p_id = p_id;
   this.arr = [];
   this.result = {};
@@ -682,9 +685,19 @@ ResourceMaker.prototype.portfolio_modeling = async function (conidArr, proid, cl
 ResourceMaker.prototype.launching = async function () {
   const instance = this;
   const back = this.back;
-  const { fileSystem, mongo, mongoinfo, shell, shellLink, headRequest, binaryRequest } = this.mother;
+  const { fileSystem, mongo, mongoinfo, shellExec, shellLink, headRequest, binaryRequest, ghostFileUpload } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const AppleNotes = require(`${process.cwd()}/apps/appleAPIs/appleNotes.js`);
+  const sizeMatrix = [
+    [ 1200, 848 ],
+    [ 800, 566 ],
+    [ 2000, 1414 ]
+  ];
+  const qualityConst = 96;
+  const originalInitial = 'i';
+  const desktopInitial = 't';
+  const mobileInitial = 'mot';
+  const reviewInitial = 'b';
   try {
     let targetFolder;
     let tempFolderName, homeFolderList, tempHome;
@@ -702,15 +715,18 @@ ResourceMaker.prototype.launching = async function () {
     let proid, cliid;
     let whereQuery, updateQuery;
     let targetContents, targetRawContentsArr, targetRawContents;
+    let outputFolder, outputFolderList;
+    let outputMobildFolder, outputMobildFolderList;
+    let fromArr, toArr;
 
     //mkdir temp directory
     tempFolderName = "tempResourcMakerFolder";
     tempHome = process.env.HOME + "/" + tempFolderName;
     homeFolderList = await fileSystem(`readDir`, [ process.env.HOME ]);
     if (homeFolderList.includes(tempFolderName)) {
-      shell.exec(`rm -rf ${shellLink(tempHome)}`);
+      await shellExec(`rm -rf ${shellLink(tempHome)}`);
     }
-    shell.exec(`mkdir ${shellLink(tempHome)}`);
+    await shellExec(`mkdir ${shellLink(tempHome)}`);
 
     note = new AppleNotes({ folder: "portfolio", subject: this.p_id });
     this.arr = await note.readNote();
@@ -726,14 +742,14 @@ ResourceMaker.prototype.launching = async function () {
     index = 0;
     while (tempResponse === 200) {
       index++;
-      tempResponse = await headRequest(this.s3Host + "/corePortfolio/original/" + this.p_id + "/i" + String(index) + this.p_id + ".jpg");
+      tempResponse = await headRequest(this.s3Host + "/corePortfolio/original/" + this.p_id + "/" + originalInitial + String(index) + this.p_id + ".jpg");
       tempResponse = tempResponse.statusCode;
     }
 
     //download images
     for (let i = 1; i < index; i++) {
-      tempObject = await binaryRequest(this.s3Host + "/corePortfolio/original/" + this.p_id + "/i" + String(i) + this.p_id + ".jpg");
-      await fileSystem(`writeBinary`, [ tempHome + "/i" + String(i) + this.p_id + ".jpg", tempObject ]);
+      tempObject = await binaryRequest(this.s3Host + "/corePortfolio/original/" + this.p_id + "/" + originalInitial + String(i) + this.p_id + ".jpg");
+      await fileSystem(`writeBinary`, [ tempHome + "/" + originalInitial + String(i) + this.p_id + ".jpg", tempObject ]);
       console.log(`download success`);
     }
     this.targetFolder = tempHome;
@@ -786,17 +802,60 @@ ResourceMaker.prototype.launching = async function () {
     await fileSystem("write", [ `${process.cwd()}/temp/${this.p_id}.js`, JSON.stringify(this.final, null, 2) ]);
 
     //on view
-    shell.exec(`rm -rf ${shellLink(process.env.HOME)}/${tempFolderName}`);
-    shell.exec(`atom ${shellLink(process.cwd())}/temp/${this.p_id}_raw.js`);
-    shell.exec(`atom ${shellLink(process.cwd())}/temp/${this.p_id}.js`);
+    await shellExec(`atom ${shellLink(process.cwd())}/temp/${this.p_id}_raw.js`);
+    await shellExec(`atom ${shellLink(process.cwd())}/temp/${this.p_id}.js`);
     console.log(this.final);
 
     //confirm
     input = await this.consoleQ(`is it OK? : (if no problem, press 'ok')\n`);
     if (input === "done" || input === "a" || input === "o" || input === "ok" || input === "OK" || input === "Ok" || input === "oK" || input === "yes" || input === "y" || input === "yeah" || input === "Y") {
+
+      // launching poo
+      outputFolder = tempHome + "/portp" + this.p_id;
+      outputMobildFolder = outputFolder + "/mobile";
+
+      await shellExec(`mkdir`, [ outputFolder ]);
+      await shellExec(`mkdir`, [ outputMobildFolder ]);
+
+      for (let { index, gs } of this.final.photos.detail) {
+        await shellExec(`convert ${shellLink(tempHome)}/${originalInitial}${String(index)}${this.p_id}.jpg -resize ${gs === 's' ? String(sizeMatrix[0][1]) + "x" + String(sizeMatrix[0][0]) : String(sizeMatrix[0][0]) + "x" + String(sizeMatrix[0][1])} -quality ${String(qualityConst)} ${shellLink(outputFolder)}/${desktopInitial}${String(index)}${this.p_id}.jpg`);
+        await shellExec(`convert ${shellLink(tempHome)}/${originalInitial}${String(index)}${this.p_id}.jpg -resize ${gs === 's' ? String(sizeMatrix[1][1]) + "x" + String(sizeMatrix[1][0]) : String(sizeMatrix[1][0]) + "x" + String(sizeMatrix[1][1])} -quality ${String(qualityConst)} ${shellLink(outputMobildFolder)}/${mobileInitial}${String(index)}${this.p_id}.jpg`);
+      }
+
+      if (this.final.contents.review.detailInfo.photodae.length > 1) {
+        await shellExec(`convert ${shellLink(tempHome)}/${originalInitial}${String(this.final.contents.review.detailInfo.photodae[1])}${this.p_id}.jpg -resize ${String(sizeMatrix[2][0]) + "x" + String(sizeMatrix[2][1])} -quality 100 ${shellLink(outputFolder)}/${reviewInitial}${String(this.final.contents.review.detailInfo.photodae[1])}${this.p_id}.jpg`);
+      }
+
+      await shellExec(`scp -r ${shellLink(outputFolder)} ${this.frontHost}/list_image`);
+
+      outputFolderList = await fileSystem(`readDir`, [ outputFolder ]);
+      outputMobildFolderList = await fileSystem(`readDir`, [ outputMobildFolder ]);
+
+      fromArr = [];
+      toArr = [];
+      for (let i of outputFolderList) {
+        if (i !== `.DS_Store` && /^[bt]/.test(i)) {
+          fromArr.push(outputFolder + "/" + i);
+          toArr.push(`corePortfolio/listImage/${this.p_id}/${i}`);
+        }
+      }
+      for (let i of outputMobildFolderList) {
+        if (i !== `.DS_Store`) {
+          fromArr.push(outputMobildFolder + "/" + i);
+          toArr.push(`corePortfolio/listImage/${this.p_id}/mobile/${i}`);
+        }
+      }
+
+      console.log(fromArr);
+      console.log(toArr);
+
+      await ghostFileUpload(fromArr, toArr);
+
       await MONGOC.db(`miro81`).collection(`contents`).insertOne(this.final);
       await back.mongoDelete("foreContents", { pid: this.p_id }, { console: true });
     }
+
+    await shellExec(`rm -rf ${shellLink(process.env.HOME)}/${tempFolderName}`);
 
   } catch (e) {
     console.log(e);
