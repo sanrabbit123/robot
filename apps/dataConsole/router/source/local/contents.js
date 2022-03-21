@@ -112,12 +112,18 @@ ContentsJs.prototype.baseMaker = function () {
 
 ContentsJs.prototype.whitePopupEvent = function (conid) {
   const instance = this;
-  const { ea, totalMother, belowHeight, contentsArr } = this;
+  const { ea, totalMother, belowHeight, contentsArr, clients, designers, projects } = this;
   const { createNode, withOut, colorChip } = GeneralJs;
   const photoChar = 't';
+  const blank = "&nbsp;&nbsp;/&nbsp;&nbsp;";
+  const serviceName = [ "홈퍼니싱", "홈스타일링", "토탈 스타일링", "엑스트라 스타일링" ];
   return function (e) {
     const contents = contentsArr.search("conid", conid);
+    const { cliid, proid, desid } = contents;
     const { photos, contents: { portfolio: { pid, detailInfo: { tag } } } } = contents;
+    const client = clients.search("cliid", cliid);
+    const designer = designers.search("desid", desid);
+    const project = projects.search("proid", proid);
     let cancelBack, whiteBoard;
     let margin;
     let zIndex;
@@ -126,11 +132,37 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
     let source;
     let photoMargin;
     let seroNum;
+    let titleSize, titleWeight;
+    let titleMarginBottom;
+    let subTitleSize, subTitleWeight;
+    let tagTong;
+    let tagTongMarginTop, tagTongPadding;
+    let tagSize, tagWeight;
+    let tagPaddingLeft;
+    let tagBetween;
+    let tagPaddingTop, tagPaddingBottom;
 
     margin = 30;
     zIndex = 2;
     innerMargin = 30;
     photoMargin = 10;
+
+    titleSize = 28;
+    titleWeight = 400;
+    titleMarginBottom = 6;
+
+    subTitleSize = 15;
+    subTitleWeight = 400;
+
+    tagTongMarginTop = 15;
+    tagTongPadding = 12;
+
+    tagSize = 14;
+    tagWeight = 400;
+    tagPaddingLeft = 12;
+    tagBetween = 4;
+    tagPaddingTop = 6;
+    tagPaddingBottom = 8;
 
     cancelBack = createNode({
       mother: totalMother,
@@ -218,9 +250,79 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
       if (gs === 's') {
         seroNum++;
       }
-     }
+    }
 
-     console.log(tag);
+    rightTong = createNode({
+      mother: mainTong,
+      style: {
+        display: "inline-block",
+        width: String(50) + '%',
+        height: String(100) + '%',
+        position: "relative",
+        overflow: "scroll",
+      }
+    });
+
+    createNode({
+      mother: rightTong,
+      text: pid,
+      style: {
+        fontSize: String(titleSize) + ea,
+        fontWeight: String(titleWeight),
+        fontFamily: "graphik",
+        color: colorChip.black,
+        marginBottom: String(titleMarginBottom) + ea,
+      }
+    });
+
+    createNode({
+      mother: rightTong,
+      text: (!(client?.name) ? "" : client.name + " 고객님" + blank) + designer.designer + " 디자이너님",
+      style: {
+        fontSize: String(subTitleSize) + ea,
+        fontWeight: String(subTitleWeight),
+        color: colorChip.black,
+        paddingLeft: String(1) + ea,
+      }
+    });
+
+    tagTong = createNode({
+      mother: rightTong,
+      style: {
+        display: "block",
+        background: colorChip.gray2,
+        borderRadius: String(5) + "px",
+        marginTop: String(tagTongMarginTop) + ea,
+        padding: String(tagTongPadding) + ea,
+        paddingBottom: String(tagTongPadding - tagBetween) + ea,
+      }
+    });
+
+    for (let t of tag) {
+      createNode({
+        mother: tagTong,
+        text: t,
+        style: {
+          display: "inline-block",
+          fontSize: String(tagSize) + ea,
+          fontWeight: String(tagWeight),
+          color: colorChip.black,
+          paddingLeft: String(tagPaddingLeft) + ea,
+          paddingRight: String(tagPaddingLeft) + ea,
+          paddingTop: String(tagPaddingTop) + ea,
+          paddingBottom: String(tagPaddingBottom) + ea,
+          background: colorChip.white,
+          borderRadius: String(5) + "px",
+          marginRight: String(tagBetween) + ea,
+          marginBottom: String(tagBetween) + ea,
+        }
+      })
+    }
+
+
+
+    console.log(client, designer, project);
+    console.log(tag);
 
   }
 }
@@ -255,7 +357,7 @@ ContentsJs.prototype.launching = async function () {
     const contentsArr = await ajaxJson({ noFlat: true, whereQuery: {} }, "/getContents", { equal: true });
     const projects = await ajaxJson({ noFlat: true, whereQuery: { $or: contentsArr.map((obj) => { return { proid: obj.proid } }) } }, "/getProjects", { equal: true });
     const clients = await ajaxJson({ noFlat: true, whereQuery: { $or: projects.map((obj) => { return { cliid: obj.cliid } }) } }, "/getClients", { equal: true });
-    const designers = await ajaxJson({ noFlat: true, whereQuery: { $or: contentsArr.map((obj) => { return { proid: obj.desid } }) } }, "/getDesigners", { equal: true });
+    const designers = await ajaxJson({ noFlat: true, whereQuery: { $or: contentsArr.map((obj) => { return { desid: obj.desid } }) } }, "/getDesigners", { equal: true });
 
     this.contentsArr = new SearchArray(contentsArr);
     this.clients = new SearchArray(clients);

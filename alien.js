@@ -430,22 +430,6 @@ Alien.prototype.smsLaunching = async function () {
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
 
-    setInterval(async () => {
-      try {
-        const now = new Date();
-        console.log("i'm alive in " + dateToString(now, true));
-        if (now.getHours() === 4 && now.getMinutes() >= 0 && now.getMinutes() <= 9) {
-          throw new Error("sms wss sleep");
-        }
-        if (now.getHours() === 5 && now.getMinutes() >= 0 && now.getMinutes() <= 9) {
-          throw new Error("sms wss sleep");
-        }
-      } catch (e) {
-        await errorLog(e.message);
-        process.exit();
-      }
-    }, (10 * 60 * 1000));
-
     ws.on("open", async () => {
       try {
         await errorLog("sms wss wake up");
