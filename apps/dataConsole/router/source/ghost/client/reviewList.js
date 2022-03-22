@@ -139,7 +139,7 @@ ReviewListJs.prototype.insertInitBox = function () {
       paddingTop: String(whiteBlockPaddingTop) + ea,
       paddingBottom: String(whiteBlockPaddingBottom) + ea,
       background: colorChip.white,
-      marginBottom: String(900) + ea,
+      marginBottom: String(20) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
     }
   });
@@ -296,29 +296,68 @@ ReviewListJs.prototype.insertInitBox = function () {
 ReviewListJs.prototype.insertPortfolioBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media } = this;
+  const { ea, media, baseTong } = this;
   const { contentsArr, clients, projects, designers } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const photoChar = 't';
   let baseBlock;
   let limitLength;
   let gsArray;
+  let baseWidth;
+  let photoMargin;
+  let columns;
+  let seroWidth, garoWidth;
+  let photoRatio;
+  let photoHeight;
+  let src;
 
   limitLength = 36;
   gsArray = this.generateGsArray(limitLength);
 
+  baseWidth = Number(baseTong.style.width.replace(/[^0-9\.]/gi, ''));
+  photoMargin = 20;
+  columns = 4;
+
+  photoRatio = (297 / 210);
+  seroWidth = (baseWidth - (photoMargin * (columns - 1))) / columns;
+  garoWidth = (seroWidth * 2) + photoMargin;
+  photoHeight = seroWidth * photoRatio;
+
   baseBlock = createNode({
-    mother: this.baseTong,
+    mother: baseTong,
     style: {
       position: "relative",
-      width: String(100) + '%',
+      width: "calc(100% + " + String(photoMargin) + ea + ")",
     }
   });
 
+  for (let i = 0; i < limitLength; i++) {
+    src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contentsArr[i].contents.portfolio.pid + "/" + photoChar + String(contentsArr[i].contents.portfolio.detailInfo.photodae[gsArray[i] === 'g' ? 1 : 0]) + contentsArr[i].contents.portfolio.pid + ".jpg";
+
+    createNode({
+      mother: baseBlock,
+      style: {
+        display: "inline-block",
+        width: String(gsArray[i] === 'g' ? garoWidth : seroWidth) + ea,
+        height: String(photoHeight) + ea,
+        borderRadius: String(5) + "px",
+        marginRight: String(photoMargin) + ea,
+        marginBottom: String(photoMargin) + ea,
+        backgroundSize: "100% auto",
+        backgroundPosition: "50% 50%",
+        backgroundImage: "url('" + src + "')",
+      }
+    });
+
+  }
+
+  
 
 
-  console.log(contentsArr);
-  console.log(gsArray);
+
+
+
 
 }
 
