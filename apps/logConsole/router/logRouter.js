@@ -259,21 +259,34 @@ LogRouter.prototype.rou_post_getContents = function () {
     try {
       const selfMongo = instance.mongo;
       let limit;
+      let contentsArr_raw;
       let contentsArr, projects, clients, designers;
 
+      contentsArr_raw = await back.getContentsArrByQuery({}, { selfMongo });
+      contentsArr_raw = contentsArr_raw.toNormal();
+      if (req.body.mode === "review") {
+        contentsArr_raw.sort((a, b) => {
+          return b.contents.review.detailInfo.order - a.contents.review.detailInfo.order;
+        });
+      } else {
+        contentsArr_raw.sort((a, b) => {
+          return Number(b.contents.portfolio.detailInfo.sort.key9) - Number(a.contents.portfolio.detailInfo.sort.key9);
+        });
+      }
+
       if (req.body.limit === undefined) {
-        contentsArr = await back.getContentsArrByQuery({}, { selfMongo });
+        contentsArr = contentsArr_raw;
       } else {
         limit = Number(req.body.limit);
-        contentsArr = await back.getContentsArrByQuery({}, { selfMongo, limit });
+        contentsArr = contentsArr_raw.slice(0, limit);
       }
 
       projects = await back.getProjectsByQuery({ $or: contentsArr.map((obj) => { return { proid: obj.proid } }) }, { selfMongo });
-      clients = await back.getClientsByQuery({ $or: projects.map((obj) => { return { cliid: obj.cliid } }) }, { selfMongo });
+      clients = await back.getClientsByQuery({ $or: contentsArr.map((obj) => { return { cliid: obj.cliid } }) }, { selfMongo });
       designers = await back.getDesignersByQuery({ $or: contentsArr.map((obj) => { return { desid: obj.desid } }) }, { selfMongo });
 
       res.send(JSON.stringify({
-        contentsArr: contentsArr.toNormal(),
+        contentsArr: contentsArr,
         projects: projects.toNormal(),
         clients: clients.toNormal(),
         designers: designers.toNormal(),

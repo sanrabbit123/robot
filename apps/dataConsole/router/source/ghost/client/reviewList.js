@@ -311,6 +311,7 @@ ReviewListJs.prototype.insertPortfolioBox = function () {
   let photoRatio;
   let photoHeight;
   let src;
+  let contents;
 
   limitLength = 36;
   gsArray = this.generateGsArray(limitLength);
@@ -333,26 +334,38 @@ ReviewListJs.prototype.insertPortfolioBox = function () {
   });
 
   for (let i = 0; i < limitLength; i++) {
-    src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contentsArr[i].contents.portfolio.pid + "/" + photoChar + String(contentsArr[i].contents.portfolio.detailInfo.photodae[gsArray[i] === 'g' ? 1 : 0]) + contentsArr[i].contents.portfolio.pid + ".jpg";
+    ({ contents } = contentsArr[i]);
+    src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.portfolio.pid + "/" + photoChar + String(contents.portfolio.detailInfo.photodae[gsArray[i] === 'g' ? 1 : 0]) + contents.portfolio.pid + ".jpg";
 
     createNode({
       mother: baseBlock,
       style: {
         display: "inline-block",
         width: String(gsArray[i] === 'g' ? garoWidth : seroWidth) + ea,
-        height: String(photoHeight) + ea,
         borderRadius: String(5) + "px",
         marginRight: String(photoMargin) + ea,
         marginBottom: String(photoMargin) + ea,
-        backgroundSize: "100% auto",
-        backgroundPosition: "50% 50%",
-        backgroundImage: "url('" + src + "')",
-      }
+      },
+      children: [
+        {
+          style: {
+            width: String(gsArray[i] === 'g' ? garoWidth : seroWidth) + ea,
+            height: String(photoHeight) + ea,
+            borderRadius: String(5) + "px",
+            marginRight: String(photoMargin) + ea,
+            marginBottom: String(photoMargin) + ea,
+            backgroundSize: "100% auto",
+            backgroundPosition: "50% 50%",
+            backgroundImage: "url('" + src + "')",
+          }
+        }
+      ]
     });
+
 
   }
 
-  
+
 
 
 
@@ -395,7 +408,7 @@ ReviewListJs.prototype.launching = async function (loading) {
     const getObj = returnGet();
     let response;
 
-    response = await ajaxJson({ limit: 36 }, LOGHOST + "/getContents", { equal: true });
+    response = await ajaxJson({ mode: "review", limit: 36 }, LOGHOST + "/getContents", { equal: true });
     this.contentsArr = new SearchArray(response.contentsArr);
     this.clients = new SearchArray(response.clients);
     this.projects = new SearchArray(response.projects);
@@ -426,7 +439,7 @@ ReviewListJs.prototype.launching = async function (loading) {
     loading.parentNode.removeChild(loading);
 
     setQueue(() => {
-      ajaxJson({}, LOGHOST + "/getContents", { equal: true }).then((response) => {
+      ajaxJson({ mode: "review" }, LOGHOST + "/getContents", { equal: true }).then((response) => {
         instance.contentsArr = new SearchArray(response.contentsArr);
         instance.clients = new SearchArray(response.clients);
         instance.projects = new SearchArray(response.projects);
