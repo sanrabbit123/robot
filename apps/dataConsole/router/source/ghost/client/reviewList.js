@@ -99,10 +99,13 @@ ReviewListJs.prototype.insertInitBox = function () {
   let searchBarWidth;
   let searchIconHeight;
   let searchIconRight, searchIconTop;
+  let whiteBlockMarginBottom;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = 30;
   leftRatio = 0.2;
+
+  whiteBlockMarginBottom = 50;
 
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
 
@@ -139,7 +142,7 @@ ReviewListJs.prototype.insertInitBox = function () {
       paddingTop: String(whiteBlockPaddingTop) + ea,
       paddingBottom: String(whiteBlockPaddingBottom) + ea,
       background: colorChip.white,
-      marginBottom: String(20) + ea,
+      marginBottom: String(whiteBlockMarginBottom) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
     }
   });
@@ -295,7 +298,7 @@ ReviewListJs.prototype.insertInitBox = function () {
 
 ReviewListJs.prototype.insertPortfolioBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, equalJson, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media, baseTong } = this;
   const { contentsArr, clients, projects, designers } = this;
   const mobile = media[4];
@@ -313,6 +316,13 @@ ReviewListJs.prototype.insertPortfolioBox = function () {
   let src;
   let contents;
   let title;
+  let quoteWidth, quoteHeight;
+  let quoteTop;
+  let photoMarginBottom;
+  let titleSize, titleWeight, titleMarginLeft;
+  let tag;
+  let block;
+  let tagTong;
 
   limitLength = 36;
   gsArray = this.generateGsArray(limitLength);
@@ -325,6 +335,15 @@ ReviewListJs.prototype.insertPortfolioBox = function () {
   seroWidth = (baseWidth - (photoMargin * (columns - 1))) / columns;
   garoWidth = (seroWidth * 2) + photoMargin;
   photoHeight = seroWidth * photoRatio;
+  photoMarginBottom = 18;
+
+  quoteHeight = 10;
+  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
+  quoteTop = 7;
+
+  titleSize = 21;
+  titleWeight = 600;
+  titleMarginLeft = 6;
 
   baseBlock = createNode({
     mother: baseTong,
@@ -338,14 +357,30 @@ ReviewListJs.prototype.insertPortfolioBox = function () {
     ({ contents } = contentsArr[i]);
     src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.portfolio.pid + "/" + photoChar + String(contents.review.detailInfo.photodae[gsArray[i] === 'g' ? 1 : 0]) + contents.portfolio.pid + ".jpg";
     title = contents.review.title.sub.split(", ").join(" ");
-    createNode({
+    tag = equalJson(JSON.stringify(contents.portfolio.detailInfo.tag));
+
+    if (gsArray[i] !== 'g') {
+      tag = tag.slice(5, 10);
+      if (tag.reduce((acc, curr) => { return acc + curr.length }, 0) > 17) {
+        tag = tag.slice(0, -1);
+      }
+    } else {
+      tag = tag.slice(5, 16);
+      if (tag.reduce((acc, curr) => { return acc + curr.length }, 0) > 30) {
+        tag = tag.slice(0, -1);
+      }
+    }
+
+    block = createNode({
       mother: baseBlock,
       style: {
         display: "inline-block",
         width: String(gsArray[i] === 'g' ? garoWidth : seroWidth) + ea,
         borderRadius: String(5) + "px",
         marginRight: String(photoMargin) + ea,
-        marginBottom: String(photoMargin) + ea,
+        marginBottom: String(72) + ea,
+        verticalAlign: "top",
+        overflow: "hidden",
       },
       children: [
         {
@@ -354,14 +389,81 @@ ReviewListJs.prototype.insertPortfolioBox = function () {
             height: String(photoHeight) + ea,
             borderRadius: String(5) + "px",
             marginRight: String(photoMargin) + ea,
-            marginBottom: String(photoMargin) + ea,
+            marginBottom: String(photoMarginBottom) + ea,
             backgroundSize: "100% auto",
             backgroundPosition: "50% 50%",
             backgroundImage: "url('" + src + "')",
           }
+        },
+        {
+          style: {
+            display: "block",
+            position: "relative",
+          },
+          children: [
+            {
+              mode: "svg",
+              source: svgMaker.doubleQuote(colorChip.green),
+              style: {
+                display: "inline-block",
+                height: String(quoteHeight) + ea,
+                width: String(quoteWidth) + ea,
+                verticalAlign: "top",
+                position: "relative",
+                top: String(quoteTop) + ea,
+              }
+            },
+            {
+              text: title,
+              style: {
+                display: "inline-block",
+                fontSize: String(titleSize) + ea,
+                fontWeight: String(titleWeight),
+                color: colorChip.black,
+                marginLeft: String(titleMarginLeft) + ea,
+                verticalAlign: "top",
+              }
+            }
+          ]
+        },
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            height: String(30) + ea,
+            marginTop: String(11) + ea,
+            width: String(110) + '%',
+            left: String(0) + ea,
+          }
         }
       ]
     });
+
+    tagTong = block.children[2];
+
+    for (let t of tag) {
+      createNode({
+        mother: tagTong,
+        text: "<b%#%b> " + t,
+        style: {
+          display: "inline-block",
+          fontSize: String(12) + ea,
+          fontWeight: String(500),
+          color: colorChip.black,
+          paddingLeft: String(10) + ea,
+          paddingTop: String(5) + ea,
+          paddingBottom: String(7) + ea,
+          paddingRight: String(10) + ea,
+          borderRadius: String(3) + "px",
+          marginRight: String(4) + ea,
+          background: colorChip.gray2
+        },
+        bold: {
+          fontWeight: String(400),
+          color: colorChip.deactive,
+        }
+      })
+    }
 
 
   }
