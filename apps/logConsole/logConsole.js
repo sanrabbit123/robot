@@ -318,29 +318,6 @@ LogConsole.prototype.logConnect = async function () {
       console.log(err);
     });
 
-    //set cron
-    setInterval(async () => {
-      try {
-        await instance.aliveTest();
-      } catch (e) {
-        console.log(e);
-      }
-    }, 30 * 60 * 1000);
-
-    //set analytics
-    const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
-    const analytics = new GoogleAnalytics();
-    const analyticsFunc = async () => {
-      try {
-        await analytics.historyToMongo();
-        await messageLog("analytics to mongo success");
-      } catch (e) {
-        console.log(e);
-      }
-    }
-    analyticsFunc().catch((err) => { console.log(err); });
-    setInterval(analyticsFunc, 1000 * 60 * 60 * 24);
-
     //server on
     https.createServer(pems, app).listen(PORT, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
 

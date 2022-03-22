@@ -164,6 +164,7 @@ Robot.prototype.aliveTest = async function () {
       { name: "python", protocol: "https:", host: address.pythoninfo.host, port: generalPort, },
       { name: "home", protocol: "https:", host: address.homeinfo.ghost.host, port: generalPort, },
       { name: "office", protocol: "https:", host: address.officeinfo.ghost.host, port: ghostPort, },
+      { name: "log", protocol: "https:", host: address.testinfo.host, port: generalPort, },
     ];
 
     targetNumber = targets.length;
@@ -1309,6 +1310,13 @@ const MENU = {
   aliveTest: async function () {
     try {
       await robot.aliveTest();
+      setInterval(async () => {
+        try {
+          await robot.aliveTest();
+        } catch (e) {
+          console.log(e);
+        }
+      }, 30 * 60 * 1000);
     } catch (e) {
       console.log(e);
     }

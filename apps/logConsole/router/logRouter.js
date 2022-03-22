@@ -36,23 +36,11 @@ LogRouter.prototype.baseMaker = function (target, req = null) {
 LogRouter.prototype.rou_get_First = function () {
   const instance = this;
   let obj = {};
-  obj.link = "/log/:id";
+  obj.link = "/ssl";
   obj.func = function (req, res) {
     try {
-      let target;
-      if (req.params.id === "ssl") {
-        res.set({ "Content-Type": "text/plain" });
-        res.send("hi");
-      } else {
-        target = req.params.id;
-        instance.baseMaker(target, null).then(function (html) {
-          res.set("Content-Type", "text/html");
-          res.send(html);
-        }).catch(function (err) {
-          throw new Error(err);
-        });
-      }
-
+      res.set({ "Content-Type": "text/plain" });
+      res.send("hi");
     } catch (e) {
       instance.mother.errorLog("Log Console 서버 문제 생김 (rou_get_First): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
@@ -65,7 +53,9 @@ LogRouter.prototype.rou_get_Disk = function () {
   const instance = this;
   const { diskReading } = this.mother;
   const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
+  const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
   const reflection = new MongoReflection();
+  const analytics = new GoogleAnalytics();
   let obj = {};
   obj.link = "/disk";
   obj.func = async function (req, res) {
@@ -76,8 +66,12 @@ LogRouter.prototype.rou_get_Disk = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
+      const now = new Date();
       const disk = await diskReading();
       reflection.coreReflection().catch((err) => { console.log(err); });
+      if (now.getHours() > 11 && now.getHours() < 16) {
+        analytics.historyToMongo().catch((err) => { console.log(err); });
+      }
       res.send(JSON.stringify({ disk: disk.toArray() }));
     } catch (e) {
       instance.mother.errorLog("Log Console 서버 문제 생김 (rou_get_Disk): " + e.message).catch((e) => { console.log(e); });
