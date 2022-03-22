@@ -3909,7 +3909,7 @@ DataRouter.prototype.rou_post_callTo = function () {
         if (index === -1 || address.officeinfo.phone.numbers[index] === undefined) {
           errorLog("Console 서버 문제 생김 (rou_post_callTo): cannot find member index => " + String(index) + ", " + thisPerson + ", " + who + ", " + JSON.stringify(req.body)).catch((e) => { console.log(e); });
           res.set({ "Content-Type": "application/json" });
-          res.send(JSON.stringify({ message: "OK" }));
+          res.send(JSON.stringify({ message: "error" }));
         } else {
           number = address.officeinfo.phone.numbers[index];
           await ghostRequest("clickDial", { id: number, destnumber: phone.replace(/[^0-9]/g, '') });
@@ -3921,7 +3921,7 @@ DataRouter.prototype.rou_post_callTo = function () {
       console.log(e);
       errorLog("Console 서버 문제 생김 (rou_post_callTo): " + e.message).catch((e) => { console.log(e); });
       res.set({ "Content-Type": "application/json" });
-      res.send(JSON.stringify({ message: "OK" }));
+      res.send(JSON.stringify({ message: "error" }));
     }
   }
   return obj;

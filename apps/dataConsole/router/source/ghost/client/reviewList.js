@@ -43,10 +43,36 @@ const ReviewListJs = function () {
 
 ReviewListJs.binaryPath = "/middle/review";
 
+ReviewListJs.prototype.generateGsArray = function (number) {
+  if (typeof number !== "number") {
+    throw new Error("invaild input");
+  }
+  const standard = [
+    'g', 's', 's',
+    's', 's', 's', 's',
+    's', 's', 'g',
+    's', 's', 's', 's',
+    's', 's', 's', 's',
+  ];
+  let additional;
+  let add;
+  let multi;
+  let result;
+  additional = number % standard.length;
+  add = standard.slice(0, additional);
+  multi = Math.floor(number / standard.length);
+  result = [];
+  for (let i = 0; i < multi; i++) {
+    result = result.concat(JSON.parse(JSON.stringify(standard)));
+  }
+  result = result.concat(add);
+  return result;
+}
+
 ReviewListJs.prototype.insertInitBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media, osException, testMode, inputClassName } = this;
+  const { ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
   let whiteBlock;
@@ -267,15 +293,75 @@ ReviewListJs.prototype.insertInitBox = function () {
 
 }
 
+ReviewListJs.prototype.insertPortfolioBox = function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { ea, media } = this;
+  const { contentsArr, clients, projects, designers } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  let baseBlock;
+  let limitLength;
+  let gsArray;
+
+  limitLength = 36;
+  gsArray = this.generateGsArray(limitLength);
+
+  baseBlock = createNode({
+    mother: this.baseTong,
+    style: {
+      position: "relative",
+      width: String(100) + '%',
+    }
+  });
+
+
+
+  console.log(contentsArr);
+  console.log(gsArray);
+
+}
+
 ReviewListJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
     this.mother.setGeneralProperties(this);
 
-    const { returnGet, ajaxJson } = GeneralJs;
-    const getObj = returnGet();
+    class SearchArray extends Array {
+      constructor(arr) {
+        super();
+        for (let i of arr) {
+          this.push(i);
+        }
+      }
+      search(target, value) {
+        let obj = null;
+        for (let i of this) {
+          if (i[target] === value) {
+            obj = i;
+          }
+        }
+        return obj;
+      }
+      toNormal() {
+        let arr = [];
+        for (let i of this) {
+          arr.push(i);
+        }
+        return arr;
+      }
+    }
 
-    this.inputClassName = "consultingInput";
+    const { returnGet, ajaxJson, setQueue } = GeneralJs;
+    const getObj = returnGet();
+    let response;
+
+    response = await ajaxJson({ limit: 36 }, LOGHOST + "/getContents", { equal: true });
+    this.contentsArr = new SearchArray(response.contentsArr);
+    this.clients = new SearchArray(response.clients);
+    this.projects = new SearchArray(response.projects);
+    this.designers = new SearchArray(response.designers);
+    this.fullLoad = false;
 
     await this.mother.ghostClientLaunching({
       mode: "front",
@@ -291,16 +377,26 @@ ReviewListJs.prototype.launching = async function (loading) {
       local: async () => {
         try {
           instance.insertInitBox();
+          instance.insertPortfolioBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "ReviewListJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
         }
       }
     });
 
-
-    console.log(LOGHOST);
-
     loading.parentNode.removeChild(loading);
+
+    setQueue(() => {
+      ajaxJson({}, LOGHOST + "/getContents", { equal: true }).then((response) => {
+        instance.contentsArr = new SearchArray(response.contentsArr);
+        instance.clients = new SearchArray(response.clients);
+        instance.projects = new SearchArray(response.projects);
+        instance.designers = new SearchArray(response.designers);
+        instance.fullLoad = true;
+      }).catch((err) => {
+        console.log(err);
+      });
+    });
 
   } catch (err) {
     console.log(err);

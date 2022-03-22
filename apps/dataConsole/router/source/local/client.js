@@ -3091,10 +3091,19 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   callEvent = async function (e) {
     try {
       if (window.confirm(thisCase.name + " 고객님께 전화를 걸까요?")) {
-        await GeneralJs.ajaxJson({
+        const response = await GeneralJs.ajaxJson({
           who: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
           phone: thisCase.phone.replace(/[^0-9]/gi, '')
         }, "/callTo");
+        if (response.message === "error") {
+          window.localStorage.clear();
+          let obj = {};
+          obj["homeliaisonConsoleLoginedName"] = '';
+          obj["homeliaisonConsoleLoginedEmail"] = '';
+          obj["homeliaisonConsoleLoginedBoolean"] = '';
+          setCookie(obj, true);
+          window.location.reload();
+        }
       }
     } catch (e) {
       console.log(e);
