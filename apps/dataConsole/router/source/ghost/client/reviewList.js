@@ -60,9 +60,19 @@ ReviewListJs.prototype.insertInitBox = function () {
   let quoteWidth;
   let quoteHeight;
   let titleFontSize, titleFontWeight;
-  let tagChildren;
-  let tags;
+  let serviceChildren;
+  let services;
   let titleWording;
+  let servicePaddingLeft;
+  let serviceSize;
+  let serviceBlockPaddingTop;
+  let whiteBlockPaddingTop, whiteBlockPaddingBottom;
+  let quotoTongHeight;
+  let searchBarPaddingTop;
+  let searchBarHeight;
+  let searchBarWidth;
+  let searchIconHeight;
+  let searchIconRight, searchIconTop;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = 30;
@@ -71,65 +81,28 @@ ReviewListJs.prototype.insertInitBox = function () {
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
 
   quoteHeight = 11;
+  quotoTongHeight = 16;
   titleFontSize = 31;
   titleFontWeight = 500;
 
-  titleWording = "솔직한 고객 후기";
-  tags = [
-    "all",
-    "아파트",
-    "새아파트",
-    "따뜻한",
-    "감성적인",
-    "빈티지",
-    "빈티지모던",
-    "모던",
-    "아늑한",
-    "우드",
-    "나무",
-    "여성적인",
-    "여성",
-    "감성",
-    "우드",
-    "나무",
-    "여성적인",
-    "여성",
-    "화이트",
-    "깔끔한",
-    "깨끗한",
-    "1인가구",
-    "투룸",
-    "오피스텔",
-    "오피스",
-    "홈오피스",
-    "사무공간",
-    "10평대인테리어",
-    "내추럴",
-    "라탄",
-  ];
+  servicePaddingLeft = 20;
+  serviceSize = 17;
+  serviceBlockPaddingTop = 39;
 
-  // titleWording = "자주 찾는 질문";
-  // tags = [
-  //   "홈리에종 진행 방식",
-  //   "진행 방식",
-  //   "디자이너 작업 방식",
-  //   "작업",
-  //   "예산 분배",
-  //   "예산 활용",
-  //   "홈스타일링",
-  //   "홈스타일링이란",
-  //   "서비스 종류",
-  //   "리모델링과 차이",
-  //   "디자이너 선택",
-  //   "홈리에종 케어",
-  //   "디자인 비용",
-  //   "디자인비 선금 지불",
-  //   "시공 비용",
-  //   "부분 시공 진행 여부",
-  //   "거주중",
-  //   "거주중인데 가능할까요",
-  //   "부분 공간"
-  // ];
+  whiteBlockPaddingTop = 56;
+  whiteBlockPaddingBottom = 80;
+
+  searchBarPaddingTop = 20;
+  searchBarHeight = 40;
+  searchBarWidth = 500;
+
+  searchIconHeight = 20;
+  searchIconRight = 11;
+  searchIconTop = 10;
+
+  titleWording = "솔직한 고객 후기";
+  services = serviceParsing().name;
+  services.push("전체 보기");
 
   whiteBlock = createNode({
     mother: this.baseTong,
@@ -137,8 +110,8 @@ ReviewListJs.prototype.insertInitBox = function () {
       position: "relative",
       borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
-      paddingTop: String(56) + ea,
-      paddingBottom: String(60) + ea,
+      paddingTop: String(whiteBlockPaddingTop) + ea,
+      paddingBottom: String(whiteBlockPaddingBottom) + ea,
       background: colorChip.white,
       marginBottom: String(900) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
@@ -154,7 +127,7 @@ ReviewListJs.prototype.insertInitBox = function () {
       textAlign: "center",
       justifyContent: "center",
       alignItems: "center",
-      height: String(16) + ea,
+      height: String(quotoTongHeight) + ea,
     },
     children: [
       {
@@ -168,7 +141,6 @@ ReviewListJs.prototype.insertInitBox = function () {
       }
     ]
   });
-
 
   createNode({
     mother: whiteBlock,
@@ -192,7 +164,6 @@ ReviewListJs.prototype.insertInitBox = function () {
     ]
   });
 
-
   createNode({
     mother: whiteBlock,
     style: {
@@ -201,15 +172,15 @@ ReviewListJs.prototype.insertInitBox = function () {
       textAlign: "center",
       justifyContent: "center",
       alignItems: "center",
-      paddingTop: String(20) + ea,
+      paddingTop: String(searchBarPaddingTop) + ea,
     },
     children: [
       {
         style: {
           display: "inline-block",
           position: "relative",
-          width: String(500) + ea,
-          height: String(40) + ea,
+          width: String(searchBarWidth) + ea,
+          height: String(searchBarHeight) + ea,
           borderRadius: String(5) + "px",
           background: colorChip.gray1,
         },
@@ -219,9 +190,9 @@ ReviewListJs.prototype.insertInitBox = function () {
             source: instance.mother.returnSearch(colorChip.black),
             style: {
               position: "absolute",
-              height: String(20) + ea,
-              right: String(11) + ea,
-              top: String(10) + ea,
+              height: String(searchIconHeight) + ea,
+              right: String(searchIconRight) + ea,
+              top: String(searchIconTop) + ea,
             }
           }
         ]
@@ -229,39 +200,47 @@ ReviewListJs.prototype.insertInitBox = function () {
     ]
   });
 
-
-  tagChildren = [];
-  for (let tag of tags) {
-    tagChildren.push({
+  serviceChildren = [];
+  for (let service of services) {
+    if (serviceChildren.length !== 0) {
+      serviceChildren.push({
+        style: {
+          display: "inline-block",
+          position: "relative",
+          paddingLeft: String(servicePaddingLeft) + ea,
+          paddingRight: String(servicePaddingLeft) + ea,
+        },
+        children: [
+          {
+            text: "|",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(serviceSize) + ea,
+              fontWeight: String(300),
+              color: colorChip.deactive,
+            },
+            bold: {
+              color: colorChip.deactive,
+            }
+          }
+        ]
+      });
+    }
+    serviceChildren.push({
       style: {
         display: "inline-block",
         position: "relative",
-        height: String(33) + ea,
-        paddingLeft: String(14) + ea,
-        paddingRight: String(14) + ea,
-        marginRight: String(6) + ea,
-        marginBottom: String(6) + ea,
+        paddingLeft: String(servicePaddingLeft) + ea,
+        paddingRight: String(servicePaddingLeft) + ea,
       },
       children: [
         {
-          style: {
-            position: "absolute",
-            top: String(0),
-            left: String(0),
-            width: String(100) + '%',
-            height: String(100) + '%',
-            background: colorChip.gray1,
-            borderRadius: String(5) + "px",
-            opacity: String(0.4 + (0.6 * Math.random())),
-          }
-        },
-        {
-          text: "<b%#%b> " + tag,
+          text: "<b%#%b> " + service,
           style: {
             display: "inline-block",
             position: "relative",
-            top: String(6) + ea,
-            fontSize: String(14) + ea,
+            fontSize: String(serviceSize) + ea,
             fontWeight: String(400),
             color: colorChip.black,
           },
@@ -281,35 +260,10 @@ ReviewListJs.prototype.insertInitBox = function () {
       textAlign: "center",
       justifyContent: "center",
       alignItems: "center",
-      paddingTop: String(45) + ea,
-      paddingLeft: String(50) + ea,
-      paddingRight: String(50) + ea,
+      paddingTop: String(serviceBlockPaddingTop) + ea,
     },
-    children: tagChildren
+    children: serviceChildren
   });
-
-  createNode({
-    mother: whiteBlock,
-    style: {
-      display: "flex",
-      position: "relative",
-      textAlign: "center",
-      justifyContent: "center",
-      alignItems: "center",
-      paddingTop: String(20) + ea,
-    },
-    children: [
-      {
-        mode: "svg",
-        source: instance.mother.returnDotdotdot(colorChip.green),
-        style: {
-          display: "inline-block",
-          height: String(7) + ea,
-        }
-      }
-    ]
-  });
-
 
 }
 
@@ -342,6 +296,9 @@ ReviewListJs.prototype.launching = async function (loading) {
         }
       }
     });
+
+
+    console.log(LOGHOST);
 
     loading.parentNode.removeChild(loading);
 

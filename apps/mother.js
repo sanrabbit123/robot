@@ -3095,7 +3095,12 @@ Mother.prototype.serviceParsing = function (serviceObj, startDateMode = false) {
     return serviceString[serviceNumber];
 
   } else {
-    throw new Error("invaild input");
+    return {
+      onoff: onoffString,
+      name: serviceString,
+      date: startDateNumbers,
+      xValue: xValueString
+    };
   }
 }
 

@@ -3145,10 +3145,13 @@ GeneralJs.serviceParsing = function (serviceObj, startDateMode = false) {
     tempArr = serviceObj.split('_');
     serviceNumber = Number(tempArr[1].replace(/[a-z]/gi, '').replace(/^0/g, '').replace(/^0/g, '')) - 1;
     return serviceString[serviceNumber];
-
   } else {
-    console.log(serviceObj);
-    throw new Error("invaild input");
+    return {
+      onoff: onoffString,
+      name: serviceString,
+      date: startDateNumbers,
+      xValue: xValueString
+    };
   }
 }
 

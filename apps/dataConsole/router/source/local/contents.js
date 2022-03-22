@@ -17,26 +17,9 @@ ContentsJs.prototype.baseMaker = function () {
   const photoChar = 't';
   let totalMother;
   let scrollTong;
-  let boxMargin;
-  let boxNumber, boxWidth;
   let tongPaddingLeft;
-  let num;
-  let pidFontSize, pidFontWeight, pidTextTop;
-  let pidPaddingLeft, pidPaddingTop, pidPaddingBottom;
 
   tongPaddingLeft = 30;
-  boxMargin = 10;
-  boxWidth = 250;
-
-  pidFontSize = 15;
-  pidFontWeight = 400;
-  pidTextTop = -4;
-  pidPaddingLeft = 13;
-  pidPaddingTop = 9;
-  pidPaddingBottom = 6;
-
-  boxNumber = Math.floor((window.innerWidth - (tongPaddingLeft * 2) + boxMargin) / (boxMargin + boxWidth));
-  boxWidth = (window.innerWidth - (tongPaddingLeft * 2) + boxMargin - (boxNumber * boxMargin)) / boxNumber;
 
   totalMother = createNode({
     mother: totalContents,
@@ -61,8 +44,75 @@ ContentsJs.prototype.baseMaker = function () {
     }
   });
 
+  this.scrollTong = scrollTong;
+  this.spreadContents();
+
+}
+
+ContentsJs.prototype.spreadContents = function (search = null) {
+  const instance = this;
+  const { ea, totalContents, scrollTong } = this;
+  const { contentsArr, designers, clients } = this;
+  const { createNode, withOut, colorChip, cleanChildren } = GeneralJs;
+  const photoChar = 't';
+  let boxMargin;
+  let boxNumber, boxWidth;
+  let num;
+  let pidFontSize, pidFontWeight, pidTextTop;
+  let pidPaddingLeft, pidPaddingTop, pidPaddingBottom;
+  let tongPaddingLeft;
+  let contentsTong;
+  let designer, client;
+  let boo;
+
+  tongPaddingLeft = 30;
+
+  boxMargin = 10;
+  boxWidth = 250;
+  pidFontSize = 15;
+  pidFontWeight = 400;
+  pidTextTop = -4;
+  pidPaddingLeft = 13;
+  pidPaddingTop = 9;
+  pidPaddingBottom = 6;
+
+  boxNumber = Math.floor((window.innerWidth - (tongPaddingLeft * 2) + boxMargin) / (boxMargin + boxWidth));
+  boxWidth = (window.innerWidth - (tongPaddingLeft * 2) + boxMargin - (boxNumber * boxMargin)) / boxNumber;
+
+  cleanChildren(scrollTong);
+
+  if (typeof search === "string") {
+    contentsTong = [];
+    for (let contents of contentsArr) {
+      designer = designers.search("desid", contents.desid);
+      client = designers.search("cliid", contents.cliid);
+
+      boo = false;
+      if (contents.contents.portfolio.detailInfo.tag.some((str) => { return (new RegExp(search, "gi")).test(str) })) {
+        boo = true;
+      }
+      if ((new RegExp(search, "gi")).test(designer.designer)) {
+        boo = true;
+      }
+      if (client !== null) {
+        if ((new RegExp(search, "gi")).test(client.name)) {
+          boo = true;
+        }
+      }
+
+      if (boo) {
+        contentsTong.push(contents);
+      }
+    }
+
+  } else {
+    contentsTong = contentsArr.toNormal();
+  }
+
   num = 0;
-  for (let contents of contentsArr) {
+  this.conidTong = [];
+  this.contentsTong = contentsTong;
+  for (let contents of contentsTong) {
     createNode({
       mother: scrollTong,
       attribute: {
@@ -122,17 +172,18 @@ ContentsJs.prototype.baseMaker = function () {
       ]
     });
     num++;
+    this.conidTong.push(contents.conid);
   }
 
 }
 
 ContentsJs.prototype.whitePopupEvent = function (conid) {
   const instance = this;
-  const { ea, totalMother, belowHeight, contentsArr, clients, designers, projects } = this;
-  const { createNode, withOut, colorChip, ajaxJson, setQueue } = GeneralJs;
+  const { ea, totalMother, belowHeight, contentsArr, clients, designers, projects, whitePopupClassName } = this;
+  const { createNode, withOut, colorChip, ajaxJson, setQueue, serviceParsing } = GeneralJs;
   const photoChar = 't';
   const blank = "&nbsp;&nbsp;/&nbsp;&nbsp;";
-  const serviceName = [ "홈퍼니싱", "홈스타일링", "토탈 스타일링", "엑스트라 스타일링" ];
+  const serviceName = serviceParsing().name;
   const tendencyConst = 10;
   const relativeConst = 10;
   const tagMultiplyConst = 3;
@@ -320,6 +371,8 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
       totalMother.removeChild(totalMother.lastChild);
     }
 
+    instance.cancelEvent = cancelEvent;
+
     cancelBack = createNode({
       mother: totalMother,
       event: {
@@ -340,6 +393,10 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
 
     whiteBoard = createNode({
       mother: totalMother,
+      class: [ whitePopupClassName ],
+      attribute: {
+        conid,
+      },
       style: {
         position: "fixed",
         background: colorChip.white,
@@ -813,7 +870,7 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
 
 ContentsJs.prototype.launching = async function () {
   const instance = this;
-  const { ajaxJson } = GeneralJs;
+  const { ajaxJson, setQueue } = GeneralJs;
   try {
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
@@ -854,6 +911,7 @@ ContentsJs.prototype.launching = async function () {
     this.clients = new SearchArray(clients);
     this.projects = new SearchArray(projects);
     this.designers = new SearchArray(designers);
+    this.whitePopupClassName = "whitePopupClassName";
 
     loading.parentElement.removeChild(loading);
 
@@ -862,6 +920,40 @@ ContentsJs.prototype.launching = async function () {
     window.addEventListener("resize", (e) => {
       window.location.reload();
     })
+    this.searchInput.addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        if (this.value.trim() === '') {
+          instance.spreadContents();
+        } else {
+          instance.spreadContents(this.value.trim());
+        }
+      }
+    });
+    window.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+        if (document.querySelector('.' + instance.whitePopupClassName) !== null) {
+          if (Array.isArray(instance.conidTong)) {
+            let func, next;
+            if (e.key === "ArrowRight") {
+              next = instance.conidTong[instance.conidTong.findIndex((c) => { return c === document.querySelector('.' + instance.whitePopupClassName).getAttribute("conid") }) + 1];
+              if (next === undefined) {
+                next = instance.conidTong[0];
+              }
+            } else {
+              next = instance.conidTong[instance.conidTong.findIndex((c) => { return c === document.querySelector('.' + instance.whitePopupClassName).getAttribute("conid") }) - 1];
+              if (next === undefined) {
+                next = instance.conidTong[instance.conidTong.length - 1];
+              }
+            }
+            setQueue(() => {
+              func = instance.whitePopupEvent(next);
+              func.call(window, e);
+            });
+            instance.cancelEvent.call(window, e);
+          }
+        }
+      }
+    });
 
   } catch (e) {
     console.log(e);
