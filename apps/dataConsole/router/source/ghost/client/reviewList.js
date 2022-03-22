@@ -312,6 +312,7 @@ ReviewListJs.prototype.insertPortfolioBox = function () {
   let photoHeight;
   let src;
   let contents;
+  let title;
 
   limitLength = 36;
   gsArray = this.generateGsArray(limitLength);
@@ -335,8 +336,8 @@ ReviewListJs.prototype.insertPortfolioBox = function () {
 
   for (let i = 0; i < limitLength; i++) {
     ({ contents } = contentsArr[i]);
-    src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.portfolio.pid + "/" + photoChar + String(contents.portfolio.detailInfo.photodae[gsArray[i] === 'g' ? 1 : 0]) + contents.portfolio.pid + ".jpg";
-
+    src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.portfolio.pid + "/" + photoChar + String(contents.review.detailInfo.photodae[gsArray[i] === 'g' ? 1 : 0]) + contents.portfolio.pid + ".jpg";
+    title = contents.review.title.sub.split(", ").join(" ");
     createNode({
       mother: baseBlock,
       style: {
