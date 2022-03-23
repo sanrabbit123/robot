@@ -479,42 +479,42 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
   gsArray = this.generateGsArray(limitLength);
 
   baseWidth = Number(baseTong.style.width.replace(/[^0-9\.]/gi, ''));
-  photoMargin = <%% 20, 18, 18, 16, 2.5 %%>;
+  photoMargin = <%% 20, 18, 18, 16, 3 %%>;
   columns = <%% 4, 4, 3, 3, 2 %%>;
 
   photoRatio = (297 / 210);
   seroWidth = (baseWidth - (photoMargin * (columns - 1))) / columns;
   garoWidth = (seroWidth * 2) + photoMargin;
   photoHeight = seroWidth * photoRatio;
-  photoMarginBottom = <%% 18, 16, 16, 16, 4 %%>;
+  photoMarginBottom = <%% 18, 16, 16, 16, 2.3 %%>;
 
-  quoteHeight = <%% 10, 8, 8, 7, 2 %%>;
+  quoteHeight = <%% 10, 8, 8, 7, 1.8 %%>;
   quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
-  quoteTop = <%% 7, 5, 5, 5, 5 %%>;
+  quoteTop = <%% 7, 5, 5, 5, 1.2 %%>;
 
-  titleSize = <%% 21, 17, 17, 15, 3.6 %%>;
+  titleSize = <%% 21, 17, 17, 15, 3.4 %%>;
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
-  titleMarginLeft = <%% 6, 6, 5, 5, 5 %%>;
+  titleMarginLeft = <%% 6, 6, 5, 5, 1.3 %%>;
 
-  photoBlockMarginBottom = <%% 72, 66, 66, 62, 5 %%>;
+  photoBlockMarginBottom = <%% 72, 66, 66, 62, 8 %%>;
 
   garoSliceStart = <%% 5, 5, 5, 5, 5 %%>;
-  garoSliceEnd = <%% 10, 10, 10, 10, 10 %%>;
+  garoSliceEnd = <%% 10, 10, 10, 10, 9 %%>;
   garoSliceLimit = <%% 17, 17, 17, 17, 17 %%>;
 
   seroSliceStart = <%% 5, 5, 5, 5, 5 %%>;
-  seroSliceEnd = <%% 16, 15, 17, 15, 15 %%>;
+  seroSliceEnd = <%% 16, 15, 17, 15, 13 %%>;
   seroSliceLimit = <%% 30, 30, 30, 30, 30 %%>;
 
-  tagTongMarginTop = <%% 11, 11, 11, 11, 3 %%>;
+  tagTongMarginTop = <%% 11, 11, 11, 11, 1.3 %%>;
   tagTongWidthRatio = <%% 1.1, 1.3, 1.3, 1.3, 1.3 %%>;
 
   tagSize = <%% 12, 10, 10, 9, 2 %%>;
   tagWeight = <%% 500, 500, 500, 500, 500 %%>;
 
   tagPaddingLeft = <%% 10, 8, 8, 7, 1 %%>;
-  tagPaddingTop = <%% 5, 4, 4, 4, 1 %%>;
-  tagPaddingBottom = <%% 7, 6, 6, 6, 1 %%>;
+  tagPaddingTop = <%% 5, 4, 4, 4, 0.9 %%>;
+  tagPaddingBottom = <%% 7, 6, 6, 6, 1.4 %%>;
   tagMarginRight = <%% 4, 3, 3, 3, 1 %%>;
 
   baseBlock = baseTong.children[1];
@@ -561,6 +561,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
             children: [
               {
                 style: {
+                  display: "block",
                   width: String(gsArray[i] === 'g' ? garoWidth : seroWidth) + ea,
                   height: String(photoHeight) + ea,
                   borderRadius: String(5) + "px",
@@ -575,6 +576,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
                 style: {
                   display: "block",
                   position: "relative",
+                  width: String(100) + '%',
                 },
                 children: [
                   {
@@ -597,6 +599,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
                       fontWeight: String(titleWeight),
                       color: colorChip.black,
                       marginLeft: String(titleMarginLeft) + ea,
+                      width: withOut(quoteWidth + titleMarginLeft, ea),
                       verticalAlign: "top",
                     }
                   }
@@ -787,7 +790,9 @@ ReviewListJs.prototype.launching = async function (loading) {
 
     window.addEventListener("scroll", (e) => {
       setDebounce(() => {
-        if (window.scrollY > 1000 && instance.fullLoad && !instance.photoLoad) {
+        let scrollMin;
+        scrollMin = <%% 1000, 1000, 900, 800, 300 %%>;
+        if (window.scrollY > scrollMin && instance.fullLoad && !instance.photoLoad) {
           instance.portfolioBlock(null, null);
           instance.photoLoad = true;
         }
