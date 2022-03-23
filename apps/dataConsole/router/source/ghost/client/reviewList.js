@@ -107,31 +107,31 @@ ReviewListJs.prototype.insertInitBox = function () {
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
-  whiteBlockMarginBottom = <%% 50, 50, 50, 50, 50 %%>;
+  whiteBlockMarginBottom = <%% 50, 50, 50, 50, 5 %%>;
 
   quoteHeight = <%% 11, 11, 11, 11, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
   titleFontSize = <%% 31, 31, 30, 28, 5.7 %%>;
   titleFontWeight = <%% 500, 500, 500, 500, 500 %%>;
 
-  servicePaddingLeft = <%% 20, 18, 13, 8, 13 %%>;
-  serviceSize = <%% 17, 16, 16, 15, 15 %%>;
-  serviceBlockPaddingTop = <%% 39, 39, 39, 39, 39 %%>;
+  servicePaddingLeft = <%% 20, 18, 13, 8, 2.3 %%>;
+  serviceSize = <%% 17, 16, 16, 15, 3.3 %%>;
+  serviceBlockPaddingTop = <%% 39, 39, 39, 39, 5 %%>;
 
   whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
-  whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 24 %%>;
+  whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
 
-  searchBarPaddingTop = <%% 20, 20, 20, 20, 20 %%>;
-  searchBarHeight = <%% 40, 40, 40, 40, 9 %%>;
-  searchBarWidth = <%% 500, 500, 490, 450, 76 %%>;
+  searchBarPaddingTop = <%% 20, 20, 20, 20, 5.2 %%>;
+  searchBarHeight = <%% 40, 40, 40, 40, 8 %%>;
+  searchBarWidth = <%% 500, 500, 490, 450, 74 %%>;
 
-  searchIconHeight = <%% 20, 20, 20, 20, 20 %%>;
-  searchIconRight = <%% 11, 11, 11, 11, 11 %%>;
-  searchIconTop = <%% 10, 10, 10, 10, 10 %%>;
+  searchIconHeight = <%% 20, 20, 20, 20, 4 %%>;
+  searchIconRight = <%% 11, 11, 11, 11, 2 %%>;
+  searchIconTop = <%% 10, 10, 10, 10, 1.8 %%>;
 
-  inputWithoutHeight = <%% 3, 3, 3, 3, 3 %%>;
+  inputWithoutHeight = <%% 3, 3, 3, 3, 0.8 %%>;
 
-  inputSize = <%% 15, 15, 15, 15, 15 %%>;
+  inputSize = <%% 15, 15, 15, 15, 3.1 %%>;
   inputWeight = <%% 300, 300, 300, 300, 300 %%>;
 
   titleWording = "솔직한 고객 후기";
@@ -277,30 +277,32 @@ ReviewListJs.prototype.insertInitBox = function () {
 
   serviceChildren = [];
   for (let service of services) {
-    if (serviceChildren.length !== 0) {
-      serviceChildren.push({
-        style: {
-          display: "inline-block",
-          position: "relative",
-          paddingLeft: String(servicePaddingLeft) + ea,
-          paddingRight: String(servicePaddingLeft) + ea,
-        },
-        children: [
-          {
-            text: "|",
-            style: {
-              display: "inline-block",
-              position: "relative",
-              fontSize: String(serviceSize) + ea,
-              fontWeight: String(300),
-              color: colorChip.deactive,
-            },
-            bold: {
-              color: colorChip.deactive,
+    if (desktop) {
+      if (serviceChildren.length !== 0) {
+        serviceChildren.push({
+          style: {
+            display: "inline-block",
+            position: "relative",
+            paddingLeft: String(servicePaddingLeft) + ea,
+            paddingRight: String(servicePaddingLeft) + ea,
+          },
+          children: [
+            {
+              text: "|",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(serviceSize) + ea,
+                fontWeight: String(300),
+                color: colorChip.deactive,
+              },
+              bold: {
+                color: colorChip.deactive,
+              }
             }
-          }
-        ]
-      });
+          ]
+        });
+      }
     }
     serviceChildren.push({
       class: [
@@ -335,6 +337,7 @@ ReviewListJs.prototype.insertInitBox = function () {
         position: "relative",
         paddingLeft: String(servicePaddingLeft) + ea,
         paddingRight: String(servicePaddingLeft) + ea,
+        marginBottom: desktop ? "" : String(servicePaddingLeft) + ea,
       },
       children: [
         {
@@ -361,8 +364,6 @@ ReviewListJs.prototype.insertInitBox = function () {
       display: "block",
       position: "relative",
       textAlign: "center",
-      justifyContent: "center",
-      alignItems: "center",
       paddingTop: String(serviceBlockPaddingTop) + ea,
     },
     children: serviceChildren
@@ -385,8 +386,8 @@ ReviewListJs.prototype.insertPortfolioBase = function () {
   let paddingBottom;
 
   limitLength = <%% 42, 42, 42, 42, 42 %%>;
-  photoMargin = <%% 20, 20, 20, 20, 20 %%>;
-  paddingBottom = <%% 120, 120, 120, 120, 120 %%>;
+  photoMargin = <%% 20, 18, 18, 16, 3 %%>;
+  paddingBottom = <%% 120, 120, 120, 120, 40 %%>;
 
   baseBlock = createNode({
     mother: baseTong,
@@ -478,24 +479,24 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
   gsArray = this.generateGsArray(limitLength);
 
   baseWidth = Number(baseTong.style.width.replace(/[^0-9\.]/gi, ''));
-  photoMargin = <%% 20, 18, 18, 16, 20 %%>;
-  columns = <%% 4, 4, 3, 3, 4 %%>;
+  photoMargin = <%% 20, 18, 18, 16, 2.5 %%>;
+  columns = <%% 4, 4, 3, 3, 2 %%>;
 
   photoRatio = (297 / 210);
   seroWidth = (baseWidth - (photoMargin * (columns - 1))) / columns;
   garoWidth = (seroWidth * 2) + photoMargin;
   photoHeight = seroWidth * photoRatio;
-  photoMarginBottom = <%% 18, 16, 16, 16, 18 %%>;
+  photoMarginBottom = <%% 18, 16, 16, 16, 4 %%>;
 
-  quoteHeight = <%% 10, 8, 8, 7, 10 %%>;
+  quoteHeight = <%% 10, 8, 8, 7, 2 %%>;
   quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
   quoteTop = <%% 7, 5, 5, 5, 5 %%>;
 
-  titleSize = <%% 21, 17, 17, 15, 17 %%>;
+  titleSize = <%% 21, 17, 17, 15, 3.6 %%>;
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
   titleMarginLeft = <%% 6, 6, 5, 5, 5 %%>;
 
-  photoBlockMarginBottom = <%% 72, 66, 66, 62, 65 %%>;
+  photoBlockMarginBottom = <%% 72, 66, 66, 62, 5 %%>;
 
   garoSliceStart = <%% 5, 5, 5, 5, 5 %%>;
   garoSliceEnd = <%% 10, 10, 10, 10, 10 %%>;
@@ -505,16 +506,16 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
   seroSliceEnd = <%% 16, 15, 17, 15, 15 %%>;
   seroSliceLimit = <%% 30, 30, 30, 30, 30 %%>;
 
-  tagTongMarginTop = <%% 11, 11, 11, 11, 11 %%>;
+  tagTongMarginTop = <%% 11, 11, 11, 11, 3 %%>;
   tagTongWidthRatio = <%% 1.1, 1.3, 1.3, 1.3, 1.3 %%>;
 
-  tagSize = <%% 12, 10, 10, 9, 12 %%>;
+  tagSize = <%% 12, 10, 10, 9, 2 %%>;
   tagWeight = <%% 500, 500, 500, 500, 500 %%>;
 
-  tagPaddingLeft = <%% 10, 8, 8, 7, 8 %%>;
-  tagPaddingTop = <%% 5, 4, 4, 4, 4 %%>;
-  tagPaddingBottom = <%% 7, 6, 6, 6, 6 %%>;
-  tagMarginRight = <%% 4, 3, 3, 3, 3 %%>;
+  tagPaddingLeft = <%% 10, 8, 8, 7, 1 %%>;
+  tagPaddingTop = <%% 5, 4, 4, 4, 1 %%>;
+  tagPaddingBottom = <%% 7, 6, 6, 6, 1 %%>;
+  tagMarginRight = <%% 4, 3, 3, 3, 1 %%>;
 
   baseBlock = baseTong.children[1];
 
@@ -715,7 +716,6 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
     }
 
   }
-
 
 }
 
