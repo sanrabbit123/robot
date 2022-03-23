@@ -109,21 +109,21 @@ ReviewListJs.prototype.insertInitBox = function () {
 
   whiteBlockMarginBottom = <%% 50, 50, 50, 50, 50 %%>;
 
-  quoteHeight = <%% 11, 11, 11, 11, 11 %%>;
-  quotoTongHeight = <%% 16, 16, 16, 16, 16 %%>;
-  titleFontSize = <%% 31, 31, 30, 28, 31 %%>;
+  quoteHeight = <%% 11, 11, 11, 11, 2.5 %%>;
+  quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
+  titleFontSize = <%% 31, 31, 30, 28, 5.7 %%>;
   titleFontWeight = <%% 500, 500, 500, 500, 500 %%>;
 
   servicePaddingLeft = <%% 20, 18, 13, 8, 13 %%>;
   serviceSize = <%% 17, 16, 16, 15, 15 %%>;
   serviceBlockPaddingTop = <%% 39, 39, 39, 39, 39 %%>;
 
-  whiteBlockPaddingTop = <%% 56, 56, 56, 56, 56 %%>;
-  whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 80 %%>;
+  whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
+  whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 24 %%>;
 
   searchBarPaddingTop = <%% 20, 20, 20, 20, 20 %%>;
-  searchBarHeight = <%% 40, 40, 40, 40, 40 %%>;
-  searchBarWidth = <%% 500, 500, 490, 450, 500 %%>;
+  searchBarHeight = <%% 40, 40, 40, 40, 9 %%>;
+  searchBarWidth = <%% 500, 500, 490, 450, 76 %%>;
 
   searchIconHeight = <%% 20, 20, 20, 20, 20 %%>;
   searchIconRight = <%% 11, 11, 11, 11, 11 %%>;
