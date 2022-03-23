@@ -490,7 +490,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
 
   quoteHeight = <%% 10, 8, 8, 7, 1.8 %%>;
   quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
-  quoteTop = <%% 7, 5, 5, 5, isIphone() ? 1.3 : 1.2 %%>;
+  quoteTop = <%% 7, 5, 5, 5, isIphone() ? 1.4 : 1.2 %%>;
 
   titleSize = <%% 21, 17, 17, 15, 3.4 %%>;
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
