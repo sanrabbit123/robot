@@ -2140,8 +2140,8 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
       if (result.fee === 0 && result.comment !== "") {
         window.alert(result.comment);
       } else {
-        if (feeObject.comment !== "") {
-          window.alert(feeObject.comment);
+        if (result.comment !== "") {
+          window.alert(result.comment);
         }
       }
 
