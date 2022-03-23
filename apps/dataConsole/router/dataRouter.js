@@ -4155,10 +4155,10 @@ DataRouter.prototype.rou_post_designerFee = function () {
 
           if (!designerRealtime.result) {
             temp.comment = "Unable schedule";
-            temp.detail.online = 0;
-            temp.detail.offline = 0;
+            // temp.detail.online = 0;
+            // temp.detail.offline = 0;
             temp.detail.travel.number = 0;
-            temp.fee = 0;
+            // temp.fee = 0;
           }
 
           temp.detail.travel.limit = 5;

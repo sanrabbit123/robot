@@ -114,7 +114,7 @@ ReviewListJs.prototype.insertInitBox = function () {
   titleFontSize = <%% 31, 31, 30, 28, 5.7 %%>;
   titleFontWeight = <%% 500, 500, 500, 500, 500 %%>;
 
-  servicePaddingLeft = <%% 20, 18, 13, 8, 2.3 %%>;
+  servicePaddingLeft = <%% 20, 18, 13, 8, 2.2 %%>;
   serviceSize = <%% 17, 16, 16, 15, 3.3 %%>;
   serviceBlockPaddingTop = <%% 39, 39, 39, 39, 5 %%>;
 
@@ -490,7 +490,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
 
   quoteHeight = <%% 10, 8, 8, 7, 1.8 %%>;
   quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
-  quoteTop = <%% 7, 5, 5, 5, 1.2 %%>;
+  quoteTop = <%% 7, 5, 5, 5, isIphone() ? 1.3 : 1.2 %%>;
 
   titleSize = <%% 21, 17, 17, 15, 3.4 %%>;
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
@@ -514,7 +514,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
 
   tagPaddingLeft = <%% 10, 8, 8, 7, 1 %%>;
   tagPaddingTop = <%% 5, 4, 4, 4, 0.9 %%>;
-  tagPaddingBottom = <%% 7, 6, 6, 6, 1.4 %%>;
+  tagPaddingBottom = <%% 7, 6, 6, 6, isIphone() ? 1.2 : 1.4 %%>;
   tagMarginRight = <%% 4, 3, 3, 3, 1 %%>;
 
   baseBlock = baseTong.children[1];

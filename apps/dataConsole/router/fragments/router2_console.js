@@ -3479,7 +3479,7 @@ DataRouter.prototype.rou_post_designerFee = function () {
             temp.comment = "Unable schedule";
             // temp.detail.online = 0;
             // temp.detail.offline = 0;
-            // temp.detail.travel.number = 0;
+            temp.detail.travel.number = 0;
             // temp.fee = 0;
           }
 
