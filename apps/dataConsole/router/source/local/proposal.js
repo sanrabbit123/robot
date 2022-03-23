@@ -2036,6 +2036,10 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
         feeObject = ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue));
         if (feeObject.fee === 0 && feeObject.comment !== "") {
           window.alert(feeObject.comment);
+        } else {
+          if (feeObject.comment !== "") {
+            window.alert(feeObject.comment);
+          }
         }
 
       }
@@ -2135,6 +2139,10 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
       result = ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue));
       if (result.fee === 0 && result.comment !== "") {
         window.alert(result.comment);
+      } else {
+        if (feeObject.comment !== "") {
+          window.alert(feeObject.comment);
+        }
       }
 
       if (timeoutMode) {
