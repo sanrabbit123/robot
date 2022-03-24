@@ -105,6 +105,7 @@ ReviewListJs.prototype.insertInitBox = function () {
   let serviceBlock;
   let inputSize, inputWeight;
   let placeholder;
+  let titleTop;
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
@@ -114,10 +115,11 @@ ReviewListJs.prototype.insertInitBox = function () {
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
   titleFontSize = <%% 31, 31, 30, 28, 5.7 %%>;
   titleFontWeight = <%% 500, 500, 500, 500, 500 %%>;
+  titleTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 4) %%>;
 
   servicePaddingLeft = <%% 20, 18, 13, 8, 2.2 %%>;
   serviceSize = <%% 17, 16, 16, 15, 3.3 %%>;
-  serviceBlockPaddingTop = <%% 39, 39, 39, 39, 5 %%>;
+  serviceBlockPaddingTop = <%% (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), 5 %%>;
 
   whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
   whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
@@ -130,7 +132,7 @@ ReviewListJs.prototype.insertInitBox = function () {
   searchIconRight = <%% 11, 11, 11, 11, 2 %%>;
   searchIconTop = <%% 10, 10, 10, 10, 1.8 %%>;
 
-  inputWithoutHeight = <%% 3, 3, 3, 3, 0.8 %%>;
+  inputWithoutHeight = <%% (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), 0.8 %%>;
 
   inputSize = <%% 15, 15, 15, 15, 3.1 %%>;
   inputWeight = <%% 300, 300, 300, 300, 300 %%>;
@@ -194,6 +196,8 @@ ReviewListJs.prototype.insertInitBox = function () {
         text: titleWording,
         style: {
           display: "inline-block",
+          position: "relative",
+          top: mobile ? "" : String(titleTop) + ea,
           fontSize: String(titleFontSize) + ea,
           fontWeight: String(titleFontWeight),
           color: colorChip.black,
@@ -487,11 +491,11 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
   seroWidth = (baseWidth - (photoMargin * (columns - 1))) / columns;
   garoWidth = (seroWidth * 2) + photoMargin;
   photoHeight = seroWidth * photoRatio;
-  photoMarginBottom = <%% 18, 16, 16, 16, 2.3 %%>;
+  photoMarginBottom = <%% (isMac() ? 18 : 20), (isMac() ? 16 : 18), (isMac() ? 16 : 18), (isMac() ? 16 : 18), 2.3 %%>;
 
   quoteHeight = <%% 10, 8, 8, 7, 1.8 %%>;
   quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
-  quoteTop = <%% 7, 5, 5, 5, isIphone() ? 1.3 : 1.2 %%>;
+  quoteTop = <%% (isMac() ? 7 : 5), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), isIphone() ? 1.3 : 1.2 %%>;
 
   titleSize = <%% 21, 17, 17, 15, 3.4 %%>;
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
@@ -507,15 +511,15 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
   seroSliceEnd = <%% 16, 15, 17, 15, 13 %%>;
   seroSliceLimit = <%% 30, 30, 30, 30, 30 %%>;
 
-  tagTongMarginTop = <%% 11, 11, 11, 11, 1.3 %%>;
+  tagTongMarginTop = <%% 11, 11, 10, 8, 1.3 %%>;
   tagTongWidthRatio = <%% 1.1, 1.3, 1.3, 1.3, 1.3 %%>;
 
   tagSize = <%% 12, 10, 10, 9, 2 %%>;
   tagWeight = <%% 500, 500, 500, 500, 500 %%>;
 
   tagPaddingLeft = <%% 10, 8, 8, 7, 1 %%>;
-  tagPaddingTop = <%% 5, 4, 4, 4, 0.9 %%>;
-  tagPaddingBottom = <%% 7, 6, 6, 6, isIphone() ? 1.2 : 1.4 %%>;
+  tagPaddingTop = <%% (isMac() ? 5 : 6), (isMac() ? 4 : 5), (isMac() ? 4 : 5), (isMac() ? 4 : 5), 0.9 %%>;
+  tagPaddingBottom = <%% (isMac() ? 7 : 6), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), isIphone() ? 1.2 : 1.4 %%>;
   tagMarginRight = <%% 4, 3, 3, 3, 1 %%>;
 
   baseBlock = baseTong.children[1];

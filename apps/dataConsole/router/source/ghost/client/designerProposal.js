@@ -3992,9 +3992,12 @@ DesignerProposalJs.prototype.submitEvent = function (desid, designer, method) {
               });
 
               await GeneralJs.sleep(500);
+
               document.body.removeChild(box);
               document.body.removeChild(back);
-              window.location.href = window.location.protocol + "//" + window.location.host + "/middle/estimation?cliid=" + instance.client.cliid + "&needs=style," + desid + "," + instance.project.proid + "," + method;
+              window.localStorage.clear();
+              GeneralJs.selfHref(window.location.protocol + "//" + window.location.host + "/middle/estimation?cliid=" + instance.client.cliid + "&needs=style," + desid + "," + instance.project.proid + "," + method);
+
             } catch (e) {
               await GeneralJs.ajaxJson({ message: "DesignerProposalJs.submitEvent.certificationBox : " + e.message }, "/errorLog");
             }

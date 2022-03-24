@@ -148,7 +148,7 @@ GeneralJs.prototype.setBackground = function (binaryPath, second = false, random
 GeneralJs.prototype.setNavigator = function (subTitle, blackMode = true, name) {
   const instance = this;
   const { standardWidth, media, totalContents, naviHeight, frontPage } = this;
-  const { createNode, createNodes, colorChip, withOut, blankHref, selfHref } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, blankHref, selfHref, isMac } = GeneralJs;
   let { ea } = this;
   let mobile = media[4];
   let desktop = !mobile;
@@ -319,6 +319,8 @@ GeneralJs.prototype.setNavigator = function (subTitle, blackMode = true, name) {
           text: naviMenu[i].title,
           style: {
             display: "inline-block",
+            position: "relative",
+            top: String(isMac() ? 0 : 2) + ea,
             fontSize: String(wordingSize) + ea,
             fontWeight: String(600),
             color: i === thisIndex ? colorChip.green : colorChip.black,
