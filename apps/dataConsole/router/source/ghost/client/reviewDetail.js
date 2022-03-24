@@ -74,42 +74,42 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   let bottomWordingVisualBottom;
   let bottomWordingLineHeight;
 
-  mainHeight = 800;
-  mainBelowBarHeight = 250;
+  mainHeight = <%% 800, 750, 710, 620, 750 %%>;
+  mainBelowBarHeight = <%% 250, 250, 250, 250, 250 %%>;
 
-  contentsBoxTop = 70;
-  contentsBoxWidth = 1200;
+  contentsBoxTop = <%% 70, 70, 70, 70, 70 %%>;
+  contentsBoxWidth = <%% 1200, 1050, 900, 760, 1200 %%>;
 
-  bottomVisual = 6;
+  bottomVisual = <%% 6, 6, 6, 6, 6 %%>;
 
-  pictureWidth = 820;
+  pictureWidth = <%% 820, 720, 610, 510, 610 %%>;
   pictureHeight = mainHeight - (contentsBoxTop * 2) - bottomVisual;
 
-  photoRightMargin = 50;
+  photoRightMargin = <%% 50, 50, 45, 40, 50 %%>;
 
-  quoteHeight = 14;
+  quoteHeight = <%% 14, 14, 13, 11, 13 %%>;
   quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
-  quoteTop = 140;
-  quotePaddingLeft = 2;
+  quoteTop = <%% 140, 135, 125, 80, 125 %%>;
+  quotePaddingLeft = <%% 2, 2, 2, 2, 2 %%>;
 
-  topReviewSize = 16;
-  topReviewWeight = 400;
+  topReviewSize = <%% 16, 16, 15, 14, 15 %%>;
+  topReviewWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  mainTitleSize = 36;
-  mainTitleWeight = 400;
-  mainTitleLineHeight = 1.16;
-  mainTitleMarginTop = 5;
+  mainTitleSize = <%% 36, 35, 33, 29, 32 %%>;
+  mainTitleWeight = <%% 400, 400, 400, 400, 400 %%>;
+  mainTitleLineHeight = <%% 1.16, 1.16, 1.16, 1.16, 1.16 %%>;
+  mainTitleMarginTop = <%% 5, 5, 5, 3, 5 %%>;
 
-  subTitleSize = 18;
-  subTitleWeight = 600;
-  subTitleMarginTop = 17;
+  subTitleSize = <%% 18, 17, 17, 15, 17 %%>;
+  subTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
+  subTitleMarginTop = <%% 17, 17, 16, 13, 17 %%>;
 
-  subLineWidth = 170;
-  subLineHeight = 11;
-  subLineLeft = 160;
+  subLineWidth = <%% 170, 120, 95, 75, 95 %%>;
+  subLineHeight = <%% 11, 11, 11, 10, 11 %%>;
+  subLineLeft = <%% 160, 150, 150, 135, 150 %%>;
 
-  bottomWordingVisualBottom = -2;
-  bottomWordingLineHeight = 1.5;
+  bottomWordingVisualBottom = <%% -2, -2, -2, -2, -2 %%>;
+  bottomWordingLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
   mainTong = createNode({
     mother: totalContents,
@@ -340,83 +340,83 @@ ReviewDetailJs.prototype.reviewContentsBox = function () {
   }
   customerStory = customerStory.slice(0, -2);
 
-  mainWidth = 900;
-  mainPaddingTop = 110;
+  mainWidth = <%% 900, 900, 900, 760, 900 %%>;
+  mainPaddingTop = <%% 110, 110, 110, 80, 110 %%>;
 
-  titleSize = 23;
-  titleWeight = 700;
-  titleLineHeight = 1.5;
-  titleBarMarginTop = 15;
-  titleBarWidth = 80;
+  titleSize = <%% 23, 23, 23, 21, 23 %%>;
+  titleWeight = <%% 700, 700, 700, 700, 700 %%>;
+  titleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+  titleBarMarginTop = <%% 15, 15, 15, 15, 15 %%>;
+  titleBarWidth = <%% 80, 80, 80, 80, 80 %%>;
 
-  contentsSize = 16;
-  contentsWeight = 400;
-  contentsLineHeight = 1.7;
+  contentsSize = <%% 16, 16, 16, 15, 16 %%>;
+  contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
+  contentsLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
 
-  customerPaddingLeft = 150;
-  customerMarginTop = 36;
+  customerPaddingLeft = <%% 150, 150, 150, 130, 150 %%>;
+  customerMarginTop = <%% 36, 36, 36, 36, 36 %%>;
 
-  customerSize = 17;
-  customerWeight = 400;
-  customerTop = 3;
-  customerLineHeight = 1.3;
+  customerSize = <%% 17, 17, 17, 16, 17 %%>;
+  customerWeight = <%% 400, 400, 400, 400, 400 %%>;
+  customerTop = <%% 3, 3, 3, 3, 3 %%>;
+  customerLineHeight = <%% 1.3, 1.3, 1.3, 1.3, 1.3 %%>;
 
-  photoMargin = 8;
-  blankMarginFirst = 126;
-  blankMargin = 100;
-  blankMarginLast = 200;
+  photoMargin = <%% 8, 8, 8, 8, 8 %%>;
+  blankMarginFirst = <%% 126, 126, 126, 96, 126 %%>;
+  blankMargin = <%% 100, 100, 100, 70, 100 %%>;
+  blankMarginLast = <%% 200, 200, 200, 170, 200 %%>;
 
-  contentsPadding = 21;
+  contentsPadding = <%% 21, 21, 21, 21, 21 %%>;
 
-  wordingTop = 3;
-  questionMargin = 10;
-  answerMargin = 36;
+  wordingTop = <%% 3, 3, 3, 3, 3 %%>;
+  questionMargin = <%% 10, 10, 10, 10, 10 %%>;
+  answerMargin = <%% 36, 36, 36, 36, 36 %%>;
 
-  questionWeight = 700;
-  answerWeight = 400;
+  questionWeight = <%% 700, 700, 700, 700, 700 %%>;
+  answerWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  belowBoxPadding = 50;
-  belowBoxHeight = 300;
+  belowBoxPadding = <%% 50, 50, 50, 36, 50 %%>;
+  belowBoxHeight = <%% 300, 300, 300, 260, 300 %%>;
 
-  belowWhiteWidth = 200;
+  belowWhiteWidth = <%% 200, 200, 200, 165, 200 %%>;
 
-  belowPictureWidth = 350;
-  belowPictureMargin = 18;
+  belowPictureWidth = <%% 350, 350, 350, 305, 350 %%>;
+  belowPictureMargin = <%% 18, 18, 18, 16, 18 %%>;
 
   nameCardWording = contents.contents.portfolio.title.main.split(", ")[1];
 
   nameCardIndex = nameCardWording.split(' ').findIndex((str) => { return /py/gi.test(str); });
   nameCardWording = nameCardWording.split(' ').slice(0, nameCardIndex).join(' ') + "\n" + nameCardWording.split(' ').slice(nameCardIndex).join(' ');
 
-  portfolioWordingSize = 15;
-  portfolioWordingWeight = 400;
+  portfolioWordingSize = <%% 15, 15, 15, 15, 15 %%>;
+  portfolioWordingWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  belowTextAreaPaddingLeft = 12;
-  belowTextTitleSize = 25;
-  belowTextTitleWeight = 700;
-  belowTextTitleLineHeight = 1.4;
-  belowTextAreaPaddingTop = 158;
-  belowTextAreaTitleBarTop = 12;
+  belowTextAreaPaddingLeft = <%% 12, 12, 12, 12, 12 %%>;
+  belowTextTitleSize = <%% 25, 25, 25, 20, 25 %%>;
+  belowTextTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+  belowTextTitleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
+  belowTextAreaPaddingTop = <%% 158, 158, 158, 137, 158 %%>;
+  belowTextAreaTitleBarTop = <%% 12, 12, 12, 12, 12 %%>;
 
-  belowTextAreaSubSize = 14;
-  belowTextAreaSubWeight = 500;
-  belowTextAreaSubLineHeight = 1.5;
-  belowTextAreaSubMarginTop = 20;
+  belowTextAreaSubSize = <%% 14, 14, 14, 12, 14 %%>;
+  belowTextAreaSubWeight = <%% 500, 500, 500, 500, 500 %%>;
+  belowTextAreaSubLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+  belowTextAreaSubMarginTop = <%% 20, 20, 20, 20, 20 %%>;
 
-  designerTongPaddingTop = 30;
-  deignserPhotoWidth = 124;
+  designerTongPaddingTop = <%% 30, 30, 30, 27, 30 %%>;
+  deignserPhotoWidth = <%% 124, 124, 124, 110, 124 %%>;
 
-  designerTitleSize = 19;
-  designerTitleWeight = 700;
-  designerTitleMarginTop = 10;
+  designerTitleSize = <%% 19, 19, 19, 16, 19 %%>;
+  designerTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+  designerTitleMarginTop = <%% 10, 10, 10, 7, 10 %%>;
 
-  designerMthSize = 13;
-  designerMthWeight = 500;
-  designerMthMarginTop = 3;
+  designerMthSize = <%% 13, 13, 13, 11, 13 %%>;
+  designerMthWeight = <%% 500, 500, 500, 500, 500 %%>;
+  designerMthMarginTop = <%% 3, 3, 3, 2, 3 %%>;
 
-  careerBottom = 30;
-  careerSize = 12;
-  careerWeight = 400;
+  careerBottom = <%% 30, 30, 30, 27, 30 %%>;
+  careerSize = <%% 12, 12, 12, 11, 12 %%>;
+  careerWeight = <%% 400, 400, 400, 400, 400 %%>;
 
   mainTong = createNode({
     mother: totalContents,
