@@ -47,6 +47,7 @@ ReviewListJs.prototype.generateGsArray = function (number) {
   if (typeof number !== "number") {
     throw new Error("invaild input");
   }
+  const instance = this;
   const standard = [
     'g', 's', 's',
     's', 's', 's', 's',

@@ -275,6 +275,12 @@ LogRouter.prototype.rou_post_getContents = function () {
         contentsArr = contentsArr_raw.slice(0, limit);
       }
 
+      if (req.body.pid !== undefined) {
+        contentsArr = contentsArr.filter((obj) => {
+          return obj.contents.portfolio.pid === req.body.pid;
+        });
+      }
+
       projects = await back.getProjectsByQuery({ $or: contentsArr.map((obj) => { return { proid: obj.proid } }) }, { selfMongo });
       clients = await back.getClientsByQuery({ $or: contentsArr.map((obj) => { return { cliid: obj.cliid } }) }, { selfMongo });
       designers = await back.getDesignersByQuery({ $or: contentsArr.map((obj) => { return { desid: obj.desid } }) }, { selfMongo });

@@ -477,9 +477,13 @@ GeneralJs.prototype.setGeneralBase = function (obj, random = 0, mode, name) {
     throw new Error("must be object => { instance, binaryPath, subTitle }");
   }
   const { instance, binaryPath, subTitle } = obj;
-  this.setBackground(binaryPath, obj.secondBackground === true, random);
-  this.setNavigator(subTitle, mode === "ghost", name);
-  this.setBaseTong(instance);
+  if (this.backgroundType !== 2) {
+    this.setBackground(binaryPath, obj.secondBackground === true, random);
+    this.setNavigator(subTitle, mode === "ghost", name);
+    this.setBaseTong(instance);
+  } else {
+    this.setNavigator(subTitle, mode === "ghost", name);
+  }
 }
 
 GeneralJs.prototype.ghostClientLaunching = async function (obj) {
