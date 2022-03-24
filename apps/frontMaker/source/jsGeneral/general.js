@@ -3155,6 +3155,37 @@ GeneralJs.serviceParsing = function (serviceObj, startDateMode = false) {
   }
 }
 
+GeneralJs.designerMthParsing = function (methods) {
+  if (!Array.isArray(methods)) {
+    throw new Error("invaild input");
+  }
+  const map = {
+    mth0: "홈스타일링",
+    mth1: "상공간 스타일링",
+    mth2: "패브릭 스타일링",
+    mth3: "가구 디자인",
+    mth4: "원룸 스타일링",
+    mth5: "온라인 스타일링",
+    mth6: "마감재 스타일링",
+    mth7: "토탈 스타일링",
+    mth8: "-",
+  };
+  return methods.map((str) => {
+    return map[str];
+  });
+}
+
+GeneralJs.designerCareer = function (designer, wordingMode = false) {
+  const today = new Date();
+  let careerSubtract;
+  careerSubtract = ((today.getFullYear() * 12) + (today.getMonth() + 1)) - ((designer.information.business.career.startY * 12) + designer.information.business.career.startM);
+  if (wordingMode) {
+    return `경력&nbsp;&nbsp;<b%|%b>&nbsp;&nbsp;${String(Math.floor(careerSubtract / 12))}년 ${String(careerSubtract % 12)}개월`;
+  } else {
+    return [ Math.floor(careerSubtract / 12), (careerSubtract % 12) ];
+  }
+}
+
 GeneralJs.findByAttribute = function (dom, attributeName, attributeValue) {
   if (typeof dom !== "string" && typeof dom !== "object") {
     throw new Error("input must be => [ HTMLCollections or className, attribute name, attribute value ]");

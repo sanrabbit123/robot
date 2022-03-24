@@ -271,7 +271,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
 
 ReviewDetailJs.prototype.reviewContentsBox = function () {
   const instance = this;
-  const { createNode, colorChip, withOut, svgMaker, equalJson } = GeneralJs;
+  const { createNode, colorChip, withOut, svgMaker, equalJson, designerMthParsing, designerCareer } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid } = this;
   const { contentsArr, designers } = this;
   const mobile = media[4];
@@ -284,6 +284,7 @@ ReviewDetailJs.prototype.reviewContentsBox = function () {
   const designer = designers.search("desid", contents.desid);
   const story = equalJson(JSON.stringify(detail));
   const photoChar = 't';
+  const today = new Date();
   let mainTong;
   let mainWidth;
   let mainPaddingTop;
@@ -322,6 +323,14 @@ ReviewDetailJs.prototype.reviewContentsBox = function () {
   let belowTextAreaPaddingTop;
   let belowTextAreaTitleBarTop;
   let belowTextAreaSubSize, belowTextAreaSubWeight, belowTextAreaSubLineHeight, belowTextAreaSubMarginTop;
+  let designerTongPaddingTop;
+  let deignserPhotoWidth;
+  let designerTitleSize, designerTitleWeight, designerTitleMarginTop;
+  let designerTong;
+  let designerMthTargets;
+  let designerMthSize, designerMthWeight, designerMthMarginTop;
+  let careerBottom;
+  let careerSize, careerWeight;
 
   story.shift();
   customerStory = '';
@@ -393,6 +402,21 @@ ReviewDetailJs.prototype.reviewContentsBox = function () {
   belowTextAreaSubWeight = 500;
   belowTextAreaSubLineHeight = 1.5;
   belowTextAreaSubMarginTop = 20;
+
+  designerTongPaddingTop = 30;
+  deignserPhotoWidth = 124;
+
+  designerTitleSize = 19;
+  designerTitleWeight = 700;
+  designerTitleMarginTop = 10;
+
+  designerMthSize = 13;
+  designerMthWeight = 500;
+  designerMthMarginTop = 3;
+
+  careerBottom = 30;
+  careerSize = 12;
+  careerWeight = 400;
 
   mainTong = createNode({
     mother: totalContents,
@@ -597,27 +621,41 @@ ReviewDetailJs.prototype.reviewContentsBox = function () {
     },
     children: [
       {
-        text: "Portfolio",
-        style: {
-          position: "absolute",
-          fontSize: String(portfolioWordingSize) + ea,
-          fontWeight: String(portfolioWordingWeight),
-          fontFamily: "graphik",
-          color: colorChip.black,
-          top: String(belowBoxPadding) + ea,
-          right: String(belowBoxPadding) + ea,
-          textAlign: "right",
-        }
-      },
-      {
         style: {
           display: "inline-block",
           position: "relative",
           borderRadius: String(5) + "px",
           width: String(belowWhiteWidth) + ea,
-          height: String(100) + '%',
+          paddingTop: String(designerTongPaddingTop) + ea,
+          height: withOut(designerTongPaddingTop, ea),
           background: colorChip.white,
-        }
+          textAlign: "center",
+          verticalAlign: "top",
+        },
+        children: [
+          {
+            style: {
+              backgroundImage: "url('" + "https://" + GHOSTHOST + "/corePortfolio/listImage/" + designer.setting.front.photo.porlid + "/" + designer.setting.front.photo.index + designer.setting.front.photo.porlid + ".jpg" + "')",
+              backgroundSize: "auto 100%",
+              backgroundPosition: "50% 50%",
+              display: "inline-block",
+              width: String(deignserPhotoWidth) + ea,
+              height: String(deignserPhotoWidth) + ea,
+              borderRadius: String(deignserPhotoWidth / 2) + ea,
+            }
+          },
+          {
+            text: designer.designer,
+            style: {
+              marginTop: String(designerTitleMarginTop) + ea,
+              marginBottom: String(designerTitleMarginTop) + ea,
+              textAlign: "center",
+              fontSize: String(designerTitleSize) + ea,
+              fontWeight: String(designerTitleWeight),
+              color: colorChip.black,
+            }
+          }
+        ]
       },
       {
         style: {
@@ -630,6 +668,7 @@ ReviewDetailJs.prototype.reviewContentsBox = function () {
           backgroundImage: "url('" + "https://" + GHOSTHOST + "/corePortfolio/listImage/" + pid + "/" + photoChar + String(contents.contents.portfolio.detailInfo.photodae[1]) + pid + ".jpg" + "')",
           backgroundSize: "auto 100%",
           backgroundPosition: "50% 50%",
+          verticalAlign: "top",
         }
       },
       {
@@ -672,6 +711,19 @@ ReviewDetailJs.prototype.reviewContentsBox = function () {
           },
         ]
       },
+      {
+        text: "Portfolio",
+        style: {
+          position: "absolute",
+          fontSize: String(portfolioWordingSize) + ea,
+          fontWeight: String(portfolioWordingWeight),
+          fontFamily: "graphik",
+          color: colorChip.black,
+          top: String(belowBoxPadding) + ea,
+          right: String(belowBoxPadding) + ea,
+          textAlign: "right",
+        }
+      }
     ]
   });
 
@@ -683,7 +735,40 @@ ReviewDetailJs.prototype.reviewContentsBox = function () {
     }
   });
 
-  console.log(designer);
+  designerTong = belowBox.firstChild;
+  designerMthTargets = designerMthParsing(designer.setting.front.methods);
+  for (let mth of designerMthTargets) {
+    createNode({
+      mother: designerTong,
+      text: mth,
+      style: {
+        marginTop: String(designerMthMarginTop) + ea,
+        textAlign: "center",
+        fontSize: String(designerMthSize) + ea,
+        fontWeight: String(designerMthWeight),
+        color: colorChip.black,
+      }
+    });
+  }
+
+  createNode({
+    mother: designerTong,
+    text: designerCareer(designer, true),
+    style: {
+      position: "absolute",
+      width: String(100) + '%',
+      textAlign: "center",
+      bottom: String(careerBottom) + ea,
+      fontSize: String(careerSize) + ea,
+      fontWeight: String(careerWeight),
+      color: colorChip.black,
+    },
+    bold: {
+      fontWeight: String(200),
+      color: colorChip.deactive,
+    }
+  })
+
 
 }
 
