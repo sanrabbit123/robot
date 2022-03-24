@@ -767,8 +767,7 @@ ReviewDetailJs.prototype.reviewContentsBox = function () {
       fontWeight: String(200),
       color: colorChip.deactive,
     }
-  })
-
+  });
 
 }
 
