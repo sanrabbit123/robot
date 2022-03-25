@@ -137,7 +137,7 @@ PortfolioListJs.prototype.insertInitBox = function () {
   inputSize = <%% 15, 15, 15, 15, 3.1 %%>;
   inputWeight = <%% 300, 300, 300, 300, 300 %%>;
 
-  titleWording = "솔직한 고객 후기";
+  titleWording = "디자이너 포트폴리오";
   services = serviceParsing().name;
   services.push("전체 보기");
   placeholder = "새아파트";

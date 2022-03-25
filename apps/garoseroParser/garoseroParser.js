@@ -1,5 +1,4 @@
 class GaroseroArray extends Array {
-
   toSimple() {
     let arr = [];
     for (let { gs } of this) {
@@ -11,7 +10,6 @@ class GaroseroArray extends Array {
   get simple() {
     return this.toSimple();
   }
-
 }
 
 const GaroseroParser = function () {

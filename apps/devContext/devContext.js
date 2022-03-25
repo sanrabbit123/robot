@@ -87,8 +87,48 @@ DevContext.prototype.launching = async function () {
 
     // await this.pureSpawn();
 
-
     
+
+
+    // let res;
+    // let item;
+    // let tong;
+    // let convertFunction;
+    //
+    // res = await requestSystem("http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcSHRent", {
+    //   LAWD_CD: "11110",
+    //   DEAL_YMD: "202202",
+    //   serviceKey: "qYxqA/rabM2euF/V0hfK7RoH5z9vLUyj5GEsjM4U3NhiVrgIBDMKE5jfdpjeTZ176nISXMeaRl2TxefP5MrpsQ=="
+    // }, { method: "get" });
+    //
+    // item = res.data.response.body.items.item;
+    //
+    // convertFunction = (obj) => {
+    //   return {
+    //     date: new Date(obj["년"], obj["월"] - 1, obj["일"]),
+    //     amount: {
+    //       trade: 0,
+    //       deposit: (typeof obj["보증금액"] === "string" ? Number(obj["보증금액"].trim().replace(/[^0-9]/gi, '')) : obj["보증금액"]) * 10000,
+    //       monthly: (typeof obj["월세금액"] === "string" ? Number(obj["월세금액"].trim().replace(/[^0-9]/gi, '')) : obj["월세금액"]) * 10000,
+    //     },
+    //     space: {
+    //       kind: "singlehouse",
+    //       name: "단독",
+    //       pyeong: obj["계약면적"] / 3.30579,
+    //       floor: 0,
+    //       dong: obj["법정동"].trim(),
+    //       builtYear: obj["건축년도"],
+    //     }
+    //   };
+    // }
+    //
+    // console.log(item);
+    // tong = [];
+    // for (let obj of item) {
+    //   tong.push(convertFunction(obj));
+    // }
+    // console.log(tong);
+
 
 
 

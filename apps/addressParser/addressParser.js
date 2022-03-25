@@ -1448,31 +1448,191 @@ AddressParser.prototype.immovablesInfoByDate = async function (date) {
   const serviceKey = this.token.openApi.key;
   const urlMap = {
     apartment: {
-      trade: "http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTrade",
-      rent: "http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptRent",
+      trade: {
+        url: "http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTrade",
+        convert: (obj) => {
+          return {
+            date: new Date(obj["년"], obj["월"] - 1, obj["일"]),
+            amount: {
+              trade: (typeof obj["거래금액"] === "string" ? Number(obj["거래금액"].trim().replace(/[^0-9]/gi, '')) : obj["거래금액"]) * 10000,
+              deposit: 0,
+              monthly: 0,
+            },
+            space: {
+              kind: "apartment",
+              name: obj["아파트"].trim(),
+              pyeong: obj["전용면적"] / 3.30579,
+              floor: obj["층"],
+              dong: obj["법정동"].trim(),
+              builtYear: obj["건축년도"],
+            }
+          };
+        }
+      },
+      rent: {
+        url: "http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptRent",
+        convert: (obj) => {
+          return {
+            date: new Date(obj["년"], obj["월"] - 1, obj["일"]),
+            amount: {
+              trade: 0,
+              deposit: (typeof obj["보증금액"] === "string" ? Number(obj["보증금액"].trim().replace(/[^0-9]/gi, '')) : obj["보증금액"]) * 10000,
+              monthly: (typeof obj["월세금액"] === "string" ? Number(obj["월세금액"].trim().replace(/[^0-9]/gi, '')) : obj["월세금액"]) * 10000,
+            },
+            space: {
+              kind: "apartment",
+              name: obj["아파트"].trim(),
+              pyeong: obj["전용면적"] / 3.30579,
+              floor: obj["층"],
+              dong: obj["법정동"].trim(),
+              builtYear: obj["건축년도"],
+            }
+          };
+        }
+      },
     },
     officetel: {
-      trade: "http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcOffiTrade",
-      rent: "http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcOffiRent"
+      trade: {
+        url: "http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcOffiTrade",
+        convert: (obj) => {
+          return {
+            date: new Date(obj["년"], obj["월"] - 1, obj["일"]),
+            amount: {
+              trade: (typeof obj["거래금액"] === "string" ? Number(obj["거래금액"].trim().replace(/[^0-9]/gi, '')) : obj["거래금액"]) * 10000,
+              deposit: 0,
+              monthly: 0,
+            },
+            space: {
+              kind: "officetel",
+              name: obj["단지"].trim(),
+              pyeong: obj["전용면적"] / 3.30579,
+              floor: obj["층"],
+              dong: obj["법정동"].trim(),
+              builtYear: obj["건축년도"],
+            }
+          };
+        }
+      },
+      rent: {
+        url: "http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcOffiRent",
+        convert: (obj) => {
+          return {
+            date: new Date(obj["년"], obj["월"] - 1, obj["일"]),
+            amount: {
+              trade: 0,
+              deposit: (typeof obj["보증금"] === "string" ? Number(obj["보증금"].trim().replace(/[^0-9]/gi, '')) : obj["보증금"]) * 10000,
+              monthly: (typeof obj["월세"] === "string" ? Number(obj["월세"].trim().replace(/[^0-9]/gi, '')) : obj["월세"]) * 10000,
+            },
+            space: {
+              kind: "officetel",
+              name: obj["단지"].trim(),
+              pyeong: obj["전용면적"] / 3.30579,
+              floor: obj["층"],
+              dong: obj["법정동"].trim(),
+              builtYear: obj["건축년도"],
+            }
+          };
+        }
+      },
     },
     rowhouse: {
-      trade: "http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcRHTrade",
-      rent: "http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcRHRent"
+      trade: {
+        url: "http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcRHTrade",
+        convert: (obj) => {
+          return {
+            date: new Date(obj["년"], obj["월"] - 1, obj["일"]),
+            amount: {
+              trade: (typeof obj["거래금액"] === "string" ? Number(obj["거래금액"].trim().replace(/[^0-9]/gi, '')) : obj["거래금액"]) * 10000,
+              deposit: 0,
+              monthly: 0,
+            },
+            space: {
+              kind: "rowhouse",
+              name: obj["연립다세대"].trim(),
+              pyeong: obj["전용면적"] / 3.30579,
+              floor: obj["층"],
+              dong: obj["법정동"].trim(),
+              builtYear: obj["건축년도"],
+            }
+          };
+        }
+      },
+      rent: {
+        url: "http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcRHRent",
+        convert: (obj) => {
+          return {
+            date: new Date(obj["년"], obj["월"] - 1, obj["일"]),
+            amount: {
+              trade: 0,
+              deposit: (typeof obj["보증금액"] === "string" ? Number(obj["보증금액"].trim().replace(/[^0-9]/gi, '')) : obj["보증금액"]) * 10000,
+              monthly: (typeof obj["월세금액"] === "string" ? Number(obj["월세금액"].trim().replace(/[^0-9]/gi, '')) : obj["월세금액"]) * 10000,
+            },
+            space: {
+              kind: "rowhouse",
+              name: obj["연립다세대"].trim(),
+              pyeong: obj["전용면적"] / 3.30579,
+              floor: obj["층"],
+              dong: obj["법정동"].trim(),
+              builtYear: obj["건축년도"],
+            }
+          };
+        }
+      },
     },
     singlehouse: {
-      trade: "http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcSHTrade",
-      rent: "http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcSHRent",
+      trade: {
+        url: "http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcSHTrade",
+        convert: (obj) => {
+          return {
+            date: new Date(obj["년"], obj["월"] - 1, obj["일"]),
+            amount: {
+              trade: (typeof obj["거래금액"] === "string" ? Number(obj["거래금액"].trim().replace(/[^0-9]/gi, '')) : obj["거래금액"]) * 10000,
+              deposit: 0,
+              monthly: 0,
+            },
+            space: {
+              kind: "singlehouse",
+              name: obj["주택유형"].trim(),
+              pyeong: obj["연면적"] / 3.30579,
+              floor: 0,
+              dong: obj["법정동"].trim(),
+              builtYear: obj["건축년도"],
+            }
+          };
+        }
+      },
+      rent: {
+        url: "http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcSHRent",
+        convert: (obj) => {
+          return {
+            date: new Date(obj["년"], obj["월"] - 1, obj["일"]),
+            amount: {
+              trade: 0,
+              deposit: (typeof obj["보증금액"] === "string" ? Number(obj["보증금액"].trim().replace(/[^0-9]/gi, '')) : obj["보증금액"]) * 10000,
+              monthly: (typeof obj["월세금액"] === "string" ? Number(obj["월세금액"].trim().replace(/[^0-9]/gi, '')) : obj["월세금액"]) * 10000,
+            },
+            space: {
+              kind: "singlehouse",
+              name: "단독",
+              pyeong: obj["계약면적"] / 3.30579,
+              floor: 0,
+              dong: obj["법정동"].trim(),
+              builtYear: obj["건축년도"],
+            }
+          };
+        }
+      },
     }
   };
   const urlTarget = [
-    urlMap.apartment.trade,
-    urlMap.apartment.rent,
-    urlMap.officetel.trade,
-    urlMap.officetel.rent,
-    urlMap.rowhouse.trade,
-    urlMap.rowhouse.rent,
-    urlMap.singlehouse.trade,
-    urlMap.singlehouse.rent,
+    urlMap.apartment.trade.url,
+    urlMap.apartment.rent.url,
+    urlMap.officetel.trade.url,
+    urlMap.officetel.rent.url,
+    urlMap.rowhouse.trade.url,
+    urlMap.rowhouse.rent.url,
+    urlMap.singlehouse.trade.url,
+    urlMap.singlehouse.rent.url,
   ];
   const zeroAddition = (num) => (num < 10 ? `0${String(num)}` : String(num));
   try {
