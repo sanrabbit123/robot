@@ -68,7 +68,9 @@ LogRouter.prototype.rou_get_Disk = function () {
     try {
       const now = new Date();
       const disk = await diskReading();
-      reflection.coreReflection().catch((err) => { console.log(err); });
+      reflection.coreReflection().then(() => {
+        return reflection.mysqlReflection();
+      }).catch((err) => { console.log(err); });
       if (now.getHours() > 11 && now.getHours() < 16) {
         analytics.historyToMongo().catch((err) => { console.log(err); });
       }
