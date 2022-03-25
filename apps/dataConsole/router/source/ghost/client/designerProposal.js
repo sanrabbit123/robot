@@ -3944,78 +3944,50 @@ DesignerProposalJs.prototype.submitEvent = function (desid, designer, method) {
     window.alert("검수 모드입니다!");
   } else {
 
-    GeneralJs.ajaxJson({
-      method: "client",
-      property: "curation",
-      idArr: [ instance.client.cliid ]
-    }, "/getHistoryProperty").then((obj) => {
-      let analytics, callBoo;
-      if (obj !== null && obj !== undefined && typeof obj === "object" && obj[instance.client.cliid] !== undefined) {
-        analytics = obj[instance.client.cliid].analytics;
-        callBoo = false;
-        for (let { success } of analytics.call.out) {
-          if (success) {
-            callBoo = true;
-          }
-        }
-        for (let { success } of analytics.call.in) {
-          if (success) {
-            callBoo = true;
-          }
-        }
-        if (!analytics.full || callBoo) {
-          instance.mother.certificationBox(name, phone, async function (back, box) {
-            try {
-              await GeneralJs.ajaxJson({
-                cliid: instance.client.cliid,
-                proid: instance.project.proid,
-                desid: desid,
-                name: name,
-                phone: phone,
-                designer: designer,
-                method: method,
-              }, "/designerProposal_submit");
+    window.localStorage.clear();
 
-              await GeneralJs.homeliaisonAnalytics({
-                page: instance.pageName,
-                standard: instance.firstPageViewTime,
-                action: "designerSelect",
-                data: {
-                  cliid: instance.client.cliid,
-                  proid: instance.project.proid,
-                  desid: desid,
-                  name: name,
-                  phone: phone,
-                  designer: designer,
-                  method: method,
-                },
-              });
+    instance.mother.certificationBox(name, phone, async function (back, box) {
+      try {
+        await GeneralJs.ajaxJson({
+          cliid: instance.client.cliid,
+          proid: instance.project.proid,
+          desid: desid,
+          name: name,
+          phone: phone,
+          designer: designer,
+          method: method,
+        }, "/designerProposal_submit");
 
-              await GeneralJs.sleep(500);
+        await GeneralJs.homeliaisonAnalytics({
+          page: instance.pageName,
+          standard: instance.firstPageViewTime,
+          action: "designerSelect",
+          data: {
+            cliid: instance.client.cliid,
+            proid: instance.project.proid,
+            desid: desid,
+            name: name,
+            phone: phone,
+            designer: designer,
+            method: method,
+          },
+        });
 
-              document.body.removeChild(box);
-              document.body.removeChild(back);
-              window.localStorage.clear();
-              GeneralJs.selfHref(window.location.protocol + "//" + window.location.host + "/middle/estimation?cliid=" + instance.client.cliid + "&needs=style," + desid + "," + instance.project.proid + "," + method);
+        await GeneralJs.sleep(500);
 
-            } catch (e) {
-              await GeneralJs.ajaxJson({ message: "DesignerProposalJs.submitEvent.certificationBox : " + e.message }, "/errorLog");
-            }
-          });
-        } else {
-          window.alert("자동 큐레이션을 진행하신 고객님은 유선 확인 후 결제를 진행하실 수 있습니다! 영업일 기준 12시간 내로 홈리에종 CX팀이 전화드릴 예정입니다!");
-        }
-      } else {
-        window.alert("자동 큐레이션을 진행하신 고객님은 유선 확인 후 결제를 진행하실 수 있습니다! 영업일 기준 12시간 내로 홈리에종 CX팀이 전화드릴 예정입니다!");
+        document.body.removeChild(box);
+        document.body.removeChild(back);
+        window.localStorage.clear();
+
+        GeneralJs.selfHref(window.location.protocol + "//" + window.location.host + "/middle/estimation?cliid=" + instance.client.cliid + "&needs=style," + desid + "," + instance.project.proid + "," + method);
+
+      } catch (e) {
+        await GeneralJs.ajaxJson({ message: "DesignerProposalJs.submitEvent.certificationBox : " + e.message }, "/errorLog");
       }
-    }).catch((err) => {
-      GeneralJs.ajaxJson({ message: "DesignerProposalJs.submitEvent : " + err.message }, "/errorLog").then(() => {
-        window.alert("오류가 발생하였습니다! 홈리에종에 문의해주세요!");
-        window.location.reload();
-      }).catch((e) => {});
     });
 
   }
+  
 }
 
 DesignerProposalJs.prototype.launching = async function (loading) {
