@@ -555,7 +555,7 @@ Robot.prototype.mysqlReflection = async function () {
     const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
     const reflection = new MongoReflection();
     await reflection.mysqlReflection();
-    await reflection.frontReflection();
+    // await reflection.frontReflection();
   } catch (e) {
     console.log(e);
   }
