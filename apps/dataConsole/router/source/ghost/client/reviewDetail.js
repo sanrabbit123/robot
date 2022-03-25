@@ -241,7 +241,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
           }
         },
       ]
-    })
+    });
 
   }
 

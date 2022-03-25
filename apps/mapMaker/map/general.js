@@ -667,6 +667,9 @@ module.exports = {
       "reviewDetail": {
         "behaviors": []
       },
+      "portfolioList": {
+        "behaviors": []
+      },
       "universalEstimation": {
         "behaviors": [
           {
