@@ -90,10 +90,10 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
 
   photoRightMargin = <%% 50, 50, 45, 40, 50 %%>;
 
-  quoteHeight = <%% 14, 14, 13, 11, 13 %%>;
+  quoteHeight = <%% 14, 14, 13, 11, 2 %%>;
   quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
-  quoteTop = <%% 140, 135, 125, 80, 125 %%>;
-  quotePaddingLeft = <%% 2, 2, 2, 2, 2 %%>;
+  quoteTop = <%% 140, 135, 125, 80, 5 %%>;
+  quotePaddingLeft = <%% 2, 2, 2, 2, 5.4 %%>;
 
   topReviewSize = <%% 16, 16, 15, 14, 15 %%>;
   topReviewWeight = <%% 400, 400, 400, 400, 400 %%>;
@@ -101,11 +101,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   mainTitleSize = <%% 36, 35, 33, 29, 4.5 %%>;
   mainTitleWeight = <%% 400, 400, 400, 400, 400 %%>;
   mainTitleLineHeight = <%% 1.16, 1.16, 1.16, 1.16, 1.2 %%>;
-  mainTitleMarginTop = <%% 5, 5, 5, 3, 4.5 %%>;
+  mainTitleMarginTop = <%% 5, 5, 5, 3, 7.5 %%>;
 
   subTitleSize = <%% 18, 17, 17, 15, 3.1 %%>;
   subTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
-  subTitleMarginTop = <%% 17, 17, 16, 13, 17 %%>;
+  subTitleMarginTop = <%% 17, 17, 16, 13, 20 %%>;
 
   subLineWidth = <%% 170, 120, 95, 75, 95 %%>;
   subLineHeight = <%% 11, 11, 11, 10, 11 %%>;
@@ -114,10 +114,10 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   bottomWordingVisualBottom = <%% -2, -2, -2, -2, -2 %%>;
   bottomWordingLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  mobileWhiteBoxTop = 21;
+  mobileWhiteBoxTop = 20;
   mobileWhiteBoxLeft = 8;
-  mobileWhiteBoxWidth = 41;
-  mobileWhiteBoxHeight = 27;
+  mobileWhiteBoxWidth = 36.6;
+  mobileWhiteBoxHeight = 31;
 
   mobileWordingLeft = 5.3;
 
@@ -201,6 +201,17 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
             height: String(100) + '%',
             background: colorChip.white,
             opacity: String(0.8),
+          }
+        },
+        {
+          mode: "svg",
+          source: svgMaker.doubleQuote(colorChip.green),
+          style: {
+            position: "absolute",
+            top: String(quoteTop) + ea,
+            left: String(quotePaddingLeft) + ea,
+            height: String(quoteHeight) + ea,
+            width: String(quoteWidth) + ea,
           }
         },
         {

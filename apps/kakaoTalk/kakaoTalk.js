@@ -180,8 +180,8 @@ KakaoTalk.prototype.templateTong = function (target) {
       convert: null
     },
     designerCheckList: {
-      name: "체크리스트 최종",
-      id: "TD_9625",
+      name: "체크리스트 진짜 최종",
+      id: "TI_1024",
       needs: [
         "date",
         "host",
