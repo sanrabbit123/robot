@@ -1128,12 +1128,48 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
   let arrowHeight;
   let arrowTop;
   let leftArrow, rightArrow;
-  let maintPaddingTop;
+  let mainPaddingTop;
   let baseBetween;
   let titleHeight, titleMarginBottom;
   let titleLineHeight;
-  let titleSize, titleWeight;
-  let titleWidth;
+  let mainTitleSize, mainTitleWeight;
+  let mainTitleWidth;
+  let belowTong;
+  let belowBaseTong;
+  let mainHeight;
+  let belowBoxHeight;
+  let belowButtonTop;
+  let belowButtonHeight;
+  let belowButtonBetween;
+  let belowButtonWordPadding;
+  let belowButtonTextTop, belowButtonSize, belowButtonWeight;
+  let photoTongClassName;
+  let move;
+  let block;
+  let src, title, tag;
+  let photoMargin;
+  let columns;
+  let photoRatio;
+  let seroWidth;
+  let photoHeight;
+  let photoMarginBottom;
+  let quoteHeight, quoteWidth, quoteTop;
+  let titleSize;
+  let titleWeight;
+  let titleMarginLeft;
+  let tagTongMarginTop;
+  let tagTongWidthRatio;
+  let tagTong;
+  let filteredContents;
+  let tagSize;
+  let tagWeight;
+  let tagPaddingLeft;
+  let tagPaddingTop;
+  let tagPaddingBottom;
+  let tagMarginRight;
+  let relativeLength;
+
+  this.relativePhotoNumber = 0;
 
   baseWidth = 1300;
   baseBetween = standardWidth - baseWidth;
@@ -1141,15 +1177,61 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
   arrowHeight = 28;
   arrowTop = 230;
 
-  maintPaddingTop = 110;
+  mainHeight = 590;
+  mainPaddingTop = 100;
 
   titleHeight = 30;
   titleMarginBottom = 32;
   titleLineHeight = 14;
 
-  titleSize = 22;
-  titleWeight = 600;
-  titleWidth = 170;
+  mainTitleSize = 22;
+  mainTitleWeight = 600;
+  mainTitleWidth = 170;
+
+  belowBoxHeight = 120;
+  belowButtonTop = 38;
+
+  belowButtonHeight = 42;
+  belowButtonBetween = 10;
+  belowButtonWordPadding = 20;
+
+  belowButtonTextTop = 9;
+  belowButtonSize = 15;
+  belowButtonWeight = 600;
+
+  move = 264;
+
+  photoTongClassName = "photoTongClassName";
+
+
+  relativeLength = 15;
+
+  photoMargin = <%% 20, 18, 18, 16, 3 %%>;
+  columns = <%% 5, 4, 3, 3, 2 %%>;
+  photoRatio = (297 / 210);
+  seroWidth = (baseWidth - (photoMargin * (columns - 1))) / columns;
+  photoHeight = seroWidth * photoRatio;
+  photoMarginBottom = <%% (isMac() ? 15 : 17), (isMac() ? 15 : 17), (isMac() ? 15 : 17), (isMac() ? 15 : 17), 2.3 %%>;
+
+  quoteHeight = <%% 8, 8, 8, 7, 1.8 %%>;
+  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
+  quoteTop = <%% (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), isIphone() ? 1.3 : 1.2 %%>;
+
+  titleSize = <%% 17, 17, 17, 15, 3.4 %%>;
+  titleWeight = <%% 600, 600, 600, 600, 600 %%>;
+  titleMarginLeft = <%% 6, 6, 5, 5, 1.3 %%>;
+
+  tagTongMarginTop = <%% 10, 10, 10, 8, 1.3 %%>;
+  tagTongWidthRatio = <%% 1.1, 1.3, 1.3, 1.3, 1.3 %%>;
+
+  tagSize = <%% 10, 10, 10, 9, 2 %%>;
+  tagWeight = <%% 500, 500, 500, 500, 500 %%>;
+
+  tagPaddingLeft = <%% 8, 8, 8, 7, 1 %%>;
+  tagPaddingTop = <%% (isMac() ? 4 : 5), (isMac() ? 4 : 5), (isMac() ? 4 : 5), (isMac() ? 4 : 5), 0.9 %%>;
+  tagPaddingBottom = <%% (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), isIphone() ? 1.2 : 1.4 %%>;
+  tagMarginRight = <%% 3, 3, 3, 3, 1 %%>;
+
 
   mainTong = createNode({
     mother: totalContents,
@@ -1158,8 +1240,8 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
       position: "relative",
       width: String(100) + '%',
       background: colorChip.gray0,
-      height: String(600) + ea,
-      paddingTop: String(maintPaddingTop) + ea,
+      height: String(mainHeight) + ea,
+      paddingTop: String(mainPaddingTop) + ea,
     }
   });
 
@@ -1197,25 +1279,35 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
       {
         text: "유사한 컨텐츠",
         style: {
-          fontSize: String(titleSize) + ea,
-          fontWeight: String(titleWeight),
+          fontSize: String(mainTitleSize) + ea,
+          fontWeight: String(mainTitleWeight),
           color: colorChip.black,
           display: "inline-block",
           background: colorChip.gray0,
           position: "absolute",
           top: String(0),
           textAlign: "center",
-          width: String(titleWidth) + ea,
-          left: "calc(50% - " + String(titleWidth / 2) + ea + ")"
+          width: String(mainTitleWidth) + ea,
+          left: "calc(50% - " + String(mainTitleWidth / 2) + ea + ")"
         }
       }
     ]
   })
 
-
   leftArrow = createNode({
     mother: baseTong,
     class: [ "hoverDefault_lite" ],
+    event: {
+      click: function (e) {
+        const photoTong = document.querySelector('.' + photoTongClassName);
+        let current, newMove;
+        current = Number(photoTong.style.transform.replace(/[^0-9\-]/gi, ''));
+        newMove = current + move;
+        if (newMove <= 0) {
+          photoTong.style.transform = "translateX(" + String(newMove) + ea + ")";
+        }
+      }
+    },
     style: {
       position: "absolute",
       top: String(arrowTop) + ea,
@@ -1250,6 +1342,17 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
   rightArrow = createNode({
     mother: baseTong,
     class: [ "hoverDefault_lite" ],
+    event: {
+      click: function (e) {
+        const photoTong = document.querySelector('.' + photoTongClassName);
+        let current, newMove;
+        current = Number(photoTong.style.transform.replace(/[^0-9\-]/gi, ''));
+        newMove = current - move;
+        if (Math.abs((instance.relativePhotoNumber - columns) * move) >= Math.abs(newMove)) {
+          photoTong.style.transform = "translateX(" + String(newMove) + ea + ")";
+        }
+      }
+    },
     style: {
       position: "absolute",
       top: String(arrowTop) + ea,
@@ -1292,71 +1395,101 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
     },
     children: [
       {
+        class: [ photoTongClassName ],
         style: {
           display: "block",
           position: "relative",
+          transform: "translateX(" + String(0) + ea + ")",
           width: String(8000) + ea,
         }
       }
     ]
   }).firstChild;
 
+  belowTong = createNode({
+    mother: totalContents,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      background: colorChip.gray2,
+      height: String(belowBoxHeight) + ea,
+    }
+  });
+
+  belowBaseTong = createNode({
+    mother: belowTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(standardWidth) + ea,
+      height: withOut(belowButtonTop, ea),
+      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
+      textAlign: "center",
+      paddingTop: String(belowButtonTop) + ea,
+    }
+  });
+
+  createNode({
+    mother: belowBaseTong,
+    class: [ "hoverDefault_lite" ],
+    style: {
+      display: "inline-block",
+      position: "relative",
+      height: String(belowButtonHeight) + ea,
+      background: colorChip.white,
+      borderRadius: String(5) + "px",
+      marginRight: String(belowButtonBetween) + ea,
+      paddingLeft: String(belowButtonWordPadding) + ea,
+      paddingRight: String(belowButtonWordPadding) + ea,
+    },
+    children: [
+      {
+        text: "홈스타일링 신청하기",
+        style: {
+          position: "relative",
+          textAlign: "center",
+          fontSize: String(belowButtonSize) + ea,
+          fontWeight: String(belowButtonWeight),
+          color: colorChip.black,
+          paddingTop: String(belowButtonTextTop) + ea,
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: belowBaseTong,
+    class: [ "hoverDefault_lite" ],
+    style: {
+      display: "inline-block",
+      position: "relative",
+      height: String(belowButtonHeight) + ea,
+      background: colorChip.white,
+      borderRadius: String(5) + "px",
+      paddingLeft: String(belowButtonWordPadding) + ea,
+      paddingRight: String(belowButtonWordPadding) + ea,
+    },
+    children: [
+      {
+        text: "목록으로 되돌아가기",
+        style: {
+          position: "relative",
+          textAlign: "center",
+          fontSize: String(belowButtonSize) + ea,
+          fontWeight: String(belowButtonWeight),
+          color: colorChip.black,
+          paddingTop: String(belowButtonTextTop) + ea,
+        }
+      }
+    ]
+  });
+
   setQueue(async () => {
     try {
       const photoChar = 't';
-      let filtered;
-      let block;
       let contentsArr;
-      let src, title, tag;
-      let photoMargin;
-      let columns;
-      let photoRatio;
-      let seroWidth;
-      let photoHeight;
-      let photoMarginBottom;
-      let quoteHeight, quoteWidth, quoteTop;
-      let titleSize;
-      let titleWeight;
-      let titleMarginLeft;
-      let tagTongMarginTop;
-      let tagTongWidthRatio;
-      let tagTong;
-      let filteredContents;
-      let tagSize;
-      let tagWeight;
-      let tagPaddingLeft;
-      let tagPaddingTop;
-      let tagPaddingBottom;
-      let tagMarginRight;
-      let relativeLength;
-
-      relativeLength = 15;
-
-      photoMargin = <%% 20, 18, 18, 16, 3 %%>;
-      columns = <%% 5, 4, 3, 3, 2 %%>;
-      photoRatio = (297 / 210);
-      seroWidth = (baseWidth - (photoMargin * (columns - 1))) / columns;
-      photoHeight = seroWidth * photoRatio;
-      photoMarginBottom = <%% (isMac() ? 15 : 17), (isMac() ? 15 : 17), (isMac() ? 15 : 17), (isMac() ? 15 : 17), 2.3 %%>;
-
-      quoteHeight = <%% 8, 8, 8, 7, 1.8 %%>;
-      quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
-      quoteTop = <%% (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), isIphone() ? 1.3 : 1.2 %%>;
-
-      titleSize = <%% 17, 17, 17, 15, 3.4 %%>;
-      titleWeight = <%% 600, 600, 600, 600, 600 %%>;
-      titleMarginLeft = <%% 6, 6, 5, 5, 1.3 %%>;
-
-      tagTongMarginTop = <%% 10, 10, 10, 8, 1.3 %%>;
-      tagTongWidthRatio = <%% 1.1, 1.3, 1.3, 1.3, 1.3 %%>;
-
-      tagSize = <%% 10, 10, 10, 9, 2 %%>;
-      tagWeight = <%% 500, 500, 500, 500, 500 %%>;
-
-      tagPaddingLeft = <%% 8, 8, 8, 7, 1 %%>;
-      tagPaddingTop = <%% (isMac() ? 4 : 5), (isMac() ? 4 : 5), (isMac() ? 4 : 5), (isMac() ? 4 : 5), 0.9 %%>;
-      tagPaddingBottom = <%% (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), isIphone() ? 1.2 : 1.4 %%>;
-      tagMarginRight = <%% 3, 3, 3, 3, 1 %%>;
+      let filtered;
 
       while (!instance.fullLoad) {
         await sleep(500);
@@ -1470,14 +1603,11 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
                 fontWeight: String(400),
                 color: colorChip.deactive,
               }
-            })
+            });
           }
-
+          instance.relativePhotoNumber++;
         }
-
       }
-
-
 
     } catch (e) {
       console.log(e);
