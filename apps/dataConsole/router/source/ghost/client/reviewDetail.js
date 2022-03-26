@@ -960,6 +960,198 @@ ReviewDetailJs.prototype.reviewContentsBox = function () {
 
 }
 
+ReviewDetailJs.prototype.relativeContents = function (contents) {
+  const instance = this;
+  const tendencyKey = [
+    {
+      target: "style",
+      name: "스타일 경향성",
+      order: [
+        "modern",
+        "classic",
+        "natural",
+        "mixmatch",
+        "scandinavian",
+        "vintage",
+        "oriental",
+        "exotic",
+      ],
+      map: {
+        modern: "모던",
+        classic: "클래식",
+        natural: "내추럴",
+        mixmatch: "믹스매치",
+        scandinavian: "북유럽",
+        vintage: "빈티지",
+        oriental: "오리엔탈",
+        exotic: "이그저틱",
+      }
+    },
+    {
+      target: "texture",
+      name: "텍스처 경향성",
+      order: [
+        "darkWood",
+        "whiteWood",
+        "coating",
+        "metal",
+      ],
+      map: {
+        darkWood: "진한 우드",
+        whiteWood: "연한 우드",
+        coating: "도장",
+        metal: "금속",
+      }
+    },
+    {
+      target: "color",
+      name: "컬러톤 경향성",
+      order: [
+        "darkWood",
+        "whiteWood",
+        "highContrast",
+        "vivid",
+        "white",
+        "mono",
+        "bright",
+        "dark",
+      ],
+      map: {
+        darkWood: "다크 우드",
+        whiteWood: "밝은 우드",
+        highContrast: "고대비",
+        vivid: "비비드",
+        white: "화이트",
+        mono: "모노톤",
+        bright: "밝은톤",
+        dark: "어두운톤",
+      }
+    },
+    {
+      target: "density",
+      name: "밀도 경향성",
+      order: [
+        "maximun",
+        "minimum",
+      ],
+      map: {
+        maximun: "맥시멈",
+        minimum: "미니멈",
+      }
+    },
+  ];
+  const tagAmplification = (contents) => {
+    const { conid, proid, cliid, desid, contents: { portfolio: { detailInfo: { tag } } } } = contents;
+    const filtered = [ ...new Set(tag.concat(tag.map((str) => {
+      return str.replace(/한$/gi, '').replace(/적인$/gi, '').replace(/스러운$/gi, '').replace(/가구$/gi, '').replace(/인테리어$/gi, '').replace(/있는$/gi, '');
+    }))) ];
+    filtered.conid = conid;
+    return filtered;
+  }
+  const tendencySpread = (contents) => {
+    const { conid, proid, cliid, desid, contents: { portfolio: { detailInfo: { tendency } } } } = contents;
+    let values;
+    values = [];
+    for (let { target, order } of tendencyKey) {
+      for (let key of order) {
+        values.push(tendency[target][key]);
+      }
+    }
+    values.conid = conid;
+    return values;
+  }
+  const tendencyConst = 12;
+  const relativeConst = 12;
+  const tagMultiplyConst = 3;
+  let standardTag;
+  let totalTag;
+  let firstFiltered;
+  let standardTendency;
+  let totalTendency;
+  let secondFiltered;
+
+  standardTag = tagAmplification(contents);
+
+  totalTag = instance.contentsArr.toNormal().map((obj) => {
+    return tagAmplification(obj);
+  }).map((arr) => {
+    let num;
+    num = 0;
+    for (let i of arr) {
+      if (standardTag.includes(i)) {
+        num++;
+      }
+    }
+    arr.number = num;
+    return arr;
+  });
+
+  totalTag.sort((a, b) => { return b.number - a.number });
+  firstFiltered = totalTag.slice(1).slice(0, relativeConst * tagMultiplyConst).map((arr) => { return arr.conid }).map((conid) => {
+    return instance.contentsArr.search("conid", conid);
+  });
+
+  standardTendency = tendencySpread(contents);
+  totalTendency = firstFiltered.map((obj) => {
+    return tendencySpread(obj);
+  }).map((arr) => {
+    let num;
+    num = 0;
+    for (let i = 0; i < arr.length; i++) {
+      num = num + (standardTendency[i] - arr[i]);
+    }
+    num = num / arr.length;
+    arr.number = Math.abs(num);
+    return arr;
+  });
+  totalTendency.sort((a, b) => { return a.number - b.number });
+
+  secondFiltered = totalTendency.slice(0, relativeConst).map((arr) => { return arr.conid }).map((conid) => {
+    return instance.contentsArr.search("conid", conid);
+  });
+
+  return secondFiltered;
+}
+
+ReviewDetailJs.prototype.reviewRelativeBox = function () {
+  const instance = this;
+  const { createNode, colorChip, withOut, svgMaker, sleep, setQueue } = GeneralJs;
+  const { totalContents, naviHeight, ea, media, pid, standardWidth } = this;
+  const { contentsArr } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const contents = contentsArr.toNormal().filter((obj) => { return obj.contents.portfolio.pid === pid })[0];
+  let mainTong;
+
+  mainTong = createNode({
+    mother: totalContents,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      background: colorChip.gray0,
+      height: String(400) + ea,
+    }
+  });
+
+  setQueue(async () => {
+    try {
+      let filtered;
+
+      while (!instance.fullLoad) {
+        await sleep(500);
+      }
+
+      filtered = instance.relativeContents(contents);
+
+      console.log(filtered);
+
+    } catch (e) {
+      console.log(e);
+    }
+  }, 1000);
+}
+
 ReviewDetailJs.prototype.launching = async function (loading) {
   const instance = this;
   const { returnGet, ajaxJson, setQueue, setDebounce } = GeneralJs;
@@ -1024,7 +1216,7 @@ ReviewDetailJs.prototype.launching = async function (loading) {
         try {
           instance.reviewMainBox();
           instance.reviewContentsBox();
-
+          instance.reviewRelativeBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "ReviewDetailJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
         }
