@@ -77,15 +77,15 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   let mobileWhiteBoxWidth, mobileWhiteBoxHeight;
   let mobileWordingLeft;
 
-  mainHeight = <%% 800, 750, 710, 620, (210 / 297) * 100 %%>;
-  mainBelowBarHeight = <%% 250, 250, 250, 250, 250 %%>;
+  mainHeight = <%% 800, 750, 710, 590, (210 / 297) * 100 %%>;
+  mainBelowBarHeight = <%% 250, 250, 250, 216, 250 %%>;
 
   contentsBoxTop = <%% 70, 70, 70, 70, 0 %%>;
-  contentsBoxWidth = <%% 1200, 1050, 900, 760, 1200 %%>;
+  contentsBoxWidth = <%% 1200, 1050, 900, 720, 1200 %%>;
 
   bottomVisual = <%% 6, 6, 6, 6, 6 %%>;
 
-  pictureWidth = <%% 820, 720, 610, 510, 610 %%>;
+  pictureWidth = <%% 820, 720, 610, 480, 610 %%>;
   pictureHeight = mainHeight - (contentsBoxTop * 2) - bottomVisual;
 
   photoRightMargin = <%% 50, 50, 45, 40, 50 %%>;
@@ -107,7 +107,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   subTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
   subTitleMarginTop = <%% 17, 17, 16, 13, 20 %%>;
 
-  subLineWidth = <%% 170, 120, 95, 75, 95 %%>;
+  subLineWidth = <%% 170, 120, 95, 65, 95 %%>;
   subLineHeight = <%% 11, 11, 11, 10, 11 %%>;
   subLineLeft = <%% 160, 150, 150, 135, 150 %%>;
 
@@ -425,7 +425,7 @@ ReviewDetailJs.prototype.reviewContentsBox = function () {
   }
   customerStory = customerStory.slice(0, -2);
 
-  mainWidth = <%% 900, 900, 900, 760, 100 %%>;
+  mainWidth = <%% 900, 900, 900, 720, 100 %%>;
   mainPaddingTop = <%% 110, 110, 110, 80, 11.7 %%>;
 
   titleSize = <%% 23, 23, 23, 21, 4.5 %%>;
@@ -464,10 +464,10 @@ ReviewDetailJs.prototype.reviewContentsBox = function () {
   belowBoxPadding = <%% 50, 50, 50, 36, 3.5 %%>;
   belowBoxHeight = <%% 300, 300, 300, 260, 30 %%>;
 
-  belowWhiteWidth = <%% 200, 200, 200, 165, 0 %%>;
+  belowWhiteWidth = <%% 200, 200, 200, 156, 0 %%>;
 
-  belowPictureWidth = <%% 350, 350, 350, 305, 43 %%>;
-  belowPictureMargin = <%% 18, 18, 18, 16, 0 %%>;
+  belowPictureWidth = <%% 350, 350, 350, 290, 43 %%>;
+  belowPictureMargin = <%% 18, 18, 18, 12, 0 %%>;
 
   nameCardWording = contents.contents.portfolio.title.main.split(", ")[1];
 
@@ -1171,66 +1171,65 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
 
   this.relativePhotoNumber = 0;
 
-  baseWidth = 1300;
+  baseWidth = <%% 1300, 980, 800, 640, 88 %%>;
   baseBetween = standardWidth - baseWidth;
 
-  arrowHeight = 28;
-  arrowTop = 230;
+  arrowHeight = <%% 28, 25, 25, 24, 25 %%>;
+  arrowTop = <%% 230, 218, 230, 190, 218 %%>;
 
-  mainHeight = 590;
-  mainPaddingTop = 100;
+  mainHeight = <%% 590, 570, 590, 496, 580 %%>;
+  mainPaddingTop = <%% 100, 96, 86, 72, 96 %%>;
 
-  titleHeight = 30;
-  titleMarginBottom = 32;
-  titleLineHeight = 14;
+  titleHeight = <%% 30, 30, 30, 28, 30 %%>;
+  titleMarginBottom = <%% 32, 32, 32, 28, 32 %%>;
+  titleLineHeight = <%% 14, 14, 14, 14, 14 %%>;
 
-  mainTitleSize = 22;
-  mainTitleWeight = 600;
-  mainTitleWidth = 170;
+  mainTitleSize = <%% 22, 22, 22, 20, 22 %%>;
+  mainTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
+  mainTitleWidth = <%% 170, 170, 170, 150, 170 %%>;
 
-  belowBoxHeight = 120;
-  belowButtonTop = 38;
+  belowBoxHeight = <%% 120, 120, 120, 110, 120 %%>;
+  belowButtonTop = <%% 38, 38, 38, 32, 38 %%>;
 
-  belowButtonHeight = 42;
-  belowButtonBetween = 10;
-  belowButtonWordPadding = 20;
+  belowButtonHeight = <%% 42, 42, 42, 40, 42 %%>;
+  belowButtonBetween = <%% 10, 10, 10, 10, 10 %%>;
+  belowButtonWordPadding = <%% 20, 20, 20, 20, 20 %%>;
 
-  belowButtonTextTop = 9;
-  belowButtonSize = 15;
-  belowButtonWeight = 600;
+  belowButtonTextTop = <%% 9, 9, 9, 9, 9 %%>;
+  belowButtonSize = <%% 15, 14, 14, 13, 15 %%>;
+  belowButtonWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-  move = 264;
+  move = <%% 264, 249, 272, 218, 26 %%>;
 
   photoTongClassName = "photoTongClassName";
 
+  relativeLength = <%% 15, 15, 15, 15, 15 %%>;
 
-  relativeLength = 15;
-
-  photoMargin = <%% 20, 18, 18, 16, 3 %%>;
+  photoMargin = <%% 20, 16, 16, 14, 3 %%>;
   columns = <%% 5, 4, 3, 3, 2 %%>;
   photoRatio = (297 / 210);
   seroWidth = (baseWidth - (photoMargin * (columns - 1))) / columns;
   photoHeight = seroWidth * photoRatio;
-  photoMarginBottom = <%% (isMac() ? 15 : 17), (isMac() ? 15 : 17), (isMac() ? 15 : 17), (isMac() ? 15 : 17), 2.3 %%>;
+  photoMarginBottom = <%% (isMac() ? 15 : 17), (isMac() ? 15 : 17), (isMac() ? 15 : 17), (isMac() ? 13 : 15), 2.3 %%>;
 
   quoteHeight = <%% 8, 8, 8, 7, 1.8 %%>;
   quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
-  quoteTop = <%% (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), isIphone() ? 1.3 : 1.2 %%>;
+  quoteTop = <%% (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 4 : 2), isIphone() ? 1.3 : 1.2 %%>;
 
-  titleSize = <%% 17, 17, 17, 15, 3.4 %%>;
+  titleSize = <%% 17, 16, 17, 14, 3.4 %%>;
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
   titleMarginLeft = <%% 6, 6, 5, 5, 1.3 %%>;
 
   tagTongMarginTop = <%% 10, 10, 10, 8, 1.3 %%>;
   tagTongWidthRatio = <%% 1.1, 1.3, 1.3, 1.3, 1.3 %%>;
 
-  tagSize = <%% 10, 10, 10, 9, 2 %%>;
+  tagSize = <%% 10, 8, 10, 7, 2 %%>;
   tagWeight = <%% 500, 500, 500, 500, 500 %%>;
 
-  tagPaddingLeft = <%% 8, 8, 8, 7, 1 %%>;
+  tagPaddingLeft = <%% 8, 7, 7, 7, 1 %%>;
   tagPaddingTop = <%% (isMac() ? 4 : 5), (isMac() ? 4 : 5), (isMac() ? 4 : 5), (isMac() ? 4 : 5), 0.9 %%>;
   tagPaddingBottom = <%% (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), isIphone() ? 1.2 : 1.4 %%>;
-  tagMarginRight = <%% 3, 3, 3, 3, 1 %%>;
+  tagMarginRight = <%% 3, 2, 3, 2, 1 %%>;
 
 
   mainTong = createNode({
@@ -1400,6 +1399,7 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
           display: "block",
           position: "relative",
           transform: "translateX(" + String(0) + ea + ")",
+          transition: "all 0.5s ease",
           width: String(8000) + ea,
         }
       }
