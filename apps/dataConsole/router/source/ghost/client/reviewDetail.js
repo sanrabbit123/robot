@@ -960,7 +960,7 @@ ReviewDetailJs.prototype.reviewContentsBox = function () {
 
 }
 
-ReviewDetailJs.prototype.relativeContents = function (contents) {
+ReviewDetailJs.prototype.relativeContents = function (contents, length) {
   const instance = this;
   const tendencyKey = [
     {
@@ -1060,9 +1060,9 @@ ReviewDetailJs.prototype.relativeContents = function (contents) {
     values.conid = conid;
     return values;
   }
-  const tendencyConst = 12;
-  const relativeConst = 12;
-  const tagMultiplyConst = 3;
+  const tendencyConst = length * 2;
+  const relativeConst = length * 2;
+  const tagMultiplyConst = 2;
   let standardTag;
   let totalTag;
   let firstFiltered;
@@ -1124,8 +1124,32 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
   let mainTong;
   let photoTong;
   let baseWidth;
+  let baseTong;
+  let arrowHeight;
+  let arrowTop;
+  let leftArrow, rightArrow;
+  let maintPaddingTop;
+  let baseBetween;
+  let titleHeight, titleMarginBottom;
+  let titleLineHeight;
+  let titleSize, titleWeight;
+  let titleWidth;
 
-  baseWidth = standardWidth;
+  baseWidth = 1300;
+  baseBetween = standardWidth - baseWidth;
+
+  arrowHeight = 28;
+  arrowTop = 230;
+
+  maintPaddingTop = 110;
+
+  titleHeight = 30;
+  titleMarginBottom = 32;
+  titleLineHeight = 14;
+
+  titleSize = 22;
+  titleWeight = 600;
+  titleWidth = 170;
 
   mainTong = createNode({
     mother: totalContents,
@@ -1135,23 +1159,143 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
       width: String(100) + '%',
       background: colorChip.gray0,
       height: String(600) + ea,
-      paddingTop: String(60) + ea,
+      paddingTop: String(maintPaddingTop) + ea,
     }
   });
 
-  photoTong = createNode({
+  baseTong = createNode({
     mother: mainTong,
     style: {
       display: "block",
       position: "relative",
       width: String(standardWidth) + ea,
       left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
+    }
+  });
+
+  createNode({
+    mother: baseTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      height: String(titleHeight) + ea,
+      marginBottom: String(titleMarginBottom) + ea,
+      textAlign: "center",
+    },
+    children: [
+      {
+        style: {
+          position: "absolute",
+          width: withOut(baseBetween, ea),
+          height: String(titleLineHeight) + ea,
+          top: String(0),
+          left: String(baseBetween / 2) + ea,
+          borderBottom: "1px dashed " + colorChip.gray3,
+        }
+      },
+      {
+        text: "유사한 컨텐츠",
+        style: {
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(titleWeight),
+          color: colorChip.black,
+          display: "inline-block",
+          background: colorChip.gray0,
+          position: "absolute",
+          top: String(0),
+          textAlign: "center",
+          width: String(titleWidth) + ea,
+          left: "calc(50% - " + String(titleWidth / 2) + ea + ")"
+        }
+      }
+    ]
+  })
+
+
+  leftArrow = createNode({
+    mother: baseTong,
+    class: [ "hoverDefault_lite" ],
+    style: {
+      position: "absolute",
+      top: String(arrowTop) + ea,
+      left: String(0),
+      width: String(arrowHeight) + ea,
+      height: String(arrowHeight) + ea,
+    },
+    children: [
+      {
+        style: {
+          position: "relative",
+          width: String(100) + '%',
+          height: String(100) + '%',
+        },
+        children: [
+          {
+            mode: "svg",
+            source: this.mother.returnBigArrow(colorChip.green),
+            style: {
+              position: "absolute",
+              top: String(0),
+              left: String(0),
+              height: String(arrowHeight) + ea,
+              transform: "rotate(180deg)",
+            }
+          }
+        ]
+      }
+    ]
+  });
+
+  rightArrow = createNode({
+    mother: baseTong,
+    class: [ "hoverDefault_lite" ],
+    style: {
+      position: "absolute",
+      top: String(arrowTop) + ea,
+      right: String(0),
+      width: String(arrowHeight) + ea,
+      height: String(arrowHeight) + ea,
+    },
+    children: [
+      {
+        style: {
+          position: "relative",
+          width: String(100) + '%',
+          height: String(100) + '%',
+        },
+        children: [
+          {
+            mode: "svg",
+            source: this.mother.returnBigArrow(colorChip.green),
+            style: {
+              position: "absolute",
+              top: String(0),
+              right: String(0),
+              height: String(arrowHeight) + ea,
+              transform: "rotate(0deg)",
+            }
+          }
+        ]
+      }
+    ]
+  });
+
+  photoTong = createNode({
+    mother: baseTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(baseWidth) + ea,
+      left: "calc(50% - " + String(baseWidth / 2) + ea + ")",
+      overflow: "scroll",
     },
     children: [
       {
         style: {
           display: "block",
           position: "relative",
+          width: String(8000) + ea,
         }
       }
     ]
@@ -1178,51 +1322,50 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
       let tagTongWidthRatio;
       let tagTong;
       let filteredContents;
-      let photoBlockMarginBottom;
       let tagSize;
       let tagWeight;
       let tagPaddingLeft;
       let tagPaddingTop;
       let tagPaddingBottom;
       let tagMarginRight;
+      let relativeLength;
+
+      relativeLength = 15;
 
       photoMargin = <%% 20, 18, 18, 16, 3 %%>;
       columns = <%% 5, 4, 3, 3, 2 %%>;
       photoRatio = (297 / 210);
       seroWidth = (baseWidth - (photoMargin * (columns - 1))) / columns;
       photoHeight = seroWidth * photoRatio;
-      photoMarginBottom = <%% (isMac() ? 18 : 20), (isMac() ? 16 : 18), (isMac() ? 16 : 18), (isMac() ? 16 : 18), 2.3 %%>;
+      photoMarginBottom = <%% (isMac() ? 15 : 17), (isMac() ? 15 : 17), (isMac() ? 15 : 17), (isMac() ? 15 : 17), 2.3 %%>;
 
-      quoteHeight = <%% 10, 8, 8, 7, 1.8 %%>;
+      quoteHeight = <%% 8, 8, 8, 7, 1.8 %%>;
       quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
-      quoteTop = <%% (isMac() ? 7 : 5), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), isIphone() ? 1.3 : 1.2 %%>;
+      quoteTop = <%% (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), isIphone() ? 1.3 : 1.2 %%>;
 
-      titleSize = <%% 21, 17, 17, 15, 3.4 %%>;
+      titleSize = <%% 17, 17, 17, 15, 3.4 %%>;
       titleWeight = <%% 600, 600, 600, 600, 600 %%>;
       titleMarginLeft = <%% 6, 6, 5, 5, 1.3 %%>;
 
-      photoBlockMarginBottom = <%% 72, 66, 66, 62, 8 %%>;
-
-      tagTongMarginTop = <%% 11, 11, 10, 8, 1.3 %%>;
+      tagTongMarginTop = <%% 10, 10, 10, 8, 1.3 %%>;
       tagTongWidthRatio = <%% 1.1, 1.3, 1.3, 1.3, 1.3 %%>;
 
-      tagSize = <%% 12, 10, 10, 9, 2 %%>;
+      tagSize = <%% 10, 10, 10, 9, 2 %%>;
       tagWeight = <%% 500, 500, 500, 500, 500 %%>;
 
-      tagPaddingLeft = <%% 10, 8, 8, 7, 1 %%>;
-      tagPaddingTop = <%% (isMac() ? 5 : 6), (isMac() ? 4 : 5), (isMac() ? 4 : 5), (isMac() ? 4 : 5), 0.9 %%>;
-      tagPaddingBottom = <%% (isMac() ? 7 : 6), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), isIphone() ? 1.2 : 1.4 %%>;
-      tagMarginRight = <%% 4, 3, 3, 3, 1 %%>;
+      tagPaddingLeft = <%% 8, 8, 8, 7, 1 %%>;
+      tagPaddingTop = <%% (isMac() ? 4 : 5), (isMac() ? 4 : 5), (isMac() ? 4 : 5), (isMac() ? 4 : 5), 0.9 %%>;
+      tagPaddingBottom = <%% (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), isIphone() ? 1.2 : 1.4 %%>;
+      tagMarginRight = <%% 3, 3, 3, 3, 1 %%>;
 
       while (!instance.fullLoad) {
         await sleep(500);
       }
 
       contentsArr = instance.contentsArr;
-      filtered = instance.relativeContents(contents);
+      filtered = instance.relativeContents(contents, relativeLength);
 
-
-      for (let i = 0; i < filtered.length; i++) {
+      for (let i = 0; i < relativeLength; i++) {
 
         ({ contents: filteredContents } = filtered[i]);
 
@@ -1244,7 +1387,6 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
               width: String(seroWidth) + ea,
               borderRadius: String(5) + "px",
               marginRight: String(photoMargin) + ea,
-              marginBottom: String(photoBlockMarginBottom) + ea,
               verticalAlign: "top",
               overflow: "hidden",
             },
