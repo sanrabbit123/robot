@@ -1115,13 +1115,17 @@ ReviewDetailJs.prototype.relativeContents = function (contents) {
 
 ReviewDetailJs.prototype.reviewRelativeBox = function () {
   const instance = this;
-  const { createNode, colorChip, withOut, svgMaker, sleep, setQueue } = GeneralJs;
+  const { createNode, colorChip, withOut, svgMaker, sleep, setQueue, equalJson, isMac, isIphone } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid, standardWidth } = this;
   const { contentsArr } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const contents = contentsArr.toNormal().filter((obj) => { return obj.contents.portfolio.pid === pid })[0];
   let mainTong;
+  let photoTong;
+  let baseWidth;
+
+  baseWidth = standardWidth;
 
   mainTong = createNode({
     mother: totalContents,
@@ -1130,21 +1134,208 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
       position: "relative",
       width: String(100) + '%',
       background: colorChip.gray0,
-      height: String(400) + ea,
+      height: String(600) + ea,
+      paddingTop: String(60) + ea,
     }
   });
 
+  photoTong = createNode({
+    mother: mainTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(standardWidth) + ea,
+      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: "relative",
+        }
+      }
+    ]
+  }).firstChild;
+
   setQueue(async () => {
     try {
+      const photoChar = 't';
       let filtered;
+      let block;
+      let contentsArr;
+      let src, title, tag;
+      let photoMargin;
+      let columns;
+      let photoRatio;
+      let seroWidth;
+      let photoHeight;
+      let photoMarginBottom;
+      let quoteHeight, quoteWidth, quoteTop;
+      let titleSize;
+      let titleWeight;
+      let titleMarginLeft;
+      let tagTongMarginTop;
+      let tagTongWidthRatio;
+      let tagTong;
+      let filteredContents;
+      let photoBlockMarginBottom;
+      let tagSize;
+      let tagWeight;
+      let tagPaddingLeft;
+      let tagPaddingTop;
+      let tagPaddingBottom;
+      let tagMarginRight;
+
+      photoMargin = <%% 20, 18, 18, 16, 3 %%>;
+      columns = <%% 5, 4, 3, 3, 2 %%>;
+      photoRatio = (297 / 210);
+      seroWidth = (baseWidth - (photoMargin * (columns - 1))) / columns;
+      photoHeight = seroWidth * photoRatio;
+      photoMarginBottom = <%% (isMac() ? 18 : 20), (isMac() ? 16 : 18), (isMac() ? 16 : 18), (isMac() ? 16 : 18), 2.3 %%>;
+
+      quoteHeight = <%% 10, 8, 8, 7, 1.8 %%>;
+      quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
+      quoteTop = <%% (isMac() ? 7 : 5), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), isIphone() ? 1.3 : 1.2 %%>;
+
+      titleSize = <%% 21, 17, 17, 15, 3.4 %%>;
+      titleWeight = <%% 600, 600, 600, 600, 600 %%>;
+      titleMarginLeft = <%% 6, 6, 5, 5, 1.3 %%>;
+
+      photoBlockMarginBottom = <%% 72, 66, 66, 62, 8 %%>;
+
+      tagTongMarginTop = <%% 11, 11, 10, 8, 1.3 %%>;
+      tagTongWidthRatio = <%% 1.1, 1.3, 1.3, 1.3, 1.3 %%>;
+
+      tagSize = <%% 12, 10, 10, 9, 2 %%>;
+      tagWeight = <%% 500, 500, 500, 500, 500 %%>;
+
+      tagPaddingLeft = <%% 10, 8, 8, 7, 1 %%>;
+      tagPaddingTop = <%% (isMac() ? 5 : 6), (isMac() ? 4 : 5), (isMac() ? 4 : 5), (isMac() ? 4 : 5), 0.9 %%>;
+      tagPaddingBottom = <%% (isMac() ? 7 : 6), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), isIphone() ? 1.2 : 1.4 %%>;
+      tagMarginRight = <%% 4, 3, 3, 3, 1 %%>;
 
       while (!instance.fullLoad) {
         await sleep(500);
       }
 
+      contentsArr = instance.contentsArr;
       filtered = instance.relativeContents(contents);
 
-      console.log(filtered);
+
+      for (let i = 0; i < filtered.length; i++) {
+
+        ({ contents: filteredContents } = filtered[i]);
+
+        if (filteredContents.review.detailInfo.photodae.length > 1) {
+
+          src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + filteredContents.portfolio.pid + "/" + photoChar + String(filteredContents.review.detailInfo.photodae[0]) + filteredContents.portfolio.pid + ".jpg";
+          title = filteredContents.review.title.sub.split(", ").join(" ");
+          tag = equalJson(JSON.stringify(filteredContents.portfolio.detailInfo.tag));
+
+          tag = tag.slice(5, 10);
+          if (tag.reduce((acc, curr) => { return acc + curr.length }, 0) > 17) {
+            tag = tag.slice(0, -1);
+          }
+
+          block = createNode({
+            mother: photoTong,
+            style: {
+              display: "inline-block",
+              width: String(seroWidth) + ea,
+              borderRadius: String(5) + "px",
+              marginRight: String(photoMargin) + ea,
+              marginBottom: String(photoBlockMarginBottom) + ea,
+              verticalAlign: "top",
+              overflow: "hidden",
+            },
+            children: [
+              {
+                style: {
+                  display: "block",
+                  width: String(seroWidth) + ea,
+                  height: String(photoHeight) + ea,
+                  borderRadius: String(5) + "px",
+                  marginRight: String(photoMargin) + ea,
+                  marginBottom: String(photoMarginBottom) + ea,
+                  backgroundSize: "100% auto",
+                  backgroundPosition: "50% 50%",
+                  backgroundImage: "url('" + src + "')",
+                }
+              },
+              {
+                style: {
+                  display: "block",
+                  position: "relative",
+                  width: String(100) + '%',
+                },
+                children: [
+                  {
+                    mode: "svg",
+                    source: svgMaker.doubleQuote(colorChip.green),
+                    style: {
+                      display: "inline-block",
+                      height: String(quoteHeight) + ea,
+                      width: String(quoteWidth) + ea,
+                      verticalAlign: "top",
+                      position: "relative",
+                      top: String(quoteTop) + ea,
+                    }
+                  },
+                  {
+                    text: title,
+                    style: {
+                      display: "inline-block",
+                      fontSize: String(titleSize) + ea,
+                      fontWeight: String(titleWeight),
+                      color: colorChip.black,
+                      marginLeft: String(titleMarginLeft) + ea,
+                      width: withOut(quoteWidth + titleMarginLeft, ea),
+                      verticalAlign: "top",
+                    }
+                  }
+                ]
+              },
+              {
+                style: {
+                  display: "block",
+                  position: "relative",
+                  marginTop: String(tagTongMarginTop) + ea,
+                  width: String(tagTongWidthRatio * 100) + '%',
+                  left: String(0) + ea,
+                }
+              }
+            ]
+          });
+          tagTong = block.children[2];
+          for (let t of tag) {
+            createNode({
+              mother: tagTong,
+              text: "<b%#%b> " + t,
+              style: {
+                display: "inline-block",
+                fontSize: String(tagSize) + ea,
+                fontWeight: String(tagWeight),
+                color: colorChip.black,
+                paddingLeft: String(tagPaddingLeft) + ea,
+                paddingTop: String(tagPaddingTop) + ea,
+                paddingBottom: String(tagPaddingBottom) + ea,
+                paddingRight: String(tagPaddingLeft) + ea,
+                borderRadius: String(3) + "px",
+                marginRight: String(tagMarginRight) + ea,
+                background: colorChip.gray2
+              },
+              bold: {
+                fontWeight: String(400),
+                color: colorChip.deactive,
+              }
+            })
+          }
+
+        }
+
+      }
+
+
 
     } catch (e) {
       console.log(e);
