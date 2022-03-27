@@ -439,6 +439,9 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null)
   let tagSize, tagWeight;
   let tagPaddingLeft, tagPaddingTop, tagPaddingBottom;
   let tagMarginRight;
+  let titleSubSize;
+  let subTitle;
+  let titleSubMarginTop;
 
   if (typeof search === "string") {
 
@@ -452,8 +455,8 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null)
         let designerTarget;
 
         target = equalJson(JSON.stringify(obj.contents.portfolio.detailInfo.tag));
-        target.push(obj.contents.review.title.main);
-        target.push(obj.contents.review.title.sub);
+        target.push(obj.contents.portfolio.title.main);
+        target.push(obj.contents.portfolio.title.sub);
         projectTarget = projects.search("proid", obj.proid);
         if (projectTarget !== null) {
           target.push(serviceParsing(projectTarget.service));
@@ -491,7 +494,7 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null)
   seroWidth = (baseWidth - (photoMargin * (columns - 1))) / columns;
   garoWidth = (seroWidth * 2) + photoMargin;
   photoHeight = seroWidth * photoRatio;
-  photoMarginBottom = <%% (isMac() ? 18 : 20), (isMac() ? 16 : 18), (isMac() ? 16 : 18), (isMac() ? 16 : 18), 2.3 %%>;
+  photoMarginBottom = <%% (isMac() ? 20 : 22), (isMac() ? 18 : 20), (isMac() ? 18 : 20), (isMac() ? 18 : 20), 2.3 %%>;
 
   quoteHeight = <%% 10, 8, 8, 7, 1.8 %%>;
   quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
@@ -500,6 +503,9 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null)
   titleSize = <%% 21, 17, 17, 15, 3.4 %%>;
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
   titleMarginLeft = <%% 6, 6, 5, 5, 1.3 %%>;
+
+  titleSubSize = 14;
+  titleSubMarginTop = 2;
 
   photoBlockMarginBottom = <%% 72, 66, 66, 62, 8 %%>;
 
@@ -534,122 +540,121 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null)
 
         ({ contents } = contentsArr[i]);
 
-        if (contents.review.detailInfo.photodae.length > 1) {
+        src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.portfolio.pid + "/" + photoChar + String(contents.portfolio.detailInfo.photodae[gsArray[i] === 'g' ? 1 : 0]) + contents.portfolio.pid + ".jpg";
+        title = contents.portfolio.title.main.split(", ")[1];
+        subTitle = contents.portfolio.title.sub;
+        tag = equalJson(JSON.stringify(contents.portfolio.detailInfo.tag));
 
-          src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.portfolio.pid + "/" + photoChar + String(contents.review.detailInfo.photodae[gsArray[i] === 'g' ? 1 : 0]) + contents.portfolio.pid + ".jpg";
-          title = contents.review.title.sub.split(", ").join(" ");
-          tag = equalJson(JSON.stringify(contents.portfolio.detailInfo.tag));
-
-          if (gsArray[i] !== 'g') {
-            tag = tag.slice(garoSliceStart, garoSliceEnd);
-            if (tag.reduce((acc, curr) => { return acc + curr.length }, 0) > garoSliceLimit) {
-              tag = tag.slice(0, -1);
-            }
-          } else {
-            tag = tag.slice(seroSliceStart, seroSliceEnd);
-            if (tag.reduce((acc, curr) => { return acc + curr.length }, 0) > seroSliceLimit) {
-              tag = tag.slice(0, -1);
-            }
+        if (gsArray[i] !== 'g') {
+          tag = tag.slice(garoSliceStart, garoSliceEnd);
+          if (tag.reduce((acc, curr) => { return acc + curr.length }, 0) > garoSliceLimit) {
+            tag = tag.slice(0, -1);
           }
-
-          block = createNode({
-            mother: baseBlock,
-            style: {
-              display: "inline-block",
-              width: String(gsArray[i] === 'g' ? garoWidth : seroWidth) + ea,
-              borderRadius: String(5) + "px",
-              marginRight: String(photoMargin) + ea,
-              marginBottom: String(photoBlockMarginBottom) + ea,
-              verticalAlign: "top",
-              overflow: "hidden",
-            },
-            children: [
-              {
-                style: {
-                  display: "block",
-                  width: String(gsArray[i] === 'g' ? garoWidth : seroWidth) + ea,
-                  height: String(photoHeight) + ea,
-                  borderRadius: String(5) + "px",
-                  marginRight: String(photoMargin) + ea,
-                  marginBottom: String(photoMarginBottom) + ea,
-                  backgroundSize: "100% auto",
-                  backgroundPosition: "50% 50%",
-                  backgroundImage: "url('" + src + "')",
-                }
-              },
-              {
-                style: {
-                  display: "block",
-                  position: "relative",
-                  width: String(100) + '%',
-                },
-                children: [
-                  {
-                    mode: "svg",
-                    source: svgMaker.doubleQuote(colorChip.green),
-                    style: {
-                      display: "inline-block",
-                      height: String(quoteHeight) + ea,
-                      width: String(quoteWidth) + ea,
-                      verticalAlign: "top",
-                      position: "relative",
-                      top: String(quoteTop) + ea,
-                    }
-                  },
-                  {
-                    text: title,
-                    style: {
-                      display: "inline-block",
-                      fontSize: String(titleSize) + ea,
-                      fontWeight: String(titleWeight),
-                      color: colorChip.black,
-                      marginLeft: String(titleMarginLeft) + ea,
-                      width: withOut(quoteWidth + titleMarginLeft, ea),
-                      verticalAlign: "top",
-                    }
-                  }
-                ]
-              },
-              {
-                style: {
-                  display: "block",
-                  position: "relative",
-                  marginTop: String(tagTongMarginTop) + ea,
-                  width: String(tagTongWidthRatio * 100) + '%',
-                  left: String(0) + ea,
-                }
-              }
-            ]
-          });
-          tagTong = block.children[2];
-          for (let t of tag) {
-            createNode({
-              mother: tagTong,
-              text: "<b%#%b> " + t,
-              style: {
-                display: "inline-block",
-                fontSize: String(tagSize) + ea,
-                fontWeight: String(tagWeight),
-                color: colorChip.black,
-                paddingLeft: String(tagPaddingLeft) + ea,
-                paddingTop: String(tagPaddingTop) + ea,
-                paddingBottom: String(tagPaddingBottom) + ea,
-                paddingRight: String(tagPaddingLeft) + ea,
-                borderRadius: String(3) + "px",
-                marginRight: String(tagMarginRight) + ea,
-                background: colorChip.gray2
-              },
-              bold: {
-                fontWeight: String(400),
-                color: colorChip.deactive,
-              }
-            })
-          }
-
-          if (search === null) {
-            this.loadedContents.push(i);
+        } else {
+          tag = tag.slice(seroSliceStart, seroSliceEnd);
+          if (tag.reduce((acc, curr) => { return acc + curr.length }, 0) > seroSliceLimit) {
+            tag = tag.slice(0, -1);
           }
         }
+
+        block = createNode({
+          mother: baseBlock,
+          style: {
+            display: "inline-block",
+            width: String(gsArray[i] === 'g' ? garoWidth : seroWidth) + ea,
+            borderRadius: String(5) + "px",
+            marginRight: String(photoMargin) + ea,
+            marginBottom: String(photoBlockMarginBottom) + ea,
+            verticalAlign: "top",
+            overflow: "hidden",
+          },
+          children: [
+            {
+              style: {
+                display: "block",
+                width: String(gsArray[i] === 'g' ? garoWidth : seroWidth) + ea,
+                height: String(photoHeight) + ea,
+                borderRadius: String(5) + "px",
+                marginRight: String(photoMargin) + ea,
+                marginBottom: String(photoMarginBottom) + ea,
+                backgroundSize: "100% auto",
+                backgroundPosition: "50% 50%",
+                backgroundImage: "url('" + src + "')",
+              }
+            },
+            {
+              style: {
+                display: "block",
+                position: "relative",
+                width: String(100) + '%',
+              },
+              children: [
+                {
+                  text: title,
+                  style: {
+                    display: "block",
+                    fontSize: String(titleSize) + ea,
+                    fontWeight: String(titleWeight),
+                    color: colorChip.black,
+                    width: withOut(0, ea),
+                    verticalAlign: "top",
+                  }
+                },
+                {
+                  text: subTitle,
+                  style: {
+                    display: "block",
+                    fontSize: String(titleSubSize) + ea,
+                    fontWeight: String(titleWeight),
+                    color: colorChip.deactive,
+                    width: withOut(0, ea),
+                    verticalAlign: "top",
+                    marginTop: String(titleSubMarginTop) + ea,
+                  }
+                }
+              ]
+            },
+            {
+              style: {
+                display: "block",
+                position: "relative",
+                marginTop: String(tagTongMarginTop) + ea,
+                width: String(tagTongWidthRatio * 100) + '%',
+                left: String(0) + ea,
+              }
+            }
+          ]
+        });
+        tagTong = block.children[2];
+        for (let t of tag) {
+          createNode({
+            mother: tagTong,
+            text: "<b%#%b> " + t,
+            style: {
+              display: "inline-block",
+              fontSize: String(tagSize) + ea,
+              fontWeight: String(tagWeight),
+              color: colorChip.black,
+              paddingLeft: String(tagPaddingLeft) + ea,
+              paddingTop: String(tagPaddingTop) + ea,
+              paddingBottom: String(tagPaddingBottom) + ea,
+              paddingRight: String(tagPaddingLeft) + ea,
+              borderRadius: String(3) + "px",
+              marginRight: String(tagMarginRight) + ea,
+              background: colorChip.gray2
+            },
+            bold: {
+              fontWeight: String(400),
+              color: colorChip.deactive,
+            }
+          })
+        }
+
+        if (search === null) {
+          this.loadedContents.push(i);
+        }
+
+
       }
     }
   } else {
