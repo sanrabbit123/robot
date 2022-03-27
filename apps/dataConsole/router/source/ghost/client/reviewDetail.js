@@ -1212,13 +1212,13 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
   photoHeight = seroWidth * photoRatio;
   photoMarginBottom = <%% (isMac() ? 15 : 17), (isMac() ? 15 : 17), (isMac() ? 15 : 17), (isMac() ? 13 : 15), 2.4 %%>;
 
-  quoteHeight = <%% 8, 8, 8, 7, 1.8 %%>;
+  quoteHeight = <%% 8, 8, 8, 7, 1.4 %%>;
   quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
   quoteTop = <%% (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 4 : 2), isIphone() ? 1.3 : 1.2 %%>;
 
   titleSize = <%% 17, 16, 17, 14, 3.2 %%>;
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
-  titleMarginLeft = <%% 6, 6, 5, 5, 1.3 %%>;
+  titleMarginLeft = <%% 6, 6, 5, 5, 1.1 %%>;
 
   tagTongMarginTop = <%% 10, 10, 10, 8, 1.6 %%>;
   tagTongWidthRatio = <%% 1.1, 1.3, 1.3, 1.3, 1.3 %%>;
@@ -1390,7 +1390,7 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
       position: "relative",
       width: String(baseWidth) + ea,
       left: "calc(50% - " + String(baseWidth / 2) + ea + ")",
-      overflow: "scroll",
+      overflow: "hidden",
     },
     children: [
       {
