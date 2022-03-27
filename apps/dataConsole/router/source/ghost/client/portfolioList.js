@@ -500,12 +500,12 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null)
   quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
   quoteTop = <%% (isMac() ? 7 : 5), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), isIphone() ? 1.3 : 1.2 %%>;
 
-  titleSize = <%% 21, 17, 17, 15, 3.4 %%>;
+  titleSize = <%% 21, 17, 17, 15, 3 %%>;
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
   titleMarginLeft = <%% 6, 6, 5, 5, 1.3 %%>;
 
-  titleSubSize = 14;
-  titleSubMarginTop = 2;
+  titleSubSize = <%% 14, 12, 12, 11, 2 %%>;
+  titleSubMarginTop = <%% 3, 3, 3, 2, 0.5 %%>;
 
   photoBlockMarginBottom = <%% 72, 66, 66, 62, 8 %%>;
 
@@ -524,8 +524,8 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null)
   tagWeight = <%% 500, 500, 500, 500, 500 %%>;
 
   tagPaddingLeft = <%% 10, 8, 8, 7, 1 %%>;
-  tagPaddingTop = <%% (isMac() ? 5 : 6), (isMac() ? 4 : 5), (isMac() ? 4 : 5), (isMac() ? 4 : 5), 0.9 %%>;
-  tagPaddingBottom = <%% (isMac() ? 7 : 6), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), isIphone() ? 1.2 : 1.4 %%>;
+  tagPaddingTop = <%% (isMac() ? 5 : 6), (isMac() ? 4 : 5), (isMac() ? 4 : 5), (isMac() ? 4 : 5), 1 %%>;
+  tagPaddingBottom = <%% (isMac() ? 7 : 6), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isIphone() ? 1.2 : 1.4) %%>;
   tagMarginRight = <%% 4, 3, 3, 3, 1 %%>;
 
   baseBlock = baseTong.children[1];
@@ -542,7 +542,20 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null)
 
         src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.portfolio.pid + "/" + photoChar + String(contents.portfolio.detailInfo.photodae[gsArray[i] === 'g' ? 1 : 0]) + contents.portfolio.pid + ".jpg";
         title = contents.portfolio.title.main.split(", ")[1];
-        subTitle = contents.portfolio.title.sub;
+        if (media[0] || media[2]) {
+          subTitle = contents.portfolio.title.sub;
+        } else {
+          subTitle = contents.portfolio.title.sub;
+          if (!mobile) {
+            if (gsArray[i] !== 'g' && subTitle.length > 27) {
+              subTitle = contents.portfolio.title.sub.replace(/홈?스타일링$/i, '');
+            }
+          } else {
+            if (gsArray[i] !== 'g' && subTitle.length > 25) {
+              subTitle = contents.portfolio.title.sub.replace(/홈?스타일링$/i, '');
+            }
+          }
+        }
         tag = equalJson(JSON.stringify(contents.portfolio.detailInfo.tag));
 
         if (gsArray[i] !== 'g') {
@@ -601,16 +614,26 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null)
                   }
                 },
                 {
-                  text: subTitle,
                   style: {
                     display: "block",
-                    fontSize: String(titleSubSize) + ea,
-                    fontWeight: String(titleWeight),
-                    color: colorChip.deactive,
                     width: withOut(0, ea),
                     verticalAlign: "top",
                     marginTop: String(titleSubMarginTop) + ea,
-                  }
+                    overflow: "hidden",
+                  },
+                  children: [
+                    {
+                      text: subTitle,
+                      style: {
+                        display: "block",
+                        position: "relative",
+                        fontSize: String(titleSubSize) + ea,
+                        fontWeight: String(titleWeight),
+                        color: colorChip.deactive,
+                        width: String(200) + '%',
+                      },
+                    }
+                  ]
                 }
               ]
             },
