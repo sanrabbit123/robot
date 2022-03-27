@@ -504,7 +504,7 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null)
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
   titleMarginLeft = <%% 6, 6, 5, 5, 1.3 %%>;
 
-  titleSubSize = <%% 14, 12, 12, 11, 2 %%>;
+  titleSubSize = <%% 14, 12, 12, 11, 2.5 %%>;
   titleSubMarginTop = <%% 3, 3, 3, 2, 0.5 %%>;
 
   photoBlockMarginBottom = <%% 72, 66, 66, 62, 8 %%>;
