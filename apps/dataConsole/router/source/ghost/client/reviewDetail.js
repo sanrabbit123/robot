@@ -116,7 +116,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
 
   mobileWhiteBoxTop = 20;
   mobileWhiteBoxLeft = 8;
-  mobileWhiteBoxWidth = 36.6;
+  mobileWhiteBoxWidth = 37;
   mobileWhiteBoxHeight = 31;
 
   mobileWordingLeft = 5.3;
