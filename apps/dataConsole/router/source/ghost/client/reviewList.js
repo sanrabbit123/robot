@@ -511,7 +511,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
   seroSliceEnd = <%% 16, 15, 17, 15, 13 %%>;
   seroSliceLimit = <%% 30, 30, 30, 30, 30 %%>;
 
-  tagTongMarginTop = <%% 11, 11, 10, 8, 1.6 %%>;
+  tagTongMarginTop = <%% 11, 11, 10, 8, 1.4 %%>;
   tagTongWidthRatio = <%% 1.1, 1.3, 1.3, 1.3, 1.3 %%>;
 
   tagSize = <%% 12, 10, 10, 9, 2 %%>;
