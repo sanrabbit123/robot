@@ -1171,35 +1171,35 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
 
   this.relativePhotoNumber = 0;
 
-  baseWidth = <%% 1300, 980, 800, 640, 88 %%>;
+  baseWidth = <%% 1300, 980, 800, 640, 76 %%>;
   baseBetween = standardWidth - baseWidth;
 
-  arrowHeight = <%% 28, 25, 25, 24, 25 %%>;
-  arrowTop = <%% 230, 218, 230, 190, 218 %%>;
+  arrowHeight = <%% 28, 25, 25, 24, 4 %%>;
+  arrowTop = <%% 230, 218, 230, 190, 34 %%>;
 
-  mainHeight = <%% 590, 570, 590, 496, 580 %%>;
-  mainPaddingTop = <%% 100, 96, 86, 72, 96 %%>;
+  mainHeight = <%% 590, 570, 590, 496, 94 %%>;
+  mainPaddingTop = <%% 100, 96, 86, 72, 10 %%>;
 
-  titleHeight = <%% 30, 30, 30, 28, 30 %%>;
-  titleMarginBottom = <%% 32, 32, 32, 28, 32 %%>;
-  titleLineHeight = <%% 14, 14, 14, 14, 14 %%>;
+  titleHeight = <%% 30, 30, 30, 28, 6 %%>;
+  titleMarginBottom = <%% 32, 32, 32, 28, 5 %%>;
+  titleLineHeight = <%% 14, 14, 14, 14, 3 %%>;
 
-  mainTitleSize = <%% 22, 22, 22, 20, 22 %%>;
+  mainTitleSize = <%% 22, 22, 22, 20, 4.5 %%>;
   mainTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
-  mainTitleWidth = <%% 170, 170, 170, 150, 170 %%>;
+  mainTitleWidth = <%% 170, 170, 170, 150, 34 %%>;
 
-  belowBoxHeight = <%% 120, 120, 120, 110, 120 %%>;
-  belowButtonTop = <%% 38, 38, 38, 32, 38 %%>;
+  belowBoxHeight = <%% 120, 120, 120, 110, 25 %%>;
+  belowButtonTop = <%% 38, 38, 38, 32, 7 %%>;
 
-  belowButtonHeight = <%% 42, 42, 42, 40, 42 %%>;
-  belowButtonBetween = <%% 10, 10, 10, 10, 10 %%>;
-  belowButtonWordPadding = <%% 20, 20, 20, 20, 20 %%>;
+  belowButtonHeight = <%% 42, 42, 42, 40, 9 %%>;
+  belowButtonBetween = <%% 10, 10, 10, 10, 2 %%>;
+  belowButtonWordPadding = <%% 20, 20, 20, 20, 4 %%>;
 
-  belowButtonTextTop = <%% 9, 9, 9, 9, 9 %%>;
-  belowButtonSize = <%% 15, 14, 14, 13, 15 %%>;
+  belowButtonTextTop = <%% 9, 9, 9, 9, 2 %%>;
+  belowButtonSize = <%% 15, 14, 14, 13, 3 %%>;
   belowButtonWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-  move = <%% 264, 249, 272, 218, 26 %%>;
+  move = <%% 264, 249, 272, 218, 39.45 %%>;
 
   photoTongClassName = "photoTongClassName";
 
@@ -1210,17 +1210,17 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
   photoRatio = (297 / 210);
   seroWidth = (baseWidth - (photoMargin * (columns - 1))) / columns;
   photoHeight = seroWidth * photoRatio;
-  photoMarginBottom = <%% (isMac() ? 15 : 17), (isMac() ? 15 : 17), (isMac() ? 15 : 17), (isMac() ? 13 : 15), 2.3 %%>;
+  photoMarginBottom = <%% (isMac() ? 15 : 17), (isMac() ? 15 : 17), (isMac() ? 15 : 17), (isMac() ? 13 : 15), 2.4 %%>;
 
   quoteHeight = <%% 8, 8, 8, 7, 1.8 %%>;
   quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
   quoteTop = <%% (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 4 : 2), isIphone() ? 1.3 : 1.2 %%>;
 
-  titleSize = <%% 17, 16, 17, 14, 3.4 %%>;
+  titleSize = <%% 17, 16, 17, 14, 3.2 %%>;
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
   titleMarginLeft = <%% 6, 6, 5, 5, 1.3 %%>;
 
-  tagTongMarginTop = <%% 10, 10, 10, 8, 1.3 %%>;
+  tagTongMarginTop = <%% 10, 10, 10, 8, 1.6 %%>;
   tagTongWidthRatio = <%% 1.1, 1.3, 1.3, 1.3, 1.3 %%>;
 
   tagSize = <%% 10, 8, 10, 7, 2 %%>;
@@ -1300,7 +1300,7 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
       click: function (e) {
         const photoTong = document.querySelector('.' + photoTongClassName);
         let current, newMove;
-        current = Number(photoTong.style.transform.replace(/[^0-9\-]/gi, ''));
+        current = Number(photoTong.style.transform.replace(/[^0-9\-\.]/gi, ''));
         newMove = current + move;
         if (newMove <= 0) {
           photoTong.style.transform = "translateX(" + String(newMove) + ea + ")";
@@ -1345,7 +1345,7 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
       click: function (e) {
         const photoTong = document.querySelector('.' + photoTongClassName);
         let current, newMove;
-        current = Number(photoTong.style.transform.replace(/[^0-9\-]/gi, ''));
+        current = Number(photoTong.style.transform.replace(/[^0-9\-\.]/gi, ''));
         newMove = current - move;
         if (Math.abs((instance.relativePhotoNumber - columns) * move) >= Math.abs(newMove)) {
           photoTong.style.transform = "translateX(" + String(newMove) + ea + ")";
@@ -1508,7 +1508,11 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
           title = filteredContents.review.title.sub.split(", ").join(" ");
           tag = equalJson(JSON.stringify(filteredContents.portfolio.detailInfo.tag));
 
-          tag = tag.slice(5, 10);
+          if (desktop) {
+            tag = tag.slice(5, 10);
+          } else {
+            tag = tag.slice(5, 8);
+          }
           if (tag.reduce((acc, curr) => { return acc + curr.length }, 0) > 17) {
             tag = tag.slice(0, -1);
           }

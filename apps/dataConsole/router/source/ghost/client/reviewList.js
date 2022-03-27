@@ -491,13 +491,13 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
   seroWidth = (baseWidth - (photoMargin * (columns - 1))) / columns;
   garoWidth = (seroWidth * 2) + photoMargin;
   photoHeight = seroWidth * photoRatio;
-  photoMarginBottom = <%% (isMac() ? 18 : 20), (isMac() ? 16 : 18), (isMac() ? 16 : 18), (isMac() ? 16 : 18), 2.3 %%>;
+  photoMarginBottom = <%% (isMac() ? 18 : 20), (isMac() ? 16 : 18), (isMac() ? 16 : 18), (isMac() ? 16 : 18), 2.5 %%>;
 
   quoteHeight = <%% 10, 8, 8, 7, 1.8 %%>;
   quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
-  quoteTop = <%% (isMac() ? 7 : 5), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), isIphone() ? 1.3 : 1.2 %%>;
+  quoteTop = <%% (isMac() ? 7 : 5), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), isIphone() ? 1.2 : 1.1 %%>;
 
-  titleSize = <%% 21, 17, 17, 15, 3.4 %%>;
+  titleSize = <%% 21, 17, 17, 15, 3.2 %%>;
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
   titleMarginLeft = <%% 6, 6, 5, 5, 1.3 %%>;
 
@@ -511,7 +511,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
   seroSliceEnd = <%% 16, 15, 17, 15, 13 %%>;
   seroSliceLimit = <%% 30, 30, 30, 30, 30 %%>;
 
-  tagTongMarginTop = <%% 11, 11, 10, 8, 1.3 %%>;
+  tagTongMarginTop = <%% 11, 11, 10, 8, 1.6 %%>;
   tagTongWidthRatio = <%% 1.1, 1.3, 1.3, 1.3, 1.3 %%>;
 
   tagSize = <%% 12, 10, 10, 9, 2 %%>;
