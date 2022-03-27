@@ -493,13 +493,13 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
   photoHeight = seroWidth * photoRatio;
   photoMarginBottom = <%% (isMac() ? 18 : 20), (isMac() ? 16 : 18), (isMac() ? 16 : 18), (isMac() ? 16 : 18), 2.5 %%>;
 
-  quoteHeight = <%% 10, 8, 8, 7, 1.8 %%>;
+  quoteHeight = <%% 10, 8, 8, 7, 1.6 %%>;
   quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
   quoteTop = <%% (isMac() ? 7 : 5), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), isIphone() ? 1.2 : 1.1 %%>;
 
   titleSize = <%% 21, 17, 17, 15, 3.4 %%>;
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
-  titleMarginLeft = <%% 6, 6, 5, 5, 1.3 %%>;
+  titleMarginLeft = <%% 6, 6, 5, 5, 1.1 %%>;
 
   photoBlockMarginBottom = <%% 72, 66, 66, 62, 8 %%>;
 
