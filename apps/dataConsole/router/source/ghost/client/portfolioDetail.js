@@ -85,7 +85,7 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
   designerBoxHeight = 303;
   titleBoxHeight = 210;
 
-  moveX = 136;
+  moveX = 138;
 
   slide = contents.contents.portfolio.detailInfo.slide;
   gsArray = slide.map((index) => {
@@ -182,6 +182,7 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
       mother: photoSlideBox,
       attribute: {
         index: String(i),
+        photo: String(slide[i]),
       },
       style: {
         position: "absolute",
