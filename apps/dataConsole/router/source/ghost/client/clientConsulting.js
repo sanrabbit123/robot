@@ -145,7 +145,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   let nameBlurEvent;
   let phoneBlurEvent;
 
-  blockHeight = <%% 750, 725, 620, 590, 175 %%>;
+  blockHeight = <%% 748, 725, 620, 590, 175 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 52, 52, 44, 32, 52 %%>;
   leftRatio = <%% 0.32, 0.26, 0.26, 0.26, 0.32 %%>;
