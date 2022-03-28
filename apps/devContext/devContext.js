@@ -88,8 +88,8 @@ DevContext.prototype.launching = async function () {
     // await this.pureSpawn();
 
 
-    console.log(await mysqlQuery("SELECT * FROM client;"));
     
+
 
 
 

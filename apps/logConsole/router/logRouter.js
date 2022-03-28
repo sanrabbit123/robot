@@ -302,6 +302,39 @@ LogRouter.prototype.rou_post_getContents = function () {
   return obj;
 }
 
+LogRouter.prototype.rou_post_mysqlQuery = function () {
+  const instance = this;
+  const back = this.back;
+  const { mysqlQuery } = this.mother;
+  let obj = {};
+  obj.link = [ "/mysqlQuery" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      let query, response;
+      if (typeof req.body.query !== "string") {
+        throw new Error("invaild post");
+      }
+      if (/;$/.test(req.body.query)) {
+        query = req.body.query;
+      } else {
+        query = req.body.query + ';';
+      }
+      response = await mysqlQuery(query, { local: true });
+      res.send(JSON.stringify(response));
+    } catch (e) {
+      instance.mother.errorLog("Log Console 서버 문제 생김 (rou_post_mysqlQuery): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 LogRouter.policy = function () {
