@@ -51,36 +51,24 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
   const mobile = media[4];
   const desktop = !mobile;
   const contents = contentsArr.toNormal().filter((obj) => { return obj.contents.portfolio.pid === pid })[0];
-  const photoChar = 'b';
+  const photoChar = 't';
   let mainHeight;
   let mainTong;
-  let mainBelowBarHeight;
   let contentsBox;
   let pictureWidth, pictureHeight;
   let picture;
   let bottomVisual;
-  let photoRightMargin;
-  let textTong;
-  let quoteHeight, quoteWidth;
-  let quoteTop;
-  let quotePaddingLeft;
-  let topReviewSize, topReviewWeight;
-  let mainTitleSize, mainTitleWeight;
-  let mainTitleLineHeight;
-  let mainTitleMarginTop;
-  let subTitleSize, subTitleWeight;
-  let subTitleMarginTop;
-  let subLineWidth, subLineHeight, subLineLeft;
-  let bottomWordingVisualBottom;
-  let bottomWordingLineHeight;
-  let mobileWhiteBoxTop, mobileWhiteBoxLeft;
-  let mobileWhiteBoxWidth, mobileWhiteBoxHeight;
-  let mobileWordingLeft;
+  let photoBox, designerBox, titleBox;
+  let boxMargin;
+  let designerBoxWidth;
+  let slideBarHeight;
+  let designerBoxHeight, titleBoxHeight;
+  let gsArray;
+  let slide;
 
   mainHeight = <%% 800, 750, 710, 590, (210 / 297) * 100 %%>;
-  mainBelowBarHeight = <%% 250, 250, 250, 216, 250 %%>;
 
-  contentsBoxTop = <%% 70, 70, 70, 70, 0 %%>;
+  contentsBoxTop = <%% 38, 38, 38, 38, 0 %%>;
   contentsBoxWidth = <%% 1200, 1050, 900, 720, 1200 %%>;
 
   bottomVisual = <%% 6, 6, 6, 6, 6 %%>;
@@ -88,38 +76,29 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
   pictureWidth = <%% 820, 720, 610, 480, 610 %%>;
   pictureHeight = mainHeight - (contentsBoxTop * 2) - bottomVisual;
 
-  photoRightMargin = <%% 50, 50, 45, 40, 50 %%>;
+  boxMargin = 40;
+  designerBoxWidth = 210;
+  slideBarHeight = 124;
 
-  quoteHeight = <%% 14, 14, 13, 11, 2 %%>;
-  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
-  quoteTop = <%% 140, 135, 125, 80, 5 %%>;
-  quotePaddingLeft = <%% 2, 2, 2, 2, 5.4 %%>;
+  designerBoxHeight = 303;
+  titleBoxHeight = 210;
 
-  topReviewSize = <%% 16, 16, 15, 14, 15 %%>;
-  topReviewWeight = <%% 400, 400, 400, 400, 400 %%>;
+  slide = contents.contents.portfolio.detailInfo.slide;
+  gsArray = slide.map((index) => {
+    let target;
+    target = null;
+    for (let { index: photoIndex, gs } of contents.photos.detail) {
+      if (index === photoIndex) {
+        target = gs;
+        break;
+      }
+    }
+    return target;
+  });
 
-  mainTitleSize = <%% 36, 35, 33, 29, 4.5 %%>;
-  mainTitleWeight = <%% 400, 400, 400, 400, 400 %%>;
-  mainTitleLineHeight = <%% 1.16, 1.16, 1.16, 1.16, 1.2 %%>;
-  mainTitleMarginTop = <%% 5, 5, 5, 3, 7.5 %%>;
+  console.log(slide);
+  console.log(gsArray);
 
-  subTitleSize = <%% 18, 17, 17, 15, 3.1 %%>;
-  subTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
-  subTitleMarginTop = <%% 17, 17, 16, 13, 20 %%>;
-
-  subLineWidth = <%% 170, 120, 95, 65, 95 %%>;
-  subLineHeight = <%% (isMac() ? 11 : 9), (isMac() ? 11 : 9), (isMac() ? 11 : 9), (isMac() ? 10 : 8), 11 %%>;
-  subLineLeft = <%% 160, 150, 150, 135, 150 %%>;
-
-  bottomWordingVisualBottom = <%% (isMac() ? -2 : -4), (isMac() ? -2 : -4), (isMac() ? -2 : -4), (isMac() ? -2 : -4), -2 %%>;
-  bottomWordingLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
-
-  mobileWhiteBoxTop = 20;
-  mobileWhiteBoxLeft = 8;
-  mobileWhiteBoxWidth = 37;
-  mobileWhiteBoxHeight = 31;
-
-  mobileWordingLeft = 5.3;
 
   mainTong = createNode({
     mother: totalContents,
@@ -142,14 +121,63 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
       width: desktop ? String(contentsBoxWidth) + ea : String(100) + '%',
       left: desktop ? "calc(50% - " + String(contentsBoxWidth / 2) + ea + ")" : String(0),
       top: String(0),
-      height: String(mainHeight - (contentsBoxTop * 2)) + ea,
+      height: String(mainHeight - (contentsBoxTop * 1)) + ea,
     }
   });
 
-  
+  photoBox = createNode({
+    mother: contentsBox,
+    style: {
+      display: "block",
+      position: "relative",
+      width: withOut(designerBoxWidth + boxMargin, ea),
+      height: String(100) + '%',
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          width: String(100) + '%',
+          background: "red",
+          height: withOut(slideBarHeight + boxMargin, ea),
+          borderRadius: String(5) + "px",
+        }
+      },
+      {
+        style: {
+          display: "block",
+          width: String(100) + '%',
+          background: "red",
+          height: String(slideBarHeight) + ea,
+          marginTop: String(boxMargin) + ea,
+        }
+      }
+    ]
+  });
 
+  designerBox = createNode({
+    mother: contentsBox,
+    style: {
+      position: "absolute",
+      top: String(contentsBoxTop) + ea,
+      right: String(0),
+      background: "blue",
+      width: String(designerBoxWidth) + ea,
+      height: String(designerBoxHeight) + ea,
+    }
+  });
 
-
+  titleBox = createNode({
+    mother: contentsBox,
+    style: {
+      position: "absolute",
+      bottom: String(0),
+      right: String(0),
+      background: "blue",
+      width: String(designerBoxWidth) + ea,
+      height: String(titleBoxHeight) + ea,
+    }
+  });
 
 }
 
