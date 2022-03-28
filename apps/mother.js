@@ -2387,10 +2387,10 @@ Mother.prototype.mysqlQuery = function (query, option = { local: false, front: t
           if (tong.length > 0) {
             resolve(tong[0]);
           } else {
-            resolve("done");
+            resolve({ message: "done" });
           }
         } else {
-          resolve("done");
+          resolve({ message: "done" });
         }
       }).catch(function (err) {
         reject(err);
