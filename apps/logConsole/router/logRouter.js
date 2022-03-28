@@ -321,11 +321,15 @@ LogRouter.prototype.rou_post_mysqlQuery = function () {
         throw new Error("invaild post");
       }
       if (/;$/.test(req.body.query)) {
-        query = req.body.query;
+        query = req.body.query.trim();
       } else {
-        query = req.body.query + ';';
+        query = req.body.query.trim() + ';';
       }
-      response = await mysqlQuery(query, { local: true });
+      if (!/drop/gi.test(query) && !/delete/gi.test(query)) {
+        response = await mysqlQuery(query, { local: true });
+      } else {
+        response = [];
+      }
       res.send(JSON.stringify(response));
     } catch (e) {
       instance.mother.errorLog("Log Console 서버 문제 생김 (rou_post_mysqlQuery): " + e.message).catch((e) => { console.log(e); });
