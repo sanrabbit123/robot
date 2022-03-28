@@ -121,7 +121,7 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
       width: desktop ? String(contentsBoxWidth) + ea : String(100) + '%',
       left: desktop ? "calc(50% - " + String(contentsBoxWidth / 2) + ea + ")" : String(0),
       top: String(0),
-      height: String(mainHeight - (contentsBoxTop * 2)) + ea,
+      height: String(mainHeight - (contentsBoxTop * 1)) + ea,
     }
   });
 
