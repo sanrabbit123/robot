@@ -66,6 +66,7 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
   let gsArray;
   let slide;
   let photoBigBox, photoSlideBox;
+  let moveX;
 
   mainHeight = <%% 800, 750, 710, 590, (210 / 297) * 100 %%>;
 
@@ -83,6 +84,8 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
 
   designerBoxHeight = 303;
   titleBoxHeight = 210;
+
+  moveX = 136;
 
   slide = contents.contents.portfolio.detailInfo.slide;
   gsArray = slide.map((index) => {
@@ -145,8 +148,9 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
       {
         style: {
           display: "block",
+          position: "relative",
           width: String(100) + '%',
-          background: "red",
+          overflow: "hidden",
           height: String(slideBarHeight) + ea,
           marginTop: String(boxMargin) + ea,
         }
@@ -155,9 +159,6 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
   });
 
   [ photoBigBox, photoSlideBox ] = [ ...photoBox.children ];
-
-  console.log(slide);
-  console.log(gsArray);
 
   for (let i = slide.length - 1; i > -1; i--) {
     createNode({
@@ -169,16 +170,33 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
         width: String(100) + '%',
         height: String(100) + '%',
         backgroundImage: "url('" + "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.contents.portfolio.pid + "/" + photoChar + String(slide[i]) + contents.contents.portfolio.pid + ".jpg" + "')",
-        backgroundSize: "100% auto",
+        backgroundSize: gsArray[i] === 'g' ? "100% auto" : "auto 100%",
         backgroundPosition: "50% 50%",
+        backgroundRepeat: "no-repeat",
       }
     });
   }
 
+  for (let i = 0; i < slide.length; i++) {
+    createNode({
+      mother: photoSlideBox,
+      style: {
+        position: "absolute",
+        top: String(0),
+        height: String(slideBarHeight) + ea,
+        width: String(slideBarHeight) + ea,
+        left: "calc(50% - " + String(slideBarHeight / 2) + ea + ")",
+        background: colorChip.gray1,
+        borderRadius: String(5) + "px",
+        backgroundImage: "url('" + "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.contents.portfolio.pid + "/" + photoChar + String(slide[i]) + contents.contents.portfolio.pid + ".jpg" + "')",
+        backgroundSize: gsArray[i] === 'g' ? "100% auto" : "auto 100%",
+        backgroundPosition: "50% 50%",
+        backgroundRepeat: "no-repeat",
+        transform: "translateX(" + String(i < slide.length / 2 ? moveX * i : (moveX * i) - 1224) + ea + ")",
+      }
+    })
+  }
 
-  console.log(photoBigBox);
-
-  console.log(photoSlideBox);
 
   designerBox = createNode({
     mother: contentsBox,
