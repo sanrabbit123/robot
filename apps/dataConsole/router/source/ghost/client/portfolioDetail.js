@@ -121,7 +121,7 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
       width: desktop ? String(contentsBoxWidth) + ea : String(100) + '%',
       left: desktop ? "calc(50% - " + String(contentsBoxWidth / 2) + ea + ")" : String(0),
       top: String(0),
-      height: String(mainHeight - (contentsBoxTop * 1)) + ea,
+      height: String(mainHeight - (contentsBoxTop * 2)) + ea,
     }
   });
 
@@ -180,6 +180,9 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
   for (let i = 0; i < slide.length; i++) {
     createNode({
       mother: photoSlideBox,
+      attribute: {
+        index: String(i),
+      },
       style: {
         position: "absolute",
         top: String(0),
@@ -192,7 +195,7 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
         backgroundSize: gsArray[i] === 'g' ? "100% auto" : "auto 100%",
         backgroundPosition: "50% 50%",
         backgroundRepeat: "no-repeat",
-        transform: "translateX(" + String(i < slide.length / 2 ? moveX * i : (moveX * i) - 1224) + ea + ")",
+        transform: "translateX(" + String(i < slide.length / 2 ? moveX * i : (moveX * i) - (moveX * slide.length)) + ea + ")",
       }
     })
   }
