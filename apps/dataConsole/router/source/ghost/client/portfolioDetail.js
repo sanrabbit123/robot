@@ -65,6 +65,7 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
   let designerBoxHeight, titleBoxHeight;
   let gsArray;
   let slide;
+  let photoBigBox, photoSlideBox;
 
   mainHeight = <%% 800, 750, 710, 590, (210 / 297) * 100 %%>;
 
@@ -95,10 +96,6 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
     }
     return target;
   });
-
-  console.log(slide);
-  console.log(gsArray);
-
 
   mainTong = createNode({
     mother: totalContents,
@@ -137,10 +134,12 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
       {
         style: {
           display: "block",
+          position: "relative",
           width: String(100) + '%',
           background: "red",
           height: withOut(slideBarHeight + boxMargin, ea),
           borderRadius: String(5) + "px",
+          overflow: "hidden",
         }
       },
       {
@@ -154,6 +153,32 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
       }
     ]
   });
+
+  [ photoBigBox, photoSlideBox ] = [ ...photoBox.children ];
+
+  console.log(slide);
+  console.log(gsArray);
+
+  for (let i = slide.length - 1; i > -1; i--) {
+    createNode({
+      mother: photoBigBox,
+      style: {
+        position: "absolute",
+        top: String(0),
+        left: String(0),
+        width: String(100) + '%',
+        height: String(100) + '%',
+        backgroundImage: "url('" + "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.contents.portfolio.pid + "/" + photoChar + String(slide[i]) + contents.contents.portfolio.pid + ".jpg" + "')",
+        backgroundSize: "100% auto",
+        backgroundPosition: "50% 50%",
+      }
+    });
+  }
+
+
+  console.log(photoBigBox);
+
+  console.log(photoSlideBox);
 
   designerBox = createNode({
     mother: contentsBox,
