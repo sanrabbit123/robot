@@ -41,7 +41,7 @@ const PortfolioListJs = function () {
   this.mother = new GeneralJs();
 }
 
-PortfolioListJs.binaryPath = "/middle/review";
+PortfolioListJs.binaryPath = "/middle/portfolio";
 
 PortfolioListJs.prototype.generateGsArray = function (number) {
   if (typeof number !== "number") {

@@ -18,11 +18,11 @@
   "meta": {
     "title": [
       "thisPerson",
-      "return ('홈리에종 고객 리뷰 | 홈리에종');"
+      "return ('홈리에종 포트폴리오 | 홈리에종');"
     ],
     "description": [
       "thisPerson",
-      "return ('홈리에종 고객 리뷰 디테일 페이지 입니다! | 홈리에종');"
+      "return ('홈리에종 디자이너 포트폴리오 디테일 페이지 입니다! | 홈리에종');"
     ],
     "image": [
       "thisPerson",
@@ -30,20 +30,20 @@
     ],
     "module": false
   },
-  "name": "reviewDetail",
+  "name": "portfolioDetail",
   "route": [
-    "reviewDetail",
-    "RD"
+    "portfolioDetail",
+    "PD"
   ]
 } %/%/g
 
-const ReviewDetailJs = function () {
+const PortfolioDetailJs = function () {
   this.mother = new GeneralJs();
 }
 
-ReviewDetailJs.binaryPath = "/middle/review";
+PortfolioDetailJs.binaryPath = "/middle/portfolio";
 
-ReviewDetailJs.prototype.reviewMainBox = function () {
+PortfolioDetailJs.prototype.portfolioMainBox = function () {
   const instance = this;
   const { createNode, colorChip, withOut, svgMaker, isMac, isIphone } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid } = this;
@@ -352,7 +352,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
 
 }
 
-ReviewDetailJs.prototype.reviewContentsBox = function () {
+PortfolioDetailJs.prototype.portfolioContentsBox = function () {
   const instance = this;
   const { createNode, colorChip, withOut, svgMaker, equalJson, designerMthParsing, designerCareer, isMac, isIphone } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid } = this;
@@ -960,7 +960,7 @@ ReviewDetailJs.prototype.reviewContentsBox = function () {
 
 }
 
-ReviewDetailJs.prototype.relativeContents = function (contents, length) {
+PortfolioDetailJs.prototype.relativeContents = function (contents, length) {
   const instance = this;
   const tendencyKey = [
     {
@@ -1113,7 +1113,7 @@ ReviewDetailJs.prototype.relativeContents = function (contents, length) {
   return secondFiltered;
 }
 
-ReviewDetailJs.prototype.reviewRelativeBox = function () {
+PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
   const instance = this;
   const { createNode, colorChip, withOut, svgMaker, sleep, setQueue, equalJson, isMac, isIphone } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid, standardWidth } = this;
@@ -1621,7 +1621,7 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
   }, 1000);
 }
 
-ReviewDetailJs.prototype.launching = async function (loading) {
+PortfolioDetailJs.prototype.launching = async function (loading) {
   const instance = this;
   const { returnGet, ajaxJson, setQueue, setDebounce } = GeneralJs;
   try {
@@ -1672,22 +1672,22 @@ ReviewDetailJs.prototype.launching = async function (loading) {
 
     await this.mother.ghostClientLaunching({
       mode: "front",
-      name: "reviewDetail",
+      name: "portfolioDetail",
       client: null,
       base: {
         instance: this,
-        binaryPath: ReviewDetailJs.binaryPath,
+        binaryPath: PortfolioDetailJs.binaryPath,
         subTitle: "",
         secondBackground: false,
         backgroundType: 2,
       },
       local: async () => {
         try {
-          instance.reviewMainBox();
-          instance.reviewContentsBox();
-          instance.reviewRelativeBox();
+          instance.portfolioMainBox();
+          instance.portfolioContentsBox();
+          instance.portfolioRelativeBox();
         } catch (e) {
-          await GeneralJs.ajaxJson({ message: "ReviewDetailJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
+          await GeneralJs.ajaxJson({ message: "PortfolioDetailJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
         }
       }
     });
@@ -1709,6 +1709,6 @@ ReviewDetailJs.prototype.launching = async function (loading) {
   } catch (err) {
     console.log(err);
     window.alert("잘못된 접근입니다!");
-    await ajaxJson({ message: "ReviewDetailJs.launching 에러 일어남 => " + err.message }, "/errorLog");
+    await ajaxJson({ message: "PortfolioDetailJs.launching 에러 일어남 => " + err.message }, "/errorLog");
   }
 }

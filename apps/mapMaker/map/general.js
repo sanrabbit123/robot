@@ -670,6 +670,9 @@ module.exports = {
       "portfolioList": {
         "behaviors": []
       },
+      "portfolioDetail": {
+        "behaviors": []
+      },
       "universalEstimation": {
         "behaviors": [
           {
