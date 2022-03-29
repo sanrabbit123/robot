@@ -100,14 +100,14 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
   pictureWidth = <%% 820, 720, 610, 480, 610 %%>;
   pictureHeight = mainHeight - (contentsBoxTop * 2) - bottomVisual;
 
-  boxMargin = 40;
-  designerBoxWidth = 210;
-  slideBarHeight = 124;
+  boxMargin = <%% 40, 40, 32, 24, 40 %%>;
+  designerBoxWidth = <%% 210, 210, 200, 175, 210 %%>;
+  slideBarHeight = <%% 124, 124, 124, 124, 124 %%>;
 
-  designerBoxHeight = 303;
-  titleBoxHeight = 210;
+  designerBoxHeight = <%% 303, 303, 303, 260, 303 %%>;
+  titleBoxHeight = <%% 210, 210, 200, 175, 210 %%>;
 
-  moveX = 138;
+  moveX = <%% 138, 138, 138, 138, 138 %%>;
 
   designerTongPaddingTop = <%% 30, 30, 30, 27, 30 %%>;
   deignserPhotoWidth = <%% 124, 124, 124, 110, 124 %%>;
@@ -124,19 +124,19 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
   careerSize = <%% 12, 12, 12, 11, 12 %%>;
   careerWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  contentsTitleSize = 26;
-  contentsTitleWeight = 700;
-  contentsTitleLineHeight = 1.4;
-  contentsSubTitleSize = 15;
-  contentsSubTitleWeight = 500;
-  contentsSubTitleLineHeight = 1.5;
-  contentsTitleBetween = 14;
+  contentsTitleSize = <%% 26, 26, 25, 21, 26 %%>;
+  contentsTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+  contentsTitleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
+  contentsSubTitleSize = <%% 15, 15, 14, 12, 15 %%>;
+  contentsSubTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
+  contentsSubTitleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+  contentsTitleBetween = <%% 14, 14, 14, 10, 14 %%>;
 
-  contentsTitleButtonWidth = 96;
-  contentsTitleButtonHeight = 36;
-  contentsTitleButtonTextTop = -2;
-  contentsTitleButtonSize = 13;
-  contentsTitleButtonWeight = 600;
+  contentsTitleButtonWidth = <%% 96, 96, 96, 88, 96 %%>;
+  contentsTitleButtonHeight = <%% 36, 36, 36, 32, 36 %%>;
+  contentsTitleButtonTextTop = <%% -2, -2, -2, -2, -2 %%>;
+  contentsTitleButtonSize = <%% 13, 13, 13, 11, 13 %%>;
+  contentsTitleButtonWeight = <%% 600, 600, 600, 600, 600 %%>;
 
   slide = contents.contents.portfolio.detailInfo.slide;
   gsArray = slide.map((index) => {
@@ -246,10 +246,11 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
         height: String(100) + '%',
         backgroundColor: colorChip.gray1,
         backgroundImage: "url('" + "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.contents.portfolio.pid + "/" + photoChar + String(slide[i]) + contents.contents.portfolio.pid + ".jpg" + "')",
-        backgroundSize: gsArray[i] === 'g' ? "100% auto" : "auto 100%",
+        backgroundSize: media[0] || media[1] || media[3] ? (gsArray[i] === 'g' ? "100% auto" : "auto 100%") : "auto 100%",
         backgroundPosition: "50% 50%",
         backgroundRepeat: "no-repeat",
         opacity: String(i === 0 ? 1 : 0),
+        transition: "all 0.3s ease",
       }
     });
     photoBigFactors.push(photoBigFactor);
@@ -277,6 +278,7 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
         backgroundRepeat: "no-repeat",
         transform: "translateX(" + String(i < slide.length / 2 ? moveX * i : (moveX * i) - (moveX * slide.length)) + ea + ")",
         opacity: Math.floor(slide.length / 2) <= i && i <= Math.ceil(slide.length / 2) ? String(0) : String(1),
+        transition: "all 0.3s ease",
       }
     });
     photoSlideFactors.push(photoSlideFactor);
