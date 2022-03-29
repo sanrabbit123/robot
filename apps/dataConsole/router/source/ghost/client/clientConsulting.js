@@ -372,9 +372,9 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       if (toggle === "off") {
         for (let dom of targets) {
           if (dom === this) {
-            if (/거주중/gi.test(dom.children[2].textContent)) {
-              livingAlertEvent(dom);
-            }
+            // if (/거주중/gi.test(dom.children[2].textContent)) {
+            //   livingAlertEvent(dom);
+            // }
             dom.setAttribute("toggle", "on");
             dom.children[0].style.opacity = String(0);
             dom.children[1].style.opacity = String(1);
