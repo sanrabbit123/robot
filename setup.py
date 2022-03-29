@@ -25,6 +25,8 @@ class RobotInstall:
             [ "netifaces" ],
             [ "pandas" ],
             [ "openpyxl" ],
+            [ "xlsxwriter" ],
+            [ "xlrd" ],
             [ "numpy" ],
             [ "pillow" ],
         ]

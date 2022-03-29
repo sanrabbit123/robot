@@ -88,6 +88,9 @@ DevContext.prototype.launching = async function () {
     // await this.pureSpawn();
 
 
+    const res = await requestSystem("https://home-liaison.info/mysqlQuery", { query: "SELECT * FROM client;" }, { headers: { "Content-Type": "application/json" } });
+    console.log(res.data);
+
 
 
 
