@@ -55,6 +55,7 @@ except Exception as e:
 # python start --------------------------------------------------------------------------------------------------------
 
 import pandas
+import xlsxwriter
 import re
 
 def excelRead(data):
@@ -75,9 +76,21 @@ def excelRead(data):
     j = dumps(arr, ensure_ascii=False).replace("NaN", "null")
     return loads(j)
 
+def excelWrite(data):
+    dataFrame = pandas.DataFrame(data["matrix"])
+    writer = pandas.ExcelWriter(data["filePath"], engine="xlsxwriter")
+    dataFrame.to_excel(writer, sheet_name="Sheet1", index=False)
+    writer.save()
+
+    return { "message": "done" }
+
 try:
     data = getBridge()
-    print(dumps(excelRead(data)))
+    if argv[1] == "read":
+        print(dumps(excelRead(data)))
+    elif argv[1] == "write":
+        print(dumps(excelWrite(data)))
+
 
 except Exception as e:
     print(e)

@@ -28,4 +28,44 @@ ExcelReader.prototype.fileToMatrix = async function (filePath, sheetsName) {
   }
 }
 
+ExcelReader.prototype.convertExcelMatrix = function (arr) {
+  if (!Array.isArray(arr)) {
+    throw new Error("input must be object-array");
+  }
+  if (!arr.every((obj) => { return typeof obj === "object" })) {
+    throw new Error("input must be object-array");
+  }
+  if (arr.length === 0) {
+    throw new Error("input cannot be zero array");
+  }
+  const instance = this;
+  let columns;
+  let result;
+
+  columns = Object.keys(arr[0]);
+
+  result = {};
+  for (let key of columns) {
+    result[key] = [];
+  }
+
+  for (let obj of arr) {
+    for (let key in obj) {
+      result[key].push(obj[key])
+    }
+  }
+
+  return result;
+}
+
+ExcelReader.prototype.matrixToFile = async function (arr, filePath) {
+  const instance = this;
+  const { pythonExecute } = this.mother;
+  try {
+    return await pythonExecute(this.pythonApp, [ "write" ], { filePath, matrix: this.convertExcelMatrix(arr) });
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 module.exports = ExcelReader;

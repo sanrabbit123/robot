@@ -91,7 +91,8 @@ DevContext.prototype.launching = async function () {
     const res = await requestSystem("https://home-liaison.info/mysqlQuery", { query: "SELECT * FROM client;" }, { headers: { "Content-Type": "application/json" } });
     console.log(res.data);
 
-
+    const excel = new ExcelReader();
+    console.log(await excel.matrixToFile(res.data, process.cwd() + "/temp/test3.xlsx"));
 
 
 
