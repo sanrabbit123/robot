@@ -145,7 +145,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   let nameBlurEvent;
   let phoneBlurEvent;
 
-  blockHeight = <%% 748, 725, 620, 590, 176 %%>;
+  blockHeight = <%% 784, 765, 725, 710, 176 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 52, 52, 44, 32, 52 %%>;
   leftRatio = <%% 0.32, 0.26, 0.26, 0.26, 0.32 %%>;
@@ -180,7 +180,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   mobileRightBoxLeft = 7;
 
   circleRadius = <%% 2.5, 2.5, 2, 2, 0.5 %%>;
-  circleTop = <%% 12, 12, 11, 12, (isIphone() ? 2.9 : 2.7) %%>;
+  circleTop = <%% 12, 12, 11, 10.5, (isIphone() ? 2.9 : 2.7) %%>;
   circleBetween = <%% 6, 6, 5, 5, 1.3 %%>;
 
   mainSize = <%% 20, 18, 17, 16, 4 %%>;
@@ -195,7 +195,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   grayTop = <%% 0, 0, 0, 0, 0 %%>;
   grayInputTop = <%% (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), -0.2 %%>;
   grayHeight = <%% 32, 32, 31, 31, 7 %%>;
-  grayBigHeight = <%% 114, 114, 114, 114, 28 %%>;
+  grayBigHeight = <%% 114, 114, 137, 154, 28 %%>;
   grayTextAreaTop = <%% 3, 3, 3, 3, 1.3 %%>;
   grayTextAreaWidth = <%% 51.7, 51.7, 51.7, 390, 51.7 %%>;
 
@@ -209,7 +209,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
 
   widthGrayType0 = <%% 160, 140, 130, 150, 34 %%>;
   widthGrayType1 = <%% 455, 329, 283, 403, 56.5 %%>;
-  widthGrayType2 = <%% 780, 610, 523, 403, 60 %%>;
+  widthGrayType2 = <%% 757, 588, 503, 383, 60 %%>;
   widthGrayType3 = <%% 392, 268, 231, 352, 44 %%>;
 
   addressWidth = <%% 54, 54, 46, 46, 11 %%>;
@@ -217,14 +217,14 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   addressWeight = <%% 600, 600, 600, 600, 600 %%>;
   addressTop = <%% (isMac() ? 5 : 7), (isMac() ? 5 : 7), (isMac() ? 5 : 7), (isMac() ? 5 : 7), 1.2 %%>;
 
-  leftCheck0 = <%% 439, 380, 338, 352, 22.8 %%>;
-  leftCheck1 = <%% 514, 448, 400, 410, 36.5 %%>;
+  leftCheck0 = <%% 125, 112, 98, 98, 22.8 %%>;
+  leftCheck1 = <%% 195, 176, 156, 152, 36.5 %%>;
   checkboxWidth = <%% 9, 9, 9, 8, 2 %%>;
-  checkboxTop = <%% (isMac() ? 9 : 10), (isMac() ? 9 : 9), (isMac() ? 8 : 8), (isMac() ? 8 : 9), (isIphone() ? 2.5 : 2.5) %%>;
+  checkboxTop = <%% (isMac() ? 9 : 10), (isMac() ? 9 : 9), (isMac() ? 9 : 9), (isMac() ? 9 : 9), (isIphone() ? 2.5 : 2.5) %%>;
   checkboxBetween = <%% 8, 8, 8, 6, 1.5 %%>;
   checkboxWeight = <%% 300, 300, 300, 300, 300 %%>;
 
-  marginRatio = <%% 1.2, 1.2, 0, 0, 1 %%>;
+  marginRatio = <%% 1.2, 1.2, 1.1, 1.1, 1 %%>;
 
   grayLineWidth = <%% 772, 600, 523, 523, 523 %%>;
   grayLineTop = <%% 12, 12, 12, 12, 12 %%>;
@@ -793,11 +793,11 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   blank = <%% "&nbsp;&nbsp;&nbsp;", "&nbsp;&nbsp;", "&nbsp;", "&nbsp;", "&nbsp;" %%>;
 
   if (media[0]) {
-    initWording0 = "홈스타일링 진행을 위해 다음 기본 정보가 필요합니다. 간단히 작성 후, 디자이너와의 1:1 상담을 받아보세요!";
+    initWording0 = "홈스타일링 진행을 위해 다음 기본 정보가 필요합니다. 간단히 작성 후, 1:1 맞춤 상담을 받아보세요!";
   } else if (media[1]) {
-    initWording0 = "홈스타일링 진행을 위해 다음 기본 정보가 필요합니다. 간단히 작성 후, 디자이너와의 상담을 받아보세요!";
+    initWording0 = "홈스타일링 진행을 위해 다음 기본 정보가 필요합니다. 간단히 작성 후, 1:1 맞춤 상담을 받아보세요!";
   } else {
-    initWording0 = "홈스타일링 진행을 위해 간단히 작성 후, 디자이너와의 1:1 상담을 받아보세요!";
+    initWording0 = "홈스타일링 진행을 위해 간단히 작성 후, 1:1 맞춤 상담을 받아보세요!";
   }
 
   if (media[0]) {
@@ -1003,14 +1003,14 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       },
       children: [
         {
-          mode: "svg",
-          source: instance.mother.returnRound(circleRadius, colorChip.green),
           style: {
             display: "inline-block",
             position: "relative",
             width: String(circleRadius * 2) + ea,
             height: String(circleRadius * 2) + ea,
             marginRight: String(circleBetween) + ea,
+            borderRadius: String(circleRadius) + ea,
+            background: colorChip.green,
             top: String(circleTop) + ea,
             verticalAlign: "top",
           }
@@ -1078,14 +1078,14 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       },
       children: [
         {
-          mode: "svg",
-          source: instance.mother.returnRound(circleRadius, colorChip.green),
           style: {
             display: "inline-block",
             position: "relative",
             width: String(circleRadius * 2) + ea,
             height: String(circleRadius * 2) + ea,
             marginRight: String(circleBetween) + ea,
+            borderRadius: String(circleRadius) + ea,
+            background: colorChip.green,
             top: String(circleTop) + ea,
             verticalAlign: "top",
           }
@@ -1154,14 +1154,14 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       },
       children: [
         {
-          mode: "svg",
-          source: instance.mother.returnRound(circleRadius, colorChip.green),
           style: {
             display: "inline-block",
             position: "relative",
             width: String(circleRadius * 2) + ea,
             height: String(circleRadius * 2) + ea,
             marginRight: String(circleBetween) + ea,
+            borderRadius: String(circleRadius) + ea,
+            background: colorChip.green,
             top: String(circleTop) + ea,
             verticalAlign: "top",
           }
@@ -1220,7 +1220,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         },
       ]
     });
-    // 3
+    // 4
     createNode({
       mother: rightBox,
       style: {
@@ -1231,14 +1231,14 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       },
       children: [
         {
-          mode: "svg",
-          source: instance.mother.returnRound(circleRadius, colorChip.green),
           style: {
             display: "inline-block",
             position: "relative",
             width: String(circleRadius * 2) + ea,
             height: String(circleRadius * 2) + ea,
             marginRight: String(circleBetween) + ea,
+            borderRadius: String(circleRadius) + ea,
+            background: colorChip.green,
             top: String(circleTop) + ea,
             verticalAlign: "top",
           }
@@ -1322,7 +1322,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         },
       ]
     });
-    // 3
+    // 5
     createNode({
       mother: rightBox,
       style: {
@@ -1375,7 +1375,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       ]
     });
 
-    // 5 : margin
+    // 6 : margin
     createNode({
       mother: rightBox,
       style: {
@@ -1386,7 +1386,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       }
     });
 
-    // 6
+    // 7
     createNode({
       mother: rightBox,
       style: {
@@ -1397,20 +1397,20 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       },
       children: [
         {
-          mode: "svg",
-          source: instance.mother.returnRound(circleRadius, colorChip.green),
           style: {
             display: "inline-block",
             position: "relative",
             width: String(circleRadius * 2) + ea,
             height: String(circleRadius * 2) + ea,
             marginRight: String(circleBetween) + ea,
+            borderRadius: String(circleRadius) + ea,
+            background: colorChip.green,
             top: String(circleTop) + ea,
             verticalAlign: "top",
           }
         },
         {
-          text: "평수",
+          text: "분양 평수",
           style: {
             display: "inline-block",
             position: "relative",
@@ -1425,7 +1425,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
           style: {
             position: "absolute",
             top: String(grayTop) + ea,
-            left: String(leftGrayType0) + ea,
+            left: String(leftGrayType2) + ea,
             width: String(widthGrayType0) + ea,
             height: String(grayHeight) + ea,
             background: colorChip.gray1,
@@ -1449,7 +1449,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
           style: {
             position: "absolute",
             top: String(grayInputTop) + ea,
-            left: String(leftGrayType0) + ea,
+            left: String(leftGrayType2) + ea,
             width: String(widthGrayType0) + ea,
             height: String(grayHeight) + ea,
             outline: String(0),
@@ -1460,153 +1460,10 @@ ClientConsultingJs.prototype.insertInitBox = function () {
             textAlign: "center",
             background: "transparent",
           }
-        },
-        // {
-        //   mode: "svg",
-        //   source: instance.mother.returnRound(circleRadius, colorChip.green),
-        //   style: {
-        //     position: "absolute",
-        //     left: String(secondPointLeft) + ea,
-        //     width: String(circleRadius * 2) + ea,
-        //     height: String(circleRadius * 2) + ea,
-        //     top: String(circleTop) + ea,
-        //     verticalAlign: "top",
-        //   }
-        // },
-        // {
-        //   text: "계약 형태",
-        //   style: {
-        //     position: "absolute",
-        //     left: String(secondPointLeft + (circleRadius * 2) + circleBetween) + ea,
-        //     top: String(mainTop) + ea,
-        //     fontSize: String(mainSize) + ea,
-        //     fontWeight: String(mainWeight),
-        //     color: colorChip.black,
-        //     verticalAlign: "top",
-        //   }
-        // },
-        // {
-        //   class: [ inputClassName ],
-        //   attribute: {
-        //     toggle: "on",
-        //     property: "contract",
-        //   },
-        //   event: {
-        //     click: checkboxClickEvent0
-        //   },
-        //   style: {
-        //     position: "absolute",
-        //     top: String(0),
-        //     left: String(leftCheck0) + ea,
-        //     height: String(100) + '%',
-        //     verticalAlign: "top",
-        //     cursor: "pointer",
-        //   },
-        //   children: [
-        //     {
-        //       mode: "svg",
-        //       source: instance.mother.returnCheckBox(colorChip.gray3),
-        //       style: {
-        //         display: "inline-block",
-        //         position: "relative",
-        //         width: String(checkboxWidth) + ea,
-        //         top: String(checkboxTop) + ea,
-        //         verticalAlign: "top",
-        //         cursor: "pointer",
-        //         opacity: String(0),
-        //       }
-        //     },
-        //     {
-        //       mode: "svg",
-        //       source: instance.mother.returnCheckBox(colorChip.green),
-        //       style: {
-        //         position: "absolute",
-        //         width: String(checkboxWidth) + ea,
-        //         top: String(checkboxTop) + ea,
-        //         left: String(0),
-        //         verticalAlign: "top",
-        //         cursor: "pointer",
-        //         opacity: String(1),
-        //       }
-        //     },
-        //     {
-        //       text: "자가",
-        //       style: {
-        //         display: "inline-block",
-        //         position: "relative",
-        //         marginLeft: String(checkboxBetween) + ea,
-        //         top: String(mainTop) + ea,
-        //         fontSize: String(mainSize) + ea,
-        //         fontWeight: String(checkboxWeight),
-        //         color: colorChip.green,
-        //         verticalAlign: "top",
-        //         cursor: "pointer",
-        //       }
-        //     },
-        //   ]
-        // },
-        // {
-        //   class: [ inputClassName ],
-        //   attribute: {
-        //     toggle: "off",
-        //     property: "contract",
-        //   },
-        //   event: {
-        //     click: checkboxClickEvent0
-        //   },
-        //   style: {
-        //     position: "absolute",
-        //     top: String(0),
-        //     left: String(leftCheck1) + ea,
-        //     height: String(100) + '%',
-        //     verticalAlign: "top",
-        //     cursor: "pointer",
-        //   },
-        //   children: [
-        //     {
-        //       mode: "svg",
-        //       source: instance.mother.returnCheckBox(colorChip.gray3),
-        //       style: {
-        //         display: "inline-block",
-        //         position: "relative",
-        //         width: String(checkboxWidth) + ea,
-        //         top: String(checkboxTop) + ea,
-        //         verticalAlign: "top",
-        //         cursor: "pointer",
-        //         opacity: String(1),
-        //       }
-        //     },
-        //     {
-        //       mode: "svg",
-        //       source: instance.mother.returnCheckBox(colorChip.green),
-        //       style: {
-        //         position: "absolute",
-        //         width: String(checkboxWidth) + ea,
-        //         top: String(checkboxTop) + ea,
-        //         left: String(0),
-        //         verticalAlign: "top",
-        //         cursor: "pointer",
-        //         opacity: String(0),
-        //       }
-        //     },
-        //     {
-        //       text: "전월세",
-        //       style: {
-        //         display: "inline-block",
-        //         position: "relative",
-        //         marginLeft: String(checkboxBetween) + ea,
-        //         top: String(mainTop) + ea,
-        //         fontSize: String(mainSize) + ea,
-        //         fontWeight: String(checkboxWeight),
-        //         color: colorChip.black,
-        //         verticalAlign: "top",
-        //         cursor: "pointer",
-        //       }
-        //     },
-        //   ]
-        // },
+        }
       ]
     });
+
     // 7
     createNode({
       mother: rightBox,
@@ -1618,76 +1475,14 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       },
       children: [
         {
-          mode: "svg",
-          source: instance.mother.returnRound(circleRadius, colorChip.green),
           style: {
             display: "inline-block",
             position: "relative",
             width: String(circleRadius * 2) + ea,
             height: String(circleRadius * 2) + ea,
             marginRight: String(circleBetween) + ea,
-            top: String(circleTop) + ea,
-            verticalAlign: "top",
-          }
-        },
-        {
-          text: "입주일",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(mainTop) + ea,
-            fontSize: String(mainSize) + ea,
-            fontWeight: String(mainWeight),
-            color: colorChip.black,
-            verticalAlign: "top",
-          }
-        },
-        {
-          style: {
-            position: "absolute",
-            top: String(grayTop) + ea,
-            left: String(leftGrayType0) + ea,
-            width: String(widthGrayType0) + ea,
-            height: String(grayHeight) + ea,
-            background: colorChip.gray1,
-            borderRadius: String(3) + "px",
-          }
-        },
-        {
-          mode: "input",
-          class: [ inputClassName ],
-          attribute: {
-            type: "text",
-            placeholder: dateToString(new Date()),
-            property: "movein",
-            value: "",
-          },
-          event: {
-            click: calendarViewEvent,
-          },
-          style: {
-            position: "absolute",
-            top: String(grayInputTop) + ea,
-            left: String(leftGrayType0) + ea,
-            width: String(widthGrayType0) + ea,
-            height: String(grayHeight) + ea,
-            outline: String(0),
-            border: String(0),
-            fontSize: String(inputSize) + ea,
-            fontWeight: String(inputWeight),
-            color: colorChip.black,
-            textAlign: "center",
-            background: "transparent",
-          }
-        },
-        {
-          mode: "svg",
-          source: instance.mother.returnRound(circleRadius, colorChip.green),
-          style: {
-            position: "absolute",
-            left: String(secondPointLeft) + ea,
-            width: String(circleRadius * 2) + ea,
-            height: String(circleRadius * 2) + ea,
+            borderRadius: String(circleRadius) + ea,
+            background: colorChip.green,
             top: String(circleTop) + ea,
             verticalAlign: "top",
           }
@@ -1695,8 +1490,8 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         {
           text: "거주 여부",
           style: {
-            position: "absolute",
-            left: String(secondPointLeft + (circleRadius * 2) + circleBetween) + ea,
+            display: "inline-block",
+            position: "relative",
             top: String(mainTop) + ea,
             fontSize: String(mainSize) + ea,
             fontWeight: String(mainWeight),
@@ -1826,6 +1621,82 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         },
       ]
     });
+
+    // 7
+    createNode({
+      mother: rightBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight) + ea,
+      },
+      children: [
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleRadius * 2) + ea,
+            height: String(circleRadius * 2) + ea,
+            marginRight: String(circleBetween) + ea,
+            borderRadius: String(circleRadius) + ea,
+            background: colorChip.green,
+            top: String(circleTop) + ea,
+            verticalAlign: "top",
+          }
+        },
+        {
+          text: "입주일",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(mainTop) + ea,
+            fontSize: String(mainSize) + ea,
+            fontWeight: String(mainWeight),
+            color: colorChip.black,
+            verticalAlign: "top",
+          }
+        },
+        {
+          style: {
+            position: "absolute",
+            top: String(grayTop) + ea,
+            left: String(leftGrayType2) + ea,
+            width: String(widthGrayType0) + ea,
+            height: String(grayHeight) + ea,
+            background: colorChip.gray1,
+            borderRadius: String(3) + "px",
+          }
+        },
+        {
+          mode: "input",
+          class: [ inputClassName ],
+          attribute: {
+            type: "text",
+            placeholder: dateToString(new Date()),
+            property: "movein",
+            value: "",
+          },
+          event: {
+            click: calendarViewEvent,
+          },
+          style: {
+            position: "absolute",
+            top: String(grayInputTop) + ea,
+            left: String(leftGrayType2) + ea,
+            width: String(widthGrayType0) + ea,
+            height: String(grayHeight) + ea,
+            outline: String(0),
+            border: String(0),
+            fontSize: String(inputSize) + ea,
+            fontWeight: String(inputWeight),
+            color: colorChip.black,
+            textAlign: "center",
+            background: "transparent",
+          }
+        },
+      ]
+    });
     // 12
     createNode({
       mother: rightBox,
@@ -1837,20 +1708,20 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       },
       children: [
         {
-          mode: "svg",
-          source: instance.mother.returnRound(circleRadius, colorChip.green),
           style: {
             display: "inline-block",
             position: "relative",
             width: String(circleRadius * 2) + ea,
             height: String(circleRadius * 2) + ea,
             marginRight: String(circleBetween) + ea,
+            borderRadius: String(circleRadius) + ea,
+            background: colorChip.green,
             top: String(circleTop) + ea,
             verticalAlign: "top",
           }
         },
         {
-          text: "요청",
+          text: "요청 사항",
           style: {
             display: "inline-block",
             position: "relative",
@@ -1865,7 +1736,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
           style: {
             position: "absolute",
             top: String(grayTextAreaTop) + ea,
-            left: String(leftGrayType0) + ea,
+            left: String(leftGrayType2) + ea,
             width: String(widthGrayType2) + ea,
             height: String(grayBigHeight) + ea,
             background: colorChip.gray1,
@@ -1882,7 +1753,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
           style: {
             position: "absolute",
             top: String(grayTextAreaTop + textareaTop) + ea,
-            left: String(leftGrayType0 + textareaLeft) + ea,
+            left: String(leftGrayType2 + textareaLeft) + ea,
             width: String(widthGrayType2 - (textareaLeft * 2)) + ea,
             height: String(grayBigHeight - (textareaTop * 1)) + ea,
             fontSize: String(grayLineBlockFontSize) + ea,
@@ -2312,7 +2183,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
           }
         },
         {
-          text: "평수",
+          text: "분양 평수",
           style: {
             display: "inline-block",
             position: "relative",
@@ -2347,81 +2218,6 @@ ClientConsultingJs.prototype.insertInitBox = function () {
             keyup: pyeongNumberEvent,
             blur: pyeongBlurEvent,
             focus: pyeongFocusEvent,
-          },
-          style: {
-            position: "absolute",
-            top: String(grayInputTop) + ea,
-            left: String(leftGrayType1) + ea,
-            width: String(widthGrayType0) + ea,
-            height: String(grayHeight) + ea,
-            outline: String(0),
-            border: String(0),
-            fontSize: String(inputSize) + ea,
-            fontWeight: String(inputWeight),
-            color: colorChip.black,
-            textAlign: "center",
-            background: "transparent",
-          }
-        },
-      ]
-    });
-    // 10
-    createNode({
-      mother: rightBox,
-      style: {
-        display: "block",
-        position: "relative",
-        marginBottom: String(blockMarginBottom) + ea,
-        height: String(moduleHeight) + ea,
-      },
-      children: [
-        {
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(circleRadius * 2) + ea,
-            height: String(circleRadius * 2) + ea,
-            borderRadius: String(circleRadius * 2) + ea,
-            background:  colorChip.green,
-            marginRight: String(circleBetween) + ea,
-            top: String(circleTop) + ea,
-            verticalAlign: "top",
-          }
-        },
-        {
-          text: "입주일",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(mainTop) + ea,
-            fontSize: String(mainSize) + ea,
-            fontWeight: String(mainWeight),
-            color: colorChip.black,
-            verticalAlign: "top",
-          }
-        },
-        {
-          style: {
-            position: "absolute",
-            top: String(grayTop) + ea,
-            left: String(leftGrayType1) + ea,
-            width: String(widthGrayType0) + ea,
-            height: String(grayHeight) + ea,
-            background: colorChip.gray1,
-            borderRadius: String(3) + "px",
-          }
-        },
-        {
-          mode: "input",
-          class: [ inputClassName ],
-          attribute: {
-            type: "text",
-            placeholder: dateToString(new Date()),
-            property: "movein",
-            value: "",
-          },
-          event: {
-            click: calendarViewEvent,
           },
           style: {
             position: "absolute",
@@ -2594,6 +2390,81 @@ ClientConsultingJs.prototype.insertInitBox = function () {
               }
             },
           ]
+        },
+      ]
+    });
+    // 10
+    createNode({
+      mother: rightBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight) + ea,
+      },
+      children: [
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleRadius * 2) + ea,
+            height: String(circleRadius * 2) + ea,
+            borderRadius: String(circleRadius * 2) + ea,
+            background:  colorChip.green,
+            marginRight: String(circleBetween) + ea,
+            top: String(circleTop) + ea,
+            verticalAlign: "top",
+          }
+        },
+        {
+          text: "입주일",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(mainTop) + ea,
+            fontSize: String(mainSize) + ea,
+            fontWeight: String(mainWeight),
+            color: colorChip.black,
+            verticalAlign: "top",
+          }
+        },
+        {
+          style: {
+            position: "absolute",
+            top: String(grayTop) + ea,
+            left: String(leftGrayType1) + ea,
+            width: String(widthGrayType0) + ea,
+            height: String(grayHeight) + ea,
+            background: colorChip.gray1,
+            borderRadius: String(3) + "px",
+          }
+        },
+        {
+          mode: "input",
+          class: [ inputClassName ],
+          attribute: {
+            type: "text",
+            placeholder: dateToString(new Date()),
+            property: "movein",
+            value: "",
+          },
+          event: {
+            click: calendarViewEvent,
+          },
+          style: {
+            position: "absolute",
+            top: String(grayInputTop) + ea,
+            left: String(leftGrayType1) + ea,
+            width: String(widthGrayType0) + ea,
+            height: String(grayHeight) + ea,
+            outline: String(0),
+            border: String(0),
+            fontSize: String(inputSize) + ea,
+            fontWeight: String(inputWeight),
+            color: colorChip.black,
+            textAlign: "center",
+            background: "transparent",
+          }
         },
       ]
     });
