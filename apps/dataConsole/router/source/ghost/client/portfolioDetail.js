@@ -45,7 +45,7 @@ PortfolioDetailJs.binaryPath = "/middle/portfolio";
 
 PortfolioDetailJs.prototype.portfolioMainBox = function () {
   const instance = this;
-  const { createNode, colorChip, withOut, svgMaker, isMac, isIphone } = GeneralJs;
+  const { createNode, colorChip, withOut, svgMaker, isMac, isIphone, setQueue } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid } = this;
   const { contentsArr } = this;
   const mobile = media[4];
@@ -67,6 +67,11 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
   let slide;
   let photoBigBox, photoSlideBox;
   let moveX;
+  let photoSlideFactor;
+  let photoSlideFactors;
+  let photoNextPrevious, photoNextSlide;
+  let photoBigFactor, photoBigFactors;
+  let photoSlideInterval;
 
   mainHeight = <%% 800, 750, 710, 590, (210 / 297) * 100 %%>;
 
@@ -125,6 +130,9 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
     }
   });
 
+  photoSlideInterval = null;
+  photoNextSlide = () => {}
+
   photoBox = createNode({
     mother: contentsBox,
     style: {
@@ -139,13 +147,24 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
           display: "block",
           position: "relative",
           width: String(100) + '%',
-          background: "red",
           height: withOut(slideBarHeight + boxMargin, ea),
           borderRadius: String(5) + "px",
           overflow: "hidden",
+          background: colorChip.gray2,
         }
       },
       {
+        event: {
+          mouseenter: (e) => {
+            if (photoSlideInterval !== null) {
+              clearInterval(photoSlideInterval);
+              photoSlideInterval = null;
+            }
+          },
+          mouseleave: (e) => {
+            photoSlideInterval = setInterval(photoNextSlide, 3000);
+          }
+        },
         style: {
           display: "block",
           position: "relative",
@@ -160,9 +179,14 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
 
   [ photoBigBox, photoSlideBox ] = [ ...photoBox.children ];
 
+  photoBigFactors = [];
   for (let i = slide.length - 1; i > -1; i--) {
-    createNode({
+    photoBigFactor = createNode({
       mother: photoBigBox,
+      attribute: {
+        index: String(i),
+        photo: String(slide[i]),
+      },
       style: {
         position: "absolute",
         top: String(0),
@@ -173,12 +197,15 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
         backgroundSize: gsArray[i] === 'g' ? "100% auto" : "auto 100%",
         backgroundPosition: "50% 50%",
         backgroundRepeat: "no-repeat",
+        opacity: String(i === 0 ? 1 : 0),
       }
     });
+    photoBigFactors.push(photoBigFactor);
   }
 
+  photoSlideFactors = [];
   for (let i = 0; i < slide.length; i++) {
-    createNode({
+    photoSlideFactor = createNode({
       mother: photoSlideBox,
       attribute: {
         index: String(i),
@@ -197,10 +224,210 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
         backgroundPosition: "50% 50%",
         backgroundRepeat: "no-repeat",
         transform: "translateX(" + String(i < slide.length / 2 ? moveX * i : (moveX * i) - (moveX * slide.length)) + ea + ")",
+        opacity: Math.floor(slide.length / 2) <= i && i <= Math.ceil(slide.length / 2) ? String(0) : String(1),
       }
-    })
+    });
+    photoSlideFactors.push(photoSlideFactor);
   }
 
+  photoNextSlide = function () {
+    let index;
+    let indexNext;
+    let viewTargetNumber;
+    let childrenTarget;
+    let target0, target1;
+    for (let i = 0; i < photoSlideFactors.length; i++) {
+      index = Number(photoSlideFactors[i].getAttribute("index"));
+      indexNext = index - 1 !== -1 ? index - 1 : slide.length - 1;
+      photoSlideFactors[i].style.transform = "translateX(" + String(indexNext < slide.length / 2 ? moveX * indexNext : (moveX * indexNext) - (moveX * slide.length)) + ea + ")";
+      photoSlideFactors[i].style.opacity = Math.floor(slide.length / 2) <= indexNext && indexNext <= Math.ceil(slide.length / 2) ? String(0) : String(1);
+      photoSlideFactors[i].setAttribute("index", String(indexNext));
+      if (indexNext === 0) {
+        viewTargetNumber = Number(photoSlideFactors[i].getAttribute("photo"));
+      }
+    }
+    childrenTarget = [ ...photoBigBox.children ];
+    for (let i = 0; i < childrenTarget.length; i++) {
+      if (Number(childrenTarget[i].getAttribute("photo")) === viewTargetNumber) {
+        target0 = i - 1;
+        target1 = i;
+      }
+    }
+    for (let i = 0; i < childrenTarget.length; i++) {
+      if ([ target0, target1 ].includes(i)) {
+        childrenTarget[i].style.opacity = String(1);
+      } else {
+        childrenTarget[i].style.opacity = String(0);
+      }
+    }
+  }
+
+  photoNextPrevious = function () {
+    let index;
+    let indexPrevious;
+    let viewTargetNumber;
+    let childrenTarget;
+    let target0, target1;
+    for (let i = 0; i < photoSlideFactors.length; i++) {
+      index = Number(photoSlideFactors[i].getAttribute("index"));
+      indexPrevious = index + 1 !== slide.length ? index + 1 : 0;
+      photoSlideFactors[i].style.transform = "translateX(" + String(indexPrevious < slide.length / 2 ? moveX * indexPrevious : (moveX * indexPrevious) - (moveX * slide.length)) + ea + ")";
+      photoSlideFactors[i].style.opacity = Math.floor(slide.length / 2) <= indexPrevious && indexPrevious <= Math.ceil(slide.length / 2) ? String(0) : String(1);
+      photoSlideFactors[i].setAttribute("index", String(indexPrevious));
+      if (indexPrevious === 0) {
+        viewTargetNumber = Number(photoSlideFactors[i].getAttribute("photo"));
+      }
+    }
+    childrenTarget = [ ...photoBigBox.children ];
+    for (let i = 0; i < childrenTarget.length; i++) {
+      if (Number(childrenTarget[i].getAttribute("photo")) === viewTargetNumber) {
+        target0 = i - 1;
+        target1 = i;
+      }
+    }
+    for (let i = 0; i < childrenTarget.length; i++) {
+      if ([ target0, target1 ].includes(i)) {
+        childrenTarget[i].style.opacity = String(1);
+      } else {
+        childrenTarget[i].style.opacity = String(0);
+      }
+    }
+  }
+
+  createNode({
+    mother: photoSlideBox,
+    event: {
+      click: (e) => {
+        photoNextSlide();
+      }
+    },
+    style: {
+      position: "absolute",
+      top: String(0),
+      height: String(slideBarHeight) + ea,
+      width: String(slideBarHeight) + ea,
+      left: "calc(50% - " + String(slideBarHeight / 2) + ea + ")",
+      background: "transparent",
+      borderRadius: String(5) + "px",
+      transform: "translateX(" + String(moveX * 1) + ea + ")",
+      cursor: "pointer",
+    }
+  });
+  createNode({
+    mother: photoSlideBox,
+    event: {
+      click: (e) => {
+        photoNextSlide();
+        setQueue(() => {
+          photoNextSlide();
+        }, 501);
+      }
+    },
+    style: {
+      position: "absolute",
+      top: String(0),
+      height: String(slideBarHeight) + ea,
+      width: String(slideBarHeight) + ea,
+      left: "calc(50% - " + String(slideBarHeight / 2) + ea + ")",
+      background: "transparent",
+      borderRadius: String(5) + "px",
+      transform: "translateX(" + String(moveX * 2) + ea + ")",
+      cursor: "pointer",
+    }
+  });
+  createNode({
+    mother: photoSlideBox,
+    event: {
+      click: (e) => {
+        photoNextSlide();
+        setQueue(() => {
+          photoNextSlide();
+        }, 501);
+        setQueue(() => {
+          photoNextSlide();
+        }, 1001);
+      }
+    },
+    style: {
+      position: "absolute",
+      top: String(0),
+      height: String(slideBarHeight) + ea,
+      width: String(slideBarHeight) + ea,
+      left: "calc(50% - " + String(slideBarHeight / 2) + ea + ")",
+      background: "transparent",
+      borderRadius: String(5) + "px",
+      transform: "translateX(" + String(moveX * 3) + ea + ")",
+      cursor: "pointer",
+    }
+  });
+  createNode({
+    mother: photoSlideBox,
+    event: {
+      click: (e) => {
+        photoNextPrevious();
+      }
+    },
+    style: {
+      position: "absolute",
+      top: String(0),
+      height: String(slideBarHeight) + ea,
+      width: String(slideBarHeight) + ea,
+      left: "calc(50% - " + String(slideBarHeight / 2) + ea + ")",
+      background: "transparent",
+      borderRadius: String(5) + "px",
+      transform: "translateX(" + String(moveX * -1) + ea + ")",
+      cursor: "pointer",
+    }
+  });
+  createNode({
+    mother: photoSlideBox,
+    event: {
+      click: (e) => {
+        photoNextPrevious();
+        setQueue(() => {
+          photoNextPrevious();
+        }, 501);
+      }
+    },
+    style: {
+      position: "absolute",
+      top: String(0),
+      height: String(slideBarHeight) + ea,
+      width: String(slideBarHeight) + ea,
+      left: "calc(50% - " + String(slideBarHeight / 2) + ea + ")",
+      background: "transparent",
+      borderRadius: String(5) + "px",
+      transform: "translateX(" + String(moveX * -2) + ea + ")",
+      cursor: "pointer",
+    }
+  });
+  createNode({
+    mother: photoSlideBox,
+    event: {
+      click: (e) => {
+        photoNextPrevious();
+        setQueue(() => {
+          photoNextPrevious();
+        }, 501);
+        setQueue(() => {
+          photoNextPrevious();
+        }, 1001);
+      }
+    },
+    style: {
+      position: "absolute",
+      top: String(0),
+      height: String(slideBarHeight) + ea,
+      width: String(slideBarHeight) + ea,
+      left: "calc(50% - " + String(slideBarHeight / 2) + ea + ")",
+      background: "transparent",
+      borderRadius: String(5) + "px",
+      transform: "translateX(" + String(moveX * -3) + ea + ")",
+      cursor: "pointer",
+    }
+  });
+
+  photoSlideInterval = setInterval(photoNextSlide, 3000);
 
   designerBox = createNode({
     mother: contentsBox,
