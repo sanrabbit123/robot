@@ -2297,16 +2297,10 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       let phone;
       let address0;
       let address1;
-      let family;
       let email;
       let pyeong;
-      let contract;
       let movein;
       let living;
-      let budget;
-      let room;
-      let bathroom;
-      let balcony;
       let etc;
       let future;
       let expectedStart;
@@ -2321,20 +2315,14 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       phone = map.find((obj) => { return obj.property === "phone" });
       address0 = map.find((obj) => { return obj.property === "address0" });
       address1 = map.find((obj) => { return obj.property === "address1" });
-      family = map.find((obj) => { return obj.property === "family" });
       email = map.find((obj) => { return obj.property === "email" });
       pyeong = map.find((obj) => { return obj.property === "pyeong" });
-      contract = map.find((obj) => { return obj.property === "contract" });
       movein = map.find((obj) => { return obj.property === "movein" });
       living = map.find((obj) => { return obj.property === "living" });
-      budget = map.find((obj) => { return obj.property === "budget" });
-      room = map.find((obj) => { return obj.property === "room" });
-      bathroom = map.find((obj) => { return obj.property === "bathroom" });
-      balcony = map.find((obj) => { return obj.property === "balcony" });
       etc = map.find((obj) => { return obj.property === "etc" });
       googleId = map.find((obj) => { return obj.property === "googleId" });
 
-      if (name === undefined || phone === undefined || address0 === undefined || address1 === undefined || family === undefined || email === undefined || pyeong === undefined || contract === undefined || movein === undefined || living === undefined || budget === undefined || room === undefined || bathroom === undefined || balcony === undefined || etc === undefined) {
+      if (name === undefined || phone === undefined || address0 === undefined || address1 === undefined || email === undefined || pyeong === undefined || movein === undefined || living === undefined || etc === undefined) {
         throw new Error("invaild post");
       }
 
@@ -2342,16 +2330,10 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       phone = phone.value.trim();
       address0 = address0.value.trim();
       address1 = address1.value.trim();
-      family = family.value.trim();
       email = email.value.trim();
       pyeong = pyeong.value.trim();
-      contract = contract.value.trim();
       movein = movein.value.trim();
       living = living.value.trim();
-      budget = budget.value.trim();
-      room = room.value.trim();
-      bathroom = bathroom.value.trim();
-      balcony = balcony.value.trim();
       etc = etc.value.trim();
       if (googleId === undefined) {
         googleId = "";
@@ -2366,13 +2348,9 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       requestObject["email"] = email;
 
       requestObject["requests.0.request.space.address"] = address0 + " " + address1;
-      requestObject["requests.0.request.family"] = family;
+      requestObject["requests.0.request.family"] = "";
 
-      if (budgetArr.includes(budget)) {
-        requestObject["requests.0.request.budget"] = budget;
-      } else {
-        requestObject["requests.0.request.budget"] = budgetArr[0];
-      }
+      requestObject["requests.0.request.budget"] = budgetArr[0];
 
       if (Number.isNaN(Number(pyeong.replace(/[^0-9\.]/gi, ''))) || Number(pyeong.replace(/[^0-9\.]/gi, '')) === 0) {
         requestObject["requests.0.request.space.pyeong"] = defaultPyeong;
@@ -2404,23 +2382,10 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
         requestObject["requests.0.analytics.date.space.movein"] = future;
       }
 
-      requestObject["requests.0.request.space.contract"] = contract;
-
-      if (Number.isNaN(Number(room.replace(/[^0-9]/gi, '')))) {
-        requestObject["requests.0.request.space.spec.room"] = 0;
-      } else {
-        requestObject["requests.0.request.space.spec.room"] = Number(room.replace(/[^0-9]/gi, ''));
-      }
-      if (Number.isNaN(Number(bathroom.replace(/[^0-9]/gi, '')))) {
-        requestObject["requests.0.request.space.spec.bathroom"] = 0;
-      } else {
-        requestObject["requests.0.request.space.spec.bathroom"] = Number(bathroom.replace(/[^0-9]/gi, ''));
-      }
-      if (/없음/gi.test(balcony)) {
-        requestObject["requests.0.request.space.spec.valcony"] = false;
-      } else {
-        requestObject["requests.0.request.space.spec.valcony"] = true;
-      }
+      requestObject["requests.0.request.space.contract"] = "자가";
+      requestObject["requests.0.request.space.spec.room"] = 3;
+      requestObject["requests.0.request.space.spec.bathroom"] = 2;
+      requestObject["requests.0.request.space.spec.valcony"] = false;
 
       requestObject["requests.0.request.etc.comment"] = etc;
       requestObject["requests.0.request.etc.channel"] = "인터넷 검색";

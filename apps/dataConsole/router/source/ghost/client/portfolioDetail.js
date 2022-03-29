@@ -710,7 +710,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
   titleBarWidth = <%% 80, 80, 80, 80, 18 %%>;
 
   contentsSize = <%% 16, 16, 16, 15, 3.5 %%>;
-  contentsTitleSize = <%% 22, 22, 22, 21, 4 %%>;
+  contentsTitleSize = <%% 23, 23, 23, 22, 4 %%>;
   contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
   contentsLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
 
@@ -724,8 +724,8 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
 
   photoMargin = <%% 8, 8, 8, 8, 1 %%>;
   blankMarginFirst = <%% 126, 126, 126, 96, 13.5 %%>;
-  blankMargin = <%% 100, 100, 100, 70, 11 %%>;
-  blankMargin2 = <%% 100, 100, 100, 70, 10 %%>;
+  blankMargin = <%% 90, 90, 90, 70, 11 %%>;
+  blankMargin2 = <%% 90, 90, 90, 70, 10 %%>;
   blankMarginLast = <%% 200, 200, 200, 170, 20 %%>;
 
   contentsPadding = <%% 21, 21, 21, 21, 6 %%>;
@@ -1407,6 +1407,9 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
   let tagMarginRight;
   let relativeLength;
   let mainTitleTop;
+  let titleSubSize;
+  let titleSubMarginTop;
+  let subTitle;
 
   this.relativePhotoNumber = 0;
 
@@ -1459,6 +1462,9 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
   titleSize = <%% 17, 16, 17, 14, 3.2 %%>;
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
   titleMarginLeft = <%% 6, 6, 5, 5, 1.1 %%>;
+
+  titleSubSize = <%% 12, 12, 12, 11, 2.5 %%>;
+  titleSubMarginTop = <%% 2, 2, 2, 2, 0.5 %%>;
 
   tagTongMarginTop = <%% 10, 10, 10, 8, 1.6 %%>;
   tagTongWidthRatio = <%% 1.1, 1.3, 1.3, 1.3, 1.3 %%>;
@@ -1744,8 +1750,18 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
 
         if (filteredContents.review.detailInfo.photodae.length > 1) {
 
-          src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + filteredContents.portfolio.pid + "/" + photoChar + String(filteredContents.review.detailInfo.photodae[0]) + filteredContents.portfolio.pid + ".jpg";
-          title = filteredContents.review.title.sub.split(", ").join(" ");
+          src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + filteredContents.portfolio.pid + "/" + photoChar + String(filteredContents.portfolio.detailInfo.photodae[0]) + filteredContents.portfolio.pid + ".jpg";
+          title = filteredContents.portfolio.title.main.split(", ")[1];
+          subTitle = filteredContents.portfolio.title.sub;
+          if (!mobile) {
+            if (subTitle.length > 27) {
+              subTitle = filteredContents.portfolio.title.sub.replace(/홈?스타일링$/i, '');
+            }
+          } else {
+            if (subTitle.length > 25) {
+              subTitle = filteredContents.portfolio.title.sub.replace(/홈?스타일링$/i, '');
+            }
+          }
           tag = equalJson(JSON.stringify(filteredContents.portfolio.detailInfo.tag));
 
           if (desktop) {
@@ -1789,28 +1805,37 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
                 },
                 children: [
                   {
-                    mode: "svg",
-                    source: svgMaker.doubleQuote(colorChip.green),
-                    style: {
-                      display: "inline-block",
-                      height: String(quoteHeight) + ea,
-                      width: String(quoteWidth) + ea,
-                      verticalAlign: "top",
-                      position: "relative",
-                      top: String(quoteTop) + ea,
-                    }
-                  },
-                  {
                     text: title,
                     style: {
-                      display: "inline-block",
+                      display: "block",
                       fontSize: String(titleSize) + ea,
                       fontWeight: String(titleWeight),
                       color: colorChip.black,
-                      marginLeft: String(titleMarginLeft) + ea,
-                      width: withOut(quoteWidth + titleMarginLeft, ea),
+                      width: withOut(0, ea),
                       verticalAlign: "top",
                     }
+                  },
+                  {
+                    style: {
+                      display: "block",
+                      width: withOut(0, ea),
+                      verticalAlign: "top",
+                      marginTop: String(titleSubMarginTop) + ea,
+                      overflow: "hidden",
+                    },
+                    children: [
+                      {
+                        text: subTitle,
+                        style: {
+                          display: "block",
+                          position: "relative",
+                          fontSize: String(titleSubSize) + ea,
+                          fontWeight: String(titleWeight),
+                          color: colorChip.deactive,
+                          width: String(200) + '%',
+                        },
+                      }
+                    ]
                   }
                 ]
               },
