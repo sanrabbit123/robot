@@ -45,12 +45,13 @@ PortfolioDetailJs.binaryPath = "/middle/portfolio";
 
 PortfolioDetailJs.prototype.portfolioMainBox = function () {
   const instance = this;
-  const { createNode, colorChip, withOut, svgMaker, isMac, isIphone, setQueue } = GeneralJs;
+  const { createNode, colorChip, withOut, svgMaker, isMac, isIphone, setQueue, designerMthParsing, designerCareer, selfHref } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid } = this;
-  const { contentsArr } = this;
+  const { contentsArr, designers } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const contents = contentsArr.toNormal().filter((obj) => { return obj.contents.portfolio.pid === pid })[0];
+  const designer = designers.search("desid", contents.desid);
   const photoChar = 't';
   let mainHeight;
   let mainTong;
@@ -72,6 +73,22 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
   let photoNextPrevious, photoNextSlide;
   let photoBigFactor, photoBigFactors;
   let photoSlideInterval;
+  let designerMthTargets;
+  let designerTongPaddingTop;
+  let deignserPhotoWidth;
+  let designerTitleSize;
+  let designerTitleWeight;
+  let designerTitleMarginTop;
+  let designerMthSize;
+  let designerMthWeight;
+  let designerMthMarginTop;
+  let careerBottom;
+  let careerSize;
+  let careerWeight;
+  let contentsTitleSize, contentsTitleWeight, contentsTitleLineHeight;
+  let contentsSubTitleSize, contentsSubTitleWeight, contentsSubTitleLineHeight;
+  let contentsTitleBetween;
+  let contentsTitleButtonWidth, contentsTitleButtonHeight, contentsTitleButtonTextTop, contentsTitleButtonSize, contentsTitleButtonWeight;
 
   mainHeight = <%% 800, 750, 710, 590, (210 / 297) * 100 %%>;
 
@@ -91,6 +108,35 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
   titleBoxHeight = 210;
 
   moveX = 138;
+
+  designerTongPaddingTop = <%% 30, 30, 30, 27, 30 %%>;
+  deignserPhotoWidth = <%% 124, 124, 124, 110, 124 %%>;
+
+  designerTitleSize = <%% 19, 19, 19, 16, 19 %%>;
+  designerTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+  designerTitleMarginTop = <%% 10, 10, 10, 7, 10 %%>;
+
+  designerMthSize = <%% 13, 13, 13, 11, 13 %%>;
+  designerMthWeight = <%% 500, 500, 500, 500, 500 %%>;
+  designerMthMarginTop = <%% 3, 3, 3, 2, 3 %%>;
+
+  careerBottom = <%% 30, 30, 30, 27, 30 %%>;
+  careerSize = <%% 12, 12, 12, 11, 12 %%>;
+  careerWeight = <%% 400, 400, 400, 400, 400 %%>;
+
+  contentsTitleSize = 26;
+  contentsTitleWeight = 700;
+  contentsTitleLineHeight = 1.4;
+  contentsSubTitleSize = 15;
+  contentsSubTitleWeight = 500;
+  contentsSubTitleLineHeight = 1.5;
+  contentsTitleBetween = 14;
+
+  contentsTitleButtonWidth = 96;
+  contentsTitleButtonHeight = 36;
+  contentsTitleButtonTextTop = -2;
+  contentsTitleButtonSize = 13;
+  contentsTitleButtonWeight = 600;
 
   slide = contents.contents.portfolio.detailInfo.slide;
   gsArray = slide.map((index) => {
@@ -126,7 +172,7 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
       width: desktop ? String(contentsBoxWidth) + ea : String(100) + '%',
       left: desktop ? "calc(50% - " + String(contentsBoxWidth / 2) + ea + ")" : String(0),
       top: String(0),
-      height: String(mainHeight - (contentsBoxTop * 1)) + ea,
+      height: String(mainHeight - (contentsBoxTop * 2)) + ea,
     }
   });
 
@@ -136,10 +182,11 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
   photoBox = createNode({
     mother: contentsBox,
     style: {
-      display: "block",
+      display: "inline-block",
       position: "relative",
       width: withOut(designerBoxWidth + boxMargin, ea),
       height: String(100) + '%',
+      marginRight: String(boxMargin) + ea,
     },
     children: [
       {
@@ -162,6 +209,10 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
             }
           },
           mouseleave: (e) => {
+            if (photoSlideInterval !== null) {
+              clearInterval(photoSlideInterval);
+              photoSlideInterval = null;
+            }
             photoSlideInterval = setInterval(photoNextSlide, 3000);
           }
         },
@@ -193,6 +244,7 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
         left: String(0),
         width: String(100) + '%',
         height: String(100) + '%',
+        backgroundColor: colorChip.gray1,
         backgroundImage: "url('" + "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.contents.portfolio.pid + "/" + photoChar + String(slide[i]) + contents.contents.portfolio.pid + ".jpg" + "')",
         backgroundSize: gsArray[i] === 'g' ? "100% auto" : "auto 100%",
         backgroundPosition: "50% 50%",
@@ -217,7 +269,7 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
         height: String(slideBarHeight) + ea,
         width: String(slideBarHeight) + ea,
         left: "calc(50% - " + String(slideBarHeight / 2) + ea + ")",
-        background: colorChip.gray1,
+        backgroundColor: colorChip.gray1,
         borderRadius: String(5) + "px",
         backgroundImage: "url('" + "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.contents.portfolio.pid + "/" + photoChar + String(slide[i]) + contents.contents.portfolio.pid + ".jpg" + "')",
         backgroundSize: gsArray[i] === 'g' ? "100% auto" : "auto 100%",
@@ -431,13 +483,79 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
 
   designerBox = createNode({
     mother: contentsBox,
+    event: {
+      click: (e) => {
+
+      }
+    },
+    style: {
+      display: "inline-block",
+      position: "relative",
+      verticalAlign: "top",
+      background: colorChip.gray0,
+      width: String(designerBoxWidth) + ea,
+      height: String(designerBoxHeight - designerTongPaddingTop) + ea,
+      paddingTop: String(designerTongPaddingTop) + ea,
+      textAlign: "center",
+      borderRadius: String(5) + "px",
+      cursor: "pointer",
+    },
+    children: [
+      {
+        style: {
+          backgroundImage: "url('" + "https://" + GHOSTHOST + "/corePortfolio/listImage/" + designer.setting.front.photo.porlid + "/" + designer.setting.front.photo.index + designer.setting.front.photo.porlid + ".jpg" + "')",
+          backgroundSize: "auto 100%",
+          backgroundPosition: "50% 50%",
+          display: "inline-block",
+          width: String(deignserPhotoWidth) + ea,
+          height: String(deignserPhotoWidth) + ea,
+          borderRadius: String(deignserPhotoWidth / 2) + ea,
+        }
+      },
+      {
+        text: designer.designer,
+        style: {
+          marginTop: String(designerTitleMarginTop) + ea,
+          marginBottom: String(designerTitleMarginTop) + ea,
+          textAlign: "center",
+          fontSize: String(designerTitleSize) + ea,
+          fontWeight: String(designerTitleWeight),
+          color: colorChip.black,
+        }
+      }
+    ]
+  });
+
+  designerMthTargets = designerMthParsing(designer.setting.front.methods);
+  for (let mth of designerMthTargets) {
+    createNode({
+      mother: designerBox,
+      text: mth,
+      style: {
+        marginTop: String(designerMthMarginTop) + ea,
+        textAlign: "center",
+        fontSize: String(designerMthSize) + ea,
+        fontWeight: String(designerMthWeight),
+        color: colorChip.black,
+      }
+    });
+  }
+
+  createNode({
+    mother: designerBox,
+    text: designerCareer(designer, true),
     style: {
       position: "absolute",
-      top: String(contentsBoxTop) + ea,
-      right: String(0),
-      background: "blue",
-      width: String(designerBoxWidth) + ea,
-      height: String(designerBoxHeight) + ea,
+      width: String(100) + '%',
+      textAlign: "center",
+      bottom: String(careerBottom) + ea,
+      fontSize: String(careerSize) + ea,
+      fontWeight: String(careerWeight),
+      color: colorChip.black,
+    },
+    bold: {
+      fontWeight: String(200),
+      color: colorChip.deactive,
     }
   });
 
@@ -447,10 +565,68 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
       position: "absolute",
       bottom: String(0),
       right: String(0),
-      background: "blue",
       width: String(designerBoxWidth) + ea,
       height: String(titleBoxHeight) + ea,
-    }
+    },
+    children: [
+      {
+        text: contents.contents.portfolio.title.main.split(", ")[1].split(" ").slice(0, contents.contents.portfolio.title.main.split(", ")[1].split(" ").findIndex((str) => { return /py/gi.test(str) })).join(" ") + "\n" + contents.contents.portfolio.title.main.split(", ")[1].split(" ").slice(contents.contents.portfolio.title.main.split(", ")[1].split(" ").findIndex((str) => { return /py/gi.test(str) })).join(" "),
+        style: {
+          display: "block",
+          position: "relative",
+          fontSize: String(contentsTitleSize) + ea,
+          fontWeight: String(contentsTitleWeight),
+          color: colorChip.black,
+          textAlign: "right",
+          lineHeight: String(contentsTitleLineHeight),
+        }
+      },
+      {
+        text: contents.contents.portfolio.title.sub.split(", ").join("\n"),
+        style: {
+          display: "block",
+          position: "relative",
+          marginTop: String(contentsTitleBetween) + ea,
+          fontSize: String(contentsSubTitleSize) + ea,
+          fontWeight: String(contentsSubTitleWeight),
+          color: colorChip.gray5,
+          textAlign: "right",
+          lineHeight: String(contentsSubTitleLineHeight),
+        }
+      },
+      {
+        event: {
+          click: (e) => { selfHref("/consulting.php") },
+        },
+        style: {
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          position: "absolute",
+          bottom: String(0),
+          right: String(0),
+          width: String(contentsTitleButtonWidth) + ea,
+          height: String(contentsTitleButtonHeight) + ea,
+          borderRadius: String(5) + "px",
+          border: "1px solid " + colorChip.gray3,
+          boxSizing: "border-box",
+          textAlign: "center",
+          cursor: "pointer",
+        },
+        children: [
+          {
+            text: "서비스 문의",
+            style: {
+              position: "relative",
+              top: String(contentsTitleButtonTextTop) + ea,
+              fontSize: String(contentsTitleButtonSize) + ea,
+              fontWeight: String(contentsTitleButtonWeight),
+              color: colorChip.green,
+            }
+          }
+        ]
+      }
+    ]
   });
 
 }
@@ -463,10 +639,9 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
   const mobile = media[4];
   const desktop = !mobile;
   const contents = contentsArr.toNormal().filter((obj) => { return obj.contents.portfolio.pid === pid })[0];
-  const { contents: { review }, photos } = contents;
+  const { contents: { review, portfolio }, photos } = contents;
   const { detail: photoDetail } = photos;
-  const { contents: { detail } } = review;
-  const [ { contents: customerStoryMother } ] = detail;
+  const { contents: { detail } } = portfolio;
   const designer = designers.search("desid", contents.desid);
   const story = equalJson(JSON.stringify(detail));
   const photoChar = 't';
@@ -519,14 +694,11 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
   let careerSize, careerWeight;
   let mobileDesignerWordingTop;
   let mobileDesignerBoxBetween;
+  let contentsTitleSize;
+  let pastPhotoKey;
 
   story.shift();
-  customerStory = '';
-  for (let { answer } of customerStoryMother) {
-    customerStory += answer;
-    customerStory += "\n\n";
-  }
-  customerStory = customerStory.slice(0, -2);
+  customerStory = detail[0].contents;
 
   mainWidth = <%% 900, 900, 900, 720, 100 %%>;
   mainPaddingTop = <%% 110, 110, 110, 80, 11.7 %%>;
@@ -538,6 +710,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
   titleBarWidth = <%% 80, 80, 80, 80, 18 %%>;
 
   contentsSize = <%% 16, 16, 16, 15, 3.5 %%>;
+  contentsTitleSize = <%% 22, 22, 22, 21, 4 %%>;
   contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
   contentsLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
 
@@ -558,10 +731,10 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
   contentsPadding = <%% 21, 21, 21, 21, 6 %%>;
 
   wordingTop = <%% (isMac() ? 3 : 1), (isMac() ? 3 : 1), (isMac() ? 3 : 1), (isMac() ? 3 : 1), 0.6 %%>;
-  questionMargin = <%% 10, 10, 10, 10, 1 %%>;
-  answerMargin = <%% 36, 36, 36, 36, 6 %%>;
+  questionMargin = <%% 25, 25, 25, 25, 1 %%>;
+  answerMargin = <%% 42, 42, 42, 42, 6 %%>;
 
-  questionWeight = <%% 700, 700, 700, 700, 700 %%>;
+  questionWeight = <%% 400, 400, 400, 400, 400 %%>;
   answerWeight = <%% 400, 400, 400, 400, 400 %%>;
 
   belowBoxPadding = <%% 50, 50, 50, 36, 3.5 %%>;
@@ -571,11 +744,6 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
 
   belowPictureWidth = <%% 350, 350, 350, 290, 43 %%>;
   belowPictureMargin = <%% 18, 18, 18, 12, 0 %%>;
-
-  nameCardWording = contents.contents.portfolio.title.main.split(", ")[1];
-
-  nameCardIndex = nameCardWording.split(' ').findIndex((str) => { return /py/gi.test(str); });
-  nameCardWording = nameCardWording.split(' ').slice(0, nameCardIndex).join(' ') + "\n" + nameCardWording.split(' ').slice(nameCardIndex).join(' ');
 
   portfolioWordingSize = <%% 15, 15, 15, 15, 2 %%>;
   portfolioWordingWeight = <%% 400, 400, 400, 400, 400 %%>;
@@ -624,7 +792,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
 
   createNode({
     mother: mainTong,
-    text: review.title.main.replace(/, /, "\n"),
+    text: portfolio.title.main.replace(/, /, "\n"),
     style: {
       display: "block",
       position: "relative",
@@ -666,30 +834,14 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
       fontWeight: String(contentsWeight),
       lineHeight: String(contentsLineHeight),
       color: colorChip.black,
-      paddingLeft: String(customerPaddingLeft) + ea,
       marginTop: String(customerMarginTop) + ea,
       paddingRight: desktop ? "" : String(customerPaddingLeft) + ea,
     },
-    children: [
-      {
-        text: "Customer\nStory",
-        style: {
-          display: desktop ? "block" : "none",
-          fontSize: String(customerSize) + ea,
-          fontWeight: String(customerWeight),
-          fontFamily: "graphik",
-          color: colorChip.black,
-          position: "absolute",
-          top: String(customerTop) + ea,
-          left: String(0),
-          lineHeight: String(customerLineHeight),
-        }
-      }
-    ]
   });
 
   totalNum = 0;
-  for (let { contents, photos } of story) {
+  pastPhotoKey = 1;
+  for (let { contents, title, photoKey } of story) {
 
     createNode({
       mother: mainTong,
@@ -698,10 +850,11 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
         height: String(totalNum === 0 ? blankMarginFirst : blankMargin2) + ea,
       }
     });
+
     num = 0;
-    for (let index of photos) {
-      src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + pid + "/" + photoChar + String(index) + pid + ".jpg";
-      garo = (photoDetail[index - 1].gs === 'g');
+    for (let i = pastPhotoKey; i < photoKey + 1; i++) {
+      src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + pid + "/" + photoChar + String(i) + pid + ".jpg";
+      garo = (photoDetail[i - 1].gs === 'g');
       createNode({
         mother: mainTong,
         mode: "img",
@@ -714,8 +867,11 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
           borderRadius: String(desktop ? 3 : 0) + "px",
         }
       });
-      num++;
+      if (!garo) {
+        num++;
+      }
     }
+
     createNode({
       mother: mainTong,
       style: {
@@ -724,77 +880,54 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
       }
     });
 
-    for (let { answer, question } of contents) {
-
-      createNode({
-        mother: mainTong,
-        text: question,
-        style: {
-          display: "block",
-          position: "relative",
-          textAlign: "left",
-          fontSize: String(contentsSize) + ea,
-          fontWeight: String(questionWeight),
-          lineHeight: String(contentsLineHeight),
-          color: colorChip.black,
-          paddingLeft: String(desktop ? contentsPadding : (contentsPadding * 2)) + ea,
-          marginBottom: String(questionMargin) + ea,
-          paddingRight: desktop ? "" : String(contentsPadding) + ea,
-        },
-        children: [
-          {
-            text: "Q.",
-            style: {
-              fontSize: String(contentsSize) + ea,
-              fontWeight: String(customerWeight),
-              fontFamily: "graphik",
-              color: colorChip.black,
-              position: "absolute",
-              top: String(wordingTop) + ea,
-              left: desktop ? String(0) : String(contentsPadding) + ea,
-              lineHeight: String(customerLineHeight),
-            }
+    createNode({
+      mother: mainTong,
+      style: {
+        display: "block",
+        position: "relative",
+        textAlign: "center",
+        width: String(100) + '%',
+        marginBottom: String(questionMargin) + ea,
+        paddingLeft: desktop ? "" : String(contentsPadding) + ea,
+        paddingRight: desktop ? "" : String(contentsPadding) + ea,
+      },
+      children: [
+        {
+          text: title.slice(0, 1).toUpperCase() + title.slice(1).replace(/room$/i, '') + (/room/i.test(title) ? " room" : ""),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(contentsTitleSize) + ea,
+            fontWeight: String(questionWeight),
+            lineHeight: String(contentsLineHeight),
+            color: colorChip.black,
+            fontFamily: "graphik",
+            borderBottom: "1px solid " + colorChip.gray3,
           }
-        ]
-      });
+        }
+      ]
+    });
 
-      createNode({
-        mother: mainTong,
-        text: answer,
-        style: {
-          display: "block",
-          position: "relative",
-          textAlign: "left",
-          fontSize: String(contentsSize) + ea,
-          fontWeight: String(answerWeight),
-          lineHeight: String(contentsLineHeight),
-          color: colorChip.black,
-          paddingLeft: String(desktop ? contentsPadding : (contentsPadding * 2)) + ea,
-          marginBottom: String(answerMargin) + ea,
-          paddingRight: desktop ? "" : String(contentsPadding) + ea,
-        },
-        children: [
-          {
-            text: "A.",
-            style: {
-              fontSize: String(contentsSize) + ea,
-              fontWeight: String(300),
-              fontFamily: "graphik",
-              color: colorChip.black,
-              position: "absolute",
-              top: String(wordingTop) + ea,
-              left: desktop ? String(0) : String(contentsPadding) + ea,
-              lineHeight: String(customerLineHeight),
-            }
-          }
-        ]
-      });
+    createNode({
+      mother: mainTong,
+      text: contents,
+      style: {
+        display: "block",
+        position: "relative",
+        textAlign: "left",
+        fontSize: String(contentsSize) + ea,
+        fontWeight: String(answerWeight),
+        lineHeight: String(contentsLineHeight),
+        color: colorChip.black,
+        marginBottom: String(answerMargin) + ea,
+        paddingLeft: desktop ? "" : String(contentsPadding) + ea,
+        paddingRight: desktop ? "" : String(contentsPadding) + ea,
+      },
+    });
 
-    }
-
+    pastPhotoKey = photoKey + 1;
     totalNum++;
   }
-
 
   createNode({
     mother: mainTong,
@@ -804,130 +937,8 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
     }
   });
 
-  belowBox = createNode({
-    mother: mainTong,
-    style: {
-      display: "block",
-      position: "relative",
-      width: desktop ? withOut(belowBoxPadding * 2, ea) : withOut((belowBoxPadding + contentsPadding) * 2, ea),
-      padding: String(belowBoxPadding) + ea,
-      height: String(belowBoxHeight) + ea,
-      borderRadius: String(5) + "px",
-      background: colorChip.gray0,
-      marginLeft: desktop ? "" : String(contentsPadding) + ea,
-      marginRight: desktop ? "" : String(contentsPadding) + ea,
-      marginBottom: desktop ? "" : String(mobileDesignerBoxBetween) + ea
-    },
-    children: [
-      {
-        style: {
-          display: desktop ? "inline-block" : "none",
-          position: "relative",
-          borderRadius: String(5) + "px",
-          width: String(belowWhiteWidth) + ea,
-          paddingTop: String(designerTongPaddingTop) + ea,
-          height: withOut(designerTongPaddingTop, ea),
-          background: colorChip.white,
-          textAlign: "center",
-          verticalAlign: "top",
-        },
-        children: [
-          {
-            style: {
-              backgroundImage: "url('" + "https://" + GHOSTHOST + "/corePortfolio/listImage/" + designer.setting.front.photo.porlid + "/" + designer.setting.front.photo.index + designer.setting.front.photo.porlid + ".jpg" + "')",
-              backgroundSize: "auto 100%",
-              backgroundPosition: "50% 50%",
-              display: "inline-block",
-              width: String(deignserPhotoWidth) + ea,
-              height: String(deignserPhotoWidth) + ea,
-              borderRadius: String(deignserPhotoWidth / 2) + ea,
-            }
-          },
-          {
-            text: designer.designer,
-            style: {
-              marginTop: String(designerTitleMarginTop) + ea,
-              marginBottom: String(designerTitleMarginTop) + ea,
-              textAlign: "center",
-              fontSize: String(designerTitleSize) + ea,
-              fontWeight: String(designerTitleWeight),
-              color: colorChip.black,
-            }
-          }
-        ]
-      },
-      {
-        style: {
-          display: "inline-block",
-          position: "relative",
-          borderRadius: String(5) + "px",
-          width: String(belowPictureWidth) + ea,
-          height: String(100) + '%',
-          marginLeft: String(belowPictureMargin) + ea,
-          backgroundImage: "url('" + "https://" + GHOSTHOST + "/corePortfolio/listImage/" + pid + "/" + photoChar + String(contents.contents.portfolio.detailInfo.photodae[1]) + pid + ".jpg" + "')",
-          backgroundSize: desktop ? "auto 100%" : "100% auto",
-          backgroundPosition: "50% 50%",
-          verticalAlign: "top",
-        }
-      },
-      {
-        style: {
-          display: "inline-block",
-          position: "relative",
-          width: withOut(belowWhiteWidth + belowPictureWidth + (belowPictureMargin * 2) + belowTextAreaPaddingLeft, ea),
-          paddingTop: String(belowTextAreaPaddingTop) + ea,
-          marginLeft: String(belowPictureMargin) + ea,
-          paddingLeft: String(belowTextAreaPaddingLeft) + ea,
-          verticalAlign: "top",
-        },
-        children: [
-          {
-            text: nameCardWording,
-            style: {
-              fontSize: String(belowTextTitleSize) + ea,
-              fontWeight: String(belowTextTitleWeight),
-              color: colorChip.black,
-              lineHeight: String(belowTextTitleLineHeight),
-            }
-          },
-          {
-            style: {
-              display: "block",
-              height: String(belowTextAreaTitleBarTop) + ea,
-              width: String(100) + '%',
-              borderBottom: "1px solid " + colorChip.gray3,
-            }
-          },
-          {
-            text: contents.contents.portfolio.title.sub.split(", ").join("\n"),
-            style: {
-              fontSize: String(belowTextAreaSubSize) + ea,
-              fontWeight: String(belowTextAreaSubWeight),
-              color: colorChip.shadow,
-              lineHeight: String(belowTextAreaSubLineHeight),
-              marginTop: String(belowTextAreaSubMarginTop) + ea,
-            }
-          },
-        ]
-      },
-      {
-        text: "Portfolio",
-        style: {
-          position: "absolute",
-          fontSize: String(portfolioWordingSize) + ea,
-          fontWeight: String(portfolioWordingWeight),
-          fontFamily: "graphik",
-          color: colorChip.black,
-          top: String(belowBoxPadding) + ea,
-          right: String(belowBoxPadding) + ea,
-          textAlign: "right",
-        }
-      }
-    ]
-  });
-
-  if (mobile) {
-    createNode({
+  if (contents.contents.review.detailInfo.photodae.length > 0) {
+    belowBox = createNode({
       mother: mainTong,
       style: {
         display: "block",
@@ -939,8 +950,46 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
         background: colorChip.gray0,
         marginLeft: desktop ? "" : String(contentsPadding) + ea,
         marginRight: desktop ? "" : String(contentsPadding) + ea,
+        marginBottom: desktop ? "" : String(mobileDesignerBoxBetween) + ea
       },
       children: [
+        {
+          style: {
+            display: desktop ? "inline-block" : "none",
+            position: "relative",
+            borderRadius: String(5) + "px",
+            width: String(belowWhiteWidth) + ea,
+            paddingTop: String(designerTongPaddingTop) + ea,
+            height: withOut(designerTongPaddingTop, ea),
+            background: colorChip.white,
+            textAlign: "center",
+            verticalAlign: "top",
+          },
+          children: [
+            {
+              style: {
+                backgroundImage: "url('" + "https://" + GHOSTHOST + "/corePortfolio/listImage/" + designer.setting.front.photo.porlid + "/" + designer.setting.front.photo.index + designer.setting.front.photo.porlid + ".jpg" + "')",
+                backgroundSize: "auto 100%",
+                backgroundPosition: "50% 50%",
+                display: "inline-block",
+                width: String(deignserPhotoWidth) + ea,
+                height: String(deignserPhotoWidth) + ea,
+                borderRadius: String(deignserPhotoWidth / 2) + ea,
+              }
+            },
+            {
+              text: designer.designer,
+              style: {
+                marginTop: String(designerTitleMarginTop) + ea,
+                marginBottom: String(designerTitleMarginTop) + ea,
+                textAlign: "center",
+                fontSize: String(designerTitleSize) + ea,
+                fontWeight: String(designerTitleWeight),
+                color: colorChip.black,
+              }
+            }
+          ]
+        },
         {
           style: {
             display: "inline-block",
@@ -949,7 +998,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
             width: String(belowPictureWidth) + ea,
             height: String(100) + '%',
             marginLeft: String(belowPictureMargin) + ea,
-            backgroundImage: "url('" + "https://" + GHOSTHOST + "/corePortfolio/listImage/" + designer.setting.front.photo.porlid + "/" + designer.setting.front.photo.index + designer.setting.front.photo.porlid + ".jpg" + "')",
+            backgroundImage: "url('" + "https://" + GHOSTHOST + "/corePortfolio/listImage/" + pid + "/" + photoChar + String(contents.contents.review.detailInfo.photodae[1]) + pid + ".jpg" + "')",
             backgroundSize: desktop ? "auto 100%" : "100% auto",
             backgroundPosition: "50% 50%",
             verticalAlign: "top",
@@ -960,14 +1009,14 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
             display: "inline-block",
             position: "relative",
             width: withOut(belowWhiteWidth + belowPictureWidth + (belowPictureMargin * 2) + belowTextAreaPaddingLeft, ea),
-            paddingTop: String(mobileDesignerWordingTop) + ea,
+            paddingTop: String(belowTextAreaPaddingTop) + ea,
             marginLeft: String(belowPictureMargin) + ea,
             paddingLeft: String(belowTextAreaPaddingLeft) + ea,
             verticalAlign: "top",
           },
           children: [
             {
-              text: designer.designer,
+              text: contents.contents.review.title.sub.split(", ").join("\n"),
               style: {
                 fontSize: String(belowTextTitleSize) + ea,
                 fontWeight: String(belowTextTitleWeight),
@@ -984,24 +1033,19 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
               }
             },
             {
-              text: designerMthParsing(designer.setting.front.methods).join(", ") + "\n" + designerCareer(designer, true),
+              text: contents.contents.portfolio.title.sub.split(", ").join("\n"),
               style: {
                 fontSize: String(belowTextAreaSubSize) + ea,
                 fontWeight: String(belowTextAreaSubWeight),
                 color: colorChip.shadow,
                 lineHeight: String(belowTextAreaSubLineHeight),
                 marginTop: String(belowTextAreaSubMarginTop) + ea,
-              },
-              bold: {
-                fontSize: String(belowTextAreaSubSize) + ea,
-                fontWeight: String(belowTextAreaSubWeight),
-                color: colorChip.shadow,
               }
             },
           ]
         },
         {
-          text: "Designer",
+          text: "Review",
           style: {
             position: "absolute",
             fontSize: String(portfolioWordingSize) + ea,
@@ -1015,52 +1059,143 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
         }
       ]
     });
-  }
 
-  createNode({
-    mother: mainTong,
-    style: {
-      display: "block",
-      height: String(blankMarginLast) + ea,
-    }
-  });
-
-  if (desktop) {
-    designerTong = belowBox.firstChild;
-    designerMthTargets = designerMthParsing(designer.setting.front.methods);
-    for (let mth of designerMthTargets) {
+    if (mobile) {
       createNode({
-        mother: designerTong,
-        text: mth,
+        mother: mainTong,
         style: {
-          marginTop: String(designerMthMarginTop) + ea,
-          textAlign: "center",
-          fontSize: String(designerMthSize) + ea,
-          fontWeight: String(designerMthWeight),
-          color: colorChip.black,
-        }
+          display: "block",
+          position: "relative",
+          width: desktop ? withOut(belowBoxPadding * 2, ea) : withOut((belowBoxPadding + contentsPadding) * 2, ea),
+          padding: String(belowBoxPadding) + ea,
+          height: String(belowBoxHeight) + ea,
+          borderRadius: String(5) + "px",
+          background: colorChip.gray0,
+          marginLeft: desktop ? "" : String(contentsPadding) + ea,
+          marginRight: desktop ? "" : String(contentsPadding) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              borderRadius: String(5) + "px",
+              width: String(belowPictureWidth) + ea,
+              height: String(100) + '%',
+              marginLeft: String(belowPictureMargin) + ea,
+              backgroundImage: "url('" + "https://" + GHOSTHOST + "/corePortfolio/listImage/" + designer.setting.front.photo.porlid + "/" + designer.setting.front.photo.index + designer.setting.front.photo.porlid + ".jpg" + "')",
+              backgroundSize: desktop ? "auto 100%" : "100% auto",
+              backgroundPosition: "50% 50%",
+              verticalAlign: "top",
+            }
+          },
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: withOut(belowWhiteWidth + belowPictureWidth + (belowPictureMargin * 2) + belowTextAreaPaddingLeft, ea),
+              paddingTop: String(mobileDesignerWordingTop) + ea,
+              marginLeft: String(belowPictureMargin) + ea,
+              paddingLeft: String(belowTextAreaPaddingLeft) + ea,
+              verticalAlign: "top",
+            },
+            children: [
+              {
+                text: designer.designer,
+                style: {
+                  fontSize: String(belowTextTitleSize) + ea,
+                  fontWeight: String(belowTextTitleWeight),
+                  color: colorChip.black,
+                  lineHeight: String(belowTextTitleLineHeight),
+                }
+              },
+              {
+                style: {
+                  display: "block",
+                  height: String(belowTextAreaTitleBarTop) + ea,
+                  width: String(100) + '%',
+                  borderBottom: "1px solid " + colorChip.gray3,
+                }
+              },
+              {
+                text: designerMthParsing(designer.setting.front.methods).join(", ") + "\n" + designerCareer(designer, true),
+                style: {
+                  fontSize: String(belowTextAreaSubSize) + ea,
+                  fontWeight: String(belowTextAreaSubWeight),
+                  color: colorChip.shadow,
+                  lineHeight: String(belowTextAreaSubLineHeight),
+                  marginTop: String(belowTextAreaSubMarginTop) + ea,
+                },
+                bold: {
+                  fontSize: String(belowTextAreaSubSize) + ea,
+                  fontWeight: String(belowTextAreaSubWeight),
+                  color: colorChip.shadow,
+                }
+              },
+            ]
+          },
+          {
+            text: "Designer",
+            style: {
+              position: "absolute",
+              fontSize: String(portfolioWordingSize) + ea,
+              fontWeight: String(portfolioWordingWeight),
+              fontFamily: "graphik",
+              color: colorChip.black,
+              top: String(belowBoxPadding) + ea,
+              right: String(belowBoxPadding) + ea,
+              textAlign: "right",
+            }
+          }
+        ]
       });
     }
 
     createNode({
-      mother: designerTong,
-      text: designerCareer(designer, true),
+      mother: mainTong,
       style: {
-        position: "absolute",
-        width: String(100) + '%',
-        textAlign: "center",
-        bottom: String(careerBottom) + ea,
-        fontSize: String(careerSize) + ea,
-        fontWeight: String(careerWeight),
-        color: colorChip.black,
-      },
-      bold: {
-        fontWeight: String(200),
-        color: colorChip.deactive,
+        display: "block",
+        height: String(blankMarginLast) + ea,
       }
     });
-  }
 
+    if (desktop) {
+      designerTong = belowBox.firstChild;
+      designerMthTargets = designerMthParsing(designer.setting.front.methods);
+      for (let mth of designerMthTargets) {
+        createNode({
+          mother: designerTong,
+          text: mth,
+          style: {
+            marginTop: String(designerMthMarginTop) + ea,
+            textAlign: "center",
+            fontSize: String(designerMthSize) + ea,
+            fontWeight: String(designerMthWeight),
+            color: colorChip.black,
+          }
+        });
+      }
+
+      createNode({
+        mother: designerTong,
+        text: designerCareer(designer, true),
+        style: {
+          position: "absolute",
+          width: String(100) + '%',
+          textAlign: "center",
+          bottom: String(careerBottom) + ea,
+          fontSize: String(careerSize) + ea,
+          fontWeight: String(careerWeight),
+          color: colorChip.black,
+        },
+        bold: {
+          fontWeight: String(200),
+          color: colorChip.deactive,
+        }
+      });
+    }
+
+  }
 }
 
 PortfolioDetailJs.prototype.relativeContents = function (contents, length) {
