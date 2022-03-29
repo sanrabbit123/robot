@@ -39,23 +39,53 @@ ExcelReader.prototype.convertExcelMatrix = function (arr) {
     throw new Error("input cannot be zero array");
   }
   const instance = this;
+  const { equalJson } = this.mother;
   let columns;
   let result;
+  let keys;
+  let tong, tempObj;
+  let arrCopied;
 
-  columns = Object.keys(arr[0]);
+  if (!Array.isArray(arr[0])) {
 
-  result = {};
-  for (let key of columns) {
-    result[key] = [];
-  }
+    columns = Object.keys(arr[0]);
 
-  for (let obj of arr) {
-    for (let key in obj) {
-      result[key].push(obj[key])
+    result = {};
+    for (let key of columns) {
+      result[key] = [];
     }
-  }
 
-  return result;
+    for (let obj of arr) {
+      for (let key in obj) {
+        result[key].push(obj[key]);
+      }
+    }
+
+    return result;
+
+  } else {
+
+    if (arr.length <= 1) {
+      throw new Error("invaild matrix");
+    }
+
+    arrCopied = equalJson(JSON.stringify(arr));
+    keys = arr[0];
+
+    arrCopied.shift();
+
+    tong = [];
+    for (let a of arrCopied) {
+      tempObj = {};
+      for (let i = 0; i < a.length; i++) {
+        tempObj[keys[i]] = a[i];
+      }
+      tong.push(tempObj);
+    }
+
+    return this.convertExcelMatrix(tong);
+    
+  }
 }
 
 ExcelReader.prototype.matrixToFile = async function (arr, filePath) {
