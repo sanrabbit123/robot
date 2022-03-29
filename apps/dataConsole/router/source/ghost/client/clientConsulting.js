@@ -793,22 +793,22 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   blank = <%% "&nbsp;&nbsp;&nbsp;", "&nbsp;&nbsp;", "&nbsp;", "&nbsp;", "&nbsp;" %%>;
 
   if (media[0]) {
-    initWording0 = "홈스타일링 진행을 위해 다음 기본 정보가 필요합니다. 간단히 작성 후, 1:1 맞춤 상담을 받아보세요!";
+    initWording0 = "서비스 진행을 위해 다음 기본 정보가 필요합니다. 간단히 작성 후, 1:1 맞춤 상담을 받아보세요!";
   } else if (media[1]) {
-    initWording0 = "홈스타일링 진행을 위해 다음 기본 정보가 필요합니다. 간단히 작성 후, 1:1 맞춤 상담을 받아보세요!";
+    initWording0 = "서비스 진행을 위해 다음 기본 정보가 필요합니다. 간단히 작성 후, 1:1 맞춤 상담을 받아보세요!";
   } else {
-    initWording0 = "홈스타일링 진행을 위해 간단히 작성 후, 1:1 맞춤 상담을 받아보세요!";
+    initWording0 = "서비스 진행을 위해 간단히 작성 후, 1:1 맞춤 상담을 받아보세요!";
   }
 
   if (media[0]) {
-    initWording1 = "<u%*%u>주소는 <b%홈스타일링을 받으실 곳%b>으로, 평은 <b%분양 평수%b>로 적어 주셔야 합니다.";
+    initWording1 = "<u%*%u>주소는 <b%인테리어를 받으실 곳%b>으로, 평은 <b%분양 평수%b>로 적어 주셔야 합니다.";
   } else if (media[1]) {
-    initWording1 = "<u%*%u>주소는 <b%홈스타일링을 받으실 곳%b>으로, 평은 <b%분양 평수%b>로 적어 주셔야 합니다.";
+    initWording1 = "<u%*%u>주소는 <b%인테리어를 받으실 곳%b>으로, 평은 <b%분양 평수%b>로 적어 주셔야 합니다.";
   } else {
     if (mobile) {
-      initWording1 = "주소는 <b%홈스타일링을 받으실 곳%b>으로, 평은 <b%분양\n평수%b>로 적어 주셔야 합니다.";
+      initWording1 = "주소는 <b%인테리어를 받으실 곳%b>으로, 평은 <b%분양\n평수%b>로 적어 주셔야 합니다.";
     } else {
-      initWording1 = "<u%*%u>주소는 <b%홈스타일링을 받으실 곳%b>으로, 평은 <b%분양 평수%b>로 적어 주셔야 합니다.";
+      initWording1 = "<u%*%u>주소는 <b%인테리어를 받으실 곳%b>으로, 평은 <b%분양 평수%b>로 적어 주셔야 합니다.";
     }
   }
 
@@ -841,7 +841,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   //main title
   createNode({
     mother: leftBox,
-    text: desktop ? ((media[0] || media[4]) ? "디자이너와의 상담을 위해" : "디자이너와의") : "디자이너와의 상담을 위해",
+    text: desktop ? ((media[0] || media[4]) ? "홈리에종과의 상담을 위해" : "홈리에종과의") : "홈리에종과의 상담을 위해",
     style: {
       position: "absolute",
       fontSize: String(titleFont) + ea,
