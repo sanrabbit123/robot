@@ -306,6 +306,9 @@ LogRouter.prototype.rou_post_mysqlQuery = function () {
   const instance = this;
   const back = this.back;
   const { mysqlQuery } = this.mother;
+  const hexAllowed = [
+    "fab00000e50000f90000ef0000c3000059",
+  ];
   let obj = {};
   obj.link = [ "/mysqlQuery" ];
   obj.func = async function (req, res) {
@@ -317,7 +320,7 @@ LogRouter.prototype.rou_post_mysqlQuery = function () {
     });
     try {
       let query, response;
-      if (typeof req.body.query !== "string") {
+      if (typeof req.body.query !== "string" || typeof req.body.hex !== "string") {
         throw new Error("invaild post");
       }
       if (/;$/.test(req.body.query)) {
@@ -326,7 +329,11 @@ LogRouter.prototype.rou_post_mysqlQuery = function () {
         query = req.body.query.trim() + ';';
       }
       if (!/drop/gi.test(query) && !/delete/gi.test(query)) {
-        response = await mysqlQuery(query, { local: true });
+        if (hexAllowed.includes(req.body.hex.trim())) {
+          response = await mysqlQuery(query, { local: true });
+        } else {
+          response = [];
+        }
       } else {
         response = [];
       }

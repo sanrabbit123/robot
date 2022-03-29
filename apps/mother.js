@@ -3814,4 +3814,14 @@ Mother.prototype.promiseTogether = function (promiseArr) {
   });
 }
 
+Mother.prototype.localUnique = function () {
+  let networkInterfaces, macTargets;
+  networkInterfaces = require("os").networkInterfaces();
+  macTargets = Object.values(networkInterfaces).flat().filter((obj) => { return obj.family === "IPv4" }).filter((obj) => { return obj.address !== "127.0.0.1" }).map((obj) => {
+    return obj.mac;
+  });
+  macTargets.sort();
+  return "fa" + macTargets[0].trim().replace(/\:/gi, "0000");
+}
+
 module.exports = Mother;
