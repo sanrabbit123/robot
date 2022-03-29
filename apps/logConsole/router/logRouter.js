@@ -308,6 +308,7 @@ LogRouter.prototype.rou_post_mysqlQuery = function () {
   const { mysqlQuery } = this.mother;
   const hexAllowed = [
     "fab00000e50000f90000ef0000c3000059",
+    "fa8c00007a0000aa0000eb0000a900002f",
   ];
   let obj = {};
   obj.link = [ "/mysqlQuery" ];
