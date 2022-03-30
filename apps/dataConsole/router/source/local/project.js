@@ -4530,7 +4530,9 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         }
       }
       this.style.color = GeneralJs.colorChip.liteBlack;
-      GeneralJs.ajax("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[thisIndex].column + "&value=" + target.value.replace(/[\=\&]/g, '') + "&email=" + cookies.homeliaisonConsoleLoginedEmail, "/updateProjectHistory", function (res) {});
+      if (window.confirm("저장하시겠습니까?")) {
+        GeneralJs.ajax("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[thisIndex].column + "&value=" + target.value.replace(/[\=\&]/g, '') + "&email=" + cookies.homeliaisonConsoleLoginedEmail, "/updateProjectHistory", function (res) {});
+      }
     }
 
     //margin box

@@ -1663,8 +1663,6 @@ ReviewDetailJs.prototype.launching = async function (loading) {
 
     response = await ajaxJson({ mode: "review", pid }, LOGHOST + "/getContents", { equal: true });
     this.contentsArr = new SearchArray(response.contentsArr);
-    this.clients = new SearchArray(response.clients);
-    this.projects = new SearchArray(response.projects);
     this.designers = new SearchArray(response.designers);
     this.fullLoad = false;
     this.photoLoad = false;
@@ -1697,8 +1695,6 @@ ReviewDetailJs.prototype.launching = async function (loading) {
     setQueue(() => {
       ajaxJson({ mode: "review" }, LOGHOST + "/getContents", { equal: true }).then((response) => {
         instance.contentsArr = new SearchArray(response.contentsArr);
-        instance.clients = new SearchArray(response.clients);
-        instance.projects = new SearchArray(response.projects);
         instance.designers = new SearchArray(response.designers);
         instance.fullLoad = true;
       }).catch((err) => {

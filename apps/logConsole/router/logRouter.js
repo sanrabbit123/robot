@@ -256,7 +256,7 @@ LogRouter.prototype.rou_post_getContents = function () {
       const selfMongo = instance.mongo;
       let limit;
       let contentsArr_raw;
-      let contentsArr, projects, clients, designers;
+      let contentsArr, projects, designers;
 
       contentsArr_raw = await back.getContentsArrByQuery({}, { selfMongo });
       contentsArr_raw = contentsArr_raw.toNormal();
@@ -284,13 +284,11 @@ LogRouter.prototype.rou_post_getContents = function () {
       }
 
       projects = await back.getProjectsByQuery({ $or: contentsArr.map((obj) => { return { proid: obj.proid } }) }, { selfMongo });
-      clients = await back.getClientsByQuery({ $or: contentsArr.map((obj) => { return { cliid: obj.cliid } }) }, { selfMongo });
       designers = await back.getDesignersByQuery({ $or: contentsArr.map((obj) => { return { desid: obj.desid } }) }, { selfMongo });
 
       res.send(JSON.stringify({
         contentsArr: contentsArr,
         projects: projects.toNormal(),
-        clients: clients.toNormal(),
         designers: designers.toNormal(),
       }));
 

@@ -413,7 +413,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
   const mobile = media[4];
   const desktop = !mobile;
   const photoChar = 't';
-  let { contentsArr, clients, projects, designers } = this;
+  let { contentsArr, projects, designers } = this;
   let baseBlock;
   let gsArray;
   let baseWidth;
@@ -763,7 +763,6 @@ ReviewListJs.prototype.launching = async function (loading) {
 
     response = await ajaxJson({ mode: "review", limit: 42 }, LOGHOST + "/getContents", { equal: true });
     this.contentsArr = new SearchArray(response.contentsArr);
-    this.clients = new SearchArray(response.clients);
     this.projects = new SearchArray(response.projects);
     this.designers = new SearchArray(response.designers);
     this.fullLoad = false;
@@ -807,7 +806,6 @@ ReviewListJs.prototype.launching = async function (loading) {
     setQueue(() => {
       ajaxJson({ mode: "review" }, LOGHOST + "/getContents", { equal: true }).then((response) => {
         instance.contentsArr = new SearchArray(response.contentsArr);
-        instance.clients = new SearchArray(response.clients);
         instance.projects = new SearchArray(response.projects);
         instance.designers = new SearchArray(response.designers);
         instance.fullLoad = true;
