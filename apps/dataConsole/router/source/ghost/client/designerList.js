@@ -284,7 +284,6 @@ DesignerListJs.prototype.insertInitBox = function () {
     style: {
       display: "block",
       paddingTop: String(80) + ea,
-      height: String(400) + ea,
       width: withOut(0, ea),
     }
   });
@@ -292,18 +291,189 @@ DesignerListJs.prototype.insertInitBox = function () {
   this.designerBlock();
 }
 
-DesignerListJs.prototype.designerBlock = function () {
+DesignerListJs.prototype.designerBlock = function (search = null) {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, cleanChildren } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, cleanChildren, designerCareer } = GeneralJs;
   const { ea, media } = this;
   const { designers, designerTong } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const targets = designers.toNormal().filter((obj) => {
-    return /완료/gi.test(obj.information.contract.status);
-  })
+  let targets;
+  let tong;
+  let block;
+  let tongPaddingLeft;
+  let blockMargin;
+  let columns;
+  let src;
+  let blockHeight;
+  let photoWidth;
+  let photoMargin;
+  let contentsPaddingTop;
+  let contentsBlock;
+  let blockMarginBottom;
+  let titleSize, titleWeight;
+  let careerSize, careerWeight;
+  let careerTextTop;
+  let careerBetween;
+  let grayBarTop, grayBarBottom;
+  let descriptionSize, descriptionWeight, descriptionLineHeight;
+
+  tongPaddingLeft = 90;
+  blockMargin = 55;
+  blockMarginBottom = 25;
+  columns = 2;
+  contentsPaddingTop = 16;
+
+  blockHeight = 180;
+  photoWidth = blockHeight - (contentsPaddingTop * 2);
+
+  photoMargin = 30;
+
+  titleSize = 24;
+  titleWeight = 700;
+
+  careerSize = 12;
+  careerWeight = 500;
+  careerTextTop = 0;
+
+  careerBetween = 8;
+
+  grayBarTop = 8;
+  grayBarBottom = 16;
+
+  descriptionSize = 14;
+  descriptionWeight = 400;
+  descriptionLineHeight = 1.5;
 
   cleanChildren(designerTong);
+
+  targets = designers.toNormal().filter((obj) => {
+    return /완료/gi.test(obj.information.contract.status);
+  });
+
+  tong = createNode({
+    mother: designerTong,
+    style: {
+      display: "block",
+      position: "relative",
+      paddingLeft: String(tongPaddingLeft) + ea,
+      paddingRight: String(tongPaddingLeft - blockMargin) + ea,
+    }
+  });
+
+  for (let designer of targets) {
+
+    src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + designer.setting.front.photo.porlid + "/" + designer.setting.front.photo.index + designer.setting.front.photo.porlid + ".jpg";
+
+    block = createNode({
+      mother: tong,
+      style: {
+        display: "inline-block",
+        width: "calc(calc(100% - " + String(columns * blockMargin) + ea + ") / " + String(columns) + ")",
+        height: String(blockHeight) + ea,
+        marginRight: String(blockMargin) + ea,
+        marginBottom: String(blockMarginBottom) + ea,
+      },
+      children: [
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(contentsPaddingTop) + ea,
+            borderRadius: String(photoWidth) + ea,
+            width: String(photoWidth) + ea,
+            height: String(photoWidth) + ea,
+            backgroundSize: "auto 100%",
+            backgroundPosition: "50% 50%",
+            backgroundImage: "url('" + src + "')",
+            verticalAlign: "top",
+          }
+        },
+        {
+          style: {
+            display: "inline-block",
+            width: withOut(photoWidth + photoMargin, ea),
+            marginLeft: String(photoMargin) + ea,
+            paddingTop: String(contentsPaddingTop) + ea,
+            paddingBottom: String(contentsPaddingTop) + ea,
+            height: withOut(contentsPaddingTop * 2, ea),
+            verticalAlign: "top",
+          }
+        }
+      ]
+    });
+
+    contentsBlock = block.children[1];
+
+    createNode({
+      mother: contentsBlock,
+      text: designer.designer,
+      style: {
+        display: "block",
+        position: "relative",
+      },
+      children: [
+        {
+          text: designer.designer,
+          style: {
+            display: "inline-block",
+            fontSize: String(titleSize) + ea,
+            fontWeight: String(titleWeight),
+            color: colorChip.black,
+            marginRight: String(careerBetween) + ea,
+          }
+        },
+        {
+          text: designerCareer(designer, true),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(careerSize) + ea,
+            fontWeight: String(careerWeight),
+            color: colorChip.green,
+            top: String(careerTextTop) + ea,
+          },
+          bold: {
+            fontSize: String(careerSize) + ea,
+            fontWeight: String(careerWeight),
+            color: colorChip.deactive,
+          }
+        },
+      ]
+    })
+
+    createNode({
+      mother: contentsBlock,
+      style: {
+        display: "block",
+        width: String(100) + '%',
+        height: String(grayBarTop) + ea,
+        borderBottom: "1px solid " + colorChip.gray3,
+      }
+    })
+
+    createNode({
+      mother: contentsBlock,
+      text: designer.setting.front.introduction.desktop.join("\n"),
+      style: {
+        display: "block",
+        marginTop: String(grayBarBottom) + ea,
+        fontSize: String(descriptionSize) + ea,
+        fontWeight: String(descriptionWeight),
+        color: colorChip.black,
+        lineHeight: String(descriptionLineHeight),
+      }
+    })
+
+
+
+
+  }
+
+
+
+
+
   console.log(targets);
 
 }
