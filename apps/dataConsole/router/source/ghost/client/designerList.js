@@ -423,7 +423,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
 
   tongPaddingLeft = 100;
   blockMargin = 40;
-  blockMarginBottom = 26;
+  blockMarginBottom = 25;
   columns = 2;
   contentsPaddingTop = 16;
 
@@ -624,9 +624,9 @@ DesignerListJs.prototype.launching = async function (loading) {
       return /완료/gi.test(obj.information.contract.status);
     }).filter((obj) => {
       return obj.setting.front.introduction.desktop.length > 0;
-    });
-
-    console.log(this.designers);
+    }).filter((obj) => {
+      return /^[ap]/i.test(obj.setting.front.photo.porlid);
+    })
 
     await this.mother.ghostClientLaunching({
       mode: "front",
