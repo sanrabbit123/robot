@@ -258,40 +258,61 @@ LogRouter.prototype.rou_post_getContents = function () {
       let contentsArr_raw;
       let contentsArr, designers;
 
-      contentsArr_raw = await back.getContentsArrByQuery({}, { selfMongo });
-      contentsArr_raw = contentsArr_raw.toNormal();
-      if (req.body.mode === "review") {
-        contentsArr_raw.sort((a, b) => {
-          return b.contents.review.detailInfo.order - a.contents.review.detailInfo.order;
-        });
-      } else {
-        contentsArr_raw.sort((a, b) => {
-          return Number(b.contents.portfolio.detailInfo.sort.key9) - Number(a.contents.portfolio.detailInfo.sort.key9);
-        });
-      }
+      if (req.body.mode !== "designer") {
 
-      if (req.body.limit === undefined) {
-        contentsArr = contentsArr_raw;
-      } else {
-        limit = Number(req.body.limit);
-        contentsArr = contentsArr_raw.slice(0, limit);
-      }
+        contentsArr_raw = await back.getContentsArrByQuery({}, { selfMongo });
+        contentsArr_raw = contentsArr_raw.toNormal();
+        if (req.body.mode === "review") {
+          contentsArr_raw.sort((a, b) => {
+            return b.contents.review.detailInfo.order - a.contents.review.detailInfo.order;
+          });
+        } else {
+          contentsArr_raw.sort((a, b) => {
+            return Number(b.contents.portfolio.detailInfo.sort.key9) - Number(a.contents.portfolio.detailInfo.sort.key9);
+          });
+        }
 
-      if (req.body.pid !== undefined) {
-        contentsArr = contentsArr.filter((obj) => {
-          return obj.contents.portfolio.pid === req.body.pid;
-        });
-      }
+        if (req.body.limit === undefined) {
+          contentsArr = contentsArr_raw;
+        } else {
+          limit = Number(req.body.limit);
+          contentsArr = contentsArr_raw.slice(0, limit);
+        }
 
-      designers = await back.getDesignersByQuery({ $or: contentsArr.map((obj) => { return { desid: obj.desid } }) }, { selfMongo });
+        if (req.body.pid !== undefined) {
+          contentsArr = contentsArr.filter((obj) => {
+            return obj.contents.portfolio.pid === req.body.pid;
+          });
+        }
 
-      if (req.body.mode === "designer") {
-        res.send(JSON.stringify(designers.frontMode()));
-      } else {
+        designers = await back.getDesignersByQuery({ $or: contentsArr.map((obj) => { return { desid: obj.desid } }) }, { selfMongo });
+
         res.send(JSON.stringify({
           contentsArr: contentsArr,
           designers: designers.frontMode(),
         }));
+
+      } else {
+
+        if (req.body.desid === undefined) {
+
+          designers = await back.getDesignersByQuery({}, { selfMongo });
+          contentsArr_raw = await back.getContentsArrByQuery({}, { selfMongo });
+          contentsArr_raw = contentsArr_raw.toNormal();
+          contentsArr_raw.sort((a, b) => {
+            return Number(b.contents.portfolio.detailInfo.sort.key9) - Number(a.contents.portfolio.detailInfo.sort.key9);
+          });
+          contentsArr = contentsArr_raw.slice(0, 100);
+
+          res.send(JSON.stringify({
+            contentsArr: contentsArr.map((obj) => { return { desid: obj.desid, tag: obj.contents.portfolio.detailInfo.tag } }),
+            designers: designers.frontMode(),
+          }));
+
+        } else {
+
+        }
+
       }
 
     } catch (e) {

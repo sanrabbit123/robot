@@ -106,6 +106,7 @@ DesignerListJs.prototype.insertInitBox = function () {
   let inputSize, inputWeight;
   let placeholder;
   let titleTop;
+  let designerTongPaddingTop;
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
@@ -136,6 +137,8 @@ DesignerListJs.prototype.insertInitBox = function () {
 
   inputSize = <%% 15, 15, 15, 15, 3.1 %%>;
   inputWeight = <%% 300, 300, 300, 300, 300 %%>;
+
+  designerTongPaddingTop = 72;
 
   titleWording = "디자이너 리스트";
   services = serviceParsing().name;
@@ -279,11 +282,111 @@ DesignerListJs.prototype.insertInitBox = function () {
     ]
   });
 
+
+  serviceChildren = [];
+  for (let service of services) {
+    if (desktop) {
+      if (serviceChildren.length !== 0) {
+        serviceChildren.push({
+          style: {
+            display: "inline-block",
+            position: "relative",
+            paddingLeft: String(servicePaddingLeft) + ea,
+            paddingRight: String(servicePaddingLeft) + ea,
+          },
+          children: [
+            {
+              text: "|",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(serviceSize) + ea,
+                fontWeight: String(300),
+                color: colorChip.deactive,
+              },
+              bold: {
+                color: colorChip.deactive,
+              }
+            }
+          ]
+        });
+      }
+    }
+    serviceChildren.push({
+      class: [
+        serviceButtonClassName
+      ],
+      attribute: {
+        toggle: "off",
+        value: service,
+      },
+      event: {
+        click: function (e) {
+          const targets = [ ...document.querySelectorAll('.' + serviceButtonClassName) ];
+          let thisValue;
+          for (let dom of targets) {
+            if (dom === this) {
+              dom.setAttribute("toggle", "on");
+              dom.firstChild.style.color = colorChip.black;
+              dom.firstChild.querySelector('b').style.color = colorChip.green;
+              thisValue = dom.getAttribute("value");
+            } else {
+              dom.setAttribute("toggle", "off");
+              dom.firstChild.style.color = colorChip.deactive;
+              dom.firstChild.querySelector('b').style.color = colorChip.deactive;
+            }
+          }
+
+          console.log(thisValue);
+
+        }
+      },
+      style: {
+        display: "inline-block",
+        position: "relative",
+        paddingLeft: String(servicePaddingLeft) + ea,
+        paddingRight: String(servicePaddingLeft) + ea,
+        marginBottom: desktop ? "" : String(servicePaddingLeft) + ea,
+      },
+      children: [
+        {
+          text: "<b%#%b> " + service,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(serviceSize) + ea,
+            fontWeight: String(400),
+            color: colorChip.deactive,
+            cursor: "pointer",
+          },
+          bold: {
+            color: colorChip.deactive,
+          }
+        }
+      ]
+    });
+  }
+
+  serviceBlock = createNode({
+    mother: whiteBlock,
+    style: {
+      display: "block",
+      position: "relative",
+      textAlign: "center",
+      paddingTop: String(serviceBlockPaddingTop) + ea,
+    },
+    children: serviceChildren
+  });
+
+  serviceBlock.lastChild.firstChild.style.color = colorChip.black;
+  serviceBlock.lastChild.firstChild.querySelector('b').style.color = colorChip.green;
+
+
   this.designerTong = createNode({
     mother: whiteBlock,
     style: {
       display: "block",
-      paddingTop: String(80) + ea,
+      paddingTop: String(designerTongPaddingTop) + ea,
       width: withOut(0, ea),
     }
   });
@@ -320,7 +423,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
 
   tongPaddingLeft = 90;
   blockMargin = 55;
-  blockMarginBottom = 25;
+  blockMarginBottom = 26;
   columns = 2;
   contentsPaddingTop = 16;
 
@@ -463,14 +566,10 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
         color: colorChip.black,
         lineHeight: String(descriptionLineHeight),
       }
-    })
-
-
+    });
 
 
   }
-
-
 
 
 
@@ -513,7 +612,7 @@ DesignerListJs.prototype.launching = async function (loading) {
     let response;
 
     response = await ajaxJson({ mode: "designer" }, LOGHOST + "/getContents", { equal: true });
-    this.designers = new SearchArray(response);
+    this.designers = new SearchArray(response.designers);
 
     await this.mother.ghostClientLaunching({
       mode: "front",
