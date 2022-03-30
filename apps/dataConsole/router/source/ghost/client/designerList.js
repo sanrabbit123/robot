@@ -110,7 +110,7 @@ DesignerListJs.prototype.insertInitBox = function () {
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
-  whiteBlockMarginBottom = <%% 50, 50, 50, 50, 5 %%>;
+  whiteBlockMarginBottom = <%% 120, 120, 120, 120, 5 %%>;
 
   quoteHeight = <%% 11, 11, 11, 11, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
@@ -252,10 +252,7 @@ DesignerListJs.prototype.insertInitBox = function () {
                   try {
                     this.value = this.value.trim();
                     this.value = this.value.replace(/[^가-힣a-z ]/gi, '');
-
-
-
-
+                    instance.designerBlock(this.value);
                   } catch (e) {
                     console.log(e);
                   }
@@ -336,9 +333,7 @@ DesignerListJs.prototype.insertInitBox = function () {
               dom.firstChild.querySelector('b').style.color = colorChip.deactive;
             }
           }
-
-          console.log(thisValue);
-
+          instance.designerBlock(/전체/gi.test(thisValue) ? "" : thisValue);
         }
       },
       style: {
@@ -391,7 +386,7 @@ DesignerListJs.prototype.insertInitBox = function () {
     }
   });
 
-  this.designerBlock();
+  this.designerBlock(null);
 }
 
 DesignerListJs.prototype.designerBlock = function (search = null) {
@@ -450,7 +445,25 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
 
   cleanChildren(designerTong);
 
-  targets = designers;
+  if (typeof search === "string") {
+    if (search.trim() === '') {
+      targets = designers;
+    } else {
+      targets = designers.filter((designer) => {
+        let boo;
+        boo = false;
+        for (let t of designer.tag) {
+          if ((new RegExp(search, "gi")).test(t)) {
+            boo = true;
+            break;
+          }
+        }
+        return boo;
+      });
+    }
+  } else {
+    targets = designers;
+  }
 
   tong = createNode({
     mother: designerTong,
@@ -617,6 +630,9 @@ DesignerListJs.prototype.launching = async function (loading) {
         if (designer.service[i] === 1) {
           designer.tag.push(services[i]);
         }
+      }
+      for (let wording of designer.setting.front.introduction.desktop) {
+        designer.tag.push(wording);
       }
     }
 
