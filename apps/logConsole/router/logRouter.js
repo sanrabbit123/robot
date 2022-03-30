@@ -310,7 +310,18 @@ LogRouter.prototype.rou_post_mysqlQuery = function () {
     "fab00000e50000f90000ef0000c3000059",
     "fa8c00007a0000aa0000eb0000a900002f",
   ];
+  let ipTong;
   let obj = {};
+  ipTong = [ 1, 127001, 172301254 ];
+  for (let info in instance.address) {
+    if (instance.address[info].ip.outer.length > 0) {
+      ipTong.push(Number(instance.address[info].ip.outer.replace(/[^0-9]/g, '')));
+    }
+    if (instance.address[info].ip.inner.length > 0) {
+      ipTong.push(Number(instance.address[info].ip.inner.replace(/[^0-9]/g, '')));
+    }
+  }
+  ipTong = Array.from(new Set(ipTong));
   obj.link = [ "/mysqlQuery" ];
   obj.func = async function (req, res) {
     res.set({
@@ -320,10 +331,11 @@ LogRouter.prototype.rou_post_mysqlQuery = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      let query, response;
+      let query, response, ip;
       if (typeof req.body.query !== "string" || typeof req.body.hex !== "string") {
         throw new Error("invaild post");
       }
+      ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
       if (/;$/.test(req.body.query)) {
         query = req.body.query.trim();
       } else {
@@ -331,7 +343,15 @@ LogRouter.prototype.rou_post_mysqlQuery = function () {
       }
       if (!/drop/gi.test(query) && !/delete/gi.test(query)) {
         if (hexAllowed.includes(req.body.hex.trim())) {
-          response = await mysqlQuery(query, { local: true });
+          if (typeof ip === "string") {
+            if (ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, '')))) {
+              response = await mysqlQuery(query, { local: true });
+            } else {
+              response = [];
+            }
+          } else {
+            response = [];
+          }
         } else {
           response = [];
         }
