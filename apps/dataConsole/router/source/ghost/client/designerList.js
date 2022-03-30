@@ -421,8 +421,8 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
   let grayBarTop, grayBarBottom;
   let descriptionSize, descriptionWeight, descriptionLineHeight;
 
-  tongPaddingLeft = 90;
-  blockMargin = 55;
+  tongPaddingLeft = 100;
+  blockMargin = 40;
   blockMarginBottom = 26;
   columns = 2;
   contentsPaddingTop = 16;
