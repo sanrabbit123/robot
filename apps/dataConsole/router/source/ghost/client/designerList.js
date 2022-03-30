@@ -450,9 +450,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
 
   cleanChildren(designerTong);
 
-  targets = designers.toNormal().filter((obj) => {
-    return /완료/gi.test(obj.information.contract.status);
-  });
+  targets = designers;
 
   tong = createNode({
     mother: designerTong,
@@ -613,6 +611,18 @@ DesignerListJs.prototype.launching = async function (loading) {
 
     response = await ajaxJson({ mode: "designer" }, LOGHOST + "/getContents", { equal: true });
     this.designers = new SearchArray(response.designers);
+    for (let designer of this.designers) {
+      designer.tag = [ ...new Set(response.contentsArr.filter((obj) => { return obj.desid === designer.desid }).map((obj) => {
+        return obj.tag;
+      }).flat()) ];
+      designer.tag.push(designer.designer);
+    }
+
+    this.designers = this.designers.toNormal().filter((obj) => {
+      return /완료/gi.test(obj.information.contract.status);
+    }).filter((obj) => {
+      return obj.setting.front.introduction.desktop.length > 0;
+    });
 
     await this.mother.ghostClientLaunching({
       mode: "front",
