@@ -3991,9 +3991,9 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       const originalValueArr = originalValue.split("\n");
 
       target.value = target.value.replace(/\&/g, ",");
-      if (window.confirm("저장하시겠습니까?")) {
+      // if (window.confirm("저장하시겠습니까?")) {
         GeneralJs.ajax("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[thisIndex].column + "&value=" + target.value.replace(/[\=\&]/g, '') + "&email=" + cookies.homeliaisonConsoleLoginedEmail, "/updateClientHistory", function (res) {});
-      }
+      // }
     }
 
     //margin box

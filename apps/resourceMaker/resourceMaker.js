@@ -516,7 +516,7 @@ ResourceMaker.prototype.modelingMap = function () {
   return JSON.parse(JSON.stringify(model));
 }
 
-ResourceMaker.prototype.portfolio_modeling = async function (conidArr, proid, cliid) {
+ResourceMaker.prototype.portfolio_modeling = async function (conidArr, proid, cliid, service) {
   const instance = this;
   const back = this.back;
   const { fileSystem, orderSystem } = this.mother;
@@ -542,6 +542,7 @@ ResourceMaker.prototype.portfolio_modeling = async function (conidArr, proid, cl
     tempObj.desid = past.designer;
     tempObj.cliid = cliid;
     tempObj.proid = proid;
+    tempObj.service = service;
 
     thisDeisnger = await back.getDesignerById(tempObj.desid);
 
@@ -718,6 +719,7 @@ ResourceMaker.prototype.launching = async function () {
     let outputFolder, outputFolderList;
     let outputMobildFolder, outputMobildFolderList;
     let fromArr, toArr;
+    let thisService;
 
     //mkdir temp directory
     tempFolderName = "tempResourcMakerFolder";
@@ -780,6 +782,7 @@ ResourceMaker.prototype.launching = async function () {
           thisProject = projects[0];
           proid = thisProject.proid;
           cliid = c.cliid;
+          thisService = thisProject.service.toNormal();
         }
       }
       if (cliid === null) {
@@ -793,12 +796,17 @@ ResourceMaker.prototype.launching = async function () {
     } else {
       proid = "";
       cliid = "";
+      thisService = {
+        serid: "s2011_aa02s",
+        xValue: "B",
+        online: false,
+      }
     }
 
     //rendering resource and write file
     await MONGOC.connect();
     temp = await MONGOC.db(`miro81`).collection(`contents`).find({}).project({ conid: 1 }).sort({ conid: -1 }).limit(1).toArray();
-    await this.portfolio_modeling(temp, proid, cliid);
+    await this.portfolio_modeling(temp, proid, cliid, thisService);
     await fileSystem("write", [ `${process.cwd()}/temp/${this.p_id}.js`, JSON.stringify(this.final, null, 2) ]);
 
     //on view

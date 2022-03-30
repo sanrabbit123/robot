@@ -3,6 +3,20 @@ const CONTENTS_DIR = process.cwd() + "/apps/backMaker/alive/contents";
 const ContentsTong = require(CONTENTS_DIR + "/contentsTong.js");
 const PhotoTong = require(CONTENTS_DIR + "/photoTong.js");
 
+const Service = function (json) {
+  this.serid = json.serid;
+  this.xValue = json.xValue;
+  this.online = Boolean(json.online);
+}
+
+Service.prototype.toNormal = function () {
+  let obj = {};
+  obj.serid = this.serid;
+  obj.xValue = this.xValue;
+  obj.online = this.online;
+  return obj;
+}
+
 const Contents = function (json) {
   this.conid = json.conid;
   this.desid = json.desid;
@@ -10,6 +24,7 @@ const Contents = function (json) {
   this.proid = json.proid;
   this.contents = new ContentsTong(json.contents);
   this.photos = new PhotoTong(json.photos);
+  this.service = new Service(json.service);
 }
 
 Contents.prototype.toNormal = function () {
@@ -20,7 +35,7 @@ Contents.prototype.toNormal = function () {
   obj.proid = this.proid;
   obj.contents = this.contents.toNormal();
   obj.photos = this.photos.toNormal();
-
+  obj.service = this.service.toNormal();
   return obj;
 }
 

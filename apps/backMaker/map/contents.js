@@ -97,7 +97,12 @@ module.exports = {
           first: 0,
           last: 0,
           detail: [],
-        }
+        },
+        service: {
+          serid: "s2011_aa02s",
+          xValue: "B",
+          online: false,
+        },
       }
     };
     return dummy;
