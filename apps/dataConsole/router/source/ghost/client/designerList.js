@@ -138,7 +138,7 @@ DesignerListJs.prototype.insertInitBox = function () {
   inputSize = <%% 15, 15, 15, 15, 3.1 %%>;
   inputWeight = <%% 300, 300, 300, 300, 300 %%>;
 
-  designerTongPaddingTop = 80;
+  designerTongPaddingTop = <%% 80, 72, 72, 72, 8 %%>;
 
   titleWording = "디자이너 리스트";
   services = serviceParsing().name;
@@ -416,32 +416,32 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
   let grayBarTop, grayBarBottom;
   let descriptionSize, descriptionWeight, descriptionLineHeight;
 
-  tongPaddingLeft = 100;
-  blockMargin = 40;
-  blockMarginBottom = 25;
-  columns = 2;
-  contentsPaddingTop = 16;
+  tongPaddingLeft = <%% 100, 72, 80, 50, 10 %%>;
+  blockMargin = <%% 40, 20, 20, 20, 40 %%>;
+  blockMarginBottom = <%% 25, 25, 25, 25, 25 %%>;
+  columns = <%% 2, 2, 1, 1, 1 %%>;
+  contentsPaddingTop = <%% 16, 16, 16, 16, 16 %%>;
 
-  blockHeight = 180;
+  blockHeight = <%% 180, 160, 180, 180, 180 %%>;
   photoWidth = blockHeight - (contentsPaddingTop * 2);
 
-  photoMargin = 30;
+  photoMargin = <%% 30, 25, 30, 30, 30 %%>;
 
-  titleSize = 24;
-  titleWeight = 600;
+  titleSize = <%% 24, 23, 23, 23, 24 %%>;
+  titleWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-  careerSize = 12;
-  careerWeight = 500;
-  careerTextTop = 0;
+  careerSize = <%% 12, 12, 12, 12, 12 %%>;
+  careerWeight = <%% 500, 500, 500, 500, 500 %%>;
+  careerTextTop = <%% 0, 0, 0, 0, 0 %%>;
 
-  careerBetween = 8;
+  careerBetween = <%% 8, 8, 8, 8, 8 %%>;
 
-  grayBarTop = 8;
-  grayBarBottom = 16;
+  grayBarTop = <%% 8, 8, 8, 8, 8 %%>;
+  grayBarBottom = <%% 16, 16, 16, 16, 16 %%>;
 
-  descriptionSize = 13;
-  descriptionWeight = 400;
-  descriptionLineHeight = 1.6;
+  descriptionSize = <%% 13, 11, 13, 11, 3 %%>;
+  descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+  descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
   cleanChildren(designerTong);
 
@@ -564,7 +564,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
         height: String(grayBarTop) + ea,
         borderBottom: "1px solid " + colorChip.gray3,
       }
-    })
+    });
 
     createNode({
       mother: contentsBlock,
