@@ -428,7 +428,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
   photoMargin = 30;
 
   titleSize = 24;
-  titleWeight = 700;
+  titleWeight = 600;
 
   careerSize = 12;
   careerWeight = 500;
@@ -439,9 +439,9 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
   grayBarTop = 8;
   grayBarBottom = 16;
 
-  descriptionSize = 14;
+  descriptionSize = 13;
   descriptionWeight = 400;
-  descriptionLineHeight = 1.5;
+  descriptionLineHeight = 1.6;
 
   cleanChildren(designerTong);
 
