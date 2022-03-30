@@ -285,10 +285,14 @@ LogRouter.prototype.rou_post_getContents = function () {
 
       designers = await back.getDesignersByQuery({ $or: contentsArr.map((obj) => { return { desid: obj.desid } }) }, { selfMongo });
 
-      res.send(JSON.stringify({
-        contentsArr: contentsArr,
-        designers: designers.toNormal(),
-      }));
+      if (req.body.mode === "designer") {
+        res.send(JSON.stringify(designers.frontMode()));
+      } else {
+        res.send(JSON.stringify({
+          contentsArr: contentsArr,
+          designers: designers.frontMode(),
+        }));
+      }
 
     } catch (e) {
       instance.mother.errorLog("Log Console 서버 문제 생김 (rou_post_extractLog): " + e.message).catch((e) => { console.log(e); });

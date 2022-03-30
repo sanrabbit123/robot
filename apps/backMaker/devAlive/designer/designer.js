@@ -25,4 +25,17 @@ Designer.prototype.toNormal = function () {
   return obj;
 }
 
+Designer.prototype.frontMode = function () {
+  let obj = {};
+  obj.designer = this.designer;
+  obj.desid = this.desid;
+  obj.information = {};
+  obj.information.contract = this.information.contract.toNormal();
+  obj.information.business = this.information.business.toNormal();
+  obj.setting = {};
+  obj.setting.front = this.setting.front.toNormal();
+  obj.setting.description = this.setting.description;
+  return obj;
+}
+
 module.exports = Designer;

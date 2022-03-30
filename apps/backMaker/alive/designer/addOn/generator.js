@@ -12,6 +12,15 @@ class Designers extends Array {
     return tong;
   }
 
+  frontMode() {
+    let tong;
+    tong = [];
+    for (let i of this) {
+      tong.push(i.frontMode());
+    }
+    return tong;
+  }
+
 }
 
 const withTools = function (Designer) {
