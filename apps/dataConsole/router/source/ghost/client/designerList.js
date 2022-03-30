@@ -137,10 +137,10 @@ DesignerListJs.prototype.insertInitBox = function () {
   inputSize = <%% 15, 15, 15, 15, 3.1 %%>;
   inputWeight = <%% 300, 300, 300, 300, 300 %%>;
 
-  titleWording = "디자이너 포트폴리오";
+  titleWording = "디자이너 리스트";
   services = serviceParsing().name;
   services.push("전체 보기");
-  placeholder = "새아파트";
+  placeholder = "";
 
   serviceButtonClassName = "serviceButton";
 
@@ -247,13 +247,12 @@ DesignerListJs.prototype.insertInitBox = function () {
               keyup: function (e) {
                 setDebounce(async () => {
                   try {
-                    while (!instance.fullLoad) {
-                      await sleep(500);
-                    }
                     this.value = this.value.trim();
                     this.value = this.value.replace(/[^가-힣a-z ]/gi, '');
-                    instance.portfolioBlock(null, this.value);
-                    instance.photoLoad = true;
+
+
+
+
                   } catch (e) {
                     console.log(e);
                   }
@@ -280,102 +279,32 @@ DesignerListJs.prototype.insertInitBox = function () {
     ]
   });
 
-  serviceChildren = [];
-  for (let service of services) {
-    if (desktop) {
-      if (serviceChildren.length !== 0) {
-        serviceChildren.push({
-          style: {
-            display: "inline-block",
-            position: "relative",
-            paddingLeft: String(servicePaddingLeft) + ea,
-            paddingRight: String(servicePaddingLeft) + ea,
-          },
-          children: [
-            {
-              text: "|",
-              style: {
-                display: "inline-block",
-                position: "relative",
-                fontSize: String(serviceSize) + ea,
-                fontWeight: String(300),
-                color: colorChip.deactive,
-              },
-              bold: {
-                color: colorChip.deactive,
-              }
-            }
-          ]
-        });
-      }
-    }
-    serviceChildren.push({
-      class: [
-        serviceButtonClassName
-      ],
-      attribute: {
-        toggle: "off",
-        value: service,
-      },
-      event: {
-        click: function (e) {
-          const targets = [ ...document.querySelectorAll('.' + serviceButtonClassName) ];
-          let thisValue;
-          for (let dom of targets) {
-            if (dom === this) {
-              dom.setAttribute("toggle", "on");
-              dom.firstChild.style.color = colorChip.black;
-              dom.firstChild.querySelector('b').style.color = colorChip.green;
-              thisValue = dom.getAttribute("value");
-            } else {
-              dom.setAttribute("toggle", "off");
-              dom.firstChild.style.color = colorChip.deactive;
-              dom.firstChild.querySelector('b').style.color = colorChip.deactive;
-            }
-          }
-          instance.portfolioBlock(null, /전체/gi.test(thisValue) ? "" : thisValue);
-          instance.photoLoad = true;
-        }
-      },
-      style: {
-        display: "inline-block",
-        position: "relative",
-        paddingLeft: String(servicePaddingLeft) + ea,
-        paddingRight: String(servicePaddingLeft) + ea,
-        marginBottom: desktop ? "" : String(servicePaddingLeft) + ea,
-      },
-      children: [
-        {
-          text: "<b%#%b> " + service,
-          style: {
-            display: "inline-block",
-            position: "relative",
-            fontSize: String(serviceSize) + ea,
-            fontWeight: String(400),
-            color: colorChip.deactive,
-            cursor: "pointer",
-          },
-          bold: {
-            color: colorChip.deactive,
-          }
-        }
-      ]
-    });
-  }
-
-  serviceBlock = createNode({
+  this.designerTong = createNode({
     mother: whiteBlock,
     style: {
       display: "block",
-      position: "relative",
-      textAlign: "center",
-      paddingTop: String(serviceBlockPaddingTop) + ea,
-    },
-    children: serviceChildren
+      paddingTop: String(80) + ea,
+      height: String(400) + ea,
+      width: withOut(0, ea),
+    }
   });
 
-  serviceBlock.lastChild.firstChild.style.color = colorChip.black;
-  serviceBlock.lastChild.firstChild.querySelector('b').style.color = colorChip.green;
+  this.designerBlock();
+}
+
+DesignerListJs.prototype.designerBlock = function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, cleanChildren } = GeneralJs;
+  const { ea, media } = this;
+  const { designers, designerTong } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const targets = designers.toNormal().filter((obj) => {
+    return /완료/gi.test(obj.information.contract.status);
+  })
+
+  cleanChildren(designerTong);
+  console.log(targets);
 
 }
 
@@ -413,14 +342,8 @@ DesignerListJs.prototype.launching = async function (loading) {
     const getObj = returnGet();
     let response;
 
-    response = await ajaxJson({ mode: "portfolio", limit: 42 }, LOGHOST + "/getContents", { equal: true });
-    this.contentsArr = new SearchArray(response.contentsArr);
-    this.clients = new SearchArray(response.clients);
-    this.projects = new SearchArray(response.projects);
-    this.designers = new SearchArray(response.designers);
-    this.fullLoad = false;
-    this.photoLoad = false;
-    this.loadedContents = [];
+    response = await ajaxJson({ mode: "designer" }, LOGHOST + "/getContents", { equal: true });
+    this.designers = new SearchArray(response);
 
     await this.mother.ghostClientLaunching({
       mode: "front",
@@ -443,17 +366,6 @@ DesignerListJs.prototype.launching = async function (loading) {
     });
 
     loading.parentNode.removeChild(loading);
-
-    window.addEventListener("scroll", (e) => {
-      setDebounce(() => {
-        let scrollMin;
-        scrollMin = <%% 1000, 1000, 900, 800, 300 %%>;
-        if (window.scrollY > scrollMin && instance.fullLoad && !instance.photoLoad) {
-          instance.portfolioBlock(null, null);
-          instance.photoLoad = true;
-        }
-      }, "windowScrollDebounce");
-    });
 
   } catch (err) {
     console.log(err);
