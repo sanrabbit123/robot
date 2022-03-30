@@ -138,7 +138,7 @@ DesignerListJs.prototype.insertInitBox = function () {
   inputSize = <%% 15, 15, 15, 15, 3.1 %%>;
   inputWeight = <%% 300, 300, 300, 300, 300 %%>;
 
-  designerTongPaddingTop = 72;
+  designerTongPaddingTop = 80;
 
   titleWording = "디자이너 리스트";
   services = serviceParsing().name;
