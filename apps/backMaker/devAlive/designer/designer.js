@@ -35,7 +35,7 @@ Designer.prototype.frontMode = function () {
   obj.setting = {};
   obj.setting.front = this.setting.front.toNormal();
   obj.setting.description = this.setting.description;
-  obj.service = this.analytics.project.matrix.map((arr) => { return (arr.some((i) => { return i === 1 }) ? 1 : 0) });
+  obj.service = this.analytics.project.matrix.toNormal().map((arr) => { return (arr.some((i) => { return i === 1 }) ? 1 : 0) });
   return obj;
 }
 

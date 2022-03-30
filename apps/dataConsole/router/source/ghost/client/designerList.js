@@ -569,10 +569,6 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
 
   }
 
-
-
-  console.log(targets);
-
 }
 
 DesignerListJs.prototype.launching = async function (loading) {
@@ -623,6 +619,8 @@ DesignerListJs.prototype.launching = async function (loading) {
     }).filter((obj) => {
       return obj.setting.front.introduction.desktop.length > 0;
     });
+
+    console.log(this.designers);
 
     await this.mother.ghostClientLaunching({
       mode: "front",
