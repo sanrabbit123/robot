@@ -413,7 +413,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
   const mobile = media[4];
   const desktop = !mobile;
   const photoChar = 't';
-  let { contentsArr, projects, designers } = this;
+  let { contentsArr, designers } = this;
   let baseBlock;
   let gsArray;
   let baseWidth;
@@ -454,10 +454,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
         target = equalJson(JSON.stringify(obj.contents.portfolio.detailInfo.tag));
         target.push(obj.contents.review.title.main);
         target.push(obj.contents.review.title.sub);
-        projectTarget = projects.search("proid", obj.proid);
-        if (projectTarget !== null) {
-          target.push(serviceParsing(projectTarget.service));
-        }
+        target.push(serviceParsing(obj.service));
         designerTarget = designers.search("desid", obj.desid);
         target.push(designerTarget.designer);
 
@@ -763,7 +760,6 @@ ReviewListJs.prototype.launching = async function (loading) {
 
     response = await ajaxJson({ mode: "review", limit: 42 }, LOGHOST + "/getContents", { equal: true });
     this.contentsArr = new SearchArray(response.contentsArr);
-    this.projects = new SearchArray(response.projects);
     this.designers = new SearchArray(response.designers);
     this.fullLoad = false;
     this.photoLoad = false;
@@ -806,7 +802,6 @@ ReviewListJs.prototype.launching = async function (loading) {
     setQueue(() => {
       ajaxJson({ mode: "review" }, LOGHOST + "/getContents", { equal: true }).then((response) => {
         instance.contentsArr = new SearchArray(response.contentsArr);
-        instance.projects = new SearchArray(response.projects);
         instance.designers = new SearchArray(response.designers);
         instance.fullLoad = true;
       }).catch((err) => {
