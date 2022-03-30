@@ -315,51 +315,51 @@ ClientConsultingJs.prototype.insertInitBox = function () {
 
   livingAlertEvent = function (mother) {
 
-    const tempId = uniqueValue("hex");
+    // const tempId = uniqueValue("hex");
     const moveinTarget = [ ...document.querySelectorAll("." + inputClassName) ].find((dom) => { return dom.getAttribute("property") === "movein" });
-    createNode({
-      mode: "aside",
-      mother,
-      id: tempId,
-      style: {
-        position: "absolute",
-        top: String(0),
-        left: String(0),
-        width: String(100) + '%',
-        height: String(100) + '%',
-        textAlign: "center",
-      },
-      children: [
-        {
-          text: "거주중일 시, 보관 이사가 없다면 도배와 필름 제외 시공이 어렵습니다!",
-          style: {
-            position: "absolute",
-            width: String(greenNoticeWidth1) + ea,
-            left: "calc(50% - " + String((greenNoticeWidth1 / 2) + (greenNoticePaddingLeft / 2)) + ea + ")",
-            background: colorChip.gradientGreen,
-            fontSize: String(greenNoticeSize) + ea,
-            fontWeight: String(greenNoticeWeight),
-            color: colorChip.white,
-            paddingTop: String(greenNoticePaddingTop) + ea,
-            paddingBottom: String(greenNoticePaddingBottom) + ea,
-            paddingLeft: String(greenNoticePaddingLeft) + ea,
-            paddingRight: String(greenNoticePaddingLeft) + ea,
-            bottom: String(greenNoticeBottom2) + ea,
-            borderRadius: String(5) + "px",
-            boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
-            animation: "fadeuplite 0.3s ease forwards",
-            lineHeight: String(greenNoticeLineHeight),
-          }
-        }
-      ]
-    });
+    // createNode({
+    //   mode: "aside",
+    //   mother,
+    //   id: tempId,
+    //   style: {
+    //     position: "absolute",
+    //     top: String(0),
+    //     left: String(0),
+    //     width: String(100) + '%',
+    //     height: String(100) + '%',
+    //     textAlign: "center",
+    //   },
+    //   children: [
+    //     {
+    //       text: "거주중일 시, 보관 이사가 없다면 도배와 필름 제외 시공이 어렵습니다!",
+    //       style: {
+    //         position: "absolute",
+    //         width: String(greenNoticeWidth1) + ea,
+    //         left: "calc(50% - " + String((greenNoticeWidth1 / 2) + (greenNoticePaddingLeft / 2)) + ea + ")",
+    //         background: colorChip.gradientGreen,
+    //         fontSize: String(greenNoticeSize) + ea,
+    //         fontWeight: String(greenNoticeWeight),
+    //         color: colorChip.white,
+    //         paddingTop: String(greenNoticePaddingTop) + ea,
+    //         paddingBottom: String(greenNoticePaddingBottom) + ea,
+    //         paddingLeft: String(greenNoticePaddingLeft) + ea,
+    //         paddingRight: String(greenNoticePaddingLeft) + ea,
+    //         bottom: String(greenNoticeBottom2) + ea,
+    //         borderRadius: String(5) + "px",
+    //         boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
+    //         animation: "fadeuplite 0.3s ease forwards",
+    //         lineHeight: String(greenNoticeLineHeight),
+    //       }
+    //     }
+    //   ]
+    // });
     if (moveinTarget.value.trim() === '') {
       moveinTarget.value = dateToString(new Date());
     }
-    GeneralJs.stacks["currentLivingAlertId"] = tempId;
-    setQueue(() => {
-      livingDownEvent(tempId);
-    }, 5 * 1000);
+    // GeneralJs.stacks["currentLivingAlertId"] = tempId;
+    // setQueue(() => {
+    //   livingDownEvent(tempId);
+    // }, 5 * 1000);
 
   }
 
@@ -372,9 +372,9 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       if (toggle === "off") {
         for (let dom of targets) {
           if (dom === this) {
-            // if (/거주중/gi.test(dom.children[2].textContent)) {
-            //   livingAlertEvent(dom);
-            // }
+            if (/거주중/gi.test(dom.children[2].textContent)) {
+              livingAlertEvent(dom);
+            }
             dom.setAttribute("toggle", "on");
             dom.children[0].style.opacity = String(0);
             dom.children[1].style.opacity = String(1);
@@ -607,7 +607,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
       },
       children: [
         {
-          text: "평수는 반드시 분양 평수로 적어주세요!",
+          text: "평수는 반드시 분양 평수(공급 평수)로 적어주세요!",
           style: {
             position: "absolute",
             width: String(greenNoticeWidth0) + ea,

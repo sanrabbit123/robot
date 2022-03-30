@@ -332,9 +332,8 @@ DataRouter.prototype.rou_get_First = function () {
   const instance = this;
   const { diskReading } = this.mother;
   let obj = {};
-  let ipTong, tempIpTong;
-  ipTong = [ 1, 127001, 172301254, 22223484203 ];
-  tempIpTong = [];
+  let ipTong;
+  ipTong = [ 1, 127001, 172301254 ];
   for (let info in instance.address) {
     if (instance.address[info].ip.outer.length > 0) {
       ipTong.push(Number(instance.address[info].ip.outer.replace(/[^0-9]/g, '')));
@@ -367,7 +366,7 @@ DataRouter.prototype.rou_get_First = function () {
           if (32 <= Number(ip.split('.')[1]) && 63 >= Number(ip.split('.')[1])) {
             pass = true;
           }
-        } else if (tempIpTong.includes(Number(ip.trim().replace(/[^0-9]/g, '')))) {
+        } else if (ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, '')))) {
           pass = true;
         } else {
           pass = false;

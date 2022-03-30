@@ -93,14 +93,14 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
   mainHeight = <%% 800, 750, 710, 590, (210 / 297) * 100 %%>;
 
   contentsBoxTop = <%% 38, 38, 38, 38, 0 %%>;
-  contentsBoxWidth = <%% 1200, 1050, 900, 720, 1200 %%>;
+  contentsBoxWidth = <%% 1200, 1050, 900, 720, 89 %%>;
 
   bottomVisual = <%% 6, 6, 6, 6, 6 %%>;
 
   pictureWidth = <%% 820, 720, 610, 480, 610 %%>;
   pictureHeight = mainHeight - (contentsBoxTop * 2) - bottomVisual;
 
-  boxMargin = <%% 40, 40, 32, 24, 40 %%>;
+  boxMargin = <%% 40, 40, 32, 24, 4 %%>;
   designerBoxWidth = <%% 210, 210, 200, 175, 210 %%>;
   slideBarHeight = <%% 124, 124, 124, 124, 124 %%>;
 
@@ -114,7 +114,7 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
 
   designerTitleSize = <%% 19, 19, 19, 16, 19 %%>;
   designerTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
-  designerTitleMarginTop = <%% 10, 10, 10, 7, 10 %%>;
+  designerTitleMarginTop = <%% (isMac() ? 10 : 11), (isMac() ? 10 : 11), (isMac() ? 10 : 11), (isMac() ? 7 : 8), 10 %%>;
 
   designerMthSize = <%% 13, 13, 13, 11, 13 %%>;
   designerMthWeight = <%% 500, 500, 500, 500, 500 %%>;
@@ -134,7 +134,7 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
 
   contentsTitleButtonWidth = <%% 96, 96, 96, 88, 96 %%>;
   contentsTitleButtonHeight = <%% 36, 36, 36, 32, 36 %%>;
-  contentsTitleButtonTextTop = <%% -2, -2, -2, -2, -2 %%>;
+  contentsTitleButtonTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -2 %%>;
   contentsTitleButtonSize = <%% 13, 13, 13, 11, 13 %%>;
   contentsTitleButtonWeight = <%% 600, 600, 600, 600, 600 %%>;
 
@@ -184,9 +184,9 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
     style: {
       display: "inline-block",
       position: "relative",
-      width: withOut(designerBoxWidth + boxMargin, ea),
+      width: desktop ? withOut(designerBoxWidth + boxMargin, ea) : String(100) + '%',
       height: String(100) + '%',
-      marginRight: String(boxMargin) + ea,
+      marginRight: desktop ? String(boxMargin) + ea : "",
     },
     children: [
       {
@@ -194,8 +194,8 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
           display: "block",
           position: "relative",
           width: String(100) + '%',
-          height: withOut(slideBarHeight + boxMargin, ea),
-          borderRadius: String(5) + "px",
+          height: desktop ? withOut(slideBarHeight + boxMargin, ea) : String(100) + '%',
+          borderRadius: desktop ? String(5) + "px" : "",
           overflow: "hidden",
           background: colorChip.gray2,
         }
@@ -217,7 +217,7 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
           }
         },
         style: {
-          display: "block",
+          display: desktop ? "block" : "none",
           position: "relative",
           width: String(100) + '%',
           overflow: "hidden",
@@ -491,7 +491,7 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
       }
     },
     style: {
-      display: "inline-block",
+      display: desktop ? "inline-block" : "none",
       position: "relative",
       verticalAlign: "top",
       background: colorChip.gray0,
@@ -564,6 +564,7 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
   titleBox = createNode({
     mother: contentsBox,
     style: {
+      display: desktop ? "block" : "none",
       position: "absolute",
       bottom: String(0),
       right: String(0),
@@ -712,7 +713,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
   titleBarWidth = <%% 80, 80, 80, 80, 18 %%>;
 
   contentsSize = <%% 16, 16, 16, 15, 3.5 %%>;
-  contentsTitleSize = <%% 23, 23, 23, 22, 4 %%>;
+  contentsTitleSize = <%% 23, 23, 23, 22, 4.2 %%>;
   contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
   contentsLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
 
@@ -733,7 +734,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
   contentsPadding = <%% 21, 21, 21, 21, 6 %%>;
 
   wordingTop = <%% (isMac() ? 3 : 1), (isMac() ? 3 : 1), (isMac() ? 3 : 1), (isMac() ? 3 : 1), 0.6 %%>;
-  questionMargin = <%% 25, 25, 25, 25, 1 %%>;
+  questionMargin = <%% 25, 25, 25, 25, 3.2 %%>;
   answerMargin = <%% 42, 42, 42, 42, 6 %%>;
 
   questionWeight = <%% 400, 400, 400, 400, 400 %%>;
@@ -836,8 +837,10 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
       fontWeight: String(contentsWeight),
       lineHeight: String(contentsLineHeight),
       color: colorChip.black,
+      width: desktop ? String(100) + '%' : withOut(contentsPadding * 2, ea),
       marginTop: String(customerMarginTop) + ea,
-      paddingRight: desktop ? "" : String(customerPaddingLeft) + ea,
+      paddingRight: desktop ? "" : String(contentsPadding) + ea,
+      paddingLeft: desktop ? "" : String(contentsPadding) + ea,
     },
   });
 
@@ -888,7 +891,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
         display: "block",
         position: "relative",
         textAlign: "center",
-        width: String(100) + '%',
+        width: desktop ? String(100) + '%' : withOut(contentsPadding * 2, ea),
         marginBottom: String(questionMargin) + ea,
         paddingLeft: desktop ? "" : String(contentsPadding) + ea,
         paddingRight: desktop ? "" : String(contentsPadding) + ea,
@@ -917,6 +920,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
         display: "block",
         position: "relative",
         textAlign: "left",
+        width: desktop ? String(100) + '%' : withOut(contentsPadding * 2, ea),
         fontSize: String(contentsSize) + ea,
         fontWeight: String(answerWeight),
         lineHeight: String(contentsLineHeight),
@@ -1461,11 +1465,11 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
   quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
   quoteTop = <%% (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 4 : 2), isIphone() ? 1.3 : 1.2 %%>;
 
-  titleSize = <%% 17, 16, 17, 14, 3.2 %%>;
+  titleSize = <%% 17, 16, 17, 14, 3 %%>;
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
   titleMarginLeft = <%% 6, 6, 5, 5, 1.1 %%>;
 
-  titleSubSize = <%% 12, 12, 12, 11, 2.5 %%>;
+  titleSubSize = <%% 12, 12, 12, 11, 2.3 %%>;
   titleSubMarginTop = <%% 2, 2, 2, 2, 0.5 %%>;
 
   tagTongMarginTop = <%% 10, 10, 10, 8, 1.6 %%>;
@@ -1753,7 +1757,7 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
         if (filteredContents.review.detailInfo.photodae.length > 1) {
 
           src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + filteredContents.portfolio.pid + "/" + photoChar + String(filteredContents.portfolio.detailInfo.photodae[0]) + filteredContents.portfolio.pid + ".jpg";
-          title = filteredContents.portfolio.title.main.split(", ")[1];
+          title = desktop ? filteredContents.portfolio.title.main.split(", ")[1] : filteredContents.portfolio.title.sub.split(", ")[1];
           subTitle = filteredContents.portfolio.title.sub;
           if (!mobile) {
             if (subTitle.length > 27) {
