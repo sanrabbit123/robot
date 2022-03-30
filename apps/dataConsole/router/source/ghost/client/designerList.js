@@ -573,7 +573,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
 
 DesignerListJs.prototype.launching = async function (loading) {
   const instance = this;
-  const { returnGet, ajaxJson, setQueue, setDebounce } = GeneralJs;
+  const { returnGet, ajaxJson, setQueue, setDebounce, serviceParsing } = GeneralJs;
   try {
     this.mother.setGeneralProperties(this);
 
@@ -603,8 +603,9 @@ DesignerListJs.prototype.launching = async function (loading) {
     }
 
     const getObj = returnGet();
-    let response;
+    let response, services;
 
+    services = serviceParsing().name;
     response = await ajaxJson({ mode: "designer" }, LOGHOST + "/getContents", { equal: true });
     this.designers = new SearchArray(response.designers);
     for (let designer of this.designers) {
@@ -612,6 +613,11 @@ DesignerListJs.prototype.launching = async function (loading) {
         return obj.tag;
       }).flat()) ];
       designer.tag.push(designer.designer);
+      for (let i = 0; i < designer.service.length; i++) {
+        if (designer.service[i] === 1) {
+          designer.tag.push(services[i]);
+        }
+      }
     }
 
     this.designers = this.designers.toNormal().filter((obj) => {
