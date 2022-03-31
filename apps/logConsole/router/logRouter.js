@@ -343,6 +343,7 @@ LogRouter.prototype.rou_post_mysqlQuery = function () {
   const hexAllowed = [
     "fab00000e50000f90000ef0000c3000059",
     "fa8c00007a0000aa0000eb0000a900002f",
+    "fa7c0000d10000c30000e600007a0000b7",
   ];
   let ipTong;
   let obj = {};
