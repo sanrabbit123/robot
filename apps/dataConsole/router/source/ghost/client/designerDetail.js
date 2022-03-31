@@ -43,6 +43,34 @@ const DesignerDetailJs = function () {
 
 DesignerDetailJs.binaryPath = "/middle/designer";
 
+DesignerDetailJs.prototype.generateGsArray = function (number) {
+  if (typeof number !== "number") {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  const standard = [
+    'g', 's', 's',
+    's', 's', 's', 's',
+    's', 's', 'g',
+    's', 's', 's', 's',
+    's', 's', 's', 's',
+    's', 's', 'g',
+  ];
+  let additional;
+  let add;
+  let multi;
+  let result;
+  additional = number % standard.length;
+  add = standard.slice(0, additional);
+  multi = Math.floor(number / standard.length);
+  result = [];
+  for (let i = 0; i < multi; i++) {
+    result = result.concat(JSON.parse(JSON.stringify(standard)));
+  }
+  result = result.concat(add);
+  return result;
+}
+
 DesignerDetailJs.prototype.insertInitBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
@@ -50,74 +78,13 @@ DesignerDetailJs.prototype.insertInitBox = function () {
   const mobile = media[4];
   const desktop = !mobile;
   let whiteBlock;
-  let style;
-  let blockHeight;
-  let leftBox, rightBox;
-  let titleBox, barBox, indexBox;
-  let margin;
-  let quoteWidth;
-  let quoteHeight;
-  let titleFontSize, titleFontWeight;
-  let serviceChildren;
-  let services;
-  let titleWording;
-  let servicePaddingLeft;
-  let serviceSize;
-  let serviceBlockPaddingTop;
   let whiteBlockPaddingTop, whiteBlockPaddingBottom;
-  let quotoTongHeight;
-  let searchBarPaddingTop;
-  let searchBarHeight;
-  let searchBarWidth;
-  let searchIconHeight;
-  let searchIconRight, searchIconTop;
   let whiteBlockMarginBottom;
   let inputWithoutHeight;
-  let serviceButtonClassName;
-  let serviceBlock;
-  let inputSize, inputWeight;
-  let placeholder;
-  let titleTop;
-  let designerTongPaddingTop;
 
-  margin = <%% 30, 30, 30, 30, 30 %%>;
-
-  whiteBlockMarginBottom = <%% 120, 120, 120, 120, 9 %%>;
-
-  quoteHeight = <%% 11, 11, 11, 11, 2.5 %%>;
-  quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
-  titleFontSize = <%% 31, 31, 30, 28, 5.7 %%>;
-  titleFontWeight = <%% 500, 500, 500, 500, 500 %%>;
-  titleTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 4) %%>;
-
-  servicePaddingLeft = <%% 20, 18, 13, 8, 2.2 %%>;
-  serviceSize = <%% 17, 16, 16, 15, 3.3 %%>;
-  serviceBlockPaddingTop = <%% (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), 5 %%>;
-
+  whiteBlockMarginBottom = <%% 36, 36, 36, 36, 9 %%>;
   whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
-  whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 6 %%>;
-
-  searchBarPaddingTop = <%% 20, 20, 20, 20, 5.2 %%>;
-  searchBarHeight = <%% 40, 40, 40, 40, 8 %%>;
-  searchBarWidth = <%% 500, 500, 490, 450, 74 %%>;
-
-  searchIconHeight = <%% 20, 20, 20, 20, 4 %%>;
-  searchIconRight = <%% 11, 11, 11, 11, 2 %%>;
-  searchIconTop = <%% 10, 10, 10, 10, 1.8 %%>;
-
-  inputWithoutHeight = <%% (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), 0.8 %%>;
-
-  inputSize = <%% 15, 15, 15, 15, 3.1 %%>;
-  inputWeight = <%% 300, 300, 300, 300, 300 %%>;
-
-  designerTongPaddingTop = <%% 80, 72, 72, 72, 6 %%>;
-
-  titleWording = "디자이너 리스트";
-  services = serviceParsing().name;
-  services.push("전체 보기");
-  placeholder = "";
-
-  serviceButtonClassName = "serviceButton";
+  whiteBlockPaddingBottom = <%% 62, 62, 62, 62, 6 %%>;
 
   whiteBlock = createNode({
     mother: this.baseTong,
@@ -133,227 +100,10 @@ DesignerDetailJs.prototype.insertInitBox = function () {
     }
   });
 
-  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
-  createNode({
-    mother: whiteBlock,
-    style: {
-      display: "flex",
-      position: "relative",
-      textAlign: "center",
-      justifyContent: "center",
-      alignItems: "center",
-      height: String(quotoTongHeight) + ea,
-    },
-    children: [
-      {
-        mode: "svg",
-        source: svgMaker.doubleQuote(colorChip.green),
-        style: {
-          display: "inline-block",
-          height: String(quoteHeight) + ea,
-          width: String(quoteWidth) + ea,
-        }
-      }
-    ]
-  });
-
-  createNode({
-    mother: whiteBlock,
-    style: {
-      display: "flex",
-      position: "relative",
-      textAlign: "center",
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    children: [
-      {
-        text: titleWording,
-        style: {
-          display: "inline-block",
-          position: "relative",
-          top: mobile ? "" : String(titleTop) + ea,
-          fontSize: String(titleFontSize) + ea,
-          fontWeight: String(titleFontWeight),
-          color: colorChip.black,
-        }
-      }
-    ]
-  });
-
-  createNode({
-    mother: whiteBlock,
-    style: {
-      display: "flex",
-      position: "relative",
-      textAlign: "center",
-      justifyContent: "center",
-      alignItems: "center",
-      paddingTop: String(searchBarPaddingTop) + ea,
-    },
-    children: [
-      {
-        style: {
-          display: "inline-block",
-          position: "relative",
-          width: String(searchBarWidth) + ea,
-          height: String(searchBarHeight) + ea,
-          borderRadius: String(5) + "px",
-          background: colorChip.gray1,
-        },
-        children: [
-          {
-            mode: "svg",
-            source: instance.mother.returnSearch(colorChip.black),
-            style: {
-              position: "absolute",
-              height: String(searchIconHeight) + ea,
-              right: String(searchIconRight) + ea,
-              top: String(searchIconTop) + ea,
-            }
-          },
-          {
-            mode: "input",
-            attribute: {
-              type: "text",
-              placeholder: placeholder,
-            },
-            event: {
-              keyup: function (e) {
-                setDebounce(async () => {
-                  try {
-                    this.value = this.value.trim();
-                    this.value = this.value.replace(/[^가-힣a-z ]/gi, '');
-                    instance.designerBlock(this.value);
-                  } catch (e) {
-                    console.log(e);
-                  }
-                }, "searchEventDebounce", 1000);
-              }
-            },
-            style: {
-              position: "absolute",
-              top: String(0),
-              left: String(0),
-              width: String(100) + '%',
-              height: withOut(inputWithoutHeight, ea),
-              border: String(0),
-              outline: String(0),
-              background: "transparent",
-              fontSize: String(inputSize) + ea,
-              fontWeight: String(inputWeight),
-              color: colorChip.black,
-              textAlign: "center",
-            }
-          }
-        ]
-      },
-    ]
-  });
-
-
-  serviceChildren = [];
-  for (let service of services) {
-    if (desktop) {
-      if (serviceChildren.length !== 0) {
-        serviceChildren.push({
-          style: {
-            display: "inline-block",
-            position: "relative",
-            paddingLeft: String(servicePaddingLeft) + ea,
-            paddingRight: String(servicePaddingLeft) + ea,
-          },
-          children: [
-            {
-              text: "|",
-              style: {
-                display: "inline-block",
-                position: "relative",
-                fontSize: String(serviceSize) + ea,
-                fontWeight: String(300),
-                color: colorChip.deactive,
-              },
-              bold: {
-                color: colorChip.deactive,
-              }
-            }
-          ]
-        });
-      }
-    }
-    serviceChildren.push({
-      class: [
-        serviceButtonClassName
-      ],
-      attribute: {
-        toggle: "off",
-        value: service,
-      },
-      event: {
-        click: function (e) {
-          const targets = [ ...document.querySelectorAll('.' + serviceButtonClassName) ];
-          let thisValue;
-          for (let dom of targets) {
-            if (dom === this) {
-              dom.setAttribute("toggle", "on");
-              dom.firstChild.style.color = colorChip.black;
-              dom.firstChild.querySelector('b').style.color = colorChip.green;
-              thisValue = dom.getAttribute("value");
-            } else {
-              dom.setAttribute("toggle", "off");
-              dom.firstChild.style.color = colorChip.deactive;
-              dom.firstChild.querySelector('b').style.color = colorChip.deactive;
-            }
-          }
-          instance.designerBlock(/전체/gi.test(thisValue) ? "" : thisValue);
-        }
-      },
-      style: {
-        display: "inline-block",
-        position: "relative",
-        paddingLeft: String(servicePaddingLeft) + ea,
-        paddingRight: String(servicePaddingLeft) + ea,
-        marginBottom: desktop ? "" : String(servicePaddingLeft) + ea,
-      },
-      children: [
-        {
-          text: "<b%#%b> " + service,
-          style: {
-            display: "inline-block",
-            position: "relative",
-            fontSize: String(serviceSize) + ea,
-            fontWeight: String(400),
-            color: colorChip.deactive,
-            cursor: "pointer",
-          },
-          bold: {
-            color: colorChip.deactive,
-          }
-        }
-      ]
-    });
-  }
-
-  serviceBlock = createNode({
-    mother: whiteBlock,
-    style: {
-      display: "block",
-      position: "relative",
-      textAlign: "center",
-      paddingTop: String(serviceBlockPaddingTop) + ea,
-    },
-    children: serviceChildren
-  });
-
-  serviceBlock.lastChild.firstChild.style.color = colorChip.black;
-  serviceBlock.lastChild.firstChild.querySelector('b').style.color = colorChip.green;
-
-
   this.designerTong = createNode({
     mother: whiteBlock,
     style: {
       display: "block",
-      paddingTop: String(designerTongPaddingTop) + ea,
       width: withOut(0, ea),
     }
   });
@@ -361,7 +111,7 @@ DesignerDetailJs.prototype.insertInitBox = function () {
   this.designerBlock(null);
 }
 
-DesignerDetailJs.prototype.designerBlock = function (search = null) {
+DesignerDetailJs.prototype.designerBlock = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, cleanChildren, designerCareer } = GeneralJs;
   const { ea, media } = this;
@@ -380,7 +130,6 @@ DesignerDetailJs.prototype.designerBlock = function (search = null) {
   let photoMargin;
   let contentsPaddingTop;
   let contentsBlock;
-  let blockMarginBottom;
   let titleSize, titleWeight;
   let careerSize, careerWeight;
   let careerTextTop;
@@ -388,54 +137,35 @@ DesignerDetailJs.prototype.designerBlock = function (search = null) {
   let grayBarTop, grayBarBottom;
   let descriptionSize, descriptionWeight, descriptionLineHeight;
 
-  tongPaddingLeft = <%% 100, 70, 80, 50, 6.5 %%>;
-  blockMargin = <%% 40, 20, 20, 20, 2 %%>;
-  blockMarginBottom = <%% 25, 25, 25, 25, 5.5 %%>;
-  columns = <%% 2, 2, 1, 1, 1 %%>;
+  tongPaddingLeft = <%% 75, 70, 80, 50, 6.5 %%>;
+  blockMargin = <%% 0, 0, 0, 0, 0 %%>;
+  columns = 1;
   contentsPaddingTop = <%% 16, 16, 16, 16, 1 %%>;
 
-  blockHeight = <%% (isMac() ? 178 : 176), 160, (isMac() ? 178 : 176), 170, 25 %%>;
+  blockHeight = <%% 206, 160, (isMac() ? 178 : 176), 170, 25 %%>;
   photoWidth = blockHeight - (contentsPaddingTop * 2);
 
-  photoMargin = <%% 30, 25, 30, 30, 4 %%>;
+  photoMargin = <%% 32, 25, 30, 30, 4 %%>;
 
-  titleSize = <%% 24, 23, 23, 23, 4 %%>;
+  titleSize = <%% 32, 23, 23, 23, 4 %%>;
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-  careerSize = <%% 12, 12, 12, 12, 2.5 %%>;
+  careerSize = <%% 13, 12, 12, 12, 2.5 %%>;
   careerWeight = <%% 500, 500, 500, 500, 500 %%>;
   careerTextTop = <%% 0, 0, 0, 0, 0 %%>;
 
   careerBetween = <%% 8, 8, 8, 8, 1.5 %%>;
 
   grayBarTop = <%% 8, 8, 8, 8, 2 %%>;
-  grayBarBottom = <%% 16, 16, 16, 16, 2 %%>;
+  grayBarBottom = <%% 18, 16, 16, 16, 2 %%>;
 
-  descriptionSize = <%% 13, 11, 13, 12, 2.7 %%>;
+  descriptionSize = <%% 15, 11, 13, 12, 2.7 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.55 %%>;
 
   cleanChildren(designerTong);
 
-  if (typeof search === "string") {
-    if (search.trim() === '') {
-      targets = designers;
-    } else {
-      targets = designers.filter((designer) => {
-        let boo;
-        boo = false;
-        for (let t of designer.tag) {
-          if ((new RegExp(search, "gi")).test(t)) {
-            boo = true;
-            break;
-          }
-        }
-        return boo;
-      });
-    }
-  } else {
-    targets = designers;
-  }
+  targets = designers;
 
   tong = createNode({
     mother: designerTong,
@@ -458,7 +188,6 @@ DesignerDetailJs.prototype.designerBlock = function (search = null) {
         width: "calc(calc(100% - " + String(columns * blockMargin) + ea + ") / " + String(columns) + ")",
         height: String(blockHeight) + ea,
         marginRight: String(blockMargin) + ea,
-        marginBottom: String(blockMarginBottom) + ea,
       },
       children: [
         {
@@ -478,6 +207,7 @@ DesignerDetailJs.prototype.designerBlock = function (search = null) {
         {
           style: {
             display: "inline-block",
+            position: "relative",
             width: withOut(photoWidth + photoMargin, ea),
             marginLeft: String(photoMargin) + ea,
             paddingTop: String(contentsPaddingTop) + ea,
@@ -526,7 +256,7 @@ DesignerDetailJs.prototype.designerBlock = function (search = null) {
           }
         },
       ]
-    })
+    });
 
     createNode({
       mother: contentsBlock,
@@ -553,6 +283,401 @@ DesignerDetailJs.prototype.designerBlock = function (search = null) {
       }
     });
 
+    createNode({
+      mother: contentsBlock,
+      style: {
+        width: String(100) + ea,
+        height: String(40) + ea,
+        position: "absolute",
+        bottom: String(contentsPaddingTop) + ea,
+        right: String(144) + ea,
+        borderRadius: String(5) + "px",
+        background: colorChip.gray2,
+        cursor: "pointer",
+      },
+      children: [
+        {
+          text: "목록으로",
+          style: {
+            position: "relative",
+            fontSize: String(15) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+            top: String(8) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+          }
+        }
+      ]
+    })
+
+    createNode({
+      mother: contentsBlock,
+      style: {
+        width: String(138) + ea,
+        height: String(40) + ea,
+        position: "absolute",
+        bottom: String(contentsPaddingTop) + ea,
+        right: String(0),
+        borderRadius: String(5) + "px",
+        background: colorChip.gradientGreen,
+        cursor: "pointer",
+      },
+      children: [
+        {
+          text: "서비스 신청하기",
+          style: {
+            position: "relative",
+            fontSize: String(15) + ea,
+            fontWeight: String(600),
+            color: colorChip.white,
+            top: String(8) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+          }
+        }
+      ]
+    })
+
+  }
+
+}
+
+DesignerDetailJs.prototype.insertPortfolioBase = function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, equalJson, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { ea, media, baseTong } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  let baseBlock;
+  let photoMargin;
+  let paddingBottom;
+
+  photoMargin = <%% 20, 18, 18, 16, 3 %%>;
+  paddingBottom = <%% 120, 120, 120, 120, 40 %%>;
+
+  baseBlock = createNode({
+    mother: baseTong,
+    style: {
+      position: "relative",
+      width: "calc(100% + " + String(photoMargin) + ea + ")",
+      paddingBottom: String(paddingBottom) + ea,
+    }
+  });
+
+  this.portfolioBlock(null, null);
+}
+
+DesignerDetailJs.prototype.portfolioBlock = function (limitLength, search = null) {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, equalJson, cleanChildren, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { ea, media, baseTong } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const photoChar = 't';
+  let { contentsArr, designers } = this;
+  let baseBlock;
+  let gsArray;
+  let baseWidth;
+  let photoMargin;
+  let columns;
+  let seroWidth, garoWidth;
+  let photoRatio;
+  let photoHeight;
+  let src;
+  let contents;
+  let title;
+  let quoteWidth, quoteHeight;
+  let quoteTop;
+  let photoMarginBottom;
+  let titleSize, titleWeight, titleMarginLeft;
+  let tag;
+  let block;
+  let tagTong;
+  let photoBlockMarginBottom;
+  let garoSliceStart, garoSliceEnd, garoSliceLimit;
+  let seroSliceStart, seroSliceEnd, seroSliceLimit;
+  let tagTongMarginTop, tagTongWidthRatio;
+  let tagSize, tagWeight;
+  let tagPaddingLeft, tagPaddingTop, tagPaddingBottom;
+  let tagMarginRight;
+  let titleSubSize;
+  let subTitle;
+  let titleSubMarginTop;
+
+  contentsArr = contentsArr;
+
+  if (limitLength === null) {
+    limitLength = contentsArr.length;
+  }
+
+  gsArray = this.generateGsArray(limitLength);
+
+  baseWidth = Number(baseTong.style.width.replace(/[^0-9\.]/gi, ''));
+  photoMargin = <%% 20, 18, 18, 16, 3 %%>;
+  columns = <%% 4, 4, 3, 3, 2 %%>;
+
+  photoRatio = (297 / 210);
+  seroWidth = (baseWidth - (photoMargin * (columns - 1))) / columns;
+  garoWidth = (seroWidth * 2) + photoMargin;
+  photoHeight = seroWidth * photoRatio;
+  photoMarginBottom = <%% (isMac() ? 20 : 22), (isMac() ? 18 : 20), (isMac() ? 18 : 20), (isMac() ? 18 : 20), 2.3 %%>;
+
+  quoteHeight = <%% 10, 8, 8, 7, 1.8 %%>;
+  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
+  quoteTop = <%% (isMac() ? 7 : 5), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), isIphone() ? 1.3 : 1.2 %%>;
+
+  titleSize = <%% 21, 17, 17, 15, 3 %%>;
+  titleWeight = <%% 600, 600, 600, 600, 600 %%>;
+  titleMarginLeft = <%% 6, 6, 5, 5, 1.3 %%>;
+
+  titleSubSize = <%% 14, 12, 12, 11, 2.5 %%>;
+  titleSubMarginTop = <%% 3, 3, 3, 2, 0.5 %%>;
+
+  photoBlockMarginBottom = <%% 72, 66, 66, 62, 8 %%>;
+
+  garoSliceStart = <%% 5, 5, 5, 5, 5 %%>;
+  garoSliceEnd = <%% 10, 10, 10, 10, 9 %%>;
+  garoSliceLimit = <%% 17, 17, 17, 17, 17 %%>;
+
+  seroSliceStart = <%% 5, 5, 5, 5, 5 %%>;
+  seroSliceEnd = <%% 16, 15, 17, 15, 13 %%>;
+  seroSliceLimit = <%% 30, 30, 30, 30, 30 %%>;
+
+  tagTongMarginTop = <%% 11, 11, 10, 8, 1.3 %%>;
+  tagTongWidthRatio = <%% 1.1, 1.3, 1.3, 1.3, 1.3 %%>;
+
+  tagSize = <%% 12, 10, 10, 9, 2 %%>;
+  tagWeight = <%% 500, 500, 500, 500, 500 %%>;
+
+  tagPaddingLeft = <%% 10, 8, 8, 7, 1 %%>;
+  tagPaddingTop = <%% (isMac() ? 5 : 6), (isMac() ? 4 : 5), (isMac() ? 4 : 5), (isMac() ? 4 : 5), 1 %%>;
+  tagPaddingBottom = <%% (isMac() ? 7 : 6), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isIphone() ? 1.2 : 1.4) %%>;
+  tagMarginRight = <%% 4, 3, 3, 3, 1 %%>;
+
+  baseBlock = baseTong.children[1];
+
+  if (search !== null) {
+    cleanChildren(baseBlock);
+  }
+
+  if (limitLength !== 0) {
+    for (let i = 0; i < limitLength; i++) {
+      if (!this.loadedContents.includes(i) || search !== null) {
+
+        ({ contents } = contentsArr[i]);
+
+        src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.portfolio.pid + "/" + photoChar + String(contents.portfolio.detailInfo.photodae[gsArray[i] === 'g' ? 1 : 0]) + contents.portfolio.pid + ".jpg";
+        title = contents.portfolio.title.main.split(", ")[1];
+        if (media[0] || media[2]) {
+          subTitle = contents.portfolio.title.sub;
+        } else {
+          subTitle = contents.portfolio.title.sub;
+          if (!mobile) {
+            if (gsArray[i] !== 'g' && subTitle.length > 27) {
+              subTitle = contents.portfolio.title.sub.replace(/홈?스타일링$/i, '');
+            }
+          } else {
+            if (gsArray[i] !== 'g' && subTitle.length > 25) {
+              subTitle = contents.portfolio.title.sub.replace(/홈?스타일링$/i, '');
+            }
+          }
+        }
+
+        tag = equalJson(JSON.stringify(contents.portfolio.detailInfo.tag));
+
+        if (gsArray[i] !== 'g') {
+          tag = tag.slice(garoSliceStart, garoSliceEnd);
+          if (tag.reduce((acc, curr) => { return acc + curr.length }, 0) > garoSliceLimit) {
+            tag = tag.slice(0, -1);
+          }
+        } else {
+          tag = tag.slice(seroSliceStart, seroSliceEnd);
+          if (tag.reduce((acc, curr) => { return acc + curr.length }, 0) > seroSliceLimit) {
+            tag = tag.slice(0, -1);
+          }
+        }
+
+        block = createNode({
+          mother: baseBlock,
+          style: {
+            display: "inline-block",
+            width: String(gsArray[i] === 'g' ? garoWidth : seroWidth) + ea,
+            borderRadius: String(5) + "px",
+            marginRight: String(photoMargin) + ea,
+            marginBottom: String(photoBlockMarginBottom) + ea,
+            verticalAlign: "top",
+            overflow: "hidden",
+          },
+          children: [
+            {
+              style: {
+                display: "block",
+                width: String(gsArray[i] === 'g' ? garoWidth : seroWidth) + ea,
+                height: String(photoHeight) + ea,
+                borderRadius: String(5) + "px",
+                marginRight: String(photoMargin) + ea,
+                marginBottom: String(photoMarginBottom) + ea,
+                backgroundSize: "100% auto",
+                backgroundPosition: "50% 50%",
+                backgroundImage: "url('" + src + "')",
+              }
+            },
+            {
+              style: {
+                display: "block",
+                position: "relative",
+                width: String(100) + '%',
+              },
+              children: [
+                {
+                  text: title,
+                  style: {
+                    display: "block",
+                    fontSize: String(titleSize) + ea,
+                    fontWeight: String(titleWeight),
+                    color: colorChip.black,
+                    width: withOut(0, ea),
+                    verticalAlign: "top",
+                  }
+                },
+                {
+                  style: {
+                    display: "block",
+                    width: withOut(0, ea),
+                    verticalAlign: "top",
+                    marginTop: String(titleSubMarginTop) + ea,
+                    overflow: "hidden",
+                  },
+                  children: [
+                    {
+                      text: subTitle,
+                      style: {
+                        display: "block",
+                        position: "relative",
+                        fontSize: String(titleSubSize) + ea,
+                        fontWeight: String(titleWeight),
+                        color: colorChip.deactive,
+                        width: String(200) + '%',
+                      },
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              style: {
+                display: "block",
+                position: "relative",
+                marginTop: String(tagTongMarginTop) + ea,
+                width: String(tagTongWidthRatio * 100) + '%',
+                left: String(0) + ea,
+              }
+            }
+          ]
+        });
+        tagTong = block.children[2];
+        for (let t of tag) {
+          createNode({
+            mother: tagTong,
+            text: "<b%#%b> " + t,
+            style: {
+              display: "inline-block",
+              fontSize: String(tagSize) + ea,
+              fontWeight: String(tagWeight),
+              color: colorChip.black,
+              paddingLeft: String(tagPaddingLeft) + ea,
+              paddingTop: String(tagPaddingTop) + ea,
+              paddingBottom: String(tagPaddingBottom) + ea,
+              paddingRight: String(tagPaddingLeft) + ea,
+              borderRadius: String(3) + "px",
+              marginRight: String(tagMarginRight) + ea,
+              background: colorChip.gray2
+            },
+            bold: {
+              fontWeight: String(400),
+              color: colorChip.deactive,
+            }
+          })
+        }
+
+        if (search === null) {
+          this.loadedContents.push(i);
+        }
+
+
+      }
+    }
+  } else {
+
+    for (let i = 0; i < 4; i++) {
+
+      block = createNode({
+        mother: baseBlock,
+        style: {
+          display: "inline-block",
+          width: String(seroWidth) + ea,
+          borderRadius: String(5) + "px",
+          marginRight: String(photoMargin) + ea,
+          marginBottom: String(photoBlockMarginBottom) + ea,
+          verticalAlign: "top",
+          overflow: "hidden",
+        },
+        children: [
+          {
+            style: {
+              width: String(seroWidth) + ea,
+              height: String(photoHeight) + ea,
+              borderRadius: String(5) + "px",
+              marginRight: String(photoMargin) + ea,
+              marginBottom: String(photoMarginBottom) + ea,
+              background: colorChip.gray2,
+            }
+          },
+          {
+            style: {
+              display: "block",
+              position: "relative",
+            },
+            children: [
+              {
+                mode: "svg",
+                source: svgMaker.doubleQuote(colorChip.green),
+                style: {
+                  display: "inline-block",
+                  height: String(quoteHeight) + ea,
+                  width: String(quoteWidth) + ea,
+                  verticalAlign: "top",
+                  position: "relative",
+                  top: String(quoteTop) + ea,
+                }
+              },
+              {
+                text: "-",
+                style: {
+                  display: "inline-block",
+                  fontSize: String(titleSize) + ea,
+                  fontWeight: String(titleWeight),
+                  color: colorChip.black,
+                  marginLeft: String(titleMarginLeft) + ea,
+                  verticalAlign: "top",
+                }
+              }
+            ]
+          },
+          {
+            style: {
+              display: "block",
+              position: "relative",
+              marginTop: String(tagTongMarginTop) + ea,
+              width: String(tagTongWidthRatio * 100) + '%',
+              left: String(0) + ea,
+            }
+          }
+        ]
+      });
+
+    }
 
   }
 
@@ -593,8 +718,11 @@ DesignerDetailJs.prototype.launching = async function (loading) {
     let response, services;
 
     services = serviceParsing().name;
-    response = await ajaxJson({ mode: "designer" }, LOGHOST + "/getContents", { equal: true });
+    response = await ajaxJson({ mode: "designer", desid: getObj.desid }, LOGHOST + "/getContents", { equal: true });
+    this.contentsArr = new SearchArray(response.contentsArr);
     this.designers = new SearchArray(response.designers);
+    this.loadedContents = [];
+
     for (let designer of this.designers) {
       designer.tag = [ ...new Set(response.contentsArr.filter((obj) => { return obj.desid === designer.desid }).map((obj) => {
         return obj.tag;
@@ -632,6 +760,7 @@ DesignerDetailJs.prototype.launching = async function (loading) {
       local: async () => {
         try {
           instance.insertInitBox();
+          instance.insertPortfolioBase();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "DesignerDetailJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
         }
