@@ -615,7 +615,11 @@ DesignerProposalJs.prototype.insertInitBox = function () {
     if (testMode) {
       return `00년 0월 0일`;
     } else {
-      return `${String(expected.getFullYear()).slice(2)}년 ${String(expected.getMonth() + 1)}월 ${String(expected.getDate())}일`;
+      if (expected.valueOf() < (new Date(2000, 0, 1)).valueOf() || expected.valueOf() > (new Date(3000, 0, 1)).valueOf()) {
+        return `해당 없음`;
+      } else {
+        return `${String(expected.getFullYear()).slice(2)}년 ${String(expected.getMonth() + 1)}월 ${String(expected.getDate())}일`;
+      }
     }
   }
   const spaceToString = function (obj) {
@@ -720,9 +724,9 @@ DesignerProposalJs.prototype.insertInitBox = function () {
       { title: "추천 서비스", value: GeneralJs.serviceParsing(this.project.service).split(' ').slice(1).join(' ') },
       { title: "서비스 형태", value: GeneralJs.serviceParsing(this.project.service).split(' ')[0] },
       { title: "대상 면적", value: String(request.space.pyeong) + "평" },
-      { title: "대상 공간", value: spaceToString(request.space.spec) },
-      { title: "계약 형태", value: request.space.contract },
-      { title: "예산", value: request.budget },
+      { title: "사전 점검일", value: expectedToString(analytics.date.space.precheck) },
+      { title: "집 비는 날", value: expectedToString(analytics.date.space.empty) },
+      { title: "입주 예정일", value: expectedToString(request.space.resident.expected) },
       { title: "예상 시작일", value: expectedToString(analytics.date.space.movein, GeneralJs.serviceParsing(this.project.service, true)) },
       { title: "예상 종료일", value: expectedToString(analytics.date.space.movein) },
     ];
@@ -731,7 +735,7 @@ DesignerProposalJs.prototype.insertInitBox = function () {
       { title: "추천 서비스", value: (desktop ? GeneralJs.serviceParsing(this.project.service).split(' ').slice(1).join(' ') : GeneralJs.serviceParsing(this.project.service).split(' ')[1]) },
       { title: "서비스 형태", value: GeneralJs.serviceParsing(this.project.service).split(' ')[0] },
       { title: "대상 면적", value: String(request.space.pyeong) + "평" },
-      { title: "대상 공간", value: spaceToString(request.space.spec) },
+      { title: "입주 예정일", value: expectedToString(request.space.resident.expected) },
       { title: "예상 시작일", value: expectedToString(analytics.date.space.movein, GeneralJs.serviceParsing(this.project.service, true)) },
       { title: "예상 종료일", value: expectedToString(analytics.date.space.movein) },
     ];
@@ -3987,7 +3991,7 @@ DesignerProposalJs.prototype.submitEvent = function (desid, designer, method) {
     });
 
   }
-  
+
 }
 
 DesignerProposalJs.prototype.launching = async function (loading) {

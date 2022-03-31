@@ -18,11 +18,11 @@
   "meta": {
     "title": [
       "thisPerson",
-      "return ('디자이너 리스트 | 홈리에종');"
+      "return ('디자이너 상세 | 홈리에종');"
     ],
     "description": [
       "thisPerson",
-      "return ('홈리에종 협업 디자이너 리스트 페이지 입니다! | 홈리에종');"
+      "return ('홈리에종 협업 디자이너 상세 내용 페이지 입니다! | 홈리에종');"
     ],
     "image": [
       "thisPerson",
@@ -30,20 +30,20 @@
     ],
     "module": false
   },
-  "name": "designerList",
+  "name": "designerDetail",
   "route": [
-    "designerList",
-    "DL"
+    "designerDetail",
+    "DD"
   ]
 } %/%/g
 
-const DesignerListJs = function () {
+const DesignerDetailJs = function () {
   this.mother = new GeneralJs();
 }
 
-DesignerListJs.binaryPath = "/middle/designer";
+DesignerDetailJs.binaryPath = "/middle/designer";
 
-DesignerListJs.prototype.generateGsArray = function (number) {
+DesignerDetailJs.prototype.generateGsArray = function (number) {
   if (typeof number !== "number") {
     throw new Error("invaild input");
   }
@@ -71,7 +71,7 @@ DesignerListJs.prototype.generateGsArray = function (number) {
   return result;
 }
 
-DesignerListJs.prototype.insertInitBox = function () {
+DesignerDetailJs.prototype.insertInitBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media } = this;
@@ -389,7 +389,7 @@ DesignerListJs.prototype.insertInitBox = function () {
   this.designerBlock(null);
 }
 
-DesignerListJs.prototype.designerBlock = function (search = null) {
+DesignerDetailJs.prototype.designerBlock = function (search = null) {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, cleanChildren, designerCareer } = GeneralJs;
   const { ea, media } = this;
@@ -586,7 +586,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
 
 }
 
-DesignerListJs.prototype.launching = async function (loading) {
+DesignerDetailJs.prototype.launching = async function (loading) {
   const instance = this;
   const { returnGet, ajaxJson, setQueue, setDebounce, serviceParsing } = GeneralJs;
   try {
@@ -648,11 +648,11 @@ DesignerListJs.prototype.launching = async function (loading) {
 
     await this.mother.ghostClientLaunching({
       mode: "front",
-      name: "designerList",
+      name: "designerDetail",
       client: null,
       base: {
         instance: this,
-        binaryPath: DesignerListJs.binaryPath,
+        binaryPath: DesignerDetailJs.binaryPath,
         subTitle: "",
         secondBackground: false,
         backgroundType: 1,
@@ -661,7 +661,7 @@ DesignerListJs.prototype.launching = async function (loading) {
         try {
           instance.insertInitBox();
         } catch (e) {
-          await GeneralJs.ajaxJson({ message: "DesignerListJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
+          await GeneralJs.ajaxJson({ message: "DesignerDetailJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
         }
       }
     });
@@ -670,6 +670,6 @@ DesignerListJs.prototype.launching = async function (loading) {
 
   } catch (err) {
     console.log(err);
-    await ajaxJson({ message: "DesignerListJs.launching 에러 일어남 => " + err.message }, "/errorLog");
+    await ajaxJson({ message: "DesignerDetailJs.launching 에러 일어남 => " + err.message }, "/errorLog");
   }
 }

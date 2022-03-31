@@ -676,6 +676,9 @@ module.exports = {
       "designerList": {
         "behaviors": []
       },
+      "designerDetail": {
+        "behaviors": []
+      },
       "universalEstimation": {
         "behaviors": [
           {
