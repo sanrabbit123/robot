@@ -89,8 +89,14 @@ DevContext.prototype.launching = async function () {
 
 
 
+    // const os = require("os");
+    //
+    // console.log(os.networkInterfaces());
+    // console.log(os.cpus())
 
 
+
+    console.log(await requestSystem("http://localhost:3000/statusReading", { data: null }, { "Content-Type": "application/json" }));
 
 
 
