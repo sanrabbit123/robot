@@ -311,6 +311,19 @@ LogRouter.prototype.rou_post_getContents = function () {
 
         } else {
 
+          designers = await back.getDesignersByQuery({ desid: req.body.desid }, { selfMongo });
+          contentsArr_raw = await back.getContentsArrByQuery({ desid: req.body.desid }, { selfMongo });
+          contentsArr_raw = contentsArr_raw.toNormal();
+          contentsArr_raw.sort((a, b) => {
+            return Number(b.contents.portfolio.detailInfo.sort.key9) - Number(a.contents.portfolio.detailInfo.sort.key9);
+          });
+          contentsArr = contentsArr_raw;
+
+          res.send(JSON.stringify({
+            contentsArr: contentsArr,
+            designers: designers.frontMode(),
+          }));
+
         }
 
       }

@@ -43,34 +43,6 @@ const DesignerListJs = function () {
 
 DesignerListJs.binaryPath = "/middle/designer";
 
-DesignerListJs.prototype.generateGsArray = function (number) {
-  if (typeof number !== "number") {
-    throw new Error("invaild input");
-  }
-  const instance = this;
-  const standard = [
-    'g', 's', 's',
-    's', 's', 's', 's',
-    's', 's', 'g',
-    's', 's', 's', 's',
-    's', 's', 's', 's',
-    's', 's', 'g',
-  ];
-  let additional;
-  let add;
-  let multi;
-  let result;
-  additional = number % standard.length;
-  add = standard.slice(0, additional);
-  multi = Math.floor(number / standard.length);
-  result = [];
-  for (let i = 0; i < multi; i++) {
-    result = result.concat(JSON.parse(JSON.stringify(standard)));
-  }
-  result = result.concat(add);
-  return result;
-}
-
 DesignerListJs.prototype.insertInitBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
