@@ -434,14 +434,14 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
   careerWeight = <%% 500, 500, 500, 500, 500 %%>;
   careerTextTop = <%% 0, 0, 0, 0, 0 %%>;
 
-  careerBetween = <%% 8, 8, 8, 8, 2 %%>;
+  careerBetween = <%% 8, 8, 8, 8, 1.5 %%>;
 
   grayBarTop = <%% 8, 8, 8, 8, 2 %%>;
   grayBarBottom = <%% 16, 16, 16, 16, 2 %%>;
 
-  descriptionSize = <%% 13, 11, 13, 12, 2.5 %%>;
+  descriptionSize = <%% 13, 11, 13, 12, 2.7 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
-  descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.55 %%>;
+  descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
   cleanChildren(designerTong);
 
