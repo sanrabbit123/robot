@@ -3224,7 +3224,7 @@ BillMaker.prototype.travelUpDown = async function (order, proid, method, index, 
   if (typeof order !== "string" || typeof proid !== "string" || typeof method !== "string" || typeof index !== "number") {
     throw new Error("invaild input");
   }
-  if (!([ "down", "up" ]).includes(injectionCase)) {
+  if (!([ "down", "up" ]).includes(order)) {
     throw new Error("injection case must be request or first or remain");
   }
   if (!/p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/.test(proid)) {

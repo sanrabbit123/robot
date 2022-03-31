@@ -1799,7 +1799,7 @@ ReceiptRouter.prototype.rou_post_travelUpDown = function () {
       });
       res.send(JSON.stringify(thisBill.toNormal()));
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_travelEjection): " + e.message).catch((e) => { console.log(e); });
+      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_travelUpDown): " + e.message).catch((e) => { console.log(e); });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
