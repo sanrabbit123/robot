@@ -5719,6 +5719,56 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                 }
                               },
                               {
+                                text: "아래로 내리기",
+                                eventFunction: async function (e) {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  try {
+                                    let position, thisIndex, pastBill, bill, tempObj;
+                                    pastBill = GeneralJs.stacks[thisProjectBill];
+                                    for (let i = 0; i < pastBill.requests.length; i++) {
+                                      if (pastBill.requests[i].id === index) {
+                                        thisIndex = i;
+                                        break;
+                                      }
+                                    }
+                                    bill = await ajaxJson({ order: "down", proid, method, index: thisIndex }, PYTHONHOST + "/travelUpDown", { equal: true });
+                                    GeneralJs.stacks[thisProjectBill] = bill;
+                                    cleanChildren(scrollTong);
+                                    requestArrMake();
+                                    responseArrMake();
+                                    requestLoad();
+                                  } catch (e) {
+                                    console.log(e);
+                                  }
+                                }
+                              },
+                              {
+                                text: "위로 올리기",
+                                eventFunction: async function (e) {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  try {
+                                    let position, thisIndex, pastBill, bill, tempObj;
+                                    pastBill = GeneralJs.stacks[thisProjectBill];
+                                    for (let i = 0; i < pastBill.requests.length; i++) {
+                                      if (pastBill.requests[i].id === index) {
+                                        thisIndex = i;
+                                        break;
+                                      }
+                                    }
+                                    bill = await ajaxJson({ order: "up", proid, method, index: thisIndex }, PYTHONHOST + "/travelUpDown", { equal: true });
+                                    GeneralJs.stacks[thisProjectBill] = bill;
+                                    cleanChildren(scrollTong);
+                                    requestArrMake();
+                                    responseArrMake();
+                                    requestLoad();
+                                  } catch (e) {
+                                    console.log(e);
+                                  }
+                                }
+                              },
+                              {
                                 text: "항목 삭제",
                                 eventFunction: async function (e) {
                                   e.preventDefault();
@@ -5746,51 +5796,51 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                             ];
                           } else {
                             menuContents = [
-                              {
-                                text: "출장비 추가",
-                                eventFunction: async function (e) {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  try {
-                                    let position, number, bill, tempObj, promptValue;
-                                    promptValue = await GeneralJs.prompt("출장비를 몇 회로 설정할까요?");
-                                    if (promptValue !== null) {
-                                      number = promptValue.trim();
-                                      number = Number(String(number).replace(/[^0-9]/gi, ''));
-                                      if (Number.isNaN(number)) {
-                                        number = 2;
-                                      }
-                                      bill = await ajaxJson({ injectionCase: /잔금/gi.test(name) ? "remain" : "first", proid, method, number }, PYTHONHOST + "/travelInjection", { equal: true });
-                                      GeneralJs.stacks[thisProjectBill] = bill;
-                                      cleanChildren(scrollTong);
-                                      requestArrMake();
-                                      responseArrMake();
-                                      requestLoad();
-                                    }
-                                  } catch (e) {
-                                    console.log(e);
-                                  }
-                                }
-                              },
-                              {
-                                text: "출장비 삭제",
-                                eventFunction: async function (e) {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  try {
-                                    let position, index, bill, tempObj;
-                                    index = 0;
-                                    bill = await ajaxJson({ injectionCase: /잔금/gi.test(name) ? "remain" : "first", proid, method, index }, PYTHONHOST + "/travelEjection", { equal: true });
-                                    GeneralJs.stacks[thisProjectBill] = bill;
-                                    cleanChildren(scrollTong);
-                                    requestArrMake();
-                                    responseArrMake();
-                                    requestLoad();
-                                  } catch (e) {
-                                    console.log(e);
-                                  }
-                                }
-                              },
+                              // {
+                              //   text: "출장비 추가",
+                              //   eventFunction: async function (e) {
+                              //     e.preventDefault();
+                              //     e.stopPropagation();
+                              //     try {
+                              //       let position, number, bill, tempObj, promptValue;
+                              //       promptValue = await GeneralJs.prompt("출장비를 몇 회로 설정할까요?");
+                              //       if (promptValue !== null) {
+                              //         number = promptValue.trim();
+                              //         number = Number(String(number).replace(/[^0-9]/gi, ''));
+                              //         if (Number.isNaN(number)) {
+                              //           number = 2;
+                              //         }
+                              //         bill = await ajaxJson({ injectionCase: /잔금/gi.test(name) ? "remain" : "first", proid, method, number }, PYTHONHOST + "/travelInjection", { equal: true });
+                              //         GeneralJs.stacks[thisProjectBill] = bill;
+                              //         cleanChildren(scrollTong);
+                              //         requestArrMake();
+                              //         responseArrMake();
+                              //         requestLoad();
+                              //       }
+                              //     } catch (e) {
+                              //       console.log(e);
+                              //     }
+                              //   }
+                              // },
+                              // {
+                              //   text: "출장비 삭제",
+                              //   eventFunction: async function (e) {
+                              //     e.preventDefault();
+                              //     e.stopPropagation();
+                              //     try {
+                              //       let position, index, bill, tempObj;
+                              //       index = 0;
+                              //       bill = await ajaxJson({ injectionCase: /잔금/gi.test(name) ? "remain" : "first", proid, method, index }, PYTHONHOST + "/travelEjection", { equal: true });
+                              //       GeneralJs.stacks[thisProjectBill] = bill;
+                              //       cleanChildren(scrollTong);
+                              //       requestArrMake();
+                              //       responseArrMake();
+                              //       requestLoad();
+                              //     } catch (e) {
+                              //       console.log(e);
+                              //     }
+                              //   }
+                              // },
                               {
                                 text: "견적서 보기",
                                 eventFunction: function (e) {
