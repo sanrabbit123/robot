@@ -396,7 +396,7 @@ LogRouter.prototype.rou_post_mysqlQuery = function () {
       res.send(JSON.stringify(response));
     } catch (e) {
       instance.mother.errorLog("Log Console 서버 문제 생김 (rou_post_mysqlQuery): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ error: e.message }));
+      res.send(JSON.stringify([]));
     }
   }
   return obj;
