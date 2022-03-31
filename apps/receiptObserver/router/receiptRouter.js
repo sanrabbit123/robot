@@ -1776,6 +1776,43 @@ ReceiptRouter.prototype.rou_post_travelEjection = function () {
   return obj;
 }
 
+ReceiptRouter.prototype.rou_post_travelUpDown = function () {
+  const instance = this;
+  const bill = this.bill;
+  const { equalJson } = this.mother;
+  let obj = {};
+  obj.link = "/travelUpDown";
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.order === undefined || req.body.proid === undefined || req.body.method === undefined || req.body.index === undefined) {
+        throw new Error("invaild post");
+      }
+      const selfMongo = instance.mongolocal;
+      const { order, proid, method, index: rawIndex } = equalJson(req.body);
+      const index = Number(rawIndex);
+      const thisBill = await bill.travelUpDown(order, proid, method, index, { selfMongo });
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify(thisBill.toNormal()));
+    } catch (e) {
+      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_travelEjection): " + e.message).catch((e) => { console.log(e); });
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify({ message: "error" }));
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 ReceiptRouter.prototype.rou_post_travelReconfig = function () {
   const instance = this;
   const bill = this.bill;

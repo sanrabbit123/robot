@@ -3220,6 +3220,130 @@ BillMaker.prototype.travelEjection = async function (injectionCase, proid, metho
   }
 }
 
+BillMaker.prototype.travelUpDown = async function (order, proid, method, index, option = { selfMongo: null, selfCoreMongo: null }) {
+  if (typeof order !== "string" || typeof proid !== "string" || typeof method !== "string" || typeof index !== "number") {
+    throw new Error("invaild input");
+  }
+  if (!([ "down", "up" ]).includes(injectionCase)) {
+    throw new Error("injection case must be request or first or remain");
+  }
+  if (!/p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/.test(proid)) {
+    throw new Error("invaild proid");
+  }
+  if (method !== "offline" && method !== "online") {
+    throw new Error("invaild method");
+  }
+  const instance = this;
+  const back = this.back;
+  const { mongo, mongopythoninfo, mongoinfo, equalJson, sleep } = this.mother;
+  const stylingItems = BillMaker.billDictionary.styling.goods;
+  const stylingRequests = BillMaker.billDictionary.styling.requests;
+  const designerCalculation = BillMaker.billDictionary.styling.calculation;
+  const stylingResponses = BillMaker.billDictionary.styling.responses;
+  const itemKey = "travelExpenses";
+  const requestKey = "travelPayment";
+  const responseKey = "designerTravelFee";
+  try {
+    let MONGOC, MONGOCOREC;
+    let selfBoo, selfCoreBoo;
+    let client, designer, project;
+    let thisBill, bilid;
+    let targetIndex;
+    let targetItem, targetNumber, targetResponse, targetResponseIndex;
+    let num;
+    let updatedBill;
+    let tempArr;
+    let finalArr;
+    let targetObj;
+    let whereQuery, updateQuery;
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      selfBoo = false;
+    } else {
+      selfBoo = true;
+    }
+    if (!selfBoo) {
+      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
+    } else {
+      MONGOC = option.selfMongo;
+    }
+
+    if (option.selfCoreMongo === undefined || option.selfCoreMongo === null) {
+      selfCoreBoo = false;
+    } else {
+      selfCoreBoo = true;
+    }
+    if (!selfCoreBoo) {
+      MONGOCOREC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      await MONGOCOREC.connect();
+    } else {
+      MONGOCOREC = option.selfCoreMongo;
+    }
+
+    project = await back.getProjectById(proid, { selfMongo: MONGOCOREC });
+    if (project === null) {
+      throw new Error("invaild proid");
+    }
+    if (!/^d/.test(project.desid)) {
+      throw new Error("unable in this project");
+    }
+    designer = await back.getDesignerById(project.desid, { selfMongo: MONGOCOREC });
+    client = await back.getClientById(project.cliid, { selfMongo: MONGOCOREC });
+
+    thisBill = await this.getBillsByQuery({
+      $and: [
+        { "links.proid": project.proid },
+        { "links.cliid": client.cliid },
+        { "links.desid": designer.desid },
+        { "links.method": method },
+      ]
+    }, { selfMongo: MONGOC });
+    if (thisBill.length === 0) {
+      throw new Error("cannot found bill");
+    }
+    thisBill = thisBill[0];
+    bilid = thisBill.bilid;
+
+    tempArr = thisBill.requests.toNormal();
+    targetObj = equalJson(JSON.stringify(tempArr[index]));
+    tempArr.splice(index, 1);
+    finalArr = equalJson(JSON.stringify(tempArr));
+    if (order === "down") {
+      if (index + 1 === thisBill.requests.toNormal().length) {
+        finalArr.push(targetObj);
+      } else {
+        finalArr.splice(index + 1, 0, targetObj);
+      }
+    } else {
+      if (index - 1 < 0) {
+        finalArr.unshift(targetObj);
+      } else {
+        finalArr.splice(index - 1, 0, targetObj);
+      }
+    }
+
+    whereQuery = { bilid };
+    updateQuery = {};
+    updateQuery["requests"] = finalArr;
+    await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
+
+    updatedBill = await this.getBillById(thisBill.bilid, { selfMongo: MONGOC });
+
+    if (!selfBoo) {
+      await MONGOC.close();
+    }
+    if (!selfCoreBoo) {
+      await MONGOCOREC.close();
+    }
+
+    return updatedBill;
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 BillMaker.prototype.travelReconfig = async function (injectionCase, proid, method, index, number, option = { selfMongo: null, selfCoreMongo: null }) {
   if (typeof injectionCase !== "string" || typeof proid !== "string" || typeof method !== "string" || typeof index !== "number" || typeof number !== "number") {
     throw new Error("invaild input");
