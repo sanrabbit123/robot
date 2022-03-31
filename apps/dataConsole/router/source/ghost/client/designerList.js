@@ -123,7 +123,7 @@ DesignerListJs.prototype.insertInitBox = function () {
   serviceBlockPaddingTop = <%% (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), 5 %%>;
 
   whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
-  whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
+  whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 6 %%>;
 
   searchBarPaddingTop = <%% 20, 20, 20, 20, 5.2 %%>;
   searchBarHeight = <%% 40, 40, 40, 40, 8 %%>;
@@ -138,7 +138,7 @@ DesignerListJs.prototype.insertInitBox = function () {
   inputSize = <%% 15, 15, 15, 15, 3.1 %%>;
   inputWeight = <%% 300, 300, 300, 300, 300 %%>;
 
-  designerTongPaddingTop = <%% 80, 72, 72, 72, 8 %%>;
+  designerTongPaddingTop = <%% 80, 72, 72, 72, 6 %%>;
 
   titleWording = "디자이너 리스트";
   services = serviceParsing().name;
@@ -416,32 +416,32 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
   let grayBarTop, grayBarBottom;
   let descriptionSize, descriptionWeight, descriptionLineHeight;
 
-  tongPaddingLeft = <%% 100, 72, 80, 50, 10 %%>;
-  blockMargin = <%% 40, 20, 20, 20, 40 %%>;
-  blockMarginBottom = <%% 25, 25, 25, 25, 25 %%>;
+  tongPaddingLeft = <%% 100, 70, 80, 50, 6.5 %%>;
+  blockMargin = <%% 40, 20, 20, 20, 2 %%>;
+  blockMarginBottom = <%% 25, 25, 25, 25, 6 %%>;
   columns = <%% 2, 2, 1, 1, 1 %%>;
-  contentsPaddingTop = <%% 16, 16, 16, 16, 16 %%>;
+  contentsPaddingTop = <%% 16, 16, 16, 16, 1 %%>;
 
-  blockHeight = <%% 180, 160, 180, 180, 180 %%>;
+  blockHeight = <%% (isMac() ? 178 : 176), 160, (isMac() ? 178 : 176), 170, 25 %%>;
   photoWidth = blockHeight - (contentsPaddingTop * 2);
 
-  photoMargin = <%% 30, 25, 30, 30, 30 %%>;
+  photoMargin = <%% 30, 25, 30, 30, 4 %%>;
 
-  titleSize = <%% 24, 23, 23, 23, 24 %%>;
+  titleSize = <%% 24, 23, 23, 23, 4 %%>;
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-  careerSize = <%% 12, 12, 12, 12, 12 %%>;
+  careerSize = <%% 12, 12, 12, 12, 2.5 %%>;
   careerWeight = <%% 500, 500, 500, 500, 500 %%>;
   careerTextTop = <%% 0, 0, 0, 0, 0 %%>;
 
-  careerBetween = <%% 8, 8, 8, 8, 8 %%>;
+  careerBetween = <%% 8, 8, 8, 8, 2 %%>;
 
-  grayBarTop = <%% 8, 8, 8, 8, 8 %%>;
-  grayBarBottom = <%% 16, 16, 16, 16, 16 %%>;
+  grayBarTop = <%% 8, 8, 8, 8, 2 %%>;
+  grayBarBottom = <%% 16, 16, 16, 16, 2 %%>;
 
-  descriptionSize = <%% 13, 11, 13, 11, 3 %%>;
+  descriptionSize = <%% 13, 11, 13, 12, 2.5 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
-  descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+  descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.55 %%>;
 
   cleanChildren(designerTong);
 
@@ -568,7 +568,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
 
     createNode({
       mother: contentsBlock,
-      text: designer.setting.front.introduction.desktop.join("\n"),
+      text: desktop ? designer.setting.front.introduction.desktop.join("\n") : designer.setting.front.introduction.mobile.join(" "),
       style: {
         display: "block",
         marginTop: String(grayBarBottom) + ea,
@@ -576,6 +576,8 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
         fontWeight: String(descriptionWeight),
         color: colorChip.black,
         lineHeight: String(descriptionLineHeight),
+        height: desktop ? "" : String(13) + ea,
+        overflow: desktop ? "" : "scroll",
       }
     });
 
