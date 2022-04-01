@@ -82,9 +82,9 @@ DesignerDetailJs.prototype.insertInitBox = function () {
   let whiteBlockMarginBottom;
   let inputWithoutHeight;
 
-  whiteBlockMarginBottom = <%% 36, 36, 36, 36, 9 %%>;
-  whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
-  whiteBlockPaddingBottom = <%% 62, 62, 62, 62, 6 %%>;
+  whiteBlockMarginBottom = <%% 36, 36, 36, 36, 6 %%>;
+  whiteBlockPaddingTop = <%% 56, 56, 46, 46, 6 %%>;
+  whiteBlockPaddingBottom = <%% 62, 62, 52, 52, 6 %%>;
 
   whiteBlock = createNode({
     mother: this.baseTong,
@@ -136,32 +136,44 @@ DesignerDetailJs.prototype.designerBlock = function () {
   let careerBetween;
   let grayBarTop, grayBarBottom;
   let descriptionSize, descriptionWeight, descriptionLineHeight;
+  let buttonHeight, buttonSize, buttonWeight;
+  let buttonTextTop;
+  let buttonWidth, buttonWidth0;
+  let buttonBetween;
 
-  tongPaddingLeft = <%% 75, 70, 80, 50, 6.5 %%>;
+  tongPaddingLeft = <%% 75, 75, 65, 65, 6.5 %%>;
   blockMargin = <%% 0, 0, 0, 0, 0 %%>;
   columns = 1;
   contentsPaddingTop = <%% 16, 16, 16, 16, 1 %%>;
 
-  blockHeight = <%% 206, 160, (isMac() ? 178 : 176), 170, 25 %%>;
+  blockHeight = <%% (isMac() ? 206 : 203), (isMac() ? 206 : 203), (isMac() ? 192 : 190), (isMac() ? 192 : 190), 32 %%>;
   photoWidth = blockHeight - (contentsPaddingTop * 2);
 
-  photoMargin = <%% 32, 25, 30, 30, 4 %%>;
+  photoMargin = <%% 32, 32, 32, 32, 4 %%>;
 
-  titleSize = <%% 32, 23, 23, 23, 4 %%>;
+  titleSize = <%% 32, 32, 30, 30, 4 %%>;
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-  careerSize = <%% 13, 12, 12, 12, 2.5 %%>;
+  careerSize = <%% 13, 13, 13, 13, 2.5 %%>;
   careerWeight = <%% 500, 500, 500, 500, 500 %%>;
   careerTextTop = <%% 0, 0, 0, 0, 0 %%>;
 
   careerBetween = <%% 8, 8, 8, 8, 1.5 %%>;
 
   grayBarTop = <%% 8, 8, 8, 8, 2 %%>;
-  grayBarBottom = <%% 18, 16, 16, 16, 2 %%>;
+  grayBarBottom = <%% 18, 18, 18, 18, 2 %%>;
 
-  descriptionSize = <%% 15, 11, 13, 12, 2.7 %%>;
+  descriptionSize = <%% 15, 15, 14, 14, 2.7 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.55 %%>;
+
+  buttonHeight = <%% 40, 36, 34, 34, 36 %%>;
+  buttonSize = <%% 15, 14, 13, 13, 14 %%>;
+  buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
+  buttonTextTop = <%% (isMac() ? 8 : 9), (isMac() ? 7 : 8), (isMac() ? 6 : 8), (isMac() ? 6 : 8), 7 %%>;
+  buttonWidth = <%% 138, 128, 118, 128, 128 %%>;
+  buttonBetween = <%% 6, 6, 6, 6, 6 %%>;
+  buttonWidth0 = <%% 100, 100, 100, 100, 100 %%>;
 
   cleanChildren(designerTong);
 
@@ -186,30 +198,31 @@ DesignerDetailJs.prototype.designerBlock = function () {
       style: {
         display: "inline-block",
         width: "calc(calc(100% - " + String(columns * blockMargin) + ea + ") / " + String(columns) + ")",
-        height: String(blockHeight) + ea,
-        marginRight: String(blockMargin) + ea,
+        height: desktop ? String(blockHeight) + ea : "",
+        marginRight: desktop ? String(blockMargin) + ea : "",
       },
       children: [
         {
           style: {
-            display: "inline-block",
+            display: desktop ? "inline-block" : "block",
             position: "relative",
             top: String(contentsPaddingTop) + ea,
-            borderRadius: String(photoWidth) + ea,
-            width: String(photoWidth) + ea,
+            borderRadius: desktop ? String(photoWidth) + ea : String(5) + "px",
+            width: desktop ? String(photoWidth) + ea : String(100) + '%',
             height: String(photoWidth) + ea,
-            backgroundSize: "auto 100%",
+            backgroundSize: desktop ? "auto 100%" : "100% auto",
             backgroundPosition: "50% 50%",
             backgroundImage: "url('" + src + "')",
             verticalAlign: "top",
+            marginBottom: desktop ? "" : String(4) + ea,
           }
         },
         {
           style: {
-            display: "inline-block",
+            display: desktop ? "inline-block" : "block",
             position: "relative",
-            width: withOut(photoWidth + photoMargin, ea),
-            marginLeft: String(photoMargin) + ea,
+            width: desktop ? withOut(photoWidth + photoMargin, ea) : String(100) + '%',
+            marginLeft: desktop ? String(photoMargin) + ea : "",
             paddingTop: String(contentsPaddingTop) + ea,
             paddingBottom: String(contentsPaddingTop) + ea,
             height: withOut(contentsPaddingTop * 2, ea),
@@ -278,66 +291,68 @@ DesignerDetailJs.prototype.designerBlock = function () {
         fontWeight: String(descriptionWeight),
         color: colorChip.black,
         lineHeight: String(descriptionLineHeight),
-        height: desktop ? "" : String(12.5) + ea,
-        overflow: desktop ? "" : "scroll",
       }
     });
 
-    createNode({
-      mother: contentsBlock,
-      style: {
-        width: String(100) + ea,
-        height: String(40) + ea,
-        position: "absolute",
-        bottom: String(contentsPaddingTop) + ea,
-        right: String(144) + ea,
-        borderRadius: String(5) + "px",
-        background: colorChip.gray2,
-        cursor: "pointer",
-      },
-      children: [
-        {
-          text: "목록으로",
-          style: {
-            position: "relative",
-            fontSize: String(15) + ea,
-            fontWeight: String(600),
-            color: colorChip.black,
-            top: String(8) + ea,
-            width: String(100) + '%',
-            textAlign: "center",
+    if (media[0]) {
+      createNode({
+        mother: contentsBlock,
+        style: {
+          width: String(buttonWidth0) + ea,
+          height: String(buttonHeight) + ea,
+          position: "absolute",
+          bottom: String(contentsPaddingTop) + ea,
+          right: String(buttonWidth + buttonBetween) + ea,
+          borderRadius: String(5) + "px",
+          background: colorChip.gray2,
+          cursor: "pointer",
+        },
+        children: [
+          {
+            text: "목록으로",
+            style: {
+              position: "relative",
+              fontSize: String(buttonSize) + ea,
+              fontWeight: String(buttonWeight),
+              color: colorChip.black,
+              top: String(buttonTextTop) + ea,
+              width: String(100) + '%',
+              textAlign: "center",
+            }
           }
-        }
-      ]
-    })
+        ]
+      });
+    }
 
-    createNode({
-      mother: contentsBlock,
-      style: {
-        width: String(138) + ea,
-        height: String(40) + ea,
-        position: "absolute",
-        bottom: String(contentsPaddingTop) + ea,
-        right: String(0),
-        borderRadius: String(5) + "px",
-        background: colorChip.gradientGreen,
-        cursor: "pointer",
-      },
-      children: [
-        {
-          text: "서비스 신청하기",
-          style: {
-            position: "relative",
-            fontSize: String(15) + ea,
-            fontWeight: String(600),
-            color: colorChip.white,
-            top: String(8) + ea,
-            width: String(100) + '%',
-            textAlign: "center",
+    if (media[0] || media[1] || media[2]) {
+      createNode({
+        mother: contentsBlock,
+        style: {
+          width: String(buttonWidth) + ea,
+          height: String(buttonHeight) + ea,
+          position: "absolute",
+          bottom: String(contentsPaddingTop) + ea,
+          right: String(0),
+          borderRadius: String(5) + "px",
+          background: colorChip.gradientGreen,
+          cursor: "pointer",
+        },
+        children: [
+          {
+            text: "서비스 신청하기",
+            style: {
+              position: "relative",
+              fontSize: String(buttonSize) + ea,
+              fontWeight: String(buttonWeight),
+              color: colorChip.white,
+              top: String(buttonTextTop) + ea,
+              width: String(100) + '%',
+              textAlign: "center",
+            }
           }
-        }
-      ]
-    })
+        ]
+      });
+    }
 
   }
 

@@ -96,7 +96,9 @@ DevContext.prototype.launching = async function () {
 
 
 
-    console.log(await requestSystem("http://localhost:3000/statusReading", { data: null }, { "Content-Type": "application/json" }));
+
+    
+
 
 
 
