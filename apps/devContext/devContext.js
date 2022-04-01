@@ -91,9 +91,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
-
-
+    // const pastProposal = equalJson(JSON.stringify(await ghostRequest("pastProposal", { proid: "p2202_aa43s" })))
+    // console.log(pastProposal);
 
 
 
