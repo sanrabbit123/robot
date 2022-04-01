@@ -2866,6 +2866,30 @@ Ghost.prototype.ghostRouter = function (needs) {
     }
   };
 
+  //POST - find past proposal
+  funcObj.post_pastProposal = {
+    link: [ "/pastProposal" ],
+    func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      try {
+        if (req.body.proid === undefined) {
+          throw new Error("invaild post, must be proid");
+        }
+        const collection = "proposalLog";
+        const { proid } = equalJson(req.body);
+        const arr = await rethink.rethinkRead(collection, { proid });
+        res.send(JSON.stringify(arr));
+      } catch (e) {
+        res.send(JSON.stringify({ message: "error : " + e.message }));
+      }
+    }
+  };
+
   //POST - set message log
   funcObj.post_messageLog = {
     link: [ "/messageLog" ],
