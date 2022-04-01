@@ -556,36 +556,36 @@ AiContents.prototype.to_poo = async function () {
 
     }
 
-    order += `scp -r ${shellLink(p_path)}/portp${p_id} ${front_www}/${image}/;`;
+    // order += `scp -r ${shellLink(p_path)}/portp${p_id} ${front_www}/${image}/;`;
 
     await shellExec(order);
 
-    ghostTargetDir = `${this.options.home_dir}/result/${p_id}code/portp${p_id}`;
-    ghostTargetDirList = await fileSystem(`readDir`, [ ghostTargetDir ]);
-
-    fromArr = [];
-    toArr = [];
-    for (let i of ghostTargetDirList) {
-      if (i !== `.DS_Store` && /^[bt]/.test(i)) {
-        fromArr.push(ghostTargetDir + "/" + i);
-        toArr.push(`corePortfolio/listImage/${p_id}/${i}`);
-      }
-    }
-
-    ghostTargetDir = `${this.options.home_dir}/result/${p_id}code/portp${p_id}/mobile`;
-    ghostTargetDirList = await fileSystem(`readDir`, [ ghostTargetDir ]);
-
-    for (let i of ghostTargetDirList) {
-      if (i !== `.DS_Store`) {
-        fromArr.push(ghostTargetDir + "/" + i);
-        toArr.push(`corePortfolio/listImage/${p_id}/mobile/${i}`);
-      }
-    }
-
-    console.log(fromArr);
-    console.log(toArr);
-
-    await ghostFileUpload(fromArr, toArr);
+    // ghostTargetDir = `${this.options.home_dir}/result/${p_id}code/portp${p_id}`;
+    // ghostTargetDirList = await fileSystem(`readDir`, [ ghostTargetDir ]);
+    //
+    // fromArr = [];
+    // toArr = [];
+    // for (let i of ghostTargetDirList) {
+    //   if (i !== `.DS_Store` && /^[bt]/.test(i)) {
+    //     fromArr.push(ghostTargetDir + "/" + i);
+    //     toArr.push(`corePortfolio/listImage/${p_id}/${i}`);
+    //   }
+    // }
+    //
+    // ghostTargetDir = `${this.options.home_dir}/result/${p_id}code/portp${p_id}/mobile`;
+    // ghostTargetDirList = await fileSystem(`readDir`, [ ghostTargetDir ]);
+    //
+    // for (let i of ghostTargetDirList) {
+    //   if (i !== `.DS_Store`) {
+    //     fromArr.push(ghostTargetDir + "/" + i);
+    //     toArr.push(`corePortfolio/listImage/${p_id}/mobile/${i}`);
+    //   }
+    // }
+    //
+    // console.log(fromArr);
+    // console.log(toArr);
+    //
+    // await ghostFileUpload(fromArr, toArr);
 
   } catch (e) {
     console.log(e.message);

@@ -350,7 +350,7 @@ LogRouter.prototype.rou_post_getContents = function () {
 
         contentsArr = contentsArr.slice(0, indexSliceNumber);
         reviewArr = reviewArr.slice(0, indexSliceNumber);
-        indexArr = indexArr.slice(0, indexSliceNumber);
+        indexArr = indexArr.slice(0, indexSliceNumber * 4);
 
         res.send(JSON.stringify({ contentsArr, reviewArr, indexArr }));
       }

@@ -74,9 +74,78 @@ FrontIndexJs.prototype.generateGsArray = function (number) {
 FrontIndexJs.prototype.insertInitBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media } = this;
+  const { ea, media, totalContents, standardWidth } = this;
+  const { indexArr } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const photoChar = 'b';
+  let naviHeight;
+  let mainHeight;
+  let mainTong;
+  let photoTong;
+  let randomIndex;
+  let randomNumber;
+  let random;
+  let src;
+
+  naviHeight = 72;
+  mainHeight = 800;
+
+  randomNumber = 5;
+
+
+  randomIndex = [];
+  while (randomIndex.length < randomNumber) {
+    random = Math.floor(Math.random() * indexArr.length);
+    if (!randomIndex.includes(random)) {
+      randomIndex.push(random);
+    }
+  }
+  randomIndex = randomIndex.map((index) => {
+    return indexArr[index];
+  });
+
+  mainTong = createNode({
+    mother: totalContents,
+    style: {
+      display: "block",
+      position: "relative",
+      paddingTop: String(naviHeight) + ea,
+      height: String(mainHeight) + ea,
+    }
+  });
+
+  photoTong = createNode({
+    mother: mainTong,
+    style: {
+      position: "relative",
+      width: String(standardWidth) + ea,
+      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
+      height: String(mainHeight) + ea,
+    }
+  })
+
+  for (let i = 0; i < randomIndex.length; i++) {
+    src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + randomIndex[i].contents.portfolio.pid + "/" + photoChar + String(randomIndex[i].contents.portfolio.detailInfo.photodae[1]) + randomIndex[i].contents.portfolio.pid + ".jpg";
+    createNode({
+      mother: photoTong,
+      style: {
+        position: "absolute",
+        top: String(0),
+        left: String(0),
+        width: String(100) + '%',
+        height: String(100) + '%',
+        backgroundImage: "url('" + src + "')",
+        backgroundPosition: "50% 68%",
+        backgroundSize: "100% auto",
+        opacity: String(i !== randomIndex.length - 1 ? 0 : 1),
+      }
+    });
+
+  }
+
+
+
 
 
 }
@@ -116,9 +185,11 @@ FrontIndexJs.prototype.launching = async function (loading) {
     let response, services;
 
     services = serviceParsing().name;
-    response = await ajaxJson({ mode: "portfolio", limit: 42 }, LOGHOST + "/getContents", { equal: true });
+    response = await ajaxJson({ mode: "index" }, LOGHOST + "/getContents", { equal: true });
     this.contentsArr = new SearchArray(response.contentsArr);
-    this.designers = new SearchArray(response.designers);
+    this.reviewArr = new SearchArray(response.reviewArr);
+    this.indexArr = new SearchArray(response.indexArr);
+    this.totalContents = document.getElementById("totalcontents");
 
     await this.mother.ghostClientLaunching({
       mode: "front",

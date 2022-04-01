@@ -692,13 +692,15 @@ ResourceMaker.prototype.launching = async function () {
   const sizeMatrix = [
     [ 1200, 848 ],
     [ 800, 566 ],
-    [ 2000, 1414 ]
+    [ 2400, 1697 ]
   ];
   const qualityConst = 96;
+  const bQualityConst = 98;
   const originalInitial = 'i';
   const desktopInitial = 't';
   const mobileInitial = 'mot';
   const reviewInitial = 'b';
+  const serverFolderPath = "corePortfolio/listImage";
   try {
     let targetFolder;
     let tempFolderName, homeFolderList, tempHome;
@@ -831,7 +833,8 @@ ResourceMaker.prototype.launching = async function () {
       }
 
       if (this.final.contents.review.detailInfo.photodae.length > 1) {
-        await shellExec(`convert ${shellLink(tempHome)}/${originalInitial}${String(this.final.contents.review.detailInfo.photodae[1])}${this.p_id}.jpg -resize ${String(sizeMatrix[2][0]) + "x" + String(sizeMatrix[2][1])} -quality 100 ${shellLink(outputFolder)}/${reviewInitial}${String(this.final.contents.review.detailInfo.photodae[1])}${this.p_id}.jpg`);
+        await shellExec(`convert ${shellLink(tempHome)}/${originalInitial}${String(this.final.contents.review.detailInfo.photodae[1])}${this.p_id}.jpg -resize ${String(sizeMatrix[2][0]) + "x" + String(sizeMatrix[2][1])} -quality ${String(bQualityConst)} ${shellLink(outputFolder)}/${reviewInitial}${String(this.final.contents.review.detailInfo.photodae[1])}${this.p_id}.jpg`);
+        await shellExec(`convert ${shellLink(tempHome)}/${originalInitial}${String(this.final.contents.portfolio.detailInfo.photodae[1])}${this.p_id}.jpg -resize ${String(sizeMatrix[2][0]) + "x" + String(sizeMatrix[2][1])} -quality ${String(bQualityConst)} ${shellLink(outputFolder)}/${reviewInitial}${String(this.final.contents.portfolio.detailInfo.photodae[1])}${this.p_id}.jpg`);
       }
 
       await shellExec(`scp -r ${shellLink(outputFolder)} ${this.frontHost}/list_image`);
@@ -844,13 +847,13 @@ ResourceMaker.prototype.launching = async function () {
       for (let i of outputFolderList) {
         if (i !== `.DS_Store` && /^[bt]/.test(i)) {
           fromArr.push(outputFolder + "/" + i);
-          toArr.push(`corePortfolio/listImage/${this.p_id}/${i}`);
+          toArr.push(`${serverFolderPath}/${this.p_id}/${i}`);
         }
       }
       for (let i of outputMobildFolderList) {
         if (i !== `.DS_Store`) {
           fromArr.push(outputMobildFolder + "/" + i);
-          toArr.push(`corePortfolio/listImage/${this.p_id}/mobile/${i}`);
+          toArr.push(`${serverFolderPath}/${this.p_id}/mobile/${i}`);
         }
       }
 
