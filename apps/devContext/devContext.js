@@ -65,7 +65,6 @@ DevContext.prototype.launching = async function () {
   try {
     await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
-    // await rethink.connect();
     const address = this.address;
     const back = this.back;
     const report = new BackReport();
@@ -91,7 +90,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-
+    await findCode("proposalLog")
 
 
 
