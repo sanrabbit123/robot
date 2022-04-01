@@ -2853,7 +2853,6 @@ Ghost.prototype.ghostRouter = function (needs) {
         }
 
         await rethink.rethinkCreate(collection, {
-          method: "send",
           date: new Date(),
           proid,
           project: project.toNormal().proposal,

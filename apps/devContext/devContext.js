@@ -90,7 +90,12 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await findCode("proposalLog")
+    const RETHINKC = await rethink.connect();
+
+    console.log(await rethink.rethinkRead("proposalLog", {}, { selfRethink: RETHINKC }))
+    console.log(await rethink.rethinkRead("messageLog", {}, { selfRethink: RETHINKC }))
+
+    await RETHINKC.close();
 
 
 
