@@ -90,6 +90,10 @@ FrontIndexJs.prototype.insertSlideBox = function () {
   let src;
   let interval;
   let titlePadding;
+  let titleSize;
+  let titleWeight;
+  let lineHeight;
+  let titleContents;
 
   speed = 0.8;
   interval = 2700;
@@ -99,7 +103,10 @@ FrontIndexJs.prototype.insertSlideBox = function () {
 
   randomNumber = 5;
   titlePadding = 100;
-
+  titleSize = 56;
+  titleWeight = 700;
+  lineHeight = 1.3;
+  titleContents = "집을 디자인하는\n새로운 방법, 홈리에종";
 
   randomIndex = [];
   while (randomIndex.length < randomNumber) {
@@ -152,7 +159,7 @@ FrontIndexJs.prototype.insertSlideBox = function () {
       left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
       height: String(mainHeight) + ea,
     }
-  })
+  });
 
   for (let i = 0; i < randomIndex.length; i++) {
     src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + randomIndex[i].contents.portfolio.pid + "/" + photoChar + String(randomIndex[i].contents.portfolio.detailInfo.photodae[1]) + randomIndex[i].contents.portfolio.pid + ".jpg";
@@ -185,17 +192,16 @@ FrontIndexJs.prototype.insertSlideBox = function () {
     },
     children: [
       {
-        text: "집을 디자인하는\n새로운 방법, 홈리에종",
+        text: titleContents,
         style: {
-          fontSize: String(56) + ea,
-          fontWeight: String(700),
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(titleWeight),
           color: colorChip.white,
-          lineHeight: String(1.3),
+          lineHeight: String(lineHeight),
         }
       }
     ]
-  })
-
+  });
 
   setInterval(() => {
     const toggle = mainTong.getAttribute("toggle");
