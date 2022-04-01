@@ -89,15 +89,10 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const os = require("os");
-    //
-    // console.log(os.networkInterfaces());
-    // console.log(os.cpus())
 
 
 
 
-    
 
 
 

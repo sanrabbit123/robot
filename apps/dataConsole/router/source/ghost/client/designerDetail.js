@@ -151,7 +151,7 @@ DesignerDetailJs.prototype.designerBlock = function () {
 
   photoMargin = <%% 32, 32, 32, 32, 4 %%>;
 
-  titleSize = <%% 32, 32, 30, 30, 4 %%>;
+  titleSize = <%% 32, 32, 30, 30, 4.2 %%>;
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
 
   careerSize = <%% 13, 13, 13, 13, 2.5 %%>;
