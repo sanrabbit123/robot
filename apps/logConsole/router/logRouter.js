@@ -257,8 +257,10 @@ LogRouter.prototype.rou_post_getContents = function () {
       let limit;
       let contentsArr_raw;
       let contentsArr, designers;
+      let reviewArr, indexArr;
+      let indexSliceNumber;
 
-      if (req.body.mode !== "designer") {
+      if (req.body.mode === "portfolio" || req.body.mode === "review") {
 
         contentsArr_raw = await back.getContentsArrByQuery({}, { selfMongo });
         contentsArr_raw = contentsArr_raw.toNormal();
@@ -292,7 +294,7 @@ LogRouter.prototype.rou_post_getContents = function () {
           designers: designers.frontMode(),
         }));
 
-      } else {
+      } else if (req.body.mode === "designer") {
 
         if (req.body.desid === undefined) {
 
@@ -326,6 +328,31 @@ LogRouter.prototype.rou_post_getContents = function () {
 
         }
 
+      } else if (req.body.mode === "index") {
+
+        indexSliceNumber = 9;
+
+        contentsArr_raw = await back.getContentsArrByQuery({}, { selfMongo });
+
+        contentsArr = contentsArr_raw.toNormal();
+        reviewArr = contentsArr_raw.toNormal();
+        indexArr = contentsArr_raw.toNormal();
+
+        contentsArr.sort((a, b) => {
+          return Number(b.contents.portfolio.detailInfo.sort.key9) - Number(a.contents.portfolio.detailInfo.sort.key9);
+        });
+        reviewArr.sort((a, b) => {
+          return b.contents.review.detailInfo.order - a.contents.review.detailInfo.order;
+        });
+        indexArr.sort((a, b) => {
+          return Number(b.contents.portfolio.detailInfo.sort.key8) - Number(a.contents.portfolio.detailInfo.sort.key8);
+        });
+
+        contentsArr = contentsArr.slice(0, indexSliceNumber);
+        reviewArr = reviewArr.slice(0, indexSliceNumber);
+        indexArr = indexArr.slice(0, indexSliceNumber);
+
+        res.send(JSON.stringify({ contentsArr, reviewArr, indexArr }));
       }
 
     } catch (e) {
