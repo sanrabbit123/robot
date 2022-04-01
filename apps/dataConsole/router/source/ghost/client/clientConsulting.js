@@ -1198,10 +1198,6 @@ ClientConsultingJs.prototype.insertInitBox = function () {
             property: "email",
             value: "",
           },
-          event: {
-            keyup: phoneHypenEvent,
-            blur: phoneBlurEvent,
-          },
           style: {
             position: "absolute",
             top: String(grayInputTop) + ea,

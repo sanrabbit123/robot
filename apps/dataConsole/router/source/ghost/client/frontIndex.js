@@ -71,7 +71,7 @@ FrontIndexJs.prototype.generateGsArray = function (number) {
   return result;
 }
 
-FrontIndexJs.prototype.insertInitBox = function () {
+FrontIndexJs.prototype.insertSlideBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media, totalContents, standardWidth } = this;
@@ -79,6 +79,7 @@ FrontIndexJs.prototype.insertInitBox = function () {
   const mobile = media[4];
   const desktop = !mobile;
   const photoChar = 'b';
+  let speed;
   let naviHeight;
   let mainHeight;
   let mainTong;
@@ -87,11 +88,17 @@ FrontIndexJs.prototype.insertInitBox = function () {
   let randomNumber;
   let random;
   let src;
+  let interval;
+  let titlePadding;
+
+  speed = 0.8;
+  interval = 2700;
 
   naviHeight = 72;
   mainHeight = 800;
 
   randomNumber = 5;
+  titlePadding = 100;
 
 
   randomIndex = [];
@@ -107,12 +114,34 @@ FrontIndexJs.prototype.insertInitBox = function () {
 
   mainTong = createNode({
     mother: totalContents,
+    attribute: {
+      toggle: "off",
+    },
     style: {
       display: "block",
       position: "relative",
       paddingTop: String(naviHeight) + ea,
       height: String(mainHeight) + ea,
-    }
+      background: colorChip.gray1,
+      animation: "justfadeinoriginal " + String(speed) + "s ease forwards",
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: "absolute",
+          top: String(naviHeight) + ea,
+          left: String(0),
+          width: String(100) + '%',
+          height: String(mainHeight) + ea,
+          background: colorChip.gray3,
+          transition: "all 0s ease",
+          transition: "transform " + String(speed) + "s ease",
+          transformOrigin: "100% 100%",
+          transform: "scaleX(0)",
+        }
+      }
+    ]
   });
 
   photoTong = createNode({
@@ -138,15 +167,60 @@ FrontIndexJs.prototype.insertInitBox = function () {
         backgroundImage: "url('" + src + "')",
         backgroundPosition: "50% 68%",
         backgroundSize: "100% auto",
+        transition: "opacity " + String(speed) + "s ease",
         opacity: String(i !== randomIndex.length - 1 ? 0 : 1),
       }
     });
-
   }
 
+  createNode({
+    mother: mainTong,
+    style: {
+      position: "absolute",
+      width: String(standardWidth - (titlePadding * 2)) + ea,
+      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
+      paddingLeft: String(titlePadding) + ea,
+      paddingRight: String(titlePadding) + ea,
+      bottom: String(titlePadding) + ea,
+    },
+    children: [
+      {
+        text: "집을 디자인하는\n새로운 방법, 홈리에종",
+        style: {
+          fontSize: String(56) + ea,
+          fontWeight: String(700),
+          color: colorChip.white,
+          lineHeight: String(1.3),
+        }
+      }
+    ]
+  })
 
 
-
+  setInterval(() => {
+    const toggle = mainTong.getAttribute("toggle");
+    const children = [ ...photoTong.children ];
+    let offIndex, onIndex;
+    if (toggle === "on") {
+      mainTong.firstChild.style.transformOrigin = "0% 100%";
+    } else {
+      mainTong.firstChild.style.transformOrigin = "100% 100%";
+    }
+    offIndex = children.findIndex((dom) => { return dom.style.opacity === String(1) });
+    onIndex = offIndex - 1;
+    if (onIndex < 0) {
+      onIndex = children.length - 1;
+    }
+    if (toggle === "on") {
+      mainTong.firstChild.style.transform = "scaleX(0)";
+      mainTong.setAttribute("toggle", "off");
+    } else {
+      mainTong.firstChild.style.transform = "scaleX(1)";
+      mainTong.setAttribute("toggle", "on");
+    }
+    children[offIndex].style.opacity = String(0);
+    children[onIndex].style.opacity = String(1);
+  }, interval);
 
 }
 
@@ -204,7 +278,7 @@ FrontIndexJs.prototype.launching = async function (loading) {
       },
       local: async () => {
         try {
-          instance.insertInitBox();
+          instance.insertSlideBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "FrontIndexJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
         }
