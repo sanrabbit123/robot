@@ -1536,7 +1536,6 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
                   width: String(seroWidth) + ea,
                   height: String(photoHeight) + ea,
                   borderRadius: String(5) + "px",
-                  marginRight: String(photoMargin) + ea,
                   marginBottom: String(photoMarginBottom) + ea,
                   backgroundSize: "100% auto",
                   backgroundPosition: "50% 50%",

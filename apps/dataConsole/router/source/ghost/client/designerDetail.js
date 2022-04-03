@@ -531,7 +531,6 @@ DesignerDetailJs.prototype.portfolioBlock = function (limitLength, search = null
                 width: String(gsArray[i] === 'g' ? garoWidth : seroWidth) + ea,
                 height: String(photoHeight) + ea,
                 borderRadius: String(5) + "px",
-                marginRight: String(photoMargin) + ea,
                 marginBottom: String(photoMarginBottom) + ea,
                 backgroundSize: "100% auto",
                 backgroundPosition: "50% 50%",
@@ -644,7 +643,6 @@ DesignerDetailJs.prototype.portfolioBlock = function (limitLength, search = null
               width: String(seroWidth) + ea,
               height: String(photoHeight) + ea,
               borderRadius: String(5) + "px",
-              marginRight: String(photoMargin) + ea,
               marginBottom: String(photoMarginBottom) + ea,
               background: colorChip.gray2,
             }

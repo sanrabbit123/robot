@@ -387,11 +387,12 @@ FrontIndexJs.prototype.insertStrongBox = function () {
 
 FrontIndexJs.prototype.insertSearchBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, equalJson, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media, totalContents, standardWidth } = this;
   const { contentsArr, reviewArr } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const photoChar = 't';
   let speed;
   let mainHeight;
   let mainTong;
@@ -405,11 +406,46 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   let inputWeight;
   let portfolioTong;
   let portfolioMargin;
+  let src, title, subTitle;
+  let block;
+  let contents, tag;
+  let garoSliceStart;
+  let garoSliceEnd;
+  let garoSliceLimit;
+  let seroSliceStart;
+  let seroSliceEnd;
+  let seroSliceLimit;
+  let tagTong;
+  let tagSize, tagWeight;
+  let tagPaddingLeft, tagPaddingTop, tagPaddingBottom;
+  let tagMarginRight;
+  let columns;
+  let blockMarginBottom;
+  let photoHeight, photoMarginBottom;
+  let titleSize, titleWeight;
+  let subTitleMarginTop, subTitleSize;
+  let tagTongMarginTop;
+  let subTitleOverWidthRatio, tagTongOverWidthRatio;
+  let reviewTong;
+  let titleMarginLeft;
+  let quoteHeight;
+  let quoteWidth;
+  let quoteTop;
+  let services;
+  let serviceChildren;
+  let servicePaddingLeft;
+  let serviceSize;
+  let serviceBlockPaddingTop;
+  let serviceBlock;
+
+  services = serviceParsing().name;
+  servicePaddingLeft = <%% 20, 18, 13, 8, 2.2 %%>;
+  serviceSize = <%% 17, 16, 16, 15, 3.3 %%>;
+  serviceBlockPaddingTop = <%% (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), 5 %%>;
 
   speed = 0.8;
-  mainHeight = 1200;
 
-  searchTongWidth = 640;
+  searchTongWidth = 560;
   searchTongHeight = <%% 40, 40, 40, 40, 8 %%>;
 
   searchIconHeight = <%% 20, 20, 20, 20, 4 %%>;
@@ -422,6 +458,44 @@ FrontIndexJs.prototype.insertSearchBox = function () {
 
   portfolioMargin = 16;
 
+  columns = 5;
+  blockMarginBottom = 60;
+
+  photoHeight = 374;
+  photoMarginBottom = 16;
+
+  garoSliceStart = <%% 5, 5, 5, 5, 5 %%>;
+  garoSliceEnd = <%% 10, 10, 10, 10, 9 %%>;
+  garoSliceLimit = <%% 17, 17, 17, 17, 17 %%>;
+
+  seroSliceStart = <%% 5, 5, 5, 5, 5 %%>;
+  seroSliceEnd = <%% 16, 15, 17, 15, 13 %%>;
+  seroSliceLimit = <%% 30, 30, 30, 30, 30 %%>;
+
+  quoteHeight = <%% 9, 8, 8, 7, 1.6 %%>;
+  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
+  quoteTop = <%% (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), isIphone() ? 1.2 : 1.1 %%>;
+
+  titleSize = 17;
+  titleWeight = 600;
+  titleMarginLeft = 5;
+
+  subTitleMarginTop = 3;
+  subTitleSize = 12;
+
+  subTitleOverWidthRatio = 2;
+  tagTongOverWidthRatio = 1.1;
+
+  tagTongMarginTop = 11;
+
+  tagSize = <%% 10, 10, 10, 9, 2 %%>;
+  tagWeight = <%% 500, 500, 500, 500, 500 %%>;
+
+  tagPaddingLeft = <%% 8, 8, 8, 7, 1 %%>;
+  tagPaddingTop = <%% (isMac() ? 4 : 5), (isMac() ? 4 : 5), (isMac() ? 4 : 5), (isMac() ? 4 : 5), 1 %%>;
+  tagPaddingBottom = <%% (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isIphone() ? 1.2 : 1.4) %%>;
+  tagMarginRight = <%% 3, 3, 3, 3, 1 %%>;
+
   mainTong = createNode({
     mother: totalContents,
     attribute: {
@@ -432,7 +506,6 @@ FrontIndexJs.prototype.insertSearchBox = function () {
       position: "relative",
       background: colorChip.white,
       animation: "justfadeinoriginal " + String(speed) + "s ease forwards",
-      height: String(mainHeight) + ea,
       paddingTop: String(120) + ea,
     },
   });
@@ -492,6 +565,73 @@ FrontIndexJs.prototype.insertSearchBox = function () {
     ]
   });
 
+  serviceChildren = [];
+  for (let service of services) {
+    if (desktop) {
+      if (serviceChildren.length !== 0) {
+        serviceChildren.push({
+          style: {
+            display: "inline-block",
+            position: "relative",
+            paddingLeft: String(servicePaddingLeft) + ea,
+            paddingRight: String(servicePaddingLeft) + ea,
+          },
+          children: [
+            {
+              text: "|",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(serviceSize) + ea,
+                fontWeight: String(300),
+                color: colorChip.deactive,
+              },
+              bold: {
+                color: colorChip.deactive,
+              }
+            }
+          ]
+        });
+      }
+    }
+    serviceChildren.push({
+      style: {
+        display: "inline-block",
+        position: "relative",
+        paddingLeft: String(servicePaddingLeft) + ea,
+        paddingRight: String(servicePaddingLeft) + ea,
+        marginBottom: desktop ? "" : String(servicePaddingLeft) + ea,
+      },
+      children: [
+        {
+          text: "<b%#%b> " + service,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(serviceSize) + ea,
+            fontWeight: String(400),
+            color: colorChip.black,
+            cursor: "pointer",
+          },
+          bold: {
+            color: colorChip.deactive,
+          }
+        }
+      ]
+    });
+  }
+
+  serviceBlock = createNode({
+    mother: mainTong,
+    style: {
+      display: "block",
+      position: "relative",
+      textAlign: "center",
+      paddingTop: String(serviceBlockPaddingTop) + ea,
+    },
+    children: serviceChildren
+  });
+
   portfolioTong = createNode({
     mother: mainTong,
     style: {
@@ -500,27 +640,360 @@ FrontIndexJs.prototype.insertSearchBox = function () {
       width: String(standardWidth + portfolioMargin) + ea,
       left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
       paddingTop: String(72) + ea,
-    }
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: "relative",
+          marginBottom: String(28) + ea,
+        },
+        children: [
+          {
+            style: {
+              position: "absolute",
+              top: String(0),
+              left: String(0),
+              width: withOut(portfolioMargin, ea),
+              height: String(13) + ea,
+              borderBottom: "1px solid " + colorChip.gray2,
+            }
+          },
+          {
+            text: "디자이너 포트폴리오",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              paddingRight: String(15) + ea,
+              background: colorChip.white,
+              fontSize: String(20) + ea,
+              fontWeight: String(600),
+              color: colorChip.black,
+              zIndex: String(1),
+            }
+          }
+        ]
+      }
+    ]
   });
 
   for (let i = 0; i < contentsArr.length; i++) {
-    createNode({
+
+    ({ contents } = contentsArr[i]);
+
+    src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.portfolio.pid + "/" + photoChar + String(contents.portfolio.detailInfo.photodae[i === 0 ? 1 : 0]) + contents.portfolio.pid + ".jpg";
+    title = contents.portfolio.title.main.split(", ")[1];
+    if (media[0] || media[2]) {
+      subTitle = contents.portfolio.title.sub;
+    } else {
+      subTitle = contents.portfolio.title.sub;
+      if (!mobile) {
+        if (i !== 0 && subTitle.length > 27) {
+          subTitle = contents.portfolio.title.sub.replace(/홈?스타일링$/i, '');
+        }
+      } else {
+        if (i !== 0 && subTitle.length > 25) {
+          subTitle = contents.portfolio.title.sub.replace(/홈?스타일링$/i, '');
+        }
+      }
+    }
+    tag = equalJson(JSON.stringify(contents.portfolio.detailInfo.tag));
+
+    if (i !== 0) {
+      tag = tag.slice(garoSliceStart, garoSliceEnd);
+      if (tag.reduce((acc, curr) => { return acc + curr.length }, 0) > garoSliceLimit) {
+        tag = tag.slice(0, -1);
+      }
+    } else {
+      tag = tag.slice(seroSliceStart, seroSliceEnd);
+      if (tag.reduce((acc, curr) => { return acc + curr.length }, 0) > seroSliceLimit) {
+        tag = tag.slice(0, -1);
+      }
+    }
+
+    block = createNode({
       mother: portfolioTong,
       style: {
         display: "inline-block",
         position: "relative",
-        width: i !== 0 ? "calc(calc(100% - " + String(portfolioMargin * 5) + ea + ") / " + String(5) + ")" : "calc(calc(calc(calc(100% - " + String(portfolioMargin * 5) + ea + ") / " + String(5) + ") * 2) + " + String(portfolioMargin) + ea + ")",
-        height: String(300) + ea,
-        background: "blue",
+        width: i !== 0 ? "calc(calc(100% - " + String(portfolioMargin * columns) + ea + ") / " + String(columns) + ")" : "calc(calc(calc(calc(100% - " + String(portfolioMargin * columns) + ea + ") / " + String(columns) + ") * 2) + " + String(portfolioMargin) + ea + ")",
         marginRight: String(portfolioMargin) + ea,
-        marginBottom: String(portfolioMargin) + ea,
-      }
+        marginBottom: String(blockMarginBottom) + ea,
+        borderRadius: String(5) + "px",
+        verticalAlign: "top",
+        overflow: "hidden",
+      },
+      children: [
+        {
+          style: {
+            display: "block",
+            width: String(100) + '%',
+            height: String(photoHeight) + ea,
+            borderRadius: String(5) + "px",
+            marginBottom: String(photoMarginBottom) + ea,
+            backgroundSize: "100% auto",
+            backgroundPosition: "50% 50%",
+            backgroundImage: "url('" + src + "')",
+          }
+        },
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            width: String(100) + '%',
+          },
+          children: [
+            {
+              text: title,
+              style: {
+                display: "block",
+                fontSize: String(titleSize) + ea,
+                fontWeight: String(titleWeight),
+                color: colorChip.black,
+                width: withOut(0, ea),
+                verticalAlign: "top",
+              }
+            },
+            {
+              style: {
+                display: "block",
+                width: withOut(0, ea),
+                verticalAlign: "top",
+                marginTop: String(subTitleMarginTop) + ea,
+                overflow: "hidden",
+              },
+              children: [
+                {
+                  text: subTitle,
+                  style: {
+                    display: "block",
+                    position: "relative",
+                    fontSize: String(subTitleSize) + ea,
+                    fontWeight: String(titleWeight),
+                    color: colorChip.deactive,
+                    width: String(subTitleOverWidthRatio * 100) + '%',
+                  },
+                }
+              ]
+            }
+          ]
+        },
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            marginTop: String(tagTongMarginTop) + ea,
+            width: String(tagTongOverWidthRatio * 100) + '%',
+            left: String(0) + ea,
+          }
+        }
+      ]
     });
+
+    tagTong = block.children[2];
+    for (let t of tag) {
+      createNode({
+        mother: tagTong,
+        text: "<b%#%b> " + t,
+        style: {
+          display: "inline-block",
+          fontSize: String(tagSize) + ea,
+          fontWeight: String(tagWeight),
+          color: colorChip.black,
+          paddingLeft: String(tagPaddingLeft) + ea,
+          paddingTop: String(tagPaddingTop) + ea,
+          paddingBottom: String(tagPaddingBottom) + ea,
+          paddingRight: String(tagPaddingLeft) + ea,
+          borderRadius: String(3) + "px",
+          marginRight: String(tagMarginRight) + ea,
+          background: colorChip.gray1
+        },
+        bold: {
+          fontWeight: String(400),
+          color: colorChip.deactive,
+        }
+      })
+    }
+
 
   }
 
+  reviewTong = createNode({
+    mother: mainTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(standardWidth + portfolioMargin) + ea,
+      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
+      paddingTop: String(24) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: "relative",
+          marginBottom: String(28) + ea,
+        },
+        children: [
+          {
+            style: {
+              position: "absolute",
+              top: String(0),
+              left: String(0),
+              width: withOut(portfolioMargin, ea),
+              height: String(13) + ea,
+              borderBottom: "1px solid " + colorChip.gray2,
+            }
+          },
+          {
+            text: "솔직한 고객 후기",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              paddingRight: String(15) + ea,
+              background: colorChip.white,
+              fontSize: String(20) + ea,
+              fontWeight: String(600),
+              color: colorChip.black,
+              zIndex: String(1),
+            }
+          }
+        ]
+      }
+    ]
+  });
+
+  for (let i = 0; i < reviewArr.length; i++) {
+
+    ({ contents } = reviewArr[i]);
+
+    src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.portfolio.pid + "/" + photoChar + String(contents.review.detailInfo.photodae[i === 0 ? 1 : 0]) + contents.portfolio.pid + ".jpg";
+    title = contents.review.title.sub.split(", ").join(" ");
+    if (media[0] || media[2]) {
+      subTitle = contents.portfolio.title.sub;
+    } else {
+      subTitle = contents.portfolio.title.sub;
+      if (!mobile) {
+        if (i !== 0 && subTitle.length > 27) {
+          subTitle = contents.portfolio.title.sub.replace(/홈?스타일링$/i, '');
+        }
+      } else {
+        if (i !== 0 && subTitle.length > 25) {
+          subTitle = contents.portfolio.title.sub.replace(/홈?스타일링$/i, '');
+        }
+      }
+    }
+    tag = equalJson(JSON.stringify(contents.portfolio.detailInfo.tag));
+
+    if (i !== 0) {
+      tag = tag.slice(garoSliceStart, garoSliceEnd);
+      if (tag.reduce((acc, curr) => { return acc + curr.length }, 0) > garoSliceLimit) {
+        tag = tag.slice(0, -1);
+      }
+    } else {
+      tag = tag.slice(seroSliceStart, seroSliceEnd);
+      if (tag.reduce((acc, curr) => { return acc + curr.length }, 0) > seroSliceLimit) {
+        tag = tag.slice(0, -1);
+      }
+    }
+
+    block = createNode({
+      mother: reviewTong,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: i !== 0 ? "calc(calc(100% - " + String(portfolioMargin * columns) + ea + ") / " + String(columns) + ")" : "calc(calc(calc(calc(100% - " + String(portfolioMargin * columns) + ea + ") / " + String(columns) + ") * 2) + " + String(portfolioMargin) + ea + ")",
+        marginRight: String(portfolioMargin) + ea,
+        marginBottom: String(blockMarginBottom) + ea,
+        borderRadius: String(5) + "px",
+        verticalAlign: "top",
+        overflow: "hidden",
+      },
+      children: [
+        {
+          style: {
+            display: "block",
+            width: String(100) + '%',
+            height: String(photoHeight) + ea,
+            borderRadius: String(5) + "px",
+            marginBottom: String(photoMarginBottom) + ea,
+            backgroundSize: "100% auto",
+            backgroundPosition: "50% 50%",
+            backgroundImage: "url('" + src + "')",
+          }
+        },
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            width: String(100) + '%',
+          },
+          children: [
+            {
+              mode: "svg",
+              source: svgMaker.doubleQuote(colorChip.green),
+              style: {
+                display: "inline-block",
+                height: String(quoteHeight) + ea,
+                width: String(quoteWidth) + ea,
+                verticalAlign: "top",
+                position: "relative",
+                top: String(quoteTop) + ea,
+              }
+            },
+            {
+              text: title,
+              style: {
+                display: "inline-block",
+                fontSize: String(titleSize) + ea,
+                fontWeight: String(titleWeight),
+                color: colorChip.black,
+                marginLeft: String(titleMarginLeft) + ea,
+                width: withOut(quoteWidth + titleMarginLeft, ea),
+                verticalAlign: "top",
+              }
+            }
+          ]
+        },
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            marginTop: String(tagTongMarginTop) + ea,
+            width: String(tagTongOverWidthRatio * 100) + '%',
+            left: String(0) + ea,
+          }
+        }
+      ]
+    });
+
+    tagTong = block.children[2];
+    for (let t of tag) {
+      createNode({
+        mother: tagTong,
+        text: "<b%#%b> " + t,
+        style: {
+          display: "inline-block",
+          fontSize: String(tagSize) + ea,
+          fontWeight: String(tagWeight),
+          color: colorChip.black,
+          paddingLeft: String(tagPaddingLeft) + ea,
+          paddingTop: String(tagPaddingTop) + ea,
+          paddingBottom: String(tagPaddingBottom) + ea,
+          paddingRight: String(tagPaddingLeft) + ea,
+          borderRadius: String(3) + "px",
+          marginRight: String(tagMarginRight) + ea,
+          background: colorChip.gray1
+        },
+        bold: {
+          fontWeight: String(400),
+          color: colorChip.deactive,
+        }
+      })
+    }
 
 
+  }
 
 
 }
