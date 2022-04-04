@@ -18,11 +18,11 @@
   "meta": {
     "title": [
       "thisPerson",
-      "return ('디자이너 상세 | 홈리에종');"
+      "return ('홈리에종 | 디자이너와 함께 하는 홈스타일링');"
     ],
     "description": [
       "thisPerson",
-      "return ('홈리에종 협업 디자이너 상세 내용 페이지 입니다! | 홈리에종');"
+      "return ('홈리에종 | 디자이너와 함께 하는 홈스타일링');"
     ],
     "image": [
       "thisPerson",
