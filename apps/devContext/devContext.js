@@ -86,12 +86,12 @@ DevContext.prototype.launching = async function () {
 
     // await this.pureSpawn();
 
+    // const pastProposal = equalJson(JSON.stringify(await ghostRequest("pastProposal", { proid: "p2202_aa43s" })));
+    // console.log(pastProposal[0].project.detail);
 
 
+    
 
-
-    // const pastProposal = equalJson(JSON.stringify(await ghostRequest("pastProposal", { proid: "p2202_aa43s" })))
-    // console.log(pastProposal);
 
 
 
@@ -2580,7 +2580,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p147");
+    // await this.getRawPortfolio("p133");
 
 
     // get corePortfolio by pid
