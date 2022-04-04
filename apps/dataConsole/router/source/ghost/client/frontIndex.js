@@ -1501,9 +1501,19 @@ FrontIndexJs.prototype.insertEndBox = function () {
   let blockTong;
   let tongPaddingLeft;
   let tongPaddingTop, tongPaddingBottom;
+  let fontSize, fontWeight;
+  let menuBetween;
+  let copyRightSize, copyRightWeight;
 
-  tongPaddingTop = 44;
-  tongPaddingBottom = 56;
+  tongPaddingTop = 54;
+  tongPaddingBottom = 66;
+
+  fontSize = 18;
+  fontWeight = 600;
+  menuBetween = 55;
+
+  copyRightSize = 17;
+  copyRightWeight = 400;
 
   mainTong = createNode({
     mother: totalContents,
@@ -1527,6 +1537,61 @@ FrontIndexJs.prototype.insertEndBox = function () {
   });
 
 
+  createNode({
+    mother: blockTong,
+    text: "디자이너 파트너쉽",
+    style: {
+      display: "inline-block",
+      position: "relative",
+      fontSize: String(fontSize) + ea,
+      fontWeight: String(fontWeight),
+      color: colorChip.black,
+      cursor: "pointer",
+    }
+  })
+
+  createNode({
+    mother: blockTong,
+    text: "자주 찾는 질문",
+    style: {
+      display: "inline-block",
+      position: "relative",
+      fontSize: String(fontSize) + ea,
+      fontWeight: String(fontWeight),
+      color: colorChip.black,
+      marginLeft: String(menuBetween) + ea,
+      cursor: "pointer",
+    }
+  })
+
+  createNode({
+    mother: blockTong,
+    text: "제휴 문의",
+    style: {
+      display: "inline-block",
+      position: "relative",
+      fontSize: String(fontSize) + ea,
+      fontWeight: String(fontWeight),
+      color: colorChip.black,
+      marginLeft: String(menuBetween) + ea,
+      cursor: "pointer",
+    }
+  })
+
+  createNode({
+    mother: blockTong,
+    text: "Copyright " + String((new Date()).getFullYear()) + " HomeLiaison Inc. All rights reserved.",
+    style: {
+      display: "inline-block",
+      position: "absolute",
+      top: String(tongPaddingTop) + ea,
+      right: String(0),
+      fontSize: String(copyRightSize) + ea,
+      fontWeight: String(copyRightWeight),
+      fontFamily: "graphik",
+      color: colorChip.black,
+    }
+  })
 
 }
 
