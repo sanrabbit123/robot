@@ -1118,7 +1118,7 @@ FrontIndexJs.prototype.insertServiceBox = function () {
   let blockNumber;
   let tongPaddingLeft;
   let tongPaddingTop, tongPaddingBottom;
-  let strongContents;
+  let serviceContents;
   let whiteTongPaddingLeft, whiteTongPaddingTop, whiteTongPaddingRight, whiteTongPaddingBottom;
   let whiteTongTitleSize;
   let iconWidth;
@@ -1130,39 +1130,61 @@ FrontIndexJs.prototype.insertServiceBox = function () {
   let iconBottom;
   let iconRight;
   let mainTong2;
-  let blockTong2;
+  let blockPaddingBottom;
+  let titleSize, titleWeight, titleMarginBottom;
+  let mainPictureHeight;
+  let mainPictureWidth;
+  let indexNumberSize, indexNumberWeight;
+  let indexNumberBigSize;
+  let detailSize, detailWeight, detailLineHeight;
+  let detailBoxWidth, detailBoxMarginLeft;
+  let detailBoldWeight;
+  let block0, block1;
+  let targetBlocks0, targetBlocks1;
+  let intervalFunction, intervalId;
+  let intervalTime;
 
-  strongContents = [
+  targetBlocks0 = [];
+  targetBlocks1 = [];
+  intervalId = null;
+  intervalTime = 5000;
+
+  serviceContents = [
     {
       title: "홈퍼니싱",
-      description: "선호하는 스타일과 역량이 맞는\n디자이너를 추천받을 수 있어요.",
-      icon: "icons0.png",
+      description: "시공 없이 가구와 소품, 패브릭 등으로\n진행하는 효율적 인테리어",
+      image: "a1.jpg",
+      detail: "시공을 꼭 하지 않아도 인테리어를 진행할 수 있습니다. 실제로 사용하는 가구, 소품, 패브릭 등을 디자인 의도에 맞춰 톤 앤 매너를 정리하여 구입하고, 라이프 스타일을 반영한 공간 기획에 따라 배치하면 충분히 멋진 공간을 만들어낼 수 있어요. <b%디자이너와 함께 하는 홈퍼니싱을 통해 시공없이 주거 인테리어의 로망을 실현%b>해보세요!",
     },
     {
       title: "홈스타일링",
-      description: "예상하지 못한 상황에도 안심하고\n인테리어를 진행할 수 있어요.",
-      icon: "icons1.png",
+      description: "부분 시공과 홈퍼니싱으로 필요한 부분만\n효과적으로 진행하는 인테리어",
+      image: "a2.jpg",
+      detail: "꼭 필요한 시공만 부분적으로 진행하며 홈퍼니싱을 통해 집 안 분위기를 확 바꿀 수 있어요. 홈스타일링은 홈퍼니싱에서 부분 시공이 더해져 더 효과적인 인테리어를 구현해내는 방법으로, <b%부담스럽게 전체 시공을 하지 않아도 마치 리모델링을 한 집과 같이 효과적인 결과물%b>을 보실 수 있는 인테리어입니다."
     },
     {
       title: "토탈 스타일링",
-      description: "시공부터 스타일링까지 원스탑\n서비스를 경험할 수 있어요.",
-      icon: "icons2.png",
+      description: "시공부터 스타일링까지 완벽하게\n진행하는 원스탑 인테리어",
+      image: "a3.jpg",
+      detail: "홈리에종 시공사 또는 디자이너 시공사를 통해 전체 리모델링을 진행할 수 있어요! 여기서 평범한 리모델링과 다른 점은, 디자이너의 스타일링까지 원스탑으로 진행된다는 점입니다. <b%전체 시공 후에 빈 집으로 끝나는 것이 아닌, 시공부터 가구와 소품까지 완벽한 마무리를 통해 완전한 인테리어%b>를 진행해드려요."
     },
     {
       title: "엑스트라 스타일링",
-      description: "디자인 선 기획 후 꼭 필요한 시공\n부터 효율적으로 진행할 수 있어요.",
-      icon: "icons3.png",
+      description: "디자인 토탈 시공과 프리미엄\n스타일링으로 진행하는 인테리어",
+      image: "a4.jpg",
+      detail: "전체 시공을 넘어서 설계 변경까지 필요한 경우가 있습니다. 엑스트라 스타일링은 도면 변경 등의 레벨 상에서 집 안의 구조를 바꾸고, 디자이너의 의도에 따라 세밀하게 진행되는 디자인 시공까지 진행하는 경우의 서비스예요. <b%처음부터 끝까지, 디자인 의도를 담아 시공부터 가구, 소품 제안, 배치까지 도와드리는 프리미엄 서비스%b>입니다."
     },
-  ]
+  ];
 
   speed = 0.8;
   mainHeight = 240;
   margin = 16;
-  blockNumber = strongContents.length;
+  blockNumber = serviceContents.length;
 
   tongPaddingLeft = 0;
-  tongPaddingTop = 160;
-  tongPaddingBottom = 170;
+  tongPaddingTop = 170;
+  tongPaddingBottom = 200;
+  blockPaddingBottom = 52;
 
   whiteTongPaddingLeft = 32;
   whiteTongPaddingTop = 21;
@@ -1181,6 +1203,86 @@ FrontIndexJs.prototype.insertServiceBox = function () {
   iconBottom = 32;
   iconRight = 28;
 
+  titleSize = 24;
+  titleWeight = 600;
+  titleMarginBottom = 40;
+
+  mainPictureHeight = 460;
+  mainPictureWidth = 1046;
+
+  indexNumberSize = 22;
+  indexNumberWeight = 200;
+  indexNumberBigSize = 24;
+
+  detailSize = 14;
+  detailWeight = 400;
+  detailLineHeight = 1.6;
+
+  detailBoxWidth = 300;
+  detailBoxMarginLeft = 52;
+  detailBoldWeight = 700;
+
+  intervalFunction = function (next = null) {
+    return async () => {
+      try {
+        let currentIndexNumber;
+        let nextIndexNumber;
+        let currentTarget0, currentTarget1;
+        let currentTitle, currentDescription, currentIndex, currentIndexBold;
+        let nextTarget0, nextTarget1;
+        let nextTitle, nextDescription, nextIndex, nextIndexBold;
+
+        currentIndexNumber = targetBlocks0.findIndex((dom) => { return dom.getAttribute("toggle") === "on" });
+
+        if (next === null) {
+          if (currentIndexNumber + 1 >= blockNumber) {
+            nextIndexNumber = 0;
+          } else {
+            nextIndexNumber = currentIndexNumber + 1;
+          }
+        } else {
+          nextIndexNumber = next;
+        }
+
+        currentTarget0 = targetBlocks0[currentIndexNumber];
+        currentTarget1 = targetBlocks1[currentIndexNumber];
+        [ currentTitle, currentDescription, currentIndex ] = [ ...currentTarget0.children ];
+        currentIndexBold = currentIndex.querySelector('b');
+
+        nextTarget0 = targetBlocks0[nextIndexNumber];
+        nextTarget1 = targetBlocks1[nextIndexNumber];
+        [ nextTitle, nextDescription, nextIndex ] = [ ...nextTarget0.children ];
+        nextIndexBold = nextIndex.querySelector('b');
+
+        currentTarget0.style.background = colorChip.gray1;
+        currentTarget0.style.boxShadow = "";
+        currentTitle.style.color = colorChip.deactive;
+        currentDescription.style.color = colorChip.deactive;
+        currentIndex.style.color = colorChip.deactive;
+        currentIndexBold.style.color = colorChip.deactive;
+        currentTarget1.style.opacity = String(0);
+
+        await sleep(300);
+
+        nextTarget0.style.background = colorChip.white;
+        nextTarget0.style.boxShadow = "0px 3px 16px -9px " + colorChip.shadow;
+        nextTitle.style.color = colorChip.green;
+        nextDescription.style.color = colorChip.black;
+        nextIndex.style.color = colorChip.green;
+        nextIndexBold.style.color = colorChip.whiteGreen;
+        nextTarget1.style.opacity = String(1);
+
+        currentTarget0.setAttribute("toggle", "off");
+        currentTarget1.setAttribute("toggle", "off");
+        nextTarget0.setAttribute("toggle", "on");
+        nextTarget1.setAttribute("toggle", "on");
+
+      } catch (e) {
+        console.log(e);
+      }
+    };
+  }
+
   mainTong = createNode({
     mother: totalContents,
     attribute: {
@@ -1194,34 +1296,69 @@ FrontIndexJs.prototype.insertServiceBox = function () {
 
   blockTong = createNode({
     mother: mainTong,
+    event: {
+      mouseenter: (e) => {
+        if (intervalId !== null) {
+          clearInterval(intervalId);
+          intervalId = null;
+        }
+      },
+      mouseleave: (e) => {
+        if (intervalId === null) {
+          intervalId = setInterval(intervalFunction(), intervalTime);
+        }
+      }
+    },
     style: {
       display: "block",
       position: "relative",
       width: String((standardWidth - (tongPaddingLeft * 2)) + margin) + ea,
       paddingTop: String(tongPaddingTop) + ea,
-      paddingBottom: String(52) + ea,
+      paddingBottom: String(blockPaddingBottom) + ea,
       left: "calc(50% - " + String((standardWidth - (tongPaddingLeft * 2)) / 2) + ea + ")",
-    }
+    },
+    children: [
+      {
+        text: "홈리에종 서비스 유형",
+        style: {
+          display: "block",
+          position: "relative",
+          width: String(100) + '%',
+          textAlign: "center",
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(titleWeight),
+          color: colorChip.black,
+          marginBottom: String(titleMarginBottom) + ea,
+        }
+      }
+    ]
   });
 
-  createNode({
-    mother: blockTong,
-    text: "홈리에종의 서비스 유형",
+  mainTong2 = createNode({
+    mother: totalContents,
     style: {
       display: "block",
       position: "relative",
-      width: String(100) + '%',
-      textAlign: "center",
-      fontSize: String(24) + ea,
-      fontWeight: String(600),
-      color: colorChip.black,
-      marginBottom: String(40) + ea,
-    }
+      height: String(mainPictureHeight) + ea,
+      background: colorChip.white,
+      paddingBottom: String(tongPaddingBottom) + ea,
+      animation: "justfadeinoriginal " + String(speed) + "s ease forwards",
+    },
   });
 
   for (let i = 0; i < blockNumber; i++) {
-    createNode({
+    block0 = createNode({
       mother: blockTong,
+      attribute: {
+        toggle: i === 0 ? "on" : "off",
+        index: String(i),
+      },
+      event: {
+        click: async function (e) {
+          const func = intervalFunction(Number(this.getAttribute("index")));
+          await func();
+        }
+      },
       style: {
         display: "inline-block",
         position: "relative",
@@ -1232,28 +1369,32 @@ FrontIndexJs.prototype.insertServiceBox = function () {
         paddingBottom: String(whiteTongPaddingBottom) + ea,
         marginRight: String(margin) + ea,
         borderRadius: String(5) + "px",
-        background: colorChip.gray0,
-        boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
+        background: i === 0 ? colorChip.white : colorChip.gray1,
+        boxShadow: i === 0 ? "0px 3px 16px -9px " + colorChip.shadow : "",
+        transition: "all 0.5s ease",
+        cursor: "pointer",
       },
       children: [
         {
-          text: strongContents[i].title,
+          text: serviceContents[i].title,
           style: {
             display: "inline-block",
             fontSize: String(whiteTongTitleSize) + ea,
             fontWeight: String(whiteTongTitleWeight),
-            color: colorChip.black,
+            color: i === 0 ? colorChip.green : colorChip.deactive,
+            transition: "all 0.5s ease",
           }
         },
         {
-          text: strongContents[i].description,
+          text: serviceContents[i].description,
           style: {
             display: "inline-block",
             marginTop: String(whiteTongDescriptionMarginTop) + ea,
             fontSize: String(whiteTongDescriptionSize) + ea,
             fontWeight: String(whiteTongDescriptionWeight),
             lineHeight: String(whiteTongDescriptionLineHeight),
-            color: colorChip.black,
+            color: i === 0 ? colorChip.black : colorChip.deactive,
+            transition: "all 0.5s ease",
           }
         },
         {
@@ -1262,94 +1403,91 @@ FrontIndexJs.prototype.insertServiceBox = function () {
             position: "absolute",
             bottom: String(iconBottom) + ea,
             right: String(iconRight) + ea,
-            fontSize: String(22) + ea,
-            fontWeight: String(200),
-            color: colorChip.green,
+            fontSize: String(indexNumberSize) + ea,
+            fontWeight: String(indexNumberWeight),
+            color: i === 0 ? colorChip.green : colorChip.deactive,
+            transition: "all 0.5s ease",
             fontFamily: "graphik",
           },
           bold: {
-            fontSize: String(20) + ea,
-            color: colorChip.whiteGreen,
+            fontSize: String(indexNumberSize) + ea,
+            color: i === 0 ? colorChip.whiteGreen : colorChip.deactive,
           }
         }
       ]
     });
+    block1 = createNode({
+     mother: mainTong2,
+     attribute: {
+       toggle: i === 0 ? "on" : "off",
+       index: String(i),
+     },
+     style: {
+       display: "block",
+       position: "absolute",
+       width: String(standardWidth) + ea,
+       top: String(0),
+       left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
+       opacity: String(i === 0 ? 1 : 0),
+       transition: "all 0.5s ease",
+     },
+     children: [
+       {
+         style: {
+           display: "inline-block",
+           position: "relative",
+           width: String(mainPictureWidth) + ea,
+           height: String(mainPictureHeight) + ea,
+           backgroundImage: "url('" + FrontIndexJs.binaryPath + "/" + serviceContents[i].image + "')",
+           backgroundSize: "auto 100%",
+           backgroundPosition: "50% 50%",
+           borderRadius: String(5) + "px",
+           verticalAlign: "top",
+         }
+       },
+       {
+         text: serviceContents[i].detail,
+         style: {
+           display: "inline-block",
+           verticalAlign: "bottom",
+           fontSize: String(detailSize) + ea,
+           fontWeight: String(detailWeight),
+           color: colorChip.black,
+           lineHeight: String(detailLineHeight),
+           width: String(detailBoxWidth) + ea,
+           marginLeft: String(detailBoxMarginLeft) + ea,
+           textAlign: "right",
+         },
+         bold: {
+           fontSize: String(detailSize) + ea,
+           fontWeight: String(detailBoldWeight),
+           color: colorChip.black,
+         }
+       },
+       {
+         text: "<b%#%b> " + String(i + 1),
+         style: {
+           position: "absolute",
+           right: String(0),
+           top: String(0) + ea,
+           fontSize: String(indexNumberBigSize) + ea,
+           fontWeight: String(indexNumberWeight),
+           fontFamily: "graphik",
+           color: colorChip.green,
+         },
+         bold: {
+           fontSize: String(indexNumberBigSize) + ea,
+           fontWeight: String(indexNumberWeight),
+           color: colorChip.whiteGreen,
+         }
+       }
+     ]
+   });
+    targetBlocks0.push(block0);
+    targetBlocks1.push(block1);
   }
 
-  mainTong2 = createNode({
-    mother: totalContents,
-    attribute: {
-      toggle: "off",
-    },
-    style: {
-      display: "block",
-      position: "relative",
-      background: colorChip.white,
-      animation: "justfadeinoriginal " + String(speed) + "s ease forwards",
-    },
-  });
-
-  blockTong2 = createNode({
-    mother: mainTong2,
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(standardWidth) + ea,
-      paddingBottom: String(tongPaddingBottom) + ea,
-      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
-    }
-  });
-
-  createNode({
-    mother: blockTong2,
-    style: {
-      display: "inline-block",
-      position: "relative",
-      width: String(1046) + ea,
-      height: String(420) + ea,
-      backgroundImage: "url('" + FrontIndexJs.binaryPath + "/z1.jpg" + "')",
-      backgroundSize: "100% auto",
-      backgroundPosition: "50% 50%",
-      borderRadius: String(5) + "px",
-      verticalAlign: "top",
-    }
-  })
-
-  createNode({
-    mother: blockTong2,
-    text: "디자인 선 기획 후 꼭 필요한 시공부터 효율적으로\n진행할 수 있어요 디자인 선 기획 후 꼭 필요한 시공부터 효율적으로 진행할 수 있어요 꼭 필요한 시공부터 효율적으로 진행할 수 있어요 디자인 선 기획 후 꼭 필요한 시공부터 효율적으로 진행할 수 있어요",
-    style: {
-      display: "inline-block",
-      verticalAlign: "bottom",
-      fontSize: String(15) + ea,
-      fontWeight: String(400),
-      color: colorChip.black,
-      lineHeight: String(1.5),
-      width: String(300) + ea,
-      marginLeft: String(52) + ea,
-      textAlign: "right",
-    }
-  });
-
-  createNode({
-    mother: blockTong2,
-    text: "<b%#%b> 1",
-    style: {
-      position: "absolute",
-      right: String(0),
-      top: String(0) + ea,
-      fontSize: String(24) + ea,
-      fontWeight: String(200),
-      fontFamily: "graphik",
-      color: colorChip.green,
-    },
-    bold: {
-      fontSize: String(24) + ea,
-      fontWeight: String(200),
-      color: colorChip.whiteGreen,
-    }
-  })
-
+  intervalId = setInterval(intervalFunction(), intervalTime);
 
 }
 
