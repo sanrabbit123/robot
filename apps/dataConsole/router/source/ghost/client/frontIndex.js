@@ -446,8 +446,8 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   let mainPaddingTop;
   let mainPaddingBottom;
 
-  mainPaddingTop = 140;
-  mainPaddingBottom = 120;
+  mainPaddingTop = 150;
+  mainPaddingBottom = 160;
 
   services = serviceParsing().name;
   services.push("전체 보기");
@@ -511,7 +511,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   portfolioBlockPaddingTop = 80;
   reviewBlockPaddingTop = 40;
 
-  blockTitleMarginBottom = 28;
+  blockTitleMarginBottom = 24;
   blockLineTop = 13;
   blockTitleSize = 20;
   blockTitleWeight = 600;
@@ -673,16 +673,6 @@ FrontIndexJs.prototype.insertSearchBox = function () {
         },
         children: [
           {
-            style: {
-              position: "absolute",
-              top: String(0),
-              left: String(0),
-              width: withOut(portfolioMargin, ea),
-              height: String(blockLineTop) + ea,
-              borderBottom: "1px solid " + colorChip.gray2,
-            }
-          },
-          {
             text: "디자이너 포트폴리오",
             style: {
               display: "inline-block",
@@ -693,6 +683,10 @@ FrontIndexJs.prototype.insertSearchBox = function () {
               fontWeight: String(blockTitleWeight),
               color: colorChip.black,
               zIndex: String(1),
+            },
+            bold: {
+              fontSize: String(blockTitleSize) + ea,
+              color: colorChip.deactive,
             }
           }
         ]
@@ -859,16 +853,6 @@ FrontIndexJs.prototype.insertSearchBox = function () {
         },
         children: [
           {
-            style: {
-              position: "absolute",
-              top: String(0),
-              left: String(0),
-              width: withOut(portfolioMargin, ea),
-              height: String(blockLineTop) + ea,
-              borderBottom: "1px solid " + colorChip.gray2,
-            }
-          },
-          {
             text: "솔직한 고객 후기",
             style: {
               display: "inline-block",
@@ -879,6 +863,10 @@ FrontIndexJs.prototype.insertSearchBox = function () {
               fontWeight: String(blockTitleWeight),
               color: colorChip.black,
               zIndex: String(1),
+            },
+            bold: {
+              fontSize: String(blockTitleSize) + ea,
+              color: colorChip.deactive,
             }
           }
         ]
@@ -1021,7 +1009,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
 
 }
 
-FrontIndexJs.prototype.insertGreenBox = function () {
+FrontIndexJs.prototype.insertBlackBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media, totalContents, standardWidth } = this;
@@ -1040,7 +1028,9 @@ FrontIndexJs.prototype.insertGreenBox = function () {
     style: {
       display: "block",
       position: "relative",
-      background: colorChip.gradientGreen,
+      backgroundImage: "url('" + FrontIndexJs.binaryPath + "/back.jpg" + "')",
+      backgroundSize: "100% auto",
+      backgroundPosition: "50% 50%",
     },
   });
 
@@ -1107,7 +1097,7 @@ FrontIndexJs.prototype.insertGreenBox = function () {
           top: String(-2) + ea,
           fontSize: String(15) + ea,
           fontWeight: String(600),
-          color: colorChip.green,
+          color: colorChip.black,
         }
       }
     ]
@@ -1139,25 +1129,27 @@ FrontIndexJs.prototype.insertServiceBox = function () {
   let whiteTongDescriptionLineHeight;
   let iconBottom;
   let iconRight;
+  let mainTong2;
+  let blockTong2;
 
   strongContents = [
     {
-      title: "디자이너 추천",
+      title: "홈퍼니싱",
       description: "선호하는 스타일과 역량이 맞는\n디자이너를 추천받을 수 있어요.",
       icon: "icons0.png",
     },
     {
-      title: "홈리에종 케어",
+      title: "홈스타일링",
       description: "예상하지 못한 상황에도 안심하고\n인테리어를 진행할 수 있어요.",
       icon: "icons1.png",
     },
     {
-      title: "원스탑 서비스",
+      title: "토탈 스타일링",
       description: "시공부터 스타일링까지 원스탑\n서비스를 경험할 수 있어요.",
       icon: "icons2.png",
     },
     {
-      title: "선 기획 후 시공",
+      title: "엑스트라 스타일링",
       description: "디자인 선 기획 후 꼭 필요한 시공\n부터 효율적으로 진행할 수 있어요.",
       icon: "icons3.png",
     },
@@ -1165,12 +1157,12 @@ FrontIndexJs.prototype.insertServiceBox = function () {
 
   speed = 0.8;
   mainHeight = 240;
-  margin = 18;
+  margin = 16;
   blockNumber = strongContents.length;
 
-  tongPaddingLeft = 60;
-  tongPaddingTop = 70;
-  tongPaddingBottom = 73;
+  tongPaddingLeft = 0;
+  tongPaddingTop = 160;
+  tongPaddingBottom = 170;
 
   whiteTongPaddingLeft = 32;
   whiteTongPaddingTop = 21;
@@ -1197,8 +1189,6 @@ FrontIndexJs.prototype.insertServiceBox = function () {
     style: {
       display: "block",
       position: "relative",
-      background: colorChip.gray2,
-      animation: "justfadeinoriginal " + String(speed) + "s ease forwards",
     },
   });
 
@@ -1209,8 +1199,23 @@ FrontIndexJs.prototype.insertServiceBox = function () {
       position: "relative",
       width: String((standardWidth - (tongPaddingLeft * 2)) + margin) + ea,
       paddingTop: String(tongPaddingTop) + ea,
-      paddingBottom: String(tongPaddingBottom) + ea,
+      paddingBottom: String(52) + ea,
       left: "calc(50% - " + String((standardWidth - (tongPaddingLeft * 2)) / 2) + ea + ")",
+    }
+  });
+
+  createNode({
+    mother: blockTong,
+    text: "홈리에종의 서비스 유형",
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      textAlign: "center",
+      fontSize: String(24) + ea,
+      fontWeight: String(600),
+      color: colorChip.black,
+      marginBottom: String(40) + ea,
     }
   });
 
@@ -1227,7 +1232,7 @@ FrontIndexJs.prototype.insertServiceBox = function () {
         paddingBottom: String(whiteTongPaddingBottom) + ea,
         marginRight: String(margin) + ea,
         borderRadius: String(5) + "px",
-        background: colorChip.white,
+        background: colorChip.gray0,
         boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
       },
       children: [
@@ -1252,24 +1257,140 @@ FrontIndexJs.prototype.insertServiceBox = function () {
           }
         },
         {
-          mode: "img",
-          attribute: {
-            src: FrontIndexJs.binaryPath + "/" + strongContents[i].icon,
-          },
+          text: "<b%# %b>" + String(i + 1),
           style: {
             position: "absolute",
             bottom: String(iconBottom) + ea,
             right: String(iconRight) + ea,
-            width: String(iconWidth) + ea,
-            height: "auto",
+            fontSize: String(22) + ea,
+            fontWeight: String(200),
+            color: colorChip.green,
+            fontFamily: "graphik",
+          },
+          bold: {
+            fontSize: String(20) + ea,
+            color: colorChip.whiteGreen,
           }
         }
       ]
     });
   }
 
+  mainTong2 = createNode({
+    mother: totalContents,
+    attribute: {
+      toggle: "off",
+    },
+    style: {
+      display: "block",
+      position: "relative",
+      background: colorChip.white,
+      animation: "justfadeinoriginal " + String(speed) + "s ease forwards",
+    },
+  });
+
+  blockTong2 = createNode({
+    mother: mainTong2,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(standardWidth) + ea,
+      paddingBottom: String(tongPaddingBottom) + ea,
+      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
+    }
+  });
+
+  createNode({
+    mother: blockTong2,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      width: String(1046) + ea,
+      height: String(420) + ea,
+      backgroundImage: "url('" + FrontIndexJs.binaryPath + "/z1.jpg" + "')",
+      backgroundSize: "100% auto",
+      backgroundPosition: "50% 50%",
+      borderRadius: String(5) + "px",
+      verticalAlign: "top",
+    }
+  })
+
+  createNode({
+    mother: blockTong2,
+    text: "디자인 선 기획 후 꼭 필요한 시공부터 효율적으로\n진행할 수 있어요 디자인 선 기획 후 꼭 필요한 시공부터 효율적으로 진행할 수 있어요 꼭 필요한 시공부터 효율적으로 진행할 수 있어요 디자인 선 기획 후 꼭 필요한 시공부터 효율적으로 진행할 수 있어요",
+    style: {
+      display: "inline-block",
+      verticalAlign: "bottom",
+      fontSize: String(15) + ea,
+      fontWeight: String(400),
+      color: colorChip.black,
+      lineHeight: String(1.5),
+      width: String(300) + ea,
+      marginLeft: String(52) + ea,
+      textAlign: "right",
+    }
+  });
+
+  createNode({
+    mother: blockTong2,
+    text: "<b%#%b> 1",
+    style: {
+      position: "absolute",
+      right: String(0),
+      top: String(0) + ea,
+      fontSize: String(24) + ea,
+      fontWeight: String(200),
+      fontFamily: "graphik",
+      color: colorChip.green,
+    },
+    bold: {
+      fontSize: String(24) + ea,
+      fontWeight: String(200),
+      color: colorChip.whiteGreen,
+    }
+  })
+
+
 }
 
+FrontIndexJs.prototype.insertEndBox = function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { ea, media, totalContents, standardWidth } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  let mainTong;
+  let blockTong;
+  let tongPaddingLeft;
+  let tongPaddingTop, tongPaddingBottom;
+
+  tongPaddingTop = 44;
+  tongPaddingBottom = 56;
+
+  mainTong = createNode({
+    mother: totalContents,
+    style: {
+      display: "block",
+      position: "relative",
+      background: colorChip.gray1,
+    },
+  });
+
+  blockTong = createNode({
+    mother: mainTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(standardWidth) + ea,
+      paddingTop: String(tongPaddingTop) + ea,
+      paddingBottom: String(tongPaddingBottom) + ea,
+      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
+    }
+  });
+
+
+
+}
 
 FrontIndexJs.prototype.launching = async function (loading) {
   const instance = this;
@@ -1328,8 +1449,9 @@ FrontIndexJs.prototype.launching = async function (loading) {
           instance.insertSlideBox();
           instance.insertStrongBox();
           instance.insertSearchBox();
-          instance.insertGreenBox();
+          instance.insertBlackBox();
           instance.insertServiceBox();
+          instance.insertEndBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "FrontIndexJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
         }
