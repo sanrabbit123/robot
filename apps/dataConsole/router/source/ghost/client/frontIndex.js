@@ -95,17 +95,17 @@ FrontIndexJs.prototype.insertSlideBox = function () {
   let lineHeight;
   let titleContents;
 
-  speed = 0.8;
-  interval = 2700;
+  speed = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
+  interval = <%% 2700, 2700, 2700, 2700, 2700 %%>;
 
-  naviHeight = 72;
-  mainHeight = 800;
+  naviHeight = <%% 72, 72, 66, 60, 60 %%>;
+  mainHeight = <%% 800, 640, 590, 500, 590 %%>;
 
-  randomNumber = 5;
-  titlePadding = 100;
-  titleSize = 56;
-  titleWeight = 700;
-  lineHeight = 1.3;
+  randomNumber = <%% 5, 5, 5, 5, 5 %%>;
+  titlePadding = <%% 100, 75, 72, 60, 75 %%>;
+  titleSize = <%% 56, 45, 43, 38, 45 %%>;
+  titleWeight = <%% 700, 700, 700, 700, 700 %%>;
+  lineHeight = <%% 1.3, 1.3, 1.3, 1.3, 1.3 %%>;
   titleContents = "집을 디자인하는\n새로운 방법, 홈리에종";
 
   randomIndex = [];
@@ -255,60 +255,83 @@ FrontIndexJs.prototype.insertStrongBox = function () {
   let iconBottom;
   let iconRight;
 
-  strongContents = [
-    {
-      title: "디자이너 추천",
-      description: "선호하는 스타일과 역량이 맞는\n디자이너를 추천받을 수 있어요.",
-      icon: "icons0.png",
-    },
-    {
-      title: "홈리에종 케어",
-      description: "예상하지 못한 상황에도 안심하고\n인테리어를 진행할 수 있어요.",
-      icon: "icons1.png",
-    },
-    {
-      title: "원스탑 서비스",
-      description: "시공부터 스타일링까지 원스탑\n서비스를 경험할 수 있어요.",
-      icon: "icons2.png",
-    },
-    {
-      title: "선 기획 후 시공",
-      description: "디자인 선 기획 후 꼭 필요한 시공\n부터 효율적으로 진행할 수 있어요.",
-      icon: "icons3.png",
-    },
-  ]
 
-  speed = 0.8;
-  mainHeight = 240;
-  margin = 18;
+  if (media[0]) {
+    strongContents = [
+      {
+        title: "디자이너 추천",
+        description: "선호하는 스타일과 역량이 맞는\n디자이너를 추천받을 수 있어요.",
+        icon: "icons0.png",
+      },
+      {
+        title: "홈리에종 케어",
+        description: "예상하지 못한 상황에도 안심하고\n인테리어를 진행할 수 있어요.",
+        icon: "icons1.png",
+      },
+      {
+        title: "원스탑 서비스",
+        description: "시공부터 스타일링까지 원스탑\n서비스를 경험할 수 있어요.",
+        icon: "icons2.png",
+      },
+      {
+        title: "선 기획 후 시공",
+        description: "디자인 선 기획 후 꼭 필요한 시공\n부터 효율적으로 진행할 수 있어요.",
+        icon: "icons3.png",
+      },
+    ]
+  } else {
+    strongContents = [
+      {
+        title: "디자이너 추천",
+        description: "선호하는 스타일이 맞는\n디자이너를 추천받아요.",
+        icon: "icons0.png",
+      },
+      {
+        title: "홈리에종 케어",
+        description: "문제 상황에도 안심하고\n진행할 수 있어요.",
+        icon: "icons1.png",
+      },
+      {
+        title: "원스탑 서비스",
+        description: "시공부터 스타일링까지\n원스탑으로 진행해요.",
+        icon: "icons2.png",
+      },
+      {
+        title: "선 기획 후 시공",
+        description: "디자인 후 꼭 필요한 시공\n부터 진행할 수 있어요.",
+        icon: "icons3.png",
+      },
+    ]
+  }
+
+  speed = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
+  mainHeight = <%% 240, 240, 240, 240, 240 %%>;
+  margin = <%% 18, 16, 16, 12, 16 %%>;
   blockNumber = strongContents.length;
 
-  tongPaddingLeft = 60;
-  tongPaddingTop = 70;
-  tongPaddingBottom = 73;
+  tongPaddingLeft = <%% 60, 50, 0, 0, 0 %%>;
+  tongPaddingTop = <%% 70, 48, 48, 42, 48 %%>;
+  tongPaddingBottom = <%% 73, 52, 52, 47, 52 %%>;
 
-  whiteTongPaddingLeft = 32;
-  whiteTongPaddingTop = 21;
-  whiteTongPaddingRight = 84;
-  whiteTongPaddingBottom = 30;
+  whiteTongPaddingLeft = <%% 32, 26, 26, 21, 26 %%>;
+  whiteTongPaddingTop = <%% 21, 18, 18, 15, 18 %%>;
+  whiteTongPaddingRight = <%% 84, 50, 50, 42, 50 %%>;
+  whiteTongPaddingBottom = <%% 30, 26, 26, 21, 26 %%>;
 
-  whiteTongTitleSize = 18;
-  whiteTongTitleWeight = 700;
+  whiteTongTitleSize = <%% 18, 16, 16, 14, 4 %%>;
+  whiteTongTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  whiteTongDescriptionSize = 14;
-  whiteTongDescriptionWeight = 400;
-  whiteTongDescriptionMarginTop = 7;
-  whiteTongDescriptionLineHeight = 1.55;
+  whiteTongDescriptionSize = <%% 14, 13, 13, 11, 3 %%>;
+  whiteTongDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+  whiteTongDescriptionMarginTop = <%% 7, 7, 7, 5, 7 %%>;
+  whiteTongDescriptionLineHeight = <%% 1.55, 1.55, 1.55, 1.55, 1.55 %%>;
 
-  iconWidth = 24;
-  iconBottom = 32;
-  iconRight = 28;
+  iconWidth = <%% 24, 24, 24, 18, 24 %%>;
+  iconBottom = <%% 32, 28, 28, 24, 28 %%>;
+  iconRight = <%% 28, 20, 20, 18, 20 %%>;
 
   mainTong = createNode({
     mother: totalContents,
-    attribute: {
-      toggle: "off",
-    },
     style: {
       display: "block",
       position: "relative",
@@ -519,9 +542,6 @@ FrontIndexJs.prototype.insertSearchBox = function () {
 
   mainTong = createNode({
     mother: totalContents,
-    attribute: {
-      toggle: "off",
-    },
     style: {
       display: "block",
       position: "relative",
@@ -1019,9 +1039,30 @@ FrontIndexJs.prototype.insertBlackBox = function () {
   let blockTong;
   let tongPaddingLeft;
   let tongPaddingTop, tongPaddingBottom;
+  let titleSize, titleWeight;
+  let subTitleSize, subTitleWeight;
+  let subTitleMarginLeft;
+  let buttonTop, buttonWidth, buttonHeight;
+  let buttonSize, buttonWeight;
+  let buttonTextTop;
 
-  tongPaddingTop = 44;
-  tongPaddingBottom = 56;
+  tongPaddingTop = <%% 44, 44, 44, 40, 44 %%>;
+  tongPaddingBottom = <%% 56, 56, 56, 52, 56 %%>;
+
+  titleSize = <%% 37, 35, 33, 29, 33 %%>;
+  titleWeight = <%% 600, 600, 600, 600, 600 %%>;
+
+  subTitleSize = <%% 16, 16, 15, 13, 15 %%>;
+  subTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
+  subTitleMarginLeft = <%% 11, 10, 10, 10, 10 %%>;
+
+  buttonTop = <%% 55, 55, 55, 48, 55 %%>;
+  buttonWidth = <%% 140, 135, 133, 125, 133 %%>;
+  buttonHeight = <%% 40, 38, 36, 33, 36 %%>;
+
+  buttonSize = <%% 15, 14, 14, 13, 14 %%>;
+  buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
+  buttonTextTop = <%% -2, -2, -2, -2, -2 %%>;
 
   mainTong = createNode({
     mother: totalContents,
@@ -1050,8 +1091,8 @@ FrontIndexJs.prototype.insertBlackBox = function () {
     mother: blockTong,
     text: "홈리에종에서 1:1 상담을 받아보세요!",
     style: {
-      fontSize: String(37) + ea,
-      fontWeight: String(600),
+      fontSize: String(titleSize) + ea,
+      fontWeight: String(titleWeight),
       color: colorChip.white,
       display: "inline-block",
       position: "relative",
@@ -1062,12 +1103,12 @@ FrontIndexJs.prototype.insertBlackBox = function () {
     mother: blockTong,
     text: "* 1차 응대 비용 무료",
     style: {
-      fontSize: String(16) + ea,
-      fontWeight: String(500),
+      fontSize: String(subTitleSize) + ea,
+      fontWeight: String(subTitleWeight),
       color: colorChip.white,
       display: "inline-block",
       position: "relative",
-      marginLeft: String(11) + ea,
+      marginLeft: String(subTitleMarginLeft) + ea,
     }
   })
 
@@ -1080,10 +1121,10 @@ FrontIndexJs.prototype.insertBlackBox = function () {
       alignItems: "center",
       textAlign: "center",
       right: String(0),
-      top: String(55) + ea,
-      width: String(140) + ea,
-      height: String(40) + ea,
-      borderRadius: String(40) + ea,
+      top: String(buttonTop) + ea,
+      width: String(buttonWidth) + ea,
+      height: String(buttonHeight) + ea,
+      borderRadius: String(buttonHeight) + ea,
       background: colorChip.white,
       boxShadow: "0px 2px 11px -9px " + colorChip.shadow,
       cursor: "pointer",
@@ -1094,9 +1135,9 @@ FrontIndexJs.prototype.insertBlackBox = function () {
         style: {
           position: "relative",
           display: "inline-block",
-          top: String(-2) + ea,
-          fontSize: String(15) + ea,
-          fontWeight: String(600),
+          top: String(buttonTextTop) + ea,
+          fontSize: String(buttonSize) + ea,
+          fontWeight: String(buttonWeight),
           color: colorChip.black,
         }
       }
@@ -1285,9 +1326,6 @@ FrontIndexJs.prototype.insertServiceBox = function () {
 
   mainTong = createNode({
     mother: totalContents,
-    attribute: {
-      toggle: "off",
-    },
     style: {
       display: "block",
       position: "relative",
@@ -1505,15 +1543,15 @@ FrontIndexJs.prototype.insertEndBox = function () {
   let menuBetween;
   let copyRightSize, copyRightWeight;
 
-  tongPaddingTop = 54;
-  tongPaddingBottom = 66;
+  tongPaddingTop = <%% 54, 54, 48, 48, 54 %%>;
+  tongPaddingBottom = <%% 66, 66, 55, 55, 66 %%>;
 
-  fontSize = 18;
-  fontWeight = 600;
-  menuBetween = 55;
+  fontSize = <%% 18, 17, 16, 15, 17 %%>;
+  fontWeight = <%% 600, 600, 600, 600, 600 %%>;
+  menuBetween = <%% 55, 48, 44, 40, 48 %%>;
 
-  copyRightSize = 17;
-  copyRightWeight = 400;
+  copyRightSize = <%% 17, 16, 15, 14, 16 %%>;
+  copyRightWeight = <%% 400, 400, 400, 400, 400 %%>;
 
   mainTong = createNode({
     mother: totalContents,
