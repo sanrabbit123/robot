@@ -463,24 +463,24 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   let portfolioBlockPaddingTop;
   let reviewBlockPaddingTop;
   let blockTitleMarginBottom;
-  let blockLineTop;
   let blockTitleSize, blockTitleWeight;
   let blockWhitePaddingRight;
   let mainPaddingTop;
   let mainPaddingBottom;
+  let viewLength;
 
-  mainPaddingTop = <%% 150, 150, 150, 150, 150 %%>;
-  mainPaddingBottom = <%% 160, 160, 160, 160, 160 %%>;
+  mainPaddingTop = <%% 150, 140, 120, 100, 140 %%>;
+  mainPaddingBottom = <%% 160, 150, 130, 110, 150 %%>;
 
   services = serviceParsing().name;
   services.push("전체 보기");
   servicePaddingLeft = <%% 20, 18, 13, 8, 2.2 %%>;
   serviceSize = <%% 17, 16, 16, 15, 3.3 %%>;
-  serviceBlockPaddingTop = <%% 33, 33, 33, 33, 33 %%>;
+  serviceBlockPaddingTop = <%% 30, 24, 22, 20, 27 %%>;
 
   speed = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
 
-  searchTongWidth = <%% 640, 640, 640, 640, 640 %%>;
+  searchTongWidth = <%% 640, 640, 560, 450, 640 %%>;
   searchTongHeight = <%% 40, 40, 40, 40, 8 %%>;
 
   searchIconHeight = <%% 20, 20, 20, 20, 4 %%>;
@@ -493,10 +493,11 @@ FrontIndexJs.prototype.insertSearchBox = function () {
 
   portfolioMargin = <%% 16, 16, 16, 16, 16 %%>;
 
-  columns = <%% 5, 4, 3, 2, 2 %%>;
-  blockMarginBottom = <%% 60, 60, 60, 60, 60 %%>;
+  columns = <%% 5, 4, 3, 3, 2 %%>;
+  viewLength = <%% 9, 7, 8, 8, 9 %%>;
+  blockMarginBottom = <%% 60, 60, 60, 45, 60 %%>;
 
-  photoHeight = <%% 374, 352, 374, 374, 374 %%>;
+  photoHeight = <%% 374, 352, 408, 320, 374 %%>;
   photoMarginBottom = <%% 16, 16, 16, 16, 16 %%>;
 
   garoSliceStart = <%% 5, 5, 5, 5, 5 %%>;
@@ -511,7 +512,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
   quoteTop = <%% (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), isIphone() ? 1.2 : 1.1 %%>;
 
-  titleSize = <%% 17, 17, 17, 17, 17 %%>;
+  titleSize = <%% 17, 17, 17, 15, 17 %%>;
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
   titleMarginLeft = <%% 5, 5, 5, 5, 5 %%>;
 
@@ -531,12 +532,11 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   tagPaddingBottom = <%% (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isIphone() ? 1.2 : 1.4) %%>;
   tagMarginRight = <%% 3, 3, 3, 3, 1 %%>;
 
-  portfolioBlockPaddingTop = <%% 80, 80, 80, 80, 80 %%>;
-  reviewBlockPaddingTop = <%% 40, 40, 40, 40, 40 %%>;
+  portfolioBlockPaddingTop = <%% 70, 60, 45, 45, 60 %%>;
+  reviewBlockPaddingTop = <%% 20, 10, 0, 0, 10 %%>;
 
-  blockTitleMarginBottom = <%% 24, 24, 24, 24, 24 %%>;
-  blockLineTop = <%% 13, 13, 13, 13, 13 %%>;
-  blockTitleSize = <%% 20, 20, 20, 20, 20 %%>;
+  blockTitleMarginBottom = <%% 24, 24, 23, 17, 24 %%>;
+  blockTitleSize = <%% 20, 20, 20, 18, 20 %%>;
   blockTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
   blockWhitePaddingRight = <%% 15, 15, 15, 15, 15 %%>;
 
@@ -714,7 +714,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
     ]
   });
 
-  for (let i = 0; i < contentsArr.length; i++) {
+  for (let i = 0; i < viewLength; i++) {
 
     ({ contents } = contentsArr[i]);
 
@@ -894,7 +894,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
     ]
   });
 
-  for (let i = 0; i < reviewArr.length; i++) {
+  for (let i = 0; i < viewLength; i++) {
 
     ({ contents } = reviewArr[i]);
 
@@ -1025,7 +1025,6 @@ FrontIndexJs.prototype.insertSearchBox = function () {
 
 
   }
-
 
 }
 
