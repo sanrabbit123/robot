@@ -6142,7 +6142,7 @@ ProposalJs.prototype.cssInjection = function () {
     right: 7px;
     top: 38px;
     width: 81px;
-    height: ${GeneralJs.isMac() ? String(160) : String(163)}px;
+    height: ${GeneralJs.isMac() ? String(118) : String(121)}px;
     background: ${GeneralJs.colorChip.white};
     z-index: 2;
     border-radius: 5px;
