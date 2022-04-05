@@ -1184,6 +1184,8 @@ FrontIndexJs.prototype.insertServiceBox = function () {
   let targetBlocks0, targetBlocks1;
   let intervalFunction, intervalId;
   let intervalTime;
+  let detailRight, detailBottom;
+  let detailPaddingTop, detailPaddingBottom, detailPaddingLeft, detailPaddingRight;
 
   targetBlocks0 = [];
   targetBlocks1 = [];
@@ -1199,7 +1201,7 @@ FrontIndexJs.prototype.insertServiceBox = function () {
     },
     {
       title: "홈스타일링",
-      description: "부분 시공과 홈퍼니싱으로 필요한 부분만\n효과적으로 진행하는 인테리어",
+      description: "부분 시공과 홈퍼니싱으로 필요한\n부분만 효과적으로 진행하는 인테리어",
       image: "a2.jpg",
       detail: "꼭 필요한 시공만 부분적으로 진행하며 홈퍼니싱을 통해 집 안 분위기를 확 바꿀 수 있어요. 홈스타일링은 홈퍼니싱에서 부분 시공이 더해져 더 효과적인 인테리어를 구현해내는 방법으로, <b%부담스럽게 전체 시공을 하지 않아도 마치 리모델링을 한 집과 같이 효과적인 결과물%b>을 보실 수 있는 인테리어입니다."
     },
@@ -1223,45 +1225,52 @@ FrontIndexJs.prototype.insertServiceBox = function () {
   blockNumber = serviceContents.length;
 
   tongPaddingLeft = <%% 0, 0, 0, 0, 0 %%>;
-  tongPaddingTop = <%% 170, 170, 170, 170, 170 %%>;
-  tongPaddingBottom = <%% 200, 200, 200, 200, 200 %%>;
-  blockPaddingBottom = <%% 52, 52, 52, 52, 52 %%>;
+  tongPaddingTop = <%% 170, 120, 120, 120, 120 %%>;
+  tongPaddingBottom = <%% 200, 150, 150, 150, 150 %%>;
+  blockPaddingBottom = <%% 52, 17, 17, 17, 17 %%>;
 
-  whiteTongPaddingLeft = <%% 32, 32, 32, 32, 32 %%>;
+  whiteTongPaddingLeft = <%% 32, 28, 28, 28, 28 %%>;
   whiteTongPaddingTop = <%% 21, 21, 21, 21, 21 %%>;
-  whiteTongPaddingRight = <%% 84, 84, 84, 84, 84 %%>;
-  whiteTongPaddingBottom = <%% 30, 30, 30, 30, 30 %%>;
+  whiteTongPaddingRight = <%% 84, 28, 28, 28, 28 %%>;
+  whiteTongPaddingBottom = <%% 30, 26, 26, 26, 26 %%>;
 
-  whiteTongTitleSize = <%% 18, 16, 16, 16, 18 %%>;
+  whiteTongTitleSize = <%% 18, 15, 15, 15, 18 %%>;
   whiteTongTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
   whiteTongDescriptionSize = <%% 14, 13, 13, 11, 14 %%>;
   whiteTongDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
-  whiteTongDescriptionMarginTop = <%% 7, 7, 7, 7, 7 %%>;
+  whiteTongDescriptionMarginTop = <%% 7, 5, 5, 5, 5 %%>;
   whiteTongDescriptionLineHeight = <%% 1.55, 1.55, 1.55, 1.55, 1.55 %%>;
 
   iconWidth = <%% 24, 24, 24, 24, 24 %%>;
   iconBottom = <%% 32, 32, 32, 32, 32 %%>;
   iconRight = <%% 28, 28, 28, 28, 28 %%>;
 
-  titleSize = <%% 24, 24, 24, 24, 24 %%>;
+  titleSize = <%% 24, 23, 23, 23, 23 %%>;
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
-  titleMarginBottom = <%% 40, 40, 40, 40, 40 %%>;
+  titleMarginBottom = <%% 40, 36, 36, 36, 36 %%>;
 
   mainPictureHeight = <%% 460, 460, 460, 460, 460 %%>;
-  mainPictureWidth = <%% 1046, 1046, 1046, 1046, 1046 %%>;
+  mainPictureWidth = <%% 1046, 1050, 900, 1050, 1050 %%>;
 
   indexNumberSize = <%% 22, 22, 22, 22, 22 %%>;
   indexNumberWeight = <%% 200, 200, 200, 200, 200 %%>;
   indexNumberBigSize = <%% 24, 24, 24, 24, 24 %%>;
 
-  detailSize = <%% 14, 14, 14, 14, 14 %%>;
+  detailSize = <%% 14, 13, 12, 11, 13 %%>;
   detailWeight = <%% 400, 400, 400, 400, 400 %%>;
   detailLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
-  detailBoxWidth = <%% 300, 300, 300, 300, 300 %%>;
+  detailBoxWidth = <%% 300, 240, 240, 240, 240 %%>;
   detailBoxMarginLeft = <%% 52, 52, 52, 52, 52 %%>;
   detailBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+  detailRight = <%% 30, 30, 30, 30, 30 %%>;
+  detailBottom = <%% 30, 30, 30, 30, 30 %%>;
+  detailPaddingTop = <%% 18, 18, 18, 18, 18 %%>;
+  detailPaddingBottom = <%% 20, 20, 20, 20, 20 %%>;
+  detailPaddingLeft = <%% 24, 24, 24, 24, 24 %%>;
+  detailPaddingRight = <%% 24, 24, 24, 24, 24 %%>;
 
   intervalFunction = function (next = null) {
     return async () => {
@@ -1438,6 +1447,7 @@ FrontIndexJs.prototype.insertServiceBox = function () {
         {
           text: "<b%# %b>" + String(i + 1),
           style: {
+            display: media[0] ? "block" : "none",
             position: "absolute",
             bottom: String(iconBottom) + ea,
             right: String(iconRight) + ea,
@@ -1487,14 +1497,24 @@ FrontIndexJs.prototype.insertServiceBox = function () {
          text: serviceContents[i].detail,
          style: {
            display: "inline-block",
+           position: media[0] ? "relative" : "absolute",
            verticalAlign: "bottom",
            fontSize: String(detailSize) + ea,
            fontWeight: String(detailWeight),
            color: colorChip.black,
            lineHeight: String(detailLineHeight),
            width: String(detailBoxWidth) + ea,
-           marginLeft: String(detailBoxMarginLeft) + ea,
+           marginLeft: media[0] ? String(detailBoxMarginLeft) + ea : "",
            textAlign: "right",
+           right: media[0] ? "" : String(detailRight) + ea,
+           bottom: media[0] ? "" : String(detailBottom) + ea,
+           background: media[0] ? "" : colorChip.white,
+           paddingTop: media[0] ? "" : String(detailPaddingTop) + ea,
+           paddingLeft: media[0] ? "" : String(detailPaddingLeft) + ea,
+           paddingBottom: media[0] ? "" : String(detailPaddingBottom) + ea,
+           paddingRight: media[0] ? "" : String(detailPaddingRight) + ea,
+           borderRadius: media[0] ? "" : String(5) + "px",
+           opacity: media[0] ? "" : String(0.9),
          },
          bold: {
            fontSize: String(detailSize) + ea,
@@ -1505,6 +1525,7 @@ FrontIndexJs.prototype.insertServiceBox = function () {
        {
          text: "<b%#%b> " + String(i + 1),
          style: {
+           display: media[0] ? "block" : "none",
            position: "absolute",
            right: String(0),
            top: String(0) + ea,
