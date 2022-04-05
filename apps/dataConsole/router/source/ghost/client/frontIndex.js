@@ -316,7 +316,7 @@ FrontIndexJs.prototype.insertStrongBox = function () {
   whiteTongPaddingLeft = <%% 32, 26, 26, 21, 26 %%>;
   whiteTongPaddingTop = <%% 21, 18, 18, 15, 18 %%>;
   whiteTongPaddingRight = <%% 84, 50, 50, 42, 50 %%>;
-  whiteTongPaddingBottom = <%% 30, 25, 24, 20, 26 %%>;
+  whiteTongPaddingBottom = <%% 28, 25, 24, 20, 26 %%>;
 
   whiteTongTitleSize = <%% 18, 16, 16, 14, 4 %%>;
   whiteTongTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -373,6 +373,8 @@ FrontIndexJs.prototype.insertStrongBox = function () {
           text: strongContents[i].title,
           style: {
             display: "inline-block",
+            position: "relative",
+            top: (isMac() || mobile ? "" : String(2) + ea),
             fontSize: String(whiteTongTitleSize) + ea,
             fontWeight: String(whiteTongTitleWeight),
             color: colorChip.black,
@@ -382,6 +384,8 @@ FrontIndexJs.prototype.insertStrongBox = function () {
           text: strongContents[i].description,
           style: {
             display: "inline-block",
+            position: "relative",
+            top: (isMac() || mobile ? "" : String(2) + ea),
             marginTop: String(whiteTongDescriptionMarginTop) + ea,
             fontSize: String(whiteTongDescriptionSize) + ea,
             fontWeight: String(whiteTongDescriptionWeight),
@@ -476,7 +480,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   services.push("전체 보기");
   servicePaddingLeft = <%% 20, 18, 13, 8, 2.2 %%>;
   serviceSize = <%% 17, 16, 16, 15, 3.3 %%>;
-  serviceBlockPaddingTop = <%% 30, 24, 22, 20, 27 %%>;
+  serviceBlockPaddingTop = <%% (isMac() ? 30 : 28), (isMac() ? 24 : 22), (isMac() ? 22 : 20), (isMac() ? 20 : 18), 27 %%>;
 
   speed = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
 
@@ -532,10 +536,10 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   tagPaddingBottom = <%% (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isIphone() ? 1.2 : 1.4) %%>;
   tagMarginRight = <%% 3, 3, 3, 3, 1 %%>;
 
-  portfolioBlockPaddingTop = <%% 70, 60, 45, 45, 60 %%>;
-  reviewBlockPaddingTop = <%% 20, 10, 0, 0, 10 %%>;
+  portfolioBlockPaddingTop = <%% 70, 55, 45, 45, 60 %%>;
+  reviewBlockPaddingTop = <%% 20, 0, 0, 0, 10 %%>;
 
-  blockTitleMarginBottom = <%% 24, 24, 23, 17, 24 %%>;
+  blockTitleMarginBottom = <%% (isMac() ? 24 : 21), (isMac() ? 24 : 20), (isMac() ? 23 : 19), (isMac() ? 17 : 14), 24 %%>;
   blockTitleSize = <%% 20, 20, 20, 18, 20 %%>;
   blockTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
   blockWhitePaddingRight = <%% 15, 15, 15, 15, 15 %%>;
@@ -1061,7 +1065,7 @@ FrontIndexJs.prototype.insertBlackBox = function () {
 
   buttonSize = <%% 15, 14, 14, 13, 14 %%>;
   buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
-  buttonTextTop = <%% -2, -2, -1, -1, -2 %%>;
+  buttonTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -2 %%>;
 
   mainTong = createNode({
     mother: totalContents,
@@ -1090,6 +1094,7 @@ FrontIndexJs.prototype.insertBlackBox = function () {
     mother: blockTong,
     text: "홈리에종에서 1:1 상담을 받아보세요!",
     style: {
+      top: (isMac() || mobile) ? String(0) : String(3) + ea,
       fontSize: String(titleSize) + ea,
       fontWeight: String(titleWeight),
       color: colorChip.white,
@@ -1102,6 +1107,7 @@ FrontIndexJs.prototype.insertBlackBox = function () {
     mother: blockTong,
     text: "* 1차 응대 비용 무료",
     style: {
+      top: (isMac() || mobile) ? String(0) : String(3) + ea,
       fontSize: String(subTitleSize) + ea,
       fontWeight: String(subTitleWeight),
       color: colorChip.white,
@@ -1229,9 +1235,9 @@ FrontIndexJs.prototype.insertServiceBox = function () {
   blockPaddingBottom = <%% 52, 17, 17, 17, 17 %%>;
 
   whiteTongPaddingLeft = <%% 32, 28, 28, 18, 28 %%>;
-  whiteTongPaddingTop = <%% 21, 21, 21, 16, 21 %%>;
+  whiteTongPaddingTop = <%% (isMac() ? 21 : 23), (isMac() ? 21 : 21), (isMac() ? 21 : 21), (isMac() ? 16 : 17), 21 %%>;
   whiteTongPaddingRight = <%% 84, 28, 28, 12, 28 %%>;
-  whiteTongPaddingBottom = <%% 30, 26, 26, 18, 26 %%>;
+  whiteTongPaddingBottom = <%% (isMac() ? 28 : 24), (isMac() ? 26 : 22), (isMac() ? 26 : 22), (isMac() ? 18 : 17), 26 %%>;
 
   whiteTongTitleSize = <%% 18, 15, 15, 13, 18 %%>;
   whiteTongTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -1242,7 +1248,7 @@ FrontIndexJs.prototype.insertServiceBox = function () {
   whiteTongDescriptionLineHeight = <%% 1.55, 1.55, 1.55, 1.55, 1.55 %%>;
 
   iconWidth = <%% 24, 24, 24, 24, 24 %%>;
-  iconBottom = <%% 32, 32, 32, 32, 32 %%>;
+  iconBottom = <%% (isMac() ? 30 : 24), (isMac() ? 30 : 24), (isMac() ? 30 : 24), (isMac() ? 30 : 24), 32 %%>;
   iconRight = <%% 28, 28, 28, 28, 28 %%>;
 
   titleSize = <%% 24, 23, 23, 21, 23 %%>;
@@ -1267,7 +1273,7 @@ FrontIndexJs.prototype.insertServiceBox = function () {
   detailRight = <%% 30, 30, 30, 30, 30 %%>;
   detailBottom = <%% 30, 30, 30, 30, 30 %%>;
   detailPaddingTop = <%% 18, 18, 18, 18, 18 %%>;
-  detailPaddingBottom = <%% 20, 21, 21, 21, 21 %%>;
+  detailPaddingBottom = <%% (isMac() ? 20 : 18), (isMac() ? 20 : 18), (isMac() ? 20 : 18), (isMac() ? 20 : 18), 21 %%>;
   detailPaddingLeft = <%% 24, 25, 25, 25, 25 %%>;
   detailPaddingRight = <%% 24, 25, 25, 25, 25 %%>;
 
@@ -1424,7 +1430,7 @@ FrontIndexJs.prototype.insertServiceBox = function () {
         {
           text: serviceContents[i].title,
           style: {
-            display: "inline-block",
+            display: "block",
             fontSize: String(whiteTongTitleSize) + ea,
             fontWeight: String(whiteTongTitleWeight),
             color: i === 0 ? colorChip.green : colorChip.deactive,
@@ -1605,6 +1611,7 @@ FrontIndexJs.prototype.insertEndBox = function () {
       fontWeight: String(fontWeight),
       color: colorChip.black,
       cursor: "pointer",
+      top: (isMac() || mobile) ? String(0) : String(3) + ea,
     }
   })
 
@@ -1619,6 +1626,7 @@ FrontIndexJs.prototype.insertEndBox = function () {
       color: colorChip.black,
       marginLeft: String(menuBetween) + ea,
       cursor: "pointer",
+      top: (isMac() || mobile) ? String(0) : String(3) + ea,
     }
   })
 
@@ -1633,6 +1641,7 @@ FrontIndexJs.prototype.insertEndBox = function () {
       color: colorChip.black,
       marginLeft: String(menuBetween) + ea,
       cursor: "pointer",
+      top: (isMac() || mobile) ? String(0) : String(3) + ea,
     }
   })
 
