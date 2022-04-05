@@ -99,7 +99,7 @@ FrontIndexJs.prototype.insertSlideBox = function () {
   interval = <%% 2700, 2700, 2700, 2700, 2700 %%>;
 
   naviHeight = <%% 72, 72, 66, 60, 60 %%>;
-  mainHeight = <%% 800, 640, 590, 500, 590 %%>;
+  mainHeight = <%% 800, 640, 590, 480, 590 %%>;
 
   randomNumber = <%% 5, 5, 5, 5, 5 %%>;
   titlePadding = <%% 100, 75, 72, 60, 75 %%>;
@@ -310,8 +310,8 @@ FrontIndexJs.prototype.insertStrongBox = function () {
   blockNumber = strongContents.length;
 
   tongPaddingLeft = <%% 60, 50, 0, 0, 0 %%>;
-  tongPaddingTop = <%% 70, 48, 48, 42, 48 %%>;
-  tongPaddingBottom = <%% 73, 52, 52, 47, 52 %%>;
+  tongPaddingTop = <%% 70, 48, 48, 32, 48 %%>;
+  tongPaddingBottom = <%% 73, 52, 52, 36, 52 %%>;
 
   whiteTongPaddingLeft = <%% 32, 26, 26, 21, 26 %%>;
   whiteTongPaddingTop = <%% 21, 18, 18, 15, 18 %%>;
@@ -1217,51 +1217,51 @@ FrontIndexJs.prototype.insertServiceBox = function () {
     },
   ];
 
-  speed = 0.8;
-  mainHeight = 240;
-  margin = 16;
+  speed = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
+  mainHeight = <%% 240, 240, 240, 240, 240 %%>;
+  margin = <%% 16, 16, 16, 16, 16 %%>;
   blockNumber = serviceContents.length;
 
-  tongPaddingLeft = 0;
-  tongPaddingTop = 170;
-  tongPaddingBottom = 200;
-  blockPaddingBottom = 52;
+  tongPaddingLeft = <%% 0, 0, 0, 0, 0 %%>;
+  tongPaddingTop = <%% 170, 170, 170, 170, 170 %%>;
+  tongPaddingBottom = <%% 200, 200, 200, 200, 200 %%>;
+  blockPaddingBottom = <%% 52, 52, 52, 52, 52 %%>;
 
-  whiteTongPaddingLeft = 32;
-  whiteTongPaddingTop = 21;
-  whiteTongPaddingRight = 84;
-  whiteTongPaddingBottom = 30;
+  whiteTongPaddingLeft = <%% 32, 32, 32, 32, 32 %%>;
+  whiteTongPaddingTop = <%% 21, 21, 21, 21, 21 %%>;
+  whiteTongPaddingRight = <%% 84, 84, 84, 84, 84 %%>;
+  whiteTongPaddingBottom = <%% 30, 30, 30, 30, 30 %%>;
 
-  whiteTongTitleSize = 18;
-  whiteTongTitleWeight = 700;
+  whiteTongTitleSize = <%% 18, 16, 16, 16, 18 %%>;
+  whiteTongTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  whiteTongDescriptionSize = 14;
-  whiteTongDescriptionWeight = 400;
-  whiteTongDescriptionMarginTop = 7;
-  whiteTongDescriptionLineHeight = 1.55;
+  whiteTongDescriptionSize = <%% 14, 13, 13, 11, 14 %%>;
+  whiteTongDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+  whiteTongDescriptionMarginTop = <%% 7, 7, 7, 7, 7 %%>;
+  whiteTongDescriptionLineHeight = <%% 1.55, 1.55, 1.55, 1.55, 1.55 %%>;
 
-  iconWidth = 24;
-  iconBottom = 32;
-  iconRight = 28;
+  iconWidth = <%% 24, 24, 24, 24, 24 %%>;
+  iconBottom = <%% 32, 32, 32, 32, 32 %%>;
+  iconRight = <%% 28, 28, 28, 28, 28 %%>;
 
-  titleSize = 24;
-  titleWeight = 600;
-  titleMarginBottom = 40;
+  titleSize = <%% 24, 24, 24, 24, 24 %%>;
+  titleWeight = <%% 600, 600, 600, 600, 600 %%>;
+  titleMarginBottom = <%% 40, 40, 40, 40, 40 %%>;
 
-  mainPictureHeight = 460;
-  mainPictureWidth = 1046;
+  mainPictureHeight = <%% 460, 460, 460, 460, 460 %%>;
+  mainPictureWidth = <%% 1046, 1046, 1046, 1046, 1046 %%>;
 
-  indexNumberSize = 22;
-  indexNumberWeight = 200;
-  indexNumberBigSize = 24;
+  indexNumberSize = <%% 22, 22, 22, 22, 22 %%>;
+  indexNumberWeight = <%% 200, 200, 200, 200, 200 %%>;
+  indexNumberBigSize = <%% 24, 24, 24, 24, 24 %%>;
 
-  detailSize = 14;
-  detailWeight = 400;
-  detailLineHeight = 1.6;
+  detailSize = <%% 14, 14, 14, 14, 14 %%>;
+  detailWeight = <%% 400, 400, 400, 400, 400 %%>;
+  detailLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
-  detailBoxWidth = 300;
-  detailBoxMarginLeft = 52;
-  detailBoldWeight = 700;
+  detailBoxWidth = <%% 300, 300, 300, 300, 300 %%>;
+  detailBoxMarginLeft = <%% 52, 52, 52, 52, 52 %%>;
+  detailBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
 
   intervalFunction = function (next = null) {
     return async () => {
@@ -1543,14 +1543,14 @@ FrontIndexJs.prototype.insertEndBox = function () {
   let menuBetween;
   let copyRightSize, copyRightWeight;
 
-  tongPaddingTop = <%% 54, 54, 48, 48, 54 %%>;
-  tongPaddingBottom = <%% 66, 66, 55, 55, 66 %%>;
+  tongPaddingTop = <%% 54, 54, 48, 32, 54 %%>;
+  tongPaddingBottom = <%% 66, 66, 55, 39, 66 %%>;
 
-  fontSize = <%% 18, 17, 16, 15, 17 %%>;
+  fontSize = <%% 18, 17, 16, 14, 17 %%>;
   fontWeight = <%% 600, 600, 600, 600, 600 %%>;
-  menuBetween = <%% 55, 48, 44, 40, 48 %%>;
+  menuBetween = <%% 55, 48, 44, 32, 48 %%>;
 
-  copyRightSize = <%% 17, 16, 15, 14, 16 %%>;
+  copyRightSize = <%% 17, 16, 15, 13, 16 %%>;
   copyRightWeight = <%% 400, 400, 400, 400, 400 %%>;
 
   mainTong = createNode({

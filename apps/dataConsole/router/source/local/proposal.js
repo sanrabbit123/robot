@@ -3759,9 +3759,9 @@ ProposalJs.prototype.list_menu = function () {
       { key: "pending", name: "작성중", },
       { key: "complete", name: "완료", },
       { key: "send", name: "발송 예약", },
-      { key: "selected", name: "고객 선택", },
+      // { key: "selected", name: "고객 선택", },
       { key: "confirm", name: "미리보기", },
-      { key: "delete", name: "삭제", }
+      // { key: "delete", name: "삭제", }
     ];
     // style
     this.style.color = GeneralJs.colorChip.green;
