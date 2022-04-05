@@ -99,11 +99,11 @@ FrontIndexJs.prototype.insertSlideBox = function () {
   interval = <%% 2700, 2700, 2700, 2700, 2700 %%>;
 
   naviHeight = <%% 72, 72, 66, 60, 60 %%>;
-  mainHeight = <%% 800, 640, 590, 480, 590 %%>;
+  mainHeight = <%% 800, 640, 560, 450, 590 %%>;
 
   randomNumber = <%% 5, 5, 5, 5, 5 %%>;
-  titlePadding = <%% 100, 75, 72, 60, 75 %%>;
-  titleSize = <%% 56, 45, 43, 38, 45 %%>;
+  titlePadding = <%% 100, 75, 72, 58, 75 %%>;
+  titleSize = <%% 56, 45, 43, 36, 45 %%>;
   titleWeight = <%% 700, 700, 700, 700, 700 %%>;
   lineHeight = <%% 1.3, 1.3, 1.3, 1.3, 1.3 %%>;
   titleContents = "집을 디자인하는\n새로운 방법, 홈리에종";
@@ -310,20 +310,20 @@ FrontIndexJs.prototype.insertStrongBox = function () {
   blockNumber = strongContents.length;
 
   tongPaddingLeft = <%% 60, 50, 0, 0, 0 %%>;
-  tongPaddingTop = <%% 70, 48, 48, 32, 48 %%>;
-  tongPaddingBottom = <%% 73, 52, 52, 36, 52 %%>;
+  tongPaddingTop = <%% 70, 48, 36, 32, 48 %%>;
+  tongPaddingBottom = <%% 73, 52, 40, 36, 52 %%>;
 
   whiteTongPaddingLeft = <%% 32, 26, 26, 21, 26 %%>;
   whiteTongPaddingTop = <%% 21, 18, 18, 15, 18 %%>;
   whiteTongPaddingRight = <%% 84, 50, 50, 42, 50 %%>;
-  whiteTongPaddingBottom = <%% 30, 26, 26, 21, 26 %%>;
+  whiteTongPaddingBottom = <%% 30, 25, 24, 20, 26 %%>;
 
   whiteTongTitleSize = <%% 18, 16, 16, 14, 4 %%>;
   whiteTongTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
   whiteTongDescriptionSize = <%% 14, 13, 13, 11, 3 %%>;
   whiteTongDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
-  whiteTongDescriptionMarginTop = <%% 7, 7, 7, 5, 7 %%>;
+  whiteTongDescriptionMarginTop = <%% 7, 7, 5, 5, 7 %%>;
   whiteTongDescriptionLineHeight = <%% 1.55, 1.55, 1.55, 1.55, 1.55 %%>;
 
   iconWidth = <%% 24, 24, 24, 18, 24 %%>;
@@ -469,18 +469,18 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   let mainPaddingTop;
   let mainPaddingBottom;
 
-  mainPaddingTop = 150;
-  mainPaddingBottom = 160;
+  mainPaddingTop = <%% 150, 150, 150, 150, 150 %%>;
+  mainPaddingBottom = <%% 160, 160, 160, 160, 160 %%>;
 
   services = serviceParsing().name;
   services.push("전체 보기");
   servicePaddingLeft = <%% 20, 18, 13, 8, 2.2 %%>;
   serviceSize = <%% 17, 16, 16, 15, 3.3 %%>;
-  serviceBlockPaddingTop = 33;
+  serviceBlockPaddingTop = <%% 33, 33, 33, 33, 33 %%>;
 
-  speed = 0.8;
+  speed = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
 
-  searchTongWidth = 640;
+  searchTongWidth = <%% 640, 640, 640, 640, 640 %%>;
   searchTongHeight = <%% 40, 40, 40, 40, 8 %%>;
 
   searchIconHeight = <%% 20, 20, 20, 20, 4 %%>;
@@ -491,13 +491,13 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   inputSize = <%% 15, 15, 15, 15, 3.1 %%>;
   inputWeight = <%% 300, 300, 300, 300, 300 %%>;
 
-  portfolioMargin = 16;
+  portfolioMargin = <%% 16, 16, 16, 16, 16 %%>;
 
-  columns = 5;
-  blockMarginBottom = 60;
+  columns = <%% 5, 4, 3, 2, 2 %%>;
+  blockMarginBottom = <%% 60, 60, 60, 60, 60 %%>;
 
-  photoHeight = 374;
-  photoMarginBottom = 16;
+  photoHeight = <%% 374, 352, 374, 374, 374 %%>;
+  photoMarginBottom = <%% 16, 16, 16, 16, 16 %%>;
 
   garoSliceStart = <%% 5, 5, 5, 5, 5 %%>;
   garoSliceEnd = <%% 10, 10, 10, 10, 9 %%>;
@@ -511,17 +511,17 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
   quoteTop = <%% (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), isIphone() ? 1.2 : 1.1 %%>;
 
-  titleSize = 17;
-  titleWeight = 600;
-  titleMarginLeft = 5;
+  titleSize = <%% 17, 17, 17, 17, 17 %%>;
+  titleWeight = <%% 600, 600, 600, 600, 600 %%>;
+  titleMarginLeft = <%% 5, 5, 5, 5, 5 %%>;
 
-  subTitleMarginTop = 3;
-  subTitleSize = 12;
+  subTitleMarginTop = <%% 3, 3, 3, 3, 3 %%>;
+  subTitleSize = <%% 12, 12, 12, 12, 12 %%>;
 
-  subTitleOverWidthRatio = 2;
-  tagTongOverWidthRatio = 1.1;
+  subTitleOverWidthRatio = <%% 2, 2, 2, 2, 2 %%>;
+  tagTongOverWidthRatio = <%% 1.1, 1.1, 1.1, 1.1, 1.1 %%>;
 
-  tagTongMarginTop = 11;
+  tagTongMarginTop = <%% 11, 11, 11, 11, 11 %%>;
 
   tagSize = <%% 10, 10, 10, 9, 2 %%>;
   tagWeight = <%% 500, 500, 500, 500, 500 %%>;
@@ -531,14 +531,14 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   tagPaddingBottom = <%% (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isIphone() ? 1.2 : 1.4) %%>;
   tagMarginRight = <%% 3, 3, 3, 3, 1 %%>;
 
-  portfolioBlockPaddingTop = 80;
-  reviewBlockPaddingTop = 40;
+  portfolioBlockPaddingTop = <%% 80, 80, 80, 80, 80 %%>;
+  reviewBlockPaddingTop = <%% 40, 40, 40, 40, 40 %%>;
 
-  blockTitleMarginBottom = 24;
-  blockLineTop = 13;
-  blockTitleSize = 20;
-  blockTitleWeight = 600;
-  blockWhitePaddingRight = 15;
+  blockTitleMarginBottom = <%% 24, 24, 24, 24, 24 %%>;
+  blockLineTop = <%% 13, 13, 13, 13, 13 %%>;
+  blockTitleSize = <%% 20, 20, 20, 20, 20 %%>;
+  blockTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
+  blockWhitePaddingRight = <%% 15, 15, 15, 15, 15 %%>;
 
   mainTong = createNode({
     mother: totalContents,
@@ -1049,20 +1049,20 @@ FrontIndexJs.prototype.insertBlackBox = function () {
   tongPaddingTop = <%% 44, 44, 44, 40, 44 %%>;
   tongPaddingBottom = <%% 56, 56, 56, 52, 56 %%>;
 
-  titleSize = <%% 37, 35, 33, 29, 33 %%>;
+  titleSize = <%% 37, 35, 32, 28, 33 %%>;
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
 
   subTitleSize = <%% 16, 16, 15, 13, 15 %%>;
   subTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
   subTitleMarginLeft = <%% 11, 10, 10, 10, 10 %%>;
 
-  buttonTop = <%% 55, 55, 55, 48, 55 %%>;
+  buttonTop = <%% 55, 55, 53, 48, 55 %%>;
   buttonWidth = <%% 140, 135, 133, 125, 133 %%>;
   buttonHeight = <%% 40, 38, 36, 33, 36 %%>;
 
   buttonSize = <%% 15, 14, 14, 13, 14 %%>;
   buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
-  buttonTextTop = <%% -2, -2, -2, -2, -2 %%>;
+  buttonTextTop = <%% -2, -2, -1, -1, -2 %%>;
 
   mainTong = createNode({
     mother: totalContents,
@@ -1195,13 +1195,13 @@ FrontIndexJs.prototype.insertServiceBox = function () {
   serviceContents = [
     {
       title: "홈퍼니싱",
-      description: "시공 없이 가구와 소품, 패브릭 등으로\n진행하는 효율적 인테리어",
+      description: "시공 없이 가구와 소품 등으로\n진행하는 효율적 인테리어",
       image: "a1.jpg",
       detail: "시공을 꼭 하지 않아도 인테리어를 진행할 수 있습니다. 실제로 사용하는 가구, 소품, 패브릭 등을 디자인 의도에 맞춰 톤 앤 매너를 정리하여 구입하고, 라이프 스타일을 반영한 공간 기획에 따라 배치하면 충분히 멋진 공간을 만들어낼 수 있어요. <b%디자이너와 함께 하는 홈퍼니싱을 통해 시공없이 주거 인테리어의 로망을 실현%b>해보세요!",
     },
     {
       title: "홈스타일링",
-      description: "부분 시공과 홈퍼니싱으로 필요한\n부분만 효과적으로 진행하는 인테리어",
+      description: "부분 시공과 홈퍼니싱으로 필요\n부분만 진행하는 스마트 인테리어",
       image: "a2.jpg",
       detail: "꼭 필요한 시공만 부분적으로 진행하며 홈퍼니싱을 통해 집 안 분위기를 확 바꿀 수 있어요. 홈스타일링은 홈퍼니싱에서 부분 시공이 더해져 더 효과적인 인테리어를 구현해내는 방법으로, <b%부담스럽게 전체 시공을 하지 않아도 마치 리모델링을 한 집과 같이 효과적인 결과물%b>을 보실 수 있는 인테리어입니다."
     },
@@ -1221,23 +1221,23 @@ FrontIndexJs.prototype.insertServiceBox = function () {
 
   speed = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
   mainHeight = <%% 240, 240, 240, 240, 240 %%>;
-  margin = <%% 16, 16, 16, 16, 16 %%>;
+  margin = <%% 16, 16, 16, 10, 16 %%>;
   blockNumber = serviceContents.length;
 
   tongPaddingLeft = <%% 0, 0, 0, 0, 0 %%>;
-  tongPaddingTop = <%% 170, 120, 120, 120, 120 %%>;
-  tongPaddingBottom = <%% 200, 150, 150, 150, 150 %%>;
+  tongPaddingTop = <%% 170, 120, 100, 70, 120 %%>;
+  tongPaddingBottom = <%% 200, 150, 120, 90, 150 %%>;
   blockPaddingBottom = <%% 52, 17, 17, 17, 17 %%>;
 
-  whiteTongPaddingLeft = <%% 32, 28, 28, 28, 28 %%>;
-  whiteTongPaddingTop = <%% 21, 21, 21, 21, 21 %%>;
-  whiteTongPaddingRight = <%% 84, 28, 28, 28, 28 %%>;
-  whiteTongPaddingBottom = <%% 30, 26, 26, 26, 26 %%>;
+  whiteTongPaddingLeft = <%% 32, 28, 28, 18, 28 %%>;
+  whiteTongPaddingTop = <%% 21, 21, 21, 16, 21 %%>;
+  whiteTongPaddingRight = <%% 84, 28, 28, 12, 28 %%>;
+  whiteTongPaddingBottom = <%% 30, 26, 26, 18, 26 %%>;
 
-  whiteTongTitleSize = <%% 18, 15, 15, 15, 18 %%>;
+  whiteTongTitleSize = <%% 18, 15, 15, 13, 18 %%>;
   whiteTongTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  whiteTongDescriptionSize = <%% 14, 13, 13, 11, 14 %%>;
+  whiteTongDescriptionSize = <%% 14, 13, 12, 11, 14 %%>;
   whiteTongDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   whiteTongDescriptionMarginTop = <%% 7, 5, 5, 5, 5 %%>;
   whiteTongDescriptionLineHeight = <%% 1.55, 1.55, 1.55, 1.55, 1.55 %%>;
@@ -1246,12 +1246,12 @@ FrontIndexJs.prototype.insertServiceBox = function () {
   iconBottom = <%% 32, 32, 32, 32, 32 %%>;
   iconRight = <%% 28, 28, 28, 28, 28 %%>;
 
-  titleSize = <%% 24, 23, 23, 23, 23 %%>;
+  titleSize = <%% 24, 23, 23, 21, 23 %%>;
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
-  titleMarginBottom = <%% 40, 36, 36, 36, 36 %%>;
+  titleMarginBottom = <%% 40, 36, 32, 28, 36 %%>;
 
-  mainPictureHeight = <%% 460, 460, 460, 460, 460 %%>;
-  mainPictureWidth = <%% 1046, 1050, 900, 1050, 1050 %%>;
+  mainPictureHeight = <%% 460, 460, 380, 320, 460 %%>;
+  mainPictureWidth = <%% 1046, 1050, 900, 720, 1050 %%>;
 
   indexNumberSize = <%% 22, 22, 22, 22, 22 %%>;
   indexNumberWeight = <%% 200, 200, 200, 200, 200 %%>;
@@ -1268,9 +1268,9 @@ FrontIndexJs.prototype.insertServiceBox = function () {
   detailRight = <%% 30, 30, 30, 30, 30 %%>;
   detailBottom = <%% 30, 30, 30, 30, 30 %%>;
   detailPaddingTop = <%% 18, 18, 18, 18, 18 %%>;
-  detailPaddingBottom = <%% 20, 20, 20, 20, 20 %%>;
-  detailPaddingLeft = <%% 24, 24, 24, 24, 24 %%>;
-  detailPaddingRight = <%% 24, 24, 24, 24, 24 %%>;
+  detailPaddingBottom = <%% 20, 21, 21, 21, 21 %%>;
+  detailPaddingLeft = <%% 24, 25, 25, 25, 25 %%>;
+  detailPaddingRight = <%% 24, 25, 25, 25, 25 %%>;
 
   intervalFunction = function (next = null) {
     return async () => {
