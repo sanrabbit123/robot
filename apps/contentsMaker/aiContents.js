@@ -556,7 +556,7 @@ AiContents.prototype.to_poo = async function () {
 
     }
 
-    // order += `scp -r ${shellLink(p_path)}/portp${p_id} ${front_www}/${image}/;`;
+    order += `scp -r ${shellLink(p_path)}/portp${p_id} ${front_www}/${image}/;`;
 
     await shellExec(order);
 

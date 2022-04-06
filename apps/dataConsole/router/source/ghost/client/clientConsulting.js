@@ -2892,6 +2892,7 @@ ClientConsultingJs.prototype.insertPannelBox = function () {
     },
     children: [
       {
+        class: [ "submitButtonClassName" ],
         events: [
           {
             type: "click",
