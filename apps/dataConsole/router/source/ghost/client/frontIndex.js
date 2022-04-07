@@ -477,7 +477,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   mainPaddingTop = <%% 150, 140, 120, 100, 140 %%>;
   mainPaddingBottom = <%% 160, 150, 130, 110, 150 %%>;
 
-  searchWordingSize = <%% 23, 22, 21, 19, 22 %%>;
+  searchWordingSize = <%% 22, 21, 21, 19, 22 %%>;
   searchWordingWeight = <%% 600, 600, 600, 600, 600 %%>;
   searchWordingMarginBottom = <%% (isMac() ? 19 : 18), (isMac() ? 18 : 17), (isMac() ? 18 : 17), (isMac() ? 16 : 15), 17 %%>;
 
