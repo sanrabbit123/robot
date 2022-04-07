@@ -474,18 +474,18 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   let viewLength;
   let searchWordingSize, searchWordingWeight, searchWordingMarginBottom;
 
-  mainPaddingTop = <%% 150, 140, 120, 100, 140 %%>;
-  mainPaddingBottom = <%% 160, 150, 130, 110, 150 %%>;
+  mainPaddingTop = <%% 140, 130, 110, 90, 140 %%>;
+  mainPaddingBottom = <%% 150, 140, 120, 100, 150 %%>;
 
-  searchWordingSize = <%% 22, 21, 21, 19, 22 %%>;
+  searchWordingSize = <%% 22, 21, 20, 18, 22 %%>;
   searchWordingWeight = <%% 600, 600, 600, 600, 600 %%>;
-  searchWordingMarginBottom = <%% (isMac() ? 19 : 18), (isMac() ? 18 : 17), (isMac() ? 18 : 17), (isMac() ? 16 : 15), 17 %%>;
+  searchWordingMarginBottom = <%% (isMac() ? 20 : 17), (isMac() ? 17 : 15), (isMac() ? 16 : 14), (isMac() ? 15 : 13), 17 %%>;
 
   services = serviceParsing().name;
   services.push("전체 보기");
   servicePaddingLeft = <%% 20, 18, 13, 8, 2.2 %%>;
   serviceSize = <%% 17, 16, 16, 15, 3.3 %%>;
-  serviceBlockPaddingTop = <%% (isMac() ? 30 : 28), (isMac() ? 24 : 22), (isMac() ? 22 : 20), (isMac() ? 20 : 18), 27 %%>;
+  serviceBlockPaddingTop = <%% (isMac() ? 25 : 26), (isMac() ? 22 : 23), (isMac() ? 20 : 21), (isMac() ? 18 : 19), 27 %%>;
 
   speed = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
 
