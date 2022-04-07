@@ -472,9 +472,14 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   let mainPaddingTop;
   let mainPaddingBottom;
   let viewLength;
+  let searchWordingSize, searchWordingWeight, searchWordingMarginBottom;
 
   mainPaddingTop = <%% 150, 140, 120, 100, 140 %%>;
   mainPaddingBottom = <%% 160, 150, 130, 110, 150 %%>;
+
+  searchWordingSize = <%% 23, 22, 21, 19, 22 %%>;
+  searchWordingWeight = <%% 600, 600, 600, 600, 600 %%>;
+  searchWordingMarginBottom = <%% (isMac() ? 19 : 18), (isMac() ? 18 : 17), (isMac() ? 18 : 17), (isMac() ? 16 : 15), 17 %%>;
 
   services = serviceParsing().name;
   services.push("전체 보기");
@@ -558,6 +563,22 @@ FrontIndexJs.prototype.insertSearchBox = function () {
 
   createNode({
     mother: mainTong,
+    text: "원하는 스타일을 찾아보세요!",
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(standardWidth) + ea,
+      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
+      textAlign: "center",
+      fontSize: String(searchWordingSize) + ea,
+      fontWeight: String(searchWordingWeight),
+      color: colorChip.black,
+      marginBottom: String(searchWordingMarginBottom) + ea,
+    }
+  });
+
+  createNode({
+    mother: mainTong,
     style: {
       display: "block",
       position: "relative",
@@ -590,7 +611,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
             mode: "input",
             attribute: {
               type: "text",
-              placeholder: "새아파트",
+              placeholder: "화이트",
             },
             style: {
               position: "absolute",
