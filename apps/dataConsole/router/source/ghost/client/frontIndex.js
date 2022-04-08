@@ -309,6 +309,9 @@ FrontIndexJs.prototype.insertStrongBox = function () {
   let iconBottom;
   let iconRight;
 
+  if (mobile) {
+    return;
+  }
 
   if (media[0]) {
     strongContents = [
@@ -530,8 +533,8 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   let searchWordingCircleWidth;
   let searchWordingCircleTop, searchWordingCircleLeft;
 
-  mainPaddingTop = <%% 140, 130, 110, 90, 140 %%>;
-  mainPaddingBottom = <%% 150, 140, 120, 100, 150 %%>;
+  mainPaddingTop = <%% 140, 130, 110, 90, 4 %%>;
+  mainPaddingBottom = <%% 150, 140, 120, 100, 5 %%>;
 
   searchWordingSize = <%% 22, 21, 20, 18, 22 %%>;
   searchWordingWeight = <%% 600, 600, 600, 600, 600 %%>;
