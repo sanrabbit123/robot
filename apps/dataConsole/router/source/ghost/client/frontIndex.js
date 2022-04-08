@@ -99,11 +99,11 @@ FrontIndexJs.prototype.insertSlideBox = function () {
   interval = <%% 2700, 2700, 2700, 2700, 2700 %%>;
 
   naviHeight = <%% 72, 72, 66, 60, 60 %%>;
-  mainHeight = <%% 800, 640, 560, 450, 590 %%>;
+  mainHeight = <%% 800, 640, 560, 450, 70.5 %%>;
 
   randomNumber = <%% 5, 5, 5, 5, 5 %%>;
-  titlePadding = <%% 100, 75, 72, 58, 75 %%>;
-  titleSize = <%% 56, 45, 43, 36, 45 %%>;
+  titlePadding = <%% 100, 75, 72, 58, 8 %%>;
+  titleSize = <%% 56, 45, 43, 36, 6 %%>;
   titleWeight = <%% 700, 700, 700, 700, 700 %%>;
   lineHeight = <%% 1.3, 1.3, 1.3, 1.3, 1.3 %%>;
   titleContents = "집을 디자인하는\n새로운 방법, 홈리에종";
@@ -127,7 +127,7 @@ FrontIndexJs.prototype.insertSlideBox = function () {
     style: {
       display: "block",
       position: "relative",
-      paddingTop: String(naviHeight) + ea,
+      paddingTop: String(naviHeight) + "px",
       height: String(mainHeight) + ea,
       background: colorChip.gray1,
       animation: "justfadeinoriginal " + String(speed) + "s ease forwards",
@@ -135,7 +135,7 @@ FrontIndexJs.prototype.insertSlideBox = function () {
     children: [
       {
         style: {
-          display: "block",
+          display: desktop ? "block" : "none",
           position: "absolute",
           top: String(naviHeight) + ea,
           left: String(0),
@@ -155,39 +155,61 @@ FrontIndexJs.prototype.insertSlideBox = function () {
     mother: mainTong,
     style: {
       position: "relative",
-      width: String(standardWidth) + ea,
-      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
+      width: String(desktop ? standardWidth : 100) + ea,
+      left: desktop ? "calc(50% - " + String(standardWidth / 2) + ea + ")" : String(0),
       height: String(mainHeight) + ea,
     }
   });
 
   for (let i = 0; i < randomIndex.length; i++) {
     src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + randomIndex[i].contents.portfolio.pid + "/" + photoChar + String(randomIndex[i].contents.portfolio.detailInfo.photodae[1]) + randomIndex[i].contents.portfolio.pid + ".jpg";
-    createNode({
-      mother: photoTong,
-      style: {
-        position: "absolute",
-        top: String(0),
-        left: String(0),
-        width: String(100) + '%',
-        height: String(100) + '%',
-        backgroundImage: "url('" + src + "')",
-        backgroundPosition: "50% 68%",
-        backgroundSize: "100% auto",
-        transition: "opacity " + String(speed) + "s ease",
-        opacity: String(i !== randomIndex.length - 1 ? 0 : 1),
-      }
-    });
+    if (desktop) {
+      createNode({
+        mother: photoTong,
+        style: {
+          position: "absolute",
+          top: String(0),
+          left: String(0),
+          width: String(100) + '%',
+          height: String(100) + '%',
+          backgroundImage: "url('" + src + "')",
+          backgroundPosition: "50% 68%",
+          backgroundSize: "100% auto",
+          transition: "opacity " + String(speed) + "s ease",
+          opacity: String(i !== randomIndex.length - 1 ? 0 : 1),
+        }
+      });
+    } else {
+      createNode({
+        mother: photoTong,
+        attribute: {
+          toggle: String(i !== randomIndex.length - 1 ? 0 : 1)
+        },
+        style: {
+          position: "absolute",
+          top: String(0),
+          left: String(0),
+          width: String(100) + '%',
+          height: String(100) + '%',
+          backgroundImage: "url('" + src + "')",
+          backgroundPosition: "50% 68%",
+          backgroundSize: "100% auto",
+          transition: "opacity " + String(0) + "s ease",
+          transition: "transform " + String(speed) + "s ease",
+          transform: (i !== randomIndex.length - 1 ? "translateX(100" + ea + ")" : "translateX(0" + ea + ")"),
+        }
+      });
+    }
   }
 
   createNode({
     mother: mainTong,
     style: {
       position: "absolute",
-      width: String(standardWidth - (titlePadding * 2)) + ea,
-      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
-      paddingLeft: String(titlePadding) + ea,
-      paddingRight: String(titlePadding) + ea,
+      width: desktop ? String(standardWidth - (titlePadding * 2)) + ea : "",
+      left: desktop ? "calc(50% - " + String(standardWidth / 2) + ea + ")" : String(7.2) + ea,
+      paddingLeft: desktop ? String(titlePadding) + ea : "",
+      paddingRight: desktop ? String(titlePadding) + ea : "",
       bottom: String(titlePadding) + ea,
     },
     children: [
@@ -207,25 +229,57 @@ FrontIndexJs.prototype.insertSlideBox = function () {
     const toggle = mainTong.getAttribute("toggle");
     const children = [ ...photoTong.children ];
     let offIndex, onIndex;
-    if (toggle === "on") {
-      mainTong.firstChild.style.transformOrigin = "0% 100%";
+    if (desktop) {
+
+      if (toggle === "on") {
+        mainTong.firstChild.style.transformOrigin = "0% 100%";
+      } else {
+        mainTong.firstChild.style.transformOrigin = "100% 100%";
+      }
+      offIndex = children.findIndex((dom) => { return dom.style.opacity === String(1) });
+      onIndex = offIndex - 1;
+      if (onIndex < 0) {
+        onIndex = children.length - 1;
+      }
+      if (toggle === "on") {
+        mainTong.firstChild.style.transform = "scaleX(0)";
+        mainTong.setAttribute("toggle", "off");
+      } else {
+        mainTong.firstChild.style.transform = "scaleX(1)";
+        mainTong.setAttribute("toggle", "on");
+      }
+      children[offIndex].style.opacity = String(0);
+      children[onIndex].style.opacity = String(1);
+
     } else {
-      mainTong.firstChild.style.transformOrigin = "100% 100%";
+
+      offIndex = children.findIndex((dom) => { return dom.getAttribute("toggle") === String(1) });
+      onIndex = offIndex - 1;
+      if (onIndex < 0) {
+        onIndex = children.length - 1;
+      }
+      children[offIndex].setAttribute("toggle", String(0));
+      children[onIndex].setAttribute("toggle", String(1));
+
+      children[onIndex].style.opacity = String(1);
+      children[offIndex].style.opacity = String(1);
+
+      children[onIndex].style.transform = "translateX(0" + ea + ")";
+      children[offIndex].style.transform = "translateX(-100" + ea + ")";
+
+      for (let i = 0; i < children.length; i++) {
+        if (i !== onIndex && i !== offIndex) {
+          children[i].style.opacity = String(0);
+        }
+      }
+
+      for (let i = 0; i < children.length; i++) {
+        if (i !== onIndex && i !== offIndex) {
+          children[i].style.transform = "translateX(100" + ea + ")";
+        }
+      }
+
     }
-    offIndex = children.findIndex((dom) => { return dom.style.opacity === String(1) });
-    onIndex = offIndex - 1;
-    if (onIndex < 0) {
-      onIndex = children.length - 1;
-    }
-    if (toggle === "on") {
-      mainTong.firstChild.style.transform = "scaleX(0)";
-      mainTong.setAttribute("toggle", "off");
-    } else {
-      mainTong.firstChild.style.transform = "scaleX(1)";
-      mainTong.setAttribute("toggle", "on");
-    }
-    children[offIndex].style.opacity = String(0);
-    children[onIndex].style.opacity = String(1);
   }, interval);
 
 }
@@ -473,6 +527,8 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   let mainPaddingBottom;
   let viewLength;
   let searchWordingSize, searchWordingWeight, searchWordingMarginBottom;
+  let searchWordingCircleWidth;
+  let searchWordingCircleTop, searchWordingCircleLeft;
 
   mainPaddingTop = <%% 140, 130, 110, 90, 140 %%>;
   mainPaddingBottom = <%% 150, 140, 120, 100, 150 %%>;
@@ -480,6 +536,10 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   searchWordingSize = <%% 22, 21, 20, 18, 22 %%>;
   searchWordingWeight = <%% 600, 600, 600, 600, 600 %%>;
   searchWordingMarginBottom = <%% (isMac() ? 20 : 17), (isMac() ? 17 : 15), (isMac() ? 16 : 14), (isMac() ? 15 : 13), 17 %%>;
+
+  searchWordingCircleWidth = <%% 4, 4, 4, 3, 4 %%>;
+  searchWordingCircleTop = <%% 6, 6, 6, 5, 6 %%>;
+  searchWordingCircleLeft = <%% -6, -6, -6, -5, -6 %%>;
 
   services = serviceParsing().name;
   services.push("전체 보기");
@@ -563,18 +623,40 @@ FrontIndexJs.prototype.insertSearchBox = function () {
 
   createNode({
     mother: mainTong,
-    text: "원하는 스타일을 찾아보세요!",
+    text: "원하던 스타일을 찾아보세요!",
     style: {
       display: "block",
       position: "relative",
       width: String(standardWidth) + ea,
       left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
       textAlign: "center",
-      fontSize: String(searchWordingSize) + ea,
-      fontWeight: String(searchWordingWeight),
-      color: colorChip.black,
       marginBottom: String(searchWordingMarginBottom) + ea,
-    }
+    },
+    children: [
+      {
+        text: "원하던 스타일을 찾아보세요!",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(searchWordingSize) + ea,
+          fontWeight: String(searchWordingWeight),
+          color: colorChip.black,
+        },
+        children: [
+          {
+            style: {
+              position: "absolute",
+              left: String(searchWordingCircleLeft) + ea,
+              top: String(searchWordingCircleTop) + ea,
+              width: String(searchWordingCircleWidth) + ea,
+              height: String(searchWordingCircleWidth) + ea,
+              borderRadius: String(searchWordingCircleWidth) + ea,
+              background: colorChip.green,
+            }
+          }
+        ]
+      }
+    ]
   });
 
   createNode({
@@ -611,7 +693,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
             mode: "input",
             attribute: {
               type: "text",
-              placeholder: "화이트",
+              placeholder: "화이트 모던",
             },
             style: {
               position: "absolute",
