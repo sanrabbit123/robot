@@ -359,30 +359,30 @@ FrontIndexJs.prototype.insertStrongBox = function () {
   }
 
   speed = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
-  mainHeight = <%% 240, 240, 240, 240, 240 %%>;
-  margin = <%% 18, 16, 16, 12, 16 %%>;
-  blockNumber = strongContents.length;
+  mainHeight = <%% 240, 240, 240, 240, 40 %%>;
+  margin = <%% 18, 16, 16, 12, 2 %%>;
+  blockNumber = desktop ? strongContents.length : 1;
 
   tongPaddingLeft = <%% 60, 50, 0, 0, 0 %%>;
-  tongPaddingTop = <%% 70, 48, 36, 32, 48 %%>;
-  tongPaddingBottom = <%% 73, 52, 40, 36, 52 %%>;
+  tongPaddingTop = <%% 70, 48, 36, 32, 6 %%>;
+  tongPaddingBottom = <%% 73, 52, 40, 36, 7 %%>;
 
-  whiteTongPaddingLeft = <%% 32, 26, 26, 21, 26 %%>;
-  whiteTongPaddingTop = <%% 21, 18, 18, 15, 18 %%>;
-  whiteTongPaddingRight = <%% 84, 50, 50, 42, 50 %%>;
-  whiteTongPaddingBottom = <%% 28, 25, 24, 20, 26 %%>;
+  whiteTongPaddingLeft = <%% 32, 26, 26, 21, 2 %%>;
+  whiteTongPaddingTop = <%% 21, 18, 18, 15, 1 %%>;
+  whiteTongPaddingRight = <%% 84, 50, 50, 42, 5 %%>;
+  whiteTongPaddingBottom = <%% 28, 25, 24, 20, 2 %%>;
 
   whiteTongTitleSize = <%% 18, 16, 16, 14, 4 %%>;
   whiteTongTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
   whiteTongDescriptionSize = <%% 14, 13, 13, 11, 3 %%>;
   whiteTongDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
-  whiteTongDescriptionMarginTop = <%% 7, 7, 5, 5, 7 %%>;
+  whiteTongDescriptionMarginTop = <%% 7, 7, 5, 5, 2 %%>;
   whiteTongDescriptionLineHeight = <%% 1.55, 1.55, 1.55, 1.55, 1.55 %%>;
 
-  iconWidth = <%% 24, 24, 24, 18, 24 %%>;
-  iconBottom = <%% 32, 28, 28, 24, 28 %%>;
-  iconRight = <%% 28, 20, 20, 18, 20 %%>;
+  iconWidth = <%% 24, 24, 24, 18, 2 %%>;
+  iconBottom = <%% 32, 28, 28, 24, 2 %%>;
+  iconRight = <%% 28, 20, 20, 18, 2 %%>;
 
   mainTong = createNode({
     mother: totalContents,
@@ -406,7 +406,7 @@ FrontIndexJs.prototype.insertStrongBox = function () {
     }
   });
 
-  for (let i = 0; i < blockNumber; i++) {
+  for (let i = 0; i < strongContents.length; i++) {
     createNode({
       mother: blockTong,
       style: {
