@@ -533,7 +533,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   let searchWordingCircleWidth;
   let searchWordingCircleTop, searchWordingCircleLeft;
 
-  mainPaddingTop = <%% 140, 130, 110, 90, 4 %%>;
+  mainPaddingTop = <%% 140, 130, 110, 90, 7 %%>;
   mainPaddingBottom = <%% 150, 140, 120, 100, 5 %%>;
 
   searchWordingSize = <%% 22, 21, 20, 18, 22 %%>;
@@ -552,7 +552,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
 
   speed = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
 
-  searchTongWidth = <%% 640, 640, 560, 450, 640 %%>;
+  searchTongWidth = <%% 640, 640, 560, 450, standardWidth %%>;
   searchTongHeight = <%% 40, 40, 40, 40, 8 %%>;
 
   searchIconHeight = <%% 20, 20, 20, 20, 4 %%>;
@@ -563,14 +563,14 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   inputSize = <%% 15, 15, 15, 15, 3.1 %%>;
   inputWeight = <%% 300, 300, 300, 300, 300 %%>;
 
-  portfolioMargin = <%% 16, 16, 16, 16, 16 %%>;
+  portfolioMargin = <%% 16, 16, 16, 16, 3 %%>;
 
   columns = <%% 5, 4, 3, 3, 2 %%>;
   viewLength = <%% 9, 7, 8, 8, 9 %%>;
-  blockMarginBottom = <%% 60, 60, 60, 45, 60 %%>;
+  blockMarginBottom = <%% 60, 60, 60, 45, 8 %%>;
 
-  photoHeight = <%% 374, 352, 408, 320, 374 %%>;
-  photoMarginBottom = <%% 16, 16, 16, 16, 16 %%>;
+  photoHeight = <%% 374, 352, 408, 320, 60 %%>;
+  photoMarginBottom = <%% 16, 16, 16, 16, 2 %%>;
 
   garoSliceStart = <%% 5, 5, 5, 5, 5 %%>;
   garoSliceEnd = <%% 10, 10, 10, 10, 9 %%>;
@@ -584,17 +584,17 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
   quoteTop = <%% (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), isIphone() ? 1.2 : 1.1 %%>;
 
-  titleSize = <%% 17, 17, 17, 15, 17 %%>;
+  titleSize = <%% 17, 17, 17, 15, 3 %%>;
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
-  titleMarginLeft = <%% 5, 5, 5, 5, 5 %%>;
+  titleMarginLeft = <%% 5, 5, 5, 5, 1.1 %%>;
 
-  subTitleMarginTop = <%% 3, 3, 3, 3, 3 %%>;
-  subTitleSize = <%% 12, 12, 12, 12, 12 %%>;
+  subTitleMarginTop = <%% 3, 3, 3, 3, 0.5 %%>;
+  subTitleSize = <%% 12, 12, 12, 12, 2.5 %%>;
 
   subTitleOverWidthRatio = <%% 2, 2, 2, 2, 2 %%>;
-  tagTongOverWidthRatio = <%% 1.1, 1.1, 1.1, 1.1, 1.1 %%>;
+  tagTongOverWidthRatio = <%% 1.1, 1.1, 1.1, 1.1, 1.5 %%>;
 
-  tagTongMarginTop = <%% 11, 11, 11, 11, 11 %%>;
+  tagTongMarginTop = <%% 11, 11, 11, 11, 1.5 %%>;
 
   tagSize = <%% 10, 10, 10, 9, 2 %%>;
   tagWeight = <%% 500, 500, 500, 500, 500 %%>;
@@ -604,13 +604,13 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   tagPaddingBottom = <%% (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isIphone() ? 1.2 : 1.4) %%>;
   tagMarginRight = <%% 3, 3, 3, 3, 1 %%>;
 
-  portfolioBlockPaddingTop = <%% 70, 55, 45, 45, 60 %%>;
-  reviewBlockPaddingTop = <%% 20, 0, 0, 0, 10 %%>;
+  portfolioBlockPaddingTop = <%% 70, 55, 45, 45, 7 %%>;
+  reviewBlockPaddingTop = <%% 20, 0, 0, 0, 4 %%>;
 
-  blockTitleMarginBottom = <%% (isMac() ? 24 : 21), (isMac() ? 24 : 20), (isMac() ? 23 : 19), (isMac() ? 17 : 14), 24 %%>;
-  blockTitleSize = <%% 20, 20, 20, 18, 20 %%>;
+  blockTitleMarginBottom = <%% (isMac() ? 24 : 21), (isMac() ? 24 : 20), (isMac() ? 23 : 19), (isMac() ? 17 : 14), 3.2 %%>;
+  blockTitleSize = <%% 20, 20, 20, 18, 4.2 %%>;
   blockTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
-  blockWhitePaddingRight = <%% 15, 15, 15, 15, 15 %%>;
+  blockWhitePaddingRight = <%% 15, 15, 15, 15, 3 %%>;
 
   mainTong = createNode({
     mother: totalContents,
@@ -626,9 +626,8 @@ FrontIndexJs.prototype.insertSearchBox = function () {
 
   createNode({
     mother: mainTong,
-    text: "원하던 스타일을 찾아보세요!",
     style: {
-      display: "block",
+      display: desktop ? "block" : "none",
       position: "relative",
       width: String(standardWidth) + ea,
       left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
@@ -637,7 +636,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
     },
     children: [
       {
-        text: "원하던 스타일을 찾아보세요!",
+        text: "원하는 스타일을 찾아보세요!",
         style: {
           display: "inline-block",
           position: "relative",
@@ -777,7 +776,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   serviceBlock = createNode({
     mother: mainTong,
     style: {
-      display: "block",
+      display: desktop ? "block" : "none",
       position: "relative",
       textAlign: "center",
       paddingTop: String(serviceBlockPaddingTop) + ea,
