@@ -195,7 +195,8 @@ FrontIndexJs.prototype.insertSlideBox = function () {
           backgroundImage: "url('" + src + "')",
           backgroundPosition: "50% 68%",
           backgroundSize: "100% auto",
-          transition: "all " + String(0) + "s ease",
+          transition: "opacity " + String(0) + "s ease",
+          transition: "transform " + String(speed) + "s ease",
           transform: (i !== randomIndex.length - 1 ? "translateX(100" + ea + ")" : "translateX(0" + ea + ")"),
         }
       });
@@ -211,7 +212,6 @@ FrontIndexJs.prototype.insertSlideBox = function () {
       paddingLeft: desktop ? String(titlePadding) + ea : "",
       paddingRight: desktop ? String(titlePadding) + ea : "",
       bottom: String(titlePadding) + ea,
-      zIndex: String(1),
     },
     children: [
       {
@@ -262,26 +262,23 @@ FrontIndexJs.prototype.insertSlideBox = function () {
       children[offIndex].setAttribute("toggle", String(0));
       children[onIndex].setAttribute("toggle", String(1));
 
-      children[onIndex].style.zIndex = String(1);
-      children[onIndex].style.animation = "frontmobileslideon " + String(speed) + "s ease forwards";
-      children[offIndex].style.zIndex = String(1);
-      children[offIndex].style.animation = "frontmobileslideoff " + String(speed) + "s ease forwards";
+      children[onIndex].style.opacity = String(1);
+      children[offIndex].style.opacity = String(1);
+
+      children[onIndex].style.transform = "translateX(0" + ea + ")";
+      children[offIndex].style.transform = "translateX(-100" + ea + ")";
 
       for (let i = 0; i < children.length; i++) {
         if (i !== onIndex && i !== offIndex) {
-          children[i].style.zIndex = String(0);
-          children[i].style.animation = "";
+          children[i].style.opacity = String(0);
         }
       }
 
-      // children[onIndex].style.transform = "translateX(0" + ea + ")";
-      // children[offIndex].style.transform = "translateX(-100" + ea + ")";
-      //
-      // for (let i = 0; i < children.length; i++) {
-      //   if (i !== onIndex && i !== offIndex) {
-      //     children[i].style.transform = "translateX(100" + ea + ")";
-      //   }
-      // }
+      for (let i = 0; i < children.length; i++) {
+        if (i !== onIndex && i !== offIndex) {
+          children[i].style.transform = "translateX(100" + ea + ")";
+        }
+      }
 
     }
 
