@@ -1345,8 +1345,8 @@ FrontIndexJs.prototype.insertServiceBox = function () {
 
   tongPaddingLeft = <%% 0, 0, 0, 0, 0 %%>;
   tongPaddingTop = <%% 170, 120, 100, 70, 10 %%>;
-  tongPaddingBottom = <%% 200, 150, 120, 90, 10 %%>;
-  blockPaddingBottom = <%% 52, 17, 17, 17, 3 %%>;
+  tongPaddingBottom = <%% 200, 150, 120, 90, 12 %%>;
+  blockPaddingBottom = <%% 18, 17, 17, 17, 0 %%>;
 
   whiteTongPaddingLeft = <%% 32, 28, 28, 18, 4 %%>;
   whiteTongPaddingTop = <%% (isMac() ? 21 : 23), (isMac() ? 21 : 21), (isMac() ? 21 : 21), (isMac() ? 16 : 17), 3.5 %%>;
@@ -1369,8 +1369,8 @@ FrontIndexJs.prototype.insertServiceBox = function () {
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
   titleMarginBottom = <%% 40, 36, 32, 28, 4 %%>;
 
-  mainPictureHeight = <%% 460, 460, 380, 320, 38 %%>;
-  mainPictureWidth = <%% 1046, 1050, 900, 720, 88 %%>;
+  mainPictureHeight = <%% 600, 440, 380, 300, 36 %%>;
+  mainPictureWidth = standardWidth;
 
   indexNumberSize = <%% 22, 22, 22, 22, 2.5 %%>;
   indexNumberWeight = <%% 200, 200, 200, 200, 200 %%>;
@@ -1462,19 +1462,19 @@ FrontIndexJs.prototype.insertServiceBox = function () {
 
   blockTong = createNode({
     mother: mainTong,
-    event: {
-      mouseenter: (e) => {
-        if (intervalId !== null) {
-          clearInterval(intervalId);
-          intervalId = null;
-        }
-      },
-      mouseleave: (e) => {
-        if (intervalId === null) {
-          intervalId = setInterval(intervalFunction(), intervalTime);
-        }
-      }
-    },
+    // event: {
+    //   mouseenter: (e) => {
+    //     if (intervalId !== null) {
+    //       clearInterval(intervalId);
+    //       intervalId = null;
+    //     }
+    //   },
+    //   mouseleave: (e) => {
+    //     if (intervalId === null) {
+    //       intervalId = setInterval(intervalFunction(), intervalTime);
+    //     }
+    //   }
+    // },
     style: {
       display: "block",
       position: "relative",
@@ -1505,7 +1505,7 @@ FrontIndexJs.prototype.insertServiceBox = function () {
     style: {
       display: "block",
       position: "relative",
-      height: desktop ? String(mainPictureHeight) + ea : String(67) + ea,
+      height: String(mainPictureHeight) + ea,
       background: colorChip.white,
       paddingBottom: String(tongPaddingBottom) + ea,
       animation: "justfadeinoriginal " + String(speed) + "s ease forwards",
@@ -1607,59 +1607,59 @@ FrontIndexJs.prototype.insertServiceBox = function () {
            width: String(mainPictureWidth) + ea,
            height: String(mainPictureHeight) + ea,
            backgroundImage: "url('" + FrontIndexJs.binaryPath + "/" + serviceContents[i].image + "')",
-           backgroundSize: "auto 100%",
+           backgroundSize: "100% auto",
            backgroundPosition: "50% 50%",
            borderRadius: String(5) + "px",
            verticalAlign: "top",
          }
        },
-       {
-         text: serviceContents[i].detail,
-         style: {
-           display: desktop ? "inline-block" : "block",
-           position: (media[0] || mobile) ? "relative" : "absolute",
-           verticalAlign: "bottom",
-           fontSize: String(detailSize) + ea,
-           fontWeight: String(detailWeight),
-           color: colorChip.black,
-           lineHeight: String(detailLineHeight),
-           width: String(detailBoxWidth) + ea,
-           marginLeft: media[0] ? String(detailBoxMarginLeft) + ea : "",
-           textAlign: desktop ? "right" : "center",
-           right: (media[0] || mobile) ? "" : String(detailRight) + ea,
-           bottom: (media[0] || mobile) ? "" : String(detailBottom) + ea,
-           background: media[0] ? "" : colorChip.white,
-           paddingTop: media[0] ? "" : String(detailPaddingTop) + ea,
-           paddingLeft: media[0] ? "" : String(detailPaddingLeft) + ea,
-           paddingBottom: media[0] ? "" : String(detailPaddingBottom) + ea,
-           paddingRight: media[0] ? "" : String(detailPaddingRight) + ea,
-           borderRadius: media[0] ? "" : String(5) + "px",
-           opacity: media[0] ? "" : String(0.9),
-         },
-         bold: {
-           fontSize: String(detailSize) + ea,
-           fontWeight: String(detailBoldWeight),
-           color: colorChip.black,
-         }
-       },
-       {
-         text: "<b%#%b> " + String(i + 1),
-         style: {
-           display: media[0] ? "block" : "none",
-           position: "absolute",
-           right: String(0),
-           top: String(0) + ea,
-           fontSize: String(indexNumberBigSize) + ea,
-           fontWeight: String(indexNumberWeight),
-           fontFamily: "graphik",
-           color: colorChip.green,
-         },
-         bold: {
-           fontSize: String(indexNumberBigSize) + ea,
-           fontWeight: String(indexNumberWeight),
-           color: colorChip.whiteGreen,
-         }
-       }
+       // {
+       //   text: serviceContents[i].detail,
+       //   style: {
+       //     display: desktop ? "inline-block" : "block",
+       //     position: (media[0] || mobile) ? "relative" : "absolute",
+       //     verticalAlign: "bottom",
+       //     fontSize: String(detailSize) + ea,
+       //     fontWeight: String(detailWeight),
+       //     color: colorChip.black,
+       //     lineHeight: String(detailLineHeight),
+       //     width: String(detailBoxWidth) + ea,
+       //     marginLeft: media[0] ? String(detailBoxMarginLeft) + ea : "",
+       //     textAlign: desktop ? "right" : "center",
+       //     right: (media[0] || mobile) ? "" : String(detailRight) + ea,
+       //     bottom: (media[0] || mobile) ? "" : String(detailBottom) + ea,
+       //     background: media[0] ? "" : colorChip.white,
+       //     paddingTop: media[0] ? "" : String(detailPaddingTop) + ea,
+       //     paddingLeft: media[0] ? "" : String(detailPaddingLeft) + ea,
+       //     paddingBottom: media[0] ? "" : String(detailPaddingBottom) + ea,
+       //     paddingRight: media[0] ? "" : String(detailPaddingRight) + ea,
+       //     borderRadius: media[0] ? "" : String(5) + "px",
+       //     opacity: media[0] ? "" : String(0.9),
+       //   },
+       //   bold: {
+       //     fontSize: String(detailSize) + ea,
+       //     fontWeight: String(detailBoldWeight),
+       //     color: colorChip.black,
+       //   }
+       // },
+       // {
+       //   text: "<b%#%b> " + String(i + 1),
+       //   style: {
+       //     display: media[0] ? "block" : "none",
+       //     position: "absolute",
+       //     right: String(0),
+       //     top: String(0) + ea,
+       //     fontSize: String(indexNumberBigSize) + ea,
+       //     fontWeight: String(indexNumberWeight),
+       //     fontFamily: "graphik",
+       //     color: colorChip.green,
+       //   },
+       //   bold: {
+       //     fontSize: String(indexNumberBigSize) + ea,
+       //     fontWeight: String(indexNumberWeight),
+       //     color: colorChip.whiteGreen,
+       //   }
+       // }
      ]
    });
     targetBlocks0.push(block0);
