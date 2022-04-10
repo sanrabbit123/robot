@@ -95,7 +95,7 @@ FrontIndexJs.prototype.insertSlideBox = function () {
   let lineHeight;
   let titleContents;
 
-  speed = <%% 0.8, 0.8, 0.8, 0.8, 0.5 %%>;
+  speed = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
   interval = <%% 2700, 2700, 2700, 2700, 2700 %%>;
 
   naviHeight = <%% 72, 72, 66, 60, 60 %%>;
@@ -212,6 +212,7 @@ FrontIndexJs.prototype.insertSlideBox = function () {
       paddingLeft: desktop ? String(titlePadding) + ea : "",
       paddingRight: desktop ? String(titlePadding) + ea : "",
       bottom: String(titlePadding) + ea,
+      zIndex: String(1),
     },
     children: [
       {
@@ -262,17 +263,17 @@ FrontIndexJs.prototype.insertSlideBox = function () {
       children[offIndex].setAttribute("toggle", String(0));
       children[onIndex].setAttribute("toggle", String(1));
 
-      children[onIndex].style.opacity = String(1);
-      children[offIndex].style.opacity = String(1);
-
-      children[onIndex].style.transform = "translateX(0" + ea + ")";
-      children[offIndex].style.transform = "translateX(-100" + ea + ")";
+      children[onIndex].style.zIndex = String(1);
+      children[offIndex].style.zIndex = String(1);
 
       for (let i = 0; i < children.length; i++) {
         if (i !== onIndex && i !== offIndex) {
-          children[i].style.opacity = String(0);
+          children[i].style.zIndex = String(0);
         }
       }
+
+      children[onIndex].style.transform = "translateX(0" + ea + ")";
+      children[offIndex].style.transform = "translateX(-100" + ea + ")";
 
       for (let i = 0; i < children.length; i++) {
         if (i !== onIndex && i !== offIndex) {
@@ -281,6 +282,7 @@ FrontIndexJs.prototype.insertSlideBox = function () {
       }
 
     }
+
   }, interval);
 
 }
@@ -1338,14 +1340,14 @@ FrontIndexJs.prototype.insertServiceBox = function () {
     },
   ];
 
-  speed = <%% 0.8, 0.8, 0.8, 0.8, 0 %%>;
+  speed = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
   mainHeight = <%% 240, 240, 240, 240, 48 %%>;
   margin = <%% 16, 16, 16, 10, 2 %%>;
   blockNumber = serviceContents.length;
 
   tongPaddingLeft = <%% 0, 0, 0, 0, 0 %%>;
   tongPaddingTop = <%% 170, 120, 100, 70, 10 %%>;
-  tongPaddingBottom = <%% 200, 150, 120, 90, 14 %%>;
+  tongPaddingBottom = <%% 200, 150, 120, 90, 15 %%>;
   blockPaddingBottom = <%% 18, 17, 17, 17, 0 %%>;
 
   whiteTongPaddingLeft = <%% 32, 28, 28, 18, 4 %%>;
