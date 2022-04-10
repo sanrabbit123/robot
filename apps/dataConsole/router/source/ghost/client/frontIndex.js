@@ -1345,7 +1345,7 @@ FrontIndexJs.prototype.insertServiceBox = function () {
 
   tongPaddingLeft = <%% 0, 0, 0, 0, 0 %%>;
   tongPaddingTop = <%% 170, 120, 100, 70, 10 %%>;
-  tongPaddingBottom = <%% 200, 150, 120, 90, 12 %%>;
+  tongPaddingBottom = <%% 200, 150, 120, 90, 13 %%>;
   blockPaddingBottom = <%% 18, 17, 17, 17, 0 %%>;
 
   whiteTongPaddingLeft = <%% 32, 28, 28, 18, 4 %%>;
