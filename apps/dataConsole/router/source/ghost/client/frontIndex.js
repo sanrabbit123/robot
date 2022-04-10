@@ -263,22 +263,25 @@ FrontIndexJs.prototype.insertSlideBox = function () {
       children[onIndex].setAttribute("toggle", String(1));
 
       children[onIndex].style.zIndex = String(1);
+      children[onIndex].style.animation = "frontmobileslideon " + String(speed) + "s ease forwards";
       children[offIndex].style.zIndex = String(1);
+      children[offIndex].style.animation = "frontmobileslideoff " + String(speed) + "s ease forwards";
 
       for (let i = 0; i < children.length; i++) {
         if (i !== onIndex && i !== offIndex) {
           children[i].style.zIndex = String(0);
+          children[i].style.animation = "";
         }
       }
 
-      children[onIndex].style.transform = "translateX(0" + ea + ")";
-      children[offIndex].style.transform = "translateX(-100" + ea + ")";
-
-      for (let i = 0; i < children.length; i++) {
-        if (i !== onIndex && i !== offIndex) {
-          children[i].style.transform = "translateX(100" + ea + ")";
-        }
-      }
+      // children[onIndex].style.transform = "translateX(0" + ea + ")";
+      // children[offIndex].style.transform = "translateX(-100" + ea + ")";
+      //
+      // for (let i = 0; i < children.length; i++) {
+      //   if (i !== onIndex && i !== offIndex) {
+      //     children[i].style.transform = "translateX(100" + ea + ")";
+      //   }
+      // }
 
     }
 

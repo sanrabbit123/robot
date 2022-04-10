@@ -757,6 +757,9 @@ GeneralJs.prototype.generalCss = function () {
     }
   }
 
+  @keyframes frontmobileslideon{from{transform:translateX(100vw);}to{transform:translateX(0vw);}}
+  @keyframes frontmobileslideoff{from{transform:translateX(0vw);}to{transform:translateX(-100vw);}}
+
   .justfadeinoriginal{animation:justfadeinoriginal 0.3s ease forwards;}
   .justfadeoutoriginal{animation:justfadeoutoriginal 0.3s ease forwards;}
   .justfadein{animation:justfadein 0.3s ease forwards;}
