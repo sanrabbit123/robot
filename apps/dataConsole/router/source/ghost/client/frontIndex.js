@@ -489,6 +489,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   const mobile = media[4];
   const desktop = !mobile;
   const photoChar = 't';
+  const photoCharMobile = "mot";
   let speed;
   let mainHeight;
   let mainTong;
@@ -839,7 +840,12 @@ FrontIndexJs.prototype.insertSearchBox = function () {
 
     ({ contents } = contentsArr[i]);
 
-    src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.portfolio.pid + "/" + photoChar + String(contents.portfolio.detailInfo.photodae[i === 0 ? 1 : 0]) + contents.portfolio.pid + ".jpg";
+    if (desktop) {
+      src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.portfolio.pid + "/" + photoChar + String(contents.portfolio.detailInfo.photodae[i === 0 ? 1 : 0]) + contents.portfolio.pid + ".jpg";
+    } else {
+      src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.portfolio.pid + "/mobile/" + photoCharMobile + String(contents.portfolio.detailInfo.photodae[i === 0 ? 1 : 0]) + contents.portfolio.pid + ".jpg";
+    }
+
     title = contents.portfolio.title.main.split(", ")[1];
     if (media[0] || media[2]) {
       subTitle = contents.portfolio.title.sub;
@@ -1019,7 +1025,12 @@ FrontIndexJs.prototype.insertSearchBox = function () {
 
     ({ contents } = reviewArr[i]);
 
-    src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.portfolio.pid + "/" + photoChar + String(contents.review.detailInfo.photodae[i === 0 ? 1 : 0]) + contents.portfolio.pid + ".jpg";
+    if (desktop) {
+      src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.portfolio.pid + "/" + photoChar + String(contents.review.detailInfo.photodae[i === 0 ? 1 : 0]) + contents.portfolio.pid + ".jpg";
+    } else {
+      src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.portfolio.pid + "/mobile/" + photoCharMobile + String(contents.review.detailInfo.photodae[i === 0 ? 1 : 0]) + contents.portfolio.pid + ".jpg";
+    }
+
     title = contents.review.title.sub.split(", ").join(" ");
     if (media[0] || media[2]) {
       subTitle = contents.portfolio.title.sub;
@@ -1143,7 +1154,6 @@ FrontIndexJs.prototype.insertSearchBox = function () {
         }
       })
     }
-
 
   }
 
