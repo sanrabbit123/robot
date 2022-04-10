@@ -131,6 +131,7 @@ FrontIndexJs.prototype.insertSlideBox = function () {
       height: String(mainHeight) + ea,
       background: colorChip.gray1,
       animation: "justfadeinoriginal " + String(speed) + "s ease forwards",
+      overflow: "hidden",
     },
     children: [
       {
@@ -284,7 +285,7 @@ FrontIndexJs.prototype.insertSlideBox = function () {
 
 }
 
-FrontIndexJs.prototype.insertStrongBox = function () {
+FrontIndexJs.prototype.insertStrongBox = function (force = false) {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media, totalContents, standardWidth } = this;
@@ -308,8 +309,9 @@ FrontIndexJs.prototype.insertStrongBox = function () {
   let whiteTongDescriptionLineHeight;
   let iconBottom;
   let iconRight;
+  let blockMarginBottom;
 
-  if (mobile) {
+  if (mobile && !force) {
     return;
   }
 
@@ -364,28 +366,30 @@ FrontIndexJs.prototype.insertStrongBox = function () {
   speed = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
   mainHeight = <%% 240, 240, 240, 240, 40 %%>;
   margin = <%% 18, 16, 16, 12, 2 %%>;
-  blockNumber = desktop ? strongContents.length : 1;
+  blockNumber = desktop ? strongContents.length : 2;
 
   tongPaddingLeft = <%% 60, 50, 0, 0, 0 %%>;
-  tongPaddingTop = <%% 70, 48, 36, 32, 6 %%>;
-  tongPaddingBottom = <%% 73, 52, 40, 36, 7 %%>;
+  tongPaddingTop = <%% 70, 48, 36, 32, 6.5 %%>;
+  tongPaddingBottom = <%% 73, 52, 40, 36, 4.5 %%>;
 
-  whiteTongPaddingLeft = <%% 32, 26, 26, 21, 2 %%>;
-  whiteTongPaddingTop = <%% 21, 18, 18, 15, 1 %%>;
+  whiteTongPaddingLeft = <%% 32, 26, 26, 21, 4 %%>;
+  whiteTongPaddingTop = <%% 21, 18, 18, 15, 3.5 %%>;
   whiteTongPaddingRight = <%% 84, 50, 50, 42, 5 %%>;
-  whiteTongPaddingBottom = <%% 28, 25, 24, 20, 2 %%>;
+  whiteTongPaddingBottom = <%% 28, 25, 24, 20, 4 %%>;
 
-  whiteTongTitleSize = <%% 18, 16, 16, 14, 4 %%>;
+  whiteTongTitleSize = <%% 18, 16, 16, 14, 3.5 %%>;
   whiteTongTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  whiteTongDescriptionSize = <%% 14, 13, 13, 11, 3 %%>;
+  whiteTongDescriptionSize = <%% 14, 13, 13, 11, 2.5 %%>;
   whiteTongDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
-  whiteTongDescriptionMarginTop = <%% 7, 7, 5, 5, 2 %%>;
+  whiteTongDescriptionMarginTop = <%% 7, 7, 5, 5, 1.2 %%>;
   whiteTongDescriptionLineHeight = <%% 1.55, 1.55, 1.55, 1.55, 1.55 %%>;
 
-  iconWidth = <%% 24, 24, 24, 18, 2 %%>;
-  iconBottom = <%% 32, 28, 28, 24, 2 %%>;
-  iconRight = <%% 28, 20, 20, 18, 2 %%>;
+  iconWidth = <%% 24, 24, 24, 18, 5 %%>;
+  iconBottom = <%% 32, 28, 28, 24, 4.8 %%>;
+  iconRight = <%% 28, 20, 20, 18, 2.8 %%>;
+
+  blockMarginBottom = <%% 3, 3, 3, 3, 2 %%>;
 
   mainTong = createNode({
     mother: totalContents,
@@ -424,6 +428,7 @@ FrontIndexJs.prototype.insertStrongBox = function () {
         borderRadius: String(5) + "px",
         background: colorChip.white,
         boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
+        marginBottom: desktop ? "" : String(blockMarginBottom) + ea,
       },
       children: [
         {
@@ -533,7 +538,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   let searchWordingCircleWidth;
   let searchWordingCircleTop, searchWordingCircleLeft;
 
-  mainPaddingTop = <%% 140, 130, 110, 90, 7 %%>;
+  mainPaddingTop = <%% 140, 130, 110, 90, 6 %%>;
   mainPaddingBottom = <%% 150, 140, 120, 100, 5 %%>;
 
   searchWordingSize = <%% 22, 21, 20, 18, 22 %%>;
@@ -608,7 +613,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   reviewBlockPaddingTop = <%% 20, 0, 0, 0, 4 %%>;
 
   blockTitleMarginBottom = <%% (isMac() ? 24 : 21), (isMac() ? 24 : 20), (isMac() ? 23 : 19), (isMac() ? 17 : 14), 3.2 %%>;
-  blockTitleSize = <%% 20, 20, 20, 18, 4.2 %%>;
+  blockTitleSize = <%% 20, 20, 20, 18, 4 %%>;
   blockTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
   blockWhitePaddingRight = <%% 15, 15, 15, 15, 3 %%>;
 
@@ -695,7 +700,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
             mode: "input",
             attribute: {
               type: "text",
-              placeholder: "화이트 모던",
+              placeholder: desktop ? "화이트 모던" : "원하는 스타일을 찾아보세요!",
             },
             style: {
               position: "absolute",
@@ -1135,6 +1140,10 @@ FrontIndexJs.prototype.insertSearchBox = function () {
 
   }
 
+  if (mobile) {
+    this.insertStrongBox(true);
+  }
+
 }
 
 FrontIndexJs.prototype.insertBlackBox = function () {
@@ -1154,23 +1163,23 @@ FrontIndexJs.prototype.insertBlackBox = function () {
   let buttonSize, buttonWeight;
   let buttonTextTop;
 
-  tongPaddingTop = <%% 44, 44, 44, 40, 44 %%>;
-  tongPaddingBottom = <%% 56, 56, 56, 52, 56 %%>;
+  tongPaddingTop = <%% 44, 44, 44, 40, 4.2 %%>;
+  tongPaddingBottom = <%% 56, 56, 56, 52, 5.5 %%>;
 
-  titleSize = <%% 37, 35, 32, 28, 33 %%>;
+  titleSize = <%% 37, 35, 32, 28, 4 %%>;
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-  subTitleSize = <%% 16, 16, 15, 13, 15 %%>;
+  subTitleSize = <%% 16, 16, 15, 13, 0 %%>;
   subTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
   subTitleMarginLeft = <%% 11, 10, 10, 10, 10 %%>;
 
-  buttonTop = <%% 55, 55, 53, 48, 55 %%>;
-  buttonWidth = <%% 140, 135, 133, 125, 133 %%>;
-  buttonHeight = <%% 40, 38, 36, 33, 36 %%>;
+  buttonTop = <%% 55, 55, 53, 48, 4.5 %%>;
+  buttonWidth = <%% 140, 135, 133, 125, 20 %%>;
+  buttonHeight = <%% 40, 38, 36, 33, 5.8 %%>;
 
-  buttonSize = <%% 15, 14, 14, 13, 14 %%>;
+  buttonSize = <%% 15, 14, 14, 13, 2.5 %%>;
   buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
-  buttonTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -2 %%>;
+  buttonTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
 
   mainTong = createNode({
     mother: totalContents,
@@ -1330,57 +1339,57 @@ FrontIndexJs.prototype.insertServiceBox = function () {
   ];
 
   speed = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
-  mainHeight = <%% 240, 240, 240, 240, 240 %%>;
-  margin = <%% 16, 16, 16, 10, 16 %%>;
+  mainHeight = <%% 240, 240, 240, 240, 48 %%>;
+  margin = <%% 16, 16, 16, 10, 2 %%>;
   blockNumber = serviceContents.length;
 
   tongPaddingLeft = <%% 0, 0, 0, 0, 0 %%>;
-  tongPaddingTop = <%% 170, 120, 100, 70, 120 %%>;
-  tongPaddingBottom = <%% 200, 150, 120, 90, 150 %%>;
-  blockPaddingBottom = <%% 52, 17, 17, 17, 17 %%>;
+  tongPaddingTop = <%% 170, 120, 100, 70, 10 %%>;
+  tongPaddingBottom = <%% 200, 150, 120, 90, 10 %%>;
+  blockPaddingBottom = <%% 52, 17, 17, 17, 3 %%>;
 
-  whiteTongPaddingLeft = <%% 32, 28, 28, 18, 28 %%>;
-  whiteTongPaddingTop = <%% (isMac() ? 21 : 23), (isMac() ? 21 : 21), (isMac() ? 21 : 21), (isMac() ? 16 : 17), 21 %%>;
-  whiteTongPaddingRight = <%% 84, 28, 28, 12, 28 %%>;
-  whiteTongPaddingBottom = <%% (isMac() ? 28 : 24), (isMac() ? 26 : 22), (isMac() ? 26 : 22), (isMac() ? 18 : 17), 26 %%>;
+  whiteTongPaddingLeft = <%% 32, 28, 28, 18, 4 %%>;
+  whiteTongPaddingTop = <%% (isMac() ? 21 : 23), (isMac() ? 21 : 21), (isMac() ? 21 : 21), (isMac() ? 16 : 17), 3.5 %%>;
+  whiteTongPaddingRight = <%% 84, 28, 28, 12, 2 %%>;
+  whiteTongPaddingBottom = <%% (isMac() ? 28 : 24), (isMac() ? 26 : 22), (isMac() ? 26 : 22), (isMac() ? 18 : 17), 4 %%>;
 
-  whiteTongTitleSize = <%% 18, 15, 15, 13, 18 %%>;
+  whiteTongTitleSize = <%% 18, 15, 15, 13, 3.5 %%>;
   whiteTongTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  whiteTongDescriptionSize = <%% 14, 13, 12, 11, 14 %%>;
+  whiteTongDescriptionSize = <%% 14, 13, 12, 11, 2.5 %%>;
   whiteTongDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
-  whiteTongDescriptionMarginTop = <%% 7, 5, 5, 5, 5 %%>;
+  whiteTongDescriptionMarginTop = <%% 7, 5, 5, 5, 1.2 %%>;
   whiteTongDescriptionLineHeight = <%% 1.55, 1.55, 1.55, 1.55, 1.55 %%>;
 
-  iconWidth = <%% 24, 24, 24, 24, 24 %%>;
-  iconBottom = <%% (isMac() ? 30 : 24), (isMac() ? 30 : 24), (isMac() ? 30 : 24), (isMac() ? 30 : 24), 32 %%>;
-  iconRight = <%% 28, 28, 28, 28, 28 %%>;
+  iconWidth = <%% 24, 24, 24, 24, 4 %%>;
+  iconBottom = <%% (isMac() ? 30 : 24), (isMac() ? 30 : 24), (isMac() ? 30 : 24), (isMac() ? 30 : 24), 2 %%>;
+  iconRight = <%% 28, 28, 28, 28, 2 %%>;
 
-  titleSize = <%% 24, 23, 23, 21, 23 %%>;
+  titleSize = <%% 24, 23, 23, 21, 4 %%>;
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
-  titleMarginBottom = <%% 40, 36, 32, 28, 36 %%>;
+  titleMarginBottom = <%% 40, 36, 32, 28, 4 %%>;
 
-  mainPictureHeight = <%% 460, 460, 380, 320, 460 %%>;
-  mainPictureWidth = <%% 1046, 1050, 900, 720, 1050 %%>;
+  mainPictureHeight = <%% 460, 460, 380, 320, 38 %%>;
+  mainPictureWidth = <%% 1046, 1050, 900, 720, 88 %%>;
 
-  indexNumberSize = <%% 22, 22, 22, 22, 22 %%>;
+  indexNumberSize = <%% 22, 22, 22, 22, 2.5 %%>;
   indexNumberWeight = <%% 200, 200, 200, 200, 200 %%>;
   indexNumberBigSize = <%% 24, 24, 24, 24, 24 %%>;
 
-  detailSize = <%% 14, 13, 12, 11, 13 %%>;
+  detailSize = <%% 14, 13, 12, 11, 3 %%>;
   detailWeight = <%% 400, 400, 400, 400, 400 %%>;
   detailLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
-  detailBoxWidth = <%% 300, 240, 240, 240, 240 %%>;
+  detailBoxWidth = <%% 300, 240, 240, 240, 88 %%>;
   detailBoxMarginLeft = <%% 52, 52, 52, 52, 52 %%>;
   detailBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
 
   detailRight = <%% 30, 30, 30, 30, 30 %%>;
   detailBottom = <%% 30, 30, 30, 30, 30 %%>;
-  detailPaddingTop = <%% 18, 18, 18, 18, 18 %%>;
-  detailPaddingBottom = <%% (isMac() ? 20 : 18), (isMac() ? 20 : 18), (isMac() ? 20 : 18), (isMac() ? 20 : 18), 21 %%>;
-  detailPaddingLeft = <%% 24, 25, 25, 25, 25 %%>;
-  detailPaddingRight = <%% 24, 25, 25, 25, 25 %%>;
+  detailPaddingTop = <%% 18, 18, 18, 18, 4 %%>;
+  detailPaddingBottom = <%% (isMac() ? 20 : 18), (isMac() ? 20 : 18), (isMac() ? 20 : 18), (isMac() ? 20 : 18), 0 %%>;
+  detailPaddingLeft = <%% 24, 25, 25, 25, 0 %%>;
+  detailPaddingRight = <%% 24, 25, 25, 25, 0 %%>;
 
   intervalFunction = function (next = null) {
     return async () => {
@@ -1496,7 +1505,7 @@ FrontIndexJs.prototype.insertServiceBox = function () {
     style: {
       display: "block",
       position: "relative",
-      height: String(mainPictureHeight) + ea,
+      height: desktop ? String(mainPictureHeight) + ea : String(67) + ea,
       background: colorChip.white,
       paddingBottom: String(tongPaddingBottom) + ea,
       animation: "justfadeinoriginal " + String(speed) + "s ease forwards",
@@ -1519,12 +1528,13 @@ FrontIndexJs.prototype.insertServiceBox = function () {
       style: {
         display: "inline-block",
         position: "relative",
-        width: "calc(calc(calc(100% - " + String(margin * blockNumber) + ea + ") / " + String(blockNumber) + ") - " + String(whiteTongPaddingLeft + whiteTongPaddingRight) + ea + ")",
+        width: "calc(calc(calc(100% - " + String(margin * (desktop ? blockNumber : 2)) + ea + ") / " + String((desktop ? blockNumber : 2)) + ") - " + String(whiteTongPaddingLeft + whiteTongPaddingRight) + ea + ")",
         paddingTop: String(whiteTongPaddingTop) + ea,
         paddingLeft: String(whiteTongPaddingLeft) + ea,
         paddingRight: String(whiteTongPaddingRight) + ea,
         paddingBottom: String(whiteTongPaddingBottom) + ea,
         marginRight: String(margin) + ea,
+        marginBottom: desktop ? "" : String(margin) + ea,
         borderRadius: String(5) + "px",
         background: i === 0 ? colorChip.white : colorChip.gray1,
         boxShadow: i === 0 ? "0px 3px 16px -9px " + colorChip.shadow : "",
@@ -1606,8 +1616,8 @@ FrontIndexJs.prototype.insertServiceBox = function () {
        {
          text: serviceContents[i].detail,
          style: {
-           display: "inline-block",
-           position: media[0] ? "relative" : "absolute",
+           display: desktop ? "inline-block" : "block",
+           position: (media[0] || mobile) ? "relative" : "absolute",
            verticalAlign: "bottom",
            fontSize: String(detailSize) + ea,
            fontWeight: String(detailWeight),
@@ -1615,9 +1625,9 @@ FrontIndexJs.prototype.insertServiceBox = function () {
            lineHeight: String(detailLineHeight),
            width: String(detailBoxWidth) + ea,
            marginLeft: media[0] ? String(detailBoxMarginLeft) + ea : "",
-           textAlign: "right",
-           right: media[0] ? "" : String(detailRight) + ea,
-           bottom: media[0] ? "" : String(detailBottom) + ea,
+           textAlign: desktop ? "right" : "center",
+           right: (media[0] || mobile) ? "" : String(detailRight) + ea,
+           bottom: (media[0] || mobile) ? "" : String(detailBottom) + ea,
            background: media[0] ? "" : colorChip.white,
            paddingTop: media[0] ? "" : String(detailPaddingTop) + ea,
            paddingLeft: media[0] ? "" : String(detailPaddingLeft) + ea,
@@ -1674,14 +1684,14 @@ FrontIndexJs.prototype.insertEndBox = function () {
   let menuBetween;
   let copyRightSize, copyRightWeight;
 
-  tongPaddingTop = <%% 54, 54, 48, 32, 54 %%>;
-  tongPaddingBottom = <%% 66, 66, 55, 39, 66 %%>;
+  tongPaddingTop = <%% 54, 54, 48, 32, 4.5 %%>;
+  tongPaddingBottom = <%% 66, 66, 55, 39, 5.5 %%>;
 
   fontSize = <%% 18, 17, 16, 14, 17 %%>;
   fontWeight = <%% 600, 600, 600, 600, 600 %%>;
   menuBetween = <%% 55, 48, 44, 32, 48 %%>;
 
-  copyRightSize = <%% 17, 16, 15, 13, 16 %%>;
+  copyRightSize = <%% 17, 16, 15, 13, 2.8 %%>;
   copyRightWeight = <%% 400, 400, 400, 400, 400 %%>;
 
   mainTong = createNode({
@@ -1710,7 +1720,7 @@ FrontIndexJs.prototype.insertEndBox = function () {
     mother: blockTong,
     text: "디자이너 파트너쉽",
     style: {
-      display: "inline-block",
+      display: desktop ? "inline-block" : "none",
       position: "relative",
       fontSize: String(fontSize) + ea,
       fontWeight: String(fontWeight),
@@ -1718,13 +1728,13 @@ FrontIndexJs.prototype.insertEndBox = function () {
       cursor: "pointer",
       top: (isMac() || mobile) ? String(0) : String(3) + ea,
     }
-  })
+  });
 
   createNode({
     mother: blockTong,
     text: "자주 찾는 질문",
     style: {
-      display: "inline-block",
+      display: desktop ? "inline-block" : "none",
       position: "relative",
       fontSize: String(fontSize) + ea,
       fontWeight: String(fontWeight),
@@ -1733,13 +1743,13 @@ FrontIndexJs.prototype.insertEndBox = function () {
       cursor: "pointer",
       top: (isMac() || mobile) ? String(0) : String(3) + ea,
     }
-  })
+  });
 
   createNode({
     mother: blockTong,
     text: "제휴 문의",
     style: {
-      display: "inline-block",
+      display: desktop ? "inline-block" : "none",
       position: "relative",
       fontSize: String(fontSize) + ea,
       fontWeight: String(fontWeight),
@@ -1748,22 +1758,24 @@ FrontIndexJs.prototype.insertEndBox = function () {
       cursor: "pointer",
       top: (isMac() || mobile) ? String(0) : String(3) + ea,
     }
-  })
+  });
 
   createNode({
     mother: blockTong,
     text: "Copyright " + String((new Date()).getFullYear()) + " HomeLiaison Inc. All rights reserved.",
     style: {
       display: "inline-block",
-      position: "absolute",
-      top: String(tongPaddingTop) + ea,
-      right: String(0),
+      position: desktop ? "absolute" : "relative",
+      top: desktop ? String(tongPaddingTop) + ea : "",
+      right: desktop ? String(0) : "",
       fontSize: String(copyRightSize) + ea,
       fontWeight: String(copyRightWeight),
       fontFamily: "graphik",
       color: colorChip.black,
+      textAlign: desktop ? "" : "center",
+      width: desktop ? "" : String(100) + '%',
     }
-  })
+  });
 
 }
 
