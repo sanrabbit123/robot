@@ -79,6 +79,7 @@ FrontIndexJs.prototype.insertSlideBox = function () {
   const mobile = media[4];
   const desktop = !mobile;
   const photoChar = 'b';
+  const photoCharMobile = "mot";
   let speed;
   let naviHeight;
   let mainHeight;
@@ -163,8 +164,10 @@ FrontIndexJs.prototype.insertSlideBox = function () {
   });
 
   for (let i = 0; i < randomIndex.length; i++) {
-    src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + randomIndex[i].contents.portfolio.pid + "/" + photoChar + String(randomIndex[i].contents.portfolio.detailInfo.photodae[1]) + randomIndex[i].contents.portfolio.pid + ".jpg";
     if (desktop) {
+
+      src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + randomIndex[i].contents.portfolio.pid + "/" + photoChar + String(randomIndex[i].contents.portfolio.detailInfo.photodae[1]) + randomIndex[i].contents.portfolio.pid + ".jpg";
+
       createNode({
         mother: photoTong,
         style: {
@@ -181,6 +184,9 @@ FrontIndexJs.prototype.insertSlideBox = function () {
         }
       });
     } else {
+
+      src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + randomIndex[i].contents.portfolio.pid + "/mobile/" + photoCharMobile + String(randomIndex[i].contents.portfolio.detailInfo.photodae[1]) + randomIndex[i].contents.portfolio.pid + ".jpg";
+
       createNode({
         mother: photoTong,
         attribute: {
