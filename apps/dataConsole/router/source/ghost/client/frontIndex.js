@@ -195,7 +195,7 @@ FrontIndexJs.prototype.insertSlideBox = function () {
           backgroundImage: "url('" + src + "')",
           backgroundPosition: "50% 68%",
           backgroundSize: "100% auto",
-          transition: "all " + String(speed) + "s ease",
+          transition: "all " + String(0) + "s ease",
           transform: (i !== randomIndex.length - 1 ? "translateX(100" + ea + ")" : "translateX(0" + ea + ")"),
         }
       });
@@ -274,11 +274,11 @@ FrontIndexJs.prototype.insertSlideBox = function () {
       children[onIndex].style.transform = "translateX(0" + ea + ")";
       children[offIndex].style.transform = "translateX(-100" + ea + ")";
 
-      // for (let i = 0; i < children.length; i++) {
-      //   if (i !== onIndex && i !== offIndex) {
-      //     children[i].style.transform = "translateX(100" + ea + ")";
-      //   }
-      // }
+      for (let i = 0; i < children.length; i++) {
+        if (i !== onIndex && i !== offIndex) {
+          children[i].style.transform = "translateX(100" + ea + ")";
+        }
+      }
 
     }
 
