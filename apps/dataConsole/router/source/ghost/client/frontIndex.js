@@ -95,7 +95,7 @@ FrontIndexJs.prototype.insertSlideBox = function () {
   let lineHeight;
   let titleContents;
 
-  speed = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
+  speed = <%% 0.8, 0.8, 0.8, 0.8, 0.5 %%>;
   interval = <%% 2700, 2700, 2700, 2700, 2700 %%>;
 
   naviHeight = <%% 72, 72, 66, 60, 60 %%>;
@@ -538,7 +538,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   let searchWordingCircleWidth;
   let searchWordingCircleTop, searchWordingCircleLeft;
 
-  mainPaddingTop = <%% 140, 130, 110, 90, 6 %%>;
+  mainPaddingTop = <%% 140, 130, 110, 90, 8 %%>;
   mainPaddingBottom = <%% 150, 140, 120, 100, 5 %%>;
 
   searchWordingSize = <%% 22, 21, 20, 18, 22 %%>;
@@ -1179,7 +1179,7 @@ FrontIndexJs.prototype.insertBlackBox = function () {
 
   buttonSize = <%% 15, 14, 14, 13, 2.5 %%>;
   buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
-  buttonTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
+  buttonTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isIphone() ? 0 : -0.3) %%>;
 
   mainTong = createNode({
     mother: totalContents,
@@ -1338,18 +1338,18 @@ FrontIndexJs.prototype.insertServiceBox = function () {
     },
   ];
 
-  speed = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
+  speed = <%% 0.8, 0.8, 0.8, 0.8, 0 %%>;
   mainHeight = <%% 240, 240, 240, 240, 48 %%>;
   margin = <%% 16, 16, 16, 10, 2 %%>;
   blockNumber = serviceContents.length;
 
   tongPaddingLeft = <%% 0, 0, 0, 0, 0 %%>;
   tongPaddingTop = <%% 170, 120, 100, 70, 10 %%>;
-  tongPaddingBottom = <%% 200, 150, 120, 90, 13 %%>;
+  tongPaddingBottom = <%% 200, 150, 120, 90, 14 %%>;
   blockPaddingBottom = <%% 18, 17, 17, 17, 0 %%>;
 
   whiteTongPaddingLeft = <%% 32, 28, 28, 18, 4 %%>;
-  whiteTongPaddingTop = <%% (isMac() ? 21 : 23), (isMac() ? 21 : 21), (isMac() ? 21 : 21), (isMac() ? 16 : 17), 3.5 %%>;
+  whiteTongPaddingTop = <%% (isMac() ? 21 : 23), (isMac() ? 21 : 21), (isMac() ? 21 : 21), (isMac() ? 16 : 17), 3.2 %%>;
   whiteTongPaddingRight = <%% 84, 28, 28, 12, 2 %%>;
   whiteTongPaddingBottom = <%% (isMac() ? 28 : 24), (isMac() ? 26 : 22), (isMac() ? 26 : 22), (isMac() ? 18 : 17), 4 %%>;
 
