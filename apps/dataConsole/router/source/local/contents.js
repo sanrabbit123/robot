@@ -180,7 +180,7 @@ ContentsJs.prototype.spreadContents = function (search = null) {
 ContentsJs.prototype.whitePopupEvent = function (conid) {
   const instance = this;
   const { ea, totalMother, belowHeight, contentsArr, clients, designers, projects, whitePopupClassName } = this;
-  const { createNode, withOut, colorChip, ajaxJson, setQueue, serviceParsing } = GeneralJs;
+  const { createNode, withOut, colorChip, ajaxJson, setQueue, serviceParsing, cleanChildren } = GeneralJs;
   const photoChar = 't';
   const blank = "&nbsp;&nbsp;/&nbsp;&nbsp;";
   const serviceName = serviceParsing().name;
@@ -328,6 +328,10 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
     let relativeBetween;
     let j;
     let relativeTitleMarginBottom;
+    let tagNum;
+    let tagGreenBoo;
+    let tagWhiteGreenBoo;
+    let tagMaker;
 
     margin = 30;
     zIndex = 2;
@@ -505,71 +509,76 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
       event: {
         click: async function (e) {
           try {
-            const conid = this.getAttribute("conid");
-            const tag = [ ...this.children ].map((dom) => { return dom.textContent });
-            const newTagName = window.prompt("태그명을 입력해주세요!");
-            let whereQuery, updateQuery;
+            if (!e.altKey) {
+              const conid = this.getAttribute("conid");
+              const tag = [ ...this.children ].map((dom) => { return dom.textContent });
+              const newTagName = window.prompt("태그명을 입력해주세요!");
+              let whereQuery, updateQuery;
 
-            if (newTagName !== '' && newTagName !== null) {
+              if (newTagName !== '' && newTagName !== null) {
 
-              tag.push(newTagName);
-              instance.contentsArr.search("conid", conid).contents.portfolio.detailInfo.tag.push(newTagName);
-              whereQuery = { conid };
-              updateQuery = {};
-              updateQuery["contents.portfolio.detailInfo.tag"] = tag;
-              await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateContents");
+                tag.push(newTagName);
+                instance.contentsArr.search("conid", conid).contents.portfolio.detailInfo.tag.push(newTagName);
+                whereQuery = { conid };
+                updateQuery = {};
+                updateQuery["contents.portfolio.detailInfo.tag"] = tag;
+                await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateContents");
 
-              createNode({
-                mother: this,
-                text: newTagName,
-                style: {
-                  display: "inline-block",
-                  fontSize: String(tagSize) + ea,
-                  fontWeight: String(tagWeight),
-                  color: colorChip.black,
-                  paddingLeft: String(tagPaddingLeft) + ea,
-                  paddingRight: String(tagPaddingLeft) + ea,
-                  paddingTop: String(tagPaddingTop) + ea,
-                  paddingBottom: String(tagPaddingBottom) + ea,
-                  background: colorChip.white,
-                  borderRadius: String(5) + "px",
-                  marginRight: String(tagBetween) + ea,
-                  marginBottom: String(tagBetween) + ea,
+                createNode({
+                  mother: this,
+                  text: newTagName,
+                  style: {
+                    display: "inline-block",
+                    fontSize: String(tagSize) + ea,
+                    fontWeight: String(tagWeight),
+                    color: colorChip.black,
+                    paddingLeft: String(tagPaddingLeft) + ea,
+                    paddingRight: String(tagPaddingLeft) + ea,
+                    paddingTop: String(tagPaddingTop) + ea,
+                    paddingBottom: String(tagPaddingBottom) + ea,
+                    background: colorChip.white,
+                    borderRadius: String(5) + "px",
+                    marginRight: String(tagBetween) + ea,
+                    marginBottom: String(tagBetween) + ea,
+                  }
+                });
+
+              }
+            } else {
+              e.preventDefault();
+              const conid = this.getAttribute("conid");
+              const tag = [ ...this.children ].map((dom) => { return dom.textContent });
+              let target, targetTag, tong;
+              let whereQuery, updateQuery;
+              if (e.target !== this) {
+                if (e.target.parentElement === this) {
+                  target = e.target;
+                } else {
+                  target = e.target.parentElement;
                 }
-              });
-
+                targetTag = target.textContent.trim();
+                tong = [];
+                for (let t of tag) {
+                  if (targetTag !== t) {
+                    tong.push(t);
+                  }
+                }
+                instance.contentsArr.search("conid", conid).contents.portfolio.detailInfo.tag = tong;
+                whereQuery = { conid };
+                updateQuery = {};
+                updateQuery["contents.portfolio.detailInfo.tag"] = tong;
+                await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateContents");
+                target.remove();
+              }
             }
           } catch (e) {
             console.log(e);
           }
         },
-        contextmenu: async function (e) {
+        contextmenu: function (e) {
           try {
             e.preventDefault();
-            const conid = this.getAttribute("conid");
-            const tag = [ ...this.children ].map((dom) => { return dom.textContent });
-            let target, targetTag, tong;
-            let whereQuery, updateQuery;
-            if (e.target !== this) {
-              if (e.target.parentElement === this) {
-                target = e.target;
-              } else {
-                target = e.target.parentElement;
-              }
-              targetTag = target.textContent.trim();
-              tong = [];
-              for (let t of tag) {
-                if (targetTag !== t) {
-                  tong.push(t);
-                }
-              }
-              instance.contentsArr.search("conid", conid).contents.portfolio.detailInfo.tag = tong;
-              whereQuery = { conid };
-              updateQuery = {};
-              updateQuery["contents.portfolio.detailInfo.tag"] = tong;
-              await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateContents");
-              target.remove();
-            }
+            e.stopPropagation();
           } catch (e) {
             console.log(e);
           }
@@ -585,26 +594,76 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
         cursor: "pointer",
       }
     });
-    for (let t of tag) {
-      createNode({
-        mother: tagTong,
-        text: t,
-        style: {
-          display: "inline-block",
-          fontSize: String(tagSize) + ea,
-          fontWeight: String(tagWeight),
-          color: colorChip.black,
-          paddingLeft: String(tagPaddingLeft) + ea,
-          paddingRight: String(tagPaddingLeft) + ea,
-          paddingTop: String(tagPaddingTop) + ea,
-          paddingBottom: String(tagPaddingBottom) + ea,
-          background: colorChip.white,
-          borderRadius: String(5) + "px",
-          marginRight: String(tagBetween) + ea,
-          marginBottom: String(tagBetween) + ea,
+
+    tagMaker = () => {
+      cleanChildren(tagTong);
+      tagNum = 0;
+      for (let t of tag) {
+
+        tagGreenBoo = false;
+        if (tagNum >= 5 && tagNum < 10) {
+          tagGreenBoo = true;
         }
-      })
+
+        tagWhiteGreenBoo = false;
+        if (tagNum >= 10 && tagNum < 17) {
+          tagWhiteGreenBoo = true;
+        }
+
+        createNode({
+          mother: tagTong,
+          text: t,
+          attribute: {
+            conid: conid,
+            value: t,
+            index: String(tagNum),
+          },
+          event: {
+            contextmenu: async function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              try {
+                const conid = this.getAttribute("conid");
+                const value = this.getAttribute("value");
+                const index = Number(this.getAttribute("index"));
+                let whereQuery, updateQuery;
+
+                tag.splice(index, 1);
+                tag.splice(5, 0, value);
+
+                whereQuery = { conid };
+                updateQuery = {};
+                updateQuery["contents.portfolio.detailInfo.tag"] = tag;
+                await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateContents");
+
+                tagMaker();
+              } catch (e) {
+                console.log(e);
+              }
+            }
+          },
+          style: {
+            display: "inline-block",
+            fontSize: String(tagSize) + ea,
+            fontWeight: String(tagWeight),
+            color: tagGreenBoo ? colorChip.white : colorChip.black,
+            paddingLeft: String(tagPaddingLeft) + ea,
+            paddingRight: String(tagPaddingLeft) + ea,
+            paddingTop: String(tagPaddingTop) + ea,
+            paddingBottom: String(tagPaddingBottom) + ea,
+            background: tagGreenBoo ? colorChip.green : (tagWhiteGreenBoo ? colorChip.whiteGreen : colorChip.white),
+            borderRadius: String(5) + "px",
+            marginRight: String(tagBetween) + ea,
+            marginBottom: String(tagBetween) + ea,
+          }
+        });
+
+        tagNum++;
+      }
     }
+
+    tagMaker();
+
     if (project !== null) {
       createNode({
         mother: rightTong,
