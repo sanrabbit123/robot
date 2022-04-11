@@ -2930,7 +2930,7 @@ ClientConsultingJs.prototype.insertPannelBox = function () {
 
 }
 
-ClientConsultingJs.prototype.insertStrongBox = function (force = false) {
+ClientConsultingJs.prototype.insertStrongBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media, totalContents, standardWidth } = this;
@@ -2955,10 +2955,6 @@ ClientConsultingJs.prototype.insertStrongBox = function (force = false) {
   let iconBottom;
   let iconRight;
   let blockMarginBottom;
-
-  if (mobile && !force) {
-    return;
-  }
 
   if (media[0]) {
     strongContents = [
@@ -3015,7 +3011,7 @@ ClientConsultingJs.prototype.insertStrongBox = function (force = false) {
 
   tongPaddingLeft = 0;
   tongPaddingTop = <%% 16, 16, 16, 12, 3 %%>;
-  tongPaddingBottom = <%% 180, 160, 140, 120, 4.5 %%>;
+  tongPaddingBottom = <%% 180, 160, 150, 80, 14 %%>;
 
   whiteTongPaddingLeft = <%% 32, 26, 26, 21, 4 %%>;
   whiteTongPaddingTop = <%% 21, 18, 18, 15, 3.5 %%>;
