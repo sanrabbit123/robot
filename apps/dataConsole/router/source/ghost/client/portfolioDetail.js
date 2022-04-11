@@ -1534,7 +1534,7 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
         }
       },
       {
-        text: "유사한 컨텐츠",
+        text: "유사한 포트폴리오",
         style: {
           fontSize: String(mainTitleSize) + ea,
           fontWeight: String(mainTitleWeight),

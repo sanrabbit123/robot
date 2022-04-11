@@ -2765,7 +2765,6 @@ ClientConsultingJs.prototype.insertPannelBox = function () {
       height: String(blockHeight) + ea,
       background: colorChip.white,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
-      marginBottom: String(blockMarginBottom) + ea,
     }
   });
 
@@ -2931,6 +2930,194 @@ ClientConsultingJs.prototype.insertPannelBox = function () {
 
 }
 
+ClientConsultingJs.prototype.insertStrongBox = function (force = false) {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { ea, media, totalContents, standardWidth } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  let speed;
+  let mainHeight;
+  let mainTong;
+  let blockTong;
+  let blockNumber;
+  let tongPaddingLeft;
+  let tongPaddingTop, tongPaddingBottom;
+  let strongContents;
+  let whiteTongPaddingLeft, whiteTongPaddingTop, whiteTongPaddingRight, whiteTongPaddingBottom;
+  let whiteTongTitleSize;
+  let iconWidth;
+  let whiteTongTitleWeight;
+  let whiteTongDescriptionSize;
+  let whiteTongDescriptionWeight;
+  let whiteTongDescriptionMarginTop;
+  let whiteTongDescriptionLineHeight;
+  let iconBottom;
+  let iconRight;
+  let blockMarginBottom;
+
+  if (mobile && !force) {
+    return;
+  }
+
+  if (media[0]) {
+    strongContents = [
+      {
+        title: "디자이너 추천",
+        description: "선호하는 스타일과 역량이 맞는\n디자이너를 추천받을 수 있어요.",
+        icon: "icons0.png",
+      },
+      {
+        title: "홈리에종 케어",
+        description: "예상하지 못한 상황에도 안심하고\n인테리어를 진행할 수 있어요.",
+        icon: "icons1.png",
+      },
+      {
+        title: "원스탑 서비스",
+        description: "시공부터 스타일링까지 원스탑\n서비스를 경험할 수 있어요.",
+        icon: "icons2.png",
+      },
+      {
+        title: "선 기획 후 시공",
+        description: "디자인 선 기획 후 꼭 필요한 시공\n부터 효율적으로 진행할 수 있어요.",
+        icon: "icons3.png",
+      },
+    ]
+  } else {
+    strongContents = [
+      {
+        title: "디자이너 추천",
+        description: "선호하는 스타일이 맞는\n디자이너를 추천받아요.",
+        icon: "icons0.png",
+      },
+      {
+        title: "홈리에종 케어",
+        description: "문제 상황에도 안심하고\n진행할 수 있어요.",
+        icon: "icons1.png",
+      },
+      {
+        title: "원스탑 서비스",
+        description: "시공부터 스타일링까지\n원스탑으로 진행해요.",
+        icon: "icons2.png",
+      },
+      {
+        title: "선 기획 후 시공",
+        description: "디자인 후 꼭 필요한 시공\n부터 진행할 수 있어요.",
+        icon: "icons3.png",
+      },
+    ]
+  }
+
+  speed = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
+  mainHeight = <%% 240, 240, 240, 240, 40 %%>;
+  margin = <%% 12, 12, 10, 10, 2 %%>;
+  blockNumber = desktop ? strongContents.length : 2;
+
+  tongPaddingLeft = 0;
+  tongPaddingTop = <%% 16, 16, 16, 12, 3 %%>;
+  tongPaddingBottom = <%% 180, 160, 140, 120, 4.5 %%>;
+
+  whiteTongPaddingLeft = <%% 32, 26, 26, 21, 4 %%>;
+  whiteTongPaddingTop = <%% 21, 18, 18, 15, 3.5 %%>;
+  whiteTongPaddingRight = <%% 84, 50, 50, 42, 5 %%>;
+  whiteTongPaddingBottom = <%% 28, 25, 24, 20, 4 %%>;
+
+  whiteTongTitleSize = <%% 18, 16, 16, 14, 3.5 %%>;
+  whiteTongTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+  whiteTongDescriptionSize = <%% 14, 13, 13, 11, 2.5 %%>;
+  whiteTongDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+  whiteTongDescriptionMarginTop = <%% 7, 7, 5, 5, 1.2 %%>;
+  whiteTongDescriptionLineHeight = <%% 1.55, 1.55, 1.55, 1.55, 1.55 %%>;
+
+  iconWidth = <%% 24, 24, 24, 18, 5 %%>;
+  iconBottom = <%% 32, 28, 28, 24, 4.8 %%>;
+  iconRight = <%% 28, 20, 20, 18, 2.8 %%>;
+
+  blockMarginBottom = <%% 3, 3, 3, 3, 2 %%>;
+
+  mainTong = createNode({
+    mother: totalContents,
+    style: {
+      display: "block",
+      position: "relative",
+      animation: "justfadeinoriginal " + String(speed) + "s ease forwards",
+    },
+  });
+
+  blockTong = createNode({
+    mother: mainTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String((standardWidth - (tongPaddingLeft * 2)) + margin) + ea,
+      paddingTop: String(tongPaddingTop) + ea,
+      paddingBottom: String(tongPaddingBottom) + ea,
+      left: "calc(50% - " + String((standardWidth - (tongPaddingLeft * 2)) / 2) + ea + ")",
+    }
+  });
+
+  for (let i = 0; i < strongContents.length; i++) {
+    createNode({
+      mother: blockTong,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: "calc(calc(calc(100% - " + String(margin * blockNumber) + ea + ") / " + String(blockNumber) + ") - " + String(whiteTongPaddingLeft + whiteTongPaddingRight) + ea + ")",
+        paddingTop: String(whiteTongPaddingTop) + ea,
+        paddingLeft: String(whiteTongPaddingLeft) + ea,
+        paddingRight: String(whiteTongPaddingRight) + ea,
+        paddingBottom: String(whiteTongPaddingBottom) + ea,
+        marginRight: String(margin) + ea,
+        borderRadius: String(5) + "px",
+        background: colorChip.white,
+        boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
+        marginBottom: desktop ? "" : String(blockMarginBottom) + ea,
+      },
+      children: [
+        {
+          text: strongContents[i].title,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: (isMac() || mobile ? "" : String(2) + ea),
+            fontSize: String(whiteTongTitleSize) + ea,
+            fontWeight: String(whiteTongTitleWeight),
+            color: colorChip.black,
+          }
+        },
+        {
+          text: strongContents[i].description,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: (isMac() || mobile ? "" : String(2) + ea),
+            marginTop: String(whiteTongDescriptionMarginTop) + ea,
+            fontSize: String(whiteTongDescriptionSize) + ea,
+            fontWeight: String(whiteTongDescriptionWeight),
+            lineHeight: String(whiteTongDescriptionLineHeight),
+            color: colorChip.black,
+          }
+        },
+        {
+          mode: "img",
+          attribute: {
+            src: "/middle/index" + "/" + strongContents[i].icon,
+          },
+          style: {
+            position: "absolute",
+            bottom: String(iconBottom) + ea,
+            right: String(iconRight) + ea,
+            width: String(iconWidth) + ea,
+            height: "auto",
+          }
+        }
+      ]
+    });
+  }
+
+}
+
 ClientConsultingJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
@@ -2956,6 +3143,7 @@ ClientConsultingJs.prototype.launching = async function (loading) {
         try {
           instance.insertInitBox();
           instance.insertPannelBox();
+          instance.insertStrongBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "ClientConsultingJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
         }

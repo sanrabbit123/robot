@@ -127,7 +127,7 @@ BillMaker.designerCalculation = function (supply, classification, percentage, cl
     throw new Error("invaild pyeong input");
   }
   if (!(new RegExp(classRegExpCase[0], "gi")).test(classification) && !(new RegExp(classRegExpCase[1], "gi")).test(classification) && !(new RegExp(classRegExpCase[2], "gi")).test(classification)) {
-    throw new Error("invaild classification");
+    throw new Error("invaild classification : " + classification);
   }
   if (Array.isArray(pyeong)) {
     if (pyeong.length === 0) {
