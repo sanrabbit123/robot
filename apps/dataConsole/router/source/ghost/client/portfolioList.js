@@ -413,6 +413,7 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null)
   const mobile = media[4];
   const desktop = !mobile;
   const photoChar = 't';
+  const photoCharMobile = "mot";
   let { contentsArr, designers } = this;
   let baseBlock;
   let gsArray;
@@ -537,7 +538,12 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null)
 
         ({ contents } = contentsArr[i]);
 
-        src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.portfolio.pid + "/" + photoChar + String(contents.portfolio.detailInfo.photodae[gsArray[i] === 'g' ? 1 : 0]) + contents.portfolio.pid + ".jpg";
+        if (desktop) {
+          src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.portfolio.pid + "/" + photoChar + String(contents.portfolio.detailInfo.photodae[gsArray[i] === 'g' ? 1 : 0]) + contents.portfolio.pid + ".jpg";
+        } else {
+          src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.portfolio.pid + "/mobile/" + photoCharMobile + String(contents.portfolio.detailInfo.photodae[gsArray[i] === 'g' ? 1 : 0]) + contents.portfolio.pid + ".jpg";
+        }
+
         title = contents.portfolio.title.main.split(", ")[1];
         if (media[0] || media[2]) {
           subTitle = contents.portfolio.title.sub;
@@ -672,7 +678,6 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null)
         if (search === null) {
           this.loadedContents.push(i);
         }
-
 
       }
     }

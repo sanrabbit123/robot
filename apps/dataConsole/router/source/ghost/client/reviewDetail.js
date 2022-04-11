@@ -52,6 +52,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   const desktop = !mobile;
   const contents = contentsArr.toNormal().filter((obj) => { return obj.contents.portfolio.pid === pid })[0];
   const photoChar = 'b';
+  const photoCharMobile = "mot";
   let mainHeight;
   let mainTong;
   let mainBelowBarHeight;
@@ -167,7 +168,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
       width: desktop ? String(pictureWidth) + ea : String(100) + '%',
       height: desktop ? String(pictureHeight) + ea : String(100) + '%',
       borderRadius: desktop ? String(5) + "px" : "",
-      backgroundImage: "url('" + "https://" + GHOSTHOST + "/corePortfolio/listImage/" + pid + "/" + photoChar + String(1) + pid + ".jpg" + "')",
+      backgroundImage: "url('" + "https://" + GHOSTHOST + "/corePortfolio/listImage/" + pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(contents.contents.review.detailInfo.photodae[1]) + pid + ".jpg" + "')",
       backgroundSize: "auto 100%",
       backgroundPosition: "50% 50%",
       boxShadow: desktop ? "0px 8px 22px -15px " + colorChip.shadow : "",
@@ -367,6 +368,7 @@ ReviewDetailJs.prototype.reviewContentsBox = function () {
   const designer = designers.search("desid", contents.desid);
   const story = equalJson(JSON.stringify(detail));
   const photoChar = 't';
+  const photoCharMobile = "mot";
   const today = new Date();
   let mainTong;
   let mainWidth;
@@ -597,7 +599,11 @@ ReviewDetailJs.prototype.reviewContentsBox = function () {
     });
     num = 0;
     for (let index of photos) {
-      src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + pid + "/" + photoChar + String(index) + pid + ".jpg";
+      if (desktop) {
+        src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + pid + "/" + photoChar + String(index) + pid + ".jpg";
+      } else {
+        src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + pid + "/mobile/" + photoCharMobile + String(index) + pid + ".jpg";
+      }
       garo = (photoDetail[index - 1].gs === 'g');
       createNode({
         mother: mainTong,
@@ -761,7 +767,7 @@ ReviewDetailJs.prototype.reviewContentsBox = function () {
           width: String(belowPictureWidth) + ea,
           height: String(100) + '%',
           marginLeft: String(belowPictureMargin) + ea,
-          backgroundImage: "url('" + "https://" + GHOSTHOST + "/corePortfolio/listImage/" + pid + "/" + photoChar + String(contents.contents.portfolio.detailInfo.photodae[1]) + pid + ".jpg" + "')",
+          backgroundImage: "url('" + "https://" + GHOSTHOST + "/corePortfolio/listImage/" + pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(contents.contents.portfolio.detailInfo.photodae[1]) + pid + ".jpg" + "')",
           backgroundSize: desktop ? "auto 100%" : "100% auto",
           backgroundPosition: "50% 50%",
           verticalAlign: "top",
@@ -1490,6 +1496,7 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
   setQueue(async () => {
     try {
       const photoChar = 't';
+      const photoCharMobile = "mot";
       let contentsArr;
       let filtered;
 
@@ -1506,7 +1513,11 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
 
         if (filteredContents.review.detailInfo.photodae.length > 1) {
 
-          src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + filteredContents.portfolio.pid + "/" + photoChar + String(filteredContents.review.detailInfo.photodae[0]) + filteredContents.portfolio.pid + ".jpg";
+          if (desktop) {
+            src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + filteredContents.portfolio.pid + "/" + photoChar + String(filteredContents.review.detailInfo.photodae[0]) + filteredContents.portfolio.pid + ".jpg";
+          } else {
+            src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + filteredContents.portfolio.pid + "/mobile/" + photoCharMobile + String(filteredContents.review.detailInfo.photodae[0]) + filteredContents.portfolio.pid + ".jpg";
+          }
           title = filteredContents.review.title.sub.split(", ").join(" ");
           tag = equalJson(JSON.stringify(filteredContents.portfolio.detailInfo.tag));
 

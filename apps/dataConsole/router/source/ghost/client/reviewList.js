@@ -413,6 +413,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
   const mobile = media[4];
   const desktop = !mobile;
   const photoChar = 't';
+  const photoCharMobile = "mot";
   let { contentsArr, designers } = this;
   let baseBlock;
   let gsArray;
@@ -533,7 +534,12 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
 
         if (contents.review.detailInfo.photodae.length > 1) {
 
-          src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.portfolio.pid + "/" + photoChar + String(contents.review.detailInfo.photodae[gsArray[i] === 'g' ? 1 : 0]) + contents.portfolio.pid + ".jpg";
+          if (desktop) {
+            src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.portfolio.pid + "/" + photoChar + String(contents.review.detailInfo.photodae[gsArray[i] === 'g' ? 1 : 0]) + contents.portfolio.pid + ".jpg";
+          } else {
+            src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.portfolio.pid + "/mobile/" + photoCharMobile + String(contents.review.detailInfo.photodae[gsArray[i] === 'g' ? 1 : 0]) + contents.portfolio.pid + ".jpg";
+          }
+
           title = contents.review.title.sub.split(", ").join(" ");
           tag = equalJson(JSON.stringify(contents.portfolio.detailInfo.tag));
 
