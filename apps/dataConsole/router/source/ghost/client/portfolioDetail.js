@@ -134,9 +134,9 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
   contentsTitleBetween = <%% 14, 14, 14, 10, 14 %%>;
 
   contentsTitleButtonWidth = <%% 96, 96, 96, 88, 96 %%>;
-  contentsTitleButtonHeight = <%% 36, 36, 36, 32, 36 %%>;
+  contentsTitleButtonHeight = <%% 38, 38, 38, 34, 36 %%>;
   contentsTitleButtonTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -2 %%>;
-  contentsTitleButtonSize = <%% 13, 13, 13, 11, 13 %%>;
+  contentsTitleButtonSize = <%% 14, 14, 14, 12, 13 %%>;
   contentsTitleButtonWeight = <%% 600, 600, 600, 600, 600 %%>;
 
   slide = contents.contents.portfolio.detailInfo.slide;
@@ -619,7 +619,7 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
         },
         children: [
           {
-            text: "서비스 문의",
+            text: "상담 받기",
             style: {
               position: "relative",
               top: String(contentsTitleButtonTextTop) + ea,
@@ -1443,22 +1443,22 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
   mainTitleWidth = <%% 170, 170, 170, 150, 34 %%>;
   mainTitleTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
-  belowBoxHeight = <%% 120, 120, 120, 110, 25 %%>;
-  belowButtonTop = <%% 38, 38, 38, 32, 7 %%>;
+  belowBoxHeight = <%% 140, 138, 138, 105, 24 %%>;
+  belowButtonTop = <%% 45, 45, 45, 32, 7 %%>;
 
-  belowButtonHeight = <%% 42, 42, 42, 40, 9 %%>;
+  belowButtonHeight = <%% (isMac() ? 45 : 43), (isMac() ? 43 : 42), (isMac() ? 43 : 42), (isMac() ? 40 : 39), 9 %%>;
   belowButtonBetween = <%% 10, 10, 10, 10, 2 %%>;
   belowButtonWordPadding = <%% 20, 20, 20, 20, 4 %%>;
 
   belowButtonTextTop = <%% (isMac() ? 9 : 11), (isMac() ? 9 : 11), (isMac() ? 9 : 11), (isMac() ? 9 : 11), 2 %%>;
-  belowButtonSize = <%% 15, 14, 14, 13, 3 %%>;
+  belowButtonSize = <%% 16, 15, 15, 14, 3 %%>;
   belowButtonWeight = <%% 600, 600, 600, 600, 600 %%>;
 
   move = <%% 264, 249, 272, 218, 39.45 %%>;
 
   photoTongClassName = "photoTongClassName";
 
-  relativeLength = <%% 15, 15, 15, 15, 15 %%>;
+  relativeLength = <%% 20, 20, 20, 20, 20 %%>;
 
   photoMargin = <%% 20, 16, 16, 14, 3 %%>;
   columns = <%% 5, 4, 3, 3, 2 %%>;
@@ -1683,7 +1683,7 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
       width: String(standardWidth) + ea,
       height: withOut(belowButtonTop, ea),
       left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
-      textAlign: "center",
+      textAlign: desktop ? "right" : "center",
       paddingTop: String(belowButtonTop) + ea,
     }
   });
@@ -1704,33 +1704,6 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
     children: [
       {
         text: "홈스타일링 신청하기",
-        style: {
-          position: "relative",
-          textAlign: "center",
-          fontSize: String(belowButtonSize) + ea,
-          fontWeight: String(belowButtonWeight),
-          color: colorChip.black,
-          paddingTop: String(belowButtonTextTop) + ea,
-        }
-      }
-    ]
-  });
-
-  createNode({
-    mother: belowBaseTong,
-    class: [ "hoverDefault_lite" ],
-    style: {
-      display: "inline-block",
-      position: "relative",
-      height: String(belowButtonHeight) + ea,
-      background: colorChip.white,
-      borderRadius: String(5) + "px",
-      paddingLeft: String(belowButtonWordPadding) + ea,
-      paddingRight: String(belowButtonWordPadding) + ea,
-    },
-    children: [
-      {
-        text: "목록으로 되돌아가기",
         style: {
           position: "relative",
           textAlign: "center",

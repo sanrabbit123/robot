@@ -171,9 +171,9 @@ DesignerDetailJs.prototype.designerBlock = function () {
   buttonSize = <%% 15, 14, 13, 13, 14 %%>;
   buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
   buttonTextTop = <%% (isMac() ? 8 : 9), (isMac() ? 7 : 8), (isMac() ? 6 : 8), (isMac() ? 6 : 8), 7 %%>;
-  buttonWidth = <%% 138, 128, 118, 128, 128 %%>;
+  buttonWidth = <%% 100, 90, 85, 100, 100 %%>;
   buttonBetween = <%% 6, 6, 6, 6, 6 %%>;
-  buttonWidth0 = <%% 100, 100, 100, 100, 100 %%>;
+  buttonWidth0 = <%% 100, 90, 85, 100, 100 %%>;
 
   cleanChildren(designerTong);
 
@@ -207,7 +207,7 @@ DesignerDetailJs.prototype.designerBlock = function () {
             display: desktop ? "inline-block" : "block",
             position: "relative",
             top: String(contentsPaddingTop) + ea,
-            borderRadius: desktop ? String(photoWidth) + ea : String(5) + "px",
+            borderRadius: desktop ? String(8) + "px" : String(5) + "px",
             width: desktop ? String(photoWidth) + ea : String(100) + '%',
             height: String(photoWidth) + ea,
             backgroundSize: desktop ? "auto 100%" : "100% auto",
@@ -339,7 +339,7 @@ DesignerDetailJs.prototype.designerBlock = function () {
         },
         children: [
           {
-            text: "서비스 신청하기",
+            text: "상담 신청",
             style: {
               position: "relative",
               fontSize: String(buttonSize) + ea,

@@ -425,7 +425,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
 
   contentsBlockHeight = 4;
 
-  tagTongMarginTop = <%% 15, 15, 19, 15, 2.8 %%>;
+  tagTongMarginTop = <%% 15, 15, 19, 15, (isIphone() ? 2.9 : 2.8) %%>;
 
   tagTongPaddingTop = <%% (isMac() ? 5 : 6), (isMac() ? 5 : 6), (isMac() ? 5 : 6), (isMac() ? 5 : 6), 1.4 %%>;
   tagTongPaddingBottom = <%% (isMac() ? 8 : 6), (isMac() ? 8 : 6), (isMac() ? 8 : 6), (isMac() ? 8 : 6), (isIphone() ? 1.6 : 2) %%>;
