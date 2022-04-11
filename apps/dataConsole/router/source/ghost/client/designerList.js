@@ -363,7 +363,7 @@ DesignerListJs.prototype.insertInitBox = function () {
 
 DesignerListJs.prototype.designerBlock = function (search = null) {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, cleanChildren, designerCareer } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, cleanChildren, designerCareer, designerMthParsing } = GeneralJs;
   const { ea, media } = this;
   const { designers, designerTong } = this;
   const mobile = media[4];
@@ -387,10 +387,18 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
   let careerBetween;
   let grayBarTop, grayBarBottom;
   let descriptionSize, descriptionWeight, descriptionLineHeight;
+  let tagTong;
+  let mthTargets;
+  let contentsBlockHeight;
+  let tagTongMarginTop;
+  let tagTongPaddingTop, tagTongPaddingBottom, tagTongPaddingLeft;
+  let tagTongMarginRight;
+  let tagSize, tagWeight;
+  let arrowWidth, arrowHeight, arrowBottom;
 
   tongPaddingLeft = <%% 100, 70, 80, 50, 6.5 %%>;
-  blockMargin = <%% 40, 20, 20, 20, 2 %%>;
-  blockMarginBottom = <%% 25, 25, 25, 25, 5.5 %%>;
+  blockMargin = <%% 40, 30, 20, 20, 2 %%>;
+  blockMarginBottom = <%% 20, 20, 15, 10, 4 %%>;
   columns = <%% 2, 2, 1, 1, 1 %%>;
   contentsPaddingTop = <%% 16, 16, 16, 16, 1 %%>;
 
@@ -408,12 +416,28 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
 
   careerBetween = <%% 8, 8, 8, 8, 1.5 %%>;
 
-  grayBarTop = <%% 8, 8, 8, 8, 2 %%>;
-  grayBarBottom = <%% 16, 16, 16, 16, 2 %%>;
+  grayBarTop = <%% 8, 8, 8, 8, 1.5 %%>;
+  grayBarBottom = <%% 14, 10, 14, 14, 1.5 %%>;
 
-  descriptionSize = <%% 13, 11, 13, 12, 2.7 %%>;
+  descriptionSize = <%% 14, 11, 13, 12, 2.7 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.55 %%>;
+
+  contentsBlockHeight = 4;
+
+  tagTongMarginTop = <%% 15, 15, 19, 15, 2.8 %%>;
+
+  tagTongPaddingTop = <%% (isMac() ? 5 : 6), (isMac() ? 5 : 6), (isMac() ? 5 : 6), (isMac() ? 5 : 6), 1.4 %%>;
+  tagTongPaddingBottom = <%% (isMac() ? 8 : 6), (isMac() ? 8 : 6), (isMac() ? 8 : 6), (isMac() ? 8 : 6), 2 %%>;
+  tagTongPaddingLeft = <%% 10, 10, 10, 10, 2.4 %%>;
+  tagTongMarginRight = <%% 5, 5, 5, 5, 1.2 %%>;
+
+  tagSize = <%% 12, 11, 12, 12, 2.5 %%>;
+  tagWeight = <%% 600, 600, 600, 600, 600 %%>;
+
+  arrowWidth = <%% 40, 32, 32, 32, 3 %%>;
+  arrowHeight = <%% 10, 8, 8, 8, 2 %%>;
+  arrowBottom = <%% 12, 12, 12, 12, 1 %%>;
 
   cleanChildren(designerTong);
 
@@ -449,7 +473,11 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
 
   for (let designer of targets) {
 
-    src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + designer.setting.front.photo.porlid + "/" + designer.setting.front.photo.index + designer.setting.front.photo.porlid + ".jpg";
+    if (desktop) {
+      src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + designer.setting.front.photo.porlid + "/" + designer.setting.front.photo.index + designer.setting.front.photo.porlid + ".jpg";
+    } else {
+      src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + designer.setting.front.photo.porlid + "/mobile/mo" + designer.setting.front.photo.index + designer.setting.front.photo.porlid + ".jpg";
+    }
 
     block = createNode({
       mother: tong,
@@ -466,7 +494,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
             display: "inline-block",
             position: "relative",
             top: String(contentsPaddingTop) + ea,
-            borderRadius: String(photoWidth) + ea,
+            borderRadius: String(8) + "px",
             width: String(photoWidth) + ea,
             height: String(photoWidth) + ea,
             backgroundSize: "auto 100%",
@@ -478,6 +506,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
         {
           style: {
             display: "inline-block",
+            position: "relative",
             width: withOut(photoWidth + photoMargin, ea),
             marginLeft: String(photoMargin) + ea,
             paddingTop: String(contentsPaddingTop) + ea,
@@ -540,7 +569,8 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
 
     createNode({
       mother: contentsBlock,
-      text: desktop ? designer.setting.front.introduction.desktop.join("\n") : designer.setting.front.introduction.mobile.join(" "),
+      class: [ "hoverDefault_lite" ],
+      text: desktop ? (designer.setting.front.introduction.desktop.slice(0, 2).join("\n") + " ...") : (designer.setting.front.introduction.desktop.slice(0, 1).join("\n") + " ..."),
       style: {
         display: "block",
         marginTop: String(grayBarBottom) + ea,
@@ -548,11 +578,69 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
         fontWeight: String(descriptionWeight),
         color: colorChip.black,
         lineHeight: String(descriptionLineHeight),
-        height: desktop ? "" : String(12.5) + ea,
+        height: desktop ? "" : String(contentsBlockHeight) + ea,
         overflow: desktop ? "" : "scroll",
       }
     });
 
+    tagTong = createNode({
+      mother: contentsBlock,
+      style: {
+        display: "block",
+        position: "relative",
+        width: String(100) + '%',
+        marginTop: String(tagTongMarginTop) + ea,
+      }
+    });
+    mthTargets = designerMthParsing(designer.setting.front.methods);
+    for (let mth of mthTargets) {
+
+      createNode({
+        mother: tagTong,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          paddingTop: String(tagTongPaddingTop) + ea,
+          paddingBottom: String(tagTongPaddingBottom) + ea,
+          paddingLeft: String(tagTongPaddingLeft) + ea,
+          paddingRight: String(tagTongPaddingLeft) + ea,
+          borderRadius: String(5) + "px",
+          marginRight: String(tagTongMarginRight) + ea,
+          background: colorChip.gray1,
+        },
+        children: [
+          {
+            text: mth,
+            style: {
+              position: "relative",
+              fontSize: String(tagSize) + ea,
+              fontWeight: String(tagWeight),
+              color: colorChip.black
+            }
+          }
+        ]
+      });
+
+    }
+
+    if (desktop) {
+      createNode({
+        mode: "svg",
+        mother: tagTong,
+        class: [ "hoverDefault_lite" ],
+        source: svgMaker.horizontalArrow(arrowWidth, arrowHeight, colorChip.green),
+        style: {
+          position: "absolute",
+          right: String(0) + ea,
+          bottom: String(arrowBottom) + ea,
+          width: String(arrowWidth) + ea,
+          height: String(arrowHeight) + ea,
+        }
+      });
+    }
 
   }
 
