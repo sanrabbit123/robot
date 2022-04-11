@@ -1288,6 +1288,7 @@ FrontIndexJs.prototype.insertServiceBox = function () {
   const { ea, media, totalContents, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const mobileImageConst = "mo";
   let speed;
   let mainHeight;
   let mainTong;
@@ -1623,7 +1624,7 @@ FrontIndexJs.prototype.insertServiceBox = function () {
            position: "relative",
            width: String(mainPictureWidth) + ea,
            height: String(mainPictureHeight) + ea,
-           backgroundImage: "url('" + FrontIndexJs.binaryPath + "/" + serviceContents[i].image + "')",
+           backgroundImage: "url('" + FrontIndexJs.binaryPath + (desktop ? "/" : "/" + mobileImageConst) + serviceContents[i].image + "')",
            backgroundSize: "100% auto",
            backgroundPosition: "50% 50%",
            borderRadius: String(5) + "px",
@@ -1731,7 +1732,6 @@ FrontIndexJs.prototype.insertEndBox = function () {
       left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
     }
   });
-
 
   createNode({
     mother: blockTong,
