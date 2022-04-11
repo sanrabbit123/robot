@@ -428,7 +428,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
   tagTongMarginTop = <%% 15, 15, 19, 15, 2.8 %%>;
 
   tagTongPaddingTop = <%% (isMac() ? 5 : 6), (isMac() ? 5 : 6), (isMac() ? 5 : 6), (isMac() ? 5 : 6), 1.4 %%>;
-  tagTongPaddingBottom = <%% (isMac() ? 8 : 6), (isMac() ? 8 : 6), (isMac() ? 8 : 6), (isMac() ? 8 : 6), 2 %%>;
+  tagTongPaddingBottom = <%% (isMac() ? 8 : 6), (isMac() ? 8 : 6), (isMac() ? 8 : 6), (isMac() ? 8 : 6), (isIphone() ? 1.6 : 2) %%>;
   tagTongPaddingLeft = <%% 10, 10, 10, 10, 2.4 %%>;
   tagTongMarginRight = <%% 5, 5, 5, 5, 1.2 %%>;
 
