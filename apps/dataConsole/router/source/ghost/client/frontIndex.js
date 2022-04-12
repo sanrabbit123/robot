@@ -483,7 +483,7 @@ FrontIndexJs.prototype.insertStrongBox = function (force = false) {
 
 FrontIndexJs.prototype.insertSearchBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, equalJson, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, equalJson, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
   const { ea, media, totalContents, standardWidth } = this;
   const { contentsArr, reviewArr } = this;
   const mobile = media[4];
@@ -877,6 +877,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
 
     block = createNode({
       mother: portfolioTong,
+      class: [ "hoverDefault_lite" ],
       style: {
         display: "inline-block",
         position: "relative",
@@ -1062,6 +1063,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
 
     block = createNode({
       mother: reviewTong,
+      class: [ "hoverDefault_lite" ],
       style: {
         display: "inline-block",
         position: "relative",
