@@ -1120,6 +1120,13 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
         },
         children: [
           {
+            attribute: { desid: designer.desid },
+            event: {
+              click: function (e) {
+                const desid = this.getAttribute("desid");
+                selfHref(FRONTHOST + "/desdetail.php?desid=" + desid);
+              }
+            },
             style: {
               display: "inline-block",
               position: "relative",
@@ -1134,6 +1141,13 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
             }
           },
           {
+            attribute: { desid: designer.desid },
+            event: {
+              click: function (e) {
+                const desid = this.getAttribute("desid");
+                selfHref(FRONTHOST + "/desdetail.php?desid=" + desid);
+              }
+            },
             style: {
               display: "inline-block",
               position: "relative",
