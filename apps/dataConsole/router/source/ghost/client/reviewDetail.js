@@ -131,6 +131,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
       background: colorChip.gray0,
       paddingTop: String(naviHeight) + "px",
       height: String(mainHeight) + ea,
+      animation: "fadeupdelay 0.5s ease forwards",
     },
     children: [
       {
@@ -518,6 +519,7 @@ ReviewDetailJs.prototype.reviewContentsBox = function () {
       left: "calc(50% - " + String(mainWidth / 2) + ea + ")",
       background: colorChip.white,
       paddingTop: String(mainPaddingTop) + ea,
+      animation: "fadeupdelay 0.5s ease forwards",
     },
   });
 

@@ -282,9 +282,15 @@ LogRouter.prototype.rou_post_getContents = function () {
         }
 
         if (req.body.pid !== undefined) {
-          contentsArr = contentsArr.filter((obj) => {
-            return obj.contents.portfolio.pid === req.body.pid;
-          });
+          if (/^re/.test(req.body.pid)) {
+            contentsArr = contentsArr.filter((obj) => {
+              return obj.contents.review.rid === req.body.pid;
+            });
+          } else {
+            contentsArr = contentsArr.filter((obj) => {
+              return obj.contents.portfolio.pid === req.body.pid;
+            });
+          }
         }
 
         designers = await back.getDesignersByQuery({ $or: contentsArr.map((obj) => { return { desid: obj.desid } }) }, { selfMongo });

@@ -161,6 +161,7 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
       background: colorChip.white,
       paddingTop: String(naviHeight) + "px",
       height: String(mainHeight) + ea,
+      animation: "fadeupdelay 0.5s ease forwards",
     },
   });
 
@@ -796,6 +797,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
       left: "calc(50% - " + String(mainWidth / 2) + ea + ")",
       background: colorChip.white,
       paddingTop: String(mainPaddingTop) + ea,
+      animation: "fadeupdelay 0.5s ease forwards",
     },
   });
 
