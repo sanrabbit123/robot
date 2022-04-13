@@ -41,7 +41,7 @@ const PortfolioListJs = function () {
   this.mother = new GeneralJs();
 }
 
-PortfolioListJs.binaryPath = "/middle/portfolio";
+PortfolioListJs.binaryPath = FRONTHOST + "/middle/portfolio";
 
 PortfolioListJs.prototype.generateGsArray = function (number) {
   if (typeof number !== "number") {
@@ -239,6 +239,7 @@ PortfolioListJs.prototype.insertInitBox = function () {
           },
           {
             mode: "input",
+            class: [ "searchInput" ],
             attribute: {
               type: "text",
               placeholder: placeholder,
@@ -539,9 +540,9 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null)
         ({ contents } = contentsArr[i]);
 
         if (desktop) {
-          src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.portfolio.pid + "/" + photoChar + String(contents.portfolio.detailInfo.photodae[gsArray[i] === 'g' ? 1 : 0]) + contents.portfolio.pid + ".jpg";
+          src = FRONTHOST + "/list_image/portp" + contents.portfolio.pid + "/" + photoChar + String(contents.portfolio.detailInfo.photodae[gsArray[i] === 'g' ? 1 : 0]) + contents.portfolio.pid + ".jpg";
         } else {
-          src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.portfolio.pid + "/mobile/" + photoCharMobile + String(contents.portfolio.detailInfo.photodae[gsArray[i] === 'g' ? 1 : 0]) + contents.portfolio.pid + ".jpg";
+          src = FRONTHOST + "/list_image/portp" + contents.portfolio.pid + "/mobile/" + photoCharMobile + String(contents.portfolio.detailInfo.photodae[gsArray[i] === 'g' ? 1 : 0]) + contents.portfolio.pid + ".jpg";
         }
 
         title = contents.portfolio.title.main.split(", ")[1];
@@ -575,6 +576,7 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null)
 
         block = createNode({
           mother: baseBlock,
+          class: [ "hoverDefault_lite" ],
           style: {
             display: "inline-block",
             width: String(gsArray[i] === 'g' ? garoWidth : seroWidth) + ea,
@@ -835,6 +837,14 @@ PortfolioListJs.prototype.launching = async function (loading) {
         instance.contentsArr = new SearchArray(response.contentsArr);
         instance.designers = new SearchArray(response.designers);
         instance.fullLoad = true;
+
+        if (typeof getObj.search === "string") {
+          if (document.querySelector("input") !== null) {
+            instance.portfolioBlock(null, getObj.search);
+            instance.photoLoad = true;
+          }
+        }
+
       }).catch((err) => {
         console.log(err);
       });

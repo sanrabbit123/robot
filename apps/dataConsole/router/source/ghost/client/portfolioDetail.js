@@ -41,7 +41,7 @@ const PortfolioDetailJs = function () {
   this.mother = new GeneralJs();
 }
 
-PortfolioDetailJs.binaryPath = "/middle/portfolio";
+PortfolioDetailJs.binaryPath = FRONTHOST + "/middle/portfolio";
 
 PortfolioDetailJs.prototype.portfolioMainBox = function () {
   const instance = this;
@@ -246,7 +246,7 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
         width: String(100) + '%',
         height: String(100) + '%',
         backgroundColor: colorChip.gray1,
-        backgroundImage: "url('" + "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.contents.portfolio.pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(slide[i]) + contents.contents.portfolio.pid + ".jpg" + "')",
+        backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + contents.contents.portfolio.pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(slide[i]) + contents.contents.portfolio.pid + ".jpg" + "')",
         backgroundSize: media[0] || media[1] || media[3] ? (gsArray[i] === 'g' ? "100% auto" : "auto 100%") : "auto 100%",
         backgroundPosition: "50% 50%",
         backgroundRepeat: "no-repeat",
@@ -273,7 +273,7 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
         left: "calc(50% - " + String(slideBarHeight / 2) + ea + ")",
         backgroundColor: colorChip.gray1,
         borderRadius: String(5) + "px",
-        backgroundImage: "url('" + "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.contents.portfolio.pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(slide[i]) + contents.contents.portfolio.pid + ".jpg" + "')",
+        backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + contents.contents.portfolio.pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(slide[i]) + contents.contents.portfolio.pid + ".jpg" + "')",
         backgroundSize: gsArray[i] === 'g' ? "100% auto" : "auto 100%",
         backgroundPosition: "50% 50%",
         backgroundRepeat: "no-repeat",
@@ -506,7 +506,7 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
     children: [
       {
         style: {
-          backgroundImage: "url('" + "https://" + GHOSTHOST + "/corePortfolio/listImage/" + designer.setting.front.photo.porlid + "/" + designer.setting.front.photo.index + designer.setting.front.photo.porlid + ".jpg" + "')",
+          backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + designer.setting.front.photo.porlid + "/" + designer.setting.front.photo.index + designer.setting.front.photo.porlid + ".jpg" + "')",
           backgroundSize: "auto 100%",
           backgroundPosition: "50% 50%",
           display: "inline-block",
@@ -861,9 +861,9 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
     num = 0;
     for (let i = pastPhotoKey; i < photoKey + 1; i++) {
       if (desktop) {
-        src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + pid + "/" + photoChar + String(i) + pid + ".jpg";
+        src = FRONTHOST + "/list_image/portp" + pid + "/" + photoChar + String(i) + pid + ".jpg";
       } else {
-        src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + pid + "/mobile/" + photoCharMobile + String(i) + pid + ".jpg";
+        src = FRONTHOST + "/list_image/portp" + pid + "/mobile/" + photoCharMobile + String(i) + pid + ".jpg";
       }
       garo = (photoDetail[i - 1].gs === 'g');
       createNode({
@@ -980,7 +980,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
           children: [
             {
               style: {
-                backgroundImage: "url('" + "https://" + GHOSTHOST + "/corePortfolio/listImage/" + designer.setting.front.photo.porlid + "/" + designer.setting.front.photo.index + designer.setting.front.photo.porlid + ".jpg" + "')",
+                backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + designer.setting.front.photo.porlid + "/" + designer.setting.front.photo.index + designer.setting.front.photo.porlid + ".jpg" + "')",
                 backgroundSize: "auto 100%",
                 backgroundPosition: "50% 50%",
                 display: "inline-block",
@@ -1010,7 +1010,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
             width: String(belowPictureWidth) + ea,
             height: String(100) + '%',
             marginLeft: String(belowPictureMargin) + ea,
-            backgroundImage: "url('" + "https://" + GHOSTHOST + "/corePortfolio/listImage/" + pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(contents.contents.review.detailInfo.photodae[1]) + pid + ".jpg" + "')",
+            backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(contents.contents.review.detailInfo.photodae[1]) + pid + ".jpg" + "')",
             backgroundSize: desktop ? "auto 100%" : "100% auto",
             backgroundPosition: "50% 50%",
             verticalAlign: "top",
@@ -1095,7 +1095,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
               width: String(belowPictureWidth) + ea,
               height: String(100) + '%',
               marginLeft: String(belowPictureMargin) + ea,
-              backgroundImage: "url('" + "https://" + GHOSTHOST + "/corePortfolio/listImage/" + designer.setting.front.photo.porlid + "/" + designer.setting.front.photo.index + designer.setting.front.photo.porlid + ".jpg" + "')",
+              backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + designer.setting.front.photo.porlid + "/" + designer.setting.front.photo.index + designer.setting.front.photo.porlid + ".jpg" + "')",
               backgroundSize: desktop ? "auto 100%" : "100% auto",
               backgroundPosition: "50% 50%",
               verticalAlign: "top",
@@ -1737,9 +1737,9 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
         if (filteredContents.review.detailInfo.photodae.length > 1) {
 
           if (desktop) {
-            src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + filteredContents.portfolio.pid + "/" + photoChar + String(filteredContents.portfolio.detailInfo.photodae[0]) + filteredContents.portfolio.pid + ".jpg";
+            src = FRONTHOST + "/list_image/portp" + filteredContents.portfolio.pid + "/" + photoChar + String(filteredContents.portfolio.detailInfo.photodae[0]) + filteredContents.portfolio.pid + ".jpg";
           } else {
-            src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + filteredContents.portfolio.pid + "/mobile/" + photoCharMobile + String(filteredContents.portfolio.detailInfo.photodae[0]) + filteredContents.portfolio.pid + ".jpg";
+            src = FRONTHOST + "/list_image/portp" + filteredContents.portfolio.pid + "/mobile/" + photoCharMobile + String(filteredContents.portfolio.detailInfo.photodae[0]) + filteredContents.portfolio.pid + ".jpg";
           }
           title = desktop ? filteredContents.portfolio.title.main.split(", ")[1] : filteredContents.portfolio.title.sub.split(", ")[1];
           subTitle = filteredContents.portfolio.title.sub;

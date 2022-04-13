@@ -41,7 +41,7 @@ const ClientConsultingJs = function () {
   this.mother = new GeneralJs();
 }
 
-ClientConsultingJs.binaryPath = "/middle/consulting";
+ClientConsultingJs.binaryPath = FRONTHOST + "/middle/consulting";
 
 ClientConsultingJs.prototype.insertInitBox = function () {
   const instance = this;
@@ -3098,7 +3098,7 @@ ClientConsultingJs.prototype.insertStrongBox = function () {
         {
           mode: "img",
           attribute: {
-            src: "/middle/index" + "/" + strongContents[i].icon,
+            src: (FRONTHOST + "/middle/index") + "/" + strongContents[i].icon,
           },
           style: {
             position: "absolute",

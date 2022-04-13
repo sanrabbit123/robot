@@ -41,7 +41,7 @@ const ReviewListJs = function () {
   this.mother = new GeneralJs();
 }
 
-ReviewListJs.binaryPath = "/middle/review";
+ReviewListJs.binaryPath = FRONTHOST + "/middle/review";
 
 ReviewListJs.prototype.generateGsArray = function (number) {
   if (typeof number !== "number") {
@@ -535,9 +535,9 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
         if (contents.review.detailInfo.photodae.length > 1) {
 
           if (desktop) {
-            src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.portfolio.pid + "/" + photoChar + String(contents.review.detailInfo.photodae[gsArray[i] === 'g' ? 1 : 0]) + contents.portfolio.pid + ".jpg";
+            src = FRONTHOST + "/list_image/portp" + contents.portfolio.pid + "/" + photoChar + String(contents.review.detailInfo.photodae[gsArray[i] === 'g' ? 1 : 0]) + contents.portfolio.pid + ".jpg";
           } else {
-            src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.portfolio.pid + "/mobile/" + photoCharMobile + String(contents.review.detailInfo.photodae[gsArray[i] === 'g' ? 1 : 0]) + contents.portfolio.pid + ".jpg";
+            src = FRONTHOST + "/list_image/portp" + contents.portfolio.pid + "/mobile/" + photoCharMobile + String(contents.review.detailInfo.photodae[gsArray[i] === 'g' ? 1 : 0]) + contents.portfolio.pid + ".jpg";
           }
 
           title = contents.review.title.sub.split(", ").join(" ");
@@ -808,6 +808,14 @@ ReviewListJs.prototype.launching = async function (loading) {
         instance.contentsArr = new SearchArray(response.contentsArr);
         instance.designers = new SearchArray(response.designers);
         instance.fullLoad = true;
+
+        if (typeof getObj.search === "string") {
+          if (document.querySelector("input") !== null) {
+            instance.portfolioBlock(null, getObj.search);
+            instance.photoLoad = true;
+          }
+        }
+
       }).catch((err) => {
         console.log(err);
       });

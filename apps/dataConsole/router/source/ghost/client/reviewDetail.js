@@ -41,7 +41,7 @@ const ReviewDetailJs = function () {
   this.mother = new GeneralJs();
 }
 
-ReviewDetailJs.binaryPath = "/middle/review";
+ReviewDetailJs.binaryPath = FRONTHOST + "/middle/review";
 
 ReviewDetailJs.prototype.reviewMainBox = function () {
   const instance = this;
@@ -168,7 +168,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
       width: desktop ? String(pictureWidth) + ea : String(100) + '%',
       height: desktop ? String(pictureHeight) + ea : String(100) + '%',
       borderRadius: desktop ? String(5) + "px" : "",
-      backgroundImage: "url('" + "https://" + GHOSTHOST + "/corePortfolio/listImage/" + pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(contents.contents.review.detailInfo.photodae[1]) + pid + ".jpg" + "')",
+      backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(contents.contents.review.detailInfo.photodae[1]) + pid + ".jpg" + "')",
       backgroundSize: "auto 100%",
       backgroundPosition: "50% 50%",
       boxShadow: desktop ? "0px 8px 22px -15px " + colorChip.shadow : "",
@@ -600,9 +600,9 @@ ReviewDetailJs.prototype.reviewContentsBox = function () {
     num = 0;
     for (let index of photos) {
       if (desktop) {
-        src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + pid + "/" + photoChar + String(index) + pid + ".jpg";
+        src = FRONTHOST + "/list_image/portp" + pid + "/" + photoChar + String(index) + pid + ".jpg";
       } else {
-        src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + pid + "/mobile/" + photoCharMobile + String(index) + pid + ".jpg";
+        src = FRONTHOST + "/list_image/portp" + pid + "/mobile/" + photoCharMobile + String(index) + pid + ".jpg";
       }
       garo = (photoDetail[index - 1].gs === 'g');
       createNode({
@@ -737,7 +737,7 @@ ReviewDetailJs.prototype.reviewContentsBox = function () {
         children: [
           {
             style: {
-              backgroundImage: "url('" + "https://" + GHOSTHOST + "/corePortfolio/listImage/" + designer.setting.front.photo.porlid + "/" + designer.setting.front.photo.index + designer.setting.front.photo.porlid + ".jpg" + "')",
+              backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + designer.setting.front.photo.porlid + "/" + designer.setting.front.photo.index + designer.setting.front.photo.porlid + ".jpg" + "')",
               backgroundSize: "auto 100%",
               backgroundPosition: "50% 50%",
               display: "inline-block",
@@ -767,7 +767,7 @@ ReviewDetailJs.prototype.reviewContentsBox = function () {
           width: String(belowPictureWidth) + ea,
           height: String(100) + '%',
           marginLeft: String(belowPictureMargin) + ea,
-          backgroundImage: "url('" + "https://" + GHOSTHOST + "/corePortfolio/listImage/" + pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(contents.contents.portfolio.detailInfo.photodae[1]) + pid + ".jpg" + "')",
+          backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(contents.contents.portfolio.detailInfo.photodae[1]) + pid + ".jpg" + "')",
           backgroundSize: desktop ? "auto 100%" : "100% auto",
           backgroundPosition: "50% 50%",
           verticalAlign: "top",
@@ -852,7 +852,7 @@ ReviewDetailJs.prototype.reviewContentsBox = function () {
             width: String(belowPictureWidth) + ea,
             height: String(100) + '%',
             marginLeft: String(belowPictureMargin) + ea,
-            backgroundImage: "url('" + "https://" + GHOSTHOST + "/corePortfolio/listImage/" + designer.setting.front.photo.porlid + "/" + designer.setting.front.photo.index + designer.setting.front.photo.porlid + ".jpg" + "')",
+            backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + designer.setting.front.photo.porlid + "/" + designer.setting.front.photo.index + designer.setting.front.photo.porlid + ".jpg" + "')",
             backgroundSize: desktop ? "auto 100%" : "100% auto",
             backgroundPosition: "50% 50%",
             verticalAlign: "top",
@@ -1487,9 +1487,9 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
         if (filteredContents.review.detailInfo.photodae.length > 1) {
 
           if (desktop) {
-            src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + filteredContents.portfolio.pid + "/" + photoChar + String(filteredContents.review.detailInfo.photodae[0]) + filteredContents.portfolio.pid + ".jpg";
+            src = FRONTHOST + "/list_image/portp" + filteredContents.portfolio.pid + "/" + photoChar + String(filteredContents.review.detailInfo.photodae[0]) + filteredContents.portfolio.pid + ".jpg";
           } else {
-            src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + filteredContents.portfolio.pid + "/mobile/" + photoCharMobile + String(filteredContents.review.detailInfo.photodae[0]) + filteredContents.portfolio.pid + ".jpg";
+            src = FRONTHOST + "/list_image/portp" + filteredContents.portfolio.pid + "/mobile/" + photoCharMobile + String(filteredContents.review.detailInfo.photodae[0]) + filteredContents.portfolio.pid + ".jpg";
           }
           title = filteredContents.review.title.sub.split(", ").join(" ");
           tag = equalJson(JSON.stringify(filteredContents.portfolio.detailInfo.tag));

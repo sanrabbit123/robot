@@ -41,7 +41,7 @@ const FrontIndexJs = function () {
   this.mother = new GeneralJs();
 }
 
-FrontIndexJs.binaryPath = "/middle/index";
+FrontIndexJs.binaryPath = FRONTHOST + "/middle/index";
 
 FrontIndexJs.prototype.generateGsArray = function (number) {
   if (typeof number !== "number") {
@@ -166,7 +166,7 @@ FrontIndexJs.prototype.insertSlideBox = function () {
   for (let i = 0; i < randomIndex.length; i++) {
     if (desktop) {
 
-      src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + randomIndex[i].contents.portfolio.pid + "/" + photoChar + String(randomIndex[i].contents.portfolio.detailInfo.photodae[1]) + randomIndex[i].contents.portfolio.pid + ".jpg";
+      src = FRONTHOST + "/list_image/portp" + randomIndex[i].contents.portfolio.pid + "/" + photoChar + String(randomIndex[i].contents.portfolio.detailInfo.photodae[1]) + randomIndex[i].contents.portfolio.pid + ".jpg";
 
       createNode({
         mother: photoTong,
@@ -183,9 +183,10 @@ FrontIndexJs.prototype.insertSlideBox = function () {
           opacity: String(i !== randomIndex.length - 1 ? 0 : 1),
         }
       });
+
     } else {
 
-      src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + randomIndex[i].contents.portfolio.pid + "/mobile/" + photoCharMobile + String(randomIndex[i].contents.portfolio.detailInfo.photodae[1]) + randomIndex[i].contents.portfolio.pid + ".jpg";
+      src = FRONTHOST + "/list_image/portp" + randomIndex[i].contents.portfolio.pid + "/mobile/" + photoCharMobile + String(randomIndex[i].contents.portfolio.detailInfo.photodae[1]) + randomIndex[i].contents.portfolio.pid + ".jpg";
 
       createNode({
         mother: photoTong,
@@ -206,6 +207,7 @@ FrontIndexJs.prototype.insertSlideBox = function () {
           transform: (i !== randomIndex.length - 1 ? "translateX(100" + ea + ")" : "translateX(0" + ea + ")"),
         }
       });
+
     }
   }
 
@@ -841,9 +843,9 @@ FrontIndexJs.prototype.insertSearchBox = function () {
     ({ contents } = contentsArr[i]);
 
     if (desktop) {
-      src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.portfolio.pid + "/" + photoChar + String(contents.portfolio.detailInfo.photodae[i === 0 ? 1 : 0]) + contents.portfolio.pid + ".jpg";
+      src = FRONTHOST + "/list_image/portp" + contents.portfolio.pid + "/" + photoChar + String(contents.portfolio.detailInfo.photodae[i === 0 ? 1 : 0]) + contents.portfolio.pid + ".jpg";
     } else {
-      src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.portfolio.pid + "/mobile/" + photoCharMobile + String(contents.portfolio.detailInfo.photodae[i === 0 ? 1 : 0]) + contents.portfolio.pid + ".jpg";
+      src = FRONTHOST + "/list_image/portp" + contents.portfolio.pid + "/mobile/" + photoCharMobile + String(contents.portfolio.detailInfo.photodae[i === 0 ? 1 : 0]) + contents.portfolio.pid + ".jpg";
     }
 
     title = contents.portfolio.title.main.split(", ")[1];
@@ -1027,9 +1029,9 @@ FrontIndexJs.prototype.insertSearchBox = function () {
     ({ contents } = reviewArr[i]);
 
     if (desktop) {
-      src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.portfolio.pid + "/" + photoChar + String(contents.review.detailInfo.photodae[i === 0 ? 1 : 0]) + contents.portfolio.pid + ".jpg";
+      src = FRONTHOST + "/list_image/portp" + contents.portfolio.pid + "/" + photoChar + String(contents.review.detailInfo.photodae[i === 0 ? 1 : 0]) + contents.portfolio.pid + ".jpg";
     } else {
-      src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + contents.portfolio.pid + "/mobile/" + photoCharMobile + String(contents.review.detailInfo.photodae[i === 0 ? 1 : 0]) + contents.portfolio.pid + ".jpg";
+      src = FRONTHOST + "/list_image/portp" + contents.portfolio.pid + "/mobile/" + photoCharMobile + String(contents.review.detailInfo.photodae[i === 0 ? 1 : 0]) + contents.portfolio.pid + ".jpg";
     }
 
     title = contents.review.title.sub.split(", ").join(" ");

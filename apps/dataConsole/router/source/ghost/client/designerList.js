@@ -41,7 +41,7 @@ const DesignerListJs = function () {
   this.mother = new GeneralJs();
 }
 
-DesignerListJs.binaryPath = "/middle/designer";
+DesignerListJs.binaryPath = FRONTHOST + "/middle/designer";
 
 DesignerListJs.prototype.insertInitBox = function () {
   const instance = this;
@@ -474,9 +474,9 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
   for (let designer of targets) {
 
     if (desktop) {
-      src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + designer.setting.front.photo.porlid + "/" + designer.setting.front.photo.index + designer.setting.front.photo.porlid + ".jpg";
+      src = FRONTHOST + "/list_image/portp" + designer.setting.front.photo.porlid + "/" + designer.setting.front.photo.index + designer.setting.front.photo.porlid + ".jpg";
     } else {
-      src = "https://" + GHOSTHOST + "/corePortfolio/listImage/" + designer.setting.front.photo.porlid + "/mobile/mo" + designer.setting.front.photo.index + designer.setting.front.photo.porlid + ".jpg";
+      src = FRONTHOST + "/list_image/portp" + designer.setting.front.photo.porlid + "/mobile/mo" + designer.setting.front.photo.index + designer.setting.front.photo.porlid + ".jpg";
     }
 
     block = createNode({
