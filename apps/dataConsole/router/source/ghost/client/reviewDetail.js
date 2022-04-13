@@ -355,7 +355,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
 
 ReviewDetailJs.prototype.reviewContentsBox = function () {
   const instance = this;
-  const { createNode, colorChip, withOut, svgMaker, equalJson, designerMthParsing, designerCareer, isMac, isIphone } = GeneralJs;
+  const { createNode, colorChip, withOut, svgMaker, equalJson, designerMthParsing, designerCareer, isMac, isIphone, selfHref } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid } = this;
   const { contentsArr, designers } = this;
   const mobile = media[4];
@@ -723,6 +723,16 @@ ReviewDetailJs.prototype.reviewContentsBox = function () {
     },
     children: [
       {
+        class: [ "hoverDefault_lite" ],
+        attribute: {
+          desid: designer.desid,
+        },
+        event: {
+          click: function (e) {
+            const desid = this.getAttribute("desid");
+            selfHref(FRONTHOST + "/desdetail.php?desid=" + desid);
+          }
+        },
         style: {
           display: desktop ? "inline-block" : "none",
           position: "relative",
@@ -760,6 +770,14 @@ ReviewDetailJs.prototype.reviewContentsBox = function () {
         ]
       },
       {
+        class: [ "hoverDefault_lite" ],
+        attribute: { pid },
+        event: {
+          click: function (e) {
+            const pid = this.getAttribute("pid");
+            selfHref(FRONTHOST + "/portdetail.php?pid=" + pid);
+          }
+        },
         style: {
           display: "inline-block",
           position: "relative",
@@ -774,6 +792,14 @@ ReviewDetailJs.prototype.reviewContentsBox = function () {
         }
       },
       {
+        class: [ "hoverDefault_lite" ],
+        attribute: { pid },
+        event: {
+          click: function (e) {
+            const pid = this.getAttribute("pid");
+            selfHref(FRONTHOST + "/portdetail.php?pid=" + pid);
+          }
+        },
         style: {
           display: "inline-block",
           position: "relative",
@@ -1121,7 +1147,7 @@ ReviewDetailJs.prototype.relativeContents = function (contents, length) {
 
 ReviewDetailJs.prototype.reviewRelativeBox = function () {
   const instance = this;
-  const { createNode, colorChip, withOut, svgMaker, sleep, setQueue, equalJson, isMac, isIphone } = GeneralJs;
+  const { createNode, colorChip, withOut, svgMaker, sleep, setQueue, equalJson, isMac, isIphone, selfHref } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid, standardWidth } = this;
   const { contentsArr } = this;
   const mobile = media[4];
@@ -1441,6 +1467,11 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
   createNode({
     mother: belowBaseTong,
     class: [ "hoverDefault_lite" ],
+    event: {
+      click: (e) => {
+        selfHref(FRONTHOST + "/consulting.php");
+      }
+    },
     style: {
       display: "inline-block",
       position: "relative",
@@ -1505,6 +1536,14 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
 
           block = createNode({
             mother: photoTong,
+            class: [ "hoverDefault_lite" ],
+            attribute: { pid: filteredContents.portfolio.pid },
+            event: {
+              click: function (e) {
+                const pid = this.getAttribute("pid");
+                selfHref(FRONTHOST + "/revdetail.php?pid=" + pid);
+              }
+            },
             style: {
               display: "inline-block",
               width: String(seroWidth) + ea,
@@ -1636,6 +1675,9 @@ ReviewDetailJs.prototype.launching = async function (loading) {
     }
 
     const getObj = returnGet();
+    if (typeof getObj.qqq === "string") {
+      getObj.pid = getObj.qqq;
+    }
     const { pid } = getObj;
     let response;
 

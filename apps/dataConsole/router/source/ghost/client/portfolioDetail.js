@@ -486,9 +486,13 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
 
   designerBox = createNode({
     mother: contentsBox,
+    attribute: {
+      desid: designer.desid,
+    },
     event: {
-      click: (e) => {
-
+      click: function (e) {
+        const desid = this.getAttribute("desid");
+        selfHref(FRONTHOST + "/desdetail.php?desid=" + desid);
       }
     },
     style: {
@@ -600,7 +604,7 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
       },
       {
         event: {
-          click: (e) => { selfHref("/consulting.php") },
+          click: (e) => { selfHref(FRONTHOST + "/consulting.php") },
         },
         style: {
           display: "flex",
@@ -637,7 +641,7 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
 
 PortfolioDetailJs.prototype.portfolioContentsBox = function () {
   const instance = this;
-  const { createNode, colorChip, withOut, svgMaker, equalJson, designerMthParsing, designerCareer, isMac, isIphone } = GeneralJs;
+  const { createNode, colorChip, withOut, svgMaker, equalJson, designerMthParsing, designerCareer, isMac, isIphone, selfHref } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid } = this;
   const { contentsArr, designers } = this;
   const mobile = media[4];
@@ -966,6 +970,16 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
       },
       children: [
         {
+          class: [ "hoverDefault_lite" ],
+          attribute: {
+            desid: designer.desid,
+          },
+          event: {
+            click: function (e) {
+              const desid = this.getAttribute("desid");
+              selfHref(FRONTHOST + "/desdetail.php?desid=" + desid);
+            }
+          },
           style: {
             display: desktop ? "inline-block" : "none",
             position: "relative",
@@ -1003,6 +1017,14 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
           ]
         },
         {
+          class: [ "hoverDefault_lite" ],
+          attribute: { pid },
+          event: {
+            click: function (e) {
+              const pid = this.getAttribute("pid");
+              selfHref(FRONTHOST + "/revdetail.php?pid=" + pid);
+            }
+          },
           style: {
             display: "inline-block",
             position: "relative",
@@ -1017,6 +1039,14 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
           }
         },
         {
+          class: [ "hoverDefault_lite" ],
+          attribute: { pid },
+          event: {
+            click: function (e) {
+              const pid = this.getAttribute("pid");
+              selfHref(FRONTHOST + "/revdetail.php?pid=" + pid);
+            }
+          },
           style: {
             display: "inline-block",
             position: "relative",
@@ -1365,7 +1395,7 @@ PortfolioDetailJs.prototype.relativeContents = function (contents, length) {
 
 PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
   const instance = this;
-  const { createNode, colorChip, withOut, svgMaker, sleep, setQueue, equalJson, isMac, isIphone } = GeneralJs;
+  const { createNode, colorChip, withOut, svgMaker, sleep, setQueue, equalJson, isMac, isIphone, selfHref } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid, standardWidth } = this;
   const { contentsArr } = this;
   const mobile = media[4];
@@ -1691,6 +1721,11 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
   createNode({
     mother: belowBaseTong,
     class: [ "hoverDefault_lite" ],
+    event: {
+      click: (e) => {
+        selfHref(FRONTHOST + "/consulting.php");
+      }
+    },
     style: {
       display: "inline-block",
       position: "relative",
@@ -1734,137 +1769,144 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
 
         ({ contents: filteredContents } = filtered[i]);
 
-        if (filteredContents.review.detailInfo.photodae.length > 1) {
-
-          if (desktop) {
-            src = FRONTHOST + "/list_image/portp" + filteredContents.portfolio.pid + "/" + photoChar + String(filteredContents.portfolio.detailInfo.photodae[0]) + filteredContents.portfolio.pid + ".jpg";
-          } else {
-            src = FRONTHOST + "/list_image/portp" + filteredContents.portfolio.pid + "/mobile/" + photoCharMobile + String(filteredContents.portfolio.detailInfo.photodae[0]) + filteredContents.portfolio.pid + ".jpg";
+        if (desktop) {
+          src = FRONTHOST + "/list_image/portp" + filteredContents.portfolio.pid + "/" + photoChar + String(filteredContents.portfolio.detailInfo.photodae[0]) + filteredContents.portfolio.pid + ".jpg";
+        } else {
+          src = FRONTHOST + "/list_image/portp" + filteredContents.portfolio.pid + "/mobile/" + photoCharMobile + String(filteredContents.portfolio.detailInfo.photodae[0]) + filteredContents.portfolio.pid + ".jpg";
+        }
+        title = desktop ? filteredContents.portfolio.title.main.split(", ")[1] : filteredContents.portfolio.title.sub.split(", ")[1];
+        subTitle = filteredContents.portfolio.title.sub;
+        if (!mobile) {
+          if (subTitle.length > 27) {
+            subTitle = filteredContents.portfolio.title.sub.replace(/홈?스타일링$/i, '');
           }
-          title = desktop ? filteredContents.portfolio.title.main.split(", ")[1] : filteredContents.portfolio.title.sub.split(", ")[1];
-          subTitle = filteredContents.portfolio.title.sub;
-          if (!mobile) {
-            if (subTitle.length > 27) {
-              subTitle = filteredContents.portfolio.title.sub.replace(/홈?스타일링$/i, '');
+        } else {
+          if (subTitle.length > 25) {
+            subTitle = filteredContents.portfolio.title.sub.replace(/홈?스타일링$/i, '');
+          }
+        }
+        tag = equalJson(JSON.stringify(filteredContents.portfolio.detailInfo.tag));
+
+        if (desktop) {
+          tag = tag.slice(5, 10);
+        } else {
+          tag = tag.slice(5, 8);
+        }
+        if (tag.reduce((acc, curr) => { return acc + curr.length }, 0) > 17) {
+          tag = tag.slice(0, -1);
+        }
+
+        block = createNode({
+          mother: photoTong,
+          class: [ "hoverDefault_lite" ],
+          attribute: { pid: filteredContents.portfolio.pid },
+          event: {
+            click: function (e) {
+              const pid = this.getAttribute("pid");
+              selfHref(FRONTHOST + "/portdetail.php?pid=" + pid);
             }
-          } else {
-            if (subTitle.length > 25) {
-              subTitle = filteredContents.portfolio.title.sub.replace(/홈?스타일링$/i, '');
+          },
+          style: {
+            display: "inline-block",
+            width: String(seroWidth) + ea,
+            borderRadius: String(5) + "px",
+            marginRight: String(photoMargin) + ea,
+            verticalAlign: "top",
+            overflow: "hidden",
+          },
+          children: [
+            {
+              style: {
+                display: "block",
+                width: String(seroWidth) + ea,
+                height: String(photoHeight) + ea,
+                borderRadius: String(5) + "px",
+                marginBottom: String(photoMarginBottom) + ea,
+                backgroundSize: "100% auto",
+                backgroundPosition: "50% 50%",
+                backgroundImage: "url('" + src + "')",
+              }
+            },
+            {
+              style: {
+                display: "block",
+                position: "relative",
+                width: String(100) + '%',
+              },
+              children: [
+                {
+                  text: title,
+                  style: {
+                    display: "block",
+                    fontSize: String(titleSize) + ea,
+                    fontWeight: String(titleWeight),
+                    color: colorChip.black,
+                    width: withOut(0, ea),
+                    verticalAlign: "top",
+                  }
+                },
+                {
+                  style: {
+                    display: "block",
+                    width: withOut(0, ea),
+                    verticalAlign: "top",
+                    marginTop: String(titleSubMarginTop) + ea,
+                    overflow: "hidden",
+                  },
+                  children: [
+                    {
+                      text: subTitle,
+                      style: {
+                        display: "block",
+                        position: "relative",
+                        fontSize: String(titleSubSize) + ea,
+                        fontWeight: String(titleWeight),
+                        color: colorChip.deactive,
+                        width: String(200) + '%',
+                      },
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              style: {
+                display: "block",
+                position: "relative",
+                marginTop: String(tagTongMarginTop) + ea,
+                width: String(tagTongWidthRatio * 100) + '%',
+                left: String(0) + ea,
+              }
             }
-          }
-          tag = equalJson(JSON.stringify(filteredContents.portfolio.detailInfo.tag));
-
-          if (desktop) {
-            tag = tag.slice(5, 10);
-          } else {
-            tag = tag.slice(5, 8);
-          }
-          if (tag.reduce((acc, curr) => { return acc + curr.length }, 0) > 17) {
-            tag = tag.slice(0, -1);
-          }
-
-          block = createNode({
-            mother: photoTong,
+          ]
+        });
+        tagTong = block.children[2];
+        for (let t of tag) {
+          createNode({
+            mother: tagTong,
+            text: "<b%#%b> " + t,
             style: {
               display: "inline-block",
-              width: String(seroWidth) + ea,
-              borderRadius: String(5) + "px",
-              marginRight: String(photoMargin) + ea,
-              verticalAlign: "top",
-              overflow: "hidden",
+              fontSize: String(tagSize) + ea,
+              fontWeight: String(tagWeight),
+              color: colorChip.black,
+              paddingLeft: String(tagPaddingLeft) + ea,
+              paddingTop: String(tagPaddingTop) + ea,
+              paddingBottom: String(tagPaddingBottom) + ea,
+              paddingRight: String(tagPaddingLeft) + ea,
+              borderRadius: String(3) + "px",
+              marginRight: String(tagMarginRight) + ea,
+              background: colorChip.gray2
             },
-            children: [
-              {
-                style: {
-                  display: "block",
-                  width: String(seroWidth) + ea,
-                  height: String(photoHeight) + ea,
-                  borderRadius: String(5) + "px",
-                  marginBottom: String(photoMarginBottom) + ea,
-                  backgroundSize: "100% auto",
-                  backgroundPosition: "50% 50%",
-                  backgroundImage: "url('" + src + "')",
-                }
-              },
-              {
-                style: {
-                  display: "block",
-                  position: "relative",
-                  width: String(100) + '%',
-                },
-                children: [
-                  {
-                    text: title,
-                    style: {
-                      display: "block",
-                      fontSize: String(titleSize) + ea,
-                      fontWeight: String(titleWeight),
-                      color: colorChip.black,
-                      width: withOut(0, ea),
-                      verticalAlign: "top",
-                    }
-                  },
-                  {
-                    style: {
-                      display: "block",
-                      width: withOut(0, ea),
-                      verticalAlign: "top",
-                      marginTop: String(titleSubMarginTop) + ea,
-                      overflow: "hidden",
-                    },
-                    children: [
-                      {
-                        text: subTitle,
-                        style: {
-                          display: "block",
-                          position: "relative",
-                          fontSize: String(titleSubSize) + ea,
-                          fontWeight: String(titleWeight),
-                          color: colorChip.deactive,
-                          width: String(200) + '%',
-                        },
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                style: {
-                  display: "block",
-                  position: "relative",
-                  marginTop: String(tagTongMarginTop) + ea,
-                  width: String(tagTongWidthRatio * 100) + '%',
-                  left: String(0) + ea,
-                }
-              }
-            ]
+            bold: {
+              fontWeight: String(400),
+              color: colorChip.deactive,
+            }
           });
-          tagTong = block.children[2];
-          for (let t of tag) {
-            createNode({
-              mother: tagTong,
-              text: "<b%#%b> " + t,
-              style: {
-                display: "inline-block",
-                fontSize: String(tagSize) + ea,
-                fontWeight: String(tagWeight),
-                color: colorChip.black,
-                paddingLeft: String(tagPaddingLeft) + ea,
-                paddingTop: String(tagPaddingTop) + ea,
-                paddingBottom: String(tagPaddingBottom) + ea,
-                paddingRight: String(tagPaddingLeft) + ea,
-                borderRadius: String(3) + "px",
-                marginRight: String(tagMarginRight) + ea,
-                background: colorChip.gray2
-              },
-              bold: {
-                fontWeight: String(400),
-                color: colorChip.deactive,
-              }
-            });
-          }
-          instance.relativePhotoNumber++;
         }
+
+        instance.relativePhotoNumber++;
+
       }
 
     } catch (e) {
@@ -1905,6 +1947,9 @@ PortfolioDetailJs.prototype.launching = async function (loading) {
     }
 
     const getObj = returnGet();
+    if (typeof getObj.qqq === "string") {
+      getObj.pid = getObj.qqq;
+    }
     const { pid } = getObj;
     let response;
 

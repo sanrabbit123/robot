@@ -211,7 +211,7 @@ GeneralJs.prototype.setNavigator = function (subTitle, blackMode = true, name) {
     },
     {
       title: "상담 신청",
-      href: "https://" + GHOSTHOST + "/middle/consulting?nulid=no",
+      href: FRONTHOST + "/consulting.php",
       green: [ "clientConsulting" ],
     },
   ];

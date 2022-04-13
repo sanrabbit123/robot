@@ -408,7 +408,7 @@ ReviewListJs.prototype.insertPortfolioBase = function () {
 
 ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, equalJson, cleanChildren, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, equalJson, cleanChildren, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
   const { ea, media, baseTong } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -458,6 +458,10 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
         target.push(serviceParsing(obj.service));
         designerTarget = designers.search("desid", obj.desid);
         target.push(designerTarget.designer);
+
+        if (/엑스트라/gi.test(search)) {
+          search = "토탈 스타일링";
+        }
 
         boo = false;
         for (let t of target) {
@@ -557,6 +561,16 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
 
           block = createNode({
             mother: baseBlock,
+            class: [ "hoverDefault_lite" ],
+            attribute: {
+              pid: contents.portfolio.pid,
+            },
+            event: {
+              click: function (e) {
+                const pid = this.getAttribute("pid");
+                selfHref(FRONTHOST + "/revdetail.php?pid=" + pid);
+              }
+            },
             style: {
               display: "inline-block",
               width: String(gsArray[i] === 'g' ? garoWidth : seroWidth) + ea,

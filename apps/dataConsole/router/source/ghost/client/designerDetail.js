@@ -113,7 +113,7 @@ DesignerDetailJs.prototype.insertInitBox = function () {
 
 DesignerDetailJs.prototype.designerBlock = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, cleanChildren, designerCareer } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, cleanChildren, designerCareer, selfHref } = GeneralJs;
   const { ea, media } = this;
   const { designers, designerTong } = this;
   const mobile = media[4];
@@ -301,6 +301,12 @@ DesignerDetailJs.prototype.designerBlock = function () {
     if (media[0]) {
       createNode({
         mother: contentsBlock,
+        class: [ "hoverDefault_lite" ],
+        event: {
+          click: function (e) {
+            selfHref(FRONTHOST + "/designer.php");
+          }
+        },
         style: {
           width: String(buttonWidth0) + ea,
           height: String(buttonHeight) + ea,
@@ -331,6 +337,12 @@ DesignerDetailJs.prototype.designerBlock = function () {
     if (media[0] || media[1] || media[2]) {
       createNode({
         mother: contentsBlock,
+        class: [ "hoverDefault_lite" ],
+        event: {
+          click: function (e) {
+            selfHref(FRONTHOST + "/consulting.php");
+          }
+        },
         style: {
           width: String(buttonWidth) + ea,
           height: String(buttonHeight) + ea,
@@ -389,7 +401,7 @@ DesignerDetailJs.prototype.insertPortfolioBase = function () {
 
 DesignerDetailJs.prototype.portfolioBlock = function (limitLength, search = null) {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, equalJson, cleanChildren, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, equalJson, cleanChildren, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
   const { ea, media, baseTong } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -525,6 +537,16 @@ DesignerDetailJs.prototype.portfolioBlock = function (limitLength, search = null
 
         block = createNode({
           mother: baseBlock,
+          class: [ "hoverDefault_lite" ],
+          attribute: {
+            pid: contents.portfolio.pid,
+          },
+          event: {
+            click: function (e) {
+              const pid = this.getAttribute("pid");
+              selfHref(FRONTHOST + "/portdetail.php?pid=" + pid);
+            }
+          },
           style: {
             display: "inline-block",
             width: String(gsArray[i] === 'g' ? garoWidth : seroWidth) + ea,
@@ -738,6 +760,9 @@ DesignerDetailJs.prototype.launching = async function (loading) {
     }
 
     const getObj = returnGet();
+    if (typeof getObj.qqq === "string") {
+      getObj.desid = getObj.qqq;
+    }
     let response, services;
 
     services = serviceParsing().name;

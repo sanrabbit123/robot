@@ -363,7 +363,7 @@ DesignerListJs.prototype.insertInitBox = function () {
 
 DesignerListJs.prototype.designerBlock = function (search = null) {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, cleanChildren, designerCareer, designerMthParsing } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, cleanChildren, designerCareer, designerMthParsing, selfHref } = GeneralJs;
   const { ea, media } = this;
   const { designers, designerTong } = this;
   const mobile = media[4];
@@ -504,6 +504,13 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
           }
         },
         {
+          attribute: { desid: designer.desid },
+          event: {
+            click: function (e) {
+              const desid = this.getAttribute("desid");
+              selfHref(FRONTHOST + "/desdetail.php?desid=" + desid);
+            }
+          },
           style: {
             display: "inline-block",
             position: "relative",

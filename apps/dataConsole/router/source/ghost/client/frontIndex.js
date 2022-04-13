@@ -712,6 +712,14 @@ FrontIndexJs.prototype.insertSearchBox = function () {
               type: "text",
               placeholder: desktop ? "화이트 모던" : "원하는 스타일을 찾아보세요!",
             },
+            event: {
+              keyup: function (e) {
+                if (e.key === "Enter") {
+                  const value = this.value.trim().replace(/[^가-힣a-z0-9 ]/gi, '');
+                  selfHref(FRONTHOST + "/portfolio.php?search=" + value);
+                }
+              }
+            },
             style: {
               position: "absolute",
               top: String(0),
@@ -762,6 +770,15 @@ FrontIndexJs.prototype.insertSearchBox = function () {
       }
     }
     serviceChildren.push({
+      attribute: {
+        value: service
+      },
+      event: {
+        click: function (e) {
+          const value = this.getAttribute("value");
+          selfHref(FRONTHOST + "/portfolio.php?search=" + value);
+        }
+      },
       style: {
         display: "inline-block",
         position: "relative",
@@ -880,6 +897,15 @@ FrontIndexJs.prototype.insertSearchBox = function () {
     block = createNode({
       mother: portfolioTong,
       class: [ "hoverDefault_lite" ],
+      attribute: {
+        pid: contents.portfolio.pid,
+      },
+      event: {
+        click: function (e) {
+          const pid = this.getAttribute("pid");
+          selfHref(FRONTHOST + "/portdetail.php?pid=" + pid);
+        }
+      },
       style: {
         display: "inline-block",
         position: "relative",
@@ -1066,6 +1092,15 @@ FrontIndexJs.prototype.insertSearchBox = function () {
     block = createNode({
       mother: reviewTong,
       class: [ "hoverDefault_lite" ],
+      attribute: {
+        pid: contents.portfolio.pid,
+      },
+      event: {
+        click: function (e) {
+          const pid = this.getAttribute("pid");
+          selfHref(FRONTHOST + "/revdetail.php?pid=" + pid);
+        }
+      },
       style: {
         display: "inline-block",
         position: "relative",
@@ -1169,7 +1204,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
 
 FrontIndexJs.prototype.insertBlackBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
   const { ea, media, totalContents, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -1254,6 +1289,11 @@ FrontIndexJs.prototype.insertBlackBox = function () {
 
   createNode({
     mother: blockTong,
+    event: {
+      click: (e) => {
+        selfHref(FRONTHOST + "/consulting.php");
+      }
+    },
     style: {
       display: "flex",
       position: "absolute",
@@ -1694,7 +1734,7 @@ FrontIndexJs.prototype.insertServiceBox = function () {
 
 FrontIndexJs.prototype.insertEndBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
   const { ea, media, totalContents, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -1713,7 +1753,7 @@ FrontIndexJs.prototype.insertEndBox = function () {
   fontWeight = <%% 600, 600, 600, 600, 600 %%>;
   menuBetween = <%% 55, 48, 44, 32, 48 %%>;
 
-  copyRightSize = <%% 17, 16, 15, 13, 2.8 %%>;
+  copyRightSize = <%% 16, 15, 14, 12, 2.8 %%>;
   copyRightWeight = <%% 400, 400, 400, 400, 400 %%>;
 
   mainTong = createNode({
@@ -1739,6 +1779,12 @@ FrontIndexJs.prototype.insertEndBox = function () {
 
   createNode({
     mother: blockTong,
+    class: [ "hoverDefault_lite" ],
+    event: {
+      click: function (e) {
+        selfHref(FRONTHOST + "/aspirant.php");
+      }
+    },
     text: "디자이너 파트너쉽",
     style: {
       display: desktop ? "inline-block" : "none",
@@ -1753,6 +1799,12 @@ FrontIndexJs.prototype.insertEndBox = function () {
 
   createNode({
     mother: blockTong,
+    class: [ "hoverDefault_lite" ],
+    event: {
+      click: function (e) {
+        selfHref(FRONTHOST + "/about.php");
+      }
+    },
     text: "자주 찾는 질문",
     style: {
       display: desktop ? "inline-block" : "none",
@@ -1768,6 +1820,12 @@ FrontIndexJs.prototype.insertEndBox = function () {
 
   createNode({
     mother: blockTong,
+    class: [ "hoverDefault_lite" ],
+    event: {
+      click: function (e) {
+        window.alert("제휴 문의는 help@home-liaison.com로 이메일을 보내주세요!");
+      }
+    },
     text: "제휴 문의",
     style: {
       display: desktop ? "inline-block" : "none",

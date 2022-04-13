@@ -2840,7 +2840,7 @@ ClientConsultingJs.prototype.insertPannelBox = function () {
     },
   ]);
 
-  ajaxJson({}, "/designerProposal_policy").then(function (res) {
+  ajaxJson({}, "https://" + GHOSTHOST + "/designerProposal_policy").then(function (res) {
     const { policy, button } = res;
     let bTags;
 
