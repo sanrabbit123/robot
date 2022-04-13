@@ -786,13 +786,13 @@ DesignerDetailJs.prototype.launching = async function (loading) {
       }
     }
 
-    this.designers = this.designers.toNormal().filter((obj) => {
-      return /완료/gi.test(obj.information.contract.status);
-    }).filter((obj) => {
-      return obj.setting.front.introduction.desktop.length > 0;
-    }).filter((obj) => {
-      return /^[ap]/i.test(obj.setting.front.photo.porlid);
-    })
+    // this.designers = this.designers.toNormal().filter((obj) => {
+    //   return /완료/gi.test(obj.information.contract.status);
+    // }).filter((obj) => {
+    //   return obj.setting.front.introduction.desktop.length > 0;
+    // }).filter((obj) => {
+    //   return /^[ap]/i.test(obj.setting.front.photo.porlid);
+    // })
 
     await this.mother.ghostClientLaunching({
       mode: "front",
