@@ -282,7 +282,6 @@ LogRouter.prototype.rou_post_getContents = function () {
         }
 
         if (req.body.pid !== undefined) {
-          console.log(req.body.pid);
           if (/^re/.test(req.body.pid)) {
             contentsArr = contentsArr.filter((obj) => {
               return obj.contents.review.rid === req.body.pid;

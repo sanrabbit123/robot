@@ -1709,6 +1709,10 @@ ReviewDetailJs.prototype.launching = async function (loading) {
     this.photoLoad = false;
     this.loadedContents = [];
 
+    if (/^re/.test(pid)) {
+      this.pid = this.contentsArr[0].contents.portfolio.pid;
+    }
+
     await this.mother.ghostClientLaunching({
       mode: "front",
       name: "reviewDetail",
