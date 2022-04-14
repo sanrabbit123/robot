@@ -5114,7 +5114,7 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
       percentage = 100;
     }
 
-    price = Math.floor(originalPrice * (percentage / 100) / 10) * 10;
+    price = Math.floor(originalPrice * (percentage / 100));
     confirmPrice = originalPrice - price;
 
     console.log(price, originalPrice)
