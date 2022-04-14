@@ -5114,10 +5114,8 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
       percentage = 100;
     }
 
-    price = Math.floor(originalPrice * (percentage / 100));
+    price = Math.floor(originalPrice * (percentage / 100) / 10) * 10;
     confirmPrice = originalPrice - price;
-
-    console.log(price, originalPrice)
 
     timestamp = dateToTimestamp(now);
     clientIp = (await ipCheck()).ip;
