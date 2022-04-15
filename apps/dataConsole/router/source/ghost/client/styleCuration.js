@@ -3302,7 +3302,7 @@ StyleCurationJs.prototype.insertInitBox = function () {
   let mobileRightBoxHeight;
   let grayBoxImageVisualWidth;
 
-  blockHeight = <%% 418, 389, 353, 282, 159 %%>;
+  blockHeight = <%% 418, 389, 353, 282, 161 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
   margin = <%% 52, 52, 44, 32, 52 %%>;
   leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
@@ -3331,7 +3331,7 @@ StyleCurationJs.prototype.insertInitBox = function () {
 
   indexNumberBottom = <%% 3, 4, 12, 4, 0 %%>;
 
-  grayBoxMarginTop = <%% 108, 103, 96, 86, 35 %%>;
+  grayBoxMarginTop = <%% 108, 103, 96, 86, 36 %%>;
 
   grayBoxTitleSize = <%% 14, 14, 13, 11, 3.2 %%>;
   grayBoxTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
