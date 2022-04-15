@@ -2562,9 +2562,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "이주현",
-    //     designer: "이연주",
-    //     link: "https://drive.google.com/drive/folders/1g4QwlsuNm1PG-UMqBcfJLs4NEeU9P04w",
+    //     client: "조민지",
+    //     designer: "이정아",
+    //     link: "https://drive.google.com/drive/folders/1_FhKb8kZWfR9lA5Lp-rCFoyztVl_0Bba",
     //     pay: true
     //   }
     // ]);
@@ -2580,7 +2580,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p192");
+    // await this.getRawPortfolio("p159");
 
 
     // get corePortfolio by pid
@@ -2589,7 +2589,7 @@ DevContext.prototype.launching = async function () {
 
     // aspirant to designer
     // await this.aspirantToDesigner([
-    //   [ "정희경", "2022-02-22" ],
+    //   [ "이아진", "2022-03-10" ],
     // ]);
 
 
@@ -2598,16 +2598,17 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2203_aa01s", [
-    //   { porlid: "a93", index: 2 },
-    //   { porlid: "a93", index: 11 },
-    //   { porlid: "a93", index: 5 },
-    //   { porlid: "a93", index: 6 },
-    //   { porlid: "a93", index: 9 },
+    // await this.setProposalSettingForDesigner("d2202_aa02s", [
+    //   { porlid: "a90", index: 1 },
+    //   { porlid: "a90", index: 4 },
+    //   { porlid: "a90", index: 10 },
+    //   { porlid: "a90", index: 8 },
+    //   { porlid: "a90", index: 15 },
+    //   { porlid: "a90", index: 16 },
     // ], [
-    //   "무에서 유를 창조하는 작업에서 성취감을 많이 느낍니다.",
-    //   "고급 소재와 고급 자재들의 루트를 많이 알고 고객의 니즈의 맞게 디자인 하는 편입니다.",
-    //   "한 컨셉이 아닌 다양한 컨셉을 연출하는걸 좋아합니다. 그리고 잘 합니다."
+    //   "최대한 고객님의 취향과 라이프스타일이 반영 된 공간을 디자인해드리려 합니다.",
+    //   "디자인시 예산에 맞춘 스타일링 밸런스 조절을 하기 위해 노력합니다.",
+    //   "소프트 모던 스타일을 잘 풀어내며 편안함이 느껴지는 공간 연출을 지향합니다."
     // ]);
 
 
