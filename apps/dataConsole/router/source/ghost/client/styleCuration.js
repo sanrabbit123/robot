@@ -3309,7 +3309,6 @@ StyleCurationJs.prototype.insertInitBox = function () {
 
   titleFont = <%% 31, 29, 27, 23, 5.7 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
-
   titleFontWeight = <%% 500, 500, 500, 500, 500 %%>;
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
 
@@ -3528,7 +3527,7 @@ StyleCurationJs.prototype.insertInitBox = function () {
     },
     bold: {
       fontWeight: String(600),
-      color: colorChip.green,
+      color: colorChip.black,
     }
   });
 
@@ -3550,7 +3549,7 @@ StyleCurationJs.prototype.insertInitBox = function () {
     },
     bold: {
       fontWeight: String(600),
-      color: colorChip.green,
+      color: colorChip.black,
     }
   });
 
@@ -3878,1187 +3877,6 @@ StyleCurationJs.prototype.insertInitBox = function () {
   //     }
   //   ]
   // })
-
-}
-
-StyleCurationJs.prototype.insertFirstService = function () {
-  const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
-  const { client, ea, media, osException, testMode } = this;
-  const mobile = media[4];
-  const desktop = !mobile;
-  let whiteBlock;
-  let style;
-  let blockHeight, bottomMargin;
-  let leftBox, rightBox;
-  let titleBox, barBox, indexBox;
-  let margin;
-  let leftRatio;
-  let wordSpacing;
-  let titleFont, titleLeft, titleFontWeight, titleSecondLeft, titleSecondWeight;
-  let titleSecondTop;
-  let barWidth, barTop;
-  let indexFont, indexFontWeight;
-  let indexNumberBottom;
-  let initWording0, initWording1;
-  let circleWidth0, circleWidth1, circleWidth2, circleWidth3;
-  let circleLeft0, circleLeft1, circleLeft2, circleLeft3;
-  let circleTop0, circleTop1, circleTop2, circleTop3;
-  let circleTextTop0, circleTextTop1, circleTextTop3;
-  let circleTextLeft0, circleTextLeft1, circleTextLeft3;
-  let circleTextSize0, circleTextSize1, circleTextSize3;
-  let circleTextWidth, circleTextWeight, circleTextFocus;
-  let circleArrowWidth, circlrArrowHeight;
-  let circleArrowTop, circlrArrowLeft;
-  let contentsBox;
-  let contentsBoxLeft;
-  let contentsBoxPadding;
-  let contentsWhiteHeight;
-  let contentsBlockHeight, contentsBlockMarginTop, contentsBlockMarginTopArrow, contentsBlockHeightArrow;
-  let contentsBlockArrowWidth;
-  let descriptionHeight, descriptionMarginTop;
-  let descriptionTitleWidth, descriptionTitleMargin;
-  let descriptionSize, descriptionWeight, descriptionLineHeight;
-  let descriptionTitleWeight;
-  let contentsBlockSize, contentsBlockBottom;
-  let wordings;
-  let mobileTitleLeft;
-  let mobileTitleTop;
-  let mobileTitleMarginBottom;
-  let barLeft;
-  let circleLeft4, circleLeft5;
-  let mobileRightBoxPaddingTop;
-  let whiteBlockPaddingBottom;
-
-  blockHeight = <%% 645, 645, 620, 533, 160 %%>;
-  bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
-  margin = <%% 52, 52, 44, 32, 52 %%>;
-  leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
-
-  titleFont = <%% 31, 28, 25, 22, 5.7 %%>;
-  titleLeft = <%% 6, 6, 6, 6, 6 %%>;
-  titleFontWeight = <%% 600, 600, 600, 600, 600 %%>;
-  titleSecondTop = <%% 55, 50, 44, 39, 2 %%>;
-  titleSecondLeft = <%% 125, 6, 6, 6, 6 %%>;
-  titleSecondWeight = <%% 200, 200, 200, 200, 200 %%>;
-
-  wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
-
-  barWidth = <%% 106, 106, 106, 106, 19.5 %%>;
-  barTop = <%% (isMac() ? 73 : 71), (isMac() ? 73 : 71), (isMac() ? 73 : 71), (isMac() ? 73 : 71), 10.5 %%>;
-  barLeft = 12;
-
-  indexFont = <%% 19, 19, 19, 19, 5.7 %%>;
-  indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
-
-  indexNumberBottom = <%% 7, 4, 2, 2, 0 %%>;
-
-  circleWidth0 = <%% 72, 72, 72, 60, 12 %%>;
-  circleWidth1 = <%% 90, 90, 90, 80, 18 %%>;
-  circleWidth2 = <%% 120, 120, 120, 108, 0 %%>;
-  circleWidth3 = <%% 108, 108, 108, 100, 24 %%>;
-
-  circleLeft0 = <%% 162, 162, 162, 138, 6 %%>;
-  circleLeft1 = <%% 63, 63, 63, 56, 14 %%>;
-  circleLeft2 = <%% 0, 0, 0, 0, 0 %%>;
-  circleLeft3 = <%% 7, 7, 7, 5, 32 %%>;
-
-  circleLeft4 = 56.5;
-  circleLeft5 = 70.5;
-
-  circleTop0 = <%% 0, 0, 0, 0, 31 %%>;
-  circleTop1 = <%% 58, 58, 58, 48, 14 %%>;
-  circleTop2 = <%% 158, 158, 158, 138, 0 %%>;
-  circleTop3 = <%% 165, 165, 165, 143, 0 %%>;
-
-  circleTextTop0 = <%% 24, 24, 24, 24, 25 %%>;
-  circleTextTop1 = <%% 34, 34, 34, 34, 25 %%>;
-  circleTextTop3 = <%% 38, 38, 38, 36, 25 %%>;
-
-  circleTextLeft0 = <%% 85, 85, 85, 85, 0 %%>;
-  circleTextLeft1 = <%% 103, 103, 103, 103, 0 %%>;
-  circleTextLeft3 = <%% 128, 128, 128, 115, 0 %%>;
-
-  circleTextSize0 = <%% 10, 10, 10, 10, 2.7 %%>;
-  circleTextSize1 = <%% 13, 13, 13, 13, 2.7 %%>;
-  circleTextSize3 = <%% 15, 15, 15, 14, 2.7 %%>;
-
-  circleTextWidth = <%% 100, 100, 100, 100, 24 %%>;
-  circleTextWeight = <%% 300, 300, 300, 300, 300 %%>;
-  circleTextFocus = <%% 500, 500, 500, 500, 500 %%>;
-
-  circleArrowWidth = <%% 110, 82, 26, 15, 2 %%>;
-  circlrArrowHeight = <%% 14, 14, 12, 9, 12 %%>;
-  circleArrowTop = <%% 207, 207, 208, 184, 30 %%>;
-  circlrArrowLeft = <%% 225, 225, 225, 200, 43 %%>;
-
-  contentsBoxLeft = <%% 350, 322, 266, 226, 6 %%>;
-  contentsBoxPadding = <%% 20, 20, 20, 10, 3 %%>;
-
-  contentsWhiteHeight = <%% 212, 212, 212, 182, 38 %%>;
-  contentsBlockHeight = <%% 40, 40, 40, 40, 9 %%>;
-  contentsBlockMarginTop = <%% 8, 8, 8, 8, 1 %%>;
-  contentsBlockMarginTopArrow = <%% 11, 11, 11, 11, 2 %%>;
-  contentsBlockArrowWidth = <%% 12, 12, 12, 10, 2 %%>;
-  contentsBlockHeightArrow = contentsBlockHeight + contentsBlockMarginTop - (contentsBlockMarginTopArrow * 2);
-
-  contentsBlockSize = <%% 12, 12, 12, 12, 2.8 %%>;
-  contentsBlockBottom = <%% (isMac() ? 12.5 : 11), (isMac() ? 12.5 : 11), (isMac() ? 12.5 : 11), (isMac() ? 12.5 : 11), 2.5 %%>;
-
-  descriptionHeight = <%% 60, 60, 60, 60, 6 %%>;
-  descriptionMarginTop = <%% 45, 45, 45, 35, 4 %%>;
-  descriptionTitleWidth = <%% 90, 90, 90, 72, 6 %%>;
-  descriptionTitleMargin = <%% 40, 40, 30, 3, 6 %%>;
-  descriptionSize = <%% 15, 15, 14, 13, 3 %%>;
-  descriptionWeight = desktop ? 300 : 400;
-  descriptionLineHeight = 1.6;
-  descriptionTitleWeight = 700;
-
-  mobileTitleLeft = 7;
-  mobileTitleTop = 7;
-  mobileTitleMarginBottom = 7;
-  mobileRightBoxPaddingTop = 48.5;
-  whiteBlockPaddingBottom = 9;
-
-  wordings = {
-    title: {
-      main: desktop ? "디자이너를 먼저 선택," : "디자이너를 먼저 선택",
-      sub: [
-        "디자이너와 함께",
-        "<b%선%b> 기획 <b%후%b> 시공"
-      ]
-    },
-    pick: [
-      "A designer",
-      "B designer",
-      "C designer",
-      "D designer",
-      "E designer"
-    ],
-    box: {
-      design: "<b%선 디자인 / 기획%b>",
-      etc: [
-        "디자인에 따른 <b%시공 범위 조정 및 진행%b>",
-        "구매 리스트 작성 및 구매",
-        "부가 서비스 이용",
-      ]
-    },
-    contents: {
-      title: [
-        "홈리에종의",
-        "인테리어"
-      ],
-    }
-  }
-
-  if (media[0]) {
-    wordings.contents.description = [ "홈리에종은 먼저 고객님의 상황을 분석하여 그에 맞는 적합한 디자이너 3명 ~ 6명을 추천드립니다. 디자이너를 선택하게 되면 해당 디자이너가 인테리어 전 과정을 케어하며, 선 디자인 후 시공/구매 방식으로 진행하게 됩니다." ]
-  } else if (media[1]) {
-    wordings.contents.description = [ "홈리에종은 고객님의 상황을 분석하여 적합한 디자이너를 추천드립니다. 해당 디자이너는 인테리어 전 과정을 케어하며, 선 디자인 후 시공 방식으로 진행하게 됩니다." ]
-  } else if (media[2]) {
-    wordings.contents.description = [ "홈리에종은 고객님의 상황을 분석하여 적합한 디자이너를 추천드립니다. 해당 디자이너는 전 과정을 케어하며, 선 디자인 후 시공 방식으로 진행하게 됩니다." ]
-  } else if (media[3]) {
-    wordings.contents.description = [ "홈리에종은 고객님의 상황을 분석하여 디자이너를 추천드립니다. 해당 디자이너는 전 과정을 케어하며, 선 디자인 후 시공 방식으로 진행하게 됩니다." ]
-  } else {
-    wordings.contents.description = [ "홈리에종은 고객님의 상황을 분석하여 적합한 디자이너를 추천드립니다. 해당 디자이너는 인테리어 전 과정을 케어하며, 선 디자인 후 시공 방식으로 진행하게 됩니다." ]
-  }
-
-  whiteBlock = createNode({
-    mother: this.baseTong,
-    style: {
-      position: "relative",
-      borderRadius: String(desktop ? 8 : 1) + ea,
-      width: String(100) + '%',
-      height: desktop ? String(blockHeight) + ea : "",
-      background: colorChip.white,
-      marginBottom: String(bottomMargin) + ea,
-      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
-      paddingBottom: desktop ? "" : String(whiteBlockPaddingBottom) + ea,
-    }
-  });
-
-  leftBox = createNode({
-    mother: whiteBlock,
-    style: {
-      display: desktop ? "inline-block" : "block",
-      position: "relative",
-      width: desktop ? "calc(calc(100% - " + String(margin * 2) + ea + ") * " + String(leftRatio) + ")" : String(100) + '%',
-      height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : "",
-      marginTop: desktop ? String(margin) + ea : "",
-      marginBottom: desktop ? String(margin) + ea : String(mobileTitleMarginBottom) + ea,
-      marginLeft: desktop ? String(margin) + ea : "",
-    }
-  });
-
-  //main title
-  createNode({
-    mother: leftBox,
-    text: wordings.title.main,
-    style: {
-      position: desktop ? "absolute" : "relative",
-      fontSize: String(titleFont) + ea,
-      fontWeight: String(titleFontWeight),
-      wordSpacing: String(wordSpacing) + "px",
-      top: desktop ? (String((media[0] ? 0 : media[1] ? 0 : 0) + (isMac() || mobile ? 0 : 4)) + ea) : "",
-      paddingTop: desktop ? "" : String(mobileTitleTop) + ea,
-      left: desktop ? String(titleLeft) + ea : "",
-      marginLeft: desktop ? "" : String(mobileTitleLeft) + ea,
-      color: colorChip.black,
-      width: desktop ? "" : withOut(mobileTitleLeft * 2, ea),
-      textAlign: desktop ? "" : "right",
-    }
-  });
-
-  createNode({
-    mother: leftBox,
-    text: wordings.title.sub.join("\n"),
-    style: {
-      position: desktop ? "absolute" : "relative",
-      fontSize: String(titleFont) + ea,
-      fontWeight: String(titleSecondWeight),
-      wordSpacing: String(wordSpacing) + "px",
-      top: desktop ? String(titleSecondTop) + ea : "",
-      marginTop: desktop ? "" : String(titleSecondTop) + ea,
-      left: desktop ? String(titleSecondLeft) + ea : "",
-      marginLeft: desktop ? "" : String(mobileTitleLeft) + ea,
-      width: desktop ? "" : withOut(mobileTitleLeft * 2, ea),
-      textAlign: desktop ? (media[0] ? "right" : "left") : "right",
-      color: colorChip.black,
-      lineHeight: String(desktop ? 1.35 : 1.3),
-    },
-    bold: {
-      fontWeight: String(titleFontWeight),
-      color: colorChip.black,
-    }
-  });
-
-  if (media[0] || media[4]) {
-    createNode({
-      mother: leftBox,
-      style: {
-        position: "absolute",
-        borderBottom: "1px " + (desktop ? "solid" : "dashed") + " " + (desktop ? colorChip.green : colorChip.whiteGreen),
-        top: String(barTop) + ea,
-        left: String(desktop ? titleLeft : barLeft) + ea,
-        width: String(barWidth) + ea,
-      }
-    });
-  }
-
-  createNode({
-    mother: leftBox,
-    text: String(1),
-    style: {
-      position: "absolute",
-      fontSize: String(indexFont) + ea,
-      fontWeight: String(indexFontWeight),
-      wordSpacing: String(wordSpacing) + ea,
-      bottom: desktop ? String(indexNumberBottom) + ea : "",
-      top: desktop ? "" : String(mobileTitleTop) + ea,
-      left: desktop ? String(titleLeft) + ea : String(mobileTitleLeft) + ea,
-      color: desktop ? colorChip.gray4 : colorChip.black,
-    }
-  });
-
-  rightBox = createNode({
-    mother: whiteBlock,
-    style: {
-      display: desktop ? "inline-block" : "block",
-      position: "relative",
-      verticalAlign: "top",
-      top: String(0) + ea,
-      width: desktop ? "calc(calc(100% - " + String(margin * 2) + ea + ") * " + String(1 - leftRatio) + ")" : String(100) + '%',
-      height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : "",
-      marginTop: desktop ? String(margin) + ea : "",
-      marginBottom: desktop ? String(margin) + ea : "",
-      marginRight: desktop ? String(margin) + ea : "",
-      paddingTop: desktop ? "" : String(mobileRightBoxPaddingTop) + ea,
-    }
-  });
-
-  createNode({
-    mother: rightBox,
-    style: {
-      position: "absolute",
-      top: String(circleTop0) + ea,
-      left: String(circleLeft0) + ea,
-      width: String(circleWidth0) + ea,
-      height: String(circleWidth0) + ea,
-      borderRadius: String(circleWidth0) + ea,
-      backgroundImage: "url('" + StyleCurationJs.binaryPath + "/profile0.jpg" + "')",
-      backgroundSize: "100% 100%",
-      backgroundPosition: "50% 50%",
-    },
-    children: [
-      {
-        style: {
-          position: "relative",
-          width: String(100) + '%',
-          height: String(100) + '%',
-        },
-        children: [
-          {
-            text: wordings.pick[0],
-            style: {
-              display: (media[2] || media[3] || media[4]) ? "none" : "block",
-              position: "absolute",
-              top: String(circleTextTop0) + ea,
-              left: String(circleTextLeft0) + ea,
-              width: String(circleTextWidth) + ea,
-              fontSize: String(circleTextSize0) + ea,
-              fontWeight: String(circleTextWeight),
-              color: colorChip.deactive,
-              fontFamily: "graphik",
-            }
-          }
-        ]
-      }
-    ]
-  });
-
-  createNode({
-    mother: rightBox,
-    style: {
-      position: "absolute",
-      top: String(circleTop1) + ea,
-      left: String(circleLeft1) + ea,
-      width: String(circleWidth1) + ea,
-      height: String(circleWidth1) + ea,
-      borderRadius: String(circleWidth1) + ea,
-      backgroundImage: "url('" + StyleCurationJs.binaryPath + "/profile1.jpg" + "')",
-      backgroundSize: "100% 100%",
-      backgroundPosition: "50% 50%",
-    },
-    children: [
-      {
-        style: {
-          position: "relative",
-          width: String(100) + '%',
-          height: String(100) + '%',
-        },
-        children: [
-          {
-            text: wordings.pick[1],
-            style: {
-              display: (media[2] || media[3] || media[4]) ? "none" : "block",
-              position: "absolute",
-              top: String(circleTextTop1) + ea,
-              left: String(circleTextLeft1) + ea,
-              width: String(circleTextWidth) + ea,
-              fontSize: String(circleTextSize1) + ea,
-              fontWeight: String(circleTextWeight),
-              color: colorChip.deactive,
-              fontFamily: "graphik",
-            }
-          }
-        ]
-      }
-    ]
-  });
-
-  if (desktop) {
-    createNode({
-      mother: rightBox,
-      style: {
-        position: "absolute",
-        top: String(circleTop2) + ea,
-        left: String(circleLeft2) + ea,
-        width: String(circleWidth2) + ea,
-        height: String(circleWidth2) + ea,
-        borderRadius: String(circleWidth2) + ea,
-        border: "1px dashed " + colorChip.green
-      }
-    });
-  }
-
-  createNode({
-    mother: rightBox,
-    style: {
-      position: "absolute",
-      top: String(circleTop3) + ea,
-      left: String(circleLeft3) + ea,
-      width: String(circleWidth3) + ea,
-      height: String(circleWidth3) + ea,
-      borderRadius: String(circleWidth3) + ea,
-      backgroundImage: "url('" + StyleCurationJs.binaryPath + "/profile2.jpg" + "')",
-      backgroundSize: "100% 100%",
-      backgroundPosition: "50% 50%",
-      border: desktop ? "" : "1px dashed " + colorChip.green
-    },
-    children: [
-      {
-        style: {
-          position: "relative",
-          width: String(100) + '%',
-          height: String(100) + '%',
-        },
-        children: [
-          {
-            text: wordings.pick[2],
-            style: {
-              position: "absolute",
-              top: String(circleTextTop3) + ea,
-              left: String(circleTextLeft3) + ea,
-              width: String(circleTextWidth) + ea,
-              fontSize: String(circleTextSize3) + ea,
-              fontWeight: String(circleTextFocus),
-              color: colorChip.green,
-              fontFamily: "graphik",
-              textAlign: desktop ? "left" : "center",
-            }
-          }
-        ]
-      }
-    ]
-  });
-
-  createNode({
-    mother: rightBox,
-    style: {
-      position: "absolute",
-      top: desktop ? String(((circleTop3 + (circleWidth3 / 2)) * 2) - (circleTop1 + circleWidth1)) + ea : String(circleTop1) + ea,
-      left: String(desktop ? circleLeft1 : circleLeft4) + ea,
-      width: String(circleWidth1) + ea,
-      height: String(circleWidth1) + ea,
-      borderRadius: String(circleWidth1) + ea,
-      backgroundImage: "url('" + StyleCurationJs.binaryPath + "/profile3.jpg" + "')",
-      backgroundSize: "100% 100%",
-      backgroundPosition: "50% 50%",
-    },
-    children: [
-      {
-        style: {
-          position: "relative",
-          width: String(100) + '%',
-          height: String(100) + '%',
-        },
-        children: [
-          {
-            text: wordings.pick[3],
-            style: {
-              display: (media[2] || media[3] || media[4]) ? "none" : "block",
-              position: "absolute",
-              top: String(circleTextTop1) + ea,
-              left: String(circleTextLeft1) + ea,
-              width: String(circleTextWidth) + ea,
-              fontSize: String(circleTextSize1) + ea,
-              fontWeight: String(circleTextWeight),
-              color: colorChip.deactive,
-              fontFamily: "graphik",
-            }
-          }
-        ]
-      }
-    ]
-  });
-
-  createNode({
-    mother: rightBox,
-    style: {
-      position: "absolute",
-      top: desktop ? String(((circleTop3 + (circleWidth3 / 2)) * 2) - (circleTop0 + circleWidth0)) + ea : String(circleTop0) + ea,
-      left: String(desktop ? circleLeft0 : circleLeft5) + ea,
-      width: String(circleWidth0) + ea,
-      height: String(circleWidth0) + ea,
-      borderRadius: String(circleWidth0) + ea,
-      backgroundImage: "url('" + StyleCurationJs.binaryPath + "/profile4.jpg" + "')",
-      backgroundSize: "100% 100%",
-      backgroundPosition: "50% 50%",
-    },
-    children: [
-      {
-        style: {
-          position: "relative",
-          width: String(100) + '%',
-          height: String(100) + '%',
-        },
-        children: [
-          {
-            text: wordings.pick[4],
-            style: {
-              display: (media[2] || media[3] || media[4]) ? "none" : "block",
-              position: "absolute",
-              top: String(circleTextTop0) + ea,
-              left: String(circleTextLeft0) + ea,
-              width: String(circleTextWidth) + ea,
-              fontSize: String(circleTextSize0) + ea,
-              fontWeight: String(circleTextWeight),
-              color: colorChip.deactive,
-              fontFamily: "graphik",
-            }
-          }
-        ]
-      }
-    ]
-  });
-
-  createNode({
-    mother: rightBox,
-    mode: "svg",
-    source: desktop ? svgMaker.horizontalArrow(circleArrowWidth, circlrArrowHeight) : svgMaker.verticalArrow(circleArrowWidth, circlrArrowHeight),
-    style: {
-      position: "absolute",
-      top: String(circleArrowTop) + ea,
-      left: String(circlrArrowLeft) + ea,
-      width: String(circleArrowWidth) + ea,
-      height: String(circlrArrowHeight) + ea,
-    }
-  });
-
-  contentsBox = createNode({
-    mother: rightBox,
-    style: {
-      position: "relative",
-      display: "inline-block",
-      width: desktop ? withOut(contentsBoxLeft + (contentsBoxPadding * 2), ea) : withOut((contentsBoxLeft * 2) + (contentsBoxPadding * 2), ea),
-      height: desktop ? String(((circleTop3 + (circleWidth3 / 2)) * 2) - (contentsBoxPadding * 2)) + ea : "",
-      marginLeft: String(contentsBoxLeft) + ea,
-      borderRadius: String(5) + "px",
-      background: colorChip.gray1,
-      padding: String(contentsBoxPadding) + ea,
-    },
-    children: [
-      {
-        style: {
-          position: "relative",
-          width: String(100) + '%',
-          height: String(contentsWhiteHeight) + ea,
-          background: colorChip.white,
-          borderRadius: String(5) + "px",
-        },
-        children: [
-          {
-            style: {
-              position: "absolute",
-              top: String(0),
-              width: String(100) + '%',
-              height: withOut(contentsBlockHeight, ea),
-              left: String(0),
-              backgroundImage: "url('" + StyleCurationJs.binaryPath + "/secondConsulting.jpg" + "')",
-              backgroundSize: "auto 100%",
-              backgroundPosition: "50% 50%",
-              borderRadius: String(5) + "px",
-              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-            }
-          },
-          {
-            text: wordings.box.design,
-            style: {
-              position: "absolute",
-              width: String(100) + '%',
-              textAlign: "center",
-              left: String(0),
-              bottom: String(contentsBlockBottom) + ea,
-              fontSize: String(contentsBlockSize) + ea,
-              fontWeight: String(500),
-              color: colorChip.green
-            },
-            bold: {
-              fontWeight: String(800),
-              color: colorChip.green
-            }
-          }
-        ]
-      },
-      {
-        style: {
-          position: "relative",
-          width: String(100) + '%',
-          height: String(contentsBlockHeightArrow) + ea,
-          marginTop: String(contentsBlockMarginTopArrow) + ea,
-          textAlign: "center",
-        },
-        children: [
-          {
-            mode: "svg",
-            source: svgMaker.verticalArrow(contentsBlockArrowWidth, contentsBlockHeightArrow, colorChip.deactive),
-            style: {
-              display: "inline-block",
-              width: String(contentsBlockArrowWidth) + ea,
-              height: String(contentsBlockHeightArrow) + ea,
-            }
-          }
-        ]
-      },
-      {
-        style: {
-          display: desktop ? "block" : "flex",
-          justifyContent: desktop ? "" : "center",
-          alignItems: desktop ? "" : "center",
-          position: "relative",
-          width: String(100) + '%',
-          height: String(contentsBlockHeight) + ea,
-          background: colorChip.gray3,
-          borderRadius: String(5) + "px",
-          marginTop: String(contentsBlockMarginTopArrow) + ea,
-        },
-        children: [
-          {
-            text: wordings.box.etc[0],
-            style: {
-              position: desktop ? "absolute" : "relative",
-              width: String(100) + '%',
-              textAlign: "center",
-              left: String(0),
-              bottom: desktop ? String(contentsBlockBottom) + ea : "",
-              fontSize: String(contentsBlockSize) + ea,
-              fontWeight: String(500),
-              color: colorChip.shadow
-            },
-            bold: {
-              fontWeight: String(800),
-              color: colorChip.shadow
-            }
-          }
-        ]
-      },
-      {
-        style: {
-          display: desktop ? "block" : "flex",
-          justifyContent: desktop ? "" : "center",
-          alignItems: desktop ? "" : "center",
-          position: "relative",
-          width: String(100) + '%',
-          height: String(contentsBlockHeight) + ea,
-          background: colorChip.gray3,
-          borderRadius: String(5) + "px",
-          marginTop: String(contentsBlockMarginTop) + ea,
-        },
-        children: [
-          {
-            text: wordings.box.etc[1],
-            style: {
-              position: desktop ? "absolute" : "relative",
-              width: String(100) + '%',
-              textAlign: "center",
-              left: String(0),
-              bottom: desktop ? String(contentsBlockBottom) + ea : "",
-              top: desktop ? "" : String(-0.2) + ea,
-              fontSize: String(contentsBlockSize) + ea,
-              fontWeight: String(500),
-              color: colorChip.shadow
-            },
-            bold: {
-              fontWeight: String(800),
-              color: colorChip.shadow
-            }
-          }
-        ]
-      },
-      {
-        style: {
-          display: desktop ? "block" : "flex",
-          justifyContent: desktop ? "" : "center",
-          alignItems: desktop ? "" : "center",
-          position: "relative",
-          width: String(100) + '%',
-          height: String(contentsBlockHeight) + ea,
-          background: colorChip.gray3,
-          borderRadius: String(5) + "px",
-          marginTop: String(contentsBlockMarginTop) + ea,
-        },
-        children: [
-          {
-            text: wordings.box.etc[2],
-            style: {
-              position: desktop ? "absolute" : "relative",
-              width: String(100) + '%',
-              textAlign: "center",
-              left: String(0),
-              bottom: desktop ? String(contentsBlockBottom) + ea : "",
-              top: desktop ? "" : String(-0.5) + ea,
-              fontSize: String(contentsBlockSize) + ea,
-              fontWeight: String(500),
-              color: colorChip.shadow
-            },
-            bold: {
-              fontWeight: String(800),
-              color: colorChip.shadow
-            }
-          }
-        ]
-      },
-    ]
-  });
-
-  createNode({
-    mother: rightBox,
-    style: {
-      display: "block",
-      position: "relative",
-      height: desktop ? String(descriptionHeight) + ea : "",
-      marginTop: String(descriptionMarginTop) + ea,
-    },
-    children: [
-      {
-        text: wordings.contents.title.join("\n"),
-        style: {
-          display: desktop ? "inline-block" : "none",
-          width: String(descriptionTitleWidth) + ea,
-          fontSize: String(descriptionSize) + ea,
-          fontWeight: String(descriptionTitleWeight),
-          color: colorChip.black,
-          lineHeight: String(descriptionLineHeight),
-        }
-      },
-      {
-        text: wordings.contents.description.join("\n"),
-        style: {
-          display: desktop ? "inline-block" : "block",
-          marginLeft: String(descriptionTitleMargin) + ea,
-          width: withOut(descriptionTitleWidth + descriptionTitleMargin, ea),
-          fontSize: String(descriptionSize) + ea,
-          fontWeight: String(descriptionWeight),
-          color: colorChip.black,
-          lineHeight: String(descriptionLineHeight),
-          textAlign: desktop ? "" : "center",
-        }
-      },
-    ]
-  });
-
-}
-
-StyleCurationJs.prototype.insertSecondService = function () {
-  const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
-  const { client, ea, media, osException, testMode } = this;
-  const mobile = media[4];
-  const desktop = !mobile;
-  let whiteBlock;
-  let style;
-  let blockHeight, bottomMargin;
-  let leftBox, rightBox;
-  let titleBox, barBox, indexBox;
-  let margin;
-  let leftRatio;
-  let wordSpacing;
-  let titleFont, titleLeft, titleFontWeight, titleSecondLeft, titleSecondWeight;
-  let titleSecondTop;
-  let barWidth, barTop;
-  let indexFont, indexFontWeight;
-  let indexNumberBottom;
-  let initWording0, initWording1;
-  let descriptionHeight, descriptionMarginTop;
-  let descriptionTitleWidth, descriptionTitleMargin;
-  let descriptionSize, descriptionWeight, descriptionLineHeight;
-  let descriptionTitleWeight;
-  let contentsBlockSize, contentsBlockBottom;
-  let wordings;
-  let grayBox;
-  let grayBoxHeight;
-  let grayBoxWidth;
-  let grayArrowWidth;
-  let grayArrowMargin;
-  let grayArrowHeight;
-  let grayBoxInnerMargin;
-  let grayTextBottom;
-  let grayTextSize;
-  let grayDeactiveTextSize;
-  let barLeft;
-  let mobileTitleLeft;
-  let mobileTitleTop;
-  let mobileTitleMarginBottom;
-  let mobileRightBoxPaddingTop;
-  let whiteBlockPaddingBottom;
-  let mobileGrayMarginTop, mobileGrayMarginLeft;
-  let mobilePictureBetween;
-
-  blockHeight = <%% 406, 406, 384, 295, 160 %%>;
-  bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
-  margin = <%% 52, 52, 44, 32, 52 %%>;
-  leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
-
-  titleFont = <%% 31, 28, 25, 22, 5.7 %%>;
-  titleLeft = <%% 6, 6, 6, 6, 0 %%>;
-  titleFontWeight = <%% 600, 600, 600, 600, 600 %%>;
-  titleSecondTop = <%% 55, 50, 44, 39, 2 %%>;
-  titleSecondLeft = <%% 125, 6, 6, 6, 6 %%>;
-  titleSecondWeight = <%% 200, 200, 200, 200, 200 %%>;
-
-  wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
-
-  barWidth = <%% 106, 106, 106, 106, 24 %%>;
-  barTop = <%% (isMac() ? 73 : 71), (isMac() ? 73 : 71), (isMac() ? 73 : 71), (isMac() ? 73 : 71), 10.5 %%>;
-  barLeft = 12.5;
-
-  indexFont = <%% 19, 19, 19, 19, 5.7 %%>;
-  indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
-
-  indexNumberBottom = <%% 7, 4, 2, 5, 0 %%>;
-
-  grayBoxHeight = <%% 210, 210, 210, 155, 24 %%>;
-  grayBoxWidth = <%% 320, 290, 260, 210, 32 %%>;
-  grayTextBottom = <%% 20, 20, 20, 20, 2 %%>;
-  grayTextSize = <%% 14, 12, 11, 11, 3 %%>;
-  grayDeactiveTextSize = <%% 16, 14, 13, 11, 3 %%>;
-  grayArrowWidth = <%% 100, 45, 39, 39, 2 %%>;
-  grayArrowMargin = <%% 20, 16, 12, 10, 2 %%>;
-  grayArrowHeight = <%% 12, 12, 12, 12, 3.5 %%>;
-  grayBoxInnerMargin = <%% 24, 20, 12, 10, 2 %%>;
-
-  descriptionHeight = <%% 60, 60, 60, 60, 6 %%>;
-  descriptionMarginTop = <%% 36, 36, 36, 25, 4 %%>;
-  descriptionTitleWidth = <%% 90, 90, 90, 72, 6 %%>;
-  descriptionTitleMargin = <%% 40, 40, 30, 3, 6 %%>;
-  descriptionSize = <%% 15, 15, 14, 13, 3 %%>;
-  descriptionWeight = desktop ? 300 : 400;
-  descriptionLineHeight = 1.6;
-  descriptionTitleWeight = 700;
-
-  mobileTitleLeft = 7;
-  mobileTitleTop = 7;
-  mobileTitleMarginBottom = 7;
-  mobileRightBoxPaddingTop = 49;
-  whiteBlockPaddingBottom = 9;
-
-  mobileGrayMarginTop = 43;
-  mobileGrayMarginLeft = 6;
-  mobilePictureBetween = 12;
-
-  wordings = {
-    title: {
-      main: desktop ? "우리집 상세 견적은," : "우리집 상세 견적은",
-      sub: [
-        "디자이너와 함께",
-        "조정해보세요!"
-      ]
-    },
-    gray: {
-      main: [
-        "디자인비",
-      ],
-      sub: [
-        "시공비",
-        "제품\n구매비",
-        "부가\n서비스비"
-      ]
-    },
-    contents: {
-      title: [
-        "홈리에종의",
-        "비용 구성"
-      ],
-    }
-  }
-
-  if (media[0]) {
-    wordings.contents.description = [ "홈리에종은 선 디자인이 필수이기 때문에, 시공 견적을 드리는 것이 아니라 디자이너의 인건비 개념인 디자인비를 먼저 받는 구조로 되어 있습니다. 우리집을 담당해 줄 전문가를 먼저 만나 함께 인테리어를 진행해보세요!" ];
-  } else if (media[1]) {
-    wordings.contents.description = [ "홈리에종은 일단 시공 견적을 드리는 것이 아니라 디자이너의 인건비 개념인 디자인비를 먼저 받는 구조로 되어 있습니다. 우리집을 담당해 줄 전문가를 만나 함께 진행해보세요!" ];
-  } else if (media[2]) {
-    wordings.contents.description = [ "홈리에종은 시공 견적부터 드리는 것이 아니라 인건비 개념인 디자인비를 먼저 받는 구조입니다. 우리집을 담당해 줄 전문가를 만나 함께 진행해보세요!" ];
-  } else if (media[3]) {
-    wordings.contents.description = [ "홈리에종은 시공 견적부터 드리는 것이 아니라 인건비 개념인 디자인비를 먼저 받는 구조입니다. 우리집을 담당해 줄 전문가를 만나 함께 진행해보세요!" ];
-  } else {
-    wordings.contents.description = [ "홈리에종은 일단 시공 견적을 드리는 것이 아니라 디자이너의 인건비 개념인 디자인비를 먼저 받는 구조로 되어 있습니다. 우리집을 담당해 줄 전문가를 만나 함께 진행해보세요!" ];
-  }
-
-  whiteBlock = createNode({
-    mother: this.baseTong,
-    style: {
-      position: "relative",
-      borderRadius: String(desktop ? 8 : 1) + ea,
-      width: String(100) + '%',
-      height: desktop ? String(blockHeight) + ea : "",
-      background: colorChip.white,
-      marginBottom: String(bottomMargin) + ea,
-      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
-      paddingBottom: desktop ? "" : String(whiteBlockPaddingBottom) + ea,
-    }
-  });
-
-  leftBox = createNode({
-    mother: whiteBlock,
-    style: {
-      display: desktop ? "inline-block" : "block",
-      position: "relative",
-      width: desktop ? "calc(calc(100% - " + String(margin * 2) + ea + ") * " + String(leftRatio) + ")" : String(100) + '%',
-      height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : "",
-      marginTop: desktop ? String(margin) + ea : "",
-      marginBottom: desktop ? String(margin) + ea : "",
-      marginLeft: desktop ? String(margin) + ea : "",
-    }
-  });
-
-  //main title
-  createNode({
-    mother: leftBox,
-    text: wordings.title.main,
-    style: {
-      position: desktop ? "absolute" : "relative",
-      fontSize: String(titleFont) + ea,
-      fontWeight: String(titleFontWeight),
-      wordSpacing: String(wordSpacing) + "px",
-      top: desktop ? (String((media[0] ? 0 : media[1] ? 0 : 0) + (isMac() || mobile ? 0 : 4)) + ea) : "",
-      paddingTop: desktop ? "" : String(mobileTitleTop) + ea,
-      left: desktop ? String(titleLeft) + ea : "",
-      marginLeft: desktop ? "" : String(mobileTitleLeft) + ea,
-      color: colorChip.black,
-      width: desktop ? "" : withOut(mobileTitleLeft * 2, ea),
-      textAlign: desktop ? "" : "right",
-    }
-  });
-
-  createNode({
-    mother: leftBox,
-    text: wordings.title.sub.join("\n"),
-    style: {
-      position: desktop ? "absolute" : "relative",
-      fontSize: String(titleFont) + ea,
-      fontWeight: String(titleSecondWeight),
-      wordSpacing: String(wordSpacing) + "px",
-      top: desktop ? String(titleSecondTop) + ea : "",
-      marginTop: desktop ? "" : String(titleSecondTop) + ea,
-      left: desktop ? String(titleSecondLeft) + ea : "",
-      marginLeft: desktop ? "" : String(mobileTitleLeft) + ea,
-      width: desktop ? "" : withOut(mobileTitleLeft * 2, ea),
-      textAlign: desktop ? (media[0] ? "right" : "left") : "right",
-      color: colorChip.black,
-      lineHeight: String(desktop ? 1.35 : 1.3),
-    },
-    bold: {
-      fontWeight: String(titleFontWeight),
-      color: colorChip.black,
-    }
-  });
-
-  if (media[0] || media[4]) {
-    createNode({
-      mother: leftBox,
-      style: {
-        position: "absolute",
-        borderBottom: "1px " + (desktop ? "solid" : "dashed") + " " + (desktop ? colorChip.green : colorChip.whiteGreen),
-        top: String(barTop) + ea,
-        left: String(desktop ? titleLeft : barLeft) + ea,
-        width: String(barWidth) + ea,
-      }
-    });
-  }
-
-  createNode({
-    mother: leftBox,
-    text: String(2),
-    style: {
-      position: "absolute",
-      fontSize: String(indexFont) + ea,
-      fontWeight: String(indexFontWeight),
-      wordSpacing: String(wordSpacing) + ea,
-      bottom: desktop ? String(indexNumberBottom) + ea : "",
-      top: desktop ? "" : String(mobileTitleTop) + ea,
-      left: desktop ? String(titleLeft) + ea : String(mobileTitleLeft) + ea,
-      color: desktop ? colorChip.gray4 : colorChip.black,
-    }
-  });
-
-  rightBox = createNode({
-    mother: whiteBlock,
-    style: {
-      display: desktop ? "inline-block" : "block",
-      position: "relative",
-      verticalAlign: "top",
-      top: String(0) + ea,
-      width: desktop ? "calc(calc(100% - " + String(margin * 2) + ea + ") * " + String(1 - leftRatio) + ")" : String(100) + '%',
-      height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : "",
-      marginTop: desktop ? String(margin) + ea : "",
-      marginBottom: desktop ? String(margin) + ea : "",
-      marginRight: desktop ? String(margin) + ea : "",
-    }
-  });
-
-  grayBox = createNode({
-    mother: rightBox,
-    style: {
-      display: "block",
-      position: "relative",
-      height: String(grayBoxHeight) + ea,
-      background: colorChip.gray1,
-      borderRadius: String(5) + "px",
-      left: desktop ? "" : String(mobileGrayMarginLeft) + ea,
-      width: desktop ? "" : withOut(mobileGrayMarginLeft * 2, ea),
-      marginTop: desktop ? "" : String(mobileGrayMarginTop) + ea,
-    }
-  });
-
-  createNode({
-    mother: grayBox,
-    style: {
-      display: desktop ? "inline-block" : "block",
-      position: desktop ? "relative" : "absolute",
-      height: String(grayBoxHeight) + ea,
-      width: desktop ? String(grayBoxWidth) + ea : String(100) + '%',
-      backgroundImage: "url('" + StyleCurationJs.binaryPath + "/3dsample.jpg" + "')",
-      backgroundSize: (media[2] || media[3]) ? "auto 100%" : "100% auto",
-      backgroundPosition: "50% 50%",
-      borderRadius: String(5) + "px",
-      boxShadow: "5px 2px 21px -9px " + colorChip.shadow,
-      top: desktop ? "" : String(-1 * (grayBoxHeight + mobilePictureBetween)) + ea,
-    }
-  });
-
-  createNode({
-    mother: grayBox,
-    style: {
-      display: desktop ? "inline-flex" : "flex",
-      position: desktop ? "relative" : "absolute",
-      verticalAlign: "top",
-      height: String(desktop ? grayBoxHeight : mobilePictureBetween) + ea,
-      width: desktop ? String(grayArrowWidth) + ea : String(100) + '%',
-      marginLeft: desktop ? String(grayArrowMargin) + ea : "",
-      justifyContent: "center",
-      alignItems: "center",
-      top: desktop ? "" : String(-1 * mobilePictureBetween) + ea,
-    },
-    children: [
-      {
-        mode: "svg",
-        source: desktop ? svgMaker.horizontalArrow(grayArrowWidth, grayArrowHeight) : svgMaker.verticalArrow(grayArrowWidth, grayArrowHeight),
-        style: {
-          position: desktop ? "relative" : "absolute",
-          width: String(grayArrowWidth) + ea,
-          height: String(grayArrowHeight) + ea,
-          bottom: desktop ? "" : String(2) + ea,
-        }
-      },
-      {
-        text: wordings.gray.main.join("\n"),
-        style: {
-          position: "absolute",
-          fontSize: String(grayTextSize) + ea,
-          fontWeight: String(600),
-          color: colorChip.green,
-          bottom: desktop ? String(grayTextBottom) + ea : "",
-          top: desktop ? "" : String(1.5) + ea,
-          textAlign: desktop ? "left" : "center",
-          left: String(0) + ea,
-          lineHeight: String(1.5),
-          width: desktop ? "" : String(100) + '%',
-        }
-      }
-    ]
-  });
-
-  createNode({
-    mother: grayBox,
-    style: {
-      display: "inline-flex",
-      position: "relative",
-      verticalAlign: "top",
-      height: String(grayBoxHeight) + ea,
-      width: desktop ? withOut(grayBoxWidth + grayArrowWidth + (grayArrowMargin * 2), ea) : withOut(grayArrowMargin, ea),
-      marginLeft: String(grayArrowMargin) + ea,
-      alignItems: "center",
-    },
-    children: [
-      {
-        style: {
-          position: "relative",
-          width: withOut(grayBoxInnerMargin, ea),
-          left: String(0),
-          height: withOut(grayBoxInnerMargin * 2, ea),
-          background: colorChip.white,
-          borderRadius: String(5) + "px",
-        }
-      },
-      {
-        style: {
-          position: "absolute",
-          width: "calc(" + withOut(grayBoxInnerMargin, ea) + " * calc(2 / 3)",
-          left: String(0),
-          height: withOut(grayBoxInnerMargin * 2, ea),
-          background: colorChip.white,
-          borderRadius: String(5) + "px",
-          boxShadow: "6px 1px 13px -9px " + colorChip.shadow,
-        }
-      },
-      {
-        style: {
-          position: "absolute",
-          width: "calc(" + withOut(grayBoxInnerMargin, ea) + " * calc(1 / 3)",
-          left: String(0),
-          height: withOut(grayBoxInnerMargin * 2, ea),
-          background: colorChip.white,
-          borderRadius: String(5) + "px",
-          boxShadow: "6px 1px 13px -9px " + colorChip.shadow,
-        }
-      },
-      {
-        text: wordings.gray.sub[0],
-        style: {
-          position: "absolute",
-          width: "calc(" + withOut(grayBoxInnerMargin, ea) + " * calc(1 / 3)",
-          left: String(0),
-          fontSize: String(grayDeactiveTextSize) + ea,
-          fontWeight: String(600),
-          color: colorChip.liteBlack,
-          lineHeight: String(1.4),
-          textAlign: "center",
-        }
-      },
-      {
-        text: wordings.gray.sub[1],
-        style: {
-          position: "absolute",
-          width: "calc(" + withOut(grayBoxInnerMargin, ea) + " * calc(1 / 3)",
-          left: "calc(" + withOut(grayBoxInnerMargin, ea) + " * calc(1 / 3)",
-          fontSize: String(grayDeactiveTextSize) + ea,
-          fontWeight: String(600),
-          color: colorChip.liteBlack,
-          lineHeight: String(1.4),
-          textAlign: "center",
-        }
-      },
-      {
-        text: wordings.gray.sub[2],
-        style: {
-          position: "absolute",
-          width: "calc(" + withOut(grayBoxInnerMargin, ea) + " * calc(1 / 3)",
-          left: "calc(" + withOut(grayBoxInnerMargin, ea) + " * calc(2 / 3)",
-          fontSize: String(grayDeactiveTextSize) + ea,
-          fontWeight: String(600),
-          color: colorChip.liteBlack,
-          lineHeight: String(1.4),
-          textAlign: "center",
-        }
-      },
-    ]
-  });
-
-  createNode({
-    mother: rightBox,
-    style: {
-      display: "block",
-      position: "relative",
-      height: desktop ? String(descriptionHeight) + ea : "",
-      marginTop: String(descriptionMarginTop) + ea,
-    },
-    children: [
-      {
-        text: wordings.contents.title.join("\n"),
-        style: {
-          display: desktop ? "inline-block" : "none",
-          width: String(descriptionTitleWidth) + ea,
-          fontSize: String(descriptionSize) + ea,
-          fontWeight: String(descriptionTitleWeight),
-          color: colorChip.black,
-          lineHeight: String(descriptionLineHeight),
-        }
-      },
-      {
-        text: wordings.contents.description.join("\n"),
-        style: {
-          display: desktop ? "inline-block" : "block",
-          marginLeft: String(descriptionTitleMargin) + ea,
-          width: withOut(descriptionTitleWidth + descriptionTitleMargin, ea),
-          fontSize: String(descriptionSize) + ea,
-          fontWeight: String(descriptionWeight),
-          color: colorChip.black,
-          lineHeight: String(descriptionLineHeight),
-          textAlign: desktop ? "" : "center",
-        }
-      },
-    ]
-  });
 
 }
 
@@ -5976,1115 +4794,559 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac } = GeneralJs;
-  const words = new WordsDictionary();
-  const serviceObj = words.getServiceWording();
-  let whiteBlock;
-  let blockHeight, blockMarginBottom;
-  let wordsTable;
-  let marginBottom;
-  let nodeArr;
-  let wordSize, wordSpacing;
-  let box0Size, box1Size, box0Margin, box1Margin;
-  let top, bottom;
-  let grayHeight, grayTop, grayTong, grayTextScroll, grayTextTong, grayTextTop, grayTextLeft, grayTextSize;
-  let buttonTong, buttonHeight, buttonTongHeight;
-  let buttonOff = {}, buttonOn = {};
-  let finalBottom;
-  let tempBlock, tempChild, tempDom;
-  let whiteBlockHeight, whiteBlockMargin, whiteBlockPaddingTop, whiteBlockPaddingLeft, whiteBlockVisual;
-  let methodsTongTop, methodsTongBottom, methodsTongLeft, methodsBlockBottom;
-  let methodsTitleWidth;
-  let methodsBlockPaddingBottom;
-  let methodsSecondBlockWidth;
-  let methodsTongClassName;
-  let methodsThirdBlockBottom;
-  let methodsSecondBlockRight;
-  let methodsTextVisual;
-  let mobileTitleSize;
-  let processTongClassName;
-  let processBlockMarginLeft;
-  let processArrowWidth;
-  let processArrowTop;
-  let processBlockHeight;
-  let processBlockPaddingBottom;
-  let processThirdBlockBottom;
-  let amountTextVisual, amountTextTop;
-  let leftMargin;
-  let servicePhotoBetween;
-  let serviceWordingBetween;
-  let serviceWordingBottom;
-  let data;
-  let feeSize;
-  let feeMarginRight, feeMarginBottomLast, feeMarginBottomInit;
-  let feeMargin0, feeMargin1, feeMargin2;
-  let feeTongPaddingTop;
-  let servicePhotoMarginBottom;
+  let blockMarginBottom;
+  let top;
+  let bottom;
+  let whiteBlock0, whiteBlock1, whiteBlock2, whiteBlock3, whiteBlock4;
+  let leftBox0, leftBox1, leftBox2, leftBox3, leftBox4;
+  let rightBox0, rightBox1, rightBox2, rightBox3, rightBox4;
+  let contents0, contents1, contents2, contents3, contents4;
+  let height0, height1, height2, height3, height4;
+  let lastBlockMarginBottom;
+  let margin;
+  let titleFont;
+  let titleLeft;
+  let titleFontWeight;
+  let wordSpacing;
+  let lineHeight;
+  let leftBoxWidth;
+  let title;
+  let description;
+  let image;
+  let boxMargin;
+  let boxTong;
+  let rightBoxPaddingTop;
+  let titleVisualTop;
+  let boxTongPaddingBottom;
+  let contents0PhotoHeight;
+  let contents0PaddingLeft, contents0PaddingTop, contents0PaddingBottom;
+  let contents0TitleSize, contents0TitleWeight;
+  let contents0TitleWhiteBoxMargin;
+  let contents0DescriptionSize, contents0DescriptionWeight;
+  let contents0DescriptionMarginTop;
+  let contents0DescriptionWeightBold;
+  let contents0DescriptionLineHeight;
+  let contents0Columns;
+  let rightBoxPaddingTopFontVersion;
+  let contents1TitleSize, contents1TitleWeight;
+  let contents1UpBox;
+  let contents1TitleBetween;
+  let contents1Between;
+  let contents1Columns;
 
-  data = {
-    selected: seridObj.map((obj) => { return Number(obj.serid.split('_')[1].replace(/[^0-9]/gi, '').replace(/^0/gi, '').replace(/^0/gi, '').replace(/^0/gi, '')) - 1; }),
-    range: seridObj.map((obj) => { return [ obj.min * 1000000, obj.max * 1000000 ] })
-  };
-
-  leftMargin = <%% 52, 52, 44, 36, 4.7 %%>;
-  top = <%% 48, 48, 48, 48, 4.7 %%>;
-  bottom = <%% 36, 36, 36, 36, 4.7 %%>;
-
-  blockHeight = <%% 400, 400, 400, 400, 400 %%>;
   blockMarginBottom = <%% 16, 16, 16, 16, 2 %%>;
-  marginBottom = <%% 13, 13, 13, 9, 4 %%>;
 
-  mobileTitleSize = 3.5;
-  wordSize = <%% 15, 15, 15, 13, 2.8 %%>;
-  wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
+  lastBlockMarginBottom = <%% 160, 160, 160, 80, 12 %%>;
 
-  box0Size = <%% 140, 120, 120, 82, 12 %%>;
-  box1Size = <%% 25, 0, 0, 0, 3 %%>;
-  box0Margin = <%% 55, 55, 55, 45, 3 %%>;
-  box1Margin = <%% 18, 18, 0, 0, 3 %%>;
+  margin = <%% 52, 52, 44, 32, 52 %%>;
 
-  grayHeight = <%% 180, 180, 180, 180, 42 %%>;
-  grayTop = <%% 4, 4, 4, 4, 2.3 %%>;
-  grayTextTop = <%% 12, 12, 10, 9, 1.8 %%>;
-  grayTextLeft = <%% 12, 12, 10, 9, 1.8 %%>;
-  grayTextSize = <%% 14, 14, 13, 11, 2.3 %%>;
+  titleFont = <%% 31, 29, 27, 23, 5.7 %%>;
+  titleLeft = <%% 6, 6, 6, 6, 0 %%>;
+  titleFontWeight = <%% 500, 500, 500, 500, 500 %%>;
+  wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
 
-  buttonTongHeight = <%% 30, 30, 30, 30, 5 %%>;
-  buttonHeight = <%% 13, 13, 12, 11, 2.5 %%>;
+  lineHeight = 1.42;
 
-  finalBottom = <%% -3, -4, -7, -9, 0 %%>;
+  leftBoxWidth = 300;
 
-  whiteBlockHeight = <%% (isMac() ? 26 : 25), (isMac() ? 26 : 25), (isMac() ? 24 : 23), (isMac() ? 20 : 19), 4.6 %%>;
-  whiteBlockMargin = <%% 6, 6, 6, 4, 1 %%>;
-  whiteBlockPaddingTop = <%% 6, 6, 6, 4, 1 %%>;
-  whiteBlockPaddingLeft = <%% 11, 11, 11, 9, 2 %%>;
-  whiteBlockVisual = <%% 1, 1, 1, 1, 0 %%>;
+  boxMargin = 30;
 
-  methodsTongTop = <%% 18, (isMac() ? 18 : 17), (isMac() ? 18 : 17), (isMac() ? 14 : 16), 3.2 %%>;
-  methodsTongBottom = <%% 1, 1, 1, 1, 0 %%>;
-  methodsTongLeft = <%% 24, 24, 22, 22, 4 %%>;
-  methodsTitleWidth = <%% 155, 140, 128, 110, 20 %%>;
-  methodsBlockPaddingBottom = <%% 20, 20, 20, 16, 1.5 %%>;
-  methodsBlockBottom = <%% 16, 16, 16, 16, 3.5 %%>;
-  if (desktop) {
-    if (!isMac()) {
-      if (media[3]) {
-        methodsBlockPaddingBottom = methodsBlockPaddingBottom - 2;
-        methodsBlockBottom = methodsBlockBottom + 1;
-      } else {
-        methodsBlockPaddingBottom = methodsBlockPaddingBottom - 4;
-        methodsBlockBottom = methodsBlockBottom + 2;
-      }
-    }
-  }
-  methodsSecondBlockWidth = <%% 370, 170, 170, 116, 80 %%>;
-  methodsSecondBlockRight = <%% 0, 32, 28, 28, 10 %%>;
-  methodsTongClassName = "methodsDetailTong";
-  processTongClassName = "processDetailTong";
-  methodsThirdBlockBottom = <%% 9, 9, 9, 9, 1 %%>;
-  methodsTextVisual = <%% 0, 0, 1, 1, 0 %%>;
+  rightBoxPaddingTop = 6;
+  rightBoxPaddingTopFontVersion = 2;
 
-  processBlockMarginLeft = <%% 8, 8, 8, 7, 1.5 %%>;
-  processBlockHeight = <%% 22, 22, 22, 18, 3 %%>;
-  processArrowWidth = <%% 25, 25, 25, 24, 5 %%>;
-  processArrowTop = <%% 7, 7, 7, 5, 1.3 %%>;
-  processThirdBlockBottom = <%% 4, 4, 4, 2, 0.5 %%>;
-  if (desktop) {
-    if (!isMac()) {
-      processThirdBlockBottom = processThirdBlockBottom - 2;
-      processArrowTop = processArrowTop - 2;
-    }
-  }
-  processBlockPaddingBottom = <%% 16, 16, 16, 16, 0.5 %%>;
+  height0 = 550;
 
-  amountTextVisual = <%% 3, 3, 3, 3, 0.8 %%>;
-  amountTextTop = <%% 20, 20, 20, 18, 0.1 %%>;
+  titleVisualTop = -2;
 
-  servicePhotoBetween = <%% 10, 9, 8, 7, 1 %%>;
-  serviceWordingBetween = <%% 8, 8, 8, 8, 3.5 %%>;
-  serviceWordingBottom = <%% 2, 2, 2, 2, 2.1 %%>;
+  boxTongPaddingBottom = 15;
+  contents0PhotoHeight = 180;
 
-  feeSize = <%% 22, 22, 22, 20, 3.5 %%>;
-  feeMarginRight = <%% 30, 30, 30, 30, 1 %%>;
-  feeMarginBottomInit = <%% 4, 4, 4, 4, 0.5 %%>;
-  feeMarginBottomLast = <%% 4, 4, 4, 4, 0 %%>;
+  contents0PaddingLeft = 13;
+  contents0PaddingTop = 6;
+  contents0PaddingBottom = 9;
+  contents0TitleSize = 14;
+  contents0TitleWeight = 700;
+  contents0TitleWhiteBoxMargin = 15;
 
-  feeMargin0 = <%% 5, 5, 5, 3, 1 %%>;
-  feeMargin1 = <%% 12, 12, 12, 9, 2 %%>;
-  feeMargin2 = <%% 6, 6, 6, 5, 1 %%>;
+  contents0DescriptionSize = 15;
+  contents0DescriptionWeight = 400;
+  contents0DescriptionLineHeight = 1.5;
+  contents0DescriptionWeightBold = 700;
+  contents0DescriptionMarginTop = 18;
 
-  feeTongPaddingTop = <%% 4, 4, 4, 2, 0.5 %%>;
+  contents0Columns = 3;
 
-  servicePhotoMarginBottom = <%% 6, 0, 0, 0, 2.5 %%>;
+  contents1TitleSize = 20;
+  contents1TitleWeight = 500;
+  contents1TitleBetween = 16;
+  contents1Between = 45;
 
-  [ whiteBlock, wordsTable ] = createNodes([
+  contents1Columns = 5;
+
+  contents0 = [
     {
-      mother: baseTong,
-      style: {
-        position: "relative",
-        borderRadius: String(desktop ? 8 : 3) + "px",
-        width: String(100) + '%',
-        background: colorChip.white,
-        boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
-        marginBottom: String(blockMarginBottom) + ea,
-        paddingTop: String(top) + ea,
-        paddingBottom: String(bottom) + ea,
-      }
+      title: "전문 지식이 없어 난감하다면?",
+      description: "시공 전 발생할 수 있는 <b%리스크를%b>\n<b%미리 체크하고 보완%b>해 드려요.",
+      image: "contents00.jpg",
     },
     {
-      mother: -1,
-      style: {
-        position: "relative",
-        marginLeft: String(desktop ? leftMargin : 0) + ea,
-        width: desktop ? withOut(leftMargin * 2, ea) : String(100) + '%',
-      }
-    }
-  ]);
-
-  //service
-  tempBlock = createNode({
-    mother: wordsTable,
-    style: {
-      position: "relative",
-      marginBottom: String(marginBottom) + ea,
-    }
-  });
-
-  createNode({
-    mother: tempBlock,
-    text: serviceObj.service.name,
-    style: {
-      display: desktop ? "inline-block" : "block",
-      fontSize: String(desktop ? wordSize : mobileTitleSize) + ea,
-      wordSpacing: String(wordSpacing) + "px",
-      position: "relative",
-      top: String(0) + ea,
-      verticalAlign: "top",
-      lineHeight: String(1.6),
-      left: desktop ? "" : String((this.subBoxMargin.left + 0.2)) + ea,
-      width: desktop ? String(box0Size) + ea : withOut(((this.subBoxMargin.left + 0.2) * 2), ea),
-      marginRight: desktop ? String(box0Margin) + ea : "",
-      marginBottom: desktop ? "" : String(marginBottom / 2) + ea,
-      fontWeight: String(600),
-      textAlign: "left",
-      color: colorChip.black,
-    }
-  });
-
-  if (desktop) {
-    createNode({
-      mother: tempBlock,
-      text: '0',
-      style: {
-        display: "inline-block",
-        fontSize: String(wordSize) + ea,
-        wordSpacing: String(wordSpacing) + "px",
-        position: "relative",
-        top: String(0) + ea,
-        verticalAlign: "top",
-        lineHeight: String(1.6),
-        width: String(box1Size) + ea,
-        marginRight: String(box1Margin) + ea,
-        fontWeight: String(600),
-        color: colorChip.white,
-        textAlign: "right",
-      }
-    });
-  }
-
-  [ grayTong, grayTextTong ] = createNodes([
-    {
-      mother: tempBlock,
-      style: {
-        display: desktop ? "inline-block" : "block",
-        position: "relative",
-        left: desktop ? "" : String((this.subBoxMargin.left + 0.2)) + ea,
-        width: desktop ? withOut(box0Size + box1Size + box0Margin + box1Margin, ea) : withOut(((this.subBoxMargin.left + 0.2) * 2), ea),
-        marginTop: String(grayTop) + ea,
-        marginBottom: String(servicePhotoMarginBottom) + ea,
-        paddingBottom: String(methodsTongBottom) + ea,
-        borderRadius: String(3) + "px",
-        boxSizing: "border-box",
-      }
+      title: "취향이 명확하지 않다면?",
+      description: "상담을 통해 <b%니즈와 취향을 파악%b>해\n컨셉의 방향성을 잡아드려요.",
+      image: "contents01.jpg",
     },
     {
-      mother: -1,
-      style: {
-        position: "relative",
-        width: String(100) + '%',
-      }
+      title: "결정이 어려운 성향이라면?",
+      description: "선택의 폭을 좁혀드리고\n<b%결정의 순간 명확한 조언%b>을 드려요.",
+      image: "contents02.jpg",
     },
-  ]);
+    {
+      title: "부족한 감각은?",
+      description: "<b%전문가의 아이디어와 감각%b>으로\n특색 있는 집을 완성합니다.",
+      image: "contents03.jpg",
+    },
+    {
+      title: "예산을 잘 쓰고 싶다면?",
+      description: "전체 <b%예산을 우선순위에 따라 분배%b>\n해 합리적으로 운영해드려요.",
+      image: "contents04.jpg",
+    },
+    {
+      title: "시간과 에너지가 부족할 땐?",
+      description: "일상 생활에 집중하실 수 있도록\n<b%전문가가 대신 고민%b>합니다.",
+      image: "contents05.jpg",
+    },
+  ];
 
-  for (let i = 0; i < serviceObj.service.contents.length; i++) {
-    tempChild = createNode({
-      mother: grayTextTong,
-      style: {
-        position: "relative",
-        display: "inline-block",
-        width: desktop ? "calc(calc(100% - " + String((serviceObj.service.contents.length - 1) * servicePhotoBetween) + ea + ") / " + String(serviceObj.service.contents.length) + ")" : "calc(calc(100% - " + String(servicePhotoBetween) + ea + ") / 2)",
-        marginRight: desktop ? String(serviceObj.service.contents.length - 1 === i ? 0 : servicePhotoBetween) + ea : String(i % 2 === 1 ? 0 : servicePhotoBetween) + ea,
-        paddingBottom: desktop ? String(serviceWordingBottom) + ea : ((i >= 2) ? 0 : serviceWordingBottom) + ea,
-      },
+  contents1 = [
+    {
+      title: "디자이너 역할",
       children: [
         {
-          mode: "img",
-          attribute: [
-            { src: StyleCurationJs.binaryPath + serviceObj.service.contents[i].image }
-          ],
-          style: {
-            position: "relative",
-            width: String(100) + '%',
-            height: "auto",
-            borderRadius: String(3) + "px",
-          }
+          title: "디자인",
+          description: "큰 <b%가구부터 패브릭%b>과 소품,\n그리고 <b%시공 디자인%b>을 제안해요.",
         },
         {
-          text: serviceObj.service.contents[i].name,
-          style: {
-            position: "relative",
-            width: String(100) + '%',
-            textAlign: "center",
-            fontSize: String(desktop ? wordSize : 3) + ea,
-            fontWeight: String(600),
-            color: data.selected.includes(i) ? colorChip.green : colorChip.black,
-            marginTop: String(desktop ? serviceWordingBetween : 1.5) + ea,
-          }
+          title: "일정 운영",
+          description: "시공과 제품 주문의 시기 및 기간의\n<b%일정을 일괄적으로 관리%b>해요.",
         },
         {
-          style: {
-            position: "absolute",
-            top: String(0),
-            left: String(0),
-            width: String(100) + '%',
-            height: String(100) + '%',
-            background: colorChip.white,
-            opacity: String(0.8),
-            display: data.selected.includes(i) ? "none" : "block",
-          }
-        }
+          title: "예산 운영",
+          description: "<b%같은 예산도 다르게%b> 쓰일 수 있도록\n예산을 분배하고 최적화합니다.",
+        },
       ]
-    });
-  }
-
-  //design fee
-  tempBlock = createNode({
-    mother: wordsTable,
-    style: {
-      position: "relative",
-      marginBottom: String(marginBottom) + ea,
-    }
-  });
-
-  createNode({
-    mother: tempBlock,
-    text: serviceObj.fee.name,
-    style: {
-      display: desktop ? "inline-block" : "block",
-      fontSize: String(desktop ? wordSize : mobileTitleSize) + ea,
-      wordSpacing: String(wordSpacing) + "px",
-      position: "relative",
-      top: String(0) + ea,
-      verticalAlign: "top",
-      lineHeight: String(1.6),
-      left: desktop ? "" : String((this.subBoxMargin.left + 0.2)) + ea,
-      width: desktop ? String(box0Size) + ea : withOut(((this.subBoxMargin.left + 0.2) * 2), ea),
-      marginRight: desktop ? String(box0Margin) + ea : "",
-      marginBottom: desktop ? "" : String(marginBottom / 2) + ea,
-      fontWeight: String(600),
-      textAlign: "left",
-      color: colorChip.black,
-    }
-  });
-
-  if (desktop) {
-    createNode({
-      mother: tempBlock,
-      text: '0',
-      style: {
-        display: "inline-block",
-        fontSize: String(wordSize) + ea,
-        wordSpacing: String(wordSpacing) + "px",
-        position: "relative",
-        top: String(0) + ea,
-        verticalAlign: "top",
-        lineHeight: String(1.6),
-        width: String(box1Size) + ea,
-        marginRight: String(box1Margin) + ea,
-        fontWeight: String(600),
-        color: colorChip.white,
-        textAlign: "right",
-      }
-    });
-  }
-
-  [ grayTong, grayTextTong ] = createNodes([
-    {
-      mother: tempBlock,
-      style: {
-        display: desktop ? "inline-block" : "block",
-        position: "relative",
-        left: desktop ? "" : String((this.subBoxMargin.left + 0.2)) + ea,
-        width: desktop ? withOut(box0Size + box1Size + box0Margin + box1Margin, ea) : withOut(((this.subBoxMargin.left + 0.2) * 2), ea),
-        marginTop: String(grayTop) + ea,
-        marginBottom: String(servicePhotoMarginBottom) + ea,
-        paddingTop: String(methodsTongTop) + ea,
-        paddingBottom: String(methodsTongBottom) + ea,
-        borderRadius: String(3) + "px",
-        border: "1px solid " + colorChip.gray3,
-        boxSizing: "border-box",
-      }
     },
     {
-      mother: -1,
-      style: {
-        position: "relative",
-        marginLeft: String(methodsTongLeft) + ea,
-        width: withOut(methodsTongLeft * 2, ea),
-      }
-    },
-  ]);
-
-  tempChild = createNode({
-    mother: grayTextTong,
-    style: {
-      position: "relative",
-      display: "block",
-      marginBottom: String(0) + ea,
-      paddingBottom: String(methodsBlockPaddingBottom) + ea,
-    },
-    children: [
-      {
-        style: {
-          display: desktop ? "inline-block" : "block",
-          position: "relative",
-          width: desktop ? String(methodsTitleWidth) + ea : "",
-          verticalAlign: "top",
-          marginBottom: desktop ? "" : String(1) + ea,
-        },
-        children: [
-          {
-            text: serviceObj.fee.contents[0].name,
-            style: {
-              position: "relative",
-              left: String(desktop ? 1 : 0) + ea,
-              fontSize: String(wordSize - methodsTextVisual) + ea,
-              fontWeight: String(600),
-              lineHeight: String(1.5),
-              color: colorChip.black,
-            }
-          },
-        ]
-      },
-      {
-        style: {
-          display: desktop ? "inline-block" : "block",
-          position: "relative",
-          width: desktop ? withOut(methodsTitleWidth, ea) : "",
-          verticalAlign: "top",
-          marginBottom: desktop ? "" : String(2.5) + ea,
-        }
-      }
-    ]
-  });
-
-  if (desktop) {
-    tempChild.children[1].style.height = String(tempChild.children[0].getBoundingClientRect().height - 4) + ea;
-    tempChild.children[1].style.overflow = "scroll";
-  }
-  tempChild.children[1].style.paddingTop = String(feeTongPaddingTop) + ea;
-
-  for (let i = 0; i < data.range.length; i++) {
-
-    createNode({
-      mother: tempChild.children[1],
-      style: {
-        display: "inline-block",
-        position: "relative",
-        top: mobile ? "" : (isMac() ? "" : String(2) + ea),
-        fontSize: String(feeSize) + ea,
-        marginRight: String(i === data.range.length - 1 ? 0 : feeMarginRight) + ea,
-        marginBottom: String(feeMarginBottomInit + (i === data.range.length - 1 ? feeMarginBottomLast : 0)) + ea,
-      },
+      title: "디자이너 제공물",
       children: [
         {
-          text: serviceObj.service.contents[data.selected[i]].name,
-          style: {
-            display: "inline-block",
-            fontSize: "inherit",
-            fontWeight: String(200),
-            color: colorChip.gray5,
-          }
+          title: "일정표",
+          description: "계약 기간 기준의\n전체 일정 캘린더",
+          image: "contents10.jpg",
         },
         {
-          text: ":",
-          style: {
-            display: "inline-block",
-            fontSize: "inherit",
-            fontWeight: String(200),
-            color: colorChip.gray5,
-            marginLeft: String(feeMargin0) + ea,
-          }
+          title: "컨셉 제안",
+          description: "프로젝트에 반영될\n컨셉 디자인",
+          image: "contents11.jpg",
         },
         {
-          text: "최저 " + String(Math.round(data.range[i][0] / 10000) === 0 ? 70 : Math.round(data.range[i][0] / 10000)) + "만원",
-          style: {
-            display: "inline-block",
-            fontSize: "inherit",
-            fontWeight: String(200),
-            color: colorChip.green,
-            marginLeft: String(feeMargin1) + ea,
-          }
+          title: "배치도",
+          description: "공간별 구성 및\n가구/소품 배치 도면",
+          image: "contents12.jpg",
         },
         {
-          text: "~",
-          style: {
-            display: "inline-block",
-            fontSize: "inherit",
-            fontWeight: String(200),
-            color: colorChip.green,
-            marginLeft: String(feeMargin2) + ea,
-          }
+          title: "제품 제안",
+          description: "기존 제품 활용 제안 및\n새 제품 구매 리스트",
+          image: "contents13.jpg",
         },
         {
-          text: "최고 " + String(Math.round(data.range[i][1] / 10000)) + "만원",
-          style: {
-            display: "inline-block",
-            fontSize: "inherit",
-            fontWeight: String(200),
-            color: colorChip.green,
-            marginLeft: String(feeMargin2) + ea,
-          }
+          title: "시공 디자인",
+          description: "시공 포함된\n서비스 진행 시 해당",
+          image: "contents14.jpg",
         },
       ]
-    });
-
-  }
-
-  //methods
-  tempBlock = createNode({
-    mother: wordsTable,
-    style: {
-      position: "relative",
-      marginBottom: String(marginBottom) + ea,
     }
-  });
+  ];
 
-  createNode({
-    mother: tempBlock,
-    text: serviceObj.methods.name,
-    style: {
-      display: desktop ? "inline-block" : "block",
-      fontSize: String(desktop ? wordSize : mobileTitleSize) + ea,
-      wordSpacing: String(wordSpacing) + "px",
-      position: "relative",
-      top: String(0) + ea,
-      verticalAlign: "top",
-      lineHeight: String(1.6),
-      left: desktop ? "" : String((this.subBoxMargin.left + 0.2)) + ea,
-      width: desktop ? String(box0Size) + ea : withOut(((this.subBoxMargin.left + 0.2) * 2), ea),
-      marginRight: desktop ? String(box0Margin) + ea : "",
-      marginBottom: desktop ? "" : String(marginBottom / 2) + ea,
-      fontWeight: String(600),
-      textAlign: "left",
-      color: colorChip.black,
-    }
-  });
 
-  if (desktop) {
-    createNode({
-      mother: tempBlock,
-      text: '0',
-      style: {
-        display: "inline-block",
-        fontSize: String(wordSize) + ea,
-        wordSpacing: String(wordSpacing) + "px",
-        position: "relative",
-        top: String(0) + ea,
-        verticalAlign: "top",
-        lineHeight: String(1.6),
-        width: String(box1Size) + ea,
-        marginRight: String(box1Margin) + ea,
-        fontWeight: String(600),
-        color: colorChip.white,
-        textAlign: "right",
-      }
-    });
-  }
+  // box 0 ---------------------------------------------------------------------------------------------------
 
-  [ grayTong, grayTextTong ] = createNodes([
-    {
-      mother: tempBlock,
-      style: {
-        display: desktop ? "inline-block" : "block",
-        position: "relative",
-        left: desktop ? "" : String((this.subBoxMargin.left + 0.2)) + ea,
-        width: desktop ? withOut(box0Size + box1Size + box0Margin + box1Margin, ea) : withOut(((this.subBoxMargin.left + 0.2) * 2), ea),
-        marginTop: String(grayTop) + ea,
-        marginBottom: String(desktop ? 6 : 2.5) + ea,
-        paddingTop: String(methodsTongTop) + ea,
-        paddingBottom: String(methodsTongBottom) + ea,
-        borderRadius: String(3) + "px",
-        border: "1px solid " + colorChip.gray3,
-        boxSizing: "border-box",
-      }
-    },
-    {
-      mother: -1,
-      style: {
-        position: "relative",
-        marginLeft: String(methodsTongLeft) + ea,
-        width: withOut(methodsTongLeft * 2, ea),
-      }
-    },
-  ]);
-
-  for (let i = 0; i < serviceObj.methods.contents.length; i++) {
-    tempChild = createNode({
-      mother: grayTextTong,
-      style: {
-        position: "relative",
-        display: "block",
-        marginBottom: String(i === serviceObj.methods.contents.length - 1 ? 0 : methodsBlockBottom) + ea,
-        paddingBottom: String(methodsBlockPaddingBottom) + ea,
-        borderBottom: (i === serviceObj.methods.contents.length - 1) ? "" : "1px solid " + colorChip.gray3,
-      },
-      children: [
-        {
-          style: {
-            display: desktop ? "inline-block" : "block",
-            position: "relative",
-            width: desktop ? String(methodsTitleWidth) + ea : "",
-            verticalAlign: "top",
-            marginBottom: desktop ? "" : String(1) + ea,
-          },
-          children: [
-            {
-              text: serviceObj.methods.contents[i].name,
-              style: {
-                position: "relative",
-                left: String(desktop ? 1 : 0) + ea,
-                fontSize: String(wordSize - methodsTextVisual) + ea,
-                fontWeight: String(600),
-                lineHeight: String(1.5),
-                color: colorChip.black,
-              }
-            },
-            {
-              text: "약 " + String(serviceObj.methods.contents[i].amount) + "일 소요",
-              style: {
-                position: "absolute",
-                left: desktop ? String(1) + ea : "",
-                fontSize: String(wordSize - methodsTextVisual - amountTextVisual) + ea,
-                fontWeight: String(400),
-                lineHeight: String(1.5),
-                top: String(amountTextTop) + ea,
-                right: mobile ? String(0) + ea : "",
-                color: colorChip.green,
-              }
-            }
-          ]
-        },
-        {
-          style: {
-            display: desktop ? "inline-block" : "block",
-            position: "relative",
-            width: desktop ? String(methodsSecondBlockWidth) + ea : "",
-            verticalAlign: "top",
-            marginRight: desktop ? String(methodsSecondBlockRight) + ea : "",
-            marginBottom: desktop ? "" : String(2.5) + ea,
-          },
-          children: [
-            {
-              text: serviceObj.methods.contents[i].contents,
-              style: {
-                fontSize: String(wordSize - methodsTextVisual) + ea,
-                fontWeight: String(300),
-                lineHeight: String(1.5),
-                color: colorChip.black,
-              }
-            }
-          ]
-        },
-        {
-          class: [ methodsTongClassName ],
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: desktop ? withOut(methodsTitleWidth + methodsSecondBlockWidth + methodsSecondBlockRight, ea) : "",
-            marginBottom: desktop ? "" : String(serviceObj.methods.contents[i].children.length !== 0 ? 2.5 : 0) + ea,
-          },
-        }
-      ]
-    });
-    tempDom = tempChild.querySelector('.' + methodsTongClassName);
-    for (let j = 0; j < serviceObj.methods.contents[i].children.length; j++) {
-      createNode({
-        mother: tempDom,
-        text: "<b%-%b> " + serviceObj.methods.contents[i].children[j],
-        style: {
-          display: "block",
-          position: "relative",
-          fontSize: String(wordSize - methodsTextVisual) + ea,
-          fontWeight: String(300),
-          color: colorChip.black,
-          marginBottom: String(j === serviceObj.methods.contents[i].children.length - 1 ? 0 : methodsThirdBlockBottom) + ea,
-          lineHeight: String(1.5),
-        },
-        bold: {
-          color: colorChip.green,
-        }
-      });
-    }
-  }
-
-  //process
-
-  tempBlock = createNode({
-    mother: wordsTable,
-    style: {
-      position: "relative",
-      marginBottom: String(marginBottom) + ea,
-    }
-  });
-
-  createNode({
-    mother: tempBlock,
-    text: serviceObj.process.name,
-    style: {
-      display: desktop ? "inline-block" : "block",
-      fontSize: String(desktop ? wordSize : mobileTitleSize) + ea,
-      wordSpacing: String(wordSpacing) + "px",
-      position: "relative",
-      top: String(0) + ea,
-      verticalAlign: "top",
-      lineHeight: String(1.6),
-      left: desktop ? "" : String((this.subBoxMargin.left + 0.2)) + ea,
-      width: desktop ? String(box0Size) + ea : withOut(((this.subBoxMargin.left + 0.2) * 2), ea),
-      marginRight: desktop ? String(box0Margin) + ea : "",
-      marginBottom: desktop ? "" : String(marginBottom / 2) + ea,
-      fontWeight: String(600),
-      textAlign: "left",
-      color: colorChip.black,
-    }
-  });
-
-  if (desktop) {
-    createNode({
-      mother: tempBlock,
-      text: '0',
-      style: {
-        display: "inline-block",
-        fontSize: String(wordSize) + ea,
-        wordSpacing: String(wordSpacing) + "px",
-        position: "relative",
-        top: String(0) + ea,
-        verticalAlign: "top",
-        lineHeight: String(1.6),
-        width: String(box1Size) + ea,
-        marginRight: String(box1Margin) + ea,
-        fontWeight: String(600),
-        color: colorChip.white,
-        textAlign: "right",
-      }
-    });
-  }
-
-  [ grayTong, grayTextTong ] = createNodes([
-    {
-      mother: tempBlock,
-      style: {
-        display: desktop ? "inline-block" : "block",
-        position: "relative",
-        left: desktop ? "" : String((this.subBoxMargin.left + 0.2)) + ea,
-        width: desktop ? withOut(box0Size + box1Size + box0Margin + box1Margin, ea) : withOut(((this.subBoxMargin.left + 0.2) * 2), ea),
-        marginTop: String(grayTop) + ea,
-        marginBottom: String(desktop ? 6 : 2.5) + ea,
-        paddingTop: String(methodsTongTop) + ea,
-        paddingBottom: String(methodsTongBottom) + ea,
-        borderRadius: String(3) + "px",
-        border: "1px solid " + colorChip.gray3,
-        boxSizing: "border-box",
-      }
-    },
-    {
-      mother: -1,
-      style: {
-        position: "relative",
-        marginLeft: String(methodsTongLeft) + ea,
-        width: withOut(methodsTongLeft * 2, ea),
-      }
-    },
-  ]);
-
-  for (let i = 0; i < serviceObj.process.contents.length; i++) {
-    tempChild = createNode({
-      mother: grayTextTong,
-      style: {
-        position: "relative",
-        display: "block",
-        marginBottom: String(i === serviceObj.process.contents.length - 1 ? 0 : methodsBlockBottom) + ea,
-        paddingBottom: String(processBlockPaddingBottom) + ea,
-        borderBottom: (i === serviceObj.process.contents.length - 1) ? "" : "1px solid " + colorChip.gray3,
-      },
-      children: [
-        {
-          style: {
-            display: desktop ? "inline-block" : "block",
-            position: "relative",
-            width: desktop ? String(methodsTitleWidth) + ea : "",
-            verticalAlign: "top",
-            marginBottom: desktop ? "" : String(1) + ea,
-          },
-          children: [
-            {
-              text: serviceObj.process.contents[i].name,
-              style: {
-                position: "relative",
-                left: String(desktop ? 1 : 0) + ea,
-                fontSize: String(wordSize - methodsTextVisual) + ea,
-                fontWeight: String(600),
-                lineHeight: String(1.5),
-                color: colorChip.black,
-              }
-            }
-          ]
-        },
-        {
-          class: [ processTongClassName ],
-          style: {
-            display: desktop ? "inline-block" : "block",
-            position: "relative",
-            width: desktop ? withOut(methodsTitleWidth, ea) : "",
-            verticalAlign: "top",
-            marginBottom: desktop ? "" : String(2.5) + ea,
-          },
-        },
-      ]
-    });
-    tempDom = tempChild.querySelector('.' + processTongClassName);
-    for (let j = 0; j < serviceObj.process.contents[i].contents.length; j++) {
-      createNode({
-        mother: tempDom,
-        text: serviceObj.process.contents[i].contents[j],
-        style: {
-          display: "inline-block",
-          position: "relative",
-          fontSize: String(wordSize - methodsTextVisual) + ea,
-          fontWeight: String(300),
-          color: colorChip.black,
-          marginRight: String(processBlockMarginLeft) + ea,
-          marginBottom: String(processThirdBlockBottom) + ea,
-          lineHeight: String(1.5),
-        },
-        bold: {
-          color: colorChip.green,
-        }
-      });
-      if (j !== serviceObj.process.contents[i].contents.length - 1) {
-        createNode({
-          mother: tempDom,
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(processArrowWidth) + ea,
-            height: String(processBlockHeight) + ea,
-            marginRight: String(processBlockMarginLeft) + ea,
-            verticalAlign: "top",
-            marginBottom: String(processThirdBlockBottom) + ea,
-          },
-          children: [
-            {
-              mode: "svg",
-              source: instance.mother.returnLongArrow(colorChip.green),
-              style: {
-                position: "absolute",
-                width: String(processArrowWidth) + ea,
-                top: String(processArrowTop) + ea,
-                left: String(0),
-              }
-            }
-          ]
-        });
-      }
-    }
-  }
-
-}
-
-StyleCurationJs.prototype.insertAdditionBox = function () {
-  const instance = this;
-  const { client, ea, baseTong, media } = this;
-  const mobile = media[4];
-  const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac } = GeneralJs;
-  const words = new WordsDictionary();
-  const addtionObj = words.getAdditionWording();
-  const addtionArr = addtionObj.wordings[media.findIndex((i) => { return i === true; })];
-  let whiteBlock;
-  let style;
-  let blockHeight, blockMarginBottom;
-  let buttonHeight, buttonWidth;
-  let buttonMargin;
-  let buttonTextTop, buttonTextSize;
-  let headWidth, headVisual;
-  let informationArea;
-  let finalBottom;
-  let margin, paddingTop;
-  let textBox;
-  let textTitleSize, textContentsSize;
-  let titleArea, contentsArea;
-  let contentsRatio;
-  let num;
-  let textBoxMarginTop, textBoxMarginBottom;
-  let contentsRatioFirst, contentsRatioSecond;
-  let titleBetween, titleVisual;
-  let titleLeftFirst, titleLeftSecond;
-  let textLineHeight;
-  let plusWidth, plusBottom;
-  let titleTopVisualFirst, titleTopVisualSecond;
-
-  margin = <%% 50, 50, 50, 50, 6 %%>;
-  paddingTop =  <%% 60, 54, 54, 54, 6.7 %%>;
-
-  blockHeight = <%% 820, 820, 820, 820, 820 %%>;
-  blockMarginBottom = <%% 160, 160, 160, 80, 12 %%>;
-
-  buttonHeight = <%% 47, 48, 48, 40, 8.4 %%>;
-  buttonWidth = <%% 206, 206, 206, 206, 17 %%>;
-  buttonMargin = <%% 8, 8, 8, 5, 2 %%>;
-
-  buttonTextTop = <%% 8, 8, 8, 8, 1.2 %%>;
-  buttonTextSize = <%% 20, 20, 20, 16, 3.8 %%>;
-
-  if (desktop) {
-    buttonTextTop = buttonTextTop + (isMac() ? 0 : 1);
-  }
-
-  headWidth = <%% 10, 10, 10, 10, 2 %%>;
-  headVisual = <%% 11, 11, 11, 11, 11 %%>;
-
-  finalBottom = <%% paddingTop + 6, 40, 30, 30, 9.7 %%>;
-
-  textTitleSize = <%% 27, 23, 22, 20, 4.2 %%>;
-  textContentsSize = <%% 15, 14.5, 14, 13, 3.3 %%>;
-
-  textBoxMarginTop = <%% 54, 40, 36, 32, 5.5 %%>;
-  textBoxMarginBottom = <%% 10, 10, 10, 10, 0 %%>;
-
-  contentsRatioFirst = <%% 41, 24, 27, 29, 11 %%>;
-  contentsRatioSecond = <%% 46.2, 31, 31.6, 33.8, 11 %%>;
-
-  titleBetween = <%% 12, 24, 22, 20, 2 %%>;
-  titleVisual = <%% 1, 1, 1, 1, 1 %%>;
-  if (desktop) {
-    if (!isMac()) {
-      titleBetween = titleBetween + 2;
-    }
-  }
-
-  titleLeftFirst = <%% 22, 0, 0, 0, 11 %%>;
-  titleLeftSecond = <%% 62, 40, 39, 34, 11 %%>;
-
-  textLineHeight = <%% 6, 6, 6, 6, 11 %%>;
-
-  plusWidth = <%% 24, 24, 24, 21, 4 %%>;
-  plusBottom = <%% (isMac() ? 39 : 44), (isMac() ? 48 : 50), (isMac() ? 47 : 49), (isMac() ? 41 : 43), 33 %%>;
-
-  titleTopVisualFirst = <%% -2, (isMac() ? -3 : -1), (isMac() ? -4 : -2), (isMac() ? -4 : -2), 0 %%>;
-  titleTopVisualSecond = <%% -1, (isMac() ? -4 : -2), (isMac() ? -5 : -3), (isMac() ? -4 : -2), 0 %%>;
-
-  whiteBlock = createNode({
-    mother: this.baseTong,
+  whiteBlock0 = createNode({
+    mother: baseTong,
     style: {
       position: "relative",
       borderRadius: String(desktop ? 8 : 3) + "px",
-      paddingTop: String(paddingTop) + ea,
-      paddingLeft: String(margin) + ea,
-      paddingRight: String(margin) + ea,
       width: withOut(margin * 2, ea),
       background: colorChip.white,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
       marginBottom: String(blockMarginBottom) + ea,
-      paddingBottom: String(finalBottom) + ea
+      height: String(height0) + ea,
+      paddingTop: String(margin) + ea,
+      paddingBottom: String(margin) + ea,
+      paddingLeft: String(margin) + ea,
+      paddingRight: String(margin) + ea,
     }
   });
 
-  //diagram
+  leftBox0 = createNode({
+    mother: whiteBlock0,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      width: String(leftBoxWidth) + ea,
+      height: String(100) + '%',
+      verticalAlign: "top",
+    }
+  });
+
   createNode({
-    mother: whiteBlock,
+    mother: leftBox0,
+    text: "이젠 디자이너와\n함께 진행하세요!",
     style: {
-      display: "block",
+      display: "inline-block",
       position: "relative",
-      width: String(100) + '%',
-    },
-    children: [
-      {
-        mode: "img",
-        attribute: [
-          { src: StyleCurationJs.binaryPath + "/" + addtionObj.image + String(media.findIndex((i) => { return i === true; })) + ".png" }
-        ],
-        style: {
-          display: "block",
-          position: "relative",
-          width: String(100) + '%',
-          top: String(0),
-          left: String(0),
-        }
-      },
-      {
-        mode: "img",
-        attribute: [
-          { src: StyleCurationJs.binaryPath + "/" + addtionObj.image + String(media.findIndex((i) => { return i === true; })) + ".svg" }
-        ],
-        style: {
-          display: "block",
-          position: "absolute",
-          width: String(100) + '%',
-          top: String(0),
-          left: String(0),
-        }
-      }
-    ]
-  });
-
-  //textBox
-  textBox = createNode({
-    mother: whiteBlock,
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(100) + '%',
-      marginTop: String(textBoxMarginTop) + ea,
-      marginBottom: String(textBoxMarginBottom) + ea,
+      fontSize: String(titleFont) + ea,
+      fontWeight: String(titleFontWeight),
+      wordSpacing: String(wordSpacing) + "px",
+      top: String(titleVisualTop) + ea,
+      marginLeft: String(titleLeft) + ea,
+      color: colorChip.black,
+      width: desktop ? "" : String(100) + '%',
+      textAlign: desktop ? "" : "center",
+      lineHeight: String(lineHeight),
     }
   });
 
-  num = 0;
-  for (let { title, contents } of addtionArr) {
-
-    contentsRatio = num === 0 ? contentsRatioFirst : contentsRatioSecond;
-
-    [ titleArea, contentsArea ] = createNodes([
-      {
-        mother: textBox,
-        style: {
-          width: desktop ? String(contentsRatio) + '%' : String(100) + '%',
-          display: desktop ? "inline-block" : "block",
-          position: "relative",
-          marginBottom: String(titleBetween) + ea,
-          top: desktop ? String((num === 0 ? titleTopVisualFirst : titleTopVisualSecond) * titleVisual) + ea : "",
-          verticalAlign: "top",
-        }
-      },
-      {
-        mother: textBox,
-        style: {
-          width: desktop ? String(100 - contentsRatio) + '%' : String(100) + '%',
-          display: desktop ? "inline-block" : "block",
-          position: "relative",
-          verticalAlign: "top",
-        }
-      },
-    ]);
-
-    if (desktop) {
-      for (let t of title) {
-        createNode({
-          mother: titleArea,
-          text: t,
-          style: {
-            position: "relative",
-            display: "block",
-            fontSize: String(textTitleSize) + ea,
-            fontWeight: String(200),
-            color: colorChip.black,
-            marginLeft: desktop ? String(num === 0 ? titleLeftFirst : titleLeftSecond) + ea : "",
-            textAlign: desktop ? "left" : "center",
-          },
-          bold: {
-            fontSize: String(textTitleSize) + ea,
-            fontWeight: String(600),
-            color: colorChip.black
-          }
-        });
-      }
-      for (let c of contents) {
-        createNode({
-          mother: contentsArea,
-          text: c,
-          style: {
-            position: "relative",
-            display: "block",
-            fontSize: String(textContentsSize) + ea,
-            fontWeight: String(300),
-            marginBottom: String(textLineHeight) + ea,
-            color: colorChip.black,
-          },
-          bold: {
-            fontSize: String(textContentsSize) + ea,
-            fontWeight: String(600),
-            color: colorChip.black
-          }
-        });
-      }
-    } else {
-
-      createNode({
-        mother: titleArea,
-        text: title.join(" "),
-        style: {
-          position: "relative",
-          display: "block",
-          fontSize: String(textTitleSize) + ea,
-          fontWeight: String(200),
-          color: colorChip.black,
-          marginLeft: desktop ? String(num === 0 ? titleLeftFirst : titleLeftSecond) + ea : "",
-          textAlign: desktop ? "left" : "center",
-        },
-        bold: {
-          fontSize: String(textTitleSize) + ea,
-          fontWeight: String(600),
-          color: colorChip.black
-        }
-      });
-
-      createNode({
-        mother: contentsArea,
-        text: contents.join(" "),
-        style: {
-          position: "relative",
-          display: "block",
-          fontSize: String(textContentsSize) + ea,
-          fontWeight: String(300),
-          marginBottom: String(num === addtionArr.length - 1 ? 0 : textLineHeight) + ea,
-          color: colorChip.black,
-          lineHeight: String(1.6),
-          textAlign: "center",
-        },
-        bold: {
-          fontSize: String(textContentsSize) + ea,
-          fontWeight: String(600),
-          color: colorChip.black
-        }
-      });
+  rightBox0 = createNode({
+    mother: whiteBlock0,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      width: withOut(leftBoxWidth, ea),
+      height: String(100) + '%',
+      verticalAlign: "top",
+      paddingTop: String(rightBoxPaddingTop) + ea,
     }
+  });
 
-    num++;
+  for (let i = 0; i < contents0.length; i++) {
+    title = contents0[i].title;
+    description = contents0[i].description;
+    image = contents0[i].image;
+
+    boxTong = createNode({
+      mother: rightBox0,
+      style: {
+        display: "inline-block",
+        width: "calc(calc(100% - " + String(boxMargin * (contents0Columns - 1)) + ea + ") / " + String(contents0Columns) + ")",
+        marginRight: String(i % contents0Columns === contents0Columns - 1 ? 0 : boxMargin) + ea,
+        marginBottom: String(boxMargin) + ea,
+        paddingBottom: String(boxTongPaddingBottom) + ea,
+      }
+    });
+
+    createNode({
+      mother: boxTong,
+      style: {
+        display: "block",
+        position: "relative",
+        width: String(100) + '%',
+        height: String(contents0PhotoHeight) + ea,
+        backgroundSize: "102% auto",
+        backgroundPosition: "50% 50%",
+        backgroundImage: "url('" + StyleCurationJs.binaryPath + "/" + image + "')",
+        borderRadius: String(5) + "px",
+      },
+      children: [
+        {
+          text: title,
+          style: {
+            display: "inline-block",
+            position: "absolute",
+            background: colorChip.white,
+            paddingLeft: String(contents0PaddingLeft) + ea,
+            paddingRight: String(contents0PaddingLeft) + ea,
+            paddingTop: String(contents0PaddingTop) + ea,
+            paddingBottom: String(contents0PaddingBottom) + ea,
+            fontSize: String(contents0TitleSize) + ea,
+            fontWeight: String(contents0TitleWeight),
+            color: colorChip.green,
+            bottom: String(contents0TitleWhiteBoxMargin) + ea,
+            left: String(contents0TitleWhiteBoxMargin) + ea,
+            borderRadius: String(5) + "px",
+          }
+        }
+      ]
+    });
+
+    createNode({
+      mother: boxTong,
+      text: description,
+      style: {
+        display: "block",
+        fontSize: String(contents0DescriptionSize) + ea,
+        fontWeight: String(contents0DescriptionWeight),
+        color: colorChip.black,
+        textAlign: "center",
+        lineHeight: String(contents0DescriptionLineHeight),
+        marginTop: String(contents0DescriptionMarginTop) + ea,
+      },
+      bold: {
+        fontWeight: String(contents0DescriptionWeightBold),
+        color: colorChip.black,
+      }
+    });
+
+  }
+
+  // box 1 ---------------------------------------------------------------------------------------------------
+
+  whiteBlock1 = createNode({
+    mother: baseTong,
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 3) + "px",
+      width: withOut(margin * 2, ea),
+      background: colorChip.white,
+      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      marginBottom: String(blockMarginBottom) + ea,
+      height: String(800) + ea,
+      paddingTop: String(margin) + ea,
+      paddingBottom: String(margin) + ea,
+      paddingLeft: String(margin) + ea,
+      paddingRight: String(margin) + ea,
+    }
+  });
+
+  leftBox1 = createNode({
+    mother: whiteBlock1,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      width: String(leftBoxWidth) + ea,
+      height: String(100) + '%',
+      verticalAlign: "top",
+    }
+  });
+
+  createNode({
+    mother: leftBox1,
+    text: "디자이너 역할과\n구체적 제공물",
+    style: {
+      display: "inline-block",
+      position: "relative",
+      fontSize: String(titleFont) + ea,
+      fontWeight: String(titleFontWeight),
+      wordSpacing: String(wordSpacing) + "px",
+      top: String(titleVisualTop) + ea,
+      marginLeft: String(titleLeft) + ea,
+      color: colorChip.black,
+      width: desktop ? "" : String(100) + '%',
+      textAlign: desktop ? "" : "center",
+      lineHeight: String(lineHeight),
+    }
+  });
+
+  rightBox1 = createNode({
+    mother: whiteBlock1,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      width: withOut(leftBoxWidth, ea),
+      height: String(100) + '%',
+      verticalAlign: "top",
+      paddingTop: String(rightBoxPaddingTopFontVersion) + ea,
+    }
+  });
+
+  createNode({
+    mother: rightBox1,
+    text: contents1[0].title,
+    style: {
+      display: "block",
+      fontSize: String(contents1TitleSize) + ea,
+      fontWeight: String(contents1TitleWeight),
+      color: colorChip.black,
+      marginBottom: String(contents1TitleBetween) + ea,
+    }
+  });
+
+  for (let { title, description } of contents1[0].children) {
+
+    contents1UpBox = createNode({
+      mother: rightBox1,
+      style: {
+        display: "inline-block",
+        width: String(232) + ea,
+        marginRight: String(10) + ea,
+        background: colorChip.gray1,
+        borderRadius: String(5) + "px",
+        verticalAlign: "top",
+        paddingLeft: String(21) + ea,
+        paddingTop: String(15) + ea,
+        paddingRight: String(21) + ea,
+        paddingBottom: String(21) + ea,
+      }
+    });
+
+    createNode({
+      mother: contents1UpBox,
+      mode: "svg",
+      source: instance.mother.returnCheckIcon(colorChip.green),
+      style: {
+        display: "inline-block",
+        position: "relative",
+        top: String(8) + ea,
+        width: String(11) + ea,
+        marginRight: String(6) + ea,
+        verticalAlign: "top",
+      }
+    })
+
+    createNode({
+      mother: contents1UpBox,
+      text: title,
+      style: {
+        display: "inline-block",
+        fontSize: String(17) + ea,
+        fontWeight: String(600),
+        verticalAlign: "top",
+      }
+    })
+
+    createNode({
+      mother: contents1UpBox,
+      style: {
+        display: "block",
+        width: String(232) + ea,
+        background: colorChip.white,
+        boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
+        borderRadius: String(5) + "px",
+        marginTop: String(10) + ea,
+        paddingTop: String(16) + ea,
+        paddingBottom: String(21) + ea,
+      },
+      children: [
+        {
+          text: description,
+          style: {
+            display: "block",
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(14) + ea,
+            fontWeight: String(400),
+            color: colorChip.black,
+            lineHeight: String(1.5),
+          },
+          bold: {
+            fontSize: String(14) + ea,
+            fontWeight: String(700),
+            color: colorChip.black,
+          }
+        }
+      ]
+    })
+
+
   }
 
   createNode({
-    mother: textBox,
-    mode: "svg",
-    source: this.mother.returnPlus(colorChip.green),
-    width: String(plusWidth) + ea,
-    position: "absolute",
-    left: String(desktop ? titleLeftFirst : 36) + ea,
-    bottom: String(plusBottom) + ea,
+    mother: rightBox1,
+    text: contents1[1].title,
+    style: {
+      display: "block",
+      fontSize: String(contents1TitleSize) + ea,
+      fontWeight: String(contents1TitleWeight),
+      color: colorChip.black,
+      marginTop: String(contents1Between) + ea,
+      marginBottom: String(contents1TitleBetween) + ea,
+    }
   });
+
+  for (let i = 0; i < contents1[1].children.length; i++) {
+    createNode({
+      mother: rightBox1,
+      style: {
+        display: "inline-block",
+        width: "calc(calc(100% - " + String(10 * (contents1Columns - 1)) + ea + ") / " + String(contents1Columns) + ")",
+        marginRight: String(i === contents1Columns - 1 ? 0 : 10) + ea,
+        height: String(300) + ea,
+        background: colorChip.gray1,
+        borderRadius: String(5) + "px",
+      }
+    })
+  }
+
+
+
+  // box 2 ---------------------------------------------------------------------------------------------------
+
+  whiteBlock2 = createNode({
+    mother: baseTong,
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 3) + "px",
+      width: withOut(margin * 2, ea),
+      background: colorChip.white,
+      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      marginBottom: String(blockMarginBottom) + ea,
+      height: String(800) + ea,
+      paddingTop: String(margin) + ea,
+      paddingBottom: String(margin) + ea,
+      paddingLeft: String(margin) + ea,
+      paddingRight: String(margin) + ea,
+    }
+  });
+
+
+
+
+  // box 3 ---------------------------------------------------------------------------------------------------
+
+  whiteBlock3 = createNode({
+    mother: baseTong,
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 3) + "px",
+      width: withOut(margin * 2, ea),
+      background: colorChip.white,
+      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      marginBottom: String(blockMarginBottom) + ea,
+      height: String(800) + ea,
+      paddingTop: String(margin) + ea,
+      paddingBottom: String(margin) + ea,
+      paddingLeft: String(margin) + ea,
+      paddingRight: String(margin) + ea,
+    }
+  });
+
+
+
+
+  // box 4 ---------------------------------------------------------------------------------------------------
+
+  whiteBlock4 = createNode({
+    mother: baseTong,
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 3) + "px",
+      width: withOut(margin * 2, ea),
+      background: colorChip.white,
+      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      marginBottom: String(lastBlockMarginBottom) + ea,
+      height: String(800) + ea,
+      paddingTop: String(margin) + ea,
+      paddingBottom: String(margin) + ea,
+      paddingLeft: String(margin) + ea,
+      paddingRight: String(margin) + ea,
+    }
+  });
+
+
+
+
 
 }
 
-StyleCurationJs.prototype.serviceConverting = async function (seridObj) {
+StyleCurationJs.prototype.serviceConverting = async function () {
   const instance = this;
   const { ea, baseTong } = this;
   const { backgroundImageBox, backgroundImageBox2 } = this.mother;
@@ -7105,8 +5367,7 @@ StyleCurationJs.prototype.serviceConverting = async function (seridObj) {
       baseTong.style.opacity = String(0);
       cleanChildren(baseTong);
       instance.insertPendingProposal();
-      instance.insertServiceBox(seridObj);
-      instance.insertAdditionBox();
+      instance.insertServiceBox();
       baseTong.style.height = "";
       baseTong.style.animation = "fadeupdelay 0.5s ease forwards";
 
@@ -7136,10 +5397,10 @@ StyleCurationJs.prototype.forceConverting = async function () {
     let firstBoo;
 
     firstBoo = true;
-    if (Array.isArray(clientHistory.curation.analytics.send)) {
-      if (clientHistory.curation.analytics.send.length > 0) {
-        if (clientHistory.curation.analytics.send.every((o) => { return typeof o === "object"; })) {
-          let boo, feeArr, thisProjects, thisProject, finalSerid;
+    // if (Array.isArray(clientHistory.curation.analytics.send)) {
+    //   if (clientHistory.curation.analytics.send.length > 0) {
+    //     if (clientHistory.curation.analytics.send.every((o) => { return typeof o === "object"; })) {
+          let boo;
 
           boo = false;
           for (let obj of clientHistory.curation.analytics.send) {
@@ -7150,31 +5411,12 @@ StyleCurationJs.prototype.forceConverting = async function () {
             }
           }
 
-          if (boo) {
-            thisProjects = await ajaxJson({ noFlat: true, whereQuery: { cliid: client.cliid } }, "/getProjects", { equal: true });
-            if (thisProjects.length > 0) {
-              thisProject = thisProjects[0];
-              finalSerid = clientHistory.curation.service.serid;
-              finalSerid = finalSerid.map((serid) => {
-                let feeArr;
-                let min, max;
-                feeArr = [];
-                for (let { fee } of thisProject.proposal.detail) {
-                  for (let { amount } of fee) {
-                    feeArr.push(amount);
-                  }
-                }
-                feeArr.sort((a, b) => { return a - b; });
-                min = Math.floor(feeArr[0] / 100000) / 10;
-                max = Math.ceil(feeArr[feeArr.length - 1] / 1000000);
-                return { serid, min, max };
-              });
-              await this.serviceConverting(finalSerid);
-            }
-          }
-        }
-      }
-    }
+          // if (boo) {
+            await this.serviceConverting();
+    //       }
+    //     }
+    //   }
+    // }
 
     if (client.requests[0].analytics.response.action !== "1차 응대 예정" || client.requests[0].analytics.response.status !== "응대중") {
       firstBoo = false;
@@ -7306,8 +5548,6 @@ StyleCurationJs.prototype.launching = async function (loading) {
       local: async () => {
         try {
           instance.insertInitBox();
-          // instance.insertFirstService();
-          // instance.insertSecondService();
           instance.insertCenterBox();
           instance.insertPhotoBox();
           instance.insertPannelBox();
