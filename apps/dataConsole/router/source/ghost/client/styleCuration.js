@@ -4829,10 +4829,34 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
   let contents0Columns;
   let rightBoxPaddingTopFontVersion;
   let contents1TitleSize, contents1TitleWeight;
-  let contents1UpBox;
+  let contents1UpBox, contents1DownBox;
   let contents1TitleBetween;
   let contents1Between;
   let contents1Columns;
+  let contents1UpBoxWidth;
+  let contents1UpBoxMargin;
+  let contents1UpBoxPaddingLeft;
+  let contents1UpBoxPaddingTop;
+  let contents1UpBoxCheckTop;
+  let contents1UpBoxCheckWidth;
+  let contents1UpBoxCheckMarginRight;
+  let contents1UpBoxTitleSize;
+  let contents1UpBoxTitleWeight;
+  let contents1UpBoxWhiteMarginTop;
+  let contents1UpBoxWhitePaddingTop;
+  let contents1UpBoxWhitePaddingBottom;
+  let contents1UpBoxWhiteSize;
+  let contents1UpBoxWhiteWeight;
+  let contents1UpBoxWhiteWeightBold;
+  let contents1UpBoxWhiteLineHeight;
+  let contents1DownBoxPaddingTop;
+  let contents1DownBoxPaddingBottom;
+  let contents1DownBoxPaddingMargin;
+  let contents1DownBoxPaddingLeft;
+  let contents1DownBoxCircleHeight;
+  let contents1DownBoxTitleMarginTop;
+  let contents1DownBoxDescriptionMarginTop;
+  let contents1DownBoxDescriptionSize;
 
   blockMarginBottom = <%% 16, 16, 16, 16, 2 %%>;
 
@@ -4849,19 +4873,20 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
 
   leftBoxWidth = 300;
 
-  boxMargin = 30;
+  boxMargin = 36;
 
-  rightBoxPaddingTop = 6;
+  rightBoxPaddingTop = 7;
   rightBoxPaddingTopFontVersion = 2;
 
-  height0 = 550;
+  height0 = 560;
+  height1 = 580;
 
   titleVisualTop = -2;
 
-  boxTongPaddingBottom = 15;
+  boxTongPaddingBottom = 10;
   contents0PhotoHeight = 180;
 
-  contents0PaddingLeft = 13;
+  contents0PaddingLeft = 15;
   contents0PaddingTop = 6;
   contents0PaddingBottom = 9;
   contents0TitleSize = 14;
@@ -4872,16 +4897,47 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
   contents0DescriptionWeight = 400;
   contents0DescriptionLineHeight = 1.5;
   contents0DescriptionWeightBold = 700;
-  contents0DescriptionMarginTop = 18;
+  contents0DescriptionMarginTop = 20;
 
   contents0Columns = 3;
 
-  contents1TitleSize = 20;
-  contents1TitleWeight = 500;
+  contents1TitleSize = 19;
+  contents1TitleWeight = 600;
   contents1TitleBetween = 16;
   contents1Between = 45;
 
   contents1Columns = 5;
+
+  contents1UpBoxWidth = 232;
+  contents1UpBoxMargin = 10;
+  contents1UpBoxPaddingLeft = 22;
+  contents1UpBoxPaddingTop = 16;
+
+  contents1UpBoxCheckTop = 7;
+  contents1UpBoxCheckWidth = 11;
+  contents1UpBoxCheckMarginRight = 6;
+
+  contents1UpBoxTitleSize = 16;
+  contents1UpBoxTitleWeight = 600;
+
+  contents1UpBoxWhiteMarginTop = 10;
+  contents1UpBoxWhitePaddingTop = 16;
+  contents1UpBoxWhitePaddingBottom = 21;
+
+  contents1UpBoxWhiteSize = 14;
+  contents1UpBoxWhiteWeight = 400;
+  contents1UpBoxWhiteWeightBold = 700;
+  contents1UpBoxWhiteLineHeight = 1.5;
+
+  contents1DownBoxPaddingTop = 30;
+  contents1DownBoxPaddingBottom = 36;
+  contents1DownBoxPaddingMargin = 10;
+  contents1DownBoxPaddingLeft = 36;
+  contents1DownBoxCircleHeight = 119;
+
+  contents1DownBoxTitleMarginTop = 16;
+  contents1DownBoxDescriptionMarginTop = 6;
+  contents1DownBoxDescriptionSize = 13;
 
   contents0 = [
     {
@@ -4940,27 +4996,27 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
         {
           title: "일정표",
           description: "계약 기간 기준의\n전체 일정 캘린더",
-          image: "contents10.jpg",
+          image: "contents10.png",
         },
         {
           title: "컨셉 제안",
           description: "프로젝트에 반영될\n컨셉 디자인",
-          image: "contents11.jpg",
+          image: "contents11.png",
         },
         {
           title: "배치도",
           description: "공간별 구성 및\n가구/소품 배치 도면",
-          image: "contents12.jpg",
+          image: "contents12.png",
         },
         {
           title: "제품 제안",
           description: "기존 제품 활용 제안 및\n새 제품 구매 리스트",
-          image: "contents13.jpg",
+          image: "contents13.png",
         },
         {
           title: "시공 디자인",
           description: "시공 포함된\n서비스 진행 시 해당",
-          image: "contents14.jpg",
+          image: "contents14.png",
         },
       ]
     }
@@ -5072,6 +5128,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
             bottom: String(contents0TitleWhiteBoxMargin) + ea,
             left: String(contents0TitleWhiteBoxMargin) + ea,
             borderRadius: String(5) + "px",
+            opacity: String(0.95),
           }
         }
       ]
@@ -5108,7 +5165,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
       background: colorChip.white,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
       marginBottom: String(blockMarginBottom) + ea,
-      height: String(800) + ea,
+      height: String(height1) + ea,
       paddingTop: String(margin) + ea,
       paddingBottom: String(margin) + ea,
       paddingLeft: String(margin) + ea,
@@ -5175,15 +5232,15 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
       mother: rightBox1,
       style: {
         display: "inline-block",
-        width: String(232) + ea,
-        marginRight: String(10) + ea,
+        width: String(contents1UpBoxWidth) + ea,
+        marginRight: String(contents1UpBoxMargin) + ea,
         background: colorChip.gray1,
         borderRadius: String(5) + "px",
         verticalAlign: "top",
-        paddingLeft: String(21) + ea,
-        paddingTop: String(15) + ea,
-        paddingRight: String(21) + ea,
-        paddingBottom: String(21) + ea,
+        paddingLeft: String(contents1UpBoxPaddingLeft) + ea,
+        paddingTop: String(contents1UpBoxPaddingTop) + ea,
+        paddingRight: String(contents1UpBoxPaddingLeft) + ea,
+        paddingBottom: String(contents1UpBoxPaddingLeft) + ea,
       }
     });
 
@@ -5194,9 +5251,9 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
       style: {
         display: "inline-block",
         position: "relative",
-        top: String(8) + ea,
-        width: String(11) + ea,
-        marginRight: String(6) + ea,
+        top: String(contents1UpBoxCheckTop) + ea,
+        width: String(contents1UpBoxCheckWidth) + ea,
+        marginRight: String(contents1UpBoxCheckMarginRight) + ea,
         verticalAlign: "top",
       }
     })
@@ -5206,8 +5263,8 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
       text: title,
       style: {
         display: "inline-block",
-        fontSize: String(17) + ea,
-        fontWeight: String(600),
+        fontSize: String(contents1UpBoxTitleSize) + ea,
+        fontWeight: String(contents1UpBoxTitleWeight),
         verticalAlign: "top",
       }
     })
@@ -5216,13 +5273,13 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
       mother: contents1UpBox,
       style: {
         display: "block",
-        width: String(232) + ea,
+        width: String(contents1UpBoxWidth) + ea,
         background: colorChip.white,
         boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
         borderRadius: String(5) + "px",
-        marginTop: String(10) + ea,
-        paddingTop: String(16) + ea,
-        paddingBottom: String(21) + ea,
+        marginTop: String(contents1UpBoxWhiteMarginTop) + ea,
+        paddingTop: String(contents1UpBoxWhitePaddingTop) + ea,
+        paddingBottom: String(contents1UpBoxWhitePaddingBottom) + ea,
       },
       children: [
         {
@@ -5231,20 +5288,19 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
             display: "block",
             width: String(100) + '%',
             textAlign: "center",
-            fontSize: String(14) + ea,
-            fontWeight: String(400),
+            fontSize: String(contents1UpBoxWhiteSize) + ea,
+            fontWeight: String(contents1UpBoxWhiteWeight),
             color: colorChip.black,
-            lineHeight: String(1.5),
+            lineHeight: String(contents1UpBoxWhiteLineHeight),
           },
           bold: {
-            fontSize: String(14) + ea,
-            fontWeight: String(700),
+            fontSize: String(contents1UpBoxWhiteSize) + ea,
+            fontWeight: String(contents1UpBoxWhiteWeightBold),
             color: colorChip.black,
           }
         }
       ]
     })
-
 
   }
 
@@ -5262,17 +5318,64 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
   });
 
   for (let i = 0; i < contents1[1].children.length; i++) {
-    createNode({
+    contents1DownBox = createNode({
       mother: rightBox1,
       style: {
         display: "inline-block",
-        width: "calc(calc(100% - " + String(10 * (contents1Columns - 1)) + ea + ") / " + String(contents1Columns) + ")",
-        marginRight: String(i === contents1Columns - 1 ? 0 : 10) + ea,
-        height: String(300) + ea,
+        width: "calc(calc(100% - " + String(contents1DownBoxPaddingMargin * (contents1Columns - 1)) + ea + ") / " + String(contents1Columns) + ")",
+        marginRight: String(i === contents1Columns - 1 ? 0 : contents1DownBoxPaddingMargin) + ea,
+        paddingTop: String(contents1DownBoxPaddingTop) + ea,
+        paddingBottom: String(contents1DownBoxPaddingBottom) + ea,
         background: colorChip.gray1,
         borderRadius: String(5) + "px",
+        verticalAlign: "top",
       }
     })
+
+    createNode({
+      mother: contents1DownBox,
+      style: {
+        marginLeft: String(contents1DownBoxPaddingLeft) + ea,
+        marginRight: String(contents1DownBoxPaddingLeft) + ea,
+        width: withOut(contents1DownBoxPaddingLeft * 2, ea),
+        height: String(contents1DownBoxCircleHeight) + ea,
+        borderRadius: String(contents1DownBoxCircleHeight) + ea,
+        background: colorChip.gray3,
+        backgroundImage: "url('" + StyleCurationJs.binaryPath + "/" + contents1[1].children[i].image + "')",
+        backgroundSize: "100% auto",
+        backgroundPosition: "50% 50%",
+      }
+    })
+
+    createNode({
+      mother: contents1DownBox,
+      text: contents1[1].children[i].title,
+      style: {
+        display: "block",
+        textAlign: "center",
+        width: String(100) + '%',
+        fontSize: String(contents1UpBoxTitleSize) + ea,
+        fontWeight: String(contents1UpBoxTitleWeight),
+        color: colorChip.black,
+        marginTop: String(contents1DownBoxTitleMarginTop) + ea,
+      }
+    })
+
+    createNode({
+      mother: contents1DownBox,
+      text: contents1[1].children[i].description,
+      style: {
+        display: "block",
+        textAlign: "center",
+        width: String(100) + '%',
+        fontSize: String(contents1DownBoxDescriptionSize) + ea,
+        fontWeight: String(contents1UpBoxWhiteWeight),
+        color: colorChip.black,
+        marginTop: String(contents1DownBoxDescriptionMarginTop) + ea,
+        lineHeight: String(contents1UpBoxWhiteLineHeight),
+      }
+    })
+
   }
 
 
@@ -5296,7 +5399,102 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
     }
   });
 
+  leftBox2 = createNode({
+    mother: whiteBlock2,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      width: String(leftBoxWidth) + ea,
+      height: String(100) + '%',
+      verticalAlign: "top",
+    }
+  });
 
+  createNode({
+    mother: leftBox2,
+    text: "인테리어 예산의\n4가지 분류",
+    style: {
+      display: "inline-block",
+      position: "relative",
+      fontSize: String(titleFont) + ea,
+      fontWeight: String(titleFontWeight),
+      wordSpacing: String(wordSpacing) + "px",
+      top: String(titleVisualTop) + ea,
+      marginLeft: String(titleLeft) + ea,
+      color: colorChip.black,
+      width: desktop ? "" : String(100) + '%',
+      textAlign: desktop ? "" : "center",
+      lineHeight: String(lineHeight),
+    }
+  });
+
+  rightBox2 = createNode({
+    mother: whiteBlock2,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      width: withOut(leftBoxWidth, ea),
+      height: String(100) + '%',
+      verticalAlign: "top",
+      paddingTop: String(rightBoxPaddingTopFontVersion) + ea,
+    }
+  });
+
+  createNode({
+    mother: rightBox2,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      textAlign: "center",
+      height: String(45) + ea,
+    },
+    children: [
+      {
+        style: {
+          position: "absolute",
+          display: "block",
+          width: String(100) + '%',
+          top: String(17) + ea,
+          height: withOut(17, ea),
+          left: String(0),
+          border: String(1) + "px solid " + colorChip.gray4,
+          borderTopLeftRadius: String(12) + "px",
+          borderTopRightRadius: String(12) + "px",
+          borderBottom: String(0),
+          boxSizing: "border-box",
+        }
+      },
+      {
+        text: "인테리어 비용 구성",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          paddingTop: String(7) + ea,
+          paddingLeft: String(16) + ea,
+          paddingRight: String(16) + ea,
+          paddingBottom: String(9) + ea,
+          fontSize: String(14) + ea,
+          fontWeight: String(600),
+          color: colorChip.black,
+          background: colorChip.gray1,
+          borderRadius: String(5) + "px",
+        }
+      }
+    ]
+  })
+
+  createNode({
+    mother: rightBox2,
+    mode: "img",
+    attribute: { src: StyleCurationJs.binaryPath + "/" + "contents2" + String(media.findIndex(boo => boo)) + ".png" },
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      marginTop: String(40) + ea,
+    }
+  })
 
 
   // box 3 ---------------------------------------------------------------------------------------------------
