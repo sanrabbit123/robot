@@ -91,10 +91,18 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const WebSocket = require("ws");
 
+    const ws = new WebSocket('wss://home-liaison.serveftp.com/client');
 
-    
+    ws.on('open', function open() {
+      console.log("yes");
+      ws.send('something');
+    });
 
+    ws.on('message', function message(data) {
+      console.log('received: %s', data);
+    });
 
 
 

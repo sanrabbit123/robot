@@ -329,19 +329,8 @@ Alien.prototype.wssLaunching = async function () {
     }
     pems.allowHTTP1 = true;
 
-
     // routing
     this.routerPatch(app);
-
-
-    // alive monitor
-    memberAlive = {};
-    Alien.stacks.deathTimeout = {};
-    for (let { id } of members) {
-      memberAlive[id] = false;
-      Alien.stacks.deathTimeout[id] = null;
-    }
-    Alien.stacks.memberAlive = memberAlive;
 
     generalSocket = new WebSocket.Server({ noServer: true });
     generalSocket.on("connection", (ws) => {
@@ -351,36 +340,6 @@ Alien.prototype.wssLaunching = async function () {
           if (c.readyState === WebSocket.OPEN && ws !== c) {
             c.send(message);
           }
-        }
-        try {
-          const data = equalJson(message);
-          let macArr, memid, index;
-          if (data.device !== undefined && data.message === "alive") {
-            macArr = data.device.networkInterfaces.map((obj) => { return obj.mac });
-
-            memid = null;
-            for (let mac of macArr) {
-              index = address.officeinfo.map.findIndex((obj) => { return obj.mac === mac });
-              if (index !== -1) {
-                if (typeof address.officeinfo.map[index].memid === "string") {
-                  memid = address.officeinfo.map[index].memid;
-                  break;
-                }
-              }
-            }
-
-            if (memid !== null) {
-              Alien.stacks.memberAlive[memid] = true;
-              if (Alien.stacks.deathTimeout[memid] !== null) {
-                clearTimeout(Alien.stacks.deathTimeout[memid]);
-              }
-              Alien.stacks.deathTimeout[memid] = setTimeout(() => {
-                Alien.stacks.memberAlive[memid] = false;
-              }, 2 * 30 * 1000);
-            }
-          }
-        } catch (e) {
-          errorLog(e.message).catch((err) => { console.log(err); });
         }
       });
     });
@@ -588,7 +547,7 @@ Alien.prototype.requestWhisk = async function (num) {
 
 const app = new Alien();
 if (/office/gi.test(process.argv[2])) {
-  app.wssLaunching(2).catch((err) => { console.log(err); });
+  app.wssLaunching().catch((err) => { console.log(err); });
 } else if (/request/gi.test(process.argv[2])) {
   app.requestWhisk(Number(process.argv[3])).catch((err) => { console.log(err); });
 } else if (/receiveSms/gi.test(process.argv[2])) {
