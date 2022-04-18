@@ -91,22 +91,18 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const WebSocket = require("ws");
-
-    const ws = new WebSocket('wss://home-liaison.serveftp.com:5000/general');
-
-    ws.on('open', function () {
-      console.log("yes");
-      ws.send('something');
-    });
-
-    ws.on('message', function (data) {
-      console.log('received: %s', data);
-    });
-
-    setInterval(() => {
-      ws.send("dddddd")
-    }, 3000);
+    // const WebSocket = require("ws");
+    //
+    // const ws = new WebSocket('wss://home-liaison.serveftp.com:5000/general');
+    //
+    // ws.on('open', function () {
+    //   console.log("yes");
+    //   ws.send('something');
+    // });
+    //
+    // ws.on('message', function (data) {
+    //   console.log('received: %s', data);
+    // });
 
 
 
