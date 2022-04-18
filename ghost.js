@@ -3848,9 +3848,6 @@ Ghost.prototype.serverLaunching = async function () {
       "designer",
       "photo",
     ];
-    let wssTargets = [
-      "client",
-    ];
 
     certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
     keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
@@ -3895,44 +3892,6 @@ Ghost.prototype.serverLaunching = async function () {
     }
 
     server = https.createServer(pems, app);
-
-    sockets = [];
-    for (let i = 0; i < wssTargets.length; i++) {
-      sockets.push(new WebSocket.Server({ noServer: true }));
-    }
-
-    for (let wss of sockets) {
-      wss.on("connection", function (ws) {
-        ws.on("message", (message) => {
-          const clients = wss.clients;
-          for (let c of clients) {
-            if (c.readyState === WebSocket.OPEN && ws !== c) {
-              c.send(message);
-            }
-          }
-        });
-      });
-    }
-
-    server.on("upgrade", function (request, socket, head) {
-      const { pathname } = url.parse(request.url);
-      let urlTargets, number;
-      urlTargets = wssTargets.map((i) => { return new RegExp(i, "gi"); });
-      number = null;
-      for (let i = 0; i < urlTargets.length; i++) {
-        if (urlTargets[i].test(pathname)) {
-          number = i;
-          break;
-        }
-      }
-      if (number !== null) {
-        sockets[number].handleUpgrade(request, socket, head, function (ws) {
-          sockets[number].emit("connection", ws, request);
-        });
-      } else {
-        socket.destroy();
-      }
-    });
 
     //server on
     server.listen(address.port, address.ip.inner, () => {
