@@ -2345,8 +2345,6 @@ DevContext.prototype.launching = async function () {
     // console.log(await getPrice("d1902_aa01s", "c2106_aa01s", [ 1, 1 ]));
 
 
-
-
     // const selfMongo = this.MONGOLOCALC;
     // const targetDesid = [
     //   'd1902_aa01s',
@@ -2441,8 +2439,6 @@ DevContext.prototype.launching = async function () {
     // console.log(average)
 
 
-
-
     // let resultObj, res;
     // resultObj = {};
     // resultObj["pretext"] = "이지영";
@@ -2459,8 +2455,6 @@ DevContext.prototype.launching = async function () {
     // resultObj["wayto"] = "인터넷 검색";
     // res = await requestSystem("https://home-liaison.serveftp.com:3000/submit", resultObj, { "Content-Type": "application/json" });
     // console.log(res);
-
-
 
 
     // const aspirants = await back.getAspirantsByQuery({});
@@ -2496,10 +2490,8 @@ DevContext.prototype.launching = async function () {
     // }
 
 
-
     // const reflection = new MongoReflection();
     // await reflection.mongoMigration("local", "pythoninfo");
-
 
 
     // TOOLS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
