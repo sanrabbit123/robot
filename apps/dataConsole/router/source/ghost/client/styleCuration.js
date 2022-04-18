@@ -4908,121 +4908,121 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
   titleFontWeight = <%% 500, 500, 500, 500, 500 %%>;
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
 
-  lineHeight = 1.42;
+  lineHeight = <%% 1.42, 1.42, 1.42, 1.42, 1.42 %%>;
 
-  leftBoxWidth = 300;
+  leftBoxWidth = <%% 300, 300, 300, 300, 300 %%>;
 
-  boxMargin = 36;
+  boxMargin = <%% 36, 36, 36, 36, 36 %%>;
 
-  rightBoxPaddingTop = 7;
-  rightBoxPaddingTopFontVersion = 2;
+  rightBoxPaddingTop = <%% 7, 7, 7, 7, 7 %%>;
+  rightBoxPaddingTopFontVersion = <%% 2, 2, 2, 2, 2 %%>;
 
-  height0 = 560;
-  height1 = 580;
-  height2 = 370;
-  height3 = 810;
-  height4 = 310;
+  height0 = <%% 560, 560, 560, 560, 560 %%>;
+  height1 = <%% 580, 580, 580, 580, 580 %%>;
+  height2 = <%% 370, 370, 370, 370, 370 %%>;
+  height3 = <%% 810, 810, 810, 810, 810 %%>;
+  height4 = <%% 310, 310, 310, 310, 310 %%>;
 
-  titleVisualTop = -2;
+  titleVisualTop = <%% -2, -2, -2, -2, -2 %%>;
 
-  boxTongPaddingBottom = 10;
-  contents0PhotoHeight = 180;
+  boxTongPaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
+  contents0PhotoHeight = <%% 180, 180, 180, 180, 180 %%>;
 
-  contents0PaddingLeft = 15;
-  contents0PaddingTop = 6;
-  contents0PaddingBottom = 9;
-  contents0TitleSize = 14;
-  contents0TitleWeight = 700;
-  contents0TitleWhiteBoxMargin = 15;
+  contents0PaddingLeft = <%% 15, 15, 15, 15, 15 %%>;
+  contents0PaddingTop = <%% 6, 6, 6, 6, 6 %%>;
+  contents0PaddingBottom = <%% 9, 9, 9, 9, 9 %%>;
+  contents0TitleSize = <%% 14, 14, 14, 14, 14 %%>;
+  contents0TitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+  contents0TitleWhiteBoxMargin = <%% 15, 15, 15, 15, 15 %%>;
 
-  contents0DescriptionSize = 15;
-  contents0DescriptionWeight = 400;
-  contents0DescriptionLineHeight = 1.5;
-  contents0DescriptionWeightBold = 700;
-  contents0DescriptionMarginTop = 20;
+  contents0DescriptionSize = <%% 15, 15, 15, 15, 15 %%>;
+  contents0DescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+  contents0DescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+  contents0DescriptionWeightBold = <%% 700, 700, 700, 700, 700 %%>;
+  contents0DescriptionMarginTop = <%% 20, 20, 20, 20, 20 %%>;
 
-  contents0Columns = 3;
+  contents0Columns = <%% 3, 3, 3, 3, 3 %%>;
 
-  contents1TitleSize = 19;
-  contents1TitleWeight = 600;
-  contents1TitleBetween = 16;
-  contents1Between = 45;
+  contents1TitleSize = <%% 19, 19, 19, 19, 19 %%>;
+  contents1TitleWeight = <%% 600, 600, 600, 600, 600 %%>;
+  contents1TitleBetween = <%% 16, 16, 16, 16, 16 %%>;
+  contents1Between = <%% 45, 45, 45, 45, 45 %%>;
 
-  contents1Columns = 5;
+  contents1Columns = <%% 5, 5, 5, 5, 5 %%>;
 
-  contents1UpBoxWidth = 232;
-  contents1UpBoxMargin = 10;
-  contents1UpBoxPaddingLeft = 22;
-  contents1UpBoxPaddingTop = 16;
+  contents1UpBoxWidth = <%% 232, 232, 232, 232, 232 %%>;
+  contents1UpBoxMargin = <%% 10, 10, 10, 10, 10 %%>;
+  contents1UpBoxPaddingLeft = <%% 22, 22, 22, 22, 22 %%>;
+  contents1UpBoxPaddingTop = <%% 16, 16, 16, 16, 16 %%>;
 
-  contents1UpBoxCheckTop = 7;
-  contents1UpBoxCheckWidth = 11;
-  contents1UpBoxCheckMarginRight = 6;
+  contents1UpBoxCheckTop = <%% 7, 7, 7, 7, 7 %%>;
+  contents1UpBoxCheckWidth = <%% 11, 11, 11, 11, 11 %%>;
+  contents1UpBoxCheckMarginRight = <%% 6, 6, 6, 6, 6 %%>;
 
-  contents1UpBoxTitleSize = 16;
-  contents1UpBoxTitleWeight = 600;
+  contents1UpBoxTitleSize = <%% 16, 16, 16, 16, 16 %%>;
+  contents1UpBoxTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-  contents1UpBoxWhiteMarginTop = 10;
-  contents1UpBoxWhitePaddingTop = 16;
-  contents1UpBoxWhitePaddingBottom = 21;
+  contents1UpBoxWhiteMarginTop = <%% 10, 10, 10, 10, 10 %%>;
+  contents1UpBoxWhitePaddingTop = <%% 16, 16, 16, 16, 16 %%>;
+  contents1UpBoxWhitePaddingBottom = <%% 21, 21, 21, 21, 21 %%>;
 
-  contents1UpBoxWhiteSize = 14;
-  contents1UpBoxWhiteWeight = 400;
-  contents1UpBoxWhiteWeightBold = 700;
-  contents1UpBoxWhiteLineHeight = 1.5;
+  contents1UpBoxWhiteSize = <%% 14, 14, 14, 14, 14 %%>;
+  contents1UpBoxWhiteWeight = <%% 400, 400, 400, 400, 400 %%>;
+  contents1UpBoxWhiteWeightBold = <%% 700, 700, 700, 700, 700 %%>;
+  contents1UpBoxWhiteLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  contents1DownBoxPaddingTop = 30;
-  contents1DownBoxPaddingBottom = 36;
-  contents1DownBoxPaddingMargin = 10;
-  contents1DownBoxPaddingLeft = 36;
-  contents1DownBoxCircleHeight = 119;
+  contents1DownBoxPaddingTop = <%% 30, 30, 30, 30, 30 %%>;
+  contents1DownBoxPaddingBottom = <%% 36, 36, 36, 36, 36 %%>;
+  contents1DownBoxPaddingMargin = <%% 10, 10, 10, 10, 10 %%>;
+  contents1DownBoxPaddingLeft = <%% 36, 36, 36, 36, 36 %%>;
+  contents1DownBoxCircleHeight = <%% 119, 119, 119, 119, 119 %%>;
 
-  contents1DownBoxTitleMarginTop = 16;
-  contents1DownBoxDescriptionMarginTop = 6;
-  contents1DownBoxDescriptionSize = 13;
+  contents1DownBoxTitleMarginTop = <%% 16, 16, 16, 16, 16 %%>;
+  contents1DownBoxDescriptionMarginTop = <%% 6, 6, 6, 6, 6 %%>;
+  contents1DownBoxDescriptionSize = <%% 13, 13, 13, 13, 13 %%>;
 
-  contents2LineBoxHeight = 45;
-  contents2LineTop = 17;
-  contents2LineRadius = 12;
-  contents2LineTitlePaddingTop = 7;
-  contents2LineTitlePaddingBottom = 9;
-  contents2LineTitlePaddingLeft = 16;
-  contents2LineTitleSize = 14;
-  contents2LineTitleWeight = 600;
+  contents2LineBoxHeight = <%% 45, 45, 45, 45, 45 %%>;
+  contents2LineTop = <%% 17, 17, 17, 17, 17 %%>;
+  contents2LineRadius = <%% 12, 12, 12, 12, 12 %%>;
+  contents2LineTitlePaddingTop = <%% 7, 7, 7, 7, 7 %%>;
+  contents2LineTitlePaddingBottom = <%% 9, 9, 9, 9, 9 %%>;
+  contents2LineTitlePaddingLeft = <%% 16, 16, 16, 16, 16 %%>;
+  contents2LineTitleSize = <%% 14, 14, 14, 14, 14 %%>;
+  contents2LineTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-  contents2ImageTop = 40;
-  contents2BoxMarginTop = 25;
-  contents2BoxFactorWidth = 172;
-  contents2BoxFactorHeight = 100;
+  contents2ImageTop = <%% 40, 40, 40, 40, 40 %%>;
+  contents2BoxMarginTop = <%% 25, 25, 25, 25, 25 %%>;
+  contents2BoxFactorWidth = <%% 172, 172, 172, 172, 172 %%>;
+  contents2BoxFactorHeight = <%% 100, 100, 100, 100, 100 %%>;
   contents2BoxFactorMarginLeftArr = [ 0, 106, 106, 91 ];
 
-  contents2TitleSize = 18;
-  contents2TitleWeight = 600;
-  contents2DescriptionSize = 13;
-  contents2DescriptionWeight = 400;
-  contents2DescriptionMarginTop = 10;
-  contents2DescriptionLineHeight = 1.5;
+  contents2TitleSize = <%% 18, 18, 18, 18, 18 %%>;
+  contents2TitleWeight = <%% 600, 600, 600, 600, 600 %%>;
+  contents2DescriptionSize = <%% 13, 13, 13, 13, 13 %%>;
+  contents2DescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+  contents2DescriptionMarginTop = <%% 10, 10, 10, 10, 10 %%>;
+  contents2DescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  contents3BoxMarginTop = 40;
-  contents3BoxBetween = 12;
-  contents3GreenHeight = 52;
-  contents3GreenTextTop = -2;
-  contents3GreenSize = 15;
-  contents3GreenWeight = 600;
+  contents3BoxMarginTop = <%% 40, 40, 40, 40, 40 %%>;
+  contents3BoxBetween = <%% 12, 12, 12, 12, 12 %%>;
+  contents3GreenHeight = <%% 52, 52, 52, 52, 52 %%>;
+  contents3GreenTextTop = <%% -2, -2, -2, -2, -2 %%>;
+  contents3GreenSize = <%% 15, 15, 15, 15, 15 %%>;
+  contents3GreenWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-  contents3GrayHeight = 640;
-  contents3GrayInnerPadding = 12;
-  contents3GrayWhiteSize = 13;
-  contents3GrayWhiteWeight = 400;
-  contents3GrayWhiteWeightBold = 700;
-  contents3GrayWhiteLineHeight = 1.5;
+  contents3GrayHeight = <%% 640, 640, 640, 640, 640 %%>;
+  contents3GrayInnerPadding = <%% 12, 12, 12, 12, 12 %%>;
+  contents3GrayWhiteSize = <%% 13, 13, 13, 13, 13 %%>;
+  contents3GrayWhiteWeight = <%% 400, 400, 400, 400, 400 %%>;
+  contents3GrayWhiteWeightBold = <%% 700, 700, 700, 700, 700 %%>;
+  contents3GrayWhiteLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  contents3GrayWhitePaddingTop = 17;
-  contents3GrayWhitePaddingBottom = 20;
+  contents3GrayWhitePaddingTop = <%% 17, 17, 17, 17, 17 %%>;
+  contents3GrayWhitePaddingBottom = <%% 20, 20, 20, 20, 20 %%>;
 
-  contents3GrayChildrenMarginTop = 20;
-  contents3GrayChildrenWeight = 600;
-  contents3GrayChildrenPaddingTop = 3;
+  contents3GrayChildrenMarginTop = <%% 20, 20, 20, 20, 20 %%>;
+  contents3GrayChildrenWeight = <%% 600, 600, 600, 600, 600 %%>;
+  contents3GrayChildrenPaddingTop = <%% 3, 3, 3, 3, 3 %%>;
 
   contents0 = [
     {
@@ -6051,8 +6051,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
       display: "block",
       width: String(100) + '%',
     }
-  })
-
+  });
 
 }
 
