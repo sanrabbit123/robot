@@ -4921,7 +4921,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
   height1 = 580;
   height2 = 370;
   height3 = 810;
-  height4 = 320;
+  height4 = 310;
 
   titleVisualTop = -2;
 
