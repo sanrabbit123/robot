@@ -4857,6 +4857,45 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
   let contents1DownBoxTitleMarginTop;
   let contents1DownBoxDescriptionMarginTop;
   let contents1DownBoxDescriptionSize;
+  let contents2Box;
+  let contents2LineBoxHeight;
+  let contents2LineTop;
+  let contents2LineRadius;
+  let contents2LineTitlePaddingTop;
+  let contents2LineTitlePaddingBottom;
+  let contents2LineTitlePaddingLeft;
+  let contents2LineTitleSize;
+  let contents2LineTitleWeight;
+  let contents2ImageTop;
+  let contents2BoxMarginTop;
+  let contents2BoxFactorWidth;
+  let contents2BoxFactorHeight;
+  let contents2BoxFactorMarginLeftArr;
+  let contents2TitleSize;
+  let contents2TitleWeight;
+  let contents2DescriptionSize;
+  let contents2DescriptionWeight;
+  let contents2DescriptionMarginTop;
+  let contents2DescriptionLineHeight;
+  let contents3Box, contents3BoxFactor;
+  let contents3BoxGray;
+  let contents3BoxMarginTop;
+  let contents3BoxBetween;
+  let contents3GreenHeight;
+  let contents3GreenTextTop;
+  let contents3GreenSize;
+  let contents3GreenWeight;
+  let contents3GrayHeight;
+  let contents3GrayInnerPadding;
+  let contents3GrayWhiteSize;
+  let contents3GrayWhiteWeight;
+  let contents3GrayWhiteLineHeight;
+  let contents3GrayWhitePaddingTop;
+  let contents3GrayWhitePaddingBottom;
+  let contents3GrayWhiteWeightBold;
+  let contents3GrayChildrenMarginTop;
+  let contents3GrayChildrenWeight;
+  let contents3GrayChildrenPaddingTop;
 
   blockMarginBottom = <%% 16, 16, 16, 16, 2 %%>;
 
@@ -4880,6 +4919,9 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
 
   height0 = 560;
   height1 = 580;
+  height2 = 370;
+  height3 = 810;
+  height4 = 320;
 
   titleVisualTop = -2;
 
@@ -4938,6 +4980,49 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
   contents1DownBoxTitleMarginTop = 16;
   contents1DownBoxDescriptionMarginTop = 6;
   contents1DownBoxDescriptionSize = 13;
+
+  contents2LineBoxHeight = 45;
+  contents2LineTop = 17;
+  contents2LineRadius = 12;
+  contents2LineTitlePaddingTop = 7;
+  contents2LineTitlePaddingBottom = 9;
+  contents2LineTitlePaddingLeft = 16;
+  contents2LineTitleSize = 14;
+  contents2LineTitleWeight = 600;
+
+  contents2ImageTop = 40;
+  contents2BoxMarginTop = 25;
+  contents2BoxFactorWidth = 172;
+  contents2BoxFactorHeight = 100;
+  contents2BoxFactorMarginLeftArr = [ 0, 106, 106, 91 ];
+
+  contents2TitleSize = 18;
+  contents2TitleWeight = 600;
+  contents2DescriptionSize = 13;
+  contents2DescriptionWeight = 400;
+  contents2DescriptionMarginTop = 10;
+  contents2DescriptionLineHeight = 1.5;
+
+  contents3BoxMarginTop = 40;
+  contents3BoxBetween = 12;
+  contents3GreenHeight = 52;
+  contents3GreenTextTop = -2;
+  contents3GreenSize = 15;
+  contents3GreenWeight = 600;
+
+  contents3GrayHeight = 640;
+  contents3GrayInnerPadding = 12;
+  contents3GrayWhiteSize = 13;
+  contents3GrayWhiteWeight = 400;
+  contents3GrayWhiteWeightBold = 700;
+  contents3GrayWhiteLineHeight = 1.5;
+
+  contents3GrayWhitePaddingTop = 17;
+  contents3GrayWhitePaddingBottom = 20;
+
+  contents3GrayChildrenMarginTop = 20;
+  contents3GrayChildrenWeight = 600;
+  contents3GrayChildrenPaddingTop = 3;
 
   contents0 = [
     {
@@ -5022,6 +5107,126 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
     }
   ];
 
+  contents2 = {
+    title: "인테리어 비용 구성",
+    children: [
+      {
+        title: "디자인 비용",
+        description: "디자이너가 공간에 대해\n기획하고 디자인하는 인건비",
+      },
+      {
+        title: "시공 비용",
+        description: "실제 시공에 들어가는\n모든 자재비와 인건비",
+      },
+      {
+        title: "제품 구매 비용",
+        description: "가구, 소품, 패브릭 등\n사용할 제품을 구매하는 실비",
+      },
+      {
+        title: "부가 서비스 비용",
+        description: "입주 청소, 정리 수납 등\n부가 서비스 비용",
+      },
+    ],
+    image: "contents2" + String(media.findIndex(boo => boo)) + ".png"
+  };
+
+  contents3 = {
+    title: "디자인 서비스 종류",
+    children: [
+      {
+        title: "홈퍼니싱",
+        description: [
+          "시공 없이 가구와 소품 등으로\n진행하는 <b%효율적 인테리어%b>",
+          "시공 없음\n약 30일 소요"
+        ],
+        children: [
+          "현장 실측",
+          "현장 미팅",
+          "예산 계획",
+          "디자인 컨설팅",
+          "전체 컨셉 디자인",
+          "공간 배치 제안",
+          "기존 제품 활용 제안",
+          "구매 제품 추천",
+        ]
+      },
+      {
+        title: "홈스타일링",
+        description: [
+          "부분 시공과 홈퍼니싱으로 필요\n부분만 진행하는 <b%스마트 인테리어%b>",
+          "5개 공정 이하의 시공\n약 45일 소요"
+        ],
+        children: [
+          "현장 실측",
+          "현장 미팅",
+          "예산 계획",
+          "디자인 컨설팅",
+          "전체 컨셉 디자인",
+          "공간 배치 제안",
+          "시공 견적",
+          "제작 가구 도면",
+          "5개 공정 이내 시공 디자인",
+          "공사 일정표 제공",
+          "시공사 지원",
+          "디자인 감리",
+          "기존 제품 활용 제안",
+          "구매 제품 추천",
+          "제작 패브릭",
+        ]
+      },
+      {
+        title: "토탈 스타일링",
+        description: [
+          "시공부터 스타일링까지 완벽하게\n진행하는 <b%원스탑 인테리어%b>",
+          "5개 초과 공정 전체 시공\n약 60일 소요"
+        ],
+        children: [
+          "현장 실측",
+          "현장 미팅",
+          "예산 계획",
+          "디자인 컨설팅",
+          "전체 컨셉 디자인",
+          "공간 배치 제안",
+          "시공 견적",
+          "제작 가구 도면",
+          "5개 공정 초과 시공 디자인",
+          "공사 일정표 제공",
+          "시공사 지원",
+          "디자인 감리",
+          "기존 제품 활용 제안",
+          "구매 제품 추천",
+          "제작 패브릭",
+          "제작 가구 설계",
+        ]
+      },
+      {
+        title: "엑스트라 스타일링",
+        description: [
+          "디자인 토탈 시공과 <b%프리미엄%b>\n<b%스타일링으로 진행%b>하는 인테리어",
+          "5개 초과 공정 전체 시공\n약 75일 소요"
+        ],
+        children: [
+          "현장 실측",
+          "현장 미팅",
+          "예산 계획",
+          "디자인 컨설팅",
+          "전체 컨셉 디자인",
+          "공간 배치 제안",
+          "시공 견적",
+          "제작 가구 도면",
+          "5개 공정 초과 시공 디자인",
+          "공사 일정표 제공",
+          "시공사 지원",
+          "디자인 감리",
+          "기존 제품 활용 제안",
+          "구매 제품 추천",
+          "제작 패브릭",
+          "제작 가구 설계",
+          "오리지널 가구 제안",
+        ]
+      },
+    ],
+  };
 
   // box 0 ---------------------------------------------------------------------------------------------------
 
@@ -5378,8 +5583,6 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
 
   }
 
-
-
   // box 2 ---------------------------------------------------------------------------------------------------
 
   whiteBlock2 = createNode({
@@ -5391,7 +5594,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
       background: colorChip.white,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
       marginBottom: String(blockMarginBottom) + ea,
-      height: String(800) + ea,
+      height: String(height2) + ea,
       paddingTop: String(margin) + ea,
       paddingBottom: String(margin) + ea,
       paddingLeft: String(margin) + ea,
@@ -5447,7 +5650,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
       position: "relative",
       width: String(100) + '%',
       textAlign: "center",
-      height: String(45) + ea,
+      height: String(contents2LineBoxHeight) + ea,
     },
     children: [
       {
@@ -5455,47 +5658,95 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
           position: "absolute",
           display: "block",
           width: String(100) + '%',
-          top: String(17) + ea,
-          height: withOut(17, ea),
+          top: String(contents2LineTop) + ea,
+          height: withOut(contents2LineTop, ea),
           left: String(0),
           border: String(1) + "px solid " + colorChip.gray4,
-          borderTopLeftRadius: String(12) + "px",
-          borderTopRightRadius: String(12) + "px",
+          borderTopLeftRadius: String(contents2LineRadius) + "px",
+          borderTopRightRadius: String(contents2LineRadius) + "px",
           borderBottom: String(0),
           boxSizing: "border-box",
         }
       },
       {
-        text: "인테리어 비용 구성",
+        text: contents2.title,
         style: {
           display: "inline-block",
           position: "relative",
-          paddingTop: String(7) + ea,
-          paddingLeft: String(16) + ea,
-          paddingRight: String(16) + ea,
-          paddingBottom: String(9) + ea,
-          fontSize: String(14) + ea,
-          fontWeight: String(600),
+          paddingTop: String(contents2LineTitlePaddingTop) + ea,
+          paddingLeft: String(contents2LineTitlePaddingLeft) + ea,
+          paddingRight: String(contents2LineTitlePaddingLeft) + ea,
+          paddingBottom: String(contents2LineTitlePaddingBottom) + ea,
+          fontSize: String(contents2LineTitleSize) + ea,
+          fontWeight: String(contents2LineTitleWeight),
           color: colorChip.black,
           background: colorChip.gray1,
           borderRadius: String(5) + "px",
         }
       }
     ]
-  })
+  });
 
   createNode({
     mother: rightBox2,
     mode: "img",
-    attribute: { src: StyleCurationJs.binaryPath + "/" + "contents2" + String(media.findIndex(boo => boo)) + ".png" },
+    attribute: { src: StyleCurationJs.binaryPath + "/" + contents2.image },
     style: {
       display: "block",
       position: "relative",
       width: String(100) + '%',
-      marginTop: String(40) + ea,
+      marginTop: String(contents2ImageTop) + ea,
     }
-  })
+  });
 
+  contents2Box = createNode({
+    mother: rightBox2,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      marginTop: String(contents2BoxMarginTop) + ea,
+    }
+  });
+
+  for (let i = 0; i < contents2.children.length; i++) {
+    createNode({
+      mother: contents2Box,
+      style: {
+        display: "inline-block",
+        width: String(contents2BoxFactorWidth) + ea,
+        height: String(contents2BoxFactorHeight) + ea,
+        marginLeft: String(contents2BoxFactorMarginLeftArr[i]) + ea
+      },
+      children: [
+        {
+          text: contents2.children[i].title,
+          style: {
+            display: "block",
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(contents2TitleSize) + ea,
+            fontWeight: String(contents2TitleWeight),
+            color: i === 0 ? colorChip.green : colorChip.black,
+          }
+        },
+        {
+          text: contents2.children[i].description,
+          style: {
+            display: "block",
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(contents2DescriptionSize) + ea,
+            fontWeight: String(contents2DescriptionWeight),
+            color: colorChip.black,
+            marginTop: String(contents2DescriptionMarginTop) + ea,
+            lineHeight: String(contents2DescriptionLineHeight),
+          }
+        },
+      ]
+    });
+
+  }
 
   // box 3 ---------------------------------------------------------------------------------------------------
 
@@ -5508,7 +5759,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
       background: colorChip.white,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
       marginBottom: String(blockMarginBottom) + ea,
-      height: String(800) + ea,
+      height: String(height3) + ea,
       paddingTop: String(margin) + ea,
       paddingBottom: String(margin) + ea,
       paddingLeft: String(margin) + ea,
@@ -5516,8 +5767,221 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
     }
   });
 
+  leftBox3 = createNode({
+    mother: whiteBlock3,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      width: String(leftBoxWidth) + ea,
+      height: String(100) + '%',
+      verticalAlign: "top",
+    }
+  });
 
+  createNode({
+    mother: leftBox3,
+    text: "디자인 서비스의\n4가지 분류",
+    style: {
+      display: "inline-block",
+      position: "relative",
+      fontSize: String(titleFont) + ea,
+      fontWeight: String(titleFontWeight),
+      wordSpacing: String(wordSpacing) + "px",
+      top: String(titleVisualTop) + ea,
+      marginLeft: String(titleLeft) + ea,
+      color: colorChip.black,
+      width: desktop ? "" : String(100) + '%',
+      textAlign: desktop ? "" : "center",
+      lineHeight: String(lineHeight),
+    }
+  });
 
+  rightBox3 = createNode({
+    mother: whiteBlock3,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      width: withOut(leftBoxWidth, ea),
+      height: String(100) + '%',
+      verticalAlign: "top",
+      paddingTop: String(rightBoxPaddingTopFontVersion) + ea,
+    }
+  });
+
+  createNode({
+    mother: rightBox3,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      textAlign: "center",
+      height: String(contents2LineBoxHeight) + ea,
+    },
+    children: [
+      {
+        style: {
+          position: "absolute",
+          display: "block",
+          width: String(100) + '%',
+          top: String(contents2LineTop) + ea,
+          height: withOut(contents2LineTop, ea),
+          left: String(0),
+          border: String(1) + "px solid " + colorChip.gray4,
+          borderTopLeftRadius: String(contents2LineRadius) + "px",
+          borderTopRightRadius: String(contents2LineRadius) + "px",
+          borderBottom: String(0),
+          boxSizing: "border-box",
+        }
+      },
+      {
+        text: contents3.title,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          paddingTop: String(contents2LineTitlePaddingTop) + ea,
+          paddingLeft: String(contents2LineTitlePaddingLeft) + ea,
+          paddingRight: String(contents2LineTitlePaddingLeft) + ea,
+          paddingBottom: String(contents2LineTitlePaddingBottom) + ea,
+          fontSize: String(contents2LineTitleSize) + ea,
+          fontWeight: String(contents2LineTitleWeight),
+          color: colorChip.black,
+          background: colorChip.gray1,
+          borderRadius: String(5) + "px",
+        }
+      }
+    ]
+  });
+
+  contents3Box = createNode({
+    mother: rightBox3,
+    style: {
+      display: "block",
+      width: String(100) + '%',
+      position: "relative",
+      marginTop: String(contents3BoxMarginTop) + ea,
+    }
+  });
+
+  for (let i = 0; i < contents3.children.length; i++) {
+    contents3BoxFactor = createNode({
+      mother: contents3Box,
+      style: {
+        display: "inline-block",
+        width: "calc(calc(100% - " + String(contents3BoxBetween * (contents3.children.length - 1)) + ea + ") / " + String(contents3.children.length) + ")",
+        marginRight: String(i === contents3.children.length - 1 ? 0 : contents3BoxBetween) + ea,
+        verticalAlign: "top",
+      }
+    })
+
+    createNode({
+      mother: contents3BoxFactor,
+      style: {
+        display: "flex",
+        position: "relative",
+        justifyContent: "center",
+        alignItems: "center",
+        textAlign: "center",
+        borderRadius: String(5) + "px",
+        background: colorChip.liteGreen,
+        height: String(contents3GreenHeight) + ea,
+        marginBottom: String(contents3BoxBetween) + ea,
+      },
+      children: [
+        {
+          text: contents3.children[i].title,
+          style: {
+            position: "relative",
+            top: String(contents3GreenTextTop) + ea,
+            fontSize: String(contents3GreenSize) + ea,
+            fontWeight: String(contents3GreenWeight),
+            color: colorChip.black,
+          }
+        }
+      ]
+    })
+
+    contents3BoxGray = createNode({
+      mother: contents3BoxFactor,
+      style: {
+        display: "block",
+        position: "relative",
+        textAlign: "center",
+        borderRadius: String(5) + "px",
+        background: colorChip.gray1,
+        height: String(contents3GrayHeight) + ea,
+        paddingTop: String(contents3GrayInnerPadding) + ea,
+      }
+    });
+
+    createNode({
+      mother: contents3BoxGray,
+      text: contents3.children[i].description[0],
+      style: {
+        display: "block",
+        textAlign: "center",
+        fontSize: String(contents3GrayWhiteSize) + ea,
+        fontWeight: String(contents3GrayWhiteWeight),
+        color: colorChip.black,
+        lineHeight: String(contents3GrayWhiteLineHeight),
+        background: colorChip.white,
+        borderRadius: String(5) + "px",
+        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+        marginLeft: String(contents3GrayInnerPadding) + ea,
+        width: withOut(contents3GrayInnerPadding * 2, ea),
+        paddingTop: String(contents3GrayWhitePaddingTop) + ea,
+        paddingBottom: String(contents3GrayWhitePaddingBottom) + ea,
+        marginBottom: String(contents3GrayInnerPadding) + ea,
+      },
+      bold: {
+        fontWeight: String(contents3GrayWhiteWeightBold),
+        color: colorChip.black,
+      }
+    });
+
+    createNode({
+      mother: contents3BoxGray,
+      text: contents3.children[i].description[1],
+      style: {
+        display: "block",
+        textAlign: "center",
+        fontSize: String(contents3GrayWhiteSize) + ea,
+        fontWeight: String(contents3GrayWhiteWeight),
+        color: colorChip.green,
+        lineHeight: String(contents3GrayWhiteLineHeight),
+        background: colorChip.white,
+        borderRadius: String(5) + "px",
+        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+        marginLeft: String(contents3GrayInnerPadding) + ea,
+        width: withOut(contents3GrayInnerPadding * 2, ea),
+        paddingTop: String(contents3GrayWhitePaddingTop) + ea,
+        paddingBottom: String(contents3GrayWhitePaddingBottom) + ea,
+        marginBottom: String(contents3GrayChildrenMarginTop) + ea,
+      },
+      bold: {
+        fontWeight: String(contents3GrayWhiteWeightBold),
+        color: colorChip.green,
+      }
+    });
+
+    for (let item of contents3.children[i].children) {
+      createNode({
+        mother: contents3BoxGray,
+        text: item,
+        style: {
+          display: "block",
+          textAlign: "center",
+          fontSize: String(contents3GrayWhiteSize) + ea,
+          fontWeight: String(contents3GrayChildrenWeight),
+          color: colorChip.black,
+          lineHeight: String(contents3GrayWhiteLineHeight),
+          width: withOut(0, ea),
+          paddingTop: String(contents3GrayChildrenPaddingTop) + ea,
+          paddingBottom: String(contents3GrayChildrenPaddingTop) + ea,
+        },
+      });
+    }
+
+  }
 
   // box 4 ---------------------------------------------------------------------------------------------------
 
@@ -5530,7 +5994,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
       background: colorChip.white,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
       marginBottom: String(lastBlockMarginBottom) + ea,
-      height: String(800) + ea,
+      height: String(height4) + ea,
       paddingTop: String(margin) + ea,
       paddingBottom: String(margin) + ea,
       paddingLeft: String(margin) + ea,
@@ -5538,8 +6002,56 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
     }
   });
 
+  leftBox4 = createNode({
+    mother: whiteBlock4,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      width: String(leftBoxWidth) + ea,
+      height: String(100) + '%',
+      verticalAlign: "top",
+    }
+  });
 
+  createNode({
+    mother: leftBox4,
+    text: "프로세스 안내",
+    style: {
+      display: "inline-block",
+      position: "relative",
+      fontSize: String(titleFont) + ea,
+      fontWeight: String(titleFontWeight),
+      wordSpacing: String(wordSpacing) + "px",
+      top: String(titleVisualTop) + ea,
+      marginLeft: String(titleLeft) + ea,
+      color: colorChip.black,
+      width: desktop ? "" : String(100) + '%',
+      textAlign: desktop ? "" : "center",
+      lineHeight: String(lineHeight),
+    }
+  });
 
+  rightBox4 = createNode({
+    mother: whiteBlock4,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      width: withOut(leftBoxWidth, ea),
+      height: String(100) + '%',
+      verticalAlign: "top",
+      paddingTop: String(rightBoxPaddingTopFontVersion) + ea,
+    }
+  });
+
+  createNode({
+    mother: rightBox4,
+    mode: "img",
+    attribute: { src: StyleCurationJs.binaryPath + "/" + "contents4" + String(media.findIndex(boo => boo)) + ".png" },
+    style: {
+      display: "block",
+      width: String(100) + '%',
+    }
+  })
 
 
 }
