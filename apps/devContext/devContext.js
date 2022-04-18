@@ -84,10 +84,20 @@ DevContext.prototype.launching = async function () {
 
     // await this.passiveAddressSync("c2110_aa14s");
 
-    // await this.pureSpawn();
-
     // const pastProposal = equalJson(JSON.stringify(await ghostRequest("pastProposal", { proid: "p2202_aa43s" })));
     // console.log(pastProposal[0].project.detail);
+
+
+
+
+
+
+
+    
+
+
+
+
 
 
 
