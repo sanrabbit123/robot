@@ -88,60 +88,6 @@ DevContext.prototype.launching = async function () {
     // console.log(pastProposal[0].project.detail);
 
 
-    const data = {
-     "amount": 2883100,
-     "apply_num": "11742145",
-     "bank_code": null,
-     "bank_name": null,
-     "buyer_addr": null,
-     "buyer_email": "friendii12@naver.com",
-     "buyer_name": "정효선",
-     "buyer_postcode": null,
-     "buyer_tel": "010-4616-7808",
-     "cancel_amount": 0,
-     "cancel_history": [],
-     "cancel_reason": null,
-     "cancel_receipt_urls": [],
-     "cancelled_at": 0,
-     "card_code": "365",
-     "card_name": "삼성카드",
-     "card_number": "379183994621",
-     "card_quota": 3,
-     "card_type": 0,
-     "cash_receipt_issued": false,
-     "channel": "mobile",
-     "currency": "KRW",
-     "custom_data": null,
-     "customer_uid": null,
-     "customer_uid_usage": null,
-     "emb_pg_provider": null,
-     "escrow": false,
-     "fail_reason": null,
-     "failed_at": 0,
-     "imp_uid": "imp_695034270821",
-     "merchant_uid": "homeliaisonBill_1650353032373",
-     "name": "홈리에종 잔금",
-     "paid_at": 1650353062,
-     "pay_method": "card",
-     "pg_id": "MOIhomeli1",
-     "pg_provider": "html5_inicis",
-     "pg_tid": "INIMX_CARDMOIhomeli120220419162422254699",
-     "receipt_url": "https://iniweb.inicis.com/DefaultWebApp/mall/cr/cm/mCmReceipt_head.jsp?noTid=INIMX_CARDMOIhomeli120220419162422254699&noMethod=1",
-     "started_at": 1650353034,
-     "status": "paid",
-     "user_agent": "Mozilla/5.0 (Linux; Android 11; SM-N986N Build/RP1A.200720.012; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/100.0.4896.88 Mobile Safari/537.36;KAKAOTALK 2409770",
-     "vbank_code": null,
-     "vbank_date": 0,
-     "vbank_holder": null,
-     "vbank_issued_at": 0,
-     "vbank_name": null,
-     "vbank_num": null
-    }
-    const bilid = "b224e_aa03s";
-    const requestNumber = 0;
-
-    console.log(await requestSystem("https://home-liaison.xyz:3000/ghostClientBill", { bilid, requestNumber, data }, { headers: { "Content-Type": "application/json" } }));
-
 
     // const WebSocket = require("ws");
     //
@@ -157,11 +103,7 @@ DevContext.prototype.launching = async function () {
     // });
 
 
-
-
-
-
-
+    
 
 
 
