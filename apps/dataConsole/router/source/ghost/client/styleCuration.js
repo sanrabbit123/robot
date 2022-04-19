@@ -3914,8 +3914,8 @@ StyleCurationJs.prototype.insertPendingProposal = function () {
   subTitlePaddingTop = <%% 8, 8, 8, 8, 1 %%>;
   subTitlePaddingBottom = <%% 80, 80, 80, 80, 12 %%>;
 
-  wording = "제안서가 완료되는 대로,\n<b%알림톡을 통해 보내드리겠습니다.%b>";
-  wording2 = "제안서 제작에는 영업일 기준 1~2일 정도 소요될 수 있습니다.";
+  wording = "디자이너 추천서가 완료되는 대로,\n<b%알림톡을 보내드리겠습니다.%b>";
+  wording2 = "추천서 제작에는 영업일 기준 1~2일 정도 소요될 수 있습니다.";
 
   whiteBlock = createNode({
     mother: this.baseTong,
@@ -4896,6 +4896,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
   let contents3GrayChildrenMarginTop;
   let contents3GrayChildrenWeight;
   let contents3GrayChildrenPaddingTop;
+  let num;
 
   blockMarginBottom = <%% 16, 16, 16, 16, 2 %%>;
 
@@ -4903,116 +4904,116 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
 
   margin = <%% 52, 52, 44, 32, 52 %%>;
 
-  titleFont = <%% 31, 29, 27, 23, 5.7 %%>;
+  titleFont = <%% 31, 26, 23, 19, 5.7 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
   titleFontWeight = <%% 500, 500, 500, 500, 500 %%>;
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
 
   lineHeight = <%% 1.42, 1.42, 1.42, 1.42, 1.42 %%>;
 
-  leftBoxWidth = <%% 300, 300, 300, 300, 300 %%>;
+  leftBoxWidth = <%% 300, 230, 300, 300, 300 %%>;
 
-  boxMargin = <%% 36, 36, 36, 36, 36 %%>;
+  boxMargin = <%% 36, 25, 36, 36, 36 %%>;
 
-  rightBoxPaddingTop = <%% 7, 7, 7, 7, 7 %%>;
+  rightBoxPaddingTop = <%% 7, 5, 7, 7, 7 %%>;
   rightBoxPaddingTopFontVersion = <%% 2, 2, 2, 2, 2 %%>;
 
-  height0 = <%% 560, 560, 560, 560, 560 %%>;
-  height1 = <%% 580, 580, 580, 580, 580 %%>;
-  height2 = <%% 370, 370, 370, 370, 370 %%>;
+  height0 = <%% 545, 415, 545, 415, 415 %%>;
+  height1 = <%% 570, 490, 570, 570, 570 %%>;
+  height2 = <%% 370, 305, 370, 370, 370 %%>;
   height3 = <%% 810, 810, 810, 810, 810 %%>;
   height4 = <%% 310, 310, 310, 310, 310 %%>;
 
   titleVisualTop = <%% -2, -2, -2, -2, -2 %%>;
 
   boxTongPaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
-  contents0PhotoHeight = <%% 180, 180, 180, 180, 180 %%>;
+  contents0PhotoHeight = <%% 180, 130, 180, 130, 130 %%>;
 
   contents0PaddingLeft = <%% 15, 15, 15, 15, 15 %%>;
   contents0PaddingTop = <%% 6, 6, 6, 6, 6 %%>;
   contents0PaddingBottom = <%% 9, 9, 9, 9, 9 %%>;
-  contents0TitleSize = <%% 14, 14, 14, 14, 14 %%>;
+  contents0TitleSize = <%% 14, 13, 14, 14, 14 %%>;
   contents0TitleWeight = <%% 700, 700, 700, 700, 700 %%>;
-  contents0TitleWhiteBoxMargin = <%% 15, 15, 15, 15, 15 %%>;
+  contents0TitleWhiteBoxMargin = <%% 15, 12, 15, 15, 15 %%>;
 
-  contents0DescriptionSize = <%% 15, 15, 15, 15, 15 %%>;
+  contents0DescriptionSize = <%% 15, 14, 15, 15, 15 %%>;
   contents0DescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   contents0DescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
   contents0DescriptionWeightBold = <%% 700, 700, 700, 700, 700 %%>;
-  contents0DescriptionMarginTop = <%% 20, 20, 20, 20, 20 %%>;
+  contents0DescriptionMarginTop = <%% 20, 15, 20, 20, 20 %%>;
 
   contents0Columns = <%% 3, 3, 3, 3, 3 %%>;
 
-  contents1TitleSize = <%% 19, 19, 19, 19, 19 %%>;
+  contents1TitleSize = <%% 19, 18, 19, 19, 19 %%>;
   contents1TitleWeight = <%% 600, 600, 600, 600, 600 %%>;
   contents1TitleBetween = <%% 16, 16, 16, 16, 16 %%>;
   contents1Between = <%% 45, 45, 45, 45, 45 %%>;
 
   contents1Columns = <%% 5, 5, 5, 5, 5 %%>;
 
-  contents1UpBoxWidth = <%% 232, 232, 232, 232, 232 %%>;
-  contents1UpBoxMargin = <%% 10, 10, 10, 10, 10 %%>;
-  contents1UpBoxPaddingLeft = <%% 22, 22, 22, 22, 22 %%>;
-  contents1UpBoxPaddingTop = <%% 16, 16, 16, 16, 16 %%>;
+  contents1UpBoxWidth = <%% 232, 193, 232, 232, 232 %%>;
+  contents1UpBoxMargin = <%% 10, 8, 10, 10, 10 %%>;
+  contents1UpBoxPaddingLeft = <%% 22, 18, 22, 22, 22 %%>;
+  contents1UpBoxPaddingTop = <%% 16, 14, 16, 16, 16 %%>;
 
   contents1UpBoxCheckTop = <%% 7, 7, 7, 7, 7 %%>;
   contents1UpBoxCheckWidth = <%% 11, 11, 11, 11, 11 %%>;
   contents1UpBoxCheckMarginRight = <%% 6, 6, 6, 6, 6 %%>;
 
-  contents1UpBoxTitleSize = <%% 16, 16, 16, 16, 16 %%>;
+  contents1UpBoxTitleSize = <%% 16, 15, 16, 16, 16 %%>;
   contents1UpBoxTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
 
   contents1UpBoxWhiteMarginTop = <%% 10, 10, 10, 10, 10 %%>;
   contents1UpBoxWhitePaddingTop = <%% 16, 16, 16, 16, 16 %%>;
   contents1UpBoxWhitePaddingBottom = <%% 21, 21, 21, 21, 21 %%>;
 
-  contents1UpBoxWhiteSize = <%% 14, 14, 14, 14, 14 %%>;
+  contents1UpBoxWhiteSize = <%% 14, 13, 14, 14, 14 %%>;
   contents1UpBoxWhiteWeight = <%% 400, 400, 400, 400, 400 %%>;
   contents1UpBoxWhiteWeightBold = <%% 700, 700, 700, 700, 700 %%>;
   contents1UpBoxWhiteLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  contents1DownBoxPaddingTop = <%% 30, 30, 30, 30, 30 %%>;
-  contents1DownBoxPaddingBottom = <%% 36, 36, 36, 36, 36 %%>;
-  contents1DownBoxPaddingMargin = <%% 10, 10, 10, 10, 10 %%>;
-  contents1DownBoxPaddingLeft = <%% 36, 36, 36, 36, 36 %%>;
-  contents1DownBoxCircleHeight = <%% 119, 119, 119, 119, 119 %%>;
+  contents1DownBoxPaddingTop = <%% 30, 22, 30, 30, 30 %%>;
+  contents1DownBoxPaddingBottom = <%% 36, 24, 36, 36, 36 %%>;
+  contents1DownBoxPaddingMargin = <%% 10, 8, 10, 10, 10 %%>;
+  contents1DownBoxPaddingLeft = <%% 36, 22, 36, 36, 36 %%>;
+  contents1DownBoxCircleHeight = <%% 119, 92, 119, 119, 119 %%>;
 
-  contents1DownBoxTitleMarginTop = <%% 16, 16, 16, 16, 16 %%>;
-  contents1DownBoxDescriptionMarginTop = <%% 6, 6, 6, 6, 6 %%>;
-  contents1DownBoxDescriptionSize = <%% 13, 13, 13, 13, 13 %%>;
+  contents1DownBoxTitleMarginTop = <%% 16, 12, 16, 16, 16 %%>;
+  contents1DownBoxDescriptionMarginTop = <%% 6, 5, 6, 6, 6 %%>;
+  contents1DownBoxDescriptionSize = <%% 13, 12, 13, 13, 13 %%>;
 
   contents2LineBoxHeight = <%% 45, 45, 45, 45, 45 %%>;
-  contents2LineTop = <%% 17, 17, 17, 17, 17 %%>;
+  contents2LineTop = <%% 17, 16, 17, 17, 17 %%>;
   contents2LineRadius = <%% 12, 12, 12, 12, 12 %%>;
   contents2LineTitlePaddingTop = <%% 7, 7, 7, 7, 7 %%>;
   contents2LineTitlePaddingBottom = <%% 9, 9, 9, 9, 9 %%>;
   contents2LineTitlePaddingLeft = <%% 16, 16, 16, 16, 16 %%>;
-  contents2LineTitleSize = <%% 14, 14, 14, 14, 14 %%>;
+  contents2LineTitleSize = <%% 14, 13, 14, 14, 14 %%>;
   contents2LineTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-  contents2ImageTop = <%% 40, 40, 40, 40, 40 %%>;
-  contents2BoxMarginTop = <%% 25, 25, 25, 25, 25 %%>;
-  contents2BoxFactorWidth = <%% 172, 172, 172, 172, 172 %%>;
+  contents2ImageTop = <%% 40, 25, 40, 40, 40 %%>;
+  contents2BoxMarginTop = <%% 25, 18, 25, 25, 25 %%>;
+  contents2BoxFactorWidth = <%% 172, 144, 172, 172, 172 %%>;
   contents2BoxFactorHeight = <%% 100, 100, 100, 100, 100 %%>;
-  contents2BoxFactorMarginLeftArr = [ 0, 106, 106, 91 ];
+  contents2BoxFactorMarginLeftArr = <&& [ 0, 106, 106, 91 ] | [ 0, 48, 48, 41 ] | [ 0, 106, 106, 91 ] | [ 0, 106, 106, 91 ] | [ 0, 106, 106, 91 ] &&>;
 
-  contents2TitleSize = <%% 18, 18, 18, 18, 18 %%>;
+  contents2TitleSize = <%% 18, 17, 18, 18, 18 %%>;
   contents2TitleWeight = <%% 600, 600, 600, 600, 600 %%>;
   contents2DescriptionSize = <%% 13, 13, 13, 13, 13 %%>;
   contents2DescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
-  contents2DescriptionMarginTop = <%% 10, 10, 10, 10, 10 %%>;
+  contents2DescriptionMarginTop = <%% 10, 6, 10, 10, 10 %%>;
   contents2DescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  contents3BoxMarginTop = <%% 40, 40, 40, 40, 40 %%>;
-  contents3BoxBetween = <%% 12, 12, 12, 12, 12 %%>;
-  contents3GreenHeight = <%% 52, 52, 52, 52, 52 %%>;
+  contents3BoxMarginTop = <%% 40, 20, 40, 40, 40 %%>;
+  contents3BoxBetween = <%% 12, 8, 12, 12, 12 %%>;
+  contents3GreenHeight = <%% 52, 48, 52, 52, 52 %%>;
   contents3GreenTextTop = <%% -2, -2, -2, -2, -2 %%>;
-  contents3GreenSize = <%% 15, 15, 15, 15, 15 %%>;
+  contents3GreenSize = <%% 15, 14, 15, 15, 15 %%>;
   contents3GreenWeight = <%% 600, 600, 600, 600, 600 %%>;
 
   contents3GrayHeight = <%% 640, 640, 640, 640, 640 %%>;
-  contents3GrayInnerPadding = <%% 12, 12, 12, 12, 12 %%>;
-  contents3GrayWhiteSize = <%% 13, 13, 13, 13, 13 %%>;
+  contents3GrayInnerPadding = <%% 12, 10, 12, 12, 12 %%>;
+  contents3GrayWhiteSize = <%% 13, 12, 13, 13, 13 %%>;
   contents3GrayWhiteWeight = <%% 400, 400, 400, 400, 400 %%>;
   contents3GrayWhiteWeightBold = <%% 700, 700, 700, 700, 700 %%>;
   contents3GrayWhiteLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
@@ -5020,7 +5021,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
   contents3GrayWhitePaddingTop = <%% 17, 17, 17, 17, 17 %%>;
   contents3GrayWhitePaddingBottom = <%% 20, 20, 20, 20, 20 %%>;
 
-  contents3GrayChildrenMarginTop = <%% 20, 20, 20, 20, 20 %%>;
+  contents3GrayChildrenMarginTop = <%% 20, 15, 20, 20, 20 %%>;
   contents3GrayChildrenWeight = <%% 600, 600, 600, 600, 600 %%>;
   contents3GrayChildrenPaddingTop = <%% 3, 3, 3, 3, 3 %%>;
 
@@ -5067,7 +5068,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
         },
         {
           title: "일정 운영",
-          description: "시공과 제품 주문의 시기 및 기간의\n<b%일정을 일괄적으로 관리%b>해요.",
+          description: "시공과 제품 주문 시기의\n<b%일정을 일괄적으로 관리%b>해요.",
         },
         {
           title: "예산 운영",
@@ -5136,7 +5137,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
       {
         title: "홈퍼니싱",
         description: [
-          "시공 없이 가구와 소품 등으로\n진행하는 <b%효율적 인테리어%b>",
+          (<&& "시공 없이 가구와 소품 등으로\n진행하는 <b%효율적 인테리어%b>" | "시공 없이 가구와 소품 등으로\n진행하는 <b%효율적 인테리어%b>" | "시공 없이 가구와 소품 등으로\n진행하는 <b%효율적 인테리어%b>" | "시공 없이 가구와 소품 등으로\n진행하는 <b%효율적 인테리어%b>" | "시공 없이 가구와 소품 등으로\n진행하는 <b%효율적 인테리어%b>" &&>),
           "시공 없음\n약 30일 소요"
         ],
         children: [
@@ -5153,7 +5154,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
       {
         title: "홈스타일링",
         description: [
-          "부분 시공과 홈퍼니싱으로 필요\n부분만 진행하는 <b%스마트 인테리어%b>",
+          (<&& "부분 시공과 홈퍼니싱으로 필요\n부분만 진행하는 <b%스마트 인테리어%b>" | "부분 시공과 홈퍼니싱으로 필요\n부분만 진행하는 <b%스마트 인테리어%b>" | "부분 시공과 홈퍼니싱으로 필요\n부분만 진행하는 <b%스마트 인테리어%b>" | "부분 시공과 홈퍼니싱으로 필요\n부분만 진행하는 <b%스마트 인테리어%b>" | "부분 시공과 홈퍼니싱으로 필요\n부분만 진행하는 <b%스마트 인테리어%b>" &&>),
           "5개 공정 이하의 시공\n약 45일 소요"
         ],
         children: [
@@ -5177,7 +5178,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
       {
         title: "토탈 스타일링",
         description: [
-          "시공부터 스타일링까지 완벽하게\n진행하는 <b%원스탑 인테리어%b>",
+          (<&& "시공부터 스타일링까지 완벽하게\n진행하는 <b%원스탑 인테리어%b>" | "시공부터 스타일링까지 완벽하게\n진행하는 <b%원스탑 인테리어%b>" | "시공부터 스타일링까지 완벽하게\n진행하는 <b%원스탑 인테리어%b>" | "시공부터 스타일링까지 완벽하게\n진행하는 <b%원스탑 인테리어%b>" | "시공부터 스타일링까지 완벽하게\n진행하는 <b%원스탑 인테리어%b>" &&>),
           "5개 초과 공정 전체 시공\n약 60일 소요"
         ],
         children: [
@@ -5202,7 +5203,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
       {
         title: "엑스트라 스타일링",
         description: [
-          "디자인 토탈 시공과 <b%프리미엄%b>\n<b%스타일링으로 진행%b>하는 인테리어",
+          (<&& "디자인 토탈 시공과 <b%프리미엄%b>\n<b%스타일링으로 진행%b>하는 인테리어" | "디자인 토탈 시공과 <b%프리미엄%b>\n<b%스타일링으로 진행%b>하는 인테리어" | "디자인 토탈 시공과 <b%프리미엄%b>\n<b%스타일링으로 진행%b>하는 인테리어" | "디자인 토탈 시공과 <b%프리미엄%b>\n<b%스타일링으로 진행%b>하는 인테리어" | "디자인 토탈 시공과 <b%프리미엄%b>\n<b%스타일링으로 진행%b>하는 인테리어" &&>),
           "5개 초과 공정 전체 시공\n약 75일 소요"
         ],
         children: [
@@ -5431,6 +5432,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
     }
   });
 
+  num = 0;
   for (let { title, description } of contents1[0].children) {
 
     contents1UpBox = createNode({
@@ -5438,7 +5440,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
       style: {
         display: "inline-block",
         width: String(contents1UpBoxWidth) + ea,
-        marginRight: String(contents1UpBoxMargin) + ea,
+        marginRight: String(num === contents1[0].children.length - 1 ? 0 : contents1UpBoxMargin) + ea,
         background: colorChip.gray1,
         borderRadius: String(5) + "px",
         verticalAlign: "top",
@@ -5461,7 +5463,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
         marginRight: String(contents1UpBoxCheckMarginRight) + ea,
         verticalAlign: "top",
       }
-    })
+    });
 
     createNode({
       mother: contents1UpBox,
@@ -5472,7 +5474,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
         fontWeight: String(contents1UpBoxTitleWeight),
         verticalAlign: "top",
       }
-    })
+    });
 
     createNode({
       mother: contents1UpBox,
@@ -5505,8 +5507,9 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
           }
         }
       ]
-    })
+    });
 
+    num++;
   }
 
   createNode({
@@ -6039,7 +6042,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
       width: withOut(leftBoxWidth, ea),
       height: String(100) + '%',
       verticalAlign: "top",
-      paddingTop: String(rightBoxPaddingTopFontVersion) + ea,
+      paddingTop: String(rightBoxPaddingTop) + ea,
     }
   });
 
