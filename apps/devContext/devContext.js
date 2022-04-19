@@ -149,9 +149,7 @@ DevContext.prototype.launching = async function () {
     // console.log(tong);
 
 
-    // const res = await ghostRequest("pastProposal", { proid: "p2204_aa30s" });
-    // console.log(JSON.stringify(res[2].project.detail, null, 2))
-
+    
 
 
 
