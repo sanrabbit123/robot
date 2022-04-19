@@ -1991,8 +1991,8 @@ DesignerProposalJs.prototype.designerPortfolio = function (mother, desid) {
   GeneralJs.ajax("noFlat=true&where=" + JSON.stringify({ desid }) + "&limit=12", "/getContents", function (res) {
     const contentsArr = JSON.parse(res);
     const web = {
-      portfolio: frontPage + "/portdetail.php?pid=",
-      review: frontPage + "/revdetail.php?pid="
+      portfolio: frontPage + "/portdetail.php?qqq=",
+      review: frontPage + "/revdetail.php?qqq="
     };
     const dateToString = function (dateObject) {
       const zeroAddition = function (num) {
@@ -2030,7 +2030,7 @@ DesignerProposalJs.prototype.designerPortfolio = function (mother, desid) {
 
     sourceArr = [];
     for (let { contents } of contentsArr) {
-      sourceArr.push({ date: new Date(contents.portfolio.date), title: { portfolio: contents.portfolio.title.main, review: contents.review.title.main }, link: { portfolio: web.portfolio + contents.portfolio.pid, review: web.review + contents.portfolio.pid } });
+      sourceArr.push({ date: new Date(contents.portfolio.date), title: { portfolio: contents.portfolio.title.main, review: contents.review.title.main }, link: { portfolio: web.portfolio + contents.portfolio.pid, review: web.review + contents.review.rid } });
     }
 
     webOpenEvent = function (e) {
