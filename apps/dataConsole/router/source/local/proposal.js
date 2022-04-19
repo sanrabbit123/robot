@@ -5121,14 +5121,18 @@ ProposalJs.save_init = async function (update = false) {
     }
 
     if (!update) {
-      const { id: newId } = await GeneralJs.ajaxJson({ updateQuery: result_obj }, "/createProject");
-      standard_id = newId;
+      if (window.confirm("저장이 확실합니까?")) {
+        const { id: newId } = await GeneralJs.ajaxJson({ updateQuery: result_obj }, "/createProject");
+        standard_id = newId;
+      }
     } else {
-      standard_id = document.getElementById("blewpp_button3").getAttribute("cus_id");
-      await GeneralJs.ajaxJson({
-        where: { proid: standard_id },
-        updateQuery: result_obj
-      }, "/rawUpdateProject");
+      if (window.confirm("업데이트가 확실합니까?")) {
+        standard_id = document.getElementById("blewpp_button3").getAttribute("cus_id");
+        await GeneralJs.ajaxJson({
+          where: { proid: standard_id },
+          updateQuery: result_obj
+        }, "/rawUpdateProject");
+      }
     }
 
     if (document.querySelector(".pp_fifth_cancelback") !== null) {
