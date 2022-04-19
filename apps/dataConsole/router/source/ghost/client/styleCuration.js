@@ -3907,10 +3907,10 @@ StyleCurationJs.prototype.insertPendingProposal = function () {
 
   quotePaddingTop = <%% 60, 60, 60, 60, 9 %%>;
   quoteMarginBottom = <%% 5, 5, 5, 5, 1 %%>;
-  quoteWidth = <%% 20, 20, 20, 16, 3 %%>;
+  quoteWidth = <%% 20, 16, 14, 12, 3 %%>;
 
-  titleSize = <%% 30, 30, 29, 27, 5 %%>;
-  subTitleSize = <%% 14, 14, 14, 14, 3 %%>;
+  titleSize = <%% 30, 27, 25, 21, 5 %%>;
+  subTitleSize = <%% 14, 14, 13, 12, 3 %%>;
   subTitlePaddingTop = <%% 8, 8, 8, 8, 1 %%>;
   subTitlePaddingBottom = <%% 80, 80, 80, 80, 12 %%>;
 
@@ -4904,7 +4904,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
 
   margin = <%% 52, 52, 44, 32, 52 %%>;
 
-  titleFont = <%% 31, 26, 23, 19, 5.7 %%>;
+  titleFont = <%% 31, 25, 23, 19, 5.7 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
   titleFontWeight = <%% 500, 500, 500, 500, 500 %%>;
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
@@ -4919,10 +4919,10 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
   rightBoxPaddingTopFontVersion = <%% 2, 2, 2, 2, 2 %%>;
 
   height0 = <%% 545, 415, 545, 415, 415 %%>;
-  height1 = <%% 570, 490, 570, 570, 570 %%>;
+  height1 = <%% 570, 480, 570, 570, 570 %%>;
   height2 = <%% 370, 305, 370, 370, 370 %%>;
-  height3 = <%% 810, 810, 810, 810, 810 %%>;
-  height4 = <%% 310, 310, 310, 310, 310 %%>;
+  height3 = <%% 810, 725, 810, 810, 810 %%>;
+  height4 = <%% 310, 270, 310, 310, 310 %%>;
 
   titleVisualTop = <%% -2, -2, -2, -2, -2 %%>;
 
@@ -4946,12 +4946,12 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
 
   contents1TitleSize = <%% 19, 18, 19, 19, 19 %%>;
   contents1TitleWeight = <%% 600, 600, 600, 600, 600 %%>;
-  contents1TitleBetween = <%% 16, 16, 16, 16, 16 %%>;
-  contents1Between = <%% 45, 45, 45, 45, 45 %%>;
+  contents1TitleBetween = <%% 16, 14, 16, 16, 16 %%>;
+  contents1Between = <%% 45, 40, 45, 45, 45 %%>;
 
   contents1Columns = <%% 5, 5, 5, 5, 5 %%>;
 
-  contents1UpBoxWidth = <%% 232, 193, 232, 232, 232 %%>;
+  contents1UpBoxWidth = <%% 232, 197, 232, 232, 232 %%>;
   contents1UpBoxMargin = <%% 10, 8, 10, 10, 10 %%>;
   contents1UpBoxPaddingLeft = <%% 22, 18, 22, 22, 22 %%>;
   contents1UpBoxPaddingTop = <%% 16, 14, 16, 16, 16 %%>;
@@ -5007,19 +5007,19 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
   contents3BoxMarginTop = <%% 40, 20, 40, 40, 40 %%>;
   contents3BoxBetween = <%% 12, 8, 12, 12, 12 %%>;
   contents3GreenHeight = <%% 52, 48, 52, 52, 52 %%>;
-  contents3GreenTextTop = <%% -2, -2, -2, -2, -2 %%>;
+  contents3GreenTextTop = <%% -2, -1, -2, -2, -2 %%>;
   contents3GreenSize = <%% 15, 14, 15, 15, 15 %%>;
   contents3GreenWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-  contents3GrayHeight = <%% 640, 640, 640, 640, 640 %%>;
+  contents3GrayHeight = <%% 640, 584, 640, 640, 640 %%>;
   contents3GrayInnerPadding = <%% 12, 10, 12, 12, 12 %%>;
   contents3GrayWhiteSize = <%% 13, 12, 13, 13, 13 %%>;
   contents3GrayWhiteWeight = <%% 400, 400, 400, 400, 400 %%>;
   contents3GrayWhiteWeightBold = <%% 700, 700, 700, 700, 700 %%>;
   contents3GrayWhiteLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  contents3GrayWhitePaddingTop = <%% 17, 17, 17, 17, 17 %%>;
-  contents3GrayWhitePaddingBottom = <%% 20, 20, 20, 20, 20 %%>;
+  contents3GrayWhitePaddingTop = <%% 17, 13, 17, 17, 17 %%>;
+  contents3GrayWhitePaddingBottom = <%% 20, 17, 20, 20, 20 %%>;
 
   contents3GrayChildrenMarginTop = <%% 20, 15, 20, 20, 20 %%>;
   contents3GrayChildrenWeight = <%% 600, 600, 600, 600, 600 %%>;
@@ -5137,7 +5137,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
       {
         title: "홈퍼니싱",
         description: [
-          (<&& "시공 없이 가구와 소품 등으로\n진행하는 <b%효율적 인테리어%b>" | "시공 없이 가구와 소품 등으로\n진행하는 <b%효율적 인테리어%b>" | "시공 없이 가구와 소품 등으로\n진행하는 <b%효율적 인테리어%b>" | "시공 없이 가구와 소품 등으로\n진행하는 <b%효율적 인테리어%b>" | "시공 없이 가구와 소품 등으로\n진행하는 <b%효율적 인테리어%b>" &&>),
+          (<&& "시공 없이 가구와 소품 등으로\n진행하는 <b%효율적 인테리어%b>" | "시공 없이 가구, 소품으로\n진행하는 <b%효율적 인테리어%b>" | "시공 없이 가구와 소품 등으로\n진행하는 <b%효율적 인테리어%b>" | "시공 없이 가구와 소품 등으로\n진행하는 <b%효율적 인테리어%b>" | "시공 없이 가구와 소품 등으로\n진행하는 <b%효율적 인테리어%b>" &&>),
           "시공 없음\n약 30일 소요"
         ],
         children: [
@@ -5154,7 +5154,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
       {
         title: "홈스타일링",
         description: [
-          (<&& "부분 시공과 홈퍼니싱으로 필요\n부분만 진행하는 <b%스마트 인테리어%b>" | "부분 시공과 홈퍼니싱으로 필요\n부분만 진행하는 <b%스마트 인테리어%b>" | "부분 시공과 홈퍼니싱으로 필요\n부분만 진행하는 <b%스마트 인테리어%b>" | "부분 시공과 홈퍼니싱으로 필요\n부분만 진행하는 <b%스마트 인테리어%b>" | "부분 시공과 홈퍼니싱으로 필요\n부분만 진행하는 <b%스마트 인테리어%b>" &&>),
+          (<&& "부분 시공과 홈퍼니싱으로 필요\n부분만 진행하는 <b%스마트 인테리어%b>" | "부분 시공과 홈퍼니싱으로\n진행하는 <b%스마트 인테리어%b>" | "부분 시공과 홈퍼니싱으로 필요\n부분만 진행하는 <b%스마트 인테리어%b>" | "부분 시공과 홈퍼니싱으로 필요\n부분만 진행하는 <b%스마트 인테리어%b>" | "부분 시공과 홈퍼니싱으로 필요\n부분만 진행하는 <b%스마트 인테리어%b>" &&>),
           "5개 공정 이하의 시공\n약 45일 소요"
         ],
         children: [
@@ -5178,7 +5178,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
       {
         title: "토탈 스타일링",
         description: [
-          (<&& "시공부터 스타일링까지 완벽하게\n진행하는 <b%원스탑 인테리어%b>" | "시공부터 스타일링까지 완벽하게\n진행하는 <b%원스탑 인테리어%b>" | "시공부터 스타일링까지 완벽하게\n진행하는 <b%원스탑 인테리어%b>" | "시공부터 스타일링까지 완벽하게\n진행하는 <b%원스탑 인테리어%b>" | "시공부터 스타일링까지 완벽하게\n진행하는 <b%원스탑 인테리어%b>" &&>),
+          (<&& "시공부터 스타일링까지 완벽하게\n진행하는 <b%원스탑 인테리어%b>" | "시공부터 스타일링까지\n진행하는 <b%원스탑 인테리어%b>" | "시공부터 스타일링까지 완벽하게\n진행하는 <b%원스탑 인테리어%b>" | "시공부터 스타일링까지 완벽하게\n진행하는 <b%원스탑 인테리어%b>" | "시공부터 스타일링까지 완벽하게\n진행하는 <b%원스탑 인테리어%b>" &&>),
           "5개 초과 공정 전체 시공\n약 60일 소요"
         ],
         children: [
@@ -5203,7 +5203,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
       {
         title: "엑스트라 스타일링",
         description: [
-          (<&& "디자인 토탈 시공과 <b%프리미엄%b>\n<b%스타일링으로 진행%b>하는 인테리어" | "디자인 토탈 시공과 <b%프리미엄%b>\n<b%스타일링으로 진행%b>하는 인테리어" | "디자인 토탈 시공과 <b%프리미엄%b>\n<b%스타일링으로 진행%b>하는 인테리어" | "디자인 토탈 시공과 <b%프리미엄%b>\n<b%스타일링으로 진행%b>하는 인테리어" | "디자인 토탈 시공과 <b%프리미엄%b>\n<b%스타일링으로 진행%b>하는 인테리어" &&>),
+          (<&& "디자인 토탈 시공과 <b%프리미엄%b>\n<b%스타일링으로 진행%b>하는 인테리어" | "토탈 시공과 <b%프리미엄 스타%b>\n<b%일링으로 진행%b>하는 인테리어" | "디자인 토탈 시공과 <b%프리미엄%b>\n<b%스타일링으로 진행%b>하는 인테리어" | "디자인 토탈 시공과 <b%프리미엄%b>\n<b%스타일링으로 진행%b>하는 인테리어" | "디자인 토탈 시공과 <b%프리미엄%b>\n<b%스타일링으로 진행%b>하는 인테리어" &&>),
           "5개 초과 공정 전체 시공\n약 75일 소요"
         ],
         children: [
