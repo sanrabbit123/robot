@@ -678,7 +678,7 @@ DataRouter.prototype.rou_post_updateLog = function () {
 DataRouter.prototype.rou_post_rawUpdateDocument = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson } = this.mother;
+  const { equalJson, errorLog } = this.mother;
   let obj = {};
   obj.link = [ "/rawUpdateClient", "/rawUpdateDesigner", "/rawUpdateProject", "/rawUpdateContents", "/rawUpdateAspirant" ];
   obj.func = async function (req, res) {
@@ -719,23 +719,29 @@ DataRouter.prototype.rou_post_rawUpdateDocument = function () {
         raw_data = await back.updateAspirant([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
       }
 
+      updateTong = {
+        user: {
+          name: "unknown",
+          email: "unknown"
+        },
+        where: Object.values(whereQuery)[0],
+        update: { updateQuery: JSON.stringify(updateQuery) },
+        date: new Date()
+      };
+
       cookies = DataRouter.cookieParsing(req);
       if (cookies !== null) {
         if (cookies.homeliaisonConsoleLoginedName !== undefined && cookies.homeliaisonConsoleLoginedEmail !== undefined) {
-          updateTong = {
-            user: {
-              name: cookies.homeliaisonConsoleLoginedName,
-              email: cookies.homeliaisonConsoleLoginedEmail
-            },
-            where: Object.values(whereQuery)[0],
-            update: { updateQuery: JSON.stringify(updateQuery) },
-            date: new Date()
-          };
-          back.mongoCreate((req.url.replace(/^\/rawU/, 'u') + "Log"), updateTong, { selfMongo: instance.mongolocal }).catch(function (e) {
-            throw new Error(e);
-          });
+          updateTong.user.name = cookies.homeliaisonConsoleLoginedName;
+          updateTong.user.email = cookies.homeliaisonConsoleLoginedEmail;
         }
       }
+
+      await errorLog("raw update 감지 => " + JSON.stringify(updateTong, null, 2));
+
+      back.mongoCreate((req.url.replace(/^\/rawU/, 'u') + "Log"), updateTong, { selfMongo: instance.mongolocal }).catch(function (e) {
+        throw new Error(e);
+      });
 
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ message: raw_data }));
