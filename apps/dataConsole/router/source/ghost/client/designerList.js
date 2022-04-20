@@ -599,7 +599,15 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
         marginTop: String(tagTongMarginTop) + ea,
       }
     });
-    mthTargets = designerMthParsing(designer.setting.front.methods);
+    mthTargets = serviceParsing(0).name;
+    console.log(designer);
+    console.log(designer.analytics.project.matrix);
+
+
+    if (mthTargets.length === 4) {
+      mthTargets.pop();
+    }
+
     for (let mth of mthTargets) {
 
       createNode({
