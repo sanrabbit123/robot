@@ -1411,7 +1411,7 @@ PortfolioDetailJs.prototype.relativeContents = function (contents, length) {
 
 PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
   const instance = this;
-  const { createNode, colorChip, withOut, svgMaker, sleep, setQueue, equalJson, isMac, isIphone, selfHref } = GeneralJs;
+  const { createNode, colorChip, withOut, svgMaker, sleep, setQueue, equalJson, isMac, isIphone, selfHref, serviceParsing } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid, standardWidth } = this;
   const { contentsArr } = this;
   const mobile = media[4];
@@ -1468,6 +1468,7 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
   let titleSubSize;
   let titleSubMarginTop;
   let subTitle;
+  let service;
 
   this.relativePhotoNumber = 0;
 
@@ -1786,14 +1787,16 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
 
       for (let i = 0; i < relativeLength; i++) {
 
-        ({ contents: filteredContents } = filtered[i]);
+        ({ contents: filteredContents, service } = filtered[i]);
 
         if (desktop) {
           src = FRONTHOST + "/list_image/portp" + filteredContents.portfolio.pid + "/" + photoChar + String(filteredContents.portfolio.detailInfo.photodae[0]) + filteredContents.portfolio.pid + ".jpg";
         } else {
           src = FRONTHOST + "/list_image/portp" + filteredContents.portfolio.pid + "/mobile/" + photoCharMobile + String(filteredContents.portfolio.detailInfo.photodae[0]) + filteredContents.portfolio.pid + ".jpg";
         }
+
         title = desktop ? filteredContents.portfolio.title.main.split(", ")[1] : filteredContents.portfolio.title.sub.split(", ")[1];
+        title = title.replace(/홈?스타일링/gi, '') + serviceParsing(0).name[Number(service.serid.split('_')[1].replace(/[^0-9]/gi, '')) - 1];
         subTitle = filteredContents.portfolio.title.sub;
         if (!mobile) {
           if (subTitle.length > 27) {
@@ -1860,7 +1863,7 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
                     fontSize: String(titleSize) + ea,
                     fontWeight: String(titleWeight),
                     color: colorChip.black,
-                    width: withOut(0, ea),
+                    width: String(200) + '%',
                     verticalAlign: "top",
                   }
                 },

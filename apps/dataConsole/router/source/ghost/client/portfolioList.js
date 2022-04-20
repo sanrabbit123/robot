@@ -444,6 +444,7 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null)
   let titleSubSize;
   let subTitle;
   let titleSubMarginTop;
+  let service;
 
   if (typeof search === "string") {
 
@@ -457,8 +458,8 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null)
         let designerTarget;
 
         target = equalJson(JSON.stringify(obj.contents.portfolio.detailInfo.tag));
-        target.push(obj.contents.portfolio.title.main);
-        target.push(obj.contents.portfolio.title.sub);
+        target.push(obj.contents.portfolio.title.main.replace(/홈?스타일링/gi, ''));
+        target.push(obj.contents.portfolio.title.sub.replace(/홈?스타일링/gi, ''));
         target.push(serviceParsing(obj.service));
         designerTarget = designers.search("desid", obj.desid);
         target.push(designerTarget.designer);
@@ -541,7 +542,7 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null)
     for (let i = 0; i < limitLength; i++) {
       if (!this.loadedContents.includes(i) || search !== null) {
 
-        ({ contents } = contentsArr[i]);
+        ({ contents, service } = contentsArr[i]);
 
         if (desktop) {
           src = FRONTHOST + "/list_image/portp" + contents.portfolio.pid + "/" + photoChar + String(contents.portfolio.detailInfo.photodae[gsArray[i] === 'g' ? 1 : 0]) + contents.portfolio.pid + ".jpg";
@@ -550,6 +551,8 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null)
         }
 
         title = contents.portfolio.title.main.split(", ")[1];
+        title = title.replace(/홈?스타일링/gi, '') + serviceParsing(0).name[Number(service.serid.split('_')[1].replace(/[^0-9]/gi, '')) - 1];
+
         if (media[0] || media[2]) {
           subTitle = contents.portfolio.title.sub;
         } else {
@@ -626,7 +629,7 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null)
                     fontSize: String(titleSize) + ea,
                     fontWeight: String(titleWeight),
                     color: colorChip.black,
-                    width: withOut(0, ea),
+                    width: String(200) + '%',
                     verticalAlign: "top",
                   }
                 },

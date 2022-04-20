@@ -436,6 +436,7 @@ DesignerDetailJs.prototype.portfolioBlock = function (limitLength, search = null
   let titleSubSize;
   let subTitle;
   let titleSubMarginTop;
+  let service;
 
   contentsArr = contentsArr;
 
@@ -497,7 +498,7 @@ DesignerDetailJs.prototype.portfolioBlock = function (limitLength, search = null
     for (let i = 0; i < limitLength; i++) {
       if (!this.loadedContents.includes(i) || search !== null) {
 
-        ({ contents } = contentsArr[i]);
+        ({ contents, service } = contentsArr[i]);
 
         if (desktop) {
           src = FRONTHOST + "/list_image/portp" + contents.portfolio.pid + "/" + photoChar + String(contents.portfolio.detailInfo.photodae[gsArray[i] === 'g' ? 1 : 0]) + contents.portfolio.pid + ".jpg";
@@ -506,6 +507,8 @@ DesignerDetailJs.prototype.portfolioBlock = function (limitLength, search = null
         }
 
         title = contents.portfolio.title.main.split(", ")[1];
+        title = title.replace(/홈?스타일링/gi, '') + serviceParsing(0).name[Number(service.serid.split('_')[1].replace(/[^0-9]/gi, '')) - 1];
+
         if (media[0] || media[2]) {
           subTitle = contents.portfolio.title.sub;
         } else {
