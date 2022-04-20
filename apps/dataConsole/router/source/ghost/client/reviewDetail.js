@@ -1238,15 +1238,15 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
   mainTitleWidth = <%% 170, 170, 170, 150, 34 %%>;
   mainTitleTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
-  belowBoxHeight = <%% 140, 138, 138, 105, 24 %%>;
+  belowBoxHeight = <%% 150, 148, 148, 125, 24 %%>;
   belowButtonTop = <%% 45, 45, 45, 32, 7 %%>;
 
-  belowButtonHeight = <%% (isMac() ? 45 : 43), (isMac() ? 43 : 42), (isMac() ? 43 : 42), (isMac() ? 40 : 39), 9 %%>;
+  belowButtonHeight = <%% 50, 48, 48, 45, 10 %%>;
   belowButtonBetween = <%% 10, 10, 10, 10, 2 %%>;
   belowButtonWordPadding = <%% 20, 20, 20, 20, 4 %%>;
 
-  belowButtonTextTop = <%% (isMac() ? 9 : 11), (isMac() ? 9 : 11), (isMac() ? 9 : 11), (isMac() ? 9 : 11), 2 %%>;
-  belowButtonSize = <%% 16, 15, 15, 14, 3 %%>;
+  belowButtonTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.3 %%>;
+  belowButtonSize = <%% 18, 17, 17, 16, 3.5 %%>;
   belowButtonWeight = <%% 600, 600, 600, 600, 600 %%>;
 
   move = <%% 264, 249, 272, 218, 39.45 %%>;
@@ -1459,7 +1459,10 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
   belowTong = createNode({
     mother: totalContents,
     style: {
-      display: "block",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      textAlign: "Center",
       position: "relative",
       width: String(100) + '%',
       background: colorChip.gray2,
@@ -1472,11 +1475,8 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
     style: {
       display: "block",
       position: "relative",
-      width: String(standardWidth) + ea,
-      height: withOut(belowButtonTop, ea),
-      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
-      textAlign: desktop ? "right" : "center",
-      paddingTop: String(belowButtonTop) + ea,
+      width: String(100) + '%',
+      textAlign: "center",
     }
   });
 
@@ -1489,7 +1489,10 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
       }
     },
     style: {
-      display: "inline-block",
+      display: "inline-flex",
+      justifyContent: "center",
+      alignItems: "center",
+      textAlign: "center",
       position: "relative",
       height: String(belowButtonHeight) + ea,
       background: colorChip.white,
@@ -1507,7 +1510,7 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
           fontSize: String(belowButtonSize) + ea,
           fontWeight: String(belowButtonWeight),
           color: colorChip.black,
-          paddingTop: String(belowButtonTextTop) + ea,
+          top: String(belowButtonTextTop) + ea,
         }
       }
     ]

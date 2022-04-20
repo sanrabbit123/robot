@@ -1250,6 +1250,11 @@ FrontIndexJs.prototype.insertBlackBox = function () {
 
   blockTong = createNode({
     mother: mainTong,
+    event: {
+      click: (e) => {
+        selfHref(FRONTHOST + "/consulting.php");
+      }
+    },
     style: {
       display: "block",
       position: "relative",
@@ -1257,6 +1262,7 @@ FrontIndexJs.prototype.insertBlackBox = function () {
       paddingTop: String(tongPaddingTop) + ea,
       paddingBottom: String(tongPaddingBottom) + ea,
       left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
+      cursor: "pointer",
     }
   });
 
@@ -1328,7 +1334,7 @@ FrontIndexJs.prototype.insertBlackBox = function () {
 
 FrontIndexJs.prototype.insertServiceBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
   const { ea, media, totalContents, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -1663,6 +1669,11 @@ FrontIndexJs.prototype.insertServiceBox = function () {
      },
      children: [
        {
+         event: {
+           click: function (e) {
+             selfHref(FRONTHOST + "/review.php");
+           }
+         },
          style: {
            display: "inline-block",
            position: "relative",
@@ -1673,6 +1684,7 @@ FrontIndexJs.prototype.insertServiceBox = function () {
            backgroundPosition: "50% 50%",
            borderRadius: String(5) + "px",
            verticalAlign: "top",
+           cursor: "pointer",
          }
        },
        // {
