@@ -171,7 +171,7 @@ DesignerDetailJs.prototype.designerBlock = function () {
   buttonSize = <%% 15, 14, 13, 13, 14 %%>;
   buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
   buttonTextTop = <%% (isMac() ? 8 : 9), (isMac() ? 7 : 8), (isMac() ? 6 : 8), (isMac() ? 6 : 8), 7 %%>;
-  buttonWidth = <%% 100, 90, 85, 100, 100 %%>;
+  buttonWidth = <%% 125, 115, 110, 100, 100 %%>;
   buttonBetween = <%% 6, 6, 6, 6, 6 %%>;
   buttonWidth0 = <%% 100, 90, 85, 100, 100 %%>;
 
@@ -355,7 +355,7 @@ DesignerDetailJs.prototype.designerBlock = function () {
         },
         children: [
           {
-            text: "상담 신청",
+            text: "HL 서비스 신청",
             style: {
               position: "relative",
               fontSize: String(buttonSize) + ea,

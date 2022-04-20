@@ -395,6 +395,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
   let tagTongMarginRight;
   let tagSize, tagWeight;
   let arrowWidth, arrowHeight, arrowBottom;
+  let num, booArr;
 
   tongPaddingLeft = <%% 100, 70, 80, 50, 6.5 %%>;
   blockMargin = <%% 40, 30, 20, 20, 2 %%>;
@@ -600,16 +601,15 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
       }
     });
     mthTargets = serviceParsing(0).name;
-    console.log(designer);
-    console.log(designer.analytics.project.matrix);
-
-
-    if (mthTargets.length === 4) {
-      mthTargets.pop();
+    booArr = designer.analytics.project.matrix.map((arr) => { return arr.some((num) => { return num === 1 }) });
+    mthTargets = mthTargets.filter((str, index) => { return booArr[index]; });
+    mthTargets = mthTargets.filter((str) => { return !/엑스트라/gi.test(str) });
+    if (mthTargets.length > 2) {
+      mthTargets = mthTargets.slice(-2);
     }
 
+    num = 0;
     for (let mth of mthTargets) {
-
       createNode({
         mother: tagTong,
         style: {
@@ -633,12 +633,13 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
               position: "relative",
               fontSize: String(tagSize) + ea,
               fontWeight: String(tagWeight),
-              color: colorChip.black
+              color: colorChip.black,
             }
           }
         ]
       });
 
+      num++;
     }
 
     if (desktop) {
