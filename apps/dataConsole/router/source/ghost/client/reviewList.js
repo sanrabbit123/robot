@@ -565,7 +565,6 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
 
           block = createNode({
             mother: baseBlock,
-            class: [ "hoverDefault_lite" ],
             attribute: {
               pid: contents.portfolio.pid,
             },
@@ -583,6 +582,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
               marginBottom: String(photoBlockMarginBottom) + ea,
               verticalAlign: "top",
               overflow: "hidden",
+              cursor: "pointer",
             },
             children: [
               {

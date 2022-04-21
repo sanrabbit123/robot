@@ -579,7 +579,6 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
 
     createNode({
       mother: contentsBlock,
-      class: [ "hoverDefault_lite" ],
       text: desktop ? (designer.setting.front.introduction.desktop.slice(0, 2).join("\n") + " ...") : (designer.setting.front.introduction.desktop.slice(0, 1).join("\n") + " ..."),
       style: {
         display: "block",
@@ -590,6 +589,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
         lineHeight: String(descriptionLineHeight),
         height: desktop ? "" : String(contentsBlockHeight) + ea,
         overflow: desktop ? "" : "scroll",
+        cursor: "pointer",
       }
     });
 

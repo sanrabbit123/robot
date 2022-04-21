@@ -897,7 +897,6 @@ FrontIndexJs.prototype.insertSearchBox = function () {
 
     block = createNode({
       mother: portfolioTong,
-      class: [ "hoverDefault_lite" ],
       attribute: {
         pid: contents.portfolio.pid,
       },
@@ -916,6 +915,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
         borderRadius: String(5) + "px",
         verticalAlign: "top",
         overflow: "hidden",
+        cursor: "pointer",
       },
       children: [
         {
@@ -1092,7 +1092,6 @@ FrontIndexJs.prototype.insertSearchBox = function () {
 
     block = createNode({
       mother: reviewTong,
-      class: [ "hoverDefault_lite" ],
       attribute: {
         pid: contents.portfolio.pid,
       },
@@ -1111,6 +1110,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
         borderRadius: String(5) + "px",
         verticalAlign: "top",
         overflow: "hidden",
+        cursor: "pointer",
       },
       children: [
         {
