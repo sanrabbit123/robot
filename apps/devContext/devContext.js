@@ -2560,9 +2560,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "이현영",
-    //     designer: "호지희",
-    //     link: "https://drive.google.com/drive/folders/1pFsdhkwbtbtzQWnqR-IrQNaPLqo_Ie5Y",
+    //     client: "김다혜",
+    //     designer: "김소영",
+    //     link: "https://drive.google.com/drive/folders/1edJzjmpfy3BlwiZVOhfx_ed4Cu5Zup7d",
     //     pay: true
     //   }
     // ]);
@@ -2639,8 +2639,8 @@ DevContext.prototype.launching = async function () {
     // send sms
     // const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
     // const human = new HumanPacket();
-    // const name = "이소정";
-    // const amount = 3223000;
+    // const name = "정유진";
+    // const amount = 3480000;
     // await human.sendSms({
     //   name: "",
     //   phone: "01055432039",
