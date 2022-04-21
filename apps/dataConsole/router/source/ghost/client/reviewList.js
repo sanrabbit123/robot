@@ -440,12 +440,18 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
   let tagSize, tagWeight;
   let tagPaddingLeft, tagPaddingTop, tagPaddingBottom;
   let tagMarginRight;
+  let contentsArrCopied;
+  let attach;
 
   if (typeof search === "string") {
 
     if (search === '') {
       contentsArr = contentsArr;
     } else {
+
+      if (/엑스트라/gi.test(search)) {
+        search = "엑스트라";
+      }
       contentsArr = contentsArr.toNormal().filter((obj) => {
         let boo;
         let target;
@@ -459,10 +465,6 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
         designerTarget = designers.search("desid", obj.desid);
         target.push(designerTarget.designer);
 
-        if (/엑스트라/gi.test(search)) {
-          search = "토탈 스타일링";
-        }
-
         boo = false;
         for (let t of target) {
           if ((new RegExp(search, "gi")).test(t)) {
@@ -473,6 +475,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
 
         return boo;
       });
+
     }
 
   } else {
