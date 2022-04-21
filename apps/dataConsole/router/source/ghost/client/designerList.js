@@ -214,6 +214,7 @@ DesignerListJs.prototype.insertInitBox = function () {
           },
           {
             mode: "input",
+            class: [ "searchInput" ],
             attribute: {
               type: "text",
               placeholder: placeholder,
@@ -505,6 +506,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
           }
         },
         {
+          class: [ "designerBlock" ],
           attribute: { desid: designer.desid },
           event: {
             click: function (e) {

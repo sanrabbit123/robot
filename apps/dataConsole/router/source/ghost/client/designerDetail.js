@@ -301,7 +301,7 @@ DesignerDetailJs.prototype.designerBlock = function () {
     if (media[0]) {
       createNode({
         mother: contentsBlock,
-        class: [ "hoverDefault_lite" ],
+        class: [ "hoverDefault_lite", "designerList" ],
         event: {
           click: function (e) {
             selfHref(FRONTHOST + "/designer.php");
@@ -337,7 +337,7 @@ DesignerDetailJs.prototype.designerBlock = function () {
     if (media[0] || media[1] || media[2]) {
       createNode({
         mother: contentsBlock,
-        class: [ "hoverDefault_lite" ],
+        class: [ "hoverDefault_lite", "consultingButton" ],
         event: {
           click: function (e) {
             selfHref(FRONTHOST + "/consulting.php");
