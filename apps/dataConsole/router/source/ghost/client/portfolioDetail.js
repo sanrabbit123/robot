@@ -604,6 +604,7 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
         }
       },
       {
+        class: [ "consultingButtonTop" ],
         event: {
           click: (e) => { selfHref(FRONTHOST + "/consulting.php") },
         },
@@ -1600,7 +1601,7 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
 
   leftArrow = createNode({
     mother: baseTong,
-    class: [ "hoverDefault_lite" ],
+    class: [ "hoverDefault_lite", "leftArrow" ],
     event: {
       click: function (e) {
         const photoTong = document.querySelector('.' + photoTongClassName);
@@ -1645,7 +1646,7 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
 
   rightArrow = createNode({
     mother: baseTong,
-    class: [ "hoverDefault_lite" ],
+    class: [ "hoverDefault_lite", "rightArrow" ],
     event: {
       click: function (e) {
         const photoTong = document.querySelector('.' + photoTongClassName);
@@ -1737,7 +1738,7 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
 
   createNode({
     mother: belowBaseTong,
-    class: [ "hoverDefault_lite" ],
+    class: [ "hoverDefault_lite", "consultingButtonBottom" ],
     event: {
       click: (e) => {
         selfHref(FRONTHOST + "/consulting.php");
