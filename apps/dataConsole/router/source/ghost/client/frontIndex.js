@@ -720,6 +720,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
                 }
               }
             },
+            class: [ "searchInput" ],
             style: {
               position: "absolute",
               top: String(0),
@@ -1250,11 +1251,11 @@ FrontIndexJs.prototype.insertBlackBox = function () {
 
   blockTong = createNode({
     mother: mainTong,
-    event: {
-      click: (e) => {
-        selfHref(FRONTHOST + "/consulting.php");
-      }
-    },
+    // event: {
+    //   click: (e) => {
+    //     selfHref(FRONTHOST + "/consulting.php");
+    //   }
+    // },
     style: {
       display: "block",
       position: "relative",
@@ -1295,6 +1296,7 @@ FrontIndexJs.prototype.insertBlackBox = function () {
 
   createNode({
     mother: blockTong,
+    class: [ "consultingButton" ],
     event: {
       click: (e) => {
         selfHref(FRONTHOST + "/consulting.php");

@@ -239,6 +239,7 @@ ReviewListJs.prototype.insertInitBox = function () {
           },
           {
             mode: "input",
+            class: [ "searchInput" ],
             attribute: {
               type: "text",
               placeholder: placeholder,
