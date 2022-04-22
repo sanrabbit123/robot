@@ -492,6 +492,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   const desktop = !mobile;
   const photoChar = 't';
   const photoCharMobile = "mot";
+  const touchStartConst = "touchStartConstName";
   let speed;
   let mainHeight;
   let mainTong;
@@ -547,6 +548,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   let searchWordingSize, searchWordingWeight, searchWordingMarginBottom;
   let searchWordingCircleWidth;
   let searchWordingCircleTop, searchWordingCircleLeft;
+  let tagBlock;
 
   mainPaddingTop = <%% 140, 130, 110, 90, 8 %%>;
   mainPaddingBottom = <%% 150, 140, 120, 100, 5 %%>;
@@ -786,6 +788,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
         paddingLeft: String(servicePaddingLeft) + ea,
         paddingRight: String(servicePaddingLeft) + ea,
         marginBottom: desktop ? "" : String(servicePaddingLeft) + ea,
+        textAlign: "center",
       },
       children: [
         {
@@ -797,6 +800,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
             fontWeight: String(400),
             color: colorChip.black,
             cursor: "pointer",
+            textAlign: "center",
           },
           bold: {
             color: colorChip.green,
@@ -816,6 +820,11 @@ FrontIndexJs.prototype.insertSearchBox = function () {
     },
     children: serviceChildren
   });
+
+  for (let dom of serviceBlock.children) {
+    dom.firstChild.style.width = String(Math.ceil(dom.firstChild.getBoundingClientRect().width + 1)) + "px";
+    dom.style.width = String(Math.ceil(dom.firstChild.getBoundingClientRect().width) + 1) + "px";
+  }
 
   portfolioTong = createNode({
     mother: mainTong,
@@ -904,6 +913,19 @@ FrontIndexJs.prototype.insertSearchBox = function () {
         click: function (e) {
           const pid = this.getAttribute("pid");
           selfHref(FRONTHOST + "/portdetail.php?pid=" + pid);
+        },
+        touchstart: function (e) {
+          const self = this;
+          self.setAttribute(touchStartConst, "on");
+          setQueue(() => {
+            self.setAttribute(touchStartConst, "off");
+          });
+        },
+        touchend: function (e) {
+          if (this.getAttribute(touchStartConst) === "on") {
+            const pid = this.getAttribute("pid");
+            selfHref(FRONTHOST + "/portdetail.php?pid=" + pid);
+          }
         }
       },
       style: {
@@ -986,7 +1008,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
 
     tagTong = block.children[2];
     for (let t of tag) {
-      createNode({
+      tagBlock = createNode({
         mother: tagTong,
         text: "<b%#%b> " + t,
         style: {
@@ -1000,13 +1022,17 @@ FrontIndexJs.prototype.insertSearchBox = function () {
           paddingRight: String(tagPaddingLeft) + ea,
           borderRadius: String(3) + "px",
           marginRight: String(tagMarginRight) + ea,
-          background: colorChip.gray1
+          background: colorChip.gray1,
+          textAlign: "center",
         },
         bold: {
           fontWeight: String(400),
           color: colorChip.deactive,
         }
-      })
+      });
+
+      tagBlock.style.width = String(Math.ceil(tagBlock.getBoundingClientRect().width - (tagPaddingLeft * 2)) + 1) + "px";
+
     }
 
 
@@ -1099,6 +1125,19 @@ FrontIndexJs.prototype.insertSearchBox = function () {
         click: function (e) {
           const pid = this.getAttribute("pid");
           selfHref(FRONTHOST + "/revdetail.php?pid=" + pid);
+        },
+        touchstart: function (e) {
+          const self = this;
+          self.setAttribute(touchStartConst, "on");
+          setQueue(() => {
+            self.setAttribute(touchStartConst, "off");
+          });
+        },
+        touchend: function (e) {
+          if (this.getAttribute(touchStartConst) === "on") {
+            const pid = this.getAttribute("pid");
+            selfHref(FRONTHOST + "/revdetail.php?pid=" + pid);
+          }
         }
       },
       style: {
@@ -1172,7 +1211,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
 
     tagTong = block.children[2];
     for (let t of tag) {
-      createNode({
+      tagBlock = createNode({
         mother: tagTong,
         text: "<b%#%b> " + t,
         style: {
@@ -1186,13 +1225,17 @@ FrontIndexJs.prototype.insertSearchBox = function () {
           paddingRight: String(tagPaddingLeft) + ea,
           borderRadius: String(3) + "px",
           marginRight: String(tagMarginRight) + ea,
-          background: colorChip.gray1
+          background: colorChip.gray1,
+          textAlign: "center",
         },
         bold: {
           fontWeight: String(400),
           color: colorChip.deactive,
         }
-      })
+      });
+
+      tagBlock.style.width = String(Math.ceil(tagBlock.getBoundingClientRect().width - (tagPaddingLeft * 2)) + 1) + "px";
+
     }
 
   }

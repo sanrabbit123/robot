@@ -837,12 +837,30 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
             if (Array.isArray(obj.type)) {
               for (let str of obj.type) {
                 if (typeof obj.event === "function") {
-                  dom_clone.addEventListener(str, obj.event);
+                  if (str === "touch") {
+                    if (/iPhone/gi.test(window.navigator.userAgent)) {
+                      dom_clone.addEventListener("click", obj.event);
+                      dom_clone.addEventListener("touchstart", obj.event);
+                    } else {
+                      dom_clone.addEventListener("click", obj.event);
+                    }
+                  } else {
+                    dom_clone.addEventListener(str, obj.event);
+                  }
                 }
               }
             } else if (typeof obj.type === "string") {
               if (typeof obj.event === "function") {
-                dom_clone.addEventListener(obj.type, obj.event);
+                if (obj.type === "touch") {
+                  if (/iPhone/gi.test(window.navigator.userAgent)) {
+                    dom_clone.addEventListener("click", obj.event);
+                    dom_clone.addEventListener("touchstart", obj.event);
+                  } else {
+                    dom_clone.addEventListener("click", obj.event);
+                  }
+                } else {
+                  dom_clone.addEventListener(obj.type, obj.event);
+                }
               }
             } else {
               throw new Error("invaild type");
@@ -851,7 +869,16 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
         } else if (typeof style.events === "object" && style.events !== null) {
           for (let type in style.events) {
             if (typeof style.events[type] === "function") {
-              dom_clone.addEventListener(type, style.events[type]);
+              if (type === "touch") {
+                if (/iPhone/gi.test(window.navigator.userAgent)) {
+                  dom_clone.addEventListener("click", style.events[type]);
+                  dom_clone.addEventListener("touchstart", style.events[type]);
+                } else {
+                  dom_clone.addEventListener("click", style.events[type]);
+                }
+              } else {
+                dom_clone.addEventListener(type, style.events[type]);
+              }
             }
           }
         }
@@ -942,12 +969,30 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
             if (Array.isArray(obj.type)) {
               for (let str of obj.type) {
                 if (typeof obj.event === "function") {
-                  dom_clone.addEventListener(str, obj.event);
+                  if (str === "touch") {
+                    if (/iPhone/gi.test(window.navigator.userAgent)) {
+                      dom_clone.addEventListener("click", obj.event);
+                      dom_clone.addEventListener("touchstart", obj.event);
+                    } else {
+                      dom_clone.addEventListener("click", obj.event);
+                    }
+                  } else {
+                    dom_clone.addEventListener(str, obj.event);
+                  }
                 }
               }
             } else if (typeof obj.type === "string") {
               if (typeof obj.event === "function") {
-                dom_clone.addEventListener(obj.type, obj.event);
+                if (obj.type === "touch") {
+                  if (/iPhone/gi.test(window.navigator.userAgent)) {
+                    dom_clone.addEventListener("click", obj.event);
+                    dom_clone.addEventListener("touchstart", obj.event);
+                  } else {
+                    dom_clone.addEventListener("click", obj.event);
+                  }
+                } else {
+                  dom_clone.addEventListener(obj.type, obj.event);
+                }
               }
             } else {
               throw new Error("invaild type");
@@ -956,7 +1001,16 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
         } else if (typeof style.events === "object" && style.events !== null) {
           for (let type in style.events) {
             if (typeof style.events[type] === "function") {
-              dom_clone.addEventListener(type, style.events[type]);
+              if (type === "touch") {
+                if (/iPhone/gi.test(window.navigator.userAgent)) {
+                  dom_clone.addEventListener("click", style.events[type]);
+                  dom_clone.addEventListener("touchstart", style.events[type]);
+                } else {
+                  dom_clone.addEventListener("click", style.events[type]);
+                }
+              } else {
+                dom_clone.addEventListener(type, style.events[type]);
+              }
             }
           }
         }
@@ -2615,14 +2669,7 @@ GeneralJs.selfHref = function (link) {
   if (link === undefined) {
     throw new Error("must be link");
   }
-  let a;
-  a = document.createElement("A");
-  a.style.display = "none";
-  a.href = link;
-  a.setAttribute("target", "_self");
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  window.location.href = link;
 }
 
 GeneralJs.styleInjection = function (dom, styleObj) {

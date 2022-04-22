@@ -315,6 +315,7 @@ DesignerListJs.prototype.insertInitBox = function () {
         paddingLeft: String(servicePaddingLeft) + ea,
         paddingRight: String(servicePaddingLeft) + ea,
         marginBottom: desktop ? "" : String(servicePaddingLeft) + ea,
+        textAlign: "center",
       },
       children: [
         {
@@ -326,6 +327,7 @@ DesignerListJs.prototype.insertInitBox = function () {
             fontWeight: String(400),
             color: colorChip.deactive,
             cursor: "pointer",
+            textAlign: "center",
           },
           bold: {
             color: colorChip.deactive,
@@ -345,6 +347,11 @@ DesignerListJs.prototype.insertInitBox = function () {
     },
     children: serviceChildren
   });
+
+  for (let dom of serviceBlock.children) {
+    dom.firstChild.style.width = String(Math.ceil(dom.firstChild.getBoundingClientRect().width + 1)) + "px";
+    dom.style.width = String(Math.ceil(dom.firstChild.getBoundingClientRect().width) + 1) + "px";
+  }
 
   serviceBlock.lastChild.firstChild.style.color = colorChip.black;
   serviceBlock.lastChild.firstChild.querySelector('b').style.color = colorChip.green;
@@ -369,6 +376,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
   const { designers, designerTong } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const touchStartConst = "touchStartConstName";
   let targets;
   let tong;
   let block;
@@ -397,6 +405,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
   let tagSize, tagWeight;
   let arrowWidth, arrowHeight, arrowBottom;
   let num, booArr;
+  let tagBlock;
 
   tongPaddingLeft = <%% 100, 70, 80, 50, 6.5 %%>;
   blockMargin = <%% 40, 30, 20, 20, 2 %%>;
@@ -512,6 +521,19 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
             click: function (e) {
               const desid = this.getAttribute("desid");
               selfHref(FRONTHOST + "/desdetail.php?desid=" + desid);
+            },
+            touchstart: function (e) {
+              const self = this;
+              self.setAttribute(touchStartConst, "on");
+              setQueue(() => {
+                self.setAttribute(touchStartConst, "off");
+              });
+            },
+            touchend: function (e) {
+              if (this.getAttribute(touchStartConst) === "on") {
+                const desid = this.getAttribute("desid");
+                selfHref(FRONTHOST + "/desdetail.php?desid=" + desid);
+              }
             }
           },
           style: {
@@ -612,7 +634,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
 
     num = 0;
     for (let mth of mthTargets) {
-      createNode({
+      tagBlock = createNode({
         mother: tagTong,
         style: {
           display: "inline-flex",
@@ -636,10 +658,13 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
               fontSize: String(tagSize) + ea,
               fontWeight: String(tagWeight),
               color: colorChip.black,
+              textAlign: "center",
             }
           }
         ]
       });
+
+      tagBlock.firstChild.style.width = String(Math.ceil(tagBlock.firstChild.getBoundingClientRect().width) + 1) + "px";
 
       num++;
     }

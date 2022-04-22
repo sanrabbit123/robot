@@ -407,6 +407,7 @@ DesignerDetailJs.prototype.portfolioBlock = function (limitLength, search = null
   const desktop = !mobile;
   const photoChar = 't';
   const photoCharMobile = "mot";
+  const touchStartConst = "touchStartConstName";
   let { contentsArr, designers } = this;
   let baseBlock;
   let gsArray;
@@ -437,6 +438,7 @@ DesignerDetailJs.prototype.portfolioBlock = function (limitLength, search = null
   let subTitle;
   let titleSubMarginTop;
   let service;
+  let tagBlock;
 
   contentsArr = contentsArr;
 
@@ -540,7 +542,6 @@ DesignerDetailJs.prototype.portfolioBlock = function (limitLength, search = null
 
         block = createNode({
           mother: baseBlock,
-          class: [ "hoverDefault_lite" ],
           attribute: {
             pid: contents.portfolio.pid,
           },
@@ -548,6 +549,19 @@ DesignerDetailJs.prototype.portfolioBlock = function (limitLength, search = null
             click: function (e) {
               const pid = this.getAttribute("pid");
               selfHref(FRONTHOST + "/portdetail.php?pid=" + pid);
+            },
+            touchstart: function (e) {
+              const self = this;
+              self.setAttribute(touchStartConst, "on");
+              setQueue(() => {
+                self.setAttribute(touchStartConst, "off");
+              });
+            },
+            touchend: function (e) {
+              if (this.getAttribute(touchStartConst) === "on") {
+                const pid = this.getAttribute("pid");
+                selfHref(FRONTHOST + "/portdetail.php?pid=" + pid);
+              }
             }
           },
           style: {
@@ -558,6 +572,7 @@ DesignerDetailJs.prototype.portfolioBlock = function (limitLength, search = null
             marginBottom: String(photoBlockMarginBottom) + ea,
             verticalAlign: "top",
             overflow: "hidden",
+            cursor: "pointer",
           },
           children: [
             {
@@ -627,7 +642,7 @@ DesignerDetailJs.prototype.portfolioBlock = function (limitLength, search = null
         });
         tagTong = block.children[2];
         for (let t of tag) {
-          createNode({
+          tagBlock = createNode({
             mother: tagTong,
             text: "<b%#%b> " + t,
             style: {
@@ -641,13 +656,17 @@ DesignerDetailJs.prototype.portfolioBlock = function (limitLength, search = null
               paddingRight: String(tagPaddingLeft) + ea,
               borderRadius: String(3) + "px",
               marginRight: String(tagMarginRight) + ea,
-              background: colorChip.gray2
+              background: colorChip.gray2,
+              textAlign: "center",
             },
             bold: {
               fontWeight: String(400),
               color: colorChip.deactive,
             }
-          })
+          });
+
+          tagBlock.style.width = String(Math.ceil(tagBlock.getBoundingClientRect().width - (tagPaddingLeft * 2)) + 1) + "px";
+
         }
 
         if (search === null) {

@@ -248,7 +248,10 @@ GeneralJs.prototype.setNavigator = function (subTitle, blackMode = true, name) {
     event: {
       click: (e) => {
         selfHref(frontPage);
-      }
+      },
+      touchstart: (e) => {
+        selfHref(frontPage);
+      },
     },
     style: {
       position: "absolute",
@@ -393,9 +396,12 @@ GeneralJs.prototype.setNavigator = function (subTitle, blackMode = true, name) {
             index: String(i)
           },
           event: {
-            click: function (e) {
+            touch: function (e) {
               const index = Number(this.getAttribute("index"));
               selfHref(naviMenu[i].href);
+            },
+            selectstart: function (e) {
+              e.preventDefault();
             }
           },
           text: naviMenu[i].title,
@@ -417,7 +423,7 @@ GeneralJs.prototype.setNavigator = function (subTitle, blackMode = true, name) {
         mode: "svg",
         source: this.returnHamburger(colorChip.black),
         event: {
-          click: (e) => {
+          touch: (e) => {
             const toggle = mobileMenuTong.getAttribute("toggle");
             if (toggle === "off") {
               mobileMenuTong.style.height = String(mobileMenuHeight) + "px";
@@ -461,7 +467,7 @@ GeneralJs.prototype.setBaseTong = function (child) {
       width: String(standardWidth) + ea,
       left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
       paddingTop: desktop ? String(baseTop) + ea : "calc(" + String(naviHeight) + "px" + " + " + String(baseTop) + ea + ")",
-      animation: "fadeupdelay 0.5s ease forwards",
+      animation: mobile ? "" : "fadeupdelay 0.5s ease forwards",
     }
   });
 

@@ -344,6 +344,7 @@ ReviewListJs.prototype.insertInitBox = function () {
         paddingLeft: String(servicePaddingLeft) + ea,
         paddingRight: String(servicePaddingLeft) + ea,
         marginBottom: desktop ? "" : String(servicePaddingLeft) + ea,
+        textAlign: "center",
       },
       children: [
         {
@@ -355,6 +356,7 @@ ReviewListJs.prototype.insertInitBox = function () {
             fontWeight: String(400),
             color: colorChip.deactive,
             cursor: "pointer",
+            textAlign: "center",
           },
           bold: {
             color: colorChip.deactive,
@@ -374,6 +376,11 @@ ReviewListJs.prototype.insertInitBox = function () {
     },
     children: serviceChildren
   });
+
+  for (let dom of serviceBlock.children) {
+    dom.firstChild.style.width = String(Math.ceil(dom.firstChild.getBoundingClientRect().width + 1)) + "px";
+    dom.style.width = String(Math.ceil(dom.firstChild.getBoundingClientRect().width) + 1) + "px";
+  }
 
   serviceBlock.lastChild.firstChild.style.color = colorChip.black;
   serviceBlock.lastChild.firstChild.querySelector('b').style.color = colorChip.green;
@@ -415,6 +422,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
   const desktop = !mobile;
   const photoChar = 't';
   const photoCharMobile = "mot";
+  const touchStartConst = "touchStartConstName";
   let { contentsArr, designers } = this;
   let baseBlock;
   let gsArray;
@@ -443,6 +451,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
   let tagMarginRight;
   let contentsArrCopied;
   let attach;
+  let tagBlock;
 
   if (typeof search === "string") {
 
@@ -572,6 +581,19 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
               click: function (e) {
                 const pid = this.getAttribute("pid");
                 selfHref(FRONTHOST + "/revdetail.php?pid=" + pid);
+              },
+              touchstart: function (e) {
+                const self = this;
+                self.setAttribute(touchStartConst, "on");
+                setQueue(() => {
+                  self.setAttribute(touchStartConst, "off");
+                });
+              },
+              touchend: function (e) {
+                if (this.getAttribute(touchStartConst) === "on") {
+                  const pid = this.getAttribute("pid");
+                  selfHref(FRONTHOST + "/revdetail.php?pid=" + pid);
+                }
               }
             },
             style: {
@@ -643,7 +665,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
           });
           tagTong = block.children[2];
           for (let t of tag) {
-            createNode({
+            tagBlock = createNode({
               mother: tagTong,
               text: "<b%#%b> " + t,
               style: {
@@ -657,13 +679,17 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
                 paddingRight: String(tagPaddingLeft) + ea,
                 borderRadius: String(3) + "px",
                 marginRight: String(tagMarginRight) + ea,
-                background: colorChip.gray2
+                background: colorChip.gray2,
+                textAlign: "center",
               },
               bold: {
                 fontWeight: String(400),
                 color: colorChip.deactive,
               }
-            })
+            });
+
+            tagBlock.style.width = String(Math.ceil(tagBlock.getBoundingClientRect().width - (tagPaddingLeft * 2)) + 1) + "px";
+
           }
 
           if (search === null) {

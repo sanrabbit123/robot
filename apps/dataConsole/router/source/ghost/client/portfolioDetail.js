@@ -643,7 +643,7 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
 
 PortfolioDetailJs.prototype.portfolioContentsBox = function () {
   const instance = this;
-  const { createNode, colorChip, withOut, svgMaker, equalJson, designerMthParsing, designerCareer, isMac, isIphone, selfHref } = GeneralJs;
+  const { createNode, colorChip, withOut, svgMaker, equalJson, designerMthParsing, designerCareer, isMac, isIphone, selfHref, setQueue } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid } = this;
   const { contentsArr, designers } = this;
   const mobile = media[4];
@@ -656,6 +656,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
   const story = equalJson(JSON.stringify(detail));
   const photoChar = 't';
   const photoCharMobile = "mot";
+  const touchStartConst = "touchStartConstName";
   const today = new Date();
   let mainTong;
   let mainWidth;
@@ -838,6 +839,10 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
   createNode({
     mother: mainTong,
     text: customerStory,
+    event: {
+      contextmenu: (e) => { e.preventDefault(); },
+      selectstart: (e) => { e.preventDefault(); }
+    },
     style: {
       display: "block",
       position: "relative",
@@ -877,6 +882,10 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
         mother: mainTong,
         mode: "img",
         attribute: { src },
+        event: {
+          contextmenu: (e) => { e.preventDefault(); },
+          selectstart: (e) => { e.preventDefault(); }
+        },
         style: {
           width: garo ? String(100) + '%' : "calc(50% - " + String(photoMargin / 2) + ea + ")",
           display: "inline-block",
@@ -929,6 +938,10 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
     createNode({
       mother: mainTong,
       text: contents,
+      event: {
+        contextmenu: (e) => { e.preventDefault(); },
+        selectstart: (e) => { e.preventDefault(); }
+      },
       style: {
         display: "block",
         position: "relative",
@@ -973,7 +986,6 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
       },
       children: [
         {
-          class: [ "hoverDefault_lite" ],
           attribute: {
             desid: designer.desid,
           },
@@ -981,6 +993,19 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
             click: function (e) {
               const desid = this.getAttribute("desid");
               selfHref(FRONTHOST + "/desdetail.php?desid=" + desid);
+            },
+            touchstart: function (e) {
+              const self = this;
+              self.setAttribute(touchStartConst, "on");
+              setQueue(() => {
+                self.setAttribute(touchStartConst, "off");
+              });
+            },
+            touchend: function (e) {
+              if (this.getAttribute(touchStartConst) === "on") {
+                const desid = this.getAttribute("desid");
+                selfHref(FRONTHOST + "/desdetail.php?desid=" + desid);
+              }
             }
           },
           style: {
@@ -993,6 +1018,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
             background: colorChip.white,
             textAlign: "center",
             verticalAlign: "top",
+            cursor: "pointer",
           },
           children: [
             {
@@ -1020,12 +1046,24 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
           ]
         },
         {
-          class: [ "hoverDefault_lite" ],
           attribute: { pid },
           event: {
             click: function (e) {
               const pid = this.getAttribute("pid");
               selfHref(FRONTHOST + "/revdetail.php?pid=" + pid);
+            },
+            touchstart: function (e) {
+              const self = this;
+              self.setAttribute(touchStartConst, "on");
+              setQueue(() => {
+                self.setAttribute(touchStartConst, "off");
+              });
+            },
+            touchend: function (e) {
+              if (this.getAttribute(touchStartConst) === "on") {
+                const pid = this.getAttribute("pid");
+                selfHref(FRONTHOST + "/revdetail.php?pid=" + pid);
+              }
             }
           },
           style: {
@@ -1039,15 +1077,28 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
             backgroundSize: desktop ? "auto 100%" : "100% auto",
             backgroundPosition: "50% 50%",
             verticalAlign: "top",
+            cursor: "pointer",
           }
         },
         {
-          class: [ "hoverDefault_lite" ],
           attribute: { pid },
           event: {
             click: function (e) {
               const pid = this.getAttribute("pid");
               selfHref(FRONTHOST + "/revdetail.php?pid=" + pid);
+            },
+            touchstart: function (e) {
+              const self = this;
+              self.setAttribute(touchStartConst, "on");
+              setQueue(() => {
+                self.setAttribute(touchStartConst, "off");
+              });
+            },
+            touchend: function (e) {
+              if (this.getAttribute(touchStartConst) === "on") {
+                const pid = this.getAttribute("pid");
+                selfHref(FRONTHOST + "/revdetail.php?pid=" + pid);
+              }
             }
           },
           style: {
@@ -1058,6 +1109,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
             marginLeft: String(belowPictureMargin) + ea,
             paddingLeft: String(belowTextAreaPaddingLeft) + ea,
             verticalAlign: "top",
+            cursor: "pointer",
           },
           children: [
             {
@@ -1126,6 +1178,19 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
               click: function (e) {
                 const desid = this.getAttribute("desid");
                 selfHref(FRONTHOST + "/desdetail.php?desid=" + desid);
+              },
+              touchstart: function (e) {
+                const self = this;
+                self.setAttribute(touchStartConst, "on");
+                setQueue(() => {
+                  self.setAttribute(touchStartConst, "off");
+                });
+              },
+              touchend: function (e) {
+                if (this.getAttribute(touchStartConst) === "on") {
+                  const desid = this.getAttribute("desid");
+                  selfHref(FRONTHOST + "/desdetail.php?desid=" + desid);
+                }
               }
             },
             style: {
@@ -1147,6 +1212,19 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
               click: function (e) {
                 const desid = this.getAttribute("desid");
                 selfHref(FRONTHOST + "/desdetail.php?desid=" + desid);
+              },
+              touchstart: function (e) {
+                const self = this;
+                self.setAttribute(touchStartConst, "on");
+                setQueue(() => {
+                  self.setAttribute(touchStartConst, "off");
+                });
+              },
+              touchend: function (e) {
+                if (this.getAttribute(touchStartConst) === "on") {
+                  const desid = this.getAttribute("desid");
+                  selfHref(FRONTHOST + "/desdetail.php?desid=" + desid);
+                }
               }
             },
             style: {
@@ -1418,6 +1496,7 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
   const mobile = media[4];
   const desktop = !mobile;
   const contents = contentsArr.toNormal().filter((obj) => { return obj.contents.portfolio.pid === pid })[0];
+  const touchStartConst = "touchStartConstName";
   let mainTong;
   let photoTong;
   let baseWidth;
@@ -1470,6 +1549,7 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
   let titleSubMarginTop;
   let subTitle;
   let service;
+  let tagBlock;
 
   this.relativePhotoNumber = 0;
 
@@ -1601,7 +1681,7 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
 
   leftArrow = createNode({
     mother: baseTong,
-    class: [ "hoverDefault_lite", "leftArrow" ],
+    class: [ "leftArrow" ],
     event: {
       click: function (e) {
         const photoTong = document.querySelector('.' + photoTongClassName);
@@ -1619,6 +1699,7 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
       left: String(0),
       width: String(arrowHeight) + ea,
       height: String(arrowHeight) + ea,
+      cursor: "pointer",
     },
     children: [
       {
@@ -1646,7 +1727,7 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
 
   rightArrow = createNode({
     mother: baseTong,
-    class: [ "hoverDefault_lite", "rightArrow" ],
+    class: [ "rightArrow" ],
     event: {
       click: function (e) {
         const photoTong = document.querySelector('.' + photoTongClassName);
@@ -1664,6 +1745,7 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
       right: String(0),
       width: String(arrowHeight) + ea,
       height: String(arrowHeight) + ea,
+      cursor: "pointer",
     },
     children: [
       {
@@ -1738,9 +1820,9 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
 
   createNode({
     mother: belowBaseTong,
-    class: [ "hoverDefault_lite", "consultingButtonBottom" ],
+    class: [ "consultingButtonBottom" ],
     event: {
-      click: (e) => {
+      touch: (e) => {
         selfHref(FRONTHOST + "/consulting.php");
       }
     },
@@ -1756,6 +1838,7 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
       marginRight: String(belowButtonBetween) + ea,
       paddingLeft: String(belowButtonWordPadding) + ea,
       paddingRight: String(belowButtonWordPadding) + ea,
+      cursor: "pointer",
     },
     children: [
       {
@@ -1821,12 +1904,24 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
 
         block = createNode({
           mother: photoTong,
-          class: [ "hoverDefault_lite" ],
           attribute: { pid: filteredContents.portfolio.pid },
           event: {
             click: function (e) {
               const pid = this.getAttribute("pid");
               selfHref(FRONTHOST + "/portdetail.php?pid=" + pid);
+            },
+            touchstart: function (e) {
+              const self = this;
+              self.setAttribute(touchStartConst, "on");
+              setQueue(() => {
+                self.setAttribute(touchStartConst, "off");
+              });
+            },
+            touchend: function (e) {
+              if (this.getAttribute(touchStartConst) === "on") {
+                const pid = this.getAttribute("pid");
+                selfHref(FRONTHOST + "/portdetail.php?pid=" + pid);
+              }
             }
           },
           style: {
@@ -1836,6 +1931,7 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
             marginRight: String(photoMargin) + ea,
             verticalAlign: "top",
             overflow: "hidden",
+            cursor: "pointer",
           },
           children: [
             {
@@ -1905,7 +2001,7 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
         });
         tagTong = block.children[2];
         for (let t of tag) {
-          createNode({
+          tagBlock = createNode({
             mother: tagTong,
             text: "<b%#%b> " + t,
             style: {
@@ -1919,13 +2015,17 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
               paddingRight: String(tagPaddingLeft) + ea,
               borderRadius: String(3) + "px",
               marginRight: String(tagMarginRight) + ea,
-              background: colorChip.gray2
+              background: colorChip.gray2,
+              textAlign: "center",
             },
             bold: {
               fontWeight: String(400),
               color: colorChip.deactive,
             }
           });
+
+          tagBlock.style.width = String(Math.ceil(tagBlock.getBoundingClientRect().width - (tagPaddingLeft * 2)) + 1) + "px";
+
         }
 
         instance.relativePhotoNumber++;
