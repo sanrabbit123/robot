@@ -5,6 +5,8 @@ const Robot = function () {
   this.mother = new Mother();
   this.back = new BackMaker();
   this.address = ADDRESS;
+  this.slack_token = "xoxb-717757271335-2032150390679-1FTxRg4wQasMpe9kKDgAdqBv";
+  this.slack_bot = new WebClient(this.slack_token);
 }
 
 Robot.timeouts = {};
@@ -198,7 +200,7 @@ Robot.prototype.aliveTest = async function () {
               console.log("\x1b[33m%s\x1b[0m", "something death");
               message += "\n======================================";
               message += "\nsomething death";
-              await errorLog(message);
+              await instance.slack_bot.chat.postMessage({ text: message, channel: "#errorLog" });
             }
           }
         }
@@ -212,14 +214,14 @@ Robot.prototype.aliveTest = async function () {
           console.log("\x1b[33m%s\x1b[0m", "something death");
           message += "\n======================================";
           message += "\nsomething death";
-          await errorLog(message);
+          await instance.slack_bot.chat.postMessage({ text: message, channel: "#errorLog" });
         }
       }
 
     }
 
   } catch (e) {
-    await errorLog("alive test error : " + e.message);
+    await instance.slack_bot.chat.postMessage({ text: "alive test error : " + e.message, channel: "#errorLog" });
   }
 }
 
@@ -860,6 +862,64 @@ Robot.prototype.localLog = async function () {
   }
 }
 
+Robot.prototype.aliveLog = async function () {
+  const instance = this;
+  const { pureServer, shellExec, shellLink, fileSystem, setQueue, requestSystem, dateToString } = this.mother;
+  try {
+    const targets = [
+      { name: "home", host: instance.address.homeinfo.ghost.host },
+      { name: "office", host: instance.address.officeinfo.ghost.host },
+      { name: "python", host: instance.address.pythoninfo.host },
+      { name: "log", host: instance.address.testinfo.host },
+    ]
+    const robotPort = 3000;
+    const pathConst = "/disk";
+    const protocol = "https:";
+    const PureServer = pureServer("class");
+    const app = new PureServer();
+    let response;
+    let intervalFunc;
+
+    app.get("/", async (req, res) => {
+      try {
+        res.send(JSON.stringify({ message: "It works!" }));
+      } catch (e) {
+        console.log(e);
+      }
+    });
+
+    intervalFunc = async () => {
+      try {
+        for (let { name, host } of targets) {
+          response = await requestSystem(protocol + "//" + host + ":" + String(robotPort) + pathConst);
+          console.log(response.data.disk);
+          if (response.data.disk[2] < 100000) {
+            await instance.slack_bot.chat.postMessage({ text: name + " " + "disk warning", channel: "#error_log" });
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    intervalFunc();
+    setInterval(intervalFunc, 2 * 60 * 60 * 1000);
+    await instance.aliveTest();
+    setInterval(async () => {
+      try {
+        await instance.aliveTest();
+      } catch (e) {
+        console.log(e);
+      }
+    }, 30 * 60 * 1000);
+
+    pureServer("listen", app, 3000);
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.arpScan = async function () {
   const instance = this;
   const address = this.address;
@@ -1317,6 +1377,13 @@ const MENU = {
           console.log(e);
         }
       }, 30 * 60 * 1000);
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  aliveLog: async function () {
+    try {
+      await robot.aliveLog();
     } catch (e) {
       console.log(e);
     }
