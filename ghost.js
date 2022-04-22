@@ -2246,6 +2246,10 @@ Ghost.prototype.ghostRouter = function (needs) {
         }
         command += `cd ${shellLink(process.env.HOME + "/" + tempFolderName)};zip -r ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)} ./*;cd ${shellLink(currentFolder)}`;
         shellExec(command).then(() => {
+          return googleDrive.upload_inPython(targetFolder, process.env.HOME + "/" + tempFolderName + "/" + shareName);
+        }).then((zipId) => {
+
+          return messageSend({ text: zipId, channel: "#error_log" });
 
           // zipId = await googleDrive.upload_inPython(targetFolder, `${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)}`);
           // zipLink = await googleDrive.read_webView_inPython(zipId);
@@ -2263,7 +2267,7 @@ Ghost.prototype.ghostRouter = function (needs) {
           // }, future);
 
 
-        }).catch((err) => { console.log(err); })
+        }).catch((err) => { messageSend({ text: err.message, channel: "#error_log" }).catch((err) => { console.log(err); }) });
         res.send(JSON.stringify({ message: "will do" }));
       } catch (e) {
         res.send(JSON.stringify({ message: "error : " + e.message }));
