@@ -2,6 +2,7 @@ const Robot = function () {
   const Mother = require(process.cwd() + "/apps/mother.js");
   const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
   const ADDRESS = require(process.cwd() + "/apps/infoObj.js");
+  const { WebClient } = require("@slack/web-api");
   this.mother = new Mother();
   this.back = new BackMaker();
   this.address = ADDRESS;
