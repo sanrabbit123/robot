@@ -2232,9 +2232,9 @@ Ghost.prototype.ghostRouter = function (needs) {
         future.setHours(future.getHours() + 3);
 
         if (homeFolder.includes(tempFolderName)) {
-          shell.exec(`rm -rf ${shellLink(process.env.HOME + "/" + tempFolderName)}`);
+          await shellExec(`rm -rf ${shellLink(process.env.HOME + "/" + tempFolderName)}`);
         }
-        shell.exec(`mkdir ${shellLink(process.env.HOME + "/" + tempFolderName)}`);
+        await shellExec(`mkdir ${shellLink(process.env.HOME + "/" + tempFolderName)}`);
         shareName = "delivery_" + String((new Date()).valueOf()) + String(Math.round(Math.random() * 10000)) + "_" + dateToString(new Date()).slice(2).replace(/\-/gi, '') + ".zip";
         command = "";
         for (let { absolute, type } of files) {
@@ -2245,26 +2245,25 @@ Ghost.prototype.ghostRouter = function (needs) {
           }
         }
         command += `cd ${shellLink(process.env.HOME + "/" + tempFolderName)};zip -r ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)} ./*;cd ${shellLink(currentFolder)}`;
-        shell.exec(command, { async: true }, async (code, stdout, stderr) => {
-          try {
-            zipId = await googleDrive.upload_inPython(targetFolder, `${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)}`);
-            zipLink = await googleDrive.read_webView_inPython(zipId);
-            shell.exec(`rm -rf ${shellLink(process.env.HOME + "/" + tempFolderName)}`);
-            text = who + "님! 요청하셨던 파일 배달이 완료되었습니다.\n유효 시간은 " + dateToString(future, true) + " 까지, 총 3시간입니다.\n다운로드 : " + zipLink;
-            await messageSend({ text, channel: "#file" });
-            instance.setTimer(async function () {
-              try {
-                const GoogleDrive = require(process.cwd() + "/apps/googleAPIs/googleDrive.js");
-                const googleDrive = new GoogleDrive();
-                await googleDrive.delete_inPython(zipLink);
-              } catch (e) {
-                console.log(e);
-              }
-            }, future);
-          } catch (e) {
-            console.log(e);
-          }
-        });
+        shellExec(command).then(() => {
+
+          // zipId = await googleDrive.upload_inPython(targetFolder, `${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)}`);
+          // zipLink = await googleDrive.read_webView_inPython(zipId);
+          // shell.exec(`rm -rf ${shellLink(process.env.HOME + "/" + tempFolderName)}`);
+          // text = who + "님! 요청하셨던 파일 배달이 완료되었습니다.\n유효 시간은 " + dateToString(future, true) + " 까지, 총 3시간입니다.\n다운로드 : " + zipLink;
+          // await messageSend({ text, channel: "#file" });
+          // instance.setTimer(async function () {
+          //   try {
+          //     const GoogleDrive = require(process.cwd() + "/apps/googleAPIs/googleDrive.js");
+          //     const googleDrive = new GoogleDrive();
+          //     await googleDrive.delete_inPython(zipLink);
+          //   } catch (e) {
+          //     console.log(e);
+          //   }
+          // }, future);
+
+
+        }).catch((err) => { console.log(err); })
         res.send(JSON.stringify({ message: "will do" }));
       } catch (e) {
         res.send(JSON.stringify({ message: "error : " + e.message }));
