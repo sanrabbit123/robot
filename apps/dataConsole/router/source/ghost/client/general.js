@@ -236,7 +236,7 @@ GeneralJs.prototype.setNavigator = function (subTitle, blackMode = true, name) {
       width: String(100) + '%',
       top: String(0),
       left: String(0),
-      zIndex: String(1),
+      zIndex: String(100),
     }
   });
 
