@@ -609,7 +609,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   subTitleSize = <%% 12, 12, 12, 12, 2.5 %%>;
 
   subTitleOverWidthRatio = <%% 2, 2, 2, 2, 2 %%>;
-  tagTongOverWidthRatio = <%% 1.1, 1.1, 1.1, 1.1, 1.5 %%>;
+  tagTongOverWidthRatio = <%% 2, 2, 2, 2, 2 %%>;
 
   tagTongMarginTop = <%% 11, 11, 11, 11, 1.5 %%>;
 

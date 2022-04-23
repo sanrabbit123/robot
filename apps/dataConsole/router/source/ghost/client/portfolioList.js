@@ -532,7 +532,7 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null)
   seroSliceLimit = <%% 30, 30, 30, 30, 30 %%>;
 
   tagTongMarginTop = <%% 11, 11, 10, 8, 1.3 %%>;
-  tagTongWidthRatio = <%% 1.1, 1.3, 1.3, 1.3, 1.5 %%>;
+  tagTongWidthRatio = <%% 2, 2, 2, 2, 2 %%>;
 
   tagSize = <%% 12, 10, 10, 9, 2 %%>;
   tagWeight = <%% 500, 500, 500, 500, 500 %%>;
