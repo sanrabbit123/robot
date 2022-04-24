@@ -5029,39 +5029,6 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
   contents3GrayChildrenWeight = <%% 600, 600, 600, 600, 600 %%>;
   contents3GrayChildrenPaddingTop = <%% 3, 3, 3, 3, 3 %%>;
 
-  contents0 = [
-    {
-      title: "전문 지식이 없어 난감하다면?",
-      description: "시공 전 발생할 수 있는 <b%리스크를%b>\n<b%미리 체크하고 보완%b>해 드려요.",
-      image: "contents00.jpg",
-    },
-    {
-      title: "취향이 명확하지 않다면?",
-      description: "상담을 통해 <b%니즈와 취향을 파악%b>해\n컨셉의 방향성을 잡아드려요.",
-      image: "contents01.jpg",
-    },
-    {
-      title: "결정이 어려운 성향이라면?",
-      description: "선택의 폭을 좁혀드리고\n<b%결정의 순간 명확한 조언%b>을 드려요.",
-      image: "contents02.jpg",
-    },
-    {
-      title: "부족한 감각은?",
-      description: "<b%전문가의 아이디어와 감각%b>으로\n특색 있는 집을 완성합니다.",
-      image: "contents03.jpg",
-    },
-    {
-      title: "예산을 잘 쓰고 싶다면?",
-      description: "전체 <b%예산을 우선순위에 따라 분배%b>\n해 합리적으로 운영해드려요.",
-      image: "contents04.jpg",
-    },
-    {
-      title: "시간과 에너지가 부족할 땐?",
-      description: "일상 생활에 집중하실 수 있도록\n<b%전문가가 대신 고민%b>합니다.",
-      image: "contents05.jpg",
-    },
-  ];
-
   contents1 = [
     {
       title: "디자이너 역할",
@@ -5144,16 +5111,6 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
           (<&& "시공 없이 가구와 소품 등으로\n진행하는 <b%효율적 인테리어%b>" | "시공 없이 가구, 소품으로\n진행하는 <b%효율적 인테리어%b>" | "시공 없이 가구, 소품으로\n진행하는 <b%효율적 인테리어%b>" | "시공 없이 가구, 소품으로\n진행하는 <b%효율적 인테리어%b>" | "시공 없이 가구, 소품으로\n진행하는 <b%효율적 인테리어%b>" &&>),
           "시공 없음\n약 30일 소요"
         ],
-        children: [
-          "현장 실측",
-          "현장 미팅",
-          "예산 계획",
-          "디자인 컨설팅",
-          "전체 컨셉 디자인",
-          "공간 배치 제안",
-          "기존 제품 활용 제안",
-          "구매 제품 추천",
-        ]
       },
       {
         title: "홈스타일링",
@@ -5161,23 +5118,6 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
           (<&& "부분 시공과 홈퍼니싱으로 필요\n부분만 진행하는 <b%스마트 인테리어%b>" | "부분 시공과 홈퍼니싱으로\n진행하는 <b%스마트 인테리어%b>" | "부분 시공과 홈퍼니싱으로\n진행하는 <b%스마트 인테리어%b>" | "부분 시공과 홈퍼니싱으로\n진행하는 <b%스마트 인테리어%b>" | "부분 시공과 홈퍼니싱으로\n진행하는 <b%스마트 인테리어%b>" &&>),
           "5개 공정 이하의 시공\n약 45일 소요"
         ],
-        children: [
-          "현장 실측",
-          "현장 미팅",
-          "예산 계획",
-          "디자인 컨설팅",
-          "전체 컨셉 디자인",
-          "공간 배치 제안",
-          "시공 견적",
-          "제작 가구 도면",
-          "5개 공정 이내 시공 디자인",
-          "공사 일정표 제공",
-          "시공사 지원",
-          "디자인 감리",
-          "기존 제품 활용 제안",
-          "구매 제품 추천",
-          "제작 패브릭",
-        ]
       },
       {
         title: "토탈 스타일링",
@@ -5185,24 +5125,6 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
           (<&& "시공부터 스타일링까지 완벽하게\n진행하는 <b%원스탑 인테리어%b>" | "시공부터 스타일링까지\n진행하는 <b%원스탑 인테리어%b>" | "시공부터 스타일링까지\n진행하는 <b%원스탑 인테리어%b>" | "시공부터 스타일링까지\n진행하는 <b%원스탑 인테리어%b>" | "시공부터 스타일링까지\n진행하는 <b%원스탑 인테리어%b>" &&>),
           "5개 초과 공정 전체 시공\n약 60일 소요"
         ],
-        children: [
-          "현장 실측",
-          "현장 미팅",
-          "예산 계획",
-          "디자인 컨설팅",
-          "전체 컨셉 디자인",
-          "공간 배치 제안",
-          "시공 견적",
-          "제작 가구 도면",
-          "5개 공정 초과 시공 디자인",
-          "공사 일정표 제공",
-          "시공사 지원",
-          "디자인 감리",
-          "기존 제품 활용 제안",
-          "구매 제품 추천",
-          "제작 패브릭",
-          "제작 가구 설계",
-        ]
       },
       {
         title: "엑스트라 스타일링",
@@ -5210,32 +5132,13 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
           (<&& "디자인 토탈 시공과 <b%프리미엄%b>\n<b%스타일링으로 진행%b>하는 인테리어" | "토탈 시공과 <b%프리미엄 스타%b>\n<b%일링으로 진행%b>하는 인테리어" | "토탈 시공과 <b%프리미엄 스타%b>\n<b%일링으로 진행%b>하는 인테리어" | "토탈 시공과 <b%프리미엄 스타%b>\n<b%일링으로 진행%b>하는 인테리어" | "토탈 시공과 <b%프리미엄 스타%b>\n<b%일링으로 진행%b>하는 인테리어" &&>),
           "5개 초과 공정 전체 시공\n약 75일 소요"
         ],
-        children: [
-          "현장 실측",
-          "현장 미팅",
-          "예산 계획",
-          "디자인 컨설팅",
-          "전체 컨셉 디자인",
-          "공간 배치 제안",
-          "시공 견적",
-          "제작 가구 도면",
-          "5개 공정 초과 시공 디자인",
-          "공사 일정표 제공",
-          "시공사 지원",
-          "디자인 감리",
-          "기존 제품 활용 제안",
-          "구매 제품 추천",
-          "제작 패브릭",
-          "제작 가구 설계",
-          "오리지널 가구 제안",
-        ]
       },
     ],
   };
 
-  // box 0 ---------------------------------------------------------------------------------------------------
+  // box 3 ---------------------------------------------------------------------------------------------------
 
-  whiteBlock0 = createNode({
+  whiteBlock3 = createNode({
     mother: baseTong,
     style: {
       position: "relative",
@@ -5244,7 +5147,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
       background: colorChip.white,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
       marginBottom: String(blockMarginBottom) + ea,
-      height: String(height0) + ea,
+      height: String(height3) + ea,
       paddingTop: String(margin) + ea,
       paddingBottom: String(margin) + ea,
       paddingLeft: String(margin) + ea,
@@ -5252,8 +5155,8 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
     }
   });
 
-  leftBox0 = createNode({
-    mother: whiteBlock0,
+  leftBox3 = createNode({
+    mother: whiteBlock3,
     style: {
       display: big ? "inline-block" : "block",
       position: "relative",
@@ -5264,8 +5167,8 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
   });
 
   createNode({
-    mother: leftBox0,
-    text: big ? "이젠 디자이너와\n함께 진행하세요!" : "이젠 디자이너와 함께 진행하세요!",
+    mother: leftBox3,
+    text: big ? "고객님께 추천하는\n스타일링 유형" : "고객님께 추천하는 스타일링 유형",
     style: {
       display: "inline-block",
       position: "relative",
@@ -5282,8 +5185,8 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
     }
   });
 
-  rightBox0 = createNode({
-    mother: whiteBlock0,
+  rightBox3 = createNode({
+    mother: whiteBlock3,
     style: {
       display: big ? "inline-block" : "block",
       position: "relative",
@@ -5294,78 +5197,284 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
     }
   });
 
-  for (let i = 0; i < contents0.length; i++) {
-    title = contents0[i].title;
-    description = contents0[i].description;
-    image = contents0[i].image;
+  contents3Box = createNode({
+    mother: rightBox3,
+    style: {
+      display: "block",
+      width: String(100) + '%',
+      position: "relative",
+    }
+  });
 
-    boxTong = createNode({
-      mother: rightBox0,
+  for (let i = 0; i < contents3.children.length; i++) {
+    contents3BoxFactor = createNode({
+      mother: contents3Box,
       style: {
         display: "inline-block",
-        width: "calc(calc(100% - " + String(boxMargin * (contents0Columns - 1)) + ea + ") / " + String(contents0Columns) + ")",
-        marginRight: String(i % contents0Columns === contents0Columns - 1 ? 0 : boxMargin) + ea,
-        marginBottom: String(boxMargin) + ea,
-        paddingBottom: String(boxTongPaddingBottom) + ea,
+        width: "calc(calc(100% - " + String(contents3BoxBetween * (contents3.children.length - 1)) + ea + ") / " + String(contents3.children.length) + ")",
+        marginRight: String(i === contents3.children.length - 1 ? 0 : contents3BoxBetween) + ea,
+        verticalAlign: "top",
+      }
+    })
+
+    createNode({
+      mother: contents3BoxFactor,
+      style: {
+        display: "flex",
+        position: "relative",
+        justifyContent: "center",
+        alignItems: "center",
+        textAlign: "center",
+        borderRadius: String(5) + "px",
+        background: colorChip.liteGreen,
+        height: String(contents3GreenHeight) + ea,
+        marginBottom: String(contents3BoxBetween) + ea,
+      },
+      children: [
+        {
+          text: contents3.children[i].title,
+          style: {
+            position: "relative",
+            top: String(contents3GreenTextTop) + ea,
+            fontSize: String(contents3GreenSize) + ea,
+            fontWeight: String(contents3GreenWeight),
+            color: colorChip.black,
+          }
+        }
+      ]
+    })
+
+    contents3BoxGray = createNode({
+      mother: contents3BoxFactor,
+      style: {
+        display: "block",
+        position: "relative",
+        textAlign: "center",
+        borderRadius: String(5) + "px",
+        background: colorChip.gray1,
+        paddingTop: String(contents3GrayInnerPadding) + ea,
+        paddingBottom: String(contents3GrayInnerPadding) + ea,
       }
     });
 
     createNode({
-      mother: boxTong,
+      mother: contents3BoxGray,
+      text: contents3.children[i].description[0],
       style: {
         display: "block",
-        position: "relative",
-        width: String(100) + '%',
-        height: String(contents0PhotoHeight) + ea,
-        backgroundSize: "102% auto",
-        backgroundPosition: "50% 50%",
-        backgroundImage: "url('" + StyleCurationJs.binaryPath + "/" + image + "')",
+        textAlign: "center",
+        fontSize: String(contents3GrayWhiteSize) + ea,
+        fontWeight: String(contents3GrayWhiteWeight),
+        color: colorChip.black,
+        lineHeight: String(contents3GrayWhiteLineHeight),
+        background: colorChip.white,
         borderRadius: String(5) + "px",
+        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+        marginLeft: String(contents3GrayInnerPadding) + ea,
+        width: withOut(contents3GrayInnerPadding * 2, ea),
+        paddingTop: String(contents3GrayWhitePaddingTop) + ea,
+        paddingBottom: String(contents3GrayWhitePaddingBottom) + ea,
+        marginBottom: String(contents3GrayInnerPadding) + ea,
       },
-      children: [
-        {
-          text: title,
-          style: {
-            display: "inline-block",
-            position: "absolute",
-            background: colorChip.white,
-            paddingLeft: String(contents0PaddingLeft) + ea,
-            paddingRight: String(contents0PaddingLeft) + ea,
-            paddingTop: String(contents0PaddingTop) + ea,
-            paddingBottom: String(contents0PaddingBottom) + ea,
-            fontSize: String(contents0TitleSize) + ea,
-            fontWeight: String(contents0TitleWeight),
-            color: colorChip.green,
-            bottom: String(contents0TitleWhiteBoxMargin) + ea,
-            left: String(contents0TitleWhiteBoxMargin) + ea,
-            borderRadius: String(5) + "px",
-            opacity: String(0.95),
-          }
-        }
-      ]
+      bold: {
+        fontWeight: String(contents3GrayWhiteWeightBold),
+        color: colorChip.black,
+      }
     });
 
     createNode({
-      mother: boxTong,
-      text: description,
+      mother: contents3BoxGray,
+      text: contents3.children[i].description[1],
       style: {
         display: "block",
-        fontSize: String(contents0DescriptionSize) + ea,
-        fontWeight: String(contents0DescriptionWeight),
-        color: colorChip.black,
         textAlign: "center",
-        lineHeight: String(contents0DescriptionLineHeight),
-        marginTop: String(contents0DescriptionMarginTop) + ea,
+        fontSize: String(contents3GrayWhiteSize) + ea,
+        fontWeight: String(contents3GrayWhiteWeight),
+        color: colorChip.green,
+        lineHeight: String(contents3GrayWhiteLineHeight),
+        background: colorChip.white,
+        borderRadius: String(5) + "px",
+        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+        marginLeft: String(contents3GrayInnerPadding) + ea,
+        width: withOut(contents3GrayInnerPadding * 2, ea),
+        paddingTop: String(contents3GrayWhitePaddingTop) + ea,
+        paddingBottom: String(contents3GrayWhitePaddingBottom) + ea,
       },
       bold: {
-        fontWeight: String(contents0DescriptionWeightBold),
-        color: colorChip.black,
+        fontWeight: String(contents3GrayWhiteWeightBold),
+        color: colorChip.green,
       }
     });
 
   }
 
-  // box 1 ---------------------------------------------------------------------------------------------------
+  // box 2 ---------------------------------------------------------------------------------------------------
+
+  whiteBlock2 = createNode({
+    mother: baseTong,
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 3) + "px",
+      width: withOut(margin * 2, ea),
+      background: colorChip.white,
+      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      marginBottom: String(blockMarginBottom) + ea,
+      height: String(height2) + ea,
+      paddingTop: String(margin) + ea,
+      paddingBottom: String(margin) + ea,
+      paddingLeft: String(margin) + ea,
+      paddingRight: String(margin) + ea,
+    }
+  });
+
+  leftBox2 = createNode({
+    mother: whiteBlock2,
+    style: {
+      display: big ? "inline-block" : "block",
+      position: "relative",
+      width: big ? String(leftBoxWidth) + ea : String(100) + '%',
+      height: big ? String(100) + '%' : "",
+      verticalAlign: "top",
+    }
+  });
+
+  createNode({
+    mother: leftBox2,
+    text: big ? "인테리어 예산의\n4가지 분류" : "인테리어 예산의 4가지 분류",
+    style: {
+      display: "inline-block",
+      position: "relative",
+      fontSize: String(titleFont) + ea,
+      fontWeight: String(titleFontWeight),
+      wordSpacing: String(wordSpacing) + "px",
+      top: String(titleVisualTop) + ea,
+      marginLeft: big ? String(titleLeft) + ea : "",
+      marginBottom: big ? "" : String(titleMarginBottom) + ea,
+      color: colorChip.black,
+      width: big ? "" : String(100) + '%',
+      textAlign: desktop ? "" : "center",
+      lineHeight: String(lineHeight),
+    }
+  });
+
+  rightBox2 = createNode({
+    mother: whiteBlock2,
+    style: {
+      display: big ? "inline-block" : "block",
+      position: "relative",
+      width: big ? withOut(leftBoxWidth, ea) : String(100) + '%',
+      height: String(100) + '%',
+      verticalAlign: "top",
+      paddingTop: String(rightBoxPaddingTopFontVersion) + ea,
+    }
+  });
+
+  createNode({
+    mother: rightBox2,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      textAlign: "center",
+      height: String(contents2LineBoxHeight) + ea,
+    },
+    children: [
+      {
+        style: {
+          position: "absolute",
+          display: "block",
+          width: String(100) + '%',
+          top: String(contents2LineTop) + ea,
+          height: withOut(contents2LineTop, ea),
+          left: String(0),
+          border: String(1) + "px solid " + colorChip.gray4,
+          borderTopLeftRadius: String(contents2LineRadius) + "px",
+          borderTopRightRadius: String(contents2LineRadius) + "px",
+          borderBottom: String(0),
+          boxSizing: "border-box",
+        }
+      },
+      {
+        text: contents2.title,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          paddingTop: String(contents2LineTitlePaddingTop) + ea,
+          paddingLeft: String(contents2LineTitlePaddingLeft) + ea,
+          paddingRight: String(contents2LineTitlePaddingLeft) + ea,
+          paddingBottom: String(contents2LineTitlePaddingBottom) + ea,
+          fontSize: String(contents2LineTitleSize) + ea,
+          fontWeight: String(contents2LineTitleWeight),
+          color: colorChip.black,
+          background: colorChip.gray1,
+          borderRadius: String(5) + "px",
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: rightBox2,
+    mode: "img",
+    attribute: { src: StyleCurationJs.binaryPath + "/" + contents2.image },
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      marginTop: String(contents2ImageTop) + ea,
+    }
+  });
+
+  contents2Box = createNode({
+    mother: rightBox2,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      marginTop: String(contents2BoxMarginTop) + ea,
+    }
+  });
+
+  for (let i = 0; i < contents2.children.length; i++) {
+    createNode({
+      mother: contents2Box,
+      style: {
+        display: "inline-block",
+        width: String(contents2BoxFactorWidth) + ea,
+        height: String(contents2BoxFactorHeight) + ea,
+        marginLeft: String(contents2BoxFactorMarginLeftArr[i]) + ea
+      },
+      children: [
+        {
+          text: contents2.children[i].title,
+          style: {
+            display: "block",
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(contents2TitleSize) + ea,
+            fontWeight: String(contents2TitleWeight),
+            color: i === 0 ? colorChip.green : colorChip.black,
+          }
+        },
+        {
+          text: contents2.children[i].description,
+          style: {
+            display: "block",
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(contents2DescriptionSize) + ea,
+            fontWeight: String(contents2DescriptionWeight),
+            color: colorChip.black,
+            marginTop: String(contents2DescriptionMarginTop) + ea,
+            lineHeight: String(contents2DescriptionLineHeight),
+          }
+        },
+      ]
+    });
+
+  }
+
+  // box 0 ---------------------------------------------------------------------------------------------------
 
   whiteBlock1 = createNode({
     mother: baseTong,
@@ -5589,408 +5698,6 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
         lineHeight: String(contents1UpBoxWhiteLineHeight),
       }
     })
-
-  }
-
-  // box 2 ---------------------------------------------------------------------------------------------------
-
-  whiteBlock2 = createNode({
-    mother: baseTong,
-    style: {
-      position: "relative",
-      borderRadius: String(desktop ? 8 : 3) + "px",
-      width: withOut(margin * 2, ea),
-      background: colorChip.white,
-      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
-      marginBottom: String(blockMarginBottom) + ea,
-      height: String(height2) + ea,
-      paddingTop: String(margin) + ea,
-      paddingBottom: String(margin) + ea,
-      paddingLeft: String(margin) + ea,
-      paddingRight: String(margin) + ea,
-    }
-  });
-
-  leftBox2 = createNode({
-    mother: whiteBlock2,
-    style: {
-      display: big ? "inline-block" : "block",
-      position: "relative",
-      width: big ? String(leftBoxWidth) + ea : String(100) + '%',
-      height: big ? String(100) + '%' : "",
-      verticalAlign: "top",
-    }
-  });
-
-  createNode({
-    mother: leftBox2,
-    text: big ? "인테리어 예산의\n4가지 분류" : "인테리어 예산의 4가지 분류",
-    style: {
-      display: "inline-block",
-      position: "relative",
-      fontSize: String(titleFont) + ea,
-      fontWeight: String(titleFontWeight),
-      wordSpacing: String(wordSpacing) + "px",
-      top: String(titleVisualTop) + ea,
-      marginLeft: big ? String(titleLeft) + ea : "",
-      marginBottom: big ? "" : String(titleMarginBottom) + ea,
-      color: colorChip.black,
-      width: big ? "" : String(100) + '%',
-      textAlign: desktop ? "" : "center",
-      lineHeight: String(lineHeight),
-    }
-  });
-
-  rightBox2 = createNode({
-    mother: whiteBlock2,
-    style: {
-      display: big ? "inline-block" : "block",
-      position: "relative",
-      width: big ? withOut(leftBoxWidth, ea) : String(100) + '%',
-      height: String(100) + '%',
-      verticalAlign: "top",
-      paddingTop: String(rightBoxPaddingTopFontVersion) + ea,
-    }
-  });
-
-  createNode({
-    mother: rightBox2,
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(100) + '%',
-      textAlign: "center",
-      height: String(contents2LineBoxHeight) + ea,
-    },
-    children: [
-      {
-        style: {
-          position: "absolute",
-          display: "block",
-          width: String(100) + '%',
-          top: String(contents2LineTop) + ea,
-          height: withOut(contents2LineTop, ea),
-          left: String(0),
-          border: String(1) + "px solid " + colorChip.gray4,
-          borderTopLeftRadius: String(contents2LineRadius) + "px",
-          borderTopRightRadius: String(contents2LineRadius) + "px",
-          borderBottom: String(0),
-          boxSizing: "border-box",
-        }
-      },
-      {
-        text: contents2.title,
-        style: {
-          display: "inline-block",
-          position: "relative",
-          paddingTop: String(contents2LineTitlePaddingTop) + ea,
-          paddingLeft: String(contents2LineTitlePaddingLeft) + ea,
-          paddingRight: String(contents2LineTitlePaddingLeft) + ea,
-          paddingBottom: String(contents2LineTitlePaddingBottom) + ea,
-          fontSize: String(contents2LineTitleSize) + ea,
-          fontWeight: String(contents2LineTitleWeight),
-          color: colorChip.black,
-          background: colorChip.gray1,
-          borderRadius: String(5) + "px",
-        }
-      }
-    ]
-  });
-
-  createNode({
-    mother: rightBox2,
-    mode: "img",
-    attribute: { src: StyleCurationJs.binaryPath + "/" + contents2.image },
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(100) + '%',
-      marginTop: String(contents2ImageTop) + ea,
-    }
-  });
-
-  contents2Box = createNode({
-    mother: rightBox2,
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(100) + '%',
-      marginTop: String(contents2BoxMarginTop) + ea,
-    }
-  });
-
-  for (let i = 0; i < contents2.children.length; i++) {
-    createNode({
-      mother: contents2Box,
-      style: {
-        display: "inline-block",
-        width: String(contents2BoxFactorWidth) + ea,
-        height: String(contents2BoxFactorHeight) + ea,
-        marginLeft: String(contents2BoxFactorMarginLeftArr[i]) + ea
-      },
-      children: [
-        {
-          text: contents2.children[i].title,
-          style: {
-            display: "block",
-            width: String(100) + '%',
-            textAlign: "center",
-            fontSize: String(contents2TitleSize) + ea,
-            fontWeight: String(contents2TitleWeight),
-            color: i === 0 ? colorChip.green : colorChip.black,
-          }
-        },
-        {
-          text: contents2.children[i].description,
-          style: {
-            display: "block",
-            width: String(100) + '%',
-            textAlign: "center",
-            fontSize: String(contents2DescriptionSize) + ea,
-            fontWeight: String(contents2DescriptionWeight),
-            color: colorChip.black,
-            marginTop: String(contents2DescriptionMarginTop) + ea,
-            lineHeight: String(contents2DescriptionLineHeight),
-          }
-        },
-      ]
-    });
-
-  }
-
-  // box 3 ---------------------------------------------------------------------------------------------------
-
-  whiteBlock3 = createNode({
-    mother: baseTong,
-    style: {
-      position: "relative",
-      borderRadius: String(desktop ? 8 : 3) + "px",
-      width: withOut(margin * 2, ea),
-      background: colorChip.white,
-      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
-      marginBottom: String(blockMarginBottom) + ea,
-      height: String(height3) + ea,
-      paddingTop: String(margin) + ea,
-      paddingBottom: String(margin) + ea,
-      paddingLeft: String(margin) + ea,
-      paddingRight: String(margin) + ea,
-    }
-  });
-
-  leftBox3 = createNode({
-    mother: whiteBlock3,
-    style: {
-      display: big ? "inline-block" : "block",
-      position: "relative",
-      width: big ? String(leftBoxWidth) + ea : String(100) + '%',
-      height: big ? String(100) + '%' : "",
-      verticalAlign: "top",
-    }
-  });
-
-  createNode({
-    mother: leftBox3,
-    text: big ? "디자인 서비스의\n4가지 분류" : "디자인 서비스의 4가지 분류",
-    style: {
-      display: "inline-block",
-      position: "relative",
-      fontSize: String(titleFont) + ea,
-      fontWeight: String(titleFontWeight),
-      wordSpacing: String(wordSpacing) + "px",
-      top: String(titleVisualTop) + ea,
-      marginLeft: big ? String(titleLeft) + ea : "",
-      marginBottom: big ? "" : String(titleMarginBottom) + ea,
-      color: colorChip.black,
-      width: big ? "" : String(100) + '%',
-      textAlign: desktop ? "" : "center",
-      lineHeight: String(lineHeight),
-    }
-  });
-
-  rightBox3 = createNode({
-    mother: whiteBlock3,
-    style: {
-      display: big ? "inline-block" : "block",
-      position: "relative",
-      width: big ? withOut(leftBoxWidth, ea) : String(100) + '%',
-      height: String(100) + '%',
-      verticalAlign: "top",
-      paddingTop: String(rightBoxPaddingTopFontVersion) + ea,
-    }
-  });
-
-  createNode({
-    mother: rightBox3,
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(100) + '%',
-      textAlign: "center",
-      height: String(contents2LineBoxHeight) + ea,
-    },
-    children: [
-      {
-        style: {
-          position: "absolute",
-          display: "block",
-          width: String(100) + '%',
-          top: String(contents2LineTop) + ea,
-          height: withOut(contents2LineTop, ea),
-          left: String(0),
-          border: String(1) + "px solid " + colorChip.gray4,
-          borderTopLeftRadius: String(contents2LineRadius) + "px",
-          borderTopRightRadius: String(contents2LineRadius) + "px",
-          borderBottom: String(0),
-          boxSizing: "border-box",
-        }
-      },
-      {
-        text: contents3.title,
-        style: {
-          display: "inline-block",
-          position: "relative",
-          paddingTop: String(contents2LineTitlePaddingTop) + ea,
-          paddingLeft: String(contents2LineTitlePaddingLeft) + ea,
-          paddingRight: String(contents2LineTitlePaddingLeft) + ea,
-          paddingBottom: String(contents2LineTitlePaddingBottom) + ea,
-          fontSize: String(contents2LineTitleSize) + ea,
-          fontWeight: String(contents2LineTitleWeight),
-          color: colorChip.black,
-          background: colorChip.gray1,
-          borderRadius: String(5) + "px",
-        }
-      }
-    ]
-  });
-
-  contents3Box = createNode({
-    mother: rightBox3,
-    style: {
-      display: "block",
-      width: String(100) + '%',
-      position: "relative",
-      marginTop: String(contents3BoxMarginTop) + ea,
-    }
-  });
-
-  for (let i = 0; i < contents3.children.length; i++) {
-    contents3BoxFactor = createNode({
-      mother: contents3Box,
-      style: {
-        display: "inline-block",
-        width: "calc(calc(100% - " + String(contents3BoxBetween * (contents3.children.length - 1)) + ea + ") / " + String(contents3.children.length) + ")",
-        marginRight: String(i === contents3.children.length - 1 ? 0 : contents3BoxBetween) + ea,
-        verticalAlign: "top",
-      }
-    })
-
-    createNode({
-      mother: contents3BoxFactor,
-      style: {
-        display: "flex",
-        position: "relative",
-        justifyContent: "center",
-        alignItems: "center",
-        textAlign: "center",
-        borderRadius: String(5) + "px",
-        background: colorChip.liteGreen,
-        height: String(contents3GreenHeight) + ea,
-        marginBottom: String(contents3BoxBetween) + ea,
-      },
-      children: [
-        {
-          text: contents3.children[i].title,
-          style: {
-            position: "relative",
-            top: String(contents3GreenTextTop) + ea,
-            fontSize: String(contents3GreenSize) + ea,
-            fontWeight: String(contents3GreenWeight),
-            color: colorChip.black,
-          }
-        }
-      ]
-    })
-
-    contents3BoxGray = createNode({
-      mother: contents3BoxFactor,
-      style: {
-        display: "block",
-        position: "relative",
-        textAlign: "center",
-        borderRadius: String(5) + "px",
-        background: colorChip.gray1,
-        height: String(contents3GrayHeight) + ea,
-        paddingTop: String(contents3GrayInnerPadding) + ea,
-      }
-    });
-
-    createNode({
-      mother: contents3BoxGray,
-      text: contents3.children[i].description[0],
-      style: {
-        display: "block",
-        textAlign: "center",
-        fontSize: String(contents3GrayWhiteSize) + ea,
-        fontWeight: String(contents3GrayWhiteWeight),
-        color: colorChip.black,
-        lineHeight: String(contents3GrayWhiteLineHeight),
-        background: colorChip.white,
-        borderRadius: String(5) + "px",
-        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-        marginLeft: String(contents3GrayInnerPadding) + ea,
-        width: withOut(contents3GrayInnerPadding * 2, ea),
-        paddingTop: String(contents3GrayWhitePaddingTop) + ea,
-        paddingBottom: String(contents3GrayWhitePaddingBottom) + ea,
-        marginBottom: String(contents3GrayInnerPadding) + ea,
-      },
-      bold: {
-        fontWeight: String(contents3GrayWhiteWeightBold),
-        color: colorChip.black,
-      }
-    });
-
-    createNode({
-      mother: contents3BoxGray,
-      text: contents3.children[i].description[1],
-      style: {
-        display: "block",
-        textAlign: "center",
-        fontSize: String(contents3GrayWhiteSize) + ea,
-        fontWeight: String(contents3GrayWhiteWeight),
-        color: colorChip.green,
-        lineHeight: String(contents3GrayWhiteLineHeight),
-        background: colorChip.white,
-        borderRadius: String(5) + "px",
-        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-        marginLeft: String(contents3GrayInnerPadding) + ea,
-        width: withOut(contents3GrayInnerPadding * 2, ea),
-        paddingTop: String(contents3GrayWhitePaddingTop) + ea,
-        paddingBottom: String(contents3GrayWhitePaddingBottom) + ea,
-        marginBottom: String(contents3GrayChildrenMarginTop) + ea,
-      },
-      bold: {
-        fontWeight: String(contents3GrayWhiteWeightBold),
-        color: colorChip.green,
-      }
-    });
-
-    for (let item of contents3.children[i].children) {
-      createNode({
-        mother: contents3BoxGray,
-        text: item,
-        style: {
-          display: "block",
-          textAlign: "center",
-          fontSize: String(contents3GrayWhiteSize) + ea,
-          fontWeight: String(contents3GrayChildrenWeight),
-          color: colorChip.black,
-          lineHeight: String(contents3GrayWhiteLineHeight),
-          width: withOut(0, ea),
-          paddingTop: String(contents3GrayChildrenPaddingTop) + ea,
-          paddingBottom: String(contents3GrayChildrenPaddingTop) + ea,
-        },
-      });
-    }
 
   }
 
