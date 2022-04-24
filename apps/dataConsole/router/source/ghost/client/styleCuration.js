@@ -4898,6 +4898,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
   let contents3GrayChildrenMarginTop;
   let contents3GrayChildrenWeight;
   let contents3GrayChildrenPaddingTop;
+  let contents3PictureHeight;
   let num;
   let titleMarginBottom;
 
@@ -5010,7 +5011,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
 
   contents3BoxMarginTop = <%% 40, 20, 20, 40, 40 %%>;
   contents3BoxBetween = <%% 12, 8, 8, 12, 12 %%>;
-  contents3GreenHeight = <%% 52, 48, 48, 52, 52 %%>;
+  contents3GreenHeight = <%% 48, 48, 48, 52, 52 %%>;
   contents3GreenTextTop = <%% -2, -1, -1, -2, -2 %%>;
   contents3GreenSize = <%% 15, 14, 14, 15, 15 %%>;
   contents3GreenWeight = <%% 600, 600, 600, 600, 600 %%>;
@@ -5028,6 +5029,8 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
   contents3GrayChildrenMarginTop = <%% 20, 15, 20, 20, 20 %%>;
   contents3GrayChildrenWeight = <%% 600, 600, 600, 600, 600 %%>;
   contents3GrayChildrenPaddingTop = <%% 3, 3, 3, 3, 3 %%>;
+
+  contents3PictureHeight = <%% 150, 150, 150, 150, 150 %%>;
 
   contents1 = [
     {
@@ -5242,6 +5245,21 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
           }
         }
       ]
+    })
+
+    createNode({
+      mother: contents3BoxFactor,
+      style: {
+        display: "flex",
+        position: "relative",
+        justifyContent: "center",
+        alignItems: "center",
+        textAlign: "center",
+        borderRadius: String(5) + "px",
+        background: colorChip.gray5,
+        height: String(contents3PictureHeight) + ea,
+        marginBottom: String(contents3BoxBetween) + ea,
+      }
     })
 
     contents3BoxGray = createNode({
