@@ -151,7 +151,7 @@ Alien.prototype.routerPatch = function (app) {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      console.log(Alien.stacks.socket.clients);
+      console.log([ ...Alien.stacks.socket.clients ]);
       res.send(JSON.stringify(Alien.stacks.socket.clients));
     } catch (e) {
       console.log(e);
@@ -230,12 +230,24 @@ Alien.prototype.wssLaunching = async function () {
     generalSocket = new WebSocket.Server({ noServer: true });
     generalSocket.on("connection", (ws) => {
       ws.on("message", (message) => {
-        const clients = generalSocket.clients;
-        for (let c of clients) {
-          if (c.readyState === WebSocket.OPEN && ws !== c) {
-            c.send(message);
+        try {
+          const { mode, data } = JSON.parse(message);
+          if (mode === "register") {
+            ws.__data__ = data;
           }
+        } catch (e) {
+
         }
+
+        // const clients = generalSocket.clients;
+        // for (let c of clients) {
+        //   if (c.readyState === WebSocket.OPEN && ws !== c) {
+        //     c.send(message);
+        //   }
+        // }
+
+
+
       });
     });
     Alien.stacks.socket = generalSocket;
