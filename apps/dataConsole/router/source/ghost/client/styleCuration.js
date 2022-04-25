@@ -4956,14 +4956,14 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
   contents0Columns = <%% 3, 3, 3, 3, 3 %%>;
 
   contents0WhitePaddingTop = <%% 26, 22, 26, 19, 26 %%>;
-  contents0WhitePaddingBottom = <%% 20, 16, 20, 15, 20 %%>;
+  contents0WhitePaddingBottom = <%% (isMac() ? 20 : 18), (isMac() ? 16 : 14), (isMac() ? 20 : 18), (isMac() ? 15 : 13), 20 %%>;
   contents0WhitePaddingLeft = <%% 30, 26, 30, 24, 30 %%>;
 
   contents0IconWidth = <%% 14, 12, 14, 12, 14 %%>;
   contents0IconMarginRight = <%% 7, 6, 7, 7, 7 %%>;
-  contents0IconTop = <%% 6, 6, 6, 6, 6 %%>;
+  contents0IconTop = <%% (isMac() ? 6 : 4), (isMac() ? 6 : 4), (isMac() ? 6 : 4), (isMac() ? 6 : 4), 6 %%>;
 
-  contents0LineTop = <%% 15, 13, 13, 12, 15 %%>;
+  contents0LineTop = <%% (isMac () ? 15 : 13), (isMac () ? 13 : 11), (isMac () ? 13 : 11), (isMac () ? 12 : 10), 15 %%>;
 
   contents0FactorMarginBottom = <%% 13, 10, 10, 8, 13 %%>;
   contents0TitlePaddingTop = <%% 30, 24, 21, 18, 30 %%>;
@@ -4978,18 +4978,18 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
   contents1UpBoxWidth = <%% 232, 197, 225, 185, 232 %%>;
   contents1UpBoxMargin = <%% 10, 8, 8, 8, 10 %%>;
   contents1UpBoxPaddingLeft = <%% 22, 18, 20, 14, 22 %%>;
-  contents1UpBoxPaddingTop = <%% 16, 14, 15, 11, 16 %%>;
+  contents1UpBoxPaddingTop = <%% (isMac() ? 16 : 17), (isMac() ? 14 : 15), (isMac() ? 15 : 16), (isMac() ? 11 : 12), 16 %%>;
 
-  contents1UpBoxCheckTop = <%% 7, 7, 7, 7, 7 %%>;
+  contents1UpBoxCheckTop = <%% (isMac() ? 7 : 5), (isMac() ? 7 : 5), (isMac() ? 7 : 5), (isMac() ? 7 : 5), 7 %%>;
   contents1UpBoxCheckWidth = <%% 11, 11, 11, 10, 11 %%>;
   contents1UpBoxCheckMarginRight = <%% 6, 6, 6, 6, 6 %%>;
 
   contents1UpBoxTitleSize = <%% 16, 15, 16, 14, 16 %%>;
   contents1UpBoxTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-  contents1UpBoxWhiteMarginTop = <%% 10, 10, 10, 8, 10 %%>;
-  contents1UpBoxWhitePaddingTop = <%% 16, 16, 16, 13, 16 %%>;
-  contents1UpBoxWhitePaddingBottom = <%% 21, 21, 21, 18, 21 %%>;
+  contents1UpBoxWhiteMarginTop = <%% (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 8 : 6), 10 %%>;
+  contents1UpBoxWhitePaddingTop = <%% (isMac() ? 16 : 17), (isMac() ? 16 : 17), (isMac() ? 16 : 17), (isMac() ? 13 : 14), 16 %%>;
+  contents1UpBoxWhitePaddingBottom = <%% (isMac() ? 21 : 19), (isMac() ? 21 : 19), (isMac() ? 21 : 19), (isMac() ? 18 : 16), 21 %%>;
 
   contents1UpBoxWhiteSize = <%% 14, 13, 14, 11, 14 %%>;
   contents1UpBoxWhiteWeight = <%% 400, 400, 400, 400, 400 %%>;
@@ -4997,13 +4997,13 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
   contents1UpBoxWhiteLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
   contents1DownBoxPaddingTop = <%% 30, 22, 24, 18, 30 %%>;
-  contents1DownBoxPaddingBottom = <%% 36, 24, 26, 21, 36 %%>;
+  contents1DownBoxPaddingBottom = <%% (isMac() ? 36 : 34), (isMac() ? 24 : 22), (isMac() ? 26 : 24), (isMac() ? 21 : 19), 36 %%>;
   contents1DownBoxPaddingMargin = <%% 10, 8, 10, 8, 10 %%>;
   contents1DownBoxPaddingLeft = <%% 36, 22, 24, 18, 36 %%>;
   contents1DownBoxCircleHeight = <%% 119, 92, 106, 87, 119 %%>;
 
-  contents1DownBoxTitleMarginTop = <%% 16, 12, 14, 12, 16 %%>;
-  contents1DownBoxDescriptionMarginTop = <%% 6, 5, 5, 4, 6 %%>;
+  contents1DownBoxTitleMarginTop = <%% (isMac() ? 17 : 18), (isMac() ? 12 : 13), (isMac() ? 14 : 15), (isMac() ? 12 : 13), 16 %%>;
+  contents1DownBoxDescriptionMarginTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), 6 %%>;
   contents1DownBoxDescriptionSize = <%% 13, 12, 13, 11, 13 %%>;
 
   contents2LineBoxHeight = <%% 45, 45, 45, 45, 45 %%>;
@@ -5031,7 +5031,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
   contents3BoxMarginTop = <%% 40, 20, 20, 40, 40 %%>;
   contents3BoxBetween = <%% 12, 8, 8, 8, 12 %%>;
   contents3GreenHeight = <%% 48, 48, 48, 40, 52 %%>;
-  contents3GreenTextTop = <%% -2, -1, -1, -2, -2 %%>;
+  contents3GreenTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -2 %%>;
   contents3GreenSize = <%% 15, 14, 14, 13, 15 %%>;
   contents3GreenWeight = <%% 600, 600, 600, 600, 600 %%>;
 
@@ -5042,8 +5042,8 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
   contents3GrayWhiteWeightBold = <%% 700, 700, 700, 700, 700 %%>;
   contents3GrayWhiteLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  contents3GrayWhitePaddingTop = <%% 17, 13, 13, 12, 17 %%>;
-  contents3GrayWhitePaddingBottom = <%% 20, 17, 17, 16, 20 %%>;
+  contents3GrayWhitePaddingTop = <%% (isMac() ? 17 : 18), (isMac() ? 13 : 14), (isMac() ? 13 : 14), (isMac() ? 12 : 13), 17 %%>;
+  contents3GrayWhitePaddingBottom = <%% (isMac() ? 20 : 18), (isMac() ? 17 : 15), (isMac() ? 17 : 15), (isMac() ? 16 : 14), 20 %%>;
 
   contents3GrayChildrenMarginTop = <%% 20, 15, 20, 20, 20 %%>;
   contents3GrayChildrenWeight = <%% 600, 600, 600, 600, 600 %%>;

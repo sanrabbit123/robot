@@ -860,7 +860,8 @@ DataConsole.prototype.connect = async function () {
             "ksstdpay.inicis.com",
             "stgmobile.inicis.com",
             "ksmobile.inicis.com",
-            "fcmobile.inicis.com"
+            "fcmobile.inicis.com",
+            "172.30.1.42:3000"
           ];
 
           __wallLogicBoo = false;
