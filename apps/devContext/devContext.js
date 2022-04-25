@@ -89,23 +89,34 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const WebSocket = require("ws");
-    //
-    // const ws = new WebSocket("wss://home-liaison.serveftp.com:5000/general");
-    //
-    // ws.on("open", () => {
-    //   console.log("yes");
-    //   ws.send(JSON.stringify({
-    //     mode: "register",
-    //     data: {
-    //       user: "uragen"
-    //     }
-    //   }));
-    // });
-    //
-    // ws.on('message', (data) => {
-    //   console.log('received: %s', data);
-    // });
+    const WebSocket = require("ws");
+    const ws = new WebSocket("wss://home-liaison.serveftp.com:5000/general");
+    ws.on("open", () => {
+      ws.send(JSON.stringify({
+        mode: "register",
+        data: {
+          user: "uragen",
+          memid: "",
+          date: new Date(),
+        }
+      }));
+    });
+
+    ws.on("message", (raw) => {
+      const { mode, data } = JSON.parse(raw);
+      if (mode === "message") {
+
+      } else if (mode === "register") {
+
+      }
+    });
+
+    ws.send(JSON.stringify({
+      mode: "message",
+      data: {
+
+      }
+    }));
 
     // console.log(await requestSystem("https://home-liaison.serveftp.com:5000/status"));
 
