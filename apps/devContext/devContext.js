@@ -89,35 +89,36 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const WebSocket = require("ws");
-    const ws = new WebSocket("wss://home-liaison.serveftp.com:5000/general");
-
-    ws.on("open", () => {
-      ws.send(JSON.stringify({
-        mode: "register",
-        to: null,
-        data: {
-          name: "배창규",
-          memid: "m1810_aa01s",
-          mac: "b0:e5:f9:f3:d3:90",
-          date: new Date(),
-        }
-      }));
-    });
-
-    ws.on("message", (raw) => {
-      const { from, data } = JSON.parse(raw);
-      console.log(from, data);
-    });
-
-    ws.send(JSON.stringify({
-      mode: "message",
-      to: "b0:e5:f9:f3:d3:90",
-      data: {
-        message: "안녕하세요",
-      }
-    }));
-
+    // const WebSocket = require("ws");
+    // const ws = new WebSocket("wss://home-liaison.serveftp.com:5000/general");
+    // const idJson = process.env.HOME + "/.homeliaison/id.json";
+    //
+    // ws.on("open", () => {
+    //   fileSystem("readJson", [ idJson ]).then((computerInfo) => {
+    //     computerInfo.data = new Date();
+    //     ws.send(JSON.stringify({
+    //       mode: "register",
+    //       to: null,
+    //       data: computerInfo
+    //     }));
+    //   }).catch((err) => {
+    //     console.log(err);
+    //   });
+    // });
+    //
+    // ws.on("message", (raw) => {
+    //   const { from, data } = JSON.parse(raw);
+    //   console.log(from, data);
+    // });
+    //
+    // ws.send(JSON.stringify({
+    //   mode: "message",
+    //   to: "b0:e5:f9:f3:d3:90",
+    //   data: {
+    //     message: "안녕하세요",
+    //   }
+    // }));
+    //
     // console.log(await requestSystem("https://home-liaison.serveftp.com:5000/status"));
 
 
@@ -2579,9 +2580,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "김수미",
-    //     designer: "강진아",
-    //     link: "https://drive.google.com/drive/folders/1FQY0Ie-0E4TaEarL7CI1uYDPAhEH2G6v",
+    //     client: "백애경",
+    //     designer: "김도현",
+    //     link: "https://drive.google.com/drive/folders/1KJgxfr1ft6jNhmd6QQwXk8TExF1pCwur",
     //     pay: true
     //   }
     // ]);
