@@ -93,7 +93,7 @@ DevContext.prototype.launching = async function () {
     //
     // const ws = new WebSocket('wss://home-liaison.serveftp.com:5000/general');
     //
-    // ws.on('open', function () {
+    // ws.on('open', () => {
     //   console.log("yes");
     //   ws.send('something');
     // });
@@ -101,6 +101,11 @@ DevContext.prototype.launching = async function () {
     // ws.on('message', function (data) {
     //   console.log('received: %s', data);
     // });
+
+
+
+
+
 
 
 

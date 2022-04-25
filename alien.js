@@ -127,31 +127,8 @@ Alien.prototype.routerPatch = function (app) {
   const instance = this;
   const address = this.address;
   const { shellExec, shellLink, fileSystem, setQueue, equalJson, errorLog, sleep, messageSend, messageLog } = this.mother;
-  const { messageStorage } = this;
-  const defaultPath = address.officeinfo.ghost.monitor.path;
-  const ipPass = (req) => {
-    let ip;
-    ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    if (/^172\.30\.1/.test(ip)) {
-      return true;
-    } else if (ip === "220.117.13.12") {
-      return true;
-    } else if (ip === "220.72.109.59") {
-      return true;
-    } else if (/^223\.3/.test(ip)) {
-      return true;
-    } else if (/^223\.4/.test(ip)) {
-      return true;
-    } else if (/^223\.5/.test(ip)) {
-      return true;
-    } else if (/^223\.6/.test(ip)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
 
-  app.get(defaultPath, async (req, res) => {
+  app.get("/", async (req, res) => {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -159,9 +136,6 @@ Alien.prototype.routerPatch = function (app) {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      if (!ipPass(req)) {
-        throw new Error("ip ban");
-      }
       res.send(JSON.stringify({ message: "OK" }));
     } catch (e) {
       console.log(e);
@@ -169,25 +143,7 @@ Alien.prototype.routerPatch = function (app) {
     }
   });
 
-  app.get(defaultPath + "/status", async (req, res) => {
-    res.set({
-      "Content-Type": "text/plain",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      if (!ipPass(req)) {
-        throw new Error("ip ban");
-      }
-      res.send(JSON.stringify(Alien.stacks.memberAlive));
-    } catch (e) {
-      console.log(e);
-      res.send("error");
-    }
-  });
-
-  app.post(defaultPath + "/status", async (req, res) => {
+  app.get("/status", async (req, res) => {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -195,17 +151,14 @@ Alien.prototype.routerPatch = function (app) {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      if (!ipPass(req)) {
-        throw new Error("ip ban");
-      }
-      res.send(JSON.stringify(Alien.stacks.memberAlive));
+      res.send(JSON.stringify(Alien.stacks.socket.clients));
     } catch (e) {
       console.log(e);
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   });
 
-  app.post(defaultPath + "/deviceLogin", async (req, res) => {
+  app.post("/status", async (req, res) => {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -213,66 +166,7 @@ Alien.prototype.routerPatch = function (app) {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      if (!ipPass(req)) {
-        throw new Error("ip ban");
-      }
-      const { device } = equalJson(req.body);
-      let macArr, memid;
-      let index;
-
-      macArr = device.networkInterfaces.map((obj) => { return obj.mac });
-
-      memid = null;
-      for (let mac of macArr) {
-        index = address.officeinfo.map.findIndex((obj) => { return obj.mac === mac });
-        if (index !== -1) {
-          if (typeof address.officeinfo.map[index].memid === "string") {
-            memid = address.officeinfo.map[index].memid;
-            break;
-          }
-        }
-      }
-
-      if (memid !== null) {
-        Alien.stacks.memberAlive[memid] = true;
-        if (Alien.stacks.deathTimeout[memid] !== null) {
-          clearTimeout(Alien.stacks.deathTimeout[memid]);
-        }
-        Alien.stacks.deathTimeout[memid] = setTimeout(() => {
-          Alien.stacks.memberAlive[memid] = false;
-        }, 2 * 30 * 1000);
-      }
-
-      res.send({ message: "done" });
-    } catch (e) {
-      console.log(e);
-      res.send(JSON.stringify({ message: "error : " + e.message }));
-    }
-  });
-
-  app.post(defaultPath + "/sendMessage", async (req, res) => {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      if (!ipPass(req)) {
-        throw new Error("ip ban");
-      }
-      if (req.body.from === undefined || req.body.to === undefined || req.body.message === undefined) {
-        throw new Error("invaild post");
-      }
-      const { from, to, message } = equalJson(req.body);
-      let option;
-      if (req.body.option !== undefined) {
-        option = equalJson(req.body.option);
-      } else {
-        option = {};
-      }
-      const messageObj = await instance.sendMessage(from, to, message, option);
-      res.send(JSON.stringify(messageObj));
+      res.send(JSON.stringify(Alien.stacks.socket.clients));
     } catch (e) {
       console.log(e);
       res.send(JSON.stringify({ message: "error : " + e.message }));
@@ -343,6 +237,7 @@ Alien.prototype.wssLaunching = async function () {
         }
       });
     });
+    Alien.stacks.socket = generalSocket;
 
     server = https.createServer(pems, app);
 
