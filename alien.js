@@ -151,6 +151,7 @@ Alien.prototype.routerPatch = function (app) {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
+      console.log(Alien.stacks.socket.clients);
       res.send(JSON.stringify(Alien.stacks.socket.clients));
     } catch (e) {
       console.log(e);
