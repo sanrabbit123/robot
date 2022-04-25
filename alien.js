@@ -151,8 +151,7 @@ Alien.prototype.routerPatch = function (app) {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      console.log([ ...Alien.stacks.socket.clients ]);
-      res.send(JSON.stringify(Alien.stacks.socket.clients));
+      res.send(JSON.stringify([ ...Alien.stacks.socket.clients ].map((obj) => { return obj.__who__ })));
     } catch (e) {
       console.log(e);
       res.send(JSON.stringify({ message: "error : " + e.message }));
@@ -167,7 +166,7 @@ Alien.prototype.routerPatch = function (app) {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      res.send(JSON.stringify(Alien.stacks.socket.clients));
+      res.send(JSON.stringify([ ...Alien.stacks.socket.clients ].map((obj) => { return obj.__who__ })));
     } catch (e) {
       console.log(e);
       res.send(JSON.stringify({ message: "error : " + e.message }));
@@ -231,23 +230,20 @@ Alien.prototype.wssLaunching = async function () {
     generalSocket.on("connection", (ws) => {
       ws.on("message", (message) => {
         try {
-          const { mode, data } = JSON.parse(message);
+          const { mode, to, data } = JSON.parse(message);
           if (mode === "register") {
-            ws.__data__ = data;
+            ws.__who__ = data;
+          } else if (mode === "message") {
+            const clients = generalSocket.clients;
+            for (let c of clients) {
+              if (c.readyState === WebSocket.OPEN && c.__who__.mac === to) {
+                c.send(JSON.stringify({ from: ws.__who__.mac, data }));
+              }
+            }
           }
         } catch (e) {
-
+          console.log(e);
         }
-
-        // const clients = generalSocket.clients;
-        // for (let c of clients) {
-        //   if (c.readyState === WebSocket.OPEN && ws !== c) {
-        //     c.send(message);
-        //   }
-        // }
-
-
-
       });
     });
     Alien.stacks.socket = generalSocket;

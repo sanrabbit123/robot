@@ -91,30 +91,30 @@ DevContext.prototype.launching = async function () {
 
     const WebSocket = require("ws");
     const ws = new WebSocket("wss://home-liaison.serveftp.com:5000/general");
+
     ws.on("open", () => {
       ws.send(JSON.stringify({
         mode: "register",
+        to: null,
         data: {
-          user: "uragen",
-          memid: "",
+          name: "배창규",
+          memid: "m1810_aa01s",
+          mac: "b0:e5:f9:f3:d3:90",
           date: new Date(),
         }
       }));
     });
 
     ws.on("message", (raw) => {
-      const { mode, data } = JSON.parse(raw);
-      if (mode === "message") {
-
-      } else if (mode === "register") {
-
-      }
+      const { from, data } = JSON.parse(raw);
+      console.log(from, data);
     });
 
     ws.send(JSON.stringify({
       mode: "message",
+      to: "b0:e5:f9:f3:d3:90",
       data: {
-
+        message: "안녕하세요",
       }
     }));
 
