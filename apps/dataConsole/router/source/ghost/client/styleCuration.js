@@ -4916,7 +4916,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
 
   titleFont = <%% 29, 24, 21, 19, 5.7 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
-  titleFontWeight = <%% 500, 500, 500, 500, 500 %%>;
+  titleFontWeight = <%% 500, 500, 600, 600, 500 %%>;
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
   titleMarginBottom = <%% 0, 0, 18, 40, 30 %%>;
 
@@ -4929,11 +4929,11 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
   rightBoxPaddingTop = <%% 7, 5, 7, 7, 7 %%>;
   rightBoxPaddingTopFontVersion = <%% 2, 2, 2, 2, 2 %%>;
 
-  height0 = <%% 310, 268, 308, 310, 310 %%>;
-  height1 = <%% 570, 480, 547, 570, 570 %%>;
-  height2 = <%% 450, 345, 450, 450, 450 %%>;
-  height3 = <%% 430, 360, 420, 420, 420 %%>;
-  height4 = <%% 310, 270, 308, 310, 310 %%>;
+  height0 = <%% 310, 268, 315, 310, 310 %%>;
+  height1 = <%% 570, 480, 550, 570, 570 %%>;
+  height2 = <%% 450, 345, 442, 450, 450 %%>;
+  height3 = <%% 430, 360, 438, 420, 420 %%>;
+  height4 = <%% 310, 270, 310, 310, 310 %%>;
 
   titleVisualTop = <%% -2, -2, -2, -2, -2 %%>;
 
@@ -4943,7 +4943,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
   contents0PaddingLeft = <%% 15, 15, 15, 15, 15 %%>;
   contents0PaddingTop = <%% 20, 20, 20, 20, 20 %%>;
   contents0PaddingBottom = <%% 9, 9, 9, 9, 9 %%>;
-  contents0TitleSize = <%% 22, 19, 22, 22, 22 %%>;
+  contents0TitleSize = <%% 22, 19, 19, 22, 22 %%>;
   contents0TitleWeight = <%% 700, 700, 700, 700, 700 %%>;
   contents0TitleWhiteBoxMargin = <%% 15, 15, 15, 15, 15 %%>;
 
@@ -4963,12 +4963,12 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
   contents0IconMarginRight = <%% 7, 6, 7, 7, 7 %%>;
   contents0IconTop = <%% 6, 6, 6, 6, 6 %%>;
 
-  contents0LineTop = <%% 15, 13, 15, 15, 15 %%>;
+  contents0LineTop = <%% 15, 13, 13, 15, 15 %%>;
 
-  contents0FactorMarginBottom = <%% 13, 10, 13, 13, 13 %%>;
-  contents0TitlePaddingTop = <%% 30, 24, 30, 30, 30 %%>;
+  contents0FactorMarginBottom = <%% 13, 10, 10, 13, 13 %%>;
+  contents0TitlePaddingTop = <%% 30, 24, 21, 30, 30 %%>;
 
-  contents1TitleSize = <%% 19, 18, 18, 19, 19 %%>;
+  contents1TitleSize = <%% 19, 18, 17, 19, 19 %%>;
   contents1TitleWeight = <%% 600, 600, 600, 600, 600 %%>;
   contents1TitleBetween = <%% 16, 14, 14, 16, 16 %%>;
   contents1Between = <%% 45, 40, 30, 45, 45 %%>;
@@ -5049,7 +5049,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
   contents3GrayChildrenWeight = <%% 600, 600, 600, 600, 600 %%>;
   contents3GrayChildrenPaddingTop = <%% 3, 3, 3, 3, 3 %%>;
 
-  contents3PictureHeight = <%% 160, 120, 160, 160, 160 %%>;
+  contents3PictureHeight = <%% 160, 120, 138, 160, 160 %%>;
 
   contents1 = [
     {
