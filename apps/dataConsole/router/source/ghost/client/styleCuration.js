@@ -4914,11 +4914,11 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
 
   margin = <%% 52, 52, 44, 32, 52 %%>;
 
-  titleFont = <%% 29, 24, 21, 19, 5.7 %%>;
+  titleFont = <%% 29, 24, 21, 17, 5.7 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
   titleFontWeight = <%% 500, 500, 600, 600, 500 %%>;
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
-  titleMarginBottom = <%% 0, 0, 18, 40, 30 %%>;
+  titleMarginBottom = <%% 0, 0, 18, 12, 30 %%>;
 
   lineHeight = <%% 1.42, 1.42, 1.42, 1.42, 1.42 %%>;
 
@@ -4929,25 +4929,25 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
   rightBoxPaddingTop = <%% 7, 5, 7, 7, 7 %%>;
   rightBoxPaddingTopFontVersion = <%% 2, 2, 2, 2, 2 %%>;
 
-  height0 = <%% 310, 268, 315, 310, 310 %%>;
-  height1 = <%% 570, 480, 550, 570, 570 %%>;
-  height2 = <%% 450, 345, 442, 450, 450 %%>;
-  height3 = <%% 430, 360, 438, 420, 420 %%>;
-  height4 = <%% 310, 270, 310, 310, 310 %%>;
+  height0 = <%% 310, 268, 315, 255, 310 %%>;
+  height1 = <%% 570, 480, 550, 447, 570 %%>;
+  height2 = <%% 450, 345, 442, 358, 450 %%>;
+  height3 = <%% 430, 360, 438, 370, 420 %%>;
+  height4 = <%% 310, 270, 310, 276, 310 %%>;
 
   titleVisualTop = <%% -2, -2, -2, -2, -2 %%>;
 
   boxTongPaddingBottom = <%% 10, 10, 6, 10, 10 %%>;
   contents0PhotoHeight = <%% 180, 130, 150, 130, 130 %%>;
 
-  contents0PaddingLeft = <%% 15, 15, 15, 15, 15 %%>;
-  contents0PaddingTop = <%% 20, 20, 20, 20, 20 %%>;
+  contents0PaddingLeft = <%% 15, 15, 15, 12, 15 %%>;
+  contents0PaddingTop = <%% 20, 20, 20, 12, 20 %%>;
   contents0PaddingBottom = <%% 9, 9, 9, 9, 9 %%>;
-  contents0TitleSize = <%% 22, 19, 19, 22, 22 %%>;
+  contents0TitleSize = <%% 22, 19, 19, 17, 22 %%>;
   contents0TitleWeight = <%% 700, 700, 700, 700, 700 %%>;
   contents0TitleWhiteBoxMargin = <%% 15, 15, 15, 15, 15 %%>;
 
-  contents0DescriptionSize = <%% 17, 16, 16, 16, 16 %%>;
+  contents0DescriptionSize = <%% 17, 16, 16, 15, 16 %%>;
   contents0DescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   contents0DescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
   contents0DescriptionWeightBold = <%% 700, 700, 700, 700, 700 %%>;
@@ -4955,56 +4955,56 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
 
   contents0Columns = <%% 3, 3, 3, 3, 3 %%>;
 
-  contents0WhitePaddingTop = <%% 26, 22, 26, 26, 26 %%>;
-  contents0WhitePaddingBottom = <%% 20, 16, 20, 20, 20 %%>;
-  contents0WhitePaddingLeft = <%% 30, 26, 30, 30, 30 %%>;
+  contents0WhitePaddingTop = <%% 26, 22, 26, 19, 26 %%>;
+  contents0WhitePaddingBottom = <%% 20, 16, 20, 15, 20 %%>;
+  contents0WhitePaddingLeft = <%% 30, 26, 30, 24, 30 %%>;
 
-  contents0IconWidth = <%% 14, 12, 14, 14, 14 %%>;
+  contents0IconWidth = <%% 14, 12, 14, 12, 14 %%>;
   contents0IconMarginRight = <%% 7, 6, 7, 7, 7 %%>;
   contents0IconTop = <%% 6, 6, 6, 6, 6 %%>;
 
-  contents0LineTop = <%% 15, 13, 13, 15, 15 %%>;
+  contents0LineTop = <%% 15, 13, 13, 12, 15 %%>;
 
-  contents0FactorMarginBottom = <%% 13, 10, 10, 13, 13 %%>;
-  contents0TitlePaddingTop = <%% 30, 24, 21, 30, 30 %%>;
+  contents0FactorMarginBottom = <%% 13, 10, 10, 8, 13 %%>;
+  contents0TitlePaddingTop = <%% 30, 24, 21, 18, 30 %%>;
 
-  contents1TitleSize = <%% 19, 18, 17, 19, 19 %%>;
+  contents1TitleSize = <%% 19, 18, 17, 15, 19 %%>;
   contents1TitleWeight = <%% 600, 600, 600, 600, 600 %%>;
-  contents1TitleBetween = <%% 16, 14, 14, 16, 16 %%>;
-  contents1Between = <%% 45, 40, 30, 45, 45 %%>;
+  contents1TitleBetween = <%% 16, 14, 14, 12, 16 %%>;
+  contents1Between = <%% 45, 40, 30, 22, 45 %%>;
 
   contents1Columns = <%% 5, 5, 5, 5, 5 %%>;
 
-  contents1UpBoxWidth = <%% 232, 197, 225, 232, 232 %%>;
-  contents1UpBoxMargin = <%% 10, 8, 8, 10, 10 %%>;
-  contents1UpBoxPaddingLeft = <%% 22, 18, 20, 22, 22 %%>;
-  contents1UpBoxPaddingTop = <%% 16, 14, 15, 16, 16 %%>;
+  contents1UpBoxWidth = <%% 232, 197, 225, 185, 232 %%>;
+  contents1UpBoxMargin = <%% 10, 8, 8, 8, 10 %%>;
+  contents1UpBoxPaddingLeft = <%% 22, 18, 20, 14, 22 %%>;
+  contents1UpBoxPaddingTop = <%% 16, 14, 15, 11, 16 %%>;
 
   contents1UpBoxCheckTop = <%% 7, 7, 7, 7, 7 %%>;
-  contents1UpBoxCheckWidth = <%% 11, 11, 11, 11, 11 %%>;
+  contents1UpBoxCheckWidth = <%% 11, 11, 11, 10, 11 %%>;
   contents1UpBoxCheckMarginRight = <%% 6, 6, 6, 6, 6 %%>;
 
-  contents1UpBoxTitleSize = <%% 16, 15, 16, 16, 16 %%>;
+  contents1UpBoxTitleSize = <%% 16, 15, 16, 14, 16 %%>;
   contents1UpBoxTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-  contents1UpBoxWhiteMarginTop = <%% 10, 10, 10, 10, 10 %%>;
-  contents1UpBoxWhitePaddingTop = <%% 16, 16, 16, 16, 16 %%>;
-  contents1UpBoxWhitePaddingBottom = <%% 21, 21, 21, 21, 21 %%>;
+  contents1UpBoxWhiteMarginTop = <%% 10, 10, 10, 8, 10 %%>;
+  contents1UpBoxWhitePaddingTop = <%% 16, 16, 16, 13, 16 %%>;
+  contents1UpBoxWhitePaddingBottom = <%% 21, 21, 21, 18, 21 %%>;
 
-  contents1UpBoxWhiteSize = <%% 14, 13, 14, 14, 14 %%>;
+  contents1UpBoxWhiteSize = <%% 14, 13, 14, 11, 14 %%>;
   contents1UpBoxWhiteWeight = <%% 400, 400, 400, 400, 400 %%>;
   contents1UpBoxWhiteWeightBold = <%% 700, 700, 700, 700, 700 %%>;
   contents1UpBoxWhiteLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  contents1DownBoxPaddingTop = <%% 30, 22, 24, 30, 30 %%>;
-  contents1DownBoxPaddingBottom = <%% 36, 24, 26, 36, 36 %%>;
-  contents1DownBoxPaddingMargin = <%% 10, 8, 10, 10, 10 %%>;
-  contents1DownBoxPaddingLeft = <%% 36, 22, 24, 36, 36 %%>;
-  contents1DownBoxCircleHeight = <%% 119, 92, 106, 119, 119 %%>;
+  contents1DownBoxPaddingTop = <%% 30, 22, 24, 18, 30 %%>;
+  contents1DownBoxPaddingBottom = <%% 36, 24, 26, 21, 36 %%>;
+  contents1DownBoxPaddingMargin = <%% 10, 8, 10, 8, 10 %%>;
+  contents1DownBoxPaddingLeft = <%% 36, 22, 24, 18, 36 %%>;
+  contents1DownBoxCircleHeight = <%% 119, 92, 106, 87, 119 %%>;
 
-  contents1DownBoxTitleMarginTop = <%% 16, 12, 14, 16, 16 %%>;
-  contents1DownBoxDescriptionMarginTop = <%% 6, 5, 5, 6, 6 %%>;
-  contents1DownBoxDescriptionSize = <%% 13, 12, 13, 13, 13 %%>;
+  contents1DownBoxTitleMarginTop = <%% 16, 12, 14, 12, 16 %%>;
+  contents1DownBoxDescriptionMarginTop = <%% 6, 5, 5, 4, 6 %%>;
+  contents1DownBoxDescriptionSize = <%% 13, 12, 13, 11, 13 %%>;
 
   contents2LineBoxHeight = <%% 45, 45, 45, 45, 45 %%>;
   contents2LineTop = <%% 17, 16, 17, 17, 17 %%>;
@@ -5029,27 +5029,27 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
   contents2DescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
   contents3BoxMarginTop = <%% 40, 20, 20, 40, 40 %%>;
-  contents3BoxBetween = <%% 12, 8, 8, 12, 12 %%>;
-  contents3GreenHeight = <%% 48, 48, 48, 52, 52 %%>;
+  contents3BoxBetween = <%% 12, 8, 8, 8, 12 %%>;
+  contents3GreenHeight = <%% 48, 48, 48, 40, 52 %%>;
   contents3GreenTextTop = <%% -2, -1, -1, -2, -2 %%>;
-  contents3GreenSize = <%% 15, 14, 14, 15, 15 %%>;
+  contents3GreenSize = <%% 15, 14, 14, 13, 15 %%>;
   contents3GreenWeight = <%% 600, 600, 600, 600, 600 %%>;
 
   contents3GrayHeight = <%% 640, 584, 625, 640, 640 %%>;
-  contents3GrayInnerPadding = <%% 12, 10, 12, 12, 12 %%>;
-  contents3GrayWhiteSize = <%% 13, 12, 13, 13, 13 %%>;
+  contents3GrayInnerPadding = <%% 12, 10, 12, 10, 12 %%>;
+  contents3GrayWhiteSize = <%% 13, 12, 13, 11, 13 %%>;
   contents3GrayWhiteWeight = <%% 400, 400, 400, 400, 400 %%>;
   contents3GrayWhiteWeightBold = <%% 700, 700, 700, 700, 700 %%>;
   contents3GrayWhiteLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  contents3GrayWhitePaddingTop = <%% 17, 13, 13, 17, 17 %%>;
-  contents3GrayWhitePaddingBottom = <%% 20, 17, 17, 20, 20 %%>;
+  contents3GrayWhitePaddingTop = <%% 17, 13, 13, 12, 17 %%>;
+  contents3GrayWhitePaddingBottom = <%% 20, 17, 17, 16, 20 %%>;
 
   contents3GrayChildrenMarginTop = <%% 20, 15, 20, 20, 20 %%>;
   contents3GrayChildrenWeight = <%% 600, 600, 600, 600, 600 %%>;
   contents3GrayChildrenPaddingTop = <%% 3, 3, 3, 3, 3 %%>;
 
-  contents3PictureHeight = <%% 160, 120, 138, 160, 160 %%>;
+  contents3PictureHeight = <%% 160, 120, 138, 110, 160 %%>;
 
   contents1 = [
     {
