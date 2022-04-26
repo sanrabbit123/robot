@@ -2607,7 +2607,7 @@ DevContext.prototype.launching = async function () {
 
     // aspirant to designer
     // await this.aspirantToDesigner([
-    //   [ "이아진", "2022-03-10" ],
+    //   [ "한주희", "2022-03-17" ],
     // ]);
 
 
@@ -2616,13 +2616,13 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2202_aa02s", [
-    //   { porlid: "a90", index: 1 },
-    //   { porlid: "a90", index: 4 },
-    //   { porlid: "a90", index: 10 },
-    //   { porlid: "a90", index: 8 },
-    //   { porlid: "a90", index: 15 },
-    //   { porlid: "a90", index: 16 },
+    // await this.setProposalSettingForDesigner("d2204_aa02s", [
+    //   { porlid: "ghost", index: 8 },
+    //   { porlid: "ghost", index: 1 },
+    //   { porlid: "ghost", index: 2 },
+    //   { porlid: "ghost", index: 3 },
+    //   { porlid: "ghost", index: 7 },
+    //   { porlid: "ghost", index: 8 },
     // ], [
     //   "최대한 고객님의 취향과 라이프스타일이 반영 된 공간을 디자인해드리려 합니다.",
     //   "디자인시 예산에 맞춘 스타일링 밸런스 조절을 하기 위해 노력합니다.",
