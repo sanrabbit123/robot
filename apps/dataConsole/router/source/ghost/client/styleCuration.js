@@ -4907,6 +4907,15 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
   let contents3PictureHeight;
   let num;
   let titleMarginBottom;
+  let data;
+  let selectedBoo;
+
+  data = seridObj.map((obj) => { return Number(obj.serid.split('_')[1].replace(/[^0-9]/gi, '').replace(/^0/gi, '').replace(/^0/gi, '').replace(/^0/gi, '')) - 1; });
+  if (data.length === 0) {
+    data = 1;
+  } else {
+    data = data[0];
+  }
 
   blockMarginBottom = <%% 16, 16, 16, 16, 2 %%>;
 
@@ -5231,6 +5240,9 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
   });
 
   for (let i = 0; i < contents3.children.length; i++) {
+
+    selectedBoo = (data === i);
+
     contents3BoxFactor = createNode({
       mother: contents3Box,
       style: {
@@ -5251,7 +5263,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
         alignItems: "center",
         textAlign: "center",
         borderRadius: String(5) + "px",
-        background: colorChip.liteGreen,
+        background: selectedBoo ? colorChip.green : colorChip.gray2,
         height: String(contents3GreenHeight) + ea,
         marginBottom: desktop ? String(contents3BoxBetween) + ea : String(contents3BoxBetween / 2) + ea,
       },
@@ -5263,7 +5275,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
             top: String(contents3GreenTextTop) + ea,
             fontSize: String(contents3GreenSize) + ea,
             fontWeight: String(contents3GreenWeight),
-            color: colorChip.black,
+            color: selectedBoo ? colorChip.white : colorChip.deactive,
           }
         }
       ]
@@ -5284,6 +5296,8 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
         backgroundImage: "url('" + StyleCurationJs.binaryPath + "/" + contents3.children[i].image + "')",
         backgroundSize: "100% auto",
         backgroundPosition: "50% 50%",
+        filter: selectedBoo ? "" : "grayscale(1)",
+        opacity: selectedBoo ? "" : String(0.7),
       }
     })
 
@@ -5308,9 +5322,9 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
         textAlign: "center",
         fontSize: String(contents3GrayWhiteSize) + ea,
         fontWeight: String(contents3GrayWhiteWeight),
-        color: colorChip.black,
+        color: selectedBoo ? colorChip.black : colorChip.deactive,
         lineHeight: String(contents3GrayWhiteLineHeight),
-        background: colorChip.white,
+        background: selectedBoo ? colorChip.white : colorChip.gray2,
         borderRadius: String(5) + "px",
         boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
         marginLeft: String(contents3GrayInnerPadding) + ea,
@@ -5321,7 +5335,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
       },
       bold: {
         fontWeight: String(contents3GrayWhiteWeightBold),
-        color: colorChip.black,
+        color: selectedBoo ? colorChip.black : colorChip.deactive,
       }
     });
 
@@ -5333,9 +5347,9 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
         textAlign: "center",
         fontSize: String(contents3GrayWhiteSize) + ea,
         fontWeight: String(contents3GrayWhiteWeight),
-        color: colorChip.green,
+        color: selectedBoo ? colorChip.green : colorChip.deactive,
         lineHeight: String(contents3GrayWhiteLineHeight),
-        background: colorChip.white,
+        background: selectedBoo ? colorChip.white : colorChip.gray2,
         borderRadius: String(5) + "px",
         boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
         marginLeft: String(contents3GrayInnerPadding) + ea,
@@ -5345,7 +5359,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
       },
       bold: {
         fontWeight: String(contents3GrayWhiteWeightBold),
-        color: colorChip.green,
+        color: selectedBoo ? colorChip.green : colorChip.deactive,
       }
     });
 
@@ -5905,7 +5919,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
 
 }
 
-StyleCurationJs.prototype.serviceConverting = async function () {
+StyleCurationJs.prototype.serviceConverting = async function (seridObj) {
   const instance = this;
   const { ea, baseTong } = this;
   const { backgroundImageBox, backgroundImageBox2 } = this.mother;
@@ -5926,7 +5940,7 @@ StyleCurationJs.prototype.serviceConverting = async function () {
       baseTong.style.opacity = String(0);
       cleanChildren(baseTong);
       instance.insertPendingProposal();
-      instance.insertServiceBox();
+      instance.insertServiceBox(seridObj);
       baseTong.style.height = "";
       baseTong.style.animation = "fadeupdelay 0.5s ease forwards";
 
@@ -5956,26 +5970,46 @@ StyleCurationJs.prototype.forceConverting = async function () {
     let firstBoo;
 
     firstBoo = true;
-    // if (Array.isArray(clientHistory.curation.analytics.send)) {
-    //   if (clientHistory.curation.analytics.send.length > 0) {
-    //     if (clientHistory.curation.analytics.send.every((o) => { return typeof o === "object"; })) {
-          let boo;
+    if (Array.isArray(clientHistory.curation.analytics.send)) {
+      if (clientHistory.curation.analytics.send.length > 0) {
+        if (clientHistory.curation.analytics.send.every((o) => { return typeof o === "object"; })) {
+          let boo, feeArr, thisProjects, thisProject, finalSerid;
 
-          boo = false;
-          for (let obj of clientHistory.curation.analytics.send) {
-            if (obj.page === "designerProposal") {
-              boo = true;
-              firstBoo = false;
-              break;
+          // boo = false;
+          // for (let obj of clientHistory.curation.analytics.send) {
+          //   if (obj.page === "designerProposal") {
+          //     boo = true;
+          //     firstBoo = false;
+          //     break;
+          //   }
+          // }
+          boo = true;
+
+          if (boo) {
+            thisProjects = await ajaxJson({ noFlat: true, whereQuery: { cliid: client.cliid } }, "/getProjects", { equal: true });
+            if (thisProjects.length > 0) {
+              thisProject = thisProjects[0];
+              finalSerid = clientHistory.curation.service.serid;
+              finalSerid = finalSerid.map((serid) => {
+                let feeArr;
+                let min, max;
+                feeArr = [];
+                for (let { fee } of thisProject.proposal.detail) {
+                  for (let { amount } of fee) {
+                    feeArr.push(amount);
+                  }
+                }
+                feeArr.sort((a, b) => { return a - b; });
+                min = Math.floor(feeArr[0] / 100000) / 10;
+                max = Math.ceil(feeArr[feeArr.length - 1] / 1000000);
+                return { serid, min, max };
+              });
+              await this.serviceConverting(finalSerid);
             }
           }
-
-          // if (boo) {
-            await this.serviceConverting();
-    //       }
-    //     }
-    //   }
-    // }
+        }
+      }
+    }
 
     if (client.requests[0].analytics.response.action !== "1차 응대 예정" || client.requests[0].analytics.response.status !== "응대중") {
       firstBoo = false;
