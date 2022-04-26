@@ -4929,10 +4929,10 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
   rightBoxPaddingTop = <%% 7, 5, 7, 7, 6.5 %%>;
   rightBoxPaddingTopFontVersion = <%% 2, 2, 2, 2, 7 %%>;
 
-  height0 = <%% 310, 268, 315, 255, 80 %%>;
+  height0 = <%% 310, 268, 315, 255, 79 %%>;
   height1 = <%% 570, 480, 550, 447, 216 %%>;
   height2 = <%% 450, 345, 442, 358, 120 %%>;
-  height3 = <%% 430, 360, 438, 370, 162 %%>;
+  height3 = <%% 430, 360, 438, 370, 163 %%>;
   height4 = <%% 310, 270, 310, 276, 109 %%>;
 
   titleVisualTop = <%% -2, -2, -2, -2, 2 %%>;
@@ -4956,12 +4956,12 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
   contents0Columns = <%% 3, 3, 3, 3, 3 %%>;
 
   contents0WhitePaddingTop = <%% 26, 22, 26, 19, 4.5 %%>;
-  contents0WhitePaddingBottom = <%% (isMac() ? 20 : 18), (isMac() ? 16 : 14), (isMac() ? 20 : 18), (isMac() ? 15 : 13), 4 %%>;
+  contents0WhitePaddingBottom = <%% (isMac() ? 20 : 18), (isMac() ? 16 : 14), (isMac() ? 20 : 18), (isMac() ? 15 : 13), 3.5 %%>;
   contents0WhitePaddingLeft = <%% 30, 26, 30, 24, 5.5 %%>;
 
   contents0IconWidth = <%% 14, 12, 14, 12, 2.5 %%>;
   contents0IconMarginRight = <%% 7, 6, 7, 7, 1.5 %%>;
-  contents0IconTop = <%% (isMac() ? 6 : 4), (isMac() ? 6 : 4), (isMac() ? 6 : 4), (isMac() ? 6 : 4), 1.3 %%>;
+  contents0IconTop = <%% (isMac() ? 6 : 4), (isMac() ? 6 : 4), (isMac() ? 6 : 4), (isMac() ? 6 : 4), 1.2 %%>;
 
   contents0LineTop = <%% (isMac () ? 15 : 13), (isMac () ? 13 : 11), (isMac () ? 13 : 11), (isMac () ? 12 : 10), 15 %%>;
 
@@ -5031,7 +5031,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
   contents3BoxMarginTop = <%% 40, 20, 20, 40, 4 %%>;
   contents3BoxBetween = <%% 12, 8, 8, 8, 2 %%>;
   contents3GreenHeight = <%% 48, 48, 48, 40, 9 %%>;
-  contents3GreenTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
+  contents3GreenTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.2 %%>;
   contents3GreenSize = <%% 15, 14, 14, 13, 3 %%>;
   contents3GreenWeight = <%% 600, 600, 600, 600, 600 %%>;
 
