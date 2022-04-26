@@ -867,7 +867,7 @@ DataConsole.prototype.connect = async function () {
           __wallLogicBoo = false;
 
           __originTarget = req.headers["origin"] || "invaild";
-          if (__originTarget === "invaild") {
+          if (__originTarget === "invaild" || __originTarget === "null" || __originTarget === "undefined" || __originTarget === null) {
             __originTarget = req.headers["host"] || "invaild";
           }
           for (let host of __vailHosts) {

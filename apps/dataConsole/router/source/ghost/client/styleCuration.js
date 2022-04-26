@@ -3898,7 +3898,7 @@ StyleCurationJs.prototype.insertPendingProposal = function () {
   let subTitleSize;
   let subTitlePaddingTop, subTitlePaddingBottom;
 
-  bottomMargin = <%% 16, 16, 16, 12, 1 %%>;
+  bottomMargin = <%% 16, 16, 16, 12, 2 %%>;
   margin = <%% 52, 52, 44, 32, 52 %%>;
   leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
 
@@ -3909,7 +3909,7 @@ StyleCurationJs.prototype.insertPendingProposal = function () {
   quoteMarginBottom = <%% 5, 5, 5, 5, 1 %%>;
   quoteWidth = <%% 20, 16, 14, 12, 3 %%>;
 
-  titleSize = <%% 30, 27, 25, 21, 5 %%>;
+  titleSize = <%% 30, 27, 25, 21, 4.5 %%>;
   subTitleSize = <%% 14, 14, 13, 12, 3 %%>;
   subTitlePaddingTop = <%% 8, 8, 8, 8, 1 %%>;
   subTitlePaddingBottom = <%% 80, 80, 80, 80, 12 %%>;
@@ -4912,13 +4912,13 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
 
   lastBlockMarginBottom = <%% 160, 160, 160, 80, 12 %%>;
 
-  margin = <%% 52, 52, 44, 32, 52 %%>;
+  margin = <%% 52, 52, 44, 32, 6 %%>;
 
-  titleFont = <%% 29, 24, 21, 17, 5.7 %%>;
+  titleFont = <%% 29, 24, 21, 17, 4.2 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
-  titleFontWeight = <%% 500, 500, 600, 600, 500 %%>;
+  titleFontWeight = <%% 500, 500, 600, 600, 600 %%>;
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
-  titleMarginBottom = <%% 0, 0, 18, 12, 30 %%>;
+  titleMarginBottom = <%% 0, 0, 18, 12, 0.5 %%>;
 
   lineHeight = <%% 1.42, 1.42, 1.42, 1.42, 1.42 %%>;
 
@@ -4926,85 +4926,85 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
 
   boxMargin = <%% 36, 25, 24, 36, 36 %%>;
 
-  rightBoxPaddingTop = <%% 7, 5, 7, 7, 7 %%>;
-  rightBoxPaddingTopFontVersion = <%% 2, 2, 2, 2, 2 %%>;
+  rightBoxPaddingTop = <%% 7, 5, 7, 7, 6.5 %%>;
+  rightBoxPaddingTopFontVersion = <%% 2, 2, 2, 2, 7 %%>;
 
-  height0 = <%% 310, 268, 315, 255, 310 %%>;
-  height1 = <%% 570, 480, 550, 447, 570 %%>;
-  height2 = <%% 450, 345, 442, 358, 450 %%>;
-  height3 = <%% 430, 360, 438, 370, 420 %%>;
-  height4 = <%% 310, 270, 310, 276, 310 %%>;
+  height0 = <%% 310, 268, 315, 255, 80 %%>;
+  height1 = <%% 570, 480, 550, 447, 216 %%>;
+  height2 = <%% 450, 345, 442, 358, 120 %%>;
+  height3 = <%% 430, 360, 438, 370, 162 %%>;
+  height4 = <%% 310, 270, 310, 276, 109 %%>;
 
-  titleVisualTop = <%% -2, -2, -2, -2, -2 %%>;
+  titleVisualTop = <%% -2, -2, -2, -2, 2 %%>;
 
   boxTongPaddingBottom = <%% 10, 10, 6, 10, 10 %%>;
   contents0PhotoHeight = <%% 180, 130, 150, 130, 130 %%>;
 
-  contents0PaddingLeft = <%% 15, 15, 15, 12, 15 %%>;
-  contents0PaddingTop = <%% 20, 20, 20, 12, 20 %%>;
-  contents0PaddingBottom = <%% 9, 9, 9, 9, 9 %%>;
-  contents0TitleSize = <%% 22, 19, 19, 17, 22 %%>;
+  contents0PaddingLeft = <%% 15, 15, 15, 12, 3 %%>;
+  contents0PaddingTop = <%% 20, 20, 20, 12, 3 %%>;
+  contents0PaddingBottom = <%% 9, 9, 9, 9, 3 %%>;
+  contents0TitleSize = <%% 22, 19, 19, 17, 3.5 %%>;
   contents0TitleWeight = <%% 700, 700, 700, 700, 700 %%>;
   contents0TitleWhiteBoxMargin = <%% 15, 15, 15, 15, 15 %%>;
 
-  contents0DescriptionSize = <%% 17, 16, 16, 15, 16 %%>;
+  contents0DescriptionSize = <%% 17, 16, 16, 15, 3.2 %%>;
   contents0DescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   contents0DescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
   contents0DescriptionWeightBold = <%% 700, 700, 700, 700, 700 %%>;
-  contents0DescriptionMarginTop = <%% 20, 15, 15, 20, 20 %%>;
+  contents0DescriptionMarginTop = <%% 20, 15, 15, 20, 4 %%>;
 
   contents0Columns = <%% 3, 3, 3, 3, 3 %%>;
 
-  contents0WhitePaddingTop = <%% 26, 22, 26, 19, 26 %%>;
-  contents0WhitePaddingBottom = <%% (isMac() ? 20 : 18), (isMac() ? 16 : 14), (isMac() ? 20 : 18), (isMac() ? 15 : 13), 20 %%>;
-  contents0WhitePaddingLeft = <%% 30, 26, 30, 24, 30 %%>;
+  contents0WhitePaddingTop = <%% 26, 22, 26, 19, 4.5 %%>;
+  contents0WhitePaddingBottom = <%% (isMac() ? 20 : 18), (isMac() ? 16 : 14), (isMac() ? 20 : 18), (isMac() ? 15 : 13), 4 %%>;
+  contents0WhitePaddingLeft = <%% 30, 26, 30, 24, 5.5 %%>;
 
-  contents0IconWidth = <%% 14, 12, 14, 12, 14 %%>;
-  contents0IconMarginRight = <%% 7, 6, 7, 7, 7 %%>;
-  contents0IconTop = <%% (isMac() ? 6 : 4), (isMac() ? 6 : 4), (isMac() ? 6 : 4), (isMac() ? 6 : 4), 6 %%>;
+  contents0IconWidth = <%% 14, 12, 14, 12, 2.5 %%>;
+  contents0IconMarginRight = <%% 7, 6, 7, 7, 1.5 %%>;
+  contents0IconTop = <%% (isMac() ? 6 : 4), (isMac() ? 6 : 4), (isMac() ? 6 : 4), (isMac() ? 6 : 4), 1.3 %%>;
 
   contents0LineTop = <%% (isMac () ? 15 : 13), (isMac () ? 13 : 11), (isMac () ? 13 : 11), (isMac () ? 12 : 10), 15 %%>;
 
-  contents0FactorMarginBottom = <%% 13, 10, 10, 8, 13 %%>;
-  contents0TitlePaddingTop = <%% 30, 24, 21, 18, 30 %%>;
+  contents0FactorMarginBottom = <%% 13, 10, 10, 8, 2 %%>;
+  contents0TitlePaddingTop = <%% 30, 24, 21, 18, 4.5 %%>;
 
-  contents1TitleSize = <%% 19, 18, 17, 15, 19 %%>;
+  contents1TitleSize = <%% 19, 18, 17, 15, 4.2 %%>;
   contents1TitleWeight = <%% 600, 600, 600, 600, 600 %%>;
-  contents1TitleBetween = <%% 16, 14, 14, 12, 16 %%>;
-  contents1Between = <%% 45, 40, 30, 22, 45 %%>;
+  contents1TitleBetween = <%% 16, 14, 14, 12, 6 %%>;
+  contents1Between = <%% 45, 40, 30, 22, 9 %%>;
 
-  contents1Columns = <%% 5, 5, 5, 5, 5 %%>;
+  contents1Columns = <%% 5, 5, 5, 5, 2 %%>;
 
-  contents1UpBoxWidth = <%% 232, 197, 225, 185, 232 %%>;
-  contents1UpBoxMargin = <%% 10, 8, 8, 8, 10 %%>;
-  contents1UpBoxPaddingLeft = <%% 22, 18, 20, 14, 22 %%>;
-  contents1UpBoxPaddingTop = <%% (isMac() ? 16 : 17), (isMac() ? 14 : 15), (isMac() ? 15 : 16), (isMac() ? 11 : 12), 16 %%>;
+  contents1UpBoxWidth = <%% 232, 197, 225, 185, 88 %%>;
+  contents1UpBoxMargin = <%% 10, 8, 8, 8, 1 %%>;
+  contents1UpBoxPaddingLeft = <%% 22, 18, 20, 14, 3.5 %%>;
+  contents1UpBoxPaddingTop = <%% (isMac() ? 16 : 17), (isMac() ? 14 : 15), (isMac() ? 15 : 16), (isMac() ? 11 : 12), 3.5 %%>;
 
-  contents1UpBoxCheckTop = <%% (isMac() ? 7 : 5), (isMac() ? 7 : 5), (isMac() ? 7 : 5), (isMac() ? 7 : 5), 7 %%>;
-  contents1UpBoxCheckWidth = <%% 11, 11, 11, 10, 11 %%>;
+  contents1UpBoxCheckTop = <%% (isMac() ? 7 : 5), (isMac() ? 7 : 5), (isMac() ? 7 : 5), (isMac() ? 7 : 5), 15.5 %%>;
+  contents1UpBoxCheckWidth = <%% 11, 11, 11, 10, 2.6 %%>;
   contents1UpBoxCheckMarginRight = <%% 6, 6, 6, 6, 6 %%>;
 
-  contents1UpBoxTitleSize = <%% 16, 15, 16, 14, 16 %%>;
+  contents1UpBoxTitleSize = <%% 16, 15, 16, 14, 3.5 %%>;
   contents1UpBoxTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-  contents1UpBoxWhiteMarginTop = <%% (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 8 : 6), 10 %%>;
-  contents1UpBoxWhitePaddingTop = <%% (isMac() ? 16 : 17), (isMac() ? 16 : 17), (isMac() ? 16 : 17), (isMac() ? 13 : 14), 16 %%>;
-  contents1UpBoxWhitePaddingBottom = <%% (isMac() ? 21 : 19), (isMac() ? 21 : 19), (isMac() ? 21 : 19), (isMac() ? 18 : 16), 21 %%>;
+  contents1UpBoxWhiteMarginTop = <%% (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 8 : 6), 3 %%>;
+  contents1UpBoxWhitePaddingTop = <%% (isMac() ? 16 : 17), (isMac() ? 16 : 17), (isMac() ? 16 : 17), (isMac() ? 13 : 14), 3 %%>;
+  contents1UpBoxWhitePaddingBottom = <%% (isMac() ? 21 : 19), (isMac() ? 21 : 19), (isMac() ? 21 : 19), (isMac() ? 18 : 16), 3.5 %%>;
 
-  contents1UpBoxWhiteSize = <%% 14, 13, 14, 11, 14 %%>;
+  contents1UpBoxWhiteSize = <%% 14, 13, 14, 11, 2.8 %%>;
   contents1UpBoxWhiteWeight = <%% 400, 400, 400, 400, 400 %%>;
   contents1UpBoxWhiteWeightBold = <%% 700, 700, 700, 700, 700 %%>;
   contents1UpBoxWhiteLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  contents1DownBoxPaddingTop = <%% 30, 22, 24, 18, 30 %%>;
-  contents1DownBoxPaddingBottom = <%% (isMac() ? 36 : 34), (isMac() ? 24 : 22), (isMac() ? 26 : 24), (isMac() ? 21 : 19), 36 %%>;
-  contents1DownBoxPaddingMargin = <%% 10, 8, 10, 8, 10 %%>;
-  contents1DownBoxPaddingLeft = <%% 36, 22, 24, 18, 36 %%>;
-  contents1DownBoxCircleHeight = <%% 119, 92, 106, 87, 119 %%>;
+  contents1DownBoxPaddingTop = <%% 30, 22, 24, 18, 5.5 %%>;
+  contents1DownBoxPaddingBottom = <%% (isMac() ? 36 : 34), (isMac() ? 24 : 22), (isMac() ? 26 : 24), (isMac() ? 21 : 19), 6 %%>;
+  contents1DownBoxPaddingMargin = <%% 10, 8, 10, 8, 2 %%>;
+  contents1DownBoxPaddingLeft = <%% 36, 22, 24, 18, 6 %%>;
+  contents1DownBoxCircleHeight = <%% 119, 92, 106, 87, 25 %%>;
 
-  contents1DownBoxTitleMarginTop = <%% (isMac() ? 17 : 18), (isMac() ? 12 : 13), (isMac() ? 14 : 15), (isMac() ? 12 : 13), 16 %%>;
-  contents1DownBoxDescriptionMarginTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), 6 %%>;
-  contents1DownBoxDescriptionSize = <%% 13, 12, 13, 11, 13 %%>;
+  contents1DownBoxTitleMarginTop = <%% (isMac() ? 17 : 18), (isMac() ? 12 : 13), (isMac() ? 14 : 15), (isMac() ? 12 : 13), 2.5 %%>;
+  contents1DownBoxDescriptionMarginTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), 1 %%>;
+  contents1DownBoxDescriptionSize = <%% 13, 12, 13, 11, 2.8 %%>;
 
   contents2LineBoxHeight = <%% 45, 45, 45, 45, 45 %%>;
   contents2LineTop = <%% 17, 16, 17, 17, 17 %%>;
@@ -5021,35 +5021,35 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
   contents2BoxFactorHeight = <%% 100, 100, 100, 100, 100 %%>;
   contents2BoxFactorMarginLeftArr = <&& [ 0, 106, 106, 91 ] | [ 0, 48, 48, 41 ] | [ 0, 49, 52, 42 ] | [ 0, 106, 106, 91 ] | [ 0, 106, 106, 91 ] &&>;
 
-  contents2TitleSize = <%% 18, 17, 17, 18, 18 %%>;
+  contents2TitleSize = <%% 18, 17, 17, 18, 3.5 %%>;
   contents2TitleWeight = <%% 600, 600, 600, 600, 600 %%>;
   contents2DescriptionSize = <%% 13, 13, 13, 13, 13 %%>;
   contents2DescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   contents2DescriptionMarginTop = <%% 10, 6, 6, 6, 10 %%>;
   contents2DescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  contents3BoxMarginTop = <%% 40, 20, 20, 40, 40 %%>;
-  contents3BoxBetween = <%% 12, 8, 8, 8, 12 %%>;
-  contents3GreenHeight = <%% 48, 48, 48, 40, 52 %%>;
-  contents3GreenTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -2 %%>;
-  contents3GreenSize = <%% 15, 14, 14, 13, 15 %%>;
+  contents3BoxMarginTop = <%% 40, 20, 20, 40, 4 %%>;
+  contents3BoxBetween = <%% 12, 8, 8, 8, 2 %%>;
+  contents3GreenHeight = <%% 48, 48, 48, 40, 9 %%>;
+  contents3GreenTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
+  contents3GreenSize = <%% 15, 14, 14, 13, 3 %%>;
   contents3GreenWeight = <%% 600, 600, 600, 600, 600 %%>;
 
   contents3GrayHeight = <%% 640, 584, 625, 640, 640 %%>;
-  contents3GrayInnerPadding = <%% 12, 10, 12, 10, 12 %%>;
-  contents3GrayWhiteSize = <%% 13, 12, 13, 11, 13 %%>;
+  contents3GrayInnerPadding = <%% 12, 10, 12, 10, 2 %%>;
+  contents3GrayWhiteSize = <%% 13, 12, 13, 11, 2.7 %%>;
   contents3GrayWhiteWeight = <%% 400, 400, 400, 400, 400 %%>;
   contents3GrayWhiteWeightBold = <%% 700, 700, 700, 700, 700 %%>;
   contents3GrayWhiteLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  contents3GrayWhitePaddingTop = <%% (isMac() ? 17 : 18), (isMac() ? 13 : 14), (isMac() ? 13 : 14), (isMac() ? 12 : 13), 17 %%>;
-  contents3GrayWhitePaddingBottom = <%% (isMac() ? 20 : 18), (isMac() ? 17 : 15), (isMac() ? 17 : 15), (isMac() ? 16 : 14), 20 %%>;
+  contents3GrayWhitePaddingTop = <%% (isMac() ? 17 : 18), (isMac() ? 13 : 14), (isMac() ? 13 : 14), (isMac() ? 12 : 13), 3 %%>;
+  contents3GrayWhitePaddingBottom = <%% (isMac() ? 20 : 18), (isMac() ? 17 : 15), (isMac() ? 17 : 15), (isMac() ? 16 : 14), 3.8 %%>;
 
   contents3GrayChildrenMarginTop = <%% 20, 15, 20, 20, 20 %%>;
   contents3GrayChildrenWeight = <%% 600, 600, 600, 600, 600 %%>;
   contents3GrayChildrenPaddingTop = <%% 3, 3, 3, 3, 3 %%>;
 
-  contents3PictureHeight = <%% 160, 120, 138, 110, 160 %%>;
+  contents3PictureHeight = <%% 160, 120, 138, 110, 26 %%>;
 
   contents1 = [
     {
@@ -5100,6 +5100,10 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
       ]
     }
   ];
+
+  if (mobile) {
+    contents1[1].children.pop();
+  }
 
   contents2 = {
     image: "contents2" + String(media.findIndex(boo => boo)) + ".png"
@@ -5231,8 +5235,9 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
       mother: contents3Box,
       style: {
         display: "inline-block",
-        width: "calc(calc(100% - " + String(contents3BoxBetween * (contents3.children.length - 1)) + ea + ") / " + String(contents3.children.length) + ")",
-        marginRight: String(i === contents3.children.length - 1 ? 0 : contents3BoxBetween) + ea,
+        width: "calc(calc(100% - " + String(contents3BoxBetween * (desktop ? (contents3.children.length - 1) : 1)) + ea + ") / " + String(desktop ? contents3.children.length : 2) + ")",
+        marginRight: desktop ? String(i === contents3.children.length - 1 ? 0 : contents3BoxBetween) + ea : String(i % 2 === 1 ? 0 : contents3BoxBetween) + ea,
+        marginBottom: desktop ? "" : String(contents3BoxBetween) + ea,
         verticalAlign: "top",
       }
     })
@@ -5248,7 +5253,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
         borderRadius: String(5) + "px",
         background: colorChip.liteGreen,
         height: String(contents3GreenHeight) + ea,
-        marginBottom: String(contents3BoxBetween) + ea,
+        marginBottom: desktop ? String(contents3BoxBetween) + ea : String(contents3BoxBetween / 2) + ea,
       },
       children: [
         {
@@ -5275,7 +5280,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
         borderRadius: String(5) + "px",
         background: colorChip.gray1,
         height: String(contents3PictureHeight) + ea,
-        marginBottom: String(contents3BoxBetween) + ea,
+        marginBottom: desktop ? String(contents3BoxBetween) + ea : String(contents3BoxBetween / 2) + ea,
         backgroundImage: "url('" + StyleCurationJs.binaryPath + "/" + contents3.children[i].image + "')",
         backgroundSize: "100% auto",
         backgroundPosition: "50% 50%",
@@ -5450,7 +5455,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
 
   createNode({
     mother: leftBox1,
-    text: big ? "디자이너 역할과\n구체적 제공물" : "디자이너 역할과 구체적 제공물",
+    text: big ? "디자이너 역할과\n구체적 제공물" : (mobile ? "디자이너의 3가지 역할" : "디자이너 역할과 구체적 제공물"),
     style: {
       display: "inline-block",
       position: "relative",
@@ -5483,7 +5488,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
     mother: rightBox1,
     text: contents1[0].title,
     style: {
-      display: "block",
+      display: desktop ? "block" : "none",
       fontSize: String(contents1TitleSize) + ea,
       fontWeight: String(contents1TitleWeight),
       color: colorChip.black,
@@ -5497,9 +5502,10 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
     contents1UpBox = createNode({
       mother: rightBox1,
       style: {
-        display: "inline-block",
-        width: String(contents1UpBoxWidth) + ea,
-        marginRight: String(num === contents1[0].children.length - 1 ? 0 : contents1UpBoxMargin) + ea,
+        display: desktop ? "inline-block" : "block",
+        position: "relative",
+        width: desktop ? String(contents1UpBoxWidth) + ea : withOut(contents1UpBoxPaddingLeft * 2, ea),
+        marginRight: desktop ? String(num === contents1[0].children.length - 1 ? 0 : contents1UpBoxMargin) + ea : "",
         background: colorChip.gray1,
         borderRadius: String(5) + "px",
         verticalAlign: "top",
@@ -5507,6 +5513,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
         paddingTop: String(contents1UpBoxPaddingTop) + ea,
         paddingRight: String(contents1UpBoxPaddingLeft) + ea,
         paddingBottom: String(contents1UpBoxPaddingLeft) + ea,
+        marginBottom: desktop ? "" : String(2) + ea,
       }
     });
 
@@ -5516,8 +5523,9 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
       source: instance.mother.returnCheckIcon(colorChip.green),
       style: {
         display: "inline-block",
-        position: "relative",
+        position: desktop ? "relative" : "absolute",
         top: String(contents1UpBoxCheckTop) + ea,
+        left: desktop ? "" : String(contents1UpBoxPaddingLeft) + ea,
         width: String(contents1UpBoxCheckWidth) + ea,
         marginRight: String(contents1UpBoxCheckMarginRight) + ea,
         verticalAlign: "top",
@@ -5529,6 +5537,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
       text: title,
       style: {
         display: "inline-block",
+        width: desktop ? "" : String(26) + '%',
         fontSize: String(contents1UpBoxTitleSize) + ea,
         fontWeight: String(contents1UpBoxTitleWeight),
         verticalAlign: "top",
@@ -5538,12 +5547,12 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
     createNode({
       mother: contents1UpBox,
       style: {
-        display: "block",
-        width: String(contents1UpBoxWidth) + ea,
+        display: desktop ? "block" : "inline-block",
+        width: desktop ? String(contents1UpBoxWidth) + ea : String(74) + '%',
         background: colorChip.white,
         boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
         borderRadius: String(5) + "px",
-        marginTop: String(contents1UpBoxWhiteMarginTop) + ea,
+        marginTop: desktop ? String(contents1UpBoxWhiteMarginTop) + ea : "",
         paddingTop: String(contents1UpBoxWhitePaddingTop) + ea,
         paddingBottom: String(contents1UpBoxWhitePaddingBottom) + ea,
       },
@@ -5581,6 +5590,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
       color: colorChip.black,
       marginTop: String(contents1Between) + ea,
       marginBottom: String(contents1TitleBetween) + ea,
+      textAlign: desktop ? "left" : "center",
     }
   });
 
@@ -5590,9 +5600,10 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
       style: {
         display: "inline-block",
         width: "calc(calc(100% - " + String(contents1DownBoxPaddingMargin * (contents1Columns - 1)) + ea + ") / " + String(contents1Columns) + ")",
-        marginRight: String(i === contents1Columns - 1 ? 0 : contents1DownBoxPaddingMargin) + ea,
+        marginRight: desktop ? String(i === contents1Columns - 1 ? 0 : contents1DownBoxPaddingMargin) + ea : String(i % 2 === 1 ? 0 : contents1DownBoxPaddingMargin) + ea,
         paddingTop: String(contents1DownBoxPaddingTop) + ea,
         paddingBottom: String(contents1DownBoxPaddingBottom) + ea,
+        marginBottom: desktop ? "" : String(contents1DownBoxPaddingMargin) + ea,
         background: colorChip.gray1,
         borderRadius: String(5) + "px",
         verticalAlign: "top",
@@ -5702,7 +5713,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
       width: big ? withOut(leftBoxWidth, ea) : String(100) + '%',
       height: String(100) + '%',
       verticalAlign: "top",
-      paddingTop: big ? String(rightBoxPaddingTop) + ea : String(0) + ea,
+      paddingTop: big ? String(rightBoxPaddingTop) + ea : (mobile ? String(7) + ea : String(0) + ea),
     }
   });
 
@@ -5773,7 +5784,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
       width: big ? withOut(leftBoxWidth, ea) : String(100) + '%',
       height: String(100) + '%',
       verticalAlign: "top",
-      paddingTop: big ? String(rightBoxPaddingTop) + ea : String(0) + ea,
+      paddingTop: big ? String(rightBoxPaddingTop) + ea : (mobile ? String(5.5) + ea : String(0) + ea),
     }
   });
 
@@ -5833,10 +5844,13 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
           text: wording,
           style: {
             display: "inline-block",
+            position: "relative",
             fontSize: String(contents0DescriptionSize) + ea,
             fontWeight: String(contents0DescriptionWeight),
             color: colorChip.black,
             verticalAlign: "top",
+            width: desktop ? "" : String(85) + '%',
+            lineHeight: desktop ? "" : String(1.3),
           },
           bold: {
             color: colorChip.green,
@@ -5859,7 +5873,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
     children: [
       {
         style: {
-          display: "block",
+          display: desktop ? "block" : "none",
           position: "absolute",
           borderBottom: "1px dashed " + colorChip.gray3,
           width: String(100) + '%',
@@ -5874,10 +5888,11 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
           fontSize: String(contents0TitleSize) + ea,
           fontWeight: String(contents0DescriptionWeight),
           color: colorChip.black,
-          textAlign: "right",
+          textAlign: desktop ? "right" : "Center",
           lineHeight: String(1.55),
           background: colorChip.white,
-          paddingLeft: String(contents0TitleWhiteBoxMargin) + ea,
+          paddingLeft: desktop ? String(contents0TitleWhiteBoxMargin) + ea : String(contents0TitleWhiteBoxMargin / 2) + ea,
+          paddingRight: String(contents0TitleWhiteBoxMargin / 2) + ea,
           zIndex: String(1),
         },
         bold: {
