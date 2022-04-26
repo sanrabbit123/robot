@@ -5975,15 +5975,14 @@ StyleCurationJs.prototype.forceConverting = async function () {
         if (clientHistory.curation.analytics.send.every((o) => { return typeof o === "object"; })) {
           let boo, feeArr, thisProjects, thisProject, finalSerid;
 
-          // boo = false;
-          // for (let obj of clientHistory.curation.analytics.send) {
-          //   if (obj.page === "designerProposal") {
-          //     boo = true;
-          //     firstBoo = false;
-          //     break;
-          //   }
-          // }
-          boo = true;
+          boo = false;
+          for (let obj of clientHistory.curation.analytics.send) {
+            if (obj.page === "designerProposal") {
+              boo = true;
+              firstBoo = false;
+              break;
+            }
+          }
 
           if (boo) {
             thisProjects = await ajaxJson({ noFlat: true, whereQuery: { cliid: client.cliid } }, "/getProjects", { equal: true });
