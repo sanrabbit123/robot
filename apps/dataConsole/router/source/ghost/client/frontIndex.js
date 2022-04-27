@@ -109,16 +109,18 @@ FrontIndexJs.prototype.insertSlideBox = function () {
   lineHeight = <%% 1.3, 1.3, 1.3, 1.3, 1.3 %%>;
   titleContents = "집을 디자인하는\n새로운 방법, 홈리에종";
 
-  randomIndex = [];
-  while (randomIndex.length < randomNumber) {
-    random = Math.floor(Math.random() * indexArr.length);
-    if (!randomIndex.includes(random)) {
-      randomIndex.push(random);
-    }
-  }
-  randomIndex = randomIndex.map((index) => {
-    return indexArr[index];
-  });
+  // randomIndex = [];
+  // while (randomIndex.length < randomNumber) {
+  //   random = Math.floor(Math.random() * indexArr.length);
+  //   if (!randomIndex.includes(random)) {
+  //     randomIndex.push(random);
+  //   }
+  // }
+  // randomIndex = randomIndex.map((index) => {
+  //   return indexArr[index];
+  // });
+
+  randomIndex = new Array(6);
 
   mainTong = createNode({
     mother: totalContents,
@@ -166,7 +168,8 @@ FrontIndexJs.prototype.insertSlideBox = function () {
   for (let i = 0; i < randomIndex.length; i++) {
     if (desktop) {
 
-      src = FRONTHOST + "/list_image/portp" + randomIndex[i].contents.portfolio.pid + "/" + photoChar + String(randomIndex[i].contents.portfolio.detailInfo.photodae[1]) + randomIndex[i].contents.portfolio.pid + ".jpg";
+      // src = FRONTHOST + "/list_image/portp" + randomIndex[i].contents.portfolio.pid + "/" + photoChar + String(randomIndex[i].contents.portfolio.detailInfo.photodae[1]) + randomIndex[i].contents.portfolio.pid + ".jpg";
+      src = FrontIndexJs.binaryPath + "/slide" + String(randomIndex.length - 1 - i) + ".jpg";
 
       createNode({
         mother: photoTong,
@@ -186,7 +189,8 @@ FrontIndexJs.prototype.insertSlideBox = function () {
 
     } else {
 
-      src = FRONTHOST + "/list_image/portp" + randomIndex[i].contents.portfolio.pid + "/mobile/" + photoCharMobile + String(randomIndex[i].contents.portfolio.detailInfo.photodae[1]) + randomIndex[i].contents.portfolio.pid + ".jpg";
+      // src = FRONTHOST + "/list_image/portp" + randomIndex[i].contents.portfolio.pid + "/mobile/" + photoCharMobile + String(randomIndex[i].contents.portfolio.detailInfo.photodae[1]) + randomIndex[i].contents.portfolio.pid + ".jpg";
+      src = FrontIndexJs.binaryPath + "/moslide" + String(randomIndex.length - 1 - i) + ".jpg";
 
       createNode({
         mother: photoTong,

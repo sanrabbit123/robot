@@ -5765,7 +5765,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
             path: "aboutService",
             cliid: client.cliid,
           });
-          await messageSend({ text: client.name + " 고객님께 큐레이션 완료 알림톡을 보냈어요.", channel: "#404_curation" })
+          await messageSend({ text: client.name + " 고객님께 큐레이션 완료 알림톡을 보냈어요.", channel: "#404_curation" });
         }
 
         res.set({ "Content-Type": "application/json" });
