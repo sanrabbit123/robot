@@ -84,15 +84,15 @@ AboutServiceJs.prototype.insertInitBox = function () {
   let grayBoxImageVisualWidth;
   let marginTop;
 
-  blockHeight = <%% 395, 326, 353, 282, 161 %%>;
+  blockHeight = <%% 395, 326, 293, 247, 161 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
   margin = <%% 52, 52, 44, 32, 52 %%>;
-  marginTop = <%% 52, 50, 44, 32, 52 %%>;
+  marginTop = <%% 52, 50, 40, 32, 52 %%>;
   leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
 
-  titleFont = <%% 31, 26, 25, 23, 5.7 %%>;
+  titleFont = <%% 31, 26, 23, 19, 5.7 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
-  titleFontWeight = <%% 500, 500, 500, 500, 500 %%>;
+  titleFontWeight = <%% 500, 500, 600, 600, 500 %%>;
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
 
   barWidth = <%% 70, 80, 80, 80, 80 %%>;
@@ -101,7 +101,7 @@ AboutServiceJs.prototype.insertInitBox = function () {
   indexFont = <%% 19, 19, 19, 19, 19 %%>;
   indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
 
-  leftWidth = <%% 300, 232, 300, 300, 300 %%>;
+  leftWidth = <%% 300, 232, 200, 164, 300 %%>;
 
   initWordingHeight = <%% 20, 20, 20, 20, 9 %%>;
   initWordingSize = <%% 15.5, 15, 14.5, 13.5, 3.5 %%>;
