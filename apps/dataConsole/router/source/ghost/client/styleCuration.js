@@ -4944,7 +4944,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
   height3 = <%% 430, 360, 438, 370, 163 %%>;
   height4 = <%% 310, 270, 310, 276, 109 %%>;
 
-  titleVisualTop = <%% -2, -2, -2, -2, 2 %%>;
+  titleVisualTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), 2 %%>;
 
   boxTongPaddingBottom = <%% 10, 10, 6, 10, 10 %%>;
   contents0PhotoHeight = <%% 180, 130, 150, 130, 130 %%>;

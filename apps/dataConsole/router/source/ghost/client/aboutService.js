@@ -84,7 +84,7 @@ AboutServiceJs.prototype.insertInitBox = function () {
   let grayBoxImageVisualWidth;
   let marginTop;
 
-  blockHeight = <%% 395, 326, 293, 246, 161 %%>;
+  blockHeight = <%% 396, 326, 293, 246, 161 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
   margin = <%% 52, 52, 44, 32, 52 %%>;
   marginTop = <%% 52, 50, 40, 32, 52 %%>;
@@ -187,7 +187,7 @@ AboutServiceJs.prototype.insertInitBox = function () {
           fontSize: String(titleFont) + ea,
           fontWeight: String(titleFontWeight),
           wordSpacing: String(wordSpacing) + "px",
-          top: desktop ? (String((media[0] ? 0 : media[1] ? 1 : 3) + (isMac() || mobile ? 0 : 4)) + ea) : String(9) + ea,
+          top: desktop ? (String((media[0] ? 0 : media[1] ? 1 : 3) + (isMac() || mobile ? 0 : 2)) + ea) : String(9) + ea,
           left: String(titleLeft) + ea,
           color: colorChip.black,
           width: desktop ? "" : String(100) + '%',
@@ -376,14 +376,14 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   height3 = <%% 430, 360, 438, 370, 163 %%>;
   height4 = <%% 310, 270, 310, 276, 109 %%>;
 
-  titleVisualTop = <%% -2, -2, -2, -2, 2 %%>;
+  titleVisualTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), 2 %%>;
 
   boxTongPaddingBottom = <%% 10, 10, 6, 10, 10 %%>;
   contents0PhotoHeight = <%% 180, 130, 150, 114, 130 %%>;
 
   contents0PaddingLeft = <%% 15, 15, 15, 12, 15 %%>;
-  contents0PaddingTop = <%% 6, 6, 6, 6, 6 %%>;
-  contents0PaddingBottom = <%% 9, 9, 9, 9, 9 %%>;
+  contents0PaddingTop = <%% (isMac() ? 6 : 8), (isMac() ? 6 : 8), (isMac() ? 6 : 8), (isMac() ? 6 : 8), 6 %%>;
+  contents0PaddingBottom = <%% (isMac() ? 9 : 7), (isMac() ? 9 : 7), (isMac() ? 9 : 7), (isMac() ? 9 : 7), 9 %%>;
   contents0TitleSize = <%% 14, 13, 13, 11, 14 %%>;
   contents0TitleWeight = <%% 700, 700, 700, 700, 700 %%>;
   contents0TitleWhiteBoxMargin = <%% 15, 12, 14, 10, 15 %%>;
