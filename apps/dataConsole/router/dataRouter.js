@@ -5762,7 +5762,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
           await instance.kakao.sendTalk("curationComplete", client.name, client.phone, {
             client: client.name,
             host: instance.address.homeinfo.ghost.host,
-            path: "curation",
+            path: "aboutService",
             cliid: client.cliid,
           });
           await messageSend({ text: client.name + " 고객님께 큐레이션 완료 알림톡을 보냈어요.", channel: "#404_curation" })

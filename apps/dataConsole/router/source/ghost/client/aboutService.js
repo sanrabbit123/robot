@@ -83,6 +83,7 @@ AboutServiceJs.prototype.insertInitBox = function () {
   let mobileRightBoxHeight;
   let grayBoxImageVisualWidth;
   let marginTop;
+  let mobileLeftBoxHeight;
 
   blockHeight = <%% 396, 326, 293, 246, 120 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
@@ -145,6 +146,7 @@ AboutServiceJs.prototype.insertInitBox = function () {
 
   mobileGrayUpHeight = 18;
   mobileRightBoxHeight = 78;
+  mobileLeftBoxHeight = 29;
 
   grayBoxImageVisualWidth = <%% 16, 4, 0, 0, 19 %%>;
 
@@ -174,7 +176,7 @@ AboutServiceJs.prototype.insertInitBox = function () {
       position: "relative",
       width: desktop ? String(leftWidth) + ea : String(100) + '%',
       lineHeight: String(1.42),
-      height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : String(29) + ea,
+      height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : String(mobileLeftBoxHeight) + ea,
       marginTop: desktop ? String(marginTop) + ea : "",
       marginBottom: desktop ? String(margin) + ea : "",
       marginLeft: desktop ? String(margin) + ea : "",
@@ -205,7 +207,7 @@ AboutServiceJs.prototype.insertInitBox = function () {
       verticalAlign: "top",
       top: String(0) + ea,
       width: desktop ? withOut(leftWidth + margin, ea) : String(100) + '%',
-      height: withOut(29, ea),
+      height: desktop ? String(100) + '%' : withOut(mobileLeftBoxHeight, ea),
       borderRadius: String(5) + "px",
       overflow: "hidden",
     },
