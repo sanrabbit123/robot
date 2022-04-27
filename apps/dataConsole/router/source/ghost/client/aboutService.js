@@ -84,7 +84,7 @@ AboutServiceJs.prototype.insertInitBox = function () {
   let grayBoxImageVisualWidth;
   let marginTop;
 
-  blockHeight = <%% 395, 326, 293, 247, 161 %%>;
+  blockHeight = <%% 395, 326, 293, 246, 161 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
   margin = <%% 52, 52, 44, 32, 52 %%>;
   marginTop = <%% 52, 50, 40, 32, 52 %%>;
@@ -365,12 +365,12 @@ AboutServiceJs.prototype.insertServiceBox = function () {
 
   leftBoxWidth = <%% 300, 230, 300, 300, 300 %%>;
 
-  boxMargin = <%% 36, 25, 24, 36, 36 %%>;
+  boxMargin = <%% 36, 25, 24, 14, 36 %%>;
 
   rightBoxPaddingTop = <%% 7, 5, 7, 7, 6.5 %%>;
   rightBoxPaddingTopFontVersion = <%% 2, 2, 2, 2, 7 %%>;
 
-  height0 = <%% 545, 415, 506, 415, 415 %%>;
+  height0 = <%% 545, 415, 506, 389, 415 %%>;
   height1 = <%% 570, 480, 550, 447, 216 %%>;
   height2 = <%% 450, 345, 442, 358, 120 %%>;
   height3 = <%% 430, 360, 438, 370, 163 %%>;
@@ -379,20 +379,20 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   titleVisualTop = <%% -2, -2, -2, -2, 2 %%>;
 
   boxTongPaddingBottom = <%% 10, 10, 6, 10, 10 %%>;
-  contents0PhotoHeight = <%% 180, 130, 150, 130, 130 %%>;
+  contents0PhotoHeight = <%% 180, 130, 150, 114, 130 %%>;
 
-  contents0PaddingLeft = <%% 15, 15, 15, 15, 15 %%>;
+  contents0PaddingLeft = <%% 15, 15, 15, 12, 15 %%>;
   contents0PaddingTop = <%% 6, 6, 6, 6, 6 %%>;
   contents0PaddingBottom = <%% 9, 9, 9, 9, 9 %%>;
-  contents0TitleSize = <%% 14, 13, 13, 14, 14 %%>;
+  contents0TitleSize = <%% 14, 13, 13, 11, 14 %%>;
   contents0TitleWeight = <%% 700, 700, 700, 700, 700 %%>;
-  contents0TitleWhiteBoxMargin = <%% 15, 12, 14, 15, 15 %%>;
+  contents0TitleWhiteBoxMargin = <%% 15, 12, 14, 10, 15 %%>;
 
-  contents0DescriptionSize = <%% 15, 14, 14, 15, 15 %%>;
+  contents0DescriptionSize = <%% 15, 14, 14, 12, 15 %%>;
   contents0DescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   contents0DescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
   contents0DescriptionWeightBold = <%% 700, 700, 700, 700, 700 %%>;
-  contents0DescriptionMarginTop = <%% 20, 15, 15, 20, 20 %%>;
+  contents0DescriptionMarginTop = <%% 20, 15, 15, 9, 20 %%>;
 
   contents0Columns = <%% 3, 3, 3, 3, 3 %%>;
 
