@@ -84,13 +84,13 @@ AboutServiceJs.prototype.insertInitBox = function () {
   let grayBoxImageVisualWidth;
   let marginTop;
 
-  blockHeight = <%% 396, 326, 293, 246, 161 %%>;
+  blockHeight = <%% 396, 326, 293, 246, 120 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
   margin = <%% 52, 52, 44, 32, 52 %%>;
   marginTop = <%% 52, 50, 40, 32, 52 %%>;
   leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
 
-  titleFont = <%% 31, 26, 23, 19, 5.7 %%>;
+  titleFont = <%% 31, 26, 23, 19, 5.4 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
   titleFontWeight = <%% 500, 500, 600, 600, 500 %%>;
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
@@ -172,7 +172,7 @@ AboutServiceJs.prototype.insertInitBox = function () {
     style: {
       display: desktop ? "inline-block" : "block",
       position: "relative",
-      width: String(leftWidth) + ea,
+      width: desktop ? String(leftWidth) + ea : String(100) + '%',
       lineHeight: String(1.42),
       height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : String(29) + ea,
       marginTop: desktop ? String(marginTop) + ea : "",
@@ -204,8 +204,8 @@ AboutServiceJs.prototype.insertInitBox = function () {
       position: "relative",
       verticalAlign: "top",
       top: String(0) + ea,
-      width: withOut(leftWidth + margin, ea),
-      height: String(100) + '%',
+      width: desktop ? withOut(leftWidth + margin, ea) : String(100) + '%',
+      height: withOut(29, ea),
       borderRadius: String(5) + "px",
       overflow: "hidden",
     },
@@ -365,12 +365,12 @@ AboutServiceJs.prototype.insertServiceBox = function () {
 
   leftBoxWidth = <%% 300, 230, 300, 300, 300 %%>;
 
-  boxMargin = <%% 36, 25, 24, 14, 36 %%>;
+  boxMargin = <%% 36, 25, 24, 14, 2 %%>;
 
   rightBoxPaddingTop = <%% 7, 5, 7, 7, 6.5 %%>;
   rightBoxPaddingTopFontVersion = <%% 2, 2, 2, 2, 7 %%>;
 
-  height0 = <%% 545, 415, 506, 389, 415 %%>;
+  height0 = <%% 545, 415, 506, 389, 143 %%>;
   height1 = <%% 570, 480, 550, 447, 216 %%>;
   height2 = <%% 450, 345, 442, 358, 120 %%>;
   height3 = <%% 430, 360, 438, 370, 163 %%>;
@@ -378,23 +378,23 @@ AboutServiceJs.prototype.insertServiceBox = function () {
 
   titleVisualTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), 2 %%>;
 
-  boxTongPaddingBottom = <%% 10, 10, 6, 10, 10 %%>;
-  contents0PhotoHeight = <%% 180, 130, 150, 114, 130 %%>;
+  boxTongPaddingBottom = <%% 10, 10, 6, 10, 4.5 %%>;
+  contents0PhotoHeight = <%% 180, 130, 150, 114, 22 %%>;
 
-  contents0PaddingLeft = <%% 15, 15, 15, 12, 15 %%>;
-  contents0PaddingTop = <%% (isMac() ? 6 : 8), (isMac() ? 6 : 8), (isMac() ? 6 : 8), (isMac() ? 6 : 8), 6 %%>;
-  contents0PaddingBottom = <%% (isMac() ? 9 : 7), (isMac() ? 9 : 7), (isMac() ? 9 : 7), (isMac() ? 9 : 7), 9 %%>;
-  contents0TitleSize = <%% 14, 13, 13, 11, 14 %%>;
+  contents0PaddingLeft = <%% 15, 15, 15, 12, 1 %%>;
+  contents0PaddingTop = <%% (isMac() ? 6 : 8), (isMac() ? 6 : 8), (isMac() ? 6 : 8), (isMac() ? 6 : 8), 2 %%>;
+  contents0PaddingBottom = <%% (isMac() ? 9 : 7), (isMac() ? 9 : 7), (isMac() ? 9 : 7), (isMac() ? 9 : 7), 2 %%>;
+  contents0TitleSize = <%% 14, 13, 13, 11, 3 %%>;
   contents0TitleWeight = <%% 700, 700, 700, 700, 700 %%>;
-  contents0TitleWhiteBoxMargin = <%% 15, 12, 14, 10, 15 %%>;
+  contents0TitleWhiteBoxMargin = <%% 15, 12, 14, 10, -7 %%>;
 
-  contents0DescriptionSize = <%% 15, 14, 14, 12, 15 %%>;
+  contents0DescriptionSize = <%% 15, 14, 14, 12, 2.5 %%>;
   contents0DescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   contents0DescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
   contents0DescriptionWeightBold = <%% 700, 700, 700, 700, 700 %%>;
-  contents0DescriptionMarginTop = <%% 20, 15, 15, 9, 20 %%>;
+  contents0DescriptionMarginTop = <%% 20, 15, 15, 9, 8 %%>;
 
-  contents0Columns = <%% 3, 3, 3, 3, 3 %%>;
+  contents0Columns = <%% 3, 3, 3, 3, 2 %%>;
 
   contents1TitleSize = <%% 19, 18, 17, 15, 4.2 %%>;
   contents1TitleWeight = <%% 600, 600, 600, 600, 600 %%>;
@@ -669,7 +669,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
       width: big ? withOut(leftBoxWidth, ea) : String(100) + '%',
       height: String(100) + '%',
       verticalAlign: "top",
-      paddingTop: String(rightBoxPaddingTop) + ea,
+      paddingTop: String(desktop ? rightBoxPaddingTop : rightBoxPaddingTopFontVersion) + ea,
     }
   });
 
@@ -708,17 +708,19 @@ AboutServiceJs.prototype.insertServiceBox = function () {
             display: "inline-block",
             position: "absolute",
             background: colorChip.white,
-            paddingLeft: String(contents0PaddingLeft) + ea,
-            paddingRight: String(contents0PaddingLeft) + ea,
-            paddingTop: String(contents0PaddingTop) + ea,
-            paddingBottom: String(contents0PaddingBottom) + ea,
+            paddingLeft: desktop ? String(contents0PaddingLeft) + ea : "",
+            paddingRight: desktop ? String(contents0PaddingLeft) + ea : "",
+            paddingTop: desktop ? String(contents0PaddingTop) + ea : "",
+            paddingBottom: desktop ? String(contents0PaddingBottom) + ea : "",
             fontSize: String(contents0TitleSize) + ea,
             fontWeight: String(contents0TitleWeight),
             color: colorChip.green,
             bottom: String(contents0TitleWhiteBoxMargin) + ea,
-            left: String(contents0TitleWhiteBoxMargin) + ea,
+            left: String(desktop ? contents0TitleWhiteBoxMargin : 0) + ea,
             borderRadius: String(5) + "px",
             opacity: String(0.95),
+            width: desktop ? "" : String(100) + '%',
+            textAlign: desktop ? "" : "center",
           }
         }
       ]
