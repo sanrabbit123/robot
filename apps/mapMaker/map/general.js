@@ -658,6 +658,9 @@ module.exports = {
       "styleCuration": {
         "behaviors": []
       },
+      "aboutService": {
+        "behaviors": []
+      },
       "clientConsulting": {
         "behaviors": []
       },
