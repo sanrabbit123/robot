@@ -82,13 +82,15 @@ AboutServiceJs.prototype.insertInitBox = function () {
   let mobileGrayUpHeight;
   let mobileRightBoxHeight;
   let grayBoxImageVisualWidth;
+  let marginTop;
 
-  blockHeight = <%% 418, 389, 353, 282, 161 %%>;
+  blockHeight = <%% 395, 326, 353, 282, 161 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
   margin = <%% 52, 52, 44, 32, 52 %%>;
+  marginTop = <%% 52, 50, 44, 32, 52 %%>;
   leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
 
-  titleFont = <%% 31, 29, 27, 23, 5.7 %%>;
+  titleFont = <%% 31, 26, 25, 23, 5.7 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
   titleFontWeight = <%% 500, 500, 500, 500, 500 %%>;
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
@@ -99,10 +101,7 @@ AboutServiceJs.prototype.insertInitBox = function () {
   indexFont = <%% 19, 19, 19, 19, 19 %%>;
   indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
 
-  quoteTop = <%% 8, 8, 8, 8, -0.6 %%>;
-  quoteHeight = <%% 12, 11, 10, 9, 2.5 %%>;
-  quoteMarginBottom = <%% (isMac() ? 7 : 8), (isMac() ? 7 : 8), (isMac() ? 7 : 8), (isMac() ? 6 : 7), 7 %%>;
-  quoteLeft = <%% 2, 2, 2, 2, 1.6 %%>;
+  leftWidth = <%% 300, 232, 300, 300, 300 %%>;
 
   initWordingHeight = <%% 20, 20, 20, 20, 9 %%>;
   initWordingSize = <%% 15.5, 15, 14.5, 13.5, 3.5 %%>;
@@ -173,93 +172,30 @@ AboutServiceJs.prototype.insertInitBox = function () {
     style: {
       display: desktop ? "inline-block" : "block",
       position: "relative",
-      width: desktop ? "calc(calc(100% - " + String(margin * 2) + ea + ") * " + String(leftRatio) + ")" : String(100) + '%',
+      width: String(leftWidth) + ea,
+      lineHeight: String(1.42),
       height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : String(29) + ea,
-      marginTop: desktop ? String(margin) + ea : "",
+      marginTop: desktop ? String(marginTop) + ea : "",
       marginBottom: desktop ? String(margin) + ea : "",
       marginLeft: desktop ? String(margin) + ea : "",
-    }
-  });
-
-  //main title
-  createNode({
-    mother: leftBox,
-    text: desktop ? ((media[0] || media[4]) ? "홈리에종 진행 프로세스와" : "홈리에종의") : "홈리에종 프로세스와",
-    style: {
-      position: "absolute",
-      fontSize: String(titleFont) + ea,
-      fontWeight: String(titleFontWeight),
-      wordSpacing: String(wordSpacing) + "px",
-      top: desktop ? (String((media[0] ? 0 : media[1] ? 1 : 3) + (isMac() || mobile ? 0 : 4)) + ea) : String(9) + ea,
-      left: String(titleLeft) + ea,
-      color: colorChip.black,
-      width: desktop ? "" : String(100) + '%',
-      textAlign: desktop ? "" : "center",
-    }
-  });
-
-  if (media[1] || media[2] || media[3]) {
-    createNode({
-      mother: leftBox,
-      text: "진행 프로세스와",
-      style: {
-        position: "absolute",
-        fontSize: String(titleFont) + ea,
-        fontWeight: String(titleFontWeight),
-        wordSpacing: String(wordSpacing) + ea,
-        top: String((media[0] ? 0 : media[1] ? 1 : 3) + (titleFont * (media[0] ? 1.45 : 1.45)) + (isMac() || mobile ? 0 : 4)) + ea,
-        left: String(titleLeft) + ea,
-        color: colorChip.black,
-      }
-    });
-  }
-
-  createNode({
-    mother: leftBox,
-    text: (media[0] ? "상세 큐레이션 안내" : "큐레이션 안내"),
-    style: {
-      position: "absolute",
-      fontSize: String(titleFont) + ea,
-      fontWeight: String(titleFontWeight),
-      wordSpacing: String(wordSpacing) + "px",
-      top: desktop ? (String((media[0] ? 0 : media[1] ? 1 : 3) + (titleFont * (media[0] ? 1.45 : 1.45) * (media[0] ? 1 : 2)) + (isMac() || mobile ? 0 : 4)) + ea) : String(17) + ea,
-      left: String(titleLeft) + ea,
-      width: desktop ? "" : String(100) + '%',
-      textAlign: desktop ? "" : "center",
-      color: colorChip.black,
-    }
-  });
-
-  if (desktop) {
-
-    if (media[0]) {
-      createNode({
-        mother: leftBox,
+    },
+    children: [
+      {
+        text: "인테리어, 막상 하려니\n막막하지 않으세요?",
         style: {
           position: "absolute",
-          borderBottom: "1px solid " + colorChip.gray3,
-          top: String(titleFont * (63 / 30)) + ea,
-          left: String(barLeft) + ea,
-          width: String(barWidth) + ea,
+          fontSize: String(titleFont) + ea,
+          fontWeight: String(titleFontWeight),
+          wordSpacing: String(wordSpacing) + "px",
+          top: desktop ? (String((media[0] ? 0 : media[1] ? 1 : 3) + (isMac() || mobile ? 0 : 4)) + ea) : String(9) + ea,
+          left: String(titleLeft) + ea,
+          color: colorChip.black,
+          width: desktop ? "" : String(100) + '%',
+          textAlign: desktop ? "" : "center",
         }
-      });
-    }
-
-    createNode({
-      mother: leftBox,
-      text: String(0),
-      style: {
-        position: "absolute",
-        fontSize: String(indexFont) + ea,
-        fontWeight: String(indexFontWeight),
-        wordSpacing: String(wordSpacing) + ea,
-        bottom: String(indexNumberBottom) + ea,
-        left: String(titleLeft) + ea,
-        color: colorChip.gray4,
       }
-    });
-
-  }
+    ]
+  });
 
   rightBox = createNode({
     mother: whiteBlock,
@@ -268,396 +204,27 @@ AboutServiceJs.prototype.insertInitBox = function () {
       position: "relative",
       verticalAlign: "top",
       top: String(0) + ea,
-      width: desktop ? "calc(calc(100% - " + String(margin * 2) + ea + ") * " + String(1 - leftRatio) + ")" : String(100) + '%',
-      height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : String(mobileRightBoxHeight) + ea,
-      marginTop: desktop ? String(margin) + ea : "",
-      marginBottom: desktop ? String(margin) + ea : "",
-      marginRight: desktop ? String(margin) + ea : "",
-    }
-  });
-
-  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
-  createNode({
-    mother: rightBox,
-    mode: "svg",
-    source: svgMaker.doubleQuote(colorChip.green),
-    style: {
-      position: "absolute",
-      top: String(quoteTop) + ea,
-      left: desktop ? String(quoteLeft) + ea : "calc(50% - " + String(quoteWidth / 2) + ea + ")",
-      width: String(quoteWidth) + ea,
-      height: String(quoteHeight) + ea,
-    }
-  });
-
-  createNode({
-    mother: rightBox,
-    text: initWording0,
-    style: {
-      position: "absolute",
-      top: String(desktop ? quoteTop + quoteHeight + quoteMarginBottom : 3.7) + ea,
-      left: String(desktop ? 0 : 13) + ea,
-      width: String(desktop ? 100 : 74) + '%',
-      height: desktop ? String(initWordingHeight) + ea : "",
-      fontSize: String(initWordingSize) + ea,
-      fontWeight: String(400),
-      color: colorChip.black,
-      wordSpacing: String(initWordingWordSpacing) + "px",
-      lineHeight: desktop ? "" : String(1.6),
-      textAlign: desktop ? "" : "center",
-    },
-    bold: {
-      fontWeight: String(600),
-      color: colorChip.black,
-    }
-  });
-
-  createNode({
-    mother: rightBox,
-    text: initWording1,
-    style: {
-      position: "absolute",
-      top: String(desktop ? quoteTop + quoteHeight + quoteMarginBottom + initWordingSize + initWordingLineHeight : 15.5) + ea,
-      left: String(desktop ? 0 : 11) + ea,
-      width: String(desktop ? 100 : 78) + '%',
-      height: desktop ? String(initWordingHeight) + ea : "",
-      fontSize: String(initWordingSize) + ea,
-      fontWeight: String(400),
-      color: colorChip.black,
-      wordSpacing: String(initWordingWordSpacing) + "px",
-      lineHeight: desktop ? "" : String(1.6),
-      textAlign: desktop ? "" : "center",
-    },
-    bold: {
-      fontWeight: String(600),
-      color: colorChip.black,
-    }
-  });
-
-  grayBox = createNode({
-    mother: rightBox,
-    style: {
-      display: "block",
-      position: "relative",
-      marginTop: desktop ? String(grayBoxMarginTop) + ea : "",
-      paddingTop: desktop ? "" : String(grayBoxMarginTop) + ea,
-      height: desktop ? withOut(grayBoxMarginTop, ea) : "",
-      width: withOut(grayBoxImageVisualWidth, ea),
+      width: withOut(leftWidth + margin, ea),
+      height: String(100) + '%',
       borderRadius: String(5) + "px",
       overflow: "hidden",
-      left: desktop ? "" : String(12) + ea,
-    }
-  });
-
-  createNode({
-    mother: grayBox,
-    mode: "img",
-    attribute: {
-      src: AboutServiceJs.binaryPath + "/init" + String(media.findIndex(boo => boo)) + ".png",
     },
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(100) + '%',
-    }
-  })
-
-  // grayBoxUp = createNode({
-  //   mother: grayBox,
-  //   style: {
-  //     display: "block",
-  //     position: "relative",
-  //     height: desktop ? String(50) + '%' : String(mobileGrayUpHeight) + ea,
-  //     width: String(100) + '%',
-  //     background: desktop ? colorChip.gray0 : "",
-  //   },
-  //   children: [
-  //     {
-  //       text: grayUpWordings[0],
-  //       style: {
-  //         position: "absolute",
-  //         fontSize: String(grayBoxTitleSize) + ea,
-  //         fontWeight: String(grayBoxTitleWeight),
-  //         color: desktop ? colorChip.black : colorChip.green,
-  //         top: String(grayBoxTitleTop) + ea,
-  //         left: String(grayBoxTitleLeft) + ea,
-  //         width: desktop ? "" : withOut(grayBoxTitleLeft * 2, ea),
-  //         textAlign: desktop ? "" : "center",
-  //       }
-  //     }
-  //   ]
-  // });
-  //
-  // createNode({
-  //   mother: grayBoxUp,
-  //   style: {
-  //     position: "absolute",
-  //     right: String(grayBoxTitleLeft) + ea,
-  //     top: String(grayBoxTop) + ea,
-  //     height: String(grayBoxHeight) + ea,
-  //     width: String(grayBoxUpWidth0) + ea,
-  //     background: colorChip.gray2,
-  //     borderRadius: String(5) + "px",
-  //   },
-  //   children: [
-  //     {
-  //       style: {
-  //         display: "flex",
-  //         alignItems: "center",
-  //         justifyContent: "center",
-  //         position: "relative",
-  //         width: withOut(overlappingWidth, ea),
-  //         height: String(100) + '%',
-  //         marginLeft: String(overlappingWidth) + ea,
-  //       },
-  //       children: [
-  //         {
-  //           text: grayUpWordings[1],
-  //           style: {
-  //             position: "relative",
-  //             fontSize: String(grayInnerWordingSize) + ea,
-  //             top: String(grayInnerWordingTextTop) + ea,
-  //             fontWeight: String(grayInnerWordingWeight),
-  //             color: colorChip.liteBlack,
-  //           }
-  //         }
-  //       ]
-  //     }
-  //   ]
-  // });
-  //
-  // createNode({
-  //   mother: grayBoxUp,
-  //   style: {
-  //     position: "absolute",
-  //     right: String(grayBoxUpRight1) + ea,
-  //     top: String(grayBoxTop) + ea,
-  //     height: String(grayBoxHeight) + ea,
-  //     width: String(grayBoxUpWidth1) + ea,
-  //     background: colorChip.gradientGreen4,
-  //     borderRadius: String(5) + "px",
-  //     boxShadow: "4px 3px 20px -9px " + colorChip.shadow,
-  //   },
-  //   children: [
-  //     {
-  //       style: {
-  //         display: "flex",
-  //         alignItems: "center",
-  //         justifyContent: "center",
-  //         position: "relative",
-  //         width: withOut(0, ea),
-  //         height: String(100) + '%',
-  //         marginLeft: String(0) + ea,
-  //       },
-  //       children: [
-  //         {
-  //           text: grayUpWordings[2],
-  //           style: {
-  //             position: "relative",
-  //             fontSize: String(grayInnerWordingSize) + ea,
-  //             top: String(grayInnerWordingTextTop) + ea,
-  //             fontWeight: String(grayInnerWordingWeight),
-  //             color: colorChip.white,
-  //           }
-  //         }
-  //       ]
-  //     }
-  //   ]
-  // });
-  //
-  // createNode({
-  //   mother: grayBoxUp,
-  //   mode: "svg",
-  //   source: svgMaker.horizontalArrow(grayBoxUpWidth2, grayBoxArrowHeight),
-  //   style: {
-  //     position: "absolute",
-  //     right: String(grayBoxUpRight2) + ea,
-  //     top: String(grayBoxArrowTop) + ea,
-  //     height: String(grayBoxArrowHeight) + ea,
-  //     width: String(grayBoxUpWidth2) + ea,
-  //   }
-  // });
-  //
-  // createNode({
-  //   mother: grayBoxUp,
-  //   style: {
-  //     position: "absolute",
-  //     right: String(grayBoxUpRight3) + ea,
-  //     top: String(grayBoxTop) + ea,
-  //     height: String(grayBoxHeight) + ea,
-  //     width: String(grayBoxUpWidth3) + ea,
-  //     background: colorChip.white,
-  //     borderRadius: String(5) + "px",
-  //     boxShadow: String(desktop ? 3 : 0) + "px 2px " + String(desktop ? 13 : 18) + "px -9px " + colorChip.shadow,
-  //   },
-  //   children: [
-  //     {
-  //       style: {
-  //         display: "flex",
-  //         alignItems: "center",
-  //         justifyContent: "center",
-  //         position: "relative",
-  //         width: withOut(0, ea),
-  //         height: String(100) + '%',
-  //         marginLeft: String(0) + ea,
-  //       },
-  //       children: [
-  //         {
-  //           text: grayUpWordings[3],
-  //           style: {
-  //             position: "relative",
-  //             fontSize: String(grayInnerWordingSize) + ea,
-  //             top: String(grayInnerWordingTextTop) + ea,
-  //             fontWeight: String(grayInnerWordingWeight),
-  //             color: colorChip.green,
-  //           }
-  //         }
-  //       ]
-  //     }
-  //   ]
-  // });
-  //
-  // grayBoxDown = createNode({
-  //   mother: grayBox,
-  //   style: {
-  //     display: "block",
-  //     position: "relative",
-  //     height: desktop ? String(50) + '%' : String(mobileGrayUpHeight) + ea,
-  //     width: String(100) + '%',
-  //     background: desktop ? colorChip.gray3 : "",
-  //   },
-  //   children: [
-  //     {
-  //       text: grayDownWordings[0],
-  //       style: {
-  //         position: "absolute",
-  //         fontSize: String(grayBoxTitleSize) + ea,
-  //         fontWeight: String(grayBoxTitleWeight),
-  //         color: desktop ? colorChip.black : colorChip.green,
-  //         top: String(grayBoxTitleTop) + ea,
-  //         left: String(grayBoxTitleLeft) + ea,
-  //         width: desktop ? "" : withOut(grayBoxTitleLeft * 2, ea),
-  //         textAlign: desktop ? "" : "center",
-  //       }
-  //     }
-  //   ]
-  // });
-  //
-  // createNode({
-  //   mother: grayBoxDown,
-  //   style: {
-  //     position: "absolute",
-  //     right: String(grayBoxTitleLeft) + ea,
-  //     top: String(grayBoxTop) + ea,
-  //     height: String(grayBoxHeight) + ea,
-  //     width: String(grayBoxDownWidth0) + ea,
-  //     background: colorChip.gray0,
-  //     borderRadius: String(5) + "px",
-  //   },
-  //   children: [
-  //     {
-  //       style: {
-  //         display: "flex",
-  //         alignItems: "center",
-  //         justifyContent: "center",
-  //         position: "relative",
-  //         width: withOut(overlappingWidth, ea),
-  //         height: String(100) + '%',
-  //         marginLeft: String(overlappingWidth) + ea,
-  //       },
-  //       children: [
-  //         {
-  //           text: grayDownWordings[1],
-  //           style: {
-  //             position: "relative",
-  //             fontSize: String(grayInnerWordingSize) + ea,
-  //             top: String(grayInnerWordingTextTop) + ea,
-  //             fontWeight: String(grayInnerWordingWeight),
-  //             color: colorChip.liteBlack,
-  //           }
-  //         }
-  //       ]
-  //     }
-  //   ]
-  // })
-  //
-  // createNode({
-  //   mother: grayBoxDown,
-  //   style: {
-  //     position: "absolute",
-  //     right: String(grayBoxDownRight1) + ea,
-  //     top: String(grayBoxTop) + ea,
-  //     height: String(grayBoxHeight) + ea,
-  //     width: String(grayBoxDownWidth1) + ea,
-  //     background: colorChip.white,
-  //     borderRadius: String(5) + "px",
-  //     boxShadow: "3px 2px 13px -9px " + colorChip.shadow,
-  //   },
-  //   children: [
-  //     {
-  //       style: {
-  //         display: "flex",
-  //         alignItems: "center",
-  //         justifyContent: "center",
-  //         position: "relative",
-  //         width: withOut(overlappingWidth, ea),
-  //         height: String(100) + '%',
-  //         marginLeft: String(overlappingWidth) + ea,
-  //       },
-  //       children: [
-  //         {
-  //           text: grayDownWordings[2],
-  //           style: {
-  //             position: "relative",
-  //             fontSize: String(grayInnerWordingSize) + ea,
-  //             top: String(grayInnerWordingTextTop) + ea,
-  //             fontWeight: String(grayInnerWordingWeight),
-  //             color: colorChip.shadow,
-  //           }
-  //         }
-  //       ]
-  //     }
-  //   ]
-  // })
-  //
-  // createNode({
-  //   mother: grayBoxDown,
-  //   style: {
-  //     position: "absolute",
-  //     right: String(grayBoxDownRight2) + ea,
-  //     top: String(grayBoxTop) + ea,
-  //     height: String(grayBoxHeight) + ea,
-  //     width: String(grayBoxDownWidth2) + ea,
-  //     background: colorChip.gradientGreen4,
-  //     borderRadius: String(5) + "px",
-  //     boxShadow: "4px 3px 20px -9px " + colorChip.shadow,
-  //   },
-  //   children: [
-  //     {
-  //       style: {
-  //         display: "flex",
-  //         alignItems: "center",
-  //         justifyContent: "center",
-  //         position: "relative",
-  //         width: withOut(0, ea),
-  //         height: String(100) + '%',
-  //         marginLeft: String(0) + ea,
-  //       },
-  //       children: [
-  //         {
-  //           text: grayDownWordings[3],
-  //           style: {
-  //             position: "relative",
-  //             fontSize: String(grayInnerWordingSize) + ea,
-  //             top: String(grayInnerWordingTextTop) + ea,
-  //             fontWeight: String(grayInnerWordingWeight),
-  //             color: colorChip.white,
-  //           }
-  //         }
-  //       ]
-  //     }
-  //   ]
-  // })
+    children: [
+      {
+        mode: "img",
+        attribute: {
+          src: AboutServiceJs.binaryPath + "/contents5" + String(media.findIndex(boo => boo)) + ".png",
+        },
+        style: {
+          display: "block",
+          position: "absolute",
+          width: String(100) + '%',
+          bottom: String(0),
+          right: String(0),
+        }
+      }
+    ]
+  });
 
 }
 
