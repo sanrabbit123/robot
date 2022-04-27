@@ -236,7 +236,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   const desktop = !mobile;
   const big = (media[0] || media[1]);
   const small = !big;
-  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone } = GeneralJs;
   let blockMarginBottom;
   let top;
   let bottom;
@@ -370,7 +370,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   rightBoxPaddingTop = <%% 7, 5, 7, 7, 6.5 %%>;
   rightBoxPaddingTopFontVersion = <%% 2, 2, 2, 2, 7 %%>;
 
-  height0 = <%% 545, 415, 506, 389, 143 %%>;
+  height0 = <%% 545, 415, 506, 389, 141 %%>;
   height1 = <%% 570, 480, 550, 447, 216 %%>;
   height2 = <%% 450, 345, 442, 358, 120 %%>;
   height3 = <%% 430, 360, 438, 370, 163 %%>;
@@ -378,7 +378,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
 
   titleVisualTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), 2 %%>;
 
-  boxTongPaddingBottom = <%% 10, 10, 6, 10, 4.5 %%>;
+  boxTongPaddingBottom = <%% 10, 10, 6, 10, 3.8 %%>;
   contents0PhotoHeight = <%% 180, 130, 150, 114, 22 %%>;
 
   contents0PaddingLeft = <%% 15, 15, 15, 12, 1 %%>;
@@ -388,11 +388,11 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   contents0TitleWeight = <%% 700, 700, 700, 700, 700 %%>;
   contents0TitleWhiteBoxMargin = <%% 15, 12, 14, 10, -7 %%>;
 
-  contents0DescriptionSize = <%% 15, 14, 14, 12, 2.5 %%>;
+  contents0DescriptionSize = <%% 15, 14, 14, 12, 2.6 %%>;
   contents0DescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   contents0DescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
   contents0DescriptionWeightBold = <%% 700, 700, 700, 700, 700 %%>;
-  contents0DescriptionMarginTop = <%% 20, 15, 15, 9, 8 %%>;
+  contents0DescriptionMarginTop = <%% 20, 15, 15, 9, (isIphone() ? 7.5 : 7.8) %%>;
 
   contents0Columns = <%% 3, 3, 3, 3, 2 %%>;
 
