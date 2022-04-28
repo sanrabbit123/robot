@@ -1085,7 +1085,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
 
   createNode({
     mother: leftBox3,
-    text: big ? "고객님께 추천하는\n스타일링 유형" : "고객님께 추천하는 스타일링 유형",
+    text: big ? "홈리에종 서비스의\n4가지 분류" : "홈리에종 서비스의 4가지 분류",
     style: {
       display: "inline-block",
       position: "relative",
