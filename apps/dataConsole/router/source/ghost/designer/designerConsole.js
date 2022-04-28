@@ -1464,9 +1464,9 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
       });
       ongoingBlock = firstMother.firstChild;
       mainTitleBlock = firstMother.lastChild;
-    }
 
-    memberTong = firstMother.querySelector('.' + ongoingTongClassName);
+      memberTong = firstMother.querySelector('.' + ongoingTongClassName);
+    }
 
     for (let project of designer.projects) {
       createNode({
