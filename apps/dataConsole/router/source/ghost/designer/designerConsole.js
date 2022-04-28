@@ -2816,7 +2816,7 @@ DesignerConsoleJs.prototype.launching = async function (loading) {
     // } else {
     //   this.initialLogin();
     // }
-    this.consoleView();
+    await this.consoleView();
 
   } catch (e) {
     console.log(e);
