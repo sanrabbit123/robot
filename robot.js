@@ -292,11 +292,14 @@ Robot.prototype.proposalMaker = function (button, arg) {
 
     }).then(() => {
 
+      const targetProposal = project.toNormal().proposal;
+      targetProposal.date = now;
+
       return back.mongoCreate(collection, {
         date: new Date(),
         method: "send",
         proid: proid,
-        project: project.toNormal().proposal,
+        project: targetProposal,
       }, { console: true });
 
     }).then(() => {

@@ -126,13 +126,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-    await findCode("다시 시도")
-
-
-
-
     // let res;
     // let item;
     // let tong;
