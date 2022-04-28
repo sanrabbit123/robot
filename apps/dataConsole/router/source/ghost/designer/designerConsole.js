@@ -2787,11 +2787,11 @@ DesignerConsoleJs.prototype.launching = async function (loading) {
 
     await protoPatch(instance, moduleList.map((m) => { return `${modulePath}/${m}`; }), `DesignerJs`);
 
-    GeneralJs.stacks["designerConsoleSseSource"] = new EventSource("https://" + SSEHOST + ":3000/specificsse/projectCard");
-    GeneralJs.stacks["designerConsoleSseEvent"] = function (e) {
-      instance.projectSseParsing(GeneralJs.equalJson(e.data));
-    }
-    GeneralJs.stacks["designerConsoleSseSource"].addEventListener("updateTong", GeneralJs.stacks["designerConsoleSseEvent"]);
+    // GeneralJs.stacks["designerConsoleSseSource"] = new EventSource("https://" + SSEHOST + ":3000/specificsse/projectCard");
+    // GeneralJs.stacks["designerConsoleSseEvent"] = function (e) {
+    //   instance.projectSseParsing(GeneralJs.equalJson(e.data));
+    // }
+    // GeneralJs.stacks["designerConsoleSseSource"].addEventListener("updateTong", GeneralJs.stacks["designerConsoleSseEvent"]);
 
     loading.parentElement.removeChild(loading);
 
