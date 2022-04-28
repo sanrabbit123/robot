@@ -231,105 +231,108 @@ Robot.prototype.proposalMaker = function (button, arg) {
     throw new Error("proposal must be id");
     return;
   }
-  if (button === "make" || button === "1") {
-    const AiProposal = require(process.cwd() + "/apps/contentsMaker/aiProposal.js");
-    let app;
-    app = new AiProposal(arg);
-    app.proposalLaunching();
-  } else if (button === "web") {
-    const instance = this;
-    const back = this.back;
-    const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
-    const path = "designerProposal";
-    const { host } = this.address.homeinfo.ghost;
-    const { requestSystem, ghostRequest, messageLog, errorLog, messageSend } = this.mother;
-    const proid = arg;
-    let kakaoInstance, cliid, name, phone, client;
-    let requestNumber, action;
-    let now;
-    return new Promise((resolve, reject) => {
+  const instance = this;
+  const back = this.back;
+  const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
+  const path = "designerProposal";
+  const collection = "proposalLog";
+  const { host } = this.address.homeinfo.ghost;
+  const { requestSystem, ghostRequest, messageLog, errorLog, messageSend } = this.mother;
+  const proid = arg;
+  let kakaoInstance, cliid, name, phone, client;
+  let requestNumber, action;
+  let now;
+  let project;
 
-      now = new Date();
+  return new Promise((resolve, reject) => {
 
-      back.getProjectById(proid).then((project) => {
-        if (project === null) {
-          reject("There is no project");
+    now = new Date();
+
+    back.getProjectById(proid).then((thisProject) => {
+      if (thisProject === null) {
+        reject("There is no project");
+      }
+      project = thisProject;
+      cliid = thisProject.cliid;
+      return back.getClientById(cliid);
+    }).then((data) => {
+      client = data;
+      name = client.name;
+      phone = client.phone;
+
+      requestNumber = 0;
+      for (let i = 0; i < client.requests.length; i++) {
+        if (client.requests[i].request.timeline.valueOf() <= now.valueOf()) {
+          requestNumber = i;
+          break;
         }
-        cliid = project.cliid;
-        return back.getClientById(cliid);
-      }).then((data) => {
-        client = data;
-        name = client.name;
-        phone = client.phone;
+      }
 
-        requestNumber = 0;
-        for (let i = 0; i < client.requests.length; i++) {
-          if (client.requests[i].request.timeline.valueOf() <= now.valueOf()) {
-            requestNumber = i;
-            break;
-          }
+      if (client.requests[requestNumber].analytics.response.action.value === "부재중 제안 발송") {
+        action = "피드백과 응대 예정";
+      } else {
+        action = "제안 피드백 예정";
+      }
+
+      kakaoInstance = new KakaoTalk();
+      return kakaoInstance.ready();
+    }).then(() => {
+      return kakaoInstance.sendTalk("designerProposal", name, phone, { client: name, host, path, proid });
+    }).then(() => {
+      return back.updateProject([ { proid }, { "proposal.status": "완료", "proposal.date": now } ]);
+    }).then(() => {
+
+      return requestSystem("https://" + instance.address.backinfo.host + ":3000/updateLog", {
+        id: cliid,
+        column: "action",
+        position: "requests." + String(requestNumber) + ".analytics.response.action",
+        pastValue: client.requests[requestNumber].analytics.response.action.value,
+        finalValue: action
+      }, { headers: { "origin": "https://" + instance.address.homeinfo.ghost.host, "Content-Type": "application/json" } });
+
+    }).then(() => {
+
+      return back.mongoCreate(collection, {
+        date: new Date(),
+        method: "send",
+        proid: proid,
+        project: project.toNormal().proposal,
+      }, { console: true });
+
+    }).then(() => {
+
+      return requestSystem("https://" + instance.address.backinfo.host + ":3000/generalMongo", {
+        mode: "sse",
+        db: "console",
+        collection: "sse_clientCard",
+        log: true,
+        who: "autoBot",
+        updateQuery: {
+          cliid,
+          requestNumber,
+          mode: "action",
+          from: client.requests[requestNumber].analytics.response.action.value,
+          to: action,
+          randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
         }
+      }, { headers: { "origin": "https://" + instance.address.homeinfo.ghost.host, "Content-Type": "application/json" } });
 
-        if (client.requests[requestNumber].analytics.response.action.value === "부재중 제안 발송") {
-          action = "피드백과 응대 예정";
-        } else {
-          action = "제안 피드백 예정";
-        }
+    }).then(() => {
 
-        kakaoInstance = new KakaoTalk();
-        return kakaoInstance.ready();
-      }).then(() => {
-        return kakaoInstance.sendTalk("designerProposal", name, phone, { client: name, host, path, proid });
-      }).then(() => {
-        return back.updateProject([ { proid }, { "proposal.status": "완료", "proposal.date": now } ]);
-      }).then(() => {
+      let updateObj;
+      updateObj = {};
+      updateObj["requests." + String(requestNumber) + ".analytics.response.action"] = action;
+      return back.updateClient([ { cliid }, updateObj ]);
 
-        return requestSystem("https://" + instance.address.backinfo.host + ":3000/updateLog", {
-          id: cliid,
-          column: "action",
-          position: "requests." + String(requestNumber) + ".analytics.response.action",
-          pastValue: client.requests[requestNumber].analytics.response.action.value,
-          finalValue: action
-        }, { headers: { "origin": "https://" + instance.address.homeinfo.ghost.host, "Content-Type": "application/json" } });
-
-      }).then(() => {
-        return requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(instance.address.officeinfo.ghost.port) + "/proposalLog", { proid }, { headers: { "origin": "https://" + instance.address.homeinfo.ghost.host, "Content-Type": "application/json" } });
-
-      }).then(() => {
-
-        return requestSystem("https://" + instance.address.backinfo.host + ":3000/generalMongo", {
-          mode: "sse",
-          db: "console",
-          collection: "sse_clientCard",
-          log: true,
-          who: "autoBot",
-          updateQuery: {
-            cliid,
-            requestNumber,
-            mode: "action",
-            from: client.requests[requestNumber].analytics.response.action.value,
-            to: action,
-            randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
-          }
-        }, { headers: { "origin": "https://" + instance.address.homeinfo.ghost.host, "Content-Type": "application/json" } });
-
-      }).then(() => {
-
-        let updateObj;
-        updateObj = {};
-        updateObj["requests." + String(requestNumber) + ".analytics.response.action"] = action;
-        return back.updateClient([ { cliid }, updateObj ]);
-
-      }).then(() => {
-        return ghostRequest("voice", { text: name + " 고객님에게 제안서 알림톡을 전송하였어요." });
-      }).then(() => {
-        return messageSend({ text: name + " 고객님에게 제안서 알림톡을 전송하였어요.\nlink : https://" + host + "/middle/" + path + "?proid=" + proid + "&mode=test", channel: "#403_proposal" });
-      }).catch((err) => {
-        errorLog("제안서 보내는 도중 오류남 : " + err.message).catch((e) => { console.log(e); });
-        reject(err);
-      });
+    }).then(() => {
+      return ghostRequest("voice", { text: name + " 고객님에게 제안서 알림톡을 전송하였어요." });
+    }).then(() => {
+      return messageSend({ text: name + " 고객님에게 제안서 알림톡을 전송하였어요.\nlink : https://" + host + "/middle/" + path + "?proid=" + proid + "&mode=test", channel: "#403_proposal" });
+    }).catch((err) => {
+      errorLog("제안서 보내는 도중 오류남 : " + err.message).catch((e) => { console.log(e); });
+      reject(err);
     });
-  }
+  });
 }
 
 Robot.prototype.requestMaker = async function (arg) {
