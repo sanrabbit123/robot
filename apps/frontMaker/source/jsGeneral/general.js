@@ -319,22 +319,22 @@ GeneralJs.ajax = function (data, url, callback) {
         callback(response);
       } else {
         alert("오류가 발생하였습니다. 다시 시도해주세요!");
-        window.location.reload();
+        // window.location.reload();
       }
     } else if (xhr.status >= 500) {
       alert("오류가 발생하였습니다. 다시 시도해주세요!");
-      window.location.reload();
+      // window.location.reload();
     } else if (xhr.status >= 402 && xhr.status <= 420) {
       alert("오류가 발생하였습니다. 다시 시도해주세요!");
-      window.location.reload();
+      // window.location.reload();
     } else if(xhr.status === 400 || xhr.status === 401) {
       alert("오류가 발생하였습니다. 다시 시도해주세요!");
-      window.location.reload();
+      // window.location.reload();
     }
   }
   xhr.onerror = function () {
     alert("오류가 발생하였습니다. 다시 시도해주세요!");
-    window.location.reload();
+    // window.location.reload();
   }
   if (typeof data === "string") {
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
