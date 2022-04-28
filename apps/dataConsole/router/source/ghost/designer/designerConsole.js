@@ -2559,7 +2559,7 @@ DesignerConsoleJs.prototype.consoleView = async function () {
     const loading = await this.mother.loadingRun();
     const middleMode = true;
     const getObj = GeneralJs.returnGet();
-    const dashBoardMode = (getObj.mode === "dashboard");
+    const dashBoardMode = (getObj.mode === "dashboard" || getObj.mode === undefined);
 
     if (!dashBoardMode) {
       this.backGrayBar();
@@ -2807,9 +2807,9 @@ DesignerConsoleJs.prototype.launching = async function (loading) {
       window.localStorage.setItem("desid", "d1701_aa01s");
     }
 
-    if (typeof getObj.mode !== "string") {
-      window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + returnGet().desid + "&mode=dashboard";
-    }
+    // if (typeof getObj.mode !== "string") {
+    //   window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + returnGet().desid + "&mode=dashboard";
+    // }
 
     // if (window.localStorage.getItem("desid") === this.desid) {
     //   await this.consoleView();
