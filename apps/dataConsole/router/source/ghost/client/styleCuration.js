@@ -5964,7 +5964,7 @@ StyleCurationJs.prototype.serviceConverting = async function (seridObj) {
 
 StyleCurationJs.prototype.forceConverting = async function () {
   const instance = this;
-  const { ajaxJson } = GeneralJs;
+  const { ajaxJson, returnGet } = GeneralJs;
   const { client, clientHistory } = this;
   try {
     let firstBoo;
@@ -5982,6 +5982,10 @@ StyleCurationJs.prototype.forceConverting = async function () {
               firstBoo = false;
               break;
             }
+          }
+
+          if (returnGet().force === "true") {
+            boo = true;
           }
 
           if (boo) {
