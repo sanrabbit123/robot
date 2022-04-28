@@ -2451,6 +2451,35 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_proposalLog = function () {
+  const instance = this;
+  const back = this.back;
+  const { shell, shellLink, requestSystem, ghostRequest } = this.mother;
+  let obj = {};
+  obj.link = [ "/proposalLog" ];
+  obj.func = async function (req, res) {
+    res.set("Content-Type", "application/json");
+    try {
+      if (typeof req.body.proid !== "string") {
+        throw new Error("invaild post");
+      }
+      const { proid } = req.body;
+      const collection = "proposalLog";
+      let rows;
+
+      rows = await back.mongoRead(collection, { proid }, { selfMongo: instance.mongolocal });
+      rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
+
+      res.send(JSON.stringify(rows.map((obj) => { return obj.project })));
+    } catch (e) {
+      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_proposalLog): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 DataRouter.prototype.rou_post_proposalReset = function () {
   const instance = this;
   const back = this.back;

@@ -1184,6 +1184,8 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
   let feeBox;
   let feeHeight, feeMarginBottom;
   let feeDetailBox, feeDetailBoxTitle;
+  let thisDesigner;
+  let thisDesignerEndBoo;
 
   bottomMarginVisual = <%% 3, 3, 3, 3, 3 %%>;
 
@@ -1228,7 +1230,13 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
 
   //title
   designerTitle = GeneralJs.nodes.div.cloneNode(true);
-  designerTitle.insertAdjacentHTML("beforeend", "추천 디자이너&nbsp;&nbsp;<b style=\"color:" + GeneralJs.colorChip[instance.designers.pick(desid).end ? "gray5" : "green"] + "\">" + this.abc[this.abcStatic] + "</b>" + (instance.designers.pick(desid).end ? "&nbsp;&nbsp;: 해당 디자이너는 마감되었습니다." : ""));
+  thisDesigner = instance.designers.pick(desid);
+  if (thisDesigner !== null) {
+    thisDesignerEndBoo = thisDesigner.end;
+  } else {
+    thisDesignerEndBoo = false;
+  }
+  designerTitle.insertAdjacentHTML("beforeend", "추천 디자이너&nbsp;&nbsp;<b style=\"color:" + GeneralJs.colorChip[thisDesignerEndBoo ? "gray5" : "green"] + "\">" + this.abc[this.abcStatic] + "</b>" + (thisDesignerEndBoo ? "&nbsp;&nbsp;: 해당 디자이너는 마감되었습니다." : ""));
   style = {
     position: "relative",
     marginLeft: String(desktop ? leftMargin : 0) + ea,
@@ -1578,7 +1586,7 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
   mother.appendChild(feeBox);
 
 
-  if (instance.designers.pick(desid).end) {
+  if (thisDesignerEndBoo) {
     for (let dom of mother.children) {
       dom.style.opacity = String(desktop ? 0.5 : 0.4);
     }
@@ -3996,7 +4004,7 @@ DesignerProposalJs.prototype.submitEvent = function (desid, designer, method) {
 
 DesignerProposalJs.prototype.launching = async function (loading) {
   const instance = this;
-  const { returnGet, ajaxJson, sleep } = GeneralJs;
+  const { returnGet, ajaxJson, sleep, equalJson } = GeneralJs;
   try {
 
     this.mother.setGeneralProperties(this);
@@ -4012,6 +4020,7 @@ DesignerProposalJs.prototype.launching = async function (loading) {
     let designers, designer;
     let whereQuery;
     let belowTarget, removeTargets;
+    let proposalHistory;
 
     if (getObj.cliid !== undefined) {
       cliid = getObj.cliid;
@@ -4043,27 +4052,34 @@ DesignerProposalJs.prototype.launching = async function (loading) {
       window.alert("아직 제안서가 만들어지지 않았습니다! 잠시만 기다려주세요 :)");
       window.location.href = this.frontPage;
       project = null;
-    } else {
-
-      whereQuery = {};
-      whereQuery["$or"] = [];
-      for (let project of projects) {
-        for (let { desid } of project.proposal.detail) {
-          whereQuery["$or"].push({ desid: desid });
-        }
-      }
-
-      projects.sort((a, b) => {
-        return (new Date(b.proposal.date)).valueOf() - (new Date(a.proposal.date)).valueOf();
-      });
-      project = projects[0];
-      proid = project.proid;
-
-      designers = await ajaxJson({ whereQuery, proid }, "/designerProposal_getDesigners");
-
     }
 
+    proposalHistory = await ajaxJson({ proid: project.proid }, "/proposalLog", { equal: true });
+
+    whereQuery = {};
+    whereQuery["$or"] = [];
+    for (let project of projects) {
+      for (let { desid } of project.proposal.detail) {
+        whereQuery["$or"].push({ desid: desid });
+      }
+    }
+
+    for (let proposal of proposalHistory) {
+      for (let { desid } of proposal.detail) {
+        whereQuery["$or"].push({ desid: desid });
+      }
+    }
+
+    projects.sort((a, b) => {
+      return (new Date(b.proposal.date)).valueOf() - (new Date(a.proposal.date)).valueOf();
+    });
+    project = projects[0];
+    proid = project.proid;
+
+    designers = await ajaxJson({ whereQuery, proid }, "/designerProposal_getDesigners");
+
     client = clients[0];
+
     for (let obj of project.proposal.detail) {
       for (let { desid, designer } of designers) {
         if (obj.desid === desid) {
@@ -4071,10 +4087,29 @@ DesignerProposalJs.prototype.launching = async function (loading) {
         }
       }
     }
+
+    for (let proposal of proposalHistory) {
+      for (let obj of proposal.detail) {
+        for (let { desid, designer } of designers) {
+          if (obj.desid === desid) {
+            obj.designer = designer;
+          }
+        }
+      }
+    }
+
+    if (proposalHistory.length > 0) {
+      if (JSON.stringify(project.proposal.detail) !== JSON.stringify(proposalHistory[0].detail)) {
+        proposalHistory.unshift(equalJson(JSON.stringify(project.proposal)));
+      }
+    }
+
     this.project = project;
     this.client = client;
     this.designers = new Designers(designers);
     this.proposal = project.proposal;
+    this.proposalHistory = proposalHistory;
+    this.proposalHistoryNumber = 0;
 
     if (getObj.proid === undefined) {
       window.location.href = window.location.protocol + "//" + window.location.host + "/middle/proposal?proid=" + project.proid;
@@ -4114,6 +4149,34 @@ DesignerProposalJs.prototype.launching = async function (loading) {
     //loading end
     await sleep(500);
     loading.parentNode.removeChild(loading);
+
+    window.addEventListener("keypress", function (e) {
+      if (e.key === 'p') {
+        let nextNumber;
+
+        nextNumber = instance.proposalHistoryNumber;
+        if (instance.proposalHistory[nextNumber + 1] !== undefined) {
+          nextNumber = nextNumber + 1;
+        } else {
+          nextNumber = 0;
+        }
+        instance.proposalHistoryNumber = nextNumber;
+
+        instance.project.proposal = instance.proposalHistory[nextNumber];
+        instance.proposal = instance.proposalHistory[nextNumber];
+
+        GeneralJs.cleanChildren(instance.baseTong);
+        instance.abcStatic = 0;
+
+        instance.insertInitBox();
+        instance.insertDesignerBoxes();
+        instance.insertServiceBox();
+        instance.insertWordBox();
+        instance.insertPannelBox();
+
+      }
+    });
+
 
   } catch (e) {
     await GeneralJs.ajaxJson({ message: "DesignerProposalJs.launching : " + e.message }, "/errorLog");

@@ -293,6 +293,7 @@ Robot.prototype.proposalMaker = function (button, arg) {
     }).then(() => {
 
       const targetProposal = project.toNormal().proposal;
+      targetProposal.status = "완료";
       targetProposal.date = now;
 
       return back.mongoCreate(collection, {

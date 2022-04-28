@@ -1791,7 +1791,7 @@ DataRouter.prototype.rou_post_proposalLog = function () {
       let rows;
 
       rows = await back.mongoRead(collection, { proid }, { selfMongo: instance.mongolocal });
-      rows.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
+      rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
 
       res.send(JSON.stringify(rows.map((obj) => { return obj.project })));
     } catch (e) {
