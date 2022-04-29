@@ -1414,7 +1414,7 @@ DataRouter.prototype.rou_post_rawUpdateDocument = function () {
         }
       }
 
-      await errorLog("raw update 감지 => " + JSON.stringify(updateTong, null, 2));
+      messageLog("raw update 감지 => " + JSON.stringify(updateTong, null, 2)).catch((err) => { console.log(err); });
 
       back.mongoCreate((req.url.replace(/^\/rawU/, 'u') + "Log"), updateTong, { selfMongo: instance.mongolocal }).catch(function (e) {
         throw new Error(e);

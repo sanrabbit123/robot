@@ -85,7 +85,7 @@ AboutServiceJs.prototype.insertInitBox = function () {
   let marginTop;
   let mobileLeftBoxHeight;
 
-  blockHeight = <%% 396, 326, 293, 246, 120 %%>;
+  blockHeight = <%% 396, 326, 293, 246, 121 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
   margin = <%% 52, 52, 44, 32, 52 %%>;
   marginTop = <%% 52, 50, 40, 32, 52 %%>;
