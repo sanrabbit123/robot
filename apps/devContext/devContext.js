@@ -89,7 +89,24 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const selfMongo = this.MONGOC;
+    const projects = await back.getProjectsByQuery({ $and: [
+      { desid: { $regex: "^d" } },
+      { "process.contract.first.date": { $gte: new Date(2021, 0, 1) } },
+      { "process.contract.first.date": { $lt: new Date(2022, 0, 1) } },
+    ] }, { selfMongo });
+    const targetCliid = projects.toNormal().map((project) => { return project.cliid });
+    const targetClients = await back.getClientsByQuery({
+      $or: targetCliid.map((cliid) => { return { cliid } })
+    })
+    const matrix = (targetClients.toNormal().map((client) => {
+      return [ client.requests[0].request.space.address ]
+    }));
+    let sheetsId;
 
+    console.log(matrix);
+    sheetsId = "1oWSq4DcdNB-ie4BxPoPrUUDDfJ-QiVUdtUJraTWQ8xU";
+    await sheets.update_value_inPython(sheetsId, "", matrix);
 
 
 
