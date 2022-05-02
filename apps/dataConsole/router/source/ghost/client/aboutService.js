@@ -238,7 +238,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   const desktop = !mobile;
   const big = (media[0] || media[1]);
   const small = !big;
-  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
   let blockMarginBottom;
   let top;
   let bottom;
@@ -350,6 +350,8 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   let contents3PictureHeight;
   let num;
   let titleMarginBottom;
+  let contents0Tong;
+  let baseTong2;
 
   blockMarginBottom = <%% 16, 16, 16, 16, 2 %%>;
 
@@ -388,7 +390,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   contents0PaddingBottom = <%% (isMac() ? 9 : 7), (isMac() ? 9 : 7), (isMac() ? 9 : 7), (isMac() ? 9 : 7), 2 %%>;
   contents0TitleSize = <%% 14, 13, 13, 11, 3 %%>;
   contents0TitleWeight = <%% 700, 700, 700, 700, 700 %%>;
-  contents0TitleWhiteBoxMargin = <%% 15, 12, 14, 10, -7 %%>;
+  contents0TitleWhiteBoxMargin = <%% 24, 12, 14, 10, -7 %%>;
 
   contents0DescriptionSize = <%% 15, 14, 14, 12, 2.6 %%>;
   contents0DescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
@@ -483,32 +485,32 @@ AboutServiceJs.prototype.insertServiceBox = function () {
 
   contents0 = [
     {
-      title: "전문 지식이 없어 난감하다면?",
+      title: "전문 지식이 없어\n난감하다면?",
       description: "시공 전 발생할 수 있는 <b%리스크를%b>\n<b%미리 체크하고 보완%b>해 드려요.",
       image: "contents00.jpg",
     },
     {
-      title: "취향이 명확하지 않다면?",
+      title: "취향이 명확하지\n않다면?",
       description: "상담을 통해 <b%니즈와 취향을 파악%b>해\n컨셉의 방향성을 잡아드려요.",
       image: "contents01.jpg",
     },
     {
-      title: "결정이 어려운 성향이라면?",
+      title: "결정이 어려운\n성향이라면?",
       description: "선택의 폭을 좁혀드리고\n<b%결정의 순간 명확한 조언%b>을 드려요.",
       image: "contents02.jpg",
     },
     {
-      title: "부족한 감각은?",
+      title: "부족한\n감각은?",
       description: "<b%전문가의 아이디어와 감각%b>으로\n특색 있는 집을 완성합니다.",
       image: "contents03.jpg",
     },
     {
-      title: "예산을 잘 쓰고 싶다면?",
+      title: "예산을 잘 쓰고\n싶다면?",
       description: "전체 <b%예산을 우선순위에 따라 분배%b>\n해 합리적으로 운영해드려요.",
       image: "contents04.jpg",
     },
     {
-      title: "시간과 에너지가 부족할 땐?",
+      title: "시간과 에너지가\n부족할 땐?",
       description: "일상 생활에 집중하실 수 있도록\n<b%전문가가 대신 고민%b>합니다.",
       image: "contents05.jpg",
     },
@@ -623,10 +625,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
       borderRadius: String(desktop ? 8 : 3) + "px",
       width: withOut(0 * 2, ea),
       background: "transparent",
-      marginBottom: String(blockMarginBottom) + ea,
-      height: String(height0) + ea,
-      paddingTop: String(margin) + ea,
-      paddingBottom: String(margin) + ea,
+      paddingTop: String(84) + ea,
     }
   });
 
@@ -640,24 +639,120 @@ AboutServiceJs.prototype.insertServiceBox = function () {
     },
     children: [
       {
+        style: {
+          display: "block",
+          position: "absolute",
+          width: String(100) + '%',
+          height: String(17) + ea,
+          top: String(0),
+          left: String(0),
+          borderBottom: "1px solid " + colorChip.gray4,
+        }
+      },
+      {
         text: "이젠 디자이너와 함께 진행하세요!",
         style: {
           display: "inline-block",
           position: "relative",
-          fontSize: String(28) + ea,
+          fontSize: String(27) + ea,
           fontWeight: String(700),
           color: colorChip.black,
           textAlign: "center",
+          paddingLeft: String(20) + ea,
+          paddingRight: String(20) + ea,
+          background: colorChip.gray0,
         }
       }
     ]
   })
 
+  contents0Tong = createNode({
+    mother: whiteBlock0,
+    style: {
+      display: "block",
+      position: "relative",
+      paddingTop: String(54) + ea,
+    }
+  })
 
-
-
-
-
+  for (let i = 0; i < contents0.length; i++) {
+    createNode({
+      mother: contents0Tong,
+      style: {
+        display: "inline-block",
+        width: "calc(calc(100% - " + String(contents0TitleWhiteBoxMargin) + ea + ") / 2)",
+        height: String(145) + ea,
+        marginRight: (i % 2 !== 0 ? "" : String(contents0TitleWhiteBoxMargin) + ea),
+        marginBottom: String(contents0TitleWhiteBoxMargin) + ea,
+        background: colorChip.white,
+        borderRadius: String(5) + "px",
+        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+        overflow: "hidden",
+      },
+      children: [
+        {
+          style: {
+            display: "inline-block",
+            height: String(100) + '%',
+            width: String(420) + ea,
+            backgroundImage: "url('" + AboutServiceJs.binaryPath + "/" + contents0[i].image + "')",
+            backgroundPosition: "50% 50%",
+            backgroundSize: "100% auto",
+          }
+        },
+        {
+          style: {
+            display: "inline-block",
+            width: withOut(420, ea),
+            position: "relative",
+            height: String(100) + '%',
+          },
+          children: [
+            {
+              text: contents0[i].title,
+              style: {
+                position: "absolute",
+                left: String(28) + ea,
+                top: String(22) + ea,
+                fontSize: String(16) + ea,
+                fontWeight: String(600),
+                color: colorChip.green,
+                lineHeight: String(1.45),
+              }
+            },
+            {
+              mode: "svg",
+              source: svgMaker.horizontalArrow(34, 8, colorChip.gray4),
+              style: {
+                position: "absolute",
+                left: String(28) + ea,
+                width: String(34) + ea,
+                height: String(8) + ea,
+                top: String(90) + ea,
+               }
+            },
+            {
+              text: contents0[i].description,
+              style: {
+                position: "absolute",
+                left: String(70) + ea,
+                bottom: String(22) + ea,
+                fontSize: String(13) + ea,
+                fontWeight: String(300),
+                color: colorChip.black,
+                lineHeight: String(1.45),
+              },
+              bold: {
+                fontSize: String(13) + ea,
+                fontWeight: String(700),
+                color: colorChip.black,
+              }
+            },
+          ]
+        }
+      ]
+    });
+  }
 
   // box 1 ---------------------------------------------------------------------------------------------------
 
@@ -892,10 +987,15 @@ AboutServiceJs.prototype.insertServiceBox = function () {
 
   }
 
+
+  baseTong2 = baseTong.cloneNode(false);
+  baseTong.parentNode.appendChild(baseTong2);
+  baseTong.style.background = colorChip.white;
+
   // box 2 ---------------------------------------------------------------------------------------------------
 
   whiteBlock2 = createNode({
-    mother: baseTong,
+    mother: baseTong2,
     style: {
       position: "relative",
       borderRadius: String(desktop ? 8 : 3) + "px",
@@ -967,7 +1067,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   // box 3 ---------------------------------------------------------------------------------------------------
 
   whiteBlock3 = createNode({
-    mother: baseTong,
+    mother: baseTong2,
     style: {
       position: "relative",
       borderRadius: String(desktop ? 8 : 3) + "px",
@@ -1159,7 +1259,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   // box 4 ---------------------------------------------------------------------------------------------------
 
   whiteBlock4 = createNode({
-    mother: baseTong,
+    mother: baseTong2,
     style: {
       position: "relative",
       borderRadius: String(desktop ? 8 : 3) + "px",
