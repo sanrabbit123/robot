@@ -351,7 +351,8 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   let num;
   let titleMarginBottom;
   let contents0Tong;
-  let baseTong2;
+  let baseTongBack2, baseTongBack3;
+  let baseTong2, baseTong3;
 
   blockMarginBottom = <%% 16, 16, 16, 16, 2 %%>;
 
@@ -664,7 +665,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
         }
       }
     ]
-  })
+  });
 
   contents0Tong = createNode({
     mother: whiteBlock0,
@@ -988,9 +989,18 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   }
 
 
+  // white area ---------------------------------------------------------------------------------------------------
+
   baseTong2 = baseTong.cloneNode(false);
-  baseTong.parentNode.appendChild(baseTong2);
-  baseTong.style.background = colorChip.white;
+  baseTong2Back = baseTong.cloneNode(false);
+  baseTong.parentNode.appendChild(baseTong2Back);
+  baseTong2Back.appendChild(baseTong2);
+  baseTong2.style.paddingTop = String(0) + ea;
+  baseTong2Back.style.paddingTop = String(84) + ea;
+  baseTong2Back.style.width = String(100) + '%';
+  baseTong2Back.style.left = String(0);
+  baseTong2Back.style.background = colorChip.white;
+  baseTong.style.marginBottom = String(180) + ea;
 
   // box 2 ---------------------------------------------------------------------------------------------------
 
@@ -999,68 +1009,58 @@ AboutServiceJs.prototype.insertServiceBox = function () {
     style: {
       position: "relative",
       borderRadius: String(desktop ? 8 : 3) + "px",
-      width: withOut(margin * 2, ea),
-      background: colorChip.white,
-      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
-      marginBottom: String(blockMarginBottom) + ea,
-      height: String(height2) + ea,
-      paddingTop: String(margin) + ea,
-      paddingBottom: String(margin) + ea,
-      paddingLeft: String(margin) + ea,
-      paddingRight: String(margin) + ea,
-    }
-  });
-
-  leftBox2 = createNode({
-    mother: whiteBlock2,
-    style: {
-      display: big ? "inline-block" : "block",
-      position: "relative",
-      width: big ? String(leftBoxWidth) + ea : String(100) + '%',
-      height: big ? String(100) + '%' : "",
-      verticalAlign: "top",
+      width: withOut(0 * 2, ea),
+      background: "transparent",
+      paddingTop: String(84) + ea,
     }
   });
 
   createNode({
-    mother: leftBox2,
-    text: big ? "인테리어 예산의\n3가지 분류" : "인테리어 예산의 3가지 분류",
-    style: {
-      display: "inline-block",
-      position: "relative",
-      fontSize: String(titleFont) + ea,
-      fontWeight: String(titleFontWeight),
-      wordSpacing: String(wordSpacing) + "px",
-      top: String(titleVisualTop) + ea,
-      marginLeft: big ? String(titleLeft) + ea : "",
-      marginBottom: big ? "" : String(titleMarginBottom) + ea,
-      color: colorChip.black,
-      width: big ? "" : String(100) + '%',
-      textAlign: desktop ? "" : "center",
-      lineHeight: String(lineHeight),
-    }
-  });
-
-  rightBox2 = createNode({
     mother: whiteBlock2,
     style: {
-      display: big ? "inline-block" : "block",
+      display: "block",
       position: "relative",
-      width: big ? withOut(leftBoxWidth, ea) : String(100) + '%',
-      height: String(100) + '%',
-      verticalAlign: "top",
-      paddingTop: String(rightBoxPaddingTop) + ea,
-    }
+      width: String(100) + '%',
+      textAlign: "center",
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: "absolute",
+          width: String(100) + '%',
+          height: String(17) + ea,
+          top: String(0),
+          left: String(0),
+          borderBottom: "1px solid " + colorChip.gray4,
+        }
+      },
+      {
+        text: "인테리어 비용, 어떻게 구성되나요?",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(27) + ea,
+          fontWeight: String(700),
+          color: colorChip.black,
+          textAlign: "center",
+          paddingLeft: String(20) + ea,
+          paddingRight: String(20) + ea,
+          background: colorChip.white,
+        }
+      }
+    ]
   });
 
   createNode({
-    mother: rightBox2,
+    mother: whiteBlock2,
     mode: "img",
     attribute: { src: AboutServiceJs.binaryPath + "/" + contents2.image },
     style: {
       display: "block",
       position: "relative",
       width: String(100) + '%',
+      marginTop: String(54) + ea,
     }
   });
 
