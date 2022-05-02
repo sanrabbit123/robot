@@ -271,8 +271,12 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   let contents0DescriptionMarginTop;
   let contents0DescriptionWeightBold;
   let contents0DescriptionLineHeight;
+  let contents0DescriptionLeft;
+  let contents0DescriptionBottom;
   let contents0Columns;
   let contents0Box;
+  let contents0ArrowWidth, contents0ArrowHeight;
+  let contents0ArrowTop;
   let contents0WhitePaddingTop, contents0WhitePaddingBottom, contents0WhitePaddingLeft;
   let contents0IconWidth, contents0IconMarginRight, contents0IconTop;
   let contents0FactorMarginBottom;
@@ -353,6 +357,17 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   let contents0Tong;
   let baseTongBack2, baseTongBack3;
   let baseTong2, baseTong3;
+  let middleTitleSize, middleTitleWeight;
+  let middleTitlePadding;
+  let middleTitleLineTop;
+  let middleTongPaddinngTop;
+  let middleTitleMarginBottom;
+  let contents0TongBoxHeight;
+  let contents0TongPhotoWidth;
+  let contents0TitleLineHeight;
+  let middleTongPaddingBottom;
+  let middleAreaPaddingTop;
+  let contents2ImageBottom;
 
   blockMarginBottom = <%% 16, 16, 16, 16, 2 %%>;
 
@@ -375,6 +390,17 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   rightBoxPaddingTop = <%% 7, 5, 7, 7, 6.5 %%>;
   rightBoxPaddingTopFontVersion = <%% 2, 2, 2, 2, 7 %%>;
 
+  middleTitleSize = <%% 26, 26, 26, 26, 26 %%>;
+  middleTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+  middleTitlePadding = <%% 20, 20, 20, 20, 20 %%>;
+  middleTitleLineTop = <%% 17, 17, 17, 17, 17 %%>;
+
+  middleTongPaddinngTop = <%% 90, 90, 90, 90, 90 %%>;
+  middleTongPaddingBottom = <%% 150, 150, 150, 150, 150 %%>;
+  middleTitleMarginBottom = <%% 54, 54, 54, 54, 54 %%>;
+
+  middleAreaPaddingTop = <%% 40, 40, 40, 40, 40 %%>;
+
   height0 = <%% 545, 415, 506, 389, 141 %%>;
   height1 = <%% 570, 480, 550, 447, 216 %%>;
   height2 = <%% 450, 345, 442, 358, 120 %%>;
@@ -386,20 +412,31 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   boxTongPaddingBottom = <%% 10, 10, 6, 10, 3.8 %%>;
   contents0PhotoHeight = <%% 180, 130, 150, 114, 22 %%>;
 
-  contents0PaddingLeft = <%% 15, 15, 15, 12, 1 %%>;
-  contents0PaddingTop = <%% (isMac() ? 6 : 8), (isMac() ? 6 : 8), (isMac() ? 6 : 8), (isMac() ? 6 : 8), 2 %%>;
+  contents0PaddingLeft = <%% 30, 30, 30, 30, 1 %%>;
+  contents0PaddingTop = <%% 24, 24, 24, 24, 2 %%>;
   contents0PaddingBottom = <%% (isMac() ? 9 : 7), (isMac() ? 9 : 7), (isMac() ? 9 : 7), (isMac() ? 9 : 7), 2 %%>;
-  contents0TitleSize = <%% 14, 13, 13, 11, 3 %%>;
-  contents0TitleWeight = <%% 700, 700, 700, 700, 700 %%>;
-  contents0TitleWhiteBoxMargin = <%% 24, 12, 14, 10, -7 %%>;
 
-  contents0DescriptionSize = <%% 15, 14, 14, 12, 2.6 %%>;
-  contents0DescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
-  contents0DescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+  contents0TitleSize = <%% 16, 16, 16, 16, 3 %%>;
+  contents0TitleWeight = <%% 600, 600, 600, 600, 600 %%>;
+  contents0TitleWhiteBoxMargin = <%% 24, 12, 14, 10, -7 %%>;
+  contents0TitleLineHeight = <%% 1.45, 1.45, 1.45, 1.45, 1.45 %%>;
+
+  contents0DescriptionSize = <%% 13, 13, 13, 12, 2.6 %%>;
+  contents0DescriptionWeight = <%% 300, 300, 300, 300, 300 %%>;
+  contents0DescriptionLineHeight = <%% 1.45, 1.45, 1.45, 1.45, 1.45 %%>;
   contents0DescriptionWeightBold = <%% 700, 700, 700, 700, 700 %%>;
   contents0DescriptionMarginTop = <%% 20, 15, 15, 9, (isIphone() ? 7.5 : 7.8) %%>;
+  contents0DescriptionLeft = <%% 72, 72, 72, 72, 72 %%>;
+  contents0DescriptionBottom = <%% 26, 26, 26, 26, 26 %%>;
 
-  contents0Columns = <%% 3, 3, 3, 3, 2 %%>;
+  contents0Columns = <%% 2, 2, 2, 1, 1 %%>;
+
+  contents0TongBoxHeight = <%% 145, 145, 145, 145, 145 %%>;
+  contents0TongPhotoWidth = <%% 420, 420, 420, 420, 420 %%>;
+
+  contents0ArrowWidth = <%% 34, 34, 34, 34, 34 %%>;
+  contents0ArrowHeight = <%% 8, 8, 8, 8, 8 %%>;
+  contents0ArrowTop = <%% 86, 86, 86, 86, 86 %%>;
 
   contents1TitleSize = <%% 19, 18, 17, 15, 4.2 %%>;
   contents1TitleWeight = <%% 600, 600, 600, 600, 600 %%>;
@@ -448,7 +485,9 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   contents2LineTitleSize = <%% 14, 13, 14, 14, 14 %%>;
   contents2LineTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-  contents2ImageTop = <%% 40, 25, 20, 40, 40 %%>;
+  contents2ImageTop = <%% 62, 62, 62, 62, 62 %%>;
+  contents2ImageBottom = <%% 200, 200, 200, 200, 200 %%>;
+
   contents2BoxMarginTop = <%% 25, 18, 20, 25, 25 %%>;
   contents2BoxFactorWidth = <%% 172, 144, 166, 172, 172 %%>;
   contents2BoxFactorHeight = <%% 100, 100, 100, 100, 100 %%>;
@@ -626,7 +665,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
       borderRadius: String(desktop ? 8 : 3) + "px",
       width: withOut(0 * 2, ea),
       background: "transparent",
-      paddingTop: String(84) + ea,
+      paddingTop: String(middleTongPaddinngTop) + ea,
     }
   });
 
@@ -644,7 +683,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
           display: "block",
           position: "absolute",
           width: String(100) + '%',
-          height: String(17) + ea,
+          height: String(middleTitleLineTop) + ea,
           top: String(0),
           left: String(0),
           borderBottom: "1px solid " + colorChip.gray4,
@@ -655,12 +694,12 @@ AboutServiceJs.prototype.insertServiceBox = function () {
         style: {
           display: "inline-block",
           position: "relative",
-          fontSize: String(27) + ea,
-          fontWeight: String(700),
+          fontSize: String(middleTitleSize) + ea,
+          fontWeight: String(middleTitleWeight),
           color: colorChip.black,
           textAlign: "center",
-          paddingLeft: String(20) + ea,
-          paddingRight: String(20) + ea,
+          paddingLeft: String(middleTitlePadding) + ea,
+          paddingRight: String(middleTitlePadding) + ea,
           background: colorChip.gray0,
         }
       }
@@ -672,7 +711,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
     style: {
       display: "block",
       position: "relative",
-      paddingTop: String(54) + ea,
+      paddingTop: String(middleTitleMarginBottom) + ea,
     }
   })
 
@@ -681,8 +720,8 @@ AboutServiceJs.prototype.insertServiceBox = function () {
       mother: contents0Tong,
       style: {
         display: "inline-block",
-        width: "calc(calc(100% - " + String(contents0TitleWhiteBoxMargin) + ea + ") / 2)",
-        height: String(145) + ea,
+        width: "calc(calc(100% - " + String(contents0TitleWhiteBoxMargin * (contents0Columns - 1)) + ea + ") / " + String(contents0Columns) + ")",
+        height: String(contents0TongBoxHeight) + ea,
         marginRight: (i % 2 !== 0 ? "" : String(contents0TitleWhiteBoxMargin) + ea),
         marginBottom: String(contents0TitleWhiteBoxMargin) + ea,
         background: colorChip.white,
@@ -695,7 +734,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
           style: {
             display: "inline-block",
             height: String(100) + '%',
-            width: String(420) + ea,
+            width: String(contents0TongPhotoWidth) + ea,
             backgroundImage: "url('" + AboutServiceJs.binaryPath + "/" + contents0[i].image + "')",
             backgroundPosition: "50% 50%",
             backgroundSize: "100% auto",
@@ -704,7 +743,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
         {
           style: {
             display: "inline-block",
-            width: withOut(420, ea),
+            width: withOut(contents0TongPhotoWidth, ea),
             position: "relative",
             height: String(100) + '%',
           },
@@ -713,39 +752,39 @@ AboutServiceJs.prototype.insertServiceBox = function () {
               text: contents0[i].title,
               style: {
                 position: "absolute",
-                left: String(28) + ea,
-                top: String(22) + ea,
-                fontSize: String(16) + ea,
-                fontWeight: String(600),
+                left: String(contents0PaddingLeft) + ea,
+                top: String(contents0PaddingTop) + ea,
+                fontSize: String(contents0TitleSize) + ea,
+                fontWeight: String(contents0TitleWeight),
                 color: colorChip.green,
-                lineHeight: String(1.45),
+                lineHeight: String(contents0TitleLineHeight),
               }
             },
             {
               mode: "svg",
-              source: svgMaker.horizontalArrow(34, 8, colorChip.gray4),
+              source: svgMaker.horizontalArrow(contents0ArrowWidth, contents0ArrowHeight, colorChip.gray4),
               style: {
                 position: "absolute",
-                left: String(28) + ea,
-                width: String(34) + ea,
-                height: String(8) + ea,
-                top: String(90) + ea,
+                left: String(contents0PaddingLeft) + ea,
+                width: String(contents0ArrowWidth) + ea,
+                height: String(contents0ArrowHeight) + ea,
+                top: String(contents0ArrowTop) + ea,
                }
             },
             {
               text: contents0[i].description,
               style: {
                 position: "absolute",
-                left: String(70) + ea,
-                bottom: String(22) + ea,
-                fontSize: String(13) + ea,
-                fontWeight: String(300),
+                left: String(contents0DescriptionLeft) + ea,
+                bottom: String(contents0DescriptionBottom) + ea,
+                fontSize: String(contents0DescriptionSize) + ea,
+                fontWeight: String(contents0DescriptionWeight),
                 color: colorChip.black,
-                lineHeight: String(1.45),
+                lineHeight: String(contents0DescriptionLineHeight),
               },
               bold: {
-                fontSize: String(13) + ea,
-                fontWeight: String(700),
+                fontSize: String(contents0DescriptionSize) + ea,
+                fontWeight: String(contents0DescriptionWeightBold),
                 color: colorChip.black,
               }
             },
@@ -996,11 +1035,11 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   baseTong.parentNode.appendChild(baseTong2Back);
   baseTong2Back.appendChild(baseTong2);
   baseTong2.style.paddingTop = String(0) + ea;
-  baseTong2Back.style.paddingTop = String(84) + ea;
+  baseTong2Back.style.paddingTop = String(middleAreaPaddingTop) + ea;
   baseTong2Back.style.width = String(100) + '%';
   baseTong2Back.style.left = String(0);
   baseTong2Back.style.background = colorChip.white;
-  baseTong.style.marginBottom = String(180) + ea;
+  baseTong.style.marginBottom = String(middleTongPaddingBottom) + ea;
 
   // box 2 ---------------------------------------------------------------------------------------------------
 
@@ -1011,7 +1050,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
       borderRadius: String(desktop ? 8 : 3) + "px",
       width: withOut(0 * 2, ea),
       background: "transparent",
-      paddingTop: String(84) + ea,
+      paddingTop: String(middleTongPaddinngTop) + ea,
     }
   });
 
@@ -1029,7 +1068,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
           display: "block",
           position: "absolute",
           width: String(100) + '%',
-          height: String(17) + ea,
+          height: String(middleTitleLineTop) + ea,
           top: String(0),
           left: String(0),
           borderBottom: "1px solid " + colorChip.gray4,
@@ -1040,12 +1079,12 @@ AboutServiceJs.prototype.insertServiceBox = function () {
         style: {
           display: "inline-block",
           position: "relative",
-          fontSize: String(27) + ea,
-          fontWeight: String(700),
+          fontSize: String(middleTitleSize) + ea,
+          fontWeight: String(middleTitleWeight),
           color: colorChip.black,
           textAlign: "center",
-          paddingLeft: String(20) + ea,
-          paddingRight: String(20) + ea,
+          paddingLeft: String(middleTitlePadding) + ea,
+          paddingRight: String(middleTitlePadding) + ea,
           background: colorChip.white,
         }
       }
@@ -1060,9 +1099,13 @@ AboutServiceJs.prototype.insertServiceBox = function () {
       display: "block",
       position: "relative",
       width: String(100) + '%',
-      marginTop: String(54) + ea,
+      marginTop: String(contents2ImageTop) + ea,
+      marginBottom: String(contents2ImageBottom) + ea,
     }
   });
+
+  
+
 
   // box 3 ---------------------------------------------------------------------------------------------------
 
@@ -1072,7 +1115,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
       position: "relative",
       borderRadius: String(desktop ? 8 : 3) + "px",
       width: withOut(margin * 2, ea),
-      background: colorChip.white,
+      background: colorChip.gray0,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
       marginBottom: String(blockMarginBottom) + ea,
       height: String(height3) + ea,
@@ -1256,10 +1299,24 @@ AboutServiceJs.prototype.insertServiceBox = function () {
 
   }
 
+
+  // gray area ---------------------------------------------------------------------------------------------------
+
+  baseTong3 = baseTong.cloneNode(false);
+  baseTong3Back = baseTong.cloneNode(false);
+  baseTong.parentNode.appendChild(baseTong3Back);
+  baseTong3Back.appendChild(baseTong3);
+  baseTong3.style.paddingTop = String(0) + ea;
+  baseTong3Back.style.paddingTop = String(middleAreaPaddingTop) + ea;
+  baseTong3Back.style.width = String(100) + '%';
+  baseTong3Back.style.left = String(0);
+  baseTong3Back.style.background = colorChip.gray0;
+  baseTong2Back.style.paddingBottom = String(middleTongPaddingBottom) + ea;
+
   // box 4 ---------------------------------------------------------------------------------------------------
 
   whiteBlock4 = createNode({
-    mother: baseTong2,
+    mother: baseTong3,
     style: {
       position: "relative",
       borderRadius: String(desktop ? 8 : 3) + "px",
