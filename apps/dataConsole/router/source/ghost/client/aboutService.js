@@ -485,7 +485,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   contents2LineTitleSize = <%% 14, 13, 14, 14, 14 %%>;
   contents2LineTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-  contents2ImageTop = <%% 62, 62, 62, 62, 62 %%>;
+  contents2ImageTop = <%% 70, 70, 70, 70, 70 %%>;
   contents2ImageBottom = <%% 200, 200, 200, 200, 200 %%>;
 
   contents2BoxMarginTop = <%% 25, 18, 20, 25, 25 %%>;
@@ -1104,7 +1104,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
     }
   });
 
-  
+
 
 
   // box 3 ---------------------------------------------------------------------------------------------------
@@ -1139,7 +1139,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
 
   createNode({
     mother: leftBox3,
-    text: big ? "홈리에종 서비스의\n4가지 분류" : "홈리에종 서비스의 4가지 분류",
+    text: big ? "디자인 서비스의\n4가지 분류" : "디자인 서비스의 4가지 분류",
     style: {
       display: "inline-block",
       position: "relative",
