@@ -621,132 +621,43 @@ AboutServiceJs.prototype.insertServiceBox = function () {
     style: {
       position: "relative",
       borderRadius: String(desktop ? 8 : 3) + "px",
-      width: withOut(margin * 2, ea),
-      background: colorChip.white,
-      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      width: withOut(0 * 2, ea),
+      background: "transparent",
       marginBottom: String(blockMarginBottom) + ea,
       height: String(height0) + ea,
       paddingTop: String(margin) + ea,
       paddingBottom: String(margin) + ea,
-      paddingLeft: String(margin) + ea,
-      paddingRight: String(margin) + ea,
-    }
-  });
-
-  leftBox0 = createNode({
-    mother: whiteBlock0,
-    style: {
-      display: big ? "inline-block" : "block",
-      position: "relative",
-      width: big ? String(leftBoxWidth) + ea : String(100) + '%',
-      height: big ? String(100) + '%' : "",
-      verticalAlign: "top",
     }
   });
 
   createNode({
-    mother: leftBox0,
-    text: big ? "이젠 디자이너와\n함께 진행하세요!" : "이젠 디자이너와 함께 진행하세요!",
-    style: {
-      display: "inline-block",
-      position: "relative",
-      fontSize: String(titleFont) + ea,
-      fontWeight: String(titleFontWeight),
-      wordSpacing: String(wordSpacing) + "px",
-      top: String(titleVisualTop) + ea,
-      marginLeft: big ? String(titleLeft) + ea : "",
-      marginBottom: big ? "" : String(titleMarginBottom) + ea,
-      color: colorChip.black,
-      width: big ? "" : String(100) + '%',
-      textAlign: desktop ? "" : "center",
-      lineHeight: String(lineHeight),
-    }
-  });
-
-  rightBox0 = createNode({
     mother: whiteBlock0,
     style: {
-      display: big ? "inline-block" : "block",
+      display: "block",
       position: "relative",
-      width: big ? withOut(leftBoxWidth, ea) : String(100) + '%',
-      height: String(100) + '%',
-      verticalAlign: "top",
-      paddingTop: String(desktop ? rightBoxPaddingTop : rightBoxPaddingTopFontVersion) + ea,
-    }
-  });
-
-  for (let i = 0; i < contents0.length; i++) {
-    title = contents0[i].title;
-    description = contents0[i].description;
-    image = contents0[i].image;
-
-    boxTong = createNode({
-      mother: rightBox0,
-      style: {
-        display: "inline-block",
-        width: "calc(calc(100% - " + String(boxMargin * (contents0Columns - 1)) + ea + ") / " + String(contents0Columns) + ")",
-        marginRight: String(i % contents0Columns === contents0Columns - 1 ? 0 : boxMargin) + ea,
-        marginBottom: String(boxMargin) + ea,
-        paddingBottom: String(boxTongPaddingBottom) + ea,
-      }
-    });
-
-    createNode({
-      mother: boxTong,
-      style: {
-        display: "block",
-        position: "relative",
-        width: String(100) + '%',
-        height: String(contents0PhotoHeight) + ea,
-        backgroundSize: "102% auto",
-        backgroundPosition: "50% 50%",
-        backgroundImage: "url('" + AboutServiceJs.binaryPath + "/" + image + "')",
-        borderRadius: String(5) + "px",
-      },
-      children: [
-        {
-          text: title,
-          style: {
-            display: "inline-block",
-            position: "absolute",
-            background: colorChip.white,
-            paddingLeft: desktop ? String(contents0PaddingLeft) + ea : "",
-            paddingRight: desktop ? String(contents0PaddingLeft) + ea : "",
-            paddingTop: desktop ? String(contents0PaddingTop) + ea : "",
-            paddingBottom: desktop ? String(contents0PaddingBottom) + ea : "",
-            fontSize: String(contents0TitleSize) + ea,
-            fontWeight: String(contents0TitleWeight),
-            color: colorChip.green,
-            bottom: String(contents0TitleWhiteBoxMargin) + ea,
-            left: String(desktop ? contents0TitleWhiteBoxMargin : 0) + ea,
-            borderRadius: String(5) + "px",
-            opacity: String(0.95),
-            width: desktop ? "" : String(100) + '%',
-            textAlign: desktop ? "" : "center",
-          }
+      width: String(100) + '%',
+      textAlign: "center",
+    },
+    children: [
+      {
+        text: "이젠 디자이너와 함께 진행하세요!",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(28) + ea,
+          fontWeight: String(700),
+          color: colorChip.black,
+          textAlign: "center",
         }
-      ]
-    });
-
-    createNode({
-      mother: boxTong,
-      text: description,
-      style: {
-        display: "block",
-        fontSize: String(contents0DescriptionSize) + ea,
-        fontWeight: String(contents0DescriptionWeight),
-        color: colorChip.black,
-        textAlign: "center",
-        lineHeight: String(contents0DescriptionLineHeight),
-        marginTop: String(contents0DescriptionMarginTop) + ea,
-      },
-      bold: {
-        fontWeight: String(contents0DescriptionWeightBold),
-        color: colorChip.black,
       }
-    });
+    ]
+  })
 
-  }
+
+
+
+
+
 
   // box 1 ---------------------------------------------------------------------------------------------------
 
@@ -1335,7 +1246,7 @@ AboutServiceJs.prototype.launching = async function (loading) {
         binaryPath: AboutServiceJs.binaryPath,
         subTitle: "홈리에종 서비스 설명",
         secondBackground: false,
-        backgroundType: 0,
+        backgroundType: 1,
       },
       local: async () => {
         try {
