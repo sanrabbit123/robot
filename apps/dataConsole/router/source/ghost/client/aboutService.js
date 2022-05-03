@@ -372,6 +372,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   let baseTong4, baseTong4Back;
   let whiteBlock5;
   let contents5Tong;
+  let photoMargin;
 
   blockMarginBottom = <%% 16, 16, 16, 16, 2 %%>;
 
@@ -526,6 +527,8 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   contents3GrayChildrenPaddingTop = <%% 3, 3, 3, 3, 3 %%>;
 
   contents3PictureHeight = <%% 160, 120, 138, 110, 26 %%>;
+
+  photoMargin = <%% 20, 18, 18, 16, 3 %%>;
 
   contents0 = [
     {
@@ -1447,7 +1450,9 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   baseTong4Back.style.width = String(100) + '%';
   baseTong4Back.style.left = String(0);
   baseTong4Back.style.background = colorChip.white;
-  baseTong.style.marginBottom = String(middleTongPaddingBottom) + ea;
+  baseTong4.style.paddingBottom = String(middleTongPaddingBottom) + ea;
+  baseTong4.style.marginBottom = String(0) + ea;
+  baseTong4Back.style.marginBottom = String(0) + ea;
 
   // box 5 ---------------------------------------------------------------------------------------------------
 
@@ -1504,6 +1509,8 @@ AboutServiceJs.prototype.insertServiceBox = function () {
     style: {
       display: "block",
       position: "relative",
+      width: "calc(100% + " + String(photoMargin) + ea + ")",
+      marginTop: String(middleTitleMarginBottom) + ea,
     }
   });
 
@@ -1778,6 +1785,32 @@ AboutServiceJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
     this.mother.setGeneralProperties(this);
+
+    class SearchArray extends Array {
+      constructor(arr) {
+        super();
+        for (let i of arr) {
+          this.push(i);
+        }
+      }
+      search(target, value) {
+        let obj = null;
+        for (let i of this) {
+          if (i[target] === value) {
+            obj = i;
+          }
+        }
+        return obj;
+      }
+      toNormal() {
+        let arr = [];
+        for (let i of this) {
+          arr.push(i);
+        }
+        return arr;
+      }
+    }
+
 
     const { returnGet, ajaxJson, requestPromise, setDebounce } = GeneralJs;
     const getObj = returnGet();
