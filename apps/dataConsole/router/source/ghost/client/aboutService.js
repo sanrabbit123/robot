@@ -369,6 +369,8 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   let middleAreaPaddingTop;
   let contents2ImageBottom;
   let contents4Tong;
+  let baseTong4, baseTong4Back;
+  let whiteBlock5;
 
   blockMarginBottom = <%% 16, 16, 16, 16, 2 %%>;
 
@@ -1381,7 +1383,6 @@ AboutServiceJs.prototype.insertServiceBox = function () {
     }
   });
 
-
   leftBox4 = createNode({
     mother: contents4Tong,
     style: {
@@ -1432,6 +1433,69 @@ AboutServiceJs.prototype.insertServiceBox = function () {
       display: "block",
       width: withOut(0 * 2, ea),
     }
+  });
+
+  // white area ---------------------------------------------------------------------------------------------------
+
+  baseTong4 = baseTong.cloneNode(false);
+  baseTong4Back = baseTong.cloneNode(false);
+  baseTong.parentNode.appendChild(baseTong4Back);
+  baseTong4Back.appendChild(baseTong4);
+  baseTong4.style.paddingTop = String(0) + ea;
+  baseTong4Back.style.paddingTop = String(middleAreaPaddingTop) + ea;
+  baseTong4Back.style.width = String(100) + '%';
+  baseTong4Back.style.left = String(0);
+  baseTong4Back.style.background = colorChip.white;
+  baseTong.style.marginBottom = String(middleTongPaddingBottom) + ea;
+
+  // box 5 ---------------------------------------------------------------------------------------------------
+
+  whiteBlock5 = createNode({
+    mother: baseTong4,
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 3) + "px",
+      width: withOut(0 * 2, ea),
+      background: "transparent",
+      paddingTop: String(middleTongPaddinngTop) + ea,
+    }
+  });
+
+  createNode({
+    mother: whiteBlock5,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      textAlign: "center",
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: "absolute",
+          width: String(100) + '%',
+          height: String(middleTitleLineTop) + ea,
+          top: String(0),
+          left: String(0),
+          borderBottom: "1px solid " + colorChip.gray4,
+        }
+      },
+      {
+        text: "솔직한 고객 후기",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(middleTitleSize) + ea,
+          fontWeight: String(middleTitleWeight),
+          color: colorChip.black,
+          textAlign: "center",
+          paddingLeft: String(middleTitlePadding) + ea,
+          paddingRight: String(middleTitlePadding) + ea,
+          background: colorChip.white,
+        }
+      }
+    ]
   });
 
 }
