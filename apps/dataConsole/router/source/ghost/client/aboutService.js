@@ -368,6 +368,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   let middleTongPaddingBottom;
   let middleAreaPaddingTop;
   let contents2ImageBottom;
+  let contents4Tong;
 
   blockMarginBottom = <%% 16, 16, 16, 16, 2 %%>;
 
@@ -375,7 +376,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
 
   margin = <%% 52, 52, 44, 32, 6 %%>;
 
-  titleFont = <%% 29, 24, 21, 17, 4.2 %%>;
+  titleFont = <%% 26, 24, 21, 17, 4.2 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
   titleFontWeight = <%% 500, 500, 600, 600, 600 %%>;
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
@@ -485,8 +486,8 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   contents2LineTitleSize = <%% 14, 13, 14, 14, 14 %%>;
   contents2LineTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-  contents2ImageTop = <%% 70, 70, 70, 70, 70 %%>;
-  contents2ImageBottom = <%% 200, 200, 200, 200, 200 %%>;
+  contents2ImageTop = <%% 75, 75, 75, 75, 75 %%>;
+  contents2ImageBottom = <%% 30, 30, 30, 30, 30 %%>;
 
   contents2BoxMarginTop = <%% 25, 18, 20, 25, 25 %%>;
   contents2BoxFactorWidth = <%% 172, 144, 166, 172, 172 %%>;
@@ -1115,7 +1116,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
       position: "relative",
       borderRadius: String(desktop ? 8 : 3) + "px",
       width: withOut(margin * 2, ea),
-      background: colorChip.gray0,
+      background: colorChip.gray1,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
       marginBottom: String(blockMarginBottom) + ea,
       height: String(height3) + ea,
@@ -1199,7 +1200,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
         alignItems: "center",
         textAlign: "center",
         borderRadius: String(5) + "px",
-        background: colorChip.liteGreen,
+        background: colorChip.white,
         height: String(contents3GreenHeight) + ea,
         marginBottom: desktop ? String(contents3BoxBetween) + ea : String(contents3BoxBetween / 2) + ea,
       },
@@ -1242,7 +1243,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
         position: "relative",
         textAlign: "center",
         borderRadius: String(5) + "px",
-        background: colorChip.gray1,
+        background: colorChip.gray3,
         paddingTop: String(contents3GrayInnerPadding) + ea,
         paddingBottom: String(contents3GrayInnerPadding) + ea,
       }
@@ -1320,20 +1321,69 @@ AboutServiceJs.prototype.insertServiceBox = function () {
     style: {
       position: "relative",
       borderRadius: String(desktop ? 8 : 3) + "px",
+      width: withOut(0 * 2, ea),
+      background: "transparent",
+      paddingTop: String(middleTongPaddinngTop) + ea,
+    }
+  });
+
+  createNode({
+    mother: whiteBlock4,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      textAlign: "center",
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: "absolute",
+          width: String(100) + '%',
+          height: String(middleTitleLineTop) + ea,
+          top: String(0),
+          left: String(0),
+          borderBottom: "1px solid " + colorChip.gray4,
+        }
+      },
+      {
+        text: "홈리에종 프로세스, 궁금해요!",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(middleTitleSize) + ea,
+          fontWeight: String(middleTitleWeight),
+          color: colorChip.black,
+          textAlign: "center",
+          paddingLeft: String(middleTitlePadding) + ea,
+          paddingRight: String(middleTitlePadding) + ea,
+          background: colorChip.gray0,
+        }
+      }
+    ]
+  });
+
+  contents4Tong = createNode({
+    mother: whiteBlock4,
+    style: {
+      display: "block",
+      position: "relative",
       width: withOut(margin * 2, ea),
-      background: colorChip.white,
-      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
-      marginBottom: String(lastBlockMarginBottom) + ea,
-      height: String(height4) + ea,
       paddingTop: String(margin) + ea,
       paddingBottom: String(margin) + ea,
       paddingLeft: String(margin) + ea,
       paddingRight: String(margin) + ea,
+      background: colorChip.white,
+      borderRadius: String(8) + "px",
+      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      marginTop: String(middleTitleMarginBottom) + ea,
     }
   });
 
+
   leftBox4 = createNode({
-    mother: whiteBlock4,
+    mother: contents4Tong,
     style: {
       display: big ? "inline-block" : "block",
       position: "relative",
@@ -1363,14 +1413,14 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   });
 
   rightBox4 = createNode({
-    mother: whiteBlock4,
+    mother: contents4Tong,
     style: {
       display: big ? "inline-block" : "block",
       position: "relative",
       width: big ? withOut(leftBoxWidth, ea) : String(100) + '%',
       height: String(100) + '%',
       verticalAlign: "top",
-      paddingTop: big ? String(rightBoxPaddingTop) + ea : (mobile ? String(7) + ea : String(0) + ea),
+      paddingTop: String(rightBoxPaddingTop) + ea,
     }
   });
 
@@ -1380,7 +1430,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
     attribute: { src: AboutServiceJs.binaryPath + "/" + contents4.image },
     style: {
       display: "block",
-      width: String(100) + '%',
+      width: withOut(0 * 2, ea),
     }
   });
 
