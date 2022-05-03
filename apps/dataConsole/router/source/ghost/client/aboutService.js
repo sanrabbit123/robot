@@ -395,12 +395,12 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   rightBoxPaddingTop = <%% 7, 5, 7, 7, 6.5 %%>;
   rightBoxPaddingTopFontVersion = <%% 2, 2, 2, 2, 7 %%>;
 
-  middleTitleSize = <%% 26, 26, 26, 26, 26 %%>;
+  middleTitleSize = <%% 26, 24, 21, 17, 4.2 %%>;
   middleTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
   middleTitlePadding = <%% 20, 20, 20, 20, 20 %%>;
   middleTitleLineTop = <%% 17, 17, 17, 17, 17 %%>;
 
-  middleTongPaddinngTop = <%% 90, 90, 90, 90, 90 %%>;
+  middleTongPaddinngTop = <%% 90, 72, 72, 72, 72 %%>;
   middleTongPaddingBottom = <%% 150, 150, 150, 150, 150 %%>;
   middleTitleMarginBottom = <%% 54, 54, 54, 54, 54 %%>;
 
