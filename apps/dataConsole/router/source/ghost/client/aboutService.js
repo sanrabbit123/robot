@@ -371,6 +371,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   let contents4Tong;
   let baseTong4, baseTong4Back;
   let whiteBlock5;
+  let contents5Tong;
 
   blockMarginBottom = <%% 16, 16, 16, 16, 2 %%>;
 
@@ -1497,6 +1498,16 @@ AboutServiceJs.prototype.insertServiceBox = function () {
       }
     ]
   });
+
+  contents5Tong = createNode({
+    mother: whiteBlock5,
+    style: {
+      display: "block",
+      position: "relative",
+    }
+  });
+
+  this.portfolioBlock(contents5Tong);
 
 }
 
