@@ -401,8 +401,8 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   middleTitleLineTop = <%% 17, 17, 17, 17, 17 %%>;
 
   middleTongPaddinngTop = <%% 90, 72, 72, 72, 72 %%>;
-  middleTongPaddingBottom = <%% 150, 150, 150, 150, 150 %%>;
-  middleTitleMarginBottom = <%% 54, 54, 54, 54, 54 %%>;
+  middleTongPaddingBottom = <%% 150, 130, 130, 130, 130 %%>;
+  middleTitleMarginBottom = <%% 54, 50, 50, 50, 50 %%>;
 
   middleAreaPaddingTop = <%% 40, 40, 40, 40, 40 %%>;
 
@@ -437,7 +437,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   contents0Columns = <%% 2, 2, 2, 1, 1 %%>;
 
   contents0TongBoxHeight = <%% 145, 145, 145, 145, 145 %%>;
-  contents0TongPhotoWidth = <%% 420, 420, 420, 420, 420 %%>;
+  contents0TongPhotoWidth = <%% 420, 250, 420, 420, 420 %%>;
 
   contents0ArrowWidth = <%% 34, 34, 34, 34, 34 %%>;
   contents0ArrowHeight = <%% 8, 8, 8, 8, 8 %%>;
