@@ -90,6 +90,16 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
+    
+
+
+
+
+
+
+
     // const sheetsId = "1oWSq4DcdNB-ie4BxPoPrUUDDfJ-QiVUdtUJraTWQ8xU";
     // const rows = await sheets.get_value_inPython(sheetsId, "default!A1:D280");
     // const kinds = [ '아파트', '오피스텔', '연립주택', '타운하우스', '단독주택', '상업공간' ];
