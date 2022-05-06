@@ -373,6 +373,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   let whiteBlock5;
   let contents5Tong;
   let photoMargin;
+  let middleTitleTextTop;
 
   blockMarginBottom = <%% 16, 16, 16, 16, 2 %%>;
 
@@ -399,6 +400,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   middleTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
   middleTitlePadding = <%% 20, 20, 20, 20, 20 %%>;
   middleTitleLineTop = <%% 17, 17, 13, 11, 17 %%>;
+  middleTitleTextTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), 0 %%>;
 
   middleTongPaddinngTop = <%% 90, 72, 64, 45, 72 %%>;
   middleTongPaddingBottom = <%% 150, 130, 100, 70, 130 %%>;
@@ -418,7 +420,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   contents0PhotoHeight = <%% 180, 130, 150, 114, 22 %%>;
 
   contents0PaddingLeft = <%% 30, 30, 30, 25, 1 %%>;
-  contents0PaddingTop = <%% 24, 24, 24, 20, 2 %%>;
+  contents0PaddingTop = <%% (isMac() ? 24 : 25), (isMac() ? 24 : 25), (isMac() ? 24 : 25), (isMac() ? 20 : 21), 2 %%>;
   contents0PaddingBottom = <%% (isMac() ? 9 : 7), (isMac() ? 9 : 7), (isMac() ? 9 : 7), (isMac() ? 9 : 7), 2 %%>;
 
   contents0TitleSize = <%% 16, 16, 15, 13, 3 %%>;
@@ -432,7 +434,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   contents0DescriptionWeightBold = <%% 700, 700, 700, 700, 700 %%>;
   contents0DescriptionMarginTop = <%% 20, 15, 15, 9, (isIphone() ? 7.5 : 7.8) %%>;
   contents0DescriptionLeft = <%% 72, 72, 62, 25, 72 %%>;
-  contents0DescriptionBottom = <%% 26, 26, 26, 22, 26 %%>;
+  contents0DescriptionBottom = <%% (isMac() ? 26 : 24), (isMac() ? 26 : 24), (isMac() ? 26 : 24), (isMac() ? 22 : 20), 26 %%>;
 
   contents0Columns = <%% 2, 2, 2, 2, 1 %%>;
 
@@ -708,6 +710,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
           paddingLeft: String(middleTitlePadding) + ea,
           paddingRight: String(middleTitlePadding) + ea,
           background: colorChip.gray0,
+          top: String(middleTitleTextTop) + ea,
         }
       }
     ]
@@ -1093,6 +1096,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
           paddingLeft: String(middleTitlePadding) + ea,
           paddingRight: String(middleTitlePadding) + ea,
           background: colorChip.white,
+          top: String(middleTitleTextTop) + ea,
         }
       }
     ]
@@ -1364,6 +1368,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
           paddingLeft: String(middleTitlePadding) + ea,
           paddingRight: String(middleTitlePadding) + ea,
           background: colorChip.gray0,
+          top: String(middleTitleTextTop) + ea,
         }
       }
     ]
@@ -1498,6 +1503,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
           paddingLeft: String(middleTitlePadding) + ea,
           paddingRight: String(middleTitlePadding) + ea,
           background: colorChip.white,
+          top: String(middleTitleTextTop) + ea,
         }
       }
     ]
