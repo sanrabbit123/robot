@@ -398,13 +398,13 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   middleTitleSize = <%% 26, 24, 21, 17, 4.2 %%>;
   middleTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
   middleTitlePadding = <%% 20, 20, 20, 20, 20 %%>;
-  middleTitleLineTop = <%% 17, 17, 17, 17, 17 %%>;
+  middleTitleLineTop = <%% 17, 17, 13, 12, 17 %%>;
 
-  middleTongPaddinngTop = <%% 90, 72, 72, 72, 72 %%>;
-  middleTongPaddingBottom = <%% 150, 130, 130, 130, 130 %%>;
-  middleTitleMarginBottom = <%% 54, 50, 50, 50, 50 %%>;
+  middleTongPaddinngTop = <%% 90, 72, 64, 64, 72 %%>;
+  middleTongPaddingBottom = <%% 150, 130, 100, 100, 130 %%>;
+  middleTitleMarginBottom = <%% 54, 50, 42, 42, 42 %%>;
 
-  middleAreaPaddingTop = <%% 40, 40, 40, 40, 40 %%>;
+  middleAreaPaddingTop = <%% 40, 40, 30, 30, 40 %%>;
 
   height0 = <%% 545, 415, 506, 389, 141 %%>;
   height1 = <%% 570, 480, 550, 447, 216 %%>;
@@ -421,7 +421,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   contents0PaddingTop = <%% 24, 24, 24, 24, 2 %%>;
   contents0PaddingBottom = <%% (isMac() ? 9 : 7), (isMac() ? 9 : 7), (isMac() ? 9 : 7), (isMac() ? 9 : 7), 2 %%>;
 
-  contents0TitleSize = <%% 16, 16, 16, 16, 3 %%>;
+  contents0TitleSize = <%% 16, 16, 15, 15, 3 %%>;
   contents0TitleWeight = <%% 600, 600, 600, 600, 600 %%>;
   contents0TitleWhiteBoxMargin = <%% 24, 12, 14, 10, -7 %%>;
   contents0TitleLineHeight = <%% 1.45, 1.45, 1.45, 1.45, 1.45 %%>;
@@ -431,15 +431,15 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   contents0DescriptionLineHeight = <%% 1.45, 1.45, 1.45, 1.45, 1.45 %%>;
   contents0DescriptionWeightBold = <%% 700, 700, 700, 700, 700 %%>;
   contents0DescriptionMarginTop = <%% 20, 15, 15, 9, (isIphone() ? 7.5 : 7.8) %%>;
-  contents0DescriptionLeft = <%% 72, 72, 72, 72, 72 %%>;
+  contents0DescriptionLeft = <%% 72, 72, 62, 72, 72 %%>;
   contents0DescriptionBottom = <%% 26, 26, 26, 26, 26 %%>;
 
   contents0Columns = <%% 2, 2, 2, 1, 1 %%>;
 
   contents0TongBoxHeight = <%% 145, 145, 145, 145, 145 %%>;
-  contents0TongPhotoWidth = <%% 420, 250, 420, 420, 420 %%>;
+  contents0TongPhotoWidth = <%% 420, 250, 183, 420, 420 %%>;
 
-  contents0ArrowWidth = <%% 34, 34, 34, 34, 34 %%>;
+  contents0ArrowWidth = <%% 34, 34, 24, 34, 34 %%>;
   contents0ArrowHeight = <%% 8, 8, 8, 8, 8 %%>;
   contents0ArrowTop = <%% 86, 86, 86, 86, 86 %%>;
 
@@ -490,7 +490,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   contents2LineTitleSize = <%% 14, 13, 14, 14, 14 %%>;
   contents2LineTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-  contents2ImageTop = <%% 75, 75, 75, 75, 75 %%>;
+  contents2ImageTop = <%% 75, 75, 54, 54, 54 %%>;
   contents2ImageBottom = <%% 30, 30, 30, 30, 30 %%>;
 
   contents2BoxMarginTop = <%% 25, 18, 20, 25, 25 %%>;
@@ -744,7 +744,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
             width: String(contents0TongPhotoWidth) + ea,
             backgroundImage: "url('" + AboutServiceJs.binaryPath + "/" + contents0[i].image + "')",
             backgroundPosition: "50% 50%",
-            backgroundSize: "100% auto",
+            backgroundSize: !media[2] ? "100% auto" : "auto 100%",
           }
         },
         {
