@@ -396,10 +396,10 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   rightBoxPaddingTop = <%% 7, 5, 7, 7, 6.5 %%>;
   rightBoxPaddingTopFontVersion = <%% 2, 2, 2, 2, 7 %%>;
 
-  middleTitleSize = <%% 26, 24, 21, 18, 4.2 %%>;
+  middleTitleSize = <%% 26, 24, 21, 18, 4.3 %%>;
   middleTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
   middleTitlePadding = <%% 20, 20, 20, 20, 3 %%>;
-  middleTitleLineTop = <%% 17, 17, 13, 11, 2.5 %%>;
+  middleTitleLineTop = <%% 17, 17, 13, 11, (isIphone() ? 2.8 : 2.6) %%>;
   middleTitleTextTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), 0 %%>;
 
   middleTongPaddinngTop = <%% 90, 72, 64, 45, 8 %%>;
@@ -423,7 +423,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   contents0PaddingTop = <%% (isMac() ? 24 : 25), (isMac() ? 24 : 25), (isMac() ? 24 : 25), (isMac() ? 20 : 21), 3.5 %%>;
   contents0PaddingBottom = <%% (isMac() ? 9 : 7), (isMac() ? 9 : 7), (isMac() ? 9 : 7), (isMac() ? 9 : 7), 2 %%>;
 
-  contents0TitleSize = <%% 16, 16, 15, 13, 3 %%>;
+  contents0TitleSize = <%% 16, 16, 15, 13, 3.1 %%>;
   contents0TitleWeight = <%% 600, 600, 600, 600, 600 %%>;
   contents0TitleWhiteBoxMargin = <%% 24, 12, 14, 10, 2 %%>;
   contents0TitleLineHeight = <%% 1.45, 1.45, 1.45, 1.45, 1.45 %%>;
