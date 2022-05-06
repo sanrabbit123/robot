@@ -661,6 +661,9 @@ module.exports = {
       "aboutService": {
         "behaviors": []
       },
+      "frontAbout": {
+        "behaviors": []
+      },
       "clientConsulting": {
         "behaviors": []
       },
