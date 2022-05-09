@@ -90,6 +90,53 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const docs = new GoogleDocs();
+    let contents;
+    let wordings;
+    let total;
+    let raw;
+    let tong, tempArr;
+    let question;
+
+    contents = await docs.get_value_inPython("1CJKlaE-ddDSv3jP5mwlmewbsCzbs5eAMSxY0VNgyH9o");
+
+    wordings = contents.body.content.filter((obj) => { return obj.startIndex !== undefined && obj.paragraph !== undefined });
+    wordings.sort((a, b) => {
+      return a.startIndex - b.startIndex;
+    })
+    total = '';
+    for (let { paragraph: { elements } } of wordings) {
+      total += elements.map((obj) => { return obj.textRun.content }).join("");
+    }
+
+    raw = total.split("\n").map((str) => { return str.trim() });
+    raw = raw.filter((str) => { return str !== '' });
+
+    tong = [];
+    tempArr = null;
+    for (let str of raw) {
+      if (/^Q\./gi.test(str)) {
+        if (Array.isArray(tempArr)) {
+
+
+
+
+          tong.push(equalJson(JSON.stringify(tempArr)));
+        }
+        tempArr = [];
+        question = str;
+      } else {
+        tempArr.push(str);
+      }
+    }
+
+
+    console.log(tong);
+
+
+
+
+
 
 
 

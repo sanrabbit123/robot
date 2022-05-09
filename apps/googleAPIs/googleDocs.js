@@ -94,11 +94,13 @@ GoogleDocs.prototype.read_value_inPython = async function (id) {
   const instance = this;
   const mother = this.general;
   try {
+    
+    id = this.general.parsingId(id);
+
     const result = await mother.pythonExecute(this.pythonApp, [ "docs", "readDocs" ], { id });
     let past;
     let elements;
 
-    id = this.general.parsingId(id);
     past = "";
     for (let obj of result.body.content) {
       if (obj.paragraph !== undefined) {
