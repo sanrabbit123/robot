@@ -662,7 +662,7 @@ FrontAboutJs.prototype.insertServiceBox = function () {
   };
 
   contents4 = {
-    image: "contents4" + String(media.findIndex(boo => boo)) + ".png"
+    image: "contents6" + String(media.findIndex(boo => boo)) + ".png"
   };
 
   // box 0 ---------------------------------------------------------------------------------------------------
