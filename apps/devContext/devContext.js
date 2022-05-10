@@ -89,7 +89,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    [
+    const faqTong = [
       {
         "question": "홈리에종은 어떤 서비스인가요?",
         "answer": "홈리에종은 고객님의 예산 / 취향 / 공간 / 생활특징을 종합적으로 이해하고 그에 맞는 홈스타일링 서비스와 디자이너를 추천하여 연결해줍니다. 연결된 디자이너는 홈리에종의 종합적인 정보와 지원을 받아 고객님의 집을 전담하여 시공부터 가구, 소품의 스타일링까지 맡게 됩니다."
@@ -146,149 +146,9 @@ DevContext.prototype.launching = async function () {
         "question": "온라인시 미팅이 없어도 괜찮은가요?",
         "answer": "원칙적으로 온라인 스타일링에는 미팅이 없으나 디자이너의 방문가능 지역에 거주하신다면, 디자이너와의 현장 미팅 1회 진행 후 온라인으로 진행하시는 것도 좋은 방법입니다. 단, 미팅 비용은 별도로 청구됩니다."
       }
-    ]
+    ];
 
 
-
-
-
-
-
-
-
-
-    // const sheetsId = "1oWSq4DcdNB-ie4BxPoPrUUDDfJ-QiVUdtUJraTWQ8xU";
-    // const rows = await sheets.get_value_inPython(sheetsId, "default!A1:D280");
-    // const kinds = [ '아파트', '오피스텔', '연립주택', '타운하우스', '단독주택', '상업공간' ];
-    // const dateKinds = [ "3년 미만", "3년 ~ 5년", "5년 ~ 10년", "10년 ~ 20년", "20년 초과", "알 수 없음", ];
-    // const pyeongKinds = [ "10평 미만", "10평대", "20평대", "30평대", "40평대", "50평 이상", ];
-    // const dateKind = (dateNumber) => {
-    //   if (typeof dateNumber === "number") {
-    //     if (dateNumber < 3) {
-    //       return "3년 미만";
-    //     } else if (dateNumber <= 5) {
-    //       return "3년 ~ 5년";
-    //     } else if (dateNumber <= 10) {
-    //       return "5년 ~ 10년";
-    //     } else if (dateNumber <= 10) {
-    //       return "10년 ~ 20년";
-    //     } else {
-    //       return "20년 초과";
-    //     }
-    //   } else {
-    //     return "알 수 없음";
-    //   }
-    // }
-    // const pyeongKind = (pyeong) => {
-    //   if (pyeong < 10) {
-    //     return "10평 미만";
-    //   } else if (pyeong < 20) {
-    //     return "10평대";
-    //   } else if (pyeong < 30) {
-    //     return "20평대";
-    //   } else if (pyeong < 40) {
-    //     return "30평대";
-    //   } else if (pyeong < 50) {
-    //     return "40평대";
-    //   } else {
-    //     return "50평 이상";
-    //   }
-    // }
-    // const matrix = rows.map((arr) => {
-    //   const [ address, pyeong_str, kind, date_raw ] = arr;
-    //   const pyeong = Number(pyeong_str);
-    //   const now = new Date();
-    //   const date = date_raw.trim() === '-' ? null : new Date(Number(date_raw.trim().split('.')[0]), Number(date_raw.trim().split('.')[1]) - 1, 1);
-    //   let dateYearNumber;
-    //   if (date === null) {
-    //     dateYearNumber = "알 수 없음";
-    //   } else {
-    //     dateYearNumber = Math.ceil((((((now.valueOf() - date.valueOf()) / 1000) / 60) / 60) / 24) / 365);
-    //   }
-    //   return [ address, kind, pyeong, pyeongKind(pyeong), date === null ? '-' : (String(date.getFullYear()) + '-' + String(date.getMonth() + 1)), (typeof dateYearNumber === "number" ? String(dateYearNumber) + '년' : dateYearNumber), dateKind(dateYearNumber) ];
-    // })
-    // let kindMap, dateKindMap, pyeongKindMap;
-    // let kindMapKey, dateKindMapKey, pyeongKindMapKey;
-    // let kindMapMatrix, dateKindMapMatrix, pyeongKindMapMatrix;
-    // let tempArr;
-    // let finalMatrix;
-    //
-    // kindMap = {};
-    // dateKindMap = {};
-    // pyeongKindMap = {};
-    //
-    // for (let key of kinds) {
-    //   kindMap[key] = 0;
-    // }
-    // for (let key of dateKinds) {
-    //   dateKindMap[key] = 0;
-    // }
-    // for (let key of pyeongKinds) {
-    //   pyeongKindMap[key] = 0;
-    // }
-    //
-    // for (let [ , kind, , pyeongKind, , , dateKind ] of matrix) {
-    //   kindMap[kind.trim()] = kindMap[kind.trim()] + 1;
-    //   pyeongKindMap[pyeongKind.trim()] = pyeongKindMap[pyeongKind.trim()] + 1;
-    //   dateKindMap[dateKind.trim()] = dateKindMap[dateKind.trim()] + 1;
-    // }
-    //
-    // kindMapKey = Object.keys(kindMap);
-    // dateKindMapKey = Object.keys(dateKindMap);
-    // pyeongKindMapKey = Object.keys(pyeongKindMap);
-    //
-    // kindMapMatrix = [];
-    // dateKindMapMatrix = [];
-    // pyeongKindMapMatrix = [];
-    //
-    // kindMapMatrix.push(kindMapKey);
-    // tempArr = [];
-    // for (let key of kindMapKey) {
-    //   tempArr.push(kindMap[key]);
-    // }
-    // kindMapMatrix.push(tempArr);
-    //
-    // dateKindMapMatrix.push(dateKindMapKey);
-    // tempArr = [];
-    // for (let key of dateKindMapKey) {
-    //   tempArr.push(dateKindMap[key]);
-    // }
-    // dateKindMapMatrix.push(tempArr);
-    //
-    // pyeongKindMapMatrix.push(pyeongKindMapKey);
-    // tempArr = [];
-    // for (let key of pyeongKindMapKey) {
-    //   tempArr.push(pyeongKindMap[key]);
-    // }
-    // pyeongKindMapMatrix.push(tempArr);
-    //
-    // finalMatrix = [];
-    // for (let arr of kindMapMatrix) {
-    //   arr.push('');
-    //   finalMatrix.push(arr);
-    // }
-    //
-    // finalMatrix.push((new Array(7)).fill(''));
-    //
-    // for (let arr of dateKindMapMatrix) {
-    //   arr.push('');
-    //   finalMatrix.push(arr);
-    // }
-    //
-    // finalMatrix.push((new Array(7)).fill(''));
-    //
-    // for (let arr of pyeongKindMapMatrix) {
-    //   arr.push('');
-    //   finalMatrix.push(arr);
-    // }
-    //
-    // finalMatrix.push((new Array(7)).fill(''));
-    //
-    // finalMatrix.push([ "주소", "종류", "평수", "평형대", "준공년월", "연식", "연식종류" ]);
-    //
-    // finalMatrix = finalMatrix.concat(matrix);
-    //
-    // await sheets.update_value_inPython(sheetsId, "default", finalMatrix)
 
 
 
