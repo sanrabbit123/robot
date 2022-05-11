@@ -117,30 +117,7 @@ FrontFaqJs.prototype.insertInitBox = function () {
   let wordSpacing;
   let titleFont, titleLeft, titleFontWeight;
   let barWidth, barLeft;
-  let indexFont, indexFontWeight;
-  let doubleQuote;
-  let quoteTop, quoteLeft, quoteHeight, quoteWidth, quoteMarginBottom;
-  let initWordingSize, initWordingHeight, initWordingWordSpacing, initWordingLineHeight;
-  let indexNumberBottom;
   let initWording0, initWording1;
-  let grayBox;
-  let grayBoxMarginTop;
-  let grayBoxTitleSize, grayBoxTitleWeight, grayBoxTitleTop, grayBoxTitleLeft;
-  let grayBoxUp, grayBoxDown;
-  let grayBoxHeight, grayBoxTop;
-  let grayBoxUpWidth0, grayBoxUpWidth1, grayBoxUpWidth2, grayBoxUpWidth3;
-  let grayBoxUpRight1, grayBoxUpRight2, grayBoxUpRight3;
-  let grayBoxDownWidth0, grayBoxDownWidth1, grayBoxDownWidth2;
-  let grayBoxDownRight1, grayBoxDownRight2;
-  let grayBoxArrowTop, grayBoxArrowHeight;
-  let overlappingWidth;
-  let grayInnerWordingSize;
-  let grayInnerWordingWeight;
-  let grayInnerWordingTextTop;
-  let grayUpWordings, grayDownWordings;
-  let mobileGrayUpHeight;
-  let mobileRightBoxHeight;
-  let grayBoxImageVisualWidth;
   let marginTop;
   let mobileLeftBoxHeight;
 
@@ -158,56 +135,9 @@ FrontFaqJs.prototype.insertInitBox = function () {
   barWidth = <%% 70, 80, 80, 80, 80 %%>;
   barLeft = <%% 240, titleLeft + 234, titleLeft + 234, titleLeft + 234, titleLeft + 234 %%>;
 
-  indexFont = <%% 19, 19, 19, 19, 19 %%>;
-  indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
-
   leftWidth = <%% 300, 232, 200, 164, 300 %%>;
 
-  initWordingHeight = <%% 20, 20, 20, 20, 9 %%>;
-  initWordingSize = <%% 15.5, 15, 14.5, 13.5, 3.5 %%>;
-  initWordingWordSpacing = <%% -1, -1, -1, -1, -1 %%>;
-  initWordingLineHeight = <%% 9, 9, 9, 9, 9 %%>;
-
-  indexNumberBottom = <%% 3, 4, 12, 4, 0 %%>;
-
-  grayBoxMarginTop = <%% 108, 103, 96, 86, 36 %%>;
-
-  grayBoxTitleSize = <%% 14, 14, 13, 11, 3.2 %%>;
-  grayBoxTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
-  grayBoxTitleTop = <%% (isMac() ? 36 : 38), (isMac() ? 36 : 38), (isMac() ? 36 : 38), (isMac() ? 20 : 21), 0 %%>;
-  grayBoxTitleLeft = <%% 40, 32, 30, 16, 6 %%>;
-  grayBoxHeight = <%% 36, 36, 34, 28, 7 %%>;
-  grayBoxTop = <%% 30, 30, 30, 15, 6.6 %%>;
-
-  grayBoxUpWidth0 = <%% 280, 180, 140, 120, 24 %%>;
-  grayBoxUpWidth1 = <%% 230, 160, 130, 110, 24 %%>;
-  grayBoxUpWidth2 = <%% 72, 72, 72, 72, 9 %%>;
-  grayBoxUpWidth3 = <%% 130, 112, 108, 90, 20 %%>;
-
-  grayBoxUpRight1 = <%% 310, 200, 160, 125, 28.5 %%>;
-  grayBoxUpRight2 = <%% 550, 370, 300, 244, 54 %%>;
-  grayBoxUpRight3 = <%% 622, 422, 341, 285, 62 %%>;
-
-  grayBoxDownWidth0 = <%% 280, 242, 195, 175, 30 %%>;
-  grayBoxDownWidth1 = <%% 277, 170, 142, 120, 29 %%>;
-  grayBoxDownWidth2 = <%% 175, 112, 108, 90, 20 %%>;
-
-  grayBoxDownRight1 = <%% 310, 264, 210, 179, 34 %%>;
-  grayBoxDownRight2 = <%% 577, 422, 341, 285, 62 %%>;
-
-  grayBoxArrowTop = <%% 42, 42, 42, 24, 8.8 %%>;
-  grayBoxArrowHeight = <%% 11, 11, 11, 9, 2 %%>;
-
-  overlappingWidth = <%% 10, 10, 10, 10, 0 %%>;
-  grayInnerWordingSize = <%% 13, 13, 13, 11, 2.8 %%>;
-  grayInnerWordingTextTop = desktop ? (isMac() ? -1 : 0) : -0.1;
-  grayInnerWordingWeight = 600;
-
-  mobileGrayUpHeight = 18;
-  mobileRightBoxHeight = 78;
   mobileLeftBoxHeight = 29;
-
-  grayBoxImageVisualWidth = <%% 16, 4, 0, 0, 19 %%>;
 
   whiteBlock = createNode({
     mother: this.baseTong,

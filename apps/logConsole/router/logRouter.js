@@ -373,11 +373,6 @@ LogRouter.prototype.rou_post_mysqlQuery = function () {
   const instance = this;
   const back = this.back;
   const { mysqlQuery } = this.mother;
-  const hexAllowed = [
-    "fab00000e50000f90000ef0000c3000059",
-    "fa8c00007a0000aa0000eb0000a900002f",
-    "fa7c0000d10000c30000e600007a0000b7",
-  ];
   let ipTong;
   let obj = {};
   ipTong = [ 1, 127001, 172301254 ];
@@ -410,13 +405,9 @@ LogRouter.prototype.rou_post_mysqlQuery = function () {
         query = req.body.query.trim() + ';';
       }
       if (!/drop/gi.test(query) && !/delete/gi.test(query)) {
-        if (hexAllowed.includes(req.body.hex.trim())) {
-          if (typeof ip === "string") {
-            if (ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, '')))) {
-              response = await mysqlQuery(query, { local: true });
-            } else {
-              response = [];
-            }
+        if (typeof ip === "string") {
+          if (ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, '')))) {
+            response = await mysqlQuery(query, { local: true });
           } else {
             response = [];
           }
