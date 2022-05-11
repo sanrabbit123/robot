@@ -89,7 +89,81 @@ DevContext.prototype.launching = async function () {
 
 
 
+    `> 테이블
 
+        client            고객
+        deisnger          디자이너
+        project           프로젝트
+
+
+    > client - 고객
+
+        cliid             고객 아이디
+        name              성함
+        phone             연락처
+        email             이메일
+        budget            예산
+        status            상태
+        action            응대
+        outreason         유출 이유
+        kakao             플친 등록
+        service           예상 서비스
+        callHistory       전화 기록
+        timeline          문의일
+        address           주소
+        pyeong            평수
+        living            거주중
+        precheck          사전점검일
+        empty             집 비는 날
+        movein            입주예정일
+        expected          예상 종료일
+        comment           요청 사항
+        channel           유입 경로
+
+
+    > designer - 디자이너
+
+        desid             디자이너 아이디
+        designer          성함
+        status            계약 상태
+        date              계약일
+        phone             연락처
+        email             이메일
+        address           주소
+        webPage           웹페이지
+        sns               sns
+        career            경력
+        account           계좌
+        classification    사업자 분류
+        businessNumber    사업자 등록번호
+        percentage        수수료
+
+
+    > project - 프로젝트
+
+        proid                   프로젝트 아이디
+        cliid                   고객 아이디
+        desid                   디자이너 아이디
+        status                  상태
+        action                  응대
+        firstDate               계약금 입금일
+        remainDate              잔금 입금일
+        remainSupply            공급가
+        remainVat               vat
+        remainConsumer          소비자가
+        remainPure              잔금
+        formDateFrom            계약서상 시작일
+        formDateTo              계약서상 종료일
+        meetingDate             현장미팅일
+        method                  정산 방식
+        percentage              수수료
+        paymentsTotalAmount     정산 총금액
+        paymentsFirstAmount     선금
+        paymentsFirstDate       선금 정산일
+        paymentsRemainAmount    잔금
+        paymentsRemainDate      잔금 정산일
+        proposalDate            제안일
+        proposalAverage         평균 제안 금액`
 
 
 
