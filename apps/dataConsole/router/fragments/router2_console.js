@@ -4567,3 +4567,33 @@ DataRouter.prototype.rou_post_getOpenGraph = function () {
   }
   return obj;
 }
+
+DataRouter.prototype.rou_post_mysqlQuery = function () {
+  const instance = this;
+  const address = this.address;
+  const { errorLog, equalJson, requestSystem } = this.mother;
+  let obj = {};
+  obj.link = [ "/mysqlQuery" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (typeof req.body.query !== "string") {
+        throw new Error("invaild post");
+      }
+      const response = await requestSystem("https://" + address.testinfo.host + "/mysqlQuery", { query: req.body.query }, { headers: { "Content-Type": "application/json" } });
+      if (typeof response.data !== "object") {
+        throw new Error("request error");
+      }
+      res.send(JSON.stringify(response.data));
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_mysqlQuery): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
