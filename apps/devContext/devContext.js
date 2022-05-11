@@ -87,8 +87,6 @@ DevContext.prototype.launching = async function () {
     // const pastProposal = equalJson(JSON.stringify(await ghostRequest("pastProposal", { proid: "p2202_aa43s" })));
     // console.log(pastProposal[0].project.detail);
 
-
-
     const faqTong = [
       {
         "question": "홈리에종은 어떤 서비스인가요?",
