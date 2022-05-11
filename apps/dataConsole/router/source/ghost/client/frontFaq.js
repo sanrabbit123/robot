@@ -209,19 +209,12 @@ FrontFaqJs.prototype.insertInitBox = function () {
 
   grayBoxImageVisualWidth = <%% 16, 4, 0, 0, 19 %%>;
 
-  grayUpWordings = [ "프로세스", "후 시공 / 구매", "선 디자인 / 기획", "디자이너 선택" ];
-  grayDownWordings = [ "비용 구성", "시공 비용", "구매 비용", "디자인비" ];
-
-  initWording0 = "본격적인 인테리어는 고객님과 맞는 <b%디자이너가 매칭된 이후%b> 진행되며,";
-  initWording1 = "<b%이를 위해 상세 큐레이션%b>이 꼭 필요합니다. 다음 질문들에 꼭 답변해주세요!";
-
   whiteBlock = createNode({
     mother: this.baseTong,
     style: {
       position: "relative",
       borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
-      height: String(blockHeight) + ea,
       background: colorChip.white,
       marginBottom: String(bottomMargin) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
@@ -239,6 +232,7 @@ FrontFaqJs.prototype.insertInitBox = function () {
       marginTop: desktop ? String(marginTop) + ea : "",
       marginBottom: desktop ? String(margin) + ea : "",
       marginLeft: desktop ? String(margin) + ea : "",
+      verticalAlign: "top",
     },
     children: [
       {
@@ -264,27 +258,12 @@ FrontFaqJs.prototype.insertInitBox = function () {
       display: desktop ? "inline-block" : "block",
       position: "relative",
       verticalAlign: "top",
-      top: String(0) + ea,
-      width: desktop ? withOut(leftWidth + margin, ea) : String(100) + '%',
-      height: desktop ? String(100) + '%' : withOut(mobileLeftBoxHeight, ea),
+      paddingTop: String(margin) + ea,
+      width: desktop ? withOut(leftWidth + margin + margin, ea) : String(100) + '%',
+      height: "",
       borderRadius: String(5) + "px",
       overflow: "hidden",
-    },
-    children: [
-      {
-        mode: "img",
-        attribute: {
-          src: FrontFaqJs.binaryPath + "/contents5" + String(media.findIndex(boo => boo)) + ".png",
-        },
-        style: {
-          display: "block",
-          position: "absolute",
-          width: String(100) + '%',
-          bottom: String(0),
-          right: String(0),
-        }
-      }
-    ]
+    }
   });
 
 }
