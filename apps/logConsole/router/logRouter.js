@@ -395,11 +395,11 @@ LogRouter.prototype.rou_post_mysqlQuery = function () {
     });
     try {
       let query, response, ip;
-      if (typeof req.body.query !== "string" || typeof req.body.hex !== "string") {
+      if (typeof req.body.query !== "string") {
         throw new Error("invaild post");
       }
       ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-      if (/;$/.test(req.body.query)) {
+      if (/;$/.test(req.body.query.trim())) {
         query = req.body.query.trim();
       } else {
         query = req.body.query.trim() + ';';
