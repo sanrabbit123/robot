@@ -6267,7 +6267,89 @@ ClientJs.prototype.addSearchEvent = function () {
   const instance = this;
   const input = this.searchInput;
   input.addEventListener("keypress", this.makeSearchEvent(null));
+  input.addEventListener("dblclick", this.makeMysqlEvent());
 }
+
+ClientJs.prototype.makeMysqlEvent = function () {
+  const instance = this;
+  const { ea, totalContents, belowHeight } = this;
+  const { createNode, withOut, colorChip, setQueue } = GeneralJs;
+  const mysqlClassName = "mysqlTargets";
+  return function (e) {
+    e.preventDefault();
+
+    let whiteCardWidth;
+    let whiteCardHeight;
+    let zIndex;
+    let queryBase;
+
+    zIndex = 3;
+    whiteCardWidth = 720;
+    whiteCardHeight = 100;
+
+    createNode({
+      mother: totalContents,
+      class: [ mysqlClassName ],
+      event: {
+        click: function (e) {
+          const removeTargets = [ ...document.querySelectorAll('.' + mysqlClassName) ];
+          for (let dom of removeTargets) {
+            if (dom === this) {
+              dom.style.animation = "justfadeout 0.3s ease forwards";
+            } else {
+              dom.style.animation = "fadedownlite 0.3s ease forwards";
+            }
+          }
+          setQueue(() => {
+            const removeTargets = [ ...document.querySelectorAll('.' + mysqlClassName) ];
+            for (let dom of removeTargets) {
+              dom.remove();
+            }
+          }, 301);
+        }
+      },
+      style: {
+        position: "fixed",
+        background: colorChip.cancelBlack,
+        top: String(0) + ea,
+        left: String(0),
+        width: withOut(0, ea),
+        height: withOut(belowHeight, ea),
+        animation: "justfadein 0.3s ease forwards",
+        zIndex: String(zIndex),
+      }
+    });
+
+    queryBase = createNode({
+      mother: totalContents,
+      class: [ mysqlClassName ],
+      style: {
+        position: "fixed",
+        background: colorChip.white,
+        width: String(whiteCardWidth) + ea,
+        height: String(whiteCardHeight) + ea,
+        top: "calc(calc(calc(100% - " + String(belowHeight) + ea + ") / 2) - " + String(whiteCardHeight / 2) + ea + ")",
+        left: "calc(50% - " + String(whiteCardWidth / 2) + ea + ")",
+        borderRadius: String(5) + "px",
+        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+        animation: "fadeuplite 0.3s ease forwards",
+        zIndex: String(zIndex),
+      }
+    });
+
+
+    
+
+
+
+
+
+
+
+
+  }
+}
+
 
 ClientJs.prototype.backGrayBar = function () {
   const instance = this;
