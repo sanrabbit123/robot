@@ -7507,10 +7507,10 @@ DataPatch.prototype.toolsColumnsName = function () {
       }
 
       if (targetMap === null) {
-        return [];
+        return [[]];
       }
       if (result.length === 0) {
-        return [];
+        return [[]];
       }
 
       propoertyDictionary = {};
