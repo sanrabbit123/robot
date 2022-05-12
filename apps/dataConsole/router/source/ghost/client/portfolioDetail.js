@@ -1607,7 +1607,7 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
   titleSubMarginTop = <%% 2, 2, 2, 2, 0.5 %%>;
 
   tagTongMarginTop = <%% 10, 10, 10, 8, 1.6 %%>;
-  tagTongWidthRatio = <%% 1.1, 1.3, 1.3, 1.3, 1.3 %%>;
+  tagTongWidthRatio = <%% 1.3, 1.3, 1.3, 1.3, 1.3 %%>;
 
   tagSize = <%% 10, 8, 10, 7, 2 %%>;
   tagWeight = <%% 500, 500, 500, 500, 500 %%>;

@@ -254,6 +254,7 @@ LogRouter.prototype.rou_post_getContents = function () {
     });
     try {
       const selfMongo = instance.mongo;
+      const hideContents = [ "p61" ];
       let limit;
       let contentsArr_raw;
       let contentsArr, designers;
@@ -293,6 +294,7 @@ LogRouter.prototype.rou_post_getContents = function () {
           }
         }
 
+        contentsArr = contentsArr.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
         designers = await back.getDesignersByQuery({ $or: contentsArr.map((obj) => { return { desid: obj.desid } }) }, { selfMongo });
 
         res.send(JSON.stringify({
@@ -311,6 +313,7 @@ LogRouter.prototype.rou_post_getContents = function () {
             return Number(b.contents.portfolio.detailInfo.sort.key9) - Number(a.contents.portfolio.detailInfo.sort.key9);
           });
           contentsArr = contentsArr_raw.slice(0, 100);
+          contentsArr = contentsArr.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
 
           res.send(JSON.stringify({
             contentsArr: contentsArr.map((obj) => { return { desid: obj.desid, tag: obj.contents.portfolio.detailInfo.tag } }),
@@ -326,6 +329,7 @@ LogRouter.prototype.rou_post_getContents = function () {
             return Number(b.contents.portfolio.detailInfo.sort.key9) - Number(a.contents.portfolio.detailInfo.sort.key9);
           });
           contentsArr = contentsArr_raw;
+          contentsArr = contentsArr.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
 
           res.send(JSON.stringify({
             contentsArr: contentsArr,
@@ -340,9 +344,9 @@ LogRouter.prototype.rou_post_getContents = function () {
 
         contentsArr_raw = await back.getContentsArrByQuery({}, { selfMongo });
 
-        contentsArr = contentsArr_raw.toNormal();
-        reviewArr = contentsArr_raw.toNormal();
-        indexArr = contentsArr_raw.toNormal();
+        contentsArr = contentsArr_raw.toNormal().filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
+        reviewArr = contentsArr_raw.toNormal().filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
+        indexArr = contentsArr_raw.toNormal().filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
 
         contentsArr.sort((a, b) => {
           return Number(b.contents.portfolio.detailInfo.sort.key9) - Number(a.contents.portfolio.detailInfo.sort.key9);

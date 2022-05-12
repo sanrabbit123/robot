@@ -7442,4 +7442,130 @@ DataPatch.prototype.contentsMap = function () {
   return map;
 }
 
+//ETC -------------------------------------------------------------------------------------------
+
+DataPatch.prototype.toolsColumnsName = function () {
+  class TableArray extends Array {
+    constructor(arr) {
+      super();
+      for (let obj of arr) {
+        this.push(obj);
+      }
+    }
+
+    toWording() {
+      const oneLevelSpace = 18;
+      const twoLevelSpace = 24;
+      const sectionChar = '>';
+      const tab = "    ";
+      let text;
+      let thisSpaceLevel;
+      text = "";
+      text += sectionChar + " 테이블";
+      text += "\n\n";
+      thisSpaceLevel = (oneLevelSpace <= this.toNormal().map((obj) => { return obj.table.length; }).reduce((acc, curr) => { return (acc <= curr ? curr : acc); }, 0)) ? twoLevelSpace : oneLevelSpace;
+      for (let { table, map } of this) {
+        text += tab + table + (new Array(thisSpaceLevel - table.length)).fill(' ').join('') + map.name;
+        text += "\n";
+      }
+      text += "\n\n";
+      for (let { table, map } of this) {
+        thisSpaceLevel = (oneLevelSpace <= map.children.map((obj) => { return obj.property.length; }).reduce((acc, curr) => { return (acc <= curr ? curr : acc); }, 0)) ? twoLevelSpace : oneLevelSpace;
+        text += sectionChar + " " + table + " - " + map.name;
+        text += "\n\n";
+        for (let { property, name } of map.children) {
+          text += tab + property + (new Array(thisSpaceLevel - property.length)).fill(' ').join('') + name;
+          text += "\n";
+        }
+        text += "\n\n";
+      }
+      return text;
+    }
+
+    toNormal() {
+      let arr = [];
+      for (let obj of this) {
+        arr.push(JSON.parse(JSON.stringify(obj)));
+      }
+      return arr;
+    }
+  };
+  const table = new TableArray([
+    { table: "client", map: {
+      name: "고객",
+      children: [
+        { property: "cliid", name: "고객 아이디" },
+        { property: "name", name: "성함" },
+        { property: "phone", name: "연락처" },
+        { property: "email", name: "이메일" },
+        { property: "budget", name: "예산" },
+        { property: "status", name: "상태" },
+        { property: "action", name: "응대" },
+        { property: "outreason", name: "유출 이유" },
+        { property: "kakao", name: "플친 등록" },
+        { property: "service", name: "예상 서비스" },
+        { property: "callHistory", name: "전화 기록" },
+        { property: "timeline", name: "문의일" },
+        { property: "address", name: "주소" },
+        { property: "pyeong", name: "평수" },
+        { property: "living", name: "거주중" },
+        { property: "precheck", name: "사전점검일" },
+        { property: "empty", name: "집 비는 날" },
+        { property: "movein", name: "입주예정일" },
+        { property: "expected", name: "예상 종료일" },
+        { property: "comment", name: "요청 사항" },
+        { property: "channel", name: "유입 경로" }
+      ]
+    } },
+    { table: "designer", map: {
+      name: "디자이너",
+      children: [
+        { property: "desid", name: "디자이너 아이디" },
+        { property: "designer", name: "성함" },
+        { property: "status", name: "계약 상태" },
+        { property: "date", name: "계약일" },
+        { property: "phone", name: "연락처" },
+        { property: "email", name: "이메일" },
+        { property: "address", name: "주소" },
+        { property: "webPage", name: "웹페이지" },
+        { property: "sns", name: "sns" },
+        { property: "career", name: "경력" },
+        { property: "account", name: "계좌" },
+        { property: "classification", name: "사업자 분류" },
+        { property: "businessNumber", name: "사업자 등록번호" },
+        { property: "percentage", name: "수수료" }
+      ]
+    } },
+    { table: "project", map: {
+      name: "프로젝트",
+      children: [
+        { property: "proid", name: "프로젝트 아이디" },
+        { property: "cliid", name: "고객 아이디" },
+        { property: "desid", name: "디자이너 아이디" },
+        { property: "status", name: "상태" },
+        { property: "action", name: "응대" },
+        { property: "firstDate", name: "계약금 입금일" },
+        { property: "remainDate", name: "잔금 입금일" },
+        { property: "remainSupply", name: "공급가" },
+        { property: "remainVat", name: "vat" },
+        { property: "remainConsumer", name: "소비자가" },
+        { property: "remainPure", name: "잔금" },
+        { property: "formDateFrom", name: "계약서상 시작일" },
+        { property: "formDateTo", name: "계약서상 종료일" },
+        { property: "meetingDate", name: "현장미팅일" },
+        { property: "method", name: "정산 방식" },
+        { property: "percentage", name: "수수료" },
+        { property: "paymentsTotalAmount", name: "정산 총금액" },
+        { property: "paymentsFirstAmount", name: "선금" },
+        { property: "paymentsFirstDate", name: "선금 정산일" },
+        { property: "paymentsRemainAmount", name: "잔금" },
+        { property: "paymentsRemainDate", name: "잔금 정산일" },
+        { property: "proposalDate", name: "제안일" },
+        { property: "proposalAverage", name: "평균 제안 금액" }
+      ]
+    } }
+  ]);
+  return table;
+}
+
 module.exports = DataPatch;

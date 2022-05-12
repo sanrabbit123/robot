@@ -6275,6 +6275,7 @@ ClientJs.prototype.makeMysqlEvent = function () {
   const { ea, totalContents, belowHeight } = this;
   const { createNode, withOut, colorChip, setQueue } = GeneralJs;
   const mysqlClassName = "mysqlTargets";
+  const columnsMap = DataPatch.toolsColumnsName().toWording();
   return function (e) {
     e.preventDefault();
 
@@ -6338,7 +6339,7 @@ ClientJs.prototype.makeMysqlEvent = function () {
     });
 
 
-    
+
 
 
 
