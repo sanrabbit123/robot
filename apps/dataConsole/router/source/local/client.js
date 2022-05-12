@@ -6273,10 +6273,12 @@ ClientJs.prototype.addSearchEvent = function () {
 ClientJs.prototype.makeMysqlEvent = function () {
   const instance = this;
   const { ea, totalContents, belowHeight } = this;
-  const { createNode, withOut, colorChip, setQueue } = GeneralJs;
+  const { createNode, withOut, colorChip, setQueue, ajaxJson } = GeneralJs;
   const mysqlClassName = "mysqlTargets";
-  const initialQuery = "SELECT name, phone, email FROM client WHERE cliid = 'c1801_aa01s';";
-  const columnsMap = DataPatch.toolsColumnsName().toWording();
+  const queryBlockClassName = "queryBlockClassName";
+  const initialQuery = "SELECT name, phone, email FROM client WHERE cliid = 'c1801_aa01s';";
+  const columns = DataPatch.toolsColumnsName();
+  const columnsMap = columns.toWording();
   return function (e) {
     e.preventDefault();
 
@@ -6291,6 +6293,7 @@ ClientJs.prototype.makeMysqlEvent = function () {
     let fontSize0, fontSize1;
     let queryPaddingTop;
     let block;
+    let buttonWidth, buttonHeight;
 
     zIndex = 3;
     whiteCardWidth = 1000;
@@ -6308,6 +6311,9 @@ ClientJs.prototype.makeMysqlEvent = function () {
     fontSize1 = 14;
 
     queryPaddingTop = 23;
+
+    buttonWidth = 75;
+    buttonHeight = 30;
 
     createNode({
       mother: totalContents,
@@ -6362,6 +6368,78 @@ ClientJs.prototype.makeMysqlEvent = function () {
 
     block = createNode({
       mother: queryBase,
+      event: {
+        click: function (e) {
+          const self = this;
+          const queryInputSetClassName = "queryInputSetClassName";
+          let input, cancel;
+          let endEvent;
+          if ([ ...self.children ].every((dom) => { return !/INPUT/gi.test(dom.nodeName); })) {
+            endEvent = () => {
+              const targets = document.querySelectorAll('.' + queryInputSetClassName);
+              const inputTarget = [ ...targets ].find((dom) => { return /INPUT/gi.test(dom.nodeName); });
+              const updatedText = inputTarget.value;
+              for (let dom of targets) {
+                dom.remove();
+              }
+              self.firstChild.textContent = updatedText;
+              window.hljs.highlightElement(self.firstChild);
+            }
+            cancel = createNode({
+              mother: self,
+              class: [ queryInputSetClassName ],
+              event: {
+                click: (e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  endEvent();
+                }
+              },
+              style: {
+                position: "fixed",
+                top: String(0),
+                left: String(0),
+                width: String(100) + '%',
+                height: String(100) + '%',
+                background: "transparent",
+                zIndex: String(1),
+              }
+            });
+            input = createNode({
+              mother: self,
+              class: [ queryInputSetClassName ],
+              mode: "input",
+              event: {
+                click: (e) => { e.preventDefault(); e.stopPropagation(); },
+                keyup: (e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    endEvent();
+                  }
+                }
+              },
+              attribute: { type: "text", value: self.textContent },
+              style: {
+                display: "block",
+                position: "absolute",
+                top: String(queryPaddingTop) + ea,
+                left: String(grayBoxPaddingLeft) + ea,
+                border: String(0),
+                background: colorChip.gray2,
+                fontFamily: "monospace",
+                fontSize: String(fontSize0) + ea,
+                fontWeight: String(500),
+                lineHeight: String(1.5),
+                width: String(8000) + ea,
+                color: colorChip.green,
+                outline: String(0),
+                padding: String(0) + ea,
+                zIndex: String(1),
+              }
+            });
+          }
+        }
+      },
       style: {
         display: "block",
         position: "relative",
@@ -6376,6 +6454,7 @@ ClientJs.prototype.makeMysqlEvent = function () {
       children: [
         {
           text: initialQuery,
+          class: [ queryBlockClassName ],
           style: {
             display: "block",
             position: "relative",
@@ -6434,10 +6513,62 @@ ClientJs.prototype.makeMysqlEvent = function () {
               }
             }
           ]
+        },
+        {
+          event: {
+            click: async function (e) {
+              try {
+                const query = document.querySelector('.' + queryBlockClassName).textContent.trim().replace(/\=/gi, "__equal__");
+                const result = await ajaxJson({ query }, "/mysqlQuery", { equal: true });
+                let matrix;
+                if (!Array.isArray(result)) {
+                  if (typeof result.error === "string") {
+                    window.alert(result.error);
+                  } else {
+                    window.alert("error!");
+                  }
+                } else {
+                  matrix = columns.toMatrix(query, result);
+
+                  console.log(matrix);
+                }
+              } catch (e) {
+                console.log(e);
+              }
+            }
+          },
+          style: {
+            display: "flex",
+            position: "absolute",
+            bottom: String(grayBoxPaddingTop) + ea,
+            right: String(grayBoxPaddingTop) + ea,
+            width: String(buttonWidth) + ea,
+            height: String(buttonHeight) + ea,
+            background: colorChip.gradientGreen3,
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            borderRadius: String(5) + ea,
+            cursor: "pointer",
+          },
+          children: [
+            {
+              text: "Query",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(-2) + ea,
+                fontFamily: "monospace",
+                fontSize: String(fontSize1) + ea,
+                fontWeight: String(500),
+                lineHeight: String(1.5),
+                color: colorChip.white,
+              }
+            }
+          ]
         }
       ]
     });
-
 
 
   }

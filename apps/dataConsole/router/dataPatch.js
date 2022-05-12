@@ -7489,6 +7489,49 @@ DataPatch.prototype.toolsColumnsName = function () {
       }
       return arr;
     }
+
+    toMatrix(query, result) {
+      const arr = this.toNormal();
+      let targetMap;
+      let propoertyDictionary;
+      let matrix;
+      let tempArr;
+      let keyArr;
+
+      targetMap = null;
+      for (let { table, map } of arr) {
+        if ((new RegExp("FROM " + table, "gi")).test(query)) {
+          targetMap = map;
+          break;
+        }
+      }
+
+      if (targetMap === null) {
+        return [];
+      }
+      if (result.length === 0) {
+        return [];
+      }
+
+      propoertyDictionary = {};
+      for (let { property, name } of targetMap.children) {
+        propoertyDictionary[property] = name;
+      }
+
+      matrix = [];
+      keyArr = Object.keys(result[0]).filter((k) => { return k !== "id" && k !== "_id"; });
+      matrix.push(keyArr.map((k) => { return propoertyDictionary[k]; }));
+      for (let obj of result) {
+        tempArr = [];
+        for (let key of keyArr) {
+          tempArr.push(obj[key]);
+        }
+        matrix.push(tempArr);
+      }
+
+      return matrix;
+    }
+
   };
   const table = new TableArray([
     { table: "client", map: {
