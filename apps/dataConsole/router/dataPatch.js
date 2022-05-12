@@ -7457,7 +7457,7 @@ DataPatch.prototype.toolsColumnsName = function () {
       const oneLevelSpace = 18;
       const twoLevelSpace = 24;
       const sectionChar = '>';
-      const tab = "    ";
+      const tab = "&nbsp;&nbsp;&nbsp;&nbsp;";
       let text;
       let thisSpaceLevel;
       text = "";
@@ -7465,7 +7465,7 @@ DataPatch.prototype.toolsColumnsName = function () {
       text += "\n\n";
       thisSpaceLevel = (oneLevelSpace <= this.toNormal().map((obj) => { return obj.table.length; }).reduce((acc, curr) => { return (acc <= curr ? curr : acc); }, 0)) ? twoLevelSpace : oneLevelSpace;
       for (let { table, map } of this) {
-        text += tab + table + (new Array(thisSpaceLevel - table.length)).fill(' ').join('') + map.name;
+        text += tab + table + (new Array(thisSpaceLevel - table.length)).fill(" ").join('') + map.name;
         text += "\n";
       }
       text += "\n\n";
@@ -7474,7 +7474,7 @@ DataPatch.prototype.toolsColumnsName = function () {
         text += sectionChar + " " + table + " - " + map.name;
         text += "\n\n";
         for (let { property, name } of map.children) {
-          text += tab + property + (new Array(thisSpaceLevel - property.length)).fill(' ').join('') + name;
+          text += tab + property + (new Array(thisSpaceLevel - property.length)).fill(" ").join('') + name;
           text += "\n";
         }
         text += "\n\n";

@@ -6275,6 +6275,7 @@ ClientJs.prototype.makeMysqlEvent = function () {
   const { ea, totalContents, belowHeight } = this;
   const { createNode, withOut, colorChip, setQueue } = GeneralJs;
   const mysqlClassName = "mysqlTargets";
+  const initialQuery = "SELECT name, phone, email FROM client WHERE cliid = 'c1801_aa01s';";
   const columnsMap = DataPatch.toolsColumnsName().toWording();
   return function (e) {
     e.preventDefault();
@@ -6283,10 +6284,30 @@ ClientJs.prototype.makeMysqlEvent = function () {
     let whiteCardHeight;
     let zIndex;
     let queryBase;
+    let innerPadding;
+    let boxBetween;
+    let queryBoxHeight;
+    let grayBoxPaddingTop, grayBoxPaddingLeft;
+    let fontSize0, fontSize1;
+    let queryPaddingTop;
+    let block;
 
     zIndex = 3;
-    whiteCardWidth = 720;
-    whiteCardHeight = 100;
+    whiteCardWidth = 1000;
+    whiteCardHeight = 600;
+
+    innerPadding = 24;
+    boxBetween = 12;
+
+    queryBoxHeight = 72;
+
+    grayBoxPaddingTop = 24;
+    grayBoxPaddingLeft = 27;
+
+    fontSize0 = 15;
+    fontSize1 = 14;
+
+    queryPaddingTop = 23;
 
     createNode({
       mother: totalContents,
@@ -6327,8 +6348,9 @@ ClientJs.prototype.makeMysqlEvent = function () {
       style: {
         position: "fixed",
         background: colorChip.white,
+        paddingTop: String(innerPadding) + ea,
         width: String(whiteCardWidth) + ea,
-        height: String(whiteCardHeight) + ea,
+        height: String(whiteCardHeight - innerPadding) + ea,
         top: "calc(calc(calc(100% - " + String(belowHeight) + ea + ") / 2) - " + String(whiteCardHeight / 2) + ea + ")",
         left: "calc(50% - " + String(whiteCardWidth / 2) + ea + ")",
         borderRadius: String(5) + "px",
@@ -6338,16 +6360,83 @@ ClientJs.prototype.makeMysqlEvent = function () {
       }
     });
 
+    block = createNode({
+      mother: queryBase,
+      style: {
+        display: "block",
+        position: "relative",
+        marginLeft: String(innerPadding) + ea,
+        marginRight: String(innerPadding) + ea,
+        width: withOut(innerPadding * 2, ea),
+        height: String(queryBoxHeight) + ea,
+        borderRadius: String(5) + "px",
+        background: colorChip.gray2,
+        overflow: "scroll",
+      },
+      children: [
+        {
+          text: initialQuery,
+          style: {
+            display: "block",
+            position: "relative",
+            fontFamily: "monospace",
+            fontSize: String(fontSize0) + ea,
+            fontWeight: String(500),
+            lineHeight: String(1.5),
+            width: String(8000) + ea,
+            color: colorChip.black,
+            paddingLeft: String(grayBoxPaddingLeft) + ea,
+            paddingTop: String(queryPaddingTop) + ea,
+          }
+        }
+      ]
+    }).firstChild;
 
+    window.hljs.highlightElement(block);
 
-
-
-
-
-
-
-
-
+    createNode({
+      mother: queryBase,
+      style: {
+        display: "block",
+        position: "relative",
+        marginTop: String(boxBetween) + ea,
+        marginLeft: String(innerPadding) + ea,
+        marginRight: String(innerPadding) + ea,
+        paddingTop: String(grayBoxPaddingTop) + ea,
+        width: withOut(innerPadding * 2, ea),
+        height: withOut(innerPadding + queryBoxHeight + boxBetween + grayBoxPaddingTop, ea),
+        borderRadius: String(5) + "px",
+        background: colorChip.gray2,
+      },
+      children: [
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            marginLeft: String(grayBoxPaddingLeft) + ea,
+            marginRight: String(grayBoxPaddingLeft) + ea,
+            width: withOut(grayBoxPaddingLeft * 2, ea),
+            height: withOut(grayBoxPaddingTop, ea),
+            overflow: "scroll",
+          },
+          children: [
+            {
+              text: columnsMap,
+              style: {
+                display: "block",
+                position: "relative",
+                width: String(100) + '%',
+                fontFamily: "monospace",
+                fontSize: String(fontSize1) + ea,
+                fontWeight: String(500),
+                lineHeight: String(1.5),
+                color: colorChip.black,
+              }
+            }
+          ]
+        }
+      ]
+    });
 
 
 
@@ -7367,11 +7456,12 @@ ClientJs.prototype.sseCardParsing = function (raw) {
 ClientJs.prototype.launching = async function () {
   const instance = this;
   try {
-    const { dateToString, returnGet, setQueue } = GeneralJs;
+    const { dateToString, returnGet, setQueue, cssInjection, requestPromise } = GeneralJs;
     const getObj = returnGet();
     let getTarget;
     let tempFunction;
     let cardViewInitial;
+    let moduleFunction;
 
     cardViewInitial = (getObj.cliid === undefined);
     if (typeof getObj.specificids === "string") {
@@ -7427,6 +7517,11 @@ ClientJs.prototype.launching = async function () {
         });
       }
     }
+
+    // external module
+    moduleFunction = new Function("window", await requestPromise("/externalModule/highlight/highlight.js"));
+    moduleFunction(window);
+    cssInjection(await requestPromise("/externalModule/highlight/highlight.css"));
 
   } catch (e) {
     GeneralJs.ajax({ message: "ClientJs 프론트 스크립트 문제 생김 " + e.message, channel: "#error_log" }, "/sendSlack", function () {});
