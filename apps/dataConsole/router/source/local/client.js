@@ -6273,7 +6273,7 @@ ClientJs.prototype.addSearchEvent = function () {
 ClientJs.prototype.makeMysqlEvent = function () {
   const instance = this;
   const { ea, totalContents, belowHeight } = this;
-  const { createNode, withOut, colorChip, setQueue, ajaxJson } = GeneralJs;
+  const { createNode, withOut, colorChip, setQueue, ajaxJson, uniqueValue, blankHref } = GeneralJs;
   const mysqlClassName = "mysqlTargets";
   const queryBlockClassName = "queryBlockClassName";
   const initialQuery = "SELECT name, phone, email FROM client WHERE cliid = 'c1801_aa01s';";
@@ -6518,9 +6518,12 @@ ClientJs.prototype.makeMysqlEvent = function () {
           event: {
             click: async function (e) {
               try {
+                const parentId = "1JcUBOu9bCrFBQfBAG-yXFcD9gqYMRC1c";
+                const loading = instance.mother.grayLoading();
                 const query = document.querySelector('.' + queryBlockClassName).textContent.trim().replace(/\=/gi, "__equal__");
                 const result = await ajaxJson({ query }, "/mysqlQuery", { equal: true });
                 let matrix;
+                let res, link;
                 if (!Array.isArray(result)) {
                   if (typeof result.error === "string") {
                     window.alert(result.error);
@@ -6529,8 +6532,15 @@ ClientJs.prototype.makeMysqlEvent = function () {
                   }
                 } else {
                   matrix = columns.toMatrix(query, result);
-
-                  console.log(matrix);
+                  res = await ajaxJson({
+                    values: matrix,
+                    newMake: true,
+                    parentId: parentId,
+                    sheetName: "fromDB_mysql_" + uniqueValue("hex")
+                  }, "/sendSheets");
+                  link = res.link;
+                  blankHref(link);
+                  loading.remove();
                 }
               } catch (e) {
                 console.log(e);

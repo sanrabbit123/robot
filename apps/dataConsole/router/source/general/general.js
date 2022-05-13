@@ -5180,7 +5180,7 @@ GeneralJs.prototype.grayLoading = function (mother = null) {
       width: String(100) + '%',
       height: String(100) + '%',
       background: colorChip.black,
-      zIndex: String(2),
+      zIndex: String(10),
       animation: "justfadein 0.3s ease forwards",
     }
   });
@@ -5196,7 +5196,7 @@ GeneralJs.prototype.grayLoading = function (mother = null) {
       left: withOut(50, width / 2, ea),
       width: String(width) + ea,
       height: String(width) + ea,
-      zIndex: String(2),
+      zIndex: String(10),
     }
   });
 
