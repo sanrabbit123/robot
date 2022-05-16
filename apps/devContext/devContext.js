@@ -88,6 +88,11 @@ DevContext.prototype.launching = async function () {
     // console.log(pastProposal[0].project.detail);
 
 
+    
+
+
+
+
 
 
 
@@ -2665,8 +2670,8 @@ DevContext.prototype.launching = async function () {
     // send sms
     // const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
     // const human = new HumanPacket();
-    // const name = "박소영";
-    // const amount = 1742000;
+    // const name = "조영준";
+    // const amount = 10297500;
     // await human.sendSms({
     //   name: "",
     //   phone: "01055432039",

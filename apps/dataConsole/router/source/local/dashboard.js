@@ -31,7 +31,6 @@ DashboardJs.prototype.whiteBoards = function () {
   const { createNode, colorChip, withOut, blankHref, isMac, cleanChildren, setQueue, ajaxJson } = GeneralJs;
   const vh = "vh";
   const memberTongClassName = "memberTong";
-  const serverTongClassName = "serverTong";
   const noticeTongClassName = "noticeTong";
   const thisHost = window.location.protocol + "//" + window.location.host;
   let outerMargin;
@@ -42,7 +41,7 @@ DashboardJs.prototype.whiteBoards = function () {
   let boxWidth0, boxWidth1;
   let boxHeight0, boxHeight1;
   let whiteRadius;
-  let onlineBlock, webBlock, clientBlock, projectBlock, constructBlock, photoBlock, proposalBlock, constructConsoleBlock, designerConsoleBlock, designerBlock, aspirantBlock, checklistBlock, calendarBlock, requestBlock, noticeBlock;
+  let onlineBlock, clientBlock, projectBlock, constructBlock, photoBlock, proposalBlock, constructConsoleBlock, designerConsoleBlock, designerBlock, aspirantBlock, checklistBlock, calendarBlock, requestBlock, noticeBlock;
   let firstMother, secondMother, thirdMother, fourthMother;
   let tempMother;
   let titleSize, subSize, lineHeight;
@@ -53,7 +52,7 @@ DashboardJs.prototype.whiteBoards = function () {
   let onlineBoxHeight0, onlineBoxBetween;
   let onlineBoxInnerMargin;
   let onlineBoxInnerMarginTop;
-  let memberTong, serverTong;
+  let memberTong;
   let memberBlockPaddingLeft;
   let memberBlockMarginBottom;
   let memberBlockWidth;
@@ -62,7 +61,6 @@ DashboardJs.prototype.whiteBoards = function () {
   let memberBlockPaddingRight;
   let homeliaisonWifiKey, hubSeongSuWifiKey;
   let alive;
-  let serverTargets;
   let noticeTong;
   let noticeSize, noticeDateSize;
   let noticePaddingLeft, noticePaddingTop, noticePaddingBottom;
@@ -107,51 +105,6 @@ DashboardJs.prototype.whiteBoards = function () {
   noticePaddingBottom = 1.4;
   noticeMarginBottom = 0.5;
 
-  serverTargets = [
-    {
-      name: "Console server",
-      alive: () => {
-        return true;
-      }
-    },
-    {
-      name: "File server",
-      alive: () => {
-        return true;
-      }
-    },
-    {
-      name: "Graphic server",
-      alive: () => {
-        return true;
-      }
-    },
-    {
-      name: "Sms server",
-      alive: () => {
-        return true;
-      }
-    },
-    {
-      name: "Monitor server",
-      alive: () => {
-        return true;
-      }
-    },
-    {
-      name: "Bill Server",
-      alive: () => {
-        return true;
-      }
-    },
-    {
-      name: "Bridge Server",
-      alive: () => {
-        return true;
-      }
-    },
-  ];
-
   boxWidth0 = boxHeight0 = "calc(calc(100vh - " + String(belowHeight + (outerMargin * 2) + (innerMargin * 2)) + ea + ") / " + String(2.5) + ")";
   boxWidth1 = boxHeight1 = "calc(calc(100vh - " + String(belowHeight + (outerMargin * 2) + (innerMargin * 2)) + ea + ") / " + String(5) + ")";
 
@@ -188,7 +141,7 @@ DashboardJs.prototype.whiteBoards = function () {
           paddingTop: String(onlineBoxTop) + vh,
           display: "block",
           width: boxWidth0,
-          height: "calc(calc(calc(100% - " + boxHeight1 + ") - " + String(innerMargin) + ea + ") - " + String(onlineBoxTop) + vh + ")",
+          height: withOut(onlineBoxTop, vh),
           borderRadius: String(whiteRadius) + ea,
           background: colorChip.white,
           boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
@@ -196,7 +149,7 @@ DashboardJs.prototype.whiteBoards = function () {
         },
         children: [
           {
-            text: "Online",
+            text: "Schedule",
             style: {
               position: "absolute",
               fontSize: String(onlineWordingSize) + vh,
@@ -213,7 +166,7 @@ DashboardJs.prototype.whiteBoards = function () {
               position: "relative",
               left: String(onlineBoxLeft) + vh,
               width: withOut(onlineBoxLeft * 2, vh),
-              height: String(onlineBoxHeight0) + vh,
+              height: withOut(onlineBoxLeft, vh),
               boxSizing: "border-box",
               border: "1px solid " + colorChip.gray4,
               borderRadius: String(5) + "px",
@@ -243,224 +196,68 @@ DashboardJs.prototype.whiteBoards = function () {
               }
             ]
           },
-          {
-            style: {
-              display: "block",
-              position: "relative",
-              marginTop: String(onlineBoxBetween) + vh,
-              left: String(onlineBoxLeft) + vh,
-              width: withOut(onlineBoxLeft * 2, vh),
-              height: withOut(onlineBoxHeight0 + onlineBoxBetween + onlineBoxLeft, vh),
-              boxSizing: "border-box",
-              border: "1px solid " + colorChip.gray4,
-              borderRadius: String(5) + "px",
-            },
-            children: [
-              {
-                style: {
-                  position: "absolute",
-                  top: String(onlineBoxInnerMarginTop) + vh,
-                  left: String(onlineBoxInnerMarginTop) + vh,
-                  width: withOut(onlineBoxInnerMarginTop * 2, vh),
-                  height: withOut(onlineBoxInnerMarginTop * 2, vh),
-                  overflow: "scroll",
-                },
-                children: [
-                  {
-                    class: [ serverTongClassName ],
-                    style: {
-                      display: "block",
-                      position: "relative",
-                      top: String(0),
-                      left: String(0),
-                      width: String(100) + '%',
-                    }
-                  }
-                ]
-              }
-            ]
-          },
-        ]
-      },
-      {
-        style: {
-          position: "relative",
-          display: "flex",
-          width: boxWidth0,
-          height: boxHeight1,
-          borderRadius: String(whiteRadius) + ea,
-          backgroundImage: "url('/middle/meeting/back.jpg')",
-          backgroundSize: "100% auto",
-          backgroundPosition: "50% 50%",
-          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
-          justifyContent: "center",
-          alignItems: "center",
-          cursor: "pointer",
-        },
-        event: { click: (e) => { blankHref(FRONTHOST, true); } },
-        children: [
-          {
-            class: [ "hoverDefault_lite" ],
-            text: "HomeLiaison web",
-            style: {
-              color: colorChip.whiteBlack,
-              fontSize: String(title3Size) + vh,
-              textAlign: "center",
-              fontWeight: String(500),
-              lineHeight: String(lineHeight),
-              fontFamily: "graphik",
-              position: "relative",
-              top: String(visualTop) + ea,
-              fontStyle: "italic",
-            },
-          }
         ]
       },
     ]
   });
   onlineBlock = firstMother.firstChild;
-  webBlock = firstMother.lastChild;
 
   memberTong = firstMother.querySelector('.' + memberTongClassName);
-  serverTong = firstMother.querySelector('.' + serverTongClassName);
 
-  memberReload = async () => {
-    try {
-      const members = instance.members;
-      const onlineStatus = await ajaxJson({}, "https://" + FILEHOST + "/officeMonitor/status", { equal: true });
-      let alive;
-      for (let member of members) {
-        alive = (onlineStatus[member.id] === true || onlineStatus[member.id] === "true");
-        if (alive) {
-          member.alive = "online";
-        } else {
-          member.alive = "offline";
+  createNode({
+    mother: memberTong,
+    event: {
+      click: this.schedulePopup("development"),
+    },
+    style: {
+      display: "block",
+      position: "relative",
+      width: withOut(memberBlockPaddingLeft * 1, vh),
+      paddingLeft: String(memberBlockPaddingLeft) + vh,
+      marginBottom: String(memberBlockMarginBottom) + ea,
+    },
+    children: [
+      {
+        mode: "svg",
+        source: instance.mother.returnRound(String(memberBlockWidth / 2) + ea, colorChip.green),
+        style: {
+          position: "absolute",
+          width: String(memberBlockWidth) + ea,
+          height: "",
+          top: String(memberBlockTop2) + ea,
+          left: String(memberBlockLeft) + vh,
         }
-      }
-      cleanChildren(memberTong);
-      for (let member of members) {
-        createNode({
-          mother: memberTong,
-          style: {
-            display: "block",
-            position: "relative",
-            width: withOut(memberBlockPaddingLeft * 1, vh),
-            paddingLeft: String(memberBlockPaddingLeft) + vh,
-            marginBottom: String(memberBlockMarginBottom) + ea,
-          },
-          children: [
-            {
-              mode: "svg",
-              source: instance.mother.returnRound(String(memberBlockWidth / 2) + ea, member.alive !== "offline" ? colorChip.green : colorChip.gray4),
-              style: {
-                position: "absolute",
-                width: String(memberBlockWidth) + ea,
-                height: "",
-                top: String(memberBlockTop) + ea,
-                left: String(memberBlockLeft) + vh,
-              }
-            },
-            {
-              text: member.name + " " + member.title + "님",
-              style: {
-                display: "inline-block",
-                position: "relative",
-                background: colorChip.white,
-                fontSize: String(memberBlockSize) + ea,
-                fontWeight: String(400),
-                color: colorChip.black,
-                paddingRight: String(memberBlockPaddingRight) + vh,
-                top: String(onlineTextTop) + vh,
-              }
-            },
-            {
-              text: member.alive,
-              style: {
-                position: "absolute",
-                right: String(0),
-                top: String(0),
-                background: colorChip.white,
-                fontSize: String(memberBlockSize) + ea,
-                fontWeight: String(300),
-                fontFamily: "graphik",
-                color: member.alive !== "offline" ? colorChip.green : colorChip.gray4,
-              }
-            }
-          ]
-        });
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  memberReload().then(() => {
-    return GeneralJs.sleep(3000);
-  }).then(() => {
-    return memberReload();
-  }).catch((err) => {
-    console.log(err);
-  });
-
-  setInterval(async () => {
-    try {
-      await memberReload();
-    } catch (e) {
-      console.log(e);
-    }
-  }, 30 * 1000);
-
-  for (let server of serverTargets) {
-    createNode({
-      mother: serverTong,
-      style: {
-        display: "block",
-        position: "relative",
-        width: withOut(memberBlockPaddingLeft * 1, vh),
-        paddingLeft: String(memberBlockPaddingLeft) + vh,
-        marginBottom: String(memberBlockMarginBottom) + ea,
       },
-      children: [
-        {
-          mode: "svg",
-          source: instance.mother.returnRound(String(memberBlockWidth / 2) + ea, server.alive() ? colorChip.green : colorChip.gray4),
-          style: {
-            position: "absolute",
-            width: String(memberBlockWidth) + ea,
-            height: "",
-            top: String(memberBlockTop2) + ea,
-            left: String(memberBlockLeft) + vh,
-          }
-        },
-        {
-          text: server.name,
-          style: {
-            display: "inline-block",
-            position: "relative",
-            background: colorChip.white,
-            fontSize: String(memberBlockSize) + ea,
-            fontWeight: String(300),
-            fontFamily: "graphik",
-            color: colorChip.black,
-            paddingRight: String(memberBlockPaddingRight) + vh,
-          }
-        },
-        {
-          text: server.alive() ? "online" : "offline",
-          style: {
-            position: "absolute",
-            right: String(0),
-            top: String(0),
-            background: colorChip.white,
-            fontSize: String(memberBlockSize) + ea,
-            fontWeight: String(300),
-            fontFamily: "graphik",
-            color: server.alive() ? colorChip.green : colorChip.gray4,
-          }
+      {
+        text: "Development",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          background: colorChip.white,
+          fontSize: String(memberBlockSize) + ea,
+          fontWeight: String(300),
+          fontFamily: "graphik",
+          color: colorChip.black,
+          paddingRight: String(memberBlockPaddingRight) + vh,
+          cursor: "pointer",
         }
-      ]
-    });
-  }
+      },
+      {
+        text: "detail",
+        style: {
+          position: "absolute",
+          right: String(0),
+          top: String(0),
+          background: colorChip.white,
+          fontSize: String(memberBlockSize) + ea,
+          fontWeight: String(300),
+          fontFamily: "graphik",
+          color: colorChip.green,
+          cursor: "pointer",
+        }
+      }
+    ]
+  });
 
   secondMother = createNode({
     mother: motherBox,
@@ -1003,15 +800,112 @@ DashboardJs.prototype.whiteBoards = function () {
 
   }
 
-  this.whiteBlocks = { onlineBlock, webBlock, clientBlock, projectBlock, constructBlock, photoBlock, proposalBlock, constructConsoleBlock, designerConsoleBlock, designerBlock, aspirantBlock, checklistBlock, calendarBlock, requestBlock, noticeBlock };
+  this.whiteBlocks = { onlineBlock, clientBlock, projectBlock, constructBlock, photoBlock, proposalBlock, constructConsoleBlock, designerConsoleBlock, designerBlock, aspirantBlock, checklistBlock, calendarBlock, requestBlock, noticeBlock };
 
+}
+
+DashboardJs.prototype.schedulePopup = function (kind) {
+  const instance = this;
+  const { totalMother, ea, belowHeight } = this;
+  const { createNode, withOut, colorChip, setQueue, getDateMatrix } = GeneralJs;
+  return function (e) {
+    const zIndex = 4;
+    const schedulePopupClassName = "schedulePopupClassName";
+    const dateMatrix = getDateMatrix(new Date()).sundayConvert();
+    let cancelBack, whiteBlock;
+    let margin;
+
+    margin = 30;
+
+    cancelBack = createNode({
+      mother: totalMother,
+      class: [ schedulePopupClassName ],
+      event: {
+        click: function (e) {
+          const targets = document.querySelectorAll('.' + schedulePopupClassName);
+          for (let dom of targets) {
+            if (dom === this) {
+              dom.style.animation = "justfadeout 0.3s ease forwards";
+            } else {
+              dom.style.animation = "fadedownlite 0.3s ease forwards";
+            }
+          }
+          setQueue(() => {
+            const targets = document.querySelectorAll('.' + schedulePopupClassName);
+            for (let dom of targets) {
+              dom.remove();
+            }
+          }, 301);
+        }
+      },
+      style: {
+        position: "fixed",
+        top: String(0),
+        left: String(0),
+        width: String(100) + '%',
+        height: withOut(belowHeight, ea),
+        background: colorChip.black,
+        animation: "justfadein 0.3s ease forwards",
+        zIndex: String(zIndex),
+      }
+    });
+
+    whiteBlock = createNode({
+      mother: totalMother,
+      class: [ schedulePopupClassName ],
+      style: {
+        position: "fixed",
+        top: String(margin) + ea,
+        left: String(margin) + ea,
+        width: withOut(margin * 2, ea),
+        height: withOut((margin * 2) + belowHeight, ea),
+        background: colorChip.white,
+        animation: "fadeuplite 0.3s ease forwards",
+        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+        borderRadius: String(5) + "px",
+        zIndex: String(zIndex),
+      }
+    });
+
+    
+
+
+    console.log(dateMatrix);
+
+
+
+
+
+
+    if (kind === "development") {
+      instance.developmentSchedule(whiteBlock).catch((err) => { console.log(err); });
+    }
+  }
+}
+
+DashboardJs.prototype.developmentSchedule = async function (whiteBlock) {
+  const instance = this;
+  const { ea, totalMother } = this;
+  const { createNode, colorChip, withOut, ajaxJson } = GeneralJs;
+  try {
+
+
+
+
+
+
+
+
+
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 DashboardJs.prototype.launching = async function () {
   const instance = this;
+  const { ajaxJson } = GeneralJs;
   try {
-    const { ajaxJson } = GeneralJs;
-
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
     this.grayBarWidth = this.mother.grayBarWidth;
