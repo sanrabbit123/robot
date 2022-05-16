@@ -88,7 +88,7 @@ DevContext.prototype.launching = async function () {
     // console.log(pastProposal[0].project.detail);
 
 
-    
+
 
 
 
@@ -2618,7 +2618,7 @@ DevContext.prototype.launching = async function () {
 
     // aspirant to designer
     // await this.aspirantToDesigner([
-    //   [ "한주희", "2022-03-17" ],
+    //   [ "김지혜", "2022-04-28" ],
     // ]);
 
 
