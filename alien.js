@@ -236,8 +236,8 @@ Alien.prototype.wssLaunching = async function () {
           } else if (mode === "message") {
             const clients = generalSocket.clients;
             for (let c of clients) {
-              if (c.readyState === WebSocket.OPEN && c.__who__.mac === to) {
-                c.send(JSON.stringify({ from: ws.__who__.mac, data }));
+              if (c.readyState === WebSocket.OPEN && c.__who__.id === to) {
+                c.send(JSON.stringify({ from: ws.__who__.id, data }));
               }
             }
           }
