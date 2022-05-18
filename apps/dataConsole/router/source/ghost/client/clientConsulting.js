@@ -2765,6 +2765,7 @@ ClientConsultingJs.prototype.insertPannelBox = function () {
       height: String(blockHeight) + ea,
       background: colorChip.white,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      marginBottom: String(blockMarginBottom) + ea,
     }
   });
 
@@ -3139,7 +3140,7 @@ ClientConsultingJs.prototype.launching = async function (loading) {
         try {
           instance.insertInitBox();
           instance.insertPannelBox();
-          instance.insertStrongBox();
+          // instance.insertStrongBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "ClientConsultingJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
         }

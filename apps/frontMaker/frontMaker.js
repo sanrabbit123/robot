@@ -470,9 +470,9 @@ FrontMaker.prototype.totalUpdate = async function (test = false) {
       host = address.testinfo.host;
       path = "/home/ubuntu/";
     } else {
-      user = "ubuntu";
-      host = address.playgroundinfo.host;
-      path = "/home/ubuntu/";
+      user = address.frontinfo.user;
+      host = address.frontinfo.host;
+      path = "/" + address.frontinfo.user + "/";
     }
 
     await this.totalLaunching(test);

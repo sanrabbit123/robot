@@ -595,14 +595,14 @@ DataConsole.prototype.renderFrontPhp = async function () {
     const targetMap = [
       { from: "clientConsulting", to: "consulting", path: "/middle/consulting" },
       { from: "aspirantExplanation", to: "aspirant", path: "/middle/aspirantExplanation" },
-      { from: "frontIndex", to: "index", path: "/middle/frontIndex" },
-      { from: "portfolioList", to: "portfolio", path: "/middle/portfolioList" },
-      { from: "portfolioDetail", to: "portdetail", path: "/middle/portfolioDetail" },
-      { from: "reviewList", to: "review", path: "/middle/reviewList" },
-      { from: "reviewDetail", to: "revdetail", path: "/middle/reviewDetail" },
-      { from: "designerList", to: "designer", path: "/middle/designerList" },
-      { from: "designerDetail", to: "desdetail", path: "/middle/designerDetail" },
-      { from: "frontAbout", to: "about", path: "/middle/frontAbout" },
+      // { from: "frontIndex", to: "index", path: "/middle/frontIndex" },
+      // { from: "portfolioList", to: "portfolio", path: "/middle/portfolioList" },
+      // { from: "portfolioDetail", to: "portdetail", path: "/middle/portfolioDetail" },
+      // { from: "reviewList", to: "review", path: "/middle/reviewList" },
+      // { from: "reviewDetail", to: "revdetail", path: "/middle/reviewDetail" },
+      // { from: "designerList", to: "designer", path: "/middle/designerList" },
+      // { from: "designerDetail", to: "desdetail", path: "/middle/designerDetail" },
+      // { from: "frontAbout", to: "about", path: "/middle/frontAbout" },
     ];
     const ghostTargets = (await fileSystem(`readDir`, [ ghostdir + "/client" ])).filter((str) => { return str !== ".DS_Store" }).filter((str) => {
       const fromArr = targetMap.map((obj) => { return obj.from });
