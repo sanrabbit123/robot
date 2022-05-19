@@ -88,13 +88,20 @@ DevContext.prototype.launching = async function () {
     // console.log(pastProposal[0].project.detail);
 
 
-
-
-
-
-
-
-
+    // const token = "5127747215:AAHDSmjmeYNJ4C4B5hWdAO-T1bJleSfOpGU";
+    // const chat_id = -1001514605562;
+    // const method = "sendMessage";
+    // const url = method => `https://api.telegram.org/bot${token}/${method}`;
+    // let res, id;
+    //
+    // res = await requestSystem(url("getMe"));
+    // id = res.data.result.id;
+    //
+    // // await requestSystem(url("sendMessage"), { chat_id, text: "안녕_" + uniqueValue("hex") }, { headers: { "Content-Type": "application/json" } });
+    //
+    //
+    // res = await requestSystem(url("getChat"), { chat_id }, { headers: { "Content-Type": "application/json" } });
+    // console.log(res);
 
 
     // const WebSocket = require("ws");
@@ -2607,7 +2614,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    await this.getRawPortfolio("p179");
+    // await this.getRawPortfolio("p162");
 
 
     // get corePortfolio by pid

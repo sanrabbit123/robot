@@ -839,7 +839,7 @@ BillMaker.returnBankCode = function (name, mode = "code") {
   }
   name = name.trim().replace(/은행/gi, '').trim().replace(/ /gi, '').trim();
   const bankMatrix = [
-    [ "농협", "11" ],
+    [ "농협", "12" ],
     [ "축협중앙회", "16" ],
     [ "우리", "20" ],
     [ "조흥", "21" ],
