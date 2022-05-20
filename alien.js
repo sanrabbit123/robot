@@ -316,9 +316,11 @@ Alien.prototype.smsLaunching = async function () {
     ws.on("message", async (message) => {
       try {
         const data = JSON.parse(message);
-        await errorLog(JSON.stringify(data));
         if (data.type === "push") {
           if (typeof data.push === "object") {
+
+            await errorLog(JSON.stringify(data.push));
+
             if (data.push.type === "sms_changed" && Array.isArray(data.push.notifications)) {
               if (data.push.notifications.length > 0) {
                 const [ sms ] = data.push.notifications;
