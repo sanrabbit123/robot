@@ -100,7 +100,7 @@ DevContext.prototype.launching = async function () {
     // // await requestSystem(url("sendMessage"), { chat_id, text: "안녕_" + uniqueValue("hex") }, { headers: { "Content-Type": "application/json" } });
     //
     //
-    // res = await requestSystem(url("getChat"), { chat_id }, { headers: { "Content-Type": "application/json" } });
+    // res = await requestSystem(url("getUpdates"), { chat_id }, { headers: { "Content-Type": "application/json" } });
     // console.log(res);
 
 
