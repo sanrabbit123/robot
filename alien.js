@@ -298,6 +298,8 @@ Alien.prototype.smsLaunching = async function () {
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
 
+    wsLaunching = () => {}
+
     wsOpenEvent = async () => {
       try {
         await errorLog("sms wss wake up");
@@ -382,6 +384,7 @@ Alien.prototype.smsLaunching = async function () {
     wsCloseEvent = async () => {
       try {
         await errorLog("sms wss dead");
+        ws = wsLaunching();
       } catch (e) {
         await errorLog(e.message);
         process.exit();
