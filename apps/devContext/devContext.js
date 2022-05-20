@@ -88,21 +88,8 @@ DevContext.prototype.launching = async function () {
     // console.log(pastProposal[0].project.detail);
 
 
-    const token = "5127747215:AAHDSmjmeYNJ4C4B5hWdAO-T1bJleSfOpGU";
-    const chat_id = -1001514605562;
-    const method = "sendMessage";
-    const url = `https://api.telegram.org/bot${token}/${method}`;
-    let text;
 
-    text = "__hello__" + uniqueValue("hex");
-
-    await requestSystem(url, { chat_id, text }, { headers: { "Content-Type": "application/json" } });
-
-    await sleep(20 * 1000);
-
-    res = await requestSystem("https://home-liaison.servehttp.com:35000/stack");
-    console.log(res.data.stack);
-    console.log((new RegExp(text, "gi")).test(res.data.stack));
+    
 
 
 
@@ -112,25 +99,40 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // res = await requestSystem(url("getUpdates"), { chat_id }, { headers: { "Content-Type": "application/json" } });
-    // console.log(res);
+
+
+
+    // const token = "5127747215:AAHDSmjmeYNJ4C4B5hWdAO-T1bJleSfOpGU";
+    // const chat_id = -1001514605562;
+    // const method = "sendMessage";
+    // const url = `https://api.telegram.org/bot${token}/${method}`;
+    // let text;
+    //
+    // text = "__hello__" + uniqueValue("hex");
+    //
+    // await requestSystem(url, { chat_id, text }, { headers: { "Content-Type": "application/json" } });
+
+    // await sleep(20 * 1000);
+    //
+    // res = await requestSystem("https://home-liaison.servehttp.com:35000/stack");
+    // console.log(res.data.stack);
+    // console.log((new RegExp(text, "gi")).test(res.data.stack));
+
+
 
 
     // const WebSocket = require("ws");
     // const ws = new WebSocket("wss://home-liaison.serveftp.com:5000/general");
-    // const idJson = process.env.HOME + "/.homeliaison/id.json";
-    //
     // ws.on("open", () => {
-    //   fileSystem("readJson", [ idJson ]).then((computerInfo) => {
-    //     computerInfo.data = new Date();
-    //     ws.send(JSON.stringify({
-    //       mode: "register",
-    //       to: null,
-    //       data: computerInfo
-    //     }));
-    //   }).catch((err) => {
-    //     console.log(err);
-    //   });
+    //   ws.send(JSON.stringify({
+    //     mode: "register",
+    //     to: null,
+    //     data: {
+    //       id: 1,
+    //       date: new Date(),
+    //       name: "uragen"
+    //     }
+    //   }));
     // });
     //
     // ws.on("message", (raw) => {
@@ -138,15 +140,11 @@ DevContext.prototype.launching = async function () {
     //   console.log(from, data);
     // });
     //
-    // ws.send(JSON.stringify({
-    //   mode: "message",
-    //   to: "b0:e5:f9:f3:d3:90",
-    //   data: {
-    //     message: "안녕하세요",
-    //   }
-    // }));
-    //
-    // console.log(await requestSystem("https://home-liaison.serveftp.com:5000/status"));
+    // setTimeout(async () => {
+    //   console.log(await requestSystem("https://home-liaison.serveftp.com:5000/status"));
+    // }, 3000)
+
+
 
 
 

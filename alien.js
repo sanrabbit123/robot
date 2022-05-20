@@ -289,7 +289,8 @@ Alien.prototype.smsLaunching = async function () {
     let pems, pemsLink;
     let certDir, keyDir, caDir;
     let ws;
-    let wsOpenEvent, wsMessageEvent;
+    let wsOpenEvent, wsMessageEvent, wsCloseEvent;
+    let wsLaunching;
 
     Alien.stacks[telegramStackName] = "";
 
@@ -367,8 +368,6 @@ Alien.prototype.smsLaunching = async function () {
                   }
                 }
               }
-            } else if (data.push.type === "mirror" && typeof data.push.application_name === "string" && (/텔레그램/gi.test(data.push.application_name) || /telegram/gi.test(data.push.application_name))) {
-              Alien.stacks[telegramStackName] = data.push.body;
             }
           } else {
             throw new Error("invaild message");
@@ -380,10 +379,25 @@ Alien.prototype.smsLaunching = async function () {
         process.exit();
       }
     }
+    wsCloseEvent = async () => {
+      try {
+        await errorLog("sms wss dead");
+      } catch (e) {
+        await errorLog(e.message);
+        process.exit();
+      }
+    }
 
-    ws = new WebSocket(url);
-    ws.on("open", wsOpenEvent);
-    ws.on("message", wsMessageEvent);
+    wsLaunching = () => {
+      let ws;
+      ws = new WebSocket(url);
+      ws.on("open", wsOpenEvent);
+      ws.on("message", wsMessageEvent);
+      ws.on("close", wsCloseEvent);
+      return ws;
+    }
+
+    ws = wsLaunching();
 
     app.get("/", (req, res) => {
       res.set({
@@ -393,16 +407,6 @@ Alien.prototype.smsLaunching = async function () {
         "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
       res.send(JSON.stringify({ message: "done" }));
-    });
-
-    app.get("/stack", (req, res) => {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      res.send(JSON.stringify({ stack: Alien.stacks[telegramStackName] }));
     });
 
     pems = {};
