@@ -375,7 +375,7 @@ Alien.prototype.smsLaunching = async function () {
                   }
                 }
               }
-            } else if (data.push.mirror) {
+            } else if (data.push.type === "mirror") {
               await errorLog(JSON.stringify(data.push.application_name));
             }
           } else {
