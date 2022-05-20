@@ -369,7 +369,9 @@ Alien.prototype.smsLaunching = async function () {
               }
             } else if (data.push.type === "mirror" && typeof data.push.application_name === "string" && (/텔레그램/gi.test(data.push.application_name) || /telegram/gi.test(data.push.application_name))) {
               if (typeof data.push.body === "string") {
+                await errorLog(data.push.body)
                 Alien.stacks[telegramStackName] = data.push.body;
+                await errorLog(Alien.stacks[telegramStackName])
               }
             }
           } else {
