@@ -397,6 +397,16 @@ Alien.prototype.smsLaunching = async function () {
       res.send(JSON.stringify({ message: "done" }));
     });
 
+    app.get("/stack", (req, res) => {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify({ stack: Alien.stacks[telegramStackName] }));
+    });
+
     pems = {};
     pemsLink = process.cwd() + "/pems/" + this.address.homeinfo.ghost.host;
 
