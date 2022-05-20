@@ -89,11 +89,11 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
+
+
     
-
-
-
-
 
 
 
@@ -111,12 +111,6 @@ DevContext.prototype.launching = async function () {
     // text = "__hello__" + uniqueValue("hex");
     //
     // await requestSystem(url, { chat_id, text }, { headers: { "Content-Type": "application/json" } });
-
-    // await sleep(20 * 1000);
-    //
-    // res = await requestSystem("https://home-liaison.servehttp.com:35000/stack");
-    // console.log(res.data.stack);
-    // console.log((new RegExp(text, "gi")).test(res.data.stack));
 
 
 
