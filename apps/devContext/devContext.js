@@ -98,7 +98,13 @@ DevContext.prototype.launching = async function () {
 
     await requestSystem(url, { chat_id, text }, { headers: { "Content-Type": "application/json" } });
 
-    // console.log(await requestSystem("https://home-liaison.servehttp.com:35000/stack"));
+    await sleep(20 * 1000);
+
+    res = await requestSystem("https://home-liaison.servehttp.com:35000/stack");
+    console.log(res.data.stack);
+    console.log((new RegExp(text, "gi")).test(res.data.stack));
+
+
 
 
 
