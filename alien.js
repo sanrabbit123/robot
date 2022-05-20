@@ -318,9 +318,6 @@ Alien.prototype.smsLaunching = async function () {
         const data = JSON.parse(message);
         if (data.type === "push") {
           if (typeof data.push === "object") {
-
-            await errorLog(JSON.stringify(data.push));
-
             if (data.push.type === "sms_changed" && Array.isArray(data.push.notifications)) {
               if (data.push.notifications.length > 0) {
                 const [ sms ] = data.push.notifications;
@@ -378,6 +375,8 @@ Alien.prototype.smsLaunching = async function () {
                   }
                 }
               }
+            } else if (data.push.mirror) {
+              await errorLog(JSON.stringify(data.push.application_name));
             }
           } else {
             throw new Error("invaild message");
