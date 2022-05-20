@@ -284,36 +284,28 @@ Alien.prototype.smsLaunching = async function () {
     const url = "wss://stream.pushbullet.com/websocket/" + token;
     const WebSocket = require("ws");
     const port = 35000;
-    const ws = new WebSocket(url);
+    const telegramStackName = "telegramStackName";
     let server;
     let pems, pemsLink;
     let certDir, keyDir, caDir;
+    let ws;
+    let wsOpenEvent, wsMessageEvent;
+
+    Alien.stacks[telegramStackName] = "";
 
     app.use(useragent.express());
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
 
-    ws.on("open", async () => {
+    wsOpenEvent = async () => {
       try {
         await errorLog("sms wss wake up");
-        setInterval(() => {
-          ws.send(JSON.stringify({ message: "alive" }));
-        }, 3 * 1000);
-        setInterval(async () => {
-          try {
-            await messageLog("sms wss alive");
-          } catch (e) {
-            await errorLog(e.message);
-            process.exit();
-          }
-        }, (30 * 60 * 1000));
       } catch (e) {
         await errorLog(e.message);
         process.exit();
       }
-    });
-
-    ws.on("message", async (message) => {
+    }
+    wsMessageEvent = async (message) => {
       try {
         const data = JSON.parse(message);
         if (data.type === "push") {
@@ -376,7 +368,9 @@ Alien.prototype.smsLaunching = async function () {
                 }
               }
             } else if (data.push.type === "mirror" && typeof data.push.application_name === "string" && (/텔레그램/gi.test(data.push.application_name) || /telegram/gi.test(data.push.application_name))) {
-              await errorLog(data.push.body);
+              if (typeof data.push.body === "string") {
+                Alien.stacks[telegramStackName] = data.push.body;
+              }
             }
           } else {
             throw new Error("invaild message");
@@ -387,7 +381,11 @@ Alien.prototype.smsLaunching = async function () {
         console.log(e);
         process.exit();
       }
-    });
+    }
+
+    ws = new WebSocket(url);
+    ws.on("open", wsOpenEvent);
+    ws.on("message", wsMessageEvent);
 
     app.get("/", (req, res) => {
       res.set({

@@ -91,13 +91,12 @@ DevContext.prototype.launching = async function () {
     const token = "5127747215:AAHDSmjmeYNJ4C4B5hWdAO-T1bJleSfOpGU";
     const chat_id = -1001514605562;
     const method = "sendMessage";
-    const url = method => `https://api.telegram.org/bot${token}/${method}`;
-    let res, id;
+    const url = `https://api.telegram.org/bot${token}/${method}`;
+    let text;
 
-    res = await requestSystem(url("getMe"));
-    id = res.data.result.id;
+    text = "__hello__" + uniqueValue("hex");
 
-    await requestSystem(url("sendMessage"), { chat_id, text: "안녕_" + uniqueValue("hex") }, { headers: { "Content-Type": "application/json" } });
+    await requestSystem(url, { chat_id, text }, { headers: { "Content-Type": "application/json" } });
 
 
     // res = await requestSystem(url("getUpdates"), { chat_id }, { headers: { "Content-Type": "application/json" } });
