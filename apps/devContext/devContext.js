@@ -98,23 +98,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
-
-    // const token = "5127747215:AAHDSmjmeYNJ4C4B5hWdAO-T1bJleSfOpGU";
-    // const chat_id = -1001514605562;
-    // const method = "sendMessage";
-    // const url = `https://api.telegram.org/bot${token}/${method}`;
-    // let text;
-    //
-    // text = "__hello__" + uniqueValue("hex");
-    //
-    // await requestSystem(url, { chat_id, text }, { headers: { "Content-Type": "application/json" } });
-
-
-
-
     // const WebSocket = require("ws");
     // const ws = new WebSocket("wss://home-liaison.serveftp.com:5000/general");
     // ws.on("open", () => {
@@ -137,12 +120,6 @@ DevContext.prototype.launching = async function () {
     // setTimeout(async () => {
     //   console.log(await requestSystem("https://home-liaison.serveftp.com:5000/status"));
     // }, 3000)
-
-
-
-
-
-
 
 
 
