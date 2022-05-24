@@ -87,7 +87,7 @@ ReviewListJs.prototype.insertInitBox = function () {
   let quoteHeight;
   let titleFontSize, titleFontWeight;
   let serviceChildren;
-  let services;
+  let searchTags;
   let titleWording;
   let servicePaddingLeft;
   let serviceSize;
@@ -106,6 +106,8 @@ ReviewListJs.prototype.insertInitBox = function () {
   let inputSize, inputWeight;
   let placeholder;
   let titleTop;
+  let servicePaddingTop, servicePaddingBottom;
+  let serviceMarginRight;
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
@@ -117,8 +119,11 @@ ReviewListJs.prototype.insertInitBox = function () {
   titleFontWeight = <%% 500, 500, 500, 500, 500 %%>;
   titleTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 4) %%>;
 
-  servicePaddingLeft = <%% 20, 18, 13, 8, 2.2 %%>;
-  serviceSize = <%% 17, 16, 16, 15, 3.3 %%>;
+  servicePaddingTop = <%% 7, 7, 7, 7, 7 %%>;
+  servicePaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
+  servicePaddingLeft = <%% 12, 18, 13, 8, 2.2 %%>;
+  serviceMarginRight = <%% 6, 6, 6, 6, 6 %%>;
+  serviceSize = <%% 13, 13, 13, 13, 3.3 %%>;
   serviceBlockPaddingTop = <%% (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), 5 %%>;
 
   whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
@@ -138,8 +143,20 @@ ReviewListJs.prototype.insertInitBox = function () {
   inputWeight = <%% 300, 300, 300, 300, 300 %%>;
 
   titleWording = "솔직한 고객 후기";
-  services = serviceParsing().name;
-  services.push("전체 보기");
+
+  searchTags = [];
+  searchTags.push("새아파트");
+  searchTags.push("깔끔한");
+  searchTags.push("감성적인");
+  searchTags.push("유니크");
+  searchTags.push("거실");
+  searchTags.push("주방");
+  searchTags.push("아이방");
+  searchTags.push("1인가구");
+  searchTags.push("모던");
+  searchTags.push("제작가구");
+  searchTags.push("화이트");
+
   placeholder = "새아파트";
 
   serviceButtonClassName = "serviceButton";
@@ -282,34 +299,7 @@ ReviewListJs.prototype.insertInitBox = function () {
   });
 
   serviceChildren = [];
-  for (let service of services) {
-    if (desktop) {
-      if (serviceChildren.length !== 0) {
-        serviceChildren.push({
-          style: {
-            display: "inline-block",
-            position: "relative",
-            paddingLeft: String(servicePaddingLeft) + ea,
-            paddingRight: String(servicePaddingLeft) + ea,
-          },
-          children: [
-            {
-              text: "|",
-              style: {
-                display: "inline-block",
-                position: "relative",
-                fontSize: String(serviceSize) + ea,
-                fontWeight: String(300),
-                color: colorChip.deactive,
-              },
-              bold: {
-                color: colorChip.deactive,
-              }
-            }
-          ]
-        });
-      }
-    }
+  for (let service of searchTags) {
     serviceChildren.push({
       class: [
         serviceButtonClassName
@@ -341,10 +331,16 @@ ReviewListJs.prototype.insertInitBox = function () {
       style: {
         display: "inline-block",
         position: "relative",
+        paddingTop: String(servicePaddingTop) + ea,
+        paddingBottom: String(servicePaddingBottom) + ea,
+        marginRight: String(serviceMarginRight) + ea,
         paddingLeft: String(servicePaddingLeft) + ea,
         paddingRight: String(servicePaddingLeft) + ea,
         marginBottom: desktop ? "" : String(servicePaddingLeft) + ea,
         textAlign: "center",
+        background: colorChip.gray1,
+        borderRadius: String(5) + "px",
+        cursor: "pointer",
       },
       children: [
         {
@@ -354,7 +350,7 @@ ReviewListJs.prototype.insertInitBox = function () {
             position: "relative",
             fontSize: String(serviceSize) + ea,
             fontWeight: String(400),
-            color: colorChip.deactive,
+            color: colorChip.black,
             cursor: "pointer",
             textAlign: "center",
           },
@@ -382,8 +378,7 @@ ReviewListJs.prototype.insertInitBox = function () {
     dom.style.width = String(Math.ceil(dom.firstChild.getBoundingClientRect().width) + 1) + "px";
   }
 
-  serviceBlock.lastChild.firstChild.style.color = colorChip.black;
-  serviceBlock.lastChild.firstChild.querySelector('b').style.color = colorChip.green;
+  serviceBlock.lastChild.style.marginRight = "";
 
 }
 
