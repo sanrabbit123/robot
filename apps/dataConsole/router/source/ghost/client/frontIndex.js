@@ -73,7 +73,7 @@ FrontIndexJs.prototype.generateGsArray = function (number) {
 
 FrontIndexJs.prototype.insertSlideBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
   const { ea, media, totalContents, standardWidth } = this;
   const { indexArr } = this;
   const mobile = media[4];
@@ -95,12 +95,26 @@ FrontIndexJs.prototype.insertSlideBox = function () {
   let titleWeight;
   let lineHeight;
   let titleContents;
+  let photoLength;
+  let grayTong, grayBlockTong;
+  let grayHeight;
+  let circleBox;
+  let circleBoxTop, circleBoxLeft;
+  let circleRadius;
+  let circleMarginRight;
+  let subTextBox;
+  let subTextBoxTop;
+  let subTextAboutSize, subTextAboutWeight;
+  let subTextAboutMarginBottom;
+  let subTextSize, subTextWeight;
+  let subTextBoldWeight;
+  let subTextContents;
 
   speed = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
   interval = <%% 2700, 2700, 2700, 2700, 2700 %%>;
 
   naviHeight = <%% 72, 72, 66, 60, 60 %%>;
-  mainHeight = <%% 800, 640, 560, 450, 70.5 %%>;
+  mainHeight = <%% 746, 640, 560, 450, 70.5 %%>;
 
   randomNumber = <%% 5, 5, 5, 5, 5 %%>;
   titlePadding = <%% 100, 75, 72, 58, 8 %%>;
@@ -108,19 +122,27 @@ FrontIndexJs.prototype.insertSlideBox = function () {
   titleWeight = <%% 700, 700, 700, 700, 700 %%>;
   lineHeight = <%% 1.3, 1.3, 1.3, 1.3, 1.3 %%>;
   titleContents = "집을 디자인하는\n새로운 방법, 홈리에종";
+  photoLength = 5;
+  subTextContents = "디자이너의 <b%전문적인 홈스타일링, 홈리에종%b>과 함께 해보세요!";
 
-  // randomIndex = [];
-  // while (randomIndex.length < randomNumber) {
-  //   random = Math.floor(Math.random() * indexArr.length);
-  //   if (!randomIndex.includes(random)) {
-  //     randomIndex.push(random);
-  //   }
-  // }
-  // randomIndex = randomIndex.map((index) => {
-  //   return indexArr[index];
-  // });
+  grayHeight = <%% 177, 177, 177, 177, 177 %%>;
 
-  randomIndex = new Array(6);
+  circleBoxTop = <%% 78, 78, 78, 78, 78 %%>;
+  circleBoxLeft = <%% 3, 3, 3, 3, 3 %%>;
+
+  circleRadius = <%% 10, 10, 10, 10, 10 %%>;
+  circleMarginRight = <%% 8, 8, 8, 8, 8 %%>;
+
+  subTextBoxTop = <%% 55, 55, 55, 55, 55 %%>;
+
+  subTextAboutSize = <%% 15, 15, 15, 15, 15 %%>;
+  subTextAboutWeight = <%% 400, 400, 400, 400, 400 %%>;
+  subTextAboutMarginBottom = <%% 3, 3, 3, 3, 3 %%>;
+  subTextSize = <%% 19, 19, 19, 19, 19 %%>;
+  subTextWeight = <%% 400, 400, 400, 400, 400 %%>;
+  subTextBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+  randomIndex = new Array(photoLength);
 
   mainTong = createNode({
     mother: totalContents,
@@ -132,7 +154,7 @@ FrontIndexJs.prototype.insertSlideBox = function () {
       position: "relative",
       paddingTop: String(naviHeight) + "px",
       height: String(mainHeight) + ea,
-      background: colorChip.gray1,
+      background: colorChip.gray2,
       animation: "justfadeinoriginal " + String(speed) + "s ease forwards",
       overflow: "hidden",
     },
@@ -238,10 +260,104 @@ FrontIndexJs.prototype.insertSlideBox = function () {
     ]
   });
 
+  grayTong = createNode({
+    mother: totalContents,
+    style: {
+      display: "block",
+      position: "relative",
+      background: colorChip.gray0,
+      height: String(grayHeight) + ea,
+    },
+  });
+
+  grayBlockTong = createNode({
+    mother: grayTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: desktop ? String(standardWidth - (titlePadding * 2)) + ea : "",
+      paddingLeft: desktop ? String(titlePadding) + ea : "",
+      paddingRight: desktop ? String(titlePadding) + ea : "",
+      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
+      height: String(100) + '%',
+    }
+  });
+
+  circleBox = createNode({
+    mother: grayBlockTong,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      top: String(circleBoxTop) + ea,
+      left: String(circleBoxLeft) + ea
+    }
+  })
+
+  for (let i = 0; i < photoLength; i++) {
+    createNode({
+      mother: circleBox,
+      style: {
+        display: "inline-block",
+        width: String(circleRadius) + ea,
+        height: String(circleRadius) + ea,
+        borderRadius: String(circleRadius) + ea,
+        background: i === 0 ? colorChip.gray5 : colorChip.gray3,
+        marginRight: String(circleMarginRight) + ea,
+        transition: "all 0.5s ease",
+      }
+    });
+  }
+
+  subTextBox = createNode({
+    mother: grayBlockTong,
+    class: [ "hoverDefault_lite" ],
+    event: {
+      click: (e) => { selfHref("/about.php"); }
+    },
+    style: {
+      position: "absolute",
+      top: String(subTextBoxTop) + ea,
+      right: String(titlePadding) + ea,
+      textAlign: "right",
+    }
+  });
+
+  createNode({
+    mother: subTextBox,
+    text: "About",
+    style: {
+      display: "block",
+      position: "relative",
+      fontSize: String(subTextAboutSize) + ea,
+      fontWeight: String(subTextAboutWeight),
+      fontFamily: "graphik",
+      color: colorChip.darkShadow,
+      marginBottom: String(subTextAboutMarginBottom) + ea,
+    }
+  });
+
+  createNode({
+    mother: subTextBox,
+    text: subTextContents,
+    style: {
+      display: "block",
+      position: "relative",
+      fontSize: String(subTextSize) + ea,
+      fontWeight: String(subTextWeight),
+      color: colorChip.darkShadow,
+    },
+    bold: {
+      fontWeight: String(subTextBoldWeight),
+      color: colorChip.darkShadow,
+    }
+  });
+
   setInterval(() => {
     const toggle = mainTong.getAttribute("toggle");
     const children = [ ...photoTong.children ];
+    const circles = [ ...circleBox.children ];
     let offIndex, onIndex;
+    let circleIndex;
     if (desktop) {
 
       if (toggle === "on") {
@@ -251,6 +367,7 @@ FrontIndexJs.prototype.insertSlideBox = function () {
       }
       offIndex = children.findIndex((dom) => { return dom.style.opacity === String(1) });
       onIndex = offIndex - 1;
+
       if (onIndex < 0) {
         onIndex = children.length - 1;
       }
@@ -263,6 +380,11 @@ FrontIndexJs.prototype.insertSlideBox = function () {
       }
       children[offIndex].style.opacity = String(0);
       children[onIndex].style.opacity = String(1);
+
+      circleIndex = offIndex === 0 ? offIndex : photoLength - offIndex;
+      for (let i = 0; i < circles.length; i++) {
+        circles[i].style.background = i === circleIndex ? colorChip.gray5 : colorChip.gray3;
+      }
 
     } else {
 
@@ -1219,6 +1341,44 @@ FrontIndexJs.prototype.insertSearchBox = function () {
 
 }
 
+FrontIndexJs.prototype.insertAboutBox = function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
+  const { ea, media, totalContents, standardWidth } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  let mainTong;
+  let blockTong;
+  let mainTongHeight;
+
+  mainTongHeight = <%% 730, 730, 730, 730, 730 %%>;
+
+
+
+  mainTong = createNode({
+    mother: totalContents,
+    style: {
+      display: "block",
+      position: "relative",
+      background: colorChip.white,
+      height: String(mainTongHeight) + ea,
+    },
+  });
+
+  blockTong = createNode({
+    mother: mainTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(standardWidth) + ea,
+      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
+      height: String(100) + '%',
+      cursor: "pointer",
+    }
+  });
+
+}
+
 FrontIndexJs.prototype.insertBlackBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
@@ -1531,11 +1691,11 @@ FrontIndexJs.prototype.launching = async function (loading) {
       local: async () => {
         try {
           instance.insertSlideBox();
+          instance.insertAboutBox();
+          instance.insertBlackBox();
+          instance.insertSearchBox();
           instance.insertStrongBox();
           instance.insertNewsBox();
-          instance.insertSearchBox();
-          instance.insertBlackBox();
-          // instance.insertAboutBox();
           instance.insertEndBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "FrontIndexJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
