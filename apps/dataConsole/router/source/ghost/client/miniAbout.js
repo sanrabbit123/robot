@@ -89,12 +89,58 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
   let photoBox;
   let descriptionBoxPaddingTop;
   let contents;
+  let titleSize, titleWeight;
+  let subTitleSize, subTitleWeight;
+  let subTitleMarginTop, subTitlePaddingRight;
+  let subTitleLineWidth, subTitleLineRight, subTitleLineTop;
+  let descriptionSize, descriptionWeight, descriptionLineHeight, descriptionMarginTop, descriptionBoldWeight;
+  let belowSize, belowWeight, belowMarginTop, belowPaddingRight;
+  let belowLineWidth, belowLineTop, belowLineRight;
+  let photo0Width, photo1Width;
+  let whiteSize, whiteWeight, whiteLineHeight, whiteBottom, whiteRight;
 
   margin = <%% 67, 67, 67, 67, 67 %%>;
   baseHeight = <%% 408, 408, 408, 408, 408 %%>;
   descriptionWidth = <%% 328, 328, 328, 328, 328 %%>;
 
   descriptionBoxPaddingTop = <%% 78, 78, 78, 78, 78 %%>;
+
+  titleSize = <%% 42, 42, 42, 42, 42 %%>;
+  titleWeight = <%% 800, 800, 800, 800, 800 %%>;
+
+  subTitleSize = <%% 15, 15, 15, 15, 15 %%>;
+  subTitleWeight = <%% 400, 400, 400, 400, 400 %%>;
+
+  subTitleMarginTop = <%% 3, 3, 3, 3, 3 %%>;
+  subTitlePaddingRight = <%% 3, 3, 3, 3, 3 %%>;
+
+  subTitleLineWidth = <%% 54, 54, 54, 54, 54 %%>;
+  subTitleLineRight = <%% 136, 136, 136, 136, 136 %%>;
+  subTitleLineTop = <%% 10, 10, 10, 10, 10 %%>;
+
+  descriptionSize = <%% 15, 15, 15, 15, 15 %%>;
+  descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+  descriptionLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
+  descriptionMarginTop = <%% 40, 40, 40, 40, 40 %%>;
+  descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+  belowSize = <%% 11, 11, 11, 11, 11 %%>;
+  belowWeight = <%% 400, 400, 400, 400, 400 %%>;
+  belowMarginTop = <%% 94, 94, 94, 94, 94 %%>;
+  belowPaddingRight = <%% 3, 3, 3, 3, 3 %%>;
+
+  belowLineWidth = <%% 142, 142, 142, 142, 142 %%>;
+  belowLineTop = <%% 8, 8, 8, 8, 8 %%>;
+  belowLineRight = <%% 186, 186, 186, 186, 186 %%>;
+
+  photo0Width = <%% 420, 420, 420, 420, 420 %%>;
+  photo1Width = <%% 300, 300, 300, 300, 300 %%>;
+
+  whiteSize = <%% 35, 35, 35, 35, 35 %%>;
+  whiteWeight = <%% 700, 700, 700, 700, 700 %%>;
+  whiteLineHeight = <%% 1.35, 1.35, 1.35, 1.35, 1.35 %%>;
+  whiteBottom = <%% 50, 50, 50, 50, 50 %%>;
+  whiteRight = <%% 50, 50, 50, 50, 50 %%>;
 
   contents = {
     title: "무드 체인지",
@@ -151,8 +197,8 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
     style: {
       display: "block",
       position: "relative",
-      fontSize: String(42) + ea,
-      fontWeight: String(800),
+      fontSize: String(titleSize) + ea,
+      fontWeight: String(titleWeight),
       color: colorChip.black,
       textAlign: "right",
     }
@@ -164,23 +210,23 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
     style: {
       display: "block",
       position: "relative",
-      fontSize: String(15) + ea,
-      fontWeight: String(400),
+      fontSize: String(subTitleSize) + ea,
+      fontWeight: String(subTitleWeight),
       fontFamily: "graphik",
       color: colorChip.black,
       textAlign: "right",
-      marginTop: String(3) + ea,
-      paddingRight: String(3) + ea,
+      marginTop: String(subTitleMarginTop) + ea,
+      paddingRight: String(subTitlePaddingRight) + ea,
     },
     children: [
       {
         style: {
           position: "absolute",
-          width: String(54) + ea,
+          width: String(subTitleLineWidth) + ea,
           height: String(0),
           borderBottom: "1.5px solid " + colorChip.gray3,
-          top: String(10) + ea,
-          right: String(136) + ea,
+          top: String(subTitleLineTop) + ea,
+          right: String(subTitleLineRight) + ea,
         }
       }
     ]
@@ -192,15 +238,15 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
     style: {
       display: "block",
       position: "relative",
-      fontSize: String(15) + ea,
-      fontWeight: String(400),
+      fontSize: String(descriptionSize) + ea,
+      fontWeight: String(descriptionWeight),
       color: colorChip.black,
-      lineHeight: String(1.66),
-      marginTop: String(40) + ea,
+      lineHeight: String(descriptionLineHeight),
+      marginTop: String(descriptionMarginTop) + ea,
       textAlign: "right",
     },
     bold: {
-      fontWeight: String(700),
+      fontWeight: String(descriptionBoldWeight),
       color: colorChip.green,
     }
   });
@@ -211,23 +257,23 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
     style: {
       display: "block",
       position: "relative",
-      fontSize: String(11) + ea,
-      fontWeight: String(400),
+      fontSize: String(belowSize) + ea,
+      fontWeight: String(belowWeight),
       fontFamily: "graphik",
       color: colorChip.black,
       textAlign: "right",
-      marginTop: String(94) + ea,
-      paddingRight: String(3) + ea,
+      marginTop: String(belowMarginTop) + ea,
+      paddingRight: String(belowPaddingRight) + ea,
     },
     children: [
       {
         style: {
           position: "absolute",
-          width: String(142) + ea,
+          width: String(belowLineWidth) + ea,
           height: String(0),
           borderBottom: "1px solid " + colorChip.darkShadow,
-          top: String(8) + ea,
-          right: String(186) + ea,
+          top: String(belowLineTop) + ea,
+          right: String(belowLineRight) + ea,
         }
       }
     ]
@@ -253,7 +299,7 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
     style: {
       display: "inline-block",
       position: "relative",
-      width: String(420) + ea,
+      width: String(photo0Width) + ea,
       height: String(100) + '%',
       backgroundImage: "url('" + MiniAboutJs.binaryPath + "/" + contents.photo[0] + "')",
       backgroundSize: "100% auto",
@@ -266,7 +312,7 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
     style: {
       display: "inline-block",
       position: "relative",
-      width: String(300) + ea,
+      width: String(photo1Width) + ea,
       height: String(100) + '%',
       backgroundImage: "url('" + MiniAboutJs.binaryPath + "/" + contents.photo[1] + "')",
       backgroundSize: "auto 100%",
@@ -279,7 +325,7 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
     style: {
       display: "inline-block",
       position: "relative",
-      width: withOut(420 + 300, ea),
+      width: withOut(photo0Width + photo1Width, ea),
       height: String(100) + '%',
       backgroundImage: "url('" + MiniAboutJs.binaryPath + "/" + contents.photo[2] + "')",
       backgroundSize: "auto 100%",
@@ -306,13 +352,13 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
     text: contents.black.join("\n"),
     style: {
       position: "absolute",
-      fontSize: String(35) + ea,
-      fontWeight: String(700),
+      fontSize: String(whiteSize) + ea,
+      fontWeight: String(whiteWeight),
       textAlign: "right",
-      lineHeight: String(1.35),
+      lineHeight: String(whiteLineHeight),
       color: colorChip.white,
-      bottom: String(50) + ea,
-      right: String(50) + ea,
+      bottom: String(whiteBottom) + ea,
+      right: String(whiteRight) + ea,
       opacity: String(0),
       transform: "translateY(10px)",
       animation: "fadeupmiddle 0.6s 2s ease forwards",
