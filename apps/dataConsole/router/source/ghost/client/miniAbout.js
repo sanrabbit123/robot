@@ -188,7 +188,7 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
       fontSize: String(15) + ea,
       fontWeight: String(400),
       color: colorChip.black,
-      lineHeight: String(1.6),
+      lineHeight: String(1.66),
       marginTop: String(40) + ea,
       textAlign: "right",
     },
@@ -209,7 +209,7 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
       fontFamily: "graphik",
       color: colorChip.black,
       textAlign: "right",
-      marginTop: String(97) + ea,
+      marginTop: String(94) + ea,
       paddingRight: String(3) + ea,
     },
     children: [
