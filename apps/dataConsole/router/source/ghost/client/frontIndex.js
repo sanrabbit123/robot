@@ -505,7 +505,7 @@ FrontIndexJs.prototype.insertStrongBox = function (force = false) {
 
   tongPaddingLeft = <%% 60, 50, 0, 0, 0 %%>;
   tongPaddingTop = <%% 70, 48, 36, 32, 6.5 %%>;
-  tongPaddingBottom = <%% 73, 52, 40, 36, 4.5 %%>;
+  tongPaddingBottom = <%% 76, 54, 42, 38, 4.5 %%>;
 
   whiteTongPaddingLeft = <%% 32, 26, 26, 21, 4 %%>;
   whiteTongPaddingTop = <%% 21, 18, 18, 15, 3.5 %%>;
@@ -640,7 +640,8 @@ FrontIndexJs.prototype.insertNewsBox = function () {
   margin = <%% 18, 16, 16, 12, 2 %%>;
 
   tongPaddingLeft = <%% 60, 50, 0, 0, 0 %%>;
-  tongPaddingTop = <%% 70, 48, 36, 32, 6.5 %%>;
+  tongPaddingTop = <%% 140, 130, 110, 90, 8 %%>;
+  tongPaddingBottom = <%% 140, 130, 110, 90, 8 %%>;
 
   whiteTongPaddingLeft = <%% 32, 26, 26, 21, 4 %%>;
   whiteTongPaddingTop = <%% 21, 18, 18, 15, 3.5 %%>;
@@ -678,6 +679,7 @@ FrontIndexJs.prototype.insertNewsBox = function () {
       position: "relative",
       width: String(standardWidth - (tongPaddingLeft * 2)) + ea,
       paddingTop: String(tongPaddingTop) + ea,
+      paddingBottom: String(tongPaddingBottom) + ea,
       left: "calc(50% - " + String((standardWidth - (tongPaddingLeft * 2)) / 2) + ea + ")",
       textAlign: "center",
     }
@@ -689,7 +691,7 @@ FrontIndexJs.prototype.insertNewsBox = function () {
       display: "inline-block",
       position: "relative",
       width: String(100) + '%',
-      height: String(400) + ea,
+      height: String(560) + ea,
       background: colorChip.gray1,
       borderRadius: String(5) + "px",
     }
@@ -765,8 +767,8 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   let searchWordingCircleTop, searchWordingCircleLeft;
   let tagBlock;
 
-  mainPaddingTop = <%% 120, 110, 90, 70, 8 %%>;
-  mainPaddingBottom = <%% 150, 140, 120, 100, 5 %%>;
+  mainPaddingTop = <%% 140, 130, 110, 90, 8 %%>;
+  mainPaddingBottom = <%% 140, 130, 110, 90, 8 %%>;
 
   searchWordingSize = <%% 22, 21, 20, 18, 22 %%>;
   searchWordingWeight = <%% 600, 600, 600, 600, 600 %%>;
@@ -854,6 +856,43 @@ FrontIndexJs.prototype.insertSearchBox = function () {
       paddingTop: String(mainPaddingTop) + ea,
       paddingBottom: String(mainPaddingBottom) + ea,
     },
+  });
+
+  createNode({
+    mother: mainTong,
+    style: {
+      display: desktop ? "block" : "none",
+      position: "relative",
+      width: String(standardWidth) + ea,
+      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
+      textAlign: "center",
+      marginBottom: String(searchWordingMarginBottom) + ea,
+    },
+    children: [
+      {
+        text: "원하는 스타일을 찾아보세요!",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(searchWordingSize) + ea,
+          fontWeight: String(searchWordingWeight),
+          color: colorChip.black,
+        },
+        children: [
+          {
+            style: {
+              position: "absolute",
+              left: String(searchWordingCircleLeft) + ea,
+              top: String(searchWordingCircleTop) + ea,
+              width: String(searchWordingCircleWidth) + ea,
+              height: String(searchWordingCircleWidth) + ea,
+              borderRadius: String(searchWordingCircleWidth) + ea,
+              background: colorChip.green,
+            }
+          }
+        ]
+      }
+    ]
   });
 
   createNode({
