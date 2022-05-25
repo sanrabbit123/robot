@@ -71,7 +71,7 @@ MiniAboutJs.prototype.insertInitBox = function () {
   });
 
   this.insertTitleBox(whiteBlock);
-
+  this.insertStrongBox(whiteBlock);
 
 }
 
@@ -87,17 +87,37 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
   let descriptionWidth;
   let descriptionBox;
   let photoBox;
+  let descriptionBoxPaddingTop;
+  let contents;
 
   margin = <%% 67, 67, 67, 67, 67 %%>;
   baseHeight = <%% 408, 408, 408, 408, 408 %%>;
   descriptionWidth = <%% 328, 328, 328, 328, 328 %%>;
+
+  descriptionBoxPaddingTop = <%% 78, 78, 78, 78, 78 %%>;
+
+  contents = {
+    title: "무드 체인지",
+    subTitle: "HomeLiaison Mini",
+    description: [
+      "<b%패브릭, 액자, 소품%b>만 교체해도",
+      "다른 집에 온 것 같은 효과!",
+      "가격 부담은 줄이고, <b%스타일링",
+      "효과는 높이는 경험%b>을 누려보세요.",
+    ],
+    below: "mood - change : HomeLiaison mini",
+    photo: [
+      "init0.jpg",
+      "init1.jpg",
+      "init2.jpg",
+    ]
+  };
 
   base = createNode({
     mother,
     style: {
       display: "block",
       position: "relative",
-      background: colorChip.white,
       paddingTop: String(margin) + ea,
       paddingBottom: String(margin) + ea,
       paddingLeft: String(margin) + ea,
@@ -110,11 +130,103 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
     style: {
       display: "inline-block",
       position: "relative",
-      height: String(baseHeight) + ea,
+      height: String(baseHeight - descriptionBoxPaddingTop) + ea,
       width: String(descriptionWidth) + ea,
       marginRight: String(margin) + ea,
+      verticalAlign: "top",
+      paddingTop: String(descriptionBoxPaddingTop) + ea,
     }
   });
+
+  createNode({
+    mother: descriptionBox,
+    text: contents.title,
+    style: {
+      display: "block",
+      position: "relative",
+      fontSize: String(42) + ea,
+      fontWeight: String(800),
+      color: colorChip.black,
+      textAlign: "right",
+    }
+  });
+
+  createNode({
+    mother: descriptionBox,
+    text: contents.subTitle,
+    style: {
+      display: "block",
+      position: "relative",
+      fontSize: String(15) + ea,
+      fontWeight: String(400),
+      fontFamily: "graphik",
+      color: colorChip.black,
+      textAlign: "right",
+      marginTop: String(3) + ea,
+      paddingRight: String(3) + ea,
+    },
+    children: [
+      {
+        style: {
+          position: "absolute",
+          width: String(54) + ea,
+          height: String(0),
+          borderBottom: "1.5px solid " + colorChip.gray3,
+          top: String(10) + ea,
+          right: String(136) + ea,
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: descriptionBox,
+    text: contents.description.join("\n"),
+    style: {
+      display: "block",
+      position: "relative",
+      fontSize: String(15) + ea,
+      fontWeight: String(400),
+      color: colorChip.black,
+      lineHeight: String(1.6),
+      marginTop: String(40) + ea,
+      textAlign: "right",
+    },
+    bold: {
+      fontWeight: String(700),
+      color: colorChip.green,
+    }
+  });
+
+  createNode({
+    mother: descriptionBox,
+    text: contents.below,
+    style: {
+      display: "block",
+      position: "relative",
+      fontSize: String(11) + ea,
+      fontWeight: String(400),
+      fontFamily: "graphik",
+      color: colorChip.black,
+      textAlign: "right",
+      marginTop: String(97) + ea,
+      paddingRight: String(3) + ea,
+    },
+    children: [
+      {
+        style: {
+          position: "absolute",
+          width: String(142) + ea,
+          height: String(0),
+          borderBottom: "1px solid " + colorChip.darkShadow,
+          top: String(8) + ea,
+          right: String(186) + ea,
+        }
+      }
+    ]
+  });
+
+  // photo
 
   photoBox = createNode({
     mother: base,
@@ -123,12 +235,89 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
       position: "relative",
       height: String(baseHeight) + ea,
       width: withOut(descriptionWidth + margin, ea),
-      background: colorChip.green,
       overflow: "hidden",
       borderTopLeftRadius: String(5) + "px",
       borderBottomLeftRadius: String(5) + "px",
     }
   });
+
+  createNode({
+    mother: photoBox,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      width: String(420) + ea,
+      height: String(100) + '%',
+      backgroundImage: "url('" + MiniAboutJs.binaryPath + "/" + contents.photo[0] + "')",
+      backgroundSize: "100% auto",
+      backgroundPosition: "50% 50%",
+    }
+  });
+
+  createNode({
+    mother: photoBox,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      width: String(300) + ea,
+      height: String(100) + '%',
+      backgroundImage: "url('" + MiniAboutJs.binaryPath + "/" + contents.photo[1] + "')",
+      backgroundSize: "auto 100%",
+      backgroundPosition: "50% 50%",
+    }
+  });
+
+  createNode({
+    mother: photoBox,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      width: withOut(420 + 300, ea),
+      height: String(100) + '%',
+      backgroundImage: "url('" + MiniAboutJs.binaryPath + "/" + contents.photo[2] + "')",
+      backgroundSize: "auto 100%",
+      backgroundPosition: "100% 50%",
+    }
+  });
+
+
+}
+
+MiniAboutJs.prototype.insertStrongBox = function (mother) {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
+  const { ea, media, standardWidth } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  let margin;
+  let base;
+  let baseHeight;
+  let descriptionWidth;
+  let descriptionBox;
+  let photoBox;
+  let descriptionBoxPaddingTop;
+  let contents;
+
+  margin = <%% 67, 67, 67, 67, 67 %%>;
+  baseHeight = <%% 408, 408, 408, 408, 408 %%>;
+  descriptionWidth = <%% 328, 328, 328, 328, 328 %%>;
+
+  descriptionBoxPaddingTop = <%% 82, 82, 82, 82, 82 %%>;
+
+  base = createNode({
+    mother,
+    style: {
+      display: "block",
+      position: "relative",
+      paddingTop: String(margin) + ea,
+      paddingBottom: String(margin) + ea,
+      paddingLeft: String(margin) + ea,
+      width: withOut(margin, ea),
+      height: String(400) + ea,
+      background: colorChip.gray2,
+    }
+  });
+
 
 
 
