@@ -133,7 +133,7 @@ FrontIndexJs.prototype.insertSlideBox = function () {
   circleRadius = <%% 10, 10, 10, 10, 10 %%>;
   circleMarginRight = <%% 8, 8, 8, 8, 8 %%>;
 
-  subTextBoxTop = <%% 55, 55, 55, 55, 55 %%>;
+  subTextBoxTop = <%% 54, 54, 54, 54, 54 %%>;
 
   subTextAboutSize = <%% 15, 15, 15, 15, 15 %%>;
   subTextAboutWeight = <%% 400, 400, 400, 400, 400 %%>;
@@ -1350,10 +1350,76 @@ FrontIndexJs.prototype.insertAboutBox = function () {
   let mainTong;
   let blockTong;
   let mainTongHeight;
+  let secondMainTong, secondBlockTong;
+  let secondMainTongHeight;
+  let descriptionPadding;
+  let photoPadding;
+  let photoTop;
+  let photoWidth, photoHeight;
+  let titleSize, titleWeight, titleLineHeight, titleTop;
+  let contentsSize, contentsWeight, contentsLineHeight, contentsTop;
+  let buttonSize, buttonWeight, buttonLineHeight, buttonTop, buttonPaddingTop, buttonPaddingBottom, buttonPaddingLeft;
+  let blockTongs;
+  let wordings;
 
   mainTongHeight = <%% 730, 730, 730, 730, 730 %%>;
+  secondMainTongHeight = <%% 741, 741, 741, 741, 741 %%>;
 
+  descriptionPadding = <%% 958, 958, 958, 958, 958 %%>;
+  photoPadding = <%% 100, 100, 100, 100, 100 %%>;
+  photoTop = <%% 142, 142, 142, 142, 142 %%>;
 
+  photoWidth = <%% 780, 780, 780, 780, 780 %%>;
+  photoHeight = <%% 440, 440, 440, 440, 440 %%>;
+
+  titleSize = <%% 31, 31, 31, 31, 31 %%>;
+  titleWeight = <%% 700, 700, 700, 700, 700 %%>;
+  titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
+  titleTop = <%% 230, 230, 230, 230, 230 %%>;
+
+  contentsSize = <%% 15, 15, 15, 15, 15 %%>;
+  contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
+  contentsLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+  contentsTop = <%% 335, 335, 335, 335, 335 %%>;
+
+  buttonSize = <%% 13, 13, 13, 13, 13 %%>;
+  buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
+  buttonLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+  buttonTop = <%% 436, 436, 436, 436, 436 %%>;
+  buttonPaddingTop = <%% 5, 5, 5, 5, 5 %%>;
+  buttonPaddingBottom = <%% 7, 7, 7, 7, 7 %%>;
+  buttonPaddingLeft = <%% 20, 20, 20, 20, 20 %%>;
+
+  wordings = [
+    {
+      title: [
+        "마지막까지 함께 하는",
+        "우리집 인테리어"
+      ],
+      contents: [
+        "시공부터 시작해 가구, 패브릭, 소품까지",
+        "홈리에종은 스타일링을 중심으로 디자인을 진행하여",
+        "디테일까지 완성된 집을 만들어 드립니다."
+      ],
+      button: "서비스 소개",
+      link: "/about.php",
+      image: "about0.jpg",
+    },
+    {
+      title: [
+        "나에게 딱 맞는",
+        "디자이너를 만나보세요."
+      ],
+      contents: [
+        "홈리에종은 고객님의 상황을 다각도로 분석해",
+        "가장 필요한 서비스와 디자이너를 연결시켜 드립니다.",
+        "나에게 꼭 맞는 디자이너를 추천받아 보세요!"
+      ],
+      button: "서비스 신청",
+      link: "/consulting.php",
+      image: "about1.jpg",
+    },
+  ];
 
   mainTong = createNode({
     mother: totalContents,
@@ -1373,9 +1439,119 @@ FrontIndexJs.prototype.insertAboutBox = function () {
       width: String(standardWidth) + ea,
       left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
       height: String(100) + '%',
-      cursor: "pointer",
     }
   });
+
+  secondMainTong = createNode({
+    mother: totalContents,
+    style: {
+      display: "block",
+      position: "relative",
+      background: colorChip.gray0,
+      height: String(secondMainTongHeight) + ea,
+    },
+  });
+
+  secondBlockTong = createNode({
+    mother: secondMainTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(standardWidth) + ea,
+      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
+      height: String(100) + '%',
+    }
+  });
+
+  blockTongs = [ blockTong, secondBlockTong ];
+
+  for (let i = 0; i < blockTongs.length; i++) {
+    createNode({
+      mother: blockTongs[i],
+      style: {
+        display: "inline-block",
+        position: "absolute",
+        width: String(photoWidth) + ea,
+        height: String(photoHeight) + ea,
+        top: String(photoTop) + ea,
+        right: i === 0 ? String(photoPadding) + ea : "",
+        left: i === 0 ? "" : String(photoPadding) + ea,
+        borderRadius: String(8) + "px",
+        background: colorChip.gray1,
+        boxShadow: "0px 5px 15px -9px " + colorChip.shadow,
+        backgroundImage: "url('" + FrontIndexJs.binaryPath + "/" + wordings[i].image + "')",
+        backgroundSize: "100% auto",
+        backgroundPosition: "50% 50%",
+      }
+    });
+
+    createNode({
+      mother: blockTongs[i],
+      text: wordings[i].title.join("\n"),
+      style: {
+        display: "inline-block",
+        position: "absolute",
+        fontSize: String(titleSize) + ea,
+        fontWeight: String(titleWeight),
+        lineHeight: String(titleLineHeight),
+        color: colorChip.black,
+        textAlign: i === 0 ? "right" : "left",
+        top: String(titleTop) + ea,
+        right: i === 0 ? String(descriptionPadding) + ea : "",
+        left: i === 0 ? "" : String(descriptionPadding) + ea,
+      }
+    });
+
+    createNode({
+      mother: blockTongs[i],
+      text: wordings[i].contents.join("\n"),
+      style: {
+        display: "inline-block",
+        position: "absolute",
+        fontSize: String(contentsSize) + ea,
+        fontWeight: String(contentsWeight),
+        lineHeight: String(contentsLineHeight),
+        color: colorChip.darkShadow,
+        textAlign: i === 0 ? "right" : "left",
+        top: String(contentsTop) + ea,
+        right: i === 0 ? String(descriptionPadding) + ea : "",
+        left: i === 0 ? "" : String(descriptionPadding) + ea,
+      }
+    });
+
+    createNode({
+      mother: blockTongs[i],
+      class: [ "hoverDefault_lite" ],
+      attribute: {
+        index: String(i),
+      },
+      event: {
+        click: function (e) {
+          const index = Number(this.getAttribute("index"));
+          selfHref(wordings[index].link);
+        }
+      },
+      text: wordings[i].button,
+      style: {
+        display: "inline-block",
+        position: "absolute",
+        fontSize: String(buttonSize) + ea,
+        fontWeight: String(buttonWeight),
+        lineHeight: String(buttonLineHeight),
+        color: colorChip.white,
+        textAlign: "center",
+        top: String(buttonTop) + ea,
+        right: i === 0 ? String(descriptionPadding) + ea : "",
+        left: i === 0 ? "" : String(descriptionPadding) + ea,
+        paddingTop: String(buttonPaddingTop) + ea,
+        paddingBottom: String(buttonPaddingBottom) + ea,
+        paddingLeft: String(buttonPaddingLeft) + ea,
+        paddingRight: String(buttonPaddingLeft) + ea,
+        borderRadius: String(buttonPaddingLeft) + ea,
+        background: colorChip.gradientGreen,
+      }
+    });
+  }
 
 }
 
