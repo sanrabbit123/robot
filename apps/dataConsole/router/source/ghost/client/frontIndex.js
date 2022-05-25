@@ -697,7 +697,6 @@ FrontIndexJs.prototype.insertNewsBox = function () {
     }
   });
 
-
 }
 
 FrontIndexJs.prototype.insertSearchBox = function () {
