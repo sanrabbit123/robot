@@ -110,7 +110,11 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
       "init0.jpg",
       "init1.jpg",
       "init2.jpg",
-    ]
+    ],
+    black: [
+      "지금 사용하고 있는 가구는 계속 쓰고 싶고",
+      "가구 교체 비용이 아깝다면?",
+    ],
   };
 
   base = createNode({
@@ -135,6 +139,9 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
       marginRight: String(margin) + ea,
       verticalAlign: "top",
       paddingTop: String(descriptionBoxPaddingTop) + ea,
+      opacity: String(0),
+      transform: "translateY(10px)",
+      animation: "fadeupdelay 1s 0.3s ease forwards",
     }
   });
 
@@ -280,6 +287,37 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
     }
   });
 
+  createNode({
+    mother: photoBox,
+    style: {
+      position: "absolute",
+      top: String(0),
+      left: String(0),
+      width: String(100) + '%',
+      height: String(100) + '%',
+      background: colorChip.black,
+      opacity: String(0),
+      animation: "justfadeinsmall 1s 2s ease forwards",
+    }
+  });
+
+  createNode({
+    mother: photoBox,
+    text: contents.black.join("\n"),
+    style: {
+      position: "absolute",
+      fontSize: String(35) + ea,
+      fontWeight: String(700),
+      textAlign: "right",
+      lineHeight: String(1.35),
+      color: colorChip.white,
+      bottom: String(50) + ea,
+      right: String(50) + ea,
+      opacity: String(0),
+      transform: "translateY(10px)",
+      animation: "fadeupmiddle 0.6s 2s ease forwards",
+    }
+  });
 
 }
 
