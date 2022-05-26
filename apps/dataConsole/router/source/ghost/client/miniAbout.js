@@ -48,13 +48,15 @@ MiniAboutJs.prototype.insertInitBox = function () {
   const { ea, media, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  let whiteBlock;
+  let whiteBlock, whiteBlock2;
   let bottomMargin;
   let buttonBoxWidth;
   let buttonBoxHeight;
   let buttonBoxTop;
   let buttonSize, buttonWeight, buttonLineHeight, buttonTextTop;
+  let blockBetween;
 
+  blockBetween = <%% 18, 18, 18, 18, 18 %%>;
   bottomMargin = <%% 200, 200, 200, 200, 200 %%>;
 
   buttonBoxWidth = <%% 172, 172, 172, 172, 172 %%>;
@@ -73,18 +75,32 @@ MiniAboutJs.prototype.insertInitBox = function () {
       borderRadius: String(8) + "px",
       width: String(100) + '%',
       background: colorChip.white,
-      marginBottom: String(bottomMargin) + ea,
-      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      marginBottom: String(blockBetween) + ea,
+      boxShadow: "0px 5px 12px -10px " + colorChip.darkShadow,
+      overflow: "hidden",
     }
   });
 
   this.insertTitleBox(whiteBlock);
   this.insertStrongBox(whiteBlock);
-  this.insertSlideBox(whiteBlock);
-  this.insertAboutBox(whiteBlock);
+
+  whiteBlock2 = createNode({
+    mother: this.baseTong,
+    style: {
+      position: "relative",
+      borderRadius: String(8) + "px",
+      width: String(100) + '%',
+      background: colorChip.white,
+      marginBottom: String(bottomMargin) + ea,
+      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+    }
+  });
+
+  this.insertSlideBox(whiteBlock2);
+  this.insertAboutBox(whiteBlock2);
 
   createNode({
-    mother: whiteBlock,
+    mother: whiteBlock2,
     style: {
       display: "flex",
       justifyContent: "center",
@@ -146,7 +162,7 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
 
   descriptionBoxPaddingTop = <%% 78, 78, 78, 78, 78 %%>;
 
-  titleSize = <%% 42, 42, 42, 42, 42 %%>;
+  titleSize = <%% 41, 41, 41, 41, 41 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
 
   subTitleSize = <%% 15, 15, 15, 15, 15 %%>;
@@ -155,7 +171,7 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
   subTitleMarginTop = <%% 3, 3, 3, 3, 3 %%>;
   subTitlePaddingRight = <%% 3, 3, 3, 3, 3 %%>;
 
-  subTitleLineWidth = <%% 54, 54, 54, 54, 54 %%>;
+  subTitleLineWidth = <%% 50, 50, 50, 50, 50 %%>;
   subTitleLineRight = <%% 136, 136, 136, 136, 136 %%>;
   subTitleLineTop = <%% 10, 10, 10, 10, 10 %%>;
 
@@ -435,7 +451,7 @@ MiniAboutJs.prototype.insertStrongBox = function (mother) {
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
   titleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  descriptionSize = <%% 14, 14, 14, 14, 14 %%>;
+  descriptionSize = <%% 13, 13, 13, 13, 13 %%>;
   descriptionWeight = <%% 300, 300, 300, 300, 300 %%>;
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
@@ -568,7 +584,7 @@ MiniAboutJs.prototype.insertSlideBox = function (mother) {
       display: "block",
       position: "relative",
       paddingTop: String(margin) + ea,
-      paddingBottom: String(40) + ea,
+      paddingBottom: String(20) + ea,
       width: withOut(0, ea),
     }
   });
@@ -702,14 +718,14 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
   subTitleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
   descriptionMarginTop = <%% 30, 30, 30, 30, 30 %%>;
-  descriptionSize = <%% 15, 15, 15, 15, 15 %%>;
+  descriptionSize = <%% 16, 16, 16, 16, 16 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
   descriptionPadding = <%% 36, 36, 36, 36, 36 %%>;
 
   descriptionLineTop = <%% 22, 22, 22, 22, 22 %%>;
 
-  aboutAreaTop = <%% 85, 85, 85, 85, 85 %%>;
+  aboutAreaTop = <%% 100, 100, 100, 100, 100 %%>;
   processAreaTop = <%% 56, 56, 56, 56, 56 %%>;
   billAreaTop = <%% 110, 110, 110, 110, 110 %%>;
   billAreaBottom = <%% 20, 20, 20, 20, 20 %%>;
