@@ -193,7 +193,7 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
   photo0Width = <%% 420, 420, 420, 420, 420 %%>;
   photo1Width = <%% 300, 300, 300, 300, 300 %%>;
 
-  whiteSize = <%% 35, 35, 35, 35, 35 %%>;
+  whiteSize = <%% 32, 32, 32, 32, 32 %%>;
   whiteWeight = <%% 700, 700, 700, 700, 700 %%>;
   whiteLineHeight = <%% 1.35, 1.35, 1.35, 1.35, 1.35 %%>;
   whiteBottom = <%% 50, 50, 50, 50, 50 %%>;
@@ -525,6 +525,9 @@ MiniAboutJs.prototype.insertStrongBox = function (mother) {
         background: colorChip.white,
         borderRadius: String(5) + "px",
         boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+        opacity: String(0),
+        transform: "translateY(10px)",
+        animation: "fadeupdelay 1s " + String(0.3 + (0.2 * (i + 0))) + "s ease forwards",
       },
       children: [
         {
@@ -575,8 +578,27 @@ MiniAboutJs.prototype.insertSlideBox = function (mother) {
   let base;
   let slideBase;
   let slidePan;
+  let slideTargets;
+  let photoWidth, photoHeight, photoMargin;
+  let photoLength;
+  let interval;
+  let basePaddingBottom;
+  let leftBase, totalWidth;
 
   margin = <%% 68, 68, 68, 68, 68 %%>;
+
+  photoLength = <%% 14, 14, 14, 14, 14 %%>;
+
+  photoMargin = <%% 12, 12, 12, 12, 12 %%>;
+  photoWidth = <%% 240, 240, 240, 240, 240 %%>;
+  photoHeight = <%% 340, 340, 340, 340, 340 %%>;
+
+  basePaddingBottom = <%% 20, 20, 20, 20, 20 %%>;
+
+  leftBase = <%% 176, 176, 176, 176, 176 %%>;
+  totalWidth = <%% 8000, 8000, 8000, 8000, 8000 %%>;
+
+  interval = 3 * 1000;
 
   base = createNode({
     mother,
@@ -584,7 +606,7 @@ MiniAboutJs.prototype.insertSlideBox = function (mother) {
       display: "block",
       position: "relative",
       paddingTop: String(margin) + ea,
-      paddingBottom: String(20) + ea,
+      paddingBottom: String(basePaddingBottom) + ea,
       width: withOut(0, ea),
     }
   });
@@ -595,7 +617,7 @@ MiniAboutJs.prototype.insertSlideBox = function (mother) {
       display: "block",
       position: "relative",
       width: String(100) + '%',
-      height: String(340) + ea,
+      height: String(photoHeight) + ea,
       overflow: "hidden",
     }
   });
@@ -604,29 +626,63 @@ MiniAboutJs.prototype.insertSlideBox = function (mother) {
     mother: slideBase,
     style: {
       position: "absolute",
-      left: String(-176) + ea,
-      width: String(8000) + ea,
+      left: String(-1 * (leftBase + ((photoWidth + photoMargin) * 2))) + ea,
+      width: String(totalWidth) + ea,
       height: String(100) + '%',
       top: String(0),
     }
   })
 
-  for (let i = 0; i < 8; i++) {
-    createNode({
+  slideTargets = [];
+  for (let i = 0; i < photoLength; i++) {
+    slideTargets.push(createNode({
       mother: slidePan,
+      attribute: {
+        index: String(i),
+        position: String(0),
+      },
       style: {
         display: "inline-block",
         position: "relative",
-        marginRight: String(12) + ea,
-        width: String(240) + ea,
-        height: String(340) + ea,
+        marginRight: String(photoMargin) + ea,
+        width: String(photoWidth) + ea,
+        height: String(photoHeight) + ea,
         borderRadius: String(5) + "px",
         background: colorChip.gray2,
+        backgroundImage: "url('" + MiniAboutJs.binaryPath + "/" + "slide" + String(i) + ".jpg" + "')",
+        backgroundSize: "auto 100%",
+        backgroundPosition: "50% 50%",
+        transform: "translateX(0px)",
+        opacity: String(i === 0 ? 0 : 1),
       }
-    })
+    }));
   }
 
+  setInterval(() => {
+    if (slideTargets.length > 0) {
+      const [ first ] = slideTargets;
+      const position = Number(first.getAttribute("position"));
+      let nextPosition;
+      let index;
 
+      nextPosition = position + 1;
+      if (nextPosition === photoLength) {
+        nextPosition = 0;
+      }
+
+      for (let dom of slideTargets) {
+        index = Number(dom.getAttribute("index"));
+        dom.style.opacity = String(position === index || nextPosition === index ? 0 : 1);
+        if (index > position || nextPosition === 0) {
+          dom.style.transform = "translateX(" + String((photoWidth + photoMargin) * nextPosition * -1) + ea + ")";
+        } else {
+          dom.style.transform = "translateX(" + String(((photoWidth + photoMargin) * (photoLength - 1 - index)) - ((photoWidth + photoMargin) * (nextPosition - index - 1))) + ea + ")";
+        }
+        dom.setAttribute("position", String(nextPosition));
+      }
+
+    }
+  }, interval);
 
 }
 
@@ -777,6 +833,13 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
         sub: "curtain, pillow, bedding, frame, home accessory, ...",
       },
       description: "홈리에종 미니 서비스의 신청 방식은 공간별 신청하는 방식으로, <b%공간별로 베딩(침구), 커튼, 러그, 액자, 소품 품목%b>을 제안 드립니다.  단, 공간의 목적과 사용 용도, 가지고 계신 가구의 상황에 따라 제안의 품목이 상이할 수 있습니다.",
+      images: [
+        "about0.jpg",
+        "about1.jpg",
+        "about2.jpg",
+        "about3.jpg",
+        "about4.jpg",
+      ]
     },
     process: {
       name: "프로세스 안내",
@@ -937,6 +1000,9 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
       width: "calc(calc(100% - " + String(aboutGrayLeftBoxMargin) + ea + ") / 2)",
       height: String(100) + '%',
       background: colorChip.gray5,
+      backgroundImage: "url('" + MiniAboutJs.binaryPath + "/" + contents.about.images[0] + "')",
+      backgroundPosition: "50% 31%",
+      backgroundSize: "100% auto",
       marginRight: String(aboutGrayLeftBoxMargin) + ea,
       borderRadius: String(3) + "px",
       verticalAlign: "top",
@@ -958,6 +1024,9 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
           width: "calc(calc(100% - " + String(aboutGrayLeftBoxMargin) + ea + ") / 2)",
           height: "calc(calc(100% - " + String(aboutGrayLeftBoxMargin) + ea + ") / 2)",
           background: colorChip.gray5,
+          backgroundImage: "url('" + MiniAboutJs.binaryPath + "/" + contents.about.images[1] + "')",
+          backgroundPosition: "50% 46%",
+          backgroundSize: "100% auto",
           marginRight: String(aboutGrayLeftBoxMargin) + ea,
           marginBottom: String(aboutGrayLeftBoxMargin) + ea,
           borderRadius: String(3) + "px",
@@ -969,6 +1038,9 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
           width: "calc(calc(100% - " + String(aboutGrayLeftBoxMargin) + ea + ") / 2)",
           height: "calc(calc(100% - " + String(aboutGrayLeftBoxMargin) + ea + ") / 2)",
           background: colorChip.gray5,
+          backgroundImage: "url('" + MiniAboutJs.binaryPath + "/" + contents.about.images[2] + "')",
+          backgroundPosition: "50% 96%",
+          backgroundSize: "100% auto",
           marginBottom: String(aboutGrayLeftBoxMargin) + ea,
           borderRadius: String(3) + "px",
         }
@@ -979,6 +1051,9 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
           width: "calc(calc(100% - " + String(aboutGrayLeftBoxMargin) + ea + ") / 2)",
           height: "calc(calc(100% - " + String(aboutGrayLeftBoxMargin) + ea + ") / 2)",
           background: colorChip.gray5,
+          backgroundImage: "url('" + MiniAboutJs.binaryPath + "/" + contents.about.images[3] + "')",
+          backgroundPosition: "50% 50%",
+          backgroundSize: "auto 100%",
           marginRight: String(aboutGrayLeftBoxMargin) + ea,
           borderRadius: String(3) + "px",
         }
@@ -989,6 +1064,9 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
           width: "calc(calc(100% - " + String(aboutGrayLeftBoxMargin) + ea + ") / 2)",
           height: "calc(calc(100% - " + String(aboutGrayLeftBoxMargin) + ea + ") / 2)",
           background: colorChip.gray5,
+          backgroundImage: "url('" + MiniAboutJs.binaryPath + "/" + contents.about.images[4] + "')",
+          backgroundPosition: "50% 50%",
+          backgroundSize: "100% auto",
           borderRadius: String(3) + "px",
         }
       },
@@ -1770,6 +1848,9 @@ MiniAboutJs.prototype.insertFaqBox = function () {
           width: "calc(100% + " + String(margin * 2) + ea + ")",
           height: String(100) + '%',
           background: colorChip.shadow,
+          backgroundImage: "url('" + MiniAboutJs.binaryPath + "/" + "below.jpg" + "')",
+          backgroundSize: "100% auto",
+          backgroundPosition: "50% 50%",
         }
       },
       {
