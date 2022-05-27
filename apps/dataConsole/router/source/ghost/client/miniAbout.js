@@ -159,9 +159,9 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
   let photo0Width, photo1Width;
   let whiteSize, whiteWeight, whiteLineHeight, whiteBottom, whiteRight;
 
-  margin = <%% 68, 68, 68, 68, 68 %%>;
+  margin = <%% 68, 68, 68, 68, 6 %%>;
   baseHeight = <%% 408, 408, 408, 408, 408 %%>;
-  descriptionWidth = <%% 328, 328, 328, 328, 328 %%>;
+  descriptionWidth = <%% 328, 240, 240, 240, 240 %%>;
 
   descriptionBoxPaddingTop = <%% 78, 78, 78, 78, 78 %%>;
 
@@ -657,6 +657,7 @@ MiniAboutJs.prototype.insertSlideBox = function (mother) {
         backgroundPosition: "50% 50%",
         transform: "translateX(0px)",
         opacity: String(i === 0 ? 0 : 1),
+        transition: "all 0.3s ease",
       }
     }));
   }
