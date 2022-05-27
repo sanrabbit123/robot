@@ -2597,9 +2597,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "김현경",
-    //     designer: "호지희",
-    //     link: "https://drive.google.com/drive/folders/1ItI4I1J_RZmH-TOM-exhUlMAPyAr1NQ0",
+    //     client: null,
+    //     designer: "김지혜",
+    //     link: "https://drive.google.com/drive/folders/1wtOHsem4qAHAWc8KhYKwUmo7az8CcIus",
     //     pay: true
     //   },
     // ]);
@@ -2619,7 +2619,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p154");
+    // await this.getCorePortfolio("p160");
 
 
     // aspirant to designer
@@ -2629,21 +2629,21 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2202_aa02s" ]);
+    // await work.newDesignerToFront([ "d2205_aa02s" ]);
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2204_aa02s", [
-    //   { porlid: "ghost", index: 8 },
-    //   { porlid: "ghost", index: 1 },
-    //   { porlid: "ghost", index: 2 },
-    //   { porlid: "ghost", index: 3 },
-    //   { porlid: "ghost", index: 7 },
-    //   { porlid: "ghost", index: 8 },
+    // await this.setProposalSettingForDesigner("d2205_aa02s", [
+    //   { porlid: "a94", index: 8 },
+    //   { porlid: "a95", index: 7 },
+    //   { porlid: "a94", index: 4 },
+    //   { porlid: "a95", index: 3 },
+    //   { porlid: "a94", index: 5 },
+    //   { porlid: "a94", index: 6 },
     // ], [
+    //   "깊이 있는 지식으로 고객님의 선호 스타일을 정확히 파악해 냅니다.",
     //   "최대한 고객님의 취향과 라이프스타일이 반영 된 공간을 디자인해드리려 합니다.",
-    //   "디자인시 예산에 맞춘 스타일링 밸런스 조절을 하기 위해 노력합니다.",
-    //   "소프트 모던 스타일을 잘 풀어내며 편안함이 느껴지는 공간 연출을 지향합니다."
+    //   "시크한 스타일부터 프렌치 모던까지 다양한 스타일을 구현해낼 수 있습니다."
     // ]);
 
 

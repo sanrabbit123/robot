@@ -1459,8 +1459,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         }
       ]
     });
-
-    // 7
+    // 8
     createNode({
       mother: rightBox,
       style: {
@@ -1617,8 +1616,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         },
       ]
     });
-
-    // 7
+    // 9
     createNode({
       mother: rightBox,
       style: {
@@ -1693,7 +1691,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
         },
       ]
     });
-    // 12
+    // 10
     createNode({
       mother: rightBox,
       style: {
