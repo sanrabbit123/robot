@@ -1613,6 +1613,8 @@ MiniAboutJs.prototype.insertFaqBox = function () {
   let rulesTitleSize, rulesTitleWeight, rulesTitleLineHeight;
   let rulesContentsMarginTop, rulesContentsSize, rulesContentsWeight, rulesContentsLineHeight;
   let rulesContentsLineTop;
+  let faqBlocks;
+  let faqPaddingLeft, faqPaddingTop;
 
   bottomMargin = <%% 200, 200, 200, 200, 200 %%>;
   margin = <%% 68, 68, 68, 68, 68 %%>;
@@ -1662,6 +1664,9 @@ MiniAboutJs.prototype.insertFaqBox = function () {
   rulesContentsLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
 
   rulesContentsLineTop = <%% 40, 40, 40, 40, 40 %%>;
+
+  faqPaddingLeft = <%% 45, 45, 45, 45, 45 %%>;
+  faqPaddingTop = <%% 32, 32, 32, 32, 32 %%>;
 
   contents = {
     faq: [
@@ -1796,9 +1801,10 @@ MiniAboutJs.prototype.insertFaqBox = function () {
     }
   });
 
+  faqBlocks = [];
   for (let i = 0; i < contents.faq.length; i++) {
 
-    createNode({
+    faqBlocks.push(createNode({
       mother: faqBox,
       attribute: {
         index: String(i),
@@ -1807,10 +1813,85 @@ MiniAboutJs.prototype.insertFaqBox = function () {
         click: function (e) {
           const index = Number(this.getAttribute("index"));
           const { question, answer } = contents.faq[index];
+          const faqPopupClassName = "faqPopupClassName";
+          let cancelBack, whiteBase;
+          let zIndex;
 
+          zIndex = 4;
 
+          for (let faq of faqBlocks) {
+            if (faq !== this) {
+              faq.firstChild.style.color = colorChip.gray2;
+            } else {
+              faq.firstChild.style.color = colorChip.green;
+            }
+          }
 
-          console.log(question, answer);
+          cancelBack = createNode({
+            mother: this,
+            class: [ faqPopupClassName ],
+            event: {
+              click: function (e) {
+                e.stopPropagation();
+                const removeTargets = document.querySelectorAll('.' + faqPopupClassName);
+                for (let faq of faqBlocks) {
+                    faq.firstChild.style.color = colorChip.black;
+                }
+                for (let dom of removeTargets) {
+                  dom.remove();
+                }
+              }
+            },
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(0),
+              width: String(100) + '%',
+              height: String(100) + '%',
+              zIndex: String(zIndex),
+            }
+          });
+
+          whiteBase = createNode({
+            mother: this,
+            class: [ faqPopupClassName ],
+            event: {
+              click: function (e) {
+                e.stopPropagation();
+              }
+            },
+            style: {
+              position: "absolute",
+              top: String(faqFactorHeight + blockBetween - 1) + ea,
+              left: String(-1) + ea,
+              width: "calc(100% + " + String(1 * 2) + ea + ")",
+              paddingTop: String(faqPaddingTop) + ea,
+              paddingBottom: String(faqPaddingTop) + ea,
+              background: colorChip.white,
+              borderRadius: String(8) + "px",
+              boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
+              animation: "fadeuphard 0.3s ease forwards",
+              zIndex: String(zIndex),
+            }
+          });
+
+          createNode({
+            mother: whiteBase,
+            text: answer,
+            style: {
+              display: "block",
+              position: "relative",
+              fontSize: String(faqFactorSize) + ea,
+              fontWeight: String(600),
+              color: colorChip.black,
+              lineHeight: String(1.6),
+              marginLeft: String(faqPaddingLeft) + ea,
+              marginRight: String(faqPaddingLeft) + ea,
+              width: withOut(faqPaddingLeft * 2, ea),
+              textAlign: "left",
+            }
+          });
+
         }
       },
       style: {
@@ -1840,7 +1921,7 @@ MiniAboutJs.prototype.insertFaqBox = function () {
           }
         }
       ]
-    });
+    }));
 
   }
 
@@ -2038,7 +2119,7 @@ MiniAboutJs.prototype.insertFaqBox = function () {
 
 MiniAboutJs.prototype.whiteSubmitEvent = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing, ajaxJson } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing, ajaxJson, setQueue } = GeneralJs;
   const { ea, media, standardWidth, totalContents, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -2096,14 +2177,16 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
     let agreeSize, agreeWeight, agreeCircleBetween, agreeCircleTop;
     let paymentAmountSize, paymentAmountWeight, paymentAmountTop, paymentAmountBetween;
     let paymentButtonSize, paymentButtonWeight, paymentButtonTop, paymentButtonPaddingTop, paymentButtonPaddingBottom, paymentButtonPaddingLeft;
+    let whiteMaxHeight;
 
     whiteWidth = <%% 1000, 1000, 900, 800, 60 %%>;
     whiteMargin = <%% 54, 54, 54, 54, 54 %%>;
-
     innerMargin = <%% 54, 54, 54, 54, 54 %%>;
 
-    titleHeight = 41;
-    paymentHeight = 70;
+    whiteMaxHeight = 900;
+
+    titleHeight = <%% 41, 41, 41, 41, 41 %%>;
+    paymentHeight = <%% 70, 70, 70, 70, 70 %%>;
 
     titleSize = <%% 27, 27, 27, 27, 27 %%>;
     titleWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -2195,11 +2278,15 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
         width: String(100) + '%',
         height: String(100) + '%',
         background: colorChip.black,
-        opacity: String(0),
-        animation: "justfadein 0.3s ease forwards",
+        opacity: String(0.3),
+        // animation: "justfadein 0.3s ease forwards",
         zIndex: String(zIndex),
       }
     });
+
+    if (window.innerHeight - naviHeight - (whiteMargin * 2) > whiteMaxHeight) {
+      whiteMargin = (window.innerHeight - whiteMaxHeight - naviHeight) / 2;
+    }
 
     whiteBase = createNode({
       mother: totalContents,
