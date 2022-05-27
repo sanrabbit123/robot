@@ -18,11 +18,11 @@
   "meta": {
     "title": [
       "thisPerson",
-      "return ('홈리에종 미니 서비스 소개 | 홈리에종');"
+      "return ('홈리에종 미니 서비스 | 홈리에종');"
     ],
     "description": [
       "thisPerson",
-      "return ('홈리에종 미니 서비스 소개 페이지 입니다! | 홈리에종');"
+      "return ('홈리에종 미니 서비스 페이지 입니다! | 홈리에종');"
     ],
     "image": [
       "thisPerson",
@@ -40,7 +40,7 @@ const MiniAboutJs = function () {
   this.mother = new GeneralJs();
 }
 
-MiniAboutJs.binaryPath = "/middle/mini";
+MiniAboutJs.binaryPath = FRONTHOST + "/middle/mini";
 
 MiniAboutJs.prototype.insertInitBox = function () {
   const instance = this;
@@ -472,7 +472,7 @@ MiniAboutJs.prototype.insertStrongBox = function (mother) {
       description: [
         "디자이너의 디자인 작업이 시작된 이후부터",
         "3일 내에 디자인 시안부터 제품",
-        "구매리스트까지 확인할 수 있어요.",
+        "구매 리스트까지 확인할 수 있어요.",
       ],
       image: "strong0.png",
     },
@@ -483,7 +483,7 @@ MiniAboutJs.prototype.insertStrongBox = function (mother) {
       ],
       description: [
         "패브릭, 소품, 액자 스타일링 제안에 특화된",
-        "전문 디자이너와 함께! 혼자서 발품팔고",
+        "전문 디자이너와 함께! 혼자서 발품 팔고",
         "고민하지 말고, 디자이너와 함께하세요. ",
       ],
       image: "strong1.png",
@@ -495,7 +495,7 @@ MiniAboutJs.prototype.insertStrongBox = function (mother) {
       ],
       description: [
         "시스템 안에서 빠른 커뮤니케이션으로",
-        "서비스의 전 과정을 한번에 확인할 수 있어",
+        "서비스의 전 과정을 한 번에 확인할 수 있어",
         "편리하게 서비스 혜택을 누릴 수 있어요!",
       ],
       image: "strong2.png",
@@ -827,7 +827,7 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
     },
     description: [
       "<b%홈리에종 미니는 패브릭, 소품, 액자만으로 공간의 무드를 변화시켜주는 스타일링 서비스%b>예요.",
-      "인테리어 시공은 부담스럽고, 가구는 그대로 쓰고싶을때, HomeLiaison mini가 도와줄게요!",
+      "인테리어 시공은 부담스럽고, 가구는 그대로 쓰고 싶을 때, HomeLiaison mini가 도와줄게요!",
     ],
     about: {
       name: "상품 안내",
@@ -835,7 +835,7 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
         main: "패브릭 + 액자 + 소품",
         sub: "curtain, pillow, bedding, frame, home accessory, ...",
       },
-      description: "홈리에종 미니 서비스의 신청 방식은 공간별 신청하는 방식으로, <b%공간별로 베딩(침구), 커튼, 러그, 액자, 소품 품목%b>을 제안 드립니다.  단, 공간의 목적과 사용 용도, 가지고 계신 가구의 상황에 따라 제안의 품목이 상이할 수 있습니다.",
+      description: "홈리에종 미니 서비스의 신청 방식은 공간별 신청하는 방식으로, <b%공간별로 베딩(침구), 커튼, 러그, 액자, 소품 품목%b>을 제안드립니다.  단, 공간의 목적과 사용 용도, 가지고 계신 가구의 상황에 따라 제안의 품목이 상이할 수 있습니다.",
       images: [
         "about0.jpg",
         "about1.jpg",
@@ -1377,7 +1377,7 @@ MiniAboutJs.prototype.insertWhyBox = function () {
     {
       title: "<b%이런 분%b>들께\n추천드려요!",
       description: [
-        "가구는 그대로 사용한채로 공간의 무드를 <b%확! 바꾸고 싶은 분!%b>",
+        "가구는 그대로 사용한 채로 공간의 무드를 <b%확! 바꾸고 싶은 분!%b>",
         "혼자 발품 팔 시간은 부족하고, <b%전문가의 도움%b>이 필요하신 분!",
         "온라인으로 <b%쉽고 빠르게%b> 공간을 꾸미고 싶으신 분!",
       ]
@@ -1666,43 +1666,43 @@ MiniAboutJs.prototype.insertFaqBox = function () {
   contents = {
     faq: [
       {
-        question: "가구도 추천해주시는건가요?",
-        answer: "",
+        question: "가구도 추천해주시는 건가요?",
+        answer: "홈리에종 mini 서비스는 기존 가구를 그대로 활용하되 패브릭, 소품, 액자의 합리적인 비용으로 내 공간의 무드를 크게 변화시킬 수 있는 라이트한 서비스로 제공하고 있습니다. 가구 체인지 도움이 필요하시다면 홈리에종의 온/오프라인 서비스를 이용해보세요!",
         important: true,
       },
       {
         question: "디자이너를 선택할 수 있나요?",
-        answer: "",
+        answer: "홈리에종 mini 서비스는 홈리에종의 전문적인 교육을 받은 디자이너가 프로젝트를 담당합니다. 특화된 서비스에 맞게 홈리에종에서 디자이너 모두 동일한 mini 서비스를 제공하기 때문에 따로 지정을 하지 않고, 자동 배치하여 빠른 서비스로 만나 볼 수 있어요!",
         important: false,
       },
       {
         question: "기간은 얼마나 소요되나요?",
-        answer: "",
+        answer: "홈리에종 mini 서비스는 큰 가구의 제작 기간이나 맞춤 제작 상품을 제안하지 않고, 빠른 시일 내 가장 어울리는 우리집의 모습을 보여드리기 위해 기성 제품을 추천드리고 있어요. 각 제품을 판매하고 있는 판매처의 상황에 따라 다를 수 있지만, 디자이너의 제안은 고객님께서 전달해 주실 기본 정보를 받는 기준, 3일 내로 내 공간을 위한 나만의 시안을 받아보실 수 있답니다! (*구매처의 배송 기간에 따라 완료까지 소요되는 기간이 상이할 수 있습니다.)",
         important: false,
       },
       {
         question: "배치도 해주시나요?",
-        answer: "",
+        answer: "홈리에종 서비스는 고객에게 제안서와 제안서 내의 제안 제품을 편리하게 구매하실 수 있도록 구매 리스트 제공까지를 디자이너의 역할로 안내하고 있습니다. 구매 진행 또한 고객님의 선택이시며, 디자이너가 제안하는 배치도에 맞게 액자 및 소품을 배치해주시면 됩니다 :)",
         important: false,
       },
       {
         question: "공간 1개만 해도 되나요?",
-        answer: "",
+        answer: "물론 가능합니다 :) 최소 공간 1개부터 진행 가능한 서비스를 제공하고 있습니다. 공간의 목적이 어떤 지에 따라서 필요한 패브릭, 액자, 소품이 달라지고 모든 공간의 제안 품목과 수량은 고객님의 댁의 상황에 맞추어 제안하게 됩니다 :)",
         important: false,
       },
       {
-        question: "실측은 어떻게 해야하나요?",
-        answer: "",
+        question: "실측은 어떻게 해야 하나요?",
+        answer: "나 혼자 하기 어려웠던 실측, 이젠 걱정하지 마세요! 실측 가이드를 제공하여 쉽고 빠르게 직접 실측할 수 있도록 홈리에종이 도와드려요!",
         important: false,
       },
       {
         question: "디자이너 제안서는 어떤 내용으로 제안받나요?",
-        answer: "",
+        answer: "디자이너의 제안서는 고객에게 제공받은 공간의 사이즈, 사진 속의 배치를 기반으로 고객님이 원하는 무드에 대해 상담 후, 디자이너와 약속된 컨셉과 무드의 공간을 시각화한 자료를 통해 제안서로 제공받게 됩니다. 시각화 자료는 실제 제품의 재질, 조화를 잘 고려함을 보여주기 위해 3D가 아닌 평면적인 콜라주 형태의 제안서로 제공됩니다.",
         important: false,
       },
       {
-        question: "디자인 제안 받은 후에 수정도 가능할까요?",
-        answer: "",
+        question: "디자인 제안받은 후에 수정도 가능할까요?",
+        answer: "디자이너는 고객과의 상담 내용을 바탕으로 디자인 작업을 진행하게 됩니다. 따라서 상담 내용과 다른 내용의 수정 제안서는 제공되지 않기 때문에 디자이너와 상담 시, 부담 없이 원하는 부분에 대해 상세하게 설명을 해주시면 원하는 방향의 스타일링을 받으실 수 있어요!",
         important: false,
       },
     ],
@@ -1717,8 +1717,8 @@ MiniAboutJs.prototype.insertFaqBox = function () {
       {
         title: "취소 규정",
         description: [
-          "디자이너와의 상담 시작 1일 전 결제 취소 가능 합니다.",
-          "디자이너와의 상담이 시작 된 이후에는 결제 취소가 불가합니다.",
+          "디자이너와의 상담 시작 1일 전 결제 취소 가능합니다.",
+          "디자이너와의 상담이 시작된 이후에는 결제 취소가 불가합니다.",
         ]
       },
       {
@@ -1800,6 +1800,19 @@ MiniAboutJs.prototype.insertFaqBox = function () {
 
     createNode({
       mother: faqBox,
+      attribute: {
+        index: String(i),
+      },
+      event: {
+        click: function (e) {
+          const index = Number(this.getAttribute("index"));
+          const { question, answer } = contents.faq[index];
+
+
+
+          console.log(question, answer);
+        }
+      },
       style: {
         display: "inline-flex",
         position: "relative",
