@@ -1879,6 +1879,9 @@ MiniAboutJs.prototype.insertFaqBox = function () {
         }
       },
       {
+        event: {
+          click: instance.whiteSubmitEvent(),
+        },
         style: {
           display: "inline-flex",
           position: "relative",
@@ -2022,7 +2025,7 @@ MiniAboutJs.prototype.insertFaqBox = function () {
 
 MiniAboutJs.prototype.whiteSubmitEvent = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing, ajaxJson } = GeneralJs;
   const { ea, media, standardWidth, totalContents, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -2074,14 +2077,20 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
     let grayLineBlockFontSize;
     let grayLineBlockFontWeight;
     let grayLineBlockFontTop;
+    let policyInnerPadding;
+    let policyTong;
+    let policyTextSize;
+    let agreeSize, agreeWeight, agreeCircleBetween, agreeCircleTop;
+    let paymentAmountSize, paymentAmountWeight, paymentAmountTop, paymentAmountBetween;
+    let paymentButtonSize, paymentButtonWeight, paymentButtonTop, paymentButtonPaddingTop, paymentButtonPaddingBottom, paymentButtonPaddingLeft;
 
     whiteWidth = <%% 1000, 1000, 900, 800, 60 %%>;
-    whiteMargin = naviHeight;
+    whiteMargin = <%% 54, 54, 54, 54, 54 %%>;
 
-    innerMargin = <%% 60, 60, 60, 60, 60 %%>;
+    innerMargin = <%% 54, 54, 54, 54, 54 %%>;
 
     titleHeight = 41;
-    paymentHeight = 90;
+    paymentHeight = 70;
 
     titleSize = <%% 27, 27, 27, 27, 27 %%>;
     titleWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -2097,8 +2106,8 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
     grayTop = <%% 0, 0, 0, 0, 0 %%>;
     grayInputTop = <%% (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), -0.2 %%>;
     grayHeight = <%% 32, 32, 31, 31, 7 %%>;
-    grayBigHeight = <%% 70, 114, 137, 154, 28 %%>;
-    grayTextAreaTop = <%% 3, 3, 3, 3, 1.3 %%>;
+    grayBigHeight = <%% 92, 92, 92, 92, 92 %%>;
+    grayTextAreaTop = <%% 0, 0, 0, 0, 0 %%>;
     grayTextAreaWidth = <%% 51.7, 51.7, 51.7, 390, 51.7 %%>;
 
     moduleHeight = grayTop + grayHeight;
@@ -2126,7 +2135,7 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
     addressWeight = <%% 600, 600, 600, 600, 600 %%>;
     addressTop = <%% (isMac() ? 5 : 7), (isMac() ? 5 : 7), (isMac() ? 5 : 7), (isMac() ? 5 : 7), 1.2 %%>;
 
-    marginRatio = <%% 0.6, 1, 1, 1, 1 %%>;
+    marginRatio = <%% 0.5, 0.5, 0.5, 0.5, 0.5 %%>;
 
     textareaTop = <%% 10, 10, 10, 10, 2 %%>;
     textareaLeft = <%% 15, 15, 15, 15, 2.5 %%>;
@@ -2135,6 +2144,25 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
     grayLineBlockFontWeight = <%% 400, 400, 400, 300, 400 %%>;
     grayLineBlockFontTop = <%% 15, 15, 15, 15, 15 %%>;
 
+    policyInnerPadding = <%% 16, 16, 16, 16, 16 %%>;
+    policyTextSize = <%% 10, 10, 10, 10, 2 %%>;
+
+    agreeCircleBetween = <%% 5, 5, 5, 5, 5 %%>;
+    agreeCircleTop = <%% 8, 8, 8, 8, 8 %%>;
+    agreeSize = <%% 14, 14, 14, 14, 14 %%>;
+    agreeWeight = <%% 600, 600, 600, 600, 600 %%>;
+
+    paymentAmountSize = <%% 30, 30, 30, 30, 30 %%>;
+    paymentAmountWeight = <%% 600, 600, 600, 600, 600 %%>;
+    paymentAmountTop = <%% 17, 17, 17, 17, 17 %%>;
+    paymentAmountBetween = <%% 20, 20, 20, 20, 20 %%>;
+
+    paymentButtonSize = <%% 16, 16, 16, 16, 16 %%>;
+    paymentButtonWeight = <%% 600, 600, 600, 600, 600 %%>;
+    paymentButtonTop = <%% 12, 12, 12, 12, 12 %%>;
+    paymentButtonPaddingTop = <%% 8, 8, 8, 8, 8 %%>;
+    paymentButtonPaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
+    paymentButtonPaddingLeft = <%% 18, 18, 18, 18, 18 %%>;
 
     cancelBack = createNode({
       mother: totalContents,
@@ -2230,7 +2258,7 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
         width: withOut(0, ea),
         height: withOut(titleHeight + paymentHeight + formPaddingTop, ea),
         paddingTop: String(formPaddingTop) + ea,
-        overflow: "hidden",
+        overflow: "scroll",
       }
     });
 
@@ -2685,14 +2713,14 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
         }
       ]
     });
-    // 10
+    // 8
     createNode({
       mother: formBox,
       style: {
         display: "block",
         position: "relative",
         marginBottom: String(blockMarginBottom) + ea,
-        height: String(moduleHeight) + ea,
+        height: String(grayTextAreaTop + grayBigHeight) + ea,
       },
       children: [
         {
@@ -2756,6 +2784,122 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
       ]
     });
 
+    // 9 : margin
+    createNode({
+      mother: formBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight * marginRatio) + ea,
+      }
+    });
+
+    // 10
+    policyTong = createNode({
+      mother: formBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+      },
+      children: [
+        {
+          style: {
+            position: "relative",
+            top: String(grayTextAreaTop) + ea,
+            left: String(0) + ea,
+            width: String(100) + '%',
+            paddingTop: String(policyInnerPadding) + ea,
+            height: String(grayBigHeight) + ea,
+            background: colorChip.gray1,
+            borderRadius: String(3) + "px",
+          },
+          children: [
+            {
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(policyInnerPadding * 2, ea),
+                marginLeft: String(policyInnerPadding) + ea,
+                height: withOut(policyInnerPadding, ea),
+                overflow: "scroll",
+              },
+              children: [
+                {
+                  style: {
+                    display: "block",
+                    position: "relative",
+                    fontSize: String(policyTextSize) + ea,
+                    color: colorChip.black,
+                  }
+                }
+              ]
+            }
+          ]
+        },
+      ]
+    }).firstChild.firstChild.firstChild;
+
+    ajaxJson({}, "https://" + GHOSTHOST + "/designerProposal_policy").then(function (res) {
+      const { policy, button } = res;
+      let bTags;
+
+      policyTong.insertAdjacentHTML("beforeend", policy);
+      bTags = policyTong.querySelectorAll("b");
+      for (let b of bTags) {
+        b.style.color = colorChip.black;
+        b.style.fontWeight = String(600);
+      }
+
+    }).catch(function (err) {
+      throw new Error(err);
+    });
+
+    // 11
+    createNode({
+      mother: formBox,
+      style: {
+        display: "block",
+        position: "relative",
+        textAlign: "right",
+      },
+      children: [
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleRadius * 2) + ea,
+            height: String(circleRadius * 2) + ea,
+            marginRight: String(agreeCircleBetween) + ea,
+            borderRadius: String(circleRadius) + ea,
+            background: colorChip.green,
+            top: String(agreeCircleTop) + ea,
+            verticalAlign: "top",
+          }
+        },
+        {
+          text: "상기 개인정보 취급 방침에 동의합니다.",
+          style: {
+            display: "inline-block",
+            fontSize: String(agreeSize) + ea,
+            fontWeight: String(agreeWeight),
+            color: colorChip.green,
+          }
+        }
+      ]
+    });
+
+    // 12 : margin
+    createNode({
+      mother: formBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight * marginRatio) + ea,
+      }
+    });
 
 
     // payment
@@ -2767,12 +2911,44 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
         position: "relative",
         width: withOut(0, ea),
         height: String(paymentHeight) + ea,
-        background: "aqua",
+        borderTop: "1px dashed " + colorChip.gray4,
+        textAlign: "right",
       }
     });
 
+    createNode({
+      mother: paymentArea,
+      text: "220,000원",
+      style: {
+        display: "inline-block",
+        position: "relative",
+        fontSize: String(paymentAmountSize) + ea,
+        fontWeight: String(paymentAmountWeight),
+        color: colorChip.black,
+        top: String(paymentAmountTop) + ea,
+        marginRight: String(paymentAmountBetween) + ea,
+      }
+    });
 
-
+    createNode({
+      mother: paymentArea,
+      text: "결제하기",
+      style: {
+        display: "inline-block",
+        position: "relative",
+        fontSize: String(paymentButtonSize) + ea,
+        fontWeight: String(paymentButtonWeight),
+        color: colorChip.white,
+        top: String(paymentButtonTop) + ea,
+        background: colorChip.gradientGreen,
+        paddingTop: String(paymentButtonPaddingTop) + ea,
+        paddingBottom: String(paymentButtonPaddingBottom) + ea,
+        paddingLeft: String(paymentButtonPaddingLeft) + ea,
+        paddingRight: String(paymentButtonPaddingLeft) + ea,
+        borderRadius: String(5) + "px",
+        cursor: "pointer",
+      }
+    });
 
   }
 }
