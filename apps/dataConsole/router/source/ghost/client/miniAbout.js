@@ -1953,7 +1953,7 @@ MiniAboutJs.prototype.insertFaqBox = function () {
         }
       }
     ]
-  })
+  });
 
   createNode({
     mother: transparentBlock,
@@ -1986,7 +1986,7 @@ MiniAboutJs.prototype.insertFaqBox = function () {
         }
       }
     ]
-  })
+  });
 
   createNode({
     mother: transparentBlock,
