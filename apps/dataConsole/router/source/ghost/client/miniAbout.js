@@ -159,44 +159,44 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
   let photo0Width, photo1Width;
   let whiteSize, whiteWeight, whiteLineHeight, whiteBottom, whiteRight;
 
-  margin = <%% 68, 68, 68, 68, 6 %%>;
-  baseHeight = <%% 408, 408, 408, 408, 408 %%>;
-  descriptionWidth = <%% 328, 240, 240, 240, 240 %%>;
+  margin = <%% 68, 64, 60, 56, 6 %%>;
+  baseHeight = <%% 408, 368, 328, 328, 328 %%>;
+  descriptionWidth = <%% 328, 200, 181, 181, 30 %%>;
 
-  descriptionBoxPaddingTop = <%% 78, 78, 78, 78, 78 %%>;
+  descriptionBoxPaddingTop = <%% 78, 68, 56, 56, 12 %%>;
 
-  titleSize = <%% 41, 41, 41, 41, 41 %%>;
+  titleSize = <%% 41, 36, 33, 33, 6 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
 
-  subTitleSize = <%% 15, 15, 15, 15, 15 %%>;
+  subTitleSize = <%% 15, 15, 14, 13, 3 %%>;
   subTitleWeight = <%% 400, 400, 400, 400, 400 %%>;
 
   subTitleMarginTop = <%% 3, 3, 3, 3, 3 %%>;
   subTitlePaddingRight = <%% 3, 3, 3, 3, 3 %%>;
 
-  subTitleLineWidth = <%% 50, 50, 50, 50, 50 %%>;
-  subTitleLineRight = <%% 136, 136, 136, 136, 136 %%>;
+  subTitleLineWidth = <%% 50, 27, 18, 18, 27 %%>;
+  subTitleLineRight = <%% 136, 136, 131, 131, 131 %%>;
   subTitleLineTop = <%% 10, 10, 10, 10, 10 %%>;
 
-  descriptionSize = <%% 15, 15, 15, 15, 15 %%>;
+  descriptionSize = <%% 15, 15, 14, 13, 3 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
-  descriptionMarginTop = <%% 40, 40, 40, 40, 40 %%>;
+  descriptionMarginTop = <%% 40, 32, 32, 32, 32 %%>;
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
 
   belowSize = <%% 11, 11, 11, 11, 11 %%>;
   belowWeight = <%% 400, 400, 400, 400, 400 %%>;
-  belowMarginTop = <%% 94, 94, 94, 94, 94 %%>;
+  belowMarginTop = <%% 94, 82, 66, 66, 66 %%>;
   belowPaddingRight = <%% 3, 3, 3, 3, 3 %%>;
 
   belowLineWidth = <%% 142, 142, 142, 142, 142 %%>;
   belowLineTop = <%% 8, 8, 8, 8, 8 %%>;
   belowLineRight = <%% 186, 186, 186, 186, 186 %%>;
 
-  photo0Width = <%% 420, 420, 420, 420, 420 %%>;
-  photo1Width = <%% 300, 300, 300, 300, 300 %%>;
+  photo0Width = <%% 420, 266, 228, 238, 42 %%>;
+  photo1Width = <%% 300, 266, 228, 238, 30 %%>;
 
-  whiteSize = <%% 32, 32, 32, 32, 32 %%>;
+  whiteSize = <%% 32, 30, 28, 28, 28 %%>;
   whiteWeight = <%% 700, 700, 700, 700, 700 %%>;
   whiteLineHeight = <%% 1.35, 1.35, 1.35, 1.35, 1.35 %%>;
   whiteBottom = <%% 50, 50, 50, 50, 50 %%>;
@@ -328,6 +328,7 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
     children: [
       {
         style: {
+          display: media[0] ? "block" : "none",
           position: "absolute",
           width: String(belowLineWidth) + ea,
           height: String(0),
@@ -362,7 +363,7 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
       width: String(photo0Width) + ea,
       height: String(100) + '%',
       backgroundImage: "url('" + MiniAboutJs.binaryPath + "/" + contents.photo[0] + "')",
-      backgroundSize: "100% auto",
+      backgroundSize: media[0] ? "100% auto" : "auto 100%",
       backgroundPosition: "50% 50%",
     }
   });
@@ -442,26 +443,28 @@ MiniAboutJs.prototype.insertStrongBox = function (mother) {
   let descriptionSize, descriptionWeight, descriptionLineHeight;
   let titleBetween;
   let iconWidth, iconBottom;
+  let iconVisual;
 
-  margin = <%% 68, 68, 68, 68, 68 %%>;
+  margin = <%% 68, 64, 60, 56, 6 %%>;
   betweenWhite = <%% 10, 10, 10, 10, 10 %%>;
 
-  innerPaddingTop = <%% 32, 32, 32, 32, 32 %%>;
-  innerPaddingBottom = <%% 34, 34, 34, 34, 34 %%>;
-  innerPaddingLeft = <%% 40, 40, 40, 40, 40 %%>;
+  innerPaddingTop = <%% 32, 26, 32, 32, 32 %%>;
+  innerPaddingBottom = <%% 34, 28, 34, 34, 34 %%>;
+  innerPaddingLeft = <%% 40, 33, 40, 40, 40 %%>;
 
-  titleSize = <%% 17, 17, 17, 17, 17 %%>;
+  titleSize = <%% 17, 16, 16, 16, 16 %%>;
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
   titleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  descriptionSize = <%% 13, 13, 13, 13, 13 %%>;
+  descriptionSize = <%% 13, 12, 12, 12, 12 %%>;
   descriptionWeight = <%% 300, 300, 300, 300, 300 %%>;
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
   titleBetween = <%% 12, 12, 12, 12, 12 %%>;
 
-  iconWidth = <%% 30, 30, 30, 30, 30 %%>;
-  iconBottom = <%% 38, 38, 38, 38, 38 %%>;
+  iconWidth = <%% 30, 26, 30, 30, 30 %%>;
+  iconBottom = <%% 38, 34, 38, 38, 38 %%>;
+  iconVisual = <%% 1, 5, 5, 5, 0 %%>;
 
   contents = [
     {
@@ -562,7 +565,7 @@ MiniAboutJs.prototype.insertStrongBox = function (mother) {
             width: String(iconWidth) + ea,
             height: "auto",
             bottom: String(iconBottom) + ea,
-            right: String(innerPaddingLeft) + ea,
+            right: String(innerPaddingLeft - iconVisual) + ea,
           }
         }
       ]
