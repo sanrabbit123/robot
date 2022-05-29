@@ -59,12 +59,12 @@ MiniAboutJs.prototype.insertInitBox = function () {
   blockBetween = <%% 18, 18, 18, 18, 18 %%>;
   bottomMargin = <%% 200, 200, 200, 200, 200 %%>;
 
-  buttonBoxWidth = <%% 172, 172, 172, 172, 172 %%>;
-  buttonBoxHeight = <%% 58, 58, 58, 58, 58 %%>;
-  buttonBoxTop = <%% -108, -108, -108, -108, -108 %%>;
+  buttonBoxWidth = <%% 172, 164, 148, 138, 164 %%>;
+  buttonBoxHeight = <%% 58, 54, 50, 45, 54 %%>;
+  buttonBoxTop = <%% -108, -108, -100, -88, -108 %%>;
 
   buttonTextTop = <%% -2, -2, -2, -2, -2 %%>;
-  buttonSize = <%% 21, 21, 21, 21, 21 %%>;
+  buttonSize = <%% 21, 20, 18, 16, 21 %%>;
   buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
   buttonLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
@@ -159,24 +159,24 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
   let photo0Width, photo1Width;
   let whiteSize, whiteWeight, whiteLineHeight, whiteBottom, whiteRight;
 
-  margin = <%% 68, 64, 60, 56, 6 %%>;
-  baseHeight = <%% 408, 368, 328, 328, 328 %%>;
-  descriptionWidth = <%% 328, 200, 181, 181, 30 %%>;
+  margin = <%% 68, 64, 56, 45, 6 %%>;
+  baseHeight = <%% 408, 368, 328, 288, 328 %%>;
+  descriptionWidth = <%% 328, 200, 181, 168, 30 %%>;
 
-  descriptionBoxPaddingTop = <%% 78, 68, 56, 56, 12 %%>;
+  descriptionBoxPaddingTop = <%% 78, 68, 50, 45, 12 %%>;
 
-  titleSize = <%% 41, 36, 33, 33, 6 %%>;
+  titleSize = <%% 41, 35, 32, 29, 6 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
 
-  subTitleSize = <%% 15, 15, 14, 13, 3 %%>;
+  subTitleSize = <%% 15, 15, 14, 12, 3 %%>;
   subTitleWeight = <%% 400, 400, 400, 400, 400 %%>;
 
   subTitleMarginTop = <%% 3, 3, 3, 3, 3 %%>;
   subTitlePaddingRight = <%% 3, 3, 3, 3, 3 %%>;
 
-  subTitleLineWidth = <%% 50, 27, 18, 18, 27 %%>;
-  subTitleLineRight = <%% 136, 136, 131, 131, 131 %%>;
-  subTitleLineTop = <%% 10, 10, 10, 10, 10 %%>;
+  subTitleLineWidth = <%% 50, 22, 16, 20, 27 %%>;
+  subTitleLineRight = <%% 136, 136, 128, 110, 131 %%>;
+  subTitleLineTop = <%% 10, 10, 10, 8, 10 %%>;
 
   descriptionSize = <%% 15, 15, 14, 13, 3 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
@@ -184,23 +184,23 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
   descriptionMarginTop = <%% 40, 32, 32, 32, 32 %%>;
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  belowSize = <%% 11, 11, 11, 11, 11 %%>;
+  belowSize = <%% 11, 11, 11, 10, 11 %%>;
   belowWeight = <%% 400, 400, 400, 400, 400 %%>;
-  belowMarginTop = <%% 94, 82, 66, 66, 66 %%>;
+  belowMarginTop = <%% 94, 83, 73, 53, 66 %%>;
   belowPaddingRight = <%% 3, 3, 3, 3, 3 %%>;
 
   belowLineWidth = <%% 142, 142, 142, 142, 142 %%>;
   belowLineTop = <%% 8, 8, 8, 8, 8 %%>;
   belowLineRight = <%% 186, 186, 186, 186, 186 %%>;
 
-  photo0Width = <%% 420, 266, 228, 238, 42 %%>;
-  photo1Width = <%% 300, 266, 228, 238, 30 %%>;
+  photo0Width = <%% 420, 266, 220, 231, 42 %%>;
+  photo1Width = <%% 300, 266, 220, 231, 30 %%>;
 
-  whiteSize = <%% 32, 30, 28, 28, 28 %%>;
+  whiteSize = <%% 32, 30, 26, 21, 28 %%>;
   whiteWeight = <%% 700, 700, 700, 700, 700 %%>;
   whiteLineHeight = <%% 1.35, 1.35, 1.35, 1.35, 1.35 %%>;
-  whiteBottom = <%% 50, 50, 50, 50, 50 %%>;
-  whiteRight = <%% 50, 50, 50, 50, 50 %%>;
+  whiteBottom = <%% 50, 50, 50, 40, 50 %%>;
+  whiteRight = <%% 50, 50, 50, 40, 50 %%>;
 
   contents = {
     title: "무드 체인지",
@@ -445,25 +445,25 @@ MiniAboutJs.prototype.insertStrongBox = function (mother) {
   let iconWidth, iconBottom;
   let iconVisual;
 
-  margin = <%% 68, 64, 60, 56, 6 %%>;
+  margin = <%% 68, 64, 56, 48, 6 %%>;
   betweenWhite = <%% 10, 10, 10, 10, 10 %%>;
 
-  innerPaddingTop = <%% 32, 26, 32, 32, 32 %%>;
-  innerPaddingBottom = <%% 34, 28, 34, 34, 34 %%>;
-  innerPaddingLeft = <%% 40, 33, 40, 40, 40 %%>;
+  innerPaddingTop = <%% 32, 26, 22, 18, 6 %%>;
+  innerPaddingBottom = <%% 34, 28, 24, 20, 34 %%>;
+  innerPaddingLeft = <%% 40, 33, 29, 24, 40 %%>;
 
-  titleSize = <%% 17, 16, 16, 16, 16 %%>;
+  titleSize = <%% 17, 16, 15, 13, 16 %%>;
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
   titleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  descriptionSize = <%% 13, 12, 12, 12, 12 %%>;
+  descriptionSize = <%% 13, 12, 12, 10, 12 %%>;
   descriptionWeight = <%% 300, 300, 300, 300, 300 %%>;
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
-  titleBetween = <%% 12, 12, 12, 12, 12 %%>;
+  titleBetween = <%% 12, 12, 10, 10, 10 %%>;
 
-  iconWidth = <%% 30, 26, 30, 30, 30 %%>;
-  iconBottom = <%% 38, 34, 38, 38, 38 %%>;
+  iconWidth = <%% 30, 26, 22, 18, 30 %%>;
+  iconBottom = <%% 38, 34, 29, 25, 38 %%>;
   iconVisual = <%% 1, 5, 5, 5, 0 %%>;
 
   contents = [
@@ -473,7 +473,7 @@ MiniAboutJs.prototype.insertStrongBox = function (mother) {
         "디자인 시안을 받을 수 있어요!",
       ],
       description: [
-        "디자이너의 디자인 작업이 시작된 이후부터",
+        <&& "디자이너의 디자인 작업이 시작된 이후부터" | "디자이너의 디자인 작업이 시작된 이후부터" | "디자이너의 디자인 작업이 시작된 이후부터" | "디자인 작업이 시작된 이후부터" | "디자인 작업이 시작된 이후부터" &&>,
         "3일 내에 디자인 시안부터 제품",
         "구매 리스트까지 확인할 수 있어요.",
       ],
@@ -481,25 +481,25 @@ MiniAboutJs.prototype.insertStrongBox = function (mother) {
     },
     {
       title: [
-        "홈리에종의 특별 교육을 받은",
-        "전문 디자이너 혜택을 누려보세요!",
+        <&& "홈리에종의 특별 교육을 받은" | "홈리에종의 특별 교육을 받은" | "홈리에종 교육을 받은" | "홈리에종 교육을 받은" | "홈리에종 교육을 받은" &&>,
+        <&& "전문 디자이너 혜택을 누려보세요!" | "전문 디자이너 혜택을 누려보세요!" | "디자이너 혜택을 누려보세요!" | "디자이너 혜택을 누려보세요!" | "디자이너 혜택을 누려보세요!" &&>,
       ],
       description: [
-        "패브릭, 소품, 액자 스타일링 제안에 특화된",
-        "전문 디자이너와 함께! 혼자서 발품 팔고",
-        "고민하지 말고, 디자이너와 함께하세요. ",
+        <&& "패브릭, 소품, 액자 스타일링 제안에 특화된" | "패브릭, 소품, 액자 스타일링 제안에 특화된" | "패브릭, 소품, 액자 스타일링 제안에 특화된" | "패브릭, 소품, 액자 제안에 특화된" | "패브릭, 소품, 액자 제안에 특화된" &&>,
+        <&& "전문 디자이너와 함께! 혼자서 발품 팔고" | "전문 디자이너와 함께! 혼자서 발품 팔고" | "디자이너와 함께! 혼자 발품 팔지" | "디자이너와 함께! 혼자 발품 팔지" | "디자이너와 함께! 혼자 발품 팔지" &&>,
+        <&& "고민하지 말고, 디자이너와 함께 하세요." | "고민하지 말고, 디자이너와 함께 하세요." | "말고, 전문 디자이너와 함께 하세요." | "말고, 디자이너와 함께 하세요." | "말고, 디자이너와 함께 하세요." &&>,
       ],
       image: "strong1.png",
     },
     {
       title: [
-        "홈리에종만의 관리 시스템으로",
+        <&& "홈리에종만의 관리 시스템으로" | "홈리에종만의 관리 시스템으로" | "홈리에종의 관리 시스템으로" | "홈리에종의 관리 시스템으로" | "홈리에종의 관리 시스템으로" &&>,
         "편리하게 이용할 수 있어요!",
       ],
       description: [
         "시스템 안에서 빠른 커뮤니케이션으로",
-        "서비스의 전 과정을 한 번에 확인할 수 있어",
-        "편리하게 서비스 혜택을 누릴 수 있어요!",
+        <&& "서비스의 전 과정을 한 번에 확인할 수 있어" | "서비스의 전 과정을 한 번에 확인할 수 있어" | "전 과정을 한 번에 확인할 수 있어" | "전 과정을 한 번에 확인할 수 있어" | "전 과정을 한 번에 확인할 수 있어" &&>,
+        <&& "편리하게 서비스 혜택을 누릴 수 있어요!" | "편리하게 서비스 혜택을 누릴 수 있어요!" | "편리하게 혜택을 누릴 수 있어요!" | "편리하게 혜택을 누릴 수 있어요!" | "편리하게 혜택을 누릴 수 있어요!" &&>,
       ],
       image: "strong2.png",
     },
@@ -591,17 +591,17 @@ MiniAboutJs.prototype.insertSlideBox = function (mother) {
   let basePaddingBottom;
   let leftBase, totalWidth;
 
-  margin = <%% 68, 68, 68, 68, 68 %%>;
+  margin = <%% 68, 64, 56, 48, 6 %%>;
 
   photoLength = <%% 14, 14, 14, 14, 14 %%>;
 
-  photoMargin = <%% 12, 12, 12, 12, 12 %%>;
-  photoWidth = <%% 240, 240, 240, 240, 240 %%>;
-  photoHeight = <%% 340, 340, 340, 340, 340 %%>;
+  photoMargin = <%% 12, 12, 10, 10, 12 %%>;
+  photoWidth = <%% 240, 210, 180, 150, 240 %%>;
+  photoHeight = <%% 340, 310, 270, 230, 340 %%>;
 
-  basePaddingBottom = <%% 20, 20, 20, 20, 20 %%>;
+  basePaddingBottom = <%% 20, 20, 18, 12, 20 %%>;
 
-  leftBase = <%% 176, 176, 176, 176, 176 %%>;
+  leftBase = <%% 176, 133, 114, 114, 176 %%>;
   totalWidth = <%% 8000, 8000, 8000, 8000, 8000 %%>;
 
   interval = 3 * 1000;
@@ -739,80 +739,78 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
   let billEaSize, billEaWeight, billEaBottom, billEaLeft;
   let billLineLeft, billLineWidth;
 
-  margin = <%% 68, 68, 68, 68, 68 %%>;
+  margin = <%% 68, 64, 56, 48, 6 %%>;
 
-  grayInnerPadding = <%% 40, 40, 40, 40, 40 %%>;
+  grayInnerPadding = <%% 40, 32, 28, 24, 32 %%>;
   grayTop = <%% 14, 14, 14, 14, 14 %%>;
 
-  aboutGrayLeftBoxMargin = <%% 8, 8, 8, 8, 8 %%>;
-
-  aboutGrayLeftWidth = <%% 580, 580, 580, 580, 580 %%>;
-  aboutContentsHeight = <%% 250, 250, 250, 250, 250 %%>;
-
-  aboutBetween = <%% 36, 36, 36, 36, 36 %%>;
-
-  aboutGrayRightTitlePaddingTop = <%% 63, 63, 63, 63, 63 %%>;
-
-  aboutTitleSize = <%% 25, 25, 25, 25, 25 %%>;
-  aboutTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
-  aboutTitleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
-
-  aboutSubTitleSize = <%% 17, 17, 17, 17, 17 %%>;
-  aboutSubTitleWeight = <%% 400, 400, 400, 400, 400 %%>;
-  aboutSubTitleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
-
-  aboutDescriptionSize = <%% 14, 14, 14, 14, 14 %%>;
-  aboutDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
-  aboutDescriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
-  aboutDescriptionMarginTop = <%% 60, 60, 60, 60, 60 %%>;
-
-  areaNameSize = <%% 16, 16, 16, 16, 16 %%>;
-  areaNameWeight = <%% 700, 700, 700, 700, 700 %%>;
-  areaNameLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
-
-  processBlockWidth = <%% 120, 120, 120, 120, 120 %%>;
-
-  titleSize = <%% 32, 32, 32, 32, 32 %%>;
+  titleSize = <%% 32, 31, 28, 25, 32 %%>;
   titleWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  subTitleSize = <%% 16, 16, 16, 16, 16 %%>;
+  subTitleSize = <%% 16, 16, 15, 14, 16 %%>;
   subTitleWeight = <%% 400, 400, 400, 400, 400 %%>;
   subTitleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  descriptionMarginTop = <%% 30, 30, 30, 30, 30 %%>;
-  descriptionSize = <%% 16, 16, 16, 16, 16 %%>;
+  descriptionMarginTop = <%% 30, 30, 30, 28, 30 %%>;
+  descriptionSize = <%% 16, 16, 15, 14, 16 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
-  descriptionPadding = <%% 36, 36, 36, 36, 36 %%>;
+  descriptionPadding = <%% 36, 36, 32, 16, 36 %%>;
+  descriptionLineTop = <%% 22, 22, 22, 20, 22 %%>;
 
-  descriptionLineTop = <%% 22, 22, 22, 22, 22 %%>;
+  aboutAreaTop = <%% 100, 100, 92, 70, 100 %%>;
+  processAreaTop = <%% 56, 56, 50, 36, 56 %%>;
+  billAreaTop = <%% 110, 96, 82, 60, 110 %%>;
+  billAreaBottom = <%% 20, 20, 18, 12, 20 %%>;
 
-  aboutAreaTop = <%% 100, 100, 100, 100, 100 %%>;
-  processAreaTop = <%% 56, 56, 56, 56, 56 %%>;
-  billAreaTop = <%% 110, 110, 110, 110, 110 %%>;
-  billAreaBottom = <%% 20, 20, 20, 20, 20 %%>;
+  areaNameSize = <%% 16, 16, 15, 15, 16 %%>;
+  areaNameWeight = <%% 700, 700, 700, 700, 700 %%>;
+  areaNameLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  processBlockHeight = <%% 80, 80, 80, 80, 80 %%>;
+  aboutGrayLeftBoxMargin = <%% 8, 8, 8, 8, 8 %%>;
+
+  aboutGrayLeftWidth = <%% 580, 520, 460, 370, 52 %%>;
+  aboutContentsHeight = <%% 250, 250, 230, 190, 25 %%>;
+
+  aboutBetween = <%% 36, 32, 28, 24, 36 %%>;
+
+  aboutGrayRightTitlePaddingTop = <%% 63, 42, 40, 35, 42 %%>;
+
+  aboutTitleSize = <%% 25, 24, 22, 17, 25 %%>;
+  aboutTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+  aboutTitleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+
+  aboutSubTitleSize = <%% 17, 16, 14, 11, 4 %%>;
+  aboutSubTitleWeight = <%% 400, 400, 400, 400, 400 %%>;
+  aboutSubTitleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+
+  aboutDescriptionSize = <%% 14, 13, 12, 11, 14 %%>;
+  aboutDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+  aboutDescriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+  aboutDescriptionMarginTop = <%% 60, 45, 22, 12, 45 %%>;
+
+  processBlockWidth = <%% 120, 96, 84, 70, 80 %%>;
+  processBlockHeight = <%% 80, 72, 64, 52, 80 %%>;
 
   processTextTop = <%% -1, -1, -1, -1, -1 %%>;
-  processSize = <%% 15, 15, 15, 15, 15 %%>;
+  processSize = <%% 15, 14, 13, 11, 14 %%>;
   processWeight = <%% 600, 600, 600, 600, 600 %%>;
   processLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
-  processBlankHeight = <%% 170, 170, 170, 170, 170 %%>;
-  processArrowWidth = <%% 43, 43, 43, 43, 43 %%>;
-  processArrowHeight = <%% 10, 10, 10, 10, 10 %%>;
-  processArrowTop = <%% 34, 34, 34, 34, 34 %%>;
+  processBlankHeight = <%% 170, 154, 138, 114, 170 %%>;
+  processArrowWidth = <%% 43, 21, 18, 10, 43 %%>;
+  processArrowHeight = <%% 10, 10, 8, 6, 10 %%>;
+  processArrowTop = <%% 34, 30, 26, 22, 34 %%>;
 
-  processNoticeBoxRight = <%% 38, 38, 38, 38, 38 %%>;
-  processNoticeBoxBottom = <%% 36, 36, 36, 36, 36 %%>;
+  processNoticeBoxRight = <%% 38, 28, 26, 20, 38 %%>;
+  processNoticeBoxBottom = <%% 36, 29, 25, 22, 36 %%>;
 
-  processNoticeSize = <%% 12, 12, 12, 12, 12 %%>;
+  processNoticeSize = <%% 12, 11, 11, 10, 12 %%>;
   processNoticeWeight = <%% 500, 500, 500, 500, 500 %%>;
-  processNoticeMarginBottom = <%% 6, 6, 6, 6, 6 %%>;
+  processNoticeMarginBottom = <%% 6, 4, 3, 2, 1 %%>;
 
-  billSize = <%% 37, 37, 37, 37, 37 %%>;
+  billSize = <%% 37, 37, 36, 34, 37 %%>;
   billWeight = <%% 600, 600, 600, 600, 600 %%>;
   billLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
@@ -822,7 +820,7 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
   billEaLeft = <%% -57, -57, -57, -57, -57 %%>;
 
   billLineLeft = <%% -56, -56, -56, -56, -56 %%>;
-  billLineWidth = <%% 230, 230, 230, 230, 230 %%>;
+  billLineWidth = <%% 230, 230, 230, 216, 230 %%>;
 
   contents = {
     title: {
@@ -839,7 +837,7 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
         main: "패브릭 + 액자 + 소품",
         sub: "curtain, pillow, bedding, frame, home accessory, ...",
       },
-      description: "홈리에종 미니 서비스의 신청 방식은 공간별 신청하는 방식으로, <b%공간별로 베딩(침구), 커튼, 러그, 액자, 소품 품목%b>을 제안드립니다.  단, 공간의 목적과 사용 용도, 가지고 계신 가구의 상황에 따라 제안의 품목이 상이할 수 있습니다.",
+      description: <&& "홈리에종 미니 서비스의 신청 방식은 공간별 신청하는 방식으로, <b%공간별로 베딩(침구), 커튼, 러그, 액자, 소품 품목%b>을 제안드립니다. 단, 공간의 목적과 사용 용도, 가지고 계신 가구의 상황에 따라 제안의 품목이 상이할 수 있습니다." | "홈리에종 미니 서비스의 신청 방식은 공간별 신청하는 방식으로, <b%공간별로 베딩(침구), 커튼, 러그, 액자, 소품 품목%b>을 제안드립니다. 단, 공간의 목적과 사용 용도, 가지고 계신 가구의 상황에 따라 제안의 품목이 상이할 수 있습니다." | "홈리에종 미니 서비스의 신청 방식은 공간별 신청하는 방식으로, <b%공간별로 베딩(침구), 커튼, 러그, 액자, 소품 품목%b>을 제안드립니다. 단, 공간의 목적과 사용 용도, 가지고 계신 가구의 상황에 따라 제안의 품목이 상이할 수 있습니다." | "홈리에종 미니 서비스의 신청 방식은 공간별 신청하는 방식으로, <b%공간별로 베딩, 커튼, 러그, 액자, 소품 품목%b>을 제안드립니다. 단, 공간의 목적과 용도, 가지고 계신 가구에 따라 제안이 상이할 수 있습니다." | "홈리에종 미니 서비스의 신청 방식은 공간별 신청하는 방식으로, <b%공간별로 베딩, 커튼, 러그, 액자, 소품 품목%b>을 제안드립니다. 단, 공간의 목적과 용도, 가지고 계신 가구에 따라 제안이 상이할 수 있습니다." &&>,
       images: [
         "about0.jpg",
         "about1.jpg",
@@ -861,8 +859,8 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
       ],
       green: [ 1, 4 ],
       notice: [
-        "고객 실측이 이루어져야 디자이너 상담이 가능합니다.",
-        "홈리에종 컨펌은 영업일 기준으로 이루어집니다.",
+        <&& "고객 실측이 이루어져야 디자이너 상담이 가능합니다." | "고객 실측이 이루어져야 디자이너 상담이 가능합니다." | "실측이 이루어져야 상담이 가능합니다." | "실측이 이루어져야 상담이 가능합니다." | "실측이 이루어져야 상담이 가능합니다." &&>,
+        <&& "홈리에종 컨펌은 영업일 기준으로 이루어집니다." | "홈리에종 컨펌은 영업일 기준으로 이루어집니다." | "컨펌은 영업일 기준으로 이루어집니다." | "컨펌은 영업일 기준으로 이루어집니다." | "컨펌은 영업일 기준으로 이루어집니다." &&>,
       ]
     },
     bill: {
