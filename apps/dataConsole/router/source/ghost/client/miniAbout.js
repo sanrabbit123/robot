@@ -57,7 +57,7 @@ MiniAboutJs.prototype.insertInitBox = function () {
   let blockBetween;
 
   blockBetween = <%% 18, 18, 18, 18, 18 %%>;
-  bottomMargin = <%% 200, 200, 200, 200, 200 %%>;
+  bottomMargin = <%% 200, 200, 180, 160, 200 %%>;
 
   buttonBoxWidth = <%% 172, 164, 148, 138, 164 %%>;
   buttonBoxHeight = <%% 58, 54, 50, 45, 54 %%>;
@@ -599,7 +599,7 @@ MiniAboutJs.prototype.insertSlideBox = function (mother) {
   photoWidth = <%% 240, 210, 180, 150, 240 %%>;
   photoHeight = <%% 340, 310, 270, 230, 340 %%>;
 
-  basePaddingBottom = <%% 20, 20, 18, 12, 20 %%>;
+  basePaddingBottom = <%% 20, 20, 10, 8, 20 %%>;
 
   leftBase = <%% 176, 133, 114, 114, 176 %%>;
   totalWidth = <%% 8000, 8000, 8000, 8000, 8000 %%>;
@@ -759,10 +759,10 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
   descriptionPadding = <%% 36, 36, 32, 16, 36 %%>;
   descriptionLineTop = <%% 22, 22, 22, 20, 22 %%>;
 
-  aboutAreaTop = <%% 100, 100, 92, 70, 100 %%>;
-  processAreaTop = <%% 56, 52, 50, 36, 56 %%>;
-  billAreaTop = <%% 110, 92, 82, 60, 110 %%>;
-  billAreaBottom = <%% 20, 10, 18, 12, 20 %%>;
+  aboutAreaTop = <%% 100, 100, 84, 70, 100 %%>;
+  processAreaTop = <%% 56, 52, 42, 36, 56 %%>;
+  billAreaTop = <%% 110, 92, 78, 60, 110 %%>;
+  billAreaBottom = <%% 20, 10, 10, 8, 20 %%>;
 
   areaNameSize = <%% 16, 16, 15, 15, 16 %%>;
   areaNameWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -1340,17 +1340,17 @@ MiniAboutJs.prototype.insertWhyBox = function () {
   let arrowBaseWidth, arrowHeight;
   let arrowTop;
 
-  basePadding = <%% 110, 90, 80, 70, 11 %%>;
-  leftWidth = <%% 400, 300, 320, 320, 40 %%>;
+  basePadding = <%% 110, 90, 85, 80, 11 %%>;
+  leftWidth = <%% 400, 300, 280, 240, 40 %%>;
 
   minusPadding = <%% -50, -50, -50, -50, -50 %%>;
   blockBetween = <%% 40, 40, 40, 40, 40 %%>;
 
-  titleSize = <%% 21, 20, 19, 18, 21 %%>;
+  titleSize = <%% 21, 20, 18, 16, 21 %%>;
   titleWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  descriptionSize = <%% 16, 16, 16, 16, 16 %%>;
+  descriptionSize = <%% 16, 16, 15, 14, 16 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
@@ -1358,10 +1358,10 @@ MiniAboutJs.prototype.insertWhyBox = function () {
   firstBlockMargin = <%% 30, 30, 30, 30, 30 %%>;
   secondBlockMargin = <%% 25, 25, 25, 25, 25 %%>;
 
-  secondPaddingTop = <%% 15, 15, 15, 15, 15 %%>;
-  secondPaddingBottom = <%% 20, 20, 20, 20, 20 %%>;
-  secondPaddingLeft = <%% 30, 30, 30, 30, 30 %%>;
-  secondTab = <%% 310, 194, 170, 150, 31 %%>;
+  secondPaddingTop = <%% 15, 15, 13, 13, 15 %%>;
+  secondPaddingBottom = <%% 20, 20, 18, 18, 20 %%>;
+  secondPaddingLeft = <%% 30, 30, 24, 22, 30 %%>;
+  secondTab = <%% 310, 194, 145, 130, 31 %%>;
 
   arrowTop = <%% 24, 24, 24, 24, 24 %%>;
   arrowBaseWidth = <%% 36, 36, 36, 36, 36 %%>;
@@ -1620,7 +1620,7 @@ MiniAboutJs.prototype.insertFaqBox = function () {
 
   bottomMargin = <%% 200, 200, 200, 200, 200 %%>;
   margin = <%% 68, 64, 56, 48, 6 %%>;
-  basePadding = <%% 110, 90, 80, 70, 11 %%>;
+  basePadding = <%% 110, 90, 85, 80, 11 %%>;
   blockBetween = <%% 10, 10, 10, 10, 10 %%>;
 
   faqSize = <%% 36, 36, 36, 36, 36 %%>;
