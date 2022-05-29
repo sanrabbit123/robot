@@ -196,7 +196,7 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
   photo0Width = <%% 420, 266, 220, 231, 42 %%>;
   photo1Width = <%% 300, 266, 220, 231, 30 %%>;
 
-  whiteSize = <%% 32, 30, 26, 21, 28 %%>;
+  whiteSize = <%% 32, 29, 26, 21, 28 %%>;
   whiteWeight = <%% 700, 700, 700, 700, 700 %%>;
   whiteLineHeight = <%% 1.35, 1.35, 1.35, 1.35, 1.35 %%>;
   whiteBottom = <%% 50, 50, 50, 40, 50 %%>;
@@ -760,9 +760,9 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
   descriptionLineTop = <%% 22, 22, 22, 20, 22 %%>;
 
   aboutAreaTop = <%% 100, 100, 92, 70, 100 %%>;
-  processAreaTop = <%% 56, 56, 50, 36, 56 %%>;
-  billAreaTop = <%% 110, 96, 82, 60, 110 %%>;
-  billAreaBottom = <%% 20, 20, 18, 12, 20 %%>;
+  processAreaTop = <%% 56, 52, 50, 36, 56 %%>;
+  billAreaTop = <%% 110, 92, 82, 60, 110 %%>;
+  billAreaBottom = <%% 20, 10, 18, 12, 20 %%>;
 
   areaNameSize = <%% 16, 16, 15, 15, 16 %%>;
   areaNameWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -1340,13 +1340,13 @@ MiniAboutJs.prototype.insertWhyBox = function () {
   let arrowBaseWidth, arrowHeight;
   let arrowTop;
 
-  basePadding = <%% 110, 110, 110, 110, 110 %%>;
-  leftWidth = <%% 400, 400, 400, 400, 400 %%>;
+  basePadding = <%% 110, 90, 80, 70, 11 %%>;
+  leftWidth = <%% 400, 300, 320, 320, 40 %%>;
 
   minusPadding = <%% -50, -50, -50, -50, -50 %%>;
   blockBetween = <%% 40, 40, 40, 40, 40 %%>;
 
-  titleSize = <%% 21, 21, 21, 21, 21 %%>;
+  titleSize = <%% 21, 20, 19, 18, 21 %%>;
   titleWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
@@ -1361,7 +1361,7 @@ MiniAboutJs.prototype.insertWhyBox = function () {
   secondPaddingTop = <%% 15, 15, 15, 15, 15 %%>;
   secondPaddingBottom = <%% 20, 20, 20, 20, 20 %%>;
   secondPaddingLeft = <%% 30, 30, 30, 30, 30 %%>;
-  secondTab = <%% 310, 310, 310, 310, 310 %%>;
+  secondTab = <%% 310, 194, 170, 150, 31 %%>;
 
   arrowTop = <%% 24, 24, 24, 24, 24 %%>;
   arrowBaseWidth = <%% 36, 36, 36, 36, 36 %%>;
@@ -1619,25 +1619,23 @@ MiniAboutJs.prototype.insertFaqBox = function () {
   let faqPaddingLeft, faqPaddingTop;
 
   bottomMargin = <%% 200, 200, 200, 200, 200 %%>;
-  margin = <%% 68, 68, 68, 68, 68 %%>;
-  basePadding = <%% 110, 110, 110, 110, 110 %%>;
+  margin = <%% 68, 64, 56, 48, 6 %%>;
+  basePadding = <%% 110, 90, 80, 70, 11 %%>;
   blockBetween = <%% 10, 10, 10, 10, 10 %%>;
-
-  ruleBlockWidth = <%% 420, 420, 420, 420, 420 %%>;
 
   faqSize = <%% 36, 36, 36, 36, 36 %%>;
   faqWeight = <%% 400, 400, 400, 400, 400 %%>;
 
   faqBoxMarginTop = <%% 42, 42, 42, 42, 42 %%>;
 
-  faqFactorHeight = <%% 72, 72, 72, 72, 72 %%>;
+  faqFactorHeight = <%% 72, 68, 64, 56, 72 %%>;
   faqFactorTextTop = <%% -2, -2, -2, -2, -2 %%>;
-  faqFactorSize = <%% 16, 16, 16, 16, 16 %%>;
+  faqFactorSize = <%% 16, 16, 15, 14, 16 %%>;
   faqFactorWeight = <%% 600, 600, 600, 600, 600 %%>;
 
   finalPhotoHeight = <%% 300, 300, 300, 300, 300 %%>;
 
-  finalSize = <%% 28, 28, 28, 28, 28 %%>;
+  finalSize = <%% 28, 26, 25, 22, 28 %%>;
   finalWeight = <%% 700, 700, 700, 700, 700 %%>;
   finalLineHeight = <%% 1.35, 1.35, 1.35, 1.35, 1.35 %%>;
 
@@ -1653,6 +1651,8 @@ MiniAboutJs.prototype.insertFaqBox = function () {
   buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
   buttonVisual = <%% 16, 16, 16, 16, 16 %%>;
   buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
+
+  ruleBlockWidth = <%% 420, 330, 330, 300, 33 %%>;
 
   rulesBoxPaddingTop = <%% 100, 100, 100, 100, 100 %%>;
 
@@ -1725,7 +1725,7 @@ MiniAboutJs.prototype.insertFaqBox = function () {
         title: "취소 규정",
         description: [
           "디자이너와의 상담 시작 1일 전 결제 취소 가능합니다.",
-          "디자이너와의 상담이 시작된 이후에는 결제 취소가 불가합니다.",
+          <&& "디자이너와의 상담이 시작된 이후에는 결제 취소가 불가합니다." | "디자이너와의 상담이 시작된 이후에는 취소가 불가합니다." | "디자이너와의 상담이 시작된 이후에는 취소가 불가합니다." | "디자이너와의 상담이 시작된 이후에는 취소가 불가합니다." | "디자이너와의 상담이 시작된 이후에는 취소가 불가합니다." &&>,
         ]
       },
       {
@@ -1738,10 +1738,10 @@ MiniAboutJs.prototype.insertFaqBox = function () {
       {
         title: "유의 사항",
         description: [
-          "결제 완료 후, 공간 정보를 공유해주신 후에 디자인 제안 작업 및 상담이 가능합니다.",
+          "공간 정보를 공유해주신 후에 디자인 제안 및 상담이 가능합니다.",
           "디자이너 선택은 불가하며, 디자이너는 홈리에종 시스템 내에서 지정됩니다.",
           "디자이너의 디자인 제안서는 1회에 한정됩니다.",
-          "실측 서비스는 제공되지 않으며, 고객님에게 실측 안내 가이드를 제공해드립니다.",
+          "실측 서비스는 제공되지 않으며, 고객님에게 실측 가이드를 제공해드립니다.",
           "가구, 제작 상품은 제안하지 않습니다.",
           "배송 완료 후 배치 서비스를 제공하지 않습니다.",
         ]
