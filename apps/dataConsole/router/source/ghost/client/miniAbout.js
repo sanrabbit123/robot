@@ -57,14 +57,14 @@ MiniAboutJs.prototype.insertInitBox = function () {
   let blockBetween;
 
   blockBetween = <%% 18, 18, 18, 18, 3 %%>;
-  bottomMargin = <%% 200, 200, 180, 160, 200 %%>;
+  bottomMargin = <%% 200, 200, 180, 160, 45 %%>;
 
-  buttonBoxWidth = <%% 172, 164, 148, 138, 164 %%>;
-  buttonBoxHeight = <%% 58, 54, 50, 45, 54 %%>;
-  buttonBoxTop = <%% -108, -108, -100, -88, -108 %%>;
+  buttonBoxWidth = <%% 172, 164, 148, 138, 32 %%>;
+  buttonBoxHeight = <%% 58, 54, 50, 45, 11 %%>;
+  buttonBoxTop = <%% -108, -108, -100, -88, -18 %%>;
 
-  buttonTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), 0 %%>;
-  buttonSize = <%% 21, 20, 18, 16, 21 %%>;
+  buttonTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.3 %%>;
+  buttonSize = <%% 21, 20, 18, 16, 4 %%>;
   buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
   buttonLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
@@ -164,7 +164,7 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
   baseHeight = <%% 408, 368, 328, 288, 53.5 %%>;
   descriptionWidth = <%% 328, 200, 181, 168, 30 %%>;
 
-  mobileBaseHeight = 42;
+  mobileBaseHeight = 40;
 
   descriptionBoxPaddingTop = <%% 78, 68, 50, 45, 5 %%>;
 
@@ -196,13 +196,13 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
   belowLineTop = <%% 8, 8, 8, 8, 8 %%>;
   belowLineRight = <%% 186, 186, 186, 186, 186 %%>;
 
-  photo0Width = <%% 420, 266, 220, 231, 38 %%>;
-  photo1Width = <%% 300, 266, 220, 231, 38 %%>;
+  photo0Width = <%% 420, 266, 220, 231, 25.3 %%>;
+  photo1Width = <%% 300, 266, 220, 231, 25.4 %%>;
 
   whiteSize = <%% 32, 29, 26, 21, 4.5 %%>;
   whiteWeight = <%% 700, 700, 700, 700, 700 %%>;
   whiteLineHeight = <%% 1.35, 1.35, 1.35, 1.35, 1.35 %%>;
-  whiteBottom = <%% 50, 50, 50, 40, 15 %%>;
+  whiteBottom = <%% 50, 50, 50, 40, 14 %%>;
   whiteRight = <%% 50, 50, 50, 40, 0 %%>;
 
   contents = {
@@ -383,7 +383,7 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
       width: String(photo1Width) + ea,
       height: String(100) + '%',
       backgroundImage: "url('" + MiniAboutJs.binaryPath + "/" + contents.photo[1] + "')",
-      backgroundSize: desktop ? "auto 100%" : "100% auto",
+      backgroundSize: "auto 100%",
       backgroundPosition: "50% 50%",
     }
   });
@@ -396,7 +396,7 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
       width: withOut(photo0Width + photo1Width, ea),
       height: String(100) + '%',
       backgroundImage: "url('" + MiniAboutJs.binaryPath + "/" + contents.photo[2] + "')",
-      backgroundSize: "auto 100%",
+      backgroundSize: desktop ? "auto 100%" : "100% auto",
       backgroundPosition: "100% 50%",
     }
   });
@@ -460,7 +460,7 @@ MiniAboutJs.prototype.insertStrongBox = function (mother) {
   innerPaddingBottom = <%% (isMac() ? 34 : 33), (isMac() ? 28 : 27), (isMac() ? 24 : 23), (isMac() ? 20 : 19), 5 %%>;
   innerPaddingLeft = <%% 40, 33, 29, 24, 6 %%>;
 
-  titleSize = <%% 17, 16, 15, 13, 3.6 %%>;
+  titleSize = <%% 17, 16, 15, 13, 3.8 %%>;
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
   titleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
@@ -601,7 +601,7 @@ MiniAboutJs.prototype.insertSlideBox = function (mother) {
   let basePaddingBottom;
   let leftBase, totalWidth;
 
-  margin = <%% 68, 64, 56, 48, 6 %%>;
+  margin = <%% 68, 64, 56, 48, 8 %%>;
 
   photoLength = <%% 14, 14, 14, 14, 14 %%>;
 
@@ -609,7 +609,7 @@ MiniAboutJs.prototype.insertSlideBox = function (mother) {
   photoWidth = <%% 240, 210, 180, 150, 36 %%>;
   photoHeight = <%% 340, 310, 270, 230, 53 %%>;
 
-  basePaddingBottom = <%% 20, 20, 10, 8, 0 %%>;
+  basePaddingBottom = <%% 20, 20, 10, 8, 3 %%>;
 
   leftBase = <%% 176, 133, 114, 114, 30 %%>;
   totalWidth = <%% 8000, 8000, 8000, 8000, 8000 %%>;
@@ -748,11 +748,12 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
   let billSize, billWeight, billLineHeight;
   let billEaSize, billEaWeight, billEaBottom, billEaLeft;
   let billLineLeft, billLineWidth;
+  let mobileProcessPaddingSmall, mobileProcessPaddingBig;
 
   margin = <%% 68, 64, 56, 48, 6 %%>;
 
-  grayInnerPadding = <%% 40, 32, 28, 24, 4 %%>;
-  grayTop = <%% 14, 14, 14, 14, 14 %%>;
+  grayInnerPadding = <%% 40, 32, 28, 24, 4.8 %%>;
+  grayTop = <%% 14, 14, 14, 14, 2 %%>;
 
   titleSize = <%% 32, 31, 28, 24, 5.5 %%>;
   titleWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -769,25 +770,25 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
   descriptionPadding = <%% 36, 36, 32, 16, 5 %%>;
   descriptionLineTop = <%% 22, 22, 22, 20, 22 %%>;
 
-  aboutAreaTop = <%% 100, 100, 84, 70, 16 %%>;
-  processAreaTop = <%% 56, 52, 42, 32, 8 %%>;
-  billAreaTop = <%% 110, 92, 78, 60, 20 %%>;
+  aboutAreaTop = <%% 100, 100, 84, 70, 11 %%>;
+  processAreaTop = <%% 56, 52, 42, 32, 7 %%>;
+  billAreaTop = <%% 110, 92, 78, 60, 8 %%>;
   billAreaBottom = <%% 20, 10, 10, 8, 4 %%>;
 
   areaNameSize = <%% 16, 16, 15, 15, 3.5 %%>;
   areaNameWeight = <%% 700, 700, 700, 700, 700 %%>;
   areaNameLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  aboutGrayLeftBoxMargin = <%% 8, 8, 8, 8, 8 %%>;
+  aboutGrayLeftBoxMargin = <%% 8, 8, 8, 8, 1 %%>;
 
   aboutGrayLeftWidth = <%% 580, 520, 460, 370, 52 %%>;
-  aboutContentsHeight = <%% 250, 250, 230, 190, 25 %%>;
+  aboutContentsHeight = <%% 250, 250, 230, 190, 42 %%>;
 
   aboutBetween = <%% 36, 32, 28, 24, 36 %%>;
 
-  aboutGrayRightTitlePaddingTop = <%% 63, 42, 40, 35, 42 %%>;
+  aboutGrayRightTitlePaddingTop = <%% 63, 42, 40, 35, 5 %%>;
 
-  aboutTitleSize = <%% 25, 24, 22, 17, 4 %%>;
+  aboutTitleSize = <%% 25, 24, 22, 17, 4.2 %%>;
   aboutTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
   aboutTitleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
@@ -798,39 +799,42 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
   aboutDescriptionSize = <%% 14, 13, 12, 11, 3 %%>;
   aboutDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   aboutDescriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
-  aboutDescriptionMarginTop = <%% 60, 45, 22, 12, 45 %%>;
+  aboutDescriptionMarginTop = <%% 60, 45, 22, 12, 4.5 %%>;
 
-  processBlockWidth = <%% 120, 96, 84, 70, 80 %%>;
-  processBlockHeight = <%% 80, 72, 64, 52, 80 %%>;
+  processBlockWidth = <%% 120, 96, 84, 70, 20 %%>;
+  processBlockHeight = <%% 80, 72, 64, 52, 10 %%>;
 
-  processTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), 0 %%>;
-  processSize = <%% 15, 14, 13, 11, 14 %%>;
-  processWeight = <%% 600, 600, 600, 600, 600 %%>;
+  processTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), 2.2 %%>;
+  processSize = <%% 15, 14, 13, 11, 3.5 %%>;
+  processWeight = <%% 600, 600, 600, 600, 400 %%>;
   processLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
-  processBlankHeight = <%% 170, 154, 138, 114, 170 %%>;
-  processArrowWidth = <%% 43, 21, 18, 10, 43 %%>;
-  processArrowHeight = <%% 10, 10, 8, 6, 10 %%>;
-  processArrowTop = <%% 34, 30, 26, 22, 34 %%>;
+  processBlankHeight = <%% 170, 154, 138, 114, 17 %%>;
+  processArrowWidth = <%% 43, 21, 18, 10, 4 %%>;
+  processArrowHeight = <%% 10, 10, 8, 6, 1 %%>;
+  processArrowTop = <%% 34, 30, 26, 22, 3 %%>;
 
   processNoticeBoxRight = <%% 38, 28, 26, 20, 38 %%>;
   processNoticeBoxBottom = <%% 36, 29, 25, 22, 36 %%>;
 
-  processNoticeSize = <%% 12, 11, 11, 10, 12 %%>;
+  processNoticeSize = <%% 12, 11, 11, 10, 2.5 %%>;
   processNoticeWeight = <%% 500, 500, 500, 500, 500 %%>;
   processNoticeMarginBottom = <%% 6, 4, 3, 2, 1 %%>;
 
-  billSize = <%% 37, 37, 36, 30, 37 %%>;
+  mobileProcessPaddingSmall = 2.5;
+  mobileProcessPaddingBig = 6;
+
+  billSize = <%% 37, 37, 36, 30, 7 %%>;
   billWeight = <%% 600, 600, 600, 600, 600 %%>;
   billLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  billEaSize = <%% 16, 16, 16, 16, 16 %%>;
+  billEaSize = <%% 16, 16, 16, 16, 3 %%>;
   billEaWeight = <%% 400, 400, 400, 400, 400 %%>;
-  billEaBottom = <%% 6, 6, 6, 6, 6 %%>;
-  billEaLeft = <%% -57, -57, -57, -57, -57 %%>;
+  billEaBottom = <%% 6, 6, 6, 6, 1.5 %%>;
+  billEaLeft = <%% -57, -57, -57, -57, -11 %%>;
 
-  billLineLeft = <%% -56, -56, -56, -56, -56 %%>;
-  billLineWidth = <%% 230, 230, 225, 197, 230 %%>;
+  billLineLeft = <%% -56, -56, -56, -56, -10 %%>;
+  billLineWidth = <%% 230, 230, 225, 197, 42.9 %%>;
 
   contents = {
     title: {
@@ -1004,8 +1008,8 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
   aboutGrayLeft = createNode({
     mother: aboutGray,
     style: {
-      display: "inline-block",
-      width: String(aboutGrayLeftWidth) + ea,
+      display: desktop ? "inline-block" : "block",
+      width: desktop ? String(aboutGrayLeftWidth) + ea : String(100) + '%',
       height: String(aboutContentsHeight) + ea,
       marginRight: String(aboutBetween) + ea,
       verticalAlign: "top",
@@ -1095,10 +1099,10 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
   aboutGrayRight = createNode({
     mother: aboutGray,
     style: {
-      display: "inline-block",
-      width: withOut(aboutGrayLeftWidth + aboutBetween, ea),
+      display: desktop ? "inline-block" : "block",
+      width: desktop ? withOut(aboutGrayLeftWidth + aboutBetween, ea) : String(100) + '%',
       paddingTop: String(aboutGrayRightTitlePaddingTop) + ea,
-      height: String(aboutContentsHeight - aboutGrayRightTitlePaddingTop) + ea,
+      height: desktop ? String(aboutContentsHeight - aboutGrayRightTitlePaddingTop) + ea : "",
       verticalAlign: "top",
     }
   });
@@ -1113,7 +1117,7 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
       fontSize: String(aboutTitleSize) + ea,
       fontWeight: String(aboutTitleWeight),
       color: colorChip.black,
-      textAlign: "left",
+      textAlign: desktop ? "left" : "center",
       lineHeight: String(aboutTitleLineHeight),
     }
   });
@@ -1127,7 +1131,7 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
       fontWeight: String(aboutSubTitleWeight),
       fontFamily: "graphik",
       color: colorChip.black,
-      textAlign: "left",
+      textAlign: desktop ? "left" : "center",
       lineHeight: String(aboutSubTitleLineHeight),
     }
   });
@@ -1140,9 +1144,10 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
       fontSize: String(aboutDescriptionSize) + ea,
       fontWeight: String(aboutDescriptionWeight),
       color: colorChip.black,
-      textAlign: "left",
+      textAlign: desktop ? "left" : "center",
       marginTop: String(aboutDescriptionMarginTop) + ea,
       lineHeight: String(aboutDescriptionLineHeight),
+      marginBottom: desktop ? "" : String(2) + ea,
     },
     bold: {
       fontWeight: String(700),
@@ -1186,9 +1191,10 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
     processBlock = createNode({
       mother: processGray,
       style: {
-        display: "inline-block",
-        width: String(processBlockWidth) + ea,
+        display: desktop ? "inline-block" : "block",
+        width: desktop ? String(processBlockWidth) + ea : String(100) + '%',
         verticalAlign: "top",
+        marginBottom: desktop ? "" : String(2) + ea,
       }
     });
 
@@ -1196,86 +1202,131 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
       createNode({
         mother: processBlock,
         style: {
-          display: "flex",
-          justifyContent: "center",
+          display: desktop ? "flex" : "block",
+          position: "relative",
+          justifyContent: desktop ? "center" : "right",
           alignItems: "center",
-          textAlign: "center",
+          textAlign: desktop ? "center" : "right",
           height: String(processBlockHeight) + ea,
-          background: contents.process.green.includes(i) ? colorChip.gradientGreen : colorChip.white,
+          background: desktop ? (contents.process.green.includes(i) ? colorChip.gradientGreen : colorChip.white) : colorChip.white,
           borderRadius: String(3) + "px",
-          marginBottom: String(j !== contents.process.matrix[i].length - 1 ? 10 : 0) + ea,
+          marginBottom: desktop ? String(j !== contents.process.matrix[i].length - 1 ? 10 : 0) + ea : "",
         },
         children: [
           {
-            text: contents.process.matrix[i][j].join("\n"),
+            text: desktop ? contents.process.matrix[i][j].join("\n") : contents.process.matrix[i][j].join(" "),
             style: {
-              display: "block",
+              display: desktop ? "block" : "inline-block",
               position: "relative",
-              textAlign: "center",
+              textAlign: desktop ? "center" : "right",
               top: String(processTextTop) + ea,
               fontSize: String(processSize) + ea,
               fontWeight: String(processWeight),
-              color: contents.process.green.includes(i) ? colorChip.white : colorChip.black,
+              color: desktop ? (contents.process.green.includes(i) ? colorChip.white : colorChip.black) : (contents.process.green.includes(i) ? colorChip.green : colorChip.black),
               lineHeight: String(processLineHeight),
+              paddingRight: desktop ? "" : String(mobileProcessPaddingBig) + ea,
+              paddingLeft: desktop ? "" : String(mobileProcessPaddingSmall) + ea,
+              background: desktop ? "" : colorChip.white,
+              zIndex: mobile ? String(1) : "",
             }
           }
         ]
-      })
+      });
+      if (mobile) {
+        break;
+      }
     }
 
-    if (i !== processLength - 1) {
-      processBlank = createNode({
-        mother: processGray,
+    if (desktop) {
+      if (i !== processLength - 1) {
+        processBlank = createNode({
+          mother: processGray,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: "calc(calc(100% - " + String(processBlockWidth * processLength) + ea + ") / " + String(processLength - 1) + ")",
+            height: String(processBlankHeight) + ea,
+            verticalAlign: "top",
+          }
+        });
+
+        createNode({
+          mother: processBlank,
+          mode: "svg",
+          source: svgMaker.horizontalArrow(processArrowWidth, processArrowHeight),
+          style: {
+            position: "relative",
+            top: String(processArrowTop) + ea,
+            width: String(processArrowWidth) + ea,
+            height: String(processArrowHeight) + ea,
+          }
+        });
+      }
+
+    } else {
+
+      createNode({
+        mother: processBlock.firstChild,
+        text: String(i + 1),
         style: {
           display: "inline-block",
-          position: "relative",
-          width: "calc(calc(100% - " + String(processBlockWidth * processLength) + ea + ") / " + String(processLength - 1) + ")",
-          height: String(processBlankHeight) + ea,
-          verticalAlign: "top",
+          position: "absolute",
+          textAlign: "left",
+          top: String(processTextTop) + ea,
+          left: String(0),
+          fontSize: String(processSize) + ea,
+          fontWeight: String(700),
+          color: desktop ? (contents.process.green.includes(i) ? colorChip.white : colorChip.black) : (contents.process.green.includes(i) ? colorChip.green : colorChip.black),
+          lineHeight: String(processLineHeight),
+          paddingLeft: String(mobileProcessPaddingBig) + ea,
+          paddingRight: String(mobileProcessPaddingSmall) + ea,
+          background: colorChip.white,
+          zIndex: String(1),
         }
       });
 
       createNode({
-        mother: processBlank,
-        mode: "svg",
-        source: svgMaker.horizontalArrow(processArrowWidth, processArrowHeight),
+        mother: processBlock.firstChild,
         style: {
-          position: "relative",
-          top: String(processArrowTop) + ea,
-          width: String(processArrowWidth) + ea,
-          height: String(processArrowHeight) + ea,
+          position: "absolute",
+          display: "block",
+          top: String(0),
+          left: String(0),
+          width: String(100) + '%',
+          height: String(45) + '%',
+          borderBottom: "1px solid " + colorChip.gray3,
+          zIndex: String(0),
         }
-      });
+      })
 
     }
+
   }
 
-  processNotice = createNode({
-    mother: processGray,
-    style: {
-      position: "absolute",
-      right: String(processNoticeBoxRight) + ea,
-      bottom: String(processNoticeBoxBottom) + ea,
-      textAlign: "right",
-    }
-  })
-
-  for (let notice of contents.process.notice) {
-
-    createNode({
-      mother: processNotice,
-      text: "* " + notice,
+  if (desktop) {
+    processNotice = createNode({
+      mother: processGray,
       style: {
-        fontSize: String(processNoticeSize) + ea,
-        fontWeight: String(processNoticeWeight),
-        color: colorChip.green,
-        marginBottom: String(processNoticeMarginBottom) + ea,
+        position: "absolute",
+        right: String(processNoticeBoxRight) + ea,
+        bottom: String(processNoticeBoxBottom) + ea,
         textAlign: "right",
       }
     })
-
+    for (let notice of contents.process.notice) {
+      createNode({
+        mother: processNotice,
+        text: "* " + notice,
+        style: {
+          fontSize: String(processNoticeSize) + ea,
+          fontWeight: String(processNoticeWeight),
+          color: colorChip.green,
+          marginBottom: String(processNoticeMarginBottom) + ea,
+          textAlign: "right",
+        }
+      });
+    }
   }
-
 
   // bill area
 
@@ -1284,7 +1335,7 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
     style: {
       display: "block",
       position: "relative",
-      textAlign: "right",
+      textAlign: desktop ? "right" : "center",
       marginTop: String(billAreaTop) + ea,
       marginBottom: String(billAreaBottom) + ea,
     },
@@ -1297,8 +1348,9 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
           color: colorChip.green,
           display: "inline-block",
           position: "relative",
-          textAlign: "right",
+          textAlign: desktop ? "right" : "center",
           lineHeight: String(billLineHeight),
+          marginLeft: desktop ? "" : String(8) + ea,
         },
         children: [
           {
