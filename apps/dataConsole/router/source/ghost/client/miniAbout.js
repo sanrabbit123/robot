@@ -56,7 +56,7 @@ MiniAboutJs.prototype.insertInitBox = function () {
   let buttonSize, buttonWeight, buttonLineHeight, buttonTextTop;
   let blockBetween;
 
-  blockBetween = <%% 18, 18, 18, 18, 18 %%>;
+  blockBetween = <%% 18, 18, 18, 18, 3 %%>;
   bottomMargin = <%% 200, 200, 180, 160, 200 %%>;
 
   buttonBoxWidth = <%% 172, 164, 148, 138, 164 %%>;
@@ -158,33 +158,36 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
   let belowLineWidth, belowLineTop, belowLineRight;
   let photo0Width, photo1Width;
   let whiteSize, whiteWeight, whiteLineHeight, whiteBottom, whiteRight;
+  let mobileBaseHeight;
 
   margin = <%% 68, 64, 56, 45, 6 %%>;
-  baseHeight = <%% 408, 368, 328, 288, 328 %%>;
+  baseHeight = <%% 408, 368, 328, 288, 53.5 %%>;
   descriptionWidth = <%% 328, 200, 181, 168, 30 %%>;
 
-  descriptionBoxPaddingTop = <%% 78, 68, 50, 45, 12 %%>;
+  mobileBaseHeight = 42;
 
-  titleSize = <%% 41, 35, 32, 28, 6 %%>;
+  descriptionBoxPaddingTop = <%% 78, 68, 50, 45, 5 %%>;
+
+  titleSize = <%% 41, 35, 32, 28, 7 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
 
   subTitleSize = <%% 15, 15, 14, 12, 3 %%>;
   subTitleWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  subTitleMarginTop = <%% 3, 3, 3, 3, 3 %%>;
-  subTitlePaddingRight = <%% 3, 3, 3, 3, 3 %%>;
+  subTitleMarginTop = <%% 3, 3, 3, 3, 0 %%>;
+  subTitlePaddingRight = <%% 3, 3, 3, 3, 0 %%>;
 
   subTitleLineWidth = <%% 50, 22, 16, 20, 27 %%>;
   subTitleLineRight = <%% 136, 136, 128, 110, 131 %%>;
   subTitleLineTop = <%% 10, 10, 10, 8, 10 %%>;
 
-  descriptionSize = <%% 15, 15, 14, 12, 3 %%>;
+  descriptionSize = <%% 15, 15, 14, 12, 3.5 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
-  descriptionMarginTop = <%% 40, 32, 32, 32, 32 %%>;
+  descriptionMarginTop = <%% 40, 32, 32, 32, 5 %%>;
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  belowSize = <%% 11, 11, 11, 10, 11 %%>;
+  belowSize = <%% 11, 11, 11, 10, 3 %%>;
   belowWeight = <%% 400, 400, 400, 400, 400 %%>;
   belowMarginTop = <%% 94, 83, 73, 60, 66 %%>;
   belowPaddingRight = <%% 3, 3, 3, 3, 3 %%>;
@@ -193,23 +196,23 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
   belowLineTop = <%% 8, 8, 8, 8, 8 %%>;
   belowLineRight = <%% 186, 186, 186, 186, 186 %%>;
 
-  photo0Width = <%% 420, 266, 220, 231, 42 %%>;
-  photo1Width = <%% 300, 266, 220, 231, 30 %%>;
+  photo0Width = <%% 420, 266, 220, 231, 38 %%>;
+  photo1Width = <%% 300, 266, 220, 231, 38 %%>;
 
-  whiteSize = <%% 32, 29, 26, 21, 28 %%>;
+  whiteSize = <%% 32, 29, 26, 21, 4.5 %%>;
   whiteWeight = <%% 700, 700, 700, 700, 700 %%>;
   whiteLineHeight = <%% 1.35, 1.35, 1.35, 1.35, 1.35 %%>;
-  whiteBottom = <%% 50, 50, 50, 40, 50 %%>;
-  whiteRight = <%% 50, 50, 50, 40, 50 %%>;
+  whiteBottom = <%% 50, 50, 50, 40, 15 %%>;
+  whiteRight = <%% 50, 50, 50, 40, 0 %%>;
 
   contents = {
     title: "무드 체인지",
     subTitle: "HomeLiaison Mini",
     description: [
-      "<b%패브릭, 액자, 소품%b>만 교체해도",
-      "다른 집에 온 것 같은 효과!",
-      "가격 부담은 줄이고, <b%스타일링",
-      "효과는 높이는 경험%b>을 누려보세요.",
+      (desktop ? "<b%패브릭, 액자, 소품%b>만 교체해도" : "<b%패브릭, 액자, 소품%b>만 교체해도 다른 집에 온 것"),
+      (desktop ? "다른 집에 온 것 같은 효과!" : "같은 효과! 가격 부담은 줄이고, <b%스타일링 효과는"),
+      (desktop ? "가격 부담은 줄이고, <b%스타일링" : "높이는 경험%b>을 누려보세요."),
+      (desktop ? "효과는 높이는 경험%b>을 누려보세요." : ""),
     ],
     below: "mood - change : HomeLiaison mini",
     photo: [
@@ -218,8 +221,8 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
       "init2.jpg",
     ],
     black: [
-      "지금 사용하고 있는 가구는 계속 쓰고 싶고",
-      "가구 교체 비용이 아깝다면?",
+      (desktop ? "지금 사용하고 있는 가구는 계속 쓰고 싶고" : "사용하던 가구는 계속 쓰고 싶고"),
+      (desktop ? "가구 교체 비용은 아깝다면?" : "교체 비용은 아깝다면?"),
     ],
   };
 
@@ -231,18 +234,19 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
       paddingTop: String(margin) + ea,
       paddingBottom: String(margin) + ea,
       paddingLeft: String(margin) + ea,
-      width: withOut(margin, ea),
+      paddingRight: desktop ? "" : String(margin) + ea,
+      width: desktop ? withOut(margin, ea) : withOut(margin * 2, ea),
     }
   });
 
   descriptionBox = createNode({
     mother: base,
     style: {
-      display: "inline-block",
+      display: desktop ? "inline-block" : "block",
       position: "relative",
       height: String(baseHeight - descriptionBoxPaddingTop) + ea,
-      width: String(descriptionWidth) + ea,
-      marginRight: String(margin) + ea,
+      width: desktop ? String(descriptionWidth) + ea : String(100) + '%',
+      marginRight: desktop ? String(margin) + ea : "",
       verticalAlign: "top",
       paddingTop: String(descriptionBoxPaddingTop) + ea,
       opacity: String(0),
@@ -260,8 +264,8 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
       fontSize: String(titleSize) + ea,
       fontWeight: String(titleWeight),
       color: colorChip.black,
-      textAlign: "right",
-      top: String(isMac() ? 0 : 3) + ea,
+      textAlign: desktop ? "right" : "center",
+      top: desktop ? String(isMac() ? 0 : 3) + ea : "",
     }
   });
 
@@ -275,13 +279,14 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
       fontWeight: String(subTitleWeight),
       fontFamily: "graphik",
       color: colorChip.black,
-      textAlign: "right",
+      textAlign: desktop ? "right" : "center",
       marginTop: String(subTitleMarginTop) + ea,
-      paddingRight: String(subTitlePaddingRight) + ea,
+      paddingRight: desktop ? String(subTitlePaddingRight) + ea : "",
     },
     children: [
       {
         style: {
+          display: desktop ? "block" : "none",
           position: "absolute",
           width: String(subTitleLineWidth) + ea,
           height: String(0),
@@ -304,7 +309,7 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
       color: colorChip.black,
       lineHeight: String(descriptionLineHeight),
       marginTop: String(descriptionMarginTop) + ea,
-      textAlign: "right",
+      textAlign: desktop ? "right" : "center",
     },
     bold: {
       fontWeight: String(descriptionBoldWeight),
@@ -316,15 +321,15 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
     mother: descriptionBox,
     text: contents.below,
     style: {
-      display: "block",
+      display: desktop ? "block" : "none",
       position: "relative",
       fontSize: String(belowSize) + ea,
       fontWeight: String(belowWeight),
       fontFamily: "graphik",
       color: colorChip.black,
-      textAlign: "right",
+      textAlign: desktop ? "right" : "center",
       marginTop: String(belowMarginTop) + ea,
-      paddingRight: String(belowPaddingRight) + ea,
+      paddingRight: desktop ? String(belowPaddingRight) + ea : "",
     },
     children: [
       {
@@ -346,11 +351,12 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
   photoBox = createNode({
     mother: base,
     style: {
-      display: "inline-block",
+      display: desktop ? "inline-block" : "block",
       position: "relative",
-      height: String(baseHeight) + ea,
-      width: withOut(descriptionWidth + margin, ea),
+      height: desktop ? String(baseHeight) + ea : String(mobileBaseHeight) + ea,
+      width: desktop ? withOut(descriptionWidth + margin, ea) : String(100) + '%',
       overflow: "hidden",
+      borderRadius: desktop ? "" : String(5) + "px",
       borderTopLeftRadius: String(5) + "px",
       borderBottomLeftRadius: String(5) + "px",
     }
@@ -377,7 +383,7 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
       width: String(photo1Width) + ea,
       height: String(100) + '%',
       backgroundImage: "url('" + MiniAboutJs.binaryPath + "/" + contents.photo[1] + "')",
-      backgroundSize: "auto 100%",
+      backgroundSize: desktop ? "auto 100%" : "100% auto",
       backgroundPosition: "50% 50%",
     }
   });
@@ -416,12 +422,13 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
       position: "absolute",
       fontSize: String(whiteSize) + ea,
       fontWeight: String(whiteWeight),
-      textAlign: "right",
+      textAlign: desktop ? "right" : "center",
       lineHeight: String(whiteLineHeight),
       color: colorChip.white,
       bottom: String(whiteBottom) + ea,
       right: String(whiteRight) + ea,
       opacity: String(0),
+      width: desktop ? "" : String(100) + '%',
       transform: "translateY(10px)",
       animation: "fadeupmiddle 0.6s 2s ease forwards",
     }
@@ -447,25 +454,25 @@ MiniAboutJs.prototype.insertStrongBox = function (mother) {
   let iconVisual;
 
   margin = <%% 68, 64, 56, 48, 6 %%>;
-  betweenWhite = <%% 10, 10, 10, 10, 10 %%>;
+  betweenWhite = <%% 10, 10, 10, 10, 2 %%>;
 
-  innerPaddingTop = <%% (isMac() ? 32 : 33), (isMac() ? 26 : 27), (isMac() ? 22 : 23), (isMac() ? 18 : 19), 6 %%>;
-  innerPaddingBottom = <%% (isMac() ? 34 : 33), (isMac() ? 28 : 27), (isMac() ? 24 : 23), (isMac() ? 20 : 19), 34 %%>;
-  innerPaddingLeft = <%% 40, 33, 29, 24, 40 %%>;
+  innerPaddingTop = <%% (isMac() ? 32 : 33), (isMac() ? 26 : 27), (isMac() ? 22 : 23), (isMac() ? 18 : 19), 5 %%>;
+  innerPaddingBottom = <%% (isMac() ? 34 : 33), (isMac() ? 28 : 27), (isMac() ? 24 : 23), (isMac() ? 20 : 19), 5 %%>;
+  innerPaddingLeft = <%% 40, 33, 29, 24, 6 %%>;
 
-  titleSize = <%% 17, 16, 15, 13, 16 %%>;
+  titleSize = <%% 17, 16, 15, 13, 3.6 %%>;
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
   titleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  descriptionSize = <%% 13, 12, 12, 10, 12 %%>;
+  descriptionSize = <%% 13, 12, 12, 10, 3 %%>;
   descriptionWeight = <%% 300, 300, 300, 300, 300 %%>;
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
-  titleBetween = <%% 12, 12, 10, 10, 10 %%>;
+  titleBetween = <%% 12, 12, 10, 10, 2.5 %%>;
 
-  iconWidth = <%% 30, 26, 22, 18, 30 %%>;
-  iconBottom = <%% 38, 34, 29, 25, 38 %%>;
-  iconVisual = <%% 1, 5, 5, 5, 0 %%>;
+  iconWidth = <%% 30, 26, 22, 18, 6.4 %%>;
+  iconBottom = <%% 38, 34, 29, 25, 6 %%>;
+  iconVisual = <%% 1, 5, 5, 5, 1 %%>;
 
   contents = [
     {
@@ -514,8 +521,9 @@ MiniAboutJs.prototype.insertStrongBox = function (mother) {
       paddingTop: String(margin) + ea,
       paddingBottom: String(margin) + ea,
       paddingLeft: String(margin) + ea,
-      width: withOut(margin, ea),
-      background: colorChip.gray2,
+      paddingRight: desktop ? "" : String(margin) + ea,
+      width: desktop ? withOut(margin, ea) : withOut(margin * 2, ea),
+      background: desktop ? colorChip.gray2 : colorChip.gray3,
     }
   });
 
@@ -523,12 +531,13 @@ MiniAboutJs.prototype.insertStrongBox = function (mother) {
     createNode({
       mother: base,
       style: {
-        display: "inline-block",
+        display: desktop ? "inline-block" : "block",
         position: "relative",
         paddingTop: String(innerPaddingTop) + ea,
         paddingBottom: String(innerPaddingBottom) + ea,
-        width: "calc(calc(calc(100% - " + String(margin) + ea + ") - " + String(betweenWhite * (contents.length - 1)) + ea + ") / " + String(contents.length) + ")",
-        marginRight: String(betweenWhite) + ea,
+        width: desktop ? "calc(calc(calc(100% - " + String(margin) + ea + ") - " + String(betweenWhite * (contents.length - 1)) + ea + ") / " + String(contents.length) + ")" : String(100) + '%',
+        marginRight: desktop ? String(betweenWhite) + ea : "",
+        marginBottom: desktop ? "" : String(betweenWhite) + ea,
         background: colorChip.white,
         borderRadius: String(5) + "px",
         boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
@@ -596,13 +605,13 @@ MiniAboutJs.prototype.insertSlideBox = function (mother) {
 
   photoLength = <%% 14, 14, 14, 14, 14 %%>;
 
-  photoMargin = <%% 12, 12, 10, 10, 12 %%>;
-  photoWidth = <%% 240, 210, 180, 150, 240 %%>;
-  photoHeight = <%% 340, 310, 270, 230, 340 %%>;
+  photoMargin = <%% 12, 12, 10, 10, 1.5 %%>;
+  photoWidth = <%% 240, 210, 180, 150, 36 %%>;
+  photoHeight = <%% 340, 310, 270, 230, 53 %%>;
 
-  basePaddingBottom = <%% 20, 20, 10, 8, 20 %%>;
+  basePaddingBottom = <%% 20, 20, 10, 8, 0 %%>;
 
-  leftBase = <%% 176, 133, 114, 114, 176 %%>;
+  leftBase = <%% 176, 133, 114, 114, 30 %%>;
   totalWidth = <%% 8000, 8000, 8000, 8000, 8000 %%>;
 
   interval = 3 * 1000;
@@ -742,30 +751,30 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
 
   margin = <%% 68, 64, 56, 48, 6 %%>;
 
-  grayInnerPadding = <%% 40, 32, 28, 24, 32 %%>;
+  grayInnerPadding = <%% 40, 32, 28, 24, 4 %%>;
   grayTop = <%% 14, 14, 14, 14, 14 %%>;
 
-  titleSize = <%% 32, 31, 28, 24, 32 %%>;
+  titleSize = <%% 32, 31, 28, 24, 5.5 %%>;
   titleWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  subTitleSize = <%% 16, 16, 15, 14, 16 %%>;
+  subTitleSize = <%% 16, 16, 15, 14, 3.5 %%>;
   subTitleWeight = <%% 400, 400, 400, 400, 400 %%>;
   subTitleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  descriptionMarginTop = <%% 30, 30, 30, 28, 30 %%>;
-  descriptionSize = <%% 16, 16, 15, 13, 16 %%>;
+  descriptionMarginTop = <%% 30, 30, 30, 28, 5 %%>;
+  descriptionSize = <%% 16, 16, 15, 13, 3 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
-  descriptionPadding = <%% 36, 36, 32, 16, 36 %%>;
+  descriptionPadding = <%% 36, 36, 32, 16, 5 %%>;
   descriptionLineTop = <%% 22, 22, 22, 20, 22 %%>;
 
-  aboutAreaTop = <%% 100, 100, 84, 70, 100 %%>;
-  processAreaTop = <%% 56, 52, 42, 32, 56 %%>;
-  billAreaTop = <%% 110, 92, 78, 60, 110 %%>;
-  billAreaBottom = <%% 20, 10, 10, 8, 20 %%>;
+  aboutAreaTop = <%% 100, 100, 84, 70, 16 %%>;
+  processAreaTop = <%% 56, 52, 42, 32, 8 %%>;
+  billAreaTop = <%% 110, 92, 78, 60, 20 %%>;
+  billAreaBottom = <%% 20, 10, 10, 8, 4 %%>;
 
-  areaNameSize = <%% 16, 16, 15, 15, 16 %%>;
+  areaNameSize = <%% 16, 16, 15, 15, 3.5 %%>;
   areaNameWeight = <%% 700, 700, 700, 700, 700 %%>;
   areaNameLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
@@ -778,15 +787,15 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
 
   aboutGrayRightTitlePaddingTop = <%% 63, 42, 40, 35, 42 %%>;
 
-  aboutTitleSize = <%% 25, 24, 22, 17, 25 %%>;
+  aboutTitleSize = <%% 25, 24, 22, 17, 4 %%>;
   aboutTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
   aboutTitleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  aboutSubTitleSize = <%% 17, 16, 14, 11, 4 %%>;
+  aboutSubTitleSize = <%% 17, 16, 14, 11, 3 %%>;
   aboutSubTitleWeight = <%% 400, 400, 400, 400, 400 %%>;
   aboutSubTitleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  aboutDescriptionSize = <%% 14, 13, 12, 11, 14 %%>;
+  aboutDescriptionSize = <%% 14, 13, 12, 11, 3 %%>;
   aboutDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   aboutDescriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
   aboutDescriptionMarginTop = <%% 60, 45, 22, 12, 45 %%>;
@@ -899,7 +908,7 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
       textAlign: "center",
       lineHeight: String(titleLineHeight),
       position: "relative",
-      top: String(isMac() ? 0 : 3) + ea,
+      top: desktop ? String(isMac() ? 0 : 3) + ea : "",
     }
   });
 
@@ -928,6 +937,7 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
     children: [
       {
         style: {
+          display: desktop ? "block" : "none",
           position: "absolute",
           top: String(0),
           left: String(0),
@@ -942,7 +952,7 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
           fontSize: String(descriptionSize) + ea,
           fontWeight: String(descriptionWeight),
           color: colorChip.black,
-          display: "inline-block",
+          display: desktop ? "inline-block" : "block",
           position: "relative",
           textAlign: "center",
           lineHeight: String(descriptionLineHeight),
@@ -950,6 +960,7 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
           paddingRight: String(descriptionPadding) + ea,
           background: colorChip.white,
           zIndex: String(1),
+          width: desktop ? "" : withOut(descriptionPadding * 2, ea),
         },
         bold: {
           fontWeight: String(400),
