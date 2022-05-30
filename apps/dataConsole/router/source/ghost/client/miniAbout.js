@@ -63,7 +63,7 @@ MiniAboutJs.prototype.insertInitBox = function () {
   buttonBoxHeight = <%% 58, 54, 50, 45, 54 %%>;
   buttonBoxTop = <%% -108, -108, -100, -88, -108 %%>;
 
-  buttonTextTop = <%% -2, -2, -2, -2, -2 %%>;
+  buttonTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), 0 %%>;
   buttonSize = <%% 21, 20, 18, 16, 21 %%>;
   buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
   buttonLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
@@ -165,7 +165,7 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
 
   descriptionBoxPaddingTop = <%% 78, 68, 50, 45, 12 %%>;
 
-  titleSize = <%% 41, 35, 32, 29, 6 %%>;
+  titleSize = <%% 41, 35, 32, 28, 6 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
 
   subTitleSize = <%% 15, 15, 14, 12, 3 %%>;
@@ -178,7 +178,7 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
   subTitleLineRight = <%% 136, 136, 128, 110, 131 %%>;
   subTitleLineTop = <%% 10, 10, 10, 8, 10 %%>;
 
-  descriptionSize = <%% 15, 15, 14, 13, 3 %%>;
+  descriptionSize = <%% 15, 15, 14, 12, 3 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
   descriptionMarginTop = <%% 40, 32, 32, 32, 32 %%>;
@@ -186,7 +186,7 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
 
   belowSize = <%% 11, 11, 11, 10, 11 %%>;
   belowWeight = <%% 400, 400, 400, 400, 400 %%>;
-  belowMarginTop = <%% 94, 83, 73, 53, 66 %%>;
+  belowMarginTop = <%% 94, 83, 73, 60, 66 %%>;
   belowPaddingRight = <%% 3, 3, 3, 3, 3 %%>;
 
   belowLineWidth = <%% 142, 142, 142, 142, 142 %%>;
@@ -261,6 +261,7 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
       fontWeight: String(titleWeight),
       color: colorChip.black,
       textAlign: "right",
+      top: String(isMac() ? 0 : 3) + ea,
     }
   });
 
@@ -448,8 +449,8 @@ MiniAboutJs.prototype.insertStrongBox = function (mother) {
   margin = <%% 68, 64, 56, 48, 6 %%>;
   betweenWhite = <%% 10, 10, 10, 10, 10 %%>;
 
-  innerPaddingTop = <%% 32, 26, 22, 18, 6 %%>;
-  innerPaddingBottom = <%% 34, 28, 24, 20, 34 %%>;
+  innerPaddingTop = <%% (isMac() ? 32 : 33), (isMac() ? 26 : 27), (isMac() ? 22 : 23), (isMac() ? 18 : 19), 6 %%>;
+  innerPaddingBottom = <%% (isMac() ? 34 : 33), (isMac() ? 28 : 27), (isMac() ? 24 : 23), (isMac() ? 20 : 19), 34 %%>;
   innerPaddingLeft = <%% 40, 33, 29, 24, 40 %%>;
 
   titleSize = <%% 17, 16, 15, 13, 16 %%>;
@@ -744,7 +745,7 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
   grayInnerPadding = <%% 40, 32, 28, 24, 32 %%>;
   grayTop = <%% 14, 14, 14, 14, 14 %%>;
 
-  titleSize = <%% 32, 31, 28, 25, 32 %%>;
+  titleSize = <%% 32, 31, 28, 24, 32 %%>;
   titleWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
@@ -753,14 +754,14 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
   subTitleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
   descriptionMarginTop = <%% 30, 30, 30, 28, 30 %%>;
-  descriptionSize = <%% 16, 16, 15, 14, 16 %%>;
+  descriptionSize = <%% 16, 16, 15, 13, 16 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
   descriptionPadding = <%% 36, 36, 32, 16, 36 %%>;
   descriptionLineTop = <%% 22, 22, 22, 20, 22 %%>;
 
   aboutAreaTop = <%% 100, 100, 84, 70, 100 %%>;
-  processAreaTop = <%% 56, 52, 42, 36, 56 %%>;
+  processAreaTop = <%% 56, 52, 42, 32, 56 %%>;
   billAreaTop = <%% 110, 92, 78, 60, 110 %%>;
   billAreaBottom = <%% 20, 10, 10, 8, 20 %%>;
 
@@ -793,7 +794,7 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
   processBlockWidth = <%% 120, 96, 84, 70, 80 %%>;
   processBlockHeight = <%% 80, 72, 64, 52, 80 %%>;
 
-  processTextTop = <%% -1, -1, -1, -1, -1 %%>;
+  processTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), 0 %%>;
   processSize = <%% 15, 14, 13, 11, 14 %%>;
   processWeight = <%% 600, 600, 600, 600, 600 %%>;
   processLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
@@ -810,7 +811,7 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
   processNoticeWeight = <%% 500, 500, 500, 500, 500 %%>;
   processNoticeMarginBottom = <%% 6, 4, 3, 2, 1 %%>;
 
-  billSize = <%% 37, 37, 36, 34, 37 %%>;
+  billSize = <%% 37, 37, 36, 30, 37 %%>;
   billWeight = <%% 600, 600, 600, 600, 600 %%>;
   billLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
@@ -820,7 +821,7 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
   billEaLeft = <%% -57, -57, -57, -57, -57 %%>;
 
   billLineLeft = <%% -56, -56, -56, -56, -56 %%>;
-  billLineWidth = <%% 230, 230, 230, 216, 230 %%>;
+  billLineWidth = <%% 230, 230, 225, 197, 230 %%>;
 
   contents = {
     title: {
@@ -897,6 +898,8 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
       display: "block",
       textAlign: "center",
       lineHeight: String(titleLineHeight),
+      position: "relative",
+      top: String(isMac() ? 0 : 3) + ea,
     }
   });
 
@@ -1094,6 +1097,8 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
     text: contents.about.title.main,
     style: {
       display: "block",
+      position: "relative",
+      top: String(isMac() ? 0 : 2) + ea,
       fontSize: String(aboutTitleSize) + ea,
       fontWeight: String(aboutTitleWeight),
       color: colorChip.black,
@@ -1340,13 +1345,13 @@ MiniAboutJs.prototype.insertWhyBox = function () {
   let arrowBaseWidth, arrowHeight;
   let arrowTop;
 
-  basePadding = <%% 110, 90, 85, 80, 11 %%>;
-  leftWidth = <%% 400, 300, 280, 240, 40 %%>;
+  basePadding = <%% 110, 90, 85, 75, 11 %%>;
+  leftWidth = <%% 400, 300, 280, 160, 40 %%>;
 
-  minusPadding = <%% -50, -50, -50, -50, -50 %%>;
+  minusPadding = <%% -50, -50, -48, -30, -50 %%>;
   blockBetween = <%% 40, 40, 40, 40, 40 %%>;
 
-  titleSize = <%% 21, 20, 18, 16, 21 %%>;
+  titleSize = <%% 21, 20, 18, 15, 21 %%>;
   titleWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
@@ -1358,13 +1363,13 @@ MiniAboutJs.prototype.insertWhyBox = function () {
   firstBlockMargin = <%% 30, 30, 30, 30, 30 %%>;
   secondBlockMargin = <%% 25, 25, 25, 25, 25 %%>;
 
-  secondPaddingTop = <%% 15, 15, 13, 13, 15 %%>;
-  secondPaddingBottom = <%% 20, 20, 18, 18, 20 %%>;
+  secondPaddingTop = <%% (isMac() ? 15 : 17), (isMac() ? 15 : 17), (isMac() ? 13 : 15), (isMac() ? 13 : 15), 15 %%>;
+  secondPaddingBottom = <%% (isMac() ? 20 : 18), (isMac() ? 20 : 18), (isMac() ? 18 : 16), (isMac() ? 18 : 16), 20 %%>;
   secondPaddingLeft = <%% 30, 30, 24, 22, 30 %%>;
-  secondTab = <%% 310, 194, 145, 130, 31 %%>;
+  secondTab = <%% 310, 194, 145, 126, 31 %%>;
 
-  arrowTop = <%% 24, 24, 24, 24, 24 %%>;
-  arrowBaseWidth = <%% 36, 36, 36, 36, 36 %%>;
+  arrowTop = <%% (isMac() ? 24 : 23), (isMac() ? 24 : 23), (isMac() ? 24 : 23), (isMac() ? 21 : 20), 24 %%>;
+  arrowBaseWidth = <%% 36, 36, 34, 16, 36 %%>;
   arrowHeight = <%% 10, 10, 10, 10, 10 %%>;
 
   contents = [
@@ -1620,48 +1625,48 @@ MiniAboutJs.prototype.insertFaqBox = function () {
 
   bottomMargin = <%% 200, 200, 200, 200, 200 %%>;
   margin = <%% 68, 64, 56, 48, 6 %%>;
-  basePadding = <%% 110, 90, 85, 80, 11 %%>;
+  basePadding = <%% 110, 90, 85, 75, 11 %%>;
   blockBetween = <%% 10, 10, 10, 10, 10 %%>;
 
-  faqSize = <%% 36, 36, 36, 36, 36 %%>;
+  faqSize = <%% 36, 36, 32, 27, 36 %%>;
   faqWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  faqBoxMarginTop = <%% 42, 42, 42, 42, 42 %%>;
+  faqBoxMarginTop = <%% 42, 42, 40, 32, 42 %%>;
 
-  faqFactorHeight = <%% 72, 68, 64, 56, 72 %%>;
-  faqFactorTextTop = <%% -2, -2, -2, -2, -2 %%>;
-  faqFactorSize = <%% 16, 16, 15, 14, 16 %%>;
+  faqFactorHeight = <%% 72, 68, 64, 50, 72 %%>;
+  faqFactorTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), 0 %%>;
+  faqFactorSize = <%% 16, 16, 15, 13, 16 %%>;
   faqFactorWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-  finalPhotoHeight = <%% 300, 300, 300, 300, 300 %%>;
+  finalPhotoHeight = <%% 300, 300, 280, 240, 300 %%>;
 
-  finalSize = <%% 28, 26, 25, 22, 28 %%>;
+  finalSize = <%% 28, 26, 24, 21, 28 %%>;
   finalWeight = <%% 700, 700, 700, 700, 700 %%>;
   finalLineHeight = <%% 1.35, 1.35, 1.35, 1.35, 1.35 %%>;
 
   finalBarWidth = <%% 40, 40, 40, 40, 40 %%>;
-  finalBarHeight = <%% 18, 18, 18, 18, 18 %%>;
-  finalBarMarginBottom = <%% 24, 24, 24, 24, 24 %%>;
+  finalBarHeight = <%% (isMac() ? 18 : 16), (isMac() ? 18 : 16), (isMac() ? 15 : 13), (isMac() ? 12 : 10), 18 %%>;
+  finalBarMarginBottom = <%% 24, 24, 21, 18, 24 %%>;
 
-  buttonWidth = <%% 100, 100, 100, 100, 100 %%>;
-  buttonHeight = <%% 45, 45, 45, 45, 45 %%>;
+  buttonWidth = <%% 100, 100, 100, 90, 100 %%>;
+  buttonHeight = <%% 45, 45, 42, 38, 45 %%>;
 
   finalVisual = <%% 8, 8, 8, 8, 8 %%>;
 
-  buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
-  buttonVisual = <%% 16, 16, 16, 16, 16 %%>;
+  buttonTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), 0 %%>;
+  buttonVisual = <%% 16, 16, 15, 14, 16 %%>;
   buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-  ruleBlockWidth = <%% 420, 330, 330, 300, 33 %%>;
+  ruleBlockWidth = <%% 420, 330, 275, 235, 33 %%>;
 
-  rulesBoxPaddingTop = <%% 100, 100, 100, 100, 100 %%>;
+  rulesBoxPaddingTop = <%% 100, 90, 85, 65, 11 %%>;
 
-  rulesTitleSize = <%% 15, 15, 15, 15, 15 %%>;
+  rulesTitleSize = <%% 15, 15, 14, 13, 15 %%>;
   rulesTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
   rulesTitleLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
   rulesContentsMarginTop = <%% 8, 8, 8, 8, 8 %%>;
-  rulesContentsSize = <%% 13, 13, 13, 13, 13 %%>;
+  rulesContentsSize = <%% 13, 13, 12, 10, 2.5 %%>;
   rulesContentsWeight = <%% 400, 400, 400, 400, 400 %%>;
   rulesContentsLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
 
@@ -1725,7 +1730,7 @@ MiniAboutJs.prototype.insertFaqBox = function () {
         title: "취소 규정",
         description: [
           "디자이너와의 상담 시작 1일 전 결제 취소 가능합니다.",
-          <&& "디자이너와의 상담이 시작된 이후에는 결제 취소가 불가합니다." | "디자이너와의 상담이 시작된 이후에는 취소가 불가합니다." | "디자이너와의 상담이 시작된 이후에는 취소가 불가합니다." | "디자이너와의 상담이 시작된 이후에는 취소가 불가합니다." | "디자이너와의 상담이 시작된 이후에는 취소가 불가합니다." &&>,
+          <&& "디자이너와의 상담이 시작된 이후에는 결제 취소가 불가합니다." | "디자이너와의 상담이 시작된 이후에는 취소가 불가합니다." | "디자이너와 상담이 시작된 이후에는 취소가 불가합니다." | "디자이너와 상담이 시작된 이후에는 취소가 불가합니다." | "디자이너와 상담이 시작된 이후에는 취소가 불가합니다." &&>,
         ]
       },
       {
@@ -2181,19 +2186,19 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
     let paymentButtonSize, paymentButtonWeight, paymentButtonTop, paymentButtonPaddingTop, paymentButtonPaddingBottom, paymentButtonPaddingLeft;
     let whiteMaxHeight;
 
-    whiteWidth = <%% 1000, 1000, 900, 800, 60 %%>;
+    whiteWidth = <%% 1000, 1000, 800, 660, 60 %%>;
     whiteMargin = <%% 54, 54, 54, 54, 54 %%>;
     innerMargin = <%% 54, 54, 54, 54, 54 %%>;
 
     whiteMaxHeight = 900;
 
-    titleHeight = <%% 41, 41, 41, 41, 41 %%>;
+    titleHeight = <%% 41, 39, 37, 35, 41 %%>;
     paymentHeight = <%% 70, 70, 70, 70, 70 %%>;
 
-    titleSize = <%% 27, 27, 27, 27, 27 %%>;
+    titleSize = <%% 27, 26, 24, 22, 27 %%>;
     titleWeight = <%% 700, 700, 700, 700, 700 %%>;
     titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
-    titleTop = <%% -10, -10, -10, -10, -10 %%>;
+    titleTop = <%% (isMac() ? -10 : -7), (isMac() ? -10 : -7), (isMac() ? -10 : -7), (isMac() ? -10 : -7), -10 %%>;
 
     formPaddingTop = <%% 40, 40, 40, 40, 40 %%>;
 
@@ -2252,14 +2257,14 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
 
     paymentAmountSize = <%% 30, 30, 30, 30, 30 %%>;
     paymentAmountWeight = <%% 600, 600, 600, 600, 600 %%>;
-    paymentAmountTop = <%% 17, 17, 17, 17, 17 %%>;
+    paymentAmountTop = <%% (isMac() ? 17 : 19), (isMac() ? 17 : 19), (isMac() ? 17 : 19), (isMac() ? 17 : 19), 17 %%>;
     paymentAmountBetween = <%% 20, 20, 20, 20, 20 %%>;
 
     paymentButtonSize = <%% 16, 16, 16, 16, 16 %%>;
     paymentButtonWeight = <%% 600, 600, 600, 600, 600 %%>;
     paymentButtonTop = <%% 12, 12, 12, 12, 12 %%>;
-    paymentButtonPaddingTop = <%% 8, 8, 8, 8, 8 %%>;
-    paymentButtonPaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
+    paymentButtonPaddingTop = <%% (isMac() ? 8 : 10), (isMac() ? 8 : 10), (isMac() ? 8 : 10), (isMac() ? 8 : 10), 8 %%>;
+    paymentButtonPaddingBottom = <%% (isMac() ? 10 : 9), (isMac() ? 10 : 9), (isMac() ? 10 : 9), (isMac() ? 10 : 9), 10 %%>;
     paymentButtonPaddingLeft = <%% 18, 18, 18, 18, 18 %%>;
 
     cancelBack = createNode({
