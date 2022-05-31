@@ -667,6 +667,9 @@ module.exports = {
       "miniAbout": {
         "behaviors": []
       },
+      "miniGuide": {
+        "behaviors": []
+      },
       "frontFaq": {
         "behaviors": []
       },
