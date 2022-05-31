@@ -202,7 +202,7 @@ MiniAboutJs.prototype.insertTitleBox = function (mother) {
   whiteSize = <%% 32, 29, 26, 21, 4.5 %%>;
   whiteWeight = <%% 700, 700, 700, 700, 700 %%>;
   whiteLineHeight = <%% 1.35, 1.35, 1.35, 1.35, 1.35 %%>;
-  whiteBottom = <%% 50, 50, 50, 40, 14 %%>;
+  whiteBottom = <%% 50, 50, 50, 40, 14.5 %%>;
   whiteRight = <%% 50, 50, 50, 40, 0 %%>;
 
   contents = {
@@ -804,7 +804,7 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
   processBlockWidth = <%% 120, 96, 84, 70, 20 %%>;
   processBlockHeight = <%% 80, 72, 64, 52, 10 %%>;
 
-  processTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), 2.2 %%>;
+  processTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), 2.5 %%>;
   processSize = <%% 15, 14, 13, 11, 3.5 %%>;
   processWeight = <%% 600, 600, 600, 600, 400 %%>;
   processLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
@@ -1133,6 +1133,8 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
       color: colorChip.black,
       textAlign: desktop ? "left" : "center",
       lineHeight: String(aboutSubTitleLineHeight),
+      paddingLeft: desktop ? "" : String(10) + ea,
+      paddingRight: desktop ? "" : String(10) + ea,
     }
   });
 
@@ -1428,7 +1430,7 @@ MiniAboutJs.prototype.insertWhyBox = function () {
   firstBlockMargin = <%% 30, 30, 30, 30, 4.5 %%>;
   secondBlockMargin = <%% 25, 25, 25, 25, 1 %%>;
 
-  secondPaddingTop = <%% (isMac() ? 15 : 17), (isMac() ? 15 : 17), (isMac() ? 13 : 15), (isMac() ? 13 : 15), 2.6 %%>;
+  secondPaddingTop = <%% (isMac() ? 15 : 17), (isMac() ? 15 : 17), (isMac() ? 13 : 15), (isMac() ? 13 : 15), 2.8 %%>;
   secondPaddingBottom = <%% (isMac() ? 20 : 18), (isMac() ? 20 : 18), (isMac() ? 18 : 16), (isMac() ? 18 : 16), 3.2 %%>;
   secondPaddingLeft = <%% 30, 30, 24, 22, 3 %%>;
   secondTab = <%% 310, 194, 145, 126, 31 %%>;
@@ -1707,8 +1709,8 @@ MiniAboutJs.prototype.insertFaqBox = function () {
   faqBoxMarginTop = <%% 42, 42, 40, 32, 5 %%>;
 
   faqFactorHeight = <%% 72, 68, 64, 50, 11 %%>;
-  faqFactorTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.3 %%>;
-  faqFactorSize = <%% 16, 16, 15, 13, 3 %%>;
+  faqFactorTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.2 %%>;
+  faqFactorSize = <%% 16, 16, 15, 13, 3.1 %%>;
   faqFactorWeight = <%% 600, 600, 600, 600, 600 %%>;
 
   finalPhotoHeight = <%% 300, 300, 280, 240, 56 %%>;
@@ -2274,7 +2276,7 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
     titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
     titleTop = <%% (isMac() ? -10 : -7), (isMac() ? -10 : -7), (isMac() ? -10 : -7), (isMac() ? -10 : -7), -0.2 %%>;
 
-    formPaddingTop = <%% 40, 40, 40, 40, 7 %%>;
+    formPaddingTop = <%% 40, 40, 40, 40, 6 %%>;
 
     circleRadius = <%% 2.5, 2.5, 2, 2, 0.5 %%>;
     circleTop = <%% 12, 12, 11, 10.5, (isIphone() ? 2.9 : 2.7) %%>;
@@ -2331,7 +2333,7 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
 
     paymentAmountSize = <%% 30, 30, 30, 30, 5.2 %%>;
     paymentAmountWeight = <%% 600, 600, 600, 600, 600 %%>;
-    paymentAmountTop = <%% (isMac() ? 17 : 19), (isMac() ? 17 : 19), (isMac() ? 17 : 19), (isMac() ? 17 : 19), 3.5 %%>;
+    paymentAmountTop = <%% (isMac() ? 17 : 19), (isMac() ? 17 : 19), (isMac() ? 17 : 19), (isMac() ? 17 : 19), 3.7 %%>;
     paymentAmountBetween = <%% 20, 20, 20, 20, 3 %%>;
 
     paymentButtonSize = <%% 16, 16, 16, 16, 3.2 %%>;
@@ -2339,7 +2341,7 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
     paymentButtonTop = <%% 12, 12, 12, 12, 3 %%>;
     paymentButtonPaddingTop = <%% (isMac() ? 8 : 10), (isMac() ? 8 : 10), (isMac() ? 8 : 10), (isMac() ? 8 : 10), 2 %%>;
     paymentButtonPaddingBottom = <%% (isMac() ? 10 : 9), (isMac() ? 10 : 9), (isMac() ? 10 : 9), (isMac() ? 10 : 9), 2.5 %%>;
-    paymentButtonPaddingLeft = <%% 18, 18, 18, 18, 3 %%>;
+    paymentButtonPaddingLeft = <%% 18, 18, 18, 18, 3.5 %%>;
 
     cancelBack = createNode({
       mother: totalContents,
