@@ -43,7 +43,7 @@ const MiniGuideJs = function () {
   this.firstClick = false;
 }
 
-MiniGuideJs.binaryPath = "/middle/miniGuide";
+MiniGuideJs.binaryPath = FRONTHOST + "/middle/miniGuide";
 
 MiniGuideJs.prototype.insertInitBox = function () {
   const instance = this;
