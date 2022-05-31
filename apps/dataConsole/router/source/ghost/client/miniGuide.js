@@ -491,6 +491,11 @@ MiniGuideJs.prototype.insertGuideBox = function () {
   let descriptionBox;
   let descriptionHeight;
   let descriptionWidth;
+  let bigTitleSize, bigTitleWeight, bigTitlePaddingLeft, bigTitleLineTop;
+  let numberSize, numberWeight;
+  let guideTitleSize, guideTitleWeight, guideTitleLineHeight;
+  let guideDescriptionSize, guideDescriptionLineHeight, guideDescriptionMarginTop;
+  let guideDescriptionWeight, guideDescriptionBoldWeight;
 
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
   margin = <%% 56, 52, 44, 32, 52 %%>;
@@ -502,6 +507,25 @@ MiniGuideJs.prototype.insertGuideBox = function () {
 
   descriptionHeight = <%% 340, 340, 340, 340, 340 %%>;
   descriptionWidth = <%% 365, 365, 365, 365, 365 %%>;
+
+  bigTitleLineTop = <%% 18, 18, 18, 18, 18 %%>;
+  bigTitleSize = <%% 26, 26, 26, 26, 26 %%>;
+  bigTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  bigTitlePaddingLeft = <%% 20, 20, 20, 20, 20 %%>;
+
+  numberSize = <%% 22, 22, 22, 22, 22 %%>;
+  numberWeight = <%% 400, 400, 400, 400, 400 %%>;
+
+  guideTitleSize = <%% 18, 18, 18, 18, 18 %%>;
+  guideTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  guideTitleLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
+
+  guideDescriptionSize = <%% 14, 14, 14, 14, 14 %%>;
+  guideDescriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+  guideDescriptionMarginTop = <%% 8, 8, 8, 8, 8 %%>;
+
+  guideDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+  guideDescriptionBoldWeight = <%% 600, 600, 600, 600, 600 %%>;
 
   contents = {
     title: "공간 실측 가이드",
@@ -581,7 +605,7 @@ MiniGuideJs.prototype.insertGuideBox = function () {
           position: "absolute",
           borderBottom: "1px solid " + colorChip.gray3,
           width: String(100) + '%',
-          height: String(18) + ea,
+          height: String(bigTitleLineTop) + ea,
           top: String(0),
           left: String(0),
         }
@@ -589,14 +613,14 @@ MiniGuideJs.prototype.insertGuideBox = function () {
       {
         text: contents.title,
         style: {
-          fontSize: String(26) + ea,
-          fontWeight: String(800),
+          fontSize: String(bigTitleSize) + ea,
+          fontWeight: String(bigTitleWeight),
           color: colorChip.black,
           display: "inline-block",
           position: "relative",
           textAlign: "center",
-          paddingLeft: String(20) + ea,
-          paddingRight: String(20) + ea,
+          paddingLeft: String(bigTitlePaddingLeft) + ea,
+          paddingRight: String(bigTitlePaddingLeft) + ea,
           background: colorChip.white,
         }
       }
@@ -636,8 +660,8 @@ MiniGuideJs.prototype.insertGuideBox = function () {
       style: {
         display: "block",
         position: "relative",
-        fontSize: String(22) + ea,
-        fontWeight: String(400),
+        fontSize: String(numberSize) + ea,
+        fontWeight: String(numberWeight),
         color: colorChip.black,
         fontFamily: "graphik",
       }
@@ -660,10 +684,10 @@ MiniGuideJs.prototype.insertGuideBox = function () {
         display: "block",
         position: "relative",
         textAlign: "right",
-        fontSize: String(18) + ea,
-        fontWeight: String(800),
+        fontSize: String(guideTitleSize) + ea,
+        fontWeight: String(guideTitleWeight),
         color: colorChip.black,
-        lineHeight: String(1.66),
+        lineHeight: String(guideTitleLineHeight),
       }
     });
 
@@ -674,19 +698,18 @@ MiniGuideJs.prototype.insertGuideBox = function () {
         display: "block",
         position: "relative",
         textAlign: "right",
-        fontSize: String(14) + ea,
-        fontWeight: String(400),
+        fontSize: String(guideDescriptionSize) + ea,
+        fontWeight: String(guideDescriptionWeight),
         color: colorChip.black,
-        lineHeight: String(1.6),
-        marginTop: String(8) + ea,
+        lineHeight: String(guideDescriptionLineHeight),
+        marginTop: String(guideDescriptionMarginTop) + ea,
       },
       bold: {
-        fontSize: String(14) + ea,
+        fontSize: String(guideDescriptionSize) + ea,
         color: colorChip.green,
-        fontWeight: String(600),
+        fontWeight: String(guideDescriptionBoldWeight),
       }
     });
-
 
     createNode({
       mother: guideBlock,
@@ -717,20 +740,125 @@ MiniGuideJs.prototype.insertTargetsBox = function () {
   let bottomMargin;
   let contents;
   let margin;
+  let topBottomVisualMargin;
+  let bigTitleSize, bigTitleWeight, bigTitlePaddingLeft, bigTitleLineTop;
+  let targetsMother;
+  let targetsBetween;
+  let targetsMotherPaddingTop;
+  let targetBox;
+  let targetTitleBox;
+  let targetTitlePaddingTop;
+  let targetTitleHeight;
+  let targetNumberVisual;
+  let targetTitlePaddingLeft;
+  let targetTitleSize, targetTitleWeight, targetNumberWeight;
+  let targetItemBox;
+  let targetItemPaddingTop, targetItemPaddingBottom;
+  let targetItemSize, targetItemWeight, targetItemMarginBottom;
+  let descriptionArea;
+  let descriptionBox;
+  let descriptionBoxTong;
+  let descriptionSize, descriptionWeight, descriptionBoldWeight, descriptionLineHeight;
+  let descriptionLineBottom;
+  let descriptionAreaMarginBottom;
 
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
   margin = <%% 56, 52, 44, 32, 52 %%>;
 
+  topBottomVisualMargin = <%% 18, 18, 18, 18, 18 %%>;
+
+  bigTitleLineTop = <%% 18, 18, 18, 18, 18 %%>;
+  bigTitleSize = <%% 26, 26, 26, 26, 26 %%>;
+  bigTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  bigTitlePaddingLeft = <%% 20, 20, 20, 20, 20 %%>;
+
+  targetsBetween = <%% 20, 20, 20, 20, 20 %%>;
+
+  targetsMotherPaddingTop = <%% 40, 40, 40, 40, 40 %%>;
+
+  targetTitlePaddingTop = <%% 12, 12, 12, 12, 12 %%>;
+  targetNumberVisual = <%% 1, 1, 1, 1, 1 %%>;
+  targetTitleHeight = <%% 43, 43, 43, 43, 43 %%>;
+  targetTitlePaddingLeft = <%% 32, 32, 32, 32, 32 %%>;
+
+  targetTitleSize = <%% 18, 18, 18, 18, 18 %%>;
+  targetTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  targetNumberWeight = <%% 300, 300, 300, 300, 300 %%>;
+
+  targetItemPaddingTop = <%% 22, 22, 22, 22, 22 %%>;
+  targetItemPaddingBottom = <%% 20, 20, 20, 20, 20 %%>;
+
+  targetItemSize = <%% 15, 15, 15, 15, 15 %%>;
+  targetItemWeight = <%% 400, 400, 400, 400, 400 %%>;
+  targetItemMarginBottom = <%% 5, 5, 5, 5, 5 %%>;
+
+  descriptionSize = <%% 14, 14, 14, 14, 14 %%>;
+  descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+  descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+  descriptionLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
+
+  descriptionLineBottom = <%% 10, 10, 10, 10, 10 %%>;
+
+  descriptionAreaMarginBottom = <%% 25, 25, 25, 25, 25 %%>;
+
   contents = {
-    title: [
-      "공간 실측 가이드와",
-      "제공 품목 안내"
+    title: "제공 품목 안내",
+    targets: [
+      {
+        title: "가구",
+        factor: [
+          "가구 추천 제공하지 않음",
+        ],
+        image: "targets0.jpg",
+      },
+      {
+        title: "패브릭",
+        factor: [
+          "매트리스 커버",
+          "매트리스 패드",
+          "이불 ( 커버 + 솜 / 일체형 )",
+          "베개 ( 커버 + 솜 )",
+          "쿠션 ( 커버 + 솜 )",
+          "스프레드",
+          "블라인드",
+          "커튼 + 커튼 봉 / 레일",
+          "대형 러그, 소형 러그, 미니 러그",
+        ],
+        image: "targets1.jpg",
+      },
+      {
+        title: "액자",
+        factor: [
+          "액자 프레임",
+          "그림 / 아트웍",
+          "레일 / 설치 자리",
+        ],
+        image: "targets2.jpg",
+      },
+      {
+        title: "소품",
+        factor: [
+          "디피용 소품",
+          "디자인 조명 / 스탠드 조명",
+          "시공 / 설치가 필요한 조명 제외",
+        ],
+        image: "targets3.jpg",
+      },
     ],
     description: [
-      "디자이너와의 온라인 상담이 진행되기 전에, 공간 실측 가이드와 제공 품목 안내서를 제공해드립니다.",
-      "<b%스타일링을 받고자 하는 공간의 실측을 가이드에 따라 진행해주시면,%b> 디자이너는 그 정보를 바탕으로 디자인을 진행하게 됩니다."
-    ],
-    image: MiniGuideJs.binaryPath + "/init" + String(media.findIndex(boo => boo)) + ".svg",
+      [
+        "홈리에종 미니의 기본적인 제공 항목은",
+        "<b%패브릭과 액자, 소품%b> 이 3가지의 카테고리",
+        "입니다. 가구 추천은 미니의 서비스 범위에",
+        "해당되지 않아 제공되지 않습니다.",
+      ],
+      [
+        "패브릭, 액자, 소품에 해당되는 제품군은 위와",
+        "같으며, <b%설치와 별도의 실측이 필요한 제품의",
+        "경우, 또는 시공이 필요한 제품의 경우 서비스",
+        "범위에 해당되지 않아%b> 제공되지 않습니다.",
+      ]
+    ]
   };
 
   whiteBlock = createNode({
@@ -739,12 +867,219 @@ MiniGuideJs.prototype.insertTargetsBox = function () {
       position: "relative",
       borderRadius: String(8) + "px",
       width: String(100) + '%',
-      height: String(400) + ea,
+      paddingTop: String(margin + topBottomVisualMargin) + ea,
+      paddingBottom: String(margin) + ea,
       background: colorChip.white,
       marginBottom: String(bottomMargin) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
     }
   });
+
+  createNode({
+    mother: whiteBlock,
+    style: {
+      display: "block",
+      position: "relative",
+      marginLeft: String(margin) + ea,
+      marginRight: String(margin) + ea,
+      width: withOut(margin * 2, ea),
+      textAlign: "center",
+    },
+    children: [
+      {
+        style: {
+          position: "absolute",
+          borderBottom: "1px solid " + colorChip.gray3,
+          width: String(100) + '%',
+          height: String(bigTitleLineTop) + ea,
+          top: String(0),
+          left: String(0),
+        }
+      },
+      {
+        text: contents.title,
+        style: {
+          fontSize: String(bigTitleSize) + ea,
+          fontWeight: String(bigTitleWeight),
+          color: colorChip.black,
+          display: "inline-block",
+          position: "relative",
+          textAlign: "center",
+          paddingLeft: String(bigTitlePaddingLeft) + ea,
+          paddingRight: String(bigTitlePaddingLeft) + ea,
+          background: colorChip.white,
+        }
+      }
+    ]
+  });
+
+  targetsMother = createNode({
+    mother: whiteBlock,
+    style: {
+      display: "block",
+      position: "relative",
+      marginLeft: String(margin) + ea,
+      marginRight: String(margin) + ea,
+      width: withOut(margin * 2, ea),
+      paddingTop: String(targetsMotherPaddingTop) + ea,
+    }
+  });
+
+  descriptionArea = createNode({
+    mother: whiteBlock,
+    style: {
+      display: "block",
+      position: "relative",
+      marginLeft: String(margin) + ea,
+      marginRight: String(margin) + ea,
+      width: withOut(margin * 2, ea),
+      paddingTop: String(targetsMotherPaddingTop) + ea,
+      marginBottom: String(descriptionAreaMarginBottom) + ea,
+    }
+  })
+
+  for (let i = 0; i < contents.targets.length; i++) {
+    targetBox = createNode({
+      mother: targetsMother,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        marginRight: (i === contents.targets.length - 1 ? String(0) + ea : String(targetsBetween) + ea),
+        width: "calc(calc(100% - " + String(targetsBetween * (contents.targets.length - 1)) + ea + ") / " + String(contents.targets.length) + ")",
+        verticalAlign: "top",
+      }
+    });
+
+    targetTitleBox = createNode({
+      mother: targetBox,
+      style: {
+        display: "block",
+        position: "relative",
+        borderRadius: String(5) + "px",
+        width: String(100) + '%',
+        paddingTop: String(targetTitlePaddingTop) + ea,
+        height: String(targetTitleHeight) + ea,
+        background: colorChip.gray1,
+        backgroundImage: "url('" + MiniGuideJs.binaryPath + "/" + contents.targets[i].image + "')",
+        backgroundPosition: "50% 50%",
+        backgroundSize: "100% auto",
+        textAlign: "right",
+      }
+    });
+
+    createNode({
+      mother: targetTitleBox,
+      text: String(i),
+      style: {
+        top: String(targetTitlePaddingTop + targetNumberVisual) + ea,
+        left: String(targetTitlePaddingLeft) + ea,
+        position: "absolute",
+        fontSize: String(targetTitleSize) + ea,
+        fontWeight: String(targetNumberWeight),
+        color: colorChip.white,
+      }
+    });
+
+    createNode({
+      mother: targetTitleBox,
+      text: contents.targets[i].title,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        fontSize: String(targetTitleSize) + ea,
+        fontWeight: String(targetTitleWeight),
+        color: colorChip.white,
+        marginRight: String(targetTitlePaddingLeft) + ea,
+        verticalAlign: "top",
+      }
+    });
+
+    targetItemBox = createNode({
+      mother: targetBox,
+      style: {
+        display: "block",
+        position: "relative",
+        borderRadius: String(5) + "px",
+        width: String(100) + '%',
+        background: colorChip.gray1,
+        paddingTop: String(targetItemPaddingTop) + ea,
+        paddingBottom: String(targetItemPaddingBottom) + ea,
+      }
+    });
+
+    for (let j = 0; j < contents.targets[i].factor.length; j++) {
+      createNode({
+        mother: targetItemBox,
+        text: contents.targets[i].factor[j],
+        style: {
+          display: "block",
+          position: "relative",
+          fontSize: String(targetItemSize) + ea,
+          fontWeight: String(targetItemWeight),
+          color: colorChip.black,
+          paddingLeft: String(targetTitlePaddingLeft) + ea,
+          width: withOut(targetTitlePaddingLeft, ea),
+          marginBottom: String(targetItemMarginBottom) + ea,
+        }
+      });
+    }
+
+    descriptionBox = createNode({
+      mother: descriptionArea,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        marginRight: (i === contents.targets.length - 1 ? String(0) + ea : String(targetsBetween) + ea),
+        width: "calc(calc(100% - " + String(targetsBetween * (contents.targets.length - 1)) + ea + ") / " + String(contents.targets.length) + ")",
+        verticalAlign: "top",
+      }
+    });
+
+    descriptionBoxTong = createNode({
+      mother: descriptionBox,
+      style: {
+        display: "block",
+        position: "relative",
+        width: String(100) + '%',
+        height: String(100) + ea,
+      }
+    });
+
+    if (Array.isArray(contents.description[i - 2])) {
+      createNode({
+        mother: descriptionBoxTong,
+        text: contents.description[i - 2].join("\n"),
+        style: {
+          display: "block",
+          position: "relative",
+          width: String(100) + '%',
+          fontSize: String(descriptionSize) + ea,
+          fontWeight: String(descriptionWeight),
+          color: colorChip.black,
+          lineHeight: String(descriptionLineHeight),
+          textAlign: "right",
+        },
+        bold: {
+          fontSize: String(descriptionSize) + ea,
+          fontWeight: String(descriptionBoldWeight),
+          color: colorChip.black,
+          lineHeight: String(descriptionLineHeight),
+        }
+      });
+    } else {
+      createNode({
+        mother: descriptionBoxTong,
+        style: {
+          position: "absolute",
+          bottom: String(descriptionLineBottom) + ea,
+          width: (i === 0 ? "calc(100% + " + String(targetsBetween) + ea + ")" : "calc(100%)"),
+          left: String(0),
+          borderBottom: "1px solid " + colorChip.gray3,
+        }
+      });
+    }
+
+  }
 
 }
 
@@ -758,20 +1093,25 @@ MiniGuideJs.prototype.insertNextBox = function () {
   let bottomMargin;
   let contents;
   let margin;
+  let finalHeight;
+  let finalSize, finalWeight, finalRight, finalTop, finalLineHeight;
 
-  bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
+  bottomMargin = <%% 200, 200, 200, 200, 12 %%>;
   margin = <%% 56, 52, 44, 32, 52 %%>;
 
+  finalHeight = <%% 224, 224, 224, 224, 224 %%>;
+  finalSize = <%% 27, 27, 27, 27, 27 %%>;
+  finalWeight = <%% 700, 700, 700, 700, 700 %%>;
+  finalRight = <%% 125, 125, 125, 125, 125 %%>;
+  finalTop = <%% 70, 70, 70, 70, 70 %%>;
+  finalLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
+
   contents = {
-    title: [
-      "공간 실측 가이드와",
-      "제공 품목 안내"
+    final: [
+      "디자이너 상담 후 디자인 시안이",
+      "제공될 예정입니다."
     ],
-    description: [
-      "디자이너와의 온라인 상담이 진행되기 전에, 공간 실측 가이드와 제공 품목 안내서를 제공해드립니다.",
-      "<b%스타일링을 받고자 하는 공간의 실측을 가이드에 따라 진행해주시면,%b> 디자이너는 그 정보를 바탕으로 디자인을 진행하게 됩니다."
-    ],
-    image: MiniGuideJs.binaryPath + "/init" + String(media.findIndex(boo => boo)) + ".svg",
+    image: MiniGuideJs.binaryPath + "/final.jpg",
   };
 
   whiteBlock = createNode({
@@ -780,10 +1120,27 @@ MiniGuideJs.prototype.insertNextBox = function () {
       position: "relative",
       borderRadius: String(8) + "px",
       width: String(100) + '%',
-      height: String(400) + ea,
-      background: colorChip.white,
+      height: String(finalHeight) + ea,
+      background: colorChip.shadow,
       marginBottom: String(bottomMargin) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      backgroundImage: "url('" + contents.image + "')",
+      backgroundSize: "100% auto",
+      backgroundPosition: "50% 50%",
+    }
+  });
+
+  createNode({
+    mother: whiteBlock,
+    text: contents.final.join("\n"),
+    style: {
+      position: "absolute",
+      fontSize: String(finalSize) + ea,
+      fontWeight: String(finalWeight),
+      color: colorChip.white,
+      right: String(finalRight) + ea,
+      top: String(finalTop) + ea,
+      lineHeight: String(finalLineHeight),
     }
   });
 
