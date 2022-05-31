@@ -57,7 +57,7 @@ MiniAboutJs.prototype.insertInitBox = function () {
   let blockBetween;
 
   blockBetween = <%% 18, 18, 18, 18, 3 %%>;
-  bottomMargin = <%% 200, 200, 180, 160, 45 %%>;
+  bottomMargin = <%% 200, 200, 180, 160, 31 %%>;
 
   buttonBoxWidth = <%% 172, 164, 148, 138, 32 %%>;
   buttonBoxHeight = <%% 58, 54, 50, 45, 11 %%>;
@@ -772,7 +772,7 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
 
   aboutAreaTop = <%% 100, 100, 84, 70, 11 %%>;
   processAreaTop = <%% 56, 52, 42, 32, 7 %%>;
-  billAreaTop = <%% 110, 92, 78, 60, 8 %%>;
+  billAreaTop = <%% 110, 92, 78, 60, 9 %%>;
   billAreaBottom = <%% 20, 10, 10, 8, 4 %%>;
 
   areaNameSize = <%% 16, 16, 15, 15, 3.5 %%>;
@@ -788,7 +788,7 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
 
   aboutGrayRightTitlePaddingTop = <%% 63, 42, 40, 35, 5 %%>;
 
-  aboutTitleSize = <%% 25, 24, 22, 17, 4.2 %%>;
+  aboutTitleSize = <%% 25, 24, 22, 17, 4 %%>;
   aboutTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
   aboutTitleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
@@ -1407,33 +1407,38 @@ MiniAboutJs.prototype.insertWhyBox = function () {
   let secondTab;
   let arrowBaseWidth, arrowHeight;
   let arrowTop;
+  let mobileTitleMarginBottom;
+  let mobilePaddingBottomVisual;
 
   basePadding = <%% 110, 90, 85, 75, 11 %%>;
-  leftWidth = <%% 400, 300, 280, 160, 40 %%>;
+  leftWidth = <%% 400, 300, 280, 160, 11 %%>;
 
-  minusPadding = <%% -50, -50, -48, -30, -50 %%>;
-  blockBetween = <%% 40, 40, 40, 40, 40 %%>;
+  minusPadding = <%% -50, -50, -48, -30, -6 %%>;
+  blockBetween = <%% 40, 40, 40, 40, 7 %%>;
 
-  titleSize = <%% 21, 20, 18, 15, 21 %%>;
+  titleSize = <%% 21, 20, 18, 15, 4 %%>;
   titleWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  descriptionSize = <%% 16, 16, 15, 14, 16 %%>;
+  descriptionSize = <%% 16, 16, 15, 14, 3.2 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
-  firstBlockMargin = <%% 30, 30, 30, 30, 30 %%>;
-  secondBlockMargin = <%% 25, 25, 25, 25, 25 %%>;
+  firstBlockMargin = <%% 30, 30, 30, 30, 4.5 %%>;
+  secondBlockMargin = <%% 25, 25, 25, 25, 1 %%>;
 
-  secondPaddingTop = <%% (isMac() ? 15 : 17), (isMac() ? 15 : 17), (isMac() ? 13 : 15), (isMac() ? 13 : 15), 15 %%>;
-  secondPaddingBottom = <%% (isMac() ? 20 : 18), (isMac() ? 20 : 18), (isMac() ? 18 : 16), (isMac() ? 18 : 16), 20 %%>;
-  secondPaddingLeft = <%% 30, 30, 24, 22, 30 %%>;
+  secondPaddingTop = <%% (isMac() ? 15 : 17), (isMac() ? 15 : 17), (isMac() ? 13 : 15), (isMac() ? 13 : 15), 2.6 %%>;
+  secondPaddingBottom = <%% (isMac() ? 20 : 18), (isMac() ? 20 : 18), (isMac() ? 18 : 16), (isMac() ? 18 : 16), 3.2 %%>;
+  secondPaddingLeft = <%% 30, 30, 24, 22, 3 %%>;
   secondTab = <%% 310, 194, 145, 126, 31 %%>;
 
   arrowTop = <%% (isMac() ? 24 : 23), (isMac() ? 24 : 23), (isMac() ? 24 : 23), (isMac() ? 21 : 20), 24 %%>;
   arrowBaseWidth = <%% 36, 36, 34, 16, 36 %%>;
   arrowHeight = <%% 10, 10, 10, 10, 10 %%>;
+
+  mobileTitleMarginBottom = 5;
+  mobilePaddingBottomVisual = 2;
 
   contents = [
     {
@@ -1445,7 +1450,7 @@ MiniAboutJs.prototype.insertWhyBox = function () {
       ]
     },
     {
-      title: "<b%이런 분%b>들께\n추천드려요!",
+      title: (desktop ? "<b%이런 분%b>들께\n추천드려요!" : "<b%이런 분%b>들께 추천드려요!"),
       description: [
         "가구는 그대로 사용한 채로 공간의 무드를 <b%확! 바꾸고 싶은 분!%b>",
         "혼자 발품 팔 시간은 부족하고, <b%전문가의 도움%b>이 필요하신 분!",
@@ -1468,7 +1473,7 @@ MiniAboutJs.prototype.insertWhyBox = function () {
   whiteBase.appendChild(baseTongClone);
 
   baseTongClone.style.paddingTop = String(basePadding) + ea;
-  baseTongClone.style.paddingBottom = String(basePadding) + ea;
+  baseTongClone.style.paddingBottom = desktop ? String(basePadding) + ea : String(basePadding + mobilePaddingBottomVisual) + ea;
 
   contentsBase = createNode({
     mother: baseTongClone,
@@ -1491,9 +1496,9 @@ MiniAboutJs.prototype.insertWhyBox = function () {
   firstLeftBase = createNode({
     mother: firstBase,
     style: {
-      display: "inline-block",
+      display: desktop ? "inline-block" : "block",
       position: "relative",
-      width: String(leftWidth) + ea,
+      width: desktop ? String(leftWidth) + ea : String(100) + '%',
       verticalAlign: "top",
     }
   });
@@ -1503,8 +1508,9 @@ MiniAboutJs.prototype.insertWhyBox = function () {
     style: {
       display: "inline-block",
       position: "relative",
-      width: withOut(leftWidth, ea),
+      width: desktop ? withOut(leftWidth, ea) : withOut(-1 * minusPadding, ea),
       verticalAlign: "top",
+      paddingTop: desktop ? "" : String(mobileTitleMarginBottom) + ea,
     }
   });
 
@@ -1536,6 +1542,7 @@ MiniAboutJs.prototype.insertWhyBox = function () {
         color: colorChip.black,
         lineHeight: String(descriptionLineHeight),
         marginBottom: String(firstBlockMargin) + ea,
+        marginLeft: desktop ? "" : String(-1 * minusPadding) + ea,
       },
       bold: {
         fontWeight: String(descriptionBoldWeight),
@@ -1570,19 +1577,20 @@ MiniAboutJs.prototype.insertWhyBox = function () {
   secondLeftBase = createNode({
     mother: secondBase,
     style: {
-      display: "inline-block",
+      display: desktop ? "inline-block" : "block",
       position: "relative",
-      width: String(leftWidth) + ea,
+      width: desktop ? String(leftWidth) + ea : String(100) + '%',
       verticalAlign: "top",
     }
   });
   secondRightBase = createNode({
     mother: secondBase,
     style: {
-      display: "inline-block",
+      display: desktop ? "inline-block" : "block",
       position: "relative",
-      width: withOut(leftWidth, ea),
+      width: desktop ? withOut(leftWidth, ea) : String(100) + '%',
       verticalAlign: "top",
+      paddingTop: desktop ? "" : String(mobileTitleMarginBottom) + ea,
     }
   });
 
@@ -1601,7 +1609,6 @@ MiniAboutJs.prototype.insertWhyBox = function () {
     }
   });
 
-
   for (let i = 0; i < contents[1].description.length; i++) {
 
     createNode({
@@ -1615,7 +1622,7 @@ MiniAboutJs.prototype.insertWhyBox = function () {
         {
           text: contents[1].description[i],
           style: {
-            display: "inline-block",
+            display: desktop ? "inline-block" : "block",
             position: "relative",
             fontSize: String(descriptionSize) + ea,
             fontWeight: String(descriptionBoldWeight),
@@ -1624,10 +1631,12 @@ MiniAboutJs.prototype.insertWhyBox = function () {
             background: colorChip.gray1,
             paddingTop: String(secondPaddingTop) + ea,
             paddingBottom: String(secondPaddingBottom) + ea,
-            paddingLeft: String(secondPaddingLeft) + ea,
-            paddingRight: String(secondPaddingLeft) + ea,
+            paddingLeft: desktop ? String(secondPaddingLeft) + ea : "",
+            paddingRight: desktop ? String(secondPaddingLeft) + ea : "",
             borderRadius: String(5) + "px",
-            marginLeft: String(i * secondTab) + ea,
+            marginLeft: desktop ? String(i * secondTab) + ea : String(0) + ea,
+            width: desktop ? "" : String(100) + '%',
+            textAlign: desktop ? "" : "center"
           },
           bold: {
             fontWeight: String(descriptionBoldWeight),
@@ -1638,6 +1647,7 @@ MiniAboutJs.prototype.insertWhyBox = function () {
           mode: "svg",
           source: svgMaker.horizontalArrow(arrowBaseWidth + (i * secondTab), arrowHeight, colorChip.gray4),
           style: {
+            display: desktop ? "block" : "none",
             position: "absolute",
             top: String(arrowTop) + ea,
             left: String(minusPadding) + ea,
@@ -1654,7 +1664,7 @@ MiniAboutJs.prototype.insertWhyBox = function () {
 
 MiniAboutJs.prototype.insertFaqBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing } = GeneralJs;
   const { ea, media, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -1686,57 +1696,57 @@ MiniAboutJs.prototype.insertFaqBox = function () {
   let faqBlocks;
   let faqPaddingLeft, faqPaddingTop;
 
-  bottomMargin = <%% 200, 200, 200, 200, 200 %%>;
+  bottomMargin = <%% 200, 200, 200, 200, 16 %%>;
   margin = <%% 68, 64, 56, 48, 6 %%>;
-  basePadding = <%% 110, 90, 85, 75, 11 %%>;
-  blockBetween = <%% 10, 10, 10, 10, 10 %%>;
+  basePadding = <%% 110, 90, 85, 75, 13 %%>;
+  blockBetween = <%% 10, 10, 10, 10, 2 %%>;
 
-  faqSize = <%% 36, 36, 32, 27, 36 %%>;
+  faqSize = <%% 36, 36, 32, 27, 5 %%>;
   faqWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  faqBoxMarginTop = <%% 42, 42, 40, 32, 42 %%>;
+  faqBoxMarginTop = <%% 42, 42, 40, 32, 5 %%>;
 
-  faqFactorHeight = <%% 72, 68, 64, 50, 72 %%>;
-  faqFactorTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), 0 %%>;
-  faqFactorSize = <%% 16, 16, 15, 13, 16 %%>;
+  faqFactorHeight = <%% 72, 68, 64, 50, 11 %%>;
+  faqFactorTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.3 %%>;
+  faqFactorSize = <%% 16, 16, 15, 13, 3 %%>;
   faqFactorWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-  finalPhotoHeight = <%% 300, 300, 280, 240, 300 %%>;
+  finalPhotoHeight = <%% 300, 300, 280, 240, 56 %%>;
 
-  finalSize = <%% 28, 26, 24, 21, 28 %%>;
+  finalSize = <%% 28, 26, 24, 21, 5 %%>;
   finalWeight = <%% 700, 700, 700, 700, 700 %%>;
   finalLineHeight = <%% 1.35, 1.35, 1.35, 1.35, 1.35 %%>;
 
-  finalBarWidth = <%% 40, 40, 40, 40, 40 %%>;
-  finalBarHeight = <%% (isMac() ? 18 : 16), (isMac() ? 18 : 16), (isMac() ? 15 : 13), (isMac() ? 12 : 10), 18 %%>;
-  finalBarMarginBottom = <%% 24, 24, 21, 18, 24 %%>;
+  finalBarWidth = <%% 40, 40, 40, 40, 5 %%>;
+  finalBarHeight = <%% (isMac() ? 18 : 16), (isMac() ? 18 : 16), (isMac() ? 15 : 13), (isMac() ? 12 : 10), 3 %%>;
+  finalBarMarginBottom = <%% 24, 24, 21, 18, 4.5 %%>;
 
-  buttonWidth = <%% 100, 100, 100, 90, 100 %%>;
-  buttonHeight = <%% 45, 45, 42, 38, 45 %%>;
+  buttonWidth = <%% 100, 100, 100, 90, 22 %%>;
+  buttonHeight = <%% 45, 45, 42, 38, 9 %%>;
 
-  finalVisual = <%% 8, 8, 8, 8, 8 %%>;
+  finalVisual = <%% 8, 8, 8, 8, 0 %%>;
 
-  buttonTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), 0 %%>;
-  buttonVisual = <%% 16, 16, 15, 14, 16 %%>;
+  buttonTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.4 %%>;
+  buttonVisual = <%% 16, 16, 15, 14, 3.2 %%>;
   buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
 
   ruleBlockWidth = <%% 420, 330, 275, 235, 33 %%>;
 
-  rulesBoxPaddingTop = <%% 100, 90, 85, 65, 11 %%>;
+  rulesBoxPaddingTop = <%% 100, 90, 85, 65, 13 %%>;
 
-  rulesTitleSize = <%% 15, 15, 14, 13, 15 %%>;
+  rulesTitleSize = <%% 15, 15, 14, 13, 3 %%>;
   rulesTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
   rulesTitleLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
-  rulesContentsMarginTop = <%% 8, 8, 8, 8, 8 %%>;
+  rulesContentsMarginTop = <%% 8, 8, 8, 8, 1.5 %%>;
   rulesContentsSize = <%% 13, 13, 12, 10, 2.5 %%>;
   rulesContentsWeight = <%% 400, 400, 400, 400, 400 %%>;
   rulesContentsLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
 
-  rulesContentsLineTop = <%% 40, 40, 40, 40, 40 %%>;
+  rulesContentsLineTop = <%% 40, 40, 40, 40, 6 %%>;
 
-  faqPaddingLeft = <%% 45, 45, 45, 45, 45 %%>;
-  faqPaddingTop = <%% 32, 32, 32, 32, 32 %%>;
+  faqPaddingLeft = <%% 45, 45, 45, 45, 5 %%>;
+  faqPaddingTop = <%% 32, 32, 32, 32, 5 %%>;
 
   contents = {
     faq: [
@@ -1858,6 +1868,7 @@ MiniAboutJs.prototype.insertFaqBox = function () {
       fontFamily: "graphik",
       color: colorChip.black,
       textAlign: "center",
+      paddingTop: desktop ? "" : String(1) + ea,
     }
   })
 
@@ -1965,11 +1976,11 @@ MiniAboutJs.prototype.insertFaqBox = function () {
         }
       },
       style: {
-        display: "inline-flex",
+        display: desktop ? "inline-flex" : "flex",
         position: "relative",
-        marginRight: String(i % 2 === 0 ? blockBetween : 0) + ea,
+        marginRight: desktop ? String(i % 2 === 0 ? blockBetween : 0) + ea : "",
         marginBottom: String(blockBetween) + ea,
-        width: "calc(calc(100% - " + String(blockBetween) + ea + ") / 2)",
+        width: desktop ? "calc(calc(100% - " + String(blockBetween) + ea + ") / 2)" : String(100) + '%',
         height: String(faqFactorHeight) + ea,
         border: "1px solid " + (contents.faq[i].important ? colorChip.green : colorChip.gray3),
         boxSizing: "border-box",
@@ -2089,9 +2100,9 @@ MiniAboutJs.prototype.insertFaqBox = function () {
   createNode({
     mother: transparentBlock,
     style: {
-      display: "inline-block",
+      display: desktop ? "inline-block" : "block",
       position: "relative",
-      width: String(ruleBlockWidth) + ea,
+      width: desktop ? String(ruleBlockWidth) + ea : String(100) + '%',
       verticalAlign: "top",
       borderTop: "1px solid " + colorChip.black,
       paddingTop: String(rulesContentsLineTop) + ea,
@@ -2122,11 +2133,11 @@ MiniAboutJs.prototype.insertFaqBox = function () {
   createNode({
     mother: transparentBlock,
     style: {
-      display: "inline-block",
+      display: desktop ? "inline-block" : "block",
       position: "relative",
-      width: String(ruleBlockWidth) + ea,
+      width: desktop ? String(ruleBlockWidth) + ea : String(100) + '%',
       verticalAlign: "top",
-      borderTop: "1px solid " + colorChip.black,
+      borderTop: desktop ? "1px solid " + colorChip.black : "",
       paddingTop: String(rulesContentsLineTop) + ea,
     },
     children: [
@@ -2155,11 +2166,11 @@ MiniAboutJs.prototype.insertFaqBox = function () {
   createNode({
     mother: transparentBlock,
     style: {
-      display: "inline-block",
+      display: desktop ? "inline-block" : "block",
       position: "relative",
-      width: withOut(ruleBlockWidth * 2, ea),
+      width: desktop ? withOut(ruleBlockWidth * 2, ea) : String(100) + '%',
       verticalAlign: "top",
-      borderTop: "1px solid " + colorChip.black,
+      borderTop: desktop ? "1px solid " + colorChip.black : "",
       paddingTop: String(rulesContentsLineTop) + ea,
     },
     children: [
@@ -2189,7 +2200,7 @@ MiniAboutJs.prototype.insertFaqBox = function () {
 
 MiniAboutJs.prototype.whiteSubmitEvent = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing, ajaxJson, setQueue } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, ajaxJson, setQueue } = GeneralJs;
   const { ea, media, standardWidth, totalContents, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -2249,21 +2260,21 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
     let paymentButtonSize, paymentButtonWeight, paymentButtonTop, paymentButtonPaddingTop, paymentButtonPaddingBottom, paymentButtonPaddingLeft;
     let whiteMaxHeight;
 
-    whiteWidth = <%% 1000, 1000, 800, 660, 60 %%>;
-    whiteMargin = <%% 54, 54, 54, 54, 54 %%>;
-    innerMargin = <%% 54, 54, 54, 54, 54 %%>;
+    whiteWidth = <%% 1000, 1000, 800, 660, 88 %%>;
+    whiteMargin = <%% 54, 54, 54, 54, 6 %%>;
+    innerMargin = <%% 54, 54, 54, 54, 6 %%>;
 
     whiteMaxHeight = 900;
 
-    titleHeight = <%% 41, 39, 37, 35, 41 %%>;
-    paymentHeight = <%% 70, 70, 70, 70, 70 %%>;
+    titleHeight = <%% 41, 39, 37, 35, 8 %%>;
+    paymentHeight = <%% 70, 70, 70, 70, 14 %%>;
 
-    titleSize = <%% 27, 26, 24, 22, 27 %%>;
+    titleSize = <%% 27, 26, 24, 22, 4 %%>;
     titleWeight = <%% 700, 700, 700, 700, 700 %%>;
     titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
-    titleTop = <%% (isMac() ? -10 : -7), (isMac() ? -10 : -7), (isMac() ? -10 : -7), (isMac() ? -10 : -7), -10 %%>;
+    titleTop = <%% (isMac() ? -10 : -7), (isMac() ? -10 : -7), (isMac() ? -10 : -7), (isMac() ? -10 : -7), -0.2 %%>;
 
-    formPaddingTop = <%% 40, 40, 40, 40, 40 %%>;
+    formPaddingTop = <%% 40, 40, 40, 40, 7 %%>;
 
     circleRadius = <%% 2.5, 2.5, 2, 2, 0.5 %%>;
     circleTop = <%% 12, 12, 11, 10.5, (isIphone() ? 2.9 : 2.7) %%>;
@@ -2272,7 +2283,7 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
     grayTop = <%% 0, 0, 0, 0, 0 %%>;
     grayInputTop = <%% (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), -0.2 %%>;
     grayHeight = <%% 32, 32, 31, 31, 7 %%>;
-    grayBigHeight = <%% 92, 92, 92, 92, 92 %%>;
+    grayBigHeight = <%% 92, 92, 92, 92, 31 %%>;
     grayTextAreaTop = <%% 0, 0, 0, 0, 0 %%>;
     grayTextAreaWidth = <%% 51.7, 51.7, 51.7, 390, 51.7 %%>;
 
@@ -2288,13 +2299,13 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
 
     leftGrayType0 = <%% 101, 90, 78, 78, 18 %%>;
     leftGrayType1 = <%% 418, 361, 318, 96, 22.8 %%>;
-    leftGrayType2 = <%% 125, 112, 98, 98, 15 %%>;
+    leftGrayType2 = <%% 125, 112, 98, 98, 22.8 %%>;
     leftGrayType3 = <%% 164, 151, 130, 129, 30.5 %%>;
 
     widthGrayType0 = <%% 160, 140, 130, 150, 34 %%>;
-    widthGrayType1 = <%% 455, 329, 283, 403, 56.5 %%>;
-    widthGrayType2 = <%% 757, 588, 503, 383, 60 %%>;
-    widthGrayType3 = <%% 392, 268, 231, 352, 44 %%>;
+    widthGrayType1 = <%% 455, 329, 283, 403, 58 %%>;
+    widthGrayType2 = <%% 757, 588, 503, 383, 53.2 %%>;
+    widthGrayType3 = <%% 392, 268, 231, 352, 45.5 %%>;
 
     addressWidth = <%% 54, 54, 46, 46, 11 %%>;
     addressSize = <%% 13, 13, 12, 12, 3 %%>;
@@ -2310,25 +2321,25 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
     grayLineBlockFontWeight = <%% 400, 400, 400, 300, 400 %%>;
     grayLineBlockFontTop = <%% 15, 15, 15, 15, 15 %%>;
 
-    policyInnerPadding = <%% 16, 16, 16, 16, 16 %%>;
-    policyTextSize = <%% 10, 10, 10, 10, 2 %%>;
+    policyInnerPadding = <%% 16, 16, 16, 16, 4 %%>;
+    policyTextSize = <%% 10, 10, 10, 10, 2.5 %%>;
 
-    agreeCircleBetween = <%% 5, 5, 5, 5, 5 %%>;
-    agreeCircleTop = <%% 8, 8, 8, 8, 8 %%>;
-    agreeSize = <%% 14, 14, 14, 14, 14 %%>;
+    agreeCircleBetween = <%% 5, 5, 5, 5, 1 %%>;
+    agreeCircleTop = <%% 8, 8, 8, 8, 1.7 %%>;
+    agreeSize = <%% 14, 14, 14, 14, 3 %%>;
     agreeWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-    paymentAmountSize = <%% 30, 30, 30, 30, 30 %%>;
+    paymentAmountSize = <%% 30, 30, 30, 30, 5.2 %%>;
     paymentAmountWeight = <%% 600, 600, 600, 600, 600 %%>;
-    paymentAmountTop = <%% (isMac() ? 17 : 19), (isMac() ? 17 : 19), (isMac() ? 17 : 19), (isMac() ? 17 : 19), 17 %%>;
-    paymentAmountBetween = <%% 20, 20, 20, 20, 20 %%>;
+    paymentAmountTop = <%% (isMac() ? 17 : 19), (isMac() ? 17 : 19), (isMac() ? 17 : 19), (isMac() ? 17 : 19), 3.5 %%>;
+    paymentAmountBetween = <%% 20, 20, 20, 20, 3 %%>;
 
-    paymentButtonSize = <%% 16, 16, 16, 16, 16 %%>;
+    paymentButtonSize = <%% 16, 16, 16, 16, 3.2 %%>;
     paymentButtonWeight = <%% 600, 600, 600, 600, 600 %%>;
-    paymentButtonTop = <%% 12, 12, 12, 12, 12 %%>;
-    paymentButtonPaddingTop = <%% (isMac() ? 8 : 10), (isMac() ? 8 : 10), (isMac() ? 8 : 10), (isMac() ? 8 : 10), 8 %%>;
-    paymentButtonPaddingBottom = <%% (isMac() ? 10 : 9), (isMac() ? 10 : 9), (isMac() ? 10 : 9), (isMac() ? 10 : 9), 10 %%>;
-    paymentButtonPaddingLeft = <%% 18, 18, 18, 18, 18 %%>;
+    paymentButtonTop = <%% 12, 12, 12, 12, 3 %%>;
+    paymentButtonPaddingTop = <%% (isMac() ? 8 : 10), (isMac() ? 8 : 10), (isMac() ? 8 : 10), (isMac() ? 8 : 10), 2 %%>;
+    paymentButtonPaddingBottom = <%% (isMac() ? 10 : 9), (isMac() ? 10 : 9), (isMac() ? 10 : 9), (isMac() ? 10 : 9), 2.5 %%>;
+    paymentButtonPaddingLeft = <%% 18, 18, 18, 18, 3 %%>;
 
     cancelBack = createNode({
       mother: totalContents,
@@ -2364,8 +2375,8 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
       style: {
         position: "fixed",
         width: String(whiteWidth) + ea,
-        height: withOut((whiteMargin * 2) + naviHeight + innerMargin, ea),
-        top: String(naviHeight + whiteMargin) + ea,
+        height: "calc(calc(100% - " + String(naviHeight) + "px" + ") - " + String((whiteMargin * 2) + innerMargin) + ea + ")",
+        top: "calc(" + String(naviHeight) + "px" + " + " + String(whiteMargin) + ea + ")",
         left: "calc(50% - " + String(whiteWidth / 2) + ea + ")",
         borderRadius: String(5) + "px",
         background: colorChip.white,
@@ -2932,7 +2943,7 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
         {
           mode: "textarea",
           attribute: {
-            placeholder: "선호하는 스타일 + 공간의 특이 사항을 적어주세요!",
+            placeholder: desktop ? "선호하는 스타일 + 공간의 특이 사항을 적어주세요!" : "선호하는 스타일 + 공간의 특이 사항을\n적어주세요!",
             property: "etc",
           },
           style: {
