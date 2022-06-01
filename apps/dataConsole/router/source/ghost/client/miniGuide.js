@@ -256,11 +256,11 @@ MiniGuideJs.prototype.insertProcessBox = function () {
 
   blankWidth = <%% 60, 25, 14, 0, 20 %%>;
 
-  circleRadius = <%% 158, 138, 125, 102, 138 %%>;
+  circleRadius = <%% 158, 132, 125, 102, 138 %%>;
   circleMargin = <%% 19, 16, 14, 14, 19 %%>;
   descriptionMarginTop = <%% 6, 5, 4, 4, 6 %%>;
 
-  processLineTop = <%% 120, 106, 96, 84, 120 %%>;
+  processLineTop = <%% 120, 102, 96, 84, 120 %%>;
   processLineHeight = <%% 18, 18, 16, 14, 18 %%>;
 
   numberSize = <%% 15, 15, 15, 15, 15 %%>;
@@ -296,7 +296,7 @@ MiniGuideJs.prototype.insertProcessBox = function () {
         title: "정보 전달",
         description: [
           <&& "가이드에 따라 진행된 실측" | "가이드에 따라 진행된 실측" | "가이드에 따라 진행된 실측" | "가이드에 따라 진행된" | "가이드에 따라 진행된" &&>,
-          <&& "정보와 요청 사항을 전달합니다." | "정보와 요청 사항을 전달합니다." | "정보와 요청 사항을 전달합니다." | "실측 정보를 전달합니다." | "실측 정보를 전달합니다." &&>,
+          <&& "정보와 요청 사항을 전달합니다." | "정보와 요청을 전달합니다." | "정보와 요청을 전달합니다." | "실측 정보를 전달합니다." | "실측 정보를 전달합니다." &&>,
         ],
         image: "process2.jpg",
       },
@@ -312,7 +312,7 @@ MiniGuideJs.prototype.insertProcessBox = function () {
         title: "디자인 시안",
         description: [
           <&& "작업이 완료되면 고객님께" | "작업이 완료되면 고객님께" | "작업이 완료되면 고객님께" | "완료되면 고객님께" | "완료되면 고객님께" &&>,
-          <&& "디자인 시안과 설명을 제공합니다." | "디자인 시안과 설명을 제공합니다." | "디자인 시안과 설명을 제공합니다." | "시안과 설명을 제공합니다." | "시안과 설명을 제공합니다." &&>,
+          <&& "디자인 시안과 설명을 제공합니다." | "시안과 설명을 제공합니다." | "시안과 설명을 제공합니다." | "시안과 설명을 제공합니다." | "시안과 설명을 제공합니다." &&>,
         ],
         image: "process4.jpg",
       },
@@ -502,25 +502,25 @@ MiniGuideJs.prototype.insertGuideBox = function () {
 
   topBottomVisualMargin = <%% 18, 16, 12, 10, 18 %%>;
 
-  guideImageWidth = <%% 876, 876, 876, 876, 876 %%>;
-  guideBlockPaddingTop = <%% 80, 90, 90, 90, 90 %%>;
+  guideImageWidth = <%% 876, 710, 746, 756, 876 %%>;
+  guideBlockPaddingTop = <%% 80, 65, 55, 45, 90 %%>;
 
-  descriptionHeight = <%% 340, 340, 340, 340, 340 %%>;
-  descriptionWidth = <%% 365, 365, 365, 365, 365 %%>;
+  descriptionHeight = <%% 340, 280, 280, 280, 340 %%>;
+  descriptionWidth = <%% 365, 200, 190, 165, 365 %%>;
 
-  bigTitleLineTop = <%% 18, 18, 18, 18, 18 %%>;
-  bigTitleSize = <%% 26, 26, 26, 26, 26 %%>;
+  bigTitleLineTop = <%% 18, 17, 16, 16, 18 %%>;
+  bigTitleSize = <%% 26, 25, 24, 23, 26 %%>;
   bigTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
   bigTitlePaddingLeft = <%% 20, 20, 20, 20, 20 %%>;
 
-  numberSize = <%% 22, 22, 22, 22, 22 %%>;
+  numberSize = <%% 22, 18, 17, 16, 22 %%>;
   numberWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  guideTitleSize = <%% 18, 18, 18, 18, 18 %%>;
+  guideTitleSize = <%% 18, 17, 16, 16, 18 %%>;
   guideTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
   guideTitleLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
 
-  guideDescriptionSize = <%% 14, 14, 14, 14, 14 %%>;
+  guideDescriptionSize = <%% 14, 13, 13, 12, 14 %%>;
   guideDescriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
   guideDescriptionMarginTop = <%% 8, 8, 8, 8, 8 %%>;
 
@@ -533,21 +533,21 @@ MiniGuideJs.prototype.insertGuideBox = function () {
       {
         title: "기본 실측",
         description: [
-          "공간의 실측은 <b%내벽과 내벽간 폭,",
-          "바닥과 천장의 높이%b>를 측정하는 것입니다.",
-          "5m 이상의 줄자를 이용하여 같은 곳이라도",
-          "최소 2회 이상 측정하여 공간의 사이즈를",
-          "정확히 기록해주세요!",
+          "공간의 실측은 <b%내벽간 폭, 바닥과",
+          "천장의 높이%b>를 측정하는 것입니다.",
+          "5m 이상 줄자를 이용하여 같은",
+          "곳이라도 2회 이상 측정하여 공간의",
+          "사이즈를 정확히 기록해주세요!",
         ],
         image: "guide0.svg",
       },
       {
         title: "창문에만 설치시 (반창용)",
         description: [
-          "창 넓이에서 <b%20cm 정도 여유 있게 가로",
-          "사이즈%b>를 측정해주시고, 높이는 <b%커튼 박스",
-          "안의 천장으로부터 창틀 하단%b>까지 20cm",
-          "정도 여유 있게 측정해주시면 됩니다.",
+          "넓이에서 <b%20cm 정도 여유 있게 가로",
+          "사이즈%b>를 측정해주시고, 높이는 <b%커튼",
+          "박스 안 천장으로부터 창틀 하단%b>까지",
+          "여유 있게 측정해주시면 됩니다.",
         ],
         image: "guide1.svg",
       },
@@ -564,10 +564,10 @@ MiniGuideJs.prototype.insertGuideBox = function () {
       {
         title: "침대 사이즈",
         description: [
-          "베딩과 관련한 패브릭 스타일링을 위해",
-          "침대 사이즈 또한 알아야 합니다. 침대",
-          "프레임이 아닌 <b%매트리스 사이즈를 기준으로",
-          "측정%b>해주시면 되며, 매트리스 사이즈 종류와",
+          "베딩과 관련한 스타일링을 위해",
+          "침대 사이즈 또한 알아야 합니다.",
+          "<b%침대 매트리스 사이즈를 기준으로",
+          "측정%b>해주시면 되며, 매트리스 종류와",
           "폭, 길이, 높이를 알려주시면 됩니다.",
         ],
         image: "guide3.svg",
