@@ -252,9 +252,16 @@ MiniProposalJs.prototype.insertCollageBox = function () {
   let bottomMargin;
   let margin;
   let contents;
+  let topBottomVisualMargin;
+  let grayTong;
+  let grayPaddingLeft;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 56, 52, 44, 32, 6 %%>;
+
+  topBottomVisualMargin = <%% 18, 16, 12, 10, 3 %%>;
+
+  grayPaddingLeft = <%% 100, 64, 64, 64, 64 %%>;
 
   contents = {
     title: "콜라주 제공 안내",
@@ -264,7 +271,7 @@ MiniProposalJs.prototype.insertCollageBox = function () {
         "콜라주는 이미지 샘플로 구성된 시각적 표현",
         "방식입니다. 고객님 공간에 맞는 패브릭,",
         "액자, 소품을 조합하여 하나의 스타일을",
-        "연출하는 용도로 만들어 집니다.  ",
+        "연출하는 용도로 만들어 집니다.",
       ],
       [
         "제품 리스트에 있는 모든 제품들이 조합",
@@ -282,15 +289,51 @@ MiniProposalJs.prototype.insertCollageBox = function () {
       position: "relative",
       borderRadius: String(8) + "px",
       width: String(100) + '%',
-      paddingTop: String(margin) + ea,
+      paddingTop: String(margin + topBottomVisualMargin) + ea,
+      paddingBottom: String(margin + topBottomVisualMargin) + ea,
       background: colorChip.white,
       marginBottom: String(bottomMargin) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
     }
   });
 
+  grayTong = createNode({
+    mother: whiteBlock,
+    style: {
+      display: "block",
+      position: "relative",
+      marginLeft: String(margin) + ea,
+      marginRight: String(margin) + ea,
+      paddingLeft: String(grayPaddingLeft) + ea,
+      width: withOut((margin * 2) + grayPaddingLeft, ea),
+      background: colorChip.gray1,
+      borderRadius: String(5) + "px",
+    }
+  });
 
-
+  createNode({
+    mother: grayTong,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      width: String(520) + ea,
+      height: String(100) + '%',
+      background: colorChip.white,
+    },
+    children: [
+      {
+        mode: "img",
+        attribute: {
+          src: contents.image,
+        },
+        style: {
+          display: "block",
+          position: "relative",
+          width: String(100) + '%',
+        }
+      }
+    ]
+  });
 
 
 }
@@ -350,7 +393,17 @@ MiniProposalJs.prototype.insertSecondBox = function () {
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 56, 52, 44, 32, 6 %%>;
 
-  contents = {};
+  contents = {
+    title: [
+      "공간별 디자인 시안과",
+      "제품 리스트",
+    ],
+    description: [
+      "고객님 공간에 딱 맞는 홈리에종 미니 스타일링안을 드립니다. 디자인 시안은 무드 보드와 제품 리스트로 제공되며,",
+      "자세한 상품 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서 배치 및 설치를 진행해주시면 됩니다.",
+      "수정 사항은 별도로 제공되지 않으며 기타 문의 사항이 있을시, 하단 채팅 기능을 통해 홈리에종으로 문의해주시길 바랍니다!",
+    ]
+  };
 
   whiteBlock = createNode({
     mother: this.baseTong,
