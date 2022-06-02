@@ -77,7 +77,7 @@ MiniGuideJs.prototype.insertInitBox = function () {
   let mobileTitleHeight;
   let mobileBottomMargin;
 
-  bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 56, 52, 44, 32, 6 %%>;
   leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
 
@@ -266,7 +266,7 @@ MiniGuideJs.prototype.insertProcessBox = function () {
   let titleMarginTopVisual;
   let mobileBlockWidth;
 
-  bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 56, 52, 44, 32, 6 %%>;
 
   topBottomVisualMargin = <%% 18, 16, 12, 10, 3 %%>;
@@ -529,7 +529,7 @@ MiniGuideJs.prototype.insertGuideBox = function () {
   let bigTitleVisual;
   let mobileGuideBlockFirstTop;
 
-  bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 56, 52, 44, 32, 6 %%>;
 
   topBottomVisualMargin = <%% 18, 16, 12, 10, 3.5 %%>;
@@ -819,7 +819,7 @@ MiniGuideJs.prototype.insertTargetsBox = function () {
   let descriptionAreaMarginBottom;
   let bigTitleVisual;
 
-  bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 56, 52, 44, 32, 6 %%>;
 
   topBottomVisualMargin = <%% 18, 16, 12, 10, 3.5 %%>;
