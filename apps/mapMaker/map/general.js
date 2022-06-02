@@ -670,6 +670,9 @@ module.exports = {
       "miniGuide": {
         "behaviors": []
       },
+      "miniProposal": {
+        "behaviors": []
+      },
       "frontFaq": {
         "behaviors": []
       },
