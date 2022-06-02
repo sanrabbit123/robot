@@ -72,16 +72,21 @@ MiniGuideJs.prototype.insertInitBox = function () {
   let rightBoxPaddingTop;
   let rightBoxPaddingBottom;
   let titleTop;
+  let titlePaddingTop;
+  let descriptionMarginLeft;
+  let mobileTitleHeight;
+  let mobileBottomMargin;
 
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
-  margin = <%% 56, 52, 44, 32, 52 %%>;
+  margin = <%% 56, 52, 44, 32, 6 %%>;
   leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
 
-  titleFont = <%% 31, 29, 27, 23, 5.7 %%>;
+  titleFont = <%% 31, 29, 27, 23, 5.8 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
-  titleFontWeight = <%% 500, 500, 500, 500, 500 %%>;
+  titleFontWeight = <%% 600, 600, 600, 600, 700 %%>;
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
   titleTop = <%% 2, 3, 2, 2, 0 %%>;
+  titlePaddingTop = <%% 5, 5, 5, 5, 5 %%>;
 
   indexFont = <%% 19, 19, 19, 19, 19 %%>;
   indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
@@ -90,19 +95,23 @@ MiniGuideJs.prototype.insertInitBox = function () {
   quoteHeight = <%% 11, 11, 10, 9, 2.5 %%>;
   quoteLeft = <%% 2, 2, 2, 2, 1.6 %%>;
 
-  rightBoxPaddingTop = <%% 25, 25, 23, 21, 5 %%>;
+  rightBoxPaddingTop = <%% 25, 25, 23, 21, 3.5 %%>;
   rightBoxPaddingBottom = <%% 6, 6, 5, 4, 0 %%>;
 
   initWordingSize = <%% 15.5, 15, 14.5, 13, 3.5 %%>;
 
   indexNumberBottom = <%% 3, 4, 12, 4, 0 %%>;
 
-  grayBoxMarginTop = <%% 55, 50, 40, 28, 28 %%>;
+  grayBoxMarginTop = <%% 55, 50, 40, 28, 9.5 %%>;
   grayBoxImageVisualWidth = <%% 6, 4, 0, 0, 19 %%>;
+
+  descriptionMarginLeft = <%% 5, 5, 5, 5, 8 %%>;
+  mobileTitleHeight = 28;
+  mobileBottomMargin = 10;
 
   contents = {
     title: [
-      <&& "공간 실측 가이드와" | "공간 실측 가이드와" | "공간 실측 가이드와" | "실측 가이드와" | "실측 가이드와" &&>,
+      <&& "공간 실측 가이드와" | "공간 실측 가이드와" | "공간 실측 가이드와" | "실측 가이드와" | "공간 실측 가이드와" &&>,
       "제공 품목 안내"
     ],
     description: [
@@ -131,7 +140,7 @@ MiniGuideJs.prototype.insertInitBox = function () {
       display: desktop ? "inline-block" : "block",
       position: "relative",
       width: desktop ? "calc(calc(100% - " + String(margin * 2) + ea + ") * " + String(leftRatio) + ")" : String(100) + '%',
-      height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : String(29) + ea,
+      height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : String(mobileTitleHeight) + ea,
       marginBottom: desktop ? String(margin) + ea : "",
       marginLeft: desktop ? String(margin) + ea : "",
     },
@@ -150,6 +159,7 @@ MiniGuideJs.prototype.insertInitBox = function () {
           width: desktop ? "" : String(100) + '%',
           textAlign: desktop ? "left" : "center",
           top: isMac() ? "" : String(titleTop) + ea,
+          paddingTop: desktop ? "" : String(titlePaddingTop) + ea,
         }
       }
     ]
@@ -162,9 +172,10 @@ MiniGuideJs.prototype.insertInitBox = function () {
       position: "relative",
       verticalAlign: "top",
       top: String(0) + ea,
-      width: desktop ? "calc(calc(100% - " + String(margin * 2) + ea + ") * " + String(1 - leftRatio) + ")" : String(100) + '%',
+      width: desktop ? "calc(calc(100% - " + String(margin * 2) + ea + ") * " + String(1 - leftRatio) + ")" : withOut(margin * 2, ea),
       marginBottom: desktop ? String(margin) + ea : "",
       marginRight: desktop ? String(margin) + ea : "",
+      marginLeft: desktop ? "" : String(margin) + ea,
       paddingTop: String(rightBoxPaddingTop) + ea,
       paddingBottom: String(rightBoxPaddingBottom) + ea,
     }
@@ -190,7 +201,8 @@ MiniGuideJs.prototype.insertInitBox = function () {
     style: {
       display: "block",
       position: "relative",
-      width: String(100) + '%',
+      width: desktop ? String(100) + '%' : withOut(descriptionMarginLeft * 2, ea),
+      marginLeft: desktop ? "" : String(descriptionMarginLeft) + ea,
       fontSize: String(initWordingSize) + ea,
       fontWeight: String(400),
       color: colorChip.black,
@@ -210,7 +222,8 @@ MiniGuideJs.prototype.insertInitBox = function () {
       position: "relative",
       marginTop: desktop ? String(grayBoxMarginTop) + ea : "",
       paddingTop: desktop ? "" : String(grayBoxMarginTop) + ea,
-      width: withOut(grayBoxImageVisualWidth, ea),
+      width: desktop ? withOut(grayBoxImageVisualWidth, ea) : String(100) + '%',
+      paddingBottom: desktop ? "" : String(mobileBottomMargin) + ea,
     }
   });
 
@@ -251,32 +264,35 @@ MiniGuideJs.prototype.insertProcessBox = function () {
   let titleSize, titleWeight, titleLineHeight;
   let descriptionSize, descriptionWeight, descriptionLineHeight;
   let titleMarginTopVisual;
+  let mobileBlockWidth;
 
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
-  margin = <%% 56, 52, 44, 32, 52 %%>;
+  margin = <%% 56, 52, 44, 32, 6 %%>;
 
-  topBottomVisualMargin = <%% 18, 16, 12, 10, 18 %%>;
+  topBottomVisualMargin = <%% 18, 16, 12, 10, 3 %%>;
 
   blankWidth = <%% 60, 25, 14, 0, 20 %%>;
 
-  circleRadius = <%% 158, 132, 120, 98, 138 %%>;
-  circleMargin = <%% 19, 16, 14, 14, 19 %%>;
-  descriptionMarginTop = <%% 6, 5, 4, 4, 6 %%>;
+  circleRadius = <%% 158, 132, 120, 98, 29 %%>;
+  circleMargin = <%% 19, 16, 14, 14, 2.8 %%>;
+  descriptionMarginTop = <%% 6, 5, 4, 4, 1 %%>;
 
   processLineTop = <%% 120, 102, 94, 82, 120 %%>;
   processLineHeight = <%% 18, 18, 16, 14, 18 %%>;
 
-  numberSize = <%% 15, 15, 15, 14, 15 %%>;
+  numberSize = <%% 15, 15, 15, 14, 3 %%>;
   numberWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  titleSize = <%% 19, 18, 16, 14, 19 %%>;
+  titleSize = <%% 19, 18, 16, 14, 4 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
   titleMarginTopVisual = <%% 2, 2, 2, 1, 0 %%>;
 
-  descriptionSize = <%% 13, 13, 11, 11, 13 %%>;
+  descriptionSize = <%% 13, 13, 11, 11, 3 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+
+  mobileBlockWidth = 38;
 
   contents = {
     process: [
@@ -345,46 +361,47 @@ MiniGuideJs.prototype.insertProcessBox = function () {
       display: "block",
       position: "relative",
       width: withOut(margin * 2, ea),
-    }
-  })
-
-  createNode({
-    mother: processBox,
-    style: {
-      position: "absolute",
-      display: "block",
-      width: String(100) + '%',
-      height: String(0),
-      left: String(0),
-      top: String(processLineTop) + ea,
-      borderBottom: "1px solid " + colorChip.gray3,
-      boxSizing: "border-box",
-    }
-  });
-  createNode({
-    mother: processBox,
-    style: {
-      position: "absolute",
-      display: "block",
-      width: String(100) + '%',
-      height: String(processLineHeight) + ea,
-      left: String(0),
-      top: String(processLineTop - (processLineHeight / 2) + 1) + ea,
-      borderRight: "1px solid " + colorChip.gray3,
-      borderLeft: "1px solid " + colorChip.gray3,
-      boxSizing: "border-box",
+      textAlign: desktop ? "" : "center",
     }
   });
 
-
-  createNode({
-    mother: processBox,
-    style: {
-      display: "inline-block",
-      width: String(blankWidth) + ea,
-      verticalAlign: "top",
-    }
-  });
+  if (desktop) {
+    createNode({
+      mother: processBox,
+      style: {
+        position: "absolute",
+        display: "block",
+        width: String(100) + '%',
+        height: String(0),
+        left: String(0),
+        top: String(processLineTop) + ea,
+        borderBottom: "1px solid " + colorChip.gray3,
+        boxSizing: "border-box",
+      }
+    });
+    createNode({
+      mother: processBox,
+      style: {
+        position: "absolute",
+        display: "block",
+        width: String(100) + '%',
+        height: String(processLineHeight) + ea,
+        left: String(0),
+        top: String(processLineTop - (processLineHeight / 2) + 1) + ea,
+        borderRight: "1px solid " + colorChip.gray3,
+        borderLeft: "1px solid " + colorChip.gray3,
+        boxSizing: "border-box",
+      }
+    });
+    createNode({
+      mother: processBox,
+      style: {
+        display: "inline-block",
+        width: String(blankWidth) + ea,
+        verticalAlign: "top",
+      }
+    });
+  }
 
   for (let i = 0; i < contents.process.length; i++) {
 
@@ -392,8 +409,9 @@ MiniGuideJs.prototype.insertProcessBox = function () {
       mother: processBox,
       style: {
         display: "inline-block",
-        width: "calc(calc(100% - " + String(blankWidth * 2) + ea + ") / " + String(contents.process.length) + ")",
+        width: desktop ? "calc(calc(100% - " + String(blankWidth * 2) + ea + ") / " + String(contents.process.length) + ")" : String(mobileBlockWidth) + ea,
         verticalAlign: "top",
+        marginBottom: desktop ? "" : String(i === contents.process.length - 1 ? margin / 2 : 4) + ea,
       }
     });
 
@@ -466,14 +484,16 @@ MiniGuideJs.prototype.insertProcessBox = function () {
 
   }
 
-  createNode({
-    mother: processBox,
-    style: {
-      display: "inline-block",
-      width: String(blankWidth) + ea,
-      verticalAlign: "top",
-    }
-  });
+  if (desktop) {
+    createNode({
+      mother: processBox,
+      style: {
+        display: "inline-block",
+        width: String(blankWidth) + ea,
+        verticalAlign: "top",
+      }
+    });
+  }
 
 }
 
@@ -507,42 +527,45 @@ MiniGuideJs.prototype.insertGuideBox = function () {
   let guideDescriptionBlockNumberTop, guideDescriptionBlockNumberLeft;
   let guideBlockPaddingBottomVisual;
   let bigTitleVisual;
+  let mobileGuideBlockFirstTop;
 
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
-  margin = <%% 56, 52, 44, 32, 52 %%>;
+  margin = <%% 56, 52, 44, 32, 6 %%>;
 
-  topBottomVisualMargin = <%% 18, 16, 12, 10, 18 %%>;
+  topBottomVisualMargin = <%% 18, 16, 12, 10, 3.5 %%>;
 
   guideImageWidth = <%% 876, 710, 812, 756, 876 %%>;
-  guideBlockPaddingTop = <%% 80, 65, 52, 38, 90 %%>;
-  guideBlockPaddingBottomVisual = <%% 0, 0, 8, 6, 0 %%>;
+  guideBlockPaddingTop = <%% 80, 65, 52, 38, 12 %%>;
+  guideBlockPaddingBottomVisual = <%% 0, 0, 8, 6, 2 %%>;
 
   descriptionHeight = <%% 340, 280, 280, 280, 340 %%>;
-  descriptionWidth = <%% 365, 200, 363, 290, 365 %%>;
+  descriptionWidth = <%% 365, 200, 363, 290, 69 %%>;
 
-  bigTitleLineTop = <%% (isMac() ? 18 : 17), 17, 15, 13, 18 %%>;
-  bigTitleSize = <%% 26, 25, 23, 20, 26 %%>;
+  bigTitleLineTop = <%% (isMac() ? 18 : 17), 17, 15, 13, 3.5 %%>;
+  bigTitleSize = <%% 26, 25, 23, 20, 5 %%>;
   bigTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-  bigTitlePaddingLeft = <%% 20, 20, 20, 20, 20 %%>;
+  bigTitlePaddingLeft = <%% 20, 20, 20, 20, 3.2 %%>;
   bigTitleVisual = <%% 3, 3, 2, 2, 0 %%>;
 
-  numberSize = <%% 22, 18, 17, 16, 22 %%>;
+  numberSize = <%% 22, 18, 17, 16, 3.3 %%>;
   numberWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  guideTitleSize = <%% 18, 17, 16, 16, 18 %%>;
+  guideTitleSize = <%% 18, 17, 16, 16, 4 %%>;
   guideTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
   guideTitleLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
 
-  guideDescriptionSize = <%% 14, 13, 13, 12, 14 %%>;
+  guideDescriptionSize = <%% 14, 13, 13, 12, 3 %%>;
   guideDescriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
-  guideDescriptionMarginTop = <%% 8, 8, 8, 8, 8 %%>;
+  guideDescriptionMarginTop = <%% 8, 8, 8, 8, 1.5 %%>;
 
   guideDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   guideDescriptionBoldWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-  guideDescriptionBlockMarginTop = <%% 0, 0, 24, 18, 4 %%>;
+  guideDescriptionBlockMarginTop = <%% 0, 0, 24, 18, 5 %%>;
   guideDescriptionBlockNumberTop = <%% 0, 0, 2, 2, 1 %%>;
   guideDescriptionBlockNumberLeft = <%% 0, 0, 415, 335, 0 %%>;
+
+  mobileGuideBlockFirstTop = 4;
 
   contents = {
     title: "공간 실측 가이드",
@@ -556,7 +579,7 @@ MiniGuideJs.prototype.insertGuideBox = function () {
           "곳이라도 2회 이상 측정하여 공간의",
           "사이즈를 정확히 기록해주세요!",
         ],
-        image: "guide0.svg",
+        image: desktop ? "guide0.svg" : "moguide0.svg",
       },
       {
         title: "창문에만 설치시 (반창용)",
@@ -566,7 +589,7 @@ MiniGuideJs.prototype.insertGuideBox = function () {
           "박스 안 천장으로부터 창틀 하단%b>까지",
           "여유 있게 측정해주시면 됩니다.",
         ],
-        image: "guide1.svg",
+        image: desktop ? "guide1.svg" : "moguide1.svg",
       },
       {
         title: "벽 전체에 설치시 (통창용)",
@@ -576,7 +599,7 @@ MiniGuideJs.prototype.insertGuideBox = function () {
           "높이는 <b%커튼 박스 안의 천장으로부터",
           "바닥%b>까지 측정해주시면 됩니다.",
         ],
-        image: "guide2.svg",
+        image: desktop ? "guide2.svg" : "moguide2.svg",
       },
       {
         title: "침대 사이즈",
@@ -587,7 +610,7 @@ MiniGuideJs.prototype.insertGuideBox = function () {
           "측정%b>해주시면 되며, 매트리스 종류와",
           "폭, 길이, 높이를 알려주시면 됩니다.",
         ],
-        image: "guide3.svg",
+        image: desktop ? "guide3.svg" : "moguide3.svg",
       },
     ]
   };
@@ -599,7 +622,7 @@ MiniGuideJs.prototype.insertGuideBox = function () {
       borderRadius: String(8) + "px",
       width: String(100) + '%',
       paddingTop: String(margin + topBottomVisualMargin) + ea,
-      paddingBottom: String(margin) + ea,
+      paddingBottom: String(desktop ? margin : 5) + ea,
       background: colorChip.white,
       marginBottom: String(bottomMargin) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
@@ -660,6 +683,12 @@ MiniGuideJs.prototype.insertGuideBox = function () {
         borderBottom: i === contents.guide.length - 1 ? "" : "1px dashed " + colorChip.gray3,
       }
     });
+
+    if (mobile) {
+      if (i === 0) {
+        guideBlock.style.paddingTop = String(guideBlockPaddingTop - mobileGuideBlockFirstTop) + ea;
+      }
+    }
 
     guideDescriptionBlock = createNode({
       mother: guideBlock,
@@ -791,44 +820,44 @@ MiniGuideJs.prototype.insertTargetsBox = function () {
   let bigTitleVisual;
 
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
-  margin = <%% 56, 52, 44, 32, 52 %%>;
+  margin = <%% 56, 52, 44, 32, 6 %%>;
 
-  topBottomVisualMargin = <%% 18, 18, 18, 18, 18 %%>;
+  topBottomVisualMargin = <%% 18, 16, 12, 10, 3.5 %%>;
 
-  bigTitleLineTop = <%% (isMac() ? 18 : 17), 17, 15, 13, 18 %%>;
-  bigTitleSize = <%% 26, 25, 23, 20, 26 %%>;
+  bigTitleLineTop = <%% (isMac() ? 18 : 17), 17, 15, 13, 3.5 %%>;
+  bigTitleSize = <%% 26, 25, 23, 20, 5 %%>;
   bigTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-  bigTitlePaddingLeft = <%% 20, 20, 20, 20, 20 %%>;
+  bigTitlePaddingLeft = <%% 20, 20, 20, 20, 3.2 %%>;
   bigTitleVisual = <%% 3, 3, 2, 2, 0 %%>;
 
-  targetsBetween = <%% 20, 18, 16, 12, 20 %%>;
+  targetsBetween = <%% 20, 18, 16, 12, 2 %%>;
 
-  targetsMotherPaddingTop = <%% 40, 30, 25, 24, 40 %%>;
+  targetsMotherPaddingTop = <%% 40, 30, 25, 24, 6.5 %%>;
 
-  targetTitlePaddingTop = <%% (isMac() ? 12 : 14), (isMac() ? 6 : 8), (isMac() ? 5 : 7), (isMac() ? 4 : 6), 12 %%>;
+  targetTitlePaddingTop = <%% (isMac() ? 12 : 14), (isMac() ? 6 : 8), (isMac() ? 5 : 7), (isMac() ? 4 : 6), 2 %%>;
   targetNumberVisual = <%% 1, 1, 1, 1, 1 %%>;
-  targetTitleHeight = <%% (isMac() ? 43 : 41), (isMac() ? 35 : 33), (isMac() ? 30 : 28), (isMac() ? 25 : 23), 43 %%>;
-  targetTitlePaddingLeft = <%% 32, 28, 26, 21, 32 %%>;
+  targetTitleHeight = <%% (isMac() ? 43 : 41), (isMac() ? 35 : 33), (isMac() ? 30 : 28), (isMac() ? 25 : 23), 9 %%>;
+  targetTitlePaddingLeft = <%% 32, 28, 26, 21, 4.5 %%>;
 
-  targetTitleSize = <%% 18, 17, 15, 13, 18 %%>;
+  targetTitleSize = <%% 18, 17, 15, 13, 4 %%>;
   targetTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
   targetNumberWeight = <%% 300, 300, 300, 300, 300 %%>;
 
-  targetItemPaddingTop = <%% (isMac() ? 22 : 21), (isMac() ? 18 : 17), (isMac() ? 16 : 15), (isMac() ? 13 : 12), 22 %%>;
-  targetItemPaddingBottom = <%% (isMac() ? 20 : 20), (isMac() ? 16 : 16), (isMac() ? 14 : 14), (isMac() ? 11 : 11), 20 %%>;
+  targetItemPaddingTop = <%% (isMac() ? 22 : 21), (isMac() ? 18 : 17), (isMac() ? 16 : 15), (isMac() ? 13 : 12), 3.5 %%>;
+  targetItemPaddingBottom = <%% (isMac() ? 20 : 20), (isMac() ? 16 : 16), (isMac() ? 14 : 14), (isMac() ? 11 : 11), 3.5 %%>;
 
-  targetItemSize = <%% 15, 14, 13, 12, 15 %%>;
+  targetItemSize = <%% 15, 14, 13, 12, 3 %%>;
   targetItemWeight = <%% 400, 400, 400, 400, 400 %%>;
-  targetItemMarginBottom = <%% 5, 5, 5, 5, 5 %%>;
+  targetItemMarginBottom = <%% 5, 5, 5, 5, 1 %%>;
 
-  descriptionSize = <%% 14, 13, 13, 12, 14 %%>;
+  descriptionSize = <%% 14, 13, 13, 12, 3 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   descriptionLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
 
   descriptionLineBottom = <%% (isMac() ? 10 : 12), (isMac() ? 16 : 18), (isMac() ? 19 : 21), (isMac() ? 20 : 22), 10 %%>;
 
-  descriptionAreaMarginBottom = <%% 25, 20, 14, 12, 25 %%>;
+  descriptionAreaMarginBottom = <%% 25, 20, 14, 12, 4 %%>;
 
   contents = {
     title: "제공 품목 안내",
@@ -883,12 +912,21 @@ MiniGuideJs.prototype.insertTargetsBox = function () {
       ],
       [
         <&& "패브릭, 액자, 소품에 해당되는 제품군은 위와" | "패브릭, 액자, 소품에 해당되는 제품군은 위와" | "서비스에 해당되는 제품군은 위와" | "서비스에 해당되는 군은 위와" | "서비스에 해당되는 군은 위와" &&>,
-        <&& "같으며, <b%설치와 별도의 실측이 필요한 제품의" | "같으며, <b%설치와 별도의 실측이 필요한 제품의" | "같으며, <b%별도 설치가 필요한 제품의" | "같으며, <b%설치가 필요한 제품의" | "같으며, <b%설치가 필요한 제품의" &&>,
-        <&& "경우, 또는 시공이 필요한 제품의 경우 서비스" | "경우, 또는 시공이 필요한 제품의 경우 서비스" | "경우, 시공이 필요한 경우 범위에" | "경우, 시공이 필요한 경우 범위가" | "경우, 시공이 필요한 경우 범위가" &&>,
+        <&& "같으며, <b%설치와 별도의 실측이 필요한 제품의" | "같으며, <b%설치와 별도의 실측이 필요한 제품의" | "같으며, <b%별도 설치가 필요한 제품의" | "같으며, <b%설치가 필요한 제품의" | "같으며, <b%설치가 필요하거나" &&>,
+        <&& "경우, 또는 시공이 필요한 제품의 경우 서비스" | "경우, 또는 시공이 필요한 제품의 경우 서비스" | "경우, 시공이 필요한 경우 범위에" | "경우, 시공이 필요한 경우 범위가" | "시공이 필요한 경우 범위가" &&>,
         <&& "범위에 해당되지 않아%b> 제공되지 않습니다." | "범위에 해당되지 않아%b> 제공되지 않습니다." | "해당되지 않아%b> 제공되지 않습니다." | "아니어서%b> 제공되지 않습니다." | "아니어서%b> 제공되지 않습니다." &&>,
       ]
     ]
   };
+
+  if (mobile) {
+    contents.targets.push(JSON.parse(JSON.stringify(contents.targets[1])));
+    contents.targets.push(JSON.parse(JSON.stringify(contents.targets[0])));
+    if (contents.targets.length > 4) {
+      contents.targets.shift();
+      contents.targets.shift();
+    }
+  }
 
   whiteBlock = createNode({
     mother: this.baseTong,
@@ -963,7 +1001,7 @@ MiniGuideJs.prototype.insertTargetsBox = function () {
       marginLeft: String(margin) + ea,
       marginRight: String(margin) + ea,
       width: withOut(margin * 2, ea),
-      paddingTop: String(targetsMotherPaddingTop) + ea,
+      paddingTop: String(desktop ? targetsMotherPaddingTop : 3.5) + ea,
       marginBottom: String(descriptionAreaMarginBottom) + ea,
     }
   })
@@ -974,8 +1012,9 @@ MiniGuideJs.prototype.insertTargetsBox = function () {
       style: {
         display: "inline-block",
         position: "relative",
-        marginRight: (i === contents.targets.length - 1 ? String(0) + ea : String(targetsBetween) + ea),
-        width: "calc(calc(100% - " + String(targetsBetween * (contents.targets.length - 1)) + ea + ") / " + String(contents.targets.length) + ")",
+        marginRight: ((desktop ? i === contents.targets.length - 1 : i % 2 === 1) ? String(0) + ea : String(targetsBetween) + ea),
+        marginBottom: desktop ? "" : String(targetsBetween) + ea,
+        width: "calc(calc(100% - " + String(targetsBetween * (desktop ? contents.targets.length - 1 : 1)) + ea + ") / " + String(desktop ? contents.targets.length : 2) + ")",
         verticalAlign: "top",
       }
     });
@@ -992,35 +1031,38 @@ MiniGuideJs.prototype.insertTargetsBox = function () {
         background: colorChip.gray1,
         backgroundImage: "url('" + MiniGuideJs.binaryPath + "/" + contents.targets[i].image + "')",
         backgroundPosition: "50% 50%",
-        backgroundSize: "100% auto",
+        backgroundSize: desktop ? "100% auto" : "auto 100%",
         textAlign: "right",
       }
     });
 
-    createNode({
-      mother: targetTitleBox,
-      text: String(i),
-      style: {
-        top: String(targetTitlePaddingTop + targetNumberVisual) + ea,
-        left: String(targetTitlePaddingLeft) + ea,
-        position: "absolute",
-        fontSize: String(targetTitleSize) + ea,
-        fontWeight: String(targetNumberWeight),
-        color: colorChip.white,
-      }
-    });
+    if (desktop) {
+      createNode({
+        mother: targetTitleBox,
+        text: String(i),
+        style: {
+          top: String(targetTitlePaddingTop + targetNumberVisual) + ea,
+          left: String(targetTitlePaddingLeft) + ea,
+          position: "absolute",
+          fontSize: String(targetTitleSize) + ea,
+          fontWeight: String(targetNumberWeight),
+          color: colorChip.white,
+        }
+      });
+    }
 
     createNode({
       mother: targetTitleBox,
       text: contents.targets[i].title,
       style: {
-        display: "inline-block",
+        display: desktop ? "inline-block" : "block",
         position: "relative",
         fontSize: String(targetTitleSize) + ea,
         fontWeight: String(targetTitleWeight),
         color: colorChip.white,
-        marginRight: String(targetTitlePaddingLeft) + ea,
+        marginRight: desktop ? String(targetTitlePaddingLeft) + ea : "",
         verticalAlign: "top",
+        textAlign: desktop ? "" : "center",
       }
     });
 
@@ -1059,8 +1101,9 @@ MiniGuideJs.prototype.insertTargetsBox = function () {
       style: {
         display: "inline-block",
         position: "relative",
-        marginRight: (i === contents.targets.length - 1 ? String(0) + ea : String(targetsBetween) + ea),
-        width: "calc(calc(100% - " + String(targetsBetween * (contents.targets.length - 1)) + ea + ") / " + String(contents.targets.length) + ")",
+        marginRight: ((desktop ? i === contents.targets.length - 1 : i % 2 === 1) ? String(0) + ea : String(targetsBetween) + ea),
+        marginBottom: desktop ? "" : String(targetsBetween) + ea,
+        width: "calc(calc(100% - " + String(targetsBetween * (desktop ? contents.targets.length - 1 : 1)) + ea + ") / " + String(desktop ? contents.targets.length : 2) + ")",
         verticalAlign: "top",
       }
     });
@@ -1071,7 +1114,7 @@ MiniGuideJs.prototype.insertTargetsBox = function () {
         display: "block",
         position: "relative",
         width: String(100) + '%',
-        height: String(100) + ea,
+        height: desktop ? String(100) + ea : "",
       }
     });
 
@@ -1087,7 +1130,7 @@ MiniGuideJs.prototype.insertTargetsBox = function () {
           fontWeight: String(descriptionWeight),
           color: colorChip.black,
           lineHeight: String(descriptionLineHeight),
-          textAlign: "right",
+          textAlign: desktop ? "right" : "left",
         },
         bold: {
           fontSize: String(descriptionSize) + ea,
@@ -1100,6 +1143,7 @@ MiniGuideJs.prototype.insertTargetsBox = function () {
       createNode({
         mother: descriptionBoxTong,
         style: {
+          display: desktop ? "block" : "none",
           position: "absolute",
           bottom: String(descriptionLineBottom) + ea,
           width: (i === 0 ? "calc(100% + " + String(targetsBetween) + ea + ")" : "calc(100%)"),
@@ -1127,13 +1171,13 @@ MiniGuideJs.prototype.insertNextBox = function () {
   let finalSize, finalWeight, finalRight, finalTop, finalLineHeight;
 
   bottomMargin = <%% 200, 200, 200, 200, 12 %%>;
-  margin = <%% 56, 52, 44, 32, 52 %%>;
+  margin = <%% 56, 52, 44, 32, 6 %%>;
 
-  finalHeight = <%% 224, 200, 194, 180, 224 %%>;
-  finalSize = <%% 27, 26, 24, 21, 27 %%>;
+  finalHeight = <%% 224, 200, 194, 180, 32 %%>;
+  finalSize = <%% 27, 26, 24, 21, 4.5 %%>;
   finalWeight = <%% 700, 700, 700, 700, 700 %%>;
-  finalRight = <%% 125, 100, 92, 80, 125 %%>;
-  finalTop = <%% (isMac() ? 70 : 73), (isMac() ? 63 : 66), (isMac() ? 63 : 65), (isMac() ? 58 : 60), 70 %%>;
+  finalRight = <%% 125, 100, 92, 80, 0 %%>;
+  finalTop = <%% (isMac() ? 70 : 73), (isMac() ? 63 : 66), (isMac() ? 63 : 65), (isMac() ? 58 : 60), 9.5 %%>;
   finalLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
   contents = {
@@ -1171,6 +1215,8 @@ MiniGuideJs.prototype.insertNextBox = function () {
       right: String(finalRight) + ea,
       top: String(finalTop) + ea,
       lineHeight: String(finalLineHeight),
+      textAlign: desktop ? "left" : "center",
+      width: desktop ? "" : String(100) + '%',
     }
   });
 
