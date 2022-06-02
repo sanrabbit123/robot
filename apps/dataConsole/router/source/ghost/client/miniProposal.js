@@ -256,7 +256,25 @@ MiniProposalJs.prototype.insertCollageBox = function () {
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 56, 52, 44, 32, 6 %%>;
 
-  contents = {};
+  contents = {
+    title: "콜라주 제공 안내",
+    sub: "collage",
+    description: [
+      [
+        "콜라주는 이미지 샘플로 구성된 시각적 표현",
+        "방식입니다. 고객님 공간에 맞는 패브릭,",
+        "액자, 소품을 조합하여 하나의 스타일을",
+        "연출하는 용도로 만들어 집니다.  ",
+      ],
+      [
+        "제품 리스트에 있는 모든 제품들이 조합",
+        "되었을 때 어떤 분위기를 내는지, 어떻게",
+        "배치되면 되는지를 알려드립니다.",
+        "가구는 해당 사항이 아니라 제외됩니다.",
+      ]
+    ],
+    image: MiniProposalJs.binaryPath + "/collage" + String(media.findIndex(boo => boo)) + ".svg",
+  };
 
   whiteBlock = createNode({
     mother: this.baseTong,
@@ -270,6 +288,10 @@ MiniProposalJs.prototype.insertCollageBox = function () {
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
     }
   });
+
+
+
+
 
 }
 
@@ -287,7 +309,17 @@ MiniProposalJs.prototype.insertPhotoBox = function () {
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 56, 52, 44, 32, 6 %%>;
 
-  contents = {};
+  contents = {
+    title: "참고 사진 제공 안내",
+    description: [
+      "무드 보드와 함께 배치의 이해를 도울 수",
+      "있도록 같은 컨셉의 인테리어 사진이 첨부될",
+      "수 있습니다. 하지만 참고 사진은 제품의",
+      "하나하나의 구성이 실제 무드 보드 / 제품",
+      "리스트와 다를 수 있으며 컨셉만 같다는",
+      "점을 유의하시길 바랍니다.",
+    ]
+  };
 
   whiteBlock = createNode({
     mother: this.baseTong,
