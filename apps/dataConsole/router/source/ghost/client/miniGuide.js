@@ -499,7 +499,7 @@ MiniGuideJs.prototype.insertProcessBox = function () {
 
 MiniGuideJs.prototype.insertGuideBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing } = GeneralJs;
   const { client, ea, media, osException, testMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -547,8 +547,8 @@ MiniGuideJs.prototype.insertGuideBox = function () {
   bigTitlePaddingLeft = <%% 20, 20, 20, 20, 3.2 %%>;
   bigTitleVisual = <%% 3, 3, 2, 2, 0 %%>;
 
-  numberSize = <%% 22, 18, 17, 16, 3.3 %%>;
-  numberWeight = <%% 400, 400, 400, 400, 400 %%>;
+  numberSize = <%% 22, 18, 17, 16, 3.8 %%>;
+  numberWeight = <%% 400, 400, 400, 400, 700 %%>;
 
   guideTitleSize = <%% 18, 17, 16, 16, 4 %%>;
   guideTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -562,7 +562,7 @@ MiniGuideJs.prototype.insertGuideBox = function () {
   guideDescriptionBoldWeight = <%% 600, 600, 600, 600, 600 %%>;
 
   guideDescriptionBlockMarginTop = <%% 0, 0, 24, 18, 5 %%>;
-  guideDescriptionBlockNumberTop = <%% 0, 0, 2, 2, 1 %%>;
+  guideDescriptionBlockNumberTop = <%% 0, 0, 2, 2, (isIphone() ? 0.4 : 0.6) %%>;
   guideDescriptionBlockNumberLeft = <%% 0, 0, 415, 335, 0 %%>;
 
   mobileGuideBlockFirstTop = 4;
@@ -712,7 +712,7 @@ MiniGuideJs.prototype.insertGuideBox = function () {
         fontSize: String(numberSize) + ea,
         fontWeight: String(numberWeight),
         color: colorChip.black,
-        fontFamily: "graphik",
+        fontFamily: desktop ? "graphik" : "sandoll",
         top: big ? "" : String(guideDescriptionBlockNumberTop) + ea,
         left: big ? "" : String(guideDescriptionBlockNumberLeft) + ea,
       }
