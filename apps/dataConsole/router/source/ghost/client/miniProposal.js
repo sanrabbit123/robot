@@ -258,8 +258,12 @@ MiniProposalJs.prototype.insertCollageBox = function () {
   let descriptionBox;
   let imageBox;
   let imageWidth, imageHeight;
-  let descriptionBoxPaddingTop, descriptionBoxPaddingBottom, descriptionBoxPaddingLeft;
+  let descriptionBoxPaddingTop, descriptionBoxPaddingBottom, descriptionBoxPaddingLeft, descriptionBoxPaddingRight;
   let descriptionTextTong;
+  let titleSize, titleWeight, titleLineHeight;
+  let descriptionPaddingTop;
+  let descriptionSize, descriptionWeight, descriptionBoldWeight, descriptionLineHeight;
+  let subSize, subWeight, subTop, subRight;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 56, 52, 44, 32, 6 %%>;
@@ -268,12 +272,29 @@ MiniProposalJs.prototype.insertCollageBox = function () {
 
   grayPaddingLeft = <%% 100, 64, 64, 64, 64 %%>;
 
-  imageWidth = <%% 520, 520, 520, 520, 520 %%>;
-  imageHeight = <%% 520, 520, 520, 520, 520 %%>;
+  imageWidth = <%% 550, 520, 520, 520, 520 %%>;
+  imageHeight = <%% 550, 520, 520, 520, 520 %%>;
 
-  descriptionBoxPaddingTop = <%% 72, 72, 72, 72, 10 %%>;
-  descriptionBoxPaddingBottom = <%% 72, 72, 72, 72, 10 %%>;
-  descriptionBoxPaddingLeft = <%% 64, 64, 64, 64, 64 %%>;
+  titleSize = <%% 18, 18, 18, 18, 18 %%>;
+  titleWeight = <%% 700, 700, 700, 700, 700 %%>;
+  titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
+
+  descriptionBoxPaddingTop = <%% 64, 64, 64, 64, 10 %%>;
+  descriptionBoxPaddingBottom = <%% 64, 64, 64, 64, 10 %%>;
+  descriptionBoxPaddingLeft = <%% 80, 64, 64, 64, 64 %%>;
+  descriptionBoxPaddingRight = <%% 20, 24, 24, 24, 24 %%>;
+
+  descriptionPaddingTop = <%% 11, 11, 11, 11, 11 %%>;
+
+  descriptionSize = <%% 14, 14, 14, 14, 14 %%>;
+  descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+  descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+  descriptionLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
+
+  subSize = <%% 16, 16, 16, 16, 16 %%>;
+  subWeight = <%% 400, 400, 400, 400, 400 %%>;
+  subTop = <%% -12, -12, -12, -12, -12 %%>;
+  subRight = <%% 44, 44, 44, 44, 44 %%>;
 
   contents = {
     title: "콜라주 제공 안내",
@@ -281,14 +302,14 @@ MiniProposalJs.prototype.insertCollageBox = function () {
     description: [
       [
         "콜라주는 이미지 샘플로 구성된 시각적 표현",
-        "방식입니다. 고객님 공간에 맞는 패브릭,",
+        "방식입니다. 고객님 공간에 맞는 <b%패브릭,",
         "액자, 소품을 조합하여 하나의 스타일을",
-        "연출하는 용도로 만들어 집니다.",
+        "연출%b>하는 용도로 만들어 집니다.",
       ],
       [
         "제품 리스트에 있는 모든 제품들이 조합",
-        "되었을 때 어떤 분위기를 내는지, 어떻게",
-        "배치되면 되는지를 알려드립니다.",
+        "되었을 때 <b%어떤 분위기를 내는지, 어떻게",
+        "배치되면 되는 지%b>를 알려드립니다.",
         "가구는 해당 사항이 아니라 제외됩니다.",
       ]
     ],
@@ -350,15 +371,16 @@ MiniProposalJs.prototype.insertCollageBox = function () {
   descriptionBox = createNode({
     mother: grayTong,
     style: {
-      display: "inline-block",
+      display: "inline-flex",
       position: "relative",
       marginLeft: String(descriptionBoxPaddingLeft) + ea,
-      width: withOut(imageWidth + (descriptionBoxPaddingLeft * 2), ea),
+      width: withOut(imageWidth + (descriptionBoxPaddingLeft + descriptionBoxPaddingRight), ea),
       marginTop: String(descriptionBoxPaddingTop) + ea,
       marginBottom: String(descriptionBoxPaddingBottom) + ea,
       height: String(imageHeight - descriptionBoxPaddingTop - descriptionBoxPaddingBottom) + ea,
       verticalAlign: "top",
-      background: "aqua"
+      flexDirection: "column",
+      justifyContent: "end"
     }
   });
 
@@ -369,8 +391,9 @@ MiniProposalJs.prototype.insertCollageBox = function () {
       display: "block",
       position: "relative",
       textAlign: "left",
-      fontSize: String(24) + ea,
-      fontWeight: String(700),
+      fontSize: String(titleSize) + ea,
+      fontWeight: String(titleWeight),
+      lineHeight: String(titleLineHeight),
       color: colorChip.black,
     }
   });
@@ -381,27 +404,47 @@ MiniProposalJs.prototype.insertCollageBox = function () {
       display: "block",
       position: "relative",
       width: String(100) + '%',
+      paddingTop: String(descriptionPaddingTop) + ea,
     }
   });
 
   for (let i = 0; i < contents.description.length; i++) {
     createNode({
       mother: descriptionTextTong,
+      text: contents.description[i].join("\n"),
       style: {
         display: "inline-block",
-        width: String(50) + '%',
-        fontSize: String(14) + ea,
-        fontWeight: String(400),
+        width: "calc(100% / " + String(contents.description.length) + ")",
+        fontSize: String(descriptionSize) + ea,
+        fontWeight: String(descriptionWeight),
         color: colorChip.black,
+        lineHeight: String(descriptionLineHeight),
+      },
+      bold: {
+        fontSize: String(descriptionSize) + ea,
+        fontWeight: String(descriptionBoldWeight),
+        color: colorChip.black,
+        lineHeight: String(descriptionLineHeight),
       }
-    })
-
-
-
+    });
   }
 
-
-
+  createNode({
+    mother: descriptionBox,
+    text: contents.sub,
+    style: {
+      display: "block",
+      position: "absolute",
+      textAlign: "right",
+      width: String(100) + '%',
+      fontSize: String(subSize) + ea,
+      fontWeight: String(subWeight),
+      top: String(subTop) + ea,
+      right: String(subRight) + ea,
+      fontFamily: "graphik",
+      color: colorChip.black,
+    }
+  });
 
 }
 
@@ -412,22 +455,61 @@ MiniProposalJs.prototype.insertPhotoBox = function () {
   const mobile = media[4];
   const desktop = !mobile;
   let whiteBlock;
-  let bottomMargin;
   let margin;
   let contents;
+  let photoTong;
+  let photoTongWidth;
+  let photoTongHeight;
+  let descriptionTong;
+  let titleSize;
+  let titleWeight;
+  let titleLineHeight;
+  let descriptionPaddingTop;
+  let descriptionSize;
+  let descriptionWeight;
+  let descriptionBoldWeight;
+  let descriptionLineHeight;
+  let photoBetween;
+  let basePadding;
 
-  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  basePadding = <%% 150, 90, 85, 75, 11 %%>;
+
   margin = <%% 56, 52, 44, 32, 6 %%>;
+
+  photoTongWidth = <%% 1150, 1150, 1150, 1150, 1150 %%>;
+  photoTongHeight = <%% 241, 241, 241, 241, 241 %%>;
+
+  photoBetween = <%% 10, 10, 10, 10, 10 %%>;
+
+  titleSize = <%% 18, 18, 18, 18, 18 %%>;
+  titleWeight = <%% 700, 700, 700, 700, 700 %%>;
+  titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
+
+  descriptionPaddingTop = <%% 11, 11, 11, 11, 11 %%>;
+
+  descriptionSize = <%% 14, 14, 14, 14, 14 %%>;
+  descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+  descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+  descriptionLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
+
 
   contents = {
     title: "참고 사진 제공 안내",
     description: [
       "무드 보드와 함께 배치의 이해를 도울 수",
-      "있도록 같은 컨셉의 인테리어 사진이 첨부될",
+      "있도록 <b%같은 컨셉의 인테리어 사진이 첨부%b>될",
       "수 있습니다. 하지만 참고 사진은 제품의",
       "하나하나의 구성이 실제 무드 보드 / 제품",
       "리스트와 다를 수 있으며 컨셉만 같다는",
       "점을 유의하시길 바랍니다.",
+    ],
+    images: [
+      MiniProposalJs.binaryPath + "/" + "sample0.jpg",
+      MiniProposalJs.binaryPath + "/" + "sample1.jpg",
+      MiniProposalJs.binaryPath + "/" + "sample2.jpg",
+      MiniProposalJs.binaryPath + "/" + "sample3.jpg",
+      MiniProposalJs.binaryPath + "/" + "sample4.jpg",
+      MiniProposalJs.binaryPath + "/" + "sample5.jpg",
     ]
   };
 
@@ -435,14 +517,83 @@ MiniProposalJs.prototype.insertPhotoBox = function () {
     mother: this.baseTong,
     style: {
       position: "relative",
-      borderRadius: String(8) + "px",
       width: String(100) + '%',
       paddingTop: String(margin) + ea,
-      background: colorChip.white,
-      marginBottom: String(bottomMargin) + ea,
-      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      paddingBottom: String(basePadding) + ea,
     }
   });
+
+  photoTong = createNode({
+    mother: whiteBlock,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      width: String(photoTongWidth) + ea,
+      height: String(photoTongHeight) + ea,
+      verticalAlign: "top",
+    }
+  });
+
+  for (let i = 0; i < contents.images.length; i++) {
+    createNode({
+      mother: photoTong,
+      mode: "img",
+      attribute: {
+        src: contents.images[i]
+      },
+      style: {
+        display: "inline-block",
+        position: "relative",
+        height: String(100) + '%',
+        borderRadius: String(5) + "px",
+        marginRight: String(photoBetween) + ea,
+      }
+    });
+  }
+
+  descriptionTong = createNode({
+    mother: whiteBlock,
+    style: {
+      display: "inline-flex",
+      verticalAlign: "top",
+      position: "relative",
+      flexDirection: "column",
+      justifyContent: "end",
+      width: withOut(photoTongWidth, ea),
+      height: String(photoTongHeight) + ea,
+    }
+  });
+
+  createNode({
+    mother: descriptionTong,
+    text: contents.title,
+    style: {
+      display: "block",
+      fontSize: String(titleSize) + ea,
+      fontWeight: String(titleWeight),
+      color: colorChip.black,
+      lineHeight: String(titleLineHeight),
+      marginBottom: String(descriptionPaddingTop) + ea,
+    }
+  });
+
+  createNode({
+    mother: descriptionTong,
+    text: contents.description.join("\n"),
+    style: {
+      display: "block",
+      fontSize: String(descriptionSize) + ea,
+      fontWeight: String(descriptionWeight),
+      color: colorChip.black,
+      lineHeight: String(descriptionLineHeight),
+    },
+    bold: {
+      fontSize: String(descriptionSize) + ea,
+      fontWeight: String(descriptionBoldWeight),
+      color: colorChip.black,
+    }
+  });
+
 
 }
 
@@ -453,12 +604,56 @@ MiniProposalJs.prototype.insertSecondBox = function () {
   const mobile = media[4];
   const desktop = !mobile;
   let whiteBlock;
+  let whiteBase;
   let bottomMargin;
   let margin;
   let contents;
+  let baseTongClone;
+  let basePadding;
+  let titleTextTong;
+  let titleTextTitleWidth;
+  let titleTextTongHeight;
+  let titleTextTitleSize, titleTextTitleWeight, titleTextTitleLineHeight;
+  let titleTextDescriptionSize, titleTextDescriptionWeight, titleTextDescriptionBoldWeight, titleTextDescriptionLineHeight;
+  let titleTextDescriptionPaddingTop;
+  let topBottomVisualMargin;
+  let grayBlock;
+  let grayTitleSize, grayTitleWeight, grayTitleLineHeight;
+  let grayTitlePadding;
+  let grayTitleLineTop;
+  let collageWhiteTong;
+  let collageSlideBetween;
+  let collageInnerMargin;
+  let collageDescriptionBox;
+
+  basePadding = <%% 150, 90, 85, 75, 11 %%>;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 56, 52, 44, 32, 6 %%>;
+
+  titleTextTitleWidth = <%% 340, 340, 340, 340, 340 %%>;
+  titleTextTongHeight = <%% 85, 85, 85, 85, 85 %%>;
+
+  titleTextTitleSize = <%% 26, 26, 26, 26, 26 %%>;
+  titleTextTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
+  titleTextTitleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+
+  titleTextDescriptionSize = <%% 14, 14, 14, 14, 14 %%>;
+  titleTextDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+  titleTextDescriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+  titleTextDescriptionLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
+  titleTextDescriptionPaddingTop = <%% 3, 3, 3, 3, 3 %%>;
+
+  topBottomVisualMargin = <%% 8, 8, 8, 8, 0 %%>;
+
+  grayTitleSize = <%% 25, 25, 25, 25, 25 %%>;
+  grayTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+  grayTitleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
+  grayTitlePadding = <%% 20, 20, 20, 20, 20 %%>;
+  grayTitleLineTop = <%% 17, 17, 17, 17, 17 %%>;
+
+  collageSlideBetween = <%% 12, 12, 12, 12, 12 %%>;
+  collageInnerMargin = <%% 24, 24, 24, 24, 24 %%>;
 
   contents = {
     title: [
@@ -466,54 +661,432 @@ MiniProposalJs.prototype.insertSecondBox = function () {
       "제품 리스트",
     ],
     description: [
-      "고객님 공간에 딱 맞는 홈리에종 미니 스타일링안을 드립니다. 디자인 시안은 무드 보드와 제품 리스트로 제공되며,",
+      "고객님 공간에 딱 맞는 홈리에종 미니 스타일링안을 드립니다. <b%디자인 시안은 무드 보드와 제품 리스트로 제공되며,%b>",
       "자세한 상품 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서 배치 및 설치를 진행해주시면 됩니다.",
       "수정 사항은 별도로 제공되지 않으며 기타 문의 사항이 있을시, 하단 채팅 기능을 통해 홈리에종으로 문의해주시길 바랍니다!",
-    ]
+    ],
+    proposal: {
+      collage: {
+        title: "무드보드와 콜라주",
+        slide: [
+          MiniProposalJs.binaryPath + "/" + "proposal0.jpg",
+          MiniProposalJs.binaryPath + "/" + "proposal1.jpg",
+        ],
+        description: {
+          title: "디자인 시안 설명",
+          matrix: [
+            [
+              "창 넓이에서 20cm 정도 여유 있게 가로",
+              "사이즈를 측정해주시고, 높이는 커튼 박스",
+              "안의 천장으로부터 창틀 하단까지 20cm",
+              "정도 여유 있게 측정해주시면 됩니다.",
+            ],
+            [
+              "창 넓이에서 20cm 정도 여유 있게 가로",
+              "사이즈를 측정해주시고, 높이는 커튼 박스",
+              "안의 천장으로부터 창틀 하단까지 20cm",
+              "정도 여유 있게 측정해주시면 됩니다.",
+            ],
+          ]
+        }
+      },
+      reference: {
+        title: "참고 사진",
+        slide: [
+          MiniProposalJs.binaryPath + "/" + "reference0.jpg",
+          MiniProposalJs.binaryPath + "/" + "reference1.jpg",
+          MiniProposalJs.binaryPath + "/" + "reference2.jpg",
+          MiniProposalJs.binaryPath + "/" + "reference3.jpg",
+        ]
+      },
+      table: {
+        title: "제품 리스트",
+        list: [
+          {
+            image: MiniProposalJs.binaryPath + "/" + "item0.png",
+            name: "거실 실링팬",
+            number: 1,
+            price: {
+              unit: 389000,
+              delivery: 0
+            },
+            detail: "화이트 / 화이트",
+            where: {
+              name: "에어블로우",
+              link: "https://google.com",
+            }
+          },
+          {
+            image: MiniProposalJs.binaryPath + "/" + "item1.png",
+            name: "스텐드 조명",
+            number: 1,
+            price: {
+              unit: 370000,
+              delivery: 0
+            },
+            detail: "노란빛",
+            where: {
+              name: "슬로우 빌라",
+              link: "https://google.com",
+            }
+          },
+          {
+            image: MiniProposalJs.binaryPath + "/" + "item2.png",
+            name: "스텐드 조명",
+            number: 1,
+            price: {
+              unit: 256000,
+              delivery: 0
+            },
+            detail: "미니 소프트웜 / 스노우 화이트",
+            where: {
+              name: "라문직영샵",
+              link: "https://google.com",
+            }
+          },
+          {
+            image: MiniProposalJs.binaryPath + "/" + "item3.png",
+            name: "조명 펜던트",
+            number: 2,
+            price: {
+              unit: 125000,
+              delivery: 0
+            },
+            detail: "주백색 일체형",
+            where: {
+              name: "조명나라",
+              link: "https://google.com",
+            }
+          },
+          {
+            image: MiniProposalJs.binaryPath + "/" + "item4.png",
+            name: "조명 펜던트",
+            number: 1,
+            price: {
+              unit: 95000,
+              delivery: 0
+            },
+            detail: "400H / 노란빛",
+            where: {
+              name: "조명나라",
+              link: "https://google.com",
+            }
+          },
+          {
+            image: MiniProposalJs.binaryPath + "/" + "item5.png",
+            name: "조명 펜던트",
+            number: 1,
+            price: {
+              unit: 74200,
+              delivery: 0
+            },
+            detail: "380 파이 / 볼전구 주백색",
+            where: {
+              name: "공간조명",
+              link: "https://google.com",
+            }
+          },
+          {
+            image: MiniProposalJs.binaryPath + "/" + "item6.png",
+            name: "조명 펜던트",
+            number: 1,
+            price: {
+              unit: 66000,
+              delivery: 0
+            },
+            detail: "화이트 / 화이트 / 12W 볼전구 전구색",
+            where: {
+              name: "라디룸",
+              link: "https://google.com",
+            }
+          },
+          {
+            image: MiniProposalJs.binaryPath + "/" + "item7.png",
+            name: "조명 펜던트",
+            number: 1,
+            price: {
+              unit: 57900,
+              delivery: 3000
+            },
+            detail: "150파이 / 일반형 / 2M / 노란빛",
+            where: {
+              name: "제일조명",
+              link: "https://google.com",
+            }
+          },
+          {
+            image: MiniProposalJs.binaryPath + "/" + "item8.png",
+            name: "스텐드 조명",
+            number: 1,
+            price: {
+              unit: 156000,
+              delivery: 3000
+            },
+            detail: "버터 / 디밍",
+            where: {
+              name: "1962",
+              link: "https://google.com",
+            }
+          },
+        ]
+      }
+    }
   };
 
+  // another base
+  whiteBase = createNode({
+    mother: this.baseTong.parentElement,
+    style: {
+      display: "block",
+      width: String(100) + '%',
+      position: "relative",
+      background: colorChip.gray3,
+    }
+  });
+
+  baseTongClone = this.baseTong.cloneNode(false);
+  whiteBase.appendChild(baseTongClone);
+
+  baseTongClone.style.paddingTop = String(basePadding) + ea;
+  baseTongClone.style.paddingBottom = String(basePadding) + ea;
+
+  // white
   whiteBlock = createNode({
-    mother: this.baseTong,
+    mother: baseTongClone,
     style: {
       position: "relative",
       borderRadius: String(8) + "px",
       width: String(100) + '%',
-      paddingTop: String(margin) + ea,
+      paddingTop: String(margin - topBottomVisualMargin) + ea,
+      paddingBottom: String(margin - topBottomVisualMargin) + ea,
       background: colorChip.white,
       marginBottom: String(bottomMargin) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
     }
   });
+  titleTextTong = createNode({
+    mother: whiteBlock,
+    style: {
+      display: "block",
+      position: "relative",
+      marginLeft: String(margin) + ea,
+      width: withOut(margin * 2, ea),
+      height: String(titleTextTongHeight) + ea,
+    }
+  });
+  createNode({
+    mother: titleTextTong,
+    text: contents.title.join("\n"),
+    style: {
+      display: "inline-block",
+      position: "relative",
+      width: String(titleTextTitleWidth) + ea,
+      fontSize: String(titleTextTitleSize) + ea,
+      fontWeight: String(titleTextTitleWeight),
+      color: colorChip.black,
+      lineHeight: String(titleTextTitleLineHeight),
+      verticalAlign: "top",
+    }
+  });
+  createNode({
+    mother: titleTextTong,
+    text: contents.description.join("\n"),
+    style: {
+      display: "inline-block",
+      position: "relative",
+      width: withOut(titleTextTitleWidth, ea),
+      fontSize: String(titleTextDescriptionSize) + ea,
+      fontWeight: String(titleTextDescriptionWeight),
+      color: colorChip.black,
+      lineHeight: String(titleTextDescriptionLineHeight),
+      verticalAlign: "top",
+      paddingTop: String(titleTextDescriptionPaddingTop) + ea,
+    },
+    bold: {
+      fontSize: String(titleTextDescriptionSize) + ea,
+      fontWeight: String(titleTextDescriptionBoldWeight),
+      color: colorChip.green,
+    }
+  });
 
-}
-
-MiniProposalJs.prototype.insertProposalBox = function () {
-  const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
-  const { client, ea, media, osException, testMode } = this;
-  const mobile = media[4];
-  const desktop = !mobile;
-  let whiteBlock;
-  let bottomMargin;
-  let margin;
-  let contents;
-
-  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 56, 52, 44, 32, 6 %%>;
-
-  contents = {};
-
-  whiteBlock = createNode({
-    mother: this.baseTong,
+  // gray
+  grayBlock = createNode({
+    mother: baseTongClone,
     style: {
       position: "relative",
       borderRadius: String(8) + "px",
       width: String(100) + '%',
-      paddingTop: String(margin) + ea,
-      background: colorChip.white,
+      paddingTop: String(margin - topBottomVisualMargin) + ea,
+      paddingBottom: String(margin - topBottomVisualMargin) + ea,
+      background: colorChip.gray1,
       marginBottom: String(bottomMargin) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
     }
+  });
+
+  // gray 1 : collage
+  createNode({
+    mother: grayBlock,
+    style: {
+      display: "block",
+      position: "relative",
+      textAlign: "center",
+      marginLeft: String(margin) + ea,
+      width: withOut(margin * 2, ea),
+    },
+    children: [
+      {
+        style: {
+          position: "absolute",
+          width: String(100) + '%',
+          top: String(0),
+          left: String(0),
+          height: String(grayTitleLineTop) + ea,
+          borderBottom: "1px solid " + colorChip.gray3,
+        }
+      },
+      {
+        text: contents.proposal.collage.title,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(grayTitleSize) + ea,
+          fontWeight: String(grayTitleWeight),
+          lineHeight: String(grayTitleLineHeight),
+          color: colorChip.black,
+          paddingLeft: String(grayTitlePadding) + ea,
+          paddingRight: String(grayTitlePadding) + ea,
+          background: colorChip.gray1,
+        }
+      }
+    ]
+  });
+
+  collageWhiteTong = createNode({
+    mother: grayBlock,
+    style: {
+      display: "block",
+      position: "relative",
+      textAlign: "center",
+      marginLeft: String(margin) + ea,
+      width: withOut((margin * 2) + (collageInnerMargin * 2), ea),
+      background: colorChip.white,
+      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      paddingTop: String(collageInnerMargin) + ea,
+      paddingBottom: String(collageInnerMargin) + ea,
+      paddingLeft: String(collageInnerMargin) + ea,
+      paddingRight: String(collageInnerMargin) + ea,
+      borderRadius: String(8) + "px",
+      marginTop: String(36) + ea,
+      marginBottom: String(40) + ea,
+    }
+  });
+
+  for (let i = 0; i < contents.proposal.collage.slide.length; i++) {
+    createNode({
+      mother: collageWhiteTong,
+      mode: "img",
+      attribute: {
+        src: contents.proposal.collage.slide[i],
+      },
+      style: {
+        display: "block",
+        position: "relative",
+        width: String(100) + '%',
+        marginBottom: String(collageSlideBetween) + ea,
+      }
+    });
+  }
+
+  collageDescriptionBox = createNode({
+    mother: collageWhiteTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      height: String(400) + ea,
+      marginTop: String(100) + ea,
+    }
+  });
+
+
+
+
+
+  // gray 2 : reference
+  createNode({
+    mother: grayBlock,
+    style: {
+      display: "block",
+      position: "relative",
+      textAlign: "center",
+      marginLeft: String(margin) + ea,
+      width: withOut(margin * 2, ea),
+    },
+    children: [
+      {
+        style: {
+          position: "absolute",
+          width: String(100) + '%',
+          top: String(0),
+          left: String(0),
+          height: String(grayTitleLineTop) + ea,
+          borderBottom: "1px solid " + colorChip.gray3,
+        }
+      },
+      {
+        text: contents.proposal.reference.title,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(grayTitleSize) + ea,
+          fontWeight: String(grayTitleWeight),
+          lineHeight: String(grayTitleLineHeight),
+          color: colorChip.black,
+          paddingLeft: String(grayTitlePadding) + ea,
+          paddingRight: String(grayTitlePadding) + ea,
+          background: colorChip.gray1,
+        }
+      }
+    ]
+  });
+
+  // gray 3 : table
+  createNode({
+    mother: grayBlock,
+    style: {
+      display: "block",
+      position: "relative",
+      textAlign: "center",
+      marginLeft: String(margin) + ea,
+      width: withOut(margin * 2, ea),
+    },
+    children: [
+      {
+        style: {
+          position: "absolute",
+          width: String(100) + '%',
+          top: String(0),
+          left: String(0),
+          height: String(grayTitleLineTop) + ea,
+          borderBottom: "1px solid " + colorChip.gray3,
+        }
+      },
+      {
+        text: contents.proposal.table.title,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(grayTitleSize) + ea,
+          fontWeight: String(grayTitleWeight),
+          lineHeight: String(grayTitleLineHeight),
+          color: colorChip.black,
+          paddingLeft: String(grayTitlePadding) + ea,
+          paddingRight: String(grayTitlePadding) + ea,
+          background: colorChip.gray1,
+        }
+      }
+    ]
   });
 
 }
@@ -542,7 +1115,6 @@ MiniProposalJs.prototype.launching = async function (loading) {
           instance.insertCollageBox();
           instance.insertPhotoBox();
           instance.insertSecondBox();
-          instance.insertProposalBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "MiniProposalJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
         }
