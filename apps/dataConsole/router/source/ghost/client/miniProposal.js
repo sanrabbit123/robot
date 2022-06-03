@@ -259,6 +259,7 @@ MiniProposalJs.prototype.insertCollageBox = function () {
   let imageBox;
   let imageWidth, imageHeight;
   let descriptionBoxPaddingTop, descriptionBoxPaddingBottom, descriptionBoxPaddingLeft;
+  let descriptionTextTong;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 56, 52, 44, 32, 6 %%>;
@@ -353,13 +354,53 @@ MiniProposalJs.prototype.insertCollageBox = function () {
       position: "relative",
       marginLeft: String(descriptionBoxPaddingLeft) + ea,
       width: withOut(imageWidth + (descriptionBoxPaddingLeft * 2), ea),
-      paddingTop: String(descriptionBoxPaddingTop) + ea,
+      marginTop: String(descriptionBoxPaddingTop) + ea,
       marginBottom: String(descriptionBoxPaddingBottom) + ea,
       height: String(imageHeight - descriptionBoxPaddingTop - descriptionBoxPaddingBottom) + ea,
       verticalAlign: "top",
       background: "aqua"
     }
   });
+
+  createNode({
+    mother: descriptionBox,
+    text: contents.title,
+    style: {
+      display: "block",
+      position: "relative",
+      textAlign: "left",
+      fontSize: String(24) + ea,
+      fontWeight: String(700),
+      color: colorChip.black,
+    }
+  });
+
+  descriptionTextTong = createNode({
+    mother: descriptionBox,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+    }
+  });
+
+  for (let i = 0; i < contents.description.length; i++) {
+    createNode({
+      mother: descriptionTextTong,
+      style: {
+        display: "inline-block",
+        width: String(50) + '%',
+        fontSize: String(14) + ea,
+        fontWeight: String(400),
+        color: colorChip.black,
+      }
+    })
+
+
+
+  }
+
+
 
 
 }
