@@ -270,8 +270,8 @@ MiniProposalJs.prototype.insertCollageBox = function () {
   imageWidth = <%% 520, 520, 520, 520, 520 %%>;
   imageHeight = <%% 520, 520, 520, 520, 520 %%>;
 
-  descriptionBoxPaddingTop = <%% 80, 100, 100, 100, 100 %%>;
-  descriptionBoxPaddingBottom = <%% 80, 100, 100, 100, 100 %%>;
+  descriptionBoxPaddingTop = <%% 72, 72, 72, 72, 10 %%>;
+  descriptionBoxPaddingBottom = <%% 72, 72, 72, 72, 10 %%>;
   descriptionBoxPaddingLeft = <%% 64, 64, 64, 64, 64 %%>;
 
   contents = {
@@ -354,10 +354,10 @@ MiniProposalJs.prototype.insertCollageBox = function () {
       marginLeft: String(descriptionBoxPaddingLeft) + ea,
       width: withOut(imageWidth + (descriptionBoxPaddingLeft * 2), ea),
       paddingTop: String(descriptionBoxPaddingTop) + ea,
-      paddingBottom: String(descriptionBoxPaddingBottom) + ea,
+      marginBottom: String(descriptionBoxPaddingBottom) + ea,
       height: String(imageHeight - descriptionBoxPaddingTop - descriptionBoxPaddingBottom) + ea,
-      background: colorChip.green,
       verticalAlign: "top",
+      background: "aqua"
     }
   });
 
