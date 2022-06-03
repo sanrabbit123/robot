@@ -641,16 +641,16 @@ MiniProposalJs.prototype.insertSecondBox = function () {
   titleTextDescriptionSize = <%% 14, 14, 14, 14, 14 %%>;
   titleTextDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   titleTextDescriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
-  titleTextDescriptionLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
+  titleTextDescriptionLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
   titleTextDescriptionPaddingTop = <%% 3, 3, 3, 3, 3 %%>;
 
   topBottomVisualMargin = <%% 8, 8, 8, 8, 0 %%>;
 
-  grayTitleSize = <%% 25, 25, 25, 25, 25 %%>;
+  grayTitleSize = <%% 24, 24, 24, 24, 24 %%>;
   grayTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
   grayTitleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
   grayTitlePadding = <%% 20, 20, 20, 20, 20 %%>;
-  grayTitleLineTop = <%% 17, 17, 17, 17, 17 %%>;
+  grayTitleLineTop = <%% 16, 16, 16, 16, 16 %%>;
 
   collageSlideBetween = <%% 12, 12, 12, 12, 12 %%>;
   collageInnerMargin = <%% 24, 24, 24, 24, 24 %%>;
@@ -672,23 +672,8 @@ MiniProposalJs.prototype.insertSecondBox = function () {
           MiniProposalJs.binaryPath + "/" + "proposal0.jpg",
           MiniProposalJs.binaryPath + "/" + "proposal1.jpg",
         ],
-        description: {
-          title: "디자인 시안 설명",
-          matrix: [
-            [
-              "창 넓이에서 20cm 정도 여유 있게 가로",
-              "사이즈를 측정해주시고, 높이는 커튼 박스",
-              "안의 천장으로부터 창틀 하단까지 20cm",
-              "정도 여유 있게 측정해주시면 됩니다.",
-            ],
-            [
-              "창 넓이에서 20cm 정도 여유 있게 가로",
-              "사이즈를 측정해주시고, 높이는 커튼 박스",
-              "안의 천장으로부터 창틀 하단까지 20cm",
-              "정도 여유 있게 측정해주시면 됩니다.",
-            ],
-          ]
-        }
+        sub: "디자인 시안 설명",
+        description: "고객님 공간에 딱 맞는 홈리에종 미니 스타일링안을 드립니다. 디자인 시안은 무드 보드와 제품 리스트로 제공되며, <b%자세한 상품 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서%b> 배치 및 설치를 진행해주시면 됩니다. 수정 사항은 별도로 제공되지 않으며 기타 문의 사항이 있을시, 하단 채팅 기능을 통해 홈리에종으로 문의해주시길 바랍니다!",
       },
       reference: {
         title: "참고 사진",
