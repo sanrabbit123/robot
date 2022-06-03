@@ -244,7 +244,7 @@ MiniProposalJs.prototype.insertInitBox = function () {
 
 MiniProposalJs.prototype.insertCollageBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing, setQueue } = GeneralJs;
   const { client, ea, media, osException, testMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -255,6 +255,10 @@ MiniProposalJs.prototype.insertCollageBox = function () {
   let topBottomVisualMargin;
   let grayTong;
   let grayPaddingLeft;
+  let descriptionBox;
+  let imageBox;
+  let imageWidth, imageHeight;
+  let descriptionBoxPaddingTop, descriptionBoxPaddingBottom, descriptionBoxPaddingLeft;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 56, 52, 44, 32, 6 %%>;
@@ -262,6 +266,13 @@ MiniProposalJs.prototype.insertCollageBox = function () {
   topBottomVisualMargin = <%% 18, 16, 12, 10, 3 %%>;
 
   grayPaddingLeft = <%% 100, 64, 64, 64, 64 %%>;
+
+  imageWidth = <%% 520, 520, 520, 520, 520 %%>;
+  imageHeight = <%% 520, 520, 520, 520, 520 %%>;
+
+  descriptionBoxPaddingTop = <%% 80, 100, 100, 100, 100 %%>;
+  descriptionBoxPaddingBottom = <%% 80, 100, 100, 100, 100 %%>;
+  descriptionBoxPaddingLeft = <%% 64, 64, 64, 64, 64 %%>;
 
   contents = {
     title: "콜라주 제공 안내",
@@ -311,14 +322,14 @@ MiniProposalJs.prototype.insertCollageBox = function () {
     }
   });
 
-  createNode({
+  imageBox = createNode({
     mother: grayTong,
     style: {
       display: "inline-block",
       position: "relative",
-      width: String(520) + ea,
-      height: String(100) + '%',
+      width: String(imageWidth) + ea,
       background: colorChip.white,
+      verticalAlign: "top",
     },
     children: [
       {
@@ -333,6 +344,21 @@ MiniProposalJs.prototype.insertCollageBox = function () {
         }
       }
     ]
+  });
+
+  descriptionBox = createNode({
+    mother: grayTong,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      marginLeft: String(descriptionBoxPaddingLeft) + ea,
+      width: withOut(imageWidth + (descriptionBoxPaddingLeft * 2), ea),
+      paddingTop: String(descriptionBoxPaddingTop) + ea,
+      paddingBottom: String(descriptionBoxPaddingBottom) + ea,
+      height: String(imageHeight - descriptionBoxPaddingTop - descriptionBoxPaddingBottom) + ea,
+      background: colorChip.green,
+      verticalAlign: "top",
+    }
   });
 
 
