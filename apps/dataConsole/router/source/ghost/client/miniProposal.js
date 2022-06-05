@@ -115,8 +115,8 @@ MiniProposalJs.prototype.insertInitBox = function () {
       "제공 방식 안내"
     ],
     description: [
-      "고객님 공간에 맞는 미니 스타일링안을 드립니다. <b%디자인 시안은 콜라주와 제품 리스트로 제공되며,%b>",
-      "자세한 상품 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하여 배치와 설치를 진행해주시면 됩니다."
+      <&& "고객님 공간에 맞는 미니 스타일링안을 드립니다. <b%디자인 시안은 콜라주와 제품 리스트로 제공되며,%b>" | "고객님 공간에 맞는 미니 스타일링안을 드립니다. <b%디자인 시안은 콜라주와 제품 리스트로 제공되며,%b>" | "고객님 공간에 맞는 스타일링안을 드립니다. <b%시안은 콜라주와 제품 리스트로 제공되며,%b>" | "고객님 공간에 맞는 스타일링안을 드립니다. <b%시안은 콜라주와 제품 리스트로 제공되며,%b>" | "고객님 공간에 맞는 스타일링안을 드립니다. <b%시안은 콜라주와 제품 리스트로 제공되며,%b>" &&>,
+      <&& "자세한 상품 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하여 배치와 설치를 진행해주시면 됩니다." | "자세한 상품 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하여 배치와 설치를 진행해주시면 됩니다." | "자세한 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하여 배치를 진행해주시면 됩니다." | "자세한 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하여 배치를 진행해주시면 됩니다." | "자세한 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하여 배치를 진행해주시면 됩니다." &&>,
     ],
     image: MiniProposalJs.binaryPath + "/init" + String(media.findIndex(boo => boo)) + ".png",
   };
@@ -270,19 +270,19 @@ MiniProposalJs.prototype.insertCollageBox = function () {
 
   topBottomVisualMargin = <%% 18, 16, 12, 10, 3 %%>;
 
-  grayPaddingLeft = <%% 100, 52, 44, 32, 6 %%>;
+  grayPaddingLeft = <%% 100, 52, 0, 0, 6 %%>;
 
-  imageWidth = <%% 550, 460, 520, 520, 520 %%>;
-  imageHeight = <%% 550, 460, 520, 520, 520 %%>;
+  imageWidth = <%% 550, 460, 400, 520, 520 %%>;
+  imageHeight = <%% 550, 460, 418, 520, 520 %%>;
 
   titleSize = <%% 18, 17, 16, 15, 4 %%>;
   titleWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
-  descriptionBoxPaddingTop = <%% 64, 50, 52, 52, 10 %%>;
-  descriptionBoxPaddingBottom = <%% 64, 50, 52, 52, 10 %%>;
-  descriptionBoxPaddingLeft = <%% 80, 52, 64, 64, 64 %%>;
-  descriptionBoxPaddingRight = <%% 20, 12, 24, 24, 24 %%>;
+  descriptionBoxPaddingTop = <%% 64, 50, 45, 52, 10 %%>;
+  descriptionBoxPaddingBottom = <%% 64, 50, 45, 52, 10 %%>;
+  descriptionBoxPaddingLeft = <%% 80, 52, 45, 64, 64 %%>;
+  descriptionBoxPaddingRight = <%% 20, 12, 8, 6, 24 %%>;
 
   descriptionPaddingTop = <%% 11, 10, 10, 10, 1 %%>;
 
@@ -291,26 +291,26 @@ MiniProposalJs.prototype.insertCollageBox = function () {
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   descriptionLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
 
-  subSize = <%% 16, 15, 15, 15, 16 %%>;
+  subSize = <%% 16, 15, 14, 13, 16 %%>;
   subWeight = <%% 400, 400, 400, 400, 400 %%>;
   subTop = <%% -12, -12, -12, -12, -12 %%>;
-  subRight = <%% 44, 40, 40, 40, 40 %%>;
+  subRight = <%% 44, 40, 34, 30, 40 %%>;
 
   contents = {
     title: "콜라주 제공 안내",
     sub: "collage",
     description: [
       [
-        <&& "콜라주는 이미지 샘플로 구성된 시각적 표현" | "콜라주는 이미지로 구성된 표현" | "콜라주는 이미지 샘플로 구성된 시각적 표현" | "콜라주는 이미지 샘플로 구성된 시각적 표현" | "콜라주는 이미지 샘플로 구성된 시각적 표현" &&>,
-        <&& "방식입니다. 고객님 공간에 맞는 <b%패브릭," | "방식입니다. 공간에 맞는 <b%패브릭," | "방식입니다. 고객님 공간에 맞는 <b%패브릭," | "방식입니다. 고객님 공간에 맞는 <b%패브릭," | "방식입니다. 고객님 공간에 맞는 <b%패브릭," &&>,
-        <&& "액자, 소품을 조합하여 하나의 스타일을" | "액자, 소품을 조합하여 스타일을" | "액자, 소품을 조합하여 하나의 스타일을" | "액자, 소품을 조합하여 하나의 스타일을" | "액자, 소품을 조합하여 하나의 스타일을" &&>,
+        <&& "콜라주는 이미지 샘플로 구성된 시각적 표현" | "콜라주는 이미지로 구성된 표현" | "콜라주는 이미지로 구성된 표현" | "콜라주는 이미지로 구성된 표현" | "콜라주는 이미지로 구성된 표현" &&>,
+        <&& "방식입니다. 고객님 공간에 맞는 <b%패브릭," | "방식입니다. 공간에 맞는 <b%패브릭," | "방식입니다. 공간에 맞는 <b%패브릭," | "방식입니다. 공간에 맞는 <b%패브릭," | "방식입니다. 공간에 맞는 <b%패브릭," &&>,
+        <&& "액자, 소품을 조합하여 하나의 스타일을" | "액자, 소품을 조합하여 스타일을" | "액자, 소품을 조합하여 스타일을" | "액자, 소품을 조합하여 스타일을" | "액자, 소품을 조합하여 스타일을" &&>,
         <&& "연출%b>하는 용도로 만들어 집니다." | "연출%b>하는 용도로 만들어 집니다." | "연출%b>하는 용도로 만들어 집니다." | "연출%b>하는 용도로 만들어 집니다." | "연출%b>하는 용도로 만들어 집니다." &&>,
       ],
       [
-        <&& "제품 리스트에 있는 모든 제품들이 조합" | "제품 리스트의 항목들이 조합" | "제품 리스트에 있는 모든 제품들이 조합" | "제품 리스트에 있는 모든 제품들이 조합" | "제품 리스트에 있는 모든 제품들이 조합" &&>,
-        <&& "되었을 때 <b%어떤 분위기를 내는 지, 어떻게" | "되었을 때 <b%어떤 분위기를 내고" | "되었을 때 <b%어떤 분위기를 내는지, 어떻게" | "되었을 때 <b%어떤 분위기를 내는지, 어떻게" | "되었을 때 <b%어떤 분위기를 내는지, 어떻게" &&>,
-        <&& "배치되면 되는 지%b>를 알려드립니다." | "배치되는 지%b>를 알려드립니다." | "배치되면 되는 지%b>를 알려드립니다." | "배치되면 되는 지%b>를 알려드립니다." | "배치되면 되는 지%b>를 알려드립니다." &&>,
-        <&& "가구는 해당 사항이 아니라 제외됩니다." | "가구는 사항에서 제외됩니다." | "가구는 해당 사항이 아니라 제외됩니다." | "가구는 해당 사항이 아니라 제외됩니다." | "가구는 해당 사항이 아니라 제외됩니다." &&>,
+        <&& "제품 리스트에 있는 모든 제품들이 조합" | "제품 리스트의 항목들이 조합" | "제품 리스트의 항목들이 조합" | "제품 리스트의 항목들이 조합" | "제품 리스트의 항목들이 조합" &&>,
+        <&& "되었을 때 <b%어떤 분위기를 내는 지, 어떻게" | "되었을 때 <b%어떤 분위기를 내고" | "되었을 때 <b%어떤 분위기를 내고" | "되었을 때 <b%어떤 분위기를 내고" | "되었을 때 <b%어떤 분위기를 내고" &&>,
+        <&& "배치되면 되는 지%b>를 알려드립니다." | "배치되는 지%b>를 알려드립니다." | "배치되는 지%b>를 알려드립니다." | "배치되는 지%b>를 알려드립니다." | "배치되는 지%b>를 알려드립니다." &&>,
+        <&& "가구는 해당 사항이 아니라 제외됩니다." | "가구는 사항에서 제외됩니다." | "가구는 사항에서 제외됩니다." | "가구는 사항에서 제외됩니다." | "가구는 사항에서 제외됩니다." &&>,
       ]
     ],
     image: MiniProposalJs.binaryPath + "/collage" + String(media.findIndex(boo => boo)) + ".svg",
@@ -472,12 +472,12 @@ MiniProposalJs.prototype.insertPhotoBox = function () {
   let photoBetween;
   let basePadding;
 
-  basePadding = <%% 150, 120, 85, 75, 11 %%>;
+  basePadding = <%% 150, 120, 105, 95, 11 %%>;
 
   margin = <%% 56, 52, 44, 32, 6 %%>;
 
-  photoTongWidth = <%% 1150, 830, 780, 780, 780 %%>;
-  photoTongHeight = <%% 241, 210, 241, 241, 241 %%>;
+  photoTongWidth = <%% 1150, 830, 670, 780, 780 %%>;
+  photoTongHeight = <%% 241, 210, 210, 180, 241 %%>;
 
   photoBetween = <%% 10, 8, 8, 6, 10 %%>;
 
@@ -514,6 +514,9 @@ MiniProposalJs.prototype.insertPhotoBox = function () {
   };
 
   if (media[1]) {
+    contents.images.pop();
+  } else if (media[2]) {
+    contents.images.pop();
     contents.images.pop();
   }
 
@@ -653,15 +656,15 @@ MiniProposalJs.prototype.insertSecondBox = function () {
   let tableColumnHeight;
   let tableColumnWeight;
 
-  basePadding = <%% 150, 120, 85, 75, 11 %%>;
+  basePadding = <%% 150, 120, 105, 95, 11 %%>;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 56, 52, 44, 32, 6 %%>;
 
-  titleTextTitleWidth = <%% 340, 280, 340, 340, 340 %%>;
+  titleTextTitleWidth = <%% 340, 280, 250, 200, 340 %%>;
   titleTextTongHeight = <%% 85, 85, 85, 85, 85 %%>;
 
-  titleTextTitleSize = <%% 26, 26, 26, 26, 26 %%>;
+  titleTextTitleSize = <%% 26, 26, 24, 22, 26 %%>;
   titleTextTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
   titleTextTitleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
@@ -671,9 +674,9 @@ MiniProposalJs.prototype.insertSecondBox = function () {
   titleTextDescriptionLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
   titleTextDescriptionPaddingTop = <%% 3, 3, 3, 3, 3 %%>;
 
-  topBottomVisualMargin = <%% 8, 8, 8, 8, 0 %%>;
+  topBottomVisualMargin = <%% 8, 8, 4, 2, 0 %%>;
 
-  grayTitleSize = <%% 22, 22, 22, 22, 22 %%>;
+  grayTitleSize = <%% 22, 22, 20, 18, 22 %%>;
   grayTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
   grayTitleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
   grayTitlePadding = <%% 20, 20, 20, 20, 20 %%>;
@@ -682,47 +685,47 @@ MiniProposalJs.prototype.insertSecondBox = function () {
   collageSlideBetween = <%% 12, 12, 12, 12, 12 %%>;
   collageInnerMargin = <%% 24, 24, 24, 24, 24 %%>;
 
-  collageDescriptionBoxMarginLeft = <%% 60, 45, 40, 35, 7 %%>;
-  collageDescriptionBoxMarginTop = <%% 72, 72, 72, 72, 72 %%>;
-  collageDescriptionBoxMarginBottom = <%% 80, 80, 80, 80, 80 %%>;
+  collageDescriptionBoxMarginLeft = <%% 60, 45, 35, 30, 7 %%>;
+  collageDescriptionBoxMarginTop = <%% 72, 72, 56, 56, 72 %%>;
+  collageDescriptionBoxMarginBottom = <%% 80, 80, 60, 60, 80 %%>;
 
-  collageDescriptionBoxTitleAreaWidth = <%% 180, 180, 180, 180, 180 %%>;
+  collageDescriptionBoxTitleAreaWidth = <%% 180, 180, 160, 140, 180 %%>;
 
-  collageDescriptionBoxTitleSize = <%% 16, 16, 16, 16, 16 %%>;
+  collageDescriptionBoxTitleSize = <%% 16, 16, 15, 14, 16 %%>;
   collageDescriptionBoxTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
   collageDescriptionBoxTitleLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
 
-  collageDescriptionBoxDescriptionSize = <%% 14, 14, 14, 14, 14 %%>;
+  collageDescriptionBoxDescriptionSize = <%% 14, 14, 13, 13, 14 %%>;
   collageDescriptionBoxDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   collageDescriptionBoxDescriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
 
   whiteTongMarginTop = <%% 32, 32, 32, 32, 32 %%>;
-  whiteTongMarginBottom = <%% 72, 72, 72, 72, 72 %%>;
+  whiteTongMarginBottom = <%% 72, 72, 60, 54, 72 %%>;
   whiteTongMarginBottomFinal = <%% 32, 32, 32, 32, 32 %%>;
 
   referencePhotoBetween = <%% 10, 10, 8, 8, 1 %%>;
 
-  tableInnerMargin = <%% 54, 45, 36, 24, 54 %%>;
-  tableInnerMarginTop = <%% 42, 42, 42, 42, 42 %%>;
+  tableInnerMargin = <%% 54, 45, 30, 30, 54 %%>;
+  tableInnerMarginTop = <%% 42, 42, 20, 20, 42 %%>;
 
   tableFactorTextTop = <%% -2, -2, -2, -2, -2 %%>;
-  tableFactorSize = <%% 14, 13, 13, 12, 14 %%>;
+  tableFactorSize = <%% 14, 13, 12, 11, 14 %%>;
   tableFactorWeight = <%% 400, 400, 400, 400, 400 %%>;
   tableColumnWeight = <%% 700, 700, 700, 700, 700 %%>;
 
   tableFactorHeight = <%% 100, 90, 80, 80, 100 %%>;
-  tableColumnHeight = <%% 45, 45, 45, 45, 45 %%>;
+  tableColumnHeight = <%% 45, 45, 40, 35, 45 %%>;
 
   tableColumnsWidth = [
-    <&& 120 | 90 | 120 | 120 | 120 &&>,
-    <&& 150 | 100 | 150 | 150 | 150 &&>,
-    <&& 100 | 60 | 100 | 100 | 100 &&>,
-    <&& 100 | 80 | 100 | 100 | 100 &&>,
-    <&& 100 | 80 | 100 | 100 | 100 &&>,
-    <&& 100 | 80 | 100 | 100 | 100 &&>,
-    <&& 270 | 180 | 270 | 270 | 270 &&>,
-    <&& 120 | 90 | 100 | 120 | 120 &&>,
-    <&& 120 | 90 | 100 | 120 | 120 &&>,
+    <&& 120 | 90 | 75 | 120 | 120 &&>,
+    <&& 150 | 100 | 95 | 150 | 150 &&>,
+    <&& 100 | 60 | 45 | 100 | 100 &&>,
+    <&& 100 | 80 | 70 | 100 | 100 &&>,
+    <&& 100 | 80 | 70 | 100 | 100 &&>,
+    <&& 100 | 80 | 70 | 100 | 100 &&>,
+    <&& 270 | 180 | 155 | 270 | 270 &&>,
+    <&& 120 | 90 | 80 | 120 | 120 &&>,
+    <&& 120 | 90 | 80 | 120 | 120 &&>,
   ];
 
   tableColumnsName = [
@@ -755,9 +758,9 @@ MiniProposalJs.prototype.insertSecondBox = function () {
       "제품 리스트",
     ],
     description: [
-      "고객님 공간에 딱 맞는 홈리에종 미니 스타일링안을 드립니다. <b%디자인 시안은 무드 보드와 제품 리스트로 제공되며,%b>",
-      "자세한 상품 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서 배치 및 설치를 진행해주시면 됩니다.",
-      "수정 사항은 별도로 제공되지 않으며 기타 문의 사항이 있을시, 하단 채팅 기능을 통해 홈리에종으로 문의해주시길 바랍니다!",
+      <&& "고객님 공간에 딱 맞는 홈리에종 미니 스타일링안을 드립니다. <b%디자인 시안은 무드 보드와 제품 리스트로 제공되며,%b>" | "고객님 공간에 딱 맞는 홈리에종 미니 스타일링안을 드립니다. <b%디자인 시안은 무드 보드와 제품 리스트로 제공되며,%b>" | "고객님 공간에 맞는 홈리에종 스타일링안을 드립니다. <b%시안은 무드 보드와 제품 리스트로 제공되며,%b>" | "고객님 공간에 딱 맞는 홈리에종 미니 스타일링안을 드립니다. <b%디자인 시안은 무드 보드와 제품 리스트로 제공되며,%b>" | "고객님 공간에 딱 맞는 홈리에종 미니 스타일링안을 드립니다. <b%디자인 시안은 무드 보드와 제품 리스트로 제공되며,%b>" &&>,
+      <&& "자세한 상품 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서 배치 및 설치를 진행해주시면 됩니다." | "자세한 상품 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서 배치 및 설치를 진행해주시면 됩니다." | "자세한 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서 배치를 진행해주시면 됩니다." | "자세한 상품 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서 배치 및 설치를 진행해주시면 됩니다." | "자세한 상품 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서 배치 및 설치를 진행해주시면 됩니다." &&>,
+      <&& "수정 사항은 별도로 제공되지 않으며 기타 문의 사항이 있을시, 하단 채팅 기능을 통해 홈리에종으로 문의해주시길 바랍니다!" | "수정 사항은 별도로 제공되지 않으며 기타 문의 사항이 있을시, 하단 채팅 기능을 통해 홈리에종으로 문의해주시길 바랍니다!" | "수정은 별도로 제공되지 않으며 문의가 있을 시, 채팅을 통해 홈리에종으로 문의해주시길 바랍니다!" | "수정 사항은 별도로 제공되지 않으며 기타 문의 사항이 있을시, 하단 채팅 기능을 통해 홈리에종으로 문의해주시길 바랍니다!" | "수정 사항은 별도로 제공되지 않으며 기타 문의 사항이 있을시, 하단 채팅 기능을 통해 홈리에종으로 문의해주시길 바랍니다!" &&>,
     ],
     proposal: {
       collage: {
