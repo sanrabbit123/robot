@@ -102,7 +102,7 @@ MiniProposalJs.prototype.insertInitBox = function () {
 
   indexNumberBottom = <%% 3, 4, 12, 4, 0 %%>;
 
-  grayBoxMarginTop = <%% 55, 50, 40, 28, 9.5 %%>;
+  grayBoxMarginTop = <%% 50, 45, 35, 25, 9.5 %%>;
   grayBoxImageVisualWidth = <%% 6, 4, 0, 0, 19 %%>;
 
   descriptionMarginLeft = <%% 5, 5, 5, 5, 8 %%>;
@@ -115,8 +115,8 @@ MiniProposalJs.prototype.insertInitBox = function () {
       "제공 방식 안내"
     ],
     description: [
-      "고객님 공간에 딱 맞는 홈리에종 미니 스타일링안을 드립니다. <b%디자인 시안은 콜라주와 제품 리스트로 제공되며,%b>",
-      "자세한 상품 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서 배치 및 설치를 진행해주시면 됩니다."
+      "고객님 공간에 맞는 미니 스타일링안을 드립니다. <b%디자인 시안은 콜라주와 제품 리스트로 제공되며,%b>",
+      "자세한 상품 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하여 배치와 설치를 진행해주시면 됩니다."
     ],
     image: MiniProposalJs.binaryPath + "/init" + String(media.findIndex(boo => boo)) + ".png",
   };
@@ -270,47 +270,47 @@ MiniProposalJs.prototype.insertCollageBox = function () {
 
   topBottomVisualMargin = <%% 18, 16, 12, 10, 3 %%>;
 
-  grayPaddingLeft = <%% 100, 64, 64, 64, 64 %%>;
+  grayPaddingLeft = <%% 100, 52, 44, 32, 6 %%>;
 
-  imageWidth = <%% 550, 520, 520, 520, 520 %%>;
-  imageHeight = <%% 550, 520, 520, 520, 520 %%>;
+  imageWidth = <%% 550, 460, 520, 520, 520 %%>;
+  imageHeight = <%% 550, 460, 520, 520, 520 %%>;
 
-  titleSize = <%% 18, 18, 18, 18, 18 %%>;
+  titleSize = <%% 18, 17, 16, 15, 4 %%>;
   titleWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
-  descriptionBoxPaddingTop = <%% 64, 64, 64, 64, 10 %%>;
-  descriptionBoxPaddingBottom = <%% 64, 64, 64, 64, 10 %%>;
-  descriptionBoxPaddingLeft = <%% 80, 64, 64, 64, 64 %%>;
-  descriptionBoxPaddingRight = <%% 20, 24, 24, 24, 24 %%>;
+  descriptionBoxPaddingTop = <%% 64, 50, 52, 52, 10 %%>;
+  descriptionBoxPaddingBottom = <%% 64, 50, 52, 52, 10 %%>;
+  descriptionBoxPaddingLeft = <%% 80, 52, 64, 64, 64 %%>;
+  descriptionBoxPaddingRight = <%% 20, 12, 24, 24, 24 %%>;
 
-  descriptionPaddingTop = <%% 11, 11, 11, 11, 11 %%>;
+  descriptionPaddingTop = <%% 11, 10, 10, 10, 1 %%>;
 
-  descriptionSize = <%% 14, 14, 14, 14, 14 %%>;
+  descriptionSize = <%% 14, 13, 13, 13, 14 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   descriptionLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
 
-  subSize = <%% 16, 16, 16, 16, 16 %%>;
+  subSize = <%% 16, 15, 15, 15, 16 %%>;
   subWeight = <%% 400, 400, 400, 400, 400 %%>;
   subTop = <%% -12, -12, -12, -12, -12 %%>;
-  subRight = <%% 44, 44, 44, 44, 44 %%>;
+  subRight = <%% 44, 40, 40, 40, 40 %%>;
 
   contents = {
     title: "콜라주 제공 안내",
     sub: "collage",
     description: [
       [
-        "콜라주는 이미지 샘플로 구성된 시각적 표현",
-        "방식입니다. 고객님 공간에 맞는 <b%패브릭,",
-        "액자, 소품을 조합하여 하나의 스타일을",
-        "연출%b>하는 용도로 만들어 집니다.",
+        <&& "콜라주는 이미지 샘플로 구성된 시각적 표현" | "콜라주는 이미지로 구성된 표현" | "콜라주는 이미지 샘플로 구성된 시각적 표현" | "콜라주는 이미지 샘플로 구성된 시각적 표현" | "콜라주는 이미지 샘플로 구성된 시각적 표현" &&>,
+        <&& "방식입니다. 고객님 공간에 맞는 <b%패브릭," | "방식입니다. 공간에 맞는 <b%패브릭," | "방식입니다. 고객님 공간에 맞는 <b%패브릭," | "방식입니다. 고객님 공간에 맞는 <b%패브릭," | "방식입니다. 고객님 공간에 맞는 <b%패브릭," &&>,
+        <&& "액자, 소품을 조합하여 하나의 스타일을" | "액자, 소품을 조합하여 스타일을" | "액자, 소품을 조합하여 하나의 스타일을" | "액자, 소품을 조합하여 하나의 스타일을" | "액자, 소품을 조합하여 하나의 스타일을" &&>,
+        <&& "연출%b>하는 용도로 만들어 집니다." | "연출%b>하는 용도로 만들어 집니다." | "연출%b>하는 용도로 만들어 집니다." | "연출%b>하는 용도로 만들어 집니다." | "연출%b>하는 용도로 만들어 집니다." &&>,
       ],
       [
-        "제품 리스트에 있는 모든 제품들이 조합",
-        "되었을 때 <b%어떤 분위기를 내는지, 어떻게",
-        "배치되면 되는 지%b>를 알려드립니다.",
-        "가구는 해당 사항이 아니라 제외됩니다.",
+        <&& "제품 리스트에 있는 모든 제품들이 조합" | "제품 리스트의 항목들이 조합" | "제품 리스트에 있는 모든 제품들이 조합" | "제품 리스트에 있는 모든 제품들이 조합" | "제품 리스트에 있는 모든 제품들이 조합" &&>,
+        <&& "되었을 때 <b%어떤 분위기를 내는 지, 어떻게" | "되었을 때 <b%어떤 분위기를 내고" | "되었을 때 <b%어떤 분위기를 내는지, 어떻게" | "되었을 때 <b%어떤 분위기를 내는지, 어떻게" | "되었을 때 <b%어떤 분위기를 내는지, 어떻게" &&>,
+        <&& "배치되면 되는 지%b>를 알려드립니다." | "배치되는 지%b>를 알려드립니다." | "배치되면 되는 지%b>를 알려드립니다." | "배치되면 되는 지%b>를 알려드립니다." | "배치되면 되는 지%b>를 알려드립니다." &&>,
+        <&& "가구는 해당 사항이 아니라 제외됩니다." | "가구는 사항에서 제외됩니다." | "가구는 해당 사항이 아니라 제외됩니다." | "가구는 해당 사항이 아니라 제외됩니다." | "가구는 해당 사항이 아니라 제외됩니다." &&>,
       ]
     ],
     image: MiniProposalJs.binaryPath + "/collage" + String(media.findIndex(boo => boo)) + ".svg",
@@ -472,22 +472,22 @@ MiniProposalJs.prototype.insertPhotoBox = function () {
   let photoBetween;
   let basePadding;
 
-  basePadding = <%% 150, 90, 85, 75, 11 %%>;
+  basePadding = <%% 150, 120, 85, 75, 11 %%>;
 
   margin = <%% 56, 52, 44, 32, 6 %%>;
 
-  photoTongWidth = <%% 1150, 1150, 1150, 1150, 1150 %%>;
-  photoTongHeight = <%% 241, 241, 241, 241, 241 %%>;
+  photoTongWidth = <%% 1150, 830, 780, 780, 780 %%>;
+  photoTongHeight = <%% 241, 210, 241, 241, 241 %%>;
 
-  photoBetween = <%% 10, 10, 10, 10, 10 %%>;
+  photoBetween = <%% 10, 8, 8, 6, 10 %%>;
 
-  titleSize = <%% 18, 18, 18, 18, 18 %%>;
+  titleSize = <%% 18, 17, 16, 15, 4 %%>;
   titleWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
-  descriptionPaddingTop = <%% 11, 11, 11, 11, 11 %%>;
+  descriptionPaddingTop = <%% 11, 10, 10, 10, 1 %%>;
 
-  descriptionSize = <%% 14, 14, 14, 14, 14 %%>;
+  descriptionSize = <%% 14, 13, 13, 12, 14 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   descriptionLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
@@ -512,6 +512,11 @@ MiniProposalJs.prototype.insertPhotoBox = function () {
       MiniProposalJs.binaryPath + "/" + "sample5.jpg",
     ]
   };
+
+  if (media[1]) {
+    contents.images.pop();
+  }
+
 
   whiteBlock = createNode({
     mother: this.baseTong,
@@ -648,12 +653,12 @@ MiniProposalJs.prototype.insertSecondBox = function () {
   let tableColumnHeight;
   let tableColumnWeight;
 
-  basePadding = <%% 150, 90, 85, 75, 11 %%>;
+  basePadding = <%% 150, 120, 85, 75, 11 %%>;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 56, 52, 44, 32, 6 %%>;
 
-  titleTextTitleWidth = <%% 340, 340, 340, 340, 340 %%>;
+  titleTextTitleWidth = <%% 340, 280, 340, 340, 340 %%>;
   titleTextTongHeight = <%% 85, 85, 85, 85, 85 %%>;
 
   titleTextTitleSize = <%% 26, 26, 26, 26, 26 %%>;
@@ -677,7 +682,7 @@ MiniProposalJs.prototype.insertSecondBox = function () {
   collageSlideBetween = <%% 12, 12, 12, 12, 12 %%>;
   collageInnerMargin = <%% 24, 24, 24, 24, 24 %%>;
 
-  collageDescriptionBoxMarginLeft = <%% 60, 70, 70, 70, 70 %%>;
+  collageDescriptionBoxMarginLeft = <%% 60, 45, 40, 35, 7 %%>;
   collageDescriptionBoxMarginTop = <%% 72, 72, 72, 72, 72 %%>;
   collageDescriptionBoxMarginBottom = <%% 80, 80, 80, 80, 80 %%>;
 
@@ -697,27 +702,27 @@ MiniProposalJs.prototype.insertSecondBox = function () {
 
   referencePhotoBetween = <%% 10, 10, 8, 8, 1 %%>;
 
-  tableInnerMargin = <%% 54, 54, 54, 54, 54 %%>;
+  tableInnerMargin = <%% 54, 45, 36, 24, 54 %%>;
   tableInnerMarginTop = <%% 42, 42, 42, 42, 42 %%>;
 
   tableFactorTextTop = <%% -2, -2, -2, -2, -2 %%>;
-  tableFactorSize = <%% 14, 14, 14, 14, 14 %%>;
+  tableFactorSize = <%% 14, 13, 13, 12, 14 %%>;
   tableFactorWeight = <%% 400, 400, 400, 400, 400 %%>;
   tableColumnWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  tableFactorHeight = <%% 100, 100, 100, 100, 100 %%>;
+  tableFactorHeight = <%% 100, 90, 80, 80, 100 %%>;
   tableColumnHeight = <%% 45, 45, 45, 45, 45 %%>;
 
   tableColumnsWidth = [
-    <&& 120 | 120 | 120 | 120 | 120 &&>,
-    <&& 150 | 150 | 150 | 150 | 150 &&>,
-    <&& 100 | 100 | 100 | 100 | 100 &&>,
-    <&& 100 | 100 | 100 | 100 | 100 &&>,
-    <&& 100 | 100 | 100 | 100 | 100 &&>,
-    <&& 100 | 100 | 100 | 100 | 100 &&>,
-    <&& 270 | 270 | 270 | 270 | 270 &&>,
-    <&& 120 | 120 | 120 | 120 | 120 &&>,
-    <&& 120 | 120 | 120 | 120 | 120 &&>,
+    <&& 120 | 90 | 120 | 120 | 120 &&>,
+    <&& 150 | 100 | 150 | 150 | 150 &&>,
+    <&& 100 | 60 | 100 | 100 | 100 &&>,
+    <&& 100 | 80 | 100 | 100 | 100 &&>,
+    <&& 100 | 80 | 100 | 100 | 100 &&>,
+    <&& 100 | 80 | 100 | 100 | 100 &&>,
+    <&& 270 | 180 | 270 | 270 | 270 &&>,
+    <&& 120 | 90 | 100 | 120 | 120 &&>,
+    <&& 120 | 90 | 100 | 120 | 120 &&>,
   ];
 
   tableColumnsName = [
