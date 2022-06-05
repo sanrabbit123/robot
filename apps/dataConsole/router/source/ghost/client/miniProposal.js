@@ -599,7 +599,7 @@ MiniProposalJs.prototype.insertPhotoBox = function () {
 
 MiniProposalJs.prototype.insertSecondBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing, autoComma, blankHref } = GeneralJs;
   const { client, ea, media, osException, testMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -625,6 +625,28 @@ MiniProposalJs.prototype.insertSecondBox = function () {
   let collageSlideBetween;
   let collageInnerMargin;
   let collageDescriptionBox;
+  let collageDescriptionBoxMarginLeft;
+  let whiteTongMarginTop, whiteTongMarginBottom;
+  let collageDescriptionBoxMarginTop, collageDescriptionBoxMarginBottom;
+  let collageDescriptionBoxTitleAreaWidth;
+  let collageDescriptionBoxTitleSize, collageDescriptionBoxTitleWeight, collageDescriptionBoxTitleLineHeight;
+  let collageDescriptionBoxDescriptionSize, collageDescriptionBoxDescriptionWeight, collageDescriptionBoxDescriptionBoldWeight;
+  let tableWhiteTong;
+  let referencePhotoTong;
+  let referencePhotoBetween;
+  let tableColumnsWidth;
+  let tableColumnsFactor;
+  let tableColumnsName;
+  let tableColumnBar;
+  let tableFatorBars;
+  let tempTong;
+  let tableInnerMargin;
+  let tableInnerMarginTop;
+  let whiteTongMarginBottomFinal;
+  let tableFactorTextTop, tableFactorSize, tableFactorWeight;
+  let tableFactorHeight;
+  let tableColumnHeight;
+  let tableColumnWeight;
 
   basePadding = <%% 150, 90, 85, 75, 11 %%>;
 
@@ -646,7 +668,7 @@ MiniProposalJs.prototype.insertSecondBox = function () {
 
   topBottomVisualMargin = <%% 8, 8, 8, 8, 0 %%>;
 
-  grayTitleSize = <%% 24, 24, 24, 24, 24 %%>;
+  grayTitleSize = <%% 22, 22, 22, 22, 22 %%>;
   grayTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
   grayTitleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
   grayTitlePadding = <%% 20, 20, 20, 20, 20 %%>;
@@ -654,6 +676,73 @@ MiniProposalJs.prototype.insertSecondBox = function () {
 
   collageSlideBetween = <%% 12, 12, 12, 12, 12 %%>;
   collageInnerMargin = <%% 24, 24, 24, 24, 24 %%>;
+
+  collageDescriptionBoxMarginLeft = <%% 60, 70, 70, 70, 70 %%>;
+  collageDescriptionBoxMarginTop = <%% 72, 72, 72, 72, 72 %%>;
+  collageDescriptionBoxMarginBottom = <%% 80, 80, 80, 80, 80 %%>;
+
+  collageDescriptionBoxTitleAreaWidth = <%% 180, 180, 180, 180, 180 %%>;
+
+  collageDescriptionBoxTitleSize = <%% 16, 16, 16, 16, 16 %%>;
+  collageDescriptionBoxTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+  collageDescriptionBoxTitleLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
+
+  collageDescriptionBoxDescriptionSize = <%% 14, 14, 14, 14, 14 %%>;
+  collageDescriptionBoxDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+  collageDescriptionBoxDescriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+  whiteTongMarginTop = <%% 32, 32, 32, 32, 32 %%>;
+  whiteTongMarginBottom = <%% 72, 72, 72, 72, 72 %%>;
+  whiteTongMarginBottomFinal = <%% 32, 32, 32, 32, 32 %%>;
+
+  referencePhotoBetween = <%% 10, 10, 8, 8, 1 %%>;
+
+  tableInnerMargin = <%% 54, 54, 54, 54, 54 %%>;
+  tableInnerMarginTop = <%% 42, 42, 42, 42, 42 %%>;
+
+  tableFactorTextTop = <%% -2, -2, -2, -2, -2 %%>;
+  tableFactorSize = <%% 14, 14, 14, 14, 14 %%>;
+  tableFactorWeight = <%% 400, 400, 400, 400, 400 %%>;
+  tableColumnWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+  tableFactorHeight = <%% 100, 100, 100, 100, 100 %%>;
+  tableColumnHeight = <%% 45, 45, 45, 45, 45 %%>;
+
+  tableColumnsWidth = [
+    <&& 120 | 120 | 120 | 120 | 120 &&>,
+    <&& 150 | 150 | 150 | 150 | 150 &&>,
+    <&& 100 | 100 | 100 | 100 | 100 &&>,
+    <&& 100 | 100 | 100 | 100 | 100 &&>,
+    <&& 100 | 100 | 100 | 100 | 100 &&>,
+    <&& 100 | 100 | 100 | 100 | 100 &&>,
+    <&& 270 | 270 | 270 | 270 | 270 &&>,
+    <&& 120 | 120 | 120 | 120 | 120 &&>,
+    <&& 120 | 120 | 120 | 120 | 120 &&>,
+  ];
+
+  tableColumnsName = [
+    "이미지",
+    "품목",
+    "수량",
+    "단가",
+    "배송비",
+    "총액",
+    "상세 사항",
+    "구매처",
+    "링크"
+  ];
+
+  tableColumnsFactor = [
+    { type: "image", source: (obj) => { return obj.image } },
+    { type: "string", source: (obj) => { return obj.name } },
+    { type: "number", source: (obj) => { return obj.number } },
+    { type: "money", source: (obj) => { return obj.price.unit } },
+    { type: "money", source: (obj) => { return obj.price.delivery } },
+    { type: "money", source: (obj) => { return (obj.price.unit * obj.number) + obj.price.delivery } },
+    { type: "string", source: (obj) => { return obj.detail } },
+    { type: "string", source: (obj) => { return obj.where.name } },
+    { type: "link", source: (obj) => { return obj.where.link } },
+  ];
 
   contents = {
     title: [
@@ -673,7 +762,7 @@ MiniProposalJs.prototype.insertSecondBox = function () {
           MiniProposalJs.binaryPath + "/" + "proposal1.jpg",
         ],
         sub: "디자인 시안 설명",
-        description: "고객님 공간에 딱 맞는 홈리에종 미니 스타일링안을 드립니다. 디자인 시안은 무드 보드와 제품 리스트로 제공되며, <b%자세한 상품 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서%b> 배치 및 설치를 진행해주시면 됩니다. 수정 사항은 별도로 제공되지 않으며 기타 문의 사항이 있을시, 하단 채팅 기능을 통해 홈리에종으로 문의해주시길 바랍니다!",
+        description: "고객님 공간에 딱 맞는 홈리에종 미니 스타일링안을 드립니다. 디자인 시안은 무드 보드와 제품 리스트로 제공되며, <b%자세한 상품 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서%b> 배치 및 설치를 진행해주시면 됩니다. 수정 사항은 별도로 제공되지 않으며 기타 문의 사항이 있을시, 하단 채팅 기능을 통해 홈리에종으로 문의해주시길 바랍니다!\n\n고객님 공간에 딱 맞는 홈리에종 미니 스타일링안을 드립니다. 디자인 시안은 무드 보드와 제품 리스트로 제공되며, <b%자세한 상품 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서%b> 배치 및 설치를 진행해주시면 됩니다. 수정 사항은 별도로 제공되지 않으며 기타 문의 사항이 있을시, 하단 채팅 기능을 통해 홈리에종으로 문의해주시길 바랍니다!",
       },
       reference: {
         title: "참고 사진",
@@ -962,8 +1051,8 @@ MiniProposalJs.prototype.insertSecondBox = function () {
       paddingLeft: String(collageInnerMargin) + ea,
       paddingRight: String(collageInnerMargin) + ea,
       borderRadius: String(8) + "px",
-      marginTop: String(36) + ea,
-      marginBottom: String(40) + ea,
+      marginTop: String(whiteTongMarginTop) + ea,
+      marginBottom: String(whiteTongMarginBottom) + ea,
     }
   });
 
@@ -988,15 +1077,44 @@ MiniProposalJs.prototype.insertSecondBox = function () {
     style: {
       display: "block",
       position: "relative",
-      width: String(100) + '%',
-      height: String(400) + ea,
-      marginTop: String(100) + ea,
+      marginTop: String(collageDescriptionBoxMarginTop) + ea,
+      textAlign: "left",
+      marginLeft: String(collageDescriptionBoxMarginLeft) + ea,
+      marginRight: String(collageDescriptionBoxMarginLeft) + ea,
+      width: withOut(collageDescriptionBoxMarginLeft * 2, ea),
+      marginBottom: String(collageDescriptionBoxMarginBottom) + ea,
     }
   });
-
-
-
-
+  createNode({
+    mother: collageDescriptionBox,
+    text: contents.proposal.collage.sub,
+    style: {
+      display: "inline-block",
+      width: String(collageDescriptionBoxTitleAreaWidth) + ea,
+      fontSize: String(collageDescriptionBoxTitleSize) + ea,
+      fontWeight: String(collageDescriptionBoxTitleWeight),
+      color: colorChip.black,
+      lineHeight: String(collageDescriptionBoxTitleLineHeight),
+      verticalAlign: "top",
+    }
+  });
+  createNode({
+    mother: collageDescriptionBox,
+    text: contents.proposal.collage.description,
+    style: {
+      display: "inline-block",
+      width: withOut(collageDescriptionBoxTitleAreaWidth, ea),
+      fontSize: String(collageDescriptionBoxDescriptionSize) + ea,
+      fontWeight: String(collageDescriptionBoxDescriptionWeight),
+      color: colorChip.black,
+      lineHeight: String(collageDescriptionBoxTitleLineHeight),
+      verticalAlign: "top",
+    },
+    bold: {
+      fontWeight: String(collageDescriptionBoxDescriptionBoldWeight),
+      color: colorChip.black,
+    }
+  });
 
   // gray 2 : reference
   createNode({
@@ -1035,6 +1153,34 @@ MiniProposalJs.prototype.insertSecondBox = function () {
       }
     ]
   });
+  referencePhotoTong = createNode({
+    mother: grayBlock,
+    style: {
+      display: "block",
+      position: "relative",
+      textAlign: "left",
+      marginLeft: String(margin) + ea,
+      width: withOut((margin * 2), ea),
+      marginTop: String(whiteTongMarginTop) + ea,
+      marginBottom: String(whiteTongMarginBottom) + ea,
+    }
+  });
+  for (let i = 0; i < contents.proposal.reference.slide.length; i++) {
+    createNode({
+      mother: referencePhotoTong,
+      mode: "img",
+      attribute: {
+        src: contents.proposal.reference.slide[i]
+      },
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: "calc(calc(100% - " + String(referencePhotoBetween * (contents.proposal.reference.slide.length - 1)) + ea + ") / " + String(contents.proposal.reference.slide.length) + ")",
+        marginRight: String(i === contents.proposal.reference.slide.length - 1 ? 0 : referencePhotoBetween) + ea,
+        borderRadius: String(5) + "px",
+      }
+    });
+  }
 
   // gray 3 : table
   createNode({
@@ -1073,6 +1219,182 @@ MiniProposalJs.prototype.insertSecondBox = function () {
       }
     ]
   });
+
+  tableWhiteTong = createNode({
+    mother: grayBlock,
+    style: {
+      display: "block",
+      position: "relative",
+      textAlign: "center",
+      marginLeft: String(margin) + ea,
+      width: withOut((margin * 2) + (tableInnerMargin * 2), ea),
+      background: colorChip.white,
+      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      paddingTop: String(tableInnerMarginTop) + ea,
+      paddingBottom: String(tableInnerMargin) + ea,
+      paddingLeft: String(tableInnerMargin) + ea,
+      paddingRight: String(tableInnerMargin) + ea,
+      borderRadius: String(8) + "px",
+      marginTop: String(whiteTongMarginTop) + ea,
+      marginBottom: String(whiteTongMarginBottomFinal) + ea,
+    }
+  });
+
+  tableColumnBar = createNode({
+    mother: tableWhiteTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: withOut(0, ea),
+      textAlign: "left",
+      borderBottom: "1px solid " + colorChip.black,
+    }
+  });
+
+  for (let i = 0; i < tableColumnsName.length; i++) {
+    createNode({
+      mother: tableColumnBar,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        width: String(tableColumnsWidth[i]) + ea,
+        height: String(tableColumnHeight) + ea,
+        textAlign: "center",
+        justifyContent: "center",
+        alignItems: "center",
+      },
+      children: [
+        {
+          text: tableColumnsName[i],
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(tableFactorTextTop) + ea,
+            fontSize: String(tableFactorSize) + ea,
+            fontWeight: String(tableColumnWeight),
+            color: colorChip.black,
+          }
+        }
+      ]
+    });
+  }
+
+
+  tableFatorBars = [];
+  for (let i = 0; i < contents.proposal.table.list.length; i++) {
+    tableFatorBars.push(createNode({
+      mother: tableWhiteTong,
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(0, ea),
+        textAlign: "left",
+        borderBottom: "1px solid " + colorChip.gray3,
+      }
+    }));
+  }
+
+  for (let i = 0; i < contents.proposal.table.list.length; i++) {
+    for (let j = 0; j < tableColumnsFactor.length; j++) {
+
+      tempTong = createNode({
+        mother: tableFatorBars[i],
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: String(tableColumnsWidth[j]) + ea,
+          height: String(tableFactorHeight) + ea,
+          textAlign: "center",
+          justifyContent: "center",
+          alignItems: "center",
+          verticalAlign: "top",
+          overflow: "scroll",
+        }
+      });
+
+      if (tableColumnsFactor[j].type === "image") {
+
+        createNode({
+          mother: tempTong,
+          mode: "img",
+          attribute: {
+            src: tableColumnsFactor[j].source(contents.proposal.table.list[i]),
+          },
+          style: {
+            display: "inline-block",
+            position: "relative",
+            height: String(tableFactorHeight) + ea,
+          }
+        })
+
+
+      } else if (tableColumnsFactor[j].type === "string") {
+
+        createNode({
+          mother: tempTong,
+          text: tableColumnsFactor[j].source(contents.proposal.table.list[i]),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(tableFactorTextTop) + ea,
+            fontSize: String(tableFactorSize) + ea,
+            fontWeight: String(tableFactorWeight),
+            color: colorChip.black,
+          }
+        });
+
+      } else if (tableColumnsFactor[j].type === "number") {
+
+        createNode({
+          mother: tempTong,
+          text: String(tableColumnsFactor[j].source(contents.proposal.table.list[i])),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(tableFactorTextTop) + ea,
+            fontSize: String(tableFactorSize) + ea,
+            fontWeight: String(tableFactorWeight),
+            color: colorChip.black,
+          }
+        });
+
+
+      } else if (tableColumnsFactor[j].type === "money") {
+
+        createNode({
+          mother: tempTong,
+          text: autoComma(tableColumnsFactor[j].source(contents.proposal.table.list[i])) + '원',
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(tableFactorTextTop) + ea,
+            fontSize: String(tableFactorSize) + ea,
+            fontWeight: String(tableFactorWeight),
+            color: colorChip.black,
+          }
+        });
+
+      } else if (tableColumnsFactor[j].type === "link") {
+
+        createNode({
+          mother: tempTong,
+          text: "링크 열기",
+          event: (e) => { blankHref(tableColumnsFactor[j].source(contents.proposal.table.list[i])) },
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(tableFactorTextTop) + ea,
+            fontSize: String(tableFactorSize) + ea,
+            fontWeight: String(tableFactorWeight),
+            color: colorChip.black,
+            cursor: "pointer",
+          }
+        });
+
+      }
+    }
+  }
+
 
 }
 
