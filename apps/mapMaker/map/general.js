@@ -673,6 +673,9 @@ module.exports = {
       "miniProposal": {
         "behaviors": []
       },
+      "miniRequest": {
+        "behaviors": []
+      },
       "frontFaq": {
         "behaviors": []
       },
