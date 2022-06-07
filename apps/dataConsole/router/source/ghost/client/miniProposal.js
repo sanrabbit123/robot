@@ -91,7 +91,7 @@ MiniProposalJs.prototype.insertInitBox = function () {
   indexFont = <%% 19, 19, 19, 19, 19 %%>;
   indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
 
-  quoteTop = <%% 9, 9, 9, 7, -0.6 %%>;
+  quoteTop = <%% (isMac() ? 9 : 7), (isMac() ? 9 : 7), (isMac() ? 9 : 7), (isMac() ? 7 : 5), -0.6 %%>;
   quoteHeight = <%% 11, 11, 10, 9, 2.5 %%>;
   quoteLeft = <%% 2, 2, 2, 2, 1.6 %%>;
 
@@ -102,7 +102,7 @@ MiniProposalJs.prototype.insertInitBox = function () {
 
   indexNumberBottom = <%% 3, 4, 12, 4, 0 %%>;
 
-  grayBoxMarginTop = <%% 50, 45, 35, 25, 9.5 %%>;
+  grayBoxMarginTop = <%% (isMac() ? 50 : 48), (isMac() ? 45 : 43), (isMac() ? 35 : 33), (isMac() ? 25 : 23), 9.5 %%>;
   grayBoxImageVisualWidth = <%% 6, 4, 0, 0, 19 %%>;
 
   descriptionMarginLeft = <%% 5, 5, 5, 5, 8 %%>;
@@ -270,31 +270,31 @@ MiniProposalJs.prototype.insertCollageBox = function () {
 
   topBottomVisualMargin = <%% 18, 16, 12, 10, 3 %%>;
 
-  grayPaddingLeft = <%% 100, 52, 0, 0, 6 %%>;
+  grayPaddingLeft = <%% 100, 52, 0, 0, 0 %%>;
 
-  imageWidth = <%% 550, 460, 400, 290, 520 %%>;
-  imageHeight = <%% 550, 460, 418, 303, 520 %%>;
+  imageWidth = <%% 550, 460, 400, 290, 30 %%>;
+  imageHeight = <%% 550, 460, 418, 303, 30 %%>;
 
-  titleSize = <%% 18, 17, 16, 15, 4 %%>;
+  titleSize = <%% 18, 17, 16, 15, 4.2 %%>;
   titleWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
-  descriptionBoxPaddingTop = <%% 64, 50, 45, 32, 10 %%>;
+  descriptionBoxPaddingTop = <%% 64, 50, 45, 32, 6 %%>;
   descriptionBoxPaddingBottom = <%% 64, 50, 45, 32, 10 %%>;
-  descriptionBoxPaddingLeft = <%% 80, 52, 45, 34, 64 %%>;
-  descriptionBoxPaddingRight = <%% 20, 12, 8, 2, 24 %%>;
+  descriptionBoxPaddingLeft = <%% 80, 52, 45, 34, 6 %%>;
+  descriptionBoxPaddingRight = <%% 20, 12, 8, 2, 0 %%>;
 
-  descriptionPaddingTop = <%% 11, 10, 10, 9, 1 %%>;
+  descriptionPaddingTop = <%% 11, 10, 10, 9, 2.2 %%>;
 
-  descriptionSize = <%% 14, 13, 13, 12, 14 %%>;
+  descriptionSize = <%% 14, 13, 13, 12, 3 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   descriptionLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
 
-  subSize = <%% 16, 15, 14, 12, 16 %%>;
+  subSize = <%% 16, 15, 14, 12, 3 %%>;
   subWeight = <%% 400, 400, 400, 400, 400 %%>;
   subTop = <%% -12, -12, -12, -8, -1 %%>;
-  subRight = <%% 44, 40, 34, 32, 40 %%>;
+  subRight = <%% 44, 40, 34, 32, 4 %%>;
 
   contents = {
     title: "콜라주 제공 안내",
@@ -339,7 +339,7 @@ MiniProposalJs.prototype.insertCollageBox = function () {
       marginRight: String(margin) + ea,
       paddingLeft: String(grayPaddingLeft) + ea,
       width: withOut((margin * 2) + grayPaddingLeft, ea),
-      background: colorChip.gray1,
+      background: desktop ? colorChip.gray1 : colorChip.white,
       borderRadius: String(5) + "px",
     }
   });
@@ -347,9 +347,9 @@ MiniProposalJs.prototype.insertCollageBox = function () {
   imageBox = createNode({
     mother: grayTong,
     style: {
-      display: "inline-block",
+      display: desktop ? "inline-block" : "block",
       position: "relative",
-      width: String(imageWidth) + ea,
+      width: desktop ? String(imageWidth) + ea : String(100) + '%',
       background: colorChip.white,
       verticalAlign: "top",
     },
@@ -371,16 +371,16 @@ MiniProposalJs.prototype.insertCollageBox = function () {
   descriptionBox = createNode({
     mother: grayTong,
     style: {
-      display: "inline-flex",
+      display: desktop ? "inline-flex" : "block",
       position: "relative",
-      marginLeft: String(descriptionBoxPaddingLeft) + ea,
-      width: withOut(imageWidth + (descriptionBoxPaddingLeft + descriptionBoxPaddingRight), ea),
+      marginLeft: desktop ? String(descriptionBoxPaddingLeft) + ea : "",
+      width: desktop ? withOut(imageWidth + (descriptionBoxPaddingLeft + descriptionBoxPaddingRight), ea) : String(100) + '%',
       marginTop: String(descriptionBoxPaddingTop) + ea,
-      marginBottom: String(descriptionBoxPaddingBottom) + ea,
-      height: String(imageHeight - descriptionBoxPaddingTop - descriptionBoxPaddingBottom) + ea,
-      verticalAlign: "top",
-      flexDirection: "column",
-      justifyContent: "end"
+      marginBottom: desktop ? String(descriptionBoxPaddingBottom) + ea : "",
+      height: desktop ? String(imageHeight - descriptionBoxPaddingTop - descriptionBoxPaddingBottom) + ea : "",
+      verticalAlign: desktop ? "top" : "",
+      flexDirection: desktop ? "column" : "",
+      justifyContent: desktop ? "end" : "",
     }
   });
 
@@ -390,7 +390,7 @@ MiniProposalJs.prototype.insertCollageBox = function () {
     style: {
       display: "block",
       position: "relative",
-      textAlign: "left",
+      textAlign: desktop ? "left" : "center",
       fontSize: String(titleSize) + ea,
       fontWeight: String(titleWeight),
       lineHeight: String(titleLineHeight),
@@ -411,14 +411,16 @@ MiniProposalJs.prototype.insertCollageBox = function () {
   for (let i = 0; i < contents.description.length; i++) {
     createNode({
       mother: descriptionTextTong,
-      text: contents.description[i].join("\n"),
+      text: desktop ? contents.description[i].join("\n") : contents.description[i].join(" "),
       style: {
-        display: "inline-block",
-        width: "calc(100% / " + String(contents.description.length) + ")",
+        display: desktop ? "inline-block" : "block",
+        width: desktop ? "calc(100% / " + String(contents.description.length) + ")" : String(100) + '%',
         fontSize: String(descriptionSize) + ea,
         fontWeight: String(descriptionWeight),
         color: colorChip.black,
         lineHeight: String(descriptionLineHeight),
+        textAlign: desktop ? "left" : "center",
+        marginBottom: desktop ? "" : String(i === 0 ? 1 : 0.5) + ea,
       },
       bold: {
         fontSize: String(descriptionSize) + ea,
@@ -433,7 +435,7 @@ MiniProposalJs.prototype.insertCollageBox = function () {
     mother: descriptionBox,
     text: contents.sub,
     style: {
-      display: "block",
+      display: desktop ? "block" : "none",
       position: "absolute",
       textAlign: "right",
       width: String(100) + '%',
@@ -471,36 +473,39 @@ MiniProposalJs.prototype.insertPhotoBox = function () {
   let descriptionLineHeight;
   let photoBetween;
   let basePadding;
+  let mobileTitleMarginTop, mobileDescriptionMarginLeft;
 
-  basePadding = <%% 150, 120, 105, 90, 11 %%>;
+  basePadding = <%% 150, 120, 105, 90, 12 %%>;
 
   margin = <%% 56, 52, 44, 32, 6 %%>;
 
-  photoTongWidth = <%% 1150, 830, 670, 520, 780 %%>;
-  photoTongHeight = <%% 241, 210, 210, 163, 241 %%>;
+  photoTongWidth = <%% 1150, 830, 670, 520, 40 %%>;
+  photoTongHeight = <%% 241, 210, 210, 163, 39.5 %%>;
 
-  photoBetween = <%% 10, 8, 8, 6, 10 %%>;
+  photoBetween = <%% 10, 8, 8, 6, 1 %%>;
 
-  titleSize = <%% 18, 17, 16, 15, 4 %%>;
+  titleSize = <%% 18, 17, 16, 15, 4.2 %%>;
   titleWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
-  descriptionPaddingTop = <%% 11, 10, 10, 9, 1 %%>;
+  descriptionPaddingTop = <%% 11, 10, 10, 9, 2.2 %%>;
 
-  descriptionSize = <%% 14, 13, 13, 12, 14 %%>;
+  descriptionSize = <%% 14, 13, 13, 12, 3 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   descriptionLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
 
+  mobileTitleMarginTop = 6;
+  mobileDescriptionMarginLeft = 2;
 
   contents = {
     title: "참고 사진 제공 안내",
     description: [
       "무드 보드와 함께 배치의 이해를 도울 수",
-      "있도록 <b%같은 컨셉의 인테리어 사진이 첨부%b>될",
+      desktop ? "있도록 <b%같은 컨셉의 인테리어 사진이 첨부%b>될" : "있도록 <b%같은 컨셉의 사진이 첨부%b>될",
       "수 있습니다. 하지만 참고 사진은 제품의",
-      "하나하나의 구성이 실제 무드 보드 / 제품",
-      "리스트와 다를 수 있으며 컨셉만 같다는",
+      "하나하나의 구성이 실제 무드 보드, 제품",
+      desktop ? "리스트와 다를 수 있으며 컨셉만 같다는" : "리스트와 다르며, 컨셉만 같다는",
       "점을 유의하시길 바랍니다.",
     ],
     images: [
@@ -534,10 +539,10 @@ MiniProposalJs.prototype.insertPhotoBox = function () {
   photoTong = createNode({
     mother: whiteBlock,
     style: {
-      display: "inline-block",
+      display: desktop ? "inline-block" : "block",
       position: "relative",
-      width: String(photoTongWidth) + ea,
-      height: String(photoTongHeight) + ea,
+      width: desktop ? String(photoTongWidth) + ea : String(100) + '%',
+      height: desktop ? String(photoTongHeight) + ea : "",
       verticalAlign: "top",
     }
   });
@@ -552,9 +557,11 @@ MiniProposalJs.prototype.insertPhotoBox = function () {
       style: {
         display: "inline-block",
         position: "relative",
-        height: String(100) + '%',
+        height: desktop ? String(100) + '%' : "",
+        width: desktop ? "" : "calc(calc(100% - " + String(photoBetween * 2) + ea + ") / " + String(3) + ")",
         borderRadius: String(5) + "px",
-        marginRight: String(photoBetween) + ea,
+        marginRight: desktop ? String(photoBetween) + ea : String(i % 3 === 2 ? 0 : photoBetween) + ea,
+        marginBottom: desktop ? "" : String(photoBetween) + ea,
       }
     });
   }
@@ -562,13 +569,14 @@ MiniProposalJs.prototype.insertPhotoBox = function () {
   descriptionTong = createNode({
     mother: whiteBlock,
     style: {
-      display: "inline-flex",
+      display: desktop ? "inline-flex" : "block",
       verticalAlign: "top",
       position: "relative",
       flexDirection: "column",
       justifyContent: "end",
-      width: withOut(photoTongWidth, ea),
-      height: String(photoTongHeight) + ea,
+      width: desktop ? withOut(photoTongWidth, ea) : String(100) + '%',
+      height: desktop ? String(photoTongHeight) + ea : "",
+      marginTop: desktop ? "" : String(mobileTitleMarginTop) + ea,
     }
   });
 
@@ -582,18 +590,22 @@ MiniProposalJs.prototype.insertPhotoBox = function () {
       color: colorChip.black,
       lineHeight: String(titleLineHeight),
       marginBottom: String(descriptionPaddingTop) + ea,
+      textAlign: desktop ? "left" : "center",
     }
   });
 
   createNode({
     mother: descriptionTong,
-    text: contents.description.join("\n"),
+    text: desktop ? contents.description.join("\n") : contents.description.join(" "),
     style: {
       display: "block",
       fontSize: String(descriptionSize) + ea,
       fontWeight: String(descriptionWeight),
       color: colorChip.black,
       lineHeight: String(descriptionLineHeight),
+      textAlign: desktop ? "left" : "center",
+      width: desktop ? "" : withOut(mobileDescriptionMarginLeft * 2, ea),
+      marginLeft: desktop ? "" : String(mobileDescriptionMarginLeft) + ea,
     },
     bold: {
       fontSize: String(descriptionSize) + ea,
@@ -656,78 +668,77 @@ MiniProposalJs.prototype.insertSecondBox = function () {
   let tableColumnHeight;
   let tableColumnWeight;
 
-  basePadding = <%% 150, 120, 105, 90, 11 %%>;
+  basePadding = <%% 150, 120, 105, 90, 12 %%>;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 56, 52, 44, 32, 6 %%>;
+  margin = <%% 56, 52, 44, 32, 4 %%>;
 
-  titleTextTitleWidth = <%% 340, 280, 250, 200, 340 %%>;
-  titleTextTongHeight = <%% 85, 85, 80, 75, 85 %%>;
+  titleTextTitleWidth = <%% 340, 280, 250, 200, 29 %%>;
+  titleTextTongHeight = <%% (isMac() ? 85 : 81), (isMac() ? 85 : 81), (isMac() ? 80 : 77), (isMac() ? 75 : 73), 10 %%>;
 
-  titleTextTitleSize = <%% 26, 26, 24, 20, 26 %%>;
+  titleTextTitleSize = <%% 26, 26, 24, 20, 4 %%>;
   titleTextTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
   titleTextTitleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
   titleTextDescriptionSize = <%% 14, 14, 14, 13, 3 %%>;
   titleTextDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   titleTextDescriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
-  titleTextDescriptionLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
-  titleTextDescriptionPaddingTop = <%% 3, 3, 3, 2, 3 %%>;
+  titleTextDescriptionLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.6 %%>;
+  titleTextDescriptionPaddingTop = <%% 3, 3, 3, 2, 0.2 %%>;
 
-  topBottomVisualMargin = <%% 8, 8, 4, 0, 0 %%>;
+  topBottomVisualMargin = <%% 8, 8, 4, 0, -2 %%>;
 
-  grayTitleSize = <%% 22, 22, 20, 17, 22 %%>;
+  grayTitleSize = <%% 22, 22, 20, 17, 4 %%>;
   grayTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
   grayTitleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
-  grayTitlePadding = <%% 20, 20, 20, 16, 20 %%>;
-  grayTitleLineTop = <%% 16, 16, 14, 11, 16 %%>;
+  grayTitlePadding = <%% 20, 20, 20, 16, 4 %%>;
+  grayTitleLineTop = <%% (isMac() ? 15 : 12), (isMac() ? 15 : 12), (isMac() ? 14 : 12), (isMac() ? 11 : 9), 2.5 %%>;
 
-  collageSlideBetween = <%% 12, 12, 12, 12, 12 %%>;
-  collageInnerMargin = <%% 24, 24, 24, 24, 24 %%>;
+  collageSlideBetween = <%% 12, 12, 12, 12, 2 %%>;
+  collageInnerMargin = <%% 24, 24, 24, 24, 3 %%>;
 
-  collageDescriptionBoxMarginLeft = <%% 60, 45, 35, 24, 7 %%>;
-  collageDescriptionBoxMarginTop = <%% 72, 72, 56, 32, 72 %%>;
-  collageDescriptionBoxMarginBottom = <%% 80, 80, 60, 32, 80 %%>;
+  collageDescriptionBoxMarginLeft = <%% 60, 45, 35, 24, 3 %%>;
+  collageDescriptionBoxMarginTop = <%% 72, 72, 56, 32, 5 %%>;
+  collageDescriptionBoxMarginBottom = <%% 80, 80, 60, 32, 5 %%>;
 
-  collageDescriptionBoxTitleAreaWidth = <%% 180, 180, 160, 140, 180 %%>;
+  collageDescriptionBoxTitleAreaWidth = <%% 180, 180, 160, 140, 88 %%>;
 
-  collageDescriptionBoxTitleSize = <%% 16, 16, 15, 13, 16 %%>;
+  collageDescriptionBoxTitleSize = <%% 16, 16, 15, 13, 3.2 %%>;
   collageDescriptionBoxTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
   collageDescriptionBoxTitleLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
 
-  collageDescriptionBoxDescriptionSize = <%% 14, 14, 13, 12, 14 %%>;
+  collageDescriptionBoxDescriptionSize = <%% 14, 14, 13, 12, 3 %%>;
   collageDescriptionBoxDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   collageDescriptionBoxDescriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  whiteTongMarginTop = <%% 32, 32, 32, 20, 32 %%>;
-  whiteTongMarginBottom = <%% 72, 72, 60, 45, 72 %%>;
-  whiteTongMarginBottomFinal = <%% 32, 32, 32, 8, 32 %%>;
+  whiteTongMarginTop = <%% 32, 32, 32, 20, 5 %%>;
+  whiteTongMarginBottom = <%% 72, 72, 60, 45, 9 %%>;
+  whiteTongMarginBottomFinal = <%% 32, 32, 32, 8, 2.5 %%>;
 
   referencePhotoBetween = <%% 10, 10, 8, 8, 1 %%>;
 
-  tableInnerMargin = <%% 54, 45, 30, 20, 54 %%>;
-  tableInnerMarginTop = <%% 42, 42, 20, 12, 42 %%>;
+  tableInnerMargin = <%% 54, 45, 30, 20, 0 %%>;
+  tableInnerMarginTop = <%% 42, 42, 20, 12, 0 %%>;
 
-  tableFactorTextTop = <%% -2, -2, -2, -2, -2 %%>;
-  tableFactorSize = <%% 14, 13, 12, 11, 14 %%>;
+  tableFactorTextTop = <%% (isMac() ? -2 : -1), (isMac() ? -2 : -1), (isMac() ? -2 : -1), (isMac() ? -2 : -1), -0.3 %%>;
+  tableFactorSize = <%% 14, 13, 12, 11, 2.5 %%>;
   tableFactorWeight = <%% 400, 400, 400, 400, 400 %%>;
   tableColumnWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  tableFactorHeight = <%% 100, 90, 80, 50, 100 %%>;
-  tableColumnHeight = <%% 45, 45, 40, 35, 45 %%>;
+  tableFactorHeight = <%% 100, 90, 80, 50, 12 %%>;
+  tableColumnHeight = <%% 45, 45, 40, 35, 6 %%>;
 
   tableColumnsWidth = [
-    <&& 120 | 90 | 75 | 50 | 120 &&>,
-    <&& 150 | 100 | 95 | 80 | 150 &&>,
-    <&& 100 | 60 | 45 | 30 | 100 &&>,
-    <&& 100 | 80 | 70 | 60 | 100 &&>,
-    <&& 100 | 80 | 70 | 60 | 100 &&>,
-    <&& 100 | 80 | 70 | 60 | 100 &&>,
-    <&& 270 | 180 | 155 | 130 | 270 &&>,
-    <&& 120 | 90 | 80 | 70 | 120 &&>,
-    <&& 120 | 90 | 80 | 70 | 120 &&>,
+    <&& 120 | 90 | 75 | 50 | 12 &&>,
+    <&& 150 | 100 | 95 | 80 | 15 &&>,
+    <&& 100 | 60 | 45 | 30 | 10 &&>,
+    <&& 100 | 80 | 70 | 60 | 10 &&>,
+    <&& 100 | 80 | 70 | 60 | 10 &&>,
+    <&& 100 | 80 | 70 | 60 | 14 &&>,
+    <&& 270 | 180 | 155 | 130 | 32 &&>,
+    <&& 120 | 90 | 80 | 70 | 12 &&>,
+    <&& 120 | 90 | 80 | 70 | 10 &&>,
   ];
-
   tableColumnsName = [
     "이미지",
     "품목",
@@ -739,7 +750,6 @@ MiniProposalJs.prototype.insertSecondBox = function () {
     "구매처",
     "링크"
   ];
-
   tableColumnsFactor = [
     { type: "image", source: (obj) => { return obj.image } },
     { type: "string", source: (obj) => { return obj.name } },
@@ -752,15 +762,29 @@ MiniProposalJs.prototype.insertSecondBox = function () {
     { type: "link", source: (obj) => { return obj.where.link } },
   ];
 
+  if (mobile) {
+    tableColumnsWidth.splice(3, 2);
+    tableColumnsName.splice(3, 2);
+    tableColumnsFactor.splice(3, 2);
+
+    tableColumnsWidth.splice(1, 1);
+    tableColumnsName.splice(1, 1);
+    tableColumnsFactor.splice(1, 1);
+
+    tableColumnsWidth.splice(4, 1);
+    tableColumnsName.splice(4, 1);
+    tableColumnsFactor.splice(4, 1);
+  }
+
   contents = {
     title: [
-      "공간별 디자인 시안과",
+      desktop ? "공간별 디자인 시안과" : "디자인 시안과",
       "제품 리스트",
     ],
     description: [
-      <&& "고객님 공간에 딱 맞는 홈리에종 미니 스타일링안을 드립니다. <b%디자인 시안은 무드 보드와 제품 리스트로 제공되며,%b>" | "고객님 공간에 딱 맞는 홈리에종 미니 스타일링안을 드립니다. <b%디자인 시안은 무드 보드와 제품 리스트로 제공되며,%b>" | "고객님 공간에 맞는 홈리에종 스타일링안을 드립니다. <b%시안은 무드 보드와 제품 리스트로 제공되며,%b>" | "고객님 공간에 맞는 스타일링안을 드립니다. <b%시안은 무드 보드와 제품 리스트로 제공되며,%b>" | "고객님 공간에 맞는 스타일링안을 드립니다. <b%시안은 무드 보드와 제품 리스트로 제공되며,%b>" &&>,
-      <&& "자세한 상품 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서 배치 및 설치를 진행해주시면 됩니다." | "자세한 상품 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서 배치 및 설치를 진행해주시면 됩니다." | "자세한 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서 배치를 진행해주시면 됩니다." | "정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서 배치를 진행해주시면 됩니다." | "정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서 배치를 진행해주시면 됩니다." &&>,
-      <&& "수정 사항은 별도로 제공되지 않으며 기타 문의 사항이 있을시, 하단 채팅 기능을 통해 홈리에종으로 문의해주시길 바랍니다!" | "수정 사항은 별도로 제공되지 않으며 기타 문의 사항이 있을시, 하단 채팅 기능을 통해 홈리에종으로 문의해주시길 바랍니다!" | "수정은 별도로 제공되지 않으며 문의가 있을 시, 채팅을 통해 홈리에종으로 문의해주시길 바랍니다!" | "수정은 제공되지 않으며 문의가 있을 시, 채팅을 통해 홈리에종으로 문의해주시길 바랍니다!" | "수정은 제공되지 않으며 문의가 있을 시, 채팅을 통해 홈리에종으로 문의해주시길 바랍니다!" &&>,
+      <&& "고객님 공간에 딱 맞는 홈리에종 미니 스타일링안을 드립니다. <b%디자인 시안은 무드 보드와 제품 리스트로 제공되며,%b>" | "고객님 공간에 딱 맞는 홈리에종 미니 스타일링안을 드립니다. <b%디자인 시안은 무드 보드와 제품 리스트로 제공되며,%b>" | "고객님 공간에 맞는 홈리에종 스타일링안을 드립니다. <b%시안은 무드 보드와 제품 리스트로 제공되며,%b>" | "고객님 공간에 맞는 스타일링안을 드립니다. <b%시안은 무드 보드와 제품 리스트로 제공되며,%b>" | "고객님께 맞는 스타일링안을 드립니다. <b%무드 보드와 제품 리스트로 제공되며,%b>" &&>,
+      <&& "자세한 상품 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서 배치 및 설치를 진행해주시면 됩니다." | "자세한 상품 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서 배치 및 설치를 진행해주시면 됩니다." | "자세한 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서 배치를 진행해주시면 됩니다." | "정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서 배치를 진행해주시면 됩니다." | "구입처를 통해 구매하신 뒤, 무드 보드를 보며 배치해주시면 됩니다." &&>,
+      <&& "수정 사항은 별도로 제공되지 않으며 기타 문의 사항이 있을시, 하단 채팅 기능을 통해 홈리에종으로 문의해주시길 바랍니다!" | "수정 사항은 별도로 제공되지 않으며 기타 문의 사항이 있을시, 하단 채팅 기능을 통해 홈리에종으로 문의해주시길 바랍니다!" | "수정은 별도로 제공되지 않으며 문의가 있을 시, 채팅을 통해 홈리에종으로 문의해주시길 바랍니다!" | "수정은 제공되지 않으며 문의가 있을 시, 채팅을 통해 홈리에종으로 문의해주시길 바랍니다!" | "\n수정은 제공되지 않으며 별도 문의는 홈리에종으로 문의주시길 바랍니다!" &&>,
     ],
     proposal: {
       collage: {
@@ -951,9 +975,9 @@ MiniProposalJs.prototype.insertSecondBox = function () {
     style: {
       display: "block",
       position: "relative",
-      marginLeft: String(margin) + ea,
-      width: withOut(margin * 2, ea),
-      height: String(titleTextTongHeight) + ea,
+      marginLeft: String((desktop ? margin : 6)) + ea,
+      width: withOut((desktop ? margin : 6) * 2, ea),
+      height: desktop ? String(titleTextTongHeight) + ea : "",
     }
   });
   createNode({
@@ -972,7 +996,7 @@ MiniProposalJs.prototype.insertSecondBox = function () {
   });
   createNode({
     mother: titleTextTong,
-    text: contents.description.join("\n"),
+    text: desktop ? contents.description.join("\n") : contents.description.join(" "),
     style: {
       display: "inline-block",
       position: "relative",
@@ -998,7 +1022,7 @@ MiniProposalJs.prototype.insertSecondBox = function () {
       position: "relative",
       borderRadius: String(8) + "px",
       width: String(100) + '%',
-      paddingTop: String(margin - topBottomVisualMargin) + ea,
+      paddingTop: String(desktop ? margin - topBottomVisualMargin : margin - topBottomVisualMargin + 1) + ea,
       paddingBottom: String(margin - topBottomVisualMargin) + ea,
       background: colorChip.gray1,
       marginBottom: String(bottomMargin) + ea,
@@ -1054,7 +1078,7 @@ MiniProposalJs.prototype.insertSecondBox = function () {
       width: withOut((margin * 2) + (collageInnerMargin * 2), ea),
       background: colorChip.white,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
-      paddingTop: String(collageInnerMargin) + ea,
+      paddingTop: String(desktop ? collageInnerMargin : collageInnerMargin + 1) + ea,
       paddingBottom: String(collageInnerMargin) + ea,
       paddingLeft: String(collageInnerMargin) + ea,
       paddingRight: String(collageInnerMargin) + ea,
@@ -1076,6 +1100,7 @@ MiniProposalJs.prototype.insertSecondBox = function () {
         position: "relative",
         width: String(100) + '%',
         marginBottom: String(collageSlideBetween) + ea,
+        borderRadius: String(5) + "px",
       }
     });
   }
@@ -1097,8 +1122,8 @@ MiniProposalJs.prototype.insertSecondBox = function () {
     mother: collageDescriptionBox,
     text: contents.proposal.collage.sub,
     style: {
-      display: "inline-block",
-      width: String(collageDescriptionBoxTitleAreaWidth) + ea,
+      display: desktop ? "inline-block" : "block",
+      width: desktop ? String(collageDescriptionBoxTitleAreaWidth) + ea : String(100) + '%',
       fontSize: String(collageDescriptionBoxTitleSize) + ea,
       fontWeight: String(collageDescriptionBoxTitleWeight),
       color: colorChip.black,
@@ -1110,13 +1135,14 @@ MiniProposalJs.prototype.insertSecondBox = function () {
     mother: collageDescriptionBox,
     text: contents.proposal.collage.description,
     style: {
-      display: "inline-block",
-      width: withOut(collageDescriptionBoxTitleAreaWidth, ea),
+      display: desktop ? "inline-block" : "block",
+      width: desktop ? withOut(collageDescriptionBoxTitleAreaWidth, ea) : String(100) + '%',
       fontSize: String(collageDescriptionBoxDescriptionSize) + ea,
       fontWeight: String(collageDescriptionBoxDescriptionWeight),
       color: colorChip.black,
       lineHeight: String(collageDescriptionBoxTitleLineHeight),
       verticalAlign: "top",
+      marginTop: desktop ? "" : String(collageDescriptionBoxMarginLeft) + ea,
     },
     bold: {
       fontWeight: String(collageDescriptionBoxDescriptionBoldWeight),
@@ -1183,8 +1209,9 @@ MiniProposalJs.prototype.insertSecondBox = function () {
       style: {
         display: "inline-block",
         position: "relative",
-        width: "calc(calc(100% - " + String(referencePhotoBetween * (contents.proposal.reference.slide.length - 1)) + ea + ") / " + String(contents.proposal.reference.slide.length) + ")",
-        marginRight: String(i === contents.proposal.reference.slide.length - 1 ? 0 : referencePhotoBetween) + ea,
+        width: desktop ? "calc(calc(100% - " + String(referencePhotoBetween * (contents.proposal.reference.slide.length - 1)) + ea + ") / " + String(contents.proposal.reference.slide.length) + ")" : "calc(calc(100% - " + String(referencePhotoBetween) + ea + ") / 2)",
+        marginRight: desktop ? String(i === contents.proposal.reference.slide.length - 1 ? 0 : referencePhotoBetween) + ea : String(i % 2 === 0 ? referencePhotoBetween : 0) + ea,
+        marginBottom: desktop ? "" : String(referencePhotoBetween) + ea,
         borderRadius: String(5) + "px",
       }
     });
@@ -1236,14 +1263,14 @@ MiniProposalJs.prototype.insertSecondBox = function () {
       textAlign: "center",
       marginLeft: String(margin) + ea,
       width: withOut((margin * 2) + (tableInnerMargin * 2), ea),
-      background: colorChip.white,
-      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      background: desktop ? colorChip.white : "transparent",
+      boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : 0,
       paddingTop: String(tableInnerMarginTop) + ea,
       paddingBottom: String(tableInnerMargin) + ea,
       paddingLeft: String(tableInnerMargin) + ea,
       paddingRight: String(tableInnerMargin) + ea,
       borderRadius: String(8) + "px",
-      marginTop: String(whiteTongMarginTop) + ea,
+      marginTop: String(desktop ? whiteTongMarginTop : whiteTongMarginTop - 1) + ea,
       marginBottom: String(whiteTongMarginBottomFinal) + ea,
     }
   });
@@ -1386,7 +1413,7 @@ MiniProposalJs.prototype.insertSecondBox = function () {
 
         createNode({
           mother: tempTong,
-          text: "링크 열기",
+          text: "Link",
           event: (e) => { blankHref(tableColumnsFactor[j].source(contents.proposal.table.list[i])) },
           style: {
             display: "inline-block",

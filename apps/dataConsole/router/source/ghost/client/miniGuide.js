@@ -91,7 +91,7 @@ MiniGuideJs.prototype.insertInitBox = function () {
   indexFont = <%% 19, 19, 19, 19, 19 %%>;
   indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
 
-  quoteTop = <%% 9, 9, 9, 7, -0.6 %%>;
+  quoteTop = <%% (isMac() ? 9 : 7), (isMac() ? 9 : 7), (isMac() ? 9 : 7), (isMac() ? 7 : 5), -0.6 %%>;
   quoteHeight = <%% 11, 11, 10, 9, 2.5 %%>;
   quoteLeft = <%% 2, 2, 2, 2, 1.6 %%>;
 
@@ -102,7 +102,7 @@ MiniGuideJs.prototype.insertInitBox = function () {
 
   indexNumberBottom = <%% 3, 4, 12, 4, 0 %%>;
 
-  grayBoxMarginTop = <%% 55, 50, 40, 28, 9.5 %%>;
+  grayBoxMarginTop = <%% (isMac() ? 55 : 53), (isMac() ? 50 : 48), (isMac() ? 40 : 38), (isMac() ? 28 : 26), 9.5 %%>;
   grayBoxImageVisualWidth = <%% 6, 4, 0, 0, 19 %%>;
 
   descriptionMarginLeft = <%% 5, 5, 5, 5, 8 %%>;
