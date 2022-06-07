@@ -43,7 +43,7 @@ const MiniProposalJs = function () {
   this.firstClick = false;
 }
 
-MiniProposalJs.binaryPath = "/middle/miniProposal";
+MiniProposalJs.binaryPath = FRONTHOST + "/middle/miniProposal";
 
 MiniProposalJs.prototype.insertInitBox = function () {
   const instance = this;
