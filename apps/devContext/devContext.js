@@ -108,16 +108,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
-
-
-
-
-
-
-
     // const WebSocket = require("ws");
     // const ws = new WebSocket("wss://home-liaison.serveftp.com:5000/general");
     // ws.on("open", () => {
@@ -2633,17 +2623,17 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2205_aa02s", [
-    //   { porlid: "a94", index: 8 },
-    //   { porlid: "a95", index: 7 },
-    //   { porlid: "a94", index: 4 },
-    //   { porlid: "a95", index: 3 },
-    //   { porlid: "a94", index: 5 },
-    //   { porlid: "a94", index: 6 },
+    // await this.setProposalSettingForDesigner("d2206_aa02s", [
+    //   { porlid: "ghost", index: 1 },
+    //   { porlid: "ghost", index: 3 },
+    //   { porlid: "ghost", index: 4 },
+    //   { porlid: "ghost", index: 6 },
+    //   { porlid: "ghost", index: 5 },
+    //   { porlid: "ghost", index: 6 },
     // ], [
-    //   "깊이 있는 지식으로 고객님의 선호 스타일을 정확히 파악해 냅니다.",
-    //   "최대한 고객님의 취향과 라이프스타일이 반영 된 공간을 디자인해드리려 합니다.",
-    //   "시크한 스타일부터 프렌치 모던까지 다양한 스타일을 구현해낼 수 있습니다."
+    //   "공간을 디자인 함에 있어 그 퀄리티를 결정하는 마지막 요소는 ‘디테일’이 될 것입니다.",
+    //   "사용자와 디자이너의 원활한 소통을 매우 중요시 생각합니다.",
+    //   "사용자의 원하는 바와 디자이너의 디자인 의도가 일치할 때를 추구합니다."
     // ]);
 
 

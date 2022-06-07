@@ -412,6 +412,16 @@ Robot.prototype.logConnect = async function () {
   }
 }
 
+Robot.prototype.secondConnect = async function () {
+  try {
+    const SecondGhost = require(process.cwd() + "/apps/secondGhost/secondGhost.js");
+    const app = new SecondGhost();
+    await app.ghostConnect();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.consoleSource = function () {
   const AiConsole = require(process.cwd() + "/apps/contentsMaker/aiConsole.js");
   let cobot = new AiConsole();
@@ -1473,6 +1483,13 @@ const MENU = {
       await robot.arpScan();
     } catch (e) {
       console.log(e);
+    }
+  },
+  second: async function () {
+    try {
+      await robot.secondConnect();
+    } catch (e) {
+      console.log();
     }
   }
 };
