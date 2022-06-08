@@ -18,11 +18,11 @@
   "meta": {
     "title": [
       "thisPerson",
-      "return ('홈리에종 디자인 제안 | 홈리에종');"
+      "return ('홈리에종 미니 콘솔 | 홈리에종');"
     ],
     "description": [
       "thisPerson",
-      "return ('홈리에종 디자인 제안 페이지 입니다! | 홈리에종');"
+      "return ('홈리에종 미니 콘솔 페이지 입니다! | 홈리에종');"
     ],
     "image": [
       "thisPerson",
@@ -43,7 +43,7 @@ const MiniRequestJs = function () {
   this.firstClick = false;
 }
 
-MiniRequestJs.binaryPath = "/middle/miniRequest";
+MiniRequestJs.binaryPath = FRONTHOST + "/middle/miniRequest";
 
 MiniRequestJs.prototype.insertInitBox = function () {
   const instance = this;
