@@ -143,6 +143,7 @@ MiniProposalJs.prototype.insertInitBox = function () {
       height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : String(mobileTitleHeight) + ea,
       marginBottom: desktop ? String(margin) + ea : "",
       marginLeft: desktop ? String(margin) + ea : "",
+      verticalAlign: "top",
     },
     children: [
       {
