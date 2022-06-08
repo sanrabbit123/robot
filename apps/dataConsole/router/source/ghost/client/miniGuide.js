@@ -111,8 +111,8 @@ MiniGuideJs.prototype.insertInitBox = function () {
 
   contents = {
     title: [
-      <&& "공간 실측 가이드와" | "공간 실측 가이드와" | "공간 실측 가이드와" | "실측 가이드와" | "공간 실측 가이드와" &&>,
-      "제공 품목 안내"
+      "프로세스 안내와",
+      "상세 정보 전송"
     ],
     description: [
       <&& "디자이너와의 온라인 상담이 진행되기 전에, 공간 실측 가이드와 제공 품목 안내서를 제공해드립니다." | "디자이너와의 온라인 상담이 진행되기 전에, 공간 실측 가이드와 제공 품목 안내서를 제공해드립니다." | "온라인 상담이 진행되기 전에, 공간 실측 가이드와 제공 품목 안내서를 제공해드립니다." | "상담이 진행되기 전에, 공간 실측 가이드와 제공 품목 안내서를 제공해드립니다." | "상담이 진행되기 전에, 공간 실측 가이드와 제공 품목 안내서를 제공해드립니다." &&>,
@@ -306,18 +306,18 @@ MiniGuideJs.prototype.insertProcessBox = function () {
         image: "process0.jpg",
       },
       {
-        title: "온라인 상담",
-        description: [
-          <&& "결제가 완료되면 디자이너와" | "결제가 완료되면 디자이너와" | "결제가 완료되면 디자이너와" | "결제가 되면 디자이너와" | "결제가 되면 디자이너와" &&>,
-          "1:1 상담이 진행됩니다.",
-        ],
-        image: "process1.jpg",
-      },
-      {
         title: "정보 전달",
         description: [
           <&& "가이드에 따라 진행된 실측" | "가이드에 따라 진행된 실측" | "가이드에 따라 진행된 실측" | "가이드에 따라 진행된" | "가이드에 따라 진행된" &&>,
           <&& "정보와 요청 사항을 전달합니다." | "정보와 요청을 전달합니다." | "정보와 요청을 전달합니다." | "실측 정보를 전달합니다." | "실측 정보를 전달합니다." &&>,
+        ],
+        image: "process1.jpg",
+      },
+      {
+        title: "온라인 상담",
+        description: [
+          <&& "결제가 완료되면 디자이너와" | "결제가 완료되면 디자이너와" | "결제가 완료되면 디자이너와" | "결제가 되면 디자이너와" | "결제가 되면 디자이너와" &&>,
+          "1:1 상담이 진행됩니다.",
         ],
         image: "process2.jpg",
       },
@@ -423,7 +423,7 @@ MiniGuideJs.prototype.insertProcessBox = function () {
         fontSize: String(numberSize) + ea,
         fontWeight: String(numberWeight),
         fontFamily: "graphik",
-        color: colorChip.black,
+        color: i === 1 ? colorChip.green : colorChip.black,
         display: "block",
         width: String(100) + '%',
         textAlign: "center",
@@ -459,7 +459,7 @@ MiniGuideJs.prototype.insertProcessBox = function () {
       style: {
         fontSize: String(titleSize) + ea,
         fontWeight: String(titleWeight),
-        color: colorChip.black,
+        color: i === 1 ? colorChip.green : colorChip.black,
         display: "block",
         width: String(100) + '%',
         textAlign: "center",
@@ -474,7 +474,7 @@ MiniGuideJs.prototype.insertProcessBox = function () {
       style: {
         fontSize: String(descriptionSize) + ea,
         fontWeight: String(descriptionWeight),
-        color: colorChip.black,
+        color: i === 1 ? colorChip.green : colorChip.black,
         display: "block",
         width: String(100) + '%',
         textAlign: "center",
@@ -495,6 +495,410 @@ MiniGuideJs.prototype.insertProcessBox = function () {
       }
     });
   }
+
+}
+
+MiniGuideJs.prototype.insertRequestBox = function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing } = GeneralJs;
+  const { client, ea, media, osException, testMode } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1]);
+  const small = !big;
+  let whiteBlock;
+  let bottomMargin;
+  let contents;
+  let margin;
+  let topBottomVisualMargin;
+  let guideBlock;
+  let guideBlockPaddingTop;
+  let guideImageWidth;
+  let guideDescriptionBlock;
+  let descriptionBox;
+  let descriptionHeight;
+  let descriptionWidth;
+  let bigTitleSize, bigTitleWeight, bigTitlePaddingLeft, bigTitleLineTop;
+  let numberSize, numberWeight;
+  let guideTitleSize, guideTitleWeight, guideTitleLineHeight;
+  let guideDescriptionSize, guideDescriptionLineHeight, guideDescriptionMarginTop;
+  let guideDescriptionWeight, guideDescriptionBoldWeight;
+  let guideImage;
+  let guideDescriptionBlockMarginTop;
+  let guideDescriptionBlockNumberTop, guideDescriptionBlockNumberLeft;
+  let bigTitleVisual;
+  let mobileGuideBlockFirstTop;
+  let type, name, placeholder, question;
+  let questionBoxHeight, questionTextTop, questionSize, questionWeight, questionBoldWeight;
+  let titleMarginBottom;
+  let answerMarginTop, answerMarginBottom;
+  let answerInnerPadding, answerInnerInnerPaddingLeft, answerInnerInnerPaddingTop;
+  let answerAreaHeight;
+  let answerSize, answerWeighit, answerLineHeight;
+  let images;
+  let grayBlock, grayBlockWhite;
+  let num;
+  let photoBetween, photoHeight;
+  let fileTextTop, fileSize, fileWeight;
+  let buttonAreaHeight;
+  let buttonWidth, buttonHeight, buttonSize, buttonWeight, buttonTextTop;
+  let buttonAreaPaddingTop;
+
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  margin = <%% 56, 52, 44, 32, 6 %%>;
+
+  topBottomVisualMargin = <%% 18, 16, 12, 10, 3.5 %%>;
+
+  descriptionHeight = <%% 340, 280, 280, 280, 340 %%>;
+  descriptionWidth = <%% 365, 200, 363, 290, 69 %%>;
+
+  bigTitleLineTop = <%% (isMac() ? 18 : 17), 17, 15, 13, 3.5 %%>;
+  bigTitleSize = <%% 26, 25, 23, 20, 5 %%>;
+  bigTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  bigTitlePaddingLeft = <%% 20, 20, 20, 20, 3.2 %%>;
+  bigTitleVisual = <%% 3, 3, 2, 2, 0 %%>;
+
+  mobileGuideBlockFirstTop = 4;
+
+  titleMarginBottom = <%% 45, 40, 36, 28, 5 %%>;
+
+  questionBoxHeight = <%% 24, 23, 22, 20, 8 %%>;
+  questionTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.3 %%>;
+  questionSize = <%% 20, 19, 18, 16, 3.6 %%>;
+  questionWeight = <%% 600, 600, 600, 600, 600 %%>;
+  questionBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
+
+  answerMarginTop = <%% 16, 15, 14, 12, 1 %%>;
+  answerMarginBottom = <%% 42, 40, 36, 28, 6 %%>;
+  answerInnerPadding = <%% 16, 16, 16, 16, 2 %%>;
+  answerInnerInnerPaddingTop = <%% 23, 23, 19, 19, 2 %%>;
+  answerInnerInnerPaddingLeft = <%% 30, 30, 25, 25, 3 %%>;
+  answerAreaHeight = <%% 130, 130, 120, 100, 24 %%>;
+  answerSize = <%% 16, 16, 15, 14, 3 %%>;
+  answerWeighit = <%% 400, 400, 400, 400, 400 %%>;
+  answerLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
+
+  photoBetween = <%% 8, 8, 8, 8, 1 %%>;
+  photoHeight = <%% 170, 125, 110, 90, 24 %%>;
+
+  fileTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.3 %%>;
+  fileSize = <%% 25, 24, 23, 22, 4 %%>;
+  fileWeight = <%% 200, 200, 200, 200, 200 %%>;
+
+  buttonAreaHeight = <%% 100, 92, 86, 78, 18 %%>;
+  buttonAreaPaddingTop = <%% 2, 2, 1, 0, 0 %%>;
+  buttonWidth = <%% 130, 130, 120, 100, 22 %%>;
+  buttonHeight = <%% 54, 54, 48, 42, 8.8 %%>;
+  buttonSize = <%% 21, 21, 18, 16, 3.5 %%>;
+  buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
+  buttonTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.3 %%>;
+
+  contents = {
+    title: "상세 정보 전송",
+    request: [
+      {
+        type: "string",
+        name: "선호하는 컬러나 스타일을 알려주세요!",
+        placeholder: "예) 화이트 우드 스타일을 좋아하고, 하얀 색감의 코지함이 있었으면 좋겠어요."
+      },
+      {
+        type: "string",
+        name: "패브릭, 액자, 소품에 쓸 예산을 알려주세요!",
+        placeholder: "예) 총 예산은 500만원 정도이고, 패브릭 300만원 / 액자 100만원 / 소품 100만원으로 생각하고 있어요."
+      },
+      {
+        type: "string",
+        name: "공간의 사이즈를 가이드에 따라 실측한 뒤 알려주세요!",
+        placeholder: "예) 침실 : 벽 높이 000mm / 벽 폭 000mm / 창문 폭 000mm / 창문 높이 000mm / 커튼박스 안 깊이 000mm\n거실 : 벽 높이 000mm / 벽 폭 000mm / 커튼박스 안 깊이 000mm"
+      },
+      {
+        type: "file",
+        name: (desktop ? "예시와 같이, 현재 공간 사진과 선호하는 인테리어 사진을 모두 보내주세요!" : "공간 사진과 선호하는 인테리어 사진을 보내주세요!"),
+        images: [
+          MiniGuideJs.binaryPath + "/" + "before0.jpg",
+          MiniGuideJs.binaryPath + "/" + "before1.jpg",
+          MiniGuideJs.binaryPath + "/" + "before2.jpg",
+          MiniGuideJs.binaryPath + "/" + "before3.jpg",
+          MiniGuideJs.binaryPath + "/" + "before4.jpg",
+        ],
+        placeholder: "클릭 또는 드래그로 파일 업로드...",
+      }
+    ]
+  };
+
+  if (mobile) {
+    contents.request[contents.request.length - 1].images.pop();
+  }
+
+  whiteBlock = createNode({
+    mother: this.baseTong,
+    style: {
+      position: "relative",
+      borderRadius: String(8) + "px",
+      width: String(100) + '%',
+      paddingTop: String(margin + topBottomVisualMargin) + ea,
+      paddingBottom: String(desktop ? margin : 5) + ea,
+      marginBottom: String(bottomMargin) + ea,
+    }
+  });
+
+  createNode({
+    mother: whiteBlock,
+    style: {
+      display: "block",
+      position: "relative",
+      marginLeft: String(0) + ea,
+      marginRight: String(0) + ea,
+      width: withOut(0 * 2, ea),
+      textAlign: "center",
+      marginBottom: String(titleMarginBottom) + ea,
+    },
+    children: [
+      {
+        style: {
+          position: "absolute",
+          borderBottom: "1px solid " + colorChip.gray4,
+          width: String(100) + '%',
+          height: String(bigTitleLineTop) + ea,
+          top: String(0),
+          left: String(0),
+        }
+      },
+      {
+        text: contents.title,
+        style: {
+          fontSize: String(bigTitleSize) + ea,
+          fontWeight: String(bigTitleWeight),
+          color: colorChip.black,
+          display: "inline-block",
+          position: "relative",
+          textAlign: "center",
+          paddingLeft: String(bigTitlePaddingLeft) + ea,
+          paddingRight: String(bigTitlePaddingLeft) + ea,
+          background: desktop ? colorChip.gray2 : colorChip.gray1,
+          top: isMac() ? "" : String(bigTitleVisual) + ea,
+        }
+      }
+    ]
+  });
+
+  for (let i = 0; i < contents.request.length; i++) {
+
+    type = contents.request[i].type;
+    name = contents.request[i].name;
+    placeholder = contents.request[i].placeholder;
+    question = "<b%Q" + String(i + 1) + ".%b> " + name;
+
+    createNode({
+      mother: whiteBlock,
+      style: {
+        display: "flex",
+        textAlign: "left",
+        position: "relative",
+        marginLeft: String(0) + ea,
+        marginRight: String(0) + ea,
+        width: withOut(0 * 2, ea),
+        height: String(questionBoxHeight) + ea,
+        alignItems: "center",
+      },
+      children: [
+        {
+          text: question,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(questionTextTop) + ea,
+            fontSize: String(questionSize) + ea,
+            fontWeight: String(questionWeight),
+            color: colorChip.black,
+          },
+          bold: {
+            color: colorChip.deactive,
+            fontWeight: String(questionBoldWeight),
+          }
+        }
+      ]
+    });
+
+    if (type === "string") {
+
+      createNode({
+        mother: whiteBlock,
+        style: {
+          display: "block",
+          width: withOut(0, ea),
+          background: colorChip.gray3,
+          borderRadius: String(5) + "px",
+          marginTop: String(answerMarginTop) + ea,
+          marginBottom: String(answerMarginBottom) + ea,
+          paddingBottom: String(answerInnerPadding) + ea,
+          paddingTop: String(answerInnerPadding) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: "block",
+              position: "relative",
+              width: withOut((answerInnerPadding * 2) + (answerInnerInnerPaddingLeft * 2), ea),
+              background: colorChip.white,
+              borderRadius: String(5) + "px",
+              paddingLeft: String(answerInnerInnerPaddingLeft) + ea,
+              paddingRight: String(answerInnerInnerPaddingLeft) + ea,
+              paddingBottom: String(answerInnerInnerPaddingLeft) + ea,
+              paddingTop: String(answerInnerInnerPaddingTop) + ea,
+              height: String(answerAreaHeight) + ea,
+              marginLeft: String(answerInnerPadding) + ea,
+              boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
+            },
+            children: [
+              {
+                mode: "textarea",
+                attribute: { placeholder },
+                style: {
+                  position: "relative",
+                  fontSize: String(answerSize) + ea,
+                  fontWeight: String(answerWeighit),
+                  color: colorChip.black,
+                  lineHeight: String(answerLineHeight),
+                  height: String(100) + '%',
+                  width: String(100) + '%',
+                  overflow: "scroll",
+                  border: String(0),
+                  outline: String(0),
+                }
+              }
+            ]
+          }
+        ]
+      });
+
+    } else {
+
+      images = contents.request[i].images;
+      grayBlock = createNode({
+        mother: whiteBlock,
+        style: {
+          display: "block",
+          width: withOut(0, ea),
+          background: colorChip.gray3,
+          borderRadius: String(5) + "px",
+          marginTop: String(answerMarginTop) + ea,
+          marginBottom: String(answerMarginBottom) + ea,
+          paddingBottom: String(answerInnerPadding) + ea,
+          paddingTop: String(answerInnerPadding) + ea,
+        },
+      });
+
+      grayBlockWhite = createNode({
+        mother: grayBlock,
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut((answerInnerPadding * 2), ea),
+          borderRadius: String(5) + "px",
+          marginLeft: String(answerInnerPadding) + ea,
+        },
+      });
+
+      num = 0;
+      for (let src of images) {
+        createNode({
+          mother: grayBlockWhite,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            borderRadius: String(5) + "px",
+            width: desktop ? "calc(calc(100% - " + String(photoBetween * (images.length - 1)) + ea + ") / " + String(images.length) + ")" : "calc(calc(100% - " + String(photoBetween * (1)) + ea + ") / " + String(2) + ")",
+            marginRight: desktop ? String(num === images.length - 1 ? 0 : photoBetween) + ea : String(num % 2 !== 0 ? 0 : photoBetween) + ea,
+            marginBottom: desktop ? "" : String(Math.floor(num / 2) === 0 ? photoBetween : 0) + ea,
+            verticalAlign: "top",
+            height: String(photoHeight) + ea,
+            backgroundImage: "url('" + src + "')",
+            backgroundSize: "100% auto",
+            backgroundPosition: "50% 50%",
+          }
+        });
+        num++;
+      }
+
+      grayBlockWhite = createNode({
+        mother: grayBlock,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut((answerInnerPadding * 2), ea),
+          borderRadius: String(5) + "px",
+          marginTop: String(answerInnerPadding) + ea,
+          marginLeft: String(answerInnerPadding) + ea,
+          background: colorChip.gray1,
+          height: String(answerAreaHeight) + ea,
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center"
+        },
+        children: [
+          {
+            text: placeholder,
+            style: {
+              position: "relative",
+              display: "inline-block",
+              top: String(fileTextTop) + ea,
+              fontSize: String(fileSize) + ea,
+              fontWeight: String(fileWeight),
+              color: colorChip.deactive,
+            }
+          }
+        ]
+      });
+
+    }
+  }
+
+  createNode({
+    mother: whiteBlock,
+    style: {
+      display: "flex",
+      textAlign: "left",
+      position: "relative",
+      marginLeft: String(0) + ea,
+      marginRight: String(0) + ea,
+      width: withOut(0 * 2, ea),
+      height: String(buttonAreaHeight) + ea,
+      justifyContent: "center",
+      textAlign: "center",
+      paddingTop: String(buttonAreaPaddingTop) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: String(buttonWidth) + ea,
+          height: String(buttonHeight) + ea,
+          borderRadius: String(5) + "px",
+          background: colorChip.gradientGreen,
+          alignItems: "center",
+          justifyContent: "center",
+          textAlign: "center",
+          cursor: "pointer",
+        },
+        children: [
+          {
+            text: "정보 전송",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(buttonSize) + ea,
+              fontWeight: String(buttonWeight),
+              color: colorChip.white,
+              top: String(buttonTextTop) + ea,
+            }
+          }
+        ]
+      }
+    ]
+  });
+
 
 }
 
@@ -1171,7 +1575,7 @@ MiniGuideJs.prototype.insertNextBox = function () {
   let finalHeight;
   let finalSize, finalWeight, finalRight, finalTop, finalLineHeight;
 
-  bottomMargin = <%% 200, 200, 200, 200, 12 %%>;
+  bottomMargin = <%% 200, 200, 200, 200, 20 %%>;
   margin = <%% 56, 52, 44, 32, 6 %%>;
 
   finalHeight = <%% 224, 200, 194, 180, 32 %%>;
@@ -1245,6 +1649,7 @@ MiniGuideJs.prototype.launching = async function (loading) {
         try {
           instance.insertInitBox();
           instance.insertProcessBox();
+          instance.insertRequestBox();
           instance.insertGuideBox();
           instance.insertTargetsBox();
           instance.insertNextBox();

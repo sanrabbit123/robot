@@ -621,7 +621,7 @@ GeneralJs.prototype.generalCss = function () {
   *::-webkit-scrollbar{display:none;}
   body{transition:all 0s ease;}
   input::placeholder {color:${(/home\-liaison\.com/gi.test(window.location.host) || /consulting/gi.test(window.location.pathname) || /reviewList/gi.test(window.location.pathname) ||  /portfolioList/gi.test(window.location.pathname) ||  /designerList/gi.test(window.location.pathname) || /front/gi.test(window.location.pathname) || /miniAbout/gi.test(window.location.pathname)) ? GeneralJs.colorChip.black : GeneralJs.colorChip.white};opacity:0.5;}
-  textarea::placeholder {color:${(/home\-liaison\.com/gi.test(window.location.host) || /consulting/gi.test(window.location.pathname) || /miniAbout/gi.test(window.location.pathname)) ? GeneralJs.colorChip.black : GeneralJs.colorChip.white};opacity:0.5;}
+  textarea::placeholder {color:${(/home\-liaison\.com/gi.test(window.location.host) || /consulting/gi.test(window.location.pathname) || /miniAbout/gi.test(window.location.pathname) || /miniGuide/gi.test(window.location.pathname)) ? GeneralJs.colorChip.black : GeneralJs.colorChip.white};opacity:0.5;}
   body,div{font-size:0;color:${GeneralJs.colorChip.black};margin:0;}
   a{text-decoration:inherit;color:inherit;-webkit-tap-highlight-color:rgba(0,0,0,0);background:0 0;outline:0}
   textarea{resize:none}
