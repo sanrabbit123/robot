@@ -765,6 +765,9 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   let searchWordingCircleWidth;
   let searchWordingCircleTop, searchWordingCircleLeft;
   let tagBlock;
+  let subInfoSize, subInfoWeight;
+  let arrowWidth, arrowHeight, arrowBottom, arrowReviewBottom;
+  let reviewSubTitleVisual;
 
   mainPaddingTop = <%% 140, 130, 110, 90, 8 %%>;
   mainPaddingBottom = <%% 140, 130, 110, 90, 8 %%>;
@@ -827,7 +830,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   subTitleOverWidthRatio = <%% 2, 2, 2, 2, 2 %%>;
   tagTongOverWidthRatio = <%% 2, 2, 2, 2, 2 %%>;
 
-  tagTongMarginTop = <%% 11, 11, 11, 11, 1.5 %%>;
+  tagTongMarginTop = <%% 8, 8, 8, 8, 1.5 %%>;
 
   tagSize = <%% 10, 10, 10, 9, 2 %%>;
   tagWeight = <%% 500, 500, 500, 500, 500 %%>;
@@ -844,6 +847,16 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   blockTitleSize = <%% 20, 20, 20, 18, 4 %%>;
   blockTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
   blockWhitePaddingRight = <%% 15, 15, 15, 15, 3 %%>;
+
+  subInfoSize = <%% 8, 8, 7, 6, 2 %%>;
+  subInfoWeight = <%% 500, 500, 500, 500, 500 %%>;
+
+  arrowWidth = <%% 30, 30, 30, 30, 30 %%>;
+  arrowHeight = <%% 8, 8, 8, 8, 8 %%>;
+  arrowBottom = <%% 2, 2, 2, 2, 2 %%>;
+  arrowReviewBottom = <%% 4, 4, 4, 3, 0 %%>;
+
+  reviewSubTitleVisual = <%% 1, 1, 1, 0, 0 %%>;
 
   mainTong = createNode({
     mother: totalContents,
@@ -1119,7 +1132,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
                     position: "relative",
                     fontSize: String(subTitleSize) + ea,
                     fontWeight: String(titleWeight),
-                    color: colorChip.deactive,
+                    color: colorChip.gray5,
                     width: String(subTitleOverWidthRatio * 100) + '%',
                   },
                 }
@@ -1132,42 +1145,39 @@ FrontIndexJs.prototype.insertSearchBox = function () {
             display: "block",
             position: "relative",
             marginTop: String(tagTongMarginTop) + ea,
-            width: String(tagTongOverWidthRatio * 100) + '%',
+            width: String(100) + '%',
+            borderTop: "1px solid " + colorChip.gray2,
             left: String(0) + ea,
-          }
+            paddingTop: String(tagTongMarginTop) + ea,
+          },
+          children: [
+            {
+              text: contents.portfolio.spaceInfo.region + "&nbsp;&nbsp;&nbsp;<b%|%b>&nbsp;&nbsp;&nbsp;" + contents.portfolio.spaceInfo.method,
+              style: {
+                display: "inline-block",
+                fontSize: String(subInfoSize) + ea,
+                fontWeight: String(subInfoWeight),
+                color: colorChip.black,
+              },
+              bold: {
+                fontWeight: String(subInfoWeight),
+                color: colorChip.green,
+              }
+            },
+            {
+              mode: "svg",
+              source: svgMaker.horizontalArrow(arrowWidth, arrowHeight),
+              style: {
+                position: "absolute",
+                width: String(arrowWidth) + ea,
+                right: String(0),
+                bottom: String(arrowBottom) + ea,
+              }
+            }
+          ]
         }
       ]
     });
-
-    tagTong = block.children[2];
-    for (let t of tag) {
-      tagBlock = createNode({
-        mother: tagTong,
-        text: "<b%#%b> " + t,
-        style: {
-          display: "inline-block",
-          fontSize: String(tagSize) + ea,
-          fontWeight: String(tagWeight),
-          color: colorChip.black,
-          paddingLeft: String(tagPaddingLeft) + ea,
-          paddingTop: String(tagPaddingTop) + ea,
-          paddingBottom: String(tagPaddingBottom) + ea,
-          paddingRight: String(tagPaddingLeft) + ea,
-          borderRadius: String(3) + "px",
-          marginRight: String(tagMarginRight) + ea,
-          background: colorChip.gray1,
-          textAlign: "center",
-        },
-        bold: {
-          fontWeight: String(400),
-          color: colorChip.deactive,
-        }
-      });
-
-      tagBlock.style.width = String(Math.ceil(tagBlock.getBoundingClientRect().width - (tagPaddingLeft * 2)) + 1) + "px";
-
-    }
-
 
   }
 
@@ -1334,42 +1344,35 @@ FrontIndexJs.prototype.insertSearchBox = function () {
           style: {
             display: "block",
             position: "relative",
-            marginTop: String(tagTongMarginTop) + ea,
-            width: String(tagTongOverWidthRatio * 100) + '%',
+            marginTop: String(subTitleMarginTop) + ea,
+            paddingLeft: String(quoteWidth + titleMarginLeft + reviewSubTitleVisual) + ea,
+            width: withOut(quoteWidth + titleMarginLeft + reviewSubTitleVisual, ea),
             left: String(0) + ea,
-          }
+          },
+          children: [
+            {
+              text: contents.portfolio.spaceInfo.space + " " + String(contents.portfolio.spaceInfo.pyeong) + "py " + "홈스타일링 후기",
+              style: {
+                display: "inline-block",
+                fontSize: String(subTitleSize) + ea,
+                fontWeight: String(titleWeight),
+                color: colorChip.gray5,
+              }
+            },
+            {
+              mode: "svg",
+              source: svgMaker.horizontalArrow(arrowWidth, arrowHeight),
+              style: {
+                position: "absolute",
+                width: String(arrowWidth) + ea,
+                right: String(0),
+                bottom: String(arrowReviewBottom) + ea,
+              }
+            }
+          ]
         }
       ]
     });
-
-    tagTong = block.children[2];
-    for (let t of tag) {
-      tagBlock = createNode({
-        mother: tagTong,
-        text: "<b%#%b> " + t,
-        style: {
-          display: "inline-block",
-          fontSize: String(tagSize) + ea,
-          fontWeight: String(tagWeight),
-          color: colorChip.black,
-          paddingLeft: String(tagPaddingLeft) + ea,
-          paddingTop: String(tagPaddingTop) + ea,
-          paddingBottom: String(tagPaddingBottom) + ea,
-          paddingRight: String(tagPaddingLeft) + ea,
-          borderRadius: String(3) + "px",
-          marginRight: String(tagMarginRight) + ea,
-          background: colorChip.gray1,
-          textAlign: "center",
-        },
-        bold: {
-          fontWeight: String(400),
-          color: colorChip.deactive,
-        }
-      });
-
-      tagBlock.style.width = String(Math.ceil(tagBlock.getBoundingClientRect().width - (tagPaddingLeft * 2)) + 1) + "px";
-
-    }
 
   }
 
