@@ -1845,6 +1845,31 @@ MiniAboutJs.prototype.insertFaqBox = function () {
     ]
   };
 
+  if (mobile) {
+    contents.rules = [
+      {
+        title: "취소 / 환불 규정",
+        description: [
+          "디자이너와의 상담 시작 1일 전 결제 취소 가능합니다.",
+          <&& "디자이너와의 상담이 시작된 이후에는 결제 취소가 불가능합니다." | "디자이너와의 상담이 시작된 이후에는 취소가 불가능합니다." | "디자이너와 상담이 시작된 이후에는 취소가 불가능합니다." | "디자이너와 상담이 시작된 이후에는 취소가 불가능합니다." | "디자이너와 상담이 시작된 이후에는 취소가 불가능합니다." &&>,
+          "디자이너와의 상담 시작 1일 전 100% 환불 가능합니다.",
+          "디자이너와의 상담이 시작되면 환불이 불가능합니다.",
+        ]
+      },
+      {
+        title: "유의 사항",
+        description: [
+          "공간 정보를 공유해주신 후에 디자인 제안 및 상담이 가능합니다.",
+          "디자이너 선택은 불가하며, 디자이너는 홈리에종 시스템 내에서 지정됩니다.",
+          "디자이너의 디자인 제안서는 1회에 한정됩니다.",
+          "실측 서비스는 제공되지 않으며, 고객님에게 실측 가이드를 제공해드립니다.",
+          "가구, 제작 상품은 제안하지 않습니다.",
+          "배송 완료 후 배치 서비스를 제공하지 않습니다.",
+        ]
+      },
+    ]
+  }
+
   grayBase = createNode({
     mother: this.baseTong.parentElement,
     style: {
@@ -2218,38 +2243,40 @@ MiniAboutJs.prototype.insertFaqBox = function () {
     ]
   });
 
-  createNode({
-    mother: transparentBlock,
-    style: {
-      display: desktop ? "inline-block" : "block",
-      position: "relative",
-      width: desktop ? withOut(ruleBlockWidth * 2, ea) : String(100) + '%',
-      verticalAlign: "top",
-      borderTop: desktop ? "1px solid " + colorChip.black : "",
-      paddingTop: String(rulesContentsLineTop) + ea,
-    },
-    children: [
-      {
-        text: contents.rules[2].title,
-        style: {
-          fontSize: String(rulesTitleSize) + ea,
-          fontWeight: String(rulesTitleWeight),
-          color: colorChip.black,
-          lineHeight: String(rulesTitleLineHeight),
-        }
+  if (desktop) {
+    createNode({
+      mother: transparentBlock,
+      style: {
+        display: desktop ? "inline-block" : "block",
+        position: "relative",
+        width: desktop ? withOut(ruleBlockWidth * 2, ea) : String(100) + '%',
+        verticalAlign: "top",
+        borderTop: desktop ? "1px solid " + colorChip.black : "",
+        paddingTop: String(rulesContentsLineTop) + ea,
       },
-      {
-        text: contents.rules[2].description.join("\n"),
-        style: {
-          marginTop: String(rulesContentsMarginTop) + ea,
-          fontSize: String(rulesContentsSize) + ea,
-          fontWeight: String(rulesContentsWeight),
-          color: colorChip.black,
-          lineHeight: String(rulesContentsLineHeight),
+      children: [
+        {
+          text: contents.rules[2].title,
+          style: {
+            fontSize: String(rulesTitleSize) + ea,
+            fontWeight: String(rulesTitleWeight),
+            color: colorChip.black,
+            lineHeight: String(rulesTitleLineHeight),
+          }
+        },
+        {
+          text: contents.rules[2].description.join("\n"),
+          style: {
+            marginTop: String(rulesContentsMarginTop) + ea,
+            fontSize: String(rulesContentsSize) + ea,
+            fontWeight: String(rulesContentsWeight),
+            color: colorChip.black,
+            lineHeight: String(rulesContentsLineHeight),
+          }
         }
-      }
-    ]
-  });
+      ]
+    });
+  }
 
 }
 
