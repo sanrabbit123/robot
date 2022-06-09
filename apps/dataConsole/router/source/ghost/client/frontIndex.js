@@ -118,31 +118,31 @@ FrontIndexJs.prototype.insertSlideBox = function () {
   interval = <%% 2700, 2700, 2700, 2700, 2700 %%>;
 
   naviHeight = <%% 72, 72, 66, 60, 60 %%>;
-  mainHeight = <%% 746, 639, 560, 480, 70.5 %%>;
+  mainHeight = <%% 746, 639, 560, 480, 67 %%>;
 
   randomNumber = <%% 5, 5, 5, 5, 5 %%>;
   titlePadding = <%% 100, 75, 75, 90, 8 %%>;
-  titleBottom = <%% 100, 75, 75, 60, 6 %%>;
+  titleBottom = <%% 100, 75, 75, 60, 8 %%>;
   titleSize = <%% 56, 45, 42, 36, 6 %%>;
   titleWeight = <%% 700, 700, 700, 700, 700 %%>;
   lineHeight = <%% 1.3, 1.3, 1.3, 1.3, 1.3 %%>;
   titleContents = "집을 디자인하는\n새로운 방법, 홈리에종";
   photoLength = 5;
-  subTextContents = "디자이너의 <b%전문적인 홈스타일링, 홈리에종%b>과 함께 해보세요!";
+  subTextContents = desktop ? "디자이너의 <b%전문적인 홈스타일링, 홈리에종%b>과 함께 해보세요!" : "<b%전문적인 홈스타일링, 홈리에종%b>과 함께 해보세요!";
 
-  grayHeight = <%% 177, 152, 140, 120, 152 %%>;
+  grayHeight = <%% 177, 152, 140, 120, 18 %%>;
 
-  circleBoxTop = <%% 78, 68, 62, 54, 68 %%>;
-  circleBoxLeft = <%% 3, 3, 3, 3, 3 %%>;
+  circleBoxTop = <%% 78, 68, 62, 54, 9.8 %%>;
+  circleBoxLeft = <%% 3, 3, 3, 3, 8 %%>;
 
-  circleRadius = <%% 10, 10, 10, 8, 10 %%>;
-  circleMarginRight = <%% 8, 8, 8, 6, 8 %%>;
+  circleRadius = <%% 10, 10, 10, 8, 1.6 %%>;
+  circleMarginRight = <%% 8, 8, 8, 6, 1.2 %%>;
 
-  subTextBoxTop = <%% 54, 44, 41, 36, 44 %%>;
+  subTextBoxTop = <%% 54, 44, 41, 36, 4.5 %%>;
 
   subTextAboutSize = <%% 15, 15, 14, 13, 2.5 %%>;
   subTextAboutWeight = <%% 400, 400, 400, 400, 400 %%>;
-  subTextAboutMarginBottom = <%% (isMac() ? 3 : 5), (isMac() ? 3 : 5), (isMac() ? 3 : 5), (isMac() ? 2 : 4), 1 %%>;
+  subTextAboutMarginBottom = <%% (isMac() ? 3 : 5), (isMac() ? 3 : 5), (isMac() ? 3 : 5), (isMac() ? 2 : 4), 0.3 %%>;
   subTextSize = <%% 19, 19, 18, 16, 3 %%>;
   subTextWeight = <%% 400, 400, 400, 400, 400 %%>;
   subTextBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -229,8 +229,8 @@ FrontIndexJs.prototype.insertSlideBox = function () {
           width: String(100) + '%',
           height: String(100) + '%',
           backgroundImage: "url('" + src + "')",
-          backgroundPosition: "50% 68%",
-          backgroundSize: "100% auto",
+          backgroundPosition: "50% 50%",
+          backgroundSize: "auto 100%",
           transition: "opacity " + String(0) + "s ease",
           transition: "transform " + String(speed) + "s ease",
           transform: (i !== randomIndex.length - 1 ? "translateX(100" + ea + ")" : "translateX(0" + ea + ")"),
@@ -282,13 +282,16 @@ FrontIndexJs.prototype.insertSlideBox = function () {
       width: desktop ? String(standardWidth - (titlePadding * 2)) + ea : "",
       paddingLeft: desktop ? String(titlePadding) + ea : "",
       paddingRight: desktop ? String(titlePadding) + ea : "",
-      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
+      left: desktop ? "calc(50% - " + String(standardWidth / 2) + ea + ")" : "",
       height: String(100) + '%',
     }
   });
 
   circleBox = createNode({
     mother: grayBlockTong,
+    event: {
+      click: (e) => { selfHref(FRONTHOST + "/about.php"); }
+    },
     style: {
       display: "inline-block",
       position: "relative",
@@ -305,11 +308,16 @@ FrontIndexJs.prototype.insertSlideBox = function () {
         width: String(circleRadius) + ea,
         height: String(circleRadius) + ea,
         borderRadius: String(circleRadius) + ea,
-        background: i === 0 ? colorChip.gray5 : colorChip.gray3,
+        background: desktop ? (i === 0 ? colorChip.gray5 : colorChip.gray3) : colorChip.gray4,
         marginRight: String(circleMarginRight) + ea,
         transition: "all 0.5s ease",
       }
     });
+    if (mobile) {
+      if (i === 2) {
+        break;
+      }
+    }
   }
 
   subTextBox = createNode({
@@ -444,6 +452,8 @@ FrontIndexJs.prototype.insertAboutBox = function () {
   let buttonSize, buttonWeight, buttonLineHeight, buttonTop, buttonPaddingTop, buttonPaddingBottom, buttonPaddingLeft;
   let blockTongs;
   let wordings;
+  let mobileBlockPadding;
+  let mobilePhotoMarginBottom, mobileTitleMarginBottom, mobileContentsMarginBottom;
 
   mainTongHeight = <%% 730, 630, 550, 433, 730 %%>;
   secondMainTongHeight = <%% 741, 634, 554, 436, 741 %%>;
@@ -452,10 +462,10 @@ FrontIndexJs.prototype.insertAboutBox = function () {
   photoPadding = <%% 100, 0, 0, 0, 0 %%>;
   photoTop = <%% 142, 120, 102, 70, 12 %%>;
 
-  photoWidth = <%% 780, 669, 568, 436, 78 %%>;
-  photoHeight = <%% 440, 377, 350, 290, 44 %%>;
+  photoWidth = <%% 780, 669, 568, 436, 88 %%>;
+  photoHeight = <%% 440, 377, 350, 290, 43 %%>;
 
-  titleSize = <%% 31, 30, 29, 24, 31 %%>;
+  titleSize = <%% 31, 30, 29, 24, 5.2 %%>;
   titleWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
   titleTop = <%% 230, 198, 177, 128, 198 %%>;
@@ -465,13 +475,18 @@ FrontIndexJs.prototype.insertAboutBox = function () {
   contentsLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
   contentsTop = <%% 335, 300, 270, 207, 300 %%>;
 
-  buttonSize = <%% 13, 13, 12, 12, 13 %%>;
+  buttonSize = <%% 13, 13, 12, 12, 3 %%>;
   buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
   buttonLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
   buttonTop = <%% 436, 397, 358, 282, 397 %%>;
-  buttonPaddingTop = <%% (isMac() ? 5 : 6), (isMac() ? 5 : 6), (isMac() ? 5 : 6), (isMac() ? 5 : 6), 5 %%>;
-  buttonPaddingBottom = <%% (isMac() ? 7 : 6), (isMac() ? 7 : 6), (isMac() ? 7 : 6), (isMac() ? 7 : 6), 7 %%>;
-  buttonPaddingLeft = <%% 20, 20, 20, 20, 20 %%>;
+  buttonPaddingTop = <%% (isMac() ? 5 : 6), (isMac() ? 5 : 6), (isMac() ? 5 : 6), (isMac() ? 5 : 6), 1.2 %%>;
+  buttonPaddingBottom = <%% (isMac() ? 7 : 6), (isMac() ? 7 : 6), (isMac() ? 7 : 6), (isMac() ? 7 : 6), 1.5 %%>;
+  buttonPaddingLeft = <%% 20, 20, 20, 20, 4 %%>;
+
+  mobileBlockPadding = 14.5;
+  mobilePhotoMarginBottom = 6;
+  mobileTitleMarginBottom = 2.5;
+  mobileContentsMarginBottom = 4;
 
   wordings = [
     {
@@ -510,7 +525,7 @@ FrontIndexJs.prototype.insertAboutBox = function () {
       display: "block",
       position: "relative",
       background: colorChip.white,
-      height: String(mainTongHeight) + ea,
+      height: desktop ? String(mainTongHeight) + ea : "",
     },
   });
 
@@ -522,6 +537,9 @@ FrontIndexJs.prototype.insertAboutBox = function () {
       width: String(standardWidth) + ea,
       left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
       height: String(100) + '%',
+      paddingTop: desktop ? "" : String(mobileBlockPadding) + ea,
+      paddingBottom: desktop ? "" : String(mobileBlockPadding) + ea,
+      textAlign: desktop ? "" : "center",
     }
   });
 
@@ -531,7 +549,7 @@ FrontIndexJs.prototype.insertAboutBox = function () {
       display: "block",
       position: "relative",
       background: colorChip.gray0,
-      height: String(secondMainTongHeight) + ea,
+      height: desktop ? String(secondMainTongHeight) + ea : "",
     },
   });
 
@@ -543,6 +561,9 @@ FrontIndexJs.prototype.insertAboutBox = function () {
       width: String(standardWidth) + ea,
       left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
       height: String(100) + '%',
+      paddingTop: desktop ? "" : String(mobileBlockPadding) + ea,
+      paddingBottom: desktop ? "" : String(mobileBlockPadding) + ea,
+      textAlign: desktop ? "" : "center",
     }
   });
 
@@ -552,13 +573,13 @@ FrontIndexJs.prototype.insertAboutBox = function () {
     createNode({
       mother: blockTongs[i],
       style: {
-        display: "inline-block",
-        position: "absolute",
+        display: desktop ? "inline-block" : "block",
+        position: desktop ? "absolute" : "relative",
         width: String(photoWidth) + ea,
         height: String(photoHeight) + ea,
-        top: String(photoTop) + ea,
-        right: i === 0 ? String(photoPadding) + ea : "",
-        left: i === 0 ? "" : String(photoPadding) + ea,
+        top: desktop ? String(photoTop) + ea : "",
+        right: desktop ? (i === 0 ? String(photoPadding) + ea : "") : "",
+        left: desktop ? (i === 0 ? "" : String(photoPadding) + ea) : "",
         borderRadius: String(8) + "px",
         background: colorChip.gray1,
         boxShadow: "0px 5px 15px -9px " + colorChip.shadow,
@@ -572,16 +593,18 @@ FrontIndexJs.prototype.insertAboutBox = function () {
       mother: blockTongs[i],
       text: wordings[i].title.join("\n"),
       style: {
-        display: "inline-block",
-        position: "absolute",
+        display: desktop ? "inline-block" : "block",
+        position: desktop ? "absolute" : "relative",
         fontSize: String(titleSize) + ea,
         fontWeight: String(titleWeight),
         lineHeight: String(titleLineHeight),
         color: colorChip.black,
-        textAlign: i === 0 ? "right" : "left",
-        top: String(titleTop) + ea,
-        right: i === 0 ? String(descriptionPadding) + ea : "",
-        left: i === 0 ? "" : String(descriptionPadding) + ea,
+        textAlign: desktop ? (i === 0 ? "right" : "left") : "center",
+        top: desktop ? String(titleTop) + ea : "",
+        right: desktop ? (i === 0 ? String(descriptionPadding) + ea : "") : "",
+        left: desktop ? (i === 0 ? "" : String(descriptionPadding) + ea) : "",
+        marginTop: desktop ? "" : String(mobilePhotoMarginBottom) + ea,
+        marginBottom: desktop ? "" : String(mobileTitleMarginBottom) + ea,
       }
     });
 
@@ -589,16 +612,17 @@ FrontIndexJs.prototype.insertAboutBox = function () {
       mother: blockTongs[i],
       text: wordings[i].contents.join("\n"),
       style: {
-        display: "inline-block",
-        position: "absolute",
+        display: desktop ? "inline-block" : "block",
+        position: desktop ? "absolute" : "relative",
         fontSize: String(contentsSize) + ea,
         fontWeight: String(contentsWeight),
         lineHeight: String(contentsLineHeight),
         color: colorChip.darkShadow,
-        textAlign: i === 0 ? "right" : "left",
-        top: String(contentsTop) + ea,
-        right: i === 0 ? String(descriptionPadding) + ea : "",
-        left: i === 0 ? "" : String(descriptionPadding) + ea,
+        textAlign: desktop ? (i === 0 ? "right" : "left") : "center",
+        top: desktop ? String(contentsTop) + ea : "",
+        right: desktop ? (i === 0 ? String(descriptionPadding) + ea : "") : "",
+        left: desktop ? (i === 0 ? "" : String(descriptionPadding) + ea) : "",
+        marginBottom: desktop ? "" : String(mobileContentsMarginBottom) + ea,
       }
     });
 
@@ -617,15 +641,15 @@ FrontIndexJs.prototype.insertAboutBox = function () {
       text: wordings[i].button,
       style: {
         display: "inline-block",
-        position: "absolute",
+        position: desktop ? "absolute" : "relative",
         fontSize: String(buttonSize) + ea,
         fontWeight: String(buttonWeight),
         lineHeight: String(buttonLineHeight),
         color: colorChip.white,
         textAlign: "center",
-        top: String(buttonTop) + ea,
-        right: i === 0 ? String(descriptionPadding) + ea : "",
-        left: i === 0 ? "" : String(descriptionPadding) + ea,
+        top: desktop ? String(buttonTop) + ea : "",
+        right: desktop ? (i === 0 ? String(descriptionPadding) + ea : "") : "",
+        left: desktop ? (i === 0 ? "" : String(descriptionPadding) + ea) : "",
         paddingTop: String(buttonPaddingTop) + ea,
         paddingBottom: String(buttonPaddingBottom) + ea,
         paddingLeft: String(buttonPaddingLeft) + ea,
@@ -918,13 +942,13 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   blockTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
   blockWhitePaddingRight = <%% 15, 15, 15, 15, 3 %%>;
 
-  subInfoSize = <%% 8, 8, 7, 6, 2 %%>;
+  subInfoSize = <%% 8, 8, 7, 6, 2.5 %%>;
   subInfoWeight = <%% 500, 500, 500, 500, 500 %%>;
 
-  arrowWidth = <%% 30, 30, 30, 30, 30 %%>;
-  arrowHeight = <%% 8, 8, 8, 8, 8 %%>;
-  arrowBottom = <%% 2, 2, 2, 2, 2 %%>;
-  arrowReviewBottom = <%% 4, 4, 4, 3, 0 %%>;
+  arrowWidth = <%% 30, 30, 30, 30, 4 %%>;
+  arrowHeight = <%% 8, 8, 8, 8, 1.5 %%>;
+  arrowBottom = <%% 2, 2, 2, 2, 1 %%>;
+  arrowReviewBottom = <%% 4, 4, 4, 3, 1 %%>;
 
   reviewSubTitleVisual = <%% 1, 1, 1, 0, 0 %%>;
 
@@ -1423,7 +1447,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
           },
           children: [
             {
-              text: contents.portfolio.spaceInfo.space + " " + String(contents.portfolio.spaceInfo.pyeong) + "py " + "홈스타일링 후기",
+              text: contents.portfolio.spaceInfo.space + " " + String(contents.portfolio.spaceInfo.pyeong) + "py " + (desktop ? "홈스타일링 후기" : "후기"),
               style: {
                 display: "inline-block",
                 fontSize: String(subTitleSize) + ea,
@@ -1690,8 +1714,8 @@ FrontIndexJs.prototype.insertNewsBox = function () {
   margin = <%% 18, 16, 16, 12, 2 %%>;
 
   tongPaddingLeft = <%% 60, 0, 0, 0, 0 %%>;
-  tongPaddingTop = <%% 160, 130, 100, 70, 8 %%>;
-  tongPaddingBottom = <%% 160, 130, 100, 70, 8 %%>;
+  tongPaddingTop = <%% 160, 130, 100, 70, 13 %%>;
+  tongPaddingBottom = <%% 160, 130, 100, 70, 15 %%>;
 
   whiteTongPaddingLeft = <%% 32, 26, 26, 21, 4 %%>;
   whiteTongPaddingTop = <%% 21, 18, 18, 15, 3.5 %%>;
@@ -1712,19 +1736,19 @@ FrontIndexJs.prototype.insertNewsBox = function () {
 
   blockMarginBottom = <%% 3, 3, 3, 3, 2 %%>;
 
-  grayHeight = <%% 560, 460, 585, 468, 560 %%>;
+  grayHeight = <%% 560, 460, 585, 468, 89 %%>;
 
   arrowTop = <%% 500, 416, 440, 350, 50 %%>;
   arrowLeft = <%% -50, -48, -45, -35, -5 %%>;
   arrowWidth = <%% 14, 14, 12, 10, 14 %%>;
 
   circleBoxMarginTop = <%% 22, 21, 20, 18, 4 %%>;
-  circleRadius = <%% 10, 10, 8, 8, 10 %%>;
-  circleBetween = <%% 8, 8, 6, 6, 8 %%>;
+  circleRadius = <%% 10, 10, 8, 8, 1.6 %%>;
+  circleBetween = <%% 8, 8, 6, 6, 1.6 %%>;
 
   titleBoxHeight = <%% 40, 36, 26, 25, 4 %%>;
-  titleTextTop = <%% -2, -2, -2, -2, -2 %%>;
-  titleSize = <%% 24, 23, 22, 20, 4 %%>;
+  titleTextTop = <%% -2, -2, -2, -2, 0 %%>;
+  titleSize = <%% 24, 23, 22, 20, 3.8 %%>;
   titleWeight = <%% 400, 400, 400, 400, 400 %%>;
 
   indent = 100;
@@ -1879,7 +1903,7 @@ FrontIndexJs.prototype.insertNewsBox = function () {
     },
     source: instance.mother.returnArrow("left", colorChip.darkShadow),
     style: {
-      display: "block",
+      display: desktop ? "block" : "none",
       position: "absolute",
       top: String(arrowTop) + ea,
       left: String(arrowLeft) + ea,
@@ -1897,7 +1921,7 @@ FrontIndexJs.prototype.insertNewsBox = function () {
     },
     source: instance.mother.returnArrow("right", colorChip.darkShadow),
     style: {
-      display: "block",
+      display: desktop ? "block" : "none",
       position: "absolute",
       top: String(arrowTop) + ea,
       right: String(arrowLeft) + ea,
@@ -1941,7 +1965,7 @@ FrontIndexJs.prototype.insertNewsBox = function () {
         backgroundPosition: "50% 50%",
         transform: "translateX(" + String((i - 1) * indent) + "%)",
         transition: "transform 0.9s ease",
-        zIndex: String(0),
+        zIndex: String(i === 1 ? 1 : 0),
       }
     }));
   }
@@ -2126,12 +2150,12 @@ FrontIndexJs.prototype.popupLaunching = function () {
   delay = 0.8;
   image = FrontIndexJs.binaryPath + "/popup" + String(media.findIndex(boo => boo)) + ".jpg";
 
-  popupWidth = <%% 600, 580, 550, 360, 20 %%>;
-  popupHeight = <%% 600, 580, 550, 475, 20 %%>;
+  popupWidth = <%% 600, 580, 550, 360, 80 %%>;
+  popupHeight = <%% 600, 580, 550, 475, 105 %%>;
 
   buttonSize = <%% 16, 16, 15, 14, 3 %%>;
   buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
-  buttonBottom = <%% -27, -27, -27, -25, -27 %%>;
+  buttonBottom = <%% -27, -27, -27, -25, -6 %%>;
 
   exitEvent = () => {
     const removeTargets = document.querySelectorAll('.' + popupFactorClassName);
