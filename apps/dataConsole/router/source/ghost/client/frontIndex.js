@@ -74,7 +74,7 @@ FrontIndexJs.prototype.generateGsArray = function (number) {
 FrontIndexJs.prototype.insertSlideBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
-  const { ea, media, totalContents, standardWidth } = this;
+  const { ea, media, totalContents } = this;
   const { indexArr } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -109,36 +109,41 @@ FrontIndexJs.prototype.insertSlideBox = function () {
   let subTextSize, subTextWeight;
   let subTextBoldWeight;
   let subTextContents;
+  let standardWidth;
+  let titleBottom;
+
+  standardWidth = <%% this.standardWidth, 1200, 1050, 900, this.standardWidth %%>;
 
   speed = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
   interval = <%% 2700, 2700, 2700, 2700, 2700 %%>;
 
   naviHeight = <%% 72, 72, 66, 60, 60 %%>;
-  mainHeight = <%% 746, 640, 560, 450, 70.5 %%>;
+  mainHeight = <%% 746, 639, 560, 480, 70.5 %%>;
 
   randomNumber = <%% 5, 5, 5, 5, 5 %%>;
-  titlePadding = <%% 100, 75, 72, 58, 8 %%>;
-  titleSize = <%% 56, 45, 43, 36, 6 %%>;
+  titlePadding = <%% 100, 75, 75, 90, 8 %%>;
+  titleBottom = <%% 100, 75, 75, 60, 6 %%>;
+  titleSize = <%% 56, 45, 42, 36, 6 %%>;
   titleWeight = <%% 700, 700, 700, 700, 700 %%>;
   lineHeight = <%% 1.3, 1.3, 1.3, 1.3, 1.3 %%>;
   titleContents = "집을 디자인하는\n새로운 방법, 홈리에종";
   photoLength = 5;
   subTextContents = "디자이너의 <b%전문적인 홈스타일링, 홈리에종%b>과 함께 해보세요!";
 
-  grayHeight = <%% 177, 177, 177, 177, 177 %%>;
+  grayHeight = <%% 177, 152, 140, 120, 152 %%>;
 
-  circleBoxTop = <%% 78, 78, 78, 78, 78 %%>;
+  circleBoxTop = <%% 78, 68, 62, 54, 68 %%>;
   circleBoxLeft = <%% 3, 3, 3, 3, 3 %%>;
 
-  circleRadius = <%% 10, 10, 10, 10, 10 %%>;
-  circleMarginRight = <%% 8, 8, 8, 8, 8 %%>;
+  circleRadius = <%% 10, 10, 10, 8, 10 %%>;
+  circleMarginRight = <%% 8, 8, 8, 6, 8 %%>;
 
-  subTextBoxTop = <%% 54, 54, 54, 54, 54 %%>;
+  subTextBoxTop = <%% 54, 44, 41, 36, 44 %%>;
 
-  subTextAboutSize = <%% 15, 15, 15, 15, 15 %%>;
+  subTextAboutSize = <%% 15, 15, 14, 13, 2.5 %%>;
   subTextAboutWeight = <%% 400, 400, 400, 400, 400 %%>;
-  subTextAboutMarginBottom = <%% 3, 3, 3, 3, 3 %%>;
-  subTextSize = <%% 19, 19, 19, 19, 19 %%>;
+  subTextAboutMarginBottom = <%% (isMac() ? 3 : 5), (isMac() ? 3 : 5), (isMac() ? 3 : 5), (isMac() ? 2 : 4), 1 %%>;
+  subTextSize = <%% 19, 19, 18, 16, 3 %%>;
   subTextWeight = <%% 400, 400, 400, 400, 400 %%>;
   subTextBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
 
@@ -190,7 +195,6 @@ FrontIndexJs.prototype.insertSlideBox = function () {
   for (let i = 0; i < randomIndex.length; i++) {
     if (desktop) {
 
-      // src = FRONTHOST + "/list_image/portp" + randomIndex[i].contents.portfolio.pid + "/" + photoChar + String(randomIndex[i].contents.portfolio.detailInfo.photodae[1]) + randomIndex[i].contents.portfolio.pid + ".jpg";
       src = FrontIndexJs.binaryPath + "/slide" + String(randomIndex.length - 1 - i) + ".jpg";
 
       createNode({
@@ -211,7 +215,6 @@ FrontIndexJs.prototype.insertSlideBox = function () {
 
     } else {
 
-      // src = FRONTHOST + "/list_image/portp" + randomIndex[i].contents.portfolio.pid + "/mobile/" + photoCharMobile + String(randomIndex[i].contents.portfolio.detailInfo.photodae[1]) + randomIndex[i].contents.portfolio.pid + ".jpg";
       src = FrontIndexJs.binaryPath + "/moslide" + String(randomIndex.length - 1 - i) + ".jpg";
 
       createNode({
@@ -245,7 +248,7 @@ FrontIndexJs.prototype.insertSlideBox = function () {
       left: desktop ? "calc(50% - " + String(standardWidth / 2) + ea + ")" : String(7.2) + ea,
       paddingLeft: desktop ? String(titlePadding) + ea : "",
       paddingRight: desktop ? String(titlePadding) + ea : "",
-      bottom: String(titlePadding) + ea,
+      bottom: String(titleBottom) + ea,
     },
     children: [
       {
@@ -267,6 +270,7 @@ FrontIndexJs.prototype.insertSlideBox = function () {
       position: "relative",
       background: colorChip.gray0,
       height: String(grayHeight) + ea,
+      overflow: "hidden",
     },
   });
 
@@ -420,369 +424,85 @@ FrontIndexJs.prototype.insertSlideBox = function () {
 
 }
 
-FrontIndexJs.prototype.insertStrongBox = function (force = false) {
+FrontIndexJs.prototype.insertAboutBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
   const { ea, media, totalContents, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  let speed;
-  let mainHeight;
   let mainTong;
   let blockTong;
-  let blockNumber;
-  let tongPaddingLeft;
-  let tongPaddingTop, tongPaddingBottom;
-  let strongContents;
-  let whiteTongPaddingLeft, whiteTongPaddingTop, whiteTongPaddingRight, whiteTongPaddingBottom;
-  let whiteTongTitleSize;
-  let iconWidth;
-  let whiteTongTitleWeight;
-  let whiteTongDescriptionSize;
-  let whiteTongDescriptionWeight;
-  let whiteTongDescriptionMarginTop;
-  let whiteTongDescriptionLineHeight;
-  let iconBottom;
-  let iconRight;
-  let blockMarginBottom;
+  let mainTongHeight;
+  let secondMainTong, secondBlockTong;
+  let secondMainTongHeight;
+  let descriptionPadding;
+  let photoPadding;
+  let photoTop;
+  let photoWidth, photoHeight;
+  let titleSize, titleWeight, titleLineHeight, titleTop;
+  let contentsSize, contentsWeight, contentsLineHeight, contentsTop;
+  let buttonSize, buttonWeight, buttonLineHeight, buttonTop, buttonPaddingTop, buttonPaddingBottom, buttonPaddingLeft;
+  let blockTongs;
+  let wordings;
 
-  if (mobile && !force) {
-    return;
-  }
+  mainTongHeight = <%% 730, 630, 550, 433, 730 %%>;
+  secondMainTongHeight = <%% 741, 634, 554, 436, 741 %%>;
 
-  if (media[0]) {
-    strongContents = [
-      {
-        title: "디자이너 추천",
-        description: "선호하는 스타일과 역량이 맞는\n디자이너를 추천받을 수 있어요.",
-        icon: "icons0.png",
-      },
-      {
-        title: "홈리에종 케어",
-        description: "예상하지 못한 상황에도 안심하고\n인테리어를 진행할 수 있어요.",
-        icon: "icons1.png",
-      },
-      {
-        title: "원스탑 서비스",
-        description: "시공부터 스타일링까지 원스탑\n서비스를 경험할 수 있어요.",
-        icon: "icons2.png",
-      },
-      {
-        title: "선 기획 후 시공",
-        description: "디자인 선 기획 후 꼭 필요한 시공\n부터 효율적으로 진행할 수 있어요.",
-        icon: "icons3.png",
-      },
-    ]
-  } else {
-    strongContents = [
-      {
-        title: "디자이너 추천",
-        description: "선호하는 스타일이 맞는\n디자이너를 추천받아요.",
-        icon: "icons0.png",
-      },
-      {
-        title: "홈리에종 케어",
-        description: "문제 상황에도 안심하고\n진행할 수 있어요.",
-        icon: "icons1.png",
-      },
-      {
-        title: "원스탑 서비스",
-        description: "시공부터 스타일링까지\n원스탑으로 진행해요.",
-        icon: "icons2.png",
-      },
-      {
-        title: "선 기획 후 시공",
-        description: "디자인 후 꼭 필요한 시공\n부터 진행할 수 있어요.",
-        icon: "icons3.png",
-      },
-    ]
-  }
+  descriptionPadding = <%% 958, 730, 616, 476, 730 %%>;
+  photoPadding = <%% 100, 0, 0, 0, 0 %%>;
+  photoTop = <%% 142, 120, 102, 70, 12 %%>;
 
-  speed = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
-  mainHeight = <%% 240, 240, 240, 240, 40 %%>;
-  margin = <%% 18, 16, 16, 12, 2 %%>;
-  blockNumber = desktop ? strongContents.length : 2;
+  photoWidth = <%% 780, 669, 568, 436, 78 %%>;
+  photoHeight = <%% 440, 377, 350, 290, 44 %%>;
 
-  tongPaddingLeft = <%% 60, 50, 0, 0, 0 %%>;
-  tongPaddingTop = <%% 70, 48, 36, 32, 6.5 %%>;
-  tongPaddingBottom = <%% 76, 54, 42, 38, 4.5 %%>;
+  titleSize = <%% 31, 30, 29, 24, 31 %%>;
+  titleWeight = <%% 700, 700, 700, 700, 700 %%>;
+  titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
+  titleTop = <%% 230, 198, 177, 128, 198 %%>;
 
-  whiteTongPaddingLeft = <%% 32, 26, 26, 21, 4 %%>;
-  whiteTongPaddingTop = <%% 21, 18, 18, 15, 3.5 %%>;
-  whiteTongPaddingRight = <%% 84, 50, 50, 42, 5 %%>;
-  whiteTongPaddingBottom = <%% 28, 25, 24, 20, 4 %%>;
+  contentsSize = <%% 15, 15, 14, 12, 3 %%>;
+  contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
+  contentsLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+  contentsTop = <%% 335, 300, 270, 207, 300 %%>;
 
-  whiteTongTitleSize = <%% 18, 16, 16, 14, 3.5 %%>;
-  whiteTongTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+  buttonSize = <%% 13, 13, 12, 12, 13 %%>;
+  buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
+  buttonLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+  buttonTop = <%% 436, 397, 358, 282, 397 %%>;
+  buttonPaddingTop = <%% (isMac() ? 5 : 6), (isMac() ? 5 : 6), (isMac() ? 5 : 6), (isMac() ? 5 : 6), 5 %%>;
+  buttonPaddingBottom = <%% (isMac() ? 7 : 6), (isMac() ? 7 : 6), (isMac() ? 7 : 6), (isMac() ? 7 : 6), 7 %%>;
+  buttonPaddingLeft = <%% 20, 20, 20, 20, 20 %%>;
 
-  whiteTongDescriptionSize = <%% 14, 13, 13, 11, 2.5 %%>;
-  whiteTongDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
-  whiteTongDescriptionMarginTop = <%% 7, 7, 5, 5, 1.2 %%>;
-  whiteTongDescriptionLineHeight = <%% 1.55, 1.55, 1.55, 1.55, 1.55 %%>;
-
-  iconWidth = <%% 24, 24, 24, 18, 5 %%>;
-  iconBottom = <%% 32, 28, 28, 24, 4.8 %%>;
-  iconRight = <%% 28, 20, 20, 18, 2.8 %%>;
-
-  blockMarginBottom = <%% 3, 3, 3, 3, 2 %%>;
-
-  mainTong = createNode({
-    mother: totalContents,
-    style: {
-      display: "block",
-      position: "relative",
-      background: colorChip.gray2,
-      animation: "justfadeinoriginal " + String(speed) + "s ease forwards",
+  wordings = [
+    {
+      title: [
+        "마지막까지 함께 하는",
+        "우리집 인테리어"
+      ],
+      contents: [
+        "시공부터 시작해 가구, 패브릭, 소품까지",
+        "홈리에종은 스타일링을 중심으로 디자인을 진행하여",
+        "디테일까지 완성된 집을 만들어 드립니다."
+      ],
+      button: "서비스 소개",
+      link: "/about.php",
+      image: "about0.jpg",
     },
-  });
-
-  blockTong = createNode({
-    mother: mainTong,
-    style: {
-      display: "block",
-      position: "relative",
-      width: String((standardWidth - (tongPaddingLeft * 2)) + margin) + ea,
-      paddingTop: String(tongPaddingTop) + ea,
-      paddingBottom: String(tongPaddingBottom) + ea,
-      left: "calc(50% - " + String((standardWidth - (tongPaddingLeft * 2)) / 2) + ea + ")",
-    }
-  });
-
-  for (let i = 0; i < strongContents.length; i++) {
-    createNode({
-      mother: blockTong,
-      style: {
-        display: "inline-block",
-        position: "relative",
-        width: "calc(calc(calc(100% - " + String(margin * blockNumber) + ea + ") / " + String(blockNumber) + ") - " + String(whiteTongPaddingLeft + whiteTongPaddingRight) + ea + ")",
-        paddingTop: String(whiteTongPaddingTop) + ea,
-        paddingLeft: String(whiteTongPaddingLeft) + ea,
-        paddingRight: String(whiteTongPaddingRight) + ea,
-        paddingBottom: String(whiteTongPaddingBottom) + ea,
-        marginRight: String(margin) + ea,
-        borderRadius: String(5) + "px",
-        background: colorChip.white,
-        boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
-        marginBottom: desktop ? "" : String(blockMarginBottom) + ea,
-      },
-      children: [
-        {
-          text: strongContents[i].title,
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: (isMac() || mobile ? "" : String(2) + ea),
-            fontSize: String(whiteTongTitleSize) + ea,
-            fontWeight: String(whiteTongTitleWeight),
-            color: colorChip.black,
-          }
-        },
-        {
-          text: strongContents[i].description,
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: (isMac() || mobile ? "" : String(2) + ea),
-            marginTop: String(whiteTongDescriptionMarginTop) + ea,
-            fontSize: String(whiteTongDescriptionSize) + ea,
-            fontWeight: String(whiteTongDescriptionWeight),
-            lineHeight: String(whiteTongDescriptionLineHeight),
-            color: colorChip.black,
-          }
-        },
-        {
-          mode: "img",
-          attribute: {
-            src: FrontIndexJs.binaryPath + "/" + strongContents[i].icon,
-          },
-          style: {
-            position: "absolute",
-            bottom: String(iconBottom) + ea,
-            right: String(iconRight) + ea,
-            width: String(iconWidth) + ea,
-            height: "auto",
-          }
-        }
-      ]
-    });
-  }
-
-}
-
-FrontIndexJs.prototype.insertNewsBox = function () {
-  const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media, totalContents, standardWidth } = this;
-  const mobile = media[4];
-  const desktop = !mobile;
-  let speed;
-  let mainHeight;
-  let mainTong;
-  let blockTong;
-  let blockNumber;
-  let tongPaddingLeft;
-  let tongPaddingTop, tongPaddingBottom;
-  let strongContents;
-  let whiteTongPaddingLeft, whiteTongPaddingTop, whiteTongPaddingRight, whiteTongPaddingBottom;
-  let whiteTongTitleSize;
-  let iconWidth;
-  let whiteTongTitleWeight;
-  let whiteTongDescriptionSize;
-  let whiteTongDescriptionWeight;
-  let whiteTongDescriptionMarginTop;
-  let whiteTongDescriptionLineHeight;
-  let iconBottom;
-  let iconRight;
-  let blockMarginBottom;
-  let contents;
-  let slideTong;
-  let images;
-  let indent;
-  let number, newNumber;
-  let pushLeft, pushRight;
-  let grayHeight;
-  let arrowTop, arrowLeft, arrowWidth;
-  let circleBox;
-  let circleOpacity;
-  let circles;
-  let circleRadius;
-  let circleBetween;
-  let opacityNumber;
-  let circleBoxMarginTop;
-  let titleBoxHeight, titleTextTop, titleSize, titleWeight;
-
-  speed = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
-  mainHeight = <%% 240, 240, 240, 240, 40 %%>;
-  margin = <%% 18, 16, 16, 12, 2 %%>;
-
-  tongPaddingLeft = <%% 60, 50, 0, 0, 0 %%>;
-  tongPaddingTop = <%% 160, 160, 150, 140, 8 %%>;
-  tongPaddingBottom = <%% 160, 160, 150, 140, 8 %%>;
-
-  whiteTongPaddingLeft = <%% 32, 26, 26, 21, 4 %%>;
-  whiteTongPaddingTop = <%% 21, 18, 18, 15, 3.5 %%>;
-  whiteTongPaddingRight = <%% 84, 50, 50, 42, 5 %%>;
-  whiteTongPaddingBottom = <%% 28, 25, 24, 20, 4 %%>;
-
-  whiteTongTitleSize = <%% 18, 16, 16, 14, 3.5 %%>;
-  whiteTongTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
-
-  whiteTongDescriptionSize = <%% 14, 13, 13, 11, 2.5 %%>;
-  whiteTongDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
-  whiteTongDescriptionMarginTop = <%% 7, 7, 5, 5, 1.2 %%>;
-  whiteTongDescriptionLineHeight = <%% 1.55, 1.55, 1.55, 1.55, 1.55 %%>;
-
-  iconWidth = <%% 24, 24, 24, 18, 5 %%>;
-  iconBottom = <%% 32, 28, 28, 24, 4.8 %%>;
-  iconRight = <%% 28, 20, 20, 18, 2.8 %%>;
-
-  blockMarginBottom = <%% 3, 3, 3, 3, 2 %%>;
-
-  grayHeight = <%% 560, 560, 560, 560, 560 %%>;
-
-  arrowTop = <%% 500, 500, 500, 500, 50 %%>;
-  arrowLeft = <%% -50, -50, -50, -50, -50 %%>;
-  arrowWidth = <%% 14, 14, 14, 14, 14 %%>;
-
-  circleBoxMarginTop = <%% 24, 24, 24, 24, 4 %%>;
-  circleRadius = <%% 10, 10, 10, 10, 10 %%>;
-  circleBetween = <%% 8, 8, 8, 8, 8 %%>;
-
-  titleBoxHeight = <%% 40, 40, 40, 40, 40 %%>;
-  titleTextTop = <%% -2, -2, -2, -2, -2 %%>;
-  titleSize = <%% 24, 24, 24, 24, 4 %%>;
-  titleWeight = <%% 400, 400, 400, 400, 400 %%>;
-
-  indent = 100;
-  circleOpacity = 0.4;
-  images = [];
-  circles = [];
-
-  pushLeft = () => {
-    for (let image of images) {
-      number = Number(image.style.transform.replace(/[^0-9\-]/gi, ''));
-      newNumber = number + indent;
-      if (newNumber === (indent * 2)) {
-        newNumber = indent * ((images.length - 2) * -1);
-      }
-      if (newNumber === indent * ((images.length - 2) * -1)) {
-        image.style.zIndex = String(0);
-      } else {
-        image.style.zIndex = String(1);
-      }
-    }
-    for (let image of images) {
-      number = Number(image.style.transform.replace(/[^0-9\-]/gi, ''));
-      newNumber = number + indent;
-      if (newNumber === (indent * 2)) {
-        newNumber = indent * ((images.length - 2) * -1);
-      }
-      image.style.transform = "translateX(" + String(newNumber) + "%)";
-    }
-
-    opacityNumber = circles.findIndex((dom) => {
-      return Number(dom.style.opacity) === circleOpacity;
-    });
-    opacityNumber = opacityNumber - 1;
-    if (opacityNumber < 0) {
-      opacityNumber = circles.length - 1;
-    }
-    for (let i = 0; i < circles.length; i++) {
-      if (i === opacityNumber) {
-        circles[i].style.opacity = String(circleOpacity);
-      } else {
-        circles[i].style.opacity = String(1);
-      }
-    }
-
-  }
-
-  pushRight = () => {
-    for (let image of images) {
-      number = Number(image.style.transform.replace(/[^0-9\-]/gi, ''));
-      newNumber = number - indent;
-      if (newNumber === (indent * -2)) {
-        newNumber = indent * (images.length - 2);
-      }
-      if (newNumber === indent * (images.length - 2)) {
-        image.style.zIndex = String(0);
-      } else {
-        image.style.zIndex = String(1);
-      }
-    }
-    for (let image of images) {
-      number = Number(image.style.transform.replace(/[^0-9\-]/gi, ''));
-      newNumber = number - indent;
-      if (newNumber === (indent * -2)) {
-        newNumber = indent * (images.length - 2);
-      }
-      image.style.transform = "translateX(" + String(newNumber) + "%)";
-    }
-
-    opacityNumber = circles.findIndex((dom) => {
-      return Number(dom.style.opacity) === circleOpacity;
-    });
-    opacityNumber = opacityNumber + 1;
-    if (opacityNumber === circles.length) {
-      opacityNumber = 0;
-    }
-    for (let i = 0; i < circles.length; i++) {
-      if (i === opacityNumber) {
-        circles[i].style.opacity = String(circleOpacity);
-      } else {
-        circles[i].style.opacity = String(1);
-      }
-    }
-
-  }
-
-  contents = {
-    slide: [
-      FrontIndexJs.binaryPath + "/news2.jpg",
-      FrontIndexJs.binaryPath + "/news0.jpg",
-      FrontIndexJs.binaryPath + "/news1.jpg",
-    ]
-  }
+    {
+      title: [
+        "나에게 딱 맞는",
+        "디자이너를 만나보세요."
+      ],
+      contents: [
+        "홈리에종은 고객님의 상황을 다각도로 분석해",
+        "가장 필요한 서비스와 디자이너를 연결시켜 드립니다.",
+        "나에게 꼭 맞는 디자이너를 추천받아 보세요!"
+      ],
+      button: "서비스 신청",
+      link: "/consulting.php",
+      image: "about1.jpg",
+    },
+  ];
 
   mainTong = createNode({
     mother: totalContents,
@@ -790,151 +510,262 @@ FrontIndexJs.prototype.insertNewsBox = function () {
       display: "block",
       position: "relative",
       background: colorChip.white,
-      animation: "justfadeinoriginal " + String(speed) + "s ease forwards",
+      height: String(mainTongHeight) + ea,
     },
   });
 
-  // contents base
   blockTong = createNode({
     mother: mainTong,
     style: {
       display: "block",
       position: "relative",
-      width: String(standardWidth - (tongPaddingLeft * 2)) + ea,
-      paddingTop: String(tongPaddingTop) + ea,
-      paddingBottom: String(tongPaddingBottom) + ea,
-      left: "calc(50% - " + String((standardWidth - (tongPaddingLeft * 2)) / 2) + ea + ")",
-      textAlign: "center",
+      width: String(standardWidth) + ea,
+      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
+      height: String(100) + '%',
     }
   });
 
-  // news title
+  secondMainTong = createNode({
+    mother: totalContents,
+    style: {
+      display: "block",
+      position: "relative",
+      background: colorChip.gray0,
+      height: String(secondMainTongHeight) + ea,
+    },
+  });
+
+  secondBlockTong = createNode({
+    mother: secondMainTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(standardWidth) + ea,
+      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
+      height: String(100) + '%',
+    }
+  });
+
+  blockTongs = [ blockTong, secondBlockTong ];
+
+  for (let i = 0; i < blockTongs.length; i++) {
+    createNode({
+      mother: blockTongs[i],
+      style: {
+        display: "inline-block",
+        position: "absolute",
+        width: String(photoWidth) + ea,
+        height: String(photoHeight) + ea,
+        top: String(photoTop) + ea,
+        right: i === 0 ? String(photoPadding) + ea : "",
+        left: i === 0 ? "" : String(photoPadding) + ea,
+        borderRadius: String(8) + "px",
+        background: colorChip.gray1,
+        boxShadow: "0px 5px 15px -9px " + colorChip.shadow,
+        backgroundImage: "url('" + FrontIndexJs.binaryPath + "/" + wordings[i].image + "')",
+        backgroundSize: "100% auto",
+        backgroundPosition: "50% 50%",
+      }
+    });
+
+    createNode({
+      mother: blockTongs[i],
+      text: wordings[i].title.join("\n"),
+      style: {
+        display: "inline-block",
+        position: "absolute",
+        fontSize: String(titleSize) + ea,
+        fontWeight: String(titleWeight),
+        lineHeight: String(titleLineHeight),
+        color: colorChip.black,
+        textAlign: i === 0 ? "right" : "left",
+        top: String(titleTop) + ea,
+        right: i === 0 ? String(descriptionPadding) + ea : "",
+        left: i === 0 ? "" : String(descriptionPadding) + ea,
+      }
+    });
+
+    createNode({
+      mother: blockTongs[i],
+      text: wordings[i].contents.join("\n"),
+      style: {
+        display: "inline-block",
+        position: "absolute",
+        fontSize: String(contentsSize) + ea,
+        fontWeight: String(contentsWeight),
+        lineHeight: String(contentsLineHeight),
+        color: colorChip.darkShadow,
+        textAlign: i === 0 ? "right" : "left",
+        top: String(contentsTop) + ea,
+        right: i === 0 ? String(descriptionPadding) + ea : "",
+        left: i === 0 ? "" : String(descriptionPadding) + ea,
+      }
+    });
+
+    createNode({
+      mother: blockTongs[i],
+      class: [ "hoverDefault_lite" ],
+      attribute: {
+        index: String(i),
+      },
+      event: {
+        click: function (e) {
+          const index = Number(this.getAttribute("index"));
+          selfHref(wordings[index].link);
+        }
+      },
+      text: wordings[i].button,
+      style: {
+        display: "inline-block",
+        position: "absolute",
+        fontSize: String(buttonSize) + ea,
+        fontWeight: String(buttonWeight),
+        lineHeight: String(buttonLineHeight),
+        color: colorChip.white,
+        textAlign: "center",
+        top: String(buttonTop) + ea,
+        right: i === 0 ? String(descriptionPadding) + ea : "",
+        left: i === 0 ? "" : String(descriptionPadding) + ea,
+        paddingTop: String(buttonPaddingTop) + ea,
+        paddingBottom: String(buttonPaddingBottom) + ea,
+        paddingLeft: String(buttonPaddingLeft) + ea,
+        paddingRight: String(buttonPaddingLeft) + ea,
+        borderRadius: String(buttonPaddingLeft) + ea,
+        background: colorChip.gradientGreen,
+      }
+    });
+  }
+
+}
+
+FrontIndexJs.prototype.insertBlackBox = function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
+  const { ea, media, totalContents, standardWidth } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  let mainTong;
+  let blockTong;
+  let tongPaddingLeft;
+  let tongPaddingTop, tongPaddingBottom;
+  let titleSize, titleWeight;
+  let subTitleSize, subTitleWeight;
+  let subTitleMarginLeft;
+  let buttonTop, buttonWidth, buttonHeight;
+  let buttonSize, buttonWeight;
+  let buttonTextTop;
+
+  tongPaddingTop = <%% 44, 44, 44, 40, 4.2 %%>;
+  tongPaddingBottom = <%% 56, 56, 56, 52, 5.5 %%>;
+
+  titleSize = <%% 37, 35, 32, 28, 4 %%>;
+  titleWeight = <%% 600, 600, 600, 600, 600 %%>;
+
+  subTitleSize = <%% 16, 16, 15, 13, 0 %%>;
+  subTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
+  subTitleMarginLeft = <%% 11, 10, 10, 10, 10 %%>;
+
+  buttonTop = <%% 55, 55, 53, 48, 4.5 %%>;
+  buttonWidth = <%% 140, 135, 133, 125, 20 %%>;
+  buttonHeight = <%% 40, 38, 36, 33, 5.8 %%>;
+
+  buttonSize = <%% 15, 14, 14, 13, 2.5 %%>;
+  buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
+  buttonTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isIphone() ? 0 : -0.3) %%>;
+
+  mainTong = createNode({
+    mother: totalContents,
+    style: {
+      display: "block",
+      position: "relative",
+      backgroundImage: "url('" + FrontIndexJs.binaryPath + "/back.jpg" + "')",
+      backgroundSize: "100% auto",
+      backgroundPosition: "50% 50%",
+    },
+  });
+
+  blockTong = createNode({
+    mother: mainTong,
+    // event: {
+    //   click: (e) => {
+    //     selfHref(FRONTHOST + "/consulting.php");
+    //   }
+    // },
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(standardWidth) + ea,
+      paddingTop: String(tongPaddingTop) + ea,
+      paddingBottom: String(tongPaddingBottom) + ea,
+      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
+      cursor: "pointer",
+    }
+  });
+
   createNode({
     mother: blockTong,
+    text: "홈리에종의 신규 서비스, 무드 체인지 런칭!",
+    style: {
+      top: (isMac() || mobile) ? String(0) : String(3) + ea,
+      fontSize: String(titleSize) + ea,
+      fontWeight: String(titleWeight),
+      color: colorChip.white,
+      display: "inline-block",
+      position: "relative",
+    }
+  })
+
+  createNode({
+    mother: blockTong,
+    text: "HomeLiaison Mini",
+    style: {
+      top: (isMac() || mobile) ? String(0) : String(3) + ea,
+      fontSize: String(subTitleSize) + ea,
+      fontWeight: String(subTitleWeight),
+      color: colorChip.white,
+      display: "inline-block",
+      position: "relative",
+      marginLeft: String(subTitleMarginLeft) + ea,
+    }
+  })
+
+  createNode({
+    mother: blockTong,
+    class: [ "consultingButton" ],
+    event: {
+      click: (e) => {
+        selfHref(FRONTHOST + "/miniAbout.php");
+      }
+    },
     style: {
       display: "flex",
-      position: "relative",
-      textAlign: "center",
-      width: String(100) + '%',
-      height: String(titleBoxHeight) + ea,
-      marginBottom: String(circleBoxMarginTop) + ea,
+      position: "absolute",
       justifyContent: "center",
       alignItems: "center",
+      textAlign: "center",
+      right: String(0),
+      top: String(buttonTop) + ea,
+      width: String(buttonWidth) + ea,
+      height: String(buttonHeight) + ea,
+      borderRadius: String(buttonHeight) + ea,
+      background: colorChip.white,
+      boxShadow: "0px 2px 11px -9px " + colorChip.shadow,
+      cursor: "pointer",
     },
     children: [
       {
-        text: "HomeLiaison News",
+        text: "서비스 소개",
         style: {
           position: "relative",
-          top: String(titleTextTop) + ea,
-          fontSize: String(titleSize) + ea,
-          fontWeight: String(titleWeight),
+          display: "inline-block",
+          top: String(buttonTextTop) + ea,
+          fontSize: String(buttonSize) + ea,
+          fontWeight: String(buttonWeight),
           color: colorChip.black,
-          fontFamily: "graphik",
         }
       }
     ]
-  });
-
-  // left arrow
-  createNode({
-    mother: blockTong,
-    mode: "svg",
-    event: {
-      click: (e) => { pushLeft(); },
-    },
-    source: instance.mother.returnArrow("left", colorChip.darkShadow),
-    style: {
-      display: "block",
-      position: "absolute",
-      top: String(arrowTop) + ea,
-      left: String(arrowLeft) + ea,
-      width: String(arrowWidth) + ea,
-      cursor: "pointer",
-    }
-  });
-
-  // right arrow
-  createNode({
-    mother: blockTong,
-    mode: "svg",
-    event: {
-      click: (e) => { pushRight(); },
-    },
-    source: instance.mother.returnArrow("right", colorChip.darkShadow),
-    style: {
-      display: "block",
-      position: "absolute",
-      top: String(arrowTop) + ea,
-      right: String(arrowLeft) + ea,
-      width: String(arrowWidth) + ea,
-      cursor: "pointer",
-    }
-  });
-
-  // slide tong
-  slideTong = createNode({
-    mother: blockTong,
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(100) + '%',
-      height: String(grayHeight) + ea,
-      background: colorChip.gray1,
-      borderRadius: String(8) + "px",
-      overflow: "hidden",
-      transition: "all 0s ease",
-    }
-  });
-  for (let i = 0; i < contents.slide.length; i++) {
-    images.push(createNode({
-      mother: slideTong,
-      style: {
-        display: "block",
-        position: "absolute",
-        width: String(100) + '%',
-        height: String(100) + '%',
-        top: String(0),
-        left: String(0),
-        backgroundImage: "url('" + contents.slide[i] + "')",
-        backgroundSize: "auto 100%",
-        backgroundPosition: "50% 50%",
-        transform: "translateX(" + String((i - 1) * indent) + "%)",
-        transition: "transform 0.9s ease",
-        zIndex: String(0),
-      }
-    }));
-  }
-
-  // circle tong
-  circleBox = createNode({
-    mother: blockTong,
-    style: {
-      display: "block",
-      position: "relative",
-      textAlign: "center",
-      marginTop: String(circleBoxMarginTop) + ea,
-    }
-  });
-  for (let i = 0; i < contents.slide.length; i++) {
-    circles.push(createNode({
-      mother: circleBox,
-      style: {
-        display: "inline-block",
-        width: String(circleRadius) + ea,
-        height: String(circleRadius) + ea,
-        borderRadius: String(circleRadius) + ea,
-        background: colorChip.shadow,
-        marginLeft: String(i === 0 ? 0 : circleBetween) + ea,
-        opacity: String(i === 0 ? circleOpacity : 1),
-      }
-    }));
-  }
-
-  setQueue(() => {
-    newNumber = null;
-    setInterval(pushRight, 5000);
-  }, 3000);
+  })
 
 }
 
@@ -1008,8 +839,8 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   let arrowWidth, arrowHeight, arrowBottom, arrowReviewBottom;
   let reviewSubTitleVisual;
 
-  mainPaddingTop = <%% 140, 130, 110, 90, 8 %%>;
-  mainPaddingBottom = <%% 140, 130, 110, 90, 8 %%>;
+  mainPaddingTop = <%% 140, 120, 90, 65, 8 %%>;
+  mainPaddingBottom = <%% 120, 100, 60, 45, 8 %%>;
 
   searchWordingSize = <%% 22, 21, 20, 18, 22 %%>;
   searchWordingWeight = <%% 600, 600, 600, 600, 600 %%>;
@@ -1293,11 +1124,12 @@ FrontIndexJs.prototype.insertSearchBox = function () {
       mother: portfolioTong,
       attribute: {
         pid: contents.portfolio.pid,
+        rid: contents.review.rid,
       },
       event: {
         click: function (e) {
           const pid = this.getAttribute("pid");
-          selfHref(FRONTHOST + "/portdetail.php?pid=" + pid);
+          selfHref(FRONTHOST + "/portdetail.php?qqq=" + pid);
         },
         touchstart: function (e) {
           const self = this;
@@ -1309,7 +1141,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
         touchend: function (e) {
           if (this.getAttribute(touchStartConst) === "on") {
             const pid = this.getAttribute("pid");
-            selfHref(FRONTHOST + "/portdetail.php?pid=" + pid);
+            selfHref(FRONTHOST + "/portdetail.php?qqq=" + pid);
           }
         }
       },
@@ -1502,11 +1334,12 @@ FrontIndexJs.prototype.insertSearchBox = function () {
       mother: reviewTong,
       attribute: {
         pid: contents.portfolio.pid,
+        rid: contents.review.rid,
       },
       event: {
         click: function (e) {
-          const pid = this.getAttribute("pid");
-          selfHref(FRONTHOST + "/revdetail.php?pid=" + pid);
+          const rid = this.getAttribute("rid");
+          selfHref(FRONTHOST + "/revdetail.php?qqq=" + rid);
         },
         touchstart: function (e) {
           const self = this;
@@ -1517,8 +1350,8 @@ FrontIndexJs.prototype.insertSearchBox = function () {
         },
         touchend: function (e) {
           if (this.getAttribute(touchStartConst) === "on") {
-            const pid = this.getAttribute("pid");
-            selfHref(FRONTHOST + "/revdetail.php?pid=" + pid);
+            const rid = this.getAttribute("rid");
+            selfHref(FRONTHOST + "/revdetail.php?qqq=" + rid);
           }
         }
       },
@@ -1621,93 +1454,119 @@ FrontIndexJs.prototype.insertSearchBox = function () {
 
 }
 
-FrontIndexJs.prototype.insertAboutBox = function () {
+FrontIndexJs.prototype.insertStrongBox = function (force = false) {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media, totalContents, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  let speed;
+  let mainHeight;
   let mainTong;
   let blockTong;
-  let mainTongHeight;
-  let secondMainTong, secondBlockTong;
-  let secondMainTongHeight;
-  let descriptionPadding;
-  let photoPadding;
-  let photoTop;
-  let photoWidth, photoHeight;
-  let titleSize, titleWeight, titleLineHeight, titleTop;
-  let contentsSize, contentsWeight, contentsLineHeight, contentsTop;
-  let buttonSize, buttonWeight, buttonLineHeight, buttonTop, buttonPaddingTop, buttonPaddingBottom, buttonPaddingLeft;
-  let blockTongs;
-  let wordings;
+  let blockNumber;
+  let tongPaddingLeft;
+  let tongPaddingTop, tongPaddingBottom;
+  let strongContents;
+  let whiteTongPaddingLeft, whiteTongPaddingTop, whiteTongPaddingRight, whiteTongPaddingBottom;
+  let whiteTongTitleSize;
+  let iconWidth;
+  let whiteTongTitleWeight;
+  let whiteTongDescriptionSize;
+  let whiteTongDescriptionWeight;
+  let whiteTongDescriptionMarginTop;
+  let whiteTongDescriptionLineHeight;
+  let iconBottom;
+  let iconRight;
+  let blockMarginBottom;
 
-  mainTongHeight = <%% 730, 730, 730, 730, 730 %%>;
-  secondMainTongHeight = <%% 741, 741, 741, 741, 741 %%>;
+  if (mobile && !force) {
+    return;
+  }
 
-  descriptionPadding = <%% 958, 958, 958, 958, 958 %%>;
-  photoPadding = <%% 100, 100, 100, 100, 100 %%>;
-  photoTop = <%% 142, 142, 142, 142, 142 %%>;
+  if (media[0]) {
+    strongContents = [
+      {
+        title: "디자이너 추천",
+        description: "선호하는 스타일과 역량이 맞는\n디자이너를 추천받을 수 있어요.",
+        icon: "icons0.png",
+      },
+      {
+        title: "홈리에종 케어",
+        description: "예상하지 못한 상황에도 안심하고\n인테리어를 진행할 수 있어요.",
+        icon: "icons1.png",
+      },
+      {
+        title: "원스탑 서비스",
+        description: "시공부터 스타일링까지 원스탑\n서비스를 경험할 수 있어요.",
+        icon: "icons2.png",
+      },
+      {
+        title: "선 기획 후 시공",
+        description: "디자인 선 기획 후 꼭 필요한 시공\n부터 효율적으로 진행할 수 있어요.",
+        icon: "icons3.png",
+      },
+    ]
+  } else {
+    strongContents = [
+      {
+        title: "디자이너 추천",
+        description: "선호하는 스타일이 맞는\n디자이너를 추천받아요.",
+        icon: "icons0.png",
+      },
+      {
+        title: "홈리에종 케어",
+        description: "문제 상황에도 안심하고\n진행할 수 있어요.",
+        icon: "icons1.png",
+      },
+      {
+        title: "원스탑 서비스",
+        description: "시공부터 스타일링까지\n원스탑으로 진행해요.",
+        icon: "icons2.png",
+      },
+      {
+        title: "선 기획 후 시공",
+        description: "디자인 후 꼭 필요한 시공\n부터 진행할 수 있어요.",
+        icon: "icons3.png",
+      },
+    ]
+  }
 
-  photoWidth = <%% 780, 780, 780, 780, 780 %%>;
-  photoHeight = <%% 440, 440, 440, 440, 440 %%>;
+  speed = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
+  mainHeight = <%% 240, 240, 240, 240, 40 %%>;
+  margin = <%% 18, 16, 16, 12, 2 %%>;
+  blockNumber = desktop ? strongContents.length : 2;
 
-  titleSize = <%% 31, 31, 31, 31, 31 %%>;
-  titleWeight = <%% 700, 700, 700, 700, 700 %%>;
-  titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
-  titleTop = <%% 230, 230, 230, 230, 230 %%>;
+  tongPaddingLeft = <%% 60, 50, 0, 0, 0 %%>;
+  tongPaddingTop = <%% 70, 48, 36, 32, 6.5 %%>;
+  tongPaddingBottom = <%% 76, 54, 42, 38, 4.5 %%>;
 
-  contentsSize = <%% 15, 15, 15, 15, 15 %%>;
-  contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
-  contentsLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
-  contentsTop = <%% 335, 335, 335, 335, 335 %%>;
+  whiteTongPaddingLeft = <%% 32, 26, 26, 21, 4 %%>;
+  whiteTongPaddingTop = <%% 21, 18, 18, 15, 3.5 %%>;
+  whiteTongPaddingRight = <%% 84, 50, 50, 42, 5 %%>;
+  whiteTongPaddingBottom = <%% 28, 25, 24, 20, 4 %%>;
 
-  buttonSize = <%% 13, 13, 13, 13, 13 %%>;
-  buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
-  buttonLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
-  buttonTop = <%% 436, 436, 436, 436, 436 %%>;
-  buttonPaddingTop = <%% 5, 5, 5, 5, 5 %%>;
-  buttonPaddingBottom = <%% 7, 7, 7, 7, 7 %%>;
-  buttonPaddingLeft = <%% 20, 20, 20, 20, 20 %%>;
+  whiteTongTitleSize = <%% 18, 16, 16, 14, 3.5 %%>;
+  whiteTongTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  wordings = [
-    {
-      title: [
-        "마지막까지 함께 하는",
-        "우리집 인테리어"
-      ],
-      contents: [
-        "시공부터 시작해 가구, 패브릭, 소품까지",
-        "홈리에종은 스타일링을 중심으로 디자인을 진행하여",
-        "디테일까지 완성된 집을 만들어 드립니다."
-      ],
-      button: "서비스 소개",
-      link: "/about.php",
-      image: "about0.jpg",
-    },
-    {
-      title: [
-        "나에게 딱 맞는",
-        "디자이너를 만나보세요."
-      ],
-      contents: [
-        "홈리에종은 고객님의 상황을 다각도로 분석해",
-        "가장 필요한 서비스와 디자이너를 연결시켜 드립니다.",
-        "나에게 꼭 맞는 디자이너를 추천받아 보세요!"
-      ],
-      button: "서비스 신청",
-      link: "/consulting.php",
-      image: "about1.jpg",
-    },
-  ];
+  whiteTongDescriptionSize = <%% 14, 13, 13, 11, 2.5 %%>;
+  whiteTongDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+  whiteTongDescriptionMarginTop = <%% 7, 7, 5, 5, 1.2 %%>;
+  whiteTongDescriptionLineHeight = <%% 1.55, 1.55, 1.55, 1.55, 1.55 %%>;
+
+  iconWidth = <%% 24, 24, 24, 18, 5 %%>;
+  iconBottom = <%% 32, 28, 28, 24, 4.8 %%>;
+  iconRight = <%% 28, 20, 20, 18, 2.8 %%>;
+
+  blockMarginBottom = <%% 3, 3, 3, 3, 2 %%>;
 
   mainTong = createNode({
     mother: totalContents,
     style: {
       display: "block",
       position: "relative",
-      background: colorChip.white,
-      height: String(mainTongHeight) + ea,
+      background: colorChip.gray2,
+      animation: "justfadeinoriginal " + String(speed) + "s ease forwards",
     },
   });
 
@@ -1716,253 +1575,406 @@ FrontIndexJs.prototype.insertAboutBox = function () {
     style: {
       display: "block",
       position: "relative",
-      width: String(standardWidth) + ea,
-      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
-      height: String(100) + '%',
+      width: String((standardWidth - (tongPaddingLeft * 2)) + margin) + ea,
+      paddingTop: String(tongPaddingTop) + ea,
+      paddingBottom: String(tongPaddingBottom) + ea,
+      left: "calc(50% - " + String((standardWidth - (tongPaddingLeft * 2)) / 2) + ea + ")",
     }
   });
 
-  secondMainTong = createNode({
-    mother: totalContents,
-    style: {
-      display: "block",
-      position: "relative",
-      background: colorChip.gray0,
-      height: String(secondMainTongHeight) + ea,
-    },
-  });
-
-  secondBlockTong = createNode({
-    mother: secondMainTong,
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(standardWidth) + ea,
-      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
-      height: String(100) + '%',
-    }
-  });
-
-  blockTongs = [ blockTong, secondBlockTong ];
-
-  for (let i = 0; i < blockTongs.length; i++) {
+  for (let i = 0; i < strongContents.length; i++) {
     createNode({
-      mother: blockTongs[i],
+      mother: blockTong,
       style: {
         display: "inline-block",
-        position: "absolute",
-        width: String(photoWidth) + ea,
-        height: String(photoHeight) + ea,
-        top: String(photoTop) + ea,
-        right: i === 0 ? String(photoPadding) + ea : "",
-        left: i === 0 ? "" : String(photoPadding) + ea,
-        borderRadius: String(8) + "px",
-        background: colorChip.gray1,
-        boxShadow: "0px 5px 15px -9px " + colorChip.shadow,
-        backgroundImage: "url('" + FrontIndexJs.binaryPath + "/" + wordings[i].image + "')",
-        backgroundSize: "100% auto",
-        backgroundPosition: "50% 50%",
-      }
-    });
-
-    createNode({
-      mother: blockTongs[i],
-      text: wordings[i].title.join("\n"),
-      style: {
-        display: "inline-block",
-        position: "absolute",
-        fontSize: String(titleSize) + ea,
-        fontWeight: String(titleWeight),
-        lineHeight: String(titleLineHeight),
-        color: colorChip.black,
-        textAlign: i === 0 ? "right" : "left",
-        top: String(titleTop) + ea,
-        right: i === 0 ? String(descriptionPadding) + ea : "",
-        left: i === 0 ? "" : String(descriptionPadding) + ea,
-      }
-    });
-
-    createNode({
-      mother: blockTongs[i],
-      text: wordings[i].contents.join("\n"),
-      style: {
-        display: "inline-block",
-        position: "absolute",
-        fontSize: String(contentsSize) + ea,
-        fontWeight: String(contentsWeight),
-        lineHeight: String(contentsLineHeight),
-        color: colorChip.darkShadow,
-        textAlign: i === 0 ? "right" : "left",
-        top: String(contentsTop) + ea,
-        right: i === 0 ? String(descriptionPadding) + ea : "",
-        left: i === 0 ? "" : String(descriptionPadding) + ea,
-      }
-    });
-
-    createNode({
-      mother: blockTongs[i],
-      class: [ "hoverDefault_lite" ],
-      attribute: {
-        index: String(i),
+        position: "relative",
+        width: "calc(calc(calc(100% - " + String(margin * blockNumber) + ea + ") / " + String(blockNumber) + ") - " + String(whiteTongPaddingLeft + whiteTongPaddingRight) + ea + ")",
+        paddingTop: String(whiteTongPaddingTop) + ea,
+        paddingLeft: String(whiteTongPaddingLeft) + ea,
+        paddingRight: String(whiteTongPaddingRight) + ea,
+        paddingBottom: String(whiteTongPaddingBottom) + ea,
+        marginRight: String(margin) + ea,
+        borderRadius: String(5) + "px",
+        background: colorChip.white,
+        boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
+        marginBottom: desktop ? "" : String(blockMarginBottom) + ea,
       },
-      event: {
-        click: function (e) {
-          const index = Number(this.getAttribute("index"));
-          selfHref(wordings[index].link);
+      children: [
+        {
+          text: strongContents[i].title,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: (isMac() || mobile ? "" : String(2) + ea),
+            fontSize: String(whiteTongTitleSize) + ea,
+            fontWeight: String(whiteTongTitleWeight),
+            color: colorChip.black,
+          }
+        },
+        {
+          text: strongContents[i].description,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: (isMac() || mobile ? "" : String(2) + ea),
+            marginTop: String(whiteTongDescriptionMarginTop) + ea,
+            fontSize: String(whiteTongDescriptionSize) + ea,
+            fontWeight: String(whiteTongDescriptionWeight),
+            lineHeight: String(whiteTongDescriptionLineHeight),
+            color: colorChip.black,
+          }
+        },
+        {
+          mode: "img",
+          attribute: {
+            src: FrontIndexJs.binaryPath + "/" + strongContents[i].icon,
+          },
+          style: {
+            position: "absolute",
+            bottom: String(iconBottom) + ea,
+            right: String(iconRight) + ea,
+            width: String(iconWidth) + ea,
+            height: "auto",
+          }
         }
-      },
-      text: wordings[i].button,
-      style: {
-        display: "inline-block",
-        position: "absolute",
-        fontSize: String(buttonSize) + ea,
-        fontWeight: String(buttonWeight),
-        lineHeight: String(buttonLineHeight),
-        color: colorChip.white,
-        textAlign: "center",
-        top: String(buttonTop) + ea,
-        right: i === 0 ? String(descriptionPadding) + ea : "",
-        left: i === 0 ? "" : String(descriptionPadding) + ea,
-        paddingTop: String(buttonPaddingTop) + ea,
-        paddingBottom: String(buttonPaddingBottom) + ea,
-        paddingLeft: String(buttonPaddingLeft) + ea,
-        paddingRight: String(buttonPaddingLeft) + ea,
-        borderRadius: String(buttonPaddingLeft) + ea,
-        background: colorChip.gradientGreen,
-      }
+      ]
     });
   }
 
 }
 
-FrontIndexJs.prototype.insertBlackBox = function () {
+FrontIndexJs.prototype.insertNewsBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, blankHref, selfHref } = GeneralJs;
   const { ea, media, totalContents, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  let speed;
+  let mainHeight;
   let mainTong;
   let blockTong;
+  let blockNumber;
   let tongPaddingLeft;
   let tongPaddingTop, tongPaddingBottom;
-  let titleSize, titleWeight;
-  let subTitleSize, subTitleWeight;
-  let subTitleMarginLeft;
-  let buttonTop, buttonWidth, buttonHeight;
-  let buttonSize, buttonWeight;
-  let buttonTextTop;
+  let strongContents;
+  let whiteTongPaddingLeft, whiteTongPaddingTop, whiteTongPaddingRight, whiteTongPaddingBottom;
+  let whiteTongTitleSize;
+  let iconWidth;
+  let whiteTongTitleWeight;
+  let whiteTongDescriptionSize;
+  let whiteTongDescriptionWeight;
+  let whiteTongDescriptionMarginTop;
+  let whiteTongDescriptionLineHeight;
+  let iconBottom;
+  let iconRight;
+  let blockMarginBottom;
+  let contents;
+  let slideTong;
+  let images;
+  let indent;
+  let number, newNumber;
+  let pushLeft, pushRight;
+  let grayHeight;
+  let arrowTop, arrowLeft, arrowWidth;
+  let circleBox;
+  let circleOpacity;
+  let circles;
+  let circleRadius;
+  let circleBetween;
+  let opacityNumber;
+  let circleBoxMarginTop;
+  let titleBoxHeight, titleTextTop, titleSize, titleWeight;
 
-  tongPaddingTop = <%% 44, 44, 44, 40, 4.2 %%>;
-  tongPaddingBottom = <%% 56, 56, 56, 52, 5.5 %%>;
+  speed = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
+  mainHeight = <%% 240, 240, 240, 240, 40 %%>;
+  margin = <%% 18, 16, 16, 12, 2 %%>;
 
-  titleSize = <%% 37, 35, 32, 28, 4 %%>;
-  titleWeight = <%% 600, 600, 600, 600, 600 %%>;
+  tongPaddingLeft = <%% 60, 0, 0, 0, 0 %%>;
+  tongPaddingTop = <%% 160, 130, 100, 70, 8 %%>;
+  tongPaddingBottom = <%% 160, 130, 100, 70, 8 %%>;
 
-  subTitleSize = <%% 16, 16, 15, 13, 0 %%>;
-  subTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
-  subTitleMarginLeft = <%% 11, 10, 10, 10, 10 %%>;
+  whiteTongPaddingLeft = <%% 32, 26, 26, 21, 4 %%>;
+  whiteTongPaddingTop = <%% 21, 18, 18, 15, 3.5 %%>;
+  whiteTongPaddingRight = <%% 84, 50, 50, 42, 5 %%>;
+  whiteTongPaddingBottom = <%% 28, 25, 24, 20, 4 %%>;
 
-  buttonTop = <%% 55, 55, 53, 48, 4.5 %%>;
-  buttonWidth = <%% 140, 135, 133, 125, 20 %%>;
-  buttonHeight = <%% 40, 38, 36, 33, 5.8 %%>;
+  whiteTongTitleSize = <%% 18, 16, 16, 14, 3.5 %%>;
+  whiteTongTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  buttonSize = <%% 15, 14, 14, 13, 2.5 %%>;
-  buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
-  buttonTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isIphone() ? 0 : -0.3) %%>;
+  whiteTongDescriptionSize = <%% 14, 13, 13, 11, 2.5 %%>;
+  whiteTongDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+  whiteTongDescriptionMarginTop = <%% 7, 7, 5, 5, 1.2 %%>;
+  whiteTongDescriptionLineHeight = <%% 1.55, 1.55, 1.55, 1.55, 1.55 %%>;
+
+  iconWidth = <%% 24, 24, 24, 18, 5 %%>;
+  iconBottom = <%% 32, 28, 28, 24, 4.8 %%>;
+  iconRight = <%% 28, 20, 20, 18, 2.8 %%>;
+
+  blockMarginBottom = <%% 3, 3, 3, 3, 2 %%>;
+
+  grayHeight = <%% 560, 460, 585, 468, 560 %%>;
+
+  arrowTop = <%% 500, 416, 440, 350, 50 %%>;
+  arrowLeft = <%% -50, -48, -45, -35, -5 %%>;
+  arrowWidth = <%% 14, 14, 12, 10, 14 %%>;
+
+  circleBoxMarginTop = <%% 22, 21, 20, 18, 4 %%>;
+  circleRadius = <%% 10, 10, 8, 8, 10 %%>;
+  circleBetween = <%% 8, 8, 6, 6, 8 %%>;
+
+  titleBoxHeight = <%% 40, 36, 26, 25, 4 %%>;
+  titleTextTop = <%% -2, -2, -2, -2, -2 %%>;
+  titleSize = <%% 24, 23, 22, 20, 4 %%>;
+  titleWeight = <%% 400, 400, 400, 400, 400 %%>;
+
+  indent = 100;
+  circleOpacity = 0.4;
+  images = [];
+  circles = [];
+
+  pushLeft = () => {
+    for (let image of images) {
+      number = Number(image.style.transform.replace(/[^0-9\-]/gi, ''));
+      newNumber = number + indent;
+      if (newNumber === (indent * 2)) {
+        newNumber = indent * ((images.length - 2) * -1);
+      }
+      if (newNumber === indent * ((images.length - 2) * -1)) {
+        image.style.zIndex = String(0);
+      } else {
+        image.style.zIndex = String(1);
+      }
+    }
+    for (let image of images) {
+      number = Number(image.style.transform.replace(/[^0-9\-]/gi, ''));
+      newNumber = number + indent;
+      if (newNumber === (indent * 2)) {
+        newNumber = indent * ((images.length - 2) * -1);
+      }
+      image.style.transform = "translateX(" + String(newNumber) + "%)";
+    }
+
+    opacityNumber = circles.findIndex((dom) => {
+      return Number(dom.style.opacity) === circleOpacity;
+    });
+    opacityNumber = opacityNumber - 1;
+    if (opacityNumber < 0) {
+      opacityNumber = circles.length - 1;
+    }
+    for (let i = 0; i < circles.length; i++) {
+      if (i === opacityNumber) {
+        circles[i].style.opacity = String(circleOpacity);
+      } else {
+        circles[i].style.opacity = String(1);
+      }
+    }
+
+  }
+
+  pushRight = () => {
+    for (let image of images) {
+      number = Number(image.style.transform.replace(/[^0-9\-]/gi, ''));
+      newNumber = number - indent;
+      if (newNumber === (indent * -2)) {
+        newNumber = indent * (images.length - 2);
+      }
+      if (newNumber === indent * (images.length - 2)) {
+        image.style.zIndex = String(0);
+      } else {
+        image.style.zIndex = String(1);
+      }
+    }
+    for (let image of images) {
+      number = Number(image.style.transform.replace(/[^0-9\-]/gi, ''));
+      newNumber = number - indent;
+      if (newNumber === (indent * -2)) {
+        newNumber = indent * (images.length - 2);
+      }
+      image.style.transform = "translateX(" + String(newNumber) + "%)";
+    }
+
+    opacityNumber = circles.findIndex((dom) => {
+      return Number(dom.style.opacity) === circleOpacity;
+    });
+    opacityNumber = opacityNumber + 1;
+    if (opacityNumber === circles.length) {
+      opacityNumber = 0;
+    }
+    for (let i = 0; i < circles.length; i++) {
+      if (i === opacityNumber) {
+        circles[i].style.opacity = String(circleOpacity);
+      } else {
+        circles[i].style.opacity = String(1);
+      }
+    }
+
+  }
+
+  contents = {
+    slide: [
+      FrontIndexJs.binaryPath + "/news2" + String(media.findIndex(boo => boo)) + ".jpg",
+      FrontIndexJs.binaryPath + "/news0" + String(media.findIndex(boo => boo)) + ".jpg",
+      FrontIndexJs.binaryPath + "/news1" + String(media.findIndex(boo => boo)) + ".jpg",
+    ]
+  }
 
   mainTong = createNode({
     mother: totalContents,
     style: {
       display: "block",
       position: "relative",
-      backgroundImage: "url('" + FrontIndexJs.binaryPath + "/back.jpg" + "')",
-      backgroundSize: "100% auto",
-      backgroundPosition: "50% 50%",
+      background: colorChip.white,
+      animation: "justfadeinoriginal " + String(speed) + "s ease forwards",
     },
   });
 
+  // contents base
   blockTong = createNode({
     mother: mainTong,
-    // event: {
-    //   click: (e) => {
-    //     selfHref(FRONTHOST + "/consulting.php");
-    //   }
-    // },
     style: {
       display: "block",
       position: "relative",
-      width: String(standardWidth) + ea,
+      width: String(standardWidth - (tongPaddingLeft * 2)) + ea,
       paddingTop: String(tongPaddingTop) + ea,
       paddingBottom: String(tongPaddingBottom) + ea,
-      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
+      left: "calc(50% - " + String((standardWidth - (tongPaddingLeft * 2)) / 2) + ea + ")",
+      textAlign: "center",
+    }
+  });
+
+  // news title
+  createNode({
+    mother: blockTong,
+    style: {
+      display: "flex",
+      position: "relative",
+      textAlign: "center",
+      width: String(100) + '%',
+      height: String(titleBoxHeight) + ea,
+      marginBottom: String(circleBoxMarginTop) + ea,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    children: [
+      {
+        text: "HomeLiaison News",
+        style: {
+          position: "relative",
+          top: String(titleTextTop) + ea,
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(titleWeight),
+          color: colorChip.black,
+          fontFamily: "graphik",
+        }
+      }
+    ]
+  });
+
+  // left arrow
+  createNode({
+    mother: blockTong,
+    mode: "svg",
+    event: {
+      click: (e) => { pushLeft(); },
+    },
+    source: instance.mother.returnArrow("left", colorChip.darkShadow),
+    style: {
+      display: "block",
+      position: "absolute",
+      top: String(arrowTop) + ea,
+      left: String(arrowLeft) + ea,
+      width: String(arrowWidth) + ea,
       cursor: "pointer",
     }
   });
 
+  // right arrow
   createNode({
     mother: blockTong,
-    text: "홈리에종에서 1:1 상담을 받아보세요!",
+    mode: "svg",
+    event: {
+      click: (e) => { pushRight(); },
+    },
+    source: instance.mother.returnArrow("right", colorChip.darkShadow),
     style: {
-      top: (isMac() || mobile) ? String(0) : String(3) + ea,
-      fontSize: String(titleSize) + ea,
-      fontWeight: String(titleWeight),
-      color: colorChip.white,
-      display: "inline-block",
-      position: "relative",
+      display: "block",
+      position: "absolute",
+      top: String(arrowTop) + ea,
+      right: String(arrowLeft) + ea,
+      width: String(arrowWidth) + ea,
+      cursor: "pointer",
     }
-  })
+  });
 
-  createNode({
+  // slide tong
+  slideTong = createNode({
     mother: blockTong,
-    text: "* 1차 응대 비용 무료",
-    style: {
-      top: (isMac() || mobile) ? String(0) : String(3) + ea,
-      fontSize: String(subTitleSize) + ea,
-      fontWeight: String(subTitleWeight),
-      color: colorChip.white,
-      display: "inline-block",
-      position: "relative",
-      marginLeft: String(subTitleMarginLeft) + ea,
-    }
-  })
-
-  createNode({
-    mother: blockTong,
-    class: [ "consultingButton" ],
     event: {
       click: (e) => {
-        selfHref(FRONTHOST + "/consulting.php");
+        selfHref(FRONTHOST + "/miniAbout.php");
       }
     },
     style: {
-      display: "flex",
-      position: "absolute",
-      justifyContent: "center",
-      alignItems: "center",
-      textAlign: "center",
-      right: String(0),
-      top: String(buttonTop) + ea,
-      width: String(buttonWidth) + ea,
-      height: String(buttonHeight) + ea,
-      borderRadius: String(buttonHeight) + ea,
-      background: colorChip.white,
-      boxShadow: "0px 2px 11px -9px " + colorChip.shadow,
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      height: String(grayHeight) + ea,
+      background: colorChip.gray1,
+      borderRadius: String(8) + "px",
+      overflow: "hidden",
+      transition: "all 0s ease",
       cursor: "pointer",
-    },
-    children: [
-      {
-        text: "서비스 신청",
-        style: {
-          position: "relative",
-          display: "inline-block",
-          top: String(buttonTextTop) + ea,
-          fontSize: String(buttonSize) + ea,
-          fontWeight: String(buttonWeight),
-          color: colorChip.black,
-        }
+    }
+  });
+  for (let i = 0; i < contents.slide.length; i++) {
+    images.push(createNode({
+      mother: slideTong,
+      style: {
+        display: "block",
+        position: "absolute",
+        width: String(100) + '%',
+        height: String(100) + '%',
+        top: String(0),
+        left: String(0),
+        backgroundImage: "url('" + contents.slide[i] + "')",
+        backgroundSize: "auto 100%",
+        backgroundPosition: "50% 50%",
+        transform: "translateX(" + String((i - 1) * indent) + "%)",
+        transition: "transform 0.9s ease",
+        zIndex: String(0),
       }
-    ]
-  })
+    }));
+  }
+
+  // circle tong
+  circleBox = createNode({
+    mother: blockTong,
+    style: {
+      display: "block",
+      position: "relative",
+      textAlign: "center",
+      marginTop: String(circleBoxMarginTop) + ea,
+    }
+  });
+  for (let i = 0; i < contents.slide.length; i++) {
+    circles.push(createNode({
+      mother: circleBox,
+      style: {
+        display: "inline-block",
+        width: String(circleRadius) + ea,
+        height: String(circleRadius) + ea,
+        borderRadius: String(circleRadius) + ea,
+        background: colorChip.shadow,
+        marginLeft: String(i === 0 ? 0 : circleBetween) + ea,
+        opacity: String(i === 0 ? circleOpacity : 1),
+      }
+    }));
+  }
+
+  setQueue(() => {
+    newNumber = null;
+    setInterval(pushRight, 5000);
+  }, 3000);
 
 }
 
@@ -2092,6 +2104,144 @@ FrontIndexJs.prototype.insertEndBox = function () {
 
 }
 
+FrontIndexJs.prototype.popupLaunching = function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref, blankHref } = GeneralJs;
+  const { ea, media, totalContents, standardWidth } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const popupFactorClassName = "popupFactorClassName";
+  const keyName = "homeliaisonPopupBan";
+  let cancelBack, whitePopup;
+  let image;
+  let zIndex;
+  let speed;
+  let delay;
+  let popupWidth, popupHeight;
+  let buttonSize, buttonWeight, buttonBottom;
+  let exitEvent;
+
+  zIndex = 101;
+  speed = 0.3;
+  delay = 0.8;
+  image = FrontIndexJs.binaryPath + "/popup" + String(media.findIndex(boo => boo)) + ".jpg";
+
+  popupWidth = <%% 600, 580, 550, 360, 20 %%>;
+  popupHeight = <%% 600, 580, 550, 475, 20 %%>;
+
+  buttonSize = <%% 16, 16, 15, 14, 3 %%>;
+  buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
+  buttonBottom = <%% -27, -27, -27, -25, -27 %%>;
+
+  exitEvent = () => {
+    const removeTargets = document.querySelectorAll('.' + popupFactorClassName);
+    for (let dom of removeTargets) {
+      totalContents.removeChild(dom);
+    }
+  }
+
+  if (window.localStorage.getItem(keyName) !== String(1)) {
+    cancelBack = createNode({
+      mother: totalContents,
+      class: [ popupFactorClassName ],
+      event: {
+        click: (e) => { exitEvent(); }
+      },
+      style: {
+        position: "fixed",
+        top: String(0),
+        left: String(0),
+        width: String(100) + '%',
+        height: String(100) + '%',
+        background: colorChip.realBlack,
+        opacity: String(0),
+        animation: "justfadein " + String(speed) + "s " + String(delay) + "s ease forwards",
+        zIndex: String(zIndex),
+      }
+    });
+
+    whitePopup = createNode({
+      mother: totalContents,
+      class: [ popupFactorClassName ],
+      event: {
+        click: (e) => {
+          blankHref(FRONTHOST + "/miniAbout.php");
+          exitEvent();
+        },
+      },
+      style: {
+        display: "block",
+        position: "fixed",
+        top: withOut(50, popupHeight / 2, ea),
+        left: withOut(50, popupWidth / 2, ea),
+        width: String(popupWidth) + ea,
+        height: String(popupHeight) + ea,
+        background: colorChip.white,
+        backgroundImage: "url('" + image + "')",
+        backgroundSize: "100% auto",
+        backgroundPosition: "50% 50%",
+        borderRadius: String(8) + "px",
+        animation: "fadeuporiginal " + String(speed) + "s " + String(delay) + "s ease forwards",
+        opacity: String(0),
+        transform: "translateY(20px)",
+        zIndex: String(zIndex),
+        cursor: "pointer",
+      },
+      children: [
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(0, ea),
+            height: withOut(0, ea),
+          },
+          children: [
+            {
+              text: "닫기",
+              event: {
+                click: (e) => {
+                  e.stopPropagation();
+                  exitEvent();
+                }
+              },
+              style: {
+                position: "absolute",
+                fontSize: String(buttonSize) + ea,
+                fontWeight: String(buttonWeight),
+                color: colorChip.white,
+                bottom: String(buttonBottom) + ea,
+                right: String(0) + ea,
+                cursor: "pointer",
+              }
+            },
+            {
+              text: "다시 보지 않기",
+              event: {
+                click: (e) => {
+                  e.stopPropagation();
+                  window.localStorage.setItem(keyName, String(1));
+                  exitEvent();
+                }
+              },
+              style: {
+                position: "absolute",
+                fontSize: String(buttonSize) + ea,
+                fontWeight: String(buttonWeight),
+                color: colorChip.white,
+                bottom: String(buttonBottom) + ea,
+                left: String(0) + ea,
+                cursor: "pointer",
+              }
+            },
+          ]
+        }
+      ]
+    });
+
+  }
+
+}
+
 FrontIndexJs.prototype.launching = async function (loading) {
   const instance = this;
   const { returnGet, ajaxJson, setQueue, setDebounce, serviceParsing } = GeneralJs;
@@ -2153,6 +2303,7 @@ FrontIndexJs.prototype.launching = async function (loading) {
           instance.insertStrongBox();
           instance.insertNewsBox();
           instance.insertEndBox();
+          instance.popupLaunching();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "FrontIndexJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
         }
