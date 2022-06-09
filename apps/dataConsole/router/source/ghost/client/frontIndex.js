@@ -634,14 +634,30 @@ FrontIndexJs.prototype.insertNewsBox = function () {
   let iconBottom;
   let iconRight;
   let blockMarginBottom;
+  let contents;
+  let slideTong;
+  let images;
+  let indent;
+  let number, newNumber;
+  let pushLeft, pushRight;
+  let grayHeight;
+  let arrowTop, arrowLeft, arrowWidth;
+  let circleBox;
+  let circleOpacity;
+  let circles;
+  let circleRadius;
+  let circleBetween;
+  let opacityNumber;
+  let circleBoxMarginTop;
+  let titleBoxHeight, titleTextTop, titleSize, titleWeight;
 
   speed = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
   mainHeight = <%% 240, 240, 240, 240, 40 %%>;
   margin = <%% 18, 16, 16, 12, 2 %%>;
 
   tongPaddingLeft = <%% 60, 50, 0, 0, 0 %%>;
-  tongPaddingTop = <%% 140, 130, 110, 90, 8 %%>;
-  tongPaddingBottom = <%% 140, 130, 110, 90, 8 %%>;
+  tongPaddingTop = <%% 160, 160, 150, 140, 8 %%>;
+  tongPaddingBottom = <%% 160, 160, 150, 140, 8 %%>;
 
   whiteTongPaddingLeft = <%% 32, 26, 26, 21, 4 %%>;
   whiteTongPaddingTop = <%% 21, 18, 18, 15, 3.5 %%>;
@@ -662,6 +678,112 @@ FrontIndexJs.prototype.insertNewsBox = function () {
 
   blockMarginBottom = <%% 3, 3, 3, 3, 2 %%>;
 
+  grayHeight = <%% 560, 560, 560, 560, 560 %%>;
+
+  arrowTop = <%% 500, 500, 500, 500, 50 %%>;
+  arrowLeft = <%% -50, -50, -50, -50, -50 %%>;
+  arrowWidth = <%% 14, 14, 14, 14, 14 %%>;
+
+  circleBoxMarginTop = <%% 24, 24, 24, 24, 4 %%>;
+  circleRadius = <%% 10, 10, 10, 10, 10 %%>;
+  circleBetween = <%% 8, 8, 8, 8, 8 %%>;
+
+  titleBoxHeight = <%% 40, 40, 40, 40, 40 %%>;
+  titleTextTop = <%% -2, -2, -2, -2, -2 %%>;
+  titleSize = <%% 24, 24, 24, 24, 4 %%>;
+  titleWeight = <%% 400, 400, 400, 400, 400 %%>;
+
+  indent = 100;
+  circleOpacity = 0.4;
+  images = [];
+  circles = [];
+
+  pushLeft = () => {
+    for (let image of images) {
+      number = Number(image.style.transform.replace(/[^0-9\-]/gi, ''));
+      newNumber = number + indent;
+      if (newNumber === (indent * 2)) {
+        newNumber = indent * ((images.length - 2) * -1);
+      }
+      if (newNumber === indent * ((images.length - 2) * -1)) {
+        image.style.zIndex = String(0);
+      } else {
+        image.style.zIndex = String(1);
+      }
+    }
+    for (let image of images) {
+      number = Number(image.style.transform.replace(/[^0-9\-]/gi, ''));
+      newNumber = number + indent;
+      if (newNumber === (indent * 2)) {
+        newNumber = indent * ((images.length - 2) * -1);
+      }
+      image.style.transform = "translateX(" + String(newNumber) + "%)";
+    }
+
+    opacityNumber = circles.findIndex((dom) => {
+      return Number(dom.style.opacity) === circleOpacity;
+    });
+    opacityNumber = opacityNumber - 1;
+    if (opacityNumber < 0) {
+      opacityNumber = circles.length - 1;
+    }
+    for (let i = 0; i < circles.length; i++) {
+      if (i === opacityNumber) {
+        circles[i].style.opacity = String(circleOpacity);
+      } else {
+        circles[i].style.opacity = String(1);
+      }
+    }
+
+  }
+
+  pushRight = () => {
+    for (let image of images) {
+      number = Number(image.style.transform.replace(/[^0-9\-]/gi, ''));
+      newNumber = number - indent;
+      if (newNumber === (indent * -2)) {
+        newNumber = indent * (images.length - 2);
+      }
+      if (newNumber === indent * (images.length - 2)) {
+        image.style.zIndex = String(0);
+      } else {
+        image.style.zIndex = String(1);
+      }
+    }
+    for (let image of images) {
+      number = Number(image.style.transform.replace(/[^0-9\-]/gi, ''));
+      newNumber = number - indent;
+      if (newNumber === (indent * -2)) {
+        newNumber = indent * (images.length - 2);
+      }
+      image.style.transform = "translateX(" + String(newNumber) + "%)";
+    }
+
+    opacityNumber = circles.findIndex((dom) => {
+      return Number(dom.style.opacity) === circleOpacity;
+    });
+    opacityNumber = opacityNumber + 1;
+    if (opacityNumber === circles.length) {
+      opacityNumber = 0;
+    }
+    for (let i = 0; i < circles.length; i++) {
+      if (i === opacityNumber) {
+        circles[i].style.opacity = String(circleOpacity);
+      } else {
+        circles[i].style.opacity = String(1);
+      }
+    }
+
+  }
+
+  contents = {
+    slide: [
+      FrontIndexJs.binaryPath + "/news2.jpg",
+      FrontIndexJs.binaryPath + "/news0.jpg",
+      FrontIndexJs.binaryPath + "/news1.jpg",
+    ]
+  }
+
   mainTong = createNode({
     mother: totalContents,
     style: {
@@ -672,6 +794,7 @@ FrontIndexJs.prototype.insertNewsBox = function () {
     },
   });
 
+  // contents base
   blockTong = createNode({
     mother: mainTong,
     style: {
@@ -685,17 +808,133 @@ FrontIndexJs.prototype.insertNewsBox = function () {
     }
   });
 
+  // news title
   createNode({
     mother: blockTong,
     style: {
-      display: "inline-block",
+      display: "flex",
       position: "relative",
+      textAlign: "center",
       width: String(100) + '%',
-      height: String(560) + ea,
-      background: colorChip.gray1,
-      borderRadius: String(5) + "px",
+      height: String(titleBoxHeight) + ea,
+      marginBottom: String(circleBoxMarginTop) + ea,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    children: [
+      {
+        text: "HomeLiaison News",
+        style: {
+          position: "relative",
+          top: String(titleTextTop) + ea,
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(titleWeight),
+          color: colorChip.black,
+          fontFamily: "graphik",
+        }
+      }
+    ]
+  });
+
+  // left arrow
+  createNode({
+    mother: blockTong,
+    mode: "svg",
+    event: {
+      click: (e) => { pushLeft(); },
+    },
+    source: instance.mother.returnArrow("left", colorChip.darkShadow),
+    style: {
+      display: "block",
+      position: "absolute",
+      top: String(arrowTop) + ea,
+      left: String(arrowLeft) + ea,
+      width: String(arrowWidth) + ea,
+      cursor: "pointer",
     }
   });
+
+  // right arrow
+  createNode({
+    mother: blockTong,
+    mode: "svg",
+    event: {
+      click: (e) => { pushRight(); },
+    },
+    source: instance.mother.returnArrow("right", colorChip.darkShadow),
+    style: {
+      display: "block",
+      position: "absolute",
+      top: String(arrowTop) + ea,
+      right: String(arrowLeft) + ea,
+      width: String(arrowWidth) + ea,
+      cursor: "pointer",
+    }
+  });
+
+  // slide tong
+  slideTong = createNode({
+    mother: blockTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      height: String(grayHeight) + ea,
+      background: colorChip.gray1,
+      borderRadius: String(8) + "px",
+      overflow: "hidden",
+      transition: "all 0s ease",
+    }
+  });
+  for (let i = 0; i < contents.slide.length; i++) {
+    images.push(createNode({
+      mother: slideTong,
+      style: {
+        display: "block",
+        position: "absolute",
+        width: String(100) + '%',
+        height: String(100) + '%',
+        top: String(0),
+        left: String(0),
+        backgroundImage: "url('" + contents.slide[i] + "')",
+        backgroundSize: "auto 100%",
+        backgroundPosition: "50% 50%",
+        transform: "translateX(" + String((i - 1) * indent) + "%)",
+        transition: "transform 0.9s ease",
+        zIndex: String(0),
+      }
+    }));
+  }
+
+  // circle tong
+  circleBox = createNode({
+    mother: blockTong,
+    style: {
+      display: "block",
+      position: "relative",
+      textAlign: "center",
+      marginTop: String(circleBoxMarginTop) + ea,
+    }
+  });
+  for (let i = 0; i < contents.slide.length; i++) {
+    circles.push(createNode({
+      mother: circleBox,
+      style: {
+        display: "inline-block",
+        width: String(circleRadius) + ea,
+        height: String(circleRadius) + ea,
+        borderRadius: String(circleRadius) + ea,
+        background: colorChip.shadow,
+        marginLeft: String(i === 0 ? 0 : circleBetween) + ea,
+        opacity: String(i === 0 ? circleOpacity : 1),
+      }
+    }));
+  }
+
+  setQueue(() => {
+    newNumber = null;
+    setInterval(pushRight, 5000);
+  }, 3000);
 
 }
 
