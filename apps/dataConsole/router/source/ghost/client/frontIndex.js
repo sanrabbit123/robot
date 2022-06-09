@@ -480,7 +480,7 @@ FrontIndexJs.prototype.insertAboutBox = function () {
   buttonLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
   buttonTop = <%% 436, 397, 358, 282, 397 %%>;
   buttonPaddingTop = <%% (isMac() ? 5 : 6), (isMac() ? 5 : 6), (isMac() ? 5 : 6), (isMac() ? 5 : 6), 1.2 %%>;
-  buttonPaddingBottom = <%% (isMac() ? 7 : 6), (isMac() ? 7 : 6), (isMac() ? 7 : 6), (isMac() ? 7 : 6), 1.5 %%>;
+  buttonPaddingBottom = <%% (isMac() ? 7 : 6), (isMac() ? 7 : 6), (isMac() ? 7 : 6), (isMac() ? 7 : 6), 1.6 %%>;
   buttonPaddingLeft = <%% 20, 20, 20, 20, 4 %%>;
 
   mobileBlockPadding = 14.5;
@@ -1748,7 +1748,7 @@ FrontIndexJs.prototype.insertNewsBox = function () {
 
   titleBoxHeight = <%% 40, 36, 26, 25, 4 %%>;
   titleTextTop = <%% -2, -2, -2, -2, 0 %%>;
-  titleSize = <%% 24, 23, 22, 20, 3.8 %%>;
+  titleSize = <%% 24, 23, 22, 20, 4 %%>;
   titleWeight = <%% 400, 400, 400, 400, 400 %%>;
 
   indent = 100;
