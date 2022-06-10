@@ -92,15 +92,172 @@ DevContext.prototype.launching = async function () {
     let user;
 
     user = {
+      useid: "",
+      desid: "",
       name: "",
       phone: "",
       email: "",
-      useid: "",
+      service: {
+        serid: "",
+        xValue: "",
+        online: true,
+      },
       request: {
-
+        timeline: new Date(1800, 0, 1),
+        status: "",
+        complete: false,
+        alarm: false,
+        space: {
+          address: "",
+          targets: 0,
+        },
+        comments: {
+          init: "",
+          style: "",
+          budget: "",
+          size: "",
+          etc: "",
+        },
+        photo: [
+          {
+            date: new Date(1800, 0, 1),
+            method: "",
+            key: "",
+            target: 0,
+          }
+        ],
+        payment: {
+          date: new Date(1800, 0, 1),
+          cancel: new Date(1800, 0, 1),
+          oid: "",
+          amount: {
+            supply: 0,
+            vat: 0,
+            consumer: 0,
+          },
+          info: {
+            method: "",
+            proof: "",
+            to: "",
+            data: [],
+          },
+          refund: 0,
+        }
       },
       response: {
-
+        timeline: new Date(1800, 0, 1),
+        status: "",
+        complete: false,
+        alarm: false,
+        history: [
+          {
+            send: new Date(1800, 0, 1),
+            read: new Date(1800, 0, 1),
+          }
+        ],
+        design: [
+          {
+            concept: [
+              {
+                date: new Date(1800, 0, 1),
+                confirm: new Date(1800, 0, 1),
+                key: "",
+                name: "",
+                target: 0,
+                space: 0,
+                comments: {
+                  designer: "",
+                  client: "",
+                  homeliaison: "",
+                }
+              }
+            ],
+            proposal: [
+              {
+                date: new Date(1800, 0, 1),
+                confirm: new Date(1800, 0, 1),
+                key: "",
+                name: "",
+                target: 0,
+                space: 0,
+                comments: {
+                  designer: "",
+                  client: "",
+                  homeliaison: "",
+                }
+              }
+            ],
+            photo: [
+              {
+                date: new Date(1800, 0, 1),
+                confirm: new Date(1800, 0, 1),
+                key: "",
+                name: "",
+                target: 0,
+                space: 0,
+                comments: {
+                  designer: "",
+                  client: "",
+                  homeliaison: "",
+                }
+              }
+            ],
+            list: [
+              {
+                date: new Date(1800, 0, 1),
+                confirm: new Date(1800, 0, 1),
+                key: "",
+                name: "",
+                target: 0,
+                space: 0,
+                detail: [
+                  {
+                    image: "",
+                    name: "",
+                    number: 0,
+                    price: {
+                      unit: 0,
+                      delivery: 0
+                    },
+                    detail: "",
+                    where: {
+                      name: "",
+                      link: "",
+                    }
+                  }
+                ],
+                comments: {
+                  designer: "",
+                  client: "",
+                  homeliaison: "",
+                }
+              }
+            ],
+          }
+        ],
+        consulting: [
+          {
+            date: new Date(1800, 0, 1),
+            comments: {
+              designer: "",
+              client: "",
+              homeliaison: "",
+            }
+          }
+        ],
+        calculation: {
+          date: new Date(1800, 0, 1),
+          cancel: new Date(1800, 0, 1),
+          method: "",
+          percentage: 0,
+          amount: 0,
+          info: {
+            account: "",
+            proof: "",
+            to: "",
+          },
+          refund: 0,
+        }
       }
     };
 
@@ -2620,7 +2777,7 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2205_aa02s" ]);
+    // await work.newDesignerToFront([ "d2112_aa01s" ]);
 
 
     // new designer set proposal setting
