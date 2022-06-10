@@ -2726,6 +2726,182 @@ BackMaker.prototype.createBuilder = async function (updateQuery, option = { self
   }
 }
 
+// GET user --------------------------------------------------------------------------------
+
+BackMaker.prototype.getUserById = async function (useid, option = { withTools: false, selfMongo: null, portfolioReset: null, devAlive: false }) {
+  const instance = this;
+  const { mongo, mongoinfo } = this.mother;
+  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  const button = "user";
+  let { User, Users, Tools } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/${button}/addOn/generator.js`);
+  try {
+    let arr, target;
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      await MONGOC.connect();
+      arr = await MONGOC.db(`miro81`).collection(button).find({ useid }).toArray();
+      await MONGOC.close();
+    } else {
+      arr = await option.selfMongo.db(`miro81`).collection(button).find({ useid }).toArray();
+    }
+
+    if (option.withTools) {
+      User = Tools.withTools(User);
+    }
+
+    if (arr.length > 0) {
+      target = new User(arr[0]);
+    } else {
+      target = null;
+    }
+
+    return target;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BackMaker.prototype.getUsersByQuery = async function (query, option = { withTools: false, selfMongo: null, fromLocal: null, devAlive: false }) {
+  const instance = this;
+  const { mongo, mongoinfo, mongolocalinfo } = this.mother;
+  let MONGOC;
+  if (option.fromLocal === true) {
+    MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+  } else {
+    MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  }
+  const button = "user";
+  let { User, Users, Tools } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/${button}/addOn/generator.js`);
+  try {
+    let tong, usersArr;
+    let sortQuery;
+
+    if (option.sort === undefined) {
+      sortQuery = { "request.timeline": -1 };
+    } else {
+      sortQuery = option.sort;
+    }
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      await MONGOC.connect();
+      if (option.limit !== undefined) {
+        tong = await MONGOC.db(`miro81`).collection(button).find(query).sort(sortQuery).limit(Number(option.limit)).toArray();
+      } else {
+        tong = await MONGOC.db(`miro81`).collection(button).find(query).sort(sortQuery).toArray();
+      }
+      await MONGOC.close();
+    } else {
+      if (option.limit !== undefined) {
+        tong = await option.selfMongo.db(`miro81`).collection(button).find(query).sort(sortQuery).limit(Number(option.limit)).toArray();
+      } else {
+        tong = await option.selfMongo.db(`miro81`).collection(button).find(query).sort(sortQuery).toArray();
+      }
+    }
+
+    if (!option.withTools) {
+      usersArr = new Users();
+      for (let i of tong) {
+        usersArr.push(new User(i));
+      }
+    } else {
+      User = Tools.withTools(User);
+      Users = Tools.withToolsArr(Users);
+      usersArr = new Users();
+      for (let i of tong) {
+        usersArr.push(new User(i));
+      }
+    }
+
+    return usersArr;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BackMaker.prototype.updateUser = async function (queryArr, option = { selfMongo: null, devAlive: false }) {
+  if (queryArr.length !== 2) {
+    throw new Error("invaild arguments : query object must be Array: [ Object: whereQuery, Object: updateQuery ]");
+  }
+  const instance = this;
+  const { mongo, mongoinfo } = this.mother;
+  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  const button = "user";
+  try {
+    const [ whereQuery, updateQuery ] = queryArr;
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      await MONGOC.connect();
+      await MONGOC.db(`miro81`).collection(button).updateOne(whereQuery, { $set: updateQuery });
+      await MONGOC.close();
+    } else {
+      await option.selfMongo.db(`miro81`).collection(button).updateOne(whereQuery, { $set: updateQuery });
+    }
+
+    return "success";
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BackMaker.prototype.deleteUser = async function (useid, option = { selfMongo: null, devAlive: false }) {
+  const instance = this;
+  const { mongo, mongoinfo } = this.mother;
+  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  const button = "user";
+  try {
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      await MONGOC.connect();
+      await MONGOC.db(`miro81`).collection(button).deleteOne({ useid });
+      await MONGOC.close();
+    } else {
+      await option.selfMongo.db(`miro81`).collection(button).deleteOne({ useid });
+    }
+    return "success";
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BackMaker.prototype.createUser = async function (updateQuery, option = { selfMongo: null, devAlive: false }) {
+  const instance = this;
+  const { mongo, mongoinfo } = this.mother;
+  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  const button = "user";
+  const map = require(`${option.devAlive === true ? this.devMapDir : this.mapDir}/user.js`);
+  try {
+    let dummy, latestUser, latestUserArr;
+    let newOption = {};
+    let temp;
+
+    if (option.selfMongo !== undefined && option.selfMongo !== null) {
+      newOption.selfMongo = option.selfMongo;
+    }
+    newOption.withTools = false;
+    newOption.sort = { "useid": -1 };
+    newOption.limit = 1;
+
+    latestUserArr = await this.getUsersByQuery({}, newOption);
+    latestUser = latestUserArr[0];
+
+    dummy = map.main();
+    dummy.structure.useid = this.idMaker(latestUser.useid);
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      await MONGOC.connect();
+      await MONGOC.db(`miro81`).collection(button).insertOne(dummy.structure);
+      await MONGOC.close();
+    } else {
+      await option.selfMongo.db(`miro81`).collection(button).insertOne(dummy.structure);
+    }
+
+    await this.updateUser([ { useid: dummy.structure.useid }, updateQuery ], option);
+
+    return dummy.structure.useid;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 // GET history --------------------------------------------------------------------------------
 
 BackMaker.prototype.getHistoryById = async function (method, id, option = { fromConsole: false, selfMongo: null }) {
