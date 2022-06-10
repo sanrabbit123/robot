@@ -2292,6 +2292,7 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
     const zIndex = 4;
     const popupClassName = "popupClassName";
     const inputClassName = "userInputClassName";
+    const priceTargetClassName = "priceTargetClassName";
     const initialPrice = 220000;
     let cancelBack, whiteBase;
     let whiteWidth;
@@ -3103,15 +3104,25 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
               this.value = this.value.replace(/[^0-9]/gi, '');
             },
             blur: function (e) {
+              const priceTarget = document.querySelector('.' + priceTargetClassName);
               const final = this.value.trim().replace(/[^0-9]/gi, '');
               let finalNumber;
+              let finalPrice;
+
               if (final === '' || Number.isNaN(Number(final))) {
                 finalNumber = 1;
               } else {
-                finalNumber = Number(final);
+                if (Number(final) === 0) {
+                  finalNumber = 1;
+                } else {
+                  finalNumber = Number(final);
+                }
               }
               this.value = String(finalNumber) + "개";
 
+              finalPrice = initialPrice * finalNumber;
+              priceTarget.setAttribute("price", String(finalPrice));
+              priceTarget.textContent = autoComma(finalPrice) + '원';
             }
           },
           style: {
@@ -3345,6 +3356,10 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
 
     createNode({
       mother: paymentArea,
+      class: [ priceTargetClassName ],
+      attribute: {
+        price: String(initialPrice),
+      },
       text: autoComma(initialPrice) + "원",
       style: {
         display: "inline-block",
