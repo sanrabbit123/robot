@@ -2293,6 +2293,7 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
     const popupClassName = "popupClassName";
     const inputClassName = "userInputClassName";
     const priceTargetClassName = "priceTargetClassName";
+    const agreeTargetClassName = "agreeTargetClassName";
     const initialPrice = 220000;
     let cancelBack, whiteBase;
     let whiteWidth;
@@ -2348,6 +2349,7 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
     let whiteMaxHeight;
     let addressPromptWidth;
     let addressPromptHeight;
+    let agreeEvent;
 
     whiteWidth = <%% 1000, 1000, 800, 660, 88 %%>;
     whiteMargin = <%% 54, 54, 54, 54, 6 %%>;
@@ -2432,6 +2434,29 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
 
     addressPromptWidth = <%% 600, 600, 600, 600, 80 %%>;
     addressPromptHeight = <%% 450, 450, 450, 450, 90 %%>;
+
+    agreeEvent = function (e) {
+      const targets = document.querySelectorAll('.' + agreeTargetClassName);
+      for (let dom of targets) {
+        if (dom.getAttribute("circle") === "true") {
+          if (dom.getAttribute("toggle") === "on") {
+            dom.style.background = colorChip.gray4;
+            dom.setAttribute("toggle", "off");
+          } else {
+            dom.style.background = colorChip.green;
+            dom.setAttribute("toggle", "on");
+          }
+        } else {
+          if (dom.getAttribute("toggle") === "on") {
+            dom.style.color = colorChip.deactive;
+            dom.setAttribute("toggle", "off");
+          } else {
+            dom.style.color = colorChip.green;
+            dom.setAttribute("toggle", "on");
+          }
+        }
+      }
+    }
 
     cancelBack = createNode({
       mother: totalContents,
@@ -3304,6 +3329,12 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
       },
       children: [
         {
+          class: [ agreeTargetClassName ],
+          event: { click: agreeEvent },
+          attribute: {
+            toggle: "on",
+            circle: "true",
+          },
           style: {
             display: "inline-block",
             position: "relative",
@@ -3314,15 +3345,22 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
             background: colorChip.green,
             top: String(agreeCircleTop) + ea,
             verticalAlign: "top",
+            cursor: "pointer",
           }
         },
         {
           text: "상기 개인정보 취급 방침에 동의합니다.",
+          class: [ agreeTargetClassName ],
+          event: { click: agreeEvent },
+          attribute: {
+            toggle: "on",
+          },
           style: {
             display: "inline-block",
             fontSize: String(agreeSize) + ea,
             fontWeight: String(agreeWeight),
             color: colorChip.green,
+            cursor: "pointer",
           }
         }
       ]
