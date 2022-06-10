@@ -511,7 +511,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
               dom.remove();
             }
             if (GeneralJs.stacks["addressEvent"] !== null && GeneralJs.stacks["addressEvent"] !== undefined) {
-              window.removeEventListener('message', GeneralJs.stacks["addressEvent"]);
+              window.removeEventListener("message", GeneralJs.stacks["addressEvent"]);
               GeneralJs.stacks["addressEvent"] = null;
             }
           }
@@ -645,7 +645,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
     const self = this;
     const mother = this.previousElementSibling;
 
-    this.value = this.value.replace(/[^0-9\.]/gi, '');
+    this.value = this.value.replace(/[\=\+\?\#\&]/gi, '');
 
     createNode({
       mode: "aside",

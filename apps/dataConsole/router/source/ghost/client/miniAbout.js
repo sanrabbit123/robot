@@ -2284,13 +2284,15 @@ MiniAboutJs.prototype.insertFaqBox = function () {
 
 MiniAboutJs.prototype.whiteSubmitEvent = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, ajaxJson, setQueue } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, ajaxJson, setQueue, autoHypenPhone, findByAttribute, autoComma } = GeneralJs;
   const { ea, media, standardWidth, totalContents, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
   return function (e) {
     const zIndex = 4;
     const popupClassName = "popupClassName";
+    const inputClassName = "userInputClassName";
+    const initialPrice = 220000;
     let cancelBack, whiteBase;
     let whiteWidth;
     let whiteMargin;
@@ -2343,6 +2345,8 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
     let paymentAmountSize, paymentAmountWeight, paymentAmountTop, paymentAmountBetween;
     let paymentButtonSize, paymentButtonWeight, paymentButtonTop, paymentButtonPaddingTop, paymentButtonPaddingBottom, paymentButtonPaddingLeft;
     let whiteMaxHeight;
+    let addressPromptWidth;
+    let addressPromptHeight;
 
     whiteWidth = <%% 1000, 1000, 800, 660, 88 %%>;
     whiteMargin = <%% 54, 54, 54, 54, 6 %%>;
@@ -2424,6 +2428,9 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
     paymentButtonPaddingTop = <%% (isMac() ? 8 : 10), (isMac() ? 8 : 10), (isMac() ? 8 : 10), (isMac() ? 8 : 10), 2 %%>;
     paymentButtonPaddingBottom = <%% (isMac() ? 10 : 9), (isMac() ? 10 : 9), (isMac() ? 10 : 9), (isMac() ? 10 : 9), 2.5 %%>;
     paymentButtonPaddingLeft = <%% 18, 18, 18, 18, 3.5 %%>;
+
+    addressPromptWidth = <%% 600, 600, 600, 600, 80 %%>;
+    addressPromptHeight = <%% 450, 450, 450, 450, 90 %%>;
 
     cancelBack = createNode({
       mother: totalContents,
@@ -2584,11 +2591,20 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
         },
         {
           mode: "input",
+          class: [ inputClassName ],
           attribute: {
             type: "text",
             placeholder: "성함",
             property: "name",
             value: "",
+          },
+          event: {
+            keyup: function (e) {
+              this.value = this.value.replace(/[^a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣]/gi, '');
+            },
+            blur: function (e) {
+              this.value = this.value.replace(/[^a-zA-Z가-힣]/gi, '');
+            }
           },
           style: {
             position: "absolute",
@@ -2655,11 +2671,20 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
         },
         {
           mode: "input",
+          class: [ inputClassName ],
           attribute: {
             type: "text",
             placeholder: "010-0000-0000",
             property: "phone",
             value: "",
+          },
+          event: {
+            keyup: function (e) {
+              this.value = autoHypenPhone(this.value);
+            },
+            blur: function (e) {
+              this.value = this.value.replace(/[^0-9\-]/gi, '');
+            }
           },
           style: {
             position: "absolute",
@@ -2726,11 +2751,23 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
         },
         {
           mode: "input",
+          class: [ inputClassName ],
           attribute: {
             type: "text",
             placeholder: "example@home-liaison.com",
             property: "email",
             value: "",
+          },
+          event: {
+            keyup: function (e) {
+              this.value = this.value.replace(/[\=\+\?\#\&\(\)]/gi, '');
+            },
+            blur: function (e) {
+              if (!/\@/.test(this.value) || !/\./.test(this.value)) {
+                window.alert("올바른 형태의 이메일로 적어주세요!");
+                this.value = this.value.replace(/[\=\+\?\#\&\(\)]/gi, '');
+              }
+            }
           },
           style: {
             position: "absolute",
@@ -2786,6 +2823,93 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
           }
         },
         {
+          event: {
+            click: function (e) {
+              const addressSearchClassName = "addressSearchClassName";
+              const zIndex = 102;
+              let cancelBack, searchWhite;
+
+              GeneralJs.stacks["addressEvent"] = async function (e) {
+                try {
+                  if (typeof e.data === "string") {
+                    findByAttribute(document.querySelectorAll('.' + inputClassName), "property", "address0").value = e.data.trim();
+                    findByAttribute(document.querySelectorAll('.' + inputClassName), "property", "address1").value = '';
+                    findByAttribute(document.querySelectorAll('.' + inputClassName), "property", "address1").focus();
+                  }
+                  const targets = document.querySelectorAll('.' + addressSearchClassName);
+                  for (let dom of targets) {
+                    dom.remove();
+                  }
+                  window.removeEventListener("message", GeneralJs.stacks["addressEvent"]);
+                  GeneralJs.stacks["addressEvent"] = null;
+                } catch (e) {
+                  await GeneralJs.ajaxJson({ message: "ClientConsultingJs.addressEvent : " + e.message }, "/errorLog");
+                }
+              }
+              window.addEventListener("message", GeneralJs.stacks["addressEvent"]);
+
+              cancelBack = createNode({
+                mother: totalContents,
+                class: [ addressSearchClassName ],
+                event: {
+                  click: (e) => {
+                    const targets = document.querySelectorAll('.' + addressSearchClassName);
+                    for (let dom of targets) {
+                      dom.remove();
+                    }
+                    if (GeneralJs.stacks["addressEvent"] !== null && GeneralJs.stacks["addressEvent"] !== undefined) {
+                      window.removeEventListener("message", GeneralJs.stacks["addressEvent"]);
+                      GeneralJs.stacks["addressEvent"] = null;
+                    }
+                  },
+                },
+                style: {
+                  position: "fixed",
+                  top: String(0),
+                  left: String(0),
+                  width: String(100) + '%',
+                  height: String(100) + '%',
+                  background: "transparent",
+                  zIndex: String(zIndex),
+                }
+              });
+
+              searchWhite = createNode({
+                mother: totalContents,
+                class: [ addressSearchClassName ],
+                style: {
+                  position: "fixed",
+                  left: "calc(50% - " + String(addressPromptWidth / 2) + ea + ")",
+                  top: "calc(50% - " + String(addressPromptHeight / 2) + ea + ")",
+                  width: String(addressPromptWidth) + ea,
+                  height: String(addressPromptHeight) + ea,
+                  zIndex: String(zIndex),
+                  background: colorChip.white,
+                  borderRadius: String(3) + "px",
+                  boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                  animation: "fadeuphard 0.3s ease forwards",
+                  overflow: "hidden",
+                },
+                children: [
+                  {
+                    mode: "iframe",
+                    attribute: [
+                      { src: window.location.protocol + "//" + GHOSTHOST + "/tools/addressLite" },
+                      { width: String(100) + '%' },
+                      { height: String(100) + '%' },
+                    ],
+                    style: {
+                      position: "absolute",
+                      top: String(0) + ea,
+                      left: String(0) + ea,
+                      border: String(0),
+                    }
+                  }
+                ]
+              });
+
+            }
+          },
           style: {
             position: "absolute",
             top: String(grayTop) + ea,
@@ -2824,6 +2948,12 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
         },
         {
           mode: "input",
+          class: [ inputClassName ],
+          event: {
+            keyup: function (e) {
+              this.value = this.value.replace(/[\=\+\?\#\&]/gi, '');
+            },
+          },
           attribute: {
             type: "text",
             placeholder: "인테리어 받을 곳의 주소",
@@ -2871,6 +3001,12 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
         },
         {
           mode: "input",
+          class: [ inputClassName ],
+          event: {
+            keyup: function (e) {
+              this.value = this.value.replace(/[\=\+\?\#\&]/gi, '');
+            },
+          },
           attribute: {
             type: "text",
             placeholder: "인테리어 받을 곳의 상세 주소",
@@ -2955,11 +3091,28 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
         },
         {
           mode: "input",
+          class: [ inputClassName ],
           attribute: {
             type: "text",
             placeholder: "00개",
-            property: "pyeong",
+            property: "targets",
             value: "",
+          },
+          event: {
+            keyup: function (e) {
+              this.value = this.value.replace(/[^0-9]/gi, '');
+            },
+            blur: function (e) {
+              const final = this.value.trim().replace(/[^0-9]/gi, '');
+              let finalNumber;
+              if (final === '' || Number.isNaN(Number(final))) {
+                finalNumber = 1;
+              } else {
+                finalNumber = Number(final);
+              }
+              this.value = String(finalNumber) + "개";
+
+            }
           },
           style: {
             position: "absolute",
@@ -3026,9 +3179,18 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
         },
         {
           mode: "textarea",
+          class: [ inputClassName ],
           attribute: {
             placeholder: desktop ? "선호하는 스타일 + 공간의 특이 사항을 적어주세요!" : "선호하는 스타일 + 공간의 특이 사항을\n적어주세요!",
             property: "etc",
+          },
+          event: {
+            keyup: function (e) {
+              this.value = this.value.replace(/[\=\+\?\#\&]/gi, '');
+            },
+            blur: function (e) {
+              this.value = this.value.replace(/[\=\+\?\#\&]/gi, '');
+            }
           },
           style: {
             position: "absolute",
@@ -3183,7 +3345,7 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
 
     createNode({
       mother: paymentArea,
-      text: "220,000원",
+      text: autoComma(initialPrice) + "원",
       style: {
         display: "inline-block",
         position: "relative",
