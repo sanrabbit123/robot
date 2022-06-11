@@ -30,7 +30,8 @@ BackMaker.coreDatabaseNames = [
       "client",
       "project",
       "designer",
-      "contents"
+      "contents",
+      "user"
     ]
   ],
   // [
@@ -258,7 +259,8 @@ BackMaker.prototype.getMap = function (mode = "id", type = "array") {
         { standard: "conid", method: "getContentsById" },
         { standard: "aspid", method: "getAspirantById" },
         { standard: "serid", method: "getServiceById" },
-        { standard: "nulid", method: "getNothingById" }
+        { standard: "nulid", method: "getNothingById" },
+        { standard: "useid", method: "getUserById" },
       ];
     } else {
       map = {
@@ -268,7 +270,8 @@ BackMaker.prototype.getMap = function (mode = "id", type = "array") {
         contents: { standard: "conid", method: "getContentsById" },
         aspirant: { standard: "aspid", method: "getAspirantById" },
         service: { standard: "serid", method: "getServiceById" },
-        nothing: { standard: "nulid", method: "getNothingById" }
+        nothing: { standard: "nulid", method: "getNothingById" },
+        user: { standard: "useid", method: "getUserById" },
       };
     }
     return map;

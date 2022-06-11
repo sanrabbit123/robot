@@ -2,6 +2,42 @@ const GENERAL_DIR = process.cwd() + "/apps/backMaker/alive/general";
 const USER_DIR = process.cwd() + "/apps/backMaker/alive/user";
 const { DateParse, Menu, Address } = require(GENERAL_DIR + "/generator.js");
 
+const CalculationInfo = function (json) {
+  this.account = json.account;
+  this.proof = json.proof;
+  this.to = json.to;
+}
+
+CalculationInfo.prototype.toNormal = function () {
+  let obj = {};
+  obj.account = this.account;
+  obj.proof = this.proof;
+  obj.to = this.to;
+  return obj;
+}
+
+const Calculation = function (json) {
+  this.date = new DateParse(json.date);
+  this.cancel = new DateParse(json.cancel);
+  this.method = json.method;
+  this.percentage = json.percentage;
+  this.amount = json.amount;
+  this.info = new CalculationInfo(json.info);
+  this.refund = json.refund;
+}
+
+Calculation.prototype.toNormal = function () {
+  let obj = {};
+  obj.date = this.date.toNormal();
+  obj.cancel = this.cancel.toNormal();
+  obj.method = this.method;
+  obj.percentage = this.percentage;
+  obj.amount = this.amount;
+  obj.info = this.info.toNormal();
+  obj.refund = this.refund;
+  return obj;
+}
+
 const ConsultingComments = function (json) {
   this.designer = json.designer;
   this.client = json.client;

@@ -4641,29 +4641,84 @@ DataRouter.prototype.rou_post_generalImpPayment = function () {
   return obj;
 }
 
-// {
-//   "success": true,
-//   "imp_uid": "imp_933478384262",
-//   "pay_method": "card",
-//   "merchant_uid": "homeliaisonMini_01027473403_165492047730",
-//   "name": "HomeLiaison Mini",
-//   "paid_amount": 10,
-//   "currency": "KRW",
-//   "pg_provider": "html5_inicis",
-//   "pg_type": "payment",
-//   "pg_tid": "StdpayCARDMOIhomeli120220611130840573029",
-//   "apply_num": "00114731",
-//   "buyer_name": "배창규",
-//   "buyer_email": "uragenbooks@gmail.com",
-//   "buyer_tel": "010-2747-3403",
-//   "buyer_addr": "",
-//   "buyer_postcode": "",
-//   "custom_data": null,
-//   "status": "paid",
-//   "paid_at": 1654920521,
-//   "receipt_url": "https://iniweb.inicis.com/DefaultWebApp/mall/cr/cm/mCmReceipt_head.jsp?noTid=StdpayCARDMOIhomeli120220611130840573029&noMethod=1",
-//   "card_name": "현대카드",
-//   "bank_name": null,
-//   "card_quota": 0,
-//   "card_number": "550000000150"
-// }
+DataRouter.prototype.rou_post_userSubmit = function () {
+  const instance = this;
+  const back = this.back;
+  const { errorLog, equalJson, requestSystem, dateToString, messageSend } = this.mother;
+  let obj = {};
+  obj.link = [ "/userSubmit" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.map === undefined) {
+        throw new Error("invaild post");
+      }
+      const selfMongo = instance.mongo;
+      const map = equalJson(req.body.map);
+      let useid;
+      let name, phone, email, address, targets, etc, oid, rsp;
+      let updateQuery;
+      let message;
+
+      // filtering
+      name = map.name.replace(/[^a-zA-Z가-힣]/gi, '');
+      phone = map.phone.replace(/[^0-9\-]/gi, '');
+      email = map.email.trim();
+      address = map.address.trim();
+      targets = Number(map.targets);
+      etc = map.etc.trim();
+      oid = map.oid.trim();
+      rsp = equalJson(map.rsp);
+
+      // create user
+      updateQuery = { name, phone, email };
+      updateQuery["service.serid"] = "s2011_aa05s";
+      updateQuery["service.xValue"] = "B";
+      updateQuery["request.timeline"] = new Date();
+      updateQuery["request.status"] = "결제 완료";
+      updateQuery["request.alarm"] = true;
+      updateQuery["request.space.address"] = address;
+      updateQuery["request.space.targets"] = targets;
+      updateQuery["request.comments.init"] = etc;
+      updateQuery["request.payment.date"] = new Date();
+      updateQuery["request.payment.oid"] = oid;
+      updateQuery["request.payment.amount.consumer"] = Math.floor(Number(rsp.paid_amount));
+      updateQuery["request.payment.amount.vat"] = Math.floor(updateQuery["request.payment.amount.consumer"] / 11);
+      updateQuery["request.payment.amount.supply"] = Math.floor(updateQuery["request.payment.amount.consumer"] - updateQuery["request.payment.amount.vat"]);
+      updateQuery["request.payment.info.method"] = "카드(" + rsp.card_name.replace(/카드/gi, '') + ")";
+      updateQuery["request.payment.info.proof"] = "이니시스";
+      updateQuery["request.payment.info.to"] = name;
+      updateQuery["request.payment.info.data"] = [ rsp ];
+
+      useid = await back.createUser(updateQuery, { selfMongo });
+
+      // alimtalk
+
+
+
+
+      // slack
+      message = "새로운 미니 서비스 결제가 일어났습니다!" + "\n";
+      message += "문의일 : " + dateToString(updateQuery["request.timeline"], true) + "\n";
+      message += "고객 아이디 : " + useid + "\n";
+      message += "성함 : " + name + "\n";
+      message += "연락처 : " + phone + "\n";
+      message += "이메일 : " + email + "\n";
+      message += "주소 : " + address + "\n";
+      message += "공간 개수 : " + String(targets) + "\n";
+      message += "요청 사항 : " + etc + "\n";
+      await messageSend({ text: message, channel: "#401_consulting" });
+
+      res.send(JSON.stringify({ useid }));
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_userSubmit): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
