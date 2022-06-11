@@ -4641,6 +4641,41 @@ DataRouter.prototype.rou_post_generalImpPayment = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_getUpdateUser = function () {
+  const instance = this;
+  const back = this.back;
+  const { errorLog, requestSystem, equalJson } = this.mother;
+  let obj = {};
+  obj.link = [ "/getUsers", "/updateUser" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const selfMongo = instance.mongo;
+      if (req.url === "/getUsers") {
+        if (req.body.whereQuery === undefined) {
+          throw new Error("invaild post");
+        }
+        const { whereQuery } = equalJson(req.body);
+        const users = await back.getUsersByQuery(whereQuery, { selfMongo });
+        res.send(JSON.stringify(users.toNormal()));
+      } else if (req.url === "/updateUser") {
+        const { whereQuery, updateQuery } = equalJson(req.body);
+        await back.updateUser([ whereQuery, updateQuery ], { selfMongo });
+        res.send(JSON.stringify({ message: "done" }));
+      }
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_getUpdateUser): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 DataRouter.prototype.rou_post_userSubmit = function () {
   const instance = this;
   const back = this.back;

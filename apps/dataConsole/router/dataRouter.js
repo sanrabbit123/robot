@@ -5318,10 +5318,45 @@ DataRouter.prototype.rou_post_generalImpPayment = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_getUpdateUser = function () {
+  const instance = this;
+  const back = this.back;
+  const { errorLog, requestSystem, equalJson } = this.mother;
+  let obj = {};
+  obj.link = [ "/getUsers", "/updateUser" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const selfMongo = instance.mongo;
+      if (req.url === "/getUsers") {
+        if (req.body.whereQuery === undefined) {
+          throw new Error("invaild post");
+        }
+        const { whereQuery } = equalJson(req.body);
+        const users = await back.getUsersByQuery(whereQuery, { selfMongo });
+        res.send(JSON.stringify(users.toNormal()));
+      } else if (req.url === "/updateUser") {
+        const { whereQuery, updateQuery } = equalJson(req.body);
+        await back.updateUser([ whereQuery, updateQuery ], { selfMongo });
+        res.send(JSON.stringify({ message: "done" }));
+      }
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_getUpdateUser): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 DataRouter.prototype.rou_post_userSubmit = function () {
   const instance = this;
   const back = this.back;
-  const { errorLog, equalJson, requestSystem } = this.mother;
+  const { errorLog, equalJson, requestSystem, dateToString, messageSend } = this.mother;
   let obj = {};
   obj.link = [ "/userSubmit" ];
   obj.func = async function (req, res) {
@@ -5340,9 +5375,7 @@ DataRouter.prototype.rou_post_userSubmit = function () {
       let useid;
       let name, phone, email, address, targets, etc, oid, rsp;
       let updateQuery;
-
-      console.log(map);
-
+      let message;
 
       // filtering
       name = map.name.replace(/[^a-zA-Z가-힣]/gi, '');
@@ -5354,9 +5387,10 @@ DataRouter.prototype.rou_post_userSubmit = function () {
       oid = map.oid.trim();
       rsp = equalJson(map.rsp);
 
-
       // create user
       updateQuery = { name, phone, email };
+      updateQuery["service.serid"] = "s2011_aa05s";
+      updateQuery["service.xValue"] = "B";
       updateQuery["request.timeline"] = new Date();
       updateQuery["request.status"] = "결제 완료";
       updateQuery["request.alarm"] = true;
@@ -5373,18 +5407,24 @@ DataRouter.prototype.rou_post_userSubmit = function () {
       updateQuery["request.payment.info.to"] = name;
       updateQuery["request.payment.info.data"] = [ rsp ];
 
-      console.log(updateQuery);
-
       useid = await back.createUser(updateQuery, { selfMongo });
-
 
       // alimtalk
 
 
+
+
       // slack
-
-
-
+      message = "새로운 미니 서비스 결제가 일어났습니다!" + "\n";
+      message += "문의일 : " + dateToString(updateQuery["request.timeline"], true) + "\n";
+      message += "고객 아이디 : " + useid + "\n";
+      message += "성함 : " + name + "\n";
+      message += "연락처 : " + phone + "\n";
+      message += "이메일 : " + email + "\n";
+      message += "주소 : " + address + "\n";
+      message += "공간 개수 : " + String(targets) + "\n";
+      message += "요청 사항 : " + etc + "\n";
+      await messageSend({ text: message, channel: "#401_consulting" });
 
       res.send(JSON.stringify({ useid }));
     } catch (e) {
@@ -5394,34 +5434,6 @@ DataRouter.prototype.rou_post_userSubmit = function () {
   }
   return obj;
 }
-
-
-// {
-//   "success": true,
-//   "imp_uid": "imp_933478384262",
-//   "pay_method": "card",
-//   "merchant_uid": "homeliaisonMini_01027473403_165492047730",
-//   "name": "HomeLiaison Mini",
-//   "paid_amount": 10,
-//   "currency": "KRW",
-//   "pg_provider": "html5_inicis",
-//   "pg_type": "payment",
-//   "pg_tid": "StdpayCARDMOIhomeli120220611130840573029",
-//   "apply_num": "00114731",
-//   "buyer_name": "배창규",
-//   "buyer_email": "uragenbooks@gmail.com",
-//   "buyer_tel": "010-2747-3403",
-//   "buyer_addr": "",
-//   "buyer_postcode": "",
-//   "custom_data": null,
-//   "status": "paid",
-//   "paid_at": 1654920521,
-//   "receipt_url": "https://iniweb.inicis.com/DefaultWebApp/mall/cr/cm/mCmReceipt_head.jsp?noTid=StdpayCARDMOIhomeli120220611130840573029&noMethod=1",
-//   "card_name": "현대카드",
-//   "bank_name": null,
-//   "card_quota": 0,
-//   "card_number": "550000000150"
-// }
 
 
 DataRouter.policy = function () {

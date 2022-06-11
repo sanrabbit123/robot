@@ -1633,11 +1633,27 @@ MiniGuideJs.prototype.launching = async function (loading) {
     this.mother.setGeneralProperties(this);
     const { returnGet, ajaxJson, requestPromise, setDebounce } = GeneralJs;
     const getObj = returnGet();
+    let users, user;
+
+    if (getObj.useid === undefined) {
+      window.alert("잘못된 접근입니다!");
+      window.location.href = this.frontPage;
+    }
+
+    users = await ajaxJson({ whereQuery: { useid: getObj.useid } }, "/getUsers", { equal: true });
+    if (users.length === 0) {
+      window.alert("잘못된 접근입니다!");
+      window.location.href = this.frontPage;
+    }
+    user = users[0];
+    this.user = user;
+
+    console.log(user);
 
     await this.mother.ghostClientLaunching({
       mode: "ghost",
       name: "miniGuide",
-      client: this.client,
+      client: this.user,
       base: {
         instance: this,
         binaryPath: MiniGuideJs.binaryPath,
