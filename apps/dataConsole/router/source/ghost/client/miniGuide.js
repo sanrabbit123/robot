@@ -500,7 +500,7 @@ MiniGuideJs.prototype.insertProcessBox = function () {
 
 MiniGuideJs.prototype.insertRequestBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, ajaxJson } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, ajaxJson, cleanChildren } = GeneralJs;
   const { client, ea, media, osException, testMode, user } = this;
   const { useid, request } = user;
   const { init, style, budget, size, etc } = request.comments;
@@ -546,6 +546,19 @@ MiniGuideJs.prototype.insertRequestBox = function () {
   let buttonWidth, buttonHeight, buttonSize, buttonWeight, buttonTextTop;
   let buttonAreaPaddingTop;
   let value, column;
+  let fileChangeEvent;
+  let fileTongClassName;
+  let grayMargin, grayHeight;
+  let cardWidthNumber;
+  let cardHeightNumber;
+  let cardMargin;
+  let cardHeight;
+  let cardWordingSize;
+  let cardInnerMargin;
+  let cardInnerMarginTop;
+  let xIconWidth;
+  let xIconTop;
+  let xVisual;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 56, 52, 44, 32, 6 %%>;
@@ -576,7 +589,7 @@ MiniGuideJs.prototype.insertRequestBox = function () {
   answerInnerPadding = <%% 16, 16, 16, 16, 2 %%>;
   answerInnerInnerPaddingTop = <%% 23, 23, 19, 19, 2 %%>;
   answerInnerInnerPaddingLeft = <%% 30, 30, 25, 25, 3 %%>;
-  answerAreaHeight = <%% 130, 130, 120, 100, 24 %%>;
+  answerAreaHeight = <%% 120, 120, 120, 120, 36 %%>;
   answerSize = <%% 16, 16, 15, 14, 3 %%>;
   answerWeighit = <%% 400, 400, 400, 400, 400 %%>;
   answerLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
@@ -595,6 +608,25 @@ MiniGuideJs.prototype.insertRequestBox = function () {
   buttonSize = <%% 21, 21, 18, 16, 3.5 %%>;
   buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
   buttonTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.3 %%>;
+
+  grayMargin = <%% 16, 16, 16, 16, 3 %%>;
+  grayHeight = <%% 120, 120, 120, 120, 36 %%>;
+
+  cardWidthNumber = <%% 8, 6, 5, 4, 2 %%>;
+  cardHeightNumber = <%% 2, 2, 2, 2, 3 %%>;
+  cardMargin = <%% 6, 6, 6, 6, 1 %%>;
+  cardHeight = (grayHeight - (desktop ? grayMargin * 2 : (grayMargin * 2) + 2) - (cardMargin * (cardHeightNumber - 1))) / cardHeightNumber;
+
+  cardWordingSize = <%% 13, 13, 13, 13, 3 %%>;
+  cardInnerMargin = <%% 16, 16, 16, 16, 3 %%>;
+  cardInnerMarginTop = <%% 11, 11, 11, 11, 2.1 %%>;
+  if (desktop) {
+    cardInnerMarginTop = cardInnerMarginTop + (isMac() ? 0 : 1);
+  }
+  xIconWidth = <%% 10, 10, 10, 10, 2 %%>;
+  xIconTop = <%% 14, 14, 14, 14, 3 %%>;
+  xVisual = <%% 4, 4, 4, 4, 1 %%>;
+
 
   contents = {
     title: "상세 정보 전송",
@@ -636,6 +668,113 @@ MiniGuideJs.prototype.insertRequestBox = function () {
       }
     ]
   };
+
+  fileTongClassName = "fileTong";
+
+  fileChangeEvent = function (e) {
+    const self = this;
+    const mother = document.querySelector('.' + fileTongClassName);
+    const cardMaker = (fileObj, index) => {
+      createNode({
+        mother,
+        events: [ { type: "click", event: (e) => { e.stopPropagation(); e.preventDefault(); } } ],
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: "calc(calc(100% - " + String(cardMargin * (cardWidthNumber - 1)) + ea + ") / " + String(cardWidthNumber) + ")",
+          height: String(cardHeight) + ea,
+          marginRight: String(index % cardWidthNumber === cardWidthNumber - 1 ? 0 : cardMargin) + ea,
+          marginBottom: String(cardMargin) + ea,
+          background: colorChip.white,
+          borderRadius: String(3) + "px",
+        },
+        children: [
+          {
+            style: {
+              position: "relative",
+              top: String(cardInnerMarginTop) + ea,
+              left: String(cardInnerMargin) + ea,
+              width: withOut(xIconWidth + (cardInnerMargin * 2.8), ea),
+              height: withOut(cardInnerMarginTop, ea),
+              overflow: "hidden",
+              textAlign: "left",
+            },
+            children: [
+              {
+                text: fileObj.name,
+                style: {
+                  position: "absolute",
+                  fontSize: String(cardWordingSize) + ea,
+                  fontWeight: String(400),
+                  color: colorChip.black,
+                  width: String(900) + ea,
+                  textAlign: "left",
+                }
+              }
+            ]
+          },
+          {
+            attribute: [
+              { index }
+            ],
+            events: [
+              {
+                type: "click",
+                event: function (e) {
+                  const index = Number(this.getAttribute("index"));
+                  let cancel;
+                  cancel = JSON.parse(instance.fileInput.getAttribute("cancel"));
+                  cancel.push(index);
+                  instance.fileInput.setAttribute("cancel", JSON.stringify(cancel));
+                  this.parentElement.parentElement.removeChild(this.parentElement);
+                }
+              }
+            ],
+            style: {
+              position: "absolute",
+              background: colorChip.white,
+              width: String(xIconWidth) + ea,
+              height: String(xIconWidth) + ea,
+              right: String(cardInnerMargin) + ea,
+              top: String(xIconTop) + ea,
+            },
+            children: [
+              {
+                style: {
+                  position: "absolute",
+                  background: colorChip.white,
+                  width: String(xIconWidth + (xVisual * 2)) + ea,
+                  height: String(xIconWidth + (xVisual * 2)) + ea,
+                  right: String(-1 * xVisual) + ea,
+                  top: String(-1 * xVisual) + ea,
+                }
+              },
+              {
+                mode: "svg",
+                source: instance.mother.returnCancel(colorChip.green),
+                style: {
+                  position: "absolute",
+                  background: colorChip.white,
+                  width: String(xIconWidth) + ea,
+                  right: String(0) + ea,
+                  top: String(0) + ea,
+                }
+              }
+            ]
+          }
+        ]
+      });
+    }
+    cleanChildren(mother);
+    if (this.files.length === 0) {
+      this.previousElementSibling.style.display = "block";
+    } else {
+      this.previousElementSibling.style.display = "none";
+    }
+    for (let i = 0; i < this.files.length; i++) {
+      cardMaker(this.files[i], i);
+    }
+  }
 
   if (mobile) {
     contents.request[contents.request.length - 1].images.pop();
@@ -851,6 +990,20 @@ MiniGuideJs.prototype.insertRequestBox = function () {
 
       grayBlockWhite = createNode({
         mother: grayBlock,
+        event: {
+          click: function (e) {
+            this.querySelector("input").click();
+          },
+          dragenter: (e) => { e.preventDefault(); e.stopPropagation(); },
+          dragover: (e) => { e.preventDefault(); e.stopPropagation(); },
+          dragleave: (e) => { e.preventDefault(); e.stopPropagation(); },
+          drop: function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.querySelector("input").files = e.dataTransfer.files;
+            fileChangeEvent.call(this.querySelector("input"), e);
+          }
+        },
         style: {
           display: "flex",
           position: "relative",
@@ -862,9 +1015,34 @@ MiniGuideJs.prototype.insertRequestBox = function () {
           height: String(answerAreaHeight) + ea,
           justifyContent: "center",
           alignItems: "center",
-          textAlign: "center"
+          textAlign: "center",
+          cursor: "pointer",
         },
         children: [
+          {
+            style: {
+              position: "absolute",
+              top: String(grayMargin + (desktop ? 0 : 2)) + ea,
+              left: String(grayMargin) + ea,
+              width: withOut(grayMargin * 2, ea),
+              height: withOut(grayMargin + grayMargin + (desktop ? 0 : 2), ea),
+              overflow: "scroll",
+              zIndex: String(1),
+              textAlign: "left",
+            },
+            children: [
+              {
+                class: [ fileTongClassName ],
+                style: {
+                  position: "relative",
+                  width: String(100) + '%',
+                  top: String(0),
+                  left: String(0),
+                  textAlign: "left",
+                }
+              }
+            ]
+          },
           {
             text: placeholder,
             style: {
@@ -874,10 +1052,29 @@ MiniGuideJs.prototype.insertRequestBox = function () {
               fontSize: String(fileSize) + ea,
               fontWeight: String(fileWeight),
               color: colorChip.deactive,
+              cursor: "pointer",
+            }
+          },
+          {
+            mode: "input",
+            event: {
+              change: fileChangeEvent,
+            },
+            attribute: [
+              { type: "file" },
+              { name: "upload" },
+              { accept: "image/*" },
+              { multiple: "true" },
+              { cancel: JSON.stringify([]) }
+            ],
+            style: {
+              position: "absolute",
+              display: "none",
             }
           }
         ]
       });
+      instance.fileInput = grayBlockWhite.querySelector("input");
 
     }
   }
