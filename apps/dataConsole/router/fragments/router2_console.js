@@ -4640,3 +4640,30 @@ DataRouter.prototype.rou_post_generalImpPayment = function () {
   }
   return obj;
 }
+
+// {
+//   "success": true,
+//   "imp_uid": "imp_933478384262",
+//   "pay_method": "card",
+//   "merchant_uid": "homeliaisonMini_01027473403_165492047730",
+//   "name": "HomeLiaison Mini",
+//   "paid_amount": 10,
+//   "currency": "KRW",
+//   "pg_provider": "html5_inicis",
+//   "pg_type": "payment",
+//   "pg_tid": "StdpayCARDMOIhomeli120220611130840573029",
+//   "apply_num": "00114731",
+//   "buyer_name": "배창규",
+//   "buyer_email": "uragenbooks@gmail.com",
+//   "buyer_tel": "010-2747-3403",
+//   "buyer_addr": "",
+//   "buyer_postcode": "",
+//   "custom_data": null,
+//   "status": "paid",
+//   "paid_at": 1654920521,
+//   "receipt_url": "https://iniweb.inicis.com/DefaultWebApp/mall/cr/cm/mCmReceipt_head.jsp?noTid=StdpayCARDMOIhomeli120220611130840573029&noMethod=1",
+//   "card_name": "현대카드",
+//   "bank_name": null,
+//   "card_quota": 0,
+//   "card_number": "550000000150"
+// }

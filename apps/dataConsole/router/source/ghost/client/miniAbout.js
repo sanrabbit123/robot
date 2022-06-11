@@ -2284,7 +2284,7 @@ MiniAboutJs.prototype.insertFaqBox = function () {
 
 MiniAboutJs.prototype.whiteSubmitEvent = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, ajaxJson, setQueue, autoHypenPhone, findByAttribute, autoComma } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, ajaxJson, setQueue, autoHypenPhone, findByAttribute, homeliaisonAnalytics, autoComma, selfHref } = GeneralJs;
   const { ea, media, standardWidth, totalContents, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -3525,49 +3525,39 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
                     }, async (rsp) => {
                       try {
                         if (rsp.success) {
-
                           map.rsp = JSON.parse(JSON.stringify(rsp));
+                          const { useid } = await ajaxJson({ map }, "/userSubmit");
 
-                          // rsp
-
-                          // {
-                          //   "success": true,
-                          //   "imp_uid": "imp_933478384262",
-                          //   "pay_method": "card",
-                          //   "merchant_uid": "homeliaisonMini_01027473403_165492047730",
-                          //   "name": "HomeLiaison Mini",
-                          //   "paid_amount": 10,
-                          //   "currency": "KRW",
-                          //   "pg_provider": "html5_inicis",
-                          //   "pg_type": "payment",
-                          //   "pg_tid": "StdpayCARDMOIhomeli120220611130840573029",
-                          //   "apply_num": "00114731",
-                          //   "buyer_name": "배창규",
-                          //   "buyer_email": "uragenbooks@gmail.com",
-                          //   "buyer_tel": "010-2747-3403",
-                          //   "buyer_addr": "",
-                          //   "buyer_postcode": "",
-                          //   "custom_data": null,
-                          //   "status": "paid",
-                          //   "paid_at": 1654920521,
-                          //   "receipt_url": "https://iniweb.inicis.com/DefaultWebApp/mall/cr/cm/mCmReceipt_head.jsp?noTid=StdpayCARDMOIhomeli120220611130840573029&noMethod=1",
-                          //   "card_name": "현대카드",
-                          //   "bank_name": null,
-                          //   "card_quota": 0,
-                          //   "card_number": "550000000150"
-                          // }
-
-                          console.log(map);
+                          homeliaisonAnalytics({
+                            page: instance.pageName,
+                            standard: instance.firstPageViewTime,
+                            action: "miniSubmit",
+                            data: { useid },
+                          }).then(() => {
+                            document.body.removeChild(box);
+                            document.body.removeChild(back);
+                            selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/miniGuide?useid=" + useid);
+                          }).catch((err) => {
+                            document.body.removeChild(box);
+                            document.body.removeChild(back);
+                            selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/miniGuide?useid=" + useid);
+                          });
 
                         } else {
-                          console.log("결제 실패");
+                          window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+                          document.body.removeChild(box);
+                          document.body.removeChild(back);
                         }
                       } catch (e) {
-
+                        window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+                        document.body.removeChild(box);
+                        document.body.removeChild(back);
                       }
                     });
                   } catch (e) {
-
+                    window.alert("인증에 실패하였습니다! 다시 시도해주세요!");
+                    document.body.removeChild(box);
+                    document.body.removeChild(back);
                   }
                 });
 
