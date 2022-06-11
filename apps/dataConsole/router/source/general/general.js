@@ -4533,16 +4533,15 @@ GeneralJs.prototype.certificationBox = function (name, phone, callback) {
 
   div_back = GeneralJs.nodes.div.cloneNode(true);
   style = {
-    animation: "fadecancel 0.4s ease forwards",
     transition: "all 0.3s ease",
     position: "fixed",
     top: String(0),
     left: String(0),
     width: "100%",
     height: "100%",
-    background: GeneralJs.colorChip.darkShadow,
-    opacity: String(0.2),
-    zIndex: String(1),
+    background: GeneralJs.colorChip.black,
+    opacity: String(0.3),
+    zIndex: String(200),
   };
   for (let i in style) {
     div_back.style[i] = style[i];
@@ -4562,7 +4561,7 @@ GeneralJs.prototype.certificationBox = function (name, phone, callback) {
       background: GeneralJs.colorChip.white,
       borderRadius: String(5) + "px",
       boxShadow: "0px 5px 15px -14px " + GeneralJs.colorChip.black,
-      zIndex: String(1),
+      zIndex: String(200),
     };
   } else {
     style = {
@@ -4576,7 +4575,7 @@ GeneralJs.prototype.certificationBox = function (name, phone, callback) {
       background: GeneralJs.colorChip.white,
       borderRadius: String(5) + "px",
       boxShadow: "0px 5px 15px -14px " + GeneralJs.colorChip.black,
-      zIndex: String(1),
+      zIndex: String(200),
     };
   }
   for (let i in style) {

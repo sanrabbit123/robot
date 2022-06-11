@@ -2575,7 +2575,7 @@ ClientConsultingJs.prototype.finalSubmit = function () {
           try {
 
             if (p === "name") {
-              firstDom.value = firstDom.value.replace(/[^가-힣]/gi, '');
+              firstDom.value = firstDom.value.replace(/[^a-zA-Z가-힣]/gi, '');
               if (firstDom.value.trim() === '') {
                 throw new Error("성함을 입력해주세요!");
               }

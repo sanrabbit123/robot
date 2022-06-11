@@ -3413,6 +3413,112 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
     createNode({
       mother: paymentArea,
       text: "결제하기",
+      event: {
+        click: function (e) {
+          const agreeTarget = document.querySelector('.' + agreeTargetClassName);
+          const agreeBoo = (agreeTarget.getAttribute("toggle") === "on");
+          if (!agreeBoo) {
+            window.alert("개인정보 처리 방침에 동의해주세요!");
+            return;
+          } else {
+
+            const inputTargets = [ ...document.querySelectorAll('.' + inputClassName) ];
+            const inputMatrix = inputTargets.map((dom) => {
+              return [ dom.getAttribute("property"), dom.value.trim().replace(/[\&\=\+\#]/gi, ''), dom ];
+            });
+            let boo;
+            let name, phone;
+            let map;
+
+            boo = true;
+
+            for (let [ property, value, dom ] of inputMatrix) {
+              dom.previousElementSibling.style.border = "";
+              if (property === "name") {
+                if (value.replace(/[^a-zA-Z가-힣]/gi, '') === '') {
+                  window.alert("성함을 입력해주세요!");
+                  boo = false;
+                  dom.previousElementSibling.style.border = "1px solid " + colorChip.green;
+                  if (typeof dom.focus === "function") {
+                    dom.focus();
+                  }
+                } else {
+                  name = value.replace(/[^a-zA-Z가-힣]/gi, '');
+                }
+              } else if (property === "phone") {
+                if (value.replace(/[^0-9\-]/gi, '') === '') {
+                  window.alert("연락처를 입력해주세요!");
+                  boo = false;
+                  dom.previousElementSibling.style.border = "1px solid " + colorChip.green;
+                  if (typeof dom.focus === "function") {
+                    dom.focus();
+                  }
+                } else {
+                  phone = value.replace(/[^0-9\-]/gi, '');
+                }
+              } else if (property === "email") {
+                if (value.trim() === '') {
+                  window.alert("이메일 주소를 적어주세요!");
+                  boo = false;
+                  dom.previousElementSibling.style.border = "1px solid " + colorChip.green;
+                  if (typeof dom.focus === "function") {
+                    dom.focus();
+                  }
+                }
+              } else if (property === "address0") {
+                if (value.trim() === '') {
+                  window.alert("주소를 검색하여 입력해주세요!");
+                  boo = false;
+                  dom.previousElementSibling.style.border = "1px solid " + colorChip.green;
+                  if (typeof dom.focus === "function") {
+                    dom.focus();
+                  }
+                }
+              } else if (property === "address1") {
+                if (value.trim() === '') {
+                  window.alert("상세 주소를 적어주세요!");
+                  boo = false;
+                  dom.previousElementSibling.style.border = "1px solid " + colorChip.green;
+                  if (typeof dom.focus === "function") {
+                    dom.focus();
+                  }
+                }
+              } else if (property === "targets") {
+                if (value.replace(/[^0-9]/gi, '') === '' || Number.isNaN(Number(value.replace(/[^0-9]/gi, '')))) {
+                  window.alert("공간 개수를 입력해주세요!");
+                  boo = false;
+                  dom.previousElementSibling.style.border = "1px solid " + colorChip.green;
+                  if (typeof dom.focus === "function") {
+                    dom.focus();
+                  }
+                }
+              }
+              if (!boo) {
+                break;
+              }
+            }
+            if (boo) {
+              map = {
+                name,
+                phone,
+                email: inputMatrix.find((arr) => { return arr[0] === "email" })[1].trim(),
+                address: inputMatrix.find((arr) => { return arr[0] === "address0" })[1].trim() + " " + inputMatrix.find((arr) => { return arr[0] === "address1" })[1].trim(),
+                targets: Number(inputMatrix.find((arr) => { return arr[0] === "targets" })[1].replace(/[^0-9]/gi, '')),
+                etc: inputMatrix.find((arr) => { return arr[0] === "etc" })[1].trim(),
+              };
+              instance.mother.certificationBox(name, phone, async function (back, box) {
+                try {
+
+                  console.log("this!");
+                  console.log(map);
+                } catch (e) {
+
+                }
+              });
+            }
+          }
+        }
+      },
       style: {
         display: "inline-block",
         position: "relative",
