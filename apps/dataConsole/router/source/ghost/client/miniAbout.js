@@ -2350,6 +2350,7 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
     let addressPromptWidth;
     let addressPromptHeight;
     let agreeEvent;
+    let oidConst;
 
     whiteWidth = <%% 1000, 1000, 800, 660, 88 %%>;
     whiteMargin = <%% 54, 54, 54, 54, 6 %%>;
@@ -2477,7 +2478,6 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
         height: String(100) + '%',
         background: colorChip.black,
         opacity: String(0.3),
-        // animation: "justfadein 0.3s ease forwards",
         zIndex: String(zIndex),
       }
     });
@@ -3145,7 +3145,7 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
               }
               this.value = String(finalNumber) + "개";
 
-              finalPrice = initialPrice * finalNumber;
+              finalPrice = Math.floor(initialPrice * finalNumber);
               priceTarget.setAttribute("price", String(finalPrice));
               priceTarget.textContent = autoComma(finalPrice) + '원';
             }
@@ -3377,9 +3377,7 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
       }
     });
 
-
     // payment
-
     paymentArea = createNode({
       mother: contentsTong,
       style: {
@@ -3396,9 +3394,9 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
       mother: paymentArea,
       class: [ priceTargetClassName ],
       attribute: {
-        price: String(initialPrice),
+        price: String(Math.floor(initialPrice)),
       },
-      text: autoComma(initialPrice) + "원",
+      text: autoComma(Math.floor(initialPrice)) + "원",
       style: {
         display: "inline-block",
         position: "relative",
@@ -3414,108 +3412,171 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
       mother: paymentArea,
       text: "결제하기",
       event: {
-        click: function (e) {
-          const agreeTarget = document.querySelector('.' + agreeTargetClassName);
-          const agreeBoo = (agreeTarget.getAttribute("toggle") === "on");
-          if (!agreeBoo) {
-            window.alert("개인정보 처리 방침에 동의해주세요!");
-            return;
-          } else {
+        click: async function (e) {
+          try {
+            const agreeTarget = document.querySelector('.' + agreeTargetClassName);
+            const agreeBoo = (agreeTarget.getAttribute("toggle") === "on");
+            if (!agreeBoo) {
+              window.alert("개인정보 처리 방침에 동의해주세요!");
+              return;
+            } else {
 
-            const inputTargets = [ ...document.querySelectorAll('.' + inputClassName) ];
-            const inputMatrix = inputTargets.map((dom) => {
-              return [ dom.getAttribute("property"), dom.value.trim().replace(/[\&\=\+\#]/gi, ''), dom ];
-            });
-            let boo;
-            let name, phone;
-            let map;
-
-            boo = true;
-
-            for (let [ property, value, dom ] of inputMatrix) {
-              dom.previousElementSibling.style.border = "";
-              if (property === "name") {
-                if (value.replace(/[^a-zA-Z가-힣]/gi, '') === '') {
-                  window.alert("성함을 입력해주세요!");
-                  boo = false;
-                  dom.previousElementSibling.style.border = "1px solid " + colorChip.green;
-                  if (typeof dom.focus === "function") {
-                    dom.focus();
-                  }
-                } else {
-                  name = value.replace(/[^a-zA-Z가-힣]/gi, '');
-                }
-              } else if (property === "phone") {
-                if (value.replace(/[^0-9\-]/gi, '') === '') {
-                  window.alert("연락처를 입력해주세요!");
-                  boo = false;
-                  dom.previousElementSibling.style.border = "1px solid " + colorChip.green;
-                  if (typeof dom.focus === "function") {
-                    dom.focus();
-                  }
-                } else {
-                  phone = value.replace(/[^0-9\-]/gi, '');
-                }
-              } else if (property === "email") {
-                if (value.trim() === '') {
-                  window.alert("이메일 주소를 적어주세요!");
-                  boo = false;
-                  dom.previousElementSibling.style.border = "1px solid " + colorChip.green;
-                  if (typeof dom.focus === "function") {
-                    dom.focus();
-                  }
-                }
-              } else if (property === "address0") {
-                if (value.trim() === '') {
-                  window.alert("주소를 검색하여 입력해주세요!");
-                  boo = false;
-                  dom.previousElementSibling.style.border = "1px solid " + colorChip.green;
-                  if (typeof dom.focus === "function") {
-                    dom.focus();
-                  }
-                }
-              } else if (property === "address1") {
-                if (value.trim() === '') {
-                  window.alert("상세 주소를 적어주세요!");
-                  boo = false;
-                  dom.previousElementSibling.style.border = "1px solid " + colorChip.green;
-                  if (typeof dom.focus === "function") {
-                    dom.focus();
-                  }
-                }
-              } else if (property === "targets") {
-                if (value.replace(/[^0-9]/gi, '') === '' || Number.isNaN(Number(value.replace(/[^0-9]/gi, '')))) {
-                  window.alert("공간 개수를 입력해주세요!");
-                  boo = false;
-                  dom.previousElementSibling.style.border = "1px solid " + colorChip.green;
-                  if (typeof dom.focus === "function") {
-                    dom.focus();
-                  }
-                }
-              }
-              if (!boo) {
-                break;
-              }
-            }
-            if (boo) {
-              map = {
-                name,
-                phone,
-                email: inputMatrix.find((arr) => { return arr[0] === "email" })[1].trim(),
-                address: inputMatrix.find((arr) => { return arr[0] === "address0" })[1].trim() + " " + inputMatrix.find((arr) => { return arr[0] === "address1" })[1].trim(),
-                targets: Number(inputMatrix.find((arr) => { return arr[0] === "targets" })[1].replace(/[^0-9]/gi, '')),
-                etc: inputMatrix.find((arr) => { return arr[0] === "etc" })[1].trim(),
-              };
-              instance.mother.certificationBox(name, phone, async function (back, box) {
-                try {
-
-                  console.log("this!");
-                  console.log(map);
-                } catch (e) {
-
-                }
+              const inputTargets = [ ...document.querySelectorAll('.' + inputClassName) ];
+              const inputMatrix = inputTargets.map((dom) => {
+                return [ dom.getAttribute("property"), dom.value.trim().replace(/[\&\=\+\#]/gi, ''), dom ];
               });
+              let boo;
+              let name, phone;
+              let map;
+              let pluginScript, plugin;
+
+              boo = true;
+
+              for (let [ property, value, dom ] of inputMatrix) {
+                dom.previousElementSibling.style.border = "";
+                if (property === "name") {
+                  if (value.replace(/[^a-zA-Z가-힣]/gi, '') === '') {
+                    window.alert("성함을 입력해주세요!");
+                    boo = false;
+                    dom.previousElementSibling.style.border = "1px solid " + colorChip.green;
+                    if (typeof dom.focus === "function") {
+                      dom.focus();
+                    }
+                  } else {
+                    name = value.replace(/[^a-zA-Z가-힣]/gi, '');
+                  }
+                } else if (property === "phone") {
+                  if (value.replace(/[^0-9\-]/gi, '') === '') {
+                    window.alert("연락처를 입력해주세요!");
+                    boo = false;
+                    dom.previousElementSibling.style.border = "1px solid " + colorChip.green;
+                    if (typeof dom.focus === "function") {
+                      dom.focus();
+                    }
+                  } else {
+                    phone = value.replace(/[^0-9\-]/gi, '');
+                  }
+                } else if (property === "email") {
+                  if (value.trim() === '') {
+                    window.alert("이메일 주소를 적어주세요!");
+                    boo = false;
+                    dom.previousElementSibling.style.border = "1px solid " + colorChip.green;
+                    if (typeof dom.focus === "function") {
+                      dom.focus();
+                    }
+                  }
+                } else if (property === "address0") {
+                  if (value.trim() === '') {
+                    window.alert("주소를 검색하여 입력해주세요!");
+                    boo = false;
+                    dom.previousElementSibling.style.border = "1px solid " + colorChip.green;
+                    if (typeof dom.focus === "function") {
+                      dom.focus();
+                    }
+                  }
+                } else if (property === "address1") {
+                  if (value.trim() === '') {
+                    window.alert("상세 주소를 적어주세요!");
+                    boo = false;
+                    dom.previousElementSibling.style.border = "1px solid " + colorChip.green;
+                    if (typeof dom.focus === "function") {
+                      dom.focus();
+                    }
+                  }
+                } else if (property === "targets") {
+                  if (value.replace(/[^0-9]/gi, '') === '' || Number.isNaN(Number(value.replace(/[^0-9]/gi, '')))) {
+                    window.alert("공간 개수를 입력해주세요!");
+                    boo = false;
+                    dom.previousElementSibling.style.border = "1px solid " + colorChip.green;
+                    if (typeof dom.focus === "function") {
+                      dom.focus();
+                    }
+                  }
+                }
+                if (!boo) {
+                  break;
+                }
+              }
+              if (boo) {
+                map = {
+                  name,
+                  phone,
+                  email: inputMatrix.find((arr) => { return arr[0] === "email" })[1].trim(),
+                  address: inputMatrix.find((arr) => { return arr[0] === "address0" })[1].trim() + " " + inputMatrix.find((arr) => { return arr[0] === "address1" })[1].trim(),
+                  targets: Number(inputMatrix.find((arr) => { return arr[0] === "targets" })[1].replace(/[^0-9]/gi, '')),
+                  etc: inputMatrix.find((arr) => { return arr[0] === "etc" })[1].trim(),
+                };
+
+                instance.mother.certificationBox(name, phone, async function (back, box) {
+                  try {
+
+                    ({ pluginScript, oidConst } = await ajaxJson({ mode: "script", oidKey: "mini" }, "/generalImpPayment"));
+                    map.oid = oidConst + phone.replace(/[^0-9]/gi, '') + "_" + String((new Date()).valueOf());
+                    plugin = new Function(pluginScript);
+                    plugin();
+                    window.IMP.init("imp71921105");
+                    window.IMP.request_pay({
+                        merchant_uid: map.oid,
+                        name: "HomeLiaison Mini",
+                        amount: 10,
+                        buyer_email: map.email,
+                        buyer_name: map.name,
+                        buyer_tel: map.phone,
+                    }, async (rsp) => {
+                      try {
+                        if (rsp.success) {
+
+                          map.rsp = JSON.parse(JSON.stringify(rsp));
+
+                          // rsp
+
+                          // {
+                          //   "success": true,
+                          //   "imp_uid": "imp_933478384262",
+                          //   "pay_method": "card",
+                          //   "merchant_uid": "homeliaisonMini_01027473403_165492047730",
+                          //   "name": "HomeLiaison Mini",
+                          //   "paid_amount": 10,
+                          //   "currency": "KRW",
+                          //   "pg_provider": "html5_inicis",
+                          //   "pg_type": "payment",
+                          //   "pg_tid": "StdpayCARDMOIhomeli120220611130840573029",
+                          //   "apply_num": "00114731",
+                          //   "buyer_name": "배창규",
+                          //   "buyer_email": "uragenbooks@gmail.com",
+                          //   "buyer_tel": "010-2747-3403",
+                          //   "buyer_addr": "",
+                          //   "buyer_postcode": "",
+                          //   "custom_data": null,
+                          //   "status": "paid",
+                          //   "paid_at": 1654920521,
+                          //   "receipt_url": "https://iniweb.inicis.com/DefaultWebApp/mall/cr/cm/mCmReceipt_head.jsp?noTid=StdpayCARDMOIhomeli120220611130840573029&noMethod=1",
+                          //   "card_name": "현대카드",
+                          //   "bank_name": null,
+                          //   "card_quota": 0,
+                          //   "card_number": "550000000150"
+                          // }
+
+                          console.log(map);
+
+                        } else {
+                          console.log("결제 실패");
+                        }
+                      } catch (e) {
+
+                      }
+                    });
+                  } catch (e) {
+
+                  }
+                });
+
+              }
             }
+          } catch (e) {
+            console.log(e);
+            window.alert("오류가 일어났습니다! 다시 시도해주세요!");
+            cancelBack.click();
           }
         }
       },

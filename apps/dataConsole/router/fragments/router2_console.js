@@ -2559,77 +2559,79 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
       const status = req.body.status;
       if (typeof status === "string") {
         if (/paid/gi.test(status)) {
-          const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
-          const bill = new BillMaker();
-          const { data: { response: { access_token: accessToken } } } = (await requestSystem("https://api.iamport.kr/users/getToken", {
-            imp_key: address.officeinfo.import.key,
-            imp_secret: address.officeinfo.import.secret
-          }, { headers: { "Content-Type": "application/json" } }));
-          const { data: { response: paymentData } } = await requestSystem("https://api.iamport.kr/payments/" + impId, {}, {
-            method: "get",
-            headers: { "Authorization": accessToken }
-          });
-          const { buyer_tel, paid_at } = paymentData;
-          const today = new Date();
-          const zeroAddition = (num) => { return num < 10 ? `0${String(num)}` : String(num); }
-          messageSend({ text: JSON.stringify(paymentData, null, 2), channel: "#error_log" }).catch((e) => { console.log(e); });
-          const convertingData = {
-            goodName: paymentData.name,
-            goodsName: paymentData.name,
-            resultCode: (paymentData.status.trim() === "paid" ? "0000" : "4000"),
-            resultMsg: (paymentData.status.trim() === "paid" ? "성공적으로 처리 하였습니다." : "결제 실패 : " + String(paymentData.fail_reason)),
-            tid: paymentData.pg_tid,
-            payMethod: "CARD",
-            applDate: `${String(today.getFullYear())}${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`,
-            mid: mid,
-            MOID: oid,
-            TotPrice: String(paymentData.amount),
-            buyerName: paymentData.buyer_name,
-            CARD_BankCode: paymentData.card_code,
-            CARD_Num: paymentData.card_number,
-            CARD_ApplPrice: String(paymentData.amount),
-            CARD_Code: paymentData.card_code,
-            vactBankName: paymentData.card_name,
-            payDevice: "MOBILE",
-            P_FN_NM: paymentData.card_name,
-          };
-          const clients = await back.getClientsByQuery({ phone: buyer_tel }, { selfMongo });
-          let requestNumber;
-          if (clients.length > 0) {
-            const [ client ] = clients;
-            const projects = await back.getProjectsByQuery({ $and: [ { cliid: client.cliid } ] }, { selfMongo });
-            if (projects.length > 0) {
-              const [ project ] = projects;
-              let bills;
-              bills = await bill.getBillsByQuery({ $and: [
-                  { "links.proid": project.proid },
-                  { "links.cliid": client.cliid },
-                  { "links.method": project.service.online ? "online" : "offline" }
-                ]
-              });
-              if (bills.length === 0) {
+          if (!/homeliaisonMini_/g.test(oid)) {
+            const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
+            const bill = new BillMaker();
+            const { data: { response: { access_token: accessToken } } } = (await requestSystem("https://api.iamport.kr/users/getToken", {
+              imp_key: address.officeinfo.import.key,
+              imp_secret: address.officeinfo.import.secret
+            }, { headers: { "Content-Type": "application/json" } }));
+            const { data: { response: paymentData } } = await requestSystem("https://api.iamport.kr/payments/" + impId, {}, {
+              method: "get",
+              headers: { "Authorization": accessToken }
+            });
+            const { buyer_tel, paid_at } = paymentData;
+            const today = new Date();
+            const zeroAddition = (num) => { return num < 10 ? `0${String(num)}` : String(num); }
+            messageSend({ text: JSON.stringify(paymentData, null, 2), channel: "#error_log" }).catch((e) => { console.log(e); });
+            const convertingData = {
+              goodName: paymentData.name,
+              goodsName: paymentData.name,
+              resultCode: (paymentData.status.trim() === "paid" ? "0000" : "4000"),
+              resultMsg: (paymentData.status.trim() === "paid" ? "성공적으로 처리 하였습니다." : "결제 실패 : " + String(paymentData.fail_reason)),
+              tid: paymentData.pg_tid,
+              payMethod: "CARD",
+              applDate: `${String(today.getFullYear())}${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`,
+              mid: mid,
+              MOID: oid,
+              TotPrice: String(paymentData.amount),
+              buyerName: paymentData.buyer_name,
+              CARD_BankCode: paymentData.card_code,
+              CARD_Num: paymentData.card_number,
+              CARD_ApplPrice: String(paymentData.amount),
+              CARD_Code: paymentData.card_code,
+              vactBankName: paymentData.card_name,
+              payDevice: "MOBILE",
+              P_FN_NM: paymentData.card_name,
+            };
+            const clients = await back.getClientsByQuery({ phone: buyer_tel }, { selfMongo });
+            let requestNumber;
+            if (clients.length > 0) {
+              const [ client ] = clients;
+              const projects = await back.getProjectsByQuery({ $and: [ { cliid: client.cliid } ] }, { selfMongo });
+              if (projects.length > 0) {
+                const [ project ] = projects;
+                let bills;
                 bills = await bill.getBillsByQuery({ $and: [
                     { "links.proid": project.proid },
                     { "links.cliid": client.cliid },
+                    { "links.method": project.service.online ? "online" : "offline" }
                   ]
                 });
-              }
-              if (bills.length > 0) {
-                const [ thisBill ] = bills;
-                requestNumber = 0;
-                for (let i = 0; i < thisBill.requests.length; i++) {
-                  if (convertingData.goodName === thisBill.requests[i].name) {
-                    requestNumber = i;
-                    break;
-                  }
+                if (bills.length === 0) {
+                  bills = await bill.getBillsByQuery({ $and: [
+                      { "links.proid": project.proid },
+                      { "links.cliid": client.cliid },
+                    ]
+                  });
                 }
-                await requestSystem("https://" + address.pythoninfo.host + ":3000/ghostClientBill", {
-                  bilid: thisBill.bilid,
-                  requestNumber,
-                  data: convertingData
-                }, { headers: { "Content-Type": "application/json" } });
-              } else {
-                throw new Error("cannot find bills (from links.proid and links.cliid)");
+                if (bills.length > 0) {
+                  const [ thisBill ] = bills;
+                  requestNumber = 0;
+                  for (let i = 0; i < thisBill.requests.length; i++) {
+                    if (convertingData.goodName === thisBill.requests[i].name) {
+                      requestNumber = i;
+                      break;
+                    }
+                  }
+                  await requestSystem("https://" + address.pythoninfo.host + ":3000/ghostClientBill", {
+                    bilid: thisBill.bilid,
+                    requestNumber,
+                    data: convertingData
+                  }, { headers: { "Content-Type": "application/json" } });
+                } else {
+                  throw new Error("cannot find bills (from links.proid and links.cliid)");
+                }
               }
             }
           }
@@ -4576,7 +4578,7 @@ DataRouter.prototype.rou_post_mysqlQuery = function () {
   obj.link = [ "/mysqlQuery" ];
   obj.func = async function (req, res) {
     res.set({
-      "Content-Type": "text/plain",
+      "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
@@ -4593,6 +4595,46 @@ DataRouter.prototype.rou_post_mysqlQuery = function () {
       res.send(JSON.stringify(response.data));
     } catch (e) {
       await errorLog("Console 서버 문제 생김 (rou_post_mysqlQuery): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_generalImpPayment = function () {
+  const instance = this;
+  const { errorLog, requestSystem } = this.mother;
+  let obj = {};
+  obj.link = [ "/generalImpPayment" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (typeof req.body.mode !== "string") {
+        throw new Error("invaild post");
+      }
+      const { mode } = req.body;
+      const oidConstDictionary = {
+        mini: "homeliaisonMini_",
+      };
+      let pluginScript;
+
+      if (mode === "script") {
+        pluginScript = '';
+        pluginScript += (await requestSystem("https://code.jquery.com/jquery-1.12.4.min.js")).data;
+        pluginScript += "\n";
+        pluginScript += (await requestSystem("https://cdn.iamport.kr/js/iamport.payment-1.1.5.js")).data;
+        res.send(JSON.stringify({ pluginScript, oidConstDictionary[req.body.oidKey] }));
+      } else {
+        throw new Error("invaild mode");
+      }
+
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_generalImpPayment): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
   }

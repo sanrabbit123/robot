@@ -5253,7 +5253,7 @@ DataRouter.prototype.rou_post_mysqlQuery = function () {
   obj.link = [ "/mysqlQuery" ];
   obj.func = async function (req, res) {
     res.set({
-      "Content-Type": "text/plain",
+      "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
@@ -5270,6 +5270,43 @@ DataRouter.prototype.rou_post_mysqlQuery = function () {
       res.send(JSON.stringify(response.data));
     } catch (e) {
       await errorLog("Console 서버 문제 생김 (rou_post_mysqlQuery): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_generalImpPayment = function () {
+  const instance = this;
+  const { errorLog, requestSystem } = this.mother;
+  let obj = {};
+  obj.link = [ "/generalImpPayment" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (typeof req.body.mode !== "string") {
+        throw new Error("invaild post");
+      }
+      const { mode } = req.body;
+      let pluginScript;
+
+      if (mode === "script") {
+        pluginScript = '';
+        pluginScript += (await requestSystem("https://code.jquery.com/jquery-1.12.4.min.js")).data;
+        pluginScript += "\n";
+        pluginScript += (await requestSystem("https://cdn.iamport.kr/js/iamport.payment-1.1.5.js")).data;
+        res.send(JSON.stringify({ pluginScript }));
+      } else {
+        throw new Error("invaild mode");
+      }
+
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_generalImpPayment): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
   }
