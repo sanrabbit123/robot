@@ -4628,7 +4628,7 @@ DataRouter.prototype.rou_post_generalImpPayment = function () {
         pluginScript += (await requestSystem("https://code.jquery.com/jquery-1.12.4.min.js")).data;
         pluginScript += "\n";
         pluginScript += (await requestSystem("https://cdn.iamport.kr/js/iamport.payment-1.1.5.js")).data;
-        res.send(JSON.stringify({ pluginScript, oidConstDictionary[req.body.oidKey] }));
+        res.send(JSON.stringify({ pluginScript, oidConst: oidConstDictionary[req.body.oidKey] }));
       } else {
         throw new Error("invaild mode");
       }
