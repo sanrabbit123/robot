@@ -48,7 +48,7 @@ MiniGuideJs.binaryPath = FRONTHOST + "/middle/miniGuide";
 MiniGuideJs.prototype.insertInitBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
-  const { client, ea, media, osException, testMode } = this;
+  const { client, ea, media, osException, testMod, user } = this;
   const mobile = media[4];
   const desktop = !mobile;
   let whiteBlock;
@@ -115,7 +115,7 @@ MiniGuideJs.prototype.insertInitBox = function () {
       "상세 정보 전송"
     ],
     description: [
-      (<&& "간략한 프로세스 안내와 함께 진행을 위해 상세 정보 사항 전송을 요청드립니다." | "간략한 프로세스 안내와 함께 진행을 위해 상세 정보 사항 전송을 요청드립니다." | "간략한 프로세스 안내와 함께 진행을 위해 상세 정보 사항 전송을 요청드립니다." | "간략한 프로세스 안내와 함께 진행을 위해 상세 정보 사항 전송을 요청드립니다." | "간략한 프로세스 안내와 함께 진행을 위해\n상세 정보 사항 전송을 요청드립니다." &&>),
+      (<&& "간략한 프로세스 안내와 함께, 진행을 위한 상세 정보 전송을 요청드립니다." | "간략한 프로세스 안내와 함께, 진행을 위한 상세 정보 전송을 요청드립니다." | "간략한 프로세스 안내와 함께, 진행을 위한 상세 정보 전송을 요청드립니다." | "간략한 프로세스 안내와 함께, 진행을 위한 상세 정보 전송을 요청드립니다." | "간략한 프로세스 안내와 함께, 진행을 위한\n상세 정보 전송을 요청드립니다." &&>),
       (<&& "<b%취향과 예산 / 실측 정보 / 현장 사진을 보내주시면,%b> 디자이너는 그 정보를 바탕으로 디자인을 진행하게 됩니다." | "<b%취향과 예산 / 실측 / 사진을 보내주시면,%b> 디자이너는 그 정보를 바탕으로 디자인을 진행하게 됩니다." | "<b%취향과 예산 / 실측 / 사진을 보내주시면,%b> 디자이너는 그 정보를 바탕으로 디자인을 진행하게 됩니다." | "<b%취향과 예산 / 실측 / 사진을 보내주시면,%b> 그 정보를 바탕으로 디자인을 진행하게 됩니다." | "<b%취향과 예산 / 실측 / 사진을 보내주시면,%b>\n정보를 바탕으로 디자인을 진행하게 됩니다." &&>)
     ],
     image: MiniGuideJs.binaryPath + "/init" + String(media.findIndex(boo => boo)) + ".svg",
@@ -500,8 +500,10 @@ MiniGuideJs.prototype.insertProcessBox = function () {
 
 MiniGuideJs.prototype.insertRequestBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing } = GeneralJs;
-  const { client, ea, media, osException, testMode } = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, ajaxJson } = GeneralJs;
+  const { client, ea, media, osException, testMode, user } = this;
+  const { useid, request } = user;
+  const { init, style, budget, size, etc } = request.comments;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1]);
@@ -543,6 +545,7 @@ MiniGuideJs.prototype.insertRequestBox = function () {
   let buttonAreaHeight;
   let buttonWidth, buttonHeight, buttonSize, buttonWeight, buttonTextTop;
   let buttonAreaPaddingTop;
+  let value, column;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 56, 52, 44, 32, 6 %%>;
@@ -599,17 +602,23 @@ MiniGuideJs.prototype.insertRequestBox = function () {
       {
         type: "string",
         name: "선호하는 컬러나 스타일을 알려주세요!",
-        placeholder: "예) 화이트 우드 스타일을 좋아하고, 하얀 색감의 코지함이 있었으면 좋겠어요."
+        placeholder: "예) 화이트 우드 스타일을 좋아하고, 하얀 색감의 코지함이 있었으면 좋겠어요.",
+        value: style,
+        column: "request.comments.style",
       },
       {
         type: "string",
         name: "패브릭, 액자, 소품에 쓸 예산을 알려주세요!",
-        placeholder: "예) 총 예산은 500만원 정도이고, 패브릭 300만원 / 액자 100만원 / 소품 100만원으로 생각하고 있어요."
+        placeholder: "예) 총 예산은 500만원 정도이고, 패브릭 300만원 / 액자 100만원 / 소품 100만원으로 생각하고 있어요.",
+        value: budget,
+        column: "request.comments.budget",
       },
       {
         type: "string",
         name: "공간의 사이즈를 가이드에 따라 실측한 뒤 알려주세요!",
-        placeholder: "예) 침실 : 벽 높이 000mm / 벽 폭 000mm / 창문 폭 000mm / 창문 높이 000mm / 커튼박스 안 깊이 000mm\n거실 : 벽 높이 000mm / 벽 폭 000mm / 커튼박스 안 깊이 000mm"
+        placeholder: "예) 침실 : 벽 높이 000mm / 벽 폭 000mm / 창문 폭 000mm / 창문 높이 000mm / 커튼박스 안 깊이 000mm\n거실 : 벽 높이 000mm / 벽 폭 000mm / 커튼박스 안 깊이 000mm",
+        value: size,
+        column: "request.comments.size",
       },
       {
         type: "file",
@@ -622,6 +631,8 @@ MiniGuideJs.prototype.insertRequestBox = function () {
           MiniGuideJs.binaryPath + "/" + "before4.jpg",
         ],
         placeholder: "클릭 또는 드래그로 파일 업로드...",
+        value: "",
+        column: "",
       }
     ]
   };
@@ -688,6 +699,8 @@ MiniGuideJs.prototype.insertRequestBox = function () {
     name = contents.request[i].name;
     placeholder = contents.request[i].placeholder;
     question = "<b%Q" + String(i + 1) + ".%b> " + name;
+    value = contents.request[i].value;
+    column = contents.request[i].column;
 
     createNode({
       mother: whiteBlock,
@@ -753,7 +766,22 @@ MiniGuideJs.prototype.insertRequestBox = function () {
             children: [
               {
                 mode: "textarea",
-                attribute: { placeholder },
+                text: value,
+                attribute: { placeholder, value, column },
+                event: {
+                  blur: async function (e) {
+                    try {
+                      const column = this.getAttribute("column");
+                      const value = this.value.trim();
+                      let updateQuery;
+                      updateQuery = {};
+                      updateQuery[column] = value;
+                      await ajaxJson({ whereQuery: { useid }, updateQuery }, "/updateUser");
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  }
+                },
                 style: {
                   position: "relative",
                   fontSize: String(answerSize) + ea,
@@ -1647,8 +1675,6 @@ MiniGuideJs.prototype.launching = async function (loading) {
     }
     user = users[0];
     this.user = user;
-
-    console.log(user);
 
     await this.mother.ghostClientLaunching({
       mode: "ghost",
