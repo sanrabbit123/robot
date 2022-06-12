@@ -1153,7 +1153,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           await back.updateUser([ whereQuery, updateQuery ], { selfMongo });
 
           // alimtalk
-
+          
 
           // slack
           await messageSend({ text: name + " 고객님의 사진 전송이 완료되었어요.", channel: "#400_customer" });
