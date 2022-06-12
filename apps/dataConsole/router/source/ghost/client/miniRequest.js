@@ -49,6 +49,8 @@ MiniRequestJs.prototype.insertInitBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
   const { client, ea, media, osException, pointColor } = this;
+  const { user } = this;
+  const { request } = user;
   const mobile = media[4];
   const desktop = !mobile;
   let whiteBlock;
@@ -130,38 +132,37 @@ MiniRequestJs.prototype.insertInitBox = function () {
 
   contents = {
     title: [
-      "김청수 고객님",
+      user.name + " 고객님",
       "미니 스타일링 관리"
     ],
     description: [
-      "김청수 고객님 관련 <b%홈리에종 미니 서비스 의뢰와 안내%b> 드립니다. 고객님께서 작성해주신",
+      user.name + " 고객님 관련 <b%홈리에종 미니 서비스 의뢰와 안내%b> 드립니다. 고객님께서 작성해주신",
       "정보를 바탕으로 상담을 진행해주시면 되며, 상담 메모는 하단 영역에 작성해주시면 됩니다.",
     ],
     userInfo: [
       {
         name: "성함",
-        value: "김청수"
+        value: user.name
       },
       {
         name: "연락처",
-        value: "010-0000-0000"
+        value: user.phone
       },
       {
         name: "이메일",
-        value: "example@gmail.com"
+        value: user.email
       },
       {
         name: "주소",
-        value: "서울특별시 동대문구 장한로 99 (장안동, 양우내안애애플) 1동 319호",
+        value: request.space.address,
       },
       {
         name: "방 개수",
-        value: String(2) + "개",
+        value: String(request.space.targets) + "개",
       },
       {
         name: "요청 사항",
-        value: "정보를 바탕으로 상담을 진행해주시면 되며, 상담 메모는 하단 영역에 작성해주시면 됩니다. 정보를 바탕으로 상담을 진행해주시면 되며, 상담 메모는 하단 영역에 작성해주시면 됩니다. 정보를 바탕으로 상담을 진행해주시면 되며, 상담 메모는 하단 영역에 작성해주시면 됩니다. 정보를 바탕으로 상담을 진행해주시면 되며, 상담 메모는 하단 영역에 작성해주시면 됩니다. 정보를 바탕으로 상담을 진행해주시면 되며, 상담 메모는 하단 영역에 작성해주시면 됩니다."
-        // value: "정보를 바탕으로 상담을 진행해주시면 되며, 상담 메모는 하단 영역에 작성해주시면 됩니다."
+        value: request.comments.init
       }
     ]
   };
@@ -366,6 +367,8 @@ MiniRequestJs.prototype.insertMemoBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
   const { client, ea, media, osException, pointColor } = this;
+  const { user } = this;
+  const { request } = user;
   const mobile = media[4];
   const desktop = !mobile;
   let whiteBlock;
@@ -2275,13 +2278,26 @@ MiniRequestJs.prototype.launching = async function (loading) {
     this.mother.setGeneralProperties(this);
     const { returnGet, ajaxJson, requestPromise, setDebounce } = GeneralJs;
     const getObj = returnGet();
+    let users, user;
 
+    if (getObj.useid === undefined) {
+      window.alert("잘못된 접근입니다!");
+      window.location.href = this.frontPage;
+    }
+
+    users = await ajaxJson({ whereQuery: { useid: getObj.useid } }, "/getUsers", { equal: true });
+    if (users.length === 0) {
+      window.alert("잘못된 접근입니다!");
+      window.location.href = this.frontPage;
+    }
+    user = users[0];
+    this.user = user;
     this.pointColor = "darkslategray";
 
     await this.mother.ghostClientLaunching({
       mode: "ghost",
       name: "miniRequest",
-      client: this.client,
+      client: this.user,
       base: {
         instance: this,
         binaryPath: MiniRequestJs.binaryPath,
