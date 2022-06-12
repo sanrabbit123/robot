@@ -2821,6 +2821,14 @@ BackMaker.prototype.getUsersByQuery = async function (query, option = { withTool
   }
 }
 
+BackMaker.prototype.returnUserDummies = function (subject) {
+  const instance = this;
+  const map = require(`${this.mapDir}/user.js`);
+  let dummy;
+  dummy = map.sub(subject);
+  return dummy;
+}
+
 BackMaker.prototype.updateUser = async function (queryArr, option = { selfMongo: null, devAlive: false }) {
   if (queryArr.length !== 2) {
     throw new Error("invaild arguments : query object must be Array: [ Object: whereQuery, Object: updateQuery ]");

@@ -315,6 +315,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
   const { filterAll, filterName, filterDate, filterCont, filterNull } = BridgeCloud.clientFilters;
   const [ MONGOC, MONGOLOCALC, KAKAO, HUMAN, ADDRESS ] = needs;
   const ignorePhone = this.ignorePhone;
+  const back = this.back;
   let funcObj = {};
 
   //GET - ssl test
@@ -1106,8 +1107,13 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           const binaryFolder = instance.address.officeinfo.ghost.file.static + instance.address.officeinfo.ghost.file.user;
           const binrayFolderTest = new RegExp(userFolderName, 'gi');
           const binaryFolderDetail = await fileSystem(`readDir`, [ binaryFolder ]);
+          const selfMongo = MONGOC;
+          let user;
           let binrayFolderBoo;
+          let photoObj;
+          let updateQuery, whereQuery;
 
+          // move file
           binrayFolderBoo = false;
           for (let i of binaryFolderDetail) {
             if (binrayFolderTest.test(i)) {
@@ -1128,11 +1134,25 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
             }
           }
 
-          // alimtalk
+          // data
+          user = await back.getUserById(useid, { selfMongo });
+          photoObj = back.returnUserDummies("request.photo");
+          photoObj.date = new Date();
+          photoObj.key = userFolderName;
+          photoObj.target = 0;
+          photoObj.method = "";
 
+          whereQuery = { useid };
+          updateQuery = {};
+          updateQuery["request.photo"] = user.toNormal().request.photo.unshift(photoObj);
+
+          await back.updateUser([ whereQuery, updateQuery ], { selfMongo });
+
+          // alimtalk
+          
 
           // slack
-
+          await messageSend({ text: name + " 고객님의 사진 전송이 완료되었어요.", channel: "#400_customer" });
 
           res.send(JSON.stringify({ message: "success" }));
 
