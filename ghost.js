@@ -1917,7 +1917,7 @@ Ghost.prototype.ghostRouter = function (needs) {
         tong = [];
         for (let path of keyArr) {
           dir = await fileSystem("readDir", [ path ]);
-          dir = dir.filter((str) => { return str !== ".DS_Store" }).map((str) => { path + "/" + str });
+          dir = dir.filter((str) => { return str !== ".DS_Store" }).map((str) => { return path + "/" + str });
           tong = tong.concat(dir);
         }
 
