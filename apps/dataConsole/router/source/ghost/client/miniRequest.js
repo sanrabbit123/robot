@@ -85,6 +85,7 @@ MiniRequestJs.prototype.insertInitBox = function () {
   let whiteBlockMinHeight;
   let whiteInnerInnerPaddingBottom;
   let blockFactorSize, blockFactorTitleWeight, blockFactorWeight, blockFactorLineHeight;
+  let whiteInnerInnerPaddingTop;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 56, 52, 44, 32, 6 %%>;
@@ -119,6 +120,7 @@ MiniRequestJs.prototype.insertInitBox = function () {
 
   whiteInnerMargin = <%% 20, 20, 20, 20, 20 %%>;
   whiteInnerInnerPadding = <%% 30, 30, 30, 30, 30 %%>;
+  whiteInnerInnerPaddingTop = <%% 24, 24, 24, 24, 24 %%>;
   whiteInnerInnerPaddingBottom = <%% 40, 40, 40, 40, 40 %%>;
 
   blockTitleAreaWidth = <%% 140, 100, 100, 100, 100 %%>;
@@ -295,7 +297,7 @@ MiniRequestJs.prototype.insertInitBox = function () {
           marginLeft: String(whiteInnerMargin) + ea,
           paddingLeft: String(whiteInnerInnerPadding) + ea,
           paddingRight: String(whiteInnerInnerPadding) + ea,
-          paddingTop: String(whiteInnerInnerPadding) + ea,
+          paddingTop: String(whiteInnerInnerPaddingTop) + ea,
           paddingBottom: String(whiteInnerInnerPaddingBottom) + ea,
           boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
           borderRadius: String(5) + "px",
@@ -365,10 +367,11 @@ MiniRequestJs.prototype.insertInitBox = function () {
 
 MiniRequestJs.prototype.insertMemoBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing, ajaxJson } = GeneralJs;
   const { client, ea, media, osException, pointColor } = this;
   const { user } = this;
   const { request } = user;
+  const { comments } = request;
   const mobile = media[4];
   const desktop = !mobile;
   let whiteBlock;
@@ -404,6 +407,9 @@ MiniRequestJs.prototype.insertMemoBox = function () {
   let blockFactorSize, blockFactorTitleWeight, blockFactorWeight, blockFactorLineHeight;
   let descriptionBetween;
   let descriptionLineHeight;
+  let whiteQuestionBetween;
+  let num;
+  let whiteInnerInnerPaddingTop;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 56, 52, 44, 32, 6 %%>;
@@ -437,11 +443,12 @@ MiniRequestJs.prototype.insertMemoBox = function () {
   mobileBottomMargin = 10;
 
   whiteInnerMargin = <%% 20, 20, 20, 20, 20 %%>;
+  whiteInnerInnerPaddingTop = <%% 24, 24, 24, 24, 24 %%>;
   whiteInnerInnerPadding = <%% 30, 30, 30, 30, 30 %%>;
   whiteInnerInnerPaddingBottom = <%% 40, 40, 40, 40, 40 %%>;
 
-
-  whiteBlockMinHeight = <%% 400, 400, 400, 400, 400 %%>;
+  whiteBlockMinHeight = <%% 240, 240, 240, 240, 24 %%>;
+  whiteQuestionBetween = <%% 13, 13, 13, 13, 13 %%>;
 
   blockFactorSize = <%% 16, 16, 16, 16, 16 %%>;
   blockFactorTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -453,22 +460,24 @@ MiniRequestJs.prototype.insertMemoBox = function () {
 
   contents = {
     description: [
-      "고객 상담은 <b%하단 6가지 내용%b>을 알아 내는",
-      "데에 초점을 두시고 진행하시면 됩니다.",
-      "6가지 항목에 대해 <b%알아내신 후, 디자인",
-      "시안 작업을 진행%b>해주시면 되며 하단",
-      "영역에서 제품 리스트와 디자인 시안을",
-      "업로드 해주시면 됩니다.",
+      "고객 상담은 <b%다음 3가지 내용%b>을 기반으로",
+      "유선 전화를 통해 진행하시면 됩니다.",
+      "3가지 항목은 <b%고객님이 직접 적어주신 것으로,",
+      "부족한 점이 있다면 상담을 통해%b> 상담 메모란에",
+      "추가하여 적어주시면 됩니다.",
     ],
     check: [
-      "현재 집을 어떻다고 느끼는 지",
-      "어떻게 변했으면 하는지 ",
-      "컬러 선택 ",
-      "예산",
-      "고객이 원하는 품목 ",
-      "공간의 사이즈",
+      "선호하는 컬러나 스타일",
+      "패브릭, 액자, 소품에 쓸 예산",
+      "공간 실측 정보",
     ],
     memo: "이곳을 클릭하여 상담 메모를 남겨주세요!",
+    memoList: [
+      { question: "고객이 받은 질문 : '선호하는 컬러나 스타일을 알려주세요!'", value: comments.style },
+      { question: "고객이 받은 질문 : '패브릭, 액자, 소품에 쓸 예산을 알려주세요!'", value: comments.budget },
+      { question: "고객이 받은 질문 : '공간의 사이즈를 가이드에 따라 실측한 뒤 알려주세요!'", value: comments.size },
+      { question: "기타 상담 메모를 적어주세요!", value: comments.etc },
+    ]
   };
 
   whiteBlock = createNode({
@@ -496,7 +505,6 @@ MiniRequestJs.prototype.insertMemoBox = function () {
       paddingBottom: String(rightBoxPaddingBottom) + ea,
       verticalAlign: "top",
       flexDirection: "column",
-      justifyContent: "end",
     }
   });
 
@@ -560,67 +568,134 @@ MiniRequestJs.prototype.insertMemoBox = function () {
     }
   });
 
-  whiteBox = createNode({
-    mother: grayBox,
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(100) + '%',
-      background: colorChip.gray1,
-      borderRadius: String(5) + "px",
-      paddingTop: String(whiteInnerMargin) + ea,
-      paddingBottom: String(whiteInnerMargin) + ea,
-    },
-    children: [
-      {
+
+  num = 0;
+  for (let { question, value } of contents.memoList) {
+
+    whiteBox = createNode({
+      mother: grayBox,
+      style: {
+        display: "block",
+        position: "relative",
+        width: String(100) + '%',
+        background: colorChip.gray1,
+        borderRadius: String(5) + "px",
+        paddingTop: String(whiteInnerMargin) + ea,
+        paddingBottom: String(whiteInnerMargin) + ea,
+        marginBottom: String(whiteInnerMargin) + ea,
+      },
+      children: [
+        {
+          text: "> " + question,
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(16) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+            paddingLeft: String(whiteInnerMargin) + ea,
+            paddingBottom: String(whiteQuestionBetween) + ea,
+          }
+        },
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            background: colorChip.white,
+            width: withOut((whiteInnerMargin * 2) + (whiteInnerInnerPadding * 2), ea),
+            marginLeft: String(whiteInnerMargin) + ea,
+            paddingLeft: String(whiteInnerInnerPadding) + ea,
+            paddingRight: String(whiteInnerInnerPadding) + ea,
+            paddingTop: String(whiteInnerInnerPaddingTop) + ea,
+            paddingBottom: String(whiteInnerInnerPadding) + ea,
+            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+            borderRadius: String(5) + "px",
+          }
+        }
+      ]
+    }).children[1];
+
+    if (num !== contents.memoList.length - 1) {
+      block = createNode({
+        mother: whiteBox,
         style: {
           display: "block",
           position: "relative",
-          background: colorChip.white,
-          width: withOut((whiteInnerMargin * 2) + (whiteInnerInnerPadding * 2), ea),
-          marginLeft: String(whiteInnerMargin) + ea,
-          paddingLeft: String(whiteInnerInnerPadding) + ea,
-          paddingRight: String(whiteInnerInnerPadding) + ea,
-          paddingTop: String(whiteInnerInnerPadding) + ea,
-          paddingBottom: String(whiteInnerInnerPadding) + ea,
-          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-          borderRadius: String(5) + "px",
-        }
-      }
-    ]
-  }).firstChild;
-
-  block = createNode({
-    mother: whiteBox,
-    style: {
-      display: "block",
-      position: "relative",
-      minHeight: String(whiteBlockMinHeight) + ea,
-    }
-  });
-
-  createNode({
-    mother: block,
-    style: {
-      display: "inline-block",
-      position: "relative",
-      width: String(100) + '%',
-      height: String(100) + '%',
-      verticalAlign: "top",
-    },
-    children: [
-      {
-        text: contents.memo,
+        },
+        children: [
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(100) + '%',
+              height: String(100) + '%',
+              verticalAlign: "top",
+            },
+            children: [
+              {
+                text: value,
+                style: {
+                  fontSize: String(blockFactorSize) + ea,
+                  fontWeight: String(blockFactorWeight),
+                  color: colorChip.black,
+                  lineHeight: String(blockFactorLineHeight),
+                  verticalAlign: "top",
+                }
+              }
+            ]
+          }
+        ]
+      });
+    } else {
+      block = createNode({
+        mother: whiteBox,
         style: {
-          fontSize: String(blockFactorSize) + ea,
-          fontWeight: String(blockFactorWeight),
-          color: colorChip.black,
-          lineHeight: String(blockFactorLineHeight),
-          verticalAlign: "top",
-        }
-      }
-    ]
-  });
+          display: "block",
+          position: "relative",
+          minHeight: String(whiteBlockMinHeight) + ea,
+        },
+        children: [
+          {
+            mode: "textarea",
+            text: value,
+            attribute: {
+              placeholder: contents.memo,
+            },
+            event: {
+              blur: async function (e) {
+                try {
+                  let whereQuery, updateQuery;
+                  whereQuery = { useid: instance.user.useid };
+                  updateQuery = {};
+                  updateQuery["request.comments.etc"] = this.value.trim();
+                  await ajaxJson({ whereQuery, updateQuery }, "/updateUser");
+                } catch (e) {
+                  window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+                }
+              }
+            },
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(100) + '%',
+              verticalAlign: "top",
+              fontSize: String(blockFactorSize) + ea,
+              fontWeight: String(blockFactorWeight),
+              color: colorChip.black,
+              lineHeight: String(blockFactorLineHeight),
+              verticalAlign: "top",
+              minHeight: String(whiteBlockMinHeight) + ea,
+              border: String(0),
+              outline: String(0),
+            },
+          }
+        ]
+      });
+    }
+
+    num++;
+  }
+
 
 }
 
