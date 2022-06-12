@@ -711,9 +711,18 @@ MiniRequestJs.prototype.insertMemoBox = function () {
     }
   });
 
-  ajaxJson({ useid: instance.user.useid }, "/ghostPass_userPhoto", { equal: true }).then((list) => {
+  ajaxJson({ useid: instance.user.useid }, "/ghostPass_userPhoto", { equal: true }).then((data) => {
+    const { list } = data;
+    const targets = list.map((raw) => { return "https://" + FILEHOST + window.encodeURI(raw) });
+
+
+
     
-    console.log(list);
+
+
+
+
+
 
   }).catch((err) => { console.log(err); })
 
