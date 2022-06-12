@@ -412,6 +412,7 @@ MiniRequestJs.prototype.insertMemoBox = function () {
   let whiteInnerInnerPaddingTop;
   let photoBox;
   let photo;
+  let photoBetween;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 56, 52, 44, 32, 6 %%>;
@@ -459,6 +460,8 @@ MiniRequestJs.prototype.insertMemoBox = function () {
 
   descriptionBetween = <%% 20, 20, 20, 20, 20 %%>;
   descriptionLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
+
+  photoBetween = <%% 8, 8, 8, 8, 1 %%>;
 
   contents = {
     description: [
@@ -706,18 +709,53 @@ MiniRequestJs.prototype.insertMemoBox = function () {
       background: colorChip.gray1,
       borderRadius: String(5) + "px",
       paddingTop: String(whiteInnerMargin) + ea,
-      paddingBottom: String(whiteInnerMargin) + ea,
+      paddingBottom: String(whiteInnerMargin - photoBetween) + ea,
       marginBottom: String(whiteInnerMargin) + ea,
-    }
-  });
+    },
+    children: [
+      {
+        style: {
+          marginLeft: String(whiteInnerMargin) + ea,
+          width: withOut((whiteInnerMargin * 2) - photoBetween, ea),
+          display: "block",
+          position: "relative",
+        }
+      }
+    ]
+  }).firstChild;
 
   ajaxJson({ useid: instance.user.useid }, "/ghostPass_userPhoto", { equal: true }).then((data) => {
     const { list } = data;
     const targets = list.map((raw) => { return "https://" + FILEHOST + window.encodeURI(raw) });
 
+    for (let link of targets) {
+      createNode({
+        mother: photoBox,
+        mode: "img",
+        attribute: {
+          src: link,
+        },
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: "calc(calc(100% - " + String(photoBetween * 4) + ea + ") / " + String(4) + ")",
+          height: "auto",
+          borderRadius: String(3) + "px",
+          marginRight: String(photoBetween) + ea,
+          marginBottom: String(photoBetween) + ea,
+          verticalAlign: "top",
+        }
+      })
 
 
-    
+
+
+    }
+
+
+
+
+
 
 
 
