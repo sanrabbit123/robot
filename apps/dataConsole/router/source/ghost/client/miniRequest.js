@@ -932,6 +932,31 @@ MiniRequestJs.prototype.insertMemoBox = function () {
 
 }
 
+MiniRequestJs.prototype.insertProposalBoxes = function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
+  const { client, ea, media, osException, pointColor, user } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+
+  instance.insertProposalBox();
+
+}
+
+MiniRequestJs.prototype.insertProposalBox = function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
+  const { client, ea, media, osException, pointColor, user } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+
+  instance.insertConceptBox();
+  instance.insertCollageBox();
+  instance.insertReferenceBox();
+  instance.insertListBox();
+
+}
+
 MiniRequestJs.prototype.insertConceptBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
@@ -2617,10 +2642,7 @@ MiniRequestJs.prototype.launching = async function (loading) {
         try {
           instance.insertInitBox();
           instance.insertMemoBox();
-          instance.insertConceptBox();
-          instance.insertCollageBox();
-          instance.insertReferenceBox();
-          instance.insertListBox();
+          instance.insertProposalBoxes();
           instance.insertFinalBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "MiniRequestJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
