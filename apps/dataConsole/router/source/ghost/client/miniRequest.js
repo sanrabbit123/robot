@@ -368,7 +368,7 @@ MiniRequestJs.prototype.insertInitBox = function () {
 MiniRequestJs.prototype.insertMemoBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing, ajaxJson } = GeneralJs;
-  const { client, ea, media, osException, pointColor } = this;
+  const { client, ea, media, osException, pointColor, totalContents } = this;
   const { user } = this;
   const { request } = user;
   const { comments } = request;
@@ -413,6 +413,11 @@ MiniRequestJs.prototype.insertMemoBox = function () {
   let photoBox;
   let photo;
   let photoBetween;
+  let image;
+  let width, height;
+  let upDownPadding;
+  let lefRightPadding;
+  let imageArrowWidth, imageArrowLeft;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 56, 52, 44, 32, 6 %%>;
@@ -462,6 +467,12 @@ MiniRequestJs.prototype.insertMemoBox = function () {
   descriptionLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
 
   photoBetween = <%% 8, 8, 8, 8, 1 %%>;
+
+  upDownPadding = <%% 108, 108, 108, 120, 120 %%>;
+  lefRightPadding = <%% 150, 150, 150, 150, 200 %%>;
+
+  imageArrowWidth = <%% 16, 16, 16, 16, 16 %%>;
+  imageArrowLeft = <%% -70, -70, -70, -70, -70 %%>;
 
   contents = {
     description: [
@@ -727,13 +738,164 @@ MiniRequestJs.prototype.insertMemoBox = function () {
   ajaxJson({ useid: instance.user.useid }, "/ghostPass_userPhoto", { equal: true }).then((data) => {
     const { list } = data;
     const targets = list.map((raw) => { return "https://" + FILEHOST + window.encodeURI(raw) });
+    let images;
+    let index;
 
+    images = [];
+    index = 0;
     for (let link of targets) {
-      createNode({
+      image = createNode({
         mother: photoBox,
         mode: "img",
+        event: {
+          click: function (e) {
+            const zIndex = String(101);
+            const index = Number(this.getAttribute("index"));
+            const imagePopupClassName = "imagePopupClassName";
+            const imagePopupIdName = "imagePopupIdName";
+            let cancelBack, imagePopup;
+            let gsMode;
+            let imageWidth, imageHeight;
+            let generateImagePopup;
+            let ratio, width, height;
+
+            cancelBack = createNode({
+              mother: totalContents,
+              class: [ imagePopupClassName ],
+              event: {
+                click: function (e) {
+                  const removeTargets = document.querySelectorAll('.' + imagePopupClassName);
+                  for (let dom of removeTargets) {
+                    dom.remove();
+                  }
+                }
+              },
+              style: {
+                position: "fixed",
+                top: String(0),
+                left: String(0),
+                width: String(100) + '%',
+                height: String(100) + '%',
+                opacity: String(0.3),
+                background: colorChip.black,
+              }
+            });
+
+            generateImagePopup = (index) => {
+              ratio = Number(images[index].getAttribute("ratio"));
+              width = Number(images[index].getAttribute("width"));
+              height = Number(images[index].getAttribute("height"));
+
+              gsMode = (window.innerWidth - (lefRightPadding * 2) < (window.innerHeight - (upDownPadding * 2)) * ratio) ? 'g' : 's';
+
+              if (gsMode === 'g') {
+                imageWidth = window.innerWidth - (lefRightPadding * 2);
+                imageHeight = imageWidth / ratio;
+              } else {
+                imageHeight = window.innerHeight - (upDownPadding * 2);
+                imageWidth = imageHeight * ratio;
+              }
+
+              return createNode({
+                id: imagePopupIdName,
+                mother: totalContents,
+                class: [ imagePopupClassName ],
+                style: {
+                  position: "fixed",
+                  width: String(imageWidth) + ea,
+                  height: String(imageHeight) + ea,
+                  top: withOut(50, imageHeight / 2, ea),
+                  left: withOut(50, imageWidth / 2, ea),
+                  borderRadius: String(3) + "px",
+                },
+                children: [
+                  {
+                    style: {
+                      display: "block",
+                      position: "relative",
+                      width: withOut(0, ea),
+                      height: withOut(0, ea),
+                    },
+                    children: [
+                      {
+                        mode: "svg",
+                        source: instance.mother.returnArrow("left", colorChip.white),
+                        attribute: {
+                          index: String(index),
+                        },
+                        event: {
+                          click: function (e) {
+                            const index = Number(this.getAttribute("index"));
+                            document.getElementById(imagePopupIdName).remove();
+                            if (images[index - 1] === undefined) {
+                              generateImagePopup(images.length - 1);
+                            } else {
+                              generateImagePopup(index - 1);
+                            }
+                          },
+                          selectstart: (e) => { e.preventDefault(); },
+                        },
+                        style: {
+                          position: "absolute",
+                          width: String(imageArrowWidth) + ea,
+                          top: withOut(50, imageArrowWidth / 2, ea),
+                          left: String(imageArrowLeft) + ea,
+                          cursor: "pointer",
+                        }
+                      },
+                      {
+                        mode: "svg",
+                        source: instance.mother.returnArrow("right", colorChip.white),
+                        attribute: {
+                          index: String(index),
+                        },
+                        event: {
+                          click: function (e) {
+                            const index = Number(this.getAttribute("index"));
+                            document.getElementById(imagePopupIdName).remove();
+                            if (images[index + 1] === undefined) {
+                              generateImagePopup(0);
+                            } else {
+                              generateImagePopup(index + 1);
+                            }
+                          },
+                          selectstart: (e) => { e.preventDefault(); },
+                        },
+                        style: {
+                          position: "absolute",
+                          width: String(imageArrowWidth) + ea,
+                          top: withOut(50, imageArrowWidth / 2, ea),
+                          right: String(imageArrowLeft) + ea,
+                          cursor: "pointer",
+                        }
+                      },
+                      {
+                        mode: "img",
+                        attribute: { src: images[index].getAttribute("src") },
+                        event: {
+                          selectstart: (e) => { e.preventDefault(); },
+                        },
+                        style: {
+                          display: "block",
+                          position: "relative",
+                          width: String(imageWidth) + ea,
+                          height: String(imageHeight) + ea,
+                          borderRadius: String(3) + "px",
+                        }
+                      }
+                    ]
+                  }
+                ]
+              });
+            }
+
+            generateImagePopup(index);
+
+          }
+        },
         attribute: {
           src: link,
+          index: String(index),
         },
         style: {
           display: "inline-block",
@@ -744,12 +906,16 @@ MiniRequestJs.prototype.insertMemoBox = function () {
           marginRight: String(photoBetween) + ea,
           marginBottom: String(photoBetween) + ea,
           verticalAlign: "top",
+          cursor: "pointer",
         }
-      })
-
-
-
-
+      });
+      ({ width, height } = image.getBoundingClientRect());
+      image.setAttribute("width", String(Math.floor(width)));
+      image.setAttribute("height", String(Math.floor(height)));
+      image.setAttribute("ratio", String(width / height));
+      image.setAttribute("gs", (width >= height ? 'g' : 's'));
+      images.push(image);
+      index++;
     }
 
 
