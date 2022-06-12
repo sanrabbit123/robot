@@ -1112,6 +1112,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           let binrayFolderBoo;
           let photoObj;
           let updateQuery, whereQuery;
+          let userCopied;
 
           // move file
           binrayFolderBoo = false;
@@ -1142,14 +1143,17 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           photoObj.target = 0;
           photoObj.method = "";
 
+          userCopied = user.toNormal();
+          userCopied.request.photo.unshift(photoObj)
+
           whereQuery = { useid };
           updateQuery = {};
-          updateQuery["request.photo"] = user.toNormal().request.photo.unshift(photoObj);
+          updateQuery["request.photo"] = userCopied.request.photo;
 
           await back.updateUser([ whereQuery, updateQuery ], { selfMongo });
 
           // alimtalk
-          
+
 
           // slack
           await messageSend({ text: name + " 고객님의 사진 전송이 완료되었어요.", channel: "#400_customer" });
