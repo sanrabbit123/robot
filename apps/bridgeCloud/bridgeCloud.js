@@ -310,7 +310,7 @@ BridgeCloud.prototype.parsingAddress = async function (id, rawString, MONGOC) {
 
 BridgeCloud.prototype.bridgeServer = function (needs) {
   const instance = this;
-  const { fileSystem, requestSystem, shell, shellLink, todayMaker, ghostRequest, headRequest, sleep, equalJson, diskReading, messageSend, errorLog, messageLog } = this.mother;
+  const { fileSystem, requestSystem, shell, shellExec, shellLink, todayMaker, ghostRequest, dateToString, headRequest, sleep, equalJson, diskReading, messageSend, errorLog, messageLog } = this.mother;
   const GoogleCalendar = require(process.cwd() + "/apps/googleAPIs/googleCalendar.js");
   const { filterAll, filterName, filterDate, filterCont, filterNull } = BridgeCloud.clientFilters;
   const [ MONGOC, MONGOLOCALC, KAKAO, HUMAN, ADDRESS ] = needs;
@@ -1082,10 +1082,67 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         }
       });
     } catch (e) {
-      await errorLog("고객 파일 서버 문제 생김 (post_binary) : " + err.message);
+      await errorLog("고객 파일 서버 문제 생김 (post_binary) : " + e.message);
       res.send('error');
     }
   }
+
+  //POST - user binary files
+  funcObj.post_userBinary = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (3000 * 1024 * 1024) });
+      form.parse(req, async function (err, fields, files) {
+        let filesKeys = Object.keys(files);
+        if (!err && filesKeys.length > 0) {
+
+          const { name, phone, useid } = fields;
+          const userFolderName = useid + "_" + phone.replace(/\-/g, '') + "_" + String((new Date()).valueOf());
+          const binaryFolder = instance.address.officeinfo.ghost.file.static + instance.address.officeinfo.ghost.file.user;
+          const binrayFolderTest = new RegExp(userFolderName, 'gi');
+          const binaryFolderDetail = await fileSystem(`readDir`, [ binaryFolder ]);
+          let binrayFolderBoo;
+
+          binrayFolderBoo = false;
+          for (let i of binaryFolderDetail) {
+            if (binrayFolderTest.test(i)) {
+            binrayFolderBoo = true;
+            }
+          }
+          if (!binrayFolderBoo) {
+            await shellExec(`mkdir ${shellLink(binaryFolder + '/' + userFolderName)}`);
+          }
+
+          for (let key of filesKeys) {
+            if (Array.isArray(files[key])) {
+              for (let j of files[key]) {
+                await shellExec(`mv ${shellLink(j.filepath)} ${shellLink(binaryFolder + '/' + userFolderName + '/' + j.originalFilename)};`);
+              }
+            } else {
+              await shellExec(`mv ${shellLink(files[key].filepath)} ${shellLink(binaryFolder + '/' + userFolderName + '/' + files[key].originalFilename)};`);
+            }
+          }
+
+          // alimtalk
+
+
+          // slack
+
+
+          res.send(JSON.stringify({ message: "success" }));
+
+      });
+    } catch (e) {
+      await errorLog("유저 파일 서버 문제 생김 (post_userBinary) : " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+
 
   //POST - designer portfolio binary
   funcObj.post_designerBinary = async function (req, res) {

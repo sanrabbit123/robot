@@ -500,7 +500,7 @@ MiniGuideJs.prototype.insertProcessBox = function () {
 
 MiniGuideJs.prototype.insertRequestBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, ajaxJson, cleanChildren } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, ajaxJson, ajaxForm, cleanChildren } = GeneralJs;
   const { client, ea, media, osException, testMode, user } = this;
   const { useid, request } = user;
   const { init, style, budget, size, etc } = request.comments;
@@ -714,22 +714,17 @@ MiniGuideJs.prototype.insertRequestBox = function () {
             ]
           },
           {
-            attribute: [
-              { index }
-            ],
-            events: [
-              {
-                type: "click",
-                event: function (e) {
-                  const index = Number(this.getAttribute("index"));
-                  let cancel;
-                  cancel = JSON.parse(instance.fileInput.getAttribute("cancel"));
-                  cancel.push(index);
-                  instance.fileInput.setAttribute("cancel", JSON.stringify(cancel));
-                  this.parentElement.parentElement.removeChild(this.parentElement);
-                }
+            attribute: { index },
+            event: {
+              click: function (e) {
+                const index = Number(this.getAttribute("index"));
+                let cancel;
+                cancel = JSON.parse(instance.fileInput.getAttribute("cancel"));
+                cancel.push(index);
+                instance.fileInput.setAttribute("cancel", JSON.stringify(cancel));
+                this.parentElement.parentElement.removeChild(this.parentElement);
               }
-            ],
+            },
             style: {
               position: "absolute",
               background: colorChip.white,
@@ -1075,7 +1070,6 @@ MiniGuideJs.prototype.insertRequestBox = function () {
         ]
       });
       instance.fileInput = grayBlockWhite.querySelector("input");
-
     }
   }
 
@@ -1095,6 +1089,32 @@ MiniGuideJs.prototype.insertRequestBox = function () {
     },
     children: [
       {
+        event: {
+          click: async function (e) {
+            try {
+              let formData, cancelPhoto;
+
+              formData = new FormData();
+              formData.enctype = "multipart/form-data";
+              formData.append("name", instance.user.name);
+              formData.append("phone", instance.user.phone);
+              formData.append("useid", instance.user.useid);
+              cancelPhoto = JSON.parse(instance.fileInput.getAttribute("cancel"));
+              for (let i = 0; i < instance.fileInput.files.length; i++) {
+                if (!cancelPhoto.includes(i)) {
+                  formData.append("upload", instance.fileInput.files[i]);
+                }
+              }
+              await ajaxForm(formData, BRIDGEHOST + "/userBinary");
+
+              window.alert("전송이 완료되었습니다!");
+
+            } catch (e) {
+              console.log(e);
+              window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+            }
+          }
+        },
         style: {
           display: "inline-flex",
           position: "relative",
