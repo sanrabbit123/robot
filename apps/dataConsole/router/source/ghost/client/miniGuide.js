@@ -501,7 +501,7 @@ MiniGuideJs.prototype.insertProcessBox = function () {
 MiniGuideJs.prototype.insertRequestBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, ajaxJson, ajaxForm, cleanChildren } = GeneralJs;
-  const { client, ea, media, osException, testMode, user } = this;
+  const { client, ea, media, osException, testMode, user, totalContents } = this;
   const { useid, request } = user;
   const { init, style, budget, size, etc } = request.comments;
   const mobile = media[4];
@@ -559,6 +559,10 @@ MiniGuideJs.prototype.insertRequestBox = function () {
   let xIconWidth;
   let xIconTop;
   let xVisual;
+  let whiteEndWidth, whiteEndHeight;
+  let whiteEndClassName;
+  let whiteEndTextTop, whiteEndSize, whiteEndWeight, whiteEndLineHeight;
+  let whiteEndContents;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 56, 52, 44, 32, 6 %%>;
@@ -627,6 +631,17 @@ MiniGuideJs.prototype.insertRequestBox = function () {
   xIconTop = <%% 14, 14, 14, 14, 3 %%>;
   xVisual = <%% 4, 4, 4, 4, 1 %%>;
 
+  whiteEndClassName = "whiteEndClassName";
+
+  whiteEndContents = desktop ? "전송이 완료되었습니다!\n디자이너가 정보를 확인하고 유선 상담을 드릴 예정입니다!" : "전송이 완료되었습니다!\n디자이너가 정보를 확인하고\n유선 상담을 드릴 예정입니다!";
+
+  whiteEndWidth = <%% 500, 500, 440, 440, 60 %%>;
+  whiteEndHeight = <%% 118, 110, 100, 100, 28 %%>;
+
+  whiteEndTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.3 %%>;
+  whiteEndSize = <%% 17, 16, 15, 15, 3.6 %%>;
+  whiteEndWeight = <%% 600, 600, 600, 600, 600 %%>;
+  whiteEndLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
   contents = {
     title: "상세 정보 전송",
@@ -1092,22 +1107,86 @@ MiniGuideJs.prototype.insertRequestBox = function () {
         event: {
           click: async function (e) {
             try {
+              const zIndex = 301;
               let formData, cancelPhoto;
+              let loading;
+              let cancelBack, whiteEndPopup;
 
-              formData = new FormData();
-              formData.enctype = "multipart/form-data";
-              formData.append("name", instance.user.name);
-              formData.append("phone", instance.user.phone);
-              formData.append("useid", instance.user.useid);
-              cancelPhoto = JSON.parse(instance.fileInput.getAttribute("cancel"));
-              for (let i = 0; i < instance.fileInput.files.length; i++) {
-                if (!cancelPhoto.includes(i)) {
-                  formData.append("upload", instance.fileInput.files[i]);
+              loading = instance.mother.grayLoading();
+
+              if (instance.fileInput.files.length > 0) {
+                formData = new FormData();
+                formData.enctype = "multipart/form-data";
+                formData.append("name", instance.user.name);
+                formData.append("phone", instance.user.phone);
+                formData.append("useid", instance.user.useid);
+                cancelPhoto = JSON.parse(instance.fileInput.getAttribute("cancel"));
+                for (let i = 0; i < instance.fileInput.files.length; i++) {
+                  if (!cancelPhoto.includes(i)) {
+                    formData.append("upload", instance.fileInput.files[i]);
+                  }
                 }
+                await ajaxForm(formData, BRIDGEHOST + "/userBinary");
               }
-              await ajaxForm(formData, BRIDGEHOST + "/userBinary");
 
-              window.alert("전송이 완료되었습니다!");
+              loading.remove();
+
+              cancelBack = createNode({
+                mother: totalContents,
+                class: [ whiteEndClassName ],
+                event: {
+                  click: function (e) {
+                    const removeTargets = document.querySelectorAll('.' + whiteEndClassName);
+                    for (let dom of removeTargets) {
+                      dom.remove();
+                    }
+                  }
+                },
+                style: {
+                  position: "fixed",
+                  top: String(0),
+                  left: String(0),
+                  width: String(100) + '%',
+                  height: String(100) + '%',
+                  background: colorChip.black,
+                  opacity: String(0.3),
+                  zIndex: String(zIndex),
+                }
+              });
+
+              whiteEndPopup = createNode({
+                mother: totalContents,
+                class: [ whiteEndClassName ],
+                style: {
+                  display: "flex",
+                  position: "fixed",
+                  top: withOut(50, whiteEndHeight / 2, ea),
+                  left: withOut(50, whiteEndWidth / 2, ea),
+                  width: String(whiteEndWidth) + ea,
+                  height: String(whiteEndHeight) + ea,
+                  background: colorChip.white,
+                  borderRadius: String(5) + "px",
+                  zIndex: String(zIndex),
+                  justifyContent: "center",
+                  alignItems: "center",
+                  textAlign: "center",
+                  boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
+                }
+              });
+
+              createNode({
+                mother: whiteEndPopup,
+                text: whiteEndContents,
+                style: {
+                  position: "relative",
+                  top: String(whiteEndTextTop) + ea,
+                  fontSize: String(whiteEndSize) + ea,
+                  fontWeight: String(whiteEndWeight),
+                  color: colorChip.black,
+                  textAlign: "center",
+                  lineHeight: String(whiteEndLineHeight),
+                }
+              });
 
             } catch (e) {
               console.log(e);
