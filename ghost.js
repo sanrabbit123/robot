@@ -1912,12 +1912,12 @@ Ghost.prototype.ghostRouter = function (needs) {
         let tong;
 
         keyArr = user.request.photo.toNormal().map((obj) => { return obj.key });
-        keyArr = keyArr.map((str) => { return staticPath + "/" + str });
+        keyArr = keyArr.map((str) => { return { path: staticPath + "/" + str, link: address.officeinfo.ghost.file.user + "/" + str } });
 
         tong = [];
-        for (let path of keyArr) {
+        for (let { path, link } of keyArr) {
           dir = await fileSystem("readDir", [ path ]);
-          dir = dir.filter((str) => { return str !== ".DS_Store" }).map((str) => { return path + "/" + str });
+          dir = dir.filter((str) => { return str !== ".DS_Store" }).map((str) => { return link + "/" + str });
           tong = tong.concat(dir);
         }
 
