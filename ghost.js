@@ -1889,6 +1889,46 @@ Ghost.prototype.ghostRouter = function (needs) {
     }
   };
 
+  //POST - find user photos
+  funcObj.post_userPhoto = {
+    link: [ "/userPhoto" ],
+    func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      try {
+        if (req.body.useid === undefined) {
+          throw new Error("invaild post");
+        }
+        const staticPath = address.officeinfo.ghost.file.static + address.officeinfo.ghost.file.user;
+        const selfMongo = MONGOC;
+        const { useid } = req.body;
+        const user = await back.getUserById(useid, { selfMongo });
+        let keyArr;
+        let dir;
+        let tong;
+
+        keyArr = user.request.photo.toNormal().map((obj) => { return obj.key });
+        keyArr = keyArr.map((str) => { return staticPath + "/" + str });
+
+        tong = [];
+        for (let path of keyArr) {
+          dir = await fileSystem("readDir", [ path ]);
+          dir = dir.filter((str) => { return str !== ".DS_Store" }).map((str) => { path + "/" + str });
+          tong = tong.concat(dir);
+        }
+
+        res.send(JSON.stringify({ list: tong }));
+
+      } catch (e) {
+        res.send(JSON.stringify({ message: e.message + " : post must be { useid }" }));
+      }
+    }
+  };
+
   //POST - static delete
   funcObj.post_staticDelete = {
     link: [ "/staticDelete" ],

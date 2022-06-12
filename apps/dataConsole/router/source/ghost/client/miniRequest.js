@@ -410,6 +410,8 @@ MiniRequestJs.prototype.insertMemoBox = function () {
   let whiteQuestionBetween;
   let num;
   let whiteInnerInnerPaddingTop;
+  let photoBox;
+  let photo;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 56, 52, 44, 32, 6 %%>;
@@ -568,7 +570,6 @@ MiniRequestJs.prototype.insertMemoBox = function () {
     }
   });
 
-
   num = 0;
   for (let { question, value } of contents.memoList) {
 
@@ -696,6 +697,25 @@ MiniRequestJs.prototype.insertMemoBox = function () {
     num++;
   }
 
+  photoBox = createNode({
+    mother: grayBox,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      background: colorChip.gray1,
+      borderRadius: String(5) + "px",
+      paddingTop: String(whiteInnerMargin) + ea,
+      paddingBottom: String(whiteInnerMargin) + ea,
+      marginBottom: String(whiteInnerMargin) + ea,
+    }
+  });
+
+  ajaxJson({ useid: instance.user.useid }, "/ghostPass_userPhoto", { equal: true }).then((list) => {
+    
+    console.log(list);
+
+  }).catch((err) => { console.log(err); })
 
 }
 
