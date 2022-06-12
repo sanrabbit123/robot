@@ -1136,6 +1136,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 
           res.send(JSON.stringify({ message: "success" }));
 
+        }
       });
     } catch (e) {
       await errorLog("유저 파일 서버 문제 생김 (post_userBinary) : " + e.message);
