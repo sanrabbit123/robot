@@ -1183,18 +1183,11 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       form.parse(req, async function (err, fields, files) {
         let filesKeys = Object.keys(files);
         if (!err && filesKeys.length > 0) {
-
           const { sheetsName } = fields;
           const file = files[filesKeys[0]];
-
           const matrix = await excel.fileToMatrix(file.filepath, sheetsName)
           await shellExec(`rm -rf ${shellLink(file.filepath)};`);
-
-          console.log(matrix);
-
-
           res.send(JSON.stringify(matrix));
-
         }
       });
     } catch (e) {
