@@ -1249,6 +1249,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
             dummyList.target = i;
             dummyList.detail = [];
             targetMatrix = equalJson(fields["list_matrix_" + String(i)]);
+            console.log(targetMatrix);
             for (let [ name, number, unit, delivery, total, spec, site, link, etc ] of targetMatrix) {
               dummyListDetail = back.returnUserDummies("response.design.list.detail");
               dummyListDetail.name = name.trim();

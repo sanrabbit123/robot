@@ -918,16 +918,6 @@ MiniRequestJs.prototype.insertMemoBox = function () {
       index++;
     }
 
-
-
-
-
-
-
-
-
-
-
   }).catch((err) => { console.log(err); })
 
 }
@@ -3159,7 +3149,7 @@ MiniRequestJs.prototype.insertListBox = function (mother, index) {
 
 MiniRequestJs.prototype.insertFinalBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing, equalJson } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing, equalJson, ajaxForm } = GeneralJs;
   const { client, ea, media, osException, pointColor, fileInputClassNames, user } = this;
   const { request: { space: { targets } } } = user;
   const mobile = media[4];
@@ -3305,6 +3295,7 @@ MiniRequestJs.prototype.insertFinalBox = function () {
               let formData;
               let key;
               let tempArr;
+              let loading;
 
               if (instance.matrix.some((arr) => { return arr === 0 })) {
                 throw new Error("공간별로 제품 리스트를 모두 올려주세요!");
@@ -3400,6 +3391,8 @@ MiniRequestJs.prototype.insertFinalBox = function () {
 
               }
 
+              loading = instance.mother.grayLoading();
+
               formData = new FormData();
               formData.enctype = "multipart/form-data";
               formData.append("useid", instance.user.useid);
@@ -3437,6 +3430,8 @@ MiniRequestJs.prototype.insertFinalBox = function () {
               }
 
               await ajaxForm(formData, BRIDGEHOST + "/userConfirm");
+
+              loading.remove();
               window.alert("홈리에종에 컨펌 요청을 보냈습니다!");
 
             } catch (e) {
