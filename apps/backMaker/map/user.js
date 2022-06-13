@@ -79,9 +79,7 @@ module.exports = {
     if (subject === "request.photo") {
       dummy = {
         date: new Date(1800, 0, 1),
-        method: "",
         key: "",
-        target: 0,
       };
     } else if (subject === "response.history") {
       dummy = {
@@ -100,9 +98,7 @@ module.exports = {
         date: new Date(1800, 0, 1),
         confirm: new Date(1800, 0, 1),
         key: "",
-        name: "",
         target: 0,
-        space: 0,
         comments: {
           designer: "",
           client: "",
@@ -114,9 +110,7 @@ module.exports = {
         date: new Date(1800, 0, 1),
         confirm: new Date(1800, 0, 1),
         key: "",
-        name: "",
         target: 0,
-        space: 0,
         comments: {
           designer: "",
           client: "",
@@ -128,9 +122,7 @@ module.exports = {
         date: new Date(1800, 0, 1),
         confirm: new Date(1800, 0, 1),
         key: "",
-        name: "",
         target: 0,
-        space: 0,
         comments: {
           designer: "",
           client: "",
@@ -141,10 +133,7 @@ module.exports = {
       dummy = {
         date: new Date(1800, 0, 1),
         confirm: new Date(1800, 0, 1),
-        key: "",
-        name: "",
         target: 0,
-        space: 0,
         detail: [],
         comments: {
           designer: "",

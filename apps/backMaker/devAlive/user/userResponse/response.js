@@ -98,9 +98,7 @@ const DesignConcept = function (json) {
   this.date = new DateParse(json.date);
   this.confirm = new DateParse(json.confirm);
   this.key = json.key;
-  this.name = json.name;
   this.target = json.target;
-  this.space = json.space;
   this.comments = new DesignComments(json.comments);
 }
 
@@ -109,9 +107,7 @@ DesignConcept.prototype.toNormal = function () {
   obj.date = this.date.toNormal();
   obj.confirm = this.confirm.toNormal();
   obj.key = this.key;
-  obj.name = this.name;
   obj.target = this.target;
-  obj.space = this.space;
   obj.comments = this.comments.toNormal();
   return obj;
 }
@@ -120,9 +116,7 @@ const DesignProposal = function (json) {
   this.date = new DateParse(json.date);
   this.confirm = new DateParse(json.confirm);
   this.key = json.key;
-  this.name = json.name;
   this.target = json.target;
-  this.space = json.space;
   this.comments = new DesignComments(json.comments);
 }
 
@@ -131,9 +125,7 @@ DesignProposal.prototype.toNormal = function () {
   obj.date = this.date.toNormal();
   obj.confirm = this.confirm.toNormal();
   obj.key = this.key;
-  obj.name = this.name;
   obj.target = this.target;
-  obj.space = this.space;
   obj.comments = this.comments.toNormal();
   return obj;
 }
@@ -142,9 +134,7 @@ const DesignPhoto = function (json) {
   this.date = new DateParse(json.date);
   this.confirm = new DateParse(json.confirm);
   this.key = json.key;
-  this.name = json.name;
   this.target = json.target;
-  this.space = json.space;
   this.comments = new DesignComments(json.comments);
 }
 
@@ -153,9 +143,7 @@ DesignPhoto.prototype.toNormal = function () {
   obj.date = this.date.toNormal();
   obj.confirm = this.confirm.toNormal();
   obj.key = this.key;
-  obj.name = this.name;
   obj.target = this.target;
-  obj.space = this.space;
   obj.comments = this.comments.toNormal();
   return obj;
 }
@@ -223,10 +211,7 @@ class DesignPurchaseDetailList extends Array {
 const DesignPurchase = function (json) {
   this.date = new DateParse(json.date);
   this.confirm = new DateParse(json.confirm);
-  this.key = json.key;
-  this.name = json.name;
   this.target = json.target;
-  this.space = json.space;
   this.detail = new DesignPurchaseDetailList(json.detail);
   this.comments = new DesignComments(json.comments);
 }
@@ -235,10 +220,7 @@ DesignPurchase.prototype.toNormal = function () {
   let obj = {};
   obj.date = this.date.toNormal();
   obj.confirm = this.confirm.toNormal();
-  obj.key = this.key;
-  obj.name = this.name;
   obj.target = this.target;
-  obj.space = this.space;
   obj.detail = this.detail.toNormal();
   obj.comments = this.comments.toNormal();
   return obj;

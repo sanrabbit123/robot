@@ -86,17 +86,13 @@ Payment.prototype.toNormal = function () {
 
 const PhotoFactor = function (json) {
   this.date = new DateParse(json.date);
-  this.method = json.method;
   this.key = json.key;
-  this.target = json.target;
 }
 
 PhotoFactor.prototype.toNormal = function () {
   let obj = {};
   obj.date = this.date.toNormal();
-  obj.method = this.method;
   obj.key = this.key;
-  obj.target = this.target;
   return obj;
 }
 

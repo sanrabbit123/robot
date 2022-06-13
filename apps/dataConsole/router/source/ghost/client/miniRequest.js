@@ -958,8 +958,8 @@ MiniRequestJs.prototype.insertProposalBoxes = function () {
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleTextTop = <%% -2, -2, -2, -2, -2 %%>;
 
+  this.matrix = (new Array(targets)).fill(0, 0);
   for (let i = 0; i < targets; i++) {
-
     whiteBlock = createNode({
       mother: this.baseTong,
       attribute: { index: String(i), },
@@ -1015,7 +1015,6 @@ MiniRequestJs.prototype.insertProposalBoxes = function () {
       ]
     });
     instance.insertProposalBox(whiteBlock, i);
-
   }
 
 }
@@ -2549,7 +2548,7 @@ MiniRequestJs.prototype.insertReferenceBox = function (mother, index) {
 
 MiniRequestJs.prototype.insertListBox = function (mother, index) {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing, downloadFile, ajaxJson, ajaxForm, autoComma } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing, downloadFile, ajaxJson, ajaxForm, autoComma, cleanChildren, equalJson } = GeneralJs;
   const { client, ea, media, osException, pointColor, fileInputClassNames } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -2594,6 +2593,13 @@ MiniRequestJs.prototype.insertListBox = function (mother, index) {
   let matrixWidth;
   let matrixType;
   let image;
+  let tableColumnHeight, tableValueHeight;
+  let tableColumnWeight, tableValueWeight;
+  let tableTextTop, tableSize;
+  let matrix;
+  let loadMatrix;
+
+  loadMatrix = async () => {};
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 56, 52, 44, 32, 6 %%>;
@@ -2640,6 +2646,15 @@ MiniRequestJs.prototype.insertListBox = function (mother, index) {
   fileUploadTextTop = <%% -2, -2, -2, -2, -2 %%>;
   fileUploadLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
+  tableColumnHeight = <%% 40, 40, 40, 40, 40 %%>;
+  tableValueHeight = <%% 100, 100, 100, 100, 100 %%>;
+
+  tableColumnWeight = <%% 700, 700, 700, 700, 700 %%>;
+  tableValueWeight = <%% 400, 400, 400, 400, 400 %%>;
+
+  tableTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.3 %%>;
+  tableSize = <%% 14, 14, 14, 14, 3 %%>;
+
   matrixWidth = [
     100, 100, 100, 100, 100, 100, 150, 100, 180, 100
   ];
@@ -2670,6 +2685,7 @@ MiniRequestJs.prototype.insertListBox = function (mother, index) {
           this.setAttribute("toggle", "off");
         } else {
           let formData, matrix, loading;
+          let copied;
 
           loading = instance.mother.grayLoading();
 
@@ -2698,7 +2714,12 @@ MiniRequestJs.prototype.insertListBox = function (mother, index) {
                     }
                   }
 
-                  console.log(JSON.stringify(matrix));
+                  copied = equalJson(JSON.stringify(matrix));
+                  for (let arr of copied) {
+                    arr[7] = window.encodeURIComponent(arr[7]);
+                  }
+                  instance.matrix[index] = copied;
+                  loadMatrix(matrix).catch((err) => { window.alert("엑셀 파일 로드중 오류가 발생하였습니다!") })
 
                   mother.style.background = pointColor;
                   text.style.color = colorChip.white;
@@ -2964,8 +2985,6 @@ MiniRequestJs.prototype.insertListBox = function (mother, index) {
     ]
   });
 
-  const matrix = [["품명","수량","단가","배송비","금액","스펙","사이트","링크","비고"],["매트리스 퀸",1,1326000,0,1326000,"코르시카나 블랙","","https://corsicanabed.com/shop_view/?idx=76",""],["거실 실링팬",1,389000,0,389000,"화이트/화이트","에어블로우","https://smartstore.naver.com/air-blow/products/5281751239",""],["스텐드조명",1,370000,0,370000,"노란빛","슬로우 빌라","https://smartstore.naver.com/slowvilla/products/5909699403",""],["스텐드조명",1,256000,0,256000,"미니 소프트웜/스노우 화이트","라문직영샵","https://smartstore.naver.com/ramun/products/571513813?",""],["조명펜던트",2,125000,0,250000,"주백색 일체형","조명나라","https://www.lightnara.com/goods/goods_view.php?goodsNo=1000002028",""],["조명펜던트",1,95000,0,95000,"400H/노란빛","조명나라","https://www.lightnara.com/goods/goods_view.php?goodsNo=1000002987",""],["조명펜던트",1,74200,0,74200,"380파이/볼전구 주백색","공간조명","https://www.9s.co.kr/shop/shopdetail.html?branduid=25848&xcode=060&mcode=001&scode=&type=Y&sort=manual&cur_code=060&GfDT=bGx3UF4%3D#none",""],["조명펜던트",1,66000,0,66000,"화이트/화이트/12W볼전구 전구색","라디룸","http://ra-droom.com/product/detail.html?product_no=465&cate_no=25&display_group=1",""],["조명펜던트",1,57900,3000,60900,"150파이/일반형/2M/노란빛","제일조명","https://jeil-light.com/PENDENT/?idx=3092",""],["스텐드조명",1,156000,3300,159300,"버터/디밍",1962,"https://smartstore.naver.com/iklamp/products/5665133226?NaPm=ct%3Dkxq8oj3c%7Cci%3Dc0ba87a5811cb1c1c3f8dbfbbdcb6ba95005d0dd%7Ctr%3Dslsl%7Csn%3D1069696%7Chk%3Df8819e26c03314fdd07222d2bf16bd7255b13d1b",""]];
-
   matrixTarget = createNode({
     mother: rightBox,
     style: {
@@ -3006,35 +3025,97 @@ MiniRequestJs.prototype.insertListBox = function (mother, index) {
     ]
   }).firstChild.firstChild;
 
-  (async function () {
+  loadMatrix = async function (matrix) {
+    try {
+      cleanChildren(matrixTarget);
 
-    num = 0;
-    for (let arr of matrix) {
+      num = 0;
+      for (let arr of matrix) {
 
-      if (num === 0) {
-        arr.unshift("사진");
-      } else {
-        ({ image } = await ajaxJson({ url: window.encodeURIComponent(arr[7]) }, "/getOpenGraph"));
-        image = window.decodeURIComponent(image);
-        console.log(image);
-        arr.unshift(image);
-      }
-
-      tableBlock = createNode({
-        mother: matrixTarget,
-        style: {
-          display: "block",
-          position: "relative",
-          height: String(num === 0 ? 40 : 100) + ea,
-          width: String(100) + '%',
-          overflow: "hidden",
+        if (num === 0) {
+          arr.unshift("사진");
+        } else {
+          ({ image } = await ajaxJson({ url: window.encodeURIComponent(arr[7]) }, "/getOpenGraph"));
+          image = window.decodeURIComponent(image);
+          arr.unshift(image);
         }
-      });
 
-      for (let i = 0; i < arr.length; i++) {
+        tableBlock = createNode({
+          mother: matrixTarget,
+          style: {
+            display: "block",
+            position: "relative",
+            height: String(num === 0 ? tableColumnHeight : tableValueHeight) + ea,
+            width: String(100) + '%',
+            overflow: "hidden",
+          }
+        });
 
-        if (i === 0) {
-          if (num === 0) {
+        for (let i = 0; i < arr.length; i++) {
+
+          if (i === 0) {
+            if (num === 0) {
+              createNode({
+                mother: tableBlock,
+                style: {
+                  display: "inline-flex",
+                  position: "relative",
+                  width: String(matrixWidth[i]) + ea,
+                  height: String(100) + '%',
+                  alignItems: "center",
+                  textAlign: "center",
+                  justifyContent: "center",
+                  verticalAlign: "top",
+                  overflow: "scroll",
+                },
+                children: [
+                  {
+                    text: num !== 0 ? (matrixType[i] === "money" ? autoComma(arr[i]) + "원" : String(arr[i])) : String(arr[i]),
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      top: String(tableTextTop) + ea,
+                      fontSize: String(tableSize) + ea,
+                      fontWeight: String(num === 0 ? tableColumnWeight : tableValueWeight),
+                      color: colorChip.black,
+                      verticalAlign: "top",
+                      cursor: matrixType[i] === "link" ? "pointer" : "",
+                    }
+                  }
+                ]
+              });
+            } else {
+              createNode({
+                mother: tableBlock,
+                style: {
+                  display: "inline-flex",
+                  position: "relative",
+                  width: String(matrixWidth[i]) + ea,
+                  height: String(100) + '%',
+                  alignItems: "center",
+                  textAlign: "center",
+                  justifyContent: "center",
+                  verticalAlign: "top",
+                  overflow: "scroll",
+                },
+                children: [
+                  {
+                    mode: "img",
+                    attribute: {
+                      src: arr[i],
+                      referrerpolicy: "no-referrer",
+                    },
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      width: String(matrixWidth[i]) + ea,
+                      verticalAlign: "top",
+                    }
+                  }
+                ]
+              });
+            }
+          } else {
             createNode({
               mother: tableBlock,
               style: {
@@ -3054,9 +3135,9 @@ MiniRequestJs.prototype.insertListBox = function (mother, index) {
                   style: {
                     display: "inline-block",
                     position: "relative",
-                    top: String(-2) + ea,
-                    fontSize: String(14) + ea,
-                    fontWeight: String(num === 0 ? 700 : 400),
+                    top: String(tableTextTop) + ea,
+                    fontSize: String(tableSize) + ea,
+                    fontWeight: String(num === 0 ? tableColumnWeight : tableValueWeight),
                     color: colorChip.black,
                     verticalAlign: "top",
                     cursor: matrixType[i] === "link" ? "pointer" : "",
@@ -3064,83 +3145,23 @@ MiniRequestJs.prototype.insertListBox = function (mother, index) {
                 }
               ]
             });
-          } else {
-            createNode({
-              mother: tableBlock,
-              style: {
-                display: "inline-flex",
-                position: "relative",
-                width: String(matrixWidth[i]) + ea,
-                height: String(100) + '%',
-                alignItems: "center",
-                textAlign: "center",
-                justifyContent: "center",
-                verticalAlign: "top",
-                overflow: "scroll",
-              },
-              children: [
-                {
-                  mode: "img",
-                  attribute: {
-                    src: arr[i],
-                    referrerpolicy: "no-referrer",
-                  },
-                  style: {
-                    display: "inline-block",
-                    position: "relative",
-                    width: String(100) + ea,
-                    verticalAlign: "top",
-                  }
-                }
-              ]
-            });
           }
-        } else {
-          createNode({
-            mother: tableBlock,
-            style: {
-              display: "inline-flex",
-              position: "relative",
-              width: String(matrixWidth[i]) + ea,
-              height: String(100) + '%',
-              alignItems: "center",
-              textAlign: "center",
-              justifyContent: "center",
-              verticalAlign: "top",
-              overflow: "scroll",
-            },
-            children: [
-              {
-                text: num !== 0 ? (matrixType[i] === "money" ? autoComma(arr[i]) + "원" : String(arr[i])) : String(arr[i]),
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  top: String(-2) + ea,
-                  fontSize: String(14) + ea,
-                  fontWeight: String(num === 0 ? 700 : 400),
-                  color: colorChip.black,
-                  verticalAlign: "top",
-                  cursor: matrixType[i] === "link" ? "pointer" : "",
-                }
-              }
-            ]
-          });
         }
+        num++;
       }
-      num++;
+    } catch (e) {
+      window.alert("오류가 발생하였습니다! 새로고침 해주세요!");
     }
-
-
-  })().catch((err) => { console.log(err); })
-
-
+  }
+  loadMatrix([]).catch((err) => { console.log(err); })
 
 }
 
 MiniRequestJs.prototype.insertFinalBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
-  const { client, ea, media, osException, pointColor } = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing, equalJson } = GeneralJs;
+  const { client, ea, media, osException, pointColor, fileInputClassNames, user } = this;
+  const { request: { space: { targets } } } = user;
   const mobile = media[4];
   const desktop = !mobile;
   let whiteBlock;
@@ -3271,6 +3292,158 @@ MiniRequestJs.prototype.insertFinalBox = function () {
     },
     children: [
       {
+        event: {
+          click: async function (e) {
+            try {
+              const { concept, collage, reference } = fileInputClassNames;
+              const conceptInputs = [ ...document.querySelectorAll('.' + concept) ];
+              const collageInputs = [ ...document.querySelectorAll('.' + collage) ];
+              const referenceInputs = [ ...document.querySelectorAll('.' + reference) ];
+              let spaceMatrix;
+              let tempObj;
+              let index;
+              let formData;
+              let key;
+              let tempArr;
+
+              if (instance.matrix.some((arr) => { return arr === 0 })) {
+                throw new Error("공간별로 제품 리스트를 모두 올려주세요!");
+              }
+              if (instance.matrix.length !== targets) {
+                throw new Error("오류가 발생하였습니다! 새로고침 하여 주세요!");
+              }
+              if (conceptInputs.length !== targets * 2) {
+                throw new Error("오류가 발생하였습니다! 새로고침 하여 주세요!");
+              }
+              if (collageInputs.length !== targets * 2) {
+                throw new Error("오류가 발생하였습니다! 새로고침 하여 주세요!");
+              }
+              if (referenceInputs.length !== targets * 5) {
+                throw new Error("오류가 발생하였습니다! 새로고침 하여 주세요!");
+              }
+
+              spaceMatrix = [];
+              for (let i = 0; i < targets; i++) {
+                tempObj = {};
+                tempObj.concept = [];
+                for (let dom of conceptInputs) {
+                  index = Number(dom.getAttribute("index"));
+                  if (Number.isNaN(index)) {
+                    throw new Error("오류가 발생하였습니다! 새로고침 하여 주세요!");
+                  }
+                  if (index === i) {
+                    tempObj.concept.push(dom);
+                  }
+                }
+                tempObj.collage = [];
+                for (let dom of collageInputs) {
+                  index = Number(dom.getAttribute("index"));
+                  if (Number.isNaN(index)) {
+                    throw new Error("오류가 발생하였습니다! 새로고침 하여 주세요!");
+                  }
+                  if (index === i) {
+                    tempObj.collage.push(dom);
+                  }
+                }
+                tempObj.reference = [];
+                for (let dom of referenceInputs) {
+                  index = Number(dom.getAttribute("index"));
+                  if (Number.isNaN(index)) {
+                    throw new Error("오류가 발생하였습니다! 새로고침 하여 주세요!");
+                  }
+                  if (index === i) {
+                    tempObj.reference.push(dom);
+                  }
+                }
+                tempObj.matrix = equalJson(JSON.stringify(instance.matrix[i]));
+                tempObj.matrix.shift();
+                spaceMatrix.push(tempObj);
+              }
+
+              for (let obj of spaceMatrix) {
+
+                for (let dom of obj.concept) {
+                  if (/INPUT/gi.test(dom.nodeName)) {
+                    if (dom.files.length === 0) {
+                      throw new Error("컨셉 시안을 올려주세요!");
+                    }
+                  } else {
+                    if (dom.value === '') {
+                      throw new Error("컨셉 시안의 설명을 적어주세요!");
+                    }
+                  }
+                }
+
+                for (let dom of obj.collage) {
+                  if (/INPUT/gi.test(dom.nodeName)) {
+                    if (dom.files.length === 0) {
+                      throw new Error("콜라주 시안을 올려주세요!");
+                    }
+                  } else {
+                    if (dom.value === '') {
+                      throw new Error("콜라주 시안의 설명을 적어주세요!");
+                    }
+                  }
+                }
+
+                for (let dom of obj.reference) {
+                  if (/INPUT/gi.test(dom.nodeName)) {
+                    if (dom.files.length === 0) {
+                      throw new Error("참고 사진 4장 사진을 모두 올려주세요!");
+                    }
+                  } else {
+                    if (dom.value === '') {
+                      throw new Error("참고 사진의 설명을 적어주세요!");
+                    }
+                  }
+                }
+
+              }
+
+              formData = new FormData();
+              formData.enctype = "multipart/form-data";
+              formData.append("useid", instance.user.useid);
+              formData.append("indexLength", String(spaceMatrix.length));
+
+              for (let i = 0; i < spaceMatrix.length; i++) {
+
+                key = "concept_file_" + String(i);
+                formData.append(key, spaceMatrix[i].concept.find((dom) => { return /INPUT/gi.test(dom.nodeName) }).files[0]);
+
+                key = "concept_description_" + String(i);
+                formData.append(key, spaceMatrix[i].concept.find((dom) => { return /TEXTAREA/gi.test(dom.nodeName) }).value);
+
+                key = "collage_file_" + String(i);
+                formData.append(key, spaceMatrix[i].collage.find((dom) => { return /INPUT/gi.test(dom.nodeName) }).files[0]);
+
+                key = "collage_description_" + String(i);
+                formData.append(key, spaceMatrix[i].collage.find((dom) => { return /TEXTAREA/gi.test(dom.nodeName) }).value);
+
+                tempArr = spaceMatrix[i].reference.filter((dom) => { return /INPUT/gi.test(dom.nodeName) });
+                key = "reference_file0_" + String(i);
+                formData.append(key, tempArr[0].files[0]);
+                key = "reference_file1_" + String(i);
+                formData.append(key, tempArr[1].files[0]);
+                key = "reference_file2_" + String(i);
+                formData.append(key, tempArr[2].files[0]);
+                key = "reference_file3_" + String(i);
+                formData.append(key, tempArr[3].files[0]);
+                key = "reference_description_" + String(i);
+                formData.append(key, spaceMatrix[i].reference.find((dom) => { return /TEXTAREA/gi.test(dom.nodeName) }).value);
+
+                key = "list_matrix_" + String(i);
+                formData.append(key, JSON.stringify(spaceMatrix[i].matrix));
+
+              }
+
+              await ajaxForm(formData, BRIDGEHOST + "/userConfirm");
+              window.alert("홈리에종에 컨펌 요청을 보냈습니다!");
+
+            } catch (e) {
+              window.alert(e.message);
+            }
+          }
+        },
         style: {
           display: "inline-flex",
           position: "relative",
@@ -3281,6 +3454,7 @@ MiniRequestJs.prototype.insertFinalBox = function () {
           alignItems: "center",
           justifyContent: "center",
           textAlign: "center",
+          cursor: "pointer",
         },
         children: [
           {
@@ -3335,6 +3509,7 @@ MiniRequestJs.prototype.launching = async function (loading) {
       ],
       list: "fileInputClassNames_list",
     }
+    this.matrix = [];
 
     document.head.insertAdjacentHTML("beforeend", `<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">`);
 
