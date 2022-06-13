@@ -2150,8 +2150,8 @@ FrontIndexJs.prototype.popupLaunching = function () {
   delay = 0.8;
   image = FrontIndexJs.binaryPath + "/popup" + String(media.findIndex(boo => boo)) + ".jpg";
 
-  popupWidth = <%% 600, 580, 550, 360, 80 %%>;
-  popupHeight = <%% 600, 580, 550, 475, 105 %%>;
+  popupWidth = <%% 600, 580, 420, 360, 80 %%>;
+  popupHeight = <%% 600, 580, 497, 425, 94 %%>;
 
   buttonSize = <%% 16, 16, 15, 14, 3 %%>;
   buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
@@ -2204,6 +2204,7 @@ FrontIndexJs.prototype.popupLaunching = function () {
         backgroundImage: "url('" + image + "')",
         backgroundSize: "100% auto",
         backgroundPosition: "50% 50%",
+        boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
         borderRadius: String(8) + "px",
         animation: "fadeuporiginal " + String(speed) + "s " + String(delay) + "s ease forwards",
         opacity: String(0),

@@ -936,31 +936,108 @@ MiniRequestJs.prototype.insertProposalBoxes = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
   const { client, ea, media, osException, pointColor, user } = this;
+  const { request: { space: { targets } } } = user;
   const mobile = media[4];
   const desktop = !mobile;
+  let whiteBlock;
+  let margin;
+  let bottomMargin;
+  let titleBoxHeight;
+  let titleLineTop;
+  let titlePadding, titleSize, titleWeight, titleTextTop;
 
-  instance.insertProposalBox();
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  margin = <%% 56, 52, 44, 32, 6 %%>;
+  margin = margin / 2;
+
+  titleBoxHeight = <%% 42, 42, 42, 42, 42 %%>;
+  titleLineTop = <%% 21, 21, 21, 21, 21 %%>;
+
+  titlePadding = <%% 22, 22, 22, 22, 22 %%>;
+  titleSize = <%% 24, 24, 24, 24, 24 %%>;
+  titleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  titleTextTop = <%% -2, -2, -2, -2, -2 %%>;
+
+  for (let i = 0; i < targets; i++) {
+
+    whiteBlock = createNode({
+      mother: this.baseTong,
+      attribute: { index: String(i), },
+      style: {
+        position: "relative",
+        borderRadius: String(8) + "px",
+        width: withOut(margin * 2, ea),
+        paddingLeft: String(margin) + ea,
+        paddingRight: String(margin) + ea,
+        paddingTop: String(margin) + ea,
+        paddingBottom: String(margin) + ea,
+        background: colorChip.gray2,
+        marginBottom: String(bottomMargin) + ea,
+        boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      }
+    });
+    createNode({
+      mother: whiteBlock,
+      style: {
+        display: "flex",
+        position: "relative",
+        height: String(titleBoxHeight) + ea,
+        marginBottom: String(margin) + ea,
+        justifyContent: "center",
+        alignItems: "center",
+        textAlign: "center",
+      },
+      children: [
+        {
+          style: {
+            position: "absolute",
+            top: String(0),
+            left: String(0),
+            width: withOut(0, ea),
+            height: String(titleLineTop) + ea,
+            borderBottom: "1px dashed " + colorChip.gray4,
+          }
+        },
+        {
+          text: "공간 " + String(i + 1),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            paddingLeft: String(titlePadding) + ea,
+            paddingRight: String(titlePadding) + ea,
+            background: colorChip.gray2,
+            fontSize: String(titleSize) + ea,
+            fontWeight: String(titleWeight),
+            color: colorChip.black,
+            top: String(titleTextTop),
+          }
+        }
+      ]
+    });
+    instance.insertProposalBox(whiteBlock, i);
+
+  }
 
 }
 
-MiniRequestJs.prototype.insertProposalBox = function () {
+MiniRequestJs.prototype.insertProposalBox = function (mother, index) {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
   const { client, ea, media, osException, pointColor, user } = this;
   const mobile = media[4];
   const desktop = !mobile;
 
-  instance.insertConceptBox();
-  instance.insertCollageBox();
-  instance.insertReferenceBox();
-  instance.insertListBox();
+  instance.insertConceptBox(mother, index);
+  instance.insertCollageBox(mother, index);
+  instance.insertReferenceBox(mother, index);
+  instance.insertListBox(mother, index);
 
 }
 
-MiniRequestJs.prototype.insertConceptBox = function () {
+MiniRequestJs.prototype.insertConceptBox = function (mother, index) {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
-  const { client, ea, media, osException, pointColor } = this;
+  const { client, ea, media, osException, pointColor, fileInputClassNames } = this;
   const mobile = media[4];
   const desktop = !mobile;
   let whiteBlock;
@@ -997,6 +1074,7 @@ MiniRequestJs.prototype.insertConceptBox = function () {
   let fileUploadSize, fileUploadWeight, fileUploadTextTop, fileUploadLineHeight;
   let photoDescriptionHeight;
   let photoDescriptionSize, photoDescriptionWeight;
+  let fileChangeEvent;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 56, 52, 44, 32, 6 %%>;
@@ -1047,15 +1125,42 @@ MiniRequestJs.prototype.insertConceptBox = function () {
     title: "컨셉 시안 업로드",
     info: [
       "< 예시 >",
-      "< 사이즈 1024x600 >"
+      "< 사이즈 1820x1000 >"
     ],
-    memo: "이곳을 클릭하여 컨셉 설명을 남겨주세요!",
+    memo: "시안을 업로드한 뒤 설명을 적어주세요!",
+    placeholder: "이곳을 클릭하여 시안에 대한 설명을 적어주세요!",
     file: "클릭 또는 드래그로\n파일 업로드...",
+    fileActive: "파일 업로드 됨",
     image: MiniRequestJs.binaryPath + "/" + "concept.jpg",
   };
 
+  fileChangeEvent = function (e) {
+    const self = this;
+    const mother = this.parentElement;
+    const grandMother = mother.parentElement;
+    const [ text ] = [ ...mother.children ];
+    const textAreaBack = grandMother.nextElementSibling.children[0].children[0];
+    const textArea = textAreaBack.children[0].children[0];
+    if (this.files.length !== 0) {
+      mother.style.background = pointColor;
+      text.style.color = colorChip.white;
+      text.textContent = contents.fileActive;
+      textAreaBack.style.background = colorChip.white;
+      textArea.style.color = colorChip.black;
+      textArea.setAttribute("placeholder", contents.placeholder);
+      textArea.focus();
+    } else {
+      mother.style.background = colorChip.gray2;
+      text.style.color = colorChip.deactive;
+      text.textContent = contents.file;
+      textAreaBack.style.background = colorChip.gray2;
+      textArea.style.color = colorChip.deactive;
+      textArea.setAttribute("placeholder", contents.memo);
+    }
+  }
+
   whiteBlock = createNode({
-    mother: this.baseTong,
+    mother,
     style: {
       position: "relative",
       borderRadius: String(8) + "px",
@@ -1201,6 +1306,20 @@ MiniRequestJs.prototype.insertConceptBox = function () {
 
   createNode({
     mother: photoBox,
+    event: {
+      click: function (e) {
+        this.querySelector("input").click();
+      },
+      dragenter: (e) => { e.preventDefault(); e.stopPropagation(); },
+      dragover: (e) => { e.preventDefault(); e.stopPropagation(); },
+      dragleave: (e) => { e.preventDefault(); e.stopPropagation(); },
+      drop: function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.querySelector("input").files = e.dataTransfer.files;
+        fileChangeEvent.call(this.querySelector("input"), e);
+      }
+    },
     style: {
       display: "inline-flex",
       position: "relative",
@@ -1212,6 +1331,7 @@ MiniRequestJs.prototype.insertConceptBox = function () {
       alignItems: "center",
       justifyContent: "center",
       textAlign: "center",
+      cursor: "pointer",
     },
     children: [
       {
@@ -1224,6 +1344,25 @@ MiniRequestJs.prototype.insertConceptBox = function () {
           color: colorChip.deactive,
           top: String(fileUploadTextTop) + ea,
           lineHeight: String(fileUploadLineHeight),
+        }
+      },
+      {
+        mode: "input",
+        class: [ fileInputClassNames.concept ],
+        event: {
+          change: fileChangeEvent,
+        },
+        attribute: [
+          { index: String(index) },
+          { type: "file" },
+          { name: "upload" },
+          { accept: "image/*" },
+          { multiple: "true" },
+          { cancel: JSON.stringify([]) }
+        ],
+        style: {
+          position: "absolute",
+          display: "none",
         }
       }
     ]
@@ -1255,7 +1394,7 @@ MiniRequestJs.prototype.insertConceptBox = function () {
         style: {
           display: "block",
           position: "relative",
-          background: colorChip.white,
+          background: colorChip.gray2,
           width: withOut((whiteInnerMargin * 2) + (whiteInnerInnerPadding * 2), ea),
           marginLeft: String(whiteInnerMargin) + ea,
           paddingLeft: String(whiteInnerInnerPadding) + ea,
@@ -1278,33 +1417,34 @@ MiniRequestJs.prototype.insertConceptBox = function () {
   });
   createNode({
     mother: block,
+    mode: "textarea",
+    class: [ fileInputClassNames.concept ],
+    attribute: {
+      placeholder: contents.memo,
+      index: String(index),
+    },
     style: {
       display: "inline-block",
       position: "relative",
       width: String(100) + '%',
-      height: String(100) + '%',
       verticalAlign: "top",
+      fontSize: String(blockFactorSize) + ea,
+      fontWeight: String(blockFactorWeight),
+      color: colorChip.deactive,
+      lineHeight: String(blockFactorLineHeight),
+      border: String(0),
+      outline: String(0),
+      background: "transparent",
+      minHeight: String(whiteBlockMinHeight) + ea,
     },
-    children: [
-      {
-        text: contents.memo,
-        style: {
-          fontSize: String(blockFactorSize) + ea,
-          fontWeight: String(blockFactorWeight),
-          color: colorChip.black,
-          lineHeight: String(blockFactorLineHeight),
-          verticalAlign: "top",
-        }
-      }
-    ]
   });
 
 }
 
-MiniRequestJs.prototype.insertCollageBox = function () {
+MiniRequestJs.prototype.insertCollageBox = function (mother, index) {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
-  const { client, ea, media, osException, pointColor } = this;
+  const { client, ea, media, osException, pointColor, fileInputClassNames } = this;
   const mobile = media[4];
   const desktop = !mobile;
   let whiteBlock;
@@ -1341,6 +1481,7 @@ MiniRequestJs.prototype.insertCollageBox = function () {
   let fileUploadSize, fileUploadWeight, fileUploadTextTop, fileUploadLineHeight;
   let photoDescriptionHeight;
   let photoDescriptionSize, photoDescriptionWeight;
+  let fileChangeEvent;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 56, 52, 44, 32, 6 %%>;
@@ -1391,15 +1532,42 @@ MiniRequestJs.prototype.insertCollageBox = function () {
     title: "콜라주 시안 업로드",
     info: [
       "< 예시 >",
-      "< 사이즈 1024x600 >"
+      "< 사이즈 1820x1000 >"
     ],
-    memo: "이곳을 클릭하여 시안 관련 설명을 남겨주세요!",
+    memo: "시안을 업로드한 뒤 설명을 적어주세요!",
+    placeholder: "이곳을 클릭하여 시안에 대한 설명을 적어주세요!",
     file: "클릭 또는 드래그로\n파일 업로드...",
+    fileActive: "파일 업로드 됨",
     image: MiniRequestJs.binaryPath + "/" + "collage.jpg",
   };
 
+  fileChangeEvent = function (e) {
+    const self = this;
+    const mother = this.parentElement;
+    const grandMother = mother.parentElement;
+    const [ text ] = [ ...mother.children ];
+    const textAreaBack = grandMother.nextElementSibling.children[0].children[0];
+    const textArea = textAreaBack.children[0].children[0];
+    if (this.files.length !== 0) {
+      mother.style.background = pointColor;
+      text.style.color = colorChip.white;
+      text.textContent = contents.fileActive;
+      textAreaBack.style.background = colorChip.white;
+      textArea.style.color = colorChip.black;
+      textArea.setAttribute("placeholder", contents.placeholder);
+      textArea.focus();
+    } else {
+      mother.style.background = colorChip.gray2;
+      text.style.color = colorChip.deactive;
+      text.textContent = contents.file;
+      textAreaBack.style.background = colorChip.gray2;
+      textArea.style.color = colorChip.deactive;
+      textArea.setAttribute("placeholder", contents.memo);
+    }
+  }
+
   whiteBlock = createNode({
-    mother: this.baseTong,
+    mother,
     style: {
       position: "relative",
       borderRadius: String(8) + "px",
@@ -1545,6 +1713,20 @@ MiniRequestJs.prototype.insertCollageBox = function () {
 
   createNode({
     mother: photoBox,
+    event: {
+      click: function (e) {
+        this.querySelector("input").click();
+      },
+      dragenter: (e) => { e.preventDefault(); e.stopPropagation(); },
+      dragover: (e) => { e.preventDefault(); e.stopPropagation(); },
+      dragleave: (e) => { e.preventDefault(); e.stopPropagation(); },
+      drop: function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.querySelector("input").files = e.dataTransfer.files;
+        fileChangeEvent.call(this.querySelector("input"), e);
+      }
+    },
     style: {
       display: "inline-flex",
       position: "relative",
@@ -1556,6 +1738,7 @@ MiniRequestJs.prototype.insertCollageBox = function () {
       alignItems: "center",
       justifyContent: "center",
       textAlign: "center",
+      cursor: "pointer",
     },
     children: [
       {
@@ -1568,6 +1751,25 @@ MiniRequestJs.prototype.insertCollageBox = function () {
           color: colorChip.deactive,
           top: String(fileUploadTextTop) + ea,
           lineHeight: String(fileUploadLineHeight),
+        }
+      },
+      {
+        mode: "input",
+        class: [ fileInputClassNames.collage ],
+        event: {
+          change: fileChangeEvent,
+        },
+        attribute: [
+          { index: String(index) },
+          { type: "file" },
+          { name: "upload" },
+          { accept: "image/*" },
+          { multiple: "true" },
+          { cancel: JSON.stringify([]) }
+        ],
+        style: {
+          position: "absolute",
+          display: "none",
         }
       }
     ]
@@ -1599,7 +1801,7 @@ MiniRequestJs.prototype.insertCollageBox = function () {
         style: {
           display: "block",
           position: "relative",
-          background: colorChip.white,
+          background: colorChip.gray2,
           width: withOut((whiteInnerMargin * 2) + (whiteInnerInnerPadding * 2), ea),
           marginLeft: String(whiteInnerMargin) + ea,
           paddingLeft: String(whiteInnerInnerPadding) + ea,
@@ -1622,33 +1824,34 @@ MiniRequestJs.prototype.insertCollageBox = function () {
   });
   createNode({
     mother: block,
+    mode: "textarea",
+    class: [ fileInputClassNames.collage ],
+    attribute: {
+      placeholder: contents.memo,
+      index: String(index),
+    },
     style: {
       display: "inline-block",
       position: "relative",
       width: String(100) + '%',
-      height: String(100) + '%',
       verticalAlign: "top",
+      fontSize: String(blockFactorSize) + ea,
+      fontWeight: String(blockFactorWeight),
+      color: colorChip.deactive,
+      lineHeight: String(blockFactorLineHeight),
+      border: String(0),
+      outline: String(0),
+      background: "transparent",
+      minHeight: String(whiteBlockMinHeight) + ea,
     },
-    children: [
-      {
-        text: contents.memo,
-        style: {
-          fontSize: String(blockFactorSize) + ea,
-          fontWeight: String(blockFactorWeight),
-          color: colorChip.black,
-          lineHeight: String(blockFactorLineHeight),
-          verticalAlign: "top",
-        }
-      }
-    ]
   });
 
 }
 
-MiniRequestJs.prototype.insertReferenceBox = function () {
+MiniRequestJs.prototype.insertReferenceBox = function (mother, index) {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
-  const { client, ea, media, osException, pointColor } = this;
+  const { client, ea, media, osException, pointColor, fileInputClassNames } = this;
   const mobile = media[4];
   const desktop = !mobile;
   let whiteBlock;
@@ -1686,6 +1889,7 @@ MiniRequestJs.prototype.insertReferenceBox = function () {
   let photoDescriptionHeight;
   let photoDescriptionSize, photoDescriptionWeight;
   let boxInnerBetween;
+  let fileChangeEvent;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 56, 52, 44, 32, 6 %%>;
@@ -1738,10 +1942,12 @@ MiniRequestJs.prototype.insertReferenceBox = function () {
     title: "참고 사진 업로드",
     info: [
       "< 예시 >",
-      "< 사이즈 1024x600 >"
+      "< 사이즈 1000x667 >"
     ],
-    memo: "이곳을 클릭하여 참고 사진 관련 설명을 남겨주세요!",
+    memo: "사진 4칸을 모두 업로드한 뒤 설명을 적어주세요!",
+    placeholder: "이곳을 클릭하여 참고 사진 관련 설명을 남겨주세요!",
     file: "파일 업로드...",
+    fileActive: "파일 업로드 됨",
     images: [
       MiniRequestJs.binaryPath + "/" + "reference0.jpg",
       MiniRequestJs.binaryPath + "/" + "reference1.jpg",
@@ -1750,8 +1956,48 @@ MiniRequestJs.prototype.insertReferenceBox = function () {
     ]
   };
 
+  fileChangeEvent = function (e) {
+    const self = this;
+    const inputTargets = document.querySelectorAll('.' + fileInputClassNames.referenceInput);
+    const mother = this.parentElement;
+    const grandMother = mother.parentElement.parentElement;
+    const [ text ] = [ ...mother.children ];
+    const textAreaBack = grandMother.nextElementSibling.children[0].children[0];
+    const textArea = textAreaBack.children[0].children[0];
+    let boo;
+
+    if (this.files.length !== 0) {
+      mother.style.background = pointColor;
+      text.style.color = colorChip.white;
+      text.textContent = contents.fileActive;
+    } else {
+      mother.style.background = colorChip.gray2;
+      text.style.color = colorChip.deactive;
+      text.textContent = contents.file;
+    }
+
+    boo = true;
+    for (let input of inputTargets) {
+      if (input.files.length === 0) {
+        boo = false;
+      }
+    }
+
+    if (boo) {
+      textAreaBack.style.background = colorChip.white;
+      textArea.style.color = colorChip.black;
+      textArea.setAttribute("placeholder", contents.placeholder);
+      textArea.focus();
+    } else {
+      textAreaBack.style.background = colorChip.gray2;
+      textArea.style.color = colorChip.deactive;
+      textArea.setAttribute("placeholder", contents.memo);
+    }
+
+  }
+
   whiteBlock = createNode({
-    mother: this.baseTong,
+    mother,
     style: {
       position: "relative",
       borderRadius: String(8) + "px",
@@ -1961,6 +2207,20 @@ MiniRequestJs.prototype.insertReferenceBox = function () {
     },
     children: [
       {
+        event: {
+          click: function (e) {
+            this.querySelector("input").click();
+          },
+          dragenter: (e) => { e.preventDefault(); e.stopPropagation(); },
+          dragover: (e) => { e.preventDefault(); e.stopPropagation(); },
+          dragleave: (e) => { e.preventDefault(); e.stopPropagation(); },
+          drop: function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.querySelector("input").files = e.dataTransfer.files;
+            fileChangeEvent.call(this.querySelector("input"), e);
+          }
+        },
         style: {
           display: "inline-flex",
           width: "calc(calc(100% - " + String(boxInnerBetween) + ea + ") / 2)",
@@ -1974,6 +2234,7 @@ MiniRequestJs.prototype.insertReferenceBox = function () {
           alignItems: "center",
           justifyContent: "center",
           textAlign: "center",
+          cursor: "pointer",
         },
         children: [
           {
@@ -1987,10 +2248,43 @@ MiniRequestJs.prototype.insertReferenceBox = function () {
               top: String(fileUploadTextTop) + ea,
               lineHeight: String(fileUploadLineHeight),
             }
+          },
+          {
+            mode: "input",
+            class: [ fileInputClassNames.reference, fileInputClassNames.referenceInput, fileInputClassNames.referenceInputs[0] ],
+            event: {
+              change: fileChangeEvent,
+            },
+            attribute: [
+              { index: String(index) },
+              { type: "file" },
+              { name: "upload" },
+              { accept: "image/*" },
+              { multiple: "true" },
+              { cancel: JSON.stringify([]) }
+            ],
+            style: {
+              position: "absolute",
+              display: "none",
+            }
           }
         ]
       },
       {
+        event: {
+          click: function (e) {
+            this.querySelector("input").click();
+          },
+          dragenter: (e) => { e.preventDefault(); e.stopPropagation(); },
+          dragover: (e) => { e.preventDefault(); e.stopPropagation(); },
+          dragleave: (e) => { e.preventDefault(); e.stopPropagation(); },
+          drop: function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.querySelector("input").files = e.dataTransfer.files;
+            fileChangeEvent.call(this.querySelector("input"), e);
+          }
+        },
         style: {
           display: "inline-flex",
           width: "calc(calc(100% - " + String(boxInnerBetween) + ea + ") / 2)",
@@ -2003,6 +2297,7 @@ MiniRequestJs.prototype.insertReferenceBox = function () {
           alignItems: "center",
           justifyContent: "center",
           textAlign: "center",
+          cursor: "pointer",
         },
         children: [
           {
@@ -2016,10 +2311,43 @@ MiniRequestJs.prototype.insertReferenceBox = function () {
               top: String(fileUploadTextTop) + ea,
               lineHeight: String(fileUploadLineHeight),
             }
+          },
+          {
+            mode: "input",
+            class: [ fileInputClassNames.reference, fileInputClassNames.referenceInput, fileInputClassNames.referenceInputs[1] ],
+            event: {
+              change: fileChangeEvent,
+            },
+            attribute: [
+              { index: String(index) },
+              { type: "file" },
+              { name: "upload" },
+              { accept: "image/*" },
+              { multiple: "true" },
+              { cancel: JSON.stringify([]) }
+            ],
+            style: {
+              position: "absolute",
+              display: "none",
+            }
           }
         ]
       },
       {
+        event: {
+          click: function (e) {
+            this.querySelector("input").click();
+          },
+          dragenter: (e) => { e.preventDefault(); e.stopPropagation(); },
+          dragover: (e) => { e.preventDefault(); e.stopPropagation(); },
+          dragleave: (e) => { e.preventDefault(); e.stopPropagation(); },
+          drop: function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.querySelector("input").files = e.dataTransfer.files;
+            fileChangeEvent.call(this.querySelector("input"), e);
+          }
+        },
         style: {
           display: "inline-flex",
           width: "calc(calc(100% - " + String(boxInnerBetween) + ea + ") / 2)",
@@ -2032,6 +2360,7 @@ MiniRequestJs.prototype.insertReferenceBox = function () {
           alignItems: "center",
           justifyContent: "center",
           textAlign: "center",
+          cursor: "pointer",
         },
         children: [
           {
@@ -2045,10 +2374,43 @@ MiniRequestJs.prototype.insertReferenceBox = function () {
               top: String(fileUploadTextTop) + ea,
               lineHeight: String(fileUploadLineHeight),
             }
+          },
+          {
+            mode: "input",
+            class: [ fileInputClassNames.reference, fileInputClassNames.referenceInput, fileInputClassNames.referenceInputs[2] ],
+            event: {
+              change: fileChangeEvent,
+            },
+            attribute: [
+              { index: String(index) },
+              { type: "file" },
+              { name: "upload" },
+              { accept: "image/*" },
+              { multiple: "true" },
+              { cancel: JSON.stringify([]) }
+            ],
+            style: {
+              position: "absolute",
+              display: "none",
+            }
           }
         ]
       },
       {
+        event: {
+          click: function (e) {
+            this.querySelector("input").click();
+          },
+          dragenter: (e) => { e.preventDefault(); e.stopPropagation(); },
+          dragover: (e) => { e.preventDefault(); e.stopPropagation(); },
+          dragleave: (e) => { e.preventDefault(); e.stopPropagation(); },
+          drop: function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.querySelector("input").files = e.dataTransfer.files;
+            fileChangeEvent.call(this.querySelector("input"), e);
+          }
+        },
         style: {
           display: "inline-flex",
           width: "calc(calc(100% - " + String(boxInnerBetween) + ea + ") / 2)",
@@ -2060,6 +2422,7 @@ MiniRequestJs.prototype.insertReferenceBox = function () {
           alignItems: "center",
           justifyContent: "center",
           textAlign: "center",
+          cursor: "pointer",
         },
         children: [
           {
@@ -2072,6 +2435,25 @@ MiniRequestJs.prototype.insertReferenceBox = function () {
               color: colorChip.deactive,
               top: String(fileUploadTextTop) + ea,
               lineHeight: String(fileUploadLineHeight),
+            }
+          },
+          {
+            mode: "input",
+            class: [ fileInputClassNames.reference, fileInputClassNames.referenceInput, fileInputClassNames.referenceInputs[3] ],
+            event: {
+              change: fileChangeEvent,
+            },
+            attribute: [
+              { index: String(index) },
+              { type: "file" },
+              { name: "upload" },
+              { accept: "image/*" },
+              { multiple: "true" },
+              { cancel: JSON.stringify([]) }
+            ],
+            style: {
+              position: "absolute",
+              display: "none",
             }
           }
         ]
@@ -2105,7 +2487,7 @@ MiniRequestJs.prototype.insertReferenceBox = function () {
         style: {
           display: "block",
           position: "relative",
-          background: colorChip.white,
+          background: colorChip.gray2,
           width: withOut((whiteInnerMargin * 2) + (whiteInnerInnerPadding * 2), ea),
           marginLeft: String(whiteInnerMargin) + ea,
           paddingLeft: String(whiteInnerInnerPadding) + ea,
@@ -2128,33 +2510,35 @@ MiniRequestJs.prototype.insertReferenceBox = function () {
   });
   createNode({
     mother: block,
+    mode: "textarea",
+    class: [ fileInputClassNames.reference ],
+    attribute: {
+      placeholder: contents.memo,
+      index: String(index),
+    },
     style: {
       display: "inline-block",
       position: "relative",
       width: String(100) + '%',
-      height: String(100) + '%',
       verticalAlign: "top",
+      fontSize: String(blockFactorSize) + ea,
+      fontWeight: String(blockFactorWeight),
+      color: colorChip.deactive,
+      lineHeight: String(blockFactorLineHeight),
+      border: String(0),
+      outline: String(0),
+      background: "transparent",
+      minHeight: String(whiteBlockMinHeight) + ea,
+
     },
-    children: [
-      {
-        text: contents.memo,
-        style: {
-          fontSize: String(blockFactorSize) + ea,
-          fontWeight: String(blockFactorWeight),
-          color: colorChip.black,
-          lineHeight: String(blockFactorLineHeight),
-          verticalAlign: "top",
-        }
-      }
-    ]
   });
 
 }
 
-MiniRequestJs.prototype.insertListBox = function () {
+MiniRequestJs.prototype.insertListBox = function (mother, index) {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
-  const { client, ea, media, osException, pointColor } = this;
+  const { client, ea, media, osException, pointColor, fileInputClassNames } = this;
   const mobile = media[4];
   const desktop = !mobile;
   let whiteBlock;
@@ -2249,7 +2633,7 @@ MiniRequestJs.prototype.insertListBox = function () {
   };
 
   whiteBlock = createNode({
-    mother: this.baseTong,
+    mother,
     style: {
       position: "relative",
       borderRadius: String(8) + "px",
@@ -2422,6 +2806,7 @@ MiniRequestJs.prototype.insertListBox = function () {
       alignItems: "center",
       justifyContent: "center",
       textAlign: "center",
+      cursor: "pointer",
     },
     children: [
       {
@@ -2543,7 +2928,7 @@ MiniRequestJs.prototype.insertFinalBox = function () {
       width: String(100) + '%',
       paddingTop: String(margin) + ea,
       paddingBottom: String(margin) + ea,
-      background: colorChip.white,
+      background: colorChip.gray2,
       marginBottom: String(bottomMargin) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
     }
@@ -2626,6 +3011,18 @@ MiniRequestJs.prototype.launching = async function (loading) {
     user = users[0];
     this.user = user;
     this.pointColor = "darkslategray";
+    this.fileInputClassNames = {
+      concept: "fileInputClassNames_concept",
+      collage: "fileInputClassNames_collage",
+      reference: "fileInputClassNames_reference",
+      referenceInput: "fileInputClassNames_referenceInput",
+      referenceInputs: [
+        "fileInputClassNames_reference0",
+        "fileInputClassNames_reference1",
+        "fileInputClassNames_reference2",
+        "fileInputClassNames_reference3",
+      ],
+    }
 
     await this.mother.ghostClientLaunching({
       mode: "ghost",
