@@ -1280,9 +1280,8 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 
           // alimtalk
 
-
           // slack
-          await messageSend({ text: name + " 고객님의 디자인 컨펌 요청이 발생하였습니다.", channel: "#400_customer" });
+          await messageSend({ text: user.name + " 고객님의 디자인 컨펌 요청이 발생하였습니다.", channel: "#400_customer" });
 
           res.send(JSON.stringify({ message: "success" }));
 
