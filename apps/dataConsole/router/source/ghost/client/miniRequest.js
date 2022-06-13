@@ -3016,6 +3016,7 @@ MiniRequestJs.prototype.insertListBox = function (mother, index) {
       } else {
         ({ image } = await ajaxJson({ url: window.encodeURIComponent(arr[7]) }, "/getOpenGraph"));
         image = window.decodeURIComponent(image);
+        console.log(image);
         arr.unshift(image);
       }
 
@@ -3080,7 +3081,10 @@ MiniRequestJs.prototype.insertListBox = function (mother, index) {
               children: [
                 {
                   mode: "img",
-                  attribute: { src: arr[i] },
+                  attribute: {
+                    src: arr[i],
+                    referrerpolicy: "no-referrer",
+                  },
                   style: {
                     display: "inline-block",
                     position: "relative",
@@ -3331,6 +3335,8 @@ MiniRequestJs.prototype.launching = async function (loading) {
       ],
       list: "fileInputClassNames_list",
     }
+
+    document.head.insertAdjacentHTML("beforeend", `<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">`);
 
     await this.mother.ghostClientLaunching({
       mode: "ghost",

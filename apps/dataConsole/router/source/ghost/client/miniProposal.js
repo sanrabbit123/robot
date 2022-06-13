@@ -1441,6 +1441,8 @@ MiniProposalJs.prototype.launching = async function (loading) {
     const { returnGet, ajaxJson, requestPromise, setDebounce } = GeneralJs;
     const getObj = returnGet();
 
+    document.head.insertAdjacentHTML("beforeend", `<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">`);
+
     await this.mother.ghostClientLaunching({
       mode: "ghost",
       name: "miniProposal",
