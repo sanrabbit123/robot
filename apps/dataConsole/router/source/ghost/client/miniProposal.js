@@ -619,822 +619,845 @@ MiniProposalJs.prototype.insertPhotoBox = function () {
 
 }
 
-MiniProposalJs.prototype.insertSecondBox = function () {
+MiniProposalJs.prototype.insertSecondBox = async function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing, autoComma, blankHref } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing, autoComma, blankHref, ajaxJson } = GeneralJs;
   const { client, ea, media, osException, testMode, user } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  let whiteBlock;
-  let whiteBase;
-  let bottomMargin;
-  let margin;
-  let contents;
-  let baseTongClone;
-  let basePadding;
-  let titleTextTong;
-  let titleTextTitleWidth;
-  let titleTextTongHeight;
-  let titleTextTitleSize, titleTextTitleWeight, titleTextTitleLineHeight;
-  let titleTextDescriptionSize, titleTextDescriptionWeight, titleTextDescriptionBoldWeight, titleTextDescriptionLineHeight;
-  let titleTextDescriptionPaddingTop;
-  let topBottomVisualMargin;
-  let grayBlock;
-  let grayTitleSize, grayTitleWeight, grayTitleLineHeight;
-  let grayTitlePadding;
-  let grayTitleLineTop;
-  let collageWhiteTong;
-  let collageSlideBetween;
-  let collageInnerMargin;
-  let collageDescriptionBox;
-  let collageDescriptionBoxMarginLeft;
-  let whiteTongMarginTop, whiteTongMarginBottom;
-  let collageDescriptionBoxMarginTop, collageDescriptionBoxMarginBottom;
-  let collageDescriptionBoxTitleAreaWidth;
-  let collageDescriptionBoxTitleSize, collageDescriptionBoxTitleWeight, collageDescriptionBoxTitleLineHeight;
-  let collageDescriptionBoxDescriptionSize, collageDescriptionBoxDescriptionWeight, collageDescriptionBoxDescriptionBoldWeight;
-  let tableWhiteTong;
-  let referencePhotoTong;
-  let referencePhotoBetween;
-  let tableColumnsWidth;
-  let tableColumnsFactor;
-  let tableColumnsName;
-  let tableColumnBar;
-  let tableFatorBars;
-  let tempTong;
-  let tableInnerMargin;
-  let tableInnerMarginTop;
-  let whiteTongMarginBottomFinal;
-  let tableFactorTextTop, tableFactorSize, tableFactorWeight;
-  let tableFactorHeight;
-  let tableColumnHeight;
-  let tableColumnWeight;
+  try {
+    let whiteBlock;
+    let whiteBase;
+    let bottomMargin;
+    let margin;
+    let contents;
+    let baseTongClone;
+    let basePadding;
+    let titleTextTong;
+    let titleTextTitleWidth;
+    let titleTextTongHeight;
+    let titleTextTitleSize, titleTextTitleWeight, titleTextTitleLineHeight;
+    let titleTextDescriptionSize, titleTextDescriptionWeight, titleTextDescriptionBoldWeight, titleTextDescriptionLineHeight;
+    let titleTextDescriptionPaddingTop;
+    let topBottomVisualMargin;
+    let grayBlock;
+    let grayTitleSize, grayTitleWeight, grayTitleLineHeight;
+    let grayTitlePadding;
+    let grayTitleLineTop;
+    let collageWhiteTong;
+    let collageSlideBetween;
+    let collageInnerMargin;
+    let collageDescriptionBox;
+    let collageDescriptionBoxMarginLeft;
+    let whiteTongMarginTop, whiteTongMarginBottom;
+    let collageDescriptionBoxMarginTop, collageDescriptionBoxMarginBottom;
+    let collageDescriptionBoxTitleAreaWidth;
+    let collageDescriptionBoxTitleSize, collageDescriptionBoxTitleWeight, collageDescriptionBoxTitleLineHeight;
+    let collageDescriptionBoxDescriptionSize, collageDescriptionBoxDescriptionWeight, collageDescriptionBoxDescriptionBoldWeight;
+    let tableWhiteTong;
+    let referencePhotoTong;
+    let referencePhotoBetween;
+    let tableColumnsWidth;
+    let tableColumnsFactor;
+    let tableColumnsName;
+    let tableColumnBar;
+    let tableFatorBars;
+    let tempTong;
+    let tableInnerMargin;
+    let tableInnerMarginTop;
+    let whiteTongMarginBottomFinal;
+    let tableFactorTextTop, tableFactorSize, tableFactorWeight;
+    let tableFactorHeight;
+    let tableColumnHeight;
+    let tableColumnWeight;
+    let concept;
+    let proposal;
+    let photo;
+    let list;
+    let conceptImages;
+    let proposalImages;
+    let photoImages;
 
-  basePadding = <%% 150, 120, 105, 90, 12 %%>;
+    basePadding = <%% 150, 120, 105, 90, 12 %%>;
 
-  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 56, 52, 44, 32, 4 %%>;
+    bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+    margin = <%% 56, 52, 44, 32, 4 %%>;
 
-  titleTextTitleWidth = <%% 340, 280, 250, 200, 29 %%>;
-  titleTextTongHeight = <%% (isMac() ? 85 : 81), (isMac() ? 85 : 81), (isMac() ? 80 : 77), (isMac() ? 75 : 73), 10 %%>;
+    titleTextTitleWidth = <%% 340, 280, 250, 200, 29 %%>;
+    titleTextTongHeight = <%% (isMac() ? 85 : 81), (isMac() ? 85 : 81), (isMac() ? 80 : 77), (isMac() ? 75 : 73), 10 %%>;
 
-  titleTextTitleSize = <%% 26, 26, 24, 20, 4 %%>;
-  titleTextTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
-  titleTextTitleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+    titleTextTitleSize = <%% 26, 26, 24, 20, 4 %%>;
+    titleTextTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
+    titleTextTitleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  titleTextDescriptionSize = <%% 14, 14, 14, 13, 3 %%>;
-  titleTextDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
-  titleTextDescriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
-  titleTextDescriptionLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.6 %%>;
-  titleTextDescriptionPaddingTop = <%% 3, 3, 3, 2, 0.2 %%>;
+    titleTextDescriptionSize = <%% 14, 14, 14, 13, 3 %%>;
+    titleTextDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+    titleTextDescriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+    titleTextDescriptionLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.6 %%>;
+    titleTextDescriptionPaddingTop = <%% 3, 3, 3, 2, 0.2 %%>;
 
-  topBottomVisualMargin = <%% 8, 8, 4, 0, -2 %%>;
+    topBottomVisualMargin = <%% 8, 8, 4, 0, -2 %%>;
 
-  grayTitleSize = <%% 22, 22, 20, 17, 4 %%>;
-  grayTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
-  grayTitleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
-  grayTitlePadding = <%% 20, 20, 20, 16, 4 %%>;
-  grayTitleLineTop = <%% (isMac() ? 15 : 12), (isMac() ? 15 : 12), (isMac() ? 14 : 12), (isMac() ? 11 : 9), 2.5 %%>;
+    grayTitleSize = <%% 22, 22, 20, 17, 4 %%>;
+    grayTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+    grayTitleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
+    grayTitlePadding = <%% 20, 20, 20, 16, 4 %%>;
+    grayTitleLineTop = <%% (isMac() ? 15 : 12), (isMac() ? 15 : 12), (isMac() ? 14 : 12), (isMac() ? 11 : 9), 2.5 %%>;
 
-  collageSlideBetween = <%% 12, 12, 12, 12, 2 %%>;
-  collageInnerMargin = <%% 24, 24, 24, 24, 3 %%>;
+    collageSlideBetween = <%% 12, 12, 12, 12, 2 %%>;
+    collageInnerMargin = <%% 24, 24, 24, 24, 3 %%>;
 
-  collageDescriptionBoxMarginLeft = <%% 60, 45, 35, 24, 3 %%>;
-  collageDescriptionBoxMarginTop = <%% 72, 72, 56, 32, 5 %%>;
-  collageDescriptionBoxMarginBottom = <%% 80, 80, 60, 32, 5 %%>;
+    collageDescriptionBoxMarginLeft = <%% 60, 45, 35, 24, 3 %%>;
+    collageDescriptionBoxMarginTop = <%% 72, 72, 56, 32, 5 %%>;
+    collageDescriptionBoxMarginBottom = <%% 80, 80, 60, 32, 5 %%>;
 
-  collageDescriptionBoxTitleAreaWidth = <%% 180, 180, 160, 140, 88 %%>;
+    collageDescriptionBoxTitleAreaWidth = <%% 180, 180, 160, 140, 88 %%>;
 
-  collageDescriptionBoxTitleSize = <%% 16, 16, 15, 13, 3.2 %%>;
-  collageDescriptionBoxTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
-  collageDescriptionBoxTitleLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
+    collageDescriptionBoxTitleSize = <%% 16, 16, 15, 13, 3.2 %%>;
+    collageDescriptionBoxTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+    collageDescriptionBoxTitleLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
 
-  collageDescriptionBoxDescriptionSize = <%% 14, 14, 13, 12, 3 %%>;
-  collageDescriptionBoxDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
-  collageDescriptionBoxDescriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+    collageDescriptionBoxDescriptionSize = <%% 14, 14, 13, 12, 3 %%>;
+    collageDescriptionBoxDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+    collageDescriptionBoxDescriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  whiteTongMarginTop = <%% 32, 32, 32, 20, 5 %%>;
-  whiteTongMarginBottom = <%% 72, 72, 60, 45, 9 %%>;
-  whiteTongMarginBottomFinal = <%% 32, 32, 32, 8, 2.5 %%>;
+    whiteTongMarginTop = <%% 32, 32, 32, 20, 5 %%>;
+    whiteTongMarginBottom = <%% 72, 72, 60, 45, 9 %%>;
+    whiteTongMarginBottomFinal = <%% 32, 32, 32, 8, 2.5 %%>;
 
-  referencePhotoBetween = <%% 10, 10, 8, 8, 1 %%>;
+    referencePhotoBetween = <%% 10, 10, 8, 8, 1 %%>;
 
-  tableInnerMargin = <%% 54, 45, 30, 20, 0 %%>;
-  tableInnerMarginTop = <%% 42, 42, 20, 12, 0 %%>;
+    tableInnerMargin = <%% 54, 45, 30, 20, 0 %%>;
+    tableInnerMarginTop = <%% 42, 42, 20, 12, 0 %%>;
 
-  tableFactorTextTop = <%% (isMac() ? -2 : -1), (isMac() ? -2 : -1), (isMac() ? -2 : -1), (isMac() ? -2 : -1), -0.3 %%>;
-  tableFactorSize = <%% 14, 13, 12, 11, 2.5 %%>;
-  tableFactorWeight = <%% 400, 400, 400, 400, 400 %%>;
-  tableColumnWeight = <%% 700, 700, 700, 700, 700 %%>;
+    tableFactorTextTop = <%% (isMac() ? -2 : -1), (isMac() ? -2 : -1), (isMac() ? -2 : -1), (isMac() ? -2 : -1), -0.3 %%>;
+    tableFactorSize = <%% 14, 13, 12, 11, 2.5 %%>;
+    tableFactorWeight = <%% 400, 400, 400, 400, 400 %%>;
+    tableColumnWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  tableFactorHeight = <%% 100, 90, 80, 50, 12 %%>;
-  tableColumnHeight = <%% 45, 45, 40, 35, 6 %%>;
+    tableFactorHeight = <%% 100, 90, 80, 50, 12 %%>;
+    tableColumnHeight = <%% 45, 45, 40, 35, 6 %%>;
 
-  tableColumnsWidth = [
-    <&& 120 | 90 | 75 | 50 | 12 &&>,
-    <&& 150 | 100 | 95 | 80 | 15 &&>,
-    <&& 100 | 60 | 45 | 30 | 10 &&>,
-    <&& 100 | 80 | 70 | 60 | 10 &&>,
-    <&& 100 | 80 | 70 | 60 | 10 &&>,
-    <&& 100 | 80 | 70 | 60 | 14 &&>,
-    <&& 270 | 180 | 155 | 130 | 32 &&>,
-    <&& 120 | 90 | 80 | 70 | 12 &&>,
-    <&& 120 | 90 | 80 | 70 | 10 &&>,
-  ];
-  tableColumnsName = [
-    "이미지",
-    "품목",
-    "수량",
-    "단가",
-    "배송비",
-    "총액",
-    "상세 사항",
-    "구매처",
-    "링크"
-  ];
-  tableColumnsFactor = [
-    { type: "image", source: (obj) => { return obj.image } },
-    { type: "string", source: (obj) => { return obj.name } },
-    { type: "number", source: (obj) => { return obj.number } },
-    { type: "money", source: (obj) => { return obj.price.unit } },
-    { type: "money", source: (obj) => { return obj.price.delivery } },
-    { type: "money", source: (obj) => { return (obj.price.unit * obj.number) + obj.price.delivery } },
-    { type: "string", source: (obj) => { return obj.detail } },
-    { type: "string", source: (obj) => { return obj.where.name } },
-    { type: "link", source: (obj) => { return obj.where.link } },
-  ];
+    tableColumnsWidth = [
+      <&& 120 | 90 | 75 | 50 | 12 &&>,
+      <&& 150 | 100 | 95 | 80 | 15 &&>,
+      <&& 100 | 60 | 45 | 30 | 10 &&>,
+      <&& 100 | 80 | 70 | 60 | 10 &&>,
+      <&& 100 | 80 | 70 | 60 | 10 &&>,
+      <&& 100 | 80 | 70 | 60 | 14 &&>,
+      <&& 270 | 180 | 155 | 130 | 32 &&>,
+      <&& 120 | 90 | 80 | 70 | 12 &&>,
+      <&& 120 | 90 | 80 | 70 | 10 &&>,
+    ];
+    tableColumnsName = [
+      "이미지",
+      "품목",
+      "수량",
+      "단가",
+      "배송비",
+      "총액",
+      "상세 사항",
+      "구매처",
+      "링크"
+    ];
+    tableColumnsFactor = [
+      { type: "image", source: (obj) => { return obj.image } },
+      { type: "string", source: (obj) => { return obj.name } },
+      { type: "number", source: (obj) => { return obj.number } },
+      { type: "money", source: (obj) => { return obj.price.unit } },
+      { type: "money", source: (obj) => { return obj.price.delivery } },
+      { type: "money", source: (obj) => { return (obj.price.unit * obj.number) + obj.price.delivery } },
+      { type: "string", source: (obj) => { return obj.detail } },
+      { type: "string", source: (obj) => { return obj.where.name } },
+      { type: "link", source: (obj) => { return obj.where.link } },
+    ];
 
-  if (mobile) {
-    tableColumnsWidth.splice(3, 2);
-    tableColumnsName.splice(3, 2);
-    tableColumnsFactor.splice(3, 2);
+    if (mobile) {
+      tableColumnsWidth.splice(3, 2);
+      tableColumnsName.splice(3, 2);
+      tableColumnsFactor.splice(3, 2);
 
-    tableColumnsWidth.splice(1, 1);
-    tableColumnsName.splice(1, 1);
-    tableColumnsFactor.splice(1, 1);
+      tableColumnsWidth.splice(1, 1);
+      tableColumnsName.splice(1, 1);
+      tableColumnsFactor.splice(1, 1);
 
-    tableColumnsWidth.splice(4, 1);
-    tableColumnsName.splice(4, 1);
-    tableColumnsFactor.splice(4, 1);
-  }
+      tableColumnsWidth.splice(4, 1);
+      tableColumnsName.splice(4, 1);
+      tableColumnsFactor.splice(4, 1);
+    }
 
-  contents = {
-    title: [
-      desktop ? "공간별 디자인 시안과" : "디자인 시안과",
-      "제품 리스트",
-    ],
-    description: [
-      <&& "고객님 공간에 딱 맞는 홈리에종 미니 스타일링안을 드립니다. <b%디자인 시안은 무드 보드와 제품 리스트로 제공되며,%b>" | "고객님 공간에 딱 맞는 홈리에종 미니 스타일링안을 드립니다. <b%디자인 시안은 무드 보드와 제품 리스트로 제공되며,%b>" | "고객님 공간에 맞는 홈리에종 스타일링안을 드립니다. <b%시안은 무드 보드와 제품 리스트로 제공되며,%b>" | "고객님 공간에 맞는 스타일링안을 드립니다. <b%시안은 무드 보드와 제품 리스트로 제공되며,%b>" | "고객님께 맞는 스타일링안을 드립니다. <b%무드 보드와 제품 리스트로 제공되며,%b>" &&>,
-      <&& "자세한 상품 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서 배치 및 설치를 진행해주시면 됩니다." | "자세한 상품 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서 배치 및 설치를 진행해주시면 됩니다." | "자세한 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서 배치를 진행해주시면 됩니다." | "정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서 배치를 진행해주시면 됩니다." | "구입처를 통해 구매하신 뒤, 무드 보드를 보며 배치해주시면 됩니다." &&>,
-      <&& "수정 사항은 별도로 제공되지 않으며 기타 문의 사항이 있을시, 하단 채팅 기능을 통해 홈리에종으로 문의해주시길 바랍니다!" | "수정 사항은 별도로 제공되지 않으며 기타 문의 사항이 있을시, 하단 채팅 기능을 통해 홈리에종으로 문의해주시길 바랍니다!" | "수정은 별도로 제공되지 않으며 문의가 있을 시, 채팅을 통해 홈리에종으로 문의해주시길 바랍니다!" | "수정은 제공되지 않으며 문의가 있을 시, 채팅을 통해 홈리에종으로 문의해주시길 바랍니다!" | "\n수정은 제공되지 않으며 별도 문의는 홈리에종으로 문의주시길 바랍니다!" &&>,
-    ],
-    proposal: {
-      collage: {
-        title: "무드보드와 콜라주",
-        slide: [
-          MiniProposalJs.binaryPath + "/" + "proposal0.jpg",
-          MiniProposalJs.binaryPath + "/" + "proposal1.jpg",
-        ],
-        sub: "디자인 시안 설명",
-        description: "고객님 공간에 딱 맞는 홈리에종 미니 스타일링안을 드립니다. 디자인 시안은 무드 보드와 제품 리스트로 제공되며, <b%자세한 상품 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서%b> 배치 및 설치를 진행해주시면 됩니다. 수정 사항은 별도로 제공되지 않으며 기타 문의 사항이 있을시, 하단 채팅 기능을 통해 홈리에종으로 문의해주시길 바랍니다!\n\n고객님 공간에 딱 맞는 홈리에종 미니 스타일링안을 드립니다. 디자인 시안은 무드 보드와 제품 리스트로 제공되며, <b%자세한 상품 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서%b> 배치 및 설치를 진행해주시면 됩니다. 수정 사항은 별도로 제공되지 않으며 기타 문의 사항이 있을시, 하단 채팅 기능을 통해 홈리에종으로 문의해주시길 바랍니다!",
-      },
-      reference: {
-        title: "참고 사진",
-        slide: [
-          MiniProposalJs.binaryPath + "/" + "reference0.jpg",
-          MiniProposalJs.binaryPath + "/" + "reference1.jpg",
-          MiniProposalJs.binaryPath + "/" + "reference2.jpg",
-          MiniProposalJs.binaryPath + "/" + "reference3.jpg",
-        ]
-      },
-      table: {
-        title: "제품 리스트",
-        list: [
-          {
-            image: MiniProposalJs.binaryPath + "/" + "item0.png",
-            name: "거실 실링팬",
-            number: 1,
-            price: {
-              unit: 389000,
-              delivery: 0
+    contents = {
+      title: [
+        desktop ? "공간별 디자인 시안과" : "디자인 시안과",
+        "제품 리스트",
+      ],
+      description: [
+        <&& "고객님 공간에 딱 맞는 홈리에종 미니 스타일링안을 드립니다. <b%디자인 시안은 무드 보드와 제품 리스트로 제공되며,%b>" | "고객님 공간에 딱 맞는 홈리에종 미니 스타일링안을 드립니다. <b%디자인 시안은 무드 보드와 제품 리스트로 제공되며,%b>" | "고객님 공간에 맞는 홈리에종 스타일링안을 드립니다. <b%시안은 무드 보드와 제품 리스트로 제공되며,%b>" | "고객님 공간에 맞는 스타일링안을 드립니다. <b%시안은 무드 보드와 제품 리스트로 제공되며,%b>" | "고객님께 맞는 스타일링안을 드립니다. <b%무드 보드와 제품 리스트로 제공되며,%b>" &&>,
+        <&& "자세한 상품 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서 배치 및 설치를 진행해주시면 됩니다." | "자세한 상품 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서 배치 및 설치를 진행해주시면 됩니다." | "자세한 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서 배치를 진행해주시면 됩니다." | "정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서 배치를 진행해주시면 됩니다." | "구입처를 통해 구매하신 뒤, 무드 보드를 보며 배치해주시면 됩니다." &&>,
+        <&& "수정 사항은 별도로 제공되지 않으며 기타 문의 사항이 있을시, 하단 채팅 기능을 통해 홈리에종으로 문의해주시길 바랍니다!" | "수정 사항은 별도로 제공되지 않으며 기타 문의 사항이 있을시, 하단 채팅 기능을 통해 홈리에종으로 문의해주시길 바랍니다!" | "수정은 별도로 제공되지 않으며 문의가 있을 시, 채팅을 통해 홈리에종으로 문의해주시길 바랍니다!" | "수정은 제공되지 않으며 문의가 있을 시, 채팅을 통해 홈리에종으로 문의해주시길 바랍니다!" | "\n수정은 제공되지 않으며 별도 문의는 홈리에종으로 문의주시길 바랍니다!" &&>,
+      ],
+      proposal: {
+        collage: {
+          title: "무드보드와 콜라주",
+          slide: [
+            MiniProposalJs.binaryPath + "/" + "proposal0.jpg",
+            MiniProposalJs.binaryPath + "/" + "proposal1.jpg",
+          ],
+          sub: "디자인 시안 설명",
+          description: "고객님 공간에 딱 맞는 홈리에종 미니 스타일링안을 드립니다. 디자인 시안은 무드 보드와 제품 리스트로 제공되며, <b%자세한 상품 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서%b> 배치 및 설치를 진행해주시면 됩니다. 수정 사항은 별도로 제공되지 않으며 기타 문의 사항이 있을시, 하단 채팅 기능을 통해 홈리에종으로 문의해주시길 바랍니다!\n\n고객님 공간에 딱 맞는 홈리에종 미니 스타일링안을 드립니다. 디자인 시안은 무드 보드와 제품 리스트로 제공되며, <b%자세한 상품 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서%b> 배치 및 설치를 진행해주시면 됩니다. 수정 사항은 별도로 제공되지 않으며 기타 문의 사항이 있을시, 하단 채팅 기능을 통해 홈리에종으로 문의해주시길 바랍니다!",
+        },
+        reference: {
+          title: "참고 사진",
+          slide: [
+            MiniProposalJs.binaryPath + "/" + "reference0.jpg",
+            MiniProposalJs.binaryPath + "/" + "reference1.jpg",
+            MiniProposalJs.binaryPath + "/" + "reference2.jpg",
+            MiniProposalJs.binaryPath + "/" + "reference3.jpg",
+          ]
+        },
+        table: {
+          title: "제품 리스트",
+          list: [
+            {
+              image: MiniProposalJs.binaryPath + "/" + "item0.png",
+              name: "거실 실링팬",
+              number: 1,
+              price: {
+                unit: 389000,
+                delivery: 0
+              },
+              detail: "화이트 / 화이트",
+              where: {
+                name: "에어블로우",
+                link: "https://google.com",
+              }
             },
-            detail: "화이트 / 화이트",
-            where: {
-              name: "에어블로우",
-              link: "https://google.com",
-            }
-          },
-          {
-            image: MiniProposalJs.binaryPath + "/" + "item1.png",
-            name: "스텐드 조명",
-            number: 1,
-            price: {
-              unit: 370000,
-              delivery: 0
+            {
+              image: MiniProposalJs.binaryPath + "/" + "item1.png",
+              name: "스텐드 조명",
+              number: 1,
+              price: {
+                unit: 370000,
+                delivery: 0
+              },
+              detail: "노란빛",
+              where: {
+                name: "슬로우 빌라",
+                link: "https://google.com",
+              }
             },
-            detail: "노란빛",
-            where: {
-              name: "슬로우 빌라",
-              link: "https://google.com",
-            }
-          },
-          {
-            image: MiniProposalJs.binaryPath + "/" + "item2.png",
-            name: "스텐드 조명",
-            number: 1,
-            price: {
-              unit: 256000,
-              delivery: 0
+            {
+              image: MiniProposalJs.binaryPath + "/" + "item2.png",
+              name: "스텐드 조명",
+              number: 1,
+              price: {
+                unit: 256000,
+                delivery: 0
+              },
+              detail: "미니 소프트웜 / 스노우 화이트",
+              where: {
+                name: "라문직영샵",
+                link: "https://google.com",
+              }
             },
-            detail: "미니 소프트웜 / 스노우 화이트",
-            where: {
-              name: "라문직영샵",
-              link: "https://google.com",
-            }
-          },
-          {
-            image: MiniProposalJs.binaryPath + "/" + "item3.png",
-            name: "조명 펜던트",
-            number: 2,
-            price: {
-              unit: 125000,
-              delivery: 0
+            {
+              image: MiniProposalJs.binaryPath + "/" + "item3.png",
+              name: "조명 펜던트",
+              number: 2,
+              price: {
+                unit: 125000,
+                delivery: 0
+              },
+              detail: "주백색 일체형",
+              where: {
+                name: "조명나라",
+                link: "https://google.com",
+              }
             },
-            detail: "주백색 일체형",
-            where: {
-              name: "조명나라",
-              link: "https://google.com",
-            }
-          },
-          {
-            image: MiniProposalJs.binaryPath + "/" + "item4.png",
-            name: "조명 펜던트",
-            number: 1,
-            price: {
-              unit: 95000,
-              delivery: 0
+            {
+              image: MiniProposalJs.binaryPath + "/" + "item4.png",
+              name: "조명 펜던트",
+              number: 1,
+              price: {
+                unit: 95000,
+                delivery: 0
+              },
+              detail: "400H / 노란빛",
+              where: {
+                name: "조명나라",
+                link: "https://google.com",
+              }
             },
-            detail: "400H / 노란빛",
-            where: {
-              name: "조명나라",
-              link: "https://google.com",
-            }
-          },
-          {
-            image: MiniProposalJs.binaryPath + "/" + "item5.png",
-            name: "조명 펜던트",
-            number: 1,
-            price: {
-              unit: 74200,
-              delivery: 0
+            {
+              image: MiniProposalJs.binaryPath + "/" + "item5.png",
+              name: "조명 펜던트",
+              number: 1,
+              price: {
+                unit: 74200,
+                delivery: 0
+              },
+              detail: "380 파이 / 볼전구 주백색",
+              where: {
+                name: "공간조명",
+                link: "https://google.com",
+              }
             },
-            detail: "380 파이 / 볼전구 주백색",
-            where: {
-              name: "공간조명",
-              link: "https://google.com",
-            }
-          },
-          {
-            image: MiniProposalJs.binaryPath + "/" + "item6.png",
-            name: "조명 펜던트",
-            number: 1,
-            price: {
-              unit: 66000,
-              delivery: 0
+            {
+              image: MiniProposalJs.binaryPath + "/" + "item6.png",
+              name: "조명 펜던트",
+              number: 1,
+              price: {
+                unit: 66000,
+                delivery: 0
+              },
+              detail: "화이트 / 화이트 / 12W 볼전구 전구색",
+              where: {
+                name: "라디룸",
+                link: "https://google.com",
+              }
             },
-            detail: "화이트 / 화이트 / 12W 볼전구 전구색",
-            where: {
-              name: "라디룸",
-              link: "https://google.com",
-            }
-          },
-          {
-            image: MiniProposalJs.binaryPath + "/" + "item7.png",
-            name: "조명 펜던트",
-            number: 1,
-            price: {
-              unit: 57900,
-              delivery: 3000
+            {
+              image: MiniProposalJs.binaryPath + "/" + "item7.png",
+              name: "조명 펜던트",
+              number: 1,
+              price: {
+                unit: 57900,
+                delivery: 3000
+              },
+              detail: "150파이 / 일반형 / 2M / 노란빛",
+              where: {
+                name: "제일조명",
+                link: "https://google.com",
+              }
             },
-            detail: "150파이 / 일반형 / 2M / 노란빛",
-            where: {
-              name: "제일조명",
-              link: "https://google.com",
-            }
-          },
-          {
-            image: MiniProposalJs.binaryPath + "/" + "item8.png",
-            name: "스텐드 조명",
-            number: 1,
-            price: {
-              unit: 156000,
-              delivery: 3000
+            {
+              image: MiniProposalJs.binaryPath + "/" + "item8.png",
+              name: "스텐드 조명",
+              number: 1,
+              price: {
+                unit: 156000,
+                delivery: 3000
+              },
+              detail: "버터 / 디밍",
+              where: {
+                name: "1962",
+                link: "https://google.com",
+              }
             },
-            detail: "버터 / 디밍",
-            where: {
-              name: "1962",
-              link: "https://google.com",
-            }
-          },
-        ]
+          ]
+        }
       }
-    }
-  };
+    };
 
-  // another base
-  whiteBase = createNode({
-    mother: this.baseTong.parentElement,
-    style: {
-      display: "block",
-      width: String(100) + '%',
-      position: "relative",
-      background: colorChip.gray3,
-    }
-  });
+    // another base
+    whiteBase = createNode({
+      mother: this.baseTong.parentElement,
+      style: {
+        display: "block",
+        width: String(100) + '%',
+        position: "relative",
+        background: colorChip.gray3,
+      }
+    });
 
-  baseTongClone = this.baseTong.cloneNode(false);
-  whiteBase.appendChild(baseTongClone);
+    baseTongClone = this.baseTong.cloneNode(false);
+    whiteBase.appendChild(baseTongClone);
 
-  baseTongClone.style.paddingTop = String(basePadding) + ea;
-  baseTongClone.style.paddingBottom = String(basePadding) + ea;
+    baseTongClone.style.paddingTop = String(basePadding) + ea;
+    baseTongClone.style.paddingBottom = String(basePadding) + ea;
 
-  // white
-  whiteBlock = createNode({
-    mother: baseTongClone,
-    style: {
-      position: "relative",
-      borderRadius: String(8) + "px",
-      width: String(100) + '%',
-      paddingTop: String(margin - topBottomVisualMargin) + ea,
-      paddingBottom: String(margin - topBottomVisualMargin) + ea,
-      background: colorChip.white,
-      marginBottom: String(bottomMargin) + ea,
-      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
-    }
-  });
-  titleTextTong = createNode({
-    mother: whiteBlock,
-    style: {
-      display: "block",
-      position: "relative",
-      marginLeft: String((desktop ? margin : 6)) + ea,
-      width: withOut((desktop ? margin : 6) * 2, ea),
-      height: desktop ? String(titleTextTongHeight) + ea : "",
-    }
-  });
-  createNode({
-    mother: titleTextTong,
-    text: contents.title.join("\n"),
-    style: {
-      display: "inline-block",
-      position: "relative",
-      width: String(titleTextTitleWidth) + ea,
-      fontSize: String(titleTextTitleSize) + ea,
-      fontWeight: String(titleTextTitleWeight),
-      color: colorChip.black,
-      lineHeight: String(titleTextTitleLineHeight),
-      verticalAlign: "top",
-    }
-  });
-  createNode({
-    mother: titleTextTong,
-    text: desktop ? contents.description.join("\n") : contents.description.join(" "),
-    style: {
-      display: "inline-block",
-      position: "relative",
-      width: withOut(titleTextTitleWidth, ea),
-      fontSize: String(titleTextDescriptionSize) + ea,
-      fontWeight: String(titleTextDescriptionWeight),
-      color: colorChip.black,
-      lineHeight: String(titleTextDescriptionLineHeight),
-      verticalAlign: "top",
-      paddingTop: String(titleTextDescriptionPaddingTop) + ea,
-    },
-    bold: {
-      fontSize: String(titleTextDescriptionSize) + ea,
-      fontWeight: String(titleTextDescriptionBoldWeight),
-      color: colorChip.green,
-    }
-  });
-
-  for (let z = 0; z < user.response.design.length; z++) {
-
-    // gray
-    grayBlock = createNode({
+    // white
+    whiteBlock = createNode({
       mother: baseTongClone,
       style: {
         position: "relative",
         borderRadius: String(8) + "px",
         width: String(100) + '%',
-        paddingTop: String(desktop ? margin - topBottomVisualMargin : margin - topBottomVisualMargin + 1) + ea,
+        paddingTop: String(margin - topBottomVisualMargin) + ea,
         paddingBottom: String(margin - topBottomVisualMargin) + ea,
-        background: colorChip.gray1,
+        background: colorChip.white,
         marginBottom: String(bottomMargin) + ea,
         boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
       }
     });
-
-    // gray 1 : collage
-    createNode({
-      mother: grayBlock,
+    titleTextTong = createNode({
+      mother: whiteBlock,
       style: {
         display: "block",
         position: "relative",
-        textAlign: "center",
-        marginLeft: String(margin) + ea,
-        width: withOut(margin * 2, ea),
-      },
-      children: [
-        {
-          style: {
-            position: "absolute",
-            width: String(100) + '%',
-            top: String(0),
-            left: String(0),
-            height: String(grayTitleLineTop) + ea,
-            borderBottom: "1px solid " + colorChip.gray3,
-          }
-        },
-        {
-          text: contents.proposal.collage.title,
-          style: {
-            display: "inline-block",
-            position: "relative",
-            fontSize: String(grayTitleSize) + ea,
-            fontWeight: String(grayTitleWeight),
-            lineHeight: String(grayTitleLineHeight),
-            color: colorChip.black,
-            paddingLeft: String(grayTitlePadding) + ea,
-            paddingRight: String(grayTitlePadding) + ea,
-            background: colorChip.gray1,
-          }
-        }
-      ]
+        marginLeft: String((desktop ? margin : 6)) + ea,
+        width: withOut((desktop ? margin : 6) * 2, ea),
+        height: desktop ? String(titleTextTongHeight) + ea : "",
+      }
     });
-
-    collageWhiteTong = createNode({
-      mother: grayBlock,
+    createNode({
+      mother: titleTextTong,
+      text: contents.title.join("\n"),
       style: {
-        display: "block",
+        display: "inline-block",
         position: "relative",
-        textAlign: "center",
-        marginLeft: String(margin) + ea,
-        width: withOut((margin * 2) + (collageInnerMargin * 2), ea),
-        background: colorChip.white,
-        boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
-        paddingTop: String(desktop ? collageInnerMargin : collageInnerMargin + 1) + ea,
-        paddingBottom: String(collageInnerMargin) + ea,
-        paddingLeft: String(collageInnerMargin) + ea,
-        paddingRight: String(collageInnerMargin) + ea,
-        borderRadius: String(8) + "px",
-        marginTop: String(whiteTongMarginTop) + ea,
-        marginBottom: String(whiteTongMarginBottom) + ea,
+        width: String(titleTextTitleWidth) + ea,
+        fontSize: String(titleTextTitleSize) + ea,
+        fontWeight: String(titleTextTitleWeight),
+        color: colorChip.black,
+        lineHeight: String(titleTextTitleLineHeight),
+        verticalAlign: "top",
+      }
+    });
+    createNode({
+      mother: titleTextTong,
+      text: desktop ? contents.description.join("\n") : contents.description.join(" "),
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: withOut(titleTextTitleWidth, ea),
+        fontSize: String(titleTextDescriptionSize) + ea,
+        fontWeight: String(titleTextDescriptionWeight),
+        color: colorChip.black,
+        lineHeight: String(titleTextDescriptionLineHeight),
+        verticalAlign: "top",
+        paddingTop: String(titleTextDescriptionPaddingTop) + ea,
+      },
+      bold: {
+        fontSize: String(titleTextDescriptionSize) + ea,
+        fontWeight: String(titleTextDescriptionBoldWeight),
+        color: colorChip.green,
       }
     });
 
-    for (let i = 0; i < contents.proposal.collage.slide.length; i++) {
+    for (let index = 0; index < user.response.design[0].concept.length; index++) {
+
+      concept = user.response.design[0].concept[index];
+      proposal = user.response.design[0].proposal[index];
+      photo = user.response.design[0].photo[index];
+      list = user.response.design[0].list[index];
+
+      conceptImages = await ajaxJson({ key: concept.key }, "/ghostPass_userKey", { equal: true });
+      conceptImages = conceptImages.list.map((path) => { return "https://" + FILEHOST + path });
+
+      console.log(conceptImages);
+
+
+      // gray
+      grayBlock = createNode({
+        mother: baseTongClone,
+        style: {
+          position: "relative",
+          borderRadius: String(8) + "px",
+          width: String(100) + '%',
+          paddingTop: String(desktop ? margin - topBottomVisualMargin : margin - topBottomVisualMargin + 1) + ea,
+          paddingBottom: String(margin - topBottomVisualMargin) + ea,
+          background: colorChip.gray1,
+          marginBottom: String(bottomMargin) + ea,
+          boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+        }
+      });
+
+      // gray 1 : collage
       createNode({
-        mother: collageWhiteTong,
-        mode: "img",
-        attribute: {
-          src: contents.proposal.collage.slide[i],
-        },
+        mother: grayBlock,
         style: {
           display: "block",
           position: "relative",
-          width: String(100) + '%',
-          marginBottom: String(collageSlideBetween) + ea,
-          borderRadius: String(5) + "px",
-        }
-      });
-    }
-
-    collageDescriptionBox = createNode({
-      mother: collageWhiteTong,
-      style: {
-        display: "block",
-        position: "relative",
-        marginTop: String(collageDescriptionBoxMarginTop) + ea,
-        textAlign: "left",
-        marginLeft: String(collageDescriptionBoxMarginLeft) + ea,
-        marginRight: String(collageDescriptionBoxMarginLeft) + ea,
-        width: withOut(collageDescriptionBoxMarginLeft * 2, ea),
-        marginBottom: String(collageDescriptionBoxMarginBottom) + ea,
-      }
-    });
-    createNode({
-      mother: collageDescriptionBox,
-      text: contents.proposal.collage.sub,
-      style: {
-        display: desktop ? "inline-block" : "block",
-        width: desktop ? String(collageDescriptionBoxTitleAreaWidth) + ea : String(100) + '%',
-        fontSize: String(collageDescriptionBoxTitleSize) + ea,
-        fontWeight: String(collageDescriptionBoxTitleWeight),
-        color: colorChip.black,
-        lineHeight: String(collageDescriptionBoxTitleLineHeight),
-        verticalAlign: "top",
-      }
-    });
-    createNode({
-      mother: collageDescriptionBox,
-      text: contents.proposal.collage.description,
-      style: {
-        display: desktop ? "inline-block" : "block",
-        width: desktop ? withOut(collageDescriptionBoxTitleAreaWidth, ea) : String(100) + '%',
-        fontSize: String(collageDescriptionBoxDescriptionSize) + ea,
-        fontWeight: String(collageDescriptionBoxDescriptionWeight),
-        color: colorChip.black,
-        lineHeight: String(collageDescriptionBoxTitleLineHeight),
-        verticalAlign: "top",
-        marginTop: desktop ? "" : String(collageDescriptionBoxMarginLeft) + ea,
-      },
-      bold: {
-        fontWeight: String(collageDescriptionBoxDescriptionBoldWeight),
-        color: colorChip.black,
-      }
-    });
-
-    // gray 2 : reference
-    createNode({
-      mother: grayBlock,
-      style: {
-        display: "block",
-        position: "relative",
-        textAlign: "center",
-        marginLeft: String(margin) + ea,
-        width: withOut(margin * 2, ea),
-      },
-      children: [
-        {
-          style: {
-            position: "absolute",
-            width: String(100) + '%',
-            top: String(0),
-            left: String(0),
-            height: String(grayTitleLineTop) + ea,
-            borderBottom: "1px solid " + colorChip.gray3,
-          }
-        },
-        {
-          text: contents.proposal.reference.title,
-          style: {
-            display: "inline-block",
-            position: "relative",
-            fontSize: String(grayTitleSize) + ea,
-            fontWeight: String(grayTitleWeight),
-            lineHeight: String(grayTitleLineHeight),
-            color: colorChip.black,
-            paddingLeft: String(grayTitlePadding) + ea,
-            paddingRight: String(grayTitlePadding) + ea,
-            background: colorChip.gray1,
-          }
-        }
-      ]
-    });
-    referencePhotoTong = createNode({
-      mother: grayBlock,
-      style: {
-        display: "block",
-        position: "relative",
-        textAlign: "left",
-        marginLeft: String(margin) + ea,
-        width: withOut((margin * 2), ea),
-        marginTop: String(whiteTongMarginTop) + ea,
-        marginBottom: String(whiteTongMarginBottom) + ea,
-      }
-    });
-    for (let i = 0; i < contents.proposal.reference.slide.length; i++) {
-      createNode({
-        mother: referencePhotoTong,
-        mode: "img",
-        attribute: {
-          src: contents.proposal.reference.slide[i]
-        },
-        style: {
-          display: "inline-block",
-          position: "relative",
-          width: desktop ? "calc(calc(100% - " + String(referencePhotoBetween * (contents.proposal.reference.slide.length - 1)) + ea + ") / " + String(contents.proposal.reference.slide.length) + ")" : "calc(calc(100% - " + String(referencePhotoBetween) + ea + ") / 2)",
-          marginRight: desktop ? String(i === contents.proposal.reference.slide.length - 1 ? 0 : referencePhotoBetween) + ea : String(i % 2 === 0 ? referencePhotoBetween : 0) + ea,
-          marginBottom: desktop ? "" : String(referencePhotoBetween) + ea,
-          borderRadius: String(5) + "px",
-        }
-      });
-    }
-
-    // gray 3 : table
-    createNode({
-      mother: grayBlock,
-      style: {
-        display: "block",
-        position: "relative",
-        textAlign: "center",
-        marginLeft: String(margin) + ea,
-        width: withOut(margin * 2, ea),
-      },
-      children: [
-        {
-          style: {
-            position: "absolute",
-            width: String(100) + '%',
-            top: String(0),
-            left: String(0),
-            height: String(grayTitleLineTop) + ea,
-            borderBottom: "1px solid " + colorChip.gray3,
-          }
-        },
-        {
-          text: contents.proposal.table.title,
-          style: {
-            display: "inline-block",
-            position: "relative",
-            fontSize: String(grayTitleSize) + ea,
-            fontWeight: String(grayTitleWeight),
-            lineHeight: String(grayTitleLineHeight),
-            color: colorChip.black,
-            paddingLeft: String(grayTitlePadding) + ea,
-            paddingRight: String(grayTitlePadding) + ea,
-            background: colorChip.gray1,
-          }
-        }
-      ]
-    });
-
-    tableWhiteTong = createNode({
-      mother: grayBlock,
-      style: {
-        display: "block",
-        position: "relative",
-        textAlign: "center",
-        marginLeft: String(margin) + ea,
-        width: withOut((margin * 2) + (tableInnerMargin * 2), ea),
-        background: desktop ? colorChip.white : "transparent",
-        boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : 0,
-        paddingTop: String(tableInnerMarginTop) + ea,
-        paddingBottom: String(tableInnerMargin) + ea,
-        paddingLeft: String(tableInnerMargin) + ea,
-        paddingRight: String(tableInnerMargin) + ea,
-        borderRadius: String(8) + "px",
-        marginTop: String(desktop ? whiteTongMarginTop : whiteTongMarginTop - 1) + ea,
-        marginBottom: String(whiteTongMarginBottomFinal) + ea,
-      }
-    });
-
-    tableColumnBar = createNode({
-      mother: tableWhiteTong,
-      style: {
-        display: "block",
-        position: "relative",
-        width: withOut(0, ea),
-        textAlign: "left",
-        borderBottom: "1px solid " + colorChip.black,
-      }
-    });
-
-    for (let i = 0; i < tableColumnsName.length; i++) {
-      createNode({
-        mother: tableColumnBar,
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          width: String(tableColumnsWidth[i]) + ea,
-          height: String(tableColumnHeight) + ea,
           textAlign: "center",
-          justifyContent: "center",
-          alignItems: "center",
+          marginLeft: String(margin) + ea,
+          width: withOut(margin * 2, ea),
         },
         children: [
           {
-            text: tableColumnsName[i],
+            style: {
+              position: "absolute",
+              width: String(100) + '%',
+              top: String(0),
+              left: String(0),
+              height: String(grayTitleLineTop) + ea,
+              borderBottom: "1px solid " + colorChip.gray3,
+            }
+          },
+          {
+            text: contents.proposal.collage.title,
             style: {
               display: "inline-block",
               position: "relative",
-              top: String(tableFactorTextTop) + ea,
-              fontSize: String(tableFactorSize) + ea,
-              fontWeight: String(tableColumnWeight),
+              fontSize: String(grayTitleSize) + ea,
+              fontWeight: String(grayTitleWeight),
+              lineHeight: String(grayTitleLineHeight),
               color: colorChip.black,
+              paddingLeft: String(grayTitlePadding) + ea,
+              paddingRight: String(grayTitlePadding) + ea,
+              background: colorChip.gray1,
             }
           }
         ]
       });
-    }
 
-    tableFatorBars = [];
-    for (let i = 0; i < contents.proposal.table.list.length; i++) {
-      tableFatorBars.push(createNode({
+      collageWhiteTong = createNode({
+        mother: grayBlock,
+        style: {
+          display: "block",
+          position: "relative",
+          textAlign: "center",
+          marginLeft: String(margin) + ea,
+          width: withOut((margin * 2) + (collageInnerMargin * 2), ea),
+          background: colorChip.white,
+          boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+          paddingTop: String(desktop ? collageInnerMargin : collageInnerMargin + 1) + ea,
+          paddingBottom: String(collageInnerMargin) + ea,
+          paddingLeft: String(collageInnerMargin) + ea,
+          paddingRight: String(collageInnerMargin) + ea,
+          borderRadius: String(8) + "px",
+          marginTop: String(whiteTongMarginTop) + ea,
+          marginBottom: String(whiteTongMarginBottom) + ea,
+        }
+      });
+
+      for (let i = 0; i < contents.proposal.collage.slide.length; i++) {
+        createNode({
+          mother: collageWhiteTong,
+          mode: "img",
+          attribute: {
+            src: contents.proposal.collage.slide[i],
+          },
+          style: {
+            display: "block",
+            position: "relative",
+            width: String(100) + '%',
+            marginBottom: String(collageSlideBetween) + ea,
+            borderRadius: String(5) + "px",
+          }
+        });
+      }
+
+      collageDescriptionBox = createNode({
+        mother: collageWhiteTong,
+        style: {
+          display: "block",
+          position: "relative",
+          marginTop: String(collageDescriptionBoxMarginTop) + ea,
+          textAlign: "left",
+          marginLeft: String(collageDescriptionBoxMarginLeft) + ea,
+          marginRight: String(collageDescriptionBoxMarginLeft) + ea,
+          width: withOut(collageDescriptionBoxMarginLeft * 2, ea),
+          marginBottom: String(collageDescriptionBoxMarginBottom) + ea,
+        }
+      });
+      createNode({
+        mother: collageDescriptionBox,
+        text: contents.proposal.collage.sub,
+        style: {
+          display: desktop ? "inline-block" : "block",
+          width: desktop ? String(collageDescriptionBoxTitleAreaWidth) + ea : String(100) + '%',
+          fontSize: String(collageDescriptionBoxTitleSize) + ea,
+          fontWeight: String(collageDescriptionBoxTitleWeight),
+          color: colorChip.black,
+          lineHeight: String(collageDescriptionBoxTitleLineHeight),
+          verticalAlign: "top",
+        }
+      });
+      createNode({
+        mother: collageDescriptionBox,
+        text: contents.proposal.collage.description,
+        style: {
+          display: desktop ? "inline-block" : "block",
+          width: desktop ? withOut(collageDescriptionBoxTitleAreaWidth, ea) : String(100) + '%',
+          fontSize: String(collageDescriptionBoxDescriptionSize) + ea,
+          fontWeight: String(collageDescriptionBoxDescriptionWeight),
+          color: colorChip.black,
+          lineHeight: String(collageDescriptionBoxTitleLineHeight),
+          verticalAlign: "top",
+          marginTop: desktop ? "" : String(collageDescriptionBoxMarginLeft) + ea,
+        },
+        bold: {
+          fontWeight: String(collageDescriptionBoxDescriptionBoldWeight),
+          color: colorChip.black,
+        }
+      });
+
+      // gray 2 : reference
+      createNode({
+        mother: grayBlock,
+        style: {
+          display: "block",
+          position: "relative",
+          textAlign: "center",
+          marginLeft: String(margin) + ea,
+          width: withOut(margin * 2, ea),
+        },
+        children: [
+          {
+            style: {
+              position: "absolute",
+              width: String(100) + '%',
+              top: String(0),
+              left: String(0),
+              height: String(grayTitleLineTop) + ea,
+              borderBottom: "1px solid " + colorChip.gray3,
+            }
+          },
+          {
+            text: contents.proposal.reference.title,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(grayTitleSize) + ea,
+              fontWeight: String(grayTitleWeight),
+              lineHeight: String(grayTitleLineHeight),
+              color: colorChip.black,
+              paddingLeft: String(grayTitlePadding) + ea,
+              paddingRight: String(grayTitlePadding) + ea,
+              background: colorChip.gray1,
+            }
+          }
+        ]
+      });
+      referencePhotoTong = createNode({
+        mother: grayBlock,
+        style: {
+          display: "block",
+          position: "relative",
+          textAlign: "left",
+          marginLeft: String(margin) + ea,
+          width: withOut((margin * 2), ea),
+          marginTop: String(whiteTongMarginTop) + ea,
+          marginBottom: String(whiteTongMarginBottom) + ea,
+        }
+      });
+      for (let i = 0; i < contents.proposal.reference.slide.length; i++) {
+        createNode({
+          mother: referencePhotoTong,
+          mode: "img",
+          attribute: {
+            src: contents.proposal.reference.slide[i]
+          },
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: desktop ? "calc(calc(100% - " + String(referencePhotoBetween * (contents.proposal.reference.slide.length - 1)) + ea + ") / " + String(contents.proposal.reference.slide.length) + ")" : "calc(calc(100% - " + String(referencePhotoBetween) + ea + ") / 2)",
+            marginRight: desktop ? String(i === contents.proposal.reference.slide.length - 1 ? 0 : referencePhotoBetween) + ea : String(i % 2 === 0 ? referencePhotoBetween : 0) + ea,
+            marginBottom: desktop ? "" : String(referencePhotoBetween) + ea,
+            borderRadius: String(5) + "px",
+          }
+        });
+      }
+
+      // gray 3 : table
+      createNode({
+        mother: grayBlock,
+        style: {
+          display: "block",
+          position: "relative",
+          textAlign: "center",
+          marginLeft: String(margin) + ea,
+          width: withOut(margin * 2, ea),
+        },
+        children: [
+          {
+            style: {
+              position: "absolute",
+              width: String(100) + '%',
+              top: String(0),
+              left: String(0),
+              height: String(grayTitleLineTop) + ea,
+              borderBottom: "1px solid " + colorChip.gray3,
+            }
+          },
+          {
+            text: contents.proposal.table.title,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(grayTitleSize) + ea,
+              fontWeight: String(grayTitleWeight),
+              lineHeight: String(grayTitleLineHeight),
+              color: colorChip.black,
+              paddingLeft: String(grayTitlePadding) + ea,
+              paddingRight: String(grayTitlePadding) + ea,
+              background: colorChip.gray1,
+            }
+          }
+        ]
+      });
+
+      tableWhiteTong = createNode({
+        mother: grayBlock,
+        style: {
+          display: "block",
+          position: "relative",
+          textAlign: "center",
+          marginLeft: String(margin) + ea,
+          width: withOut((margin * 2) + (tableInnerMargin * 2), ea),
+          background: desktop ? colorChip.white : "transparent",
+          boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : 0,
+          paddingTop: String(tableInnerMarginTop) + ea,
+          paddingBottom: String(tableInnerMargin) + ea,
+          paddingLeft: String(tableInnerMargin) + ea,
+          paddingRight: String(tableInnerMargin) + ea,
+          borderRadius: String(8) + "px",
+          marginTop: String(desktop ? whiteTongMarginTop : whiteTongMarginTop - 1) + ea,
+          marginBottom: String(whiteTongMarginBottomFinal) + ea,
+        }
+      });
+
+      tableColumnBar = createNode({
         mother: tableWhiteTong,
         style: {
           display: "block",
           position: "relative",
           width: withOut(0, ea),
           textAlign: "left",
-          borderBottom: "1px solid " + colorChip.gray3,
+          borderBottom: "1px solid " + colorChip.black,
         }
-      }));
-    }
+      });
 
-    for (let i = 0; i < contents.proposal.table.list.length; i++) {
-      for (let j = 0; j < tableColumnsFactor.length; j++) {
-
-        tempTong = createNode({
-          mother: tableFatorBars[i],
+      for (let i = 0; i < tableColumnsName.length; i++) {
+        createNode({
+          mother: tableColumnBar,
           style: {
             display: "inline-flex",
             position: "relative",
-            width: String(tableColumnsWidth[j]) + ea,
-            height: String(tableFactorHeight) + ea,
+            width: String(tableColumnsWidth[i]) + ea,
+            height: String(tableColumnHeight) + ea,
             textAlign: "center",
             justifyContent: "center",
             alignItems: "center",
-            verticalAlign: "top",
-            overflow: "scroll",
-          }
+          },
+          children: [
+            {
+              text: tableColumnsName[i],
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(tableFactorTextTop) + ea,
+                fontSize: String(tableFactorSize) + ea,
+                fontWeight: String(tableColumnWeight),
+                color: colorChip.black,
+              }
+            }
+          ]
         });
+      }
 
-        if (tableColumnsFactor[j].type === "image") {
+      tableFatorBars = [];
+      for (let i = 0; i < contents.proposal.table.list.length; i++) {
+        tableFatorBars.push(createNode({
+          mother: tableWhiteTong,
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(0, ea),
+            textAlign: "left",
+            borderBottom: "1px solid " + colorChip.gray3,
+          }
+        }));
+      }
 
-          createNode({
-            mother: tempTong,
-            mode: "img",
-            attribute: {
-              src: tableColumnsFactor[j].source(contents.proposal.table.list[i]),
-            },
+      for (let i = 0; i < contents.proposal.table.list.length; i++) {
+        for (let j = 0; j < tableColumnsFactor.length; j++) {
+
+          tempTong = createNode({
+            mother: tableFatorBars[i],
             style: {
-              display: "inline-block",
+              display: "inline-flex",
               position: "relative",
+              width: String(tableColumnsWidth[j]) + ea,
               height: String(tableFactorHeight) + ea,
-            }
-          })
-
-
-        } else if (tableColumnsFactor[j].type === "string") {
-
-          createNode({
-            mother: tempTong,
-            text: tableColumnsFactor[j].source(contents.proposal.table.list[i]),
-            style: {
-              display: "inline-block",
-              position: "relative",
-              top: String(tableFactorTextTop) + ea,
-              fontSize: String(tableFactorSize) + ea,
-              fontWeight: String(tableFactorWeight),
-              color: colorChip.black,
+              textAlign: "center",
+              justifyContent: "center",
+              alignItems: "center",
+              verticalAlign: "top",
+              overflow: "scroll",
             }
           });
 
-        } else if (tableColumnsFactor[j].type === "number") {
+          if (tableColumnsFactor[j].type === "image") {
 
-          createNode({
-            mother: tempTong,
-            text: String(tableColumnsFactor[j].source(contents.proposal.table.list[i])),
-            style: {
-              display: "inline-block",
-              position: "relative",
-              top: String(tableFactorTextTop) + ea,
-              fontSize: String(tableFactorSize) + ea,
-              fontWeight: String(tableFactorWeight),
-              color: colorChip.black,
-            }
-          });
+            createNode({
+              mother: tempTong,
+              mode: "img",
+              attribute: {
+                src: tableColumnsFactor[j].source(contents.proposal.table.list[i]),
+              },
+              style: {
+                display: "inline-block",
+                position: "relative",
+                height: String(tableFactorHeight) + ea,
+              }
+            })
 
 
-        } else if (tableColumnsFactor[j].type === "money") {
+          } else if (tableColumnsFactor[j].type === "string") {
 
-          createNode({
-            mother: tempTong,
-            text: autoComma(tableColumnsFactor[j].source(contents.proposal.table.list[i])) + '원',
-            style: {
-              display: "inline-block",
-              position: "relative",
-              top: String(tableFactorTextTop) + ea,
-              fontSize: String(tableFactorSize) + ea,
-              fontWeight: String(tableFactorWeight),
-              color: colorChip.black,
-            }
-          });
+            createNode({
+              mother: tempTong,
+              text: tableColumnsFactor[j].source(contents.proposal.table.list[i]),
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(tableFactorTextTop) + ea,
+                fontSize: String(tableFactorSize) + ea,
+                fontWeight: String(tableFactorWeight),
+                color: colorChip.black,
+              }
+            });
 
-        } else if (tableColumnsFactor[j].type === "link") {
+          } else if (tableColumnsFactor[j].type === "number") {
 
-          createNode({
-            mother: tempTong,
-            text: "Link",
-            event: (e) => { blankHref(tableColumnsFactor[j].source(contents.proposal.table.list[i])) },
-            style: {
-              display: "inline-block",
-              position: "relative",
-              top: String(tableFactorTextTop) + ea,
-              fontSize: String(tableFactorSize) + ea,
-              fontWeight: String(tableFactorWeight),
-              color: colorChip.black,
-              cursor: "pointer",
-            }
-          });
+            createNode({
+              mother: tempTong,
+              text: String(tableColumnsFactor[j].source(contents.proposal.table.list[i])),
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(tableFactorTextTop) + ea,
+                fontSize: String(tableFactorSize) + ea,
+                fontWeight: String(tableFactorWeight),
+                color: colorChip.black,
+              }
+            });
 
+
+          } else if (tableColumnsFactor[j].type === "money") {
+
+            createNode({
+              mother: tempTong,
+              text: autoComma(tableColumnsFactor[j].source(contents.proposal.table.list[i])) + '원',
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(tableFactorTextTop) + ea,
+                fontSize: String(tableFactorSize) + ea,
+                fontWeight: String(tableFactorWeight),
+                color: colorChip.black,
+              }
+            });
+
+          } else if (tableColumnsFactor[j].type === "link") {
+
+            createNode({
+              mother: tempTong,
+              text: "Link",
+              event: (e) => { blankHref(tableColumnsFactor[j].source(contents.proposal.table.list[i])) },
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(tableFactorTextTop) + ea,
+                fontSize: String(tableFactorSize) + ea,
+                fontWeight: String(tableFactorWeight),
+                color: colorChip.black,
+                cursor: "pointer",
+              }
+            });
+
+          }
         }
       }
+
     }
 
+  } catch (e) {
+    window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+    window.location.reload();
   }
-
 }
 
 MiniProposalJs.prototype.launching = async function (loading) {
@@ -1476,7 +1499,7 @@ MiniProposalJs.prototype.launching = async function (loading) {
           instance.insertInitBox();
           instance.insertCollageBox();
           instance.insertPhotoBox();
-          instance.insertSecondBox();
+          await instance.insertSecondBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "MiniProposalJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
         }

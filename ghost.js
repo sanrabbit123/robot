@@ -1947,7 +1947,7 @@ Ghost.prototype.ghostRouter = function (needs) {
         const selfMongo = MONGOC;
         const { key } = req.body;
         const keyDetailList = (await fileSystem("readDir", [ staticPath + "/" + key ])).filter((str) => { return str !== ".DS_Store" });
-        res.send(JSON.stringify({ list: keyDetailList.map((str) => { return address.officeinfo.ghost.file.user + "/" + str }) }));
+        res.send(JSON.stringify({ list: keyDetailList.map((str) => { return address.officeinfo.ghost.file.user + "/" + key + "/" + str }) }));
       } catch (e) {
         res.send(JSON.stringify({ message: e.message + " : post must be { useid }" }));
       }
