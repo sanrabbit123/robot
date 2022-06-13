@@ -1185,26 +1185,15 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         if (!err && filesKeys.length > 0) {
 
           const { sheetsName } = fields;
+          const file = files[filesKeys[0]];
 
-          console.log(sheetsName);
-          console.log(files);
+          const matrix = await excel.fileToMatrix(file.filepath, sheetsName)
+          await shellExec(`rm -rf ${shellLink(file.filepath)};`);
 
-          // await excel.fileToMatrix(filepath, sheetsName)
-
-
-          // for (let key of filesKeys) {
-          //   if (Array.isArray(files[key])) {
-          //     for (let j of files[key]) {
-          //       await shellExec(`rm -rf ${shellLink(j.filepath)} ${shellLink(binaryFolder + '/' + userFolderName + '/' + j.originalFilename)};`);
-          //     }
-          //   } else {
-          //     await shellExec(`rm -rf ${shellLink(files[key].filepath)} ${shellLink(binaryFolder + '/' + userFolderName + '/' + files[key].originalFilename)};`);
-          //   }
-          // }
+          console.log(matrix);
 
 
-
-          res.send(JSON.stringify({ message: "success" }));
+          res.send(JSON.stringify(matrix));
 
         }
       });
