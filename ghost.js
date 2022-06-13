@@ -1929,6 +1929,31 @@ Ghost.prototype.ghostRouter = function (needs) {
     }
   };
 
+  //POST - find user key photos
+  funcObj.post_userKey = {
+    link: [ "/userKey" ],
+    func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      try {
+        if (req.body.key === undefined) {
+          throw new Error("invaild post");
+        }
+        const staticPath = address.officeinfo.ghost.file.static + address.officeinfo.ghost.file.user;
+        const selfMongo = MONGOC;
+        const { key } = req.body;
+        const keyDetailList = (await fileSystem("readDir", [ staticPath + "/" + key ])).filter((str) => { return str !== ".DS_Store" });
+        res.send(JSON.stringify({ list: keyDetailList.map((str) => { return address.officeinfo.ghost.file.user + "/" + str }) }));
+      } catch (e) {
+        res.send(JSON.stringify({ message: e.message + " : post must be { useid }" }));
+      }
+    }
+  };
+
   //POST - static delete
   funcObj.post_staticDelete = {
     link: [ "/staticDelete" ],
