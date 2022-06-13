@@ -2676,6 +2676,8 @@ MiniRequestJs.prototype.insertListBox = function (mother, index) {
         } else {
           let formData, matrix, loading;
           let copied;
+          let num;
+          let image;
 
           loading = instance.mother.grayLoading();
 
@@ -2694,6 +2696,7 @@ MiniRequestJs.prototype.insertListBox = function (mother, index) {
                   matrix = matrix.filter((arr) => { return arr[0] !== null });
                   matrix = matrix.slice(1);
 
+                  num = 0;
                   for (let arr of matrix) {
                     for (let i = 0; i < arr.length; i++) {
                       if (typeof arr[i] === "string") {
@@ -2702,11 +2705,22 @@ MiniRequestJs.prototype.insertListBox = function (mother, index) {
                         arr[i] = "";
                       }
                     }
+
+                    if (num === 0) {
+                      arr.unshift("사진");
+                    } else {
+                      ({ image } = await ajaxJson({ url: window.encodeURIComponent(arr[7]) }, "/getOpenGraph"));
+                      image = window.decodeURIComponent(image);
+                      arr.unshift(image);
+                    }
+
+                    num++;
                   }
 
                   copied = equalJson(JSON.stringify(matrix));
                   for (let arr of copied) {
-                    arr[7] = window.encodeURIComponent(arr[7]);
+                    arr[0] = window.encodeURIComponent(arr[0]);
+                    arr[8] = window.encodeURIComponent(arr[8]);
                   }
                   instance.matrix[index] = copied;
                   loadMatrix(matrix).catch((err) => { window.alert("엑셀 파일 로드중 오류가 발생하였습니다!") })
@@ -3021,14 +3035,6 @@ MiniRequestJs.prototype.insertListBox = function (mother, index) {
 
       num = 0;
       for (let arr of matrix) {
-
-        if (num === 0) {
-          arr.unshift("사진");
-        } else {
-          ({ image } = await ajaxJson({ url: window.encodeURIComponent(arr[7]) }, "/getOpenGraph"));
-          image = window.decodeURIComponent(image);
-          arr.unshift(image);
-        }
 
         tableBlock = createNode({
           mother: matrixTarget,
@@ -3513,6 +3519,7 @@ MiniRequestJs.prototype.launching = async function (loading) {
     this.matrix = [];
 
     document.head.insertAdjacentHTML("beforeend", `<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">`);
+    document.head.insertAdjacentHTML("beforeend", `<meta name="referrer" content="no-referrer" />`);
 
     await this.mother.ghostClientLaunching({
       mode: "ghost",

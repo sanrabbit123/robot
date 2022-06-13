@@ -677,6 +677,10 @@ MiniProposalJs.prototype.insertSecondBox = async function () {
     let conceptImages;
     let proposalImages;
     let photoImages;
+    let slide;
+    let description;
+    let image;
+    let userBlock;
 
     basePadding = <%% 150, 120, 105, 90, 12 %%>;
 
@@ -761,7 +765,7 @@ MiniProposalJs.prototype.insertSecondBox = async function () {
       "링크"
     ];
     tableColumnsFactor = [
-      { type: "image", source: (obj) => { return obj.image } },
+      { type: "image", source: (obj) => { return obj.where.link } },
       { type: "string", source: (obj) => { return obj.name } },
       { type: "number", source: (obj) => { return obj.number } },
       { type: "money", source: (obj) => { return obj.price.unit } },
@@ -799,153 +803,17 @@ MiniProposalJs.prototype.insertSecondBox = async function () {
       proposal: {
         collage: {
           title: "무드보드와 콜라주",
-          slide: [
-            MiniProposalJs.binaryPath + "/" + "proposal0.jpg",
-            MiniProposalJs.binaryPath + "/" + "proposal1.jpg",
-          ],
           sub: "디자인 시안 설명",
-          description: "고객님 공간에 딱 맞는 홈리에종 미니 스타일링안을 드립니다. 디자인 시안은 무드 보드와 제품 리스트로 제공되며, <b%자세한 상품 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서%b> 배치 및 설치를 진행해주시면 됩니다. 수정 사항은 별도로 제공되지 않으며 기타 문의 사항이 있을시, 하단 채팅 기능을 통해 홈리에종으로 문의해주시길 바랍니다!\n\n고객님 공간에 딱 맞는 홈리에종 미니 스타일링안을 드립니다. 디자인 시안은 무드 보드와 제품 리스트로 제공되며, <b%자세한 상품 정보와 구입처를 통해 구매하신 뒤, 무드 보드를 참고하셔서%b> 배치 및 설치를 진행해주시면 됩니다. 수정 사항은 별도로 제공되지 않으며 기타 문의 사항이 있을시, 하단 채팅 기능을 통해 홈리에종으로 문의해주시길 바랍니다!",
         },
         reference: {
           title: "참고 사진",
-          slide: [
-            MiniProposalJs.binaryPath + "/" + "reference0.jpg",
-            MiniProposalJs.binaryPath + "/" + "reference1.jpg",
-            MiniProposalJs.binaryPath + "/" + "reference2.jpg",
-            MiniProposalJs.binaryPath + "/" + "reference3.jpg",
-          ]
         },
         table: {
           title: "제품 리스트",
-          list: [
-            {
-              image: MiniProposalJs.binaryPath + "/" + "item0.png",
-              name: "거실 실링팬",
-              number: 1,
-              price: {
-                unit: 389000,
-                delivery: 0
-              },
-              detail: "화이트 / 화이트",
-              where: {
-                name: "에어블로우",
-                link: "https://google.com",
-              }
-            },
-            {
-              image: MiniProposalJs.binaryPath + "/" + "item1.png",
-              name: "스텐드 조명",
-              number: 1,
-              price: {
-                unit: 370000,
-                delivery: 0
-              },
-              detail: "노란빛",
-              where: {
-                name: "슬로우 빌라",
-                link: "https://google.com",
-              }
-            },
-            {
-              image: MiniProposalJs.binaryPath + "/" + "item2.png",
-              name: "스텐드 조명",
-              number: 1,
-              price: {
-                unit: 256000,
-                delivery: 0
-              },
-              detail: "미니 소프트웜 / 스노우 화이트",
-              where: {
-                name: "라문직영샵",
-                link: "https://google.com",
-              }
-            },
-            {
-              image: MiniProposalJs.binaryPath + "/" + "item3.png",
-              name: "조명 펜던트",
-              number: 2,
-              price: {
-                unit: 125000,
-                delivery: 0
-              },
-              detail: "주백색 일체형",
-              where: {
-                name: "조명나라",
-                link: "https://google.com",
-              }
-            },
-            {
-              image: MiniProposalJs.binaryPath + "/" + "item4.png",
-              name: "조명 펜던트",
-              number: 1,
-              price: {
-                unit: 95000,
-                delivery: 0
-              },
-              detail: "400H / 노란빛",
-              where: {
-                name: "조명나라",
-                link: "https://google.com",
-              }
-            },
-            {
-              image: MiniProposalJs.binaryPath + "/" + "item5.png",
-              name: "조명 펜던트",
-              number: 1,
-              price: {
-                unit: 74200,
-                delivery: 0
-              },
-              detail: "380 파이 / 볼전구 주백색",
-              where: {
-                name: "공간조명",
-                link: "https://google.com",
-              }
-            },
-            {
-              image: MiniProposalJs.binaryPath + "/" + "item6.png",
-              name: "조명 펜던트",
-              number: 1,
-              price: {
-                unit: 66000,
-                delivery: 0
-              },
-              detail: "화이트 / 화이트 / 12W 볼전구 전구색",
-              where: {
-                name: "라디룸",
-                link: "https://google.com",
-              }
-            },
-            {
-              image: MiniProposalJs.binaryPath + "/" + "item7.png",
-              name: "조명 펜던트",
-              number: 1,
-              price: {
-                unit: 57900,
-                delivery: 3000
-              },
-              detail: "150파이 / 일반형 / 2M / 노란빛",
-              where: {
-                name: "제일조명",
-                link: "https://google.com",
-              }
-            },
-            {
-              image: MiniProposalJs.binaryPath + "/" + "item8.png",
-              name: "스텐드 조명",
-              number: 1,
-              price: {
-                unit: 156000,
-                delivery: 3000
-              },
-              detail: "버터 / 디밍",
-              where: {
-                name: "1962",
-                link: "https://google.com",
-              }
-            },
-          ]
         }
+      },
+      review: {
+        title: "시안 리뷰"
       }
     };
 
@@ -966,7 +834,7 @@ MiniProposalJs.prototype.insertSecondBox = async function () {
     baseTongClone.style.paddingTop = String(basePadding) + ea;
     baseTongClone.style.paddingBottom = String(basePadding) + ea;
 
-    // white
+    // white info
     whiteBlock = createNode({
       mother: baseTongClone,
       style: {
@@ -1025,6 +893,7 @@ MiniProposalJs.prototype.insertSecondBox = async function () {
       }
     });
 
+    // gray proposal
     for (let index = 0; index < user.response.design[0].concept.length; index++) {
 
       concept = user.response.design[0].concept[index];
@@ -1035,8 +904,19 @@ MiniProposalJs.prototype.insertSecondBox = async function () {
       conceptImages = await ajaxJson({ key: concept.key }, "/ghostPass_userKey", { equal: true });
       conceptImages = conceptImages.list.map((path) => { return "https://" + FILEHOST + path });
 
-      console.log(conceptImages);
+      proposalImages = await ajaxJson({ key: proposal.key }, "/ghostPass_userKey", { equal: true });
+      proposalImages = proposalImages.list.map((path) => { return "https://" + FILEHOST + path });
 
+      photoImages = await ajaxJson({ key: photo.key }, "/ghostPass_userKey", { equal: true });
+      photoImages = photoImages.list.map((path) => { return "https://" + FILEHOST + path });
+
+      slide = conceptImages.concat(proposalImages);
+
+      description = "";
+      description += concept.comments.designer + "\n\n";
+      description += proposal.comments.designer + "\n\n";
+      description += photo.comments.designer;
+      description = description.trim();
 
       // gray
       grayBlock = createNode({
@@ -1111,12 +991,12 @@ MiniProposalJs.prototype.insertSecondBox = async function () {
         }
       });
 
-      for (let i = 0; i < contents.proposal.collage.slide.length; i++) {
+      for (let i = 0; i < slide.length; i++) {
         createNode({
           mother: collageWhiteTong,
           mode: "img",
           attribute: {
-            src: contents.proposal.collage.slide[i],
+            src: slide[i],
           },
           style: {
             display: "block",
@@ -1156,7 +1036,7 @@ MiniProposalJs.prototype.insertSecondBox = async function () {
       });
       createNode({
         mother: collageDescriptionBox,
-        text: contents.proposal.collage.description,
+        text: description,
         style: {
           display: desktop ? "inline-block" : "block",
           width: desktop ? withOut(collageDescriptionBoxTitleAreaWidth, ea) : String(100) + '%',
@@ -1222,18 +1102,18 @@ MiniProposalJs.prototype.insertSecondBox = async function () {
           marginBottom: String(whiteTongMarginBottom) + ea,
         }
       });
-      for (let i = 0; i < contents.proposal.reference.slide.length; i++) {
+      for (let i = 0; i < photoImages.length; i++) {
         createNode({
           mother: referencePhotoTong,
           mode: "img",
           attribute: {
-            src: contents.proposal.reference.slide[i]
+            src: photoImages[i]
           },
           style: {
             display: "inline-block",
             position: "relative",
-            width: desktop ? "calc(calc(100% - " + String(referencePhotoBetween * (contents.proposal.reference.slide.length - 1)) + ea + ") / " + String(contents.proposal.reference.slide.length) + ")" : "calc(calc(100% - " + String(referencePhotoBetween) + ea + ") / 2)",
-            marginRight: desktop ? String(i === contents.proposal.reference.slide.length - 1 ? 0 : referencePhotoBetween) + ea : String(i % 2 === 0 ? referencePhotoBetween : 0) + ea,
+            width: desktop ? "calc(calc(100% - " + String(referencePhotoBetween * (photoImages.length - 1)) + ea + ") / " + String(photoImages.length) + ")" : "calc(calc(100% - " + String(referencePhotoBetween) + ea + ") / 2)",
+            marginRight: desktop ? String(i === photoImages.length - 1 ? 0 : referencePhotoBetween) + ea : String(i % 2 === 0 ? referencePhotoBetween : 0) + ea,
             marginBottom: desktop ? "" : String(referencePhotoBetween) + ea,
             borderRadius: String(5) + "px",
           }
@@ -1338,7 +1218,7 @@ MiniProposalJs.prototype.insertSecondBox = async function () {
       }
 
       tableFatorBars = [];
-      for (let i = 0; i < contents.proposal.table.list.length; i++) {
+      for (let i = 0; i < list.detail.length; i++) {
         tableFatorBars.push(createNode({
           mother: tableWhiteTong,
           style: {
@@ -1351,7 +1231,7 @@ MiniProposalJs.prototype.insertSecondBox = async function () {
         }));
       }
 
-      for (let i = 0; i < contents.proposal.table.list.length; i++) {
+      for (let i = 0; i < list.detail.length; i++) {
         for (let j = 0; j < tableColumnsFactor.length; j++) {
 
           tempTong = createNode({
@@ -1371,11 +1251,14 @@ MiniProposalJs.prototype.insertSecondBox = async function () {
 
           if (tableColumnsFactor[j].type === "image") {
 
+            ({ image } = await ajaxJson({ url: tableColumnsFactor[j].source(list.detail[i]) }, "/getOpenGraph"));
+            image = window.decodeURIComponent(image);
+
             createNode({
               mother: tempTong,
               mode: "img",
               attribute: {
-                src: tableColumnsFactor[j].source(contents.proposal.table.list[i]),
+                src: image,
               },
               style: {
                 display: "inline-block",
@@ -1389,7 +1272,7 @@ MiniProposalJs.prototype.insertSecondBox = async function () {
 
             createNode({
               mother: tempTong,
-              text: tableColumnsFactor[j].source(contents.proposal.table.list[i]),
+              text: tableColumnsFactor[j].source(list.detail[i]),
               style: {
                 display: "inline-block",
                 position: "relative",
@@ -1404,7 +1287,7 @@ MiniProposalJs.prototype.insertSecondBox = async function () {
 
             createNode({
               mother: tempTong,
-              text: String(tableColumnsFactor[j].source(contents.proposal.table.list[i])),
+              text: String(tableColumnsFactor[j].source(list.detail[i])),
               style: {
                 display: "inline-block",
                 position: "relative",
@@ -1420,7 +1303,7 @@ MiniProposalJs.prototype.insertSecondBox = async function () {
 
             createNode({
               mother: tempTong,
-              text: autoComma(tableColumnsFactor[j].source(contents.proposal.table.list[i])) + '원',
+              text: autoComma(tableColumnsFactor[j].source(list.detail[i])) + '원',
               style: {
                 display: "inline-block",
                 position: "relative",
@@ -1436,7 +1319,7 @@ MiniProposalJs.prototype.insertSecondBox = async function () {
             createNode({
               mother: tempTong,
               text: "Link",
-              event: (e) => { blankHref(tableColumnsFactor[j].source(contents.proposal.table.list[i])) },
+              event: (e) => { blankHref(tableColumnsFactor[j].source(list.detail[i])) },
               style: {
                 display: "inline-block",
                 position: "relative",
@@ -1453,6 +1336,47 @@ MiniProposalJs.prototype.insertSecondBox = async function () {
       }
 
     }
+
+    // user comments
+    userBlock = createNode({
+      mother: baseTongClone,
+      style: {
+        position: "relative",
+        borderRadius: String(8) + "px",
+        width: String(100) + '%',
+        paddingTop: String(margin - topBottomVisualMargin) + ea,
+        paddingBottom: String(margin - topBottomVisualMargin) + ea,
+        background: colorChip.white,
+        marginBottom: String(bottomMargin) + ea,
+        boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      }
+    });
+    createNode({
+      mother: userBlock,
+      style: {
+        display: "block",
+        position: "relative",
+        marginLeft: String((desktop ? margin : 6)) + ea,
+        width: withOut((desktop ? margin : 6) * 2, ea),
+        height: desktop ? String(titleTextTongHeight) + ea : "",
+      },
+      children: [
+        {
+          text: contents.review.title,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(titleTextTitleWidth) + ea,
+            fontSize: String(titleTextTitleSize) + ea,
+            fontWeight: String(titleTextTitleWeight),
+            color: colorChip.black,
+            lineHeight: String(titleTextTitleLineHeight),
+            verticalAlign: "top",
+          }
+        }
+      ]
+    });
+
 
   } catch (e) {
     window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
@@ -1482,6 +1406,7 @@ MiniProposalJs.prototype.launching = async function (loading) {
     this.user = user;
 
     document.head.insertAdjacentHTML("beforeend", `<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">`);
+    document.head.insertAdjacentHTML("beforeend", `<meta name="referrer" content="no-referrer" />`);
 
     await this.mother.ghostClientLaunching({
       mode: "ghost",

@@ -1256,8 +1256,9 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
               dummyList.target = i;
               dummyList.detail = [];
               targetMatrix = equalJson(fields["list_matrix_" + String(i)]);
-              for (let [ name, number, unit, delivery, total, spec, site, link, etc ] of targetMatrix) {
+              for (let [ image, name, number, unit, delivery, total, spec, site, link, etc ] of targetMatrix) {
                 dummyListDetail = back.returnUserDummies("response.design.list.detail");
+                dummyListDetail.image = String(image).trim();
                 dummyListDetail.name = String(name).trim();
                 dummyListDetail.number = Number(number);
                 dummyListDetail.price.unit = Number(unit);
