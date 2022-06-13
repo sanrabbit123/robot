@@ -1101,65 +1101,71 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
     try {
       const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (3000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
-        let filesKeys = Object.keys(files);
-        if (!err && filesKeys.length > 0) {
+        try {
+          let filesKeys = Object.keys(files);
+          if (!err && filesKeys.length > 0) {
 
-          const { name, phone, useid } = fields;
-          const userFolderName = useid + "_" + phone.replace(/\-/g, '') + "_" + String((new Date()).valueOf());
-          const binaryFolder = instance.address.officeinfo.ghost.file.static + instance.address.officeinfo.ghost.file.user;
-          const binrayFolderTest = new RegExp(userFolderName, 'gi');
-          const binaryFolderDetail = await fileSystem(`readDir`, [ binaryFolder ]);
-          const selfMongo = MONGOC;
-          let user;
-          let binrayFolderBoo;
-          let photoObj;
-          let updateQuery, whereQuery;
-          let userCopied;
+            const { name, phone, useid } = fields;
+            const userFolderName = useid + "_" + phone.replace(/\-/g, '') + "_" + String((new Date()).valueOf());
+            const binaryFolder = instance.address.officeinfo.ghost.file.static + instance.address.officeinfo.ghost.file.user;
+            const binrayFolderTest = new RegExp(userFolderName, 'gi');
+            const binaryFolderDetail = await fileSystem(`readDir`, [ binaryFolder ]);
+            const selfMongo = MONGOC;
+            let user;
+            let binrayFolderBoo;
+            let photoObj;
+            let updateQuery, whereQuery;
+            let userCopied;
 
-          // move file
-          binrayFolderBoo = false;
-          for (let i of binaryFolderDetail) {
-            if (binrayFolderTest.test(i)) {
-            binrayFolderBoo = true;
-            }
-          }
-          if (!binrayFolderBoo) {
-            await shellExec(`mkdir ${shellLink(binaryFolder + '/' + userFolderName)}`);
-          }
-
-          for (let key of filesKeys) {
-            if (Array.isArray(files[key])) {
-              for (let j of files[key]) {
-                await shellExec(`mv ${shellLink(j.filepath)} ${shellLink(binaryFolder + '/' + userFolderName + '/' + j.originalFilename)};`);
+            // move file
+            binrayFolderBoo = false;
+            for (let i of binaryFolderDetail) {
+              if (binrayFolderTest.test(i)) {
+              binrayFolderBoo = true;
               }
-            } else {
-              await shellExec(`mv ${shellLink(files[key].filepath)} ${shellLink(binaryFolder + '/' + userFolderName + '/' + files[key].originalFilename)};`);
             }
+            if (!binrayFolderBoo) {
+              await shellExec(`mkdir ${shellLink(binaryFolder + '/' + userFolderName)}`);
+            }
+
+            for (let key of filesKeys) {
+              if (Array.isArray(files[key])) {
+                for (let j of files[key]) {
+                  await shellExec(`mv ${shellLink(j.filepath)} ${shellLink(binaryFolder + '/' + userFolderName + '/' + j.originalFilename)};`);
+                }
+              } else {
+                await shellExec(`mv ${shellLink(files[key].filepath)} ${shellLink(binaryFolder + '/' + userFolderName + '/' + files[key].originalFilename)};`);
+              }
+            }
+
+            // data
+            user = await back.getUserById(useid, { selfMongo });
+            photoObj = back.returnUserDummies("request.photo");
+            photoObj.date = new Date();
+            photoObj.key = userFolderName;
+
+            userCopied = user.toNormal();
+            userCopied.request.photo.unshift(photoObj)
+
+            whereQuery = { useid };
+            updateQuery = {};
+            updateQuery["request.photo"] = userCopied.request.photo;
+
+            await back.updateUser([ whereQuery, updateQuery ], { selfMongo });
+
+            // alimtalk
+
+
+            // slack
+            await messageSend({ text: name + " 고객님의 사진 전송이 완료되었어요.", channel: "#400_customer" });
+
+            res.send(JSON.stringify({ message: "success" }));
+          } else {
+            throw new Error(err.message);
           }
-
-          // data
-          user = await back.getUserById(useid, { selfMongo });
-          photoObj = back.returnUserDummies("request.photo");
-          photoObj.date = new Date();
-          photoObj.key = userFolderName;
-
-          userCopied = user.toNormal();
-          userCopied.request.photo.unshift(photoObj)
-
-          whereQuery = { useid };
-          updateQuery = {};
-          updateQuery["request.photo"] = userCopied.request.photo;
-
-          await back.updateUser([ whereQuery, updateQuery ], { selfMongo });
-
-          // alimtalk
-
-
-          // slack
-          await messageSend({ text: name + " 고객님의 사진 전송이 완료되었어요.", channel: "#400_customer" });
-
-          res.send(JSON.stringify({ message: "success" }));
-
+        } catch (e) {
+          await errorLog("유저 파일 서버 문제 생김 (post_userBinary) : " + e.message);
+          res.send(JSON.stringify({ error: e.message }));
         }
       });
     } catch (e) {
@@ -1179,116 +1185,123 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
     try {
       const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (3000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
-        let filesKeys = Object.keys(files);
-        if (!err && filesKeys.length > 0) {
+        try {
+          let filesKeys = Object.keys(files);
+          if (!err && filesKeys.length > 0) {
 
-          const useid = fields.useid;
-          const length = Number(fields.indexLength);
-          const binaryFolder = instance.address.officeinfo.ghost.file.static + instance.address.officeinfo.ghost.file.user;
-          const selfMongo = MONGOC;
-          const now = new Date();
-          const nowValue = now.valueOf();
-          let keyConcept, keyCollage, keyReference;
-          let dummyDesign;
-          let dummyConcept, dummyCollage, dummyReference, dummyList;
-          let user;
-          let key;
-          let targetMatrix;
-          let dummyListDetail;
-          let whereQuery, updateQuery;
-          let copiedDesign;
+            const useid = fields.useid;
+            const length = Number(fields.indexLength);
+            const binaryFolder = instance.address.officeinfo.ghost.file.static + instance.address.officeinfo.ghost.file.user;
+            const selfMongo = MONGOC;
+            const now = new Date();
+            const nowValue = now.valueOf();
+            let keyConcept, keyCollage, keyReference;
+            let dummyDesign;
+            let dummyConcept, dummyCollage, dummyReference, dummyList;
+            let user;
+            let key;
+            let targetMatrix;
+            let dummyListDetail;
+            let whereQuery, updateQuery;
+            let copiedDesign;
 
-          user = await back.getUserById(useid, { selfMongo });
+            user = await back.getUserById(useid, { selfMongo });
 
-          dummyDesign = back.returnUserDummies("response.design");
+            dummyDesign = back.returnUserDummies("response.design");
 
-          for (let i = 0; i < length; i++) {
+            for (let i = 0; i < length; i++) {
 
-            dummyConcept = back.returnUserDummies("response.design.concept");
-            dummyCollage = back.returnUserDummies("response.design.proposal");
-            dummyReference = back.returnUserDummies("response.design.photo");
-            dummyList = back.returnUserDummies("response.design.list");
+              dummyConcept = back.returnUserDummies("response.design.concept");
+              dummyCollage = back.returnUserDummies("response.design.proposal");
+              dummyReference = back.returnUserDummies("response.design.photo");
+              dummyList = back.returnUserDummies("response.design.list");
 
-            keyConcept = useid + "_" + "concept" + String(i) + "_" + String(nowValue);
-            keyCollage = useid + "_" + "collage" + String(i) + "_" + String(nowValue);
-            keyReference = useid + "_" + "reference" + String(i) + "_" + String(nowValue);
+              keyConcept = useid + "_" + "concept" + String(i) + "_" + String(nowValue);
+              keyCollage = useid + "_" + "collage" + String(i) + "_" + String(nowValue);
+              keyReference = useid + "_" + "reference" + String(i) + "_" + String(nowValue);
 
-            await shellExec(`mkdir ${shellLink(binaryFolder + '/' + keyConcept)}`);
-            await shellExec(`mkdir ${shellLink(binaryFolder + '/' + keyCollage)}`);
-            await shellExec(`mkdir ${shellLink(binaryFolder + '/' + keyReference)}`);
+              await shellExec(`mkdir ${shellLink(binaryFolder + '/' + keyConcept)}`);
+              await shellExec(`mkdir ${shellLink(binaryFolder + '/' + keyCollage)}`);
+              await shellExec(`mkdir ${shellLink(binaryFolder + '/' + keyReference)}`);
 
-            key = "concept_file_" + String(i);
-            await shellExec(`mv ${shellLink(files[key].filepath)} ${shellLink(binaryFolder + '/' + keyConcept + '/' + files[key].originalFilename)};`);
-            key = "collage_file_" + String(i);
-            await shellExec(`mv ${shellLink(files[key].filepath)} ${shellLink(binaryFolder + '/' + keyCollage + '/' + files[key].originalFilename)};`);
-            key = "reference_file0_" + String(i);
-            await shellExec(`mv ${shellLink(files[key].filepath)} ${shellLink(binaryFolder + '/' + keyReference + '/' + files[key].originalFilename)};`);
-            key = "reference_file1_" + String(i);
-            await shellExec(`mv ${shellLink(files[key].filepath)} ${shellLink(binaryFolder + '/' + keyReference + '/' + files[key].originalFilename)};`);
-            key = "reference_file2_" + String(i);
-            await shellExec(`mv ${shellLink(files[key].filepath)} ${shellLink(binaryFolder + '/' + keyReference + '/' + files[key].originalFilename)};`);
-            key = "reference_file3_" + String(i);
-            await shellExec(`mv ${shellLink(files[key].filepath)} ${shellLink(binaryFolder + '/' + keyReference + '/' + files[key].originalFilename)};`);
+              key = "concept_file_" + String(i);
+              await shellExec(`mv ${shellLink(files[key].filepath)} ${shellLink(binaryFolder + '/' + keyConcept + '/' + files[key].originalFilename)};`);
+              key = "collage_file_" + String(i);
+              await shellExec(`mv ${shellLink(files[key].filepath)} ${shellLink(binaryFolder + '/' + keyCollage + '/' + files[key].originalFilename)};`);
+              key = "reference_file0_" + String(i);
+              await shellExec(`mv ${shellLink(files[key].filepath)} ${shellLink(binaryFolder + '/' + keyReference + '/' + files[key].originalFilename)};`);
+              key = "reference_file1_" + String(i);
+              await shellExec(`mv ${shellLink(files[key].filepath)} ${shellLink(binaryFolder + '/' + keyReference + '/' + files[key].originalFilename)};`);
+              key = "reference_file2_" + String(i);
+              await shellExec(`mv ${shellLink(files[key].filepath)} ${shellLink(binaryFolder + '/' + keyReference + '/' + files[key].originalFilename)};`);
+              key = "reference_file3_" + String(i);
+              await shellExec(`mv ${shellLink(files[key].filepath)} ${shellLink(binaryFolder + '/' + keyReference + '/' + files[key].originalFilename)};`);
 
-            dummyConcept.date = new Date();
-            dummyConcept.key = keyConcept;
-            dummyConcept.target = i;
-            dummyConcept.comments.designer = fields["concept_description_" + String(i)];
+              dummyConcept.date = new Date();
+              dummyConcept.key = keyConcept;
+              dummyConcept.target = i;
+              dummyConcept.comments.designer = fields["concept_description_" + String(i)];
 
-            dummyCollage.date = new Date();
-            dummyCollage.key = keyCollage;
-            dummyCollage.target = i;
-            dummyCollage.comments.designer = fields["collage_description_" + String(i)];
+              dummyCollage.date = new Date();
+              dummyCollage.key = keyCollage;
+              dummyCollage.target = i;
+              dummyCollage.comments.designer = fields["collage_description_" + String(i)];
 
-            dummyReference.date = new Date();
-            dummyReference.key = keyReference;
-            dummyReference.target = i;
-            dummyReference.comments.designer = fields["reference_description_" + String(i)];
+              dummyReference.date = new Date();
+              dummyReference.key = keyReference;
+              dummyReference.target = i;
+              dummyReference.comments.designer = fields["reference_description_" + String(i)];
 
-            dummyList.date = new Date();
-            dummyList.target = i;
-            dummyList.detail = [];
-            targetMatrix = equalJson(fields["list_matrix_" + String(i)]);
-            for (let [ name, number, unit, delivery, total, spec, site, link, etc ] of targetMatrix) {
-              dummyListDetail = back.returnUserDummies("response.design.list.detail");
-              dummyListDetail.name = String(name).trim();
-              dummyListDetail.number = Number(number);
-              dummyListDetail.price.unit = Number(unit);
-              dummyListDetail.price.delivery = Number(delivery);
-              dummyListDetail.detail = (String(spec) + " " + String(etc)).trim();
-              dummyListDetail.where.name = String(site).trim();
-              dummyListDetail.where.link = String(link).trim();
-              dummyList.detail.push(dummyListDetail);
+              dummyList.date = new Date();
+              dummyList.target = i;
+              dummyList.detail = [];
+              targetMatrix = equalJson(fields["list_matrix_" + String(i)]);
+              for (let [ name, number, unit, delivery, total, spec, site, link, etc ] of targetMatrix) {
+                dummyListDetail = back.returnUserDummies("response.design.list.detail");
+                dummyListDetail.name = String(name).trim();
+                dummyListDetail.number = Number(number);
+                dummyListDetail.price.unit = Number(unit);
+                dummyListDetail.price.delivery = Number(delivery);
+                dummyListDetail.detail = (String(spec) + " " + String(etc)).trim();
+                dummyListDetail.where.name = String(site).trim();
+                dummyListDetail.where.link = String(link).trim();
+                dummyList.detail.push(dummyListDetail);
+              }
+
+              dummyDesign.concept.push(dummyConcept);
+              dummyDesign.proposal.push(dummyCollage);
+              dummyDesign.photo.push(dummyReference);
+              dummyDesign.list.push(dummyList);
             }
 
-            dummyDesign.concept.push(dummyConcept);
-            dummyDesign.proposal.push(dummyCollage);
-            dummyDesign.photo.push(dummyReference);
-            dummyDesign.list.push(dummyList);
+            whereQuery = { useid };
+            updateQuery = {};
+            updateQuery["response.timeline"] = new Date();
+            updateQuery["response.status"] = "컨펌 대기";
+            updateQuery["response.alarm"] = true;
+            copiedDesign = user.response.design.toNormal();
+            copiedDesign.unshift(dummyDesign);
+            updateQuery["response.design"] = copiedDesign;
+
+            await back.updateUser([ whereQuery, updateQuery ], { selfMongo });
+
+            // alimtalk
+
+            // slack
+            await messageSend({ text: user.name + " 고객님의 디자인 컨펌 요청이 발생하였습니다.", channel: "#400_customer" });
+
+            res.send(JSON.stringify({ message: "success" }));
+
+          } else {
+            throw new Error(err.message);
           }
-
-          whereQuery = { useid };
-          updateQuery = {};
-          updateQuery["response.timeline"] = new Date();
-          updateQuery["response.status"] = "컨펌 대기";
-          updateQuery["response.alarm"] = true;
-          copiedDesign = user.response.design.toNormal();
-          copiedDesign.unshift(dummyDesign);
-          updateQuery["response.design"] = copiedDesign;
-
-          await back.updateUser([ whereQuery, updateQuery ], { selfMongo });
-
-          // alimtalk
-
-          // slack
-          await messageSend({ text: user.name + " 고객님의 디자인 컨펌 요청이 발생하였습니다.", channel: "#400_customer" });
-
-          res.send(JSON.stringify({ message: "success" }));
-
+        } catch (e) {
+          await errorLog("유저 파일 서버 문제 생김 (post_userConfirm) : " + e.message);
+          res.send(JSON.stringify({ error: e.message }));
         }
       });
     } catch (e) {
-      await errorLog("유저 파일 서버 문제 생김 (post_userBinary) : " + e.message);
+      await errorLog("유저 파일 서버 문제 생김 (post_userConfirm) : " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
   }

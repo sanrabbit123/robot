@@ -3296,6 +3296,7 @@ MiniRequestJs.prototype.insertFinalBox = function () {
               let key;
               let tempArr;
               let loading;
+              let response;
 
               if (instance.matrix.some((arr) => { return arr === 0 })) {
                 throw new Error("공간별로 제품 리스트를 모두 올려주세요!");
@@ -3429,10 +3430,15 @@ MiniRequestJs.prototype.insertFinalBox = function () {
 
               }
 
-              await ajaxForm(formData, BRIDGEHOST + "/userConfirm");
+              response = equalJson(await ajaxForm(formData, BRIDGEHOST + "/userConfirm"));
 
-              loading.remove();
-              window.alert("홈리에종에 컨펌 요청을 보냈습니다!");
+              if (response.message === "success") {
+                loading.remove();
+                window.alert("홈리에종에 컨펌 요청을 보냈습니다!");
+              } else {
+                throw new Error("오류가 발생하였습니다! 다시 시도해주세요!");
+                window.location.reload();
+              }
 
             } catch (e) {
               window.alert(e.message);
