@@ -312,10 +312,12 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
   const instance = this;
   const { fileSystem, requestSystem, shell, shellExec, shellLink, todayMaker, ghostRequest, dateToString, headRequest, sleep, equalJson, diskReading, messageSend, errorLog, messageLog } = this.mother;
   const GoogleCalendar = require(process.cwd() + "/apps/googleAPIs/googleCalendar.js");
+  const ExcelReader = require(process.cwd() + "/apps/excelReader/excelReader.js");
   const { filterAll, filterName, filterDate, filterCont, filterNull } = BridgeCloud.clientFilters;
   const [ MONGOC, MONGOLOCALC, KAKAO, HUMAN, ADDRESS ] = needs;
   const ignorePhone = this.ignorePhone;
   const back = this.back;
+  const excel = new ExcelReader();
   let funcObj = {};
 
   //GET - ssl test
@@ -1153,7 +1155,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           await back.updateUser([ whereQuery, updateQuery ], { selfMongo });
 
           // alimtalk
-          
+
 
           // slack
           await messageSend({ text: name + " 고객님의 사진 전송이 완료되었어요.", channel: "#400_customer" });
@@ -1168,6 +1170,49 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
     }
   }
 
+  //POST - general excel to matrix
+  funcObj.post_excelToMatrix = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (3000 * 1024 * 1024) });
+      form.parse(req, async function (err, fields, files) {
+        let filesKeys = Object.keys(files);
+        if (!err && filesKeys.length > 0) {
+
+          const { sheetsName } = fields;
+
+          console.log(sheetsName);
+          console.log(files);
+
+          // await excel.fileToMatrix(filepath, sheetsName)
+
+
+          // for (let key of filesKeys) {
+          //   if (Array.isArray(files[key])) {
+          //     for (let j of files[key]) {
+          //       await shellExec(`rm -rf ${shellLink(j.filepath)} ${shellLink(binaryFolder + '/' + userFolderName + '/' + j.originalFilename)};`);
+          //     }
+          //   } else {
+          //     await shellExec(`rm -rf ${shellLink(files[key].filepath)} ${shellLink(binaryFolder + '/' + userFolderName + '/' + files[key].originalFilename)};`);
+          //   }
+          // }
+
+
+
+          res.send(JSON.stringify({ message: "success" }));
+
+        }
+      });
+    } catch (e) {
+      await errorLog("유저 파일 서버 문제 생김 (post_userBinary) : " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
 
   //POST - designer portfolio binary
   funcObj.post_designerBinary = async function (req, res) {

@@ -1148,6 +1148,7 @@ MiniRequestJs.prototype.insertConceptBox = function (mother, index) {
       textAreaBack.style.background = colorChip.white;
       textArea.style.color = colorChip.black;
       textArea.setAttribute("placeholder", contents.placeholder);
+      this.setAttribute("toggle", "on");
       textArea.focus();
     } else {
       mother.style.background = colorChip.gray2;
@@ -1156,6 +1157,7 @@ MiniRequestJs.prototype.insertConceptBox = function (mother, index) {
       textAreaBack.style.background = colorChip.gray2;
       textArea.style.color = colorChip.deactive;
       textArea.setAttribute("placeholder", contents.memo);
+      this.setAttribute("toggle", "off");
     }
   }
 
@@ -1355,10 +1357,11 @@ MiniRequestJs.prototype.insertConceptBox = function (mother, index) {
         attribute: [
           { index: String(index) },
           { type: "file" },
-          { name: "upload" },
+          { name: fileInputClassNames.concept },
           { accept: "image/*" },
           { multiple: "true" },
-          { cancel: JSON.stringify([]) }
+          { cancel: JSON.stringify([]) },
+          { toggle: "off" },
         ],
         style: {
           position: "absolute",
@@ -1555,6 +1558,7 @@ MiniRequestJs.prototype.insertCollageBox = function (mother, index) {
       textAreaBack.style.background = colorChip.white;
       textArea.style.color = colorChip.black;
       textArea.setAttribute("placeholder", contents.placeholder);
+      this.setAttribute("toggle", "on");
       textArea.focus();
     } else {
       mother.style.background = colorChip.gray2;
@@ -1563,6 +1567,7 @@ MiniRequestJs.prototype.insertCollageBox = function (mother, index) {
       textAreaBack.style.background = colorChip.gray2;
       textArea.style.color = colorChip.deactive;
       textArea.setAttribute("placeholder", contents.memo);
+      this.setAttribute("toggle", "off");
     }
   }
 
@@ -1762,10 +1767,11 @@ MiniRequestJs.prototype.insertCollageBox = function (mother, index) {
         attribute: [
           { index: String(index) },
           { type: "file" },
-          { name: "upload" },
+          { name: fileInputClassNames.collage },
           { accept: "image/*" },
           { multiple: "true" },
-          { cancel: JSON.stringify([]) }
+          { cancel: JSON.stringify([]) },
+          { toggle: "off" },
         ],
         style: {
           position: "absolute",
@@ -1970,10 +1976,12 @@ MiniRequestJs.prototype.insertReferenceBox = function (mother, index) {
       mother.style.background = pointColor;
       text.style.color = colorChip.white;
       text.textContent = contents.fileActive;
+      this.setAttribute("toggle", "on");
     } else {
       mother.style.background = colorChip.gray2;
       text.style.color = colorChip.deactive;
       text.textContent = contents.file;
+      this.setAttribute("toggle", "off");
     }
 
     boo = true;
@@ -2258,10 +2266,11 @@ MiniRequestJs.prototype.insertReferenceBox = function (mother, index) {
             attribute: [
               { index: String(index) },
               { type: "file" },
-              { name: "upload" },
+              { name: fileInputClassNames.referenceInputs[0] },
               { accept: "image/*" },
               { multiple: "true" },
-              { cancel: JSON.stringify([]) }
+              { cancel: JSON.stringify([]) },
+              { toggle: "off" },
             ],
             style: {
               position: "absolute",
@@ -2321,10 +2330,11 @@ MiniRequestJs.prototype.insertReferenceBox = function (mother, index) {
             attribute: [
               { index: String(index) },
               { type: "file" },
-              { name: "upload" },
+              { name: fileInputClassNames.referenceInputs[1] },
               { accept: "image/*" },
               { multiple: "true" },
-              { cancel: JSON.stringify([]) }
+              { cancel: JSON.stringify([]) },
+              { toggle: "off" },
             ],
             style: {
               position: "absolute",
@@ -2384,10 +2394,11 @@ MiniRequestJs.prototype.insertReferenceBox = function (mother, index) {
             attribute: [
               { index: String(index) },
               { type: "file" },
-              { name: "upload" },
+              { name: fileInputClassNames.referenceInputs[2] },
               { accept: "image/*" },
               { multiple: "true" },
-              { cancel: JSON.stringify([]) }
+              { cancel: JSON.stringify([]) },
+              { toggle: "off" },
             ],
             style: {
               position: "absolute",
@@ -2446,10 +2457,11 @@ MiniRequestJs.prototype.insertReferenceBox = function (mother, index) {
             attribute: [
               { index: String(index) },
               { type: "file" },
-              { name: "upload" },
+              { name: fileInputClassNames.referenceInputs[3] },
               { accept: "image/*" },
               { multiple: "true" },
-              { cancel: JSON.stringify([]) }
+              { cancel: JSON.stringify([]) },
+              { toggle: "off" },
             ],
             style: {
               position: "absolute",
@@ -2537,7 +2549,7 @@ MiniRequestJs.prototype.insertReferenceBox = function (mother, index) {
 
 MiniRequestJs.prototype.insertListBox = function (mother, index) {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing, downloadFile, ajaxJson, ajaxForm } = GeneralJs;
   const { client, ea, media, osException, pointColor, fileInputClassNames } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -2575,6 +2587,7 @@ MiniRequestJs.prototype.insertListBox = function (mother, index) {
   let fileUploadSize, fileUploadWeight, fileUploadTextTop, fileUploadLineHeight;
   let photoDescriptionHeight;
   let photoDescriptionSize, photoDescriptionWeight;
+  let fileChangeEvent;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 56, 52, 44, 32, 6 %%>;
@@ -2629,8 +2642,53 @@ MiniRequestJs.prototype.insertListBox = function (mother, index) {
     ],
     memo: "이곳을 클릭하여\n리스트 파일을 다운로드 하세요!",
     file: "클릭 또는 드래그로\n파일 업로드...",
-    image: MiniRequestJs.binaryPath + "/" + "collage.jpg",
+    fileActive: "파일 업로드 됨",
+    sample: "https://" + FILEHOST + "/photo/sample/listSample.xlsx",
   };
+
+  fileChangeEvent = async function (e) {
+    try {
+      const self = this;
+      const mother = this.parentElement;
+      const [ text ] = [ ...mother.children ];
+      if (this.files.length !== 0) {
+        if (!/xlsx$/gi.test(this.files[0].name)) {
+          window.alert("샘플 엑셀 파일을 올려주세요!");
+          this.setAttribute("toggle", "off");
+        } else {
+          let formData, matrix, loading;
+
+          loading = instance.mother.grayLoading();
+
+          formData = new FormData();
+          formData.enctype = "multipart/form-data";
+          formData.append("sheetsName", "sample");
+          formData.append("upload", this.files[0]);
+          matrix = await ajaxForm(formData, BRIDGEHOST + "/excelToMatrix");
+
+          console.log(matrix);
+
+          loading.remove();
+
+
+
+
+
+          mother.style.background = pointColor;
+          text.style.color = colorChip.white;
+          text.textContent = contents.fileActive;
+          this.setAttribute("toggle", "on");
+        }
+      } else {
+        mother.style.background = colorChip.gray2;
+        text.style.color = colorChip.deactive;
+        text.textContent = contents.file;
+        this.setAttribute("toggle", "off");
+      }
+    } catch (e) {
+      window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+    }
+  }
 
   whiteBlock = createNode({
     mother,
@@ -2763,6 +2821,11 @@ MiniRequestJs.prototype.insertListBox = function (mother, index) {
 
   createNode({
     mother: photoBox,
+    event: {
+      click: function (e) {
+        downloadFile(contents.sample).catch((err) => { window.alert("오류가 발생하였습니다! 다시 시도해주세요!"); });
+      }
+    },
     style: {
       display: "inline-flex",
       position: "relative",
@@ -2775,6 +2838,7 @@ MiniRequestJs.prototype.insertListBox = function (mother, index) {
       justifyContent: "center",
       textAlign: "center",
       marginRight: String(boxBetween) + ea,
+      cursor: "pointer",
     },
     children: [
       {
@@ -2795,6 +2859,20 @@ MiniRequestJs.prototype.insertListBox = function (mother, index) {
 
   createNode({
     mother: photoBox,
+    event: {
+      click: function (e) {
+        this.querySelector("input").click();
+      },
+      dragenter: (e) => { e.preventDefault(); e.stopPropagation(); },
+      dragover: (e) => { e.preventDefault(); e.stopPropagation(); },
+      dragleave: (e) => { e.preventDefault(); e.stopPropagation(); },
+      drop: function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.querySelector("input").files = e.dataTransfer.files;
+        fileChangeEvent.call(this.querySelector("input"), e);
+      }
+    },
     style: {
       display: "inline-flex",
       position: "relative",
@@ -2819,6 +2897,24 @@ MiniRequestJs.prototype.insertListBox = function (mother, index) {
           color: colorChip.deactive,
           top: String(fileUploadTextTop) + ea,
           lineHeight: String(fileUploadLineHeight),
+        }
+      },
+      {
+        mode: "input",
+        class: [ fileInputClassNames.list ],
+        event: {
+          change: fileChangeEvent,
+        },
+        attribute: [
+          { index: String(index) },
+          { type: "file" },
+          { name: fileInputClassNames.list },
+          { cancel: JSON.stringify([]) },
+          { toggle: "off" },
+        ],
+        style: {
+          position: "absolute",
+          display: "none",
         }
       }
     ]
@@ -3022,6 +3118,7 @@ MiniRequestJs.prototype.launching = async function (loading) {
         "fileInputClassNames_reference2",
         "fileInputClassNames_reference3",
       ],
+      list: "fileInputClassNames_list",
     }
 
     await this.mother.ghostClientLaunching({
