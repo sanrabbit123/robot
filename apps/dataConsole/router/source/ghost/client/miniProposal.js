@@ -681,6 +681,12 @@ MiniProposalJs.prototype.insertSecondBox = async function () {
     let description;
     let image;
     let userBlock;
+    let userBlockTong;
+    let userBlockPadding;
+    let userBlockInnerPadding;
+    let userBlockInnerPaddingTop;
+    let userBlockMinHeight;
+    let userBlockSize, userBlockWeight, userBlockLineHeight;
 
     basePadding = <%% 150, 120, 105, 90, 12 %%>;
 
@@ -742,6 +748,15 @@ MiniProposalJs.prototype.insertSecondBox = async function () {
     tableFactorHeight = <%% 100, 90, 80, 50, 12 %%>;
     tableColumnHeight = <%% 45, 45, 40, 35, 6 %%>;
 
+    userBlockPadding = <%% 16, 16, 16, 16, 2 %%>;
+    userBlockInnerPadding = <%% 30, 30, 25, 25, 3 %%>;
+    userBlockInnerPaddingTop = <%% 23, 23, 19, 19, 2 %%>;
+    userBlockMinHeight = <%% 200, 200, 180, 150, 36 %%>;
+
+    userBlockSize = <%% 16, 16, 15, 14, 3 %%>;
+    userBlockWeight = <%% 400, 400, 400, 400, 400 %%>;
+    userBlockLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
+
     tableColumnsWidth = [
       <&& 120 | 90 | 75 | 50 | 12 &&>,
       <&& 150 | 100 | 95 | 80 | 15 &&>,
@@ -765,7 +780,7 @@ MiniProposalJs.prototype.insertSecondBox = async function () {
       "링크"
     ];
     tableColumnsFactor = [
-      { type: "image", source: (obj) => { return obj.where.link } },
+      { type: "image", source: (obj) => { return obj.image } },
       { type: "string", source: (obj) => { return obj.name } },
       { type: "number", source: (obj) => { return obj.number } },
       { type: "money", source: (obj) => { return obj.price.unit } },
@@ -813,7 +828,8 @@ MiniProposalJs.prototype.insertSecondBox = async function () {
         }
       },
       review: {
-        title: "시안 리뷰"
+        title: <&& "고객님의 디자인 리뷰" | "고객님의 디자인 리뷰" | "고객님의 디자인 리뷰" | "디자인 리뷰" | "고객님의 디자인 리뷰" &&>,
+        description: "디자이너와 홈리에종에게 전달할 리뷰를 남겨주세요!"
       }
     };
 
@@ -1251,14 +1267,11 @@ MiniProposalJs.prototype.insertSecondBox = async function () {
 
           if (tableColumnsFactor[j].type === "image") {
 
-            ({ image } = await ajaxJson({ url: tableColumnsFactor[j].source(list.detail[i]) }, "/getOpenGraph"));
-            image = window.decodeURIComponent(image);
-
             createNode({
               mother: tempTong,
               mode: "img",
               attribute: {
-                src: image,
+                src: window.decodeURIComponent(tableColumnsFactor[j].source(list.detail[i])),
               },
               style: {
                 display: "inline-block",
@@ -1351,32 +1364,102 @@ MiniProposalJs.prototype.insertSecondBox = async function () {
         boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
       }
     });
-    createNode({
+    userBlockTong = createNode({
       mother: userBlock,
       style: {
         display: "block",
         position: "relative",
         marginLeft: String((desktop ? margin : 6)) + ea,
         width: withOut((desktop ? margin : 6) * 2, ea),
-        height: desktop ? String(titleTextTongHeight) + ea : "",
       },
       children: [
         {
           text: contents.review.title,
           style: {
-            display: "inline-block",
+            display: desktop ? "inline-block" : "block",
             position: "relative",
-            width: String(titleTextTitleWidth) + ea,
+            width: desktop ? String(titleTextTitleWidth) + ea : "",
             fontSize: String(titleTextTitleSize) + ea,
             fontWeight: String(titleTextTitleWeight),
             color: colorChip.black,
             lineHeight: String(titleTextTitleLineHeight),
             verticalAlign: "top",
+            marginBottom: desktop ? "" : String(2.5) + ea,
           }
         }
       ]
     });
+    createNode({
+      mother: userBlockTong,
+      style: {
+        display: desktop ? "inline-block" : "block",
+        position: "relative",
+        width: withOut((desktop ? titleTextTitleWidth : 0) + (userBlockPadding * 2), ea),
+        borderRadius: String(5) + "px",
+        background: colorChip.gray1,
+        verticalAlign: "top",
+        paddingTop: String(userBlockPadding) + ea,
+        paddingBottom: String(userBlockPadding) + ea,
+        paddingLeft: String(userBlockPadding) + ea,
+        paddingRight: String(userBlockPadding) + ea,
+        minHeight: String(userBlockMinHeight) + ea,
+      },
+      children: [
+        {
+          style: {
+            display: "block",
+            width: withOut(userBlockInnerPadding * 2, ea),
+            minHeight: String(userBlockMinHeight) + ea,
+            background: colorChip.white,
+            borderRadius: String(5) + "px",
+            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+            paddingTop: String(userBlockInnerPaddingTop) + ea,
+            paddingLeft: String(userBlockInnerPadding) + ea,
+            paddingRight: String(userBlockInnerPadding) + ea,
+            paddingBottom: String(userBlockInnerPadding) + ea,
+          },
+          children: [
+            {
+              mode: "textarea",
+              text: instance.user.response.design[0].concept[0].comments.client,
+              attribute: {
+                placeholder: contents.review.description,
+              },
+              event: {
+                blur: async function (e) {
+                  try {
+                    let whereQuery, updateQuery;
 
+                    this.value = this.value.trim();
+
+                    whereQuery = { useid: instance.user.useid };
+                    updateQuery = {};
+                    updateQuery["response.design.0.concept.0.comments.client"] = this.value.replace(/[\&\=\+]/gi, '');
+
+                    await ajaxJson({ whereQuery, updateQuery }, "/updateUser");
+
+                  } catch (e) {
+                    window.alert("오류가 발생하였습니다! 다시 시도해주세요.");
+                  }
+                }
+              },
+              style: {
+                display: "block",
+                width: String(100) + '%',
+                minHeight: String(userBlockMinHeight) + ea,
+                outline: String(0),
+                border: String(0),
+                fontSize: String(userBlockSize) + ea,
+                fontWeight: String(userBlockWeight),
+                lineHeight: String(userBlockLineHeight),
+                color: colorChip.black,
+                background: "transparent",
+              }
+            }
+          ]
+        }
+      ]
+    });
 
   } catch (e) {
     window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
