@@ -4517,7 +4517,7 @@ DataRouter.prototype.rou_post_getOpenGraph = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      if (typeof req.body.mode !== "string" || typeof req.body.url !== "string") {
+      if (typeof req.body.url !== "string") {
         throw new Error("invaild post");
       }
       const mode = req.body.mode;
@@ -4540,25 +4540,27 @@ DataRouter.prototype.rou_post_getOpenGraph = function () {
       });
       url = urlArr.join("");
 
-      if (mode === "image") {
-        try {
-          resOpen = await requestSystem(url);
-          targets = [ ...resOpen.data.matchAll(/\<meta[^\>]+property=\"og\:image\"[^\>]+\>/gi) ].map((arr) => { return arr[0] });
-        } catch (e) {
-          targets = [];
+      try {
+        resOpen = await requestSystem(url);
+        targets = [ ...resOpen.data.matchAll(/\<meta[^\>]+property=\"og\:image\"[^\>]+\>/gi) ].map((arr) => { return arr[0] });
+      } catch (e) {
+        targets = [];
+      }
+
+      middleTarget = [];
+      target = null;
+
+      if (targets.length > 0) {
+        middleTarget = [ ...targets[targets.length - 1].matchAll(/content\=\"[^\"]+\"/gi) ];
+        if (middleTarget.length > 0) {
+          target = middleTarget[0][0].trim().replace(/^content\=\"/gi, '').slice(0, -1);
         }
+      }
 
-        middleTarget = [];
-        target = null;
-
-        if (targets.length > 0) {
-          middleTarget = [ ...targets[targets.length - 1].matchAll(/content\=\"[^\"]+\"/gi) ];
-          if (middleTarget.length > 0) {
-            target = middleTarget[0][0].trim().replace(/^content\=\"/gi, '').slice(0, -1);
-          }
-        }
-
-        result = { image: target };
+      if (target === null) {
+        result = { image: null };
+      } else {
+        result = { image: global.encodeURIComponent(target) };
       }
 
       res.send(JSON.stringify(result));

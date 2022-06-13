@@ -2549,7 +2549,7 @@ MiniRequestJs.prototype.insertReferenceBox = function (mother, index) {
 
 MiniRequestJs.prototype.insertListBox = function (mother, index) {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing, downloadFile, ajaxJson, ajaxForm } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing, downloadFile, ajaxJson, ajaxForm, autoComma } = GeneralJs;
   const { client, ea, media, osException, pointColor, fileInputClassNames } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -2588,6 +2588,12 @@ MiniRequestJs.prototype.insertListBox = function (mother, index) {
   let photoDescriptionHeight;
   let photoDescriptionSize, photoDescriptionWeight;
   let fileChangeEvent;
+  let matrixTarget;
+  let num;
+  let tableBlock;
+  let matrixWidth;
+  let matrixType;
+  let image;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 56, 52, 44, 32, 6 %%>;
@@ -2634,6 +2640,13 @@ MiniRequestJs.prototype.insertListBox = function (mother, index) {
   fileUploadTextTop = <%% -2, -2, -2, -2, -2 %%>;
   fileUploadLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
+  matrixWidth = [
+    100, 100, 100, 100, 100, 100, 150, 100, 180, 100
+  ];
+  matrixType = [
+    "image", "string", "number", "money", "money", "money", "string", "string", "link", "string"
+  ];
+
   contents = {
     title: "제품 리스트 업로드",
     info: [
@@ -2653,31 +2666,62 @@ MiniRequestJs.prototype.insertListBox = function (mother, index) {
       const [ text ] = [ ...mother.children ];
       if (this.files.length !== 0) {
         if (!/xlsx$/gi.test(this.files[0].name)) {
-          window.alert("샘플 엑셀 파일을 올려주세요!");
+          window.alert("샘플 엑셀 파일을 이용하여 올려주세요!");
           this.setAttribute("toggle", "off");
         } else {
           let formData, matrix, loading;
 
           loading = instance.mother.grayLoading();
 
-          formData = new FormData();
-          formData.enctype = "multipart/form-data";
-          formData.append("sheetsName", "sample");
-          formData.append("upload", this.files[0]);
-          matrix = await ajaxForm(formData, BRIDGEHOST + "/excelToMatrix");
+          try {
 
-          console.log(matrix);
+            formData = new FormData();
+            formData.enctype = "multipart/form-data";
+            formData.append("sheetsName", "sample");
+            formData.append("upload", this.files[0]);
+            matrix = JSON.parse(await ajaxForm(formData, BRIDGEHOST + "/excelToMatrix"));
+
+            if (Array.isArray(matrix)) {
+              if (matrix.every((arr) => { return Array.isArray(arr); })) {
+                if (matrix.every((arr) => { return arr.length === 9 })) {
+
+                  matrix = matrix.filter((arr) => { return arr[0] !== null });
+                  matrix = matrix.slice(1);
+
+                  for (let arr of matrix) {
+                    for (let i = 0; i < arr.length; i++) {
+                      if (typeof arr[i] === "string") {
+                        arr[i] = arr[i].trim();
+                      } else if (arr[i] === null || arr[i] === undefined) {
+                        arr[i] = "";
+                      }
+                    }
+                  }
+
+                  console.log(JSON.stringify(matrix));
+
+                  mother.style.background = pointColor;
+                  text.style.color = colorChip.white;
+                  text.textContent = contents.fileActive;
+                  this.setAttribute("toggle", "on");
+                } else {
+                  throw new Error("");
+                }
+              } else {
+                throw new Error("");
+              }
+            } else {
+              throw new Error("");
+            }
+          } catch (e) {
+            window.alert("샘플 엑셀 파일을 이용하여 올려주세요!");
+            mother.style.background = colorChip.gray2;
+            text.style.color = colorChip.deactive;
+            text.textContent = contents.file;
+            this.setAttribute("toggle", "off");
+          }
 
           loading.remove();
-
-
-
-
-
-          mother.style.background = pointColor;
-          text.style.color = colorChip.white;
-          text.textContent = contents.fileActive;
-          this.setAttribute("toggle", "on");
         }
       } else {
         mother.style.background = colorChip.gray2;
@@ -2816,6 +2860,7 @@ MiniRequestJs.prototype.insertListBox = function (mother, index) {
       display: "block",
       position: "relative",
       width: withOut(0, ea),
+      marginBottom: String(boxBetween) + ea,
     }
   });
 
@@ -2855,7 +2900,6 @@ MiniRequestJs.prototype.insertListBox = function (mother, index) {
       }
     ]
   });
-
 
   createNode({
     mother: photoBox,
@@ -2919,6 +2963,173 @@ MiniRequestJs.prototype.insertListBox = function (mother, index) {
       }
     ]
   });
+
+  const matrix = [["품명","수량","단가","배송비","금액","스펙","사이트","링크","비고"],["매트리스 퀸",1,1326000,0,1326000,"코르시카나 블랙","","https://corsicanabed.com/shop_view/?idx=76",""],["거실 실링팬",1,389000,0,389000,"화이트/화이트","에어블로우","https://smartstore.naver.com/air-blow/products/5281751239",""],["스텐드조명",1,370000,0,370000,"노란빛","슬로우 빌라","https://smartstore.naver.com/slowvilla/products/5909699403",""],["스텐드조명",1,256000,0,256000,"미니 소프트웜/스노우 화이트","라문직영샵","https://smartstore.naver.com/ramun/products/571513813?",""],["조명펜던트",2,125000,0,250000,"주백색 일체형","조명나라","https://www.lightnara.com/goods/goods_view.php?goodsNo=1000002028",""],["조명펜던트",1,95000,0,95000,"400H/노란빛","조명나라","https://www.lightnara.com/goods/goods_view.php?goodsNo=1000002987",""],["조명펜던트",1,74200,0,74200,"380파이/볼전구 주백색","공간조명","https://www.9s.co.kr/shop/shopdetail.html?branduid=25848&xcode=060&mcode=001&scode=&type=Y&sort=manual&cur_code=060&GfDT=bGx3UF4%3D#none",""],["조명펜던트",1,66000,0,66000,"화이트/화이트/12W볼전구 전구색","라디룸","http://ra-droom.com/product/detail.html?product_no=465&cate_no=25&display_group=1",""],["조명펜던트",1,57900,3000,60900,"150파이/일반형/2M/노란빛","제일조명","https://jeil-light.com/PENDENT/?idx=3092",""],["스텐드조명",1,156000,3300,159300,"버터/디밍",1962,"https://smartstore.naver.com/iklamp/products/5665133226?NaPm=ct%3Dkxq8oj3c%7Cci%3Dc0ba87a5811cb1c1c3f8dbfbbdcb6ba95005d0dd%7Ctr%3Dslsl%7Csn%3D1069696%7Chk%3Df8819e26c03314fdd07222d2bf16bd7255b13d1b",""]];
+
+  matrixTarget = createNode({
+    mother: rightBox,
+    style: {
+      display: "block",
+      position: "relative",
+      width: desktop ? withOut(0, ea) : String(100) + '%',
+      paddingBottom: desktop ? "" : String(mobileBottomMargin) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: "relative",
+          width: String(100) + '%',
+          background: colorChip.gray1,
+          borderRadius: String(5) + "px",
+          paddingTop: String(whiteInnerMargin) + ea,
+          paddingBottom: String(whiteInnerMargin) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: "block",
+              position: "relative",
+              background: colorChip.white,
+              width: withOut((whiteInnerMargin * 2) + (whiteInnerInnerPadding * 2), ea),
+              marginLeft: String(whiteInnerMargin) + ea,
+              paddingLeft: String(whiteInnerInnerPadding) + ea,
+              paddingRight: String(whiteInnerInnerPadding) + ea,
+              paddingTop: String(whiteInnerInnerPadding) + ea,
+              paddingBottom: String(whiteInnerInnerPadding) + ea,
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+              borderRadius: String(5) + "px",
+            }
+          }
+        ]
+      }
+    ]
+  }).firstChild.firstChild;
+
+  (async function () {
+
+    num = 0;
+    for (let arr of matrix) {
+
+      if (num === 0) {
+        arr.unshift("사진");
+      } else {
+        ({ image } = await ajaxJson({ url: window.encodeURIComponent(arr[7]) }, "/getOpenGraph"));
+        image = window.decodeURIComponent(image);
+        arr.unshift(image);
+      }
+
+      tableBlock = createNode({
+        mother: matrixTarget,
+        style: {
+          display: "block",
+          position: "relative",
+          height: String(num === 0 ? 40 : 100) + ea,
+          width: String(100) + '%',
+          overflow: "hidden",
+        }
+      });
+
+      for (let i = 0; i < arr.length; i++) {
+
+        if (i === 0) {
+          if (num === 0) {
+            createNode({
+              mother: tableBlock,
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: String(matrixWidth[i]) + ea,
+                height: String(100) + '%',
+                alignItems: "center",
+                textAlign: "center",
+                justifyContent: "center",
+                verticalAlign: "top",
+                overflow: "scroll",
+              },
+              children: [
+                {
+                  text: num !== 0 ? (matrixType[i] === "money" ? autoComma(arr[i]) + "원" : String(arr[i])) : String(arr[i]),
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    top: String(-2) + ea,
+                    fontSize: String(14) + ea,
+                    fontWeight: String(num === 0 ? 700 : 400),
+                    color: colorChip.black,
+                    verticalAlign: "top",
+                    cursor: matrixType[i] === "link" ? "pointer" : "",
+                  }
+                }
+              ]
+            });
+          } else {
+            createNode({
+              mother: tableBlock,
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: String(matrixWidth[i]) + ea,
+                height: String(100) + '%',
+                alignItems: "center",
+                textAlign: "center",
+                justifyContent: "center",
+                verticalAlign: "top",
+                overflow: "scroll",
+              },
+              children: [
+                {
+                  mode: "img",
+                  attribute: { src: arr[i] },
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    width: String(100) + ea,
+                    verticalAlign: "top",
+                  }
+                }
+              ]
+            });
+          }
+        } else {
+          createNode({
+            mother: tableBlock,
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: String(matrixWidth[i]) + ea,
+              height: String(100) + '%',
+              alignItems: "center",
+              textAlign: "center",
+              justifyContent: "center",
+              verticalAlign: "top",
+              overflow: "scroll",
+            },
+            children: [
+              {
+                text: num !== 0 ? (matrixType[i] === "money" ? autoComma(arr[i]) + "원" : String(arr[i])) : String(arr[i]),
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  top: String(-2) + ea,
+                  fontSize: String(14) + ea,
+                  fontWeight: String(num === 0 ? 700 : 400),
+                  color: colorChip.black,
+                  verticalAlign: "top",
+                  cursor: matrixType[i] === "link" ? "pointer" : "",
+                }
+              }
+            ]
+          });
+        }
+      }
+      num++;
+    }
+
+
+  })().catch((err) => { console.log(err); })
+
+
 
 }
 
