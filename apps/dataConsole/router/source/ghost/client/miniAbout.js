@@ -2351,6 +2351,7 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
     let addressPromptHeight;
     let agreeEvent;
     let oidConst;
+    let paymentAmountSizeSub;
 
     whiteWidth = <%% 1000, 1000, 800, 660, 88 %%>;
     whiteMargin = <%% 54, 54, 54, 54, 6 %%>;
@@ -2421,7 +2422,8 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
     agreeSize = <%% 14, 14, 14, 14, 3 %%>;
     agreeWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-    paymentAmountSize = <%% 30, 30, 30, 30, 5.2 %%>;
+    paymentAmountSize = <%% 30, 30, 29, 27, 3.7 %%>;
+    paymentAmountSizeSub = <%% 13, 13, 12, 11, 2.5 %%>;
     paymentAmountWeight = <%% 600, 600, 600, 600, 600 %%>;
     paymentAmountTop = <%% (isMac() ? 17 : 19), (isMac() ? 17 : 19), (isMac() ? 17 : 19), (isMac() ? 17 : 19), 3.7 %%>;
     paymentAmountBetween = <%% 20, 20, 20, 20, 3 %%>;
@@ -3147,7 +3149,9 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
 
               finalPrice = Math.floor(initialPrice * finalNumber);
               priceTarget.setAttribute("price", String(finalPrice));
-              priceTarget.textContent = autoComma(finalPrice) + '원';
+              priceTarget.textContent = "";
+              priceTarget.insertAdjacentHTML("beforeend", autoComma(Math.floor(finalPrice)) + "원<b style=\"color:" + colorChip.green + "\"> - 30,000원 </b><b style=\"color:" + colorChip.green + ";font-size:" + String(paymentAmountSizeSub) + ea + "\">* 프로모션 적용중</b>")
+              // priceTarget.textContent = autoComma(finalPrice) + '원';
             }
           },
           style: {
@@ -3396,7 +3400,7 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
       attribute: {
         price: String(Math.floor(initialPrice)),
       },
-      text: autoComma(Math.floor(initialPrice)) + "원",
+      text: autoComma(Math.floor(initialPrice)) + "원<b style=\"color:" + colorChip.green + "\"> - 30,000원 </b><b style=\"color:" + colorChip.green + ";font-size:" + String(paymentAmountSizeSub) + ea + "\">* 프로모션 적용중</b>",
       style: {
         display: "inline-block",
         position: "relative",
@@ -3405,7 +3409,7 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
         color: colorChip.black,
         top: String(paymentAmountTop) + ea,
         marginRight: String(paymentAmountBetween) + ea,
-      }
+      },
     });
 
     createNode({
@@ -3518,7 +3522,7 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
                     window.IMP.request_pay({
                         merchant_uid: map.oid,
                         name: "HomeLiaison Mini",
-                        amount: Math.floor(map.targets * initialPrice),
+                        amount: Math.floor((map.targets * initialPrice) - 30000),
                         buyer_email: map.email,
                         buyer_name: map.name,
                         buyer_tel: map.phone,
