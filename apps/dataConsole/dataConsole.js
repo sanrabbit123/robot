@@ -595,7 +595,7 @@ DataConsole.prototype.renderFrontPhp = async function () {
     const targetMap = [
       { from: "clientConsulting", to: "consulting", path: "/middle/consulting" },
       { from: "aspirantExplanation", to: "aspirant", path: "/middle/aspirantExplanation" },
-      { from: "frontIndex", to: "index", path: "/middle/frontIndex" },
+      // { from: "frontIndex", to: "index", path: "/middle/frontIndex" },
       // { from: "portfolioList", to: "portfolio", path: "/middle/portfolioList" },
       // { from: "portfolioDetail", to: "portdetail", path: "/middle/portfolioDetail" },
       // { from: "reviewList", to: "review", path: "/middle/reviewList" },
