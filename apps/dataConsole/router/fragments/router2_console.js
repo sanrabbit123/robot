@@ -4625,7 +4625,7 @@ DataRouter.prototype.rou_post_generalImpPayment = function () {
       const storeCollection = "impPaymentTempStore";
       const selfMongo = instance.mongolocal;
       const oidConstDictionary = {
-        mini: "homeliaisonMini_",
+        mini: "mini_",
       };
       let pluginScript;
 
@@ -4656,10 +4656,7 @@ DataRouter.prototype.rou_post_generalImpPayment = function () {
             imp_key: address.officeinfo.import.key,
             imp_secret: address.officeinfo.import.secret,
           }, { headers: { "Content-Type": "application/json" } })).data;
-
-          await errorLog(access_token);
-
-          const { data: { response: rsp } } = await requestSystem(`https://api.iamport.kr/payments/find/${oid}`, {}, { method: "get", headers: { "Authorization": access_token } });
+          const { data: { response: rsp } } = await requestSystem("https://api.iamport.kr/payments/find/" + oid, {}, { method: "get", headers: { "Authorization": access_token } });
           res.send(JSON.stringify({ data: equalJson(data), oid, rsp }));
         }
 
