@@ -89,8 +89,14 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const oid = "homeliaisonMini_01027473403_165519954264";
+    const { response: { access_token } } = (await requestSystem("https://api.iamport.kr/users/getToken", {
+      imp_key: instance.address.officeinfo.import.key,
+      imp_secret: instance.address.officeinfo.import.secret,
+    }, { headers: { "Content-Type": "application/json" } })).data;
+    const { data: { response: rsp } } = await requestSystem(`https://api.iamport.kr/payments/find/${oid}`, {}, { method: "get", headers: { "Authorization": access_token } });
 
-
+    console.log(rsp);
 
 
 

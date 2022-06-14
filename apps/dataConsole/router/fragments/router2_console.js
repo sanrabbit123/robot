@@ -4606,6 +4606,7 @@ DataRouter.prototype.rou_post_mysqlQuery = function () {
 DataRouter.prototype.rou_post_generalImpPayment = function () {
   const instance = this;
   const back = this.back;
+  const address = this.address;
   const { errorLog, requestSystem, uniqueValue, equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/generalImpPayment" ];
@@ -4652,9 +4653,12 @@ DataRouter.prototype.rou_post_generalImpPayment = function () {
         } else {
           const [ { key, data, oid } ] = rows;
           const { response: { access_token } } = (await requestSystem("https://api.iamport.kr/users/getToken", {
-            imp_key: instance.address.officeinfo.import.key,
-            imp_secret: instance.address.officeinfo.import.secret,
-          }, { headers: { "Content-Type": "application/json" } })).data
+            imp_key: address.officeinfo.import.key,
+            imp_secret: address.officeinfo.import.secret,
+          }, { headers: { "Content-Type": "application/json" } })).data;
+
+          await errorLog(access_token);
+
           const { data: { response: rsp } } = await requestSystem(`https://api.iamport.kr/payments/find/${oid}`, {}, { method: "get", headers: { "Authorization": access_token } });
           res.send(JSON.stringify({ data: equalJson(data), oid, rsp }));
         }
