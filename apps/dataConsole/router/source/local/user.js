@@ -6,8 +6,8 @@ const UserJs = function () {
 
 UserJs.prototype.baseMaker = function () {
   const instance = this;
-  const { totalContents, ea, belowHeight, users, designers } = this;
-  const { createNode, withOut, colorChip, isMac, dateToString, blankHref } = GeneralJs;
+  const { totalContents, ea, belowHeight, users, designers, miniDesigners } = this;
+  const { createNode, withOut, colorChip, isMac, dateToString, blankHref, ajaxJson } = GeneralJs;
   let outerMargin;
   let innerPadding;
   let grayBack;
@@ -46,6 +46,16 @@ UserJs.prototype.baseMaker = function () {
 
   alarmCircleRadius = 8;
 
+  idWidth = 88;
+  nameWidth = 60;
+  phoneWidth = 122;
+  timelineWidth = 145;
+  status0Width = 80;
+  status1Width = 80;
+  targetsWidth = 49;
+  designerWidth = 70;
+  emailWidth = 200;
+
   buttonTextTop = isMac() ? -1 : 0;
   buttonSize = 12;
   buttonWeight = 700;
@@ -59,10 +69,7 @@ UserJs.prototype.baseMaker = function () {
       name: "컨펌 및 전송",
       click: async function (e) {
         try {
-
           // alimtalk
-
-
 
 
 
@@ -79,7 +86,7 @@ UserJs.prototype.baseMaker = function () {
       }
     },
     {
-      name: "제안 보기",
+      name: "제안서 보기",
       click: async function (e) {
         try {
           const useid = this.getAttribute("useid");
@@ -118,9 +125,27 @@ UserJs.prototype.baseMaker = function () {
       name: "디자이너 지정",
       click: async function (e) {
         try {
+          const targets = miniDesigners.map((desid) => { return { designer: designers.find((obj) => { return obj.desid === desid }).designer, desid } });
+          const mother = totalContents;
+          const zIndex = 4;
+          let cancelBack, whitePopup;
 
+          cancelBack = createNode({
+            mother,
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(0),
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              background: colorChip.black,
+              opacity: String(0.3),
+            }
+          });
 
+          
 
+          console.log(targets);
 
         } catch (e) {
           console.log(e);
@@ -153,16 +178,6 @@ UserJs.prototype.baseMaker = function () {
       }
     },
   ];
-
-  idWidth = 88;
-  nameWidth = 60;
-  phoneWidth = 122;
-  timelineWidth = 145;
-  status0Width = 80;
-  status1Width = 80;
-  targetsWidth = 49;
-  designerWidth = 70;
-  emailWidth = 200;
 
   grayBack = createNode({
     mother: totalContents,
@@ -702,9 +717,15 @@ UserJs.prototype.launching = async function () {
 
     users = await ajaxJson({ whereQuery: {} }, "/getUsers", { equal: true });
     designers = await ajaxJson({ noFlat: true, whereQuery: {} }, "/getDesigners", { equal: true });
+    miniDesigners = [
+      "d1701_aa01s",
+      "d1904_aa12s",
+      "d1908_aa02s"
+    ];
 
     this.users = users;
     this.designers = designers;
+    this.miniDesigners = miniDesigners;
 
     this.baseMaker();
 

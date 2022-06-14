@@ -367,7 +367,7 @@ MiniRequestJs.prototype.insertInitBox = function () {
 
 MiniRequestJs.prototype.insertMemoBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing, ajaxJson } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing, ajaxJson, sleep } = GeneralJs;
   const { client, ea, media, osException, pointColor, totalContents } = this;
   const { user } = this;
   const { request } = user;
@@ -735,190 +735,199 @@ MiniRequestJs.prototype.insertMemoBox = function () {
     ]
   }).firstChild;
 
-  ajaxJson({ useid: instance.user.useid }, "/ghostPass_userPhoto", { equal: true }).then((data) => {
-    const { list } = data;
-    const targets = list.map((raw) => { return "https://" + FILEHOST + window.encodeURI(raw) });
-    let images;
-    let index;
 
-    images = [];
-    index = 0;
-    for (let link of targets) {
-      image = createNode({
-        mother: photoBox,
-        mode: "img",
-        event: {
-          click: function (e) {
-            const zIndex = String(101);
-            const index = Number(this.getAttribute("index"));
-            const imagePopupClassName = "imagePopupClassName";
-            const imagePopupIdName = "imagePopupIdName";
-            let cancelBack, imagePopup;
-            let gsMode;
-            let imageWidth, imageHeight;
-            let generateImagePopup;
-            let ratio, width, height;
+  (async () => {
+    try {
+      const data = await ajaxJson({ useid: instance.user.useid }, "/ghostPass_userPhoto", { equal: true });
+      const { list } = data;
+      const targets = list.map((raw) => { return "https://" + FILEHOST + window.encodeURI(raw) });
+      let images;
+      let index;
 
-            cancelBack = createNode({
-              mother: totalContents,
-              class: [ imagePopupClassName ],
-              event: {
-                click: function (e) {
-                  const removeTargets = document.querySelectorAll('.' + imagePopupClassName);
-                  for (let dom of removeTargets) {
-                    dom.remove();
-                  }
-                }
-              },
-              style: {
-                position: "fixed",
-                top: String(0),
-                left: String(0),
-                width: String(100) + '%',
-                height: String(100) + '%',
-                opacity: String(0.3),
-                background: colorChip.black,
-              }
-            });
+      images = [];
+      index = 0;
+      for (let link of targets) {
+        image = createNode({
+          mother: photoBox,
+          mode: "img",
+          event: {
+            click: function (e) {
+              const zIndex = String(101);
+              const index = Number(this.getAttribute("index"));
+              const imagePopupClassName = "imagePopupClassName";
+              const imagePopupIdName = "imagePopupIdName";
+              let cancelBack, imagePopup;
+              let gsMode;
+              let imageWidth, imageHeight;
+              let generateImagePopup;
+              let ratio, width, height;
 
-            generateImagePopup = (index) => {
-              ratio = Number(images[index].getAttribute("ratio"));
-              width = Number(images[index].getAttribute("width"));
-              height = Number(images[index].getAttribute("height"));
-
-              gsMode = (window.innerWidth - (lefRightPadding * 2) < (window.innerHeight - (upDownPadding * 2)) * ratio) ? 'g' : 's';
-
-              if (gsMode === 'g') {
-                imageWidth = window.innerWidth - (lefRightPadding * 2);
-                imageHeight = imageWidth / ratio;
-              } else {
-                imageHeight = window.innerHeight - (upDownPadding * 2);
-                imageWidth = imageHeight * ratio;
-              }
-
-              return createNode({
-                id: imagePopupIdName,
+              cancelBack = createNode({
                 mother: totalContents,
                 class: [ imagePopupClassName ],
+                event: {
+                  click: function (e) {
+                    const removeTargets = document.querySelectorAll('.' + imagePopupClassName);
+                    for (let dom of removeTargets) {
+                      dom.remove();
+                    }
+                  }
+                },
                 style: {
                   position: "fixed",
-                  width: String(imageWidth) + ea,
-                  height: String(imageHeight) + ea,
-                  top: withOut(50, imageHeight / 2, ea),
-                  left: withOut(50, imageWidth / 2, ea),
-                  borderRadius: String(3) + "px",
-                },
-                children: [
-                  {
-                    style: {
-                      display: "block",
-                      position: "relative",
-                      width: withOut(0, ea),
-                      height: withOut(0, ea),
-                    },
-                    children: [
-                      {
-                        mode: "svg",
-                        source: instance.mother.returnArrow("left", colorChip.white),
-                        attribute: {
-                          index: String(index),
-                        },
-                        event: {
-                          click: function (e) {
-                            const index = Number(this.getAttribute("index"));
-                            document.getElementById(imagePopupIdName).remove();
-                            if (images[index - 1] === undefined) {
-                              generateImagePopup(images.length - 1);
-                            } else {
-                              generateImagePopup(index - 1);
-                            }
-                          },
-                          selectstart: (e) => { e.preventDefault(); },
-                        },
-                        style: {
-                          position: "absolute",
-                          width: String(imageArrowWidth) + ea,
-                          top: withOut(50, imageArrowWidth / 2, ea),
-                          left: String(imageArrowLeft) + ea,
-                          cursor: "pointer",
-                        }
-                      },
-                      {
-                        mode: "svg",
-                        source: instance.mother.returnArrow("right", colorChip.white),
-                        attribute: {
-                          index: String(index),
-                        },
-                        event: {
-                          click: function (e) {
-                            const index = Number(this.getAttribute("index"));
-                            document.getElementById(imagePopupIdName).remove();
-                            if (images[index + 1] === undefined) {
-                              generateImagePopup(0);
-                            } else {
-                              generateImagePopup(index + 1);
-                            }
-                          },
-                          selectstart: (e) => { e.preventDefault(); },
-                        },
-                        style: {
-                          position: "absolute",
-                          width: String(imageArrowWidth) + ea,
-                          top: withOut(50, imageArrowWidth / 2, ea),
-                          right: String(imageArrowLeft) + ea,
-                          cursor: "pointer",
-                        }
-                      },
-                      {
-                        mode: "img",
-                        attribute: { src: images[index].getAttribute("src") },
-                        event: {
-                          selectstart: (e) => { e.preventDefault(); },
-                        },
-                        style: {
-                          display: "block",
-                          position: "relative",
-                          width: String(imageWidth) + ea,
-                          height: String(imageHeight) + ea,
-                          borderRadius: String(3) + "px",
-                        }
-                      }
-                    ]
-                  }
-                ]
+                  top: String(0),
+                  left: String(0),
+                  width: String(100) + '%',
+                  height: String(100) + '%',
+                  opacity: String(0.3),
+                  background: colorChip.black,
+                }
               });
+
+              generateImagePopup = (index) => {
+                ratio = Number(images[index].getAttribute("ratio"));
+                width = Number(images[index].getAttribute("width"));
+                height = Number(images[index].getAttribute("height"));
+
+                gsMode = (window.innerWidth - (lefRightPadding * 2) < (window.innerHeight - (upDownPadding * 2)) * ratio) ? 'g' : 's';
+
+                if (gsMode === 'g') {
+                  imageWidth = window.innerWidth - (lefRightPadding * 2);
+                  imageHeight = imageWidth / ratio;
+                } else {
+                  imageHeight = window.innerHeight - (upDownPadding * 2);
+                  imageWidth = imageHeight * ratio;
+                }
+
+                return createNode({
+                  id: imagePopupIdName,
+                  mother: totalContents,
+                  class: [ imagePopupClassName ],
+                  style: {
+                    position: "fixed",
+                    width: String(imageWidth) + ea,
+                    height: String(imageHeight) + ea,
+                    top: withOut(50, imageHeight / 2, ea),
+                    left: withOut(50, imageWidth / 2, ea),
+                    borderRadius: String(3) + "px",
+                  },
+                  children: [
+                    {
+                      style: {
+                        display: "block",
+                        position: "relative",
+                        width: withOut(0, ea),
+                        height: withOut(0, ea),
+                      },
+                      children: [
+                        {
+                          mode: "svg",
+                          source: instance.mother.returnArrow("left", colorChip.white),
+                          attribute: {
+                            index: String(index),
+                          },
+                          event: {
+                            click: function (e) {
+                              const index = Number(this.getAttribute("index"));
+                              document.getElementById(imagePopupIdName).remove();
+                              if (images[index - 1] === undefined) {
+                                generateImagePopup(images.length - 1);
+                              } else {
+                                generateImagePopup(index - 1);
+                              }
+                            },
+                            selectstart: (e) => { e.preventDefault(); },
+                          },
+                          style: {
+                            position: "absolute",
+                            width: String(imageArrowWidth) + ea,
+                            top: withOut(50, imageArrowWidth / 2, ea),
+                            left: String(imageArrowLeft) + ea,
+                            cursor: "pointer",
+                          }
+                        },
+                        {
+                          mode: "svg",
+                          source: instance.mother.returnArrow("right", colorChip.white),
+                          attribute: {
+                            index: String(index),
+                          },
+                          event: {
+                            click: function (e) {
+                              const index = Number(this.getAttribute("index"));
+                              document.getElementById(imagePopupIdName).remove();
+                              if (images[index + 1] === undefined) {
+                                generateImagePopup(0);
+                              } else {
+                                generateImagePopup(index + 1);
+                              }
+                            },
+                            selectstart: (e) => { e.preventDefault(); },
+                          },
+                          style: {
+                            position: "absolute",
+                            width: String(imageArrowWidth) + ea,
+                            top: withOut(50, imageArrowWidth / 2, ea),
+                            right: String(imageArrowLeft) + ea,
+                            cursor: "pointer",
+                          }
+                        },
+                        {
+                          mode: "img",
+                          attribute: { src: images[index].getAttribute("src") },
+                          event: {
+                            selectstart: (e) => { e.preventDefault(); },
+                          },
+                          style: {
+                            display: "block",
+                            position: "relative",
+                            width: String(imageWidth) + ea,
+                            height: String(imageHeight) + ea,
+                            borderRadius: String(3) + "px",
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                });
+              }
+
+              generateImagePopup(index);
+
             }
-
-            generateImagePopup(index);
-
+          },
+          attribute: {
+            src: link,
+            index: String(index),
+          },
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: "calc(calc(100% - " + String(photoBetween * 4) + ea + ") / " + String(4) + ")",
+            height: "auto",
+            borderRadius: String(3) + "px",
+            marginRight: String(photoBetween) + ea,
+            marginBottom: String(photoBetween) + ea,
+            verticalAlign: "top",
+            cursor: "pointer",
           }
-        },
-        attribute: {
-          src: link,
-          index: String(index),
-        },
-        style: {
-          display: "inline-block",
-          position: "relative",
-          width: "calc(calc(100% - " + String(photoBetween * 4) + ea + ") / " + String(4) + ")",
-          height: "auto",
-          borderRadius: String(3) + "px",
-          marginRight: String(photoBetween) + ea,
-          marginBottom: String(photoBetween) + ea,
-          verticalAlign: "top",
-          cursor: "pointer",
+        });
+        ({ width, height } = image.getBoundingClientRect());
+        while (height === 0) {
+          await sleep(500);
+          ({ width, height } = image.getBoundingClientRect());
         }
-      });
-      ({ width, height } = image.getBoundingClientRect());
-      image.setAttribute("width", String(Math.floor(width)));
-      image.setAttribute("height", String(Math.floor(height)));
-      image.setAttribute("ratio", String(width / height));
-      image.setAttribute("gs", (width >= height ? 'g' : 's'));
-      images.push(image);
-      index++;
-    }
+        image.setAttribute("width", String(Math.floor(width)));
+        image.setAttribute("height", String(Math.floor(height)));
+        image.setAttribute("ratio", String(width / height));
+        images.push(image);
+        index++;
+      }
 
-  }).catch((err) => { console.log(err); })
+    } catch (e) {
+      window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+    }
+  })().catch((err) => { console.log(err); });
 
 }
 
