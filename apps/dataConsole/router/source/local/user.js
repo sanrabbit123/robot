@@ -7,7 +7,7 @@ const UserJs = function () {
 UserJs.prototype.baseMaker = function () {
   const instance = this;
   const { totalContents, ea, belowHeight, users, designers, miniDesigners } = this;
-  const { createNode, withOut, colorChip, isMac, dateToString, blankHref, ajaxJson } = GeneralJs;
+  const { createNode, withOut, colorChip, isMac, dateToString, blankHref, ajaxJson, cleanChildren } = GeneralJs;
   let outerMargin;
   let innerPadding;
   let grayBack;
@@ -29,6 +29,7 @@ UserJs.prototype.baseMaker = function () {
   let num;
   let buttonBetween;
   let idWidth, nameWidth, phoneWidth, timelineWidth, status0Width, status1Width, targetsWidth, designerWidth, emailWidth;
+  let contentsLoad;
 
   outerMargin = 30;
   innerPadding = 20;
@@ -64,14 +65,60 @@ UserJs.prototype.baseMaker = function () {
   buttonWidth = 90;
   buttonBetween = 6;
 
+  contentsLoad = () => {};
+
   buttonList = [
     {
       name: "컨펌 및 전송",
       click: async function (e) {
         try {
+          const useid = this.getAttribute("useid");
+          const user = instance.users.find((obj) => { return obj.useid === useid });
+          const desid = user.desid;
+          const designer = instance.designers.find((obj) => { return obj.desid === desid });
+          let updateQuery, whereQuery;
+
           // alimtalk 1
+          await ajaxJson({
+            method: "miniProposal",
+            name: user.name,
+            phone: user.phone,
+            option: {
+              client: user.name,
+              host: GHOSTHOST,
+              path: "miniProposal",
+              useid: useid,
+            }
+          }, "/alimTalk");
 
           // alimtalk 2
+          await ajaxJson({
+            method: "miniCompleteDesigner",
+            name: designer.designer,
+            phone: designer.information.phone,
+            option: {
+              designer: designer.designer,
+              client: user.name,
+            }
+          }, "/alimTalk");
+
+          whereQuery = { useid };
+          updateQuery = {};
+          updateQuery["request.status"] = "제안서 전송";
+          updateQuery["response.status"] = "제안서 컨펌";
+          updateQuery["request.alarm"] = false;
+          updateQuery["response.alarm"] = false;
+
+          await ajaxJson({ whereQuery, updateQuery }, "/updateUser");
+
+          instance.users.find((obj) => { return obj.useid === useid }).request.status = "제안서 전송";
+          instance.users.find((obj) => { return obj.useid === useid }).request.alarm = false;
+          instance.users.find((obj) => { return obj.useid === useid }).response.status = "제안서 컨펌";
+          instance.users.find((obj) => { return obj.useid === useid }).response.alarm = false;
+
+          window.alert(user.name + " 고객님께 제안서 알림톡을 보냈습니다!");
+
+          contentsLoad();
 
         } catch (e) {
           console.log(e);
@@ -153,8 +200,17 @@ UserJs.prototype.baseMaker = function () {
           smallSize = 12;
           smallWeight = 400;
 
+          cancelBack = {};
+          whitePopup = {};
+
           cancelBack = createNode({
             mother,
+            event: {
+              click: function () {
+                whitePopup.remove();
+                cancelBack.remove();
+              }
+            },
             style: {
               position: "fixed",
               top: String(0),
@@ -194,21 +250,41 @@ UserJs.prototype.baseMaker = function () {
                     const name = designer.designer;
                     const phone = designer.information.phone;
                     const useid = this.getAttribute("useid");
+                    const user = instance.users.find((obj) => { return obj.useid === useid });
                     let whereQuery, updateQuery;
 
                     whereQuery = { useid };
                     updateQuery = {};
                     updateQuery["desid"] = desid;
+                    updateQuery["request.status"] = "디자인 대기";
                     updateQuery["response.status"] = "디자인 요청";
 
                     await ajaxJson({ whereQuery, updateQuery }, "/updateUser");
 
                     // alimtalk
-                    console.log(designer, name, phone);
+                    await ajaxJson({
+                      method: "miniRequest",
+                      name: name,
+                      phone: phone,
+                      option: {
+                        designer: name,
+                        client: user.name,
+                        host: GHOSTHOST,
+                        path: "miniRequest",
+                        useid: useid,
+                      }
+                    }, "/alimTalk");
 
+                    instance.users.find((obj) => { return obj.useid === useid }).desid = desid;
+                    instance.users.find((obj) => { return obj.useid === useid }).request.status = "디자인 대기";
+                    instance.users.find((obj) => { return obj.useid === useid }).response.status = "디자인 요청";
 
+                    window.alert(name + " 디자이너에게 홈리에종 미니 서비스 요청을 보냈습니다!");
 
+                    whitePopup.remove();
+                    cancelBack.remove();
 
+                    contentsLoad();
 
                   } catch (e) {
                     console.log(e);
@@ -338,228 +414,17 @@ UserJs.prototype.baseMaker = function () {
 
   // column
 
-  motherBlock = createNode({
-    mother: grayTong,
-    style: {
-      display: "block",
-      position: "sticky",
-      top: String(0),
-      zIndex: String(1),
-      height: String(blockHeight) + ea,
-      width: withOut(0, ea),
-      overflow: "hidden",
-      borderRadius: String(5) + "px",
-      marginBottom: String(blockMargin) + ea,
-    }
-  });
+  contentsLoad = () => {
 
-  createNode({
-    mother: motherBlock,
-    style: {
-      display: "inline-flex",
-      width: String(blockHeight) + ea,
-      position: "relative",
-      height: String(blockHeight) + ea,
-      background: colorChip.gradientGray,
-      backdropFilter: "blur(4px)",
-      borderRadius: String(5) + "px",
-      verticalAlign: "top",
-      marginRight: String(blockMargin) + ea,
-      justifyContent: "center",
-      alignItems: "center",
-      textAlign: "center",
-    },
-    children: [
-      {
-        style: {
-          display: "inline-block",
-          position: "relative",
-          width: String(alarmCircleRadius) + ea,
-          height: String(alarmCircleRadius) + ea,
-          borderRadius: String(alarmCircleRadius) + ea,
-          background: colorChip.gray4,
-        }
-      }
-    ]
-  });
-
-  baseBlock = createNode({
-    mother: motherBlock,
-    style: {
-      display: "inline-block",
-      width: withOut(blockHeight + blockMargin, ea),
-      position: "relative",
-      height: String(blockHeight) + ea,
-      background: colorChip.gradientGray,
-      backdropFilter: "blur(4px)",
-      borderRadius: String(5) + "px",
-      verticalAlign: "top",
-    },
-    children: [
-      {
-        style: {
-          display: "block",
-          position: "relative",
-          width: String(8000) + ea,
-          height: withOut(0, ea),
-        }
-      },
-    ]
-  });
-  targetTong = baseBlock.firstChild;
-  createNode({
-    mother: targetTong,
-    text: "아이디",
-    style: {
-      width: String(idWidth) + ea,
-      display: "inline-block",
-      position: "relative",
-      fontSize: String(textSize) + ea,
-      fontWeight: String(700),
-      color: colorChip.white,
-      top: String(textTop) + ea,
-      marginLeft: String(minimumBetween) + ea,
-    }
-  });
-  createNode({
-    mother: targetTong,
-    text: '|',
-    style: {
-      width: String(barWidth) + ea,
-      display: "inline-block",
-      position: "relative",
-      fontSize: String(textSize) + ea,
-      fontWeight: String(700),
-      color: colorChip.gray4,
-      top: String(textTop) + ea,
-      marginLeft: String(barMargin) + ea,
-    }
-  });
-  createNode({
-    mother: targetTong,
-    text: "이름",
-    style: {
-      width: String(nameWidth) + ea,
-      display: "inline-block",
-      position: "relative",
-      fontSize: String(textSize) + ea,
-      fontWeight: String(700),
-      color: colorChip.white,
-      top: String(textTop) + ea,
-      marginLeft: String(minimumBetween) + ea,
-    }
-  });
-  createNode({
-    mother: targetTong,
-    text: "연락처",
-    style: {
-      width: String(phoneWidth) + ea,
-      display: "inline-block",
-      position: "relative",
-      fontSize: String(textSize) + ea,
-      fontWeight: String(700),
-      color: colorChip.white,
-      top: String(textTop) + ea,
-      marginLeft: String(minimumBetween) + ea,
-    }
-  });
-  createNode({
-    mother: targetTong,
-    text: "결제일",
-    style: {
-      width: String(timelineWidth) + ea,
-      display: "inline-block",
-      position: "relative",
-      fontSize: String(textSize) + ea,
-      fontWeight: String(700),
-      color: colorChip.white,
-      top: String(textTop) + ea,
-      marginLeft: String(minimumBetween) + ea,
-    }
-  });
-  createNode({
-    mother: targetTong,
-    text: "상태 A",
-    style: {
-      width: String(status0Width) + ea,
-      display: "inline-block",
-      position: "relative",
-      fontSize: String(textSize) + ea,
-      fontWeight: String(700),
-      color: colorChip.white,
-      top: String(textTop) + ea,
-      marginLeft: String(minimumBetween) + ea,
-    }
-  });
-  createNode({
-    mother: targetTong,
-    text: "상태 B",
-    style: {
-      width: String(status1Width) + ea,
-      display: "inline-block",
-      position: "relative",
-      fontSize: String(textSize) + ea,
-      fontWeight: String(700),
-      color: colorChip.white,
-      top: String(textTop) + ea,
-      marginLeft: String(minimumBetween) + ea,
-    }
-  });
-  createNode({
-    mother: targetTong,
-    text: "공간",
-    style: {
-      width: String(targetsWidth) + ea,
-      display: "inline-block",
-      position: "relative",
-      fontSize: String(textSize) + ea,
-      fontWeight: String(700),
-      color: colorChip.white,
-      top: String(textTop) + ea,
-      marginLeft: String(minimumBetween) + ea,
-    }
-  });
-  createNode({
-    mother: targetTong,
-    text: "디자이너",
-    style: {
-      width: String(designerWidth) + ea,
-      display: "inline-block",
-      position: "relative",
-      fontSize: String(textSize) + ea,
-      fontWeight: String(700),
-      color: colorChip.white,
-      top: String(textTop) + ea,
-      marginLeft: String(minimumBetween) + ea,
-    }
-  });
-  createNode({
-    mother: targetTong,
-    text: "이메일",
-    style: {
-      width: String(emailWidth) + ea,
-      display: "inline-block",
-      position: "relative",
-      fontSize: String(textSize) + ea,
-      fontWeight: String(700),
-      color: colorChip.white,
-      top: String(textTop) + ea,
-      marginLeft: String(minimumBetween) + ea,
-    }
-  });
-
-  // values
-
-  for (let user of users) {
+    cleanChildren(grayTong);
 
     motherBlock = createNode({
       mother: grayTong,
-      attribute: {
-        useid: user.useid,
-      },
       style: {
         display: "block",
-        position: "relative",
+        position: "sticky",
+        top: String(0),
+        zIndex: String(1),
         height: String(blockHeight) + ea,
         width: withOut(0, ea),
         overflow: "hidden",
@@ -570,15 +435,13 @@ UserJs.prototype.baseMaker = function () {
 
     createNode({
       mother: motherBlock,
-      attribute: {
-        useid: user.useid,
-      },
       style: {
         display: "inline-flex",
         width: String(blockHeight) + ea,
         position: "relative",
         height: String(blockHeight) + ea,
-        background: colorChip.white,
+        background: colorChip.gradientGray,
+        backdropFilter: "blur(4px)",
         borderRadius: String(5) + "px",
         verticalAlign: "top",
         marginRight: String(blockMargin) + ea,
@@ -594,7 +457,7 @@ UserJs.prototype.baseMaker = function () {
             width: String(alarmCircleRadius) + ea,
             height: String(alarmCircleRadius) + ea,
             borderRadius: String(alarmCircleRadius) + ea,
-            background: user.request.alarm ? colorChip.red : colorChip.gradientGreen,
+            background: colorChip.gray4,
           }
         }
       ]
@@ -602,23 +465,18 @@ UserJs.prototype.baseMaker = function () {
 
     baseBlock = createNode({
       mother: motherBlock,
-      attribute: {
-        useid: user.useid,
-      },
       style: {
         display: "inline-block",
         width: withOut(blockHeight + blockMargin, ea),
         position: "relative",
         height: String(blockHeight) + ea,
-        background: colorChip.white,
+        background: colorChip.gradientGray,
+        backdropFilter: "blur(4px)",
         borderRadius: String(5) + "px",
         verticalAlign: "top",
       },
       children: [
         {
-          attribute: {
-            useid: user.useid,
-          },
           style: {
             display: "block",
             position: "relative",
@@ -628,56 +486,17 @@ UserJs.prototype.baseMaker = function () {
         },
       ]
     });
-
-    num = 0;
-    for (let { name, click, contextmenu } of buttonList) {
-      createNode({
-        mother: baseBlock,
-        attribute: {
-          useid: user.useid,
-        },
-        event: { click, contextmenu },
-        style: {
-          display: "inline-flex",
-          position: "absolute",
-          width: String(buttonWidth) + ea,
-          height: String(buttonHeight) + ea,
-          right: String(buttongTop + ((buttonWidth + buttonBetween) * num)) + ea,
-          top: String(buttongTop) + ea,
-          borderRadius: String(5) + "px",
-          background: colorChip.gradientGreen,
-          cursor: "pointer",
-          justifyContent: "center",
-          alignItems: "center",
-          textAlign: "center",
-        },
-        children: [
-          {
-            text: name,
-            style: {
-              position: "relative",
-              top: String(buttonTextTop) + ea,
-              color: colorChip.white,
-              fontSize: String(buttonSize) + ea,
-              fontWeight: String(buttonWeight),
-            }
-          }
-        ]
-      });
-      num++;
-    }
-
     targetTong = baseBlock.firstChild;
     createNode({
       mother: targetTong,
-      text: user.useid,
+      text: "아이디",
       style: {
         width: String(idWidth) + ea,
         display: "inline-block",
         position: "relative",
         fontSize: String(textSize) + ea,
-        fontWeight: String(400),
-        color: colorChip.black,
+        fontWeight: String(700),
+        color: colorChip.white,
         top: String(textTop) + ea,
         marginLeft: String(minimumBetween) + ea,
       }
@@ -690,7 +509,7 @@ UserJs.prototype.baseMaker = function () {
         display: "inline-block",
         position: "relative",
         fontSize: String(textSize) + ea,
-        fontWeight: String(400),
+        fontWeight: String(700),
         color: colorChip.gray4,
         top: String(textTop) + ea,
         marginLeft: String(barMargin) + ea,
@@ -698,118 +517,382 @@ UserJs.prototype.baseMaker = function () {
     });
     createNode({
       mother: targetTong,
-      text: user.name,
+      text: "이름",
       style: {
         width: String(nameWidth) + ea,
         display: "inline-block",
         position: "relative",
         fontSize: String(textSize) + ea,
-        fontWeight: String(400),
-        color: colorChip.black,
+        fontWeight: String(700),
+        color: colorChip.white,
         top: String(textTop) + ea,
         marginLeft: String(minimumBetween) + ea,
       }
     });
     createNode({
       mother: targetTong,
-      text: user.phone,
+      text: "연락처",
       style: {
         width: String(phoneWidth) + ea,
         display: "inline-block",
         position: "relative",
         fontSize: String(textSize) + ea,
-        fontWeight: String(400),
-        color: colorChip.black,
+        fontWeight: String(700),
+        color: colorChip.white,
         top: String(textTop) + ea,
         marginLeft: String(minimumBetween) + ea,
       }
     });
     createNode({
       mother: targetTong,
-      text: dateToString(user.request.timeline, true),
+      text: "결제일",
       style: {
         width: String(timelineWidth) + ea,
         display: "inline-block",
         position: "relative",
         fontSize: String(textSize) + ea,
-        fontWeight: String(400),
-        color: colorChip.black,
+        fontWeight: String(700),
+        color: colorChip.white,
         top: String(textTop) + ea,
         marginLeft: String(minimumBetween) + ea,
       }
     });
     createNode({
       mother: targetTong,
-      text: user.request.status,
+      text: "상태 A",
       style: {
         width: String(status0Width) + ea,
         display: "inline-block",
         position: "relative",
         fontSize: String(textSize) + ea,
-        fontWeight: String(400),
-        color: colorChip.black,
+        fontWeight: String(700),
+        color: colorChip.white,
         top: String(textTop) + ea,
         marginLeft: String(minimumBetween) + ea,
       }
     });
     createNode({
       mother: targetTong,
-      text: user.response.status,
+      text: "상태 B",
       style: {
         width: String(status1Width) + ea,
         display: "inline-block",
         position: "relative",
         fontSize: String(textSize) + ea,
-        fontWeight: String(400),
-        color: colorChip.black,
+        fontWeight: String(700),
+        color: colorChip.white,
         top: String(textTop) + ea,
         marginLeft: String(minimumBetween) + ea,
       }
     });
     createNode({
       mother: targetTong,
-      text: String(user.request.space.targets) + "개",
+      text: "공간",
       style: {
         width: String(targetsWidth) + ea,
         display: "inline-block",
         position: "relative",
         fontSize: String(textSize) + ea,
-        fontWeight: String(400),
-        color: colorChip.black,
+        fontWeight: String(700),
+        color: colorChip.white,
         top: String(textTop) + ea,
         marginLeft: String(minimumBetween) + ea,
       }
     });
     createNode({
       mother: targetTong,
-      text: /^d/.test(user.desid) ? designers.find((obj) => { return obj.desid === user.desid }).designer : "미지정",
+      text: "디자이너",
       style: {
         width: String(designerWidth) + ea,
         display: "inline-block",
         position: "relative",
         fontSize: String(textSize) + ea,
-        fontWeight: String(400),
-        color: colorChip.black,
+        fontWeight: String(700),
+        color: colorChip.white,
         top: String(textTop) + ea,
         marginLeft: String(minimumBetween) + ea,
       }
     });
     createNode({
       mother: targetTong,
-      text: user.email,
+      text: "이메일",
       style: {
         width: String(emailWidth) + ea,
         display: "inline-block",
         position: "relative",
         fontSize: String(textSize) + ea,
-        fontWeight: String(400),
-        color: colorChip.black,
+        fontWeight: String(700),
+        color: colorChip.white,
         top: String(textTop) + ea,
         marginLeft: String(minimumBetween) + ea,
       }
     });
 
+    for (let user of users) {
+
+      motherBlock = createNode({
+        mother: grayTong,
+        attribute: {
+          useid: user.useid,
+        },
+        style: {
+          display: "block",
+          position: "relative",
+          height: String(blockHeight) + ea,
+          width: withOut(0, ea),
+          overflow: "hidden",
+          borderRadius: String(5) + "px",
+          marginBottom: String(blockMargin) + ea,
+        }
+      });
+
+      createNode({
+        mother: motherBlock,
+        attribute: {
+          useid: user.useid,
+        },
+        style: {
+          display: "inline-flex",
+          width: String(blockHeight) + ea,
+          position: "relative",
+          height: String(blockHeight) + ea,
+          background: colorChip.white,
+          borderRadius: String(5) + "px",
+          verticalAlign: "top",
+          marginRight: String(blockMargin) + ea,
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+        },
+        children: [
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(alarmCircleRadius) + ea,
+              height: String(alarmCircleRadius) + ea,
+              borderRadius: String(alarmCircleRadius) + ea,
+              background: user.request.alarm ? colorChip.red : colorChip.gradientGreen,
+            }
+          }
+        ]
+      });
+
+      baseBlock = createNode({
+        mother: motherBlock,
+        attribute: {
+          useid: user.useid,
+        },
+        style: {
+          display: "inline-block",
+          width: withOut(blockHeight + blockMargin, ea),
+          position: "relative",
+          height: String(blockHeight) + ea,
+          background: colorChip.white,
+          borderRadius: String(5) + "px",
+          verticalAlign: "top",
+        },
+        children: [
+          {
+            attribute: {
+              useid: user.useid,
+            },
+            style: {
+              display: "block",
+              position: "relative",
+              width: String(8000) + ea,
+              height: withOut(0, ea),
+            }
+          },
+        ]
+      });
+
+      num = 0;
+      for (let { name, click, contextmenu } of buttonList) {
+        createNode({
+          mother: baseBlock,
+          attribute: {
+            useid: user.useid,
+          },
+          event: { click, contextmenu },
+          style: {
+            display: "inline-flex",
+            position: "absolute",
+            width: String(buttonWidth) + ea,
+            height: String(buttonHeight) + ea,
+            right: String(buttongTop + ((buttonWidth + buttonBetween) * num)) + ea,
+            top: String(buttongTop) + ea,
+            borderRadius: String(5) + "px",
+            background: colorChip.gradientGreen,
+            cursor: "pointer",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+          },
+          children: [
+            {
+              text: name,
+              style: {
+                position: "relative",
+                top: String(buttonTextTop) + ea,
+                color: colorChip.white,
+                fontSize: String(buttonSize) + ea,
+                fontWeight: String(buttonWeight),
+              }
+            }
+          ]
+        });
+        num++;
+      }
+
+      targetTong = baseBlock.firstChild;
+      createNode({
+        mother: targetTong,
+        text: user.useid,
+        style: {
+          width: String(idWidth) + ea,
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(textSize) + ea,
+          fontWeight: String(400),
+          color: colorChip.black,
+          top: String(textTop) + ea,
+          marginLeft: String(minimumBetween) + ea,
+        }
+      });
+      createNode({
+        mother: targetTong,
+        text: '|',
+        style: {
+          width: String(barWidth) + ea,
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(textSize) + ea,
+          fontWeight: String(400),
+          color: colorChip.gray4,
+          top: String(textTop) + ea,
+          marginLeft: String(barMargin) + ea,
+        }
+      });
+      createNode({
+        mother: targetTong,
+        text: user.name,
+        style: {
+          width: String(nameWidth) + ea,
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(textSize) + ea,
+          fontWeight: String(400),
+          color: colorChip.black,
+          top: String(textTop) + ea,
+          marginLeft: String(minimumBetween) + ea,
+        }
+      });
+      createNode({
+        mother: targetTong,
+        text: user.phone,
+        style: {
+          width: String(phoneWidth) + ea,
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(textSize) + ea,
+          fontWeight: String(400),
+          color: colorChip.black,
+          top: String(textTop) + ea,
+          marginLeft: String(minimumBetween) + ea,
+        }
+      });
+      createNode({
+        mother: targetTong,
+        text: dateToString(user.request.timeline, true),
+        style: {
+          width: String(timelineWidth) + ea,
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(textSize) + ea,
+          fontWeight: String(400),
+          color: colorChip.black,
+          top: String(textTop) + ea,
+          marginLeft: String(minimumBetween) + ea,
+        }
+      });
+      createNode({
+        mother: targetTong,
+        text: user.request.status,
+        style: {
+          width: String(status0Width) + ea,
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(textSize) + ea,
+          fontWeight: String(400),
+          color: colorChip.black,
+          top: String(textTop) + ea,
+          marginLeft: String(minimumBetween) + ea,
+        }
+      });
+      createNode({
+        mother: targetTong,
+        text: user.response.status,
+        style: {
+          width: String(status1Width) + ea,
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(textSize) + ea,
+          fontWeight: String(400),
+          color: colorChip.black,
+          top: String(textTop) + ea,
+          marginLeft: String(minimumBetween) + ea,
+        }
+      });
+      createNode({
+        mother: targetTong,
+        text: String(user.request.space.targets) + "개",
+        style: {
+          width: String(targetsWidth) + ea,
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(textSize) + ea,
+          fontWeight: String(400),
+          color: colorChip.black,
+          top: String(textTop) + ea,
+          marginLeft: String(minimumBetween) + ea,
+        }
+      });
+      createNode({
+        mother: targetTong,
+        text: /^d/.test(user.desid) ? designers.find((obj) => { return obj.desid === user.desid }).designer : "미지정",
+        style: {
+          width: String(designerWidth) + ea,
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(textSize) + ea,
+          fontWeight: String(400),
+          color: colorChip.black,
+          top: String(textTop) + ea,
+          marginLeft: String(minimumBetween) + ea,
+        }
+      });
+      createNode({
+        mother: targetTong,
+        text: user.email,
+        style: {
+          width: String(emailWidth) + ea,
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(textSize) + ea,
+          fontWeight: String(400),
+          color: colorChip.black,
+          top: String(textTop) + ea,
+          marginLeft: String(minimumBetween) + ea,
+        }
+      });
+
+    }
+
   }
+
+  contentsLoad();
+
 
 }
 

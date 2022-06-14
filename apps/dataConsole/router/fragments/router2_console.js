@@ -4732,6 +4732,7 @@ DataRouter.prototype.rou_post_userSubmit = function () {
       updateQuery["request.payment.info.proof"] = "이니시스";
       updateQuery["request.payment.info.to"] = name;
       updateQuery["request.payment.info.data"] = [ rsp ];
+      updateQuery["response.status"] = "지정 대기";
 
       useid = await back.createUser(updateQuery, { selfMongo });
 

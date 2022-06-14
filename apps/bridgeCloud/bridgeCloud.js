@@ -1151,6 +1151,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
             updateQuery = {};
             updateQuery["request.photo"] = userCopied.request.photo;
             updateQuery["request.status"] = "사진 전송";
+            updateQuery["response.status"] = "지정 필요";
 
             await back.updateUser([ whereQuery, updateQuery ], { selfMongo });
 
