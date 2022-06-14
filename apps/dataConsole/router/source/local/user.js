@@ -143,7 +143,7 @@ UserJs.prototype.baseMaker = function () {
             }
           });
 
-          
+
 
           console.log(targets);
 
