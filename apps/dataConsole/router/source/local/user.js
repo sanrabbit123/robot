@@ -78,47 +78,53 @@ UserJs.prototype.baseMaker = function () {
           const designer = instance.designers.find((obj) => { return obj.desid === desid });
           let updateQuery, whereQuery;
 
-          // alimtalk 1
-          await ajaxJson({
-            method: "miniProposal",
-            name: user.name,
-            phone: user.phone,
-            option: {
-              client: user.name,
-              host: GHOSTHOST,
-              path: "miniProposal",
-              useid: useid,
-            }
-          }, "/alimTalk");
+          if (user.response.design.length > 0) {
 
-          // alimtalk 2
-          await ajaxJson({
-            method: "miniCompleteDesigner",
-            name: designer.designer,
-            phone: designer.information.phone,
-            option: {
-              designer: designer.designer,
-              client: user.name,
-            }
-          }, "/alimTalk");
+            // alimtalk 1
+            await ajaxJson({
+              method: "miniProposal",
+              name: user.name,
+              phone: user.phone,
+              option: {
+                client: user.name,
+                host: GHOSTHOST,
+                path: "miniProposal",
+                useid: useid,
+              }
+            }, "/alimTalk");
 
-          whereQuery = { useid };
-          updateQuery = {};
-          updateQuery["request.status"] = "제안서 전송";
-          updateQuery["response.status"] = "제안서 컨펌";
-          updateQuery["request.alarm"] = false;
-          updateQuery["response.alarm"] = false;
+            // alimtalk 2
+            await ajaxJson({
+              method: "miniCompleteDesigner",
+              name: designer.designer,
+              phone: designer.information.phone,
+              option: {
+                designer: designer.designer,
+                client: user.name,
+              }
+            }, "/alimTalk");
 
-          await ajaxJson({ whereQuery, updateQuery }, "/updateUser");
+            whereQuery = { useid };
+            updateQuery = {};
+            updateQuery["request.status"] = "제안서 전송";
+            updateQuery["response.status"] = "제안서 컨펌";
+            updateQuery["request.alarm"] = false;
+            updateQuery["response.alarm"] = false;
 
-          instance.users.find((obj) => { return obj.useid === useid }).request.status = "제안서 전송";
-          instance.users.find((obj) => { return obj.useid === useid }).request.alarm = false;
-          instance.users.find((obj) => { return obj.useid === useid }).response.status = "제안서 컨펌";
-          instance.users.find((obj) => { return obj.useid === useid }).response.alarm = false;
+            await ajaxJson({ whereQuery, updateQuery }, "/updateUser");
 
-          window.alert(user.name + " 고객님께 제안서 알림톡을 보냈습니다!");
+            instance.users.find((obj) => { return obj.useid === useid }).request.status = "제안서 전송";
+            instance.users.find((obj) => { return obj.useid === useid }).request.alarm = false;
+            instance.users.find((obj) => { return obj.useid === useid }).response.status = "제안서 컨펌";
+            instance.users.find((obj) => { return obj.useid === useid }).response.alarm = false;
 
-          contentsLoad();
+            window.alert(user.name + " 고객님께 제안서 알림톡을 보냈습니다!");
+
+            contentsLoad();
+
+          } else {
+            window.alert("현재 단계에서는 할 수 없습니다!");
+          }
 
         } catch (e) {
           console.log(e);
@@ -130,14 +136,20 @@ UserJs.prototype.baseMaker = function () {
         } catch (e) {
           console.log(e);
         }
-      }
+      },
+      green: (user) => { return user.response.design.length > 0; },
     },
     {
       name: "제안서 보기",
       click: async function (e) {
         try {
           const useid = this.getAttribute("useid");
-          blankHref("https://" + GHOSTHOST + "/middle/miniProposal?useid=" + useid);
+          const user = instance.users.find((obj) => { return obj.useid === useid });
+          if (user.response.design.length > 0) {
+            blankHref("https://" + GHOSTHOST + "/middle/miniProposal?useid=" + useid);
+          } else {
+            window.alert("현재 단계에서는 할 수 없습니다!");
+          }
         } catch (e) {
           console.log(e);
         }
@@ -148,7 +160,8 @@ UserJs.prototype.baseMaker = function () {
         } catch (e) {
           console.log(e);
         }
-      }
+      },
+      green: (user) => { return user.response.design.length > 0; },
     },
     {
       name: "요청서 보기",
@@ -166,7 +179,8 @@ UserJs.prototype.baseMaker = function () {
         } catch (e) {
           console.log(e);
         }
-      }
+      },
+      green: (user) => { return true },
     },
     {
       name: "디자이너 지정",
@@ -342,7 +356,8 @@ UserJs.prototype.baseMaker = function () {
         } catch (e) {
           console.log(e);
         }
-      }
+      },
+      green: (user) => { return true },
     },
     {
       name: "가이드 보기",
@@ -360,7 +375,8 @@ UserJs.prototype.baseMaker = function () {
         } catch (e) {
           console.log(e);
         }
-      }
+      },
+      green: (user) => { return true },
     },
   ];
 
@@ -672,7 +688,7 @@ UserJs.prototype.baseMaker = function () {
               width: String(alarmCircleRadius) + ea,
               height: String(alarmCircleRadius) + ea,
               borderRadius: String(alarmCircleRadius) + ea,
-              background: user.request.alarm ? colorChip.red : colorChip.gradientGreen,
+              background: (user.response.status === "지정 필요" || user.response.status === "컨펌 대기") ? colorChip.red : colorChip.gradientGreen,
             }
           }
         ]
@@ -708,7 +724,7 @@ UserJs.prototype.baseMaker = function () {
       });
 
       num = 0;
-      for (let { name, click, contextmenu } of buttonList) {
+      for (let { name, click, contextmenu, green } of buttonList) {
         createNode({
           mother: baseBlock,
           attribute: {
@@ -723,7 +739,7 @@ UserJs.prototype.baseMaker = function () {
             right: String(buttongTop + ((buttonWidth + buttonBetween) * num)) + ea,
             top: String(buttongTop) + ea,
             borderRadius: String(5) + "px",
-            background: colorChip.gradientGreen,
+            background: green(user) ? colorChip.gradientGreen : colorChip.gradientGray,
             cursor: "pointer",
             justifyContent: "center",
             alignItems: "center",
