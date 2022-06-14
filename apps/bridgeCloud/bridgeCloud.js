@@ -1156,8 +1156,10 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
             // alimtalk
 
 
+
+
             // slack
-            await messageSend({ text: name + " 고객님의 사진 전송이 완료되었어요.", channel: "#400_customer" });
+            await messageSend({ text: name + " 고객님의 사진 전송이 완료되었어요.", channel: "#405_mini", voice: true });
 
             res.send(JSON.stringify({ message: "success" }));
           } else {
@@ -1288,8 +1290,10 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 
             // alimtalk
 
+            
+
             // slack
-            await messageSend({ text: user.name + " 고객님의 디자인 컨펌 요청이 발생하였습니다.", channel: "#400_customer" });
+            await messageSend({ text: user.name + " 고객님의 디자인 컨펌 요청이 발생하였습니다.", channel: "#405_mini", voice: true });
 
             res.send(JSON.stringify({ message: "success" }));
 

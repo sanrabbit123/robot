@@ -7,7 +7,7 @@ const UserJs = function () {
 UserJs.prototype.baseMaker = function () {
   const instance = this;
   const { totalContents, ea, belowHeight, users, designers } = this;
-  const { createNode, withOut, colorChip, isMac, dateToString } = GeneralJs;
+  const { createNode, withOut, colorChip, isMac, dateToString, blankHref } = GeneralJs;
   let outerMargin;
   let innerPadding;
   let grayBack;
@@ -57,64 +57,99 @@ UserJs.prototype.baseMaker = function () {
   buttonList = [
     {
       name: "컨펌 및 전송",
-      click: function (e) {
-        
+      click: async function (e) {
+        try {
+
+          // alimtalk
 
 
+
+
+
+        } catch (e) {
+          console.log(e);
+        }
       },
-      contextmenu: function (e) {
+      contextmenu: async function (e) {
         e.preventDefault();
-
-
-
+        try {
+        } catch (e) {
+          console.log(e);
+        }
       }
     },
     {
       name: "제안 보기",
-      click: function (e) {
-
+      click: async function (e) {
+        try {
+          const useid = this.getAttribute("useid");
+          blankHref("https://" + GHOSTHOST + "/middle/miniProposal?useid=" + useid);
+        } catch (e) {
+          console.log(e);
+        }
       },
       contextmenu: function (e) {
         e.preventDefault();
-
-
-
+        try {
+        } catch (e) {
+          console.log(e);
+        }
       }
     },
     {
-      name: "디자이너 보기",
-      click: function (e) {
-
+      name: "요청서 보기",
+      click: async function (e) {
+        try {
+          const useid = this.getAttribute("useid");
+          blankHref("https://" + GHOSTHOST + "/middle/miniRequest?useid=" + useid);
+        } catch (e) {
+          console.log(e);
+        }
       },
-      contextmenu: function (e) {
+      contextmenu: async function (e) {
         e.preventDefault();
-
-
-
+        try {
+        } catch (e) {
+          console.log(e);
+        }
       }
     },
     {
       name: "디자이너 지정",
-      click: function (e) {
+      click: async function (e) {
+        try {
 
+
+
+
+        } catch (e) {
+          console.log(e);
+        }
       },
-      contextmenu: function (e) {
+      contextmenu: async function (e) {
         e.preventDefault();
-
-
-
+        try {
+        } catch (e) {
+          console.log(e);
+        }
       }
     },
     {
       name: "가이드 보기",
-      click: function (e) {
-
+      click: async function (e) {
+        try {
+          const useid = this.getAttribute("useid");
+          blankHref("https://" + GHOSTHOST + "/middle/miniGuide?useid=" + useid);
+        } catch (e) {
+          console.log(e);
+        }
       },
-      contextmenu: function (e) {
+      contextmenu: async function (e) {
         e.preventDefault();
-
-
-
+        try {
+        } catch (e) {
+          console.log(e);
+        }
       }
     },
   ];
@@ -477,6 +512,7 @@ UserJs.prototype.baseMaker = function () {
         attribute: {
           useid: user.useid,
         },
+        event: { click, contextmenu },
         style: {
           display: "inline-flex",
           position: "absolute",
@@ -494,7 +530,6 @@ UserJs.prototype.baseMaker = function () {
         children: [
           {
             text: name,
-            event: { click, contextmenu },
             style: {
               position: "relative",
               top: String(buttonTextTop) + ea,
@@ -667,14 +702,6 @@ UserJs.prototype.launching = async function () {
 
     users = await ajaxJson({ whereQuery: {} }, "/getUsers", { equal: true });
     designers = await ajaxJson({ noFlat: true, whereQuery: {} }, "/getDesigners", { equal: true });
-
-    users = users.concat(equalJson(JSON.stringify(users)));
-    users = users.concat(equalJson(JSON.stringify(users)));
-    users = users.concat(equalJson(JSON.stringify(users)));
-    users = users.concat(equalJson(JSON.stringify(users)));
-    users = users.concat(equalJson(JSON.stringify(users)));
-    users = users.concat(equalJson(JSON.stringify(users)));
-    users = users.concat(equalJson(JSON.stringify(users)));
 
     this.users = users;
     this.designers = designers;

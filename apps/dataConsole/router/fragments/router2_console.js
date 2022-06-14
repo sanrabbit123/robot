@@ -4749,7 +4749,7 @@ DataRouter.prototype.rou_post_userSubmit = function () {
       message += "주소 : " + address + "\n";
       message += "공간 개수 : " + String(targets) + "\n";
       message += "요청 사항 : " + etc + "\n";
-      await messageSend({ text: message, channel: "#401_consulting" });
+      await messageSend({ text: message, channel: "#405_mini" });
 
       res.send(JSON.stringify({ useid }));
     } catch (e) {
