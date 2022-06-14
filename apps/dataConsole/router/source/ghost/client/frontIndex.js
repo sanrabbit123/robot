@@ -1708,6 +1708,7 @@ FrontIndexJs.prototype.insertNewsBox = function () {
   let opacityNumber;
   let circleBoxMarginTop;
   let titleBoxHeight, titleTextTop, titleSize, titleWeight;
+  let titleBarBottom, titleBarLeft, titleBarWidth, titleBarHeight;
 
   speed = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
   mainHeight = <%% 240, 240, 240, 240, 40 %%>;
@@ -1742,14 +1743,19 @@ FrontIndexJs.prototype.insertNewsBox = function () {
   arrowLeft = <%% -50, -48, -45, -35, -5 %%>;
   arrowWidth = <%% 14, 14, 12, 10, 14 %%>;
 
-  circleBoxMarginTop = <%% 22, 21, 20, 18, 4 %%>;
+  circleBoxMarginTop = <%% 24, 24, 23, 20, 5 %%>;
   circleRadius = <%% 10, 10, 8, 8, 1.6 %%>;
   circleBetween = <%% 8, 8, 6, 6, 1.6 %%>;
 
   titleBoxHeight = <%% 40, 36, 26, 25, 4 %%>;
-  titleTextTop = <%% -2, -2, -2, -2, 0 %%>;
-  titleSize = <%% 24, 23, 22, 20, 4 %%>;
-  titleWeight = <%% 400, 400, 400, 400, 400 %%>;
+  titleTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.3 %%>;
+  titleSize = <%% 25, 25, 24, 22, 4.2 %%>;
+  titleWeight = <%% 800, 800, 800, 800, 800 %%>;
+
+  titleBarBottom = <%% (isMac() ? 0 : 3), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
+  titleBarLeft = <%% -4, -4, -4, -3, -0.6 %%>;
+  titleBarWidth = <%% 144, 144, 139, 125, 24 %%>;
+  titleBarHeight = <%% 9, 9, 9, 8, 1.5 %%>;
 
   indent = 100;
   circleOpacity = 0.4;
@@ -1881,15 +1887,30 @@ FrontIndexJs.prototype.insertNewsBox = function () {
     },
     children: [
       {
-        text: "HomeLiaison News",
+        text: "홈리에종 뉴스",
         style: {
+          display: "inline-block",
           position: "relative",
           top: String(titleTextTop) + ea,
           fontSize: String(titleSize) + ea,
           fontWeight: String(titleWeight),
           color: colorChip.black,
-          fontFamily: "graphik",
-        }
+        },
+        children: [
+          {
+            style: {
+              position: "absolute",
+              bottom: String(titleBarBottom) + ea,
+              left: String(titleBarLeft) + ea,
+              width: String(titleBarWidth) + ea,
+              height: String(titleBarHeight) + ea,
+              borderRadius: String(titleBarHeight) + ea,
+              background: colorChip.gradientGreen,
+              zIndex: String(-1),
+              opacity: String(0.65),
+            }
+          }
+        ]
       }
     ]
   });
@@ -2150,8 +2171,8 @@ FrontIndexJs.prototype.popupLaunching = function () {
   delay = 0.8;
   image = FrontIndexJs.binaryPath + "/popup" + String(media.findIndex(boo => boo)) + ".jpg";
 
-  popupWidth = <%% 600, 580, 420, 360, 80 %%>;
-  popupHeight = <%% 600, 580, 497, 425, 94 %%>;
+  popupWidth = <%% 500, 450, 420, 360, 80 %%>;
+  popupHeight = <%% 574, 516, 480, 414, 92 %%>;
 
   buttonSize = <%% 16, 16, 15, 14, 3 %%>;
   buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
