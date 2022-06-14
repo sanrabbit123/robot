@@ -4605,7 +4605,8 @@ DataRouter.prototype.rou_post_mysqlQuery = function () {
 
 DataRouter.prototype.rou_post_generalImpPayment = function () {
   const instance = this;
-  const { errorLog, requestSystem } = this.mother;
+  const back = this.back;
+  const { errorLog, requestSystem, uniqueValue, equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/generalImpPayment" ];
   obj.func = async function (req, res) {
@@ -4620,6 +4621,8 @@ DataRouter.prototype.rou_post_generalImpPayment = function () {
         throw new Error("invaild post");
       }
       const { mode } = req.body;
+      const storeCollection = "impPaymentTempStore";
+      const selfMongo = instance.mongolocal;
       const oidConstDictionary = {
         mini: "homeliaisonMini_",
       };
@@ -4631,6 +4634,31 @@ DataRouter.prototype.rou_post_generalImpPayment = function () {
         pluginScript += "\n";
         pluginScript += (await requestSystem("https://cdn.iamport.kr/js/iamport.payment-1.1.5.js")).data;
         res.send(JSON.stringify({ pluginScript, oidConst: oidConstDictionary[req.body.oidKey] }));
+
+      } else if (mode === "store") {
+
+        const data = equalJson(req.body.data);
+        const key = "impKey_" + uniqueValue("hex");
+        await back.mongoCreate(storeCollection, { key, data: JSON.stringify(data), oid: req.body.oid }, { selfMongo });
+
+        res.send(JSON.stringify({ key }));
+
+      } else if (mode === "open") {
+
+        const key = req.body.key;
+        const rows = await back.mongoRead(storeCollection, { key }, { selfMongo });
+        if (rows.length === 0) {
+          res.send(JSON.stringify({}));
+        } else {
+          const [ { key, data, oid } ] = rows;
+          const { response: { access_token } } = (await requestSystem("https://api.iamport.kr/users/getToken", {
+            imp_key: instance.address.officeinfo.import.key,
+            imp_secret: instance.address.officeinfo.import.secret,
+          }, { headers: { "Content-Type": "application/json" } })).data
+          const { data: { response: rsp } } = await requestSystem(`https://api.iamport.kr/payments/find/${oid}`, {}, { method: "get", headers: { "Authorization": access_token } });
+          res.send(JSON.stringify({ data: equalJson(data), oid, rsp }));
+        }
+
       } else {
         throw new Error("invaild mode");
       }

@@ -3433,6 +3433,7 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
               let name, phone;
               let map;
               let pluginScript, plugin;
+              let key;
 
               boo = true;
 
@@ -3519,47 +3520,61 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
                     plugin = new Function(pluginScript);
                     plugin();
                     window.IMP.init("imp71921105");
-                    window.IMP.request_pay({
-                        merchant_uid: map.oid,
-                        name: "HomeLiaison Mini",
-                        // amount: Math.floor((map.targets * initialPrice) - 30000),
-                        amount: Math.floor(1100),
-                        buyer_email: map.email,
-                        buyer_name: map.name,
-                        buyer_tel: map.phone,
-                        m_redirect_url: window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mobilecard=true&mid=" + formValue.mid + "&oid=" + formValue.oid,
-                    }, async (rsp) => {
-                      try {
-                        if (rsp.success) {
-                          map.rsp = JSON.parse(JSON.stringify(rsp));
-                          const { useid } = await ajaxJson({ map }, "/userSubmit");
+                    if (desktop) {
+                      window.IMP.request_pay({
+                          merchant_uid: map.oid,
+                          name: "HomeLiaison Mini",
+                          amount: Math.floor((map.targets * initialPrice) - 30000),
+                          buyer_email: map.email,
+                          buyer_name: map.name,
+                          buyer_tel: map.phone,
+                      }, async (rsp) => {
+                        try {
+                          if (rsp.success) {
+                            map.rsp = JSON.parse(JSON.stringify(rsp));
+                            const { useid } = await ajaxJson({ map }, "/userSubmit");
 
-                          homeliaisonAnalytics({
-                            page: instance.pageName,
-                            standard: instance.firstPageViewTime,
-                            action: "miniSubmit",
-                            data: { useid },
-                          }).then(() => {
+                            homeliaisonAnalytics({
+                              page: instance.pageName,
+                              standard: instance.firstPageViewTime,
+                              action: "miniSubmit",
+                              data: { useid },
+                            }).then(() => {
+                              document.body.removeChild(box);
+                              document.body.removeChild(back);
+                              selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/miniGuide?useid=" + useid);
+                            }).catch((err) => {
+                              document.body.removeChild(box);
+                              document.body.removeChild(back);
+                              selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/miniGuide?useid=" + useid);
+                            });
+
+                          } else {
+                            window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
                             document.body.removeChild(box);
                             document.body.removeChild(back);
-                            selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/miniGuide?useid=" + useid);
-                          }).catch((err) => {
-                            document.body.removeChild(box);
-                            document.body.removeChild(back);
-                            selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/miniGuide?useid=" + useid);
-                          });
-
-                        } else {
+                          }
+                        } catch (e) {
                           window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
                           document.body.removeChild(box);
                           document.body.removeChild(back);
                         }
-                      } catch (e) {
-                        window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
-                        document.body.removeChild(box);
-                        document.body.removeChild(back);
-                      }
-                    });
+                      });
+                    } else {
+                      ({ key } = await ajaxJson({ mode: "store", oid: map.oid, data: map }, "/generalImpPayment"));
+
+                      window.IMP.request_pay({
+                          merchant_uid: map.oid,
+                          name: "HomeLiaison Mini",
+                          // amount: Math.floor((map.targets * initialPrice) - 30000),
+                          amount: Math.floor(1100),
+                          buyer_email: map.email,
+                          buyer_name: map.name,
+                          buyer_tel: map.phone,
+                          m_redirect_url: window.location.protocol + "//" + window.location.host + window.location.pathname + "?mobilecard=" + key,
+                      }, (rsp) => {});
+                    }
+
                   } catch (e) {
                     window.alert("인증에 실패하였습니다! 다시 시도해주세요!");
                     document.body.removeChild(box);
@@ -3601,7 +3616,7 @@ MiniAboutJs.prototype.launching = async function (loading) {
   try {
     this.mother.setGeneralProperties(this);
 
-    const { returnGet, ajaxJson, requestPromise, setDebounce } = GeneralJs;
+    const { returnGet, ajaxJson, requestPromise, setDebounce, homeliaisonAnalytics, selfHref } = GeneralJs;
     const getObj = returnGet();
 
     await this.mother.ghostClientLaunching({
@@ -3627,6 +3642,29 @@ MiniAboutJs.prototype.launching = async function (loading) {
     });
 
     loading.parentNode.removeChild(loading);
+
+    if (typeof getObj.mobilecard === "string") {
+      const response = await ajaxJson({ mode: "open", key: getObj.mobilecard }, "/generalImpPayment", { equal: true });
+      if (response.data !== undefined && response.rsp !== undefined) {
+        const { data: map, rsp } = response;
+
+        map.rsp = JSON.parse(JSON.stringify(rsp));
+        const { useid } = await ajaxJson({ map }, "/userSubmit");
+
+        homeliaisonAnalytics({
+          page: instance.pageName,
+          standard: instance.firstPageViewTime,
+          action: "miniSubmit",
+          data: { useid },
+        }).then(() => {
+          selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/miniGuide?useid=" + useid);
+        }).catch((err) => {
+          selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/miniGuide?useid=" + useid);
+        });
+
+      }
+    }
+
 
   } catch (err) {
     console.log(err);
