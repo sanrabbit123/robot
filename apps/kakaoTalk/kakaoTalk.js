@@ -963,6 +963,100 @@ KakaoTalk.prototype.templateTong = function (target) {
         ];
       },
     },
+    miniConsulting: {
+      name: "미니 신청 완료",
+      id: "TJ_0095",
+      needs: [
+        "client",
+        "host",
+        "path",
+        "useid",
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "host", to: obj.host },
+          { from: "path", to: obj.path },
+          { from: "useid", to: obj.useid },
+        ];
+      },
+    },
+    miniRequest: {
+      name: "미니 디자인 요청 수정",
+      id: "TJ_0147",
+      needs: [
+        "designer",
+        "client",
+        "host",
+        "path",
+        "useid",
+      ],
+      convert: function (obj) {
+        return [
+          { from: "designer", to: obj.designer },
+          { from: "client", to: obj.client },
+          { from: "host", to: obj.host },
+          { from: "path", to: obj.path },
+          { from: "useid", to: obj.useid },
+        ];
+      },
+    },
+    miniFile: {
+      name: "미니 고객 파일 전송 완료",
+      id: "TJ_0100",
+      needs: [
+        "client",
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+        ];
+      },
+    },
+    miniConfirmUser: {
+      name: "미니 컨펌 대기 고객",
+      id: "TJ_0105",
+      needs: [
+        "client",
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+        ];
+      },
+    },
+    miniCompleteDesigner: {
+      name: "미니 컨펌 완료 디자이너",
+      id: "TJ_0106",
+      needs: [
+        "designer",
+        "client",
+      ],
+      convert: function (obj) {
+        return [
+          { from: "designer", to: obj.designer },
+          { from: "client", to: obj.client },
+        ];
+      },
+    },
+    miniProposal: {
+      name: "미니 제안서 전송",
+      id: "TJ_0109",
+      needs: [
+        "client",
+        "host",
+        "path",
+        "useid",
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "host", to: obj.host },
+          { from: "path", to: obj.path },
+          { from: "useid", to: obj.useid },
+        ];
+      },
+    },
   };
   if (target === "$all") {
     return tong;
