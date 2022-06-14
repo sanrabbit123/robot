@@ -1150,13 +1150,14 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
             whereQuery = { useid };
             updateQuery = {};
             updateQuery["request.photo"] = userCopied.request.photo;
+            updateQuery["request.status"] = "사진 전송";
 
             await back.updateUser([ whereQuery, updateQuery ], { selfMongo });
 
             // alimtalk
-
-
-
+            await KAKAO.sendTalk("miniFile", user.name, user.phone, {
+              client: user.name,
+            });
 
             // slack
             await messageSend({ text: name + " 고객님의 사진 전송이 완료되었어요.", channel: "#405_mini", voice: true });
@@ -1289,8 +1290,9 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
             await back.updateUser([ whereQuery, updateQuery ], { selfMongo });
 
             // alimtalk
-
-            
+            await KAKAO.sendTalk("miniConfirmUser", user.name, user.phone, {
+              client: user.name,
+            });
 
             // slack
             await messageSend({ text: user.name + " 고객님의 디자인 컨펌 요청이 발생하였습니다.", channel: "#405_mini", voice: true });

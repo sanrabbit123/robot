@@ -69,9 +69,9 @@ UserJs.prototype.baseMaker = function () {
       name: "컨펌 및 전송",
       click: async function (e) {
         try {
-          // alimtalk
+          // alimtalk 1
 
-
+          // alimtalk 2
 
         } catch (e) {
           console.log(e);
@@ -125,10 +125,33 @@ UserJs.prototype.baseMaker = function () {
       name: "디자이너 지정",
       click: async function (e) {
         try {
+          const useid = this.getAttribute("useid");
           const targets = miniDesigners.map((desid) => { return { designer: designers.find((obj) => { return obj.desid === desid }).designer, desid } });
           const mother = totalContents;
           const zIndex = 4;
           let cancelBack, whitePopup;
+          let popupWidth, popupHeight;
+          let whitePadding;
+          let marginBottom;
+          let bigTextTop, bigSize, bigWeight;
+          let textBetween;
+          let smallTextTop, smallSize, smallWeight;
+
+          whitePadding = 20;
+          popupWidth = 180;
+          blockHeight = 45;
+          marginBottom = 8;
+          popupHeight = (blockHeight + marginBottom) * targets.length;
+
+          bigTextTop = -1;
+          bigSize = 16;
+          bigWeight = 600;
+
+          textBetween = 4;
+
+          smallTextTop = 1;
+          smallSize = 12;
+          smallWeight = 400;
 
           cancelBack = createNode({
             mother,
@@ -143,9 +166,95 @@ UserJs.prototype.baseMaker = function () {
             }
           });
 
+          whitePopup = createNode({
+            mother,
+            style: {
+              position: "fixed",
+              width: String(popupWidth) + ea,
+              top: "calc(calc(calc(100% - " + String(belowHeight) + ea + ") / 2) - " + String(popupHeight / 2) + ea + ")",
+              left: withOut(50, ((popupWidth + (whitePadding * 2)) / 2), ea),
+              background: colorChip.white,
+              padding: String(whitePadding) + ea,
+              paddingBottom: String(whitePadding - marginBottom) + ea,
+              borderRadius: String(5) + "px",
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+              animation: "fadeuporiginal 0.3s ease forwards",
+            }
+          });
+
+          for (let { designer, desid } of targets) {
+            createNode({
+              mother: whitePopup,
+              attribute: { designer, desid, useid },
+              event: {
+                click: async function (e) {
+                  try {
+                    const desid = this.getAttribute("desid");
+                    const designer = instance.designers.find((obj) => { return obj.desid === desid });
+                    const name = designer.designer;
+                    const phone = designer.information.phone;
+                    const useid = this.getAttribute("useid");
+                    let whereQuery, updateQuery;
+
+                    whereQuery = { useid };
+                    updateQuery = {};
+                    updateQuery["desid"] = desid;
+                    updateQuery["response.status"] = "디자인 요청";
+
+                    await ajaxJson({ whereQuery, updateQuery }, "/updateUser");
+
+                    // alimtalk
+                    console.log(designer, name, phone);
 
 
-          console.log(targets);
+
+
+
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              },
+              style: {
+                display: "flex",
+                width: withOut(0, ea),
+                height: String(blockHeight) + ea,
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+                flexDirection: "row",
+                borderRadius: String(5) + "px",
+                background: colorChip.gray1,
+                marginBottom: String(marginBottom) + ea,
+                cursor: "pointer",
+              },
+              children: [
+                {
+                  text: designer,
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    top: String(bigTextTop) + ea,
+                    fontSize: String(bigSize) + ea,
+                    fontWeight: String(bigWeight),
+                    color: colorChip.black,
+                    marginRight: String(textBetween) + ea,
+                  }
+                },
+                {
+                  text: desid,
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    top: String(smallTextTop) + ea,
+                    fontSize: String(smallSize) + ea,
+                    fontWeight: String(smallWeight),
+                    color: colorChip.green,
+                  }
+                }
+              ]
+            });
+          }
 
         } catch (e) {
           console.log(e);

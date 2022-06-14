@@ -5360,6 +5360,7 @@ DataRouter.prototype.rou_post_getUpdateUser = function () {
 DataRouter.prototype.rou_post_userSubmit = function () {
   const instance = this;
   const back = this.back;
+  const kakao = this.kakao;
   const { errorLog, equalJson, requestSystem, dateToString, messageSend } = this.mother;
   let obj = {};
   obj.link = [ "/userSubmit" ];
@@ -5414,9 +5415,12 @@ DataRouter.prototype.rou_post_userSubmit = function () {
       useid = await back.createUser(updateQuery, { selfMongo });
 
       // alimtalk
-      
-
-
+      await kakao.sendTalk("miniConsulting", name, phone, {
+        client: name,
+        host: instance.address.homeinfo.ghost.host,
+        path: "miniGuide",
+        useid: useid,
+      });
 
       // slack
       message = "새로운 미니 서비스 결제가 일어났습니다!" + "\n";
