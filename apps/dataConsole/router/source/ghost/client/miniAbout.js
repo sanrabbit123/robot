@@ -3644,6 +3644,7 @@ MiniAboutJs.prototype.launching = async function (loading) {
     loading.parentNode.removeChild(loading);
 
     if (typeof getObj.mobilecard === "string") {
+      const grayLoadingIcon = instance.mother.grayLoading();
       const response = await ajaxJson({ mode: "open", key: getObj.mobilecard }, "/generalImpPayment", { equal: true });
       if (response.data !== undefined && response.rsp !== undefined) {
         const { data: map, rsp } = response;
@@ -3663,6 +3664,8 @@ MiniAboutJs.prototype.launching = async function (loading) {
         });
 
       }
+
+      grayLoadingIcon.remove();
     }
 
 
