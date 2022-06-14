@@ -4754,10 +4754,10 @@ DataRouter.prototype.rou_post_userSubmit = function () {
       updateQuery["request.comments.init"] = etc;
       updateQuery["request.payment.date"] = new Date();
       updateQuery["request.payment.oid"] = oid;
-      if (rsp.paid_amount === undefined || !Number.isNaN(Number(rsp.paid_amount))) {
-        updateQuery["request.payment.amount.consumer"] = Math.floor(Number(rsp.paid_amount));
-      } else {
+      if (rsp.paid_amount === undefined || Number.isNaN(Number(rsp.paid_amount))) {
         updateQuery["request.payment.amount.consumer"] = Math.floor(Number(rsp.amount));
+      } else {
+        updateQuery["request.payment.amount.consumer"] = Math.floor(Number(rsp.paid_amount));
       }
       updateQuery["request.payment.amount.vat"] = Math.floor(updateQuery["request.payment.amount.consumer"] / 11);
       updateQuery["request.payment.amount.supply"] = Math.floor(updateQuery["request.payment.amount.consumer"] - updateQuery["request.payment.amount.vat"]);

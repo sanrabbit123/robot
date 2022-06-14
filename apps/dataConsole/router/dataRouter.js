@@ -3238,7 +3238,7 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
       const status = req.body.status;
       if (typeof status === "string") {
         if (/paid/gi.test(status)) {
-          if (!/homeliaisonMini_/g.test(oid)) {
+          if (!/mini_/g.test(oid)) {
             const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
             const bill = new BillMaker();
             const { data: { response: { access_token: accessToken } } } = (await requestSystem("https://api.iamport.kr/users/getToken", {
@@ -5284,7 +5284,9 @@ DataRouter.prototype.rou_post_mysqlQuery = function () {
 
 DataRouter.prototype.rou_post_generalImpPayment = function () {
   const instance = this;
-  const { errorLog, requestSystem } = this.mother;
+  const back = this.back;
+  const address = this.address;
+  const { errorLog, requestSystem, uniqueValue, equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/generalImpPayment" ];
   obj.func = async function (req, res) {
@@ -5299,8 +5301,10 @@ DataRouter.prototype.rou_post_generalImpPayment = function () {
         throw new Error("invaild post");
       }
       const { mode } = req.body;
+      const storeCollection = "impPaymentTempStore";
+      const selfMongo = instance.mongolocal;
       const oidConstDictionary = {
-        mini: "homeliaisonMini_",
+        mini: "mini_",
       };
       let pluginScript;
 
@@ -5310,6 +5314,31 @@ DataRouter.prototype.rou_post_generalImpPayment = function () {
         pluginScript += "\n";
         pluginScript += (await requestSystem("https://cdn.iamport.kr/js/iamport.payment-1.1.5.js")).data;
         res.send(JSON.stringify({ pluginScript, oidConst: oidConstDictionary[req.body.oidKey] }));
+
+      } else if (mode === "store") {
+
+        const data = equalJson(req.body.data);
+        const key = "impKey_" + uniqueValue("hex");
+        await back.mongoCreate(storeCollection, { key, data: JSON.stringify(data), oid: req.body.oid }, { selfMongo });
+
+        res.send(JSON.stringify({ key }));
+
+      } else if (mode === "open") {
+
+        const key = req.body.key;
+        const rows = await back.mongoRead(storeCollection, { key }, { selfMongo });
+        if (rows.length === 0) {
+          res.send(JSON.stringify({}));
+        } else {
+          const [ { key, data, oid } ] = rows;
+          const { response: { access_token } } = (await requestSystem("https://api.iamport.kr/users/getToken", {
+            imp_key: address.officeinfo.import.key,
+            imp_secret: address.officeinfo.import.secret,
+          }, { headers: { "Content-Type": "application/json" } })).data;
+          const { data: { response: rsp } } = await requestSystem("https://api.iamport.kr/payments/find/" + oid, {}, { method: "get", headers: { "Authorization": access_token } });
+          res.send(JSON.stringify({ data: equalJson(data), oid, rsp }));
+        }
+
       } else {
         throw new Error("invaild mode");
       }
@@ -5404,7 +5433,11 @@ DataRouter.prototype.rou_post_userSubmit = function () {
       updateQuery["request.comments.init"] = etc;
       updateQuery["request.payment.date"] = new Date();
       updateQuery["request.payment.oid"] = oid;
-      updateQuery["request.payment.amount.consumer"] = Math.floor(Number(rsp.paid_amount));
+      if (rsp.paid_amount === undefined || !Number.isNaN(Number(rsp.paid_amount))) {
+        updateQuery["request.payment.amount.consumer"] = Math.floor(Number(rsp.paid_amount));
+      } else {
+        updateQuery["request.payment.amount.consumer"] = Math.floor(Number(rsp.amount));
+      }
       updateQuery["request.payment.amount.vat"] = Math.floor(updateQuery["request.payment.amount.consumer"] / 11);
       updateQuery["request.payment.amount.supply"] = Math.floor(updateQuery["request.payment.amount.consumer"] - updateQuery["request.payment.amount.vat"]);
       updateQuery["request.payment.info.method"] = "카드(" + rsp.card_name.replace(/카드/gi, '') + ")";
