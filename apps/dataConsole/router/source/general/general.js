@@ -2219,7 +2219,7 @@ GeneralJs.prototype.greenBar = function () {
     "/dashboard",
   ];
   naviIconsContextLinks = [
-    "/client",
+    "/user",
     "/proposal",
     "/builder?mode=construct",
     "/builder",
