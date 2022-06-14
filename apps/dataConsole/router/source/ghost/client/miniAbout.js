@@ -3518,8 +3518,7 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
                     window.IMP.request_pay({
                         merchant_uid: map.oid,
                         name: "HomeLiaison Mini",
-                        // amount: Math.floor(map.targets * initialPrice),
-                        amount: Math.floor(1100),
+                        amount: Math.floor(map.targets * initialPrice),
                         buyer_email: map.email,
                         buyer_name: map.name,
                         buyer_tel: map.phone,
