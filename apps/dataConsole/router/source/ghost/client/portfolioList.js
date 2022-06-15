@@ -113,10 +113,10 @@ PortfolioListJs.prototype.insertInitBox = function () {
 
   whiteBlockMarginBottom = <%% 50, 50, 50, 50, 5 %%>;
 
-  quoteHeight = <%% 11, 11, 11, 11, 2.5 %%>;
+  quoteHeight = <%% 15, 15, 15, 15, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
-  titleFontSize = <%% 31, 31, 30, 28, 5.7 %%>;
-  titleFontWeight = <%% 500, 500, 500, 500, 500 %%>;
+  titleFontSize = <%% 35, 35, 35, 35, 5.7 %%>;
+  titleFontWeight = <%% 700, 700, 700, 500, 500 %%>;
   titleTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 4) %%>;
 
   servicePaddingTop = <%% 7, 7, 7, 7, 7 %%>;
@@ -167,15 +167,12 @@ PortfolioListJs.prototype.insertInitBox = function () {
       position: "relative",
       borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
-      paddingTop: String(whiteBlockPaddingTop) + ea,
-      paddingBottom: String(whiteBlockPaddingBottom) + ea,
-      background: colorChip.white,
+      paddingBottom: String(whiteBlockPaddingBottom * 10) + ea,
       marginBottom: String(whiteBlockMarginBottom) + ea,
-      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
     }
   });
 
-  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
+  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.white))) * quoteHeight;
   createNode({
     mother: whiteBlock,
     style: {
@@ -185,11 +182,12 @@ PortfolioListJs.prototype.insertInitBox = function () {
       justifyContent: "center",
       alignItems: "center",
       height: String(quotoTongHeight) + ea,
+      opacity: String(0.6),
     },
     children: [
       {
         mode: "svg",
-        source: svgMaker.doubleQuote(colorChip.green),
+        source: svgMaker.doubleQuote(colorChip.white),
         style: {
           display: "inline-block",
           height: String(quoteHeight) + ea,
@@ -217,11 +215,38 @@ PortfolioListJs.prototype.insertInitBox = function () {
           top: mobile ? "" : String(titleTop) + ea,
           fontSize: String(titleFontSize) + ea,
           fontWeight: String(titleFontWeight),
-          color: colorChip.black,
+          color: colorChip.white,
         }
       }
     ]
   });
+
+  createNode({
+    mother: whiteBlock,
+    style: {
+      display: "flex",
+      position: "relative",
+      textAlign: "center",
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: String(2) + ea,
+    },
+    children: [
+      {
+        text: "포트폴리오로 찾는 나의 스타일",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: mobile ? "" : String(0) + ea,
+          fontSize: String(16) + ea,
+          fontWeight: String(500),
+          color: colorChip.white,
+        }
+      }
+    ]
+  });
+
+  /*
 
   createNode({
     mother: whiteBlock,
@@ -379,6 +404,8 @@ PortfolioListJs.prototype.insertInitBox = function () {
   }
 
   serviceBlock.lastChild.style.marginRight = "";
+
+  */
 
 }
 
