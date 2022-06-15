@@ -1566,6 +1566,8 @@ DataRouter.prototype.rou_post_getClientReport = function () {
       let proposalsTong;
       let cliidTempArr, proidTempArr;
       let motherClients, motherProjects, motherProjects_raw;
+      let motherClientHistories;
+      let histories;
 
       if (req.body.month === undefined) {
         if (req.body.startYear === undefined) {
@@ -1595,6 +1597,7 @@ DataRouter.prototype.rou_post_getClientReport = function () {
       }
 
       motherClients = (await back.getClientsByQuery({}, { selfMongo: instance.mongo, withTools: true })).getRequestsTong().map((arr) => { let obj = arr[0].toNormal(); obj.cliid = arr.cliid; return obj; });
+      motherClientHistories = await back.mongoRead("clientHistory", {}, { selfMongo: instance.mongolocal });
       motherProjects_raw = (await back.getProjectsByQuery({}, { selfMongo: instance.mongo })).toNormal();
       motherProjects = motherProjects_raw.filter((obj) => {  return obj.process.contract.first.date.valueOf() >= (new Date(2000, 0, 1)).valueOf() });
 
@@ -1622,23 +1625,17 @@ DataRouter.prototype.rou_post_getClientReport = function () {
           cliidArr_raw = clients.map((obj) => { return obj.cliid; });
           cliidArr_raw = Array.from(new Set(cliidArr_raw));
           process = motherProjects_raw.filter((obj) => { return cliidArr_raw.includes(obj.cliid) });
-          obj.proposal = process.length;
-          obj.cliid.proposal = process.map((obj) => { return obj.cliid });
-          obj.proid.proposal = process.map((obj) => { return obj.cliid });
+          histories = motherClientHistories.filter((obj) => { return process.map((o) => { return o.cliid; }).includes(obj.cliid) });
+          histories = histories.filter((obj) => { return obj.curation.analytics.send.some((o) => { return /designerProposal/gi.test(o.page) }) });
+          obj.proposal = histories.length;
+          obj.cliid.proposal = [ ...new Set(histories.map((obj) => { return obj.cliid })) ];
+          obj.proid.proposal = [ ...new Set(process.filter((obj) => { return histories.map((o) => { return o.cliid }).includes(obj.cliid) }).map((obj) => { return obj.proid })) ];
 
           //recommend
-          proposals = motherProjects_raw.filter((obj) => { return obj.proposal.date >= arr[0].valueOf() && obj.proposal.date < arr[2].valueOf() });
-          pastTong = [];
-          proposalsTong = [];
-          for (let i of proposals) {
-            if (!pastTong.includes(i.cliid)) {
-              proposalsTong.push(i);
-            }
-            pastTong.push(i.cliid);
-          }
-          obj.recommend = proposalsTong.length;
-          obj.cliid.recommend = [ ...new Set(proposals.map((obj) => { return obj.cliid; })) ];
-          obj.proid.recommend = [];
+          histories = histories.filter((obj) => { return obj.curation.analytics.page.some((o) => { return /designerProposal/gi.test(o.page) }) });
+          obj.recommend = histories.length;
+          obj.cliid.recommend = [ ...new Set(histories.map((obj) => { return obj.cliid })) ];
+          obj.proid.recommend = [ ...new Set(process.filter((obj) => { return histories.map((o) => { return o.cliid }).includes(obj.cliid) }).map((obj) => { return obj.proid })) ];
 
           //contract
           contracts = motherProjects.filter((obj) => { return obj.process.contract.first.date >= arr[0].valueOf() && obj.process.contract.first.date < arr[2].valueOf() });
@@ -1647,10 +1644,12 @@ DataRouter.prototype.rou_post_getClientReport = function () {
           obj.proid.contract = contracts.map((obj) => { return obj.proid });
 
           //process start
+          cliidArr_raw = clients.map((obj) => { return obj.cliid; });
+          cliidArr_raw = Array.from(new Set(cliidArr_raw));
           process = motherProjects.filter((obj) => { return cliidArr_raw.includes(obj.cliid) });
           obj.process = process.length;
-          obj.cliid.process = process.map((obj) => { return obj.cliid });
-          obj.proid.process = process.map((obj) => { return obj.cliid });
+          obj.cliid.process = [ ...new Set(process.map((obj) => { return obj.cliid })) ];
+          obj.proid.process = [ ...new Set(process.map((obj) => { return obj.proid })) ];
 
           monthArr.push(obj);
         }
