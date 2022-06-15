@@ -1965,6 +1965,8 @@ MiniProposalJs.prototype.whiteReviewEvent = function () {
       });
       ratingBlock = createNode({
         mother: formBox,
+        class: [ inputClassName ],
+        attribute: { question: question.replace(/\"/gi, "'") },
         style: {
           display: "block",
           position: "relative",
@@ -2236,6 +2238,8 @@ MiniProposalJs.prototype.whiteReviewEvent = function () {
       });
       ratingBlock = createNode({
         mother: formBox,
+        class: [ inputClassName ],
+        attribute: { question: question.replace(/\"/gi, "'") },
         style: {
           display: "block",
           position: "relative",
@@ -2466,171 +2470,13 @@ MiniProposalJs.prototype.whiteReviewEvent = function () {
       event: {
         click: async function (e) {
           try {
-            const agreeTarget = document.querySelector('.' + agreeTargetClassName);
-            const agreeBoo = (agreeTarget.getAttribute("toggle") === "on");
-            if (!agreeBoo) {
-              window.alert("개인정보 처리 방침에 동의해주세요!");
-              return;
-            } else {
+            const targets = [ ...document.querySelectorAll('.' + inputClassName) ];
+            const subjectTargets = targets.filter((dom) => { return /TEXTAREA/gi.test(dom.nodeName); });
+            const objectTargets = targets.filter((dom) => { return !/TEXTAREA/gi.test(dom.nodeName); });
 
-              const inputTargets = [ ...document.querySelectorAll('.' + inputClassName) ];
-              const inputMatrix = inputTargets.map((dom) => {
-                return [ dom.getAttribute("property"), dom.value.trim().replace(/[\&\=\+\#]/gi, ''), dom ];
-              });
-              let boo;
-              let name, phone;
-              let map;
-              let pluginScript, plugin;
-              let key;
+            console.log(objectTargets);
+            console.log(subjectTargets);
 
-              boo = true;
-
-              for (let [ property, value, dom ] of inputMatrix) {
-                dom.previousElementSibling.style.border = "";
-                if (property === "name") {
-                  if (value.replace(/[^a-zA-Z가-힣]/gi, '') === '') {
-                    window.alert("성함을 입력해주세요!");
-                    boo = false;
-                    dom.previousElementSibling.style.border = "1px solid " + colorChip.green;
-                    if (typeof dom.focus === "function") {
-                      dom.focus();
-                    }
-                  } else {
-                    name = value.replace(/[^a-zA-Z가-힣]/gi, '');
-                  }
-                } else if (property === "phone") {
-                  if (value.replace(/[^0-9\-]/gi, '') === '') {
-                    window.alert("연락처를 입력해주세요!");
-                    boo = false;
-                    dom.previousElementSibling.style.border = "1px solid " + colorChip.green;
-                    if (typeof dom.focus === "function") {
-                      dom.focus();
-                    }
-                  } else {
-                    phone = value.replace(/[^0-9\-]/gi, '');
-                  }
-                } else if (property === "email") {
-                  if (value.trim() === '') {
-                    window.alert("이메일 주소를 적어주세요!");
-                    boo = false;
-                    dom.previousElementSibling.style.border = "1px solid " + colorChip.green;
-                    if (typeof dom.focus === "function") {
-                      dom.focus();
-                    }
-                  }
-                } else if (property === "address0") {
-                  if (value.trim() === '') {
-                    window.alert("주소를 검색하여 입력해주세요!");
-                    boo = false;
-                    dom.previousElementSibling.style.border = "1px solid " + colorChip.green;
-                    if (typeof dom.focus === "function") {
-                      dom.focus();
-                    }
-                  }
-                } else if (property === "address1") {
-                  if (value.trim() === '') {
-                    window.alert("상세 주소를 적어주세요!");
-                    boo = false;
-                    dom.previousElementSibling.style.border = "1px solid " + colorChip.green;
-                    if (typeof dom.focus === "function") {
-                      dom.focus();
-                    }
-                  }
-                } else if (property === "targets") {
-                  if (value.replace(/[^0-9]/gi, '') === '' || Number.isNaN(Number(value.replace(/[^0-9]/gi, '')))) {
-                    window.alert("공간 개수를 입력해주세요!");
-                    boo = false;
-                    dom.previousElementSibling.style.border = "1px solid " + colorChip.green;
-                    if (typeof dom.focus === "function") {
-                      dom.focus();
-                    }
-                  }
-                }
-                if (!boo) {
-                  break;
-                }
-              }
-              if (boo) {
-                map = {
-                  name,
-                  phone,
-                  email: inputMatrix.find((arr) => { return arr[0] === "email" })[1].trim(),
-                  address: inputMatrix.find((arr) => { return arr[0] === "address0" })[1].trim() + " " + inputMatrix.find((arr) => { return arr[0] === "address1" })[1].trim(),
-                  targets: Number(inputMatrix.find((arr) => { return arr[0] === "targets" })[1].replace(/[^0-9]/gi, '')),
-                  etc: inputMatrix.find((arr) => { return arr[0] === "etc" })[1].trim(),
-                };
-
-                instance.mother.certificationBox(name, phone, async function (back, box) {
-                  try {
-
-                    ({ pluginScript, oidConst } = await ajaxJson({ mode: "script", oidKey: "mini" }, "/generalImpPayment"));
-                    map.oid = oidConst + phone.replace(/[^0-9]/gi, '') + "_" + String((new Date()).valueOf());
-                    plugin = new Function(pluginScript);
-                    plugin();
-                    window.IMP.init("imp71921105");
-                    if (desktop) {
-                      window.IMP.request_pay({
-                          merchant_uid: map.oid,
-                          name: "HomeLiaison Mini",
-                          amount: Math.floor((map.targets * initialPrice) - 30000),
-                          buyer_email: map.email,
-                          buyer_name: map.name,
-                          buyer_tel: map.phone,
-                      }, async (rsp) => {
-                        try {
-                          if (rsp.success) {
-                            map.rsp = JSON.parse(JSON.stringify(rsp));
-                            const { useid } = await ajaxJson({ map }, "/userSubmit");
-
-                            homeliaisonAnalytics({
-                              page: instance.pageName,
-                              standard: instance.firstPageViewTime,
-                              action: "miniSubmit",
-                              data: { useid },
-                            }).then(() => {
-                              document.body.removeChild(box);
-                              document.body.removeChild(back);
-                              selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/miniGuide?useid=" + useid);
-                            }).catch((err) => {
-                              document.body.removeChild(box);
-                              document.body.removeChild(back);
-                              selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/miniGuide?useid=" + useid);
-                            });
-
-                          } else {
-                            window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
-                            document.body.removeChild(box);
-                            document.body.removeChild(back);
-                          }
-                        } catch (e) {
-                          window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
-                          document.body.removeChild(box);
-                          document.body.removeChild(back);
-                        }
-                      });
-                    } else {
-                      ({ key } = await ajaxJson({ mode: "store", oid: map.oid, data: map }, "/generalImpPayment"));
-
-                      window.IMP.request_pay({
-                          merchant_uid: map.oid,
-                          name: "HomeLiaison Mini",
-                          amount: Math.floor((map.targets * initialPrice) - 30000),
-                          buyer_email: map.email,
-                          buyer_name: map.name,
-                          buyer_tel: map.phone,
-                          m_redirect_url: window.location.protocol + "//" + window.location.host + window.location.pathname + "?mobilecard=" + key,
-                      }, (rsp) => {});
-                    }
-
-                  } catch (e) {
-                    window.alert("인증에 실패하였습니다! 다시 시도해주세요!");
-                    document.body.removeChild(box);
-                    document.body.removeChild(back);
-                  }
-                });
-
-              }
-            }
           } catch (e) {
             console.log(e);
             window.alert("오류가 일어났습니다! 다시 시도해주세요!");

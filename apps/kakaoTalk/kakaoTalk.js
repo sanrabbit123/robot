@@ -1057,6 +1057,24 @@ KakaoTalk.prototype.templateTong = function (target) {
         ];
       },
     },
+    miniComplete: {
+      name: "미니 완료 고객",
+      id: "TJ_0378",
+      needs: [
+        "client",
+        "host",
+        "path",
+        "useid",
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "host", to: obj.host },
+          { from: "path", to: obj.path },
+          { from: "useid", to: obj.useid },
+        ];
+      },
+    },
   };
   if (target === "$all") {
     return tong;
