@@ -1467,6 +1467,807 @@ MiniProposalJs.prototype.insertSecondBox = async function () {
   }
 }
 
+MiniProposalJs.prototype.whiteReviewEvent = function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, ajaxJson, setQueue, autoHypenPhone, findByAttribute, homeliaisonAnalytics, autoComma, selfHref } = GeneralJs;
+  const { ea, media, standardWidth, totalContents, naviHeight } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  return function (e) {
+    const zIndex = 4;
+    const popupClassName = "popupClassName";
+    const inputClassName = "userInputClassName";
+    const priceTargetClassName = "priceTargetClassName";
+    const agreeTargetClassName = "agreeTargetClassName";
+    const initialPrice = 220000;
+    let cancelBack, whiteBase;
+    let whiteWidth;
+    let whiteMargin;
+    let innerMargin;
+    let contentsTong;
+    let titleArea, formArea, paymentArea;
+    let titleHeight, formHeight, paymentHeight;
+    let titleSize, titleWeight, titleLineHeight, titleTop;
+    let formPaddingTop;
+    let formBox;
+    let circleRadius;
+    let circleTop;
+    let circleBetween;
+    let grayTop;
+    let grayInputTop;
+    let grayHeight;
+    let grayBigHeight;
+    let grayTextAreaTop;
+    let grayTextAreaWidth;
+    let moduleHeight;
+    let blockMarginBottom;
+    let mainSize;
+    let mainWeight;
+    let mainTop;
+    let inputSize;
+    let inputWeight;
+    let inputIndent;
+    let leftGrayType0;
+    let leftGrayType1;
+    let leftGrayType2;
+    let leftGrayType3;
+    let widthGrayType0;
+    let widthGrayType1;
+    let widthGrayType2;
+    let widthGrayType3;
+    let addressWidth;
+    let addressSize;
+    let addressWeight;
+    let addressTop;
+    let marginRatio;
+    let textareaTop;
+    let textareaLeft;
+    let grayLineBlockFontSize;
+    let grayLineBlockFontWeight;
+    let grayLineBlockFontTop;
+    let policyInnerPadding;
+    let policyTong;
+    let policyTextSize;
+    let agreeSize, agreeWeight, agreeCircleBetween, agreeCircleTop;
+    let paymentAmountSize, paymentAmountWeight, paymentAmountTop, paymentAmountBetween;
+    let paymentButtonSize, paymentButtonWeight, paymentButtonTop, paymentButtonPaddingTop, paymentButtonPaddingBottom, paymentButtonPaddingLeft;
+    let whiteMaxHeight;
+    let addressPromptWidth;
+    let addressPromptHeight;
+    let agreeEvent;
+    let oidConst;
+    let paymentAmountSizeSub;
+    let ratingContents;
+    let ratingBlock;
+
+    whiteWidth = <%% 1000, 1000, 800, 660, 88 %%>;
+    whiteMargin = <%% 54, 54, 54, 54, 6 %%>;
+    innerMargin = <%% 54, 54, 54, 54, 6 %%>;
+
+    whiteMaxHeight = 900;
+
+    titleHeight = <%% 41, 39, 37, 35, 8 %%>;
+    paymentHeight = <%% 70, 70, 70, 70, 14 %%>;
+
+    titleSize = <%% 27, 26, 24, 22, 4 %%>;
+    titleWeight = <%% 700, 700, 700, 700, 700 %%>;
+    titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
+    titleTop = <%% (isMac() ? -10 : -7), (isMac() ? -10 : -7), (isMac() ? -10 : -7), (isMac() ? -10 : -7), -0.2 %%>;
+
+    formPaddingTop = <%% 40, 40, 40, 40, 6 %%>;
+
+    circleRadius = <%% 2.5, 2.5, 2, 2, 0.5 %%>;
+    circleTop = <%% 12, 12, 11, 10.5, (isIphone() ? 2.9 : 2.7) %%>;
+    circleBetween = <%% 6, 6, 5, 5, 1.3 %%>;
+
+    grayTop = <%% 0, 0, 0, 0, 0 %%>;
+    grayInputTop = <%% (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), -0.2 %%>;
+    grayHeight = <%% 32, 32, 31, 31, 7 %%>;
+    grayBigHeight = <%% 92, 92, 92, 92, 31 %%>;
+    grayTextAreaTop = <%% 0, 0, 0, 0, 0 %%>;
+    grayTextAreaWidth = <%% 51.7, 51.7, 51.7, 390, 51.7 %%>;
+
+    moduleHeight = grayTop + grayHeight;
+    blockMarginBottom = <%% 15, 15, 12, 12, 2 %%>;
+
+    mainSize = <%% 20, 18, 17, 16, 4 %%>;
+    mainWeight = <%% 500, 500, 500, 500, 500 %%>;
+    mainTop = <%% (isMac() ? 0 : 3), (isMac() ? 2 : 4), (isMac() ? 2 : 4), (isMac() ? 2 : 4), 0.5 %%>;
+    inputSize = <%% 13, 13, 12, 12, 3 %%>;
+    inputWeight = <%% 400, 400, 400, 400, 400 %%>;
+    inputIndent = <%% 10, 10, 10, 10, 2.5 %%>;
+
+    leftGrayType0 = <%% 101, 90, 78, 78, 18 %%>;
+    leftGrayType1 = <%% 418, 361, 318, 96, 22.8 %%>;
+    leftGrayType2 = <%% 125, 112, 98, 98, 22.8 %%>;
+    leftGrayType3 = <%% 164, 151, 130, 129, 30.5 %%>;
+
+    widthGrayType0 = <%% 160, 140, 130, 150, 34 %%>;
+    widthGrayType1 = <%% 455, 329, 283, 403, 58 %%>;
+    widthGrayType2 = <%% 757, 588, 503, 383, 53.2 %%>;
+    widthGrayType3 = <%% 392, 268, 231, 352, 45.5 %%>;
+
+    addressWidth = <%% 54, 54, 46, 46, 11 %%>;
+    addressSize = <%% 13, 13, 12, 12, 3 %%>;
+    addressWeight = <%% 600, 600, 600, 600, 600 %%>;
+    addressTop = <%% (isMac() ? 5 : 7), (isMac() ? 5 : 7), (isMac() ? 5 : 7), (isMac() ? 5 : 7), 1.2 %%>;
+
+    marginRatio = <%% 0.5, 0.5, 0.5, 0.5, 0.5 %%>;
+
+    textareaTop = <%% 10, 10, 10, 10, 2 %%>;
+    textareaLeft = <%% 15, 15, 15, 15, 2.5 %%>;
+
+    grayLineBlockFontSize = <%% 14, 12, 12, 12, 3 %%>;
+    grayLineBlockFontWeight = <%% 400, 400, 400, 300, 400 %%>;
+    grayLineBlockFontTop = <%% 15, 15, 15, 15, 15 %%>;
+
+    policyInnerPadding = <%% 16, 16, 16, 16, 4 %%>;
+    policyTextSize = <%% 10, 10, 10, 10, 2.5 %%>;
+
+    agreeCircleBetween = <%% 5, 5, 5, 5, 1 %%>;
+    agreeCircleTop = <%% 8, 8, 8, 8, 1.7 %%>;
+    agreeSize = <%% 14, 14, 14, 14, 3 %%>;
+    agreeWeight = <%% 600, 600, 600, 600, 600 %%>;
+
+    paymentAmountSize = <%% 30, 30, 29, 27, 3.7 %%>;
+    paymentAmountSizeSub = <%% 13, 13, 12, 11, 2.5 %%>;
+    paymentAmountWeight = <%% 600, 600, 600, 600, 600 %%>;
+    paymentAmountTop = <%% (isMac() ? 17 : 19), (isMac() ? 17 : 19), (isMac() ? 17 : 19), (isMac() ? 17 : 19), 3.7 %%>;
+    paymentAmountBetween = <%% 20, 20, 20, 20, 3 %%>;
+
+    paymentButtonSize = <%% 16, 16, 16, 16, 3.2 %%>;
+    paymentButtonWeight = <%% 600, 600, 600, 600, 600 %%>;
+    paymentButtonTop = <%% 12, 12, 12, 12, 3 %%>;
+    paymentButtonPaddingTop = <%% (isMac() ? 8 : 10), (isMac() ? 8 : 10), (isMac() ? 8 : 10), (isMac() ? 8 : 10), 2 %%>;
+    paymentButtonPaddingBottom = <%% (isMac() ? 10 : 9), (isMac() ? 10 : 9), (isMac() ? 10 : 9), (isMac() ? 10 : 9), 2.5 %%>;
+    paymentButtonPaddingLeft = <%% 18, 18, 18, 18, 3.5 %%>;
+
+    addressPromptWidth = <%% 600, 600, 600, 600, 80 %%>;
+    addressPromptHeight = <%% 450, 450, 450, 450, 90 %%>;
+
+    ratingContents = [
+      {
+        text: <&& "부족하다" | "부족하다" | "부족하다" | "부족하다" | "부족하다" &&>,
+        left: <&& 45 | 45 | 45 | 45 | 45 &&>,
+        width: <&& 69 | 69 | 69 | 69 | 69 &&>,
+      },
+      {
+        text: <&& "보통이다" | "보통이다" | "보통이다" | "보통이다" | "보통이다" &&>,
+        left: <&& 221 | 221 | 221 | 221 | 221 &&>,
+        width: <&& 174 | 174 | 174 | 174 | 174 &&>,
+      },
+      {
+        text: <&& "괜찮은 것 같다" | "괜찮은 것 같다" | "괜찮은 것 같다" | "괜찮은 것 같다" | "괜찮은 것 같다" &&>,
+        left: <&& 394 | 394 | 394 | 394 | 394 &&>,
+        width: <&& 187 | 187 | 187 | 187 | 187 &&>,
+      },
+      {
+        text: <&& "만족스럽다" | "만족스럽다" | "만족스럽다" | "만족스럽다" | "만족스럽다" &&>,
+        left: <&& 579 | 579 | 579 | 579 | 579 &&>,
+        width: <&& 175 | 175 | 175 | 175 | 175 &&>,
+      },
+      {
+        text: <&& "매우 만족스럽다" | "매우 만족스럽다" | "매우 만족스럽다" | "매우 만족스럽다" | "매우 만족스럽다" &&>,
+        left: <&& 756 | 756 | 756 | 756 | 756 &&>,
+        width: <&& 190 | 190 | 190 | 190 | 190 &&>,
+      }
+    ]
+
+    agreeEvent = function (e) {
+      const targets = document.querySelectorAll('.' + agreeTargetClassName);
+      for (let dom of targets) {
+        if (dom.getAttribute("circle") === "true") {
+          if (dom.getAttribute("toggle") === "on") {
+            dom.style.background = colorChip.gray4;
+            dom.setAttribute("toggle", "off");
+          } else {
+            dom.style.background = colorChip.green;
+            dom.setAttribute("toggle", "on");
+          }
+        } else {
+          if (dom.getAttribute("toggle") === "on") {
+            dom.style.color = colorChip.deactive;
+            dom.setAttribute("toggle", "off");
+          } else {
+            dom.style.color = colorChip.green;
+            dom.setAttribute("toggle", "on");
+          }
+        }
+      }
+    }
+
+    cancelBack = createNode({
+      mother: totalContents,
+      class: [ popupClassName ],
+      event: {
+        click: function (e) {
+          const removeTargets = document.querySelectorAll('.' + popupClassName);
+          for (let dom of removeTargets) {
+            dom.remove();
+          }
+        }
+      },
+      style: {
+        position: "fixed",
+        top: String(0),
+        left: String(0),
+        width: String(100) + '%',
+        height: String(100) + '%',
+        background: colorChip.black,
+        opacity: String(0.3),
+        zIndex: String(zIndex),
+      }
+    });
+
+    if (window.innerHeight - naviHeight - (whiteMargin * 2) > whiteMaxHeight) {
+      whiteMargin = (window.innerHeight - whiteMaxHeight - naviHeight) / 2;
+    }
+
+    whiteBase = createNode({
+      mother: totalContents,
+      class: [ popupClassName ],
+      style: {
+        position: "fixed",
+        width: String(whiteWidth) + ea,
+        height: "calc(calc(100% - " + String(naviHeight) + "px" + ") - " + String((whiteMargin * 2) + innerMargin) + ea + ")",
+        top: "calc(" + String(naviHeight) + "px" + " + " + String(whiteMargin) + ea + ")",
+        left: "calc(50% - " + String(whiteWidth / 2) + ea + ")",
+        borderRadius: String(5) + "px",
+        background: colorChip.white,
+        boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
+        animation: "fadeuporiginal 0.3s ease forwards",
+        paddingTop: String(innerMargin) + ea,
+        zIndex: String(zIndex),
+      }
+    });
+
+    contentsTong = createNode({
+      mother: whiteBase,
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(innerMargin * 2, ea),
+        height: withOut(innerMargin, ea),
+        marginLeft: String(innerMargin) + ea,
+        marginRight: String(innerMargin) + ea,
+      }
+    });
+
+
+    // title
+
+    titleArea = createNode({
+      mother: contentsTong,
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(0, ea),
+        height: String(titleHeight) + ea,
+        borderBottom: "1px solid " + colorChip.black,
+      },
+      children: [
+        {
+          text: "Mini 서비스 리뷰",
+          style: {
+            textAlign: "left",
+            position: "absolute",
+            fontSize: String(titleSize) + ea,
+            fontWeight: String(titleWeight),
+            color: colorChip.black,
+            lineHeight: String(titleLineHeight),
+            top: String(titleTop) + ea,
+            left: String(0),
+          }
+        }
+      ]
+    });
+
+
+    // form
+
+    formArea = createNode({
+      mother: contentsTong,
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(0, ea),
+        height: withOut(titleHeight + paymentHeight + formPaddingTop, ea),
+        paddingTop: String(formPaddingTop) + ea,
+        overflow: "scroll",
+      }
+    });
+
+    formBox = createNode({
+      mother: formArea,
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(0, ea),
+      }
+    });
+
+    // 1
+    createNode({
+      mother: formBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight) + ea,
+      },
+      children: [
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleRadius * 2) + ea,
+            height: String(circleRadius * 2) + ea,
+            marginRight: String(circleBetween) + ea,
+            borderRadius: String(circleRadius) + ea,
+            background: colorChip.green,
+            top: String(circleTop) + ea,
+            verticalAlign: "top",
+          }
+        },
+        {
+          text: "Mini 스타일링 서비스를 제공 받고 만족하셨나요?",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(mainTop) + ea,
+            fontSize: String(mainSize) + ea,
+            fontWeight: String(mainWeight),
+            color: colorChip.black,
+            verticalAlign: "top",
+          }
+        }
+      ]
+    });
+
+    ratingBlock = createNode({
+      mother: formBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight) + ea,
+      },
+      children: [
+        {
+          style: {
+            display: "block",
+            position: "absolute",
+            borderBottom: "1px solid " + colorChip.gray3,
+            width: withOut(0, ea),
+            height: String(moduleHeight) + ea,
+            top: String(0),
+            left: String(0),
+          }
+        }
+      ]
+    });
+
+    for (let { text, left, width } of ratingContents) {
+      createNode({
+        mother: ratingBlock,
+        text,
+        attribute: {
+          toggle: "off"
+        },
+        style: {
+          position: "absolute",
+          fontWeight: String(800),
+          fontSize: String(14) + ea,
+          color: colorChip.darkShadow,
+          top: String(0) + ea,
+          left: String(left) + ea,
+          cursor: "pointer",
+        }
+      });
+      createNode({
+        mother: ratingBlock,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(24) + ea,
+          width: String(width) + ea,
+          height: String(9) + ea,
+          borderRight: "1px solid " + colorChip.gray3,
+        }
+      });
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // 6 : margin
+    createNode({
+      mother: formBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight * marginRatio) + ea,
+      }
+    });
+    createNode({
+      mother: formBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight * marginRatio) + ea,
+      }
+    });
+    createNode({
+      mother: formBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight * marginRatio) + ea,
+      }
+    });
+    createNode({
+      mother: formBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight * marginRatio) + ea,
+      }
+    });
+    createNode({
+      mother: formBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight * marginRatio) + ea,
+      }
+    });
+
+    // 10
+    policyTong = createNode({
+      mother: formBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+      },
+      children: [
+        {
+          style: {
+            position: "relative",
+            top: String(grayTextAreaTop) + ea,
+            left: String(0) + ea,
+            width: String(100) + '%',
+            paddingTop: String(policyInnerPadding) + ea,
+            height: String(grayBigHeight) + ea,
+            background: colorChip.gray1,
+            borderRadius: String(3) + "px",
+          },
+          children: [
+            {
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(policyInnerPadding * 2, ea),
+                marginLeft: String(policyInnerPadding) + ea,
+                height: withOut(policyInnerPadding, ea),
+                overflow: "scroll",
+              },
+              children: [
+                {
+                  style: {
+                    display: "block",
+                    position: "relative",
+                    fontSize: String(policyTextSize) + ea,
+                    color: colorChip.black,
+                  }
+                }
+              ]
+            }
+          ]
+        },
+      ]
+    }).firstChild.firstChild.firstChild;
+
+    ajaxJson({}, "https://" + GHOSTHOST + "/designerProposal_policy").then(function (res) {
+      const { policy, button } = res;
+      let bTags;
+
+      policyTong.insertAdjacentHTML("beforeend", policy);
+      bTags = policyTong.querySelectorAll("b");
+      for (let b of bTags) {
+        b.style.color = colorChip.black;
+        b.style.fontWeight = String(600);
+      }
+
+    }).catch(function (err) {
+      throw new Error(err);
+    });
+
+    // 11
+    createNode({
+      mother: formBox,
+      style: {
+        display: "block",
+        position: "relative",
+        textAlign: "right",
+      },
+      children: [
+        {
+          class: [ agreeTargetClassName ],
+          event: { click: agreeEvent },
+          attribute: {
+            toggle: "on",
+            circle: "true",
+          },
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleRadius * 2) + ea,
+            height: String(circleRadius * 2) + ea,
+            marginRight: String(agreeCircleBetween) + ea,
+            borderRadius: String(circleRadius) + ea,
+            background: colorChip.green,
+            top: String(agreeCircleTop) + ea,
+            verticalAlign: "top",
+            cursor: "pointer",
+          }
+        },
+        {
+          text: "상기 개인정보 취급 방침에 동의합니다.",
+          class: [ agreeTargetClassName ],
+          event: { click: agreeEvent },
+          attribute: {
+            toggle: "on",
+          },
+          style: {
+            display: "inline-block",
+            fontSize: String(agreeSize) + ea,
+            fontWeight: String(agreeWeight),
+            color: colorChip.green,
+            cursor: "pointer",
+          }
+        }
+      ]
+    });
+
+    // 12 : margin
+    createNode({
+      mother: formBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight * marginRatio) + ea,
+      }
+    });
+
+    // payment
+    paymentArea = createNode({
+      mother: contentsTong,
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(0, ea),
+        height: String(paymentHeight) + ea,
+        borderTop: "1px dashed " + colorChip.gray4,
+        textAlign: "right",
+      }
+    });
+
+    createNode({
+      mother: paymentArea,
+      text: "제출하기",
+      event: {
+        click: async function (e) {
+          try {
+            const agreeTarget = document.querySelector('.' + agreeTargetClassName);
+            const agreeBoo = (agreeTarget.getAttribute("toggle") === "on");
+            if (!agreeBoo) {
+              window.alert("개인정보 처리 방침에 동의해주세요!");
+              return;
+            } else {
+
+              const inputTargets = [ ...document.querySelectorAll('.' + inputClassName) ];
+              const inputMatrix = inputTargets.map((dom) => {
+                return [ dom.getAttribute("property"), dom.value.trim().replace(/[\&\=\+\#]/gi, ''), dom ];
+              });
+              let boo;
+              let name, phone;
+              let map;
+              let pluginScript, plugin;
+              let key;
+
+              boo = true;
+
+              for (let [ property, value, dom ] of inputMatrix) {
+                dom.previousElementSibling.style.border = "";
+                if (property === "name") {
+                  if (value.replace(/[^a-zA-Z가-힣]/gi, '') === '') {
+                    window.alert("성함을 입력해주세요!");
+                    boo = false;
+                    dom.previousElementSibling.style.border = "1px solid " + colorChip.green;
+                    if (typeof dom.focus === "function") {
+                      dom.focus();
+                    }
+                  } else {
+                    name = value.replace(/[^a-zA-Z가-힣]/gi, '');
+                  }
+                } else if (property === "phone") {
+                  if (value.replace(/[^0-9\-]/gi, '') === '') {
+                    window.alert("연락처를 입력해주세요!");
+                    boo = false;
+                    dom.previousElementSibling.style.border = "1px solid " + colorChip.green;
+                    if (typeof dom.focus === "function") {
+                      dom.focus();
+                    }
+                  } else {
+                    phone = value.replace(/[^0-9\-]/gi, '');
+                  }
+                } else if (property === "email") {
+                  if (value.trim() === '') {
+                    window.alert("이메일 주소를 적어주세요!");
+                    boo = false;
+                    dom.previousElementSibling.style.border = "1px solid " + colorChip.green;
+                    if (typeof dom.focus === "function") {
+                      dom.focus();
+                    }
+                  }
+                } else if (property === "address0") {
+                  if (value.trim() === '') {
+                    window.alert("주소를 검색하여 입력해주세요!");
+                    boo = false;
+                    dom.previousElementSibling.style.border = "1px solid " + colorChip.green;
+                    if (typeof dom.focus === "function") {
+                      dom.focus();
+                    }
+                  }
+                } else if (property === "address1") {
+                  if (value.trim() === '') {
+                    window.alert("상세 주소를 적어주세요!");
+                    boo = false;
+                    dom.previousElementSibling.style.border = "1px solid " + colorChip.green;
+                    if (typeof dom.focus === "function") {
+                      dom.focus();
+                    }
+                  }
+                } else if (property === "targets") {
+                  if (value.replace(/[^0-9]/gi, '') === '' || Number.isNaN(Number(value.replace(/[^0-9]/gi, '')))) {
+                    window.alert("공간 개수를 입력해주세요!");
+                    boo = false;
+                    dom.previousElementSibling.style.border = "1px solid " + colorChip.green;
+                    if (typeof dom.focus === "function") {
+                      dom.focus();
+                    }
+                  }
+                }
+                if (!boo) {
+                  break;
+                }
+              }
+              if (boo) {
+                map = {
+                  name,
+                  phone,
+                  email: inputMatrix.find((arr) => { return arr[0] === "email" })[1].trim(),
+                  address: inputMatrix.find((arr) => { return arr[0] === "address0" })[1].trim() + " " + inputMatrix.find((arr) => { return arr[0] === "address1" })[1].trim(),
+                  targets: Number(inputMatrix.find((arr) => { return arr[0] === "targets" })[1].replace(/[^0-9]/gi, '')),
+                  etc: inputMatrix.find((arr) => { return arr[0] === "etc" })[1].trim(),
+                };
+
+                instance.mother.certificationBox(name, phone, async function (back, box) {
+                  try {
+
+                    ({ pluginScript, oidConst } = await ajaxJson({ mode: "script", oidKey: "mini" }, "/generalImpPayment"));
+                    map.oid = oidConst + phone.replace(/[^0-9]/gi, '') + "_" + String((new Date()).valueOf());
+                    plugin = new Function(pluginScript);
+                    plugin();
+                    window.IMP.init("imp71921105");
+                    if (desktop) {
+                      window.IMP.request_pay({
+                          merchant_uid: map.oid,
+                          name: "HomeLiaison Mini",
+                          amount: Math.floor((map.targets * initialPrice) - 30000),
+                          buyer_email: map.email,
+                          buyer_name: map.name,
+                          buyer_tel: map.phone,
+                      }, async (rsp) => {
+                        try {
+                          if (rsp.success) {
+                            map.rsp = JSON.parse(JSON.stringify(rsp));
+                            const { useid } = await ajaxJson({ map }, "/userSubmit");
+
+                            homeliaisonAnalytics({
+                              page: instance.pageName,
+                              standard: instance.firstPageViewTime,
+                              action: "miniSubmit",
+                              data: { useid },
+                            }).then(() => {
+                              document.body.removeChild(box);
+                              document.body.removeChild(back);
+                              selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/miniGuide?useid=" + useid);
+                            }).catch((err) => {
+                              document.body.removeChild(box);
+                              document.body.removeChild(back);
+                              selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/miniGuide?useid=" + useid);
+                            });
+
+                          } else {
+                            window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+                            document.body.removeChild(box);
+                            document.body.removeChild(back);
+                          }
+                        } catch (e) {
+                          window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+                          document.body.removeChild(box);
+                          document.body.removeChild(back);
+                        }
+                      });
+                    } else {
+                      ({ key } = await ajaxJson({ mode: "store", oid: map.oid, data: map }, "/generalImpPayment"));
+
+                      window.IMP.request_pay({
+                          merchant_uid: map.oid,
+                          name: "HomeLiaison Mini",
+                          amount: Math.floor((map.targets * initialPrice) - 30000),
+                          buyer_email: map.email,
+                          buyer_name: map.name,
+                          buyer_tel: map.phone,
+                          m_redirect_url: window.location.protocol + "//" + window.location.host + window.location.pathname + "?mobilecard=" + key,
+                      }, (rsp) => {});
+                    }
+
+                  } catch (e) {
+                    window.alert("인증에 실패하였습니다! 다시 시도해주세요!");
+                    document.body.removeChild(box);
+                    document.body.removeChild(back);
+                  }
+                });
+
+              }
+            }
+          } catch (e) {
+            console.log(e);
+            window.alert("오류가 일어났습니다! 다시 시도해주세요!");
+            cancelBack.click();
+          }
+        }
+      },
+      style: {
+        display: "inline-block",
+        position: "relative",
+        fontSize: String(paymentButtonSize) + ea,
+        fontWeight: String(paymentButtonWeight),
+        color: colorChip.white,
+        top: String(paymentButtonTop) + ea,
+        background: colorChip.gradientGreen,
+        paddingTop: String(paymentButtonPaddingTop) + ea,
+        paddingBottom: String(paymentButtonPaddingBottom) + ea,
+        paddingLeft: String(paymentButtonPaddingLeft) + ea,
+        paddingRight: String(paymentButtonPaddingLeft) + ea,
+        borderRadius: String(5) + "px",
+        cursor: "pointer",
+      }
+    });
+
+  }
+}
+
 MiniProposalJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
@@ -1515,6 +2316,11 @@ MiniProposalJs.prototype.launching = async function (loading) {
     });
 
     loading.parentNode.removeChild(loading);
+
+    if (typeof getObj.reviewcard === "string") {
+      this.whiteReviewEvent().call(this, {});
+    }
+
 
   } catch (err) {
     console.log(err);
