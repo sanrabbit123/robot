@@ -1273,10 +1273,10 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
                 dummyList.detail.push(dummyListDetail);
               }
 
-              dummyDesign.concept.push(dummyConcept);
-              dummyDesign.proposal.push(dummyCollage);
-              dummyDesign.photo.push(dummyReference);
-              dummyDesign.list.push(dummyList);
+              dummyDesign.concept.unshift(dummyConcept);
+              dummyDesign.proposal.unshift(dummyCollage);
+              dummyDesign.photo.unshift(dummyReference);
+              dummyDesign.list.unshift(dummyList);
             }
 
             whereQuery = { useid };

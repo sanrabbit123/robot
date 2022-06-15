@@ -1546,6 +1546,7 @@ MiniProposalJs.prototype.whiteReviewEvent = function () {
     let ratingTextTop;
     let questionContents;
     let descriptionSize, descriptionLineHeight, descriptionMarginTop, descriptionPaddingBottom;
+    let num, num2;
 
     whiteWidth = <%% 1000, 1000, 800, 660, 88 %%>;
     whiteMargin = <%% 54, 54, 54, 54, 6 %%>;
@@ -1926,6 +1927,7 @@ MiniProposalJs.prototype.whiteReviewEvent = function () {
     });
 
     // homeliaison question
+    num = 0;
     for (let { question, type } of questionContents.homeliaison.object) {
       createNode({
         mother: formBox,
@@ -1966,7 +1968,11 @@ MiniProposalJs.prototype.whiteReviewEvent = function () {
       ratingBlock = createNode({
         mother: formBox,
         class: [ inputClassName ],
-        attribute: { question: question.replace(/\"/gi, "'") },
+        attribute: {
+          question: question.replace(/\"/gi, "'"),
+          kind: "homeliaison",
+          index: String(num),
+        },
         style: {
           display: "block",
           position: "relative",
@@ -1987,6 +1993,7 @@ MiniProposalJs.prototype.whiteReviewEvent = function () {
           }
         ]
       });
+      num2 = 0;
       for (let { text, left, width, text2, left2 } of ratingContents) {
         createNode({
           mother: ratingBlock,
@@ -1994,6 +2001,8 @@ MiniProposalJs.prototype.whiteReviewEvent = function () {
           attribute: {
             toggle: "off",
             target: "true",
+            value: (type === 0 ? text : text2),
+            strength: String(num2 + 1),
           },
           event: {
             click: function (e) {
@@ -2033,6 +2042,7 @@ MiniProposalJs.prototype.whiteReviewEvent = function () {
             transition: "all 0.2s ease",
           }
         });
+        num2++;
       }
       createNode({
         mother: formBox,
@@ -2043,7 +2053,10 @@ MiniProposalJs.prototype.whiteReviewEvent = function () {
           height: String(moduleHeight * marginRatio) + ea,
         }
       });
+      num++;
     }
+
+    num = 0;
     for (let { question, placeholder } of questionContents.homeliaison.subject) {
       createNode({
         mother: formBox,
@@ -2106,8 +2119,11 @@ MiniProposalJs.prototype.whiteReviewEvent = function () {
             mode: "textarea",
             class: [ inputClassName ],
             attribute: {
+              question: question,
               placeholder: placeholder,
               property: "etc",
+              kind: "homeliaison",
+              index: String(num),
             },
             event: {
               keyup: function (e) {
@@ -2135,9 +2151,7 @@ MiniProposalJs.prototype.whiteReviewEvent = function () {
           }
         ]
       });
-
-
-
+      num++;
     }
 
     // margin
@@ -2199,6 +2213,7 @@ MiniProposalJs.prototype.whiteReviewEvent = function () {
     });
 
     // designer question
+    num = 0;
     for (let { question, type } of questionContents.designer.object) {
       createNode({
         mother: formBox,
@@ -2239,7 +2254,11 @@ MiniProposalJs.prototype.whiteReviewEvent = function () {
       ratingBlock = createNode({
         mother: formBox,
         class: [ inputClassName ],
-        attribute: { question: question.replace(/\"/gi, "'") },
+        attribute: {
+          question: question.replace(/\"/gi, "'"),
+          kind: "designer",
+          index: String(num),
+        },
         style: {
           display: "block",
           position: "relative",
@@ -2260,6 +2279,7 @@ MiniProposalJs.prototype.whiteReviewEvent = function () {
           }
         ]
       });
+      num2 = 0;
       for (let { text, left, width, text2, left2 } of ratingContents) {
         createNode({
           mother: ratingBlock,
@@ -2267,6 +2287,8 @@ MiniProposalJs.prototype.whiteReviewEvent = function () {
           attribute: {
             toggle: "off",
             target: "true",
+            value: (type === 0 ? text : text2),
+            strength: String(num2 + 1),
           },
           event: {
             click: function (e) {
@@ -2306,6 +2328,7 @@ MiniProposalJs.prototype.whiteReviewEvent = function () {
             transition: "all 0.2s ease",
           }
         });
+        num2++;
       }
       createNode({
         mother: formBox,
@@ -2316,7 +2339,10 @@ MiniProposalJs.prototype.whiteReviewEvent = function () {
           height: String(moduleHeight * marginRatio) + ea,
         }
       });
+      num++;
     }
+
+    num = 0;
     for (let { question, placeholder } of questionContents.designer.subject) {
       createNode({
         mother: formBox,
@@ -2379,8 +2405,11 @@ MiniProposalJs.prototype.whiteReviewEvent = function () {
             mode: "textarea",
             class: [ inputClassName ],
             attribute: {
+              question: question,
               placeholder: placeholder,
               property: "etc",
+              kind: "designer",
+              index: String(num),
             },
             event: {
               keyup: function (e) {
@@ -2408,9 +2437,7 @@ MiniProposalJs.prototype.whiteReviewEvent = function () {
           }
         ]
       });
-
-
-
+      num++;
     }
 
     // margin
@@ -2471,11 +2498,88 @@ MiniProposalJs.prototype.whiteReviewEvent = function () {
         click: async function (e) {
           try {
             const targets = [ ...document.querySelectorAll('.' + inputClassName) ];
-            const subjectTargets = targets.filter((dom) => { return /TEXTAREA/gi.test(dom.nodeName); });
             const objectTargets = targets.filter((dom) => { return !/TEXTAREA/gi.test(dom.nodeName); });
+            const subjectTargets = targets.filter((dom) => { return /TEXTAREA/gi.test(dom.nodeName); });
+            let valueTong;
+            let tempObj;
+            let value;
+            let whereQuery, updateQuery;
 
-            console.log(objectTargets);
-            console.log(subjectTargets);
+            valueTong = {
+              object: [],
+              subject: []
+            };
+
+            objectTargets.forEach((dom) => {
+              tempObj = {};
+              tempObj.question = dom.getAttribute("question");
+              tempObj.answer = [ ...dom.children ].filter((d) => { return d.getAttribute("target") === "true" }).filter((d) => { return d.getAttribute("toggle") === "on" });
+              if (tempObj.answer.length === 0) {
+                tempObj.answer = "모르겠다(0)";
+              } else {
+                tempObj.answer = tempObj.answer[0].getAttribute("value") + "(" + tempObj.answer[0].getAttribute("strength") + ")";
+              }
+              tempObj.kind = dom.getAttribute("kind");
+              tempObj.index = Number(dom.getAttribute("index"));
+              valueTong.object.push(tempObj);
+            });
+
+            subjectTargets.forEach((dom) => {
+              tempObj = {};
+              tempObj.question = dom.getAttribute("question");
+              tempObj.answer = dom.value.trim();
+              tempObj.kind = dom.getAttribute("kind");
+              tempObj.index = Number(dom.getAttribute("index"));
+              valueTong.subject.push(tempObj);
+            });
+
+            valueTong.object.sort((a, b) => { return a.index - b.index });
+            valueTong.subject.sort((a, b) => { return a.index - b.index });
+
+            value = [];
+            value.push("홈리에종에 대한 설문");
+            value.push("");
+            for (let { question, answer, kind } of valueTong.object) {
+              if (kind === "homeliaison") {
+                value.push("Q. " + question);
+                value.push("A. " + answer);
+                value.push("");
+              }
+            }
+            for (let { question, answer, kind } of valueTong.subject) {
+              if (kind === "homeliaison") {
+                value.push("Q. " + question);
+                value.push("A. " + answer);
+                value.push("");
+              }
+            }
+            value.push("__split__");
+            value.push("");
+            value.push("디자이너에 대한 설문");
+            value.push("");
+            for (let { question, answer, kind } of valueTong.object) {
+              if (kind === "designer") {
+                value.push("Q. " + question);
+                value.push("A. " + answer);
+                value.push("");
+              }
+            }
+            for (let { question, answer, kind } of valueTong.subject) {
+              if (kind === "designer") {
+                value.push("Q. " + question);
+                value.push("A. " + answer);
+                value.push("");
+              }
+            }
+
+            whereQuery = { useid: instance.user.useid };
+            updateQuery = {};
+            updateQuery["response.design.0.proposal.0.comments.client"] = value.join("\n").replace(/[\&\=\+\{\}\[\]\#]/gi, '').trim();
+
+            await ajaxJson({ whereQuery, updateQuery }, "/updateUser");
+
+            window.alert("설문 작성이 완료되었습니다! 감사합니다 :)");
+            window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?useid=" + instance.user.useid;
 
           } catch (e) {
             console.log(e);
