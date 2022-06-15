@@ -1539,6 +1539,13 @@ MiniProposalJs.prototype.whiteReviewEvent = function () {
     let paymentAmountSizeSub;
     let ratingContents;
     let ratingBlock;
+    let ratingWeight;
+    let ratingSize;
+    let ratingBarTop;
+    let ratingBarHeight;
+    let ratingTextTop;
+    let questionContents;
+    let descriptionSize, descriptionLineHeight, descriptionMarginTop, descriptionPaddingBottom;
 
     whiteWidth = <%% 1000, 1000, 800, 660, 88 %%>;
     whiteMargin = <%% 54, 54, 54, 54, 6 %%>;
@@ -1568,11 +1575,11 @@ MiniProposalJs.prototype.whiteReviewEvent = function () {
     grayTextAreaWidth = <%% 51.7, 51.7, 51.7, 390, 51.7 %%>;
 
     moduleHeight = grayTop + grayHeight;
-    blockMarginBottom = <%% 15, 15, 12, 12, 2 %%>;
+    blockMarginBottom = <%% 12, 12, 9, 9, 1 %%>;
 
-    mainSize = <%% 20, 18, 17, 16, 4 %%>;
+    mainSize = <%% 20, 18, 17, 16, 3.5 %%>;
     mainWeight = <%% 500, 500, 500, 500, 500 %%>;
-    mainTop = <%% (isMac() ? 0 : 3), (isMac() ? 2 : 4), (isMac() ? 2 : 4), (isMac() ? 2 : 4), 0.5 %%>;
+    mainTop = <%% (isMac() ? 0 : 3), (isMac() ? 2 : 4), (isMac() ? 2 : 4), (isMac() ? 2 : 4), 0.9 %%>;
     inputSize = <%% 13, 13, 12, 12, 3 %%>;
     inputWeight = <%% 400, 400, 400, 400, 400 %%>;
     inputIndent = <%% 10, 10, 10, 10, 2.5 %%>;
@@ -1592,7 +1599,7 @@ MiniProposalJs.prototype.whiteReviewEvent = function () {
     addressWeight = <%% 600, 600, 600, 600, 600 %%>;
     addressTop = <%% (isMac() ? 5 : 7), (isMac() ? 5 : 7), (isMac() ? 5 : 7), (isMac() ? 5 : 7), 1.2 %%>;
 
-    marginRatio = <%% 0.5, 0.5, 0.5, 0.5, 0.5 %%>;
+    marginRatio = <%% 0.8, 0.8, 0.7, 0.6, 0.7 %%>;
 
     textareaTop = <%% 10, 10, 10, 10, 2 %%>;
     textareaLeft = <%% 15, 15, 15, 15, 2.5 %%>;
@@ -1625,33 +1632,127 @@ MiniProposalJs.prototype.whiteReviewEvent = function () {
     addressPromptWidth = <%% 600, 600, 600, 600, 80 %%>;
     addressPromptHeight = <%% 450, 450, 450, 450, 90 %%>;
 
+    ratingWeight = <%% 800, 800, 800, 800, 800 %%>;
+    ratingSize = <%% 14, 14, 13, 12, 2.6 %%>;
+    ratingBarTop = <%% 24, 24, 24, 24, 4.7 %%>;
+    ratingBarHeight = <%% 9, 9, 8, 7, 2.3 %%>;
+    ratingTextTop = <%% (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), 0 %%>;
+
+    descriptionSize = <%% 15, 15, 15, 15, 3 %%>;
+    descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+    descriptionMarginTop = <%% 10, 10, 10, 10, 2.5 %%>;
+    descriptionPaddingBottom = <%% 22, 22, 22, 22, 4.5 %%>;
+
     ratingContents = [
       {
         text: <&& "부족하다" | "부족하다" | "부족하다" | "부족하다" | "부족하다" &&>,
-        left: <&& 45 | 45 | 45 | 45 | 45 &&>,
-        width: <&& 69 | 69 | 69 | 69 | 69 &&>,
+        left: <&& 45 | 45 | 35 | 18 | 2.5 &&>,
+        width: <&& 69 | 69 | 57 | 38 | 6.8 &&>,
+        text2: <&& "매우 아니다" | "매우 아니다" | "매우 아니다" | "매우 아니다" | "매우 아니다" &&>,
+        left2: <&& 39 | 39 | 29 | 12 | 1.2 &&>,
       },
       {
         text: <&& "보통이다" | "보통이다" | "보통이다" | "보통이다" | "보통이다" &&>,
-        left: <&& 221 | 221 | 221 | 221 | 221 &&>,
-        width: <&& 174 | 174 | 174 | 174 | 174 &&>,
+        left: <&& 221 | 221 | 169 | 127 | 18 &&>,
+        width: <&& 174 | 174 | 133 | 108 | 15.5 &&>,
+        text2: <&& "아니다" | "아니다" | "아니다" | "아니다" | "아니다" &&>,
+        left2: <&& 226 | 226 | 174 | 132 | 19.3 &&>,
       },
       {
-        text: <&& "괜찮은 것 같다" | "괜찮은 것 같다" | "괜찮은 것 같다" | "괜찮은 것 같다" | "괜찮은 것 같다" &&>,
-        left: <&& 394 | 394 | 394 | 394 | 394 &&>,
-        width: <&& 187 | 187 | 187 | 187 | 187 &&>,
+        text: <&& "괜찮은 것 같다" | "괜찮은 것 같다" | "괜찮은 것 같다" | "괜찮은 것 같다" | "괜찮다" &&>,
+        left: <&& 394 | 394 | 304 | 237 | 34 &&>,
+        width: <&& 187 | 187 | 146 | 120 | 14.5 &&>,
+        text2: <&& "보통이다" | "보통이다" | "보통이다" | "보통이다" | "보통이다" &&>,
+        left2: <&& 408 | 408 | 315 | 247 | 33 &&>,
       },
       {
         text: <&& "만족스럽다" | "만족스럽다" | "만족스럽다" | "만족스럽다" | "만족스럽다" &&>,
-        left: <&& 579 | 579 | 579 | 579 | 579 &&>,
-        width: <&& 175 | 175 | 175 | 175 | 175 &&>,
+        left: <&& 579 | 579 | 446 | 355 | 47 &&>,
+        width: <&& 175 | 175 | 134 | 111 | 14.7 &&>,
+        text2: <&& "그렇다" | "그렇다" | "그렇다" | "그렇다" | "그렇다" &&>,
+        left2: <&& 589 | 589 | 456 | 364 | 48.8 &&>,
       },
       {
-        text: <&& "매우 만족스럽다" | "매우 만족스럽다" | "매우 만족스럽다" | "매우 만족스럽다" | "매우 만족스럽다" &&>,
-        left: <&& 756 | 756 | 756 | 756 | 756 &&>,
-        width: <&& 190 | 190 | 190 | 190 | 190 &&>,
+        text: <&& "매우 만족스럽다" | "매우 만족스럽다" | "매우 만족스럽다" | "매우 만족스럽다" | "훌륭하다" &&>,
+        left: <&& 756 | 756 | 574 | 459 | 65 &&>,
+        width: <&& 190 | 190 | 140 | 113 | 16.8 &&>,
+        text2: <&& "매우 그렇다" | "매우 그렇다" | "매우 그렇다" | "매우 그렇다" | "매우 그렇다" &&>,
+        left2: <&& 768 | 768 | 585 | 467 | 64 &&>,
       }
-    ]
+    ];
+
+    questionContents = {
+      homeliaison: {
+        title: "Homeliaison / 프로젝트 케어 만족도",
+        description: (desktop ? [
+          "전체 프로젝트를 진행하는 전 단계에서 Homeliaison이 담당한 과정에 대한 만족도 설문입니다.",
+          "각 설문 내용에 솔직하게 답변 해 주시면 감사하겠습니다."
+        ] : [
+          "전체 프로젝트를 진행하는 전 단계에서",
+          "Homeliaison이 담당한 과정에 대한 만족도 설문입니다.",
+          "각 설문 내용에 솔직하게 답변 해 주시면 감사하겠습니다."
+        ]),
+        object: [
+          {
+            question: "스타일링 서비스를 제공 받고 만족하셨나요?",
+            type: 0,
+          },
+          {
+            question: "각 단계별 진행을 위한 안내가 잘 되었나요?",
+            type: 0,
+          },
+          {
+            question: "문의에 대한 처리가 원활하게 이루어졌나요?",
+            type: 0,
+          },
+          {
+            question: "서비스에 대해 지인 또는 가족이 궁금해한 적이 있나요?",
+            type: 1,
+          },
+          {
+            question: "서비스를 추천하실 의향이 있나요?",
+            type: 1,
+          },
+        ],
+        subject: [
+          {
+            question: "추천 또는 추천하시지 않는다면, 이유가 있나요?",
+            placeholder: "추천 또는 추천하시지 않는 이유를 알려주세요!",
+          }
+        ]
+      },
+      designer: {
+        title: "Designer / 프로젝트 케어 만족도",
+        description: (desktop ? [
+          "전체 프로젝트를 진행하는 전 단계에서 디자이너가 담당한 과정에 대한 만족도 설문입니다.",
+          "각 설문 내용에 솔직하게 답변 해 주시면 감사하겠습니다."
+        ] : [
+          "전체 프로젝트를 진행하는 전 단계에서",
+          "디자이너가 담당한 과정에 대한 만족도 설문입니다.",
+          "각 설문 내용에 솔직하게 답변 해 주시면 감사하겠습니다."
+        ]),
+        object: [
+          {
+            question: "시행 전 안내받은 내용과 서비스 퀄리티가 일치했나요?",
+            type: 0,
+          },
+          {
+            question: "제공받은 제안서는 설명받은 내용과 일치했나요?",
+            type: 0,
+          },
+          {
+            question: "우리집의 무드가 이전과 다르게 확실히 변화되었나요?",
+            type: 1,
+          },
+        ],
+        subject: [
+          {
+            question: "진행 중 부족했던 점이 있다면 무엇일까요?",
+            placeholder: "프로젝트 진행 중 부족했던 점, 혹은 어떻게 개선하면 좋을지에 대해 알려주세요!",
+          }
+        ]
+      }
+    }
 
     agreeEvent = function (e) {
       const targets = document.querySelectorAll('.' + agreeTargetClassName);
@@ -1786,267 +1887,556 @@ MiniProposalJs.prototype.whiteReviewEvent = function () {
       }
     });
 
-    // 1
+    // homeliaison description
     createNode({
       mother: formBox,
       style: {
         display: "block",
         position: "relative",
         marginBottom: String(blockMarginBottom) + ea,
-        height: String(moduleHeight) + ea,
       },
       children: [
         {
+          text: questionContents.homeliaison.title,
           style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(circleRadius * 2) + ea,
-            height: String(circleRadius * 2) + ea,
-            marginRight: String(circleBetween) + ea,
-            borderRadius: String(circleRadius) + ea,
-            background: colorChip.green,
-            top: String(circleTop) + ea,
-            verticalAlign: "top",
-          }
-        },
-        {
-          text: "Mini 스타일링 서비스를 제공 받고 만족하셨나요?",
-          style: {
-            display: "inline-block",
+            display: "block",
             position: "relative",
             top: String(mainTop) + ea,
             fontSize: String(mainSize) + ea,
-            fontWeight: String(mainWeight),
+            fontWeight: String(800),
             color: colorChip.black,
             verticalAlign: "top",
           }
-        }
-      ]
-    });
-
-    ratingBlock = createNode({
-      mother: formBox,
-      style: {
-        display: "block",
-        position: "relative",
-        marginBottom: String(blockMarginBottom) + ea,
-        height: String(moduleHeight) + ea,
-      },
-      children: [
+        },
         {
+          text: questionContents.homeliaison.description.join("\n"),
           style: {
             display: "block",
-            position: "absolute",
-            borderBottom: "1px solid " + colorChip.gray3,
-            width: withOut(0, ea),
-            height: String(moduleHeight) + ea,
-            top: String(0),
-            left: String(0),
+            position: "relative",
+            marginTop: String(descriptionMarginTop) + ea,
+            fontSize: String(descriptionSize) + ea,
+            fontWeight: String(400),
+            color: colorChip.black,
+            lineHeight: String(descriptionLineHeight),
+            verticalAlign: "top",
+            paddingBottom: String(descriptionPaddingBottom) + ea,
           }
-        }
+        },
       ]
     });
 
-    for (let { text, left, width } of ratingContents) {
+    // homeliaison question
+    for (let { question, type } of questionContents.homeliaison.object) {
       createNode({
-        mother: ratingBlock,
-        text,
-        attribute: {
-          toggle: "off"
-        },
+        mother: formBox,
         style: {
-          position: "absolute",
-          fontWeight: String(800),
-          fontSize: String(14) + ea,
-          color: colorChip.darkShadow,
-          top: String(0) + ea,
-          left: String(left) + ea,
-          cursor: "pointer",
-        }
-      });
-      createNode({
-        mother: ratingBlock,
-        style: {
-          display: "inline-block",
+          display: "block",
           position: "relative",
-          top: String(24) + ea,
-          width: String(width) + ea,
-          height: String(9) + ea,
-          borderRight: "1px solid " + colorChip.gray3,
+          marginBottom: String(blockMarginBottom) + ea,
+          height: String(moduleHeight) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(circleRadius * 2) + ea,
+              height: String(circleRadius * 2) + ea,
+              marginRight: String(circleBetween) + ea,
+              borderRadius: String(circleRadius) + ea,
+              background: colorChip.green,
+              top: String(circleTop) + ea,
+              verticalAlign: "top",
+            }
+          },
+          {
+            text: question,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(mainTop) + ea,
+              fontSize: String(mainSize) + ea,
+              fontWeight: String(mainWeight),
+              color: colorChip.black,
+              verticalAlign: "top",
+            }
+          }
+        ]
+      });
+      ratingBlock = createNode({
+        mother: formBox,
+        style: {
+          display: "block",
+          position: "relative",
+          marginBottom: String(blockMarginBottom) + ea,
+          height: String(moduleHeight) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: "block",
+              position: "absolute",
+              borderBottom: "1px solid " + colorChip.gray3,
+              width: withOut(0, ea),
+              height: String(moduleHeight) + ea,
+              top: String(0),
+              left: String(0),
+            }
+          }
+        ]
+      });
+      for (let { text, left, width, text2, left2 } of ratingContents) {
+        createNode({
+          mother: ratingBlock,
+          text: type === 0 ? text : text2,
+          attribute: {
+            toggle: "off",
+            target: "true",
+          },
+          event: {
+            click: function (e) {
+              const mother = this.parentNode;
+              const targets = [ ...mother.children ].filter((dom) => { return dom.getAttribute("target") === "true"; });
+              for (let dom of targets) {
+                if (dom === this) {
+                  dom.style.color = colorChip.green;
+                  dom.setAttribute("toggle", "on");
+                } else {
+                  dom.style.color = colorChip.gray3;
+                  dom.setAttribute("toggle", "off");
+                }
+              }
+            }
+          },
+          style: {
+            position: "absolute",
+            fontWeight: String(ratingWeight),
+            fontSize: String(ratingSize) + ea,
+            color: colorChip.deactive,
+            top: String(ratingTextTop) + ea,
+            left: String(type === 0 ? left : left2) + ea,
+            cursor: "pointer",
+            transition: "all 0.2s ease",
+          }
+        });
+        createNode({
+          mother: ratingBlock,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(ratingBarTop) + ea,
+            width: String(width) + ea,
+            height: String(ratingBarHeight) + ea,
+            borderRight: "1px solid " + colorChip.gray3,
+            transition: "all 0.2s ease",
+          }
+        });
+      }
+      createNode({
+        mother: formBox,
+        style: {
+          display: "block",
+          position: "relative",
+          marginBottom: String(blockMarginBottom) + ea,
+          height: String(moduleHeight * marginRatio) + ea,
         }
       });
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // 6 : margin
-    createNode({
-      mother: formBox,
-      style: {
-        display: "block",
-        position: "relative",
-        marginBottom: String(blockMarginBottom) + ea,
-        height: String(moduleHeight * marginRatio) + ea,
-      }
-    });
-    createNode({
-      mother: formBox,
-      style: {
-        display: "block",
-        position: "relative",
-        marginBottom: String(blockMarginBottom) + ea,
-        height: String(moduleHeight * marginRatio) + ea,
-      }
-    });
-    createNode({
-      mother: formBox,
-      style: {
-        display: "block",
-        position: "relative",
-        marginBottom: String(blockMarginBottom) + ea,
-        height: String(moduleHeight * marginRatio) + ea,
-      }
-    });
-    createNode({
-      mother: formBox,
-      style: {
-        display: "block",
-        position: "relative",
-        marginBottom: String(blockMarginBottom) + ea,
-        height: String(moduleHeight * marginRatio) + ea,
-      }
-    });
-    createNode({
-      mother: formBox,
-      style: {
-        display: "block",
-        position: "relative",
-        marginBottom: String(blockMarginBottom) + ea,
-        height: String(moduleHeight * marginRatio) + ea,
-      }
-    });
-
-    // 10
-    policyTong = createNode({
-      mother: formBox,
-      style: {
-        display: "block",
-        position: "relative",
-        marginBottom: String(blockMarginBottom) + ea,
-      },
-      children: [
-        {
-          style: {
-            position: "relative",
-            top: String(grayTextAreaTop) + ea,
-            left: String(0) + ea,
-            width: String(100) + '%',
-            paddingTop: String(policyInnerPadding) + ea,
-            height: String(grayBigHeight) + ea,
-            background: colorChip.gray1,
-            borderRadius: String(3) + "px",
-          },
-          children: [
-            {
-              style: {
-                display: "block",
-                position: "relative",
-                width: withOut(policyInnerPadding * 2, ea),
-                marginLeft: String(policyInnerPadding) + ea,
-                height: withOut(policyInnerPadding, ea),
-                overflow: "scroll",
-              },
-              children: [
-                {
-                  style: {
-                    display: "block",
-                    position: "relative",
-                    fontSize: String(policyTextSize) + ea,
-                    color: colorChip.black,
-                  }
-                }
-              ]
+    for (let { question, placeholder } of questionContents.homeliaison.subject) {
+      createNode({
+        mother: formBox,
+        style: {
+          display: "block",
+          position: "relative",
+          marginBottom: String(blockMarginBottom) + ea,
+          height: String(moduleHeight) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(circleRadius * 2) + ea,
+              height: String(circleRadius * 2) + ea,
+              marginRight: String(circleBetween) + ea,
+              borderRadius: String(circleRadius) + ea,
+              background: colorChip.green,
+              top: String(circleTop) + ea,
+              verticalAlign: "top",
             }
-          ]
+          },
+          {
+            text: question,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(mainTop) + ea,
+              fontSize: String(mainSize) + ea,
+              fontWeight: String(mainWeight),
+              color: colorChip.black,
+              verticalAlign: "top",
+            }
+          }
+        ]
+      });
+
+      createNode({
+        mother: formBox,
+        style: {
+          display: "block",
+          position: "relative",
+          marginBottom: String(blockMarginBottom) + ea,
+          height: String(grayTextAreaTop + grayBigHeight) + ea,
         },
-      ]
-    }).firstChild.firstChild.firstChild;
+        children: [
+          {
+            style: {
+              position: "absolute",
+              top: String(grayTextAreaTop) + ea,
+              left: String(0) + ea,
+              width: String(100) + '%',
+              height: String(grayBigHeight) + ea,
+              background: colorChip.gray1,
+              borderRadius: String(3) + "px",
+            }
+          },
+          {
+            mode: "textarea",
+            class: [ inputClassName ],
+            attribute: {
+              placeholder: placeholder,
+              property: "etc",
+            },
+            event: {
+              keyup: function (e) {
+                this.value = this.value.replace(/[\=\+\?\#\&]/gi, '');
+              },
+              blur: function (e) {
+                this.value = this.value.replace(/[\=\+\?\#\&]/gi, '');
+              }
+            },
+            style: {
+              position: "absolute",
+              top: String(grayTextAreaTop + textareaTop) + ea,
+              left: String(textareaLeft) + ea,
+              width: withOut((textareaLeft * 2), ea),
+              height: String(grayBigHeight - (textareaTop * 1)) + ea,
+              fontSize: String(grayLineBlockFontSize) + ea,
+              fontWeight: String(grayLineBlockFontWeight),
+              border: String(0),
+              background: "transparent",
+              outline: String(0),
+              overflow: "scroll",
+              lineHeight: String(1.6),
+              color: colorChip.black,
+            }
+          }
+        ]
+      });
 
-    ajaxJson({}, "https://" + GHOSTHOST + "/designerProposal_policy").then(function (res) {
-      const { policy, button } = res;
-      let bTags;
 
-      policyTong.insertAdjacentHTML("beforeend", policy);
-      bTags = policyTong.querySelectorAll("b");
-      for (let b of bTags) {
-        b.style.color = colorChip.black;
-        b.style.fontWeight = String(600);
-      }
 
-    }).catch(function (err) {
-      throw new Error(err);
-    });
+    }
 
-    // 11
+    // margin
     createNode({
       mother: formBox,
       style: {
         display: "block",
         position: "relative",
-        textAlign: "right",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight * marginRatio) + ea,
+      }
+    });
+    createNode({
+      mother: formBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight * marginRatio) + ea,
+      }
+    });
+
+    // designer description
+    createNode({
+      mother: formBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
       },
       children: [
         {
-          class: [ agreeTargetClassName ],
-          event: { click: agreeEvent },
-          attribute: {
-            toggle: "on",
-            circle: "true",
-          },
+          text: questionContents.designer.title,
           style: {
-            display: "inline-block",
+            display: "block",
             position: "relative",
-            width: String(circleRadius * 2) + ea,
-            height: String(circleRadius * 2) + ea,
-            marginRight: String(agreeCircleBetween) + ea,
-            borderRadius: String(circleRadius) + ea,
-            background: colorChip.green,
-            top: String(agreeCircleTop) + ea,
+            top: String(mainTop) + ea,
+            fontSize: String(mainSize) + ea,
+            fontWeight: String(800),
+            color: colorChip.black,
             verticalAlign: "top",
-            cursor: "pointer",
           }
         },
         {
-          text: "상기 개인정보 취급 방침에 동의합니다.",
-          class: [ agreeTargetClassName ],
-          event: { click: agreeEvent },
-          attribute: {
-            toggle: "on",
-          },
+          text: questionContents.designer.description.join("\n"),
           style: {
-            display: "inline-block",
-            fontSize: String(agreeSize) + ea,
-            fontWeight: String(agreeWeight),
-            color: colorChip.green,
-            cursor: "pointer",
+            display: "block",
+            position: "relative",
+            marginTop: String(descriptionMarginTop) + ea,
+            fontSize: String(descriptionSize) + ea,
+            fontWeight: String(400),
+            color: colorChip.black,
+            lineHeight: String(descriptionLineHeight),
+            verticalAlign: "top",
+            paddingBottom: String(descriptionPaddingBottom) + ea,
           }
-        }
+        },
       ]
     });
 
-    // 12 : margin
+    // designer question
+    for (let { question, type } of questionContents.designer.object) {
+      createNode({
+        mother: formBox,
+        style: {
+          display: "block",
+          position: "relative",
+          marginBottom: String(blockMarginBottom) + ea,
+          height: String(moduleHeight) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(circleRadius * 2) + ea,
+              height: String(circleRadius * 2) + ea,
+              marginRight: String(circleBetween) + ea,
+              borderRadius: String(circleRadius) + ea,
+              background: colorChip.green,
+              top: String(circleTop) + ea,
+              verticalAlign: "top",
+            }
+          },
+          {
+            text: question,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(mainTop) + ea,
+              fontSize: String(mainSize) + ea,
+              fontWeight: String(mainWeight),
+              color: colorChip.black,
+              verticalAlign: "top",
+            }
+          }
+        ]
+      });
+      ratingBlock = createNode({
+        mother: formBox,
+        style: {
+          display: "block",
+          position: "relative",
+          marginBottom: String(blockMarginBottom) + ea,
+          height: String(moduleHeight) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: "block",
+              position: "absolute",
+              borderBottom: "1px solid " + colorChip.gray3,
+              width: withOut(0, ea),
+              height: String(moduleHeight) + ea,
+              top: String(0),
+              left: String(0),
+            }
+          }
+        ]
+      });
+      for (let { text, left, width, text2, left2 } of ratingContents) {
+        createNode({
+          mother: ratingBlock,
+          text: type === 0 ? text : text2,
+          attribute: {
+            toggle: "off",
+            target: "true",
+          },
+          event: {
+            click: function (e) {
+              const mother = this.parentNode;
+              const targets = [ ...mother.children ].filter((dom) => { return dom.getAttribute("target") === "true"; });
+              for (let dom of targets) {
+                if (dom === this) {
+                  dom.style.color = colorChip.green;
+                  dom.setAttribute("toggle", "on");
+                } else {
+                  dom.style.color = colorChip.gray3;
+                  dom.setAttribute("toggle", "off");
+                }
+              }
+            }
+          },
+          style: {
+            position: "absolute",
+            fontWeight: String(ratingWeight),
+            fontSize: String(ratingSize) + ea,
+            color: colorChip.deactive,
+            top: String(ratingTextTop) + ea,
+            left: String(type === 0 ? left : left2) + ea,
+            cursor: "pointer",
+            transition: "all 0.2s ease",
+          }
+        });
+        createNode({
+          mother: ratingBlock,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(ratingBarTop) + ea,
+            width: String(width) + ea,
+            height: String(ratingBarHeight) + ea,
+            borderRight: "1px solid " + colorChip.gray3,
+            transition: "all 0.2s ease",
+          }
+        });
+      }
+      createNode({
+        mother: formBox,
+        style: {
+          display: "block",
+          position: "relative",
+          marginBottom: String(blockMarginBottom) + ea,
+          height: String(moduleHeight * marginRatio) + ea,
+        }
+      });
+    }
+    for (let { question, placeholder } of questionContents.designer.subject) {
+      createNode({
+        mother: formBox,
+        style: {
+          display: "block",
+          position: "relative",
+          marginBottom: String(blockMarginBottom) + ea,
+          height: String(moduleHeight) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(circleRadius * 2) + ea,
+              height: String(circleRadius * 2) + ea,
+              marginRight: String(circleBetween) + ea,
+              borderRadius: String(circleRadius) + ea,
+              background: colorChip.green,
+              top: String(circleTop) + ea,
+              verticalAlign: "top",
+            }
+          },
+          {
+            text: question,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(mainTop) + ea,
+              fontSize: String(mainSize) + ea,
+              fontWeight: String(mainWeight),
+              color: colorChip.black,
+              verticalAlign: "top",
+            }
+          }
+        ]
+      });
+
+      createNode({
+        mother: formBox,
+        style: {
+          display: "block",
+          position: "relative",
+          marginBottom: String(blockMarginBottom) + ea,
+          height: String(grayTextAreaTop + grayBigHeight) + ea,
+        },
+        children: [
+          {
+            style: {
+              position: "absolute",
+              top: String(grayTextAreaTop) + ea,
+              left: String(0) + ea,
+              width: String(100) + '%',
+              height: String(grayBigHeight) + ea,
+              background: colorChip.gray1,
+              borderRadius: String(3) + "px",
+            }
+          },
+          {
+            mode: "textarea",
+            class: [ inputClassName ],
+            attribute: {
+              placeholder: placeholder,
+              property: "etc",
+            },
+            event: {
+              keyup: function (e) {
+                this.value = this.value.replace(/[\=\+\?\#\&]/gi, '');
+              },
+              blur: function (e) {
+                this.value = this.value.replace(/[\=\+\?\#\&]/gi, '');
+              }
+            },
+            style: {
+              position: "absolute",
+              top: String(grayTextAreaTop + textareaTop) + ea,
+              left: String(textareaLeft) + ea,
+              width: withOut((textareaLeft * 2), ea),
+              height: String(grayBigHeight - (textareaTop * 1)) + ea,
+              fontSize: String(grayLineBlockFontSize) + ea,
+              fontWeight: String(grayLineBlockFontWeight),
+              border: String(0),
+              background: "transparent",
+              outline: String(0),
+              overflow: "scroll",
+              lineHeight: String(1.6),
+              color: colorChip.black,
+            }
+          }
+        ]
+      });
+
+
+
+    }
+
+    // margin
+    createNode({
+      mother: formBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight * marginRatio) + ea,
+      }
+    });
+    createNode({
+      mother: formBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight * marginRatio) + ea,
+      }
+    });
+    createNode({
+      mother: formBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight * marginRatio) + ea,
+      }
+    });
     createNode({
       mother: formBox,
       style: {

@@ -489,9 +489,9 @@ MiniRequestJs.prototype.insertMemoBox = function () {
     ],
     memo: "이곳을 클릭하여 상담 메모를 남겨주세요!",
     memoList: [
-      { question: "고객이 받은 질문 : '선호하는 컬러나 스타일을 알려주세요!'", value: comments.style },
-      { question: "고객이 받은 질문 : '패브릭, 액자, 소품에 쓸 예산을 알려주세요!'", value: comments.budget },
-      { question: "고객이 받은 질문 : '공간의 사이즈를 가이드에 따라 실측한 뒤 알려주세요!'", value: comments.size },
+      { question: "고객이 받은 질문 : '공간에 사용된 가구들은 어떤 것들이 있나요?'", value: comments.style },
+      { question: "고객이 받은 질문 : '공간 사용 목적과 예산에 대해 작성해 주세요!'", value: comments.budget },
+      { question: "고객이 받은 질문 : '가이드에 맞춰 공간의 사이즈를 실측하여 작성해주세요.'", value: comments.size },
       { question: "기타 상담 메모를 적어주세요!", value: comments.etc },
     ]
   };

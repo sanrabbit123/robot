@@ -88,50 +88,66 @@ DevContext.prototype.launching = async function () {
     // console.log(pastProposal[0].project.detail);
 
 
-    const addr = new AddressParser();
-    let from, to;
-    let distance;
-    let meters;
-    let seconds;
-    let targets;
-
-    from = "서울특별시 마포구 양화로 55";
-    targets = [
-      { name: "강원도 원주", to: "강원도 원주시 무실동 1714" },
-      { name: "강원도 춘천", to: "강원도 춘천시 공지로 591" },
-      { name: "강원도 강릉", to: "강원도 강릉시 강릉대로 149" },
-      { name: "경기도 평택", to: "경기도 평택시 평택로 51" },
-      { name: "충청남도 천안", to: "충청남도 천안시 서북구 불당동 1534" },
-      { name: "대전광역시", to: "대전광역시 서구 둔산동 1420" },
-      { name: "세종특별자치시", to: "세종특별자치시 보람동 744" },
-      { name: "충청북도 청주", to: "충청북도 청주시 서원구 사직동 265-5" },
-      { name: "충청북도 충주", to: "충청북도 충주시 금릉동 661" },
-      { name: "광주광역시 광산구", to: "광주광역시 광산구 송정동 1003-141" },
-      { name: "광주광역시 동구", to: "광주광역시 동구 학동 720-10" },
-      { name: "전라북도 전주", to: "전라북도 전주시 덕진구 금암동 767-9" },
-      { name: "전라북도 군산", to: "전라북도 군산시 대명동 388-13" },
-      { name: "전라남도 순천", to: "전라남도 순천시 장천동 18-22" },
-      { name: "전라남도 여수", to: "전라남도 여수시 학동 68-20" },
-      { name: "대구광역시 동구", to: "대구광역시 동구 신암동 1463" },
-      { name: "대구광역시 수성구", to: "대구광역시 수성구 범어동 197-4" },
-      { name: "대구광역시 달서구", to: "대구광역시 달서구 월성동 281" },
-      { name: "울산광역시 남구", to: "울산광역시 남구 신정동 646-4" },
-      { name: "경상북도 포항", to: "경상북도 포항시 남구 대잠동 971" },
-      { name: "경상남도 김해", to: "경상남도 김해시 부원동 630-7" },
-      { name: "경상남도 창원", to: "경상남도 창원시 성산구 신월동 94" },
-      { name: "부산광역시 해운대구", to: "부산광역시 해운대구 중동 1378-95" },
-      { name: "부산광역시 중구", to: "부산광역시 중구 대청동4가 6-20" },
-      { name: "부산광역시 기장군", to: "부산광역시 기장군 기장읍 청강리 846" },
-      { name: "제주도 연동", to: "제주특별자치도 제주시 연동 302-6" },
-    ];
-
-    for (let { name, to } of targets) {
-      distance = await addr.getDistance(from, to);
-      ({ meters, seconds } = distance);
-      console.log(meters, seconds);
-    }
 
 
+
+
+    // const addr = new AddressParser();
+    // let from, to;
+    // let distance;
+    // let meters;
+    // let seconds;
+    // let targets;
+    // let meterStandard, secondStandard;
+    // let matrix;
+    // let sheetsId;
+    //
+    // meterStandard = 0.22;
+    // secondStandard = 0.5;
+    //
+    // from = "서울특별시 마포구 양화로 55";
+    // targets = [
+    //   { name: "강원도 원주", to: "강원도 원주시 무실동 1714" },
+    //   { name: "강원도 춘천", to: "강원도 춘천시 공지로 591" },
+    //   { name: "강원도 강릉", to: "강원도 강릉시 강릉대로 149" },
+    //   { name: "경기도 평택", to: "경기도 평택시 평택로 51" },
+    //   { name: "충청남도 천안", to: "충청남도 천안시 서북구 불당동 1534" },
+    //   { name: "대전광역시", to: "대전광역시 서구 둔산동 1420" },
+    //   { name: "세종특별자치시", to: "세종특별자치시 보람동 744" },
+    //   { name: "충청북도 청주", to: "충청북도 청주시 서원구 사직동 265-5" },
+    //   { name: "충청북도 충주", to: "충청북도 충주시 금릉동 661" },
+    //   { name: "광주광역시 광산구", to: "광주광역시 광산구 송정동 1003-141" },
+    //   { name: "광주광역시 동구", to: "광주광역시 동구 학동 720-10" },
+    //   { name: "전라북도 전주", to: "전라북도 전주시 덕진구 금암동 767-9" },
+    //   { name: "전라북도 군산", to: "전라북도 군산시 대명동 388-13" },
+    //   { name: "전라남도 순천", to: "전라남도 순천시 장천동 18-22" },
+    //   { name: "전라남도 여수", to: "전라남도 여수시 학동 68-20" },
+    //   { name: "대구광역시 동구", to: "대구광역시 동구 신암동 1463" },
+    //   { name: "대구광역시 수성구", to: "대구광역시 수성구 범어동 197-4" },
+    //   { name: "대구광역시 달서구", to: "대구광역시 달서구 월성동 281" },
+    //   { name: "울산광역시 남구", to: "울산광역시 남구 신정동 646-4" },
+    //   { name: "경상북도 포항", to: "경상북도 포항시 남구 대잠동 971" },
+    //   { name: "경상남도 김해", to: "경상남도 김해시 부원동 630-7" },
+    //   { name: "경상남도 창원", to: "경상남도 창원시 성산구 신월동 94" },
+    //   { name: "부산광역시 해운대구", to: "부산광역시 해운대구 중동 1378-95" },
+    //   { name: "부산광역시 중구", to: "부산광역시 중구 대청동4가 6-20" },
+    //   { name: "부산광역시 기장군", to: "부산광역시 기장군 기장읍 청강리 846" },
+    //   { name: "제주도 연동", to: "제주특별자치도 제주시 연동 302-6" },
+    // ];
+    //
+    // matrix = [ [ "대상", "미터", "초", "출장비" ] ];
+    //
+    // for (let { name, to } of targets) {
+    //   distance = await addr.getDistance(from, to);
+    //   ({ meters, seconds } = distance);
+    //   matrix.push([ name, meters, seconds, autoComma(Math.floor(((meters * meterStandard) + (seconds * secondStandard)) / 1000) * 1000) + '원' ]);
+    // }
+    //
+    // sheetsId = await sheets.create_newSheets_inPython("사진 작가님 출장비", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
+    // await sheets.setting_cleanView_inPython(sheetsId);
+    // await sheets.update_value_inPython(sheetsId, "", matrix);
+    //
+    // console.log(matrix);
 
 
 
