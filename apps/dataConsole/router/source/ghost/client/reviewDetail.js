@@ -432,13 +432,13 @@ ReviewDetailJs.prototype.reviewContentsBox = function () {
   mainWidth = <%% 900, 900, 900, 720, 100 %%>;
   mainPaddingTop = <%% 110, 110, 110, 80, 11.7 %%>;
 
-  titleSize = <%% 23, 23, 23, 21, 4.5 %%>;
+  titleSize = <%% 23, 23, 23, 21, 4.8 %%>;
   titleWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
   titleBarMarginTop = <%% 15, 15, 15, 15, 3 %%>;
   titleBarWidth = <%% 80, 80, 80, 80, 18 %%>;
 
-  contentsSize = <%% 16, 16, 16, 15, 3.5 %%>;
+  contentsSize = <%% 16, 16, 16, 15, 3.8 %%>;
   contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
   contentsLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
 
@@ -1301,6 +1301,14 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
   let relativeLength;
   let mainTitleTop;
   let tagBlock;
+  let subTitleMarginTop;
+  let subTitleMarginTopReview;
+  let subTitleSize;
+  let subArrowWidth;
+  let subArrowHeight;
+  let subArrowBottom;
+  let subArrowReviewBottom;
+  let reviewSubTitleVisual;
 
   this.relativePhotoNumber = 0;
 
@@ -1350,7 +1358,7 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
   quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
   quoteTop = <%% (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 4 : 2), isIphone() ? 1.3 : 1.2 %%>;
 
-  titleSize = <%% 17, 16, 17, 14, 3.2 %%>;
+  titleSize = <%% 17, 16, 17, 14, 2.7 %%>;
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
   titleMarginLeft = <%% 6, 6, 5, 5, 1.1 %%>;
 
@@ -1365,6 +1373,16 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
   tagPaddingBottom = <%% (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), isIphone() ? 1.2 : 1.4 %%>;
   tagMarginRight = <%% 3, 2, 3, 2, 1 %%>;
 
+  subTitleMarginTop = <%% 3, 3, 3, 3, 0.5 %%>;
+  subTitleMarginTopReview = <%% 3, 3, 3, 2, 0.2 %%>;
+  subTitleSize = <%% 12, 12, 12, 12, 2.3 %%>;
+
+  subArrowWidth = <%% 24, 20, 24, 24, 4 %%>;
+  subArrowHeight = <%% 8, 8, 8, 8, 1.5 %%>;
+  subArrowBottom = <%% 2, 2, 2, 2, 1 %%>;
+  subArrowReviewBottom = <%% 4, 4, 4, 3, 1.5 %%>;
+
+  reviewSubTitleVisual = <%% 1, 1, 1, 0, 0 %%>;
 
   mainTong = createNode({
     mother: totalContents,
@@ -1721,41 +1739,36 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
                 style: {
                   display: "block",
                   position: "relative",
-                  marginTop: String(tagTongMarginTop) + ea,
-                  width: String(tagTongWidthRatio * 100) + '%',
+                  marginTop: String(subTitleMarginTopReview) + ea,
+                  paddingLeft: String(quoteWidth + titleMarginLeft + reviewSubTitleVisual) + ea,
+                  width: withOut(quoteWidth + titleMarginLeft + reviewSubTitleVisual, ea),
                   left: String(0) + ea,
-                }
+                },
+                children: [
+                  {
+                    text: filteredContents.portfolio.spaceInfo.space + " " + String(filteredContents.portfolio.spaceInfo.pyeong) + "py " + ((media[0] || media[1] || media[2]) ? "홈스타일링 후기" : "후기"),
+                    style: {
+                      display: "inline-block",
+                      fontSize: String(subTitleSize) + ea,
+                      fontWeight: String(titleWeight),
+                      color: colorChip.gray5,
+                    }
+                  },
+                  {
+                    mode: "svg",
+                    source: svgMaker.horizontalArrow(subArrowWidth, subArrowHeight),
+                    style: {
+                      position: "absolute",
+                      width: String(subArrowWidth) + ea,
+                      right: String(0),
+                      bottom: String(subArrowReviewBottom) + ea,
+                    }
+                  }
+                ]
               }
             ]
           });
-          tagTong = block.children[2];
-          for (let t of tag) {
-            tagBlock = createNode({
-              mother: tagTong,
-              text: "<b%#%b> " + t,
-              style: {
-                display: "inline-block",
-                fontSize: String(tagSize) + ea,
-                fontWeight: String(tagWeight),
-                color: colorChip.black,
-                paddingLeft: String(tagPaddingLeft) + ea,
-                paddingTop: String(tagPaddingTop) + ea,
-                paddingBottom: String(tagPaddingBottom) + ea,
-                paddingRight: String(tagPaddingLeft) + ea,
-                borderRadius: String(3) + "px",
-                marginRight: String(tagMarginRight) + ea,
-                background: colorChip.gray2,
-                textAlign: "center",
-              },
-              bold: {
-                fontWeight: String(400),
-                color: colorChip.deactive,
-              }
-            });
 
-            tagBlock.style.width = String(Math.ceil(tagBlock.getBoundingClientRect().width - (tagPaddingLeft * 2)) + 1) + "px";
-
-          }
           instance.relativePhotoNumber++;
         }
       }

@@ -715,14 +715,14 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
   mainWidth = <%% 900, 900, 900, 720, 100 %%>;
   mainPaddingTop = <%% 110, 110, 110, 80, 11.7 %%>;
 
-  titleSize = <%% 23, 23, 23, 21, 4.5 %%>;
+  titleSize = <%% 23, 23, 23, 21, 4.8 %%>;
   titleWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
   titleBarMarginTop = <%% 15, 15, 15, 15, 3 %%>;
   titleBarWidth = <%% 80, 80, 80, 80, 18 %%>;
 
-  contentsSize = <%% 16, 16, 16, 15, 3.5 %%>;
-  contentsTitleSize = <%% 23, 23, 23, 22, 4.2 %%>;
+  contentsSize = <%% 16, 16, 16, 15, 3.8 %%>;
+  contentsTitleSize = <%% 23, 23, 23, 22, 4.5 %%>;
   contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
   contentsLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
 
@@ -1550,6 +1550,13 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
   let subTitle;
   let service;
   let tagBlock;
+  let subInfoSize;
+  let subInfoWeight;
+  let subInfoTextTop;
+  let subArrowWidth;
+  let subArrowHeight;
+  let subArrowBottom;
+  let subArrowReviewBottom;
 
   this.relativePhotoNumber = 0;
 
@@ -1617,6 +1624,14 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
   tagPaddingBottom = <%% (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), isIphone() ? 1.2 : 1.4 %%>;
   tagMarginRight = <%% 3, 2, 3, 2, 1 %%>;
 
+  subInfoSize = <%% 8, 8, 7, 6, 2.5 %%>;
+  subInfoWeight = <%% 500, 500, 500, 500, 500 %%>;
+  subInfoTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
+
+  subArrowWidth = <%% 30, 30, 30, 30, 4 %%>;
+  subArrowHeight = <%% 8, 8, 8, 8, 1.5 %%>;
+  subArrowBottom = <%% 2, 2, 2, 2, 1 %%>;
+  subArrowReviewBottom = <%% 4, 4, 4, 3, 1.5 %%>;
 
   mainTong = createNode({
     mother: totalContents,
@@ -1993,40 +2008,41 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
                 display: "block",
                 position: "relative",
                 marginTop: String(tagTongMarginTop) + ea,
-                width: String(tagTongWidthRatio * 100) + '%',
+                width: String(100) + '%',
+                borderTop: "1px solid " + colorChip.gray2,
                 left: String(0) + ea,
-              }
+                paddingTop: String(tagTongMarginTop) + ea,
+              },
+              children: [
+                {
+                  text: filteredContents.portfolio.spaceInfo.region + "&nbsp;&nbsp;&nbsp;<b%|%b>&nbsp;&nbsp;&nbsp;" + filteredContents.portfolio.spaceInfo.method.split(" ")[0],
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    top: String(subInfoTextTop) + ea,
+                    fontSize: String(subInfoSize) + ea,
+                    fontWeight: String(subInfoWeight),
+                    color: colorChip.black,
+                  },
+                  bold: {
+                    fontWeight: String(subInfoWeight),
+                    color: colorChip.green,
+                  }
+                },
+                {
+                  mode: "svg",
+                  source: svgMaker.horizontalArrow(subArrowWidth, subArrowHeight),
+                  style: {
+                    position: "absolute",
+                    width: String(subArrowWidth) + ea,
+                    right: String(0),
+                    bottom: String(subArrowBottom) + ea,
+                  }
+                }
+              ]
             }
           ]
         });
-        tagTong = block.children[2];
-        for (let t of tag) {
-          tagBlock = createNode({
-            mother: tagTong,
-            text: "<b%#%b> " + t,
-            style: {
-              display: "inline-block",
-              fontSize: String(tagSize) + ea,
-              fontWeight: String(tagWeight),
-              color: colorChip.black,
-              paddingLeft: String(tagPaddingLeft) + ea,
-              paddingTop: String(tagPaddingTop) + ea,
-              paddingBottom: String(tagPaddingBottom) + ea,
-              paddingRight: String(tagPaddingLeft) + ea,
-              borderRadius: String(3) + "px",
-              marginRight: String(tagMarginRight) + ea,
-              background: colorChip.gray2,
-              textAlign: "center",
-            },
-            bold: {
-              fontWeight: String(400),
-              color: colorChip.deactive,
-            }
-          });
-
-          tagBlock.style.width = String(Math.ceil(tagBlock.getBoundingClientRect().width - (tagPaddingLeft * 2)) + 1) + "px";
-
-        }
 
         instance.relativePhotoNumber++;
 

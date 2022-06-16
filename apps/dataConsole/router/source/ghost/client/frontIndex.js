@@ -949,7 +949,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   subInfoWeight = <%% 500, 500, 500, 500, 500 %%>;
   subInfoTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
-  arrowWidth = <%% 30, 30, 30, 30, 4 %%>;
+  arrowWidth = <%% 28, 28, 26, 26, 4 %%>;
   arrowHeight = <%% 8, 8, 8, 8, 1.5 %%>;
   arrowBottom = <%% 2, 2, 2, 2, 1 %%>;
   arrowReviewBottom = <%% 4, 4, 4, 3, 1.5 %%>;
@@ -1251,7 +1251,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
           },
           children: [
             {
-              text: contents.portfolio.spaceInfo.region + "&nbsp;&nbsp;&nbsp;<b%|%b>&nbsp;&nbsp;&nbsp;" + contents.portfolio.spaceInfo.method,
+              text: contents.portfolio.spaceInfo.region + "&nbsp;&nbsp;&nbsp;<b%|%b>&nbsp;&nbsp;&nbsp;" + contents.portfolio.spaceInfo.method.split(" ")[0] + " 스타일링",
               style: {
                 display: "inline-block",
                 position: "relative",

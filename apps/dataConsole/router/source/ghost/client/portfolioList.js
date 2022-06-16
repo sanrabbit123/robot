@@ -767,7 +767,7 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null)
               },
               children: [
                 {
-                  text: contents.portfolio.spaceInfo.region + "&nbsp;&nbsp;&nbsp;<b%|%b>&nbsp;&nbsp;&nbsp;" + contents.portfolio.spaceInfo.method,
+                  text: contents.portfolio.spaceInfo.region + "&nbsp;&nbsp;&nbsp;<b%|%b>&nbsp;&nbsp;&nbsp;" + contents.portfolio.spaceInfo.method.split(" ")[0] + " 스타일링",
                   style: {
                     display: "inline-block",
                     position: "relative",
