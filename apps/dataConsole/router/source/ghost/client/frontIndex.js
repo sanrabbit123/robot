@@ -945,7 +945,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
 
   subInfoSize = <%% 8, 8, 7, 6, 2.5 %%>;
   subInfoWeight = <%% 500, 500, 500, 500, 500 %%>;
-    subInfoTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
+  subInfoTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
   arrowWidth = <%% 30, 30, 30, 30, 4 %%>;
   arrowHeight = <%% 8, 8, 8, 8, 1.5 %%>;

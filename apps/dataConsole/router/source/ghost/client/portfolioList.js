@@ -114,30 +114,31 @@ PortfolioListJs.prototype.insertInitBox = function () {
   let tagTextTop;
   let tagTongBottom;
   let boxTopVisual;
+  let mobileBlockTop;
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
-  whiteBlockMarginBottom = <%% 45, 45, 45, 40, 5 %%>;
+  whiteBlockMarginBottom = <%% 45, 45, 45, 40, 4 %%>;
 
   quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
-  titleFontSize = <%% 35, 33, 32, 30, 5.7 %%>;
+  titleFontSize = <%% 35, 33, 32, 30, 6.4 %%>;
   titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 4) %%>;
 
   servicePaddingTop = <%% 7, 7, 7, 7, 7 %%>;
   servicePaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
-  servicePaddingLeft = <%% 13, 13, 13, 8, 2.2 %%>;
+  servicePaddingLeft = <%% 13, 13, 13, 12, 2.2 %%>;
   serviceMarginRight = <%% 6, 6, 6, 6, 6 %%>;
-  serviceSize = <%% 13, 13, 13, 13, 3.3 %%>;
+  serviceSize = <%% 13, 13, 13, 12, 3.3 %%>;
   serviceBlockPaddingTop = <%% (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), 5 %%>;
 
   whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
   whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
 
-  searchBarPaddingTop = <%% 210, 210, 192, 164, 5.2 %%>;
-  searchBarHeight = <%% 40, 40, 40, 40, 8 %%>;
-  searchBarWidth = <%% 690, 516, 516, 475, 74 %%>;
+  searchBarPaddingTop = <%% 210, 210, 192, 164, 11.5 %%>;
+  searchBarHeight = <%% 40, 40, 40, 36, 8 %%>;
+  searchBarWidth = <%% 690, 516, 516, 420, 88 %%>;
 
   searchIconHeight = <%% 20, 20, 20, 20, 4 %%>;
   searchIconRight = <%% 11, 11, 11, 11, 2 %%>;
@@ -145,11 +146,11 @@ PortfolioListJs.prototype.insertInitBox = function () {
 
   inputWithoutHeight = <%% (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), 0.8 %%>;
 
-  inputSize = <%% 15, 15, 15, 15, 3.1 %%>;
+  inputSize = <%% 15, 15, 15, 14, 3.1 %%>;
   inputWeight = <%% 300, 300, 300, 300, 300 %%>;
 
-  subTitleMarginTop = <%% 2, 2, 1, 1, 2 %%>;
-  subTitleFontSize = <%% 16, 16, 16, 15, 3 %%>;
+  subTitleMarginTop = <%% 2, 2, 1, 1, 0.2 %%>;
+  subTitleFontSize = <%% 16, 16, 16, 15, 3.2 %%>;
   subTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
 
   tagTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
@@ -158,6 +159,8 @@ PortfolioListJs.prototype.insertInitBox = function () {
 
   titleWording = "디자이너 포트폴리오";
   subTitleContents = "포트폴리오로 찾는 나의 스타일";
+
+  mobileBlockTop = 3.5;
 
   searchTags = [];
   if (media[0]) {
@@ -203,6 +206,7 @@ PortfolioListJs.prototype.insertInitBox = function () {
       width: String(100) + '%',
       marginBottom: String(whiteBlockMarginBottom) + ea,
       top: String(-1 * boxTopVisual) + ea,
+      paddingTop: desktop ? "" : String(mobileBlockTop) + ea,
     }
   });
 
@@ -298,7 +302,8 @@ PortfolioListJs.prototype.insertInitBox = function () {
           width: String(searchBarWidth) + ea,
           height: String(searchBarHeight) + ea,
           borderRadius: String(5) + "px",
-          background: colorChip.gray2,
+          background: desktop ? colorChip.gray2 : colorChip.white,
+          opacity: desktop ? String(1) : String(0.88),
         },
         children: [
           {
@@ -424,7 +429,7 @@ PortfolioListJs.prototype.insertInitBox = function () {
   serviceBlock = createNode({
     mother: middleBox,
     style: {
-      display: "block",
+      display: desktop ? "block" : "none",
       position: "absolute",
       textAlign: "center",
       right: String(0),
@@ -604,7 +609,7 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null)
   tagPaddingBottom = <%% (isMac() ? 7 : 6), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isIphone() ? 1.2 : 1.4) %%>;
   tagMarginRight = <%% 4, 3, 3, 3, 1 %%>;
 
-  subInfoSize = <%% 12, 11, 11, 10, 2.8 %%>;
+  subInfoSize = <%% 12, 11, 11, 10, 2.5 %%>;
   subInfoWeight = <%% 500, 500, 500, 500, 500 %%>;
   subInfoTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
