@@ -402,20 +402,14 @@ KakaoTalk.prototype.templateTong = function (target) {
       },
     },
     curationComplete: {
-      name: "큐레이션 완료 수정 수정 수정",
-      id: "TI_4993",
+      name: "큐레이션 완료 수정 수정 수정 링크 없는 버전",
+      id: "TJ_0535",
       needs: [
         "client",
-        "host",
-        "path",
-        "cliid"
       ],
       convert: function (obj) {
         return [
           { from: "client", to: obj.client },
-          { from: "host", to: obj.host },
-          { from: "path", to: obj.path },
-          { from: "cliid", to: obj.cliid },
         ];
       },
     },
