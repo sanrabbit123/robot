@@ -190,7 +190,6 @@ PortfolioListJs.prototype.insertInitBox = function () {
     searchTags.push("깔끔한");
     searchTags.push("아이방");
     searchTags.push("제작가구");
-    searchTags.push("화이트");
   }
 
   placeholder = "새아파트";
