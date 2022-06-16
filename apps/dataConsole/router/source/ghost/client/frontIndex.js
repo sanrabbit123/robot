@@ -862,6 +862,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   let subInfoSize, subInfoWeight;
   let arrowWidth, arrowHeight, arrowBottom, arrowReviewBottom;
   let reviewSubTitleVisual;
+  let subInfoTextTop;
 
   mainPaddingTop = <%% 140, 120, 90, 65, 8 %%>;
   mainPaddingBottom = <%% 120, 100, 60, 45, 8 %%>;
@@ -944,6 +945,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
 
   subInfoSize = <%% 8, 8, 7, 6, 2.5 %%>;
   subInfoWeight = <%% 500, 500, 500, 500, 500 %%>;
+    subInfoTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
   arrowWidth = <%% 30, 30, 30, 30, 4 %%>;
   arrowHeight = <%% 8, 8, 8, 8, 1.5 %%>;
@@ -1250,6 +1252,8 @@ FrontIndexJs.prototype.insertSearchBox = function () {
               text: contents.portfolio.spaceInfo.region + "&nbsp;&nbsp;&nbsp;<b%|%b>&nbsp;&nbsp;&nbsp;" + contents.portfolio.spaceInfo.method,
               style: {
                 display: "inline-block",
+                position: "relative",
+                top: String(subInfoTextTop) + ea,
                 fontSize: String(subInfoSize) + ea,
                 fontWeight: String(subInfoWeight),
                 color: colorChip.black,

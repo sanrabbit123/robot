@@ -85,7 +85,7 @@ GeneralJs.prototype.setBackground = function (binaryPath, second = false, random
           width: String(100) + '%',
           height: String(backHeight) + ea,
           backgroundImage: "url('" + binaryPath + "/" + backgroundImageName + "')",
-          backgroundSize: (!media[3] && !media[4]) ? "100% auto" : "auto 100%",
+          backgroundSize: this.backgroundType !== 1 ? ((!media[3] && !media[4]) ? "100% auto" : "auto 100%") : (mobile ? "auto 100%" : "100% auto"),
           backgroundPosition: "top",
           animation: "justfadeinoriginal 0.3s ease forwards",
         }
@@ -509,7 +509,7 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
 
     this.backgroundType = base.backgroundType;
     if (base.backgroundType === 1) {
-      this.backHeight = <%% 420, 420, 410, 320, 80 %%>;
+      this.backHeight = <%% 420, 420, 375, 320, 80 %%>;
       base.instance.backHeight = this.backHeight;
     }
 

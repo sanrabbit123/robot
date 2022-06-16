@@ -108,20 +108,26 @@ PortfolioListJs.prototype.insertInitBox = function () {
   let titleTop;
   let servicePaddingTop, servicePaddingBottom;
   let serviceMarginRight;
+  let subTitleMarginTop, subTitleFontSize, subTitleWeight;
+  let subTitleContents;
+  let middleBox;
+  let tagTextTop;
+  let tagTongBottom;
+  let boxTopVisual;
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
-  whiteBlockMarginBottom = <%% 50, 50, 50, 50, 5 %%>;
+  whiteBlockMarginBottom = <%% 45, 45, 45, 40, 5 %%>;
 
-  quoteHeight = <%% 15, 15, 15, 15, 2.5 %%>;
+  quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
-  titleFontSize = <%% 35, 35, 35, 35, 5.7 %%>;
-  titleFontWeight = <%% 700, 700, 700, 500, 500 %%>;
+  titleFontSize = <%% 35, 33, 32, 30, 5.7 %%>;
+  titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 4) %%>;
 
   servicePaddingTop = <%% 7, 7, 7, 7, 7 %%>;
   servicePaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
-  servicePaddingLeft = <%% 12, 18, 13, 8, 2.2 %%>;
+  servicePaddingLeft = <%% 13, 13, 13, 8, 2.2 %%>;
   serviceMarginRight = <%% 6, 6, 6, 6, 6 %%>;
   serviceSize = <%% 13, 13, 13, 13, 3.3 %%>;
   serviceBlockPaddingTop = <%% (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), 5 %%>;
@@ -129,9 +135,9 @@ PortfolioListJs.prototype.insertInitBox = function () {
   whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
   whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
 
-  searchBarPaddingTop = <%% 20, 20, 20, 20, 5.2 %%>;
+  searchBarPaddingTop = <%% 210, 210, 192, 164, 5.2 %%>;
   searchBarHeight = <%% 40, 40, 40, 40, 8 %%>;
-  searchBarWidth = <%% 500, 500, 490, 450, 74 %%>;
+  searchBarWidth = <%% 690, 516, 516, 475, 74 %%>;
 
   searchIconHeight = <%% 20, 20, 20, 20, 4 %%>;
   searchIconRight = <%% 11, 11, 11, 11, 2 %%>;
@@ -142,20 +148,47 @@ PortfolioListJs.prototype.insertInitBox = function () {
   inputSize = <%% 15, 15, 15, 15, 3.1 %%>;
   inputWeight = <%% 300, 300, 300, 300, 300 %%>;
 
+  subTitleMarginTop = <%% 2, 2, 1, 1, 2 %%>;
+  subTitleFontSize = <%% 16, 16, 16, 15, 3 %%>;
+  subTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
+
+  tagTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
+  tagTongBottom = <%% 3, 3, 1, 1, 0 %%>;
+  boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
+
   titleWording = "디자이너 포트폴리오";
+  subTitleContents = "포트폴리오로 찾는 나의 스타일";
 
   searchTags = [];
-  searchTags.push("새아파트");
-  searchTags.push("깔끔한");
-  searchTags.push("감성적인");
-  searchTags.push("유니크");
-  searchTags.push("거실");
-  searchTags.push("주방");
-  searchTags.push("아이방");
-  searchTags.push("1인가구");
-  searchTags.push("모던");
-  searchTags.push("제작가구");
-  searchTags.push("화이트");
+  if (media[0]) {
+    searchTags.push("깔끔한");
+    searchTags.push("감성적인");
+    searchTags.push("거실");
+    searchTags.push("아이방");
+    searchTags.push("모던");
+    searchTags.push("제작가구");
+    searchTags.push("화이트");
+  } else if (media[1]) {
+    searchTags.push("깔끔한");
+    searchTags.push("감성적인");
+    searchTags.push("아이방");
+    searchTags.push("제작가구");
+    searchTags.push("화이트");
+  } else if (media[2]) {
+    searchTags.push("깔끔한");
+    searchTags.push("아이방");
+    searchTags.push("제작가구");
+    searchTags.push("화이트");
+  } else if (media[3]) {
+    searchTags.push("깔끔한");
+    searchTags.push("아이방");
+    searchTags.push("제작가구");
+  } else if (media[4]) {
+    searchTags.push("깔끔한");
+    searchTags.push("아이방");
+    searchTags.push("제작가구");
+    searchTags.push("화이트");
+  }
 
   placeholder = "새아파트";
 
@@ -164,11 +197,12 @@ PortfolioListJs.prototype.insertInitBox = function () {
   whiteBlock = createNode({
     mother: this.baseTong,
     style: {
+      display: "block",
       position: "relative",
       borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
-      paddingBottom: String(whiteBlockPaddingBottom * 10) + ea,
       marginBottom: String(whiteBlockMarginBottom) + ea,
+      top: String(-1 * boxTopVisual) + ea,
     }
   });
 
@@ -229,32 +263,30 @@ PortfolioListJs.prototype.insertInitBox = function () {
       textAlign: "center",
       justifyContent: "center",
       alignItems: "center",
-      marginTop: String(2) + ea,
+      marginTop: String(subTitleMarginTop) + ea,
     },
     children: [
       {
-        text: "포트폴리오로 찾는 나의 스타일",
+        text: subTitleContents,
         style: {
           display: "inline-block",
           position: "relative",
           top: mobile ? "" : String(0) + ea,
-          fontSize: String(16) + ea,
-          fontWeight: String(500),
+          fontSize: String(subTitleFontSize) + ea,
+          fontWeight: String(subTitleWeight),
           color: colorChip.white,
         }
       }
     ]
   });
 
-  /*
-
-  createNode({
+  middleBox = createNode({
     mother: whiteBlock,
     style: {
       display: "flex",
       position: "relative",
       textAlign: "center",
-      justifyContent: "center",
+      justifyContent: "left",
       alignItems: "center",
       paddingTop: String(searchBarPaddingTop) + ea,
     },
@@ -266,7 +298,7 @@ PortfolioListJs.prototype.insertInitBox = function () {
           width: String(searchBarWidth) + ea,
           height: String(searchBarHeight) + ea,
           borderRadius: String(5) + "px",
-          background: colorChip.gray1,
+          background: colorChip.gray2,
         },
         children: [
           {
@@ -354,18 +386,19 @@ PortfolioListJs.prototype.insertInitBox = function () {
         }
       },
       style: {
-        display: "inline-block",
+        display: "inline-flex",
         position: "relative",
-        paddingTop: String(servicePaddingTop) + ea,
-        paddingBottom: String(servicePaddingBottom) + ea,
+        height: String(searchBarHeight - (tagTongBottom * 2)) + ea,
         marginRight: String(serviceMarginRight) + ea,
         paddingLeft: String(servicePaddingLeft) + ea,
         paddingRight: String(servicePaddingLeft) + ea,
-        marginBottom: desktop ? "" : String(servicePaddingLeft) + ea,
         textAlign: "center",
-        background: colorChip.gray1,
+        background: colorChip.gray2,
         borderRadius: String(5) + "px",
         cursor: "pointer",
+        justifyContent: "center",
+        alignItems: "center",
+        textAlign: "center",
       },
       children: [
         {
@@ -373,6 +406,7 @@ PortfolioListJs.prototype.insertInitBox = function () {
           style: {
             display: "inline-block",
             position: "relative",
+            top: String(tagTextTop) + ea,
             fontSize: String(serviceSize) + ea,
             fontWeight: String(400),
             color: colorChip.black,
@@ -388,12 +422,13 @@ PortfolioListJs.prototype.insertInitBox = function () {
   }
 
   serviceBlock = createNode({
-    mother: whiteBlock,
+    mother: middleBox,
     style: {
       display: "block",
-      position: "relative",
+      position: "absolute",
       textAlign: "center",
-      paddingTop: String(serviceBlockPaddingTop) + ea,
+      right: String(0),
+      bottom: String(tagTongBottom) + ea,
     },
     children: serviceChildren
   });
@@ -404,8 +439,6 @@ PortfolioListJs.prototype.insertInitBox = function () {
   }
 
   serviceBlock.lastChild.style.marginRight = "";
-
-  */
 
 }
 
@@ -476,6 +509,13 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null)
   let titleSubMarginTop;
   let service;
   let tagBlock;
+  let subInfoSize;
+  let subInfoWeight;
+  let arrowWidth;
+  let arrowHeight;
+  let arrowBottom;
+  let arrowReviewBottom;
+  let subInfoTextTop;
 
   if (typeof search === "string") {
 
@@ -553,7 +593,7 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null)
   seroSliceEnd = <%% 16, 15, 17, 15, 13 %%>;
   seroSliceLimit = <%% 30, 30, 30, 30, 30 %%>;
 
-  tagTongMarginTop = <%% 11, 11, 10, 8, 1.3 %%>;
+  tagTongMarginTop = <%% (isMac() ? 11 : 10), (isMac() ? 11 : 10), (isMac() ? 10 : 9), (isMac() ? 8 : 7), 1.3 %%>;
   tagTongWidthRatio = <%% 2, 2, 2, 2, 2 %%>;
 
   tagSize = <%% 12, 10, 10, 9, 2 %%>;
@@ -563,6 +603,15 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null)
   tagPaddingTop = <%% (isMac() ? 5 : 6), (isMac() ? 4 : 5), (isMac() ? 4 : 5), (isMac() ? 4 : 5), 1 %%>;
   tagPaddingBottom = <%% (isMac() ? 7 : 6), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isIphone() ? 1.2 : 1.4) %%>;
   tagMarginRight = <%% 4, 3, 3, 3, 1 %%>;
+
+  subInfoSize = <%% 12, 11, 11, 10, 2.8 %%>;
+  subInfoWeight = <%% 500, 500, 500, 500, 500 %%>;
+  subInfoTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
+
+  arrowWidth = <%% 32, 30, 30, 26, 4 %%>;
+  arrowHeight = <%% 9, 8, 8, 8, 1.5 %%>;
+  arrowBottom = <%% 3, 3, 3, 2, 1 %%>;
+  arrowReviewBottom = <%% 4, 4, 4, 3, 1 %%>;
 
   baseBlock = baseTong.children[1];
 
@@ -694,7 +743,7 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null)
                         position: "relative",
                         fontSize: String(titleSubSize) + ea,
                         fontWeight: String(titleWeight),
-                        color: colorChip.deactive,
+                        color: colorChip.gray5,
                         width: String(200) + '%',
                       },
                     }
@@ -707,40 +756,44 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null)
                 display: "block",
                 position: "relative",
                 marginTop: String(tagTongMarginTop) + ea,
-                width: String(tagTongWidthRatio * 100) + '%',
+                width: String(100) + '%',
+                borderTop: "1px solid " + colorChip.gray3,
                 left: String(0) + ea,
-              }
+                paddingTop: String(tagTongMarginTop) + ea,
+              },
+              children: [
+                {
+                  text: contents.portfolio.spaceInfo.region + "&nbsp;&nbsp;&nbsp;<b%|%b>&nbsp;&nbsp;&nbsp;" + contents.portfolio.spaceInfo.method,
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    top: String(subInfoTextTop) + ea,
+                    fontSize: String(subInfoSize) + ea,
+                    fontWeight: String(subInfoWeight),
+                    color: colorChip.black,
+                  },
+                  bold: {
+                    fontWeight: String(subInfoWeight),
+                    color: colorChip.green,
+                  }
+                },
+                {
+                  mode: "svg",
+                  source: svgMaker.horizontalArrow(arrowWidth, arrowHeight),
+                  style: {
+                    position: "absolute",
+                    width: String(arrowWidth) + ea,
+                    right: String(0),
+                    bottom: String(arrowBottom) + ea,
+                  }
+                }
+              ]
             }
           ]
         });
-        tagTong = block.children[2];
-        for (let t of tag) {
-          tagBlock = createNode({
-            mother: tagTong,
-            text: "<b%#%b> " + t,
-            style: {
-              display: "inline-block",
-              fontSize: String(tagSize) + ea,
-              fontWeight: String(tagWeight),
-              color: colorChip.black,
-              paddingLeft: String(tagPaddingLeft) + ea,
-              paddingTop: String(tagPaddingTop) + ea,
-              paddingBottom: String(tagPaddingBottom) + ea,
-              paddingRight: String(tagPaddingLeft) + ea,
-              borderRadius: String(3) + "px",
-              marginRight: String(tagMarginRight) + ea,
-              background: colorChip.gray2,
-              textAlign: "center",
-            },
-            bold: {
-              fontWeight: String(400),
-              color: colorChip.deactive,
-            }
-          });
 
-          tagBlock.style.width = String(Math.ceil(tagBlock.getBoundingClientRect().width - (tagPaddingLeft * 2)) + 1) + "px";
 
-        }
+
 
         if (search === null) {
           this.loadedContents.push(i);
