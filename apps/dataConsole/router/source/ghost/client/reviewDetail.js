@@ -1380,7 +1380,7 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
   subArrowWidth = <%% 24, 20, 24, 24, 4 %%>;
   subArrowHeight = <%% 8, 8, 8, 8, 1.5 %%>;
   subArrowBottom = <%% 2, 2, 2, 2, 1 %%>;
-  subArrowReviewBottom = <%% 4, 4, 4, 3, 1.5 %%>;
+  subArrowReviewBottom = <%% (isMac() ? 5 : 6), (isMac() ? 5 : 6), (isMac() ? 4 : 6), (isMac() ? 4 : 6), 1.5 %%>;
 
   reviewSubTitleVisual = <%% 1, 1, 1, 0, 0 %%>;
 

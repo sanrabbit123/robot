@@ -1624,13 +1624,13 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
   tagPaddingBottom = <%% (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), isIphone() ? 1.2 : 1.4 %%>;
   tagMarginRight = <%% 3, 2, 3, 2, 1 %%>;
 
-  subInfoSize = <%% 8, 8, 7, 6, 2.5 %%>;
+  subInfoSize = <%% 12, 11, 11, 10, 2.5 %%>;
   subInfoWeight = <%% 500, 500, 500, 500, 500 %%>;
   subInfoTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
   subArrowWidth = <%% 30, 30, 30, 30, 4 %%>;
   subArrowHeight = <%% 8, 8, 8, 8, 1.5 %%>;
-  subArrowBottom = <%% 2, 2, 2, 2, 1 %%>;
+  subArrowBottom = <%% 3, 3, 3, 2, 1 %%>;
   subArrowReviewBottom = <%% 4, 4, 4, 3, 1.5 %%>;
 
   mainTong = createNode({
@@ -2015,7 +2015,7 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
               },
               children: [
                 {
-                  text: filteredContents.portfolio.spaceInfo.region + "&nbsp;&nbsp;&nbsp;<b%|%b>&nbsp;&nbsp;&nbsp;" + filteredContents.portfolio.spaceInfo.method.split(" ")[0],
+                  text: filteredContents.portfolio.spaceInfo.region + "&nbsp;&nbsp;&nbsp;<b%|%b>&nbsp;&nbsp;&nbsp;" + filteredContents.portfolio.spaceInfo.method.split(" ")[0] + " 스타일링",
                   style: {
                     display: "inline-block",
                     position: "relative",
