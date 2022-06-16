@@ -509,7 +509,7 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
 
     this.backgroundType = base.backgroundType;
     if (base.backgroundType === 1) {
-      this.backHeight = <%% 420, 420, 375, 320, 100 %%>;
+      this.backHeight = <%% 420, 420, 375, 320, 94 %%>;
       base.instance.backHeight = this.backHeight;
     }
 

@@ -136,7 +136,7 @@ PortfolioListJs.prototype.insertInitBox = function () {
   whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
   whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
 
-  searchBarPaddingTop = <%% 210, 210, 192, 164, 11.5 %%>;
+  searchBarPaddingTop = <%% 220, 220, 192, 164, 11.5 %%>;
   searchBarHeight = <%% 40, 40, 40, 36, 8 %%>;
   searchBarWidth = <%% 690, 516, 516, 420, 88 %%>;
 
@@ -612,10 +612,10 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null)
   subInfoWeight = <%% 500, 500, 500, 500, 500 %%>;
   subInfoTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
-  arrowWidth = <%% 32, 30, 30, 26, 4 %%>;
+  arrowWidth = <%% 32, 28, 28, 26, 4 %%>;
   arrowHeight = <%% 9, 8, 8, 8, 1.5 %%>;
   arrowBottom = <%% 3, 3, 3, 2, 1 %%>;
-  arrowReviewBottom = <%% 4, 4, 4, 3, 1 %%>;
+  arrowReviewBottom = <%% 5, 4, 4, 4, 1 %%>;
 
   baseBlock = baseTong.children[1];
 

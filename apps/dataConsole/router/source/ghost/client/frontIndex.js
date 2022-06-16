@@ -863,6 +863,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   let arrowWidth, arrowHeight, arrowBottom, arrowReviewBottom;
   let reviewSubTitleVisual;
   let subInfoTextTop;
+  let subTitleMarginTopReview;
 
   mainPaddingTop = <%% 140, 120, 90, 65, 8 %%>;
   mainPaddingBottom = <%% 120, 100, 60, 45, 8 %%>;
@@ -920,6 +921,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   titleMarginLeft = <%% 5, 5, 5, 5, 1.1 %%>;
 
   subTitleMarginTop = <%% 3, 3, 3, 3, 0.5 %%>;
+  subTitleMarginTopReview = <%% 3, 3, 3, 2, 0.2 %%>;
   subTitleSize = <%% 12, 12, 12, 12, 2.5 %%>;
 
   subTitleOverWidthRatio = <%% 2, 2, 2, 2, 2 %%>;
@@ -950,7 +952,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   arrowWidth = <%% 30, 30, 30, 30, 4 %%>;
   arrowHeight = <%% 8, 8, 8, 8, 1.5 %%>;
   arrowBottom = <%% 2, 2, 2, 2, 1 %%>;
-  arrowReviewBottom = <%% 4, 4, 4, 3, 1 %%>;
+  arrowReviewBottom = <%% 4, 4, 4, 3, 1.5 %%>;
 
   reviewSubTitleVisual = <%% 1, 1, 1, 0, 0 %%>;
 
@@ -1444,7 +1446,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
           style: {
             display: "block",
             position: "relative",
-            marginTop: String(subTitleMarginTop) + ea,
+            marginTop: String(subTitleMarginTopReview) + ea,
             paddingLeft: String(quoteWidth + titleMarginLeft + reviewSubTitleVisual) + ea,
             width: withOut(quoteWidth + titleMarginLeft + reviewSubTitleVisual, ea),
             left: String(0) + ea,

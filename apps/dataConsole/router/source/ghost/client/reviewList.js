@@ -108,30 +108,37 @@ ReviewListJs.prototype.insertInitBox = function () {
   let titleTop;
   let servicePaddingTop, servicePaddingBottom;
   let serviceMarginRight;
+  let subTitleMarginTop, subTitleFontSize, subTitleWeight;
+  let subTitleContents;
+  let middleBox;
+  let tagTextTop;
+  let tagTongBottom;
+  let boxTopVisual;
+  let mobileBlockTop;
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
-  whiteBlockMarginBottom = <%% 50, 50, 50, 50, 5 %%>;
+  whiteBlockMarginBottom = <%% 45, 45, 45, 40, 4 %%>;
 
-  quoteHeight = <%% 11, 11, 11, 11, 2.5 %%>;
+  quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
-  titleFontSize = <%% 31, 31, 30, 28, 5.7 %%>;
-  titleFontWeight = <%% 500, 500, 500, 500, 500 %%>;
+  titleFontSize = <%% 35, 33, 32, 30, 6.4 %%>;
+  titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 4) %%>;
 
   servicePaddingTop = <%% 7, 7, 7, 7, 7 %%>;
   servicePaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
-  servicePaddingLeft = <%% 12, 18, 13, 8, 2.2 %%>;
+  servicePaddingLeft = <%% 13, 13, 13, 12, 2.2 %%>;
   serviceMarginRight = <%% 6, 6, 6, 6, 6 %%>;
-  serviceSize = <%% 13, 13, 13, 13, 3.3 %%>;
+  serviceSize = <%% 13, 13, 13, 12, 3.3 %%>;
   serviceBlockPaddingTop = <%% (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), 5 %%>;
 
   whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
   whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
 
-  searchBarPaddingTop = <%% 20, 20, 20, 20, 5.2 %%>;
-  searchBarHeight = <%% 40, 40, 40, 40, 8 %%>;
-  searchBarWidth = <%% 500, 500, 490, 450, 74 %%>;
+  searchBarPaddingTop = <%% 220, 220, 192, 164, 11.5 %%>;
+  searchBarHeight = <%% 40, 40, 40, 36, 8 %%>;
+  searchBarWidth = <%% 690, 516, 516, 420, 88 %%>;
 
   searchIconHeight = <%% 20, 20, 20, 20, 4 %%>;
   searchIconRight = <%% 11, 11, 11, 11, 2 %%>;
@@ -139,23 +146,51 @@ ReviewListJs.prototype.insertInitBox = function () {
 
   inputWithoutHeight = <%% (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), 0.8 %%>;
 
-  inputSize = <%% 15, 15, 15, 15, 3.1 %%>;
+  inputSize = <%% 15, 15, 15, 14, 3.1 %%>;
   inputWeight = <%% 300, 300, 300, 300, 300 %%>;
 
+  subTitleMarginTop = <%% 2, 2, 1, 1, 0.2 %%>;
+  subTitleFontSize = <%% 16, 16, 16, 15, 3.2 %%>;
+  subTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
+
+  tagTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
+  tagTongBottom = <%% 3, 3, 1, 1, 0 %%>;
+  boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
+
   titleWording = "솔직한 고객 후기";
+  subTitleContents = "우리집을 소개합니다";
+
+  mobileBlockTop = 3.5;
 
   searchTags = [];
-  searchTags.push("새아파트");
-  searchTags.push("깔끔한");
-  searchTags.push("감성적인");
-  searchTags.push("유니크");
-  searchTags.push("거실");
-  searchTags.push("주방");
-  searchTags.push("아이방");
-  searchTags.push("1인가구");
-  searchTags.push("모던");
-  searchTags.push("제작가구");
-  searchTags.push("화이트");
+  if (media[0]) {
+    searchTags.push("깔끔한");
+    searchTags.push("감성적인");
+    searchTags.push("거실");
+    searchTags.push("아이방");
+    searchTags.push("모던");
+    searchTags.push("제작가구");
+    searchTags.push("화이트");
+  } else if (media[1]) {
+    searchTags.push("깔끔한");
+    searchTags.push("감성적인");
+    searchTags.push("아이방");
+    searchTags.push("제작가구");
+    searchTags.push("화이트");
+  } else if (media[2]) {
+    searchTags.push("깔끔한");
+    searchTags.push("아이방");
+    searchTags.push("제작가구");
+    searchTags.push("화이트");
+  } else if (media[3]) {
+    searchTags.push("깔끔한");
+    searchTags.push("아이방");
+    searchTags.push("제작가구");
+  } else if (media[4]) {
+    searchTags.push("깔끔한");
+    searchTags.push("아이방");
+    searchTags.push("제작가구");
+  }
 
   placeholder = "새아파트";
 
@@ -164,18 +199,17 @@ ReviewListJs.prototype.insertInitBox = function () {
   whiteBlock = createNode({
     mother: this.baseTong,
     style: {
+      display: "block",
       position: "relative",
       borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
-      paddingTop: String(whiteBlockPaddingTop) + ea,
-      paddingBottom: String(whiteBlockPaddingBottom) + ea,
-      background: colorChip.white,
       marginBottom: String(whiteBlockMarginBottom) + ea,
-      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      top: String(-1 * boxTopVisual) + ea,
+      paddingTop: desktop ? "" : String(mobileBlockTop) + ea,
     }
   });
 
-  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
+  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.white))) * quoteHeight;
   createNode({
     mother: whiteBlock,
     style: {
@@ -185,11 +219,12 @@ ReviewListJs.prototype.insertInitBox = function () {
       justifyContent: "center",
       alignItems: "center",
       height: String(quotoTongHeight) + ea,
+      opacity: String(0.6),
     },
     children: [
       {
         mode: "svg",
-        source: svgMaker.doubleQuote(colorChip.green),
+        source: svgMaker.doubleQuote(colorChip.white),
         style: {
           display: "inline-block",
           height: String(quoteHeight) + ea,
@@ -217,7 +252,7 @@ ReviewListJs.prototype.insertInitBox = function () {
           top: mobile ? "" : String(titleTop) + ea,
           fontSize: String(titleFontSize) + ea,
           fontWeight: String(titleFontWeight),
-          color: colorChip.black,
+          color: colorChip.white,
         }
       }
     ]
@@ -231,6 +266,31 @@ ReviewListJs.prototype.insertInitBox = function () {
       textAlign: "center",
       justifyContent: "center",
       alignItems: "center",
+      marginTop: String(subTitleMarginTop) + ea,
+    },
+    children: [
+      {
+        text: subTitleContents,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: mobile ? "" : String(0) + ea,
+          fontSize: String(subTitleFontSize) + ea,
+          fontWeight: String(subTitleWeight),
+          color: colorChip.white,
+        }
+      }
+    ]
+  });
+
+  middleBox = createNode({
+    mother: whiteBlock,
+    style: {
+      display: "flex",
+      position: "relative",
+      textAlign: "center",
+      justifyContent: "left",
+      alignItems: "center",
       paddingTop: String(searchBarPaddingTop) + ea,
     },
     children: [
@@ -241,7 +301,8 @@ ReviewListJs.prototype.insertInitBox = function () {
           width: String(searchBarWidth) + ea,
           height: String(searchBarHeight) + ea,
           borderRadius: String(5) + "px",
-          background: colorChip.gray1,
+          background: desktop ? colorChip.gray2 : colorChip.white,
+          opacity: desktop ? String(1) : String(0.88),
         },
         children: [
           {
@@ -329,18 +390,19 @@ ReviewListJs.prototype.insertInitBox = function () {
         }
       },
       style: {
-        display: "inline-block",
+        display: "inline-flex",
         position: "relative",
-        paddingTop: String(servicePaddingTop) + ea,
-        paddingBottom: String(servicePaddingBottom) + ea,
+        height: String(searchBarHeight - (tagTongBottom * 2)) + ea,
         marginRight: String(serviceMarginRight) + ea,
         paddingLeft: String(servicePaddingLeft) + ea,
         paddingRight: String(servicePaddingLeft) + ea,
-        marginBottom: desktop ? "" : String(servicePaddingLeft) + ea,
         textAlign: "center",
-        background: colorChip.gray1,
+        background: colorChip.gray2,
         borderRadius: String(5) + "px",
         cursor: "pointer",
+        justifyContent: "center",
+        alignItems: "center",
+        textAlign: "center",
       },
       children: [
         {
@@ -348,6 +410,7 @@ ReviewListJs.prototype.insertInitBox = function () {
           style: {
             display: "inline-block",
             position: "relative",
+            top: String(tagTextTop) + ea,
             fontSize: String(serviceSize) + ea,
             fontWeight: String(400),
             color: colorChip.black,
@@ -363,12 +426,13 @@ ReviewListJs.prototype.insertInitBox = function () {
   }
 
   serviceBlock = createNode({
-    mother: whiteBlock,
+    mother: middleBox,
     style: {
-      display: "block",
-      position: "relative",
+      display: desktop ? "block" : "none",
+      position: "absolute",
       textAlign: "center",
-      paddingTop: String(serviceBlockPaddingTop) + ea,
+      right: String(0),
+      bottom: String(tagTongBottom) + ea,
     },
     children: serviceChildren
   });
@@ -447,6 +511,14 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
   let contentsArrCopied;
   let attach;
   let tagBlock;
+  let subTitleMarginTop;
+  let subTitleSize;
+  let reviewSubTitleVisual;
+  let arrowWidth;
+  let arrowHeight;
+  let arrowBottom;
+  let arrowReviewBottom;
+  let subTitleTextTop;
 
   if (typeof search === "string") {
 
@@ -531,6 +603,17 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
   tagPaddingTop = <%% (isMac() ? 5 : 6), (isMac() ? 4 : 5), (isMac() ? 4 : 5), (isMac() ? 4 : 5), 0.9 %%>;
   tagPaddingBottom = <%% (isMac() ? 7 : 6), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), isIphone() ? 1.2 : 1.4 %%>;
   tagMarginRight = <%% 4, 3, 3, 3, 1 %%>;
+
+  subTitleMarginTop = <%% 3, 3, 3, 2, 0.2 %%>;
+  subTitleSize = <%% 14, 12, 12, 11, 2.6 %%>;
+  subTitleTextTop = <%% (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 0), 0 %%>;
+
+  reviewSubTitleVisual = <%% 1, 1, 1, 0, 0 %%>;
+
+  arrowWidth = <%% 32, 28, 28, 26, 4 %%>;
+  arrowHeight = <%% 9, 8, 8, 8, 1.5 %%>;
+  arrowBottom = <%% 3, 3, 3, 2, 1 %%>;
+  arrowReviewBottom = <%% (isMac() ? 5 : 6), (isMac() ? 4 : 5), (isMac() ? 4 : 5), (isMac() ? 4 : 5), 1.5 %%>;
 
   baseBlock = baseTong.children[1];
 
@@ -651,41 +734,38 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
                 style: {
                   display: "block",
                   position: "relative",
-                  marginTop: String(tagTongMarginTop) + ea,
-                  width: String(tagTongWidthRatio * 100) + '%',
+                  marginTop: String(subTitleMarginTop) + ea,
+                  paddingLeft: String(quoteWidth + titleMarginLeft + reviewSubTitleVisual) + ea,
+                  width: withOut(quoteWidth + titleMarginLeft + reviewSubTitleVisual, ea),
                   left: String(0) + ea,
-                }
+                },
+                children: [
+                  {
+                    text: contents.portfolio.spaceInfo.space + " " + String(contents.portfolio.spaceInfo.pyeong) + "py " + (desktop ? "홈스타일링 후기" : "후기"),
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      top: String(subTitleTextTop) + ea,
+                      fontSize: String(subTitleSize) + ea,
+                      fontWeight: String(titleWeight),
+                      color: colorChip.gray5,
+                    }
+                  },
+                  {
+                    mode: "svg",
+                    source: svgMaker.horizontalArrow(arrowWidth, arrowHeight),
+                    style: {
+                      position: "absolute",
+                      width: String(arrowWidth) + ea,
+                      right: String(0),
+                      bottom: String(arrowReviewBottom) + ea,
+                    }
+                  }
+                ]
               }
             ]
           });
-          tagTong = block.children[2];
-          for (let t of tag) {
-            tagBlock = createNode({
-              mother: tagTong,
-              text: "<b%#%b> " + t,
-              style: {
-                display: "inline-block",
-                fontSize: String(tagSize) + ea,
-                fontWeight: String(tagWeight),
-                color: colorChip.black,
-                paddingLeft: String(tagPaddingLeft) + ea,
-                paddingTop: String(tagPaddingTop) + ea,
-                paddingBottom: String(tagPaddingBottom) + ea,
-                paddingRight: String(tagPaddingLeft) + ea,
-                borderRadius: String(3) + "px",
-                marginRight: String(tagMarginRight) + ea,
-                background: colorChip.gray2,
-                textAlign: "center",
-              },
-              bold: {
-                fontWeight: String(400),
-                color: colorChip.deactive,
-              }
-            });
 
-            tagBlock.style.width = String(Math.ceil(tagBlock.getBoundingClientRect().width - (tagPaddingLeft * 2)) + 1) + "px";
-
-          }
 
           if (search === null) {
             this.loadedContents.push(i);
