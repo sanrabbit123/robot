@@ -136,33 +136,38 @@ DesignerListJs.prototype.insertInitBox = function () {
 
   searchTags = [];
   if (media[0]) {
+    searchTags.push("패브릭");
     searchTags.push("홈퍼니싱");
-    searchTags.push("홈스타일링");
     searchTags.push("토탈 스타일링");
     searchTags.push("제작가구");
+    searchTags.push("온라인");
   } else if (media[1]) {
+    searchTags.push("패브릭");
     searchTags.push("홈퍼니싱");
-    searchTags.push("홈스타일링");
     searchTags.push("토탈 스타일링");
     searchTags.push("제작가구");
+    searchTags.push("온라인");
   } else if (media[2]) {
+    searchTags.push("패브릭");
     searchTags.push("홈퍼니싱");
-    searchTags.push("홈스타일링");
     searchTags.push("토탈 스타일링");
     searchTags.push("제작가구");
+    searchTags.push("온라인");
   } else if (media[3]) {
+    searchTags.push("패브릭");
     searchTags.push("홈퍼니싱");
-    searchTags.push("홈스타일링");
     searchTags.push("토탈 스타일링");
     searchTags.push("제작가구");
+    searchTags.push("온라인");
   } else if (media[4]) {
+    searchTags.push("패브릭");
     searchTags.push("홈퍼니싱");
-    searchTags.push("홈스타일링");
     searchTags.push("토탈 스타일링");
     searchTags.push("제작가구");
+    searchTags.push("온라인");
   }
 
-  placeholder = "새아파트";
+  placeholder = "패브릭";
 
   serviceButtonClassName = "serviceButton";
 
@@ -296,13 +301,9 @@ DesignerListJs.prototype.insertInitBox = function () {
               keyup: function (e) {
                 setDebounce(async () => {
                   try {
-                    while (!instance.fullLoad) {
-                      await sleep(500);
-                    }
                     this.value = this.value.trim();
                     this.value = this.value.replace(/[^가-힣a-z ]/gi, '');
-                    instance.portfolioBlock(null, this.value);
-                    instance.photoLoad = true;
+                    instance.designerBlock(this.value);
                   } catch (e) {
                     console.log(e);
                   }
@@ -355,8 +356,7 @@ DesignerListJs.prototype.insertInitBox = function () {
               dom.firstChild.querySelector('b').style.color = colorChip.deactive;
             }
           }
-          instance.portfolioBlock(null, /전체/gi.test(thisValue) ? "" : thisValue);
-          instance.photoLoad = true;
+          instance.designerBlock(/전체/gi.test(thisValue) ? "" : thisValue);
         }
       },
       style: {
@@ -872,10 +872,6 @@ DesignerListJs.prototype.launching = async function (loading) {
     response = await ajaxJson({ mode: "designer" }, LOGHOST + "/getContents", { equal: true });
     this.designers = new SearchArray(response.designers);
     for (let designer of this.designers) {
-      designer.tag = [ ...new Set(response.contentsArr.filter((obj) => { return obj.desid === designer.desid }).map((obj) => {
-        return obj.tag;
-      }).flat()) ];
-      designer.tag.push(designer.designer);
       for (let i = 0; i < designer.service.length; i++) {
         if (designer.service[i] === 1) {
           designer.tag.push(services[i]);
@@ -887,7 +883,7 @@ DesignerListJs.prototype.launching = async function (loading) {
     }
 
     this.designers = this.designers.toNormal().filter((obj) => {
-      return /완료/gi.test(obj.information.contract.status);
+      return !/해지/gi.test(obj.information.contract.status);
     }).filter((obj) => {
       return obj.setting.front.introduction.desktop.length > 0;
     }).filter((obj) => {

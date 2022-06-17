@@ -39,6 +39,36 @@ Designer.prototype.frontMode = function () {
   obj.setting.front = this.setting.front.toNormal();
   obj.setting.description = this.setting.description;
   obj.service = this.analytics.project.matrix.toNormal().map((arr) => { return (arr.some((i) => { return i === 1 }) ? 1 : 0) });
+  obj.tag = [];
+  obj.tag.push(this.designer);
+  obj.tag.push(this.desid);
+  if (this.analytics.project.online) {
+    obj.tag.push("온라인");
+  }
+  if (this.analytics.project.living) {
+    obj.tag.push("거주중");
+  }
+  obj.tag = obj.tag.concat(this.analytics.project.paperWork.toNormal());
+  if (this.analytics.styling.furniture.builtin) {
+    obj.tag.push("붙박이장");
+    obj.tag.push("빌트인");
+    obj.tag.push("장");
+  }
+  if (this.analytics.styling.furniture.design) {
+    obj.tag.push("제작가구");
+    obj.tag.push("가구");
+    obj.tag.push("제작");
+    obj.tag.push("제작 가구");
+    obj.tag.push("디자인가구");
+    obj.tag.push("디자인 가구");
+  }
+  if (this.analytics.styling.fabric.curtain.toNormal().includes("직접 제작") || this.analytics.styling.fabric.bedding.toNormal().includes("직접 제작")) {
+    obj.tag.push("패브릭");
+    obj.tag.push("패브릭 제작");
+    obj.tag.push("패브릭제작");
+    obj.tag.push("제작 패브릭");
+    obj.tag.push("제작패브릭");
+  }
   return obj;
 }
 
