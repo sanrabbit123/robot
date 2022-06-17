@@ -162,34 +162,6 @@ FrontAboutJs.prototype.insertInitBox = function () {
   mobileBlockTop = 3.5;
 
   searchTags = [];
-  if (media[0]) {
-    searchTags.push("깔끔한");
-    searchTags.push("감성적인");
-    searchTags.push("거실");
-    searchTags.push("아이방");
-    searchTags.push("모던");
-    searchTags.push("제작가구");
-    searchTags.push("화이트");
-  } else if (media[1]) {
-    searchTags.push("깔끔한");
-    searchTags.push("감성적인");
-    searchTags.push("아이방");
-    searchTags.push("제작가구");
-    searchTags.push("화이트");
-  } else if (media[2]) {
-    searchTags.push("깔끔한");
-    searchTags.push("아이방");
-    searchTags.push("제작가구");
-    searchTags.push("화이트");
-  } else if (media[3]) {
-    searchTags.push("깔끔한");
-    searchTags.push("아이방");
-    searchTags.push("제작가구");
-  } else if (media[4]) {
-    searchTags.push("깔끔한");
-    searchTags.push("아이방");
-    searchTags.push("제작가구");
-  }
 
   placeholder = "새아파트";
 
@@ -280,6 +252,285 @@ FrontAboutJs.prototype.insertInitBox = function () {
         }
       }
     ]
+  });
+
+}
+
+FrontAboutJs.prototype.insertFirstService = function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { ea, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  let mainBlock;
+  let mainPaddingTop, mainPaddingBottom;
+  let titleArea, contentsArea;
+  let contents;
+
+  mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 123 : 122), (isMac() ? 102 : 100), 4 %%>;
+  mainPaddingBottom = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 123 : 122), (isMac() ? 102 : 100), 4 %%>;
+
+  contents = {
+    main: [
+      "홈리에종의 서비스는",
+      "무엇인가요?",
+    ],
+    sub: [
+      "홈리에종 서비스"
+    ],
+    description: [
+      [
+        "홈리에종은 홈스타일링 컨시어지 서비스를",
+        "운영하는 플랫폼입니다. <b%홈리에종에서 디자이너를",
+        "만나 단계별로 제공되는 케어 서비스를 경험해",
+        "보세요.%b> 상황에 맞는 방법을 찾아 고객님과 함께",
+        "인테리어 디자인을 완성합니다.",
+      ],
+      [
+        "한 명의 디자이너가 우리집 시공부터",
+        "홈스타일링까지, 내 상황에 맞는 홈리에종 케어",
+        "서비스를 받아 나만의 집을 완성해보세요!",
+      ]
+    ],
+    button: [
+      "디자이너 큐레이션 설명 보기"
+    ]
+  };
+
+  mainBlock = createNode({
+    mother: this.baseTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      paddingTop: String(mainPaddingTop) + ea,
+      paddingBottom: String(mainPaddingBottom) + ea,
+    }
+  });
+
+  titleArea = createNode({
+    mother: mainBlock,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+    }
+  });
+
+  contentsArea = createNode({
+    mother: mainBlock,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+    }
+  });
+
+
+}
+
+FrontAboutJs.prototype.insertSecondService = function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { ea, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  let mainBlock;
+  let mainPaddingTop, mainPaddingBottom;
+  let contents;
+
+  mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 123 : 122), (isMac() ? 102 : 100), 4 %%>;
+  mainPaddingBottom = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 123 : 122), (isMac() ? 102 : 100), 4 %%>;
+
+  contents = {
+    main: [
+      "구체적으로 어떻게 진행되나요?",
+    ],
+    sub: [
+      "상담 신청서 작성",
+      "서비스 큐레이션",
+      "디자이너 선택",
+      "현장 미팅",
+      "기획 / 디자인",
+      "시공 / 제품 구매",
+      "촬영 / 인터뷰"
+    ],
+    description: [
+      [
+        "홈리에종의 프로세스는 일단 먼저,",
+        "하단 상담 신청서를 작성해주시면,",
+        "홈리에종의 친절한 상담과 추천으로",
+        "<b%나에게 가장 잘 맞는 디자이너를%b>",
+        "<b%만나%b> 홈스타일링을 진행하게 됩니다.",
+      ],
+      [
+        "고객님과 매칭된 디자이너는",
+        "<b%일단 기획과 디자인을 선행한 후,",
+        "시공 견적을 내고 제품 제안을 진행%b>",
+        "하게 됩니다. 그리고 세팅에 관여하여",
+        "인테리어 프로세를 완성하게 됩니다.",
+      ]
+    ],
+    button: [
+      "결제 및 프로세스"
+    ]
+  };
+
+  mainBlock = createNode({
+    mother: this.baseTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      paddingTop: String(mainPaddingTop) + ea,
+      paddingBottom: String(mainPaddingBottom) + ea,
+    }
+  });
+
+}
+
+FrontAboutJs.prototype.insertThirdService = function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { ea, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  let mainBlock;
+  let mainPaddingTop, mainPaddingBottom;
+  let contents;
+
+  mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 123 : 122), (isMac() ? 102 : 100), 4 %%>;
+  mainPaddingBottom = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 123 : 122), (isMac() ? 102 : 100), 4 %%>;
+
+  contents = {
+    main: [
+      "예산과 기간은",
+      "어떻게 설정하나요?",
+    ],
+    sub: [
+      "고객 준비 사항"
+    ],
+    description: [
+      [
+        "나에게 맞는 효율적이고 합리적인 예산 활용을 위해서는 전체적인 가용 예산에 대한 고민이 선행",
+        "되어야 합니다. 사용 가능한 전체 예산을 정하는 것은",
+        "디자이너가 임의로 설정할 수 없으므로,",
+        "<b%최대 예산과 최소 예산의 범위를 고객님께서 직접",
+        "정해주시고, 디자이너와 상담을 시작%b>하시면 됩니다.",
+      ],
+      [
+        "* 가전을 위한 금액은 전체 예산에서 별도로 구분",
+        "하셔야 합니다.",
+      ]
+    ],
+    button: [
+      "예산의 3가지 구성"
+    ]
+  };
+
+  mainBlock = createNode({
+    mother: this.baseTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      paddingTop: String(mainPaddingTop) + ea,
+      paddingBottom: String(mainPaddingBottom) + ea,
+    }
+  });
+
+}
+
+FrontAboutJs.prototype.insertFourthService = function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { ea, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  let mainBlock;
+  let mainPaddingTop, mainPaddingBottom;
+  let contents;
+
+  mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 123 : 122), (isMac() ? 102 : 100), 4 %%>;
+  mainPaddingBottom = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 123 : 122), (isMac() ? 102 : 100), 4 %%>;
+
+  contents = {
+    main: [
+      "홈리에종과 함께 하는 홈스타일링",
+    ],
+    sub: [
+      "홈스타일링 플랫폼",
+      "프로젝트 케어",
+      "솔직한 고객 후기",
+    ],
+    description: [
+      [
+        [
+          "홈리에종에서는 다양한 스타일의 포트폴리오와",
+          "홈스타일링 디자이너를 한 번에 만나 보실 수 있습니다.",
+        ],
+        [
+          "홈리에종은 <b%시공에 치우쳐져 있던 인테리어 디자인을",
+          "고객님들의 실제 생활을 위한 디자인으%b>로 바꾸어",
+          "공간이 줄 수 있는 풍성함과 편안함을 전하고자 합니다.",
+        ]
+      ],
+      [
+        [
+          "홈리에종은 고객님께서 안심하고 서비스를 받을 수",
+          "있도록 전 인테리어 과정을 케어하고 인프라를 지원합니다.",
+        ],
+        [
+          "홈리에종은 고객과 디자이너를 위해 있기에, <b%중재와 보증",
+          "시공 인프라 지원, 다양한 부가 서비스 제공 등을 통해",
+          "프로젝트 중심의 새로운 인테리어 문화%b>를 선도합니다.",
+        ]
+      ]
+    ],
+    button: []
+  };
+
+  mainBlock = createNode({
+    mother: this.baseTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      paddingTop: String(mainPaddingTop) + ea,
+      paddingBottom: String(mainPaddingBottom) + ea,
+    }
+  });
+
+}
+
+FrontAboutJs.prototype.insertConsultingBox = function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { ea, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  let mainBlock;
+  let mainPaddingTop, mainPaddingBottom;
+  let contents;
+
+  mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 123 : 122), (isMac() ? 102 : 100), 4 %%>;
+  mainPaddingBottom = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 123 : 122), (isMac() ? 102 : 100), 4 %%>;
+
+  contents = {
+    main: [
+      "홈리에종 서비스 신청",
+    ],
+  };
+
+  mainBlock = createNode({
+    mother: this.baseTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      paddingTop: String(mainPaddingTop) + ea,
+      paddingBottom: String(mainPaddingBottom) + ea,
+    }
   });
 
 }
@@ -740,7 +991,11 @@ FrontAboutJs.prototype.launching = async function (loading) {
       local: async () => {
         try {
           instance.insertInitBox();
-
+          instance.insertFirstService();
+          instance.insertSecondService();
+          instance.insertThirdService();
+          instance.insertFourthService();
+          instance.insertConsultingBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "FrontAboutJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
         }
