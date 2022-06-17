@@ -141,22 +141,20 @@ DesignerListJs.prototype.insertInitBox = function () {
     searchTags.push("토탈 스타일링");
     searchTags.push("제작가구");
     searchTags.push("온라인");
+    searchTags.push("전체");
   } else if (media[1]) {
     searchTags.push("패브릭");
     searchTags.push("홈퍼니싱");
-    searchTags.push("토탈 스타일링");
     searchTags.push("제작가구");
     searchTags.push("온라인");
+    searchTags.push("전체");
   } else if (media[2]) {
     searchTags.push("패브릭");
-    searchTags.push("홈퍼니싱");
-    searchTags.push("토탈 스타일링");
     searchTags.push("제작가구");
     searchTags.push("온라인");
+    searchTags.push("전체");
   } else if (media[3]) {
     searchTags.push("패브릭");
-    searchTags.push("홈퍼니싱");
-    searchTags.push("토탈 스타일링");
     searchTags.push("제작가구");
     searchTags.push("온라인");
   } else if (media[4]) {
@@ -165,6 +163,7 @@ DesignerListJs.prototype.insertInitBox = function () {
     searchTags.push("토탈 스타일링");
     searchTags.push("제작가구");
     searchTags.push("온라인");
+    searchTags.push("전체");
   }
 
   placeholder = "패브릭";

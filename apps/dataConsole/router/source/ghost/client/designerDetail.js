@@ -146,7 +146,7 @@ DesignerDetailJs.prototype.designerBlock = function () {
   columns = 1;
   contentsPaddingTop = <%% 16, 16, 16, 16, 1 %%>;
 
-  blockHeight = <%% (isMac() ? 206 : 203), (isMac() ? 206 : 203), (isMac() ? 192 : 190), (isMac() ? 192 : 190), 32 %%>;
+  blockHeight = <%% (isMac() ? 206 : 203), (isMac() ? 206 : 203), (isMac() ? 192 : 190), (isMac() ? 192 : 190), 42 %%>;
   photoWidth = blockHeight - (contentsPaddingTop * 2);
 
   photoMargin = <%% 32, 32, 32, 32, 4 %%>;
@@ -439,6 +439,13 @@ DesignerDetailJs.prototype.portfolioBlock = function (limitLength, search = null
   let titleSubMarginTop;
   let service;
   let tagBlock;
+  let subInfoSize;
+  let subInfoWeight;
+  let arrowWidth;
+  let arrowHeight;
+  let arrowBottom;
+  let arrowReviewBottom;
+  let subInfoTextTop;
 
   contentsArr = contentsArr;
 
@@ -479,8 +486,8 @@ DesignerDetailJs.prototype.portfolioBlock = function (limitLength, search = null
   seroSliceEnd = <%% 16, 15, 17, 15, 13 %%>;
   seroSliceLimit = <%% 30, 30, 30, 30, 30 %%>;
 
-  tagTongMarginTop = <%% 11, 11, 10, 8, 1.3 %%>;
-  tagTongWidthRatio = <%% 1.1, 1.3, 1.3, 1.3, 1.3 %%>;
+  tagTongMarginTop = <%% (isMac() ? 11 : 10), (isMac() ? 11 : 10), (isMac() ? 10 : 9), (isMac() ? 8 : 7), 1.3 %%>;
+  tagTongWidthRatio = <%% 2, 2, 2, 2, 2 %%>;
 
   tagSize = <%% 12, 10, 10, 9, 2 %%>;
   tagWeight = <%% 500, 500, 500, 500, 500 %%>;
@@ -489,6 +496,15 @@ DesignerDetailJs.prototype.portfolioBlock = function (limitLength, search = null
   tagPaddingTop = <%% (isMac() ? 5 : 6), (isMac() ? 4 : 5), (isMac() ? 4 : 5), (isMac() ? 4 : 5), 1 %%>;
   tagPaddingBottom = <%% (isMac() ? 7 : 6), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isIphone() ? 1.2 : 1.4) %%>;
   tagMarginRight = <%% 4, 3, 3, 3, 1 %%>;
+
+  subInfoSize = <%% 12, 11, 11, 10, 2.5 %%>;
+  subInfoWeight = <%% 500, 500, 500, 500, 500 %%>;
+  subInfoTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
+
+  arrowWidth = <%% 32, 28, 28, 26, 4 %%>;
+  arrowHeight = <%% 9, 8, 8, 8, 1.5 %%>;
+  arrowBottom = <%% 3, 3, 3, 2, 1 %%>;
+  arrowReviewBottom = <%% 5, 4, 4, 4, 1 %%>;
 
   baseBlock = baseTong.children[1];
 
@@ -634,40 +650,41 @@ DesignerDetailJs.prototype.portfolioBlock = function (limitLength, search = null
                 display: "block",
                 position: "relative",
                 marginTop: String(tagTongMarginTop) + ea,
-                width: String(tagTongWidthRatio * 100) + '%',
+                width: String(100) + '%',
+                borderTop: "1px solid " + colorChip.gray3,
                 left: String(0) + ea,
-              }
+                paddingTop: String(tagTongMarginTop) + ea,
+              },
+              children: [
+                {
+                  text: contents.portfolio.spaceInfo.region + "&nbsp;&nbsp;&nbsp;<b%|%b>&nbsp;&nbsp;&nbsp;" + contents.portfolio.spaceInfo.method.split(" ")[0] + " 스타일링",
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    top: String(subInfoTextTop) + ea,
+                    fontSize: String(subInfoSize) + ea,
+                    fontWeight: String(subInfoWeight),
+                    color: colorChip.black,
+                  },
+                  bold: {
+                    fontWeight: String(subInfoWeight),
+                    color: colorChip.green,
+                  }
+                },
+                {
+                  mode: "svg",
+                  source: svgMaker.horizontalArrow(arrowWidth, arrowHeight),
+                  style: {
+                    position: "absolute",
+                    width: String(arrowWidth) + ea,
+                    right: String(0),
+                    bottom: String(arrowBottom) + ea,
+                  }
+                }
+              ]
             }
           ]
         });
-        tagTong = block.children[2];
-        for (let t of tag) {
-          tagBlock = createNode({
-            mother: tagTong,
-            text: "<b%#%b> " + t,
-            style: {
-              display: "inline-block",
-              fontSize: String(tagSize) + ea,
-              fontWeight: String(tagWeight),
-              color: colorChip.black,
-              paddingLeft: String(tagPaddingLeft) + ea,
-              paddingTop: String(tagPaddingTop) + ea,
-              paddingBottom: String(tagPaddingBottom) + ea,
-              paddingRight: String(tagPaddingLeft) + ea,
-              borderRadius: String(3) + "px",
-              marginRight: String(tagMarginRight) + ea,
-              background: colorChip.gray2,
-              textAlign: "center",
-            },
-            bold: {
-              fontWeight: String(400),
-              color: colorChip.deactive,
-            }
-          });
-
-          tagBlock.style.width = String(Math.ceil(tagBlock.getBoundingClientRect().width - (tagPaddingLeft * 2)) + 1) + "px";
-
-        }
 
         if (search === null) {
           this.loadedContents.push(i);
