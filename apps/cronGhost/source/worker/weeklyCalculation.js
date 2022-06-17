@@ -1,5 +1,6 @@
 const dayId = [
   "d125",
+  "d180",
 ];
 
 const hourId = [];
@@ -17,7 +18,7 @@ const worker = async function (package) {
   const { requestSystem, messageLog, errorLog } = mother;
   try {
     const today = new Date();
-    if (today.getDay() === 1) {
+    if (today.getDay() === 1 || today.getDay() === 5) {
       await requestSystem("https://" + address.pythoninfo.host + ":" + String(3000) + "/weeklyCalculation", { data: null }, { headers: { "Content-Type": "application/json" } });
       await messageLog("weekly calculation done");
     }

@@ -796,9 +796,6 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null)
           ]
         });
 
-
-
-
         if (search === null) {
           this.loadedContents.push(i);
         }
