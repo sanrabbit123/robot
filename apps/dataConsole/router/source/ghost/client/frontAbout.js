@@ -280,14 +280,14 @@ FrontAboutJs.prototype.insertFirstService = function () {
   mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 123 : 122), (isMac() ? 102 : 100), 4 %%>;
   mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 143 : 142), (isMac() ? 122 : 120), 5 %%>;
 
-  titleSize = <%% 37, 37, 37, 37, 37 %%>;
+  titleSize = <%% 32, 32, 32, 32, 32 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
   titlePaddingLeft = <%% 24, 24, 24, 24, 24 %%>;
-  titleLineTop = <%% 26, 26, 26, 26, 26 %%>;
+  titleLineTop = <%% 23, 23, 23, 23, 23 %%>;
 
-  numberTextTop = <%% 3, 3, 3, 3, 3 %%>;
-  numberSize = <%% 33, 33, 33, 33, 33 %%>;
+  numberTextTop = <%% 5, 5, 5, 5, 5 %%>;
+  numberSize = <%% 27, 27, 27, 27, 27 %%>;
   numberWeight = <%% 700, 700, 700, 700, 700 %%>;
   numberLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
@@ -302,11 +302,10 @@ FrontAboutJs.prototype.insertFirstService = function () {
   width1 = <%% 418, 418, 418, 418, 418 %%>;
   width2 = <%% 810, 810, 810, 810, 810 %%>;
 
-  imageHeight = <%% 370, 370, 370, 370, 370 %%>;
+  imageHeight = <%% 390, 390, 390, 390, 390 %%>;
 
   buttonHeight = <%% 36, 36, 36, 36, 36 %%>;
   buttonWidth = <%% 180, 180, 180, 180, 180 %%>;
-
   buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
   buttonSize = <%% 13, 13, 13, 13, 13 %%>;
   buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -375,7 +374,6 @@ FrontAboutJs.prototype.insertFirstService = function () {
     }
   });
 
-
   createNode({
     mother: titleArea,
     text: "01",
@@ -391,7 +389,6 @@ FrontAboutJs.prototype.insertFirstService = function () {
       lineHeight: String(numberLineHeight),
     }
   });
-
 
   createNode({
     mother: titleArea,
@@ -418,7 +415,6 @@ FrontAboutJs.prototype.insertFirstService = function () {
       marginTop: String(contentsAreaMarginTop) + ea,
     }
   });
-
 
   createNode({
     mother: contentsArea,
@@ -517,9 +513,73 @@ FrontAboutJs.prototype.insertSecondService = function () {
   let mainPaddingTop, mainPaddingBottom;
   let contents;
   let baseTongClone;
+  let titleArea, contentsArea;
+  let titleSize, titleWeight, titleLineHeight;
+  let numberSize, numberWeight, numberLineHeight, numberTextTop;
+  let boxBetween;
+  let boxNumber;
+  let baseBox;
+  let blockBox;
+  let subSize, subWeight, subBetween;
+  let subHorizontalHeight;
+  let subHorizontalMargin;
+  let arrowWidth;
+  let imageHeight;
+  let blankFirstTop;
+  let contentsSize;
+  let contentsWeight;
+  let contentsBoldWeight;
+  let contentsLineHeight;
+  let buttonTextTop;
+  let buttonSize;
+  let buttonWeight;
+  let buttonLineHeight;
+  let buttonHeight;
+  let buttonWidth;
+  let contentsVisualTextTop;
+
+  titleSize = <%% 31, 31, 31, 31, 31 %%>;
+  titleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
+
+  numberTextTop = <%% 3, 3, 3, 3, 3 %%>;
+  numberSize = <%% 25, 25, 25, 25, 25 %%>;
+  numberWeight = <%% 700, 700, 700, 700, 700 %%>;
+  numberLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
+
+  contentsAreaMarginTop = <%% 45, 45, 45, 45, 45 %%>;
 
   mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 123 : 122), (isMac() ? 102 : 100), 4 %%>;
   mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 143 : 142), (isMac() ? 122 : 120), 5 %%>;
+
+  boxBetween = <%% 45, 45, 45, 45, 45 %%>;
+  subHorizontalHeight = <%% 40, 40, 40, 40, 40 %%>;
+  subHorizontalMargin = <%% 3, 3, 3, 3, 3 %%>;
+
+  boxNumber = 5;
+
+  subSize = <%% 16, 16, 16, 16, 16 %%>;
+  subWeight = <%% 600, 600, 600, 600, 600 %%>;
+  subBetween = <%% 11, 11, 11, 11, 11 %%>;
+
+  arrowWidth = <%% 12, 12, 12, 12, 12 %%>;
+
+  imageHeight = <%% 244, 244, 244, 244, 244 %%>;
+  blankFirstTop = <%% 33, 33, 33, 33, 33 %%>;
+
+  contentsSize = <%% 16, 16, 16, 16, 16 %%>;
+  contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
+  contentsBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+  contentsLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
+
+  buttonHeight = <%% 36, 36, 36, 36, 36 %%>;
+  buttonWidth = <%% 120, 120, 120, 120, 120 %%>;
+  buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
+  buttonSize = <%% 13, 13, 13, 13, 13 %%>;
+  buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
+  buttonLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+
+  contentsVisualTextTop = <%% 5, 5, 5, 5, 5 %%>;
 
   contents = {
     main: [
@@ -552,6 +612,15 @@ FrontAboutJs.prototype.insertSecondService = function () {
     ],
     button: [
       "결제 및 프로세스"
+    ],
+    image: [
+      FrontAboutJs.binaryPath + "/b1.jpg",
+      FrontAboutJs.binaryPath + "/b2.jpg",
+      FrontAboutJs.binaryPath + "/b3.jpg",
+      FrontAboutJs.binaryPath + "/b4.jpg",
+      FrontAboutJs.binaryPath + "/b5.jpg",
+      FrontAboutJs.binaryPath + "/b6.jpg",
+      FrontAboutJs.binaryPath + "/b7.jpg",
     ]
   };
 
@@ -575,6 +644,543 @@ FrontAboutJs.prototype.insertSecondService = function () {
     }
   });
 
+  titleArea = createNode({
+    mother: mainBlock,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+    }
+  });
+
+  createNode({
+    mother: titleArea,
+    text: "02",
+    style: {
+      display: "block",
+      position: "relative",
+      width: withOut(0, ea),
+      textAlign: "center",
+      fontSize: String(numberSize) + ea,
+      fontWeight: String(numberWeight),
+      lineHeight: String(numberLineHeight),
+    }
+  });
+
+  createNode({
+    mother: titleArea,
+    text: contents.main.join("\n"),
+    style: {
+      display: "block",
+      position: "relative",
+      width: withOut(0, ea),
+      textAlign: "center",
+      fontSize: String(titleSize) + ea,
+      fontWeight: String(titleWeight),
+      lineHeight: String(titleLineHeight),
+      color: colorChip.black,
+    }
+  });
+
+  contentsArea = createNode({
+    mother: mainBlock,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      marginTop: String(contentsAreaMarginTop) + ea,
+    }
+  });
+
+  for (let i = 0; i < boxNumber; i++) {
+    baseBox = createNode({
+      mother: contentsArea,
+      attribute: { index: String(i), },
+      style: {
+        display: "inline-block",
+        width: "calc(calc(100% - " + String(boxBetween * (boxNumber - 1)) + ea + ") / " + String(boxNumber) + ")",
+        verticalAlign: "top",
+      }
+    });
+
+    if (i === 0) {
+      createNode({
+        mother: baseBox,
+        style: {
+          display: "block",
+          position: "relative",
+        },
+        children: [
+          {
+            text: contents.sub[0],
+            style: {
+              display: "block",
+              position: "relative",
+              width: String(100) + '%',
+              textAlign: "center",
+              fontSize: String(subSize) + ea,
+              fontWeight: String(subWeight),
+              color: colorChip.darkShadow,
+              marginBottom: String(subBetween) + ea,
+            }
+          },
+          {
+            mode: "img",
+            attribute: {
+              src: contents.image[0],
+            },
+            style: {
+              display: "block",
+              position: "relative",
+              width: String(100) + '%',
+              borderRadius: String(5) + "px",
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+            }
+          }
+        ]
+      });
+      createNode({
+        mother: baseBox,
+        style: {
+          display: "flex",
+          width: withOut(0, ea),
+          height: String(subHorizontalHeight) + ea,
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          marginTop: String(subHorizontalMargin) + ea,
+          marginBottom: String(subHorizontalMargin) + ea,
+        },
+        children: [
+          {
+            mode: "svg",
+            source: instance.mother.returnArrow("right", colorChip.gray4),
+            style: {
+              display: "inline-block",
+              width: String(arrowWidth) + ea,
+              transform: "rotate(90deg)",
+            }
+          }
+        ]
+      });
+      createNode({
+        mother: baseBox,
+        style: {
+          display: "block",
+          position: "relative",
+        },
+        children: [
+          {
+            mode: "img",
+            attribute: {
+              src: contents.image[5],
+            },
+            style: {
+              display: "block",
+              position: "relative",
+              width: String(100) + '%',
+              borderRadius: String(5) + "px",
+              marginBottom: String(subBetween) + ea,
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+            }
+          },
+          {
+            text: contents.sub[5],
+            style: {
+              display: "block",
+              position: "relative",
+              width: String(100) + '%',
+              textAlign: "center",
+              fontSize: String(subSize) + ea,
+              fontWeight: String(subWeight),
+              color: colorChip.darkShadow,
+            }
+          },
+        ]
+      });
+    } else if (i === 1) {
+      createNode({
+        mother: baseBox,
+        style: {
+          display: "block",
+          position: "relative",
+        },
+        children: [
+          {
+            text: contents.sub[1],
+            style: {
+              display: "block",
+              position: "relative",
+              width: String(100) + '%',
+              textAlign: "center",
+              fontSize: String(subSize) + ea,
+              fontWeight: String(subWeight),
+              color: colorChip.darkShadow,
+              marginBottom: String(subBetween) + ea,
+            }
+          },
+          {
+            mode: "img",
+            attribute: {
+              src: contents.image[1],
+            },
+            style: {
+              display: "block",
+              position: "relative",
+              width: String(100) + '%',
+              borderRadius: String(5) + "px",
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+            }
+          }
+        ]
+      });
+      createNode({
+        mother: baseBox,
+        style: {
+          display: "flex",
+          width: withOut(0, ea),
+          height: String(subHorizontalHeight) + ea,
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          marginTop: String(subHorizontalMargin) + ea,
+          marginBottom: String(subHorizontalMargin) + ea,
+        },
+        children: [
+          {
+            mode: "svg",
+            source: instance.mother.returnArrow("right", colorChip.gray4),
+            style: {
+              display: "inline-block",
+              width: String(arrowWidth) + ea,
+              transform: "rotate(270deg)",
+            }
+          }
+        ]
+      });
+      createNode({
+        mother: baseBox,
+        style: {
+          display: "block",
+          position: "relative",
+        },
+        children: [
+          {
+            mode: "img",
+            attribute: {
+              src: contents.image[6],
+            },
+            style: {
+              display: "block",
+              position: "relative",
+              width: String(100) + '%',
+              borderRadius: String(5) + "px",
+              marginBottom: String(subBetween) + ea,
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+            }
+          },
+          {
+            text: contents.sub[6],
+            style: {
+              display: "block",
+              position: "relative",
+              width: String(100) + '%',
+              textAlign: "center",
+              fontSize: String(subSize) + ea,
+              fontWeight: String(subWeight),
+              color: colorChip.darkShadow,
+            }
+          },
+        ]
+      });
+    } else if (i === 2) {
+      createNode({
+        mother: baseBox,
+        style: {
+          display: "block",
+          position: "relative",
+        },
+        children: [
+          {
+            text: contents.sub[2],
+            style: {
+              display: "block",
+              position: "relative",
+              width: String(100) + '%',
+              textAlign: "center",
+              fontSize: String(subSize) + ea,
+              fontWeight: String(subWeight),
+              color: colorChip.darkShadow,
+              marginBottom: String(subBetween) + ea,
+            }
+          },
+          {
+            mode: "img",
+            attribute: {
+              src: contents.image[2],
+            },
+            style: {
+              display: "block",
+              position: "relative",
+              width: String(100) + '%',
+              borderRadius: String(5) + "px",
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+            }
+          }
+        ]
+      });
+      createNode({
+        mother: baseBox,
+        style: {
+          display: "flex",
+          position: "relative",
+          marginTop: String(subHorizontalHeight + (subHorizontalMargin * 2)) + ea,
+          height: String(imageHeight) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: "flex",
+              position: "absolute",
+              bottom: String(0),
+              left: String(0),
+              width: String(buttonWidth) + ea,
+              height: String(buttonHeight) + ea,
+              background: colorChip.gradientGreen,
+              borderRadius: String(5) + "px",
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              cursor: "pointer",
+            },
+            children: [
+              {
+                text: contents.button.join("\n"),
+                style: {
+                  position: "relative",
+                  top: String(buttonTextTop) + ea,
+                  fontSize: String(buttonSize) + ea,
+                  fontWeight: String(buttonWeight),
+                  color: colorChip.white,
+                  lineHeight: String(buttonLineHeight),
+                }
+              }
+            ]
+          }
+        ]
+      });
+
+
+    } else if (i === 3) {
+      createNode({
+        mother: baseBox,
+        style: {
+          display: "block",
+          position: "relative",
+        },
+        children: [
+          {
+            text: contents.sub[3],
+            style: {
+              display: "block",
+              position: "relative",
+              width: String(100) + '%',
+              textAlign: "center",
+              fontSize: String(subSize) + ea,
+              fontWeight: String(subWeight),
+              color: colorChip.darkShadow,
+              marginBottom: String(subBetween) + ea,
+            }
+          },
+          {
+            mode: "img",
+            attribute: {
+              src: contents.image[3],
+            },
+            style: {
+              display: "block",
+              position: "relative",
+              width: String(100) + '%',
+              borderRadius: String(5) + "px",
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+            }
+          }
+        ]
+      });
+      createNode({
+        mother: baseBox,
+        style: {
+          display: "flex",
+          position: "relative",
+          marginTop: String(subHorizontalHeight + (subHorizontalMargin * 2)) + ea,
+          height: String(imageHeight) + ea,
+          flexDirection: "column-reverse",
+        },
+        children: [
+          {
+            text: contents.description[0].join("\n"),
+            style: {
+              display: "block",
+              position: "relative",
+              fontSize: String(contentsSize) + ea,
+              fontWeight: String(contentsWeight),
+              lineHeight: String(contentsLineHeight),
+              color: colorChip.black,
+              top: String(contentsVisualTextTop) + ea,
+            },
+            bold: {
+              fontWeight: String(contentsBoldWeight),
+              color: colorChip.black,
+            }
+          }
+        ]
+      });
+
+    } else if (i === 4) {
+      createNode({
+        mother: baseBox,
+        style: {
+          display: "block",
+          position: "relative",
+        },
+        children: [
+          {
+            text: contents.sub[4],
+            style: {
+              display: "block",
+              position: "relative",
+              width: String(100) + '%',
+              textAlign: "center",
+              fontSize: String(subSize) + ea,
+              fontWeight: String(subWeight),
+              color: colorChip.darkShadow,
+              marginBottom: String(subBetween) + ea,
+            }
+          },
+          {
+            mode: "img",
+            attribute: {
+              src: contents.image[4],
+            },
+            style: {
+              display: "block",
+              position: "relative",
+              width: String(100) + '%',
+              borderRadius: String(5) + "px",
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+            }
+          }
+        ]
+      });
+      createNode({
+        mother: baseBox,
+        style: {
+          display: "flex",
+          position: "relative",
+          marginTop: String(subHorizontalHeight + (subHorizontalMargin * 2)) + ea,
+          height: String(imageHeight) + ea,
+          flexDirection: "column-reverse",
+        },
+        children: [
+          {
+            text: contents.description[1].join("\n"),
+            style: {
+              display: "block",
+              position: "relative",
+              fontSize: String(contentsSize) + ea,
+              fontWeight: String(contentsWeight),
+              lineHeight: String(contentsLineHeight),
+              color: colorChip.black,
+              top: String(contentsVisualTextTop) + ea,
+            },
+            bold: {
+              fontWeight: String(contentsBoldWeight),
+              color: colorChip.black,
+            }
+          }
+        ]
+      });
+
+    }
+
+    if (i !== boxNumber - 1) {
+      blockBox = createNode({
+        mother: contentsArea,
+        style: {
+          display: "inline-block",
+          width: String(boxBetween) + ea,
+          verticalAlign: "top",
+        }
+      });
+
+      if (i === 0) {
+
+        createNode({
+          mother: blockBox,
+          style: {
+            display: "flex",
+            width: withOut(0, ea),
+            height: String(imageHeight) + ea,
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            marginTop: String(blankFirstTop) + ea,
+          },
+        });
+
+        createNode({
+          mother: blockBox,
+          style: {
+            display: "flex",
+            width: withOut(0, ea),
+            height: String(imageHeight) + ea,
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            marginTop: String(subHorizontalHeight + (subHorizontalMargin * 2)) + ea,
+          },
+          children: [
+            {
+              mode: "svg",
+              source: instance.mother.returnArrow("right", colorChip.gray4),
+              style: {
+                display: "inline-block",
+                width: String(arrowWidth) + ea,
+              }
+            }
+          ]
+        });
+
+      } else {
+
+        createNode({
+          mother: blockBox,
+          style: {
+            display: "flex",
+            width: withOut(0, ea),
+            height: String(imageHeight) + ea,
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            marginTop: String(blankFirstTop) + ea,
+          },
+          children: [
+            {
+              mode: "svg",
+              source: instance.mother.returnArrow("right", colorChip.gray4),
+              style: {
+                display: "inline-block",
+                width: String(arrowWidth) + ea,
+              }
+            }
+          ]
+        });
+
+      }
+
+    }
+  }
+
 }
 
 FrontAboutJs.prototype.insertThirdService = function () {
@@ -585,11 +1191,58 @@ FrontAboutJs.prototype.insertThirdService = function () {
   const desktop = !mobile;
   let mainBlock;
   let mainPaddingTop, mainPaddingBottom;
+  let titleArea, contentsArea;
   let contents;
-  let baseTongClone;
+  let titleSize, titleWeight, titleLineHeight;
+  let titlePaddingLeft;
+  let titleLineTop;
+  let numberSize, numberWeight, numberLineHeight, numberTextTop;
+  let contentsAreaMarginTop;
+  let contentsSize, contentsWeight, contentsBoldWeight, contentsLineHeight;
+  let width0, width1, width2;
+  let imageHeight;
+  let buttonWidth, buttonHeight;
+  let buttonTextTop, buttonSize, buttonWeight, buttonLineHeight;
+  let buttonLeft;
+  let titlePaddingRight;
+  let width1MarginLeft;
 
   mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 123 : 122), (isMac() ? 102 : 100), 4 %%>;
   mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 143 : 142), (isMac() ? 122 : 120), 5 %%>;
+
+  titleSize = <%% 32, 32, 32, 32, 32 %%>;
+  titleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
+  titlePaddingLeft = <%% 24, 24, 24, 24, 24 %%>;
+  titleLineTop = <%% 23, 23, 23, 23, 23 %%>;
+  titlePaddingRight = <%% 69, 69, 69, 69, 69 %%>;
+  numberTextTop = <%% 5, 5, 5, 5, 5 %%>;
+  numberSize = <%% 27, 27, 27, 27, 27 %%>;
+  numberWeight = <%% 700, 700, 700, 700, 700 %%>;
+  numberLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
+
+  contentsAreaMarginTop = <%% 45, 45, 45, 45, 45 %%>;
+
+  contentsSize = <%% 16, 16, 16, 16, 16 %%>;
+  contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
+  contentsBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+  contentsLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
+
+  width0 = <%% 172, 172, 172, 172, 172 %%>;
+  width1 = <%% 310, 310, 310, 310, 310 %%>;
+  width2 = <%% 810, 810, 810, 810, 810 %%>;
+
+  width1MarginLeft = <%% 108, 108, 108, 108, 108 %%>;
+
+  imageHeight = <%% 390, 390, 390, 390, 390 %%>;
+
+  buttonHeight = <%% 36, 36, 36, 36, 36 %%>;
+  buttonWidth = <%% 130, 130, 130, 130, 130 %%>;
+  buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
+  buttonSize = <%% 13, 13, 13, 13, 13 %%>;
+  buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
+  buttonLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+  buttonLeft = <%% 1090, 1090, 1090, 1090, 1090 %%>;
 
   contents = {
     main: [
@@ -601,11 +1254,12 @@ FrontAboutJs.prototype.insertThirdService = function () {
     ],
     description: [
       [
-        "나에게 맞는 효율적이고 합리적인 예산 활용을 위해서는 전체적인 가용 예산에 대한 고민이 선행",
-        "되어야 합니다. 사용 가능한 전체 예산을 정하는 것은",
-        "디자이너가 임의로 설정할 수 없으므로,",
-        "<b%최대 예산과 최소 예산의 범위를 고객님께서 직접",
-        "정해주시고, 디자이너와 상담을 시작%b>하시면 됩니다.",
+        "나에게 맞는 효율적이고 합리적인 예산 활용을 위해",
+        "전체적인 예산에 대한 고민이 선행되어야 합니다.",
+        "사용 가능한 전체 예산을 정하는 것은 디자이너가",
+        "임의로 설정할 수 없으므로, <b%최대 최소 예산의",
+        "범위를 고객님께서 직접 정해주시고, 디자이너와",
+        "상담을 시작%b>하시면 됩니다.",
       ],
       [
         "* 가전을 위한 금액은 전체 예산에서 별도로 구분",
@@ -614,7 +1268,10 @@ FrontAboutJs.prototype.insertThirdService = function () {
     ],
     button: [
       "예산의 3가지 구성"
-    ]
+    ],
+    image: [
+      FrontAboutJs.binaryPath + "/c1.jpg"
+    ],
   };
 
   baseTongClone = this.baseTong.cloneNode(false);
@@ -633,6 +1290,157 @@ FrontAboutJs.prototype.insertThirdService = function () {
     }
   });
 
+  titleArea = createNode({
+    mother: mainBlock,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: String(100) + '%',
+      flexDirection: "row-reverse",
+    }
+  });
+
+  createNode({
+    mother: titleArea,
+    style: {
+      display: "block",
+      position: "absolute",
+      top: String(0),
+      left: String(0),
+      width: withOut(0, ea),
+      height: String(titleLineTop) + ea,
+      borderBottom: "1px solid " + colorChip.gray3,
+    }
+  });
+
+  createNode({
+    mother: titleArea,
+    text: "03",
+    style: {
+      display: "block",
+      position: "absolute",
+      top: String(numberTextTop) + ea,
+      left: String(0),
+      background: colorChip.gray0,
+      paddingRight: String(titlePaddingLeft) + ea,
+      fontSize: String(numberSize) + ea,
+      fontWeight: String(numberWeight),
+      lineHeight: String(numberLineHeight),
+    }
+  });
+
+  createNode({
+    mother: titleArea,
+    text: contents.main.join("\n"),
+    style: {
+      display: "inline-block",
+      position: "relative",
+      fontSize: String(titleSize) + ea,
+      fontWeight: String(titleWeight),
+      lineHeight: String(titleLineHeight),
+      background: colorChip.gray0,
+      color: colorChip.black,
+      textAlign: "left",
+      paddingLeft: String(titlePaddingLeft) + ea,
+      paddingRight: String(titlePaddingRight) + ea,
+    }
+  });
+
+  contentsArea = createNode({
+    mother: mainBlock,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      marginTop: String(contentsAreaMarginTop) + ea,
+    }
+  });
+
+  createNode({
+    mother: contentsArea,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      backgroundImage: "url('" + contents.image[0] + "')",
+      backgroundPosition: "50% 41%",
+      backgroundSize: "100% auto",
+      width: String(width2) + ea,
+      height: String(imageHeight) + ea,
+      borderRadius: String(5) + "px",
+      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+    }
+  });
+
+  createNode({
+    mother: contentsArea,
+    text: contents.sub.join("\n"),
+    style: {
+      display: "inline-block",
+      position: "relative",
+      fontSize: String(contentsSize) + ea,
+      fontWeight: String(contentsBoldWeight),
+      lineHeight: String(contentsLineHeight),
+      color: colorChip.black,
+      textAlign: "left",
+      verticalAlign: "top",
+      width: String(width0) + ea,
+      marginLeft: String(width1MarginLeft) + ea,
+    }
+  });
+
+  createNode({
+    mother: contentsArea,
+    text: contents.description.map((arr) => { return arr.join("\n") }).join("\n\n"),
+    style: {
+      display: "inline-block",
+      position: "relative",
+      fontSize: String(contentsSize) + ea,
+      fontWeight: String(contentsWeight),
+      lineHeight: String(contentsLineHeight),
+      color: colorChip.black,
+      textAlign: "left",
+      verticalAlign: "top",
+      width: String(width1) + ea,
+    },
+    bold: {
+      fontWeight: String(contentsBoldWeight),
+      lineHeight: String(contentsLineHeight),
+      color: colorChip.black,
+    }
+  });
+
+  createNode({
+    mother: contentsArea,
+    style: {
+      display: "inline-flex",
+      position: "absolute",
+      bottom: String(0),
+      left: String(buttonLeft) + ea,
+      verticalAlign: "top",
+      height: String(buttonHeight) + ea,
+      width: String(buttonWidth) + ea,
+      justifyContent: "center",
+      alignItems: "center",
+      textAlign: "center",
+      background: colorChip.gradientGreen,
+      borderRadius: String(5) + "px",
+      cursor: "pointer",
+    },
+    children: [
+      {
+        text: contents.button.join("\n"),
+        style: {
+          position: "relative",
+          display: "inline-block",
+          top: String(buttonTextTop) + ea,
+          fontSize: String(buttonSize) + ea,
+          fontWeight: String(buttonWeight),
+          lineHeight: String(buttonLineHeight),
+          color: colorChip.white,
+        }
+      }
+    ]
+  });
 }
 
 FrontAboutJs.prototype.insertFourthService = function () {
@@ -645,6 +1453,26 @@ FrontAboutJs.prototype.insertFourthService = function () {
   let mainPaddingTop, mainPaddingBottom;
   let contents;
   let baseTongClone;
+  let titleSize;
+  let titleWeight;
+  let titleLineHeight;
+  let numberTextTop;
+  let numberSize;
+  let numberWeight;
+  let numberLineHeight;
+  let contentsAreaMarginTop;
+  let titleArea, contentsArea;
+
+  titleSize = <%% 31, 31, 31, 31, 31 %%>;
+  titleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
+
+  numberTextTop = <%% 3, 3, 3, 3, 3 %%>;
+  numberSize = <%% 25, 25, 25, 25, 25 %%>;
+  numberWeight = <%% 700, 700, 700, 700, 700 %%>;
+  numberLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
+
+  contentsAreaMarginTop = <%% 45, 45, 45, 45, 45 %%>;
 
   mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 123 : 122), (isMac() ? 102 : 100), 4 %%>;
   mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 143 : 142), (isMac() ? 122 : 120), 5 %%>;
@@ -682,7 +1510,8 @@ FrontAboutJs.prototype.insertFourthService = function () {
         ]
       ]
     ],
-    button: []
+    button: [],
+    image: []
   };
 
   baseTongClone = this.baseTong.cloneNode(false);
@@ -691,7 +1520,7 @@ FrontAboutJs.prototype.insertFourthService = function () {
   baseTongClone.style.width = String(100) + '%';
   baseTongClone.style.left = String(0);
   baseTongClone.style.paddingTop = "";
-  baseTongClone.style.background = colorChip.gray3;
+  baseTongClone.style.background = colorChip.gray2;
 
   mainBlock = createNode({
     mother: baseTongClone,
@@ -704,6 +1533,60 @@ FrontAboutJs.prototype.insertFourthService = function () {
       paddingBottom: String(mainPaddingBottom) + ea,
     }
   });
+
+  titleArea = createNode({
+    mother: mainBlock,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+    }
+  });
+
+  createNode({
+    mother: titleArea,
+    text: "04",
+    style: {
+      display: "block",
+      position: "relative",
+      width: withOut(0, ea),
+      textAlign: "center",
+      fontSize: String(numberSize) + ea,
+      fontWeight: String(numberWeight),
+      lineHeight: String(numberLineHeight),
+    }
+  });
+
+  createNode({
+    mother: titleArea,
+    text: contents.main.join("\n"),
+    style: {
+      display: "block",
+      position: "relative",
+      width: withOut(0, ea),
+      textAlign: "center",
+      fontSize: String(titleSize) + ea,
+      fontWeight: String(titleWeight),
+      lineHeight: String(titleLineHeight),
+      color: colorChip.black,
+    }
+  });
+
+  contentsArea = createNode({
+    mother: mainBlock,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      marginTop: String(contentsAreaMarginTop) + ea,
+      background: colorChip.white,
+      borderRadius: String(5) + "px",
+      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      height: String(800) + ea,
+    }
+  });
+
+
 
 }
 
