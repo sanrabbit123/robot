@@ -266,9 +266,51 @@ FrontAboutJs.prototype.insertFirstService = function () {
   let mainPaddingTop, mainPaddingBottom;
   let titleArea, contentsArea;
   let contents;
+  let titleSize, titleWeight, titleLineHeight;
+  let titlePaddingLeft;
+  let titleLineTop;
+  let numberSize, numberWeight, numberLineHeight, numberTextTop;
+  let contentsAreaMarginTop;
+  let contentsSize, contentsWeight, contentsBoldWeight, contentsLineHeight;
+  let width0, width1, width2;
+  let imageHeight;
+  let buttonWidth, buttonHeight;
+  let buttonTextTop, buttonSize, buttonWeight, buttonLineHeight;
 
   mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 123 : 122), (isMac() ? 102 : 100), 4 %%>;
-  mainPaddingBottom = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 123 : 122), (isMac() ? 102 : 100), 4 %%>;
+  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 143 : 142), (isMac() ? 122 : 120), 5 %%>;
+
+  titleSize = <%% 37, 37, 37, 37, 37 %%>;
+  titleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
+  titlePaddingLeft = <%% 24, 24, 24, 24, 24 %%>;
+  titleLineTop = <%% 26, 26, 26, 26, 26 %%>;
+
+  numberTextTop = <%% 3, 3, 3, 3, 3 %%>;
+  numberSize = <%% 33, 33, 33, 33, 33 %%>;
+  numberWeight = <%% 700, 700, 700, 700, 700 %%>;
+  numberLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
+
+  contentsAreaMarginTop = <%% 45, 45, 45, 45, 45 %%>;
+
+  contentsSize = <%% 16, 16, 16, 16, 16 %%>;
+  contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
+  contentsBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+  contentsLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
+
+  width0 = <%% 172, 172, 172, 172, 172 %%>;
+  width1 = <%% 418, 418, 418, 418, 418 %%>;
+  width2 = <%% 810, 810, 810, 810, 810 %%>;
+
+  imageHeight = <%% 370, 370, 370, 370, 370 %%>;
+
+  buttonHeight = <%% 36, 36, 36, 36, 36 %%>;
+  buttonWidth = <%% 180, 180, 180, 180, 180 %%>;
+
+  buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
+  buttonSize = <%% 13, 13, 13, 13, 13 %%>;
+  buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
+  buttonLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
   contents = {
     main: [
@@ -294,7 +336,10 @@ FrontAboutJs.prototype.insertFirstService = function () {
     ],
     button: [
       "디자이너 큐레이션 설명 보기"
-    ]
+    ],
+    image: [
+      FrontAboutJs.binaryPath + "/a1.jpg"
+    ],
   };
 
   mainBlock = createNode({
@@ -317,30 +362,164 @@ FrontAboutJs.prototype.insertFirstService = function () {
     }
   });
 
+  createNode({
+    mother: titleArea,
+    style: {
+      display: "block",
+      position: "absolute",
+      top: String(0),
+      left: String(0),
+      width: withOut(0, ea),
+      height: String(titleLineTop) + ea,
+      borderBottom: "1px solid " + colorChip.gray3,
+    }
+  });
+
+
+  createNode({
+    mother: titleArea,
+    text: "01",
+    style: {
+      display: "block",
+      position: "absolute",
+      top: String(numberTextTop) + ea,
+      right: String(0),
+      background: colorChip.gray0,
+      paddingLeft: String(titlePaddingLeft) + ea,
+      fontSize: String(numberSize) + ea,
+      fontWeight: String(numberWeight),
+      lineHeight: String(numberLineHeight),
+    }
+  });
+
+
+  createNode({
+    mother: titleArea,
+    text: contents.main.join("\n"),
+    style: {
+      display: "inline-block",
+      position: "relative",
+      fontSize: String(titleSize) + ea,
+      fontWeight: String(titleWeight),
+      lineHeight: String(titleLineHeight),
+      background: colorChip.gray0,
+      color: colorChip.black,
+      textAlign: "left",
+      paddingRight: String(titlePaddingLeft) + ea,
+    }
+  });
+
   contentsArea = createNode({
     mother: mainBlock,
     style: {
       display: "block",
       position: "relative",
       width: String(100) + '%',
+      marginTop: String(contentsAreaMarginTop) + ea,
     }
   });
 
+
+  createNode({
+    mother: contentsArea,
+    text: contents.sub.join("\n"),
+    style: {
+      display: "inline-block",
+      position: "relative",
+      fontSize: String(contentsSize) + ea,
+      fontWeight: String(contentsBoldWeight),
+      lineHeight: String(contentsLineHeight),
+      color: colorChip.black,
+      textAlign: "left",
+      verticalAlign: "top",
+      width: String(width0) + ea,
+    }
+  });
+
+  createNode({
+    mother: contentsArea,
+    text: contents.description.map((arr) => { return arr.join("\n") }).join("\n\n"),
+    style: {
+      display: "inline-block",
+      position: "relative",
+      fontSize: String(contentsSize) + ea,
+      fontWeight: String(contentsWeight),
+      lineHeight: String(contentsLineHeight),
+      color: colorChip.black,
+      textAlign: "left",
+      verticalAlign: "top",
+      width: String(width1) + ea,
+    },
+    bold: {
+      fontWeight: String(contentsBoldWeight),
+      lineHeight: String(contentsLineHeight),
+      color: colorChip.black,
+    }
+  });
+
+  createNode({
+    mother: contentsArea,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      backgroundImage: "url('" + contents.image[0] + "')",
+      backgroundPosition: "50% 41%",
+      backgroundSize: "100% auto",
+      width: String(width2) + ea,
+      height: String(imageHeight) + ea,
+      borderRadius: String(5) + "px",
+      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+    }
+  });
+
+  createNode({
+    mother: contentsArea,
+    style: {
+      display: "inline-flex",
+      position: "absolute",
+      bottom: String(0),
+      left: String(width0) + ea,
+      verticalAlign: "top",
+      height: String(buttonHeight) + ea,
+      width: String(buttonWidth) + ea,
+      justifyContent: "center",
+      alignItems: "center",
+      textAlign: "center",
+      background: colorChip.gradientGreen,
+      borderRadius: String(5) + "px",
+      cursor: "pointer",
+    },
+    children: [
+      {
+        text: contents.button.join("\n"),
+        style: {
+          position: "relative",
+          display: "inline-block",
+          top: String(buttonTextTop) + ea,
+          fontSize: String(buttonSize) + ea,
+          fontWeight: String(buttonWeight),
+          lineHeight: String(buttonLineHeight),
+          color: colorChip.white,
+        }
+      }
+    ]
+  });
 
 }
 
 FrontAboutJs.prototype.insertSecondService = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media } = this;
+  const { ea, media, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
   let mainBlock;
   let mainPaddingTop, mainPaddingBottom;
   let contents;
+  let baseTongClone;
 
   mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 123 : 122), (isMac() ? 102 : 100), 4 %%>;
-  mainPaddingBottom = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 123 : 122), (isMac() ? 102 : 100), 4 %%>;
+  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 143 : 142), (isMac() ? 122 : 120), 5 %%>;
 
   contents = {
     main: [
@@ -376,12 +555,21 @@ FrontAboutJs.prototype.insertSecondService = function () {
     ]
   };
 
+  baseTongClone = this.baseTong.cloneNode(false);
+  this.baseTong.parentNode.appendChild(baseTongClone);
+
+  baseTongClone.style.width = String(100) + '%';
+  baseTongClone.style.left = String(0);
+  baseTongClone.style.paddingTop = "";
+  baseTongClone.style.background = colorChip.gray1;
+
   mainBlock = createNode({
-    mother: this.baseTong,
+    mother: baseTongClone,
     style: {
       display: "block",
       position: "relative",
-      width: String(100) + '%',
+      width: String(standardWidth) + ea,
+      left: withOut(50, standardWidth / 2, ea),
       paddingTop: String(mainPaddingTop) + ea,
       paddingBottom: String(mainPaddingBottom) + ea,
     }
@@ -398,9 +586,10 @@ FrontAboutJs.prototype.insertThirdService = function () {
   let mainBlock;
   let mainPaddingTop, mainPaddingBottom;
   let contents;
+  let baseTongClone;
 
   mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 123 : 122), (isMac() ? 102 : 100), 4 %%>;
-  mainPaddingBottom = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 123 : 122), (isMac() ? 102 : 100), 4 %%>;
+  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 143 : 142), (isMac() ? 122 : 120), 5 %%>;
 
   contents = {
     main: [
@@ -428,8 +617,13 @@ FrontAboutJs.prototype.insertThirdService = function () {
     ]
   };
 
+  baseTongClone = this.baseTong.cloneNode(false);
+  this.baseTong.parentNode.appendChild(baseTongClone);
+
+  baseTongClone.style.paddingTop = "";
+
   mainBlock = createNode({
-    mother: this.baseTong,
+    mother: baseTongClone,
     style: {
       display: "block",
       position: "relative",
@@ -444,15 +638,16 @@ FrontAboutJs.prototype.insertThirdService = function () {
 FrontAboutJs.prototype.insertFourthService = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media } = this;
+  const { ea, media, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
   let mainBlock;
   let mainPaddingTop, mainPaddingBottom;
   let contents;
+  let baseTongClone;
 
   mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 123 : 122), (isMac() ? 102 : 100), 4 %%>;
-  mainPaddingBottom = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 123 : 122), (isMac() ? 102 : 100), 4 %%>;
+  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 143 : 142), (isMac() ? 122 : 120), 5 %%>;
 
   contents = {
     main: [
@@ -490,12 +685,21 @@ FrontAboutJs.prototype.insertFourthService = function () {
     button: []
   };
 
+  baseTongClone = this.baseTong.cloneNode(false);
+  this.baseTong.parentNode.appendChild(baseTongClone);
+
+  baseTongClone.style.width = String(100) + '%';
+  baseTongClone.style.left = String(0);
+  baseTongClone.style.paddingTop = "";
+  baseTongClone.style.background = colorChip.gray3;
+
   mainBlock = createNode({
-    mother: this.baseTong,
+    mother: baseTongClone,
     style: {
       display: "block",
       position: "relative",
-      width: String(100) + '%',
+      width: String(standardWidth) + ea,
+      left: withOut(50, standardWidth / 2, ea),
       paddingTop: String(mainPaddingTop) + ea,
       paddingBottom: String(mainPaddingBottom) + ea,
     }
@@ -506,15 +710,16 @@ FrontAboutJs.prototype.insertFourthService = function () {
 FrontAboutJs.prototype.insertConsultingBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media } = this;
+  const { ea, media, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
   let mainBlock;
   let mainPaddingTop, mainPaddingBottom;
   let contents;
+  let baseTongClone;
 
   mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 123 : 122), (isMac() ? 102 : 100), 4 %%>;
-  mainPaddingBottom = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 123 : 122), (isMac() ? 102 : 100), 4 %%>;
+  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 143 : 142), (isMac() ? 122 : 120), 5 %%>;
 
   contents = {
     main: [
@@ -522,12 +727,21 @@ FrontAboutJs.prototype.insertConsultingBox = function () {
     ],
   };
 
+  baseTongClone = this.baseTong.cloneNode(false);
+  this.baseTong.parentNode.appendChild(baseTongClone);
+
+  baseTongClone.style.width = String(100) + '%';
+  baseTongClone.style.left = String(0);
+  baseTongClone.style.paddingTop = "";
+  baseTongClone.style.background = colorChip.gray1;
+
   mainBlock = createNode({
-    mother: this.baseTong,
+    mother: baseTongClone,
     style: {
       display: "block",
       position: "relative",
-      width: String(100) + '%',
+      width: String(standardWidth) + ea,
+      left: withOut(50, standardWidth / 2, ea),
       paddingTop: String(mainPaddingTop) + ea,
       paddingBottom: String(mainPaddingBottom) + ea,
     }
@@ -1003,35 +1217,6 @@ FrontAboutJs.prototype.launching = async function (loading) {
     });
 
     loading.parentNode.removeChild(loading);
-
-    window.addEventListener("scroll", (e) => {
-      setDebounce(() => {
-        let scrollMin;
-        scrollMin = <%% 1000, 1000, 900, 800, 300 %%>;
-        if (window.scrollY > scrollMin && instance.fullLoad && !instance.photoLoad) {
-          instance.portfolioBlock(null, null);
-          instance.photoLoad = true;
-        }
-      }, "windowScrollDebounce");
-    });
-
-    setQueue(() => {
-      ajaxJson({ mode: "review" }, LOGHOST + "/getContents", { equal: true }).then((response) => {
-        instance.contentsArr = new SearchArray(response.contentsArr);
-        instance.designers = new SearchArray(response.designers);
-        instance.fullLoad = true;
-
-        if (typeof getObj.search === "string") {
-          if (document.querySelector("input") !== null) {
-            instance.portfolioBlock(null, getObj.search);
-            instance.photoLoad = true;
-          }
-        }
-
-      }).catch((err) => {
-        console.log(err);
-      });
-    });
 
   } catch (err) {
     console.log(err);
