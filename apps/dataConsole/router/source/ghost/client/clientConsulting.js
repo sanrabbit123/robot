@@ -2902,8 +2902,8 @@ ClientConsultingJs.prototype.insertPannelBox = function () {
           position: "relative",
           width: String(buttonWidth) + ea,
           height: String(100) + '%',
-          background: colorChip.green,
-          borderRadius: String(3) + "px",
+          background: colorChip.gradientGreen,
+          borderRadius: String(5) + "px",
           cursor: "pointer",
         },
         children: [

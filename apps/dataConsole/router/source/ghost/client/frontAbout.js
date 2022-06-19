@@ -470,6 +470,9 @@ FrontAboutJs.prototype.insertFirstService = function () {
 
   createNode({
     mother: contentsArea,
+    event: {
+      click: instance.aboutPopup(0),
+    },
     style: {
       display: "inline-flex",
       position: "absolute",
@@ -1773,7 +1776,7 @@ FrontAboutJs.prototype.insertFourthService = function () {
 
 FrontAboutJs.prototype.insertConsultingBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, ajaxJson } = GeneralJs;
   const { ea, media, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -1903,6 +1906,20 @@ FrontAboutJs.prototype.insertConsultingBox = function () {
   let phoneBlurEvent;
   let leftBoxWidth;
   let textAreaBlockHeight;
+  let descriptionSize, descriptionWeight, descriptionLineHeight, descriptionMarginTop, descriptionBoldWeight;
+  let policyArea;
+  let policyAreaMarginTop;
+  let policyGrayHeight;
+  let policyGrayTextTop;
+  let policyGrayTextLeft;
+  let policyGrayTextSize;
+  let policyTong;
+  let agreeTong;
+  let agreeTongMarginTop, agreeSize, agreeWeight, agreeLineHeight;
+  let agreeCircleRadius, agreeCircleTop, agreeCircleMarginRight;
+  let submitTong, submitTongMarginTop;
+  let submitButtonWidth, submitButtonHeight;
+  let submitSize, submitWeight, submitLineHeight, submitTextTop;
 
   blockHeight = <%% 784, 765, 725, 710, 176 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
@@ -2102,15 +2119,44 @@ FrontAboutJs.prototype.insertConsultingBox = function () {
   leftBoxWidth = <%% 398, 398, 398, 398, 398 %%>;
   textAreaBlockHeight = <%% 118, 118, 118, 118, 118 %%>;
 
+  descriptionSize = <%% 16, 16, 16, 16, 16 %%>;
+  descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+  descriptionLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
+  descriptionMarginTop = <%% 10, 10, 10, 10, 10 %%>;
+  descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+  policyAreaMarginTop = <%% 15, 15, 12, 10, 1 %%>;
+  policyGrayHeight = <%% 180, 180, 180, 180, 42 %%>;
+  policyGrayTextTop = <%% 22, 22, 20, 20, 3 %%>;
+  policyGrayTextLeft = <%% 22, 20, 18, 15, 3 %%>;
+  policyGrayTextSize = <%% 12, 12, 10, 10, 2 %%>;
+
+  agreeTongMarginTop = <%% 10, 10, 10, 10, 10 %%>;
+  agreeSize = <%% 15, 15, 15, 15, 15 %%>;
+  agreeWeight = <%% 500, 500, 500, 500, 500 %%>;
+  agreeLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+
+  agreeCircleRadius = <%% 6, 6, 6, 6, 6 %%>;
+  agreeCircleTop = <%% 10, 10, 10, 10, 10 %%>;
+  agreeCircleMarginRight = <%% 5, 5, 5, 5, 5 %%>;
+
+  submitTongMarginTop = <%% 20, 20, 20, 20, 20 %%>;
+  submitButtonWidth = <%% 156, 156, 156, 156, 156 %%>;
+  submitButtonHeight = <%% 47, 47, 47, 47, 47 %%>;
+  submitSize = <%% 20, 20, 20, 20, 20 %%>;
+  submitWeight = <%% 400, 400, 400, 400, 400 %%>;
+  submitLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+  submitTextTop = <%% -2, -2, -2, -2, -2 %%>;
+
   contents = {
     main: [
       "홈리에종 서비스 신청",
     ],
     sub: [
-      "서비스 진행을 위해",
-      "다음 기본 정보가 필요합니다.",
-      "신청서를 간단히 작성 후,",
-      "1:1 맞춤 상담을 받아보세요!",
+      "홈리에종의 서비스 진행을 위해서는",
+      "다음과 같이 기본 정보가 필요합니다.",
+      "서비스 신청서를 간단히 작성 후,",
+      "<b%디자이너의 1:1 맞춤 상담%b>을 받아보세요!",
     ]
   };
 
@@ -2194,8 +2240,39 @@ FrontAboutJs.prototype.insertConsultingBox = function () {
       position: "relative",
       marginLeft: String(innerPadding) + ea,
       width: String(leftBoxWidth) + ea,
+      verticalAlign: "top",
     }
   });
+
+  createNode({
+    mother: leftBox,
+    mode: "svg",
+    source: svgMaker.doubleQuote(colorChip.green),
+    style: {
+      display: "block",
+      position: "relative",
+      height: String(quoteHeight) + ea,
+      marginLeft: String(quoteLeft) + ea,
+    }
+  });
+
+  createNode({
+    mother: leftBox,
+    text: contents.sub.join("\n"),
+    style: {
+      display: "block",
+      position: "relative",
+      fontSize: String(descriptionSize) + ea,
+      fontWeight: String(descriptionWeight),
+      color: colorChip.black,
+      lineHeight: String(descriptionLineHeight),
+      marginTop: String(descriptionMarginTop) + ea,
+    },
+    bold: {
+      fontWeight: String(descriptionBoldWeight),
+      color: colorChip.black,
+    }
+  })
 
   rightBox = createNode({
     mother: contentsArea,
@@ -2203,6 +2280,7 @@ FrontAboutJs.prototype.insertConsultingBox = function () {
       display: "inline-block",
       position: "relative",
       width: withOut(leftBoxWidth + (innerPadding * 2), ea),
+      verticalAlign: "top",
     }
   });
 
@@ -2977,22 +3055,154 @@ FrontAboutJs.prototype.insertConsultingBox = function () {
     ]
   });
 
+  // policy and submit
+  policyArea = createNode({
+    mother: mainBlock,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      marginTop: String(policyAreaMarginTop) + ea,
+      background: colorChip.white,
+      borderRadius: String(5) + "px",
+      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      paddingTop: String(innerPadding) + ea,
+      paddingBottom: String(innerPadding) + ea,
+    }
+  });
+
+  policyTong = createNode({
+    mother: policyArea,
+    style: {
+      display: "block",
+      position: "relative",
+      marginLeft: String(innerPadding) + ea,
+      width: withOut(innerPadding * 2, ea),
+      height: String(policyGrayHeight) + ea,
+      background: colorChip.gray1,
+      borderRadius: String(3) + "px",
+    },
+    children: [
+      {
+        style: {
+          position: "absolute",
+          top: String(policyGrayTextTop) + ea,
+          left: String(policyGrayTextLeft) + ea,
+          width: withOut(policyGrayTextLeft * 2, ea),
+          height: withOut(policyGrayTextTop * 2, ea),
+          overflow: "scroll",
+        },
+        children: [
+          {
+            position: "absolute",
+            top: String(0) + ea,
+            left: String(0) + ea,
+            width: String(100) + '%',
+            height: "auto",
+            fontSize: String(policyGrayTextSize) + ea,
+            fontWeight: String(300),
+            lineHeight: String(1.6),
+            color: colorChip.black,
+          }
+        ]
+      }
+    ]
+  }).firstChild.firstChild;
+
+  agreeTong = createNode({
+    mother: policyArea,
+    style: {
+      display: "flex",
+      position: "relative",
+      flexDirection: "row-reverse",
+      marginLeft: String(innerPadding) + ea,
+      width: withOut(innerPadding * 2, ea),
+      marginTop: String(agreeTongMarginTop) + ea,
+    },
+    children: [
+      {
+        attribute: {
+          toggle: "on",
+        },
+        text: "상기 개인정보 취급 방침에 동의합니다.",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(agreeSize) + ea,
+          fontWeight: String(agreeWeight),
+          color: colorChip.green,
+          lineHeight: String(agreeLineHeight),
+        }
+      },
+      {
+        attribute: {
+          toggle: "on",
+        },
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: String(agreeCircleRadius) + ea,
+          height: String(agreeCircleRadius) + ea,
+          borderRadius: String(agreeCircleRadius) + ea,
+          background: colorChip.green,
+          top: String(agreeCircleTop) + ea,
+          marginRight: String(agreeCircleMarginRight) + ea,
+        }
+      }
+    ]
+  });
+
+  submitTong = createNode({
+    mother: policyArea,
+    style: {
+      display: "block",
+      position: "relative",
+      marginTop: String(submitTongMarginTop) + ea,
+      textAlign: "center",
+    },
+    children: [
+      {
+        style: {
+          display: "inline-flex",
+          width: String(submitButtonWidth) + ea,
+          height: String(submitButtonHeight) + ea,
+          background: colorChip.gradientGreen,
+          borderRadius: String(5) + "px",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+        },
+        children: [
+          {
+            text: "상담 신청하기",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(submitSize) + ea,
+              fontWeight: String(submitWeight),
+              color: colorChip.white,
+              lineHeight: String(submitLineHeight),
+              top: String(submitTextTop) + ea,
+            }
+          }
+        ]
+      }
+    ]
+  });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  ajaxJson({}, "https://" + GHOSTHOST + "/designerProposal_policy").then(function (res) {
+    const { policy } = res;
+    let bTags;
+    policyTong.insertAdjacentHTML("beforeend", policy);
+    bTags = policyTong.querySelectorAll("b");
+    for (let b of bTags) {
+      b.style.color = colorChip.black;
+      b.style.fontWeight = String(600);
+    }
+  }).catch(function (err) {
+    throw new Error(err);
+  });
 
 }
 
@@ -3395,6 +3605,72 @@ FrontAboutJs.prototype.portfolioBlock = function (limitLength, search = null) {
 
   }
 
+}
+
+FrontAboutJs.prototype.aboutPopup = function (index) {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, ajaxJson } = GeneralJs;
+  const { ea, media, standardWidth, totalContents, naviHeight } = this;
+  return function (e) {
+    const zIndex = 99;
+    const aboutPopupClassName = "aboutPopupClassName";
+    let cancelBack, whitePopup;
+    let popupWidth, popupHeight;
+    let popupHeightRatio;
+    let popupHeightMarginTop;
+    let innerPadding;
+
+    popupHeightRatio = 0.84;
+    popupHeight = (window.innerHeight - naviHeight) * popupHeightRatio;
+    popupHeightMarginTop = ((window.innerHeight - naviHeight) - popupHeight) / 2;
+    popupWidth = 1200;
+    innerPadding = 60;
+
+    cancelBack = createNode({
+      mother: totalContents,
+      class: [ aboutPopupClassName ],
+      event: {
+        click: function (e) {
+          const removeTargets = document.querySelectorAll('.' + aboutPopupClassName);
+          for (let dom of removeTargets) {
+            dom.remove();
+          }
+        }
+      },
+      style: {
+        position: "fixed",
+        top: String(0),
+        left: String(0),
+        width: String(100) + '%',
+        height: String(100) + '%',
+        background: colorChip.black,
+        opacity: String(0.4),
+        zIndex: String(zIndex),
+      }
+    });
+
+    whitePopup = createNode({
+      mother: totalContents,
+      class: [ aboutPopupClassName ],
+      style: {
+        position: "fixed",
+        top: String(naviHeight + popupHeightMarginTop) + ea,
+        height: String(popupHeight - (innerPadding * 2)) + ea,
+        width: String(popupWidth - (innerPadding * 2)) + ea,
+        left: withOut(50, popupWidth / 2, ea),
+        background: colorChip.white,
+        borderRadius: String(5) + "px",
+        boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
+        zIndex: String(zIndex),
+        animation: "fadeuporiginal 0.3s ease forwards",
+        paddingTop: String(innerPadding) + ea,
+        paddingLeft: String(innerPadding) + ea,
+        paddingRight: String(innerPadding) + ea,
+        paddingBottom: String(innerPadding) + ea,
+      }
+    });
+
+  }
 }
 
 FrontAboutJs.prototype.launching = async function (loading) {
