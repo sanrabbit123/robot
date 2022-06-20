@@ -305,7 +305,7 @@ FrontAboutJs.prototype.insertFirstService = function () {
   imageHeight = <%% 390, 390, 390, 390, 390 %%>;
 
   buttonHeight = <%% 36, 36, 36, 36, 36 %%>;
-  buttonWidth = <%% 180, 180, 180, 180, 180 %%>;
+  buttonWidth = <%% 130, 130, 130, 130, 130 %%>;
   buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
   buttonSize = <%% 13, 13, 13, 13, 13 %%>;
   buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -334,7 +334,7 @@ FrontAboutJs.prototype.insertFirstService = function () {
       ]
     ],
     button: [
-      "디자이너 큐레이션 설명 보기"
+      "디자이너 큐레이션"
     ],
     image: [
       FrontAboutJs.binaryPath + "/a1.jpg"
@@ -590,12 +590,12 @@ FrontAboutJs.prototype.insertSecondService = function () {
     ],
     sub: [
       "상담 신청서 작성",
-      "서비스 큐레이션",
-      "디자이너 선택",
       "현장 미팅",
       "기획 / 디자인",
       "시공 / 제품 구매",
-      "촬영 / 인터뷰"
+      "촬영 / 인터뷰",
+      "서비스 큐레이션",
+      "디자이너 선택",
     ],
     description: [
       [
