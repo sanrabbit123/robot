@@ -339,6 +339,22 @@ FrontAboutJs.prototype.insertFirstService = function () {
     image: [
       FrontAboutJs.binaryPath + "/a1.jpg"
     ],
+    popup: [
+      [
+        "홀리에종에서 디자이너를 만나는 방식은",
+        "먼저 고객님이 상담 신청서를 통해 기본적인",
+        "정보를 남겨주시면, 그에 맞춰 홈리에종이",
+        "적합한 <b%디자이너를 추천드리고, 고객님이",
+        "추천 받은 디자이너들 중 한 명을 선택함으로써%b>",
+        "디자이너 매칭이 성사됩니다.",
+      ],
+      [
+        "매칭된 디자이너는 고객님 현장의 <b%전담",
+        "디자이너가 되어 1:1 상담과 함께",
+        "집의 완성까지 책임지고%b> 고객님을 리드하게",
+        "됩니다.",
+      ]
+    ]
   };
 
   mainBlock = createNode({
@@ -471,7 +487,7 @@ FrontAboutJs.prototype.insertFirstService = function () {
   createNode({
     mother: contentsArea,
     event: {
-      click: instance.aboutPopup(0),
+      click: instance.aboutPopup(contents),
     },
     style: {
       display: "inline-flex",
@@ -576,7 +592,7 @@ FrontAboutJs.prototype.insertSecondService = function () {
   contentsLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
 
   buttonHeight = <%% 36, 36, 36, 36, 36 %%>;
-  buttonWidth = <%% 120, 120, 120, 120, 120 %%>;
+  buttonWidth = <%% 110, 110, 110, 110, 110 %%>;
   buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
   buttonSize = <%% 13, 13, 13, 13, 13 %%>;
   buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -614,7 +630,23 @@ FrontAboutJs.prototype.insertSecondService = function () {
       ]
     ],
     button: [
-      "결제 및 프로세스"
+      "디자인비 결제"
+    ],
+    popup: [
+      [
+        "홈리에종의 프로세스는 일단 먼저,",
+        "하단 상담 신청서를 작성해주시면,",
+        "홈리에종의 친절한 상담과 추천으로",
+        "<b%나에게 가장 잘 맞는 디자이너를%b>",
+        "<b%만나%b> 홈스타일링을 진행하게 됩니다.",
+      ],
+      [
+        "고객님과 매칭된 디자이너는",
+        "<b%일단 기획과 디자인을 선행한 후,",
+        "시공 견적을 내고 제품 제안을 진행%b>",
+        "하게 됩니다. 그리고 세팅에 관여하여",
+        "인테리어 프로세를 완성하게 됩니다.",
+      ]
     ],
     image: [
       FrontAboutJs.binaryPath + "/b1.jpg",
@@ -934,6 +966,7 @@ FrontAboutJs.prototype.insertSecondService = function () {
       });
       createNode({
         mother: baseBox,
+
         style: {
           display: "flex",
           position: "relative",
@@ -942,6 +975,9 @@ FrontAboutJs.prototype.insertSecondService = function () {
         },
         children: [
           {
+            event: {
+              click: instance.aboutPopup(contents),
+            },
             style: {
               display: "flex",
               position: "absolute",
@@ -1272,6 +1308,22 @@ FrontAboutJs.prototype.insertThirdService = function () {
     button: [
       "예산의 3가지 구성"
     ],
+    popup: [
+      [
+        "홈리에종의 프로세스는 일단 먼저,",
+        "하단 상담 신청서를 작성해주시면,",
+        "홈리에종의 친절한 상담과 추천으로",
+        "<b%나에게 가장 잘 맞는 디자이너를%b>",
+        "<b%만나%b> 홈스타일링을 진행하게 됩니다.",
+      ],
+      [
+        "고객님과 매칭된 디자이너는",
+        "<b%일단 기획과 디자인을 선행한 후,",
+        "시공 견적을 내고 제품 제안을 진행%b>",
+        "하게 됩니다. 그리고 세팅에 관여하여",
+        "인테리어 프로세를 완성하게 됩니다.",
+      ]
+    ],
     image: [
       FrontAboutJs.binaryPath + "/c1.jpg"
     ],
@@ -1414,6 +1466,9 @@ FrontAboutJs.prototype.insertThirdService = function () {
 
   createNode({
     mother: contentsArea,
+    event: {
+      click: instance.aboutPopup(contents),
+    },
     style: {
       display: "inline-flex",
       position: "absolute",
@@ -3607,24 +3662,42 @@ FrontAboutJs.prototype.portfolioBlock = function (limitLength, search = null) {
 
 }
 
-FrontAboutJs.prototype.aboutPopup = function (index) {
+FrontAboutJs.prototype.aboutPopup = function (contents) {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, ajaxJson } = GeneralJs;
   const { ea, media, standardWidth, totalContents, naviHeight } = this;
   return function (e) {
     const zIndex = 99;
     const aboutPopupClassName = "aboutPopupClassName";
+    const { button, popup } = contents;
     let cancelBack, whitePopup;
     let popupWidth, popupHeight;
     let popupHeightRatio;
     let popupHeightMarginTop;
     let innerPadding;
+    let innerPaddingTop;
+    let titleBox, titleBoxPaddingBottom, titleBoxMarginBottom;
+    let titleSize, titleWeight;
+    let contentsSize, contentsWeight, contentsLineHeight, contentsBoldWeight;
+    let contentsBox;
 
     popupHeightRatio = 0.84;
     popupHeight = (window.innerHeight - naviHeight) * popupHeightRatio;
     popupHeightMarginTop = ((window.innerHeight - naviHeight) - popupHeight) / 2;
-    popupWidth = 1200;
-    innerPadding = 60;
+    popupWidth = <%% 600, 600, 600, 600, 600 %%>;
+    innerPadding = <%% 50, 50, 50, 50, 50 %%>;
+    innerPaddingTop = <%% 40, 40, 40, 40, 40 %%>;
+
+    titleBoxPaddingBottom = <%% 12, 12, 12, 12, 12 %%>;
+    titleBoxMarginBottom = <%% 24, 24, 24, 24, 24 %%>;
+
+    titleSize = <%% 22, 22, 22, 22, 22 %%>;
+    titleWeight = <%% 600, 600, 600, 600, 600 %%>;
+
+    contentsSize = <%% 16, 16, 16, 16, 16 %%>;
+    contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
+    contentsLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
+    contentsBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
 
     cancelBack = createNode({
       mother: totalContents,
@@ -3655,20 +3728,71 @@ FrontAboutJs.prototype.aboutPopup = function (index) {
       style: {
         position: "fixed",
         top: String(naviHeight + popupHeightMarginTop) + ea,
-        height: String(popupHeight - (innerPadding * 2)) + ea,
         width: String(popupWidth - (innerPadding * 2)) + ea,
         left: withOut(50, popupWidth / 2, ea),
         background: colorChip.white,
         borderRadius: String(5) + "px",
         boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
         zIndex: String(zIndex),
-        animation: "fadeuporiginal 0.3s ease forwards",
-        paddingTop: String(innerPadding) + ea,
+        paddingTop: String(innerPaddingTop) + ea,
         paddingLeft: String(innerPadding) + ea,
         paddingRight: String(innerPadding) + ea,
         paddingBottom: String(innerPadding) + ea,
+        transition: "all 0s ease",
+        transform: "translateY(20px)",
+        opacity: String(0),
       }
     });
+
+    titleBox = createNode({
+      mother: whitePopup,
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(0, ea),
+        paddingBottom: String(titleBoxPaddingBottom) + ea,
+        marginBottom: String(titleBoxMarginBottom) + ea,
+        borderBottom: "1px solid " + colorChip.gray3,
+      },
+      children: [
+        {
+          text: button.join(" "),
+          style: {
+            fontSize: String(titleSize) + ea,
+            fontWeight: String(titleWeight),
+            color: colorChip.black,
+          }
+        }
+      ]
+    });
+
+    contentsBox = createNode({
+      mother: whitePopup,
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(0, ea),
+      },
+      children: [
+        {
+          text: popup.map((arr) => { return arr.join(" ") }).join("\n\n"),
+          style: {
+            fontSize: String(contentsSize) + ea,
+            fontWeight: String(contentsWeight),
+            color: colorChip.black,
+            lineHeight: String(contentsLineHeight),
+          },
+          bold: {
+            fontWeight: String(contentsBoldWeight),
+            color: colorChip.green,
+          }
+        }
+      ]
+    })
+
+    popupHeight = whitePopup.getBoundingClientRect().height;
+    whitePopup.style.top = "calc(calc(50% - " + String(popupHeight / 2) + "px" + ") + " + String(0) + "px" + ")";
+    whitePopup.style.animation = "fadeuporiginal 0.3s ease forwards";
 
   }
 }
