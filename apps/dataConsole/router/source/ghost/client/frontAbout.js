@@ -159,7 +159,7 @@ FrontAboutJs.prototype.insertInitBox = function () {
   titleWording = "홈리에종 서비스 소개";
   subTitleContents = "홈리에종과 함께 하는 홈스타일링";
 
-  mobileBlockTop = 3.5;
+  mobileBlockTop = 4.5;
 
   searchTags = [];
 
@@ -168,7 +168,7 @@ FrontAboutJs.prototype.insertInitBox = function () {
   serviceButtonClassName = "serviceButton";
 
   if (mobile) {
-    totalContents.children[2].style.height = String(68) + ea;
+    totalContents.children[2].style.height = String(67) + ea;
   }
 
   whiteBlock = createNode({
@@ -284,16 +284,16 @@ FrontAboutJs.prototype.insertFirstService = function () {
   let buttonTextTop, buttonSize, buttonWeight, buttonLineHeight;
 
   mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 103 : 102), (isMac() ? 83 : 82), 10 %%>;
-  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 118 : 117), (isMac() ? 98 : 97), 11 %%>;
+  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 118 : 117), (isMac() ? 98 : 97), 13 %%>;
 
-  titleSize = <%% 32, 30, 28, 25, 5.4 %%>;
+  titleSize = <%% 32, 30, 28, 25, 5 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
   titlePaddingLeft = <%% 24, 24, 24, 24, 3 %%>;
   titleLineTop = <%% (isMac() ? 23 : 18), (isMac() ? 21 : 17), (isMac() ? 20 : 16), (isMac() ? 18 : 14), 3.5 %%>;
 
-  numberTextTop = <%% 5, 5, 4, 3, 0.1 %%>;
-  numberSize = <%% 27, 26, 25, 24, 5 %%>;
+  numberTextTop = <%% 5, 5, 4, 3, 0.3 %%>;
+  numberSize = <%% 27, 26, 25, 24, 4.5 %%>;
   numberWeight = <%% 700, 700, 700, 700, 700 %%>;
   numberLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
@@ -566,18 +566,18 @@ FrontAboutJs.prototype.insertSecondService = function () {
   let buttonWidth;
   let contentsVisualTextTop;
 
-  titleSize = <%% 31, 29, 27, 24, 5.4 %%>;
+  titleSize = <%% 31, 29, 27, 24, 5 %%>;
 
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
   numberTextTop = <%% 3, 3, 3, 3, 3 %%>;
-  numberSize = <%% 25, 23, 22, 21, 5 %%>;
+  numberSize = <%% 25, 23, 22, 21, 4.5 %%>;
   numberWeight = <%% 700, 700, 700, 700, 700 %%>;
   numberLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
   mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 103 : 102), (isMac() ? 83 : 82), 10 %%>;
-  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 118 : 117), (isMac() ? 98 : 97), 11 %%>;
+  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 118 : 117), (isMac() ? 98 : 97), 12 %%>;
 
   contentsAreaMarginTop = <%% 45, 40, 34, 28, 6 %%>;
 
@@ -1248,7 +1248,7 @@ FrontAboutJs.prototype.insertSecondService = function () {
           width: "calc(calc(100% - " + String(boxBetween * (boxNumber - 1)) + ea + ") / " + String(boxNumber) + ")",
           verticalAlign: "top",
           marginRight: String(i % boxNumber === boxNumber - 1 ? 0 : boxBetween) + ea,
-          marginBottom: String(5.4) + ea,
+          marginBottom: String(i !== contents.sub.length - 1 ? 5.4 : 0) + ea,
         }
       });
       createNode({
@@ -1286,9 +1286,6 @@ FrontAboutJs.prototype.insertSecondService = function () {
           }
         ]
       });
-
-
-
 
     }
 
@@ -1349,16 +1346,16 @@ FrontAboutJs.prototype.insertThirdService = function () {
   let width1MarginLeft;
 
   mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 103 : 102), (isMac() ? 83 : 82), 10 %%>;
-  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 118 : 117), (isMac() ? 98 : 97), 11 %%>;
+  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 118 : 117), (isMac() ? 98 : 97), 12 %%>;
 
-  titleSize = <%% 32, 30, 28, 25, 5.4 %%>;
+  titleSize = <%% 32, 30, 28, 25, 5 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
   titlePaddingLeft = <%% 24, 24, 24, 24, 3 %%>;
   titleLineTop = <%% (isMac() ? 23 : 18), (isMac() ? 21 : 17), (isMac() ? 20 : 16), (isMac() ? 18 : 14), 3.5 %%>;
   titlePaddingRight = <%% 69, 69, 61, 52, 0 %%>;
-  numberTextTop = <%% 5, 5, 4, 3, 0.1 %%>;
-  numberSize = <%% 27, 26, 25, 24, 5 %%>;
+  numberTextTop = <%% 5, 5, 4, 3, 0.3 %%>;
+  numberSize = <%% 27, 26, 25, 24, 4.5 %%>;
   numberWeight = <%% 700, 700, 700, 700, 700 %%>;
   numberLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
@@ -1572,7 +1569,7 @@ FrontAboutJs.prototype.insertThirdService = function () {
       click: instance.aboutPopup(contents),
     },
     style: {
-      display: "inline-flex",
+      display: desktop ? "inline-flex" : "none",
       position: "absolute",
       bottom: String(0),
       left: String(buttonLeft) + ea,
@@ -1646,19 +1643,19 @@ FrontAboutJs.prototype.insertFourthService = function () {
   let moreSize, moreWeight, moreBetween;
   let moreArrowWidth, moreArrowHeight;
 
-  titleSize = <%% 31, 29, 27, 24, 5.4 %%>;
+  titleSize = <%% 31, 29, 27, 24, 5 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
   numberTextTop = <%% 3, 3, 3, 3, 3 %%>;
-  numberSize = <%% 25, 23, 22, 21, 5 %%>;
+  numberSize = <%% 25, 23, 22, 21, 4.5 %%>;
   numberWeight = <%% 700, 700, 700, 700, 700 %%>;
   numberLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
   contentsAreaMarginTop = <%% 45, 40, 34, 28, 6 %%>;
 
   mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 103 : 102), (isMac() ? 83 : 82), 10 %%>;
-  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 118 : 117), (isMac() ? 98 : 97), 11 %%>;
+  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 118 : 117), (isMac() ? 98 : 97), 14 %%>;
 
   innerPadding = <%% 60, 50, 45, 40, 6 %%>;
 
@@ -1673,7 +1670,7 @@ FrontAboutJs.prototype.insertFourthService = function () {
   contentsBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   contentsLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
 
-  subSize = <%% 22, 21, 19, 17, 5 %%>;
+  subSize = <%% 22, 21, 19, 17, 4.5 %%>;
   subWeight = <%% 700, 700, 700, 700, 700 %%>;
 
   subNumberSize = <%% 18, 17, 16, 15, 3 %%>;
@@ -1681,18 +1678,18 @@ FrontAboutJs.prototype.insertFourthService = function () {
 
   photoMargin = <%% 20, 18, 18, 16, 3 %%>;
   photoNumber = <%% 7, 7, 5, 5, 7 %%>;
-  reviewTitleSize = <%% 24, 22, 21, 20, 5 %%>;
+  reviewTitleSize = <%% 24, 22, 21, 20, 4.5 %%>;
   reviewTitleMarginTop = <%% 80, 80, 70, 60, 12 %%>;
   reviewTitleMarginBottom = <%% 32, 32, 32, 32, 4.5 %%>;
 
-  moreBoxHeight = <%% 15, 15, 15, 15, 15 %%>;
-  moreBoxMarginBottom = <%% 21, 21, 21, 21, 21 %%>;
+  moreBoxHeight = <%% 15, 15, 15, 15, 3 %%>;
+  moreBoxMarginBottom = <%% 21, 21, 21, 21, 4.5 %%>;
 
-  moreSize = <%% 16, 16, 16, 15, 3 %%>;
+  moreSize = <%% 16, 16, 16, 15, 3.5 %%>;
   moreWeight = <%% 700, 700, 700, 700, 700 %%>;
-  moreBetween = <%% 10, 10, 10, 10, 10 %%>;
-  moreArrowWidth = <%% 30, 30, 30, 30, 30 %%>;
-  moreArrowHeight = <%% 10, 10, 10, 8, 10 %%>;
+  moreBetween = <%% 10, 10, 10, 10, 1.5 %%>;
+  moreArrowWidth = <%% 30, 30, 30, 30, 8 %%>;
+  moreArrowHeight = <%% 10, 10, 10, 8, 2 %%>;
 
   contents = {
     main: [
@@ -2189,7 +2186,7 @@ FrontAboutJs.prototype.insertConsultingBox = function () {
   grayTop = <%% 0, 0, 0, 0, 0 %%>;
   grayInputTop = <%% (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), -0.2 %%>;
   grayHeight = <%% 32, 32, 31, 31, 7 %%>;
-  grayBigHeight = <%% 114, 114, 122, 124, 28 %%>;
+  grayBigHeight = <%% 114, 114, 122, 124, 36 %%>;
   grayTextAreaTop = <%% 3, 3, 3, 3, 1.3 %%>;
   grayTextAreaWidth = <%% 51.7, 51.7, 51.7, 390, 51.7 %%>;
 
@@ -2198,13 +2195,13 @@ FrontAboutJs.prototype.insertConsultingBox = function () {
 
   leftGrayType0 = <%% 101, 90, 78, 78, 18 %%>;
   leftGrayType1 = <%% 418, 361, 318, 96, 22.8 %%>;
-  leftGrayType2 = <%% 125, 112, 98, 98, 15 %%>;
+  leftGrayType2 = <%% 125, 112, 98, 98, 22.8 %%>;
   leftGrayType3 = <%% 164, 151, 130, 129, 30.5 %%>;
 
   widthGrayType0 = <%% 160, 140, 130, 150, 34 %%>;
-  widthGrayType1 = <%% 455, 329, 283, 403, 56.5 %%>;
-  widthGrayType2 = <%% 757, 588, 503, 383, 60 %%>;
-  widthGrayType3 = <%% 392, 268, 231, 352, 44 %%>;
+  widthGrayType1 = <%% 455, 329, 283, 403, 58.1 %%>;
+  widthGrayType2 = <%% 757, 588, 503, 383, 53.4 %%>;
+  widthGrayType3 = <%% 392, 268, 231, 352, 45.6 %%>;
 
   addressWidth = <%% 54, 54, 46, 46, 11 %%>;
   addressSize = <%% 13, 13, 12, 12, 3 %%>;
@@ -2218,7 +2215,7 @@ FrontAboutJs.prototype.insertConsultingBox = function () {
   checkboxBetween = <%% 8, 8, 8, 6, 1.5 %%>;
   checkboxWeight = <%% 300, 300, 300, 300, 300 %%>;
 
-  marginRatio = <%% 1.2, 1.2, 1.1, 1.1, 1 %%>;
+  marginRatio = <%% 1.2, 1.2, 1.1, 1.1, 0.8 %%>;
 
   grayLineWidth = <%% 772, 600, 523, 523, 523 %%>;
   grayLineTop = <%% 12, 12, 12, 12, 12 %%>;
@@ -2295,29 +2292,29 @@ FrontAboutJs.prototype.insertConsultingBox = function () {
   calendarWidth = <%% 260, 250, 230, 210, 56 %%>;
   calendarTop = <%% 41, 41, 41, 40, 8.2 %%>;
 
-  titleSize = <%% 31, 29, 27, 24, 4 %%>;
+  titleSize = <%% 31, 29, 27, 24, 5 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
   numberTextTop = <%% 3, 3, 3, 3, 3 %%>;
-  numberSize = <%% 25, 23, 22, 21, 25 %%>;
+  numberSize = <%% 25, 23, 22, 21, 4.5 %%>;
   numberWeight = <%% 700, 700, 700, 700, 700 %%>;
   numberLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
-  contentsAreaMarginTop = <%% 45, 40, 34, 28, 4 %%>;
+  contentsAreaMarginTop = <%% 45, 40, 34, 28, 6 %%>;
 
-  mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 103 : 102), (isMac() ? 83 : 82), 4 %%>;
-  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 118 : 117), (isMac() ? 98 : 97), 5 %%>;
+  mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 103 : 102), (isMac() ? 83 : 82), 10 %%>;
+  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 118 : 117), (isMac() ? 98 : 97), 20 %%>;
 
-  innerPadding = <%% 60, 50, 45, 40, 60 %%>;
+  innerPadding = <%% 60, 50, 45, 40, 6 %%>;
 
   imageWidthRatio = <%% 0.5, 0.5, 0.5, 0.5, 0.5 %%>;
 
-  wordingBetween = <%% 15, 15, 15, 15, 15 %%>;
-  imageBetween = <%% 40, 36, 36, 36, 40 %%>;
-  imageHeight = <%% 330, 270, 270, 270, 33 %%>;
+  wordingBetween = <%% 15, 15, 15, 15, 1.5 %%>;
+  imageBetween = <%% 40, 36, 36, 36, 4 %%>;
+  imageHeight = <%% 330, 270, 270, 270, 3 %%>;
 
-  contentsSize = <%% 16, 15, 15, 14, 3 %%>;
+  contentsSize = <%% 16, 15, 15, 14, 3.5 %%>;
   contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
   contentsBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   contentsLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
@@ -2334,8 +2331,8 @@ FrontAboutJs.prototype.insertConsultingBox = function () {
   reviewTitleMarginTop = <%% 80, 80, 80, 80, 80 %%>;
   reviewTitleMarginBottom = <%% 32, 32, 32, 32, 32 %%>;
 
-  leftBoxWidth = <%% 398, 250, 209, 160, 398 %%>;
-  textAreaBlockHeight = <%% 118, 118, 118, 118, 118 %%>;
+  leftBoxWidth = <%% 398, 250, 209, 160, 0 %%>;
+  textAreaBlockHeight = <%% 118, 118, 118, 118, 37 %%>;
 
   descriptionSize = <%% 16, 15, 14, 12, 3 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
@@ -2343,25 +2340,25 @@ FrontAboutJs.prototype.insertConsultingBox = function () {
   descriptionMarginTop = <%% 10, 10, 8, 6, 10 %%>;
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  policyAreaMarginTop = <%% 15, 15, 12, 10, 1 %%>;
+  policyAreaMarginTop = <%% 15, 15, 12, 10, 2 %%>;
   policyGrayHeight = <%% 180, 180, 180, 180, 42 %%>;
   policyGrayTextTop = <%% 22, 22, 20, 20, 3 %%>;
   policyGrayTextLeft = <%% 22, 20, 18, 15, 3 %%>;
   policyGrayTextSize = <%% 12, 12, 10, 10, 2 %%>;
 
-  agreeTongMarginTop = <%% 10, 10, 10, 10, 10 %%>;
-  agreeSize = <%% 15, 15, 15, 15, 15 %%>;
+  agreeTongMarginTop = <%% 10, 10, 10, 10, 1 %%>;
+  agreeSize = <%% 15, 15, 15, 15, 3 %%>;
   agreeWeight = <%% 500, 500, 500, 500, 500 %%>;
   agreeLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
-  agreeCircleRadius = <%% 6, 6, 6, 6, 6 %%>;
-  agreeCircleTop = <%% (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 10 : 8), 10 %%>;
-  agreeCircleMarginRight = <%% 5, 5, 5, 5, 5 %%>;
+  agreeCircleRadius = <%% 6, 6, 6, 6, 1 %%>;
+  agreeCircleTop = <%% (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 10 : 8), 2 %%>;
+  agreeCircleMarginRight = <%% 5, 5, 5, 5, 1 %%>;
 
-  submitTongMarginTop = <%% 20, 20, 20, 20, 20 %%>;
-  submitButtonWidth = <%% 156, 156, 142, 130, 156 %%>;
-  submitButtonHeight = <%% 47, 47, 42, 38, 47 %%>;
-  submitSize = <%% 20, 20, 18, 16, 3 %%>;
+  submitTongMarginTop = <%% 20, 20, 20, 20, 6 %%>;
+  submitButtonWidth = <%% 156, 156, 142, 130, 33 %%>;
+  submitButtonHeight = <%% 47, 47, 42, 38, 10 %%>;
+  submitSize = <%% 20, 20, 18, 16, 4 %%>;
   submitWeight = <%% 400, 400, 400, 400, 400 %%>;
   submitLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
   submitTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.3 %%>;
@@ -2454,7 +2451,7 @@ FrontAboutJs.prototype.insertConsultingBox = function () {
   leftBox = createNode({
     mother: contentsArea,
     style: {
-      display: "inline-block",
+      display: desktop ? "inline-block" : "none",
       position: "relative",
       marginLeft: String(innerPadding) + ea,
       width: String(leftBoxWidth) + ea,
@@ -2499,6 +2496,8 @@ FrontAboutJs.prototype.insertConsultingBox = function () {
       position: "relative",
       width: withOut(leftBoxWidth + (innerPadding * 2), ea),
       verticalAlign: "top",
+      marginLeft: desktop ? "" : String(innerPadding) + ea,
+      paddingTop: desktop ? "" : String(1) + ea,
     }
   });
 
@@ -3251,7 +3250,7 @@ FrontAboutJs.prototype.insertConsultingBox = function () {
         mode: "textarea",
         class: [ inputClassName ],
         attribute: {
-          placeholder: "선호하는 스타일 + 공간의 특이 사항을 적어주세요!\n(예) 모던 프렌치 + 코지한 홈스타일링을 원해요.\n(예) 팬트리가 있어요.\n(예) 복층 공간입니다.",
+          placeholder: "선호하는 스타일 + 공간의 특이 사항을 적어주세요!\n(예) 모던 프렌치 홈스타일링을 원해요.\n(예) 팬트리가 있어요.\n(예) 복층 공간입니다.",
           property: "etc",
         },
         style: {
