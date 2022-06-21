@@ -589,7 +589,7 @@ FrontAboutJs.prototype.insertSecondService = function () {
 
   subSize = <%% 16, 15, 14, 13, 3 %%>;
   subWeight = <%% 600, 600, 600, 600, 600 %%>;
-  subBetween = <%% 11, 11, 11, 11, 11 %%>;
+  subBetween = <%% 11, 11, 11, 11, 2 %%>;
 
   arrowWidth = <%% 12, 10, 8, 6, 2 %%>;
 
@@ -665,6 +665,14 @@ FrontAboutJs.prototype.insertSecondService = function () {
       FrontAboutJs.binaryPath + "/b7.jpg",
     ]
   };
+
+  if (mobile) {
+    contents.sub.splice(1, 0, contents.sub.pop())
+    contents.sub.splice(1, 0, contents.sub.pop())
+    contents.image.splice(1, 0, contents.image.pop())
+    contents.image.splice(1, 0, contents.image.pop())
+  }
+
 
   baseTongClone = this.baseTong.cloneNode(false);
   this.baseTong.parentNode.appendChild(baseTongClone);
@@ -1230,6 +1238,86 @@ FrontAboutJs.prototype.insertSecondService = function () {
 
   } else {
 
+    for (let i = 0; i < contents.sub.length; i++) {
+
+      baseBox = createNode({
+        mother: contentsArea,
+        attribute: { index: String(i), },
+        style: {
+          display: "inline-block",
+          width: "calc(calc(100% - " + String(boxBetween * (boxNumber - 1)) + ea + ") / " + String(boxNumber) + ")",
+          verticalAlign: "top",
+          marginRight: String(i % boxNumber === boxNumber - 1 ? 0 : boxBetween) + ea,
+          marginBottom: String(5.4) + ea,
+        }
+      });
+      createNode({
+        mother: baseBox,
+        style: {
+          display: "block",
+          position: "relative",
+        },
+        children: [
+          {
+            text: String(i + 1) + ". " + contents.sub[i],
+            style: {
+              display: "block",
+              position: "relative",
+              width: String(100) + '%',
+              textAlign: "center",
+              fontSize: String(subSize) + ea,
+              fontWeight: String(subWeight),
+              color: colorChip.darkShadow,
+              marginBottom: String(subBetween) + ea,
+            }
+          },
+          {
+            mode: "img",
+            attribute: {
+              src: contents.image[i],
+            },
+            style: {
+              display: "block",
+              position: "relative",
+              width: String(100) + '%',
+              borderRadius: String(5) + "px",
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+            }
+          }
+        ]
+      });
+
+
+
+
+    }
+
+    baseBox = createNode({
+      mother: contentsArea,
+      style: {
+        display: "inline-block",
+        width: "calc(calc(calc(calc(calc(100% - " + String(boxBetween * (boxNumber - 1)) + ea + ") / " + String(boxNumber) + ") * 2) + " + String(boxBetween) + ea + ") - " + String(6) + ea + ")",
+        verticalAlign: "top",
+        paddingTop: String(5) + ea,
+        paddingLeft: String(6) + ea,
+      },
+      children: [
+        {
+          text: contents.description.map((arr) => { return arr.join(" ") })[0],
+          style: {
+            fontSize: String(contentsSize) + ea,
+            fontWeight: String(contentsWeight),
+            color: colorChip.black,
+            lineHeight: String(contentsLineHeight),
+          },
+          bold: {
+            fontWeight: String(contentsBoldWeight),
+            color: colorChip.black,
+          }
+        }
+      ]
+    });
+
   }
 
 }
@@ -1558,34 +1646,34 @@ FrontAboutJs.prototype.insertFourthService = function () {
   let moreSize, moreWeight, moreBetween;
   let moreArrowWidth, moreArrowHeight;
 
-  titleSize = <%% 31, 29, 27, 24, 4 %%>;
+  titleSize = <%% 31, 29, 27, 24, 5.4 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
   numberTextTop = <%% 3, 3, 3, 3, 3 %%>;
-  numberSize = <%% 25, 23, 22, 21, 25 %%>;
+  numberSize = <%% 25, 23, 22, 21, 5 %%>;
   numberWeight = <%% 700, 700, 700, 700, 700 %%>;
   numberLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
-  contentsAreaMarginTop = <%% 45, 40, 34, 28, 4 %%>;
+  contentsAreaMarginTop = <%% 45, 40, 34, 28, 6 %%>;
 
-  mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 103 : 102), (isMac() ? 83 : 82), 4 %%>;
-  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 118 : 117), (isMac() ? 98 : 97), 5 %%>;
+  mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 103 : 102), (isMac() ? 83 : 82), 10 %%>;
+  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 118 : 117), (isMac() ? 98 : 97), 11 %%>;
 
   innerPadding = <%% 60, 50, 45, 40, 6 %%>;
 
-  imageWidthRatio = <%% 0.5, 0.5, 0.5, 0.5, 0.5 %%>;
+  imageWidthRatio = <%% 0.5, 0.5, 0.5, 0.5, 1 %%>;
 
-  wordingBetween = <%% 15, 15, 15, 14, 15 %%>;
-  imageBetween = <%% 40, 36, 36, 30, 40 %%>;
-  imageHeight = <%% 330, 270, 250, 210, 33 %%>;
+  wordingBetween = <%% 15, 15, 15, 14, 2.5 %%>;
+  imageBetween = <%% 40, 36, 36, 30, 12 %%>;
+  imageHeight = <%% 330, 270, 250, 210, 36 %%>;
 
-  contentsSize = <%% 16, 15, 14, 13, 3 %%>;
+  contentsSize = <%% 16, 15, 14, 13, 3.5 %%>;
   contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
   contentsBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   contentsLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
 
-  subSize = <%% 22, 21, 19, 17, 4 %%>;
+  subSize = <%% 22, 21, 19, 17, 5 %%>;
   subWeight = <%% 700, 700, 700, 700, 700 %%>;
 
   subNumberSize = <%% 18, 17, 16, 15, 3 %%>;
@@ -1593,14 +1681,14 @@ FrontAboutJs.prototype.insertFourthService = function () {
 
   photoMargin = <%% 20, 18, 18, 16, 3 %%>;
   photoNumber = <%% 7, 7, 5, 5, 7 %%>;
-  reviewTitleSize = <%% 24, 22, 21, 20, 24 %%>;
-  reviewTitleMarginTop = <%% 80, 80, 70, 60, 80 %%>;
-  reviewTitleMarginBottom = <%% 32, 32, 32, 32, 32 %%>;
+  reviewTitleSize = <%% 24, 22, 21, 20, 5 %%>;
+  reviewTitleMarginTop = <%% 80, 80, 70, 60, 12 %%>;
+  reviewTitleMarginBottom = <%% 32, 32, 32, 32, 4.5 %%>;
 
   moreBoxHeight = <%% 15, 15, 15, 15, 15 %%>;
   moreBoxMarginBottom = <%% 21, 21, 21, 21, 21 %%>;
 
-  moreSize = <%% 16, 16, 16, 15, 16 %%>;
+  moreSize = <%% 16, 16, 16, 15, 3 %%>;
   moreWeight = <%% 700, 700, 700, 700, 700 %%>;
   moreBetween = <%% 10, 10, 10, 10, 10 %%>;
   moreArrowWidth = <%% 30, 30, 30, 30, 30 %%>;
@@ -1758,13 +1846,15 @@ FrontAboutJs.prototype.insertFourthService = function () {
     createNode({
       mother: serviceBox[i],
       style: {
-        display: "inline-flex",
+        display: desktop ? "inline-flex" : "flex",
         position: "relative",
-        paddingLeft: String(imageBetween) + ea,
-        width: String(((standardWidth - (innerPadding * 2)) * (1 - imageWidthRatio)) - imageBetween) + ea,
-        height: String(imageHeight) + ea,
+        paddingLeft: desktop ? String(imageBetween) + ea : "",
+        width: desktop ? String(((standardWidth - (innerPadding * 2)) * (1 - imageWidthRatio)) - imageBetween) + ea : String((standardWidth - (innerPadding * 2)) * imageWidthRatio) + ea,
+        height: desktop ? String(imageHeight) + ea : "",
         verticalAlign: "top",
-        flexDirection: "column-reverse"
+        flexDirection: "column-reverse",
+        textAlign: desktop ? "left" : "center",
+        marginTop: desktop ? "" : String(reviewTitleMarginBottom) + ea,
       },
       children: [
         {
@@ -1808,6 +1898,7 @@ FrontAboutJs.prototype.insertFourthService = function () {
         {
           text: "4-" + String(i + 1),
           style: {
+            display: desktop ? "block" : "none",
             fontSize: String(subNumberSize) + ea,
             fontWeight: String(subNumberWeight),
             color: colorChip.green,
@@ -1839,7 +1930,7 @@ FrontAboutJs.prototype.insertFourthService = function () {
       fontWeight: String(subWeight),
       color: colorChip.black,
       display: "block",
-      width: withOut(0, ea),
+      width: withOut(photoMargin, ea),
       textAlign: "center",
     }
   })
@@ -3425,7 +3516,7 @@ FrontAboutJs.prototype.portfolioBlock = function (limitLength, search = null) {
 
   gsArray = this.generateGsArray(limitLength);
 
-  baseWidth = <%% 1280, 950, 810, 640, 128 %%>;
+  baseWidth = <%% 1280, 950, 810, 640, 76 %%>;
   photoMargin = <%% 20, 18, 18, 16, 3 %%>;
   columns = <%% 4, 4, 3, 3, 2 %%>;
 
