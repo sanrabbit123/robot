@@ -117,7 +117,7 @@ FrontAboutJs.prototype.insertInitBox = function () {
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
-  whiteBlockMarginBottom = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 123 : 122), (isMac() ? 102 : 100), 20.5 %%>;
+  whiteBlockMarginBottom = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 123 : 122), (isMac() ? 102 : 100), 21.5 %%>;
 
   quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
@@ -168,7 +168,7 @@ FrontAboutJs.prototype.insertInitBox = function () {
   serviceButtonClassName = "serviceButton";
 
   if (mobile) {
-    totalContents.children[2].style.height = String(67) + ea;
+    totalContents.children[2].style.height = String(68) + ea;
   }
 
   whiteBlock = createNode({
@@ -3820,16 +3820,16 @@ FrontAboutJs.prototype.aboutPopup = function (contents) {
     popupHeight = (window.innerHeight - naviHeight) * popupHeightRatio;
     popupHeightMarginTop = ((window.innerHeight - naviHeight) - popupHeight) / 2;
     popupWidth = <%% 600, 600, 600, 600, 600 %%>;
-    innerPadding = <%% 50, 50, 50, 50, 50 %%>;
-    innerPaddingTop = <%% 40, 40, 40, 40, 40 %%>;
+    innerPadding = <%% 50, 50, 40, 40, 50 %%>;
+    innerPaddingTop = <%% 40, 40, 30, 30, 40 %%>;
 
     titleBoxPaddingBottom = <%% 12, 12, 12, 12, 12 %%>;
     titleBoxMarginBottom = <%% 24, 24, 24, 24, 24 %%>;
 
-    titleSize = <%% 22, 22, 22, 22, 22 %%>;
+    titleSize = <%% 22, 22, 21, 20, 22 %%>;
     titleWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-    contentsSize = <%% 15, 15, 15, 15, 15 %%>;
+    contentsSize = <%% 15, 15, 14, 13, 15 %%>;
     contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
     contentsLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
     contentsBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
