@@ -73,7 +73,7 @@ FrontAboutJs.prototype.generateGsArray = function (number) {
 FrontAboutJs.prototype.insertInitBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media } = this;
+  const { ea, media, totalContents } = this;
   const mobile = media[4];
   const desktop = !mobile;
   let whiteBlock;
@@ -117,7 +117,7 @@ FrontAboutJs.prototype.insertInitBox = function () {
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
-  whiteBlockMarginBottom = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 123 : 122), (isMac() ? 102 : 100), 4 %%>;
+  whiteBlockMarginBottom = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 123 : 122), (isMac() ? 102 : 100), 20.5 %%>;
 
   quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
@@ -166,6 +166,10 @@ FrontAboutJs.prototype.insertInitBox = function () {
   placeholder = "새아파트";
 
   serviceButtonClassName = "serviceButton";
+
+  if (mobile) {
+    totalContents.children[2].style.height = String(68) + ea;
+  }
 
   whiteBlock = createNode({
     mother: this.baseTong,
@@ -279,35 +283,35 @@ FrontAboutJs.prototype.insertFirstService = function () {
   let buttonWidth, buttonHeight;
   let buttonTextTop, buttonSize, buttonWeight, buttonLineHeight;
 
-  mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 103 : 102), (isMac() ? 83 : 82), 4 %%>;
-  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 118 : 117), (isMac() ? 98 : 97), 5 %%>;
+  mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 103 : 102), (isMac() ? 83 : 82), 10 %%>;
+  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 118 : 117), (isMac() ? 98 : 97), 11 %%>;
 
-  titleSize = <%% 32, 30, 28, 25, 4 %%>;
+  titleSize = <%% 32, 30, 28, 25, 5.4 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
-  titlePaddingLeft = <%% 24, 24, 24, 24, 24 %%>;
-  titleLineTop = <%% (isMac() ? 23 : 18), (isMac() ? 21 : 17), (isMac() ? 20 : 16), (isMac() ? 18 : 14), 21 %%>;
+  titlePaddingLeft = <%% 24, 24, 24, 24, 3 %%>;
+  titleLineTop = <%% (isMac() ? 23 : 18), (isMac() ? 21 : 17), (isMac() ? 20 : 16), (isMac() ? 18 : 14), 3.5 %%>;
 
-  numberTextTop = <%% 5, 5, 4, 3, 5 %%>;
-  numberSize = <%% 27, 26, 25, 24, 3 %%>;
+  numberTextTop = <%% 5, 5, 4, 3, 0.1 %%>;
+  numberSize = <%% 27, 26, 25, 24, 5 %%>;
   numberWeight = <%% 700, 700, 700, 700, 700 %%>;
   numberLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
-  contentsAreaMarginTop = <%% 45, 40, 34, 28, 4 %%>;
+  contentsAreaMarginTop = <%% 45, 40, 34, 28, 6 %%>;
 
-  contentsSize = <%% 16, 15, 14, 13, 3 %%>;
+  contentsSize = <%% 16, 15, 14, 13, 3.5 %%>;
   contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
   contentsBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   contentsLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
 
-  width0 = <%% 172, 141, 132, 117, 30 %%>;
-  width1 = <%% 418, 339, 319, 248, 418 %%>;
-  width2 = <%% 810, 570, 449, 354, 810 %%>;
+  width0 = <%% 172, 141, 132, 117, 33 %%>;
+  width1 = <%% 418, 339, 319, 248, 55 %%>;
+  width2 = <%% 810, 570, 449, 354, 88 %%>;
 
   imageHeight = <%% 390, 320, 296, 258, 39 %%>;
 
-  buttonHeight = <%% 36, 36, 34, 30, 36 %%>;
-  buttonWidth = <%% 130, 130, 130, 120, 130 %%>;
+  buttonHeight = <%% 36, 36, 34, 30, 7.5 %%>;
+  buttonWidth = <%% 130, 130, 130, 120, 30 %%>;
   buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), 0 %%>;
   buttonSize = <%% 13, 13, 13, 12, 3 %%>;
   buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -400,7 +404,7 @@ FrontAboutJs.prototype.insertFirstService = function () {
       position: "absolute",
       top: String(numberTextTop) + ea,
       right: String(0),
-      background: colorChip.gray0,
+      background: desktop ? colorChip.gray0 : colorChip.gray1,
       paddingLeft: String(titlePaddingLeft) + ea,
       fontSize: String(numberSize) + ea,
       fontWeight: String(numberWeight),
@@ -417,7 +421,7 @@ FrontAboutJs.prototype.insertFirstService = function () {
       fontSize: String(titleSize) + ea,
       fontWeight: String(titleWeight),
       lineHeight: String(titleLineHeight),
-      background: colorChip.gray0,
+      background: desktop ? colorChip.gray0 : colorChip.gray1,
       color: colorChip.black,
       textAlign: "left",
       paddingRight: String(titlePaddingLeft) + ea,
@@ -477,12 +481,13 @@ FrontAboutJs.prototype.insertFirstService = function () {
       display: "inline-block",
       position: "relative",
       backgroundImage: "url('" + contents.image[0] + "')",
-      backgroundPosition: big ? "50% 41%" : "50% 50%",
-      backgroundSize: big ? "100% auto" : "auto 100%",
+      backgroundPosition: !media[3] ? "50% 41%" : "50% 50%",
+      backgroundSize: !media[3] ? "100% auto" : "auto 100%",
       width: String(width2) + ea,
       height: String(imageHeight) + ea,
       borderRadius: String(5) + "px",
       boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      marginTop: desktop ? "" : String(8.5) + ea,
     }
   });
 
@@ -492,7 +497,7 @@ FrontAboutJs.prototype.insertFirstService = function () {
       click: instance.aboutPopup(contents),
     },
     style: {
-      display: "inline-flex",
+      display: desktop ? "inline-flex" : "none",
       position: "absolute",
       bottom: String(0),
       left: String(width0) + ea,
@@ -561,37 +566,37 @@ FrontAboutJs.prototype.insertSecondService = function () {
   let buttonWidth;
   let contentsVisualTextTop;
 
-  titleSize = <%% 31, 29, 27, 24, 4 %%>;
+  titleSize = <%% 31, 29, 27, 24, 5.4 %%>;
 
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
   numberTextTop = <%% 3, 3, 3, 3, 3 %%>;
-  numberSize = <%% 25, 23, 22, 21, 25 %%>;
+  numberSize = <%% 25, 23, 22, 21, 5 %%>;
   numberWeight = <%% 700, 700, 700, 700, 700 %%>;
   numberLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
-  mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 103 : 102), (isMac() ? 83 : 82), 4 %%>;
-  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 118 : 117), (isMac() ? 98 : 97), 5 %%>;
+  mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 103 : 102), (isMac() ? 83 : 82), 10 %%>;
+  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 118 : 117), (isMac() ? 98 : 97), 11 %%>;
 
-  contentsAreaMarginTop = <%% 45, 40, 34, 28, 4 %%>;
+  contentsAreaMarginTop = <%% 45, 40, 34, 28, 6 %%>;
 
-  boxBetween = <%% 45, 30, 24, 16, 45 %%>;
+  boxBetween = <%% 45, 30, 24, 16, 2 %%>;
   subHorizontalHeight = <%% 40, 30, 24, 20, 30 %%>;
   subHorizontalMargin = <%% 3, 2, 1, 1, 3 %%>;
 
-  boxNumber = 5;
+  boxNumber = desktop ? 5 : 3;
 
-  subSize = <%% 16, 15, 14, 13, 4 %%>;
+  subSize = <%% 16, 15, 14, 13, 3 %%>;
   subWeight = <%% 600, 600, 600, 600, 600 %%>;
   subBetween = <%% 11, 11, 11, 11, 11 %%>;
 
-  arrowWidth = <%% 12, 10, 8, 6, 12 %%>;
+  arrowWidth = <%% 12, 10, 8, 6, 2 %%>;
 
   imageHeight = <%% 244, 186, 161, 131, 186 %%>;
   blankFirstTop = <%% 33, 33, 33, 33, 33 %%>;
 
-  contentsSize = <%% 16, 15, 14, 13, 3 %%>;
+  contentsSize = <%% 16, 15, 14, 13, 3.5 %%>;
   contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
   contentsBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   contentsLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
@@ -667,7 +672,7 @@ FrontAboutJs.prototype.insertSecondService = function () {
   baseTongClone.style.width = String(100) + '%';
   baseTongClone.style.left = String(0);
   baseTongClone.style.paddingTop = "";
-  baseTongClone.style.background = colorChip.gray1;
+  baseTongClone.style.background = desktop ? colorChip.gray1 : colorChip.gray2;
 
   mainBlock = createNode({
     mother: baseTongClone,
@@ -729,456 +734,65 @@ FrontAboutJs.prototype.insertSecondService = function () {
     }
   });
 
-  for (let i = 0; i < boxNumber; i++) {
-    baseBox = createNode({
-      mother: contentsArea,
-      attribute: { index: String(i), },
-      style: {
-        display: "inline-block",
-        width: "calc(calc(100% - " + String(boxBetween * (boxNumber - 1)) + ea + ") / " + String(boxNumber) + ")",
-        verticalAlign: "top",
-      }
-    });
-
-    if (i === 0) {
-      createNode({
-        mother: baseBox,
-        style: {
-          display: "block",
-          position: "relative",
-        },
-        children: [
-          {
-            text: contents.sub[0],
-            style: {
-              display: "block",
-              position: "relative",
-              width: String(100) + '%',
-              textAlign: "center",
-              fontSize: String(subSize) + ea,
-              fontWeight: String(subWeight),
-              color: colorChip.darkShadow,
-              marginBottom: String(subBetween) + ea,
-            }
-          },
-          {
-            mode: "img",
-            attribute: {
-              src: contents.image[0],
-            },
-            style: {
-              display: "block",
-              position: "relative",
-              width: String(100) + '%',
-              borderRadius: String(5) + "px",
-              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-            }
-          }
-        ]
-      });
-      createNode({
-        mother: baseBox,
-        style: {
-          display: "flex",
-          width: withOut(0, ea),
-          height: String(subHorizontalHeight) + ea,
-          justifyContent: "center",
-          alignItems: "center",
-          textAlign: "center",
-          marginTop: String(subHorizontalMargin) + ea,
-          marginBottom: String(subHorizontalMargin) + ea,
-        },
-        children: [
-          {
-            mode: "svg",
-            source: instance.mother.returnArrow("right", colorChip.gray4),
-            style: {
-              display: "inline-block",
-              width: String(arrowWidth) + ea,
-              transform: "rotate(90deg)",
-            }
-          }
-        ]
-      });
-      createNode({
-        mother: baseBox,
-        style: {
-          display: "block",
-          position: "relative",
-        },
-        children: [
-          {
-            mode: "img",
-            attribute: {
-              src: contents.image[5],
-            },
-            style: {
-              display: "block",
-              position: "relative",
-              width: String(100) + '%',
-              borderRadius: String(5) + "px",
-              marginBottom: String(subBetween) + ea,
-              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-            }
-          },
-          {
-            text: contents.sub[5],
-            style: {
-              display: "block",
-              position: "relative",
-              width: String(100) + '%',
-              textAlign: "center",
-              fontSize: String(subSize) + ea,
-              fontWeight: String(subWeight),
-              color: colorChip.darkShadow,
-            }
-          },
-        ]
-      });
-    } else if (i === 1) {
-      createNode({
-        mother: baseBox,
-        style: {
-          display: "block",
-          position: "relative",
-        },
-        children: [
-          {
-            text: contents.sub[1],
-            style: {
-              display: "block",
-              position: "relative",
-              width: String(100) + '%',
-              textAlign: "center",
-              fontSize: String(subSize) + ea,
-              fontWeight: String(subWeight),
-              color: colorChip.darkShadow,
-              marginBottom: String(subBetween) + ea,
-            }
-          },
-          {
-            mode: "img",
-            attribute: {
-              src: contents.image[1],
-            },
-            style: {
-              display: "block",
-              position: "relative",
-              width: String(100) + '%',
-              borderRadius: String(5) + "px",
-              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-            }
-          }
-        ]
-      });
-      createNode({
-        mother: baseBox,
-        style: {
-          display: "flex",
-          width: withOut(0, ea),
-          height: String(subHorizontalHeight) + ea,
-          justifyContent: "center",
-          alignItems: "center",
-          textAlign: "center",
-          marginTop: String(subHorizontalMargin) + ea,
-          marginBottom: String(subHorizontalMargin) + ea,
-        },
-        children: [
-          {
-            mode: "svg",
-            source: instance.mother.returnArrow("right", colorChip.gray4),
-            style: {
-              display: "inline-block",
-              width: String(arrowWidth) + ea,
-              transform: "rotate(270deg)",
-            }
-          }
-        ]
-      });
-      createNode({
-        mother: baseBox,
-        style: {
-          display: "block",
-          position: "relative",
-        },
-        children: [
-          {
-            mode: "img",
-            attribute: {
-              src: contents.image[6],
-            },
-            style: {
-              display: "block",
-              position: "relative",
-              width: String(100) + '%',
-              borderRadius: String(5) + "px",
-              marginBottom: String(subBetween) + ea,
-              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-            }
-          },
-          {
-            text: contents.sub[6],
-            style: {
-              display: "block",
-              position: "relative",
-              width: String(100) + '%',
-              textAlign: "center",
-              fontSize: String(subSize) + ea,
-              fontWeight: String(subWeight),
-              color: colorChip.darkShadow,
-            }
-          },
-        ]
-      });
-    } else if (i === 2) {
-      createNode({
-        mother: baseBox,
-        style: {
-          display: "block",
-          position: "relative",
-        },
-        children: [
-          {
-            text: contents.sub[2],
-            style: {
-              display: "block",
-              position: "relative",
-              width: String(100) + '%',
-              textAlign: "center",
-              fontSize: String(subSize) + ea,
-              fontWeight: String(subWeight),
-              color: colorChip.darkShadow,
-              marginBottom: String(subBetween) + ea,
-            }
-          },
-          {
-            mode: "img",
-            attribute: {
-              src: contents.image[2],
-            },
-            style: {
-              display: "block",
-              position: "relative",
-              width: String(100) + '%',
-              borderRadius: String(5) + "px",
-              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-            }
-          }
-        ]
-      });
-      createNode({
-        mother: baseBox,
-
-        style: {
-          display: "flex",
-          position: "relative",
-          marginTop: String(subHorizontalHeight + (subHorizontalMargin * 2)) + ea,
-          height: String(imageHeight) + ea,
-        },
-        children: [
-          {
-            event: {
-              click: instance.aboutPopup(contents),
-            },
-            style: {
-              display: "flex",
-              position: "absolute",
-              bottom: String(0),
-              left: String(0),
-              width: String(buttonWidth) + ea,
-              height: String(buttonHeight) + ea,
-              background: colorChip.gradientGreen,
-              borderRadius: String(5) + "px",
-              justifyContent: "center",
-              alignItems: "center",
-              textAlign: "center",
-              cursor: "pointer",
-            },
-            children: [
-              {
-                text: contents.button.join("\n"),
-                style: {
-                  position: "relative",
-                  top: String(buttonTextTop) + ea,
-                  fontSize: String(buttonSize) + ea,
-                  fontWeight: String(buttonWeight),
-                  color: colorChip.white,
-                  lineHeight: String(buttonLineHeight),
-                }
-              }
-            ]
-          }
-        ]
-      });
-
-
-    } else if (i === 3) {
-      createNode({
-        mother: baseBox,
-        style: {
-          display: "block",
-          position: "relative",
-        },
-        children: [
-          {
-            text: contents.sub[3],
-            style: {
-              display: "block",
-              position: "relative",
-              width: String(100) + '%',
-              textAlign: "center",
-              fontSize: String(subSize) + ea,
-              fontWeight: String(subWeight),
-              color: colorChip.darkShadow,
-              marginBottom: String(subBetween) + ea,
-            }
-          },
-          {
-            mode: "img",
-            attribute: {
-              src: contents.image[3],
-            },
-            style: {
-              display: "block",
-              position: "relative",
-              width: String(100) + '%',
-              borderRadius: String(5) + "px",
-              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-            }
-          }
-        ]
-      });
-      createNode({
-        mother: baseBox,
-        style: {
-          display: "flex",
-          position: "relative",
-          marginTop: String(subHorizontalHeight + (subHorizontalMargin * 2)) + ea,
-          height: String(imageHeight) + ea,
-          flexDirection: "column-reverse",
-        },
-        children: [
-          {
-            text: contents.description[0].join("\n"),
-            style: {
-              display: "block",
-              position: "relative",
-              fontSize: String(contentsSize) + ea,
-              fontWeight: String(contentsWeight),
-              lineHeight: String(contentsLineHeight),
-              color: colorChip.black,
-              top: String(contentsVisualTextTop) + ea,
-            },
-            bold: {
-              fontWeight: String(contentsBoldWeight),
-              color: colorChip.black,
-            }
-          }
-        ]
-      });
-
-    } else if (i === 4) {
-      createNode({
-        mother: baseBox,
-        style: {
-          display: "block",
-          position: "relative",
-        },
-        children: [
-          {
-            text: contents.sub[4],
-            style: {
-              display: "block",
-              position: "relative",
-              width: String(100) + '%',
-              textAlign: "center",
-              fontSize: String(subSize) + ea,
-              fontWeight: String(subWeight),
-              color: colorChip.darkShadow,
-              marginBottom: String(subBetween) + ea,
-            }
-          },
-          {
-            mode: "img",
-            attribute: {
-              src: contents.image[4],
-            },
-            style: {
-              display: "block",
-              position: "relative",
-              width: String(100) + '%',
-              borderRadius: String(5) + "px",
-              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-            }
-          }
-        ]
-      });
-      createNode({
-        mother: baseBox,
-        style: {
-          display: "flex",
-          position: "relative",
-          marginTop: String(subHorizontalHeight + (subHorizontalMargin * 2)) + ea,
-          height: String(imageHeight) + ea,
-          flexDirection: "column-reverse",
-        },
-        children: [
-          {
-            text: contents.description[1].join("\n"),
-            style: {
-              display: "block",
-              position: "relative",
-              fontSize: String(contentsSize) + ea,
-              fontWeight: String(contentsWeight),
-              lineHeight: String(contentsLineHeight),
-              color: colorChip.black,
-              top: String(contentsVisualTextTop) + ea,
-            },
-            bold: {
-              fontWeight: String(contentsBoldWeight),
-              color: colorChip.black,
-            }
-          }
-        ]
-      });
-
-    }
-
-    if (i !== boxNumber - 1) {
-      blockBox = createNode({
+  if (desktop) {
+    for (let i = 0; i < boxNumber; i++) {
+      baseBox = createNode({
         mother: contentsArea,
+        attribute: { index: String(i), },
         style: {
           display: "inline-block",
-          width: String(boxBetween) + ea,
+          width: "calc(calc(100% - " + String(boxBetween * (boxNumber - 1)) + ea + ") / " + String(boxNumber) + ")",
           verticalAlign: "top",
         }
       });
 
       if (i === 0) {
-
         createNode({
-          mother: blockBox,
+          mother: baseBox,
           style: {
-            display: "flex",
-            width: withOut(0, ea),
-            height: String(imageHeight) + ea,
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
-            marginTop: String(blankFirstTop) + ea,
+            display: "block",
+            position: "relative",
           },
+          children: [
+            {
+              text: contents.sub[0],
+              style: {
+                display: "block",
+                position: "relative",
+                width: String(100) + '%',
+                textAlign: "center",
+                fontSize: String(subSize) + ea,
+                fontWeight: String(subWeight),
+                color: colorChip.darkShadow,
+                marginBottom: String(subBetween) + ea,
+              }
+            },
+            {
+              mode: "img",
+              attribute: {
+                src: contents.image[0],
+              },
+              style: {
+                display: "block",
+                position: "relative",
+                width: String(100) + '%',
+                borderRadius: String(5) + "px",
+                boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+              }
+            }
+          ]
         });
-
         createNode({
-          mother: blockBox,
+          mother: baseBox,
           style: {
             display: "flex",
             width: withOut(0, ea),
-            height: String(imageHeight) + ea,
+            height: String(subHorizontalHeight) + ea,
             justifyContent: "center",
             alignItems: "center",
             textAlign: "center",
-            marginTop: String(subHorizontalHeight + (subHorizontalMargin * 2)) + ea,
+            marginTop: String(subHorizontalMargin) + ea,
+            marginBottom: String(subHorizontalMargin) + ea,
           },
           children: [
             {
@@ -1187,31 +801,348 @@ FrontAboutJs.prototype.insertSecondService = function () {
               style: {
                 display: "inline-block",
                 width: String(arrowWidth) + ea,
+                transform: "rotate(90deg)",
+              }
+            }
+          ]
+        });
+        createNode({
+          mother: baseBox,
+          style: {
+            display: "block",
+            position: "relative",
+          },
+          children: [
+            {
+              mode: "img",
+              attribute: {
+                src: contents.image[5],
+              },
+              style: {
+                display: "block",
+                position: "relative",
+                width: String(100) + '%',
+                borderRadius: String(5) + "px",
+                marginBottom: String(subBetween) + ea,
+                boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+              }
+            },
+            {
+              text: contents.sub[5],
+              style: {
+                display: "block",
+                position: "relative",
+                width: String(100) + '%',
+                textAlign: "center",
+                fontSize: String(subSize) + ea,
+                fontWeight: String(subWeight),
+                color: colorChip.darkShadow,
+              }
+            },
+          ]
+        });
+      } else if (i === 1) {
+        createNode({
+          mother: baseBox,
+          style: {
+            display: "block",
+            position: "relative",
+          },
+          children: [
+            {
+              text: contents.sub[1],
+              style: {
+                display: "block",
+                position: "relative",
+                width: String(100) + '%',
+                textAlign: "center",
+                fontSize: String(subSize) + ea,
+                fontWeight: String(subWeight),
+                color: colorChip.darkShadow,
+                marginBottom: String(subBetween) + ea,
+              }
+            },
+            {
+              mode: "img",
+              attribute: {
+                src: contents.image[1],
+              },
+              style: {
+                display: "block",
+                position: "relative",
+                width: String(100) + '%',
+                borderRadius: String(5) + "px",
+                boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+              }
+            }
+          ]
+        });
+        createNode({
+          mother: baseBox,
+          style: {
+            display: "flex",
+            width: withOut(0, ea),
+            height: String(subHorizontalHeight) + ea,
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            marginTop: String(subHorizontalMargin) + ea,
+            marginBottom: String(subHorizontalMargin) + ea,
+          },
+          children: [
+            {
+              mode: "svg",
+              source: instance.mother.returnArrow("right", colorChip.gray4),
+              style: {
+                display: "inline-block",
+                width: String(arrowWidth) + ea,
+                transform: "rotate(270deg)",
+              }
+            }
+          ]
+        });
+        createNode({
+          mother: baseBox,
+          style: {
+            display: "block",
+            position: "relative",
+          },
+          children: [
+            {
+              mode: "img",
+              attribute: {
+                src: contents.image[6],
+              },
+              style: {
+                display: "block",
+                position: "relative",
+                width: String(100) + '%',
+                borderRadius: String(5) + "px",
+                marginBottom: String(subBetween) + ea,
+                boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+              }
+            },
+            {
+              text: contents.sub[6],
+              style: {
+                display: "block",
+                position: "relative",
+                width: String(100) + '%',
+                textAlign: "center",
+                fontSize: String(subSize) + ea,
+                fontWeight: String(subWeight),
+                color: colorChip.darkShadow,
+              }
+            },
+          ]
+        });
+      } else if (i === 2) {
+        createNode({
+          mother: baseBox,
+          style: {
+            display: "block",
+            position: "relative",
+          },
+          children: [
+            {
+              text: contents.sub[2],
+              style: {
+                display: "block",
+                position: "relative",
+                width: String(100) + '%',
+                textAlign: "center",
+                fontSize: String(subSize) + ea,
+                fontWeight: String(subWeight),
+                color: colorChip.darkShadow,
+                marginBottom: String(subBetween) + ea,
+              }
+            },
+            {
+              mode: "img",
+              attribute: {
+                src: contents.image[2],
+              },
+              style: {
+                display: "block",
+                position: "relative",
+                width: String(100) + '%',
+                borderRadius: String(5) + "px",
+                boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+              }
+            }
+          ]
+        });
+        createNode({
+          mother: baseBox,
+
+          style: {
+            display: "flex",
+            position: "relative",
+            marginTop: String(subHorizontalHeight + (subHorizontalMargin * 2)) + ea,
+            height: String(imageHeight) + ea,
+          },
+          children: [
+            {
+              event: {
+                click: instance.aboutPopup(contents),
+              },
+              style: {
+                display: "flex",
+                position: "absolute",
+                bottom: String(0),
+                left: String(0),
+                width: String(buttonWidth) + ea,
+                height: String(buttonHeight) + ea,
+                background: colorChip.gradientGreen,
+                borderRadius: String(5) + "px",
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+                cursor: "pointer",
+              },
+              children: [
+                {
+                  text: contents.button.join("\n"),
+                  style: {
+                    position: "relative",
+                    top: String(buttonTextTop) + ea,
+                    fontSize: String(buttonSize) + ea,
+                    fontWeight: String(buttonWeight),
+                    color: colorChip.white,
+                    lineHeight: String(buttonLineHeight),
+                  }
+                }
+              ]
+            }
+          ]
+        });
+
+
+      } else if (i === 3) {
+        createNode({
+          mother: baseBox,
+          style: {
+            display: "block",
+            position: "relative",
+          },
+          children: [
+            {
+              text: contents.sub[3],
+              style: {
+                display: "block",
+                position: "relative",
+                width: String(100) + '%',
+                textAlign: "center",
+                fontSize: String(subSize) + ea,
+                fontWeight: String(subWeight),
+                color: colorChip.darkShadow,
+                marginBottom: String(subBetween) + ea,
+              }
+            },
+            {
+              mode: "img",
+              attribute: {
+                src: contents.image[3],
+              },
+              style: {
+                display: "block",
+                position: "relative",
+                width: String(100) + '%',
+                borderRadius: String(5) + "px",
+                boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+              }
+            }
+          ]
+        });
+        createNode({
+          mother: baseBox,
+          style: {
+            display: "flex",
+            position: "relative",
+            marginTop: String(subHorizontalHeight + (subHorizontalMargin * 2)) + ea,
+            height: String(imageHeight) + ea,
+            flexDirection: "column-reverse",
+          },
+          children: [
+            {
+              text: contents.description[0].join("\n"),
+              style: {
+                display: "block",
+                position: "relative",
+                fontSize: String(contentsSize) + ea,
+                fontWeight: String(contentsWeight),
+                lineHeight: String(contentsLineHeight),
+                color: colorChip.black,
+                top: String(contentsVisualTextTop) + ea,
+              },
+              bold: {
+                fontWeight: String(contentsBoldWeight),
+                color: colorChip.black,
               }
             }
           ]
         });
 
-      } else {
-
+      } else if (i === 4) {
         createNode({
-          mother: blockBox,
+          mother: baseBox,
           style: {
-            display: "flex",
-            width: withOut(0, ea),
-            height: String(imageHeight) + ea,
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
-            marginTop: String(blankFirstTop) + ea,
+            display: "block",
+            position: "relative",
           },
           children: [
             {
-              mode: "svg",
-              source: instance.mother.returnArrow("right", colorChip.gray4),
+              text: contents.sub[4],
               style: {
-                display: "inline-block",
-                width: String(arrowWidth) + ea,
+                display: "block",
+                position: "relative",
+                width: String(100) + '%',
+                textAlign: "center",
+                fontSize: String(subSize) + ea,
+                fontWeight: String(subWeight),
+                color: colorChip.darkShadow,
+                marginBottom: String(subBetween) + ea,
+              }
+            },
+            {
+              mode: "img",
+              attribute: {
+                src: contents.image[4],
+              },
+              style: {
+                display: "block",
+                position: "relative",
+                width: String(100) + '%',
+                borderRadius: String(5) + "px",
+                boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+              }
+            }
+          ]
+        });
+        createNode({
+          mother: baseBox,
+          style: {
+            display: "flex",
+            position: "relative",
+            marginTop: String(subHorizontalHeight + (subHorizontalMargin * 2)) + ea,
+            height: String(imageHeight) + ea,
+            flexDirection: "column-reverse",
+          },
+          children: [
+            {
+              text: contents.description[1].join("\n"),
+              style: {
+                display: "block",
+                position: "relative",
+                fontSize: String(contentsSize) + ea,
+                fontWeight: String(contentsWeight),
+                lineHeight: String(contentsLineHeight),
+                color: colorChip.black,
+                top: String(contentsVisualTextTop) + ea,
+              },
+              bold: {
+                fontWeight: String(contentsBoldWeight),
+                color: colorChip.black,
               }
             }
           ]
@@ -1219,7 +1150,86 @@ FrontAboutJs.prototype.insertSecondService = function () {
 
       }
 
+      if (i !== boxNumber - 1) {
+        blockBox = createNode({
+          mother: contentsArea,
+          style: {
+            display: "inline-block",
+            width: String(boxBetween) + ea,
+            verticalAlign: "top",
+          }
+        });
+
+        if (i === 0) {
+
+          createNode({
+            mother: blockBox,
+            style: {
+              display: "flex",
+              width: withOut(0, ea),
+              height: String(imageHeight) + ea,
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              marginTop: String(blankFirstTop) + ea,
+            },
+          });
+
+          createNode({
+            mother: blockBox,
+            style: {
+              display: "flex",
+              width: withOut(0, ea),
+              height: String(imageHeight) + ea,
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              marginTop: String(subHorizontalHeight + (subHorizontalMargin * 2)) + ea,
+            },
+            children: [
+              {
+                mode: "svg",
+                source: instance.mother.returnArrow("right", colorChip.gray4),
+                style: {
+                  display: "inline-block",
+                  width: String(arrowWidth) + ea,
+                }
+              }
+            ]
+          });
+
+        } else {
+
+          createNode({
+            mother: blockBox,
+            style: {
+              display: "flex",
+              width: withOut(0, ea),
+              height: String(imageHeight) + ea,
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              marginTop: String(blankFirstTop) + ea,
+            },
+            children: [
+              {
+                mode: "svg",
+                source: instance.mother.returnArrow("right", colorChip.gray4),
+                style: {
+                  display: "inline-block",
+                  width: String(arrowWidth) + ea,
+                }
+              }
+            ]
+          });
+
+        }
+
+      }
     }
+
+  } else {
+
   }
 
 }
@@ -1250,32 +1260,32 @@ FrontAboutJs.prototype.insertThirdService = function () {
   let titlePaddingRight;
   let width1MarginLeft;
 
-  mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 103 : 102), (isMac() ? 83 : 82), 4 %%>;
-  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 118 : 117), (isMac() ? 98 : 97), 5 %%>;
+  mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 103 : 102), (isMac() ? 83 : 82), 10 %%>;
+  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 118 : 117), (isMac() ? 98 : 97), 11 %%>;
 
-  titleSize = <%% 32, 30, 28, 25, 4 %%>;
+  titleSize = <%% 32, 30, 28, 25, 5.4 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
-  titlePaddingLeft = <%% 24, 24, 24, 24, 24 %%>;
-  titleLineTop = <%% (isMac() ? 23 : 18), (isMac() ? 21 : 17), (isMac() ? 20 : 16), (isMac() ? 18 : 14), 21 %%>;
-  titlePaddingRight = <%% 69, 69, 61, 52, 69 %%>;
-  numberTextTop = <%% 5, 5, 4, 3, 5 %%>;
-  numberSize = <%% 27, 26, 25, 24, 3 %%>;
+  titlePaddingLeft = <%% 24, 24, 24, 24, 3 %%>;
+  titleLineTop = <%% (isMac() ? 23 : 18), (isMac() ? 21 : 17), (isMac() ? 20 : 16), (isMac() ? 18 : 14), 3.5 %%>;
+  titlePaddingRight = <%% 69, 69, 61, 52, 0 %%>;
+  numberTextTop = <%% 5, 5, 4, 3, 0.1 %%>;
+  numberSize = <%% 27, 26, 25, 24, 5 %%>;
   numberWeight = <%% 700, 700, 700, 700, 700 %%>;
   numberLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
-  contentsAreaMarginTop = <%% 45, 40, 34, 28, 4 %%>;
+  contentsAreaMarginTop = <%% 45, 40, 34, 28, 7 %%>;
 
-  contentsSize = <%% 16, 15, 14, 13, 3 %%>;
+  contentsSize = <%% 16, 15, 14, 13, 3.5 %%>;
   contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
   contentsBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   contentsLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
 
-  width0 = <%% 172, 133, 127, 85, 133 %%>;
-  width1 = <%% 310, 292, 272, 240, 310 %%>;
-  width2 = <%% 810, 570, 449, 354, 810 %%>;
+  width0 = <%% 172, 133, 127, 85, 33 %%>;
+  width1 = <%% 310, 292, 272, 240, 55 %%>;
+  width2 = <%% 810, 570, 449, 354, 88 %%>;
 
-  width1MarginLeft = <%% 108, 52, 52, 41, 108 %%>;
+  width1MarginLeft = <%% 108, 52, 52, 41, 0 %%>;
 
   imageHeight = <%% 390, 320, 296, 258, 39 %%>;
 
@@ -1293,20 +1303,20 @@ FrontAboutJs.prototype.insertThirdService = function () {
       "어떻게 설정하나요?",
     ],
     sub: [
-      big ? "고객 준비 사항" : "준비 사항"
+      !media[3] ? "고객 준비 사항" : "준비 사항"
     ],
     description: [
       [
         (big ? "나에게 맞는 효율적이고 합리적인 예산 활용을 위해" : "효율적이고 합리적인 예산 활용을 위해"),
-        "전체적인 예산에 대한 고민이 선행되어야 합니다.",
-        "사용 가능한 전체 예산을 정하는 것은 디자이너가",
-        "임의로 설정할 수 없으므로, <b%최대 최소 예산의",
-        "범위를 고객님께서 직접 정해주시고, 디자이너와",
-        "상담을 시작%b>하시면 됩니다.",
+        (desktop ? "전체적인 예산에 대한 고민이 선행되어야 합니다." : "예산에 대한 고민이 선행되어야 합니다."),
+        (desktop ? "사용 가능한 전체 예산을 정하는 것은 디자이너가" : "전체 예산을 정하는 것은 디자이너가"),
+        (desktop ? "임의로 설정할 수 없으므로, <b%최대 최소 예산의" : "임의로 설정할 수 없으므로, <b%최대 예산의"),
+        (desktop ? "범위를 고객님께서 직접 정해주시고, 디자이너와" : "범위를 고객님께서 정해주시고, 디자"),
+        (desktop ? "상담을 시작%b>하시면 됩니다." : "이너와 상담을 시작%b>하시면 됩니다."),
       ],
       [
-        "* 가전을 위한 금액은 전체 예산에서 별도로 구분",
-        "하셔야 합니다.",
+        (desktop ? "* 가전을 위한 금액은 전체 예산에서 별도로 구분" : "* 가전을 위한 금액은 전체 예산에서"),
+        (desktop ? "하셔야 합니다." : "별도로 구분하셔야 합니다."),
       ]
     ],
     button: [
@@ -1379,7 +1389,7 @@ FrontAboutJs.prototype.insertThirdService = function () {
       position: "absolute",
       top: String(numberTextTop) + ea,
       left: String(0),
-      background: colorChip.gray0,
+      background: desktop ? colorChip.gray0 : colorChip.gray1,
       paddingRight: String(titlePaddingLeft) + ea,
       fontSize: String(numberSize) + ea,
       fontWeight: String(numberWeight),
@@ -1396,7 +1406,7 @@ FrontAboutJs.prototype.insertThirdService = function () {
       fontSize: String(titleSize) + ea,
       fontWeight: String(titleWeight),
       lineHeight: String(titleLineHeight),
-      background: colorChip.gray0,
+      background: desktop ? colorChip.gray0 : colorChip.gray1,
       color: colorChip.black,
       textAlign: "left",
       paddingLeft: String(titlePaddingLeft) + ea,
@@ -1420,12 +1430,13 @@ FrontAboutJs.prototype.insertThirdService = function () {
       display: "inline-block",
       position: "relative",
       backgroundImage: "url('" + contents.image[0] + "')",
-      backgroundPosition: big ? "50% 41%" : "50% 50%",
-      backgroundSize: big ? "100% auto" : "auto 100%",
+      backgroundPosition: !media[3] ? "50% 41%" : "50% 50%",
+      backgroundSize: !media[3] ? "100% auto" : "auto 100%",
       width: String(width2) + ea,
       height: String(imageHeight) + ea,
       borderRadius: String(5) + "px",
       boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      marginBottom: desktop ? "" : String(8) + ea,
     }
   });
 
