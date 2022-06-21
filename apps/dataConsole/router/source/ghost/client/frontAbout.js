@@ -262,6 +262,8 @@ FrontAboutJs.prototype.insertFirstService = function () {
   const { ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
   let mainBlock;
   let mainPaddingTop, mainPaddingBottom;
   let titleArea, contentsArea;
@@ -277,37 +279,37 @@ FrontAboutJs.prototype.insertFirstService = function () {
   let buttonWidth, buttonHeight;
   let buttonTextTop, buttonSize, buttonWeight, buttonLineHeight;
 
-  mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 123 : 122), (isMac() ? 102 : 100), 4 %%>;
-  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 143 : 142), (isMac() ? 122 : 120), 5 %%>;
+  mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 103 : 102), (isMac() ? 83 : 82), 4 %%>;
+  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 118 : 117), (isMac() ? 98 : 97), 5 %%>;
 
-  titleSize = <%% 32, 32, 32, 32, 32 %%>;
+  titleSize = <%% 32, 30, 28, 25, 4 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
   titlePaddingLeft = <%% 24, 24, 24, 24, 24 %%>;
-  titleLineTop = <%% 23, 23, 23, 23, 23 %%>;
+  titleLineTop = <%% (isMac() ? 23 : 18), (isMac() ? 21 : 17), (isMac() ? 20 : 16), (isMac() ? 18 : 14), 21 %%>;
 
-  numberTextTop = <%% 5, 5, 5, 5, 5 %%>;
-  numberSize = <%% 27, 27, 27, 27, 27 %%>;
+  numberTextTop = <%% 5, 5, 4, 3, 5 %%>;
+  numberSize = <%% 27, 26, 25, 24, 3 %%>;
   numberWeight = <%% 700, 700, 700, 700, 700 %%>;
   numberLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
-  contentsAreaMarginTop = <%% 45, 45, 45, 45, 45 %%>;
+  contentsAreaMarginTop = <%% 45, 40, 34, 28, 4 %%>;
 
-  contentsSize = <%% 16, 16, 16, 16, 16 %%>;
+  contentsSize = <%% 16, 15, 14, 13, 3 %%>;
   contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
   contentsBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   contentsLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
 
-  width0 = <%% 172, 172, 172, 172, 172 %%>;
-  width1 = <%% 418, 418, 418, 418, 418 %%>;
-  width2 = <%% 810, 810, 810, 810, 810 %%>;
+  width0 = <%% 172, 141, 132, 117, 30 %%>;
+  width1 = <%% 418, 339, 319, 248, 418 %%>;
+  width2 = <%% 810, 570, 449, 354, 810 %%>;
 
-  imageHeight = <%% 390, 390, 390, 390, 390 %%>;
+  imageHeight = <%% 390, 320, 296, 258, 39 %%>;
 
-  buttonHeight = <%% 36, 36, 36, 36, 36 %%>;
-  buttonWidth = <%% 130, 130, 130, 130, 130 %%>;
-  buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
-  buttonSize = <%% 13, 13, 13, 13, 13 %%>;
+  buttonHeight = <%% 36, 36, 34, 30, 36 %%>;
+  buttonWidth = <%% 130, 130, 130, 120, 130 %%>;
+  buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), 0 %%>;
+  buttonSize = <%% 13, 13, 13, 12, 3 %%>;
   buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
   buttonLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
@@ -321,16 +323,16 @@ FrontAboutJs.prototype.insertFirstService = function () {
     ],
     description: [
       [
-        "홈리에종은 홈스타일링 컨시어지 서비스를",
-        "운영하는 플랫폼입니다. <b%홈리에종에서 디자이너를",
-        "만나 단계별로 제공되는 케어 서비스를 경험해",
-        "보세요.%b> 상황에 맞는 방법을 찾아 고객님과 함께",
-        "인테리어 디자인을 완성합니다.",
+        (big ? "홈리에종은 홈스타일링 컨시어지 서비스를" : "홈리에종은 홈스타일링 서비스를"),
+        (big ? "운영하는 플랫폼입니다. <b%홈리에종에서 디자이너를" : "운영하는 플랫폼입니다. <b%디자이너를"),
+        (big ? "만나 단계별로 제공되는 케어 서비스를 경험해" : "만나 단계별로 제공되는 서비스를 경험해"),
+        (big ? "보세요.%b> 상황에 맞는 방법을 찾아 고객님과 함께" : "보세요.%b> 상황에 맞는 방법을 찾아 함께"),
+        (big ? "인테리어 디자인을 완성합니다." : "인테리어 디자인을 완성합니다."),
       ],
       [
-        "한 명의 디자이너가 우리집 시공부터",
-        "홈스타일링까지, 내 상황에 맞는 홈리에종 케어",
-        "서비스를 받아 나만의 집을 완성해보세요!",
+        (big ? "한 명의 디자이너가 우리집 시공부터" : "한 명의 디자이너가 우리집 시공부터"),
+        (big ? "홈스타일링까지, 내 상황에 맞는 홈리에종 케어" : "홈스타일링까지, 내 상황에 맞는 케어"),
+        (big ? "서비스를 받아 나만의 집을 완성해보세요!" : "서비스를 받아 집을 완성해보세요!"),
       ]
     ],
     button: [
@@ -475,8 +477,8 @@ FrontAboutJs.prototype.insertFirstService = function () {
       display: "inline-block",
       position: "relative",
       backgroundImage: "url('" + contents.image[0] + "')",
-      backgroundPosition: "50% 41%",
-      backgroundSize: "100% auto",
+      backgroundPosition: big ? "50% 41%" : "50% 50%",
+      backgroundSize: big ? "100% auto" : "auto 100%",
       width: String(width2) + ea,
       height: String(imageHeight) + ea,
       borderRadius: String(5) + "px",
@@ -528,6 +530,8 @@ FrontAboutJs.prototype.insertSecondService = function () {
   const { ea, media, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
   let mainBlock;
   let mainPaddingTop, mainPaddingBottom;
   let contents;
@@ -557,44 +561,45 @@ FrontAboutJs.prototype.insertSecondService = function () {
   let buttonWidth;
   let contentsVisualTextTop;
 
-  titleSize = <%% 31, 31, 31, 31, 31 %%>;
+  titleSize = <%% 31, 29, 27, 24, 4 %%>;
+
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
   numberTextTop = <%% 3, 3, 3, 3, 3 %%>;
-  numberSize = <%% 25, 25, 25, 25, 25 %%>;
+  numberSize = <%% 25, 23, 22, 21, 25 %%>;
   numberWeight = <%% 700, 700, 700, 700, 700 %%>;
   numberLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
-  contentsAreaMarginTop = <%% 45, 45, 45, 45, 45 %%>;
+  mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 103 : 102), (isMac() ? 83 : 82), 4 %%>;
+  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 118 : 117), (isMac() ? 98 : 97), 5 %%>;
 
-  mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 123 : 122), (isMac() ? 102 : 100), 4 %%>;
-  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 143 : 142), (isMac() ? 122 : 120), 5 %%>;
+  contentsAreaMarginTop = <%% 45, 40, 34, 28, 4 %%>;
 
-  boxBetween = <%% 45, 45, 45, 45, 45 %%>;
-  subHorizontalHeight = <%% 40, 40, 40, 40, 40 %%>;
-  subHorizontalMargin = <%% 3, 3, 3, 3, 3 %%>;
+  boxBetween = <%% 45, 30, 24, 16, 45 %%>;
+  subHorizontalHeight = <%% 40, 30, 24, 20, 30 %%>;
+  subHorizontalMargin = <%% 3, 2, 1, 1, 3 %%>;
 
   boxNumber = 5;
 
-  subSize = <%% 16, 16, 16, 16, 16 %%>;
+  subSize = <%% 16, 15, 14, 13, 4 %%>;
   subWeight = <%% 600, 600, 600, 600, 600 %%>;
   subBetween = <%% 11, 11, 11, 11, 11 %%>;
 
-  arrowWidth = <%% 12, 12, 12, 12, 12 %%>;
+  arrowWidth = <%% 12, 10, 8, 6, 12 %%>;
 
-  imageHeight = <%% 244, 244, 244, 244, 244 %%>;
+  imageHeight = <%% 244, 186, 161, 131, 186 %%>;
   blankFirstTop = <%% 33, 33, 33, 33, 33 %%>;
 
-  contentsSize = <%% 16, 16, 16, 16, 16 %%>;
+  contentsSize = <%% 16, 15, 14, 13, 3 %%>;
   contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
   contentsBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   contentsLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
 
-  buttonHeight = <%% 36, 36, 36, 36, 36 %%>;
-  buttonWidth = <%% 110, 110, 110, 110, 110 %%>;
-  buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
-  buttonSize = <%% 13, 13, 13, 13, 13 %%>;
+  buttonHeight = <%% 36, 36, 34, 30, 36 %%>;
+  buttonWidth = <%% 110, 110, 110, 100, 110 %%>;
+  buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), 0 %%>;
+  buttonSize = <%% 13, 13, 13, 12, 3 %%>;
   buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
   buttonLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
@@ -615,18 +620,18 @@ FrontAboutJs.prototype.insertSecondService = function () {
     ],
     description: [
       [
-        "홈리에종의 프로세스는 일단 먼저,",
-        "하단 상담 신청서를 작성해주시면,",
-        "홈리에종의 친절한 상담과 추천으로",
-        "<b%나에게 가장 잘 맞는 디자이너를%b>",
-        "<b%만나%b> 홈스타일링을 진행하게 됩니다.",
+        (<&& "홈리에종의 프로세스는 일단 먼저," | "홈리에종의 프로세스는 먼저," | "홈리에종의 프로세스는" | "홈리에종의 프로세스는" | "홈리에종의 프로세스는" &&>),
+        (<&& "하단 상담 신청서를 작성해주시면," | "상담 신청서를 작성해주시면," | "신청서를 작성해주시면," | "신청서를 작성해주시면," | "신청서를 작성해주시면," &&>),
+        (<&& "홈리에종의 친절한 상담과 추천으로" | "홈리에종의 상담과 추천으로" | "홈리에종의 추천으로 가장" | "홈리에종의 추천으로 가장" | "홈리에종의 추천으로 가장" &&>),
+        (<&& "<b%나에게 가장 잘 맞는 디자이너를%b>" | "<b%나에게 가장 잘 맞는 디자이너를%b>" | "<b%잘 맞는 디자이너를 만나%b>" | "<b%잘 맞는 디자이너를 만나%b>" | "<b%잘 맞는 디자이너를 만나%b>" &&>),
+        (<&& "<b%만나%b> 홈스타일링을 진행하게 됩니다." | "<b%만나%b> 홈스타일링을 진행합니다." | "홈스타일링을 진행합니다." | "홈스타일링을 진행합니다." | "홈스타일링을 진행합니다." &&>),
       ],
       [
-        "고객님과 매칭된 디자이너는",
-        "<b%일단 기획과 디자인을 선행한 후,",
-        "시공 견적을 내고 제품 제안을 진행%b>",
-        "하게 됩니다. 그리고 세팅에 관여하여",
-        "인테리어 프로세를 완성하게 됩니다.",
+        (<&& "고객님과 매칭된 디자이너는" | "고객님과 매칭된 디자이너는" | "매칭된 디자이너는" | "매칭된 디자이너는" | "매칭된 디자이너는" &&>),
+        (<&& "<b%일단 기획과 디자인을 선행한 후," | "<b%일단 기획과 디자인을 선행한 후" | "<b%기획과 디자인을 선행한 후" | "<b%기획과 디자인을 선행한 후" | "<b%기획과 디자인을 선행한 후" &&>),
+        (<&& "시공 견적을 내고 제품 제안을 진행%b>" | "견적을 내고 제품 제안을 진행%b>" | "견적을 내고 제품 제안을%b>" | "견적을 내고 제품 제안을%b>" | "견적을 내고 제품 제안을%b>" &&>),
+        (<&& "하게 됩니다. 그리고 세팅에 관여하여" | "하게 됩니다. 그리고 세팅에 관여" | "하며, 세팅에 관여하여" | "하며, 세팅에 관여하여" | "하며, 세팅에 관여하여" &&>),
+        (<&& "인테리어 프로세스를 완성하게 됩니다." | "하여 프로세스를 완성하게 됩니다." | "프로세스를 완성합니다." | "프로세스를 완성합니다." | "프로세스를 완성합니다." &&>),
       ]
     ],
     button: [
@@ -634,18 +639,15 @@ FrontAboutJs.prototype.insertSecondService = function () {
     ],
     popup: [
       [
-        "홈리에종의 프로세스는 일단 먼저,",
-        "하단 상담 신청서를 작성해주시면,",
-        "홈리에종의 친절한 상담과 추천으로",
-        "<b%나에게 가장 잘 맞는 디자이너를%b>",
-        "<b%만나%b> 홈스타일링을 진행하게 됩니다.",
+        "홈리에종의 프로세스는 디자이너와 1:1로 만나",
+        "인테리어의 전반적인 과정을 같이 진행하는",
+        "형식이기 때문에 <b%시공비, 구매비와는 별도로 디자인비가",
+        "발생%b>합니다. 시점은 디자이너 선택 후 디자인비를",
+        "결제 하시게 되며, 디자인비를 결제 해주셔야 현장 미팅이 가능합니다.",
       ],
       [
-        "고객님과 매칭된 디자이너는",
-        "<b%일단 기획과 디자인을 선행한 후,",
-        "시공 견적을 내고 제품 제안을 진행%b>",
-        "하게 됩니다. 그리고 세팅에 관여하여",
-        "인테리어 프로세를 완성하게 됩니다.",
+        "결제해주신 디자인비는 홈리에종이 가지고 있다가 <b%인테리어 현장이 잘 끝나면",
+        "디자이너에게 정산하는 형식%b>으로 고객님께 안전한 서비스를 제공합니다.",
       ]
     ],
     image: [
@@ -1228,6 +1230,8 @@ FrontAboutJs.prototype.insertThirdService = function () {
   const { ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
   let mainBlock;
   let mainPaddingTop, mainPaddingBottom;
   let titleArea, contentsArea;
@@ -1246,42 +1250,42 @@ FrontAboutJs.prototype.insertThirdService = function () {
   let titlePaddingRight;
   let width1MarginLeft;
 
-  mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 123 : 122), (isMac() ? 102 : 100), 4 %%>;
-  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 143 : 142), (isMac() ? 122 : 120), 5 %%>;
+  mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 103 : 102), (isMac() ? 83 : 82), 4 %%>;
+  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 118 : 117), (isMac() ? 98 : 97), 5 %%>;
 
-  titleSize = <%% 32, 32, 32, 32, 32 %%>;
+  titleSize = <%% 32, 30, 28, 25, 4 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
   titlePaddingLeft = <%% 24, 24, 24, 24, 24 %%>;
-  titleLineTop = <%% 23, 23, 23, 23, 23 %%>;
-  titlePaddingRight = <%% 69, 69, 69, 69, 69 %%>;
-  numberTextTop = <%% 5, 5, 5, 5, 5 %%>;
-  numberSize = <%% 27, 27, 27, 27, 27 %%>;
+  titleLineTop = <%% (isMac() ? 23 : 18), (isMac() ? 21 : 17), (isMac() ? 20 : 16), (isMac() ? 18 : 14), 21 %%>;
+  titlePaddingRight = <%% 69, 69, 61, 52, 69 %%>;
+  numberTextTop = <%% 5, 5, 4, 3, 5 %%>;
+  numberSize = <%% 27, 26, 25, 24, 3 %%>;
   numberWeight = <%% 700, 700, 700, 700, 700 %%>;
   numberLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
-  contentsAreaMarginTop = <%% 45, 45, 45, 45, 45 %%>;
+  contentsAreaMarginTop = <%% 45, 40, 34, 28, 4 %%>;
 
-  contentsSize = <%% 16, 16, 16, 16, 16 %%>;
+  contentsSize = <%% 16, 15, 14, 13, 3 %%>;
   contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
   contentsBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   contentsLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
 
-  width0 = <%% 172, 172, 172, 172, 172 %%>;
-  width1 = <%% 310, 310, 310, 310, 310 %%>;
-  width2 = <%% 810, 810, 810, 810, 810 %%>;
+  width0 = <%% 172, 133, 127, 85, 133 %%>;
+  width1 = <%% 310, 292, 272, 240, 310 %%>;
+  width2 = <%% 810, 570, 449, 354, 810 %%>;
 
-  width1MarginLeft = <%% 108, 108, 108, 108, 108 %%>;
+  width1MarginLeft = <%% 108, 52, 52, 41, 108 %%>;
 
-  imageHeight = <%% 390, 390, 390, 390, 390 %%>;
+  imageHeight = <%% 390, 320, 296, 258, 39 %%>;
 
-  buttonHeight = <%% 36, 36, 36, 36, 36 %%>;
-  buttonWidth = <%% 130, 130, 130, 130, 130 %%>;
-  buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
-  buttonSize = <%% 13, 13, 13, 13, 13 %%>;
+  buttonHeight = <%% 36, 36, 34, 30, 36 %%>;
+  buttonWidth = <%% 130, 130, 130, 120, 130 %%>;
+  buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), 0 %%>;
+  buttonSize = <%% 13, 13, 13, 12, 3 %%>;
   buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
   buttonLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
-  buttonLeft = <%% 1090, 1090, 1090, 1090, 1090 %%>;
+  buttonLeft = <%% 1090, 755, 628, 481, 755 %%>;
 
   contents = {
     main: [
@@ -1289,11 +1293,11 @@ FrontAboutJs.prototype.insertThirdService = function () {
       "어떻게 설정하나요?",
     ],
     sub: [
-      "고객 준비 사항"
+      big ? "고객 준비 사항" : "준비 사항"
     ],
     description: [
       [
-        "나에게 맞는 효율적이고 합리적인 예산 활용을 위해",
+        (big ? "나에게 맞는 효율적이고 합리적인 예산 활용을 위해" : "효율적이고 합리적인 예산 활용을 위해"),
         "전체적인 예산에 대한 고민이 선행되어야 합니다.",
         "사용 가능한 전체 예산을 정하는 것은 디자이너가",
         "임의로 설정할 수 없으므로, <b%최대 최소 예산의",
@@ -1310,18 +1314,17 @@ FrontAboutJs.prototype.insertThirdService = function () {
     ],
     popup: [
       [
-        "홈리에종의 프로세스는 일단 먼저,",
-        "하단 상담 신청서를 작성해주시면,",
-        "홈리에종의 친절한 상담과 추천으로",
-        "<b%나에게 가장 잘 맞는 디자이너를%b>",
-        "<b%만나%b> 홈스타일링을 진행하게 됩니다.",
+        "인테리어를 하는 데에 있어 예산을 3가지로 나누어",
+        "진행해주셔야 합니다. <b%1. 인테리어 시공 비용과 2. 제품 구매 비용",
+        "3. 가전 및 생활 용품 비용%b>으로",
+        "나누어서 예산을 설정해 주시면 디자이너는",
+        "1번과 2번 예산에 맞추어 시공 정도를 조정해드리고",
+        "제품 선택을 리드해드립니다.",
       ],
       [
-        "고객님과 매칭된 디자이너는",
-        "<b%일단 기획과 디자인을 선행한 후,",
-        "시공 견적을 내고 제품 제안을 진행%b>",
-        "하게 됩니다. 그리고 세팅에 관여하여",
-        "인테리어 프로세를 완성하게 됩니다.",
+        "가전과 생활 용품은 디자이너의 제공 범위를",
+        "넘어서는 범위로, 고객님께서 별도로 생각하시어",
+        "진행해주시면 됩니다.",
       ]
     ],
     image: [
@@ -1417,8 +1420,8 @@ FrontAboutJs.prototype.insertThirdService = function () {
       display: "inline-block",
       position: "relative",
       backgroundImage: "url('" + contents.image[0] + "')",
-      backgroundPosition: "50% 41%",
-      backgroundSize: "100% auto",
+      backgroundPosition: big ? "50% 41%" : "50% 50%",
+      backgroundSize: big ? "100% auto" : "auto 100%",
       width: String(width2) + ea,
       height: String(imageHeight) + ea,
       borderRadius: String(5) + "px",
@@ -1507,6 +1510,8 @@ FrontAboutJs.prototype.insertFourthService = function () {
   const { ea, media, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
   let mainBlock;
   let mainPaddingTop, mainPaddingBottom;
   let contents;
@@ -1537,45 +1542,58 @@ FrontAboutJs.prototype.insertFourthService = function () {
   let photoMargin;
   let photoNumber, reviewTitleSize;
   let reviewTitleMarginTop, reviewTitleMarginBottom;
+  let moreBox;
+  let moreBoxHeight, moreBoxMarginBottom;
+  let moreSize, moreWeight, moreBetween;
+  let moreArrowWidth, moreArrowHeight;
 
-  titleSize = <%% 31, 31, 31, 31, 31 %%>;
+  titleSize = <%% 31, 29, 27, 24, 4 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
   numberTextTop = <%% 3, 3, 3, 3, 3 %%>;
-  numberSize = <%% 25, 25, 25, 25, 25 %%>;
+  numberSize = <%% 25, 23, 22, 21, 25 %%>;
   numberWeight = <%% 700, 700, 700, 700, 700 %%>;
   numberLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
-  contentsAreaMarginTop = <%% 45, 45, 45, 45, 45 %%>;
+  contentsAreaMarginTop = <%% 45, 40, 34, 28, 4 %%>;
 
-  mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 123 : 122), (isMac() ? 102 : 100), 4 %%>;
-  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 143 : 142), (isMac() ? 122 : 120), 5 %%>;
+  mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 103 : 102), (isMac() ? 83 : 82), 4 %%>;
+  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 118 : 117), (isMac() ? 98 : 97), 5 %%>;
 
-  innerPadding = <%% 60, 60, 60, 60, 60 %%>;
+  innerPadding = <%% 60, 50, 45, 40, 6 %%>;
 
   imageWidthRatio = <%% 0.5, 0.5, 0.5, 0.5, 0.5 %%>;
 
-  wordingBetween = <%% 15, 15, 15, 15, 15 %%>;
-  imageBetween = <%% 40, 40, 40, 40, 40 %%>;
-  imageHeight = <%% 330, 330, 330, 330, 330 %%>;
+  wordingBetween = <%% 15, 15, 15, 14, 15 %%>;
+  imageBetween = <%% 40, 36, 36, 30, 40 %%>;
+  imageHeight = <%% 330, 270, 250, 210, 33 %%>;
 
-  contentsSize = <%% 16, 16, 16, 16, 16 %%>;
+  contentsSize = <%% 16, 15, 14, 13, 3 %%>;
   contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
   contentsBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   contentsLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
 
-  subSize = <%% 22, 22, 22, 22, 22 %%>;
+  subSize = <%% 22, 21, 19, 17, 4 %%>;
   subWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  subNumberSize = <%% 18, 18, 18, 18, 18 %%>;
+  subNumberSize = <%% 18, 17, 16, 15, 3 %%>;
   subNumberWeight = <%% 200, 200, 200, 200, 200 %%>;
 
   photoMargin = <%% 20, 18, 18, 16, 3 %%>;
-  photoNumber = <%% 7, 7, 7, 7, 7 %%>;
-  reviewTitleSize = <%% 24, 24, 24, 24, 24 %%>;
-  reviewTitleMarginTop = <%% 80, 80, 80, 80, 80 %%>;
+  photoNumber = <%% 7, 7, 5, 5, 7 %%>;
+  reviewTitleSize = <%% 24, 22, 21, 20, 24 %%>;
+  reviewTitleMarginTop = <%% 80, 80, 70, 60, 80 %%>;
   reviewTitleMarginBottom = <%% 32, 32, 32, 32, 32 %%>;
+
+  moreBoxHeight = <%% 15, 15, 15, 15, 15 %%>;
+  moreBoxMarginBottom = <%% 21, 21, 21, 21, 21 %%>;
+
+  moreSize = <%% 16, 16, 16, 15, 16 %%>;
+  moreWeight = <%% 700, 700, 700, 700, 700 %%>;
+  moreBetween = <%% 10, 10, 10, 10, 10 %%>;
+  moreArrowWidth = <%% 30, 30, 30, 30, 30 %%>;
+  moreArrowHeight = <%% 10, 10, 10, 8, 10 %%>;
 
   contents = {
     main: [
@@ -1601,12 +1619,12 @@ FrontAboutJs.prototype.insertFourthService = function () {
       [
         [
           "홈리에종은 고객님께서 안심하고 서비스를 받을 수",
-          "있도록 전 인테리어 과정을 케어하고 인프라를 지원합니다.",
+          big ? "있도록 전 인테리어 과정을 케어하고 인프라를 지원합니다." : "있도록 전 과정을 케어하고 인프라를 지원합니다.",
         ],
         [
-          "홈리에종은 고객과 디자이너를 위해 있기에, <b%중재와 보증",
-          "시공 인프라 지원, 다양한 부가 서비스 제공 등을 통해",
-          "프로젝트 중심의 새로운 인테리어 문화%b>를 선도합니다.",
+          big ? "홈리에종은 고객과 디자이너를 위해 있기에, <b%중재와 보증" : "홈리에종은 고객과 디자이너를 위해 있기에, <b%중재와",
+          big ? "시공 인프라 지원, 다양한 부가 서비스 제공 등을 통해" : "보증 인프라 지원, 다양한 부가 서비스 제공 등을 통해",
+          big ? "프로젝트 중심의 새로운 인테리어 문화%b>를 선도합니다." : "프로젝트 중심의 새로운 인테리어 문화%b>를 선도합니다.",
         ]
       ]
     ],
@@ -1815,7 +1833,7 @@ FrontAboutJs.prototype.insertFourthService = function () {
     }
   })
 
-  this.reviewTong = createNode({
+  reviewTong = createNode({
     mother: reviewBox,
     style: {
       display: "block",
@@ -1825,7 +1843,48 @@ FrontAboutJs.prototype.insertFourthService = function () {
     }
   });
 
+  this.reviewTong = reviewTong;
   this.portfolioBlock(photoNumber, null);
+
+  moreBox = createNode({
+    mother: reviewTong,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: withOut(0, ea),
+      height: String(moreBoxHeight) + ea,
+      justifyContent: "center",
+      alignItems: "center",
+      textAlign: "center",
+      flexDirection: "row",
+      marginBottom: String(moreBoxMarginBottom) + ea,
+    },
+    children: [
+      {
+        text: "더보기",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(moreSize) + ea,
+          fontWeight: String(moreWeight),
+          color: colorChip.black,
+          marginRight: String(moreBetween) + ea,
+          cursor: "pointer",
+        }
+      },
+      {
+        mode: "svg",
+        source: svgMaker.horizontalArrow(moreArrowWidth, moreArrowHeight, colorChip.green),
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: String(moreArrowWidth) + ea,
+          height: String(moreArrowHeight) + ea,
+          cursor: "pointer",
+        }
+      }
+    ]
+  });
 
 }
 
@@ -1835,6 +1894,8 @@ FrontAboutJs.prototype.insertConsultingBox = function () {
   const { ea, media, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
   const inputClassName = "inputClassName";
   let mainBlock;
   let mainPaddingTop, mainPaddingBottom;
@@ -2026,7 +2087,7 @@ FrontAboutJs.prototype.insertConsultingBox = function () {
   grayTop = <%% 0, 0, 0, 0, 0 %%>;
   grayInputTop = <%% (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), -0.2 %%>;
   grayHeight = <%% 32, 32, 31, 31, 7 %%>;
-  grayBigHeight = <%% 114, 114, 137, 154, 28 %%>;
+  grayBigHeight = <%% 114, 114, 122, 124, 28 %%>;
   grayTextAreaTop = <%% 3, 3, 3, 3, 1.3 %%>;
   grayTextAreaWidth = <%% 51.7, 51.7, 51.7, 390, 51.7 %%>;
 
@@ -2132,37 +2193,37 @@ FrontAboutJs.prototype.insertConsultingBox = function () {
   calendarWidth = <%% 260, 250, 230, 210, 56 %%>;
   calendarTop = <%% 41, 41, 41, 40, 8.2 %%>;
 
-  titleSize = <%% 31, 31, 31, 31, 31 %%>;
+  titleSize = <%% 31, 29, 27, 24, 4 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
   numberTextTop = <%% 3, 3, 3, 3, 3 %%>;
-  numberSize = <%% 25, 25, 25, 25, 25 %%>;
+  numberSize = <%% 25, 23, 22, 21, 25 %%>;
   numberWeight = <%% 700, 700, 700, 700, 700 %%>;
   numberLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
-  contentsAreaMarginTop = <%% 45, 45, 45, 45, 45 %%>;
+  contentsAreaMarginTop = <%% 45, 40, 34, 28, 4 %%>;
 
-  mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 123 : 122), (isMac() ? 102 : 100), 4 %%>;
-  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 143 : 142), (isMac() ? 122 : 120), 5 %%>;
+  mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 103 : 102), (isMac() ? 83 : 82), 4 %%>;
+  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 118 : 117), (isMac() ? 98 : 97), 5 %%>;
 
-  innerPadding = <%% 60, 60, 60, 60, 60 %%>;
+  innerPadding = <%% 60, 50, 45, 40, 60 %%>;
 
   imageWidthRatio = <%% 0.5, 0.5, 0.5, 0.5, 0.5 %%>;
 
   wordingBetween = <%% 15, 15, 15, 15, 15 %%>;
-  imageBetween = <%% 40, 40, 40, 40, 40 %%>;
-  imageHeight = <%% 330, 330, 330, 330, 330 %%>;
+  imageBetween = <%% 40, 36, 36, 36, 40 %%>;
+  imageHeight = <%% 330, 270, 270, 270, 33 %%>;
 
-  contentsSize = <%% 16, 16, 16, 16, 16 %%>;
+  contentsSize = <%% 16, 15, 15, 14, 3 %%>;
   contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
   contentsBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   contentsLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
 
-  subSize = <%% 22, 22, 22, 22, 22 %%>;
+  subSize = <%% 22, 21, 20, 19, 4 %%>;
   subWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  subNumberSize = <%% 18, 18, 18, 18, 18 %%>;
+  subNumberSize = <%% 18, 17, 16, 15, 3 %%>;
   subNumberWeight = <%% 200, 200, 200, 200, 200 %%>;
 
   photoMargin = <%% 20, 18, 18, 16, 3 %%>;
@@ -2171,13 +2232,13 @@ FrontAboutJs.prototype.insertConsultingBox = function () {
   reviewTitleMarginTop = <%% 80, 80, 80, 80, 80 %%>;
   reviewTitleMarginBottom = <%% 32, 32, 32, 32, 32 %%>;
 
-  leftBoxWidth = <%% 398, 398, 398, 398, 398 %%>;
+  leftBoxWidth = <%% 398, 250, 209, 160, 398 %%>;
   textAreaBlockHeight = <%% 118, 118, 118, 118, 118 %%>;
 
-  descriptionSize = <%% 16, 16, 16, 16, 16 %%>;
+  descriptionSize = <%% 16, 15, 14, 12, 3 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
-  descriptionMarginTop = <%% 10, 10, 10, 10, 10 %%>;
+  descriptionMarginTop = <%% 10, 10, 8, 6, 10 %%>;
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
 
   policyAreaMarginTop = <%% 15, 15, 12, 10, 1 %%>;
@@ -2192,26 +2253,26 @@ FrontAboutJs.prototype.insertConsultingBox = function () {
   agreeLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
   agreeCircleRadius = <%% 6, 6, 6, 6, 6 %%>;
-  agreeCircleTop = <%% 10, 10, 10, 10, 10 %%>;
+  agreeCircleTop = <%% (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 10 : 8), 10 %%>;
   agreeCircleMarginRight = <%% 5, 5, 5, 5, 5 %%>;
 
   submitTongMarginTop = <%% 20, 20, 20, 20, 20 %%>;
-  submitButtonWidth = <%% 156, 156, 156, 156, 156 %%>;
-  submitButtonHeight = <%% 47, 47, 47, 47, 47 %%>;
-  submitSize = <%% 20, 20, 20, 20, 20 %%>;
+  submitButtonWidth = <%% 156, 156, 142, 130, 156 %%>;
+  submitButtonHeight = <%% 47, 47, 42, 38, 47 %%>;
+  submitSize = <%% 20, 20, 18, 16, 3 %%>;
   submitWeight = <%% 400, 400, 400, 400, 400 %%>;
   submitLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
-  submitTextTop = <%% -2, -2, -2, -2, -2 %%>;
+  submitTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.3 %%>;
 
   contents = {
     main: [
       "홈리에종 서비스 신청",
     ],
     sub: [
-      "홈리에종의 서비스 진행을 위해서는",
-      "다음과 같이 기본 정보가 필요합니다.",
-      "서비스 신청서를 간단히 작성 후,",
-      "<b%디자이너의 1:1 맞춤 상담%b>을 받아보세요!",
+      <&& "홈리에종의 서비스 진행을 위해서는" | "홈리에종 서비스 진행을 위해서는" | "서비스 진행을 위해서는" | "서비스 진행을 위해서는" | "홈리에종 서비스 진행을 위해서는" &&>,
+      <&& "다음과 같이 기본 정보가 필요합니다." | "다음 기본 정보가 필요합니다." | "기본 정보가 필요합니다." | "기본 정보가 필요합니다." | "다음 기본 정보가 필요합니다." &&>,
+      <&& "서비스 신청서를 간단히 작성 후," | "신청서를 간단히 작성 후," | "신청서를 간단히 작성 후," | "신청서를 간단히 작성 후," | "신청서를 간단히 작성 후," &&>,
+      <&& "<b%디자이너의 1:1 맞춤 상담%b>을 받아보세요!" | "<b%1:1 맞춤 상담%b>을 받아보세요!" | "<b%1:1 상담%b>을 받아보세요!" | "<b%1:1 상담%b>을 받아보세요!" | "<b%1:1 맞춤 상담%b>을 받아보세요!" &&>,
     ]
   };
 
@@ -3261,33 +3322,6 @@ FrontAboutJs.prototype.insertConsultingBox = function () {
 
 }
 
-FrontAboutJs.prototype.insertPortfolioBase = function () {
-  const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, equalJson, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media, baseTong } = this;
-  const mobile = media[4];
-  const desktop = !mobile;
-  let baseBlock;
-  let limitLength;
-  let photoMargin;
-  let paddingBottom;
-
-  limitLength = <%% 42, 42, 42, 42, 42 %%>;
-  photoMargin = <%% 20, 18, 18, 16, 3 %%>;
-  paddingBottom = <%% 120, 120, 120, 120, 40 %%>;
-
-  baseBlock = createNode({
-    mother: baseTong,
-    style: {
-      position: "relative",
-      width: "calc(100% + " + String(photoMargin) + ea + ")",
-      paddingBottom: String(paddingBottom) + ea,
-    }
-  });
-
-  this.portfolioBlock(limitLength, null);
-}
-
 FrontAboutJs.prototype.portfolioBlock = function (limitLength, search = null) {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, equalJson, cleanChildren, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
@@ -3380,7 +3414,7 @@ FrontAboutJs.prototype.portfolioBlock = function (limitLength, search = null) {
 
   gsArray = this.generateGsArray(limitLength);
 
-  baseWidth = <%% 1280, 1280, 1280, 1280, 1280 %%>;
+  baseWidth = <%% 1280, 950, 810, 640, 128 %%>;
   photoMargin = <%% 20, 18, 18, 16, 3 %%>;
   columns = <%% 4, 4, 3, 3, 2 %%>;
 
@@ -3398,7 +3432,7 @@ FrontAboutJs.prototype.portfolioBlock = function (limitLength, search = null) {
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
   titleMarginLeft = <%% 6, 6, 5, 5, 1.1 %%>;
 
-  photoBlockMarginBottom = <%% 72, 66, 66, 62, 8 %%>;
+  photoBlockMarginBottom = <%% 72, 66, 64, 52, 8 %%>;
 
   garoSliceStart = <%% 5, 5, 5, 5, 5 %%>;
   garoSliceEnd = <%% 10, 10, 10, 10, 9 %%>;
@@ -3420,12 +3454,12 @@ FrontAboutJs.prototype.portfolioBlock = function (limitLength, search = null) {
   tagMarginRight = <%% 4, 3, 3, 3, 1 %%>;
 
   subTitleMarginTop = <%% 3, 3, 3, 2, 0.2 %%>;
-  subTitleSize = <%% 14, 12, 12, 11, 2.6 %%>;
+  subTitleSize = <%% 14, 11, 12, 11, 2.6 %%>;
   subTitleTextTop = <%% (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 0), 0 %%>;
 
   reviewSubTitleVisual = <%% 1, 1, 1, 0, 0 %%>;
 
-  arrowWidth = <%% 32, 28, 28, 26, 4 %%>;
+  arrowWidth = <%% 32, 24, 24, 22, 4 %%>;
   arrowHeight = <%% 9, 8, 8, 8, 1.5 %%>;
   arrowBottom = <%% 3, 3, 3, 2, 1 %%>;
   arrowReviewBottom = <%% (isMac() ? 5 : 6), (isMac() ? 4 : 5), (isMac() ? 4 : 5), (isMac() ? 4 : 5), 1.5 %%>;
@@ -3694,7 +3728,7 @@ FrontAboutJs.prototype.aboutPopup = function (contents) {
     titleSize = <%% 22, 22, 22, 22, 22 %%>;
     titleWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-    contentsSize = <%% 16, 16, 16, 16, 16 %%>;
+    contentsSize = <%% 15, 15, 15, 15, 15 %%>;
     contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
     contentsLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
     contentsBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
