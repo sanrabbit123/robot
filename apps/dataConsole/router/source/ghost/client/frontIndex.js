@@ -668,6 +668,7 @@ FrontIndexJs.prototype.insertBlackBox = function () {
   const { ea, media, totalContents, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const bannerClassName = "bannerClassName";
   let mainTong;
   let blockTong;
   let tongPaddingLeft;
@@ -755,7 +756,7 @@ FrontIndexJs.prototype.insertBlackBox = function () {
 
   createNode({
     mother: blockTong,
-    class: [ "consultingButton" ],
+    class: [ "consultingButton", bannerClassName ],
     event: {
       click: (e) => {
         selfHref(FRONTHOST + "/miniAbout.php");
@@ -2162,6 +2163,9 @@ FrontIndexJs.prototype.popupLaunching = function () {
   const mobile = media[4];
   const desktop = !mobile;
   const popupFactorClassName = "popupFactorClassName";
+  const popupInboundClassName = "popupInboundClassName";
+  const popupCloseClassName = "popupCloseClassName";
+  const popupNeverClassName = "popupNeverClassName";
   const keyName = "homeliaisonPopupBan";
   let cancelBack, whitePopup;
   let image;
@@ -2213,7 +2217,7 @@ FrontIndexJs.prototype.popupLaunching = function () {
 
     whitePopup = createNode({
       mother: totalContents,
-      class: [ popupFactorClassName ],
+      class: [ popupFactorClassName, popupInboundClassName ],
       event: {
         click: (e) => {
           blankHref(FRONTHOST + "/miniAbout.php");
@@ -2250,6 +2254,7 @@ FrontIndexJs.prototype.popupLaunching = function () {
           children: [
             {
               text: "닫기",
+              class: [ popupCloseClassName ],
               event: {
                 click: (e) => {
                   e.stopPropagation();
@@ -2268,6 +2273,7 @@ FrontIndexJs.prototype.popupLaunching = function () {
             },
             {
               text: "다시 보지 않기",
+              class: [ popupNeverClassName ],
               event: {
                 click: (e) => {
                   e.stopPropagation();

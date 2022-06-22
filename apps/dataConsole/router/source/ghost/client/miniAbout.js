@@ -48,6 +48,7 @@ MiniAboutJs.prototype.insertInitBox = function () {
   const { ea, media, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const ctaUpClassName = "ctaUpClassName";
   let whiteBlock, whiteBlock2;
   let bottomMargin;
   let buttonBoxWidth;
@@ -101,6 +102,7 @@ MiniAboutJs.prototype.insertInitBox = function () {
 
   createNode({
     mother: whiteBlock2,
+    class: [ ctaUpClassName ],
     event: {
       click: instance.whiteSubmitEvent(),
     },
@@ -1670,6 +1672,8 @@ MiniAboutJs.prototype.insertFaqBox = function () {
   const { ea, media, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const ctaDownClassName = "ctaDownClassName";
+  const goGeneralClassName = "goGeneralClassName";
   let baseTongClone;
   let grayBase;
   let whiteBlock;
@@ -2026,6 +2030,7 @@ MiniAboutJs.prototype.insertFaqBox = function () {
           if (typeof contents.faq[index].button === "function") {
             createNode({
               mother: whiteBase,
+              class: [ goGeneralClassName ],
               event: { click: contents.faq[index].button },
               style: {
                 display: "inline-flex",
@@ -2136,6 +2141,7 @@ MiniAboutJs.prototype.insertFaqBox = function () {
         }
       },
       {
+        class: [ ctaDownClassName ],
         event: {
           click: instance.whiteSubmitEvent(),
         },
@@ -2294,6 +2300,7 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
     const inputClassName = "userInputClassName";
     const priceTargetClassName = "priceTargetClassName";
     const agreeTargetClassName = "agreeTargetClassName";
+    const priceButtonClassName = "priceButtonClassName";
     const initialPrice = 220000;
     let cancelBack, whiteBase;
     let whiteWidth;
@@ -3414,6 +3421,7 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
 
     createNode({
       mother: paymentArea,
+      class: [ priceButtonClassName ],
       text: "결제하기",
       event: {
         click: async function (e) {

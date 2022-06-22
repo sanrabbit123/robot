@@ -90,7 +90,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
-  whiteBlockMarginBottom = <%% 76, 68, 52, 45, 9.5 %%>;
+  whiteBlockMarginBottom = <%% 80, 70, 64, 50, 14.5 %%>;
 
   quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
