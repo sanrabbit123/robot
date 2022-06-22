@@ -759,7 +759,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   }
 
   nameBlurEvent = function (e) {
-    this.value = this.value.trim();
+    this.value = this.value.trim().replace(/[^a-zA-Z가-힣]/gi, '');
     if (this.value !== '') {
       homeliaisonAnalytics({
         page: instance.pageName,
@@ -775,7 +775,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   }
 
   phoneBlurEvent = function (e) {
-    this.value = this.value.trim();
+    this.value = this.value.trim().replace(/[^0-9\-]/gi, '');
     if (this.value !== '') {
       homeliaisonAnalytics({
         page: instance.pageName,
@@ -2623,6 +2623,7 @@ ClientConsultingJs.prototype.finalSubmit = function () {
             if (typeof firstDom.focus === "function") {
               firstDom.focus();
             }
+            break;
           }
         } else {
 

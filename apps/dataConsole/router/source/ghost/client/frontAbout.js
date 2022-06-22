@@ -1602,7 +1602,7 @@ FrontAboutJs.prototype.insertThirdService = function () {
 
 FrontAboutJs.prototype.insertFourthService = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, createNodes, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, createNodes, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, blankHref } = GeneralJs;
   const { ea, media, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -1947,6 +1947,11 @@ FrontAboutJs.prototype.insertFourthService = function () {
 
   moreBox = createNode({
     mother: reviewTong,
+    event: {
+      click: function (e) {
+        blankHref(FRONTHOST + "/review.php");
+      }
+    },
     style: {
       display: "flex",
       position: "relative",
@@ -1987,6 +1992,167 @@ FrontAboutJs.prototype.insertFourthService = function () {
 
 }
 
+FrontAboutJs.prototype.finalSubmit = function () {
+  const instance = this;
+  const inputClassName = "inputClassName";
+  const agreeTargetClassName = "agreeTargetClassName";
+  const { ajaxJson, colorChip, findByAttribute, scrollTo, dateToString, sleep, selfHref, homeliaisonAnalytics } = GeneralJs;
+  return async function (e) {
+    try {
+      const property = "property";
+      const targets = [ ...document.querySelectorAll('.' + inputClassName) ];
+      let properties;
+      let map;
+      let tempObj;
+      let nodeName;
+      let firstDom;
+      let visualSpecific;
+      let name, phone;
+      let tempTargets;
+      let onValue;
+      let boo;
+
+      if (document.querySelector('.' + agreeTargetClassName).getAttribute("toggle") === "off") {
+        window.alert("개인정보 취급 방침에 동의해주세요!");
+      } else {
+
+        visualSpecific = 150;
+
+        properties = [];
+        for (let dom of targets) {
+          properties.push(dom.getAttribute(property));
+        }
+        properties = [ ...new Set(properties) ];
+
+        map = [];
+        boo = true;
+        for (let p of properties) {
+          tempObj = {};
+          tempObj.property = p;
+
+          firstDom = findByAttribute(targets, property, p);
+          nodeName = firstDom.nodeName;
+          if (/INPUT/gi.test(nodeName) || /TEXTAREA/gi.test(nodeName)) {
+            try {
+
+              if (p === "name") {
+                firstDom.value = firstDom.value.replace(/[^a-zA-Z가-힣]/gi, '');
+                if (firstDom.value.trim() === '') {
+                  throw new Error("성함을 입력해주세요!");
+                }
+                name = firstDom.value.trim();
+              } else if (p === "phone") {
+                firstDom.value = firstDom.value.replace(/[^0-9\-]/gi, '');
+                if (firstDom.value.trim() === '') {
+                  throw new Error("연락처를 입력해주세요!");
+                }
+                phone = firstDom.value.trim();
+              } else if (p === "address0") {
+                firstDom.value = firstDom.value.trim();
+                if (firstDom.value.trim() === '') {
+                  throw new Error("주소를 검색하여 입력해주세요!");
+                }
+              } else if (p === "address1") {
+                firstDom.value = firstDom.value.trim();
+                if (firstDom.value.trim() === '') {
+                  throw new Error("상세 주소를 적어주세요!");
+                }
+              } else if (p === "email") {
+                firstDom.value = firstDom.value.trim();
+                if (firstDom.value.trim() === '') {
+                  throw new Error("이메일 주소를 적어주세요!");
+                }
+              } else if (p === "pyeong") {
+                firstDom.value = firstDom.value.replace(/[^0-9\.]/gi, '');
+                if (firstDom.value.trim() === '' || Number.isNaN(Number(firstDom.value.trim())) || Number(firstDom.value.trim()) === 0) {
+                  throw new Error("분양 평수를 알려주세요!");
+                }
+              } else if (p === "movein") {
+                firstDom.value = firstDom.value.replace(/[^0-9\-]/gi, '').trim();
+                if (!/[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/gi.test(firstDom.value.trim())) {
+                  throw new Error("입주 예정일을 알려주세요! (정해지지 않았을 경우, 예상되는 날짜를 찍어주세요!)");
+                }
+              }
+
+              tempObj.value = firstDom.value.replace(/[\=\+\&\>\<\/\\\{\}\[\]\`]/gi, '');
+
+            } catch (e) {
+              window.alert(e.message);
+              boo = false;
+              scrollTo(window, firstDom, visualSpecific);
+              firstDom.previousElementSibling.style.border = "1px solid " + colorChip.green;
+              if (typeof firstDom.focus === "function") {
+                firstDom.focus();
+              }
+              break;
+            }
+          } else {
+
+            tempTargets = [];
+            for (let dom of targets) {
+              if (dom.getAttribute(property) === p) {
+                tempTargets.push(dom);
+              }
+            }
+
+            onValue = '';
+            for (let dom of tempTargets) {
+              if (dom.getAttribute("toggle") === "on") {
+                onValue = dom.textContent.trim();
+                break;
+              }
+            }
+            tempObj.value = onValue;
+
+          }
+          map.push(tempObj)
+        }
+
+        if (typeof instance.googleClientId === "string") {
+          map.push({
+            property: "googleId",
+            value: instance.googleClientId
+          });
+        } else {
+          map.push({
+            property: "googleId",
+            value: ""
+          });
+        }
+
+        if (boo) {
+          instance.mother.certificationBox(name, phone, async function (back, box) {
+            try {
+              const { cliid } = await ajaxJson({ map }, "/clientSubmit");
+              homeliaisonAnalytics({
+                page: instance.pageName,
+                standard: instance.firstPageViewTime,
+                action: "login",
+                data: { cliid },
+              }).then(() => {
+                document.body.removeChild(box);
+                document.body.removeChild(back);
+                selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/curation/?cliid=" + cliid);
+              }).catch((err) => {
+                document.body.removeChild(box);
+                document.body.removeChild(back);
+                selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/curation/?cliid=" + cliid);
+              });
+            } catch (e) {
+              await ajaxJson({ message: "FrontAboutJs.certificationBox : " + e.message }, "/errorLog");
+            }
+          });
+        }
+
+      }
+
+    } catch (e) {
+      console.log(e);
+      window.location.reload();
+    }
+  }
+}
+
 FrontAboutJs.prototype.insertConsultingBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, ajaxJson } = GeneralJs;
@@ -1996,6 +2162,7 @@ FrontAboutJs.prototype.insertConsultingBox = function () {
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
   const inputClassName = "inputClassName";
+  const agreeTargetClassName = "agreeTargetClassName";
   let mainBlock;
   let mainPaddingTop, mainPaddingBottom;
   let contents;
@@ -2135,6 +2302,7 @@ FrontAboutJs.prototype.insertConsultingBox = function () {
   let submitTong, submitTongMarginTop;
   let submitButtonWidth, submitButtonHeight;
   let submitSize, submitWeight, submitLineHeight, submitTextTop;
+  let agreeToggleEvent;
 
   blockHeight = <%% 784, 765, 725, 710, 176 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
@@ -2374,6 +2542,443 @@ FrontAboutJs.prototype.insertConsultingBox = function () {
       <&& "<b%디자이너의 1:1 맞춤 상담%b>을 받아보세요!" | "<b%1:1 맞춤 상담%b>을 받아보세요!" | "<b%1:1 상담%b>을 받아보세요!" | "<b%1:1 상담%b>을 받아보세요!" | "<b%1:1 맞춤 상담%b>을 받아보세요!" &&>,
     ]
   };
+
+  phoneHypenEvent = function (e) {
+    this.value = autoHypenPhone(this.value);
+  }
+
+  nameBlurEvent = function (e) {
+    this.value = this.value.trim().replace(/[^a-zA-Z가-힣]/gi, '');
+    if (this.value !== '') {
+      homeliaisonAnalytics({
+        page: instance.pageName,
+        standard: instance.firstPageViewTime,
+        action: "inputBlur",
+        data: {
+          name: this.value
+        },
+      }).catch((err) => {
+        console.log(err);
+      });
+    }
+  }
+
+  phoneBlurEvent = function (e) {
+    this.value = this.value.trim().replace(/[^0-9\-]/gi, '');
+    if (this.value !== '') {
+      homeliaisonAnalytics({
+        page: instance.pageName,
+        standard: instance.firstPageViewTime,
+        action: "inputBlur",
+        data: {
+          phone: this.value
+        },
+      }).catch((err) => {
+        console.log(err);
+      });
+    }
+  }
+
+  addressButtonEvent = async function (e) {
+    try {
+      const totalContents = document.getElementById("totalcontents");
+      const removeTargets = "removeTargets";
+      const zIndex = 4;
+      let cancelBack, whitePrompt;
+
+      GeneralJs.stacks["addressEvent"] = async function (e) {
+        try {
+          if (typeof e.data === "string") {
+            findByAttribute(document.querySelectorAll('.' + inputClassName), "property", "address0").value = e.data.trim();
+            findByAttribute(document.querySelectorAll('.' + inputClassName), "property", "address1").value = '';
+            findByAttribute(document.querySelectorAll('.' + inputClassName), "property", "address1").focus();
+          }
+          const targets = document.querySelectorAll('.' + removeTargets);
+          for (let dom of targets) {
+            dom.remove();
+          }
+          window.removeEventListener("message", GeneralJs.stacks["addressEvent"]);
+          GeneralJs.stacks["addressEvent"] = null;
+        } catch (e) {
+          await GeneralJs.ajaxJson({ message: "ClientConsultingJs.addressEvent : " + e.message }, "/errorLog");
+        }
+      }
+      window.addEventListener("message", GeneralJs.stacks["addressEvent"]);
+
+      homeliaisonAnalytics({
+        page: instance.pageName,
+        standard: instance.firstPageViewTime,
+        action: "addressClick",
+        data: {},
+      }).catch((err) => {
+        console.log(err);
+      });
+
+      cancelBack = createNode({
+        mother: totalContents,
+        class: [ removeTargets ],
+        event: {
+          click: (e) => {
+            const targets = document.querySelectorAll('.' + removeTargets);
+            for (let dom of targets) {
+              dom.remove();
+            }
+            if (GeneralJs.stacks["addressEvent"] !== null && GeneralJs.stacks["addressEvent"] !== undefined) {
+              window.removeEventListener("message", GeneralJs.stacks["addressEvent"]);
+              GeneralJs.stacks["addressEvent"] = null;
+            }
+          }
+        },
+        style: {
+          position: "fixed",
+          top: String(0),
+          left: String(0),
+          zIndex: String(zIndex),
+          width: String(100) + '%',
+          height: String(100) + '%',
+          background: "transparent",
+        }
+      });
+
+      whitePrompt = createNode({
+        mother: totalContents,
+        class: [ removeTargets ],
+        style: {
+          position: "fixed",
+          left: "calc(50% - " + String(addressPromptWidth / 2) + ea + ")",
+          top: "calc(50% - " + String(addressPromptHeight / 2) + ea + ")",
+          width: String(addressPromptWidth) + ea,
+          height: String(addressPromptHeight) + ea,
+          zIndex: String(zIndex),
+          background: colorChip.white,
+          borderRadius: String(3) + "px",
+          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          animation: "fadeuphard 0.3s ease forwards",
+          overflow: "hidden",
+        },
+        children: [
+          {
+            mode: "iframe",
+            attribute: [
+              { src: window.location.protocol + "//" + GHOSTHOST + "/tools/addressLite" },
+              { width: String(100) + '%' },
+              { height: String(100) + '%' },
+            ],
+            style: {
+              position: "absolute",
+              top: String(0) + ea,
+              left: String(0) + ea,
+              border: String(0),
+            }
+          }
+        ]
+      });
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  addressBlurEvent = function (e) {
+    const self = this;
+    const mother = this.previousElementSibling;
+    const targets = [ ...mother.children ];
+    for (let dom of targets) {
+      dom.remove();
+    }
+  }
+
+  addressFocusEvent = function (e) {
+    const self = this;
+    const mother = this.previousElementSibling;
+
+    this.value = this.value.replace(/[\=\+\?\#\&]/gi, '');
+
+    createNode({
+      mode: "aside",
+      mother,
+      style: {
+        position: "relative",
+        top: String(0),
+        left: String(0),
+        width: String(100) + '%',
+        height: String(100) + '%',
+        textAlign: "center",
+      },
+      children: [
+        {
+          text: "주소는 인테리어를 받으실 곳으로 적어주세요!",
+          style: {
+            position: "absolute",
+            width: String(greenNoticeWidth1) + ea,
+            left: "calc(50% - " + String((greenNoticeWidth1 / 2) + greenNoticePaddingLeft) + ea + ")",
+            background: colorChip.gradientGreen,
+            fontSize: String(greenNoticeSize) + ea,
+            fontWeight: String(greenNoticeWeight),
+            color: colorChip.white,
+            paddingTop: String(greenNoticePaddingTop) + ea,
+            paddingBottom: String(greenNoticePaddingBottom) + ea,
+            paddingLeft: String(greenNoticePaddingLeft) + ea,
+            paddingRight: String(greenNoticePaddingLeft) + ea,
+            bottom: String(greenNoticeBottom) + ea,
+            borderRadius: String(5) + "px",
+            boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
+            animation: "fadeuplite 0.3s ease forwards",
+            lineHeight: String(greenNoticeLineHeight),
+          }
+        }
+      ]
+    });
+
+  }
+
+  pyeongNumberEvent = function (e) {
+    this.value = this.value.replace(/[^0-9\.]/gi, '');
+  }
+
+  pyeongBlurEvent = function (e) {
+    const self = this;
+    const mother = this.previousElementSibling;
+    const targets = [ ...mother.children ];
+    for (let dom of targets) {
+      dom.remove();
+    }
+    if (this.value.replace(/[^0-9\.]/gi, '').trim() === '') {
+      this.value = "00평";
+    } else {
+      this.value = this.value.replace(/[^0-9\.]/gi, '') + "평";
+    }
+  }
+
+  pyeongFocusEvent = function (e) {
+    const self = this;
+    const mother = this.previousElementSibling;
+
+    this.value = this.value.replace(/[^0-9\.]/gi, '');
+
+    createNode({
+      mode: "aside",
+      mother,
+      style: {
+        position: "relative",
+        top: String(0),
+        left: String(0),
+        width: String(100) + '%',
+        height: String(100) + '%',
+        textAlign: "center",
+      },
+      children: [
+        {
+          text: "평수는 반드시 분양 평수(공급 평수)로 적어주세요!",
+          style: {
+            position: "absolute",
+            width: String(greenNoticeWidth0) + ea,
+            left: "calc(50% - " + String((greenNoticeWidth0 / 2) + greenNoticePaddingLeft) + ea + ")",
+            background: colorChip.gradientGreen,
+            fontSize: String(greenNoticeSize) + ea,
+            fontWeight: String(greenNoticeWeight),
+            color: colorChip.white,
+            paddingTop: String(greenNoticePaddingTop) + ea,
+            paddingBottom: String(greenNoticePaddingBottom) + ea,
+            paddingLeft: String(greenNoticePaddingLeft) + ea,
+            paddingRight: String(greenNoticePaddingLeft) + ea,
+            bottom: String(greenNoticeBottom) + ea,
+            borderRadius: String(5) + "px",
+            boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
+            animation: "fadeuplite 0.3s ease forwards",
+            lineHeight: String(greenNoticeLineHeight),
+          }
+        }
+      ]
+    });
+
+  }
+
+  livingDownEvent = function (id) {
+    GeneralJs.stacks["currentLivingAlertId"] = null;
+    if (document.getElementById(id) !== null) {
+      document.getElementById(id).style.animation = "fadedownlite 0.3s ease forwards";
+      setQueue(() => {
+        if (document.getElementById(id) !== null) {
+          document.getElementById(id).parentElement.removeChild(document.getElementById(id));
+        }
+      }, 301);
+    }
+  }
+
+  livingAlertEvent = function (mother) {
+
+    // const tempId = uniqueValue("hex");
+    const moveinTarget = [ ...document.querySelectorAll("." + inputClassName) ].find((dom) => { return dom.getAttribute("property") === "movein" });
+    // createNode({
+    //   mode: "aside",
+    //   mother,
+    //   id: tempId,
+    //   style: {
+    //     position: "absolute",
+    //     top: String(0),
+    //     left: String(0),
+    //     width: String(100) + '%',
+    //     height: String(100) + '%',
+    //     textAlign: "center",
+    //   },
+    //   children: [
+    //     {
+    //       text: "거주중일 시, 보관 이사가 없다면 도배와 필름 제외 시공이 어렵습니다!",
+    //       style: {
+    //         position: "absolute",
+    //         width: String(greenNoticeWidth1) + ea,
+    //         left: "calc(50% - " + String((greenNoticeWidth1 / 2) + (greenNoticePaddingLeft / 2)) + ea + ")",
+    //         background: colorChip.gradientGreen,
+    //         fontSize: String(greenNoticeSize) + ea,
+    //         fontWeight: String(greenNoticeWeight),
+    //         color: colorChip.white,
+    //         paddingTop: String(greenNoticePaddingTop) + ea,
+    //         paddingBottom: String(greenNoticePaddingBottom) + ea,
+    //         paddingLeft: String(greenNoticePaddingLeft) + ea,
+    //         paddingRight: String(greenNoticePaddingLeft) + ea,
+    //         bottom: String(greenNoticeBottom2) + ea,
+    //         borderRadius: String(5) + "px",
+    //         boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
+    //         animation: "fadeuplite 0.3s ease forwards",
+    //         lineHeight: String(greenNoticeLineHeight),
+    //       }
+    //     }
+    //   ]
+    // });
+    if (moveinTarget.value.trim() === '') {
+      moveinTarget.value = dateToString(new Date());
+    }
+    // GeneralJs.stacks["currentLivingAlertId"] = tempId;
+    // setQueue(() => {
+    //   livingDownEvent(tempId);
+    // }, 5 * 1000);
+
+  }
+
+  checkboxClickEvent0 = async function (e) {
+    try {
+      const property = this.getAttribute("property");
+      const toggle = this.getAttribute("toggle");
+      const targetsAll = [ ...document.querySelectorAll("." + inputClassName) ];
+      const targets = targetsAll.filter((dom) => { return dom.getAttribute("property") === property });
+      if (toggle === "off") {
+        for (let dom of targets) {
+          if (dom === this) {
+            if (/거주중/gi.test(dom.children[2].textContent)) {
+              livingAlertEvent(dom);
+            }
+            dom.setAttribute("toggle", "on");
+            dom.children[0].style.opacity = String(0);
+            dom.children[1].style.opacity = String(1);
+            dom.children[2].style.color = colorChip.green;
+          } else {
+            dom.setAttribute("toggle", "off");
+            dom.children[0].style.opacity = String(1);
+            dom.children[1].style.opacity = String(0);
+            dom.children[2].style.color = colorChip.black;
+          }
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  calendarViewEvent = async function (e) {
+    try {
+      const mother = this.previousElementSibling;
+      const removeTargets = "removeTargets";
+      const zIndex = 4;
+      let cancelBack, whitePrompt;
+      let calendar;
+
+      cancelBack = createNode({
+        mother,
+        class: [ removeTargets ],
+        event: {
+          click: (e) => {
+            const targets = document.querySelectorAll('.' + removeTargets);
+            for (let dom of targets) {
+              dom.remove();
+            }
+          }
+        },
+        style: {
+          position: "fixed",
+          top: String(0),
+          left: String(0),
+          zIndex: String(zIndex),
+          width: String(100) + '%',
+          height: String(100) + '%',
+          background: "transparent",
+        }
+      });
+
+      whitePrompt = createNode({
+        mother,
+        class: [ removeTargets ],
+        style: {
+          position: "relative",
+          top: String(0),
+          left: String(0),
+          width: String(100) + '%',
+          height: String(100) + '%',
+        },
+        children: [
+          {
+            style: {
+              position: "absolute",
+              left: "calc(50% - " + String(calendarWidth / 2) + ea + ")",
+              top: String(calendarTop) + ea,
+              width: String(calendarWidth) + ea,
+              zIndex: String(zIndex),
+              background: colorChip.white,
+              borderRadius: String(3) + "px",
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+              animation: "fadeuphard 0.3s ease forwards",
+              transition: "all 0s ease",
+            },
+          }
+        ]
+      }).firstChild;
+
+      calendar = instance.mother.makeCalendar(stringToDate(new Date()), function (e) {
+        let targets;
+        findByAttribute(document.querySelectorAll('.' + inputClassName), "property", "movein").value = this.getAttribute("buttonValue");
+        targets = document.querySelectorAll('.' + removeTargets);
+        for (let dom of targets) {
+          dom.remove();
+        }
+      }, { width: calendarWidth, mobile });
+      whitePrompt.appendChild(calendar.calendarBase);
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  agreeToggleEvent = function () {
+    const children = [ ...this.parentElement.children ];
+    const [ words, circle ] = children;
+    let toggle;
+
+    for (let dom of children) {
+      toggle = dom.getAttribute("toggle");
+    }
+
+    if (toggle === "on") {
+      circle.style.background = colorChip.gray4;
+      words.style.color = colorChip.deactive;
+      circle.setAttribute("toggle", "off");
+      words.setAttribute("toggle", "off");
+    } else {
+      circle.style.background = colorChip.green;
+      words.style.color = colorChip.green;
+      circle.setAttribute("toggle", "on");
+      words.setAttribute("toggle", "on");
+    }
+  }
 
   baseTongClone = this.baseTong.cloneNode(false);
   this.baseTong.parentNode.appendChild(baseTongClone);
@@ -3328,6 +3933,9 @@ FrontAboutJs.prototype.insertConsultingBox = function () {
 
   agreeTong = createNode({
     mother: policyArea,
+    attribute: {
+      toggle: "on",
+    },
     style: {
       display: "flex",
       position: "relative",
@@ -3335,11 +3943,16 @@ FrontAboutJs.prototype.insertConsultingBox = function () {
       marginLeft: String(innerPadding) + ea,
       width: withOut(innerPadding * 2, ea),
       marginTop: String(agreeTongMarginTop) + ea,
+      cursor: "pointer",
     },
     children: [
       {
+        class: [ agreeTargetClassName ],
         attribute: {
           toggle: "on",
+        },
+        event: {
+          click: agreeToggleEvent
         },
         text: "상기 개인정보 취급 방침에 동의합니다.",
         style: {
@@ -3349,11 +3962,16 @@ FrontAboutJs.prototype.insertConsultingBox = function () {
           fontWeight: String(agreeWeight),
           color: colorChip.green,
           lineHeight: String(agreeLineHeight),
+          cursor: "pointer",
         }
       },
       {
+        class: [ agreeTargetClassName ],
         attribute: {
           toggle: "on",
+        },
+        event: {
+          click: agreeToggleEvent
         },
         style: {
           display: "inline-block",
@@ -3364,6 +3982,7 @@ FrontAboutJs.prototype.insertConsultingBox = function () {
           background: colorChip.green,
           top: String(agreeCircleTop) + ea,
           marginRight: String(agreeCircleMarginRight) + ea,
+          cursor: "pointer",
         }
       }
     ]
@@ -3379,6 +3998,10 @@ FrontAboutJs.prototype.insertConsultingBox = function () {
     },
     children: [
       {
+        class: [ "submitButtonClassName" ],
+        event: {
+          click: instance.finalSubmit()
+        },
         style: {
           display: "inline-flex",
           width: String(submitButtonWidth) + ea,
@@ -3388,6 +4011,7 @@ FrontAboutJs.prototype.insertConsultingBox = function () {
           justifyContent: "center",
           alignItems: "center",
           textAlign: "center",
+          cursor: "pointer",
         },
         children: [
           {
