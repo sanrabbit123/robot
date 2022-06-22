@@ -90,7 +90,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
-  whiteBlockMarginBottom = <%% 70, 60, 52, 45, 4 %%>;
+  whiteBlockMarginBottom = <%% 76, 68, 52, 45, 9.5 %%>;
 
   quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
@@ -225,12 +225,44 @@ ClientConsultingJs.prototype.insertInitBox = function () {
 
 ClientConsultingJs.prototype.insertConsultingBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media, osException, testMode, inputClassName } = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, ajaxJson } = GeneralJs;
+  const { ea, media, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  let whiteBlock;
-  let style;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  const inputClassName = "inputClassName";
+  const agreeTargetClassName = "agreeTargetClassName";
+  let mainBlock;
+  let mainPaddingTop, mainPaddingBottom;
+  let contents;
+  let baseTongClone;
+  let titleSize;
+  let titleWeight;
+  let titleLineHeight;
+  let numberTextTop;
+  let numberSize;
+  let numberWeight;
+  let numberLineHeight;
+  let contentsAreaMarginTop;
+  let titleArea, contentsArea;
+  let serviceBox0, serviceBox1, reviewBox;
+  let innerPadding;
+  let imageWidthRatio;
+  let wordingBetween;
+  let imageBetween;
+  let imageHeight;
+  let serviceBox;
+  let contentsSize;
+  let contentsWeight;
+  let contentsBoldWeight;
+  let contentsLineHeight;
+  let subSize, subWeight;
+  let subNumberSize, subNumberWeight;
+  let reviewTong;
+  let photoMargin;
+  let photoNumber, reviewTitleSize;
+  let reviewTitleMarginTop, reviewTitleMarginBottom;
   let blockHeight, bottomMargin;
   let leftBox, rightBox;
   let titleBox, barBox, indexBox;
@@ -324,6 +356,23 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   let livingDownEvent;
   let nameBlurEvent;
   let phoneBlurEvent;
+  let leftBoxWidth;
+  let textAreaBlockHeight;
+  let descriptionSize, descriptionWeight, descriptionLineHeight, descriptionMarginTop, descriptionBoldWeight;
+  let policyArea;
+  let policyAreaMarginTop;
+  let policyGrayHeight;
+  let policyGrayTextTop;
+  let policyGrayTextLeft;
+  let policyGrayTextSize;
+  let policyTong;
+  let agreeTong;
+  let agreeTongMarginTop, agreeSize, agreeWeight, agreeLineHeight;
+  let agreeCircleRadius, agreeCircleTop, agreeCircleMarginRight;
+  let submitTong, submitTongMarginTop;
+  let submitButtonWidth, submitButtonHeight;
+  let submitSize, submitWeight, submitLineHeight, submitTextTop;
+  let agreeToggleEvent;
 
   blockHeight = <%% 784, 765, 725, 710, 176 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
@@ -375,7 +424,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   grayTop = <%% 0, 0, 0, 0, 0 %%>;
   grayInputTop = <%% (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), -0.2 %%>;
   grayHeight = <%% 32, 32, 31, 31, 7 %%>;
-  grayBigHeight = <%% 114, 114, 137, 154, 28 %%>;
+  grayBigHeight = <%% 114, 114, 122, 124, 36 %%>;
   grayTextAreaTop = <%% 3, 3, 3, 3, 1.3 %%>;
   grayTextAreaWidth = <%% 51.7, 51.7, 51.7, 390, 51.7 %%>;
 
@@ -384,13 +433,13 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
 
   leftGrayType0 = <%% 101, 90, 78, 78, 18 %%>;
   leftGrayType1 = <%% 418, 361, 318, 96, 22.8 %%>;
-  leftGrayType2 = <%% 125, 112, 98, 98, 15 %%>;
+  leftGrayType2 = <%% 125, 112, 98, 98, 22.8 %%>;
   leftGrayType3 = <%% 164, 151, 130, 129, 30.5 %%>;
 
   widthGrayType0 = <%% 160, 140, 130, 150, 34 %%>;
-  widthGrayType1 = <%% 455, 329, 283, 403, 56.5 %%>;
-  widthGrayType2 = <%% 757, 588, 503, 383, 60 %%>;
-  widthGrayType3 = <%% 392, 268, 231, 352, 44 %%>;
+  widthGrayType1 = <%% 455, 329, 283, 403, 58.1 %%>;
+  widthGrayType2 = <%% 757, 588, 503, 383, 53.4 %%>;
+  widthGrayType3 = <%% 392, 268, 231, 352, 45.6 %%>;
 
   addressWidth = <%% 54, 54, 46, 46, 11 %%>;
   addressSize = <%% 13, 13, 12, 12, 3 %%>;
@@ -404,7 +453,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   checkboxBetween = <%% 8, 8, 8, 6, 1.5 %%>;
   checkboxWeight = <%% 300, 300, 300, 300, 300 %%>;
 
-  marginRatio = <%% 1.2, 1.2, 1.1, 1.1, 1 %%>;
+  marginRatio = <%% 1.2, 1.2, 1.1, 1.1, 0.8 %%>;
 
   grayLineWidth = <%% 772, 600, 523, 523, 523 %%>;
   grayLineTop = <%% 12, 12, 12, 12, 12 %%>;
@@ -481,168 +530,122 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   calendarWidth = <%% 260, 250, 230, 210, 56 %%>;
   calendarTop = <%% 41, 41, 41, 40, 8.2 %%>;
 
-  livingDownEvent = function (id) {
-    GeneralJs.stacks["currentLivingAlertId"] = null;
-    if (document.getElementById(id) !== null) {
-      document.getElementById(id).style.animation = "fadedownlite 0.3s ease forwards";
-      setQueue(() => {
-        if (document.getElementById(id) !== null) {
-          document.getElementById(id).parentElement.removeChild(document.getElementById(id));
-        }
-      }, 301);
+  titleSize = <%% 31, 29, 27, 24, 5 %%>;
+  titleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
+
+  numberTextTop = <%% 3, 3, 3, 3, 3 %%>;
+  numberSize = <%% 25, 23, 22, 21, 4.5 %%>;
+  numberWeight = <%% 700, 700, 700, 700, 700 %%>;
+  numberLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
+
+  contentsAreaMarginTop = <%% 45, 40, 34, 28, 6 %%>;
+
+  mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 103 : 102), (isMac() ? 83 : 82), 10 %%>;
+  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 118 : 117), (isMac() ? 98 : 97), 20 %%>;
+
+  innerPadding = <%% 60, 50, 45, 40, 6 %%>;
+
+  imageWidthRatio = <%% 0.5, 0.5, 0.5, 0.5, 0.5 %%>;
+
+  wordingBetween = <%% 15, 15, 15, 15, 1.5 %%>;
+  imageBetween = <%% 40, 36, 36, 36, 4 %%>;
+  imageHeight = <%% 330, 270, 270, 270, 3 %%>;
+
+  contentsSize = <%% 16, 15, 15, 14, 3.5 %%>;
+  contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
+  contentsBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+  contentsLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
+
+  subSize = <%% 22, 21, 20, 19, 4 %%>;
+  subWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+  subNumberSize = <%% 18, 17, 16, 15, 3 %%>;
+  subNumberWeight = <%% 200, 200, 200, 200, 200 %%>;
+
+  photoMargin = <%% 20, 18, 18, 16, 3 %%>;
+  photoNumber = <%% 7, 7, 7, 7, 7 %%>;
+  reviewTitleSize = <%% 24, 24, 24, 24, 24 %%>;
+  reviewTitleMarginTop = <%% 80, 80, 80, 80, 80 %%>;
+  reviewTitleMarginBottom = <%% 32, 32, 32, 32, 32 %%>;
+
+  leftBoxWidth = <%% 398, 250, 209, 160, 0 %%>;
+  textAreaBlockHeight = <%% 118, 118, 118, 118, 37 %%>;
+
+  descriptionSize = <%% 16, 15, 14, 12, 3 %%>;
+  descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+  descriptionLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
+  descriptionMarginTop = <%% 10, 10, 8, 6, 10 %%>;
+  descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+  policyAreaMarginTop = <%% 15, 15, 12, 10, 2 %%>;
+  policyGrayHeight = <%% 180, 180, 180, 180, 42 %%>;
+  policyGrayTextTop = <%% 22, 22, 20, 20, 3 %%>;
+  policyGrayTextLeft = <%% 22, 20, 18, 15, 3 %%>;
+  policyGrayTextSize = <%% 12, 12, 10, 10, 2 %%>;
+
+  agreeTongMarginTop = <%% 10, 10, 10, 10, 1 %%>;
+  agreeSize = <%% 15, 15, 15, 15, 3 %%>;
+  agreeWeight = <%% 500, 500, 500, 500, 500 %%>;
+  agreeLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+
+  agreeCircleRadius = <%% 6, 6, 6, 6, 1 %%>;
+  agreeCircleTop = <%% (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 10 : 8), 2 %%>;
+  agreeCircleMarginRight = <%% 5, 5, 5, 5, 1 %%>;
+
+  submitTongMarginTop = <%% 20, 20, 20, 20, 6 %%>;
+  submitButtonWidth = <%% 156, 156, 142, 130, 33 %%>;
+  submitButtonHeight = <%% 47, 47, 42, 38, 10 %%>;
+  submitSize = <%% 20, 20, 18, 16, 4 %%>;
+  submitWeight = <%% 400, 400, 400, 400, 400 %%>;
+  submitLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+  submitTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.3 %%>;
+
+  contents = {
+    main: [
+      "홈리에종 서비스 신청",
+    ],
+    sub: [
+      <&& "홈리에종의 서비스 진행을 위해서는" | "홈리에종 서비스 진행을 위해서는" | "서비스 진행을 위해서는" | "서비스 진행을 위해서는" | "홈리에종 서비스 진행을 위해서는" &&>,
+      <&& "다음과 같이 기본 정보가 필요합니다." | "다음 기본 정보가 필요합니다." | "기본 정보가 필요합니다." | "기본 정보가 필요합니다." | "다음 기본 정보가 필요합니다." &&>,
+      <&& "서비스 신청서를 간단히 작성 후," | "신청서를 간단히 작성 후," | "신청서를 간단히 작성 후," | "신청서를 간단히 작성 후," | "신청서를 간단히 작성 후," &&>,
+      <&& "<b%디자이너의 1:1 맞춤 상담%b>을 받아보세요!" | "<b%1:1 맞춤 상담%b>을 받아보세요!" | "<b%1:1 상담%b>을 받아보세요!" | "<b%1:1 상담%b>을 받아보세요!" | "<b%1:1 맞춤 상담%b>을 받아보세요!" &&>,
+    ]
+  };
+
+  phoneHypenEvent = function (e) {
+    this.value = autoHypenPhone(this.value);
+  }
+
+  nameBlurEvent = function (e) {
+    this.value = this.value.trim().replace(/[^a-zA-Z가-힣]/gi, '');
+    if (this.value !== '') {
+      homeliaisonAnalytics({
+        page: instance.pageName,
+        standard: instance.firstPageViewTime,
+        action: "inputBlur",
+        data: {
+          name: this.value
+        },
+      }).catch((err) => {
+        console.log(err);
+      });
     }
   }
 
-  livingAlertEvent = function (mother) {
-
-    // const tempId = uniqueValue("hex");
-    const moveinTarget = [ ...document.querySelectorAll("." + inputClassName) ].find((dom) => { return dom.getAttribute("property") === "movein" });
-    // createNode({
-    //   mode: "aside",
-    //   mother,
-    //   id: tempId,
-    //   style: {
-    //     position: "absolute",
-    //     top: String(0),
-    //     left: String(0),
-    //     width: String(100) + '%',
-    //     height: String(100) + '%',
-    //     textAlign: "center",
-    //   },
-    //   children: [
-    //     {
-    //       text: "거주중일 시, 보관 이사가 없다면 도배와 필름 제외 시공이 어렵습니다!",
-    //       style: {
-    //         position: "absolute",
-    //         width: String(greenNoticeWidth1) + ea,
-    //         left: "calc(50% - " + String((greenNoticeWidth1 / 2) + (greenNoticePaddingLeft / 2)) + ea + ")",
-    //         background: colorChip.gradientGreen,
-    //         fontSize: String(greenNoticeSize) + ea,
-    //         fontWeight: String(greenNoticeWeight),
-    //         color: colorChip.white,
-    //         paddingTop: String(greenNoticePaddingTop) + ea,
-    //         paddingBottom: String(greenNoticePaddingBottom) + ea,
-    //         paddingLeft: String(greenNoticePaddingLeft) + ea,
-    //         paddingRight: String(greenNoticePaddingLeft) + ea,
-    //         bottom: String(greenNoticeBottom2) + ea,
-    //         borderRadius: String(5) + "px",
-    //         boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
-    //         animation: "fadeuplite 0.3s ease forwards",
-    //         lineHeight: String(greenNoticeLineHeight),
-    //       }
-    //     }
-    //   ]
-    // });
-    if (moveinTarget.value.trim() === '') {
-      moveinTarget.value = dateToString(new Date());
-    }
-    // GeneralJs.stacks["currentLivingAlertId"] = tempId;
-    // setQueue(() => {
-    //   livingDownEvent(tempId);
-    // }, 5 * 1000);
-
-  }
-
-  checkboxClickEvent0 = async function (e) {
-    try {
-      const property = this.getAttribute("property");
-      const toggle = this.getAttribute("toggle");
-      const targetsAll = [ ...document.querySelectorAll("." + inputClassName) ];
-      const targets = targetsAll.filter((dom) => { return dom.getAttribute("property") === property });
-      if (toggle === "off") {
-        for (let dom of targets) {
-          if (dom === this) {
-            if (/거주중/gi.test(dom.children[2].textContent)) {
-              livingAlertEvent(dom);
-            }
-            dom.setAttribute("toggle", "on");
-            dom.children[0].style.opacity = String(0);
-            dom.children[1].style.opacity = String(1);
-            dom.children[2].style.color = colorChip.green;
-          } else {
-            dom.setAttribute("toggle", "off");
-            dom.children[0].style.opacity = String(1);
-            dom.children[1].style.opacity = String(0);
-            dom.children[2].style.color = colorChip.black;
-          }
-        }
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  checkboxClickEvent1 = async function (e) {
-    try {
-      const property = this.getAttribute("property");
-      const toggle = this.getAttribute("toggle");
-      const targetsAll = [ ...document.querySelectorAll("." + inputClassName) ];
-      const targets = targetsAll.filter((dom) => { return dom.getAttribute("property") === property });
-      if (toggle === "off") {
-        for (let dom of targets) {
-          if (dom === this) {
-            dom.setAttribute("toggle", "on");
-            dom.style.color = colorChip.green;
-            dom.parentElement.children[0].style.opacity = String(1);
-          } else {
-            dom.setAttribute("toggle", "off");
-            dom.style.color = colorChip.deactive;
-            dom.parentElement.children[0].style.opacity = String(0);
-          }
-        }
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  checkboxClickEvent2 = async function (e) {
-    try {
-      const property = this.getAttribute("property");
-      const toggle = this.getAttribute("toggle");
-      const targetsAll = [ ...document.querySelectorAll("." + inputClassName) ];
-      const targets = targetsAll.filter((dom) => { return dom.getAttribute("property") === property });
-      if (toggle === "off") {
-        for (let dom of targets) {
-          if (dom === this) {
-            dom.setAttribute("toggle", "on");
-            dom.style.color = colorChip.green;
-            dom.children[0].style.opacity = String(1);
-          } else {
-            dom.setAttribute("toggle", "off");
-            dom.style.color = colorChip.deactive;
-            dom.children[0].style.opacity = String(0);
-          }
-        }
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  checkboxClickEvent3 = async function (e) {
-    try {
-      const property = this.getAttribute("property");
-      const toggle = this.getAttribute("toggle");
-      const targetsAll = [ ...document.querySelectorAll("." + inputClassName) ];
-      const targets = targetsAll.filter((dom) => { return dom.getAttribute("property") === property });
-      if (toggle === "off") {
-        for (let dom of targets) {
-          if (dom === this) {
-            dom.setAttribute("toggle", "on");
-            dom.children[0].style.opacity = String(0);
-            dom.children[1].style.opacity = String(1);
-            dom.children[2].style.color = colorChip.green;
-          } else {
-            dom.setAttribute("toggle", "off");
-            dom.children[0].style.opacity = String(1);
-            dom.children[1].style.opacity = String(0);
-            dom.children[2].style.color = colorChip.deactive;
-          }
-        }
-      }
-    } catch (e) {
-      console.log(e);
+  phoneBlurEvent = function (e) {
+    this.value = this.value.trim().replace(/[^0-9\-]/gi, '');
+    if (this.value !== '') {
+      homeliaisonAnalytics({
+        page: instance.pageName,
+        standard: instance.firstPageViewTime,
+        action: "inputBlur",
+        data: {
+          phone: this.value
+        },
+      }).catch((err) => {
+        console.log(err);
+      });
     }
   }
 
@@ -746,8 +749,57 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
     }
   }
 
-  phoneHypenEvent = function (e) {
-    this.value = autoHypenPhone(this.value);
+  addressBlurEvent = function (e) {
+    const self = this;
+    const mother = this.previousElementSibling;
+    const targets = [ ...mother.children ];
+    for (let dom of targets) {
+      dom.remove();
+    }
+  }
+
+  addressFocusEvent = function (e) {
+    const self = this;
+    const mother = this.previousElementSibling;
+
+    this.value = this.value.replace(/[\=\+\?\#\&]/gi, '');
+
+    createNode({
+      mode: "aside",
+      mother,
+      style: {
+        position: "relative",
+        top: String(0),
+        left: String(0),
+        width: String(100) + '%',
+        height: String(100) + '%',
+        textAlign: "center",
+      },
+      children: [
+        {
+          text: "주소는 인테리어를 받으실 곳으로 적어주세요!",
+          style: {
+            position: "absolute",
+            width: String(greenNoticeWidth1) + ea,
+            left: "calc(50% - " + String((greenNoticeWidth1 / 2) + greenNoticePaddingLeft) + ea + ")",
+            background: colorChip.gradientGreen,
+            fontSize: String(greenNoticeSize) + ea,
+            fontWeight: String(greenNoticeWeight),
+            color: colorChip.white,
+            paddingTop: String(greenNoticePaddingTop) + ea,
+            paddingBottom: String(greenNoticePaddingBottom) + ea,
+            paddingLeft: String(greenNoticePaddingLeft) + ea,
+            paddingRight: String(greenNoticePaddingLeft) + ea,
+            bottom: String(greenNoticeBottom) + ea,
+            borderRadius: String(5) + "px",
+            boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
+            animation: "fadeuplite 0.3s ease forwards",
+            lineHeight: String(greenNoticeLineHeight),
+          }
+        }
+      ]
+    });
+
   }
 
   pyeongNumberEvent = function (e) {
@@ -812,57 +864,95 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
 
   }
 
-  addressBlurEvent = function (e) {
-    const self = this;
-    const mother = this.previousElementSibling;
-    const targets = [ ...mother.children ];
-    for (let dom of targets) {
-      dom.remove();
+  livingDownEvent = function (id) {
+    GeneralJs.stacks["currentLivingAlertId"] = null;
+    if (document.getElementById(id) !== null) {
+      document.getElementById(id).style.animation = "fadedownlite 0.3s ease forwards";
+      setQueue(() => {
+        if (document.getElementById(id) !== null) {
+          document.getElementById(id).parentElement.removeChild(document.getElementById(id));
+        }
+      }, 301);
     }
   }
 
-  addressFocusEvent = function (e) {
-    const self = this;
-    const mother = this.previousElementSibling;
+  livingAlertEvent = function (mother) {
 
-    this.value = this.value.replace(/[\=\+\?\#\&]/gi, '');
+    // const tempId = uniqueValue("hex");
+    const moveinTarget = [ ...document.querySelectorAll("." + inputClassName) ].find((dom) => { return dom.getAttribute("property") === "movein" });
+    // createNode({
+    //   mode: "aside",
+    //   mother,
+    //   id: tempId,
+    //   style: {
+    //     position: "absolute",
+    //     top: String(0),
+    //     left: String(0),
+    //     width: String(100) + '%',
+    //     height: String(100) + '%',
+    //     textAlign: "center",
+    //   },
+    //   children: [
+    //     {
+    //       text: "거주중일 시, 보관 이사가 없다면 도배와 필름 제외 시공이 어렵습니다!",
+    //       style: {
+    //         position: "absolute",
+    //         width: String(greenNoticeWidth1) + ea,
+    //         left: "calc(50% - " + String((greenNoticeWidth1 / 2) + (greenNoticePaddingLeft / 2)) + ea + ")",
+    //         background: colorChip.gradientGreen,
+    //         fontSize: String(greenNoticeSize) + ea,
+    //         fontWeight: String(greenNoticeWeight),
+    //         color: colorChip.white,
+    //         paddingTop: String(greenNoticePaddingTop) + ea,
+    //         paddingBottom: String(greenNoticePaddingBottom) + ea,
+    //         paddingLeft: String(greenNoticePaddingLeft) + ea,
+    //         paddingRight: String(greenNoticePaddingLeft) + ea,
+    //         bottom: String(greenNoticeBottom2) + ea,
+    //         borderRadius: String(5) + "px",
+    //         boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
+    //         animation: "fadeuplite 0.3s ease forwards",
+    //         lineHeight: String(greenNoticeLineHeight),
+    //       }
+    //     }
+    //   ]
+    // });
+    if (moveinTarget.value.trim() === '') {
+      moveinTarget.value = dateToString(new Date());
+    }
+    // GeneralJs.stacks["currentLivingAlertId"] = tempId;
+    // setQueue(() => {
+    //   livingDownEvent(tempId);
+    // }, 5 * 1000);
 
-    createNode({
-      mode: "aside",
-      mother,
-      style: {
-        position: "relative",
-        top: String(0),
-        left: String(0),
-        width: String(100) + '%',
-        height: String(100) + '%',
-        textAlign: "center",
-      },
-      children: [
-        {
-          text: "주소는 인테리어를 받으실 곳으로 적어주세요!",
-          style: {
-            position: "absolute",
-            width: String(greenNoticeWidth1) + ea,
-            left: "calc(50% - " + String((greenNoticeWidth1 / 2) + greenNoticePaddingLeft) + ea + ")",
-            background: colorChip.gradientGreen,
-            fontSize: String(greenNoticeSize) + ea,
-            fontWeight: String(greenNoticeWeight),
-            color: colorChip.white,
-            paddingTop: String(greenNoticePaddingTop) + ea,
-            paddingBottom: String(greenNoticePaddingBottom) + ea,
-            paddingLeft: String(greenNoticePaddingLeft) + ea,
-            paddingRight: String(greenNoticePaddingLeft) + ea,
-            bottom: String(greenNoticeBottom) + ea,
-            borderRadius: String(5) + "px",
-            boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
-            animation: "fadeuplite 0.3s ease forwards",
-            lineHeight: String(greenNoticeLineHeight),
+  }
+
+  checkboxClickEvent0 = async function (e) {
+    try {
+      const property = this.getAttribute("property");
+      const toggle = this.getAttribute("toggle");
+      const targetsAll = [ ...document.querySelectorAll("." + inputClassName) ];
+      const targets = targetsAll.filter((dom) => { return dom.getAttribute("property") === property });
+      if (toggle === "off") {
+        for (let dom of targets) {
+          if (dom === this) {
+            if (/거주중/gi.test(dom.children[2].textContent)) {
+              livingAlertEvent(dom);
+            }
+            dom.setAttribute("toggle", "on");
+            dom.children[0].style.opacity = String(0);
+            dom.children[1].style.opacity = String(1);
+            dom.children[2].style.color = colorChip.green;
+          } else {
+            dom.setAttribute("toggle", "off");
+            dom.children[0].style.opacity = String(1);
+            dom.children[1].style.opacity = String(0);
+            dom.children[2].style.color = colorChip.black;
           }
         }
-      ]
-    });
-
+      }
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   calendarViewEvent = async function (e) {
@@ -938,1787 +1028,1050 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
     }
   }
 
-  nameBlurEvent = function (e) {
-    this.value = this.value.trim().replace(/[^a-zA-Z가-힣]/gi, '');
-    if (this.value !== '') {
-      homeliaisonAnalytics({
-        page: instance.pageName,
-        standard: instance.firstPageViewTime,
-        action: "inputBlur",
-        data: {
-          name: this.value
-        },
-      }).catch((err) => {
-        console.log(err);
-      });
+  agreeToggleEvent = function () {
+    const children = [ ...this.parentElement.children ];
+    const [ words, circle ] = children;
+    let toggle;
+
+    for (let dom of children) {
+      toggle = dom.getAttribute("toggle");
     }
-  }
 
-  phoneBlurEvent = function (e) {
-    this.value = this.value.trim().replace(/[^0-9\-]/gi, '');
-    if (this.value !== '') {
-      homeliaisonAnalytics({
-        page: instance.pageName,
-        standard: instance.firstPageViewTime,
-        action: "inputBlur",
-        data: {
-          phone: this.value
-        },
-      }).catch((err) => {
-        console.log(err);
-      });
-    }
-  }
-
-  blank = <%% "&nbsp;&nbsp;&nbsp;", "&nbsp;&nbsp;", "&nbsp;", "&nbsp;", "&nbsp;" %%>;
-
-  if (media[0]) {
-    initWording0 = "서비스 진행을 위해 다음 기본 정보가 필요합니다. 간단히 작성 후, 1:1 맞춤 상담을 받아보세요!";
-  } else if (media[1]) {
-    initWording0 = "서비스 진행을 위해 다음 기본 정보가 필요합니다. 간단히 작성 후, 1:1 맞춤 상담을 받아보세요!";
-  } else {
-    initWording0 = "서비스 진행을 위해 간단히 작성 후, 1:1 맞춤 상담을 받아보세요!";
-  }
-
-  if (media[0]) {
-    initWording1 = "<u%*%u>주소는 <b%인테리어를 받으실 곳%b>으로, 평은 <b%분양 평수%b>로 적어 주셔야 합니다.";
-  } else if (media[1]) {
-    initWording1 = "<u%*%u>주소는 <b%인테리어를 받으실 곳%b>으로, 평은 <b%분양 평수%b>로 적어 주셔야 합니다.";
-  } else {
-    if (mobile) {
-      initWording1 = "주소는 <b%인테리어를 받으실 곳%b>으로, 평은 <b%분양\n평수%b>로 적어 주셔야 합니다.";
+    if (toggle === "on") {
+      circle.style.background = colorChip.gray4;
+      words.style.color = colorChip.deactive;
+      circle.setAttribute("toggle", "off");
+      words.setAttribute("toggle", "off");
     } else {
-      initWording1 = "<u%*%u>주소는 <b%인테리어를 받으실 곳%b>으로, 평은 <b%분양 평수%b>로 적어 주셔야 합니다.";
+      circle.style.background = colorChip.green;
+      words.style.color = colorChip.green;
+      circle.setAttribute("toggle", "on");
+      words.setAttribute("toggle", "on");
     }
   }
 
-  whiteBlock = createNode({
+  mainBlock = createNode({
     mother: this.baseTong,
     style: {
+      display: "block",
       position: "relative",
-      borderRadius: String(desktop ? 8 : 1) + ea,
+      paddingBottom: String(mainPaddingBottom) + ea,
+    }
+  });
+
+  contentsArea = createNode({
+    mother: mainBlock,
+    style: {
+      display: "block",
+      position: "relative",
       width: String(100) + '%',
-      height: String(blockHeight) + ea,
+      marginTop: String(contentsAreaMarginTop) + ea,
       background: colorChip.white,
-      marginBottom: String(bottomMargin) + ea,
-      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      borderRadius: String(5) + "px",
+      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      paddingTop: String(innerPadding) + ea,
+      paddingBottom: String(innerPadding) + ea,
     }
   });
 
   leftBox = createNode({
-    mother: whiteBlock,
+    mother: contentsArea,
     style: {
-      display: desktop ? "inline-block" : "block",
+      display: desktop ? "inline-block" : "none",
       position: "relative",
-      width: desktop ? "calc(calc(100% - " + String(margin * 2) + ea + ") * " + String(leftRatio) + ")" : String(100) + '%',
-      height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : String(29) + ea,
-      marginTop: desktop ? String(margin) + ea : "",
-      marginBottom: desktop ? String(margin) + ea : "",
-      marginLeft: desktop ? String(margin) + ea : "",
-    }
-  });
-
-  //main title
-  createNode({
-    mother: leftBox,
-    text: desktop ? ((media[0] || media[4]) ? "홈리에종과의 상담을 위해" : "홈리에종과의") : "홈리에종과의 상담을 위해",
-    style: {
-      position: "absolute",
-      fontSize: String(titleFont) + ea,
-      fontWeight: String(titleFontWeight),
-      wordSpacing: String(wordSpacing) + "px",
-      top: desktop ? (String((media[0] ? 0 : media[1] ? 1 : 3) + (isMac() || mobile ? 0 : 4)) + ea) : String(9) + ea,
-      left: String(titleLeft) + ea,
-      color: colorChip.black,
-      width: desktop ? "" : String(100) + '%',
-      textAlign: desktop ? "" : "center",
-    }
-  });
-
-  if (media[1] || media[2] || media[3]) {
-    createNode({
-      mother: leftBox,
-      text: "상담을 위해,",
-      style: {
-        position: "absolute",
-        fontSize: String(titleFont) + ea,
-        fontWeight: String(titleFontWeight),
-        wordSpacing: String(wordSpacing) + ea,
-        top: String((media[0] ? 0 : media[1] ? 1 : 3) + (titleFont * (media[0] ? 1.45 : 1.45)) + (isMac() || mobile ? 0 : 4)) + ea,
-        left: String(titleLeft) + ea,
-        color: colorChip.black,
-      }
-    });
-  }
-
-  createNode({
-    mother: leftBox,
-    text: "기입해주세요!",
-    style: {
-      position: "absolute",
-      fontSize: String(titleFont) + ea,
-      fontWeight: String(titleFontWeight),
-      wordSpacing: String(wordSpacing) + "px",
-      top: desktop ? (String((media[0] ? 0 : media[1] ? 1 : 3) + (titleFont * (media[0] ? 1.45 : 1.45) * (media[0] ? 1 : 2)) + (isMac() || mobile ? 0 : 4)) + ea) : String(17) + ea,
-      left: String(titleLeft) + ea,
-      width: desktop ? "" : String(100) + '%',
-      textAlign: desktop ? "" : "center",
-      color: colorChip.black,
-    }
-  });
-
-  if (desktop) {
-
-    if (media[0]) {
-      createNode({
-        mother: leftBox,
-        style: {
-          position: "absolute",
-          borderBottom: "1px solid " + colorChip.gray3,
-          top: String(titleFont * (63 / 30)) + ea,
-          left: String(barLeft) + ea,
-          width: String(barWidth) + ea,
-        }
-      });
-    }
-
-  }
-
-  rightBox = createNode({
-    mother: whiteBlock,
-    style: {
-      display: desktop ? "inline-block" : "block",
-      position: "relative",
+      marginLeft: String(innerPadding) + ea,
+      width: String(leftBoxWidth) + ea,
       verticalAlign: "top",
-      top: String(0) + ea,
-      width: desktop ? "calc(calc(100% - " + String(margin * 2) + ea + ") * " + String(1 - leftRatio) + ")" : withOut(mobileRightBoxLeft * 2, ea),
-      height: desktop ? "calc(100% - " + String((margin * 2) + rightBoxPaddingTop) + ea + ")" : String(mobileRightBoxHeight) + ea,
-      paddingTop: String(rightBoxPaddingTop) + ea,
-      marginTop: desktop ? String(margin) + ea : "",
-      marginBottom: desktop ? String(margin) + ea : "",
-      marginRight: desktop ? String(margin) + ea : "",
-      paddingLeft: mobile ? String(mobileRightBoxLeft) + ea : "",
-      paddingRight: mobile ? String(mobileRightBoxLeft) + ea : "",
     }
   });
 
-  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
   createNode({
-    mother: rightBox,
+    mother: leftBox,
     mode: "svg",
     source: svgMaker.doubleQuote(colorChip.green),
     style: {
-      position: "absolute",
-      top: String(quoteTop) + ea,
-      left: desktop ? String(quoteLeft) + ea : "calc(50% - " + String(quoteWidth / 2) + ea + ")",
-      width: String(quoteWidth) + ea,
+      display: "block",
+      position: "relative",
       height: String(quoteHeight) + ea,
+      marginLeft: String(quoteLeft) + ea,
     }
   });
 
   createNode({
-    mother: rightBox,
-    text: desktop ? initWording0 : initWording1,
+    mother: leftBox,
+    text: contents.sub.join("\n"),
     style: {
-      position: "absolute",
-      top: String(desktop ? quoteTop + quoteHeight + quoteMarginBottom : 3.7) + ea,
-      left: String(desktop ? 0 : 13) + ea,
-      width: String(desktop ? 100 : 74) + '%',
-      height: desktop ? String(initWordingHeight) + ea : "",
-      fontSize: String(initWordingSize) + ea,
-      fontWeight: String(400),
+      display: "block",
+      position: "relative",
+      fontSize: String(descriptionSize) + ea,
+      fontWeight: String(descriptionWeight),
       color: colorChip.black,
-      wordSpacing: String(initWordingWordSpacing) + "px",
-      lineHeight: desktop ? "" : String(1.6),
-      textAlign: desktop ? "" : "center",
+      lineHeight: String(descriptionLineHeight),
+      marginTop: String(descriptionMarginTop) + ea,
     },
     bold: {
-      fontWeight: String(700),
+      fontWeight: String(descriptionBoldWeight),
       color: colorChip.black,
-    },
-    under: {
-      fontWeight: String(400),
-      color: colorChip.green,
+    }
+  })
+
+  rightBox = createNode({
+    mother: contentsArea,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      width: withOut(leftBoxWidth + (innerPadding * 2), ea),
+      verticalAlign: "top",
+      marginLeft: desktop ? "" : String(innerPadding) + ea,
+      paddingTop: desktop ? "" : String(1) + ea,
     }
   });
 
+  // 1
   createNode({
     mother: rightBox,
-    text: initWording1,
     style: {
-      display: desktop ? "block" : "none",
-      position: "absolute",
-      top: String(desktop ? quoteTop + quoteHeight + quoteMarginBottom + initWordingSize + initWordingLineHeight : 15.5) + ea,
-      left: String(desktop ? 0 : 11) + ea,
-      width: String(desktop ? 100 : 78) + '%',
-      height: String(initWordingHeight) + ea,
-      fontSize: String(initWordingSize) + ea,
-      fontWeight: String(400),
-      wordSpacing: String(initWordingWordSpacing) + "px",
-      lineHeight: desktop ? "" : String(1.6),
-      textAlign: desktop ? "" : "center",
-      color: colorChip.black,
+      display: "block",
+      position: "relative",
+      marginBottom: String(blockMarginBottom) + ea,
+      height: String(moduleHeight) + ea,
     },
-    bold: {
-      fontWeight: String(700),
-      color: colorChip.black,
+    children: [
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: String(circleRadius * 2) + ea,
+          height: String(circleRadius * 2) + ea,
+          marginRight: String(circleBetween) + ea,
+          borderRadius: String(circleRadius) + ea,
+          background: colorChip.green,
+          top: String(circleTop) + ea,
+          verticalAlign: "top",
+        }
+      },
+      {
+        text: "성함",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(mainTop) + ea,
+          fontSize: String(mainSize) + ea,
+          fontWeight: String(mainWeight),
+          color: colorChip.black,
+          verticalAlign: "top",
+        }
+      },
+      {
+        style: {
+          position: "absolute",
+          top: String(grayTop) + ea,
+          left: String(leftGrayType0) + ea,
+          width: String(widthGrayType0) + ea,
+          height: String(grayHeight) + ea,
+          background: colorChip.gray1,
+          borderRadius: String(3) + "px",
+        }
+      },
+      {
+        mode: "input",
+        class: [ inputClassName ],
+        attribute: {
+          type: "text",
+          placeholder: "성함",
+          property: "name",
+          value: "",
+        },
+        event: {
+          blur: nameBlurEvent,
+        },
+        style: {
+          position: "absolute",
+          top: String(grayInputTop) + ea,
+          left: String(leftGrayType0) + ea,
+          width: String(widthGrayType0) + ea,
+          height: String(grayHeight) + ea,
+          outline: String(0),
+          border: String(0),
+          fontSize: String(inputSize) + ea,
+          fontWeight: String(inputWeight),
+          color: colorChip.black,
+          textAlign: "center",
+          background: "transparent",
+        }
+      },
+    ]
+  });
+  // 2
+  createNode({
+    mother: rightBox,
+    style: {
+      display: "block",
+      position: "relative",
+      marginBottom: String(blockMarginBottom) + ea,
+      height: String(moduleHeight) + ea,
     },
-    under: {
-      fontWeight: String(400),
-      color: colorChip.green,
+    children: [
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: String(circleRadius * 2) + ea,
+          height: String(circleRadius * 2) + ea,
+          marginRight: String(circleBetween) + ea,
+          borderRadius: String(circleRadius) + ea,
+          background: colorChip.green,
+          top: String(circleTop) + ea,
+          verticalAlign: "top",
+        }
+      },
+      {
+        text: "연락처",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(mainTop) + ea,
+          fontSize: String(mainSize) + ea,
+          fontWeight: String(mainWeight),
+          color: colorChip.black,
+          verticalAlign: "top",
+        }
+      },
+      {
+        style: {
+          position: "absolute",
+          top: String(grayTop) + ea,
+          left: String(leftGrayType0) + ea,
+          width: String(widthGrayType0) + ea,
+          height: String(grayHeight) + ea,
+          background: colorChip.gray1,
+          borderRadius: String(3) + "px",
+        }
+      },
+      {
+        mode: "input",
+        class: [ inputClassName ],
+        attribute: {
+          type: "text",
+          placeholder: "010-0000-0000",
+          property: "phone",
+          value: "",
+        },
+        event: {
+          keyup: phoneHypenEvent,
+          blur: phoneBlurEvent,
+        },
+        style: {
+          position: "absolute",
+          top: String(grayInputTop) + ea,
+          left: String(leftGrayType0) + ea,
+          width: String(widthGrayType0) + ea,
+          height: String(grayHeight) + ea,
+          outline: String(0),
+          border: String(0),
+          fontSize: String(inputSize) + ea,
+          fontWeight: String(inputWeight),
+          color: colorChip.black,
+          textAlign: "center",
+          background: "transparent",
+        }
+      },
+    ]
+  });
+  // 3
+  createNode({
+    mother: rightBox,
+    style: {
+      display: "block",
+      position: "relative",
+      marginBottom: String(blockMarginBottom) + ea,
+      height: String(moduleHeight) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: String(circleRadius * 2) + ea,
+          height: String(circleRadius * 2) + ea,
+          marginRight: String(circleBetween) + ea,
+          borderRadius: String(circleRadius) + ea,
+          background: colorChip.green,
+          top: String(circleTop) + ea,
+          verticalAlign: "top",
+        }
+      },
+      {
+        text: "이메일",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(mainTop) + ea,
+          fontSize: String(mainSize) + ea,
+          fontWeight: String(mainWeight),
+          color: colorChip.black,
+          verticalAlign: "top",
+        }
+      },
+      {
+        style: {
+          position: "absolute",
+          top: String(grayTop) + ea,
+          left: String(leftGrayType0) + ea,
+          width: String(widthGrayType1) + ea,
+          height: String(grayHeight) + ea,
+          background: colorChip.gray1,
+          borderRadius: String(3) + "px",
+        }
+      },
+      {
+        mode: "input",
+        class: [ inputClassName ],
+        attribute: {
+          type: "text",
+          placeholder: "example@home-liaison.com",
+          property: "email",
+          value: "",
+        },
+        style: {
+          position: "absolute",
+          top: String(grayInputTop) + ea,
+          left: String(leftGrayType0) + ea,
+          width: String(widthGrayType1) + ea,
+          height: String(grayHeight) + ea,
+          outline: String(0),
+          border: String(0),
+          fontSize: String(inputSize) + ea,
+          fontWeight: String(inputWeight),
+          color: colorChip.black,
+          textAlign: "left",
+          background: "transparent",
+          textIndent: String(inputIndent) + ea,
+        }
+      },
+    ]
+  });
+  // 4
+  createNode({
+    mother: rightBox,
+    style: {
+      display: "block",
+      position: "relative",
+      marginBottom: String(blockMarginBottom) + ea,
+      height: String(moduleHeight) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: String(circleRadius * 2) + ea,
+          height: String(circleRadius * 2) + ea,
+          marginRight: String(circleBetween) + ea,
+          borderRadius: String(circleRadius) + ea,
+          background: colorChip.green,
+          top: String(circleTop) + ea,
+          verticalAlign: "top",
+        }
+      },
+      {
+        text: "주소",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(mainTop) + ea,
+          fontSize: String(mainSize) + ea,
+          fontWeight: String(mainWeight),
+          color: colorChip.black,
+          verticalAlign: "top",
+        }
+      },
+      {
+        event: {
+          click: addressButtonEvent
+        },
+        style: {
+          position: "absolute",
+          top: String(grayTop) + ea,
+          left: String(leftGrayType0) + ea,
+          width: String(addressWidth) + ea,
+          height: String(grayHeight) + ea,
+          background: colorChip.gradientGreen,
+          borderRadius: String(3) + "px",
+          cursor: "pointer",
+        },
+        children: [
+          {
+            text: "검색",
+            style: {
+              width: String(100) + '%',
+              textAlign: "center",
+              fontSize: String(addressSize) + ea,
+              fontWeight: String(addressWeight),
+              color: colorChip.white,
+              position: "relative",
+              top: String(addressTop) + ea,
+            }
+          }
+        ]
+      },
+      {
+        style: {
+          position: "absolute",
+          top: String(grayTop) + ea,
+          left: String(leftGrayType3) + ea,
+          width: String(widthGrayType3) + ea,
+          height: String(grayHeight) + ea,
+          background: colorChip.gray1,
+          borderRadius: String(3) + "px",
+        }
+      },
+      {
+        mode: "input",
+        class: [ inputClassName ],
+        attribute: {
+          type: "text",
+          placeholder: "인테리어 받을 곳의 주소",
+          property: "address0",
+          value: "",
+        },
+        style: {
+          position: "absolute",
+          top: String(grayInputTop) + ea,
+          left: String(leftGrayType3) + ea,
+          width: String(widthGrayType3) + ea,
+          height: String(grayHeight) + ea,
+          outline: String(0),
+          border: String(0),
+          fontSize: String(inputSize) + ea,
+          fontWeight: String(inputWeight),
+          color: colorChip.black,
+          textAlign: "left",
+          background: "transparent",
+          textIndent: String(inputIndent) + ea,
+        }
+      },
+    ]
+  });
+  // 5
+  createNode({
+    mother: rightBox,
+    style: {
+      display: "block",
+      position: "relative",
+      marginBottom: String(blockMarginBottom) + ea,
+      height: String(moduleHeight) + ea,
+    },
+    children: [
+      {
+        style: {
+          position: "absolute",
+          top: String(grayTop) + ea,
+          left: String(leftGrayType0) + ea,
+          width: String(widthGrayType1) + ea,
+          height: String(grayHeight) + ea,
+          background: colorChip.gray1,
+          borderRadius: String(3) + "px",
+        }
+      },
+      {
+        mode: "input",
+        class: [ inputClassName ],
+        attribute: {
+          type: "text",
+          placeholder: "인테리어 받을 곳의 상세 주소",
+          property: "address1",
+          value: "",
+        },
+        event: {
+          focus: addressFocusEvent,
+          blur: addressBlurEvent,
+        },
+        style: {
+          position: "absolute",
+          top: String(grayInputTop) + ea,
+          left: String(leftGrayType0) + ea,
+          width: String(widthGrayType1) + ea,
+          height: String(grayHeight) + ea,
+          outline: String(0),
+          border: String(0),
+          fontSize: String(inputSize) + ea,
+          fontWeight: String(inputWeight),
+          color: colorChip.black,
+          textAlign: "left",
+          background: "transparent",
+          textIndent: String(inputIndent) + ea,
+        }
+      },
+    ]
+  });
+
+  // 6 : margin
+  createNode({
+    mother: rightBox,
+    style: {
+      display: "block",
+      position: "relative",
+      marginBottom: String(blockMarginBottom) + ea,
+      height: String(moduleHeight * marginRatio) + ea,
     }
   });
 
-  // block desktop start
-  if (desktop) {
-
-    // 1
-    createNode({
-      mother: rightBox,
-      style: {
-        display: "block",
-        position: "relative",
-        marginBottom: String(blockMarginBottom) + ea,
-        height: String(moduleHeight) + ea,
-      },
-      children: [
-        {
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(circleRadius * 2) + ea,
-            height: String(circleRadius * 2) + ea,
-            marginRight: String(circleBetween) + ea,
-            borderRadius: String(circleRadius) + ea,
-            background: colorChip.green,
-            top: String(circleTop) + ea,
-            verticalAlign: "top",
-          }
-        },
-        {
-          text: "성함",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(mainTop) + ea,
-            fontSize: String(mainSize) + ea,
-            fontWeight: String(mainWeight),
-            color: colorChip.black,
-            verticalAlign: "top",
-          }
-        },
-        {
-          style: {
-            position: "absolute",
-            top: String(grayTop) + ea,
-            left: String(leftGrayType0) + ea,
-            width: String(widthGrayType0) + ea,
-            height: String(grayHeight) + ea,
-            background: colorChip.gray1,
-            borderRadius: String(3) + "px",
-          }
-        },
-        {
-          mode: "input",
-          class: [ inputClassName ],
-          attribute: {
-            type: "text",
-            placeholder: "성함",
-            property: "name",
-            value: "",
-          },
-          event: {
-            blur: nameBlurEvent,
-          },
-          style: {
-            position: "absolute",
-            top: String(grayInputTop) + ea,
-            left: String(leftGrayType0) + ea,
-            width: String(widthGrayType0) + ea,
-            height: String(grayHeight) + ea,
-            outline: String(0),
-            border: String(0),
-            fontSize: String(inputSize) + ea,
-            fontWeight: String(inputWeight),
-            color: colorChip.black,
-            textAlign: "center",
-            background: "transparent",
-          }
-        },
-      ]
-    });
-    // 2
-    createNode({
-      mother: rightBox,
-      style: {
-        display: "block",
-        position: "relative",
-        marginBottom: String(blockMarginBottom) + ea,
-        height: String(moduleHeight) + ea,
-      },
-      children: [
-        {
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(circleRadius * 2) + ea,
-            height: String(circleRadius * 2) + ea,
-            marginRight: String(circleBetween) + ea,
-            borderRadius: String(circleRadius) + ea,
-            background: colorChip.green,
-            top: String(circleTop) + ea,
-            verticalAlign: "top",
-          }
-        },
-        {
-          text: "연락처",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(mainTop) + ea,
-            fontSize: String(mainSize) + ea,
-            fontWeight: String(mainWeight),
-            color: colorChip.black,
-            verticalAlign: "top",
-          }
-        },
-        {
-          style: {
-            position: "absolute",
-            top: String(grayTop) + ea,
-            left: String(leftGrayType0) + ea,
-            width: String(widthGrayType0) + ea,
-            height: String(grayHeight) + ea,
-            background: colorChip.gray1,
-            borderRadius: String(3) + "px",
-          }
-        },
-        {
-          mode: "input",
-          class: [ inputClassName ],
-          attribute: {
-            type: "text",
-            placeholder: "010-0000-0000",
-            property: "phone",
-            value: "",
-          },
-          event: {
-            keyup: phoneHypenEvent,
-            blur: phoneBlurEvent,
-          },
-          style: {
-            position: "absolute",
-            top: String(grayInputTop) + ea,
-            left: String(leftGrayType0) + ea,
-            width: String(widthGrayType0) + ea,
-            height: String(grayHeight) + ea,
-            outline: String(0),
-            border: String(0),
-            fontSize: String(inputSize) + ea,
-            fontWeight: String(inputWeight),
-            color: colorChip.black,
-            textAlign: "center",
-            background: "transparent",
-          }
-        },
-      ]
-    });
-    // 3
-    createNode({
-      mother: rightBox,
-      style: {
-        display: "block",
-        position: "relative",
-        marginBottom: String(blockMarginBottom) + ea,
-        height: String(moduleHeight) + ea,
-      },
-      children: [
-        {
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(circleRadius * 2) + ea,
-            height: String(circleRadius * 2) + ea,
-            marginRight: String(circleBetween) + ea,
-            borderRadius: String(circleRadius) + ea,
-            background: colorChip.green,
-            top: String(circleTop) + ea,
-            verticalAlign: "top",
-          }
-        },
-        {
-          text: "이메일",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(mainTop) + ea,
-            fontSize: String(mainSize) + ea,
-            fontWeight: String(mainWeight),
-            color: colorChip.black,
-            verticalAlign: "top",
-          }
-        },
-        {
-          style: {
-            position: "absolute",
-            top: String(grayTop) + ea,
-            left: String(leftGrayType0) + ea,
-            width: String(widthGrayType1) + ea,
-            height: String(grayHeight) + ea,
-            background: colorChip.gray1,
-            borderRadius: String(3) + "px",
-          }
-        },
-        {
-          mode: "input",
-          class: [ inputClassName ],
-          attribute: {
-            type: "text",
-            placeholder: "example@home-liaison.com",
-            property: "email",
-            value: "",
-          },
-          style: {
-            position: "absolute",
-            top: String(grayInputTop) + ea,
-            left: String(leftGrayType0) + ea,
-            width: String(widthGrayType1) + ea,
-            height: String(grayHeight) + ea,
-            outline: String(0),
-            border: String(0),
-            fontSize: String(inputSize) + ea,
-            fontWeight: String(inputWeight),
-            color: colorChip.black,
-            textAlign: "left",
-            background: "transparent",
-            textIndent: String(inputIndent) + ea,
-          }
-        },
-      ]
-    });
-    // 4
-    createNode({
-      mother: rightBox,
-      style: {
-        display: "block",
-        position: "relative",
-        marginBottom: String(blockMarginBottom) + ea,
-        height: String(moduleHeight) + ea,
-      },
-      children: [
-        {
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(circleRadius * 2) + ea,
-            height: String(circleRadius * 2) + ea,
-            marginRight: String(circleBetween) + ea,
-            borderRadius: String(circleRadius) + ea,
-            background: colorChip.green,
-            top: String(circleTop) + ea,
-            verticalAlign: "top",
-          }
-        },
-        {
-          text: "주소",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(mainTop) + ea,
-            fontSize: String(mainSize) + ea,
-            fontWeight: String(mainWeight),
-            color: colorChip.black,
-            verticalAlign: "top",
-          }
-        },
-        {
-          event: {
-            click: addressButtonEvent
-          },
-          style: {
-            position: "absolute",
-            top: String(grayTop) + ea,
-            left: String(leftGrayType0) + ea,
-            width: String(addressWidth) + ea,
-            height: String(grayHeight) + ea,
-            background: colorChip.gradientGreen,
-            borderRadius: String(3) + "px",
-            cursor: "pointer",
-          },
-          children: [
-            {
-              text: "검색",
-              style: {
-                width: String(100) + '%',
-                textAlign: "center",
-                fontSize: String(addressSize) + ea,
-                fontWeight: String(addressWeight),
-                color: colorChip.white,
-                position: "relative",
-                top: String(addressTop) + ea,
-              }
-            }
-          ]
-        },
-        {
-          style: {
-            position: "absolute",
-            top: String(grayTop) + ea,
-            left: String(leftGrayType3) + ea,
-            width: String(widthGrayType3) + ea,
-            height: String(grayHeight) + ea,
-            background: colorChip.gray1,
-            borderRadius: String(3) + "px",
-          }
-        },
-        {
-          mode: "input",
-          class: [ inputClassName ],
-          attribute: {
-            type: "text",
-            placeholder: "인테리어 받을 곳의 주소",
-            property: "address0",
-            value: "",
-          },
-          style: {
-            position: "absolute",
-            top: String(grayInputTop) + ea,
-            left: String(leftGrayType3) + ea,
-            width: String(widthGrayType3) + ea,
-            height: String(grayHeight) + ea,
-            outline: String(0),
-            border: String(0),
-            fontSize: String(inputSize) + ea,
-            fontWeight: String(inputWeight),
-            color: colorChip.black,
-            textAlign: "left",
-            background: "transparent",
-            textIndent: String(inputIndent) + ea,
-          }
-        },
-      ]
-    });
-    // 5
-    createNode({
-      mother: rightBox,
-      style: {
-        display: "block",
-        position: "relative",
-        marginBottom: String(blockMarginBottom) + ea,
-        height: String(moduleHeight) + ea,
-      },
-      children: [
-        {
-          style: {
-            position: "absolute",
-            top: String(grayTop) + ea,
-            left: String(leftGrayType0) + ea,
-            width: String(widthGrayType1) + ea,
-            height: String(grayHeight) + ea,
-            background: colorChip.gray1,
-            borderRadius: String(3) + "px",
-          }
-        },
-        {
-          mode: "input",
-          class: [ inputClassName ],
-          attribute: {
-            type: "text",
-            placeholder: "인테리어 받을 곳의 상세 주소",
-            property: "address1",
-            value: "",
-          },
-          event: {
-            focus: addressFocusEvent,
-            blur: addressBlurEvent,
-          },
-          style: {
-            position: "absolute",
-            top: String(grayInputTop) + ea,
-            left: String(leftGrayType0) + ea,
-            width: String(widthGrayType1) + ea,
-            height: String(grayHeight) + ea,
-            outline: String(0),
-            border: String(0),
-            fontSize: String(inputSize) + ea,
-            fontWeight: String(inputWeight),
-            color: colorChip.black,
-            textAlign: "left",
-            background: "transparent",
-            textIndent: String(inputIndent) + ea,
-          }
-        },
-      ]
-    });
-
-    // 6 : margin
-    createNode({
-      mother: rightBox,
-      style: {
-        display: "block",
-        position: "relative",
-        marginBottom: String(blockMarginBottom) + ea,
-        height: String(moduleHeight * marginRatio) + ea,
-      }
-    });
-
-    // 7
-    createNode({
-      mother: rightBox,
-      style: {
-        display: "block",
-        position: "relative",
-        marginBottom: String(blockMarginBottom) + ea,
-        height: String(moduleHeight) + ea,
-      },
-      children: [
-        {
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(circleRadius * 2) + ea,
-            height: String(circleRadius * 2) + ea,
-            marginRight: String(circleBetween) + ea,
-            borderRadius: String(circleRadius) + ea,
-            background: colorChip.green,
-            top: String(circleTop) + ea,
-            verticalAlign: "top",
-          }
-        },
-        {
-          text: "분양 평수",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(mainTop) + ea,
-            fontSize: String(mainSize) + ea,
-            fontWeight: String(mainWeight),
-            color: colorChip.black,
-            verticalAlign: "top",
-          }
-        },
-        {
-          style: {
-            position: "absolute",
-            top: String(grayTop) + ea,
-            left: String(leftGrayType2) + ea,
-            width: String(widthGrayType0) + ea,
-            height: String(grayHeight) + ea,
-            background: colorChip.gray1,
-            borderRadius: String(3) + "px",
-          }
-        },
-        {
-          mode: "input",
-          class: [ inputClassName ],
-          attribute: {
-            type: "text",
-            placeholder: "00평 (분양 평수)",
-            property: "pyeong",
-            value: "",
-          },
-          event: {
-            keyup: pyeongNumberEvent,
-            blur: pyeongBlurEvent,
-            focus: pyeongFocusEvent,
-          },
-          style: {
-            position: "absolute",
-            top: String(grayInputTop) + ea,
-            left: String(leftGrayType2) + ea,
-            width: String(widthGrayType0) + ea,
-            height: String(grayHeight) + ea,
-            outline: String(0),
-            border: String(0),
-            fontSize: String(inputSize) + ea,
-            fontWeight: String(inputWeight),
-            color: colorChip.black,
-            textAlign: "center",
-            background: "transparent",
-          }
+  // 7
+  createNode({
+    mother: rightBox,
+    style: {
+      display: "block",
+      position: "relative",
+      marginBottom: String(blockMarginBottom) + ea,
+      height: String(moduleHeight) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: String(circleRadius * 2) + ea,
+          height: String(circleRadius * 2) + ea,
+          marginRight: String(circleBetween) + ea,
+          borderRadius: String(circleRadius) + ea,
+          background: colorChip.green,
+          top: String(circleTop) + ea,
+          verticalAlign: "top",
         }
-      ]
-    });
-    // 8
-    createNode({
-      mother: rightBox,
-      style: {
-        display: "block",
-        position: "relative",
-        marginBottom: String(blockMarginBottom) + ea,
-        height: String(moduleHeight) + ea,
       },
-      children: [
-        {
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(circleRadius * 2) + ea,
-            height: String(circleRadius * 2) + ea,
-            marginRight: String(circleBetween) + ea,
-            borderRadius: String(circleRadius) + ea,
-            background: colorChip.green,
-            top: String(circleTop) + ea,
-            verticalAlign: "top",
-          }
-        },
-        {
-          text: "거주 여부",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(mainTop) + ea,
-            fontSize: String(mainSize) + ea,
-            fontWeight: String(mainWeight),
-            color: colorChip.black,
-            verticalAlign: "top",
-          }
-        },
-        {
-          class: [ inputClassName ],
-          attribute: {
-            toggle: "on",
-            property: "living",
-          },
-          event: {
-            click: checkboxClickEvent0
-          },
-          style: {
-            position: "absolute",
-            top: String(0),
-            left: String(leftCheck0) + ea,
-            height: String(100) + '%',
-            verticalAlign: "top",
-            cursor: "pointer",
-          },
-          children: [
-            {
-              mode: "svg",
-              source: instance.mother.returnCheckBox(colorChip.gray3),
-              style: {
-                display: "inline-block",
-                position: "relative",
-                width: String(checkboxWidth) + ea,
-                top: String(checkboxTop) + ea,
-                verticalAlign: "top",
-                cursor: "pointer",
-                opacity: String(0),
-              }
-            },
-            {
-              mode: "svg",
-              source: instance.mother.returnCheckBox(colorChip.green),
-              style: {
-                position: "absolute",
-                width: String(checkboxWidth) + ea,
-                top: String(checkboxTop) + ea,
-                left: String(0),
-                verticalAlign: "top",
-                cursor: "pointer",
-                opacity: String(1),
-              }
-            },
-            {
-              text: "이사",
-              style: {
-                display: "inline-block",
-                position: "relative",
-                marginLeft: String(checkboxBetween) + ea,
-                top: String(mainTop) + ea,
-                fontSize: String(mainSize) + ea,
-                fontWeight: String(checkboxWeight),
-                color: colorChip.green,
-                verticalAlign: "top",
-                cursor: "pointer",
-              }
-            },
-          ]
-        },
-        {
-          class: [ inputClassName ],
-          attribute: {
-            toggle: "off",
-            property: "living",
-          },
-          event: {
-            click: checkboxClickEvent0
-          },
-          style: {
-            position: "absolute",
-            top: String(0),
-            left: String(leftCheck1) + ea,
-            height: String(100) + '%',
-            verticalAlign: "top",
-            cursor: "pointer",
-          },
-          children: [
-            {
-              mode: "svg",
-              source: instance.mother.returnCheckBox(colorChip.gray3),
-              style: {
-                display: "inline-block",
-                position: "relative",
-                width: String(checkboxWidth) + ea,
-                top: String(checkboxTop) + ea,
-                verticalAlign: "top",
-                cursor: "pointer",
-                opacity: String(1),
-              }
-            },
-            {
-              mode: "svg",
-              source: instance.mother.returnCheckBox(colorChip.green),
-              style: {
-                position: "absolute",
-                width: String(checkboxWidth) + ea,
-                top: String(checkboxTop) + ea,
-                left: String(0),
-                verticalAlign: "top",
-                cursor: "pointer",
-                opacity: String(0),
-              }
-            },
-            {
-              text: "거주중",
-              style: {
-                display: "inline-block",
-                position: "relative",
-                marginLeft: String(checkboxBetween) + ea,
-                top: String(mainTop) + ea,
-                fontSize: String(mainSize) + ea,
-                fontWeight: String(checkboxWeight),
-                color: colorChip.black,
-                verticalAlign: "top",
-                cursor: "pointer",
-              }
-            },
-          ]
-        },
-      ]
-    });
-    // 9
-    createNode({
-      mother: rightBox,
-      style: {
-        display: "block",
-        position: "relative",
-        marginBottom: String(blockMarginBottom) + ea,
-        height: String(moduleHeight) + ea,
+      {
+        text: "분양 평수",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(mainTop) + ea,
+          fontSize: String(mainSize) + ea,
+          fontWeight: String(mainWeight),
+          color: colorChip.black,
+          verticalAlign: "top",
+        }
       },
-      children: [
-        {
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(circleRadius * 2) + ea,
-            height: String(circleRadius * 2) + ea,
-            marginRight: String(circleBetween) + ea,
-            borderRadius: String(circleRadius) + ea,
-            background: colorChip.green,
-            top: String(circleTop) + ea,
-            verticalAlign: "top",
-          }
-        },
-        {
-          text: "입주일",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(mainTop) + ea,
-            fontSize: String(mainSize) + ea,
-            fontWeight: String(mainWeight),
-            color: colorChip.black,
-            verticalAlign: "top",
-          }
-        },
-        {
-          style: {
-            position: "absolute",
-            top: String(grayTop) + ea,
-            left: String(leftGrayType2) + ea,
-            width: String(widthGrayType0) + ea,
-            height: String(grayHeight) + ea,
-            background: colorChip.gray1,
-            borderRadius: String(3) + "px",
-          }
-        },
-        {
-          mode: "input",
-          class: [ inputClassName ],
-          attribute: {
-            type: "text",
-            placeholder: dateToString(new Date()),
-            property: "movein",
-            value: "",
-          },
-          event: {
-            click: calendarViewEvent,
-          },
-          style: {
-            position: "absolute",
-            top: String(grayInputTop) + ea,
-            left: String(leftGrayType2) + ea,
-            width: String(widthGrayType0) + ea,
-            height: String(grayHeight) + ea,
-            outline: String(0),
-            border: String(0),
-            fontSize: String(inputSize) + ea,
-            fontWeight: String(inputWeight),
-            color: colorChip.black,
-            textAlign: "center",
-            background: "transparent",
-          }
-        },
-      ]
-    });
-    // 10
-    createNode({
-      mother: rightBox,
-      style: {
-        display: "block",
-        position: "relative",
-        marginBottom: String(blockMarginBottom) + ea,
-        height: String(moduleHeight) + ea,
+      {
+        style: {
+          position: "absolute",
+          top: String(grayTop) + ea,
+          left: String(leftGrayType2) + ea,
+          width: String(widthGrayType0) + ea,
+          height: String(grayHeight) + ea,
+          background: colorChip.gray1,
+          borderRadius: String(3) + "px",
+        }
       },
-      children: [
-        {
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(circleRadius * 2) + ea,
-            height: String(circleRadius * 2) + ea,
-            marginRight: String(circleBetween) + ea,
-            borderRadius: String(circleRadius) + ea,
-            background: colorChip.green,
-            top: String(circleTop) + ea,
-            verticalAlign: "top",
-          }
+      {
+        mode: "input",
+        class: [ inputClassName ],
+        attribute: {
+          type: "text",
+          placeholder: "00평 (분양 평수)",
+          property: "pyeong",
+          value: "",
         },
-        {
-          text: "요청 사항",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(mainTop) + ea,
-            fontSize: String(mainSize) + ea,
-            fontWeight: String(mainWeight),
-            color: colorChip.black,
-            verticalAlign: "top",
-          }
+        event: {
+          keyup: pyeongNumberEvent,
+          blur: pyeongBlurEvent,
+          focus: pyeongFocusEvent,
         },
-        {
-          style: {
-            position: "absolute",
-            top: String(grayTextAreaTop) + ea,
-            left: String(leftGrayType2) + ea,
-            width: String(widthGrayType2) + ea,
-            height: String(grayBigHeight) + ea,
-            background: colorChip.gray1,
-            borderRadius: String(3) + "px",
-          }
+        style: {
+          position: "absolute",
+          top: String(grayInputTop) + ea,
+          left: String(leftGrayType2) + ea,
+          width: String(widthGrayType0) + ea,
+          height: String(grayHeight) + ea,
+          outline: String(0),
+          border: String(0),
+          fontSize: String(inputSize) + ea,
+          fontWeight: String(inputWeight),
+          color: colorChip.black,
+          textAlign: "center",
+          background: "transparent",
+        }
+      }
+    ]
+  });
+  // 8
+  createNode({
+    mother: rightBox,
+    style: {
+      display: "block",
+      position: "relative",
+      marginBottom: String(blockMarginBottom) + ea,
+      height: String(moduleHeight) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: String(circleRadius * 2) + ea,
+          height: String(circleRadius * 2) + ea,
+          marginRight: String(circleBetween) + ea,
+          borderRadius: String(circleRadius) + ea,
+          background: colorChip.green,
+          top: String(circleTop) + ea,
+          verticalAlign: "top",
+        }
+      },
+      {
+        text: "거주 여부",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(mainTop) + ea,
+          fontSize: String(mainSize) + ea,
+          fontWeight: String(mainWeight),
+          color: colorChip.black,
+          verticalAlign: "top",
+        }
+      },
+      {
+        class: [ inputClassName ],
+        attribute: {
+          toggle: "on",
+          property: "living",
         },
-        {
-          mode: "textarea",
-          class: [ inputClassName ],
-          attribute: {
-            placeholder: "선호하는 스타일 + 공간의 특이 사항을 적어주세요!\n(예) 모던 프렌치 + 코지한 홈스타일링을 원해요.\n(예) 팬트리가 있어요.\n(예) 복층 공간입니다.",
-            property: "etc",
+        event: {
+          click: checkboxClickEvent0
+        },
+        style: {
+          position: "absolute",
+          top: String(0),
+          left: String(leftCheck0) + ea,
+          height: String(100) + '%',
+          verticalAlign: "top",
+          cursor: "pointer",
+        },
+        children: [
+          {
+            mode: "svg",
+            source: instance.mother.returnCheckBox(colorChip.gray3),
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(checkboxWidth) + ea,
+              top: String(checkboxTop) + ea,
+              verticalAlign: "top",
+              cursor: "pointer",
+              opacity: String(0),
+            }
           },
-          style: {
+          {
+            mode: "svg",
+            source: instance.mother.returnCheckBox(colorChip.green),
+            style: {
+              position: "absolute",
+              width: String(checkboxWidth) + ea,
+              top: String(checkboxTop) + ea,
+              left: String(0),
+              verticalAlign: "top",
+              cursor: "pointer",
+              opacity: String(1),
+            }
+          },
+          {
+            text: "이사",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              marginLeft: String(checkboxBetween) + ea,
+              top: String(mainTop) + ea,
+              fontSize: String(mainSize) + ea,
+              fontWeight: String(checkboxWeight),
+              color: colorChip.green,
+              verticalAlign: "top",
+              cursor: "pointer",
+            }
+          },
+        ]
+      },
+      {
+        class: [ inputClassName ],
+        attribute: {
+          toggle: "off",
+          property: "living",
+        },
+        event: {
+          click: checkboxClickEvent0
+        },
+        style: {
+          position: "absolute",
+          top: String(0),
+          left: String(leftCheck1) + ea,
+          height: String(100) + '%',
+          verticalAlign: "top",
+          cursor: "pointer",
+        },
+        children: [
+          {
+            mode: "svg",
+            source: instance.mother.returnCheckBox(colorChip.gray3),
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(checkboxWidth) + ea,
+              top: String(checkboxTop) + ea,
+              verticalAlign: "top",
+              cursor: "pointer",
+              opacity: String(1),
+            }
+          },
+          {
+            mode: "svg",
+            source: instance.mother.returnCheckBox(colorChip.green),
+            style: {
+              position: "absolute",
+              width: String(checkboxWidth) + ea,
+              top: String(checkboxTop) + ea,
+              left: String(0),
+              verticalAlign: "top",
+              cursor: "pointer",
+              opacity: String(0),
+            }
+          },
+          {
+            text: "거주중",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              marginLeft: String(checkboxBetween) + ea,
+              top: String(mainTop) + ea,
+              fontSize: String(mainSize) + ea,
+              fontWeight: String(checkboxWeight),
+              color: colorChip.black,
+              verticalAlign: "top",
+              cursor: "pointer",
+            }
+          },
+        ]
+      },
+    ]
+  });
+  // 9
+  createNode({
+    mother: rightBox,
+    style: {
+      display: "block",
+      position: "relative",
+      marginBottom: String(blockMarginBottom) + ea,
+      height: String(moduleHeight) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: String(circleRadius * 2) + ea,
+          height: String(circleRadius * 2) + ea,
+          marginRight: String(circleBetween) + ea,
+          borderRadius: String(circleRadius) + ea,
+          background: colorChip.green,
+          top: String(circleTop) + ea,
+          verticalAlign: "top",
+        }
+      },
+      {
+        text: "입주일",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(mainTop) + ea,
+          fontSize: String(mainSize) + ea,
+          fontWeight: String(mainWeight),
+          color: colorChip.black,
+          verticalAlign: "top",
+        }
+      },
+      {
+        style: {
+          position: "absolute",
+          top: String(grayTop) + ea,
+          left: String(leftGrayType2) + ea,
+          width: String(widthGrayType0) + ea,
+          height: String(grayHeight) + ea,
+          background: colorChip.gray1,
+          borderRadius: String(3) + "px",
+        }
+      },
+      {
+        mode: "input",
+        class: [ inputClassName ],
+        attribute: {
+          type: "text",
+          placeholder: dateToString(new Date()),
+          property: "movein",
+          value: "",
+        },
+        event: {
+          click: calendarViewEvent,
+        },
+        style: {
+          position: "absolute",
+          top: String(grayInputTop) + ea,
+          left: String(leftGrayType2) + ea,
+          width: String(widthGrayType0) + ea,
+          height: String(grayHeight) + ea,
+          outline: String(0),
+          border: String(0),
+          fontSize: String(inputSize) + ea,
+          fontWeight: String(inputWeight),
+          color: colorChip.black,
+          textAlign: "center",
+          background: "transparent",
+        }
+      },
+    ]
+  });
+  // 10
+  createNode({
+    mother: rightBox,
+    style: {
+      display: "block",
+      position: "relative",
+      marginBottom: String(blockMarginBottom) + ea,
+      height: String(textAreaBlockHeight) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: String(circleRadius * 2) + ea,
+          height: String(circleRadius * 2) + ea,
+          marginRight: String(circleBetween) + ea,
+          borderRadius: String(circleRadius) + ea,
+          background: colorChip.green,
+          top: String(circleTop) + ea,
+          verticalAlign: "top",
+        }
+      },
+      {
+        text: "요청 사항",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(mainTop) + ea,
+          fontSize: String(mainSize) + ea,
+          fontWeight: String(mainWeight),
+          color: colorChip.black,
+          verticalAlign: "top",
+        }
+      },
+      {
+        style: {
+          position: "absolute",
+          top: String(grayTextAreaTop) + ea,
+          left: String(leftGrayType2) + ea,
+          width: String(widthGrayType2) + ea,
+          height: String(grayBigHeight) + ea,
+          background: colorChip.gray1,
+          borderRadius: String(3) + "px",
+        }
+      },
+      {
+        mode: "textarea",
+        class: [ inputClassName ],
+        attribute: {
+          placeholder: "선호하는 스타일 + 공간의 특이 사항을 적어주세요!\n(예) 모던 프렌치 홈스타일링을 원해요.\n(예) 팬트리가 있어요.\n(예) 복층 공간입니다.",
+          property: "etc",
+        },
+        style: {
+          position: "absolute",
+          top: String(grayTextAreaTop + textareaTop) + ea,
+          left: String(leftGrayType2 + textareaLeft) + ea,
+          width: String(widthGrayType2 - (textareaLeft * 2)) + ea,
+          height: String(grayBigHeight - (textareaTop * 1)) + ea,
+          fontSize: String(grayLineBlockFontSize) + ea,
+          fontWeight: String(grayLineBlockFontWeight),
+          border: String(0),
+          background: "transparent",
+          outline: String(0),
+          overflow: "scroll",
+          lineHeight: String(1.6),
+          color: colorChip.black,
+        }
+      }
+    ]
+  });
+
+  // policy and submit
+  policyArea = createNode({
+    mother: mainBlock,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      marginTop: String(policyAreaMarginTop) + ea,
+      background: colorChip.white,
+      borderRadius: String(5) + "px",
+      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      paddingTop: String(innerPadding) + ea,
+      paddingBottom: String(innerPadding) + ea,
+    }
+  });
+
+  policyTong = createNode({
+    mother: policyArea,
+    style: {
+      display: "block",
+      position: "relative",
+      marginLeft: String(innerPadding) + ea,
+      width: withOut(innerPadding * 2, ea),
+      height: String(policyGrayHeight) + ea,
+      background: colorChip.gray1,
+      borderRadius: String(3) + "px",
+    },
+    children: [
+      {
+        style: {
+          position: "absolute",
+          top: String(policyGrayTextTop) + ea,
+          left: String(policyGrayTextLeft) + ea,
+          width: withOut(policyGrayTextLeft * 2, ea),
+          height: withOut(policyGrayTextTop * 2, ea),
+          overflow: "scroll",
+        },
+        children: [
+          {
             position: "absolute",
-            top: String(grayTextAreaTop + textareaTop) + ea,
-            left: String(leftGrayType2 + textareaLeft) + ea,
-            width: String(widthGrayType2 - (textareaLeft * 2)) + ea,
-            height: String(grayBigHeight - (textareaTop * 1)) + ea,
-            fontSize: String(grayLineBlockFontSize) + ea,
-            fontWeight: String(grayLineBlockFontWeight),
-            border: String(0),
-            background: "transparent",
-            outline: String(0),
-            overflow: "scroll",
+            top: String(0) + ea,
+            left: String(0) + ea,
+            width: String(100) + '%',
+            height: "auto",
+            fontSize: String(policyGrayTextSize) + ea,
+            fontWeight: String(300),
             lineHeight: String(1.6),
             color: colorChip.black,
           }
-        }
-      ]
-    });
-
-  } else {
-
-    // 1
-    createNode({
-      mother: rightBox,
-      style: {
-        display: "block",
-        position: "relative",
-        marginBottom: String(blockMarginBottom) + ea,
-        height: String(moduleHeight) + ea,
-      },
-      children: [
-        {
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(circleRadius * 2) + ea,
-            height: String(circleRadius * 2) + ea,
-            borderRadius: String(circleRadius * 2) + ea,
-            background: colorChip.green,
-            marginRight: String(circleBetween) + ea,
-            top: String(circleTop) + ea,
-            verticalAlign: "top",
-          }
-        },
-        {
-          text: "성함",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(mainTop) + ea,
-            fontSize: String(mainSize) + ea,
-            fontWeight: String(mainWeight),
-            color: colorChip.black,
-            verticalAlign: "top",
-          }
-        },
-        {
-          style: {
-            position: "absolute",
-            top: String(grayTop) + ea,
-            left: String(leftGrayType0) + ea,
-            width: String(widthGrayType0) + ea,
-            height: String(grayHeight) + ea,
-            background: colorChip.gray1,
-            borderRadius: String(3) + "px",
-          }
-        },
-        {
-          mode: "input",
-          class: [ inputClassName ],
-          attribute: {
-            type: "text",
-            placeholder: "성함",
-            property: "name",
-            value: "",
-          },
-          event: {
-            blur: nameBlurEvent,
-          },
-          style: {
-            position: "absolute",
-            top: String(grayInputTop) + ea,
-            left: String(leftGrayType0) + ea,
-            width: String(widthGrayType0) + ea,
-            height: String(grayHeight) + ea,
-            outline: String(0),
-            border: String(0),
-            fontSize: String(inputSize) + ea,
-            fontWeight: String(inputWeight),
-            color: colorChip.black,
-            textAlign: "center",
-            background: "transparent",
-          }
-        },
-      ]
-    });
-    // 2
-    createNode({
-      mother: rightBox,
-      style: {
-        display: "block",
-        position: "relative",
-        marginBottom: String(blockMarginBottom) + ea,
-        height: String(moduleHeight) + ea,
-      },
-      children: [
-        {
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(circleRadius * 2) + ea,
-            height: String(circleRadius * 2) + ea,
-            borderRadius: String(circleRadius * 2) + ea,
-            background:  colorChip.green,
-            marginRight: String(circleBetween) + ea,
-            top: String(circleTop) + ea,
-            verticalAlign: "top",
-          }
-        },
-        {
-          text: "연락처",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(mainTop) + ea,
-            fontSize: String(mainSize) + ea,
-            fontWeight: String(mainWeight),
-            color: colorChip.black,
-            verticalAlign: "top",
-          }
-        },
-        {
-          style: {
-            position: "absolute",
-            top: String(grayTop) + ea,
-            left: String(leftGrayType0) + ea,
-            width: String(widthGrayType0) + ea,
-            height: String(grayHeight) + ea,
-            background: colorChip.gray1,
-            borderRadius: String(3) + "px",
-          }
-        },
-        {
-          mode: "input",
-          class: [ inputClassName ],
-          attribute: {
-            type: "text",
-            placeholder: "010-0000-0000",
-            property: "phone",
-            value: "",
-          },
-          event: {
-            keyup: phoneHypenEvent,
-            blur: phoneBlurEvent,
-          },
-          style: {
-            position: "absolute",
-            top: String(grayInputTop) + ea,
-            left: String(leftGrayType0) + ea,
-            width: String(widthGrayType0) + ea,
-            height: String(grayHeight) + ea,
-            outline: String(0),
-            border: String(0),
-            fontSize: String(inputSize) + ea,
-            fontWeight: String(inputWeight),
-            color: colorChip.black,
-            textAlign: "center",
-            background: "transparent",
-          }
-        },
-      ]
-    });
-    // 3
-    createNode({
-      mother: rightBox,
-      style: {
-        display: "block",
-        position: "relative",
-        marginBottom: String(blockMarginBottom) + ea,
-        height: String(moduleHeight) + ea,
-      },
-      children: [
-        {
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(circleRadius * 2) + ea,
-            height: String(circleRadius * 2) + ea,
-            borderRadius: String(circleRadius * 2) + ea,
-            background:  colorChip.green,
-            marginRight: String(circleBetween) + ea,
-            top: String(circleTop) + ea,
-            verticalAlign: "top",
-          }
-        },
-        {
-          text: "이메일",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(mainTop) + ea,
-            fontSize: String(mainSize) + ea,
-            fontWeight: String(mainWeight),
-            color: colorChip.black,
-            verticalAlign: "top",
-          }
-        },
-        {
-          style: {
-            position: "absolute",
-            top: String(grayTop) + ea,
-            left: String(leftGrayType0) + ea,
-            width: String(widthGrayType1) + ea,
-            height: String(grayHeight) + ea,
-            background: colorChip.gray1,
-            borderRadius: String(3) + "px",
-          }
-        },
-        {
-          mode: "input",
-          class: [ inputClassName ],
-          attribute: {
-            type: "text",
-            placeholder: "example@home-liaison.com",
-            property: "email",
-            value: "",
-          },
-          style: {
-            position: "absolute",
-            top: String(grayInputTop) + ea,
-            left: String(leftGrayType0) + ea,
-            width: String(widthGrayType1) + ea,
-            height: String(grayHeight) + ea,
-            outline: String(0),
-            border: String(0),
-            fontSize: String(inputSize) + ea,
-            fontWeight: String(inputWeight),
-            color: colorChip.black,
-            textAlign: "left",
-            background: "transparent",
-            textIndent: String(inputIndent) + ea,
-          }
-        },
-      ]
-    });
-    // 4
-    createNode({
-      mother: rightBox,
-      style: {
-        display: "block",
-        position: "relative",
-        marginBottom: String(blockMarginBottom) + ea,
-        height: String(moduleHeight) + ea,
-      },
-      children: [
-        {
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(circleRadius * 2) + ea,
-            height: String(circleRadius * 2) + ea,
-            borderRadius: String(circleRadius * 2) + ea,
-            background:  colorChip.green,
-            marginRight: String(circleBetween) + ea,
-            top: String(circleTop) + ea,
-            verticalAlign: "top",
-          }
-        },
-        {
-          text: "주소",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(mainTop) + ea,
-            fontSize: String(mainSize) + ea,
-            fontWeight: String(mainWeight),
-            color: colorChip.black,
-            verticalAlign: "top",
-          }
-        },
-        {
-          event: {
-            click: addressButtonEvent
-          },
-          style: {
-            position: "absolute",
-            top: String(grayTop) + ea,
-            left: String(leftGrayType0) + ea,
-            width: String(addressWidth) + ea,
-            height: String(grayHeight) + ea,
-            background: colorChip.gradientGreen,
-            borderRadius: String(3) + "px",
-            cursor: "pointer",
-          },
-          children: [
-            {
-              text: "검색",
-              style: {
-                width: String(100) + '%',
-                textAlign: "center",
-                fontSize: String(addressSize) + ea,
-                fontWeight: String(addressWeight),
-                color: colorChip.white,
-                position: "relative",
-                top: String(addressTop) + ea,
-              }
-            }
-          ]
-        },
-        {
-          style: {
-            position: "absolute",
-            top: String(grayTop) + ea,
-            left: String(leftGrayType3) + ea,
-            width: String(widthGrayType3) + ea,
-            height: String(grayHeight) + ea,
-            background: colorChip.gray1,
-            borderRadius: String(3) + "px",
-          }
-        },
-        {
-          mode: "input",
-          class: [ inputClassName ],
-          attribute: {
-            type: "text",
-            placeholder: "주소",
-            property: "address0",
-            value: "",
-          },
-          style: {
-            position: "absolute",
-            top: String(grayInputTop) + ea,
-            left: String(leftGrayType3) + ea,
-            width: String(widthGrayType3) + ea,
-            height: String(grayHeight) + ea,
-            outline: String(0),
-            border: String(0),
-            fontSize: String(inputSize) + ea,
-            fontWeight: String(inputWeight),
-            color: colorChip.black,
-            textAlign: "left",
-            background: "transparent",
-            textIndent: String(inputIndent) + ea,
-          }
-        },
-      ]
-    });
-    // 5
-    createNode({
-      mother: rightBox,
-      style: {
-        display: "block",
-        position: "relative",
-        marginBottom: String(blockMarginBottom) + ea,
-        height: String(moduleHeight) + ea,
-      },
-      children: [
-        {
-          style: {
-            position: "absolute",
-            top: String(grayTop) + ea,
-            left: String(leftGrayType0) + ea,
-            width: String(widthGrayType1) + ea,
-            height: String(grayHeight) + ea,
-            background: colorChip.gray1,
-            borderRadius: String(3) + "px",
-          }
-        },
-        {
-          mode: "input",
-          class: [ inputClassName ],
-          attribute: {
-            type: "text",
-            placeholder: "인테리어 받을 곳의 상세 주소",
-            property: "address1",
-            value: "",
-          },
-          event: {
-            focus: addressFocusEvent,
-            blur: addressBlurEvent,
-          },
-          style: {
-            position: "absolute",
-            top: String(grayInputTop) + ea,
-            left: String(leftGrayType0) + ea,
-            width: String(widthGrayType1) + ea,
-            height: String(grayHeight) + ea,
-            outline: String(0),
-            border: String(0),
-            fontSize: String(inputSize) + ea,
-            fontWeight: String(inputWeight),
-            color: colorChip.black,
-            textAlign: "left",
-            background: "transparent",
-            textIndent: String(inputIndent) + ea,
-          }
-        },
-      ]
-    });
-    // 7 : margin
-    createNode({
-      mother: rightBox,
-      style: {
-        display: "block",
-        position: "relative",
-        marginBottom: String(blockMarginBottom) + ea,
-        height: String(moduleHeight * marginRatio) + ea,
+        ]
       }
-    });
-    // 8
-    createNode({
-      mother: rightBox,
-      style: {
-        display: "block",
-        position: "relative",
-        marginBottom: String(blockMarginBottom) + ea,
-        height: String(moduleHeight) + ea,
-      },
-      children: [
-        {
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(circleRadius * 2) + ea,
-            height: String(circleRadius * 2) + ea,
-            borderRadius: String(circleRadius * 2) + ea,
-            background:  colorChip.green,
-            marginRight: String(circleBetween) + ea,
-            top: String(circleTop) + ea,
-            verticalAlign: "top",
-          }
+    ]
+  }).firstChild.firstChild;
+
+  agreeTong = createNode({
+    mother: policyArea,
+    attribute: {
+      toggle: "on",
+    },
+    style: {
+      display: "flex",
+      position: "relative",
+      flexDirection: "row-reverse",
+      marginLeft: String(innerPadding) + ea,
+      width: withOut(innerPadding * 2, ea),
+      marginTop: String(agreeTongMarginTop) + ea,
+      cursor: "pointer",
+    },
+    children: [
+      {
+        class: [ agreeTargetClassName ],
+        attribute: {
+          toggle: "on",
         },
-        {
-          text: "분양 평수",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(mainTop) + ea,
-            fontSize: String(mainSize) + ea,
-            fontWeight: String(mainWeight),
-            color: colorChip.black,
-            verticalAlign: "top",
-          }
+        event: {
+          click: agreeToggleEvent
         },
-        {
-          style: {
-            position: "absolute",
-            top: String(grayTop) + ea,
-            left: String(leftGrayType1) + ea,
-            width: String(widthGrayType0) + ea,
-            height: String(grayHeight) + ea,
-            background: colorChip.gray1,
-            borderRadius: String(3) + "px",
-          }
-        },
-        {
-          mode: "input",
-          class: [ inputClassName ],
-          attribute: {
-            type: "text",
-            placeholder: "00평 (분양 평수)",
-            property: "pyeong",
-            value: "",
-          },
-          event: {
-            keyup: pyeongNumberEvent,
-            blur: pyeongBlurEvent,
-            focus: pyeongFocusEvent,
-          },
-          style: {
-            position: "absolute",
-            top: String(grayInputTop) + ea,
-            left: String(leftGrayType1) + ea,
-            width: String(widthGrayType0) + ea,
-            height: String(grayHeight) + ea,
-            outline: String(0),
-            border: String(0),
-            fontSize: String(inputSize) + ea,
-            fontWeight: String(inputWeight),
-            color: colorChip.black,
-            textAlign: "center",
-            background: "transparent",
-          }
-        },
-      ]
-    });
-    // 11
-    createNode({
-      mother: rightBox,
-      style: {
-        display: "block",
-        position: "relative",
-        marginBottom: String(blockMarginBottom) + ea,
-        height: String(moduleHeight) + ea,
-      },
-      children: [
-        {
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(circleRadius * 2) + ea,
-            height: String(circleRadius * 2) + ea,
-            borderRadius: String(circleRadius * 2) + ea,
-            background:  colorChip.green,
-            marginRight: String(circleBetween) + ea,
-            top: String(circleTop) + ea,
-            verticalAlign: "top",
-          }
-        },
-        {
-          text: "거주 여부",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(mainTop) + ea,
-            fontSize: String(mainSize) + ea,
-            fontWeight: String(mainWeight),
-            color: colorChip.black,
-            verticalAlign: "top",
-          }
-        },
-        {
-          class: [ inputClassName ],
-          attribute: {
-            toggle: "on",
-            property: "living",
-          },
-          event: {
-            click: checkboxClickEvent0
-          },
-          style: {
-            position: "absolute",
-            top: String(0),
-            left: String(leftCheck0) + ea,
-            height: String(100) + '%',
-            verticalAlign: "top",
-            cursor: "pointer",
-          },
-          children: [
-            {
-              mode: "svg",
-              source: instance.mother.returnCheckBox(colorChip.gray3),
-              style: {
-                display: "inline-block",
-                position: "relative",
-                width: String(checkboxWidth) + ea,
-                top: String(checkboxTop) + ea,
-                verticalAlign: "top",
-                cursor: "pointer",
-                opacity: String(0),
-              }
-            },
-            {
-              mode: "svg",
-              source: instance.mother.returnCheckBox(colorChip.green),
-              style: {
-                position: "absolute",
-                width: String(checkboxWidth) + ea,
-                top: String(checkboxTop) + ea,
-                left: String(0),
-                verticalAlign: "top",
-                cursor: "pointer",
-                opacity: String(1),
-              }
-            },
-            {
-              text: "이사",
-              style: {
-                display: "inline-block",
-                position: "relative",
-                marginLeft: String(checkboxBetween) + ea,
-                top: String(mobileCheckBoxMainTop) + ea,
-                fontSize: String(mobileCheckBoxMainSize) + ea,
-                fontWeight: String(checkboxWeight),
-                color: colorChip.green,
-                verticalAlign: "top",
-                cursor: "pointer",
-              }
-            },
-          ]
-        },
-        {
-          class: [ inputClassName ],
-          attribute: {
-            toggle: "off",
-            property: "living",
-          },
-          event: {
-            click: checkboxClickEvent0
-          },
-          style: {
-            position: "absolute",
-            top: String(0),
-            left: String(leftCheck1) + ea,
-            height: String(100) + '%',
-            verticalAlign: "top",
-            cursor: "pointer",
-          },
-          children: [
-            {
-              mode: "svg",
-              source: instance.mother.returnCheckBox(colorChip.gray3),
-              style: {
-                display: "inline-block",
-                position: "relative",
-                width: String(checkboxWidth) + ea,
-                top: String(checkboxTop) + ea,
-                verticalAlign: "top",
-                cursor: "pointer",
-                opacity: String(1),
-              }
-            },
-            {
-              mode: "svg",
-              source: instance.mother.returnCheckBox(colorChip.green),
-              style: {
-                position: "absolute",
-                width: String(checkboxWidth) + ea,
-                top: String(checkboxTop) + ea,
-                left: String(0),
-                verticalAlign: "top",
-                cursor: "pointer",
-                opacity: String(0),
-              }
-            },
-            {
-              text: "거주중",
-              style: {
-                display: "inline-block",
-                position: "relative",
-                marginLeft: String(checkboxBetween) + ea,
-                top: String(mobileCheckBoxMainTop) + ea,
-                fontSize: String(mobileCheckBoxMainSize) + ea,
-                fontWeight: String(checkboxWeight),
-                color: colorChip.black,
-                verticalAlign: "top",
-                cursor: "pointer",
-              }
-            },
-          ]
-        },
-      ]
-    });
-    // 10
-    createNode({
-      mother: rightBox,
-      style: {
-        display: "block",
-        position: "relative",
-        marginBottom: String(blockMarginBottom) + ea,
-        height: String(moduleHeight) + ea,
-      },
-      children: [
-        {
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(circleRadius * 2) + ea,
-            height: String(circleRadius * 2) + ea,
-            borderRadius: String(circleRadius * 2) + ea,
-            background:  colorChip.green,
-            marginRight: String(circleBetween) + ea,
-            top: String(circleTop) + ea,
-            verticalAlign: "top",
-          }
-        },
-        {
-          text: "입주일",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(mainTop) + ea,
-            fontSize: String(mainSize) + ea,
-            fontWeight: String(mainWeight),
-            color: colorChip.black,
-            verticalAlign: "top",
-          }
-        },
-        {
-          style: {
-            position: "absolute",
-            top: String(grayTop) + ea,
-            left: String(leftGrayType1) + ea,
-            width: String(widthGrayType0) + ea,
-            height: String(grayHeight) + ea,
-            background: colorChip.gray1,
-            borderRadius: String(3) + "px",
-          }
-        },
-        {
-          mode: "input",
-          class: [ inputClassName ],
-          attribute: {
-            type: "text",
-            placeholder: dateToString(new Date()),
-            property: "movein",
-            value: "",
-          },
-          event: {
-            click: calendarViewEvent,
-          },
-          style: {
-            position: "absolute",
-            top: String(grayInputTop) + ea,
-            left: String(leftGrayType1) + ea,
-            width: String(widthGrayType0) + ea,
-            height: String(grayHeight) + ea,
-            outline: String(0),
-            border: String(0),
-            fontSize: String(inputSize) + ea,
-            fontWeight: String(inputWeight),
-            color: colorChip.black,
-            textAlign: "center",
-            background: "transparent",
-          }
-        },
-      ]
-    });
-    // 18
-    createNode({
-      mother: rightBox,
-      style: {
-        display: "block",
-        position: "relative",
-        marginBottom: String(blockMarginBottom) + ea,
-        height: String(moduleHeight) + ea,
-      },
-      children: [
-        {
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(circleRadius * 2) + ea,
-            height: String(circleRadius * 2) + ea,
-            borderRadius: String(circleRadius * 2) + ea,
-            background:  colorChip.green,
-            marginRight: String(circleBetween) + ea,
-            top: String(circleTop) + ea,
-            verticalAlign: "top",
-          }
-        },
-        {
-          text: "요청 사항",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(mainTop) + ea,
-            fontSize: String(mainSize) + ea,
-            fontWeight: String(mainWeight),
-            color: colorChip.black,
-            verticalAlign: "top",
-          }
-        },
-        {
-          style: {
-            position: "absolute",
-            top: String(grayTextAreaTop) + ea,
-            left: String(leftGrayType1) + ea,
-            width: String(grayTextAreaWidth) + ea,
-            height: String(grayBigHeight) + ea,
-            background: colorChip.gray1,
-            borderRadius: String(3) + "px",
-          }
-        },
-        {
-          mode: "textarea",
-          class: [ inputClassName ],
-          attribute: {
-            placeholder: "선호 스타일과 공간 사항을 적어주세요!\n(예) 모던 프렌치 홈스타일링을 원해요.\n(예) 팬트리가 있어요.\n(예) 복층 공간입니다.",
-            property: "etc",
-          },
-          style: {
-            position: "absolute",
-            top: String(grayTextAreaTop + textareaTop) + ea,
-            left: String(leftGrayType1 + textareaLeft) + ea,
-            width: String(grayTextAreaWidth - (textareaLeft * 2)) + ea,
-            height: String(grayBigHeight - (textareaTop * 1)) + ea,
-            fontSize: String(inputSize) + ea,
-            fontWeight: String(grayLineBlockFontWeight),
-            border: String(0),
-            background: "transparent",
-            outline: String(0),
-            overflow: "scroll",
-            lineHeight: String(1.6),
-            color: colorChip.black,
-          }
+        text: "상기 개인정보 취급 방침에 동의합니다.",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(agreeSize) + ea,
+          fontWeight: String(agreeWeight),
+          color: colorChip.green,
+          lineHeight: String(agreeLineHeight),
+          cursor: "pointer",
         }
-      ]
-    });
-  }
+      },
+      {
+        class: [ agreeTargetClassName ],
+        attribute: {
+          toggle: "on",
+        },
+        event: {
+          click: agreeToggleEvent
+        },
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: String(agreeCircleRadius) + ea,
+          height: String(agreeCircleRadius) + ea,
+          borderRadius: String(agreeCircleRadius) + ea,
+          background: colorChip.green,
+          top: String(agreeCircleTop) + ea,
+          marginRight: String(agreeCircleMarginRight) + ea,
+          cursor: "pointer",
+        }
+      }
+    ]
+  });
+
+  submitTong = createNode({
+    mother: policyArea,
+    style: {
+      display: "block",
+      position: "relative",
+      marginTop: String(submitTongMarginTop) + ea,
+      textAlign: "center",
+    },
+    children: [
+      {
+        class: [ "submitButtonClassName" ],
+        event: {
+          click: instance.finalSubmit()
+        },
+        style: {
+          display: "inline-flex",
+          width: String(submitButtonWidth) + ea,
+          height: String(submitButtonHeight) + ea,
+          background: colorChip.gradientGreen,
+          borderRadius: String(5) + "px",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          cursor: "pointer",
+        },
+        children: [
+          {
+            text: "상담 신청하기",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(submitSize) + ea,
+              fontWeight: String(submitWeight),
+              color: colorChip.white,
+              lineHeight: String(submitLineHeight),
+              top: String(submitTextTop) + ea,
+            }
+          }
+        ]
+      }
+    ]
+  });
+
+
+  ajaxJson({}, "https://" + GHOSTHOST + "/designerProposal_policy").then(function (res) {
+    const { policy } = res;
+    let bTags;
+    policyTong.insertAdjacentHTML("beforeend", policy);
+    bTags = policyTong.querySelectorAll("b");
+    for (let b of bTags) {
+      b.style.color = colorChip.black;
+      b.style.fontWeight = String(600);
+    }
+  }).catch(function (err) {
+    throw new Error(err);
+  });
+
 }
 
 ClientConsultingJs.prototype.finalSubmit = function () {
   const instance = this;
-  const { inputClassName } = this;
+  const inputClassName = "inputClassName";
+  const agreeTargetClassName = "agreeTargetClassName";
   const { ajaxJson, colorChip, findByAttribute, scrollTo, dateToString, sleep, selfHref, homeliaisonAnalytics } = GeneralJs;
   return async function (e) {
     try {
@@ -2735,132 +2088,138 @@ ClientConsultingJs.prototype.finalSubmit = function () {
       let onValue;
       let boo;
 
-      visualSpecific = 150;
+      if (document.querySelector('.' + agreeTargetClassName).getAttribute("toggle") === "off") {
+        window.alert("개인정보 취급 방침에 동의해주세요!");
+      } else {
 
-      properties = [];
-      for (let dom of targets) {
-        properties.push(dom.getAttribute(property));
-      }
-      properties = [ ...new Set(properties) ];
+        visualSpecific = 150;
 
-      map = [];
-      boo = true;
-      for (let p of properties) {
-        tempObj = {};
-        tempObj.property = p;
+        properties = [];
+        for (let dom of targets) {
+          properties.push(dom.getAttribute(property));
+        }
+        properties = [ ...new Set(properties) ];
 
-        firstDom = findByAttribute(targets, property, p);
-        nodeName = firstDom.nodeName;
-        if (/INPUT/gi.test(nodeName) || /TEXTAREA/gi.test(nodeName)) {
-          try {
+        map = [];
+        boo = true;
+        for (let p of properties) {
+          tempObj = {};
+          tempObj.property = p;
 
-            if (p === "name") {
-              firstDom.value = firstDom.value.replace(/[^a-zA-Z가-힣]/gi, '');
-              if (firstDom.value.trim() === '') {
-                throw new Error("성함을 입력해주세요!");
+          firstDom = findByAttribute(targets, property, p);
+          nodeName = firstDom.nodeName;
+          if (/INPUT/gi.test(nodeName) || /TEXTAREA/gi.test(nodeName)) {
+            try {
+
+              if (p === "name") {
+                firstDom.value = firstDom.value.replace(/[^a-zA-Z가-힣]/gi, '');
+                if (firstDom.value.trim() === '') {
+                  throw new Error("성함을 입력해주세요!");
+                }
+                name = firstDom.value.trim();
+              } else if (p === "phone") {
+                firstDom.value = firstDom.value.replace(/[^0-9\-]/gi, '');
+                if (firstDom.value.trim() === '') {
+                  throw new Error("연락처를 입력해주세요!");
+                }
+                phone = firstDom.value.trim();
+              } else if (p === "address0") {
+                firstDom.value = firstDom.value.trim();
+                if (firstDom.value.trim() === '') {
+                  throw new Error("주소를 검색하여 입력해주세요!");
+                }
+              } else if (p === "address1") {
+                firstDom.value = firstDom.value.trim();
+                if (firstDom.value.trim() === '') {
+                  throw new Error("상세 주소를 적어주세요!");
+                }
+              } else if (p === "email") {
+                firstDom.value = firstDom.value.trim();
+                if (firstDom.value.trim() === '') {
+                  throw new Error("이메일 주소를 적어주세요!");
+                }
+              } else if (p === "pyeong") {
+                firstDom.value = firstDom.value.replace(/[^0-9\.]/gi, '');
+                if (firstDom.value.trim() === '' || Number.isNaN(Number(firstDom.value.trim())) || Number(firstDom.value.trim()) === 0) {
+                  throw new Error("분양 평수를 알려주세요!");
+                }
+              } else if (p === "movein") {
+                firstDom.value = firstDom.value.replace(/[^0-9\-]/gi, '').trim();
+                if (!/[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/gi.test(firstDom.value.trim())) {
+                  throw new Error("입주 예정일을 알려주세요! (정해지지 않았을 경우, 예상되는 날짜를 찍어주세요!)");
+                }
               }
-              name = firstDom.value.trim();
-            } else if (p === "phone") {
-              firstDom.value = firstDom.value.replace(/[^0-9\-]/gi, '');
-              if (firstDom.value.trim() === '') {
-                throw new Error("연락처를 입력해주세요!");
-              }
-              phone = firstDom.value.trim();
-            } else if (p === "address0") {
-              firstDom.value = firstDom.value.trim();
-              if (firstDom.value.trim() === '') {
-                throw new Error("주소를 검색하여 입력해주세요!");
-              }
-            } else if (p === "address1") {
-              firstDom.value = firstDom.value.trim();
-              if (firstDom.value.trim() === '') {
-                throw new Error("상세 주소를 적어주세요!");
-              }
-            } else if (p === "email") {
-              firstDom.value = firstDom.value.trim();
-              if (firstDom.value.trim() === '') {
-                throw new Error("이메일 주소를 적어주세요!");
-              }
-            } else if (p === "pyeong") {
-              firstDom.value = firstDom.value.replace(/[^0-9\.]/gi, '');
-              if (firstDom.value.trim() === '' || Number.isNaN(Number(firstDom.value.trim())) || Number(firstDom.value.trim()) === 0) {
-                throw new Error("분양 평수를 알려주세요!");
-              }
-            } else if (p === "movein") {
-              firstDom.value = firstDom.value.replace(/[^0-9\-]/gi, '').trim();
-              if (!/[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/gi.test(firstDom.value.trim())) {
-                throw new Error("입주 예정일을 알려주세요! (정해지지 않았을 경우, 예상되는 날짜를 찍어주세요!)");
-              }
-            }
 
-            tempObj.value = firstDom.value.replace(/[\=\+\&\>\<\/\\\{\}\[\]\`]/gi, '');
+              tempObj.value = firstDom.value.replace(/[\=\+\&\>\<\/\\\{\}\[\]\`]/gi, '');
 
-          } catch (e) {
-            window.alert(e.message);
-            boo = false;
-            scrollTo(window, firstDom, visualSpecific);
-            firstDom.previousElementSibling.style.border = "1px solid " + colorChip.green;
-            if (typeof firstDom.focus === "function") {
-              firstDom.focus();
-            }
-            break;
-          }
-        } else {
-
-          tempTargets = [];
-          for (let dom of targets) {
-            if (dom.getAttribute(property) === p) {
-              tempTargets.push(dom);
-            }
-          }
-
-          onValue = '';
-          for (let dom of tempTargets) {
-            if (dom.getAttribute("toggle") === "on") {
-              onValue = dom.textContent.trim();
+            } catch (e) {
+              window.alert(e.message);
+              boo = false;
+              scrollTo(window, firstDom, visualSpecific);
+              firstDom.previousElementSibling.style.border = "1px solid " + colorChip.green;
+              if (typeof firstDom.focus === "function") {
+                firstDom.focus();
+              }
               break;
             }
-          }
-          tempObj.value = onValue;
+          } else {
 
+            tempTargets = [];
+            for (let dom of targets) {
+              if (dom.getAttribute(property) === p) {
+                tempTargets.push(dom);
+              }
+            }
+
+            onValue = '';
+            for (let dom of tempTargets) {
+              if (dom.getAttribute("toggle") === "on") {
+                onValue = dom.textContent.trim();
+                break;
+              }
+            }
+            tempObj.value = onValue;
+
+          }
+          map.push(tempObj)
         }
-        map.push(tempObj)
-      }
 
-      if (typeof instance.googleClientId === "string") {
-        map.push({
-          property: "googleId",
-          value: instance.googleClientId
-        });
-      } else {
-        map.push({
-          property: "googleId",
-          value: ""
-        });
-      }
+        if (typeof instance.googleClientId === "string") {
+          map.push({
+            property: "googleId",
+            value: instance.googleClientId
+          });
+        } else {
+          map.push({
+            property: "googleId",
+            value: ""
+          });
+        }
 
-      if (boo) {
-        instance.mother.certificationBox(name, phone, async function (back, box) {
-          try {
-            const { cliid } = await ajaxJson({ map }, "/clientSubmit");
-            homeliaisonAnalytics({
-              page: instance.pageName,
-              standard: instance.firstPageViewTime,
-              action: "login",
-              data: { cliid },
-            }).then(() => {
-              document.body.removeChild(box);
-              document.body.removeChild(back);
-              selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/curation/?cliid=" + cliid);
-            }).catch((err) => {
-              document.body.removeChild(box);
-              document.body.removeChild(back);
-              selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/curation/?cliid=" + cliid);
-            });
-          } catch (e) {
-            await ajaxJson({ message: "ClientConsultingJs.certificationBox : " + e.message }, "/errorLog");
-          }
-        });
+        if (boo) {
+          instance.mother.certificationBox(name, phone, async function (back, box) {
+            try {
+              const { cliid } = await ajaxJson({ map }, "/clientSubmit");
+              homeliaisonAnalytics({
+                page: instance.pageName,
+                standard: instance.firstPageViewTime,
+                action: "login",
+                data: { cliid },
+              }).then(() => {
+                document.body.removeChild(box);
+                document.body.removeChild(back);
+                selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/curation/?cliid=" + cliid);
+              }).catch((err) => {
+                document.body.removeChild(box);
+                document.body.removeChild(back);
+                selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/curation/?cliid=" + cliid);
+              });
+            } catch (e) {
+              await ajaxJson({ message: "FrontAboutJs.certificationBox : " + e.message }, "/errorLog");
+            }
+          });
+        }
+
       }
 
     } catch (e) {
@@ -3319,8 +2678,6 @@ ClientConsultingJs.prototype.launching = async function (loading) {
         try {
           instance.insertInitBox();
           instance.insertConsultingBox();
-          instance.insertPannelBox();
-          // instance.insertStrongBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "ClientConsultingJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
         }
