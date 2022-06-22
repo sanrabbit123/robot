@@ -2636,9 +2636,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "민수진",
-    //     designer: "강주현",
-    //     link: "https://drive.google.com/drive/folders/1_zAuCo1YVge-m2olfAofsvD6HrP-10xr",
+    //     client: "신유진",
+    //     designer: "박미연",
+    //     link: "https://drive.google.com/drive/folders/19qjUnI4PBg4j-PSRaSTPPN9EPmSH86A2",
     //     pay: true
     //   },
     // ]);
@@ -2668,7 +2668,7 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2112_aa01s" ]);
+    // await work.newDesignerToFront([ "d2201_aa02s" ]);
 
 
     // new designer set proposal setting
