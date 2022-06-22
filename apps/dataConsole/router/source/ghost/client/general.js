@@ -528,7 +528,7 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
       this.homeliaisonTalk({}, true);
     } else {
       this.footerMake();
-      this.homeliaisonTalk();
+      this.greenTalk();
     }
     this.totalContents.style.height = "auto";
 

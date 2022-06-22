@@ -69,6 +69,9 @@ GeneralJs.svgMaker = {
   },
   calendarIcon: function (color) {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1343.66 1279.127"><path fill="${color}" d="M1343.66 90.609c0-35.574-20.504-66.354-50.336-81.182 -1.354-0.673-2.728-1.313-4.12-1.92 -1.225-0.534-2.463-1.041-3.715-1.521 -0.873-0.335-1.753-0.657-2.639-0.965 -2.514-0.875-5.077-1.643-7.686-2.298C1268.085 0.947 1260.679 0 1253.051 0H90.609C72.315 0 55.29 5.427 41.048 14.751c-0.976 0.639-1.942 1.291-2.891 1.966 -0.849 0.604-1.683 1.227-2.51 1.859 -3.773 2.883-7.317 6.052-10.59 9.482 -0.046 0.048-0.092 0.098-0.138 0.146 -0.908 0.955-1.794 1.931-2.66 2.925 -1.069 1.227-2.105 2.484-3.107 3.768C7.152 50.264 0 69.601 0 90.609v169.702h0v928.208c0 50.042 40.567 90.609 90.609 90.609h1162.442c50.042 0 90.609-40.567 90.609-90.609V260.311h0V90.609zM1291.361 1188.518c0 21.158-17.152 38.311-38.311 38.311H90.609c-21.158 0-38.311-17.152-38.311-38.311V280.009c0-10.879 8.819-19.699 19.699-19.699h1199.666c10.879 0 19.699 8.819 19.699 19.699V1188.518z"/><path fill="${color}" d="M358.2 576.714h-161.176c-9.348 0-16.927-7.578-16.927-16.927V398.612c0-9.348 7.578-16.927 16.927-16.927h161.176c9.348 0 16.927 7.578 16.927 16.927v161.176C375.127 569.136 367.548 576.714 358.2 576.714z"/><path fill="${color}" d="M620.995 576.714H459.82c-9.348 0-16.927-7.578-16.927-16.927V398.612c0-9.348 7.578-16.927 16.927-16.927h161.176c9.348 0 16.927 7.578 16.927 16.927v161.176C637.922 569.136 630.344 576.714 620.995 576.714z"/><path fill="${color}" d="M883.792 576.714H722.616c-9.348 0-16.927-7.578-16.927-16.927V398.612c0-9.348 7.578-16.927 16.927-16.927h161.176c9.348 0 16.927 7.578 16.927 16.927v161.176C900.718 569.136 893.14 576.714 883.792 576.714z"/><path fill="${color}" d="M1146.588 576.714H985.412c-9.348 0-16.927-7.578-16.927-16.927V398.612c0-9.348 7.578-16.927 16.927-16.927h161.176c9.348 0 16.927 7.578 16.927 16.927v161.176C1163.515 569.136 1155.936 576.714 1146.588 576.714z"/><path fill="${color}" d="M358.2 839.509h-161.176c-9.348 0-16.927-7.578-16.927-16.927V661.407c0-9.348 7.578-16.927 16.927-16.927h161.176c9.348 0 16.927 7.578 16.927 16.927v161.176C375.127 831.931 367.548 839.509 358.2 839.509z"/><path fill="${color}" d="M620.995 839.509H459.82c-9.348 0-16.927-7.578-16.927-16.927V661.407c0-9.348 7.578-16.927 16.927-16.927h161.176c9.348 0 16.927 7.578 16.927 16.927v161.176C637.922 831.931 630.344 839.509 620.995 839.509z"/><path fill="${color}" d="M883.792 839.509H722.616c-9.348 0-16.927-7.578-16.927-16.927V661.407c0-9.348 7.578-16.927 16.927-16.927h161.176c9.348 0 16.927 7.578 16.927 16.927v161.176C900.718 831.931 893.14 839.509 883.792 839.509z"/><path fill="${color}" d="M1146.588 839.509H985.412c-9.348 0-16.927-7.578-16.927-16.927V661.407c0-9.348 7.578-16.927 16.927-16.927h161.176c9.348 0 16.927 7.578 16.927 16.927v161.176C1163.515 831.931 1155.936 839.509 1146.588 839.509z"/><path fill="${color}" d="M358.2 1102.305h-161.176c-9.348 0-16.927-7.578-16.927-16.927V924.202c0-9.348 7.578-16.927 16.927-16.927h161.176c9.348 0 16.927 7.578 16.927 16.927v161.176C375.127 1094.726 367.548 1102.305 358.2 1102.305z"/><path fill="${color}" d="M620.995 1102.305H459.82c-9.348 0-16.927-7.578-16.927-16.927V924.202c0-9.348 7.578-16.927 16.927-16.927h161.176c9.348 0 16.927 7.578 16.927 16.927v161.176C637.922 1094.726 630.344 1102.305 620.995 1102.305z"/><path fill="${color}" d="M883.792 1102.305H722.616c-9.348 0-16.927-7.578-16.927-16.927V924.202c0-9.348 7.578-16.927 16.927-16.927h161.176c9.348 0 16.927 7.578 16.927 16.927v161.176C900.718 1094.726 893.14 1102.305 883.792 1102.305z"/><path fill="${color}" d="M1146.588 1102.305H985.412c-9.348 0-16.927-7.578-16.927-16.927V924.202c0-9.348 7.578-16.927 16.927-16.927h161.176c9.348 0 16.927 7.578 16.927 16.927v161.176C1163.515 1094.726 1155.936 1102.305 1146.588 1102.305z"/></svg>`;
+  },
+  interactionIcon: function (color) {
+    return `<svg xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 157.123 136.627"><path d="M129.909 100.943c-0.036-0.942 0.417-1.842 1.193-2.377 15.607-10.751 26.021-25.595 26.021-42.495C157.123 24.914 125.206 0 85.836 0S14.549 24.914 14.549 56.071s31.916 55.727 71.287 55.727c3.2 0 6.35-0.169 9.439-0.493 1.217-0.128 2.427 0.239 3.388 0.997 11.411 8.991 28.209 14.495 42.154 15.168 0.974 0.047 1.498-1.129 0.81-1.821C137.912 121.911 130.361 112.89 129.909 100.943z" fill="${color}"/><path d="M33.147 98.552C20.886 89.012 13.323 76.646 11.353 63.176 4.268 69.82 0 78.401 0 87.817 0 99.343 7.088 109.47 17.718 116.814c0.567 0.392 0.907 1.042 0.879 1.731 -0.34 8.333-5.726 14.574-8.186 17.004 -0.408 0.403-0.109 1.101 0.464 1.077 9.433-0.395 20.845-4.059 28.709-10.09 0.906-0.695 2.032-1.031 3.169-0.921 1.956 0.19 3.948 0.289 5.969 0.289 13.053 0 24.907-3.952 33.654-10.453C63.758 114.795 46.388 108.854 33.147 98.552z" fill="${color}"/></svg>`;
   }
 }
 
@@ -4475,6 +4478,83 @@ GeneralJs.prototype.footerMake = function (type = 'A', color = "gradientGreen", 
   if (mobileForce) {
     document.getElementById("totalcontents").appendChild(div_clone);
   }
+}
+
+GeneralJs.prototype.greenTalk = function () {
+  const instance = this;
+  const { createNode, createNodes, colorChip, withOut, ajaxJson } = GeneralJs;
+  const media = GeneralJs.stacks.updateMiddleMedialQueryConditions;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const small = media[3] || media[4];
+  const big = !small;
+  const ea = desktop ? "px" : "vw";
+  const totalContents = document.getElementById("totalcontents");
+  const zIndex = 1;
+  let baseWidth, right, bottom;
+  let iconWidth;
+  let greenBase;
+  let iconVisualTop, iconVisualLeft;
+  let talkIcon;
+  let whitePopup;
+
+  baseWidth = desktop ? 68 : 12;
+  right = desktop ? 38 : 5.2;
+  bottom = desktop ? 39 : 6.2;
+
+  iconWidth = desktop ? 38 : 6;
+  iconVisualTop = desktop ? -1 : -0.3;
+  iconVisualLeft = desktop ? -0.5 : -0.2;
+
+  whitePopup = () => {
+    return function (e) {
+      const zIndex = 101;
+      const mother = totalContents;
+
+      console.log("this!");
+
+    }
+  }
+
+  greenBase = createNode({
+    mother: totalContents,
+    event: {
+      click: whitePopup(),
+    },
+    style: {
+      display: "flex",
+      position: "fixed",
+      cursor: "pointer",
+      width: String(baseWidth) + ea,
+      height: String(baseWidth) + ea,
+      bottom: String(bottom) + ea,
+      right: String(right) + ea,
+      borderRadius: String(baseWidth) + ea,
+      background: colorChip.gradientGreen,
+      boxShadow: "0px 6px 20px -10px " + colorChip.shadow,
+      animation: "talkfade 1.2s ease forwards",
+      zIndex: String(zIndex),
+      justifyContent: "center",
+      alignItems: "center",
+      textAlign: "center",
+    }
+  });
+
+  talkIcon = createNode({
+    mother: greenBase,
+    mode: "svg",
+    source: GeneralJs.svgMaker.interactionIcon(colorChip.white),
+    style: {
+      display: "inline-block",
+      position: "relative",
+      width: String(iconWidth) + ea,
+      top: String(iconVisualTop) + ea,
+      left: String(iconVisualLeft) + ea,
+      cursor: "pointer",
+    }
+  });
+
+  this.talkIcon = { dom: greenBase };
 }
 
 GeneralJs.prototype.homeliaisonTalk = function (local_instance = {}, force_mobile = false) {
