@@ -87,7 +87,7 @@ DevContext.prototype.launching = async function () {
     // const pastProposal = equalJson(JSON.stringify(await ghostRequest("pastProposal", { proid: "p2202_aa43s" })));
     // console.log(pastProposal[0].project.detail);
 
-    await ghostRequest("voice", { text: "새로운 상담 문의가 왔습니다!" });
+
 
 
 
