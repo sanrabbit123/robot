@@ -89,7 +89,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-
+    await findCode("ghostPass")
 
 
     // const addr = new AddressParser();
