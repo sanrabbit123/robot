@@ -489,7 +489,7 @@ DashboardJs.prototype.whiteBoards = function () {
               alignItems: "center",
               cursor: "pointer",
             },
-            event: { click: (e) => { blankHref("https://" + FILEHOST + "/publicSector/estimation", true); } },
+            event: { click: (e) => { /* dev */ } },
             children: [
               {
                 class: [ "hoverDefault_lite" ],
@@ -867,7 +867,7 @@ DashboardJs.prototype.schedulePopup = function (kind) {
       }
     });
 
-    
+
 
 
     console.log(dateMatrix);
@@ -912,7 +912,7 @@ DashboardJs.prototype.launching = async function () {
 
     this.whiteBlocks = {};
     this.members = (await ajaxJson({ type: "get" }, "/getMembers", { equal: true })).filter((obj) => { return obj.alive });
-    this.slackNotices = await ajaxJson({ channel: "000_master_notice" }, "https://" + FILEHOST + "/slackMessages", { equal: true });
+    this.slackNotices = [];
 
     this.baseMaker();
     this.whiteBoards();
