@@ -3104,240 +3104,6 @@ Mother.prototype.serviceParsing = function (serviceObj, startDateMode = false) {
   }
 }
 
-Mother.prototype.statusReading = function (sendLog = true) {
-  const os = require("os");
-  const mac = /darwin/gi.test(os.platform());
-  const { spawn } = require("child_process");
-  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  const recordUrl = "https://" + ADDRESS.officeinfo.ghost.host + "/statusLog";
-  const axios = require("axios");
-  const now = new Date();
-  const pm2Promise = () => {
-    const pm2 = spawn("pm2", [ "list" ]);
-    let result;
-    let nameIndex, modeIndex, pidIndex, uptimeIndex, statusIndex, cpuIndex, memIndex, userIndex;
-    return new Promise((resolve, reject) => {
-      result = [];
-      pm2.stdout.on("data", (data) => {
-        result = result.concat(String(data).split("\n"));
-      });
-      pm2.on("close", (code) => {
-        result = result.filter((i) => { return !/\[PM2/gi.test(i.trim()); }).filter((i) => { return i.trim() !== ''; });
-        result = result.filter((i) => { return /[a-z0-9]/gi.test(i); }).map((i) => { return i.trim().split(i[0]).map((j) => { return j.trim(); }).filter((j) => { return j !== ''; }); });
-
-        nameIndex = result[0].findIndex((i) => { return /name/gi.test(i); });
-        modeIndex = result[0].findIndex((i) => { return /mode/gi.test(i); });
-        pidIndex = result[0].findIndex((i) => { return /pid/gi.test(i); });
-        uptimeIndex = result[0].findIndex((i) => { return /uptime/gi.test(i); });
-        statusIndex = result[0].findIndex((i) => { return /status/gi.test(i); });
-        cpuIndex = result[0].findIndex((i) => { return /cpu/gi.test(i); });
-        memIndex = result[0].findIndex((i) => { return /mem/gi.test(i); });
-        userIndex = result[0].findIndex((i) => { return /user/gi.test(i); });
-
-        if (nameIndex === undefined || modeIndex === undefined || pidIndex === undefined || uptimeIndex === undefined || statusIndex === undefined || cpuIndex === undefined || memIndex === undefined || userIndex === undefined) {
-          reject("invaild stdout");
-        } else {
-          result.shift();
-          result = result.map((arr) => {
-            let memory;
-            memory = arr[memIndex];
-            if (/mb/gi.test(memory)) {
-              memory = Math.round(Number(memory.replace(/[^0-9\-\.]/gi, '')) * 1024 * 1024);
-            } else if (/kb/gi.test(memory)) {
-              memory = Math.round(Number(memory.replace(/[^0-9\-\.]/gi, '')) * 1024);
-            } else if (/gb/gi.test(memory)) {
-              memory = Math.round(Number(memory.replace(/[^0-9\-\.]/gi, '')) * 1024 * 1024 * 1024);
-            } else {
-              memory = Math.round(Number(memory.replace(/[^0-9\-\.]/gi, '')));
-            }
-            return {
-              name: arr[nameIndex],
-              mode: arr[modeIndex],
-              pid: arr[pidIndex],
-              uptime: arr[uptimeIndex],
-              status: arr[statusIndex],
-              cpu: Math.round(Number(arr[cpuIndex].replace(/[^0-9\.\-]/gi, '')) / 100),
-              memory: memory,
-              user: arr[userIndex],
-            }
-          });
-          resolve(result);
-        }
-      });
-    });
-  }
-  const dfPromise = () => {
-    const df = spawn("df", [ "-h" ]);
-    let str, tempArr;
-    let totalIndex, usedIndex, availableIndex, mountIndex;
-    return new Promise((resolve, reject) => {
-      str = '';
-
-      df.stdout.on("data", (data) => {
-        str += String(data);
-      });
-
-      df.on("close", (code) => {
-        tempArr = str.split('\n');
-
-        tempArr = tempArr.filter((i) => { return i !== '' }).map((i) => { return i.trim().split(' ').map((j) => { return j.trim(); }).filter((j) => { return j !== ''; }) });
-
-        mountIndex = tempArr[0].findIndex((i) => { return /mount/gi.test(i); });
-        totalIndex = tempArr[0].findIndex((i) => { return /size/gi.test(i); });
-        usedIndex = tempArr[0].findIndex((i) => { return /used/gi.test(i); });
-        availableIndex = tempArr[0].findIndex((i) => { return /avail/gi.test(i); });
-
-        if (typeof mountIndex !== "number" || typeof totalIndex !== "number" || typeof usedIndex !== "number" || typeof availableIndex !== "number") {
-          reject("invaild stdout");
-        } else {
-          tempArr.shift();
-          tempArr = tempArr.filter((i) => { return /^\//gi.test(i[mountIndex]); });
-          tempArr = tempArr.map((arr) => {
-            let position, total, used, available;
-
-            position = arr[mountIndex];
-
-            total = Math.floor(Number(arr[totalIndex].replace(/[^0-9\.\-]/gi, '')) * 100) / 100;
-            if (/T/gi.test(arr[totalIndex])) {
-              total = total * 1024 * 1024 * 1024 * 1024;
-            } else if (/G/gi.test(arr[totalIndex])) {
-              total = total * 1024 * 1024 * 1024;
-            } else if (/M/gi.test(arr[totalIndex])) {
-              total = total * 1024 * 1024;
-            } else if (/K/gi.test(arr[totalIndex])) {
-              total = total * 1024;
-            }
-
-            used = Math.floor(Number(arr[usedIndex].replace(/[^0-9\.\-]/gi, '')) * 100) / 100;
-            if (/T/gi.test(arr[usedIndex])) {
-              used = used * 1024 * 1024 * 1024 * 1024;
-            } else if (/G/gi.test(arr[usedIndex])) {
-              used = used * 1024 * 1024 * 1024;
-            } else if (/M/gi.test(arr[usedIndex])) {
-              used = used * 1024 * 1024;
-            } else if (/K/gi.test(arr[usedIndex])) {
-              used = used * 1024;
-            }
-
-            available = Math.floor(Number(arr[availableIndex].replace(/[^0-9\.\-]/gi, '')) * 100) / 100;
-            if (/T/gi.test(arr[availableIndex])) {
-              available = available * 1024 * 1024 * 1024 * 1024;
-            } else if (/G/gi.test(arr[availableIndex])) {
-              available = available * 1024 * 1024 * 1024;
-            } else if (/M/gi.test(arr[availableIndex])) {
-              available = available * 1024 * 1024;
-            } else if (/K/gi.test(arr[availableIndex])) {
-              available = available * 1024;
-            }
-
-            return { position, total, used, available };
-          })
-
-          resolve(tempArr);
-        }
-      });
-    });
-  }
-  let top;
-  let num, arr;
-  let index;
-  let processIndex, cpuIndex;
-  let tempArr;
-  let result;
-  let tempObj;
-  let endBoo;
-  if (mac) {
-    top = spawn("top");
-  } else {
-    top = spawn("top", [ "-b" ])
-  }
-  return new Promise((resolve, reject) => {
-    num = 0;
-    result = { date: new Date() };
-    top.stdout.on("data", (data) => {
-      arr = String(data).split("\n");
-      arr = arr.map((i) => { return i.trim(); }).filter((i) => { return i !== ''; });
-      if (mac) {
-        endBoo = (num !== 0 && arr.length > 0 && /Processes\:/gi.test(arr[0]));
-      } else {
-        endBoo = (num !== 0 && arr.length > 0 && /top \-/gi.test(arr[0]));
-      }
-      if (endBoo) {
-        if (mac) {
-          processIndex = arr.findIndex((i) => { return /^Processes/i.test(i); });
-          cpuIndex = arr.findIndex((i) => { return /^CPU/i.test(i); });
-        } else {
-          processIndex = arr.findIndex((i) => { return /^Tasks/i.test(i); });
-          cpuIndex = arr.findIndex((i) => { return /^\%Cpu/i.test(i); });
-        }
-        if (typeof processIndex !== "number" || typeof cpuIndex !== "number") {
-          reject("stdout error");
-        } else {
-          tempArr = arr[cpuIndex].split(':').map((i) => { return i.trim(); })[1].split(',').map((i) => { return Number(i.replace(/[^0-9\.\-]/gi, '')); });
-          result.cpu = {};
-          result.cpu.used = Math.round((100 - tempArr[mac ? 2 : 3]) * 1000) / 100000;
-          result.cpu.idle = Math.round((tempArr[mac ? 2 : 3]) * 1000) / 100000;
-          result.cpu.detail = os.cpus();
-
-          tempArr = arr[processIndex].split(':').map((i) => { return i.trim(); })[1].split(',').map((i) => { return Number(i.replace(/[^0-9\.\-]/gi, '')); });
-          result.processes = {};
-          result.processes.total = tempArr[0];
-          result.processes.running = tempArr[1];
-          result.processes.sleeping = tempArr[2];
-
-          result.memory = {};
-          result.memory.total = os.totalmem();
-          result.memory.free = os.freemem();
-
-          tempArr = [];
-          tempObj = os.networkInterfaces();
-          for (let i in tempObj) {
-            tempArr = tempArr.concat(tempObj[i]);
-          }
-          tempArr = tempArr.filter((i) => { return /4/gi.test(i.family) && !/127\.0\.0\.1/gi.test(i.address); });
-          result.network = tempArr;
-
-          result.platform = os.platform();
-          result.arch = os.arch();
-          now.setSeconds(now.getSeconds() - os.uptime());
-
-          result.start = now;
-
-          dfPromise().then((dfResult) => {
-            result.disk = dfResult.find((i) => { return i.position === "/"; });
-            if (result.disk === undefined) {
-              throw new Error("invaild df result");
-            }
-            result.disk = JSON.parse(JSON.stringify(result.disk));
-            delete result.disk.position;
-            result.disk.detail = dfResult;
-            return pm2Promise();
-          }).then((pm2Result) => {
-            result.pm2 = pm2Result;
-            if (sendLog) {
-              return axios.post(recordUrl, result, { headers: { "Content-Type": "application/json" } });
-            } else {
-              return { status: 200 };
-            }
-          }).then((res) => {
-            if (res.status === 200) {
-              resolve(result);
-            } else {
-              reject("axios request error");
-            }
-          }).catch((err) => {
-            reject(err);
-          });
-
-        }
-        top.kill();
-      }
-      num++;
-    });
-    top.stderr.on("data", (data) => { reject(data); });
-  });
-}
-
 Mother.prototype.diskReading = function (mode = "check", arr = []) {
   if (typeof mode !== "string") {
     throw new Error("invaild input");
@@ -3435,7 +3201,7 @@ Mother.prototype.errorLog = function (text) {
     }
   }
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  const recordUrl = "https://" + ADDRESS.officeinfo.ghost.host + "/messageLog";
+  const recordUrl = "https://" + ADDRESS.testinfo.host + "/messageLog";
   const axios = require("axios");
   const collection = "errorLog";
   const channel = "#error_log";
@@ -3474,8 +3240,7 @@ Mother.prototype.messageSend = function (text, channel = "silent", voice = false
     voice = false;
   }
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  const recordUrl = "https://" + ADDRESS.officeinfo.ghost.host + "/messageLog";
-  const voiceUrl = "https://" + ADDRESS.officeinfo.ghost.host + "/voice";
+  const recordUrl = "https://" + ADDRESS.testinfo.host + "/messageLog";
   const axios = require("axios");
   const collection = "messageLog";
   const emptyPromise = () => {
@@ -3488,11 +3253,7 @@ Mother.prototype.messageSend = function (text, channel = "silent", voice = false
       if (res.status !== 200) {
         reject(res);
       } else {
-        if (voice) {
-          return axios.post(voiceUrl, { text }, { headers: { "Content-Type": "application/json" } });
-        } else {
-          return emptyPromise();
-        }
+        return emptyPromise();
       }
     }).then((res) => {
       if (res.status !== 200) {
@@ -3524,7 +3285,7 @@ Mother.prototype.messageLog = function (text) {
     channel = "silent";
   }
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  const recordUrl = "https://" + ADDRESS.officeinfo.ghost.host + "/messageLog";
+  const recordUrl = "https://" + ADDRESS.testinfo.host + "/messageLog";
   const axios = require("axios");
   const collection = "messageLog";
   return new Promise((resolve, reject) => {
@@ -3753,32 +3514,6 @@ Mother.prototype.xyConverting = function (original) {
   }
 
   return converted;
-}
-
-Mother.prototype.sendMessage = function (from, to, message, option = {}) {
-  if (typeof from !== "string" || !Array.isArray(to) || typeof message !== "string") {
-    throw new Error("invaild input");
-  }
-  if (!to.every((id) => { return typeof id === "string" })) {
-    throw new Error("invaild to array");
-  }
-  if (typeof option !== "object") {
-    throw new Error("invild option");
-  }
-  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  const monitorUrl = "https://" + ADDRESS.officeinfo.ghost.host + "/officeMonitor/sendMessage";
-  const axios = require("axios");
-  return new Promise((resolve, reject) => {
-    axios.post(monitorUrl, { from, to, message, option }, { headers: { "Content-Type": "application/json" } }).then((res) => {
-      if (res.status !== 200) {
-        reject(res);
-      } else {
-        resolve(res);
-      }
-    }).catch((err) => {
-      reject(err);
-    });
-  });
 }
 
 Mother.prototype.promiseTogether = function (promiseArr) {

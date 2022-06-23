@@ -374,15 +374,6 @@ Clown.prototype.recordCloud = async function (sw, boo = true) {
   }
 }
 
-Clown.prototype.statusReading = async function (sw, boo = true) {
-  try {
-    const result = await this.mother.statusReading();
-    console.log(result);
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 Clown.prototype.pythonCloud = async function () {
   try {
     const ReceiptObserver = require(`${process.cwd()}/apps/receiptObserver/receiptObserver.js`);
@@ -1218,13 +1209,6 @@ const MENU = {
   aliveTest: async function () {
     try {
       await robot.aliveTest();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  statusReading: async function () {
-    try {
-      await robot.statusReading();
     } catch (e) {
       console.log(e);
     }

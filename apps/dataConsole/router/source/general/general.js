@@ -2690,7 +2690,7 @@ GeneralJs.prototype.memberView = function () {
   const instance = this;
   return async function (e) {
     try {
-      const { createNode, colorChip, withOut, ajaxJson, setCookie, sendMessage, isMac } = GeneralJs;
+      const { createNode, colorChip, withOut, ajaxJson, setCookie, isMac } = GeneralJs;
       const totalContents = document.getElementById("totalcontents");
       const member = instance.member;
       const ea = "px";
@@ -2883,12 +2883,6 @@ GeneralJs.prototype.memberView = function () {
                     }
                   });
 
-                  // message = await GeneralJs.prompt("알람 문구를 적어주세요!");
-
-                  // if (typeof message === "string") {
-                  //   await sendMessage(thisMemid, targetMembers, message, option);
-                  // }
-
                 } catch (e) {
                   console.log(e);
                 }
@@ -2910,21 +2904,10 @@ GeneralJs.prototype.memberView = function () {
             event: {
               click: async function (e) {
                 try {
-                  const option = { alarm: true, alert: true };
-                  let targetMembers;
-                  let thisMemid;
-                  let message;
-                  targetMembers = [];
-                  for (let dom of tong) {
-                    if (dom.getAttribute("toggle") === "on") {
-                      targetMembers.push(dom.getAttribute("memid"));
-                    }
-                  }
-                  thisMemid = instance.member.id;
-                  message = await GeneralJs.prompt("경고 문구를 적어주세요!");
-                  if (typeof message === "string") {
-                    await sendMessage(thisMemid, targetMembers, message, option);
-                  }
+
+                  //dev
+
+
                 } catch (e) {
                   console.log(e);
                 }
