@@ -451,7 +451,7 @@ LogRouter.prototype.rou_post_mysqlQuery = function () {
 LogRouter.prototype.rou_post_messageLog = function () {
   const instance = this;
   const webHook = this.webHook;
-  const { requestSystem } = this.mother;
+  const { requestSystem, ghostRequest } = this.mother;
   let obj;
   obj = {};
   obj.link = [ "/messageLog" ];
@@ -471,6 +471,18 @@ LogRouter.prototype.rou_post_messageLog = function () {
       if (channel !== "silent") {
         await instance.slack_bot.chat.postMessage({ text, channel });
       }
+      let voice;
+
+      if (req.body.voice === true || req.body.voice === "true") {
+        voice = true;
+      } else {
+        voice = false;
+      }
+
+      if (voice) {
+        ghostRequest("voice", { text }).catch((err) => { console.log(err); });
+      }
+
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
       instance.mother.errorLog("Log Console 서버 문제 생김 (rou_post_mysqlQuery): " + e.message).catch((e) => { console.log(e); });

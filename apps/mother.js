@@ -3249,7 +3249,7 @@ Mother.prototype.messageSend = function (text, channel = "silent", voice = false
     });
   }
   return new Promise((resolve, reject) => {
-    axios.post(recordUrl, { text, channel, collection }, { headers: { "Content-Type": "application/json" } }).then((res) => {
+    axios.post(recordUrl, { text, channel, collection, voice }, { headers: { "Content-Type": "application/json" } }).then((res) => {
       if (res.status !== 200) {
         reject(res);
       } else {

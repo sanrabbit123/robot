@@ -2955,56 +2955,6 @@ Ghost.prototype.ghostRouter = function (needs) {
     }
   };
 
-  //POST - set message log
-  funcObj.post_messageLog = {
-    link: [ "/messageLog" ],
-    func: async function (req, res) {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
-      });
-      try {
-        if (req.body.text === undefined || req.body.channel === undefined || req.body.collection === undefined) {
-          throw new Error("invaild post, must be text, channel");
-        }
-        const { text, channel, collection } = req.body;
-        const ip = String(req.headers['x-forwarded-for'] === undefined ? req.connection.remoteAddress : req.headers['x-forwarded-for']).trim().replace(/[^0-9\.]/gi, '');
-        const rawUserAgent = req.useragent;
-        const { source: userAgent, browser, os, platform } = rawUserAgent;
-        const referrer = (req.headers.referer === undefined ? "" : req.headers.referer);
-        const status = equalJson(req.body);
-        let thisName;
-
-        thisName = "unknown";
-        for (let info in instance.address) {
-          if (ip === instance.address[info].ip.outer) {
-            thisName = info.replace(/info$/, '');
-            break;
-          }
-        }
-
-        await rethink.rethinkCreate(collection, {
-          date: new Date(),
-          text,
-          channel,
-          from: { name: thisName, ip, referrer, userAgent, browser, os, platform, mobile: rawUserAgent.isMobile }
-        });
-        await requestSystem(webHook.url, webHook.message(text), { headers: webHook.headers });
-        if (channel !== "silent") {
-          await instance.slack_bot.chat.postMessage({ text, channel });
-        }
-
-        requestSystem("http://172.30.1.58:3000/log", { message: text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
-
-        res.send(JSON.stringify({ message: "done" }));
-      } catch (e) {
-        res.send(JSON.stringify({ message: "error : " + e.message }));
-      }
-    }
-  };
-
   //POST - rethink api
   funcObj.post_rethink = {
     link: [ "/rethink" ],
