@@ -2486,7 +2486,7 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       message += "구글 아이디 : " + googleId;
       await messageSend({ text: message, channel: "#401_consulting" });
 
-      ghostRequest("/print", { cliid }).catch((err) => {
+      ghostRequest("/print", { cliid, voice: message.split("\n")[0] + " 성함은 " + thisClient.name + "입니다!" }).catch((err) => {
         errorLog("Bridge 서버 문제 생김 (submit, kakao) : " + err.message).catch((e) => { console.log(e); });
       });
 

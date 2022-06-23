@@ -2760,6 +2760,10 @@ Ghost.prototype.ghostRouter = function (needs) {
         console.log(err);
       });
 
+      if (typeof req.body.voice === "string") {
+        ghostRequest("voice", { text: req.body.voice });
+      }
+
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": '*',
