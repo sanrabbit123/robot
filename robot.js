@@ -201,7 +201,7 @@ Robot.prototype.aliveTest = async function () {
               console.log("\x1b[33m%s\x1b[0m", "something death");
               message += "\n======================================";
               message += "\nsomething death";
-              await instance.slack_bot.chat.postMessage({ text: message, channel: "#errorLog" });
+              await instance.slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
             }
           }
         }
@@ -215,14 +215,14 @@ Robot.prototype.aliveTest = async function () {
           console.log("\x1b[33m%s\x1b[0m", "something death");
           message += "\n======================================";
           message += "\nsomething death";
-          await instance.slack_bot.chat.postMessage({ text: message, channel: "#errorLog" });
+          await instance.slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
         }
       }
 
     }
 
   } catch (e) {
-    await instance.slack_bot.chat.postMessage({ text: "alive test error : " + e.message, channel: "#errorLog" });
+    await instance.slack_bot.chat.postMessage({ text: "alive test error : " + e.message, channel: "#error_log" });
   }
 }
 
