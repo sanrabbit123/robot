@@ -452,6 +452,8 @@ LogRouter.prototype.rou_post_messageLog = function () {
   const instance = this;
   const webHook = this.webHook;
   const { requestSystem } = this.mother;
+  let obj;
+  obj = {};
   obj.link = [ "/messageLog" ];
   obj.func = async function (req, res) {
     res.set({
