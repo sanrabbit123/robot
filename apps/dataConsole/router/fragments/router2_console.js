@@ -1567,7 +1567,7 @@ DataRouter.prototype.rou_post_getContentsDetail = function () {
 DataRouter.prototype.rou_post_sendSlack = function () {
   const instance = this;
   const back = this.back;
-  const { ghostRequest, equalJson, messageSend, errorLog } = this.mother;
+  const { equalJson, messageSend, errorLog } = this.mother;
   const url = require("url");
   let obj = {};
   obj.link = "/sendSlack";
@@ -1622,10 +1622,6 @@ DataRouter.prototype.rou_post_sendSlack = function () {
           await messageSend({ text: req.body.message, channel: req.body.channel });
         }
 
-      }
-
-      if (req.body.voice !== undefined) {
-        await ghostRequest("voice", { text: req.body.message });
       }
 
       res.send(JSON.stringify({ message: "success" }));
@@ -1807,7 +1803,7 @@ DataRouter.prototype.rou_post_proposalReset = function () {
   const back = this.back;
   const work = this.work;
   const address = this.address;
-  const { requestSystem, ghostRequest } = this.mother;
+  const { requestSystem, messageSend } = this.mother;
   let obj = {};
   obj.link = [ "/proposalReset", "/proposalCreate" ];
   obj.func = async function (req, res) {
@@ -1859,7 +1855,7 @@ DataRouter.prototype.rou_post_proposalReset = function () {
                   console.log(err);
                 });
               } else {
-                ghostRequest("/voice", { text: id + " 고객님은 스타일 체크를 진행하지 않아 자동으로 제안서를 만들 수 없습니다!" }).catch((err) => {
+                messageSend({ text: id + " 고객님은 스타일 체크를 진행하지 않아 자동으로 제안서를 만들 수 없습니다!", channel: "#403_proposal" }).catch((err) => {
                   console.log(err);
                 });
               }
