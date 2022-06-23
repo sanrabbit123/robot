@@ -2756,9 +2756,7 @@ Ghost.prototype.ghostRouter = function (needs) {
     link: [ "/printer", "/print" ],
     func: function (req, res) {
 
-      instance.clientPrint(req.body.cliid, MONGOC).then((client) => {
-        return ghostRequest("/voice", { text: "새로운 상담 문의가 왔어요! 성함은 " + client.name + " 고객님 입니다." });
-      }).catch((err) => {
+      instance.clientPrint(req.body.cliid, MONGOC).catch((err) => {
         console.log(err);
       });
 
