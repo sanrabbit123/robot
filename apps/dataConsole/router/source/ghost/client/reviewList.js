@@ -136,7 +136,7 @@ ReviewListJs.prototype.insertInitBox = function () {
   whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
   whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
 
-  searchBarPaddingTop = <%% 220, 220, 192, 164, 11.5 %%>;
+  searchBarPaddingTop = <%% 220, 220, 192, 164, 13 %%>;
   searchBarHeight = <%% 40, 40, 40, 36, 8 %%>;
   searchBarWidth = <%% 690, 516, 516, 420, 88 %%>;
 

@@ -1668,10 +1668,10 @@ FrontAboutJs.prototype.insertFourthService = function () {
   imageWidthRatio = <%% 0.5, 0.5, 0.5, 0.5, 1 %%>;
 
   wordingBetween = <%% 15, 15, 15, 14, 2.5 %%>;
-  imageBetween = <%% 60, 56, 56, 48, 7 %%>;
-  imageBlockBetween = <%% 60, 56, 56, 48, 7 %%>;
+  imageBetween = <%% 60, 50, 45, 36, 7 %%>;
+  imageBlockBetween = <%% 64, 54, 50, 40, 12 %%>;
   imageWidth = <%% 810, 570, 449, 354, 88 %%>;
-  imageHeight = <%% 390, 320, 296, 258, 39 %%>;
+  imageHeight = <%% 390, 320, 296, 228, 39 %%>;
 
   contentsSize = <%% 16, 15, 14, 13, 3.5 %%>;
   contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
@@ -1688,7 +1688,7 @@ FrontAboutJs.prototype.insertFourthService = function () {
   photoNumber = <%% 7, 7, 5, 5, 7 %%>;
   reviewTitleSize = <%% 24, 22, 21, 20, 4.5 %%>;
   reviewTitleMarginTop = <%% 80, 80, 70, 60, 12 %%>;
-  reviewTitleMarginBottom = <%% 32, 32, 32, 32, 4.5 %%>;
+  reviewTitleMarginBottom = <%% 32, 32, 32, 32, 7.5 %%>;
 
   moreBoxHeight = <%% 15, 15, 15, 15, 3 %%>;
   moreBoxMarginBottom = <%% 21, 21, 21, 21, 4.5 %%>;
@@ -1699,13 +1699,13 @@ FrontAboutJs.prototype.insertFourthService = function () {
   moreArrowWidth = <%% 30, 30, 30, 30, 8 %%>;
   moreArrowHeight = <%% 10, 10, 10, 8, 2 %%>;
 
-  paddingTopVisual = <%% 0, 0, 0, 0, 0.3 %%>;
+  paddingTopVisual = <%% 0, 0, 0, 0, 1 %%>;
   paddingBottomVisual = <%% 3, 3, 2, 1, 1 %%>;
 
-  plusMarginLeft = <%% 100, 100, 100, 100, 12 %%>;
-  plusFontTopMinus = <%% 100, 100, 100, 100, 100 %%>;
-  plusFontLeftVisual = <%% 4, 4, 4, 4, 4 %%>;
-  plusFontSize = <%% 115, 115, 115, 115, 115 %%>;
+  plusMarginLeft = <%% 82, 72, 60, 52, 12 %%>;
+  plusFontTopMinus = <%% 80, 70, 60, 50, 90 %%>;
+  plusFontLeftVisual = <%% 3, 3, 3, 1, 4 %%>;
+  plusFontSize = <%% 88, 84, 72, 60, 5 %%>;
 
   contents = {
     main: [
@@ -1849,11 +1849,12 @@ FrontAboutJs.prototype.insertFourthService = function () {
         backgroundSize: "100% auto",
         backgroundPosition: "50% 50%",
         verticalAlign: "top",
-        marginLeft: (i !== 0 ? String(plusMarginLeft) + ea : ""),
+        marginLeft: desktop ? (i !== 0 ? String(plusMarginLeft) + ea : "") : "",
+        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
       }
     });
 
-    if (i !== 0) {
+    if ((i !== 0) && desktop) {
       createNode({
         mother: image,
         text: '+',
@@ -1875,16 +1876,16 @@ FrontAboutJs.prototype.insertFourthService = function () {
         display: desktop ? "inline-flex" : "flex",
         position: "relative",
         paddingLeft: desktop ? String(imageBetween) + ea : "",
-        width: withOut(imageWidth + imageBetween + (i !== 0 ? plusMarginLeft : 0), ea),
+        width: desktop ? withOut(imageWidth + imageBetween + (i !== 0 ? plusMarginLeft : 0), ea) : withOut(0),
         height: desktop ? String(imageHeight) + ea : "",
         verticalAlign: "top",
         flexDirection: "column-reverse",
-        textAlign: desktop ? "left" : "center",
+        textAlign: "left",
         marginTop: desktop ? "" : String(reviewTitleMarginBottom) + ea,
       },
       children: [
         {
-          text: contents.description[i][1].join("\n"),
+          text: desktop ? contents.description[i][1].join("\n") : contents.description[i][1].join(" "),
           style: {
             display: "block",
             position: "relative",
@@ -1892,6 +1893,9 @@ FrontAboutJs.prototype.insertFourthService = function () {
             fontWeight: String(contentsWeight),
             lineHeight: String(contentsLineHeight),
             color: colorChip.black,
+            textAlign: "left",
+            width: desktop ? "" : String(55) + ea,
+            left: desktop ? "" : String(33) + ea,
           },
           bold: {
             fontWeight: String(contentsBoldWeight),
@@ -1899,7 +1903,7 @@ FrontAboutJs.prototype.insertFourthService = function () {
           }
         },
         {
-          text: contents.description[i][0].join("\n"),
+          text: desktop ? contents.description[i][0].join("\n") : contents.description[i][0].join(" "),
           style: {
             display: "block",
             position: "relative",
@@ -1908,17 +1912,22 @@ FrontAboutJs.prototype.insertFourthService = function () {
             lineHeight: String(contentsLineHeight),
             color: colorChip.black,
             marginBottom: String(wordingBetween) + ea,
+            textAlign: "left",
+            width: desktop ? "" : String(55) + ea,
+            left: desktop ? "" : String(33) + ea,
           }
         },
         {
-          text: contents.sub[i],
+          text: desktop ? contents.sub[i] : contents.sub[i].split(" ").slice(-2).join("\n"),
           style: {
             display: "block",
-            position: "relative",
-            fontSize: String(subSize) + ea,
+            position: desktop ? "relative" : "absolute",
+            fontSize: String(desktop ? subSize : contentsSize) + ea,
             fontWeight: String(subWeight),
             color: colorChip.black,
             marginBottom: String(wordingBetween) + ea,
+            top: desktop ? "" : String(0),
+            left: desktop ? "" : String(0),
           },
           bold: {
             fontSize: String(subSize) + ea,
@@ -2047,13 +2056,13 @@ FrontAboutJs.prototype.insertFifthService = function () {
   paddingTopVisual = <%% 0, 0, 0, 0, 0.3 %%>;
   paddingBottomVisual = <%% 3, 3, 2, 1, 1 %%>;
 
-  buttonWidth = <%% 135, 135, 135, 135, 135 %%>;
-  buttonHeight = <%% 50, 50, 50, 50, 50 %%>;
-  buttonSize = <%% 19, 19, 19, 19, 19 %%>;
+  buttonWidth = <%% 144, 135, 135, 120, 30 %%>;
+  buttonHeight = <%% 52, 50, 50, 42, 11 %%>;
+  buttonSize = <%% 21, 19, 19, 17, 4 %%>;
   buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
-  buttonTextTop = <%% -2, -2, -2, -2, -2 %%>;
-  buttonBoxMarginTop = <%% 40, 40, 40, 40, 40 %%>;
-  buttonBoxMarginBottom = <%% 42, 42, 42, 42, 42 %%>;
+  buttonTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.3 %%>;
+  buttonBoxMarginTop = <%% 50, 48, 48, 48, 8 %%>;
+  buttonBoxMarginBottom = <%% 60, 60, 60, 60, 9 %%>;
 
   contents = {
     main: [
