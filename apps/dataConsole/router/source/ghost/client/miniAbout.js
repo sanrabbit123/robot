@@ -2404,7 +2404,7 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
 
     widthGrayType0 = <%% 160, 140, 130, 150, 34 %%>;
     widthGrayType1 = <%% 455, 329, 283, 403, 58 %%>;
-    widthGrayType2 = <%% 757, 588, 503, 383, 53.2 %%>;
+    widthGrayType2 = <%% 767, 588, 503, 383, 53.2 %%>;
     widthGrayType3 = <%% 392, 268, 231, 352, 45.5 %%>;
 
     addressWidth = <%% 54, 54, 46, 46, 11 %%>;
@@ -2435,7 +2435,7 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
     paymentAmountTop = <%% (isMac() ? 17 : 19), (isMac() ? 17 : 19), (isMac() ? 17 : 19), (isMac() ? 17 : 19), 3.7 %%>;
     paymentAmountBetween = <%% 20, 20, 20, 20, 3 %%>;
 
-    paymentButtonSize = <%% 16, 16, 16, 16, 3.2 %%>;
+    paymentButtonSize = <%% 17, 17, 16, 16, 3.2 %%>;
     paymentButtonWeight = <%% 600, 600, 600, 600, 600 %%>;
     paymentButtonTop = <%% 12, 12, 12, 12, 3 %%>;
     paymentButtonPaddingTop = <%% (isMac() ? 8 : 10), (isMac() ? 8 : 10), (isMac() ? 8 : 10), (isMac() ? 8 : 10), 2 %%>;

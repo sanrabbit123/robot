@@ -1098,6 +1098,8 @@ GeneralJs.withOut = function (percent, num, ea) {
     return ("calc(" + String(percent) + "% - " + String(num) + ea + ")");
   } else if (typeof percent !== undefined && typeof num === "string" && ea === undefined) {
     return ("calc(" + String(100) + "% - " + String(percent) + num + ")");
+  } else if (typeof percent === "number" && num === undefined && ea === undefined) {
+    return ("calc(" + String(100) + "% - " + String(percent) + "px" + ")");
   } else {
     throw new Error("invaild arguments");
   }
@@ -4427,7 +4429,7 @@ GeneralJs.prototype.greenTalk = function () {
   const media = GeneralJs.stacks.updateMiddleMedialQueryConditions;
   const mobile = media[4];
   const desktop = !mobile;
-  const small = media[3] || media[4];
+  const small = (media[3] || media[4]);
   const big = !small;
   const ea = desktop ? "px" : "vw";
   const totalContents = document.getElementById("totalcontents");
