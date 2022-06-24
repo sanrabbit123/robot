@@ -1668,7 +1668,7 @@ FrontAboutJs.prototype.insertFourthService = function () {
   imageWidthRatio = <%% 0.5, 0.5, 0.5, 0.5, 1 %%>;
 
   wordingBetween = <%% 15, 15, 15, 14, 2.5 %%>;
-  imageBetween = <%% 56, 52, 52, 42, 7 %%>;
+  imageBetween = <%% 60, 56, 56, 48, 7 %%>;
   imageBlockBetween = <%% 60, 56, 56, 48, 7 %%>;
   imageWidth = <%% 810, 570, 449, 354, 88 %%>;
   imageHeight = <%% 390, 320, 296, 258, 39 %%>;
@@ -1702,7 +1702,7 @@ FrontAboutJs.prototype.insertFourthService = function () {
   paddingTopVisual = <%% 0, 0, 0, 0, 0.3 %%>;
   paddingBottomVisual = <%% 3, 3, 2, 1, 1 %%>;
 
-  plusMarginLeft = <%% 108, 100, 100, 100, 12 %%>;
+  plusMarginLeft = <%% 100, 100, 100, 100, 12 %%>;
   plusFontTopMinus = <%% 100, 100, 100, 100, 100 %%>;
   plusFontLeftVisual = <%% 4, 4, 4, 4, 4 %%>;
   plusFontSize = <%% 115, 115, 115, 115, 115 %%>;
