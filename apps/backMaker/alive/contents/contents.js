@@ -306,9 +306,10 @@ Contents.prototype.getGoogleDocsDetail = function (server) {
 
   result.review = [];
   if (review !== '') {
+
     tempArr2 = review.split('\n').map((i) => { return (i === '' ? "\n" : i.trim()); }).map((i) => {
       let arr0;
-      if (/^[0-9]/.test(i)) {
+      if (/^[0-9]/.test(i) && /[0-9]$/.test(i)) {
         arr0 = i.split(' ').map((j) => { return Number(j.trim()); });
         arr0 = arr0.map((z) => {
           return server + corePortfolio + "/" + self.contents.portfolio.pid + "/" + photoChar + String(z) + self.contents.portfolio.pid + ".jpg" + token + String(z);

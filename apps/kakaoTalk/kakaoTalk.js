@@ -25,7 +25,7 @@ const KakaoTalk = function () {
     test: new RegExp(this.ip.test + "\n", 'g'),
   };
   this.token = {
-    office: '5f5f42a2694f8791940f1dfd084dc64077fb533bc5391736c6655078a78442e14d0b9ba3d1fcf4b94435f9459af07aa24b1b7bb387e7abaf19da6f3e3f7e07226w2W+ZqNGQWbMEV6c6pM6aLv/x9Gsv7SnPrnHME+7exAqL+t89jmzl7HTmdvxZAjMjgth6wDbz81a9I86IwyMA==',
+    office: '7c3384dd3b6e943f8128adb61f537bc316124b2eb2b0f03b81e76db1ccaa3e1ce057594fc9df213004416f9d049d685c8bb0675d4db0b4fdde3610085179cde3ciwCIj/6sre3xiXz5V4aCDIdUvW1oRBjGUbrPgrbNFX2XYIhQzLLtEcMxKSxRXKZztHRlWBIYBJlbOsKNUAMkA==',
     home: '34e1a559ad517cf7e32f924bb3c3f6e2dc865f894f1162c173e63e5d224740f6766e23fb96bc51595a7f3ee58cc1cb65d2710ea0b68beb82e21f29e3725ef078lRinPbbWuJNPx/NHWDcf6nWQ62ebNNIzxq+bW+h8s9/fGcDmTi6K0bg7ge6Llat86xRmkS/zTlRnQjn9PVFe0g==',
     console: '34e1a559ad517cf7e32f924bb3c3f6e2dc865f894f1162c173e63e5d224740f6766e23fb96bc51595a7f3ee58cc1cb65d2710ea0b68beb82e21f29e3725ef078lRinPbbWuJNPx/NHWDcf6nWQ62ebNNIzxq+bW+h8s9/fGcDmTi6K0bg7ge6Llat86xRmkS/zTlRnQjn9PVFe0g==',
     python: '53d2f480ce9e4087b03d0fd8b8fac1e87aa47d407fefff0cadcddb4e9301cc705f5ea3c27f3bd1ad0c537daaef82b2a1ff29e2d623e3176034a9be316d1adcd7bU9USuplgt2b2Ivow9XRAwQf7dYTr+naSe5eTD6GWQIJmcJ5ARB1wx8WE2Akvm02I9yfLXlTfyAJG84jAOFPnw==',

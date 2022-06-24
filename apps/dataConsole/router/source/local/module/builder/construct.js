@@ -512,18 +512,18 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
           }
 
           loading = instance.mother.grayLoading();
-          if (window.confirm("견적 관리 페이지로 갈까요?")) {
-            window.location.href = window.location.protocol + "//" + window.location.host + "/builder?mode=estimation&buiid=" + thisBuiid;
-          }
-
-          newInvoice = await ajaxJson({ buiid: thisBuiid, proid: project.proid }, "/pythonPass_invoiceCreate", { equal: true });
+          // if (window.confirm("견적 관리 페이지로 갈까요?")) {
+          //   window.location.href = window.location.protocol + "//" + window.location.host + "/builder?mode=estimation&buiid=" + thisBuiid;
+          // }
+          //
+          // newInvoice = await ajaxJson({ buiid: thisBuiid, proid: project.proid }, "/pythonPass_invoiceCreate", { equal: true });
 
           tempArr = value.split('-');
 
           thisProject = instance.projects.search("proid", project.proid);
           thisEstimate = thisProject.process.design.construct.estimate;
           thisEstimate.unshift({
-            invid: newInvoice.invid,
+            invid: null,
             date: new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')))
           });
           thisEstimate.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
