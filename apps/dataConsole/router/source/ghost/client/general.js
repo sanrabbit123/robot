@@ -42,6 +42,7 @@ GeneralJs.prototype.setGeneralProperties = function (instance) {
   this.media = GeneralJs.stacks.updateMiddleMedialQueryConditions;
   instance.media = this.media;
 
+  this.firstPageViewTime = new Date();
   instance.firstPageViewTime = new Date();
 }
 
@@ -514,6 +515,7 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
     }
 
     base.instance.pageName = name;
+    base.instance.mother.pageName = name;
     this.setGeneralBase(base, typeof obj.background === "number" ? obj.background : 0, mode, name);
     await local();
 
@@ -551,6 +553,7 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
       },
     }).then((json) => {
       base.instance.googleClientId = json.data.id;
+      base.instance.mother.googleClientId = json.data.id;
       base.instance.userInfo = json;
     }).catch((err) => {
       console.log(err);

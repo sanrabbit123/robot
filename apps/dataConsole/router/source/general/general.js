@@ -5790,7 +5790,6 @@ GeneralJs.prototype.consultingPopup = function () {
       }
     }
 
-
     agreeEvent = function (e) {
       const targets = document.querySelectorAll('.' + agreeTargetClassName);
       for (let dom of targets) {
@@ -5867,7 +5866,6 @@ GeneralJs.prototype.consultingPopup = function () {
       }
     });
 
-
     // title
     titleArea = createNode({
       mother: contentsTong,
@@ -5894,7 +5892,6 @@ GeneralJs.prototype.consultingPopup = function () {
         }
       ]
     });
-
 
     //form
     formArea = createNode({
@@ -6644,7 +6641,6 @@ GeneralJs.prototype.consultingPopup = function () {
         }
       ]
     });
-
     // 10
     createNode({
       mother: formBox,
@@ -6724,7 +6720,6 @@ GeneralJs.prototype.consultingPopup = function () {
         }
       ]
     });
-
     // 11 : margin
     createNode({
       mother: formBox,
@@ -6870,6 +6865,9 @@ GeneralJs.prototype.consultingPopup = function () {
     });
     createNode({
       mother: paymentArea,
+      event: {
+        click: instance.finalSubmit(),
+      },
       text: "신청하기",
       style: {
         display: "inline-block",
@@ -6888,5 +6886,165 @@ GeneralJs.prototype.consultingPopup = function () {
       }
     });
 
+  }
+}
+
+GeneralJs.prototype.finalSubmit = function () {
+  const instance = this;
+  const inputClassName = "whitePopupInputClassName";
+  const agreeTargetClassName = "agreeTargetClassName";
+  const { ajaxJson, colorChip, findByAttribute, scrollTo, dateToString, sleep, selfHref, homeliaisonAnalytics } = GeneralJs;
+  return async function (e) {
+    try {
+      const property = "property";
+      const targets = [ ...document.querySelectorAll('.' + inputClassName) ];
+      let properties;
+      let map;
+      let tempObj;
+      let nodeName;
+      let firstDom;
+      let visualSpecific;
+      let name, phone;
+      let tempTargets;
+      let onValue;
+      let boo;
+
+      if (document.querySelector('.' + agreeTargetClassName).getAttribute("toggle") === "off") {
+        window.alert("개인정보 취급 방침에 동의해주세요!");
+      } else {
+
+        visualSpecific = 150;
+
+        properties = [];
+        for (let dom of targets) {
+          properties.push(dom.getAttribute(property));
+        }
+        properties = [ ...new Set(properties) ];
+
+        map = [];
+        boo = true;
+        for (let p of properties) {
+          tempObj = {};
+          tempObj.property = p;
+
+          firstDom = findByAttribute(targets, property, p);
+          nodeName = firstDom.nodeName;
+          if (/INPUT/gi.test(nodeName) || /TEXTAREA/gi.test(nodeName)) {
+            try {
+
+              if (p === "name") {
+                firstDom.value = firstDom.value.replace(/[^a-zA-Z가-힣]/gi, '');
+                if (firstDom.value.trim() === '') {
+                  throw new Error("성함을 입력해주세요!");
+                }
+                name = firstDom.value.trim();
+              } else if (p === "phone") {
+                firstDom.value = firstDom.value.replace(/[^0-9\-]/gi, '');
+                if (firstDom.value.trim() === '') {
+                  throw new Error("연락처를 입력해주세요!");
+                }
+                phone = firstDom.value.trim();
+              } else if (p === "address0") {
+                firstDom.value = firstDom.value.trim();
+                if (firstDom.value.trim() === '') {
+                  throw new Error("주소를 검색하여 입력해주세요!");
+                }
+              } else if (p === "address1") {
+                firstDom.value = firstDom.value.trim();
+                if (firstDom.value.trim() === '') {
+                  throw new Error("상세 주소를 적어주세요!");
+                }
+              } else if (p === "email") {
+                firstDom.value = firstDom.value.trim();
+                if (firstDom.value.trim() === '') {
+                  throw new Error("이메일 주소를 적어주세요!");
+                }
+              } else if (p === "pyeong") {
+                firstDom.value = firstDom.value.replace(/[^0-9\.]/gi, '');
+                if (firstDom.value.trim() === '' || Number.isNaN(Number(firstDom.value.trim())) || Number(firstDom.value.trim()) === 0) {
+                  throw new Error("분양 평수를 알려주세요!");
+                }
+              } else if (p === "movein") {
+                firstDom.value = firstDom.value.replace(/[^0-9\-]/gi, '').trim();
+                if (!/[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/gi.test(firstDom.value.trim())) {
+                  throw new Error("입주 예정일을 알려주세요! (정해지지 않았을 경우, 예상되는 날짜를 찍어주세요!)");
+                }
+              }
+
+              tempObj.value = firstDom.value.replace(/[\=\+\&\>\<\/\\\{\}\[\]\`]/gi, '');
+
+            } catch (e) {
+              window.alert(e.message);
+              boo = false;
+              scrollTo(window, firstDom, visualSpecific);
+              firstDom.previousElementSibling.style.border = "1px solid " + colorChip.green;
+              if (typeof firstDom.focus === "function") {
+                firstDom.focus();
+              }
+              break;
+            }
+          } else {
+
+            tempTargets = [];
+            for (let dom of targets) {
+              if (dom.getAttribute(property) === p) {
+                tempTargets.push(dom);
+              }
+            }
+
+            onValue = '';
+            for (let dom of tempTargets) {
+              if (dom.getAttribute("toggle") === "on") {
+                onValue = dom.textContent.trim();
+                break;
+              }
+            }
+            tempObj.value = onValue;
+
+          }
+          map.push(tempObj);
+        }
+
+        if (typeof instance.googleClientId === "string") {
+          map.push({
+            property: "googleId",
+            value: instance.googleClientId
+          });
+        } else {
+          map.push({
+            property: "googleId",
+            value: ""
+          });
+        }
+
+        if (boo) {
+          instance.certificationBox(name, phone, async function (back, box) {
+            try {
+              const { cliid } = await ajaxJson({ map }, "/clientSubmit");
+              homeliaisonAnalytics({
+                page: instance.pageName,
+                standard: instance.firstPageViewTime,
+                action: "login",
+                data: { cliid },
+              }).then(() => {
+                document.body.removeChild(box);
+                document.body.removeChild(back);
+                selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/curation/?cliid=" + cliid);
+              }).catch((err) => {
+                document.body.removeChild(box);
+                document.body.removeChild(back);
+                selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/curation/?cliid=" + cliid);
+              });
+            } catch (e) {
+              await ajaxJson({ message: "FrontAboutJs.certificationBox : " + e.message }, "/errorLog");
+            }
+          });
+        }
+      }
+
+    } catch (e) {
+      console.log(e);
+      window.location.reload();
+    }
   }
 }
