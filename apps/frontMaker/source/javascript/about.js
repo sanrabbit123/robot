@@ -1975,7 +1975,6 @@ AboutJs.prototype.launching = async function () {
           reloadFunction = instance.reloadState(false);
           reloadFunction();
           instance.mother.specialBan();
-          instance.mother.homeliaisonTalk();
 
         } else if (level === 1) {
 

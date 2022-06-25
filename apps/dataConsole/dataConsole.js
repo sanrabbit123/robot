@@ -451,11 +451,6 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
       generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
       generalString = generalString.replace(/(\/<%generalMap%>\/)/, (match, p1, offset, string) => {
         let generalObj_clone = JSON.parse(JSON.stringify(generalMap));
-        for (let j in generalObj_clone.main.interaction) {
-          if (!([ name ]).includes(j)) {
-            delete generalObj_clone.main.interaction[j];
-          }
-        }
         return JSON.stringify(generalObj_clone, null, 2);
       });
 

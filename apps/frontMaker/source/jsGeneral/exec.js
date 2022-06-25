@@ -23,7 +23,6 @@ document.addEventListener("DOMContentLoaded", async function (e) {
     local_funcs.mother.fadeIn();
     local_funcs.mother.specialBan();
     local_funcs.mother.footerMake('/<%name%>/');
-    local_funcs.mother.homeliaisonTalk(local_funcs);
     document.body.style.height = "";
   } catch (e) {
     window.localStorage.clear();

@@ -3831,7 +3831,7 @@ GeneralJs.prototype.resizeLaunching = function (callback) {
         GeneralJs.totalDelete();
         callback();
         instance.specialBan();
-        instance.homeliaisonTalk();
+        instance.greenTalk();
       }
       instance.resizeStack = 0;
     }
@@ -4423,9 +4423,9 @@ GeneralJs.prototype.footerMake = function (type = 'A', color = "gradientGreen", 
   }
 }
 
-GeneralJs.prototype.greenTalk = function () {
+GeneralJs.prototype.greenTalk = function (text = "홈리에종을 통해 1:1 상담을 받아보세요!") {
   const instance = this;
-  const { createNode, createNodes, colorChip, withOut, ajaxJson } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac } = GeneralJs;
   const media = GeneralJs.stacks.updateMiddleMedialQueryConditions;
   const mobile = media[4];
   const desktop = !mobile;
@@ -4440,6 +4440,13 @@ GeneralJs.prototype.greenTalk = function () {
   let iconVisualTop, iconVisualLeft;
   let talkIcon;
   let whitePopup;
+  let whitePopupHeight, whitePopupTop;
+  let triangleWidth;
+  let whitePopupWidth, whitePopupLeft;
+  let popupSize, popupWeight, popupTextTop;
+  let whitePopupPaddingLeft;
+  let whitePopupLeftBetween;
+  let whitePopupWidthVisual;
 
   baseWidth = desktop ? 68 : 12;
   right = desktop ? 38 : 5.2;
@@ -4448,6 +4455,20 @@ GeneralJs.prototype.greenTalk = function () {
   iconWidth = desktop ? 38 : 6;
   iconVisualTop = desktop ? -1 : -0.3;
   iconVisualLeft = desktop ? -0.5 : -0.2;
+
+  whitePopupHeight = desktop ? 48 : 8;
+  whitePopupTop = desktop ? 11 : 2;
+
+  triangleWidth = desktop ? 8 : 1.6;
+
+  popupTextTop = desktop ? (isMac() ? -1 : 0) : -0.3;
+  popupSize = desktop ? 16 : 2.9;
+  popupWeight = desktop ? 600 : 600;
+
+  whitePopupPaddingLeft = desktop ? 19 : 2.5;
+  whitePopupLeftBetween = desktop ? 20 : 3.2;
+
+  whitePopupWidthVisual = desktop ? 2 : 2;
 
   greenBase = createNode({
     mother: totalContents,
@@ -4487,525 +4508,66 @@ GeneralJs.prototype.greenTalk = function () {
     }
   });
 
+  whitePopup = createNode({
+    mother: greenBase,
+    style: {
+      display: "flex",
+      position: "absolute",
+      height: String(whitePopupHeight) + ea,
+      top: String(whitePopupTop) + ea,
+      background: "white",
+      borderRadius: String(5) + "px",
+      boxShadow: "2px 2px 18px -10px #a0a0a0",
+      animation: "talkwhitefade 1.6s ease forwards",
+      justifyContent: "center",
+      alignItems: "center",
+      textAlign: "center",
+      width: String(2000) + ea,
+    },
+    children: [
+      {
+        style: {
+          position: "relative",
+          top: String(0),
+          left: String(0),
+          height: withOut(0),
+          display: "inline-flex",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          paddingLeft: String(whitePopupPaddingLeft) + ea,
+          paddingRight: String(whitePopupPaddingLeft) + ea,
+        },
+        children: [
+          {
+            style: {
+              position: "absolute",
+              right: "calc(" + String(-1 * (triangleWidth / 2)) + ea + " - " + String(whitePopupWidthVisual / 2) + "px" + ")",
+              top: withOut(50, triangleWidth / 2, ea),
+              width: String(triangleWidth) + ea,
+              height: String(triangleWidth) + ea,
+              background: colorChip.white,
+              transform: "rotate(45deg)",
+            }
+          },
+          {
+            text,
+            style: {
+              position: "relative",
+              top: String(popupTextTop) + ea,
+              fontSize: String(popupSize) + ea,
+              fontWeight: String(popupWeight),
+              color: colorChip.black,
+            }
+          }
+        ]
+      }
+    ]
+  });
+  whitePopup.style.width = String(Math.ceil(whitePopup.firstChild.getBoundingClientRect().width) + whitePopupWidthVisual) + "px";
+  whitePopup.style.left = "calc(calc(" + String(Math.ceil(whitePopup.getBoundingClientRect().width)) + "px" + " + " + String(whitePopupLeftBetween) + ea +") * -1)";
+
   this.talkIcon = { dom: greenBase };
-}
-
-GeneralJs.prototype.homeliaisonTalk = function (local_instance = {}, force_mobile = false) {
-  const instance = this;
-  let div_clone, div_clone2, svg_clone, height, baseWidth, width, right, ea, mother, top, radius, visualSpecific, visualSpecific2, leftMargin, totalHeight, margin;
-  let func, func_RAW;
-  let style = {};
-  let list = force_mobile ? [ "mobile" ] : [ "desktop", "mobile" ];
-  let wording = { desktop: "", mobile: "" };
-  let doms = { desktop: {}, mobile: {} };
-  let domsWording = { desktop: {}, mobile: {} };
-  let interactionArr, interactionTarget = null;
-  const { main: { interaction }, sub: { loader, talk, triangle, close, arrow: inputArrow } } = this.map;
-  interactionArr = Object.keys(interaction);
-  for (let i = 0; i < interactionArr.length; i++) {
-    interactionTarget = interaction[interactionArr[i]];
-  }
-
-  if (interactionTarget === null) {
-    throw new Error("interaction patch first");
-  }
-  const { behaviors } = interactionTarget;
-  let icon, eventFunc;
-  let finalNum = Math.abs(Math.round(Math.random() * ((behaviors.length - 1) + 0.5 - (-1 * 0.5)) - 0.5));
-
-  GeneralJs.events["iconClickEvent"] = [];
-
-  for (let i = 0; i < list.length; i++) {
-
-    ea = list[i] === "desktop" ? "px" : "vw";
-
-    //set target
-    mother = document.getElementById(!force_mobile ? (list[i] === "desktop" ? "totalcontents" : "mototalcontents") : "totalcontents");
-
-    //green base
-    div_clone = GeneralJs.nodes.div.cloneNode(true);
-    baseWidth = list[i] === "desktop" ? 68 : 12;
-    right = list[i] === "desktop" ? 38 : 5.2;
-    style = {
-      position: "fixed",
-      cursor: "pointer",
-      width: String(baseWidth) + ea,
-      height: String(baseWidth) + ea,
-      bottom: String(right + 1) + ea,
-      right: String(right) + ea,
-      borderRadius: String(baseWidth / 2) + ea,
-      background: "linear-gradient(222deg,rgba(89,175,137,.85) 5%,rgba(0,156,106,.85) 100%)",
-      boxShadow: "0px 6px 20px -10px #606060",
-      animation: "talkfade 1.2s ease forwards",
-      zIndex: "1",
-    }
-    for (let j in style) {
-      div_clone.style[j] = style[j];
-    }
-
-    //talk icon
-    width = list[i] === "desktop" ? 38 : 6;
-    visualSpecific = list[i] === "desktop" ? { top: 1, left: 1 } : { top: 0.3, left: 0.2 };
-    svg_clone = SvgTong.tongMaker();
-    svg_clone.src = talk;
-    svg_clone.id = (list[i] === "desktop" ? "" : "mo") + "talkIcon";
-    height = GeneralJs.parseRatio({ source: svg_clone.src, target: width, method: "width", result: "number" });
-    svg_clone.classList.add("hoverdefault");
-    style = {
-      position: "relative",
-      width: String(width) + ea,
-      height: String(height) + ea,
-      top: String(((baseWidth - height) / 2) - visualSpecific.top) + ea,
-      left: String(((baseWidth - width) / 2) - visualSpecific.left) + ea,
-    };
-    for (let j in style) {
-      svg_clone.style[j] = style[j];
-    }
-    icon = SvgTong.parsing(svg_clone);
-    div_clone.appendChild(icon);
-
-    //white wording
-    if (behaviors.length !== 0) {
-
-      //white
-      totalHeight = list[i] === "desktop" ? 48 : 8;
-      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-      top = list[i] === "desktop" ? 11 : 2;
-      radius = list[i] === "desktop" ? 5 : 1.5;
-      style = {
-        position: "absolute",
-        height: String(totalHeight) + ea,
-        top: String(top) + ea,
-        background: "white",
-        borderRadius: String(radius) + ea,
-        boxShadow: "2px 2px 18px -10px #a0a0a0",
-        animation: "talkwhitefade 1.6s ease forwards",
-      };
-      for (let j in style) {
-        div_clone2.style[j] = style[j];
-      }
-
-      //triangle
-      height = list[i] === "desktop" ? 12 : 3;
-      visualSpecific = list[i] === "desktop" ? -1 : -0.2;
-      visualSpecific2 = list[i] === "desktop" ? 1 : 1;
-      svg_clone = SvgTong.tongMaker();
-      svg_clone.src = triangle;
-      width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
-      style = {
-        position: "absolute",
-        width: String(width) + ea,
-        height: String(height) + ea,
-        top: String(((totalHeight - height) / 2) + visualSpecific) + ea,
-        boxShadow: "2px 0px 16px -12px #a0a0a0",
-        right: String((-1 * width) + visualSpecific2) + ea,
-      };
-      for (let j in style) {
-        svg_clone.style[j] = style[j];
-      }
-      div_clone2.appendChild(SvgTong.parsing(svg_clone));
-
-      //wording
-      height = list[i] === "desktop" ? 14.5 : 2.6;
-      margin = list[i] === "desktop" ? 20 : 3;
-      visualSpecific = list[i] === "desktop" ? -1 : -0.1;
-      visualSpecific2 = list[i] === "desktop" ? 2 : 0.5;
-      leftMargin = list[i] === "desktop" ? -22 : -4;
-      svg_clone = SvgTong.tongMaker();
-      svg_clone.src = behaviors[finalNum].src[list[i]];
-      svg_clone.classList.add("hoverdefault");
-      width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
-      style = {
-        position: "absolute",
-        width: String(width) + ea,
-        height: String(height) + ea,
-        top: String(((totalHeight - height) / 2) + visualSpecific) + ea,
-        left: String(margin) + ea,
-      };
-      for (let j in style) {
-        svg_clone.style[j] = style[j];
-      }
-      div_clone2.appendChild(SvgTong.parsing(svg_clone));
-      div_clone2.style.width = String(width + (margin * 2) + visualSpecific2) + ea;
-      div_clone2.style.left = String((-1 * (width + (margin * 2))) + leftMargin) + ea;
-
-      //append
-      domsWording[list[i]] = div_clone2;
-      doms[list[i]] = div_clone;
-      div_clone.appendChild(div_clone2);
-
-      //add event
-      func_RAW = behaviors[finalNum].action;
-
-      if (behaviors[finalNum].actionException === undefined) {
-        eventFunc = function (e) {
-          let func = new Function("getObj", behaviors[finalNum].action);
-          func(GeneralJs.returnGet());
-        }
-        domsWording[list[i]].addEventListener("click", eventFunc);
-        icon.addEventListener("click", eventFunc);
-      } else {
-        eventFunc = function (e) {
-          let target = doms[list[i]];
-          let boo = list[i] === "desktop" ? true : false;
-          let ea = list[i] === "desktop" ? "px" : "vw";
-          let div_clone, div_clone2, svg_clone, input_clone, totalHeight, totalWidth, top, bottom, margin, radius, height, width, visualSpecific, visualSpecific2;
-          let style = {};
-          let whiteDoms = {};
-
-          target.lastChild.style.animation = "talkwhitefadeout 0.3s ease forwards";
-
-          //white box
-          totalHeight = list[i] === "desktop" ? 150 : 30;
-          totalWidth = list[i] === "desktop" ? 340 : 69;
-          div_clone = GeneralJs.nodes.div.cloneNode(true);
-          top = list[i] === "desktop" ? -97 : -17;
-          radius = list[i] === "desktop" ? 5 : 1;
-          visualSpecific = list[i] === "desktop" ? 20 : 4.2;
-          style = {
-            position: "absolute",
-            height: String(totalHeight) + ea,
-            top: String(top) + ea,
-            background: "white",
-            borderRadius: String(radius) + ea,
-            boxShadow: "2px 2px 18px -10px #a0a0a0",
-            animation: "talkwhitefadeconvert 0.3s ease forwards",
-            width: String(totalWidth) + ea,
-            left: "-" + String(totalWidth + visualSpecific) + ea,
-          };
-          for (let j in style) {
-            div_clone.style[j] = style[j];
-          }
-          whiteDoms.box = div_clone;
-
-          //green
-          height = (list[i] === "desktop" ? 17 : 3.2);
-          div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-          style = {
-            position: "absolute",
-            height: String(height) + ea,
-            top: String(0) + ea,
-            borderTopLeftRadius: String(radius) + ea,
-            borderTopRightRadius: String(radius) + ea,
-            borderBottomLeftRadius: String(0) + ea,
-            borderBottomRightRadius: String(0) + ea,
-            background: "linear-gradient(222deg,rgba(89,175,137,.85) 5%,rgba(0,156,106,.85) 100%)",
-            width: "100%",
-            left: "0"
-          };
-          for (let j in style) {
-            div_clone2.style[j] = style[j];
-          }
-          div_clone.appendChild(div_clone2);
-          whiteDoms.green = div_clone2;
-
-          //triangle
-          height = list[i] === "desktop" ? 12 : 4;
-          visualSpecific = list[i] === "desktop" ? -6 : -0.2;
-          visualSpecific2 = list[i] === "desktop" ? 1 : 1;
-          svg_clone = SvgTong.tongMaker();
-          svg_clone.src = triangle;
-          width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
-          style = {
-            position: "absolute",
-            width: String(width) + ea,
-            height: String(height) + ea,
-            top: String(((totalHeight - (height * 2))) + visualSpecific) + ea,
-            boxShadow: "2px 0px 16px -12px #a0a0a0",
-            right: String((-1 * width) + visualSpecific2) + ea,
-          };
-          for (let j in style) {
-            svg_clone.style[j] = style[j];
-          }
-          whiteDoms.arrow = SvgTong.parsing(svg_clone);
-          div_clone.appendChild(whiteDoms.arrow);
-
-          //x icon
-          height = list[i] === "desktop" ? 7 : 1.5;
-          top = list[i] === "desktop" ? 5 : 0.9;
-          visualSpecific = list[i] === "desktop" ? 1 : 0.2;
-          svg_clone = SvgTong.tongMaker();
-          svg_clone.src = close;
-          width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
-          style = {
-            position: "absolute",
-            width: String(width) + ea,
-            height: String(height) + ea,
-            top: String(top) + ea,
-            left: String(top + visualSpecific) + ea,
-          };
-          for (let j in style) {
-            svg_clone.style[j] = style[j];
-          }
-          svg_clone.addEventListener("click", function (e) {
-            target.removeChild(target.lastChild);
-          });
-          whiteDoms.xIcon = SvgTong.parsing(svg_clone);
-          div_clone.appendChild(whiteDoms.xIcon);
-
-          //input arrow
-          height = list[i] === "desktop" ? 15 : 3.8;
-          bottom = list[i] === "desktop" ? 28 : 6;
-          visualSpecific = list[i] === "desktop" ? -9 : -1;
-          svg_clone = SvgTong.tongMaker();
-          svg_clone.src = inputArrow;
-          width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
-          style = {
-            position: "absolute",
-            width: String(width) + ea,
-            height: String(height) + ea,
-            bottom: String(bottom) + ea,
-            left: String(bottom + visualSpecific) + ea,
-          };
-          for (let j in style) {
-            svg_clone.style[j] = style[j];
-          }
-          whiteDoms.greenArrow = SvgTong.parsing(svg_clone);
-          div_clone.appendChild(whiteDoms.greenArrow);
-
-          //input base
-          height = list[i] === "desktop" ? 29 : 6;
-          visualSpecific2 = list[i] === "desktop" ? -8 : -1.3;
-          div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-          style = {
-            position: "absolute",
-            height: String(height) + ea,
-            bottom: String(bottom + visualSpecific2) + ea,
-            borderRadius: String(radius + (list[i] === "desktop" ? -2 : 0)) + ea,
-            background: "#f2f2f2",
-            width: String(totalWidth - (bottom + visualSpecific + width + (list[i] === "desktop" ? 26.3 : 6.4))) + ea,
-            left: String(bottom + visualSpecific + (list[i] === "desktop" ? 17.2 : 4.1)) + ea,
-          };
-          for (let j in style) {
-            div_clone2.style[j] = style[j];
-          }
-          whiteDoms.inputBase = div_clone2;
-          div_clone.appendChild(div_clone2);
-
-          //input
-          input_clone = GeneralJs.nodes.input.cloneNode(true);
-          input_clone.classList.add("inputdefault");
-          input_clone.setAttribute("type", "text");
-          style = {
-            position: "absolute",
-            height: String(height) + ea,
-            bottom: String(bottom + visualSpecific2) + ea,
-            borderRadius: String(radius + (list[i] === "desktop" ? -2 : 0)) + ea,
-            background: "transparent",
-            width: String(totalWidth - (bottom + visualSpecific + width + (list[i] === "desktop" ? 26.3 : 6.4))) + ea,
-            left: String(bottom + visualSpecific + (list[i] === "desktop" ? 17.2 : 4.7)) + ea,
-          };
-          for (let j in style) {
-            input_clone.style[j] = style[j];
-          }
-          whiteDoms.input = input_clone;
-          div_clone.appendChild(input_clone);
-
-          let timeout = setTimeout(function () {
-            whiteDoms.input.focus();
-            clearTimeout(timeout);
-          }, 0);
-
-          //wording
-          height = list[i] === "desktop" ? 15 : 3.6;
-          top = list[i] === "desktop" ? 50 : 9.2;
-          visualSpecific2 = list[i] === "desktop" ? -2 : -0.2;
-          svg_clone = SvgTong.tongMaker();
-          svg_clone.src = behaviors[finalNum].actionException[0].src[list[i]];
-          width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
-          style = {
-            position: "absolute",
-            width: String(width) + ea,
-            height: String(height) + ea,
-            top: String(top) + ea,
-            left: String(bottom + visualSpecific + visualSpecific2) + ea,
-          };
-          for (let j in style) {
-            svg_clone.style[j] = style[j];
-          }
-          whiteDoms.wording = SvgTong.parsing(svg_clone);
-          div_clone.appendChild(whiteDoms.wording);
-
-          //event
-          if (behaviors[finalNum].actionException.length === 1) {
-            whiteDoms.input.addEventListener("keyup", function (e) {
-              this.value = GeneralJs.escapeString(this.value);
-            });
-            whiteDoms.input.addEventListener("keypress", function (e) {
-              let svg_clone;
-              let height, top, width, visualSpecific;
-              let style = {};
-              let ea = list[i] === "desktop" ? "px" : "vw";
-              let valuesTong = [];
-
-              if (e.key === "Enter") {
-
-                //loader
-                height = list[i] === "desktop" ? 48 : 10;
-                top = list[i] === "desktop" ? 50 : 9.5;
-                visualSpecific = list[i] === "desktop" ? 3 : 0.5;
-                svg_clone = SvgTong.tongMaker();
-                svg_clone.src = loader;
-                width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
-                style = {
-                  position: "absolute",
-                  width: String(width) + ea,
-                  height: String(height) + ea,
-                  top: String(top) + ea,
-                  left: "50%",
-                  marginLeft: '-' + String((width / 2) + visualSpecific) + ea,
-                  animation: "loadingrotate 1.8s linear 20",
-                };
-                for (let j in style) {
-                  svg_clone.style[j] = style[j];
-                }
-                div_clone.appendChild(SvgTong.parsing(svg_clone));
-
-                valuesTong.push(this.value);
-                let func = new Function("valuesTong", "instance", "flatform", "mother", behaviors[finalNum].action);
-                func(valuesTong, local_instance, (list[i] === "desktop" ? "desktop" : "mobile"), div_clone);
-                let icon = document.getElementById((list[i] === "desktop" ? "" : "mo") + "talkIcon");
-                icon.removeEventListener("click", GeneralJs.events["iconClickEvent"][i]);
-                GeneralJs.addHrefEvent(icon, "http://pf.kakao.com/_vxixkjxl/chat");
-
-              }
-            });
-          } else if (behaviors[finalNum].actionException.length === 2) {
-            whiteDoms.input.addEventListener("keyup", function (e) {
-              this.value = GeneralJs.escapeString(this.value);
-            });
-            whiteDoms.input.addEventListener("keypress", function (e) {
-              let height, top, bottom, visualSpecific, visualSpecific2, width;
-              let svg_clone, input_clone;
-              let style = {};
-              let ea = list[i] === "desktop" ? "px" : "vw";
-              let valuesTong = [];
-
-              if (e.key === "Enter") {
-                valuesTong.push(this.value);
-
-                //fadeout word and input
-                whiteDoms.wording.style.animation = "talkwhitefadeout 0.3s ease forwards";
-                whiteDoms.input.style.display = "none";
-
-                //new input
-                bottom = list[i] === "desktop" ? 28 : 6;
-                visualSpecific = list[i] === "desktop" ? -9 : -1;
-                height = list[i] === "desktop" ? 29 : 6;
-                visualSpecific2 = list[i] === "desktop" ? -8 : -1.3;
-                input_clone = GeneralJs.nodes.input.cloneNode(true);
-                input_clone.classList.add("inputdefault");
-                input_clone.setAttribute("type", "text");
-                style = {
-                  position: "absolute",
-                  height: String(height) + ea,
-                  bottom: String(bottom + visualSpecific2) + ea,
-                  borderRadius: String(radius + (list[i] === "desktop" ? -2 : 0)) + ea,
-                  background: "transparent",
-                  width: String(totalWidth - (bottom + visualSpecific + width + (list[i] === "desktop" ? 26.3 : 6.4))) + ea,
-                  left: String(bottom + visualSpecific + (list[i] === "desktop" ? 17.2 : 4.7)) + ea,
-                };
-                for (let j in style) {
-                  input_clone.style[j] = style[j];
-                }
-                whiteDoms.newInput = input_clone;
-                div_clone.appendChild(input_clone);
-
-                //new wording
-                height = list[i] === "desktop" ? 15 : 3.6;
-                top = list[i] === "desktop" ? 50 : 9.2;
-                visualSpecific2 = list[i] === "desktop" ? -2 : -0.2;
-                svg_clone = SvgTong.tongMaker();
-                svg_clone.src = behaviors[finalNum].actionException[1].src[list[i]];
-                width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
-                style = {
-                  position: "absolute",
-                  width: String(width) + ea,
-                  height: String(height) + ea,
-                  top: String(top) + ea,
-                  left: String(bottom + visualSpecific + visualSpecific2) + ea,
-                  animation: "talkwhitefadeconvert 0.3s ease forwards",
-                };
-                for (let j in style) {
-                  svg_clone.style[j] = style[j];
-                }
-                whiteDoms.newWording = SvgTong.parsing(svg_clone);
-                div_clone.appendChild(whiteDoms.newWording);
-
-                //second event
-                let timeout = setTimeout(function () {
-                  whiteDoms.newInput.focus();
-                  clearTimeout(timeout);
-                }, 0);
-                whiteDoms.newInput.addEventListener("keyup", function (e) {
-                  this.value = GeneralJs.autoHypenPhone(this.value);
-                });
-                whiteDoms.newInput.addEventListener("keypress", function (e) {
-                  let targets;
-                  let svg_clone;
-                  let height, top, width, visualSpecific;
-                  let style = {};
-                  let ea = list[i] === "desktop" ? "px" : "vw";
-
-                  if (e.key === "Enter") {
-                    targets = [ "green", "newWording", "newInput", "greenArrow", "inputBase" ];
-                    for (let i = 0; i < targets.length; i++) {
-                      whiteDoms[targets[i]].style.animation = "justfadeout 0.3s ease forwards";
-                    }
-
-                    //loader
-                    height = list[i] === "desktop" ? 48 : 10;
-                    top = list[i] === "desktop" ? 50 : 9.5;
-                    visualSpecific = list[i] === "desktop" ? 3 : 0.5;
-                    svg_clone = SvgTong.tongMaker();
-                    svg_clone.src = loader;
-                    width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
-                    style = {
-                      position: "absolute",
-                      width: String(width) + ea,
-                      height: String(height) + ea,
-                      top: String(top) + ea,
-                      left: "50%",
-                      marginLeft: '-' + String((width / 2) + visualSpecific) + ea,
-                      animation: "loadingrotate 1.8s linear 20",
-                    };
-                    for (let j in style) {
-                      svg_clone.style[j] = style[j];
-                    }
-                    div_clone.appendChild(SvgTong.parsing(svg_clone));
-
-                    valuesTong.push(this.value);
-                    let func = new Function("valuesTong", "instance", "flatform", "mother", behaviors[finalNum].action);
-                    func(valuesTong, local_instance, list[i], div_clone);
-                  }
-                });
-              }
-            });
-          } else {
-            throw new Error("Please bulidng logic");
-          }
-
-          //event end
-          target.appendChild(div_clone);
-
-        }
-        GeneralJs.events["iconClickEvent"].push(eventFunc);
-        domsWording[list[i]].addEventListener("click", GeneralJs.events["iconClickEvent"][i]);
-        icon.addEventListener("click", GeneralJs.events["iconClickEvent"][i]);
-
-      }
-
-    } else {
-      GeneralJs.addHrefEvent(div_clone, "http://pf.kakao.com/_vxixkjxl/chat");
-    }
-
-    //end
-    this.talkIcon = { dom: div_clone };
-    if (mother !== null) {
-      mother.appendChild(div_clone);
-    }
-
-  }
 }
 
 GeneralJs.prototype.whiteLogin = function (boo = "desktop") {

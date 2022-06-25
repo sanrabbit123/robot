@@ -524,7 +524,6 @@ ConsultingJs.prototype.submitEvent = function (boo) {
       }
       ajaxdata = ajaxdata.slice(1);
 
-      //convert homeliaisonTalk
       let icon;
       if (document.getElementById("talkIcon") !== null) {
         icon = document.getElementById("talkIcon");
