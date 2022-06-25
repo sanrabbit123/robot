@@ -4449,20 +4449,10 @@ GeneralJs.prototype.greenTalk = function () {
   iconVisualTop = desktop ? -1 : -0.3;
   iconVisualLeft = desktop ? -0.5 : -0.2;
 
-  whitePopup = () => {
-    return function (e) {
-      const zIndex = 101;
-      const mother = totalContents;
-
-      console.log("this!");
-
-    }
-  }
-
   greenBase = createNode({
     mother: totalContents,
     event: {
-      click: whitePopup(),
+      click: instance.consultingPopup(),
     },
     style: {
       display: "flex",
