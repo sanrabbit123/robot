@@ -9,7 +9,7 @@ const RethinkAccess = function () {
   this.moduleDir = this.dir + "/module";
   this.module = this.moduleDir + "/rethinkdb.js";
   this.connectionInfo = {
-    host: ADDRESS.officeinfo.ghost.host,
+    host: "localhost",
     port: ADDRESS.officeinfo.rethink.port,
     db: ADDRESS.officeinfo.rethink.db,
   };
