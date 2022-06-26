@@ -125,7 +125,7 @@ Ghost.prototype.clientPrint = async function (cliid, MONGOC = null) {
     });
   }
   const getPrintCommand = function (printer, targetFile) {
-    return `uniprint -printer ${printer} -size 9 -hsize 0 -L -wrap -font ${fontName} ${targetFile}`;
+    return `uniprint -printer ${printer} -size 9 -hsize 0 -L -media A4 -wrap -font ${fontName} ${targetFile}`;
   }
   const nowValue = (new Date()).valueOf();
   const tempFileName = (cliid) => { return `printerTemp_${cliid}_${String(nowValue)}.txt`; };
