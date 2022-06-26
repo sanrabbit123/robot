@@ -6140,6 +6140,10 @@ StyleCurationJs.prototype.launching = async function (loading) {
         subTitle: (this.client.name + " 고객님 서비스 안내"),
         secondBackground: true,
         backgroundType: 0,
+        talk: {
+          text: "하단 스타일 체크를 꼭 완료해주세요!",
+          event: "channel",
+        }
       },
       local: async () => {
         try {

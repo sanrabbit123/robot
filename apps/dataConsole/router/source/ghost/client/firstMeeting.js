@@ -1790,6 +1790,10 @@ FirstMeetingJs.prototype.launching = async function (loading) {
         subTitle: (this.client.name + " 고객님 현장 미팅 안내"),
         secondBackground: false,
         backgroundType: 0,
+        talk: {
+          text: "기타 문의 사항은 홈리에종 채널에 주세요!",
+          event: "channel",
+        }
       },
       local: async () => {
         try {

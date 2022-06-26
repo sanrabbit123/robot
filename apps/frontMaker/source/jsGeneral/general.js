@@ -4426,7 +4426,7 @@ GeneralJs.prototype.footerMake = function (type = 'A', color = "gradientGreen", 
 GeneralJs.prototype.greenTalk = function (text = "홈리에종을 통해 1:1 상담을 받아보세요!", event = "consulting") {
   if (typeof text === "string" && typeof event === "string") {
     // pass
-  } else if (typeof text === "object" && event === undefined) {
+  } else if (typeof text === "object") {
     if (typeof text.text === "string" && typeof text.event === "string") {
       event = text.event;
       text = text.text;
@@ -4437,7 +4437,7 @@ GeneralJs.prototype.greenTalk = function (text = "홈리에종을 통해 1:1 상
     throw new Error("invaild input");
   }
   const instance = this;
-  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, blankHref } = GeneralJs;
   const media = GeneralJs.stacks.updateMiddleMedialQueryConditions;
   const mobile = media[4];
   const desktop = !mobile;
@@ -4492,6 +4492,10 @@ GeneralJs.prototype.greenTalk = function (text = "홈리에종을 통해 1:1 상
 
   if (event === "consulting") {
     eventFunc = instance.consultingPopup();
+  } else if (event === "channel") {
+    eventFunc = function (e) {
+      blankHref("http://pf.kakao.com/_vxixkjxl/chat");
+    }
   }
 
   greenBase = createNode({

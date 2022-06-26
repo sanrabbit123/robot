@@ -783,6 +783,10 @@ ConstructEstimationJs.prototype.launching = async function (loading) {
         binaryPath: ConstructEstimationJs.binaryPath,
         subTitle: (this.client.name + " 고객님 시공 견적서"),
         backgroundType: 0,
+        talk: {
+          text: "기타 문의 사항은 홈리에종 채널에 주세요!",
+          event: "channel",
+        }
       },
       local: async () => {
         try {

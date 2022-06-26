@@ -1836,7 +1836,7 @@ AboutServiceJs.prototype.launching = async function (loading) {
         secondBackground: false,
         backgroundType: 1,
         talk: {
-          text: "",
+          text: "기타 문의 사항은 홈리에종 채널에 주세요!",
           event: "channel",
         }
       },

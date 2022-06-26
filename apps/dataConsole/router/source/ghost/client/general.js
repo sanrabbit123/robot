@@ -530,7 +530,12 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
     } else {
       this.footerMake();
     }
-    this.greenTalk();
+
+    if (typeof base.talk === "object") {
+      this.greenTalk(base.talk);
+    } else {
+      this.greenTalk();
+    }
     this.totalContents.style.height = "auto";
 
     getObj = returnGet();
