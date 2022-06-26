@@ -1835,6 +1835,10 @@ AboutServiceJs.prototype.launching = async function (loading) {
         subTitle: "홈리에종 서비스 설명",
         secondBackground: false,
         backgroundType: 1,
+        talk: {
+          text: "",
+          event: "channel",
+        }
       },
       local: async () => {
         try {

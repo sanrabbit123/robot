@@ -4423,7 +4423,19 @@ GeneralJs.prototype.footerMake = function (type = 'A', color = "gradientGreen", 
   }
 }
 
-GeneralJs.prototype.greenTalk = function (text = "홈리에종을 통해 1:1 상담을 받아보세요!") {
+GeneralJs.prototype.greenTalk = function (text = "홈리에종을 통해 1:1 상담을 받아보세요!", event = "consulting") {
+  if (typeof text === "string" && typeof event === "string") {
+    // pass
+  } else if (typeof text === "object" && event === undefined) {
+    if (typeof text.text === "string" && typeof text.event === "string") {
+      event = text.event;
+      text = text.text;
+    } else {
+      throw new Error("invaild object input");
+    }
+  } else {
+    throw new Error("invaild input");
+  }
   const instance = this;
   const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac } = GeneralJs;
   const media = GeneralJs.stacks.updateMiddleMedialQueryConditions;
@@ -4447,6 +4459,10 @@ GeneralJs.prototype.greenTalk = function (text = "홈리에종을 통해 1:1 상
   let whitePopupPaddingLeft;
   let whitePopupLeftBetween;
   let whitePopupWidthVisual;
+  let width;
+  let backgroundWidth;
+  let opacity;
+  let eventFunc;
 
   baseWidth = desktop ? 68 : 12;
   right = desktop ? 38 : 5.2;
@@ -4461,19 +4477,27 @@ GeneralJs.prototype.greenTalk = function (text = "홈리에종을 통해 1:1 상
 
   triangleWidth = desktop ? 8 : 1.6;
 
-  popupTextTop = desktop ? (isMac() ? -1 : 0) : -0.3;
+  popupTextTop = desktop ? (isMac() ? -1 : 1) : -0.2;
   popupSize = desktop ? 16 : 2.9;
   popupWeight = desktop ? 600 : 600;
 
-  whitePopupPaddingLeft = desktop ? 19 : 2.5;
+  whitePopupPaddingLeft = desktop ? 19 : 3;
   whitePopupLeftBetween = desktop ? 20 : 3.2;
 
   whitePopupWidthVisual = desktop ? 2 : 2;
 
+  backgroundWidth = desktop ? 1000 : 80;
+
+  opacity = 0.95;
+
+  if (event === "consulting") {
+    eventFunc = instance.consultingPopup();
+  }
+
   greenBase = createNode({
     mother: totalContents,
     event: {
-      click: instance.consultingPopup(),
+      click: eventFunc,
     },
     style: {
       display: "flex",
@@ -4510,22 +4534,28 @@ GeneralJs.prototype.greenTalk = function (text = "홈리에종을 통해 1:1 상
 
   whitePopup = createNode({
     mother: greenBase,
+    event: {
+      click: (e) => { e.preventDefault(); e.stopPropagation(); }
+    },
     style: {
       display: "flex",
       position: "absolute",
       height: String(whitePopupHeight) + ea,
       top: String(whitePopupTop) + ea,
-      background: "white",
-      borderRadius: String(5) + "px",
-      boxShadow: "2px 2px 18px -10px #a0a0a0",
-      animation: "talkwhitefade 1.6s ease forwards",
-      justifyContent: "center",
+      background: "transparent",
+      justifyContent: "right",
       alignItems: "center",
-      textAlign: "center",
-      width: String(2000) + ea,
+      textAlign: "right",
+      width: String(backgroundWidth) + ea,
+      left: String((backgroundWidth * -1) - whitePopupLeftBetween) + ea,
+      transition: "all 0s ease",
+      cursor: "default",
     },
     children: [
       {
+        event: {
+          click: eventFunc,
+        },
         style: {
           position: "relative",
           top: String(0),
@@ -4537,17 +4567,36 @@ GeneralJs.prototype.greenTalk = function (text = "홈리에종을 통해 1:1 상
           textAlign: "center",
           paddingLeft: String(whitePopupPaddingLeft) + ea,
           paddingRight: String(whitePopupPaddingLeft) + ea,
+          transition: "all 0s ease",
+          animation: "talkwhitefade 1.6s ease forwards",
+          cursor: "pointer",
         },
         children: [
           {
             style: {
               position: "absolute",
-              right: "calc(" + String(-1 * (triangleWidth / 2)) + ea + " - " + String(whitePopupWidthVisual / 2) + "px" + ")",
+              top: String(0),
+              left: String(0),
+              width: withOut(0),
+              height: withOut(0),
+              background: "white",
+              borderRadius: String(5) + "px",
+              boxShadow: "2px 2px 18px -10px #a0a0a0",
+              transition: "all 0s ease",
+              opacity: String(opacity),
+            }
+          },
+          {
+            style: {
+              position: "absolute",
+              right: "calc(" + String(-1 * (triangleWidth / 2)) + ea + ")",
               top: withOut(50, triangleWidth / 2, ea),
               width: String(triangleWidth) + ea,
               height: String(triangleWidth) + ea,
               background: colorChip.white,
               transform: "rotate(45deg)",
+              transition: "all 0s ease",
+              opacity: String(opacity),
             }
           },
           {
@@ -4558,14 +4607,17 @@ GeneralJs.prototype.greenTalk = function (text = "홈리에종을 통해 1:1 상
               fontSize: String(popupSize) + ea,
               fontWeight: String(popupWeight),
               color: colorChip.black,
+              transition: "all 0s ease",
             }
           }
         ]
       }
     ]
   });
-  whitePopup.style.width = String(Math.ceil(whitePopup.firstChild.getBoundingClientRect().width) + whitePopupWidthVisual) + "px";
-  whitePopup.style.left = "calc(calc(" + String(Math.ceil(whitePopup.getBoundingClientRect().width)) + "px" + " + " + String(whitePopupLeftBetween) + ea +") * -1)";
+
+  // width = Math.ceil(whitePopup.firstChild.getBoundingClientRect().width) + whitePopupWidthVisual;
+  // whitePopup.style.width = String(width) + "px";
+  // whitePopup.style.left = "calc(calc(" + String(width) + "px" + " + " + String(whitePopupLeftBetween) + ea +") * -1)";
 
   this.talkIcon = { dom: greenBase };
 }
