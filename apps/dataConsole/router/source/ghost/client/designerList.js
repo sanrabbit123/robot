@@ -454,7 +454,7 @@ DesignerListJs.prototype.designerList = function () {
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
-  whiteBlockMarginBottom = <%% 120, 120, 120, 120, 9 %%>;
+  whiteBlockMarginBottom = <%% 200, 200, 200, 200, 9 %%>;
 
   quoteHeight = <%% 11, 11, 11, 11, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
@@ -491,6 +491,7 @@ DesignerListJs.prototype.designerList = function () {
   whiteBlock = createNode({
     mother: this.baseTong,
     style: {
+      display: "block",
       position: "relative",
       borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
@@ -498,7 +499,7 @@ DesignerListJs.prototype.designerList = function () {
       paddingBottom: String(whiteBlockPaddingBottom) + ea,
       background: colorChip.white,
       marginBottom: String(whiteBlockMarginBottom) + ea,
-      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      boxShadow: "0px 3px 15px -10px " + colorChip.gray5,
     }
   });
 
