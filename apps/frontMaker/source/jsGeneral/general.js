@@ -4261,13 +4261,13 @@ GeneralJs.prototype.footerMake = function () {
     mobile: [
       "포트폴리오",
       "고객 후기",
-      "서비스 소개",
+      "FAQ",
       "서비스 신청",
     ],
     mobileHref: [
       "/portfolio.php",
       "/review.php",
-      "/about.php",
+      "/faq.php",
       "/consulting.php"
     ],
     mobileInfo: [
