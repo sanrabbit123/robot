@@ -598,6 +598,7 @@ DataConsole.prototype.renderFrontPhp = async function () {
       { from: "designerList", to: "designer", path: "/middle/designerList" },
       { from: "designerDetail", to: "desdetail", path: "/middle/designerDetail" },
       { from: "frontAbout", to: "about", path: "/middle/frontAbout" },
+      { from: "frontFaq", to: "faq", path: "/middle/frontFaq" },
       { from: "miniAbout", to: "miniAbout", path: "/middle/miniAbout" },
     ];
     const ghostTargets = (await fileSystem(`readDir`, [ ghostdir + "/client" ])).filter((str) => { return str !== ".DS_Store" }).filter((str) => {

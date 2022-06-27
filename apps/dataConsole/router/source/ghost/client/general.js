@@ -518,24 +518,9 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
     base.instance.mother.pageName = name;
     this.setGeneralBase(base, typeof obj.background === "number" ? obj.background : 0, mode, name);
     await local();
+    this.footerMake();
+    this.greenTalk(typeof base.talk === "object" ? base.talk : null);
 
-    if (this.media[4]) {
-      this.footerMake('A', "gradientGreen", true);
-      belowTarget = document.querySelector(".mofooterbelow");
-      belowTarget.removeChild(belowTarget.firstChild);
-      removeTargets = belowTarget.querySelectorAll("a");
-      for (let dom of removeTargets) {
-        belowTarget.removeChild(dom);
-      }
-    } else {
-      this.footerMake();
-    }
-
-    if (typeof base.talk === "object") {
-      this.greenTalk(base.talk);
-    } else {
-      this.greenTalk();
-    }
     this.totalContents.style.height = "auto";
 
     getObj = returnGet();

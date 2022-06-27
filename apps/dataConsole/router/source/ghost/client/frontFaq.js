@@ -48,7 +48,7 @@ FrontFaqJs.faqContents = [
     "answer": "홈리에종은 고객님의 예산 / 취향 / 공간 / 생활특징을 종합적으로 이해하고 그에 맞는 <b%홈스타일링 서비스와 디자이너를 추천하여 연결%b>해줍니다. 연결된 디자이너는 홈리에종의 종합적인 정보와 지원을 받아 고객님의 집을 전담하여 시공부터 가구, 소품의 스타일링까지 맡게 됩니다."
   },
   {
-    "question": "홈스타일링이 무엇인가요?",
+    "question": "홈스타일링이란 무엇인가요?",
     "answer": "홈스타일링이란 시공 위주인 리모델링과 달리 고객님의 전체 예산 내에서 기능, 디자인적으로 필요한 만큼 시공하고 마감, 가구, 패브릭, 소품 등으로 공간을 꾸미는 것에 집중하는 방식을 의미합니다. <b%불필요한 공사가 없어 비용이 절약되는 동시에 실제 디자인은 더 예쁘게%b> 나온답니다!"
   },
   {
@@ -188,7 +188,7 @@ FrontFaqJs.prototype.insertInitBox = function () {
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
   titleWording = "홈리에종 FAQ";
-  subTitleContents = "자주 찾는 질문들";
+  subTitleContents = "자주 묻는 질문";
 
   mobileBlockTop = 3.5;
 
@@ -224,7 +224,7 @@ FrontFaqJs.prototype.insertInitBox = function () {
     searchTags.push("전체");
   }
 
-  placeholder = "패브릭";
+  placeholder = "디자인비";
 
   serviceButtonClassName = "serviceButton";
 
@@ -360,7 +360,7 @@ FrontFaqJs.prototype.insertInitBox = function () {
                   try {
                     this.value = this.value.trim();
                     this.value = this.value.replace(/[^가-힣a-z ]/gi, '');
-                    instance.designerBlock(this.value);
+                    instance.insertFaqBlock(this.value);
                   } catch (e) {
                     console.log(e);
                   }
@@ -413,7 +413,7 @@ FrontFaqJs.prototype.insertInitBox = function () {
               dom.firstChild.querySelector('b').style.color = colorChip.deactive;
             }
           }
-          instance.designerBlock(/전체/gi.test(thisValue) ? "" : thisValue);
+          instance.insertFaqBlock(/전체/gi.test(thisValue) ? "" : thisValue);
         }
       },
       style: {
@@ -516,7 +516,7 @@ FrontFaqJs.prototype.insertFaqBox = function () {
 
 FrontFaqJs.prototype.insertFaqBlock = function (search = null) {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, cleanChildren } = GeneralJs;
   const { ea, media, totalContents, baseTong } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -559,10 +559,19 @@ FrontFaqJs.prototype.insertFaqBlock = function (search = null) {
 
   mobileQuestionMarginBottom = 1.5;
 
+  cleanChildren(faqTong);
+
   targetContents = JSON.parse(JSON.stringify(FrontFaqJs.faqContents));
 
-
-
+  if (typeof search === "string") {
+    if (search.trim() === '') {
+      targetContents = targetContents;
+    } else {
+      targetContents = targetContents.filter((obj) => {
+        return (new RegExp(search, "gi")).test(obj.question);
+      });
+    }
+  }
 
   num = 0;
   for (let { question, answer } of targetContents) {

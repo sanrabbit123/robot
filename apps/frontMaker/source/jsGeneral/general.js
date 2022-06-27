@@ -4119,315 +4119,527 @@ GeneralJs.prototype.navigatorMake = function () {
   this.navigator = { desktop: desktopNavigator, mobile: mobileNavigator };
 }
 
-GeneralJs.prototype.footerMake = function (type = 'A', color = "gradientGreen", mobileForce = false) {
+GeneralJs.prototype.footerMake = function () {
   const instance = this;
-  const { footer } = this.map.main;
-  const { words, src } = footer;
-  const { mobileCase } = words;
-  const wordsKey = Object.keys(words);
-  const media = [
-    (window.innerWidth > 1540),
-    (window.innerWidth <= 1540 && window.innerWidth > 1050),
-    (window.innerWidth <= 1050 && window.innerWidth > 900),
-    (window.innerWidth <= 900 && window.innerWidth > 760),
-    (window.innerWidth <= 760),
-  ];
-  const standardWidths = [ 1400, 1050, 900, 720, 100 ];
-  // css tong => [ width, height, top, margin-left ]
-  const cssTong = {
-    f18home: [
-      255,
-      73,
-      66,
-      -700,
-      "right",
+  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, selfHref, blankHref } = GeneralJs;
+  const media = GeneralJs.stacks.updateMiddleMedialQueryConditions;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const small = (media[3] || media[4]);
+  const big = !small;
+  const ea = desktop ? "px" : "vw";
+  const totalContents = document.getElementById("totalcontents");
+  let footerBase;
+  let baseHeight;
+  let logoWidth;
+  let footerTong;
+  let tongHeight;
+  let basePaddingTop;
+  let leftTong, rightTong;
+  let leftTongWidth;
+  let logoType;
+  let contents;
+  let logoMarginBottom;
+  let leftSize;
+  let leftWeight;
+  let leftLineHeight;
+  let finalTong;
+  let supportTongWidth, menuTongWidth, finalTongWidth;
+  let tongTopVisual;
+  let titleMarginBottom;
+  let titleSize, titleWeight, titleLineHeight;
+  let titleBetween;
+  let contentsSize, contentsWeight, contentsLineHeight;
+  let descriptionSize, descriptionWeight, descriptionLineHeight;
+  let buttonBox;
+  let num;
+  let finalMobileBottom;
+  let mobileMargin;
+  let mobileWordMarginTop;
+  let mobileButtonBetween, mobileButtonTextTop;
+  let mobileButtonHeight, mobileLogoMarginTop;
+  let supportTong, menuTong;
+
+  standardWidth = <%% 1400, 1050, 900, 720, 100 %%>;
+
+  baseHeight = <%% 300, 300, 300, 240, 240 %%>;
+  basePaddingTop = <%% 67, 67, 67, 52, 9 %%>;
+  tongHeight = <%% 165, 165, 165, 135, 165 %%>;
+
+  logoType = <%% 3, 3, 3, 3, 0 %%>;
+  logoWidth = <%% 217, 217, 217, 176, 36 %%>;
+
+  leftTongWidth = <%% 300, 300, 300, 300, 300 %%>;
+
+  logoMarginBottom = <%% 28, 28, 28, 22, 28 %%>;
+
+  leftSize = <%% 12, 12, 12, 10, 12 %%>;
+  leftWeight = <%% 600, 600, 600, 600, 600 %%>;
+  leftLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+
+  supportTongWidth = <%% 200, 200, 200, 180, 200 %%>;
+  menuTongWidth = <%% 150, 140, 130, 110, 150 %%>;
+  finalTongWidth = <%% 245, 235, 215, 185, 245 %%>;
+
+  tongTopVisual = <%% -5, -5, -5, -5, -5 %%>;
+  titleMarginBottom = <%% 22, 22, 22, 18, 22 %%>;
+
+  titleSize = <%% 19, 19, 19, 16, 19 %%>;
+  titleWeight = <%% 700, 700, 700, 700, 700 %%>;
+  titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
+  titleBetween = <%% 4, 4, 4, 4, 4 %%>;
+
+  contentsSize = <%% 16, 16, 16, 13, 3.5 %%>;
+  contentsWeight = <%% 500, 500, 500, 500, 500 %%>;
+  contentsLineHeight = <%% 2, 2, 2, 2, 1.7 %%>;
+
+  descriptionSize = <%% 12, 12, 12, 10, 12 %%>;
+  descriptionWeight = <%% 500, 500, 500, 500, 500 %%>;
+  descriptionLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
+
+  finalMobileBottom = 12;
+  mobileMargin = 8;
+  mobileWordMarginTop = 5;
+
+  mobileButtonBetween = 2;
+  mobileButtonTextTop = -0.3;
+
+  mobileButtonHeight = 10;
+  mobileLogoMarginTop = 8;
+
+  contents = {
+    left: [
+      "CEO : 박혜연",
+      "서울특별시 성동구 상원1길 26, 서울숲 A타워 1305호",
+      "사업자등록번호 : 221 - 81 - 49759",
+      "통신판매신고업 : 제 2020 - 서울성동 - 01563호",
     ],
-    f18faq: [
-      80,
-      18,
-      120,
-      157,
-      "left"
+    right: {
+      support: {
+        title: "INFO & SUPPROT",
+        contents: [
+          "홈리에종 FAQ",
+          "이용 약관 및 개인정보 이용방침",
+          "T : 02 - 2039 - 2252",
+          "E : help@home-liaison.com",
+        ],
+        href: [
+          "/faq.php",
+          "/faq.php",
+          null,
+          null
+        ]
+      },
+      menu: {
+        title: "MENU",
+        contents: [
+          "서비스 소개",
+          "포트폴리오",
+          "고객 후기",
+          "디자이너",
+        ],
+        href: [
+          "/about.php",
+          "/portfolio.php",
+          "/review.php",
+          "/designer.php",
+        ]
+      },
+      final: {
+        title: [
+          { text: "서비스 신청", event: (e) => { selfHref("/consulting.php") } },
+          { text: "블로그 & 인스타그램", event: (e) => { blankHref("https://blog.naver.com/homeliaison"); blankHref("https://www.instagram.com/homeliaison"); } },
+          { text: "디자이너 신청", event: (e) => { selfHref("/aspirant.php") } },
+        ],
+        description: [
+          "홈리에종의 모든 거래에 대한 책임과",
+          "배송, 교환, 환불, 민원 등의 처리는",
+          "홈리에종에서 진행합니다."
+        ]
+      }
+    },
+    mobile: [
+      "포트폴리오",
+      "고객 후기",
+      "서비스 소개",
+      "서비스 신청",
     ],
-    f18card: [
-      70,
-      18,
-      120,
-      247,
-      "left"
+    mobileHref: [
+      "/portfolio.php",
+      "/review.php",
+      "/about.php",
+      "/consulting.php"
     ],
-    f18terms: [
-      190,
-      17,
-      153,
-      126,
-      "left"
-    ],
-    f18about: [
-      78,
-      18,
-      120,
-      380,
-      "left"
-    ],
-    f18port: [
-      72,
-      17,
-      153,
-      386,
-      "left"
-    ],
-    f18designer: [
-      62,
-      17,
-      186,
-      397,
-      "left"
-    ],
-    f18blog: [
-      64,
-      17,
-      216,
-      395,
-      "left"
-    ],
-    f18channel: [
-      163,
-      25,
-      64,
-      539,
-      "left"
-    ],
-    f18naverblog: [
-      52,
-      25,
-      95,
-      549,
-      "left"
-    ],
-    f18instagram: [
-      80,
-      25,
-      95,
-      621,
-      "left"
-    ],
-    f18designersubmit: [
-      100,
-      25,
-      125,
-      601,
-      "left"
-    ],
-    f18partnershipsubmit: [
-      60,
-      25,
-      125,
-      526,
-      "left"
-    ],
+    mobileInfo: [
+      "02 - 2039 - 2252",
+      "help@home-liaison.com",
+    ]
   };
 
-  let div_clone, div_clone2, a_clone, svg_clone;
-  let height, width, top;
-  let style = {};
-  let ea;
-  let actionTong = [];
-  let tempFunc;
-  let arr = [];
-  let mobileType;
-  let mobileCaseKeys = Object.keys(mobileCase);
-  let mobileCaseTempArr;
-  let mobileCaseTongs = {};
-  let standardWidth;
-  let height_original, top_original;
+  footerBase = createNode({
+    mother: totalContents,
+    style: {
+      display: "block",
+      background: colorChip.gradientGreen,
+      width: withOut(0, ea),
+      position: "relative",
+      height: desktop ? String(baseHeight - basePaddingTop) + ea : "",
+      paddingTop: String(basePaddingTop) + ea,
+      paddingBottom: desktop ? "" : String(finalMobileBottom) + ea,
+    }
+  });
 
-  //make action tong
-  for (let i = 0; i < wordsKey.length; i++) {
-    if (wordsKey[i] !== "mobileCase") {
-      for (let j = 0; j < words[wordsKey[i]].length; j++) {
-        if (Array.isArray(words[wordsKey[i]][j].action)) {
-          for (let k = 0; k < words[wordsKey[i]][j].action.length; k++) {
-            if (words[wordsKey[i]][j].action[k].css !== "") {
-              actionTong.push({
-                css: words[wordsKey[i]][j].action[k].css,
-                js: words[wordsKey[i]][j].action[k].js
-              });
+  if (desktop) {
+
+    footerTong = createNode({
+      mother: footerBase,
+      style: {
+        display: "flex",
+        position: "relative",
+        flexDirection: "row",
+        justifyContent: "right",
+        alignItems: "center",
+        textAlign: "right",
+        width: String(standardWidth) + ea,
+        left: withOut(50, standardWidth / 2, ea),
+        height: String(tongHeight) + ea,
+      }
+    });
+
+    // logo tong
+    leftTong = createNode({
+      mother: footerTong,
+      style: {
+        display: "inline-block",
+        position: "absolute",
+        left: String(0),
+        top: String(0),
+        width: String(leftTongWidth) + ea,
+        height: withOut(0, ea),
+      }
+    });
+
+    createNode({
+      mother: leftTong,
+      mode: "svg",
+      source: this.returnLogo(colorChip.white, logoType),
+      style: {
+        display: "block",
+        position: "relative",
+        width: String(logoWidth) + ea,
+        marginBottom: String(logoMarginBottom) + ea,
+      }
+    });
+
+    for (let text of contents.left) {
+      createNode({
+        mother: leftTong,
+        text,
+        style: {
+          display: "block",
+          textAlign: "left",
+          fontSize: String(leftSize) + ea,
+          fontWeight: String(leftWeight),
+          lineHeight: String(leftLineHeight),
+          color: colorChip.white,
+        }
+      });
+    }
+
+    // support tong
+    supportTong = createNode({
+      mother: footerTong,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        height: withOut(0, ea),
+        width: String(supportTongWidth) + ea,
+        textAlign: "right",
+        top: String(tongTopVisual) + ea,
+      },
+      children: [
+        {
+          text: contents.right.support.title,
+          style: {
+            fontSize: String(titleSize) + ea,
+            fontWeight: String(titleWeight),
+            color: colorChip.white,
+            position: "relative",
+            display: "block",
+            marginBottom: String(titleMarginBottom) + ea,
+            lineHeight: String(titleLineHeight),
+          }
+        },
+        {
+          text: contents.right.support.contents.join("\n"),
+          style: {
+            fontSize: String(contentsSize) + ea,
+            fontWeight: String(contentsWeight),
+            lineHeight: String(contentsLineHeight),
+            color: colorChip.white,
+            position: "relative",
+            display: "block",
+            cursor: "pointer",
+          }
+        },
+      ]
+    }).children[1];
+
+    for (let i = 0; i < contents.right.support.href.length; i++) {
+      createNode({
+        mother: supportTong,
+        attribute: { index: String(i) },
+        event: {
+          click: function (e) {
+            const index = Number(this.getAttribute("index"));
+            if (contents.right.support.href[index] !== null) {
+              selfHref(contents.right.support.href[index]);
             }
           }
-        } else {
-          if (words[wordsKey[i]][j].action.css !== "") {
-            actionTong.push({
-              css: words[wordsKey[i]][j].action.css,
-              js: words[wordsKey[i]][j].action.js
-            });
+        },
+        style: {
+          position: "absolute",
+          display: "block",
+          width: withOut(0),
+          left: String(0),
+          height: String(25) + '%',
+          top: String(25 * i) + '%',
+          background: "transparent",
+          cursor: "pointer",
+        }
+      })
+    }
+
+    // menu tong
+    menuTong = createNode({
+      mother: footerTong,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        height: withOut(0, ea),
+        width: String(menuTongWidth) + ea,
+        textAlign: "right",
+        top: String(tongTopVisual) + ea,
+      },
+      children: [
+        {
+          text: contents.right.menu.title,
+          style: {
+            fontSize: String(titleSize) + ea,
+            fontWeight: String(titleWeight),
+            color: colorChip.white,
+            position: "relative",
+            display: "block",
+            marginBottom: String(titleMarginBottom) + ea,
+            lineHeight: String(titleLineHeight),
+          }
+        },
+        {
+          text: contents.right.menu.contents.join("\n"),
+          style: {
+            fontSize: String(contentsSize) + ea,
+            fontWeight: String(contentsWeight),
+            lineHeight: String(contentsLineHeight),
+            color: colorChip.white,
+            position: "relative",
+            display: "block",
+            cursor: "pointer",
+          }
+        },
+      ]
+    }).children[1];
+
+    for (let i = 0; i < contents.right.menu.href.length; i++) {
+      createNode({
+        mother: menuTong,
+        attribute: { index: String(i) },
+        event: {
+          click: function (e) {
+            const index = Number(this.getAttribute("index"));
+            if (contents.right.menu.href[index] !== null) {
+              selfHref(contents.right.menu.href[index]);
+            }
+          }
+        },
+        style: {
+          position: "absolute",
+          display: "block",
+          width: withOut(0),
+          left: String(0),
+          height: String(25) + '%',
+          top: String(25 * i) + '%',
+          background: "transparent",
+          cursor: "pointer",
+        }
+      });
+    }
+
+    // final tong
+    finalTong = createNode({
+      mother: footerTong,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        height: withOut(0, ea),
+        width: String(finalTongWidth) + ea,
+        textAlign: "right",
+        top: String(tongTopVisual) + ea,
+      }
+    });
+    for (let { text, event } of contents.right.final.title) {
+      createNode({
+        mother: finalTong,
+        text,
+        event: {
+          click: event
+        },
+        style: {
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(titleWeight),
+          color: colorChip.white,
+          position: "relative",
+          display: "block",
+          marginBottom: String(titleBetween) + ea,
+          lineHeight: String(titleLineHeight),
+          cursor: "pointer",
+        }
+      });
+    }
+    createNode({
+      mother: finalTong,
+      text: contents.right.final.description.join("\n"),
+      style: {
+        position: "relative",
+        marginTop: String(titleMarginBottom) + ea,
+        display: "block",
+        fontSize: String(descriptionSize) + ea,
+        fontWeight: String(descriptionWeight),
+        color: colorChip.white,
+        lineHeight: String(descriptionLineHeight),
+      }
+    });
+
+  } else {
+
+    buttonBox = createNode({
+      mother: footerBase,
+      style: {
+        display: "block",
+        position: "relative",
+        marginLeft: String(mobileMargin) + ea,
+        width: withOut((mobileMargin * 2), ea),
+      }
+    });
+
+    num = 0;
+    for (let text of contents.mobile) {
+      createNode({
+        mother: buttonBox,
+        attribute: { index: String(num) },
+        event: {
+          click: function (e) {
+            const index = Number(this.getAttribute("index"));
+            selfHref(contents.mobileHref[index]);
+          }
+        },
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          borderRadius: String(5) + "px",
+          width: "calc(calc(100% - " + String(mobileButtonBetween) + ea + ") / 2)",
+          height: String(mobileButtonHeight) + ea,
+          marginRight: String(num % 2 === 1 ? 0 : mobileButtonBetween) + ea,
+          marginBottom: String(mobileButtonBetween) + ea,
+          background: colorChip.darkGreen,
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+        },
+        children: [
+          {
+            text,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(contentsSize) + ea,
+              fontWeight: String(800),
+              color: colorChip.white,
+              top: String(mobileButtonTextTop) + ea,
+            }
+          }
+        ]
+      });
+      num++;
+    }
+
+    createNode({
+      mother: footerBase,
+      text: contents.left.join("\n"),
+      style: {
+        display: "block",
+        position: "relative",
+        marginLeft: String(mobileMargin) + ea,
+        width: withOut((mobileMargin * 2), ea),
+        fontSize: String(contentsSize) + ea,
+        textAlign: "center",
+        fontWeight: String(contentsWeight),
+        lineHeight: String(contentsLineHeight),
+        color: colorChip.white,
+        marginTop: String(mobileWordMarginTop) + ea,
+      }
+    })
+
+    createNode({
+      mother: footerBase,
+      text: contents.mobileInfo.join("&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;"),
+      style: {
+        display: "block",
+        position: "relative",
+        marginLeft: String(mobileMargin) + ea,
+        width: withOut((mobileMargin * 2), ea),
+        fontSize: String(contentsSize) + ea,
+        textAlign: "center",
+        fontWeight: String(contentsWeight),
+        lineHeight: String(contentsLineHeight),
+        color: colorChip.white,
+        marginTop: String(mobileWordMarginTop) + ea,
+      }
+    })
+
+    createNode({
+      mother: footerBase,
+      style: {
+        display: "block",
+        position: "relative",
+        marginLeft: String(mobileMargin) + ea,
+        width: withOut((mobileMargin * 2), ea),
+        textAlign: "center",
+        marginTop: String(mobileLogoMarginTop) + ea,
+      },
+      children: [
+        {
+          mode: "svg",
+          source: this.returnLogo(colorChip.white, logoType),
+          style: {
+            display: "inline-block",
+            width: String(logoWidth) + ea,
           }
         }
-      }
-    }
+      ]
+    })
+
   }
 
-  //desktop
-  div_clone = GeneralJs.nodes.div.cloneNode(true);
-  div_clone.id = "footergreenback0817";
-  div_clone.style.background = GeneralJs.colorChip[color];
-
-  standardWidth = 0;
-  if (media[0]) {
-    standardWidth = standardWidths[0];
-  } else if (media[1]) {
-    standardWidth = standardWidths[1];
-  } else if (media[2]) {
-    standardWidth = standardWidths[2];
-  } else if (media[3]) {
-    standardWidth = standardWidths[3];
-  } else if (media[4]) {
-    standardWidth = standardWidths[4];
-  }
-
-  //footer left
-  ea = "px";
-  height = 165;
-  top = 67;
-  if (media[3] || media[4]) {
-    height_original = height;
-    top_original = top;
-    height = 135;
-    top = 52;
-    div_clone.style.height = String(240) + ea;
-  }
-
-  svg_clone = SvgTong.tongMaker();
-  svg_clone.src = src.desktop.left;
-  width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
-  style = {
-    display: "block",
-    position: "absolute",
-    left: String(50) + '%',
-    transition: "all 0.5s ease",
-    height: String(height) + ea,
-    width: String(width) + ea,
-    top: String(top) + ea,
-    marginLeft: String(-1 * (standardWidth / 2)) + ea
-  };
-  for (let i in style) {
-    svg_clone.style[i] = style[i];
-  }
-  div_clone.appendChild(SvgTong.parsing(svg_clone));
-
-  //footer right
-  svg_clone = SvgTong.tongMaker();
-  svg_clone.src = src.desktop.right;
-  width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
-  style = {
-    display: "block",
-    position: "absolute",
-    left: String(50) + '%',
-    transition: "all 0.5s ease",
-    height: String(height) + ea,
-    width: String(width) + ea,
-    top: String(top) + ea,
-    marginLeft: String((standardWidth / 2) - width) + ea
-  };
-  for (let i in style) {
-    svg_clone.style[i] = style[i];
-  }
-  div_clone.appendChild(SvgTong.parsing(svg_clone));
-
-  for (let i = 0; i < actionTong.length; i++) {
-    tempFunc = new Function("instance", "return function (e) { " + actionTong[i].js + " }");
-    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "absolute",
-      opacity: String(0),
-      left: String(50) + '%',
-      cursor: "pointer",
-      width: String(cssTong[actionTong[i].css][0]) + ea,
-      height: String(cssTong[actionTong[i].css][1]) + ea,
-      top: String(cssTong[actionTong[i].css][2]) + ea,
-      marginLeft: String(cssTong[actionTong[i].css][4] === "right" ? -1 * (standardWidth / 2) : cssTong[actionTong[i].css][3] - ((standardWidths[0] / 2) - (standardWidth / 2))) + ea,
-    };
-    if (media[3]) {
-      style.width = String(cssTong[actionTong[i].css][0] * (height / height_original)) + ea;
-      style.height = String(cssTong[actionTong[i].css][1] * (height / height_original)) + ea;
-      style.top = String(((cssTong[actionTong[i].css][2] - top_original) * (height / height_original)) + top) + ea;
-      if (cssTong[actionTong[i].css][4] === "left") {
-        style.marginLeft = String(((cssTong[actionTong[i].css][3] - ((standardWidths[0] / 2) - (standardWidth / 2))) * (height / height_original)) + 65) + ea;
-      }
-    }
-    for (let j in style) {
-      div_clone2.style[j] = style[j];
-    }
-    div_clone2.addEventListener("click", tempFunc(this));
-    div_clone.appendChild(div_clone2);
-  }
-
-  //mother append
-  if (document.getElementById("totalcontents") !== null) {
-    if (!mobileForce) {
-      document.getElementById("totalcontents").appendChild(div_clone);
-    }
-  }
-
-  //mobile
-  for (let i in mobileCase) {
-    mobileCaseTongs[i] = [];
-    mobileCaseTongs[i].push(i);
-    for (let j = 0; j < mobileCase[i].targets.length; j++) {
-      mobileCaseTongs[i].push(mobileCase[i].targets[j]);
-    }
-  }
-
-  for (let i in mobileCaseTongs) {
-    for (let j = 0; j < mobileCaseTongs[i].length; j++) {
-      if (type === mobileCaseTongs[i][j]) {
-        mobileType = i;
-      }
-    }
-  }
-
-  arr.push("mofooter" + mobileType);
-  for (let i = 0; i < mobileCase[mobileType].menu.length; i++) {
-    arr.push(mobileCase[mobileType].menu[i].href);
-  }
-
-  div_clone = GeneralJs.nodes.div.cloneNode(true);
-  div_clone.className = "mofooterbelow";
-
-  svg_clone = SvgTong.tongMaker();
-  svg_clone.src = src.mobile[mobileType];
-  svg_clone.style.width = "100%";
-  svg_clone.style.display = "block";
-  div_clone.appendChild(SvgTong.parsing(svg_clone));
-
-  svg_clone = SvgTong.tongMaker();
-  svg_clone.src = src.mobile['Z'];
-  svg_clone.style.width = "100%";
-  svg_clone.style.display = "block";
-  div_clone.appendChild(SvgTong.parsing(svg_clone));
-
-  for (let i = 0; i < 3; i++) {
-    a_clone = GeneralJs.nodes.a.cloneNode(true);
-    a_clone.href = arr[i + 1];
-    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-    div_clone2.classList.add("mfbelbutton");
-    div_clone2.classList.add("mfbelbu" + String(i + 1));
-    a_clone.appendChild(div_clone2);
-    div_clone.appendChild(a_clone);
-  }
-  if (document.getElementById("mototalcontents") !== null) {
-    document.getElementById("mototalcontents").appendChild(div_clone);
-  }
-  if (mobileForce) {
-    document.getElementById("totalcontents").appendChild(div_clone);
-  }
 }
 
 GeneralJs.prototype.greenTalk = function (text = "홈리에종을 통해 1:1 상담을 받아보세요!", event = "consulting") {
   if (typeof text === "string" && typeof event === "string") {
     // pass
   } else if (typeof text === "object") {
-    if (typeof text.text === "string" && typeof text.event === "string") {
+    if (text === null) {
+      event = "consulting";
+      text = "홈리에종을 통해 1:1 상담을 받아보세요!";
+    } else if (text !== null && typeof text.text === "string" && typeof text.event === "string") {
       event = text.event;
       text = text.text;
     } else {
