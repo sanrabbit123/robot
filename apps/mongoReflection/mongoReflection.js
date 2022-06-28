@@ -342,18 +342,14 @@ MongoReflection.prototype.mysqlReflection = async function (to = "local") {
 
 MongoReflection.prototype.frontReflection = async function (to = "local") {
   const instance = this;
-  const { mysqlQuery } = this.mother;
+  const { mysqlQuery, fileSystem } = this.mother;
   try {
 
     console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `mariaDB front reflection start ==================================================`);
 
     const from = "front";
     const targets = await this.showTables(from);
-    console.log(targets);
-
-    const status = await this.showTables(to);
-    console.log(status);
-
+    // const status = await this.showTables(to);
     let targets_refined, fromQuery, whereQuery, columnsArr, createQuery, queryArr, rows;
 
     whereQuery = {};
@@ -362,17 +358,12 @@ MongoReflection.prototype.frontReflection = async function (to = "local") {
     fromQuery[from] = true;
     queryArr = [];
 
-    targets_refined = [];
-    for (let i of targets) {
-      if (i !== "conlist" && i !== "sessions") {
-        targets_refined.push(i);
-      }
-    }
+    targets_refined = targets.filter((str) => { return str !== "conlist" && str !== "sessions" });
 
     for (let table of targets_refined) {
-      if (status.includes(table)) {
-        await mysqlQuery("DROP TABLE " + table, whereQuery);
-      }
+      // if (status.includes(table)) {
+      //   await mysqlQuery("DROP TABLE " + table, whereQuery);
+      // }
       createQuery = "CREATE TABLE " + table + " (id INT(11) NOT NULL AUTO_INCREMENT,";
       columnsArr = await this.showColumns(table, from);
       for (let { column, type } of columnsArr) {
@@ -392,7 +383,9 @@ MongoReflection.prototype.frontReflection = async function (to = "local") {
     }
 
     //execute
-    await mysqlQuery(queryArr, whereQuery);
+
+    await fileSystem(`writeJson`, [ `${process.cwd()}/temp/queryArr.json` ]);
+    // await mysqlQuery(queryArr, whereQuery);
     console.log(`\x1b[33m%s\x1b[0m`, `mariaDB front reflection success`);
 
   } catch (e) {
