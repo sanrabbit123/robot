@@ -572,9 +572,9 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   leftBoxWidth = <%% 398, 250, 209, 160, 0 %%>;
   textAreaBlockHeight = <%% 118, 118, 118, 118, 37 %%>;
 
-  descriptionSize = <%% 16, 15, 14, 12, 3 %%>;
+  descriptionSize = <%% 15, 14, 13, 12, 3 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
-  descriptionLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
+  descriptionLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.66 %%>;
   descriptionMarginTop = <%% 10, 10, 8, 6, 10 %%>;
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
 

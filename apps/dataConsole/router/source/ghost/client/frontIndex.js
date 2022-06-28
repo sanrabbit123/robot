@@ -1158,7 +1158,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
       event: {
         click: function (e) {
           const pid = this.getAttribute("pid");
-          selfHref(FRONTHOST + "/portdetail.php?qqq=" + pid);
+          selfHref(FRONTHOST + "/portdetail.php?pid=" + pid);
         },
         touchstart: function (e) {
           const self = this;
@@ -1170,7 +1170,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
         touchend: function (e) {
           if (this.getAttribute(touchStartConst) === "on") {
             const pid = this.getAttribute("pid");
-            selfHref(FRONTHOST + "/portdetail.php?qqq=" + pid);
+            selfHref(FRONTHOST + "/portdetail.php?pid=" + pid);
           }
         }
       },
@@ -1369,8 +1369,8 @@ FrontIndexJs.prototype.insertSearchBox = function () {
       },
       event: {
         click: function (e) {
-          const rid = this.getAttribute("rid");
-          selfHref(FRONTHOST + "/revdetail.php?qqq=" + rid);
+          const pid = this.getAttribute("pid");
+          selfHref(FRONTHOST + "/revdetail.php?pid=" + pid);
         },
         touchstart: function (e) {
           const self = this;
@@ -1381,8 +1381,8 @@ FrontIndexJs.prototype.insertSearchBox = function () {
         },
         touchend: function (e) {
           if (this.getAttribute(touchStartConst) === "on") {
-            const rid = this.getAttribute("rid");
-            selfHref(FRONTHOST + "/revdetail.php?qqq=" + rid);
+            const pid = this.getAttribute("pid");
+            selfHref(FRONTHOST + "/revdetail.php?pid=" + pid);
           }
         }
       },
