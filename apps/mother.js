@@ -2353,7 +2353,7 @@ Mother.prototype.mysqlQuery = function (query, option = { local: false, front: t
   const mysqlStandard = ADDRESS["frontinfo"];
   let host;
   if (option.local === true) {
-    host = "127.0.0.1";
+    host = "localhost";
   } else if (option.front === true) {
     host = ADDRESS["frontinfo"]["host"];
   } else {
