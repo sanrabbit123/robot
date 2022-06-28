@@ -386,7 +386,7 @@ MongoReflection.prototype.frontReflection = async function (to = "local") {
 
     await fileSystem(`write`, [ `${process.cwd()}/temp/queryArr.sql`, queryArr.join("\n") ]);
     // await mysqlQuery(queryArr, whereQuery);
-    console.log(`\x1b[33m%s\x1b[0m`, `mariaDB front reflection success`);
+    console.log(`\x1b[33m%s\x1b[0m`, `mariaDB front reflection (to sql file) success`);
 
   } catch (e) {
     console.log(e);
