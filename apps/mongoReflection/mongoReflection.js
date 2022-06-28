@@ -349,7 +349,11 @@ MongoReflection.prototype.frontReflection = async function (to = "local") {
 
     const from = "front";
     const targets = await this.showTables(from);
+    console.log(targets);
+
     const status = await this.showTables(to);
+    console.log(status);
+
     let targets_refined, fromQuery, whereQuery, columnsArr, createQuery, queryArr, rows;
 
     whereQuery = {};
