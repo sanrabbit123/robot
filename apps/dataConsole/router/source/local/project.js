@@ -1506,6 +1506,7 @@ ProjectJs.prototype.infoArea = function (info) {
 
 ProjectJs.prototype.spreadData = async function (search = null) {
   const instance = this;
+  const { stringToDate } = GeneralJs;
   try {
     let projects;
     let whereQuery;
@@ -1517,12 +1518,24 @@ ProjectJs.prototype.spreadData = async function (search = null) {
     let standardDataTong = [], infoDataTong = [];
     let standardDomsFirst, caseDomsFirst, casesFirst;
     let standardDomsTargets, caseDomsTargets;
+    let sortStandard;
 
     if (search === null || search === '' || search === '-') {
       projects = await GeneralJs.ajaxJson({ where: { desid: { $regex: "^d" }, "process.status": { $regex: "^[대진홀]" } } }, "/getProjects");
     } else {
       projects = await GeneralJs.ajaxJson({ query: search }, "/searchProjects");
     }
+    sortStandard = (str) => {
+      const date = stringToDate(str);
+      if (date.valueOf() < (new Date(2000, 0, 1)).valueOf()) {
+        return (new Date(4000, 0, 1)).valueOf();
+      } else {
+        return date.valueOf();
+      }
+    }
+    projects.data.sort((a, b) => {
+      return sortStandard(b.info.firstDate) - sortStandard(a.info.firstDate);
+    })
 
     cliidArr = [];
     desidArr = [];

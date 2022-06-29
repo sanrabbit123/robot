@@ -4732,7 +4732,7 @@ GeneralJs.prototype.greenTalk = function (input) {
   redDotLeft = desktop ? -6 : -0.6;
 
   secondPopupWidth = <%% 225, 225, 210, 200, 39.5 %%>;
-  secondPopupHeight = <%% 200, 200, 180, 167, 33.5 %%>;
+  secondPopupHeight = <%% 195, 195, 180, 167, 33.5 %%>;
   secondPopupTop = <%% -215, -215, -197, -180, -36 %%>;
   secondPopupLeft = <%% -160, -160, -143, -133, -28.5 %%>;
 
