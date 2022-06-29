@@ -481,6 +481,7 @@ const HomeLiaisonAnalytics = function (json) {
   this.styling = new StylingAnalytics(json.styling);
   this.purchase = new PurchaseAnalytics(json.purchase);
   this.etc = new EtcAnalytics(json.etc);
+  this.grade = json.grade;
 }
 
 HomeLiaisonAnalytics.prototype.toNormal = function () {
@@ -491,6 +492,7 @@ HomeLiaisonAnalytics.prototype.toNormal = function () {
   obj.styling = this.styling.toNormal();
   obj.purchase = this.purchase.toNormal();
   obj.etc = this.etc.toNormal();
+  obj.grade = this.grade;
   return obj;
 }
 

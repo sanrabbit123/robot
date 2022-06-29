@@ -169,7 +169,8 @@ module.exports = {
               { name: "디자인 기획시 고객에게 맞추는 편", value: false },
             ],
             relation: "확인중"
-          }
+          },
+          grade: 0,
         },
         realTime: {
           availableDate: [],
