@@ -120,7 +120,6 @@ CronSource.prototype.targetLauching = async function (cronId) {
       num = 0;
       for (let obj of targetList) {
         res = await obj.worker(package);
-        // await rethink.rethinkCreate("cronLog", { date: new Date(), name: sourceMap.date[index][1][num].split("/").slice(-1)[0], result: res });
         num++;
       }
     }
@@ -133,7 +132,6 @@ CronSource.prototype.targetLauching = async function (cronId) {
       num = 0;
       for (let obj of targetList) {
         res = await obj.worker(package);
-        // await rethink.rethinkCreate("cronLog", { date: new Date(), name: sourceMap.hour[index][1][num].split("/").slice(-1)[0], result: res });
         num++;
       }
     }

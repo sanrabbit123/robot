@@ -1,6 +1,7 @@
 const dayId = [
   "d091",
   "d171",
+  "d174",
 ];
 
 const hourId = [];
@@ -173,6 +174,10 @@ const worker = async function (package) {
     console.log(results);
     const logView = JSON.stringify(results, null, 2);
     console.log(logView)
+
+    await messageLog("cash receipt sync yes : " + logView);
+    await messageLog("cash receipt sync yes : " + address.pythoninfo.host);
+    
     let res;
     res = await requestSystem("https://" + address.pythoninfo.host + ":3000/cashReceipt", results[1], { headers: { "Content-Type": "application/json" } });
     console.log(res.data);
