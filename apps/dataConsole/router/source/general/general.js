@@ -768,6 +768,10 @@ GeneralJs.prototype.generalCss = function () {
   @keyframes talkwhitefadeout {from{opacity:1;transform:translateX(0px)} 50%{opacity:0;transform:translateX(0px)} to{opacity:0;transform:translateX(8px)}}
   @keyframes talkwhitefadeconvert {from,10%{opacity:0;transform:translateX(12px)} to{opacity:1;transform:translateX(0px)}}
 
+  @keyframes talksecondfadein {from,50%{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0px)}}
+  @keyframes talksecondfadeout {from{opacity:1;transform:translateY(0px)} 50%{opacity:0;transform:translateY(0px)} to{opacity:0;transform:translateY(8px)}}
+
+
   .justfadeinoriginal{animation:justfadeinoriginal 0.3s ease forwards;}
   .justfadeoutoriginal{animation:justfadeoutoriginal 0.3s ease forwards;}
   .justfadein{animation:justfadein 0.3s ease forwards;}
@@ -6871,6 +6875,7 @@ GeneralJs.prototype.consultingPopup = function () {
     });
     createNode({
       mother: paymentArea,
+      class: [ "consultingPopupAnywhereSubmit" ],
       event: {
         click: instance.finalSubmit(),
       },

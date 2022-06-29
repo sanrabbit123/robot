@@ -4632,24 +4632,34 @@ GeneralJs.prototype.footerMake = function () {
 
 }
 
-GeneralJs.prototype.greenTalk = function (text = "홈리에종을 통해 1:1 상담을 받아보세요!", event = "consulting") {
-  if (typeof text === "string" && typeof event === "string") {
-    // pass
-  } else if (typeof text === "object") {
-    if (text === null) {
+GeneralJs.prototype.greenTalk = function (input) {
+  let text, event, second;
+  if (input === undefined) {
+    event = "consulting";
+    text = "홈리에종을 통해 1:1 상담을 받아보세요!";
+    second = false;
+  } else if (typeof input === "object") {
+    if (input === null) {
       event = "consulting";
       text = "홈리에종을 통해 1:1 상담을 받아보세요!";
-    } else if (text !== null && typeof text.text === "string" && typeof text.event === "string") {
-      event = text.event;
-      text = text.text;
+      second = false;
+    } else if (input !== null && typeof input.text === "string" && typeof input.event === "string") {
+      event = input.event;
+      text = input.text;
+      if (typeof input.second === "boolean") {
+        second = input.second;
+      } else {
+        second = false;
+      }
     } else {
       throw new Error("invaild object input");
     }
   } else {
     throw new Error("invaild input");
   }
+
   const instance = this;
-  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, blankHref, setDebounce, setQueue } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, blankHref, setDebounce, setQueue, selfHref } = GeneralJs;
   const media = GeneralJs.stacks.updateMiddleMedialQueryConditions;
   const mobile = media[4];
   const desktop = !mobile;
@@ -4661,6 +4671,7 @@ GeneralJs.prototype.greenTalk = function (text = "홈리에종을 통해 1:1 상
   const whitePopupClassName = "greenTalkWordsWhitePopupClassName";
   const eventClassName = "greenTalkEventClassName";
   const redDotTimeOutEventName = "redDotTimeOutEventName";
+  const secondPopupClassName = "secondPopupClassName";
   const zIndex = 1;
   let baseWidth, right, bottom;
   let iconWidth;
@@ -4683,6 +4694,12 @@ GeneralJs.prototype.greenTalk = function (text = "홈리에종을 통해 1:1 상
   let redDotRadius;
   let redDotTop, redDotLeft;
   let whitePopupBase;
+  let secondPopup;
+  let secondPopupBase;
+  let secondPopupWidth, secondPopupHeight, secondPopupTop, secondPopupLeft;
+  let secondPopupImageHeight;
+  let secondSize, secondWeight, secondLineHeight, secondTextTop;
+  let secondImage, secondWords;
 
   baseWidth = desktop ? 68 : 12;
   right = desktop ? 38 : 5.2;
@@ -4714,11 +4731,36 @@ GeneralJs.prototype.greenTalk = function (text = "홈리에종을 통해 1:1 상
   redDotTop = desktop ? 0 : 0;
   redDotLeft = desktop ? -6 : -0.6;
 
+  secondPopupWidth = <%% 225, 225, 210, 200, 39.5 %%>;
+  secondPopupHeight = <%% 200, 200, 180, 167, 33.5 %%>;
+  secondPopupTop = <%% -215, -215, -197, -180, -36 %%>;
+  secondPopupLeft = <%% -160, -160, -143, -133, -28.5 %%>;
+
+  secondPopupImageHeight = <%% 125, 125, 115, 102, 20.5 %%>;
+
+  secondSize = <%% 14, 14, 13, 12, 2.6 %%>;
+  secondWeight = <%% 600, 600, 600, 600, 600 %%>;
+  secondLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+  secondTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isIphone() ? 0 : -0.3) %%>;
+
+  secondImage = FRONTHOST + "/middle/about/c3.jpg";
+  secondWords = "홈스타일링 디자이너와\n함께 인테리어를 진행해보세요!";
+
+  secondPopup = null;
+
   if (event === "consulting") {
     eventFunc = instance.consultingPopup();
   } else if (event === "channel") {
     eventFunc = function (e) {
       blankHref("http://pf.kakao.com/_vxixkjxl/chat");
+    }
+  } else if (event === "review") {
+    eventFunc = function (e) {
+      selfHref("/review.php");
+    }
+  } else if (event === "portfolio") {
+    eventFunc = function (e) {
+      selfHref("/portfolio.php");
     }
   }
 
@@ -4884,53 +4926,148 @@ GeneralJs.prototype.greenTalk = function (text = "홈리에종을 통해 1:1 상
     ]
   });
 
+  if (second) {
+    secondPopup = createNode({
+      mother: greenBase,
+      class: [ secondPopupClassName ],
+      attribute: {
+        toggle: "off"
+      },
+      event: {
+        click: function (e) {
+          e.stopPropagation();
+          selfHref("/consulting.php");
+        }
+      },
+      style: {
+        position: "absolute",
+        width: String(secondPopupWidth) + ea,
+        height: String(secondPopupHeight) + ea,
+        top: String(secondPopupTop) + ea,
+        left: String(secondPopupLeft) + ea,
+        borderRadius: String(8) + "px",
+        background: colorChip.white,
+        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+        cursor: "pointer",
+        opacity: String(0),
+        transform: "translateY(8px)",
+      }
+    });
+
+    secondPopupBase = createNode({
+      mother: secondPopup,
+      style: {
+        display: "block",
+        position: "relative",
+        top: String(0),
+        left: String(0),
+        width: withOut(0),
+        height: withOut(0),
+        borderRadius: String(8) + "px",
+        overflow: "hidden",
+      },
+      children: [
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(0),
+            height: String(secondPopupImageHeight) + ea,
+            background: colorChip.gray1,
+            backgroundImage: "url('" + secondImage + "')",
+            backgroundSize: "100% auto",
+            backgroundPosition: "50% 50%",
+          }
+        },
+        {
+          style: {
+            display: "flex",
+            position: "relative",
+            width: withOut(0),
+            height: String(secondPopupHeight - secondPopupImageHeight) + ea,
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+          },
+          children: [
+            {
+              text: secondWords,
+              style: {
+                position: "relative",
+                top: String(secondTextTop) + ea,
+                fontSize: String(secondSize) + ea,
+                fontWeight: String(secondWeight),
+                color: colorChip.black,
+                lineHeight: String(secondLineHeight),
+                textAlign: "center",
+              }
+            }
+          ]
+        }
+      ]
+    });
+
+  }
 
   window.addEventListener("scroll", (e) => {
     setDebounce(() => {
-      let scrollMin;
+      let scrollMin, scrollSecondMin;
       let redDot, whitePopup;
 
-      scrollMin = <%% 1000, 1000, 900, 800, 300 %%>;
+      scrollMin = <%% 600, 600, 500, 400, 150 %%>;
+      scrollSecondMin = <%% 3600, 3600, 3000, 2400, 2000 %%>;
+
       redDot = document.querySelector('.' + redDotClassName);
       whitePopup = document.querySelector('.' + whitePopupClassName);
+      secondPopup = document.querySelector('.' + secondPopupClassName);
 
       if (window.scrollY > scrollMin) {
-
         if (whitePopup.getAttribute("toggle") === "off") {
-          redDot.style.transform = "scale(1)";
-          whitePopup.style.animation = "talkwhitefadein 0.5s ease forwards";
 
-          redDot.setAttribute("toggle", "on");
-          whitePopup.setAttribute("toggle", "on");
+          if (!second || window.scrollY <= scrollSecondMin) {
+            redDot.style.transform = "scale(1)";
+            whitePopup.style.animation = "talkwhitefadein 0.5s ease forwards";
+            redDot.setAttribute("toggle", "on");
+            whitePopup.setAttribute("toggle", "on");
 
-          GeneralJs.stacks[redDotTimeOutEventName] = setTimeout(() => {
+            GeneralJs.stacks[redDotTimeOutEventName] = setTimeout(() => {
+              redDot.style.transform = "scale(0)";
+              redDot.setAttribute("toggle", "off");
+              if (GeneralJs.stacks[redDotTimeOutEventName] !== null && GeneralJs.stacks[redDotTimeOutEventName] !== undefined) {
+                clearTimeout(GeneralJs.stacks[redDotTimeOutEventName]);
+                GeneralJs.stacks[redDotTimeOutEventName] = null;
+              }
+            }, 5000);
+          }
+
+        }
+      }
+
+      if (second) {
+        if (window.scrollY > scrollSecondMin) {
+          if (redDot.getAttribute("toggle") === "on") {
             redDot.style.transform = "scale(0)";
             redDot.setAttribute("toggle", "off");
-            if (GeneralJs.stacks[redDotTimeOutEventName] !== null && GeneralJs.stacks[redDotTimeOutEventName] !== undefined) {
-              clearTimeout(GeneralJs.stacks[redDotTimeOutEventName]);
-              GeneralJs.stacks[redDotTimeOutEventName] = null;
-            }
-          }, 5000);
+          }
+          if (whitePopup.getAttribute("toggle") === "on") {
+            whitePopup.style.animation = "talkwhitefadeout 0.5s ease forwards";
+            whitePopup.setAttribute("toggle", "off");
+            redDot.style.transform = "scale(0)";
+            redDot.setAttribute("toggle", "off");
+          }
+          if (secondPopup.getAttribute("toggle") === "off") {
+            secondPopup.style.animation = "talksecondfadein 1s ease forwards";
+            secondPopup.setAttribute("toggle", "on");
+          }
+        } else {
+          if (secondPopup.getAttribute("toggle") === "on") {
+            secondPopup.style.animation = "talksecondfadeout 1s ease forwards";
+            secondPopup.setAttribute("toggle", "off");
+          }
         }
-
-      } else {
-
-        // if (whitePopup.getAttribute("toggle") === "on") {
-        //   whitePopup.style.animation = "talkwhitefadeout 0.6s ease forwards";
-        //   whitePopup.setAttribute("toggle", "off");
-        //
-        //   if (redDot.getAttribute("toggle") === "on") {
-        //     redDot.style.transform = "scale(0)";
-        //     redDot.setAttribute("toggle", "off");
-        //     if (GeneralJs.stacks[redDotTimeOutEventName] !== null && GeneralJs.stacks[redDotTimeOutEventName] !== undefined) {
-        //       clearTimeout(GeneralJs.stacks[redDotTimeOutEventName]);
-        //       GeneralJs.stacks[redDotTimeOutEventName] = null;
-        //     }
-        //   }
-        //
-        // }
-
       }
+
+
     }, "greenTalkSystemDebounce");
   });
 

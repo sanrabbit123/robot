@@ -680,8 +680,8 @@ FrontIndexJs.prototype.insertBlackBox = function () {
   let buttonSize, buttonWeight;
   let buttonTextTop;
 
-  tongPaddingTop = <%% 44, 44, 44, 40, 4.2 %%>;
-  tongPaddingBottom = <%% 56, 56, 56, 52, 5.5 %%>;
+  tongPaddingTop = <%% 44, 44, 44, 40, 5.2 %%>;
+  tongPaddingBottom = <%% 56, 56, 56, 52, 6.5 %%>;
 
   titleSize = <%% 37, 35, 32, 28, 4 %%>;
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
@@ -690,13 +690,13 @@ FrontIndexJs.prototype.insertBlackBox = function () {
   subTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
   subTitleMarginLeft = <%% 11, 10, 10, 10, 10 %%>;
 
-  buttonTop = <%% 55, 55, 53, 48, 4.5 %%>;
+  buttonTop = <%% 55, 55, 53, 48, 5.5 %%>;
   buttonWidth = <%% 140, 135, 133, 125, 20 %%>;
   buttonHeight = <%% 40, 38, 36, 33, 5.8 %%>;
 
   buttonSize = <%% 15, 14, 14, 13, 2.5 %%>;
   buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
-  buttonTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isIphone() ? 0 : -0.3) %%>;
+  buttonTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isIphone() ? 0 : -0.3) %%>;
 
   mainTong = createNode({
     mother: totalContents,
@@ -711,11 +711,12 @@ FrontIndexJs.prototype.insertBlackBox = function () {
 
   blockTong = createNode({
     mother: mainTong,
-    // event: {
-    //   click: (e) => {
-    //     selfHref(FRONTHOST + "/consulting.php");
-    //   }
-    // },
+    class: [ bannerClassName ],
+    event: {
+      click: (e) => {
+        selfHref(FRONTHOST + "/miniAbout.php");
+      }
+    },
     style: {
       display: "block",
       position: "relative",
@@ -756,12 +757,12 @@ FrontIndexJs.prototype.insertBlackBox = function () {
 
   createNode({
     mother: blockTong,
-    class: [ "consultingButton", bannerClassName ],
-    event: {
-      click: (e) => {
-        selfHref(FRONTHOST + "/miniAbout.php");
-      }
-    },
+    class: [ "consultingButton" ],
+    // event: {
+    //   click: (e) => {
+    //     selfHref(FRONTHOST + "/miniAbout.php");
+    //   }
+    // },
     style: {
       display: "flex",
       position: "absolute",

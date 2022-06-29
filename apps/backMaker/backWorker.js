@@ -1284,7 +1284,7 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
       }
 
       if (y >= 2 && distanceBoo) {
-        comment = "Unable in totalStyling";
+        comment = "Distance over, unable in totalStyling";
         fee = 0;
         offlineFeeCase = 0;
         onlineFeeCase = 0;
