@@ -1,7 +1,7 @@
 const dayId = [
   "d091",
   "d171",
-  "d175",
+  "d181",
 ];
 
 const hourId = [];
@@ -101,88 +101,79 @@ const worker = async function (package) {
 
           return { json: { cashOut: total } };
         }
-      },
-      {
-        link: "https://tecr.hometax.go.kr/websquare/websquare.html?w2xPath=/ui/cr/c/b/UTECRCB005.xml",
-        func: async function () {
-          const { sleep, stringToDate } = GeneralJs;
-          let buttons;
-          let pageNumber, pageButtons;
-          let domTargets, textArr;
-          let total, middle;
-          let timeIndex;
-          let tempObj;
-
-          document.getElementById("tabControl1_UTECRCB005_tab_tabs3").click();
-          await sleep(500);
-          document.getElementById("trigger1").click();
-
-          await sleep(2000);
-
-          pageButtons = document.querySelectorAll('.w2pageList_control_label');
-          pageNumber = pageButtons.length;
-
-          total = [];
-          for (let i = 0; i < pageNumber; i++) {
-            pageButtons = document.querySelectorAll('.w2pageList_control_label');
-            pageButtons[i].click();
-            await sleep(2000);
-
-            domTargets = document.getElementById("grdCshpt").querySelectorAll("td");
-            textArr = [];
-            for (let dom of domTargets) {
-              textArr.push(dom.textContent);
-            }
-            textArr = textArr.filter((i) => { return !(/[0-9]/g.test(i) && /\:/g.test(i) && /[A-Z]/gi.test(i) && / /gi.test(i) && /,/gi.test(i)); });
-            textArr = textArr.map((i) => { return i.trim(); });
-            textArr = textArr.filter((i) => { return i !== '' });
-
-            timeIndex = [];
-            for (let j = 0; j < textArr.length; j++) {
-              if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] [0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]$/.test(textArr[j].trim())) {
-                timeIndex.push(j);
-              }
-            }
-
-            middle = [];
-            for (let index of timeIndex) {
-              middle.push({
-                time: JSON.stringify(stringToDate(textArr[index].trim())).slice(1, -1),
-                business: textArr[index + 2],
-                from: textArr[index + 3],
-                item: textArr[index + 5],
-                supply: Number(textArr[index + 7].replace(/[^0-9\-]/g, '')),
-                vat: Number(textArr[index + 8].replace(/[^0-9\-]/g, '')),
-                service: Number(textArr[index + 9].replace(/[^0-9\-]/g, '')),
-                total: Number(textArr[index + 10].replace(/[^0-9\-]/g, '')),
-                id: textArr[index + 11],
-                issuance: textArr[index + 12],
-                deal: /승인/gi.test(textArr[index + 13]),
-                etc: textArr[index + 16],
-              });
-            }
-
-            total.push(middle);
-            await sleep(500);
-          }
-
-          return { json: { cashIn: total } };
-        }
       }
+      // {
+      //   link: "https://tecr.hometax.go.kr/websquare/websquare.html?w2xPath=/ui/cr/c/b/UTECRCB005.xml",
+      //   func: async function () {
+      //     const { sleep, stringToDate } = GeneralJs;
+      //     let buttons;
+      //     let pageNumber, pageButtons;
+      //     let domTargets, textArr;
+      //     let total, middle;
+      //     let timeIndex;
+      //     let tempObj;
+      //
+      //     document.getElementById("tabControl1_UTECRCB005_tab_tabs3").click();
+      //     await sleep(500);
+      //     document.getElementById("trigger1").click();
+      //
+      //     await sleep(2000);
+      //
+      //     pageButtons = document.querySelectorAll('.w2pageList_control_label');
+      //     pageNumber = pageButtons.length;
+      //
+      //     total = [];
+      //     for (let i = 0; i < pageNumber; i++) {
+      //       pageButtons = document.querySelectorAll('.w2pageList_control_label');
+      //       pageButtons[i].click();
+      //       await sleep(2000);
+      //
+      //       domTargets = document.getElementById("grdCshpt").querySelectorAll("td");
+      //       textArr = [];
+      //       for (let dom of domTargets) {
+      //         textArr.push(dom.textContent);
+      //       }
+      //       textArr = textArr.filter((i) => { return !(/[0-9]/g.test(i) && /\:/g.test(i) && /[A-Z]/gi.test(i) && / /gi.test(i) && /,/gi.test(i)); });
+      //       textArr = textArr.map((i) => { return i.trim(); });
+      //       textArr = textArr.filter((i) => { return i !== '' });
+      //
+      //       timeIndex = [];
+      //       for (let j = 0; j < textArr.length; j++) {
+      //         if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] [0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]$/.test(textArr[j].trim())) {
+      //           timeIndex.push(j);
+      //         }
+      //       }
+      //
+      //       middle = [];
+      //       for (let index of timeIndex) {
+      //         middle.push({
+      //           time: JSON.stringify(stringToDate(textArr[index].trim())).slice(1, -1),
+      //           business: textArr[index + 2],
+      //           from: textArr[index + 3],
+      //           item: textArr[index + 5],
+      //           supply: Number(textArr[index + 7].replace(/[^0-9\-]/g, '')),
+      //           vat: Number(textArr[index + 8].replace(/[^0-9\-]/g, '')),
+      //           service: Number(textArr[index + 9].replace(/[^0-9\-]/g, '')),
+      //           total: Number(textArr[index + 10].replace(/[^0-9\-]/g, '')),
+      //           id: textArr[index + 11],
+      //           issuance: textArr[index + 12],
+      //           deal: /승인/gi.test(textArr[index + 13]),
+      //           etc: textArr[index + 16],
+      //         });
+      //       }
+      //
+      //       total.push(middle);
+      //       await sleep(500);
+      //     }
+      //
+      //     return { json: { cashIn: total } };
+      //   }
+      // }
     ];
-
-
-    await messageLog("cash receipt sync yes : ");
-
-
     const results = equalJson(JSON.stringify(await chrome.scriptChain(map)));
     console.log(results);
     const logView = JSON.stringify(results, null, 2);
     console.log(logView)
-
-    await messageLog("cash receipt sync yes : " + logView);
-    await messageLog("cash receipt sync yes : " + address.pythoninfo.host);
-
     let res;
     res = await requestSystem("https://" + address.pythoninfo.host + ":3000/cashReceipt", results[1], { headers: { "Content-Type": "application/json" } });
     console.log(res.data);
