@@ -730,7 +730,7 @@ FrontIndexJs.prototype.insertBlackBox = function () {
 
   createNode({
     mother: blockTong,
-    text: "홈리에종의 신규 서비스, 무드 체인지 런칭!",
+    text: "쓰던 가구 그대로? 가심비 스타일링의 비밀!",
     style: {
       top: (isMac() || mobile) ? String(0) : String(3) + ea,
       fontSize: String(titleSize) + ea,

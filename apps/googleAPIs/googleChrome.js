@@ -213,6 +213,8 @@ GoogleChrome.prototype.scriptChain = async function (map, between = 1000) {
   const { equalJson, fileSystem, sleep } = this.mother;
   const { puppeteer } = this;
   const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
+  const DataConsole = require(`${process.cwd()}/apps/dataConsole/dataConsole.js`);
+  const dataConsole = new DataConsole();
   try {
     const browser = await puppeteer.launch({ args: [ "--no-sandbox", "--disable-setuid-sandbox" ] });
     const page = await browser.newPage();
@@ -220,6 +222,9 @@ GoogleChrome.prototype.scriptChain = async function (map, between = 1000) {
 
     generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
     generalString = generalString.replace(/\/<%generalMap%>\//, "{}");
+    generalString += (await fileSystem(`readString`, [ `${process.cwd()}/apps/dataConsole/router/source/general/general.js` ]));
+    generalString = dataConsole.mediaQuery(generalString).code;
+
     returnScript = (func) => {
       return generalString + "\n\n" + func.toString().trim().replace(/^(async)? *(function[^\(]*\([^\)]*\)|\([^\)]*\)[^\=]+\=\>)[^\{]*\{/i, '').replace(/\}$/i, '');
     }
