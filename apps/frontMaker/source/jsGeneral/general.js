@@ -4649,7 +4649,7 @@ GeneralJs.prototype.greenTalk = function (text = "홈리에종을 통해 1:1 상
     throw new Error("invaild input");
   }
   const instance = this;
-  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, blankHref } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, blankHref, setDebounce, setQueue } = GeneralJs;
   const media = GeneralJs.stacks.updateMiddleMedialQueryConditions;
   const mobile = media[4];
   const desktop = !mobile;
@@ -4657,6 +4657,10 @@ GeneralJs.prototype.greenTalk = function (text = "홈리에종을 통해 1:1 상
   const big = !small;
   const ea = desktop ? "px" : "vw";
   const totalContents = document.getElementById("totalcontents");
+  const redDotClassName = "redDotClassName";
+  const whitePopupClassName = "greenTalkWordsWhitePopupClassName";
+  const eventClassName = "greenTalkEventClassName";
+  const redDotTimeOutEventName = "redDotTimeOutEventName";
   const zIndex = 1;
   let baseWidth, right, bottom;
   let iconWidth;
@@ -4675,6 +4679,10 @@ GeneralJs.prototype.greenTalk = function (text = "홈리에종을 통해 1:1 상
   let backgroundWidth;
   let opacity;
   let eventFunc;
+  let redDot;
+  let redDotRadius;
+  let redDotTop, redDotLeft;
+  let whitePopupBase;
 
   baseWidth = desktop ? 68 : 12;
   right = desktop ? 38 : 5.2;
@@ -4702,6 +4710,10 @@ GeneralJs.prototype.greenTalk = function (text = "홈리에종을 통해 1:1 상
 
   opacity = 0.95;
 
+  redDotRadius = desktop ? 9 : 1;
+  redDotTop = desktop ? 0 : 0;
+  redDotLeft = desktop ? -6 : -0.6;
+
   if (event === "consulting") {
     eventFunc = instance.consultingPopup();
   } else if (event === "channel") {
@@ -4712,6 +4724,7 @@ GeneralJs.prototype.greenTalk = function (text = "홈리에종을 통해 1:1 상
 
   greenBase = createNode({
     mother: totalContents,
+    class: [ eventClassName ],
     event: {
       click: eventFunc,
     },
@@ -4731,6 +4744,41 @@ GeneralJs.prototype.greenTalk = function (text = "홈리에종을 통해 1:1 상
       justifyContent: "center",
       alignItems: "center",
       textAlign: "center",
+    },
+    children: [
+      {
+        style: {
+          display: "flex",
+          position: "relative",
+          top: String(0),
+          left: String(0),
+          width: withOut(0),
+          height: withOut(0),
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+        }
+      }
+    ]
+  }).firstChild;
+
+  redDot = createNode({
+    mother: greenBase,
+    class: [ redDotClassName ],
+    attribute: {
+      toggle: "off"
+    },
+    style: {
+      position: "absolute",
+      width: String(redDotRadius) + ea,
+      height: String(redDotRadius) + ea,
+      top: String(redDotTop) + ea,
+      left: String(redDotLeft) + ea,
+      borderRadius: String(redDotRadius) + ea,
+      background: colorChip.red,
+      transformOrigin: "50% 50%",
+      transition: "all 0.2s ease",
+      transform: "scale(0)",
     }
   });
 
@@ -4748,7 +4796,7 @@ GeneralJs.prototype.greenTalk = function (text = "홈리에종을 통해 1:1 상
     }
   });
 
-  whitePopup = createNode({
+  whitePopupBase = createNode({
     mother: greenBase,
     event: {
       click: (e) => { e.preventDefault(); e.stopPropagation(); }
@@ -4767,73 +4815,124 @@ GeneralJs.prototype.greenTalk = function (text = "홈리에종을 통해 1:1 상
       transition: "all 0s ease",
       cursor: "default",
     },
+  });
+
+  whitePopup = createNode({
+    mother: whitePopupBase,
+    class: [ whitePopupClassName ],
+    attribute: {
+      toggle: "off"
+    },
+    event: {
+      click: eventFunc,
+    },
+    style: {
+      position: "relative",
+      top: String(0),
+      left: String(0),
+      height: withOut(0),
+      display: "inline-flex",
+      justifyContent: "center",
+      alignItems: "center",
+      textAlign: "center",
+      paddingLeft: String(whitePopupPaddingLeft) + ea,
+      paddingRight: String(whitePopupPaddingLeft) + ea,
+      transition: "all 0s ease",
+      cursor: "pointer",
+      opacity: String(0),
+      transform: "translateX(8px)",
+    },
     children: [
       {
-        event: {
-          click: eventFunc,
-        },
         style: {
-          position: "relative",
+          position: "absolute",
           top: String(0),
           left: String(0),
+          width: withOut(0),
           height: withOut(0),
-          display: "inline-flex",
-          justifyContent: "center",
-          alignItems: "center",
-          textAlign: "center",
-          paddingLeft: String(whitePopupPaddingLeft) + ea,
-          paddingRight: String(whitePopupPaddingLeft) + ea,
+          background: "white",
+          borderRadius: String(5) + "px",
+          boxShadow: "2px 2px 18px -10px #a0a0a0",
           transition: "all 0s ease",
-          animation: "talkwhitefade 1.6s ease forwards",
-          cursor: "pointer",
-        },
-        children: [
-          {
-            style: {
-              position: "absolute",
-              top: String(0),
-              left: String(0),
-              width: withOut(0),
-              height: withOut(0),
-              background: "white",
-              borderRadius: String(5) + "px",
-              boxShadow: "2px 2px 18px -10px #a0a0a0",
-              transition: "all 0s ease",
-              opacity: String(opacity),
-            }
-          },
-          {
-            style: {
-              position: "absolute",
-              right: "calc(" + String(-1 * (triangleWidth / 2)) + ea + ")",
-              top: withOut(50, triangleWidth / 2, ea),
-              width: String(triangleWidth) + ea,
-              height: String(triangleWidth) + ea,
-              background: colorChip.white,
-              transform: "rotate(45deg)",
-              transition: "all 0s ease",
-              opacity: String(opacity),
-            }
-          },
-          {
-            text,
-            style: {
-              position: "relative",
-              top: String(popupTextTop) + ea,
-              fontSize: String(popupSize) + ea,
-              fontWeight: String(popupWeight),
-              color: colorChip.black,
-              transition: "all 0s ease",
-            }
-          }
-        ]
+          opacity: String(opacity),
+        }
+      },
+      {
+        style: {
+          position: "absolute",
+          right: "calc(" + String(-1 * (triangleWidth / 2)) + ea + ")",
+          top: withOut(50, triangleWidth / 2, ea),
+          width: String(triangleWidth) + ea,
+          height: String(triangleWidth) + ea,
+          background: colorChip.white,
+          transform: "rotate(45deg)",
+          transition: "all 0s ease",
+          opacity: String(opacity),
+        }
+      },
+      {
+        text,
+        style: {
+          position: "relative",
+          top: String(popupTextTop) + ea,
+          fontSize: String(popupSize) + ea,
+          fontWeight: String(popupWeight),
+          color: colorChip.black,
+          transition: "all 0s ease",
+        }
       }
     ]
   });
 
-  // width = Math.ceil(whitePopup.firstChild.getBoundingClientRect().width) + whitePopupWidthVisual;
-  // whitePopup.style.width = String(width) + "px";
-  // whitePopup.style.left = "calc(calc(" + String(width) + "px" + " + " + String(whitePopupLeftBetween) + ea +") * -1)";
+
+  window.addEventListener("scroll", (e) => {
+    setDebounce(() => {
+      let scrollMin;
+      let redDot, whitePopup;
+
+      scrollMin = <%% 1000, 1000, 900, 800, 300 %%>;
+      redDot = document.querySelector('.' + redDotClassName);
+      whitePopup = document.querySelector('.' + whitePopupClassName);
+
+      if (window.scrollY > scrollMin) {
+
+        if (whitePopup.getAttribute("toggle") === "off") {
+          redDot.style.transform = "scale(1)";
+          whitePopup.style.animation = "talkwhitefadein 0.5s ease forwards";
+
+          redDot.setAttribute("toggle", "on");
+          whitePopup.setAttribute("toggle", "on");
+
+          GeneralJs.stacks[redDotTimeOutEventName] = setTimeout(() => {
+            redDot.style.transform = "scale(0)";
+            redDot.setAttribute("toggle", "off");
+            if (GeneralJs.stacks[redDotTimeOutEventName] !== null && GeneralJs.stacks[redDotTimeOutEventName] !== undefined) {
+              clearTimeout(GeneralJs.stacks[redDotTimeOutEventName]);
+              GeneralJs.stacks[redDotTimeOutEventName] = null;
+            }
+          }, 5000);
+        }
+
+      } else {
+
+        // if (whitePopup.getAttribute("toggle") === "on") {
+        //   whitePopup.style.animation = "talkwhitefadeout 0.6s ease forwards";
+        //   whitePopup.setAttribute("toggle", "off");
+        //
+        //   if (redDot.getAttribute("toggle") === "on") {
+        //     redDot.style.transform = "scale(0)";
+        //     redDot.setAttribute("toggle", "off");
+        //     if (GeneralJs.stacks[redDotTimeOutEventName] !== null && GeneralJs.stacks[redDotTimeOutEventName] !== undefined) {
+        //       clearTimeout(GeneralJs.stacks[redDotTimeOutEventName]);
+        //       GeneralJs.stacks[redDotTimeOutEventName] = null;
+        //     }
+        //   }
+        //
+        // }
+
+      }
+    }, "greenTalkSystemDebounce");
+  });
 
   this.talkIcon = { dom: greenBase };
 }

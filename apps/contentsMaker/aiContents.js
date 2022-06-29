@@ -610,8 +610,8 @@ AiContents.prototype.to_google = async function (pid) {
     const drive = new GoogleDrive();
     const today = new Date();
     const server = this.address.homeinfo.ghost.protocol + "://" + this.address.homeinfo.ghost.host;
-    const portfolioLink = "https://" + this.address.frontinfo.host + "/portdetail.php?qqq=";
-    const reviewLink = "https://" + this.address.frontinfo.host + "/revdetail.php?qqq=";
+    const portfolioLink = "https://" + this.address.frontinfo.host + "/portdetail.php?pid=";
+    const reviewLink = "https://" + this.address.frontinfo.host + "/revdetail.php?pid=";
     const makeLink = (id) => { return `https://docs.google.com/document/d/${id}/edit?usp=sharing`; };
     const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
     const kakaoInstance = new KakaoTalk();
@@ -687,10 +687,11 @@ AiContents.prototype.to_google = async function (pid) {
 
       channel = "#200_web";
       await messageSend({ text: `${client.name} 고객님 디자이너 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${portfolioLink + pid}`, channel });
-      await messageSend({ text: `${client.name} 고객님 고객 인터뷰 컨텐츠를 웹에 업로드하였습니다! link : ${reviewLink + rid}`, channel });
+      await messageSend({ text: `${client.name} 고객님 고객 인터뷰 컨텐츠를 웹에 업로드하였습니다! link : ${reviewLink + pid}`, channel });
 
       await kakaoInstance.sendTalk("contentsShareClient", client.name, client.phone, { client: client.name, rid });
       await kakaoInstance.sendTalk("contentsShareDesigner", designer.designer, designer.information.phone, { client: client.name, designer: designer.designer, pid });
+      await messageSend({ text: `${client.name} 고객님에게 컨텐츠 공유 링크를 보냈어요.`, channel: "#502_sns_contents", voice: true });
 
       project = await back.getProjectById(proid, { selfMongo });
       if (project !== null) {
@@ -708,6 +709,8 @@ AiContents.prototype.to_google = async function (pid) {
 
       if (proid !== '') {
         await kakaoInstance.sendTalk("contentsShareDesigner", designer.designer, designer.information.phone, { client: client.name, designer: designer.designer, pid });
+        await messageSend({ text: `${designer.designer} 디자이너님에게 컨텐츠 공유 링크를 보냈어요.`, channel: "#502_sns_contents", voice: true });
+
         project = await back.getProjectById(proid, { selfMongo });
         if (project !== null) {
           await back.updateProject([ { proid }, { "contents.share.designer.contents": new Date() } ]);

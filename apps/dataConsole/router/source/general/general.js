@@ -764,7 +764,8 @@ GeneralJs.prototype.generalCss = function () {
 
   @keyframes talkfade {from,30%{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0px)}}
   @keyframes talkwhitefade {from,85%{opacity:0;transform:translateX(8px)} to{opacity:1;transform:translateX(0px)}}
-  @keyframes talkwhitefadeout {from{opacity:1;transform:translateX(0px)} to{opacity:0;transform:translateX(-12px)}}
+  @keyframes talkwhitefadein {from{opacity:0;transform:translateX(8px)} to{opacity:1;transform:translateX(0px)}}
+  @keyframes talkwhitefadeout {from{opacity:1;transform:translateX(0px)} 50%{opacity:0;transform:translateX(0px)} to{opacity:0;transform:translateX(8px)}}
   @keyframes talkwhitefadeconvert {from,10%{opacity:0;transform:translateX(12px)} to{opacity:1;transform:translateX(0px)}}
 
   .justfadeinoriginal{animation:justfadeinoriginal 0.3s ease forwards;}

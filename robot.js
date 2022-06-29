@@ -138,18 +138,12 @@ Robot.prototype.contentsMaker = function (button, arg) {
   const AiContents = require(process.cwd() + "/apps/contentsMaker/aiContents.js");
   const ResourceMaker = require(process.cwd() + "/apps/resourceMaker/resourceMaker.js");
   let app;
-  if (button === "make" || button === "1") {
-    app = new AiContents(arg);
-    app.total_make();
-  } else if (button === "mysql" || button === "2") {
-    app = new AiContents();
-    app.to_mysql();
-  } else if (button === "poo" || button === "3") {
-    app = new AiContents();
-    app.to_poo();
-  } else if (button === "resource" || button === "4") {
+  if (button === "resource" || button === "1") {
     app = new ResourceMaker(arg);
     app.launching();
+  } else if (button === "google" || button === "2") {
+    app = new AiContents();
+    app.to_google(arg);
   }
 }
 
@@ -1002,16 +996,8 @@ Robot.prototype.launching = async function () {
 
     //contents maker
     } else if (re === "contents" || re === "2") {
-      re2 = await consoleQ(`Choose commands : 1.make 2.mysql 3.poo 4.resource 5.front\n`);
-      if (re2 === "make" || re2 === "1") {
-        re3 = await consoleQ(`Porfolio number?\n`);
-      } else if (re2 === "mysql" || re2 === "2") {
-        re3 = ``;
-      } else if (re2 === "poo" || re2 === "3") {
-        re3 = ``;
-      } else if (re2 === "resource" || re2 === "4") {
-        re3 = await consoleQ(`Porfolio number?\n`);
-      }
+      re2 = await consoleQ(`Choose commands : 1.resource 2.google\n`);
+      re3 = await consoleQ(`Porfolio number?\n`);
       this.contentsMaker(re2, re3);
 
     //portfolio filter
