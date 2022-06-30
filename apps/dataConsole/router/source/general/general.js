@@ -5203,7 +5203,7 @@ GeneralJs.prototype.grayLoading = function (mother = null) {
 
 GeneralJs.prototype.consultingPopup = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, ajaxJson } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, ajaxJson, homeliaisonAnalytics } = GeneralJs;
   const { ea, naviHeight } = this;
   const media = GeneralJs.stacks.updateMiddleMedialQueryConditions;
   const mobile = media[4];
@@ -5532,6 +5532,20 @@ GeneralJs.prototype.consultingPopup = function () {
       for (let dom of targets) {
         dom.remove();
       }
+      if (this.value !== '') {
+        homeliaisonAnalytics({
+          page: instance.pageName,
+          standard: instance.firstPageViewTime,
+          action: "inputBlur",
+          data: {
+            property: "address1",
+            value: this.value,
+            date: dateToString(new Date()),
+          },
+        }).catch((err) => {
+          console.log(err);
+        });
+      }
     }
 
     addressFocusEvent = function (e) {
@@ -5593,6 +5607,20 @@ GeneralJs.prototype.consultingPopup = function () {
         this.value = "00평";
       } else {
         this.value = this.value.replace(/[^0-9\.]/gi, '') + "평";
+      }
+      if (this.value !== "00평" && this.value !== '') {
+        homeliaisonAnalytics({
+          page: instance.pageName,
+          standard: instance.firstPageViewTime,
+          action: "inputBlur",
+          data: {
+            property: "pyeong",
+            value: this.value,
+            date: dateToString(new Date()),
+          },
+        }).catch((err) => {
+          console.log(err);
+        });
       }
     }
 
@@ -5990,6 +6018,20 @@ GeneralJs.prototype.consultingPopup = function () {
             },
             blur: function (e) {
               this.value = this.value.replace(/[^a-zA-Z가-힣]/gi, '');
+              if (this.value !== '') {
+                homeliaisonAnalytics({
+                  page: instance.pageName,
+                  standard: instance.firstPageViewTime,
+                  action: "inputBlur",
+                  data: {
+                    property: "name",
+                    value: this.value,
+                    date: dateToString(new Date()),
+                  },
+                }).catch((err) => {
+                  console.log(err);
+                });
+              }
             }
           },
           style: {
@@ -6070,6 +6112,20 @@ GeneralJs.prototype.consultingPopup = function () {
             },
             blur: function (e) {
               this.value = this.value.replace(/[^0-9\-]/gi, '');
+              if (this.value !== '') {
+                homeliaisonAnalytics({
+                  page: instance.pageName,
+                  standard: instance.firstPageViewTime,
+                  action: "inputBlur",
+                  data: {
+                    property: "phone",
+                    value: this.value,
+                    date: dateToString(new Date()),
+                  },
+                }).catch((err) => {
+                  console.log(err);
+                });
+              }
             }
           },
           style: {
@@ -6152,6 +6208,20 @@ GeneralJs.prototype.consultingPopup = function () {
               if (!/\@/.test(this.value) || !/\./.test(this.value)) {
                 window.alert("올바른 형태의 이메일로 적어주세요!");
                 this.value = this.value.replace(/[\=\+\?\#\&\(\)]/gi, '');
+              }
+              if (this.value !== '') {
+                homeliaisonAnalytics({
+                  page: instance.pageName,
+                  standard: instance.firstPageViewTime,
+                  action: "inputBlur",
+                  data: {
+                    property: "email",
+                    value: this.value,
+                    date: dateToString(new Date()),
+                  },
+                }).catch((err) => {
+                  console.log(err);
+                });
               }
             }
           },
@@ -6255,6 +6325,22 @@ GeneralJs.prototype.consultingPopup = function () {
             keyup: function (e) {
               this.value = this.value.replace(/[\=\+\?\#\&]/gi, '');
             },
+            blur: function (e) {
+              if (this.value !== '') {
+                homeliaisonAnalytics({
+                  page: instance.pageName,
+                  standard: instance.firstPageViewTime,
+                  action: "inputBlur",
+                  data: {
+                    property: "address0",
+                    value: this.value,
+                    date: dateToString(new Date()),
+                  },
+                }).catch((err) => {
+                  console.log(err);
+                });
+              }
+            }
           },
           attribute: {
             type: "text",
@@ -6637,6 +6723,22 @@ GeneralJs.prototype.consultingPopup = function () {
           },
           event: {
             click: calendarViewEvent,
+            blur: function () {
+              if (this.value !== '') {
+                homeliaisonAnalytics({
+                  page: instance.pageName,
+                  standard: instance.firstPageViewTime,
+                  action: "inputBlur",
+                  data: {
+                    property: "movein",
+                    value: this.value,
+                    date: dateToString(new Date()),
+                  },
+                }).catch((err) => {
+                  console.log(err);
+                });
+              }
+            }
           },
           style: {
             position: "absolute",
@@ -6714,6 +6816,20 @@ GeneralJs.prototype.consultingPopup = function () {
             },
             blur: function (e) {
               this.value = this.value.replace(/[\=\+\?\#\&]/gi, '');
+              if (this.value !== '') {
+                homeliaisonAnalytics({
+                  page: instance.pageName,
+                  standard: instance.firstPageViewTime,
+                  action: "inputBlur",
+                  data: {
+                    property: "etc",
+                    value: this.value,
+                    date: dateToString(new Date()),
+                  },
+                }).catch((err) => {
+                  console.log(err);
+                });
+              }
             }
           },
           style: {

@@ -747,7 +747,8 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
             position: "relative",
             fontSize: String(careerSize) + ea,
             fontWeight: String(careerWeight),
-            color: designer.analytics.grade === 1 ? colorChip.green : colorChip.deactive,
+            // color: designer.analytics.grade === 1 ? colorChip.green : colorChip.deactive,
+            color: colorChip.green,
             top: String(careerTextTop) + ea,
           },
           bold: {
@@ -760,7 +761,8 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
           mode: "svg",
           source: instance.mother.returnMark(colorChip.green),
           style: {
-            display: designer.analytics.grade === 1 ? "inline-block" : "none",
+            // display: designer.analytics.grade === 1 ? "inline-block" : "none",
+            display: "none",
             position: "absolute",
             width: String(markWidth) + ea,
             right: String(0),

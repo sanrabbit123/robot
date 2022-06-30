@@ -914,9 +914,9 @@ Robot.prototype.aliveLog = async function () {
       }
     };
 
-    intervalFunc();
+    intervalFunc().catch((err) => { console.log(err); });
     setInterval(intervalFunc, 2 * 60 * 60 * 1000);
-    await instance.aliveTest();
+    instance.aliveTest().catch((err) => { console.log(err); });
     setInterval(async () => {
       try {
         await instance.aliveTest();

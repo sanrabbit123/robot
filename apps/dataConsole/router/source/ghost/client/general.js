@@ -538,7 +538,7 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
       action: "pageInit",
       data: {
         cliid: client !== null ? client.cliid : "null",
-        scroll: window.scrollY,
+        href: window.encodeURIComponent(window.location.href),
       },
     }).then((json) => {
       base.instance.googleClientId = json.data.id;
@@ -559,6 +559,8 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
             data: {
               cliid: client !== null ? client.cliid : "null",
               scroll: window.scrollY,
+              total: ((document.body.getBoundingClientRect() !== null && document.body.getBoundingClientRect() !== undefined) ? document.body.getBoundingClientRect().height : 0),
+              screen: window.innerHeight,
             },
           }).catch((err) => {
             console.log(err);

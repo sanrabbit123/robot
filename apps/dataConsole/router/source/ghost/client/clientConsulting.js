@@ -373,6 +373,8 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   let submitButtonWidth, submitButtonHeight;
   let submitSize, submitWeight, submitLineHeight, submitTextTop;
   let agreeToggleEvent;
+  let emailBlurEvent;
+  let bigAddressBlurEvent;
 
   blockHeight = <%% 784, 765, 725, 710, 176 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
@@ -625,7 +627,9 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
         standard: instance.firstPageViewTime,
         action: "inputBlur",
         data: {
-          name: this.value
+          property: "name",
+          value: this.value,
+          date: dateToString(new Date()),
         },
       }).catch((err) => {
         console.log(err);
@@ -641,7 +645,44 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
         standard: instance.firstPageViewTime,
         action: "inputBlur",
         data: {
-          phone: this.value
+          property: "phone",
+          value: this.value,
+          date: dateToString(new Date()),
+        },
+      }).catch((err) => {
+        console.log(err);
+      });
+    }
+  }
+
+  emailBlurEvent = function () {
+    this.value = this.value.replace(/[\=\+\?\#\&\(\)]/gi, '');
+    if (this.value !== '') {
+      homeliaisonAnalytics({
+        page: instance.pageName,
+        standard: instance.firstPageViewTime,
+        action: "inputBlur",
+        data: {
+          property: "email",
+          value: this.value,
+          date: dateToString(new Date()),
+        },
+      }).catch((err) => {
+        console.log(err);
+      });
+    }
+  }
+
+  bigAddressBlurEvent = function () {
+    if (this.value !== '') {
+      homeliaisonAnalytics({
+        page: instance.pageName,
+        standard: instance.firstPageViewTime,
+        action: "inputBlur",
+        data: {
+          property: "address0",
+          value: this.value,
+          date: dateToString(new Date()),
         },
       }).catch((err) => {
         console.log(err);
@@ -756,6 +797,20 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
     for (let dom of targets) {
       dom.remove();
     }
+    if (this.value !== '') {
+      homeliaisonAnalytics({
+        page: instance.pageName,
+        standard: instance.firstPageViewTime,
+        action: "inputBlur",
+        data: {
+          property: "address1",
+          value: this.value,
+          date: dateToString(new Date()),
+        },
+      }).catch((err) => {
+        console.log(err);
+      });
+    }
   }
 
   addressFocusEvent = function (e) {
@@ -817,6 +872,20 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       this.value = "00평";
     } else {
       this.value = this.value.replace(/[^0-9\.]/gi, '') + "평";
+    }
+    if (this.value !== "00평" && this.value !== '') {
+      homeliaisonAnalytics({
+        page: instance.pageName,
+        standard: instance.firstPageViewTime,
+        action: "inputBlur",
+        data: {
+          property: "pyeong",
+          value: this.value,
+          date: dateToString(new Date()),
+        },
+      }).catch((err) => {
+        console.log(err);
+      });
     }
   }
 
@@ -1333,6 +1402,9 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
           property: "email",
           value: "",
         },
+        event: {
+          blur: emailBlurEvent
+        },
         style: {
           position: "absolute",
           top: String(grayInputTop) + ea,
@@ -1434,6 +1506,9 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
           placeholder: "인테리어 받을 곳의 주소",
           property: "address0",
           value: "",
+        },
+        event: {
+          blur: bigAddressBlurEvent
         },
         style: {
           position: "absolute",
@@ -1808,6 +1883,22 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
         },
         event: {
           click: calendarViewEvent,
+          blur: function () {
+            if (this.value !== '') {
+              homeliaisonAnalytics({
+                page: instance.pageName,
+                standard: instance.firstPageViewTime,
+                action: "inputBlur",
+                data: {
+                  property: "movein",
+                  value: this.value,
+                  date: dateToString(new Date()),
+                },
+              }).catch((err) => {
+                console.log(err);
+              });
+            }
+          }
         },
         style: {
           position: "absolute",
@@ -1878,6 +1969,25 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
         attribute: {
           placeholder: "선호하는 스타일 + 공간의 특이 사항을 적어주세요!\n(예) 모던 프렌치 홈스타일링을 원해요.\n(예) 팬트리가 있어요.\n(예) 복층 공간입니다.",
           property: "etc",
+        },
+        event: {
+          blur: function () {
+            this.value = this.value.replace(/[\=\+\?\#\&]/gi, '');
+            if (this.value !== '') {
+              homeliaisonAnalytics({
+                page: instance.pageName,
+                standard: instance.firstPageViewTime,
+                action: "inputBlur",
+                data: {
+                  property: "etc",
+                  value: this.value,
+                  date: dateToString(new Date()),
+                },
+              }).catch((err) => {
+                console.log(err);
+              });
+            }
+          },
         },
         style: {
           position: "absolute",
@@ -2051,7 +2161,6 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       }
     ]
   });
-
 
   ajaxJson({}, "https://" + GHOSTHOST + "/designerProposal_policy").then(function (res) {
     const { policy } = res;

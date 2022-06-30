@@ -5,7 +5,7 @@ module.exports = {
       script: "./robot.js",
       instances: 1,
       exec_mode: "cluster",
-      args: [ "aliveLog" ]
+      args: [ "second" ]
     },
   ]
 };
