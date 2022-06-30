@@ -768,7 +768,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
           }
         }
       ]
-    })
+    });
 
     createNode({
       mother: contentsBlock,
