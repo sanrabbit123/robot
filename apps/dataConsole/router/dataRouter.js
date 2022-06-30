@@ -5264,7 +5264,7 @@ DataRouter.prototype.rou_post_mysqlQuery = function () {
         throw new Error("invaild post");
       }
       const query = req.body.query.replace(/__equal__/gi, '=');
-      const response = await requestSystem("https://" + address.testinfo.host + "/mysqlQuery", { query }, { headers: { "Content-Type": "application/json" } });
+      const response = await requestSystem("http://" + address.officeinfo.ghost.host + ":" + String(address.officeinfo.ghost.second.port) + "/mysqlQuery", { query }, { headers: { "Content-Type": "application/json" } });
       if (typeof response.data !== "object") {
         throw new Error("request error");
       }

@@ -859,7 +859,7 @@ DataConsole.prototype.connect = async function () {
             "stgmobile.inicis.com",
             "ksmobile.inicis.com",
             "fcmobile.inicis.com",
-            "172.30.1.42:3000"
+            "192.168.0.14:3000"
           ];
 
           __wallLogicBoo = false;

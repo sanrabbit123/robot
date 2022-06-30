@@ -2785,7 +2785,7 @@ Ghost.prototype.ghostRouter = function (needs) {
         "Access-Control-Allow-Headers": '*',
       });
       const text = (typeof req.body.text !== "string" ? "안녕하세요!" : req.body.text);
-      requestSystem("http://" + instance.address.officeinfo.ghost.second.host + ":3000/textToVoice", { text }, { headers: { "Content-Type": "application/json" } }).catch((err) => {
+      requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(instance.address.officeinfo.ghost.second.port) + "/textToVoice", { text }, { headers: { "Content-Type": "application/json" } }).catch((err) => {
         console.log(err);
       });
       res.send(JSON.stringify({ message: "will do" }));

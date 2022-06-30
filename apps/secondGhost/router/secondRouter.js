@@ -84,6 +84,19 @@ SecondRouter.prototype.rou_post_mysqlQuery = function () {
   const back = this.back;
   const { mysqlQuery } = this.mother;
   let obj = {};
+  let ipTong;
+
+  ipTong = [ 1, 127001, 19216801 ];
+  for (let info in instance.address) {
+    if (instance.address[info].ip.outer.length > 0) {
+      ipTong.push(Number(instance.address[info].ip.outer.replace(/[^0-9]/g, '')));
+    }
+    if (instance.address[info].ip.inner.length > 0) {
+      ipTong.push(Number(instance.address[info].ip.inner.replace(/[^0-9]/g, '')));
+    }
+  }
+  ipTong = Array.from(new Set(ipTong));
+
   obj.link = [ "/mysqlQuery" ];
   obj.func = async function (req, res) {
     res.set({
@@ -97,13 +110,22 @@ SecondRouter.prototype.rou_post_mysqlQuery = function () {
       if (typeof req.body.query !== "string") {
         throw new Error("invaild post");
       }
+      ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
       if (/;$/.test(req.body.query.trim())) {
         query = req.body.query.trim();
       } else {
         query = req.body.query.trim() + ';';
       }
-      if (!/drop/gi.test(query) && !/delete/gi.test(query)) {
-        response = await mysqlQuery(query, { local: true });
+      if (!/drop/gi.test(query) && !/delete/gi.test(query) && /^select/gi.test(query)) {
+        if (typeof ip === "string") {
+          if (ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, '')))) {
+            response = await mysqlQuery(query, { local: true });
+          } else {
+            response = [];
+          }
+        } else {
+          response = [];
+        }
       } else {
         response = [];
       }
