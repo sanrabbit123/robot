@@ -1217,7 +1217,7 @@ ReceiptRouter.prototype.sync_paymentProject = async function (bilid, requestNumb
           }
         }).then((res) => {
           const { data } = res;
-          return requestSystem("https://" + instance.address.backinfo.host + ":3000/getHistoryProperty", {
+          return requestSystem("https://" + instance.address.backinfo.host + ":3000/updateHistory", {
             method: "project",
             id: proid,
             column: "manager",
