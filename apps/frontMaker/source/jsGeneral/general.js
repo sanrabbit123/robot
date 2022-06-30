@@ -4714,7 +4714,7 @@ GeneralJs.prototype.greenTalk = function (input) {
 
   triangleWidth = desktop ? 8 : 1.6;
 
-  popupTextTop = desktop ? (isMac() ? -1 : 1) : -0.2;
+  popupTextTop = desktop ? (isMac() ? -1 : 1) : (isIphone() ? 0 : -0.2);
   popupSize = desktop ? 16 : 2.9;
   popupWeight = desktop ? 600 : 600;
 
