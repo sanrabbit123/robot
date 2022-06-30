@@ -5014,7 +5014,7 @@ GeneralJs.prototype.greenTalk = function (input) {
       let scrollMin, scrollSecondMin;
       let redDot, whitePopup;
 
-      scrollMin = <%% 600, 600, 500, 400, 150 %%>;
+      scrollMin = <%% 200, 200, 160, 100, 50 %%>;
       scrollSecondMin = <%% 3600, 3600, 3000, 2400, 2000 %%>;
 
       redDot = document.querySelector('.' + redDotClassName);

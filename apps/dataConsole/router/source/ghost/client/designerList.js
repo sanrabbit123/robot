@@ -890,6 +890,11 @@ DesignerListJs.prototype.launching = async function (loading) {
       return /^[ap]/i.test(obj.setting.front.photo.porlid);
     })
 
+    this.designers.sort((a, b) => {
+      return b.analytics.grade - a.analytics.grade;
+    });
+
+
     await this.mother.ghostClientLaunching({
       mode: "front",
       name: "designerList",
