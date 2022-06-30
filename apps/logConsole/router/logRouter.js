@@ -71,9 +71,7 @@ LogRouter.prototype.rou_get_Disk = function () {
   const instance = this;
   const { diskReading } = this.mother;
   const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
-  const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
   const reflection = new MongoReflection();
-  const analytics = new GoogleAnalytics();
   let obj = {};
   obj.link = "/disk";
   obj.func = async function (req, res) {
@@ -86,12 +84,7 @@ LogRouter.prototype.rou_get_Disk = function () {
     try {
       const now = new Date();
       const disk = await diskReading();
-      reflection.coreReflection().then(() => {
-        return reflection.mysqlReflection();
-      }).catch((err) => { console.log(err); });
-      if (now.getHours() > 11 && now.getHours() < 16) {
-        analytics.historyToMongo().catch((err) => { console.log(err); });
-      }
+      reflection.coreReflection().catch((err) => { console.log(err); });
       res.send(JSON.stringify({ disk: disk.toArray() }));
     } catch (e) {
       instance.mother.errorLog("Log Console 서버 문제 생김 (rou_get_Disk): " + e.message).catch((e) => { console.log(e); });
