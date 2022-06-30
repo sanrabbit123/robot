@@ -5984,8 +5984,6 @@ StyleCurationJs.prototype.forceConverting = async function () {
             }
           }
 
-          boo = false;
-
           if (returnGet().force === "true") {
             boo = true;
           }
