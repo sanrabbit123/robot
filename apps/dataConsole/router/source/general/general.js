@@ -5434,6 +5434,18 @@ GeneralJs.prototype.consultingPopup = function () {
     greenNoticeWidth0 = <%% 96, 96, 96, 96, 28 %%>;
     greenNoticeWidth1 = <%% 120, 120, 120, 120, 28 %%>;
 
+    homeliaisonAnalytics({
+      page: instance.pageName,
+      standard: instance.firstPageViewTime,
+      action: "popupOpen",
+      data: {
+        href: window.encodeURIComponent(window.location.href),
+        date: dateToString(new Date(), true),
+      },
+    }).catch((err) => {
+      console.log(err);
+    });
+
     addressButtonEvent = async function (e) {
       try {
         const totalContents = document.getElementById("totalcontents");
@@ -5540,7 +5552,7 @@ GeneralJs.prototype.consultingPopup = function () {
           data: {
             property: "address1",
             value: this.value,
-            date: dateToString(new Date()),
+            date: dateToString(new Date(), true),
           },
         }).catch((err) => {
           console.log(err);
@@ -5616,7 +5628,7 @@ GeneralJs.prototype.consultingPopup = function () {
           data: {
             property: "pyeong",
             value: this.value,
-            date: dateToString(new Date()),
+            date: dateToString(new Date(), true),
           },
         }).catch((err) => {
           console.log(err);
@@ -6026,7 +6038,7 @@ GeneralJs.prototype.consultingPopup = function () {
                   data: {
                     property: "name",
                     value: this.value,
-                    date: dateToString(new Date()),
+                    date: dateToString(new Date(), true),
                   },
                 }).catch((err) => {
                   console.log(err);
@@ -6120,7 +6132,7 @@ GeneralJs.prototype.consultingPopup = function () {
                   data: {
                     property: "phone",
                     value: this.value,
-                    date: dateToString(new Date()),
+                    date: dateToString(new Date(), true),
                   },
                 }).catch((err) => {
                   console.log(err);
@@ -6217,7 +6229,7 @@ GeneralJs.prototype.consultingPopup = function () {
                   data: {
                     property: "email",
                     value: this.value,
-                    date: dateToString(new Date()),
+                    date: dateToString(new Date(), true),
                   },
                 }).catch((err) => {
                   console.log(err);
@@ -6334,7 +6346,7 @@ GeneralJs.prototype.consultingPopup = function () {
                   data: {
                     property: "address0",
                     value: this.value,
-                    date: dateToString(new Date()),
+                    date: dateToString(new Date(), true),
                   },
                 }).catch((err) => {
                   console.log(err);
@@ -6732,7 +6744,7 @@ GeneralJs.prototype.consultingPopup = function () {
                   data: {
                     property: "movein",
                     value: this.value,
-                    date: dateToString(new Date()),
+                    date: dateToString(new Date(), true),
                   },
                 }).catch((err) => {
                   console.log(err);
@@ -6824,7 +6836,7 @@ GeneralJs.prototype.consultingPopup = function () {
                   data: {
                     property: "etc",
                     value: this.value,
-                    date: dateToString(new Date()),
+                    date: dateToString(new Date(), true),
                   },
                 }).catch((err) => {
                   console.log(err);
@@ -7156,7 +7168,10 @@ GeneralJs.prototype.finalSubmit = function () {
                 page: instance.pageName,
                 standard: instance.firstPageViewTime,
                 action: "login",
-                data: { cliid },
+                data: {
+                  cliid,
+                  date: dateToString(new Date(), true),
+                },
               }).then(() => {
                 document.body.removeChild(box);
                 document.body.removeChild(back);

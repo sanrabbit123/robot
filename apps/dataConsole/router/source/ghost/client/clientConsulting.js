@@ -629,7 +629,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
         data: {
           property: "name",
           value: this.value,
-          date: dateToString(new Date()),
+          date: dateToString(new Date(), true),
         },
       }).catch((err) => {
         console.log(err);
@@ -647,7 +647,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
         data: {
           property: "phone",
           value: this.value,
-          date: dateToString(new Date()),
+          date: dateToString(new Date(), true),
         },
       }).catch((err) => {
         console.log(err);
@@ -665,7 +665,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
         data: {
           property: "email",
           value: this.value,
-          date: dateToString(new Date()),
+          date: dateToString(new Date(), true),
         },
       }).catch((err) => {
         console.log(err);
@@ -682,7 +682,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
         data: {
           property: "address0",
           value: this.value,
-          date: dateToString(new Date()),
+          date: dateToString(new Date(), true),
         },
       }).catch((err) => {
         console.log(err);
@@ -720,7 +720,9 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
         page: instance.pageName,
         standard: instance.firstPageViewTime,
         action: "addressClick",
-        data: {},
+        data: {
+          date: dateToString(new Date(), true),
+        },
       }).catch((err) => {
         console.log(err);
       });
@@ -805,7 +807,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
         data: {
           property: "address1",
           value: this.value,
-          date: dateToString(new Date()),
+          date: dateToString(new Date(), true),
         },
       }).catch((err) => {
         console.log(err);
@@ -881,7 +883,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
         data: {
           property: "pyeong",
           value: this.value,
-          date: dateToString(new Date()),
+          date: dateToString(new Date(), true),
         },
       }).catch((err) => {
         console.log(err);
@@ -1892,7 +1894,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
                 data: {
                   property: "movein",
                   value: this.value,
-                  date: dateToString(new Date()),
+                  date: dateToString(new Date(), true),
                 },
               }).catch((err) => {
                 console.log(err);
@@ -1981,7 +1983,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
                 data: {
                   property: "etc",
                   value: this.value,
-                  date: dateToString(new Date()),
+                  date: dateToString(new Date(), true),
                 },
               }).catch((err) => {
                 console.log(err);
@@ -2313,7 +2315,10 @@ ClientConsultingJs.prototype.finalSubmit = function () {
                 page: instance.pageName,
                 standard: instance.firstPageViewTime,
                 action: "login",
-                data: { cliid },
+                data: {
+                  cliid,
+                  date: dateToString(new Date(), true),
+                },
               }).then(() => {
                 document.body.removeChild(box);
                 document.body.removeChild(back);

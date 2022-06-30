@@ -504,7 +504,7 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
     if (typeof obj.name !== "string" || typeof obj.client !== "object" || typeof obj.base !== "object" || typeof obj.local !== "function") {
       throw new Error("must be object => { name, client, base, local }");
     }
-    const { ajaxJson, returnGet, homeliaisonAnalytics, setDebounce } = GeneralJs;
+    const { ajaxJson, returnGet, homeliaisonAnalytics, setDebounce, dateToString } = GeneralJs;
     const { mode, name, client, base, local } = obj;
     let belowTarget, removeTargets, getObj;
 
@@ -539,6 +539,7 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
       data: {
         cliid: client !== null ? client.cliid : "null",
         href: window.encodeURIComponent(window.location.href),
+        date: dateToString(new Date(), true),
       },
     }).then((json) => {
       base.instance.googleClientId = json.data.id;
@@ -561,6 +562,7 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
               scroll: window.scrollY,
               total: ((document.body.getBoundingClientRect() !== null && document.body.getBoundingClientRect() !== undefined) ? document.body.getBoundingClientRect().height : 0),
               screen: window.innerHeight,
+              date: dateToString(new Date(), true),
             },
           }).catch((err) => {
             console.log(err);

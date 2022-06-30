@@ -148,6 +148,8 @@ SecondGhost.prototype.ghostConnect = async function () {
   const multiForms = multer();
   const useragent = require("express-useragent");
   const staticFolder = process.env.HOME + "/static";
+  const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
+  const reflection = new MongoReflection();
 
   app.use(useragent.express());
   app.use(express.json({ limit : "50mb" }));
@@ -178,6 +180,9 @@ SecondGhost.prototype.ghostConnect = async function () {
             await instance.slack_bot.chat.postMessage({ text: name + " " + "disk warning", channel: "#error_log" });
           }
         }
+        await reflection.coreReflection();
+        await reflection.mysqlReflection();
+        console.log("disk check, core reflection, mysql reflect done");
       } catch (e) {
         console.log(e);
       }
