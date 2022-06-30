@@ -551,6 +551,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
   let arrowWidth, arrowHeight, arrowBottom;
   let num, booArr;
   let tagBlock;
+  let markWidth, markTop;
 
   tongPaddingLeft = <%% 100, 70, 80, 50, 6.5 %%>;
   blockMargin = <%% 40, 30, 20, 20, 2 %%>;
@@ -594,6 +595,9 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
   arrowWidth = <%% 40, 32, 32, 32, 3 %%>;
   arrowHeight = <%% 10, 8, 8, 8, 2 %%>;
   arrowBottom = <%% 12, 12, 12, 12, 1 %%>;
+
+  markWidth = <%% 14, 14, 14, 13, 3 %%>;
+  markTop = <%% (isMac() ? 14 : 12), (isMac() ? 14 : 12), (isMac() ? 14 : 12), (isMac() ? 14 : 12), (isIphone() ? 2.2 : 1.8) %%>;
 
   cleanChildren(designerTong);
 
@@ -646,6 +650,26 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
       },
       children: [
         {
+          attribute: { desid: designer.desid },
+          event: {
+            click: function (e) {
+              const desid = this.getAttribute("desid");
+              selfHref(FRONTHOST + "/desdetail.php?desid=" + desid);
+            },
+            touchstart: function (e) {
+              const self = this;
+              self.setAttribute(touchStartConst, "on");
+              setQueue(() => {
+                self.setAttribute(touchStartConst, "off");
+              });
+            },
+            touchend: function (e) {
+              if (this.getAttribute(touchStartConst) === "on") {
+                const desid = this.getAttribute("desid");
+                selfHref(FRONTHOST + "/desdetail.php?desid=" + desid);
+              }
+            }
+          },
           style: {
             display: "inline-block",
             position: "relative",
@@ -657,6 +681,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
             backgroundPosition: "50% 50%",
             backgroundImage: "url('" + src + "')",
             verticalAlign: "top",
+            cursor: "pointer",
           }
         },
         {
@@ -699,10 +724,10 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
 
     createNode({
       mother: contentsBlock,
-      text: designer.designer,
       style: {
         display: "block",
         position: "relative",
+        cursor: "pointer",
       },
       children: [
         {
@@ -722,7 +747,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
             position: "relative",
             fontSize: String(careerSize) + ea,
             fontWeight: String(careerWeight),
-            color: colorChip.green,
+            color: designer.analytics.grade === 1 ? colorChip.green : colorChip.deactive,
             top: String(careerTextTop) + ea,
           },
           bold: {
@@ -731,6 +756,17 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
             color: colorChip.deactive,
           }
         },
+        {
+          mode: "svg",
+          source: instance.mother.returnMark(colorChip.green),
+          style: {
+            display: designer.analytics.grade === 1 ? "inline-block" : "none",
+            position: "absolute",
+            width: String(markWidth) + ea,
+            right: String(0),
+            top: String(markTop) + ea,
+          }
+        }
       ]
     })
 
@@ -893,7 +929,6 @@ DesignerListJs.prototype.launching = async function (loading) {
     this.designers.sort((a, b) => {
       return b.analytics.grade - a.analytics.grade;
     });
-
 
     await this.mother.ghostClientLaunching({
       mode: "front",
