@@ -553,4 +553,62 @@ MongoReflection.prototype.frontReflection = async function (to = "local") {
   }
 }
 
+MongoReflection.prototype.logReflection = async function (to = "local") {
+  const instance = this;
+  const { mongo } = this.mother;
+  try {
+    const dbName = "miro81";
+    const secondPort = 27018;
+    const fromDB = "testinfo";
+    let MONGOC_FROM, MONGOC_TO;
+    let fromString, toString;
+    let toDB;
+    let rows;
+    let consoleWording;
+    let equalNum;
+    let collection;
+
+    fromHost = this.address[fromDB].host;
+    fromString = "mongodb://" + this.address[fromDB].user + ':' + this.address[fromDB].password + '@' + fromHost + ':' + String(this.address[fromDB].port) + "/admin";
+    toString = "mongodb://" + this.address.officeinfo.mongo.user + ':' + this.address.officeinfo.mongo.password + '@' + "127.0.0.1" + ':' + String(secondPort) + "/admin";
+
+    console.log(`from DB : ${JSON.stringify(this.address[fromDB], null, 2)}`);
+
+    MONGOC_FROM = new mongo(fromString, { useUnifiedTopology: true });
+    MONGOC_TO = new mongo(toString, { useUnifiedTopology: true });
+
+    await MONGOC_FROM.connect();
+    await MONGOC_TO.connect();
+
+    console.log("connection success");
+
+    collection = await MONGOC_FROM.db(dbName).listCollections().toArray();
+
+    for (let i of collection) {
+
+      try {
+        await MONGOC_TO.db(dbName).collection(i).drop();
+      } catch {
+        console.log("There is no collection : " + i);
+      }
+
+      rows = await MONGOC_FROM.db(dbName).collection(i).find({}).toArray();
+      for (let j of rows) {
+        await MONGOC_TO.db(dbName).collection(i).insertOne(j);
+      }
+      console.log(`migration ${i} success`);
+
+    }
+
+    await MONGOC_FROM.close();
+    await MONGOC_TO.close();
+
+    console.log(`\x1b[33m%s\x1b[0m`, `from: ${from} => to: ${to} reflection success`);
+    console.log(``);
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 module.exports = MongoReflection;

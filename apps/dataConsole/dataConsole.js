@@ -586,6 +586,7 @@ DataConsole.prototype.renderFrontPhp = async function () {
       { from: "frontAbout", to: "about", path: "/middle/frontAbout" },
       { from: "frontFaq", to: "faq", path: "/middle/frontFaq" },
       { from: "frontTerms", to: "terms", path: "/middle/frontTerms" },
+      { from: "frontNotfound", to: "notfound", path: "/middle/frontNotfound" },
       { from: "miniAbout", to: "miniAbout", path: "/middle/miniAbout" },
     ];
     const ghostTargets = (await fileSystem(`readDir`, [ ghostdir + "/client" ])).filter((str) => { return str !== ".DS_Store" }).filter((str) => {

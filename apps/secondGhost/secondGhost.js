@@ -167,11 +167,10 @@ SecondGhost.prototype.ghostConnect = async function () {
   const pathConst = "/disk";
   const protocol = "https:";
   let response;
-  let intervalFunc;
-
+  let intervalFunc0, intervalFunc1, intervalFunc2;
   try {
 
-    intervalFunc = async () => {
+    intervalFunc0 = async () => {
       try {
         for (let { name, host } of targets) {
           response = await requestSystem(protocol + "//" + host + ":" + String(robotPort) + pathConst);
@@ -186,19 +185,29 @@ SecondGhost.prototype.ghostConnect = async function () {
       } catch (e) {
         console.log(e);
       }
-    };
-
-    intervalFunc().catch((err) => { console.log(err); });
-    setInterval(intervalFunc, 2 * 60 * 60 * 1000);
-
-    instance.aliveTest().catch((err) => { console.log(err); });
-    setInterval(async () => {
+    }
+    intervalFunc1 = async () => {
       try {
         await instance.aliveTest();
       } catch (e) {
         console.log(e);
       }
-    }, 30 * 60 * 1000);
+    }
+    intervalFunc2 = async () => {
+      try {
+        await reflection.logReflection();
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    intervalFunc0().catch((err) => { console.log(err); });
+    intervalFunc1().catch((err) => { console.log(err); });
+    intervalFunc2().catch((err) => { console.log(err); });
+
+    setInterval(intervalFunc0, 2 * 60 * 60 * 1000);
+    setInterval(intervalFunc1, 30 * 60 * 1000);
+    setInterval(intervalFunc2, 24 * 60 * 60 * 1000);
 
     console.log(``);
     console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching second ghost ==============`);
