@@ -584,21 +584,23 @@ MongoReflection.prototype.logReflection = async function (to = "local") {
 
     collection = await MONGOC_FROM.db(dbName).listCollections().toArray();
 
-    for (let i of collection) {
+    console.log(collection);
 
-      try {
-        await MONGOC_TO.db(dbName).collection(i).drop();
-      } catch {
-        console.log("There is no collection : " + i);
-      }
-
-      rows = await MONGOC_FROM.db(dbName).collection(i).find({}).toArray();
-      for (let j of rows) {
-        await MONGOC_TO.db(dbName).collection(i).insertOne(j);
-      }
-      console.log(`migration ${i} success`);
-
-    }
+    // for (let i of collection) {
+    //
+    //   try {
+    //     await MONGOC_TO.db(dbName).collection(i).drop();
+    //   } catch {
+    //     console.log("There is no collection : " + i);
+    //   }
+    //
+    //   rows = await MONGOC_FROM.db(dbName).collection(i).find({}).toArray();
+    //   for (let j of rows) {
+    //     await MONGOC_TO.db(dbName).collection(i).insertOne(j);
+    //   }
+    //   console.log(`migration ${i} success`);
+    //
+    // }
 
     await MONGOC_FROM.close();
     await MONGOC_TO.close();
