@@ -553,7 +553,7 @@ MongoReflection.prototype.frontReflection = async function (to = "local") {
   }
 }
 
-MongoReflection.prototype.logReflection = async function (to = "local") {
+MongoReflection.prototype.logReflection = async function () {
   const instance = this;
   const { mongo } = this.mother;
   try {
@@ -603,7 +603,7 @@ MongoReflection.prototype.logReflection = async function (to = "local") {
     await MONGOC_FROM.close();
     await MONGOC_TO.close();
 
-    console.log(`\x1b[33m%s\x1b[0m`, `from: ${from} => to: ${to} reflection success`);
+    console.log(`\x1b[33m%s\x1b[0m`, `log console to second ghost reflection success`);
     console.log(``);
 
   } catch (e) {
