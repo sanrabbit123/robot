@@ -71,7 +71,6 @@ LogConsole.prototype.renderStatic = async function (staticFolder) {
   try {
 
     //set static
-    const moduleName = "log";
     const staticDir = `${this.dir}/router/source/local`;
     const staticDirList_raw = await fileSystem(`readDir`, [ staticDir ]);
     const staticDirList = staticDirList_raw.filter((fileName) => { return !(([ ".DS_Store" ]).includes(fileName)); });
@@ -82,9 +81,6 @@ LogConsole.prototype.renderStatic = async function (staticFolder) {
 
     if (!homeDirList.includes(staticFolder.split('/')[staticFolder.split('/').length - 1])) {
       shell.exec(`mkdir ${shellLink(staticFolder)}`);
-    }
-    if (!await fileSystem(`exist`, [ `${shellLink(staticFolder)}/log` ])) {
-      shell.exec(`mkdir ${shellLink(staticFolder)}/log`);
     }
     console.log(`set static`);
 
@@ -154,8 +150,8 @@ LogConsole.prototype.renderStatic = async function (staticFolder) {
       result += "\n\n";
 
       console.log(`${i} merge success`);
-      await fileSystem(`write`, [ `${staticFolder}/log/${i}`, result ]);
-      resultFromArr.push(`${staticFolder}/log/${i}`);
+      await fileSystem(`write`, [ `${staticFolder}/${i}`, result ]);
+      resultFromArr.push(`${staticFolder}/${i}`);
 
     }
 
