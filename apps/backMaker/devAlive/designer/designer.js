@@ -33,6 +33,7 @@ Designer.prototype.frontMode = function () {
   obj.information.contract = this.information.contract.toNormal();
   obj.information.business = this.information.business.toNormal();
   obj.analytics = {};
+  obj.analytics.grade = this.analytics.grade;
   obj.analytics.project = {};
   obj.analytics.project.matrix = this.analytics.project.matrix.toNormal();
   obj.setting = {};

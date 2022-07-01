@@ -502,6 +502,7 @@ const RemainCalculation = function (json) {
   this.amount = new RemainCalculationAmount(json.amount);
   this.info = new RemainCalculationInfo(json.info);
   this.refund = json.refund;
+  this.discount = json.discount;
 }
 
 RemainCalculation.prototype.toNormal = function () {
@@ -509,6 +510,7 @@ RemainCalculation.prototype.toNormal = function () {
   obj.amount = this.amount.toNormal();
   obj.info = this.info.toNormal();
   obj.refund = this.refund;
+  obj.discount = this.discount;
   return obj;
 }
 

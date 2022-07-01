@@ -56,6 +56,7 @@ module.exports = {
                   to: "",
                 },
                 refund: 0,
+                discount: 0,
               },
             },
             form: {
