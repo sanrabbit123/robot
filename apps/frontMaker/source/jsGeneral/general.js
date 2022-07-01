@@ -4025,7 +4025,7 @@ GeneralJs.prototype.footerMake = function () {
         ],
         href: [
           "/faq.php",
-          "/faq.php",
+          "/terms.php",
           null,
           null
         ]
