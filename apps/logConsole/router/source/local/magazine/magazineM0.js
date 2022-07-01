@@ -4,15 +4,20 @@ const MagazineM0Js = function () {
   this.ea = "px";
 }
 
+MagazineM0Js.prototype.baseMaker = function () {
+  const instance = this;
+  const { createNode, withOut, colorChip } = GeneralJs;
+
+
+
+}
+
 MagazineM0Js.prototype.launching = async function () {
   const instance = this;
   try {
-    const { cssInjection, returnGet, colorChip } = GeneralJs;
+    const { returnGet } = GeneralJs;
     let getObj;
     getObj = returnGet();
-
-    console.log("magazine");
-
 
   } catch (e) {
     console.log(e);
