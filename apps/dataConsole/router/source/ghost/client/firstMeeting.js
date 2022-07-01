@@ -31,6 +31,7 @@
     "module": false
   },
   "name": "firstMeeting",
+  "hangul": "현장 미팅 안내",
   "route": [
     "meeting",
     "FM"

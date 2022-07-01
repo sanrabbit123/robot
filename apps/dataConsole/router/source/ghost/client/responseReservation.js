@@ -31,6 +31,7 @@
     "module": false
   },
   "name": "responseReservation",
+  "hangul": "응대 예약",
   "route": [
     "reservation",
     "RR"

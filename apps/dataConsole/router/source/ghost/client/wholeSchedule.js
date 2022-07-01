@@ -31,6 +31,7 @@
     "module": false
   },
   "name": "wholeSchedule",
+  "hangul": "전체 일정 안내",
   "route": [
     "schedule",
     "WS"

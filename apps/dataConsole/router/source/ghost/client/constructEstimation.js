@@ -31,6 +31,7 @@
     "module": false
   },
   "name": "constructEstimation",
+  "hangul": "시공 견적 안내",
   "route": [
     "cestimation",
     "CE"

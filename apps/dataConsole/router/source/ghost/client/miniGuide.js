@@ -31,6 +31,7 @@
     "module": false
   },
   "name": "miniGuide",
+  "hangul": "미니 실측 가이드",
   "route": [
     "curation",
     "SC"

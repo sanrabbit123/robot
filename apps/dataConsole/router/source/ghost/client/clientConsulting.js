@@ -31,6 +31,7 @@
     "module": false
   },
   "name": "clientConsulting",
+  "hangul": "서비스 신청",
   "route": [
     "consulting",
     "CC"

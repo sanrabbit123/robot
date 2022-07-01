@@ -31,6 +31,7 @@
     "module": false
   },
   "name": "universalEstimation",
+  "hangul": "결제 안내",
   "route": [
     "estimation",
     "UE"

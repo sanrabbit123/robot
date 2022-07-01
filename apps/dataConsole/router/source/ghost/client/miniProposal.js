@@ -31,6 +31,7 @@
     "module": false
   },
   "name": "miniProposal",
+  "hangul": "미니 디자인 제안",
   "route": [
     "curation",
     "SC"

@@ -31,6 +31,7 @@
     "module": false
   },
   "name": "designerList",
+  "hangul": "디자이너 리스트",
   "route": [
     "designerList",
     "DL"

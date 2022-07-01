@@ -31,6 +31,7 @@
     "module": false
   },
   "name": "reviewDetail",
+  "hangul": "리뷰 상세",
   "route": [
     "reviewDetail",
     "RD"

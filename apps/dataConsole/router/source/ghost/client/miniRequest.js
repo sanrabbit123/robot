@@ -31,6 +31,7 @@
     "module": false
   },
   "name": "miniRequest",
+  "hangul": "미니 서비스 콘솔",
   "route": [
     "curation",
     "SC"

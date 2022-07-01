@@ -31,6 +31,7 @@
     "module": false
   },
   "name": "styleCuration",
+  "hangul": "서비스 큐레이션",
   "route": [
     "curation",
     "SC"

@@ -310,6 +310,18 @@ Mother.prototype.fileSystem = function (sw, arr) {
         });
       });
       break;
+    case "readHead":
+      return new Promise(function (resolve, reject) {
+        if (arr.length === 0) { reject("second argument must be length 1~2 array"); }
+        const { spawn } = require("child_process");
+        const du = spawn("head", [ "-n", String(typeof arr[1] === "number" ? arr[1] : 10), arr[0] ]);
+        let out;
+        out = "";
+        du.stdout.on("data", (data) => { out += String(data); });
+        du.stderr.on("data", (data) => { reject(String(data)); });
+        du.on("close", (code) => { resolve(String(out)); });
+      });
+      break;
     case "write":
       return new Promise(function (resolve, reject) {
         if (arr.length !== 2) { reject("second argument must be length 2 array"); }

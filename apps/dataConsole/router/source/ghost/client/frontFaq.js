@@ -31,6 +31,7 @@
     "module": false
   },
   "name": "frontFaq",
+  "hangul": "FAQ",
   "route": [
     "frontFaq"
   ]

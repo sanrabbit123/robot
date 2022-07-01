@@ -31,6 +31,7 @@
     "module": false
   },
   "name": "frontTerms",
+  "hangul": "개인정보 처리 방침",
   "route": [
     "frontTerms"
   ]

@@ -31,6 +31,7 @@
     "module": false
   },
   "name": "designerDetail",
+  "hangul": "디자이너 상세",
   "route": [
     "designerDetail",
     "DD"

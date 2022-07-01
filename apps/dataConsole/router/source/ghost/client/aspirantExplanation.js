@@ -31,6 +31,7 @@
     "module": false
   },
   "name": "aspirantExplanation",
+  "hangul": "디자이너 신청",
   "route": [
     "aspirantExplanation"
   ]

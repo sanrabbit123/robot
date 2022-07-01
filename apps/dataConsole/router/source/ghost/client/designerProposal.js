@@ -31,6 +31,7 @@
     "module": false
   },
   "name": "designerProposal",
+  "hangul": "디자이너 추천",
   "route": [
     "proposal",
     "DP"

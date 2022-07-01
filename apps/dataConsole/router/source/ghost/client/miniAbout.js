@@ -31,6 +31,7 @@
     "module": false
   },
   "name": "miniAbout",
+  "hangul": "미니 서비스 소개",
   "route": [
     "miniAbout"
   ]

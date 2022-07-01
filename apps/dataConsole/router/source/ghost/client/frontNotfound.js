@@ -31,6 +31,7 @@
     "module": false
   },
   "name": "frontNotfound",
+  "hangul": "404 에러",
   "route": [
     "frontNotfound"
   ]

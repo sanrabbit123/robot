@@ -31,6 +31,7 @@
     "module": false
   },
   "name": "frontIndex",
+  "hangul": "메인 홈",
   "route": [
     "frontIndex",
     "DD"

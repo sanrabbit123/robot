@@ -31,6 +31,7 @@
     "module": false
   },
   "name": "purchaseList",
+  "hangul": "구매 리스트",
   "route": [
     "purchase",
     "PL"

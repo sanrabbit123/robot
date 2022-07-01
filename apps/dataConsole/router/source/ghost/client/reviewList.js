@@ -31,6 +31,7 @@
     "module": false
   },
   "name": "reviewList",
+  "hangul": "리뷰 리스트",
   "route": [
     "reviewList",
     "RL"

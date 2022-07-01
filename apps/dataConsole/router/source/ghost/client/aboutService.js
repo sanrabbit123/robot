@@ -31,6 +31,7 @@
     "module": false
   },
   "name": "aboutService",
+  "hangul": "서비스 소개",
   "route": [
     "aboutService"
   ]
