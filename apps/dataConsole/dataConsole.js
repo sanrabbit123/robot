@@ -190,7 +190,6 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
     officeString = "const OFFICEHOST = \"" + OFFICEHOST + "\";\n" + "const FILEHOST = \"" + FILEHOST + "\";";
     svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/string/svgTong.js` ]);
     generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
-    generalString = generalString.replace(/\/<%generalMap%>\//, "{}");
     consoleGeneralString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/general.js` ]);
     trapString = await this.back.setAjaxAuthorization();
 
@@ -207,12 +206,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
       execString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/exec.js` ]);
       execString = execString.replace(/\/<%name%>\//, (i.slice(0, 1).toUpperCase() + i.replace(/\.js$/, '').slice(1)));
       fileString = await fileSystem(`readString`, [ `${this.dir}/router/source/local/${i}` ]);
-      if (/\/<%map%>\//g.test(fileString)) {
-        fileString = fileString.replace(/(\/<%map%>\/)/g, function (match, p1, offset, string) {
-          return JSON.stringify(require(`${instance.dir}/router/source/svg/map/${i}`), null, 2);
-        });
-        svgTongItemsString = await fileSystem(`readString`, [ `${this.dir}/router/source/svg/svgTong/${i}` ]);
-      }
+
       if (await fileSystem(`exist`, [ `${this.dir}/router/source/class/${i}` ])) {
         classString = await fileSystem(`readString`, [ `${this.dir}/router/source/class/${i}` ]);
         fileString = classString.replace(/module\.exports \= [^\n]+/gi, '') + "\n\n" + fileString;
@@ -278,7 +272,6 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
 
 DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address, DataPatch, DataMiddle) {
   const instance = this;
-  const generalMap = require(`${process.cwd()}/apps/mapMaker/map/general.js`);
   const { fileSystem, shell, shellLink, treeParsing } = this.mother;
   const S3HOST = this.address.homeinfo.ghost.protocol + "://" + this.address.homeinfo.ghost.host;
   const SSEHOST = address.host;
@@ -424,12 +417,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
       moduleBoo = false;
 
       fileString = await fileSystem(`readString`, [ `${staticDir}/${i}` ]);
-      if (/\/<%map%>\//g.test(fileString)) {
-        fileString = fileString.replace(/(\/<%map%>\/)/g, function (match, p1, offset, string) {
-          return JSON.stringify(require(`${instance.dir}/router/source/svg/middle/map/${i}`), null, 2);
-        });
-        svgTongItemsString = await fileSystem(`readString`, [ `${this.dir}/router/source/svg/middle/svgTong/${i}` ]);
-      }
+
 
       if (!/\/<%patch%>\//g.test(fileString)) {
         throw new Error("There is no patch, impossible");
@@ -449,10 +437,6 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
 
       //set browser js
       generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
-      generalString = generalString.replace(/(\/<%generalMap%>\/)/, (match, p1, offset, string) => {
-        let generalObj_clone = JSON.parse(JSON.stringify(generalMap));
-        return JSON.stringify(generalObj_clone, null, 2);
-      });
 
       execString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/middleExec.js` ]);
       execString = execString.replace(/\/<%name%>\//, (name.slice(0, 1).toUpperCase() + name.slice(1)));

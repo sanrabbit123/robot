@@ -100,10 +100,8 @@ LogConsole.prototype.renderStatic = async function (staticFolder) {
     officeString = "const OFFICEHOST = \"" + OFFICEHOST + "\";\n" + "const FILEHOST = \"" + FILEHOST + "\";";
     svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/string/svgTong.js` ]);
     generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
-    generalString = generalString.replace(/\/<%generalMap%>\//, "{}");
     consoleGeneralString = await fileSystem(`readString`, [ `${this.console}/router/source/general/general.js` ]);
     trapString = await this.back.setAjaxAuthorization();
-
 
     staticDirFunc = async (staticDir) => {
       try {

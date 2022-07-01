@@ -21,7 +21,6 @@ GoogleChrome.prototype.frontRender = async function (func) {
     let finalFunc;
 
     generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
-    generalString = generalString.replace(/\/<%generalMap%>\//, "{}");
     finalFunc = generalString;
     finalFunc += "\n\n";
     finalFunc += "const print = function (input) {\n";
@@ -188,7 +187,6 @@ GoogleChrome.prototype.frontScript = async function (link, func) {
     await page.goto(link, { waitUntil: "networkidle2" });
 
     generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
-    generalString = generalString.replace(/\/<%generalMap%>\//, "{}");
     funcScript = generalString + "\n\n" + func.toString().trim().replace(/^(async)? *(function[^\(]*\([^\)]*\)|\([^\)]*\)[^\=]+\=\>)[^\{]*\{/i, '').replace(/\}$/i, '');
     frontResponse = await page.evaluate(new AsyncFunction(funcScript));
 
@@ -221,7 +219,6 @@ GoogleChrome.prototype.scriptChain = async function (map, between = 1000) {
     let funcScript, generalString, frontResponse, frontResponses;
 
     generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
-    generalString = generalString.replace(/\/<%generalMap%>\//, "{}");
     generalString += (await fileSystem(`readString`, [ `${process.cwd()}/apps/dataConsole/router/source/general/general.js` ]));
     generalString = dataConsole.mediaQuery(generalString).code;
 

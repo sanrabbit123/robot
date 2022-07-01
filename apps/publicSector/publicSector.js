@@ -55,7 +55,6 @@ PublicSector.prototype.staticRender = async function () {
 
     svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/string/svgTong.js` ]);
     generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
-    generalString = generalString.replace(/\/<%generalMap%>\//, "{}");
     consoleGeneralString = await fileSystem(`readString`, [ `${process.cwd()}/apps/dataConsole/router/source/general/general.js` ]);
     publicGeneralString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/general.js` ]);
     trapString = await this.back.setAjaxAuthorization();
@@ -72,12 +71,6 @@ PublicSector.prototype.staticRender = async function () {
       execString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/exec.js` ]);
       execString = execString.replace(/\/<%name%>\//, (i.slice(0, 1).toUpperCase() + i.replace(/\.js$/, '').slice(1)));
       fileString = await fileSystem(`readString`, [ `${this.dir}/router/source/local/${i}` ]);
-      if (/\/<%map%>\//g.test(fileString)) {
-        fileString = fileString.replace(/(\/<%map%>\/)/g, function (match, p1, offset, string) {
-          return JSON.stringify(require(`${instance.dir}/router/source/svg/map/${i}`), null, 2);
-        });
-        svgTongItemsString = await fileSystem(`readString`, [ `${this.dir}/router/source/svg/svgTong/${i}` ]);
-      }
 
       //merge
       code0 = svgTongString + "\n\n" + trapString + "\n\n";
