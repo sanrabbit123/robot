@@ -88,7 +88,7 @@ DevContext.prototype.launching = async function () {
     // console.log(pastProposal[0].project.detail);
 
 
-    
+
 
 
 

@@ -365,10 +365,24 @@ Mother.prototype.fileSystem = function (sw, arr) {
         if (arr.length !== 1) { reject("second argument must be length 1 array"); }
         fs.access(arr[0], fs.constants.F_OK, function (err) {
           try {
-            if (!err) { resolve(true); }
-            else { resolve(false); }
+            if (!err) {
+              resolve(true);
+            } else {
+              resolve(false);
+            }
           } catch (e) {
             resolve(false);
+          }
+        });
+      });
+    case "isDir":
+      return new Promise(function(resolve, reject) {
+        if (arr.length !== 1) { reject("second argument must be length 1 array"); }
+        fs.stat(arr[0], (err, stats) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(stats.isDirectory());
           }
         });
       });

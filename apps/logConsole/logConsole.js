@@ -71,24 +71,23 @@ LogConsole.prototype.renderStatic = async function (staticFolder) {
   try {
 
     //set static
-    const staticDir = `${this.dir}/router/source/local`;
-    const staticDirList_raw = await fileSystem(`readDir`, [ staticDir ]);
-    const staticDirList = staticDirList_raw.filter((fileName) => { return !(([ ".DS_Store" ]).includes(fileName)); });
     const homeDirList = await fileSystem(`readDir`, [ process.env.HOME ]);
+    let staticDir, staticDirFunc;
+    let staticDirList_raw, staticDirList;
     let folderSize, tempScriptString;
     let tempMediaResult;
     let subModuleList;
-
-    if (!homeDirList.includes(staticFolder.split('/')[staticFolder.split('/').length - 1])) {
-      shell.exec(`mkdir ${shellLink(staticFolder)}`);
-    }
-    console.log(`set static`);
-
+    let temp;
     let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, sseString, sseConsoleString, polyfillString, classString, pythonString, bridgeString, frontWebString, trapString, officeString;
     let code0, code1, code2, code3;
     let result;
     let prototypes, prototypeBoo;
     let resultFromArr;
+
+    if (!homeDirList.includes(staticFolder.split('/')[staticFolder.split('/').length - 1])) {
+      shell.exec(`mkdir ${shellLink(staticFolder)}`);
+    }
+    console.log(`set static`);
 
     //set general js
     s3String = "const S3HOST = \"" + S3HOST + "\";";
@@ -105,10 +104,43 @@ LogConsole.prototype.renderStatic = async function (staticFolder) {
     consoleGeneralString = await fileSystem(`readString`, [ `${this.console}/router/source/general/general.js` ]);
     trapString = await this.back.setAjaxAuthorization();
 
+
+    staticDirFunc = async (staticDir) => {
+      try {
+        let staticDirList_raw, staticDirList;
+        staticDirList_raw = (await fileSystem(`readDir`, [ staticDir ])).filter((str) => { return str !== ".DS_Store"; });
+        staticDirList_raw = staticDirList_raw.map((str) => { return `${staticDir}/${str}` });
+        staticDirList = [];
+        for (let path of staticDirList_raw) {
+          if (await fileSystem(`isDir`, [ path ])) {
+            staticDirList = staticDirList.concat(await staticDirFunc(path));
+          } else {
+            staticDirList.push(path);
+          }
+        }
+        return staticDirList;
+      } catch (e) {
+        throw new Error("read static files error : " + e.message);
+      }
+    }
+
+    staticDir = `${this.dir}/router/source/local`;
+    staticDirList = await staticDirFunc(staticDir);
+    if (staticDirList.some((path) => { return !/\.js$/.test(path) })) {
+      throw new Error("not allow non-js file");
+    }
+    staticDirList = staticDirList.map((path) => {
+      return { path, name: path.split("/")[path.split("/").length - 1] };
+    })
+    if (staticDirList.length !== [ ...new Set(staticDirList.map((obj) => { return obj.name })) ].length) {
+      throw new Error("name error, not allow same file name");
+    }
+
     //write local js
     console.log(`set target :`, staticDirList);
     resultFromArr = [];
-    for (let i of staticDirList) {
+
+    for (let { path, name } of staticDirList) {
 
       result = '';
       code0 = '';
@@ -116,8 +148,8 @@ LogConsole.prototype.renderStatic = async function (staticFolder) {
       svgTongItemsString = null;
 
       execString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/exec.js` ]);
-      execString = execString.replace(/\/<%name%>\//, (i.slice(0, 1).toUpperCase() + i.replace(/\.js$/, '').slice(1)));
-      fileString = await fileSystem(`readString`, [ `${this.dir}/router/source/local/${i}` ]);
+      execString = execString.replace(/\/<%name%>\//, (name.slice(0, 1).toUpperCase() + name.replace(/\.js$/, '').slice(1)));
+      fileString = await fileSystem(`readString`, [ path ]);
 
       //merge
       code0 = svgTongString + "\n\n" + trapString + "\n\n" + s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + frontWebString + "\n\n" + officeString + "\n\n";
@@ -149,11 +181,13 @@ LogConsole.prototype.renderStatic = async function (staticFolder) {
       result += code3;
       result += "\n\n";
 
-      console.log(`${i} merge success`);
-      await fileSystem(`write`, [ `${staticFolder}/${i}`, result ]);
-      resultFromArr.push(`${staticFolder}/${i}`);
+      console.log(`${name} merge success`);
+      await fileSystem(`write`, [ `${staticFolder}/${name}`, result ]);
+      resultFromArr.push(`${staticFolder}/${name}`);
 
     }
+
+    console.log(`set render :`, resultFromArr);
 
     return resultFromArr;
 
