@@ -18,11 +18,11 @@
   "meta": {
     "title": [
       "thisPerson",
-      "return ('홈리에종 개인정보 처리 방침 | 홈리에종');"
+      "return ('잘못 들어오셨습니다! | 홈리에종');"
     ],
     "description": [
       "thisPerson",
-      "return ('홈리에종 홈리에종 개인정보 처리 방침 페이지 입니다! | 홈리에종');"
+      "return ('잘못 들어오셨습니다! | 홈리에종');"
     ],
     "image": [
       "thisPerson",
@@ -30,19 +30,19 @@
     ],
     "module": false
   },
-  "name": "frontTerms",
+  "name": "frontNotfound",
   "route": [
-    "frontTerms"
+    "frontNotfound"
   ]
 } %/%/g
 
-const FrontTermsJs = function () {
+const FrontNotfoundJs = function () {
   this.mother = new GeneralJs();
 }
 
-FrontTermsJs.binaryPath = "/middle/index";
+FrontNotfoundJs.binaryPath = "/middle/index";
 
-FrontTermsJs.prototype.insertInitBox = function () {
+FrontNotfoundJs.prototype.insertInitBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media } = this;
@@ -128,8 +128,8 @@ FrontTermsJs.prototype.insertInitBox = function () {
   tagTongBottom = <%% 3, 3, 1, 1, 0 %%>;
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
-  titleWording = "개인정보 처리 방침";
-  subTitleContents = "기타 문의는 홈리에종 채널에 주세요!";
+  titleWording = "잘못 들어오셨습니다";
+  subTitleContents = "존재하지 않는 페이지입니다. 기타 문의는 홈리에종 채널에 주세요!";
 
   mobileBlockTop = 3.5;
 
@@ -240,7 +240,7 @@ FrontTermsJs.prototype.insertInitBox = function () {
 
 }
 
-FrontTermsJs.prototype.insertTermsBox = async function () {
+FrontNotfoundJs.prototype.insertTermsBox = async function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, ajaxJson } = GeneralJs;
   const { ea, media, totalContents, baseTong } = this;
@@ -297,8 +297,6 @@ FrontTermsJs.prototype.insertTermsBox = async function () {
 
     mobileQuestionMarginBottom = 1.5;
 
-    ({ policy } = await ajaxJson({}, "https://" + GHOSTHOST + "/designerProposal_policy"));
-
     whiteBlock = createNode({
       mother: baseTong,
       style: {
@@ -336,7 +334,7 @@ FrontTermsJs.prototype.insertTermsBox = async function () {
 
     contents = createNode({
       mother: baseBlock,
-      text: policy,
+      text: "<b%존재하지 않는 페이지%b>\n\n서버에 없는 주소로 들어오셨습니다. 홈페이지 또는 이전 페이지로 돌아가 주시면 감사하겠습니다.",
       style: {
         display: "block",
         position: "relative",
@@ -349,8 +347,8 @@ FrontTermsJs.prototype.insertTermsBox = async function () {
         top: String(textTop) + ea,
       },
       bold: {
-        fontWeight: String(answerBoldWeight),
-        color: colorChip.green,
+        fontWeight: String(questionWeight),
+        color: colorChip.black,
       }
     });
 
@@ -366,7 +364,7 @@ FrontTermsJs.prototype.insertTermsBox = async function () {
   }
 }
 
-FrontTermsJs.prototype.launching = async function (loading) {
+FrontNotfoundJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
     this.mother.setGeneralProperties(this);
@@ -376,12 +374,12 @@ FrontTermsJs.prototype.launching = async function (loading) {
 
     await this.mother.ghostClientLaunching({
       mode: "front",
-      name: "frontTerms",
+      name: "frontNotfound",
       client: null,
       base: {
         instance: this,
-        binaryPath: FrontTermsJs.binaryPath,
-        subTitle: "홈리에종 개인정보 처리 방침",
+        binaryPath: FrontNotfoundJs.binaryPath,
+        subTitle: "잘못 들어오셨습니다",
         secondBackground: false,
         backgroundType: 1,
       },
@@ -390,7 +388,7 @@ FrontTermsJs.prototype.launching = async function (loading) {
           instance.insertInitBox();
           await instance.insertTermsBox();
         } catch (e) {
-          await GeneralJs.ajaxJson({ message: "FrontTermsJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
+          await GeneralJs.ajaxJson({ message: "FrontNotfoundJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
         }
       }
     });
@@ -399,6 +397,6 @@ FrontTermsJs.prototype.launching = async function (loading) {
 
   } catch (err) {
     console.log(err);
-    await GeneralJs.ajaxJson({ message: "FrontTermsJs.launching 에러 일어남 => " + err.message }, "/errorLog");
+    await GeneralJs.ajaxJson({ message: "FrontNotfoundJs.launching 에러 일어남 => " + err.message }, "/errorLog");
   }
 }

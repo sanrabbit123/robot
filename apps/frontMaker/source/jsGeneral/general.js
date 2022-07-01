@@ -4024,8 +4024,8 @@ GeneralJs.prototype.footerMake = function () {
           "E : help@home-liaison.com",
         ],
         href: [
-          "/faq.php",
-          "/terms.php",
+          FRONTHOST + "/faq.php",
+          FRONTHOST + "/terms.php",
           null,
           null
         ]
@@ -4039,17 +4039,17 @@ GeneralJs.prototype.footerMake = function () {
           "디자이너",
         ],
         href: [
-          "/about.php",
-          "/portfolio.php",
-          "/review.php",
-          "/designer.php",
+          FRONTHOST + "/about.php",
+          FRONTHOST + "/portfolio.php",
+          FRONTHOST + "/review.php",
+          FRONTHOST + "/designer.php",
         ]
       },
       final: {
         title: [
-          { text: "서비스 신청", event: (e) => { selfHref("/consulting.php") } },
+          { text: "서비스 신청", event: (e) => { selfHref(FRONTHOST + "/consulting.php") } },
           { text: "블로그 & 인스타그램", event: (e) => { blankHref("https://blog.naver.com/homeliaison"); blankHref("https://www.instagram.com/homeliaison"); } },
-          { text: "디자이너 신청", event: (e) => { selfHref("/aspirant.php") } },
+          { text: "디자이너 신청", event: (e) => { selfHref(FRONTHOST + "/aspirant.php") } },
         ],
         description: [
           "홈리에종의 모든 거래에 대한 책임과",
@@ -4065,10 +4065,10 @@ GeneralJs.prototype.footerMake = function () {
       "서비스 신청",
     ],
     mobileHref: [
-      "/portfolio.php",
-      "/review.php",
-      "/faq.php",
-      "/consulting.php"
+      FRONTHOST + "/portfolio.php",
+      FRONTHOST + "/review.php",
+      FRONTHOST + "/faq.php",
+      FRONTHOST + "/consulting.php"
     ],
     mobileInfo: [
       "02 - 2039 - 2252",
