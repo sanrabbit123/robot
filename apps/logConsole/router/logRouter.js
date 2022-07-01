@@ -84,7 +84,7 @@ LogRouter.prototype.rou_get_Disk = function () {
     try {
       const now = new Date();
       const disk = await diskReading();
-      reflection.coreReflection().catch((err) => { console.log(err); });
+      reflection.frontReflection().catch((err) => { console.log(err); });
       res.send(JSON.stringify({ disk: disk.toArray() }));
     } catch (e) {
       instance.mother.errorLog("Log Console 서버 문제 생김 (rou_get_Disk): " + e.message).catch((e) => { console.log(e); });
@@ -292,6 +292,7 @@ LogRouter.prototype.rou_post_extractLog = function () {
         if (tong[id] === undefined) {
           tong = {};
         } else {
+          tong[id].id = id;
           tong = tong[id];
         }
       }

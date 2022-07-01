@@ -33,15 +33,17 @@ BackMaker.coreDatabaseNames = [
       "contents",
       "user"
     ]
-  ],
-  // [
-  //   "backinfo",
-  //   [
-  //     "clientHistory",
-  //     "projectHistory",
-  //     "designerHistory"
-  //   ]
-  // ],
+  ]
+];
+
+BackMaker.frontDatabaseNames = [
+  [
+    "mongoinfo",
+    [
+      "designer",
+      "contents"
+    ]
+  ]
 ];
 
 BackMaker.flatDeathCollections = [

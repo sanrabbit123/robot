@@ -1041,7 +1041,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
             mode: "input",
             attribute: {
               type: "text",
-              placeholder: desktop ? "화이트 모던" : "원하는 스타일을 찾아보세요!",
+              placeholder: desktop ? "화이트" : "원하는 스타일을 찾아보세요!",
             },
             event: {
               keyup: function (e) {

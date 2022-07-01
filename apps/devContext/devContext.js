@@ -96,15 +96,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const id = "160404750.1656633407";
-
-
-    
-
-
-
-
-
     // const addr = new AddressParser();
     // let from, to;
     // let distance;

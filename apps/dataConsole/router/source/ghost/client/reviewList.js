@@ -331,12 +331,25 @@ ReviewListJs.prototype.insertInitBox = function () {
                     }
                     this.value = this.value.trim();
                     this.value = this.value.replace(/[^가-힣a-z ]/gi, '');
+
+                    homeliaisonAnalytics({
+                      page: instance.pageName,
+                      standard: instance.firstPageViewTime,
+                      action: "searchKeyword",
+                      data: {
+                        value: this.value,
+                        date: dateToString(new Date(), true),
+                      },
+                    }).catch((err) => {
+                      console.log(err);
+                    });
+
                     instance.portfolioBlock(null, this.value);
                     instance.photoLoad = true;
                   } catch (e) {
                     console.log(e);
                   }
-                }, "searchEventDebounce", 1000);
+                }, "searchEventDebounce", 500);
               }
             },
             style: {

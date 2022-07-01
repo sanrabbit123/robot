@@ -555,6 +555,16 @@ Robot.prototype.coreReflection = async function () {
   }
 }
 
+Robot.prototype.frontReflection = async function () {
+  try {
+    const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
+    const reflection = new MongoReflection();
+    await reflection.frontReflection();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.mysqlReflection = async function () {
   try {
     const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
@@ -1167,6 +1177,13 @@ const MENU = {
   coreReflect: async function () {
     try {
       await robot.coreReflection();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  frontReflect: async function () {
+    try {
+      await robot.frontReflection();
     } catch (e) {
       console.log(e);
     }

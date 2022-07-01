@@ -331,12 +331,25 @@ PortfolioListJs.prototype.insertInitBox = function () {
                     }
                     this.value = this.value.trim();
                     this.value = this.value.replace(/[^가-힣a-z ]/gi, '');
+
+                    homeliaisonAnalytics({
+                      page: instance.pageName,
+                      standard: instance.firstPageViewTime,
+                      action: "searchKeyword",
+                      data: {
+                        value: this.value,
+                        date: dateToString(new Date(), true),
+                      },
+                    }).catch((err) => {
+                      console.log(err);
+                    });
+
                     instance.portfolioBlock(null, this.value);
                     instance.photoLoad = true;
                   } catch (e) {
                     console.log(e);
                   }
-                }, "searchEventDebounce", 1000);
+                }, "searchEventDebounce", 500);
               }
             },
             style: {
@@ -878,7 +891,7 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null)
 
 PortfolioListJs.prototype.launching = async function (loading) {
   const instance = this;
-  const { returnGet, ajaxJson, setQueue, setDebounce } = GeneralJs;
+  const { returnGet, ajaxJson, setQueue, setDebounce, homeliaisonAnalytics, dateToString } = GeneralJs;
   try {
     this.mother.setGeneralProperties(this);
 
@@ -961,6 +974,17 @@ PortfolioListJs.prototype.launching = async function (loading) {
           if (document.querySelector("input") !== null) {
             instance.portfolioBlock(null, getObj.search);
             instance.photoLoad = true;
+            homeliaisonAnalytics({
+              page: instance.pageName,
+              standard: instance.firstPageViewTime,
+              action: "searchKeyword",
+              data: {
+                value: getObj.search,
+                date: dateToString(new Date(), true),
+              },
+            }).catch((err) => {
+              console.log(err);
+            });
           }
         }
 

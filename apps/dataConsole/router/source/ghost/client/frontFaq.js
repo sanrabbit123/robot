@@ -360,6 +360,19 @@ FrontFaqJs.prototype.insertInitBox = function () {
                   try {
                     this.value = this.value.trim();
                     this.value = this.value.replace(/[^가-힣a-z ]/gi, '');
+
+                    homeliaisonAnalytics({
+                      page: instance.pageName,
+                      standard: instance.firstPageViewTime,
+                      action: "searchKeyword",
+                      data: {
+                        value: this.value,
+                        date: dateToString(new Date(), true),
+                      },
+                    }).catch((err) => {
+                      console.log(err);
+                    });
+
                     instance.insertFaqBlock(this.value);
                   } catch (e) {
                     console.log(e);
