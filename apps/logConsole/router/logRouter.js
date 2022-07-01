@@ -201,8 +201,54 @@ LogRouter.prototype.rou_post_receiveLog = function () {
 LogRouter.prototype.rou_post_extractLog = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson } = this.mother;
+  const { equalJson, stringToDate } = this.mother;
   let obj = {};
+  let findBackground, rowsToTong;
+
+  findBackground = async (from, to) => {
+    try {
+      const collection = "homeliaisonAnalytics";
+      let rows;
+      rows = await back.mongoRead(collection, {
+        $and: [
+          { "date.now": { $gte: from } },
+          { "date.now": { $lt: to } },
+        ]
+      }, { selfMongo: instance.mongo });
+      return rows;
+    } catch (e) {
+      console.log(e);
+      return [];
+    }
+  }
+  rowsToTong = (rows) => {
+    let tong;
+    let copied;
+    tong = {};
+    for (let obj of rows) {
+      if (typeof tong[obj.data.id] !== "object") {
+        tong[obj.data.id] = {};
+      }
+      copied = equalJson(JSON.stringify(obj));
+      delete copied._id;
+
+      tong[obj.data.id].network = copied.network;
+      if (!Array.isArray(tong[obj.data.id].history)) {
+        tong[obj.data.id].history = [];
+      }
+      tong[obj.data.id].history.push({
+        date: copied.date.now,
+        ...copied.data
+      });
+    }
+    for (let key in tong) {
+      tong[key].history.sort((a, b) => {
+        return a.date.valueOf() - b.date.valueOf();
+      });
+    }
+    return tong;
+  }
+
   obj.link = [ "/extractLog" ];
   obj.func = async function (req, res) {
     res.set({
@@ -212,33 +258,42 @@ LogRouter.prototype.rou_post_extractLog = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      const collection = "homeliaisonAnalytics";
-      const selfMongo = instance.mongo;
-      const targets = await back.mongoRead(collection, {}, { selfMongo });
-      let tong;
-      let tempObj;
-
-      tong = {};
-      for (let { network, date, data } of targets) {
-        if (tong[data.id] === undefined) {
-          tong[data.id] = {
-            network,
-            history: []
-          };
-        }
-        tempObj = {};
-        tempObj.date = date.now;
-        tempObj.duration = (date.now.valueOf() - date.standard.valueOf())
-        tempObj.page = data.page;
-        tempObj.action = data.action;
-        tempObj.value = data.value;
-        tong[data.id].history.push(tempObj);
+      if (req.body.mode === undefined) {
+        throw new Error("invaild post");
       }
+      const { mode } = req.body;
+      let id, from, to;
+      let rows, tong;
 
-      for (let key in tong) {
-        tong[key].history.sort((a, b) => {
-          return a.date.valueOf() - b.date.valueOf();
-        })
+      if (mode === "list") {
+        if (typeof req.body.from !== "string" || typeof req.body.to !== "string") {
+          throw new Error("must be from, to");
+        }
+
+        from = stringToDate(req.body.from);
+        to = stringToDate(req.body.to);
+
+        rows = await findBackground(from, to);
+        tong = rowsToTong(rows);
+
+      } else if (mode === "get") {
+        if (req.body.id === undefined) {
+          throw new Error("must be id");
+        }
+        id = req.body.id;
+
+        from = new Date();
+        to = new Date();
+        from.setMonth(from.getMonth() - 1);
+
+        rows = await findBackground(from, to);
+        tong = rowsToTong(rows);
+
+        if (tong[id] === undefined) {
+          tong = {};
+        } else {
+          tong = tong[id];
+        }
       }
 
       res.send(JSON.stringify(tong));

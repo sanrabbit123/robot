@@ -96,6 +96,13 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const id = "160404750.1656633407";
+
+
+    
+
+
+
 
 
     // const addr = new AddressParser();
@@ -841,6 +848,11 @@ DevContext.prototype.launching = async function () {
     //   });
     //   await messageSend({ text: client.name + " 고객님께 신청 완료하라고 독촉했어요.", channel: "#404_curation", voice: true });
     // }
+
+
+
+
+
 
 
     // force client complete
@@ -2660,7 +2672,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p182");
+    // await this.getCorePortfolio("p183");
 
 
     // aspirant to designer
