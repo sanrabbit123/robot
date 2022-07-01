@@ -3201,7 +3201,7 @@ Mother.prototype.errorLog = function (text) {
     }
   }
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  const recordUrl = "https://" + ADDRESS.testinfo.host + "/messageLog";
+  const recordUrl = "https://" + ADDRESS.pythoninfo.host + ":3000/messageLog";
   const axios = require("axios");
   const collection = "errorLog";
   const channel = "#error_log";
@@ -3240,7 +3240,7 @@ Mother.prototype.messageSend = function (text, channel = "silent", voice = false
     voice = false;
   }
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  const recordUrl = "https://" + ADDRESS.testinfo.host + "/messageLog";
+  const recordUrl = "https://" + ADDRESS.pythoninfo.host + ":3000/messageLog";
   const axios = require("axios");
   const collection = "messageLog";
   const emptyPromise = () => {
@@ -3285,7 +3285,7 @@ Mother.prototype.messageLog = function (text) {
     channel = "silent";
   }
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  const recordUrl = "https://" + ADDRESS.testinfo.host + "/messageLog";
+  const recordUrl = "https://" + ADDRESS.pythoninfo.host + ":3000/messageLog";
   const axios = require("axios");
   const collection = "messageLog";
   return new Promise((resolve, reject) => {
