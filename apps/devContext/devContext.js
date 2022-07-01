@@ -88,10 +88,6 @@ DevContext.prototype.launching = async function () {
     // console.log(pastProposal[0].project.detail);
 
 
-    const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
-    const reflection = new MongoReflection();
-
-    await reflection.logReflection();
 
 
 

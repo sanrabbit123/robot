@@ -201,9 +201,7 @@ SecondGhost.prototype.ghostConnect = async function () {
       }
     }
 
-    intervalFunc0().catch((err) => { console.log(err); });
-    intervalFunc1().catch((err) => { console.log(err); });
-    intervalFunc2().catch((err) => { console.log(err); });
+    intervalFunc0().then(intervalFunc1).then(intervalFunc2).catch((err) => { console.log(err); });
 
     setInterval(intervalFunc0, 2 * 60 * 60 * 1000);
     setInterval(intervalFunc1, 30 * 60 * 1000);
