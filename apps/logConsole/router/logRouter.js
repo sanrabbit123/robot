@@ -35,27 +35,11 @@ LogRouter.prototype.baseMaker = function (target, req = null) {
 
 LogRouter.prototype.rou_get_First = function () {
   const instance = this;
-  let obj = {};
-  obj.link = "/ssl";
-  obj.func = function (req, res) {
-    try {
-      res.set({ "Content-Type": "text/plain" });
-      res.send("hi");
-    } catch (e) {
-      instance.mother.errorLog("Log Console 서버 문제 생김 (rou_get_First): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
-    }
-  }
-  return obj;
-}
-
-LogRouter.prototype.rou_get_Disk = function () {
-  const instance = this;
   const { diskReading } = this.mother;
   const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
   const reflection = new MongoReflection();
   let obj = {};
-  obj.link = "/disk";
+  obj.link = "/:id";
   obj.func = async function (req, res) {
     res.set({
       "Content-Type": "application/json",
@@ -64,16 +48,32 @@ LogRouter.prototype.rou_get_Disk = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      const now = new Date();
-      const disk = await diskReading();
-      reflection.frontReflection().catch((err) => { console.log(err); });
-      res.send(JSON.stringify({ disk: disk.toArray() }));
+
+      if (req.params.id === "ssl") {
+
+        res.send(JSON.stringify({ message: "hi" }));
+
+      } else if (req.params.id === "disk") {
+
+        const disk = await diskReading();
+        reflection.frontReflection().catch((err) => { console.log(err); });
+        res.send(JSON.stringify({ disk: disk.toArray() }));
+
+      } else {
+
+        const html = await instance.baseMaker(req.params.id, req);
+        res.set("Content-Type", "text/html");
+        res.send(html);
+
+      }
+
     } catch (e) {
-      instance.mother.errorLog("Log Console 서버 문제 생김 (rou_get_Disk): " + e.message).catch((e) => { console.log(e); });
+      instance.mother.errorLog("Log Console 서버 문제 생김 (rou_get_First): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }
   }
+
   return obj;
 }
 
