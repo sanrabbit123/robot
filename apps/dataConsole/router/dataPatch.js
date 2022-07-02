@@ -5697,7 +5697,7 @@ DataPatch.prototype.projectMap = function () {
   };
 
   const discountToObject = function (value, pastValue, vaildMode) {
-    let obj;
+    let number;
     let temp;
     let boo = false;
 
@@ -5705,33 +5705,7 @@ DataPatch.prototype.projectMap = function () {
       return { boo: !boo, value: null };
     }
 
-    obj = {};
-
-    if (/홈퍼/g.test(value)) {
-      obj.serid = "s2011_aa01s";
-    } else if (/홈스/g.test(value)) {
-      obj.serid = "s2011_aa02s";
-    } else if (/토탈/g.test(value)) {
-      obj.serid = "s2011_aa03s";
-    } else if (/설계/g.test(value)) {
-      obj.serid = "s2011_aa04s";
-    }
-
-    if (/mini/gi.test(value)) {
-      obj.xValue = 'M';
-    } else if (/basic/gi.test(value)) {
-      obj.xValue = 'B';
-    } else if (/premium/gi.test(value)) {
-      obj.xValue = 'P';
-    }
-
-    if (/온라인/gi.test(value)) {
-      obj.online = true;
-    } else {
-      obj.online = false;
-    }
-
-    return obj;
+    return (Number((value.split('%')[0]).replace(/[^0-9]/gi, '')) / 100);
   };
   const discountInputFunction = function (mother, input, callback) {
     let buttonStyle, inputStyle, style;
@@ -5749,6 +5723,9 @@ DataPatch.prototype.projectMap = function () {
     let online;
 
     originalValue = input.value;
+
+    console.log(originalValue);
+
     if (/온라인/gi.test(originalValue)) {
       online = "온라인";
     } else {
@@ -5888,40 +5865,23 @@ DataPatch.prototype.projectMap = function () {
     fontSize = Number(mother.style.fontSize.replace((new RegExp(ea, "gi")), ''));
     width = Number(mother.style.width.replace((new RegExp(ea, "gi")), '')) + 60;
     if (width === '' || Number.isNaN(width)) {
-      width = "300";
+      width = String(300);
     }
     top = height * 0.5;
     iconWidth = 18;
 
-    div_clone = GeneralJs.nodes.div.cloneNode(true);
-    div_clone.classList.add("removeTarget");
-    div_clone.classList.add("divTong");
-    style = {
-      position: "absolute",
-      top: String((height * 2) - top) + ea,
-      left: (width !== "300" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
-      width: String(width) + ea,
-      textAlign: "center",
-      fontSize: "inherit",
-      zIndex: String(3),
-      paddingBottom: String(iconWidth + 3) + ea,
-    };
-    for (let i in style) {
-      div_clone.style[i] = style[i];
-    }
-
     buttonStyle = {
+      display: "block",
       position: "relative",
       left: (width !== "300" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
       width: String(width) + ea,
       paddingTop: String(height * 0.3) + ea,
       height: String(height * 1.5) + ea,
       fontSize: "inherit",
-      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       borderRadius: String(3) + ea,
       animation: "fadeuplite 0.3s ease forwards",
-      marginBottom: String(4) + ea,
+      marginBottom: String(height / 4) + ea,
     };
 
     buttonDetailStyles = [
@@ -5939,21 +5899,9 @@ DataPatch.prototype.projectMap = function () {
       },
       {
         position: "absolute",
-        left: "calc(28% + " + String(4 * 1) + ea + ")",
-        top: String(0) + ea,
-        width: "40%",
-        height: "100%",
-        background: GeneralJs.colorChip.green,
-        zIndex: String(3),
-        borderRadius: String(3) + ea,
-        fontSize: "inherit",
-        boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
-      },
-      {
-        position: "absolute",
         right: String(0) + ea,
         top: String(0) + ea,
-        width: "calc(32% - " + String(4 * 2) + ea + ")",
+        width: "calc(72% - " + String(Math.round((height) / 4)) + ea + ")",
         height: "100%",
         background: GeneralJs.colorChip.green,
         zIndex: String(3),
@@ -5974,156 +5922,121 @@ DataPatch.prototype.projectMap = function () {
       width: "100%",
       height: (GeneralJs.isMac() ? "95%" : "98%"),
       left: String(0) + ea,
-      top: GeneralJs.isMac() ? "19%" : "20%",
+      top: String(GeneralJs.isMac() ? 0 : 2) + ea,
       borderRadius: String(3) + ea,
+      outline: String(0),
       border: String(0),
-      cursor: "pointer",
     };
 
-    for (let i = 0; i < valuesTong.length; i++) {
-      button_clone = GeneralJs.nodes.div.cloneNode(true);
-      button_clone.classList.add("removeTarget");
-      for (let j in buttonStyle) {
-        button_clone.style[j] = buttonStyle[j];
-      }
-
-      for (let z = 0; z < 3; z++) {
-        button_clone2 = GeneralJs.nodes.div.cloneNode(true);
-        button_clone2.classList.add("removeTarget");
-        button_clone2.classList.add("hoverDefault_lite");
-        button_clone2.classList.add("divTarget" + ([ "Zero", "One", "Two" ])[z]);
-        for (let j in buttonDetailStyles[z]) {
-          button_clone2.style[j] = buttonDetailStyles[z][j];
-        }
-        input_clone = GeneralJs.nodes.div.cloneNode(true);
-        input_clone.classList.add("inputTarget" + ([ "Zero", "One", "Two" ])[z]);
-        for (let j in inputStyle) {
-          input_clone.style[j] = inputStyle[j];
-        }
-
-        input_clone.setAttribute("target", valuesTong[i][z]);
-        input_clone.textContent = valuesTong[i][z];
-
-        if (z !== 0) {
-          if ((new RegExp(valuesTong[i][z], "gi")).test(originalValue)) {
-            input_clone.setAttribute("switch", "on");
-            button_clone2.style.background = "#ececec";
-            input_clone.style.color = GeneralJs.colorChip.green;
-          } else {
-            input_clone.setAttribute("switch", "off");
-          }
-          input_clone.addEventListener("click", function (e) {
-            const zeroClass = "inputTargetZero";
-            const zIndex = z;
-            const thisClass = this.className;
-            const divTargets = document.querySelectorAll("." + thisClass.replace(/^input/, "div"));
-            const inputTargets = document.querySelectorAll("." + thisClass);
-            const zeroDivTargets = document.querySelectorAll("." + zeroClass.replace(/^input/, "div"));
-            const zeroInputTargets = document.querySelectorAll("." + zeroClass);
-
-            for (let dom of divTargets) {
-              dom.style.background = GeneralJs.colorChip.green;
-            }
-
-            for (let dom of inputTargets) {
-              dom.style.color = GeneralJs.colorChip.whiteBlack;
-              dom.setAttribute("switch", "off");
-            }
-
-            if (zIndex === 1) {
-              for (let dom of zeroDivTargets) {
-                dom.style.background = GeneralJs.colorChip.green;
-              }
-
-              for (let dom of zeroInputTargets) {
-                dom.style.color = GeneralJs.colorChip.whiteBlack;
-                dom.setAttribute("switch", "off");
+    GeneralJs.createNode({
+      mother,
+      class: [ "removeTarget", "divTong" ],
+      style: {
+        display: "block",
+        position: "absolute",
+        top: String((height * 2) - top) + ea,
+        left: (width !== "300" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+        width: String(width) + ea,
+        textAlign: "center",
+        fontSize: "inherit",
+        zIndex: String(3),
+        paddingBottom: String(iconWidth + 3) + ea,
+      },
+      children: [
+        {
+          style: {
+            ...buttonStyle
+          },
+          children: [
+            {
+              style: {
+                ...buttonDetailStyles[0]
+              },
+              children: [
+                {
+                  mode: "input",
+                  attribute: {
+                    type: "text",
+                    value: "%"
+                  },
+                  style: {
+                    ...inputStyle,
+                    cursor: "pointer"
+                  }
+                }
+              ]
+            },
+            {
+              style: {
+                ...buttonDetailStyles[1]
               }
             }
-
-            this.parentElement.style.background = "#ececec";
-            this.style.color = GeneralJs.colorChip.green;
-
-            if (zIndex === 1) {
-              this.parentElement.previousElementSibling.style.background = "#ececec";
-              this.parentElement.previousElementSibling.children[0].style.color = GeneralJs.colorChip.green;
-            }
-
-            this.setAttribute("switch", "on");
-          });
-        } else {
-          if ((new RegExp(valuesTong[i][1], "gi")).test(originalValue)) {
-            input_clone.setAttribute("switch", "on");
-            button_clone2.style.background = "#ececec";
-            input_clone.style.color = GeneralJs.colorChip.green;
-          } else {
-            input_clone.setAttribute("switch", "off");
-          }
-          input_clone.addEventListener("click", function (e) {
-            const thisClass = this.className;
-            const inputTargets = document.querySelectorAll("." + thisClass);
-            for (let dom of inputTargets) {
-              if (dom.textContent === "오프라인") {
-                dom.textContent = "온라인";
-              } else {
-                dom.textContent = "오프라인";
+          ]
+        },
+        {
+          style: {
+            ...buttonStyle
+          },
+          children: [
+            {
+              style: {
+                ...buttonDetailStyles[0]
+              },
+              children: [
+                {
+                  mode: "input",
+                  attribute: {
+                    type: "text",
+                    value: "공급가"
+                  },
+                  style: {
+                    ...inputStyle,
+                    cursor: "pointer"
+                  }
+                }
+              ]
+            },
+            {
+              style: {
+                ...buttonDetailStyles[1]
               }
             }
-          });
-        }
+          ]
+        },
+        {
+          style: {
+            ...buttonStyle
+          },
+          children: [
+            {
+              style: {
+                ...buttonDetailStyles[0]
+              },
+              children: [
+                {
+                  mode: "input",
+                  attribute: {
+                    type: "text",
+                    value: "소비자가"
+                  },
+                  style: {
+                    ...inputStyle,
+                    cursor: "pointer"
+                  }
+                }
+              ]
+            },
+            {
+              style: {
+                ...buttonDetailStyles[1]
+              }
+            }
+          ]
+        },
+      ]
+    });
 
-        button_clone2.appendChild(input_clone);
-        button_clone.appendChild(button_clone2);
-      }
 
-      div_clone.appendChild(button_clone);
-    }
-
-    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk(GeneralJs.colorChip.green));
-    svg_clone.classList.add("removeTarget");
-    style = {
-      position: "absolute",
-      bottom: String(0),
-      width: String(iconWidth) + ea,
-      left: "calc(50% - " + String(iconWidth / 2) + ea + ")",
-      cursor: "pointer",
-    };
-    for (let i in style) {
-      svg_clone.style[i] = style[i];
-    }
-    svg_clone.addEventListener("click", endEvent);
-    div_clone.appendChild(svg_clone);
-
-    mother.appendChild(div_clone);
-  };
-  const discountToString = function (value) {
-    let str;
-
-    if (value.online) {
-      str = "온라인 ";
-    } else {
-      str = "오프라인 ";
-    }
-
-    if (value.serid === "s2011_aa01s") {
-      str += "홈퍼니싱 ";
-    } else if (value.serid === "s2011_aa02s") {
-      str += "홈스타일링 ";
-    } else if (value.serid === "s2011_aa03s") {
-      str += "토탈 스타일링 ";
-    } else if (value.serid === "s2011_aa04s") {
-      str += "설계 변경 ";
-    }
-
-    if (value.xValue === 'M') {
-      str += "mini";
-    } else if (value.xValue === 'B') {
-      str += "basic";
-    } else if (value.xValue === 'P') {
-      str += "premium";
-    }
-
-    return str;
   };
 
   const map = {
@@ -6300,7 +6213,7 @@ DataPatch.prototype.projectMap = function () {
     remainPure: { name: "잔금", position: "process.contract.remain.calculation.amount.consumer", type: "object", objectFunction: remainPureToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: false, moneyBoo: true },
     remainInfo: { name: "잔금 정보", position: "process.contract.remain.calculation.info", type: "object", inputFunction: methodInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: methodToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     remainRefund: { name: "계약금 환불액", position: "process.contract.remain.calculation.refund", type: "number", searchBoo: true, moneyBoo: true },
-    discount: { name: "할인율", position: "process.contract.remain.calculation.discount", type: "object", inputFunction: discountInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: discountToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), stringFunction: discountToString.toString().replace(/\}$/, '').replace(/function \(value\) \{/gi, ''), searchBoo: true },
+    discount: { name: "할인율", position: "process.contract.remain.calculation.discount", type: "object", inputFunction: discountInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: discountToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true },
     formDateFrom: { name: "프로젝트 시작일", position: "process.contract.form.date.from", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
     formDateTo: { name: "프로젝트 종료일", position: "process.contract.form.date.to", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
     formDateCancel: { name: "계약 취소", position: "process.contract.form.date.cancel", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
