@@ -89,47 +89,70 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const selfMongo = this.MONGOC;
-    const projects = await back.getProjectsByQuery({ desid: { $regex: "^d" } }, { selfMongo });
-    let tong;
-    let whereQuery, updateQuery;
-    let feeTarget;
-    let feeObj;
-
-    tong = [];
-    for (let project of projects) {
-      if (project.proposal.detail.toNormal().map((obj) => { return obj.desid }).includes(project.desid)) {
-        if (project.proposal.detail.toNormal().find((obj) => { return obj.desid === project.desid }).fee.length !== 0) {
-          tong.push(project.toNormal());
-        }
-      }
-    }
-
-    for (let project of tong) {
-      feeTarget = project.proposal.detail.find((obj) => { return obj.desid === project.desid }).fee;
-      feeObj = null;
-      if (!project.service.online) {
-        feeObj = feeTarget.find((obj) => { return obj.method === "offline" });
-      } else {
-        feeObj = feeTarget.find((obj) => { return obj.method === "online" });
-      }
-
-      if (feeObj === undefined || feeObj === null) {
-        feeObj = feeTarget[0];
-      }
-
-      whereQuery = { proid: project.proid };
-      updateQuery = {};
-      updateQuery["process.contract.remain.calculation.discount"] = feeObj.discount;
-      console.log(whereQuery, updateQuery);
-
-    }
 
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // const selfMongo = this.MONGOC;
+    // const projects = await back.getProjectsByQuery({ desid: { $regex: "^d" } }, { selfMongo });
+    // let tong;
+    // let whereQuery, updateQuery;
+    // let feeTarget;
+    // let feeObj;
+    //
+    // tong = [];
+    // for (let project of projects) {
+    //   if (project.proposal.detail.toNormal().map((obj) => { return obj.desid }).includes(project.desid)) {
+    //     if (project.proposal.detail.toNormal().find((obj) => { return obj.desid === project.desid }).fee.length !== 0) {
+    //       tong.push(project.toNormal());
+    //     }
+    //   }
+    // }
+    //
+    // for (let project of tong) {
+    //   feeTarget = project.proposal.detail.find((obj) => { return obj.desid === project.desid }).fee;
+    //   feeObj = null;
+    //   if (!project.service.online) {
+    //     feeObj = feeTarget.find((obj) => { return obj.method === "offline" });
+    //   } else {
+    //     feeObj = feeTarget.find((obj) => { return obj.method === "online" });
+    //   }
+    //
+    //   if (feeObj === undefined || feeObj === null) {
+    //     feeObj = feeTarget[0];
+    //   }
+    //
+    //   whereQuery = { proid: project.proid };
+    //   updateQuery = {};
+    //   updateQuery["process.contract.remain.calculation.discount"] = feeObj.discount;
+    //
+    //   await back.updateProject([ whereQuery, updateQuery ], { selfMongo });
+    //   console.log(whereQuery, updateQuery);
+    // }
 
 
 

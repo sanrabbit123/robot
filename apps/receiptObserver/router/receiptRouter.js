@@ -1161,17 +1161,18 @@ ReceiptRouter.prototype.sync_paymentProject = async function (bilid, requestNumb
     let businessMethod;
     let bankName, bankTo;
     let calculate;
+    let discount;
 
     if (/홈리에종 계약금/gi.test(data.goodName.trim()) || /홈리에종 잔금/gi.test(data.goodName.trim())) {
       projectQuery = {};
       if (proposal.fee.length === 1) {
-        // pureDesignFee = Math.round(proposal.fee[0].amount * (1 - proposal.fee[0].discount));
         pureDesignFee = Math.round(proposal.fee[0].amount);
+        discount = proposal.fee[0].discount;
       } else {
         for (let obj of proposal.fee) {
           if (obj.method === thisBill.links.method) {
-            // pureDesignFee = Math.round(obj.amount * (1 - obj.discount));
             pureDesignFee = Math.round(obj.amount);
+            discount = obj.discount;
           }
         }
       }
@@ -1194,6 +1195,7 @@ ReceiptRouter.prototype.sync_paymentProject = async function (bilid, requestNumb
         projectQuery["process.contract.remain.calculation.amount.supply"] = Number(pureDesignFee);
         projectQuery["process.contract.remain.calculation.amount.vat"] = Number(vat);
         projectQuery["process.contract.remain.calculation.amount.consumer"] = Number(consumer);
+        projectQuery["process.contract.remain.calculation.discount"] = Number(discount);
 
         classification = designer.information.business.businessInfo.classification;
         percentage = Number(designer.information.business.service.cost.percentage);
@@ -1218,7 +1220,7 @@ ReceiptRouter.prototype.sync_paymentProject = async function (bilid, requestNumb
           projectQuery["process.calculation.info.to"] = bankTo;
         }
 
-        [ calculate ] = bill.designerCalculation(pureDesignFee, businessMethod, percentage, client, { toArray: true });
+        [ calculate ] = bill.designerCalculation((pureDesignFee / (1 - discount)), businessMethod, percentage, client, { toArray: true });
         projectQuery["process.calculation.payments.totalAmount"] = calculate;
         projectQuery["process.calculation.payments.first.amount"] = Math.round(calculate / 2);
         projectQuery["process.calculation.payments.remain.amount"] = Math.round(calculate / 2);
