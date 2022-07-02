@@ -155,6 +155,50 @@ const withTools = function (Project) {
       }
       return totalString;
     }
+    const discountToString = function (discount, supply, consumer) {
+      const autoComma = function (str) {
+        let minus;
+        let count, countArr;
+        let temp, tempArr;
+        if (typeof str === "number") {
+          str = String(Math.floor(str));
+        }
+        if (/e/gi.test(str)) {
+          throw new Error("is too heavy");
+        }
+        minus = /\-/g.test(str) ? /\-/g.exec(str)[0] : '';
+        str = str.replace(/[^0-9]/g, '');
+        if (str === '') {
+          throw new Error("invaild number");
+        }
+        count = Math.ceil(str.length / 3);
+        countArr = [];
+        for (let i = 0; i < count; i++) {
+          countArr.push([ 3 * i, 3 * (i + 1) ]);
+        }
+        if (countArr.length === 0) {
+          throw new Error("invaild number");
+        }
+        tempArr = [];
+        for (let arr of countArr) {
+          temp = '';
+          for (let i = arr[0]; i < arr[1]; i++) {
+            if (str.length - 1 - i < 0) {
+              temp += '';
+            } else {
+              temp = str[str.length - 1 - i] + temp;
+            }
+          }
+          if (temp !== '') {
+            tempArr.unshift(temp);
+          }
+        }
+        return (minus + tempArr.join(','));
+      }
+      const supplyDiscount = (supply / (1 - discount)) - supply;
+      const consumerDiscount = (consumer / (1 - discount)) - consumer;
+      return `${String(discount * 100)}% (${autoComma(supplyDiscount)}원/${autoComma(consumerDiscount)}원)`;
+    }
 
     let tong = [];
     let temp;
@@ -162,7 +206,7 @@ const withTools = function (Project) {
 
     const { proid, cliid, desid, service: { serid, xValue, online } } = project;
     const { date: proposalDate, detail: proposalDetail } = project.proposal;
-    const { status, action, outreason, call: { next, history: callHistory }, contract: { first: { guide: firstGuide, date: firstDate, cancel: firstCancel, calculation: { amount: firstAmount, info: firstInfo, refund: firstRefund, } }, remain: { guide: remainGuide, date: remainDate, cancel: remainCancel, calculation: { amount: { supply: remainSupply, vat: remainVat, consumer: remainConsumer }, info: remainInfo, refund: remainRefund, } }, form: { guide: formGuide, date: { from: formDateFrom, to: formDateTo, cancel: formDateCancel, } }, meeting: { date: meetingDate } }, calculation: { method, percentage, info: calculationInfo, payments: { totalAmount: paymentsTotalAmount, first: { amount: paymentsFirstAmount, date: paymentsFirstDate, cancel: paymentsFirstCancel, refund: paymentsFirstRefund, }, remain: { amount: paymentsRemainAmount, date: paymentsRemainDate, cancel: paymentsRemainCancel, refund: paymentsRemainRefund, } } } } = project.process;
+    const { status, action, outreason, call: { next, history: callHistory }, contract: { first: { guide: firstGuide, date: firstDate, cancel: firstCancel, calculation: { amount: firstAmount, info: firstInfo, refund: firstRefund, } }, remain: { guide: remainGuide, date: remainDate, cancel: remainCancel, calculation: { amount: { supply: remainSupply, vat: remainVat, consumer: remainConsumer }, info: remainInfo, refund: remainRefund, discount: remainDiscount } }, form: { guide: formGuide, date: { from: formDateFrom, to: formDateTo, cancel: formDateCancel, } }, meeting: { date: meetingDate } }, calculation: { method, percentage, info: calculationInfo, payments: { totalAmount: paymentsTotalAmount, first: { amount: paymentsFirstAmount, date: paymentsFirstDate, cancel: paymentsFirstCancel, refund: paymentsFirstRefund, }, remain: { amount: paymentsRemainAmount, date: paymentsRemainDate, cancel: paymentsRemainCancel, refund: paymentsRemainRefund, } } } } = project.process;
     const { photo: { boo: photoBoo, status: photoStatus, date: contentsPhotoDate, info: { photographer, interviewer } }, raw: { portfolio: { status: rawPortfolioStatus }, interview: { status: rawInterviewStatus }, photo: { status: rawPhotoStatus } }, share: { client: { photo: shareClientPhoto, contents: shareClientContents }, designer: { photo: shareDesignerPhoto, contents: shareDesignerContents } } } = project.contents;
 
     proposalDetailLength = proposalDetail.length;
@@ -206,6 +250,7 @@ const withTools = function (Project) {
       remainPure: String(remainConsumer - firstAmount),
       remainInfo: infoToString(remainInfo),
       remainRefund: String(remainRefund),
+      discount: discountToString(remainDiscount, remainSupply, remainConsumer),
       formDateFrom: dateToString(formDateFrom),
       formDateTo: dateToString(formDateTo),
       formDateCancel: dateToString(formDateCancel),
