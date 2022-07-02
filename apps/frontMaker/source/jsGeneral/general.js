@@ -3921,7 +3921,7 @@ GeneralJs.prototype.specialBan = function () {
 
 GeneralJs.prototype.footerMake = function () {
   const instance = this;
-  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, selfHref, blankHref } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, selfHref, blankHref, setQueue } = GeneralJs;
   const media = GeneralJs.stacks.updateMiddleMedialQueryConditions;
   const mobile = media[4];
   const desktop = !mobile;
@@ -3929,6 +3929,7 @@ GeneralJs.prototype.footerMake = function () {
   const big = !small;
   const ea = desktop ? "px" : "vw";
   const totalContents = document.getElementById("totalcontents");
+  const touchStartConst = "footerTouchStartConstName";
   let footerBase;
   let baseHeight;
   let logoWidth;
@@ -3959,6 +3960,7 @@ GeneralJs.prototype.footerMake = function () {
   let mobileButtonBetween, mobileButtonTextTop;
   let mobileButtonHeight, mobileLogoMarginTop;
   let supportTong, menuTong;
+  let mobileButtonEvent;
 
   standardWidth = <%% 1400, 1050, 900, 720, 100 %%>;
 
@@ -4331,15 +4333,29 @@ GeneralJs.prototype.footerMake = function () {
       }
     });
 
+    mobileButtonEvent = function (e) {
+      const index = Number(this.getAttribute("index"));
+      selfHref(contents.mobileHref[index]);
+    }
+
     num = 0;
     for (let text of contents.mobile) {
       createNode({
         mother: buttonBox,
         attribute: { index: String(num) },
         event: {
-          click: function (e) {
-            const index = Number(this.getAttribute("index"));
-            selfHref(contents.mobileHref[index]);
+          click: mobileButtonEvent,
+          touchstart: function (e) {
+            const self = this;
+            self.setAttribute(touchStartConst, "on");
+            setQueue(() => {
+              self.setAttribute(touchStartConst, "off");
+            });
+          },
+          touchend: function (e) {
+            if (this.getAttribute(touchStartConst) === "on") {
+              mobileButtonEvent.call(this, e);
+            }
           }
         },
         style: {

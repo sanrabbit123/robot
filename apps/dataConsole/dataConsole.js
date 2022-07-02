@@ -7,7 +7,7 @@ const DataConsole = function () {
   this.dir = process.cwd() + "/apps/dataConsole";
   this.sourceDir = this.dir + "/router/source";
   this.middleDir = this.sourceDir + "/middle";
-  this.ghostdir = this.sourceDir + "/ghost";
+  this.ghostDir = this.sourceDir + "/ghost";
   this.middleModuleDir = this.middleDir + "/module";
 }
 
@@ -412,7 +412,6 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
 
       fileString = await fileSystem(`readString`, [ `${staticDir}/${i}` ]);
 
-
       if (!/\/<%patch%>\//g.test(fileString)) {
         throw new Error("There is no patch, impossible");
       }
@@ -564,7 +563,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
 DataConsole.prototype.renderFrontPhp = async function () {
   const instance = this;
   const { fileSystem, shellLink, shellExec, equalJson, requestSystem, consoleQ } = this.mother;
-  const { ghostdir } = this;
+  const { ghostDir } = this;
   const address = this.address;
   const staticFolder = process.env.HOME + "/static";
   const staticMiddleFolder = staticFolder + "/middle";
@@ -589,7 +588,7 @@ DataConsole.prototype.renderFrontPhp = async function () {
       { from: "frontNotfound", to: "notfound", path: "/middle/frontNotfound" },
       { from: "miniAbout", to: "miniAbout", path: "/middle/miniAbout" },
     ];
-    const ghostTargets = (await fileSystem(`readDir`, [ ghostdir + "/client" ])).filter((str) => { return str !== ".DS_Store" }).filter((str) => {
+    const ghostTargets = (await fileSystem(`readDir`, [ ghostDir + "/client" ])).filter((str) => { return str !== ".DS_Store" }).filter((str) => {
       const fromArr = targetMap.map((obj) => { return obj.from });
       return fromArr.includes(str.replace(/\.js$/i, ''));
     }).map((str) => {
@@ -719,6 +718,63 @@ DataConsole.prototype.setBinary = async function () {
     }
 
     return resultFromArr;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+DataConsole.prototype.readGhostPatch = async function () {
+  const instance = this;
+  const { fileSystem } = this.mother;
+  try {
+    const ghostTargetsDir = `${this.ghostDir}/client`;
+    const ghostTargets = (await fileSystem("readDir", [ ghostTargetsDir ])).filter((str) => { return str !== ".DS_Store" && str !== "general.js" }).map((str) => { return `${ghostTargetsDir}/${str}`; });
+    const readHead = async (path) => {
+      try {
+        let raw, patch;
+        raw = await fileSystem("readHead", [ path, 50 ]);
+        patch = JSON.parse(raw.slice(0, [ ...raw.matchAll(/%\/%\/g/g) ][0].index).replace(/\/<%patch%>\/ /gi, ''));
+        return patch;
+      } catch (e) {
+        return {};
+      }
+    }
+    class GhostPatch extends Array {
+      constructor(arr) {
+        super();
+        for (let obj of arr) {
+          this.push(obj);
+        }
+        for (let obj of arr) {
+          this[obj.name] = obj;
+        }
+      }
+
+      getHangulNames() {
+        let tong = [];
+        for (let obj of this) {
+          tong[obj.name] = obj.hangul;
+        }
+        return tong;
+      }
+
+      getMetaObject() {
+        let obj = {};
+        for (let o of this) {
+          obj[o.name] = o.meta;
+        }
+        return obj;
+      }
+
+    }
+    let tong;
+
+    tong = [];
+    for (let target of ghostTargets) {
+      tong.push(await readHead(target));
+    }
+
+    return new GhostPatch(tong);
   } catch (e) {
     console.log(e);
   }
