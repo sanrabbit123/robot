@@ -149,7 +149,8 @@ GeneralJs.prototype.setBackground = function (binaryPath, second = false, random
 GeneralJs.prototype.setNavigator = function (subTitle, blackMode = true, name) {
   const instance = this;
   const { standardWidth, media, totalContents, naviHeight, frontPage } = this;
-  const { createNode, createNodes, colorChip, withOut, blankHref, selfHref, isMac } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, blankHref, selfHref, isMac, setQueue } = GeneralJs;
+  const touchStartConst = "mainNavigatorTouchStartConstName";
   let { ea } = this;
   let mobile = media[4];
   let desktop = !mobile;
@@ -170,6 +171,8 @@ GeneralJs.prototype.setNavigator = function (subTitle, blackMode = true, name) {
   let mobileMenuHeight;
   let mobileFirstTop, mobileVerticalBetween;
   let thisIndex;
+  let hamburgerEvent;
+  let mobileHrefEvent;
 
   iconHeight = <%% 21.5, 21.5, 19, 17, 16 %%>;
   iconTop = <%% 22, 22, 20.5, 18, 20 %%>;
@@ -390,6 +393,10 @@ GeneralJs.prototype.setNavigator = function (subTitle, blackMode = true, name) {
           }
         ]
       });
+      mobileHrefEvent = function (e) {
+        const index = Number(this.getAttribute("index"));
+        selfHref(naviMenu[index].href);
+      }
       for (let i = 0; i < naviMenu.length; i++) {
         createNode({
           mother: mobileMenuTong.firstChild.firstChild,
@@ -397,12 +404,21 @@ GeneralJs.prototype.setNavigator = function (subTitle, blackMode = true, name) {
             index: String(i)
           },
           event: {
-            touch: function (e) {
-              const index = Number(this.getAttribute("index"));
-              selfHref(naviMenu[i].href);
-            },
+            click: mobileHrefEvent,
             selectstart: function (e) {
               e.preventDefault();
+            },
+            touchstart: function (e) {
+              const self = this;
+              self.setAttribute(touchStartConst, "on");
+              setQueue(() => {
+                self.setAttribute(touchStartConst, "off");
+              });
+            },
+            touchend: function (e) {
+              if (this.getAttribute(touchStartConst) === "on") {
+                mobileHrefEvent.call(this, e);
+              }
             }
           },
           text: naviMenu[i].title,
@@ -419,19 +435,35 @@ GeneralJs.prototype.setNavigator = function (subTitle, blackMode = true, name) {
         });
       }
 
+      hamburgerEvent = function (e) {
+        const toggle = mobileMenuTong.getAttribute("toggle");
+        if (toggle === "off") {
+          mobileMenuTong.style.height = String(mobileMenuHeight) + "px";
+          mobileMenuTong.setAttribute("toggle", "on");
+        } else {
+          mobileMenuTong.style.height = String(0) + "px";
+          mobileMenuTong.setAttribute("toggle", "off");
+        }
+      }
+
       createNode({
         mother: naviBase,
         mode: "svg",
         source: this.returnHamburger(colorChip.black),
         event: {
-          touch: (e) => {
-            const toggle = mobileMenuTong.getAttribute("toggle");
-            if (toggle === "off") {
-              mobileMenuTong.style.height = String(mobileMenuHeight) + "px";
-              mobileMenuTong.setAttribute("toggle", "on");
-            } else {
-              mobileMenuTong.style.height = String(0) + "px";
-              mobileMenuTong.setAttribute("toggle", "off");
+          click: function (e) {
+            hamburgerEvent.call(this, e)
+          },
+          touchstart: function (e) {
+            const self = this;
+            self.setAttribute(touchStartConst, "on");
+            setQueue(() => {
+              self.setAttribute(touchStartConst, "off");
+            });
+          },
+          touchend: function (e) {
+            if (this.getAttribute(touchStartConst) === "on") {
+              hamburgerEvent.call(this, e);
             }
           }
         },
