@@ -4472,6 +4472,7 @@ GeneralJs.prototype.greenTalk = function (input) {
   const eventClassName = "greenTalkEventClassName";
   const redDotTimeOutEventName = "redDotTimeOutEventName";
   const secondPopupClassName = "secondPopupClassName";
+  const touchStartConst = "greenTalkTouchStartConstName";
   const zIndex = 1;
   let baseWidth, right, bottom;
   let iconWidth;
@@ -4569,6 +4570,18 @@ GeneralJs.prototype.greenTalk = function (input) {
     class: [ eventClassName ],
     event: {
       click: eventFunc,
+      touchstart: function (e) {
+        const self = this;
+        self.setAttribute(touchStartConst, "on");
+        setQueue(() => {
+          self.setAttribute(touchStartConst, "off");
+        });
+      },
+      touchend: function (e) {
+        if (this.getAttribute(touchStartConst) === "on") {
+          eventFunc.call(this, e);
+        }
+      }
     },
     style: {
       display: "flex",
@@ -4661,12 +4674,24 @@ GeneralJs.prototype.greenTalk = function (input) {
 
   whitePopup = createNode({
     mother: whitePopupBase,
-    class: [ whitePopupClassName ],
+    class: [ whitePopupClassName, eventClassName ],
     attribute: {
       toggle: "off"
     },
     event: {
       click: eventFunc,
+      touchstart: function (e) {
+        const self = this;
+        self.setAttribute(touchStartConst, "on");
+        setQueue(() => {
+          self.setAttribute(touchStartConst, "off");
+        });
+      },
+      touchend: function (e) {
+        if (this.getAttribute(touchStartConst) === "on") {
+          eventFunc.call(this, e);
+        }
+      }
     },
     style: {
       position: "relative",

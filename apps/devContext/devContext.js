@@ -92,18 +92,18 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const readHead = async (path) => {
-    //   try {
-    //     let raw, patch;
-    //     raw = await fileSystem("readHead", [ path, 50 ]);
-    //     patch = JSON.parse(raw.slice(0, [ ...raw.matchAll(/%\/%\/g/g) ][0].index).replace(/\/<%patch%>\/ /gi, ''));
-    //     return patch;
-    //   } catch (e) {
-    //     return {};
-    //   }
-    // }
-    //
-    // console.log(await readHead(`${process.cwd()}/apps/dataConsole/router/source/ghost/client/aspirantExplanation.js`));
+    const readHead = async (path) => {
+      try {
+        let raw, patch;
+        raw = await fileSystem("readHead", [ path, 50 ]);
+        patch = JSON.parse(raw.slice(0, [ ...raw.matchAll(/%\/%\/g/g) ][0].index).replace(/\/<%patch%>\/ /gi, ''));
+        return patch;
+      } catch (e) {
+        return {};
+      }
+    }
+
+    console.log(await readHead(`${process.cwd()}/apps/dataConsole/router/source/ghost/client/aspirantExplanation.js`));
 
 
 
