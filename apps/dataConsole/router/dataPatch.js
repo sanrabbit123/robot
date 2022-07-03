@@ -5708,9 +5708,12 @@ DataPatch.prototype.projectMap = function () {
     return (Number((value.split('%')[0]).replace(/[^0-9]/gi, '')) / 100);
   };
   const discountInputFunction = function (mother, input, callback) {
+    const ea = "px";
+    const percentageValueInputClassName = "percentageValueInputClassName";
+    const supplyValueInputClassName = "supplyValueInputClassName";
+    const consumerValueInputClassName = "consumerValueInputClassName";
     let buttonStyle, inputStyle, style;
     let buttonDetailStyles;
-    let ea = "px";
     let height, fontSize, top, width;
     let div_clone, svg_clone;
     let button_clone, button_clone2;
@@ -5721,138 +5724,81 @@ DataPatch.prototype.projectMap = function () {
     let valuesTong;
     let originalValue;
     let online;
+    let supplyConsumer;
+    let percentage, supply, consumer;
+    let supplyOriginal, consumerOriginal;
 
     originalValue = input.value;
 
-    console.log(originalValue);
+    [ percentage, supplyConsumer ] = originalValue.replace(/ /gi, '').split('%');
+    [ supply, consumer ] = supplyConsumer.split('/');
 
-    if (/온라인/gi.test(originalValue)) {
-      online = "온라인";
-    } else {
-      online = "오프라인";
-    }
-    valuesTong = [
-      [ online, "홈퍼니싱", "mini" ],
-      [ online, "홈스타일링", "basic" ],
-      [ online, "토탈 스타일링", "premium" ],
-      [ online, "설계 변경", "premium" ],
-    ];
+    percentage = Number(percentage.replace(/[^0-9\.\-]/gi, ''));
+    supply = Number(supply.replace(/[^0-9]/gi, ''));
+    consumer = Number(consumer.replace(/[^0-9]/gi, ''));
+
+    supplyOriginal = (supply / percentage) * 100;
+    consumerOriginal = (consumer / percentage) * 100;
 
     endEvent = async function (e) {
       try {
-        let onoffLine;
-        let inputs0 = document.querySelectorAll(".inputTargetOne");
-        let inputs1 = document.querySelectorAll(".inputTargetTwo");
-        let totalString = '';
-        let designer;
-        let onlineAble, designerAble;
+        const percentageInput = document.querySelector('.' + percentageValueInputClassName);
+        const supplyInput = document.querySelector('.' + supplyValueInputClassName);
+        const consumerInput = document.querySelector('.' + consumerValueInputClassName);
+        const percentage = Number(percentageInput.value);
+        const supply = Number(supplyInput.value);
+        const consumer = Number(consumerInput.value);
+        const supplyOriginal = Number(supplyInput.getAttribute("original"));
+        const consumerOriginal = Number(consumerInput.getAttribute("original"));
         let proid, project;
-        let x, y;
-        let currentMode;
-        let newPrice;
-        let ajaxData, ajaxData2;
-        let client, cliid;
-        let inspectionArr;
-        let report;
-        let message;
+        let whereQuery, updateQuery;
+        let discount;
+        let desid, designer;
+        let newSupply;
+        let newVat;
+        let newConsumer;
+        let res;
+        let calculate;
 
         proid = mother.parentElement.className.replace(/(p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z])/g, (match, proid) => { return proid.trim(); });
-        currentMode = "row";
         if (!/p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/g.test(proid)) {
           proid = mother.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("index");
-          currentMode = "card";
         }
         project = (await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { proid } }, "/getProjects", { equal: true }))[0];
-        designer = (await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { desid: project.desid } }, "/getDesigners", { equal: true }))[0];
-        client = (await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { cliid: project.cliid } }, "/getClients", { equal: true }))[0];
-        cliid = client.cliid;
+        desid = project.desid;
+        designer = (await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { desid } }, "/getDesigners", { equal: true }))[0];
 
-        onlineAble = true;
-        if (document.querySelector(".inputTargetZero").textContent === "온라인") {
-          onoffLine = "온라인";
-          if (!designer.analytics.project.online) {
-            onlineAble = false;
-          }
-        } else {
-          onoffLine = "오프라인";
-        }
+        discount = percentage / 100;
+        newSupply = supplyOriginal - supply;
+        newVat = newSupply * (0.1);
+        newConsumer = newSupply + newVat;
 
-        for (let i = 0; i < inputs0.length; i++) {
-          if (inputs0[i].getAttribute("switch") === "on") {
-            totalString += inputs0[i].getAttribute("target");
-            totalString += ' ';
-            x = i;
-          }
-        }
-        for (let i = 0; i < inputs1.length; i++) {
-          if (inputs1[i].getAttribute("switch") === "on") {
-            totalString += inputs1[i].getAttribute("target");
-            y = i;
-          }
-        }
+        ({ calculate } = await GeneralJs.ajaxJson({
+          supply: supplyOriginal,
+          classification: designer.information.business.businessInfo.classification,
+          percentage: designer.information.business.service.cost.percentage,
+          cliid: proid
+        }, PYTHONHOST + "/designerCalculation"));
 
-        if (y === 3) {
-          y = 2;
-        }
+        whereQuery = { proid };
+        updateQuery = {};
+        updateQuery["process.contract.remain.calculation.amount.supply"] = newSupply;
+        updateQuery["process.contract.remain.calculation.amount.vat"] = newVat;
+        updateQuery["process.contract.remain.calculation.amount.consumer"] = newConsumer;
+        updateQuery["process.contract.remain.calculation.discount"] = discount;
+        updateQuery["process.calculation.payments.totalAmount"] = calculate;
+        updateQuery["process.calculation.payments.first.amount"] = Math.floor(calculate / 2);
+        updateQuery["process.calculation.payments.remain.amount"] = calculate - updateQuery["process.calculation.payments.first.amount"];
 
-        totalString = onoffLine + " " + totalString;
-        designerAble = (designer.analytics.project.matrix[x][y] === 1);
+        await GeneralJs.ajaxJson({ whereQuery, updateQuery }, "/rawUpdateProject");
 
-        if (onlineAble && designerAble) {
-          if (window.confirm("서비스를 바꾸시겠습니까?")) {
-            inspectionArr = await GeneralJs.ajaxJson({
-              mode: "inspection",
-              addressArr: [ { id: cliid, address: client.requests[0].request.space.address } ],
-              liteMode: false,
-            }, "/parsingAddress");
-            if (inspectionArr.length !== 0) {
-              window.alert("고객님의 주소가 잘못되어 제안서를 만들 수 없습니다!\n" + inspectionArr[0].message + "\n고객님의 주소를 올바른 형식으로 고쳐주세요!\n(도로명과 건물 번호가 반드시 있어야 함)");
-              window.location.href = window.location.protocol + "//" + window.location.host + "/client?cliid=" + inspectionArr[0].id;
-            } else {
-
-              ajaxData = { proid, method: (/오프/gi.test(onoffLine) ? "offline" : "online"), serid: `s2011_aa0${String(x + 1)}s`, mode: "confirm" };
-              ajaxData2 = { proid, method: (/오프/gi.test(onoffLine) ? "offline" : "online"), serid: `s2011_aa0${String(x + 1)}s` };
-              newPrice = await GeneralJs.prompt("새로운 공급가를 오직 숫자로만 적어주세요! (만원 표기 안 됨) 자동 계산을 원할 시, '자동'이라고 써주세요!");
-              if (!Number.isNaN(Number(newPrice.replace(/[^0-9]/gi, '')))) {
-                if (Number(newPrice.replace(/[^0-9]/gi, '')) !== 0) {
-                  ajaxData.newPrice = Number(newPrice.replace(/[^0-9]/gi, ''));
-                  ajaxData2.newPrice = Number(newPrice.replace(/[^0-9]/gi, ''));
-                }
-              }
-
-              report = await GeneralJs.ajaxJson(ajaxData, PYTHONHOST + "/serviceConverting");
-              if (typeof report.error === "string") {
-                window.alert(report.error);
-                window.alert("이 디자이너는 해당 서비스를 진행할 수 없습니다!");
-              } else {
-                message = "다음 상세 사항을 확인해주세요! 추가 견적이 발생할 경우 자동으로 알림톡이 발송될 예정입니다, 확실합니까?\n";
-                message += "기존 공급가 : " + GeneralJs.autoComma(report.price.supply.from) + '원' + '\n';
-                message += "기존 잔금 : " + GeneralJs.autoComma(report.price.remain.from) + '원' + '\n';
-                message += "새로운 공급가 : " + GeneralJs.autoComma(report.price.supply.to) + '원' + '\n';
-                message += "새로운 잔금 : " + GeneralJs.autoComma(report.price.remain.to) + '원' + '\n';
-                message += "안내될 차액 : " + GeneralJs.autoComma(report.price.between.consumer) + '원' + '\n';
-                message += "기존 정산 총 금액 : " + GeneralJs.autoComma(report.calculate.total.from) + '원' + '\n';
-                message += "기존 정산 선금 : " + GeneralJs.autoComma(report.calculate.first.from) + '원' + '\n';
-                message += "기존 정산 잔금 : " + GeneralJs.autoComma(report.calculate.remain.from) + '원' + '\n';
-                message += "새로운 정산 총 금액 : " + GeneralJs.autoComma(report.calculate.total.to) + '원' + '\n';
-                message += "새로운 정산 선금 : " + GeneralJs.autoComma(report.calculate.first.to) + '원' + '\n';
-                message += "새로운 정산 잔금 : " + GeneralJs.autoComma(report.calculate.remain.to) + '원' + '\n';
-                if (window.confirm(message)) {
-                  await GeneralJs.ajaxJson(ajaxData2, PYTHONHOST + "/serviceConverting");
-                }
-              }
-
-              window.location.reload();
-            }
-          }
-        } else {
-          window.alert("이 디자이너는 해당 서비스를 운용할 수 없습니다!");
-        }
+        window.location.href = window.location.protocol + "//" + window.location.host + "/project?proid=" + proid;
 
       } catch (e) {
         console.log(e);
       }
     };
+
 
     input.value = "입력중";
     if (input.parentElement.childNodes[0].nodeType === 3) {
@@ -5969,7 +5915,41 @@ DataPatch.prototype.projectMap = function () {
             {
               style: {
                 ...buttonDetailStyles[1]
-              }
+              },
+              children: [
+                {
+                  mode: "input",
+                  class: [ percentageValueInputClassName ],
+                  event: {
+                    keyup: function (e) {
+                      if (e.key === "Enter") {
+                        this.blur();
+                      }
+                    },
+                    blur: function (e) {
+                      this.value = this.value.replace(/[^0-9\.\-]/gi, '');
+                      if (Number.isNaN(Number(this.value))) {
+                        window.alert("숫자만 입력해주세요!");
+                      } else {
+                        const newPercentage = Number(this.value);
+                        const supplyTarget = document.querySelector('.' + supplyValueInputClassName);
+                        const consumerTarget = document.querySelector('.' + consumerValueInputClassName);
+                        const supplyOriginal = Number(supplyTarget.getAttribute("original"));
+                        const consumerOriginal = Number(consumerTarget.getAttribute("original"));
+                        supplyTarget.value = String((supplyOriginal / 100) * newPercentage);
+                        consumerTarget.value = String((consumerOriginal / 100) * newPercentage);
+                      }
+                    }
+                  },
+                  attribute: {
+                    type: "text",
+                    value: String(percentage)
+                  },
+                  style: {
+                    ...inputStyle
+                  }
+                }
+              ]
             }
           ]
         },
@@ -5999,7 +5979,43 @@ DataPatch.prototype.projectMap = function () {
             {
               style: {
                 ...buttonDetailStyles[1]
-              }
+              },
+              children: [
+                {
+                  mode: "input",
+                  class: [ supplyValueInputClassName ],
+                  event: {
+                    keyup: function (e) {
+                      if (e.key === "Enter") {
+                        this.blur();
+                      }
+                    },
+                    blur: function (e) {
+                      this.value = this.value.replace(/[^0-9\.\-]/gi, '');
+                      if (Number.isNaN(Number(this.value))) {
+                        window.alert("숫자만 입력해주세요!");
+                      } else {
+                        const newSupply = Number(this.value);
+                        const percentageTarget = document.querySelector('.' + percentageValueInputClassName);
+                        const consumerTarget = document.querySelector('.' + consumerValueInputClassName);
+                        const supplyOriginal = Number(this.getAttribute("original"));
+                        const consumerOriginal = Number(consumerTarget.getAttribute("original"));
+                        const newPercentage = (newSupply / supplyOriginal) * 100;
+                        consumerTarget.value = String((consumerOriginal / 100) * newPercentage);
+                        percentageTarget.value = String(Math.round(newPercentage * 100) / 100);
+                      }
+                    }
+                  },
+                  attribute: {
+                    type: "text",
+                    value: String(supply),
+                    original: String(supplyOriginal)
+                  },
+                  style: {
+                    ...inputStyle
+                  }
+                }
+              ]
             }
           ]
         },
@@ -6029,13 +6045,62 @@ DataPatch.prototype.projectMap = function () {
             {
               style: {
                 ...buttonDetailStyles[1]
-              }
+              },
+              children: [
+                {
+                  mode: "input",
+                  class: [ consumerValueInputClassName ],
+                  event: {
+                    keyup: function (e) {
+                      if (e.key === "Enter") {
+                        this.blur();
+                      }
+                    },
+                    blur: function (e) {
+                      this.value = this.value.replace(/[^0-9\.\-]/gi, '');
+                      if (Number.isNaN(Number(this.value))) {
+                        window.alert("숫자만 입력해주세요!");
+                      } else {
+                        const newConsumer = Number(this.value);
+                        const percentageTarget = document.querySelector('.' + percentageValueInputClassName);
+                        const supplyTarget = document.querySelector('.' + supplyValueInputClassName);
+                        const supplyOriginal = Number(supplyTarget.getAttribute("original"));
+                        const consumerOriginal = Number(this.getAttribute("original"));
+                        const newPercentage = (newConsumer / consumerOriginal) * 100;
+                        supplyTarget.value = String((supplyOriginal / 100) * newPercentage);
+                        percentageTarget.value = String(Math.round(newPercentage * 100) / 100);
+                      }
+                    }
+                  },
+                  attribute: {
+                    type: "text",
+                    value: String(consumer),
+                    original: String(consumerOriginal)
+                  },
+                  style: {
+                    ...inputStyle
+                  }
+                }
+              ]
             }
           ]
         },
+        {
+          mode: "svg",
+          source: GeneralJs.prototype.returnOk(GeneralJs.colorChip.green),
+          event: {
+            click: endEvent
+          },
+          style: {
+            position: "absolute",
+            bottom: String(0),
+            width: String(iconWidth) + ea,
+            left: "calc(50% - " + String(iconWidth / 2) + ea + ")",
+            cursor: "pointer"
+          }
+        }
       ]
     });
-
 
   };
 
