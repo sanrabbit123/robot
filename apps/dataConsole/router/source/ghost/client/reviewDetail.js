@@ -1525,6 +1525,16 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
       {
         mode: "svg",
         source: svgMaker.linkIcon(colorChip.black),
+        event: {
+          click: async function (e) {
+            try {
+              await window.navigator.clipboard.writeText(window.location.href);
+              window.alert("링크가 복사되었습니다!");
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        },
         style: {
           display: "inline-block",
           position: "relative",
@@ -1534,6 +1544,23 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
       },
       {
         text: "previous",
+        event: {
+          click: function (e) {
+            const entireContents = instance.contentsArr.toNormal();
+            const entireContentsLength = entireContents.length;
+            let thisContentsIndex;
+            let previousIndex;
+            let newLink;
+            thisContentsIndex = entireContents.findIndex((obj) => { return obj.contents.portfolio.pid === pid });
+            if (thisContentsIndex === entireContentsLength - 1) {
+              previousIndex = thisContentsIndex;
+            } else {
+              previousIndex = thisContentsIndex + 1;
+            }
+            newLink = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search.replace(new RegExp("pid=" + pid, "gi"), "pid=" + entireContents[previousIndex].contents.portfolio.pid);
+            selfHref(newLink);
+          }
+        },
         style: {
           display: "inline-block",
           position: "absolute",
@@ -1548,6 +1575,23 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
       },
       {
         text: "next",
+        event: {
+          click: function (e) {
+            const entireContents = instance.contentsArr.toNormal();
+            const entireContentsLength = entireContents.length;
+            let thisContentsIndex;
+            let nextIndex;
+            let newLink;
+            thisContentsIndex = entireContents.findIndex((obj) => { return obj.contents.portfolio.pid === pid });
+            if (thisContentsIndex === 0) {
+              nextIndex = 0;
+            } else {
+              nextIndex = thisContentsIndex - 1;
+            }
+            newLink = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search.replace(new RegExp("pid=" + pid, "gi"), "pid=" + entireContents[nextIndex].contents.portfolio.pid);
+            selfHref(newLink);
+          }
+        },
         style: {
           display: "inline-block",
           position: "absolute",
@@ -1958,7 +2002,6 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
       console.log(e);
     }
   }, 1000);
-
 
   // photo
 
