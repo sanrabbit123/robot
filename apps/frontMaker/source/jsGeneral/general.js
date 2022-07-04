@@ -5264,3 +5264,40 @@ GeneralJs.kakaoSdkPatch = function () {
     });
   });
 }
+
+GeneralJs.setMetaData = function (obj) {
+  if (typeof obj !== "object" || obj === null) {
+    throw new Error("invalid input");
+  }
+  if (typeof obj.title !== "string" || typeof obj.description !== "string" || typeof obj.image !== "string") {
+    throw new Error("invaild input");
+  }
+  const head = document.querySelector("head");
+  const metas = [ ...head.querySelectorAll("meta") ];
+  if (metas.length < 3) {
+    throw new Error("invalid html");
+  }
+  const title = metas.find((dom) => { return dom.getAttribute("property") === "og:title" });
+  const title2 = document.querySelector("title");
+  const description = metas.find((dom) => { return dom.getAttribute("property") === "og:description" });
+  const description2 = metas.find((dom) => { return dom.getAttribute("name") === "description" });
+  const image = metas.find((dom) => { return dom.getAttribute("property") === "og:image" });
+  if (title === undefined || title2 === null || description === undefined || description2 === undefined || image === undefined) {
+    throw new Error("invalid meta setting");
+  }
+  let description3;
+  if (document.body.firstChild.id !== "totalcontents" && document.body.firstChild.style.display === "none") {
+    description3 = document.body.firstChild;
+  } else {
+    description3 = null;
+  }
+  title.setAttribute("content", obj.title);
+  title2.textContent = obj.title;
+  description.setAttribute("content", obj.description);
+  description2.setAttribute("content", obj.description);
+  if (description3 !== null) {
+    description3.textContent = obj.description;
+  }
+  image.setAttribute("content", obj.image);
+  return "success";
+}

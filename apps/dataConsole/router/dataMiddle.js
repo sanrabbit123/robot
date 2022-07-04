@@ -79,7 +79,9 @@ MiddleCommunication.prototype.baseHtml = async function (target, req, selfMongo,
     }
 
     html = `<!DOCTYPE html>
-    <html lang="ko" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="${designerOnly}">
+    <html lang="ko" dir="ltr"><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="${designerOnly}">
     <meta content="${titleString}" property="og:title">
     <meta content="${descriptionString}" property="og:description">
     <meta content="${imageString.replace(/__thisHost__/g, req.get("host"))}" property="og:image">

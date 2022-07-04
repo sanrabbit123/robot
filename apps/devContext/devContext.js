@@ -90,11 +90,9 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const res = await requestSystem("https://developers.kakao.com/sdk/js/kakao.min.js")
-    console.log(res);
 
 
-    
+
 
 
 
