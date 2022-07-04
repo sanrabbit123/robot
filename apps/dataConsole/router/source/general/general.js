@@ -823,9 +823,6 @@ GeneralJs.prototype.returnPlus = function (color) {
 }
 
 GeneralJs.prototype.returnArrow = function (direction, color) {
-  if (direction === undefined && color === undefined) {
-    throw new Error("invaild arguments");
-  }
   if (direction !== undefined && color === undefined) {
     color = direction;
     direction = "right";

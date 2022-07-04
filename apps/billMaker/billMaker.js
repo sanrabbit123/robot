@@ -4109,7 +4109,7 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
   const doingSignature = "billMaker_designerConvertingDoing_" + proid;
   const work = new BackWorker();
   const back = this.back;
-  const { mongo, mongopythoninfo, mongoinfo, equalJson, sleep, fileSystem } = this.mother;
+  const { mongo, mongopythoninfo, mongoinfo, equalJson, sleep, fileSystem, errorLog } = this.mother;
   const { vatRatio, freeRatio, designerCancel } = BillMaker.billDictionary.styling.etc;
   try {
     let MONGOC, MONGOCOREC;
@@ -4592,6 +4592,7 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
 
   } catch (e) {
     await fileSystem(`remove`, [ `${process.cwd()}/temp/${doingSignature}.json` ]);
+    await errorLog(e.message);
     console.log(e);
   }
 }
