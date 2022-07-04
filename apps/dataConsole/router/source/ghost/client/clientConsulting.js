@@ -109,7 +109,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
   whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
 
-  searchBarPaddingTop = <%% 220, 220, 192, 164, 11.5 %%>;
+  searchBarPaddingTop = <%% 220, 220, 192, 164, 12.5 %%>;
   searchBarHeight = <%% 40, 40, 40, 36, 8 %%>;
   searchBarWidth = <%% 690, 516, 516, 420, 88 %%>;
 
@@ -133,7 +133,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
   titleWording = "홈리에종 서비스 신청";
   subTitleContents = "디자이너와의 1:1 상담을 받아보세요!";
 
-  mobileBlockTop = 3.5;
+  mobileBlockTop = 4.5;
 
   whiteBlock = createNode({
     mother: this.baseTong,

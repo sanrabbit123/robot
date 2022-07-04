@@ -1310,6 +1310,12 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
   let subArrowBottom;
   let subArrowReviewBottom;
   let reviewSubTitleVisual;
+  let shareTong, shareBaseTong;
+  let shareTongHeight;
+  let shareIconHeight;
+  let shareIconBetween0, shareIconBetween1;
+  let previousNextSize, previousNextWeight, previousNextTextTop, previousNextLeftRight;
+  let whitePhotoTong;
 
   this.relativePhotoNumber = 0;
 
@@ -1320,7 +1326,7 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
   arrowTop = <%% 230, 218, 230, 190, 34 %%>;
 
   mainHeight = <%% 590, 570, 590, 496, 94 %%>;
-  mainPaddingTop = <%% 100, 96, 86, 72, 10 %%>;
+  mainPaddingTop = <%% 110, 96, 86, 72, 10 %%>;
 
   titleHeight = <%% 30, 30, 30, 28, 6 %%>;
   titleMarginBottom = <%% 32, 32, 32, 28, 5 %%>;
@@ -1385,6 +1391,104 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
 
   reviewSubTitleVisual = <%% 1, 1, 1, 0, 0 %%>;
 
+  shareTongHeight = <%% 100, 100, 90, 80, 10 %%>;
+  shareIconHeight = <%% 19, 19, 19, 18, 4 %%>;
+
+  shareIconBetween0 = <%% 34, 34, 34, 34, 3 %%>;
+  shareIconBetween1 = <%% 31, 31, 31, 31, 3 %%>;
+
+  previousNextSize = <%% 16, 16, 16, 16, 16 %%>;
+  previousNextWeight = <%% 500, 500, 500, 500, 500 %%>;
+  previousNextTextTop = <%% 36, 36, 36, 36, 36 %%>;
+  previousNextLeftRight = baseBetween / 2;
+
+  shareTong = createNode({
+    mother: totalContents,
+    style: {
+      display: "block",
+      position: "relative",
+      width: withOut(0),
+      background: colorChip.gray2,
+      height: String(shareTongHeight) + ea,
+    }
+  });
+
+  shareBaseTong = createNode({
+    mother: shareTong,
+    style: {
+      display: "flex",
+      flexDirection: "row",
+      position: "relative",
+      width: String(standardWidth) + ea,
+      height: withOut(0, ea),
+      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    children: [
+      {
+        mode: "svg",
+        source: svgMaker.facebookIcon(colorChip.black),
+        style: {
+          display: "inline-block",
+          position: "relative",
+          height: String(shareIconHeight) + ea,
+          cursor: "pointer",
+        }
+      },
+      {
+        mode: "svg",
+        source: svgMaker.twitterIcon(colorChip.black),
+        style: {
+          display: "inline-block",
+          position: "relative",
+          height: String(shareIconHeight) + ea,
+          marginLeft: String(shareIconBetween0) + ea,
+          marginRight: String(shareIconBetween1) + ea,
+          cursor: "pointer",
+        }
+      },
+      {
+        mode: "svg",
+        source: svgMaker.linkIcon(colorChip.black),
+        style: {
+          display: "inline-block",
+          position: "relative",
+          height: String(shareIconHeight) + ea,
+          cursor: "pointer",
+        }
+      },
+      {
+        text: "previous",
+        style: {
+          display: "inline-block",
+          position: "absolute",
+          fontSize: String(previousNextSize) + ea,
+          fontWeight: String(previousNextWeight),
+          color: colorChip.darkDarkShadow,
+          fontFamily: "graphik",
+          top: String(previousNextTextTop) + ea,
+          left: String(previousNextLeftRight) + ea,
+          cursor: "pointer",
+        }
+      },
+      {
+        text: "next",
+        style: {
+          display: "inline-block",
+          position: "absolute",
+          fontSize: String(previousNextSize) + ea,
+          fontWeight: String(previousNextWeight),
+          color: colorChip.darkDarkShadow,
+          fontFamily: "graphik",
+          top: String(previousNextTextTop) + ea,
+          right: String(previousNextLeftRight) + ea,
+          cursor: "pointer",
+        }
+      },
+    ]
+  });
+
   mainTong = createNode({
     mother: totalContents,
     style: {
@@ -1392,8 +1496,8 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
       position: "relative",
       width: String(100) + '%',
       background: colorChip.gray0,
-      height: String(mainHeight) + ea,
       paddingTop: String(mainPaddingTop) + ea,
+      paddingBottom: String(mainPaddingTop) + ea,
     }
   });
 
@@ -1429,7 +1533,7 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
         }
       },
       {
-        text: "유사한 포트폴리오",
+        text: "유사한 고객 후기",
         style: {
           fontSize: String(mainTitleSize) + ea,
           fontWeight: String(mainTitleWeight),
@@ -1444,7 +1548,7 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
         }
       }
     ]
-  })
+  });
 
   leftArrow = createNode({
     mother: baseTong,
@@ -1778,6 +1882,69 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
       console.log(e);
     }
   }, 1000);
+
+
+  // photo
+
+  createNode({
+    mother: baseTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      height: String(titleHeight) + ea,
+      marginBottom: String(titleMarginBottom) + ea,
+      marginTop: String(mainPaddingTop) + ea,
+      textAlign: "center",
+    },
+    children: [
+      {
+        style: {
+          position: "absolute",
+          width: withOut(baseBetween, ea),
+          height: String(titleLineHeight) + ea,
+          top: String(0),
+          left: String(baseBetween / 2) + ea,
+          borderBottom: "1px dashed " + colorChip.gray3,
+        }
+      },
+      {
+        text: "사진 모아 보기",
+        style: {
+          fontSize: String(mainTitleSize) + ea,
+          fontWeight: String(mainTitleWeight),
+          color: colorChip.black,
+          display: "inline-block",
+          background: colorChip.gray0,
+          position: "absolute",
+          top: String(mainTitleTop) + ea,
+          textAlign: "center",
+          width: String(mainTitleWidth) + ea,
+          left: "calc(50% - " + String(mainTitleWidth / 2) + ea + ")",
+        }
+      }
+    ]
+  });
+
+  whitePhotoTong = createNode({
+    mother: baseTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: withOut(baseBetween, ea),
+      marginLeft: String(baseBetween / 2) + ea,
+      height: String(400) + ea,
+      background: colorChip.white,
+      borderRadius: String(5) + "px",
+      marginBottom: String(10) + ea,
+    }
+  });
+
+  console.log(contents);
+
+
+
+
 }
 
 ReviewDetailJs.prototype.launching = async function (loading) {

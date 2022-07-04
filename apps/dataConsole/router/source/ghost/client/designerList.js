@@ -109,7 +109,7 @@ DesignerListJs.prototype.insertInitBox = function () {
   whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
   whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
 
-  searchBarPaddingTop = <%% 220, 220, 192, 164, 13 %%>;
+  searchBarPaddingTop = <%% 220, 220, 192, 164, 14 %%>;
   searchBarHeight = <%% 40, 40, 40, 36, 8 %%>;
   searchBarWidth = <%% 690, 516, 516, 420, 88 %%>;
 
@@ -133,7 +133,7 @@ DesignerListJs.prototype.insertInitBox = function () {
   titleWording = "디자이너 리스트";
   subTitleContents = "홈스타일링 전문 디자이너를 만나보세요!";
 
-  mobileBlockTop = 3.5;
+  mobileBlockTop = 4.5;
 
   searchTags = [];
   if (media[0]) {
