@@ -4339,7 +4339,7 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
 
       [ calculate ] = BillMaker.designerCalculation(newSupply, classification, percentage, client, { toArray: true });
 
-      projectUpdateQuery["process.calculation.method"] = classification.toNormal();
+      projectUpdateQuery["process.calculation.method"] = classification.toNormal().replace(/법인/gi, '').replace(/개인/gi, '');
       projectUpdateQuery["process.calculation.percentage"] = percentage;
       if (designer.information.business.account.length > 0) {
         bankName = designer.information.business.account[0].bankName + " " + String(designer.information.business.account[0].accountNumber);
