@@ -81,6 +81,9 @@ GeneralJs.svgMaker = {
   twitterIcon: function (color) {
     return `<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 95.7448 72.7716" xml:space="preserve"><path fill="${color}" d="M92.3282,8.9345c0.0413-0.0609-0.0226-0.1375-0.09-0.1081c-3.217,1.4019-6.6648,2.3476-10.2794,2.7797 c3.6844-2.2066,6.5313-5.6677,7.9374-9.7991c0.038-0.1115-0.0846-0.2111-0.1865-0.1519c-3.4564,2.0073-7.2726,3.4696-11.3289,4.2702 c-3.5244-3.7562-8.6285-6.0247-14.2419-5.7592c-8.1436,0.3851-15.2084,6.2443-16.9653,14.2053 c-0.6271,2.8413-0.5682,5.662,0.0281,8.2395c-15.207-0.7616-28.6886-8.0478-37.7175-19.1212 C7.9131,6.1929,7.011,9.3352,7.011,12.6936c0,6.3463,3.228,11.9481,8.137,15.2276c-2.9982-0.096-5.8215-0.9193-8.2879-2.2881 c0,0.0789,0,0.1509,0,0.2299c0,8.8676,6.3051,16.2636,14.6788,17.9411c-1.5334,0.4185-3.1526,0.6415-4.8232,0.6415 c-1.1766,0-2.3258-0.1166-3.4407-0.3259c2.3293,7.269,9.0872,12.5622,17.0938,12.7097c-6.2605,4.9089-14.1505,7.8351-22.7266,7.8351 c-1.475,0-2.933-0.0858-4.3669-0.2573c8.0992,5.1902,17.7147,8.2193,28.0505,8.2193c33.6593,0,52.0601-27.8824,52.0601-52.0635 c0-0.7924-0.0172-1.5814-0.0515-2.367C86.8439,15.6623,89.8979,12.5147,92.3282,8.9345z"/></svg>`;
   },
+  talkIcon: function (color) {
+    return `<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 451.0676 385.724" xml:space="preserve"><path fill="${color}" d="M61.5539,378.9067c-2.0208,2.0784-0.4816,5.6116,2.3813,5.4706c40.9867-2.0228,90.3566-18.5609,123.8974-45.5795 c2.8252-2.275,6.3823-3.3783,9.9602-2.994c9.0774,0.9742,18.3355,1.4826,27.7415,1.4826 c115.7158,0,209.5221-73.8304,209.5221-167.4551S341.251,1.3427,225.5343,1.3427S16.0112,76.2068,16.0112,169.8315 c0,50.783,30.6094,95.3863,76.4798,127.6918c2.281,1.6068,3.6107,4.3138,3.5054,7.1429 C94.6668,340.5665,72.4753,367.6725,61.5539,378.9067z"/></svg>`;
+  }
 }
 
 GeneralJs.colorSet = {
@@ -5216,5 +5219,48 @@ GeneralJs.homeliaisonAnalytics = function (obj) {
     } else {
       reject("there is no gtag");
     }
+  });
+}
+
+GeneralJs.facebookSdkPatch = function () {
+  const appId = "855866308109037";
+  const autoLogAppEvents = true;
+  const xfbml = true;
+  const version = "v14.0"
+  window.fbAsyncInit = () => { FB.init({ appId, autoLogAppEvents, xfbml, version }); }
+  return new Promise((resolve, reject) => {
+    GeneralJs.ajaxJson({ url: window.encodeURIComponent("https://connect.facebook.net/en_US/sdk.js") }, "/requestScript").then((obj) => {
+      const { data } = obj;
+      const facebookFunc = new Function(data);
+      return facebookFunc();
+    }).then(() => {
+      resolve(null);
+    }).catch((err) => {
+      reject(err);
+    });
+  });
+}
+
+GeneralJs.kakaoSdkPatch = function () {
+  const appKey = "9731e2ecf82492f8d33d98d9bac33823";
+  return new Promise((resolve, reject) => {
+    GeneralJs.ajaxJson({ url: window.encodeURIComponent("https://developers.kakao.com/sdk/js/kakao.min.js") }, "/requestScript").then((obj) => {
+      const { data } = obj;
+      const kakaoSdkFunction = new Function(data);
+      return kakaoSdkFunction();
+    }).then(() => {
+      window.Kakao.init(appKey);
+      try {
+        if (window.Kakao.isInitialized()) {
+          resolve(null);
+        } else {
+          reject("kakao error");
+        }
+      } catch (e) {
+        reject("kakao error");
+      }
+    }).catch((err) => {
+      reject(err);
+    });
   });
 }

@@ -1404,25 +1404,27 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
 
   reviewSubTitleVisual = <%% 1, 1, 1, 0, 0 %%>;
 
-  shareTongHeight = <%% 100, 100, 90, 80, 10 %%>;
-  shareIconHeight = <%% 19, 19, 19, 18, 4 %%>;
+  shareTongHeight = <%% 100, 100, 96, 90, 10 %%>;
+  shareIconHeight = <%% 19, 19, 18, 18, 4 %%>;
 
   shareIconBetween0 = <%% 34, 34, 34, 34, 3 %%>;
-  shareIconBetween1 = <%% 31, 31, 31, 31, 3 %%>;
+  shareIconBetween1 = <%% 30, 30, 30, 30, 3 %%>;
 
-  previousNextSize = <%% 16, 16, 16, 16, 16 %%>;
+  previousNextSize = <%% 16, 16, 15, 14, 16 %%>;
   previousNextWeight = <%% 500, 500, 500, 500, 500 %%>;
-  previousNextTextTop = <%% 36, 36, 36, 36, 36 %%>;
+  previousNextTextTop = <%% 36, 36, 34, 33, 3 %%>;
   previousNextLeftRight = baseBetween / 2;
 
   photoBetween = <%% 8, 8, 7, 6, 1 %%>;
   whitePhotoTongInnerPadding = <%% 36, 36, 32, 30, 4 %%>;
-  whitePhotoHeight = <%% 210, 210, 210, 210, 210 %%>;
+  whitePhotoHeight = <%% 210, 210, 170, 133, 21 %%>;
   whitePhotoNumbers = <%% 8, 6, 6, 6, 6 %%>;
   whitePhotoTongMarginBottom = <%% 10, 10, 10, 10, 1 %%>;
   whitePopupBigPadding = <%% 64, 64, 64, 64, 4 %%>;
   whitePhotoBigArrowHeight = <%% 15, 15, 15, 15, 15 %%>;
   whitePhotoBigArrowAreaHeight = <%% 200, 200, 200, 200, 20 %%>;
+
+  // share
 
   shareTong = createNode({
     mother: totalContents,
@@ -1451,6 +1453,16 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
       {
         mode: "svg",
         source: svgMaker.facebookIcon(colorChip.black),
+        event: {
+          click: function (e) {
+            if (window.FB !== undefined) {
+              window.FB.ui({
+                method: 'share',
+                href: window.location.href,
+              }, (response) => {});
+            }
+          }
+        },
         style: {
           display: "inline-block",
           position: "relative",
@@ -1460,7 +1472,47 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
       },
       {
         mode: "svg",
-        source: svgMaker.twitterIcon(colorChip.black),
+        source: svgMaker.talkIcon(colorChip.black),
+        event: {
+          click: function () {
+            if (window.Kakao !== undefined) {
+              window.Kakao.Share.sendDefault({
+                objectType: 'feed',
+                content: {
+                  title: '딸기 치즈 케익',
+                  description: '#케익 #딸기 #삼평동 #카페 #분위기 #소개팅',
+                  imageUrl:
+                    'http://k.kakaocdn.net/dn/Q2iNx/btqgeRgV54P/VLdBs9cvyn8BJXB3o7N8UK/kakaolink40_original.png',
+                  link: {
+                    mobileWebUrl: 'https://developers.kakao.com',
+                    webUrl: 'https://developers.kakao.com',
+                  },
+                },
+                social: {
+                  likeCount: 286,
+                  commentCount: 45,
+                  sharedCount: 845,
+                },
+                buttons: [
+                  {
+                    title: '웹으로 보기',
+                    link: {
+                      mobileWebUrl: 'https://developers.kakao.com',
+                      webUrl: 'https://developers.kakao.com',
+                    },
+                  },
+                  {
+                    title: '앱으로 보기',
+                    link: {
+                      mobileWebUrl: 'https://developers.kakao.com',
+                      webUrl: 'https://developers.kakao.com',
+                    },
+                  },
+                ],
+              });
+            }
+          }
+        },
         style: {
           display: "inline-block",
           position: "relative",
@@ -1510,6 +1562,8 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
       },
     ]
   });
+
+  // relative
 
   mainTong = createNode({
     mother: totalContents,
@@ -2171,15 +2225,13 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
       }
     });
 
-
   }
-
 
 }
 
 ReviewDetailJs.prototype.launching = async function (loading) {
   const instance = this;
-  const { returnGet, ajaxJson, setQueue, setDebounce } = GeneralJs;
+  const { returnGet, ajaxJson, setQueue, setDebounce, facebookSdkPatch, kakaoSdkPatch } = GeneralJs;
   try {
     this.mother.setGeneralProperties(this);
 
@@ -2256,6 +2308,11 @@ ReviewDetailJs.prototype.launching = async function (loading) {
     loading.parentNode.removeChild(loading);
 
     setQueue(() => {
+      facebookSdkPatch().then(() => {
+        return kakaoSdkPatch();
+      }).catch((err) => {
+        console.log(err);
+      });
       ajaxJson({ mode: "review" }, LOGHOST + "/getContents", { equal: true }).then((response) => {
         instance.contentsArr = new SearchArray(response.contentsArr);
         instance.designers = new SearchArray(response.designers);
