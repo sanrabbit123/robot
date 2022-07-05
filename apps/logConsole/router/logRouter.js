@@ -277,6 +277,17 @@ LogRouter.prototype.rou_post_extractLog = function () {
           tong[id].id = id;
           tong = tong[id];
         }
+      } else if (mode === "raw") {
+        if (typeof req.body.from !== "string" || typeof req.body.to !== "string") {
+          throw new Error("must be from, to");
+        }
+
+        from = stringToDate(req.body.from);
+        to = stringToDate(req.body.to);
+
+        tong = await findBackground(from, to);
+      } else {
+        throw new Error("invalid mode");
       }
 
       res.send(JSON.stringify(tong));

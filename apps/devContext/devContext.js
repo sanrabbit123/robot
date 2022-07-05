@@ -104,17 +104,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
     // const selfMongo = this.MONGOC;
     // const projects = await back.getProjectsByQuery({ desid: { $regex: "^d" } }, { selfMongo });
     // let tong;
@@ -2726,7 +2715,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p183");
+    // await this.getRawPortfolio("p180");
 
 
     // get corePortfolio by pid

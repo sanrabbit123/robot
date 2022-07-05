@@ -92,7 +92,7 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
   let contentsTitleBetween;
   let contentsTitleButtonWidth, contentsTitleButtonHeight, contentsTitleButtonTextTop, contentsTitleButtonSize, contentsTitleButtonWeight;
 
-  mainHeight = <%% 800, 750, 710, 590, (210 / 297) * 100 %%>;
+  mainHeight = <%% 800, 750, 710, 590, 91 %%>;
 
   contentsBoxTop = <%% 38, 38, 38, 38, 0 %%>;
   contentsBoxWidth = <%% 1200, 1050, 900, 720, 89 %%>;
@@ -102,14 +102,14 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
   pictureWidth = <%% 820, 720, 610, 480, 610 %%>;
   pictureHeight = mainHeight - (contentsBoxTop * 2) - bottomVisual;
 
-  boxMargin = <%% 40, 40, 32, 24, 4 %%>;
+  boxMargin = <%% 40, 40, 32, 24, 3 %%>;
   designerBoxWidth = <%% 210, 210, 200, 175, 210 %%>;
-  slideBarHeight = <%% 124, 124, 124, 124, 124 %%>;
+  slideBarHeight = <%% 124, 124, 124, 124, 17 %%>;
 
   designerBoxHeight = <%% 303, 303, 303, 260, 303 %%>;
   titleBoxHeight = <%% 210, 210, 200, 175, 210 %%>;
 
-  moveX = <%% 138, 138, 138, 138, 138 %%>;
+  moveX = <%% 138, 138, 138, 138, 18 %%>;
 
   designerTongPaddingTop = <%% 30, 30, 30, 27, 30 %%>;
   deignserPhotoWidth = <%% 124, 124, 124, 110, 124 %%>;
@@ -197,7 +197,7 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
           display: "block",
           position: "relative",
           width: String(100) + '%',
-          height: desktop ? withOut(slideBarHeight + boxMargin, ea) : String(100) + '%',
+          height: withOut(slideBarHeight + boxMargin, ea),
           borderRadius: desktop ? String(5) + "px" : "",
           overflow: "hidden",
           background: colorChip.gray2,
@@ -206,21 +206,25 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
       {
         event: {
           mouseenter: (e) => {
-            if (photoSlideInterval !== null) {
-              clearInterval(photoSlideInterval);
-              photoSlideInterval = null;
+            if (desktop) {
+              if (photoSlideInterval !== null) {
+                clearInterval(photoSlideInterval);
+                photoSlideInterval = null;
+              }
             }
           },
           mouseleave: (e) => {
-            if (photoSlideInterval !== null) {
-              clearInterval(photoSlideInterval);
-              photoSlideInterval = null;
+            if (desktop) {
+              if (photoSlideInterval !== null) {
+                clearInterval(photoSlideInterval);
+                photoSlideInterval = null;
+              }
+              photoSlideInterval = setInterval(photoNextSlide, 3000);
             }
-            photoSlideInterval = setInterval(photoNextSlide, 3000);
           }
         },
         style: {
-          display: desktop ? "block" : "none",
+          display: "block",
           position: "relative",
           width: String(100) + '%',
           overflow: "hidden",
@@ -486,6 +490,8 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
 
   photoSlideInterval = setInterval(photoNextSlide, 3000);
 
+  // designer
+
   designerBox = createNode({
     mother: contentsBox,
     attribute: {
@@ -567,6 +573,8 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
       color: colorChip.deactive,
     }
   });
+
+  // title
 
   titleBox = createNode({
     mother: contentsBox,
