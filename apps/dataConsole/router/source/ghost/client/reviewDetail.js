@@ -1246,7 +1246,7 @@ ReviewDetailJs.prototype.relativeContents = function (contents, length) {
 
 ReviewDetailJs.prototype.reviewRelativeBox = function () {
   const instance = this;
-  const { createNode, colorChip, withOut, svgMaker, sleep, setQueue, equalJson, isMac, isIphone, selfHref, swipePatch } = GeneralJs;
+  const { createNode, colorChip, withOut, svgMaker, sleep, setQueue, equalJson, isMac, isIphone, selfHref, swipePatch, homeliaisonAnalytics, dateToString } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid, standardWidth } = this;
   const { contentsArr } = this;
   const mobile = media[4];
@@ -1459,6 +1459,17 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
         event: {
           click: function (e) {
             if (window.FB !== undefined) {
+              homeliaisonAnalytics({
+                page: instance.pageName,
+                standard: instance.firstPageViewTime,
+                action: "shareFacebook",
+                data: {
+                  href: window.encodeURIComponent(window.location.href),
+                  date: dateToString(new Date(), true),
+                },
+              }).catch((err) => {
+                console.log(err);
+              });
               window.FB.ui({
                 method: 'share',
                 href: window.location.href,
@@ -1479,38 +1490,36 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
         event: {
           click: function () {
             if (window.Kakao !== undefined) {
-              window.Kakao.Share.sendDefault({
-                objectType: 'feed',
-                content: {
-                  title: '딸기 치즈 케익',
-                  description: '#케익 #딸기 #삼평동 #카페 #분위기 #소개팅',
-                  imageUrl:
-                    'http://k.kakaocdn.net/dn/Q2iNx/btqgeRgV54P/VLdBs9cvyn8BJXB3o7N8UK/kakaolink40_original.png',
-                  link: {
-                    mobileWebUrl: 'https://developers.kakao.com',
-                    webUrl: 'https://developers.kakao.com',
-                  },
+              homeliaisonAnalytics({
+                page: instance.pageName,
+                standard: instance.firstPageViewTime,
+                action: "shareKaKao",
+                data: {
+                  href: window.encodeURIComponent(window.location.href),
+                  date: dateToString(new Date(), true),
                 },
-                social: {
-                  likeCount: 286,
-                  commentCount: 45,
-                  sharedCount: 845,
+              }).catch((err) => {
+                console.log(err);
+              });
+              window.Kakao.Share.sendDefault({
+                objectType: "feed",
+                content: {
+                  title: document.querySelector("title").textContent,
+                  description: [ ...document.querySelectorAll("meta") ].find((dom) => { return dom.getAttribute("property") === "og:description" }).getAttribute("content"),
+                  imageUrl: [ ...document.querySelectorAll("meta") ].find((dom) => { return dom.getAttribute("property") === "og:image" }).getAttribute("content"),
+                  link: {
+                    mobileWebUrl: window.location.href,
+                    webUrl: window.location.href,
+                  },
                 },
                 buttons: [
                   {
-                    title: '웹으로 보기',
+                    title: "웹으로 보기",
                     link: {
-                      mobileWebUrl: 'https://developers.kakao.com',
-                      webUrl: 'https://developers.kakao.com',
+                      mobileWebUrl: window.location.href,
+                      webUrl: window.location.href,
                     },
-                  },
-                  {
-                    title: '앱으로 보기',
-                    link: {
-                      mobileWebUrl: 'https://developers.kakao.com',
-                      webUrl: 'https://developers.kakao.com',
-                    },
-                  },
+                  }
                 ],
               });
             }
@@ -1531,6 +1540,17 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
         event: {
           click: async function (e) {
             try {
+              homeliaisonAnalytics({
+                page: instance.pageName,
+                standard: instance.firstPageViewTime,
+                action: "shareLink",
+                data: {
+                  href: window.encodeURIComponent(window.location.href),
+                  date: dateToString(new Date(), true),
+                },
+              }).catch((err) => {
+                console.log(err);
+              });
               await window.navigator.clipboard.writeText(window.location.href);
               window.alert("링크가 복사되었습니다!");
             } catch (e) {
@@ -2074,6 +2094,18 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
     let staticSetting;
     let imageRender;
 
+    homeliaisonAnalytics({
+      page: instance.pageName,
+      standard: instance.firstPageViewTime,
+      action: "photoBigView",
+      data: {
+        pid: pid,
+        date: dateToString(new Date(), true),
+      },
+    }).catch((err) => {
+      console.log(err);
+    });
+
     order = Number(this.getAttribute("order"));
     index = Number(this.getAttribute("index"));
     gs = this.getAttribute("gs");
@@ -2356,7 +2388,6 @@ ReviewDetailJs.prototype.launching = async function (loading) {
     setMetaData({
       title: this.contentsArr[0].contents.review.title.sub.replace(/,/gi, '') + " | 홈리에종",
       description: this.contentsArr[0].contents.review.contents.detail[0].contents.map((obj) => { return obj.answer }).join(""),
-      image: "/test.jpg",
       image: FRONTHOST + "/list_image/portp" + this.pid + "/b" + String(this.contentsArr[0].contents.review.detailInfo.photodae[1]) + this.pid + ".jpg",
     });
 

@@ -1491,13 +1491,18 @@ PortfolioDetailJs.prototype.relativeContents = function (contents, length) {
 
 PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
   const instance = this;
-  const { createNode, colorChip, withOut, svgMaker, sleep, setQueue, equalJson, isMac, isIphone, selfHref, serviceParsing } = GeneralJs;
+  const { createNode, colorChip, withOut, svgMaker, sleep, setQueue, equalJson, isMac, isIphone, selfHref, serviceParsing, swipePatch, homeliaisonAnalytics, dateToString } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid, standardWidth } = this;
   const { contentsArr } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const contents = contentsArr.toNormal().filter((obj) => { return obj.contents.portfolio.pid === pid })[0];
   const touchStartConst = "touchStartConstName";
+  const photoTouchStartConst = "photoTouchStartConst";
+  const photoChar = 't';
+  const photoCharMobile = "mot";
+  const photoDefaultRatio = (297 / 210);
+  const whitePhotoBigClassName = "whitePhotoBigClassName";
   let mainTong;
   let photoTong;
   let baseWidth;
@@ -1558,6 +1563,23 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
   let subArrowHeight;
   let subArrowBottom;
   let subArrowReviewBottom;
+  let shareTong, shareBaseTong;
+  let shareTongHeight;
+  let shareIconHeight;
+  let shareIconBetween0, shareIconBetween1;
+  let previousNextSize, previousNextWeight, previousNextTextTop, previousNextLeftRight;
+  let whitePhotoTong;
+  let photoSrc;
+  let photoBetween;
+  let whitePhotoTongInnerPadding;
+  let whitePhotoHeight;
+  let whitePhotoNumbers;
+  let whitePhotoTongMarginBottom;
+  let whitePopupBigPadding;
+  let whitePhotoBigArrowHeight;
+  let whitePhotoBigArrowAreaHeight;
+  let whitePhotoEvent;
+  let rightArrowEvent, leftArrowEvent;
 
   this.relativePhotoNumber = 0;
 
@@ -1634,6 +1656,231 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
   subArrowBottom = <%% 3, 3, 3, 2, 1 %%>;
   subArrowReviewBottom = <%% 4, 4, 4, 3, 1.5 %%>;
 
+  shareTongHeight = <%% 100, 100, 96, 90, 13 %%>;
+  shareIconHeight = <%% 19, 19, 18, 18, 3.6 %%>;
+
+  shareIconBetween0 = <%% 34, 34, 34, 34, 5.4 %%>;
+  shareIconBetween1 = <%% 30, 30, 30, 30, 5 %%>;
+
+  previousNextSize = <%% 16, 16, 15, 14, 3 %%>;
+  previousNextWeight = <%% 500, 500, 500, 500, 500 %%>;
+  previousNextTextTop = <%% 36, 36, 34, 33, 3.9 %%>;
+  previousNextLeftRight = baseBetween / 2;
+
+  photoBetween = <%% 8, 8, 7, 6, 1 %%>;
+  whitePhotoTongInnerPadding = <%% 36, 36, 32, 30, 3 %%>;
+  whitePhotoHeight = <%% 210, 210, 170, 133, 24 %%>;
+  whitePhotoNumbers = <%% 8, 6, 6, 6, 4 %%>;
+  whitePhotoTongMarginBottom = <%% 10, 10, 10, 10, 1 %%>;
+  whitePopupBigPadding = <%% 64, 64, 64, 64, 28 %%>;
+  whitePhotoBigArrowHeight = <%% 15, 15, 15, 15, 2 %%>;
+  whitePhotoBigArrowAreaHeight = <%% 200, 200, 200, 200, 20 %%>;
+
+  // share
+
+  shareTong = createNode({
+    mother: totalContents,
+    style: {
+      display: "block",
+      position: "relative",
+      width: withOut(0),
+      background: colorChip.gray2,
+      height: String(shareTongHeight) + ea,
+    }
+  });
+
+  shareBaseTong = createNode({
+    mother: shareTong,
+    style: {
+      display: "flex",
+      flexDirection: "row",
+      position: "relative",
+      width: String(standardWidth) + ea,
+      height: withOut(0, ea),
+      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    children: [
+      {
+        mode: "svg",
+        source: svgMaker.facebookIcon(colorChip.black),
+        event: {
+          click: function (e) {
+            if (window.FB !== undefined) {
+              homeliaisonAnalytics({
+                page: instance.pageName,
+                standard: instance.firstPageViewTime,
+                action: "shareFacebook",
+                data: {
+                  href: window.encodeURIComponent(window.location.href),
+                  date: dateToString(new Date(), true),
+                },
+              }).catch((err) => {
+                console.log(err);
+              });
+              window.FB.ui({
+                method: "share",
+                href: window.location.href,
+              }, (response) => {});
+            }
+          }
+        },
+        style: {
+          display: "inline-block",
+          position: "relative",
+          height: String(shareIconHeight) + ea,
+          cursor: "pointer",
+        }
+      },
+      {
+        mode: "svg",
+        source: svgMaker.talkIcon(colorChip.black),
+        event: {
+          click: function () {
+            if (window.Kakao !== undefined) {
+              homeliaisonAnalytics({
+                page: instance.pageName,
+                standard: instance.firstPageViewTime,
+                action: "shareKaKao",
+                data: {
+                  href: window.encodeURIComponent(window.location.href),
+                  date: dateToString(new Date(), true),
+                },
+              }).catch((err) => {
+                console.log(err);
+              });
+              window.Kakao.Share.sendDefault({
+                objectType: "feed",
+                content: {
+                  title: document.querySelector("title").textContent,
+                  description: [ ...document.querySelectorAll("meta") ].find((dom) => { return dom.getAttribute("property") === "og:description" }).getAttribute("content"),
+                  imageUrl: [ ...document.querySelectorAll("meta") ].find((dom) => { return dom.getAttribute("property") === "og:image" }).getAttribute("content"),
+                  link: {
+                    mobileWebUrl: window.location.href,
+                    webUrl: window.location.href,
+                  },
+                },
+                buttons: [
+                  {
+                    title: "웹으로 보기",
+                    link: {
+                      mobileWebUrl: window.location.href,
+                      webUrl: window.location.href,
+                    },
+                  }
+                ],
+              });
+            }
+          }
+        },
+        style: {
+          display: "inline-block",
+          position: "relative",
+          height: String(shareIconHeight) + ea,
+          marginLeft: String(shareIconBetween0) + ea,
+          marginRight: String(shareIconBetween1) + ea,
+          cursor: "pointer",
+        }
+      },
+      {
+        mode: "svg",
+        source: svgMaker.linkIcon(colorChip.black),
+        event: {
+          click: async function (e) {
+            try {
+              homeliaisonAnalytics({
+                page: instance.pageName,
+                standard: instance.firstPageViewTime,
+                action: "shareLink",
+                data: {
+                  href: window.encodeURIComponent(window.location.href),
+                  date: dateToString(new Date(), true),
+                },
+              }).catch((err) => {
+                console.log(err);
+              });
+              await window.navigator.clipboard.writeText(window.location.href);
+              window.alert("링크가 복사되었습니다!");
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        },
+        style: {
+          display: "inline-block",
+          position: "relative",
+          height: String(shareIconHeight) + ea,
+          cursor: "pointer",
+        }
+      },
+      {
+        text: "previous",
+        event: {
+          click: function (e) {
+            const entireContents = instance.contentsArr.toNormal();
+            const entireContentsLength = entireContents.length;
+            let thisContentsIndex;
+            let previousIndex;
+            let newLink;
+            thisContentsIndex = entireContents.findIndex((obj) => { return obj.contents.portfolio.pid === pid });
+            if (thisContentsIndex === entireContentsLength - 1) {
+              previousIndex = thisContentsIndex;
+            } else {
+              previousIndex = thisContentsIndex + 1;
+            }
+            newLink = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search.replace(new RegExp("pid=" + pid, "gi"), "pid=" + entireContents[previousIndex].contents.portfolio.pid);
+            selfHref(newLink);
+          }
+        },
+        style: {
+          display: "inline-block",
+          position: "absolute",
+          fontSize: String(previousNextSize) + ea,
+          fontWeight: String(previousNextWeight),
+          color: colorChip.darkDarkShadow,
+          fontFamily: "graphik",
+          top: String(previousNextTextTop) + ea,
+          left: String(previousNextLeftRight) + ea,
+          cursor: "pointer",
+        }
+      },
+      {
+        text: "next",
+        event: {
+          click: function (e) {
+            const entireContents = instance.contentsArr.toNormal();
+            const entireContentsLength = entireContents.length;
+            let thisContentsIndex;
+            let nextIndex;
+            let newLink;
+            thisContentsIndex = entireContents.findIndex((obj) => { return obj.contents.portfolio.pid === pid });
+            if (thisContentsIndex === 0) {
+              nextIndex = 0;
+            } else {
+              nextIndex = thisContentsIndex - 1;
+            }
+            newLink = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search.replace(new RegExp("pid=" + pid, "gi"), "pid=" + entireContents[nextIndex].contents.portfolio.pid);
+            selfHref(newLink);
+          }
+        },
+        style: {
+          display: "inline-block",
+          position: "absolute",
+          fontSize: String(previousNextSize) + ea,
+          fontWeight: String(previousNextWeight),
+          color: colorChip.darkDarkShadow,
+          fontFamily: "graphik",
+          top: String(previousNextTextTop) + ea,
+          right: String(previousNextLeftRight) + ea,
+          cursor: "pointer",
+        }
+      },
+    ]
+  });
+
+  // relative
+
   mainTong = createNode({
     mother: totalContents,
     style: {
@@ -1641,8 +1888,8 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
       position: "relative",
       width: String(100) + '%',
       background: colorChip.gray0,
-      height: String(mainHeight) + ea,
       paddingTop: String(mainPaddingTop) + ea,
+      paddingBottom: String(mainPaddingTop) + ea,
     }
   });
 
@@ -2053,11 +2300,315 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
       console.log(e);
     }
   }, 1000);
+
+  // photo
+
+  createNode({
+    mother: baseTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      height: String(titleHeight) + ea,
+      marginBottom: String(titleMarginBottom) + ea,
+      marginTop: String(mainPaddingTop) + ea,
+      textAlign: "center",
+    },
+    children: [
+      {
+        style: {
+          position: "absolute",
+          width: withOut(baseBetween, ea),
+          height: String(titleLineHeight) + ea,
+          top: String(0),
+          left: String(baseBetween / 2) + ea,
+          borderBottom: "1px dashed " + colorChip.gray3,
+        }
+      },
+      {
+        text: "사진 모아 보기",
+        style: {
+          fontSize: String(mainTitleSize) + ea,
+          fontWeight: String(mainTitleWeight),
+          color: colorChip.black,
+          display: "inline-block",
+          background: colorChip.gray0,
+          position: "absolute",
+          top: String(mainTitleTop) + ea,
+          textAlign: "center",
+          width: String(mainTitleWidth) + ea,
+          left: "calc(50% - " + String(mainTitleWidth / 2) + ea + ")",
+        }
+      }
+    ]
+  });
+
+  whitePhotoTong = createNode({
+    mother: baseTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: withOut(baseBetween + (whitePhotoTongInnerPadding * 2) - photoBetween, ea),
+      marginLeft: String(baseBetween / 2) + ea,
+      background: colorChip.white,
+      borderRadius: String(5) + "px",
+      marginBottom: String(whitePhotoTongMarginBottom) + ea,
+      paddingTop: String(whitePhotoTongInnerPadding) + ea,
+      paddingLeft: String(whitePhotoTongInnerPadding) + ea,
+      paddingRight: String(whitePhotoTongInnerPadding - photoBetween) + ea,
+      paddingBottom: String(whitePhotoTongInnerPadding - photoBetween) + ea,
+    }
+  });
+
+  whitePhotoEvent = function (e) {
+    const zIndex = 101;
+    let order, index, gs;
+    let cancelBack, imagePopup, leftArrow, rightArrow;
+    let width, height;
+    let src;
+    let staticSetting;
+    let imageRender;
+
+    homeliaisonAnalytics({
+      page: instance.pageName,
+      standard: instance.firstPageViewTime,
+      action: "photoBigView",
+      data: {
+        pid: pid,
+        date: dateToString(new Date(), true),
+      },
+    }).catch((err) => {
+      console.log(err);
+    });
+
+    order = Number(this.getAttribute("order"));
+    index = Number(this.getAttribute("index"));
+    gs = this.getAttribute("gs");
+
+    staticSetting = (order, index, gs) => {
+      src = FRONTHOST + "/list_image/portp" + pid + "/" + photoChar + String(index) + pid + ".jpg";
+
+      height = window.innerHeight - (whitePopupBigPadding * 2);
+      if (gs === 'g') {
+        width = height * photoDefaultRatio;
+      } else {
+        width = height / photoDefaultRatio;
+      }
+
+      if (width > window.innerWidth - (whitePopupBigPadding * 2)) {
+        width = window.innerWidth - (whitePopupBigPadding * 2);
+        if (gs === 'g') {
+          height = width / photoDefaultRatio;
+        } else {
+          height = width * photoDefaultRatio;
+        }
+      }
+    }
+
+    staticSetting(order, index, gs);
+
+    leftArrowEvent = (e) => {
+      let previousObj;
+      if (contents.photos.detail[order - 1] === undefined) {
+        previousObj = contents.photos.detail[contents.photos.detail.length - 1];
+      } else {
+        previousObj = contents.photos.detail[order - 1];
+      }
+      order = previousObj.index - 1;
+      index = previousObj.index;
+      gs = previousObj.gs;
+      staticSetting(order, index, gs);
+      imageRender(width, height, src);
+    }
+
+    rightArrowEvent = (e) => {
+      let nextObj;
+      if (contents.photos.detail[order + 1] === undefined) {
+        nextObj = contents.photos.detail[0];
+      } else {
+        nextObj = contents.photos.detail[order + 1];
+      }
+      order = nextObj.index - 1;
+      index = nextObj.index;
+      gs = nextObj.gs;
+      staticSetting(order, index, gs);
+      imageRender(width, height, src);
+    }
+
+    cancelBack = createNode({
+      mother: totalContents,
+      class: [ whitePhotoBigClassName ],
+      event: {
+        click: function (e) {
+          e.stopPropagation();
+          const removeTargets = document.querySelectorAll('.' + whitePhotoBigClassName);
+          for (let dom of removeTargets) {
+            dom.remove();
+          }
+        }
+      },
+      style: {
+        position: "fixed",
+        top: String(0),
+        left: String(0),
+        opacity: String(0.7),
+        background: colorChip.realBlack,
+        width: withOut(0),
+        height: withOut(0),
+        zIndex: String(zIndex),
+      }
+    });
+
+    imagePopup = createNode({
+      mother: totalContents,
+      class: [ whitePhotoBigClassName ],
+      event: {
+        contextmenu: function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        },
+      },
+      style: {
+        position: "fixed",
+        borderRadius: String(5) + "px",
+        zIndex: String(zIndex),
+        animation: "fadeuporiginal 0.3s ease forwards",
+        backgroundSize: "100% 100%",
+        backgroundPosition: "50% 50%",
+        transition: "all 0s ease",
+      }
+    });
+
+    swipePatch("right", rightArrowEvent, imagePopup, "imagePopupSwipeStack_");
+    swipePatch("up", rightArrowEvent, imagePopup, "imagePopupSwipeStack_");
+    swipePatch("left", leftArrowEvent, imagePopup, "imagePopupSwipeStack_");
+    swipePatch("down", leftArrowEvent, imagePopup, "imagePopupSwipeStack_");
+
+    imageRender = (width, height, src) => {
+      imagePopup.style.width = String(width) + "px";
+      imagePopup.style.height = String(height) + "px";
+      imagePopup.style.top = withOut(50, height / 2, "px");
+      imagePopup.style.left = withOut(50, width / 2, "px");
+      imagePopup.style.backgroundImage = "url('" + src + "')";
+    }
+
+    imageRender(width, height, src);
+
+    leftArrow = createNode({
+      mother: totalContents,
+      class: [ whitePhotoBigClassName ],
+      event: {
+        click: leftArrowEvent
+      },
+      style: {
+        position: "fixed",
+        top: withOut(50, whitePhotoBigArrowAreaHeight / 2, ea),
+        height: String(whitePhotoBigArrowAreaHeight) + ea,
+        left: String(0),
+        width: String(whitePopupBigPadding) + "px",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        cursor: "pointer",
+        zIndex: String(zIndex),
+      },
+      children: [
+        {
+          mode: "svg",
+          source: instance.mother.returnArrow("left", colorChip.white),
+          style: {
+            position: "relative",
+            height: String(whitePhotoBigArrowHeight) + ea,
+            animation: "fadeuporiginal 0.3s ease forwards",
+          }
+        }
+      ]
+    });
+
+    rightArrow = createNode({
+      mother: totalContents,
+      class: [ whitePhotoBigClassName ],
+      event: {
+        click: rightArrowEvent
+      },
+      style: {
+        position: "fixed",
+        top: withOut(50, whitePhotoBigArrowAreaHeight / 2, ea),
+        height: String(whitePhotoBigArrowAreaHeight) + ea,
+        right: String(0),
+        width: String(whitePopupBigPadding) + "px",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        cursor: "pointer",
+        zIndex: String(zIndex),
+      },
+      children: [
+        {
+          mode: "svg",
+          source: instance.mother.returnArrow("right", colorChip.white),
+          style: {
+            position: "relative",
+            height: String(whitePhotoBigArrowHeight) + ea,
+            animation: "fadeuporiginal 0.3s ease forwards",
+          }
+        }
+      ]
+    });
+
+  }
+
+  for (let { index, gs } of contents.photos.detail) {
+    if (desktop) {
+      photoSrc = FRONTHOST + "/list_image/portp" + pid + "/" + photoChar + String(index) + pid + ".jpg";
+    } else {
+      photoSrc = FRONTHOST + "/list_image/portp" + pid + "/mobile/" + photoCharMobile + String(index) + pid + ".jpg";
+    }
+
+    createNode({
+      mother: whitePhotoTong,
+      attribute: {
+        order: String(index - 1),
+        index: String(index),
+        gs,
+        pid,
+      },
+      event: {
+        click: whitePhotoEvent,
+        touchstart: function (e) {
+          const self = this;
+          self.setAttribute(photoTouchStartConst, "on");
+          setQueue(() => {
+            self.setAttribute(photoTouchStartConst, "off");
+          });
+        },
+        touchend: function (e) {
+          if (this.getAttribute(photoTouchStartConst) === "on") {
+            whitePhotoEvent.call(this, e);
+          }
+        }
+      },
+      style: {
+        display: "inline-block",
+        width: gs === "s" ? "calc(calc(100% - " + String(photoBetween * whitePhotoNumbers) + ea + ") / " + String(whitePhotoNumbers) + ")" : "calc(calc(calc(calc(100% - " + String(photoBetween * whitePhotoNumbers) + ea + ") / " + String(whitePhotoNumbers) + ") * 2) + " + String(photoBetween) + ea + ")",
+        height: String(whitePhotoHeight) + ea,
+        marginRight: String(photoBetween) + ea,
+        marginBottom: String(photoBetween) + ea,
+        backgroundImage: "url('" + photoSrc + "')",
+        backgroundSize: gs === "s" ? "auto 100%" : "100% auto",
+        backgroundPosition: "50% 50%",
+        borderRadius: String(3) + "px",
+        cursor: "pointer",
+      }
+    });
+
+  }
+
 }
 
 PortfolioDetailJs.prototype.launching = async function (loading) {
   const instance = this;
-  const { returnGet, ajaxJson, setQueue, setDebounce } = GeneralJs;
+  const { returnGet, ajaxJson, setQueue, setDebounce, facebookSdkPatch, kakaoSdkPatch, setMetaData } = GeneralJs;
   try {
     this.mother.setGeneralProperties(this);
 
@@ -2098,12 +2649,18 @@ PortfolioDetailJs.prototype.launching = async function (loading) {
     }
     this.pid = pid;
 
-    response = await ajaxJson({ mode: "review", pid }, LOGHOST + "/getContents", { equal: true });
+    response = await ajaxJson({ mode: "portfolio", pid }, LOGHOST + "/getContents", { equal: true });
     this.contentsArr = new SearchArray(response.contentsArr);
     this.designers = new SearchArray(response.designers);
     this.fullLoad = false;
     this.photoLoad = false;
     this.loadedContents = [];
+
+    setMetaData({
+      title: this.contentsArr[0].contents.portfolio.title.sub.split(', ')[1] + " | 홈리에종",
+      description: this.contentsArr[0].contents.portfolio.contents.detail[0].contents,
+      image: FRONTHOST + "/list_image/portp" + this.pid + "/b" + String(this.contentsArr[0].contents.portfolio.detailInfo.photodae[1]) + this.pid + ".jpg",
+    });
 
     await this.mother.ghostClientLaunching({
       mode: "front",
@@ -2130,7 +2687,12 @@ PortfolioDetailJs.prototype.launching = async function (loading) {
     loading.parentNode.removeChild(loading);
 
     setQueue(() => {
-      ajaxJson({ mode: "review" }, LOGHOST + "/getContents", { equal: true }).then((response) => {
+      facebookSdkPatch().then(() => {
+        return kakaoSdkPatch();
+      }).catch((err) => {
+        console.log(err);
+      });
+      ajaxJson({ mode: "portfolio" }, LOGHOST + "/getContents", { equal: true }).then((response) => {
         instance.contentsArr = new SearchArray(response.contentsArr);
         instance.designers = new SearchArray(response.designers);
         instance.fullLoad = true;

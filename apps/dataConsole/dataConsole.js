@@ -573,20 +573,20 @@ DataConsole.prototype.renderFrontPhp = async function () {
   try {
     await this.renderMiddleStatic(staticFolder, address.backinfo, DataPatch, DataMiddle, true);
     const targetMap = [
-      // { from: "clientConsulting", to: "consulting", path: "/middle/consulting" },
-      // { from: "aspirantExplanation", to: "aspirant", path: "/middle/aspirantExplanation" },
-      // { from: "frontIndex", to: "index", path: "/middle/frontIndex" },
-      // { from: "portfolioList", to: "portfolio", path: "/middle/portfolioList" },
-      // { from: "portfolioDetail", to: "portdetail", path: "/middle/portfolioDetail" },
-      // { from: "reviewList", to: "review", path: "/middle/reviewList" },
-      // { from: "reviewDetail", to: "revdetail", path: "/middle/reviewDetail" },
-      // { from: "designerList", to: "designer", path: "/middle/designerList" },
-      // { from: "designerDetail", to: "desdetail", path: "/middle/designerDetail" },
-      // { from: "frontAbout", to: "about", path: "/middle/frontAbout" },
-      // { from: "frontFaq", to: "faq", path: "/middle/frontFaq" },
+      { from: "clientConsulting", to: "consulting", path: "/middle/consulting" },
+      { from: "aspirantExplanation", to: "aspirant", path: "/middle/aspirantExplanation" },
+      { from: "frontIndex", to: "index", path: "/middle/frontIndex" },
+      { from: "portfolioList", to: "portfolio", path: "/middle/portfolioList" },
+      { from: "portfolioDetail", to: "portdetail", path: "/middle/portfolioDetail" },
+      { from: "reviewList", to: "review", path: "/middle/reviewList" },
+      { from: "reviewDetail", to: "revdetail", path: "/middle/reviewDetail" },
+      { from: "designerList", to: "designer", path: "/middle/designerList" },
+      { from: "designerDetail", to: "desdetail", path: "/middle/designerDetail" },
+      { from: "frontAbout", to: "about", path: "/middle/frontAbout" },
+      { from: "frontFaq", to: "faq", path: "/middle/frontFaq" },
       { from: "frontTerms", to: "terms", path: "/middle/frontTerms" },
-      // { from: "frontNotfound", to: "notfound", path: "/middle/frontNotfound" },
-      // { from: "miniAbout", to: "miniAbout", path: "/middle/miniAbout" },
+      { from: "frontNotfound", to: "notfound", path: "/middle/frontNotfound" },
+      { from: "miniAbout", to: "miniAbout", path: "/middle/miniAbout" },
     ];
     const ghostTargets = (await fileSystem(`readDir`, [ ghostDir + "/client" ])).filter((str) => { return str !== ".DS_Store" }).filter((str) => {
       const fromArr = targetMap.map((obj) => { return obj.from });
