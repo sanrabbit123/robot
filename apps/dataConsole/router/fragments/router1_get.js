@@ -246,6 +246,8 @@ DataRouter.prototype.rou_get_First = function () {
             target = "file";
           } else if (/^use/i.test(req.params.id)) {
             target = "user";
+          } else if (/^ana/i.test(req.params.id)) {
+            target = "analytics";
           } else {
             target = "dashboard";
           }
