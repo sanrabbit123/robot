@@ -24,7 +24,7 @@ AnalyticsJs.prototype.baseMaker = function () {
   margin = 40;
   columnsMargin = 8;
 
-  fontSize = 17;
+  fontSize = 16;
   fontWeight = 400;
   fontBoldWeight = 600;
   textTop = isMac() ? -2 : 0;
@@ -146,10 +146,13 @@ AnalyticsJs.prototype.launching = async function () {
     let historyAverageArr;
     let inputArr;
     let loginArr;
-    let timeArr;
     let mobileArr;
     let sum, average;
     let userLength;
+    let aboutArr;
+    let portfolioArr;
+    let reviewArr;
+    let designerArr;
 
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
@@ -202,8 +205,11 @@ AnalyticsJs.prototype.launching = async function () {
     popupArr = [];
     inputArr = [];
     loginArr = [];
-    timeArr = [];
     mobileArr = [];
+    aboutArr = [];
+    portfolioArr = [];
+    reviewArr = [];
+    designerArr = [];
     for (let str of standard) {
       [ year, month, date ] = str.split('-');
       year = Number(year);
@@ -235,22 +241,17 @@ AnalyticsJs.prototype.launching = async function () {
 
       if (userLength !== 0) {
         userArr.push(userLength);
-        timeArr.push(Math.round(Object.values(userObj).map((arr) => {
-          if (arr.length === 1) {
-            return 0;
-          } else {
-            arr.sort((a, b) => { return a.date.now.valueOf() - b.date.now.valueOf() });
-            return Math.round((((arr[arr.length - 1].date.now.valueOf() - arr[0].date.now.valueOf()) / 1000) / 60) * 100) / 100;
-          }
-        }).reduce((curr, acc) => { return curr + acc }, 0) / userLength))
         mobileArr.push(Math.round((Object.values(userObj).filter((arr) => { return arr[0].network.mobile }).length * 100) / userLength));
         historyAverageArr.push(Math.floor(Object.values(userObj).map((arr) => { return arr.length }).reduce((curr, acc) => { return curr + acc }, 0) / userLength));
       } else {
         userArr.push(0);
-        timeArr.push(0);
         mobileArr.push(0);
         historyAverageArr.push(0);
       }
+      aboutArr.push(target.filter((obj) => { return /about/gi.test(obj.data.page) && obj.data.action === "pageInit"; }).length);
+      portfolioArr.push(target.filter((obj) => { return /portfolio/gi.test(obj.data.page) && obj.data.action === "pageInit"; }).length);
+      reviewArr.push(target.filter((obj) => { return /review/gi.test(obj.data.page) && obj.data.action === "pageInit"; }).length);
+      designerArr.push(target.filter((obj) => { return /designer/gi.test(obj.data.page) && obj.data.action === "pageInit"; }).length);
       consultingArr.push(target.filter((obj) => { return obj.data.page === "clientConsulting" && obj.data.action === "pageInit"; }).length);
       popupArr.push(target.filter((obj) => { return obj.data.action === "popupOpen"; }).length);
       inputArr.push(Object.values(userObj).filter((arr) => { return arr.map((obj) => { return obj.data.action }).includes("inputBlur") }).length);
@@ -270,12 +271,6 @@ AnalyticsJs.prototype.launching = async function () {
     userArr.push(average);
     userArr.unshift("사용자");
 
-    sum = timeArr.reduce((curr, acc) => { return curr + acc }, 0);
-    average = Math.round(sum / timeArr.length);
-    timeArr.push('-');
-    timeArr.push(average);
-    timeArr.unshift("평균 시간");
-
     sum = mobileArr.reduce((curr, acc) => { return curr + acc }, 0);
     average = Math.round(sum / mobileArr.length);
     mobileArr.push('-');
@@ -287,6 +282,30 @@ AnalyticsJs.prototype.launching = async function () {
     historyAverageArr.push('-');
     historyAverageArr.push(average);
     historyAverageArr.unshift("평균 이벤트");
+
+    sum = aboutArr.reduce((curr, acc) => { return curr + acc }, 0);
+    average = Math.round(sum / aboutArr.length);
+    aboutArr.push(sum);
+    aboutArr.push(average);
+    aboutArr.unshift("어바웃 페이지");
+
+    sum = portfolioArr.reduce((curr, acc) => { return curr + acc }, 0);
+    average = Math.round(sum / portfolioArr.length);
+    portfolioArr.push(sum);
+    portfolioArr.push(average);
+    portfolioArr.unshift("포트폴리오 페이지");
+
+    sum = reviewArr.reduce((curr, acc) => { return curr + acc }, 0);
+    average = Math.round(sum / reviewArr.length);
+    reviewArr.push(sum);
+    reviewArr.push(average);
+    reviewArr.unshift("리뷰 페이지");
+
+    sum = designerArr.reduce((curr, acc) => { return curr + acc }, 0);
+    average = Math.round(sum / designerArr.length);
+    designerArr.push(sum);
+    designerArr.push(average);
+    designerArr.unshift("디자이너 페이지");
 
     sum = consultingArr.reduce((curr, acc) => { return curr + acc }, 0);
     average = Math.round(sum / consultingArr.length);
@@ -314,9 +333,12 @@ AnalyticsJs.prototype.launching = async function () {
 
     matrix.push(eventArr.map((number) => { return typeof number === "number" ? `${autoComma(number)} <b%회%b>` : number; }));
     matrix.push(userArr.map((number) => { return typeof number === "number" ? `${autoComma(number)} <b%명%b>` : number; }));
-    matrix.push(timeArr.map((number) => { return typeof number === "number" ? `${String(number)} <b%분%b>` : number; }));
     matrix.push(mobileArr.map((number) => { return typeof number === "number" ? `${String(number)} <b%%%b>` : number; }));
     matrix.push(historyAverageArr.map((number) => { return typeof number === "number" ? `${autoComma(number)} <b%회%b>` : number; }));
+    matrix.push(aboutArr.map((number) => { return typeof number === "number" ? `${autoComma(number)} <b%회%b>` : number; }));
+    matrix.push(portfolioArr.map((number) => { return typeof number === "number" ? `${autoComma(number)} <b%회%b>` : number; }));
+    matrix.push(reviewArr.map((number) => { return typeof number === "number" ? `${autoComma(number)} <b%회%b>` : number; }));
+    matrix.push(designerArr.map((number) => { return typeof number === "number" ? `${autoComma(number)} <b%회%b>` : number; }));
     matrix.push(consultingArr.map((number) => { return typeof number === "number" ? `${autoComma(number)} <b%회%b>` : number; }));
     matrix.push(popupArr.map((number) => { return typeof number === "number" ? `${autoComma(number)} <b%회%b>` : number; }));
     matrix.push(inputArr.map((number) => { return typeof number === "number" ? `${autoComma(number)} <b%명%b>` : number; }));
