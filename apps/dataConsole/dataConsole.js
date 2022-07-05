@@ -11,64 +11,9 @@ const DataConsole = function () {
   this.middleModuleDir = this.middleDir + "/module";
 }
 
-DataConsole.prototype.mediaQuery = function (code) {
-  const conditions = [
-    "window.innerWidth > 1450",
-    "window.innerWidth <= 1450 && window.innerWidth > 1100",
-    "window.innerWidth <= 1100 && window.innerWidth > 900",
-    "window.innerWidth <= 900 && window.innerWidth > 760",
-    "window.innerWidth <= 760"
-  ];
-  const updateProtoConst = "GeneralJs.stacks.updateMiddleMedialQueryConditions";
-  const matchReg = /[\n;]([^\n\;]*)\<\%\%([^\%]+)\%\%\>[;]?/g;
-  const replacer = function (match, p1, p2, offset, string) {
-    const safeWall = "\n\n";
-    let tempValue, tempArr, tempStr;
-
-    tempValue = p1.replace(/[\n;]/g, '').replace(/\<\%\%/g, '').trim();
-    tempArr = p2.replace(/\<\%\%/g, '').replace(/\%\%\>/g, '').trim().split(",");
-    tempStr = "";
-    if (tempArr.length > conditions.length) {
-      throw new Error("parse error");
-    }
-    for (let j = 0; j < tempArr.length; j++) {
-      tempStr += " } else if (" + conditions[j] + ") { ";
-      tempStr += "\n"
-      tempStr += tempValue;
-      tempStr += " ";
-      tempStr += tempArr[j];
-      tempStr += ";\n";
-    }
-    tempStr = safeWall + tempStr.slice(7) + " }" + safeWall;
-    return tempStr;
-  }
-  let updateProto;
-
-  updateProto = '';
-  updateProto += updateProtoConst;
-  updateProto += " = ";
-  updateProto += "[";
-  for (let i of conditions) {
-    updateProto += "(";
-    updateProto += i;
-    updateProto += "),";
-  }
-  updateProto += "];\n";
-
-  code = code.replace(matchReg, replacer);
-  code = code.replace(/\<\&\&([^\&]+)\&\&\>/g, (match, p1) => {
-    let tempValue, tempArr, tempStr;
-    tempArr = p1.replace(/\<\&\&/g, '').replace(/\&\&\>/g, '').trim().split("|");
-    tempArr = tempArr.map((str) => { return str.trim(); });
-    return `(${conditions[0]} ? ${tempArr[0]} : (${conditions[1]} ? ${tempArr[1]} : (${conditions[2]} ? ${tempArr[2]} : (${conditions[3]} ? ${tempArr[3]} : ${tempArr[4]}))))`;
-  });
-
-  return { conditions: updateProto, code };
-}
-
 DataConsole.prototype.renderStatic = async function (staticFolder, address, DataPatch) {
   const instance = this;
-  const { fileSystem, shell, shellLink, sleep } = this.mother;
+  const { fileSystem, shell, shellLink, sleep, mediaQuery } = this.mother;
   const S3HOST = this.address.homeinfo.ghost.protocol + "://" + this.address.homeinfo.ghost.host;
   const SSEHOST = address.host;
   const SSEHOST_CONSOLE = this.address.backinfo.host;
@@ -145,7 +90,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
       });
       tempScriptString = tempScriptString.replace(/\.prototype\.launching = /g, ".prototype.launching_pastFunction = ");
       if (/<%%/gi.test(tempScriptString)) {
-        tempMediaResult = this.mediaQuery(tempScriptString);
+        tempMediaResult = mediaQuery(tempScriptString);
         tempScriptString = tempMediaResult.conditions + "\n\n" + tempMediaResult.code;
       }
       while (!(await fileSystem(`exist`, [ `${staticFolder}/${moduleName}/${i.replace(/\.js/gi, '')}` ]))) {
@@ -161,7 +106,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
         for (let subFile of subModuleList) {
           tempScriptString = await fileSystem(`readString`, [ `${staticDir}/${moduleName}/${i.replace(/\.js/gi, '')}/${subFile}` ]);
           if (/<%%/gi.test(tempScriptString)) {
-            tempMediaResult = this.mediaQuery(tempScriptString);
+            tempMediaResult = mediaQuery(tempScriptString);
             tempScriptString = tempMediaResult.conditions + "\n\n" + tempMediaResult.code;
           }
           await fileSystem(`write`, [ `${staticFolder}/${moduleName}/${i.replace(/\.js/gi, '')}/${subFile}`, tempScriptString ]);
@@ -234,11 +179,11 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
 
       //set media query
       if (/<%%/gi.test(code2)) {
-        tempMediaResult = this.mediaQuery(code2);
+        tempMediaResult = mediaQuery(code2);
         code2 = tempMediaResult.code;
       }
       if (/<%%/gi.test(code3)) {
-        tempMediaResult = this.mediaQuery(code3);
+        tempMediaResult = mediaQuery(code3);
         code3 = tempMediaResult.conditions + "\n\n" + tempMediaResult.code;
       }
 
@@ -271,7 +216,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
 
 DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address, DataPatch, DataMiddle, mini = false) {
   const instance = this;
-  const { fileSystem, shell, shellLink, treeParsing } = this.mother;
+  const { fileSystem, shell, shellLink, treeParsing, mediaQuery } = this.mother;
   const { minify } = require("terser");
   const S3HOST = this.address.homeinfo.ghost.protocol + "://" + this.address.homeinfo.ghost.host;
   const SSEHOST = address.host;
@@ -483,12 +428,12 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
       //set media query
       generalMediaBoo = false;
       if (/<%%/gi.test(code2)) {
-        tempMediaResult = this.mediaQuery(code2);
+        tempMediaResult = mediaQuery(code2);
         code2 = tempMediaResult.code + "\n\n" + tempMediaResult.conditions;
         generalMediaBoo = true;
       }
       if (/<%%/gi.test(code3)) {
-        tempMediaResult = this.mediaQuery(code3);
+        tempMediaResult = mediaQuery(code3);
         if (generalMediaBoo) {
           code3 = tempMediaResult.code;
         } else {

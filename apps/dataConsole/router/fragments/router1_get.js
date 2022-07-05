@@ -373,6 +373,41 @@ DataRouter.prototype.rou_get_Trigger = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_get_Patch = function () {
+  const instance = this;
+  const { fileSystem } = this.mother;
+  let obj = {};
+  obj.link = "/patch/:key";
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      let target, stream;
+      if (typeof req.query.directory === "string") {
+        target = instance.dir + "/router/source/patch/" + req.query.directory + "/" + req.params.key + ".js";
+      } else {
+        target = instance.dir + "/router/source/patch" + "/" + req.params.key + ".js";
+      }
+      if (await fileSystem("exist", [ target ])) {
+        stream = await fileSystem("readStream", [ target ]);
+        stream.pipe(res);
+      } else {
+        throw new Error("invaild key");
+      }
+    } catch (e) {
+      instance.mother.errorLog("Console 서버 문제 생김 (rou_get_Patch): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+      res.send("error : " + e.message);
+    }
+  }
+  return obj;
+}
+
+
 DataRouter.prototype.rou_get_ServerSent = function () {
   const instance = this;
   const back = this.back;

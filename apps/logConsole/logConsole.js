@@ -9,56 +9,9 @@ const LogConsole = function () {
   this.sourceDir = this.dir + "/router/source";
 }
 
-LogConsole.prototype.mediaQuery = function (code) {
-  const conditions = [
-    "window.innerWidth > 1450",
-    "window.innerWidth <= 1450 && window.innerWidth > 1100",
-    "window.innerWidth <= 1100 && window.innerWidth > 900",
-    "window.innerWidth <= 900 && window.innerWidth > 760",
-    "window.innerWidth <= 760"
-  ];
-  const updateProtoConst = "GeneralJs.stacks.updateMiddleMedialQueryConditions";
-  const matchReg = /[\n;]([^\n\;]*)\<\%\%([^\%]+)\%\%\>[;]?/g;
-  const replacer = function (match, p1, p2, offset, string) {
-    const safeWall = "\n\n";
-    let tempValue, tempArr, tempStr;
-
-    tempValue = p1.replace(/[\n;]/g, '').replace(/\<\%\%/g, '').trim();
-    tempArr = p2.replace(/\<\%\%/g, '').replace(/\%\%\>/g, '').trim().split(",");
-    tempStr = "";
-    if (tempArr.length > conditions.length) {
-      throw new Error("parse error");
-    }
-    for (let j = 0; j < tempArr.length; j++) {
-      tempStr += " } else if (" + conditions[j] + ") { ";
-      tempStr += "\n"
-      tempStr += tempValue;
-      tempStr += " ";
-      tempStr += tempArr[j];
-      tempStr += ";\n";
-    }
-    tempStr = safeWall + tempStr.slice(7) + " }" + safeWall;
-    return tempStr;
-  }
-  let updateProto;
-
-  updateProto = '';
-  updateProto += updateProtoConst;
-  updateProto += " = ";
-  updateProto += "[";
-  for (let i of conditions) {
-    updateProto += "(";
-    updateProto += i;
-    updateProto += "),";
-  }
-  updateProto += "];\n";
-
-  return { conditions: updateProto, code: code.replace(matchReg, replacer) };
-}
-
 LogConsole.prototype.renderStatic = async function (staticFolder) {
   const instance = this;
-  const { fileSystem, shell, shellLink, sleep } = this.mother;
+  const { fileSystem, shell, shellLink, sleep, mediaQuery } = this.mother;
   const S3HOST = this.address.homeinfo.ghost.protocol + "://" + this.address.homeinfo.ghost.host;
   const SSEHOST = this.address.testinfo.host;
   const SSEHOST_CONSOLE = this.address.testinfo.host;
@@ -157,11 +110,11 @@ LogConsole.prototype.renderStatic = async function (staticFolder) {
 
       //set media query
       if (/<%%/gi.test(code2)) {
-        tempMediaResult = this.mediaQuery(code2);
+        tempMediaResult = mediaQuery(code2);
         code2 = tempMediaResult.code;
       }
       if (/<%%/gi.test(code3)) {
-        tempMediaResult = this.mediaQuery(code3);
+        tempMediaResult = mediaQuery(code3);
         code3 = tempMediaResult.conditions + "\n\n" + tempMediaResult.code;
       }
 

@@ -22,16 +22,20 @@ MagazineM0Js.prototype.returnContents = function () {
 MagazineM0Js.prototype.baseMaker = function () {
   const instance = this;
   const { createNode, colorChip, withOut, svgMaker, isMac, isIphone } = GeneralJs;
-  const { totalContents, naviHeight, ea, media } = this;
+  const { totalContents, naviHeight, ea, media, baseTong } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const contents = this.returnContents();
+
+
+  
+
 
   console.log(contents);
 
 
   createNode({
-    mother: totalContents,
+    mother: baseTong,
     style: {
       display: "block",
       paddingTop: String(naviHeight) + ea,
@@ -47,7 +51,6 @@ MagazineM0Js.prototype.magazineLaunching = async function () {
     let getObj;
     getObj = returnGet();
 
-    console.log("this!");
     this.baseMaker();
 
   } catch (e) {

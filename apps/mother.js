@@ -322,6 +322,12 @@ Mother.prototype.fileSystem = function (sw, arr) {
         du.on("close", (code) => { resolve(String(out)); });
       });
       break;
+    case "readStream":
+      return new Promise(function(resolve, reject) {
+        if (arr.length !== 1) { reject("second argument must be length 1 array"); }
+        const stream = fs.createReadStream(arr[0])
+        resolve(stream);
+      });
     case "write":
       return new Promise(function (resolve, reject) {
         if (arr.length !== 2) { reject("second argument must be length 2 array"); }
@@ -3583,6 +3589,61 @@ Mother.prototype.localUnique = function () {
   });
   macTargets.sort();
   return "fa" + macTargets[0].trim().replace(/\:/gi, "0000");
+}
+
+Mother.prototype.mediaQuery = function (code) {
+  const conditions = [
+    "window.innerWidth > 1450",
+    "window.innerWidth <= 1450 && window.innerWidth > 1100",
+    "window.innerWidth <= 1100 && window.innerWidth > 900",
+    "window.innerWidth <= 900 && window.innerWidth > 760",
+    "window.innerWidth <= 760"
+  ];
+  const updateProtoConst = "GeneralJs.stacks.updateMiddleMedialQueryConditions";
+  const matchReg = /[\n;]([^\n\;]*)\<\%\%([^\%]+)\%\%\>[;]?/g;
+  const replacer = function (match, p1, p2, offset, string) {
+    const safeWall = "\n\n";
+    let tempValue, tempArr, tempStr;
+
+    tempValue = p1.replace(/[\n;]/g, '').replace(/\<\%\%/g, '').trim();
+    tempArr = p2.replace(/\<\%\%/g, '').replace(/\%\%\>/g, '').trim().split(",");
+    tempStr = "";
+    if (tempArr.length > conditions.length) {
+      throw new Error("parse error");
+    }
+    for (let j = 0; j < tempArr.length; j++) {
+      tempStr += " } else if (" + conditions[j] + ") { ";
+      tempStr += "\n"
+      tempStr += tempValue;
+      tempStr += " ";
+      tempStr += tempArr[j];
+      tempStr += ";\n";
+    }
+    tempStr = safeWall + tempStr.slice(7) + " }" + safeWall;
+    return tempStr;
+  }
+  let updateProto;
+
+  updateProto = '';
+  updateProto += updateProtoConst;
+  updateProto += " = ";
+  updateProto += "[";
+  for (let i of conditions) {
+    updateProto += "(";
+    updateProto += i;
+    updateProto += "),";
+  }
+  updateProto += "];\n";
+
+  code = code.replace(matchReg, replacer);
+  code = code.replace(/\<\&\&([^\&]+)\&\&\>/g, (match, p1) => {
+    let tempValue, tempArr, tempStr;
+    tempArr = p1.replace(/\<\&\&/g, '').replace(/\&\&\>/g, '').trim().split("|");
+    tempArr = tempArr.map((str) => { return str.trim(); });
+    return `(${conditions[0]} ? ${tempArr[0]} : (${conditions[1]} ? ${tempArr[1]} : (${conditions[2]} ? ${tempArr[2]} : (${conditions[3]} ? ${tempArr[3]} : ${tempArr[4]}))))`;
+  });
+
+  return { conditions: updateProto, code };
 }
 
 module.exports = Mother;

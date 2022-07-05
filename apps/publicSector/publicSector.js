@@ -21,9 +21,7 @@ const PublicSector = function () {
 PublicSector.prototype.staticRender = async function () {
   const instance = this;
   const { home, name, spawnDir, serverDir, publicSector } = this;
-  const { fileSystem, shellExec, ipCheck } = this.mother;
-  const DataConsole = require(`${process.cwd()}/apps/dataConsole/dataConsole.js`);
-  const con = new DataConsole();
+  const { fileSystem, shellExec, ipCheck, mediaQuery } = this.mother;
   try {
     const thisIp = await ipCheck();
     let staticName, staticDir, staticHome;
@@ -79,11 +77,11 @@ PublicSector.prototype.staticRender = async function () {
 
       //set media query
       if (/<%%/gi.test(code2)) {
-        tempMediaResult = con.mediaQuery(code2);
+        tempMediaResult = mediaQuery(code2);
         code2 = tempMediaResult.code;
       }
       if (/<%%/gi.test(code3)) {
-        tempMediaResult = con.mediaQuery(code3);
+        tempMediaResult = mediaQuery(code3);
         code3 = tempMediaResult.conditions + "\n\n" + tempMediaResult.code;
       }
 

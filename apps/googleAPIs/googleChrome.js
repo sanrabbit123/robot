@@ -208,11 +208,9 @@ GoogleChrome.prototype.scriptChain = async function (map, between = 1000) {
     throw new Error("invalid input => [ { link, async func } ]");
   }
   const instance = this;
-  const { equalJson, fileSystem, sleep } = this.mother;
+  const { equalJson, fileSystem, sleep, mediaQuery } = this.mother;
   const { puppeteer } = this;
   const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
-  const DataConsole = require(`${process.cwd()}/apps/dataConsole/dataConsole.js`);
-  const dataConsole = new DataConsole();
   try {
     const browser = await puppeteer.launch({ args: [ "--no-sandbox", "--disable-setuid-sandbox" ] });
     const page = await browser.newPage();
@@ -220,7 +218,7 @@ GoogleChrome.prototype.scriptChain = async function (map, between = 1000) {
 
     generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
     generalString += (await fileSystem(`readString`, [ `${process.cwd()}/apps/dataConsole/router/source/general/general.js` ]));
-    generalString = dataConsole.mediaQuery(generalString).code;
+    generalString = mediaQuery(generalString).code;
 
     returnScript = (func) => {
       return generalString + "\n\n" + func.toString().trim().replace(/^(async)? *(function[^\(]*\([^\)]*\)|\([^\)]*\)[^\=]+\=\>)[^\{]*\{/i, '').replace(/\}$/i, '');
