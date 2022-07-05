@@ -47,9 +47,6 @@ MagazineM0Js.prototype.baseMaker = function () {
 MagazineM0Js.prototype.magazineLaunching = async function () {
   const instance = this;
   try {
-    const { returnGet } = GeneralJs;
-    let getObj;
-    getObj = returnGet();
 
     this.baseMaker();
 
