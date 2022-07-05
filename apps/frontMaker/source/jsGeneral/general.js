@@ -3310,8 +3310,7 @@ GeneralJs.findByAttribute = function (dom, attributeName, attributeValue) {
   }
 }
 
-GeneralJs.swipePatch = function (direction, callback = function () {}) {
-  const stackConst = "swipeStack_";
+GeneralJs.swipePatch = function (direction, callback = function () {}, dom = document, stackConst = "swipeStack_") {
   const xDown = "xDown";
   const yDown = "yDown";
   const xDiff = "xDiff";
@@ -3356,13 +3355,13 @@ GeneralJs.swipePatch = function (direction, callback = function () {}) {
   }
 
   if (typeof GeneralJs.stacks[stackConst + handleTouchStart] === "function") {
-    document.removeEventListener("touchstart", GeneralJs.stacks[stackConst + handleTouchStart]);
+    dom.removeEventListener("touchstart", GeneralJs.stacks[stackConst + handleTouchStart]);
   }
   if (typeof GeneralJs.stacks[stackConst + handleTouchMove] === "function") {
-    document.removeEventListener("touchmove", GeneralJs.stacks[stackConst + handleTouchMove]);
+    dom.removeEventListener("touchmove", GeneralJs.stacks[stackConst + handleTouchMove]);
   }
   if (typeof GeneralJs.stacks[stackConst + handleTouchEnd] === "function") {
-    document.removeEventListener("touchend", GeneralJs.stacks[stackConst + handleTouchEnd]);
+    dom.removeEventListener("touchend", GeneralJs.stacks[stackConst + handleTouchEnd]);
   }
 
   GeneralJs.stacks[stackConst + xDown] = null;
@@ -3440,9 +3439,9 @@ GeneralJs.swipePatch = function (direction, callback = function () {}) {
     GeneralJs.stacks[stackConst + timeDown] = null;
   }
 
-  document.addEventListener("touchstart", GeneralJs.stacks[stackConst + handleTouchStart], false);
-  document.addEventListener("touchmove", GeneralJs.stacks[stackConst + handleTouchMove], false);
-  document.addEventListener("touchend", GeneralJs.stacks[stackConst + handleTouchEnd], false);
+  dom.addEventListener("touchstart", GeneralJs.stacks[stackConst + handleTouchStart], false);
+  dom.addEventListener("touchmove", GeneralJs.stacks[stackConst + handleTouchMove], false);
+  dom.addEventListener("touchend", GeneralJs.stacks[stackConst + handleTouchEnd], false);
 }
 
 GeneralJs.xyConverting = function (original) {

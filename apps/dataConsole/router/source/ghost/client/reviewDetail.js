@@ -1246,13 +1246,14 @@ ReviewDetailJs.prototype.relativeContents = function (contents, length) {
 
 ReviewDetailJs.prototype.reviewRelativeBox = function () {
   const instance = this;
-  const { createNode, colorChip, withOut, svgMaker, sleep, setQueue, equalJson, isMac, isIphone, selfHref } = GeneralJs;
+  const { createNode, colorChip, withOut, svgMaker, sleep, setQueue, equalJson, isMac, isIphone, selfHref, swipePatch } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid, standardWidth } = this;
   const { contentsArr } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const contents = contentsArr.toNormal().filter((obj) => { return obj.contents.portfolio.pid === pid })[0];
   const touchStartConst = "touchStartConstName";
+  const photoTouchStartConst = "photoTouchStartConst";
   const photoChar = 't';
   const photoCharMobile = "mot";
   const photoDefaultRatio = (297 / 210);
@@ -1329,6 +1330,8 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
   let whitePopupBigPadding;
   let whitePhotoBigArrowHeight;
   let whitePhotoBigArrowAreaHeight;
+  let whitePhotoEvent;
+  let rightArrowEvent, leftArrowEvent;
 
   this.relativePhotoNumber = 0;
 
@@ -1404,24 +1407,24 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
 
   reviewSubTitleVisual = <%% 1, 1, 1, 0, 0 %%>;
 
-  shareTongHeight = <%% 100, 100, 96, 90, 10 %%>;
-  shareIconHeight = <%% 19, 19, 18, 18, 4 %%>;
+  shareTongHeight = <%% 100, 100, 96, 90, 13 %%>;
+  shareIconHeight = <%% 19, 19, 18, 18, 3.6 %%>;
 
-  shareIconBetween0 = <%% 34, 34, 34, 34, 3 %%>;
-  shareIconBetween1 = <%% 30, 30, 30, 30, 3 %%>;
+  shareIconBetween0 = <%% 34, 34, 34, 34, 5.4 %%>;
+  shareIconBetween1 = <%% 30, 30, 30, 30, 5 %%>;
 
-  previousNextSize = <%% 16, 16, 15, 14, 16 %%>;
+  previousNextSize = <%% 16, 16, 15, 14, 3 %%>;
   previousNextWeight = <%% 500, 500, 500, 500, 500 %%>;
-  previousNextTextTop = <%% 36, 36, 34, 33, 3 %%>;
+  previousNextTextTop = <%% 36, 36, 34, 33, 3.9 %%>;
   previousNextLeftRight = baseBetween / 2;
 
   photoBetween = <%% 8, 8, 7, 6, 1 %%>;
-  whitePhotoTongInnerPadding = <%% 36, 36, 32, 30, 4 %%>;
-  whitePhotoHeight = <%% 210, 210, 170, 133, 21 %%>;
-  whitePhotoNumbers = <%% 8, 6, 6, 6, 6 %%>;
+  whitePhotoTongInnerPadding = <%% 36, 36, 32, 30, 3 %%>;
+  whitePhotoHeight = <%% 210, 210, 170, 133, 24 %%>;
+  whitePhotoNumbers = <%% 8, 6, 6, 6, 4 %%>;
   whitePhotoTongMarginBottom = <%% 10, 10, 10, 10, 1 %%>;
-  whitePopupBigPadding = <%% 64, 64, 64, 64, 4 %%>;
-  whitePhotoBigArrowHeight = <%% 15, 15, 15, 15, 15 %%>;
+  whitePopupBigPadding = <%% 64, 64, 64, 64, 28 %%>;
+  whitePhotoBigArrowHeight = <%% 15, 15, 15, 15, 2 %%>;
   whitePhotoBigArrowAreaHeight = <%% 200, 200, 200, 200, 20 %%>;
 
   // share
@@ -2062,6 +2065,192 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
     }
   });
 
+  whitePhotoEvent = function (e) {
+    const zIndex = 101;
+    let order, index, gs;
+    let cancelBack, imagePopup, leftArrow, rightArrow;
+    let width, height;
+    let src;
+    let staticSetting;
+    let imageRender;
+
+    order = Number(this.getAttribute("order"));
+    index = Number(this.getAttribute("index"));
+    gs = this.getAttribute("gs");
+
+    staticSetting = (order, index, gs) => {
+      src = FRONTHOST + "/list_image/portp" + pid + "/" + photoChar + String(index) + pid + ".jpg";
+
+      height = window.innerHeight - (whitePopupBigPadding * 2);
+      if (gs === 'g') {
+        width = height * photoDefaultRatio;
+      } else {
+        width = height / photoDefaultRatio;
+      }
+
+      if (width > window.innerWidth - (whitePopupBigPadding * 2)) {
+        width = window.innerWidth - (whitePopupBigPadding * 2);
+        if (gs === 'g') {
+          height = width / photoDefaultRatio;
+        } else {
+          height = width * photoDefaultRatio;
+        }
+      }
+    }
+
+    staticSetting(order, index, gs);
+
+    leftArrowEvent = (e) => {
+      let previousObj;
+      if (contents.photos.detail[order - 1] === undefined) {
+        previousObj = contents.photos.detail[contents.photos.detail.length - 1];
+      } else {
+        previousObj = contents.photos.detail[order - 1];
+      }
+      order = previousObj.index - 1;
+      index = previousObj.index;
+      gs = previousObj.gs;
+      staticSetting(order, index, gs);
+      imageRender(width, height, src);
+    }
+
+    rightArrowEvent = (e) => {
+      let nextObj;
+      if (contents.photos.detail[order + 1] === undefined) {
+        nextObj = contents.photos.detail[0];
+      } else {
+        nextObj = contents.photos.detail[order + 1];
+      }
+      order = nextObj.index - 1;
+      index = nextObj.index;
+      gs = nextObj.gs;
+      staticSetting(order, index, gs);
+      imageRender(width, height, src);
+    }
+
+    cancelBack = createNode({
+      mother: totalContents,
+      class: [ whitePhotoBigClassName ],
+      event: {
+        click: function (e) {
+          e.stopPropagation();
+          const removeTargets = document.querySelectorAll('.' + whitePhotoBigClassName);
+          for (let dom of removeTargets) {
+            dom.remove();
+          }
+        }
+      },
+      style: {
+        position: "fixed",
+        top: String(0),
+        left: String(0),
+        opacity: String(0.7),
+        background: colorChip.realBlack,
+        width: withOut(0),
+        height: withOut(0),
+        zIndex: String(zIndex),
+      }
+    });
+
+    imagePopup = createNode({
+      mother: totalContents,
+      class: [ whitePhotoBigClassName ],
+      event: {
+        contextmenu: function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        },
+      },
+      style: {
+        position: "fixed",
+        borderRadius: String(5) + "px",
+        zIndex: String(zIndex),
+        animation: "fadeuporiginal 0.3s ease forwards",
+        backgroundSize: "100% 100%",
+        backgroundPosition: "50% 50%",
+        transition: "all 0s ease",
+      }
+    });
+
+    swipePatch("right", rightArrowEvent, imagePopup, "imagePopupSwipeStack_");
+    swipePatch("up", rightArrowEvent, imagePopup, "imagePopupSwipeStack_");
+    swipePatch("left", leftArrowEvent, imagePopup, "imagePopupSwipeStack_");
+    swipePatch("down", leftArrowEvent, imagePopup, "imagePopupSwipeStack_");
+
+    imageRender = (width, height, src) => {
+      imagePopup.style.width = String(width) + "px";
+      imagePopup.style.height = String(height) + "px";
+      imagePopup.style.top = withOut(50, height / 2, "px");
+      imagePopup.style.left = withOut(50, width / 2, "px");
+      imagePopup.style.backgroundImage = "url('" + src + "')";
+    }
+
+    imageRender(width, height, src);
+
+    leftArrow = createNode({
+      mother: totalContents,
+      class: [ whitePhotoBigClassName ],
+      event: {
+        click: leftArrowEvent
+      },
+      style: {
+        position: "fixed",
+        top: withOut(50, whitePhotoBigArrowAreaHeight / 2, ea),
+        height: String(whitePhotoBigArrowAreaHeight) + ea,
+        left: String(0),
+        width: String(whitePopupBigPadding) + "px",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        cursor: "pointer",
+        zIndex: String(zIndex),
+      },
+      children: [
+        {
+          mode: "svg",
+          source: instance.mother.returnArrow("left", colorChip.white),
+          style: {
+            position: "relative",
+            height: String(whitePhotoBigArrowHeight) + ea,
+            animation: "fadeuporiginal 0.3s ease forwards",
+          }
+        }
+      ]
+    });
+
+    rightArrow = createNode({
+      mother: totalContents,
+      class: [ whitePhotoBigClassName ],
+      event: {
+        click: rightArrowEvent
+      },
+      style: {
+        position: "fixed",
+        top: withOut(50, whitePhotoBigArrowAreaHeight / 2, ea),
+        height: String(whitePhotoBigArrowAreaHeight) + ea,
+        right: String(0),
+        width: String(whitePopupBigPadding) + "px",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        cursor: "pointer",
+        zIndex: String(zIndex),
+      },
+      children: [
+        {
+          mode: "svg",
+          source: instance.mother.returnArrow("right", colorChip.white),
+          style: {
+            position: "relative",
+            height: String(whitePhotoBigArrowHeight) + ea,
+            animation: "fadeuporiginal 0.3s ease forwards",
+          }
+        }
+      ]
+    });
+
+  }
+
   for (let { index, gs } of contents.photos.detail) {
     if (desktop) {
       photoSrc = FRONTHOST + "/list_image/portp" + pid + "/" + photoChar + String(index) + pid + ".jpg";
@@ -2078,180 +2267,18 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
         pid,
       },
       event: {
-        click: function (e) {
-          const zIndex = 101;
-          let order, index, gs;
-          let cancelBack, imagePopup, leftArrow, rightArrow;
-          let width, height;
-          let src;
-          let staticSetting;
-          let imageRender;
-
-          order = Number(this.getAttribute("order"));
-          index = Number(this.getAttribute("index"));
-          gs = this.getAttribute("gs");
-
-          staticSetting = (order, index, gs) => {
-            src = FRONTHOST + "/list_image/portp" + pid + "/" + photoChar + String(index) + pid + ".jpg";
-
-            height = window.innerHeight - (whitePopupBigPadding * 2);
-            if (gs === 'g') {
-              width = height * photoDefaultRatio;
-            } else {
-              width = height / photoDefaultRatio;
-            }
-
-            if (width > window.innerWidth - (whitePopupBigPadding * 2)) {
-              width = window.innerWidth - (whitePopupBigPadding * 2);
-              if (gs === 'g') {
-                height = width / photoDefaultRatio;
-              } else {
-                height = width * photoDefaultRatio;
-              }
-            }
+        click: whitePhotoEvent,
+        touchstart: function (e) {
+          const self = this;
+          self.setAttribute(photoTouchStartConst, "on");
+          setQueue(() => {
+            self.setAttribute(photoTouchStartConst, "off");
+          });
+        },
+        touchend: function (e) {
+          if (this.getAttribute(photoTouchStartConst) === "on") {
+            whitePhotoEvent.call(this, e);
           }
-
-          staticSetting(order, index, gs);
-
-          cancelBack = createNode({
-            mother: totalContents,
-            class: [ whitePhotoBigClassName ],
-            event: {
-              click: function (e) {
-                e.stopPropagation();
-                const removeTargets = document.querySelectorAll('.' + whitePhotoBigClassName);
-                for (let dom of removeTargets) {
-                  dom.remove();
-                }
-              }
-            },
-            style: {
-              position: "fixed",
-              top: String(0),
-              left: String(0),
-              opacity: String(0.7),
-              background: colorChip.realBlack,
-              width: withOut(0),
-              height: withOut(0),
-              zIndex: String(zIndex),
-            }
-          });
-
-          imagePopup = createNode({
-            mother: totalContents,
-            class: [ whitePhotoBigClassName ],
-            event: {
-              contextmenu: function (e) {
-                e.preventDefault();
-              }
-            },
-            style: {
-              position: "fixed",
-              borderRadius: String(5) + "px",
-              zIndex: String(zIndex),
-              animation: "fadeuporiginal 0.3s ease forwards",
-              backgroundSize: "100% 100%",
-              backgroundPosition: "50% 50%",
-              transition: "all 0s ease",
-            }
-          });
-
-          imageRender = (width, height, src) => {
-            imagePopup.style.width = String(width) + ea;
-            imagePopup.style.height = String(height) + ea;
-            imagePopup.style.top = withOut(50, height / 2, ea);
-            imagePopup.style.left = withOut(50, width / 2, ea);
-            imagePopup.style.backgroundImage = "url('" + src + "')";
-          }
-
-          imageRender(width, height, src);
-
-          leftArrow = createNode({
-            mother: totalContents,
-            class: [ whitePhotoBigClassName ],
-            event: {
-              click: (e) => {
-                let previousObj;
-                if (contents.photos.detail[order - 1] === undefined) {
-                  previousObj = contents.photos.detail[contents.photos.detail.length - 1];
-                } else {
-                  previousObj = contents.photos.detail[order - 1];
-                }
-                order = previousObj.index - 1;
-                index = previousObj.index;
-                gs = previousObj.gs;
-                staticSetting(order, index, gs);
-                imageRender(width, height, src);
-              }
-            },
-            style: {
-              position: "fixed",
-              top: withOut(50, whitePhotoBigArrowAreaHeight / 2, ea),
-              height: String(whitePhotoBigArrowAreaHeight) + ea,
-              left: String(0),
-              width: String(whitePopupBigPadding) + ea,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              cursor: "pointer",
-              zIndex: String(zIndex),
-            },
-            children: [
-              {
-                mode: "svg",
-                source: instance.mother.returnArrow("left", colorChip.white),
-                style: {
-                  position: "relative",
-                  height: String(whitePhotoBigArrowHeight) + ea,
-                  animation: "fadeuporiginal 0.3s ease forwards",
-                }
-              }
-            ]
-          });
-
-          rightArrow = createNode({
-            mother: totalContents,
-            class: [ whitePhotoBigClassName ],
-            event: {
-              click: (e) => {
-                let nextObj;
-                if (contents.photos.detail[order + 1] === undefined) {
-                  nextObj = contents.photos.detail[0];
-                } else {
-                  nextObj = contents.photos.detail[order + 1];
-                }
-                order = nextObj.index - 1;
-                index = nextObj.index;
-                gs = nextObj.gs;
-                staticSetting(order, index, gs);
-                imageRender(width, height, src);
-              }
-            },
-            style: {
-              position: "fixed",
-              top: withOut(50, whitePhotoBigArrowAreaHeight / 2, ea),
-              height: String(whitePhotoBigArrowAreaHeight) + ea,
-              right: String(0),
-              width: String(whitePopupBigPadding) + ea,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              cursor: "pointer",
-              zIndex: String(zIndex),
-            },
-            children: [
-              {
-                mode: "svg",
-                source: instance.mother.returnArrow("right", colorChip.white),
-                style: {
-                  position: "relative",
-                  height: String(whitePhotoBigArrowHeight) + ea,
-                  animation: "fadeuporiginal 0.3s ease forwards",
-                }
-              }
-            ]
-          });
-
         }
       },
       style: {

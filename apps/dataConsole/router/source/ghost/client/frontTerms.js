@@ -362,6 +362,92 @@ FrontTermsJs.prototype.insertTermsBox = async function () {
       dom.style.fontWeight = String(questionWeight);
     }
 
+    contents = createNode({
+      mother: baseBlock,
+      text: "버튼 1",
+      event: {
+        click: function () {
+          window.FB.ui({
+            method: 'share',
+            href: window.location.href,
+          }, (response) => {});
+        }
+      },
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(0),
+        verticalAlign: "top",
+        fontSize: String(answerSize) + ea,
+        fontWeight: String(answerWeight),
+        color: colorChip.black,
+        lineHeight: String(answerLineHeight),
+        top: String(textTop) + ea,
+      },
+      bold: {
+        fontWeight: String(answerBoldWeight),
+        color: colorChip.green,
+      }
+    });
+
+    contents = createNode({
+      mother: baseBlock,
+      text: "버튼 2",
+      event: {
+        click: function (e) {
+          window.Kakao.Share.sendDefault({
+            objectType: 'feed',
+            content: {
+              title: '딸기 치즈 케익',
+              description: '#케익 #딸기 #삼평동 #카페 #분위기 #소개팅',
+              imageUrl:
+                'http://k.kakaocdn.net/dn/Q2iNx/btqgeRgV54P/VLdBs9cvyn8BJXB3o7N8UK/kakaolink40_original.png',
+              link: {
+                mobileWebUrl: 'https://developers.kakao.com',
+                webUrl: 'https://developers.kakao.com',
+              },
+            },
+            social: {
+              likeCount: 286,
+              commentCount: 45,
+              sharedCount: 845,
+            },
+            buttons: [
+              {
+                title: '웹으로 보기',
+                link: {
+                  mobileWebUrl: 'https://developers.kakao.com',
+                  webUrl: 'https://developers.kakao.com',
+                },
+              },
+              {
+                title: '앱으로 보기',
+                link: {
+                  mobileWebUrl: 'https://developers.kakao.com',
+                  webUrl: 'https://developers.kakao.com',
+                },
+              },
+            ],
+          });
+        }
+      },
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(0),
+        verticalAlign: "top",
+        fontSize: String(answerSize) + ea,
+        fontWeight: String(answerWeight),
+        color: colorChip.black,
+        lineHeight: String(answerLineHeight),
+        top: String(textTop) + ea,
+      },
+      bold: {
+        fontWeight: String(answerBoldWeight),
+        color: colorChip.green,
+      }
+    });
+
   } catch (e) {
     console.log(e);
   }
@@ -372,7 +458,7 @@ FrontTermsJs.prototype.launching = async function (loading) {
   try {
     this.mother.setGeneralProperties(this);
 
-    const { returnGet, ajaxJson, requestPromise, setDebounce } = GeneralJs;
+    const { returnGet, ajaxJson, requestPromise, setDebounce, facebookSdkPatch, kakaoSdkPatch } = GeneralJs;
     const getObj = returnGet();
 
     await this.mother.ghostClientLaunching({
@@ -397,6 +483,12 @@ FrontTermsJs.prototype.launching = async function (loading) {
     });
 
     loading.parentNode.removeChild(loading);
+
+    facebookSdkPatch().then(() => {
+      return kakaoSdkPatch();
+    }).catch((err) => {
+      console.log(err);
+    });
 
   } catch (err) {
     console.log(err);
