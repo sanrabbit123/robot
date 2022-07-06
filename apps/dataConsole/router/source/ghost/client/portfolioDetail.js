@@ -2093,7 +2093,7 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
     mother: belowBaseTong,
     class: [ "consultingButtonBottom" ],
     event: {
-      touch: (e) => {
+      click: (e) => {
         selfHref(FRONTHOST + "/consulting.php");
       }
     },
@@ -2412,6 +2412,7 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
         }
       }
     }
+    imageRender = () => {}
 
     staticSetting(order, index, gs);
 
@@ -2583,6 +2584,7 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
       },
       event: {
         click: whitePhotoEvent,
+        contextmenu: (e) => { e.preventDefault() },
         touchstart: function (e) {
           const self = this;
           self.setAttribute(photoTouchStartConst, "on");

@@ -5186,40 +5186,57 @@ GeneralJs.homeliaisonAnalytics = function (obj) {
   const analyticsReceivePath = "/receiveLog";
   const dbPort = 3000;
   return new Promise((resolve, reject) => {
-    if (typeof window.gtag === "function") {
-      if (typeof obj === "object" && obj !== null) {
-        if (typeof obj.page === "string" && obj.standard instanceof Date && typeof obj.action === "string" && typeof obj.data === "object" && obj.data !== null) {
-          window.gtag("get", window.gtagId, "client_id", (client_id) => {
-            const json = {
-              page: obj.page,
-              action: obj.action,
-              standard: obj.standard.valueOf(),
-              date: (new Date()).valueOf(),
-              googleId: client_id,
-              id: client_id,
-              ...obj.data
-            };
-            if (typeof window.fbq === "function") {
-              window.fbq("trackCustom", obj.action, json);
-            }
-            window.gtag("event", obj.action, {
-              "event_category": obj.page,
-              "event_label": JSON.stringify(json),
-            });
-            GeneralJs.ajaxJson({
-              data: { ...json, value: obj.data },
-            }, "https://" + dbHost + ':' + String(dbPort) + analyticsReceivePath).then((obj) => {
-              resolve(obj);
-            }).catch((err) => {
-              reject(err.message);
-            });
-          });
-        } else {
-          reject("input must be { page: String, standard: Date, action: String, data: Object } }");
-        }
-      }
+    if (window.location.host === "localhost:3000" || window.location.host === "localhost:8080" || window.location.host === "localhost") {
+      window.gtag("get", window.gtagId, "client_id", (client_id) => {
+        const json = {
+          date: {
+            now: new Date(),
+          },
+          data: {
+            page: obj.page,
+            action: obj.action,
+            id: client_id,
+            value: { ...obj.data }
+          }
+        };
+        resolve(json);
+      });
     } else {
-      reject("there is no gtag");
+      if (typeof window.gtag === "function") {
+        if (typeof obj === "object" && obj !== null) {
+          if (typeof obj.page === "string" && obj.standard instanceof Date && typeof obj.action === "string" && typeof obj.data === "object" && obj.data !== null) {
+            window.gtag("get", window.gtagId, "client_id", (client_id) => {
+              const json = {
+                page: obj.page,
+                action: obj.action,
+                standard: obj.standard.valueOf(),
+                date: (new Date()).valueOf(),
+                googleId: client_id,
+                id: client_id,
+                ...obj.data
+              };
+              if (typeof window.fbq === "function") {
+                window.fbq("trackCustom", obj.action, json);
+              }
+              window.gtag("event", obj.action, {
+                "event_category": obj.page,
+                "event_label": JSON.stringify(json),
+              });
+              GeneralJs.ajaxJson({
+                data: { ...json, value: obj.data },
+              }, "https://" + dbHost + ':' + String(dbPort) + analyticsReceivePath).then((obj) => {
+                resolve(obj);
+              }).catch((err) => {
+                reject(err.message);
+              });
+            });
+          } else {
+            reject("input must be { page: String, standard: Date, action: String, data: Object } }");
+          }
+        }
+      } else {
+        reject("there is no gtag");
+      }
     }
   });
 }

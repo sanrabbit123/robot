@@ -1836,7 +1836,7 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
     mother: belowBaseTong,
     class: [ "consultingButtonBottom" ],
     event: {
-      touch: (e) => {
+      click: (e) => {
         selfHref(FRONTHOST + "/consulting.php");
       }
     },
@@ -2129,6 +2129,7 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
         }
       }
     }
+    imageRender = () => {}
 
     staticSetting(order, index, gs);
 
@@ -2300,6 +2301,7 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
       },
       event: {
         click: whitePhotoEvent,
+        contextmenu: (e) => { e.preventDefault() },
         touchstart: function (e) {
           const self = this;
           self.setAttribute(photoTouchStartConst, "on");
