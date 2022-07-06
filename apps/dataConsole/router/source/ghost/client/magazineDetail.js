@@ -46,15 +46,18 @@ MagazineDetailJs.binaryPath = FRONTHOST + "/middle/index";
 MagazineDetailJs.prototype.generalBase = function () {
   const instance = this;
   const { createNode, createNodes, colorChip, withOut, svgMaker, isMac, isIphone } = GeneralJs;
-  const { totalContents, naviHeight, ea, media, backHeight, standardWidth } = this;
+  const { totalContents, naviHeight, ea, media, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
   let backgroundImageName;
   let backgroundGray, backgroundImageBox;
   let baseTop;
+  let backHeight;
 
   backgroundImageName = "back.jpg";
   baseTop = <%% 200, 200, 170, 140, 10 %%>;
+  this.backHeight = <%% 420, 420, 375, 320, 94 %%>;
+  backHeight = this.backHeight;
 
   [ backgroundGray, backgroundImageBox ] = createNodes([
     {
@@ -65,7 +68,7 @@ MagazineDetailJs.prototype.generalBase = function () {
         left: String(0),
         width: String(100) + '%',
         height: String(100) + '%',
-        background: colorChip.gray1,
+        background: colorChip.white,
         animation: "justfadeinoriginal 0.3s ease forwards",
       }
     },

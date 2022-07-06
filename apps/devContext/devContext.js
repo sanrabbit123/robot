@@ -90,11 +90,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await findCode("mediaQuery")
-
-
-
-
 
 
 
@@ -2679,6 +2674,8 @@ DevContext.prototype.launching = async function () {
     // });
 
 
+
+
     // const kakao = new KakaoTalk();
     // await kakao.ready();
     // await kakao.sendTalk("firstMeetingDayAgo", "리에종", "010-5543-2039", {
@@ -2782,8 +2779,8 @@ DevContext.prototype.launching = async function () {
     // send sms
     // const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
     // const human = new HumanPacket();
-    // const name = "박소영";
-    // const amount = 1485000;
+    // const name = "권은비";
+    // const amount = 10907500;
     // await human.sendSms({
     //   name: "",
     //   phone: "01055432039",

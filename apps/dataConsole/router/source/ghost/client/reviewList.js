@@ -373,90 +373,477 @@ ReviewListJs.prototype.insertInitBox = function () {
     ]
   });
 
-  serviceChildren = [];
-  for (let service of searchTags) {
-    serviceChildren.push({
-      class: [
-        serviceButtonClassName
-      ],
-      attribute: {
-        toggle: "off",
-        value: service,
-      },
-      event: {
-        click: function (e) {
-          const targets = [ ...document.querySelectorAll('.' + serviceButtonClassName) ];
-          let thisValue;
-          for (let dom of targets) {
-            if (dom === this) {
-              dom.setAttribute("toggle", "on");
-              dom.firstChild.style.color = colorChip.black;
-              dom.firstChild.querySelector('b').style.color = colorChip.green;
-              thisValue = dom.getAttribute("value");
-            } else {
-              dom.setAttribute("toggle", "off");
-              dom.firstChild.style.color = colorChip.deactive;
-              dom.firstChild.querySelector('b').style.color = colorChip.deactive;
-            }
-          }
-          instance.portfolioBlock(null, /전체/gi.test(thisValue) ? "" : thisValue);
-          instance.photoLoad = true;
-        }
-      },
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        height: String(searchBarHeight - (tagTongBottom * 2)) + ea,
-        marginRight: String(serviceMarginRight) + ea,
-        paddingLeft: String(servicePaddingLeft) + ea,
-        paddingRight: String(servicePaddingLeft) + ea,
-        textAlign: "center",
-        background: colorChip.gray2,
-        borderRadius: String(5) + "px",
-        cursor: "pointer",
-        justifyContent: "center",
-        alignItems: "center",
-        textAlign: "center",
-      },
-      children: [
-        {
-          text: "<b%#%b> " + service,
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(tagTextTop) + ea,
-            fontSize: String(serviceSize) + ea,
-            fontWeight: String(400),
-            color: colorChip.black,
-            cursor: "pointer",
-            textAlign: "center",
-          },
-          bold: {
-            color: colorChip.deactive,
-          }
-        }
-      ]
-    });
-  }
 
-  serviceBlock = createNode({
+
+
+  // DEV ============================================================================================================================================================
+  // DEV ============================================================================================================================================================
+
+
+  const toggleTargetClassName = "toggleTargetClassName";
+  const circleClassName = "circleClassName";
+  const circleBaseClassName = "circleBaseClassName";
+
+  let buttonSize
+  let buttonWeight
+  let buttonBetween
+  let buttonTongWidth
+  let buttonWidth
+  let buttonHeight
+  let buttonTextTop
+  let buttonLeft
+  let circleWidth
+  let tabletVisualBottom
+  let mobileButtonTongMarginTop
+  let mobileButtonBetween
+  let contentsPaddingTop
+  let designerDetailToggleEvent
+
+  buttonSize = <%% 14, 14, 13, 13, 3.2 %%>;
+  buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
+  buttonBetween = <%% 2, 2, 2, 2, 2 %%>;
+
+  buttonTongWidth = <%% 90, 90, 90, 90, 90 %%>;
+
+  buttonWidth = <%% 26, 26, 26, 26, 5.6 %%>;
+  buttonHeight = <%% 12, 12, 12, 12, 3 %%>;
+  buttonTextTop = <%% (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 4 : 2), (isMac() ? 4 : 2), (isIphone() ? 1.1 : 0.8) %%>;
+  buttonLeft = <%% -34, -34, -34, -34, -7 %%>;
+  circleWidth = <%% 8, 8, 8, 8, 2 %%>;
+
+  tabletVisualBottom = 4;
+  mobileButtonTongMarginTop = 3;
+  mobileButtonBetween = 10.5;
+  contentsPaddingTop = <%% 16, 16, 16, 0, 1 %%>;
+
+  designerDetailToggleEvent = () => {}
+
+  createNode({
     mother: middleBox,
     style: {
-      display: desktop ? "block" : "none",
-      position: "absolute",
-      textAlign: "center",
+      display: desktop ? "inline-flex" : "flex",
+      flexDirection: desktop ? "column" : "row",
+      position: desktop ? "absolute" : "relative",
+      width: desktop ? String(buttonTongWidth) + ea : "",
+      bottom: String(0),
+      marginTop: desktop ? "" : String(mobileButtonTongMarginTop) + ea,
       right: String(0),
-      bottom: String(tagTongBottom) + ea,
+      justifyContent: desktop ? "left" : "right",
+      alignItems: "start",
+      textAlign: "left",
     },
-    children: serviceChildren
+    children: [
+      {
+        class: [ toggleTargetClassName ],
+        attribute: {
+          toggle: "on",
+          mode: "portfolio",
+        },
+        event: {
+          click: designerDetailToggleEvent,
+          touchstart: function (e) {
+            const self = this;
+            self.setAttribute(touchStartConst, "on");
+            setQueue(() => {
+              self.setAttribute(touchStartConst, "off");
+            });
+          },
+          touchend: function (e) {
+            if (this.getAttribute(touchStartConst) === "on") {
+              designerDetailToggleEvent.call(this, e);
+            }
+          }
+        },
+        text: "포트폴리오 보기",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(buttonSize) + ea,
+          fontWeight: String(buttonWeight),
+          color: colorChip.green,
+          cursor: "pointer",
+          transition: "all 0.5s ease",
+        },
+        children: [
+          {
+            class: [ circleBaseClassName ],
+            style: {
+              position: "absolute",
+              width: String(buttonWidth) + ea,
+              height: String(buttonHeight) + ea,
+              background: colorChip.green,
+              top: String(buttonTextTop) + ea,
+              left: String(buttonLeft) + ea,
+              borderRadius: String(buttonHeight) + ea,
+              transition: "all 0.5s ease",
+            },
+            children: [
+              {
+                style: {
+                  display: "block",
+                  position: "relative",
+                  width: withOut(0),
+                  height: withOut(0),
+                },
+                children: [
+                  {
+                    class: [ circleClassName ],
+                    style: {
+                      display: "inline-block",
+                      width: String(circleWidth) + ea,
+                      height: String(circleWidth) + ea,
+                      borderRadius: String(circleWidth) + ea,
+                      top: String((buttonHeight - circleWidth) / 2) + ea,
+                      left: String(buttonWidth - circleWidth - ((buttonHeight - circleWidth) / 2)) + ea,
+                      background: colorChip.white,
+                      position: "absolute",
+                      transition: "all 0.5s ease",
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        class: [ toggleTargetClassName ],
+        attribute: {
+          toggle: "off",
+          mode: "photo",
+        },
+        event: {
+          click: designerDetailToggleEvent,
+          touchstart: function (e) {
+            const self = this;
+            self.setAttribute(touchStartConst, "on");
+            setQueue(() => {
+              self.setAttribute(touchStartConst, "off");
+            });
+          },
+          touchend: function (e) {
+            if (this.getAttribute(touchStartConst) === "on") {
+              designerDetailToggleEvent.call(this, e);
+            }
+          }
+        },
+        text: "사진만 보기",
+        style: {
+          marginTop: desktop ? String(buttonBetween) + ea : '',
+          marginLeft: desktop ? '' : String(mobileButtonBetween) + ea,
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(buttonSize) + ea,
+          fontWeight: String(buttonWeight),
+          color: colorChip.deactive,
+          cursor: "pointer",
+          transition: "all 0.5s ease",
+        },
+        children: [
+          {
+            class: [ circleBaseClassName ],
+            style: {
+              position: "absolute",
+              width: String(buttonWidth) + ea,
+              height: String(buttonHeight) + ea,
+              background: colorChip.gray5,
+              top: String(buttonTextTop) + ea,
+              left: String(buttonLeft) + ea,
+              borderRadius: String(buttonHeight) + ea,
+              transition: "all 0.5s ease",
+            },
+            children: [
+              {
+                style: {
+                  display: "block",
+                  position: "relative",
+                  width: withOut(0),
+                  height: withOut(0),
+                },
+                children: [
+                  {
+                    class: [ circleClassName ],
+                    style: {
+                      display: "inline-block",
+                      width: String(circleWidth) + ea,
+                      height: String(circleWidth) + ea,
+                      borderRadius: String(circleWidth) + ea,
+                      top: String((buttonHeight - circleWidth) / 2) + ea,
+                      left: String((buttonHeight - circleWidth) / 2) + ea,
+                      background: colorChip.white,
+                      position: "absolute",
+                      transition: "all 0.5s ease",
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+    ]
   });
 
-  for (let dom of serviceBlock.children) {
-    dom.firstChild.style.width = String(Math.ceil(dom.firstChild.getBoundingClientRect().width + 1)) + "px";
-    dom.style.width = String(Math.ceil(dom.firstChild.getBoundingClientRect().width) + 1) + "px";
-  }
+  createNode({
+    mother: middleBox,
+    style: {
+      display: desktop ? "inline-flex" : "flex",
+      flexDirection: desktop ? "column" : "row",
+      position: desktop ? "absolute" : "relative",
+      width: desktop ? String(buttonTongWidth) + ea : "",
+      bottom: String(0),
+      marginTop: desktop ? "" : String(mobileButtonTongMarginTop) + ea,
+      right: String(125) + ea,
+      justifyContent: desktop ? "left" : "right",
+      alignItems: "start",
+      textAlign: "left",
+    },
+    children: [
+      {
+        class: [ toggleTargetClassName ],
+        attribute: {
+          toggle: "on",
+          mode: "portfolio",
+        },
+        event: {
+          click: designerDetailToggleEvent,
+          touchstart: function (e) {
+            const self = this;
+            self.setAttribute(touchStartConst, "on");
+            setQueue(() => {
+              self.setAttribute(touchStartConst, "off");
+            });
+          },
+          touchend: function (e) {
+            if (this.getAttribute(touchStartConst) === "on") {
+              designerDetailToggleEvent.call(this, e);
+            }
+          }
+        },
+        text: "최신순 정렬",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(buttonSize) + ea,
+          fontWeight: String(buttonWeight),
+          color: colorChip.green,
+          cursor: "pointer",
+          transition: "all 0.5s ease",
+        },
+        children: [
+          {
+            class: [ circleBaseClassName ],
+            style: {
+              position: "absolute",
+              width: String(buttonWidth) + ea,
+              height: String(buttonHeight) + ea,
+              background: colorChip.green,
+              top: String(buttonTextTop) + ea,
+              left: String(buttonLeft) + ea,
+              borderRadius: String(buttonHeight) + ea,
+              transition: "all 0.5s ease",
+            },
+            children: [
+              {
+                style: {
+                  display: "block",
+                  position: "relative",
+                  width: withOut(0),
+                  height: withOut(0),
+                },
+                children: [
+                  {
+                    class: [ circleClassName ],
+                    style: {
+                      display: "inline-block",
+                      width: String(circleWidth) + ea,
+                      height: String(circleWidth) + ea,
+                      borderRadius: String(circleWidth) + ea,
+                      top: String((buttonHeight - circleWidth) / 2) + ea,
+                      left: String(buttonWidth - circleWidth - ((buttonHeight - circleWidth) / 2)) + ea,
+                      background: colorChip.white,
+                      position: "absolute",
+                      transition: "all 0.5s ease",
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        class: [ toggleTargetClassName ],
+        attribute: {
+          toggle: "off",
+          mode: "photo",
+        },
+        event: {
+          click: designerDetailToggleEvent,
+          touchstart: function (e) {
+            const self = this;
+            self.setAttribute(touchStartConst, "on");
+            setQueue(() => {
+              self.setAttribute(touchStartConst, "off");
+            });
+          },
+          touchend: function (e) {
+            if (this.getAttribute(touchStartConst) === "on") {
+              designerDetailToggleEvent.call(this, e);
+            }
+          }
+        },
+        text: "인기순 정렬",
+        style: {
+          marginTop: desktop ? String(buttonBetween) + ea : '',
+          marginLeft: desktop ? '' : String(mobileButtonBetween) + ea,
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(buttonSize) + ea,
+          fontWeight: String(buttonWeight),
+          color: colorChip.deactive,
+          cursor: "pointer",
+          transition: "all 0.5s ease",
+        },
+        children: [
+          {
+            class: [ circleBaseClassName ],
+            style: {
+              position: "absolute",
+              width: String(buttonWidth) + ea,
+              height: String(buttonHeight) + ea,
+              background: colorChip.gray5,
+              top: String(buttonTextTop) + ea,
+              left: String(buttonLeft) + ea,
+              borderRadius: String(buttonHeight) + ea,
+              transition: "all 0.5s ease",
+            },
+            children: [
+              {
+                style: {
+                  display: "block",
+                  position: "relative",
+                  width: withOut(0),
+                  height: withOut(0),
+                },
+                children: [
+                  {
+                    class: [ circleClassName ],
+                    style: {
+                      display: "inline-block",
+                      width: String(circleWidth) + ea,
+                      height: String(circleWidth) + ea,
+                      borderRadius: String(circleWidth) + ea,
+                      top: String((buttonHeight - circleWidth) / 2) + ea,
+                      left: String((buttonHeight - circleWidth) / 2) + ea,
+                      background: colorChip.white,
+                      position: "absolute",
+                      transition: "all 0.5s ease",
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+    ]
+  });
 
-  serviceBlock.lastChild.style.marginRight = "";
+
+  // DEV ============================================================================================================================================================
+  // DEV ============================================================================================================================================================
+
+
+  // serviceChildren = [];
+  // for (let service of searchTags) {
+  //   serviceChildren.push({
+  //     class: [
+  //       serviceButtonClassName
+  //     ],
+  //     attribute: {
+  //       toggle: "off",
+  //       value: service,
+  //     },
+  //     event: {
+  //       click: function (e) {
+  //         const targets = [ ...document.querySelectorAll('.' + serviceButtonClassName) ];
+  //         let thisValue;
+  //         for (let dom of targets) {
+  //           if (dom === this) {
+  //             dom.setAttribute("toggle", "on");
+  //             dom.firstChild.style.color = colorChip.black;
+  //             dom.firstChild.querySelector('b').style.color = colorChip.green;
+  //             thisValue = dom.getAttribute("value");
+  //           } else {
+  //             dom.setAttribute("toggle", "off");
+  //             dom.firstChild.style.color = colorChip.deactive;
+  //             dom.firstChild.querySelector('b').style.color = colorChip.deactive;
+  //           }
+  //         }
+  //         instance.portfolioBlock(null, /전체/gi.test(thisValue) ? "" : thisValue);
+  //         instance.photoLoad = true;
+  //       }
+  //     },
+  //     style: {
+  //       display: "inline-flex",
+  //       position: "relative",
+  //       height: String(searchBarHeight - (tagTongBottom * 2)) + ea,
+  //       marginRight: String(serviceMarginRight) + ea,
+  //       paddingLeft: String(servicePaddingLeft) + ea,
+  //       paddingRight: String(servicePaddingLeft) + ea,
+  //       textAlign: "center",
+  //       background: colorChip.gray2,
+  //       borderRadius: String(5) + "px",
+  //       cursor: "pointer",
+  //       justifyContent: "center",
+  //       alignItems: "center",
+  //       textAlign: "center",
+  //     },
+  //     children: [
+  //       {
+  //         text: "<b%#%b> " + service,
+  //         style: {
+  //           display: "inline-block",
+  //           position: "relative",
+  //           top: String(tagTextTop) + ea,
+  //           fontSize: String(serviceSize) + ea,
+  //           fontWeight: String(400),
+  //           color: colorChip.black,
+  //           cursor: "pointer",
+  //           textAlign: "center",
+  //         },
+  //         bold: {
+  //           color: colorChip.deactive,
+  //         }
+  //       }
+  //     ]
+  //   });
+  // }
+  //
+  // serviceBlock = createNode({
+  //   mother: middleBox,
+  //   style: {
+  //     display: desktop ? "block" : "none",
+  //     position: "absolute",
+  //     textAlign: "center",
+  //     right: String(200) + ea,
+  //     bottom: String(tagTongBottom) + ea,
+  //   },
+  //   children: serviceChildren
+  // });
+  //
+  // for (let dom of serviceBlock.children) {
+  //   dom.firstChild.style.width = String(Math.ceil(dom.firstChild.getBoundingClientRect().width + 1)) + "px";
+  //   dom.style.width = String(Math.ceil(dom.firstChild.getBoundingClientRect().width) + 1) + "px";
+  // }
+  //
+  // serviceBlock.lastChild.style.marginRight = "";
+
+
+  // DEV ============================================================================================================================================================
+  // DEV ============================================================================================================================================================
+
 
 }
 
