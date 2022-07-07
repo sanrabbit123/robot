@@ -225,12 +225,12 @@ ReviewListJs.prototype.insertInitBox = function () {
     searchTags.push("모던");
     searchTags.push("제작가구");
     searchTags.push("화이트");
-    searchTags.push("30평대");
+    searchTags.push("전체");
   } else if (media[1]) {
     searchTags.push("아이방");
     searchTags.push("모던");
     searchTags.push("제작가구");
-    searchTags.push("화이트");
+    searchTags.push("전체");
   }
 
   serviceButtonClassName = "serviceButton";
@@ -278,10 +278,11 @@ ReviewListJs.prototype.insertInitBox = function () {
           }
 
           if (mode === "key9") {
-            instance.portfolioBlock(null, '', "key9");
+            instance.sort = "key9";
           } else {
-            instance.portfolioBlock(null, '', "key8");
+            instance.sort = "key8";
           }
+          instance.portfolioBlock(null, instance.search, instance.sort);
 
         } else {
 
@@ -300,10 +301,11 @@ ReviewListJs.prototype.insertInitBox = function () {
           }
 
           if (mode === "key9") {
-            instance.portfolioBlock(null, '', "key8");
+            instance.sort = "key8";
           } else {
-            instance.portfolioBlock(null, '', "key9");
+            instance.sort = "key9";
           }
+          instance.portfolioBlock(null, instance.search, instance.sort);
 
         }
 
@@ -474,7 +476,8 @@ ReviewListJs.prototype.insertInitBox = function () {
                       console.log(err);
                     });
 
-                    instance.portfolioBlock(null, this.value);
+                    instance.search = this.value;
+                    instance.portfolioBlock(null, instance.search, instance.sort);
                     instance.photoLoad = true;
                   } catch (e) {
                     console.log(e);
@@ -696,7 +699,8 @@ ReviewListJs.prototype.insertInitBox = function () {
                 dom.firstChild.querySelector('b').style.color = colorChip.deactive;
               }
             }
-            instance.portfolioBlock(null, /전체/gi.test(thisValue) ? "" : thisValue);
+            instance.search = /전체/gi.test(thisValue) ? "" : thisValue;
+            instance.portfolioBlock(null, instance.search, instance.sort);
             instance.photoLoad = true;
           }
         },
@@ -779,7 +783,7 @@ ReviewListJs.prototype.insertPortfolioBase = function () {
     }
   });
 
-  this.portfolioBlock(limitLength, null, "key9");
+  this.portfolioBlock(limitLength, null, instance.sort);
 }
 
 ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, sort = "key9") {
@@ -1205,6 +1209,8 @@ ReviewListJs.prototype.launching = async function (loading) {
     this.fullLoad = false;
     this.photoLoad = false;
     this.loadedContents = [];
+    this.sort = "key9";
+    this.search = "";
 
     await this.mother.ghostClientLaunching({
       mode: "front",
@@ -1234,7 +1240,7 @@ ReviewListJs.prototype.launching = async function (loading) {
         let scrollMin;
         scrollMin = <%% 1000, 1000, 900, 800, 300 %%>;
         if (window.scrollY > scrollMin && instance.fullLoad && !instance.photoLoad) {
-          instance.portfolioBlock(null, null, "key9");
+          instance.portfolioBlock(null, null, instance.sort);
           instance.photoLoad = true;
         }
       }, "windowScrollDebounce");
@@ -1248,7 +1254,7 @@ ReviewListJs.prototype.launching = async function (loading) {
 
         if (typeof getObj.search === "string") {
           if (document.querySelector("input") !== null) {
-            instance.portfolioBlock(null, getObj.search, "key9");
+            instance.portfolioBlock(null, getObj.search, instance.sort);
             instance.photoLoad = true;
           }
         }
