@@ -2694,15 +2694,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "이성혜",
-    //     designer: "우다미",
-    //     link: "https://drive.google.com/drive/folders/1PbftDSdo41-NU9aW9C2krbhJP2SSYhlb",
-    //     pay: true
-    //   },
-    //   {
-    //     client: "박혜정",
-    //     designer: "우다미",
-    //     link: "https://drive.google.com/drive/folders/1a4-IcKhMwa2IQiqvueQSw-qVvo4Ktu06",
+    //     client: "엄미경",
+    //     designer: "권미정",
+    //     link: "https://drive.google.com/drive/folders/1PTInAMNL6brfapOrZWTgleI0hor48t4X",
     //     pay: true
     //   },
     // ]);

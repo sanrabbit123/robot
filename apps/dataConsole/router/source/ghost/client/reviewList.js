@@ -78,6 +78,14 @@ ReviewListJs.prototype.insertInitBox = function () {
   const { ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const toggleTargetClassName = "toggleTargetClassName";
+  const toggleTargetClassName2 = "toggleTargetClassName2";
+  const circleClassName = "circleClassName";
+  const circleBaseClassName = "circleBaseClassName";
+  const touchStartConst = "toggleTouchStartConstName";
+  let mobileSearchWhiteBoxPaddingTop;
+  let mobileSearchWhiteBoxPaddingBottom;
+  let mobileSearchWhiteBoxMarginBottom;
   let whiteBlock;
   let style;
   let blockHeight;
@@ -116,6 +124,24 @@ ReviewListJs.prototype.insertInitBox = function () {
   let tagTongBottom;
   let boxTopVisual;
   let mobileBlockTop;
+  let buttonSize;
+  let buttonWeight;
+  let buttonBetween;
+  let buttonTongWidth;
+  let buttonWidth;
+  let buttonHeight;
+  let buttonTextTop;
+  let buttonLeft;
+  let circleWidth;
+  let tabletVisualBottom;
+  let mobileButtonTongMarginTop;
+  let mobileButtonBetween;
+  let contentsPaddingTop;
+  let designerDetailToggleEvent;
+  let sortBoxRight;
+  let mobileBackgroundHeight;
+  let mobileVisualPaddingLeft;
+  let tagBoxRight;
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
@@ -129,9 +155,9 @@ ReviewListJs.prototype.insertInitBox = function () {
 
   servicePaddingTop = <%% 7, 7, 7, 7, 7 %%>;
   servicePaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
-  servicePaddingLeft = <%% 13, 13, 13, 12, 2.2 %%>;
+  servicePaddingLeft = <%% 15, 15, 14, 13, 2.2 %%>;
   serviceMarginRight = <%% 6, 6, 6, 6, 6 %%>;
-  serviceSize = <%% 13, 13, 13, 12, 3.3 %%>;
+  serviceSize = <%% 13.5, 13.5, 13, 12, 3.3 %%>;
   serviceBlockPaddingTop = <%% (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), 5 %%>;
 
   whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
@@ -139,7 +165,7 @@ ReviewListJs.prototype.insertInitBox = function () {
 
   searchBarPaddingTop = <%% 220, 220, 192, 164, 14 %%>;
   searchBarHeight = <%% 40, 40, 40, 36, 8 %%>;
-  searchBarWidth = <%% 690, 516, 516, 420, 88 %%>;
+  searchBarWidth = <%% 690, 516, 516, 420, 78 %%>;
 
   searchIconHeight = <%% 20, 20, 20, 20, 4 %%>;
   searchIconRight = <%% 11, 11, 11, 11, 2 %%>;
@@ -155,7 +181,7 @@ ReviewListJs.prototype.insertInitBox = function () {
   subTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
 
   tagTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
-  tagTongBottom = <%% 3, 3, 1, 1, 0 %%>;
+  tagTongBottom = <%% 1, 1, 1, 1, 0 %%>;
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
   titleWording = "솔직한 고객 후기";
@@ -163,39 +189,135 @@ ReviewListJs.prototype.insertInitBox = function () {
 
   mobileBlockTop = 4.5;
 
+  mobileSearchWhiteBoxPaddingTop = 4.8;
+  mobileSearchWhiteBoxPaddingBottom = 4.8;
+  mobileSearchWhiteBoxMarginBottom = 5;
+
+  placeholder = "새아파트";
+
+  buttonSize = <%% 14, 14, 13, 13, 3.2 %%>;
+  buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
+  buttonBetween = <%% 2, 2, 2, 2, 2 %%>;
+
+  buttonTongWidth = <%% 65, 65, 60, 60, 90 %%>;
+
+  buttonWidth = <%% 26, 26, 26, 24, 5.6 %%>;
+  buttonHeight = <%% 12, 12, 12, 12, 3 %%>;
+  buttonTextTop = <%% (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 4 : 2), (isMac() ? 4 : 2), (isIphone() ? 1.2 : 1) %%>;
+  buttonLeft = <%% -34, -34, -34, -31, -7 %%>;
+  circleWidth = <%% 8, 8, 8, 8, 2 %%>;
+
+  tabletVisualBottom = 4;
+  mobileButtonTongMarginTop = 3;
+  mobileButtonBetween = 11.5;
+  contentsPaddingTop = <%% 16, 16, 16, 0, 1 %%>;
+
+  sortBoxRight = <%% 0, 0, 0, 0, 20 %%>;
+
+  mobileBackgroundHeight = isIphone() ? 75.5 : 73;
+  mobileVisualPaddingLeft = 6;
+
+  tagBoxRight = <%% 130, 128, 100, 100, 10 %%>;
+
   searchTags = [];
   if (media[0]) {
-    searchTags.push("깔끔한");
-    searchTags.push("감성적인");
-    searchTags.push("거실");
     searchTags.push("아이방");
     searchTags.push("모던");
     searchTags.push("제작가구");
     searchTags.push("화이트");
+    searchTags.push("30평대");
   } else if (media[1]) {
-    searchTags.push("깔끔한");
-    searchTags.push("감성적인");
     searchTags.push("아이방");
+    searchTags.push("모던");
     searchTags.push("제작가구");
     searchTags.push("화이트");
-  } else if (media[2]) {
-    searchTags.push("깔끔한");
-    searchTags.push("아이방");
-    searchTags.push("제작가구");
-    searchTags.push("화이트");
-  } else if (media[3]) {
-    searchTags.push("깔끔한");
-    searchTags.push("아이방");
-    searchTags.push("제작가구");
-  } else if (media[4]) {
-    searchTags.push("깔끔한");
-    searchTags.push("아이방");
-    searchTags.push("제작가구");
   }
 
-  placeholder = "새아파트";
-
   serviceButtonClassName = "serviceButton";
+
+  designerDetailToggleEvent = (toggleTargetClassName) => {
+    return async function (e) {
+      try {
+        const toggle = this.getAttribute("toggle");
+        const mode = this.getAttribute("mode");
+        const targets = [ ...document.querySelectorAll('.' + toggleTargetClassName) ];
+        const thisTarget = targets.find((dom) => { return dom.getAttribute("mode") === mode });
+        const oppositeTarget = targets.find((dom) => { return dom.getAttribute("mode") !== mode });
+        const thisCircleBase = thisTarget.querySelector('.' + circleBaseClassName);
+        const thisCircle = thisTarget.querySelector('.' + circleClassName);
+        const oppositeCircleBase = oppositeTarget.querySelector('.' + circleBaseClassName);
+        const oppositeCircle = oppositeTarget.querySelector('.' + circleClassName);
+
+        homeliaisonAnalytics({
+          page: instance.pageName,
+          standard: instance.firstPageViewTime,
+          action: "viewToggle",
+          data: {
+            mode: mode,
+            toggle: toggle,
+            date: dateToString(new Date(), true),
+          },
+        }).catch((err) => {
+          console.log(err);
+        });
+
+        if (toggle === "off") {
+
+          thisTarget.style.color = colorChip.green;
+          thisCircleBase.style.background = colorChip.green;
+          thisCircle.style.left = String(buttonWidth - circleWidth - ((buttonHeight - circleWidth) / 2)) + ea;
+          thisTarget.setAttribute("toggle", "on");
+
+          oppositeTarget.style.color = colorChip.deactive;
+          oppositeCircleBase.style.background = colorChip.gray5;
+          oppositeCircle.style.left = String((buttonHeight - circleWidth) / 2) + ea;
+          oppositeTarget.setAttribute("toggle", "off");
+
+          while (!instance.fullLoad) {
+            await sleep(500);
+          }
+
+          if (mode === "key9") {
+            instance.portfolioBlock(null, '', "key9");
+          } else {
+            instance.portfolioBlock(null, '', "key8");
+          }
+
+        } else {
+
+          thisTarget.style.color = colorChip.deactive;
+          thisCircleBase.style.background = colorChip.gray5;
+          thisCircle.style.left = String((buttonHeight - circleWidth) / 2) + ea;
+          thisTarget.setAttribute("toggle", "off");
+
+          oppositeTarget.style.color = colorChip.green;
+          oppositeCircleBase.style.background = colorChip.green;
+          oppositeCircle.style.left = String(buttonWidth - circleWidth - ((buttonHeight - circleWidth) / 2)) + ea;
+          oppositeTarget.setAttribute("toggle", "on");
+
+          while (!instance.fullLoad) {
+            await sleep(500);
+          }
+
+          if (mode === "key9") {
+            instance.portfolioBlock(null, '', "key8");
+          } else {
+            instance.portfolioBlock(null, '', "key9");
+          }
+
+        }
+
+        instance.photoLoad = true;
+
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+
+  if (mobile) {
+    instance.mother.backgroundImageBox.style.height = String(mobileBackgroundHeight) + ea;
+  }
 
   whiteBlock = createNode({
     mother: this.baseTong,
@@ -290,9 +412,16 @@ ReviewListJs.prototype.insertInitBox = function () {
       display: "flex",
       position: "relative",
       textAlign: "center",
-      justifyContent: "left",
+      justifyContent: desktop ? "left" : "center",
       alignItems: "center",
-      paddingTop: String(searchBarPaddingTop) + ea,
+      paddingTop: desktop ? String(searchBarPaddingTop) + ea : String(mobileSearchWhiteBoxPaddingTop) + ea,
+      paddingBottom: desktop ? "" : String(mobileSearchWhiteBoxPaddingBottom) + ea,
+      background: mobile ? colorChip.white : "",
+      borderRadius: mobile ? String(5) + "px" : "",
+      boxShadow: mobile ? "0px 3px 15px -9px " + colorChip.shadow : "",
+      flexDirection: mobile ? "column" : "row",
+      marginTop: mobile ? String(searchBarPaddingTop) + ea : "",
+      marginBottom: mobile ? String(mobileSearchWhiteBoxMarginBottom) + ea : "",
     },
     children: [
       {
@@ -302,8 +431,8 @@ ReviewListJs.prototype.insertInitBox = function () {
           width: String(searchBarWidth) + ea,
           height: String(searchBarHeight) + ea,
           borderRadius: String(5) + "px",
-          background: desktop ? colorChip.gray2 : colorChip.white,
-          opacity: desktop ? String(1) : String(0.88),
+          background: colorChip.gray2,
+          opacity: String(1),
         },
         children: [
           {
@@ -373,74 +502,30 @@ ReviewListJs.prototype.insertInitBox = function () {
     ]
   });
 
-
-
-
-  // DEV ============================================================================================================================================================
-  // DEV ============================================================================================================================================================
-
-
-  const toggleTargetClassName = "toggleTargetClassName";
-  const circleClassName = "circleClassName";
-  const circleBaseClassName = "circleBaseClassName";
-
-  let buttonSize
-  let buttonWeight
-  let buttonBetween
-  let buttonTongWidth
-  let buttonWidth
-  let buttonHeight
-  let buttonTextTop
-  let buttonLeft
-  let circleWidth
-  let tabletVisualBottom
-  let mobileButtonTongMarginTop
-  let mobileButtonBetween
-  let contentsPaddingTop
-  let designerDetailToggleEvent
-
-  buttonSize = <%% 14, 14, 13, 13, 3.2 %%>;
-  buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
-  buttonBetween = <%% 2, 2, 2, 2, 2 %%>;
-
-  buttonTongWidth = <%% 90, 90, 90, 90, 90 %%>;
-
-  buttonWidth = <%% 26, 26, 26, 26, 5.6 %%>;
-  buttonHeight = <%% 12, 12, 12, 12, 3 %%>;
-  buttonTextTop = <%% (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 4 : 2), (isMac() ? 4 : 2), (isIphone() ? 1.1 : 0.8) %%>;
-  buttonLeft = <%% -34, -34, -34, -34, -7 %%>;
-  circleWidth = <%% 8, 8, 8, 8, 2 %%>;
-
-  tabletVisualBottom = 4;
-  mobileButtonTongMarginTop = 3;
-  mobileButtonBetween = 10.5;
-  contentsPaddingTop = <%% 16, 16, 16, 0, 1 %%>;
-
-  designerDetailToggleEvent = () => {}
-
   createNode({
     mother: middleBox,
     style: {
       display: desktop ? "inline-flex" : "flex",
       flexDirection: desktop ? "column" : "row",
       position: desktop ? "absolute" : "relative",
-      width: desktop ? String(buttonTongWidth) + ea : "",
+      width: desktop ? String(buttonTongWidth) + ea : String(searchBarWidth) + ea,
       bottom: String(0),
       marginTop: desktop ? "" : String(mobileButtonTongMarginTop) + ea,
-      right: String(0),
-      justifyContent: desktop ? "left" : "right",
+      right: desktop ? String(sortBoxRight) + ea : "",
+      justifyContent: desktop ? "left" : "center",
       alignItems: "start",
       textAlign: "left",
+      paddingLeft: desktop ? "" : String(mobileVisualPaddingLeft) + ea,
     },
     children: [
       {
-        class: [ toggleTargetClassName ],
+        class: [ toggleTargetClassName2 ],
         attribute: {
           toggle: "on",
-          mode: "portfolio",
+          mode: "key9",
         },
         event: {
-          click: designerDetailToggleEvent,
+          click: designerDetailToggleEvent(toggleTargetClassName2),
           touchstart: function (e) {
             const self = this;
             self.setAttribute(touchStartConst, "on");
@@ -450,173 +535,7 @@ ReviewListJs.prototype.insertInitBox = function () {
           },
           touchend: function (e) {
             if (this.getAttribute(touchStartConst) === "on") {
-              designerDetailToggleEvent.call(this, e);
-            }
-          }
-        },
-        text: "포트폴리오 보기",
-        style: {
-          display: "inline-block",
-          position: "relative",
-          fontSize: String(buttonSize) + ea,
-          fontWeight: String(buttonWeight),
-          color: colorChip.green,
-          cursor: "pointer",
-          transition: "all 0.5s ease",
-        },
-        children: [
-          {
-            class: [ circleBaseClassName ],
-            style: {
-              position: "absolute",
-              width: String(buttonWidth) + ea,
-              height: String(buttonHeight) + ea,
-              background: colorChip.green,
-              top: String(buttonTextTop) + ea,
-              left: String(buttonLeft) + ea,
-              borderRadius: String(buttonHeight) + ea,
-              transition: "all 0.5s ease",
-            },
-            children: [
-              {
-                style: {
-                  display: "block",
-                  position: "relative",
-                  width: withOut(0),
-                  height: withOut(0),
-                },
-                children: [
-                  {
-                    class: [ circleClassName ],
-                    style: {
-                      display: "inline-block",
-                      width: String(circleWidth) + ea,
-                      height: String(circleWidth) + ea,
-                      borderRadius: String(circleWidth) + ea,
-                      top: String((buttonHeight - circleWidth) / 2) + ea,
-                      left: String(buttonWidth - circleWidth - ((buttonHeight - circleWidth) / 2)) + ea,
-                      background: colorChip.white,
-                      position: "absolute",
-                      transition: "all 0.5s ease",
-                    }
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        class: [ toggleTargetClassName ],
-        attribute: {
-          toggle: "off",
-          mode: "photo",
-        },
-        event: {
-          click: designerDetailToggleEvent,
-          touchstart: function (e) {
-            const self = this;
-            self.setAttribute(touchStartConst, "on");
-            setQueue(() => {
-              self.setAttribute(touchStartConst, "off");
-            });
-          },
-          touchend: function (e) {
-            if (this.getAttribute(touchStartConst) === "on") {
-              designerDetailToggleEvent.call(this, e);
-            }
-          }
-        },
-        text: "사진만 보기",
-        style: {
-          marginTop: desktop ? String(buttonBetween) + ea : '',
-          marginLeft: desktop ? '' : String(mobileButtonBetween) + ea,
-          display: "inline-block",
-          position: "relative",
-          fontSize: String(buttonSize) + ea,
-          fontWeight: String(buttonWeight),
-          color: colorChip.deactive,
-          cursor: "pointer",
-          transition: "all 0.5s ease",
-        },
-        children: [
-          {
-            class: [ circleBaseClassName ],
-            style: {
-              position: "absolute",
-              width: String(buttonWidth) + ea,
-              height: String(buttonHeight) + ea,
-              background: colorChip.gray5,
-              top: String(buttonTextTop) + ea,
-              left: String(buttonLeft) + ea,
-              borderRadius: String(buttonHeight) + ea,
-              transition: "all 0.5s ease",
-            },
-            children: [
-              {
-                style: {
-                  display: "block",
-                  position: "relative",
-                  width: withOut(0),
-                  height: withOut(0),
-                },
-                children: [
-                  {
-                    class: [ circleClassName ],
-                    style: {
-                      display: "inline-block",
-                      width: String(circleWidth) + ea,
-                      height: String(circleWidth) + ea,
-                      borderRadius: String(circleWidth) + ea,
-                      top: String((buttonHeight - circleWidth) / 2) + ea,
-                      left: String((buttonHeight - circleWidth) / 2) + ea,
-                      background: colorChip.white,
-                      position: "absolute",
-                      transition: "all 0.5s ease",
-                    }
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-    ]
-  });
-
-  createNode({
-    mother: middleBox,
-    style: {
-      display: desktop ? "inline-flex" : "flex",
-      flexDirection: desktop ? "column" : "row",
-      position: desktop ? "absolute" : "relative",
-      width: desktop ? String(buttonTongWidth) + ea : "",
-      bottom: String(0),
-      marginTop: desktop ? "" : String(mobileButtonTongMarginTop) + ea,
-      right: String(125) + ea,
-      justifyContent: desktop ? "left" : "right",
-      alignItems: "start",
-      textAlign: "left",
-    },
-    children: [
-      {
-        class: [ toggleTargetClassName ],
-        attribute: {
-          toggle: "on",
-          mode: "portfolio",
-        },
-        event: {
-          click: designerDetailToggleEvent,
-          touchstart: function (e) {
-            const self = this;
-            self.setAttribute(touchStartConst, "on");
-            setQueue(() => {
-              self.setAttribute(touchStartConst, "off");
-            });
-          },
-          touchend: function (e) {
-            if (this.getAttribute(touchStartConst) === "on") {
-              designerDetailToggleEvent.call(this, e);
+              designerDetailToggleEvent(toggleTargetClassName2).call(this, e);
             }
           }
         },
@@ -673,13 +592,13 @@ ReviewListJs.prototype.insertInitBox = function () {
         ]
       },
       {
-        class: [ toggleTargetClassName ],
+        class: [ toggleTargetClassName2 ],
         attribute: {
           toggle: "off",
-          mode: "photo",
+          mode: "key8",
         },
         event: {
-          click: designerDetailToggleEvent,
+          click: designerDetailToggleEvent(toggleTargetClassName2),
           touchstart: function (e) {
             const self = this;
             self.setAttribute(touchStartConst, "on");
@@ -689,7 +608,7 @@ ReviewListJs.prototype.insertInitBox = function () {
           },
           touchend: function (e) {
             if (this.getAttribute(touchStartConst) === "on") {
-              designerDetailToggleEvent.call(this, e);
+              designerDetailToggleEvent(toggleTargetClassName2).call(this, e);
             }
           }
         },
@@ -750,100 +669,89 @@ ReviewListJs.prototype.insertInitBox = function () {
     ]
   });
 
-
-  // DEV ============================================================================================================================================================
-  // DEV ============================================================================================================================================================
-
-
-  // serviceChildren = [];
-  // for (let service of searchTags) {
-  //   serviceChildren.push({
-  //     class: [
-  //       serviceButtonClassName
-  //     ],
-  //     attribute: {
-  //       toggle: "off",
-  //       value: service,
-  //     },
-  //     event: {
-  //       click: function (e) {
-  //         const targets = [ ...document.querySelectorAll('.' + serviceButtonClassName) ];
-  //         let thisValue;
-  //         for (let dom of targets) {
-  //           if (dom === this) {
-  //             dom.setAttribute("toggle", "on");
-  //             dom.firstChild.style.color = colorChip.black;
-  //             dom.firstChild.querySelector('b').style.color = colorChip.green;
-  //             thisValue = dom.getAttribute("value");
-  //           } else {
-  //             dom.setAttribute("toggle", "off");
-  //             dom.firstChild.style.color = colorChip.deactive;
-  //             dom.firstChild.querySelector('b').style.color = colorChip.deactive;
-  //           }
-  //         }
-  //         instance.portfolioBlock(null, /전체/gi.test(thisValue) ? "" : thisValue);
-  //         instance.photoLoad = true;
-  //       }
-  //     },
-  //     style: {
-  //       display: "inline-flex",
-  //       position: "relative",
-  //       height: String(searchBarHeight - (tagTongBottom * 2)) + ea,
-  //       marginRight: String(serviceMarginRight) + ea,
-  //       paddingLeft: String(servicePaddingLeft) + ea,
-  //       paddingRight: String(servicePaddingLeft) + ea,
-  //       textAlign: "center",
-  //       background: colorChip.gray2,
-  //       borderRadius: String(5) + "px",
-  //       cursor: "pointer",
-  //       justifyContent: "center",
-  //       alignItems: "center",
-  //       textAlign: "center",
-  //     },
-  //     children: [
-  //       {
-  //         text: "<b%#%b> " + service,
-  //         style: {
-  //           display: "inline-block",
-  //           position: "relative",
-  //           top: String(tagTextTop) + ea,
-  //           fontSize: String(serviceSize) + ea,
-  //           fontWeight: String(400),
-  //           color: colorChip.black,
-  //           cursor: "pointer",
-  //           textAlign: "center",
-  //         },
-  //         bold: {
-  //           color: colorChip.deactive,
-  //         }
-  //       }
-  //     ]
-  //   });
-  // }
-  //
-  // serviceBlock = createNode({
-  //   mother: middleBox,
-  //   style: {
-  //     display: desktop ? "block" : "none",
-  //     position: "absolute",
-  //     textAlign: "center",
-  //     right: String(200) + ea,
-  //     bottom: String(tagTongBottom) + ea,
-  //   },
-  //   children: serviceChildren
-  // });
-  //
-  // for (let dom of serviceBlock.children) {
-  //   dom.firstChild.style.width = String(Math.ceil(dom.firstChild.getBoundingClientRect().width + 1)) + "px";
-  //   dom.style.width = String(Math.ceil(dom.firstChild.getBoundingClientRect().width) + 1) + "px";
-  // }
-  //
-  // serviceBlock.lastChild.style.marginRight = "";
-
-
-  // DEV ============================================================================================================================================================
-  // DEV ============================================================================================================================================================
-
+  if (media[0] || media[1]) {
+    serviceChildren = [];
+    for (let service of searchTags) {
+      serviceChildren.push({
+        class: [
+          serviceButtonClassName
+        ],
+        attribute: {
+          toggle: "off",
+          value: service,
+        },
+        event: {
+          click: function (e) {
+            const targets = [ ...document.querySelectorAll('.' + serviceButtonClassName) ];
+            let thisValue;
+            for (let dom of targets) {
+              if (dom === this) {
+                dom.setAttribute("toggle", "on");
+                dom.firstChild.style.color = colorChip.black;
+                dom.firstChild.querySelector('b').style.color = colorChip.green;
+                thisValue = dom.getAttribute("value");
+              } else {
+                dom.setAttribute("toggle", "off");
+                dom.firstChild.style.color = colorChip.deactive;
+                dom.firstChild.querySelector('b').style.color = colorChip.deactive;
+              }
+            }
+            instance.portfolioBlock(null, /전체/gi.test(thisValue) ? "" : thisValue);
+            instance.photoLoad = true;
+          }
+        },
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          height: String(searchBarHeight - (tagTongBottom * 2)) + ea,
+          marginRight: String(serviceMarginRight) + ea,
+          paddingLeft: String(servicePaddingLeft) + ea,
+          paddingRight: String(servicePaddingLeft) + ea,
+          textAlign: "center",
+          background: colorChip.gray2,
+          borderRadius: String(5) + "px",
+          cursor: "pointer",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+        },
+        children: [
+          {
+            text: "<b%#%b> " + service,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(tagTextTop) + ea,
+              fontSize: String(serviceSize) + ea,
+              fontWeight: String(400),
+              color: colorChip.black,
+              cursor: "pointer",
+              textAlign: "center",
+            },
+            bold: {
+              color: colorChip.deactive,
+            }
+          }
+        ]
+      });
+    }
+    serviceBlock = createNode({
+      mother: middleBox,
+      style: {
+        display: desktop ? "block" : "none",
+        position: "absolute",
+        textAlign: "center",
+        right: String(tagBoxRight) + ea,
+        bottom: String(tagTongBottom) + ea,
+      },
+      children: serviceChildren
+    });
+    for (let dom of serviceBlock.children) {
+      dom.firstChild.style.width = String(Math.ceil(dom.firstChild.getBoundingClientRect().width + 1)) + "px";
+      dom.style.width = String(Math.ceil(dom.firstChild.getBoundingClientRect().width) + 1) + "px";
+    }
+    serviceBlock.lastChild.style.marginRight = "";
+  }
 
 }
 
@@ -871,10 +779,10 @@ ReviewListJs.prototype.insertPortfolioBase = function () {
     }
   });
 
-  this.portfolioBlock(limitLength, null);
+  this.portfolioBlock(limitLength, null, "key9");
 }
 
-ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
+ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, sort = "key9") {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, equalJson, cleanChildren, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
   const { ea, media, baseTong } = this;
@@ -883,7 +791,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
   const photoChar = 't';
   const photoCharMobile = "mot";
   const touchStartConst = "touchStartConstName";
-  let { contentsArr, designers } = this;
+  let { designers } = this;
   let baseBlock;
   let gsArray;
   let baseWidth;
@@ -920,17 +828,18 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
   let arrowBottom;
   let arrowReviewBottom;
   let subTitleTextTop;
+  let contentsArr;
 
   if (typeof search === "string") {
 
     if (search === '') {
-      contentsArr = contentsArr;
+      contentsArr = this.contentsArr;
     } else {
 
       if (/엑스트라/gi.test(search)) {
         search = "엑스트라";
       }
-      contentsArr = contentsArr.toNormal().filter((obj) => {
+      contentsArr = this.contentsArr.toNormal().filter((obj) => {
         let boo;
         let target;
         let projectTarget;
@@ -957,7 +866,18 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
     }
 
   } else {
-    contentsArr = contentsArr;
+    contentsArr = this.contentsArr;
+  }
+
+  contentsArr = equalJson(JSON.stringify(contentsArr)).filter((obj) => { return obj.contents.review.detailInfo.photodae.length > 1 });
+  if (sort === "key9") {
+    contentsArr.sort((a, b) => {
+      return Number(b.contents.review.detailInfo.order) - Number(a.contents.review.detailInfo.order);
+    });
+  } else {
+    contentsArr.sort((a, b) => {
+      return Number(b.contents.portfolio.detailInfo.sort.key8) - Number(a.contents.portfolio.detailInfo.sort.key8);
+    });
   }
 
   if (limitLength === null) {
@@ -1028,149 +948,146 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null) {
 
         ({ contents } = contentsArr[i]);
 
-        if (contents.review.detailInfo.photodae.length > 1) {
+        if (desktop) {
+          src = FRONTHOST + "/list_image/portp" + contents.portfolio.pid + "/" + photoChar + String(contents.review.detailInfo.photodae[gsArray[i] === 'g' ? 1 : 0]) + contents.portfolio.pid + ".jpg";
+        } else {
+          src = FRONTHOST + "/list_image/portp" + contents.portfolio.pid + "/mobile/" + photoCharMobile + String(contents.review.detailInfo.photodae[gsArray[i] === 'g' ? 1 : 0]) + contents.portfolio.pid + ".jpg";
+        }
 
-          if (desktop) {
-            src = FRONTHOST + "/list_image/portp" + contents.portfolio.pid + "/" + photoChar + String(contents.review.detailInfo.photodae[gsArray[i] === 'g' ? 1 : 0]) + contents.portfolio.pid + ".jpg";
-          } else {
-            src = FRONTHOST + "/list_image/portp" + contents.portfolio.pid + "/mobile/" + photoCharMobile + String(contents.review.detailInfo.photodae[gsArray[i] === 'g' ? 1 : 0]) + contents.portfolio.pid + ".jpg";
+        title = contents.review.title.sub.split(", ").join(" ");
+        tag = equalJson(JSON.stringify(contents.portfolio.detailInfo.tag));
+
+        if (gsArray[i] !== 'g') {
+          tag = tag.slice(garoSliceStart, garoSliceEnd);
+          if (tag.reduce((acc, curr) => { return acc + curr.length }, 0) > garoSliceLimit) {
+            tag = tag.slice(0, -1);
           }
-
-          title = contents.review.title.sub.split(", ").join(" ");
-          tag = equalJson(JSON.stringify(contents.portfolio.detailInfo.tag));
-
-          if (gsArray[i] !== 'g') {
-            tag = tag.slice(garoSliceStart, garoSliceEnd);
-            if (tag.reduce((acc, curr) => { return acc + curr.length }, 0) > garoSliceLimit) {
-              tag = tag.slice(0, -1);
-            }
-          } else {
-            tag = tag.slice(seroSliceStart, seroSliceEnd);
-            if (tag.reduce((acc, curr) => { return acc + curr.length }, 0) > seroSliceLimit) {
-              tag = tag.slice(0, -1);
-            }
+        } else {
+          tag = tag.slice(seroSliceStart, seroSliceEnd);
+          if (tag.reduce((acc, curr) => { return acc + curr.length }, 0) > seroSliceLimit) {
+            tag = tag.slice(0, -1);
           }
+        }
 
-          block = createNode({
-            mother: baseBlock,
-            attribute: {
-              pid: contents.portfolio.pid,
+        block = createNode({
+          mother: baseBlock,
+          attribute: {
+            pid: contents.portfolio.pid,
+          },
+          event: {
+            click: function (e) {
+              const pid = this.getAttribute("pid");
+              selfHref(FRONTHOST + "/revdetail.php?pid=" + pid);
             },
-            event: {
-              click: function (e) {
+            touchstart: function (e) {
+              const self = this;
+              self.setAttribute(touchStartConst, "on");
+              setQueue(() => {
+                self.setAttribute(touchStartConst, "off");
+              });
+            },
+            touchend: function (e) {
+              if (this.getAttribute(touchStartConst) === "on") {
                 const pid = this.getAttribute("pid");
                 selfHref(FRONTHOST + "/revdetail.php?pid=" + pid);
-              },
-              touchstart: function (e) {
-                const self = this;
-                self.setAttribute(touchStartConst, "on");
-                setQueue(() => {
-                  self.setAttribute(touchStartConst, "off");
-                });
-              },
-              touchend: function (e) {
-                if (this.getAttribute(touchStartConst) === "on") {
-                  const pid = this.getAttribute("pid");
-                  selfHref(FRONTHOST + "/revdetail.php?pid=" + pid);
-                }
+              }
+            }
+          },
+          style: {
+            display: "inline-block",
+            width: String(gsArray[i] === 'g' ? garoWidth : seroWidth) + ea,
+            borderRadius: String(5) + "px",
+            marginRight: String(photoMargin) + ea,
+            marginBottom: String(photoBlockMarginBottom) + ea,
+            verticalAlign: "top",
+            overflow: "hidden",
+            cursor: "pointer",
+          },
+          children: [
+            {
+              style: {
+                display: "block",
+                width: String(gsArray[i] === 'g' ? garoWidth : seroWidth) + ea,
+                height: String(photoHeight) + ea,
+                borderRadius: String(5) + "px",
+                marginBottom: String(photoMarginBottom) + ea,
+                backgroundSize: "100% auto",
+                backgroundPosition: "50% 50%",
+                backgroundImage: "url('" + src + "')",
               }
             },
-            style: {
-              display: "inline-block",
-              width: String(gsArray[i] === 'g' ? garoWidth : seroWidth) + ea,
-              borderRadius: String(5) + "px",
-              marginRight: String(photoMargin) + ea,
-              marginBottom: String(photoBlockMarginBottom) + ea,
-              verticalAlign: "top",
-              overflow: "hidden",
-              cursor: "pointer",
-            },
-            children: [
-              {
-                style: {
-                  display: "block",
-                  width: String(gsArray[i] === 'g' ? garoWidth : seroWidth) + ea,
-                  height: String(photoHeight) + ea,
-                  borderRadius: String(5) + "px",
-                  marginBottom: String(photoMarginBottom) + ea,
-                  backgroundSize: "100% auto",
-                  backgroundPosition: "50% 50%",
-                  backgroundImage: "url('" + src + "')",
+            {
+              style: {
+                display: "block",
+                position: "relative",
+                width: String(100) + '%',
+              },
+              children: [
+                {
+                  mode: "svg",
+                  source: svgMaker.doubleQuote(colorChip.green),
+                  style: {
+                    display: "inline-block",
+                    height: String(quoteHeight) + ea,
+                    width: String(quoteWidth) + ea,
+                    verticalAlign: "top",
+                    position: "relative",
+                    top: String(quoteTop) + ea,
+                  }
+                },
+                {
+                  text: title,
+                  style: {
+                    display: "inline-block",
+                    fontSize: String(titleSize) + ea,
+                    fontWeight: String(titleWeight),
+                    color: colorChip.black,
+                    marginLeft: String(titleMarginLeft) + ea,
+                    width: withOut(quoteWidth + titleMarginLeft, ea),
+                    verticalAlign: "top",
+                  }
                 }
+              ]
+            },
+            {
+              style: {
+                display: "block",
+                position: "relative",
+                marginTop: String(subTitleMarginTop) + ea,
+                paddingLeft: String(quoteWidth + titleMarginLeft + reviewSubTitleVisual) + ea,
+                width: withOut(quoteWidth + titleMarginLeft + reviewSubTitleVisual, ea),
+                left: String(0) + ea,
               },
-              {
-                style: {
-                  display: "block",
-                  position: "relative",
-                  width: String(100) + '%',
-                },
-                children: [
-                  {
-                    mode: "svg",
-                    source: svgMaker.doubleQuote(colorChip.green),
-                    style: {
-                      display: "inline-block",
-                      height: String(quoteHeight) + ea,
-                      width: String(quoteWidth) + ea,
-                      verticalAlign: "top",
-                      position: "relative",
-                      top: String(quoteTop) + ea,
-                    }
-                  },
-                  {
-                    text: title,
-                    style: {
-                      display: "inline-block",
-                      fontSize: String(titleSize) + ea,
-                      fontWeight: String(titleWeight),
-                      color: colorChip.black,
-                      marginLeft: String(titleMarginLeft) + ea,
-                      width: withOut(quoteWidth + titleMarginLeft, ea),
-                      verticalAlign: "top",
-                    }
+              children: [
+                {
+                  text: contents.portfolio.spaceInfo.space + " " + String(contents.portfolio.spaceInfo.pyeong) + "py " + (desktop ? "홈스타일링 후기" : "후기"),
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    top: String(subTitleTextTop) + ea,
+                    fontSize: String(subTitleSize) + ea,
+                    fontWeight: String(titleWeight),
+                    color: colorChip.gray5,
                   }
-                ]
-              },
-              {
-                style: {
-                  display: "block",
-                  position: "relative",
-                  marginTop: String(subTitleMarginTop) + ea,
-                  paddingLeft: String(quoteWidth + titleMarginLeft + reviewSubTitleVisual) + ea,
-                  width: withOut(quoteWidth + titleMarginLeft + reviewSubTitleVisual, ea),
-                  left: String(0) + ea,
                 },
-                children: [
-                  {
-                    text: contents.portfolio.spaceInfo.space + " " + String(contents.portfolio.spaceInfo.pyeong) + "py " + (desktop ? "홈스타일링 후기" : "후기"),
-                    style: {
-                      display: "inline-block",
-                      position: "relative",
-                      top: String(subTitleTextTop) + ea,
-                      fontSize: String(subTitleSize) + ea,
-                      fontWeight: String(titleWeight),
-                      color: colorChip.gray5,
-                    }
-                  },
-                  {
-                    mode: "svg",
-                    source: svgMaker.horizontalArrow(arrowWidth, arrowHeight),
-                    style: {
-                      position: "absolute",
-                      width: String(arrowWidth) + ea,
-                      right: String(0),
-                      bottom: String(arrowReviewBottom) + ea,
-                    }
+                {
+                  mode: "svg",
+                  source: svgMaker.horizontalArrow(arrowWidth, arrowHeight),
+                  style: {
+                    position: "absolute",
+                    width: String(arrowWidth) + ea,
+                    right: String(0),
+                    bottom: String(arrowReviewBottom) + ea,
                   }
-                ]
-              }
-            ]
-          });
+                }
+              ]
+            }
+          ]
+        });
 
 
-          if (search === null) {
-            this.loadedContents.push(i);
-          }
+        if (search === null) {
+          this.loadedContents.push(i);
         }
       }
     }
@@ -1317,7 +1234,7 @@ ReviewListJs.prototype.launching = async function (loading) {
         let scrollMin;
         scrollMin = <%% 1000, 1000, 900, 800, 300 %%>;
         if (window.scrollY > scrollMin && instance.fullLoad && !instance.photoLoad) {
-          instance.portfolioBlock(null, null);
+          instance.portfolioBlock(null, null, "key9");
           instance.photoLoad = true;
         }
       }, "windowScrollDebounce");
@@ -1331,7 +1248,7 @@ ReviewListJs.prototype.launching = async function (loading) {
 
         if (typeof getObj.search === "string") {
           if (document.querySelector("input") !== null) {
-            instance.portfolioBlock(null, getObj.search);
+            instance.portfolioBlock(null, getObj.search, "key9");
             instance.photoLoad = true;
           }
         }
