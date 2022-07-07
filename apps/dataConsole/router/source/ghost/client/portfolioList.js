@@ -699,6 +699,19 @@ PortfolioListJs.prototype.insertInitBox = function () {
                 dom.firstChild.querySelector('b').style.color = colorChip.deactive;
               }
             }
+
+            homeliaisonAnalytics({
+              page: instance.pageName,
+              standard: instance.firstPageViewTime,
+              action: "clickKeyword",
+              data: {
+                value: thisValue,
+                date: dateToString(new Date(), true),
+              },
+            }).catch((err) => {
+              console.log(err);
+            });
+
             instance.search = /전체/gi.test(thisValue) ? "" : thisValue;
             instance.portfolioBlock(null, instance.search, instance.sort);
             instance.photoLoad = true;

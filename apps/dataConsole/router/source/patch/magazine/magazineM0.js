@@ -19,252 +19,264 @@ MagazineM0Js.prototype.returnContents = function () {
   };
 }
 
-MagazineM0Js.prototype.insertInitBox = function () {
+MagazineM0Js.prototype.mainContents = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media } = this;
+  const { createNode, colorChip, withOut, svgMaker, equalJson, designerMthParsing, designerCareer, isMac, isIphone, selfHref, setQueue } = GeneralJs;
+  const { totalContents, ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  let whiteBlock;
-  let style;
-  let blockHeight;
-  let leftBox, rightBox;
-  let titleBox, barBox, indexBox;
-  let margin;
-  let quoteWidth;
-  let quoteHeight;
-  let titleFontSize, titleFontWeight;
-  let serviceChildren;
-  let searchTags;
-  let titleWording;
-  let servicePaddingLeft;
-  let serviceSize;
-  let serviceBlockPaddingTop;
-  let whiteBlockPaddingTop, whiteBlockPaddingBottom;
-  let quotoTongHeight;
-  let searchBarPaddingTop;
-  let searchBarHeight;
-  let searchBarWidth;
-  let searchIconHeight;
-  let searchIconRight, searchIconTop;
-  let whiteBlockMarginBottom;
-  let inputWithoutHeight;
-  let serviceButtonClassName;
-  let serviceBlock;
-  let inputSize, inputWeight;
-  let placeholder;
-  let titleTop;
-  let servicePaddingTop, servicePaddingBottom;
-  let serviceMarginRight;
-  let subTitleMarginTop, subTitleFontSize, subTitleWeight;
-  let subTitleContents;
-  let middleBox;
-  let tagTextTop;
-  let tagTongBottom;
-  let boxTopVisual;
-  let mobileBlockTop;
-
-  let contents;
-
-  contents = this.returnContents();
-
-  margin = <%% 30, 30, 30, 30, 30 %%>;
-
-  whiteBlockMarginBottom = <%% 134, 80, 74, 60, 14.5 %%>;
-
-  quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
-  quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
-  titleFontSize = <%% 35, 33, 32, 30, 6.4 %%>;
-  titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
-  titleTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 4) %%>;
-
-  servicePaddingTop = <%% 7, 7, 7, 7, 7 %%>;
-  servicePaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
-  servicePaddingLeft = <%% 13, 13, 13, 12, 2.2 %%>;
-  serviceMarginRight = <%% 6, 6, 6, 6, 6 %%>;
-  serviceSize = <%% 13, 13, 13, 12, 3.3 %%>;
-  serviceBlockPaddingTop = <%% (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), 5 %%>;
-
-  whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
-  whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
-
-  searchBarPaddingTop = <%% 220, 220, 192, 164, 12.5 %%>;
-  searchBarHeight = <%% 40, 40, 40, 36, 8 %%>;
-  searchBarWidth = <%% 690, 516, 516, 420, 88 %%>;
-
-  searchIconHeight = <%% 20, 20, 20, 20, 4 %%>;
-  searchIconRight = <%% 11, 11, 11, 11, 2 %%>;
-  searchIconTop = <%% 10, 10, 10, 10, 1.8 %%>;
-
-  inputWithoutHeight = <%% (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), 0.8 %%>;
-
-  inputSize = <%% 15, 15, 15, 14, 3.1 %%>;
-  inputWeight = <%% 300, 300, 300, 300, 300 %%>;
-
-  subTitleMarginTop = <%% 2, 2, 1, 1, 0.2 %%>;
-  subTitleFontSize = <%% 16, 16, 16, 15, 3.2 %%>;
-  subTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
-
-  tagTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
-  tagTongBottom = <%% 3, 3, 1, 1, 0 %%>;
-  boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
-
-  titleWording = contents.title.main;
-  subTitleContents = contents.title.sub;
-
-  mobileBlockTop = 4.5;
-
-  whiteBlock = createNode({
-    mother: this.baseTong,
-    style: {
-      display: "block",
-      position: "relative",
-      borderRadius: String(desktop ? 8 : 1) + ea,
-      width: String(100) + '%',
-      marginBottom: String(whiteBlockMarginBottom) + ea,
-      top: String(-1 * boxTopVisual) + ea,
-      paddingTop: desktop ? "" : String(mobileBlockTop) + ea,
-    }
-  });
-
-  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.white))) * quoteHeight;
-  createNode({
-    mother: whiteBlock,
-    style: {
-      display: "flex",
-      position: "relative",
-      textAlign: "center",
-      justifyContent: "center",
-      alignItems: "center",
-      height: String(quotoTongHeight) + ea,
-      opacity: String(0.6),
-    },
-    children: [
-      {
-        mode: "svg",
-        source: svgMaker.doubleQuote(colorChip.white),
-        style: {
-          display: "inline-block",
-          height: String(quoteHeight) + ea,
-          width: String(quoteWidth) + ea,
-        }
-      }
-    ]
-  });
-
-  createNode({
-    mother: whiteBlock,
-    style: {
-      display: "flex",
-      position: "relative",
-      textAlign: "center",
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    children: [
-      {
-        text: titleWording,
-        style: {
-          display: "inline-block",
-          position: "relative",
-          top: mobile ? "" : String(titleTop) + ea,
-          fontSize: String(titleFontSize) + ea,
-          fontWeight: String(titleFontWeight),
-          color: colorChip.white,
-        }
-      }
-    ]
-  });
-
-  createNode({
-    mother: whiteBlock,
-    style: {
-      display: "flex",
-      position: "relative",
-      textAlign: "center",
-      justifyContent: "center",
-      alignItems: "center",
-      marginTop: String(subTitleMarginTop) + ea,
-    },
-    children: [
-      {
-        text: subTitleContents,
-        style: {
-          display: "inline-block",
-          position: "relative",
-          top: mobile ? "" : String(0) + ea,
-          fontSize: String(subTitleFontSize) + ea,
-          fontWeight: String(subTitleWeight),
-          color: colorChip.white,
-        }
-      }
-    ]
-  });
-
-}
-
-MagazineM0Js.prototype.insertContentsBox = function () {
-  const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, ajaxJson } = GeneralJs;
-  const { ea, media, standardWidth } = this;
-  const mobile = media[4];
-  const desktop = !mobile;
-  const big = (media[0] || media[1] || media[2]);
-  const small = !big;
-  let contentsAreaMarginTop;
+  let mainWidth;
   let mainPaddingTop;
-  let mainPaddingBottom;
-  let innerPadding;
-  let mainBlock;
-  let contentsArea;
-  let contentsTong;
+  let titleSize;
+  let titleWeight;
+  let titleLineHeight;
+  let titleBarMarginTop;
+  let titleBarWidth;
+  let contentsSize;
+  let contentsWeight;
+  let contentsLineHeight;
+  let mainTong;
+  let titleBarMarginBottom;
+  let photoMargin;
+  let blankMarginFirst;
+  let blankMargin;
+  let blankMargin2;
+  let blankMarginLast;
+  let contentsMarginBottom;
+  let binaryPath;
 
-  contentsAreaMarginTop = <%% 45, 40, 34, 28, 6 %%>;
+  binaryPath = FRONTHOST + "/list_image/magaz" + "m0";
 
-  mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 103 : 102), (isMac() ? 83 : 82), 10 %%>;
-  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 118 : 117), (isMac() ? 98 : 97), 20 %%>;
+  mainWidth = <%% 900, 900, 900, 720, 100 %%>;
+  mainPaddingTop = <%% 110, 110, 110, 80, 11.7 %%>;
 
-  innerPadding = <%% 60, 50, 45, 40, 6 %%>;
+  titleSize = <%% 23, 23, 23, 21, 4.8 %%>;
+  titleWeight = <%% 700, 700, 700, 700, 700 %%>;
+  titleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+  titleBarMarginTop = <%% 15, 15, 15, 15, 3 %%>;
+  titleBarWidth = <%% 80, 80, 80, 80, 18 %%>;
+  titleBarMarginBottom = <%% 36, 36, 36, 36, 5.5 %%>;
 
-  mainBlock = createNode({
-    mother: this.baseTong,
+  contentsSize = <%% 16, 16, 16, 15, 3.8 %%>;
+  contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
+  contentsLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
+  contentsMarginBottom = <%% 36, 36, 36, 36, 6 %%>;
+
+  photoMargin = <%% 8, 8, 8, 8, 1 %%>;
+  blankMarginFirst = <%% 126, 126, 126, 96, 13.5 %%>;
+  blankMargin = <%% 100, 100, 100, 70, 11 %%>;
+  blankMargin2 = <%% 100, 100, 100, 70, 10 %%>;
+  blankMarginLast = <%% 200, 200, 200, 170, 20 %%>;
+
+
+  mainTong = createNode({
+    mother: totalContents,
     style: {
       display: "block",
       position: "relative",
-      paddingBottom: String(mainPaddingBottom) + ea,
-    }
+      width: String(mainWidth) + ea,
+      left: "calc(50% - " + String(mainWidth / 2) + ea + ")",
+      background: colorChip.white,
+      paddingTop: String(mainPaddingTop) + ea,
+      paddingBottom: String(200) + ea,
+      animation: "fadeupdelay 0.5s ease forwards",
+    },
   });
-
-  contentsArea = createNode({
-    mother: mainBlock,
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(100) + '%',
-      marginTop: String(contentsAreaMarginTop) + ea,
-      paddingTop: String(innerPadding) + ea,
-      paddingBottom: String(innerPadding) + ea,
-    }
-  });
-
-  contentsTong = createNode({
-    mother: contentsArea,
-    style: {
-      display: "block",
-      position: "relative",
-      marginLeft: String(innerPadding) + ea,
-      width: withOut(innerPadding * 2, ea),
-    }
-  })
 
   createNode({
-    mother: contentsTong,
+    mother: mainTong,
+    text: "멋진 인테리어는\n벽을 낭비하지 않는다.",
+    style: {
+      display: "block",
+      position: "relative",
+      textAlign: "center",
+      fontSize: String(titleSize) + ea,
+      fontWeight: String(titleWeight),
+      lineHeight: String(titleLineHeight),
+      color: colorChip.black,
+    }
+  });
+
+  createNode({
+    mother: mainTong,
+    style: {
+      display: "block",
+      position: "relative",
+      textAlign: "center",
+      marginTop: String(titleBarMarginTop) + ea,
+      marginBottom: String(titleBarMarginBottom) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: "inline-block",
+          width: String(titleBarWidth) + ea,
+          borderBottom: "1px solid " + colorChip.gray3,
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: mainTong,
     text: "모든 집에는 벽이 있다. 집에서 아주 많은 면적을 차지하는 벽을 잘 꾸미는 것은 인테리어 성공의 지름길이다. 멋진 인테리어는 절대로 벽을 낭비하지 않는다. 우리 집에도 꾸밀 벽이 있는지 떠올려보자.",
     style: {
-      fontSize: String(16) + ea,
-      fontWeight: String(400),
+      display: "block",
+      position: "relative",
+      fontSize: String(contentsSize) + ea,
+      fontWeight: String(contentsWeight),
       color: colorChip.black,
-      lineHeight: String(1.66),
+      lineHeight: String(contentsLineHeight),
+    }
+  });
+
+  createNode({
+    mother: mainTong,
+    style: {
+      display: "block",
+      height: String(blankMarginFirst) + ea,
+    }
+  });
+
+  createNode({
+    mother: mainTong,
+    mode: "img",
+    attribute: { src: binaryPath + "/a0.jpg" },
+    event: {
+      contextmenu: (e) => { e.preventDefault(); },
+      selectstart: (e) => { e.preventDefault(); }
+    },
+    style: {
+      width: withOut(0),
+      display: "inline-block",
+      marginBottom: String(photoMargin) + ea,
+      marginRight: String(0) + ea,
+      borderRadius: String(3) + "px",
+    }
+  });
+
+  createNode({
+    mother: mainTong,
+    style: {
+      display: "block",
+      height: String(blankMargin) + ea,
+    }
+  });
+
+  createNode({
+    mother: mainTong,
+    text: "1) 아파트에서 찾아볼 수 있는 전형적인 구조의 벽이 있다. 현관 신발장 입구에서 바라보는 복도 벽이다. 여기에 와우 포인트를 주면 집의 첫인상이 멋지다. 2) 데드 스페이스를 활용한다. 분명히 냉장고 문 또는 방문이 열리는 방향 탓에 쓰이지 못하는 벽이 있을 것이다. 3) 가구 주변의 벽을 함께 꾸미면 배치한 그 가구를 더욱 빛나게 한다. 4) 충분한 양의 가구가 벽을 메우지 못한 경우가 있다. 미니멀 라이프를 지향해서 최소한의 가구만 두더라도 휑한 벽에 포인트를 주면 자칫 단조로울 수 있는 공간에 무게감이 생긴다.\n\n당신의 도화지를 골랐다면, 상상 이상으로 좋은 효과를 낼 수 있는 월 데코 방법 5가지를 제안한다.",
+    style: {
+      display: "block",
+      position: "relative",
+      fontSize: String(contentsSize) + ea,
+      fontWeight: String(contentsWeight),
+      color: colorChip.black,
+      lineHeight: String(contentsLineHeight),
+      marginBottom: String(contentsMarginBottom) + ea,
+    }
+  });
+
+  createNode({
+    mother: mainTong,
+    style: {
+      display: "block",
+      height: String(blankMargin) + ea,
+    }
+  });
+
+  createNode({
+    mother: mainTong,
+    text: "01\n실크 스크린, 스텐실, 스티커",
+    style: {
+      display: "block",
+      position: "relative",
+      textAlign: "center",
+      fontSize: String(titleSize) + ea,
+      fontWeight: String(titleWeight),
+      lineHeight: String(titleLineHeight),
+      color: colorChip.black,
+    }
+  });
+
+  createNode({
+    mother: mainTong,
+    style: {
+      display: "block",
+      position: "relative",
+      textAlign: "center",
+      marginTop: String(titleBarMarginTop) + ea,
+      marginBottom: String(titleBarMarginBottom) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: "inline-block",
+          width: String(titleBarWidth) + ea,
+          borderBottom: "1px solid " + colorChip.gray3,
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: mainTong,
+    text: "디자인 벽지와 같은 효과를 원하지만 가구와 짐을 비우고 도배를 할 수 없는 상황이라면, 가능한 범위에 부분적으로 연출이 가능한 것이 장점인 실크 스크린과 스텐실, 스티커를 활용할 수 있다.\n\n이것들의 두 번째 장점은 도안을 고르고 원하는 위치에 붙이는 것이 자유로워 나만의 디자인을 원한다면 적합하다는 것이다. 내가 원하는 도안을 인쇄해 주거나 같이 만들어주기도 하는 제조업자들이 있다. 아이 방에는 토끼나 바다 생물, 공룡 등의 동물류와 무지개와 구름, 별 같은 자연 풍경이 어울린다. 주방이나 현관, 세탁실에는 관련한 소재의 그림이나 텍스트를 도안으로 사용해 공간 용도를 미적으로 표시할 수 있다. 그 외에도 일러스트 삽화와 질감 표시, 기하학적인 무늬까지 디자인에 한계가 거의 없다.",
+    style: {
+      display: "block",
+      position: "relative",
+      fontSize: String(contentsSize) + ea,
+      fontWeight: String(contentsWeight),
+      color: colorChip.black,
+      lineHeight: String(contentsLineHeight),
+      marginBottom: String(contentsMarginBottom) + ea,
+    }
+  });
+
+  createNode({
+    mother: mainTong,
+    style: {
+      display: "block",
+      height: String(blankMargin) + ea,
+    }
+  });
+
+  createNode({
+    mother: mainTong,
+    mode: "img",
+    attribute: { src: binaryPath + "/b1.jpg" },
+    event: {
+      contextmenu: (e) => { e.preventDefault(); },
+      selectstart: (e) => { e.preventDefault(); }
+    },
+    style: {
+      width: withOut(0),
+      display: "inline-block",
+      marginBottom: String(photoMargin) + ea,
+      marginRight: String(0) + ea,
+      borderRadius: String(3) + "px",
+    }
+  });
+
+  createNode({
+    mother: mainTong,
+    style: {
+      display: "block",
+      height: String(blankMargin) + ea,
+    }
+  });
+
+  createNode({
+    mother: mainTong,
+    text: "세 가지 기법은 유사하면서도 작은 차이점들이 있다. 실크 스크린은 도료로 작업하고 꽤 정교한 표현이 가능해서 가장 퀄리티가 좋지만 난이도 또한 가장 높으니 전문 업체에 맡기는 것을 권장한다. 스텐실은 상대적으로 간단한 틀을 대고 물감을 찍어내는 방식이므로 손재주가 있으면 셀프로 도전할 수 있다. 벽지 스티커는 가장 쉽고 간편한 방식이며, 비닐로 되어 있어 청소와 유지가 쉽고 습기에 강하다.",
+    style: {
+      display: "block",
+      position: "relative",
+      fontSize: String(contentsSize) + ea,
+      fontWeight: String(contentsWeight),
+      color: colorChip.black,
+      lineHeight: String(contentsLineHeight),
+      marginBottom: String(contentsMarginBottom) + ea,
     }
   });
 
@@ -276,8 +288,7 @@ MagazineM0Js.prototype.magazineLaunching = async function () {
   const instance = this;
   try {
 
-    this.insertInitBox();
-    this.insertContentsBox();
+    this.mainContents();
 
   } catch (e) {
     console.log(e);

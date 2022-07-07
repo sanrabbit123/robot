@@ -41,68 +41,127 @@ const MagazineDetailJs = function () {
   this.mother = new GeneralJs();
 }
 
-MagazineDetailJs.binaryPath = FRONTHOST + "/middle/index";
+MagazineDetailJs.binaryPath = FRONTHOST + "/list_image/magaz";
 
-MagazineDetailJs.prototype.generalBase = function () {
+MagazineDetailJs.prototype.magazineMainBox = function () {
   const instance = this;
-  const { createNode, createNodes, colorChip, withOut, svgMaker, isMac, isIphone } = GeneralJs;
-  const { totalContents, naviHeight, ea, media, standardWidth } = this;
+  const { createNode, colorChip, withOut, svgMaker, isMac, isIphone } = GeneralJs;
+  const { totalContents, naviHeight, ea, media } = this;
+  const { contentsArr } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  let backgroundImageName;
-  let backgroundGray, backgroundImageBox;
-  let baseTop;
-  let backHeight;
+  let mainHeight;
+  let mainTong;
+  let mainBelowBarHeight;
+  let contentsBox;
+  let pictureWidth, pictureHeight;
+  let picture;
+  let bottomVisual;
+  let logoBottom, logoLeft, logoWidth;
+  let wordingSize, wordingWeight;
+  let wordingBottom, wordingLeft;
 
-  backgroundImageName = "back.jpg";
-  baseTop = <%% 200, 200, 170, 140, 10 %%>;
-  this.backHeight = <%% 420, 420, 375, 320, 94 %%>;
-  backHeight = this.backHeight;
+  mainHeight = <%% 800, 750, 710, 590, (210 / 297) * 100 %%>;
+  mainBelowBarHeight = <%% 250, 250, 250, 216, 250 %%>;
 
-  [ backgroundGray, backgroundImageBox ] = createNodes([
-    {
-      mother: totalContents,
-      style: {
-        position: "absolute",
-        top: String(0),
-        left: String(0),
-        width: String(100) + '%',
-        height: String(100) + '%',
-        background: colorChip.white,
-        animation: "justfadeinoriginal 0.3s ease forwards",
-      }
-    },
-    {
-      mother: totalContents,
-      style: {
-        position: "absolute",
-        top: String(0),
-        left: String(0),
-        width: String(100) + '%',
-        height: String(backHeight) + ea,
-        backgroundImage: "url('" + MagazineDetailJs.binaryPath + "/" + backgroundImageName + "')",
-        backgroundSize: this.backgroundType !== 1 ? ((!media[3] && !media[4]) ? "100% auto" : "auto 100%") : (mobile ? "auto 100%" : "100% auto"),
-        backgroundPosition: "top",
-        animation: "justfadeinoriginal 0.3s ease forwards",
-      }
-    }
-  ]);
-  this.backgroundGray = backgroundGray;
-  this.backgroundImageBox = backgroundImageBox;
+  contentsBoxTop = <%% 70, 70, 70, 70, 0 %%>;
+  contentsBoxWidth = <%% 1200, 1050, 900, 720, 1200 %%>;
 
-  baseTong = createNode({
+  bottomVisual = <%% 6, 6, 6, 6, 6 %%>;
+
+  pictureHeight = mainHeight - (contentsBoxTop * 2) - bottomVisual;
+
+  logoBottom = <%% 48, 48, 48, 48, 48 %%>;
+  logoLeft = <%% 50, 50, 50, 50, 50 %%>;
+  logoWidth = <%% 33, 33, 33, 33, 33 %%>;
+
+  wordingBottom = <%% 44, 44, 44, 44, 44 %%>;
+  wordingLeft = <%% 91, 91, 91, 91, 91 %%>;
+  wordingSize = <%% 20, 20, 20, 20, 20 %%>;
+  wordingWeight = <%% 400, 400, 400, 400, 400 %%>;
+
+  mainTong = createNode({
     mother: totalContents,
     style: {
+      display: "block",
       position: "relative",
-      width: String(standardWidth) + ea,
-      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
-      paddingTop: desktop ? String(baseTop) + ea : "calc(" + String(naviHeight) + "px" + " + " + String(baseTop) + ea + ")",
-      animation: mobile ? "" : "fadeupdelay 0.5s ease forwards",
+      width: String(100) + '%',
+      background: colorChip.gray0,
+      paddingTop: String(naviHeight) + "px",
+      height: String(mainHeight) + ea,
+      animation: "fadeupdelay 0.5s ease forwards",
+    },
+    children: [
+      {
+        style: {
+          display: desktop ? "block" : "none",
+          position: "absolute",
+          background: colorChip.gray1,
+          bottom: String(0),
+          left: String(0),
+          height: String(mainBelowBarHeight) + ea,
+          width: String(100) + '%',
+        }
+      }
+    ]
+  });
+
+  contentsBox = createNode({
+    mother: mainTong,
+    style: {
+      display: "block",
+      position: "relative",
+      paddingTop: String(contentsBoxTop) + ea,
+      width: desktop ? String(contentsBoxWidth) + ea : String(100) + '%',
+      left: desktop ? "calc(50% - " + String(contentsBoxWidth / 2) + ea + ")" : String(0),
+      top: String(0),
+      height: String(mainHeight - (contentsBoxTop * 2)) + ea,
     }
   });
 
-  this.baseTop = baseTop;
-  this.baseTong = baseTong;
+  picture = createNode({
+    mother: contentsBox,
+    style: {
+      display: desktop ? "inline-block" : "block",
+      position: desktop ? "relative" : "absolute",
+      width: withOut(0),
+      height: desktop ? String(pictureHeight) + ea : String(100) + '%',
+      borderRadius: desktop ? String(5) + "px" : "",
+      backgroundImage: "url('" + MagazineDetailJs.binaryPath + this.mid + "/main.jpg" + "')",
+      backgroundSize: "100% auto",
+      backgroundPosition: "50% 50%",
+      boxShadow: desktop ? "0px 8px 22px -15px " + colorChip.shadow : "",
+      verticalAlign: "top",
+    }
+  });
+
+  createNode({
+    mother: picture,
+    mode: "svg",
+    source: instance.mother.returnLogo(colorChip.white, 4),
+    style: {
+      position: "absolute",
+      bottom: String(logoBottom) + ea,
+      left: String(logoLeft) + ea,
+      width: String(logoWidth) + ea,
+    }
+  });
+
+  createNode({
+    mother: picture,
+    text: "magazine",
+    style: {
+      position: "absolute",
+      bottom: String(wordingBottom) + ea,
+      left: String(wordingLeft) + ea,
+      fontSize: String(wordingSize) + ea,
+      fontWeight: String(wordingWeight),
+      color: colorChip.white,
+      fontFamily: "graphik",
+    }
+  });
+
+
 }
 
 MagazineDetailJs.prototype.launching = async function (loading) {
@@ -136,7 +195,7 @@ MagazineDetailJs.prototype.launching = async function (loading) {
       },
       local: async () => {
         try {
-          instance.generalBase();
+          instance.magazineMainBox();
           await instance.magazineLaunching();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "MagazineDetailJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");

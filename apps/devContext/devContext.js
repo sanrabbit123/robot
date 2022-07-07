@@ -91,6 +91,17 @@ DevContext.prototype.launching = async function () {
 
 
 
+    
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2694,9 +2705,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "엄미경",
-    //     designer: "권미정",
-    //     link: "https://drive.google.com/drive/folders/1PTInAMNL6brfapOrZWTgleI0hor48t4X",
+    //     client: null,
+    //     designer: "김우현",
+    //     link: "https://drive.google.com/drive/folders/1zvJKbzP5aVHAaaqIoG7SvjfeyYNIw_JE",
     //     pay: true
     //   },
     // ]);
@@ -2712,7 +2723,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p180");
+    // await this.getRawPortfolio("p218");
 
 
     // get corePortfolio by pid
@@ -2721,7 +2732,7 @@ DevContext.prototype.launching = async function () {
 
     // aspirant to designer
     // await this.aspirantToDesigner([
-    //   [ "김도희", "2022-03-14" ],
+    //   [ "김우현", "2022-04-22" ],
     // ]);
 
 

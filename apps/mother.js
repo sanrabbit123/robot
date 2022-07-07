@@ -584,6 +584,62 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
   });
 }
 
+Mother.prototype.ajaxJson = function (data, url) {
+  if (typeof data !== "object" || typeof url !== "string") {
+    throw new Error("invaild input");
+  }
+  const axios = require('axios');
+  const equal = function (jsonString) {
+    if (typeof jsonString === "object") {
+      jsonString = JSON.stringify(jsonString);
+    }
+    if (typeof jsonString !== "string") {
+      jsonString = String(jsonString);
+    }
+    const filtered = jsonString.replace(/(\"[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z\")/g, function (match, p1, offset, string) { return "new Date(" + p1 + ")"; });
+    const tempFunc = new Function("const obj = " + filtered + "; return obj;");
+    const json = tempFunc();
+    let temp, boo;
+    if (typeof json === "object") {
+      for (let i in json) {
+        if (typeof json[i] === "string") {
+          if (/^[\{\[]/.test(json[i].trim()) && /[\}\]]$/.test(json[i].trim())) {
+            try {
+              temp = JSON.parse(json[i]);
+              boo = true;
+            } catch (e) {
+              boo = false;
+            }
+            if (boo) {
+              json[i] = equal(json[i]);
+            }
+          }
+        }
+      }
+      return json;
+    } else {
+      return jsonString;
+    }
+  }
+  return new Promise((resolve, reject) => {
+    axios.post(url, data, { headers: { "Content-Type": "application/json" } }).then((response) => {
+      if (response.data === undefined) {
+        reject("response error : there is no data");
+      } else {
+        try {
+          const jsonString = JSON.stringify(response.data);
+          JSON.parse(jsonString);
+          resolve(equal(jsonString));
+        } catch (e) {
+          resolve(response.data);
+        }
+      }
+    }).catch(function (error) {
+      reject(error);
+    });
+  });
+}
+
 Mother.prototype.headRequest = function (to, port = 80, headers = {}) {
   if (typeof to !== "string" || typeof headers !== "object") {
     throw new Error("invaild input");

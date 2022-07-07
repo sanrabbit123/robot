@@ -166,7 +166,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
     mother: contentsBox,
     style: {
       display: desktop ? "inline-block" : "block",
-      position: desktop ? "desktop" : "absolute",
+      position: desktop ? "relative" : "absolute",
       width: desktop ? String(pictureWidth) + ea : String(100) + '%',
       height: desktop ? String(pictureHeight) + ea : String(100) + '%',
       borderRadius: desktop ? String(5) + "px" : "",
@@ -717,7 +717,6 @@ ReviewDetailJs.prototype.reviewContentsBox = function () {
 
     totalNum++;
   }
-
 
   createNode({
     mother: mainTong,
