@@ -5375,3 +5375,15 @@ GeneralJs.mediaQuery = function (code) {
 
   return { conditions: updateProto, code };
 }
+
+GeneralJs.injectionVideo = function (obj) {
+  if (typeof obj !== "object" || obj === null) {
+    throw new Error("invaild input");
+  }
+  if (typeof obj.mother !== "object" || typeof obj.id !== "string" || typeof obj.width !== "number" || typeof obj.height !== "number" || typeof obj.ea !== "string") {
+    throw new Error("invaild input");
+  }
+  const { mother, id, width, height, ea } = obj;
+  const htmlString = `<iframe width="${String(width) + ea}" height="${String(height) + ea}" src="https://www.youtube.com/embed/${id}?controls=1&autoplay=1&mute=1&modestbranding=1&amp;playlist=${id}&loop=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+  mother.insertAdjacentHTML("beforeend", htmlString);
+}

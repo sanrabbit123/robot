@@ -1324,7 +1324,6 @@ DesignerDetailJs.prototype.insertBelowButton = function () {
     ]
   });
 
-
 }
 
 DesignerDetailJs.prototype.launching = async function (loading) {

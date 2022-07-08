@@ -261,6 +261,93 @@ FrontAboutJs.prototype.insertInitBox = function () {
 
 }
 
+FrontAboutJs.prototype.insertZeroVideo = function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, injectionVideo } = GeneralJs;
+  const { ea, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  let mainBlock;
+  let mainPaddingTop, mainPaddingBottom;
+  let titleArea, contentsArea;
+  let contentsAreaMarginTop;
+  let videoWidth, videoHeight;
+  let videoTong;
+
+  let contentsSize, contentsWeight, contentsBoldWeight, contentsLineHeight;
+
+  mainPaddingTop = <%% 110, 110, 110, 110, 11 %%>;
+  mainPaddingBottom = <%% 2, 2, 2, 2, 0 %%>;
+
+  contentsAreaMarginTop = <%% 45, 40, 34, 28, 6 %%>;
+
+  contentsSize = <%% 16, 15, 14, 13, 3.5 %%>;
+  contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
+  contentsBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+  contentsLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
+
+
+  videoWidth = <%% 1066, 1066, 1066, 1066, 1066 %%>;
+  videoHeight = <%% 600, 600, 600, 600, 600 %%>;
+
+
+  mainBlock = createNode({
+    mother: this.baseTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      paddingTop: String(mainPaddingTop) + ea,
+      paddingBottom: String(mainPaddingBottom) + ea,
+    }
+  });
+
+  contentsArea = createNode({
+    mother: mainBlock,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      marginTop: String(contentsAreaMarginTop) + ea,
+      background: colorChip.gray2,
+      borderRadius: String(5) + "px",
+    }
+  });
+
+  injectionVideo({
+    mother: createNode({
+      mother: contentsArea,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: String(videoWidth) + ea,
+        height: String(videoHeight) + ea,
+        borderRadius: String(5) + "px",
+        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+        overflow: "hidden",
+      }
+    }),
+    id: "RMg42j_uXnE",
+    width: videoWidth,
+    height: videoHeight,
+    ea: ea
+  });
+
+  createNode({
+    mother: contentsArea,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      width: withOut(videoWidth, ea),
+      height: String(videoHeight) + ea,
+    }
+  })
+
+
+}
+
 FrontAboutJs.prototype.insertFirstService = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
@@ -2987,6 +3074,7 @@ FrontAboutJs.prototype.launching = async function (loading) {
       local: async () => {
         try {
           instance.insertInitBox();
+          instance.insertZeroVideo();
           instance.insertFirstService();
           instance.insertSecondService();
           instance.insertThirdService();
