@@ -926,9 +926,6 @@ BillMaker.returnBankCode = function (name, mode = "code") {
         break;
       }
     }
-    if (/농협/gi.test(name)) {
-      result = "11";
-    }
     return result;
   } else if (mode === "matrix") {
     return bankMatrix;

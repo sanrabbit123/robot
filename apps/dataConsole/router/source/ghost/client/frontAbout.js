@@ -274,7 +274,8 @@ FrontAboutJs.prototype.insertZeroVideo = function () {
   let titleArea, contentsArea;
   let contentsAreaMarginTop;
   let videoWidth, videoHeight;
-  let videoTong;
+  let videoId;
+
 
   let contentsSize, contentsWeight, contentsBoldWeight, contentsLineHeight;
 
@@ -291,7 +292,7 @@ FrontAboutJs.prototype.insertZeroVideo = function () {
 
   videoWidth = <%% 1066, 1066, 1066, 1066, 1066 %%>;
   videoHeight = <%% 600, 600, 600, 600, 600 %%>;
-
+  videoId = "RMg42j_uXnE";
 
   mainBlock = createNode({
     mother: this.baseTong,
@@ -329,7 +330,7 @@ FrontAboutJs.prototype.insertZeroVideo = function () {
         overflow: "hidden",
       }
     }),
-    id: "RMg42j_uXnE",
+    id: videoId,
     width: videoWidth,
     height: videoHeight,
     ea: ea
@@ -343,7 +344,7 @@ FrontAboutJs.prototype.insertZeroVideo = function () {
       width: withOut(videoWidth, ea),
       height: String(videoHeight) + ea,
     }
-  })
+  });
 
 
 }
