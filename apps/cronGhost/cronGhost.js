@@ -33,7 +33,7 @@ CronGhost.prototype.cronRouter = async function () {
 CronGhost.prototype.cronServer = async function () {
   const instance = this;
   const { pureServer, dateToString, mongo, mongolocalinfo, mongoinfo, mongoconsoleinfo, mongopythoninfo, errorLog } = this.mother;
-  const port = 53000;
+  const port = 53001;
   const interval = (10 * 60 * 1000);
   const dateCopy = (dateObj) => { return new Date(JSON.stringify(dateObj).slice(1, -1)); }
   const zeroAddition = (num) => { return num < 10 ? `0${String(num)}` : String(num) }
