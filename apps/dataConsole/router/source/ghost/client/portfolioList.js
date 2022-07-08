@@ -217,7 +217,7 @@ PortfolioListJs.prototype.insertInitBox = function () {
   mobileBackgroundHeight = isIphone() ? 75.5 : 73;
   mobileVisualPaddingLeft = 6;
 
-  tagBoxRight = <%% 130, 128, 100, 100, 10 %%>;
+  tagBoxRight = <%% 132, 128, 100, 100, 10 %%>;
 
   searchTags = [];
   if (media[0]) {
