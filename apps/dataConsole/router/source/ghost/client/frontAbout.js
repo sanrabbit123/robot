@@ -342,6 +342,7 @@ FrontAboutJs.prototype.insertZeroVideo = function () {
         overflow: "hidden",
         justifyContent: "center",
         alignItems: "center",
+        verticalAlign: "top",
       }
     },
   });
@@ -354,6 +355,7 @@ FrontAboutJs.prototype.insertZeroVideo = function () {
         position: "relative",
         width: withOut(videoWidth, ea),
         height: String(videoHeight) + ea,
+        verticalAlign: "top",
       },
       children: [
         {

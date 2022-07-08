@@ -5410,8 +5410,8 @@ GeneralJs.injectVideo = function (obj) {
     height = targetDom.getBoundingClientRect().height;
   }
 
-  width = width + 2;
-  height = height + 2;
+  width = width + 10;
+  height = height + (10 * (height / width));
 
   htmlString = `<iframe width="${String(width)}" height="${String(height)}" src="https://www.youtube.com/embed/${id}?controls=1&autoplay=1&mute=1&modestbranding=1&amp;playlist=${id}&loop=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
   targetDom.insertAdjacentHTML("beforeend", htmlString);
