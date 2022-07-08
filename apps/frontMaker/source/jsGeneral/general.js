@@ -5376,14 +5376,45 @@ GeneralJs.mediaQuery = function (code) {
   return { conditions: updateProto, code };
 }
 
-GeneralJs.injectionVideo = function (obj) {
+GeneralJs.injectVideo = function (obj) {
   if (typeof obj !== "object" || obj === null) {
     throw new Error("invaild input");
   }
-  if (typeof obj.mother !== "object" || typeof obj.id !== "string" || typeof obj.width !== "number" || typeof obj.height !== "number" || typeof obj.ea !== "string") {
+  if (typeof obj.dom !== "object" || typeof obj.id !== "string" || typeof obj.dom.style.width !== "string" || typeof obj.dom.style.height !== "string") {
     throw new Error("invaild input");
   }
-  const { mother, id, width, height, ea } = obj;
-  const htmlString = `<iframe width="${String(width) + ea}" height="${String(height) + ea}" src="https://www.youtube.com/embed/${id}?controls=1&autoplay=1&mute=1&modestbranding=1&amp;playlist=${id}&loop=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-  mother.insertAdjacentHTML("beforeend", htmlString);
+  const { id, dom } = obj;
+  let htmlString, targetDom;
+  let width, height, ea;
+  let widthStr, heightStr;
+
+  widthStr = dom.style.width;
+  heightStr = dom.style.height;
+  width = Number(widthStr.replace(/[^0-9\-\.]/gi, ''));
+  height = Number(heightStr.replace(/[^0-9\-\.]/gi, ''));
+  ea = widthStr.replace(/[0-9\-\.]/gi, '')
+
+  if (ea === '' || Number.isNaN(width) || Number.isNaN(height)) {
+    throw new Error("invalid width, height value");
+  }
+
+  targetDom = GeneralJs.createNode(dom);
+  targetDom.style.display = "inline-flex";
+  targetDom.style.position = "relative";
+  targetDom.style.overflow = "hidden";
+  targetDom.style.justifyContent = "center";
+  targetDom.style.alignItems = "center";
+
+  if (ea !== "px") {
+    width = targetDom.getBoundingClientRect().width;
+    height = targetDom.getBoundingClientRect().height;
+  }
+
+  width = width + 2;
+  height = height + 2;
+
+  htmlString = `<iframe width="${String(width)}" height="${String(height)}" src="https://www.youtube.com/embed/${id}?controls=1&autoplay=1&mute=1&modestbranding=1&amp;playlist=${id}&loop=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+  targetDom.insertAdjacentHTML("beforeend", htmlString);
+
+  return targetDom;
 }

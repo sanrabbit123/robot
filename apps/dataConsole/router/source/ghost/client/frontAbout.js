@@ -263,7 +263,7 @@ FrontAboutJs.prototype.insertInitBox = function () {
 
 FrontAboutJs.prototype.insertZeroVideo = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, injectionVideo } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, injectVideo } = GeneralJs;
   const { ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -274,25 +274,36 @@ FrontAboutJs.prototype.insertZeroVideo = function () {
   let titleArea, contentsArea;
   let contentsAreaMarginTop;
   let videoWidth, videoHeight;
+  let videoTong, contentsTong;
   let videoId;
-
-
   let contentsSize, contentsWeight, contentsBoldWeight, contentsLineHeight;
+  let contents;
+  let contentsPadding;
 
-  mainPaddingTop = <%% 110, 110, 110, 110, 11 %%>;
-  mainPaddingBottom = <%% 2, 2, 2, 2, 0 %%>;
+  mainPaddingTop = <%% 110, 108, 80, 62, (isIphone() ? 6 : 8) %%>;
+  mainPaddingBottom = <%% 2, 0, 0, 0, 1 %%>;
 
   contentsAreaMarginTop = <%% 45, 40, 34, 28, 6 %%>;
 
   contentsSize = <%% 16, 15, 14, 13, 3.5 %%>;
-  contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
+  contentsWeight = <%% 700, 700, 700, 700, 700 %%>;
   contentsBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
-  contentsLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
+  contentsLineHeight = <%% 1.8, 1.8, 1.8, 1.8, 1.8 %%>;
+  contentsPadding = <%% 40, 40, 40, 40, 4 %%>;
 
+  videoWidth = <%% 1066, 1050, 900, 720, 88 %%>;
+  videoHeight = <%% 600, 591, 506, 405, 49.5 %%>;
 
-  videoWidth = <%% 1066, 1066, 1066, 1066, 1066 %%>;
-  videoHeight = <%% 600, 600, 600, 600, 600 %%>;
   videoId = "RMg42j_uXnE";
+
+  contents = [
+    "<b%CONTENTS%b>",
+    "<b%1.%b> 홈리에종의 서비스는 무엇인가요?",
+    "<b%2.%b> 구체적으로 어떻게 진행되나요?",
+    "<b%3.%b> 예산과 기간은 어떻게 설정하나요?",
+    "<b%4.%b> 홈리에종과 함께 해야 하는 이유!",
+    "<b%5.%b> 솔직한 고객 후기"
+  ];
 
   mainBlock = createNode({
     mother: this.baseTong,
@@ -317,35 +328,53 @@ FrontAboutJs.prototype.insertZeroVideo = function () {
     }
   });
 
-  injectionVideo({
-    mother: createNode({
+  videoTong = injectVideo({
+    id: videoId,
+    dom: {
       mother: contentsArea,
       style: {
-        display: "inline-block",
+        display: "inline-flex",
         position: "relative",
         width: String(videoWidth) + ea,
         height: String(videoHeight) + ea,
         borderRadius: String(5) + "px",
         boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
         overflow: "hidden",
+        justifyContent: "center",
+        alignItems: "center",
       }
-    }),
-    id: videoId,
-    width: videoWidth,
-    height: videoHeight,
-    ea: ea
+    },
   });
 
-  createNode({
-    mother: contentsArea,
-    style: {
-      display: "inline-block",
-      position: "relative",
-      width: withOut(videoWidth, ea),
-      height: String(videoHeight) + ea,
-    }
-  });
-
+  if (media[0]) {
+    contentsTong = createNode({
+      mother: contentsArea,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: withOut(videoWidth, ea),
+        height: String(videoHeight) + ea,
+      },
+      children: [
+        {
+          text: contents.join("\n"),
+          style: {
+            position: "absolute",
+            fontSize: String(contentsSize) + ea,
+            fontWeight: String(contentsWeight),
+            color: colorChip.black,
+            lineHeight: String(contentsLineHeight),
+            bottom: String(contentsPadding) + ea,
+            left: String(contentsPadding) + ea,
+          },
+          bold: {
+            color: colorChip.deactive,
+            fontWeight: String(800)
+          }
+        }
+      ]
+    });
+  }
 
 }
 
