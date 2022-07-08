@@ -179,8 +179,8 @@ SecondGhost.prototype.ghostConnect = async function () {
             await instance.slack_bot.chat.postMessage({ text: name + " " + "disk warning", channel: "#error_log" });
           }
         }
-        await reflection.coreReflection();
-        await reflection.mysqlReflection();
+        // await reflection.coreReflection();
+        // await reflection.mysqlReflection();
         console.log("disk check, core reflection, mysql reflect done");
       } catch (e) {
         console.log(e);
@@ -195,7 +195,7 @@ SecondGhost.prototype.ghostConnect = async function () {
     }
     intervalFunc2 = async () => {
       try {
-        await reflection.logReflection();
+        // await reflection.logReflection();
       } catch (e) {
         console.log(e);
       }
