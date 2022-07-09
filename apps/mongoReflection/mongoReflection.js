@@ -507,7 +507,13 @@ MongoReflection.prototype.mongoToFront = async function () {
           "VARCHAR(255)",
         ];
 
-        queryArr = designers.frontMode().map((designer) => {
+        queryArr = designers.frontMode().filter((obj) => {
+          return !/해지/gi.test(obj.information.contract.status);
+        }).filter((obj) => {
+          return obj.setting.front.introduction.desktop.length > 0;
+        }).filter((obj) => {
+          return /^[ap]/i.test(obj.setting.front.photo.porlid);
+        }).map((designer) => {
           let value;
           let query;
 

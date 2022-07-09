@@ -89,5 +89,31 @@ class GeneralPhp {
     return $html;
   }
 
+  public function mysqlGet ($query) {
+    $connection = new mysqli("localhost", "miro81", "Gha-Fldpwhd83!", "miro81");
+    $connection->set_charset("utf8");
+
+    if ($connection->connect_errno) {
+      return "error";
+    }
+
+    $result = $connection->query($query);
+
+    if (!$result) {
+      return "error";
+    }
+
+    $resultArray = [];
+    $count = $result->num_rows;
+    for ($i = 0; $i < $count; $i++) {
+      array_push($resultArray, $result->fetch_array(MYSQLI_NUM));
+    }
+
+    $result->free();
+    $connection->close();
+
+    return $resultArray;
+  }
+
 }
 ?>
