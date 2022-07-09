@@ -8,6 +8,7 @@ const DataConsole = function () {
   this.sourceDir = this.dir + "/router/source";
   this.middleDir = this.sourceDir + "/middle";
   this.ghostDir = this.sourceDir + "/ghost";
+  this.frontDir = this.sourceDir + "/front";
   this.middleModuleDir = this.middleDir + "/module";
 }
 
@@ -512,6 +513,7 @@ DataConsole.prototype.renderFrontPhp = async function () {
   const address = this.address;
   const staticFolder = process.env.HOME + "/static";
   const staticMiddleFolder = staticFolder + "/middle";
+  const frontDir = this.frontDir + "/client";
   const DataPatch = require(`${this.dir}/router/dataPatch.js`);
   const DataMiddle = require(`${this.dir}/router/dataMiddle.js`);
   const middleLockConst = "?cliid=c1801_aa01s";
@@ -539,16 +541,19 @@ DataConsole.prototype.renderFrontPhp = async function () {
     }).map((str) => {
       const o = targetMap.find((obj) => { return obj.from === str.replace(/\.js$/i, '') });
       o.file = `${staticMiddleFolder}/${str}`;
+      o.php = `${frontDir}/${str.replace(/\.js$/i, ".php")}`;
       return o;
     });
     let targetScript, response, html;
     let motherTong, middleTong;
     let command;
     let input;
+    let phpScript;
+    let generalPhpScript;
 
     motherTong = [];
     middleTong = [];
-    for (let { from, to, file, path } of ghostTargets) {
+    for (let { from, to, file, php, path } of ghostTargets) {
       targetScript = await fileSystem(`readString`, [ file ]);
       targetScript = targetScript.replace(/ajaxJson\((\{[^}]*\}[^}]*\}?, ?)(\"[^\"]+\")/gi, (original, p1, p2) => {
         if (/^[\"\']http/.test(p2)) {
@@ -558,13 +563,11 @@ DataConsole.prototype.renderFrontPhp = async function () {
         }
       });
 
-      response = await requestSystem("https://" + address.backinfo.host + path + middleLockConst);
-      html = response.data;
-      html = html.replace(/G-N81TTVHYK4/gi, "UA-97880990-1");
+      phpScript = await fileSystem(`readString`, [ php ]);
 
       await fileSystem(`write`, [ `${process.cwd()}/temp/${from}.js`, targetScript ]);
       middleTong.push(`${shellLink(process.cwd())}/temp/${shellLink(from)}.js`);
-      await fileSystem(`write`, [ `${process.cwd()}/temp/${to}.php`, html ]);
+      await fileSystem(`write`, [ `${process.cwd()}/temp/${to}.php`, phpScript ]);
       motherTong.push(`${shellLink(process.cwd())}/temp/${shellLink(to)}.php`);
     }
 
@@ -576,6 +579,14 @@ DataConsole.prototype.renderFrontPhp = async function () {
     }).concat(motherTong.map((p) => {
       return `scp ${p} ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/`;
     })).join(';');
+
+    generalPhpScript = await fileSystem(`readString`, [ frontDir + "/general.php" ]);
+    generalPhpScript = generalPhpScript.replace(/__host__/gi, address.frontinfo.host);
+    generalPhpScript = generalPhpScript.replace(/__user__/gi, address.frontinfo.user);
+    generalPhpScript = generalPhpScript.replace(/__password__/gi, address.frontinfo.password);
+    generalPhpScript = generalPhpScript.replace(/__database__/gi, address.frontinfo.database);
+    await fileSystem(`write`, [ `${process.cwd()}/temp/general.php`, generalPhpScript ]);
+    command += `;scp ${process.cwd()}/temp/general.php ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/;`;
 
     console.log(command);
 

@@ -1,7 +1,7 @@
 <?php
 class GeneralPhp {
 
-  public $host = "home-liaison.com";
+  public $host = "__host__";
   public $protocol = "https://";
 
   function __construct () {}
@@ -90,7 +90,7 @@ class GeneralPhp {
   }
 
   public function mysqlGet ($query) {
-    $connection = new mysqli("localhost", "miro81", "Gha-Fldpwhd83!", "miro81");
+    $connection = new mysqli("localhost", "__user__", "__password__", "__database__");
     $connection->set_charset("utf8");
 
     if ($connection->connect_errno) {
