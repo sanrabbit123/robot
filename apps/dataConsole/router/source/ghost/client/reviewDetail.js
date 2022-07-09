@@ -2386,12 +2386,6 @@ ReviewDetailJs.prototype.launching = async function (loading) {
       this.pid = this.contentsArr[0].contents.portfolio.pid;
     }
 
-    setMetaData({
-      title: this.contentsArr[0].contents.review.title.sub.replace(/,/gi, '') + " | 홈리에종",
-      description: this.contentsArr[0].contents.review.contents.detail[0].contents.map((obj) => { return obj.answer }).join(""),
-      image: FRONTHOST + "/list_image/portp" + this.pid + "/b" + String(this.contentsArr[0].contents.review.detailInfo.photodae[1]) + this.pid + ".jpg",
-    });
-
     await this.mother.ghostClientLaunching({
       mode: "front",
       name: "reviewDetail",

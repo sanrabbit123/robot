@@ -1391,12 +1391,6 @@ DesignerDetailJs.prototype.launching = async function (loading) {
     //   return /^[ap]/i.test(obj.setting.front.photo.porlid);
     // })
 
-    setMetaData({
-      title: this.designers[0].designer + " 디자이너 | 홈리에종",
-      description: this.designers[0].designer + " 홈스타일링 디자이너 상세 페이지입니다.",
-      image: FRONTHOST + "/list_image/portp" + this.designers[0].setting.front.photo.porlid + "/" + this.designers[0].setting.front.photo.index + this.designers[0].setting.front.photo.porlid + ".jpg",
-    });
-
     await this.mother.ghostClientLaunching({
       mode: "front",
       name: "designerDetail",

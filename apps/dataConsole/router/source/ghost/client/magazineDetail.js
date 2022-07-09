@@ -166,7 +166,7 @@ MagazineDetailJs.prototype.magazineMainBox = function () {
 
 MagazineDetailJs.prototype.launching = async function (loading) {
   const instance = this;
-  const { returnGet, ajaxJson, setQueue, setDebounce, facebookSdkPatch, kakaoSdkPatch, setMetaData, protoPatch } = GeneralJs;
+  const { returnGet, ajaxJson, setQueue, setDebounce, facebookSdkPatch, kakaoSdkPatch, protoPatch } = GeneralJs;
   try {
     this.mother.setGeneralProperties(this);
 

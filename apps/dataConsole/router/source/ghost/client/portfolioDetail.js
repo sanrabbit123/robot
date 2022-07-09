@@ -2618,7 +2618,7 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
 
 PortfolioDetailJs.prototype.launching = async function (loading) {
   const instance = this;
-  const { returnGet, ajaxJson, setQueue, setDebounce, facebookSdkPatch, kakaoSdkPatch, setMetaData } = GeneralJs;
+  const { returnGet, ajaxJson, setQueue, setDebounce, facebookSdkPatch, kakaoSdkPatch } = GeneralJs;
   try {
     this.mother.setGeneralProperties(this);
 
@@ -2665,12 +2665,6 @@ PortfolioDetailJs.prototype.launching = async function (loading) {
     this.fullLoad = false;
     this.photoLoad = false;
     this.loadedContents = [];
-
-    setMetaData({
-      title: this.contentsArr[0].contents.portfolio.title.sub.split(', ')[1] + " | 홈리에종",
-      description: this.contentsArr[0].contents.portfolio.contents.detail[0].contents,
-      image: FRONTHOST + "/list_image/portp" + this.pid + "/b" + String(this.contentsArr[0].contents.portfolio.detailInfo.photodae[1]) + this.pid + ".jpg",
-    });
 
     await this.mother.ghostClientLaunching({
       mode: "front",
