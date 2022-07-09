@@ -1380,6 +1380,7 @@ DesignerListJs.prototype.launching = async function (loading) {
     services = serviceParsing().name;
     response = await ajaxJson({ mode: "designer" }, LOGHOST + "/getContents", { equal: true });
     this.designers = new SearchArray(response.designers);
+    this.contentsArr = new SearchArray(response.contentsArr);
     for (let designer of this.designers) {
       for (let i = 0; i < designer.service.length; i++) {
         if (designer.service[i] === 1) {
