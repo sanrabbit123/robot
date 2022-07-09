@@ -352,6 +352,14 @@ LogRouter.prototype.rou_post_getContents = function () {
               return obj.contents.portfolio.pid === req.body.pid;
             });
           }
+        } else {
+          contentsArr = contentsArr.map((obj) => {
+            let copied;
+            copied = equalJson(JSON.stringify(obj));
+            delete copied.contents.portfolio.contents.detail;
+            delete copied.contents.review.contents.detail;
+            return copied;
+          });
         }
 
         contentsArr = contentsArr.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
@@ -372,7 +380,13 @@ LogRouter.prototype.rou_post_getContents = function () {
           contentsArr_raw.sort((a, b) => {
             return Number(b.contents.portfolio.detailInfo.sort.key9) - Number(a.contents.portfolio.detailInfo.sort.key9);
           });
-          contentsArr = contentsArr_raw;
+          contentsArr = contentsArr_raw.map((obj) => {
+            let copied;
+            copied = equalJson(JSON.stringify(obj));
+            delete copied.contents.portfolio.contents.detail;
+            delete copied.contents.review.contents.detail;
+            return copied;
+          });
           contentsArr = contentsArr.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
 
           res.send(JSON.stringify({
