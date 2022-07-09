@@ -1,0 +1,93 @@
+<?php
+class GeneralPhp {
+
+  public $host = "home-liaison.com";
+  public $protocol = "https://";
+
+  function __construct () {}
+
+  public function bastHtml ($name, $titleString, $descriptionString, $hiddenString, $imageString, $fullLink) {
+
+    $gtagManagerId = "GTM-W6FSR8M";
+    $gtagId = "UA-97880990-1";
+    $googleSearchId = "YRxCc6xhQlM3qTygta5Qw0CObJJrLDYmUE8_wCR0AQc";
+    $facebookId = "814052605684956";
+    $indexName = "frontIndex";
+    $hostLink = "https://".$this->host;
+
+    // head
+    $html = '<!DOCTYPE html>'."\n";
+    $html .= '<html lang="ko" dir="ltr"><head>'."\n";
+    $html .= '<meta charset="utf-8">'."\n";
+    $html .= '<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no,user-scalable=no">'."\n";
+    $html .= '<link rel="canonical" href="'.$fullLink.'">'."\n";
+    $html .= '<meta content="'.$fullLink.'" property="og:url"><meta content="website" property="og:type">'."\n";
+    $html .= '<meta name="google-site-verification" content="'.$googleSearchId.'"><meta name="twitter:card" content="summary_large_image"><meta content="'.$facebookId.'" property="fb:app_id">'."\n";
+    $html .= '<meta name="robots" content="index,follow">'."\n";
+    $html .= '<meta content="'.$titleString.'" property="og:title">'."\n";
+    $html .= '<meta content="'.$descriptionString.'" property="og:description">'."\n";
+    $html .= '<meta content="'.$imageString.'" property="og:image">'."\n";
+    $html .= '<meta name="description" content="'.$descriptionString.'">'."\n";
+    $html .= '<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-20190722112100.png"><meta name="msapplication-TileImage" content="/mstile-144x144-20190722112100.png">'."\n";
+    $html .= '<link rel="manifest" href="/manifest.json">'."\n";
+    $html .= '<meta name="keywords" content="홈스타일링, 홈리에종, 주거인테리어">'."\n";
+    if ($name === $indexName) {
+      $html .= '<script type="application/ld+json">{"@context": "http:\/\/schema.org","@id": "'.$hostLink.'#","@type": "ProfessionalService","url": "'.$hostLink.'","name": "홈리에종 | 디자이너와 함께하는 홈스타일링 플랫폼","description": "홈리에종은 홈스타일링 플랫폼으로, 집을 디자인하는 새로운 방법을 제안합니다.","sameAs": ["https:\/\/www.facebook.com\/homeliaison","https:\/\/blog.naver.com\/homeliaison","https:\/\/www.instagram.com\/homeliaison"],"address": {"@type": "PostalAddress","streetAddress": "279, Dongmak-ro","addressLocality": "Seoul","addressRegion": "Mapo-gu","postalCode": "04151","addressCountry": "KR"},"telephone": "02-2039-2252","image": "'.$hostLink.'/share/lb-image-0.jpg","openingHoursSpecification": {"@type": "OpeningHoursSpecification","dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens": "09:00","closes": "18:00"}}</script>'."\n";
+    }
+    $html .= '<title>'.$titleString.'</title><style></style>'."\n";
+
+    // google
+    $html .= '<!-- Google Tag Manager -->'."\n";
+    $html .= '<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({"gtm.start":'."\n";
+    $html .= 'new Date().getTime(),event:"gtm.js"});var f=d.getElementsByTagName(s)[0],'."\n";
+    $html .= 'j=d.createElement(s),dl=l!="dataLayer"?"&l="+l:"";j.async=true;j.src='."\n";
+    $html .= '"https://www.googletagmanager.com/gtm.js?id="+i+dl;f.parentNode.insertBefore(j,f);'."\n";
+    $html .= '})(window,document,"script","dataLayer","'.$gtagManagerId.'");</script>'."\n";
+    $html .= '<!-- End Google Tag Manager -->'."\n";
+    $html .= '<script async src="https://www.googletagmanager.com/gtag/js?id='.$gtagId.'"></script>'."\n";
+    $html .= '<script>'."\n";
+    $html .= 'window.dataLayer = window.dataLayer || [];'."\n";
+    $html .= 'window.gtagId = "'.$gtagId.'";'."\n";
+    $html .= 'window.gtag = function () { window.dataLayer.push(arguments); }'."\n";
+    $html .= 'window.gtag("js", new Date());'."\n";
+    $html .= 'window.gtag("config", "'.$gtagId.'");'."\n";
+    $html .= 'window.gtagPage = function () {'."\n";
+    $html .= '  window.gtag("config", "'.$gtagId.'");'."\n";
+    $html .= '}'."\n";
+    $html .= '</script>'."\n";
+
+    // body
+    $html .= '</head><body>'."\n";
+    $html .= '<div style="display: none;position: absolute;opacity: 0;font-size: 0px;">'.$this->hiddenHtml($hiddenString).'</div>'."\n";
+    $html .= '<div id="totalcontents"></div>'."\n";
+    $html .= '<script src="/middle/'.$name.'.js"></script>'."\n";
+    $html .= '</body></html>';
+
+    return $html;
+  }
+
+  public function hiddenHtml ($hiddenString) {
+    $html = '<a href="/about.php" class="hiddenobject"><div class="hiddenobject">홈스타일링 서비스 소개</div></a>'."\n";
+    $html .= '<a href="/portfolio.php" class="hiddenobject"><div class="hiddenobject"><b>홈스타일링</b> 디자이너 주거 인테리어 디자인 포트폴리오</div></a>'."\n";
+    $html .= '<a href="/review.php" class="hiddenobject"><div class="hiddenobject">홈리에종 고객 후기</div></a>'."\n";
+    $html .= '<a href="/designer.php" class="hiddenobject"><div class="hiddenobject">홈스타일링 디자이너 모아보기</div></a>'."\n";
+    $html .= '<a href="/consulting.php" class="hiddenobject"><div class="hiddenobject">홈스타일링 상담 신청</div></a>'."\n";
+    $html .= '<a href="/index.php" class="hiddenobject"><div class="hiddenobject">홈리에종 홈페이지</div></a>'."\n";
+    $html .= '<a href="/terms.php" class="hiddenobject"><div class="hiddenobject">홈리에종 개인정보 처리 방침 / 이용약관</div></a>'."\n";
+    $html .= '<a href="/faq.php" class="hiddenobject"><div class="hiddenobject">홈리에종 FAQ</div></a>'."\n";
+    $html .= '<a href="http://pf.kakao.com/_vxixkjxl" class="hiddenobject"><div class="hiddenobject">홈리에종 카카오 플러스 채널</div></a>'."\n";
+    $html .= '<a href="https://blog.naver.com/homeliaison" class="hiddenobject"><div class="hiddenobject">홈리에종 네이버 블로그</div></a>'."\n";
+    $html .= '<a href="https://instagram.com/homeliaison" class="hiddenobject"><div class="hiddenobject">홈리에종 인스타그램</div></a>'."\n";
+    $html .= '<div class="hiddenobject">'.$hiddenString.'</div>'."\n";
+    $html .= '<h1 class="hiddenobject">(주)홈리에종</h1>'."\n";
+    $html .= '<p class="hiddenobject">CEO : 박혜연</p>'."\n";
+    $html .= '<p class="hiddenobject">서울특별시 성동구 상원1길 26, 서울숲 A타워 1305호</p>'."\n";
+    $html .= '<p class="hiddenobject">사업자등록번호 : 221 - 81 - 49759</p>'."\n";
+    $html .= '<p class="hiddenobject">통신판매신고업 : 제 2020 - 서울성동 - 01563호</p>'."\n";
+    $html .= '<p class="hiddenobject">T : 02-2039-2252</p>'."\n";
+    $html .= '<p class="hiddenobject">E : help@home-liaison.com</p>'."\n";
+    return $html;
+  }
+
+}
+?>

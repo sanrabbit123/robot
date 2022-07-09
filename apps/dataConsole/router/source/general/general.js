@@ -645,6 +645,7 @@ GeneralJs.prototype.generalCss = function () {
   #footergreenback0817{display:block;position:relative;width:100%;height:300px;background-color:${GeneralJs.colorChip.green};overflow:hidden}
   .footerbutton{position:absolute;opacity:0;transition:all .5s ease;left:50%;cursor:pointer}
   .footerbutton:hover{opacity:0.5;}
+  .hiddenobject{display: none;position: absolute; opacity: 0;font-size:0px}
   @media (min-width:1061px) and (max-width:1610px) {
     #desknaviframe{width:1050px;left:calc(50% - 525px);}
   }

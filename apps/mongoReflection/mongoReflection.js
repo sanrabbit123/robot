@@ -477,6 +477,176 @@ MongoReflection.prototype.coreReflection = async function (to = "local") {
   }
 }
 
+MongoReflection.prototype.mongoToFront = async function () {
+  const instance = this;
+  const back = this.back;
+  const { mysqlQuery } = this.mother;
+  try {
+    const designerToFront = async function () {
+      try {
+        const designers = await back.getDesignersByQuery({});
+        let queryArr, columns, table;
+        let createQuery;
+        let types;
+
+        table = "designer";
+
+        columns = [
+          "desid",
+          "designer",
+          "introduction",
+          "porlid",
+          "tid",
+        ];
+
+        types = [
+          "VARCHAR(255)",
+          "VARCHAR(255)",
+          "TEXT",
+          "VARCHAR(255)",
+          "VARCHAR(255)",
+        ];
+
+        queryArr = designers.frontMode().map((designer) => {
+          let value;
+          let query;
+
+          value = [
+            designer.desid,
+            designer.designer,
+            designer.setting.front.introduction.desktop.join(" "),
+            designer.setting.front.photo.porlid,
+            designer.setting.front.photo.index
+          ];
+
+          query = "INSERT INTO ";
+          query += table;
+          query += " (";
+          for (let i of columns) {
+            query += i + ',';
+          }
+          query = query.slice(0, -1) + ") VALUES (";
+          for (let i of value) {
+            query += "'" + String(i).replace(/\'/g, '"') + "',";
+          }
+          query = query.slice(0, -1) + ");";
+
+          return query;
+        });
+
+        createQuery = "CREATE TABLE " + table + " (id INT(11) NOT NULL AUTO_INCREMENT,";
+        for (let i = 0; i < columns.length; i++) {
+          createQuery += columns[i] + ' ' + types[i] + ',';
+        }
+        createQuery += "PRIMARY KEY (id));";
+
+        queryArr.unshift(createQuery);
+        queryArr.unshift("DROP TABLE " + table + ";");
+
+        await mysqlQuery(queryArr);
+
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    const contentsToFront = async function () {
+      try {
+        const contents = await back.getContentsArrByQuery({});
+        let queryArr, columns, table;
+        let createQuery;
+        let types;
+
+        table = "contents";
+
+        columns = [
+          "conid",
+          "desid",
+          "pid",
+          "rid",
+          "portfoliotitlemain",
+          "portfoliotitlesub",
+          "apart",
+          "reviewtitlemain",
+          "reviewtitlesub",
+          "portfoliocontents",
+          "reviewcontents",
+          "portfoliotid",
+          "reivewtid"
+        ];
+
+        types = [
+          "VARCHAR(255)",
+          "VARCHAR(255)",
+          "VARCHAR(255)",
+          "VARCHAR(255)",
+          "VARCHAR(255)",
+          "VARCHAR(255)",
+          "VARCHAR(255)",
+          "VARCHAR(255)",
+          "VARCHAR(255)",
+          "TEXT",
+          "TEXT",
+          "VARCHAR(255)",
+          "VARCHAR(255)",
+        ];
+
+
+        queryArr = contents.map((obj) => {
+          let value;
+          let query;
+
+          value = [
+            obj.conid,
+            obj.desid,
+            obj.contents.portfolio.pid,
+            obj.contents.review.rid,
+            obj.contents.portfolio.title.main,
+            obj.contents.portfolio.title.sub.split(", ")[0],
+            obj.contents.portfolio.title.sub.split(", ")[1],
+            obj.contents.review.title.main,
+            obj.contents.review.title.sub.replace(/,/gi, ''),
+            obj.contents.portfolio.contents.detail.toNormal().map((o) => { return o.contents }).join("\n"),
+            obj.contents.review.contents.detail.toNormal().map((o) => { return o.contents.map((k) => { return k.question + "\n" + k.answer }).join("\n") }).join("\n").slice(1),
+            't' + String(obj.contents.portfolio.detailInfo.photodae[1]),
+            't' + String(obj.contents.review.detailInfo.photodae[1]),
+          ];
+
+          query = "INSERT INTO ";
+          query += table;
+          query += " (";
+          for (let i of columns) {
+            query += i + ',';
+          }
+          query = query.slice(0, -1) + ") VALUES (";
+          for (let i of value) {
+            query += "'" + String(i).replace(/\'/g, '"') + "',";
+          }
+          query = query.slice(0, -1) + ");";
+
+          return query;
+        });
+
+        createQuery = "CREATE TABLE " + table + " (id INT(11) NOT NULL AUTO_INCREMENT,";
+        for (let i = 0; i < columns.length; i++) {
+          createQuery += columns[i] + ' ' + types[i] + ',';
+        }
+        createQuery += "PRIMARY KEY (id));";
+
+        queryArr.unshift(createQuery);
+        queryArr.unshift("DROP TABLE " + table + ";");
+
+        await mysqlQuery(queryArr);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    await designerToFront();
+    await contentsToFront();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 MongoReflection.prototype.frontReflection = async function (to = "local") {
   const instance = this;
   const { mongo } = this.mother;
@@ -547,6 +717,8 @@ MongoReflection.prototype.frontReflection = async function (to = "local") {
       console.log(``);
 
     }
+
+    await this.mongoToFront();
 
   } catch (e) {
     console.log(e);
