@@ -54,7 +54,6 @@ const PlayAudio = function (option = {}) {
     this.player = option.player;
   }
   this.urlRegex = /^(https?|ftp):\/\/[^\s\/$.?#].[^\s]*$/i;
-  this.restapiKey = "e0d7657d8f0da70f3df436046728c0a0";
   this.dir = process.cwd() + "/apps/playAudio";
   this.python = this.dir + "/python/app.py";
 }
@@ -93,27 +92,12 @@ PlayAudio.prototype.play = function (audio, options = {}) {
 
 PlayAudio.prototype.textToVoice = async function (text = "안녕하세요?") {
   const instance = this;
-  const { restapiKey } = this;
-  const { shell, shellLink, returnRandoms } = this.mother;
+  const { shellExec, shellLink } = this.mother;
   try {
-    let command, tempDir, fileName, randoms;
-
-    randoms = await returnRandoms();
-    text = text.replace(/[\[\]\{\}\"\'\<\>\/\\\~\`\+\=\-\_\@\#\$\%\^\&\*\(\)]/g, '');
-    tempDir = process.cwd() + "/temp";
-    fileName = `tempVoiceRecord_${String((new Date()).valueOf())}_${String(randoms[0])}.mp3`;
-
-    command = ``;
-    command += `curl -v -X POST "https://kakaoi-newtone-openapi.kakao.com/v1/synthesize" `;
-    command += `-H "Content-Type: application/xml" `;
-    command += `-H "Authorization: ${restapiKey}" `;
-    command += `-d '<speak>${text.replace(/\'/g, '"').replace(/\n/g, ' ').replace(/\t/g, '')}</speak>'`;
-    command += ` > ${shellLink(tempDir)}/${fileName}`;
-
-    shell.exec(command, { silent: true });
-    await this.play(`${tempDir}/${fileName}`);
-    shell.exec(`rm -rf ${shellLink(tempDir)}/${fileName}`, { silent: true });
-
+    let file;
+    file = await this.textToMp3(text);
+    await this.play(file);
+    await shellExec(`rm -rf ${shellLink(file)}`);
   } catch (e) {
     console.log(e);
   }
@@ -121,8 +105,7 @@ PlayAudio.prototype.textToVoice = async function (text = "안녕하세요?") {
 
 PlayAudio.prototype.textToMp3 = async function (text = "안녕하세요?") {
   const instance = this;
-  const { restapiKey } = this;
-  const { shell, shellLink, returnRandoms } = this.mother;
+  const { shellExec, shellLink, returnRandoms } = this.mother;
   try {
     let command, tempDir, fileName, randoms;
 
@@ -132,13 +115,13 @@ PlayAudio.prototype.textToMp3 = async function (text = "안녕하세요?") {
     fileName = `tempVoiceRecord_${String((new Date()).valueOf())}_${String(randoms[0])}.mp3`;
 
     command = ``;
-    command += `curl -v -X POST "https://kakaoi-newtone-openapi.kakao.com/v1/synthesize" `;
-    command += `-H "Content-Type: application/xml" `;
-    command += `-H "Authorization: ${restapiKey}" `;
-    command += `-d '<speak>${text.replace(/\'/g, '"').replace(/\n/g, ' ').replace(/\t/g, '')}</speak>'`;
-    command += ` > ${shellLink(tempDir)}/${fileName}`;
+    command += `aws polly synthesize-speech `;
+    command += `--output-format mp3 `;
+    command += `--voice-id Seoyeon `;
+    command += `--text '${text.replace(/\'/g, '"').replace(/\n/g, ' ').replace(/\t/g, '')}' `;
+    command += `${shellLink(tempDir)}/${fileName}`;
 
-    shell.exec(command, { silent: true });
+    await shellExec(command);
 
     return (tempDir + "/" + fileName);
 
