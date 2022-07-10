@@ -50,6 +50,11 @@ DesignerListJs.prototype.insertInitBox = function () {
   const { ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const toggleTargetClassName = "toggleTargetClassName";
+  const toggleTargetClassName2 = "toggleTargetClassName2";
+  const circleClassName = "circleClassName";
+  const circleBaseClassName = "circleBaseClassName";
+  const touchStartConst = "toggleTouchStartConstName";
   let whiteBlock;
   let style;
   let blockHeight;
@@ -88,6 +93,24 @@ DesignerListJs.prototype.insertInitBox = function () {
   let tagTongBottom;
   let boxTopVisual;
   let mobileBlockTop;
+  let buttonSize;
+  let buttonWeight;
+  let buttonBetween;
+  let buttonTongWidth;
+  let buttonWidth;
+  let buttonHeight;
+  let buttonTextTop;
+  let buttonLeft;
+  let circleWidth;
+  let tabletVisualBottom;
+  let mobileButtonTongMarginTop;
+  let mobileButtonBetween;
+  let contentsPaddingTop;
+  let sortBoxRight;
+  let mobileBackgroundHeight;
+  let mobileVisualPaddingLeft;
+  let tagBoxRight;
+  let designerDetailToggleEvent;
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
@@ -101,9 +124,9 @@ DesignerListJs.prototype.insertInitBox = function () {
 
   servicePaddingTop = <%% 7, 7, 7, 7, 7 %%>;
   servicePaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
-  servicePaddingLeft = <%% 13, 13, 13, 12, 2.2 %%>;
+  servicePaddingLeft = <%% 15, 15, 14, 13, 2.2 %%>;
   serviceMarginRight = <%% 6, 6, 6, 6, 6 %%>;
-  serviceSize = <%% 13, 13, 13, 12, 3.3 %%>;
+  serviceSize = <%% 13.5, 13.5, 13, 12, 3.3 %%>;
   serviceBlockPaddingTop = <%% (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), 5 %%>;
 
   whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
@@ -135,20 +158,117 @@ DesignerListJs.prototype.insertInitBox = function () {
 
   mobileBlockTop = 4.5;
 
+  buttonSize = <%% 14, 14, 13, 13, 3.2 %%>;
+  buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
+  buttonBetween = <%% 2, 2, 2, 2, 2 %%>;
+
+  buttonTongWidth = <%% 90, 90, 85, 85, 90 %%>;
+
+  buttonWidth = <%% 26, 26, 26, 24, 5.6 %%>;
+  buttonHeight = <%% 12, 12, 12, 12, 3 %%>;
+  buttonTextTop = <%% (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 4 : 2), (isMac() ? 4 : 2), (isIphone() ? 1.2 : 1) %%>;
+  buttonLeft = <%% -34, -34, -34, -31, -7 %%>;
+  circleWidth = <%% 8, 8, 8, 8, 2 %%>;
+
+  tabletVisualBottom = 4;
+  mobileButtonTongMarginTop = 3;
+  mobileButtonBetween = 11.5;
+  contentsPaddingTop = <%% 16, 16, 16, 0, 1 %%>;
+
+  sortBoxRight = <%% 0, 0, 0, 0, 20 %%>;
+
+  mobileBackgroundHeight = isIphone() ? 75.5 : 73;
+  mobileVisualPaddingLeft = 6;
+
+  tagBoxRight = <%% 157, 153, 125, 125, 10 %%>;
+
+  designerDetailToggleEvent = (toggleTargetClassName) => {
+    return async function (e) {
+      try {
+        const toggle = this.getAttribute("toggle");
+        const mode = this.getAttribute("mode");
+        const targets = [ ...document.querySelectorAll('.' + toggleTargetClassName) ];
+        const thisTarget = targets.find((dom) => { return dom.getAttribute("mode") === mode });
+        const oppositeTarget = targets.find((dom) => { return dom.getAttribute("mode") !== mode });
+        const thisCircleBase = thisTarget.querySelector('.' + circleBaseClassName);
+        const thisCircle = thisTarget.querySelector('.' + circleClassName);
+        const oppositeCircleBase = oppositeTarget.querySelector('.' + circleBaseClassName);
+        const oppositeCircle = oppositeTarget.querySelector('.' + circleClassName);
+
+        homeliaisonAnalytics({
+          page: instance.pageName,
+          standard: instance.firstPageViewTime,
+          action: "viewToggle",
+          data: {
+            mode: mode,
+            toggle: toggle,
+            date: dateToString(new Date(), true),
+          },
+        }).catch((err) => {
+          console.log(err);
+        });
+
+        if (toggle === "off") {
+
+          thisTarget.style.color = colorChip.green;
+          thisCircleBase.style.background = colorChip.green;
+          thisCircle.style.left = String(buttonWidth - circleWidth - ((buttonHeight - circleWidth) / 2)) + ea;
+          thisTarget.setAttribute("toggle", "on");
+
+          oppositeTarget.style.color = colorChip.deactive;
+          oppositeCircleBase.style.background = colorChip.gray5;
+          oppositeCircle.style.left = String((buttonHeight - circleWidth) / 2) + ea;
+          oppositeTarget.setAttribute("toggle", "off");
+
+          if (mode === "only") {
+            instance.sort = "only";
+            instance.designerList();
+          } else {
+            instance.sort = "with";
+            instance.designerListWithReview();
+          }
+
+        } else {
+
+          thisTarget.style.color = colorChip.deactive;
+          thisCircleBase.style.background = colorChip.gray5;
+          thisCircle.style.left = String((buttonHeight - circleWidth) / 2) + ea;
+          thisTarget.setAttribute("toggle", "off");
+
+          oppositeTarget.style.color = colorChip.green;
+          oppositeCircleBase.style.background = colorChip.green;
+          oppositeCircle.style.left = String(buttonWidth - circleWidth - ((buttonHeight - circleWidth) / 2)) + ea;
+          oppositeTarget.setAttribute("toggle", "on");
+
+          if (mode === "only") {
+            instance.sort = "with";
+            instance.designerListWithReview();
+          } else {
+            instance.sort = "only";
+            instance.designerList();
+          }
+
+        }
+
+        instance.photoLoad = true;
+
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+
   searchTags = [];
   if (media[0]) {
     searchTags.push("패브릭");
     searchTags.push("홈퍼니싱");
-    searchTags.push("토탈 스타일링");
     searchTags.push("제작가구");
     searchTags.push("온라인");
-    searchTags.push("전체");
   } else if (media[1]) {
     searchTags.push("패브릭");
     searchTags.push("홈퍼니싱");
     searchTags.push("제작가구");
     searchTags.push("온라인");
-    searchTags.push("전체");
   } else if (media[2]) {
     searchTags.push("패브릭");
     searchTags.push("제작가구");
@@ -343,89 +463,270 @@ DesignerListJs.prototype.insertInitBox = function () {
     ]
   });
 
-  serviceChildren = [];
-  for (let service of searchTags) {
-    serviceChildren.push({
-      class: [
-        serviceButtonClassName
-      ],
-      attribute: {
-        toggle: "off",
-        value: service,
-      },
-      event: {
-        click: function (e) {
-          const targets = [ ...document.querySelectorAll('.' + serviceButtonClassName) ];
-          let thisValue;
-          for (let dom of targets) {
-            if (dom === this) {
-              dom.setAttribute("toggle", "on");
-              dom.firstChild.style.color = colorChip.black;
-              dom.firstChild.querySelector('b').style.color = colorChip.green;
-              thisValue = dom.getAttribute("value");
-            } else {
-              dom.setAttribute("toggle", "off");
-              dom.firstChild.style.color = colorChip.deactive;
-              dom.firstChild.querySelector('b').style.color = colorChip.deactive;
-            }
-          }
-          instance.designerBlock(/전체/gi.test(thisValue) ? "" : thisValue);
-        }
-      },
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        height: String(searchBarHeight - (tagTongBottom * 2)) + ea,
-        marginRight: String(serviceMarginRight) + ea,
-        paddingLeft: String(servicePaddingLeft) + ea,
-        paddingRight: String(servicePaddingLeft) + ea,
-        textAlign: "center",
-        background: colorChip.gray2,
-        borderRadius: String(5) + "px",
-        cursor: "pointer",
-        justifyContent: "center",
-        alignItems: "center",
-        textAlign: "center",
-      },
-      children: [
-        {
-          text: "<b%#%b> " + service,
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(tagTextTop) + ea,
-            fontSize: String(serviceSize) + ea,
-            fontWeight: String(400),
-            color: colorChip.black,
-            cursor: "pointer",
-            textAlign: "center",
-          },
-          bold: {
-            color: colorChip.deactive,
-          }
-        }
-      ]
-    });
-  }
-
-  serviceBlock = createNode({
+  createNode({
     mother: middleBox,
     style: {
-      display: desktop ? "block" : "none",
-      position: "absolute",
-      textAlign: "center",
-      right: String(0),
-      bottom: String(tagTongBottom) + ea,
+      display: desktop ? "inline-flex" : "flex",
+      flexDirection: desktop ? "column" : "row",
+      position: desktop ? "absolute" : "relative",
+      width: desktop ? String(buttonTongWidth) + ea : String(searchBarWidth) + ea,
+      bottom: String(0),
+      marginTop: desktop ? "" : String(mobileButtonTongMarginTop) + ea,
+      right: desktop ? String(sortBoxRight) + ea : "",
+      justifyContent: desktop ? "left" : "center",
+      alignItems: "start",
+      textAlign: "left",
+      paddingLeft: desktop ? "" : String(mobileVisualPaddingLeft) + ea,
     },
-    children: serviceChildren
+    children: [
+      {
+        class: [ toggleTargetClassName2 ],
+        attribute: {
+          toggle: "on",
+          mode: "only",
+        },
+        event: {
+          click: designerDetailToggleEvent(toggleTargetClassName2),
+          touchstart: function (e) {
+            const self = this;
+            self.setAttribute(touchStartConst, "on");
+            setQueue(() => {
+              self.setAttribute(touchStartConst, "off");
+            });
+          },
+          touchend: function (e) {
+            if (this.getAttribute(touchStartConst) === "on") {
+              designerDetailToggleEvent(toggleTargetClassName2).call(this, e);
+            }
+          }
+        },
+        text: "디자이너만 보기",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(buttonSize) + ea,
+          fontWeight: String(buttonWeight),
+          color: colorChip.green,
+          cursor: "pointer",
+          transition: "all 0.5s ease",
+        },
+        children: [
+          {
+            class: [ circleBaseClassName ],
+            style: {
+              position: "absolute",
+              width: String(buttonWidth) + ea,
+              height: String(buttonHeight) + ea,
+              background: colorChip.green,
+              top: String(buttonTextTop) + ea,
+              left: String(buttonLeft) + ea,
+              borderRadius: String(buttonHeight) + ea,
+              transition: "all 0.5s ease",
+            },
+            children: [
+              {
+                style: {
+                  display: "block",
+                  position: "relative",
+                  width: withOut(0),
+                  height: withOut(0),
+                },
+                children: [
+                  {
+                    class: [ circleClassName ],
+                    style: {
+                      display: "inline-block",
+                      width: String(circleWidth) + ea,
+                      height: String(circleWidth) + ea,
+                      borderRadius: String(circleWidth) + ea,
+                      top: String((buttonHeight - circleWidth) / 2) + ea,
+                      left: String(buttonWidth - circleWidth - ((buttonHeight - circleWidth) / 2)) + ea,
+                      background: colorChip.white,
+                      position: "absolute",
+                      transition: "all 0.5s ease",
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        class: [ toggleTargetClassName2 ],
+        attribute: {
+          toggle: "off",
+          mode: "with",
+        },
+        event: {
+          click: designerDetailToggleEvent(toggleTargetClassName2),
+          touchstart: function (e) {
+            const self = this;
+            self.setAttribute(touchStartConst, "on");
+            setQueue(() => {
+              self.setAttribute(touchStartConst, "off");
+            });
+          },
+          touchend: function (e) {
+            if (this.getAttribute(touchStartConst) === "on") {
+              designerDetailToggleEvent(toggleTargetClassName2).call(this, e);
+            }
+          }
+        },
+        text: "리뷰 함께 보기",
+        style: {
+          marginTop: desktop ? String(buttonBetween) + ea : '',
+          marginLeft: desktop ? '' : String(mobileButtonBetween) + ea,
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(buttonSize) + ea,
+          fontWeight: String(buttonWeight),
+          color: colorChip.deactive,
+          cursor: "pointer",
+          transition: "all 0.5s ease",
+        },
+        children: [
+          {
+            class: [ circleBaseClassName ],
+            style: {
+              position: "absolute",
+              width: String(buttonWidth) + ea,
+              height: String(buttonHeight) + ea,
+              background: colorChip.gray5,
+              top: String(buttonTextTop) + ea,
+              left: String(buttonLeft) + ea,
+              borderRadius: String(buttonHeight) + ea,
+              transition: "all 0.5s ease",
+            },
+            children: [
+              {
+                style: {
+                  display: "block",
+                  position: "relative",
+                  width: withOut(0),
+                  height: withOut(0),
+                },
+                children: [
+                  {
+                    class: [ circleClassName ],
+                    style: {
+                      display: "inline-block",
+                      width: String(circleWidth) + ea,
+                      height: String(circleWidth) + ea,
+                      borderRadius: String(circleWidth) + ea,
+                      top: String((buttonHeight - circleWidth) / 2) + ea,
+                      left: String((buttonHeight - circleWidth) / 2) + ea,
+                      background: colorChip.white,
+                      position: "absolute",
+                      transition: "all 0.5s ease",
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+    ]
   });
 
-  for (let dom of serviceBlock.children) {
-    dom.firstChild.style.width = String(Math.ceil(dom.firstChild.getBoundingClientRect().width + 1)) + "px";
-    dom.style.width = String(Math.ceil(dom.firstChild.getBoundingClientRect().width) + 1) + "px";
-  }
+  if (media[0] || media[1]) {
+    serviceChildren = [];
+    for (let service of searchTags) {
+      serviceChildren.push({
+        class: [
+          serviceButtonClassName
+        ],
+        attribute: {
+          toggle: "off",
+          value: service,
+        },
+        event: {
+          click: function (e) {
+            const targets = [ ...document.querySelectorAll('.' + serviceButtonClassName) ];
+            let thisValue;
+            for (let dom of targets) {
+              if (dom === this) {
+                dom.setAttribute("toggle", "on");
+                dom.firstChild.style.color = colorChip.black;
+                dom.firstChild.querySelector('b').style.color = colorChip.green;
+                thisValue = dom.getAttribute("value");
+              } else {
+                dom.setAttribute("toggle", "off");
+                dom.firstChild.style.color = colorChip.deactive;
+                dom.firstChild.querySelector('b').style.color = colorChip.deactive;
+              }
+            }
 
-  serviceBlock.lastChild.style.marginRight = "";
+            homeliaisonAnalytics({
+              page: instance.pageName,
+              standard: instance.firstPageViewTime,
+              action: "clickKeyword",
+              data: {
+                value: thisValue,
+                date: dateToString(new Date(), true),
+              },
+            }).catch((err) => {
+              console.log(err);
+            });
+
+            instance.search = /전체/gi.test(thisValue) ? "" : thisValue;
+            instance.portfolioBlock(null, instance.search, instance.sort);
+            instance.photoLoad = true;
+          }
+        },
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          height: String(searchBarHeight - (tagTongBottom * 2)) + ea,
+          marginRight: String(serviceMarginRight) + ea,
+          paddingLeft: String(servicePaddingLeft) + ea,
+          paddingRight: String(servicePaddingLeft) + ea,
+          textAlign: "center",
+          background: colorChip.gray2,
+          borderRadius: String(5) + "px",
+          cursor: "pointer",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+        },
+        children: [
+          {
+            text: "<b%#%b> " + service,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(tagTextTop) + ea,
+              fontSize: String(serviceSize) + ea,
+              fontWeight: String(400),
+              color: colorChip.black,
+              cursor: "pointer",
+              textAlign: "center",
+            },
+            bold: {
+              color: colorChip.deactive,
+            }
+          }
+        ]
+      });
+    }
+    serviceBlock = createNode({
+      mother: middleBox,
+      style: {
+        display: desktop ? "block" : "none",
+        position: "absolute",
+        textAlign: "center",
+        right: String(tagBoxRight) + ea,
+        bottom: String(tagTongBottom) + ea,
+      },
+      children: serviceChildren
+    });
+    for (let dom of serviceBlock.children) {
+      dom.firstChild.style.width = String(Math.ceil(dom.firstChild.getBoundingClientRect().width + 1)) + "px";
+      dom.style.width = String(Math.ceil(dom.firstChild.getBoundingClientRect().width) + 1) + "px";
+    }
+    serviceBlock.lastChild.style.marginRight = "";
+  }
 
 }
 
@@ -501,6 +802,10 @@ DesignerListJs.prototype.designerList = function () {
   placeholder = "";
 
   serviceButtonClassName = "serviceButton";
+
+  if ([ ...this.baseTong.children ].length >= 2) {
+    this.baseTong.removeChild(this.baseTong.children[1]);
+  }
 
   whiteBlock = createNode({
     mother: this.baseTong,
@@ -886,7 +1191,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
 
 }
 
-DesignerListJs.prototype.designerListB = function () {
+DesignerListJs.prototype.designerListWithReview = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media } = this;
@@ -959,6 +1264,10 @@ DesignerListJs.prototype.designerListB = function () {
 
   serviceButtonClassName = "serviceButton";
 
+  if ([ ...this.baseTong.children ].length >= 2) {
+    this.baseTong.removeChild(this.baseTong.children[1]);
+  }
+
   whiteBlock = createNode({
     mother: this.baseTong,
     style: {
@@ -978,10 +1287,10 @@ DesignerListJs.prototype.designerListB = function () {
     }
   });
 
-  this.designerBlockB(null);
+  this.designerBlockWithReview(null);
 }
 
-DesignerListJs.prototype.designerBlockB = function (search = null) {
+DesignerListJs.prototype.designerBlockWithReview = function (search = null) {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, cleanChildren, designerCareer, designerMthParsing, selfHref } = GeneralJs;
   const { ea, media } = this;
@@ -1705,7 +2014,7 @@ DesignerListJs.prototype.launching = async function (loading) {
       local: async () => {
         try {
           instance.insertInitBox();
-          instance.designerListB();
+          instance.designerList();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "DesignerListJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
         }
