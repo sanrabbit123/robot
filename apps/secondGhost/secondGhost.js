@@ -81,6 +81,8 @@ SecondGhost.prototype.aliveTest = async function () {
           message += "\nsomething death";
           await instance.slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
         }
+      } else {
+        await instance.slack_bot.chat.postMessage({ text: "server all alive", channel: "#error_log" });
       }
 
     }
@@ -90,58 +92,11 @@ SecondGhost.prototype.aliveTest = async function () {
   }
 }
 
-SecondGhost.prototype.aliveLog = async function () {
-  const instance = this;
-  const { pureServer, shellExec, shellLink, fileSystem, setQueue, requestSystem, dateToString } = this.mother;
-  try {
-    const targets = [
-      { name: "home", host: instance.address.homeinfo.ghost.host },
-      { name: "office", host: instance.address.officeinfo.ghost.host },
-      { name: "python", host: instance.address.pythoninfo.host },
-      { name: "log", host: instance.address.testinfo.host },
-    ]
-    const robotPort = 3000;
-    const pathConst = "/disk";
-    const protocol = "https:";
-    let response;
-    let intervalFunc;
-
-    intervalFunc = async () => {
-      try {
-        for (let { name, host } of targets) {
-          response = await requestSystem(protocol + "//" + host + ":" + String(robotPort) + pathConst);
-          console.log(response.data.disk);
-          if (response.data.disk[2] < 100000) {
-            await instance.slack_bot.chat.postMessage({ text: name + " " + "disk warning", channel: "#error_log" });
-          }
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    };
-
-    intervalFunc().catch((err) => { console.log(err); });
-    setInterval(intervalFunc, 2 * 60 * 60 * 1000);
-
-    instance.aliveTest().catch((err) => { console.log(err); });
-    setInterval(async () => {
-      try {
-        await instance.aliveTest();
-      } catch (e) {
-        console.log(e);
-      }
-    }, 30 * 60 * 1000);
-
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 SecondGhost.prototype.ghostConnect = async function () {
   const instance = this;
-  const { fileSystem, shellExec, shellLink, mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, errorLog, messageLog, setQueue, requestSystem, dateToString } = this.mother;
-  const PORT = 3000;
-  const https = require("https");
+  const { fileSystem, shellExec, shellLink, errorLog, messageLog, setQueue, requestSystem, dateToString } = this.mother;
+  const PORT = 53001;
+  const http = require("http");
   const express = require("express");
   const app = express();
   const multer = require("multer");
@@ -179,9 +134,7 @@ SecondGhost.prototype.ghostConnect = async function () {
             await instance.slack_bot.chat.postMessage({ text: name + " " + "disk warning", channel: "#error_log" });
           }
         }
-        // await reflection.coreReflection();
-        // await reflection.mysqlReflection();
-        console.log("disk check, core reflection, mysql reflect done");
+        await instance.slack_bot.chat.postMessage({ text: "disk check done", channel: "#error_log" });
       } catch (e) {
         console.log(e);
       }
@@ -195,7 +148,6 @@ SecondGhost.prototype.ghostConnect = async function () {
     }
     intervalFunc2 = async () => {
       try {
-        // await reflection.logReflection();
       } catch (e) {
         console.log(e);
       }
@@ -203,7 +155,7 @@ SecondGhost.prototype.ghostConnect = async function () {
 
     intervalFunc0().then(intervalFunc1).then(intervalFunc2).catch((err) => { console.log(err); });
 
-    setInterval(intervalFunc0, 2 * 60 * 60 * 1000);
+    setInterval(intervalFunc0, 12 * 60 * 60 * 1000);
     setInterval(intervalFunc1, 30 * 60 * 1000);
     setInterval(intervalFunc2, 24 * 60 * 60 * 1000);
 
@@ -211,46 +163,9 @@ SecondGhost.prototype.ghostConnect = async function () {
     console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching second ghost ==============`);
     console.log(``);
 
-    //set mongo connetion
-    let MONGOC;
-    MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
-    console.log(`\x1b[33m%s\x1b[0m`, `set DB server => 127.0.0.1`);
-    console.log(``);
-
-    await MONGOC.connect();
-
-    //set pem key
-    let pems, pemsLink;
-    let certDir, keyDir, caDir;
-
-    pems = {};
-    pemsLink = process.cwd() + "/pems/" + this.address.officeinfo.ghost.host;
-
-    certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
-    keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
-    caDir = await fileSystem(`readDir`, [ `${pemsLink}/ca` ]);
-
-    for (let i of certDir) {
-      if (i !== `.DS_Store`) {
-        pems.cert = await fileSystem(`read`, [ `${pemsLink}/cert/${i}` ]);
-      }
-    }
-    for (let i of keyDir) {
-      if (i !== `.DS_Store`) {
-        pems.key = await fileSystem(`read`, [ `${pemsLink}/key/${i}` ]);
-      }
-    }
-    pems.ca = [];
-    for (let i of caDir) {
-      if (i !== `.DS_Store`) {
-        pems.ca.push(await fileSystem(`read`, [ `${pemsLink}/ca/${i}` ]));
-      }
-    }
-    pems.allowHTTP1 = true;
-
     //set router
     const SecondRouter = require(`${this.dir}/router/secondRouter.js`);
-    const router = new SecondRouter(MONGOC);
+    const router = new SecondRouter();
 
     const rouObj = router.getAll();
     for (let obj of rouObj.get) {
@@ -262,7 +177,7 @@ SecondGhost.prototype.ghostConnect = async function () {
     console.log(`set router`);
 
     //server on
-    https.createServer(pems, app).listen(PORT, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
+    http.createServer(app).listen(PORT, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
 
   } catch (e) {
     console.log(e);
