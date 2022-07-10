@@ -989,6 +989,8 @@ DesignerListJs.prototype.designerBlockB = function (search = null) {
   const mobile = media[4];
   const desktop = !mobile;
   const touchStartConst = "touchStartConstName";
+  const photoChar = 't';
+  const photoCharMobile = "mot";
   let targets;
   let tong;
   let block;
@@ -1019,12 +1021,49 @@ DesignerListJs.prototype.designerBlockB = function (search = null) {
   let num, booArr;
   let tagBlock;
   let markWidth, markTop;
+  let blockPaddingTop;
+  let reviewBlock;
+  let reviewTong;
+  let contentsTarget;
+  let contents;
+  let reviewSrc;
+  let title;
+  let subTitle;
+  let portfolioMargin;
+  let reviewColumns;
+  let photoHeight;
+  let photoMarginBottom;
+  let quoteHeight;
+  let quoteWidth;
+  let quoteTop;
+  let reviewTitleSize;
+  let reviewTitleWeight;
+  let reviewTitleMarginLeft;
+  let subTitleMarginTop;
+  let subTitleMarginTopReview;
+  let subTitleSize;
+  let subTitleOverWidthRatio;
+  let tagTongOverWidthRatio;
+  let reviewArrowWidth;
+  let reviewArrowHeight;
+  let reviewArrowBottom;
+  let reviewArrowReviewBottom;
+  let reviewSubTitleVisual;
+  let reviewTitleBox, reviewTitleMarginBottom;
+  let reviewTitleLineTop;
+  let reviewTitleBoxTextTop;
+  let reviewTitleBoxSize;
+  let reviewTitleBoxWeight;
+  let reviewTitleBoxPaddingRight;
+  let reviewTitleBoxBoldWeight;
 
   tongPaddingLeft = <%% 100, 70, 80, 50, 6.5 %%>;
   blockMargin = <%% 40, 30, 20, 20, 2 %%>;
   blockMarginBottom = <%% 20, 20, 15, 10, 4 %%>;
   columns = <%% 2, 2, 1, 1, 1 %%>;
   contentsPaddingTop = <%% 16, 16, 16, 16, 1 %%>;
+
+  blockPaddingTop = <%% 24, 24, 24, 24, 2 %%>;
 
   blockHeight = <%% (isMac() ? 178 : 176), 160, (isMac() ? 178 : 176), 170, 25 %%>;
   photoWidth = blockHeight - (contentsPaddingTop * 2);
@@ -1066,6 +1105,43 @@ DesignerListJs.prototype.designerBlockB = function (search = null) {
   markWidth = <%% 14, 14, 14, 13, 3 %%>;
   markTop = <%% (isMac() ? 14 : 12), (isMac() ? 14 : 12), (isMac() ? 14 : 12), (isMac() ? 14 : 12), (isIphone() ? 2.2 : 1.8) %%>;
 
+  portfolioMargin = <%% 16, 16, 16, 16, 3 %%>;
+
+  reviewColumns = <%% 5, 4, 3, 3, 2 %%>;
+  photoHeight = <%% 264, 264, 264, 264, 60 %%>;
+  photoMarginBottom = <%% 16, 16, 16, 16, 2 %%>;
+
+  quoteHeight = <%% 9, 8, 8, 7, 1.6 %%>;
+  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
+  quoteTop = <%% (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), isIphone() ? 1.2 : 1.1 %%>;
+
+  reviewTitleSize = <%% 17, 17, 17, 15, 3 %%>;
+  reviewTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
+  reviewTitleMarginLeft = <%% 5, 5, 5, 5, 1.1 %%>;
+
+  subTitleMarginTop = <%% 3, 3, 3, 3, 0.5 %%>;
+  subTitleMarginTopReview = <%% 3, 3, 3, 2, 0.2 %%>;
+  subTitleSize = <%% 12, 12, 12, 12, 2.5 %%>;
+
+  subTitleOverWidthRatio = <%% 2, 2, 2, 2, 2 %%>;
+  tagTongOverWidthRatio = <%% 2, 2, 2, 2, 2 %%>;
+
+  reviewArrowWidth = <%% 28, 28, 26, 26, 4 %%>;
+  reviewArrowHeight = <%% 8, 8, 8, 8, 1.5 %%>;
+  reviewArrowBottom = <%% 2, 2, 2, 2, 1 %%>;
+  reviewArrowReviewBottom = <%% 4, 4, 4, 3, 1.5 %%>;
+  reviewSubTitleVisual = <%% 1, 1, 1, 0, 0 %%>;
+
+  reviewTitleBox = <%% 60, 60, 60, 60, 60 %%>;
+  reviewTitleMarginBottom = <%% 6, 6, 6, 6, 6 %%>;
+  reviewTitleLineTop = <%% 27, 27, 27, 27, 27 %%>;
+
+  reviewTitleBoxTextTop = <%% -2, -2, -2, -2, -2 %%>;
+  reviewTitleBoxSize = <%% 18, 18, 18, 18, 18 %%>;
+  reviewTitleBoxWeight = <%% 400, 400, 400, 400, 400 %%>;
+  reviewTitleBoxPaddingRight = <%% 16, 16, 16, 16, 16 %%>;
+  reviewTitleBoxBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+
   cleanChildren(designerTong);
 
   if (typeof search === "string") {
@@ -1097,6 +1173,16 @@ DesignerListJs.prototype.designerBlockB = function (search = null) {
   });
 
   for (let designer of targets) {
+    contentsTarget = instance.contentsArr.toNormal().filter((obj) => { return obj.desid === designer.desid }).filter((obj) => {
+      return obj.contents.review.detailInfo.photodae.length > 0;
+    });
+    designer.contentsTarget = contentsTarget;
+  }
+  targets.sort((a, b) => { return b.contentsTarget.length - a.contentsTarget.length });
+
+  for (let designer of targets) {
+
+    // designer area
 
     if (desktop) {
       src = FRONTHOST + "/list_image/portp" + designer.setting.front.photo.porlid + "/" + designer.setting.front.photo.index + designer.setting.front.photo.porlid + ".jpg";
@@ -1111,11 +1197,11 @@ DesignerListJs.prototype.designerBlockB = function (search = null) {
         height: String(blockHeight) + ea,
         marginBottom: String(blockMarginBottom) + ea,
         background: colorChip.white,
-        paddingLeft: String(40) + ea,
-        paddingRight: String(40) + ea,
-        paddingTop: String(24) + ea,
-        paddingBottom: String(24) + ea,
-        width: withOut(40 * 2, ea),
+        paddingLeft: String(blockMargin) + ea,
+        paddingRight: String(blockMargin) + ea,
+        paddingTop: String(blockPaddingTop) + ea,
+        paddingBottom: String(blockPaddingTop) + ea,
+        width: withOut(blockMargin * 2, ea),
         borderRadius: String(5) + "px",
         boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
       },
@@ -1192,7 +1278,6 @@ DesignerListJs.prototype.designerBlockB = function (search = null) {
     });
 
     contentsBlock = block.children[1];
-
     createNode({
       mother: contentsBlock,
       style: {
@@ -1218,7 +1303,6 @@ DesignerListJs.prototype.designerBlockB = function (search = null) {
             position: "relative",
             fontSize: String(careerSize) + ea,
             fontWeight: String(careerWeight),
-            // color: designer.analytics.grade === 1 ? colorChip.green : colorChip.deactive,
             color: colorChip.green,
             top: String(careerTextTop) + ea,
           },
@@ -1232,7 +1316,6 @@ DesignerListJs.prototype.designerBlockB = function (search = null) {
           mode: "svg",
           source: instance.mother.returnMark(colorChip.green),
           style: {
-            // display: designer.analytics.grade === 1 ? "inline-block" : "none",
             display: "none",
             position: "absolute",
             width: String(markWidth) + ea,
@@ -1242,7 +1325,6 @@ DesignerListJs.prototype.designerBlockB = function (search = null) {
         }
       ]
     });
-
     createNode({
       mother: contentsBlock,
       style: {
@@ -1252,7 +1334,6 @@ DesignerListJs.prototype.designerBlockB = function (search = null) {
         borderBottom: "1px solid " + colorChip.gray3,
       }
     });
-
     createNode({
       mother: contentsBlock,
       text: desktop ? (designer.setting.front.introduction.desktop.slice(0, 2).join("\n") + " ...") : (designer.setting.front.introduction.desktop.slice(0, 1).join("\n") + " ..."),
@@ -1322,7 +1403,6 @@ DesignerListJs.prototype.designerBlockB = function (search = null) {
 
       num++;
     }
-
     if (desktop) {
       createNode({
         mode: "svg",
@@ -1339,8 +1419,211 @@ DesignerListJs.prototype.designerBlockB = function (search = null) {
       });
     }
 
-  }
+    // review area
 
+    contentsTarget = designer.contentsTarget;
+    if (contentsTarget.length > 0) {
+      reviewBlock = createNode({
+        mother: tong,
+        style: {
+          display: "block",
+          width: withOut(0),
+          marginBottom: String(blockMarginBottom * 2) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: "flex",
+              position: "relative",
+              alignItems: "center",
+              width: withOut(0),
+              height: String(reviewTitleBox) + ea,
+              marginBottom: String(reviewTitleMarginBottom) + ea,
+            },
+            children: [
+              {
+                style: {
+                  position: "absolute",
+                  top: String(0),
+                  left: String(0),
+                  width: withOut(0),
+                  height: String(reviewTitleLineTop) + ea,
+                  borderBottom: "1px solid " + colorChip.gray3,
+                }
+              },
+              {
+                text: designer.designer + " 디자이너 <b%고객 후기%b>",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  top: String(reviewTitleBoxTextTop) + ea,
+                  fontSize: String(reviewTitleBoxSize) + ea,
+                  fontWeight: String(reviewTitleBoxWeight),
+                  paddingRight: String(reviewTitleBoxPaddingRight) + ea,
+                  color: colorChip.black,
+                  background: colorChip.gray0,
+                },
+                bold: {
+                  fontWeight: String(reviewTitleBoxBoldWeight),
+                  color: colorChip.black,
+                }
+              }
+            ]
+          },
+          {
+            style: {
+              display: "block",
+              position: "relative",
+            }
+          }
+        ]
+      });
+      reviewTong = reviewBlock.children[1];
+      for (let i = 0; i < contentsTarget.length; i++) {
+        ({ contents } = contentsTarget[i]);
+
+        if (desktop) {
+          reviewSrc = FRONTHOST + "/list_image/portp" + contents.portfolio.pid + "/" + photoChar + String(contents.review.detailInfo.photodae[1]) + contents.portfolio.pid + ".jpg";
+        } else {
+          reviewSrc = FRONTHOST + "/list_image/portp" + contents.portfolio.pid + "/mobile/" + photoCharMobile + String(contents.review.detailInfo.photodae[1]) + contents.portfolio.pid + ".jpg";
+        }
+
+        title = contents.review.title.sub.split(", ").join(" ");
+        if (media[0] || media[2]) {
+          subTitle = contents.portfolio.title.sub;
+        } else {
+          subTitle = contents.portfolio.title.sub;
+          if (!mobile) {
+            if (i !== 0 && subTitle.length > 27) {
+              subTitle = contents.portfolio.title.sub.replace(/홈?스타일링$/i, '');
+            }
+          } else {
+            if (i !== 0 && subTitle.length > 25) {
+              subTitle = contents.portfolio.title.sub.replace(/홈?스타일링$/i, '');
+            }
+          }
+        }
+
+        createNode({
+          mother: reviewTong,
+          attribute: {
+            pid: contents.portfolio.pid,
+            rid: contents.review.rid,
+          },
+          event: {
+            click: function (e) {
+              const pid = this.getAttribute("pid");
+              selfHref(FRONTHOST + "/revdetail.php?pid=" + pid);
+            },
+            touchstart: function (e) {
+              const self = this;
+              self.setAttribute(touchStartConst, "on");
+              setQueue(() => {
+                self.setAttribute(touchStartConst, "off");
+              });
+            },
+            touchend: function (e) {
+              if (this.getAttribute(touchStartConst) === "on") {
+                const pid = this.getAttribute("pid");
+                selfHref(FRONTHOST + "/revdetail.php?pid=" + pid);
+              }
+            }
+          },
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: "calc(calc(100% - " + String(portfolioMargin * reviewColumns) + ea + ") / " + String(reviewColumns) + ")",
+            marginRight: String(portfolioMargin) + ea,
+            marginBottom: String(blockMarginBottom) + ea,
+            borderRadius: String(5) + "px",
+            verticalAlign: "top",
+            overflow: "hidden",
+            cursor: "pointer",
+          },
+          children: [
+            {
+              style: {
+                display: "block",
+                width: String(100) + '%',
+                height: String(photoHeight) + ea,
+                borderRadius: String(5) + "px",
+                marginBottom: String(photoMarginBottom) + ea,
+                backgroundSize: "auto 100%",
+                backgroundPosition: "50% 50%",
+                backgroundImage: "url('" + reviewSrc + "')",
+              }
+            },
+            {
+              style: {
+                display: "block",
+                position: "relative",
+                width: String(100) + '%',
+              },
+              children: [
+                {
+                  mode: "svg",
+                  source: svgMaker.doubleQuote(colorChip.green),
+                  style: {
+                    display: "inline-block",
+                    height: String(quoteHeight) + ea,
+                    width: String(quoteWidth) + ea,
+                    verticalAlign: "top",
+                    position: "relative",
+                    top: String(quoteTop) + ea,
+                  }
+                },
+                {
+                  text: title,
+                  style: {
+                    display: "inline-block",
+                    fontSize: String(reviewTitleSize) + ea,
+                    fontWeight: String(reviewTitleWeight),
+                    color: colorChip.black,
+                    marginLeft: String(reviewTitleMarginLeft) + ea,
+                    width: withOut(quoteWidth + reviewTitleMarginLeft, ea),
+                    verticalAlign: "top",
+                  }
+                }
+              ]
+            },
+            {
+              style: {
+                display: "block",
+                position: "relative",
+                marginTop: String(subTitleMarginTopReview) + ea,
+                paddingLeft: String(quoteWidth + reviewTitleMarginLeft + reviewSubTitleVisual) + ea,
+                width: withOut(quoteWidth + reviewTitleMarginLeft + reviewSubTitleVisual, ea),
+                left: String(0) + ea,
+              },
+              children: [
+                {
+                  text: contents.portfolio.spaceInfo.space + " " + String(contents.portfolio.spaceInfo.pyeong) + "py " + (desktop ? "홈스타일링 후기" : "후기"),
+                  style: {
+                    display: "inline-block",
+                    fontSize: String(subTitleSize) + ea,
+                    fontWeight: String(reviewTitleWeight),
+                    color: colorChip.gray5,
+                  }
+                },
+                {
+                  mode: "svg",
+                  source: svgMaker.horizontalArrow(reviewArrowWidth, reviewArrowHeight),
+                  style: {
+                    position: "absolute",
+                    width: String(reviewArrowWidth) + ea,
+                    right: String(0),
+                    bottom: String(reviewArrowReviewBottom) + ea,
+                  }
+                }
+              ]
+            }
+          ]
+        });
+
+      }
+    }
+
+  }
 }
 
 DesignerListJs.prototype.launching = async function (loading) {

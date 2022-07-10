@@ -5094,7 +5094,7 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
           target = "잔금";
         }
         await back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
-        messageSend({ text: name + " 고객님께 시공 " + target + " 안내 알림톡을 전송했어요.", channel: "#400_customer", voice: true }).catch((err) => {
+        messageSend({ text: name + " 고객님께 시공 " + target + " 안내 알림톡을 전송했어요.", channel: "#400_customer", voice: false }).catch((err) => {
           console.log(err);
         });
         result = { date: dateToString(now), now };
@@ -5725,7 +5725,7 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
       await requestSystem("https://" + address.pythoninfo.host + ":3000/createStylingBill", { proid, desid }, { headers: { "Content-Type": "application/json" } });
       await back.updateProject([ { proid }, { "service.online": (method === "online") } ], { selfMongo: instance.mongo });
 
-      messageSend({ text: `${name} 고객님이 ${designer} 디자이너를 선택하셨어요.`, channel: "#400_customer", voice: true }).then(() => {
+      messageSend({ text: `${name} 고객님이 ${designer} 디자이너를 선택하셨어요.`, channel: "#400_customer", voice: false }).then(() => {
         return requestSystem("https://" + address.backinfo.host + ":3000/generalMongo", {
           mode: "sse",
           db: "console",
@@ -6118,7 +6118,7 @@ DataRouter.prototype.rou_post_styleCuration_styleCheckComplete = function () {
       text = name + " 고객님이 스타일 찾기를 완료하였어요.";
       channel = "#404_curation";
 
-      messageSend({ text, channel, voice: true }).catch((e) => {
+      messageSend({ text, channel, voice: false }).catch((e) => {
         console.log(e);
       });
 
@@ -6167,7 +6167,7 @@ DataRouter.prototype.rou_post_styleCuration_pageInitComplete = function () {
       channel = "#404_curation";
 
       if (phone !== "010-2747-3403") {
-        messageSend({ text, channel, voice: true }).catch((e) => {
+        messageSend({ text, channel, voice: false }).catch((e) => {
           console.log(e);
         });
       }
@@ -6185,7 +6185,7 @@ DataRouter.prototype.rou_post_styleCuration_pageInitComplete = function () {
             path: "curation",
             cliid: cliid,
           });
-          await messageSend({ text: client.name + " 고객님께 신청 완료하라고 독촉했어요.", channel: "#404_curation", voice: true });
+          await messageSend({ text: client.name + " 고객님께 신청 완료하라고 독촉했어요.", channel: "#404_curation", voice: false });
         }
       }, 40 * 60 * 1000);
 

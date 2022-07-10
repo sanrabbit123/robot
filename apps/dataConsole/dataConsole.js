@@ -516,7 +516,6 @@ DataConsole.prototype.renderFrontPhp = async function () {
   const frontDir = this.frontDir + "/client";
   const DataPatch = require(`${this.dir}/router/dataPatch.js`);
   const DataMiddle = require(`${this.dir}/router/dataMiddle.js`);
-  const middleLockConst = "?cliid=c1801_aa01s";
   try {
     await this.renderMiddleStatic(staticFolder, address.backinfo, DataPatch, DataMiddle, true);
     const targetMap = [
