@@ -323,9 +323,7 @@ Robot.prototype.proposalMaker = function (button, arg) {
       return back.updateClient([ { cliid }, updateObj ]);
 
     }).then(() => {
-      return ghostRequest("voice", { text: name + " 고객님에게 제안서 알림톡을 전송하였어요." });
-    }).then(() => {
-      return messageSend({ text: name + " 고객님에게 제안서 알림톡을 전송하였어요.\nlink : https://" + host + "/middle/" + path + "?proid=" + proid + "&mode=test", channel: "#403_proposal" });
+      return messageSend({ text: name + " 고객님에게 제안서 알림톡을 전송하였어요.\nlink : https://" + host + "/middle/" + path + "?proid=" + proid + "&mode=test", channel: "#403_proposal", voice: false });
     }).catch((err) => {
       errorLog("제안서 보내는 도중 오류남 : " + err.message).catch((e) => { console.log(e); });
       reject(err);

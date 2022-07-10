@@ -4378,7 +4378,7 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
           target = "잔금";
         }
         await back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
-        messageSend({ text: name + " 고객님께 시공 " + target + " 안내 알림톡을 전송했어요.", channel: "#400_customer", voice: true }).catch((err) => {
+        messageSend({ text: name + " 고객님께 시공 " + target + " 안내 알림톡을 전송했어요.", channel: "#400_customer", voice: false }).catch((err) => {
           console.log(err);
         });
         result = { date: dateToString(now), now };

@@ -69,7 +69,7 @@ const worker = async function (package) {
       wording = "오전 ";
     }
 
-    await ghostRequest("voice", { text: "지금은 " + wording + String(target) + "시 입니다. " + second });
+    // await ghostRequest("voice", { text: "지금은 " + wording + String(target) + "시 입니다. " + second });
 
     await messageLog("time alarm done");
 

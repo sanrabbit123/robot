@@ -89,6 +89,8 @@ DevContext.prototype.launching = async function () {
 
 
 
+    // await messageSend({ text: "안녕하세요! 새로운 상담 문의가 왔습니다.", channel: "#error_log", voice: true });
+
 
 
 

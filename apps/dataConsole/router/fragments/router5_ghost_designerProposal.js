@@ -26,7 +26,7 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
       await requestSystem("https://" + address.pythoninfo.host + ":3000/createStylingBill", { proid, desid }, { headers: { "Content-Type": "application/json" } });
       await back.updateProject([ { proid }, { "service.online": (method === "online") } ], { selfMongo: instance.mongo });
 
-      messageSend({ text: `${name} 고객님이 ${designer} 디자이너를 선택하셨어요.`, channel: "#400_customer", voice: true }).then(() => {
+      messageSend({ text: `${name} 고객님이 ${designer} 디자이너를 선택하셨어요.`, channel: "#400_customer", voice: false }).then(() => {
         return requestSystem("https://" + address.backinfo.host + ":3000/generalMongo", {
           mode: "sse",
           db: "console",
