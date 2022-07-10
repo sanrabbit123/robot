@@ -1056,14 +1056,15 @@ DesignerListJs.prototype.designerBlockB = function (search = null) {
   let reviewTitleBoxWeight;
   let reviewTitleBoxPaddingRight;
   let reviewTitleBoxBoldWeight;
+  let reviewBlockMarginBottom;
 
   tongPaddingLeft = <%% 100, 70, 80, 50, 6.5 %%>;
-  blockMargin = <%% 40, 30, 20, 20, 2 %%>;
+  blockMargin = <%% 40, 36, 36, 32, 4 %%>;
   blockMarginBottom = <%% 20, 20, 15, 10, 4 %%>;
   columns = <%% 2, 2, 1, 1, 1 %%>;
   contentsPaddingTop = <%% 16, 16, 16, 16, 1 %%>;
 
-  blockPaddingTop = <%% 24, 24, 24, 24, 2 %%>;
+  blockPaddingTop = <%% 24, 20, 20, 16, 3.5 %%>;
 
   blockHeight = <%% (isMac() ? 178 : 176), 160, (isMac() ? 178 : 176), 170, 25 %%>;
   photoWidth = blockHeight - (contentsPaddingTop * 2);
@@ -1108,7 +1109,7 @@ DesignerListJs.prototype.designerBlockB = function (search = null) {
   portfolioMargin = <%% 16, 16, 16, 16, 3 %%>;
 
   reviewColumns = <%% 5, 4, 3, 3, 2 %%>;
-  photoHeight = <%% 264, 264, 264, 264, 60 %%>;
+  photoHeight = <%% 264, 250.5, 289.33, 229.33, 42.5 %%>;
   photoMarginBottom = <%% 16, 16, 16, 16, 2 %%>;
 
   quoteHeight = <%% 9, 8, 8, 7, 1.6 %%>;
@@ -1132,15 +1133,17 @@ DesignerListJs.prototype.designerBlockB = function (search = null) {
   reviewArrowReviewBottom = <%% 4, 4, 4, 3, 1.5 %%>;
   reviewSubTitleVisual = <%% 1, 1, 1, 0, 0 %%>;
 
-  reviewTitleBox = <%% 60, 60, 60, 60, 60 %%>;
-  reviewTitleMarginBottom = <%% 6, 6, 6, 6, 6 %%>;
-  reviewTitleLineTop = <%% 27, 27, 27, 27, 27 %%>;
+  reviewTitleBox = <%% 60, 60, 60, 60, 11 %%>;
+  reviewTitleMarginBottom = <%% 6, 6, 4, 2, 0 %%>;
+  reviewTitleLineTop = <%% 27, 27, 27, 27, 3.2 %%>;
 
   reviewTitleBoxTextTop = <%% -2, -2, -2, -2, -2 %%>;
-  reviewTitleBoxSize = <%% 18, 18, 18, 18, 18 %%>;
+  reviewTitleBoxSize = <%% 18, 18, 18, 18, 3.6 %%>;
   reviewTitleBoxWeight = <%% 400, 400, 400, 400, 400 %%>;
-  reviewTitleBoxPaddingRight = <%% 16, 16, 16, 16, 16 %%>;
+  reviewTitleBoxPaddingRight = <%% 16, 16, 16, 16, 3 %%>;
   reviewTitleBoxBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+  reviewBlockMarginBottom = <%% 45, 42, 36, 30, 6 %%>;
 
   cleanChildren(designerTong);
 
@@ -1428,7 +1431,7 @@ DesignerListJs.prototype.designerBlockB = function (search = null) {
         style: {
           display: "block",
           width: withOut(0),
-          marginBottom: String(blockMarginBottom * 2) + ea,
+          marginBottom: String(desktop ? blockMarginBottom * 3 : blockMarginBottom * 2) + ea,
         },
         children: [
           {
@@ -1461,7 +1464,7 @@ DesignerListJs.prototype.designerBlockB = function (search = null) {
                   fontWeight: String(reviewTitleBoxWeight),
                   paddingRight: String(reviewTitleBoxPaddingRight) + ea,
                   color: colorChip.black,
-                  background: colorChip.gray0,
+                  background: desktop ? colorChip.gray0 : colorChip.gray1,
                 },
                 bold: {
                   fontWeight: String(reviewTitleBoxBoldWeight),
@@ -1474,6 +1477,7 @@ DesignerListJs.prototype.designerBlockB = function (search = null) {
             style: {
               display: "block",
               position: "relative",
+              width: "calc(100% + " + String(portfolioMargin) + ea + ")",
             }
           }
         ]
@@ -1534,7 +1538,7 @@ DesignerListJs.prototype.designerBlockB = function (search = null) {
             position: "relative",
             width: "calc(calc(100% - " + String(portfolioMargin * reviewColumns) + ea + ") / " + String(reviewColumns) + ")",
             marginRight: String(portfolioMargin) + ea,
-            marginBottom: String(blockMarginBottom) + ea,
+            marginBottom: String(reviewBlockMarginBottom) + ea,
             borderRadius: String(5) + "px",
             verticalAlign: "top",
             overflow: "hidden",
