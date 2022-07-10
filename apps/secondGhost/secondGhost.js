@@ -60,7 +60,7 @@ SecondGhost.prototype.aliveTest = async function () {
             if (successNum === targetNumber) {
               console.log("\x1b[33m%s\x1b[0m", "all alive");
               message = "server all alive";
-              await messageLog(message);
+              await instance.slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
             } else if (successNum + failNum === targetNumber) {
               console.log("\x1b[33m%s\x1b[0m", "something death");
               message += "\n======================================";
@@ -81,8 +81,6 @@ SecondGhost.prototype.aliveTest = async function () {
           message += "\nsomething death";
           await instance.slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
         }
-      } else {
-        await instance.slack_bot.chat.postMessage({ text: "server all alive", channel: "#error_log" });
       }
 
     }
@@ -156,7 +154,7 @@ SecondGhost.prototype.ghostConnect = async function () {
     intervalFunc0().then(intervalFunc1).then(intervalFunc2).catch((err) => { console.log(err); });
 
     setInterval(intervalFunc0, 12 * 60 * 60 * 1000);
-    setInterval(intervalFunc1, 30 * 60 * 1000);
+    setInterval(intervalFunc1, 1 * 60 * 60 * 1000);
     setInterval(intervalFunc2, 24 * 60 * 60 * 1000);
 
     console.log(``);
