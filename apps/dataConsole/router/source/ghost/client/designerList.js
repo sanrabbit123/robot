@@ -111,6 +111,9 @@ DesignerListJs.prototype.insertInitBox = function () {
   let mobileVisualPaddingLeft;
   let tagBoxRight;
   let designerDetailToggleEvent;
+  let mobileSearchWhiteBoxPaddingTop;
+  let mobileSearchWhiteBoxPaddingBottom;
+  let mobileSearchWhiteBoxMarginBottom;
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
@@ -134,7 +137,7 @@ DesignerListJs.prototype.insertInitBox = function () {
 
   searchBarPaddingTop = <%% 220, 220, 192, 164, 14 %%>;
   searchBarHeight = <%% 40, 40, 40, 36, 8 %%>;
-  searchBarWidth = <%% 690, 516, 516, 420, 88 %%>;
+  searchBarWidth = <%% 690, 516, 516, 420, 78 %%>;
 
   searchIconHeight = <%% 20, 20, 20, 20, 4 %%>;
   searchIconRight = <%% 11, 11, 11, 11, 2 %%>;
@@ -157,6 +160,10 @@ DesignerListJs.prototype.insertInitBox = function () {
   subTitleContents = "홈스타일링 전문 디자이너를 만나보세요!";
 
   mobileBlockTop = 4.5;
+
+  mobileSearchWhiteBoxPaddingTop = 4.8;
+  mobileSearchWhiteBoxPaddingBottom = 5;
+  mobileSearchWhiteBoxMarginBottom = 4;
 
   buttonSize = <%% 14, 14, 13, 13, 3.2 %%>;
   buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
@@ -221,11 +228,11 @@ DesignerListJs.prototype.insertInitBox = function () {
           oppositeTarget.setAttribute("toggle", "off");
 
           if (mode === "only") {
-            instance.sort = "only";
-            instance.designerList();
+            instance.mode = "only";
+            instance.designerList(instance.search);
           } else {
-            instance.sort = "with";
-            instance.designerListWithReview();
+            instance.mode = "with";
+            instance.designerListWithReview(instance.search);
           }
 
         } else {
@@ -241,11 +248,11 @@ DesignerListJs.prototype.insertInitBox = function () {
           oppositeTarget.setAttribute("toggle", "on");
 
           if (mode === "only") {
-            instance.sort = "with";
-            instance.designerListWithReview();
+            instance.mode = "with";
+            instance.designerListWithReview(instance.search);
           } else {
-            instance.sort = "only";
-            instance.designerList();
+            instance.mode = "only";
+            instance.designerList(instance.search);
           }
 
         }
@@ -261,14 +268,13 @@ DesignerListJs.prototype.insertInitBox = function () {
   searchTags = [];
   if (media[0]) {
     searchTags.push("패브릭");
-    searchTags.push("홈퍼니싱");
     searchTags.push("제작가구");
     searchTags.push("온라인");
+    searchTags.push("전체");
   } else if (media[1]) {
-    searchTags.push("패브릭");
-    searchTags.push("홈퍼니싱");
-    searchTags.push("제작가구");
     searchTags.push("온라인");
+    searchTags.push("제작가구");
+    searchTags.push("전체");
   } else if (media[2]) {
     searchTags.push("패브릭");
     searchTags.push("제작가구");
@@ -290,6 +296,10 @@ DesignerListJs.prototype.insertInitBox = function () {
   placeholder = "패브릭";
 
   serviceButtonClassName = "serviceButton";
+
+  if (mobile) {
+    instance.mother.backgroundImageBox.style.height = String(mobileBackgroundHeight) + ea;
+  }
 
   whiteBlock = createNode({
     mother: this.baseTong,
@@ -384,9 +394,16 @@ DesignerListJs.prototype.insertInitBox = function () {
       display: "flex",
       position: "relative",
       textAlign: "center",
-      justifyContent: "left",
+      justifyContent: desktop ? "left" : "center",
       alignItems: "center",
-      paddingTop: String(searchBarPaddingTop) + ea,
+      paddingTop: desktop ? String(searchBarPaddingTop) + ea : String(mobileSearchWhiteBoxPaddingTop) + ea,
+      paddingBottom: desktop ? "" : String(mobileSearchWhiteBoxPaddingBottom) + ea,
+      background: mobile ? colorChip.white : "",
+      borderRadius: mobile ? String(5) + "px" : "",
+      boxShadow: mobile ? "0px 3px 15px -9px " + colorChip.shadow : "",
+      flexDirection: mobile ? "column" : "row",
+      marginTop: mobile ? String(searchBarPaddingTop) + ea : "",
+      marginBottom: mobile ? String(mobileSearchWhiteBoxMarginBottom) + ea : "",
     },
     children: [
       {
@@ -396,8 +413,8 @@ DesignerListJs.prototype.insertInitBox = function () {
           width: String(searchBarWidth) + ea,
           height: String(searchBarHeight) + ea,
           borderRadius: String(5) + "px",
-          background: desktop ? colorChip.gray2 : colorChip.white,
-          opacity: desktop ? String(1) : String(0.88),
+          background: colorChip.gray2,
+          opacity: String(1),
         },
         children: [
           {
@@ -436,7 +453,12 @@ DesignerListJs.prototype.insertInitBox = function () {
                       console.log(err);
                     });
 
-                    instance.designerBlock(this.value);
+                    instance.search = this.value;
+                    if (instance.mode === "only") {
+                      instance.designerList(instance.search);
+                    } else {
+                      instance.designerListWithReview(instance.search);
+                    }
                   } catch (e) {
                     console.log(e);
                   }
@@ -671,8 +693,11 @@ DesignerListJs.prototype.insertInitBox = function () {
             });
 
             instance.search = /전체/gi.test(thisValue) ? "" : thisValue;
-            instance.portfolioBlock(null, instance.search, instance.sort);
-            instance.photoLoad = true;
+            if (instance.mode === "only") {
+              instance.designerList(instance.search);
+            } else {
+              instance.designerListWithReview(instance.search);
+            }
           }
         },
         style: {
@@ -730,7 +755,7 @@ DesignerListJs.prototype.insertInitBox = function () {
 
 }
 
-DesignerListJs.prototype.designerList = function () {
+DesignerListJs.prototype.designerList = function (search = null) {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media } = this;
@@ -830,7 +855,7 @@ DesignerListJs.prototype.designerList = function () {
     }
   });
 
-  this.designerBlock(null);
+  this.designerBlock(search);
 }
 
 DesignerListJs.prototype.designerBlock = function (search = null) {
@@ -1191,7 +1216,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
 
 }
 
-DesignerListJs.prototype.designerListWithReview = function () {
+DesignerListJs.prototype.designerListWithReview = function (search = null) {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media } = this;
@@ -1287,7 +1312,7 @@ DesignerListJs.prototype.designerListWithReview = function () {
     }
   });
 
-  this.designerBlockWithReview(null);
+  this.designerBlockWithReview(search);
 }
 
 DesignerListJs.prototype.designerBlockWithReview = function (search = null) {
@@ -1446,7 +1471,7 @@ DesignerListJs.prototype.designerBlockWithReview = function (search = null) {
   reviewTitleMarginBottom = <%% 6, 6, 4, 2, 0 %%>;
   reviewTitleLineTop = <%% 27, 27, 27, 27, 3.2 %%>;
 
-  reviewTitleBoxTextTop = <%% -2, -2, -2, -2, -2 %%>;
+  reviewTitleBoxTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -2 %%>;
   reviewTitleBoxSize = <%% 18, 18, 18, 18, 3.6 %%>;
   reviewTitleBoxWeight = <%% 400, 400, 400, 400, 400 %%>;
   reviewTitleBoxPaddingRight = <%% 16, 16, 16, 16, 3 %%>;
@@ -1999,6 +2024,9 @@ DesignerListJs.prototype.launching = async function (loading) {
     this.designers.sort((a, b) => {
       return b.analytics.grade - a.analytics.grade;
     });
+
+    this.search = "";
+    this.mode = "only";
 
     await this.mother.ghostClientLaunching({
       mode: "front",

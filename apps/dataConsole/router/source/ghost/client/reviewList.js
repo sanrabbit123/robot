@@ -190,7 +190,7 @@ ReviewListJs.prototype.insertInitBox = function () {
   mobileBlockTop = 4.5;
 
   mobileSearchWhiteBoxPaddingTop = 4.8;
-  mobileSearchWhiteBoxPaddingBottom = 4.8;
+  mobileSearchWhiteBoxPaddingBottom = 5;
   mobileSearchWhiteBoxMarginBottom = 5;
 
   placeholder = "새아파트";
