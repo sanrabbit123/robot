@@ -89,6 +89,10 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
+
+
     // await messageSend({ text: "안녕하세요! 새로운 상담 문의가 왔습니다.", channel: "#error_log", voice: true });
 
 
@@ -2683,9 +2687,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: null,
-    //     designer: "김우현",
-    //     link: "https://drive.google.com/drive/folders/1zvJKbzP5aVHAaaqIoG7SvjfeyYNIw_JE",
+    //     client: "이미순",
+    //     designer: "박주령",
+    //     link: "https://drive.google.com/drive/folders/1QFnbr8mDdJTB0P9pRG5uhGVEVw9PZnvX",
     //     pay: true
     //   },
     // ]);
