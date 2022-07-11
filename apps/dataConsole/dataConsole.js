@@ -568,8 +568,6 @@ DataConsole.prototype.renderFrontPhp = async function () {
       middleTong.push(`${shellLink(process.cwd())}/temp/${shellLink(from)}.js`);
       await fileSystem(`write`, [ `${process.cwd()}/temp/${to}.php`, phpScript ]);
       motherTong.push(`${shellLink(process.cwd())}/temp/${shellLink(to)}.php`);
-      await fileSystem(`write`, [ `${process.cwd()}/temp/${to}`, phpScript ]);
-      motherTong.push(`${shellLink(process.cwd())}/temp/${shellLink(to)}`);
     }
 
     console.log("middle :", middleTong);

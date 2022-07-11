@@ -11,6 +11,7 @@ class GeneralPhp {
     $gtagManagerId = "GTM-W6FSR8M";
     $gtagId = "UA-97880990-1";
     $googleSearchId = "YRxCc6xhQlM3qTygta5Qw0CObJJrLDYmUE8_wCR0AQc";
+    $naverSearchId = "59096f538ddb9a8704025cefc11269d504f62aac";
     $facebookId = "814052605684956";
     $indexName = "frontIndex";
     $hostLink = "https://".$this->host;
@@ -22,7 +23,10 @@ class GeneralPhp {
     $html .= '<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no,user-scalable=no">'."\n";
     $html .= '<link rel="canonical" href="'.$fullLink.'">'."\n";
     $html .= '<meta content="'.$fullLink.'" property="og:url"><meta content="website" property="og:type">'."\n";
-    $html .= '<meta name="google-site-verification" content="'.$googleSearchId.'"><meta name="twitter:card" content="summary_large_image"><meta content="'.$facebookId.'" property="fb:app_id">'."\n";
+    $html .= '<meta name="google-site-verification" content="'.$googleSearchId.'">'."\n";
+    $html .= '<meta name="naver-site-verification" content="'.$naverSearchId.'">'."\n";
+    $html .= '<meta name="twitter:card" content="summary_large_image">'."\n";
+    $html .= '<meta content="'.$facebookId.'" property="fb:app_id">'."\n";
     $html .= '<meta name="robots" content="index,follow">'."\n";
     $html .= '<meta content="'.$titleString.'" property="og:title">'."\n";
     $html .= '<meta content="'.$descriptionString.'" property="og:description">'."\n";

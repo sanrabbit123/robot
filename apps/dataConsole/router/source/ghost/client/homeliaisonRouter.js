@@ -54,7 +54,6 @@ HomeliaisonRouterJs.prototype.boxRouting = function () {
   let routingContents;
   let buttonTong;
   let buttonTongWidth;
-  let belowHeight;
   let blockHeight;
   let blockBetween;
   let fontTextTop, fontSize, fontWeight;
@@ -62,17 +61,16 @@ HomeliaisonRouterJs.prototype.boxRouting = function () {
 
   mainWidth = <%% 900, 900, 900, 720, 100 %%>;
 
-  buttonTongWidth = <%% 400, 400, 400, 400, 88 %%>;
-  belowHeight = <%% 123, 123, 123, 123, 0 %%>;
+  buttonTongWidth = <%% 400, 400, 380, 340, 82 %%>;
 
-  blockHeight = <%% 56, 56, 56, 56, 6 %%>;
-  blockBetween = <%% 12, 12, 12, 10, 1 %%>;
+  blockHeight = <%% 56, 56, 54, 50, 12 %%>;
+  blockBetween = <%% 12, 12, 12, 10, 2 %%>;
 
-  fontTextTop = <%% -2, -2, -2, -2, -2 %%>;
-  fontSize = <%% 17, 17, 17, 17, 17 %%>;
+  fontTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.3 %%>;
+  fontSize = <%% 17, 17, 16, 15, 3.6 %%>;
   fontWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  radius = <%% 10, 10, 10, 10, 8 %%>;
+  radius = <%% 10, 10, 10, 10, 5 %%>;
 
   routingContents = [
     {

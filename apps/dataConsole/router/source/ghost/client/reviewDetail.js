@@ -1505,7 +1505,7 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
                 content: {
                   title: document.querySelector("title").textContent,
                   description: [ ...document.querySelectorAll("meta") ].find((dom) => { return dom.getAttribute("property") === "og:description" }).getAttribute("content"),
-                  imageUrl: [ ...document.querySelectorAll("meta") ].find((dom) => { return dom.getAttribute("property") === "og:image" }).getAttribute("content"),
+                  imageUrl: FRONTHOST + [ ...document.querySelectorAll("meta") ].find((dom) => { return dom.getAttribute("property") === "og:image" }).getAttribute("content"),
                   link: {
                     mobileWebUrl: window.location.href,
                     webUrl: window.location.href,
