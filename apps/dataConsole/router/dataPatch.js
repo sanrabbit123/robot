@@ -5727,381 +5727,478 @@ DataPatch.prototype.projectMap = function () {
     let supplyConsumer;
     let percentage, supply, consumer;
     let supplyOriginal, consumerOriginal;
+    let proid;
 
-    originalValue = input.value;
+    proid = mother.parentElement.className.replace(/(p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z])/g, (match, proid) => { return proid.trim(); });
+    if (!/p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/g.test(proid)) {
+      proid = mother.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("index");
+    }
 
-    [ percentage, supplyConsumer ] = originalValue.replace(/ /gi, '').split('%');
-    [ supply, consumer ] = supplyConsumer.split('/');
+    GeneralJs.ajaxJson({ noFlat: true, whereQuery: { proid } }, "/getProjects", { equal: true }).then((projects) => {
+      const [ project ] = projects;
 
-    percentage = Number(percentage.replace(/[^0-9\.\-]/gi, ''));
-    supply = Number(supply.replace(/[^0-9]/gi, ''));
-    consumer = Number(consumer.replace(/[^0-9]/gi, ''));
+      originalValue = input.value;
 
-    supplyOriginal = (supply / percentage) * 100;
-    consumerOriginal = (consumer / percentage) * 100;
+      [ percentage, supplyConsumer ] = originalValue.replace(/ /gi, '').split('%');
+      [ supply, consumer ] = supplyConsumer.split('/');
 
-    endEvent = async function (e) {
-      try {
-        const percentageInput = document.querySelector('.' + percentageValueInputClassName);
-        const supplyInput = document.querySelector('.' + supplyValueInputClassName);
-        const consumerInput = document.querySelector('.' + consumerValueInputClassName);
-        const percentage = Number(percentageInput.value);
-        const supply = Number(supplyInput.value);
-        const consumer = Number(consumerInput.value);
-        const supplyOriginal = Number(supplyInput.getAttribute("original"));
-        const consumerOriginal = Number(consumerInput.getAttribute("original"));
-        let proid, project;
-        let whereQuery, updateQuery;
-        let discount;
-        let desid, designer;
-        let newSupply;
-        let newVat;
-        let newConsumer;
-        let res;
-        let calculate;
+      percentage = Number(percentage.replace(/[^0-9\.\-]/gi, ''));
+      supply = Number(supply.replace(/[^0-9]/gi, ''));
+      consumer = Number(consumer.replace(/[^0-9]/gi, ''));
 
-        proid = mother.parentElement.className.replace(/(p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z])/g, (match, proid) => { return proid.trim(); });
-        if (!/p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/g.test(proid)) {
-          proid = mother.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("index");
+      supplyOriginal = project.process.contract.remain.calculation.amount.supply + supply;
+      consumerOriginal = project.process.contract.remain.calculation.amount.consumer + consumer;
+
+      endEvent = async function (e) {
+        try {
+          const percentageInput = document.querySelector('.' + percentageValueInputClassName);
+          const supplyInput = document.querySelector('.' + supplyValueInputClassName);
+          const consumerInput = document.querySelector('.' + consumerValueInputClassName);
+          const percentage = Number(percentageInput.value);
+          const supply = Number(supplyInput.value);
+          const consumer = Number(consumerInput.value);
+          const supplyOriginal = Number(supplyInput.getAttribute("original"));
+          const consumerOriginal = Number(consumerInput.getAttribute("original"));
+          let proid, project;
+          let whereQuery, updateQuery;
+          let discount;
+          let desid, designer;
+          let newSupply;
+          let newVat;
+          let newConsumer;
+          let res;
+          let calculate;
+
+          proid = mother.parentElement.className.replace(/(p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z])/g, (match, proid) => { return proid.trim(); });
+          if (!/p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/g.test(proid)) {
+            proid = mother.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("index");
+          }
+          project = (await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { proid } }, "/getProjects", { equal: true }))[0];
+          desid = project.desid;
+          designer = (await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { desid } }, "/getDesigners", { equal: true }))[0];
+
+          discount = percentage / 100;
+          newSupply = supplyOriginal - supply;
+          newVat = newSupply * (0.1);
+          newConsumer = newSupply + newVat;
+
+          ({ calculate } = await GeneralJs.ajaxJson({
+            supply: supplyOriginal,
+            classification: designer.information.business.businessInfo.classification,
+            percentage: designer.information.business.service.cost.percentage,
+            cliid: proid
+          }, PYTHONHOST + "/designerCalculation"));
+
+          whereQuery = { proid };
+          updateQuery = {};
+          updateQuery["process.contract.remain.calculation.amount.supply"] = newSupply;
+          updateQuery["process.contract.remain.calculation.amount.vat"] = newVat;
+          updateQuery["process.contract.remain.calculation.amount.consumer"] = newConsumer;
+          updateQuery["process.contract.remain.calculation.discount"] = discount;
+          updateQuery["process.calculation.payments.totalAmount"] = calculate;
+          updateQuery["process.calculation.payments.first.amount"] = Math.floor(calculate / 2);
+          updateQuery["process.calculation.payments.remain.amount"] = calculate - updateQuery["process.calculation.payments.first.amount"];
+
+          await GeneralJs.ajaxJson({ whereQuery, updateQuery }, "/rawUpdateProject");
+
+          window.location.href = window.location.protocol + "//" + window.location.host + "/project?proid=" + proid;
+
+        } catch (e) {
+          console.log(e);
         }
-        project = (await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { proid } }, "/getProjects", { equal: true }))[0];
-        desid = project.desid;
-        designer = (await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { desid } }, "/getDesigners", { equal: true }))[0];
+      };
 
-        discount = percentage / 100;
-        newSupply = supplyOriginal - supply;
-        newVat = newSupply * (0.1);
-        newConsumer = newSupply + newVat;
-
-        ({ calculate } = await GeneralJs.ajaxJson({
-          supply: supplyOriginal,
-          classification: designer.information.business.businessInfo.classification,
-          percentage: designer.information.business.service.cost.percentage,
-          cliid: proid
-        }, PYTHONHOST + "/designerCalculation"));
-
-        whereQuery = { proid };
-        updateQuery = {};
-        updateQuery["process.contract.remain.calculation.amount.supply"] = newSupply;
-        updateQuery["process.contract.remain.calculation.amount.vat"] = newVat;
-        updateQuery["process.contract.remain.calculation.amount.consumer"] = newConsumer;
-        updateQuery["process.contract.remain.calculation.discount"] = discount;
-        updateQuery["process.calculation.payments.totalAmount"] = calculate;
-        updateQuery["process.calculation.payments.first.amount"] = Math.floor(calculate / 2);
-        updateQuery["process.calculation.payments.remain.amount"] = calculate - updateQuery["process.calculation.payments.first.amount"];
-
-        await GeneralJs.ajaxJson({ whereQuery, updateQuery }, "/rawUpdateProject");
-
-        window.location.href = window.location.protocol + "//" + window.location.host + "/project?proid=" + proid;
-
-      } catch (e) {
-        console.log(e);
+      input.value = "입력중";
+      if (input.parentElement.childNodes[0].nodeType === 3) {
+        input.parentElement.style.transition = "0s all ease";
+        input.parentElement.style.color = "transparent";
       }
-    };
 
+      mother.style.overflow = "";
+      height = Number(mother.style.height.replace((new RegExp(ea, "gi")), ''));
+      fontSize = Number(mother.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+      width = Number(mother.style.width.replace((new RegExp(ea, "gi")), '')) + 60;
+      if (width === '' || Number.isNaN(width)) {
+        width = String(300);
+      }
+      top = height * 0.5;
+      iconWidth = 18;
 
-    input.value = "입력중";
-    if (input.parentElement.childNodes[0].nodeType === 3) {
-      input.parentElement.style.transition = "0s all ease";
-      input.parentElement.style.color = "transparent";
-    }
-
-    mother.style.overflow = "";
-    height = Number(mother.style.height.replace((new RegExp(ea, "gi")), ''));
-    fontSize = Number(mother.style.fontSize.replace((new RegExp(ea, "gi")), ''));
-    width = Number(mother.style.width.replace((new RegExp(ea, "gi")), '')) + 60;
-    if (width === '' || Number.isNaN(width)) {
-      width = String(300);
-    }
-    top = height * 0.5;
-    iconWidth = 18;
-
-    buttonStyle = {
-      display: "block",
-      position: "relative",
-      left: (width !== "300" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
-      width: String(width) + ea,
-      paddingTop: String(height * 0.3) + ea,
-      height: String(height * 1.5) + ea,
-      fontSize: "inherit",
-      zIndex: String(3),
-      borderRadius: String(3) + ea,
-      animation: "fadeuplite 0.3s ease forwards",
-      marginBottom: String(height / 4) + ea,
-    };
-
-    buttonDetailStyles = [
-      {
-        position: "absolute",
-        left: String(0) + ea,
-        top: String(0) + ea,
-        width: "28%",
-        height: "100%",
-        background: GeneralJs.colorChip.green,
-        zIndex: String(3),
-        borderRadius: String(3) + ea,
-        fontSize: "inherit",
-        boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
-      },
-      {
-        position: "absolute",
-        right: String(0) + ea,
-        top: String(0) + ea,
-        width: "calc(72% - " + String(Math.round((height) / 4)) + ea + ")",
-        height: "100%",
-        background: GeneralJs.colorChip.green,
-        zIndex: String(3),
-        borderRadius: String(3) + ea,
-        fontSize: "inherit",
-        boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
-      },
-    ];
-
-    inputStyle = {
-      position: "absolute",
-      fontSize: "inherit",
-      fontWeight: String(400),
-      color: GeneralJs.colorChip.whiteBlack,
-      zIndex: String(3),
-      textAlign: "center",
-      background: "transparent",
-      width: "100%",
-      height: (GeneralJs.isMac() ? "95%" : "98%"),
-      left: String(0) + ea,
-      top: String(GeneralJs.isMac() ? 0 : 2) + ea,
-      borderRadius: String(3) + ea,
-      outline: String(0),
-      border: String(0),
-    };
-
-    GeneralJs.createNode({
-      mother,
-      class: [ "removeTarget", "divTong" ],
-      style: {
+      buttonStyle = {
         display: "block",
-        position: "absolute",
-        top: String((height * 2) - top) + ea,
+        position: "relative",
         left: (width !== "300" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
         width: String(width) + ea,
-        textAlign: "center",
+        paddingTop: String(height * 0.3) + ea,
+        height: String(height * 1.5) + ea,
         fontSize: "inherit",
         zIndex: String(3),
-        paddingBottom: String(iconWidth + 3) + ea,
-      },
-      children: [
-        {
-          style: {
-            ...buttonStyle
-          },
-          children: [
-            {
-              style: {
-                ...buttonDetailStyles[0]
-              },
-              children: [
-                {
-                  mode: "input",
-                  attribute: {
-                    type: "text",
-                    value: "%"
-                  },
-                  style: {
-                    ...inputStyle,
-                    cursor: "pointer"
-                  }
-                }
-              ]
-            },
-            {
-              style: {
-                ...buttonDetailStyles[1]
-              },
-              children: [
-                {
-                  mode: "input",
-                  class: [ percentageValueInputClassName ],
-                  event: {
-                    keyup: function (e) {
-                      if (e.key === "Enter") {
-                        this.blur();
-                      }
-                    },
-                    blur: function (e) {
-                      this.value = this.value.replace(/[^0-9\.\-]/gi, '');
-                      if (Number.isNaN(Number(this.value))) {
-                        window.alert("숫자만 입력해주세요!");
-                      } else {
-                        const newPercentage = Number(this.value);
-                        const supplyTarget = document.querySelector('.' + supplyValueInputClassName);
-                        const consumerTarget = document.querySelector('.' + consumerValueInputClassName);
-                        const supplyOriginal = Number(supplyTarget.getAttribute("original"));
-                        const consumerOriginal = Number(consumerTarget.getAttribute("original"));
-                        supplyTarget.value = String((supplyOriginal / 100) * newPercentage);
-                        consumerTarget.value = String((consumerOriginal / 100) * newPercentage);
-                      }
-                    }
-                  },
-                  attribute: {
-                    type: "text",
-                    value: String(percentage)
-                  },
-                  style: {
-                    ...inputStyle
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
-          style: {
-            ...buttonStyle
-          },
-          children: [
-            {
-              style: {
-                ...buttonDetailStyles[0]
-              },
-              children: [
-                {
-                  mode: "input",
-                  attribute: {
-                    type: "text",
-                    value: "공급가"
-                  },
-                  style: {
-                    ...inputStyle,
-                    cursor: "pointer"
-                  }
-                }
-              ]
-            },
-            {
-              style: {
-                ...buttonDetailStyles[1]
-              },
-              children: [
-                {
-                  mode: "input",
-                  class: [ supplyValueInputClassName ],
-                  event: {
-                    keyup: function (e) {
-                      if (e.key === "Enter") {
-                        this.blur();
-                      }
-                    },
-                    blur: function (e) {
-                      this.value = this.value.replace(/[^0-9\.\-]/gi, '');
-                      if (Number.isNaN(Number(this.value))) {
-                        window.alert("숫자만 입력해주세요!");
-                      } else {
-                        const newSupply = Number(this.value);
-                        const percentageTarget = document.querySelector('.' + percentageValueInputClassName);
-                        const consumerTarget = document.querySelector('.' + consumerValueInputClassName);
-                        const supplyOriginal = Number(this.getAttribute("original"));
-                        const consumerOriginal = Number(consumerTarget.getAttribute("original"));
-                        const newPercentage = (newSupply / supplyOriginal) * 100;
-                        consumerTarget.value = String((consumerOriginal / 100) * newPercentage);
-                        percentageTarget.value = String(Math.round(newPercentage * 100) / 100);
-                      }
-                    }
-                  },
-                  attribute: {
-                    type: "text",
-                    value: String(supply),
-                    original: String(supplyOriginal)
-                  },
-                  style: {
-                    ...inputStyle
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
-          style: {
-            ...buttonStyle
-          },
-          children: [
-            {
-              style: {
-                ...buttonDetailStyles[0]
-              },
-              children: [
-                {
-                  mode: "input",
-                  attribute: {
-                    type: "text",
-                    value: "소비자가"
-                  },
-                  style: {
-                    ...inputStyle,
-                    cursor: "pointer"
-                  }
-                }
-              ]
-            },
-            {
-              style: {
-                ...buttonDetailStyles[1]
-              },
-              children: [
-                {
-                  mode: "input",
-                  class: [ consumerValueInputClassName ],
-                  event: {
-                    keyup: function (e) {
-                      if (e.key === "Enter") {
-                        this.blur();
-                      }
-                    },
-                    blur: function (e) {
-                      this.value = this.value.replace(/[^0-9\.\-]/gi, '');
-                      if (Number.isNaN(Number(this.value))) {
-                        window.alert("숫자만 입력해주세요!");
-                      } else {
-                        const newConsumer = Number(this.value);
-                        const percentageTarget = document.querySelector('.' + percentageValueInputClassName);
-                        const supplyTarget = document.querySelector('.' + supplyValueInputClassName);
-                        const supplyOriginal = Number(supplyTarget.getAttribute("original"));
-                        const consumerOriginal = Number(this.getAttribute("original"));
-                        const newPercentage = (newConsumer / consumerOriginal) * 100;
-                        supplyTarget.value = String((supplyOriginal / 100) * newPercentage);
-                        percentageTarget.value = String(Math.round(newPercentage * 100) / 100);
-                      }
-                    }
-                  },
-                  attribute: {
-                    type: "text",
-                    value: String(consumer),
-                    original: String(consumerOriginal)
-                  },
-                  style: {
-                    ...inputStyle
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
-          mode: "svg",
-          source: GeneralJs.prototype.returnOk(GeneralJs.colorChip.green),
-          event: {
-            click: endEvent
-          },
-          style: {
-            position: "absolute",
-            bottom: String(0),
-            width: String(iconWidth) + ea,
-            left: "calc(50% - " + String(iconWidth / 2) + ea + ")",
-            cursor: "pointer"
-          }
-        }
-      ]
-    });
+        borderRadius: String(3) + ea,
+        animation: "fadeuplite 0.3s ease forwards",
+        marginBottom: String(height / 4) + ea,
+      };
 
+      buttonDetailStyles = [
+        {
+          position: "absolute",
+          left: String(0) + ea,
+          top: String(0) + ea,
+          width: "28%",
+          height: "100%",
+          background: GeneralJs.colorChip.green,
+          zIndex: String(3),
+          borderRadius: String(3) + ea,
+          fontSize: "inherit",
+          boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
+        },
+        {
+          position: "absolute",
+          right: String(0) + ea,
+          top: String(0) + ea,
+          width: "calc(72% - " + String(Math.round((height) / 4)) + ea + ")",
+          height: "100%",
+          background: GeneralJs.colorChip.green,
+          zIndex: String(3),
+          borderRadius: String(3) + ea,
+          fontSize: "inherit",
+          boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
+        },
+      ];
+
+      inputStyle = {
+        position: "absolute",
+        fontSize: "inherit",
+        fontWeight: String(400),
+        color: GeneralJs.colorChip.whiteBlack,
+        zIndex: String(3),
+        textAlign: "center",
+        background: "transparent",
+        width: "100%",
+        height: (GeneralJs.isMac() ? "95%" : "98%"),
+        left: String(0) + ea,
+        top: String(GeneralJs.isMac() ? 0 : 2) + ea,
+        borderRadius: String(3) + ea,
+        outline: String(0),
+        border: String(0),
+      };
+
+      GeneralJs.createNode({
+        mother,
+        class: [ "removeTarget", "divTong" ],
+        style: {
+          display: "block",
+          position: "absolute",
+          top: String((height * 2) - top) + ea,
+          left: (width !== "300" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+          width: String(width) + ea,
+          textAlign: "center",
+          fontSize: "inherit",
+          zIndex: String(3),
+          paddingBottom: String(iconWidth + 3) + ea,
+        },
+        children: [
+          {
+            style: {
+              ...buttonStyle
+            },
+            children: [
+              {
+                style: {
+                  ...buttonDetailStyles[0]
+                },
+                children: [
+                  {
+                    mode: "input",
+                    attribute: {
+                      type: "text",
+                      value: "%"
+                    },
+                    style: {
+                      ...inputStyle,
+                      cursor: "pointer"
+                    }
+                  }
+                ]
+              },
+              {
+                style: {
+                  ...buttonDetailStyles[1]
+                },
+                children: [
+                  {
+                    mode: "input",
+                    class: [ percentageValueInputClassName ],
+                    event: {
+                      keyup: function (e) {
+                        if (e.key === "Enter") {
+                          this.blur();
+                        }
+                      },
+                      blur: function (e) {
+                        this.value = this.value.replace(/[^0-9\.\-]/gi, '');
+                        if (Number.isNaN(Number(this.value))) {
+                          window.alert("숫자만 입력해주세요!");
+                        } else {
+                          const newPercentage = Number(this.value);
+                          const supplyTarget = document.querySelector('.' + supplyValueInputClassName);
+                          const consumerTarget = document.querySelector('.' + consumerValueInputClassName);
+                          const supplyOriginal = Number(supplyTarget.getAttribute("original"));
+                          const consumerOriginal = Number(consumerTarget.getAttribute("original"));
+                          supplyTarget.value = String((supplyOriginal / 100) * newPercentage);
+                          consumerTarget.value = String((consumerOriginal / 100) * newPercentage);
+                        }
+                      }
+                    },
+                    attribute: {
+                      type: "text",
+                      value: String(percentage)
+                    },
+                    style: {
+                      ...inputStyle
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            style: {
+              ...buttonStyle
+            },
+            children: [
+              {
+                style: {
+                  ...buttonDetailStyles[0]
+                },
+                children: [
+                  {
+                    mode: "input",
+                    attribute: {
+                      type: "text",
+                      value: "공급가"
+                    },
+                    style: {
+                      ...inputStyle,
+                      cursor: "pointer"
+                    }
+                  }
+                ]
+              },
+              {
+                style: {
+                  ...buttonDetailStyles[1]
+                },
+                children: [
+                  {
+                    mode: "input",
+                    class: [ supplyValueInputClassName ],
+                    event: {
+                      keyup: function (e) {
+                        if (e.key === "Enter") {
+                          this.blur();
+                        }
+                      },
+                      blur: function (e) {
+                        this.value = this.value.replace(/[^0-9\.\-]/gi, '');
+                        if (Number.isNaN(Number(this.value))) {
+                          window.alert("숫자만 입력해주세요!");
+                        } else {
+                          const newSupply = Number(this.value);
+                          const percentageTarget = document.querySelector('.' + percentageValueInputClassName);
+                          const consumerTarget = document.querySelector('.' + consumerValueInputClassName);
+                          const supplyOriginal = Number(this.getAttribute("original"));
+                          const consumerOriginal = Number(consumerTarget.getAttribute("original"));
+                          const newPercentage = (newSupply / supplyOriginal) * 100;
+                          consumerTarget.value = String((consumerOriginal / 100) * newPercentage);
+                          percentageTarget.value = String(Math.round(newPercentage * 100) / 100);
+                        }
+                      }
+                    },
+                    attribute: {
+                      type: "text",
+                      value: String(supply),
+                      original: String(supplyOriginal)
+                    },
+                    style: {
+                      ...inputStyle
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            style: {
+              ...buttonStyle
+            },
+            children: [
+              {
+                style: {
+                  ...buttonDetailStyles[0]
+                },
+                children: [
+                  {
+                    mode: "input",
+                    attribute: {
+                      type: "text",
+                      value: "소비자가"
+                    },
+                    style: {
+                      ...inputStyle,
+                      cursor: "pointer"
+                    }
+                  }
+                ]
+              },
+              {
+                style: {
+                  ...buttonDetailStyles[1]
+                },
+                children: [
+                  {
+                    mode: "input",
+                    class: [ consumerValueInputClassName ],
+                    event: {
+                      keyup: function (e) {
+                        if (e.key === "Enter") {
+                          this.blur();
+                        }
+                      },
+                      blur: function (e) {
+                        this.value = this.value.replace(/[^0-9\.\-]/gi, '');
+                        if (Number.isNaN(Number(this.value))) {
+                          window.alert("숫자만 입력해주세요!");
+                        } else {
+                          const newConsumer = Number(this.value);
+                          const percentageTarget = document.querySelector('.' + percentageValueInputClassName);
+                          const supplyTarget = document.querySelector('.' + supplyValueInputClassName);
+                          const supplyOriginal = Number(supplyTarget.getAttribute("original"));
+                          const consumerOriginal = Number(this.getAttribute("original"));
+                          const newPercentage = (newConsumer / consumerOriginal) * 100;
+                          supplyTarget.value = String((supplyOriginal / 100) * newPercentage);
+                          percentageTarget.value = String(Math.round(newPercentage * 100) / 100);
+                        }
+                      }
+                    },
+                    attribute: {
+                      type: "text",
+                      value: String(consumer),
+                      original: String(consumerOriginal)
+                    },
+                    style: {
+                      ...inputStyle
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            style: {
+              ...buttonStyle
+            },
+            children: [
+              {
+                style: {
+                  ...buttonDetailStyles[0]
+                },
+                children: [
+                  {
+                    mode: "input",
+                    attribute: {
+                      type: "text",
+                      value: "정가(공)"
+                    },
+                    style: {
+                      ...inputStyle,
+                      cursor: "pointer"
+                    }
+                  }
+                ]
+              },
+              {
+                style: {
+                  ...buttonDetailStyles[1]
+                },
+                children: [
+                  {
+                    mode: "input",
+                    attribute: {
+                      type: "text",
+                      value: GeneralJs.autoComma(supplyOriginal) + '원',
+                      original: String(supplyOriginal)
+                    },
+                    style: {
+                      ...inputStyle
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            style: {
+              ...buttonStyle
+            },
+            children: [
+              {
+                style: {
+                  ...buttonDetailStyles[0]
+                },
+                children: [
+                  {
+                    mode: "input",
+                    attribute: {
+                      type: "text",
+                      value: "정가(소)"
+                    },
+                    style: {
+                      ...inputStyle,
+                      cursor: "pointer"
+                    }
+                  }
+                ]
+              },
+              {
+                style: {
+                  ...buttonDetailStyles[1]
+                },
+                children: [
+                  {
+                    mode: "input",
+                    attribute: {
+                      type: "text",
+                      value: GeneralJs.autoComma(consumerOriginal) + '원',
+                      original: String(consumerOriginal)
+                    },
+                    style: {
+                      ...inputStyle
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            mode: "svg",
+            source: GeneralJs.prototype.returnOk(GeneralJs.colorChip.green),
+            event: {
+              click: endEvent
+            },
+            style: {
+              position: "absolute",
+              bottom: String(0),
+              width: String(iconWidth) + ea,
+              left: "calc(50% - " + String(iconWidth / 2) + ea + ")",
+              cursor: "pointer"
+            }
+          }
+        ]
+      });
+
+    }).catch((err) => {
+      console.log(err);
+    });
   };
 
   const map = {
