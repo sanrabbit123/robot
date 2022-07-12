@@ -690,7 +690,6 @@ ProjectJs.prototype.infoArea = function (info) {
         if (thisMap.type === "date" && e.type === "click") {
 
           cancel_inputBack.style.background = GeneralJs.colorChip.white;
-          // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
 
           this.style.overflow = "";
           width = 260;
@@ -727,7 +726,6 @@ ProjectJs.prototype.infoArea = function (info) {
         } else if (thisMap.type !== "object" && thisMap.items !== undefined) {
 
           cancel_inputBack.style.background = GeneralJs.colorChip.white;
-          // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
 
           this.style.overflow = "";
           height = Number(this.style.height.replace((new RegExp(ea, "gi")), ''));
@@ -847,7 +845,6 @@ ProjectJs.prototype.infoArea = function (info) {
         } else if (thisMap.type !== "object" && thisMap.address !== undefined && e.type === "click") {
 
           cancel_inputBack.style.background = GeneralJs.colorChip.white;
-          // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
 
           this.style.overflow = "";
           height = Number(this.style.height.replace((new RegExp(ea, "gi")), ''));
@@ -895,7 +892,6 @@ ProjectJs.prototype.infoArea = function (info) {
         } else if (thisMap.type === "object" && thisMap.inputFunction !== undefined) {
 
           cancel_inputBack.style.background = GeneralJs.colorChip.white;
-          // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
           tempFunction = new Function("mother", "input", "callback", thisMap.inputFunction);
           tempFunction(this, input_clone, function () {
             let e = {};
@@ -1498,8 +1494,10 @@ ProjectJs.prototype.infoArea = function (info) {
     this.totalMother.appendChild(div_clone);
   }
 
-  if (div_clone.getBoundingClientRect().height < window.innerHeight) {
+  if ([ ...div_clone.children ].length < 15) {
     div_clone.style.height = String(window.innerHeight) + ea;
+  } else {
+    div_clone.style.height = "";
   }
 
 }

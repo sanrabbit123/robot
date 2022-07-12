@@ -1469,8 +1469,10 @@ ClientJs.prototype.infoArea = function (info) {
     this.totalMother.appendChild(div_clone);
   }
 
-  if (div_clone.getBoundingClientRect().height < window.innerHeight) {
+  if ([ ...div_clone.children ].length < 15) {
     div_clone.style.height = String(window.innerHeight) + ea;
+  } else {
+    div_clone.style.height = "";
   }
 
 }
