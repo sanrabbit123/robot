@@ -184,6 +184,7 @@ MagazineDetailJs.prototype.magazineContentsBox = function () {
   let binaryPath;
   let contents;
   let type;
+  let mobileDescriptionPadding;
 
   binaryPath = MagazineDetailJs.binaryPath + this.mid;
   ({ contents } = this.magazine);
@@ -209,6 +210,8 @@ MagazineDetailJs.prototype.magazineContentsBox = function () {
   blankMargin2 = <%% 100, 100, 100, 70, 10 %%>;
   blankMarginLast = <%% 200, 200, 200, 170, 20 %%>;
 
+  mobileDescriptionPadding = 6;
+
   mainTong = createNode({
     mother: totalContents,
     style: {
@@ -218,7 +221,7 @@ MagazineDetailJs.prototype.magazineContentsBox = function () {
       left: "calc(50% - " + String(mainWidth / 2) + ea + ")",
       background: colorChip.white,
       paddingTop: String(mainPaddingTop) + ea,
-      paddingBottom: String(200) + ea,
+      paddingBottom: String(desktop ? 200 : 30) + ea,
       animation: "fadeupdelay 0.5s ease forwards",
     },
   });
@@ -278,6 +281,9 @@ MagazineDetailJs.prototype.magazineContentsBox = function () {
           fontWeight: String(contentsWeight),
           color: colorChip.black,
           lineHeight: String(contentsLineHeight),
+          width: withOut(desktop ? 0 : (mobileDescriptionPadding * 2), ea),
+          paddingLeft: mobile ? String(mobileDescriptionPadding) + ea : 0,
+          paddingRight: mobile ? String(mobileDescriptionPadding) + ea : 0,
         }
       });
     } else if (type.replace(/^general/i, '').replace(/^blank/i, '') === "Image") {
@@ -295,7 +301,7 @@ MagazineDetailJs.prototype.magazineContentsBox = function () {
             display: "inline-block",
             marginBottom: String(photoMargin) + ea,
             marginRight: String(0) + ea,
-            borderRadius: String(3) + "px",
+            borderRadius: String(desktop ? 3 : 0) + "px",
           }
         });
       } else {
@@ -312,7 +318,7 @@ MagazineDetailJs.prototype.magazineContentsBox = function () {
             display: "inline-block",
             marginRight: String(photoMargin) + ea,
             marginBottom: String(photoMargin) + ea,
-            borderRadius: String(3) + "px",
+            borderRadius: String(desktop ? 3 : 0) + "px",
           }
         });
         createNode({
@@ -328,7 +334,7 @@ MagazineDetailJs.prototype.magazineContentsBox = function () {
             display: "inline-block",
             marginBottom: String(photoMargin) + ea,
             marginRight: String(0) + ea,
-            borderRadius: String(3) + "px",
+            borderRadius: String(desktop ? 3 : 0) + "px",
           }
         });
       }

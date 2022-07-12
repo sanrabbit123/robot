@@ -990,26 +990,26 @@ Robot.prototype.arpScan = async function () {
   }
 }
 
+Robot.prototype.magazineMaker = function (mid) {
+  const ResourceMaker = require(process.cwd() + "/apps/resourceMaker/resourceMaker.js");
+  const app = new ResourceMaker();
+  app.magazineMaker(mid).catch((err) => { console.log(err); })
+}
+
 Robot.prototype.launching = async function () {
   const instance = this;
   const { consoleQ } = this.mother;
   try {
     let re, re2, re3, re4, re5, re6;
 
-    re = await consoleQ(`Choose commands : 1.back 2.contents 3.portfolio 4.proposal 5.google 6.front 7.consulting 8.aiohttp 9.aiohttpInstall 10.exit\n`);
+    re = await consoleQ(`Choose commands : 1.contents 2.portfolio 3.magazine\n`);
 
-    //console server
-    if (re === "back" || re === "1") {
-      this.dataConsole(false);
-
-    //contents maker
-    } else if (re === "contents" || re === "2") {
+    if (re === "contents" || re === "1") {
       re2 = await consoleQ(`Choose commands : 1.resource 2.google\n`);
       re3 = await consoleQ(`Porfolio number?\n`);
       this.contentsMaker(re2, re3);
 
-    //portfolio filter
-    } else if (re === "portfolio" || re === "3") {
+    } else if (re === "portfolio" || re === "2") {
       re2 = await consoleQ(`Choose commands : 1.portfolio 2.ghost\n`);
       if (re2 === "portfolio" || re2 === "1") {
         re3 = await consoleQ(`Client name what?\n`);
@@ -1022,18 +1022,11 @@ Robot.prototype.launching = async function () {
         this.portfolioFilter("ghost", "null", "", re3, "g0");
       }
 
-    //proposal
-    } else if (re === "proposal" || re === "4") {
-      re3 = await consoleQ(`Project number? (default: latest, if you want press 'none')\n`);
-      this.proposalMaker("1", re3);
+    } else if (re === "magazine" || re === "3") {
+      re3 = await consoleQ(`mid?\n`);
+      this.magazineMaker(re3);
 
-    //google
-    } else if (re === "google" || re === "5") {
-      re2 = await consoleQ(`Choose commands : 1.token 2.analytics\n`);
-      this.googleAPIs(re2);
-
-    //exit
-    } else if (re === "exit" || re === "10") {
+    } else {
       process.exit();
     }
 

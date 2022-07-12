@@ -23,6 +23,7 @@ AppleNotes.prototype.text_filter_lite = function (str) {
     str = str.trim();
     str = str.replace(/^\n/g, '').replace(/^ /g, '').replace(/ $/g, '').replace(/ /g, ' ').replace(/  /g, ' ').replace(/ /g, ' ').replace(/\t/g, ' ').replace(/​/g, '');
   }
+  str = str.trim();
   return str;
 }
 

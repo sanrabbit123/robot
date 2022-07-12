@@ -629,7 +629,9 @@ ReviewDetailJs.prototype.reviewContentsBox = function () {
           borderRadius: String(desktop ? 3 : 0) + "px",
         }
       });
-      num++;
+      if (!garo) {
+        num++;
+      }
     }
     createNode({
       mother: mainTong,
