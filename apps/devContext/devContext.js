@@ -57,124 +57,6 @@ const DevContext = function () {
   this.dir = `${process.cwd()}/apps/devContext`;
 }
 
-DevContext.prototype.magazineMaker = async function (mid) {
-  const instance = this;
-  const { equalJson, mongo, mongotestinfo } = this.mother;
-  const back = this.back;
-  const address = this.address;
-  const AppleNotes = require(process.cwd() + "/apps/appleAPIs/appleNotes.js");
-  const MONGOC = new mongo(mongotestinfo, { useUnifiedTopology: true });
-  const collection = "magazine";
-  try {
-    let note, targetArr;
-    let contents;
-    let tempArr, tempArr2;
-    let matrix;
-    let keywordsDictionary;
-    let tempObj;
-    let magazine;
-    let rows;
-    let latestPast;
-
-    await MONGOC.connect();
-
-    rows = await back.mongoRead(collection, {}, { selfMongo: MONGOC });
-    rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
-    [ latestPast ] = rows;
-
-    keywordsDictionary = {
-      gt: "generalTitle",
-      bt: "blankTitle",
-      gd: "generalDescription",
-      bd: "blankDescription",
-      gi: "generalImage",
-      bi: "blankImage",
-    };
-
-    note = new AppleNotes({ folder: "magazine", subject: mid });
-    targetArr = await note.readNote();
-    contents = {};
-
-    contents.init = targetArr[1].replace(/\^ma\: /gi, "").split('|').map((str) => { return str.trim(); });
-    targetArr = targetArr.slice(2);
-
-    matrix = [];
-    for (let i = 0; i < targetArr.length; i++) {
-      if (/^\^/i.test(targetArr[i])) {
-        if (targetArr[i].length < 4) {
-          throw new Error("invaild command");
-        }
-        if (targetArr[i][3] !== ':') {
-          throw new Error("invaild command");
-        }
-        tempArr = [
-          targetArr[i].slice(1, 3),
-          targetArr[i].slice(4).trim()
-        ];
-        tempArr[0] = keywordsDictionary[tempArr[0]];
-        if (tempArr[0] === undefined) {
-          throw new Error("invaild keywords");
-        }
-        tempObj = {
-          type: tempArr[0],
-          data: [ tempArr[1] ]
-        }
-        matrix.push(tempObj);
-      } else {
-        if (targetArr[i - 1] === undefined) {
-          throw new Error("invaild command");
-        }
-        matrix[matrix.length - 1].data.push(targetArr[i]);
-      }
-    }
-
-    for (let obj of matrix) {
-      if (/Description/gi.test(obj.type)) {
-        obj.text = obj.data.map((str) => { return str.trim().replace(/__br__/gi, "\n") })
-      } else if (/Image/gi.test(obj.type)) {
-        tempArr2 = obj.data[0].trim().split("|").map((str) => { return str.trim() });
-        if (tempArr2.length === 4) {
-          obj.gs = 's';
-          obj.source = [
-            [ tempArr2[0], tempArr2[2] ],
-            [ tempArr2[1], tempArr2[3] ],
-          ];
-        } else if (tempArr2.length === 2) {
-          obj.gs = 'g';
-          obj.source = [
-            tempArr2[0],
-            tempArr2[1]
-          ]
-        } else {
-          throw new Error("invaild data");
-        }
-      } else if (/Title/gi.test(obj.type)) {
-        if (obj.data[0].trim() === '') {
-          obj.text = [];
-        } else {
-          obj.text = obj.data[0].trim().split("|").map((str) => { return str.trim() });
-        }
-      }
-    }
-
-    for (let obj of matrix) {
-      delete obj.data;
-    }
-
-    contents.detail = equalJson(JSON.stringify(matrix));
-    magazine = { magid: back.idMaker(latestPast.magid), mid, date: new Date(), contents }
-
-    await back.mongoCreate(collection, magazine, { selfMongo: MONGOC });
-
-    console.log(mid + " insert success");
-
-    await MONGOC.close();
-
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 DevContext.prototype.launching = async function () {
   const instance = this;
   const rethink = new RethinkAccess();
@@ -207,7 +89,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await this.magazineMaker("m0");
+
+
 
 
 
@@ -2823,7 +2706,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p218");
+    // await this.getRawPortfolio("p185");
 
 
     // get corePortfolio by pid
