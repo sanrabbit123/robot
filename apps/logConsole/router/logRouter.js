@@ -437,6 +437,29 @@ LogRouter.prototype.rou_post_getContents = function () {
         indexArr = indexArr.slice(0, indexSliceNumber * 2);
 
         res.send(JSON.stringify({ contentsArr, reviewArr, indexArr }));
+      } else if (req.body.mode === "magazine") {
+
+        contentsArr_raw = await back.mongoRead("magazine", {}, { selfMongo });
+        contentsArr_raw.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+
+        if (req.body.mid !== undefined) {
+          contentsArr = contentsArr_raw.filter((obj) => {
+            return obj.mid === req.body.mid;
+          });
+        } else {
+          contentsArr = contentsArr_raw.map((obj) => {
+            let copied;
+            copied = equalJson(JSON.stringify(obj));
+            delete copied.contents.detail;
+            delete copied.contents.detail;
+            return copied;
+          });
+        }
+
+        res.send(JSON.stringify({
+          contentsArr: contentsArr,
+        }));
+
       }
 
     } catch (e) {

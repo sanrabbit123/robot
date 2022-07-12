@@ -2032,7 +2032,7 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
     style: {
       display: "block",
       position: "relative",
-      width: String(100) + '%',
+      width: withOut(0),
       height: String(titleHeight) + ea,
       marginBottom: String(titleMarginBottom) + ea,
       marginTop: String(mainPaddingTop) + ea,
@@ -2042,10 +2042,10 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
       {
         style: {
           position: "absolute",
-          width: withOut(baseBetween, ea),
+          width: withOut(whitePhotoTongInnerPadding * 2, ea),
           height: String(titleLineHeight) + ea,
           top: String(0),
-          left: String(baseBetween / 2) + ea,
+          left: String(whitePhotoTongInnerPadding) + ea,
           borderBottom: "1px dashed " + colorChip.gray3,
         }
       },
@@ -2072,8 +2072,8 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
     style: {
       display: "block",
       position: "relative",
-      width: withOut(baseBetween + (whitePhotoTongInnerPadding * 2) - photoBetween, ea),
-      marginLeft: String(baseBetween / 2) + ea,
+      width: withOut((whitePhotoTongInnerPadding * 2) - photoBetween, ea),
+      marginLeft: String(0) + ea,
       background: colorChip.white,
       borderRadius: String(5) + "px",
       marginBottom: String(whitePhotoTongMarginBottom) + ea,
