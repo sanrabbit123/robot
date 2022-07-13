@@ -2353,7 +2353,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
           update: { x, y, value: instance.values[x][y].value },
           updateQuery: obj.update(instance.values[x][y].value, instance.values, instance.client)
         }, "/ghostClient_updateAnalytics").catch((err) => {
-          GeneralJs.ajaxJson({ message: "StyleCurationJs.ghostClient_updateAnalytics : " + err.message }, "/errorLog").catch((e) => {});
+          console.log(err);
         });
       }
 
@@ -2550,7 +2550,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                     updateQuery: obj.update(valuesCopied[x][y].value, valuesCopied, instance.client)
                   }, "/ghostClient_updateAnalytics");
                 }).catch((err) => {
-                  GeneralJs.ajaxJson({ message: "StyleCurationJs.ghostClient_updateAnalytics.update : " + err.message }, "/errorLog").catch((e) => {});
+                  console.log(err);
                 });
               }
             }
@@ -2702,7 +2702,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                   update: { x, y, value: instance.values[x][y].value },
                   updateQuery: obj.update(instance.values[x][y].value, instance.values, instance.client)
                 }, "/ghostClient_updateAnalytics").catch((err) => {
-                  GeneralJs.ajaxJson({ message: "StyleCurationJs.ghostClient_updateAnalytics.update.matrix : " + err.message }, "/errorLog").catch((e) => {});
+                  console.log(err);
                 });
                 for (let c of children) {
                   c.style.color = colorChip.green;
@@ -2864,7 +2864,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                   }, "/ghostClient_updateAnalytics");
                 }
               } catch (e) {
-                await GeneralJs.ajaxJson({ message: "StyleCurationJs.numberEvent.blur : " + e.message }, "/errorLog");
+                console.log(err);
               }
             },
             keypress: function (e) {
@@ -4234,7 +4234,7 @@ StyleCurationJs.prototype.insertPannelBox = function () {
     },
   ]);
 
-  ajaxJson({}, "/designerProposal_policy").then(function (res) {
+  ajaxJson({}, "https://" + GHOSTHOST + "/designerProposal_policy").then(function (res) {
     const { policy, button } = res;
     let bTags;
 
@@ -4314,17 +4314,6 @@ StyleCurationJs.prototype.insertPannelBox = function () {
                 if (pass) {
 
                   instance.parsingValues();
-
-                  // instance.mother.certificationBox(instance.client.name, instance.client.phone, async function (back, box) {
-                  //   try {
-                  //     await GeneralJs.sleep(500);
-                  //     document.body.removeChild(box);
-                  //     document.body.removeChild(back);
-                  //     instance.parsingValues();
-                  //   } catch (e) {
-                  //     await GeneralJs.ajaxJson({ message: "StyleCurationJs.certificationBox : " + e.message }, "/errorLog");
-                  //   }
-                  // });
 
                 }
               }

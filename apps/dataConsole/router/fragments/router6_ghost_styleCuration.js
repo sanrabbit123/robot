@@ -5,6 +5,12 @@ DataRouter.prototype.rou_post_styleCuration_getPhotos = function () {
   let obj = {};
   obj.link = "/styleCuration_getPhotos";
   obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       const selfMongo = instance.mongo;
       const contentsArr = await back.getContentsArrByQuery({}, { selfMongo });
@@ -47,11 +53,11 @@ DataRouter.prototype.rou_post_styleCuration_getPhotos = function () {
       });
       photos = photos.filter((obj) => { return !obj.tendency.every((num) => { return num === 0; }); });
 
-      res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify({ photos, contentsArr, designers: sendingDesigners }));
     } catch (e) {
       await errorLog("GhostClient 서버 문제 생김 (rou_post_styleCuration_getPhotos): " + e.message);
       console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -66,6 +72,12 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
   let obj = {};
   obj.link = "/styleCuration_updateCalculation";
   obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       if (req.body.cliid === undefined || req.body.historyQuery === undefined || req.body.coreQuery === undefined || req.body.mode === undefined) {
         throw new Error("invaild post");
@@ -253,14 +265,12 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
           await messageSend({ text: client.name + " 고객님께 큐레이션 완료 알림톡을 보냈어요.", channel: "#404_curation" });
         }
 
-        res.set({ "Content-Type": "application/json" });
         res.send(JSON.stringify({ service: [], client: client.toNormal(), history }));
 
       }
     } catch (e) {
       await errorLog("GhostClient 서버 문제 생김 (rou_post_styleCuration_updateCalculation) : " + e.message);
       console.log(e);
-      res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -274,6 +284,12 @@ DataRouter.prototype.rou_post_styleCuration_styleCheckComplete = function () {
   let obj = {};
   obj.link = "/styleCuration_styleCheckComplete";
   obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       if (req.body.cliid === undefined || req.body.name === undefined || req.body.image === undefined) {
         throw new Error("invaild post");
@@ -301,12 +317,10 @@ DataRouter.prototype.rou_post_styleCuration_styleCheckComplete = function () {
       //   })
       // }, 30 * 60 * 1000);
 
-      res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify({ message: "done" }));
 
     } catch (e) {
       await errorLog("GhostClient 서버 문제 생김 (rou_post_styleCuration_styleCheckComplete) : " + e.message);
-      res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify({ message: "error" }));
     }
   }
@@ -322,6 +336,12 @@ DataRouter.prototype.rou_post_styleCuration_pageInitComplete = function () {
   let obj = {};
   obj.link = "/styleCuration_pageInitComplete";
   obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       if (req.body.cliid === undefined || req.body.name === undefined || req.body.phone === undefined) {
         throw new Error("invaild post");
@@ -332,11 +352,11 @@ DataRouter.prototype.rou_post_styleCuration_pageInitComplete = function () {
       text = name + " 고객님이 스타일 찾기 페이지에 진입하셨어요.";
       channel = "#404_curation";
 
-      if (phone !== "010-2747-3403") {
-        messageSend({ text, channel, voice: false }).catch((e) => {
-          console.log(e);
-        });
-      }
+      // if (phone !== "010-2747-3403") {
+      //   messageSend({ text, channel, voice: false }).catch((e) => {
+      //     console.log(e);
+      //   });
+      // }
 
       if (DataRouter.timeouts["styleCuration_pageInitComplete_" + cliid] !== undefined && DataRouter.timeouts["styleCuration_pageInitComplete_" + cliid] !== null) {
         clearTimeout(DataRouter.timeouts["styleCuration_pageInitComplete_" + cliid]);
@@ -355,12 +375,10 @@ DataRouter.prototype.rou_post_styleCuration_pageInitComplete = function () {
         }
       }, 40 * 60 * 1000);
 
-      res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify({ message: "done" }));
 
     } catch (e) {
       await errorLog("GhostClient 서버 문제 생김 (rou_post_styleCuration_styleCheckComplete) : " + e.message);
-      res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify({ message: "error" }));
     }
   }
