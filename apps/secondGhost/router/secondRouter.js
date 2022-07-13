@@ -453,7 +453,7 @@ SecondRouter.prototype.rou_post_getDocuments = function () {
         throw new Error("invaild post");
       }
 
-      const selfMongo = this.mongo;
+      const selfMongo = instance.mongo;
       const { whereQuery } = equalJson(req.body);
       let rows;
 
@@ -479,7 +479,65 @@ SecondRouter.prototype.rou_post_getDocuments = function () {
       res.send(JSON.stringify(rows.toNormal()));
 
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_getDocuments): " + e.message).catch((e) => { console.log(e); });
+      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_getDocuments): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+SecondRouter.prototype.rou_post_updateDocument = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, errorLog, messageLog } = this.mother;
+  let obj = {};
+  obj.link = [ "/updateClient", "/updateDesigner", "/updateProject", "/updateContents", "/updateAspirant" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.whereQuery === undefined || req.body.updateQuery === undefined) {
+        throw new Error("invaild post");
+      }
+
+      const selfMongo = instance.mongo;
+      const { whereQuery, updateQuery } = equalJson(req.body);
+      let data;
+
+      if (typeof whereQuery !== "object" || whereQuery === null) {
+        throw new Error("invaild query object");
+      }
+      if (Object.keys(whereQuery).length === 0) {
+        throw new Error("query ban");
+      }
+      if (typeof updateQuery !== "object" || updateQuery === null) {
+        throw new Error("invaild query object");
+      }
+
+      if (req.url === "/updateClient") {
+        data = await back.updateClient([ whereQuery, updateQuery ], { selfMongo });
+      } else if (req.url === "/updateDesigner") {
+        data = await back.updateDesigner([ whereQuery, updateQuery ], { selfMongo });
+      } else if (req.url === "/updateProject") {
+        data = await back.updateProject([ whereQuery, updateQuery ], { selfMongo });
+      } else if (req.url === "/updateContents") {
+        data = await back.updateContents([ whereQuery, updateQuery ], { selfMongo });
+      } else if (req.url === "/updateAspirant") {
+        data = await back.updateAspirant([ whereQuery, updateQuery ], { selfMongo });
+      }
+
+      res.send(JSON.stringify({ message: data }));
+
+    } catch (e) {
+      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_updateDocument): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }
