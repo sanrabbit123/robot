@@ -2930,6 +2930,7 @@ StyleCurationJs.prototype.photoBefore = function (mother) {
   let greenTop, greenLeft;
   let noticeWording, noticeWordsSize;
   let noticeTop;
+  let wordingBox;
 
   GeneralJs.stacks[stackName] = 0;
   GeneralJs.stacks[loadingName] = false;
@@ -2941,7 +2942,7 @@ StyleCurationJs.prototype.photoBefore = function (mother) {
   pictureMargin = <%% 10, 6, 6, 4, 1 %%>;
 
   pannelHeight = <%% 106, 106, 106, 92, 20 %%>;
-  pannelPaddingTop = <%% 16, 16, 16, 12, 4 %%>;
+  pannelPaddingTop = <%% 16, 16, 16, 12, 5 %%>;
   pannelWordsSize = <%% 23, 23, 23, 21, 4 %%>;
   noticeWordsSize = <%% 12, 12, 12, 12, 3 %%>;
   pannelWordsPadding = <%% 16, 16, 16, 12, 16 %%>;
@@ -2958,7 +2959,7 @@ StyleCurationJs.prototype.photoBefore = function (mother) {
   arrowTop = <%% 43, 43, 43, 33, 2 %%>;
   arrowWidth = <%% 10, 10, 10, 8, 2 %%>;
 
-  noticeTop = <%% 53, 53, 53, 45, 10.2 %%>;
+  noticeTop = <%% 53, 53, 53, 45, 11.2 %%>;
 
   questionWording = this.wordings.photoWordings[desktop ? "desktop" : "mobile"].question;
   noticeWording = this.wordings.photoWordings[desktop ? "desktop" : "mobile"].notice;
@@ -3030,7 +3031,7 @@ StyleCurationJs.prototype.photoBefore = function (mother) {
     });
   }
 
-  createNode({
+  wordingBox = createNode({
     mother,
     style: {
       display: "block",
@@ -3093,6 +3094,10 @@ StyleCurationJs.prototype.photoBefore = function (mother) {
       },
     ]
   });
+
+  if (mobile) {
+    mother.insertBefore(wordingBox, pictureBox);
+  }
 
 }
 
@@ -3773,7 +3778,7 @@ StyleCurationJs.prototype.insertPhotoBox = function () {
   let cardWordingSize;
   let fileChangeEvent;
 
-  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  bottomMargin = <%% 16, 16, 16, 12, 4 %%>;
   margin = <%% 52, 52, 44, 36, 4.7 %%>;
   paddingTop =  <%% 46, 46, 40, 32, 4.7 %%>;
 
@@ -3864,7 +3869,7 @@ StyleCurationJs.prototype.insertPhotoBox = function () {
           borderRadius: String(5) + "px",
           overflow: desktop ? "hidden" : "",
           marginBottom: String(titleBottom) + ea,
-          marginTop: desktop ? "" : String(4) + ea,
+          marginTop: desktop ? "" : String(3) + ea,
         }
       },
     ]
@@ -3990,11 +3995,9 @@ StyleCurationJs.prototype.insertPhotoBox = function () {
           width: String(100) + '%',
           height: String(grayHeight) + ea,
           border: desktop ? "1px solid " + colorChip.gray1 : "",
-          background: desktop ? colorChip.gray1 : colorChip.gray6,
+          background: desktop ? colorChip.gray1 : colorChip.gray3,
           borderRadius: String(desktop ? 5 : 3) + "px",
           overflow: "hidden",
-          marginTop: desktop ? "" : String(-2) + ea,
-          zIndex: desktop ? "" : String(-1),
         },
         children: [
           {
@@ -4029,7 +4032,7 @@ StyleCurationJs.prototype.insertPhotoBox = function () {
           textAlign: "center",
           fontSize: String(pannelWordsSize) + ea,
           fontWeight: String(200),
-          color: desktop ? colorChip.gray4 : colorChip.deactive,
+          color: desktop ? colorChip.gray4 : colorChip.shadow,
           top: String(grayTextTop) + ea,
         }
       },
