@@ -3909,7 +3909,7 @@ DataRouter.prototype.rou_post_callTo = function () {
           res.send(JSON.stringify({ message: "error" }));
         } else {
           number = address.officeinfo.phone.numbers[index];
-          await ghostRequest("clickDial", { id: number, destnumber: phone.replace(/[^0-9]/g, '') });
+          await requestSystem("https://" + instance.address.secondinfo.host + ":3000/clickDial", { id: number, destnumber: phone.replace(/[^0-9]/g, '') }, { headers: { "Content-Type": "application/json" } });
           res.set({ "Content-Type": "application/json" });
           res.send(JSON.stringify({ message: "true" }));
         }
