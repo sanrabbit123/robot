@@ -89,7 +89,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
+
 
 
     // const selfMongo = this.MONGOC;
@@ -1846,7 +1846,7 @@ DevContext.prototype.launching = async function () {
     // num = 0;
     // for (let id of phoneNumbers) {
     //   callbackurl = "/receiveCall.php";
-    //   callbackhost = "211.210.148.85";
+    //   callbackhost = "52.79.229.124";
     //   callbackport = 80;
     //   console.log((await requestSystem(url + "?id=" + id + "&pass=" + pass + "&callbackurl=" + callbackurl + "&callbackhost=" + callbackhost + "&callbackport=" + String(callbackport), { id, pass, callbackurl, callbackhost, callbackport: String(callbackport) }, { headers: { "Content-Type": "application/json" } })).data);
     //   num++;
@@ -1864,7 +1864,7 @@ DevContext.prototype.launching = async function () {
     // num = 0;
     // for (let id of phoneNumbers) {
     //   callbackurl = "/receiveCall.php";
-    //   callbackhost = "211.210.148.85";
+    //   callbackhost = "52.79.229.124";
     //   callbackport = 80;
     //   console.log((await requestSystem(url + "?id=" + id + "&pass=" + pass, { id, pass }, { headers: { "Content-Type": "application/json" } })).data);
     //   num++;

@@ -177,7 +177,7 @@ SecondRouter.prototype.rou_post_mysqlQuery = function () {
 SecondRouter.prototype.rou_post_parsingCall = function () {
   const instance = this;
   const back = this.back;
-  const { requestSystem, messageSend } = this.mother;
+  const { requestSystem, messageSend, errorLog, messageLog } = this.mother;
   const jsdom = require("jsdom");
   const { JSDOM } = jsdom;
   let obj = {};
@@ -276,7 +276,7 @@ SecondRouter.prototype.rou_post_parsingCall = function () {
 SecondRouter.prototype.rou_post_receiveCall = function () {
   const instance = this;
   const back = this.back;
-  const { requestSystem, messageSend, fileSystem, setQueue, sleep, shellExec, shellLink } = this.mother;
+  const { requestSystem, messageSend, fileSystem, setQueue, sleep, shellExec, shellLink, errorLog, messageLog } = this.mother;
   let obj = {};
   obj.link = [ "/receiveCall" ];
   obj.func = async function (req, res) {
@@ -365,6 +365,40 @@ SecondRouter.prototype.rou_post_receiveCall = function () {
   return obj;
 }
 
+SecondRouter.prototype.rou_post_clickDial = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const { requestSystem, messageSend, fileSystem, setQueue, sleep, shellExec, shellLink, errorLog, messageLog } = this.mother;
+  const querystring = require("querystring");
+  let obj = {};
+  obj.link = [ "/clickDial" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.id === undefined || req.body.destnumber === undefined) {
+        throw new Error("invaild post");
+      }
+      const url = "https://centrex.uplus.co.kr/RestApi/clickdial";
+      let query, phone;
+      query = { id: req.body.id, pass: address.officeinfo.phone.password, destnumber: req.body.destnumber.replace(/[^0-9]/g, '') };
+      requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } }).catch((err) => {
+        errorLog("Ghost error (rou_post_clickDial) : " + "전화 거는 도중 문제 생김 => " + err.message).catch((er) => { console.log(er); });
+      });
+      res.send(JSON.stringify({ message: "hello?" }));
+
+    } catch (e) {
+      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_clickDial): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
 
 //ROUTING ----------------------------------------------------------------------
 
