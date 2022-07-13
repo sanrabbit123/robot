@@ -7,6 +7,7 @@ DataRouter.prototype.rou_post_getDocuments = function () {
   let obj = {};
   obj.link = [ "/getClients", "/getDesigners", "/getProjects", "/getContents", "/getBuilders" ];
   obj.func = async function (req, res) {
+    res.set({ "Content-Type": "application/json" });
     try {
       let standard, raw_data, data, optionQuery, whereQuery;
       if (req.body.where === undefined && req.body.whereQuery !== undefined) {
@@ -107,15 +108,14 @@ DataRouter.prototype.rou_post_getDocuments = function () {
 
       if (req.body.noFlat === undefined) {
         data = raw_data.flatDeath();
-        res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ standard, data }));
       } else {
-        res.set("Content-Type", "application/json");
         res.send(JSON.stringify(raw_data.toNormal()));
       }
     } catch (e) {
       instance.mother.errorLog("Console 서버 문제 생김 (rou_post_getDocuments): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -682,6 +682,7 @@ DataRouter.prototype.rou_post_rawUpdateDocument = function () {
   let obj = {};
   obj.link = [ "/rawUpdateClient", "/rawUpdateDesigner", "/rawUpdateProject", "/rawUpdateContents", "/rawUpdateAspirant" ];
   obj.func = async function (req, res) {
+    res.set("Content-Type", "application/json");
     try {
       let raw_data;
       let whereQuery, updateQuery, dateQuery;
@@ -743,12 +744,12 @@ DataRouter.prototype.rou_post_rawUpdateDocument = function () {
         throw new Error(e);
       });
 
-      res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ message: raw_data }));
 
     } catch (e) {
       instance.mother.errorLog("Console 서버 문제 생김 (rou_post_rawUpdateDocument): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;

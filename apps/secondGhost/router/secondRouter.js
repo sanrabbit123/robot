@@ -25,6 +25,16 @@ const SecondRouter = function (slack_bot, MONGOC) {
     },
     channel: "#error_log"
   };
+
+  this.vaildHost = [
+    this.address.frontinfo.host,
+    this.address.homeinfo.ghost.host,
+    this.address.pythoninfo.host,
+    this.address.testinfo.host,
+    this.address.officeinfo.ghost.host,
+    "localhost:3000",
+  ];
+
 }
 
 SecondRouter.prototype.baseMaker = function (target, req = null) {
@@ -48,6 +58,28 @@ SecondRouter.prototype.baseMaker = function (target, req = null) {
   return new Promise(function(resolve, reject) {
     resolve(html);
   });
+}
+
+SecondRouter.prototype.fireWall = function (req) {
+  const instance = this;
+  let __originTarget, __wallLogicBoo, __vailHosts;
+
+  __vailHosts = this.vaildHost;
+  __originTarget = req.headers["origin"];
+  if (typeof __originTarget !== "string") {
+    __originTarget = req.headers["host"];
+    if (typeof __originTarget !== "string") {
+      __originTarget = "";
+    }
+  }
+  __wallLogicBoo = false;
+  for (let host of __vailHosts) {
+    __wallLogicBoo = (new RegExp(host, "gi")).test(__originTarget.trim().replace(/\/$/, ''));
+    if (__wallLogicBoo) {
+      break;
+    }
+  }
+  return __wallLogicBoo;
 }
 
 //GET ---------------------------------------------------------------------------------------------
@@ -394,6 +426,61 @@ SecondRouter.prototype.rou_post_clickDial = function () {
 
     } catch (e) {
       instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_clickDial): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+SecondRouter.prototype.rou_post_getDocuments = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson } = this.mother;
+  let obj = {};
+  obj.link = [ "/getClients", "/getDesigners", "/getProjects", "/getContents", "/getBuilders" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.whereQuery === undefined) {
+        throw new Error("invaild post");
+      }
+
+      const selfMongo = this.mongo;
+      const { whereQuery } = equalJson(req.body);
+      let rows;
+
+      if (typeof whereQuery !== "object" || whereQuery === null) {
+        throw new Error("invaild query object");
+      }
+      if (Object.keys(whereQuery).length === 0) {
+        throw new Error("query ban");
+      }
+
+      if (req.url === "/getClients") {
+        rows = await back.getClientsByQuery(whereQuery, { selfMongo });
+      } else if (req.url === "/getDesigners") {
+        rows = await back.getDesignersByQuery(whereQuery, { selfMongo });
+      } else if (req.url === "/getProjects") {
+        rows = await back.getProjectsByQuery(whereQuery, { selfMongo });
+      } else if (req.url === "/getContents") {
+        rows = await back.getContentsArrByQuery(whereQuery, { selfMongo });
+      } else if (req.url === "/getBuilders") {
+        rows = await back.getBuildersByQuery(whereQuery, { selfMongo });
+      }
+
+      res.send(JSON.stringify(rows.toNormal()));
+
+    } catch (e) {
+      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_getDocuments): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }
   }
