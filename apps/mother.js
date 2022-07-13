@@ -12,6 +12,7 @@ const Mother = function () {
   this.mongolocalinfo = "mongodb://" + infoObj.mongoinfo.user + ':' + infoObj.mongoinfo.password + '@' + "127.0.0.1" + ':' + String(infoObj.mongoinfo.port) + "/admin";
   this.mongobridgeinfo = "mongodb://" + infoObj.bridgeinfo.user + ':' + infoObj.bridgeinfo.password + '@' + infoObj.bridgeinfo.host + ':' + String(infoObj.bridgeinfo.port) + "/admin";
   this.mongotestinfo = "mongodb://" + infoObj.testinfo.user + ':' + infoObj.testinfo.password + '@' + infoObj.testinfo.host + ':' + String(infoObj.testinfo.port) + "/admin";
+  this.mongosecondinfo = "mongodb://" + infoObj.secondinfo.user + ':' + infoObj.secondinfo.password + '@' + infoObj.secondinfo.host + ':' + String(infoObj.secondinfo.port) + "/admin";
 
   this.bridgeinfo = this.mongobridgeinfo;
   this.mongo = require("mongodb").MongoClient;
@@ -3289,7 +3290,7 @@ Mother.prototype.errorLog = function (text) {
     }
   }
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  const recordUrl = "https://" + ADDRESS.pythoninfo.host + ":3000/messageLog";
+  const recordUrl = "https://" + ADDRESS.secondinfo.host + ":3000/messageLog";
   const axios = require("axios");
   const collection = "errorLog";
   const channel = "#error_log";
@@ -3328,7 +3329,7 @@ Mother.prototype.messageSend = function (text, channel = "silent", voice = false
     voice = false;
   }
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  const recordUrl = "https://" + ADDRESS.pythoninfo.host + ":3000/messageLog";
+  const recordUrl = "https://" + ADDRESS.secondinfo.host + ":3000/messageLog";
   const axios = require("axios");
   const collection = "messageLog";
   const emptyPromise = () => {
@@ -3373,7 +3374,7 @@ Mother.prototype.messageLog = function (text) {
     channel = "silent";
   }
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  const recordUrl = "https://" + ADDRESS.pythoninfo.host + ":3000/messageLog";
+  const recordUrl = "https://" + ADDRESS.secondinfo.host + ":3000/messageLog";
   const axios = require("axios");
   const collection = "messageLog";
   return new Promise((resolve, reject) => {

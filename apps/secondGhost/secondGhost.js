@@ -92,9 +92,9 @@ SecondGhost.prototype.aliveTest = async function () {
 
 SecondGhost.prototype.ghostConnect = async function () {
   const instance = this;
-  const { fileSystem, shellExec, shellLink, errorLog, messageLog, setQueue, requestSystem, dateToString } = this.mother;
-  const PORT = 53001;
-  const http = require("http");
+  const { fileSystem, shellExec, shellLink, errorLog, messageLog, setQueue, requestSystem, dateToString, sleep } = this.mother;
+  const PORT = 3000;
+  const https = require("https");
   const express = require("express");
   const app = express();
   const multer = require("multer");
@@ -146,6 +146,9 @@ SecondGhost.prototype.ghostConnect = async function () {
     }
     intervalFunc2 = async () => {
       try {
+        await reflection.coreReflection();
+        await sleep(1000);
+        await reflection.mysqlReflection();
       } catch (e) {
         console.log(e);
       }
@@ -161,9 +164,38 @@ SecondGhost.prototype.ghostConnect = async function () {
     console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching second ghost ==============`);
     console.log(``);
 
+    //set pem key
+    let pems, pemsLink;
+    let certDir, keyDir, caDir;
+
+    pems = {};
+    pemsLink = process.cwd() + "/pems/" + this.address.secondinfo.host;
+
+    certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
+    keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
+    caDir = await fileSystem(`readDir`, [ `${pemsLink}/ca` ]);
+
+    for (let i of certDir) {
+      if (i !== `.DS_Store`) {
+        pems.cert = await fileSystem(`read`, [ `${pemsLink}/cert/${i}` ]);
+      }
+    }
+    for (let i of keyDir) {
+      if (i !== `.DS_Store`) {
+        pems.key = await fileSystem(`read`, [ `${pemsLink}/key/${i}` ]);
+      }
+    }
+    pems.ca = [];
+    for (let i of caDir) {
+      if (i !== `.DS_Store`) {
+        pems.ca.push(await fileSystem(`read`, [ `${pemsLink}/ca/${i}` ]));
+      }
+    }
+    pems.allowHTTP1 = true;
+
     //set router
     const SecondRouter = require(`${this.dir}/router/secondRouter.js`);
-    const router = new SecondRouter();
+    const router = new SecondRouter(this.slack_bot);
 
     const rouObj = router.getAll();
     for (let obj of rouObj.get) {
@@ -175,7 +207,7 @@ SecondGhost.prototype.ghostConnect = async function () {
     console.log(`set router`);
 
     //server on
-    http.createServer(app).listen(PORT, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
+    https.createServer(pems, app).listen(PORT, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
 
   } catch (e) {
     console.log(e);
