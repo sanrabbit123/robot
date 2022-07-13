@@ -1,11 +1,13 @@
-const SecondRouter = function (slack_bot) {
+const SecondRouter = function (slack_bot, MONGOC) {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
 
   this.mother = new Mother();
   this.back = new BackMaker();
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
-  this.host = this.address.testinfo.host;
+  this.host = this.address.secondinfo.host;
+  this.mongo = MONGOC;
+  this.timeouts = {};
 
   this.slack_bot = slack_bot;
   this.webHook = {
@@ -171,6 +173,197 @@ SecondRouter.prototype.rou_post_mysqlQuery = function () {
   }
   return obj;
 }
+
+SecondRouter.prototype.rou_post_parsingCall = function () {
+  const instance = this;
+  const back = this.back;
+  const { requestSystem, messageSend } = this.mother;
+  const jsdom = require("jsdom");
+  const { JSDOM } = jsdom;
+  let obj = {};
+  obj.link = [ "/parsingCall" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    const outerUrl = "http://www.moyaweb.com/search_result.do";
+    try {
+      if (req.body.phoneNumber === undefined) {
+        console.log(req.body);
+        res.send(JSON.stringify({ error: "error" }));
+      } else {
+        const selfMongo = instance.mongo;
+        const { phoneNumber, kind } = req.body;
+        const method = (kind === '1' ? "전화" : "문자");
+        let client;
+        let rows, temp, name, sub, text;
+        let manager;
+        let desid, proid;
+        let projects;
+        let boo;
+        let outerResponse;
+        let entireDom, resultDom, findName;
+        let builders;
+
+        if (!/^2/.test(phoneNumber)) {
+          manager = null;
+          rows = await back.getClientsByQuery({ phone: phoneNumber }, { selfMongo });
+          if (rows.length === 0) {
+            rows = await back.getDesignersByQuery({ "information.phone": phoneNumber }, { selfMongo });
+            if (rows.length === 0) {
+              temp = await back.setMemberObj({ selfMongo, getMode: true });
+              rows = [];
+              for (let obj of temp) {
+                if (obj.phone === phoneNumber) {
+                  rows.push(obj);
+                }
+              }
+              if (rows.length === 0) {
+                name = "알 수 없는";
+                sub = "사람";
+              } else {
+                name = rows[0].name;
+                sub = "팀원";
+              }
+            } else {
+              name = rows[0].designer;
+              sub = "실장님";
+            }
+          } else {
+            client = rows[0];
+            name = client.name;
+            sub = "고객님";
+          }
+          text = `${name} ${sub}에게서 ${method}가 왔습니다!`;
+
+          if (name.trim() === "알 수 없는") {
+            builders = await back.getBuildersByQuery({ "information.phone": phoneNumber }, { selfMongo });
+            if (builders.length > 0) {
+              text = `${builders[0].builder} 시공 소장님께 ${method}가 왔습니다!`;
+            } else {
+              text = `알 수 없는 사람(${phoneNumber})으로부터 ${method}가 왔습니다!`
+            }
+            if (/^알 수 없는/gi.test(text)) {
+              rows = await back.getAspirantsByQuery({ phone: phoneNumber }, { selfMongo });
+              if (rows.length === 0) {
+                outerResponse = await requestSystem(outerUrl, { SCH_TEL_NO: String(phoneNumber).replace(/[^0-9]/gi, '') }, { headers: { "Content-Type": "application/x-www-form-urlencoded" } });
+                entireDom = new JSDOM(outerResponse.data);
+                resultDom = entireDom.window.document.getElementById("result_phone_text");
+                if (resultDom !== null) {
+                  findName = resultDom.textContent.trim();
+                  text = `${findName}에서 ${method}가 왔습니다!`;
+                }
+              } else {
+                text = `${rows[0].designer} 디자이너 신청자로부터 ${method}가 왔습니다!`;
+              }
+            }
+          }
+          await messageSend({ text, channel: "#call", voice: true });
+        }
+        res.send(JSON.stringify({ message: "success" }));
+      }
+    } catch (e) {
+      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_parsingCall): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+SecondRouter.prototype.rou_post_receiveCall = function () {
+  const instance = this;
+  const back = this.back;
+  const { requestSystem, messageSend, fileSystem, setQueue, sleep, shellExec, shellLink } = this.mother;
+  let obj = {};
+  obj.link = [ "/receiveCall" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.sender === undefined || req.body.kind === undefined) {
+        console.log(req.body);
+        res.send(JSON.stringify({ error: "error" }));
+      } else {
+        const { sender, kind, ip } = req.body;
+        const timeoutConst = "receiveCall";
+        let phoneNumber, senderArr;
+        let part0, part1, part2;
+
+        senderArr = sender.split('');
+        phoneNumber = '';
+        part0 = '';
+        part1 = '';
+        part2 = '';
+        if (/^01/gi.test(sender)) {
+          for (let i = 0; i < 3; i++) {
+            part0 += senderArr.shift();
+          }
+          for (let i = 0; i < 4; i++) {
+            part2 = senderArr.pop() + part2;
+          }
+          part1 = senderArr.join('');
+          phoneNumber = part0 + '-' + part1 + '-' + part2;
+        } else if (/^02/gi.test(sender)) {
+          for (let i = 0; i < 2; i++) {
+            part0 += senderArr.shift();
+          }
+          for (let i = 0; i < 4; i++) {
+            part2 = senderArr.pop() + part2;
+          }
+          part1 = senderArr.join('');
+          phoneNumber = part0 + '-' + part1 + '-' + part2;
+        } else {
+          for (let i = 0; i < 3; i++) {
+            part0 += senderArr.shift();
+          }
+          for (let i = 0; i < 4; i++) {
+            part2 = senderArr.pop() + part2;
+          }
+          part1 = senderArr.join('');
+          phoneNumber = part0 + '-' + part1 + '-' + part2;
+        }
+
+        if (instance.timeouts[timeoutConst] !== undefined || instance.timeouts[timeoutConst] !== null) {
+          clearTimeout(instance.timeouts[timeoutConst]);
+        }
+        instance.timeouts[timeoutConst] = setTimeout(async () => {
+          try {
+            await fileSystem(`writeJson`, [ `${process.cwd()}/temp/${timeoutConst}.json`, { phoneNumber, kind } ]);
+            setQueue(async () => {
+              try {
+                await sleep(Math.round(1000 * Math.random()));
+                if (await fileSystem(`exist`, [ `${process.cwd()}/temp/${timeoutConst}.json` ])) {
+                  const { phoneNumber, kind } = await fileSystem(`readJson`, [ `${process.cwd()}/temp/${timeoutConst}.json` ]);
+                  await shellExec(`rm`, [ `-rf`, `${process.cwd()}/temp/${timeoutConst}.json` ]);
+                  await requestSystem("https://" + instance.address.secondinfo.host + ":3000/parsingCall", { phoneNumber, kind }, { headers: { "Content-Type": "application/json" } });
+                }
+              } catch (e) {
+                throw new Error(e.message);
+              }
+            }, 300);
+            clearTimeout(instance.timeouts[timeoutConst]);
+            instance.timeouts[timeoutConst] = null;
+          } catch (e) {
+            console.log(e);
+          }
+        }, 600);
+
+        res.send(JSON.stringify({ message: "success" }));
+    } catch (e) {
+      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_receiveCall): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 
 //ROUTING ----------------------------------------------------------------------
 
