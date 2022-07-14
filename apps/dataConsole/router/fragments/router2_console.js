@@ -1288,6 +1288,12 @@ DataRouter.prototype.rou_post_getHistory = function () {
   let obj = {};
   obj.link = [ "/getClientHistory", "/getProjectHistory", "/getHistoryProperty", "/getHistoryTotal", "/getClientsImportant", "/getProjectsImportant", "/getClientsManager", "/getProjectsManager", "/getClientsIssue", "/getProjectsIssue" ];
   obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       let historyObj, responseArr;
       let resultObj;
@@ -1351,11 +1357,10 @@ DataRouter.prototype.rou_post_getHistory = function () {
       if (responseArr === null) {
         responseArr = [];
       }
-      res.set("Content-Type", "application/json");
       res.send(JSON.stringify(responseArr));
     } catch (e) {
       instance.mother.errorLog("Console 서버 문제 생김 (rou_post_getHistory): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -2922,6 +2927,12 @@ DataRouter.prototype.rou_post_parsingAddress = function () {
   let obj = {};
   obj.link = [ "/parsingAddress" ];
   obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       if (req.body.mode === undefined) {
         throw new Error("must be mode => inspection, distance");
@@ -2979,11 +2990,10 @@ DataRouter.prototype.rou_post_parsingAddress = function () {
         result = tong;
       }
 
-      res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify(result));
     } catch (e) {
       instance.mother.errorLog("Console 서버 문제 생김 (rou_post_parsingAddress): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;

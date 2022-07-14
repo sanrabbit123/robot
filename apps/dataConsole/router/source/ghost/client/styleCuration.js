@@ -1185,19 +1185,19 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
         mode: "update",
         cliid: instance.client.cliid,
         update: { x: "style", y: 0, value: instance.values.style[0].value }
-      }, "/ghostClient_updateAnalytics").then(() => {
+      }, BACKHOST + "/ghostClient_updateAnalytics").then(() => {
         return ajaxJson({
           page: "styleCuration",
           mode: "image",
           cliid: instance.client.cliid,
           image: image
-        }, "/ghostClient_updateAnalytics");
+        }, BACKHOST + "/ghostClient_updateAnalytics");
       }).then(() => {
         return ajaxJson({
           cliid: instance.client.cliid,
           name: instance.client.name,
           image: image,
-        }, "/styleCuration_styleCheckComplete");
+        }, BACKHOST + "/styleCuration_styleCheckComplete");
       }).then(() => {
         return GeneralJs.homeliaisonAnalytics({
           page: instance.pageName,
@@ -1210,7 +1210,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
           },
         });
       }).catch((err) => {
-        GeneralJs.ajaxJson({ message: "StyleCurationJs.styleCheck.pickupDesigners : " + err.message }, "/errorLog").catch((e) => {});
+        GeneralJs.ajaxJson({ message: "StyleCurationJs.styleCheck.pickupDesigners : " + err.message }, BACKHOST + "/errorLog").catch((e) => {});
       });
 
     }
@@ -1296,7 +1296,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
           }
 
         } catch (e) {
-          await GeneralJs.ajaxJson({ message: "StyleCurationJs.resetEvent.sleep.true : " + e.message }, "/errorLog");
+          await GeneralJs.ajaxJson({ message: "StyleCurationJs.resetEvent.sleep.true : " + e.message }, BACKHOST + "/errorLog");
         }
       });
     } else {
@@ -1317,7 +1317,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
           }
           GeneralJs.stacks[loadingName] = false;
         } catch (e) {
-          await GeneralJs.ajaxJson({ message: "StyleCurationJs.resetEvent.sleep.false : " + e.message }, "/errorLog");
+          await GeneralJs.ajaxJson({ message: "StyleCurationJs.resetEvent.sleep.false : " + e.message }, BACKHOST + "/errorLog");
         }
       });
     }
@@ -1972,7 +1972,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                         mode: "inspection",
                         addressArr: [ { id: instance.client.cliid, address: e.data.trim().replace(/[\<\>\[\]\&\=\{\}\:\$]/gi, '') } ],
                         liteMode: false,
-                      }, "/parsingAddress");
+                      }, BACKHOST + "/parsingAddress");
 
                       if (inspectionArr.length !== 0) {
                         window.alert("주소가 잘못되었습니다! 주소를 표준 주소 체계 형식으로 고쳐주세요!\n(팝업의 검색 기능을 활용해주세요!)");
@@ -1987,7 +1987,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                           cliid: instance.client.cliid,
                           update: { x, y, value: instance.values[x][y].value },
                           updateQuery: obj.update(instance.values[x][y].value, instance.values, instance.client)
-                        }, "/ghostClient_updateAnalytics");
+                        }, BACKHOST + "/ghostClient_updateAnalytics");
                       }
 
                       removeTargets = targetMother.querySelectorAll("aside");
@@ -1997,7 +1997,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                       window.removeEventListener("message", GeneralJs.stacks["addressEvent"]);
                       GeneralJs.stacks["addressEvent"] = null;
                     } catch (e) {
-                      await GeneralJs.ajaxJson({ message: "StyleCurationJs.addressEvent : " + e.message }, "/errorLog");
+                      await GeneralJs.ajaxJson({ message: "StyleCurationJs.addressEvent : " + e.message }, BACKHOST + "/errorLog");
                     }
                   }
                   window.addEventListener("message", GeneralJs.stacks["addressEvent"]);
@@ -2032,7 +2032,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                         mode: "inspection",
                         addressArr: [ { id: instance.client.cliid, address: self.value.trim().replace(/[\<\>\[\]\&\=\{\}\:\$]/gi, '') } ],
                         liteMode: false,
-                      }, "/parsingAddress");
+                      }, BACKHOST + "/parsingAddress");
                       if (inspectionArr.length !== 0) {
                         window.alert("주소가 잘못되었습니다! 주소를 표준 주소 체계 형식으로 고쳐주세요!\n(팝업의 검색 기능을 활용해주세요!)");
                         self.value = "";
@@ -2045,13 +2045,13 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                           cliid: instance.client.cliid,
                           update: { x, y, value: instance.values[x][y].value },
                           updateQuery: obj.update(instance.values[x][y].value, instance.values, instance.client)
-                        }, "/ghostClient_updateAnalytics");
+                        }, BACKHOST + "/ghostClient_updateAnalytics");
                       }
                     }
 
                   }
                 } catch (e) {
-                  await GeneralJs.ajaxJson({ message: "StyleCurationJs.addressEvent.blur : " + e.message }, "/errorLog");
+                  await GeneralJs.ajaxJson({ message: "StyleCurationJs.addressEvent.blur : " + e.message }, BACKHOST + "/errorLog");
                 }
               }
             },
@@ -2160,9 +2160,9 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                       cliid: instance.client.cliid,
                       update: { x, y, value: instance.values[x][y].value },
                       updateQuery: obj.update(valuesCopied[x][y].value, valuesCopied, instance.client)
-                    }, "/ghostClient_updateAnalytics");
+                    }, BACKHOST + "/ghostClient_updateAnalytics");
                   }).catch((err) => {
-                    GeneralJs.ajaxJson({ message: "StyleCurationJs.valuesConvert : " + err.message }, "/errorLog").catch((e) => {});
+                    GeneralJs.ajaxJson({ message: "StyleCurationJs.valuesConvert : " + err.message }, BACKHOST + "/errorLog").catch((e) => {});
                   });
 
                 }
@@ -2352,7 +2352,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
           cliid: instance.client.cliid,
           update: { x, y, value: instance.values[x][y].value },
           updateQuery: obj.update(instance.values[x][y].value, instance.values, instance.client)
-        }, "/ghostClient_updateAnalytics").catch((err) => {
+        }, BACKHOST + "/ghostClient_updateAnalytics").catch((err) => {
           console.log(err);
         });
       }
@@ -2548,7 +2548,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                     cliid: instance.client.cliid,
                     update: { x, y, value: instance.values[x][y].value },
                     updateQuery: obj.update(valuesCopied[x][y].value, valuesCopied, instance.client)
-                  }, "/ghostClient_updateAnalytics");
+                  }, BACKHOST + "/ghostClient_updateAnalytics");
                 }).catch((err) => {
                   console.log(err);
                 });
@@ -2701,7 +2701,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                   cliid: instance.client.cliid,
                   update: { x, y, value: instance.values[x][y].value },
                   updateQuery: obj.update(instance.values[x][y].value, instance.values, instance.client)
-                }, "/ghostClient_updateAnalytics").catch((err) => {
+                }, BACKHOST + "/ghostClient_updateAnalytics").catch((err) => {
                   console.log(err);
                 });
                 for (let c of children) {
@@ -2861,7 +2861,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                     cliid: instance.client.cliid,
                     update: { x, y, value: instance.values[x][y].value },
                     updateQuery: obj.update(instance.values[x][y].value, instance.values, instance.client)
-                  }, "/ghostClient_updateAnalytics");
+                  }, BACKHOST + "/ghostClient_updateAnalytics");
                 }
               } catch (e) {
                 console.log(err);
@@ -3149,7 +3149,7 @@ StyleCurationJs.prototype.valuesConvert = async function (deepCopy = false) {
     return deepCopy ? valuesCopied : this.values;
 
   } catch (e) {
-    await GeneralJs.ajaxJson({ message: "StyleCurationJs.valuesConvert : " + e.message }, "/errorLog");
+    await GeneralJs.ajaxJson({ message: "StyleCurationJs.valuesConvert : " + e.message }, BACKHOST + "/errorLog");
   }
 }
 
@@ -3200,7 +3200,7 @@ StyleCurationJs.prototype.parsingValues = function () {
     }
   }).then((data) => {
     if (data === "success") {
-      return ajaxJson({ cliid: instance.client.cliid, historyQuery, coreQuery, mode: "calculation", fromConsole: 0 }, "/styleCuration_updateCalculation");
+      return ajaxJson({ cliid: instance.client.cliid, historyQuery, coreQuery, mode: "calculation", fromConsole: 0 }, BACKHOST + "/styleCuration_updateCalculation");
     } else {
       window.alert("사진 전송에 문제가 생겼습니다! 200MB 이하의 파일로 다시 시도해주세요!");
       return new Promise((resolve, reject) => { resolve({ promisePass: true }); });
@@ -3256,7 +3256,7 @@ StyleCurationJs.prototype.parsingValues = function () {
           page: "styleCuration",
           mode: "submit",
           cliid: instance.client.cliid,
-        }, "/ghostClient_updateAnalytics");
+        }, BACKHOST + "/ghostClient_updateAnalytics");
       }
     }
   }).then((obj) => {
@@ -3270,7 +3270,7 @@ StyleCurationJs.prototype.parsingValues = function () {
       message: instance.client.name + " 고객님이 큐레이션 페이지를 제출하는 도중 오류를 만나 비정상 종료되었습니다! error 내용 : " + err.message,
       channel: "#404_curation",
       voice: false,
-    }, "/sendSlack").then(() => {
+    }, BACKHOST + "/sendSlack").then(() => {
       window.alert("오류가 발생하였습니다! 다시 한번 제출을 시도해주시길 부탁드립니다!");
       window.location.reload();
     }).catch((err) => { console.log(err); });
@@ -3365,7 +3365,7 @@ StyleCurationJs.prototype.insertInitBox = function () {
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
   titleWording = "상세 큐레이션";
-  subTitleContents = "정확한 디자이너 매칭을 위해 작성해주세요!";
+  subTitleContents = "정확한 디자이너 매칭을 위해 꼭 작성해주세요!";
 
   mobileBlockTop = 4.5;
 
@@ -4234,7 +4234,7 @@ StyleCurationJs.prototype.insertPannelBox = function () {
     },
   ]);
 
-  ajaxJson({}, "https://" + GHOSTHOST + "/designerProposal_policy").then(function (res) {
+  ajaxJson({}, BACKHOST + "/designerProposal_policy").then(function (res) {
     const { policy, button } = res;
     let bTags;
 
@@ -5496,7 +5496,7 @@ StyleCurationJs.prototype.serviceConverting = async function (seridObj) {
       mode: "page",
       liteMode: (returnGet().mode === "lite"),
       cliid: instance.client.cliid,
-    }, "/ghostClient_updateAnalytics");
+    }, BACKHOST + "/ghostClient_updateAnalytics");
     backgroundImageBox2.style.opacity = String(1);
     backgroundImageBox.style.animation = "justfadeoutoriginal 1s ease forwards";
     baseTong.style.height = String(baseTong.getBoundingClientRect().height) + ea;
@@ -5523,7 +5523,7 @@ StyleCurationJs.prototype.serviceConverting = async function (seridObj) {
     }, 500);
     return "done";
   } catch (e) {
-    await GeneralJs.ajaxJson({ message: "StyleCurationJs.serviceConverting : " + e.message }, "/errorLog");
+    await GeneralJs.ajaxJson({ message: "StyleCurationJs.serviceConverting : " + e.message }, BACKHOST + "/errorLog");
   }
 }
 
@@ -5554,7 +5554,7 @@ StyleCurationJs.prototype.forceConverting = async function () {
           }
 
           if (boo) {
-            thisProjects = await ajaxJson({ noFlat: true, whereQuery: { cliid: client.cliid } }, "/getProjects", { equal: true });
+            thisProjects = await ajaxJson({ whereQuery: { cliid: client.cliid } }, SECONDHOST + "/getProjects", { equal: true });
             if (thisProjects.length > 0) {
               thisProject = thisProjects[0];
               finalSerid = clientHistory.curation.service.serid;
@@ -5583,10 +5583,10 @@ StyleCurationJs.prototype.forceConverting = async function () {
       firstBoo = false;
     }
     if (firstBoo) {
-      await ajaxJson({ cliid: client.cliid, name: client.name, phone: client.phone }, "/styleCuration_pageInitComplete");
+      await ajaxJson({ cliid: client.cliid, name: client.name, phone: client.phone }, BACKHOST + "/styleCuration_pageInitComplete");
     }
   } catch (e) {
-    await GeneralJs.ajaxJson({ message: "StyleCurationJs.forceConverting : " + e.message }, "/errorLog");
+    await GeneralJs.ajaxJson({ message: "StyleCurationJs.forceConverting : " + e.message }, BACKHOST + "/errorLog");
   }
 }
 
@@ -5610,7 +5610,7 @@ StyleCurationJs.prototype.launching = async function (loading) {
       window.location.href = this.frontPage;
     }
 
-    clients = await ajaxJson({ noFlat: true, whereQuery: { cliid: getObj.cliid } }, "/getClients", { equal: true });
+    clients = await ajaxJson({ whereQuery: { cliid: getObj.cliid } }, SECONDHOST + "/getClients", { equal: true });
     if (clients.length === 0) {
       window.alert("잘못된 접근입니다!");
       window.location.href = this.frontPage;
@@ -5623,14 +5623,14 @@ StyleCurationJs.prototype.launching = async function (loading) {
       liteMode = false;
     }
 
-    contentsPhotoObj = await ajaxJson({}, "/styleCuration_getPhotos", { equal: true });
+    contentsPhotoObj = await ajaxJson({}, BACKHOST + "/styleCuration_getPhotos", { equal: true });
     this.selectPhotos = [];
     this.randomPick = [];
     this.photos = contentsPhotoObj.photos;
     this.contentsArr = contentsPhotoObj.contentsArr;
     this.designers = contentsPhotoObj.designers;
     this.client = client;
-    this.clientHistory = await ajaxJson({ id: client.cliid, rawMode: true }, "/getClientHistory");
+    this.clientHistory = await ajaxJson({ id: client.cliid, rawMode: true }, BACKHOST + "/getClientHistory");
 
     if (!liteMode) {
       liteForce = false;
@@ -5718,7 +5718,7 @@ StyleCurationJs.prototype.launching = async function (loading) {
           instance.insertPannelBox();
           await instance.forceConverting();
         } catch (e) {
-          await GeneralJs.ajaxJson({ message: "StyleCurationJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
+          await GeneralJs.ajaxJson({ message: "StyleCurationJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
       }
     });
@@ -5727,6 +5727,6 @@ StyleCurationJs.prototype.launching = async function (loading) {
 
   } catch (err) {
     console.log(err);
-    await GeneralJs.ajaxJson({ message: "StyleCurationJs.launching 에러 일어남 => " + err.message }, "/errorLog");
+    await GeneralJs.ajaxJson({ message: "StyleCurationJs.launching 에러 일어남 => " + err.message }, BACKHOST + "/errorLog");
   }
 }

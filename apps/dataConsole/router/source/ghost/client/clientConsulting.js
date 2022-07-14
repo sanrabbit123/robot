@@ -712,7 +712,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
           window.removeEventListener("message", GeneralJs.stacks["addressEvent"]);
           GeneralJs.stacks["addressEvent"] = null;
         } catch (e) {
-          await GeneralJs.ajaxJson({ message: "ClientConsultingJs.addressEvent : " + e.message }, "/errorLog");
+          await GeneralJs.ajaxJson({ message: "ClientConsultingJs.addressEvent : " + e.message }, BACKHOST + "/errorLog");
         }
       }
       window.addEventListener("message", GeneralJs.stacks["addressEvent"]);
@@ -2165,7 +2165,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
     ]
   });
 
-  ajaxJson({}, "https://" + GHOSTHOST + "/designerProposal_policy").then(function (res) {
+  ajaxJson({}, BACKHOST + "/designerProposal_policy").then(function (res) {
     const { policy } = res;
     let bTags;
     policyTong.insertAdjacentHTML("beforeend", policy);
@@ -2311,7 +2311,7 @@ ClientConsultingJs.prototype.finalSubmit = function () {
         if (boo) {
           instance.mother.certificationBox(name, phone, async function (back, box) {
             try {
-              const { cliid } = await ajaxJson({ map }, "/clientSubmit");
+              const { cliid } = await ajaxJson({ map }, BACKHOST + "/clientSubmit");
               homeliaisonAnalytics({
                 page: instance.pageName,
                 standard: instance.firstPageViewTime,
@@ -2330,7 +2330,7 @@ ClientConsultingJs.prototype.finalSubmit = function () {
                 selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/curation/?cliid=" + cliid);
               });
             } catch (e) {
-              await ajaxJson({ message: "FrontAboutJs.certificationBox : " + e.message }, "/errorLog");
+              await ajaxJson({ message: "FrontAboutJs.certificationBox : " + e.message }, BACKHOST + "/errorLog");
             }
           });
         }
@@ -2494,7 +2494,7 @@ ClientConsultingJs.prototype.insertPannelBox = function () {
     },
   ]);
 
-  ajaxJson({}, "https://" + GHOSTHOST + "/designerProposal_policy").then(function (res) {
+  ajaxJson({}, BACKHOST + "/designerProposal_policy").then(function (res) {
     const { policy, button } = res;
     let bTags;
 
@@ -2794,7 +2794,7 @@ ClientConsultingJs.prototype.launching = async function (loading) {
           instance.insertInitBox();
           instance.insertConsultingBox();
         } catch (e) {
-          await GeneralJs.ajaxJson({ message: "ClientConsultingJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
+          await GeneralJs.ajaxJson({ message: "ClientConsultingJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
       }
     });
@@ -2803,6 +2803,6 @@ ClientConsultingJs.prototype.launching = async function (loading) {
 
   } catch (err) {
     console.log(err);
-    await GeneralJs.ajaxJson({ message: "ClientConsultingJs.launching 에러 일어남 => " + err.message }, "/errorLog");
+    await GeneralJs.ajaxJson({ message: "ClientConsultingJs.launching 에러 일어남 => " + err.message }, BACKHOST + "/errorLog");
   }
 }
