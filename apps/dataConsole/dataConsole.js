@@ -25,6 +25,8 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
   const LOGHOST = "https://" + this.address.testinfo.host + ":3000";
   const FRONTHOST = "https://" + this.address.frontinfo.host;
   const OFFICEHOST = "https://" + this.address.officeinfo.ghost.host + ":" + String(this.address.officeinfo.ghost.port);
+  const BACKHOST = "https://" + this.address.backinfo.host + ":3000";
+  const SECONDHOST = "https://" + this.address.secondinfo.host + ":3000";
   const classException = {
     proposal: [ "designer.js" ],
     bill: [ "designer.js" ],
@@ -118,7 +120,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
 
     console.log(`set static`);
 
-    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, sseString, sseConsoleString, polyfillString, classString, pythonString, bridgeString, frontWebString, officeString, logString;
+    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, sseString, sseConsoleString, polyfillString, classString, pythonString, bridgeString, frontWebString, officeString, logString, backString, secondString;
     let code0, code1, code2, code3;
     let result;
     let prototypes, dataPatchScript, prototypeBoo;
@@ -133,6 +135,8 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
     bridgeString = "const BRIDGEHOST = \"" + BRIDGEHOST + "\";";
     logString = "const LOGHOST = \"" + LOGHOST + "\";";
     frontWebString = "const FRONTHOST = \"" + FRONTHOST + "\";";
+    backString = "const BACKHOST = \"" + BACKHOST + "\";";
+    secondString = "const SECONDHOST = \"" + SECONDHOST + "\";";
     officeString = "const OFFICEHOST = \"" + OFFICEHOST + "\";\n" + "const FILEHOST = \"" + FILEHOST + "\";";
     svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/string/svgTong.js` ]);
     generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
@@ -173,7 +177,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
       }
 
       //merge
-      code0 = svgTongString + "\n\n" + s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + logString + "\n\n" + frontWebString + "\n\n" + officeString + "\n\n";
+      code0 = svgTongString + "\n\n" + s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + logString + "\n\n" + backString + "\n\n" + secondString + "\n\n" + frontWebString + "\n\n" + officeString + "\n\n";
       code1 = dataPatchScript;
       code2 = generalString + "\n\n" + consoleGeneralString;
       code3 = fileString + "\n\n" + execString;
@@ -229,6 +233,8 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
   const LOGHOST = "https://" + this.address.testinfo.host + ":3000";
   const FRONTHOST = "https://" + this.address.frontinfo.host;
   const OFFICEHOST = "https://" + this.address.officeinfo.ghost.host + ":" + String(this.address.officeinfo.ghost.port);
+  const BACKHOST = "https://" + this.address.backinfo.host + ":3000";
+  const SECONDHOST = "https://" + this.address.secondinfo.host + ":3000";
   try {
 
     //module transform function
@@ -294,7 +300,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
 
     let staticDirList;
     let staticTempDir, staticTempDirList_raw, staticTempDirList;
-    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, sseString, sseConsoleString, polyfillString, pythonString, frontClassString, bridgeString, frontWebString, officeString, logString;
+    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, sseString, sseConsoleString, polyfillString, pythonString, frontClassString, bridgeString, frontWebString, officeString, logString, backString, secondString;;
     let code0, code1, code2, code3;
     let result, moduleString;
     let prototypes, dataPatchScript, prototypeBoo;
@@ -339,6 +345,8 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     pythonString = "const PYTHONHOST = \"" + PYTHONHOST + "\";";
     bridgeString = "const BRIDGEHOST = \"" + BRIDGEHOST + "\";";
     logString = "const LOGHOST = \"" + LOGHOST + "\";";
+    backString = "const BACKHOST = \"" + BACKHOST + "\";";
+    secondString = "const SECONDHOST = \"" + SECONDHOST + "\";";
     frontWebString = "const FRONTHOST = \"" + FRONTHOST + "\";";
     officeString = "const OFFICEHOST = \"" + OFFICEHOST + "\";\n" + "const FILEHOST = \"" + FILEHOST + "\";";
     svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/string/svgTong.js` ]);
@@ -413,7 +421,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
       }
 
       //merge
-      code0 = svgTongString + "\n\n" + s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + logString + "\n\n" + frontWebString + "\n\n" + officeString + "\n\n";
+      code0 = svgTongString + "\n\n" + s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + logString + "\n\n" + backString + "\n\n" + secondString + "\n\n" + frontWebString + "\n\n" + officeString + "\n\n";
       code1 = dataPatchScript + "\n\n";
       if (kinds === "MIDDLE") {
         code2 = generalString + "\n\n" + consoleGeneralString + "\n\n" + frontClassString + "\n\n";
@@ -848,7 +856,7 @@ DataConsole.prototype.connect = async function () {
             instance.address.testinfo.host,
             instance.address.testinfo.host + ":3000",
             instance.address.secondinfo.host,
-            instance.address.secondinfo.host + ":3000",      
+            instance.address.secondinfo.host + ":3000",
             instance.address.officeinfo.ghost.host,
             instance.address.officeinfo.ghost.host + ":3000",
             "localhost:3000",
