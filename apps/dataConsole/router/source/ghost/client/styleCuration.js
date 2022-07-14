@@ -2971,7 +2971,7 @@ StyleCurationJs.prototype.photoBefore = function (mother) {
     beforePhotosSelected.push(beforePhotos[randomNum]);
     beforePhotos.splice(randomNum, 1);
   }
-  beforePhotosSelected = beforePhotosSelected.map((jpg) => { return S3HOST + StyleCurationJs.binaryPath + "/" + jpg; });
+  beforePhotosSelected = beforePhotosSelected.map((jpg) => { return StyleCurationJs.binaryPath + "/" + jpg; });
 
   image = [];
 
