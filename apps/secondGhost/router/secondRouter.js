@@ -86,20 +86,42 @@ SecondRouter.prototype.fireWall = function (req) {
 
 SecondRouter.prototype.rou_get_First = function () {
   const instance = this;
-  const { errorLog } = this.mother;
+  const { errorLog, diskReading } = this.mother;
+  const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
+  const reflection = new MongoReflection();
   let obj = {};
-  obj.link = "/ssl";
-  obj.func = function (req, res) {
-    res.set({ "Content-Type": "text/plain" });
+  obj.link = "/:id";
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
-      res.send("hi");
+
+      if (req.params.id === "ssl") {
+        res.send(JSON.stringify({ message: "hi" }));
+      } else if (req.params.id === "disk") {
+        const disk = await diskReading();
+        reflection.coreReflection().then(() => {
+          return reflection.mysqlReflection();
+        }).catch((err) => { console.log(err); });
+        res.send(JSON.stringify({ disk: disk.toArray() }));
+      } else {
+        res.send(JSON.stringify({ message: "hi" }));
+      }
+
     } catch (e) {
       errorLog("Second Ghost 서버 문제 생김 (rou_get_First): " + e.message).catch((e) => { console.log(e); });
-      res.send("error");
+      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
+
   return obj;
 }
+
 
 //POST ---------------------------------------------------------------------------------------------
 

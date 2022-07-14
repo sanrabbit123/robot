@@ -56,38 +56,11 @@ Robot.prototype.mongoToJson = async function () {
   }
 }
 
-Robot.prototype.diskReading = function () {
+Robot.prototype.diskTest = function () {
   const instance = this;
-  const { requestSystem, diskReading, dateToString } = this.mother;
-  const targets = [
-    { name: "home", host: instance.address.homeinfo.ghost.host },
-    { name: "office", host: instance.address.officeinfo.ghost.host },
-    { name: "python", host: instance.address.pythoninfo.host },
-    { name: "log", host: instance.address.testinfo.host },
-  ]
-  const robotPort = 3000;
-  const pathConst = "/disk";
-  const protocol = "https:";
-  let response;
-  let intervalFunc;
-
-  intervalFunc = async () => {
-    try {
-      console.clear();
-      for (let { name, host } of targets) {
-        response = await requestSystem(protocol + "//" + host + ":" + String(robotPort) + pathConst);
-        console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, name + " disk status");
-        console.log(`\x1b[33m%s\x1b[0m`, dateToString(new Date(), true));
-        diskReading("view", response.data.disk);
-        console.log("");
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  intervalFunc();
-  setInterval(intervalFunc, 2 * 60 * 60 * 1000);
+  const CronGhost = require(`${process.cwd()}/apps/cronGhost/cronGhost.js`);
+  const app = new CronGhost();
+  app.diskTest().catch((err) => { console.log(err); });
 }
 
 Robot.prototype.infoObj = async function () {
@@ -147,77 +120,11 @@ Robot.prototype.contentsMaker = function (button, arg) {
   }
 }
 
-Robot.prototype.aliveTest = async function () {
+Robot.prototype.aliveTest = function () {
   const instance = this;
-  const address = this.address;
-  const { requestSystem, messageLog, errorLog } = this.mother;
-  const generalPort = 3000;
-  const ghostPort = 8080;
-  const controlPath = "/ssl";
-  let res, targets, targetNumber, successNum, failNum, message;
-  try {
-
-    targets = [
-      { name: "python", protocol: "https:", host: address.pythoninfo.host, port: generalPort, },
-      { name: "home", protocol: "https:", host: address.homeinfo.ghost.host, port: generalPort, },
-      { name: "office", protocol: "https:", host: address.officeinfo.ghost.host, port: ghostPort, },
-      { name: "log", protocol: "https:", host: address.testinfo.host, port: generalPort, },
-    ];
-
-    targetNumber = targets.length;
-    successNum = 0;
-    failNum = 0;
-    message = '';
-
-    await requestSystem("https://" + address.pythoninfo.host + ":" + String(generalPort) + "/taxBill", { data: null }, { headers: { "Content-Type": "application/json" } });
-
-    for (let { name, protocol, host, port } of targets) {
-
-      boo = false;
-      try {
-        res = await requestSystem(protocol + "//" + host + ':' + String(port) + controlPath);
-      } catch {
-        res = null;
-      }
-
-      if (typeof res === "object" && res !== null) {
-        if (res.status !== undefined && typeof res.status === "number") {
-          if (res.status === 200) {
-            console.log("\x1b[32m%s\x1b[0m", name + " server alive");
-            successNum = successNum + 1;
-            message += "\n" +  name + " server alive";
-            boo = true;
-            if (successNum === targetNumber) {
-              console.log("\x1b[33m%s\x1b[0m", "all alive");
-              message = "server all alive";
-              await messageLog(message);
-            } else if (successNum + failNum === targetNumber) {
-              console.log("\x1b[33m%s\x1b[0m", "something death");
-              message += "\n======================================";
-              message += "\nsomething death";
-              await instance.slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
-            }
-          }
-        }
-      }
-
-      if (!boo) {
-        failNum = failNum + 1;
-        console.log("\x1b[32m%s\x1b[0m", name + " server death");
-        message += "\n" +  name + " server death";
-        if (successNum + failNum === targetNumber) {
-          console.log("\x1b[33m%s\x1b[0m", "something death");
-          message += "\n======================================";
-          message += "\nsomething death";
-          await instance.slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
-        }
-      }
-
-    }
-
-  } catch (e) {
-    await instance.slack_bot.chat.postMessage({ text: "alive test error : " + e.message, channel: "#error_log" });
-  }
+  const CronGhost = require(`${process.cwd()}/apps/cronGhost/cronGhost.js`);
+  const app = new CronGhost();
+  app.aliveTest().catch((err) => { console.log(err); });
 }
 
 Robot.prototype.proposalMaker = function (button, arg) {
@@ -882,64 +789,6 @@ Robot.prototype.localLog = async function () {
   }
 }
 
-Robot.prototype.aliveLog = async function () {
-  const instance = this;
-  const { pureServer, shellExec, shellLink, fileSystem, setQueue, requestSystem, dateToString } = this.mother;
-  try {
-    const targets = [
-      { name: "home", host: instance.address.homeinfo.ghost.host },
-      { name: "office", host: instance.address.officeinfo.ghost.host },
-      { name: "python", host: instance.address.pythoninfo.host },
-      { name: "log", host: instance.address.testinfo.host },
-    ]
-    const robotPort = 3000;
-    const pathConst = "/disk";
-    const protocol = "https:";
-    const PureServer = pureServer("class");
-    const app = new PureServer();
-    let response;
-    let intervalFunc;
-
-    app.get("/", async (req, res) => {
-      try {
-        res.send(JSON.stringify({ message: "It works!" }));
-      } catch (e) {
-        console.log(e);
-      }
-    });
-
-    intervalFunc = async () => {
-      try {
-        for (let { name, host } of targets) {
-          response = await requestSystem(protocol + "//" + host + ":" + String(robotPort) + pathConst);
-          console.log(response.data.disk);
-          if (response.data.disk[2] < 100000) {
-            await instance.slack_bot.chat.postMessage({ text: name + " " + "disk warning", channel: "#error_log" });
-          }
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    };
-
-    intervalFunc().catch((err) => { console.log(err); });
-    setInterval(intervalFunc, 2 * 60 * 60 * 1000);
-    instance.aliveTest().catch((err) => { console.log(err); });
-    setInterval(async () => {
-      try {
-        await instance.aliveTest();
-      } catch (e) {
-        console.log(e);
-      }
-    }, 30 * 60 * 1000);
-
-    pureServer("listen", app, 3000);
-
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 Robot.prototype.arpScan = async function () {
   const instance = this;
   const address = this.address;
@@ -1389,20 +1238,6 @@ const MENU = {
   aliveTest: async function () {
     try {
       await robot.aliveTest();
-      setInterval(async () => {
-        try {
-          await robot.aliveTest();
-        } catch (e) {
-          console.log(e);
-        }
-      }, 30 * 60 * 1000);
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  aliveLog: async function () {
-    try {
-      await robot.aliveLog();
     } catch (e) {
       console.log(e);
     }
@@ -1442,9 +1277,9 @@ const MENU = {
       console.log(e);
     }
   },
-  diskReading: async function () {
+  diskTest: async function () {
     try {
-      await robot.diskReading();
+      await robot.diskTest();
     } catch (e) {
       console.log(e);
     }

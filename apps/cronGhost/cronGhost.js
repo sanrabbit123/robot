@@ -2,11 +2,117 @@ const CronGhost = function () {
   const Mother = require(process.cwd() + "/apps/mother.js");
   const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
   const ADDRESS = require(process.cwd() + "/apps/infoObj.js");
+  const { WebClient } = require("@slack/web-api");
+
   this.mother = new Mother();
   this.back = new BackMaker();
   this.address = ADDRESS;
   this.dir = `${process.cwd()}/apps/cronGhost`;
   this.list = [];
+  this.slack_token = "xoxb-717757271335-2032150390679-1FTxRg4wQasMpe9kKDgAdqBv";
+  this.slack_bot = new WebClient(this.slack_token);
+}
+
+CronGhost.prototype.aliveTest = async function () {
+  const instance = this;
+  const address = this.address;
+  const { requestSystem, messageLog, errorLog } = this.mother;
+  const generalPort = 3000;
+  const ghostPort = 8080;
+  const controlPath = "/ssl";
+  let res, targets, targetNumber, successNum, failNum, message;
+  try {
+
+    targets = [
+      { name: "python", protocol: "https:", host: address.pythoninfo.host, port: generalPort, },
+      { name: "home", protocol: "https:", host: address.homeinfo.ghost.host, port: generalPort, },
+      { name: "office", protocol: "https:", host: address.officeinfo.ghost.host, port: ghostPort, },
+      { name: "log", protocol: "https:", host: address.testinfo.host, port: generalPort, },
+      { name: "second", protocol: "https:", host: address.secondinfo.host, port: generalPort, },
+    ];
+
+    targetNumber = targets.length;
+    successNum = 0;
+    failNum = 0;
+    message = '';
+
+    await requestSystem("https://" + address.pythoninfo.host + ":" + String(generalPort) + "/taxBill", { data: null }, { headers: { "Content-Type": "application/json" } });
+
+    for (let { name, protocol, host, port } of targets) {
+
+      boo = false;
+      try {
+        res = await requestSystem(protocol + "//" + host + ':' + String(port) + controlPath);
+      } catch {
+        res = null;
+      }
+
+      if (typeof res === "object" && res !== null) {
+        if (res.status !== undefined && typeof res.status === "number") {
+          if (res.status === 200) {
+            console.log("\x1b[32m%s\x1b[0m", name + " server alive");
+            successNum = successNum + 1;
+            message += "\n" +  name + " server alive";
+            boo = true;
+            if (successNum === targetNumber) {
+              console.log("\x1b[33m%s\x1b[0m", "all alive");
+              message = "server all alive";
+              await instance.slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
+            } else if (successNum + failNum === targetNumber) {
+              console.log("\x1b[33m%s\x1b[0m", "something death");
+              message += "\n======================================";
+              message += "\nsomething death";
+              await instance.slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
+            }
+          }
+        }
+      }
+
+      if (!boo) {
+        failNum = failNum + 1;
+        console.log("\x1b[32m%s\x1b[0m", name + " server death");
+        message += "\n" +  name + " server death";
+        if (successNum + failNum === targetNumber) {
+          console.log("\x1b[33m%s\x1b[0m", "something death");
+          message += "\n======================================";
+          message += "\nsomething death";
+          await instance.slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
+        }
+      }
+
+    }
+
+  } catch (e) {
+    await instance.slack_bot.chat.postMessage({ text: "alive test error : " + e.message, channel: "#error_log" });
+  }
+}
+
+CronGhost.prototype.diskTest = async function () {
+  const instance = this;
+  const { requestSystem } = this.mother;
+  try {
+    const targets = [
+      { name: "home", host: instance.address.homeinfo.ghost.host },
+      { name: "office", host: instance.address.officeinfo.ghost.host },
+      { name: "python", host: instance.address.pythoninfo.host },
+      { name: "log", host: instance.address.testinfo.host },
+      { name: "second", host: instance.address.secondinfo.host },
+    ]
+    const robotPort = 3000;
+    const pathConst = "/disk";
+    const protocol = "https:";
+    let response;
+    for (let { name, host } of targets) {
+      response = await requestSystem(protocol + "//" + host + ":" + String(robotPort) + pathConst);
+      console.log(response.data.disk);
+      if (response.data.disk[2] < 100000) {
+        await instance.slack_bot.chat.postMessage({ text: name + " " + "disk warning", channel: "#error_log" });
+      }
+    }
+    await instance.slack_bot.chat.postMessage({ text: "disk check done", channel: "#error_log" });
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 CronGhost.prototype.cronRouter = async function () {
@@ -88,6 +194,7 @@ CronGhost.prototype.cronServer = async function () {
     await kakaoInstance.ready();
 
     let intervalFunc, startTime, today;
+    let intervalFunc0, intervalFunc1;
 
     this.source = new CronSource(
       this.mother,
@@ -148,6 +255,22 @@ CronGhost.prototype.cronServer = async function () {
       }
     }
 
+    intervalFunc0 = async () => {
+      try {
+        await instance.diskTest();
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    intervalFunc1 = async () => {
+      try {
+        await instance.aliveTest();
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
     today = new Date();
     startTime = Number(zeroAddition(today.getMinutes()).slice(1));
     if (startTime === 0) {
@@ -160,6 +283,8 @@ CronGhost.prototype.cronServer = async function () {
     setTimeout(() => {
       intervalFunc().catch((err) => { console.log(err); });
       setInterval(intervalFunc, interval);
+      setInterval(intervalFunc0, 12 * 60 * 60 * 1000);
+      setInterval(intervalFunc1, 1 * 60 * 60 * 1000);
     }, startTime);
 
     pureServer("listen", app, port);
