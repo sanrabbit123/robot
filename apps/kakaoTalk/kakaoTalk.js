@@ -940,8 +940,8 @@ KakaoTalk.prototype.templateTong = function (target) {
       },
     },
     pushClient: {
-      name: "상담 신청 완료 쪼기",
-      id: "TH_5028",
+      name: "상담 신청 완료 쪼기 수정",
+      id: "TJ_3621",
       needs: [
         "client",
         "host",

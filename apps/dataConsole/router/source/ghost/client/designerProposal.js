@@ -803,17 +803,15 @@ DesignerProposalJs.prototype.insertInfoBox = function () {
       }
     }
   }
-  const blank = "&nbsp;&nbsp;&nbsp;&nbsp;";
+  const blank = "&nbsp;&nbsp;&nbsp;";
   let whiteBlock;
   let style;
   let bottomMargin;
   let leftBox, rightBox;
   let titleBox, barBox, indexBox;
   let margin;
-  let leftRatio;
   let wordSpacing;
   let titleFont, titleLeft, titleFontWeight;
-  let barWidth, barLeft;
   let indexFont, indexFontWeight;
   let initWordingSize, initWordingHeight, initWordingWordSpacing, initWordingLineHeight;
   let whiteWording;
@@ -829,10 +827,13 @@ DesignerProposalJs.prototype.insertInfoBox = function () {
   let infoBox;
   let num;
   let factorSize;
+  let barHeight, barWidth;
+  let infoBoxMarginTop, infoBoxMarginBottom;
+  let mobileRatio;
+  let mobileSecondMarginTop;
 
   bottomMargin = <%% 16, 16, 16, 12, 2 %%>;
-  margin = <%% 60, 60, 44, 32, 52 %%>;
-  leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
+  margin = <%% 60, 60, 44, 32, 7 %%>;
 
   titleFont = <%% 31, 30, 27.5, 23, 5.7 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
@@ -843,9 +844,6 @@ DesignerProposalJs.prototype.insertInfoBox = function () {
   titleFontWeight = <%% 500, 500, 500, 500, 500 %%>;
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
 
-  barWidth = <%% 80, 80, 80, 80, 80 %%>;
-  barLeft = <%% titleLeft + 234, titleLeft + 234, titleLeft + 234, titleLeft + 234, titleLeft + 234 %%>;
-
   indexFont = <%% 19, 19, 19, 19, 19 %%>;
   indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
 
@@ -854,16 +852,34 @@ DesignerProposalJs.prototype.insertInfoBox = function () {
   initWordingWordSpacing = <%% -1, -1, -1, -1, -1 %%>;
   initWordingLineHeight = <%% 9, 9, 9, 9, 9 %%>;
 
-  factorSize = <%% 19, 19, 19, 19, 5 %%>;
+  barHeight = <%% 16, 16, 16, 12, 5 %%>;
+  barWidth = <%% 72, 72, 72, 72, 12 %%>;
 
-  factors = [
-    { title: "추천 서비스", value: (desktop ? GeneralJs.serviceParsing(this.project.service).split(' ').slice(1).join(' ') : GeneralJs.serviceParsing(this.project.service).split(' ')[1]) },
-    { title: "서비스 형태", value: GeneralJs.serviceParsing(this.project.service).split(' ')[0] },
-    { title: "예상 시작일", value: expectedToString(analytics.date.space.movein, GeneralJs.serviceParsing(this.project.service, true)) },
-    { title: "예상 종료일", value: expectedToString(analytics.date.space.movein) },
-  ];
+  infoBoxMarginTop = <%% 36, 36, 32, 20, 5 %%>;
+  infoBoxMarginBottom = <%% 6, 6, 6, 6, 2 %%>;
 
-  initWording0 = "안녕하세요, " + this.client.name + "님! 고객님께 " + "<b%" + serviceParsing(this.project.service) + " 서비스와 그에 맞는 디자이너%b>를 제안드립니다.";
+  factorSize = <%% 19, 19, 18, 16, 4 %%>;
+
+  mobileRatio = 75;
+  mobileSecondMarginTop = 3;
+
+  if (media[0]) {
+    factors = [
+      { title: "추천 서비스", value: ((media[0] || media[1] || media[2]) ? GeneralJs.serviceParsing(this.project.service).split(' ').slice(1).join(' ') : GeneralJs.serviceParsing(this.project.service).split(' ')[1]) },
+      { title: "입주 예정일", value: expectedToString(request.space.resident.expected) },
+      { title: "예상 시작일", value: expectedToString(analytics.date.space.movein, GeneralJs.serviceParsing(this.project.service, true)) },
+      { title: "예상 종료일", value: expectedToString(analytics.date.space.movein) },
+    ];
+  } else {
+    factors = [
+      { title: "추천 서비스", value: ((media[0] || media[1] || media[2]) ? GeneralJs.serviceParsing(this.project.service).split(' ').slice(1).join(' ') : GeneralJs.serviceParsing(this.project.service).split(' ')[1]) },
+      { title: "예상 시작일", value: expectedToString(analytics.date.space.movein, GeneralJs.serviceParsing(this.project.service, true)) },
+      { title: "예상 종료일", value: expectedToString(analytics.date.space.movein) },
+    ];
+  }
+
+
+  initWording0 = "안녕하세요, " + this.client.name + "님! 고객님께" + (desktop ? " " : "\n") + "<b%" + serviceParsing(this.project.service) + " 서비스와 그에 맞는 디자이너%b>를 제안드립니다.";
   if (media[0] || media[1]) {
     initWording1 = "선택된 디자이너는 고객님의 가용 예산을 현장 조건에 맞게 적절히 분배하여 스타일링을 진행합니다.";
   } else {
@@ -900,11 +916,10 @@ DesignerProposalJs.prototype.insertInfoBox = function () {
 
   createNode({
     mother: rightBox,
-    text: initWording0 + "\n" + initWording1,
+    text: desktop ? initWording0 + "\n" + initWording1 : initWording0,
     style: {
       position: "relative",
-      left: String(desktop ? 0 : 13) + ea,
-      width: String(desktop ? 100 : 74) + '%',
+      width: String(desktop ? 100 : mobileRatio) + '%',
       fontSize: String(initWordingSize) + ea,
       fontWeight: String(400),
       color: colorChip.black,
@@ -919,13 +934,36 @@ DesignerProposalJs.prototype.insertInfoBox = function () {
     }
   });
 
+  if (mobile) {
+    createNode({
+      mother: rightBox,
+      text: initWording1,
+      style: {
+        position: "relative",
+        width: String(desktop ? 100 : mobileRatio) + '%',
+        fontSize: String(initWordingSize) + ea,
+        fontWeight: String(400),
+        color: colorChip.black,
+        wordSpacing: String(initWordingWordSpacing) + "px",
+        lineHeight: String(1.7),
+        textAlign: "center",
+        marginTop: String(mobileSecondMarginTop) + ea,
+      },
+      bold: {
+        fontSize: String(initWordingSize) + ea,
+        fontWeight: String(700),
+        color: colorChip.green,
+      }
+    });
+  }
+
   createNode({
     mother: rightBox,
     style: {
       display: "inline-block",
       position: "relative",
-      height: String(16) + ea,
-      width: String(72) + ea,
+      height: String(barHeight) + ea,
+      width: String(barWidth) + ea,
       borderBottom: "1px solid " + colorChip.gray3,
     }
   });
@@ -935,12 +973,12 @@ DesignerProposalJs.prototype.insertInfoBox = function () {
     style: {
       display: "flex",
       position: "relative",
-      flexDirection: "row",
+      flexDirection: desktop ? "row" : "column",
       textAlign: "center",
       alignItems: "center",
       justifyContent: "center",
-      marginTop: String(36) + ea,
-      paddingBottom: String(6) + ea,
+      marginTop: String(infoBoxMarginTop) + ea,
+      paddingBottom: String(infoBoxMarginBottom) + ea,
     }
   });
 
@@ -966,16 +1004,18 @@ DesignerProposalJs.prototype.insertInfoBox = function () {
     if (num !== factors.length - 1) {
       createNode({
         mother: infoBox,
-        text: blank + blank + "|" + blank + blank,
+        text: desktop ? blank + blank + "|" + blank + blank : "",
         style: {
           display: "inline-block",
           position: "relative",
           fontSize: String(factorSize) + ea,
           fontWeight: String(200),
           color: colorChip.gray4,
+          height: desktop ? "" : String(1.4) + ea,
         }
       });
     }
+
     num++;
   }
 
@@ -1442,12 +1482,14 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
     marginLeft: String(desktop ? leftMargin : 0) + ea,
     marginRight: String(desktop ? leftMargin : 0) + ea,
     width: desktop ? "calc(100% - " + String(leftMargin * 2) + ea + ")" : String(100) + '%',
-    height: String(feeHeight) + ea,
+    height: desktop ? String(feeHeight) + ea : "",
     marginTop: String((!media[2] && !media[3]) ? analyticsBoxTopMargin : (media[2] ? 30 : 20)) + ea,
     marginBottom: String(feeMarginBottom) + ea,
     borderRadius: mobile ? String(3) + "px" : "",
     background: mobile ? GeneralJs.colorChip.white : "transparent",
     boxShadow: mobile ? "0px 5px 12px -10px " + GeneralJs.colorChip.gray5 : "",
+    paddingTop: mobile ? String(3.5) + ea : "",
+    paddingBottom: mobile ? String(4.2) + ea : "",
   };
   for (let i in style) {
     feeBox.style[i] = style[i];
@@ -2036,7 +2078,6 @@ DesignerProposalJs.prototype.designerPortfolio = function (mother, desid) {
       }
     }
   });
-
 }
 
 DesignerProposalJs.prototype.feeToString = function (fee) {
@@ -2045,21 +2086,32 @@ DesignerProposalJs.prototype.feeToString = function (fee) {
   const { autoComma } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
+  const blank = desktop ? "<b%&nbsp;&nbsp;/&nbsp;&nbsp;%b>" : "\n";
   let moneyText;
   let money;
+  let originalAmount, discountAmount;
   moneyText = '';
-  for (let { amount, method, partial, distance } of fee) {
+  for (let { amount, method, partial, distance, discount } of fee) {
     if (/offline/gi.test(method)) {
       // money = amount + (distance.amount * distance.number);
       money = amount;
     } else {
       money = amount;
     }
-    money = Math.round(money / 1000) * 1000;
-    moneyText += (/offline/gi.test(method) ? "오프라인" : "온라인") + (partial ? "(부분) " : ' ') + autoComma(money) + "원";
-    moneyText += ", ";
+
+    if (discount === 0) {
+      money = Math.round(money);
+      moneyText += (/offline/gi.test(method) ? "오프라인" : "온라인") + (partial ? "(부분) " : ' ') + autoComma(money) + "원";
+      moneyText += blank;
+    } else {
+      money = Math.round(money);
+      originalAmount = Math.round((money / (1 - discount)));
+      moneyText += (/offline/gi.test(method) ? "오프라인" : "온라인") + (partial ? "(부분)" : '') + '&nbsp;&nbsp;<u%' + autoComma(originalAmount) + "원%u>&nbsp;&nbsp;" + autoComma(money) + "원";
+      moneyText += blank;
+    }
+
   }
-  moneyText = moneyText.slice(0, -2);
+  moneyText = moneyText.slice(0, -1 * (blank.length));
   if (mobile) {
     if (/, /gi.test(moneyText)) {
       moneyText = moneyText.replace(/오프라인/g, "오프").replace(/온라인/g, "온");
@@ -2071,7 +2123,7 @@ DesignerProposalJs.prototype.feeToString = function (fee) {
 DesignerProposalJs.prototype.designerFee = function (mother, fee) {
   const instance = this;
   const { ea, media } = this;
-  const { withOut } = GeneralJs;
+  const { withOut, createNode, colorChip, isMac } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
   let arrowBox, arrowHead, moneyBox, vatBox;
@@ -2084,7 +2136,7 @@ DesignerProposalJs.prototype.designerFee = function (mother, fee) {
   let barMargin;
 
   wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
-  arrowTop = <%% 11, 11, 13, 16, 11 %%>;
+  arrowTop = <%% 13, 13, 14, 17, 11 %%>;
 
   headWidth = <%% 10, 10, 10, 8, 10 %%>;
   headTop = <%% 6, 6, 8, 12, 6 %%>;
@@ -2092,7 +2144,7 @@ DesignerProposalJs.prototype.designerFee = function (mother, fee) {
   headVisual = <%% 11, 11, 11, 11, 11 %%>;
 
   feeBottom = <%% 0, 0, 0, 0, 0 %%>;
-  feeSize = <%% 28, 28, 26, 22, 5 %%>;
+  feeSize = <%% 26, 26, 24, 19, 4.5 %%>;
   feeRight = <%% 60, 60, 60, 60, 0 %%>;
 
   vatBottom = <%% 3, 3, 3, 3, 3 %%>;
@@ -2102,69 +2154,67 @@ DesignerProposalJs.prototype.designerFee = function (mother, fee) {
   barMargin = <%% 15, 15, 15, 15, 3 %%>;
 
   if (desktop) {
-    feeBottom = feeBottom + (GeneralJs.isMac() ? 0 : -3);
-    vatBottom = vatBottom + (GeneralJs.isMac() ? 0 : -3);
+    feeBottom = feeBottom + (isMac() ? 0 : -3);
+    vatBottom = vatBottom + (isMac() ? 0 : -3);
   }
 
   if (desktop) {
-    arrowBox = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "absolute",
-      borderBottom: "1px solid " + GeneralJs.colorChip.gray3,
-      width: withOut(feeRight + 10, ea),
-      top: String(arrowTop) + ea,
-    };
-    for (let i in style) {
-      arrowBox.style[i] = style[i];
+    arrowBox = createNode({
+      mother,
+      style: {
+        position: "absolute",
+        borderBottom: "1px solid " + colorChip.gray3,
+        width: withOut(feeRight + 16, ea),
+        top: String(arrowTop) + ea,
+      }
+    });
+  }
+
+  moneyBox = createNode({
+    mother,
+    text: this.feeToString(fee),
+    style: {
+      position: desktop ? "absolute" : "relative",
+      bottom: desktop ? String(feeBottom) + ea : "",
+      right: String(feeRight) + ea,
+      fontSize: String(feeSize) + ea,
+      fontWeight: String(500),
+      paddingLeft: desktop ? String(barMargin) + ea : "",
+      color: colorChip.green,
+      background: colorChip.white,
+      width: desktop ? "" : String(100) + '%',
+      textAlign: desktop ? "" : "center",
+      lineHeight: desktop ? "" : String(1.5),
+    },
+    bold: {
+      fontSize: String(feeSize) + ea,
+      fontWeight: String(300),
+      color: colorChip.gray4,
+    },
+    under: {
+      fontSize: String(feeSize) + ea,
+      fontWeight: String(400),
+      color: colorChip.gray4,
+      "text-decoration": "line-through",
     }
-    mother.appendChild(arrowBox);
+  });
 
-  }
-
-  moneyBox = GeneralJs.nodes.div.cloneNode(true);
-  moneyBox.textContent = this.feeToString(fee);
-  style = {
-    position: "absolute",
-    bottom: String(feeBottom) + ea,
-    right: String(feeRight) + ea,
-    fontSize: String(feeSize) + ea,
-    fontWeight: String(500),
-    color: GeneralJs.colorChip.green,
-    background: GeneralJs.colorChip.white,
-  };
-  if (mobile) {
-    delete style.bottom;
-    style.top = String(3) + ea;
-    style.width = String(100) + '%';
-    style.textAlign = "center";
-  } else if (desktop) {
-    style.paddingLeft = String(barMargin) + ea;
-  }
-  for (let i in style) {
-    moneyBox.style[i] = style[i];
-  }
-  mother.appendChild(moneyBox);
-
-  vatBox = GeneralJs.nodes.div.cloneNode(true);
-  vatBox.textContent = "(vat별도)";
-  style = {
-    position: "absolute",
-    bottom: String(vatBottom) + ea,
-    right: String(vatRight) + ea,
-    fontSize: String(vatSize) + ea,
-    fontWeight: String(200),
-    color: GeneralJs.colorChip.green
-  };
-  if (mobile) {
-    delete style.bottom;
-    style.top = String(9.5) + ea;
-    style.width = String(100) + '%';
-    style.textAlign = "center";
-  }
-  for (let i in style) {
-    vatBox.style[i] = style[i];
-  }
-  mother.appendChild(vatBox);
+  vatBox = createNode({
+    mother,
+    text: "(vat별도)",
+    style: {
+      position: desktop ? "absolute" : "relative",
+      bottom: desktop ? String(vatBottom) + ea : "",
+      width: desktop ? "" : String(100) + '%',
+      textAlign: desktop ? "" : "center",
+      right: String(vatRight) + ea,
+      fontSize: String(vatSize) + ea,
+      fontWeight: String(200),
+      lineHeight: desktop ? "" : String(1.5),
+      marginTop: desktop ? "" : String(0.5) + ea,
+      color: colorChip.green
+    }
+  });
 
 }
 
@@ -2189,6 +2239,10 @@ DesignerProposalJs.prototype.designerFeeDetail = function (mother, desid, fee) {
   let amount, km, time, distance, number;
   let amount2;
   let online, offline, both;
+  let onlineDiscount, offlineDiscount;
+  let thisAmount;
+  let originalAmount;
+  let discountAmount;
 
   for (let obj of this.proposal.detail) {
     if (obj.desid === desid) {
@@ -2238,13 +2292,13 @@ DesignerProposalJs.prototype.designerFeeDetail = function (mother, desid, fee) {
 
   if (online) {
     sourceArr = [
-      { title: thisDesigner.designer + " 디자이너 디자인비", amount: autoComma(Math.round(amount / 1000) * 1000) + "원" },
+      { title: thisDesigner.designer + " 디자이너 디자인비", amount: autoComma(Math.round(amount)) + "원" },
     ];
   }
 
   if (offline) {
     sourceArr = [
-      { title: thisDesigner.designer + " 디자이너 디자인비", amount: autoComma(Math.round(amount / 1000) * 1000) + "원" },
+      { title: thisDesigner.designer + " 디자이너 디자인비", amount: autoComma(Math.round(amount)) + "원" },
       { title: "출장비 (거리 : " + km + " / 시간 : " + time + " / 1회당)", amount: autoComma(distance * 1) + "원" }
     ];
     if (mobile) {
@@ -2257,8 +2311,8 @@ DesignerProposalJs.prototype.designerFeeDetail = function (mother, desid, fee) {
 
   if (both) {
     sourceArr = [
-      { title: thisDesigner.designer + " 디자이너 디자인비 (오프라인)", amount: autoComma(Math.round(amount / 1000) * 1000) + "원" },
-      { title: thisDesigner.designer + " 디자이너 디자인비 (온라인)", amount: autoComma(Math.round(amount2 / 1000) * 1000) + "원" },
+      { title: thisDesigner.designer + " 디자이너 디자인비 (오프라인)", amount: autoComma(Math.round(amount)) + "원" },
+      { title: thisDesigner.designer + " 디자이너 디자인비 (온라인)", amount: autoComma(Math.round(amount2)) + "원" },
       { title: "출장비 (거리 : " + km + " / 시간 : " + time + " / 1회당)", amount: autoComma(distance * 1) + "원" }
     ];
     if (mobile) {
@@ -2267,6 +2321,58 @@ DesignerProposalJs.prototype.designerFeeDetail = function (mother, desid, fee) {
     if (distance * number === 0) {
       sourceArr.pop();
     }
+  }
+
+  onlineDiscount = 0;
+  offlineDiscount = 0;
+  for (let obj of thisProposal.fee) {
+    if (/offline/gi.test(obj.method)) {
+      offlineDiscount = obj.discount;
+    } else {
+      onlineDiscount = obj.discount;
+    }
+  }
+
+  if (offlineDiscount !== 0 && thisProposal.fee.some((obj) => { return /offline/gi.test(obj.method) })) {
+
+    if (both) {
+      thisAmount = Math.round(amount);
+    } else {
+      if (offline) {
+        thisAmount = Math.round(amount);
+      } else {
+        thisAmount = 0;
+      }
+    }
+    originalAmount = Math.round((thisAmount / (1 - offlineDiscount)));
+    discountAmount = Math.floor(originalAmount - thisAmount);
+
+    sourceArr.push({
+      title: "오프라인 디자인비 할인율 (할인 금액)",
+      amount: String(Math.floor((offlineDiscount) * 100)) + '%' + ' (' + autoComma(discountAmount) + "원" + ')',
+    });
+
+  }
+
+  if (onlineDiscount !== 0 && thisProposal.fee.some((obj) => { return /online/gi.test(obj.method) })) {
+
+    if (both) {
+      thisAmount = Math.round(amount2);
+    } else {
+      if (offline) {
+        thisAmount = 0;
+      } else {
+        thisAmount = Math.round(amount);
+      }
+    }
+    originalAmount = Math.round((thisAmount / (1 - onlineDiscount)));
+    discountAmount = Math.floor(originalAmount - thisAmount);
+
+    sourceArr.push({
+      title: "온라인 디자인비 할인율 (할인 금액)",
+      amount: String(Math.floor((onlineDiscount) * 100)) + '%' + ' (' + autoComma(discountAmount) + "원" + ')',
+    });
+
   }
 
   marginTop = <%% left - 6, left - 6, top, top, 2 %%>;
@@ -2313,7 +2419,7 @@ DesignerProposalJs.prototype.designerFeeDetail = function (mother, desid, fee) {
     entireDom.appendChild(titleDom);
 
     amountDom = GeneralJs.nodes.div.cloneNode(true);
-    amountDom.textContent = amount + " (vat 별도)";
+    amountDom.textContent = amount + (/원$/.test(amount) ? " (vat 별도)" : "");
     amountDom.classList.add("hoverDefault");
     style = {
       position: "absolute",

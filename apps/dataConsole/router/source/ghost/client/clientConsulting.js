@@ -2323,11 +2323,11 @@ ClientConsultingJs.prototype.finalSubmit = function () {
               }).then(() => {
                 document.body.removeChild(box);
                 document.body.removeChild(back);
-                selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/curation/?cliid=" + cliid);
+                selfHref("/curation.php?cliid=" + cliid);
               }).catch((err) => {
                 document.body.removeChild(box);
                 document.body.removeChild(back);
-                selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/curation/?cliid=" + cliid);
+                selfHref("/curation.php?cliid=" + cliid);
               });
             } catch (e) {
               await ajaxJson({ message: "FrontAboutJs.certificationBox : " + e.message }, BACKHOST + "/errorLog");
