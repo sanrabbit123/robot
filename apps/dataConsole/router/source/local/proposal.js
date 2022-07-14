@@ -1783,16 +1783,58 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                 }
               ]
             },
-            //total
+            //plus minus designer
             {
               style: {
                 display: "block",
                 position: "relative",
                 height: String(blockHeight) + ea,
               },
+              attribute: [
+                { desid },
+                { cliid },
+                { serid },
+                { xValue },
+                { thisOnOff },
+                { number: String(Math.round((/^off/gi.test(thisOnOff) ? discountOffline : discountOnline) * 100) * -1) },
+              ],
+              events: [
+                {
+                  type: [ "click", "contextmenu" ],
+                  event: function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const desid = this.getAttribute("desid");
+                    const cliid = this.getAttribute("cliid");
+                    const serid = this.getAttribute("serid");
+                    const xValue = this.getAttribute("xValue");
+                    const number = Number(this.getAttribute("number"));
+                    const thisOnOff = this.getAttribute("thisOnOff");
+                    const onlinePosition = 7;
+                    const offlinePosition = 8;
+                    const finalPosition = 11;
+                    let newNumber;
+                    let final;
+                    let original;
+                    if (e.type === "click") {
+                      newNumber = number + 1;
+                    } else {
+                      newNumber = number - 1;
+                    }
+                    this.lastChild.textContent = String(newNumber) + "%";
+                    this.setAttribute("number", String(newNumber));
+
+                    original = Number(this.parentElement.children[/^off/.test(thisOnOff) ? offlinePosition : onlinePosition].lastChild.textContent.replace(/[^0-9\-]/gi, ''));
+                    final = original * (1 - ((-1 * newNumber) / 100));
+                    this.parentElement.children[finalPosition].lastChild.textContent = GeneralJs.autoComma(final) + "원";
+                    this.parentElement.parentElement.parentElement.querySelector("input").value = GeneralJs.autoComma(final);
+                    input_widthSet(this.parentElement.parentElement.parentElement.querySelector("input"));
+                  }
+                }
+              ],
               children: [
                 {
-                  text: "출장비 적용",
+                  text: "증감율 (De 부담)",
                   style: {
                     position: "absolute",
                     fontSize: String(size) + ea,
@@ -1803,7 +1845,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                   }
                 },
                 {
-                  text: GeneralJs.autoComma(offline + (distance * travel.number)) + "원",
+                  text: String(0) + "%",
                   style: {
                     position: "absolute",
                     fontSize: String(size) + ea,
@@ -1844,7 +1886,6 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                     const thisOnOff = this.getAttribute("thisOnOff");
                     const onlinePosition = 7;
                     const offlinePosition = 8;
-                    const premiumPosition = 10;
                     const finalPosition = 11;
                     let newNumber;
                     let final;
@@ -1867,7 +1908,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
               ],
               children: [
                 {
-                  text: "증감율",
+                  text: "증감율 (HL 부담)",
                   style: {
                     position: "absolute",
                     fontSize: String(size) + ea,

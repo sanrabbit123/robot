@@ -91,6 +91,37 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
+
+
+
+
+    // const selfMongo = this.MONGOC;
+    // const projects = await back.getProjectsByQuery({}, { selfMongo });
+    // let whereQuery, updateQuery;
+    // for (let project of projects) {
+    //   if (project.proid !== "p1801_aa01s") {
+    //     whereQuery = { proid: project.proid };
+    //     updateQuery = {};
+    //     for (let i = 0; i < project.proposal.detail.length; i++) {
+    //       for (let j = 0; j < project.proposal.detail[i].fee.length; j++) {
+    //         updateQuery["proposal.detail." + String(i) + ".fee." + String(j) + ".discount"] = 0;
+    //       }
+    //     }
+    //     await back.updateProject([ whereQuery, updateQuery ], { selfMongo });
+    //     console.log(whereQuery, updateQuery);
+    //   }
+    // }
+
+
+
+
+
+
+
+
+
     // const selfMongo = this.MONGOC;
     // const projects = await back.getProjectsByQuery({ desid: { $regex: "^d" } }, { selfMongo });
     // let tong;
@@ -2698,7 +2729,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p185");
+    // await this.getRawPortfolio("p187");
 
 
     // get corePortfolio by pid
@@ -2707,7 +2738,7 @@ DevContext.prototype.launching = async function () {
 
     // aspirant to designer
     // await this.aspirantToDesigner([
-    //   [ "김우현", "2022-04-22" ],
+    //   [ "오정언", "2022-07-15" ],
     // ]);
 
 
