@@ -1358,9 +1358,6 @@ DesignerDetailJs.prototype.launching = async function (loading) {
     }
 
     const getObj = returnGet();
-    if (typeof getObj.qqq === "string") {
-      getObj.desid = getObj.qqq;
-    }
     let response, services;
 
     services = serviceParsing().name;

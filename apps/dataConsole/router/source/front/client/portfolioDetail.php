@@ -6,6 +6,10 @@ $host = $general->host;
 $protocol = $general->protocol;
 $hostLink = $protocol.$host;
 
+if (!isset($_GET['pid'])) {
+  header("Location: ".$hostLink."/portfolio.php");
+}
+
 $pid = $_GET["pid"];
 $contentsList = $general->mysqlGet("SELECT pid, portfoliotitlemain, apart, portfoliocontents, portfoliotid FROM contents WHERE pid = '".$pid."';");
 

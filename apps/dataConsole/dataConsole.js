@@ -589,6 +589,9 @@ DataConsole.prototype.renderFrontPhp = async function () {
 
     generalPhpScript = await fileSystem(`readString`, [ frontDir + "/general.php" ]);
     generalPhpScript = generalPhpScript.replace(/__host__/gi, address.frontinfo.host);
+    generalPhpScript = generalPhpScript.replace(/__secondHost__/gi, address.secondinfo.host + ":3000");
+    generalPhpScript = generalPhpScript.replace(/__logHost__/gi, address.testinfo.host + ":3000");
+    generalPhpScript = generalPhpScript.replace(/__backHost__/gi, address.backinfo.host + ":3000");
     generalPhpScript = generalPhpScript.replace(/__user__/gi, address.frontinfo.user);
     generalPhpScript = generalPhpScript.replace(/__password__/gi, address.frontinfo.password);
     generalPhpScript = generalPhpScript.replace(/__database__/gi, address.frontinfo.database);

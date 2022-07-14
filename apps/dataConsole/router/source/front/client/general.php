@@ -2,6 +2,10 @@
 class GeneralPhp {
 
   public $host = "__host__";
+  public $frontHost = "__host__";
+  public $secondHost = "__secondHost__";
+  public $logHost = "__logHost__";
+  public $backHost = "__backHost__";
   public $protocol = "https://";
 
   function __construct () {}
@@ -117,6 +121,93 @@ class GeneralPhp {
     $connection->close();
 
     return $resultArray;
+  }
+
+  public function ajaxJson($json, $url) {
+    $headers = array();
+    array_push($headers, "Content-Type: application/json");
+    array_push($headers, "origin: __host__");
+    array_push($headers, "host: __host__");
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    return json_decode($response);
+  }
+
+  public function getRealClientIp() {
+    $ipAddress = '';
+    if ($_SERVER['HTTP_CLIENT_IP']) {
+      $ipAddress = $_SERVER['HTTP_CLIENT_IP'];
+    } else if($_SERVER['HTTP_X_FORWARDED_FOR']) {
+      $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    } else if($_SERVER['HTTP_X_FORWARDED']) {
+      $ipAddress = $_SERVER['HTTP_X_FORWARDED'];
+    } else if($_SERVER['HTTP_FORWARDED_FOR']) {
+      $ipAddress = $_SERVER['HTTP_FORWARDED_FOR'];
+    } else if($_SERVER['HTTP_FORWARDED']) {
+      $ipAddress = $_SERVER['HTTP_FORWARDED'];
+    } else if($_SERVER['REMOTE_ADDR']) {
+      $ipAddress = $_SERVER['REMOTE_ADDR'];
+    } else {
+      $ipAddress = 'unknown';
+    }
+    return $ipAddress;
+  }
+
+  public function getClients(string $cliid) {
+    $url = $this->protocol.$this->secondHost."/getClients";
+    $whereQuery = array();
+    $whereQuery["cliid"] = $cliid;
+    $data = array();
+    $data["whereQuery"] = $whereQuery;
+    $dataJson = json_encode($data);
+    $response = $this->ajaxJson($dataJson, $url);
+    return $response;
+  }
+
+  public function getClient(string $cliid) {
+    $clients = $this->getClients($cliid);
+    return $clients[0];
+  }
+
+  public function getDesigners(string $desid) {
+    $url = $this->protocol.$this->secondHost."/getDesigners";
+    $whereQuery = array();
+    $whereQuery["desid"] = $desid;
+    $data = array();
+    $data["whereQuery"] = $whereQuery;
+    $dataJson = json_encode($data);
+    $response = $this->ajaxJson($dataJson, $url);
+    return $response;
+  }
+
+  public function getDesigner(string $desid) {
+    $designers = $this->getDesigners($desid);
+    return $designers[0];
+  }
+
+  public function getProjects(string $proid) {
+    $url = $this->protocol.$this->secondHost."/getProjects";
+    $whereQuery = array();
+    $whereQuery["proid"] = $proid;
+    $data = array();
+    $data["whereQuery"] = $whereQuery;
+    $dataJson = json_encode($data);
+    $response = $this->ajaxJson($dataJson, $url);
+    return $response;
+  }
+
+  public function getProject(string $proid) {
+    $projects = $this->getProjects($proid);
+    return $projects[0];
   }
 
 }

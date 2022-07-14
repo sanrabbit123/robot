@@ -2366,9 +2366,6 @@ ReviewDetailJs.prototype.launching = async function (loading) {
     }
 
     const getObj = returnGet();
-    if (typeof getObj.qqq === "string") {
-      getObj.pid = getObj.qqq;
-    }
     const { pid } = getObj;
     let response;
 

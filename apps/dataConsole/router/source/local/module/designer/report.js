@@ -1107,8 +1107,8 @@ DesignerJs.prototype.reportDataRendering = async function (desid) {
               tempArr.push(obj.contents.portfolio.pid);
               tempArr.push(dateToString(obj.contents.portfolio.date));
               tempArr.push(dateToString(obj.contents.review.date));
-              tempArr.push(homepage + portfolioPath + "?qqq=" + obj.contents.portfolio.pid);
-              tempArr.push(/999/g.test(obj.contents.review.rid) ? "-" : homepage + reviewPath + "?qqq=" + obj.contents.review.rid);
+              tempArr.push(homepage + portfolioPath + "?pid=" + obj.contents.portfolio.pid);
+              tempArr.push(/999/g.test(obj.contents.review.rid) ? "-" : homepage + reviewPath + "?pid=" + obj.contents.portfolio.pid);
               resultObj.contents[i].matrix.push(tempArr);
               order = order - 1;
               totalOrder = totalOrder + 1;
@@ -1478,7 +1478,7 @@ DesignerJs.prototype.reportDataRendering = async function (desid) {
           tempArr = [
             (obj.name === undefined ? "개인" : obj.name),
             dateToString(obj.contents.portfolio.date).slice(2).replace(/\-/gi, '.'),
-            FRONTHOST + "/portdetail.php?qqq=" + obj.contents.portfolio.pid,
+            FRONTHOST + "/portdetail.php?pid=" + obj.contents.portfolio.pid,
           ];
           entireTong.mobile.contents.push(tempArr);
         }

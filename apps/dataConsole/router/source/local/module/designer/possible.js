@@ -2068,7 +2068,7 @@ DesignerJs.prototype.possibleIconSet = function (desid) {
           id += '0';
         }
         id += num;
-        blankHref(FRONTHOST + "/desdetail.php?qqq=de" + id);
+        blankHref(FRONTHOST + "/desdetail.php?desid=" + designer.desid);
       });
 
     }

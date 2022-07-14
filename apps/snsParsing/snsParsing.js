@@ -261,9 +261,9 @@ SnsParsing.prototype.contentsSheets = async function () {
       tempArr.push("https://" + address.backinfo.host + "/contents?conid=" + contents.conid);
 
       tempArr.push(dateToString(contents.contents.portfolio.date));
-      tempArr.push(web + "/portdetail.php?qqq=" + contents.contents.portfolio.pid);
+      tempArr.push(web + "/portdetail.php?pid=" + contents.contents.portfolio.pid);
       if (contents.contents.review.rid !== "re999") {
-        tempArr.push(web + "/revdetail.php?qqq=" + contents.contents.review.rid);
+        tempArr.push(web + "/revdetail.php?pid=" + contents.contents.portfolio.pid);
       } else {
         tempArr.push("");
       }
@@ -340,7 +340,7 @@ SnsParsing.prototype.getSnsReport = async function () {
 
       this.web.portfolio.date = contents.contents.portfolio.date;
       this.web.portfolio.title = contents.contents.portfolio.title.main;
-      this.web.portfolio.link = web + "/portdetail.php?qqq=" + contents.contents.portfolio.pid;
+      this.web.portfolio.link = web + "/portdetail.php?pid=" + contents.contents.portfolio.pid;
       this.web.portfolio.boo = true;
 
       this.web.review.date = contents.contents.review.date;
@@ -348,7 +348,7 @@ SnsParsing.prototype.getSnsReport = async function () {
       this.web.review.link = "";
       this.web.review.boo = false;
       if (contents.contents.review.rid !== "re999") {
-        this.web.review.link = web + "/revdetail.php?qqq=" + contents.contents.review.rid;
+        this.web.review.link = web + "/revdetail.php?pid=" + contents.contents.portfolio.pid;
         this.web.review.boo = true;
       }
     }

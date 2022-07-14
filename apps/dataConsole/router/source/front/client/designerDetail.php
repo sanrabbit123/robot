@@ -6,6 +6,10 @@ $host = $general->host;
 $protocol = $general->protocol;
 $hostLink = $protocol.$host;
 
+if (!isset($_GET['desid'])) {
+  header("Location: ".$hostLink."/designer.php");
+}
+
 $desid = $_GET["desid"];
 $designerList = $general->mysqlGet("SELECT desid, designer, introduction, porlid, tid FROM designer WHERE desid = '".$desid."';");
 $contentsList = $general->mysqlGet("SELECT pid, portfoliotitlemain, reviewtitlemain FROM contents WHERE desid = '".$desid."';");
