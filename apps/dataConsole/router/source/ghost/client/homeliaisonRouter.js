@@ -267,7 +267,7 @@ HomeliaisonRouterJs.prototype.launching = async function (loading) {
           instance.boxRouting();
 
         } catch (e) {
-          await GeneralJs.ajaxJson({ message: "HomeliaisonRouterJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
+          await GeneralJs.ajaxJson({ message: "HomeliaisonRouterJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
       }
     });
@@ -286,6 +286,6 @@ HomeliaisonRouterJs.prototype.launching = async function (loading) {
   } catch (err) {
     console.log(err);
     window.alert("잘못된 접근입니다!");
-    await ajaxJson({ message: "HomeliaisonRouterJs.launching 에러 일어남 => " + err.message }, "/errorLog");
+    await ajaxJson({ message: "HomeliaisonRouterJs.launching 에러 일어남 => " + err.message }, BACKHOST + "/errorLog");
   }
 }

@@ -3114,7 +3114,7 @@ FrontAboutJs.prototype.launching = async function (loading) {
           instance.insertBlackBox();
           instance.insertFifthService();
         } catch (e) {
-          await GeneralJs.ajaxJson({ message: "FrontAboutJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
+          await GeneralJs.ajaxJson({ message: "FrontAboutJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
       }
     });
@@ -3123,6 +3123,6 @@ FrontAboutJs.prototype.launching = async function (loading) {
 
   } catch (err) {
     console.log(err);
-    await ajaxJson({ message: "FrontAboutJs.launching 에러 일어남 => " + err.message }, "/errorLog");
+    await ajaxJson({ message: "FrontAboutJs.launching 에러 일어남 => " + err.message }, BACKHOST + "/errorLog");
   }
 }

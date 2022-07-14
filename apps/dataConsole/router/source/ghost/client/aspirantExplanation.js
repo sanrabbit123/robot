@@ -2237,7 +2237,7 @@ AspirantExplanationJs.prototype.launching = async function (loading) {
           instance.insertThirdBox();
           instance.insertFourthBox();
         } catch (e) {
-          await GeneralJs.ajaxJson({ message: "AspirantExplanationJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
+          await GeneralJs.ajaxJson({ message: "AspirantExplanationJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
       }
     });
@@ -2246,6 +2246,6 @@ AspirantExplanationJs.prototype.launching = async function (loading) {
 
   } catch (err) {
     console.log(err);
-    await GeneralJs.ajaxJson({ message: "AspirantExplanationJs.launching 에러 일어남 => " + err.message }, "/errorLog");
+    await GeneralJs.ajaxJson({ message: "AspirantExplanationJs.launching 에러 일어남 => " + err.message }, BACKHOST + "/errorLog");
   }
 }

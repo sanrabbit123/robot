@@ -88,7 +88,6 @@ DevContext.prototype.launching = async function () {
     // console.log(pastProposal[0].project.detail);
 
 
-    await findCode("qqq");
 
 
 
@@ -871,7 +870,7 @@ DevContext.prototype.launching = async function () {
     // if (client.requests[0].analytics.response.status.value === "응대중" && client.requests[0].analytics.response.action.value === "1차 응대 예정") {
     //   await kakao.sendTalk("pushClient", client.name, client.phone, {
     //     client: client.name,
-    //     host: address.homeinfo.ghost.host,
+    //     host: address.frontinfo.host,
     //     path: "curation",
     //     cliid: cliid,
     //   });

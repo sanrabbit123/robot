@@ -2402,7 +2402,7 @@ ReviewDetailJs.prototype.launching = async function (loading) {
           instance.reviewContentsBox();
           instance.reviewRelativeBox();
         } catch (e) {
-          await GeneralJs.ajaxJson({ message: "ReviewDetailJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
+          await GeneralJs.ajaxJson({ message: "ReviewDetailJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
       }
     });
@@ -2427,6 +2427,6 @@ ReviewDetailJs.prototype.launching = async function (loading) {
   } catch (err) {
     console.log(err);
     window.alert("잘못된 접근입니다!");
-    await ajaxJson({ message: "ReviewDetailJs.launching 에러 일어남 => " + err.message }, "/errorLog");
+    await ajaxJson({ message: "ReviewDetailJs.launching 에러 일어남 => " + err.message }, BACKHOST + "/errorLog");
   }
 }

@@ -331,7 +331,7 @@ const StyleCurationJs = function () {
   this.firstClick = false;
 }
 
-StyleCurationJs.binaryPath = "/middle/curation";
+StyleCurationJs.binaryPath = FRONTHOST + "/middle/curation";
 
 StyleCurationJs.randomPick = function (photos, contentsArr, pictureNumber, roomsIntersection = false) {
   if (typeof photos !== "object" || typeof contentsArr !== "object" || typeof pictureNumber !== "number" || typeof roomsIntersection !== "boolean") {

@@ -6,7 +6,7 @@ $host = $general->host;
 $protocol = $general->protocol;
 $hostLink = $protocol.$host;
 
-if (!isset($_GET['pid'])) {
+if (!isset($_GET["pid"])) {
   header("Location: ".$hostLink."/portfolio.php");
 }
 

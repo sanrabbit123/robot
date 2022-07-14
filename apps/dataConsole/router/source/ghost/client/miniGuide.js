@@ -1997,7 +1997,7 @@ MiniGuideJs.prototype.launching = async function (loading) {
           instance.insertTargetsBox();
           instance.insertNextBox();
         } catch (e) {
-          await GeneralJs.ajaxJson({ message: "MiniGuideJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
+          await GeneralJs.ajaxJson({ message: "MiniGuideJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
       }
     });
@@ -2006,6 +2006,6 @@ MiniGuideJs.prototype.launching = async function (loading) {
 
   } catch (err) {
     console.log(err);
-    await GeneralJs.ajaxJson({ message: "MiniGuideJs.launching 에러 일어남 => " + err.message }, "/errorLog");
+    await GeneralJs.ajaxJson({ message: "MiniGuideJs.launching 에러 일어남 => " + err.message }, BACKHOST + "/errorLog");
   }
 }

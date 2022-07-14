@@ -603,6 +603,186 @@ DesignerProposalJs.prototype.proposalMapGenerator = function (designer) {
 
 DesignerProposalJs.prototype.insertInitBox = function () {
   const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { ea, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  let whiteBlock;
+  let style;
+  let blockHeight;
+  let leftBox, rightBox;
+  let titleBox, barBox, indexBox;
+  let margin;
+  let quoteWidth;
+  let quoteHeight;
+  let titleFontSize, titleFontWeight;
+  let serviceChildren;
+  let searchTags;
+  let titleWording;
+  let servicePaddingLeft;
+  let serviceSize;
+  let serviceBlockPaddingTop;
+  let whiteBlockPaddingTop, whiteBlockPaddingBottom;
+  let quotoTongHeight;
+  let searchBarPaddingTop;
+  let searchBarHeight;
+  let searchBarWidth;
+  let searchIconHeight;
+  let searchIconRight, searchIconTop;
+  let whiteBlockMarginBottom;
+  let inputWithoutHeight;
+  let serviceButtonClassName;
+  let serviceBlock;
+  let inputSize, inputWeight;
+  let placeholder;
+  let titleTop;
+  let servicePaddingTop, servicePaddingBottom;
+  let serviceMarginRight;
+  let subTitleMarginTop, subTitleFontSize, subTitleWeight;
+  let subTitleContents;
+  let middleBox;
+  let tagTextTop;
+  let tagTongBottom;
+  let boxTopVisual;
+  let mobileBlockTop;
+
+  margin = <%% 30, 30, 30, 30, 30 %%>;
+
+  whiteBlockMarginBottom = <%% 90, 80, 74, 60, 14.5 %%>;
+
+  quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
+  quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
+  titleFontSize = <%% 35, 33, 32, 30, 6.4 %%>;
+  titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
+  titleTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 4) %%>;
+
+  servicePaddingTop = <%% 7, 7, 7, 7, 7 %%>;
+  servicePaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
+  servicePaddingLeft = <%% 13, 13, 13, 12, 2.2 %%>;
+  serviceMarginRight = <%% 6, 6, 6, 6, 6 %%>;
+  serviceSize = <%% 13, 13, 13, 12, 3.3 %%>;
+  serviceBlockPaddingTop = <%% (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), 5 %%>;
+
+  whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
+  whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
+
+  searchBarPaddingTop = <%% 220, 220, 192, 164, 12.5 %%>;
+  searchBarHeight = <%% 40, 40, 40, 36, 8 %%>;
+  searchBarWidth = <%% 690, 516, 516, 420, 88 %%>;
+
+  searchIconHeight = <%% 20, 20, 20, 20, 4 %%>;
+  searchIconRight = <%% 11, 11, 11, 11, 2 %%>;
+  searchIconTop = <%% 10, 10, 10, 10, 1.8 %%>;
+
+  inputWithoutHeight = <%% (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), 0.8 %%>;
+
+  inputSize = <%% 15, 15, 15, 14, 3.1 %%>;
+  inputWeight = <%% 300, 300, 300, 300, 300 %%>;
+
+  subTitleMarginTop = <%% 2, 2, 1, 1, 0.2 %%>;
+  subTitleFontSize = <%% 16, 16, 16, 15, 3.2 %%>;
+  subTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
+
+  tagTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
+  tagTongBottom = <%% 3, 3, 1, 1, 0 %%>;
+  boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
+
+  titleWording = "디자이너 추천";
+  subTitleContents = "고객님께 맞는 디자이너를 제안드립니다.";
+
+  mobileBlockTop = 4.5;
+
+  whiteBlock = createNode({
+    mother: this.baseTong,
+    style: {
+      display: "block",
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      marginBottom: String(whiteBlockMarginBottom) + ea,
+      top: String(-1 * boxTopVisual) + ea,
+      paddingTop: desktop ? "" : String(mobileBlockTop) + ea,
+    }
+  });
+
+  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.white))) * quoteHeight;
+  createNode({
+    mother: whiteBlock,
+    style: {
+      display: "flex",
+      position: "relative",
+      textAlign: "center",
+      justifyContent: "center",
+      alignItems: "center",
+      height: String(quotoTongHeight) + ea,
+      opacity: String(0.6),
+    },
+    children: [
+      {
+        mode: "svg",
+        source: svgMaker.doubleQuote(colorChip.white),
+        style: {
+          display: "inline-block",
+          height: String(quoteHeight) + ea,
+          width: String(quoteWidth) + ea,
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: whiteBlock,
+    style: {
+      display: "flex",
+      position: "relative",
+      textAlign: "center",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    children: [
+      {
+        text: titleWording,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: mobile ? "" : String(titleTop) + ea,
+          fontSize: String(titleFontSize) + ea,
+          fontWeight: String(titleFontWeight),
+          color: colorChip.white,
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: whiteBlock,
+    style: {
+      display: "flex",
+      position: "relative",
+      textAlign: "center",
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: String(subTitleMarginTop) + ea,
+    },
+    children: [
+      {
+        text: subTitleContents,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: mobile ? "" : String(0) + ea,
+          fontSize: String(subTitleFontSize) + ea,
+          fontWeight: String(subTitleWeight),
+          color: colorChip.white,
+        }
+      }
+    ]
+  });
+
+}
+
+DesignerProposalJs.prototype.insertInfoBox = function () {
+  const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
   const { client, ea, media, osException, testMode } = this;
   const mobile = media[4];
@@ -623,17 +803,10 @@ DesignerProposalJs.prototype.insertInitBox = function () {
       }
     }
   }
-  const spaceToString = function (obj) {
-    const { bathroom, room, valcony } = obj;
-    if (testMode) {
-      return `방 ${String(0)}${desktop ? "개" : ""}, 화장실 ${String(0)}${desktop ? "개" : ""}`;
-    } else {
-      return `방 ${String(room)}${desktop ? "개" : ""}, 화장실 ${String(bathroom)}${desktop ? "개" : ""}`;
-    }
-  }
+  const blank = "&nbsp;&nbsp;&nbsp;&nbsp;";
   let whiteBlock;
   let style;
-  let blockHeight, bottomMargin;
+  let bottomMargin;
   let leftBox, rightBox;
   let titleBox, barBox, indexBox;
   let margin;
@@ -642,34 +815,7 @@ DesignerProposalJs.prototype.insertInitBox = function () {
   let titleFont, titleLeft, titleFontWeight;
   let barWidth, barLeft;
   let indexFont, indexFontWeight;
-  let doubleQuote;
-  let quoteTop, quoteLeft, quoteHeight, quoteWidth, quoteMarginBottom;
   let initWordingSize, initWordingHeight, initWordingWordSpacing, initWordingLineHeight;
-  let factorBox, clientFactor, factorStyle;
-  let factorBoxWidth, factorBoxTop, factorBoxTopVisual;
-  let factorPaddingLeft, factorPaddingTop;
-  let factorTitle, factorTitleStyle;
-  let factors;
-  let factorSize;
-  let factorBar, factorBarStyle;
-  let factorBarWidth, factorBarTop;
-  let factorArrowHead, factorArrowHeadStyle;
-  let factorArrowHeadWidth;
-  let factorArrowHeadTop, factorArrowHeadLeft;
-  let factorValue, factorValueStyle;
-  let factorValueBottom, factorValueRight;
-  let factorsValueDoms;
-  let factorValueMargin, factorValueHeadMargin;
-  let designerBox;
-  let desigerBoxWidth, desigerBoxHeight;
-  let targetDesigners;
-  let targetDesignerBoxTop, targetDesignerBoxIndent;
-  let designerFactorTitleTop;
-  let designerFactor;
-  let designerBar;
-  let designerFactorTitleSize, designerFactorSize, designerFactorHeight;
-  let topBox;
-  let topBoxSize, topBoxWidth, topBoxHeight, topBoxRight;
   let whiteWording;
   let pastBlocks;
   let designerBarBottom, designerBarLeft;
@@ -680,10 +826,12 @@ DesignerProposalJs.prototype.insertInitBox = function () {
   let indexNumberBottom;
   let factorMarginBottom;
   let initWording0, initWording1;
+  let infoBox;
+  let num;
+  let factorSize;
 
-  blockHeight = <%% this.backHeight - 460, this.backHeight - 470, this.backHeight - 490, this.backHeight - 540, this.backHeight - 460 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 2 %%>;
-  margin = <%% 52, 52, 44, 32, 52 %%>;
+  margin = <%% 60, 60, 44, 32, 52 %%>;
   leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
 
   titleFont = <%% 31, 30, 27.5, 23, 5.7 %%>;
@@ -701,118 +849,25 @@ DesignerProposalJs.prototype.insertInitBox = function () {
   indexFont = <%% 19, 19, 19, 19, 19 %%>;
   indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
 
-  quoteTop = <%% 8, 8, 8, 8, -0.6 %%>;
-  quoteHeight = <%% 12, 12, 12, 9, 2.5 %%>;
-  quoteMarginBottom = <%% 7, 7, 7, 6, 7 %%>;
-  quoteLeft = <%% 2, 2, 2, 2, 1.6 %%>;
-
   initWordingHeight = <%% 20, 20, 20, 20, 9 %%>;
   initWordingSize = <%% 15.5, 15.5, 15.5, 13.5, 3.5 %%>;
   initWordingWordSpacing = <%% -1, -1, -1, -1, -1 %%>;
   initWordingLineHeight = <%% 9, 9, 9, 9, 9 %%>;
 
-  factorBoxWidth = <%% 940, 672, 576, 478, 630 %%>;
-  factorBoxTop = <%% 100, 100, 100, 82, 9 %%>;
-  factorBoxTopVisual = <%% 12, 11, 9, 1, 3 %%>;
+  factorSize = <%% 19, 19, 19, 19, 5 %%>;
 
-  factorPaddingLeft = <%% 10, 10, 11, 10, 16 %%>;
-  factorPaddingTop = <%% 10, 10, 10, 2, 5.5 %%>;
-  factorSize = <%% 17.5, 17.5, 17.5, 14, 3.5 %%>;
-  factorMarginBottom = <%% 40, 40, 40, 0, 0 %%>;
+  factors = [
+    { title: "추천 서비스", value: (desktop ? GeneralJs.serviceParsing(this.project.service).split(' ').slice(1).join(' ') : GeneralJs.serviceParsing(this.project.service).split(' ')[1]) },
+    { title: "서비스 형태", value: GeneralJs.serviceParsing(this.project.service).split(' ')[0] },
+    { title: "예상 시작일", value: expectedToString(analytics.date.space.movein, GeneralJs.serviceParsing(this.project.service, true)) },
+    { title: "예상 종료일", value: expectedToString(analytics.date.space.movein) },
+  ];
 
-  if (media[0]) {
-    factors = [
-      { title: "추천 서비스", value: GeneralJs.serviceParsing(this.project.service).split(' ').slice(1).join(' ') },
-      { title: "서비스 형태", value: GeneralJs.serviceParsing(this.project.service).split(' ')[0] },
-      { title: "대상 면적", value: String(request.space.pyeong) + "평" },
-      { title: "사전 점검일", value: expectedToString(analytics.date.space.precheck) },
-      { title: "집 비는 날", value: expectedToString(analytics.date.space.empty) },
-      { title: "입주 예정일", value: expectedToString(request.space.resident.expected) },
-      { title: "예상 시작일", value: expectedToString(analytics.date.space.movein, GeneralJs.serviceParsing(this.project.service, true)) },
-      { title: "예상 종료일", value: expectedToString(analytics.date.space.movein) },
-    ];
+  initWording0 = "안녕하세요, " + this.client.name + "님! 고객님께 " + "<b%" + serviceParsing(this.project.service) + " 서비스와 그에 맞는 디자이너%b>를 제안드립니다.";
+  if (media[0] || media[1]) {
+    initWording1 = "선택된 디자이너는 고객님의 가용 예산을 현장 조건에 맞게 적절히 분배하여 스타일링을 진행합니다.";
   } else {
-    factors = [
-      { title: "추천 서비스", value: (desktop ? GeneralJs.serviceParsing(this.project.service).split(' ').slice(1).join(' ') : GeneralJs.serviceParsing(this.project.service).split(' ')[1]) },
-      { title: "서비스 형태", value: GeneralJs.serviceParsing(this.project.service).split(' ')[0] },
-      { title: "대상 면적", value: String(request.space.pyeong) + "평" },
-      { title: "입주 예정일", value: expectedToString(request.space.resident.expected) },
-      { title: "예상 시작일", value: expectedToString(analytics.date.space.movein, GeneralJs.serviceParsing(this.project.service, true)) },
-      { title: "예상 종료일", value: expectedToString(analytics.date.space.movein) },
-    ];
-  }
-
-  factorsValueDoms = new Array(factors.length);
-  factorsBarDoms = new Array(factors.length);
-  factorsBarHeadDoms = new Array(factors.length);
-
-  factorBarWidth = <%% 200, 200, 200, 200, 200 %%>;
-  factorBarTop = <%% 12, 11, 11, 26 + (GeneralJs.isMac() ? 0 : 1), 8.5 %%>;
-  factorArrowHeadWidth = <%% 8, 8, 8, 6, 0 %%>;
-  factorArrowHeadTop = <%% 39, 37, 39, 23 + (GeneralJs.isMac() ? 0 : 1), 7 %%>;
-  factorArrowHeadLeft = <%% 188, 188, 188, 188, 188 %%>;
-
-  if (desktop) {
-    factorBarTop = factorBarTop + (GeneralJs.isMac() ? 0 : -3);
-    factorArrowHeadTop = factorArrowHeadTop + (GeneralJs.isMac() ? 0 : -3);
-  }
-
-  factorValueBottom = <%% 11, 13, 13, 3, 2.5 %%>;
-  factorValueRight = <%% 36, 36, 36, 36, 4.5 %%>;
-
-  factorValueMargin = <%% 46, 46, 46, 46, 30 %%>;
-  factorValueHeadMargin = <%% 10, 10, 10, 7, 10 %%>;
-
-  factorBarWhiteMargin = <%% 11, 11, 10, 8, 2 %%>;
-
-  desigerBoxWidth = <%% 240, 240, 240, 240, 240 %%>;
-  desigerBoxHeight = <%% 52, 52, 52, 52, 52 %%>;
-
-  targetDesigners = [];
-  for (let i = 0; i < this.proposal.detail.length; i++) {
-    targetDesigners.push(this.proposal.detail[i].designer);
-  }
-  pastBlocks = [];
-  designerFactorTitleTop = <%% 4, 4, 4, 4, 4 %%>;
-  targetDesignerBoxTop = <%% 24, 24, 24, 24, 24 %%>;
-  if (desktop) {
-    targetDesignerBoxTop = targetDesignerBoxTop + (GeneralJs.isMac() ? 0 : 2);
-  }
-  targetDesignerBoxIndent = <%% 34, 36, 36, 36, 36 %%>;
-
-  designerFactorTitleSize = <%% 13, 13, 13, 13, 13 %%>;
-  designerFactorSize = <%% 22, 22, 22, 22, 22 %%>;
-  designerFactorHeight = <%% 20, 20, 20, 20, 20 %%>;
-
-  topBoxSize = <%% 14, 14, 14, 14, 14 %%>;
-  topBoxWidth = <%% 700, 700, 700, 700, 700 %%>;
-  topBoxHeight = <%% 28, 28, 28, 28, 28 %%>;
-  topBoxRight = <%% 1, 1, 1, 1, 1 %%>;
-
-  designerBarBottom = <%% 2, 2, 2, 2, 2 %%>;
-  if (desktop) {
-    designerBarBottom = designerBarBottom + (GeneralJs.isMac() ? 0 : 3);
-  }
-  designerBarLeft = <%% 6, 6, 6, 6, 6 %%>;
-
-  serviceBarTop = <%% 56, 55, 54, 56, 56 %%>;
-  serviceBarTop = serviceBarTop + (GeneralJs.isMac() ? 0 : -2);
-  serviceBarLeft = <%% 0, 1, 0, 0, 0 %%>;
-  serviceBarWidth = <%% 66, 38, 37, 39, 39 %%>;
-  indexNumberBottom = <%% 3, 4, 6, 4, 0 %%>;
-
-  if (desktop) {
-    initWording0 = this.client.name + " 고객님께" + ((!media[2] && !media[3]) ? " 고객 맞춤 커스터마이징 : " : " ") + "<b style=\"color:" + colorChip.green + "\">" + serviceParsing(this.project.service) + " 서비스</b>를 제안드립니다.";
-  } else {
-    initWording0 = this.client.name + " 고객님께 고객 커스터마이징 " + "<b style=\"color:" + colorChip.green + "\">" + serviceParsing(this.project.service) + " 서비스</b>를 제안드립니다.";
-  }
-
-  if (media[0]) {
-    initWording1 = "담당 디자이너가 고객님의 전체 가용 예산을 시공 / 제작가구 / 구매가구 / 패브릭 소품 등을 위해 적절히 분배하여 제안합니다.";
-  } else if (media[1]) {
-    initWording1 = "담당 디자이너가 고객님의 전체 가용 예산을 현장 조건에 맞게 적절히 분배하여 스타일링을 진행합니다.";
-  } else {
-    initWording1 = "담당 디자이너가 고객님의 예산을 현장에 맞게 분배하여 스타일링을 진행합니다.";
+    initWording1 = "선택된 디자이너는 고객님의 예산을 현장에 맞게 분배하여 스타일링을 진행합니다.";
   }
 
   whiteBlock = createNode({
@@ -821,293 +876,107 @@ DesignerProposalJs.prototype.insertInitBox = function () {
       position: "relative",
       borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
-      height: String(blockHeight) + ea,
       background: colorChip.white,
       marginBottom: String(bottomMargin) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
     }
   });
 
-  leftBox = createNode({
-    mother: whiteBlock,
-    style: {
-      display: desktop ? "inline-block" : "block",
-      position: "relative",
-      width: desktop ? "calc(calc(100% - " + String(margin * 2) + ea + ") * " + String(leftRatio) + ")" : String(100) + '%',
-      height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : String(29) + ea,
-      marginTop: desktop ? String(margin) + ea : "",
-      marginBottom: desktop ? String(margin) + ea : "",
-      marginLeft: desktop ? String(margin) + ea : "",
-    }
-  });
-
-  //main title
-  createNode({
-    mother: leftBox,
-    text: (media[0] || media[4]) ? "당신에게 딱 맞는 디자이너," : "당신에게",
-    style: {
-      position: "absolute",
-      fontSize: String(titleFont) + ea,
-      fontWeight: String(titleFontWeight),
-      wordSpacing: String(wordSpacing) + "px",
-      top: desktop ? (String((media[0] ? 0 : media[1] ? 1 : 3) + (isMac() || mobile ? 0 : 4)) + ea) : String(9) + ea,
-      left: String(titleLeft) + ea,
-      color: colorChip.black,
-      width: desktop ? "" : String(100) + '%',
-      textAlign: desktop ? "" : "center",
-    }
-  });
-
-  if (media[1] || media[2] || media[3]) {
-    createNode({
-      mother: leftBox,
-      text: "딱 맞는 디자이너,",
-      style: {
-        position: "absolute",
-        fontSize: String(titleFont) + ea,
-        fontWeight: String(titleFontWeight),
-        wordSpacing: String(wordSpacing) + ea,
-        top: String((media[0] ? 0 : media[1] ? 1 : 3) + (titleFont * (media[0] ? 1.45 : 1.47)) + (isMac() || mobile ? 0 : 4)) + ea,
-        left: String(titleLeft) + ea,
-        color: colorChip.black,
-      }
-    });
-  }
-
-  createNode({
-    mother: leftBox,
-    text: "이 곳 홈리에종에서",
-    style: {
-      position: "absolute",
-      fontSize: String(titleFont) + ea,
-      fontWeight: String(titleFontWeight),
-      wordSpacing: String(wordSpacing) + "px",
-      top: desktop ? (String((media[0] ? 0 : media[1] ? 1 : 3) + (titleFont * (media[0] ? 1.45 : 1.47) * (media[0] ? 1 : 2)) + (isMac() || mobile ? 0 : 4)) + ea) : String(17) + ea,
-      left: String(titleLeft) + ea,
-      width: desktop ? "" : String(100) + '%',
-      textAlign: desktop ? "" : "center",
-      color: colorChip.black,
-    }
-  });
-
-  if (desktop) {
-
-    if (media[0]) {
-      createNode({
-        mother: leftBox,
-        style: {
-          position: "absolute",
-          borderBottom: "1px solid " + colorChip.gray3,
-          top: String(titleFont * (63 / 30)) + ea,
-          left: String(barLeft) + ea,
-          width: String(barWidth) + ea,
-        }
-      });
-    }
-
-    createNode({
-      mother: leftBox,
-      text: String(0),
-      style: {
-        position: "absolute",
-        fontSize: String(indexFont) + ea,
-        fontWeight: String(indexFontWeight),
-        wordSpacing: String(wordSpacing) + ea,
-        bottom: String(indexNumberBottom) + ea,
-        left: String(titleLeft) + ea,
-        color: colorChip.gray4,
-      }
-    });
-
-  }
-
   rightBox = createNode({
     mother: whiteBlock,
     style: {
-      display: desktop ? "inline-block" : "block",
-      position: desktop ? "absolute" : "relative",
+      display: "flex",
+      position: "relative",
       top: String(0) + ea,
-      width: desktop ? "calc(calc(100% - " + String(margin * 2) + ea + ") * " + String(1 - leftRatio) + ")" : String(100) + '%',
-      height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : String(80) + ea,
-      marginTop: desktop ? String(margin) + ea : "",
-      marginBottom: desktop ? String(margin) + ea : "",
-      marginRight: desktop ? String(margin) + ea : "",
-    }
-  });
-
-  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
-  createNode({
-    mother: rightBox,
-    mode: "svg",
-    source: svgMaker.doubleQuote(colorChip.green),
-    style: {
-      position: "absolute",
-      top: String(quoteTop) + ea,
-      left: desktop ? String(quoteLeft) + ea : "calc(50% - " + String(quoteWidth / 2) + ea + ")",
-      width: String(quoteWidth) + ea,
-      height: String(quoteHeight) + ea,
+      width: withOut(0),
+      paddingTop: String(margin) + ea,
+      paddingBottom: String(margin) + ea,
+      textAlign: "center",
+      justifyContent: "center",
+      flexDirection: "column",
+      alignItems: "center",
     }
   });
 
   createNode({
     mother: rightBox,
-    text: initWording0,
-    style: {
-      position: "absolute",
-      top: String(desktop ? quoteTop + quoteHeight + quoteMarginBottom : 3.7) + ea,
-      left: String(desktop ? 0 : 13) + ea,
-      width: String(desktop ? 100 : 74) + '%',
-      height: String(initWordingHeight) + ea,
-      fontSize: String(initWordingSize) + ea,
-      fontWeight: String(400),
-      wordSpacing: String(initWordingWordSpacing) + "px",
-      lineHeight: desktop ? "" : String(1.6),
-      textAlign: desktop ? "" : "center",
-      color: colorChip.black,
-    }
-  });
-
-  createNode({
-    mother: rightBox,
-    text: initWording1,
-    style: {
-      position: "absolute",
-      top: String(desktop ? quoteTop + quoteHeight + quoteMarginBottom + initWordingSize + initWordingLineHeight : 15.5) + ea,
-      left: String(desktop ? 0 : 11) + ea,
-      width: String(desktop ? 100 : 78) + '%',
-      height: String(initWordingHeight) + ea,
-      fontSize: String(initWordingSize) + ea,
-      fontWeight: String(400),
-      wordSpacing: String(initWordingWordSpacing) + "px",
-      lineHeight: desktop ? "" : String(1.6),
-      textAlign: desktop ? "" : "center",
-      color: colorChip.black,
-    }
-  });
-
-  factorBox = createNode({
-    mother: rightBox,
+    text: initWording0 + "\n" + initWording1,
     style: {
       position: "relative",
-      top: String(desktop ? factorBoxTop + factorBoxTopVisual : 32) + ea,
-      left: desktop ? "" : String(6 + 3) + ea,
-      width: desktop ? String(factorBoxWidth) + ea : String(100 - (6 * 2)) + '%',
-      height: desktop ? "calc(100% - " + String(factorBoxTop - factorBoxTopVisual) + ea + ")" : String(40) + ea,
+      left: String(desktop ? 0 : 13) + ea,
+      width: String(desktop ? 100 : 74) + '%',
+      fontSize: String(initWordingSize) + ea,
+      fontWeight: String(400),
+      color: colorChip.black,
+      wordSpacing: String(initWordingWordSpacing) + "px",
+      lineHeight: String(1.7),
+      textAlign: "center",
+    },
+    bold: {
+      fontSize: String(initWordingSize) + ea,
+      fontWeight: String(700),
+      color: colorChip.green,
     }
   });
 
-  factorStyle = {
-    display: "inline-block",
-    position: "relative",
-    width: media[0] ? "calc(calc(100% / " + String(3) + ") - " + String(factorPaddingLeft * 3) + ea + ")" : "calc(calc(100% / " + String(2) + ") - " + String(factorPaddingLeft * 2) + ea + ")",
-    height: "calc(calc(100% / " + String(3) + ") - " + String(factorPaddingTop * 2) + ea + ")",
-    paddingBottom: String((!media[3] && !media[4]) ? factorPaddingTop * 0.5 : factorPaddingTop * 2) + ea,
-    paddingRight: String(factorPaddingLeft * 2) + ea,
-    marginBottom: String(factorMarginBottom) + ea,
-  };
-
-  factorTitleStyle = {
-    position: "absolute",
-    fontSize: String(factorSize) + ea,
-    fontWeight: String(600),
-    top: String(0),
-    left: String(0),
-    wordSpacing: String(initWordingWordSpacing) + "px",
-    background: colorChip.white,
-    paddingRight: String(desktop ? 10 : 0) + ea,
-    zIndex: String(1),
-  };
-
-  factorBarStyle = {
-    position: "absolute",
-    borderBottom: "1px solid " + colorChip.gray2,
-    width: withOut(factorValueRight, ea),
-    top: String(factorBarTop) + ea,
-  };
-
-  factorArrowHeadStyle = {
-    position: "absolute",
-    borderRight: "1px solid " + colorChip.gray3,
-    borderBottom: "1px solid " + colorChip.gray3,
-    top: String(factorArrowHeadTop) + ea,
-    left: String(factorArrowHeadLeft) + ea,
-    width: String(factorArrowHeadWidth) + ea,
-    height: String(factorArrowHeadWidth) + ea,
-    transform: "rotate(-45deg)",
-  };
-
-  factorValueStyle = {
-    position: "absolute",
-    fontSize: String(factorSize) + ea,
-    fontWeight: String(500),
-    color: colorChip.green,
-    bottom: (!media[3] && !media[4]) ? "" : String(factorValueBottom) + ea,
-    right: String(factorValueRight) + ea,
-    wordSpacing: String(initWordingWordSpacing) + "px",
-    background: colorChip.white,
-    paddingLeft: String(factorBarWhiteMargin) + ea,
-    top: (!media[3] && !media[4]) ? String(0) : "",
-  };
-
-  for (let i = 0; i < factors.length; i++) {
-
-    if (i === 2) {
-      factorStyle.marginBottom = String(0);
-      factorValueStyle.fontWeight = String(300);
-      factorValueStyle.color = colorChip.black;
+  createNode({
+    mother: rightBox,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      height: String(16) + ea,
+      width: String(72) + ea,
+      borderBottom: "1px solid " + colorChip.gray3,
     }
+  });
 
-    if (media[0]) {
-      if (i === 1) {
-        factorStyle.marginRight = String(factorPaddingLeft * 10) + ea;
-      } else {
-        factorStyle.marginRight = String(0) + ea;
+  infoBox = createNode({
+    mother: rightBox,
+    style: {
+      display: "flex",
+      position: "relative",
+      flexDirection: "row",
+      textAlign: "center",
+      alignItems: "center",
+      justifyContent: "center",
+      marginTop: String(36) + ea,
+      paddingBottom: String(6) + ea,
+    }
+  });
+
+  num = 0;
+  for (let { title, value } of factors) {
+    createNode({
+      mother: infoBox,
+      text: title + ":" + blank + "<b%" + value + "%b>",
+      style: {
+        display: "inline-block",
+        position: "relative",
+        fontSize: String(factorSize) + ea,
+        fontWeight: String(700),
+        color: colorChip.black,
+      },
+      bold: {
+        fontSize: String(factorSize) + ea,
+        fontWeight: String(400),
+        color: colorChip.green,
       }
-    }
+    });
 
-    clientFactor = GeneralJs.nodes.div.cloneNode(true);
-    for (let j in factorStyle) {
-      clientFactor.style[j] = factorStyle[j];
+    if (num !== factors.length - 1) {
+      createNode({
+        mother: infoBox,
+        text: blank + blank + "|" + blank + blank,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(factorSize) + ea,
+          fontWeight: String(200),
+          color: colorChip.gray4,
+        }
+      });
     }
-
-    factorTitle = GeneralJs.nodes.div.cloneNode(true);
-    factorTitle.textContent = factors[i].title;
-    for (let j in factorTitleStyle) {
-      factorTitle.style[j] = factorTitleStyle[j];
-    }
-    clientFactor.appendChild(factorTitle);
-
-    factorBar = GeneralJs.nodes.div.cloneNode(true);
-    for (let j in factorBarStyle) {
-      factorBar.style[j] = factorBarStyle[j];
-    }
-    clientFactor.appendChild(factorBar);
-    factorsBarDoms[i] = factorBar;
-
-    factorValue = GeneralJs.nodes.div.cloneNode(true);
-    factorValue.textContent = factors[i].value;
-    for (let j in factorValueStyle) {
-      factorValue.style[j] = factorValueStyle[j];
-    }
-    clientFactor.appendChild(factorValue);
-    factorsValueDoms[i] = factorValue;
-
-    factorBox.appendChild(clientFactor);
-  }
-
-  if (!media[3] && !media[4]) {
-    serviceBar = GeneralJs.nodes.div.cloneNode(true);
-    barStyle = {
-      position: "absolute",
-      borderBottom: "1px dashed " + colorChip.gray4,
-      top: String(serviceBarTop) + ea,
-      left: String(serviceBarLeft) + ea,
-      width: withOut(serviceBarWidth, ea),
-    };
-    for (let i in barStyle) {
-      serviceBar.style[i] = barStyle[i];
-    }
-    factorBox.appendChild(serviceBar);
+    num++;
   }
 
 }
@@ -3995,7 +3864,7 @@ DesignerProposalJs.prototype.submitEvent = function (desid, designer, method) {
         GeneralJs.selfHref(window.location.protocol + "//" + window.location.host + "/middle/estimation?cliid=" + instance.client.cliid + "&needs=style," + desid + "," + instance.project.proid + "," + method);
 
       } catch (e) {
-        await GeneralJs.ajaxJson({ message: "DesignerProposalJs.submitEvent.certificationBox : " + e.message }, "/errorLog");
+        await GeneralJs.ajaxJson({ message: "DesignerProposalJs.submitEvent.certificationBox : " + e.message }, BACKHOST + "/errorLog");
       }
     });
 
@@ -4141,12 +4010,13 @@ DesignerProposalJs.prototype.launching = async function (loading) {
       local: async () => {
         try {
           instance.insertInitBox();
+          instance.insertInfoBox();
           instance.insertDesignerBoxes();
           instance.insertServiceBox();
           instance.insertWordBox();
           instance.insertPannelBox();
         } catch (e) {
-          await GeneralJs.ajaxJson({ message: "DesignerProposalJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
+          await GeneralJs.ajaxJson({ message: "DesignerProposalJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
       }
     });
@@ -4155,35 +4025,35 @@ DesignerProposalJs.prototype.launching = async function (loading) {
     await sleep(500);
     loading.parentNode.removeChild(loading);
 
-    window.addEventListener("keypress", function (e) {
-      if (e.key === 'p') {
-        let nextNumber;
-
-        nextNumber = instance.proposalHistoryNumber;
-        if (instance.proposalHistory[nextNumber + 1] !== undefined) {
-          nextNumber = nextNumber + 1;
-        } else {
-          nextNumber = 0;
-        }
-        instance.proposalHistoryNumber = nextNumber;
-
-        instance.project.proposal = instance.proposalHistory[nextNumber];
-        instance.proposal = instance.proposalHistory[nextNumber];
-
-        GeneralJs.cleanChildren(instance.baseTong);
-        instance.abcStatic = 0;
-
-        instance.insertInitBox();
-        instance.insertDesignerBoxes();
-        instance.insertServiceBox();
-        instance.insertWordBox();
-        instance.insertPannelBox();
-
-      }
-    });
+    // window.addEventListener("keypress", function (e) {
+    //   if (e.key === 'p') {
+    //     let nextNumber;
+    //
+    //     nextNumber = instance.proposalHistoryNumber;
+    //     if (instance.proposalHistory[nextNumber + 1] !== undefined) {
+    //       nextNumber = nextNumber + 1;
+    //     } else {
+    //       nextNumber = 0;
+    //     }
+    //     instance.proposalHistoryNumber = nextNumber;
+    //
+    //     instance.project.proposal = instance.proposalHistory[nextNumber];
+    //     instance.proposal = instance.proposalHistory[nextNumber];
+    //
+    //     GeneralJs.cleanChildren(instance.baseTong);
+    //     instance.abcStatic = 0;
+    //
+    //     instance.insertInfoBox();
+    //     instance.insertDesignerBoxes();
+    //     instance.insertServiceBox();
+    //     instance.insertWordBox();
+    //     instance.insertPannelBox();
+    //
+    //   }
+    // });
 
 
   } catch (e) {
-    await GeneralJs.ajaxJson({ message: "DesignerProposalJs.launching : " + e.message }, "/errorLog");
+    await GeneralJs.ajaxJson({ message: "DesignerProposalJs.launching : " + e.message }, BACKHOST + "/errorLog");
   }
 }

@@ -2655,7 +2655,7 @@ MiniProposalJs.prototype.launching = async function (loading) {
           instance.insertPhotoBox();
           await instance.insertSecondBox();
         } catch (e) {
-          await GeneralJs.ajaxJson({ message: "MiniProposalJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
+          await GeneralJs.ajaxJson({ message: "MiniProposalJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
       }
     });
@@ -2669,6 +2669,6 @@ MiniProposalJs.prototype.launching = async function (loading) {
 
   } catch (err) {
     console.log(err);
-    await GeneralJs.ajaxJson({ message: "MiniProposalJs.launching 에러 일어남 => " + err.message }, "/errorLog");
+    await GeneralJs.ajaxJson({ message: "MiniProposalJs.launching 에러 일어남 => " + err.message }, BACKHOST + "/errorLog");
   }
 }

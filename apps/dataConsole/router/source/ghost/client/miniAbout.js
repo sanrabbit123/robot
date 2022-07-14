@@ -2879,7 +2879,7 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
                   window.removeEventListener("message", GeneralJs.stacks["addressEvent"]);
                   GeneralJs.stacks["addressEvent"] = null;
                 } catch (e) {
-                  await GeneralJs.ajaxJson({ message: "ClientConsultingJs.addressEvent : " + e.message }, "/errorLog");
+                  await GeneralJs.ajaxJson({ message: "ClientConsultingJs.addressEvent : " + e.message }, BACKHOST + "/errorLog");
                 }
               }
               window.addEventListener("message", GeneralJs.stacks["addressEvent"]);
@@ -3648,7 +3648,7 @@ MiniAboutJs.prototype.launching = async function (loading) {
           instance.insertWhyBox();
           instance.insertFaqBox();
         } catch (e) {
-          await GeneralJs.ajaxJson({ message: "MiniAboutJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
+          await GeneralJs.ajaxJson({ message: "MiniAboutJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
       }
     });
@@ -3683,6 +3683,6 @@ MiniAboutJs.prototype.launching = async function (loading) {
 
   } catch (err) {
     console.log(err);
-    await GeneralJs.ajaxJson({ message: "MiniAboutJs.launching 에러 일어남 => " + err.message }, "/errorLog");
+    await GeneralJs.ajaxJson({ message: "MiniAboutJs.launching 에러 일어남 => " + err.message }, BACKHOST + "/errorLog");
   }
 }

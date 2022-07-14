@@ -2044,7 +2044,7 @@ DesignerListJs.prototype.launching = async function (loading) {
           instance.insertInitBox();
           instance.designerList();
         } catch (e) {
-          await GeneralJs.ajaxJson({ message: "DesignerListJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
+          await GeneralJs.ajaxJson({ message: "DesignerListJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
       }
     });
@@ -2053,6 +2053,6 @@ DesignerListJs.prototype.launching = async function (loading) {
 
   } catch (err) {
     console.log(err);
-    await ajaxJson({ message: "DesignerListJs.launching 에러 일어남 => " + err.message }, "/errorLog");
+    await ajaxJson({ message: "DesignerListJs.launching 에러 일어남 => " + err.message }, BACKHOST + "/errorLog");
   }
 }

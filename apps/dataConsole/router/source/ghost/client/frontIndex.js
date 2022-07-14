@@ -2365,7 +2365,7 @@ FrontIndexJs.prototype.launching = async function (loading) {
           instance.insertEndBox();
           instance.popupLaunching();
         } catch (e) {
-          await GeneralJs.ajaxJson({ message: "FrontIndexJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
+          await GeneralJs.ajaxJson({ message: "FrontIndexJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
       }
     });
@@ -2374,6 +2374,6 @@ FrontIndexJs.prototype.launching = async function (loading) {
 
   } catch (err) {
     console.log(err);
-    await ajaxJson({ message: "FrontIndexJs.launching 에러 일어남 => " + err.message }, "/errorLog");
+    await ajaxJson({ message: "FrontIndexJs.launching 에러 일어남 => " + err.message }, BACKHOST + "/errorLog");
   }
 }

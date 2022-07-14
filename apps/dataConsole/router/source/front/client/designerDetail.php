@@ -6,7 +6,7 @@ $host = $general->host;
 $protocol = $general->protocol;
 $hostLink = $protocol.$host;
 
-if (!isset($_GET['desid'])) {
+if (!isset($_GET["desid"])) {
   header("Location: ".$hostLink."/designer.php");
 }
 

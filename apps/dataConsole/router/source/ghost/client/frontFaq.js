@@ -694,7 +694,7 @@ FrontFaqJs.prototype.launching = async function (loading) {
           instance.insertInitBox();
           instance.insertFaqBox();
         } catch (e) {
-          await GeneralJs.ajaxJson({ message: "FrontFaqJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
+          await GeneralJs.ajaxJson({ message: "FrontFaqJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
       }
     });
@@ -703,6 +703,6 @@ FrontFaqJs.prototype.launching = async function (loading) {
 
   } catch (err) {
     console.log(err);
-    await GeneralJs.ajaxJson({ message: "FrontFaqJs.launching 에러 일어남 => " + err.message }, "/errorLog");
+    await GeneralJs.ajaxJson({ message: "FrontFaqJs.launching 에러 일어남 => " + err.message }, BACKHOST + "/errorLog");
   }
 }

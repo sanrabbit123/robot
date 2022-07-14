@@ -1405,7 +1405,7 @@ DesignerDetailJs.prototype.launching = async function (loading) {
           instance.insertPortfolioBase();
           instance.insertBelowButton();
         } catch (e) {
-          await GeneralJs.ajaxJson({ message: "DesignerDetailJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
+          await GeneralJs.ajaxJson({ message: "DesignerDetailJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
       }
     });
@@ -1414,6 +1414,6 @@ DesignerDetailJs.prototype.launching = async function (loading) {
 
   } catch (err) {
     console.log(err);
-    await ajaxJson({ message: "DesignerDetailJs.launching 에러 일어남 => " + err.message }, "/errorLog");
+    await ajaxJson({ message: "DesignerDetailJs.launching 에러 일어남 => " + err.message }, BACKHOST + "/errorLog");
   }
 }

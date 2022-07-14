@@ -391,7 +391,7 @@ FrontTermsJs.prototype.launching = async function (loading) {
           instance.insertInitBox();
           await instance.insertTermsBox();
         } catch (e) {
-          await GeneralJs.ajaxJson({ message: "FrontTermsJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
+          await GeneralJs.ajaxJson({ message: "FrontTermsJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
       }
     });
@@ -406,6 +406,6 @@ FrontTermsJs.prototype.launching = async function (loading) {
 
   } catch (err) {
     console.log(err);
-    await GeneralJs.ajaxJson({ message: "FrontTermsJs.launching 에러 일어남 => " + err.message }, "/errorLog");
+    await GeneralJs.ajaxJson({ message: "FrontTermsJs.launching 에러 일어남 => " + err.message }, BACKHOST + "/errorLog");
   }
 }

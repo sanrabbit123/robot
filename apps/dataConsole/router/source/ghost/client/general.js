@@ -605,6 +605,6 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
     });
 
   } catch (e) {
-    await GeneralJs.ajaxJson({ message: "GeneralJs.ghostClientLaunching : " + e.message }, "/errorLog");
+    await GeneralJs.ajaxJson({ message: "GeneralJs.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
   }
 }

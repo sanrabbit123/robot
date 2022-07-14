@@ -2680,7 +2680,7 @@ PortfolioDetailJs.prototype.launching = async function (loading) {
           instance.portfolioContentsBox();
           instance.portfolioRelativeBox();
         } catch (e) {
-          await GeneralJs.ajaxJson({ message: "PortfolioDetailJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
+          await GeneralJs.ajaxJson({ message: "PortfolioDetailJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
       }
     });
@@ -2705,6 +2705,6 @@ PortfolioDetailJs.prototype.launching = async function (loading) {
   } catch (err) {
     console.log(err);
     window.alert("잘못된 접근입니다!");
-    await ajaxJson({ message: "PortfolioDetailJs.launching 에러 일어남 => " + err.message }, "/errorLog");
+    await ajaxJson({ message: "PortfolioDetailJs.launching 에러 일어남 => " + err.message }, BACKHOST + "/errorLog");
   }
 }

@@ -1241,7 +1241,7 @@ ReviewListJs.prototype.launching = async function (loading) {
           instance.insertInitBox();
           instance.insertPortfolioBase();
         } catch (e) {
-          await GeneralJs.ajaxJson({ message: "ReviewListJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
+          await GeneralJs.ajaxJson({ message: "ReviewListJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
       }
     });
@@ -1279,6 +1279,6 @@ ReviewListJs.prototype.launching = async function (loading) {
 
   } catch (err) {
     console.log(err);
-    await ajaxJson({ message: "ReviewListJs.launching 에러 일어남 => " + err.message }, "/errorLog");
+    await ajaxJson({ message: "ReviewListJs.launching 에러 일어남 => " + err.message }, BACKHOST + "/errorLog");
   }
 }
