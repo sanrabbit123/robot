@@ -1588,6 +1588,7 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
   let whitePhotoBigArrowAreaHeight;
   let whitePhotoEvent;
   let rightArrowEvent, leftArrowEvent;
+  let mainPaddingBottom;
 
   this.relativePhotoNumber = 0;
 
@@ -1599,6 +1600,7 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
 
   mainHeight = <%% 590, 570, 590, 496, 94 %%>;
   mainPaddingTop = <%% 100, 96, 86, 72, 10 %%>;
+  mainPaddingBottom = <%% 110, 106, 94, 80, 10.5 %%>;
 
   titleHeight = <%% 30, 30, 30, 28, 6 %%>;
   titleMarginBottom = <%% 32, 32, 32, 28, 5 %%>;
@@ -1897,7 +1899,7 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
       width: String(100) + '%',
       background: colorChip.gray0,
       paddingTop: String(mainPaddingTop) + ea,
-      paddingBottom: String(mainPaddingTop) + ea,
+      paddingBottom: String(mainPaddingBottom) + ea,
     }
   });
 
@@ -2311,6 +2313,8 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
 
   // photo
 
+  /*
+
   createNode({
     mother: baseTong,
     style: {
@@ -2613,6 +2617,8 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
     });
 
   }
+
+  */
 
 }
 

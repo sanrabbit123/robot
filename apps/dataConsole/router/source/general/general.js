@@ -5465,7 +5465,7 @@ GeneralJs.prototype.consultingPopup = function () {
             window.removeEventListener("message", GeneralJs.stacks["addressEvent"]);
             GeneralJs.stacks["addressEvent"] = null;
           } catch (e) {
-            await GeneralJs.ajaxJson({ message: "ClientConsultingJs.addressEvent : " + e.message }, "/errorLog");
+            await GeneralJs.ajaxJson({ message: "ClientConsultingJs.addressEvent : " + e.message }, BACKHOST + "/errorLog");
           }
         }
         window.addEventListener("message", GeneralJs.stacks["addressEvent"]);
@@ -6917,7 +6917,7 @@ GeneralJs.prototype.consultingPopup = function () {
       ]
     }).firstChild.firstChild.firstChild;
 
-    ajaxJson({}, "https://" + GHOSTHOST + "/designerProposal_policy").then(function (res) {
+    ajaxJson({}, BACKHOST + "/designerProposal_policy").then(function (res) {
       const { policy, button } = res;
       let bTags;
 
@@ -7161,7 +7161,7 @@ GeneralJs.prototype.finalSubmit = function () {
         if (boo) {
           instance.certificationBox(name, phone, async function (back, box) {
             try {
-              const { cliid } = await ajaxJson({ map }, "/clientSubmit");
+              const { cliid } = await ajaxJson({ map }, BACKHOST + "/clientSubmit");
               homeliaisonAnalytics({
                 page: instance.pageName,
                 standard: instance.firstPageViewTime,
@@ -7173,14 +7173,14 @@ GeneralJs.prototype.finalSubmit = function () {
               }).then(() => {
                 document.body.removeChild(box);
                 document.body.removeChild(back);
-                selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/curation/?cliid=" + cliid);
+                selfHref("/curation.php?cliid=" + cliid);
               }).catch((err) => {
                 document.body.removeChild(box);
                 document.body.removeChild(back);
-                selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/curation/?cliid=" + cliid);
+                selfHref("/curation.php?cliid=" + cliid);
               });
             } catch (e) {
-              await ajaxJson({ message: "FrontAboutJs.certificationBox : " + e.message }, "/errorLog");
+              await ajaxJson({ message: "FrontAboutJs.certificationBox : " + e.message }, BACKHOST + "/errorLog");
             }
           });
         }
