@@ -856,7 +856,7 @@ DesignerProposalJs.prototype.insertInfoBox = function () {
   barWidth = <%% 72, 72, 72, 72, 12 %%>;
 
   infoBoxMarginTop = <%% 36, 36, 32, 20, 4.8 %%>;
-  infoBoxMarginBottom = <%% 6, 6, 6, 6, 2 %%>;
+  infoBoxMarginBottom = <%% (isMac() ? 6 : 4), (isMac() ? 6 : 4), (isMac() ? 6 : 4), (isMac() ? 6 : 4), 2 %%>;
 
   factorSize = <%% 19, 19, 18, 16, 4 %%>;
 
