@@ -5522,7 +5522,7 @@ BillMaker.prototype.constructInjection = async function (bilid, buiid, amountObj
 BillMaker.prototype.taxBill = async function (pastDateNumber = 2) {
   const instance = this;
   const back = this.back;
-  const { mongo, mongoinfo, mongolocalinfo, fileSystem, shellExec, shellLink, pythonExecute, requestSystem, decryptoHash, autoComma, messageLog, messageSend, errorLog } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, fileSystem, shellExec, shellLink, pythonExecute, requestSystem, decryptoHash, autoComma, messageLog, messageSend, errorLog, curlRequest } = this.mother;
   const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
   try {
     const collection = "taxBill";
@@ -5686,6 +5686,7 @@ BillMaker.prototype.taxBill = async function (pastDateNumber = 2) {
     }
 
     console.log("parsing start...");
+
     resultObjTong = [];
     htmlNum = 0;
     for (let { date, html } of htmlTong) {
@@ -5696,8 +5697,8 @@ BillMaker.prototype.taxBill = async function (pastDateNumber = 2) {
 
       localScript = '';
       for (let arr of search) {
-        res = await requestSystem(arr[1]);
-        localScript += res.data;
+        res = await curlRequest(arr[1]);
+        localScript += res;
         localScript += "\n\n";
       }
 
