@@ -370,7 +370,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
   const { client, designer, ea, baseTong, media, bill, request, completeMode, completeInfo } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, isMac, setQueue } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, isMac, isIphone, setQueue } = GeneralJs;
   const wordings = this.billWordings();
   const cashTarget = "cashTarget";
   const businessTarget = "businessTarget";
@@ -462,20 +462,20 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
   blockMarginBottom = <%% 160, 160, 160, 80, 12 %%>;
 
-  titleFontSize = <%% 26, 24, 23, 20, 4.3 %%>;
+  titleFontSize = <%% 26, 24, 23, 20, 4.4 %%>;
   titleFontWeight = <%% 300, 300, 300, 300, 300 %%>;
-  titleFontBottom = <%% 4, 4, 4, 3, 1 %%>;
+  titleFontBottom = <%% 4, 4, 4, 3, 0.5 %%>;
   titlePadding = <%% 6, 6, 6, 5, 12 %%>;
   titlePaddingMargin = <%% 18, 18, 18, 16, 18 %%>;
   titleBoxPaddingTop = <%% 2, 2, 2, 2, 2 %%>;
 
-  titleBarTopVisual = <%% (isMac() ? 9 : 6), (isMac() ? 7 : 6), (isMac() ? 6 : 6), (isMac() ? 5 : 5), 15.5 %%>;
-  titleBarBottomVisual = <%% (isMac() ? 6 : 10), (isMac() ? 5 : 10), (isMac() ? 4 : 10), (isMac() ? 4 : 8), 6 %%>;
+  titleBarTopVisual = <%% (isMac() ? 8 : 6), (isMac() ? 7 : 6), (isMac() ? 6 : 6), (isMac() ? 5 : 5), (isIphone() ? 16 : 15.2) %%>;
+  titleBarBottomVisual = <%% (isMac() ? 5 : 8), (isMac() ? 5 : 7), (isMac() ? 4 : 6), (isMac() ? 4 : 8), 6 %%>;
 
   initWordingSize = <%% 14.5, 14, 14, 12, 3 %%>;
   initWordingWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  subTitleBoxTop = <%% 26, 22, 19, 15, 35 %%>;
+  subTitleBoxTop = <%% (isMac() ? 24 : 25), (isMac() ? 22 : 23), (isMac() ? 19 : 20), (isMac() ? 15 : 16), 35 %%>;
 
   itemBarLeft = <%% 28, 28, 28, 28, 2 %%>;
   itemBarTop = <%% 9, 9, 9, 9, 1 %%>;
