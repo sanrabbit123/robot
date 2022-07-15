@@ -855,7 +855,7 @@ DesignerProposalJs.prototype.insertInfoBox = function () {
   barHeight = <%% 16, 16, 16, 12, 5 %%>;
   barWidth = <%% 72, 72, 72, 72, 12 %%>;
 
-  infoBoxMarginTop = <%% 36, 36, 32, 20, 5 %%>;
+  infoBoxMarginTop = <%% 36, 36, 32, 20, 4.8 %%>;
   infoBoxMarginBottom = <%% 6, 6, 6, 6, 2 %%>;
 
   factorSize = <%% 19, 19, 18, 16, 4 %%>;
@@ -877,7 +877,9 @@ DesignerProposalJs.prototype.insertInfoBox = function () {
       { title: "예상 종료일", value: expectedToString(analytics.date.space.movein) },
     ];
   }
-
+  if (mobile) {
+    factors.shift();
+  }
 
   initWording0 = "안녕하세요, " + this.client.name + "님! 고객님께" + (desktop ? " " : "\n") + "<b%" + serviceParsing(this.project.service) + " 서비스와 그에 맞는 디자이너%b>를 제안드립니다.";
   if (media[0] || media[1]) {
@@ -2001,7 +2003,7 @@ DesignerProposalJs.prototype.designerPortfolio = function (mother, desid) {
       entireDom.appendChild(titleDom);
 
       portfolioDom = GeneralJs.nodes.div.cloneNode(true);
-      portfolioDom.textContent = desktop ? "포트폴리오" : "H";
+      portfolioDom.textContent = desktop ? "포트폴리오" : "Link";
       portfolioDom.classList.add("hoverDefault");
       portfolioDom.setAttribute("link", link.portfolio);
       style = {
