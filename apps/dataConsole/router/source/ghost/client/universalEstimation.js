@@ -462,20 +462,20 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
   blockMarginBottom = <%% 160, 160, 160, 80, 12 %%>;
 
-  titleFontSize = <%% 27, 27, 25, 20, 5.7 %%>;
+  titleFontSize = <%% 26, 24, 23, 20, 4.3 %%>;
   titleFontWeight = <%% 300, 300, 300, 300, 300 %%>;
-  titleFontBottom = <%% 4, 4, 3, 2, 0.2 %%>;
+  titleFontBottom = <%% 4, 4, 4, 3, 1 %%>;
   titlePadding = <%% 6, 6, 6, 5, 12 %%>;
   titlePaddingMargin = <%% 18, 18, 18, 16, 18 %%>;
   titleBoxPaddingTop = <%% 2, 2, 2, 2, 2 %%>;
 
-  titleBarTopVisual = <%% (isMac() ? 10 : 6), (isMac() ? 10 : 6), (isMac() ? 10 : 6), (isMac() ? 7 : 5), 17.5 %%>;
-  titleBarBottomVisual = <%% (isMac() ? 6 : 10), (isMac() ? 6 : 10), (isMac() ? 6 : 10), (isMac() ? 6 : 8), 6 %%>;
+  titleBarTopVisual = <%% (isMac() ? 9 : 6), (isMac() ? 7 : 6), (isMac() ? 6 : 6), (isMac() ? 5 : 5), 15.5 %%>;
+  titleBarBottomVisual = <%% (isMac() ? 6 : 10), (isMac() ? 5 : 10), (isMac() ? 4 : 10), (isMac() ? 4 : 8), 6 %%>;
 
-  initWordingSize = <%% 14.5, 14, 14, 13, 3 %%>;
+  initWordingSize = <%% 14.5, 14, 14, 12, 3 %%>;
   initWordingWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  subTitleBoxTop = <%% 30, 30, 27, 20, 35 %%>;
+  subTitleBoxTop = <%% 26, 22, 19, 15, 35 %%>;
 
   itemBarLeft = <%% 28, 28, 28, 28, 2 %%>;
   itemBarTop = <%% 9, 9, 9, 9, 1 %%>;
@@ -669,7 +669,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
           left: desktop ? String(0) : withOut(50, titlePadding / 2, ea),
           width: String(titlePadding) + ea,
           borderRadius: String(3) + "px",
-          height: desktop ? withOut(titleBarTopVisual + titleBarBottomVisual, ea) : String(0.8) + ea,
+          height: desktop ? withOut(titleBarTopVisual + titleBarBottomVisual, ea) : String(0.5) + ea,
           background: colorChip.gray2,
           top: String(titleBarTopVisual) + ea,
         }

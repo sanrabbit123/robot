@@ -33,6 +33,7 @@ const SecondRouter = function (slack_bot, MONGOC) {
     this.address.testinfo.host,
     this.address.officeinfo.ghost.host,
     "localhost:3000",
+    "192.168.0.14:3000",
   ];
 
 }
