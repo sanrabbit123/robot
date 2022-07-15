@@ -6,7 +6,12 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
   let obj = {};
   obj.link = "/designerProposal_submit";
   obj.func = async function (req, res) {
-    res.set({ "Content-Type": "application/json" });
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       let { cliid, proid, desid, name, phone, designer, method } = req.body;
       let thisProject, thisClient, requestNumber;
@@ -106,7 +111,12 @@ DataRouter.prototype.rou_post_designerProposal_getDesigners = function () {
   let obj = {};
   obj.link = "/designerProposal_getDesigners";
   obj.func = async function (req, res) {
-    res.set("Content-Type", "application/json");
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       if (req.body.whereQuery === undefined || req.body.proid === undefined) {
         throw new Error("invaild post");

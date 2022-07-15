@@ -1903,13 +1903,15 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
 
 DesignerProposalJs.prototype.designerPortfolio = function (mother, desid) {
   const instance = this;
+  const { ajaxJson } = GeneralJs;
   const { ea, media, frontPage } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { top, bottom, left } = this.subBoxMargin;
   const thisDesigner = this.designers.pick(desid);
-  GeneralJs.ajax("noFlat=true&where=" + JSON.stringify({ desid }) + "&limit=12", "/getContents", function (res) {
-    const contentsArr = JSON.parse(res);
+
+  ajaxJson({ mode: "designer", desid }, LOGHOST + "/getContents").then((res) => {
+    const { contentsArr } = res;
     const web = {
       portfolio: frontPage + "/portdetail.php?pid=",
       review: frontPage + "/revdetail.php?pid="
@@ -2077,6 +2079,8 @@ DesignerProposalJs.prototype.designerPortfolio = function (mother, desid) {
         mother.style.paddingTop = String(mobilePaddingTop) + ea;
       }
     }
+  }).catch((err) => {
+    console.log(err);
   });
 }
 
@@ -2742,7 +2746,7 @@ DesignerProposalJs.prototype.insertWordBox = function () {
     },
   ]);
 
-  ajaxJson("/designerProposal_policy").then(function (res) {
+  ajaxJson(BACKHOST + "/designerProposal_policy").then(function (res) {
     const { policy, button } = res;
     let bTags;
 
@@ -3922,7 +3926,8 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
 DesignerProposalJs.prototype.submitEvent = function (desid, designer, method) {
   const instance = this;
   const { frontPage } = this;
-  const getObj = GeneralJs.returnGet();
+  const { returnGet, ajaxJson, homeliaisonAnalytics, sleep, selfHref } = GeneralJs;
+  const getObj = returnGet();
   let name, phone;
 
   name = instance.client.name;
@@ -3936,7 +3941,7 @@ DesignerProposalJs.prototype.submitEvent = function (desid, designer, method) {
 
     instance.mother.certificationBox(name, phone, async function (back, box) {
       try {
-        await GeneralJs.ajaxJson({
+        await ajaxJson({
           cliid: instance.client.cliid,
           proid: instance.project.proid,
           desid: desid,
@@ -3944,9 +3949,9 @@ DesignerProposalJs.prototype.submitEvent = function (desid, designer, method) {
           phone: phone,
           designer: designer,
           method: method,
-        }, "/designerProposal_submit");
+        }, BACKHOST + "/designerProposal_submit");
 
-        await GeneralJs.homeliaisonAnalytics({
+        await homeliaisonAnalytics({
           page: instance.pageName,
           standard: instance.firstPageViewTime,
           action: "designerSelect",
@@ -3961,16 +3966,16 @@ DesignerProposalJs.prototype.submitEvent = function (desid, designer, method) {
           },
         });
 
-        await GeneralJs.sleep(500);
+        await sleep(500);
 
         document.body.removeChild(box);
         document.body.removeChild(back);
         window.localStorage.clear();
 
-        GeneralJs.selfHref(window.location.protocol + "//" + window.location.host + "/middle/estimation?cliid=" + instance.client.cliid + "&needs=style," + desid + "," + instance.project.proid + "," + method);
+        selfHref("https://" + GHOSTHOST + "/middle/estimation?cliid=" + instance.client.cliid + "&needs=style," + desid + "," + instance.project.proid + "," + method);
 
       } catch (e) {
-        await GeneralJs.ajaxJson({ message: "DesignerProposalJs.submitEvent.certificationBox : " + e.message }, BACKHOST + "/errorLog");
+        await ajaxJson({ message: "DesignerProposalJs.submitEvent.certificationBox : " + e.message }, BACKHOST + "/errorLog");
       }
     });
 
@@ -4001,22 +4006,25 @@ DesignerProposalJs.prototype.launching = async function (loading) {
     if (getObj.cliid !== undefined) {
       cliid = getObj.cliid;
       proid = null;
-    } else {
+    } else if (getObj.proid !== undefined) {
       cliid = null;
       proid = getObj.proid;
+    } else {
+      window.alert("잘못된 접근입니다!");
+      throw new Error("invaild get object");
     }
 
     //set proposal, client info
     if (cliid !== null) {
-      projects = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getProjects");
-      clients = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getClients");
+      projects = await ajaxJson({ whereQuery: { cliid } }, SECONDHOST + "/getProjects");
+      clients = await ajaxJson({ whereQuery: { cliid } }, SECONDHOST + "/getClients");
     } else {
-      projects = await ajaxJson({ noFlat: true, whereQuery: { proid } }, "/getProjects");
+      projects = await ajaxJson({ whereQuery: { proid } }, SECONDHOST + "/getProjects");
       projects.sort((a, b) => {
         return (new Date(b.proposal.date)).valueOf() - (new Date(a.proposal.date)).valueOf();
       });
       project = projects[0];
-      clients = await ajaxJson({ noFlat: true, whereQuery: { cliid: project.cliid } }, "/getClients");
+      clients = await ajaxJson({ whereQuery: { cliid: project.cliid } }, SECONDHOST + "/getClients");
     }
 
     if (clients.length === 0) {
@@ -4030,7 +4038,7 @@ DesignerProposalJs.prototype.launching = async function (loading) {
       project = null;
     }
 
-    proposalHistory = await ajaxJson({ proid: project.proid }, "/proposalLog", { equal: true });
+    proposalHistory = await ajaxJson({ proid: project.proid }, BACKHOST + "/proposalLog", { equal: true });
 
     whereQuery = {};
     whereQuery["$or"] = [];
@@ -4052,7 +4060,7 @@ DesignerProposalJs.prototype.launching = async function (loading) {
     project = projects[0];
     proid = project.proid;
 
-    designers = await ajaxJson({ whereQuery, proid }, "/designerProposal_getDesigners");
+    designers = await ajaxJson({ whereQuery, proid }, BACKHOST + "/designerProposal_getDesigners");
 
     client = clients[0];
 
@@ -4087,10 +4095,6 @@ DesignerProposalJs.prototype.launching = async function (loading) {
     this.proposalHistory = proposalHistory;
     this.proposalHistoryNumber = 0;
 
-    if (getObj.proid === undefined) {
-      window.location.href = window.location.protocol + "//" + window.location.host + "/middle/proposal?proid=" + project.proid;
-    }
-
     // TEST Center ==================================================================================================
     if (proid === "p1801_aa01s") {
       for (let d of designers) {
@@ -4122,7 +4126,7 @@ DesignerProposalJs.prototype.launching = async function (loading) {
           instance.insertWordBox();
           instance.insertPannelBox();
         } catch (e) {
-          await GeneralJs.ajaxJson({ message: "DesignerProposalJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
+          await ajaxJson({ message: "DesignerProposalJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
       }
     });
@@ -4160,6 +4164,7 @@ DesignerProposalJs.prototype.launching = async function (loading) {
 
 
   } catch (e) {
-    await GeneralJs.ajaxJson({ message: "DesignerProposalJs.launching : " + e.message }, BACKHOST + "/errorLog");
+    await ajaxJson({ message: "DesignerProposalJs.launching : " + e.message }, BACKHOST + "/errorLog");
+    window.location.href = FRONTHOST;
   }
 }
