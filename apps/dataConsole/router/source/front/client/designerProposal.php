@@ -12,7 +12,7 @@ if (!isset($_GET["proid"])) {
 
 $proid = $_GET["proid"];
 $project = $general->getProject($proid);
-$client = $getClient->getProject($project->cliid);
+$client = $general->getClient($project->cliid);
 
 $name = "designerProposal";
 $fullLink = $hostLink + "/proposal.php?proid=" + $proid;
