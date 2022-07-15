@@ -88,8 +88,9 @@ DevContext.prototype.launching = async function () {
     // console.log(pastProposal[0].project.detail);
 
 
-    const reflect = new MongoReflection();
-    await reflect.mongoMigration("local", "pythoninfo")
+
+    
+
 
 
 
