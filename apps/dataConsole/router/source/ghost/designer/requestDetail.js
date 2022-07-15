@@ -41,7 +41,26 @@ const RequestDetailJs = function () {
   this.mother = new GeneralJs();
 }
 
-RequestDetailJs.binaryPath = "/middle/request";
+RequestDetailJs.binaryPath = "/middle/console";
+
+RequestDetailJs.prototype.insertInitBox = function () {
+  const instance = this;
+  const { ea, baseTong } = this;
+  const { createNode, colorChip, withOut } = GeneralJs;
+  let whiteBase;
+
+  whiteBase = createNode({
+    mother: baseTong,
+    style: {
+      display: "block",
+      height: String(1200) + ea,
+      borderRadius: String(5) + "px",
+      background: colorChip.white,
+      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+    }
+  });
+
+}
 
 RequestDetailJs.prototype.launching = async function (loading) {
   const instance = this;
@@ -50,13 +69,10 @@ RequestDetailJs.prototype.launching = async function (loading) {
     const { returnGet, ajaxJson } = GeneralJs;
     const getObj = returnGet();
 
-
-
-
     await this.mother.ghostDesignerLaunching({
       mode: "front",
       name: "requestDetail",
-      client: null,
+      designer: null,
       base: {
         instance: this,
         binaryPath: RequestDetailJs.binaryPath,
@@ -66,10 +82,7 @@ RequestDetailJs.prototype.launching = async function (loading) {
       },
       local: async () => {
         try {
-
-          
-
-
+          instance.insertInitBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "RequestDetailJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }

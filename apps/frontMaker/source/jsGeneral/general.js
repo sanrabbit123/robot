@@ -3933,7 +3933,7 @@ GeneralJs.prototype.specialBan = function () {
   for (i = 0; i < textareas.length; i++) { textareas[i].addEventListener("keyup", specialban_lite); }
 }
 
-GeneralJs.prototype.footerMake = function () {
+GeneralJs.prototype.footerMake = function (backgroundColor = null) {
   const instance = this;
   const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, selfHref, blankHref, setQueue } = GeneralJs;
   const media = GeneralJs.stacks.updateMiddleMedialQueryConditions;
@@ -4096,7 +4096,7 @@ GeneralJs.prototype.footerMake = function () {
     mother: totalContents,
     style: {
       display: "block",
-      background: colorChip.gradientGreen,
+      background: ((backgroundColor === null || backgroundColor === undefined) ? colorChip.gradientGreen : backgroundColor),
       width: withOut(0, ea),
       position: "relative",
       height: desktop ? String(baseHeight - basePaddingTop) + ea : "",
