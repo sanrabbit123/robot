@@ -3852,7 +3852,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
       break;
     case "confirm":
       return_func = async function (e) {
-        GeneralJs.blankHref("https://" + GHOSTHOST + "/middle/proposal?proid=" + proid + "&mode=test");
+        GeneralJs.blankHref(FRONTHOST + "/proposal.php?proid=" + proid + "&mode=test");
         reset_event(this);
       }
       break;

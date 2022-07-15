@@ -1708,7 +1708,7 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
       } else if (req.url === "/createProposalDocument") {
 
         const { proid } = req.body;
-        const proposalLink = "https://" + ADDRESS.homeinfo.ghost.host + "/middle/designerProposal?proid=" + proid + "&mode=test";
+        const proposalLink = "https://" + ADDRESS.frontinfo.host + "/proposal.php?proid=" + proid + "&mode=test";
         const thisProject = await back.getProjectById(proid, { selfMongo: instance.mongo });
         const cliid = thisProject.cliid;
         let page, cookies, dummy, historyObj;

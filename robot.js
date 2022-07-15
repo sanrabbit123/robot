@@ -135,9 +135,9 @@ Robot.prototype.proposalMaker = function (button, arg) {
   const instance = this;
   const back = this.back;
   const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
-  const path = "designerProposal";
+  const path = "proposal";
   const collection = "proposalLog";
-  const { host } = this.address.homeinfo.ghost;
+  const { host } = this.address.frontinfo;
   const { requestSystem, ghostRequest, messageLog, errorLog, messageSend } = this.mother;
   const proid = arg;
   let kakaoInstance, cliid, name, phone, client;
@@ -230,9 +230,9 @@ Robot.prototype.proposalMaker = function (button, arg) {
       return back.updateClient([ { cliid }, updateObj ]);
 
     }).then(() => {
-      return messageSend({ text: name + " 고객님께 제안서를 전송하였어요.\nlink : https://" + host + "/middle/" + path + "?proid=" + proid + "&mode=test", channel: "#403_proposal", voice: true });
+      return messageSend({ text: name + " 고객님께 추천서를 전송하였어요.\nlink : https://" + host + "/" + path + ".php?proid=" + proid + "&mode=test", channel: "#403_proposal", voice: true });
     }).catch((err) => {
-      errorLog("제안서 보내는 도중 오류남 : " + err.message).catch((e) => { console.log(e); });
+      errorLog("추천서 보내는 도중 오류남 : " + err.message).catch((e) => { console.log(e); });
       reject(err);
     });
   });

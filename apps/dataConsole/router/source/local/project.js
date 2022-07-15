@@ -8284,7 +8284,7 @@ ProjectJs.prototype.communicationRender = function () {
   const { stringToDate, sleep } = GeneralJs;
 
   communication.setItem([
-    () => { return "제안서 다시 발송"; },
+    () => { return "추천서 다시 발송"; },
     function () {
       return true;
     },
@@ -8307,9 +8307,9 @@ ProjectJs.prototype.communicationRender = function () {
           }
         }
         if (thisCase !== null) {
-          if (window.confirm(thisCase.name + " 고객님께 제안서를 다시 보낼까요?")) {
+          if (window.confirm(thisCase.name + " 고객님께 추천서를 다시 보낼까요?")) {
             await GeneralJs.ajaxJson({ instant: true, proid, retryProposal: true }, "/createProposalDocument");
-            window.alert(`제안서 알림톡 발송이 요청되었습니다!`);
+            window.alert(`추천서 알림톡 발송이 요청되었습니다!`);
           }
         }
       } catch (e) {
