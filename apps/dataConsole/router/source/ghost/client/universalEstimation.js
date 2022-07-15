@@ -1039,7 +1039,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
     }
   });
 
-  ajaxJson("/designerProposal_policy").then(function (res) {
+  ajaxJson(BACKHOST + "/designerProposal_policy").then(function (res) {
     const { policy, button } = res;
     let bTags;
 
@@ -1126,7 +1126,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
           device: (desktop ? "desktop" : "mobile"),
           requestNumber: String(instance.requestNumber),
           bilid: instance.bill.bilid,
-        }, "/inicisPayment");
+        }, BACKHOST + "/inicisPayment");
         const formMother = document.createElement("DIV");
         const form = document.createElement("FORM");
         let value, formId, plugin;
@@ -1636,7 +1636,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
         }
 
       } catch (e) {
-        await GeneralJs.ajaxJson({ message: "UniversalEstimationJs.insertPaymentBox.paymentEvent : " + e.message }, "/errorLog");
+        await GeneralJs.ajaxJson({ message: "UniversalEstimationJs.insertPaymentBox.paymentEvent : " + e.message }, BACKHOST + "/errorLog");
       }
     };
   }
@@ -1800,7 +1800,7 @@ UniversalEstimationJs.prototype.payComplete = async function (data, pythonSend =
 
     if (!refresh) {
       if (pythonSend) {
-        await ajaxJson({ bilid, requestNumber, data }, "/pythonPass_ghostClientBill");
+        await ajaxJson({ bilid, requestNumber, data }, BACKHOST + "/pythonPass_ghostClientBill");
       }
     }
 
@@ -1828,7 +1828,7 @@ UniversalEstimationJs.prototype.payComplete = async function (data, pythonSend =
     this.completeMode = true;
 
   } catch (e) {
-    await GeneralJs.ajaxJson({ message: "UniversalEstimationJs.payComplete : " + e.message }, "/errorLog");
+    await GeneralJs.ajaxJson({ message: "UniversalEstimationJs.payComplete : " + e.message }, BACKHOST + "/errorLog");
     window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
     window.location.reload();
   }
@@ -1888,9 +1888,9 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
     }
     this.clientRequestNumber = clientRequestNumber;
 
-    bills = await ajaxJson({ mode: "read", whereQuery: { $and: [ { class: kind }, { "links.cliid": cliid }, { "links.desid": desid }, { "links.proid": proid }, { "links.method": method } ] } }, "/pythonPass_generalBill", { equal: true });
+    bills = await ajaxJson({ mode: "read", whereQuery: { $and: [ { class: kind }, { "links.cliid": cliid }, { "links.desid": desid }, { "links.proid": proid }, { "links.method": method } ] } }, BACKHOST + "/pythonPass_generalBill", { equal: true });
     if (bills.length === 0) {
-      bills = await ajaxJson({ mode: "read", whereQuery: { $and: [ { class: kind }, { "links.cliid": cliid }, { "links.desid": desid }, { "links.proid": proid }, { "links.method": (/off/gi.test(method) ? "online" : "offline") } ] } }, "/pythonPass_generalBill", { equal: true });
+      bills = await ajaxJson({ mode: "read", whereQuery: { $and: [ { class: kind }, { "links.cliid": cliid }, { "links.desid": desid }, { "links.proid": proid }, { "links.method": (/off/gi.test(method) ? "online" : "offline") } ] } }, BACKHOST + "/pythonPass_generalBill", { equal: true });
       if (bills.length === 0) {
         alert("결제 안내 문서가 없습니다! 홈리에종에 문의해주세요!");
         window.location.href = this.frontPage;
@@ -1951,7 +1951,7 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
         mid: getObj.mid,
         oid: getObj.oid,
         impId: getObj.imp_uid,
-      }, "/inicisPayment");
+      }, BACKHOST + "/inicisPayment");
       if (convertingData.error === "error") {
         window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
       } else {
@@ -1960,11 +1960,14 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
     }
 
     if (getObj.hash !== undefined) {
+
       data = await ajaxJson({
         hash: getObj.hash,
         mode: "decrypto",
-      }, "/inicisPayment", { equal: true });
+      }, BACKHOST + "/inicisPayment", { equal: true });
+
       if (typeof getObj.cashphone === "string") {
+
         await ajaxJson({
           mode: "cashPhone",
           phone: getObj.cashphone,
@@ -1974,8 +1977,9 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
           desid,
           cliid,
           name: client.name,
-        }, "/inicisPayment");
+        }, BACKHOST + "/inicisPayment");
         data.cashPhone = getObj.cashphone;
+
       }
       if (getObj.mode === "complete") {
         await this.payComplete(data, true);
