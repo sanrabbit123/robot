@@ -77,7 +77,7 @@ UniversalEstimationJs.prototype.billWordings = function () {
   wordings = {
     mainTitle: [
       client.name + " 고객님",
-      "<b%" + (project.service.online ? "온라인" : "오프라인") + " " + serviceName[Number(project.service.serid.split('_')[1].replace(/[^0-9]/g, '').replace(/^0/, '')) - 1] + " 내역%b>",
+      "<b%" + (project.service.online ? "온라인" : "오프라인") + " " + serviceName[Number(project.service.serid.split('_')[1].replace(/[^0-9]/g, '').replace(/^0/, '')) - 1] + " 관련%b>",
     ],
     subTitle: [
       "<b%현장명%b> : " + request.space.address,
@@ -187,6 +187,186 @@ UniversalEstimationJs.prototype.billWordings = function () {
 
 UniversalEstimationJs.prototype.insertInitBox = function () {
   const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { ea, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  let whiteBlock;
+  let style;
+  let blockHeight;
+  let leftBox, rightBox;
+  let titleBox, barBox, indexBox;
+  let margin;
+  let quoteWidth;
+  let quoteHeight;
+  let titleFontSize, titleFontWeight;
+  let serviceChildren;
+  let searchTags;
+  let titleWording;
+  let servicePaddingLeft;
+  let serviceSize;
+  let serviceBlockPaddingTop;
+  let whiteBlockPaddingTop, whiteBlockPaddingBottom;
+  let quotoTongHeight;
+  let searchBarPaddingTop;
+  let searchBarHeight;
+  let searchBarWidth;
+  let searchIconHeight;
+  let searchIconRight, searchIconTop;
+  let whiteBlockMarginBottom;
+  let inputWithoutHeight;
+  let serviceButtonClassName;
+  let serviceBlock;
+  let inputSize, inputWeight;
+  let placeholder;
+  let titleTop;
+  let servicePaddingTop, servicePaddingBottom;
+  let serviceMarginRight;
+  let subTitleMarginTop, subTitleFontSize, subTitleWeight;
+  let subTitleContents;
+  let middleBox;
+  let tagTextTop;
+  let tagTongBottom;
+  let boxTopVisual;
+  let mobileBlockTop;
+
+  margin = <%% 30, 30, 30, 30, 30 %%>;
+
+  whiteBlockMarginBottom = <%% 90, 80, 74, 60, 14.5 %%>;
+
+  quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
+  quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
+  titleFontSize = <%% 35, 33, 32, 30, 6.4 %%>;
+  titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
+  titleTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 4) %%>;
+
+  servicePaddingTop = <%% 7, 7, 7, 7, 7 %%>;
+  servicePaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
+  servicePaddingLeft = <%% 13, 13, 13, 12, 2.2 %%>;
+  serviceMarginRight = <%% 6, 6, 6, 6, 6 %%>;
+  serviceSize = <%% 13, 13, 13, 12, 3.3 %%>;
+  serviceBlockPaddingTop = <%% (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), 5 %%>;
+
+  whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
+  whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
+
+  searchBarPaddingTop = <%% 220, 220, 192, 164, 12.5 %%>;
+  searchBarHeight = <%% 40, 40, 40, 36, 8 %%>;
+  searchBarWidth = <%% 690, 516, 516, 420, 88 %%>;
+
+  searchIconHeight = <%% 20, 20, 20, 20, 4 %%>;
+  searchIconRight = <%% 11, 11, 11, 11, 2 %%>;
+  searchIconTop = <%% 10, 10, 10, 10, 1.8 %%>;
+
+  inputWithoutHeight = <%% (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), 0.8 %%>;
+
+  inputSize = <%% 15, 15, 15, 14, 3.1 %%>;
+  inputWeight = <%% 300, 300, 300, 300, 300 %%>;
+
+  subTitleMarginTop = <%% 2, 2, 1, 1, 0.2 %%>;
+  subTitleFontSize = <%% 16, 16, 16, 15, 3.2 %%>;
+  subTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
+
+  tagTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
+  tagTongBottom = <%% 3, 3, 1, 1, 0 %%>;
+  boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
+
+  titleWording = "홈리에종 결제 안내";
+  subTitleContents = "내용을 확인해주시고 결제를 부탁드립니다.";
+
+  mobileBlockTop = 4.5;
+
+  whiteBlock = createNode({
+    mother: this.baseTong,
+    style: {
+      display: "block",
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      marginBottom: String(whiteBlockMarginBottom) + ea,
+      top: String(-1 * boxTopVisual) + ea,
+      paddingTop: desktop ? "" : String(mobileBlockTop) + ea,
+    }
+  });
+
+  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.white))) * quoteHeight;
+  createNode({
+    mother: whiteBlock,
+    style: {
+      display: "flex",
+      position: "relative",
+      textAlign: "center",
+      justifyContent: "center",
+      alignItems: "center",
+      height: String(quotoTongHeight) + ea,
+      opacity: String(0.6),
+    },
+    children: [
+      {
+        mode: "svg",
+        source: svgMaker.doubleQuote(colorChip.white),
+        style: {
+          display: "inline-block",
+          height: String(quoteHeight) + ea,
+          width: String(quoteWidth) + ea,
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: whiteBlock,
+    style: {
+      display: "flex",
+      position: "relative",
+      textAlign: "center",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    children: [
+      {
+        text: titleWording,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: mobile ? "" : String(titleTop) + ea,
+          fontSize: String(titleFontSize) + ea,
+          fontWeight: String(titleFontWeight),
+          color: colorChip.white,
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: whiteBlock,
+    style: {
+      display: "flex",
+      position: "relative",
+      textAlign: "center",
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: String(subTitleMarginTop) + ea,
+    },
+    children: [
+      {
+        text: subTitleContents,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: mobile ? "" : String(0) + ea,
+          fontSize: String(subTitleFontSize) + ea,
+          fontWeight: String(subTitleWeight),
+          color: colorChip.white,
+        }
+      }
+    ]
+  });
+
+}
+
+UniversalEstimationJs.prototype.insertPaymentBox = function () {
+  const instance = this;
   const { client, designer, ea, baseTong, media, bill, request, completeMode, completeInfo } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -282,9 +462,9 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
   blockMarginBottom = <%% 160, 160, 160, 80, 12 %%>;
 
-  titleFontSize = <%% 30, 30, 28, 23, 5.7 %%>;
+  titleFontSize = <%% 27, 27, 25, 20, 5.7 %%>;
   titleFontWeight = <%% 300, 300, 300, 300, 300 %%>;
-  titleFontBottom = <%% 2, 2, 2, 2, 0.2 %%>;
+  titleFontBottom = <%% 4, 4, 3, 2, 0.2 %%>;
   titlePadding = <%% 6, 6, 6, 5, 12 %%>;
   titlePaddingMargin = <%% 18, 18, 18, 16, 18 %%>;
   titleBoxPaddingTop = <%% 2, 2, 2, 2, 2 %%>;
@@ -295,11 +475,11 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   initWordingSize = <%% 14.5, 14, 14, 13, 3 %%>;
   initWordingWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  subTitleBoxTop = <%% 35, 35, 31, 20, 35 %%>;
+  subTitleBoxTop = <%% 30, 30, 27, 20, 35 %%>;
 
   itemBarLeft = <%% 28, 28, 28, 28, 2 %%>;
-  itemBarTop = <%% 10, 10, 10, 10, 1 %%>;
-  itemBarBottom = <%% 11, 11, 11, 11, 2 %%>;
+  itemBarTop = <%% 9, 9, 9, 9, 1 %%>;
+  itemBarBottom = <%% 10, 10, 10, 10, 2 %%>;
 
   tableMarginTop = <%% 32, 32, 26, 22, 8.5 %%>;
   tablePaddingTop = <%% 10, 10, 10, 10, 2.5 %%>;
@@ -345,7 +525,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   greenButtonWidth = <%% 122, 122, 122, 110, 20 %%>;
   greenButtonHeight = <%% 47, 47, 45, 40, 8.4 %%>;
   greenButtonFontSize = <%% 20, 20, 20, 16, 3.8 %%>;
-  greenButtonTextTop = <%% (isMac() ? 8 : 11), (isMac() ? 8 : 11), (isMac() ? 8 : 11), (isMac() ? 8 : 11), 1.2 %%>;
+  greenButtonTextTop = <%% (isMac() ? 9 : 11), (isMac() ? 9 : 11), (isMac() ? 9 : 11), (isMac() ? 9 : 11), 1.2 %%>;
   greenButtonBetween = <%% 4, 4, 4, 2, 0.6 %%>;
 
   greenBasePaddingTop = <%% 10, 10, 10, 10, 3.8 %%>;
@@ -463,7 +643,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
           width: mobile ? String(100) + '%' : "",
         },
         bold: {
-          fontWeight: String(600),
+          fontWeight: String(500),
           color: colorChip.black,
         }
       },
@@ -479,7 +659,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
           width: mobile ? String(100) + '%' : "",
         },
         bold: {
-          fontWeight: String(600),
+          fontWeight: String(500),
           color: colorChip.black,
         }
       },
@@ -1456,7 +1636,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
         }
 
       } catch (e) {
-        await GeneralJs.ajaxJson({ message: "UniversalEstimationJs.insertInitBox.paymentEvent : " + e.message }, "/errorLog");
+        await GeneralJs.ajaxJson({ message: "UniversalEstimationJs.insertPaymentBox.paymentEvent : " + e.message }, "/errorLog");
       }
     };
   }
@@ -1679,15 +1859,15 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
     let totalNum, payNum, cancelNum;
     let clientRequestNumber;
 
-    clients = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getClients", { equal: true });
+    clients = await ajaxJson({ whereQuery: { cliid } }, SECONDHOST + "/getClients", { equal: true });
     if (clients.length === 0) {
       throw new Error("error spot 3 : " + cliid);
     }
-    designers = await ajaxJson({ noFlat: true, whereQuery: { desid } }, "/getDesigners", { equal: true });
+    designers = await ajaxJson({ whereQuery: { desid } }, SECONDHOST + "/getDesigners", { equal: true });
     if (designers.length === 0) {
       throw new Error("error spot 4 : " + desid);
     }
-    projects = await ajaxJson({ noFlat: true, whereQuery: { proid } }, "/getProjects", { equal: true });
+    projects = await ajaxJson({ whereQuery: { proid } }, SECONDHOST + "/getProjects", { equal: true });
     if (projects.length === 0) {
       throw new Error("error spot 5 : " + proid);
     }
@@ -1809,7 +1989,6 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
       mode: "ghost",
       name: "universalEstimation",
       client: client,
-      background: 3,
       base: {
         instance: this,
         binaryPath: UniversalEstimationJs.binaryPath,
@@ -1823,8 +2002,9 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
       local: async () => {
         try {
           instance.insertInitBox();
+          instance.insertPaymentBox();
         } catch (e) {
-          await GeneralJs.ajaxJson({ message: "UniversalEstimationJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
+          await GeneralJs.ajaxJson({ message: "UniversalEstimationJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
       }
     });
@@ -1839,7 +2019,7 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
     loading.parentNode.removeChild(loading);
 
   } catch (e) {
-    await GeneralJs.ajaxJson({ message: "UniversalEstimationJs.launching : " + e.message }, "/errorLog");
+    await GeneralJs.ajaxJson({ message: "UniversalEstimationJs.launching : " + e.message }, BACKHOST + "/errorLog");
     alert("잘못된 접근입니다!");
     window.location.href = this.frontPage;
   }

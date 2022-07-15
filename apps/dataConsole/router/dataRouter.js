@@ -2424,7 +2424,7 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
       } else if (req.url === "/createProposalDocument") {
 
         const { proid } = req.body;
-        const proposalLink = "https://" + ADDRESS.homeinfo.ghost.host + "/middle/designerProposal?proid=" + proid + "&mode=test";
+        const proposalLink = "https://" + ADDRESS.frontinfo.host + "/proposal.php?proid=" + proid + "&mode=test";
         const thisProject = await back.getProjectById(proid, { selfMongo: instance.mongo });
         const cliid = thisProject.cliid;
         let page, cookies, dummy, historyObj;
@@ -4241,6 +4241,12 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
   let obj = {};
   obj.link = [ "/inicisPayment" ];
   obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       const now = new Date();
 
@@ -4335,7 +4341,6 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
 
         }
 
-        res.set({ "Content-Type": "application/json" });
         res.send(JSON.stringify({ pluginScript, formValue }));
 
       } else if (req.body.mode === "decrypto") {
@@ -4343,10 +4348,8 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
         let result = await decryptoHash(password, req.body.hash.trim());
         try {
           result = JSON.parse(result);
-          res.set({ "Content-Type": "application/json" });
           res.send(JSON.stringify(result));
         } catch (e) {
-          res.set({ "Content-Type": "application/json" });
           res.send(JSON.stringify({ result }));
         }
 
@@ -4385,7 +4388,6 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
           "__ignorethis__": 1,
         };
 
-        res.set({ "Content-Type": "application/json" });
         if (paymentData.status.trim() === "paid") {
           res.send(JSON.stringify({ convertingData }));
         } else {
@@ -4410,7 +4412,6 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
         }, {
           headers: { "Content-Type": "application/json" }
         });
-        res.set({ "Content-Type": "application/json" });
         res.send(JSON.stringify({ message: "done" }));
 
       } else {
@@ -4529,8 +4530,7 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
 
     } catch (e) {
       instance.mother.errorLog("Console 서버 문제 생김 (rou_post_inicisPayment): " + e.message).catch((e) => { console.log(e); });
-      res.set({ "Content-Type": "application/json" });
-      res.send(JSON.stringify({ message: "error" }));
+      res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
   return obj;
@@ -4544,22 +4544,26 @@ DataRouter.prototype.rou_post_pythonPass = function () {
   let obj = {};
   obj.link = [ "/pythonPass_ghostClientBill", "/pythonPass_generalBill", "/pythonPass_invoiceRead", "/pythonPass_invoiceCreate", "/pythonPass_generalMongo", "/pythonPass_returnDummy", "/pythonPass_invoiceRequest" ];
   obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       const url = req.url.replace(/^\//gi, '');
       if (url.split('_').length < 2) {
-        res.set({ "Content-Type": "application/json" });
         res.send(JSON.stringify({ message: "OK" }));
       } else {
         const path = url.split('_')[1].trim();
         let targetUrl, pythonResponse;
         targetUrl = "https://" + address["pythoninfo"].host + ":3000/" + path;
         pythonResponse = await requestSystem(targetUrl, equalJson(req.body), { headers: { "Content-Type": "application/json" } });
-        res.set({ "Content-Type": "application/json" });
         res.send(JSON.stringify(pythonResponse.data));
       }
     } catch (e) {
       instance.mother.errorLog("Console 서버 문제 생김 (rou_post_pythonPass): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -4573,21 +4577,25 @@ DataRouter.prototype.rou_post_ghostPass = function () {
   let obj = {};
   obj.link = [ "/ghostPass_clientPhoto", "/ghostPass_photoParsing", "/ghostPass_listFiles", "/ghostPass_deliveryFiles", "/ghostPass_searchFiles", "/ghostPass_dirParsing", "/ghostPass_pdfPrint", "/ghostPass_staticDelete", "/ghostPass_designerPhoto", "/ghostPass_userPhoto", "/ghostPass_userKey" ];
   obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       const url = req.url.replace(/^\//gi, '');
       if (url.split('_').length < 2) {
-        res.set({ "Content-Type": "application/json" });
         res.send(JSON.stringify({ message: "OK" }));
       } else {
         const path = url.split('_')[1].trim();
         let ghostResponse;
         ghostResponse = await ghostRequest(path, equalJson(req.body));
-        res.set({ "Content-Type": "application/json" });
         res.send(JSON.stringify(ghostResponse));
       }
     } catch (e) {
       instance.mother.errorLog("Console 서버 문제 생김 (rou_post_ghostPass): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -4601,9 +4609,9 @@ DataRouter.prototype.rou_post_callTo = function () {
   let obj = {};
   obj.link = [ "/callTo" ];
   obj.func = async function (req, res) {
+    res.set({ "Content-Type": "application/json" });
     try {
       if (req.body.who === undefined) {
-        res.set({ "Content-Type": "application/json" });
         res.send(JSON.stringify({ message: "OK" }));
       } else {
         const cookies = DataRouter.cookieParsing(req);
@@ -4637,19 +4645,16 @@ DataRouter.prototype.rou_post_callTo = function () {
 
         if (index === -1 || address.officeinfo.phone.numbers[index] === undefined) {
           errorLog("Console 서버 문제 생김 (rou_post_callTo): cannot find member index => " + String(index) + ", " + thisPerson + ", " + who + ", " + JSON.stringify(req.body)).catch((e) => { console.log(e); });
-          res.set({ "Content-Type": "application/json" });
           res.send(JSON.stringify({ message: "error" }));
         } else {
           number = address.officeinfo.phone.numbers[index];
           await requestSystem("https://" + instance.address.secondinfo.host + ":3000/clickDial", { id: number, destnumber: phone.replace(/[^0-9]/g, '') }, { headers: { "Content-Type": "application/json" } });
-          res.set({ "Content-Type": "application/json" });
           res.send(JSON.stringify({ message: "true" }));
         }
       }
     } catch (e) {
       console.log(e);
       errorLog("Console 서버 문제 생김 (rou_post_callTo): " + e.message).catch((e) => { console.log(e); });
-      res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify({ message: "error" }));
     }
   }

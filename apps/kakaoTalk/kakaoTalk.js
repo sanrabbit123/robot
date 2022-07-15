@@ -196,8 +196,8 @@ KakaoTalk.prototype.templateTong = function (target) {
       },
     },
     designerProposal: {
-      name: "제안서 발송 수정 수정 수정",
-      id: "TH_5245",
+      name: "제안서 발송 수정 수정 수정 수정",
+      id: "TJ_3701",
       needs: [
         "client",
         "host",
@@ -214,8 +214,8 @@ KakaoTalk.prototype.templateTong = function (target) {
       },
     },
     outOfDesignerProposal: {
-      name: "제안서 발송 부재중",
-      id: "TF_3653",
+      name: "제안서 발송 부재중 수정",
+      id: "TJ_3702",
       needs: [
         "client",
         "host",

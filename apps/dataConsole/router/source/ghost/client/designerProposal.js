@@ -421,7 +421,7 @@ const DesignerProposalJs = function () {
 
 //static
 
-DesignerProposalJs.binaryPath = "/middle/proposal";
+DesignerProposalJs.binaryPath = FRONTHOST + "/middle/proposal";
 
 DesignerProposalJs.styleTextParsing = function (text) {
   const cssArr = text.split(';');
