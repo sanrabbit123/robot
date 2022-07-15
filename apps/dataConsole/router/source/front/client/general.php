@@ -75,7 +75,7 @@ class GeneralPhp {
   }
 
   public function hiddenHtml ($hiddenString) {
-    $html = '<header class="hiddenobject"><h1>홈스타일링 플랫폼 : 홈리에종</h></header><nav class="hiddenobject"><a href="/about.php" class="hiddenobject">홈스타일링 서비스 소개</a>'."\n";
+    $html = '<header class="hiddenobject"><h1>홈스타일링 플랫폼 : 홈리에종</h1></header><nav class="hiddenobject"><a href="/about.php" class="hiddenobject">홈스타일링 서비스 소개</a>'."\n";
     $html .= '<a href="/portfolio.php" class="hiddenobject"><b>홈스타일링</b> 디자이너 주거 인테리어 디자인 포트폴리오</a>'."\n";
     $html .= '<a href="/review.php" class="hiddenobject">홈리에종 고객 후기</a>'."\n";
     $html .= '<a href="/designer.php" class="hiddenobject">홈스타일링 디자이너 모아보기</a>'."\n";
