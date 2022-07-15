@@ -331,8 +331,10 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
           ghostClientGeneralString = await fileSystem(`readString`, [ ghostClientGeneral ]);
         }
       } else if (kinds === "GHOST:DESIGNER") {
-        ghostDesignerGeneral = dir + "/" + file;
-        ghostDesignerGeneralString = await fileSystem(`readString`, [ ghostDesignerGeneral ]);
+        if (file === "general.js") {
+          ghostDesignerGeneral = dir + "/" + file;
+          ghostDesignerGeneralString = await fileSystem(`readString`, [ ghostDesignerGeneral ]);
+        }
       }
     }
     staticDirList = staticDirList.filter((obj) => { return !(obj.file === "general.js" && /^GHOST/.test(obj.kinds)); });

@@ -1402,7 +1402,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
         project = await back.getProjectById(proid, { selfMongo: instance.mongo });
         proposal = project.selectProposal(desid);
 
-        if (client === null || designer === null || project === null || proposal === null) {
+        if (client === null || designer === null || project === null) {
           throw new Error("invaild id");
         }
 
