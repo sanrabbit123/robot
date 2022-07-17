@@ -529,7 +529,7 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
-  paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
+  paddingTop =  <%% 52, 52, 44, 36, 6 %%>;
 
   whiteBottomMargin = <%% 58, 58, 58, 58, 0 %%>;
 
@@ -560,14 +560,14 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
   bigNumberSize = <%% 37, 37, 34, 30, 5 %%>;
   bigNumberBetween = <%% -3, -3, -3, -3, 0 %%>;
   bigNumberMargin = <%% 0, 0, 0, 0, 0 %%>;
-  bigNumberBetweenMargin = <%% 28, 28, 28, 28, 2 %%>;
+  bigNumberBetweenMargin = <%% 28, 28, 28, 28, 5 %%>;
 
   periodLineTop = <%% 27, 27, 27, 27, 3.8 %%>;
   periodPaddingLeft = <%% 16, 16, 16, 16, 7 %%>;
   periodLineWidth = <%% 4, 4, 4, 4, 4 %%>;
 
   mobileCalendarMargin = 6;
-  mobileCalendarMarginTop = 6.5;
+  mobileCalendarMarginTop = 5;
   mobilePaddingTop = 5;
   mobilePaddingBottom = 10.5;
 
@@ -577,7 +577,7 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
   zeroWordingTop = <%% -3, -3, -3, -3, -3 %%>;
 
   initTitleMarginTop = <%% 14, 14, 14, 14, 2.5 %%>;
-  initContentsMarginTop = <%% 4, 4, 4, 4, 1 %%>;
+  initContentsMarginTop = <%% 4, 4, 4, 4, 0.5 %%>;
   initContentsBottom = <%% -3, -3, -3, -3, 0 %%>;
   initContentsPaddingLeft = <%% 14, 14, 14, 14, 0 %%>;
 
@@ -590,7 +590,7 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
       borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
       background: colorChip.white,
-      paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
+      paddingTop: String(paddingTop) + ea,
       paddingBottom: desktop ? String(whiteBottomMargin) + ea : "",
       marginBottom: String(bottomMargin) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
@@ -633,7 +633,7 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
               top: String(titleTopNumber) + ea,
               fontSize: String(titleFontSize) + ea,
               fontWeight: String(600),
-              background: desktop ? colorChip.white : colorChip.gray1,
+              background: colorChip.white,
               paddingRight: String(numberRight) + ea,
               color: colorChip.black,
             }
@@ -646,9 +646,9 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
               top: String(titleTop) + ea,
               fontSize: String(titleFontSize) + ea,
               fontWeight: String(200),
-              background: desktop ? colorChip.white : colorChip.gray1,
+              background: colorChip.white,
               paddingLeft: String(numberRight) + ea,
-              color: desktop ? colorChip.black : colorChip.green,
+              color: desktop ? colorChip.black : colorChip.deactive,
             }
           },
         ]
@@ -660,7 +660,6 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
           width: String(100) + '%',
           overflow: "hidden",
           marginBottom: String(0) + ea,
-          marginTop: desktop ? "" : String(14) + ea,
         }
       },
     ]
@@ -719,7 +718,7 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
             display: "block",
             fontSize: String(initWordingSize) + ea,
             fontWeight: String(400),
-            color: colorChip.black,
+            color: desktop ? colorChip.black : colorChip.green,
             marginTop: String(initContentsMarginTop) + ea,
             lineHeight: String(1.6),
           },
@@ -735,14 +734,14 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
             display: "block",
             fontSize: String(initWordingSize) + ea,
             fontWeight: String(600),
-            color: desktop ? colorChip.black : colorChip.green,
+            color: colorChip.black,
             marginTop: String(bigNumberBetweenMargin) + ea,
             paddingLeft: String(initContentsPaddingLeft) + ea,
             lineHeight: String(1.6),
             position: "relative",
           },
           bold: {
-            fontSize: String(initWordingSize) + ea,
+            fontSize: String(contentsWordingSize) + ea,
             fontWeight: String(600),
             color: colorChip.black
           },
@@ -766,7 +765,7 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
             display: "block",
             fontSize: String(initWordingSize) + ea,
             fontWeight: String(400),
-            color: colorChip.black,
+            color: desktop ? colorChip.black : colorChip.green,
             marginTop: String(initContentsMarginTop) + ea,
             lineHeight: String(1.6),
           },
@@ -781,9 +780,9 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
           style: {
             display: "block",
             position: "relative",
-            fontSize: String(initWordingSize) + ea,
+            fontSize: String(contentsWordingSize) + ea,
             fontWeight: String(600),
-            color: desktop ? colorChip.black : colorChip.green,
+            color: colorChip.black,
             paddingLeft: String(initContentsPaddingLeft) + ea,
             marginTop: String(bigNumberBetweenMargin) + ea,
             lineHeight: String(1.6),
@@ -895,7 +894,7 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
             fontSize: String(contentsWordingSize) + ea,
             fontWeight: String(600),
             color: colorChip.black,
-            marginTop: String(bigNumberBetweenMargin) + ea,
+            marginTop: String(desktop ? bigNumberBetweenMargin : 2) + ea,
             paddingLeft: String(contentsPaddingLeft) + ea,
             lineHeight: String(1.6),
             position: "relative",
@@ -1008,15 +1007,15 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
   zeroMarginRight = <%% 10, 10, 10, 10, 10 %%>;
   firstWidth = <%% 240, 240, 190, 170, 10 %%>;
   secondWidth = <%% 25, 25, 25, 25, 2 %%>;
-  secondMarginRight = <%% 10, 10, 10, 10, 1.5 %%>;
+  secondMarginRight = <%% 10, 10, 10, 10, 2 %%>;
 
   checkBoxWidth = <%% 10, 10, 10, 10, 2 %%>;
   arrowBoxWidth = <%% 9, 8, 8, 8, 1.8 %%>;
   checkBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.6 %%>;
   arrowBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.5 %%>;
 
-  contentsMarginBottom0 = <%% 4, 4, 4, 4, 1 %%>;
-  contentsMarginBottom1 = <%% 18, 18, 18, 18, 1 %%>;
+  contentsMarginBottom0 = <%% 4, 4, 4, 4, 2 %%>;
+  contentsMarginBottom1 = <%% 18, 18, 18, 18, 2 %%>;
 
   mobilePaddingLeft = 6;
 
@@ -1090,7 +1089,7 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
               fontWeight: String(200),
               background: desktop ? colorChip.white : colorChip.gray1,
               paddingLeft: String(numberRight) + ea,
-              color: desktop ? colorChip.black : colorChip.green,
+              color: desktop ? colorChip.black : colorChip.deactive,
             }
           },
         ]
@@ -1110,7 +1109,7 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
           borderTop: desktop ? "1px solid " + colorChip.shadow : "",
           paddingLeft: desktop ? "" : String(mobilePaddingLeft) + ea,
           paddingRight: desktop ? "" : String(mobilePaddingLeft) + ea,
-          paddingBottom: desktop ? "" : String(10.5) + ea,
+          paddingBottom: desktop ? "" : String(9.5) + ea,
         }
       },
     ]
@@ -1373,7 +1372,7 @@ FirstMeetingJs.prototype.insertPhotoBox = function (indexNumber) {
               fontWeight: String(200),
               background: desktop ? colorChip.white : colorChip.gray1,
               paddingLeft: String(numberRight) + ea,
-              color: desktop ? colorChip.black : colorChip.green,
+              color: desktop ? colorChip.black : colorChip.deactive,
             }
           },
         ]
