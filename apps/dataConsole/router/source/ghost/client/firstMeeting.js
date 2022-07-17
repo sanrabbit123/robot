@@ -43,7 +43,7 @@ const FirstMeetingJs = function () {
   this.client = null;
 }
 
-FirstMeetingJs.binaryPath = "/middle/meeting";
+FirstMeetingJs.binaryPath = FRONTHOST + "/middle/meeting";
 
 FirstMeetingJs.prototype.tableStatic = function (designer, project, client, clientHistory, projectHistory, requestNumber) {
   const instance = this;
@@ -231,12 +231,12 @@ FirstMeetingJs.prototype.meetingWordings = function (service) {
       this.wordings.table = {};
       this.wordings.table.title = [ "기본 안내" ];
       this.wordings.table.subTitle = [
-        "입주 예정",
+        "현장 미팅 주소",
+        "현장 미팅 시간",
         "예상 기간"
       ];
       this.wordings.table.contents = [
         "현장 미팅 전, <b%디자이너에게 공유%b>할 고객님의 기본 정보입니다.",
-        "디자이너가 고객님을 뵙기 전에 미팅을 준비하면서 확인하는 사전 정보이며,",
         "<b%잘못된 정보가 있을 시%b> 홈리에종에 말씀해주시길 바랍니다.",
       ];
       this.wordings.table.table = instance.tableStatic(instance.designer, instance.project, instance.client, instance.clientHistory, instance.projectHistory, instance.requestNumber);
@@ -281,312 +281,188 @@ FirstMeetingJs.prototype.meetingWordings = function (service) {
 
 FirstMeetingJs.prototype.insertInitBox = function () {
   const instance = this;
-  const mother = this.mother;
-  const { client, project, projectHistory, requestNumber, ea, baseTong, media } = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { ea, media, client } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac } = GeneralJs;
-  const emptyReload = (originalArr, reloadArr) => {
-    if (originalArr.map((a) => { return a.trim(); }).filter((a) => { return a !== ""; }).length > 0) {
-      return originalArr.join(' ');
-    } else {
-      return reloadArr.join(' ');
-    }
-  }
-  let whiteBlock, whiteTong;
-  let blockHeight, bottomMargin;
+  let whiteBlock;
+  let style;
+  let blockHeight;
+  let leftBox, rightBox;
+  let titleBox, barBox, indexBox;
   let margin;
+  let quoteWidth;
+  let quoteHeight;
   let titleFontSize, titleFontWeight;
-  let firstBlock, secondBlock, thirdBlock;
-  let firstBlockWidth;
-  let initWordingSize;
-  let lineHeight;
-  let wordings, initPhoto;
-  let zeroWordingSize, zeroWordingTop;
-  let titlePadding;
-  let titleHeight;
-  let titleMargin;
-  let lineTop, linetMargin;
-  let secondBlockWidth, secondBlockMargin;
-  let initTitleMarginTop;
-  let initContentsMarginTop;
-  let initContentsBottom;
-  let initContentsPaddingLeft;
-  let arrowTop, arrowWidth, arrorLeft;
-  let mobilePhotoHeight;
-  let titleTextTop;
+  let serviceChildren;
+  let searchTags;
+  let titleWording;
+  let servicePaddingLeft;
+  let serviceSize;
+  let serviceBlockPaddingTop;
+  let whiteBlockPaddingTop, whiteBlockPaddingBottom;
+  let quotoTongHeight;
+  let searchBarPaddingTop;
+  let searchBarHeight;
+  let searchBarWidth;
+  let searchIconHeight;
+  let searchIconRight, searchIconTop;
+  let whiteBlockMarginBottom;
+  let inputWithoutHeight;
+  let serviceButtonClassName;
+  let serviceBlock;
+  let inputSize, inputWeight;
+  let placeholder;
+  let titleTop;
+  let servicePaddingTop, servicePaddingBottom;
+  let serviceMarginRight;
+  let subTitleMarginTop, subTitleFontSize, subTitleWeight;
+  let subTitleContents;
+  let middleBox;
+  let tagTextTop;
+  let tagTongBottom;
+  let boxTopVisual;
+  let mobileBlockTop;
 
-  blockHeight = <%% 400, 380, 367, 260, 424 %%>;
-  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 52, 52, 44, 36, 4.7 %%>;
+  margin = <%% 30, 30, 30, 30, 30 %%>;
 
-  titleFontSize = <%% 29, 28.5, 27.5, 23, 5.7 %%>;
-  titleFontWeight = <%% 500, 500, 500, 500, 500 %%>;
-  titlePadding = <%% 6, 2, 1, 0, 1 %%>;
-  titleHeight = <%% 38, 38, 38, 38, 10 %%>;
-  titleMargin = <%% 32, 26, 24, 12, 2 %%>;
+  whiteBlockMarginBottom = <%% 90, 80, 74, 60, 14.5 %%>;
 
-  lineTop = <%% 18, 18, 17, 14, 0.6 %%>;
-  linetMargin = <%% 20, 20, 20, 20, 0.6 %%>;
+  quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
+  quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
+  titleFontSize = <%% 35, 33, 32, 30, 6.4 %%>;
+  titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
+  titleTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 4) %%>;
 
-  secondBlockWidth = <%% 300, 250, 220, 200, 33 %%>;
-  secondBlockMargin = <%% 36, 35, 34, 34, 2.5 %%>;
+  servicePaddingTop = <%% 7, 7, 7, 7, 7 %%>;
+  servicePaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
+  servicePaddingLeft = <%% 13, 13, 13, 12, 2.2 %%>;
+  serviceMarginRight = <%% 6, 6, 6, 6, 6 %%>;
+  serviceSize = <%% 13, 13, 13, 12, 3.3 %%>;
+  serviceBlockPaddingTop = <%% (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), 5 %%>;
 
-  initWordingSize = <%% 14.5, 14, 14, 13, 3.2 %%>;
+  whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
+  whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
 
-  zeroWordingSize = <%% 21, 21, 21, 21, 21 %%>;
-  zeroWordingTop = <%% -3, -3, -3, -3, -3 %%>;
+  searchBarPaddingTop = <%% 220, 220, 192, 164, 12.5 %%>;
+  searchBarHeight = <%% 40, 40, 40, 36, 8 %%>;
+  searchBarWidth = <%% 690, 516, 516, 420, 88 %%>;
 
-  initTitleMarginTop = <%% 14, 14, 14, 14, 2.5 %%>;
-  initContentsMarginTop = <%% 4, 4, 4, 4, 1 %%>;
-  initContentsBottom = <%% -3, -3, -3, -3, 0 %%>;
-  initContentsPaddingLeft = <%% 14, 14, 14, 14, 0 %%>;
+  searchIconHeight = <%% 20, 20, 20, 20, 4 %%>;
+  searchIconRight = <%% 11, 11, 11, 11, 2 %%>;
+  searchIconTop = <%% 10, 10, 10, 10, 1.8 %%>;
 
-  arrowWidth = <%% 8, 8, 7, 6, 1.6 %%>;
-  arrowTop = <%% (isMac() ? 6 : 4), (isMac() ? 6 : 4), (isMac() ? 6 : 4), (isMac() ? 6 : 4), 0.3 %%>;
-  arrorLeft = <%% 1, 1, 1, 1, 0 %%>;
+  inputWithoutHeight = <%% (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), 0.8 %%>;
 
-  wordings = this.wordings.initWordings;
-  initPhoto = <%% this.wordings.initWordings.image[0], this.wordings.initWordings.image[1], this.wordings.initWordings.image[1], this.wordings.initWordings.image[1], this.wordings.initWordings.image[2] %%>;
+  inputSize = <%% 15, 15, 15, 14, 3.1 %%>;
+  inputWeight = <%% 300, 300, 300, 300, 300 %%>;
 
-  titleTextTop = isMac() ? 0 : 4;
+  subTitleMarginTop = <%% 2, 2, 1, 1, 0.2 %%>;
+  subTitleFontSize = <%% 16, 16, 16, 15, 3.2 %%>;
+  subTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
 
-  mobilePhotoHeight = 26;
+  tagTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
+  tagTongBottom = <%% 3, 3, 1, 1, 0 %%>;
+  boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
-  lineHeight = 1.6;
+  titleWording = "현장 미팅 안내";
+  subTitleContents = this.client.name + " 고객님의 현장 미팅 사전 안내입니다.";
+
+  mobileBlockTop = 4.5;
 
   whiteBlock = createNode({
-    mother: baseTong,
+    mother: this.baseTong,
     style: {
+      display: "block",
       position: "relative",
       borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
-      height: desktop ? String(blockHeight - (margin * 2)) + ea : "auto",
-      background: colorChip.white,
-      paddingTop: String(desktop ? margin : 9) + ea,
-      paddingBottom: String(desktop ? margin : 10.5) + ea,
-      marginBottom: String(bottomMargin) + ea,
-      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      marginBottom: String(whiteBlockMarginBottom) + ea,
+      top: String(-1 * boxTopVisual) + ea,
+      paddingTop: desktop ? "" : String(mobileBlockTop) + ea,
+    }
+  });
+
+  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.white))) * quoteHeight;
+  createNode({
+    mother: whiteBlock,
+    style: {
+      display: "flex",
+      position: "relative",
+      textAlign: "center",
+      justifyContent: "center",
+      alignItems: "center",
+      height: String(quotoTongHeight) + ea,
+      opacity: String(0.6),
     },
     children: [
       {
-        display: "block",
-        position: "relative",
-        width: withOut(margin * 2, ea),
-        height: String(100) + '%',
-        marginLeft: String(margin) + ea,
+        mode: "svg",
+        source: svgMaker.doubleQuote(colorChip.white),
+        style: {
+          display: "inline-block",
+          height: String(quoteHeight) + ea,
+          width: String(quoteWidth) + ea,
+        }
       }
     ]
   });
-  whiteTong = whiteBlock.firstChild;
 
-  [ firstBlock, secondBlock ] = createNodes([
-    {
-      mother: whiteTong,
-      style: {
-        display: desktop ? "inline-block" : "block",
-        position: "relative",
-        width: desktop ? withOut(secondBlockWidth + secondBlockMargin, ea) : String(100) + '%',
-        height: desktop ? String(100) + '%' : '',
-        verticalAlign: "top",
-        textAlign: desktop ? "" : "center",
-      },
-      children: [
-        {
-          style: {
-            display: desktop ? "block" : "none",
-            width: String(100) + '%',
-            position: "absolute",
-            top: String(0),
-            left: String(0),
-            borderBottom: "1px dashed " + colorChip.gray3,
-            height: String(lineTop) + ea,
-          }
-        },
-        {
-          text: wordings.title.join(" "),
-          style: {
-            display: desktop ? "inline-block" : "block",
-            fontSize: String(titleFontSize) + ea,
-            fontWeight: String(titleFontWeight),
-            position: "relative",
-            fontFamily: "sandoll",
-            paddingLeft: desktop ? String(titlePadding) + ea : "",
-            paddingRight: desktop ? String(linetMargin) + ea : "",
-            height: String(titleHeight) + ea,
-            background: colorChip.white,
-            wordSpacing: String(-2) + "px",
-            color: colorChip.black,
-            top: desktop ? String(titleTextTop) + ea : "",
-          },
-          bold: {
-            fontSize: String(titleFontSize) + ea,
-            color: colorChip.black,
-          }
-        },
-        {
-          style: {
-            display: "block",
-            position: "relative",
-            height: desktop ? withOut(titleHeight + titleMargin, ea) : String(mobilePhotoHeight) + ea,
-            marginTop: String(titleMargin) + ea,
-            marginLeft: String(titlePadding) + ea,
-            width: desktop ? String(100) + '%' : withOut(titlePadding * 2, ea),
-            borderRadius: String(5) + "px",
-            backgroundImage: "url('" + FirstMeetingJs.binaryPath + initPhoto + "')",
-            backgroundSize: "100% auto",
-            backgroundPosition: "50% 50%",
-          }
-        },
-      ]
+  createNode({
+    mother: whiteBlock,
+    style: {
+      display: "flex",
+      position: "relative",
+      textAlign: "center",
+      justifyContent: "center",
+      alignItems: "center",
     },
-    {
-      mother: whiteTong,
-      style: {
-        display: desktop ? "inline-flex" : "flex",
-        position: "relative",
-        width: desktop ? String(secondBlockWidth) + ea : withOut(secondBlockMargin * 2, ea),
-        paddingTop: desktop ? String(titleHeight + titleMargin) + ea : String(6) + ea,
-        height: desktop ? withOut(titleHeight + titleMargin, ea) : "",
-        verticalAlign: "top",
-        textAlign: desktop ? "" : "center",
-        marginLeft: String(secondBlockMargin) + ea,
-        flexDirection: "column-reverse"
-      },
-      children: [
-        {
-          text: wordings.contents.join(" "),
-          style: {
-            display: (!media[3] ? "block" : "none"),
-            position: "relative",
-            fontSize: String(initWordingSize) + ea,
-            fontWeight: String(400),
-            color: colorChip.black,
-            lineHeight: String(1.6),
-            bottom: String(initContentsBottom) + ea,
-            marginTop: desktop ? String(initTitleMarginTop) + ea : String(5) + ea,
-          },
-          bold: {
-            fontSize: String(initWordingSize) + ea,
-            fontWeight: String(600),
-            color: colorChip.black
-          }
-        },
-        {
-          text: emptyReload(projectHistory.request.about.where, [ client.requests[requestNumber].request.space.address ]),
-          style: {
-            display: "block",
-            fontSize: String(initWordingSize) + ea,
-            fontWeight: String(400),
-            color: colorChip.black,
-            marginTop: String(initContentsMarginTop) + ea,
-            lineHeight: String(1.4),
-          },
-          bold: {
-            fontSize: String(initWordingSize) + ea,
-            fontWeight: String(600),
-            color: colorChip.black
-          }
-        },
-        {
-          text: wordings.subTitle[1],
-          style: {
-            display: "block",
-            fontSize: String(initWordingSize) + ea,
-            fontWeight: String(600),
-            color: desktop ? colorChip.black : colorChip.green,
-            marginTop: String(initTitleMarginTop) + ea,
-            paddingLeft: String(initContentsPaddingLeft) + ea,
-            lineHeight: String(1.4),
-            position: "relative",
-          },
-          bold: {
-            fontSize: String(initWordingSize) + ea,
-            fontWeight: String(600),
-            color: colorChip.black
-          },
-          children: [
-            {
-              mode: "svg",
-              source: mother.returnArrow("right", colorChip.green),
-              style: {
-                display: desktop ? "block" : "none",
-                position: "absolute",
-                width: String(arrowWidth) + ea,
-                left: String(arrorLeft) + ea,
-                top: String(arrowTop) + ea,
-              }
-            },
-          ]
-        },
-        {
-          text: emptyReload(projectHistory.request.about.when, [ dateToString(project.process.contract.meeting.date, true, true) ]),
-          style: {
-            display: "block",
-            fontSize: String(initWordingSize) + ea,
-            fontWeight: String(400),
-            color: colorChip.black,
-            marginTop: String(initContentsMarginTop) + ea,
-            lineHeight: String(1.4),
-          },
-          bold: {
-            fontSize: String(initWordingSize) + ea,
-            fontWeight: String(600),
-            color: colorChip.black
-          }
-        },
-        {
-          text: wordings.subTitle[0],
-          style: {
-            display: "block",
-            position: "relative",
-            fontSize: String(initWordingSize) + ea,
-            fontWeight: String(600),
-            color: desktop ? colorChip.black : colorChip.green,
-            paddingLeft: String(initContentsPaddingLeft) + ea,
-            lineHeight: String(1.4),
-          },
-          bold: {
-            fontSize: String(initWordingSize) + ea,
-            fontWeight: String(600),
-            color: colorChip.black
-          },
-          children: [
-            {
-              mode: "svg",
-              source: mother.returnArrow("right", colorChip.green),
-              style: {
-                display: desktop ? "block" : "none",
-                position: "absolute",
-                width: String(arrowWidth) + ea,
-                left: String(arrorLeft) + ea,
-                top: String(arrowTop) + ea,
-              }
-            },
-          ]
-        },
-        {
-          text: String(0),
-          style: {
-            display: desktop ? "block" : "none",
-            position: "absolute",
-            right: String(0),
-            top: String(zeroWordingTop) + ea,
-            fontSize: String(zeroWordingSize) + ea,
-            fontWeight: String(200),
-            color: colorChip.gray3
-          }
+    children: [
+      {
+        text: titleWording,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: mobile ? "" : String(titleTop) + ea,
+          fontSize: String(titleFontSize) + ea,
+          fontWeight: String(titleFontWeight),
+          color: colorChip.white,
         }
-      ]
-    }
-  ]);
+      }
+    ]
+  });
+
+  createNode({
+    mother: whiteBlock,
+    style: {
+      display: "flex",
+      position: "relative",
+      textAlign: "center",
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: String(subTitleMarginTop) + ea,
+    },
+    children: [
+      {
+        text: subTitleContents,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: mobile ? "" : String(0) + ea,
+          fontSize: String(subTitleFontSize) + ea,
+          fontWeight: String(subTitleWeight),
+          color: colorChip.white,
+        }
+      }
+    ]
+  });
 
 }
 
 FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
   const instance = this;
   const mother = this.mother;
-  const { client, project, ea, baseTong, media } = this;
+  const { client, project, projectHistory, requestNumber, ea, baseTong, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac } = GeneralJs;
@@ -639,14 +515,21 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
   let mobilePaddingTop, mobilePaddingBottom;
   let periodPaddingLeft;
   let periodLineWidth;
+  let initWordingSize;
+  let zeroWordingSize;
+  let zeroWordingTop;
+  let initTitleMarginTop;
+  let initContentsMarginTop;
+  let initContentsBottom;
+  let initContentsPaddingLeft;
 
   bigDesktop = (media[0] || media[1]);
 
   wordsTitle = wordings.title.join(" ");
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 52, 52, 44, 36, 4.7 %%>;
-  paddingTop =  <%% 46, 46, 40, 32, 4.7 %%>;
+  margin = <%% 55, 55, 47, 39, 4.7 %%>;
+  paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
 
   whiteBottomMargin = <%% 58, 58, 58, 58, 0 %%>;
 
@@ -658,11 +541,11 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
 
   titleBottom = <%% (isMac() ? 21 : 19), (isMac() ? 21 : 19), (isMac() ? 21 : 19), (isMac() ? 21 : 19), 0 %%>;
 
-  mobileTitleLeft = 1.5;
+  mobileTitleLeft = 6;
   mobileTitleTop = -8.7;
 
-  secondBlockWidth = <%% 300, 250, 220, 200, 33 %%>;
-  secondBlockMargin = <%% 36, 35, 34, 34, 33 %%>;
+  secondBlockWidth = <%% 300, 230, 220, 200, 33 %%>;
+  secondBlockMargin = <%% 45, 40, 40, 40, 33 %%>;
 
   contentsWordingSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
   contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
@@ -688,6 +571,16 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
   mobilePaddingTop = 5;
   mobilePaddingBottom = 10.5;
 
+  initWordingSize = <%% 14.5, 14, 14, 13, 3.2 %%>;
+
+  zeroWordingSize = <%% 21, 21, 21, 21, 21 %%>;
+  zeroWordingTop = <%% -3, -3, -3, -3, -3 %%>;
+
+  initTitleMarginTop = <%% 14, 14, 14, 14, 2.5 %%>;
+  initContentsMarginTop = <%% 4, 4, 4, 4, 1 %%>;
+  initContentsBottom = <%% -3, -3, -3, -3, 0 %%>;
+  initContentsPaddingLeft = <%% 14, 14, 14, 14, 0 %%>;
+
   this.whiteMargin = (desktop ? margin : 0);
 
   whiteBlock = createNode({
@@ -696,11 +589,11 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
       position: "relative",
       borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
-      background: desktop ? colorChip.white : "",
+      background: colorChip.white,
       paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
       paddingBottom: desktop ? String(whiteBottomMargin) + ea : "",
       marginBottom: String(bottomMargin) + ea,
-      boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
     },
     children: [
       {
@@ -725,9 +618,8 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
       {
         style: {
           display: "block",
-          position: mobile ? "absolute" : "relative",
+          position: "relative",
           left: desktop ? "" : String(mobileTitleLeft) + ea,
-          top: desktop ? "" : String(mobileTitleTop) + ea,
           width: desktop ? String(100) + '%' : withOut((mobileTitleLeft * 2), ea),
           marginBottom: String(titleBottom) + ea,
           zIndex: mobile ? String(1) : "",
@@ -766,9 +658,6 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
           display: "block",
           position: "relative",
           width: String(100) + '%',
-          background: desktop ? "" : colorChip.white,
-          boxShadow: mobile ? "0px 5px 12px -10px " + colorChip.gray5 : "",
-          borderRadius: mobile ? String(1) + ea : "",
           overflow: "hidden",
           marginBottom: String(0) + ea,
           marginTop: desktop ? "" : String(14) + ea,
@@ -803,26 +692,120 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
         marginLeft: desktop ? String(secondBlockMargin) + ea : String(mobileCalendarMargin) + ea,
         flexDirection: "column-reverse",
         paddingTop: desktop ? "" : String(mobilePaddingTop) + ea,
-        paddingBottom: desktop ? "" : String(mobilePaddingBottom) + ea,
+        paddingBottom: desktop ? String(1) + ea : String(mobilePaddingBottom) + ea,
       },
       children: [
         {
           text: wordings.contents.join(" "),
           style: {
-            display: "block",
+            display: (!media[3] ? "block" : "none"),
             position: "relative",
-            fontSize: String(contentsWordingSize) + ea,
+            fontSize: String(initWordingSize) + ea,
             fontWeight: String(400),
             color: colorChip.black,
             lineHeight: String(1.6),
-            bottom: String(contentsBottom) + ea,
-            marginTop: String(desktop ? contentsMarginTop : mobilePaddingTop) + ea,
+            bottom: String(initContentsBottom) + ea,
+            marginTop: desktop ? String(bigNumberBetweenMargin) + ea : String(5) + ea,
           },
           bold: {
-            fontSize: String(contentsWordingSize) + ea,
+            fontSize: String(initWordingSize) + ea,
             fontWeight: String(600),
             color: colorChip.black
           }
+        },
+        {
+          text: emptyReload(projectHistory.request.about.where, [ client.requests[requestNumber].request.space.address ]),
+          style: {
+            display: "block",
+            fontSize: String(initWordingSize) + ea,
+            fontWeight: String(400),
+            color: colorChip.black,
+            marginTop: String(initContentsMarginTop) + ea,
+            lineHeight: String(1.6),
+          },
+          bold: {
+            fontSize: String(initWordingSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black
+          }
+        },
+        {
+          text: wordings.subTitle[0],
+          style: {
+            display: "block",
+            fontSize: String(initWordingSize) + ea,
+            fontWeight: String(600),
+            color: desktop ? colorChip.black : colorChip.green,
+            marginTop: String(bigNumberBetweenMargin) + ea,
+            paddingLeft: String(initContentsPaddingLeft) + ea,
+            lineHeight: String(1.6),
+            position: "relative",
+          },
+          bold: {
+            fontSize: String(initWordingSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black
+          },
+          children: [
+            {
+              mode: "svg",
+              source: mother.returnArrow("right", colorChip.green),
+              style: {
+                display: desktop ? "block" : "none",
+                position: "absolute",
+                width: String(arrowWidth) + ea,
+                left: String(arrorLeft) + ea,
+                top: String(arrowTop) + ea,
+              }
+            },
+          ]
+        },
+        {
+          text: emptyReload(projectHistory.request.about.when, [ dateToString(project.process.contract.meeting.date, true, true) ]),
+          style: {
+            display: "block",
+            fontSize: String(initWordingSize) + ea,
+            fontWeight: String(400),
+            color: colorChip.black,
+            marginTop: String(initContentsMarginTop) + ea,
+            lineHeight: String(1.6),
+          },
+          bold: {
+            fontSize: String(initWordingSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black
+          }
+        },
+        {
+          text: wordings.subTitle[1],
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(initWordingSize) + ea,
+            fontWeight: String(600),
+            color: desktop ? colorChip.black : colorChip.green,
+            paddingLeft: String(initContentsPaddingLeft) + ea,
+            marginTop: String(bigNumberBetweenMargin) + ea,
+            lineHeight: String(1.6),
+          },
+          bold: {
+            fontSize: String(initWordingSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black
+          },
+          children: [
+            {
+              mode: "svg",
+              source: mother.returnArrow("right", colorChip.green),
+              style: {
+                display: desktop ? "block" : "none",
+                position: "absolute",
+                width: String(arrowWidth) + ea,
+                left: String(arrorLeft) + ea,
+                top: String(arrowTop) + ea,
+              }
+            },
+          ]
         },
         {
           style: {
@@ -850,7 +833,7 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
                 fontWeight: String(200),
                 fontFamily: "graphik",
                 color: colorChip.green,
-                lineHeight: String(1.4),
+                lineHeight: String(1.6),
                 background: colorChip.white,
                 paddingLeft: String(16) + ea,
                 position: "relative",
@@ -906,7 +889,7 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
           ]
         },
         {
-          text: wordings.subTitle[1],
+          text: wordings.subTitle[2],
           style: {
             display: "block",
             fontSize: String(contentsWordingSize) + ea,
@@ -914,7 +897,7 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
             color: colorChip.black,
             marginTop: String(bigNumberBetweenMargin) + ea,
             paddingLeft: String(contentsPaddingLeft) + ea,
-            lineHeight: String(1.4),
+            lineHeight: String(1.6),
             position: "relative",
           },
           children: [
@@ -986,8 +969,8 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
   matrix = wordings.matrix;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 52, 52, 44, 36, 4.7 %%>;
-  paddingTop =  <%% 46, 46, 40, 32, 4.7 %%>;
+  margin = <%% 55, 55, 47, 39, 4.7 %%>;
+  paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
 
   whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
 
@@ -1286,8 +1269,8 @@ FirstMeetingJs.prototype.insertPhotoBox = function (indexNumber) {
   wordsTitle = wordings.title[0];
 
   bottomMargin = <%% 160, 160, 160, 120, 30 %%>;
-  margin = <%% 52, 52, 44, 36, 4.7 %%>;
-  paddingTop =  <%% 46, 46, 40, 32, 4.7 %%>;
+  margin = <%% 55, 55, 47, 39, 4.7 %%>;
+  paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
 
   whiteBottomMargin = <%% 68, 68, 68, 68, 0 %%>;
 

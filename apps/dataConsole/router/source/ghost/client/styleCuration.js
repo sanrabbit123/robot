@@ -3626,8 +3626,8 @@ StyleCurationJs.prototype.insertCenterBox = function () {
   }
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 52, 52, 44, 36, 4.7 %%>;
-  paddingTop =  <%% 50, 50, 42, 34, 4.7 %%>;
+  margin = <%% 55, 55, 47, 39, 4.7 %%>;
+  paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
 
   titleFontSize = <%% 21, 21, 21, 21, 4.3 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
