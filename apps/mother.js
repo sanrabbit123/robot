@@ -2439,15 +2439,19 @@ Mother.prototype.decryptoHash = function (password, hash, option = { algorithm: 
 Mother.prototype.mysqlQuery = function (query, option = { local: false, front: true }) {
   const mysql = require('mysql2');
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  const mysqlStandard = ADDRESS["frontinfo"];
+  let mysqlStandard;
   let host;
+
+  mysqlStandard = ADDRESS["frontinfo"];
   if (option.local === true) {
     host = "127.0.0.1";
   } else if (option.front === true) {
     host = ADDRESS["frontinfo"]["host"];
   } else {
-    host = ADDRESS["frontinfo"]["host"];
+    mysqlStandard = option;
+    host = mysqlStandard.host;
   }
+  
   const { user, password, database } = mysqlStandard;
   const connection = mysql.createConnection({ host, user, password, database });
   let tong = {};

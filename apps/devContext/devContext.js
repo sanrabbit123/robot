@@ -93,9 +93,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
     // const selfMongo = this.MONGOC;
     // const projects = await back.getProjectsByQuery({}, { selfMongo });
     // let whereQuery, updateQuery;
@@ -114,6 +111,52 @@ DevContext.prototype.launching = async function () {
     // }
 
 
+    // const targetFolder = `${process.cwd()}/temp/target`;
+    // const targetList = (await fileSystem(`readDir`, [ targetFolder ])).filter((str) => { return str !== ".DS_Store" }).map((str) => { return `${targetFolder}/${str}` });
+    // const token = "____split____";
+    // let raw, num;
+    // let arr;
+    // let columns;
+    // let name;
+    // let query;
+    // let queryArr;
+    // let createQuery;
+    //
+    // for (let txt of targetList) {
+    //   raw = await fileSystem(`readString`, [ txt ]);
+    //   arr = raw.split("\n").map((str) => { let a = str.split(token); a.shift(); return a; }).filter((arr) => { return arr.length > 1 });
+    //
+    //   name = txt.split("/")[txt.split("/").length - 1].replace(/\.txt$/i, '');
+    //   columns = arr.shift();
+    //
+    //   queryArr = [];
+    //   createQuery = "CREATE TABLE " + name + " (";
+    //   createQuery += "id INT(11) NOT NULL AUTO_INCREMENT,";
+    //   createQuery += " ";
+    //   for (let i of columns) {
+    //     createQuery += i;
+    //     createQuery += " ";
+    //     createQuery += "VARCHAR(255)";
+    //     createQuery += ", ";
+    //   }
+    //   createQuery += "PRIMARY KEY (id));";
+    //   queryArr.push(createQuery);
+    //
+    //   for (let valuesArr of arr) {
+    //     query = "INSERT INTO " + name + " (" + columns.join(",") + ") VALUES (";
+    //     for (let value of valuesArr) {
+    //       query += "'";
+    //       query += value.replace(/'/gi ,'"');
+    //       query += "',";
+    //     }
+    //     query = query.slice(0, -1);
+    //     query += ");";
+    //     queryArr.push(query);
+    //   }
+    //
+    //   await fileSystem(`write`, [ `${targetFolder}/${name}.sql`, queryArr.join("\n") ])
+    //
+    // }
 
 
 
