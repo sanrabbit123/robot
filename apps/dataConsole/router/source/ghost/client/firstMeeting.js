@@ -567,7 +567,7 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
   periodLineWidth = <%% 4, 4, 4, 4, 4 %%>;
 
   mobileCalendarMargin = 6;
-  mobileCalendarMarginTop = 5;
+  mobileCalendarMarginTop = 4;
   mobilePaddingTop = 5;
   mobilePaddingBottom = 10.5;
 
