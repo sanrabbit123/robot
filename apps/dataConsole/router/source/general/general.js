@@ -4187,7 +4187,7 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
 
   borderWeight = <%% 1, 1, 1, 1, 1 %%>;
 
-  size = <%% 15, 14, 13, 11, 2.6 %%>;
+  size = <%% 15, 14, 13, 12, 2.6 %%>;
   if (typeof option.style.size === "number") {
     size = option.style.size;
   }
