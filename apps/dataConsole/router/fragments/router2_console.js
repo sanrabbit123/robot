@@ -3551,11 +3551,17 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
         const buyername = req.body.buyerName;
         const buyertel = req.body.buyerPhone;
         const buyeremail = req.body.buyerEmail;
-        const returnUrl = req.body.currentPage + "/inicisPayment?cliid=" + cliid + "&needs=" + ([ kind, desid, proid, method ]).join(',');
-        const closeUrl = req.body.currentPage + "/tools/trigger";
-
+        let returnUrl, closeUrl;
         let pluginScript, formValue, acceptmethod;
         let future;
+
+        if ((new RegExp(address.frontinfo.host), "gi").test(req.body.currentPage)) {
+          returnUrl = req.body.currentPage + "/estimation.php?cliid=" + cliid + "&needs=" + ([ kind, desid, proid, method ]).join(',');
+          closeUrl = "https://" + address.backinfo.host + "/tools/trigger";
+        } else {
+          returnUrl = req.body.currentPage + "/estimation?cliid=" + cliid + "&needs=" + ([ kind, desid, proid, method ]).join(',');
+          closeUrl = req.body.currentPage + "/tools/trigger";
+        }
 
         if (device === "mobile" && gopaymethod === "Card") {
           pluginScript = '';

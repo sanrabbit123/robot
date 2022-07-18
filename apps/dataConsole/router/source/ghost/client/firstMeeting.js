@@ -1395,14 +1395,14 @@ FirstMeetingJs.prototype.insertPhotoBox = function (indexNumber) {
   images = [];
   ajaxJson({
     cliid
-  }, "/ghostPass_clientPhoto").then((obj) => {
+  }, BACKHOST + "/ghostPass_clientPhoto").then((obj) => {
     images = images.concat(obj.sitePhoto);
     images = images.concat(obj.preferredPhoto);
     return ajaxJson({
       idArr: [ cliid ],
       method: "client",
       property: "curation",
-    }, "/getHistoryProperty");
+    }, BACKHOST + "/getHistoryProperty");
   }).then((raw) => {
     if (typeof raw !== "object" || Array.isArray(raw)) {
       throw new Error("결과 없음");
@@ -1410,7 +1410,7 @@ FirstMeetingJs.prototype.insertPhotoBox = function (indexNumber) {
     obj = raw;
     return ajaxJson({
       images: obj[cliid].image
-    }, "/ghostPass_photoParsing");
+    }, BACKHOST + "/ghostPass_photoParsing");
   }).then((raw) => {
     curation = obj[cliid];
     images = curation.image.map((image) => {
@@ -1694,7 +1694,7 @@ FirstMeetingJs.prototype.insertPhotoBox = function (indexNumber) {
     }
 
   }).catch((err) => {
-    GeneralJs.ajaxJson({ message: "FirstMeetingJs.insertPhotoBox : " + err.message }, "/errorLog").catch((e) => {});
+    GeneralJs.ajaxJson({ message: "FirstMeetingJs.insertPhotoBox : " + err.message }, BACKHOST + "/errorLog").catch((e) => {});
   });
 
 }
@@ -1719,7 +1719,7 @@ FirstMeetingJs.prototype.launching = async function (loading) {
     }
 
     proid = getObj.proid;
-    projects = await ajaxJson({ noFlat: true, whereQuery: { proid } }, "/getProjects", { equal: true });
+    projects = await ajaxJson({ whereQuery: { proid } }, SECONDHOST + "/getProjects", { equal: true });
     if (projects.length === 0) {
       window.alert("잘못된 접근입니다!");
       window.location.href = this.frontPage;
@@ -1730,18 +1730,16 @@ FirstMeetingJs.prototype.launching = async function (loading) {
       window.location.href = this.frontPage;
     }
     this.project = project;
-    this.projectHistory = await ajaxJson({ id: project.proid, rawMode: true }, "/getProjectHistory");
+    this.projectHistory = await ajaxJson({ id: project.proid, rawMode: true }, BACKHOST + "/getProjectHistory");
 
-    clients = await ajaxJson({ noFlat: true, whereQuery: { cliid: project.cliid } }, "/getClients", { equal: true });
+    clients = await ajaxJson({ whereQuery: { cliid: project.cliid } }, SECONDHOST + "/getClients", { equal: true });
     if (clients.length === 0) {
       window.alert("잘못된 접근입니다!");
       window.location.href = this.frontPage;
     }
     [ client ] = clients;
     this.client = client;
-    this.clientHistory = await ajaxJson({ id: client.cliid, rawMode: true }, "/getClientHistory");
-
-    document.querySelector("title").textContent = client.name + " 고객님 현장 미팅 안내 | 홈리에종";
+    this.clientHistory = await ajaxJson({ id: client.cliid, rawMode: true }, BACKHOST + "/getClientHistory");
 
     requestNumber = 0;
     for (let i = 0; i < client.requests.length; i++) {
@@ -1752,7 +1750,7 @@ FirstMeetingJs.prototype.launching = async function (loading) {
     }
     this.requestNumber = requestNumber;
 
-    designers = await ajaxJson({ noFlat: true, whereQuery: { desid: project.desid } }, "/getDesigners", { equal: true });
+    designers = await ajaxJson({ whereQuery: { desid: project.desid } }, SECONDHOST + "/getDesigners", { equal: true });
     if (designers.length === 0) {
       window.alert("잘못된 접근입니다!");
       window.location.href = this.frontPage;
@@ -1760,7 +1758,7 @@ FirstMeetingJs.prototype.launching = async function (loading) {
     [ designer ] = designers;
     this.designer = designer;
 
-    service = await ajaxJson({ key: "firstMeeting" }, "/getServiceByKey", { equal: true });
+    service = await ajaxJson({ key: "firstMeeting" }, BACKHOST + "/getServiceByKey", { equal: true });
     this.wordings = this.meetingWordings(service);
 
     await this.mother.ghostClientLaunching({
@@ -1785,7 +1783,7 @@ FirstMeetingJs.prototype.launching = async function (loading) {
           instance.insertChecklistBox(2);
           instance.insertPhotoBox(3);
         } catch (e) {
-          await GeneralJs.ajaxJson({ message: "FirstMeetingJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
+          await GeneralJs.ajaxJson({ message: "FirstMeetingJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
       }
     });
@@ -1793,6 +1791,6 @@ FirstMeetingJs.prototype.launching = async function (loading) {
     loading.parentNode.removeChild(loading);
 
   } catch (e) {
-    await GeneralJs.ajaxJson({ message: "FirstMeetingJs.launching : " + e.message }, "/errorLog");
+    await GeneralJs.ajaxJson({ message: "FirstMeetingJs.launching : " + e.message }, BACKHOST + "/errorLog");
   }
 }

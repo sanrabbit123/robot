@@ -54,7 +54,7 @@ const UniversalEstimationJs = function () {
   this.mother = new GeneralJs();
 }
 
-UniversalEstimationJs.binaryPath = "/middle/estimation";
+UniversalEstimationJs.binaryPath = FRONTHOST + "/middle/estimation";
 
 UniversalEstimationJs.prototype.billWordings = function () {
   const instance = this;
