@@ -3555,7 +3555,7 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
         let pluginScript, formValue, acceptmethod;
         let future;
 
-        if ((new RegExp(address.frontinfo.host), "gi").test(req.body.currentPage)) {
+        if ((new RegExp(address.frontinfo.host, "gi")).test(req.body.currentPage)) {
           returnUrl = req.body.currentPage + "/estimation.php?cliid=" + cliid + "&needs=" + ([ kind, desid, proid, method ]).join(',');
           closeUrl = "https://" + address.backinfo.host + "/tools/trigger";
         } else {
