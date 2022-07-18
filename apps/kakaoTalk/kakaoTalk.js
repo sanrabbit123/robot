@@ -700,8 +700,8 @@ KakaoTalk.prototype.templateTong = function (target) {
       },
     },
     firstMeetingWeekAgo: {
-      name: "현장 미팅 안내 일주일",
-      id: "TG_2313",
+      name: "현장 미팅 안내 일주일 수정",
+      id: "TJ_3907",
       needs: [
         "client",
         "date",
@@ -726,8 +726,8 @@ KakaoTalk.prototype.templateTong = function (target) {
       },
     },
     firstMeetingDayAgo: {
-      name: "현장 미팅 안내 하루전",
-      id: "TG_2318",
+      name: "현장 미팅 안내 하루전 수정",
+      id: "TJ_3908",
       needs: [
         "client",
         "date",

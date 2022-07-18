@@ -183,17 +183,79 @@ GeneralJs.prototype.setNavigator = function () {
   createNode({
     mother: naviBase,
     style: {
+      display: "inline-block",
       position: "absolute",
       top: String(wordTop) + "px",
       right: desktop ? "calc(50% - " + String(standardWidth / 2) + ea + ")" : String(mobileMargin) + ea,
       height: String(wordHeight) + "px",
-      width: String(200) + "px",
+      width: String(600) + "px",
       fontSize: String(wordSize) + "px",
-      fontWeight: String(300),
+      fontWeight: String(500),
       textAlign: "right",
       wordSpacing: String(-1) + "px",
       color: colorChip.white,
-    }
+    },
+    children: [
+      {
+        text: "기본 정보",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: "inherit",
+          fontWeight: "inherit",
+          color: "inherit",
+          cursor: "pointer",
+          marginRight: String(wordingMarginRight) + ea,
+        }
+      },
+      {
+        text: "프로젝트 관리",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: "inherit",
+          fontWeight: "inherit",
+          color: "inherit",
+          cursor: "pointer",
+          marginRight: String(wordingMarginRight) + ea,
+        }
+      },
+      {
+        text: "정산 정보",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: "inherit",
+          fontWeight: "inherit",
+          color: "inherit",
+          cursor: "pointer",
+          marginRight: String(wordingMarginRight) + ea,
+        }
+      },
+      {
+        text: "의뢰서",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: "inherit",
+          fontWeight: "inherit",
+          color: "inherit",
+          cursor: "pointer",
+          marginRight: String(wordingMarginRight) + ea,
+        }
+      },
+      {
+        text: "일정 관리",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: "inherit",
+          fontWeight: "inherit",
+          color: "inherit",
+          cursor: "pointer",
+        }
+      },
+    ]
   });
 }
 
