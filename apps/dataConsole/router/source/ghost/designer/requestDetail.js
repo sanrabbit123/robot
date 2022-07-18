@@ -562,9 +562,9 @@ RequestDetailJs.prototype.insertInformationBox = function (indexNumber) {
 
   contentsTitleMarginTop = <%% 14, 14, 14, 14, 1 %%>;
   contentsMarginTop = <%% 36, 36, 36, 36, 1 %%>;
-  contentsPaddingLeft = <%% 14, 14, 14, 14, 0 %%>;
+  contentsPaddingLeft = <%% 14, 14, 14, 13, 0 %%>;
   arrowWidth = <%% 8, 8, 7, 6, 1.6 %%>;
-  arrowTop = <%% (isMac() ? 6 : 4), (isMac() ? 6 : 4), (isMac() ? 6 : 4), (isMac() ? 6 : 4), 0.3 %%>;
+  arrowTop = <%% (isMac() ? 6 : 4), (isMac() ? 6 : 4), (isMac() ? 7 : 5), (isMac() ? 7 : 5), 0.3 %%>;
   arrorLeft = <%% 1, 1, 1, 1, 0 %%>;
 
   bigNumberSize = <%% 37, 37, 28, 30, 5 %%>;
