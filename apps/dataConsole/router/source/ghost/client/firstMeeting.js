@@ -539,7 +539,7 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
-  titleBottom = <%% (isMac() ? 21 : 19), (isMac() ? 21 : 19), (isMac() ? 21 : 19), (isMac() ? 21 : 19), 0 %%>;
+  titleBottom = <%% (isMac() ? 18 : 16), (isMac() ? 18 : 16), (isMac() ? 18 : 16), (isMac() ? 18 : 16), 0 %%>;
 
   mobileTitleLeft = 6;
   mobileTitleTop = -8.7;
@@ -979,7 +979,7 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
-  titleBottom = <%% (isMac() ? 21 : 19), (isMac() ? 21 : 19), (isMac() ? 21 : 19), (isMac() ? 21 : 19), 0 %%>;
+  titleBottom = <%% (isMac() ? 18 : 16), (isMac() ? 18 : 16), (isMac() ? 18 : 16), (isMac() ? 18 : 16), 0 %%>;
   contentsAreaPaddingTop = <%% 34, 34, 34, 34, 6 %%>;
 
   mobileTitleLeft = 1.5;
@@ -1279,7 +1279,7 @@ FirstMeetingJs.prototype.insertPhotoBox = function (indexNumber) {
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
-  titleBottom = <%% 26, 26, 26, 26, 6 %%>;
+  titleBottom = <%% 24, 24, 24, 24, 6 %%>;
   mobileTitleLeft = 1.5;
   mobileTitleTop = -8.7;
 
