@@ -89,7 +89,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await findCode("tools/trigger");
+
+
 
 
 
@@ -2753,9 +2754,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "차수연",
-    //     designer: "김소영",
-    //     link: "https://drive.google.com/drive/folders/1Nlp2ZLeeq740IdwwgYmFOWWxyR4xWGI4",
+    //     client: "서윤희",
+    //     designer: "권미정",
+    //     link: "https://drive.google.com/drive/folders/1YozTLB2wBPqpdu40IqoB3e1GQA5_6kmI",
     //     pay: true
     //   },
     // ]);

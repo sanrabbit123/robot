@@ -57,14 +57,42 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           type: "string",
         },
         {
-          name: "계약일",
+          name: "우선 디자이너",
           value: function (designer) {
-            const zeroAddition = (num) => { return (num < 10) ? '0' + String(num) : String(num); }
-            const targetDate = designer.information.contract.date;
-            return String(targetDate.getFullYear()) + '-' + zeroAddition(targetDate.getMonth() + 1) + '-' + zeroAddition(targetDate.getDate());
+            let contents, value;
+            contents = [
+              "우선",
+              "일반"
+            ];
+            value = [
+              (designer.analytics.grade === 1) ? 1 : 0,
+              (designer.analytics.grade === 1) ? 0 : 1,
+            ];
+            return { contents, value };
           },
-          height: factorHeight,
-          type: "string",
+          update: function (value, designer) {
+            let contents, target;
+            contents = [
+              "우선",
+              "일반"
+            ];
+            target = null;
+            for (let i = 0; i < value.length; i++) {
+              if (value[i] === 1) {
+                target = contents[i];
+                break;
+              }
+            }
+            if (target === null) {
+              target = contents[1];
+            }
+            return { "analytics.grade": (target === contents[0] ? 1 : 0) };
+          },
+          height: factorHeight * 1.1,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
         },
         {
           name: "웹페이지",
