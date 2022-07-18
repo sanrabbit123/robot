@@ -519,7 +519,6 @@ RequestDetailJs.prototype.insertInformationBox = function (indexNumber) {
   let bigNumberMargin;
   let bigNumberBetweenMargin;
   let periodLineTop;
-  let bigDesktop;
   let calendar;
   let mobileCalendarMargin, mobileCalendarMarginTop;
   let mobilePaddingTop, mobilePaddingBottom;
@@ -533,9 +532,7 @@ RequestDetailJs.prototype.insertInformationBox = function (indexNumber) {
   let initContentsBottom;
   let initContentsPaddingLeft;
 
-  bigDesktop = (media[0] || media[1]);
-
-  wordsTitle = wordings.title.join(" ") + " <b%: " + client.name + " 고객님%b>";
+  wordsTitle = desktop ? wordings.title.join(" ") + " <b%: " + client.name + " 고객님%b>" : wordings.title.join(" ");
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
