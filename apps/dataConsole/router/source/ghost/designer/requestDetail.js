@@ -1739,7 +1739,6 @@ RequestDetailJs.prototype.launching = async function (loading) {
       },
       local: async () => {
         try {
-          // instance.insertInitBox();
           instance.insertInformationBox(1);
           instance.insertChecklistBox(2);
           instance.insertPhotoBox(3);
