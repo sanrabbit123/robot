@@ -475,7 +475,7 @@ RequestDetailJs.prototype.insertInformationBox = function (indexNumber) {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, blankHref } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, blankHref, downloadFile } = GeneralJs;
   const wordings = this.wordings.tableWordings;
   const {
     title,
@@ -531,6 +531,7 @@ RequestDetailJs.prototype.insertInformationBox = function (indexNumber) {
   let initContentsMarginTop;
   let initContentsBottom;
   let initContentsPaddingLeft;
+  let printSize;
 
   wordsTitle = desktop ? wordings.title.join(" ") + " <b%: " + client.name + " 고객님%b>" : wordings.title.join(" ");
 
@@ -541,6 +542,7 @@ RequestDetailJs.prototype.insertInformationBox = function (indexNumber) {
   whiteBottomMargin = <%% 58, 58, 58, 58, 0 %%>;
 
   titleFontSize = <%% 22, 22, 22, 21, 4.3 %%>;
+  printSize = <%% 14, 14, 13, 12, 4 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
 
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
@@ -636,8 +638,11 @@ RequestDetailJs.prototype.insertInformationBox = function (indexNumber) {
             text: wordsTitle,
             event: {
               click: function (e) {
-                ajaxJson({ url: window.encodeURIComponent("https://home-liaison.com/index.php") }, "/ghostPass_pageToPng").then((res) => {
-                  blankHref(window.decodeURIComponent(res.url));
+                const loading = instance.mother.grayLoading();
+                ajaxJson({ url: window.encodeURIComponent(window.location.href) }, "/ghostPass_pageToPng").then((res) => {
+                  return downloadFile(window.decodeURIComponent(res.url));
+                }).then(() => {
+                  loading.remove();
                 }).catch((err) => {
                   console.log(err);
                 })
@@ -656,7 +661,7 @@ RequestDetailJs.prototype.insertInformationBox = function (indexNumber) {
             bold: {
               background: colorChip.white,
               color: colorChip.green,
-              fontSize: String(14) + ea,
+              fontSize: String(printSize) + ea,
               fontWeight: String(300),
               cursor: "pointer",
             },
@@ -2118,11 +2123,6 @@ RequestDetailJs.prototype.launching = async function (loading) {
     });
 
     loading.parentNode.removeChild(loading);
-
-    console.log(await ajaxJson({ html: window.document.body.innerHTML.replace(/=/gi, "__equal__").replace(/&/gi, "__ampersand__").replace(/'/gi, "__quotes__") }, "/ghostPass_pdfPrint"))
-
-
-
 
   } catch (err) {
     console.log(err);
