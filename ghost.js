@@ -2434,6 +2434,38 @@ Ghost.prototype.ghostRouter = function (needs) {
     }
   };
 
+  //POST - pageToPng
+  funcObj.post_pageToPng = {
+    link: [ "/pageToPng" ],
+    func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      try {
+        if (typeof req.body.url !== "string") {
+          throw new Error("invaild post : url must be string");
+        }
+        const static = instance.address.officeinfo.ghost.file.static;
+        const imageName = `pagePrint_${uniqueValue("string")}.png`;
+
+        await chrome.pageToPng(global.decodeURIComponent(req.body.url), static + "/" + imageName, false);
+
+        setQueue(() => {
+          shell.exec(`rm -rf ${shellLink(static)}/${imageName};`);
+        }, 15 * 60 * 1000);
+
+        res.send(JSON.stringify({ url: global.encodeURIComponent("https://" + instance.address.officeinfo.ghost.host + "/" + imageName) }));
+
+      } catch (e) {
+        console.log(e);
+        res.send(JSON.stringify({ message: "error : " + e.message }));
+      }
+    }
+  };
+
   //POST - insync check
   funcObj.post_insyncCheck = {
     link: [ "/insyncCheck" ],

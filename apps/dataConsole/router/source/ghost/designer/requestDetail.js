@@ -475,7 +475,7 @@ RequestDetailJs.prototype.insertInformationBox = function (indexNumber) {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, blankHref } = GeneralJs;
   const wordings = this.wordings.tableWordings;
   const {
     title,
@@ -634,6 +634,15 @@ RequestDetailJs.prototype.insertInformationBox = function (indexNumber) {
         children: [
           {
             text: wordsTitle,
+            event: {
+              click: function (e) {
+                ajaxJson({ url: window.encodeURIComponent("https://home-liaison.com/index.php") }, "/ghostPass_pageToPng").then((res) => {
+                  blankHref(window.decodeURIComponent(res.url));
+                }).catch((err) => {
+                  console.log(err);
+                })
+              }
+            },
             style: {
               position: "relative",
               display: "inline-block",
@@ -646,10 +655,11 @@ RequestDetailJs.prototype.insertInformationBox = function (indexNumber) {
             },
             bold: {
               background: colorChip.white,
-              color: colorChip.black,
-              fontSize: String(titleFontSize) + ea,
+              color: colorChip.green,
+              fontSize: String(14) + ea,
               fontWeight: String(300),
-            }
+              cursor: "pointer",
+            },
           },
           {
             text: String(indexNumber),
