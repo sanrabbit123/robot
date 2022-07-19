@@ -119,6 +119,7 @@ GeneralJs.prototype.setNavigator = function () {
   let thisIndex;
   let hamburgerEvent;
   let mobileHrefEvent;
+  let naviMenu;
 
   iconHeight = <%% 21.5, 21.5, 19, 17, 16 %%>;
   iconTop = <%% 22, 22, 20.5, 18, 20 %%>;
@@ -138,6 +139,39 @@ GeneralJs.prototype.setNavigator = function () {
   mobileVerticalBetween = 37;
 
   thisIndex = 99;
+  naviMenu = [
+    {
+      title: "기본 정보",
+      href: FRONTHOST + "/about.php",
+      green: [],
+    },
+    {
+      title: "프로젝트 관리",
+      href: FRONTHOST + "/portfolio.php",
+      green: [],
+    },
+    {
+      title: "정산 정보",
+      href: FRONTHOST + "/designer.php",
+      green: [],
+    },
+    {
+      title: "의뢰서",
+      href: FRONTHOST + "/review.php",
+      green: [],
+    },
+    {
+      title: "일정 관리",
+      href: FRONTHOST + "/consulting.php",
+      green: [],
+    },
+  ];
+  for (let i = 0; i < naviMenu.length; i++) {
+    if (naviMenu[i].green.includes(name)) {
+      thisIndex = i;
+      break;
+    }
+  }
 
   if (desktop) {
     wordTop = wordTop + (GeneralJs.isMac() ? 0 : 1);
@@ -180,83 +214,165 @@ GeneralJs.prototype.setNavigator = function () {
     }
   });
 
-  createNode({
-    mother: naviBase,
-    style: {
-      display: "inline-block",
-      position: "absolute",
-      top: String(wordTop) + "px",
-      right: desktop ? "calc(50% - " + String(standardWidth / 2) + ea + ")" : String(mobileMargin) + ea,
-      height: String(wordHeight) + "px",
-      width: String(600) + "px",
-      fontSize: String(wordSize) + "px",
-      fontWeight: String(500),
-      textAlign: "right",
-      wordSpacing: String(-1) + "px",
-      color: colorChip.white,
-    },
-    children: [
-      {
-        text: "기본 정보",
+  if (desktop) {
+    naviTong = createNode({
+      mother: naviBase,
+      style: {
+        display: "inline-block",
+        position: "absolute",
+        top: String(wordTop) + "px",
+        right: desktop ? "calc(50% - " + String(standardWidth / 2) + ea + ")" : String(mobileMargin) + ea,
+        height: String(wordHeight) + "px",
+        width: String(600) + "px",
+        fontSize: String(wordSize) + "px",
+        fontWeight: String(500),
+        textAlign: "right",
+        wordSpacing: String(-1) + "px",
+        color: colorChip.white,
+      }
+    });
+    for (let i = 0; i < naviMenu.length; i++) {
+      createNode({
+        mother: naviTong,
+        attribute: {
+          index: String(i)
+        },
+        text: naviMenu[i].title,
         style: {
           display: "inline-block",
           position: "relative",
+          top: String(isMac() ? 0 : 2) + ea,
           fontSize: "inherit",
           fontWeight: "inherit",
           color: "inherit",
           cursor: "pointer",
-          marginRight: String(wordingMarginRight) + ea,
+          marginRight: String(i === naviMenu.length - 1 ? 0 : wordingMarginRight) + ea,
+          transition: "all 0.5s ease",
         }
+      });
+    }
+  } else {
+    mobileMenuTong = createNode({
+      mother: naviBase,
+      attribute: {
+        toggle: "off",
       },
-      {
-        text: "프로젝트 관리",
+      class: [ "backblurdefault_lite" ],
+      style: {
+        position: "relative",
+        top: String(100) + '%',
+        display: "block",
+        height: String(0) + "px",
+        overflow: "hidden",
+        transition: "all 0.5s ease",
+      },
+      children: [
+        {
+          class: [ "backblurdefault_lite" ],
+          style: {
+            position: "absolute",
+            bottom: String(0),
+            left: String(0),
+            width: String(100) + '%',
+            height: String(mobileMenuHeight) + "px",
+            background: colorChip.gradientGray,
+          },
+          children: [
+            {
+              style: {
+                position: "relative",
+                width: String(100) + '%',
+                height: String(100) + '%',
+              }
+            }
+          ]
+        }
+      ]
+    });
+    mobileHrefEvent = function (e) {
+      const index = Number(this.getAttribute("index"));
+      selfHref(naviMenu[index].href);
+    }
+    for (let i = 0; i < naviMenu.length; i++) {
+      createNode({
+        mother: mobileMenuTong.firstChild.firstChild,
+        attribute: {
+          index: String(i)
+        },
+        event: {
+          click: mobileHrefEvent,
+          selectstart: function (e) {
+            e.preventDefault();
+          },
+          touchstart: function (e) {
+            const self = this;
+            self.setAttribute(touchStartConst, "on");
+            setQueue(() => {
+              self.setAttribute(touchStartConst, "off");
+            });
+          },
+          touchend: function (e) {
+            if (this.getAttribute(touchStartConst) === "on") {
+              mobileHrefEvent.call(this, e);
+            }
+          }
+        },
+        text: naviMenu[i].title,
         style: {
-          display: "inline-block",
-          position: "relative",
-          fontSize: "inherit",
-          fontWeight: "inherit",
-          color: "inherit",
-          cursor: "pointer",
-          marginRight: String(wordingMarginRight) + ea,
+          display: "block",
+          position: "absolute",
+          fontSize: String(wordingSize) + "px",
+          fontWeight: String(600),
+          color: colorChip.white,
+          width: String(100) + '%',
+          textAlign: "center",
+          top: String(mobileFirstTop + (mobileVerticalBetween * i)) + "px",
+        }
+      });
+    }
+
+    hamburgerEvent = function (e) {
+      const toggle = mobileMenuTong.getAttribute("toggle");
+      if (toggle === "off") {
+        mobileMenuTong.style.height = String(mobileMenuHeight) + "px";
+        mobileMenuTong.setAttribute("toggle", "on");
+      } else {
+        mobileMenuTong.style.height = String(0) + "px";
+        mobileMenuTong.setAttribute("toggle", "off");
+      }
+    }
+
+    createNode({
+      mother: naviBase,
+      mode: "svg",
+      source: this.returnHamburger(colorChip.white),
+      event: {
+        click: function (e) {
+          hamburgerEvent.call(this, e)
+        },
+        touchstart: function (e) {
+          const self = this;
+          self.setAttribute(touchStartConst, "on");
+          setQueue(() => {
+            self.setAttribute(touchStartConst, "off");
+          });
+        },
+        touchend: function (e) {
+          if (this.getAttribute(touchStartConst) === "on") {
+            hamburgerEvent.call(this, e);
+          }
         }
       },
-      {
-        text: "정산 정보",
-        style: {
-          display: "inline-block",
-          position: "relative",
-          fontSize: "inherit",
-          fontWeight: "inherit",
-          color: "inherit",
-          cursor: "pointer",
-          marginRight: String(wordingMarginRight) + ea,
-        }
-      },
-      {
-        text: "의뢰서",
-        style: {
-          display: "inline-block",
-          position: "relative",
-          fontSize: "inherit",
-          fontWeight: "inherit",
-          color: "inherit",
-          cursor: "pointer",
-          marginRight: String(wordingMarginRight) + ea,
-        }
-      },
-      {
-        text: "일정 관리",
-        style: {
-          display: "inline-block",
-          position: "relative",
-          fontSize: "inherit",
-          fontWeight: "inherit",
-          color: "inherit",
-          cursor: "pointer",
-        }
-      },
-    ]
-  });
+      style: {
+        position: "absolute",
+        top: String(hamburgerTop) + "px",
+        right: String(mobileMargin) + ea,
+        width: String(searchWidth) + "px",
+        zIndex: String(1),
+      }
+    });
+  }
+
 }
 
 GeneralJs.prototype.setBaseTong = function (child) {

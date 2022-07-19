@@ -4380,7 +4380,7 @@ GeneralJs.prototype.footerMake = function (backgroundColor = null) {
           height: String(mobileButtonHeight) + ea,
           marginRight: String(num % 2 === 1 ? 0 : mobileButtonBetween) + ea,
           marginBottom: String(mobileButtonBetween) + ea,
-          background: colorChip.darkGreen,
+          background: ((backgroundColor === null || backgroundColor === undefined || backgroundColor === colorChip.gradientGreen || backgroundColor === colorChip.gradientGreen2 || backgroundColor === colorChip.gradientGreen3 || backgroundColor === colorChip.gradientGreen4) ? colorChip.darkGreen : colorChip.realBlack),
           justifyContent: "center",
           alignItems: "center",
           textAlign: "center",

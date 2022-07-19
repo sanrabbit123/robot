@@ -196,22 +196,22 @@ GeneralJs.prototype.setNavigator = function (subTitle, blackMode = true, name) {
     {
       title: "서비스 소개",
       href: FRONTHOST + "/about.php",
-      green: [],
+      green: [ "frontAbout" ],
     },
     {
       title: "포트폴리오",
       href: FRONTHOST + "/portfolio.php",
-      green: [],
+      green: [ "portfolioList, portfolioDetail" ],
     },
     {
       title: "디자이너",
       href: FRONTHOST + "/designer.php",
-      green: [],
+      green: [ "designerList", "designerDetail" ],
     },
     {
       title: "고객 후기",
       href: FRONTHOST + "/review.php",
-      green: [],
+      green: [ "reviewList", "reviewDetail" ],
     },
     {
       title: "상담 신청",

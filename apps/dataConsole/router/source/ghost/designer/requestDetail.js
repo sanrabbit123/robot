@@ -1159,7 +1159,7 @@ RequestDetailJs.prototype.insertDetailBox = function (indexNumber) {
                   left: String(0),
                   height: String(lineTop) + ea,
                   width: withOut(0),
-                  borderBottom: "1px solid " + colorChip.gray3,
+                  borderBottom: desktop ? "1px solid " + colorChip.gray3 : "",
                 }
               },
               {
@@ -1954,7 +1954,7 @@ RequestDetailJs.prototype.insertNoticeBox = function (indexNumber) {
                   left: String(0),
                   height: String(lineTop) + ea,
                   width: withOut(0),
-                  borderBottom: "1px solid " + colorChip.gray3,
+                  borderBottom: desktop ? "1px solid " + colorChip.gray3 : "",
                 }
               },
               {
