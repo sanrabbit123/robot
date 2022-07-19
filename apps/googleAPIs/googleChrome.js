@@ -92,7 +92,7 @@ GoogleChrome.prototype.scriptRequest = async function (url, frontCodeArr) {
   }
 }
 
-GoogleChrome.prototype.pdfPrint = async function (link, filePath = null, openMode = true) {
+GoogleChrome.prototype.pdfPrint = async function (link, filePath = null, openMode = false) {
   if (typeof link !== "string") {
     throw new Error("invalid input => { link, filePath }");
   }
