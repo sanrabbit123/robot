@@ -50,6 +50,7 @@ MagazineDetailJs.prototype.magazineInitBox = function () {
   const { contentsArr } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const zeroAddition = (num) => { return num < 10 ? `0${String(num)}` : (num < 100 ? String(num) : String(num).slice(-2)) };
   let mainHeight;
   let mainTong;
   let mainBelowBarHeight;
@@ -61,6 +62,13 @@ MagazineDetailJs.prototype.magazineInitBox = function () {
   let wordingSize, wordingWeight;
   let wordingBottom, wordingLeft;
   let contents;
+  let mainTitleSize;
+  let mainTitleWeight;
+  let mainTitleTextTop;
+  let whiteBoxBottom;
+  let whiteBoxRight;
+  let whiteBoxWidth;
+  let whiteBoxHeight;
 
   ({ contents } = this.magazine);
 
@@ -82,6 +90,15 @@ MagazineDetailJs.prototype.magazineInitBox = function () {
   wordingLeft = <%% 44, 44, 40, 32, 44 %%>;
   wordingSize = <%% 18, 18, 16, 14, 18 %%>;
   wordingWeight = <%% 400, 400, 400, 400, 400 %%>;
+
+  mainTitleSize = <%% 16, 16, 16, 14, 2.5 %%>;
+  mainTitleWeight = <%% 400, 400, 400, 400, 400 %%>;
+  mainTitleTextTop = <%% -2, -2, -2, -2, -0.4 %%>;
+
+  whiteBoxBottom = <%% 34, 34, 34, 34, 4 %%>;
+  whiteBoxRight = <%% 36, 36, 36, 36, 4 %%>;
+  whiteBoxWidth = <%% 150, 150, 150, 135, 22.5 %%>;
+  whiteBoxHeight = <%% 42, 42, 42, 40, 7 %%>;
 
   mainTong = createNode({
     mother: totalContents,
@@ -138,22 +155,48 @@ MagazineDetailJs.prototype.magazineInitBox = function () {
     }
   });
 
-  if (desktop) {
-    createNode({
-      mother: picture,
-      text: "magazine #" + String(Number(this.mid.replace(/[^0-9]/gi, '')) + 1),
-      style: {
-        position: "absolute",
-        bottom: String(wordingBottom) + ea,
-        right: String(wordingLeft) + ea,
-        fontSize: String(wordingSize) + ea,
-        fontWeight: String(wordingWeight),
-        color: colorChip.black,
-        fontFamily: "graphik",
-        opacity: String(0.9),
-      }
-    });
-  }
+  createNode({
+    mother: picture,
+    style: {
+      display: "flex",
+      position: "absolute",
+      bottom: String(whiteBoxBottom) + ea,
+      right: String(whiteBoxRight) + ea,
+      width: String(whiteBoxWidth) + ea,
+      height: String(whiteBoxHeight) + ea,
+      borderRadius: String(1) + ea,
+      overflow: "hidden",
+      justifyContent: "center",
+      alignItems: "center",
+      textAlign: "center",
+    },
+    children: [
+      {
+        class: [ "backblurwhite" ],
+        style: {
+          position: "absolute",
+          top: String(0),
+          left: String(0),
+          width: String(100) + '%',
+          height: String(100) + '%',
+          borderRadius: String(8) + "px",
+        }
+      },
+      {
+        text: "magazine #" + zeroAddition(Number(this.mid.replace(/[^0-9]/gi, '')) + 1),
+        style: {
+          position: "relative",
+          textAlign: "center",
+          fontSize: String(mainTitleSize) + ea,
+          fontWeight: String(mainTitleWeight),
+          fontFamily: "graphik",
+          color: colorChip.black,
+          top: String(mainTitleTextTop) + ea,
+        }
+      },
+    ]
+  });
+
 
 }
 
@@ -343,6 +386,384 @@ MagazineDetailJs.prototype.magazineContentsBox = function () {
 
 }
 
+MagazineDetailJs.prototype.magazineRelativeBox = function () {
+  const instance = this;
+  const { createNode, colorChip, withOut, svgMaker, sleep, setQueue, equalJson, isMac, isIphone, selfHref, swipePatch, homeliaisonAnalytics, dateToString } = GeneralJs;
+  const { totalContents, naviHeight, ea, media, pid, standardWidth } = this;
+  const { contentsArr } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const touchStartConst = "touchStartConstName";
+  const photoTouchStartConst = "photoTouchStartConst";
+  const photoChar = 't';
+  const photoCharMobile = "mot";
+  const photoDefaultRatio = (297 / 210);
+  const whitePhotoBigClassName = "whitePhotoBigClassName";
+  let mainTong;
+  let photoTong;
+  let baseWidth;
+  let baseTong;
+  let arrowHeight;
+  let arrowTop;
+  let leftArrow, rightArrow;
+  let mainPaddingTop;
+  let baseBetween;
+  let titleHeight, titleMarginBottom;
+  let titleLineHeight;
+  let mainTitleSize, mainTitleWeight;
+  let mainTitleWidth;
+  let belowTong;
+  let belowBaseTong;
+  let mainHeight;
+  let belowBoxHeight;
+  let belowButtonTop;
+  let belowButtonHeight;
+  let belowButtonBetween;
+  let belowButtonWordPadding;
+  let belowButtonTextTop, belowButtonSize, belowButtonWeight;
+  let photoTongClassName;
+  let move;
+  let block;
+  let src, title, tag;
+  let photoMargin;
+  let columns;
+  let photoRatio;
+  let seroWidth;
+  let photoHeight;
+  let photoMarginBottom;
+  let quoteHeight, quoteWidth, quoteTop;
+  let titleSize;
+  let titleWeight;
+  let titleMarginLeft;
+  let tagTongMarginTop;
+  let tagTongWidthRatio;
+  let tagTong;
+  let filteredContents;
+  let tagSize;
+  let tagWeight;
+  let tagPaddingLeft;
+  let tagPaddingTop;
+  let tagPaddingBottom;
+  let tagMarginRight;
+  let relativeLength;
+  let mainTitleTop;
+  let tagBlock;
+  let subTitleMarginTop;
+  let subTitleMarginTopReview;
+  let subTitleSize;
+  let subArrowWidth;
+  let subArrowHeight;
+  let subArrowBottom;
+  let subArrowReviewBottom;
+  let reviewSubTitleVisual;
+  let shareTong, shareBaseTong;
+  let shareTongHeight;
+  let shareIconHeight;
+  let shareIconBetween0, shareIconBetween1;
+  let previousNextSize, previousNextWeight, previousNextTextTop, previousNextLeftRight;
+  let whitePhotoTong;
+  let photoSrc;
+  let photoBetween;
+  let whitePhotoTongInnerPadding;
+  let whitePhotoHeight;
+  let whitePhotoNumbers;
+  let whitePhotoTongMarginBottom;
+  let whitePopupBigPadding;
+  let whitePhotoBigArrowHeight;
+  let whitePhotoBigArrowAreaHeight;
+  let whitePhotoEvent;
+  let rightArrowEvent, leftArrowEvent;
+  let mainPaddingBottom;
+
+  this.relativePhotoNumber = 0;
+
+  baseWidth = <%% 1300, 980, 800, 640, 76 %%>;
+  baseBetween = standardWidth - baseWidth;
+
+  arrowHeight = <%% 28, 25, 25, 24, 4 %%>;
+  arrowTop = <%% 230, 218, 230, 190, 34 %%>;
+
+  mainHeight = <%% 590, 570, 590, 496, 94 %%>;
+  mainPaddingTop = <%% 110, 96, 86, 72, 10 %%>;
+  mainPaddingBottom = <%% 110, 106, 94, 80, 10.5 %%>;
+
+  titleHeight = <%% 30, 30, 30, 28, 6 %%>;
+  titleMarginBottom = <%% 32, 32, 32, 28, 5 %%>;
+  titleLineHeight = <%% 14, 14, 14, 14, 3 %%>;
+
+  mainTitleSize = <%% 22, 22, 22, 20, 4.5 %%>;
+  mainTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
+  mainTitleWidth = <%% 170, 170, 170, 150, 34 %%>;
+  mainTitleTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
+
+  belowBoxHeight = <%% 150, 148, 148, 125, 24 %%>;
+  belowButtonTop = <%% 45, 45, 45, 32, 7 %%>;
+
+  belowButtonHeight = <%% 50, 48, 48, 45, 10 %%>;
+  belowButtonBetween = <%% 10, 10, 10, 10, 2 %%>;
+  belowButtonWordPadding = <%% 20, 20, 20, 20, 4 %%>;
+
+  belowButtonTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.3 %%>;
+  belowButtonSize = <%% 18, 17, 17, 16, 3.5 %%>;
+  belowButtonWeight = <%% 600, 600, 600, 600, 600 %%>;
+
+  move = <%% 264, 249, 272, 218, 39.45 %%>;
+
+  photoTongClassName = "photoTongClassName";
+
+  relativeLength = <%% 20, 20, 20, 20, 20 %%>;
+
+  photoMargin = <%% 20, 16, 16, 14, 3 %%>;
+  columns = <%% 5, 4, 3, 3, 2 %%>;
+  photoRatio = (297 / 210);
+  seroWidth = (baseWidth - (photoMargin * (columns - 1))) / columns;
+  photoHeight = seroWidth * photoRatio;
+  photoMarginBottom = <%% (isMac() ? 15 : 17), (isMac() ? 15 : 17), (isMac() ? 15 : 17), (isMac() ? 13 : 15), 2.4 %%>;
+
+  quoteHeight = <%% 8, 8, 8, 7, 1.4 %%>;
+  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
+  quoteTop = <%% (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 4 : 2), isIphone() ? 1.3 : 1.2 %%>;
+
+  titleSize = <%% 17, 16, 17, 14, 2.7 %%>;
+  titleWeight = <%% 600, 600, 600, 600, 600 %%>;
+  titleMarginLeft = <%% 6, 6, 5, 5, 1.1 %%>;
+
+  tagTongMarginTop = <%% 10, 10, 10, 8, 1.6 %%>;
+  tagTongWidthRatio = <%% 1.3, 1.3, 1.3, 1.3, 1.3 %%>;
+
+  tagSize = <%% 10, 8, 10, 7, 2 %%>;
+  tagWeight = <%% 500, 500, 500, 500, 500 %%>;
+
+  tagPaddingLeft = <%% 8, 7, 7, 7, 1 %%>;
+  tagPaddingTop = <%% (isMac() ? 4 : 5), (isMac() ? 4 : 5), (isMac() ? 4 : 5), (isMac() ? 4 : 5), 0.9 %%>;
+  tagPaddingBottom = <%% (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), isIphone() ? 1.2 : 1.4 %%>;
+  tagMarginRight = <%% 3, 2, 3, 2, 1 %%>;
+
+  subTitleMarginTop = <%% 3, 3, 3, 3, 0.5 %%>;
+  subTitleMarginTopReview = <%% 3, 3, 3, 2, 0.2 %%>;
+  subTitleSize = <%% 12, 12, 12, 12, 2.3 %%>;
+
+  subArrowWidth = <%% 24, 20, 24, 24, 4 %%>;
+  subArrowHeight = <%% 8, 8, 8, 8, 1.5 %%>;
+  subArrowBottom = <%% 2, 2, 2, 2, 1 %%>;
+  subArrowReviewBottom = <%% (isMac() ? 5 : 6), (isMac() ? 5 : 6), (isMac() ? 4 : 6), (isMac() ? 4 : 6), 1.5 %%>;
+
+  reviewSubTitleVisual = <%% 1, 1, 1, 0, 0 %%>;
+
+  shareTongHeight = <%% 100, 100, 96, 90, 13 %%>;
+  shareIconHeight = <%% 19, 19, 18, 18, 3.6 %%>;
+
+  shareIconBetween0 = <%% 34, 34, 34, 34, 5.4 %%>;
+  shareIconBetween1 = <%% 30, 30, 30, 30, 5 %%>;
+
+  previousNextSize = <%% 16, 16, 15, 14, 3 %%>;
+  previousNextWeight = <%% 500, 500, 500, 500, 500 %%>;
+  previousNextTextTop = <%% 36, 36, 34, 33, 3.9 %%>;
+  previousNextLeftRight = baseBetween / 2;
+
+  photoBetween = <%% 8, 8, 7, 6, 1 %%>;
+  whitePhotoTongInnerPadding = <%% 36, 36, 32, 30, 3 %%>;
+  whitePhotoHeight = <%% 210, 210, 170, 133, 24 %%>;
+  whitePhotoNumbers = <%% 8, 6, 6, 6, 4 %%>;
+  whitePhotoTongMarginBottom = <%% 10, 10, 10, 10, 1 %%>;
+  whitePopupBigPadding = <%% 64, 64, 64, 64, 28 %%>;
+  whitePhotoBigArrowHeight = <%% 15, 15, 15, 15, 2 %%>;
+  whitePhotoBigArrowAreaHeight = <%% 200, 200, 200, 200, 20 %%>;
+
+  // share
+
+  shareTong = createNode({
+    mother: totalContents,
+    style: {
+      display: "block",
+      position: "relative",
+      width: withOut(0),
+      background: colorChip.gray2,
+      height: String(shareTongHeight) + ea,
+    }
+  });
+
+  shareBaseTong = createNode({
+    mother: shareTong,
+    style: {
+      display: "flex",
+      flexDirection: "row",
+      position: "relative",
+      width: String(standardWidth) + ea,
+      height: withOut(0, ea),
+      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    children: [
+      {
+        mode: "svg",
+        source: svgMaker.facebookIcon(colorChip.black),
+        event: {
+          click: function (e) {
+            if (window.FB !== undefined) {
+              homeliaisonAnalytics({
+                page: instance.pageName,
+                standard: instance.firstPageViewTime,
+                action: "shareFacebook",
+                data: {
+                  href: window.encodeURIComponent(window.location.href),
+                  date: dateToString(new Date(), true),
+                },
+              }).catch((err) => {
+                console.log(err);
+              });
+              window.FB.ui({
+                method: 'share',
+                href: window.location.href,
+              }, (response) => {});
+            }
+          }
+        },
+        style: {
+          display: "inline-block",
+          position: "relative",
+          height: String(shareIconHeight) + ea,
+          cursor: "pointer",
+        }
+      },
+      {
+        mode: "svg",
+        source: svgMaker.talkIcon(colorChip.black),
+        event: {
+          click: function () {
+            if (window.Kakao !== undefined) {
+              homeliaisonAnalytics({
+                page: instance.pageName,
+                standard: instance.firstPageViewTime,
+                action: "shareKaKao",
+                data: {
+                  href: window.encodeURIComponent(window.location.href),
+                  date: dateToString(new Date(), true),
+                },
+              }).catch((err) => {
+                console.log(err);
+              });
+              window.Kakao.Share.sendDefault({
+                objectType: "feed",
+                content: {
+                  title: document.querySelector("title").textContent,
+                  description: [ ...document.querySelectorAll("meta") ].find((dom) => { return dom.getAttribute("property") === "og:description" }).getAttribute("content"),
+                  imageUrl: FRONTHOST + [ ...document.querySelectorAll("meta") ].find((dom) => { return dom.getAttribute("property") === "og:image" }).getAttribute("content"),
+                  link: {
+                    mobileWebUrl: window.location.href,
+                    webUrl: window.location.href,
+                  },
+                },
+                buttons: [
+                  {
+                    title: "웹으로 보기",
+                    link: {
+                      mobileWebUrl: window.location.href,
+                      webUrl: window.location.href,
+                    },
+                  }
+                ],
+              });
+            }
+          }
+        },
+        style: {
+          display: "inline-block",
+          position: "relative",
+          height: String(shareIconHeight) + ea,
+          marginLeft: String(shareIconBetween0) + ea,
+          marginRight: String(shareIconBetween1) + ea,
+          cursor: "pointer",
+        }
+      },
+      {
+        mode: "svg",
+        source: svgMaker.linkIcon(colorChip.black),
+        event: {
+          click: async function (e) {
+            try {
+              homeliaisonAnalytics({
+                page: instance.pageName,
+                standard: instance.firstPageViewTime,
+                action: "shareLink",
+                data: {
+                  href: window.encodeURIComponent(window.location.href),
+                  date: dateToString(new Date(), true),
+                },
+              }).catch((err) => {
+                console.log(err);
+              });
+              await window.navigator.clipboard.writeText(window.location.href);
+              window.alert("링크가 복사되었습니다!");
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        },
+        style: {
+          display: "inline-block",
+          position: "relative",
+          height: String(shareIconHeight) + ea,
+          cursor: "pointer",
+        }
+      },
+      {
+        text: "previous",
+        event: {
+          click: function (e) {
+            const midNumber = Number(instance.mid.replace(/[^0-9]/gi, ''));
+            const next = midNumber - 1;
+            let newLink;
+            if (next >= 0) {
+              newLink = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search.replace(new RegExp("mid=" + instance.mid, "gi"), "mid=" + 'm' + String(next));
+              selfHref(newLink);
+            }
+          }
+        },
+        style: {
+          display: "inline-block",
+          position: "absolute",
+          fontSize: String(previousNextSize) + ea,
+          fontWeight: String(previousNextWeight),
+          color: colorChip.darkDarkShadow,
+          fontFamily: "graphik",
+          top: String(previousNextTextTop) + ea,
+          left: String(previousNextLeftRight) + ea,
+          cursor: "pointer",
+        }
+      },
+      {
+        text: "next",
+        event: {
+          click: function (e) {
+            const midNumber = Number(instance.mid.replace(/[^0-9]/gi, ''));
+            const next = midNumber + 1;
+            let newLink;
+            if (next >= 0) {
+              newLink = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search.replace(new RegExp("mid=" + instance.mid, "gi"), "mid=" + 'm' + String(next));
+              selfHref(newLink);
+            }
+          }
+        },
+        style: {
+          display: "inline-block",
+          position: "absolute",
+          fontSize: String(previousNextSize) + ea,
+          fontWeight: String(previousNextWeight),
+          color: colorChip.darkDarkShadow,
+          fontFamily: "graphik",
+          top: String(previousNextTextTop) + ea,
+          right: String(previousNextLeftRight) + ea,
+          cursor: "pointer",
+        }
+      },
+    ]
+  });
+
+}
+
+
 MagazineDetailJs.prototype.launching = async function (loading) {
   const instance = this;
   const { returnGet, ajaxJson, setQueue, setDebounce, facebookSdkPatch, kakaoSdkPatch, protoPatch } = GeneralJs;
@@ -361,6 +782,10 @@ MagazineDetailJs.prototype.launching = async function (loading) {
     mid = getObj.mid;
     this.mid = mid;
     response = await ajaxJson({ mode: "magazine", mid }, LOGHOST + "/getContents", { equal: true });
+    while (response.contentsArr.length === 0) {
+      this.mid = 'm' + String(Number(this.mid.replace(/[^0-9]/gi, '')) - 1);
+      response = await ajaxJson({ mode: "magazine", mid: this.mid }, LOGHOST + "/getContents", { equal: true });
+    }
     [ magazine ] = response.contentsArr;
     this.magazine = magazine;
 
@@ -379,6 +804,7 @@ MagazineDetailJs.prototype.launching = async function (loading) {
         try {
           instance.magazineInitBox();
           instance.magazineContentsBox();
+          instance.magazineRelativeBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "MagazineDetailJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
@@ -386,6 +812,14 @@ MagazineDetailJs.prototype.launching = async function (loading) {
     });
 
     loading.parentNode.removeChild(loading);
+
+    setQueue(() => {
+      facebookSdkPatch().then(() => {
+        return kakaoSdkPatch();
+      }).catch((err) => {
+        console.log(err);
+      });
+    });
 
   } catch (err) {
     console.log(err);

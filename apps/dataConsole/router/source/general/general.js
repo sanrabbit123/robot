@@ -682,6 +682,21 @@ GeneralJs.prototype.generalCss = function () {
     -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
   }
+  .backblurwhite {
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    background: rgb(255, 255, 255, 0.8);
+  }
+  .backblurtransparent {
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    background: rgb(255, 255, 255, 0.3);
+  }
+  .backblurblack {
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    background: linear-gradient(256deg, rgba(20, 20, 20, 0.65) 0%, rgba(28, 28, 28, 0.7) 100%);
+  }
   @keyframes justfadeinoriginal{from{opacity:0;}to{opacity:1;}}
   @keyframes justfadeoutoriginal{from{opacity:1;}to{opacity:0;}}
   @keyframes justfadeinnine{from{opacity:0;}to{opacity:0.9;}}

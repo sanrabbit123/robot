@@ -192,18 +192,17 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
         height: String(mobileWhiteBoxHeight) + ea,
         borderRadius: String(1) + ea,
         overflow: "hidden",
-        animation: "fadeuplite 0.5s ease forwards",
       },
       children: [
         {
+          class: [ "backblurwhite" ],
           style: {
             position: "absolute",
             top: String(0),
             left: String(0),
             width: String(100) + '%',
             height: String(100) + '%',
-            background: colorChip.white,
-            opacity: String(0.8),
+            borderRadius: String(1) + ea,
           }
         },
         {

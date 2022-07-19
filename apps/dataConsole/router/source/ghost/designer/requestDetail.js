@@ -2088,15 +2088,12 @@ RequestDetailJs.prototype.launching = async function (loading) {
     this.wordings = this.meetingWordings(service);
 
     await this.mother.ghostDesignerLaunching({
-      mode: "front",
       name: "requestDetail",
-      designer: null,
+      designer: this.designer,
       base: {
         instance: this,
         binaryPath: RequestDetailJs.binaryPath,
         subTitle: "",
-        secondBackground: false,
-        backgroundType: 0,
       },
       local: async () => {
         try {
