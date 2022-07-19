@@ -533,7 +533,7 @@ RequestDetailJs.prototype.insertInformationBox = function (indexNumber) {
   let initContentsPaddingLeft;
   let printSize;
 
-  wordsTitle = desktop ? wordings.title.join(" ") + "&nbsp;&nbsp;<b%문서 출력하기%b>" : wordings.title.join(" ");
+  wordsTitle = desktop ? wordings.title.join(" ") + "&nbsp;&nbsp;<b%이미지로 저장%b>" : wordings.title.join(" ");
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
