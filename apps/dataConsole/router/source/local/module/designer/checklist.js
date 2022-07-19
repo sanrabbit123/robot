@@ -57,11 +57,11 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           type: "string",
         },
         {
-          name: "우선 디자이너",
+          name: "메인 디자이너",
           value: function (designer) {
             let contents, value;
             contents = [
-              "우선",
+              "메인",
               "일반"
             ];
             value = [
@@ -73,7 +73,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           update: function (value, designer) {
             let contents, target;
             contents = [
-              "우선",
+              "메인",
               "일반"
             ];
             target = null;
