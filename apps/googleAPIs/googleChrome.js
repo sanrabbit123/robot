@@ -142,6 +142,41 @@ GoogleChrome.prototype.pdfPrint = async function (link, filePath = null, openMod
   }
 }
 
+GoogleChrome.prototype.pageToPng = async function (link, filePath = null, openMode = false) {
+  const instance = this;
+  const { shellLink, shellExec, uniqueValue } = this.mother;
+  const { puppeteer } = this;
+  const tempDir = process.cwd() + "/temp";
+  try {
+    if (filePath === null) {
+      filePath = tempDir + "/" + uniqueValue("hex") + ".png";
+    }
+    const browser = await puppeteer.launch({
+      args: [ "--no-sandbox", "--disable-setuid-sandbox" ],
+    });
+    const page = await browser.newPage();
+    await page.setViewport({
+      width: 1920,
+      height: 1080,
+      deviceScaleFactor: 2,
+    });
+
+    await page.goto(link, { waitUntil: "networkidle2" });
+    await page.evaluateHandle("document.fonts.ready");
+    await page.screenshot({ path: filePath, fullPage: true });
+
+    await browser.close();
+
+    if (openMode) {
+      await shellExec(`open ${shellLink(filePath)}`);
+    }
+
+    return { file: filePath };
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 GoogleChrome.prototype.getHtml = async function (link) {
   if (typeof link !== "string") {
     throw new Error("invalid input => { link }");

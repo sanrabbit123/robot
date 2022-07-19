@@ -89,8 +89,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
 
+    await chrome.pageToPng("https://home-liaison.com/about.php", null, false);
 
 
 
