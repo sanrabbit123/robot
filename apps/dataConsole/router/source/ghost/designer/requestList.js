@@ -92,7 +92,7 @@ RequestListJs.prototype.insertInformationBox = function () {
 
   whiteBottomMargin = <%% 58, 58, 58, 58, 0 %%>;
 
-  titleFontSize = <%% 22, 22, 22, 21, 4.3 %%>;
+  titleFontSize = <%% 22, 22, 20, 20, 4.3 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
 
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
@@ -102,27 +102,27 @@ RequestListJs.prototype.insertInformationBox = function () {
 
   mobileTitleLeft = 6;
 
-  grayMargin = <%% 24, 24, 24, 24, 24 %%>;
-  grayPadding = <%% 14, 14, 14, 14, 14 %%>;
+  grayMargin = <%% 24, 24, 20, 20, 24 %%>;
+  grayPadding = <%% 14, 14, 10, 10, 14 %%>;
 
   tongMargin = <%% 6, 6, 6, 6, 1 %%>;
 
-  tongHeight = <%% 50, 50, 50, 50, 50 %%>;
+  tongHeight = <%% 50, 50, 42, 42, 50 %%>;
 
-  whiteSize = <%% 15, 15, 15, 15, 15 %%>;
+  whiteSize = <%% 15, 15, 13, 13, 15 %%>;
   whiteWeight = <%% 400, 400, 400, 400, 400 %%>;
   whiteColumnWeight = <%% 200, 200, 200, 200, 200 %%>;
   whiteTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
 
   circleWidth = <%% 8, 8, 8, 8, 8 %%>;
-  circleTop = <%% 21, 21, 21, 21, 21 %%>;
+  circleTop = <%% 21, 21, 17, 17, 21 %%>;
   circleRight = <%% 20, 20, 20, 20, 14 %%>;
 
   minimalLength = 6;
 
-  colorBoxHeight = <%% 26, 26, 26, 26, 26 %%>;
-  colorBoxPadding = <%% 10, 10, 10, 10, 10 %%>;
-  colorBoxSize = <%% 11, 11, 11, 11, 11 %%>;
+  colorBoxHeight = <%% 26, 26, 24, 24, 26 %%>;
+  colorBoxPadding = <%% 10, 10, 8, 8, 10 %%>;
+  colorBoxSize = <%% 11, 11, 10, 10, 11 %%>;
   colorBoxWeight = <%% 700, 700, 700, 700, 700 %%>;
   colorBoxTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
@@ -141,7 +141,7 @@ RequestListJs.prototype.insertInformationBox = function () {
     return map[index];
   }
 
-  widthMap = [ 64, 117, 120, 70, 144, 150, 150 ];
+  widthMap = <&& [ 64, 117, 120, 70, 144, 148, 150 ] | [ 64, 117, 120, 70, 144, 148, 148 ] | [ 56, 97, 95, 60, 124, 120, 120 ] | [ 56, 94, 92, 60, 121, 120, 120 ] | [ 64, 117, 120, 70, 144, 150, 150 ] &&>;
 
   boxTarget = [
     (state) => { return (state <= 1 ? colorChip.yellow : colorChip.deactive) },
@@ -154,14 +154,20 @@ RequestListJs.prototype.insertInformationBox = function () {
   ];
 
   forceWidth = [
-    39,
+    (<&& 39 | 39 | 36 | 36 | 3 &&>),
     null,
     null,
     null,
     null,
     null,
     null,
-  ]
+  ];
+
+  if (small) {
+    widthMap.pop();
+    boxTarget.pop();
+    forceWidth.pop();
+  }
 
   whiteBlock = createNode({
     mother: baseTong,
@@ -485,7 +491,7 @@ RequestListJs.prototype.insertNoticeBox = function () {
 
   whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
 
-  titleFontSize = <%% 22, 22, 22, 21, 4.3 %%>;
+  titleFontSize = <%% 22, 22, 20, 20, 4.3 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
 
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
