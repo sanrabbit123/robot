@@ -896,6 +896,8 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
   let num, booArr;
   let tagBlock;
   let markWidth, markTop;
+  let whiteCircleWidth;
+  let realPhotoCircleWidth;
 
   tongPaddingLeft = <%% 100, 70, 80, 50, 6.5 %%>;
   blockMargin = <%% 40, 30, 20, 20, 2 %%>;
@@ -905,6 +907,9 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
 
   blockHeight = <%% (isMac() ? 178 : 176), 160, (isMac() ? 178 : 176), 170, 25 %%>;
   photoWidth = blockHeight - (contentsPaddingTop * 2);
+
+  whiteCircleWidth = photoWidth * 0.94;
+  realPhotoCircleWidth = photoWidth * (desktop ? 0.9 : 0.89);
 
   photoMargin = <%% 30, 25, 30, 30, 4 %%>;
 
@@ -1015,18 +1020,51 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
             }
           },
           style: {
-            display: "inline-block",
+            display: "inline-flex",
             position: "relative",
             top: String(contentsPaddingTop) + ea,
-            borderRadius: String(8) + "px",
+            borderRadius: String(photoWidth) + ea,
             width: String(photoWidth) + ea,
             height: String(photoWidth) + ea,
-            backgroundSize: "auto 100%",
-            backgroundPosition: "50% 50%",
-            backgroundImage: "url('" + src + "')",
+            background: designer.analytics.grade === 1 ? colorChip.gradientGreen : colorChip.gray1,
             verticalAlign: "top",
             cursor: "pointer",
-          }
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                borderRadius: String(whiteCircleWidth) + ea,
+                width: String(whiteCircleWidth) + ea,
+                height: String(whiteCircleWidth) + ea,
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+                background: colorChip.white,
+              },
+              children: [
+                {
+                  style: {
+                    display: "inline-flex",
+                    position: "relative",
+                    borderRadius: String(realPhotoCircleWidth) + ea,
+                    width: String(realPhotoCircleWidth) + ea,
+                    height: String(realPhotoCircleWidth) + ea,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    backgroundSize: "auto 100%",
+                    backgroundPosition: "50% 50%",
+                    backgroundImage: "url('" + src + "')",
+                  }
+                }
+              ]
+            }
+          ]
         },
         {
           class: [ "designerBlock" ],
@@ -1091,7 +1129,6 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
             position: "relative",
             fontSize: String(careerSize) + ea,
             fontWeight: String(careerWeight),
-            // color: designer.analytics.grade === 1 ? colorChip.green : colorChip.deactive,
             color: colorChip.green,
             top: String(careerTextTop) + ea,
           },
@@ -1105,8 +1142,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
           mode: "svg",
           source: instance.mother.returnMark(colorChip.green),
           style: {
-            // display: designer.analytics.grade === 1 ? "inline-block" : "none",
-            display: "none",
+            display: designer.analytics.grade === 1 ? "inline-block" : "none",
             position: "absolute",
             width: String(markWidth) + ea,
             right: String(0),
@@ -2020,10 +2056,6 @@ DesignerListJs.prototype.launching = async function (loading) {
     }).filter((obj) => {
       return /^[ap]/i.test(obj.setting.front.photo.porlid);
     })
-
-    this.designers.sort((a, b) => {
-      return b.analytics.grade - a.analytics.grade;
-    });
 
     this.search = "";
     this.mode = "only";
