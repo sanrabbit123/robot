@@ -3556,7 +3556,7 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
         let future;
 
         if ((new RegExp(address.frontinfo.host, "gi")).test(req.body.currentPage)) {
-          returnUrl = req.body.currentPage + "/inicisPayment.php?cliid=" + cliid + "&needs=" + ([ kind, desid, proid, method ]).join(',');
+          returnUrl = req.body.currentPage + "/inicisPayment?cliid=" + cliid + "&needs=" + ([ kind, desid, proid, method ]).join(',');
           closeUrl = req.body.currentPage + "/tools/trigger.html";
         } else {
           returnUrl = req.body.currentPage + "/inicisPayment?cliid=" + cliid + "&needs=" + ([ kind, desid, proid, method ]).join(',');
