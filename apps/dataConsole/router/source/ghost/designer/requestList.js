@@ -112,7 +112,7 @@ RequestListJs.prototype.insertInformationBox = function () {
   whiteSize = <%% 15, 15, 13, 13, 3 %%>;
   whiteWeight = <%% 400, 400, 400, 400, 400 %%>;
   whiteColumnWeight = <%% 200, 200, 200, 200, 200 %%>;
-  whiteTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
+  whiteTextTop = <%% (isMac() ? -1 : 2), (isMac() ? -1 : 2), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
 
   circleWidth = <%% 8, 8, 8, 8, 1.2 %%>;
   circleTop = <%% 21, 21, 17, 17, 2.7 %%>;
@@ -124,7 +124,7 @@ RequestListJs.prototype.insertInformationBox = function () {
   colorBoxPadding = <%% 10, 10, 8, 8, 2.2 %%>;
   colorBoxSize = <%% 11, 11, 10, 10, 2.5 %%>;
   colorBoxWeight = <%% 700, 700, 700, 700, 700 %%>;
-  colorBoxTextTop = <%% -1, -1, -1, -1, (isIphone() ? 0 : -0.2) %%>;
+  colorBoxTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isIphone() ? 0 : -0.2) %%>;
 
   this.whiteMargin = (desktop ? margin : 0);
 
