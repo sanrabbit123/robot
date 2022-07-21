@@ -974,10 +974,6 @@ RequestDetailJs.prototype.insertDetailBox = function (indexNumber) {
   let wordings;
   let lineTop, linePadding;
 
-  wordings = this.wordings.checkWordings;
-  wordsTitle = wordings.title[0];
-  matrix = wordings.matrix;
-
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
   paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
@@ -1768,10 +1764,6 @@ RequestDetailJs.prototype.insertNoticeBox = function (indexNumber) {
   let mobileContentsWordingSize;
   let wordings;
   let lineTop, linePadding;
-
-  wordings = this.wordings.checkWordings;
-  wordsTitle = wordings.title[0];
-  matrix = wordings.matrix;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
