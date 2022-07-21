@@ -51,7 +51,7 @@ RequestListJs.prototype.insertInformationBox = function () {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone } = GeneralJs;
   let paddingTop;
   let block;
   let whiteBlock, whiteTong;
@@ -87,10 +87,10 @@ RequestListJs.prototype.insertInformationBox = function () {
   let colorBoxSize, colorBoxWeight, colorBoxTextTop;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 55, 55, 47, 39, 4.7 %%>;
+  margin = <%% 55, 55, 47, 39, 6 %%>;
   paddingTop =  <%% 52, 52, 44, 36, 6 %%>;
 
-  whiteBottomMargin = <%% 58, 58, 58, 58, 0 %%>;
+  whiteBottomMargin = <%% 58, 58, 58, 58, 6 %%>;
 
   titleFontSize = <%% 22, 22, 20, 20, 4.3 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
@@ -98,75 +98,106 @@ RequestListJs.prototype.insertInformationBox = function () {
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
-  titleBottom = <%% (isMac() ? 18 : 16), (isMac() ? 18 : 16), (isMac() ? 18 : 16), (isMac() ? 18 : 16), 0 %%>;
+  titleBottom = <%% (isMac() ? 18 : 16), (isMac() ? 18 : 16), (isMac() ? 15 : 13), (isMac() ? 15 : 13), 3 %%>;
 
   mobileTitleLeft = 6;
 
-  grayMargin = <%% 24, 24, 20, 20, 24 %%>;
-  grayPadding = <%% 14, 14, 10, 10, 14 %%>;
+  grayMargin = <%% 24, 24, 20, 20, 2.4 %%>;
+  grayPadding = <%% 14, 14, 10, 10, 2 %%>;
 
   tongMargin = <%% 6, 6, 6, 6, 1 %%>;
 
-  tongHeight = <%% 50, 50, 42, 42, 50 %%>;
+  tongHeight = <%% 50, 50, 42, 42, 9 %%>;
 
-  whiteSize = <%% 15, 15, 13, 13, 15 %%>;
+  whiteSize = <%% 15, 15, 13, 13, 3 %%>;
   whiteWeight = <%% 400, 400, 400, 400, 400 %%>;
   whiteColumnWeight = <%% 200, 200, 200, 200, 200 %%>;
   whiteTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
 
-  circleWidth = <%% 8, 8, 8, 8, 8 %%>;
-  circleTop = <%% 21, 21, 17, 17, 21 %%>;
-  circleRight = <%% 20, 20, 20, 20, 14 %%>;
+  circleWidth = <%% 8, 8, 8, 8, 1.2 %%>;
+  circleTop = <%% 21, 21, 17, 17, 2.7 %%>;
+  circleRight = <%% 20, 20, 20, 20, 2.7 %%>;
 
-  minimalLength = 6;
+  minimalLength = <%% 6, 6, 12, 12, 6 %%>;
 
-  colorBoxHeight = <%% 26, 26, 24, 24, 26 %%>;
-  colorBoxPadding = <%% 10, 10, 8, 8, 10 %%>;
-  colorBoxSize = <%% 11, 11, 10, 10, 11 %%>;
+  colorBoxHeight = <%% 26, 26, 24, 24, 5.5 %%>;
+  colorBoxPadding = <%% 10, 10, 8, 8, 2.2 %%>;
+  colorBoxSize = <%% 11, 11, 10, 10, 2.5 %%>;
   colorBoxWeight = <%% 700, 700, 700, 700, 700 %%>;
-  colorBoxTextTop = <%% -1, -1, -1, -1, -1 %%>;
+  colorBoxTextTop = <%% -1, -1, -1, -1, (isIphone() ? 0 : -0.2) %%>;
 
   this.whiteMargin = (desktop ? margin : 0);
 
   contentsMap = (project, index) => {
-    const map = [
-      serviceParsing(project.service).replace(/[a-zA-Z]/gi, '').trim().split(' ')[0],
-      serviceParsing(project.service).replace(/[a-zA-Z]/gi, '').trim().split(' ').slice(1).join(' '),
-      project.name + " <b%고객님%b>",
-      "<b%현장 미팅 : %b>",
-      dateToString(project.process.contract.meeting.date, true).slice(0, -3).replace(/ /gi, "&nbsp;&nbsp;&nbsp;").trim() === "해당" ? "미정" : dateToString(project.process.contract.meeting.date, true).slice(0, -3).replace(/ /gi, "&nbsp;&nbsp;&nbsp;").trim(),
-      "<b%시작일 : %b>" + dateToString(project.process.contract.form.date.from, false).slice(2),
-      "<b%종료일 : %b>" + dateToString(project.process.contract.form.date.to, false).slice(2),
-    ];
+    let map;
+    if (desktop) {
+      map = [
+        serviceParsing(project.service).replace(/[a-zA-Z]/gi, '').trim().split(' ')[0],
+        serviceParsing(project.service).replace(/[a-zA-Z]/gi, '').trim().split(' ').slice(1).join(' '),
+        project.name + " <b%고객님%b>",
+        "<b%현장 미팅 : %b>",
+        dateToString(project.process.contract.meeting.date, true).slice(0, -3).replace(/ /gi, "&nbsp;&nbsp;&nbsp;").trim() === "해당" ? "미정" : dateToString(project.process.contract.meeting.date, true).slice(0, -3).replace(/ /gi, "&nbsp;&nbsp;&nbsp;").trim(),
+        "<b%시작일 : %b>" + dateToString(project.process.contract.form.date.from, false).slice(2),
+        "<b%종료일 : %b>" + dateToString(project.process.contract.form.date.to, false).slice(2),
+      ];
+    } else {
+      map = [
+        project.name + " <b%고객님%b>",
+        serviceParsing(project.service).replace(/[a-zA-Z]/gi, '').trim().split(' ')[0],
+        serviceParsing(project.service).replace(/[a-zA-Z]/gi, '').trim().split(' ').slice(1).join(' '),
+        dateToString(project.process.contract.meeting.date, true).slice(0, -3).replace(/ /gi, "&nbsp;&nbsp;&nbsp;").trim() === "해당" ? "미팅 미정" : "미팅 : " + dateToString(project.process.contract.meeting.date, true).slice(0, -3).replace(/ /gi, "&nbsp;&nbsp;&nbsp;").trim(),
+      ];
+    }
     return map[index];
   }
 
-  widthMap = <&& [ 64, 117, 120, 70, 144, 148, 150 ] | [ 64, 117, 120, 70, 144, 148, 148 ] | [ 56, 97, 95, 60, 124, 120, 120 ] | [ 56, 94, 92, 60, 121, 120, 120 ] | [ 64, 117, 120, 70, 144, 150, 150 ] &&>;
 
-  boxTarget = [
-    (state) => { return (state <= 1 ? colorChip.yellow : colorChip.deactive) },
-    (state) => { return (state <= 1 ? colorChip.red : colorChip.deactive) },
-    null,
-    null,
-    (state) => { return (state <= 1 ? (state === 0 ? colorChip.purple : colorChip.shadow) : colorChip.deactive) },
-    null,
-    null,
-  ];
+  if (desktop) {
+    widthMap = <&& [ 64, 117, 120, 70, 144, 148, 150 ] | [ 64, 117, 120, 70, 144, 148, 148 ] | [ 56, 97, 95, 60, 124, 120, 120 ] | [ 56, 94, 92, 60, 121, 120, 120 ] | [ 6, 11, 12, 7, 14, 15, 15 ] &&>;
 
-  forceWidth = [
-    (<&& 39 | 39 | 36 | 36 | 3 &&>),
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-  ];
+    boxTarget = [
+      (state) => { return (state <= 1 ? colorChip.yellow : colorChip.deactive) },
+      (state) => { return (state <= 1 ? colorChip.red : colorChip.deactive) },
+      null,
+      null,
+      (state) => { return (state <= 1 ? (state === 0 ? colorChip.purple : colorChip.shadow) : colorChip.deactive) },
+      null,
+      null,
+    ];
 
-  if (small) {
-    widthMap.pop();
-    boxTarget.pop();
-    forceWidth.pop();
+    forceWidth = [
+      (<&& 39 | 39 | 36 | 36 | 6 &&>),
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+    ];
+  } else {
+    widthMap = [ 6, 11, 12, 7 ];
+
+    boxTarget = [
+      null,
+      (state) => { return (state <= 1 ? colorChip.yellow : colorChip.deactive) },
+      (state) => { return (state <= 1 ? colorChip.red : colorChip.deactive) },
+      (state) => { return (state <= 1 ? (state === 0 ? colorChip.purple : colorChip.shadow) : colorChip.deactive) },
+    ];
+
+    forceWidth = [
+      null,
+      null,
+      null,
+      null,
+    ];
+  }
+
+  if (desktop) {
+    if (small) {
+      widthMap.pop();
+      boxTarget.pop();
+      forceWidth.pop();
+    }
   }
 
   whiteBlock = createNode({
@@ -177,7 +208,7 @@ RequestListJs.prototype.insertInformationBox = function () {
       width: String(100) + '%',
       background: colorChip.white,
       paddingTop: String(paddingTop) + ea,
-      paddingBottom: desktop ? String(whiteBottomMargin) + ea : "",
+      paddingBottom: String(whiteBottomMargin) + ea,
       marginBottom: String(bottomMargin) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
     },
@@ -185,9 +216,9 @@ RequestListJs.prototype.insertInformationBox = function () {
       {
         display: "block",
         position: "relative",
-        width: desktop ? withOut(margin * 2, ea) : String(100) + '%',
+        width: withOut(margin * 2, ea),
         height: String(100) + '%',
-        marginLeft: String(desktop ? margin : 0) + ea,
+        marginLeft: String(margin) + ea,
       }
     ]
   });
@@ -205,8 +236,7 @@ RequestListJs.prototype.insertInformationBox = function () {
         style: {
           display: "block",
           position: "relative",
-          left: desktop ? "" : String(mobileTitleLeft) + ea,
-          width: desktop ? String(100) + '%' : withOut((mobileTitleLeft * 2), ea),
+          width: withOut(0),
           marginBottom: String(titleBottom) + ea,
           zIndex: mobile ? String(1) : "",
         },
@@ -280,19 +310,21 @@ RequestListJs.prototype.insertInformationBox = function () {
       whiteBaseTong = createNode({
         mother: grayTong,
         style: {
-          display: "inline-flex",
+          display: desktop ? "inline-flex" : "block",
           position: "relative",
           marginLeft: String(grayMargin) + ea,
           width: withOut((grayMargin * 2) + (grayPadding * 2), ea),
           paddingLeft: String(grayPadding) + ea,
           paddingRight: String(grayPadding) + ea,
-          height: String(tongHeight) + ea,
+          height: desktop ? String(tongHeight) + ea : "",
           borderRadius: String(5) + "px",
           background: state >= 2 ? (state === 3 ? colorChip.gray4 : colorChip.gray1) : colorChip.white,
           marginBottom: String(tongMargin) + ea,
           alignItems: "center",
           flexDirection: "row",
           cursor: "pointer",
+          paddingTop: desktop ? "" : String(grayPadding) + ea,
+          paddingBottom: desktop ? "" : String(grayPadding - 1) + ea,
         },
       });
       for (let j = 0; j < widthMap.length; j++) {
@@ -303,13 +335,17 @@ RequestListJs.prototype.insertInformationBox = function () {
             mother: whiteBaseTong,
             text: contentsMap(projects[i], j),
             style: {
-              display: "inline-block",
+              display: desktop ? "inline-block" : "block",
               position: "relative",
               fontSize: String(whiteSize) + ea,
-              fontWeight: String(j === 2 ? 700 : whiteWeight),
+              fontWeight: String(mobile || j === 2 ? 700 : whiteWeight),
               top: String(whiteTextTop) + ea,
               color: state >= 2 ? colorChip.deactive : colorChip.black,
-              width: String(widthMap[j]) + ea,
+              width: desktop ? String(widthMap[j]) + ea : "",
+              marginRight: desktop ? "" : String(1) + ea,
+              marginBottom: desktop ? "" : String(0.7) + ea,
+              paddingLeft: desktop ? "" : String(0.4) + ea,
+              paddingTop: desktop ? "" : String(0.2) + ea,
             },
             bold: {
               fontWeight: String(whiteColumnWeight),
@@ -327,7 +363,9 @@ RequestListJs.prototype.insertInformationBox = function () {
               alignItems: "center",
               top: String(0),
               height: withOut(0),
-              width: String(widthMap[j]) + ea,
+              width: desktop ? String(widthMap[j]) + ea : "",
+              marginRight: desktop ? "" : String(1) + ea,
+              marginBottom: desktop ? "" : String(1) + ea,
             },
             children: [
               {
@@ -340,7 +378,7 @@ RequestListJs.prototype.insertInformationBox = function () {
                   borderRadius: String(5) + "px",
                   paddingLeft: String(colorBoxPadding) + ea,
                   paddingRight: String(colorBoxPadding) + ea,
-                  width: forceWidth[j] === null ? "" : String(forceWidth[j]) + ea,
+                  width: desktop ? (forceWidth[j] === null ? "" : String(forceWidth[j]) + ea) : "",
                   justifyContent: "center",
                 },
                 children: [
