@@ -228,9 +228,11 @@ MagazineDetailJs.prototype.magazineContentsBox = function () {
   let contents;
   let type;
   let mobileDescriptionPadding;
+  let editorTextTop;
+  let editorBetween;
 
   binaryPath = MagazineDetailJs.binaryPath + this.mid;
-  ({ contents } = this.magazine);
+  ({ contents, editor } = this.magazine);
 
   mainWidth = <%% 900, 900, 900, 720, 100 %%>;
   mainPaddingTop = <%% 110, 110, 110, 80, 11.7 %%>;
@@ -252,6 +254,9 @@ MagazineDetailJs.prototype.magazineContentsBox = function () {
   blankMargin = <%% 100, 100, 100, 70, 11 %%>;
   blankMargin2 = <%% 100, 100, 100, 70, 10 %%>;
   blankMarginLast = <%% 200, 200, 200, 170, 20 %%>;
+
+  editorBetween = <%% 8, 8, 8, 7, 1.5 %%>;
+  editorTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
   mobileDescriptionPadding = 6;
 
@@ -383,6 +388,47 @@ MagazineDetailJs.prototype.magazineContentsBox = function () {
       }
     }
   }
+
+
+  createNode({
+    mother: mainTong,
+    style: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      textAlign: "center",
+      flexDirection: "row",
+      marginTop: String(mobile ? blankMargin * 1.2 : blankMargin) + ea,
+      marginLeft: mobile ? String(mobileDescriptionPadding) + ea : "",
+      marginRight: mobile ? String(mobileDescriptionPadding) + ea : "",
+      width: mobile ? withOut(mobileDescriptionPadding * 2, ea) : withOut(0),
+    },
+    children: [
+      {
+        text: "editor",
+        style: {
+          display: "inline-block",
+          fontSize: String(contentsSize) + ea,
+          fontWeight: String(500),
+          fontFamily: "graphik",
+          color: colorChip.black,
+          position: "relative",
+          marginRight: String(editorBetween) + ea,
+        }
+      },
+      {
+        text: editor,
+        style: {
+          display: "inline-block",
+          fontSize: String(contentsSize) + ea,
+          fontWeight: String(500),
+          color: colorChip.black,
+          position: "relative",
+          top: String(editorTextTop) + ea,
+        }
+      }
+    ]
+  });
 
 }
 
@@ -762,7 +808,6 @@ MagazineDetailJs.prototype.magazineRelativeBox = function () {
   });
 
 }
-
 
 MagazineDetailJs.prototype.launching = async function (loading) {
   const instance = this;

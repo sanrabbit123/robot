@@ -447,13 +447,7 @@ LogRouter.prototype.rou_post_getContents = function () {
             return obj.mid === req.body.mid;
           });
         } else {
-          contentsArr = contentsArr_raw.map((obj) => {
-            let copied;
-            copied = equalJson(JSON.stringify(obj));
-            delete copied.contents.detail;
-            delete copied.contents.detail;
-            return copied;
-          });
+          contentsArr = contentsArr_raw;
         }
 
         res.send(JSON.stringify({

@@ -704,6 +704,7 @@ ResourceMaker.prototype.magazineMaker = async function (mid) {
     let magazine;
     let rows;
     let latestPast;
+    let editor;
 
     await MONGOC.connect();
 
@@ -725,6 +726,7 @@ ResourceMaker.prototype.magazineMaker = async function (mid) {
     contents = {};
 
     contents.init = targetArr[1].replace(/\^ma\: /gi, "").split('|').map((str) => { return str.trim(); });
+    editor = contents.init.pop();
     targetArr = targetArr.slice(2);
 
     matrix = [];
@@ -791,7 +793,7 @@ ResourceMaker.prototype.magazineMaker = async function (mid) {
     }
 
     contents.detail = equalJson(JSON.stringify(matrix));
-    magazine = { magid: back.idMaker(latestPast.magid), mid, date: new Date(), contents }
+    magazine = { magid: back.idMaker(latestPast.magid), mid, editor, date: new Date(), contents };
 
     await back.mongoCreate(collection, magazine, { selfMongo: MONGOC });
 
