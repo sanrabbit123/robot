@@ -201,7 +201,7 @@ GeneralJs.prototype.setNavigator = function (subTitle, blackMode = true, name) {
     {
       title: "포트폴리오",
       href: FRONTHOST + "/portfolio.php",
-      green: [ "portfolioList, portfolioDetail" ],
+      green: [ "portfolioList", "portfolioDetail" ],
     },
     {
       title: "디자이너",

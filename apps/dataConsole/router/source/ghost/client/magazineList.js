@@ -588,7 +588,6 @@ MagazineListJs.prototype.insertInitBox = function () {
 
 }
 
-
 MagazineListJs.prototype.magazineList = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, cleanChildren, designerCareer, designerMthParsing, selfHref } = GeneralJs;
