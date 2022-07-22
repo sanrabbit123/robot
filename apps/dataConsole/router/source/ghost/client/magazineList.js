@@ -395,7 +395,11 @@ MagazineListJs.prototype.launching = async function (loading) {
     const getObj = returnGet();
     let response;
 
+    response = await ajaxJson({ mode: "magazine" }, LOGHOST + "/getContents", { equal: true });
+
+
     
+
 
 
 

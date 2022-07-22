@@ -447,7 +447,18 @@ LogRouter.prototype.rou_post_getContents = function () {
             return obj.mid === req.body.mid;
           });
         } else {
-          contentsArr = contentsArr_raw;
+          contentsArr = contentsArr_raw.map((obj) => {
+            let contents;
+            contents = equalJson(JSON.stringify(obj));
+            contents.detail = contents.detail.slice(0, 2);
+            return {
+              magid: obj.magid,
+              mid: obj.mid,
+              date: obj.date,
+              editor: obj.editor,
+              contents
+            }
+          })
         }
 
         res.send(JSON.stringify({
