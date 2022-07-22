@@ -449,7 +449,7 @@ LogRouter.prototype.rou_post_getContents = function () {
         } else {
           contentsArr = contentsArr_raw.map((obj) => {
             let contents;
-            contents = equalJson(JSON.stringify(obj));
+            contents = equalJson(JSON.stringify(obj.contents));
             contents.detail = contents.detail.slice(0, 2);
             return {
               magid: obj.magid,
