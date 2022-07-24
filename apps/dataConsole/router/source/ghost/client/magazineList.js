@@ -128,8 +128,8 @@ MagazineListJs.prototype.insertInitBox = function () {
   servicePaddingTop = <%% 7, 7, 7, 7, 7 %%>;
   servicePaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
   servicePaddingLeft = <%% 15, 15, 14, 13, 2.2 %%>;
-  serviceMarginRight = <%% 6, 6, 6, 6, 6 %%>;
-  serviceSize = <%% 13.5, 13.5, 13, 12, 3.3 %%>;
+  serviceMarginRight = <%% 6, 6, 6, 6, 1 %%>;
+  serviceSize = <%% 13.5, 13.5, 13, 12, 2.6 %%>;
   serviceBlockPaddingTop = <%% (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), 5 %%>;
 
   whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
@@ -153,7 +153,7 @@ MagazineListJs.prototype.insertInitBox = function () {
   subTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
 
   tagTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
-  tagTongBottom = <%% 3, 3, 1, 1, 0 %%>;
+  tagTongBottom = <%% 3, 3, 1, 1, 0.5 %%>;
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
   titleWording = "홈리에종 매거진";
@@ -272,25 +272,24 @@ MagazineListJs.prototype.insertInitBox = function () {
     searchTags.push("온라인");
     searchTags.push("전체");
   } else if (media[1]) {
-    searchTags.push("온라인");
+    searchTags.push("패브릭");
     searchTags.push("제작가구");
+    searchTags.push("온라인");
     searchTags.push("전체");
   } else if (media[2]) {
     searchTags.push("패브릭");
     searchTags.push("제작가구");
     searchTags.push("온라인");
-    searchTags.push("전체");
   } else if (media[3]) {
     searchTags.push("패브릭");
     searchTags.push("제작가구");
     searchTags.push("온라인");
   } else if (media[4]) {
     searchTags.push("패브릭");
-    searchTags.push("홈퍼니싱");
-    searchTags.push("토탈 스타일링");
     searchTags.push("제작가구");
     searchTags.push("온라인");
     searchTags.push("전체");
+
   }
 
   placeholder = "패브릭";
@@ -485,106 +484,105 @@ MagazineListJs.prototype.insertInitBox = function () {
     ]
   });
 
-  if (media[0] || media[1]) {
-    serviceChildren = [];
-    for (let service of searchTags) {
-      serviceChildren.push({
-        class: [
-          serviceButtonClassName
-        ],
-        attribute: {
-          toggle: "off",
-          value: service,
-        },
-        event: {
-          click: function (e) {
-            const targets = [ ...document.querySelectorAll('.' + serviceButtonClassName) ];
-            let thisValue;
-            for (let dom of targets) {
-              if (dom === this) {
-                dom.setAttribute("toggle", "on");
-                dom.firstChild.style.color = colorChip.black;
-                dom.firstChild.querySelector('b').style.color = colorChip.green;
-                thisValue = dom.getAttribute("value");
-              } else {
-                dom.setAttribute("toggle", "off");
-                dom.firstChild.style.color = colorChip.deactive;
-                dom.firstChild.querySelector('b').style.color = colorChip.deactive;
-              }
-            }
-
-            homeliaisonAnalytics({
-              page: instance.pageName,
-              standard: instance.firstPageViewTime,
-              action: "clickKeyword",
-              data: {
-                value: thisValue,
-                date: dateToString(new Date(), true),
-              },
-            }).catch((err) => {
-              console.log(err);
-            });
-
-            instance.search = /전체/gi.test(thisValue) ? "" : thisValue;
-            if (instance.mode === "only") {
-              instance.designerList(instance.search);
-            } else {
-              instance.designerListWithReview(instance.search);
-            }
-          }
-        },
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          height: String(searchBarHeight - (tagTongBottom * 2)) + ea,
-          marginRight: String(serviceMarginRight) + ea,
-          paddingLeft: String(servicePaddingLeft) + ea,
-          paddingRight: String(servicePaddingLeft) + ea,
-          textAlign: "center",
-          background: colorChip.gray2,
-          borderRadius: String(5) + "px",
-          cursor: "pointer",
-          justifyContent: "center",
-          alignItems: "center",
-          textAlign: "center",
-        },
-        children: [
-          {
-            text: "<b%#%b> " + service,
-            style: {
-              display: "inline-block",
-              position: "relative",
-              top: String(tagTextTop) + ea,
-              fontSize: String(serviceSize) + ea,
-              fontWeight: String(400),
-              color: colorChip.black,
-              cursor: "pointer",
-              textAlign: "center",
-            },
-            bold: {
-              color: colorChip.deactive,
-            }
-          }
-        ]
-      });
-    }
-    serviceBlock = createNode({
-      mother: middleBox,
-      style: {
-        display: desktop ? "block" : "none",
-        position: "absolute",
-        textAlign: "center",
-        right: String(0) + ea,
-        bottom: String(tagTongBottom) + ea,
+  serviceChildren = [];
+  for (let service of searchTags) {
+    serviceChildren.push({
+      class: [
+        serviceButtonClassName
+      ],
+      attribute: {
+        toggle: "off",
+        value: service,
       },
-      children: serviceChildren
+      event: {
+        click: function (e) {
+          const targets = [ ...document.querySelectorAll('.' + serviceButtonClassName) ];
+          let thisValue;
+          for (let dom of targets) {
+            if (dom === this) {
+              dom.setAttribute("toggle", "on");
+              dom.firstChild.style.color = colorChip.black;
+              dom.firstChild.querySelector('b').style.color = colorChip.green;
+              thisValue = dom.getAttribute("value");
+            } else {
+              dom.setAttribute("toggle", "off");
+              dom.firstChild.style.color = colorChip.deactive;
+              dom.firstChild.querySelector('b').style.color = colorChip.deactive;
+            }
+          }
+
+          homeliaisonAnalytics({
+            page: instance.pageName,
+            standard: instance.firstPageViewTime,
+            action: "clickKeyword",
+            data: {
+              value: thisValue,
+              date: dateToString(new Date(), true),
+            },
+          }).catch((err) => {
+            console.log(err);
+          });
+
+          instance.search = /전체/gi.test(thisValue) ? "" : thisValue;
+          if (instance.mode === "only") {
+            instance.designerList(instance.search);
+          } else {
+            instance.designerListWithReview(instance.search);
+          }
+        }
+      },
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        height: String(searchBarHeight - (tagTongBottom * 2)) + ea,
+        marginRight: String(serviceMarginRight) + ea,
+        paddingLeft: String(servicePaddingLeft) + ea,
+        paddingRight: String(servicePaddingLeft) + ea,
+        textAlign: "center",
+        background: desktop ? colorChip.gray2 : colorChip.gray1,
+        borderRadius: String(5) + "px",
+        cursor: "pointer",
+        justifyContent: "center",
+        alignItems: "center",
+        textAlign: "center",
+      },
+      children: [
+        {
+          text: "<b%#%b> " + service,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(tagTextTop) + ea,
+            fontSize: String(serviceSize) + ea,
+            fontWeight: String(desktop ? 400 : 500),
+            color: colorChip.black,
+            cursor: "pointer",
+            textAlign: "center",
+          },
+          bold: {
+            color: colorChip.deactive,
+          }
+        }
+      ]
     });
-    for (let dom of serviceBlock.children) {
-      dom.firstChild.style.width = String(Math.ceil(dom.firstChild.getBoundingClientRect().width + 1)) + "px";
-      dom.style.width = String(Math.ceil(dom.firstChild.getBoundingClientRect().width) + 1) + "px";
-    }
-    serviceBlock.lastChild.style.marginRight = "";
   }
+  serviceBlock = createNode({
+    mother: middleBox,
+    style: {
+      display: "block",
+      position: desktop ? "absolute" : "relative",
+      textAlign: "center",
+      right: String(0) + ea,
+      bottom: desktop ? String(tagTongBottom) + ea : "",
+      marginTop: mobile ? String(3) + ea : "",
+    },
+    children: serviceChildren
+  });
+  for (let dom of serviceBlock.children) {
+    dom.firstChild.style.width = String(Math.ceil(dom.firstChild.getBoundingClientRect().width + 1)) + "px";
+    dom.style.width = String(Math.ceil(dom.firstChild.getBoundingClientRect().width) + 1) + "px";
+  }
+  serviceBlock.lastChild.style.marginRight = "";
 
 }
 
@@ -594,6 +592,8 @@ MagazineListJs.prototype.magazineList = function () {
   const { ea, media, magazines, baseTong } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const small = (media[3] || media[4]);
+  const big = !small;
   const blank = "<u%&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;%u>";
   let whiteBlock;
   let whiteBottomMargin;
@@ -616,38 +616,38 @@ MagazineListJs.prototype.magazineList = function () {
   let tagBoxHeight, tagBoxPadding, tagBoxBetween;
   let tagSize, tagWeight, tagTextTop;
 
-  whiteBottomMargin = <%% 16, 16, 16, 16, 3 %%>;
+  whiteBottomMargin = <%% 16, 16, 16, 16, 2 %%>;
 
-  innerPadding = <%% 40, 40, 40, 40, 4 %%>;
+  innerPadding = <%% 40, 36, 32, 28, 6 %%>;
 
   finalBottom = <%% 240, 240, 240, 240, 40 %%>;
 
-  wordsLimit = <%% 232, 232, 232, 232, 232 %%>;
+  wordsLimit = <%% 232, 110, 100, 75, 65 %%>;
 
-  imageHeight = <%% 260, 260, 260, 260, 26 %%>;
-  imageWidth = <%% 483, 483, 483, 483, 48 %%>;
+  imageHeight = <%% 260, 210, 180, 160, 42 %%>;
+  imageWidth = <%% 483, 390, 330, 297, 48 %%>;
 
-  imageBetween = <%% 40, 40, 40, 40, 32 %%>;
+  imageBetween = <%% 40, 36, 32, 24, 5 %%>;
 
-  barBetween = <%% 16, 16, 16, 16, 16 %%>;
+  barBetween = <%% 16, 12, 10, 8, 2.5 %%>;
 
-  wordsBoxPaddingTop = <%% 26, 26, 26, 26, 2 %%>;
+  wordsBoxPaddingTop = <%% 26, 22, 14, 13, 5 %%>;
 
-  titleSize = <%% 23, 23, 23, 23, 4 %%>;
+  titleSize = <%% 23, 22, 20, 17, 4.2 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
-  contentsSize = <%% 14, 14, 14, 14, 14 %%>;
+  contentsSize = <%% 14, 14, 13, 11, 3 %%>;
   contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
   contentsLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
 
-  editorSize = <%% 12, 12, 12, 12, 2.5 %%>;
+  editorSize = <%% 12, 12, 11, 10, 2.5 %%>;
 
-  tagBoxHeight = <%% 28, 28, 28, 28, 6 %%>;
-  tagBoxPadding = <%% 12, 12, 12, 12, 12 %%>;
-  tagBoxBetween = <%% 5, 5, 5, 5, 5 %%>;
+  tagBoxHeight = <%% 28, 28, 24, 24, 6 %%>;
+  tagBoxPadding = <%% 12, 12, 10, 10, 2.5 %%>;
+  tagBoxBetween = <%% 5, 5, 4, 4, 1 %%>;
 
-  tagSize = <%% 11, 11, 11, 10, 2.5 %%>;
+  tagSize = <%% 11, 11, 10, 10, 2.6 %%>;
   tagWeight = <%% 600, 600, 600, 600, 600 %%>;
   tagTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.2 %%>;
 
@@ -670,19 +670,21 @@ MagazineListJs.prototype.magazineList = function () {
         paddingRight: String(innerPadding) + ea,
         paddingBottom: String(innerPadding) + ea,
         width: withOut(innerPadding * 2, ea),
+        flexDirection: desktop ? "row" : "column",
       }
     });
 
     imageBox = createNode({
       mother: whiteBlock,
-      mode: "img",
-      attribute: { src: thisPath + magazine.contents.init[desktop ? 0 : 1] },
       style: {
-        display: "inline-block",
+        display: desktop ? "inline-block" : "block",
         position: "relative",
         borderRadius: String(5) + "px",
+        backgroundPosition: "50% 50%",
+        backgroundSize: desktop ? "100% 100%" : "100% auto",
+        backgroundImage: "url('" + thisPath + magazine.contents.init[desktop ? 0 : 1] + "')",
         height: String(imageHeight) + ea,
-        width: String(imageWidth) + ea,
+        width: desktop ? String(imageWidth) + ea : String(100) + '%',
         marginRight: String(imageBetween) + ea,
       }
     });
@@ -690,18 +692,18 @@ MagazineListJs.prototype.magazineList = function () {
     wordsBox = createNode({
       mother: whiteBlock,
       style: {
-        display: "inline-flex",
+        display: desktop ? "inline-flex" : "flex",
         position: "relative",
         paddingTop: String(wordsBoxPaddingTop) + ea,
-        height: String(imageHeight - wordsBoxPaddingTop) + ea,
-        width: withOut(imageWidth + imageBetween, ea),
+        height: desktop ? String(imageHeight - wordsBoxPaddingTop) + ea : "",
+        width: desktop ? withOut(imageWidth + imageBetween, ea) : "",
         flexDirection: "column",
       }
     });
 
     createNode({
       mother: wordsBox,
-      text: magazine.contents.detail[0].text.join("\n"),
+      text: desktop ? magazine.contents.detail[0].text.join("\n") : magazine.contents.detail[0].text.join(" "),
       style: {
         position: "relative",
         fontSize: String(titleSize) + ea,
@@ -736,8 +738,9 @@ MagazineListJs.prototype.magazineList = function () {
 
     createNode({
       mother: wordsBox,
-      text: "<b%작성일%b> : " + dateToString(magazine.date) + blank + "<b%에디터%b> : " + magazine.editor,
+      text: big ? "<b%작성일%b> : " + dateToString(magazine.date) + blank + "<b%에디터%b> : " + magazine.editor : "<b%에디터%b> : " + magazine.editor,
       style: {
+        display: desktop ? "inline-block" : "none",
         position: "absolute",
         bottom: String(0),
         left: String(0),
@@ -761,11 +764,17 @@ MagazineListJs.prototype.magazineList = function () {
     tagTong = createNode({
       mother: wordsBox,
       style: {
-        position: "absolute",
-        bottom: String(0),
-        right: String(0),
+        display: desktop ? "inline-block" : "block",
+        position: desktop ? "absolute" : "relative",
+        bottom: desktop ? String(0) : "",
+        right: desktop ? String(0) : "",
+        marginTop: desktop ? "" : String(imageBetween) + ea,
       }
     })
+
+    if (media[3]) {
+      magazine.contents.tag.pop();
+    }
 
     for (let tag of magazine.contents.tag) {
       createNode({
@@ -781,7 +790,8 @@ MagazineListJs.prototype.magazineList = function () {
           justifyContent: "center",
           alignItems: "center",
           textAlign: "center",
-          marginLeft: String(tagBoxBetween) + ea,
+          marginLeft: desktop ? String(tagBoxBetween) + ea : "",
+          marginRight: mobile ? String(tagBoxBetween) + ea : "",
         },
         children: [
           {
