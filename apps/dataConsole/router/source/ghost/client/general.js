@@ -146,7 +146,7 @@ GeneralJs.prototype.setBackground = function (binaryPath, second = false, random
 
 }
 
-GeneralJs.prototype.setNavigator = function (subTitle, blackMode = true, name) {
+GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
   const instance = this;
   const { standardWidth, media, totalContents, naviHeight, frontPage } = this;
   const { createNode, createNodes, colorChip, withOut, blankHref, selfHref, isMac, setQueue } = GeneralJs;
@@ -235,7 +235,7 @@ GeneralJs.prototype.setNavigator = function (subTitle, blackMode = true, name) {
     class: [ "backblurdefault_lite" ],
     style: {
       position: "fixed",
-      background: blackMode ? colorChip.gradientGray : colorChip.white,
+      background: modeNumber !== 1 ? colorChip.gradientGray : colorChip.white,
       height: String(naviHeight) + "px",
       width: String(100) + '%',
       top: String(0),
@@ -247,7 +247,7 @@ GeneralJs.prototype.setNavigator = function (subTitle, blackMode = true, name) {
   createNode({
     mother: naviBase,
     mode: "svg",
-    source: this.returnLogo(blackMode ? colorChip.white : colorChip.green, 0),
+    source: this.returnLogo(modeNumber !== 1 ? colorChip.white : colorChip.green, 0),
     class: [ desktop ? "hoverDefault" : "hoverDefault_mobile" ],
     event: {
       click: (e) => {
@@ -267,7 +267,7 @@ GeneralJs.prototype.setNavigator = function (subTitle, blackMode = true, name) {
     }
   });
 
-  if (blackMode) {
+  if (modeNumber === 0) {
     createNode({
       mother: naviBase,
       text: subTitle,
@@ -303,23 +303,27 @@ GeneralJs.prototype.setNavigator = function (subTitle, blackMode = true, name) {
         createNode({
           mother: naviTong,
           attribute: {
-            index: String(i)
+            index: String(i),
+            mode: String(modeNumber),
           },
           event: {
             mouseenter: function (e) {
               const index = Number(this.getAttribute("index"));
+              const modeNumber = Number(this.getAttribute("mode"));
               if (index !== thisIndex) {
                 this.style.color = colorChip.green;
               }
             },
             mouseleave: function (e) {
               const index = Number(this.getAttribute("index"));
+              const modeNumber = Number(this.getAttribute("mode"));
               if (index !== thisIndex) {
-                this.style.color = colorChip.black;
+                this.style.color = (modeNumber === 1 ? colorChip.black : colorChip.white);
               }
             },
             click: function (e) {
               const index = Number(this.getAttribute("index"));
+              const modeNumber = Number(this.getAttribute("mode"));
               selfHref(naviMenu[i].href);
             }
           },
@@ -330,7 +334,7 @@ GeneralJs.prototype.setNavigator = function (subTitle, blackMode = true, name) {
             top: String(isMac() ? 0 : 2) + ea,
             fontSize: String(wordingSize) + ea,
             fontWeight: String(600),
-            color: i === thisIndex ? colorChip.green : colorChip.black,
+            color: i === thisIndex ? colorChip.green : (modeNumber === 1 ? colorChip.black : colorChip.white),
             marginRight: String(i === naviMenu.length - 1 ? wordingMarginRightLast : wordingMarginRight) + ea,
             cursor: "pointer",
             transition: "all 0.5s ease",
@@ -341,7 +345,7 @@ GeneralJs.prototype.setNavigator = function (subTitle, blackMode = true, name) {
       createNode({
         mother: naviBase,
         mode: "svg",
-        source: this.returnSearch(colorChip.green),
+        source: this.returnSearch(modeNumber === 1 ? colorChip.green : colorChip.white),
         class: [ "hoverDefault" ],
         event: {
           click: (e) => {
@@ -379,7 +383,7 @@ GeneralJs.prototype.setNavigator = function (subTitle, blackMode = true, name) {
               left: String(0),
               width: String(100) + '%',
               height: String(mobileMenuHeight) + "px",
-              background: colorChip.white,
+              background: modeNumber !== 1 ? colorChip.gradientGray : colorChip.white,
             },
             children: [
               {
@@ -427,7 +431,7 @@ GeneralJs.prototype.setNavigator = function (subTitle, blackMode = true, name) {
             position: "absolute",
             fontSize: String(wordingSize) + "px",
             fontWeight: String(600),
-            color: i === thisIndex ? colorChip.green : colorChip.black,
+            color: i === thisIndex ? colorChip.green : (modeNumber === 1 ? colorChip.black : colorChip.white),
             width: String(100) + '%',
             textAlign: "center",
             top: String(mobileFirstTop + (mobileVerticalBetween * i)) + "px",
@@ -449,7 +453,7 @@ GeneralJs.prototype.setNavigator = function (subTitle, blackMode = true, name) {
       createNode({
         mother: naviBase,
         mode: "svg",
-        source: this.returnHamburger(colorChip.black),
+        source: this.returnHamburger(modeNumber === 1 ? colorChip.black : colorChip.white),
         event: {
           click: function (e) {
             hamburgerEvent.call(this, e)
@@ -520,10 +524,10 @@ GeneralJs.prototype.setGeneralBase = function (obj, random = 0, mode, name) {
   const { instance, binaryPath, subTitle } = obj;
   if (this.backgroundType !== 2) {
     this.setBackground(binaryPath, obj.secondBackground === true, random);
-    this.setNavigator(subTitle, mode === "ghost", name);
+    this.setNavigator(subTitle, [ "ghost", "front", "black" ].findIndex((str) => { return str === mode }), name);
     this.setBaseTong(instance);
   } else {
-    this.setNavigator(subTitle, mode === "ghost", name);
+    this.setNavigator(subTitle, [ "ghost", "front", "black" ].findIndex((str) => { return str === mode }), name);
   }
 }
 
@@ -536,7 +540,7 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
     if (typeof obj.name !== "string" || typeof obj.client !== "object" || typeof obj.base !== "object" || typeof obj.local !== "function") {
       throw new Error("must be object => { name, client, base, local }");
     }
-    const { ajaxJson, returnGet, homeliaisonAnalytics, setDebounce, dateToString } = GeneralJs;
+    const { ajaxJson, returnGet, homeliaisonAnalytics, setDebounce, dateToString, colorChip } = GeneralJs;
     const { mode, name, client, base, local } = obj;
     let belowTarget, removeTargets, getObj;
 
@@ -550,7 +554,11 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
     base.instance.mother.pageName = name;
     this.setGeneralBase(base, typeof obj.background === "number" ? obj.background : 0, mode, name);
     await local();
-    this.footerMake();
+    if (mode === "front") {
+      this.footerMake();
+    } else {
+      this.footerMake(colorChip.gradientBlack);
+    }
     this.greenTalk(typeof base.talk === "object" ? base.talk : null);
 
     this.totalContents.style.height = "auto";

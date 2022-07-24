@@ -722,7 +722,7 @@ MagazineListJs.prototype.magazineList = function () {
 
     createNode({
       mother: wordsBox,
-      text: "<b%작성일%b> : " + dateToString(magazine.date) + blank + "<b%작성자%b> : " + magazine.editor,
+      text: "<b%작성일%b> : " + dateToString(magazine.date) + blank + "<b%에디터%b> : " + magazine.editor,
       style: {
         position: "absolute",
         bottom: String(0),
@@ -785,7 +785,7 @@ MagazineListJs.prototype.launching = async function (loading) {
     this.magazines = response.contentsArr;
 
     await this.mother.ghostClientLaunching({
-      mode: "front",
+      mode: "black",
       name: "magazineList",
       client: null,
       base: {
