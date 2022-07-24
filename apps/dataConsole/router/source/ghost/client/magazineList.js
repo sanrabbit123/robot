@@ -611,6 +611,10 @@ MagazineListJs.prototype.magazineList = function () {
   let contentsSize, contentsWeight, contentsLineHeight;
   let wordsLimit;
   let finalBottom;
+  let tagTong;
+  let editorSize;
+  let tagBoxHeight, tagBoxPadding, tagBoxBetween;
+  let tagSize, tagWeight, tagTextTop;
 
   whiteBottomMargin = <%% 16, 16, 16, 16, 3 %%>;
 
@@ -636,6 +640,16 @@ MagazineListJs.prototype.magazineList = function () {
   contentsSize = <%% 14, 14, 14, 14, 14 %%>;
   contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
   contentsLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
+
+  editorSize = <%% 12, 12, 12, 12, 2.5 %%>;
+
+  tagBoxHeight = <%% 28, 28, 28, 28, 6 %%>;
+  tagBoxPadding = <%% 12, 12, 12, 12, 12 %%>;
+  tagBoxBetween = <%% 5, 5, 5, 5, 5 %%>;
+
+  tagSize = <%% 11, 11, 11, 10, 2.5 %%>;
+  tagWeight = <%% 600, 600, 600, 600, 600 %%>;
+  tagTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.2 %%>;
 
   staticPath = FRONTHOST + "/list_image/magaz";
 
@@ -727,37 +741,68 @@ MagazineListJs.prototype.magazineList = function () {
         position: "absolute",
         bottom: String(0),
         left: String(0),
-        fontSize: String(contentsSize) + ea,
+        fontSize: String(editorSize) + ea,
         fontWeight: String(contentsWeight),
         color: colorChip.black,
         lineHeight: String(contentsLineHeight),
       },
       under: {
-        fontSize: String(contentsSize) + ea,
+        fontSize: String(editorSize) + ea,
         fontWeight: String(contentsWeight),
         color: colorChip.gray4,
       },
       bold: {
-        fontSize: String(contentsSize) + ea,
+        fontSize: String(editorSize) + ea,
         fontWeight: String(800),
         color: colorChip.black,
       }
     });
 
-    createNode({
+    tagTong = createNode({
       mother: wordsBox,
-      text: "#" + String(Number(magazine.mid.replace(/[^0-9]/gi, '')) + 1),
       style: {
         position: "absolute",
         bottom: String(0),
         right: String(0),
-        fontSize: String(contentsSize) + ea,
-        fontWeight: String(contentsWeight),
-        fontFamily: "graphik",
-        color: colorChip.green,
-        lineHeight: String(contentsLineHeight),
-      },
-    });
+      }
+    })
+
+    for (let tag of magazine.contents.tag) {
+      createNode({
+        mother: tagTong,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          height: String(tagBoxHeight) + ea,
+          paddingLeft: String(tagBoxPadding) + ea,
+          paddingRight: String(tagBoxPadding) + ea,
+          borderRadius: String(5) + "px",
+          background: colorChip.gray1,
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          marginLeft: String(tagBoxBetween) + ea,
+        },
+        children: [
+          {
+            text: "<b%#%b> " + tag,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(tagSize) + ea,
+              fontWeight: String(tagWeight),
+              color: colorChip.black,
+              top: String(tagTextTop) + ea,
+            },
+            bold: {
+              fontSize: String(tagSize) + ea,
+              fontWeight: String(400),
+              color: colorChip.deactive,
+            }
+          }
+        ]
+      })
+    }
 
   }
 
