@@ -136,11 +136,11 @@ DesignerAboutJs.prototype.insertBasicBox = function () {
     },
     {
       property: "인스타",
-      value: "https://home-liaison.com"
+      value: "https://instagram.com/homeliaison"
     },
     {
       property: "블로그",
-      value: "https://home-liaison.com"
+      value: "https://blog.naver.com/homeliaison"
     },
   ]
 
