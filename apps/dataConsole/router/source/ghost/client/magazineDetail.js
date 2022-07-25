@@ -187,9 +187,9 @@ MagazineDetailJs.prototype.magazineInitBox = function () {
           left: String(0),
           width: String(100) + '%',
           height: String(100) + '%',
-          borderRadius: desktop ? String(8) + "px" : "",
           borderTopRightRadius: mobile ? String(8) + "px" : "",
           borderBottomRightRadius: mobile ? String(8) + "px" : "",
+          borderRadius: desktop ? String(8) + "px" : "",
           background: desktop ? "" : colorChip.white,
           boxShadow: desktop ? "" : "0px 0px 15px -9px " + colorChip.shadow,
         }
