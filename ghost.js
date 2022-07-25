@@ -2434,6 +2434,48 @@ Ghost.prototype.ghostRouter = function (needs) {
     }
   };
 
+  //POST - pageToPdf
+  funcObj.post_pageToPdf = {
+    link: [ "/pageToPdf" ],
+    func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      try {
+        if (typeof req.body.url !== "string") {
+          throw new Error("invaild post : url must be string");
+        }
+        const static = instance.address.officeinfo.ghost.file.static;
+        const imageName = `pagePrint_${uniqueValue("string")}.png`;
+        const htmlName = imageName.replace(/\.png$/i, ".html");
+        const pdfName = imageName.replace(/\.png$/i, ".pdf");
+        let htmlString;
+
+        await chrome.pageToPng(global.decodeURIComponent(req.body.url), static + "/" + imageName, true);
+
+        htmlString = `<html><head><style>*{margin:0;padding:0}</style></head><body><img src="https://${instance.address.officeinfo.ghost.host}/${imageName}" style="width:100%"></body></html>`;
+        await fileSystem(`write`, [ `${static}/${htmlName}`, htmlString ]);
+
+        await chrome.pdfPrint(`https://${instance.address.officeinfo.ghost.host}/${htmlName}`, `${static}/${pdfName}`, false);
+
+        setQueue(() => {
+          shell.exec(`rm -rf ${shellLink(static)}/${imageName};`);
+          shell.exec(`rm -rf ${shellLink(static)}/${htmlName};`);
+          shell.exec(`rm -rf ${shellLink(static)}/${pdfName};`);
+        }, 15 * 60 * 1000);
+
+        res.send(JSON.stringify({ url: global.encodeURIComponent("https://" + instance.address.officeinfo.ghost.host + "/" + pdfName) }));
+
+      } catch (e) {
+        console.log(e);
+        res.send(JSON.stringify({ message: "error : " + e.message }));
+      }
+    }
+  };
+
   //POST - pageToPng
   funcObj.post_pageToPng = {
     link: [ "/pageToPng" ],

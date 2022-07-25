@@ -90,10 +90,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const target = "https://home-liaison.serveftp.com/test.html";
 
-
-    await chrome.pdfPrint(target);
 
 
 
