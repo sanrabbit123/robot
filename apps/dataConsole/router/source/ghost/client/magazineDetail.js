@@ -75,7 +75,7 @@ MagazineDetailJs.prototype.magazineInitBox = function () {
 
   ({ contents, editor } = this.magazine);
 
-  mainHeight = <%% 800, 750, 710, 590, (210 / 297) * 100 %%>;
+  mainHeight = <%% 800, 750, 710, 590, 64 %%>;
   mainBelowBarHeight = <%% 250, 250, 250, 216, 250 %%>;
 
   contentsBoxTop = <%% 70, 70, 70, 70, 0 %%>;
@@ -94,18 +94,18 @@ MagazineDetailJs.prototype.magazineInitBox = function () {
   wordingSize = <%% 18, 18, 16, 14, 18 %%>;
   wordingWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  mainTitleSize = <%% 24, 24, 22, 20, 3.8 %%>;
+  mainTitleSize = <%% 24, 24, 22, 20, 5 %%>;
   mainTitleWeight = <%% 900, 900, 900, 900, 900 %%>;
   mainTitleTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.2 %%>;
 
-  whiteBoxPadding = <%% 36, 36, 32, 30, 4.8 %%>;
-  whiteBoxLeft = <%% 60, 60, 48, 40, 6 %%>;
-  whiteBoxHeight = <%% 128, 128, 116, 108, 20 %%>;
+  whiteBoxPadding = <%% 36, 36, 32, 30, 6 %%>;
+  whiteBoxLeft = <%% 60, 60, 48, 40, 0 %%>;
+  whiteBoxHeight = <%% 128, 128, 116, 108, 27 %%>;
 
   editorSize = <%% 13, 13, 13, 12, 2.5 %%>;
   editorWeight = <%% 400, 400, 400, 400, 400 %%>;
-  editorMarginLeft = <%% 50, 50, 50, 40, 5 %%>;
-  editorTextTop = <%% (isMac() ? 19 : 20), (isMac() ? 19 : 20), (isMac() ? 18 : 19), (isMac() ? 17 : 17), 2.9 %%>;
+  editorMarginLeft = <%% 50, 50, 50, 40, 5.2 %%>;
+  editorTextTop = <%% (isMac() ? 19 : 20), (isMac() ? 19 : 20), (isMac() ? 18 : 19), (isMac() ? 17 : 17), 4.4 %%>;
 
   mainTong = createNode({
     mother: totalContents,
@@ -117,6 +117,7 @@ MagazineDetailJs.prototype.magazineInitBox = function () {
       paddingTop: String(naviHeight) + "px",
       height: String(mainHeight) + ea,
       animation: "fadeupdelay 0.5s ease forwards",
+      zIndex: desktop ? "" : String(1),
     },
     children: [
       {
@@ -155,7 +156,7 @@ MagazineDetailJs.prototype.magazineInitBox = function () {
       height: desktop ? String(pictureHeight) + ea : String(100) + '%',
       borderRadius: desktop ? String(5) + "px" : "",
       backgroundImage: "url('" + MagazineDetailJs.binaryPath + this.mid + contents.init[desktop ? 0 : 1] + "')",
-      backgroundSize: "auto 100%",
+      backgroundSize: desktop ? "auto 100%" : "100% auto",
       backgroundPosition: "50% 50%",
       boxShadow: desktop ? "0px 8px 22px -15px " + colorChip.shadow : "",
       verticalAlign: "top",
@@ -167,12 +168,12 @@ MagazineDetailJs.prototype.magazineInitBox = function () {
     style: {
       display: "inline-flex",
       position: "relative",
-      top: desktop ? withOut((whiteBoxHeight + whiteBoxLeft), ea) : withOut(50, (whiteBoxHeight / 2), ea),
+      top: desktop ? withOut((whiteBoxHeight + whiteBoxLeft), ea) : String(51) + ea,
       left: String(whiteBoxLeft) + ea,
       height: String(whiteBoxHeight) + ea,
       paddingLeft: String(whiteBoxPadding) + ea,
       paddingRight: String(whiteBoxPadding) + ea,
-      overflow: "hidden",
+      overflow: desktop ? "hidden" : "",
       justifyContent: "left",
       alignItems: "center",
       textAlign: "left",
@@ -186,7 +187,11 @@ MagazineDetailJs.prototype.magazineInitBox = function () {
           left: String(0),
           width: String(100) + '%',
           height: String(100) + '%',
-          borderRadius: String(8) + "px",
+          borderRadius: desktop ? String(8) + "px" : "",
+          borderTopRightRadius: mobile ? String(8) + "px" : "",
+          borderBottomRightRadius: mobile ? String(8) + "px" : "",
+          background: desktop ? "" : colorChip.white,
+          boxShadow: desktop ? "" : "0px 0px 15px -9px " + colorChip.shadow,
         }
       },
       {
@@ -257,6 +262,7 @@ MagazineDetailJs.prototype.magazineContentsBox = function () {
   let editorTextTop;
   let editorBetween;
   let num;
+  let grayTong;
 
   binaryPath = MagazineDetailJs.binaryPath + this.mid;
   ({ contents, editor } = this.magazine);
@@ -287,6 +293,29 @@ MagazineDetailJs.prototype.magazineContentsBox = function () {
 
   mobileDescriptionPadding = 6;
 
+  grayTong = createNode({
+    mother: totalContents,
+    style: {
+      display: "block",
+      position: "relative",
+      width: withOut(0),
+      paddingTop: String(mainPaddingTop + (desktop ? 0 : 13.5)) + ea,
+      paddingBottom: desktop ? "" : String(mainPaddingTop) + ea,
+      background: desktop ? "" : colorChip.gray1,
+      animation: "fadeupdelay 0.5s ease forwards",
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: "relative",
+          width: String(mainWidth) + ea,
+          left: "calc(50% - " + String(mainWidth / 2) + ea + ")",
+        }
+      }
+    ]
+  });
+
   mainTong = createNode({
     mother: totalContents,
     style: {
@@ -295,7 +324,6 @@ MagazineDetailJs.prototype.magazineContentsBox = function () {
       width: String(mainWidth) + ea,
       left: "calc(50% - " + String(mainWidth / 2) + ea + ")",
       background: colorChip.white,
-      paddingTop: String(mainPaddingTop) + ea,
       paddingBottom: String(desktop ? 200 : 30) + ea,
       animation: "fadeupdelay 0.5s ease forwards",
     },
@@ -306,13 +334,19 @@ MagazineDetailJs.prototype.magazineContentsBox = function () {
     if (num !== 0) {
       type = obj.type;
       if (/^blank/i.test(type)) {
-        createNode({
-          mother: mainTong,
-          style: {
-            display: "block",
-            height: String(blankMargin) + ea,
-          }
-        });
+
+        if (mobile && num === 2 && type === "blankImage") {
+          // pass
+        } else {
+          createNode({
+            mother: mainTong,
+            style: {
+              display: "block",
+              height: String(blankMargin) + ea,
+            }
+          });
+        }
+
       }
       if (type.replace(/^general/i, '').replace(/^blank/i, '') === "Title") {
         createNode({
@@ -349,7 +383,7 @@ MagazineDetailJs.prototype.magazineContentsBox = function () {
         });
       } else if (type.replace(/^general/i, '').replace(/^blank/i, '') === "Description") {
         createNode({
-          mother: mainTong,
+          mother: (num === 1 ? grayTong.firstChild : mainTong),
           text: obj.text.join("\n\n"),
           style: {
             display: "block",
