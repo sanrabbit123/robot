@@ -142,7 +142,7 @@ GoogleChrome.prototype.pdfPrint = async function (link, filePath = null, openMod
   }
 }
 
-GoogleChrome.prototype.pageToPng = async function (link, filePath = null, openMode = false) {
+GoogleChrome.prototype.pageToPng = async function (link, filePath = null, tabletMode = false) {
   const instance = this;
   const { shellLink, shellExec, uniqueValue } = this.mother;
   const { puppeteer } = this;
@@ -156,7 +156,7 @@ GoogleChrome.prototype.pageToPng = async function (link, filePath = null, openMo
     });
     const page = await browser.newPage();
     await page.setViewport({
-      width: 1920,
+      width: !tabletMode ? 1920 : 1080,
       height: 1080,
       deviceScaleFactor: 2,
     });
@@ -166,10 +166,6 @@ GoogleChrome.prototype.pageToPng = async function (link, filePath = null, openMo
     await page.screenshot({ path: filePath, fullPage: true });
 
     await browser.close();
-
-    if (openMode) {
-      await shellExec(`open ${shellLink(filePath)}`);
-    }
 
     return { file: filePath };
   } catch (e) {

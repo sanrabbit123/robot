@@ -3764,7 +3764,7 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
     newFeeObject = await work.getDesignerFee(desid, cliid, serid, xValue, { selfMongo: MONGOCOREC, selfLocalMongo: null });
     if (newFeeObject.detail[method] === 0) {
       await fileSystem(`remove`, [ `${process.cwd()}/temp/${doingSignature}.json` ]);
-      return { error: "unable in this service" };
+      return { error: "unable in this service : " + newFeeObject.comment };
     } else {
 
       returnObject.service.from.serid = project.service.serid;

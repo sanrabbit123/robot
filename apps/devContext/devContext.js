@@ -89,7 +89,12 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
+
+    const target = "https://home-liaison.serveftp.com/test.html";
+
+
+    await chrome.pdfPrint(target);
+
 
 
 
@@ -2757,9 +2762,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "정수영",
-    //     designer: "김윤진",
-    //     link: "https://drive.google.com/drive/folders/17LS7CJ_UpS60A9wkZmaovtS7larYvvxN",
+    //     client: "김푸른",
+    //     designer: "이정아",
+    //     link: "https://drive.google.com/drive/folders/1eiQ69rgrZRiUjkllhu-TG9ahlp1qz6Bw",
     //     pay: true
     //   },
     // ]);
