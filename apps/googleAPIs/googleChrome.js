@@ -156,7 +156,7 @@ GoogleChrome.prototype.pageToPng = async function (link, filePath = null, tablet
     });
     const page = await browser.newPage();
     await page.setViewport({
-      width: !tabletMode ? 1920 : 1080,
+      width: !tabletMode ? 1920 : 960,
       height: 1080,
       deviceScaleFactor: 2,
     });

@@ -31,7 +31,7 @@
     "module": false
   },
   "name": "requestList",
-  "hangul": "스타일링 요청",
+  "hangul": "의뢰서 리스트",
   "route": [
     "requestList"
   ]
@@ -92,7 +92,7 @@ RequestListJs.prototype.insertInformationBox = function () {
 
   whiteBottomMargin = <%% 58, 58, 58, 58, 6 %%>;
 
-  titleFontSize = <%% 22, 22, 20, 20, 4.3 %%>;
+  titleFontSize = <%% 24, 24, 23, 22, 4.3 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
 
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
@@ -529,7 +529,7 @@ RequestListJs.prototype.insertNoticeBox = function () {
 
   whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
 
-  titleFontSize = <%% 22, 22, 20, 20, 4.3 %%>;
+  titleFontSize = <%% 24, 24, 23, 22, 4.3 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
 
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;

@@ -533,7 +533,7 @@ RequestDetailJs.prototype.insertInformationBox = function (indexNumber) {
   let initContentsPaddingLeft;
   let printSize;
 
-  wordsTitle = desktop ? wordings.title.join(" ") + "&nbsp;&nbsp;<b%이미지로 저장%b>" : wordings.title.join(" ");
+  wordsTitle = desktop ? wordings.title.join(" ") + "&nbsp;&nbsp;<b%pdf로 저장%b>" : wordings.title.join(" ");
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -541,7 +541,7 @@ RequestDetailJs.prototype.insertInformationBox = function (indexNumber) {
 
   whiteBottomMargin = <%% 58, 58, 58, 58, 0 %%>;
 
-  titleFontSize = <%% 22, 22, 22, 21, 4.3 %%>;
+  titleFontSize = <%% 24, 24, 23, 22, 4.3 %%>;
   printSize = <%% 14, 14, 13, 12, 4 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
 
@@ -980,7 +980,7 @@ RequestDetailJs.prototype.insertDetailBox = function (indexNumber) {
 
   whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
 
-  titleFontSize = <%% 22, 22, 22, 21, 4.3 %%>;
+  titleFontSize = <%% 24, 24, 23, 22, 4.3 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
 
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
@@ -1293,7 +1293,7 @@ RequestDetailJs.prototype.insertPhotoBox = function (indexNumber) {
 
   whiteBottomMargin = <%% 68, 68, 68, 68, 0 %%>;
 
-  titleFontSize = <%% 21, 21, 21, 21, 4.3 %%>;
+  titleFontSize = <%% 24, 24, 23, 22, 4.3 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
 
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
@@ -1771,7 +1771,7 @@ RequestDetailJs.prototype.insertNoticeBox = function (indexNumber) {
 
   whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
 
-  titleFontSize = <%% 22, 22, 22, 21, 4.3 %%>;
+  titleFontSize = <%% 24, 24, 23, 22, 4.3 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
 
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
