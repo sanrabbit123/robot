@@ -855,6 +855,19 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong, x) {
               y: String(i),
               z: String(z),
             },
+            event: {
+              click: function (e) {
+                const x = Number(this.getAttribute('x'));
+                const y = Number(this.getAttribute('y'));
+                const z = Number(this.getAttribute('z'));
+
+                
+
+                console.log(x, y, z);
+
+
+              }
+            },
             style: {
               display: "inline-block",
               height: withOut(0),
