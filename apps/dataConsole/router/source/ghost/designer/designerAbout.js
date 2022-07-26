@@ -325,7 +325,6 @@ DesignerAboutJs.prototype.renderWhite = function (type, title, contents, index) 
   topPadding0 = <%% 52, 52, 44, 36, 4.7 %%>;
   topPadding1 = <%% 40, 40, 38, 32, 4.7 %%>;
 
-
   whiteBlock = createNode({
     mother: baseTong,
     style: {
@@ -351,7 +350,7 @@ DesignerAboutJs.prototype.renderWhite = function (type, title, contents, index) 
   whiteTong = whiteBlock.children[0];
 
   block = this.renderTong(type, title, whiteTong, index);
-  this.renderBlock(contents, block.children[1]);
+  this.renderBlock(contents, block.children[1], index - 1);
 }
 
 DesignerAboutJs.prototype.renderTong = function (type, title, whiteTong, index) {
@@ -443,7 +442,7 @@ DesignerAboutJs.prototype.renderTong = function (type, title, whiteTong, index) 
 
 }
 
-DesignerAboutJs.prototype.renderBlock = function (contents, tong) {
+DesignerAboutJs.prototype.renderBlock = function (contents, tong, x) {
   const instance = this;
   const { ea, baseTong, media } = this;
   const mobile = media[4];
