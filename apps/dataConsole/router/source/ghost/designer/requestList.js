@@ -92,7 +92,7 @@ RequestListJs.prototype.insertInformationBox = function () {
 
   whiteBottomMargin = <%% 58, 58, 58, 58, 6 %%>;
 
-  titleFontSize = <%% 24, 24, 23, 22, 4.3 %%>;
+  titleFontSize = <%% 22, 22, 22, 21, 4.3 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
 
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
@@ -529,7 +529,7 @@ RequestListJs.prototype.insertNoticeBox = function () {
 
   whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
 
-  titleFontSize = <%% 24, 24, 23, 22, 4.3 %%>;
+  titleFontSize = <%% 22, 22, 22, 21, 4.3 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
 
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;

@@ -3539,7 +3539,7 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
                           buyer_tel: map.phone,
                       }, async (rsp) => {
                         try {
-                          if (rsp.success) {
+                          if (typeof rsp.status === "string" && /paid/gi.test(rsp.status)) {
                             map.rsp = JSON.parse(JSON.stringify(rsp));
                             const { useid } = await ajaxJson({ map }, "/userSubmit");
 
