@@ -131,24 +131,171 @@ DesignerAboutJs.prototype.contentsCenter = function () {
       ]
     },
     {
-      title: "공간 범위",
+      title: "작업 방식",
       whiteType: 1,
       contents: [
         {
-          property: "주소",
-          value: "서울 동대문구 한천로63길 10 (이문동,이문e편한세상아파트)"
+          property: "온라인",
+          value: [
+            "가능",
+            "불가능",
+          ]
         },
         {
-          property: "유효 범위",
-          value: "40km"
+          property: "거주중",
+          value: [
+            "가능",
+            "불가능",
+          ]
         },
         {
-          property: "한계 범위",
-          value: "60km"
+          property: "1차 제안 시간",
+          value: [
+            "1주일 이내",
+            "2주일 이내",
+            "3주일 이내",
+            "3주일 이상",
+          ]
         },
         {
-          property: "시공 한계 범위",
-          value: "60km"
+          property: "페이퍼 워크",
+          value: [
+            "도면",
+            "3D",
+            "컨셉 제안",
+            "마감재 제안",
+            "제품 리스트",
+            "제품 이미지",
+            "콜라주",
+          ]
+        },
+      ]
+    },
+    {
+      title: "제작 관련",
+      whiteType: 1,
+      contents: [
+        {
+          property: "빌트인 제작",
+          value: [
+            "가능",
+            "불가능",
+          ]
+        },
+        {
+          property: "가구 제작",
+          value: [
+            "가능",
+            "불가능",
+          ]
+        },
+        {
+          property: "커튼 패브릭",
+          value: [
+            "업체 연결",
+            "기성 제품 추천",
+            "직접 제작",
+          ]
+        },
+        {
+          property: "베딩 패브릭",
+          value: [
+            "업체 연결",
+            "기성 제품 추천",
+            "직접 제작",
+          ]
+        },
+        {
+          property: "설치 서비스",
+          value: [
+            "직접",
+            "연결",
+          ]
+        },
+        {
+          property: "정리 수납",
+          value: [
+            "연결",
+            "미제공",
+          ]
+        },
+      ]
+    },
+    {
+      title: "스타일",
+      whiteType: 2,
+      contents: [
+        {
+          property: "스타일 경향성",
+          value: {
+            modern: { name: "모던", value: 2 },
+            classic: { name: "클래식", value: 6 },
+            natural: { name: "내추럴", value: 8 },
+            mixmatch: { name: "믹스매치", value: 5 },
+            scandinavian: { name: "북유럽", value: 4 },
+            vintage: { name: "빈티지", value: 10 },
+            oriental: { name: "오리엔탈", value: 1 },
+            exotic: { name: "이그저틱", value: 3 },
+            __order__: [
+              "modern",
+              "classic",
+              "natural",
+              "mixmatch",
+              "scandinavian",
+              "vintage",
+              "oriental",
+              "exotic",
+            ]
+          }
+        },
+        {
+          property: "텍스처 경향성",
+          value: {
+            darkWood: { name: "진한 우드", value: 2 },
+            whiteWood: { name: "연한 우드", value: 6 },
+            coating: { name: "도장", value: 8 },
+            metal: { name: "금속", value: 5 },
+            __order__: [
+              "darkWood",
+              "whiteWood",
+              "coating",
+              "metal",
+            ]
+          }
+        },
+        {
+          property: "컬러톤 경향성",
+          value: {
+            darkWood: { name: "다크 우드", value: 2 },
+            whiteWood: { name: "밝은 우드", value: 6 },
+            highContrast: { name: "고대비", value: 8 },
+            vivid: { name: "비비드", value: 5 },
+            white: { name: "화이트", value: 4 },
+            mono: { name: "모노톤", value: 10 },
+            bright: { name: "밝은톤", value: 1 },
+            dark: { name: "어두운톤", value: 3 },
+            __order__: [
+              "darkWood",
+              "whiteWood",
+              "highContrast",
+              "vivid",
+              "white",
+              "mono",
+              "bright",
+              "dark",
+            ]
+          }
+        },
+        {
+          property: "밀도 경향성",
+          value: {
+            maximun: { name: "맥시멈", value: 2 },
+            minimum: { name: "미니멈", value: 6 },
+            __order__: [
+              "maximun",
+              "minimum",
+            ]
+          }
         },
       ]
     },
@@ -202,11 +349,11 @@ DesignerAboutJs.prototype.renderWhite = function (type, title, contents, index) 
   });
   whiteTong = whiteBlock.children[0];
 
-  block = this.renderTong(title, whiteTong, index);
+  block = this.renderTong(type, title, whiteTong, index);
   this.renderBlock(contents, block.children[1]);
 }
 
-DesignerAboutJs.prototype.renderTong = function (title, whiteTong, index) {
+DesignerAboutJs.prototype.renderTong = function (type, title, whiteTong, index) {
   const instance = this;
   const { ea, baseTong, media } = this;
   const mobile = media[4];
@@ -220,17 +367,20 @@ DesignerAboutJs.prototype.renderTong = function (title, whiteTong, index) {
   let numberSize;
   let numberWeight;
   let finalBottomMargin;
+  let realFinalBottomMargin;
 
   titleWidth = <%% 300, 300, 300, 300, 30 %%>;
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
   titleFontSize = <%% 20, 20, 20, 19, 4.3 %%>;
 
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
-  numberSize = <%% 20, 20, 20, 20, 20 %%>;
+  numberSize = <%% 18, 18, 18, 16, 3 %%>;
   numberWeight = <%% 200, 200, 200, 200, 200 %%>;
-  numberBottom = <%% 46, 46, 46, 46, 6 %%>;
+  numberBottom = <%% 43, 43, 43, 43, 6 %%>;
 
   finalBottomMargin = <%% 30, 30, 30, 30, 3 %%>;
+
+  realFinalBottomMargin = <%% 24, 24, 24, 24, 3 %%>;
 
   return createNode({
     mother: whiteTong,
@@ -272,14 +422,15 @@ DesignerAboutJs.prototype.renderTong = function (title, whiteTong, index) {
           verticalAlign: "top",
           top: String(titleTopNumber) + ea,
           paddingBottom: String(finalBottomMargin) + ea,
-          borderBottom: "1px dashed " + colorChip.green,
+          marginBottom: type === 2 ? String(realFinalBottomMargin) + ea : "",
+          borderBottom: type !== 2 ? "1px dashed " + colorChip.green : "",
         }
       },
       {
         text: String(index),
         style: {
           position: "absolute",
-          bottom: String(numberBottom) + ea,
+          bottom: String(numberBottom + (type === 2 ? realFinalBottomMargin : 0)) + ea,
           right: String(0) + ea,
           fontSize: String(numberSize) + ea,
           fontWeight: String(numberWeight),
@@ -309,9 +460,18 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong) {
   let baseBlock;
   let circleBlock, propertyBlock, valueBlock;
   let factorWidth;
+  let divideNumber;
+  let num;
+  let factorBetween;
+  let tendencyTong;
+  let tendencyBlockTop;
+  let tendencyBlockWidth;
+  let tendencyBlockHeight;
+  let tendencyValueConst;
+  let z;
 
-  blockHeight = <%% 30, 30, 30, 30, 30 %%>;
-  blockMarginBottom = <%% 10, 10, 10, 10, 3 %%>;
+  blockHeight = <%% 22, 22, 22, 22, 22 %%>;
+  blockMarginBottom = <%% 16, 16, 16, 16, 3 %%>;
 
   circleBoxWidth = <%% 16, 16, 16, 16, 16 %%>;
   circleWidth = <%% 5, 5, 5, 5, 5 %%>;
@@ -323,19 +483,27 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong) {
 
   firstWidth = <%% 180, 180, 180, 180, 20 %%>;
 
-  factorWidth = <%% 210, 210, 200, 180, 20 %%>;
+  factorWidth = <%% 192, 192, 192, 192, 20 %%>;
+  factorBetween = <%% 8, 8, 8, 8, 1 %%>;
 
+  divideNumber = <%% 4, 4, 4, 4, 2 %%>;
+
+  tendencyBlockTop = <%% 3, 3, 3, 3, 3 %%>;
+  tendencyBlockWidth = <%% 100, 100, 100, 100, 90 %%>;
+  tendencyBlockHeight = <%% 16, 16, 16, 16, 16 %%>;
+
+  tendencyValueConst = 10;
+
+  z = 0;
   for (let { property, value } of contents) {
 
     baseBlock = createNode({
       mother: tong,
       style: {
-        display: "flex",
+        display: "block",
         position: "relative",
         width: withOut(0),
-        height: String(blockHeight) + ea,
-        alignItems: "center",
-        marginBottom: String(blockMarginBottom) + ea,
+        marginBottom: String((typeof value === "object" && value !== null && Array.isArray(value.__order__) && z !== contents.length - 1) ? blockMarginBottom * 2 : blockMarginBottom) + ea,
       },
     });
 
@@ -349,6 +517,7 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong) {
         justifyContent: "center",
         alignItems: "center",
         textAlign: "center",
+        verticalAlign: "top",
       },
       children: [
         {
@@ -375,6 +544,7 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong) {
         fontWeight: String(contentsWeight0),
         color: colorChip.black,
         width: String(firstWidth) + ea,
+        verticalAlign: "top",
       },
     });
 
@@ -389,6 +559,7 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong) {
           fontWeight: String(contentsWeight1),
           color: colorChip.black,
           width: withOut(firstWidth + circleBoxWidth, ea),
+          verticalAlign: "top",
         },
       });
     } else if (Array.isArray(value)) {
@@ -399,9 +570,11 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong) {
           display: "inline-block",
           position: "relative",
           width: withOut(firstWidth + circleBoxWidth, ea),
+          verticalAlign: "top",
         },
       });
 
+      num = 0;
       for (let v of value) {
         createNode({
           mother: valueBlock,
@@ -415,18 +588,82 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong) {
             fontSize: String(contentsSize) + ea,
             fontWeight: String(contentsWeight1),
             color: colorChip.deactive,
-            width: String(factorWidth) + ea,
+            width: "calc(100% / " + String(divideNumber) + ")",
             cursor: "pointer",
+            marginTop: String(num >= divideNumber ? factorBetween : 0) + ea,
           },
         });
+        num++;
+      }
+
+    } else if (typeof value === "object" && value !== null && Array.isArray(value.__order__)) {
+
+      valueBlock = createNode({
+        mother: baseBlock,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: withOut(firstWidth + circleBoxWidth, ea),
+          verticalAlign: "top",
+        },
+      });
+
+      num = 0;
+      for (let key of value.__order__) {
+
+        tendencyTong = createNode({
+          mother: valueBlock,
+          style: {
+            display: "block",
+            position: "relative",
+            marginTop: String(num !== 0 ? factorBetween : 0) + ea,
+          },
+          children: [
+            {
+              text: value[key].name,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(contentsSize) + ea,
+                fontWeight: String(contentsWeight1),
+                width: String(tendencyBlockWidth) + ea,
+                verticalAlign: "top",
+              }
+            },
+            {
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(tendencyBlockTop) + ea,
+                width: withOut(tendencyBlockWidth * 2, ea),
+                height: String(tendencyBlockHeight) + ea,
+                verticalAlign: "top",
+                borderRadius: String(3) + "px",
+                overflow: "hidden",
+              },
+            }
+          ]
+        }).children[1];
+
+        for (let i = 0; i < tendencyValueConst; i++) {
+          createNode({
+            mother: tendencyTong,
+            style: {
+              display: "inline-block",
+              height: withOut(0),
+              width: "calc(100% / " + String(tendencyValueConst) + ")",
+              background: value[key].value > i ? colorChip.green : colorChip.gray1,
+            }
+          })
+        }
+
+        num++;
       }
 
     }
 
-
-
+    z++;
   }
-
 }
 
 DesignerAboutJs.prototype.launching = async function (loading) {
