@@ -715,6 +715,31 @@ MagazineListJs.prototype.magazineList = function () {
       }
     });
 
+    if (mobile) {
+      createNode({
+        mother: wordsBox,
+        text: "<b%" + magazine.contents.category + "%b>&nbsp;&nbsp;&nbsp;<u%|%u>&nbsp;&nbsp;&nbsp;" + magazine.contents.tag.join(", "),
+        style: {
+          position: "relative",
+          fontSize: String(2.5) + ea,
+          fontWeight: String(300),
+          color: colorChip.shadow,
+          lineHeight: String(contentsLineHeight),
+          marginBottom: String(1) + ea,
+        },
+        under: {
+          fontSize: String(2.5) + ea,
+          fontWeight: String(300),
+          color: colorChip.deactive,
+        },
+        bold: {
+          fontSize: String(2.5) + ea,
+          fontWeight: String(800),
+          color: colorChip.black,
+        }
+      });
+    }
+
     createNode({
       mother: wordsBox,
       text: desktop ? magazine.contents.detail[0].text.join("\n") : magazine.contents.detail[0].text.join(" "),
@@ -775,114 +800,118 @@ MagazineListJs.prototype.magazineList = function () {
       }
     });
 
-    tagTong = createNode({
-      mother: wordsBox,
-      style: {
-        display: desktop ? "inline-block" : "block",
-        position: desktop ? "absolute" : "relative",
-        bottom: desktop ? String(0) : "",
-        right: desktop ? String(0) : "",
-        marginTop: desktop ? "" : String(imageBetween) + ea,
-        textAlign: desktop ? "left" : "right",
-      }
-    })
+    if (desktop) {
 
-    if (media[3]) {
-      magazine.contents.tag.pop();
-    }
-
-    for (let tag of magazine.contents.tag) {
-      createNode({
-        mother: tagTong,
+      // tag
+      tagTong = createNode({
+        mother: wordsBox,
         style: {
-          display: "inline-flex",
-          position: "relative",
-          height: String(tagBoxHeight) + ea,
-          paddingLeft: String(tagBoxPadding) + ea,
-          paddingRight: String(tagBoxPadding) + ea,
-          borderRadius: String(5) + "px",
-          background: colorChip.gray1,
-          justifyContent: "center",
-          alignItems: "center",
-          textAlign: "center",
-          marginLeft: desktop ? String(tagBoxBetween) + ea : "",
-          marginRight: mobile ? String(tagBoxBetween) + ea : "",
-        },
-        children: [
-          {
-            text: "<b%#%b> " + tag,
-            style: {
-              display: "inline-block",
-              position: "relative",
-              fontSize: String(tagSize) + ea,
-              fontWeight: String(tagWeight),
-              color: colorChip.black,
-              top: String(tagTextTop) + ea,
-            },
-            bold: {
-              fontSize: String(tagSize) + ea,
-              fontWeight: String(400),
-              color: colorChip.deactive,
-            }
-          }
-        ]
+          display: desktop ? "inline-block" : "block",
+          position: desktop ? "absolute" : "relative",
+          bottom: desktop ? String(0) : "",
+          right: desktop ? String(0) : "",
+          marginTop: desktop ? "" : String(imageBetween) + ea,
+          textAlign: desktop ? "left" : "right",
+        }
       })
-    }
 
-    // category
-    categoryDom = createNode({
-      mother: wordsBox,
-      style: {
-        display: "inline-block",
-        position: "absolute",
-        left: desktop ? "" : String(0),
-        right: desktop ? String(0) : "",
-        top: desktop ? String(0) : "",
-        bottom: desktop ? "" : String(0),
-      },
-      children: [
-        {
+      if (media[3]) {
+        magazine.contents.tag.pop();
+      }
+
+      for (let tag of magazine.contents.tag) {
+        createNode({
+          mother: tagTong,
           style: {
-            display: desktop ? "block" : "flex",
-            alignItems: desktop ? "" : "center",
+            display: "inline-flex",
             position: "relative",
-            top: String(0),
-            left: String(0),
-            width: desktop ? withOut(0) : "",
-            height: desktop ? withOut(0) : String(tagBoxHeight) + ea,
-            paddingLeft: mobile ? String(tagBoxPadding) + ea : "",
-            paddingRight: mobile ? String(tagBoxPadding) + ea : "",
+            height: String(tagBoxHeight) + ea,
+            paddingLeft: String(tagBoxPadding) + ea,
+            paddingRight: String(tagBoxPadding) + ea,
+            borderRadius: String(5) + "px",
+            background: colorChip.gray1,
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            marginLeft: desktop ? String(tagBoxBetween) + ea : "",
+            marginRight: mobile ? String(tagBoxBetween) + ea : "",
           },
           children: [
             {
-              style: {
-                display: "block",
-                position: "absolute",
-                bottom: desktop ? String(colorBarBottom) + ea : String(0),
-                height: desktop ? String(colorBarHeight) + ea : withOut(0),
-                width: desktop ? "calc(100% + " + String(colorBarLeft * 2) + ea + ")" : withOut(0),
-                left: desktop ? String(-1 * colorBarLeft) + ea : String(0),
-                background: (brightMode ? colorChip.yellow : colorChip.red),
-                opacity: String(colorBarOpacity),
-                borderRadius: String(3) + "px",
-              }
-            },
-            {
-              text: magazine.contents.category,
+              text: "<b%#%b> " + tag,
               style: {
                 display: "inline-block",
                 position: "relative",
-                fontSize: String(categorySize) + ea,
-                fontWeight: String(categoryWeight),
-                top: desktop ? "" : String(colorBarBottom) + ea,
-                fontFamily: "graphik",
-                color: desktop ? colorChip.black : (brightMode ? colorChip.black : colorChip.white),
+                fontSize: String(tagSize) + ea,
+                fontWeight: String(tagWeight),
+                color: colorChip.black,
+                top: String(tagTextTop) + ea,
+              },
+              bold: {
+                fontSize: String(tagSize) + ea,
+                fontWeight: String(400),
+                color: colorChip.deactive,
               }
             }
           ]
-        }
-      ]
-    });
+        })
+      }
+
+      // category
+      categoryDom = createNode({
+        mother: wordsBox,
+        style: {
+          display: "inline-block",
+          position: "absolute",
+          left: desktop ? "" : String(0),
+          right: desktop ? String(0) : "",
+          top: desktop ? String(0) : "",
+          bottom: desktop ? "" : String(0),
+        },
+        children: [
+          {
+            style: {
+              display: desktop ? "block" : "flex",
+              alignItems: desktop ? "" : "center",
+              position: "relative",
+              top: String(0),
+              left: String(0),
+              width: desktop ? withOut(0) : "",
+              height: desktop ? withOut(0) : String(tagBoxHeight) + ea,
+              paddingLeft: mobile ? String(tagBoxPadding) + ea : "",
+              paddingRight: mobile ? String(tagBoxPadding) + ea : "",
+            },
+            children: [
+              {
+                style: {
+                  display: "block",
+                  position: "absolute",
+                  bottom: desktop ? String(colorBarBottom) + ea : String(0),
+                  height: desktop ? String(colorBarHeight) + ea : withOut(0),
+                  width: desktop ? "calc(100% + " + String(colorBarLeft * 2) + ea + ")" : withOut(0),
+                  left: desktop ? String(-1 * colorBarLeft) + ea : String(0),
+                  background: (brightMode ? colorChip.yellow : colorChip.red),
+                  opacity: String(colorBarOpacity),
+                  borderRadius: String(3) + "px",
+                }
+              },
+              {
+                text: magazine.contents.category,
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(categorySize) + ea,
+                  fontWeight: String(categoryWeight),
+                  top: desktop ? "" : String(colorBarBottom) + ea,
+                  fontFamily: "graphik",
+                  color: desktop ? colorChip.black : (brightMode ? colorChip.black : colorChip.white),
+                }
+              }
+            ]
+          }
+        ]
+      });
+    }
 
   }
 
