@@ -165,7 +165,11 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           value: [
             "대중교통",
             "자동차",
-          ]
+          ],
+          selectValue: (designer) => {
+            return [ 1 ];
+          },
+          multiple: false,
         }
       ]
     },
@@ -178,14 +182,22 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           value: [
             "가능",
             "불가능",
-          ]
+          ],
+          selectValue: (designer) => {
+            return [ 1 ];
+          },
+          multiple: false,
         },
         {
           property: "거주중",
           value: [
             "가능",
             "불가능",
-          ]
+          ],
+          selectValue: (designer) => {
+            return [ 1 ];
+          },
+          multiple: false,
         },
         {
           property: "1차 제안 시간",
@@ -194,7 +206,11 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             "2주일 이내",
             "3주일 이내",
             "3주일 이상",
-          ]
+          ],
+          selectValue: (designer) => {
+            return [ 1 ];
+          },
+          multiple: false,
         },
         {
           property: "페이퍼 워크",
@@ -206,7 +222,11 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             "제품 리스트",
             "제품 이미지",
             "콜라주",
-          ]
+          ],
+          selectValue: (designer) => {
+            return [ 0, 1, 3 ];
+          },
+          multiple: true,
         },
       ]
     },
@@ -219,14 +239,22 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           value: [
             "가능",
             "불가능",
-          ]
+          ],
+          selectValue: (designer) => {
+            return [ 1 ];
+          },
+          multiple: false,
         },
         {
           property: "가구 제작",
           value: [
             "가능",
             "불가능",
-          ]
+          ],
+          selectValue: (designer) => {
+            return [ 1 ];
+          },
+          multiple: false,
         },
         {
           property: "커튼 패브릭",
@@ -234,7 +262,11 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             "업체 연결",
             "기성 제품 추천",
             "직접 제작",
-          ]
+          ],
+          selectValue: (designer) => {
+            return [ 1 ];
+          },
+          multiple: true,
         },
         {
           property: "베딩 패브릭",
@@ -242,21 +274,33 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             "업체 연결",
             "기성 제품 추천",
             "직접 제작",
-          ]
+          ],
+          selectValue: (designer) => {
+            return [ 1, 2 ];
+          },
+          multiple: true,
         },
         {
           property: "설치 서비스",
           value: [
             "직접",
             "연결",
-          ]
+          ],
+          selectValue: (designer) => {
+            return [ 0 ];
+          },
+          multiple: false,
         },
         {
           property: "정리 수납",
           value: [
             "연결",
             "미제공",
-          ]
+          ],
+          selectValue: (designer) => {
+            return [ 0 ];
+          },
+          multiple: false,
         },
       ]
     },
@@ -483,11 +527,12 @@ DesignerAboutJs.prototype.renderTong = function (type, title, whiteTong, index) 
 
 DesignerAboutJs.prototype.renderBlock = function (contents, tong, x) {
   const instance = this;
-  const { ea, baseTong, media } = this;
+  const { ea, baseTong, media, designer } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
   const removePopupTargetClassName = "removePopupTargetClassName";
+  const menuTargetClassName = "menuTargetClassName";
   let blockHeight;
   let blockMarginBottom;
   let circleBoxWidth;
@@ -686,15 +731,65 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong, x) {
         createNode({
           mother: valueBlock,
           text: v,
+          class: [ menuTargetClassName + String(x) + String(z) ],
+          attribute: {
+            x: String(x),
+            z: String(z),
+            toggle: instance.contents[x].contents[z].selectValue(designer).includes(num) ? "on" : "off",
+          },
           event: {
             selectstart: (e) => { e.preventDefault(); },
+            click: function (e) {
+              e.stopPropagation();
+              const self = this;
+              const toggle = this.getAttribute("toggle");
+              const x = Number(this.getAttribute("x"));
+              const z = Number(this.getAttribute("z"));
+              let targets;
+
+              if (toggle === "on") {
+                if (instance.contents[x].contents[z].multiple) {
+                  self.style.color = colorChip.deactive;
+                } else {
+                  targets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
+                  if (targets.length === 2) {
+                    for (let dom of targets) {
+                      if (dom === self) {
+                        dom.style.color = colorChip.deactive;
+                      } else {
+                        dom.style.color = colorChip.green;
+                        dom.setAttribute("toggle", "on");
+                      }
+                    }
+                  } else {
+                    self.style.color = colorChip.deactive;
+                  }
+                }
+                self.setAttribute("toggle", "off");
+              } else {
+                if (instance.contents[x].contents[z].multiple) {
+                  self.style.color = colorChip.green;
+                } else {
+                  targets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
+                  for (let dom of targets) {
+                    if (dom === self) {
+                      dom.style.color = colorChip.green;
+                    } else {
+                      dom.style.color = colorChip.deactive;
+                      dom.setAttribute("toggle", "off");
+                    }
+                  }
+                }
+                self.setAttribute("toggle", "on");
+              }
+            }
           },
           style: {
             display: "inline-block",
             position: "relative",
             fontSize: String(contentsSize) + ea,
             fontWeight: String(contentsWeight1),
-            color: colorChip.deactive,
+            color: instance.contents[x].contents[z].selectValue(designer).includes(num) ? colorChip.green : colorChip.deactive,
             width: "calc(100% / " + String(divideNumber) + ")",
             cursor: "pointer",
             marginTop: String(num >= divideNumber ? factorBetween : 0) + ea,
@@ -755,18 +850,23 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong, x) {
         for (let i = 0; i < tendencyValueConst; i++) {
           createNode({
             mother: tendencyTong,
+            attribute: {
+              x: String(x),
+              y: String(i),
+              z: String(z),
+            },
             style: {
               display: "inline-block",
               height: withOut(0),
               width: "calc(100% / " + String(tendencyValueConst) + ")",
               background: value[key].value > i ? colorChip.green : colorChip.gray1,
+              cursor: "pointer",
             }
-          })
+          });
         }
 
         num++;
       }
-
     }
 
     z++;
