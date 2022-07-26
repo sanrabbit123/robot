@@ -73,7 +73,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               whereQuery = { desid };
               updateQuery = {};
               updateQuery["designer"] = raw;
-              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateProject");
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
               return text;
             } catch (e) {
               console.log(e);
