@@ -300,7 +300,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
       ]
     },
   ];
-
+  this.contents = contents;
   for (let i = 0; i < contents.length; i++) {
     this.renderWhite(contents[i].whiteType, contents[i].title, contents[i].contents, i + 1);
   }
@@ -448,6 +448,7 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong) {
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
+  const removePopupTargetClassName = "removePopupTargetClassName";
   let blockHeight;
   let blockMarginBottom;
   let circleBoxWidth;
@@ -552,6 +553,71 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong) {
       valueBlock = createNode({
         mother: baseBlock,
         text: value,
+        attribute: { value },
+        event: {
+          click: function (e) {
+            const self = this;
+            const thisValue = this.getAttribute("value");
+            const zIndex = 4;
+            let cancelBack, whiteInput;
+
+            cancelBack = createNode({
+              mother: self,
+              class: [ removePopupTargetClassName ],
+              event: {
+                click: function (e) {
+                  e.stopPropagation();
+                  const removeTargets = document.querySelectorAll('.' + removePopupTargetClassName);
+                  for (let dom of removeTargets) {
+                    dom.remove();
+                  }
+                }
+              },
+              style: {
+                top: String(0),
+                left: String(0),
+                width: withOut(0),
+                height: withOut(0),
+                position: "fixed",
+                background: "transparent",
+                zIndex: String(zIndex),
+              }
+            });
+
+            whiteInput = createNode({
+              mother: self,
+              class: [ removePopupTargetClassName ],
+              mode: "input",
+              attribute: {
+                type: "text",
+                value: thisValue,
+              },
+              event: {
+                click: function (e) {
+                  e.stopPropagation();
+                }
+              },
+              style: {
+                display: "block",
+                position: "absolute",
+                top: String(0),
+                left: String(0),
+                width: withOut(0),
+                height: withOut(0),
+                fontSize: String(contentsSize) + ea,
+                fontWeight: String(contentsWeight1),
+                color: colorChip.green,
+                border: String(0),
+                outline: String(0),
+                background: colorChip.white,
+                zIndex: String(zIndex),
+              }
+            });
+
+            whiteInput.focus();
+
+          }
+        },
         style: {
           display: "inline-block",
           position: "relative",
