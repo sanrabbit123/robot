@@ -59,27 +59,45 @@ DesignerAboutJs.prototype.contentsCenter = function () {
       contents: [
         {
           property: "성함",
-          value: "배창규"
+          value: "배창규",
+          renderValue: (text) => {
+            return text;
+          },
         },
         {
           property: "연락처",
-          value: "010-2747-3403"
+          value: "010-2747-3403",
+          renderValue: (text) => {
+            return text;
+          },
         },
         {
           property: "이메일",
-          value: "uragenbooks@gmail.com"
+          value: "uragenbooks@gmail.com",
+          renderValue: (text) => {
+            return text;
+          },
         },
         {
           property: "웹페이지",
-          value: "https://home-liaison.com"
+          value: "https://home-liaison.com",
+          renderValue: (text) => {
+            return text;
+          },
         },
         {
           property: "인스타",
-          value: "https://instagram.com/homeliaison"
+          value: "https://instagram.com/homeliaison",
+          renderValue: (text) => {
+            return text;
+          },
         },
         {
           property: "블로그",
-          value: "https://blog.naver.com/homeliaison"
+          value: "https://blog.naver.com/homeliaison",
+          renderValue: (text) => {
+            return text;
+          },
         },
       ]
     },
@@ -89,15 +107,24 @@ DesignerAboutJs.prototype.contentsCenter = function () {
       contents: [
         {
           property: "유관 경력",
-          value: "총 10년 3개월"
+          value: "총 10년 3개월",
+          renderValue: (text) => {
+            return text.replace(/^총 /gi, '').trim();
+          },
         },
         {
           property: "스타일링 경력",
-          value: "시작일 : 2016년 9월"
+          value: "시작일 : 2016년 9월",
+          renderValue: (text) => {
+            return text.replace(/년/i, '-').replace(/[^0-9\-]/gi, '').trim();
+          },
         },
         {
           property: "계좌번호",
-          value: "우리 10025-801-12181"
+          value: "우리 10025-801-12181",
+          renderValue: (text) => {
+            return text;
+          },
         },
       ]
     },
@@ -107,19 +134,31 @@ DesignerAboutJs.prototype.contentsCenter = function () {
       contents: [
         {
           property: "주소",
-          value: "서울 동대문구 한천로63길 10 (이문동,이문e편한세상아파트)"
+          value: "서울 동대문구 한천로63길 10 (이문동,이문e편한세상아파트)",
+          renderValue: (text) => {
+            return text;
+          },
         },
         {
           property: "유효 범위",
-          value: "40km"
+          value: "40km",
+          renderValue: (text) => {
+            return text.replace(/[^0-9\-\.]/gi, '');
+          },
         },
         {
           property: "한계 범위",
-          value: "60km"
+          value: "60km",
+          renderValue: (text) => {
+            return text.replace(/[^0-9\-\.]/gi, '');
+          },
         },
         {
           property: "시공 한계 범위",
-          value: "60km"
+          value: "60km",
+          renderValue: (text) => {
+            return text.replace(/[^0-9\-\.]/gi, '');
+          },
         },
         {
           property: "이동 수단",
@@ -553,11 +592,13 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong, x) {
       valueBlock = createNode({
         mother: baseBlock,
         text: value,
-        attribute: { value },
+        attribute: { value, x: String(x), z: String(z) },
         event: {
           click: function (e) {
             const self = this;
-            const thisValue = this.getAttribute("value");
+            const x = Number(this.getAttribute('x'));
+            const z = Number(this.getAttribute('z'));
+            const thisValue = instance.contents[x].contents[z].renderValue(this.getAttribute("value"));
             const zIndex = 4;
             let cancelBack, whiteInput;
 
