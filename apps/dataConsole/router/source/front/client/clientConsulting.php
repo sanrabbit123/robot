@@ -7,7 +7,7 @@ $protocol = $general->protocol;
 $hostLink = $protocol.$host;
 
 $name = "clientConsulting";
-$fullLink = $hostLink + "/consulting.php";
+$fullLink = $hostLink."/consulting.php";
 
 $titleString = "홈리에종 서비스 신청 | 홈리에종";
 $descriptionString = "홈리에종 서비스 신청 페이지 입니다! | 홈리에종";

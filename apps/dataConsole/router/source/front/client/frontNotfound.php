@@ -7,7 +7,7 @@ $protocol = $general->protocol;
 $hostLink = $protocol.$host;
 
 $name = "frontNotfound";
-$fullLink = $hostLink + "/notfound.php";
+$fullLink = $hostLink."/notfound.php";
 
 $titleString = "잘못 들어오셨습니다! | 홈리에종";
 $descriptionString = "잘못 들어오셨습니다! | 홈리에종";

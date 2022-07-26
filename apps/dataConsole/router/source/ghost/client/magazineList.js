@@ -110,7 +110,6 @@ MagazineListJs.prototype.insertInitBox = function () {
   let mobileBackgroundHeight;
   let mobileVisualPaddingLeft;
   let tagBoxRight;
-  let designerDetailToggleEvent;
   let mobileSearchWhiteBoxPaddingTop;
   let mobileSearchWhiteBoxPaddingBottom;
   let mobileSearchWhiteBoxMarginBottom;
@@ -189,110 +188,33 @@ MagazineListJs.prototype.insertInitBox = function () {
 
   tagBoxRight = <%% 157, 153, 125, 125, 10 %%>;
 
-  designerDetailToggleEvent = (toggleTargetClassName) => {
-    return async function (e) {
-      try {
-        const toggle = this.getAttribute("toggle");
-        const mode = this.getAttribute("mode");
-        const targets = [ ...document.querySelectorAll('.' + toggleTargetClassName) ];
-        const thisTarget = targets.find((dom) => { return dom.getAttribute("mode") === mode });
-        const oppositeTarget = targets.find((dom) => { return dom.getAttribute("mode") !== mode });
-        const thisCircleBase = thisTarget.querySelector('.' + circleBaseClassName);
-        const thisCircle = thisTarget.querySelector('.' + circleClassName);
-        const oppositeCircleBase = oppositeTarget.querySelector('.' + circleBaseClassName);
-        const oppositeCircle = oppositeTarget.querySelector('.' + circleClassName);
-
-        homeliaisonAnalytics({
-          page: instance.pageName,
-          standard: instance.firstPageViewTime,
-          action: "viewToggle",
-          data: {
-            mode: mode,
-            toggle: toggle,
-            date: dateToString(new Date(), true),
-          },
-        }).catch((err) => {
-          console.log(err);
-        });
-
-        if (toggle === "off") {
-
-          thisTarget.style.color = colorChip.green;
-          thisCircleBase.style.background = colorChip.green;
-          thisCircle.style.left = String(buttonWidth - circleWidth - ((buttonHeight - circleWidth) / 2)) + ea;
-          thisTarget.setAttribute("toggle", "on");
-
-          oppositeTarget.style.color = colorChip.deactive;
-          oppositeCircleBase.style.background = colorChip.gray5;
-          oppositeCircle.style.left = String((buttonHeight - circleWidth) / 2) + ea;
-          oppositeTarget.setAttribute("toggle", "off");
-
-          if (mode === "only") {
-            instance.mode = "only";
-            instance.designerList(instance.search);
-          } else {
-            instance.mode = "with";
-            instance.designerListWithReview(instance.search);
-          }
-
-        } else {
-
-          thisTarget.style.color = colorChip.deactive;
-          thisCircleBase.style.background = colorChip.gray5;
-          thisCircle.style.left = String((buttonHeight - circleWidth) / 2) + ea;
-          thisTarget.setAttribute("toggle", "off");
-
-          oppositeTarget.style.color = colorChip.green;
-          oppositeCircleBase.style.background = colorChip.green;
-          oppositeCircle.style.left = String(buttonWidth - circleWidth - ((buttonHeight - circleWidth) / 2)) + ea;
-          oppositeTarget.setAttribute("toggle", "on");
-
-          if (mode === "only") {
-            instance.mode = "with";
-            instance.designerListWithReview(instance.search);
-          } else {
-            instance.mode = "only";
-            instance.designerList(instance.search);
-          }
-
-        }
-
-        instance.photoLoad = true;
-
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  }
-
   searchTags = [];
   if (media[0]) {
     searchTags.push("패브릭");
-    searchTags.push("제작가구");
-    searchTags.push("온라인");
+    searchTags.push("인테리어");
+    searchTags.push("전환");
     searchTags.push("전체");
   } else if (media[1]) {
     searchTags.push("패브릭");
-    searchTags.push("제작가구");
-    searchTags.push("온라인");
+    searchTags.push("인테리어");
+    searchTags.push("전환");
     searchTags.push("전체");
   } else if (media[2]) {
     searchTags.push("패브릭");
-    searchTags.push("제작가구");
-    searchTags.push("온라인");
+    searchTags.push("인테리어");
+    searchTags.push("전환");
   } else if (media[3]) {
     searchTags.push("패브릭");
-    searchTags.push("제작가구");
-    searchTags.push("온라인");
+    searchTags.push("인테리어");
+    searchTags.push("전환");
   } else if (media[4]) {
     searchTags.push("패브릭");
-    searchTags.push("제작가구");
-    searchTags.push("온라인");
+    searchTags.push("인테리어");
+    searchTags.push("전환");
     searchTags.push("전체");
-
   }
 
-  placeholder = "패브릭";
+  placeholder = "집";
 
   serviceButtonClassName = "serviceButton";
 
@@ -453,11 +375,8 @@ MagazineListJs.prototype.insertInitBox = function () {
                     });
 
                     instance.search = this.value;
-                    if (instance.mode === "only") {
-                      instance.designerList(instance.search);
-                    } else {
-                      instance.designerListWithReview(instance.search);
-                    }
+
+
                   } catch (e) {
                     console.log(e);
                   }
@@ -524,11 +443,7 @@ MagazineListJs.prototype.insertInitBox = function () {
           });
 
           instance.search = /전체/gi.test(thisValue) ? "" : thisValue;
-          if (instance.mode === "only") {
-            instance.designerList(instance.search);
-          } else {
-            instance.designerListWithReview(instance.search);
-          }
+
         }
       },
       style: {
@@ -673,6 +588,11 @@ MagazineListJs.prototype.magazineList = function () {
 
     whiteBlock = createNode({
       mother: baseTong,
+      event: {
+        click: function (e) {
+          selfHref(FRONTHOST + "/magdetail.php?mid=" + magazine.mid);
+        }
+      },
       style: {
         display: "flex",
         background: colorChip.white,
@@ -685,6 +605,7 @@ MagazineListJs.prototype.magazineList = function () {
         paddingBottom: String(innerPadding) + ea,
         width: withOut(innerPadding * 2, ea),
         flexDirection: desktop ? "row" : "column",
+        cursor: "pointer",
       }
     });
 

@@ -7,7 +7,7 @@ $protocol = $general->protocol;
 $hostLink = $protocol.$host;
 
 $name = "reviewList";
-$fullLink = $hostLink + "/review.php";
+$fullLink = $hostLink."/review.php";
 
 $titleString = "홈리에종 고객 리뷰 | 홈리에종";
 $descriptionString = "홈리에종 고객 리뷰 리스트 페이지 입니다! | 홈리에종";

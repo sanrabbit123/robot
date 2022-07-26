@@ -14,7 +14,7 @@ $cliid = $_GET["cliid"];
 $client = $general->getClient($cliid);
 
 $name = "styleCuration";
-$fullLink = $hostLink + "/curation.php?cliid=" + $cliid;
+$fullLink = $hostLink."/curation.php?cliid=".$cliid;
 
 $titleString = "상세 큐레이션 | 홈리에종";
 $descriptionString = $client->name." 고객님과 디자이너의 정확한 매칭을 위해 상세한 정보가 필요합니다. 그 정보를 기입할 수 있는 상세 큐레이션 페이지입니다.";

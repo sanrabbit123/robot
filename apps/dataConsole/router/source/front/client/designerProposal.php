@@ -15,7 +15,7 @@ $project = $general->getProject($proid);
 $client = $general->getClient($project->cliid);
 
 $name = "designerProposal";
-$fullLink = $hostLink + "/proposal.php?proid=" + $proid;
+$fullLink = $hostLink."/proposal.php?proid=".$proid;
 
 $titleString = "디자이너 추천서 | 홈리에종";
 $descriptionString = $client->name." 고객님을 위한 서비스와 디자이너 추천 페이지입니다.";

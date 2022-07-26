@@ -7,7 +7,7 @@ $protocol = $general->protocol;
 $hostLink = $protocol.$host;
 
 $name = "miniAbout";
-$fullLink = $hostLink + "/miniAbout.php";
+$fullLink = $hostLink."/miniAbout.php";
 
 $titleString = "홈리에종 미니 서비스 | 홈리에종";
 $descriptionString = "홈리에종 미니 서비스 페이지 입니다! | 홈리에종";

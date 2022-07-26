@@ -15,7 +15,7 @@ $designerList = $general->mysqlGet("SELECT desid, designer, introduction, porlid
 $contentsList = $general->mysqlGet("SELECT pid, portfoliotitlemain, reviewtitlemain FROM contents WHERE desid = '".$desid."';");
 
 $name = "designerDetail";
-$fullLink = $hostLink + "/desdetail.php?desid=" + $desid;
+$fullLink = $hostLink."/desdetail.php?desid=".$desid;
 
 $titleString = $designerList[0][1]." 디자이너 | 홈리에종";
 $descriptionString = "홈리에종 협업 디자이너, ".$designerList[0][1]." 디자이너의 상세 내용 페이지 입니다! | 홈리에종";

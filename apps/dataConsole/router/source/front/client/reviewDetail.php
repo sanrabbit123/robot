@@ -14,7 +14,7 @@ $pid = $_GET["pid"];
 $contentsList = $general->mysqlGet("SELECT pid, reviewtitlemain, reviewtitlesub, reviewcontents, reivewtid FROM contents WHERE pid = '".$pid."';");
 
 $name = "reviewDetail";
-$fullLink = $hostLink + "/revdetail.php?pid=" + $pid;
+$fullLink = $hostLink."/revdetail.php?pid=".$pid;
 
 $titleString = $contentsList[0][2]." | 홈리에종";
 $descriptionString = explode("\n", $contentsList[0][3])[0];

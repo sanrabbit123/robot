@@ -173,6 +173,7 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
   let thisIndex;
   let hamburgerEvent;
   let mobileHrefEvent;
+  let specialMenu;
 
   iconHeight = <%% 21.5, 21.5, 19, 17, 16 %%>;
   iconTop = <%% 22, 22, 20.5, 18, 20 %%>;
@@ -185,9 +186,9 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
   wordingMarginRight = <%% 36, 36, 34, 24, 3 %%>;
   wordingMarginRightLast = <%% 9, 9, 4, 0, 1 %%>;
   hamburgerTop = 21;
-  searchWidth = <%% 22.5, 22.5, 21, 18, 20 %%>;
+  searchWidth = <%% 64, 64, 62, 60, 20 %%>;
   searchWidthMinus = <%% 23, 23, 21, 18.5, 2 %%>;
-  mobileMenuHeight = 210;
+  mobileMenuHeight = 243;
   mobileFirstTop = 11;
   mobileVerticalBetween = 37;
 
@@ -197,28 +198,46 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
       title: "서비스 소개",
       href: FRONTHOST + "/about.php",
       green: [ "frontAbout" ],
+      focus: false,
     },
     {
       title: "포트폴리오",
       href: FRONTHOST + "/portfolio.php",
       green: [ "portfolioList", "portfolioDetail" ],
+      focus: false,
     },
     {
       title: "디자이너",
       href: FRONTHOST + "/designer.php",
       green: [ "designerList", "designerDetail" ],
+      focus: false,
     },
     {
       title: "고객 후기",
       href: FRONTHOST + "/review.php",
       green: [ "reviewList", "reviewDetail" ],
+      focus: false,
     },
     {
       title: "상담 신청",
       href: FRONTHOST + "/consulting.php",
       green: [ "clientConsulting" ],
+      focus: true,
+      last: true,
     },
   ];
+
+  specialMenu = {
+    title: "매거진",
+    href: FRONTHOST + "/magazine.php",
+    green: [ "magazineList", "magazineDetail" ],
+    focus: false,
+  };
+
+  if (mobile) {
+    naviMenu.splice(naviMenu.length - 1, 0, specialMenu);
+  }
+
   for (let i = 0; i < naviMenu.length; i++) {
     if (naviMenu[i].green.includes(name)) {
       thisIndex = i;
@@ -344,16 +363,20 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
 
       createNode({
         mother: naviBase,
-        mode: "svg",
-        source: this.returnSearch(modeNumber === 1 ? colorChip.green : colorChip.white),
+        text: "Magazine",
         class: [ "hoverDefault" ],
         event: {
           click: (e) => {
-            selfHref(frontPage + "/portfolio.php");
+            selfHref(frontPage + "/magazine.php");
           }
         },
         style: {
           position: "absolute",
+          fontSize: String(14) + ea,
+          fontWeight: String(400),
+          fontFamily: "graphik",
+          fontStyle: "italic",
+          color: colorChip.green,
           top: String(iconTop) + ea,
           left: desktop ? "calc(50% + " + String((standardWidth / 2) - searchWidthMinus) + ea + ")" : String(mobileMargin) + ea,
           width: String(searchWidth) + ea,
@@ -431,7 +454,7 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
             position: "absolute",
             fontSize: String(wordingSize) + "px",
             fontWeight: String(600),
-            color: i === thisIndex ? colorChip.green : (modeNumber === 1 ? colorChip.black : colorChip.white),
+            color: (i === thisIndex || naviMenu[i].focus) ? colorChip.green : (modeNumber === 1 ? colorChip.black : colorChip.white),
             width: String(100) + '%',
             textAlign: "center",
             top: String(mobileFirstTop + (mobileVerticalBetween * i)) + "px",

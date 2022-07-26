@@ -7,7 +7,7 @@ $protocol = $general->protocol;
 $hostLink = $protocol.$host;
 
 $name = "frontAbout";
-$fullLink = $hostLink + "/about.php";
+$fullLink = $hostLink."/about.php";
 
 $titleString = "홈리에종 서비스 소개 | 홈리에종";
 $descriptionString = "홈리에종 서비스 소개 페이지 입니다! | 홈리에종";

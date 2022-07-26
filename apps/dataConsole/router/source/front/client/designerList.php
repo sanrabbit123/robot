@@ -7,7 +7,7 @@ $protocol = $general->protocol;
 $hostLink = $protocol.$host;
 
 $name = "designerList";
-$fullLink = $hostLink + "/designer.php";
+$fullLink = $hostLink."/designer.php";
 
 $titleString = "디자이너 리스트 | 홈리에종";
 $descriptionString = "홈리에종 협업 디자이너 리스트 페이지 입니다! | 홈리에종";

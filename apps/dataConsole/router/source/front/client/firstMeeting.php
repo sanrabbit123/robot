@@ -15,7 +15,7 @@ $project = $general->getProject($proid);
 $client = $general->getClient($project->cliid);
 
 $name = "firstMeeting";
-$fullLink = $hostLink + "/meeting.php?proid=" + $proid;
+$fullLink = $hostLink."/meeting.php?proid=".$proid;
 
 $titleString = "현장 미팅 안내 | 홈리에종";
 $descriptionString = $client->name." 고객님 프로젝트의 현장 미팅 안내입니다!";

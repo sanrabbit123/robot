@@ -7,7 +7,7 @@ $protocol = $general->protocol;
 $hostLink = $protocol.$host;
 
 $name = "frontTerms";
-$fullLink = $hostLink + "/terms.php";
+$fullLink = $hostLink."/terms.php";
 
 $titleString = "홈리에종 개인정보 처리 방침 | 홈리에종";
 $descriptionString = "홈리에종 홈리에종 개인정보 처리 방침 페이지 입니다! | 홈리에종";

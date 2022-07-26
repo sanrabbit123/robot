@@ -7,7 +7,7 @@ $protocol = $general->protocol;
 $hostLink = $protocol.$host;
 
 $name = "portfolioList";
-$fullLink = $hostLink + "/portfolio.php";
+$fullLink = $hostLink."/portfolio.php";
 
 $titleString = "홈리에종 포트폴리오 | 홈리에종";
 $descriptionString = "홈리에종 디자이너 포트폴리오 페이지 입니다! | 홈리에종";

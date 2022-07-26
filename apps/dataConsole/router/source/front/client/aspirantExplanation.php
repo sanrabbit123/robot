@@ -7,7 +7,7 @@ $protocol = $general->protocol;
 $hostLink = $protocol.$host;
 
 $name = "aspirantExplanation";
-$fullLink = $hostLink + "/aspirant.php";
+$fullLink = $hostLink."/aspirant.php";
 
 $titleString = "홈리에종 디자이너 신청 | 홈리에종";
 $descriptionString = "홈리에종 디자이너 신청 설명 페이지 입니다! | 홈리에종";

@@ -14,7 +14,7 @@ $pid = $_GET["pid"];
 $contentsList = $general->mysqlGet("SELECT pid, portfoliotitlemain, apart, portfoliocontents, portfoliotid FROM contents WHERE pid = '".$pid."';");
 
 $name = "portfolioDetail";
-$fullLink = $hostLink + "/portdetail.php?pid=" + $pid;
+$fullLink = $hostLink."/portdetail.php?pid=".$pid;
 
 $titleString = $contentsList[0][2]." | 홈리에종";
 $descriptionString = explode("\n", $contentsList[0][3])[0];
