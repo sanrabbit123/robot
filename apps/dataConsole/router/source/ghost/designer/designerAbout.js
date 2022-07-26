@@ -325,6 +325,7 @@ DesignerAboutJs.prototype.renderWhite = function (type, title, contents, index) 
   topPadding0 = <%% 52, 52, 44, 36, 4.7 %%>;
   topPadding1 = <%% 40, 40, 38, 32, 4.7 %%>;
 
+
   whiteBlock = createNode({
     mother: baseTong,
     style: {
