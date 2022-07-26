@@ -533,6 +533,7 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong, x) {
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
   const removePopupTargetClassName = "removePopupTargetClassName";
   const menuTargetClassName = "menuTargetClassName";
+  const tendencyBarTargetClassName = "tendencyBarTargetClassName";
   let blockHeight;
   let blockMarginBottom;
   let circleBoxWidth;
@@ -850,22 +851,27 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong, x) {
         for (let i = 0; i < tendencyValueConst; i++) {
           createNode({
             mother: tendencyTong,
+            class: [ tendencyBarTargetClassName + String(x) + String(num) + String(z) ],
             attribute: {
               x: String(x),
-              y: String(i),
+              y: String(num),
               z: String(z),
+              i: String(i),
             },
             event: {
               click: function (e) {
                 const x = Number(this.getAttribute('x'));
                 const y = Number(this.getAttribute('y'));
                 const z = Number(this.getAttribute('z'));
-
-                
-
-                console.log(x, y, z);
-
-
+                const i = Number(this.getAttribute('i'));
+                const targets = [ ...document.querySelectorAll('.' + tendencyBarTargetClassName + String(x) + String(y) + String(z)) ];
+                for (let a = 0; a < targets.length; a++) {
+                  if (a <= i) {
+                    targets[a].style.background = colorChip.green;
+                  } else {
+                    targets[a].style.background = colorChip.gray1;
+                  }
+                }
               }
             },
             style: {
@@ -874,6 +880,7 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong, x) {
               width: "calc(100% / " + String(tendencyValueConst) + ")",
               background: value[key].value > i ? colorChip.green : colorChip.gray1,
               cursor: "pointer",
+              transition: "all 0s ease",
             }
           });
         }
