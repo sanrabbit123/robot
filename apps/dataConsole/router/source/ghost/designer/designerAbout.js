@@ -59,42 +59,64 @@ DesignerAboutJs.prototype.contentsCenter = function () {
       contents: [
         {
           property: "성함",
-          value: "배창규",
+          returnValue: (designer) => {
+            return designer.designer;
+          },
           renderValue: (text) => {
             return text;
           },
         },
         {
           property: "연락처",
-          value: "010-2747-3403",
+          returnValue: (designer) => {
+            return designer.information.phone;
+          },
           renderValue: (text) => {
             return text;
           },
         },
         {
           property: "이메일",
-          value: "uragenbooks@gmail.com",
+          returnValue: (designer) => {
+            return designer.information.email;
+          },
           renderValue: (text) => {
             return text;
           },
         },
         {
           property: "웹페이지",
-          value: "https://home-liaison.com",
+          returnValue: (designer) => {
+            return designer.information.personalSystem.webPage.length === 0 ? "없음" : designer.information.personalSystem.webPage[0];
+          },
           renderValue: (text) => {
             return text;
           },
         },
         {
           property: "인스타",
-          value: "https://instagram.com/homeliaison",
+          returnValue: (designer) => {
+            const target = designer.information.personalSystem.sns.find((obj) => { return /Insta/gi.test(obj.kind) });
+            if (target === undefined) {
+              return "없음";
+            } else {
+              return target.href;
+            }
+          },
           renderValue: (text) => {
             return text;
           },
         },
         {
           property: "블로그",
-          value: "https://blog.naver.com/homeliaison",
+          returnValue: (designer) => {
+            const target = designer.information.personalSystem.sns.find((obj) => { return /Naver/gi.test(obj.kind) });
+            if (target === undefined) {
+              return "없음";
+            } else {
+              return target.href;
+            }
+          },
           renderValue: (text) => {
             return text;
           },
@@ -107,13 +129,18 @@ DesignerAboutJs.prototype.contentsCenter = function () {
       contents: [
         {
           property: "유관 경력",
-          value: "총 10년 3개월",
+          returnValue: (designer) => {
+            return `총 ${String(designer.information.business.career.relatedY)}년 ${String(designer.information.business.career.relatedM)}개월`;
+          },
           renderValue: (text) => {
             return text.replace(/^총 /gi, '').trim();
           },
         },
         {
           property: "스타일링 경력",
+          returnValue: (designer) => {
+            return `시작일 : ${String(designer.information.business.career.startY)}년 ${String(designer.information.business.career.startM)}월`;
+          },
           value: "시작일 : 2016년 9월",
           renderValue: (text) => {
             return text.replace(/년/i, '-').replace(/[^0-9\-]/gi, '').trim();
@@ -121,7 +148,14 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         },
         {
           property: "계좌번호",
-          value: "우리 10025-801-12181",
+          returnValue: (designer) => {
+            const targetArr = designer.information.business.account.filter((obj) => { return obj.accountNumber !== '' });
+            if (targetArr.length === 0) {
+              return "없음";
+            } else {
+              return targetArr[0].bankName + " " + targetArr[0].accountNumber;
+            }
+          },
           renderValue: (text) => {
             return text;
           },
@@ -134,40 +168,54 @@ DesignerAboutJs.prototype.contentsCenter = function () {
       contents: [
         {
           property: "주소",
-          value: "서울 동대문구 한천로63길 10 (이문동,이문e편한세상아파트)",
+          returnValue: (designer) => {
+            return designer.information.address.length === 0 ? "없음" : designer.information.address[0];
+          },
           renderValue: (text) => {
             return text;
           },
         },
         {
           property: "유효 범위",
-          value: "40km",
+          returnValue: (designer) => {
+            return String(designer.analytics.region.range) + "km";
+          },
           renderValue: (text) => {
             return text.replace(/[^0-9\-\.]/gi, '');
           },
         },
         {
           property: "한계 범위",
-          value: "60km",
+          returnValue: (designer) => {
+            return String(designer.analytics.region.expenses) + "km";
+          },
           renderValue: (text) => {
             return text.replace(/[^0-9\-\.]/gi, '');
           },
         },
         {
           property: "시공 한계 범위",
-          value: "60km",
+          returnValue: (designer) => {
+            return String(designer.analytics.region.construct) + "km";
+          },
           renderValue: (text) => {
             return text.replace(/[^0-9\-\.]/gi, '');
           },
         },
         {
           property: "이동 수단",
-          value: [
-            "대중교통",
-            "자동차",
-          ],
+          returnValue: (designer) => {
+            return [
+              "대중교통",
+              "자동차",
+            ];
+          },
           selectValue: (designer) => {
-            return [ 1 ];
+            if (designer.analytics.region.transportation === "자동차") {
+              return [ 1 ];
+            } else {
+              return [ 0 ];
+            }
           },
           multiple: false,
         }
@@ -179,42 +227,58 @@ DesignerAboutJs.prototype.contentsCenter = function () {
       contents: [
         {
           property: "온라인",
-          value: [
+          returnValue: (designer) => { return [
             "가능",
             "불가능",
-          ],
+          ] },
           selectValue: (designer) => {
-            return [ 1 ];
+            if (designer.analytics.project.online) {
+              return [ 0 ];
+            } else {
+              return [ 1 ];
+            }
           },
           multiple: false,
         },
         {
           property: "거주중",
-          value: [
+          returnValue: (designer) => { return [
             "가능",
             "불가능",
-          ],
+          ] },
           selectValue: (designer) => {
-            return [ 1 ];
+            if (designer.analytics.project.living) {
+              return [ 0 ];
+            } else {
+              return [ 1 ];
+            }
           },
           multiple: false,
         },
         {
           property: "1차 제안 시간",
-          value: [
+          returnValue: (designer) => { return [
             "1주일 이내",
             "2주일 이내",
             "3주일 이내",
             "3주일 이상",
-          ],
+          ] },
           selectValue: (designer) => {
-            return [ 1 ];
+            if (designer.analytics.project.time.first <= 7) {
+              return [ 0 ];
+            } else if (designer.analytics.project.time.first <= 14) {
+              return [ 1 ];
+            } else if (designer.analytics.project.time.first <= 21) {
+              return [ 2 ];
+            } else {
+              return [ 3 ];
+            }
           },
           multiple: false,
         },
         {
           property: "페이퍼 워크",
-          value: [
+          returnValue: (designer) => { return [
             "도면",
             "3D",
             "컨셉 제안",
@@ -222,9 +286,20 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             "제품 리스트",
             "제품 이미지",
             "콜라주",
-          ],
+          ] },
           selectValue: (designer) => {
-            return [ 0, 1, 3 ];
+            const targets = [
+              "도면",
+              "3D",
+              "컨셉 제안",
+              "마감재 제안",
+              "제품 리스트",
+              "제품 이미지",
+              "콜라주",
+            ];
+            return designer.analytics.project.paperWork.map((str) => {
+              return targets.findIndex((s) => { return s === str });
+            });
           },
           multiple: true,
         },
@@ -236,69 +311,99 @@ DesignerAboutJs.prototype.contentsCenter = function () {
       contents: [
         {
           property: "빌트인 제작",
-          value: [
+          returnValue: (designer) => { return [
             "가능",
             "불가능",
-          ],
+          ] },
           selectValue: (designer) => {
-            return [ 1 ];
+            if (designer.analytics.styling.furniture.builtin) {
+              return [ 0 ];
+            } else {
+              return [ 1 ];
+            }
           },
           multiple: false,
         },
         {
           property: "가구 제작",
-          value: [
+          returnValue: (designer) => { return [
             "가능",
             "불가능",
-          ],
+          ] },
           selectValue: (designer) => {
-            return [ 1 ];
+            if (designer.analytics.styling.furniture.design) {
+              return [ 0 ];
+            } else {
+              return [ 1 ];
+            }
           },
           multiple: false,
         },
         {
           property: "커튼 패브릭",
-          value: [
+          returnValue: (designer) => { return [
             "업체 연결",
             "기성 제품 추천",
             "직접 제작",
-          ],
+          ] },
           selectValue: (designer) => {
-            return [ 1 ];
+            const targets = [
+              "업체 연결",
+              "기성 제품 추천",
+              "직접 제작",
+            ];
+            return designer.analytics.styling.fabric.curtain.map((str) => {
+              return targets.findIndex((s) => { return s === str });
+            });
           },
           multiple: true,
         },
         {
           property: "베딩 패브릭",
-          value: [
+          returnValue: (designer) => { return [
             "업체 연결",
             "기성 제품 추천",
             "직접 제작",
-          ],
+          ] },
           selectValue: (designer) => {
-            return [ 1, 2 ];
+            const targets = [
+              "업체 연결",
+              "기성 제품 추천",
+              "직접 제작",
+            ];
+            return designer.analytics.styling.fabric.bedding.map((str) => {
+              return targets.findIndex((s) => { return s === str });
+            });
           },
           multiple: true,
         },
         {
           property: "설치 서비스",
-          value: [
+          returnValue: (designer) => { return [
             "직접",
             "연결",
-          ],
+          ] },
           selectValue: (designer) => {
-            return [ 0 ];
+            if (designer.analytics.purchase.setting.install) {
+              return [ 0 ];
+            } else {
+              return [ 1 ];
+            }
           },
           multiple: false,
         },
         {
           property: "정리 수납",
-          value: [
+          returnValue: (designer) => { return [
             "연결",
             "미제공",
-          ],
+          ] },
           selectValue: (designer) => {
-            return [ 0 ];
+            if (designer.analytics.purchase.setting.storage) {
+              return [ 0 ];
+            } else {
+              return [ 1 ];
+            }
           },
           multiple: false,
         },
@@ -310,15 +415,15 @@ DesignerAboutJs.prototype.contentsCenter = function () {
       contents: [
         {
           property: "스타일 경향성",
-          value: {
-            modern: { name: "모던", value: 2 },
-            classic: { name: "클래식", value: 6 },
-            natural: { name: "내추럴", value: 8 },
-            mixmatch: { name: "믹스매치", value: 5 },
-            scandinavian: { name: "북유럽", value: 4 },
-            vintage: { name: "빈티지", value: 10 },
-            oriental: { name: "오리엔탈", value: 1 },
-            exotic: { name: "이그저틱", value: 3 },
+          returnValue: (designer) => { return {
+            modern: { name: "모던", value: designer.analytics.styling.tendency.style.modern },
+            classic: { name: "클래식", value: designer.analytics.styling.tendency.style.classic },
+            natural: { name: "내추럴", value: designer.analytics.styling.tendency.style.natural },
+            mixmatch: { name: "믹스매치", value: designer.analytics.styling.tendency.style.mixmatch },
+            scandinavian: { name: "북유럽", value: designer.analytics.styling.tendency.style.scandinavian },
+            vintage: { name: "빈티지", value: designer.analytics.styling.tendency.style.vintage },
+            oriental: { name: "오리엔탈", value: designer.analytics.styling.tendency.style.oriental },
+            exotic: { name: "이그저틱", value: designer.analytics.styling.tendency.style.exotic },
             __order__: [
               "modern",
               "classic",
@@ -329,34 +434,34 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               "oriental",
               "exotic",
             ]
-          }
+          } }
         },
         {
           property: "텍스처 경향성",
-          value: {
-            darkWood: { name: "진한 우드", value: 2 },
-            whiteWood: { name: "연한 우드", value: 6 },
-            coating: { name: "도장", value: 8 },
-            metal: { name: "금속", value: 5 },
+          returnValue: (designer) => { return {
+            darkWood: { name: "진한 우드", value: designer.analytics.styling.tendency.texture.darkWood },
+            whiteWood: { name: "연한 우드", value: designer.analytics.styling.tendency.texture.whiteWood },
+            coating: { name: "도장", value: designer.analytics.styling.tendency.texture.coating },
+            metal: { name: "금속", value: designer.analytics.styling.tendency.texture.metal },
             __order__: [
               "darkWood",
               "whiteWood",
               "coating",
               "metal",
             ]
-          }
+          } }
         },
         {
           property: "컬러톤 경향성",
-          value: {
-            darkWood: { name: "다크 우드", value: 2 },
-            whiteWood: { name: "밝은 우드", value: 6 },
-            highContrast: { name: "고대비", value: 8 },
-            vivid: { name: "비비드", value: 5 },
-            white: { name: "화이트", value: 4 },
-            mono: { name: "모노톤", value: 10 },
-            bright: { name: "밝은톤", value: 1 },
-            dark: { name: "어두운톤", value: 3 },
+          returnValue: (designer) => { return {
+            darkWood: { name: "다크 우드", value: designer.analytics.styling.tendency.color.darkWood },
+            whiteWood: { name: "밝은 우드", value: designer.analytics.styling.tendency.color.whiteWood },
+            highContrast: { name: "고대비", value: designer.analytics.styling.tendency.color.highContrast },
+            vivid: { name: "비비드", value: designer.analytics.styling.tendency.color.vivid },
+            white: { name: "화이트", value: designer.analytics.styling.tendency.color.white },
+            mono: { name: "모노톤", value: designer.analytics.styling.tendency.color.mono },
+            bright: { name: "밝은톤", value: designer.analytics.styling.tendency.color.bright },
+            dark: { name: "어두운톤", value: designer.analytics.styling.tendency.color.dark },
             __order__: [
               "darkWood",
               "whiteWood",
@@ -367,18 +472,18 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               "bright",
               "dark",
             ]
-          }
+          } }
         },
         {
           property: "밀도 경향성",
-          value: {
-            maximun: { name: "맥시멈", value: 2 },
-            minimum: { name: "미니멈", value: 6 },
+          returnValue: (designer) => { return {
+            maximun: { name: "맥시멈", value: designer.analytics.styling.tendency.density.maximun },
+            minimum: { name: "미니멈", value: designer.analytics.styling.tendency.density.minimum },
             __order__: [
               "maximun",
               "minimum",
             ]
-          }
+          } }
         },
       ]
     },
@@ -555,6 +660,7 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong, x) {
   let tendencyBlockHeight;
   let tendencyValueConst;
   let z;
+  let value;
 
   blockHeight = <%% 22, 22, 22, 22, 22 %%>;
   blockMarginBottom = <%% 16, 16, 16, 16, 3 %%>;
@@ -581,7 +687,9 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong, x) {
   tendencyValueConst = 10;
 
   z = 0;
-  for (let { property, value } of contents) {
+  for (let obj of contents) {
+
+    value = obj.returnValue(designer);
 
     baseBlock = createNode({
       mother: tong,
@@ -599,7 +707,7 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong, x) {
         display: "inline-flex",
         position: "relative",
         width: String(circleBoxWidth) + ea,
-        height: String(blockHeight) + ea,
+        height: String(blockHeight + (desktop ? -1 : 0)) + ea,
         justifyContent: "center",
         alignItems: "center",
         textAlign: "center",
@@ -622,7 +730,7 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong, x) {
 
     propertyBlock = createNode({
       mother: baseBlock,
-      text: property,
+      text: obj.property,
       style: {
         display: "inline-block",
         position: "relative",

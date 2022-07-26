@@ -617,6 +617,8 @@ MagazineListJs.prototype.magazineList = function () {
   let tagSize, tagWeight, tagTextTop;
   let categorySize, categoryWeight;
   let colorBarBottom, colorBarHeight, colorBarLeft, colorBarOpacity;
+  let categoryDom;
+  let brightMode;
 
   whiteBottomMargin = <%% 16, 16, 16, 16, 2 %%>;
 
@@ -645,25 +647,27 @@ MagazineListJs.prototype.magazineList = function () {
 
   editorSize = <%% 12, 12, 11, 10, 2.5 %%>;
 
-  tagBoxHeight = <%% 28, 28, 24, 24, 6 %%>;
-  tagBoxPadding = <%% 12, 12, 10, 10, 2.5 %%>;
-  tagBoxBetween = <%% 5, 5, 4, 4, 1 %%>;
+  tagBoxHeight = <%% 28, 28, 24, 24, 5.6 %%>;
+  tagBoxPadding = <%% 12, 12, 10, 10, 2 %%>;
+  tagBoxBetween = <%% 5, 5, 4, 4, 0.5 %%>;
 
-  tagSize = <%% 11, 11, 10, 10, 2.6 %%>;
+  tagSize = <%% 11, 11, 10, 10, 2.5 %%>;
   tagWeight = <%% 600, 600, 600, 600, 600 %%>;
   tagTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.2 %%>;
 
-  categorySize = <%% 14, 13, 12, 11, 14 %%>;
+  categorySize = <%% 14, 13, 12, 11, 2.6 %%>;
   categoryWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  colorBarBottom = <%% -1, -1, -1, -1, -1 %%>;
-  colorBarHeight = <%% 6, 6, 6, 6, 6 %%>;
-  colorBarLeft = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+  colorBarBottom = <%% -1, -1, -1, -1, -0.3 %%>;
+  colorBarHeight = <%% 6, 6, 6, 6, 1.4 %%>;
+  colorBarLeft = <%% 1.5, 1.5, 1.5, 1.5, 0 %%>;
   colorBarOpacity = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
 
   staticPath = FRONTHOST + "/list_image/magaz";
 
   for (let magazine of magazines) {
+
+    brightMode = (Math.random() < 0.5);
 
     thisPath = staticPath + magazine.mid;
 
@@ -779,6 +783,7 @@ MagazineListJs.prototype.magazineList = function () {
         bottom: desktop ? String(0) : "",
         right: desktop ? String(0) : "",
         marginTop: desktop ? "" : String(imageBetween) + ea,
+        textAlign: desktop ? "left" : "right",
       }
     })
 
@@ -825,54 +830,59 @@ MagazineListJs.prototype.magazineList = function () {
     }
 
     // category
-    if (desktop) {
-      createNode({
-        mother: wordsBox,
-        style: {
-          display: "inline-block",
-          position: "absolute",
-          right: String(0),
-          top: String(0),
-        },
-        children: [
-          {
-            style: {
-              position: "relative",
-              top: String(0),
-              left: String(0),
-              width: withOut(0),
-              height: withOut(0),
-            },
-            children: [
-              {
-                style: {
-                  display: "block",
-                  position: "absolute",
-                  bottom: String(colorBarBottom) + ea,
-                  height: String(colorBarHeight) + ea,
-                  width: "calc(100% + " + String(colorBarLeft * 2) + ea + ")",
-                  left: String(-1 * colorBarLeft) + ea,
-                  background: (Math.random() < 0.5 ? colorChip.red : colorChip.yellow),
-                  opacity: String(colorBarOpacity),
-                  borderRadius: String(3) + "px",
-                }
-              },
-              {
-                text: magazine.contents.category,
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  fontSize: String(categorySize) + ea,
-                  fontWeight: String(categoryWeight),
-                  fontFamily: "graphik",
-                  color: colorChip.black,
-                }
+    categoryDom = createNode({
+      mother: wordsBox,
+      style: {
+        display: "inline-block",
+        position: "absolute",
+        left: desktop ? "" : String(0),
+        right: desktop ? String(0) : "",
+        top: desktop ? String(0) : "",
+        bottom: desktop ? "" : String(0),
+      },
+      children: [
+        {
+          style: {
+            display: desktop ? "block" : "flex",
+            alignItems: desktop ? "" : "center",
+            position: "relative",
+            top: String(0),
+            left: String(0),
+            width: desktop ? withOut(0) : "",
+            height: desktop ? withOut(0) : String(tagBoxHeight) + ea,
+            paddingLeft: mobile ? String(tagBoxPadding) + ea : "",
+            paddingRight: mobile ? String(tagBoxPadding) + ea : "",
+          },
+          children: [
+            {
+              style: {
+                display: "block",
+                position: "absolute",
+                bottom: desktop ? String(colorBarBottom) + ea : String(0),
+                height: desktop ? String(colorBarHeight) + ea : withOut(0),
+                width: desktop ? "calc(100% + " + String(colorBarLeft * 2) + ea + ")" : withOut(0),
+                left: desktop ? String(-1 * colorBarLeft) + ea : String(0),
+                background: (brightMode ? colorChip.yellow : colorChip.red),
+                opacity: String(colorBarOpacity),
+                borderRadius: String(3) + "px",
               }
-            ]
-          }
-        ]
-      });
-    }
+            },
+            {
+              text: magazine.contents.category,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(categorySize) + ea,
+                fontWeight: String(categoryWeight),
+                top: desktop ? "" : String(colorBarBottom) + ea,
+                fontFamily: "graphik",
+                color: desktop ? colorChip.black : (brightMode ? colorChip.black : colorChip.white),
+              }
+            }
+          ]
+        }
+      ]
+    });
 
   }
 
