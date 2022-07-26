@@ -47,6 +47,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
   const instance = this;
   const mother = this.mother;
   const { ea, baseTong, media, designer } = this;
+  const { desid } = designer;
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
@@ -65,6 +66,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           renderValue: (text) => {
             return text;
           },
+          updateValue: async (raw) => {
+            try {
+              const text = raw;
+              let whereQuery, updateQuery;
+              whereQuery = { desid };
+              updateQuery = {};
+              updateQuery["designer"] = raw;
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateProject");
+              return text;
+            } catch (e) {
+              console.log(e);
+            }
+          },
         },
         {
           property: "연락처",
@@ -73,6 +87,16 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           },
           renderValue: (text) => {
             return text;
+          },
+          updateValue: async (raw) => {
+            try {
+
+
+
+
+            } catch (e) {
+              console.log(e);
+            }
           },
         },
         {
@@ -83,6 +107,16 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           renderValue: (text) => {
             return text;
           },
+          updateValue: async (raw) => {
+            try {
+
+
+
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
         },
         {
           property: "웹페이지",
@@ -91,6 +125,16 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           },
           renderValue: (text) => {
             return text;
+          },
+          updateValue: async (raw) => {
+            try {
+
+
+
+
+            } catch (e) {
+              console.log(e);
+            }
           },
         },
         {
@@ -106,6 +150,16 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           renderValue: (text) => {
             return text;
           },
+          updateValue: async (raw) => {
+            try {
+
+
+
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
         },
         {
           property: "블로그",
@@ -119,6 +173,16 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           },
           renderValue: (text) => {
             return text;
+          },
+          updateValue: async (raw) => {
+            try {
+
+
+
+
+            } catch (e) {
+              console.log(e);
+            }
           },
         },
       ]
@@ -135,6 +199,16 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           renderValue: (text) => {
             return text.replace(/^총 /gi, '').trim();
           },
+          updateValue: async (raw) => {
+            try {
+
+
+
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
         },
         {
           property: "스타일링 경력",
@@ -144,6 +218,16 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           value: "시작일 : 2016년 9월",
           renderValue: (text) => {
             return text.replace(/년/i, '-').replace(/[^0-9\-]/gi, '').trim();
+          },
+          updateValue: async (raw) => {
+            try {
+
+
+
+
+            } catch (e) {
+              console.log(e);
+            }
           },
         },
         {
@@ -158,6 +242,16 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           },
           renderValue: (text) => {
             return text;
+          },
+          updateValue: async (raw) => {
+            try {
+
+
+
+
+            } catch (e) {
+              console.log(e);
+            }
           },
         },
       ]
@@ -174,6 +268,16 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           renderValue: (text) => {
             return text;
           },
+          updateValue: async (raw) => {
+            try {
+
+
+
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
         },
         {
           property: "유효 범위",
@@ -182,6 +286,16 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           },
           renderValue: (text) => {
             return text.replace(/[^0-9\-\.]/gi, '');
+          },
+          updateValue: async (raw) => {
+            try {
+
+
+
+
+            } catch (e) {
+              console.log(e);
+            }
           },
         },
         {
@@ -192,6 +306,16 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           renderValue: (text) => {
             return text.replace(/[^0-9\-\.]/gi, '');
           },
+          updateValue: async (raw) => {
+            try {
+
+
+
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
         },
         {
           property: "시공 한계 범위",
@@ -200,6 +324,16 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           },
           renderValue: (text) => {
             return text.replace(/[^0-9\-\.]/gi, '');
+          },
+          updateValue: async (raw) => {
+            try {
+
+
+
+
+            } catch (e) {
+              console.log(e);
+            }
           },
         },
         {
@@ -218,6 +352,16 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             }
           },
           multiple: false,
+          updateValue: async (raw) => {
+            try {
+
+
+
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
         }
       ]
     },
@@ -239,6 +383,16 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             }
           },
           multiple: false,
+          updateValue: async (raw) => {
+            try {
+
+
+
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
         },
         {
           property: "거주중",
@@ -254,6 +408,16 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             }
           },
           multiple: false,
+          updateValue: async (raw) => {
+            try {
+
+
+
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
         },
         {
           property: "1차 제안 시간",
@@ -275,6 +439,16 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             }
           },
           multiple: false,
+          updateValue: async (raw) => {
+            try {
+
+
+
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
         },
         {
           property: "페이퍼 워크",
@@ -302,6 +476,16 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             });
           },
           multiple: true,
+          updateValue: async (raw) => {
+            try {
+
+
+
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
         },
       ]
     },
@@ -323,6 +507,16 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             }
           },
           multiple: false,
+          updateValue: async (raw) => {
+            try {
+
+
+
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
         },
         {
           property: "가구 제작",
@@ -338,6 +532,16 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             }
           },
           multiple: false,
+          updateValue: async (raw) => {
+            try {
+
+
+
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
         },
         {
           property: "커튼 패브릭",
@@ -357,6 +561,16 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             });
           },
           multiple: true,
+          updateValue: async (raw) => {
+            try {
+
+
+
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
         },
         {
           property: "베딩 패브릭",
@@ -376,6 +590,16 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             });
           },
           multiple: true,
+          updateValue: async (raw) => {
+            try {
+
+
+
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
         },
         {
           property: "설치 서비스",
@@ -391,6 +615,16 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             }
           },
           multiple: false,
+          updateValue: async (raw) => {
+            try {
+
+
+
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
         },
         {
           property: "정리 수납",
@@ -406,6 +640,16 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             }
           },
           multiple: false,
+          updateValue: async (raw) => {
+            try {
+
+
+
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
         },
       ]
     },
@@ -434,7 +678,17 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               "oriental",
               "exotic",
             ]
-          } }
+          } },
+          updateValue: async (raw) => {
+            try {
+
+
+
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
         },
         {
           property: "텍스처 경향성",
@@ -449,7 +703,17 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               "coating",
               "metal",
             ]
-          } }
+          } },
+          updateValue: async (raw) => {
+            try {
+
+
+
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
         },
         {
           property: "컬러톤 경향성",
@@ -472,7 +736,17 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               "bright",
               "dark",
             ]
-          } }
+          } },
+          updateValue: async (raw) => {
+            try {
+
+
+
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
         },
         {
           property: "밀도 경향성",
@@ -483,7 +757,17 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               "maximun",
               "minimum",
             ]
-          } }
+          } },
+          updateValue: async (raw) => {
+            try {
+
+
+
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
         },
       ]
     },
@@ -755,16 +1039,39 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong, x) {
             const thisValue = instance.contents[x].contents[z].renderValue(this.getAttribute("value"));
             const zIndex = 4;
             let cancelBack, whiteInput;
+            let saveEvent;
+
+            saveEvent = async (raw) => {
+              try {
+                const text = await instance.contents[x].contents[z].updateValue(raw);
+                self.firstChild.textContent = text;
+                self.setAttribute("value", text);
+              } catch (e) {
+                console.log(e);
+              }
+            }
+
+            cancelBack = {};
+            whiteInput = {};
 
             cancelBack = createNode({
               mother: self,
               class: [ removePopupTargetClassName ],
               event: {
-                click: function (e) {
+                click: async function (e) {
                   e.stopPropagation();
-                  const removeTargets = document.querySelectorAll('.' + removePopupTargetClassName);
-                  for (let dom of removeTargets) {
-                    dom.remove();
+                  try {
+                    if (whiteInput.value.trim() !== instance.contents[x].contents[z].renderValue(self.getAttribute("value"))) {
+                      if (window.confirm("수정하시겠습니까?")) {
+                        await saveEvent(whiteInput.value.trim());
+                      }
+                    }
+                    const removeTargets = document.querySelectorAll('.' + removePopupTargetClassName);
+                    for (let dom of removeTargets) {
+                      dom.remove();
+                    }
+                  } catch (e) {
+                    console.log(e);
                   }
                 }
               },
@@ -790,6 +1097,27 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong, x) {
               event: {
                 click: function (e) {
                   e.stopPropagation();
+                },
+                keydown: function (e) {
+                  if (e.key === "Tab") {
+                    e.preventDefault();
+                  }
+                },
+                keyup: async function (e) {
+                  try {
+                    if (e.key === "Enter" || e.key === "Tab") {
+                      e.preventDefault();
+                      if (this.value.trim() !== instance.contents[x].contents[z].renderValue(self.getAttribute("value"))) {
+                        await saveEvent(this.value.trim());
+                      }
+                      const removeTargets = document.querySelectorAll('.' + removePopupTargetClassName);
+                      for (let dom of removeTargets) {
+                        dom.remove();
+                      }
+                    }
+                  } catch (e) {
+                    console.log(e);
+                  }
                 }
               },
               style: {

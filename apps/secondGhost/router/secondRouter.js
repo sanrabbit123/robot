@@ -513,7 +513,7 @@ SecondRouter.prototype.rou_post_getDocuments = function () {
 SecondRouter.prototype.rou_post_updateDocument = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, errorLog, messageLog } = this.mother;
+  const { equalJson, errorLog, messageLog, messageSend } = this.mother;
   let obj = {};
   obj.link = [ "/updateClient", "/updateDesigner", "/updateProject", "/updateContents", "/updateAspirant" ];
   obj.func = async function (req, res) {
@@ -544,6 +544,8 @@ SecondRouter.prototype.rou_post_updateDocument = function () {
       if (typeof updateQuery !== "object" || updateQuery === null) {
         throw new Error("invaild query object");
       }
+
+      await messageSend({ text: "업데이트 감지 : " + JSON.stringify(whereQuery, null, 2) + "\n\n" + JSON.stringify(updateQuery, null, 2), channel: "#error_log" });
 
       if (req.url === "/updateClient") {
         data = await back.updateClient([ whereQuery, updateQuery ], { selfMongo });
