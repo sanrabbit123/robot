@@ -752,6 +752,11 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
   let billEaSize, billEaWeight, billEaBottom, billEaLeft;
   let billLineLeft, billLineWidth;
   let mobileProcessPaddingSmall, mobileProcessPaddingBig;
+  let beforeGray;
+  let beforeImageBetween;
+  let beforeWhiteCircleWidth;
+  let beforeArrowWidth, beforeArrowHeight;
+  let beforeTextBoxHeight, beforeFinalBottom;
 
   margin = <%% 68, 64, 56, 48, 6 %%>;
 
@@ -839,6 +844,14 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
   billLineLeft = <%% -56, -56, -56, -56, -10 %%>;
   billLineWidth = <%% 230, 230, 225, 197, 42.9 %%>;
 
+  beforeImageBetween = <%% 30, 20, 16, 12, 2 %%>;
+  beforeWhiteCircleWidth = <%% 45, 40, 40, 36, 10 %%>;
+  beforeArrowWidth = <%% 10, 10, 9, 8, 2.5 %%>;
+  beforeArrowHeight = <%% 24, 20, 20, 16, 5 %%>;
+
+  beforeFinalBottom = <%% 30, 30, 24, 20, 12 %%>;
+  beforeTextBoxHeight = <%% 50, 42, 36, 30, 8 %%>;
+
   contents = {
     title: {
       main: "홈리에종 Mini",
@@ -861,6 +874,14 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
         "about2.jpg",
         "about3.jpg",
         "about4.jpg",
+      ]
+    },
+    before: {
+      name: "비포 & 에프터",
+      images: [
+        [ "ba_before_0.jpg", "ba_after_0.jpg" ],
+        [ "ba_before_1.jpg", "ba_after_1.jpg" ],
+        [ "ba_before_2.jpg", "ba_after_2.jpg" ],
       ]
     },
     process: {
@@ -1159,6 +1180,252 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
       color: colorChip.black,
     }
   });
+
+  // before and after area
+
+  createNode({
+    mother: base,
+    text: contents.before.name,
+    style: {
+      fontSize: String(areaNameSize) + ea,
+      fontWeight: String(areaNameWeight),
+      color: colorChip.black,
+      display: "block",
+      textAlign: "center",
+      lineHeight: String(areaNameLineHeight),
+      marginTop: String(processAreaTop) + ea,
+    }
+  });
+
+  beforeGray = createNode({
+    mother: base,
+    style: {
+      display: "block",
+      position: "relative",
+      background: colorChip.gray1,
+      marginTop: String(grayTop) + ea,
+      borderRadius: String(5) + "px",
+      paddingTop: String(grayInnerPadding) + ea,
+      paddingBottom: String(grayInnerPadding) + ea,
+      paddingRight: String(grayInnerPadding) + ea,
+      paddingLeft: String(grayInnerPadding) + ea,
+      width: withOut(grayInnerPadding * 2, ea),
+    }
+  });
+
+  if (desktop) {
+    for (let i = 0; i < 3; i++) {
+      createNode({
+        mother: beforeGray,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: desktop ? "calc(calc(100% - " + String(beforeImageBetween * 2) + ea + ") / " + String(3) + ")" : withOut(0),
+          marginRight: desktop ? (i === 3 - 1 ? "" : String(beforeImageBetween) + ea) : "",
+          zIndex: String(1),
+        },
+        children: [
+          {
+            mode: "img",
+            attribute: { src: MiniAboutJs.binaryPath + "/" + contents.before.images[i][0] },
+            style: {
+              position: "relative",
+              borderTopLeftRadius: String(5) + "px",
+              borderTopRightRadius: String(5) + "px",
+              width: withOut(0),
+            }
+          },
+          {
+            class: [ "backblurwhite" ],
+            style: {
+              display: "inline-flex",
+              position: "absolute",
+              bottom: String(-1 * (beforeWhiteCircleWidth / 2)) + ea,
+              width: String(beforeWhiteCircleWidth) + ea,
+              left: "calc(50% - " + String(beforeWhiteCircleWidth / 2) + ea + ")",
+              height: String(beforeWhiteCircleWidth) + ea,
+              borderRadius: String(beforeWhiteCircleWidth) + ea,
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+              alignItems: "center",
+              justifyContent: "center",
+              textAlign: "center",
+            },
+            children: [
+              {
+                mode: "svg",
+                source: svgMaker.verticalArrow(beforeArrowWidth, beforeArrowHeight),
+                style: {
+                  display: "inline-block",
+                  width: String(beforeArrowWidth) + ea,
+                  height: String(beforeArrowHeight) + ea,
+                }
+              }
+            ]
+          }
+        ]
+      });
+    }
+    for (let i = 0; i < 3; i++) {
+      createNode({
+        mother: beforeGray,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: desktop ? "calc(calc(100% - " + String(beforeImageBetween * 2) + ea + ") / " + String(3) + ")" : withOut(0),
+          marginRight: desktop ? (i === 3 - 1 ? "" : String(beforeImageBetween) + ea) : "",
+          marginBottom: String(beforeFinalBottom) + ea,
+        },
+        children: [
+          {
+            mode: "img",
+            attribute: { src: MiniAboutJs.binaryPath + "/" + contents.before.images[i][1] },
+            style: {
+              position: "relative",
+              borderBottomLeftRadius: String(5) + "px",
+              borderBottomRightRadius: String(5) + "px",
+              width: withOut(0),
+            }
+          },
+          {
+            style: {
+              display: "flex",
+              position: "absolute",
+              bottom: String(-1 * beforeTextBoxHeight) + ea,
+              left: String(0),
+              width: withOut(0),
+              height: String(beforeTextBoxHeight) + ea,
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              textAlign: "center",
+            },
+            children: [
+              {
+                text: [ "거실", "주방", "아이방" ][i] + " <b%비포 앤 에프터%b>",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(processSize) + ea,
+                  fontWeight: String(300),
+                  color: colorChip.black,
+                },
+                bold: {
+                  fontSize: String(processSize) + ea,
+                  fontWeight: String(700),
+                  color: colorChip.black,
+                }
+              }
+            ]
+          }
+        ]
+      });
+    }
+  } else {
+    for (let i = 0; i < 3; i++) {
+      createNode({
+        mother: beforeGray,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: desktop ? "calc(calc(100% - " + String(beforeImageBetween * 2) + ea + ") / " + String(3) + ")" : withOut(0),
+          marginRight: desktop ? (i === 3 - 1 ? "" : String(beforeImageBetween) + ea) : "",
+          zIndex: String(1),
+        },
+        children: [
+          {
+            mode: "img",
+            attribute: { src: MiniAboutJs.binaryPath + "/" + contents.before.images[i][0] },
+            style: {
+              position: "relative",
+              borderTopLeftRadius: String(5) + "px",
+              borderTopRightRadius: String(5) + "px",
+              width: withOut(0),
+            }
+          },
+          {
+            class: [ "backblurwhite" ],
+            style: {
+              display: "inline-flex",
+              position: "absolute",
+              bottom: String(-1 * (beforeWhiteCircleWidth / 2)) + ea,
+              width: String(beforeWhiteCircleWidth) + ea,
+              left: "calc(50% - " + String(beforeWhiteCircleWidth / 2) + ea + ")",
+              height: String(beforeWhiteCircleWidth) + ea,
+              borderRadius: String(beforeWhiteCircleWidth) + ea,
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+              alignItems: "center",
+              justifyContent: "center",
+              textAlign: "center",
+            },
+            children: [
+              {
+                mode: "svg",
+                source: svgMaker.verticalArrow(beforeArrowWidth, beforeArrowHeight),
+                style: {
+                  display: "inline-block",
+                  width: String(beforeArrowWidth) + ea,
+                  height: String(beforeArrowHeight) + ea,
+                }
+              }
+            ]
+          }
+        ]
+      });
+      createNode({
+        mother: beforeGray,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: desktop ? "calc(calc(100% - " + String(beforeImageBetween * 2) + ea + ") / " + String(3) + ")" : withOut(0),
+          marginRight: desktop ? (i === 3 - 1 ? "" : String(beforeImageBetween) + ea) : "",
+          marginBottom: String(i === 3 - 1 ? 6 : beforeFinalBottom) + ea,
+        },
+        children: [
+          {
+            mode: "img",
+            attribute: { src: MiniAboutJs.binaryPath + "/" + contents.before.images[i][1] },
+            style: {
+              position: "relative",
+              borderBottomLeftRadius: String(5) + "px",
+              borderBottomRightRadius: String(5) + "px",
+              width: withOut(0),
+            }
+          },
+          {
+            style: {
+              display: "flex",
+              position: "absolute",
+              bottom: String(-1 * beforeTextBoxHeight) + ea,
+              left: String(0),
+              width: withOut(0),
+              height: String(beforeTextBoxHeight) + ea,
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              textAlign: "center",
+            },
+            children: [
+              {
+                text: [ "거실", "주방", "아이방" ][i] + " <b%비포 앤 에프터%b>",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(processSize) + ea,
+                  fontWeight: String(300),
+                  color: colorChip.black,
+                },
+                bold: {
+                  fontSize: String(processSize) + ea,
+                  fontWeight: String(700),
+                  color: colorChip.black,
+                }
+              }
+            ]
+          }
+        ]
+      });
+    }
+  }
 
   // process area
 

@@ -2753,9 +2753,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "김푸른",
-    //     designer: "이정아",
-    //     link: "https://drive.google.com/drive/folders/1eiQ69rgrZRiUjkllhu-TG9ahlp1qz6Bw",
+    //     client: null,
+    //     designer: "김윤진",
+    //     link: "https://drive.google.com/drive/folders/11fIUFrClp4K0KsvLtLfur6CmMXS2vSte",
     //     pay: true
     //   },
     // ]);
@@ -2775,7 +2775,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p197");
+    // await this.getCorePortfolio("p216");
 
 
     // aspirant to designer

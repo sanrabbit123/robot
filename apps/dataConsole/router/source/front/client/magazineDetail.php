@@ -11,15 +11,16 @@ if (!isset($_GET["mid"])) {
 }
 
 $mid = $_GET["mid"];
+$magazine = $general->getMagazine($mid);
 
 $name = "magazineDetail";
 $fullLink = $hostLink."/magdetail.php?mid=".$mid;
 
-$titleString = "홈리에종 매거진 | 홈리에종";
-$descriptionString = "홈리에종 매거진 페이지 입니다! | 홈리에종";
-$imageString = "/list_image/portpp18/t19p18.jpg";
+$titleString = $magazine->contents->detail[0]->text[0]." ".$magazine->contents->detail[0]->text[1]." | 홈리에종";
+$descriptionString = $magazine->contents->detail[1]->text[0];
+$imageString = "/list_image/magaz".$magazine->mid.$magazine->contents->init[1];
 
-$hiddenString = '<h1>홈리에종 매거진</h1><h3>홈스타일링 매거진 리스트</h3>';
+$hiddenString = '<h1>홈리에종 매거진</h1><h3>홈스타일링 매거진 디테일</h3>'.$magazine->contents->detail[0]->text[0]." ".$magazine->contents->detail[0]->text[1]." ".$magazine->contents->detail[1]->text[0];
 
 $html = $general->bastHtml($name, $titleString, $descriptionString, $hiddenString, $imageString, $fullLink);
 echo $html;

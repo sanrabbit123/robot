@@ -174,23 +174,25 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
   let hamburgerEvent;
   let mobileHrefEvent;
   let specialMenu;
+  let magazineSize;
 
   iconHeight = <%% 21.5, 21.5, 19, 17, 16 %%>;
-  iconTop = <%% 22, 22, 20.5, 18, 20 %%>;
+  iconTop = <%% 21.5, 21.5, 19.5, 16, 20 %%>;
   wordHeight = <%% 20, 20, 20, 20, 20 %%>;
   wordSize = <%% 15, 15, 15, 14, 13 %%>;
   wordTop = <%% 24, 24, 21, 19, 18 %%>;
   mobileMargin = 6.1;
-  wordingTop = <%% 21.5, 21.5, 20.5, 17, 10 %%>;
+  wordingTop = <%% (isMac() ? 22 : 22), (isMac() ? 22 : 22), (isMac() ? 21 : 20), (isMac() ? 17 : 16), 10 %%>;
   wordingSize = <%% 14.5, 14.5, 14, 13, 15 %%>;
   wordingMarginRight = <%% 36, 36, 34, 24, 3 %%>;
   wordingMarginRightLast = <%% 9, 9, 4, 0, 1 %%>;
   hamburgerTop = 21;
   searchWidth = <%% 64, 64, 62, 60, 20 %%>;
-  searchWidthMinus = <%% 23, 23, 21, 18.5, 2 %%>;
+  searchWidthMinus = <%% 63, 63, 61, 58.5, 2 %%>;
   mobileMenuHeight = 243;
   mobileFirstTop = 11;
   mobileVerticalBetween = 37;
+  magazineSize = <%% 14, 14, 14, 13, 3 %%>;
 
   thisIndex = 99;
   naviMenu = [
@@ -372,11 +374,11 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
         },
         style: {
           position: "absolute",
-          fontSize: String(14) + ea,
+          fontSize: String(magazineSize) + ea,
           fontWeight: String(400),
           fontFamily: "graphik",
           fontStyle: "italic",
-          color: colorChip.green,
+          color: modeNumber === 2 ? colorChip.white : colorChip.green,
           top: String(iconTop) + ea,
           left: desktop ? "calc(50% + " + String((standardWidth / 2) - searchWidthMinus) + ea + ")" : String(mobileMargin) + ea,
           width: String(searchWidth) + ea,

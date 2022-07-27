@@ -3330,7 +3330,7 @@ Ghost.prototype.photoRouter = function (needs) {
   const folderName = "사진_등록_포트폴리오";
   const pathNameConst = "/photo_";
   const sambaDir = this.homeliaisonServer + "/" + folderName;
-  const { fileSystem, requestSystem, shell, shellExec, shellLink, todayMaker, mongo, mongoinfo, mongolocalinfo, dateToString, sleep } = this.mother;
+  const { fileSystem, requestSystem, shell, shellExec, shellLink, todayMaker, mongo, mongoinfo, mongolocalinfo, dateToString, sleep, errorLog } = this.mother;
   let funcObj = {};
 
   //POST - ls
@@ -3481,6 +3481,7 @@ Ghost.prototype.photoRouter = function (needs) {
 
         }
       } catch (e) {
+        await errorLog("rawtoraw zip error : " + e.message);
         res.send(JSON.stringify({ message: "error : " + e.message }));
       }
     }

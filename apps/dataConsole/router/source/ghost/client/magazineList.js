@@ -376,6 +376,7 @@ MagazineListJs.prototype.insertInitBox = function () {
 
                     instance.search = this.value;
 
+                    instance.magazineList(instance.search);
 
                   } catch (e) {
                     console.log(e);
@@ -444,6 +445,8 @@ MagazineListJs.prototype.insertInitBox = function () {
 
           instance.search = /전체/gi.test(thisValue) ? "" : thisValue;
 
+          instance.magazineList(instance.search);
+
         }
       },
       style: {
@@ -501,7 +504,7 @@ MagazineListJs.prototype.insertInitBox = function () {
 
 }
 
-MagazineListJs.prototype.magazineList = function () {
+MagazineListJs.prototype.magazineList = function (search = null) {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, cleanChildren, designerCareer, designerMthParsing, selfHref } = GeneralJs;
   const { ea, media, magazines, baseTong } = this;
@@ -534,6 +537,23 @@ MagazineListJs.prototype.magazineList = function () {
   let colorBarBottom, colorBarHeight, colorBarLeft, colorBarOpacity;
   let categoryDom;
   let brightMode;
+  let targetMagazines;
+  let baseChildren;
+
+  if (search === null || search === "" || search === undefined || search === "전체") {
+    targetMagazines = magazines;
+  } else if (typeof search === "string" && search.trim() !== '' && search.trim() !== "전체") {
+    targetMagazines = magazines.filter((obj) => { return obj.contents.tag.map((str) => { return new RegExp(str, "gi") }).some((r) => { return r.test(search); }) });
+  } else {
+    targetMagazines = magazines;
+  }
+
+  baseChildren = [ ...instance.baseTong.children ];
+  for (let i = 0; i < baseChildren.length; i++) {
+    if (i !== 0) {
+      baseChildren[i].remove();
+    }
+  }
 
   whiteBottomMargin = <%% 16, 16, 16, 16, 2 %%>;
 
@@ -580,7 +600,7 @@ MagazineListJs.prototype.magazineList = function () {
 
   staticPath = FRONTHOST + "/list_image/magaz";
 
-  for (let magazine of magazines) {
+  for (let magazine of targetMagazines) {
 
     brightMode = (Math.random() < 0.5);
 

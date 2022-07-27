@@ -211,7 +211,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           },
         },
         {
-          property: "스타일링 경력",
+          property: desktop ? "스타일링 경력" : "스타일링",
           returnValue: (designer) => {
             return `시작일 : ${String(designer.information.business.career.startY)}년 ${String(designer.information.business.career.startM)}월`;
           },
@@ -318,7 +318,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           },
         },
         {
-          property: "시공 한계 범위",
+          property: "시공 한계",
           returnValue: (designer) => {
             return String(designer.analytics.region.construct) + "km";
           },
@@ -420,7 +420,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           },
         },
         {
-          property: "1차 제안 시간",
+          property: desktop ? "1차 제안 시간" : "1차 제안",
           returnValue: (designer) => { return [
             "1주일 이내",
             "2주일 이내",
@@ -802,10 +802,10 @@ DesignerAboutJs.prototype.renderWhite = function (type, title, contents, index) 
     style: {
       display: "block",
       position: "relative",
-      borderTopLeftRadius: type === 0 ? String(desktop ? 8 : 1) + ea : "",
-      borderTopRightRadius: type === 0 ? String(desktop ? 8 : 1) + ea : "",
+      borderTopLeftRadius: type === 0 ? String(8) + "px" : "",
+      borderTopRightRadius: type === 0 ? String(8) + "px" : "",
       width: String(100) + '%',
-      background: desktop ? colorChip.white : "",
+      background: colorChip.white,
       paddingTop: desktop ? String(type === 0 ? topPadding0 : topPadding1) + ea : "",
       boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
     },
@@ -830,7 +830,9 @@ DesignerAboutJs.prototype.renderTong = function (type, title, whiteTong, index) 
   const { ea, baseTong, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma } = GeneralJs;
   let titleWidth;
   let titleTopNumber;
   let titleFontSize;
@@ -840,19 +842,26 @@ DesignerAboutJs.prototype.renderTong = function (type, title, whiteTong, index) 
   let numberWeight;
   let finalBottomMargin;
   let realFinalBottomMargin;
+  let mobileBasicMargin;
+  let mobileBasePaddingTop;
+  let mobileLineTop;
 
-  titleWidth = <%% 300, 300, 300, 300, 30 %%>;
+  titleWidth = <%% 300, 160, 140, 120, 30 %%>;
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
-  titleFontSize = <%% 20, 20, 20, 19, 4.3 %%>;
+  titleFontSize = <%% 20, 20, 18, 16, 4 %%>;
 
-  numberRight = <%% 12, 12, 12, 12, 3 %%>;
+  numberRight = <%% 12, 12, 12, 12, 2 %%>;
   numberSize = <%% 18, 18, 18, 16, 3 %%>;
   numberWeight = <%% 200, 200, 200, 200, 200 %%>;
   numberBottom = <%% 43, 43, 43, 43, 6 %%>;
 
-  finalBottomMargin = <%% 30, 30, 30, 30, 3 %%>;
+  finalBottomMargin = <%% (isMac() ? 30 : 27), (isMac() ? 30 : 27), (isMac() ? 30 : 27), (isMac() ? 24 : 22), 0 %%>;
 
   realFinalBottomMargin = <%% 24, 24, 24, 24, 3 %%>;
+
+  mobileLineTop = isIphone() ? 2.7 : 2.5;
+  mobileBasePaddingTop = 7;
+  mobileBasicMargin = 7;
 
   return createNode({
     mother: whiteTong,
@@ -860,16 +869,30 @@ DesignerAboutJs.prototype.renderTong = function (type, title, whiteTong, index) 
       display: "block",
       position: "relative",
       width: String(100) + '%',
+      paddingTop: desktop ? "" : String(mobileBasePaddingTop) + ea,
     },
     children: [
       {
         style: {
-          display: "inline-block",
+          display: desktop ? "inline-block" : "block",
           position: "relative",
-          width: String(titleWidth) + ea,
+          width: desktop ? String(titleWidth) + ea : withOut(mobileBasicMargin * 2, ea),
           verticalAlign: "top",
+          marginLeft: desktop ? "" : String(mobileBasicMargin) + ea,
+          marginBottom: desktop ? "" : String(4) + ea,
         },
         children: [
+          {
+            style: {
+              display: desktop ? "none" : "block",
+              position: "absolute",
+              top: String(0),
+              width: withOut(0),
+              left: String(0),
+              height: String(mobileLineTop) + ea,
+              borderBottom: "1px dashed " + colorChip.green,
+            }
+          },
           {
             text: title,
             style: {
@@ -878,7 +901,7 @@ DesignerAboutJs.prototype.renderTong = function (type, title, whiteTong, index) 
               top: String(titleTopNumber) + ea,
               fontSize: String(titleFontSize) + ea,
               fontWeight: String(700),
-              background: desktop ? colorChip.white : colorChip.gray1,
+              background: colorChip.white,
               paddingRight: String(numberRight) + ea,
               color: colorChip.black,
             }
@@ -887,20 +910,22 @@ DesignerAboutJs.prototype.renderTong = function (type, title, whiteTong, index) 
       },
       {
         style: {
-          display: "inline-block",
+          display: desktop ? "inline-block" : "block",
           position: "relative",
           overflow: "hidden",
-          width: withOut(titleWidth, ea),
+          width: desktop ? withOut(titleWidth, ea) : withOut(mobileBasicMargin * 2, ea),
           verticalAlign: "top",
           top: String(titleTopNumber) + ea,
-          paddingBottom: String(finalBottomMargin) + ea,
-          marginBottom: type === 2 ? String(realFinalBottomMargin) + ea : "",
-          borderBottom: type !== 2 ? "1px dashed " + colorChip.green : "",
+          paddingBottom: desktop ? String(finalBottomMargin) + ea : (type === 2 ? String(mobileBasicMargin) + ea : String(0) + ea),
+          marginBottom: type === 2 ? String(realFinalBottomMargin) + ea : String(desktop ? 2 : 0) + ea,
+          borderBottom: desktop ? (type !== 2 ? "1px dashed " + colorChip.green : "") : "",
+          marginLeft: desktop ? "" : String(mobileBasicMargin) + ea,
         }
       },
       {
         text: String(index),
         style: {
+          display: big ? "inline-block" : "none",
           position: "absolute",
           bottom: String(numberBottom + (type === 2 ? realFinalBottomMargin : 0)) + ea,
           right: String(0) + ea,
@@ -919,7 +944,9 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong, x) {
   const { ea, baseTong, media, designer } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma } = GeneralJs;
   const removePopupTargetClassName = "removePopupTargetClassName";
   const menuTargetClassName = "menuTargetClassName";
   const tendencyBarTargetClassName = "tendencyBarTargetClassName";
@@ -934,7 +961,6 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong, x) {
   let firstWidth;
   let baseBlock;
   let circleBlock, propertyBlock, valueBlock;
-  let factorWidth;
   let divideNumber;
   let num;
   let factorBetween;
@@ -945,28 +971,28 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong, x) {
   let tendencyValueConst;
   let z;
   let value;
+  let tendencyMinusRatio;
 
-  blockHeight = <%% 22, 22, 22, 22, 22 %%>;
-  blockMarginBottom = <%% 16, 16, 16, 16, 3 %%>;
+  blockHeight = <%% 22, 21, 21, 19, (isIphone() ? 5.2 : 4.9) %%>;
+  blockMarginBottom = <%% 16, 15, 15, 12, 2.5 %%>;
 
-  circleBoxWidth = <%% 16, 16, 16, 16, 16 %%>;
-  circleWidth = <%% 5, 5, 5, 5, 5 %%>;
-  circleTop = <%% 1, 1, 1, 1, 1 %%>;
+  circleBoxWidth = <%% 16, 16, 16, 14, 2.8 %%>;
+  circleWidth = <%% 5, 5, 5, 4, 1 %%>;
+  circleTop = <%% 1, 1, 1, 1, 0 %%>;
 
-  contentsSize = <%% 16, 16, 16, 15, 3 %%>;
+  contentsSize = <%% 16, 15, 15, 14, 3.4 %%>;
   contentsWeight0 = <%% 600, 600, 600, 600, 600 %%>;
   contentsWeight1 = <%% 300, 300, 300, 300, 300 %%>;
 
-  firstWidth = <%% 180, 180, 180, 180, 20 %%>;
-
-  factorWidth = <%% 192, 192, 192, 192, 20 %%>;
-  factorBetween = <%% 8, 8, 8, 8, 1 %%>;
+  firstWidth = <%% 180, 160, 140, 120, 23 %%>;
+  factorBetween = <%% 8, 8, 8, 8, 1.5 %%>;
 
   divideNumber = <%% 4, 4, 4, 4, 2 %%>;
 
-  tendencyBlockTop = <%% 3, 3, 3, 3, 3 %%>;
-  tendencyBlockWidth = <%% 100, 100, 100, 100, 90 %%>;
-  tendencyBlockHeight = <%% 16, 16, 16, 16, 16 %%>;
+  tendencyBlockTop = <%% 3, 3, 3, 3, 0.8 %%>;
+  tendencyBlockWidth = <%% 100, 90, 90, 80, 20 %%>;
+  tendencyBlockHeight = <%% 16, 16, 16, 16, 3.4 %%>;
+  tendencyMinusRatio = <%% 2, 1.5, 1.5, 1, 1 %%>;
 
   tendencyValueConst = 10;
 
@@ -1240,10 +1266,12 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong, x) {
       valueBlock = createNode({
         mother: baseBlock,
         style: {
-          display: "inline-block",
+          display: desktop ? "inline-block" : "block",
           position: "relative",
-          width: withOut(firstWidth + circleBoxWidth, ea),
+          width: desktop ? withOut(firstWidth + circleBoxWidth, ea) : withOut(0),
           verticalAlign: "top",
+          paddingTop: desktop ? "" : String(2.5) + ea,
+          paddingLeft: desktop ? "" : String(circleBoxWidth) + ea,
         },
       });
 
@@ -1274,7 +1302,7 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong, x) {
                 display: "inline-block",
                 position: "relative",
                 top: String(tendencyBlockTop) + ea,
-                width: withOut(tendencyBlockWidth * 2, ea),
+                width: desktop ? withOut(tendencyBlockWidth * tendencyMinusRatio, ea) : withOut(tendencyBlockWidth + circleBoxWidth, ea),
                 height: String(tendencyBlockHeight) + ea,
                 verticalAlign: "top",
                 borderRadius: String(3) + "px",
