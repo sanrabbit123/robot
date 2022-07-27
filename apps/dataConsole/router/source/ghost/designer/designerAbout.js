@@ -137,13 +137,26 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           },
           updateValue: async (raw, designer) => {
             try {
+              let text, whereQuery, updateQuery;
 
+              whereQuery = { desid };
+              updateQuery = {};
 
-
-
-
-
-
+              text = raw.split('?')[0].trim();
+              if (text === '' || text === "없음") {
+                text = "없음";
+                updateQuery["information.personalSystem.webPage"] = [];
+                await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              } else {
+                if (/^http/.test(text)) {
+                  updateQuery["information.personalSystem.webPage"] = [ text ];
+                  await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+                } else {
+                  window.alert("전체 링크를 적어주세요! (http로 시작하는)");
+                  text = designer.information.personalSystem.webPage.length === 0 ? "없음" : designer.information.personalSystem.webPage[0];
+                }
+              }
+              return text;
             } catch (e) {
               console.log(e);
             }
@@ -164,6 +177,12 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           },
           updateValue: async (raw, designer) => {
             try {
+              let text, whereQuery, updateQuery;
+
+              whereQuery = { desid };
+              updateQuery = {};
+
+              
 
 
 
