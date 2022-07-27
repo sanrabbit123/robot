@@ -757,6 +757,12 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
   let beforeWhiteCircleWidth;
   let beforeArrowWidth, beforeArrowHeight;
   let beforeTextBoxHeight, beforeFinalBottom;
+  let reviewGray;
+  let reviewInnerPadding;
+  let reviewMinHeight;
+  let reviewSize;
+  let reviewQuoteWidth;
+  let reviewQuoteBetween;
 
   margin = <%% 68, 64, 56, 48, 6 %%>;
 
@@ -844,13 +850,20 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
   billLineLeft = <%% -56, -56, -56, -56, -10 %%>;
   billLineWidth = <%% 230, 230, 225, 197, 42.9 %%>;
 
-  beforeImageBetween = <%% 30, 20, 16, 12, 2 %%>;
+  beforeImageBetween = <%% 24, 20, 16, 12, 2 %%>;
   beforeWhiteCircleWidth = <%% 45, 40, 40, 36, 10 %%>;
   beforeArrowWidth = <%% 10, 10, 9, 8, 2.5 %%>;
   beforeArrowHeight = <%% 24, 20, 20, 16, 5 %%>;
 
   beforeFinalBottom = <%% 30, 30, 24, 20, 12 %%>;
   beforeTextBoxHeight = <%% 50, 42, 36, 30, 8 %%>;
+
+  reviewInnerPadding = <%% 30, 28, 24, 20, 4.5 %%>;
+  reviewMinHeight = <%% 128, 169, 158, 178, 1 %%>;
+  reviewSize = <%% 13, 13, 12, 11 , 2.8 %%>;
+
+  reviewQuoteWidth = <%% 15, 15, 14, 13, 3 %%>;
+  reviewQuoteBetween = <%% 10, 10, 9, 8, 1.5 %%>;
 
   contents = {
     title: {
@@ -877,11 +890,46 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
       ]
     },
     before: {
-      name: "비포 & 에프터",
+      name: "무드 체인지를 한다면?",
+      space: [ "거실", "알파룸", "아이방" ],
+      sub: "비포 앤 에프터",
       images: [
         [ "ba_before_0.jpg", "ba_after_0.jpg" ],
         [ "ba_before_1.jpg", "ba_after_1.jpg" ],
         [ "ba_before_2.jpg", "ba_after_2.jpg" ],
+      ]
+    },
+    review: {
+      name: "미니 고객 리뷰",
+      detail: [
+        {
+          text: [
+            "처음 자취를 하게 되면서 집을 예쁘게 꾸미고 싶었는데, 아무리 따라해도 예쁜 사진처럼 되지 않더라고요. ",
+            "같은 가구들은 모두 샀지만 제 방에 어울리는 지도 잘 모르겠어서 미니 서비스를 신청했어요!",
+            "디자이너님이 추천해주신 소품이랑 커튼만 바꾼 것 같은데 집 분위기가 확 달라져서 너무 행복해요!",
+          ]
+        },
+        {
+          text: [
+            "딸 방을 유아스러운 느낌을 없애고 고등학생 방으로 꾸며주고 싶었어요. 가구는 다 화이트여서 그대로 사용하면서 분위기를 바꿀 수 있지 않을까 했었어요.",
+            "이번에 제안주신 것들을 그대로 다 샀더니 완전 새로운 방이 되었더라고요.",
+            "딸도 만족해해서 홈스타일링의 전문성을 크게 느끼고 있어요ㅎㅎ 다음엔 전체도 해보고 싶어지더라구요.",
+          ]
+        },
+        {
+          text: [
+            "신혼집으로 이사오면서 기대를 부풀고 예쁜 가구들을 구입했는데, 분위기가 살지 않는 것 같아요. ",
+            "제가 고른건 남편은 별로 좋아하지 않고, 어렵고 힘들더라고요 ㅠㅠ",
+            "디자이너님이 저희 의견을 반영하면서 제안주신 소품이 너무 마음에 들어서 하나씩 놓을 때마다 ",
+            "점점 예뻐져서 엄청 설렜어요 ㅎㅎ 그려주신 시안이랑 똑같아서 신기했어요! 무드체인지라더니 진짜 무드가 확 변했습니다 감사해요!",
+          ]
+        },
+        {
+          text: [
+            "결혼하고 신혼집 마련하면서 구입한 가구라 쉽게 바꾸기가 어려워서 어떻게 해야하나 고민이 많았어요ㅠ",
+            "그러다 홈스타일링을 봤고 홈페이지에서 가구를 그대로 쓰고 나머지를 제안해준다고해서 이거다 하고 바로 결제했는데 제가 사면 이상하던 쿠션과 소품들이 너무 찰떡같이 어울리더라고요 마치 세트처럼ㅋㅋ 너무 만족합니다~",
+          ]
+        },
       ]
     },
     process: {
@@ -1301,7 +1349,7 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
             },
             children: [
               {
-                text: [ "거실", "주방", "아이방" ][i] + " <b%비포 앤 에프터%b>",
+                text: contents.before.space[i] + " <b%" + contents.before.sub + "%b>",
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -1378,7 +1426,7 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
           position: "relative",
           width: desktop ? "calc(calc(100% - " + String(beforeImageBetween * 2) + ea + ") / " + String(3) + ")" : withOut(0),
           marginRight: desktop ? (i === 3 - 1 ? "" : String(beforeImageBetween) + ea) : "",
-          marginBottom: String(i === 3 - 1 ? 6 : beforeFinalBottom) + ea,
+          marginBottom: String(i === 3 - 1 ? 8 : beforeFinalBottom) + ea,
         },
         children: [
           {
@@ -1406,7 +1454,7 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
             },
             children: [
               {
-                text: [ "거실", "주방", "아이방" ][i] + " <b%비포 앤 에프터%b>",
+                text: contents.before.space[i] + " <b%" + contents.before.sub + "%b>",
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -1425,6 +1473,86 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
         ]
       });
     }
+  }
+
+  // reivew area
+
+  createNode({
+    mother: base,
+    text: contents.review.name,
+    style: {
+      fontSize: String(areaNameSize) + ea,
+      fontWeight: String(areaNameWeight),
+      color: colorChip.black,
+      display: "block",
+      textAlign: "center",
+      lineHeight: String(areaNameLineHeight),
+      marginTop: String(processAreaTop) + ea,
+    }
+  });
+
+  reviewGray = createNode({
+    mother: base,
+    style: {
+      display: "block",
+      position: "relative",
+      background: colorChip.gray1,
+      marginTop: String(grayTop) + ea,
+      borderRadius: String(5) + "px",
+      paddingTop: String(grayInnerPadding) + ea,
+      paddingBottom: String(grayInnerPadding) + ea,
+      paddingRight: String(grayInnerPadding) + ea,
+      paddingLeft: String(grayInnerPadding) + ea,
+      width: withOut(grayInnerPadding * 2, ea),
+    }
+  });
+
+  for (let i = 0; i < contents.review.detail.length; i++) {
+
+    createNode({
+      mother: reviewGray,
+      style: {
+        display: "inline-flex",
+        width: desktop ? "calc(calc(100% - " + beforeImageBetween + ea + ") / 2)" : withOut(0),
+        borderRadius: String(5) + "px",
+        background: colorChip.white,
+        marginRight: desktop ? String(i % 2 === 0 ? beforeImageBetween : 0) + ea : "",
+        marginBottom: desktop ? String(Math.floor(i / 2) === 0 ? beforeImageBetween : 0) + ea : String(beforeImageBetween) + ea,
+        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+        paddingTop: String(reviewInnerPadding) + ea,
+        paddingBottom: String(reviewInnerPadding) + ea,
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "left",
+        height: desktop ? String(reviewMinHeight) + ea : "",
+        verticalAlign: "top",
+      },
+      children: [
+        {
+          mode: "svg",
+          source: svgMaker.doubleQuote(colorChip.gray5),
+          style: {
+            width: String(reviewQuoteWidth) + ea,
+            display: "block",
+            marginLeft: String(reviewInnerPadding + (desktop ? 1 : 0.3)) + ea,
+            marginBottom: String(reviewQuoteBetween) + ea,
+          }
+        },
+        {
+          text: contents.review.detail[i].text.join("\n"),
+          style: {
+            display: "block",
+            marginLeft: String(reviewInnerPadding) + ea,
+            width: withOut(reviewInnerPadding * 2, ea),
+            fontSize: String(reviewSize) + ea,
+            fontWeight: String(400),
+            color: colorChip.black,
+            lineHeight: String(1.6),
+          }
+        }
+      ]
+    });
+
   }
 
   // process area

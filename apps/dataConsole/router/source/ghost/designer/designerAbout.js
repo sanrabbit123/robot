@@ -50,7 +50,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
   const { desid } = designer;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, autoHypenPhone } = GeneralJs;
   let contents;
 
   contents = [
@@ -66,13 +66,13 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           renderValue: (text) => {
             return text;
           },
-          updateValue: async (raw) => {
+          updateValue: async (raw, designer) => {
             try {
-              const text = raw;
+              const text = raw.replace(/[ㄱ-ㅎㅏ-ㅣ]/gi, '').replace(/[\=\&\+]/gi, '').trim();
               let whereQuery, updateQuery;
               whereQuery = { desid };
               updateQuery = {};
-              updateQuery["designer"] = raw;
+              updateQuery["designer"] = text;
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
               return text;
             } catch (e) {
@@ -88,12 +88,18 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           renderValue: (text) => {
             return text;
           },
-          updateValue: async (raw) => {
+          filterValue: (text) => {
+            return autoHypenPhone(text);
+          },
+          updateValue: async (raw, designer) => {
             try {
-
-
-
-
+              const text = raw.replace(/[^0-9\-]/gi, '');
+              let whereQuery, updateQuery;
+              whereQuery = { desid };
+              updateQuery = {};
+              updateQuery["information.phone"] = text;
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              return text;
             } catch (e) {
               console.log(e);
             }
@@ -107,12 +113,15 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           renderValue: (text) => {
             return text;
           },
-          updateValue: async (raw) => {
+          updateValue: async (raw, designer) => {
             try {
-
-
-
-
+              const text = raw.replace(/[ㄱ-ㅎㅏ-ㅣ]/gi, '').replace(/[\=\&\+]/gi, '').trim();
+              let whereQuery, updateQuery;
+              whereQuery = { desid };
+              updateQuery = {};
+              updateQuery["information.email"] = text;
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              return text;
             } catch (e) {
               console.log(e);
             }
@@ -126,8 +135,11 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           renderValue: (text) => {
             return text;
           },
-          updateValue: async (raw) => {
+          updateValue: async (raw, designer) => {
             try {
+
+
+
 
 
 
@@ -150,8 +162,11 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           renderValue: (text) => {
             return text;
           },
-          updateValue: async (raw) => {
+          updateValue: async (raw, designer) => {
             try {
+
+
+
 
 
 
@@ -174,8 +189,11 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           renderValue: (text) => {
             return text;
           },
-          updateValue: async (raw) => {
+          updateValue: async (raw, designer) => {
             try {
+
+
+
 
 
 
@@ -199,8 +217,11 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           renderValue: (text) => {
             return text.replace(/^총 /gi, '').trim();
           },
-          updateValue: async (raw) => {
+          updateValue: async (raw, designer) => {
             try {
+
+
+
 
 
 
@@ -219,8 +240,11 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           renderValue: (text) => {
             return text.replace(/년/i, '-').replace(/[^0-9\-]/gi, '').trim();
           },
-          updateValue: async (raw) => {
+          updateValue: async (raw, designer) => {
             try {
+
+
+
 
 
 
@@ -243,8 +267,11 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           renderValue: (text) => {
             return text;
           },
-          updateValue: async (raw) => {
+          updateValue: async (raw, designer) => {
             try {
+
+
+
 
 
 
@@ -268,7 +295,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           renderValue: (text) => {
             return text;
           },
-          updateValue: async (raw) => {
+          updateValue: async (raw, designer) => {
             try {
 
 
@@ -287,7 +314,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           renderValue: (text) => {
             return text.replace(/[^0-9\-\.]/gi, '');
           },
-          updateValue: async (raw) => {
+          updateValue: async (raw, designer) => {
             try {
 
 
@@ -306,7 +333,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           renderValue: (text) => {
             return text.replace(/[^0-9\-\.]/gi, '');
           },
-          updateValue: async (raw) => {
+          updateValue: async (raw, designer) => {
             try {
 
 
@@ -325,7 +352,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           renderValue: (text) => {
             return text.replace(/[^0-9\-\.]/gi, '');
           },
-          updateValue: async (raw) => {
+          updateValue: async (raw, designer) => {
             try {
 
 
@@ -352,7 +379,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             }
           },
           multiple: false,
-          updateValue: async (raw) => {
+          updateValue: async (raw, designer) => {
             try {
 
 
@@ -383,7 +410,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             }
           },
           multiple: false,
-          updateValue: async (raw) => {
+          updateValue: async (raw, designer) => {
             try {
 
 
@@ -408,7 +435,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             }
           },
           multiple: false,
-          updateValue: async (raw) => {
+          updateValue: async (raw, designer) => {
             try {
 
 
@@ -439,7 +466,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             }
           },
           multiple: false,
-          updateValue: async (raw) => {
+          updateValue: async (raw, designer) => {
             try {
 
 
@@ -476,7 +503,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             });
           },
           multiple: true,
-          updateValue: async (raw) => {
+          updateValue: async (raw, designer) => {
             try {
 
 
@@ -507,7 +534,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             }
           },
           multiple: false,
-          updateValue: async (raw) => {
+          updateValue: async (raw, designer) => {
             try {
 
 
@@ -532,7 +559,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             }
           },
           multiple: false,
-          updateValue: async (raw) => {
+          updateValue: async (raw, designer) => {
             try {
 
 
@@ -561,7 +588,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             });
           },
           multiple: true,
-          updateValue: async (raw) => {
+          updateValue: async (raw, designer) => {
             try {
 
 
@@ -590,7 +617,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             });
           },
           multiple: true,
-          updateValue: async (raw) => {
+          updateValue: async (raw, designer) => {
             try {
 
 
@@ -615,7 +642,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             }
           },
           multiple: false,
-          updateValue: async (raw) => {
+          updateValue: async (raw, designer) => {
             try {
 
 
@@ -640,7 +667,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             }
           },
           multiple: false,
-          updateValue: async (raw) => {
+          updateValue: async (raw, designer) => {
             try {
 
 
@@ -679,7 +706,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               "exotic",
             ]
           } },
-          updateValue: async (raw) => {
+          updateValue: async (raw, designer) => {
             try {
 
 
@@ -704,7 +731,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               "metal",
             ]
           } },
-          updateValue: async (raw) => {
+          updateValue: async (raw, designer) => {
             try {
 
 
@@ -737,7 +764,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               "dark",
             ]
           } },
-          updateValue: async (raw) => {
+          updateValue: async (raw, designer) => {
             try {
 
 
@@ -758,7 +785,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               "minimum",
             ]
           } },
-          updateValue: async (raw) => {
+          updateValue: async (raw, designer) => {
             try {
 
 
@@ -1069,7 +1096,7 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong, x) {
 
             saveEvent = async (raw) => {
               try {
-                const text = await instance.contents[x].contents[z].updateValue(raw);
+                const text = await instance.contents[x].contents[z].updateValue(raw, instance.designer);
                 self.firstChild.textContent = text;
                 self.setAttribute("value", text);
               } catch (e) {
@@ -1111,7 +1138,6 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong, x) {
                 zIndex: String(zIndex),
               }
             });
-
             whiteInput = createNode({
               mother: self,
               class: [ removePopupTargetClassName ],
@@ -1140,6 +1166,10 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong, x) {
                       for (let dom of removeTargets) {
                         dom.remove();
                       }
+                    } else {
+                      if (typeof instance.contents[x].contents[z].filterValue === "function") {
+                        this.value = instance.contents[x].contents[z].filterValue(this.value);
+                      }
                     }
                   } catch (e) {
                     console.log(e);
@@ -1162,7 +1192,6 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong, x) {
                 zIndex: String(zIndex),
               }
             });
-
             whiteInput.focus();
 
           }
