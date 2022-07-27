@@ -146,13 +146,15 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               if (text === '' || text === "없음") {
                 text = "없음";
                 updateQuery["information.personalSystem.webPage"] = [];
+                instance.designer.information.personalSystem.webPage = [];
                 await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
               } else {
                 if (/^http/.test(text)) {
                   updateQuery["information.personalSystem.webPage"] = [ text ];
+                  instance.designer.information.personalSystem.webPage = [ text ];
                   await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
                 } else {
-                  window.alert("전체 링크를 적어주세요! (http로 시작하는)");
+                  window.alert("전체 링크를 적어주세요! (http로 시작하는 전체 링크)");
                   text = designer.information.personalSystem.webPage.length === 0 ? "없음" : designer.information.personalSystem.webPage[0];
                 }
               }
@@ -178,18 +180,48 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           updateValue: async (raw, designer) => {
             try {
               let text, whereQuery, updateQuery;
+              let target;
+              let arr;
 
               whereQuery = { desid };
               updateQuery = {};
 
-              
+              text = raw.split('?')[0].trim();
 
+              arr = [];
+              for (let obj of designer.information.personalSystem.sns) {
+                if (!/Insta/gi.test(obj.kind)) {
+                  arr.push(obj);
+                }
+              }
 
+              if (text === '' || text === "없음") {
+                text = "없음";
+                updateQuery["information.personalSystem.sns"] = arr;
+                instance.designer.information.personalSystem.sns = arr;
+                await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
+              } else {
+                if (/^http/.test(text)) {
+                  arr.push({
+                    kind: "Instagram",
+                    href: text
+                  });
+                  updateQuery["information.personalSystem.sns"] = arr;
+                  instance.designer.information.personalSystem.sns = arr;
+                  await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
-
-
-
+                } else {
+                  window.alert("전체 링크를 적어주세요! (http로 시작하는 전체 링크)");
+                  target = designer.information.personalSystem.sns.find((obj) => { return /Insta/gi.test(obj.kind) });
+                  if (target === undefined) {
+                    text = "없음";
+                  } else {
+                    text = target.href;
+                  }
+                }
+              }
+              return text;
             } catch (e) {
               console.log(e);
             }
@@ -210,13 +242,49 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           },
           updateValue: async (raw, designer) => {
             try {
+              let text, whereQuery, updateQuery;
+              let target;
+              let arr;
 
+              whereQuery = { desid };
+              updateQuery = {};
 
+              text = raw.split('?')[0].trim();
 
+              arr = [];
+              for (let obj of designer.information.personalSystem.sns) {
+                if (!/Naver/gi.test(obj.kind)) {
+                  arr.push(obj);
+                }
+              }
 
+              if (text === '' || text === "없음") {
+                text = "없음";
+                updateQuery["information.personalSystem.sns"] = arr;
+                instance.designer.information.personalSystem.sns = arr;
+                await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
+              } else {
+                if (/^http/.test(text)) {
+                  arr.push({
+                    kind: "Naver",
+                    href: text
+                  });
+                  updateQuery["information.personalSystem.sns"] = arr;
+                  instance.designer.information.personalSystem.sns = arr;
+                  await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
-
+                } else {
+                  window.alert("전체 링크를 적어주세요! (http로 시작하는 전체 링크)");
+                  target = designer.information.personalSystem.sns.find((obj) => { return /Naver/gi.test(obj.kind) });
+                  if (target === undefined) {
+                    text = "없음";
+                  } else {
+                    text = target.href;
+                  }
+                }
+              }
+              return text;
             } catch (e) {
               console.log(e);
             }
