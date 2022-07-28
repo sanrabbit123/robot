@@ -95,6 +95,7 @@ DevContext.prototype.launching = async function () {
 
 
 
+    /*
 
     // back
 
@@ -124,11 +125,6 @@ DevContext.prototype.launching = async function () {
     }
 
     // { totalClient, contractProjects, proposalProjects, designer };
-
-
-
-
-
 
 
     // front
@@ -211,7 +207,7 @@ DevContext.prototype.launching = async function () {
     // 가격, 수수료
 
 
-
+    */
 
 
 

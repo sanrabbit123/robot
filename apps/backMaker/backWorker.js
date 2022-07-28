@@ -876,6 +876,101 @@ BackWorker.prototype.designerCalculation = async function () {
   }
 }
 
+BackWorker.prototype.designerFeeTable = async function (desid, option = { selfMongo: null, selfLocalMongo: null }) {
+  if (typeof desid !== "string") {
+    throw new Error("invalid input");
+  }
+  const instance = this;
+  const { mongo, mongoinfo, mongoconsoleinfo } = this.mother;
+  const back = this.back;
+  const serviceTable = [
+    "s2011_aa01s",
+    "s2011_aa02s",
+    "s2011_aa03s",
+    "s2011_aa04s",
+  ];
+  const cliidConst = "c1801_aa01s";
+  const xValueConst = 'B';
+  const minPyeong = 8;
+  const maxPyeong = 100;
+  const toMoney = (num) => { return (Math.round(num / 1000) * 1000); }
+  let MONGOC, MONGOLOCALC;
+
+  if (option.selfMongo === null || option.selfMongo === undefined) {
+    MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+    await MONGOC.connect();
+  } else {
+    MONGOC = option.selfMongo;
+  }
+
+  if (option.selfLocalMongo === null || option.selfLocalMongo === undefined) {
+    MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    await MONGOLOCALC.connect();
+  } else {
+    MONGOLOCALC = option.selfLocalMongo;
+  }
+
+  try {
+    let designer;
+    let res;
+    let result;
+    let y, serviceMatchBoo;
+
+    designer = await back.getDesignerById(desid, { selfMongo: MONGOC });
+
+    result = {};
+    result.service = {};
+
+    for (let serid of serviceTable) {
+
+      y = Number((serid.split('_'))[1].replace(/[^0-9]/g, '').replace(/^0/, '').replace(/^0/, '').replace(/^0/, '')) - 1;
+      if (Number.isNaN(y)) {
+        throw new Error("service error");
+      }
+      serviceMatchBoo = designer.analytics.project.matrix[y].some((s) => { return s === 1; });
+
+      res = await this.getDesignerFee(desid, cliidConst, serid, xValueConst, { selfMongo: MONGOC, selfLocalMongo: MONGOLOCALC, generalPriceView: true });
+      result.alphaPercentage = res.alphaPercentage;
+      result.priceStandard = res.priceStandard;
+      result.service[serid] = {
+        feeFunction: res.feeFunction,
+        able: serviceMatchBoo,
+        example: [],
+      };
+
+      for (let i = minPyeong; i < maxPyeong + 1; i++) {
+        result.service[serid].example.push({
+          pyeong: i,
+          price: toMoney(res.feeFunction(i) * 10000 * res.alphaPercentage)
+        });
+      }
+
+    }
+
+    if (option.jsonMode === true) {
+      for (let serid in result.service) {
+        delete result.service[serid].feeFunction;
+      }
+      delete result.priceStandard._id;
+
+      return JSON.stringify(result, null, 2);
+
+    } else {
+      return result;
+    }
+
+  } catch (e) {
+    console.log(e);
+  } finally {
+    if (option.selfMongo === null || option.selfMongo === undefined) {
+      await MONGOC.close();
+    }
+    if (option.selfLocalMongo === null || option.selfLocalMongo === undefined) {
+      await MONGOLOCALC.close();
+    }
+  }
+}
+
 BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null, xValue = null, option = { selfMongo: null, selfLocalMongo: null }) {
   if (typeof proid === "string" && /^p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(proid)) {
     if (typeof cliid !== "object" || cliid === null) {
@@ -947,6 +1042,7 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
     functionScript = "let " + outputName + ";\n" + functionScript.slice(String("} else ").length) + "}\nreturn Math.round(" + outputName + ");";
     return new Function(inputName, functionScript);
   }
+  const toMoney = (num) => { return (Math.round(num / 1000) * 1000); }
   let MONGOC, MONGOLOCALC;
 
   if (option.selfMongo === null || option.selfMongo === undefined) {
@@ -985,7 +1081,6 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
     let mode;
     let offlineFeeCase;
     let onlineFeeCase;
-    let toMoney;
     let travelNumber;
     let thisDesignerCareerStart;
     let distanceLimitBoo;
@@ -1232,10 +1327,15 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
 
       alphaPercentage = (alpha / 100) + 1;
 
+      if (option.generalPriceView === true) {
+        return {
+          alphaPercentage,
+          priceStandard,
+          feeFunction: thisFeeFunction
+        };
+      }
+
       fee = alphaPercentage * fee;
-
-      
-
 
       offlineFeeCase = fee;
       onlineFeeCase = fee * 0.85;
@@ -1296,8 +1396,6 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
       if (comment === "" && fee === 0) {
         comment = "Zero in table";
       }
-
-      toMoney = (num) => { return (Math.round(num / 1000) * 1000); }
 
       tong.push({
         desid: designer.desid,
