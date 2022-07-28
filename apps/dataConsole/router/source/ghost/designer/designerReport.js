@@ -1804,10 +1804,11 @@ DesignerReportJs.prototype.launching = async function (loading) {
     }
 
     desid = getObj.desid;
+
+    const servicePrice = await ajaxJson({ desid }, BACKHOST + "/designerFeeTable", { equal: true });
     const { totalClient, contractProjects, proposalProjects, designer } = await ajaxJson({ desid }, SECONDHOST + "/designerProjects", { equal: true });
+
     this.designer = designer;
-
-
 
     // 제안
 
@@ -1817,8 +1818,6 @@ DesignerReportJs.prototype.launching = async function (loading) {
     // 제안 날짜
     // 제안 금액
     // 계약 여부
-
-    /*
 
     proposals = proposalProjects.map((obj) => {
       let normal;
@@ -1884,16 +1883,9 @@ DesignerReportJs.prototype.launching = async function (loading) {
       return normal;
     });
 
-
-    */
-
-
-
-
-
-
-
-
+    this.proposals = proposals;
+    this.contracts = contracts;
+    this.service = servicePrice;
 
     await this.mother.ghostDesignerLaunching({
       name: "designerReport",

@@ -592,15 +592,21 @@ SecondRouter.prototype.rou_post_designerProjects = function () {
       const selfMongo = instance.mongo;
       const { desid } = req.body;
       const designer = await back.getDesignerById(desid, { selfMongo });
-      const totalProject = await back.getProjectsByQuery({}, { selfMongo });
+      const totalProject = await back.getProjectsByQuery({
+        $or: [
+          {
+            "proposal.detail": {
+              $elemMatch: { desid }
+            }
+          },
+          {
+            desid: desid
+          }
+        ]
+      }, { selfMongo });
       let contractProjects, proposalProjects;
       let totalClient;
       let cliidArr;
-      // let servicePrice;
-      // let rawTableRequest;
-      //
-      // rawTableRequest = await requestSystem("https://" + address.homeinfo.ghost.host + "/designerFeeTable", { desid }, { headers: { "Content-Type": "application/json", "origin": address.secondinfo.host } });
-      // servicePrice = rawTableRequest.data;
 
       contractProjects = totalProject.toNormal().filter((obj) => {
         return obj.desid === desid;
