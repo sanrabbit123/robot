@@ -306,15 +306,43 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           },
           updateValue: async (raw, designer) => {
             try {
+              let text, whereQuery, updateQuery;
+              let arr;
 
+              whereQuery = { desid };
+              updateQuery = {};
 
+              arr = raw.trim().split("년");
+              if (arr.length !== 2) {
+                throw new Error("invalid text");
+              }
 
+              arr = arr.map((str) => { return Number(str.replace(/[^0-9]/gi, '')) });
+              if (arr.some(Number.isNaN)) {
+                throw new Error("invalid text");
+              }
 
+              if (arr[1] >= 12) {
+                throw new Error("invalid text");
+              }
 
+              if (arr[0] < 0 || arr[1] < 0) {
+                throw new Error("invalid text");
+              }
 
+              updateQuery["information.business.career.relatedY"] = arr[0];
+              updateQuery["information.business.career.relatedM"] = arr[1];
+
+              instance.designer.information.business.career.relatedY = arr[0];
+              instance.designer.information.business.career.relatedM = arr[1];
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+              return `총 ${String(arr[0])}년 ${String(arr[1])}개월`;
 
             } catch (e) {
-              console.log(e);
+              window.alert("형식에 맞게 적어주세요! '00년 00개월'");
+              return `총 ${String(designer.information.business.career.relatedY)}년 ${String(designer.information.business.career.relatedM)}개월`;
             }
           },
         },
@@ -329,15 +357,47 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           },
           updateValue: async (raw, designer) => {
             try {
+              let text, whereQuery, updateQuery;
+              let arr;
 
+              whereQuery = { desid };
+              updateQuery = {};
 
+              arr = raw.trim().split("-");
+              if (arr.length !== 2) {
+                throw new Error("invalid text");
+              }
 
+              arr = arr.map((str) => { return Number(str.replace(/[^0-9]/gi, '')) });
+              if (arr.some(Number.isNaN)) {
+                throw new Error("invalid text");
+              }
 
+              if (arr[1] >= 13) {
+                throw new Error("invalid text");
+              }
 
+              if (arr[0] < 2000) {
+                throw new Error("invalid text");
+              }
 
+              if (arr[0] < 0 || arr[1] < 0) {
+                throw new Error("invalid text");
+              }
+
+              updateQuery["information.business.career.startY"] = arr[0];
+              updateQuery["information.business.career.startM"] = arr[1];
+
+              instance.designer.information.business.career.startY = arr[0];
+              instance.designer.information.business.career.startM = arr[1];
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+              return `시작일 : ${String(arr[0])}년 ${String(arr[1])}월`;
 
             } catch (e) {
-              console.log(e);
+              window.alert("형식에 맞게 적어주세요! '0000(년도)-00(월)'");
+              return `시작일 : ${String(designer.information.business.career.startY)}년 ${String(designer.information.business.career.startM)}월`;
             }
           },
         },
@@ -356,15 +416,48 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           },
           updateValue: async (raw, designer) => {
             try {
+              let text, whereQuery, updateQuery;
+              let arr;
+              let obj;
 
+              whereQuery = { desid };
+              updateQuery = {};
 
+              for (let i = 0; i < 3; i++) {
+                raw = raw.replace(/  /gi, ' ').replace(/   /gi, ' ').trim();
+              }
 
+              arr = raw.split(' ');
+              if (arr.length !== 2) {
+                throw new Error("invalid text");
+              }
 
+              arr = arr.map((str) => { return str.trim() });
+              if (arr.some((str) => { return str === '' })) {
+                throw new Error("invalid text");
+              }
 
+              obj = {
+                bankName: arr[0].replace(/은행/gi, ''),
+                accountNumber: arr[1],
+                to: designer.designer
+              };
 
+              instance.designer.information.business.account = [ obj ];
+              updateQuery["information.business.account"] = [ obj ];
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+              return obj.bankName + " " + obj.accountNumber;
 
             } catch (e) {
-              console.log(e);
+              window.alert("형식에 맞게 적어주세요! '은행이름 계좌번호'");
+              const targetArr = designer.information.business.account.filter((obj) => { return obj.accountNumber !== '' });
+              if (targetArr.length === 0) {
+                return "없음";
+              } else {
+                return targetArr[0].bankName + " " + targetArr[0].accountNumber;
+              }
             }
           },
         },
@@ -384,12 +477,38 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           },
           updateValue: async (raw, designer) => {
             try {
+              let text, whereQuery, updateQuery;
 
+              whereQuery = { desid };
+              updateQuery = {};
 
+              for (let i = 0; i < 3; i++) {
+                raw = raw.replace(/  /gi, ' ').replace(/   /gi, ' ').trim();
+              }
+              text = raw;
 
+              if (text === '') {
+                throw new Error("invalid text");
+              }
+
+              if (/^없/gi.test(text)) {
+                throw new Error("invalid text");
+              }
+
+              if (!/^[가-힣]/gi.test(text)) {
+                throw new Error("invalid text");
+              }
+
+              updateQuery["information.address"] = [ text ];
+              instance.designer.information.address = [ text ];
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+              return text;
 
             } catch (e) {
-              console.log(e);
+              window.alert("올바른 형식의 주소를 적어주세요!");
+              return designer.information.address.length === 0 ? "없음" : designer.information.address[0];
             }
           },
         },
@@ -403,12 +522,31 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           },
           updateValue: async (raw, designer) => {
             try {
+              let text, whereQuery, updateQuery;
 
+              whereQuery = { desid };
+              updateQuery = {};
 
+              text = raw.replace(/[^0-9\.]/gi, '');
+              if (text === '') {
+                throw new Error("invalid text");
+              }
 
+              text = Number(text);
+              if (Number.isNaN(text)) {
+                throw new Error("invalid text");
+              }
+
+              updateQuery["analytics.region.range"] = text;
+              instance.designer.analytics.region.range = text;
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+              return String(text) + "km";
 
             } catch (e) {
-              console.log(e);
+              window.alert("숫자로만 적어주세요!");
+              return String(designer.analytics.region.range) + "km";
             }
           },
         },
@@ -422,12 +560,31 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           },
           updateValue: async (raw, designer) => {
             try {
+              let text, whereQuery, updateQuery;
 
+              whereQuery = { desid };
+              updateQuery = {};
 
+              text = raw.replace(/[^0-9\.]/gi, '');
+              if (text === '') {
+                throw new Error("invalid text");
+              }
 
+              text = Number(text);
+              if (Number.isNaN(text)) {
+                throw new Error("invalid text");
+              }
+
+              updateQuery["analytics.region.expenses"] = text;
+              instance.designer.analytics.region.expenses = text;
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+              return String(text) + "km";
 
             } catch (e) {
-              console.log(e);
+              window.alert("숫자로만 적어주세요!");
+              return String(designer.analytics.region.expenses) + "km";
             }
           },
         },
@@ -441,12 +598,31 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           },
           updateValue: async (raw, designer) => {
             try {
+              let text, whereQuery, updateQuery;
 
+              whereQuery = { desid };
+              updateQuery = {};
 
+              text = raw.replace(/[^0-9\.]/gi, '');
+              if (text === '') {
+                throw new Error("invalid text");
+              }
 
+              text = Number(text);
+              if (Number.isNaN(text)) {
+                throw new Error("invalid text");
+              }
+
+              updateQuery["analytics.region.construct"] = text;
+              instance.designer.analytics.region.construct = text;
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+              return String(text) + "km";
 
             } catch (e) {
-              console.log(e);
+              window.alert("숫자로만 적어주세요!");
+              return String(designer.analytics.region.construct) + "km";
             }
           },
         },
@@ -466,11 +642,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             }
           },
           multiple: false,
-          updateValue: async (raw, designer) => {
+          updateValue: async (raw, columns, designer) => {
             try {
+              let text, whereQuery, updateQuery;
 
+              whereQuery = { desid };
+              updateQuery = {};
 
+              text = columns[raw.findIndex((num) => { return num === 1 })];
 
+              instance.designer.analytics.region.transportation = text;
+              updateQuery["analytics.region.transportation"] = text;
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
               console.log(e);
@@ -497,11 +681,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             }
           },
           multiple: false,
-          updateValue: async (raw, designer) => {
+          updateValue: async (raw, columns, designer) => {
             try {
+              let text, whereQuery, updateQuery;
 
+              whereQuery = { desid };
+              updateQuery = {};
 
+              text = columns[raw.findIndex((num) => { return num === 1 })];
 
+              instance.designer.analytics.project.online = (text === "가능");
+              updateQuery["analytics.project.online"] = (text === "가능");
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
               console.log(e);
@@ -522,11 +714,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             }
           },
           multiple: false,
-          updateValue: async (raw, designer) => {
+          updateValue: async (raw, columns, designer) => {
             try {
+              let text, whereQuery, updateQuery;
 
+              whereQuery = { desid };
+              updateQuery = {};
 
+              text = columns[raw.findIndex((num) => { return num === 1 })];
 
+              instance.designer.analytics.project.living = (text === "가능");
+              updateQuery["analytics.project.living"] = (text === "가능");
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
               console.log(e);
@@ -553,11 +753,27 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             }
           },
           multiple: false,
-          updateValue: async (raw, designer) => {
+          updateValue: async (raw, columns, designer) => {
             try {
+              let number, whereQuery, updateQuery;
+              let numberColumns;
 
+              whereQuery = { desid };
+              updateQuery = {};
 
+              numberColumns = [
+                7,
+                14,
+                21,
+                28,
+              ];
 
+              number = numberColumns[raw.findIndex((num) => { return num === 1 })];
+
+              instance.designer.analytics.project.time.first = number;
+              updateQuery["analytics.project.time.first"] = number;
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
               console.log(e);
@@ -590,11 +806,22 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             });
           },
           multiple: true,
-          updateValue: async (raw, designer) => {
+          updateValue: async (raw, columns, designer) => {
             try {
+              let text, whereQuery, updateQuery;
+              let filtered;
 
+              whereQuery = { desid };
+              updateQuery = {};
 
+              filtered = columns.filter((str, index) => {
+                return raw[index] === 1;
+              });
 
+              instance.designer.analytics.project.paperWork = filtered;
+              updateQuery["analytics.project.paperWork"] = filtered;
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
               console.log(e);
@@ -621,11 +848,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             }
           },
           multiple: false,
-          updateValue: async (raw, designer) => {
+          updateValue: async (raw, columns, designer) => {
             try {
+              let text, whereQuery, updateQuery;
 
+              whereQuery = { desid };
+              updateQuery = {};
 
+              text = columns[raw.findIndex((num) => { return num === 1 })];
 
+              instance.designer.analytics.styling.furniture.builtin = (text === "가능");
+              updateQuery["analytics.styling.furniture.builtin"] = (text === "가능");
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
               console.log(e);
@@ -646,11 +881,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             }
           },
           multiple: false,
-          updateValue: async (raw, designer) => {
+          updateValue: async (raw, columns, designer) => {
             try {
+              let text, whereQuery, updateQuery;
 
+              whereQuery = { desid };
+              updateQuery = {};
 
+              text = columns[raw.findIndex((num) => { return num === 1 })];
 
+              instance.designer.analytics.styling.furniture.design = (text === "가능");
+              updateQuery["analytics.styling.furniture.design"] = (text === "가능");
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
               console.log(e);
@@ -675,11 +918,22 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             });
           },
           multiple: true,
-          updateValue: async (raw, designer) => {
+          updateValue: async (raw, columns, designer) => {
             try {
+              let text, whereQuery, updateQuery;
+              let filtered;
 
+              whereQuery = { desid };
+              updateQuery = {};
 
+              filtered = columns.filter((str, index) => {
+                return raw[index] === 1;
+              });
 
+              instance.designer.analytics.styling.fabric.curtain = filtered;
+              updateQuery["analytics.styling.fabric.curtain"] = filtered;
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
               console.log(e);
@@ -704,11 +958,22 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             });
           },
           multiple: true,
-          updateValue: async (raw, designer) => {
+          updateValue: async (raw, columns, designer) => {
             try {
+              let text, whereQuery, updateQuery;
+              let filtered;
 
+              whereQuery = { desid };
+              updateQuery = {};
 
+              filtered = columns.filter((str, index) => {
+                return raw[index] === 1;
+              });
 
+              instance.designer.analytics.styling.fabric.bedding = filtered;
+              updateQuery["analytics.styling.fabric.bedding"] = filtered;
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
               console.log(e);
@@ -729,11 +994,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             }
           },
           multiple: false,
-          updateValue: async (raw, designer) => {
+          updateValue: async (raw, columns, designer) => {
             try {
+              let text, whereQuery, updateQuery;
 
+              whereQuery = { desid };
+              updateQuery = {};
 
+              text = columns[raw.findIndex((num) => { return num === 1 })];
 
+              instance.designer.analytics.purchase.setting.install = (text === "직접");
+              updateQuery["analytics.purchase.setting.install"] = (text === "직접");
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
               console.log(e);
@@ -754,11 +1027,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             }
           },
           multiple: false,
-          updateValue: async (raw, designer) => {
+          updateValue: async (raw, columns, designer) => {
             try {
+              let text, whereQuery, updateQuery;
 
+              whereQuery = { desid };
+              updateQuery = {};
 
+              text = columns[raw.findIndex((num) => { return num === 1 })];
 
+              instance.designer.analytics.purchase.setting.storage = (text === "연결");
+              updateQuery["analytics.purchase.setting.storage"] = (text === "연결");
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
               console.log(e);
@@ -793,11 +1074,17 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               "exotic",
             ]
           } },
-          updateValue: async (raw, designer) => {
+          updateValue: async (raw, target, designer) => {
             try {
+              let whereQuery, updateQuery;
 
+              whereQuery = { desid };
+              updateQuery = {};
 
+              designer.analytics.styling.tendency.style[target] = raw;
+              updateQuery["analytics.styling.tendency.style." + target] = raw;
 
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
               console.log(e);
@@ -818,11 +1105,17 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               "metal",
             ]
           } },
-          updateValue: async (raw, designer) => {
+          updateValue: async (raw, target, designer) => {
             try {
+              let whereQuery, updateQuery;
 
+              whereQuery = { desid };
+              updateQuery = {};
 
+              designer.analytics.styling.tendency.texture[target] = raw;
+              updateQuery["analytics.styling.tendency.texture." + target] = raw;
 
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
               console.log(e);
@@ -851,11 +1144,17 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               "dark",
             ]
           } },
-          updateValue: async (raw, designer) => {
+          updateValue: async (raw, target, designer) => {
             try {
+              let whereQuery, updateQuery;
 
+              whereQuery = { desid };
+              updateQuery = {};
 
+              designer.analytics.styling.tendency.color[target] = raw;
+              updateQuery["analytics.styling.tendency.color." + target] = raw;
 
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
               console.log(e);
@@ -872,11 +1171,17 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               "minimum",
             ]
           } },
-          updateValue: async (raw, designer) => {
+          updateValue: async (raw, target, designer) => {
             try {
+              let whereQuery, updateQuery;
 
+              whereQuery = { desid };
+              updateQuery = {};
 
+              designer.analytics.styling.tendency.density[target] = raw;
+              updateQuery["analytics.styling.tendency.density." + target] = raw;
 
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
               console.log(e);
@@ -1325,6 +1630,8 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong, x) {
               const x = Number(this.getAttribute("x"));
               const z = Number(this.getAttribute("z"));
               let targets;
+              let finalTargets;
+              let finalNumbers;
 
               if (toggle === "on") {
                 if (instance.contents[x].contents[z].multiple) {
@@ -1361,6 +1668,13 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong, x) {
                 }
                 self.setAttribute("toggle", "on");
               }
+
+              finalTargets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
+              finalNumbers = finalTargets.map((dom) => { return dom.getAttribute("toggle") === "on" ? 1 : 0 });
+
+              instance.contents[x].contents[z].updateValue(finalNumbers, instance.contents[x].contents[z].returnValue(instance.designer), instance.designer).catch((err) => {
+                console.log(err);
+              });
             }
           },
           style: {
@@ -1452,6 +1766,7 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong, x) {
                     targets[a].style.background = colorChip.gray1;
                   }
                 }
+                instance.contents[x].contents[z].updateValue(i + 1, instance.contents[x].contents[z].returnValue(instance.designer).__order__[y], instance.designer).catch((err) => { console.log(err); });
               }
             },
             style: {
