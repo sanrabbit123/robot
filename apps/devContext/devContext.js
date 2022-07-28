@@ -95,36 +95,12 @@ DevContext.prototype.launching = async function () {
 
 
 
-    /*
 
     // back
 
     const selfMongo = this.MONGOLOCALC;
     const desid = "d1904_aa01s";
-    const designer = await back.getDesignerById(desid, { selfMongo });
-    const totalProject = await back.getProjectsByQuery({}, { selfMongo });
-
-    let contractProjects, proposalProjects;
-    let totalClient;
-    let cliidArr;
-
-    contractProjects = totalProject.toNormal().filter((obj) => {
-      return obj.desid === desid;
-    });
-    proposalProjects = totalProject.toNormal().filter((obj) => {
-      return obj.proposal.detail.some((o) => { return o.desid === desid });
-    });
-
-    cliidArr = contractProjects.map((obj) => { return obj.cliid }).concat(proposalProjects.map((obj) => { return obj.cliid }));
-    cliidArr = [ ...new Set(cliidArr) ];
-    cliidArr = cliidArr.map((cliid) => { return { cliid } });
-    if (cliidArr.length === 0) {
-      totalClient = [];
-    } else {
-      totalClient = (await back.getClientsByQuery({ $or: cliidArr }, { selfMongo })).toNormal();
-    }
-
-    // { totalClient, contractProjects, proposalProjects, designer };
+    const { totalClient, contractProjects, proposalProjects, designer, servicePrice } = (await requestSystem("https://home-liaison.net:3000/designerReport", { desid }, { headers: { "Content-Type": "application/json", "origin": address.secondinfo.host } })).data;
 
 
     // front
@@ -204,10 +180,9 @@ DevContext.prototype.launching = async function () {
     });
 
 
-    // 가격, 수수료
 
 
-    */
+
 
 
 

@@ -570,6 +570,64 @@ SecondRouter.prototype.rou_post_updateDocument = function () {
   return obj;
 }
 
+SecondRouter.prototype.rou_post_designerReport = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const { requestSystem, messageSend, fileSystem, setQueue, sleep, shellExec, shellLink, errorLog, messageLog } = this.mother;
+  const querystring = require("querystring");
+  let obj = {};
+  obj.link = [ "/designerReport" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.desid === undefined) {
+        throw new Error("invaild post");
+      }
+      const selfMongo = instance.mongo;
+      const { desid } = req.body;
+      const designer = await back.getDesignerById(desid, { selfMongo });
+      const totalProject = await back.getProjectsByQuery({}, { selfMongo });
+      let contractProjects, proposalProjects;
+      let totalClient;
+      let cliidArr;
+      let servicePrice;
+      let rawTableRequest;
+
+      rawTableRequest = await requestSystem("https://" + address.homeinfo.ghost.host + "/designerFeeTable", { desid }, { headers: { "Content-Type": "application/json", "origin": address.secondinfo.host } });
+      servicePrice = rawTableRequest.data;
+
+      contractProjects = totalProject.toNormal().filter((obj) => {
+        return obj.desid === desid;
+      });
+      proposalProjects = totalProject.toNormal().filter((obj) => {
+        return obj.proposal.detail.some((o) => { return o.desid === desid });
+      });
+
+      cliidArr = contractProjects.map((obj) => { return obj.cliid }).concat(proposalProjects.map((obj) => { return obj.cliid }));
+      cliidArr = [ ...new Set(cliidArr) ];
+      cliidArr = cliidArr.map((cliid) => { return { cliid } });
+      if (cliidArr.length === 0) {
+        totalClient = [];
+      } else {
+        totalClient = (await back.getClientsByQuery({ $or: cliidArr }, { selfMongo })).toNormal();
+      }
+
+      res.send(JSON.stringify({ totalClient, contractProjects, proposalProjects, designer: designer.toNormal(), servicePrice }));
+
+    } catch (e) {
+      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_designerReport): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 SecondRouter.prototype.getAll = function () {
