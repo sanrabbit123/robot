@@ -93,17 +93,68 @@ DevContext.prototype.launching = async function () {
     const desid = "d1904_aa01s";
     const designer = await back.getDesignerById(desid, { selfMongo });
     const totalProject = await back.getProjectsByQuery({}, { selfMongo });
-    const contractProjects = totalProject.filter((obj) => {
+
+    let contractProjects, proposalProjects;
+    let totalClient;
+    let cliidArr;
+
+    contractProjects = totalProject.toNormal().filter((obj) => {
       return obj.desid === desid;
     });
-    const proposalProjects = totalProject.filter((obj) => {
+    proposalProjects = totalProject.toNormal().filter((obj) => {
       return obj.proposal.detail.some((o) => { return o.desid === desid });
     });
 
+    cliidArr = contractProjects.map((obj) => { return obj.cliid }).concat(proposalProjects.map((obj) => { return obj.cliid }));
+    cliidArr = [ ...new Set(cliidArr) ];
+    cliidArr = cliidArr.map((cliid) => { return { cliid } });
+    if (cliidArr.length === 0) {
+      totalClient = [];
+    } else {
+      totalClient = (await back.getClientsByQuery({ $or: cliidArr }, { selfMongo })).toNormal();
+    }
+
+    // { totalClient, contractProjects, proposalProjects, designer };
 
 
-    console.log(contractProjects.length);
-    console.log(proposalProjects.length);
+
+    // front
+    let proposals;
+
+
+    proposals = proposalProjects.map((obj) => {
+      let normal;
+      let thisClient;
+
+      normal = equalJson(JSON.stringify(obj));
+      thisClient = totalClient.find((obj) => { return obj.cliid === normal.cliid });
+
+      normal.proposal.name = thisClient.name;
+      normal.proposal.pyeong = thisClient.requests[0].request.space.pyeong;
+
+      normal.proposal.proid = normal.proid;
+      normal.proposal.cliid = normal.cliid;
+      normal.proposal.desid = normal.desid;
+
+      normal.proposal.service = serviceParsing(normal.service).replace(/[a-zA-Z]/gi, '').trim();
+      normal.proposal.detail = normal.proposal.detail.filter((o) => { return o.desid === desid })[0];
+
+      return normal.proposal;
+    });
+
+    console.log(proposals);
+
+    // 고객
+    // 서비스
+    // 제안 날짜
+    // 제안 금액
+    // 평수
+    // 계약 여부
+
+
+
+
+
 
 
 
