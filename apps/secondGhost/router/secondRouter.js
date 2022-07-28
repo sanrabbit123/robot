@@ -570,14 +570,14 @@ SecondRouter.prototype.rou_post_updateDocument = function () {
   return obj;
 }
 
-SecondRouter.prototype.rou_post_designerReport = function () {
+SecondRouter.prototype.rou_post_designerProjects = function () {
   const instance = this;
   const back = this.back;
   const address = this.address;
   const { requestSystem, messageSend, fileSystem, setQueue, sleep, shellExec, shellLink, errorLog, messageLog } = this.mother;
   const querystring = require("querystring");
   let obj = {};
-  obj.link = [ "/designerReport" ];
+  obj.link = [ "/designerProjects" ];
   obj.func = async function (req, res) {
     res.set({
       "Content-Type": "application/json",
@@ -596,11 +596,11 @@ SecondRouter.prototype.rou_post_designerReport = function () {
       let contractProjects, proposalProjects;
       let totalClient;
       let cliidArr;
-      let servicePrice;
-      let rawTableRequest;
-
-      rawTableRequest = await requestSystem("https://" + address.homeinfo.ghost.host + "/designerFeeTable", { desid }, { headers: { "Content-Type": "application/json", "origin": address.secondinfo.host } });
-      servicePrice = rawTableRequest.data;
+      // let servicePrice;
+      // let rawTableRequest;
+      //
+      // rawTableRequest = await requestSystem("https://" + address.homeinfo.ghost.host + "/designerFeeTable", { desid }, { headers: { "Content-Type": "application/json", "origin": address.secondinfo.host } });
+      // servicePrice = rawTableRequest.data;
 
       contractProjects = totalProject.toNormal().filter((obj) => {
         return obj.desid === desid;
@@ -618,10 +618,10 @@ SecondRouter.prototype.rou_post_designerReport = function () {
         totalClient = (await back.getClientsByQuery({ $or: cliidArr }, { selfMongo })).toNormal();
       }
 
-      res.send(JSON.stringify({ totalClient, contractProjects, proposalProjects, designer: designer.toNormal(), servicePrice }));
+      res.send(JSON.stringify({ totalClient, contractProjects, proposalProjects, designer: designer.toNormal() }));
 
     } catch (e) {
-      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_designerReport): " + e.message).catch((e) => { console.log(e); });
+      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_designerProjects): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }

@@ -5562,6 +5562,31 @@ DataRouter.prototype.rou_post_requestScript = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_designerFeeTable = function () {
+  const instance = this;
+  const work = this.work;
+  const { errorLog, requestSystem } = this.mother;
+  let obj = {};
+  obj.link = [ "/designerFeeTable" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      let json;
+      json = await work.designerFeeTable(req.body.desid, { selfMongo: this.mongo, selfLocalMongo: this.mongolocal, jsonMode: true });
+      res.send(json);
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_designerFeeTable): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 
 DataRouter.policy = function () {
   let text = '';
