@@ -1887,6 +1887,8 @@ DesignerReportJs.prototype.launching = async function (loading) {
     this.contracts = contracts;
     this.service = servicePrice;
 
+    console.log(proposals, contracts, servicePrice);
+
     await this.mother.ghostDesignerLaunching({
       name: "designerReport",
       designer: this.designer,
@@ -1898,7 +1900,7 @@ DesignerReportJs.prototype.launching = async function (loading) {
       local: async () => {
         try {
 
-
+          
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "DesignerReportJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
