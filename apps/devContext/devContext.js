@@ -89,7 +89,29 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
+    const selfMongo = this.MONGOLOCALC;
+    const desid = "d1904_aa01s";
+    const designer = await back.getDesignerById(desid, { selfMongo });
+    const totalProject = await back.getProjectsByQuery({}, { selfMongo });
+    const contractProjects = totalProject.filter((obj) => {
+      return obj.desid === desid;
+    });
+    const proposalProjects = totalProject.filter((obj) => {
+      return obj.proposal.detail.some((o) => { return o.desid === desid });
+    });
+
+
+
+    console.log(contractProjects.length);
+    console.log(proposalProjects.length);
+
+
+
+
+
+
+
+
 
 
 
