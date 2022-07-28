@@ -1131,7 +1131,7 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
         matrixTong.push({
           to: price.standard.x.value[m][1],
           amount: price.matrix[m][y]
-        })
+        });
       }
       thisFeeFunction = functionMaker(matrixTong);
       fee = thisFeeFunction(request.space.pyeong.value) * 10000;
@@ -1233,6 +1233,9 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
       alphaPercentage = (alpha / 100) + 1;
 
       fee = alphaPercentage * fee;
+
+      
+
 
       offlineFeeCase = fee;
       onlineFeeCase = fee * 0.85;

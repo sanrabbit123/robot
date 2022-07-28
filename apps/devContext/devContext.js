@@ -89,6 +89,15 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
+
+
+
+
+
+    // back
+
     const selfMongo = this.MONGOLOCALC;
     const desid = "d1904_aa01s";
     const designer = await back.getDesignerById(desid, { selfMongo });
@@ -118,13 +127,26 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // front
-    let proposals;
 
+
+
+
+    // front
+    let proposals, contracts;
+
+    // 제안
+
+    // 고객
+    // 평수
+    // 서비스
+    // 제안 날짜
+    // 제안 금액
+    // 계약 여부
 
     proposals = proposalProjects.map((obj) => {
       let normal;
       let thisClient;
+      let feeTarget;
 
       normal = equalJson(JSON.stringify(obj));
       thisClient = totalClient.find((obj) => { return obj.cliid === normal.cliid });
@@ -139,17 +161,60 @@ DevContext.prototype.launching = async function () {
       normal.proposal.service = serviceParsing(normal.service).replace(/[a-zA-Z]/gi, '').trim();
       normal.proposal.detail = normal.proposal.detail.filter((o) => { return o.desid === desid })[0];
 
+      if (normal.proposal.detail.fee.length === 1) {
+        normal.proposal.detail.fee = normal.proposal.detail.fee[0];
+      } else if (normal.proposal.detail.fee.length > 1) {
+        feeTarget = null;
+        if (normal.service.online) {
+          feeTarget = normal.proposal.detail.fee.find((o) => { return /online/gi.test(o.method) })
+        } else {
+          feeTarget = normal.proposal.detail.fee.find((o) => { return /offline/gi.test(o.method) })
+        }
+        if (feeTarget !== null && feeTarget !== undefined) {
+          normal.proposal.detail.fee = feeTarget;
+        } else {
+          normal.proposal.detail.fee = normal.proposal.detail.fee[0];
+        }
+      } else {
+        normal.proposal.detail.fee = { amount: 0 };
+      }
+
       return normal.proposal;
     });
 
-    console.log(proposals);
+    // 계약
 
     // 고객
     // 서비스
-    // 제안 날짜
-    // 제안 금액
-    // 평수
-    // 계약 여부
+    // 시작일
+    // 종료일
+    // 소비자가
+    // 정산 금액
+    // 선금 정산일
+    // 잔금 정산일
+
+    contracts = contractProjects.map((obj) => {
+      let normal;
+      let thisClient;
+      let feeTarget;
+
+      normal = equalJson(JSON.stringify(obj));
+      thisClient = totalClient.find((obj) => { return obj.cliid === normal.cliid });
+
+      normal.name = thisClient.name;
+      normal.serviceName = serviceParsing(normal.service).replace(/[a-zA-Z]/gi, '').trim();
+
+      return normal;
+    });
+
+
+    // 가격, 수수료
+
+
+
+
+
+
 
 
 
