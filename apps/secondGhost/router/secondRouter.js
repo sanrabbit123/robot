@@ -586,6 +586,9 @@ SecondRouter.prototype.rou_post_designerProjects = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
       if (req.body.desid === undefined) {
         throw new Error("invaild post");
       }

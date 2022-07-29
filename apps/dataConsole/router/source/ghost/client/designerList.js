@@ -945,8 +945,8 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
   arrowHeight = <%% 10, 8, 8, 8, 2 %%>;
   arrowBottom = <%% 12, 12, 12, 12, 1 %%>;
 
-  markWidth = <%% 14, 14, 14, 13, 3 %%>;
-  markTop = <%% (isMac() ? 14 : 12), (isMac() ? 14 : 12), (isMac() ? 14 : 12), (isMac() ? 14 : 12), (isIphone() ? 2.2 : 1.8) %%>;
+  markWidth = <%% 34, 34, 34, 34, 6.4 %%>;
+  markTop = <%% (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isIphone() ? 2.3 : 2) %%>;
 
   cleanChildren(designerTong);
 
@@ -1140,7 +1140,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
         },
         {
           mode: "svg",
-          source: instance.mother.returnMark(colorChip.green),
+          source: instance.mother.returnMainMark(colorChip.green),
           style: {
             display: designer.analytics.grade === 1 ? "inline-block" : "none",
             position: "absolute",
@@ -1685,17 +1685,6 @@ DesignerListJs.prototype.designerBlockWithReview = function (search = null) {
             color: colorChip.deactive,
           }
         },
-        {
-          mode: "svg",
-          source: instance.mother.returnMark(colorChip.green),
-          style: {
-            display: "none",
-            position: "absolute",
-            width: String(markWidth) + ea,
-            right: String(0),
-            top: String(markTop) + ea,
-          }
-        }
       ]
     });
     createNode({

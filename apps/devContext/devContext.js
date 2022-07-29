@@ -88,7 +88,7 @@ DevContext.prototype.launching = async function () {
     // console.log(pastProposal[0].project.detail);
 
 
-    
+
 
 
 
@@ -2761,9 +2761,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: null,
-    //     designer: "김윤진",
-    //     link: "https://drive.google.com/drive/folders/11fIUFrClp4K0KsvLtLfur6CmMXS2vSte",
+    //     client: "이숙진",
+    //     designer: "이정아",
+    //     link: "https://drive.google.com/drive/folders/1jEusV1Zsye6KeYnlu3thzgA6pAirnLmq",
     //     pay: true
     //   },
     // ]);
@@ -2783,7 +2783,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p216");
+    // await this.getCorePortfolio("p191");
 
 
     // aspirant to designer

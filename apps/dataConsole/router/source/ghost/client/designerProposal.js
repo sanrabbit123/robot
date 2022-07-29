@@ -1065,6 +1065,7 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
   const { ea, media } = this;
   const { topMargin, leftMargin } = this.whiteBoxNumbers;
   const { desid, designer, pictureSettings, description } = info;
+  const { createNode, colorChip, withOut } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
   let bottomMarginVisual;
@@ -1098,6 +1099,7 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
   let feeDetailBox, feeDetailBoxTitle;
   let thisDesigner;
   let thisDesignerEndBoo;
+  let markWidth, markMargin, markTop;
 
   bottomMarginVisual = <%% 3, 3, 3, 3, 3 %%>;
 
@@ -1134,6 +1136,10 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
 
   feeHeight = <%% 30, 30, 30, 30, 18 %%>;
   feeMarginBottom = <%% 10, 10, 10, 10, 0 %%>;
+
+  markWidth = <%% 35, 35, 35, 35, 7 %%>;
+  markMargin = <%% 10, 10, 10, 10, 1.9 %%>;
+  markTop = <%% 1, 1, 1, 1, 0.3 %%>;
 
   //mother padding
   mother.style.paddingTop = String(desktop ? topMargin : 3) + ea;
@@ -1187,6 +1193,21 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
   }
 
   mother.appendChild(designerTitle);
+
+  if (this.designers.pick(desid).analytics.grade === 1) {
+    createNode({
+      mother: designerTitle,
+      mode: "svg",
+      source: instance.mother.returnMainMark(colorChip.green),
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: String(markWidth) + ea,
+        marginLeft: String(markMargin) + ea,
+        top: String(markTop) + ea,
+      }
+    })
+  }
 
   //picture and description
   pictureDescription = GeneralJs.nodes.div.cloneNode(true);
