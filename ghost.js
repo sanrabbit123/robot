@@ -1046,7 +1046,7 @@ Ghost.prototype.ghostRouter = function (needs) {
   const address = this.address;
   const { webHook, serverTempFolder } = this;
   const [ MONGOC, MONGOLOCALC, MONGOCONSOLEC, rethink ] = needs;
-  const { fileSystem, headRequest, requestSystem, shell, shellExec, shellLink, ghostRequest, dateToString, todayMaker, mongo, mongoinfo, mongolocalinfo, sleep, equalJson, leafParsing, uniqueValue, setQueue, ipParsing, errorLog, messageSend, messageLog } = this.mother;
+  const { fileSystem, headRequest, requestSystem, shell, shellExec, shellLink, ghostRequest, dateToString, todayMaker, mongo, mongoinfo, mongolocalinfo, sleep, equalJson, leafParsing, uniqueValue, setQueue, ipParsing, errorLog, messageSend, messageLog, mysqlQuery } = this.mother;
   const querystring = require("querystring");
   const PlayAudio = require(process.cwd() + "/apps/playAudio/playAudio.js");
   const ParsingHangul = require(process.cwd() + "/apps/parsingHangul/parsingHangul.js");
@@ -1059,6 +1059,18 @@ Ghost.prototype.ghostRouter = function (needs) {
   const imageReader = new ImageReader(this.mother, this.back, this.address);
   const chrome = new GoogleChrome();
   let funcObj = {};
+  let ipTong;
+
+  ipTong = [ 1, 127001, 19216801 ];
+  for (let info in instance.address) {
+    if (instance.address[info].ip.outer.length > 0) {
+      ipTong.push(Number(instance.address[info].ip.outer.replace(/[^0-9]/g, '')));
+    }
+    if (instance.address[info].ip.inner.length > 0) {
+      ipTong.push(Number(instance.address[info].ip.inner.replace(/[^0-9]/g, '')));
+    }
+  }
+  ipTong = Array.from(new Set(ipTong));
 
   //GET - redirect
   funcObj.get_root = {
@@ -1314,264 +1326,6 @@ Ghost.prototype.ghostRouter = function (needs) {
           console.log(e);
         }
       });
-    }
-  };
-
-  //POST - clickDial
-  funcObj.post_clickDial = {
-    link: [ "/clickDial" ],
-    func: async function (req, res) {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
-      });
-      try {
-        if (req.body.id === undefined || req.body.destnumber === undefined) {
-          throw new Error("invaild post");
-        }
-        const url = "https://centrex.uplus.co.kr/RestApi/clickdial";
-        let query, phone;
-        query = { id: req.body.id, pass: address.officeinfo.phone.password, destnumber: req.body.destnumber.replace(/[^0-9]/g, '') };
-        requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } }).catch((err) => {
-          errorLog("Ghost error (rou_post_clickDial) : " + "전화 거는 도중 문제 생김 => " + err.message).catch((er) => { console.log(er); });
-        });
-        res.send(JSON.stringify({ message: "hello?" }));
-      } catch (e) {
-        await errorLog("Ghost error (rou_post_clickDial) : " + e.message);
-        res.send(JSON.stringify({ message: "error" }));
-      }
-    }
-  };
-
-  //POST - receiveCall
-  funcObj.post_receiveCall = {
-    link: [ "/receiveCall" ],
-    func: async function (req, res) {
-      try {
-        res.set({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": '*',
-          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-          "Access-Control-Allow-Headers": '*',
-        });
-        if (req.body.sender === undefined || req.body.kind === undefined) {
-          console.log(req.body);
-          res.send(JSON.stringify({ error: "error" }));
-        } else {
-          const { sender, kind, ip } = req.body;
-          const timeoutConst = "receiveCall";
-          let phoneNumber, senderArr;
-          let part0, part1, part2;
-
-          senderArr = sender.split('');
-          phoneNumber = '';
-          part0 = '';
-          part1 = '';
-          part2 = '';
-          if (/^01/gi.test(sender)) {
-            for (let i = 0; i < 3; i++) {
-              part0 += senderArr.shift();
-            }
-            for (let i = 0; i < 4; i++) {
-              part2 = senderArr.pop() + part2;
-            }
-            part1 = senderArr.join('');
-            phoneNumber = part0 + '-' + part1 + '-' + part2;
-          } else if (/^02/gi.test(sender)) {
-            for (let i = 0; i < 2; i++) {
-              part0 += senderArr.shift();
-            }
-            for (let i = 0; i < 4; i++) {
-              part2 = senderArr.pop() + part2;
-            }
-            part1 = senderArr.join('');
-            phoneNumber = part0 + '-' + part1 + '-' + part2;
-          } else {
-            for (let i = 0; i < 3; i++) {
-              part0 += senderArr.shift();
-            }
-            for (let i = 0; i < 4; i++) {
-              part2 = senderArr.pop() + part2;
-            }
-            part1 = senderArr.join('');
-            phoneNumber = part0 + '-' + part1 + '-' + part2;
-          }
-
-          if (Ghost.timeouts[timeoutConst] !== undefined || Ghost.timeouts[timeoutConst] !== null) {
-            clearTimeout(Ghost.timeouts[timeoutConst]);
-          }
-          Ghost.timeouts[timeoutConst] = setTimeout(async () => {
-            try {
-              await fileSystem(`writeJson`, [ `${process.cwd()}/temp/${timeoutConst}.json`, { phoneNumber, kind } ]);
-              setQueue(async () => {
-                try {
-                  await sleep(Math.round(1000 * Math.random()));
-                  if (await fileSystem(`exist`, [ `${process.cwd()}/temp/${timeoutConst}.json` ])) {
-                    const { phoneNumber, kind } = await fileSystem(`readJson`, [ `${process.cwd()}/temp/${timeoutConst}.json` ]);
-                    await shellExec(`rm`, [ `-rf`, `${process.cwd()}/temp/${timeoutConst}.json` ]);
-                    await ghostRequest("parsingCall", { phoneNumber, kind });
-                  }
-                } catch (e) {
-                  throw new Error(e.message);
-                }
-              }, 300);
-              clearTimeout(Ghost.timeouts[timeoutConst]);
-              Ghost.timeouts[timeoutConst] = null;
-            } catch (e) {
-              console.log(e);
-            }
-          }, 600);
-
-          res.send(JSON.stringify({ message: "success" }));
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  };
-
-  //POST - parsingCall
-  funcObj.post_parsingCall = {
-    link: [ "/parsingCall" ],
-    func: async function (req, res) {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
-      });
-      const outerUrl = "http://www.moyaweb.com/search_result.do";
-      try {
-        if (req.body.phoneNumber === undefined) {
-          console.log(req.body);
-          res.send(JSON.stringify({ error: "error" }));
-        } else {
-          const { phoneNumber, kind } = req.body;
-          const method = (kind === '1' ? "전화" : "문자");
-          let client;
-          let rows, temp, name, sub, text;
-          let manager;
-          let cliid, desid, proid;
-          let projects;
-          let boo;
-          let outerResponse;
-          let entireDom, resultDom, findName;
-          let builders;
-
-          if (!/^2/.test(phoneNumber)) {
-            manager = null;
-            rows = await back.getClientsByQuery({ phone: phoneNumber }, { selfMongo: MONGOC });
-            if (rows.length === 0) {
-              rows = await back.getDesignersByQuery({ "information.phone": phoneNumber }, { selfMongo: MONGOC });
-              if (rows.length === 0) {
-                temp = await back.setMemberObj({ selfMongo: MONGOC, getMode: true });
-                rows = [];
-                for (let obj of temp) {
-                  if (obj.phone === phoneNumber) {
-                    rows.push(obj);
-                  }
-                }
-                if (rows.length === 0) {
-                  name = "알 수 없는";
-                  sub = "사람";
-                } else {
-                  name = rows[0].name;
-                  sub = "팀원";
-                }
-              } else {
-                name = rows[0].designer;
-                sub = "실장님";
-                manager = await back.getHistoryById("designer", rows[0].desid, { selfMongo: MONGOCONSOLEC });
-                if (manager !== null) {
-                  if (manager.manager === '-' || manager.manager === '' || /^[홀없]/.test(manager.manager)) {
-                    manager = null;
-                  } else {
-                    manager = manager.manager;
-                  }
-                }
-              }
-            } else {
-              client = rows[0];
-              name = client.name;
-              sub = "고객님";
-              cliid = client.cliid;
-              boo = false;
-              for (let { analytics } of client.requests) {
-                boo = /진행/gi.test(analytics.response.status);
-              }
-              if (boo) {
-                projects = await back.getProjectsByQuery({ $and: [ { cliid }, { desid: { $regex: "^d" } }, { "process.status": { $regex: "^[진홀]" } } ] }, { selfMongo: instance.mongo });
-                if (projects.length > 0) {
-                  manager = await back.getHistoryById("project", projects[0].proid, { selfMongo: MONGOCONSOLEC });
-                  if (manager !== null) {
-                    if (manager.manager === '-' || manager.manager === '' || /^[홀없]/.test(manager.manager)) {
-                      manager = null;
-                    } else {
-                      manager = manager.manager;
-                    }
-                  }
-                } else {
-                  manager = await back.getHistoryById("client", cliid, { selfMongo: MONGOCONSOLEC });
-                  if (manager !== null) {
-                    if (manager.manager === '-' || manager.manager === '' || /^[홀없]/.test(manager.manager)) {
-                      manager = null;
-                    } else {
-                      manager = manager.manager;
-                    }
-                  }
-                }
-              } else {
-                manager = await back.getHistoryById("client", cliid, { selfMongo: MONGOCONSOLEC });
-                if (manager !== null) {
-                  if (manager.manager === '-' || manager.manager === '' || /^[홀없]/.test(manager.manager)) {
-                    manager = null;
-                  } else {
-                    manager = manager.manager;
-                  }
-                }
-              }
-            }
-            text = `${name} ${sub}에게서 ${method}가 왔습니다!`;
-            if (manager !== null) {
-              text += ` ${manager} 담당자님 `;
-              if (method === "전화") {
-                text += method + " 받아주세요!";
-              } else {
-                text += method + " 확인해주세요!";
-              }
-            }
-            if (name.trim() === "알 수 없는") {
-              builders = await back.getBuildersByQuery({ "information.phone": phoneNumber }, { selfMongo: MONGOC });
-              if (builders.length > 0) {
-                text = `${builders[0].builder} 시공 소장님께 ${method}가 왔습니다!`;
-              } else {
-                text = `알 수 없는 사람(${phoneNumber})으로부터 ${method}가 왔습니다!`
-              }
-              if (/^알 수 없는/gi.test(text)) {
-                rows = await back.getAspirantsByQuery({ phone: phoneNumber }, { selfMongo: MONGOC });
-                if (rows.length === 0) {
-                  outerResponse = await requestSystem(outerUrl, { SCH_TEL_NO: String(phoneNumber).replace(/[^0-9]/gi, '') }, { headers: { "Content-Type": "application/x-www-form-urlencoded" } });
-                  entireDom = new JSDOM(outerResponse.data);
-                  resultDom = entireDom.window.document.getElementById("result_phone_text");
-                  if (resultDom !== null) {
-                    findName = resultDom.textContent.trim();
-                    text = `${findName}에서 ${method}가 왔습니다!`;
-                  }
-                } else {
-                  text = `${rows[0].designer} 디자이너 신청자로부터 ${method}가 왔습니다!`;
-                }
-              }
-            }
-            await messageSend({ text, channel: "#call", voice: true });
-          }
-          res.send(JSON.stringify({ message: "success" }));
-        }
-      } catch (e) {
-        await errorLog("Ghost 문제 생김 (rou_post_parsingCall) : " + e.message);
-        res.send(JSON.stringify({ message: "error" }));
-      }
     }
   };
 
@@ -2521,6 +2275,57 @@ Ghost.prototype.ghostRouter = function (needs) {
       try {
         const result = await instance.insyncCheck();
         res.send(JSON.stringify(result));
+      } catch (e) {
+        res.send(JSON.stringify({ message: "error : " + e.message }));
+      }
+    }
+  };
+
+  //POST - send slack
+  funcObj.post_sendSlack = {
+    link: [ "/sendSlack" ],
+    func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      try {
+        await messageSend({ text: req.body.message, channel: req.body.channel });
+        res.send(JSON.stringify({ message: "success" }));
+      } catch (e) {
+        res.send(JSON.stringify({ message: "error : " + e.message }));
+      }
+    }
+  };
+
+  //POST - mysql query
+  funcObj.post_mysqlQuery = {
+    link: [ "/mysqlQuery" ],
+    func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      try {
+        if (typeof req.body.query !== "string") {
+          throw new Error("invaild post");
+        }
+        let query, response;
+        if (/;$/.test(req.body.query.trim())) {
+          query = req.body.query.trim();
+        } else {
+          query = req.body.query.trim() + ';';
+        }
+        if (!/drop/gi.test(query) && !/delete/gi.test(query)) {
+          response = await mysqlQuery(query, { local: true });
+        } else {
+          response = [];
+        }
+        res.send(JSON.stringify(response));
       } catch (e) {
         res.send(JSON.stringify({ message: "error : " + e.message }));
       }

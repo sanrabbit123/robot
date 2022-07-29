@@ -105,9 +105,6 @@ SecondRouter.prototype.rou_get_First = function () {
         res.send(JSON.stringify({ message: "hi" }));
       } else if (req.params.id === "disk") {
         const disk = await diskReading();
-        reflection.coreReflection().then(() => {
-          return reflection.mysqlReflection();
-        }).catch((err) => { console.log(err); });
         res.send(JSON.stringify({ disk: disk.toArray() }));
       } else {
         res.send(JSON.stringify({ message: "hi" }));
