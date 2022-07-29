@@ -41,7 +41,7 @@ const RequestListJs = function () {
   this.mother = new GeneralJs();
 }
 
-RequestListJs.binaryPath = "/middle/console";
+RequestListJs.binaryPath = FRONTHOST + "/middle/console";
 
 RequestListJs.prototype.insertInitBox = function () {
   const instance = this;

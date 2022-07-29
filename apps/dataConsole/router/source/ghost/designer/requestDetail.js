@@ -41,7 +41,7 @@ const RequestDetailJs = function () {
   this.mother = new GeneralJs();
 }
 
-RequestDetailJs.binaryPath = "/middle/console";
+RequestDetailJs.binaryPath = FRONTHOST + "/middle/console";
 
 RequestDetailJs.prototype.tableStatic = function (designer, project, client, clientHistory, projectHistory, requestNumber) {
   const instance = this;

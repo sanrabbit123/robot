@@ -41,7 +41,7 @@ const DesignerReportJs = function () {
   this.mother = new GeneralJs();
 }
 
-DesignerReportJs.binaryPath = "/middle/console";
+DesignerReportJs.binaryPath = FRONTHOST + "/middle/console/report";
 
 DesignerReportJs.prototype.insertInitBox = function () {
   const instance = this;

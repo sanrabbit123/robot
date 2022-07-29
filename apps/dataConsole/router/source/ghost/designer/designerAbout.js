@@ -41,7 +41,7 @@ const DesignerAboutJs = function () {
   this.mother = new GeneralJs();
 }
 
-DesignerAboutJs.binaryPath = "/middle/console";
+DesignerAboutJs.binaryPath = FRONTHOST + "/middle/console/about";
 
 DesignerAboutJs.prototype.insertInitBox = function () {
   const instance = this;

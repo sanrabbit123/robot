@@ -46,7 +46,7 @@ GeneralJs.prototype.setGeneralProperties = function (instance) {
   instance.firstPageViewTime = new Date();
 }
 
-GeneralJs.prototype.setBackground = function () {
+GeneralJs.prototype.setBackground = function (binaryPath) {
   const instance = this;
   const { ea, media, backHeight, totalContents } = this;
   const { createNodes, colorChip, withOut } = GeneralJs;
@@ -54,9 +54,7 @@ GeneralJs.prototype.setBackground = function () {
   const desktop = !mobile;
   let backgroundImageName;
   let backgroundGray, backgroundImageBox;
-  let binaryPath;
 
-  binaryPath = FRONTHOST + "/middle/console";
   backgroundImageName = "back.jpg";
 
   [ backgroundGray, backgroundImageBox ] = createNodes([
@@ -411,8 +409,8 @@ GeneralJs.prototype.setGeneralBase = function (obj) {
   if (obj.instance === undefined || typeof obj.binaryPath !== "string" || typeof obj.subTitle !== "string") {
     throw new Error("must be object => { instance, binaryPath, subTitle }");
   }
-  const { instance, subTitle } = obj;
-  this.setBackground();
+  const { instance, subTitle, binaryPath } = obj;
+  this.setBackground(binaryPath);
   this.setNavigator();
   this.setBaseTong(instance);
 }
