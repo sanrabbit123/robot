@@ -160,6 +160,7 @@ CronGhost.prototype.cronServer = async function () {
   const GoogleCalendar = require(`${process.cwd()}/apps/googleAPIs/googleCalendar.js`);
   const GoogleDocs = require(`${process.cwd()}/apps/googleAPIs/googleDocs.js`);
   const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
+  const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
   try {
     const app = await this.cronRouter();
 
@@ -192,6 +193,8 @@ CronGhost.prototype.cronServer = async function () {
     const humanInstance = new HumanPacket();
     const kakaoInstance = new KakaoTalk();
     await kakaoInstance.ready();
+
+    const reflection = new MongoReflection();
 
     let intervalFunc, startTime, today;
     let intervalFunc0, intervalFunc1;
@@ -258,6 +261,9 @@ CronGhost.prototype.cronServer = async function () {
     intervalFunc0 = async () => {
       try {
         await instance.diskTest();
+        reflection.coreReflection().then(() => {
+          return reflection.mysqlReflection();
+        }).catch((err) => { console.log(err); });
       } catch (e) {
         console.log(e);
       }
@@ -282,8 +288,9 @@ CronGhost.prototype.cronServer = async function () {
 
     setTimeout(() => {
       intervalFunc().catch((err) => { console.log(err); });
+      intervalFunc0().catch((err) => { console.log(err); });
       setInterval(intervalFunc, interval);
-      setInterval(intervalFunc0, 12 * 60 * 60 * 1000);
+      setInterval(intervalFunc0, 3 * 60 * 60 * 1000);
       setInterval(intervalFunc1, 1 * 60 * 60 * 1000);
     }, startTime);
 
