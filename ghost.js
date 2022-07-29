@@ -2292,7 +2292,7 @@ Ghost.prototype.ghostRouter = function (needs) {
         "Access-Control-Allow-Headers": '*',
       });
       try {
-        await messageSend({ text: req.body.message, channel: req.body.channel });
+        await messageSend({ text: req.body.text, channel: req.body.channel });
         res.send(JSON.stringify({ message: "success" }));
       } catch (e) {
         res.send(JSON.stringify({ message: "error : " + e.message }));
