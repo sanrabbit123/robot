@@ -536,7 +536,7 @@ DesignerReportJs.prototype.renderTong = function (title, whiteTong, index) {
   numberRight = <%% 12, 12, 12, 12, 2 %%>;
   numberSize = <%% 15, 15, 15, 14, 3 %%>;
   numberWeight = <%% 600, 600, 600, 600, 600 %%>;
-  numberBottom = <%% 68, 68, 68, 68, 6 %%>;
+  numberBottom = <%% 63, 63, 63, 63, 6 %%>;
 
   finalBottomMargin = <%% 55, 55, 55, 55, 0 %%>;
 
@@ -544,7 +544,7 @@ DesignerReportJs.prototype.renderTong = function (title, whiteTong, index) {
   mobileBasePaddingTop = 7;
   mobileBasicMargin = 7;
 
-  maxHeight = <%% 972, 972, 972, 972, 972 %%>;
+  maxHeight = <%% 962, 962, 962, 962, 97 %%>;
 
   return createNode({
     mother: whiteTong,
@@ -606,6 +606,23 @@ DesignerReportJs.prototype.renderTong = function (title, whiteTong, index) {
       },
       {
         text: "전체 보기",
+        attribute: {
+          toggle: "off",
+        },
+        event: {
+          click: function (e) {
+            const toggle = this.getAttribute("toggle");
+            if (toggle === "off") {
+              this.previousElementSibling.style.maxHeight = "";
+              this.setAttribute("toggle", "on");
+              this.style.color = colorChip.green;
+            } else {
+              this.previousElementSibling.style.maxHeight = String(maxHeight) + ea;
+              this.setAttribute("toggle", "off");
+              this.style.color = colorChip.deactive;
+            }
+          }
+        },
         style: {
           position: "absolute",
           fontSize: String(numberSize) + ea,
@@ -613,6 +630,7 @@ DesignerReportJs.prototype.renderTong = function (title, whiteTong, index) {
           color: colorChip.deactive,
           bottom: String(numberBottom) + ea,
           left: String(0),
+          cursor: "pointer",
         }
       }
     ]
