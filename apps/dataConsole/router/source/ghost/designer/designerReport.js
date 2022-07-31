@@ -237,6 +237,12 @@ DesignerReportJs.prototype.contentsCenter = function () {
   let serviceMatrix;
   let tempArr;
   let z;
+  let proposalAverage;
+  let contractAverage;
+  let serviceAverage;
+  let a, b, c, d;
+  let averagePyeong;
+
 
   proposalMatrix = [
     [
@@ -251,10 +257,21 @@ DesignerReportJs.prototype.contentsCenter = function () {
     ]
   ];
 
+  proposalAverage = [
+    [ "총 제안 횟수", 0 ],
+    [ "평균 평수", 0 ],
+    [ "평균 평단가", 0 ],
+    [ "최고 제안가", 0 ]
+  ];
+
   proposals.sort((a, b) => {
     return b.date.valueOf() - a.date.valueOf();
   });
   z = 0;
+  a = 0;
+  b = 0;
+  c = 0;
+  d = 0;
   for (let proposal of proposals) {
     tempArr = [];
     tempArr.push(String(z + 1));
@@ -266,8 +283,22 @@ DesignerReportJs.prototype.contentsCenter = function () {
     tempArr.push(autoComma(Math.round(proposal.detail.fee.amount / proposal.pyeong)) + "원");
     tempArr.push(proposal.desid.trim() !== "" ? "O" : "X");
     proposalMatrix.push(tempArr);
+
+    a += proposal.pyeong;
+    if (Math.round(proposal.detail.fee.amount / proposal.pyeong) >= 50000) {
+      b += Math.round(proposal.detail.fee.amount / proposal.pyeong);
+      d++;
+    }
+    c = (proposal.detail.fee.amount >= c ? proposal.detail.fee.amount : c);
+
     z++;
   }
+
+  proposalAverage[0][1] = String(z) + '회';
+  proposalAverage[1][1] = String(z !== 0 ? Math.round(a / z) : 0) + '평';
+  proposalAverage[2][1] = autoComma(d !== 0 ? Math.round(b / d) : 0) + '원';
+  proposalAverage[3][1] = autoComma(c) + '원';
+
 
   contractMatrix = [
     [
@@ -282,10 +313,21 @@ DesignerReportJs.prototype.contentsCenter = function () {
     ]
   ];
 
+  contractAverage = [
+    [ "총 계약 횟수", 0 ],
+    [ "평균 평수", 0 ],
+    [ "평균 소비자가", 0 ],
+    [ "최고 정산가", 0 ]
+  ];
+
   contracts.sort((a, b) => {
     return b.process.contract.form.date.from.valueOf() - a.process.contract.form.date.from.valueOf();
   });
   z = 0;
+  a = 0;
+  b = 0;
+  c = 0;
+  d = 0;
   for (let contract of contracts) {
     if (contract.process.status !== "드랍" && contract.process.status !== "드롭" && contract.process.status !== "홀딩") {
       tempArr = [];
@@ -298,8 +340,23 @@ DesignerReportJs.prototype.contentsCenter = function () {
       tempArr.push(dateToString(contract.process.calculation.payments.first.date));
       tempArr.push(dateToString(contract.process.calculation.payments.remain.date));
       contractMatrix.push(tempArr);
+
+      a += contract.pyeong;
+      b += contract.process.contract.remain.calculation.amount.consumer;
+      c = (contract.process.calculation.payments.totalAmount >= c ? contract.process.calculation.payments.totalAmount : c);
       z++;
     }
+  }
+
+  contractAverage[0][1] = String(z) + '회';
+  contractAverage[1][1] = String(z !== 0 ? Math.round(a / z) : 0) + '평';
+  contractAverage[2][1] = autoComma(z !== 0 ? Math.round(b / z) : 0) + '원';
+  contractAverage[3][1] = autoComma(c) + '원';
+
+  if ((z !== 0 ? Math.round(a / z) : 0) === 0) {
+    averagePyeong = 34;
+  } else {
+    averagePyeong = Math.round(a / z);
   }
 
   serviceMatrix = [
@@ -315,6 +372,16 @@ DesignerReportJs.prototype.contentsCenter = function () {
     ]
   ];
 
+  serviceAverage = [
+    [ String(averagePyeong) + "평 홈퍼니싱", 0 ],
+    [ String(averagePyeong) + "평 홈스타일링", 0 ],
+    [ String(averagePyeong) + "평 토탈 스타일링", 0 ],
+  ];
+
+  a = 0;
+  b = 0;
+  c = 0;
+  d = 0;
   for (let z = 0; z < service.service.s2011_aa01s.example.length; z++) {
     tempArr = [];
     tempArr.push(String(z + 1));
@@ -327,6 +394,10 @@ DesignerReportJs.prototype.contentsCenter = function () {
     tempArr.push(autoComma(toMoney(service.service.s2011_aa03s.example[z].price * service.priceStandard.premium)) + '원');
     serviceMatrix.push(tempArr);
   }
+
+  serviceAverage[0][1] = autoComma(toMoney(service.service.s2011_aa01s.example[averagePyeong].price)) + '원';
+  serviceAverage[1][1] = autoComma(toMoney(service.service.s2011_aa02s.example[averagePyeong].price)) + '원';
+  serviceAverage[2][1] = autoComma(toMoney(service.service.s2011_aa03s.example[averagePyeong].price)) + '원';
 
   contents = [
     {
@@ -342,7 +413,8 @@ DesignerReportJs.prototype.contentsCenter = function () {
           150,
           80,
         ],
-        matrix: proposalMatrix
+        matrix: proposalMatrix,
+        average: proposalAverage,
       }
     },
     {
@@ -358,7 +430,8 @@ DesignerReportJs.prototype.contentsCenter = function () {
           130,
           130,
         ],
-        matrix: contractMatrix
+        matrix: contractMatrix,
+        average: contractAverage,
       }
     },
     {
@@ -374,7 +447,8 @@ DesignerReportJs.prototype.contentsCenter = function () {
           130,
           130,
         ],
-        matrix: serviceMatrix
+        matrix: serviceMatrix,
+        average: serviceAverage,
       }
     },
   ];
@@ -462,7 +536,7 @@ DesignerReportJs.prototype.renderTong = function (title, whiteTong, index) {
   numberRight = <%% 12, 12, 12, 12, 2 %%>;
   numberSize = <%% 15, 15, 15, 14, 3 %%>;
   numberWeight = <%% 600, 600, 600, 600, 600 %%>;
-  numberBottom = <%% 62, 62, 62, 62, 6 %%>;
+  numberBottom = <%% 68, 68, 68, 68, 6 %%>;
 
   finalBottomMargin = <%% 55, 55, 55, 55, 0 %%>;
 
@@ -557,6 +631,7 @@ DesignerReportJs.prototype.renderBlock = function (contents, tong, x) {
   const removePopupTargetClassName = "removePopupTargetClassName";
   const menuTargetClassName = "menuTargetClassName";
   const tendencyBarTargetClassName = "tendencyBarTargetClassName";
+  const blank = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u%|%u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
   let blockHeight;
   let blockMarginBottom;
   let circleBoxWidth;
@@ -582,6 +657,13 @@ DesignerReportJs.prototype.renderBlock = function (contents, tong, x) {
   let blockBase;
   let titlePaddingBottom;
   let titleMarginBottom;
+  let whiteTongPadding;
+  let whiteTongMarginBottom;
+  let whiteTongHeight;
+  let whiteSize, whiteWeight, whiteBoldWeight;
+  let whiteTextTop;
+  let whiteWording;
+  let whiteWordingArr;
 
   blockHeight = <%% 38, 38, 38, 38, 6 %%>;
   blockMarginBottom = <%% 16, 15, 15, 12, 2.5 %%>;
@@ -599,6 +681,79 @@ DesignerReportJs.prototype.renderBlock = function (contents, tong, x) {
 
   titlePaddingBottom = <%% 5, 5, 5, 5, 5 %%>;
   titleMarginBottom = <%% 11, 11, 11, 11, 11 %%>;
+
+  whiteTongPadding = <%% 16, 16, 16, 16, 2 %%>;
+  whiteTongMarginBottom = <%% 24, 24, 24, 24, 2 %%>;
+  whiteTongHeight = <%% 85, 85, 85, 85, 24 %%>;
+
+  whiteSize = <%% 19, 19, 19, 19, 4 %%>;
+  whiteWeight = <%% 200, 200, 200, 200, 200 %%>;
+  whiteBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+  whiteTextTop = <%% -2, -2, -2, -2, -2 %%>;
+
+  whiteWordingArr = [];
+  for (let [ property, value ] of contents.average) {
+    whiteWording = '';
+    whiteWording += property;
+    whiteWording += " :&nbsp;&nbsp;<b%";
+    whiteWording += value;
+    whiteWording += "%b>";
+    whiteWordingArr.push(whiteWording);
+  }
+  whiteWording = whiteWordingArr.join(blank);
+
+  createNode({
+    mother: tong,
+    style: {
+      display: "block",
+      position: "relative",
+      borderRadius: String(5) + "px",
+      background: colorChip.gray1,
+      paddingTop: String(whiteTongPadding) + ea,
+      paddingBottom: String(whiteTongPadding) + ea,
+      marginBottom: String(whiteTongMarginBottom) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          marginLeft: String(whiteTongPadding) + ea,
+          width: withOut(whiteTongPadding * 2, ea),
+          height: String(whiteTongHeight) + ea,
+          borderRadius: String(5) + "px",
+          background: colorChip.white,
+          boxShadow: "0px 3px 12px -9px " + colorChip.shadow,
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+        },
+        children: [
+          {
+            text: whiteWording,
+            style: {
+              top: String(whiteTextTop) + ea,
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(whiteSize) + ea,
+              fontWeight: String(whiteWeight),
+              color: colorChip.black,
+            },
+            bold: {
+              fontSize: String(whiteSize) + ea,
+              fontWeight: String(whiteBoldWeight),
+              color: colorChip.green,
+            },
+            under: {
+              fontSize: String(whiteSize) + ea,
+              fontWeight: String(whiteWeight),
+              color: colorChip.gray3,
+            }
+          }
+        ]
+      }
+    ]
+  })
 
   z = 0;
   for (let arr of contents.matrix) {
@@ -672,16 +827,31 @@ DesignerReportJs.prototype.launching = async function (loading) {
       let normal;
       let thisClient;
       let feeTarget;
+      let requestNumber;
+      let proposalDate;
 
       normal = equalJson(JSON.stringify(obj));
       thisClient = totalClient.find((obj) => { return obj.cliid === normal.cliid });
+      requestNumber = 0;
+      proposalDate = obj.proposal.date.valueOf();
+      for (let i = 0; i < thisClient.requests.length; i++) {
+        if (i === 0) {
+          if (proposalDate >= thisClient.requests[i].request.timeline.valueOf()) {
+            requestNumber = i;
+          }
+        } else {
+          if (proposalDate <= thisClient.requests[i - 1].request.timeline.valueOf() && proposalDate >= thisClient.requests[i].request.timeline.valueOf()) {
+            requestNumber = i;
+          }
+        }
+      }
 
       normal.proposal.name = thisClient.name;
 
-      if (thisClient.requests[0].request.space.partial.boo) {
-        normal.proposal.pyeong = thisClient.requests[0].request.space.partial.pyeong;
+      if (thisClient.requests[requestNumber].request.space.partial.boo) {
+        normal.proposal.pyeong = thisClient.requests[requestNumber].request.space.partial.pyeong;
       } else {
-        normal.proposal.pyeong = thisClient.requests[0].request.space.pyeong;
+        normal.proposal.pyeong = thisClient.requests[requestNumber].request.space.pyeong;
       }
 
       normal.proposal.proid = normal.proid;
@@ -716,11 +886,31 @@ DesignerReportJs.prototype.launching = async function (loading) {
       let normal;
       let thisClient;
       let feeTarget;
+      let requestNumber;
+      let proposalDate;
 
       normal = equalJson(JSON.stringify(obj));
       thisClient = totalClient.find((obj) => { return obj.cliid === normal.cliid });
+      requestNumber = 0;
+      proposalDate = obj.proposal.date.valueOf();
+      for (let i = 0; i < thisClient.requests.length; i++) {
+        if (i === 0) {
+          if (proposalDate >= thisClient.requests[i].request.timeline.valueOf()) {
+            requestNumber = i;
+          }
+        } else {
+          if (proposalDate <= thisClient.requests[i - 1].request.timeline.valueOf() && proposalDate >= thisClient.requests[i].request.timeline.valueOf()) {
+            requestNumber = i;
+          }
+        }
+      }
 
       normal.name = thisClient.name;
+      if (thisClient.requests[requestNumber].request.space.partial.boo) {
+        normal.pyeong = thisClient.requests[requestNumber].request.space.partial.pyeong;
+      } else {
+        normal.pyeong = thisClient.requests[requestNumber].request.space.pyeong;
+      }
       normal.serviceName = serviceParsing(normal.service).replace(/[a-zA-Z]/gi, '').trim();
 
       return normal;
