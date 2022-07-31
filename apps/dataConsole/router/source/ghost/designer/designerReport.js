@@ -243,7 +243,6 @@ DesignerReportJs.prototype.contentsCenter = function () {
   let a, b, c, d;
   let averagePyeong;
 
-
   proposalMatrix = [
     [
       "",
@@ -403,16 +402,13 @@ DesignerReportJs.prototype.contentsCenter = function () {
     {
       title: "추천 리포트",
       contents: {
-        width: [
-          40,
-          140,
-          70,
-          200,
-          150,
-          150,
-          150,
-          80,
-        ],
+        width: <&&
+          [ 40, 140, 70, 200, 150, 150, 150, 80, ] |
+          [ 30, 120, 70, 200, 140, 140, 140, 80, ] |
+          [ 30, 120, 70, 200, 140, 140, 140, 80, ] |
+          [ 30, 120, 70, 200, 140, 140, 140, 80, ] |
+          [ 30, 120, 70, 200, 140, 140, 140, 80, ] |
+        &&>,
         matrix: proposalMatrix,
         average: proposalAverage,
       }
@@ -420,16 +416,13 @@ DesignerReportJs.prototype.contentsCenter = function () {
     {
       title: "계약 리포트",
       contents: {
-        width: [
-          40,
-          140,
-          160,
-          130,
-          130,
-          130,
-          130,
-          130,
-        ],
+        width: <&&
+          [ 40, 140, 160, 130, 130, 130, 130, 130, ] |
+          [ 30, 120, 148, 127, 127, 127, 127, 127, ] |
+          [ 40, 140, 160, 130, 130, 130, 130, 130, ] |
+          [ 40, 140, 160, 130, 130, 130, 130, 130, ] |
+          [ 40, 140, 160, 130, 130, 130, 130, 130, ] |
+        &&>,
         matrix: contractMatrix,
         average: contractAverage,
       }
@@ -437,16 +430,13 @@ DesignerReportJs.prototype.contentsCenter = function () {
     {
       title: "평별 가격",
       contents: {
-        width: [
-          40,
-          140,
-          130,
-          130,
-          130,
-          130,
-          130,
-          130,
-        ],
+        width: <&&
+          [ 40, 140, 130, 130, 130, 130, 130, 130, ] |
+          [ 30, 120, 129, 129, 129, 129, 129, 129, ] |
+          [ 40, 140, 130, 130, 130, 130, 130, 130, ] |
+          [ 40, 140, 130, 130, 130, 130, 130, 130, ] |
+          [ 40, 140, 130, 130, 130, 130, 130, 130, ] |
+        &&>,
         matrix: serviceMatrix,
         average: serviceAverage,
       }
@@ -489,6 +479,7 @@ DesignerReportJs.prototype.renderWhite = function (title, contents, index) {
       width: String(100) + '%',
       background: colorChip.white,
       paddingTop: desktop ? String(topPadding0) + ea : "",
+      paddingBottom: desktop ? String(leftPadding) + ea : "",
       boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
       marginBottom: String(marginBottom) + ea,
     },
@@ -519,34 +510,50 @@ DesignerReportJs.prototype.renderTong = function (title, whiteTong, index) {
   let titleWidth;
   let titleTopNumber;
   let titleFontSize;
-  let numberRight;
+  let titlePaddingRight;
   let numberBottom;
   let numberSize;
   let numberWeight;
-  let finalBottomMargin;
   let mobileBasicMargin;
   let mobileBasePaddingTop;
   let mobileLineTop;
   let maxHeight;
+  let titleMarginBottom;
+  let resultTong;
+  let totalViewEvent;
+  let numberTop;
 
   titleWidth = <%% 300, 160, 140, 120, 30 %%>;
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
-  titleFontSize = <%% 20, 20, 18, 16, 4 %%>;
+  titleFontSize = <%% 20, 21, 19, 16, 4 %%>;
+  titleMarginBottom = <%% 24, 24, 20, 18, 4 %%>;
+  titlePaddingRight = <%% 12, 10, 10, 10, 2 %%>;
 
-  numberRight = <%% 12, 12, 12, 12, 2 %%>;
-  numberSize = <%% 15, 15, 15, 14, 3 %%>;
+  numberSize = <%% 15, 12, 12, 11, 3 %%>;
   numberWeight = <%% 600, 600, 600, 600, 600 %%>;
-  numberBottom = <%% 63, 63, 63, 63, 6 %%>;
-
-  finalBottomMargin = <%% 55, 55, 55, 55, 0 %%>;
+  numberBottom = <%% 8, 8, 8, 8, 6 %%>;
+  numberTop = <%% 10, 10, 10, 10, 1 %%>;
 
   mobileLineTop = isIphone() ? 2.7 : 2.5;
   mobileBasePaddingTop = 7;
   mobileBasicMargin = 7;
 
-  maxHeight = <%% 962, 962, 962, 962, 97 %%>;
+  maxHeight = <%% 962, 940, 940, 940, 97 %%>;
 
-  return createNode({
+  totalViewEvent = function (e) {
+    const toggle = this.getAttribute("toggle");
+    if (toggle === "off") {
+      this.previousElementSibling.style.maxHeight = "";
+      this.setAttribute("toggle", "on");
+      this.style.color = colorChip.green;
+    } else {
+      this.previousElementSibling.style.maxHeight = String(maxHeight) + ea;
+      this.setAttribute("toggle", "off");
+      this.style.color = colorChip.deactive;
+    }
+  }
+
+  resultTong = createNode({
     mother: whiteTong,
     style: {
       display: "block",
@@ -557,25 +564,14 @@ DesignerReportJs.prototype.renderTong = function (title, whiteTong, index) {
     children: [
       {
         style: {
-          display: desktop ? "inline-block" : "block",
+          display: media[0] ? "inline-block" : "block",
           position: "relative",
-          width: desktop ? String(titleWidth) + ea : withOut(mobileBasicMargin * 2, ea),
+          width: media[0] ? String(titleWidth) + ea : (desktop ? "" : withOut(mobileBasicMargin * 2, ea)),
           verticalAlign: "top",
           marginLeft: desktop ? "" : String(mobileBasicMargin) + ea,
-          marginBottom: desktop ? "" : String(4) + ea,
+          marginBottom: media[0] ? "" : String(titleMarginBottom) + ea,
         },
         children: [
-          {
-            style: {
-              display: desktop ? "none" : "block",
-              position: "absolute",
-              top: String(0),
-              width: withOut(0),
-              left: String(0),
-              height: String(mobileLineTop) + ea,
-              borderBottom: "1px dashed " + colorChip.green,
-            }
-          },
           {
             text: title,
             style: {
@@ -585,7 +581,7 @@ DesignerReportJs.prototype.renderTong = function (title, whiteTong, index) {
               fontSize: String(titleFontSize) + ea,
               fontWeight: String(700),
               background: colorChip.white,
-              paddingRight: String(numberRight) + ea,
+              paddingRight: String(titlePaddingRight) + ea,
               color: colorChip.black,
             }
           },
@@ -593,49 +589,55 @@ DesignerReportJs.prototype.renderTong = function (title, whiteTong, index) {
       },
       {
         style: {
-          display: desktop ? "inline-block" : "block",
+          display: media[0] ? "inline-block" : "block",
           position: "relative",
           overflow: "hidden",
-          width: desktop ? withOut(titleWidth, ea) : withOut(mobileBasicMargin * 2, ea),
+          width: media[0] ? withOut(titleWidth, ea) : (desktop ? "" : withOut(mobileBasicMargin * 2, ea)),
           verticalAlign: "top",
           top: String(titleTopNumber) + ea,
           maxHeight: String(maxHeight) + ea,
-          marginBottom: String(finalBottomMargin) + ea,
           marginLeft: desktop ? "" : String(mobileBasicMargin) + ea,
         }
       },
-      {
-        text: "전체 보기",
-        attribute: {
-          toggle: "off",
-        },
-        event: {
-          click: function (e) {
-            const toggle = this.getAttribute("toggle");
-            if (toggle === "off") {
-              this.previousElementSibling.style.maxHeight = "";
-              this.setAttribute("toggle", "on");
-              this.style.color = colorChip.green;
-            } else {
-              this.previousElementSibling.style.maxHeight = String(maxHeight) + ea;
-              this.setAttribute("toggle", "off");
-              this.style.color = colorChip.deactive;
-            }
-          }
-        },
-        style: {
-          position: "absolute",
-          fontSize: String(numberSize) + ea,
-          fontWeight: String(numberWeight),
-          color: colorChip.deactive,
-          bottom: String(numberBottom) + ea,
-          left: String(0),
-          cursor: "pointer",
-        }
-      }
     ]
   });
 
+  if (media[0]) {
+    createNode({
+      mother: resultTong,
+      text: "전체 보기",
+      attribute: { toggle: "off", },
+      event: { click: totalViewEvent },
+      style: {
+        position: "absolute",
+        fontSize: String(numberSize) + ea,
+        fontWeight: String(numberWeight),
+        color: colorChip.deactive,
+        bottom: String(numberBottom) + ea,
+        left: String(0),
+        cursor: "pointer",
+      }
+    });
+  } else {
+    createNode({
+      mother: resultTong,
+      text: "전체 보기",
+      attribute: { toggle: "off", },
+      event: { click: totalViewEvent },
+      style: {
+        position: "absolute",
+        fontSize: String(numberSize) + ea,
+        fontWeight: String(numberWeight),
+        color: colorChip.deactive,
+        top: String(numberTop) + ea,
+        left: String(resultTong.children[0].children[0].getBoundingClientRect().width) + "px",
+        cursor: "pointer",
+      }
+    });
+
+  }
+
+  return resultTong;
 }
 
 DesignerReportJs.prototype.renderBlock = function (contents, tong, x) {
@@ -700,11 +702,11 @@ DesignerReportJs.prototype.renderBlock = function (contents, tong, x) {
   titlePaddingBottom = <%% 5, 5, 5, 5, 5 %%>;
   titleMarginBottom = <%% 11, 11, 11, 11, 11 %%>;
 
-  whiteTongPadding = <%% 16, 16, 16, 16, 2 %%>;
-  whiteTongMarginBottom = <%% 24, 24, 24, 24, 2 %%>;
-  whiteTongHeight = <%% 85, 85, 85, 85, 24 %%>;
+  whiteTongPadding = <%% 16, 12, 10, 8, 2 %%>;
+  whiteTongMarginBottom = <%% 24, 20, 20, 18, 2 %%>;
+  whiteTongHeight = <%% 85, 82, 80, 75, 24 %%>;
 
-  whiteSize = <%% 19, 19, 19, 19, 4 %%>;
+  whiteSize = <%% 19, 19, 18, 16, 4 %%>;
   whiteWeight = <%% 200, 200, 200, 200, 200 %%>;
   whiteBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   whiteTextTop = <%% -2, -2, -2, -2, -2 %%>;
