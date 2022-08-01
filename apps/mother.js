@@ -2451,7 +2451,7 @@ Mother.prototype.mysqlQuery = function (query, option = { local: false, front: t
     mysqlStandard = option;
     host = mysqlStandard.host;
   }
-  
+
   const { user, password, database } = mysqlStandard;
   const connection = mysql.createConnection({ host, user, password, database });
   let tong = {};
@@ -3705,6 +3705,88 @@ Mother.prototype.mediaQuery = function (code) {
   });
 
   return { conditions: updateProto, code };
+}
+
+Mother.prototype.processSystem = async function (mode, processNameKeywords = []) {
+  if (typeof mode !== "string") {
+    throw new Error("invalid input, must be mode");
+  }
+  const processList = function () {
+    const { spawn } = require("child_process");
+    const ps = spawn("ps", [ "-ax" ]);
+    return new Promise((resolve, reject) => {
+      let out, processList;
+      out = "";
+      ps.stdout.on("data", (data) => { out += String(data); });
+      ps.stderr.on("data", (data) => { reject(String(data)); });
+      ps.on("close", (code) => {
+        processList = out.split("\n").slice(1).map((str) => {
+          return str.trim();
+        }).map((str) => {
+          const arr = str.split(/[0-9]\:[0-9][0-9]/);
+          if (arr.length >= 2) {
+            return arr;
+          } else {
+            return null;
+          }
+        }).filter((arr) => {
+          return arr !== null;
+        }).map(([ first, second ]) => {
+          return [ Number(first.split(" ")[0].trim()), second.split(" ").slice(1).join(" ") ];
+        }).map(([ pid, process ]) => {
+          return { pid, process };
+        });
+        resolve(processList);
+      });
+    });
+  }
+  const killProcess = function (pid) {
+    const { exec } = require("child_process");
+    return new Promise((resolve, reject) => {
+      exec("kill -9 " + String(pid), { cwd: process.cwd(), maxBuffer: 20 * 1024 * 1024 }, (error, stdout, stderr) => {
+        if (error) {
+          reject(error);
+        } else {
+          if (typeof stdout === "string") {
+            resolve(stdout.trim());
+          } else {
+            resolve(stdout);
+          }
+        }
+      });
+    });
+  }
+  try {
+    if (mode === "list") {
+      return await processList();
+    } else if (mode === "kill" || mode === "find" || mode === "pid") {
+      if (!Array.isArray(processNameKeywords)) {
+        throw new Error("keywords box must be array");
+      }
+      const list = await processList();
+      let targetPid;
+
+      targetPid = null;
+      for (let { pid, process } of list) {
+        if (processNameKeywords.map((str) => { return new RegExp(str, "gi"); }).every((reg) => { return reg.test(process) })) {
+          targetPid = pid;
+        }
+      }
+      if (mode === "find" || mode === "pid") {
+        return targetPid;
+      } else {
+        if (targetPid !== null) {
+          await killProcess(targetPid);
+          return "done";
+        } else {
+          console.log("there is no process");
+          return null;
+        }
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 module.exports = Mother;
