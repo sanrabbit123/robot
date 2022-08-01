@@ -243,7 +243,7 @@ DesignerReportJs.prototype.contentsCenter = function () {
   let a, b, c, d;
   let averagePyeong;
 
-  proposalMatrix = [
+  proposalMatrix = (desktop ? [
     [
       "",
       "고객",
@@ -254,14 +254,25 @@ DesignerReportJs.prototype.contentsCenter = function () {
       "평단가",
       "계약 여부",
     ]
-  ];
+  ] : [
+    [
+      "고객",
+      "평수",
+      "제안 날짜",
+      "제안 금액",
+      "평단가",
+    ]
+  ]);
 
-  proposalAverage = [
+  proposalAverage = (desktop ? [
     [ "총 제안 횟수", 0 ],
     [ "평균 평수", 0 ],
     [ "평균 평단가", 0 ],
     [ "최고 제안가", 0 ]
-  ];
+  ] : [
+    [ "총 횟수", 0 ],
+    [ "평균 평단가", 0 ],
+  ]);
 
   proposals.sort((a, b) => {
     return b.date.valueOf() - a.date.valueOf();
@@ -273,14 +284,21 @@ DesignerReportJs.prototype.contentsCenter = function () {
   d = 0;
   for (let proposal of proposals) {
     tempArr = [];
-    tempArr.push(String(z + 1));
+
+    if (desktop) {
+      tempArr.push(String(z + 1));
+    }
     tempArr.push(proposal.name);
     tempArr.push(String(Math.round(proposal.pyeong)) + '평');
-    tempArr.push(proposal.service);
+    if (desktop) {
+      tempArr.push(proposal.service);
+    }
     tempArr.push(dateToString(proposal.date));
     tempArr.push(autoComma(proposal.detail.fee.amount) + "원");
     tempArr.push(autoComma(Math.round(proposal.detail.fee.amount / proposal.pyeong)) + "원");
-    tempArr.push(proposal.desid.trim() !== "" ? "O" : "X");
+    if (desktop) {
+      tempArr.push(proposal.desid.trim() !== "" ? "O" : "X");
+    }
     proposalMatrix.push(tempArr);
 
     a += proposal.pyeong;
@@ -293,13 +311,17 @@ DesignerReportJs.prototype.contentsCenter = function () {
     z++;
   }
 
-  proposalAverage[0][1] = String(z) + '회';
-  proposalAverage[1][1] = String(z !== 0 ? Math.round(a / z) : 0) + '평';
-  proposalAverage[2][1] = autoComma(d !== 0 ? Math.round(b / d) : 0) + '원';
-  proposalAverage[3][1] = autoComma(c) + '원';
+  if (desktop) {
+    proposalAverage[0][1] = String(z) + '회';
+    proposalAverage[1][1] = String(z !== 0 ? Math.round(a / z) : 0) + '평';
+    proposalAverage[2][1] = autoComma(d !== 0 ? Math.round(b / d) : 0) + '원';
+    proposalAverage[3][1] = autoComma(c) + '원';
+  } else {
+    proposalAverage[0][1] = String(z) + '회';
+    proposalAverage[1][1] = autoComma(d !== 0 ? Math.round(b / d) : 0) + '원';
+  }
 
-
-  contractMatrix = [
+  contractMatrix = (desktop ? [
     [
       "",
       "고객",
@@ -310,14 +332,25 @@ DesignerReportJs.prototype.contentsCenter = function () {
       "선금 정산일",
       "잔금 정산일",
     ]
-  ];
+  ] : [
+    [
+      "고객",
+      "소비자가",
+      "정산 금액",
+      "선금 정산",
+      "잔금 정산",
+    ]
+  ]);
 
-  contractAverage = [
+  contractAverage = (desktop ? [
     [ "총 계약 횟수", 0 ],
     [ "평균 평수", 0 ],
     [ "평균 소비자가", 0 ],
     [ "최고 정산가", 0 ]
-  ];
+  ] : [
+    [ "총 횟수", 0 ],
+    [ "평균 소비자가", 0 ],
+  ]);
 
   contracts.sort((a, b) => {
     return b.process.contract.form.date.from.valueOf() - a.process.contract.form.date.from.valueOf();
@@ -330,14 +363,24 @@ DesignerReportJs.prototype.contentsCenter = function () {
   for (let contract of contracts) {
     if (contract.process.status !== "드랍" && contract.process.status !== "드롭" && contract.process.status !== "홀딩") {
       tempArr = [];
-      tempArr.push(String(z + 1));
+
+      if (desktop) {
+        tempArr.push(String(z + 1));
+      }
       tempArr.push(contract.name);
-      tempArr.push(contract.serviceName);
-      tempArr.push(dateToString(contract.process.contract.form.date.from));
+      if (desktop) {
+        tempArr.push(contract.serviceName);
+        tempArr.push(dateToString(contract.process.contract.form.date.from));
+      }
       tempArr.push(autoComma(contract.process.contract.remain.calculation.amount.consumer) + '원');
       tempArr.push(autoComma(contract.process.calculation.payments.totalAmount) + '원');
-      tempArr.push(dateToString(contract.process.calculation.payments.first.date));
-      tempArr.push(dateToString(contract.process.calculation.payments.remain.date));
+      if (desktop) {
+        tempArr.push(dateToString(contract.process.calculation.payments.first.date));
+        tempArr.push(dateToString(contract.process.calculation.payments.remain.date));
+      } else {
+        tempArr.push(dateToString(contract.process.calculation.payments.first.date).slice(2));
+        tempArr.push(dateToString(contract.process.calculation.payments.remain.date).slice(2));
+      }
       contractMatrix.push(tempArr);
 
       a += contract.pyeong;
@@ -347,10 +390,15 @@ DesignerReportJs.prototype.contentsCenter = function () {
     }
   }
 
-  contractAverage[0][1] = String(z) + '회';
-  contractAverage[1][1] = String(z !== 0 ? Math.round(a / z) : 0) + '평';
-  contractAverage[2][1] = autoComma(z !== 0 ? Math.round(b / z) : 0) + '원';
-  contractAverage[3][1] = autoComma(c) + '원';
+  if (desktop) {
+    contractAverage[0][1] = String(z) + '회';
+    contractAverage[1][1] = String(z !== 0 ? Math.round(a / z) : 0) + '평';
+    contractAverage[2][1] = autoComma(z !== 0 ? Math.round(b / z) : 0) + '원';
+    contractAverage[3][1] = autoComma(c) + '원';
+  } else {
+    contractAverage[0][1] = String(z) + '회';
+    contractAverage[1][1] = autoComma(z !== 0 ? Math.round(b / z) : 0) + '원';
+  }
 
   if ((z !== 0 ? Math.round(a / z) : 0) === 0) {
     averagePyeong = 34;
@@ -358,7 +406,7 @@ DesignerReportJs.prototype.contentsCenter = function () {
     averagePyeong = Math.round(a / z);
   }
 
-  serviceMatrix = [
+  serviceMatrix = (desktop ? [
     [
       "",
       "평수",
@@ -369,13 +417,26 @@ DesignerReportJs.prototype.contentsCenter = function () {
       "토탈 스타일링(B)",
       "토탈 스타일링(P)",
     ]
-  ];
+  ] : [
+    [
+      "평수",
+      "홈퍼니싱",
+      "홈스타일링",
+      "토탈 스타일링",
+    ]
+  ]);
 
-  serviceAverage = [
-    [ String(averagePyeong) + "평 홈퍼니싱", 0 ],
-    [ String(averagePyeong) + "평 홈스타일링", 0 ],
-    [ String(averagePyeong) + "평 토탈 스타일링", 0 ],
-  ];
+  if (desktop) {
+    serviceAverage = [
+      [ String(averagePyeong) + "평 홈퍼니싱", 0 ],
+      [ String(averagePyeong) + "평 홈스타일링", 0 ],
+      [ String(averagePyeong) + "평 토탈 스타일링", 0 ],
+    ];
+  } else {
+    serviceAverage = [
+      [ String(averagePyeong) + "평 홈스타일링", 0 ],
+    ];
+  }
 
   a = 0;
   b = 0;
@@ -383,20 +444,32 @@ DesignerReportJs.prototype.contentsCenter = function () {
   d = 0;
   for (let z = 0; z < service.service.s2011_aa01s.example.length; z++) {
     tempArr = [];
-    tempArr.push(String(z + 1));
+    if (desktop) {
+      tempArr.push(String(z + 1));
+    }
     tempArr.push(String(service.service.s2011_aa01s.example[z].pyeong) + '평');
     tempArr.push(autoComma(toMoney(service.service.s2011_aa01s.example[z].price)) + '원');
-    tempArr.push(autoComma(toMoney(service.service.s2011_aa01s.example[z].price * service.priceStandard.premium)) + '원');
+    if (desktop) {
+      tempArr.push(autoComma(toMoney(service.service.s2011_aa01s.example[z].price * service.priceStandard.premium)) + '원');
+    }
     tempArr.push(autoComma(toMoney(service.service.s2011_aa02s.example[z].price)) + '원');
-    tempArr.push(autoComma(toMoney(service.service.s2011_aa02s.example[z].price * service.priceStandard.premium)) + '원');
+    if (desktop) {
+      tempArr.push(autoComma(toMoney(service.service.s2011_aa02s.example[z].price * service.priceStandard.premium)) + '원');
+    }
     tempArr.push(autoComma(toMoney(service.service.s2011_aa03s.example[z].price)) + '원');
-    tempArr.push(autoComma(toMoney(service.service.s2011_aa03s.example[z].price * service.priceStandard.premium)) + '원');
+    if (desktop) {
+      tempArr.push(autoComma(toMoney(service.service.s2011_aa03s.example[z].price * service.priceStandard.premium)) + '원');
+    }
     serviceMatrix.push(tempArr);
   }
 
-  serviceAverage[0][1] = autoComma(toMoney(service.service.s2011_aa01s.example[averagePyeong].price)) + '원';
-  serviceAverage[1][1] = autoComma(toMoney(service.service.s2011_aa02s.example[averagePyeong].price)) + '원';
-  serviceAverage[2][1] = autoComma(toMoney(service.service.s2011_aa03s.example[averagePyeong].price)) + '원';
+  if (desktop) {
+    serviceAverage[0][1] = autoComma(toMoney(service.service.s2011_aa01s.example[averagePyeong].price)) + '원';
+    serviceAverage[1][1] = autoComma(toMoney(service.service.s2011_aa02s.example[averagePyeong].price)) + '원';
+    serviceAverage[2][1] = autoComma(toMoney(service.service.s2011_aa03s.example[averagePyeong].price)) + '원';
+  } else {
+    serviceAverage[0][1] = autoComma(toMoney(service.service.s2011_aa02s.example[averagePyeong].price)) + '원';
+  }
 
   contents = [
     {
@@ -407,7 +480,7 @@ DesignerReportJs.prototype.contentsCenter = function () {
           [ 30, 120, 70, 200, 140, 140, 140, 80, ] |
           [ 24, 100, 60, 170, 120, 120, 120, 60, ] |
           [ 16, 90, 50, 140, 95, 95, 95, 50, ] |
-          [ 24, 100, 60, 170, 120, 120, 120, 60, ] |
+          [ 10, 10, 19, 19, 16 ]
         &&>,
         matrix: proposalMatrix,
         average: proposalAverage,
@@ -421,7 +494,7 @@ DesignerReportJs.prototype.contentsCenter = function () {
           [ 30, 120, 148, 127, 127, 127, 127, 127, ] |
           [ 24, 100, 130, 109, 109, 109, 109, 109, ] |
           [ 16, 90, 122, 81, 81, 81, 81, 81, ] |
-          [ 24, 100, 130, 109, 109, 109, 109, 109, ] |
+          [ 10, 18, 18, 14, 14 ]
         &&>,
         matrix: contractMatrix,
         average: contractAverage,
@@ -435,7 +508,7 @@ DesignerReportJs.prototype.contentsCenter = function () {
           [ 30, 120, 129, 129, 129, 129, 129, 129, ] |
           [ 24, 100, 112, 112, 112, 112, 112, 112, ] |
           [ 16, 90, 88, 88, 88, 88, 88, 88, ] |
-          [ 24, 100, 129, 129, 129, 129, 129, 129, ] |
+          [ 10, 21, 21, 21 ]
         &&>,
         matrix: serviceMatrix,
         average: serviceAverage,
@@ -507,6 +580,7 @@ DesignerReportJs.prototype.renderTong = function (title, whiteTong, index) {
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma } = GeneralJs;
+  const maxHeightTargetClassName = "maxHeightTargetClassName";
   let titleWidth;
   let titleTopNumber;
   let titleFontSize;
@@ -526,28 +600,29 @@ DesignerReportJs.prototype.renderTong = function (title, whiteTong, index) {
   titleWidth = <%% 300, 160, 140, 120, 30 %%>;
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
   titleFontSize = <%% 20, 21, 19, 17, 4 %%>;
-  titleMarginBottom = <%% 24, 24, 20, 16, 4 %%>;
+  titleMarginBottom = <%% 24, 24, 20, 16, 2.8 %%>;
   titlePaddingRight = <%% 12, 10, 10, 8, 2 %%>;
 
   numberSize = <%% 15, 12, 12, 11, 2.5 %%>;
   numberWeight = <%% 600, 600, 600, 600, 600 %%>;
-  numberBottom = <%% 8, 8, 8, 8, 6 %%>;
-  numberTop = <%% 10, 10, 8, 6, 1 %%>;
+  numberBottom = <%% (isMac() ? 8 : 6), 8, 8, 8, 6 %%>;
+  numberTop = <%% 8, 2, 2, 2, 0 %%>;
 
   mobileLineTop = isIphone() ? 2.7 : 2.5;
   mobileBasePaddingTop = 7;
   mobileBasicMargin = 7;
 
-  maxHeight = <%% 962, 940, 834, 680, 97 %%>;
+  maxHeight = <%% 962, 940, 834, 680, 107 %%>;
 
   totalViewEvent = function (e) {
+    const index = this.getAttribute("index");
     const toggle = this.getAttribute("toggle");
     if (toggle === "off") {
-      this.previousElementSibling.style.maxHeight = "";
+      document.querySelector('.' + maxHeightTargetClassName + String(index)).style.maxHeight = "";
       this.setAttribute("toggle", "on");
       this.style.color = colorChip.green;
     } else {
-      this.previousElementSibling.style.maxHeight = String(maxHeight) + ea;
+      document.querySelector('.' + maxHeightTargetClassName + String(index)).style.maxHeight = String(maxHeight) + ea;
       this.setAttribute("toggle", "off");
       this.style.color = colorChip.deactive;
     }
@@ -560,6 +635,7 @@ DesignerReportJs.prototype.renderTong = function (title, whiteTong, index) {
       position: "relative",
       width: String(100) + '%',
       paddingTop: desktop ? "" : String(mobileBasePaddingTop) + ea,
+      paddingBottom: desktop ? "" : String(mobileBasePaddingTop) + ea,
     },
     children: [
       {
@@ -583,11 +659,13 @@ DesignerReportJs.prototype.renderTong = function (title, whiteTong, index) {
               background: colorChip.white,
               paddingRight: String(titlePaddingRight) + ea,
               color: colorChip.black,
+              verticalAlign: "baseline"
             }
           },
         ]
       },
       {
+        class: [ maxHeightTargetClassName + String(index) ],
         style: {
           display: media[0] ? "inline-block" : "block",
           position: "relative",
@@ -606,9 +684,10 @@ DesignerReportJs.prototype.renderTong = function (title, whiteTong, index) {
     createNode({
       mother: resultTong,
       text: "전체 보기",
-      attribute: { toggle: "off", },
+      attribute: { toggle: "off", index: String(index) },
       event: { click: totalViewEvent },
       style: {
+        display: "inline-block",
         position: "absolute",
         fontSize: String(numberSize) + ea,
         fontWeight: String(numberWeight),
@@ -620,18 +699,19 @@ DesignerReportJs.prototype.renderTong = function (title, whiteTong, index) {
     });
   } else {
     createNode({
-      mother: resultTong,
+      mother: resultTong.children[0],
       text: "전체 보기",
-      attribute: { toggle: "off", },
+      attribute: { toggle: "off", index: String(index) },
       event: { click: totalViewEvent },
       style: {
-        position: "absolute",
+        display: "inline-block",
+        position: "relative",
         fontSize: String(numberSize) + ea,
         fontWeight: String(numberWeight),
         color: colorChip.deactive,
-        top: String(numberTop) + ea,
-        left: String(resultTong.children[0].children[0].getBoundingClientRect().width) + "px",
+        verticalAlign: "baseline",
         cursor: "pointer",
+        top: desktop ? (isMac() ? "" : String(numberTop) + ea) : "",
       }
     });
 
@@ -692,24 +772,24 @@ DesignerReportJs.prototype.renderBlock = function (contents, tong, x) {
   circleWidth = <%% 5, 5, 5, 4, 1 %%>;
   circleTop = <%% 1, 1, 1, 1, 0 %%>;
 
-  contentsSize = <%% 15, 15, 14, 12, 3.4 %%>;
+  contentsSize = <%% 15, 15, 14, 12, 2.7 %%>;
   contentsWeight0 = <%% 600, 600, 600, 600, 600 %%>;
   contentsWeight1 = <%% 400, 400, 400, 400, 400 %%>;
 
   firstWidth = <%% 180, 160, 140, 120, 23 %%>;
   factorBetween = <%% 8, 8, 8, 8, 1.5 %%>;
 
-  titlePaddingBottom = <%% 5, 5, 4, 3, 5 %%>;
-  titleMarginBottom = <%% 11, 11, 10, 9, 11 %%>;
+  titlePaddingBottom = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 3 : 2), 1.5 %%>;
+  titleMarginBottom = <%% (isMac() ? 11 : 12), (isMac() ? 11 : 12), (isMac() ? 10 : 11), (isMac() ? 9 : 10), 1.5 %%>;
 
   whiteTongPadding = <%% 16, 12, 10, 8, 2 %%>;
-  whiteTongMarginBottom = <%% 24, 20, 16, 10, 2 %%>;
-  whiteTongHeight = <%% 85, 82, 68, 54, 24 %%>;
+  whiteTongMarginBottom = <%% 24, 20, 16, 10, 3 %%>;
+  whiteTongHeight = <%% 85, 82, 68, 54, 11.6 %%>;
 
-  whiteSize = <%% 19, 19, 16, 14, 4 %%>;
+  whiteSize = <%% 19, 19, 16, 14, 3.2 %%>;
   whiteWeight = <%% 200, 200, 200, 200, 200 %%>;
   whiteBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
-  whiteTextTop = <%% -2, -2, -2, -2, -2 %%>;
+  whiteTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.3 %%>;
 
   whiteWordingArr = [];
   for (let [ property, value ] of contents.average) {
@@ -809,7 +889,7 @@ DesignerReportJs.prototype.renderBlock = function (contents, tong, x) {
               position: "relative",
               fontSize: String(contentsSize) + ea,
               fontWeight: String(z === 0 ? contentsWeight0 : contentsWeight1),
-              color: y === 0 ? colorChip.deactive : colorChip.black,
+              color: desktop ? (y === 0 ? colorChip.deactive : colorChip.black) : colorChip.black,
             }
           }
         ]
