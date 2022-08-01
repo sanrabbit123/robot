@@ -601,7 +601,7 @@ BackWorker.prototype.newDesignerToFront = async function (desidArr, option = { s
           scpOrder += `scp ${shellLink(newMobile)} ${ADDRESS.frontinfo.user}@${ADDRESS.frontinfo.host}:/${ADDRESS.frontinfo.user}/www/list_svg/dedetail/wording;`;
           scpOrder += `scp ${shellLink(newName)} ${ADDRESS.frontinfo.user}@${ADDRESS.frontinfo.host}:/${ADDRESS.frontinfo.user}/www/list_svg/delist/name;`;
 
-          await shellExec(scpOrder);
+          // await shellExec(scpOrder);
           console.log(`scp done`);
 
           await shellExec(`rm -rf ${shellLink(newDesktop)}`);

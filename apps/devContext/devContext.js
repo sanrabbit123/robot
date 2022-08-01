@@ -2774,11 +2774,11 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p186");
+    // await this.getRawPortfolio("a96");
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p191");
+    // await this.getCorePortfolio("a96");
 
 
     // aspirant to designer
@@ -2788,7 +2788,7 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2201_aa01s" ]);
+    await work.newDesignerToFront([ "d2206_aa01s" ]);
 
 
     // new designer set proposal setting
