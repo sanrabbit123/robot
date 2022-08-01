@@ -405,9 +405,9 @@ DesignerReportJs.prototype.contentsCenter = function () {
         width: <&&
           [ 40, 140, 70, 200, 150, 150, 150, 80, ] |
           [ 30, 120, 70, 200, 140, 140, 140, 80, ] |
-          [ 30, 120, 70, 200, 140, 140, 140, 80, ] |
-          [ 30, 120, 70, 200, 140, 140, 140, 80, ] |
-          [ 30, 120, 70, 200, 140, 140, 140, 80, ] |
+          [ 24, 100, 60, 170, 120, 120, 120, 60, ] |
+          [ 16, 90, 50, 140, 95, 95, 95, 50, ] |
+          [ 24, 100, 60, 170, 120, 120, 120, 60, ] |
         &&>,
         matrix: proposalMatrix,
         average: proposalAverage,
@@ -419,9 +419,9 @@ DesignerReportJs.prototype.contentsCenter = function () {
         width: <&&
           [ 40, 140, 160, 130, 130, 130, 130, 130, ] |
           [ 30, 120, 148, 127, 127, 127, 127, 127, ] |
-          [ 40, 140, 160, 130, 130, 130, 130, 130, ] |
-          [ 40, 140, 160, 130, 130, 130, 130, 130, ] |
-          [ 40, 140, 160, 130, 130, 130, 130, 130, ] |
+          [ 24, 100, 130, 109, 109, 109, 109, 109, ] |
+          [ 16, 90, 122, 81, 81, 81, 81, 81, ] |
+          [ 24, 100, 130, 109, 109, 109, 109, 109, ] |
         &&>,
         matrix: contractMatrix,
         average: contractAverage,
@@ -433,9 +433,9 @@ DesignerReportJs.prototype.contentsCenter = function () {
         width: <&&
           [ 40, 140, 130, 130, 130, 130, 130, 130, ] |
           [ 30, 120, 129, 129, 129, 129, 129, 129, ] |
-          [ 40, 140, 130, 130, 130, 130, 130, 130, ] |
-          [ 40, 140, 130, 130, 130, 130, 130, 130, ] |
-          [ 40, 140, 130, 130, 130, 130, 130, 130, ] |
+          [ 24, 100, 112, 112, 112, 112, 112, 112, ] |
+          [ 16, 90, 88, 88, 88, 88, 88, 88, ] |
+          [ 24, 100, 129, 129, 129, 129, 129, 129, ] |
         &&>,
         matrix: serviceMatrix,
         average: serviceAverage,
@@ -525,20 +525,20 @@ DesignerReportJs.prototype.renderTong = function (title, whiteTong, index) {
 
   titleWidth = <%% 300, 160, 140, 120, 30 %%>;
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
-  titleFontSize = <%% 20, 21, 19, 16, 4 %%>;
-  titleMarginBottom = <%% 24, 24, 20, 18, 4 %%>;
-  titlePaddingRight = <%% 12, 10, 10, 10, 2 %%>;
+  titleFontSize = <%% 20, 21, 19, 17, 4 %%>;
+  titleMarginBottom = <%% 24, 24, 20, 16, 4 %%>;
+  titlePaddingRight = <%% 12, 10, 10, 8, 2 %%>;
 
-  numberSize = <%% 15, 12, 12, 11, 3 %%>;
+  numberSize = <%% 15, 12, 12, 11, 2.5 %%>;
   numberWeight = <%% 600, 600, 600, 600, 600 %%>;
   numberBottom = <%% 8, 8, 8, 8, 6 %%>;
-  numberTop = <%% 10, 10, 10, 10, 1 %%>;
+  numberTop = <%% 10, 10, 8, 6, 1 %%>;
 
   mobileLineTop = isIphone() ? 2.7 : 2.5;
   mobileBasePaddingTop = 7;
   mobileBasicMargin = 7;
 
-  maxHeight = <%% 962, 940, 940, 940, 97 %%>;
+  maxHeight = <%% 962, 940, 834, 680, 97 %%>;
 
   totalViewEvent = function (e) {
     const toggle = this.getAttribute("toggle");
@@ -651,7 +651,7 @@ DesignerReportJs.prototype.renderBlock = function (contents, tong, x) {
   const removePopupTargetClassName = "removePopupTargetClassName";
   const menuTargetClassName = "menuTargetClassName";
   const tendencyBarTargetClassName = "tendencyBarTargetClassName";
-  const blank = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u%|%u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+  const blank = big ? "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u%|%u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" : "&nbsp;&nbsp;&nbsp;<u%|%u>&nbsp;&nbsp;&nbsp;";
   let blockHeight;
   let blockMarginBottom;
   let circleBoxWidth;
@@ -685,28 +685,28 @@ DesignerReportJs.prototype.renderBlock = function (contents, tong, x) {
   let whiteWording;
   let whiteWordingArr;
 
-  blockHeight = <%% 38, 38, 38, 38, 6 %%>;
+  blockHeight = <%% 38, 38, 34, 28, 6 %%>;
   blockMarginBottom = <%% 16, 15, 15, 12, 2.5 %%>;
 
   circleBoxWidth = <%% 16, 16, 16, 14, 2.8 %%>;
   circleWidth = <%% 5, 5, 5, 4, 1 %%>;
   circleTop = <%% 1, 1, 1, 1, 0 %%>;
 
-  contentsSize = <%% 15, 15, 15, 14, 3.4 %%>;
+  contentsSize = <%% 15, 15, 14, 12, 3.4 %%>;
   contentsWeight0 = <%% 600, 600, 600, 600, 600 %%>;
   contentsWeight1 = <%% 400, 400, 400, 400, 400 %%>;
 
   firstWidth = <%% 180, 160, 140, 120, 23 %%>;
   factorBetween = <%% 8, 8, 8, 8, 1.5 %%>;
 
-  titlePaddingBottom = <%% 5, 5, 5, 5, 5 %%>;
-  titleMarginBottom = <%% 11, 11, 11, 11, 11 %%>;
+  titlePaddingBottom = <%% 5, 5, 4, 3, 5 %%>;
+  titleMarginBottom = <%% 11, 11, 10, 9, 11 %%>;
 
   whiteTongPadding = <%% 16, 12, 10, 8, 2 %%>;
-  whiteTongMarginBottom = <%% 24, 20, 20, 18, 2 %%>;
-  whiteTongHeight = <%% 85, 82, 80, 75, 24 %%>;
+  whiteTongMarginBottom = <%% 24, 20, 16, 10, 2 %%>;
+  whiteTongHeight = <%% 85, 82, 68, 54, 24 %%>;
 
-  whiteSize = <%% 19, 19, 18, 16, 4 %%>;
+  whiteSize = <%% 19, 19, 16, 14, 4 %%>;
   whiteWeight = <%% 200, 200, 200, 200, 200 %%>;
   whiteBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   whiteTextTop = <%% -2, -2, -2, -2, -2 %%>;
