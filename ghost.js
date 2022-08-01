@@ -2300,6 +2300,29 @@ Ghost.prototype.ghostRouter = function (needs) {
     }
   };
 
+  //POST - bolt pipe
+  funcObj.post_boltPipe = {
+    link: [ "/boltPipe" ],
+    func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      try {
+        if (req.body.path === undefined || req.body.data === undefined) {
+          throw new Error("invalid post");
+        }
+        const { path, data } = equalJson(req.body);
+        requestSystem(instance.address.officeinfo.bolt.protocol + "//" + instance.address.officeinfo.bolt.server + ":" + String(instance.address.officeinfo.bolt.port) + path, data, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
+        res.send(JSON.stringify({ message: "will do" }));
+      } catch (e) {
+        res.send(JSON.stringify({ message: "error : " + e.message }));
+      }
+    }
+  };
+
   //POST - mysql query
   funcObj.post_mysqlQuery = {
     link: [ "/mysqlQuery" ],
