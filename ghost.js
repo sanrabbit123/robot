@@ -2315,6 +2315,10 @@ Ghost.prototype.ghostRouter = function (needs) {
           throw new Error("invalid post");
         }
         const { path, data } = equalJson(req.body);
+
+        await errorLog(path);
+        await errorLog(JSON.stringify(data, null, 2));
+
         requestSystem(instance.address.officeinfo.bolt.protocol + "//" + instance.address.officeinfo.bolt.server + ":" + String(instance.address.officeinfo.bolt.port) + path, data, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
         res.send(JSON.stringify({ message: "will do" }));
       } catch (e) {
