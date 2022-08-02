@@ -2516,6 +2516,12 @@ DataRouter.prototype.rou_post_getDesignerGhost = function () {
   let obj = {};
   obj.link = "/getDesignerGhost";
   obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       if (req.body.desid === undefined) {
         throw new Error("must be desid");
@@ -2537,11 +2543,10 @@ DataRouter.prototype.rou_post_getDesignerGhost = function () {
         final.push(tempArr);
       }
 
-      res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify(final));
     } catch (e) {
       instance.mother.errorLog("Console 서버 문제 생김 (rou_post_getDesignerGhost): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -2556,7 +2561,12 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
   obj.link = "/webHookPayment";
   obj.public = true;
   obj.func = async function (req, res) {
-    res.set({ "Content-Type": "application/json" });
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       const selfMongo = instance.mongo;
       const impId = req.body.imp_uid;

@@ -1711,6 +1711,7 @@ DesignerBoardJs.prototype.launching = async function (loading) {
     let requestNumber;
     let service;
     let response, services;
+    let ghostContents;
 
     if (getObj.desid === undefined) {
       window.alert("잘못된 접근입니다!");
@@ -1747,22 +1748,10 @@ DesignerBoardJs.prototype.launching = async function (loading) {
     services = serviceParsing().name;
     response = await ajaxJson({ mode: "designer", desid: getObj.desid }, LOGHOST + "/getContents", { equal: true });
     this.contentsArr = new SearchArray(response.contentsArr);
-    this.designers = new SearchArray(response.designers);
 
-    for (let designer of this.designers) {
-      designer.tag = [ ...new Set(response.contentsArr.filter((obj) => { return obj.desid === designer.desid }).map((obj) => {
-        return obj.tag;
-      }).flat()) ];
-      designer.tag.push(designer.designer);
-      for (let i = 0; i < designer.service.length; i++) {
-        if (designer.service[i] === 1) {
-          designer.tag.push(services[i]);
-        }
-      }
-      for (let wording of designer.setting.front.introduction.desktop) {
-        designer.tag.push(wording);
-      }
-    }
+    ghostContents = await ajaxJson({ desid: designer.desid }, BACKHOST + "/getDesignerGhost", { equal: true });
+
+    console.log(ghostContents);
 
     await this.mother.ghostDesignerLaunching({
       name: "designerBoard",
