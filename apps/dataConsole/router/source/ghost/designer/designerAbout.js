@@ -1445,7 +1445,7 @@ DesignerAboutJs.prototype.renderTong = function (type, title, whiteTong, index) 
 
   titleWidth = <%% 300, 160, 140, 120, 30 %%>;
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
-  titleFontSize = <%% 20, 20, 18, 16, 4 %%>;
+  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
 
   numberRight = <%% 12, 12, 12, 12, 2 %%>;
   numberSize = <%% 18, 18, 18, 16, 3 %%>;

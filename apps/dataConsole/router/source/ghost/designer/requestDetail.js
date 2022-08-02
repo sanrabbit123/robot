@@ -541,7 +541,7 @@ RequestDetailJs.prototype.insertInformationBox = function (indexNumber) {
 
   whiteBottomMargin = <%% 58, 58, 58, 58, 0 %%>;
 
-  titleFontSize = <%% 22, 22, 22, 21, 4.3 %%>;
+  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
   printSize = <%% 14, 14, 13, 12, 4 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
 
@@ -980,7 +980,7 @@ RequestDetailJs.prototype.insertDetailBox = function (indexNumber) {
 
   whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
 
-  titleFontSize = <%% 22, 22, 22, 21, 4.3 %%>;
+  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
 
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
@@ -1293,7 +1293,7 @@ RequestDetailJs.prototype.insertPhotoBox = function (indexNumber) {
 
   whiteBottomMargin = <%% 68, 68, 68, 68, 0 %%>;
 
-  titleFontSize = <%% 22, 22, 22, 21, 4.3 %%>;
+  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
 
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
@@ -1771,7 +1771,7 @@ RequestDetailJs.prototype.insertNoticeBox = function (indexNumber) {
 
   whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
 
-  titleFontSize = <%% 22, 22, 22, 21, 4.3 %%>;
+  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
 
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;

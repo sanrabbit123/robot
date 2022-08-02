@@ -270,7 +270,7 @@ RequestListJs.prototype.insertInformationBox = function () {
 
   whiteBottomMargin = <%% 58, 58, 58, 58, 6 %%>;
 
-  titleFontSize = <%% 22, 22, 22, 21, 4.3 %%>;
+  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
 
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
@@ -280,7 +280,7 @@ RequestListJs.prototype.insertInformationBox = function () {
 
   mobileTitleLeft = 6;
 
-  grayMargin = <%% 24, 24, 20, 20, 2.5 %%>;
+  grayMargin = <%% 16, 16, 14, 12, 2.5 %%>;
   grayPadding = <%% 14, 14, 10, 10, 2.5 %%>;
 
   tongMargin = <%% 6, 6, 6, 6, 1 %%>;
@@ -460,13 +460,13 @@ RequestListJs.prototype.insertInformationBox = function () {
       background: colorChip.gray3,
       borderRadius: String(5) + "px",
       paddingTop: String(grayMargin) + ea,
-      paddingBottom: String(grayMargin) + ea,
+      paddingBottom: String(grayMargin - tongMargin) + ea,
     }
   });
 
   targets = equalJson(JSON.stringify(projects));
   if (targets.length < minimalLength) {
-    for (var i = 0; i < minimalLength - projects.length; i++) {
+    for (let i = 0; i < minimalLength - projects.length; i++) {
       targets.push(null);
     }
   }
@@ -707,7 +707,7 @@ RequestListJs.prototype.insertNoticeBox = function () {
 
   whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
 
-  titleFontSize = <%% 22, 22, 22, 21, 4.3 %%>;
+  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
 
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;

@@ -144,23 +144,13 @@ GeneralJs.prototype.setNavigator = function () {
       green: [],
     },
     {
-      title: "프로젝트 관리",
-      href: FRONTHOST + "/portfolio.php",
-      green: [],
-    },
-    {
-      title: "정산 정보",
+      title: "정산 리포트",
       href: FRONTHOST + "/designer.php",
       green: [],
     },
     {
-      title: "의뢰서",
+      title: "프로젝트 의뢰서",
       href: FRONTHOST + "/review.php",
-      green: [],
-    },
-    {
-      title: "일정 관리",
-      href: FRONTHOST + "/consulting.php",
       green: [],
     },
   ];
