@@ -41,7 +41,7 @@ const DesignerBoardJs = function () {
   this.mother = new GeneralJs();
 }
 
-DesignerBoardJs.binaryPath = FRONTHOST + "/middle/console";
+DesignerBoardJs.binaryPath = FRONTHOST + "/middle/console/dashboard";
 
 DesignerBoardJs.prototype.insertInitBox = function () {
   const instance = this;
@@ -475,6 +475,9 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
   let colorBoxSize, colorBoxWeight, colorBoxTextTop;
   let targetLength;
   let arrowHeight;
+  let grayBetween;
+
+  grayBetween = <%% 40, 40, 36, 36, 3 %%>;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -627,6 +630,7 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
       display: "block",
       position: "relative",
       width: String(100) + '%',
+      marginBottom: String(grayBetween) + ea,
     },
     children: [
       {
@@ -828,9 +832,10 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
 
   }
 
+  return whiteBlock;
 }
 
-DesignerBoardJs.prototype.insertCommentsBox = function () {
+DesignerBoardJs.prototype.insertCommentsBox = function (whiteBlock) {
   const instance = this;
   const mother = this.mother;
   const { clients, projects, requestNumber, ea, baseTong, media } = this;
@@ -841,7 +846,7 @@ DesignerBoardJs.prototype.insertCommentsBox = function () {
   const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker } = GeneralJs;
   let paddingTop;
   let block;
-  let whiteBlock, whiteTong;
+  let whiteTong;
   let bottomMargin;
   let titleFontSize;
   let num;
@@ -874,6 +879,9 @@ DesignerBoardJs.prototype.insertCommentsBox = function () {
   let colorBoxSize, colorBoxWeight, colorBoxTextTop;
   let targetLength;
   let arrowHeight;
+  let grayBetween;
+
+  grayBetween = <%% 40, 40, 36, 36, 3 %%>;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -996,28 +1004,6 @@ DesignerBoardJs.prototype.insertCommentsBox = function () {
     }
   }
 
-  whiteBlock = createNode({
-    mother: baseTong,
-    style: {
-      position: "relative",
-      borderRadius: String(desktop ? 8 : 1) + ea,
-      width: String(100) + '%',
-      background: colorChip.white,
-      paddingTop: String(paddingTop) + ea,
-      paddingBottom: String(whiteBottomMargin) + ea,
-      marginBottom: String(bottomMargin) + ea,
-      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
-    },
-    children: [
-      {
-        display: "block",
-        position: "relative",
-        width: withOut(margin * 2, ea),
-        height: String(100) + '%',
-        marginLeft: String(margin) + ea,
-      }
-    ]
-  });
   whiteTong = whiteBlock.firstChild;
 
   block = createNode({
@@ -1026,6 +1012,7 @@ DesignerBoardJs.prototype.insertCommentsBox = function () {
       display: "block",
       position: "relative",
       width: String(100) + '%',
+      marginBottom: String(grayBetween) + ea,
     },
     children: [
       {
@@ -1229,7 +1216,7 @@ DesignerBoardJs.prototype.insertCommentsBox = function () {
 
 }
 
-DesignerBoardJs.prototype.insertforeContentsBox = function () {
+DesignerBoardJs.prototype.insertforeContentsBox = function (whiteBlock) {
   const instance = this;
   const mother = this.mother;
   const { clients, projects, requestNumber, ea, baseTong, media, ghostContents } = this;
@@ -1240,7 +1227,7 @@ DesignerBoardJs.prototype.insertforeContentsBox = function () {
   const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone } = GeneralJs;
   let paddingTop;
   let block;
-  let whiteBlock, whiteTong;
+  let whiteTong;
   let bottomMargin;
   let titleFontSize;
   let num;
@@ -1396,28 +1383,6 @@ DesignerBoardJs.prototype.insertforeContentsBox = function () {
     }
   }
 
-  whiteBlock = createNode({
-    mother: baseTong,
-    style: {
-      position: "relative",
-      borderRadius: String(desktop ? 8 : 1) + ea,
-      width: String(100) + '%',
-      background: colorChip.white,
-      paddingTop: String(paddingTop) + ea,
-      paddingBottom: String(whiteBottomMargin) + ea,
-      marginBottom: String(bottomMargin) + ea,
-      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
-    },
-    children: [
-      {
-        display: "block",
-        position: "relative",
-        width: withOut(margin * 2, ea),
-        height: String(100) + '%',
-        marginLeft: String(margin) + ea,
-      }
-    ]
-  });
   whiteTong = whiteBlock.firstChild;
 
   block = createNode({
@@ -1849,7 +1814,7 @@ DesignerBoardJs.prototype.portfolioBlock = function () {
   arrowBottom = <%% 3, 3, 3, 2, 1 %%>;
   arrowReviewBottom = <%% 5, 4, 4, 4, 1 %%>;
 
-  baseBlock = baseTong.children[6];
+  baseBlock = baseTong.children[4];
   cleanChildren(baseBlock);
 
   if (limitLength !== 0) {
@@ -2190,11 +2155,13 @@ DesignerBoardJs.prototype.launching = async function (loading) {
       },
       local: async () => {
         try {
+          let whiteBlock;
+
           instance.insertInitBox();
           instance.insertRouterBox();
-          instance.insertProcessBox();
-          instance.insertCommentsBox();
-          instance.insertforeContentsBox();
+          whiteBlock = instance.insertProcessBox();
+          instance.insertCommentsBox(whiteBlock);
+          instance.insertforeContentsBox(whiteBlock);
           instance.insertPortfolioBase();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "DesignerBoardJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
