@@ -1749,7 +1749,7 @@ DesignerBoardJs.prototype.launching = async function (loading) {
     response = await ajaxJson({ mode: "designer", desid: getObj.desid }, LOGHOST + "/getContents", { equal: true });
     this.contentsArr = new SearchArray(response.contentsArr);
 
-    ghostContents = await ajaxJson({ desid: designer.desid }, BACKHOST + "/getDesignerGhost", { equal: true });
+    ghostContents = await ajaxJson({ desid: designer.desid, mode: "full" }, BACKHOST + "/getDesignerGhost", { equal: true });
 
     console.log(ghostContents);
 

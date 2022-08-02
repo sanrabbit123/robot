@@ -2543,7 +2543,12 @@ DataRouter.prototype.rou_post_getDesignerGhost = function () {
         final.push(tempArr);
       }
 
-      res.send(JSON.stringify(final));
+      if (req.body.mode === undefined || req.body.mode === null || req.body.mode === "list") {
+        res.send(JSON.stringify(final));
+      } else if (req.body.mode === "full") {
+        res.send(JSON.stringify(result));
+      }
+
     } catch (e) {
       instance.mother.errorLog("Console 서버 문제 생김 (rou_post_getDesignerGhost): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
