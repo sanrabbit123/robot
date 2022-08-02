@@ -782,7 +782,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
           obj.file = foreCastContant + "/" + obj.file.split("/").slice(-2).join("/");
         }
 
-        finalObj = { pid: nextPid, desid: targetDesigner.desid, forecast };
+        finalObj = { pid: nextPid, desid: targetDesigner.desid, client, forecast };
         await back.mongoCreate("foreContents", finalObj, { console: true });
 
         shell.exec(`scp -r ${shellLink(folderPath)} ${this.address.homeinfo.ghost.user}@${this.address.homeinfo.ghost.host}:${shellLink(forecastPath)}/`);
