@@ -1425,6 +1425,47 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
     }
   }
 
+  //POST - comments words binary files
+  funcObj.post_commentsBinary = async function (req, res) {
+    res.set({
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      console.log("file request get");
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (3000 * 1024 * 1024) });
+      form.parse(req, async function (err, fields, files) {
+        res.set({
+          "Content-Type": "text/plain",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        });
+        if (!err && [ ...files ].length > 0) {
+          const folderConst = "글_디자이너";
+          const { proid, designer, client } = fields;
+          let execName;
+
+          for (let file of files) {
+            execName = file.originalFilename.split(".")[file.originalFilename.split(".").length - 1];
+            await shellExec(`mv ${shellLink(file.filepath)} ${instance.address.officeinfo.ghost.file.static + instance.address.officeinfo.ghost.file.office}/${folderConst}/${designer}_${client}_디자이너글_${proid}.${execName};`);
+          }
+
+          res.send('success');
+
+        } else {
+          await errorLog("디자이너글 파일 서버 문제 생김 (post_commentsBinary) : " + JSON.stringify(fields) + "\n" + err.message);
+          res.send('error');
+        }
+      });
+    } catch (e) {
+      await errorLog("디자이너글 파일 서버 문제 생김 (post_commentsBinary) : " + e.message);
+      res.send('error');
+    }
+  }
+
   //POST - certification
   funcObj.post_certification = async function (req, res) {
     res.set({

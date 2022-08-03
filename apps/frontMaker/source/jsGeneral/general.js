@@ -2692,9 +2692,9 @@ GeneralJs.sleep = function (time) {
 GeneralJs.downloadString = function (text, fileName, fileType = "plain") {
   if (/csv/gi.test(fileType)) {
     fileType = "text/csv"
-  } else if (/csv/gi.test(fileType)) {
+  } else if (/json/gi.test(fileType)) {
     fileType = "application/json"
-  } else if (/csv/gi.test(fileType)) {
+  } else if (/js/gi.test(fileType)) {
     fileType = "application/js"
   } else if (/svg/gi.test(fileType)) {
     fileType = "image/svg+xml"

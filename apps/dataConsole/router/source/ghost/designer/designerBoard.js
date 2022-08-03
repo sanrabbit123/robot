@@ -838,12 +838,13 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
 DesignerBoardJs.prototype.insertCommentsBox = function (whiteBlock) {
   const instance = this;
   const mother = this.mother;
-  const { clients, projects, requestNumber, ea, baseTong, media } = this;
+  const { clients, projects, requestNumber, ea, baseTong, media, totalContents } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker } = GeneralJs;
+  const commentPopupClassName = "commentPopupClassName";
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, downloadFile, ajaxForm } = GeneralJs;
   let paddingTop;
   let block;
   let whiteTong;
@@ -880,6 +881,22 @@ DesignerBoardJs.prototype.insertCommentsBox = function (whiteBlock) {
   let targetLength;
   let arrowHeight;
   let grayBetween;
+  let designerCommentsBoxEvent;
+  let whitePromptWidth;
+  let whitePromptPaddingTop;
+  let whitePromptPaddingBottom;
+  let whitePromptTitleHeight;
+  let whitePromptButtonHeight;
+  let whitePromptTitleSize;
+  let whitePromptTitleWeight;
+  let whitePromptTitleBoldWeight;
+  let whitePromptTitleLineHeight;
+  let whitePromptTitleTextTop;
+  let whitePromptButtonBetween;
+  let whitePromptButtonTextTop;
+  let whitePromptButtonWidth;
+  let whitePromptButtonSize;
+  let whitePromptButtonWeight;
 
   grayBetween = <%% 40, 40, 36, 36, 3 %%>;
 
@@ -923,6 +940,25 @@ DesignerBoardJs.prototype.insertCommentsBox = function (whiteBlock) {
   colorBoxSize = <%% 11, 11, 10, 10, 2.5 %%>;
   colorBoxWeight = <%% 700, 700, 700, 700, 700 %%>;
   colorBoxTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isIphone() ? 0 : -0.2) %%>;
+
+  whitePromptWidth = <%% 600, 600, 600, 600, 60 %%>;
+  whitePromptPaddingTop = <%% 12, 12, 12, 12, 1 %%>;
+  whitePromptPaddingBottom = <%% 40, 40, 40, 40, 4 %%>;
+  whitePromptTitleHeight = <%% 110, 110, 110, 110, 11 %%>;
+  whitePromptButtonHeight = <%% 35, 35, 35, 35, 3 %%>;
+
+  whitePromptTitleSize = <%% 20, 20, 20, 20, 20 %%>;
+  whitePromptTitleWeight = <%% 400, 400, 400, 400, 400 %%>;
+  whitePromptTitleBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+  whitePromptTitleLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+  whitePromptTitleTextTop = <%% 0, 0, 0, 0, 0 %%>;
+
+  whitePromptButtonBetween = <%% 6, 6, 6, 6, 6 %%>;
+  whitePromptButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
+  whitePromptButtonWidth = <%% 125, 125, 125, 125, 12 %%>;
+
+  whitePromptButtonSize = <%% 13, 13, 13, 13, 13 %%>;
+  whitePromptButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
   this.whiteMargin = (desktop ? margin : 0);
 
@@ -1001,6 +1037,219 @@ DesignerBoardJs.prototype.insertCommentsBox = function (whiteBlock) {
       widthMap.pop();
       boxTarget.pop();
       forceWidth.pop();
+    }
+  }
+
+  designerCommentsBoxEvent = (project) => {
+    return function (e) {
+      const proid = this.getAttribute("proid");
+      const designer = this.getAttribute("designer");
+      const client = this.getAttribute("client");
+      const self = this;
+      const zIndex = String(2);
+      let cancelBack, whitePrompt, hiddenInput;
+
+      cancelBack = createNode({
+        mother: totalContents,
+        class: [ commentPopupClassName ],
+        event: {
+          click: (e) => {
+            e.stopPropagation();
+            const removeTargets = document.querySelectorAll('.' + commentPopupClassName);
+            for (let dom of removeTargets) {
+              dom.remove();
+            }
+          }
+        },
+        style: {
+          top: String(0),
+          left: String(0),
+          width: withOut(0, ea),
+          height: withOut(0, ea),
+          background: colorChip.black,
+          opacity: String(0.2),
+          position: "fixed",
+          zIndex: String(zIndex),
+        }
+      });
+
+      hiddenInput = createNode({
+        mother: totalContents,
+        class: [ commentPopupClassName ],
+        mode: "input",
+        attribute: {
+          type: "file",
+          name: "comments",
+          proid,
+          designer,
+          client
+        },
+        event: {
+          change: async function (e) {
+            try {
+              const proid = this.getAttribute("proid");
+              const designer = this.getAttribute("designer");
+              const client = this.getAttribute("client");
+              let thisFile, formData;
+              if ([ ...this.files ].length === 1) {
+                thisFile = [ ...this.files ][0];
+
+                formData = new FormData();
+                formData.enctype = "multipart/form-data";
+                formData.append("proid", proid);
+                formData.append("designer", designer);
+                formData.append("client", client);
+                formData.append("comments", thisFile);
+
+                await ajaxForm(formData, BRIDGEHOST + "/commentsBinary");
+
+                window.alert("업로드가 완료되었습니다!");
+
+              }
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        },
+        style: {
+          display: "none",
+          opacity: String(0),
+          position: "absolute",
+        }
+      });
+
+      whitePrompt = createNode({
+        mother: totalContents,
+        class: [ commentPopupClassName ],
+        event: {
+          click: (e) => { e.stopPropagation() }
+        },
+        style: {
+          display: "inline-block",
+          position: "fixed",
+          borderRadius: String(5) + "px",
+          background: colorChip.white,
+          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          width: String(whitePromptWidth) + ea,
+          left: withOut(50, whitePromptWidth / 2, ea),
+          top: withOut(50, ((whitePromptPaddingTop + whitePromptPaddingBottom + whitePromptTitleHeight + whitePromptButtonHeight) / 2), ea),
+          paddingTop: String(whitePromptPaddingTop) + ea,
+          paddingBottom: String(whitePromptPaddingBottom) + ea,
+          zIndex: String(zIndex),
+          animation: "fadeuplite 0.3s ease",
+        },
+        children: [
+          {
+            style: {
+              display: "flex",
+              position: "relative",
+              height: String(whitePromptTitleHeight) + ea,
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              flexDirection: "column",
+            },
+            children: [
+              {
+                text: "디자이너 글 탬플릿을 활용하여\n디자이너 글을 <b%워드 / pdf / 한글 등의 파일로 업로드%b> 해주세요!",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  top: String(whitePromptTitleTextTop) + ea,
+                  fontSize: String(whitePromptTitleSize) + ea,
+                  fontWeight: String(whitePromptTitleWeight),
+                  color: colorChip.black,
+                  lineHeight: String(whitePromptTitleLineHeight),
+                },
+                bold: {
+                  fontSize: String(whitePromptTitleSize) + ea,
+                  fontWeight: String(whitePromptTitleBoldWeight),
+                  color: colorChip.black,
+                }
+              }
+            ]
+          },
+          {
+            style: {
+              display: "flex",
+              position: "relative",
+              height: String(whitePromptButtonHeight) + ea,
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              flexDirection: "row",
+            },
+            children: [
+              {
+                event: {
+                  click: function (e) {
+                    downloadFile("https://" + FILEHOST + "/photo/sample/commentsSample.docx").catch((err) => {
+                      console.log(err);
+                    });
+                  }
+                },
+                style: {
+                  display: "inline-flex",
+                  width: String(whitePromptButtonWidth) + ea,
+                  height: String(whitePromptButtonHeight) + ea,
+                  borderRadius: String(5) + "px",
+                  background: colorChip.gradientGray,
+                  marginRight: String(whitePromptButtonBetween) + ea,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  textAlign: "center",
+                  cursor: "pointer",
+                },
+                children: [
+                  {
+                    text: "디자이너 글 탬플릿",
+                    style: {
+                      position: "relative",
+                      top: String(whitePromptButtonTextTop) + ea,
+                      fontSize: String(whitePromptButtonSize) + ea,
+                      fontWeight: String(whitePromptButtonWeight),
+                      color: colorChip.white,
+                    }
+                  }
+                ]
+              },
+              {
+                event: {
+                  click: function (e) {
+                    const targetInput = document.querySelector("input." + commentPopupClassName);
+                    targetInput.click();
+                  }
+                },
+                style: {
+                  display: "inline-flex",
+                  width: String(whitePromptButtonWidth) + ea,
+                  height: String(whitePromptButtonHeight) + ea,
+                  borderRadius: String(5) + "px",
+                  background: colorChip.gradientGreen,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  textAlign: "center",
+                  cursor: "pointer",
+                },
+                children: [
+                  {
+                    text: "디자이너 글 업로드",
+                    style: {
+                      position: "relative",
+                      top: String(whitePromptButtonTextTop) + ea,
+                      fontSize: String(whitePromptButtonSize) + ea,
+                      fontWeight: String(whitePromptButtonWeight),
+                      color: colorChip.white,
+                    }
+                  }
+                ]
+              },
+            ]
+          }
+        ]
+      })
+
+
     }
   }
 
@@ -1084,6 +1333,14 @@ DesignerBoardJs.prototype.insertCommentsBox = function (whiteBlock) {
 
       whiteBaseTong = createNode({
         mother: grayTong,
+        attribute: {
+          proid: targets[i].proid,
+          designer: instance.designer.designer,
+          client: targets[i].name,
+        },
+        event: {
+          click: designerCommentsBoxEvent(targets[i])
+        },
         style: {
           display: desktop ? "inline-flex" : "block",
           position: "relative",
