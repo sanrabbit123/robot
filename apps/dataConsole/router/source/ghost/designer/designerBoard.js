@@ -1091,7 +1091,6 @@ DesignerBoardJs.prototype.insertCommentsBox = function (whiteBlock) {
               const designer = this.getAttribute("designer");
               const client = this.getAttribute("client");
               let thisFile, formData, res;
-              console.log("this!");
               if ([ ...this.files ].length === 1) {
                 thisFile = [ ...this.files ][0];
 
@@ -1103,11 +1102,10 @@ DesignerBoardJs.prototype.insertCommentsBox = function (whiteBlock) {
                 formData.append("comments", thisFile);
 
                 res = await ajaxForm(formData, BRIDGEHOST + "/commentsBinary");
-
-                console.log(res);
-
+                await ajaxJson({ whereQuery: { proid }, updateQuery: { "contents.raw.portfolio.status": "원본 수집 완료" } }, SECONDHOST + "/updateProject");
+                await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 디자이너 글을 업로드 했습니다!", channel: "#300_designer" }, BACKHOST + "/sendSlack");
                 window.alert("업로드가 완료되었습니다!");
-
+                cancelBack.click();
               }
             } catch (e) {
               console.log(e);
