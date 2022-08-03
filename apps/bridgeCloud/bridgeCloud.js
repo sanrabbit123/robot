@@ -1448,10 +1448,15 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           const { proid, designer, client } = fields;
           let execName;
 
+          await errorLog(proid);
+
           for (let file of files) {
             execName = file.originalFilename.split(".")[file.originalFilename.split(".").length - 1];
             await shellExec(`mv ${shellLink(file.filepath)} ${instance.address.officeinfo.ghost.file.static + instance.address.officeinfo.ghost.file.office}/${folderConst}/${designer}_${client}_디자이너글_${proid}.${execName};`);
           }
+
+          await errorLog(designer);
+
 
           res.send('success');
 

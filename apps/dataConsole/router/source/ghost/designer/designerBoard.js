@@ -1090,7 +1090,8 @@ DesignerBoardJs.prototype.insertCommentsBox = function (whiteBlock) {
               const proid = this.getAttribute("proid");
               const designer = this.getAttribute("designer");
               const client = this.getAttribute("client");
-              let thisFile, formData;
+              let thisFile, formData, res;
+              console.log("this!");
               if ([ ...this.files ].length === 1) {
                 thisFile = [ ...this.files ][0];
 
@@ -1101,7 +1102,9 @@ DesignerBoardJs.prototype.insertCommentsBox = function (whiteBlock) {
                 formData.append("client", client);
                 formData.append("comments", thisFile);
 
-                await ajaxForm(formData, BRIDGEHOST + "/commentsBinary");
+                res = await ajaxForm(formData, BRIDGEHOST + "/commentsBinary");
+
+                console.log(res);
 
                 window.alert("업로드가 완료되었습니다!");
 
