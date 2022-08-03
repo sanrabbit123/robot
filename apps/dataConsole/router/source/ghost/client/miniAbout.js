@@ -763,6 +763,10 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
   let reviewSize;
   let reviewQuoteWidth;
   let reviewQuoteBetween;
+  let firstSlide, secondSlide, thirdSlide;
+  let reviewSlideWidth;
+  let convertingSlide;
+  let reviewGrayHeight;
 
   margin = <%% 68, 64, 56, 48, 6 %%>;
 
@@ -859,11 +863,15 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
   beforeTextBoxHeight = <%% 50, 42, 36, 30, 8 %%>;
 
   reviewInnerPadding = <%% 30, 28, 24, 20, 4.5 %%>;
-  reviewMinHeight = <%% 128, 169, 158, 178, 1 %%>;
-  reviewSize = <%% 13, 13, 12, 11 , 2.8 %%>;
+  reviewMinHeight = <%% 108, 102, 96, 88, 49.5 %%>;
+  reviewSize = <%% 14, 13, 12, 11, 2.8 %%>;
 
-  reviewQuoteWidth = <%% 15, 15, 14, 13, 3 %%>;
-  reviewQuoteBetween = <%% 10, 10, 9, 8, 1.5 %%>;
+  reviewSlideWidth = <%% 624, 570, 540, 474, 54.2 %%>;
+
+  reviewQuoteWidth = <%% 13, 13, 12, 11, 3 %%>;
+  reviewQuoteBetween = <%% 5, 5, 5, 4, 1.5 %%>;
+
+  reviewGrayHeight = <%% 168, 158, 144, 142, 58.5 %%>;
 
   contents = {
     title: {
@@ -1475,86 +1483,6 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
     }
   }
 
-  // reivew area
-
-  createNode({
-    mother: base,
-    text: contents.review.name,
-    style: {
-      fontSize: String(areaNameSize) + ea,
-      fontWeight: String(areaNameWeight),
-      color: colorChip.black,
-      display: "block",
-      textAlign: "center",
-      lineHeight: String(areaNameLineHeight),
-      marginTop: String(processAreaTop) + ea,
-    }
-  });
-
-  reviewGray = createNode({
-    mother: base,
-    style: {
-      display: "block",
-      position: "relative",
-      background: colorChip.gray1,
-      marginTop: String(grayTop) + ea,
-      borderRadius: String(5) + "px",
-      paddingTop: String(grayInnerPadding) + ea,
-      paddingBottom: String(grayInnerPadding) + ea,
-      paddingRight: String(grayInnerPadding) + ea,
-      paddingLeft: String(grayInnerPadding) + ea,
-      width: withOut(grayInnerPadding * 2, ea),
-    }
-  });
-
-  for (let i = 0; i < contents.review.detail.length; i++) {
-
-    createNode({
-      mother: reviewGray,
-      style: {
-        display: "inline-flex",
-        width: desktop ? "calc(calc(100% - " + beforeImageBetween + ea + ") / 2)" : withOut(0),
-        borderRadius: String(5) + "px",
-        background: colorChip.white,
-        marginRight: desktop ? String(i % 2 === 0 ? beforeImageBetween : 0) + ea : "",
-        marginBottom: desktop ? String(Math.floor(i / 2) === 0 ? beforeImageBetween : 0) + ea : String(beforeImageBetween) + ea,
-        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-        paddingTop: String(reviewInnerPadding) + ea,
-        paddingBottom: String(reviewInnerPadding) + ea,
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "left",
-        height: desktop ? String(reviewMinHeight) + ea : "",
-        verticalAlign: "top",
-      },
-      children: [
-        {
-          mode: "svg",
-          source: svgMaker.doubleQuote(colorChip.gray5),
-          style: {
-            width: String(reviewQuoteWidth) + ea,
-            display: "block",
-            marginLeft: String(reviewInnerPadding + (desktop ? 1 : 0.3)) + ea,
-            marginBottom: String(reviewQuoteBetween) + ea,
-          }
-        },
-        {
-          text: contents.review.detail[i].text.join("\n"),
-          style: {
-            display: "block",
-            marginLeft: String(reviewInnerPadding) + ea,
-            width: withOut(reviewInnerPadding * 2, ea),
-            fontSize: String(reviewSize) + ea,
-            fontWeight: String(400),
-            color: colorChip.black,
-            lineHeight: String(1.6),
-          }
-        }
-      ]
-    });
-
-  }
-
   // process area
 
   createNode({
@@ -1727,6 +1655,280 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
       });
     }
   }
+
+  // reivew area
+
+  createNode({
+    mother: base,
+    text: contents.review.name,
+    style: {
+      fontSize: String(areaNameSize) + ea,
+      fontWeight: String(areaNameWeight),
+      color: colorChip.black,
+      display: "block",
+      textAlign: "center",
+      lineHeight: String(areaNameLineHeight),
+      marginTop: String(processAreaTop) + ea,
+    }
+  });
+
+  reviewGray = createNode({
+    mother: base,
+    style: {
+      display: "block",
+      position: "relative",
+      background: colorChip.gray1,
+      marginTop: String(grayTop) + ea,
+      borderRadius: String(5) + "px",
+      paddingTop: String(grayInnerPadding) + ea,
+      paddingBottom: String(grayInnerPadding) + ea,
+      paddingRight: String(grayInnerPadding) + ea,
+      paddingLeft: String(grayInnerPadding) + ea,
+      width: withOut(grayInnerPadding * 2, ea),
+      height: String(reviewGrayHeight) + ea,
+    }
+  });
+
+
+  firstSlide = createNode({
+    mother: reviewGray,
+    style: {
+      display: "inline-flex",
+      position: "absolute",
+      left: String(grayInnerPadding) + ea,
+      width: String(reviewSlideWidth) + ea,
+      borderRadius: String(5) + "px",
+      background: colorChip.gray0,
+      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      paddingTop: String(reviewInnerPadding) + ea,
+      paddingBottom: String(reviewInnerPadding) + ea,
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "left",
+      height: String(reviewMinHeight) + ea,
+      verticalAlign: "top",
+      transformOrigin: "0% 50%",
+      transform: "scale(0.85)",
+    },
+    children: [
+      {
+        mode: "svg",
+        source: svgMaker.doubleQuote(colorChip.gray4),
+        style: {
+          width: String(reviewQuoteWidth) + ea,
+          display: "block",
+          marginLeft: String(reviewInnerPadding + (desktop ? 1 : 0.3)) + ea,
+          marginBottom: String(reviewQuoteBetween) + ea,
+          transition: "all 0.5s ease",
+        }
+      },
+      {
+        text: contents.review.detail[1].text.join("\n"),
+        style: {
+          display: "block",
+          marginLeft: String(reviewInnerPadding) + ea,
+          width: withOut(reviewInnerPadding * 2, ea),
+          fontSize: String(reviewSize) + ea,
+          fontWeight: String(400),
+          color: colorChip.deactive,
+          lineHeight: String(1.6),
+          transition: "all 0.5s ease",
+        }
+      }
+    ]
+  });
+
+  thirdSlide = createNode({
+    mother: reviewGray,
+    style: {
+      display: "inline-flex",
+      position: "absolute",
+      right: String(grayInnerPadding) + ea,
+      width: String(reviewSlideWidth + (mobile ? 2 : 0)) + ea,
+      borderRadius: String(5) + "px",
+      background: colorChip.gray0,
+      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      paddingTop: String(reviewInnerPadding) + ea,
+      paddingBottom: String(reviewInnerPadding) + ea,
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "left",
+      height: String(reviewMinHeight) + ea,
+      verticalAlign: "top",
+      transformOrigin: "100% 50%",
+      transform: "scale(0.85)",
+    },
+    children: [
+      {
+        mode: "svg",
+        source: svgMaker.doubleQuote(colorChip.gray4),
+        style: {
+          width: String(reviewQuoteWidth) + ea,
+          display: "block",
+          marginLeft: String(reviewInnerPadding + (desktop ? 1 : 0.3)) + ea,
+          marginBottom: String(reviewQuoteBetween) + ea,
+          transition: "all 0.5s ease",
+        }
+      },
+      {
+        text: contents.review.detail[2].text.join("\n"),
+        style: {
+          display: "block",
+          marginLeft: String(reviewInnerPadding) + ea,
+          width: withOut(reviewInnerPadding * 2, ea),
+          fontSize: String(reviewSize) + ea,
+          fontWeight: String(400),
+          color: colorChip.deactive,
+          lineHeight: String(1.6),
+          transition: "all 0.5s ease",
+        }
+      }
+    ]
+  });
+
+  secondSlide = createNode({
+    mother: reviewGray,
+    attribute: {
+      value: String(0),
+    },
+    style: {
+      display: "inline-flex",
+      position: "absolute",
+      left: withOut(50, reviewSlideWidth / 2, ea),
+      width: String(reviewSlideWidth) + ea,
+      borderRadius: String(5) + "px",
+      background: colorChip.white,
+      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      paddingTop: String(reviewInnerPadding) + ea,
+      paddingBottom: String(reviewInnerPadding) + ea,
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "left",
+      height: String(reviewMinHeight) + ea,
+      verticalAlign: "top",
+    },
+    children: [
+      {
+        mode: "svg",
+        source: svgMaker.doubleQuote(colorChip.gray5),
+        style: {
+          width: String(reviewQuoteWidth) + ea,
+          display: "block",
+          marginLeft: String(reviewInnerPadding + (desktop ? 1 : 0.3)) + ea,
+          marginBottom: String(reviewQuoteBetween) + ea,
+          transition: "all 0.5s ease",
+        }
+      },
+      {
+        text: contents.review.detail[0].text.join("\n"),
+        style: {
+          display: "block",
+          marginLeft: String(reviewInnerPadding) + ea,
+          width: withOut(reviewInnerPadding * 2, ea),
+          fontSize: String(reviewSize) + ea,
+          fontWeight: String(400),
+          color: colorChip.black,
+          lineHeight: String(1.6),
+          transition: "all 0.5s ease",
+        }
+      }
+    ]
+  });
+
+  convertingSlide = () => {
+    const thisValue = Number(secondSlide.getAttribute("value"));
+    const nextValue = thisValue + 1;
+
+    secondSlide.setAttribute("value", String(nextValue));
+
+    firstSlide.children[0].style.opacity = String(0);
+    firstSlide.children[1].style.opacity = String(0);
+    firstSlide.children[0].style.transform = "translateY(8px)";
+    firstSlide.children[1].style.transform = "translateY(8px)";
+
+    secondSlide.children[0].style.opacity = String(0);
+    secondSlide.children[1].style.opacity = String(0);
+    secondSlide.children[0].style.transform = "translateY(8px)";
+    secondSlide.children[1].style.transform = "translateY(8px)";
+
+    thirdSlide.children[0].style.opacity = String(0);
+    thirdSlide.children[1].style.opacity = String(0);
+    thirdSlide.children[0].style.transform = "translateY(8px)";
+    thirdSlide.children[1].style.transform = "translateY(8px)";
+
+    setTimeout(() => {
+      firstSlide.children[1].textContent = contents.review.detail[((nextValue + 1) % 4)].text.join("\n");
+      firstSlide.children[0].style.opacity = String(1);
+      firstSlide.children[1].style.opacity = String(1);
+      firstSlide.children[0].style.transform = "translateY(0px)";
+      firstSlide.children[1].style.transform = "translateY(0px)";
+
+      secondSlide.children[1].textContent = contents.review.detail[(nextValue % 4)].text.join("\n");
+      secondSlide.children[0].style.opacity = String(1);
+      secondSlide.children[1].style.opacity = String(1);
+      secondSlide.children[0].style.transform = "translateY(0px)";
+      secondSlide.children[1].style.transform = "translateY(0px)";
+
+      thirdSlide.children[1].textContent = contents.review.detail[((nextValue + 2) % 4)].text.join("\n");
+      thirdSlide.children[0].style.opacity = String(1);
+      thirdSlide.children[1].style.opacity = String(1);
+      thirdSlide.children[0].style.transform = "translateY(0px)";
+      thirdSlide.children[1].style.transform = "translateY(0px)";
+    }, 501);
+  }
+
+  setInterval(() => {
+    convertingSlide();
+  }, 5000);
+
+  // for (let i = 0; i < contents.review.detail.length; i++) {
+  //
+  //   createNode({
+  //     mother: reviewGray,
+  //     style: {
+  //       display: "inline-flex",
+  //       width: desktop ? "calc(calc(100% - " + beforeImageBetween + ea + ") / 2)" : withOut(0),
+  //       borderRadius: String(5) + "px",
+  //       background: colorChip.white,
+  //       marginRight: desktop ? String(i % 2 === 0 ? beforeImageBetween : 0) + ea : "",
+  //       marginBottom: desktop ? String(Math.floor(i / 2) === 0 ? beforeImageBetween : 0) + ea : String(beforeImageBetween) + ea,
+  //       boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+  //       paddingTop: String(reviewInnerPadding) + ea,
+  //       paddingBottom: String(reviewInnerPadding) + ea,
+  //       flexDirection: "column",
+  //       justifyContent: "center",
+  //       alignItems: "left",
+  //       height: desktop ? String(reviewMinHeight) + ea : "",
+  //       verticalAlign: "top",
+  //     },
+  //     children: [
+  //       {
+  //         mode: "svg",
+  //         source: svgMaker.doubleQuote(colorChip.gray5),
+  //         style: {
+  //           width: String(reviewQuoteWidth) + ea,
+  //           display: "block",
+  //           marginLeft: String(reviewInnerPadding + (desktop ? 1 : 0.3)) + ea,
+  //           marginBottom: String(reviewQuoteBetween) + ea,
+  //         }
+  //       },
+  //       {
+  //         text: contents.review.detail[i].text.join("\n"),
+  //         style: {
+  //           display: "block",
+  //           marginLeft: String(reviewInnerPadding) + ea,
+  //           width: withOut(reviewInnerPadding * 2, ea),
+  //           fontSize: String(reviewSize) + ea,
+  //           fontWeight: String(400),
+  //           color: colorChip.black,
+  //           lineHeight: String(1.6),
+  //         }
+  //       }
+  //     ]
+  //   });
+  //
+  // }
+
 
   // bill area
 
