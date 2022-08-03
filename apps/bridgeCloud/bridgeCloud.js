@@ -1443,20 +1443,16 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
           "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
         });
-        if (!err && [ ...files ].length > 0) {
+        if (!err) {
           const folderConst = "글_디자이너";
           const { proid, designer, client } = fields;
-          let execName;
+          let execName, file;
 
-          await errorLog(proid);
-
-          for (let file of files) {
+          for (let key in files) {
+            file = files[key];
             execName = file.originalFilename.split(".")[file.originalFilename.split(".").length - 1];
             await shellExec(`mv ${shellLink(file.filepath)} ${instance.address.officeinfo.ghost.file.static + instance.address.officeinfo.ghost.file.office}/${folderConst}/${designer}_${client}_디자이너글_${proid}.${execName};`);
           }
-
-          await errorLog(designer);
-
 
           res.send('success');
 
