@@ -1911,13 +1911,13 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
       weekBlockWeight = 600;
       weekBlockTextTop = (GeneralJs.isMac() ? -2 : -1);
       arrowWidth = 12;
-      arrowTop = 18;
+      arrowTop = 17;
       dateBlockHeight = 120;
       dateBlockPaddingTop = 40;
       dateBlockPaddingBottom = 20;
       dateBlockWeight = 300;
       datePositionTop = 10;
-      datePositionLeft = 18;
+      datePositionLeft = 15;
       barMotherHeight = 25;
       colorSqureTop = 4;
       colorSqureHeight = 20;

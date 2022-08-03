@@ -549,7 +549,7 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
   if (desktop) {
     widthMap = <&&
       [ 86, 102, 73, 150, 150, 170, 150 ] |
-      [ 86, 102, 73, 148, 148, 168, 148 ] |
+      [ 86, 100, 62, 140, 140, 160, 140 ] |
       [ 56, 97, 73, 120, 120, 120, 120 ] |
       [ 56, 94, 73, 120, 120, 120, 120 ] |
       [ 6, 11, 12, 7, 14, 15, 15 ]
@@ -989,7 +989,7 @@ DesignerBoardJs.prototype.insertCommentsBox = function (whiteBlock) {
   if (desktop) {
     widthMap = <&&
       [ 86, 102, 73, 150, 150, 170, 150 ] |
-      [ 86, 102, 73, 148, 148, 168, 148 ] |
+      [ 86, 100, 62, 140, 140, 160, 140 ] |
       [ 56, 97, 73, 120, 120, 120, 120 ] |
       [ 56, 94, 73, 120, 120, 120, 120 ] |
       [ 6, 11, 12, 7, 14, 15, 15 ]
@@ -1590,7 +1590,7 @@ DesignerBoardJs.prototype.insertforeContentsBox = function (whiteBlock) {
   if (desktop) {
     widthMap = <&&
       [ 86, 102, 73, 150, 150, 170, 150 ] |
-      [ 86, 102, 73, 148, 148, 168, 148 ] |
+      [ 86, 100, 62, 140, 140, 160, 140 ] |
       [ 56, 97, 73, 120, 120, 120, 120 ] |
       [ 56, 94, 73, 120, 120, 120, 120 ] |
       [ 6, 11, 12, 7, 14, 15, 15 ]
@@ -2009,7 +2009,7 @@ DesignerBoardJs.prototype.insertCalendarBox = function () {
         contents: {
           color: colorChip.green,
           description: "",
-          title: project.name + " 고객님 시작일",
+          title: project.name + " 시작일",
         },
         date: {
           start: project.process.contract.form.date.from,
@@ -2023,7 +2023,7 @@ DesignerBoardJs.prototype.insertCalendarBox = function () {
         contents: {
           color: colorChip.green,
           description: "",
-          title: project.name + " 고객님 종료일",
+          title: project.name + " 종료일",
         },
         date: {
           start: project.process.contract.form.date.to,
@@ -2037,7 +2037,7 @@ DesignerBoardJs.prototype.insertCalendarBox = function () {
         contents: {
           color: colorChip.purple,
           description: "",
-          title: project.name + " 고객님 현장 미팅",
+          title: project.name + " 현장 미팅",
         },
         date: {
           start: project.process.contract.meeting.date,
@@ -2051,7 +2051,7 @@ DesignerBoardJs.prototype.insertCalendarBox = function () {
         contents: {
           color: colorChip.yellow,
           description: "",
-          title: project.name + " 고객님 촬영",
+          title: project.name + " 촬영",
         },
         date: {
           start: project.contents.photo.date,
