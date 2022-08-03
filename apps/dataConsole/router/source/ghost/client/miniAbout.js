@@ -1689,7 +1689,6 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
     }
   });
 
-
   firstSlide = createNode({
     mother: reviewGray,
     style: {
@@ -1879,7 +1878,7 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
 
   setInterval(() => {
     convertingSlide();
-  }, 5000);
+  }, 10000);
 
   // for (let i = 0; i < contents.review.detail.length; i++) {
   //
