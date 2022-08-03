@@ -1897,7 +1897,7 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
   //       flexDirection: "column",
   //       justifyContent: "center",
   //       alignItems: "left",
-  //       height: desktop ? String(reviewMinHeight) + ea : "",
+  //       height: desktop ? String(128) + ea : "",
   //       verticalAlign: "top",
   //     },
   //     children: [
@@ -1927,7 +1927,6 @@ MiniAboutJs.prototype.insertAboutBox = function (mother) {
   //   });
   //
   // }
-
 
   // bill area
 
