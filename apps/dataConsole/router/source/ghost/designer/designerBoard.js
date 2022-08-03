@@ -1610,6 +1610,202 @@ DesignerBoardJs.prototype.insertforeContentsBox = function (whiteBlock) {
 
 }
 
+DesignerBoardJs.prototype.insertCalendarBox = function () {
+  const instance = this;
+  const mother = this.mother;
+  const { clients, projects, requestNumber, ea, baseTong, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, colorCalendar } = GeneralJs;
+  const isDateValid = (date) => {
+    return ((new Date(2000, 0, 1)).valueOf() <= date.valueOf() && (new Date(3000, 0, 1)).valueOf() > date.valueOf());
+  }
+  let paddingTop;
+  let block;
+  let whiteBlock, whiteTong;
+  let bottomMargin;
+  let titleFontSize;
+  let num;
+  let numberRight;
+  let titleTop, titleTopNumber;
+  let titleBottom;
+  let index;
+  let tong;
+  let whiteBottomMargin;
+  let grayBetween;
+  let dateArr;
+
+  grayBetween = <%% 40, 40, 36, 36, 3 %%>;
+
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  margin = <%% 55, 55, 47, 39, 6 %%>;
+  paddingTop =  <%% 52, 52, 44, 36, 6 %%>;
+
+  whiteBottomMargin = <%% 58, 58, 58, 58, 6 %%>;
+
+  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+  numberRight = <%% 12, 12, 12, 12, 3 %%>;
+
+  titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
+  titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
+
+  titleBottom = <%% (isMac() ? 18 : 16), (isMac() ? 18 : 16), (isMac() ? 15 : 13), (isMac() ? 15 : 13), 3 %%>;
+
+  this.whiteMargin = (desktop ? margin : 0);
+
+  whiteBlock = createNode({
+    mother: baseTong,
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      background: colorChip.white,
+      paddingTop: String(paddingTop) + ea,
+      paddingBottom: String(whiteBottomMargin) + ea,
+      marginBottom: String(bottomMargin) + ea,
+      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+    },
+    children: [
+      {
+        display: "block",
+        position: "relative",
+        width: withOut(margin * 2, ea),
+        height: String(100) + '%',
+        marginLeft: String(margin) + ea,
+      }
+    ]
+  });
+  whiteTong = whiteBlock.firstChild;
+
+  block = createNode({
+    mother: whiteTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      marginBottom: String(grayBetween) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(0),
+          marginBottom: String(titleBottom) + ea,
+          zIndex: mobile ? String(1) : "",
+        },
+        children: [
+          {
+            text: "디자이너 캘린더",
+            style: {
+              position: "relative",
+              display: "inline-block",
+              top: String(titleTopNumber) + ea,
+              fontSize: String(titleFontSize) + ea,
+              fontWeight: String(600),
+              background: colorChip.white,
+              paddingRight: String(numberRight) + ea,
+              color: colorChip.black,
+            },
+            bold: {
+              background: colorChip.white,
+              color: colorChip.black,
+              fontSize: String(titleFontSize) + ea,
+              fontWeight: String(300),
+            }
+          },
+        ]
+      },
+      {
+        style: {
+          display: "block",
+          position: "relative",
+          width: String(100) + '%',
+          overflow: "hidden",
+          marginBottom: String(0) + ea,
+        }
+      },
+    ]
+  });
+  tong = block.lastChild;
+
+  dateArr = [
+    {
+      contents: {
+        color: colorChip.red,
+        description: "",
+        title: "오늘",
+      },
+      date: {
+        start: new Date(),
+        end: new Date(),
+      }
+    },
+  ];
+
+  for (let project of projects) {
+    if (isDateValid(project.process.contract.form.date.from)) {
+      dateArr.push({
+        contents: {
+          color: colorChip.green,
+          description: "",
+          title: project.name + " 고객님 시작일",
+        },
+        date: {
+          start: project.process.contract.form.date.from,
+          end: project.process.contract.form.date.from,
+        }
+      });
+    }
+
+    if (isDateValid(project.process.contract.form.date.to)) {
+      dateArr.push({
+        contents: {
+          color: colorChip.green,
+          description: "",
+          title: project.name + " 고객님 종료일",
+        },
+        date: {
+          start: project.process.contract.form.date.to,
+          end: project.process.contract.form.date.to,
+        }
+      });
+    }
+
+    if (isDateValid(project.process.contract.meeting.date)) {
+      dateArr.push({
+        contents: {
+          color: colorChip.purple,
+          description: "",
+          title: project.name + " 고객님 현장 미팅",
+        },
+        date: {
+          start: project.process.contract.meeting.date,
+          end: project.process.contract.meeting.date,
+        }
+      });
+    }
+
+    if (isDateValid(project.contents.photo.date)) {
+      dateArr.push({
+        contents: {
+          color: colorChip.yellow,
+          description: "",
+          title: project.name + " 고객님 촬영",
+        },
+        date: {
+          start: project.contents.photo.date,
+          end: project.contents.photo.date,
+        }
+      });
+    }
+  }
+
+  colorCalendar(tong, dateArr);
+}
+
 DesignerBoardJs.prototype.generateGsArray = function (number) {
   if (typeof number !== "number") {
     throw new Error("invaild input");
@@ -1814,7 +2010,7 @@ DesignerBoardJs.prototype.portfolioBlock = function () {
   arrowBottom = <%% 3, 3, 3, 2, 1 %%>;
   arrowReviewBottom = <%% 5, 4, 4, 4, 1 %%>;
 
-  baseBlock = baseTong.children[4];
+  baseBlock = baseTong.children[5];
   cleanChildren(baseBlock);
 
   if (limitLength !== 0) {
@@ -2156,12 +2352,12 @@ DesignerBoardJs.prototype.launching = async function (loading) {
       local: async () => {
         try {
           let whiteBlock;
-
           instance.insertInitBox();
           instance.insertRouterBox();
           whiteBlock = instance.insertProcessBox();
           instance.insertCommentsBox(whiteBlock);
           instance.insertforeContentsBox(whiteBlock);
+          instance.insertCalendarBox();
           instance.insertPortfolioBase();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "DesignerBoardJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
