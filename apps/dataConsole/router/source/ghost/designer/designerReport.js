@@ -94,7 +94,7 @@ DesignerReportJs.prototype.insertInitBox = function () {
 
   quoteHeight = <%% 15, 15, 15, 15, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
-  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+  titleFontSize = <%% 35, 33, 32, 30, 6.4 %%>;
   titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 4) %%>;
 

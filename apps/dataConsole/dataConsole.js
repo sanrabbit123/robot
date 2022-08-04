@@ -604,7 +604,98 @@ DataConsole.prototype.renderFrontPhp = async function () {
     generalPhpScript = generalPhpScript.replace(/__password__/gi, address.frontinfo.password);
     generalPhpScript = generalPhpScript.replace(/__database__/gi, address.frontinfo.database);
     await fileSystem(`write`, [ `${process.cwd()}/temp/general.php`, generalPhpScript ]);
+
     command += `;scp ${process.cwd()}/temp/general.php ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/;`;
+
+    console.log(command);
+
+    input = await consoleQ(`is it OK? : (if no problem, press 'ok')\n`);
+    if (input === "done" || input === "a" || input === "o" || input === "ok" || input === "OK" || input === "Ok" || input === "oK" || input === "yes" || input === "y" || input === "yeah" || input === "Y") {
+      await shellExec(command);
+      console.log(`front update done`);
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+DataConsole.prototype.renderDesignerPhp = async function () {
+  const instance = this;
+  const { fileSystem, shellLink, shellExec, equalJson, requestSystem, consoleQ } = this.mother;
+  const { ghostDir } = this;
+  const address = this.address;
+  const staticFolder = process.env.HOME + "/static";
+  const staticMiddleFolder = staticFolder + "/middle";
+  const frontClientDir = this.frontDir + "/client";
+  const frontDir = this.frontDir + "/designer";
+  const DataPatch = require(`${this.dir}/router/dataPatch.js`);
+  const DataMiddle = require(`${this.dir}/router/dataMiddle.js`);
+  try {
+    await this.renderMiddleStatic(staticFolder, address.backinfo, DataPatch, DataMiddle, true);
+    const targetMap = [
+      { from: "designerAbout", to: "about", path: "/middle/designerAbout" },
+      { from: "designerBoard", to: "dashboard", path: "/middle/designerBoard" },
+      { from: "designerReport", to: "report", path: "/middle/designerReport" },
+      { from: "requestDetail", to: "request", path: "/middle/requestDetail" },
+      { from: "requestList", to: "requests", path: "/middle/requestList" },
+    ];
+    const ghostTargets = (await fileSystem(`readDir`, [ ghostDir + "/designer" ])).filter((str) => { return str !== ".DS_Store" }).filter((str) => {
+      const fromArr = targetMap.map((obj) => { return obj.from });
+      return fromArr.includes(str.replace(/\.js$/i, ''));
+    }).map((str) => {
+      const o = targetMap.find((obj) => { return obj.from === str.replace(/\.js$/i, '') });
+      o.file = `${staticMiddleFolder}/${str}`;
+      o.php = `${frontDir}/${str.replace(/\.js$/i, ".php")}`;
+      return o;
+    });
+    let targetScript, response, html;
+    let motherTong, middleTong;
+    let command;
+    let input;
+    let phpScript;
+    let generalPhpScript;
+
+    motherTong = [];
+    middleTong = [];
+    for (let { from, to, file, php, path } of ghostTargets) {
+      targetScript = await fileSystem(`readString`, [ file ]);
+      targetScript = targetScript.replace(/ajaxJson\((\{[^}]*\}[^}]*\}?, ?)(\"[^\"]+\")/gi, (original, p1, p2) => {
+        if (/^[\"\']http/.test(p2)) {
+          return original;
+        } else {
+          return `ajaxJson(${p1}"https://${address.backinfo.host}" + ${p2}`;
+        }
+      });
+
+      phpScript = await fileSystem(`readString`, [ php ]);
+
+      await fileSystem(`write`, [ `${process.cwd()}/temp/${from}.js`, targetScript ]);
+      middleTong.push(`${shellLink(process.cwd())}/temp/${shellLink(from)}.js`);
+      await fileSystem(`write`, [ `${process.cwd()}/temp/${to}.php`, phpScript ]);
+      motherTong.push(`${shellLink(process.cwd())}/temp/${shellLink(to)}.php`);
+    }
+
+    console.log("middle :", middleTong);
+    console.log("mother :", motherTong);
+
+    command = middleTong.map((p) => {
+      return `scp ${p} ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/middle/`;
+    }).concat(motherTong.map((p) => {
+      return `scp ${p} ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/designer/`;
+    })).join(';');
+
+    generalPhpScript = await fileSystem(`readString`, [ frontClientDir + "/general.php" ]);
+    generalPhpScript = generalPhpScript.replace(/__host__/gi, address.frontinfo.host);
+    generalPhpScript = generalPhpScript.replace(/__secondHost__/gi, address.secondinfo.host + ":3000");
+    generalPhpScript = generalPhpScript.replace(/__logHost__/gi, address.testinfo.host + ":3000");
+    generalPhpScript = generalPhpScript.replace(/__backHost__/gi, address.backinfo.host + ":3000");
+    generalPhpScript = generalPhpScript.replace(/__user__/gi, address.frontinfo.user);
+    generalPhpScript = generalPhpScript.replace(/__password__/gi, address.frontinfo.password);
+    generalPhpScript = generalPhpScript.replace(/__database__/gi, address.frontinfo.database);
+    await fileSystem(`write`, [ `${process.cwd()}/temp/general.php`, generalPhpScript ]);
+
+    command += `;scp ${process.cwd()}/temp/general.php ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/designer/;`;
 
     console.log(command);
 

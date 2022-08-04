@@ -107,6 +107,12 @@ Robot.prototype.renderFrontPhp = async function () {
   await app.renderFrontPhp();
 }
 
+Robot.prototype.renderDesignerPhp = async function () {
+  const DataConsole = require(process.cwd() + "/apps/dataConsole/dataConsole.js");
+  const app = new DataConsole();
+  await app.renderDesignerPhp();
+}
+
 Robot.prototype.contentsMaker = function (button, arg) {
   const AiContents = require(process.cwd() + "/apps/contentsMaker/aiContents.js");
   const ResourceMaker = require(process.cwd() + "/apps/resourceMaker/resourceMaker.js");
@@ -1266,6 +1272,20 @@ const MENU = {
   php: async function () {
     try {
       await robot.renderFrontPhp();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  phpClient: async function () {
+    try {
+      await robot.renderFrontPhp();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  phpDesigner: async function () {
+    try {
+      await robot.renderDesignerPhp();
     } catch (e) {
       console.log(e);
     }

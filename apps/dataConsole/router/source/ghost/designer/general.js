@@ -91,7 +91,7 @@ GeneralJs.prototype.setBackground = function (binaryPath) {
 
 }
 
-GeneralJs.prototype.setNavigator = function () {
+GeneralJs.prototype.setNavigator = function (designer) {
   const instance = this;
   const { standardWidth, media, totalContents, naviHeight, frontPage } = this;
   const { createNode, createNodes, colorChip, withOut, blankHref, selfHref, isMac, setQueue } = GeneralJs;
@@ -132,25 +132,30 @@ GeneralJs.prototype.setNavigator = function () {
   hamburgerTop = 21;
   searchWidth = <%% 22.5, 22.5, 21, 18, 20 %%>;
   searchWidthMinus = <%% 23, 23, 21, 18.5, 2 %%>;
-  mobileMenuHeight = 210;
+  mobileMenuHeight = 174;
   mobileFirstTop = 11;
   mobileVerticalBetween = 37;
 
   thisIndex = 99;
   naviMenu = [
     {
+      title: "프로젝트 관리",
+      href: FRONTHOST + "/designer/dashboard.php?desid=" + designer.desid,
+      green: [],
+    },
+    {
       title: "기본 정보",
-      href: FRONTHOST + "/about.php",
+      href: FRONTHOST + "/designer/about.php?desid=" + designer.desid,
       green: [],
     },
     {
       title: "정산 리포트",
-      href: FRONTHOST + "/designer.php",
+      href: FRONTHOST + "/designer/report.php?desid=" + designer.desid,
       green: [],
     },
     {
       title: "프로젝트 의뢰서",
-      href: FRONTHOST + "/review.php",
+      href: FRONTHOST + "/designer/requests.php?desid=" + designer.desid,
       green: [],
     },
   ];
@@ -224,6 +229,12 @@ GeneralJs.prototype.setNavigator = function () {
         mother: naviTong,
         attribute: {
           index: String(i)
+        },
+        event: {
+          click: function (e) {
+            const index = Number(this.getAttribute("index"));
+            selfHref(naviMenu[index].href);
+          }
         },
         text: naviMenu[i].title,
         style: {
@@ -392,7 +403,7 @@ GeneralJs.prototype.setBaseTong = function (child) {
   child.baseTong = this.baseTong;
 }
 
-GeneralJs.prototype.setGeneralBase = function (obj) {
+GeneralJs.prototype.setGeneralBase = function (obj, designer) {
   if (typeof obj !== "object") {
     throw new Error("must be object => { instance, binaryPath, subTitle }");
   }
@@ -401,7 +412,7 @@ GeneralJs.prototype.setGeneralBase = function (obj) {
   }
   const { instance, subTitle, binaryPath } = obj;
   this.setBackground(binaryPath);
-  this.setNavigator();
+  this.setNavigator(designer);
   this.setBaseTong(instance);
 }
 
@@ -419,7 +430,7 @@ GeneralJs.prototype.ghostDesignerLaunching = async function (obj) {
 
     base.instance.pageName = name;
     base.instance.mother.pageName = name;
-    this.setGeneralBase(base);
+    this.setGeneralBase(base, designer);
     await local();
     this.footerMake(colorChip.gradientBlack);
     this.totalContents.style.height = "auto";

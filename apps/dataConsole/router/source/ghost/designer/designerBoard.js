@@ -224,12 +224,12 @@ DesignerBoardJs.prototype.insertInitBox = function () {
 DesignerBoardJs.prototype.insertRouterBox = function () {
   const instance = this;
   const mother = this.mother;
-  const { clients, projects, requestNumber, ea, baseTong, media } = this;
+  const { clients, projects, requestNumber, ea, baseTong, media, desid } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, selfHref } = GeneralJs;
   let paddingTop;
   let block;
   let whiteBlock, whiteTong;
@@ -316,17 +316,17 @@ DesignerBoardJs.prototype.insertRouterBox = function () {
     {
       title: "기본 정보",
       sub: "checklist",
-      href: FRONTHOST + "/about.php",
+      href: FRONTHOST + "/designer/about.php" + "?desid=" + desid,
     },
     {
       title: "정산 리포트",
       sub: "report",
-      href: FRONTHOST + "/designer.php",
+      href: FRONTHOST + "/designer/report.php" + "?desid=" + desid,
     },
     {
       title: desktop ? "프로젝트 의뢰서" : "의뢰서",
-      sub: "request",
-      href: FRONTHOST + "/review.php",
+      sub: "requests",
+      href: FRONTHOST + "/designer/requests.php" + "?desid=" + desid,
     },
   ];
 
@@ -389,6 +389,15 @@ DesignerBoardJs.prototype.insertRouterBox = function () {
   for (let i = 0; i < naviMenu.length; i++) {
     whiteBaseTong = createNode({
       mother: grayTong,
+      attribute: {
+        index: String(i)
+      },
+      event: {
+        click: function (e) {
+          const index = Number(this.getAttribute("index"));
+          selfHref(naviMenu[index].href);
+        }
+      },
       style: {
         display: "inline-flex",
         position: "relative",
@@ -445,7 +454,7 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, selfHref } = GeneralJs;
   let paddingTop;
   let block;
   let whiteBlock, whiteTong;
@@ -807,6 +816,15 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
       createNode({
         mother: whiteBaseTong,
         mode: "svg",
+        attribute: {
+          proid: targets[i].proid
+        },
+        event: {
+          click: function (e) {
+            const proid = this.getAttribute("proid");
+            selfHref(FRONTHOST + "/designer/request.php?proid=" + proid);
+          }
+        },
         source: svgMaker.horizontalArrow(circleWidth, arrowHeight),
         style: {
           position: "absolute",
@@ -814,6 +832,7 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
           top: String(circleTop) + ea,
           width: String(circleWidth) + ea,
           borderRadius: String(circleWidth) + ea,
+          cursor: "pointer",
         }
       });
     } else {
@@ -2601,6 +2620,7 @@ DesignerBoardJs.prototype.launching = async function (loading) {
     }
 
     desid = getObj.desid;
+    this.desid = desid;
     designers = await ajaxJson({ whereQuery: { desid } }, SECONDHOST + "/getDesigners", { equal: true });
     if (designers.length === 0) {
       window.alert("잘못된 접근입니다!");

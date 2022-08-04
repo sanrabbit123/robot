@@ -229,7 +229,7 @@ RequestListJs.prototype.insertInformationBox = function () {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, selfHref } = GeneralJs;
   let paddingTop;
   let block;
   let whiteBlock, whiteTong;
@@ -487,6 +487,15 @@ RequestListJs.prototype.insertInformationBox = function () {
 
       whiteBaseTong = createNode({
         mother: grayTong,
+        attribute: {
+          proid: targets[i].proid
+        },
+        event: {
+          click: function (e) {
+            const proid = this.getAttribute("proid");
+            selfHref(FRONTHOST + "/designer/request.php?proid=" + proid);
+          }
+        },
         style: {
           display: desktop ? "inline-flex" : "block",
           position: "relative",
