@@ -3561,8 +3561,7 @@ MiniRequestJs.prototype.launching = async function (loading) {
     this.mother.backgroundGray.style.background = this.pointColor;
     this.mother.backgroundImageBox.style.backgroundImage = "";
     this.mother.backgroundImageBox.style.background = this.pointColor;
-    document.getElementById("footergreenback0817").style.background = "transparent";
-
+    
     loading.parentNode.removeChild(loading);
 
   } catch (err) {

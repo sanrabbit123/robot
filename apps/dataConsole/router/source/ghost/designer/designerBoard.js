@@ -265,6 +265,7 @@ DesignerBoardJs.prototype.insertRouterBox = function () {
   let colorBoxSize, colorBoxWeight, colorBoxTextTop;
   let naviMenu;
   let textVisual;
+  let whiteSubSize;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -282,17 +283,18 @@ DesignerBoardJs.prototype.insertRouterBox = function () {
 
   mobileTitleLeft = 6;
 
-  grayMargin = <%% 16, 16, 14, 12, 2.5 %%>;
-  grayPadding = <%% 14, 14, 10, 10, 2.5 %%>;
+  grayMargin = <%% 16, 16, 14, 12, 0 %%>;
+  grayPadding = <%% 14, 14, 10, 10, 0 %%>;
 
   tongMargin = <%% 10, 10, 10, 10, 1 %%>;
 
-  tongHeight = <%% 120, 120, 120, 120, 9 %%>;
+  tongHeight = <%% 120, 120, 110, 100, 16 %%>;
 
-  whiteSize = <%% 15, 15, 13, 13, 3 %%>;
-  whiteWeight = <%% 400, 400, 400, 400, 400 %%>;
+  whiteSize = <%% 20, 19, 18, 17, 3.4 %%>;
+  whiteWeight = <%% 800, 800, 800, 800, 800 %%>;
   whiteColumnWeight = <%% 200, 200, 200, 200, 200 %%>;
-  whiteTextTop = <%% (isMac() ? -1 : 2), (isMac() ? -1 : 2), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
+  whiteTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 1), (isMac() ? 0 : 1), 0 %%>;
+  whiteSubSize = <%% 14, 14, 13, 12, 2.6 %%>;
 
   circleWidth = <%% 8, 8, 8, 8, 1.2 %%>;
   circleTop = <%% 21, 21, 17, 17, 2.7 %%>;
@@ -322,7 +324,7 @@ DesignerBoardJs.prototype.insertRouterBox = function () {
       href: FRONTHOST + "/designer.php",
     },
     {
-      title: "프로젝트 의뢰서",
+      title: desktop ? "프로젝트 의뢰서" : "의뢰서",
       sub: "request",
       href: FRONTHOST + "/review.php",
     },
@@ -377,7 +379,7 @@ DesignerBoardJs.prototype.insertRouterBox = function () {
     mother: tong,
     style: {
       display: "block",
-      background: colorChip.gray3,
+      background: desktop ? colorChip.gray3 : "transparent",
       borderRadius: String(5) + "px",
       paddingTop: String(grayMargin) + ea,
       paddingBottom: String(grayMargin - tongMargin) + ea,
@@ -395,12 +397,12 @@ DesignerBoardJs.prototype.insertRouterBox = function () {
         width: "calc(calc(calc(100% - " + String(grayMargin * 2) + ea + ") - " + String(tongMargin * (naviMenu.length - 1)) + ea + ") / " + String(naviMenu.length) + ")",
         height: String(tongHeight) + ea,
         borderRadius: String(5) + "px",
-        background: colorChip.white,
-        marginBottom: String(tongMargin) + ea,
+        background: desktop ? colorChip.white : colorChip.gray1,
+        marginBottom: String(desktop ? tongMargin : 0) + ea,
         alignItems: "center",
         flexDirection: "column",
         cursor: "pointer",
-        boxShadow: "0px 3px 12px -9px " + colorChip.shadow,
+        boxShadow: desktop ? "0px 3px 12px -9px " + colorChip.shadow : "",
         justifyContent: "center",
         textAlign: "center",
       },
@@ -409,8 +411,10 @@ DesignerBoardJs.prototype.insertRouterBox = function () {
           text: naviMenu[i].title,
           style: {
             display: "block",
-            fontSize: String(20) + ea,
-            fontWeight: String(800),
+            position: "relative",
+            top: String(whiteTextTop) + ea,
+            fontSize: String(whiteSize) + ea,
+            fontWeight: String(whiteWeight),
             color: colorChip.black,
           }
         },
@@ -418,7 +422,9 @@ DesignerBoardJs.prototype.insertRouterBox = function () {
           text: naviMenu[i].sub,
           style: {
             display: "block",
-            fontSize: String(14) + ea,
+            position: "relative",
+            top: desktop ? "" : String(isIphone() ? -0.6 : 0) + ea,
+            fontSize: String(whiteSubSize) + ea,
             fontWeight: String(400),
             fontFamily: "graphik",
             color: colorChip.green,
@@ -477,21 +483,21 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
   let arrowHeight;
   let grayBetween;
 
-  grayBetween = <%% 40, 40, 36, 36, 3 %%>;
+  grayBetween = <%% 40, 40, 36, 36, 5 %%>;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
   paddingTop =  <%% 52, 52, 44, 36, 6 %%>;
 
-  whiteBottomMargin = <%% 58, 58, 58, 58, 6 %%>;
+  whiteBottomMargin = <%% 58, 56, 50, 44, 6 %%>;
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
 
-  titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
+  titleTopNumber = <%% isMac() ? 0 : 1, isMac() ? 0 : 1, isMac() ? 0 : 1, isMac() ? 0 : 1, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
-  titleBottom = <%% (isMac() ? 18 : 16), (isMac() ? 18 : 16), (isMac() ? 15 : 13), (isMac() ? 15 : 13), 3 %%>;
+  titleBottom = <%% (isMac() ? 18 : 16), (isMac() ? 18 : 16), (isMac() ? 15 : 13), (isMac() ? 15 : 13), 2.5 %%>;
 
   mobileTitleLeft = 6;
 
@@ -500,19 +506,19 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
 
   tongMargin = <%% 6, 6, 6, 6, 1 %%>;
 
-  tongHeight = <%% 50, 50, 42, 42, 9 %%>;
+  tongHeight = <%% 50, 50, 42, 42, 15.64 %%>;
 
   whiteSize = <%% 15, 15, 13, 13, 3 %%>;
   whiteWeight = <%% 400, 400, 400, 400, 400 %%>;
   whiteColumnWeight = <%% 200, 200, 200, 200, 200 %%>;
   whiteTextTop = <%% (isMac() ? -1 : 2), (isMac() ? -1 : 2), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
 
-  circleWidth = <%% 21, 21, 20, 20, 1.2 %%>;
-  circleTop = <%% 20, 20, 17, 17, 2.7 %%>;
+  circleWidth = <%% 21, 21, 20, 20, 4 %%>;
+  circleTop = <%% 20, 20, 17, 17, 3 %%>;
   circleRight = <%% 20, 20, 20, 20, 2.7 %%>;
-  arrowHeight = <%% 8, 8, 8, 8, 2 %%>;
+  arrowHeight = <%% 8, 8, 8, 8, 1.5 %%>;
 
-  minimalLength = <%% 3, 3, 3, 3, 6 %%>;
+  minimalLength = <%% 3, 3, 3, 3, 3 %%>;
 
   colorBoxHeight = <%% 26, 26, 24, 24, 5.5 %%>;
   colorBoxPadding = <%% 10, 10, 8, 8, 2.2 %%>;
@@ -525,7 +531,7 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
   contentsMap = (project, index) => {
     let map;
 
-    if (desktop) {
+    if (big) {
       map = [
         project.process.action,
         serviceParsing(project.service).replace(/[a-zA-Z]/gi, '').trim().split(' ').slice(1).join(' '),
@@ -536,12 +542,23 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
         "<b%잔금 정산 : %b>" + (/없음/gi.test(dateToString(project.process.calculation.payments.remain.date, false).slice(2)) ? "예정" : dateToString(project.process.calculation.payments.remain.date, false).slice(2)),
       ];
     } else {
-      map = [
-        project.name + " <b%고객님%b>",
-        serviceParsing(project.service).replace(/[a-zA-Z]/gi, '').trim().split(' ')[0],
-        serviceParsing(project.service).replace(/[a-zA-Z]/gi, '').trim().split(' ').slice(1).join(' '),
-        project.process.action,
-      ];
+      if (desktop) {
+        map = [
+          project.process.action,
+          serviceParsing(project.service).replace(/[a-zA-Z]/gi, '').trim().split(' ').slice(1).join(' '),
+          project.name,
+          "<b%시작일 : %b>" + dateToString(project.process.contract.form.date.from, false).slice(2),
+          "<b%종료일 : %b>" + dateToString(project.process.contract.form.date.to, false).slice(2),
+          "<b%선금 : %b>" + (/없음/gi.test(dateToString(project.process.calculation.payments.first.date, false).slice(2)) ? "예정" : dateToString(project.process.calculation.payments.first.date, false).slice(2)),
+        ];
+      } else {
+        map = [
+          project.name + " <b%고객님%b>",
+          project.process.action,
+          serviceParsing(project.service).replace(/[a-zA-Z]/gi, '').trim().split(' ').slice(1).join(' '),
+          "선금 : " + (/없음/gi.test(dateToString(project.process.calculation.payments.first.date, false).slice(2)) ? "예정" : dateToString(project.process.calculation.payments.first.date, false).slice(2)),
+        ];
+      }
     }
     return map[index];
   }
@@ -550,8 +567,8 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
     widthMap = <&&
       [ 86, 102, 73, 150, 150, 170, 150 ] |
       [ 86, 100, 62, 140, 140, 160, 140 ] |
-      [ 56, 97, 73, 120, 120, 120, 120 ] |
-      [ 56, 94, 73, 120, 120, 120, 120 ] |
+      [ 80, 91, 54, 116, 116, 132, 116 ] |
+      [ 78, 88, 54, 116, 116, 116, 116 ] |
       [ 6, 11, 12, 7, 14, 15, 15 ]
     &&>;
 
@@ -566,8 +583,8 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
     ];
 
     forceWidth = [
-      (<&& 62 | 62 | 36 | 36 | 6 &&>),
-      (<&& 62 | 62 | 36 | 36 | 6 &&>),
+      (<&& 62 | 62 | 60 | 58 | 6 &&>),
+      (<&& 62 | 62 | 60 | 58 | 6 &&>),
       null,
       null,
       null,
@@ -579,9 +596,9 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
 
     boxTarget = [
       null,
-      (state) => { return (state <= 1 ? colorChip.red : colorChip.deactive) },
-      (state) => { return (state <= 1 ? colorChip.yellow : colorChip.deactive) },
-      (state) => { return (state <= 1 ? (state === 0 ? colorChip.purple : colorChip.shadow) : colorChip.deactive) },
+      (state) => { return colorChip.red },
+      (state) => { return colorChip.yellow },
+      (state) => { return colorChip.shadow },
     ];
 
     forceWidth = [
@@ -590,14 +607,6 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
       null,
       null,
     ];
-  }
-
-  if (desktop) {
-    if (small) {
-      widthMap.pop();
-      boxTarget.pop();
-      forceWidth.pop();
-    }
   }
 
   whiteBlock = createNode({
@@ -717,7 +726,7 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
           flexDirection: "row",
           cursor: "pointer",
           paddingTop: desktop ? "" : String(grayPadding) + ea,
-          paddingBottom: desktop ? "" : String(grayPadding - 1) + ea,
+          paddingBottom: desktop ? "" : String(grayPadding - 0.8) + ea,
         },
       });
       for (let j = 0; j < widthMap.length; j++) {
@@ -736,7 +745,7 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
               color: state >= 2 ? colorChip.deactive : colorChip.black,
               width: desktop ? String(widthMap[j]) + ea : "",
               marginRight: desktop ? "" : String(1) + ea,
-              marginBottom: desktop ? "" : String(0.7) + ea,
+              marginBottom: desktop ? "" : String(1) + ea,
               paddingLeft: desktop ? "" : String(0.4) + ea,
               paddingTop: desktop ? "" : String(0.2) + ea,
             },
@@ -898,7 +907,7 @@ DesignerBoardJs.prototype.insertCommentsBox = function (whiteBlock) {
   let whitePromptButtonSize;
   let whitePromptButtonWeight;
 
-  grayBetween = <%% 40, 40, 36, 36, 3 %%>;
+  grayBetween = <%% 40, 40, 36, 36, 5 %%>;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -912,7 +921,7 @@ DesignerBoardJs.prototype.insertCommentsBox = function (whiteBlock) {
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
-  titleBottom = <%% (isMac() ? 18 : 16), (isMac() ? 18 : 16), (isMac() ? 15 : 13), (isMac() ? 15 : 13), 3 %%>;
+  titleBottom = <%% (isMac() ? 18 : 16), (isMac() ? 18 : 16), (isMac() ? 15 : 13), (isMac() ? 15 : 13), 2.5 %%>;
 
   mobileTitleLeft = 6;
 
@@ -921,19 +930,19 @@ DesignerBoardJs.prototype.insertCommentsBox = function (whiteBlock) {
 
   tongMargin = <%% 6, 6, 6, 6, 1 %%>;
 
-  tongHeight = <%% 50, 50, 42, 42, 9 %%>;
+  tongHeight = <%% 50, 50, 42, 42, 15.64 %%>;
 
   whiteSize = <%% 15, 15, 13, 13, 3 %%>;
   whiteWeight = <%% 400, 400, 400, 400, 400 %%>;
   whiteColumnWeight = <%% 200, 200, 200, 200, 200 %%>;
   whiteTextTop = <%% (isMac() ? -1 : 2), (isMac() ? -1 : 2), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
 
-  circleWidth = <%% 21, 21, 20, 20, 1.2 %%>;
-  circleTop = <%% 20, 20, 17, 17, 2.7 %%>;
+  circleWidth = <%% 21, 21, 20, 20, 4 %%>;
+  circleTop = <%% 20, 20, 17, 17, 3 %%>;
   circleRight = <%% 20, 20, 20, 20, 2.7 %%>;
-  arrowHeight = <%% 8, 8, 8, 8, 2 %%>;
+  arrowHeight = <%% 8, 8, 8, 8, 1.5 %%>;
 
-  minimalLength = <%% 3, 3, 3, 3, 6 %%>;
+  minimalLength = <%% 3, 3, 3, 3, 3 %%>;
 
   colorBoxHeight = <%% 26, 26, 24, 24, 5.5 %%>;
   colorBoxPadding = <%% 10, 10, 8, 8, 2.2 %%>;
@@ -965,7 +974,7 @@ DesignerBoardJs.prototype.insertCommentsBox = function (whiteBlock) {
   contentsMap = (project, index) => {
     let map;
 
-    if (desktop) {
+    if (big) {
       map = [
         "디자이너글",
         serviceParsing(project.service).replace(/[a-zA-Z]/gi, '').trim().split(' ').slice(1).join(' '),
@@ -976,12 +985,23 @@ DesignerBoardJs.prototype.insertCommentsBox = function (whiteBlock) {
         "<b%잔금 정산 : %b>" + (/없음/gi.test(dateToString(project.process.calculation.payments.remain.date, false).slice(2)) ? "예정" : dateToString(project.process.calculation.payments.remain.date, false).slice(2)),
       ];
     } else {
-      map = [
-        project.name + " <b%고객님%b>",
-        serviceParsing(project.service).replace(/[a-zA-Z]/gi, '').trim().split(' ')[0],
-        serviceParsing(project.service).replace(/[a-zA-Z]/gi, '').trim().split(' ').slice(1).join(' '),
-        project.process.action,
-      ];
+      if (desktop) {
+        map = [
+          "디자이너글",
+          serviceParsing(project.service).replace(/[a-zA-Z]/gi, '').trim().split(' ').slice(1).join(' '),
+          project.name,
+          "<b%시작일 : %b>" + dateToString(project.process.contract.form.date.from, false).slice(2),
+          "<b%종료일 : %b>" + dateToString(project.process.contract.form.date.to, false).slice(2),
+          "<b%선금 : %b>" + (/없음/gi.test(dateToString(project.process.calculation.payments.first.date, false).slice(2)) ? "예정" : dateToString(project.process.calculation.payments.first.date, false).slice(2)),
+        ];
+      } else {
+        map = [
+          project.name + " <b%고객님%b>",
+          "디자이너글",
+          serviceParsing(project.service).replace(/[a-zA-Z]/gi, '').trim().split(' ').slice(1).join(' '),
+          "선금 : " + (/없음/gi.test(dateToString(project.process.calculation.payments.first.date, false).slice(2)) ? "예정" : dateToString(project.process.calculation.payments.first.date, false).slice(2)),
+        ];
+      }
     }
     return map[index];
   }
@@ -990,8 +1010,8 @@ DesignerBoardJs.prototype.insertCommentsBox = function (whiteBlock) {
     widthMap = <&&
       [ 86, 102, 73, 150, 150, 170, 150 ] |
       [ 86, 100, 62, 140, 140, 160, 140 ] |
-      [ 56, 97, 73, 120, 120, 120, 120 ] |
-      [ 56, 94, 73, 120, 120, 120, 120 ] |
+      [ 80, 91, 54, 116, 116, 132, 116 ] |
+      [ 78, 88, 54, 116, 116, 116, 116 ] |
       [ 6, 11, 12, 7, 14, 15, 15 ]
     &&>;
 
@@ -1006,8 +1026,8 @@ DesignerBoardJs.prototype.insertCommentsBox = function (whiteBlock) {
     ];
 
     forceWidth = [
-      (<&& 62 | 62 | 36 | 36 | 6 &&>),
-      (<&& 62 | 62 | 36 | 36 | 6 &&>),
+      (<&& 62 | 62 | 60 | 58 | 6 &&>),
+      (<&& 62 | 62 | 60 | 58 | 6 &&>),
       null,
       null,
       null,
@@ -1019,9 +1039,9 @@ DesignerBoardJs.prototype.insertCommentsBox = function (whiteBlock) {
 
     boxTarget = [
       null,
-      (state) => { return (state <= 1 ? colorChip.red : colorChip.deactive) },
-      (state) => { return (state <= 1 ? colorChip.yellow : colorChip.deactive) },
-      (state) => { return (state <= 1 ? (state === 0 ? colorChip.purple : colorChip.shadow) : colorChip.deactive) },
+      (state) => { return colorChip.purple },
+      (state) => { return colorChip.yellow },
+      (state) => { return colorChip.shadow },
     ];
 
     forceWidth = [
@@ -1030,14 +1050,6 @@ DesignerBoardJs.prototype.insertCommentsBox = function (whiteBlock) {
       null,
       null,
     ];
-  }
-
-  if (desktop) {
-    if (small) {
-      widthMap.pop();
-      boxTarget.pop();
-      forceWidth.pop();
-    }
   }
 
   designerCommentsBoxEvent = (project) => {
@@ -1357,7 +1369,7 @@ DesignerBoardJs.prototype.insertCommentsBox = function (whiteBlock) {
           flexDirection: "row",
           cursor: "pointer",
           paddingTop: desktop ? "" : String(grayPadding) + ea,
-          paddingBottom: desktop ? "" : String(grayPadding - 1) + ea,
+          paddingBottom: desktop ? "" : String(grayPadding - 0.8) + ea,
         },
       });
       for (let j = 0; j < widthMap.length; j++) {
@@ -1376,7 +1388,7 @@ DesignerBoardJs.prototype.insertCommentsBox = function (whiteBlock) {
               color: state >= 2 ? colorChip.deactive : colorChip.black,
               width: desktop ? String(widthMap[j]) + ea : "",
               marginRight: desktop ? "" : String(1) + ea,
-              marginBottom: desktop ? "" : String(0.7) + ea,
+              marginBottom: desktop ? "" : String(1) + ea,
               paddingLeft: desktop ? "" : String(0.4) + ea,
               paddingTop: desktop ? "" : String(0.2) + ea,
             },
@@ -1533,7 +1545,7 @@ DesignerBoardJs.prototype.insertforeContentsBox = function (whiteBlock) {
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
-  titleBottom = <%% (isMac() ? 18 : 16), (isMac() ? 18 : 16), (isMac() ? 15 : 13), (isMac() ? 15 : 13), 3 %%>;
+  titleBottom = <%% (isMac() ? 18 : 16), (isMac() ? 18 : 16), (isMac() ? 15 : 13), (isMac() ? 15 : 13), 2.5 %%>;
 
   mobileTitleLeft = 6;
 
@@ -1542,7 +1554,7 @@ DesignerBoardJs.prototype.insertforeContentsBox = function (whiteBlock) {
 
   tongMargin = <%% 6, 6, 6, 6, 1 %%>;
 
-  tongHeight = <%% 50, 50, 42, 42, 9 %%>;
+  tongHeight = <%% 50, 50, 42, 42, 15.64 %%>;
 
   whiteSize = <%% 15, 15, 13, 13, 3 %%>;
   whiteWeight = <%% 400, 400, 400, 400, 400 %%>;
@@ -1553,7 +1565,7 @@ DesignerBoardJs.prototype.insertforeContentsBox = function (whiteBlock) {
   circleTop = <%% 21, 21, 17, 17, 2.7 %%>;
   circleRight = <%% 20, 20, 20, 20, 2.7 %%>;
 
-  minimalLength = <%% 3, 3, 3, 3, 6 %%>;
+  minimalLength = <%% 3, 3, 3, 3, 3 %%>;
 
   colorBoxHeight = <%% 26, 26, 24, 24, 5.5 %%>;
   colorBoxPadding = <%% 10, 10, 8, 8, 2.2 %%>;
@@ -1566,7 +1578,7 @@ DesignerBoardJs.prototype.insertforeContentsBox = function (whiteBlock) {
   contentsMap = (project, index) => {
     let map;
 
-    if (desktop) {
+    if (big) {
       map = [
         "업로드 예정",
         serviceParsing(project.service).replace(/[a-zA-Z]/gi, '').trim().split(' ').slice(1).join(' '),
@@ -1577,12 +1589,24 @@ DesignerBoardJs.prototype.insertforeContentsBox = function (whiteBlock) {
         "<b%아이디 : %b>" + project.pid,
       ];
     } else {
-      map = [
-        project.name + " <b%고객님%b>",
-        serviceParsing(project.service).replace(/[a-zA-Z]/gi, '').trim().split(' ')[0],
-        serviceParsing(project.service).replace(/[a-zA-Z]/gi, '').trim().split(' ').slice(1).join(' '),
-        project.process.action,
-      ];
+      if (desktop) {
+        map = [
+          "업로드 예정",
+          serviceParsing(project.service).replace(/[a-zA-Z]/gi, '').trim().split(' ').slice(1).join(' '),
+          project.name,
+          "<b%시작일 : %b>" + dateToString(project.process.contract.form.date.from, false).slice(2),
+          "<b%종료일 : %b>" + dateToString(project.process.contract.form.date.to, false).slice(2),
+          "<b%잔금 : %b>" + (/없음/gi.test(dateToString(project.process.calculation.payments.remain.date, false).slice(2)) ? "예정" : dateToString(project.process.calculation.payments.remain.date, false).slice(2)),
+        ];
+      } else {
+        map = [
+          project.name + " <b%고객님%b>",
+          "업로드 예정",
+          serviceParsing(project.service).replace(/[a-zA-Z]/gi, '').trim().split(' ').slice(1).join(' '),
+          "잔금 : " + (/없음/gi.test(dateToString(project.process.calculation.payments.remain.date, false).slice(2)) ? "예정" : dateToString(project.process.calculation.payments.remain.date, false).slice(2)),
+        ];
+      }
+
     }
     return map[index];
   }
@@ -1591,8 +1615,8 @@ DesignerBoardJs.prototype.insertforeContentsBox = function (whiteBlock) {
     widthMap = <&&
       [ 86, 102, 73, 150, 150, 170, 150 ] |
       [ 86, 100, 62, 140, 140, 160, 140 ] |
-      [ 56, 97, 73, 120, 120, 120, 120 ] |
-      [ 56, 94, 73, 120, 120, 120, 120 ] |
+      [ 80, 91, 54, 116, 116, 132, 116 ] |
+      [ 78, 88, 54, 116, 116, 116, 116 ] |
       [ 6, 11, 12, 7, 14, 15, 15 ]
     &&>;
 
@@ -1607,8 +1631,8 @@ DesignerBoardJs.prototype.insertforeContentsBox = function (whiteBlock) {
     ];
 
     forceWidth = [
-      (<&& 62 | 62 | 36 | 36 | 6 &&>),
-      (<&& 62 | 62 | 36 | 36 | 6 &&>),
+      (<&& 62 | 62 | 60 | 58 | 6 &&>),
+      (<&& 62 | 62 | 60 | 58 | 6 &&>),
       null,
       null,
       null,
@@ -1620,9 +1644,9 @@ DesignerBoardJs.prototype.insertforeContentsBox = function (whiteBlock) {
 
     boxTarget = [
       null,
-      (state) => { return (state <= 1 ? colorChip.red : colorChip.deactive) },
-      (state) => { return (state <= 1 ? colorChip.yellow : colorChip.deactive) },
-      (state) => { return (state <= 1 ? (state === 0 ? colorChip.purple : colorChip.shadow) : colorChip.deactive) },
+      (state) => { return colorChip.green },
+      (state) => { return colorChip.yellow },
+      (state) => { return colorChip.shadow },
     ];
 
     forceWidth = [
@@ -1751,7 +1775,7 @@ DesignerBoardJs.prototype.insertforeContentsBox = function (whiteBlock) {
           flexDirection: "row",
           cursor: "pointer",
           paddingTop: desktop ? "" : String(grayPadding) + ea,
-          paddingBottom: desktop ? "" : String(grayPadding - 1) + ea,
+          paddingBottom: desktop ? "" : String(grayPadding - 0.8) + ea,
         },
       });
       for (let j = 0; j < widthMap.length; j++) {
@@ -1770,7 +1794,7 @@ DesignerBoardJs.prototype.insertforeContentsBox = function (whiteBlock) {
               color: state >= 2 ? colorChip.deactive : colorChip.black,
               width: desktop ? String(widthMap[j]) + ea : "",
               marginRight: desktop ? "" : String(1) + ea,
-              marginBottom: desktop ? "" : String(0.7) + ea,
+              marginBottom: desktop ? "" : String(1) + ea,
               paddingLeft: desktop ? "" : String(0.4) + ea,
               paddingTop: desktop ? "" : String(0.2) + ea,
             },
@@ -1898,13 +1922,13 @@ DesignerBoardJs.prototype.insertCalendarBox = function () {
   grayBetween = <%% 40, 40, 36, 36, 3 %%>;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 55, 55, 47, 39, 6 %%>;
+  margin = <%% 55, 55, 47, 39, 0 %%>;
   paddingTop =  <%% 52, 52, 44, 36, 6 %%>;
 
-  whiteBottomMargin = <%% 58, 58, 58, 58, 6 %%>;
+  whiteBottomMargin = <%% 20, 20, 16, 8, 0.5 %%>;
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
-  numberRight = <%% 12, 12, 12, 12, 3 %%>;
+  numberRight = <%% 12, 12, 12, 12, 2 %%>;
 
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
@@ -1919,11 +1943,11 @@ DesignerBoardJs.prototype.insertCalendarBox = function () {
       position: "relative",
       borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
-      background: colorChip.white,
+      background: desktop ? colorChip.white : "",
       paddingTop: String(paddingTop) + ea,
       paddingBottom: String(whiteBottomMargin) + ea,
       marginBottom: String(bottomMargin) + ea,
-      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
     },
     children: [
       {
@@ -1956,6 +1980,17 @@ DesignerBoardJs.prototype.insertCalendarBox = function () {
         },
         children: [
           {
+            style: {
+              display: desktop ? "none" : "block",
+              top: String(0),
+              left: String(0),
+              width: withOut(0),
+              height: String(isIphone() ? 2.8 : 2.5) + ea,
+              borderBottom: "1px dashed " + colorChip.gray4,
+              position: "absolute",
+            }
+          },
+          {
             text: "디자이너 캘린더",
             style: {
               position: "relative",
@@ -1963,7 +1998,7 @@ DesignerBoardJs.prototype.insertCalendarBox = function () {
               top: String(titleTopNumber) + ea,
               fontSize: String(titleFontSize) + ea,
               fontWeight: String(600),
-              background: colorChip.white,
+              background: colorChip.gray1,
               paddingRight: String(numberRight) + ea,
               color: colorChip.black,
             },
@@ -2113,8 +2148,8 @@ DesignerBoardJs.prototype.insertPortfolioBase = function () {
   titlePaddingTop = <%% 30, 30, 30, 30, 3 %%>;
   titlePaddingBottom = <%% 30, 30, 30, 30, 3 %%>;
 
-  lineTop = <%% 44, 44, 44, 44, 4 %%>;
-  wordsPaddingRight = <%% 16, 16, 16, 16, 1 %%>;
+  lineTop = <%% 44, 44, 44, 44, isIphone() ? 5.8 : 5.5 %%>;
+  wordsPaddingRight = <%% 16, 16, 16, 16, 2 %%>;
 
   createNode({
     mother: baseTong,
@@ -2132,7 +2167,7 @@ DesignerBoardJs.prototype.insertPortfolioBase = function () {
           height: String(lineTop) + ea,
           top: String(0),
           left: String(0),
-          borderBottom: "1px dashed " + colorChip.deactive,
+          borderBottom: "1px dashed " + colorChip.gray4,
         }
       },
       {

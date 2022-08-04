@@ -502,7 +502,7 @@ RequestListJs.prototype.insertInformationBox = function () {
           flexDirection: "row",
           cursor: "pointer",
           paddingTop: desktop ? "" : String(grayPadding) + ea,
-          paddingBottom: desktop ? "" : String(grayPadding - 1) + ea,
+          paddingBottom: desktop ? "" : String(grayPadding - 0.8) + ea,
         },
       });
       for (let j = 0; j < widthMap.length; j++) {
@@ -521,7 +521,7 @@ RequestListJs.prototype.insertInformationBox = function () {
               color: state >= 2 ? colorChip.deactive : colorChip.black,
               width: desktop ? String(widthMap[j]) + ea : "",
               marginRight: desktop ? "" : String(1) + ea,
-              marginBottom: desktop ? "" : String(0.7) + ea,
+              marginBottom: desktop ? "" : String(1) + ea,
               paddingLeft: desktop ? "" : String(0.4) + ea,
               paddingTop: desktop ? "" : String(0.2) + ea,
             },
