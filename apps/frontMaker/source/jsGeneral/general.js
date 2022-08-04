@@ -5251,9 +5251,6 @@ GeneralJs.promiseTogether = function (promiseArr) {
 }
 
 GeneralJs.homeliaisonAnalytics = function (obj) {
-  const dbHost = "home-liaison.info";
-  const analyticsReceivePath = "/receiveLog";
-  const dbPort = 3000;
   return new Promise((resolve, reject) => {
     if (window.location.host === "localhost:3000" || window.location.host === "localhost:8080" || window.location.host === "localhost") {
       window.gtag("get", window.gtagId, "client_id", (client_id) => {
@@ -5290,13 +5287,6 @@ GeneralJs.homeliaisonAnalytics = function (obj) {
               window.gtag("event", obj.action, {
                 "event_category": obj.page,
                 "event_label": JSON.stringify(json),
-              });
-              GeneralJs.ajaxJson({
-                data: { ...json, value: obj.data },
-              }, "https://" + dbHost + ':' + String(dbPort) + analyticsReceivePath).then((obj) => {
-                resolve(obj);
-              }).catch((err) => {
-                reject(err.message);
               });
             });
           } else {
