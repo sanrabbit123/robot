@@ -19,7 +19,7 @@ const worker = async function (package) {
   try {
     const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
     const reflection = new MongoReflection();
-    await reflection.ultimateReflection();
+    await reflection.coreReflection();
     await messageLog("core mongo reflection done");
     return true;
   } catch (e) {
