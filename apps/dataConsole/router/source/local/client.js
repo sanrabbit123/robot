@@ -7463,6 +7463,66 @@ ClientJs.prototype.communicationRender = function () {
       }
     }
   ]);
+  communication.setItem([
+    () => { return "드랍시 서비스 소개"; },
+    function () {
+      return true;
+    },
+    async function (e) {
+      try {
+        let cliid, thisCase, serid, thisHistory, callBoo, liteBoo, inspectionArr;
+        let requestNumber;
+        let caseTong;
+        let answer;
+        let updateQuery;
+        let name;
+
+        if (instance.whiteBox === null || instance.whiteBox === undefined) {
+          do {
+            cliid = (await GeneralJs.prompt("고객 아이디를 입력하세요!")).trim();
+          } while (!/^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(cliid));
+        } else {
+          cliid = instance.whiteBox.id;
+        }
+        thisCase = null;
+        caseTong = [];
+        for (let c of instance.cases) {
+          if (c !== null) {
+            if (c.cliid === cliid) {
+              thisCase = c;
+              caseTong.push(c);
+            }
+          }
+        }
+        if (thisCase !== null) {
+          if (window.confirm(thisCase.name + " 고객님께 드랍시 서비스 소개 알림톡을 전송합니다. 확실합니까?")) {
+
+            await ajaxJson({
+              id: cliid,
+              column: null,
+              value: null,
+              email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+              send: "finalPush",
+            }, "/updateClientHistory");
+
+            await ajaxJson({
+              method: "finalPush",
+              name: thisCase.name,
+              phone: thisCase.phone,
+              option: {
+                client: thisCase.name,
+                host: FRONTHOST.replace(/^https\:\/\//i, ''),
+                path: "magnetic",
+              }
+            }, "/alimTalk");
+
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
 }
 
 ClientJs.prototype.sseCardParsing = function (raw) {

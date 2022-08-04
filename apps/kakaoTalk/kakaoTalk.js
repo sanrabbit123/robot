@@ -661,6 +661,22 @@ KakaoTalk.prototype.templateTong = function (target) {
         ];
       },
     },
+    finalPush: {
+      name: "드랍시 서비스 안내",
+      id: "TJ_5864",
+      needs: [
+        "client",
+        "host",
+        "path",
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "host", to: obj.host },
+          { from: "path", to: obj.path },
+        ];
+      },
+    },
     designerConsoleRequest: {
       name: "홈스타일링 의뢰서 전송",
       id: "TF_9057",
