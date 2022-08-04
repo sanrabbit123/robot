@@ -992,6 +992,14 @@ RequestListJs.prototype.launching = async function (loading) {
     [ designer ] = designers;
     this.designer = designer;
 
+    if (typeof window.localStorage.getItem("HL_desid") === "string") {
+      if (window.localStorage.getItem("HL_desid") !== desid) {
+        GeneralJs.selfHref(FRONTHOST + "/designer/login.php");
+      }
+    } else {
+      GeneralJs.selfHref(FRONTHOST + "/designer/login.php");
+    }
+
     projects = await ajaxJson({ whereQuery: { desid } }, SECONDHOST + "/getProjects", { equal: true });
     this.projects = projects;
 

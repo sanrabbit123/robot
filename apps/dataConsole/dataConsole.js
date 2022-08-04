@@ -639,6 +639,7 @@ DataConsole.prototype.renderDesignerPhp = async function () {
       { from: "designerReport", to: "report", path: "/middle/designerReport" },
       { from: "requestDetail", to: "request", path: "/middle/requestDetail" },
       { from: "requestList", to: "requests", path: "/middle/requestList" },
+      { from: "designerLogin", to: "login", path: "/middle/designerLogin" },
     ];
     const ghostTargets = (await fileSystem(`readDir`, [ ghostDir + "/designer" ])).filter((str) => { return str !== ".DS_Store" }).filter((str) => {
       const fromArr = targetMap.map((obj) => { return obj.from });
