@@ -2313,7 +2313,6 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
 
   // photo
 
-  /*
 
   createNode({
     mother: baseTong,
@@ -2609,7 +2608,7 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
         marginRight: String(photoBetween) + ea,
         marginBottom: String(photoBetween) + ea,
         backgroundImage: "url('" + photoSrc + "')",
-        backgroundSize: gs === "s" ? "auto 100%" : "100% auto",
+        backgroundSize: "100% auto",
         backgroundPosition: "50% 50%",
         borderRadius: String(3) + "px",
         cursor: "pointer",
@@ -2618,7 +2617,6 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
 
   }
 
-  */
 
 }
 

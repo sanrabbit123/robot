@@ -3974,7 +3974,7 @@ DesignerProposalJs.prototype.submitEvent = function (desid, designer, method) {
           method: method,
         }, BACKHOST + "/designerProposal_submit");
 
-        await homeliaisonAnalytics({
+        homeliaisonAnalytics({
           page: instance.pageName,
           standard: instance.firstPageViewTime,
           action: "designerSelect",
@@ -3987,7 +3987,9 @@ DesignerProposalJs.prototype.submitEvent = function (desid, designer, method) {
             designer: designer,
             method: method,
           },
-        });
+        }).catch((err) => {
+          console.log(err);
+        })
 
         await sleep(500);
 

@@ -2030,7 +2030,6 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
 
   // photo
 
-  /*
 
   createNode({
     mother: baseTong,
@@ -2326,7 +2325,7 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
         marginRight: String(photoBetween) + ea,
         marginBottom: String(photoBetween) + ea,
         backgroundImage: "url('" + photoSrc + "')",
-        backgroundSize: gs === "s" ? "auto 100%" : "100% auto",
+        backgroundSize: "100% auto",
         backgroundPosition: "50% 50%",
         borderRadius: String(3) + "px",
         cursor: "pointer",
@@ -2335,7 +2334,6 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
 
   }
 
-  */
 
 }
 
