@@ -1194,20 +1194,20 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
 
   mother.appendChild(designerTitle);
 
-  // if (this.designers.pick(desid).analytics.grade === 1) {
-  //   createNode({
-  //     mother: designerTitle,
-  //     mode: "svg",
-  //     source: instance.mother.returnMainMark(colorChip.green),
-  //     style: {
-  //       display: "inline-block",
-  //       position: "relative",
-  //       width: String(markWidth) + ea,
-  //       marginLeft: String(markMargin) + ea,
-  //       top: String(markTop) + ea,
-  //     }
-  //   })
-  // }
+  if (this.designers.pick(desid).analytics.grade === 1) {
+    createNode({
+      mother: designerTitle,
+      mode: "svg",
+      source: instance.mother.returnMainMark(colorChip.green),
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: String(markWidth) + ea,
+        marginLeft: String(markMargin) + ea,
+        top: String(markTop) + ea,
+      }
+    })
+  }
 
   //picture and description
   pictureDescription = GeneralJs.nodes.div.cloneNode(true);
