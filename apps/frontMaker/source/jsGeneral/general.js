@@ -63,6 +63,43 @@ GeneralJs.svgMaker = {
     const constYValues = [ 3.506, 5.862, 3.411, 3.461, 3.506 ];
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${calcul(x)} ${calcul(y)}" xml:space="preserve"><path d="M${calcul(x - constXValues[0])},${calcul(y - constYValues[0])}c-0.019-0.045-0.046-0.086-0.081-0.121l-2.983-2.984c-0.146-0.146-0.384-0.146-0.53,0s-0.146,0.384,0,0.53l2.344,2.344H2.876c-1.172,0-2.126-0.954-2.126-2.126V0H0v${calcul(y - constYValues[1])}c0,1.586,1.29,2.876,2.876,2.876h${calcul(x - constXValues[1])}l-2.344,2.343c-0.146,0.146-0.146,0.385,0,0.531c0.073,0.073,0.169,0.109,0.265,0.109s0.192-0.036,0.265-0.109l2.984-2.984c0.034-0.034,0.062-0.075,0.081-0.121c0.019-0.045,0.029-0.094,0.029-0.144C${calcul(x)},${calcul(y - constYValues[2])},${calcul(x - constXValues[2])},${calcul(y - constYValues[3])},${calcul(x - constXValues[3])},${calcul(y - constYValues[4])}z"/></svg>`;
   },
+  processArrow: function (width, height, color = GeneralJs.colorChip.green) {
+    if (typeof width !== "number" || typeof height !== "number" || typeof color !== "string") {
+      throw new Error("input must be { width, height, color }");
+    }
+    if (height === 0) {
+      throw new Error("zero height ban");
+    }
+    const ratio = width / height;
+    const calcul = (num) => { return String(Math.round(num * 1000) / 1000); }
+    let standard;
+    let x, y, w, z;
+    let standardWidth;
+
+    standard = 200;
+    standardWidth = standard * ratio;
+
+    x = 3;
+    y = 4;
+    w = 10;
+    z = 14;
+
+    return `<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 ${calcul(standardWidth)} ${calcul(standard)}" xml:space="preserve"><path fill="${color}" d="M ${calcul(standardWidth - (((standard / 2) / y) * x))}, ${calcul(standard)}H 0l ${calcul(((standard / 2) - (z / 2)) / (y / x))}, -${calcul((standard / 2) - (z / 2))}c ${calcul(x)}, -${calcul(y)}, ${calcul(x)}, -${calcul(w)}, 0, -${calcul(z)}L 0,0h ${calcul(standardWidth - (((standard / 2) / y) * x))}l ${calcul(((standard / 2) - (z / 2)) / (y / x))}, ${calcul((standard / 2) - (z / 2))}c ${calcul(x)}, ${calcul(y)}, ${calcul(x)}, ${calcul(w)}, 0, ${calcul(z)}L ${calcul(standardWidth - (((standard / 2) / y) * x))}, ${calcul(standard)}z" /></svg>`;
+  },
+  commentTriangle: function (direction, color) {
+    if (typeof direction !== "string" || typeof color !== "string") {
+      throw new Error("direction => [ verticalRight, verticalLeft, horizontalRight, horizontalLeft ]")
+    }
+    if (direction === "horizontalRight") {
+      return `<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 20 10" xml:space="preserve"><path fill="${color}" d="M 0, 0L 20, 0l -10, 10h -10L 0, 0z" /></svg>`;
+    } else if (direction === "horizontalLeft") {
+      return `<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 20 10" xml:space="preserve"><path fill="${color}" d="M 20, 0L 0, 0l 10, 10h 10L 20, 0z" /></svg>`;
+    } else if (direction === "verticalRight") {
+      return `<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 10 20" xml:space="preserve"><path fill="${color}" d="M 10, 0L 0, 0L 0, 10l 10, 10L 10, 0z"/></svg>`;
+    } else if (direction === "verticalLeft") {
+      return `<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 10 20" xml:space="preserve"><path fill="${color}" d="M 10, 0L 0, 0L 0, 20l 10, -10L 10, 0z"/></svg>`;
+    }
+  },
   doubleQuote: function (color) {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56.785 49.482"><path d="M1.404 41.51C-3.883 27.672 6.229 7.036 23.924 0l1.608 2.581c-8.272 4.924-13.097 10.083-14.936 15.947 -1.379 4.22 0.69 6.799 3.446 7.034 6.205 0.47 10.8 5.862 10.8 11.492 0 6.801-5.054 12.428-11.718 12.428C7.837 49.482 3.242 46.2 1.404 41.51zM32.657 41.51C27.37 27.672 37.482 7.036 55.177 0l1.608 2.581c-8.272 4.924-13.097 10.083-14.936 15.947 -1.379 4.22 0.69 6.799 3.446 7.034 6.205 0.47 10.802 5.862 10.802 11.492 0 6.801-5.056 12.428-11.72 12.428C39.09 49.482 34.495 46.2 32.657 41.51z" fill="${color}"/></svg>`;
   },
