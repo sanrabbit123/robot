@@ -1994,13 +1994,13 @@ DesignerAboutJs.prototype.launching = async function (loading) {
     [ designer ] = designers;
     this.designer = designer;
 
-    if (typeof window.localStorage.getItem("HL_desid") === "string") {
-      if (window.localStorage.getItem("HL_desid") !== desid) {
-        GeneralJs.selfHref(FRONTHOST + "/designer/login.php");
-      }
-    } else {
-      GeneralJs.selfHref(FRONTHOST + "/designer/login.php");
-    }
+    // if (typeof window.localStorage.getItem("HL_desid") === "string") {
+    //   if (window.localStorage.getItem("HL_desid") !== desid) {
+    //     GeneralJs.selfHref(FRONTHOST + "/designer/login.php");
+    //   }
+    // } else {
+    //   GeneralJs.selfHref(FRONTHOST + "/designer/login.php");
+    // }
 
     await this.mother.ghostDesignerLaunching({
       name: "designerAbout",

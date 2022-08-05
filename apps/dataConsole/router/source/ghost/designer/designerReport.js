@@ -918,13 +918,13 @@ DesignerReportJs.prototype.launching = async function (loading) {
 
     desid = getObj.desid;
 
-    if (typeof window.localStorage.getItem("HL_desid") === "string") {
-      if (window.localStorage.getItem("HL_desid") !== desid) {
-        GeneralJs.selfHref(FRONTHOST + "/designer/login.php");
-      }
-    } else {
-      GeneralJs.selfHref(FRONTHOST + "/designer/login.php");
-    }
+    // if (typeof window.localStorage.getItem("HL_desid") === "string") {
+    //   if (window.localStorage.getItem("HL_desid") !== desid) {
+    //     GeneralJs.selfHref(FRONTHOST + "/designer/login.php");
+    //   }
+    // } else {
+    //   GeneralJs.selfHref(FRONTHOST + "/designer/login.php");
+    // }
 
     const servicePrice = await ajaxJson({ desid }, BACKHOST + "/designerFeeTable", { equal: true });
     const { totalClient, contractProjects, proposalProjects, designer } = await ajaxJson({ desid }, SECONDHOST + "/designerProjects", { equal: true });
