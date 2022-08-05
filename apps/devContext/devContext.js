@@ -90,11 +90,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
-
-
-
-
 
 
     // const selfMongo = this.MONGOC;
@@ -940,7 +935,7 @@ DevContext.prototype.launching = async function () {
 
 
     // push client
-    // const cliid = "c2203_aa42s";
+    // const cliid = "c2208_aa13s";
     // const kakao = new KakaoTalk();
     // await kakao.ready();
     // const client = await back.getClientById(cliid, { selfMongo: this.MONGOC });
@@ -2775,7 +2770,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p190");
+    // await this.getRawPortfolio("a98");
 
 
     // get corePortfolio by pid

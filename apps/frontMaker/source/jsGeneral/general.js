@@ -5288,6 +5288,13 @@ GeneralJs.homeliaisonAnalytics = function (obj) {
                 "event_category": obj.page,
                 "event_label": JSON.stringify(json),
               });
+              resolve({
+                date: {
+                  standard: new Date(),
+                  now: new Date(),
+                },
+                data: json
+              });
             });
           } else {
             reject("input must be { page: String, standard: Date, action: String, data: Object } }");
