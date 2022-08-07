@@ -17,17 +17,6 @@ const Mother = function () {
   this.bridgeinfo = this.mongobridgeinfo;
   this.mongo = require("mongodb").MongoClient;
 
-  //mysql
-  this.frontinfo = {
-    host: infoObj.frontinfo.host,
-    user: infoObj.frontinfo.user,
-    password: infoObj.frontinfo.password,
-    port: infoObj.frontinfo.port,
-    database: infoObj.frontinfo.database
-  };
-
-  this.mysql = require("mysql2");
-
   //shell
   this.shell = require("shelljs");
 
@@ -2437,7 +2426,7 @@ Mother.prototype.decryptoHash = function (password, hash, option = { algorithm: 
 }
 
 Mother.prototype.mysqlQuery = function (query, option = { local: false, front: true }) {
-  const mysql = require('mysql2');
+  const mysql = require("mysql2");
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   let mysqlStandard;
   let host;
