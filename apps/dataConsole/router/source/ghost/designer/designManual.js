@@ -43,6 +43,445 @@ const DesignManualJs = function () {
 
 DesignManualJs.binaryPath = FRONTHOST + "/middle/console/manual";
 
+DesignManualJs.prototype.staticSetting = function () {
+  const instance = this;
+  const { ea, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  let contents;
+
+  contents = [
+    {
+      "title": "현장 미팅",
+      "checklist": [
+        {
+          "title": "디자이너가 진행할 4가지",
+          "children": [
+            {
+              "title": "현장 조사",
+              "contents": "현장에 대한 <b%특이사항 파악과 실측이 중요%b>합니다. 현장 방문이 어려운 경우, 현 거주지 또는 외부에서 만나실 수 있지만 시공 계약 전의 현장 방문은 필수입니다."
+            },
+            {
+              "title": "니즈 조사",
+              "contents": "디자이너는 고객님이 전송해주신 자료를 바탕으로 <b%미팅 사전 준비를 합니다.%b> 그리고 <b%현장에서 고객님의 이야기를 들어 니즈를 파악%b>합니다."
+            },
+            {
+              "title": "컨셉 잡기",
+              "contents": "컨셉은 <b%디자인의 기준이 되므로 매우 중요%b>합니다. 이미지 기반의 제안 및 고객님의 동의 과정을 통해서 이후 디자인 작업이 진행되고, 컨셉은 계속 변경할 수 없습니다."
+            },
+            {
+              "title": "시공 체크",
+              "contents": "프로젝트에 시공이 있을 경우, 현장 상태를 보고 디자이너는 현재 상태에서 <b%어떤 시공을 진행할 수 있는지, 어디까지 할 수 있는지%b> 등을 구체적으로 파악하게 됩니다."
+            }
+          ]
+        },
+        {
+          "title": "현장 조사 관련",
+          "children": [
+            {
+              "title": "도면 확인",
+              "contents": "<b%현장의 도면을 준비해주세요.%b> 적절한 도면이 없는 경우 실측을 통해 디자이너가 기록하지만 시간이 지체될 수 있습니다."
+            },
+            {
+              "title": "실측",
+              "contents": "도면이 있다고 해도 실제와 다를 수 있습니다. <b%도면보다 실측이 더 중요하므로 디자이너는 반드시 실측을 진행%b>합니다."
+            }
+          ]
+        },
+        {
+          "title": "니즈 조사 관련",
+          "children": [
+            {
+              "title": "예산 확인",
+              "contents": "니즈와 항상 더불어 고려해야 하는 것은 예산입니다. 디자이너는 <b%예산에 대한 범위 확인과 어떻게 나누어 쓸 지를 파악%b>하게 됩니다."
+            },
+            {
+              "title": "용도 확인",
+              "contents": "단순한 니즈만 듣는 것을 넘어 디자이너는 고객님의 라이프 스타일과 가족 구성원을 기반으로 <b%최적의 공간 용도와 동선을 기획%b>합니다."
+            }
+          ]
+        },
+        {
+          "title": "컨셉 잡기 관련",
+          "children": [
+            {
+              "title": "진행의 기준",
+              "contents": "조화로운 공간을 만들기 위해선 중심적인 기준이 필요하고, 그 <b%기준점을 정하는 작업이 컨셉을 잡는 일%b>입니다. 컨셉 작업은 1회를 초과하여 수정할 수 없습니다."
+            },
+            {
+              "title": "이미지 기반",
+              "contents": "추상적인 단어와 문장들로만 컨셉을 잡는 것이 아니라, <b%사진이나 이미지 등을 활용하여 디자인 컨셉%b>을 잡습니다. 컨셉 의논이 길게 소요되는 경우 <b%프로젝트 시작 후의 1차 시안에 해당 작업이 포함될 수 있습니다.%b>"
+            }
+          ]
+        },
+        {
+          "title": "시공 체크 관련",
+          "children": [
+            {
+              "title": "현장 진단",
+              "contents": "니즈를 넘어서 원하는 <b%스타일을 구현하기 위해 현장 자체에 필요한 시공%b>이 있을 수 있습니다. 디자이너는 현장을 진단하여 필요한 시공 사항을 설명해드립니다."
+            },
+            {
+              "title": "시공 범위",
+              "contents": "디자이너는 고객님의 니즈와 예산의 균형적인 분배, 기존 현장의 상태를 <b%종합적으로 판단하여 시공의 범위를 조정%b>하게 됩니다."
+            }
+          ]
+        },
+        {
+          "title": "기타 주의 사항",
+          "children": [
+            {
+              "title": "디자이너 변경",
+              "contents": "현장 미팅 후 디자이너와 잘 맞지 않는다고 판단될 시, <b%최대 1회까지 디자이너 변경을 요청%b>하실 수 있습니다. (거리로 인해 출장비가 발생한 경우, 변경 디자이너에 대한 출장비는 재발생됩니다.)"
+            },
+            {
+              "title": "다음 단계 안내",
+              "contents": "미팅 완료 후 계약서 작성과 잔금 결제가 완료되면 디자이너의 디자인 작업이 시작됩니다."
+            },
+            {
+              "title": "진행 취소시",
+              "contents": "현장 미팅 이후 진행 자체를 취소하실 시 <b%계약금은 환급되지 않습니다.%b>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "일정 안내",
+      "checklist": [
+        {
+          "title": "기본적인 순서",
+          "children": [
+            {
+              "title": "6가지 과정",
+              "contents": "인테리어의 기본적인 순서는 1 <b%실측%b>, 2 <b%디자인(설계)%b>, 3 <b%견적%b>, 4 <b%시공(제작)%b>, 5 <b%구매%b>, 6 <b%세팅%b> 으로 이루어집니다. <b%누락되거나 순서가 뒤바뀐 경우, 문제가 발생%b>할 수 있습니다."
+            }
+          ]
+        },
+        {
+          "title": "디자인 일정",
+          "children": [
+            {
+              "title": "1차 제안",
+              "contents": "디자이너는 현장 상태와 예산을 고려해서 <b%컨셉을 잡고 디자인을 진행하여 도면 또는 디자인 시안의 형태로 어떻게 집을 만들지 제안%b>하게 됩니다. 페이퍼 워크의 형태는 디자이너마다 다를 수 있습니다."
+            },
+            {
+              "title": "수정 제안",
+              "contents": "디자인 제안은 <b%보통 2~3회 정도 수정을 거치며 고객님과 의견을 조율%b>해 완성해 나아갑니다. 일정에는 디자인 수정에 대한 시간적 고려가 반영되어 있어야 합니다."
+            }
+          ]
+        },
+        {
+          "title": "견적 일정",
+          "children": [
+            {
+              "title": "시공사 선택",
+              "contents": "디자이너 시공사 또는 홈리에종 시공사로부터 <b%견적서를 받고 비교하여 시공사를 선택할 수 있는 과정%b>이 있습니다. 여러 업체에서 견적을 많이 받을수록 일정 기간이 늘어날 수 있습니다."
+            },
+            {
+              "title": "견적 수정",
+              "contents": "시공사 선택 후, 견적을 받고 견적을 수정할 수 있는 과정입니다. 공사가 시작된 후 공사 내역이 생기거나 수정될 시 추가 비용이 발생될 수 있기 때문에, <b%누락된 공사 항목은 없는지 꼼꼼하게 확인해야 하는 단계%b>입니다."
+            }
+          ]
+        },
+        {
+          "title": "시공 일정",
+          "children": [
+            {
+              "title": "공정표 제공",
+              "contents": "시공이 <b%시작되면 시공사가 공정표를 제공%b>합니다. 공정표는 일반적으로 철거 -> 전기, 설비 -> 목공 -> 도장 -> 타일 -> 금속 -> 마감 순으로 되어 있습니다. 현장 상황에 따라 구체적인 순서는 달라질 수 있습니다."
+            },
+            {
+              "title": "추가 공사 방지",
+              "contents": "견적대로 진행하는 것이 중요하며, <b%부득이하게 수정 또는 추가 요청이 있을 경우, 공정상 언제 요청하는지에 따라 비용과 시간이 크게 늘어날 수%b> 있습니다."
+            }
+          ]
+        },
+        {
+          "title": "구매 일정",
+          "children": [
+            {
+              "title": "리스트 제공",
+              "contents": "입주 청소가 끝나는 타이밍에 맞춰 제품이 올 수 있도록 디자이너는 <b%구체적인 제품과 스펙과 구매처(링크)가 적혀 있는 리스트를 제공%b>합니다. 구매 대행은 진행해드리지 않으며, 직접 구입해주시면 됩니다."
+            },
+            {
+              "title": "배송 고려",
+              "contents": "구매 일정에서 가장 중요한 것은 배송에 대한 고려입니다. 제품마다 배송 일자가 모두 다르고 <b%변수도 많기 때문에 일정의 여유를 두고 구매를 진행%b>하시는 것이 중요합니다."
+            }
+          ]
+        },
+        {
+          "title": "세팅 일정",
+          "children": [
+            {
+              "title": "세팅 가이드",
+              "contents": "디자이너는 가구와 제품의 <b%배치도를 통해 어떤 것을 어디에 둘 지에 대한 구체적인 가이드를 제공%b>합니다. 디자이너가 직접 조립 및 설치를 도와드리지는 않습니다."
+            },
+            {
+              "title": "촬영 조율",
+              "contents": "구매와 세팅이 모두 완료되면 홈리에종 통해 촬영 일자를 잡게 되며, 촬영 일자에 맞춰 촬영과 인터뷰를 진행하게 됩니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "1차 제안",
+      "checklist": [
+        {
+          "title": "기본적인 구성",
+          "children": [
+            {
+              "title": "4가지 요소",
+              "contents": "디자인 제안에는 다음과 같은 4가지 기본 요소를 갖추고 있습니다. 1 <b%컨셉%b>, 2 <b%공간 범위%b>, 3 <b%배치도%b>, 4 <b%시각화%b> 입니다. 디자이너마다 표현 방식은 다를 수 있으며, 4가지 외의 다른 요소가 포함되어 있을 수 있습니다."
+            }
+          ]
+        },
+        {
+          "title": "컨셉 설명",
+          "children": [
+            {
+              "title": "디자인의 방향",
+              "contents": "컨셉은 <b%디자인의 방향이자 기준점%b>이 되어 모든 스타일링 과정에서 어떤 스타일로 할 지에 대한 기준이 되어줍니다. 컨셉은 조화로운 분위기를 갖추기 위한 가장 중요한 과정이며, 컨셉이 명확해야 결과 또한 명확하니 <b%가장 먼저, 가장 확실하게 결정%b>해주셔야 합니다."
+            },
+            {
+              "title": "컨셉의 수정",
+              "contents": "<b%컨셉의 수정은 최대 1회까지 가능%b>하며, 수정을 원할 시 빨리 말씀해주셔야 합니다. 컨셉이 수정되는 순간 모든 공간의 디자인을 처음부터 다시 해야 하는 상황이 되기 때문입니다."
+            }
+          ]
+        },
+        {
+          "title": "공간 범위",
+          "children": [
+            {
+              "title": "명확한 범위 설정",
+              "contents": "스타일링이 진행될 명확한 범위 설정이 되어 있어야 하고, 동시에 현장 전체적인 구성과 계획을 보여주고 있어야 합니다."
+            },
+            {
+              "title": "용도의 설정",
+              "contents": "공간의 범위를 설정하는 과정은 각 공간의 용도를 설정하는 단계이기도 합니다. <b%고객님의 라이프 스타일과 니즈에 맞게 공간이 사용하기 좋게 구성될 수 있도록%b> 고민하고 결정하는 과정입니다."
+            }
+          ]
+        },
+        {
+          "title": "공간별 배치도",
+          "children": [
+            {
+              "title": "크기의 고려",
+              "contents": "<b%도면에서 가장 중요한 것은 스케일(축적)입니다.%b> 배치도에 있는 모든 것들은 실제 크기에 맞게 그려져 있어야 하며, 공간에 어떤 크기로 들어가고 얼마나 면적을 차지하게 될지가 구체적으로 표현되어 있어야 합니다."
+            }
+          ]
+        },
+        {
+          "title": "공간별 시각화",
+          "children": [
+            {
+              "title": "콜라주, 사진, 3D",
+              "contents": "디자이너는 홈스타일링이 되었을 때를 가정하여 <b%콜라주, 제품 사진, 3D 등으로 시각화된 자료를 제공%b>하게 됩니다. 이는 디자이너의 개인적인 시각화 스킬에 따라 그 종류와 퀄리티가 다를 수 있습니다."
+            },
+            {
+              "title": "주의 사항",
+              "contents": "시각화의 경우는 <b%디자이너마다 방식이 모두 다르고, 특히 3D의 경우 어떤 디자이너의 경우 유료로만 제공할 수%b> 있습니다. 시각화는 공간을 미리 확인할 수 있게 해주는 자료이지만 그만큼 시간이 많이 들고 어려운 작업이기에, 지나치게 시각화를 요청할 경우 추가 비용이 들어갈 수 있습니다."
+            }
+          ]
+        },
+        {
+          "title": "디자인의 수정",
+          "children": [
+            {
+              "title": "수정 횟수",
+              "contents": "컨셉은 최대 1회, 그 외의 디자인 수정은 3~5회까지 가능합니다. <b%수정을 너무 많이 하거나 수정 범위가 지나치게 클 경우, 일정에 차질이 생길 수 있어%b> 추후 문제가 발생할 수도 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "수정 제안",
+      "checklist": [
+        {
+          "title": "기본적인 구성",
+          "children": [
+            {
+              "title": "4가지 요소",
+              "contents": "디자인 제안에는 다음과 같은 4가지 기본 요소를 갖추고 있습니다. 1 <b%컨셉%b>, 2 <b%공간 범위%b>, 3 <b%배치도%b>, 4 <b%시각화%b> 입니다. 디자이너마다 표현 방식은 다를 수 있으며, 4가지 외의 다른 요소가 포함되어 있을 수 있습니다."
+            }
+          ]
+        },
+        {
+          "title": "컨셉 설명",
+          "children": [
+            {
+              "title": "디자인의 방향",
+              "contents": "컨셉은 <b%디자인의 방향이자 기준점%b>이 되어 모든 스타일링 과정에서 어떤 스타일로 할 지에 대한 기준이 되어줍니다. 컨셉은 조화로운 분위기를 갖추기 위한 가장 중요한 과정이며, 컨셉이 명확해야 결과 또한 명확하니 <b%가장 먼저, 가장 확실하게 결정%b>해주셔야 합니다."
+            },
+            {
+              "title": "컨셉의 수정",
+              "contents": "<b%컨셉의 수정은 최대 1회까지 가능%b>하며, 수정을 원할 시 빨리 말씀해주셔야 합니다. 컨셉이 수정되는 순간 모든 공간의 디자인을 처음부터 다시 해야 하는 상황이 되기 때문입니다."
+            }
+          ]
+        },
+        {
+          "title": "공간 범위",
+          "children": [
+            {
+              "title": "명확한 범위 설정",
+              "contents": "스타일링이 진행될 명확한 범위 설정이 되어 있어야 하고, 동시에 현장 전체적인 구성과 계획을 보여주고 있어야 합니다."
+            },
+            {
+              "title": "용도의 설정",
+              "contents": "공간의 범위를 설정하는 과정은 각 공간의 용도를 설정하는 단계이기도 합니다. <b%고객님의 라이프 스타일과 니즈에 맞게 공간이 사용하기 좋게 구성될 수 있도록%b> 고민하고 결정하는 과정입니다."
+            }
+          ]
+        },
+        {
+          "title": "공간별 배치도",
+          "children": [
+            {
+              "title": "크기의 고려",
+              "contents": "<b%도면에서 가장 중요한 것은 스케일(축적)입니다.%b> 배치도에 있는 모든 것들은 실제 크기에 맞게 그려져 있어야 하며, 공간에 어떤 크기로 들어가고 얼마나 면적을 차지하게 될지가 구체적으로 표현되어 있어야 합니다."
+            }
+          ]
+        },
+        {
+          "title": "공간별 시각화",
+          "children": [
+            {
+              "title": "콜라주, 사진, 3D",
+              "contents": "디자이너는 홈스타일링이 되었을 때를 가정하여 <b%콜라주, 제품 사진, 3D 등으로 시각화된 자료를 제공%b>하게 됩니다. 이는 디자이너의 개인적인 시각화 스킬에 따라 그 종류와 퀄리티가 다를 수 있습니다."
+            },
+            {
+              "title": "주의 사항",
+              "contents": "시각화의 경우는 <b%디자이너마다 방식이 모두 다르고, 특히 3D의 경우 어떤 디자이너의 경우 유료로만 제공할 수%b> 있습니다. 시각화는 공간을 미리 확인할 수 있게 해주는 자료이지만 그만큼 시간이 많이 들고 어려운 작업이기에, 지나치게 시각화를 요청할 경우 추가 비용이 들어갈 수 있습니다."
+            }
+          ]
+        },
+        {
+          "title": "디자인의 수정",
+          "children": [
+            {
+              "title": "수정 횟수",
+              "contents": "컨셉은 최대 1회, 그 외의 디자인 수정은 3~5회까지 가능합니다. <b%수정을 너무 많이 하거나 수정 범위가 지나치게 클 경우, 일정에 차질이 생길 수 있어%b> 추후 문제가 발생할 수도 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "시공 의뢰서",
+      "checklist": [
+        {
+          "title": "시공사 선택",
+          "children": [
+            {
+              "title": "직접 선택",
+              "contents": "홈리에종은 디자인 니즈의 반영, 품질, 합리적인 견적을 제시하는 시공사를 추천하여 고객님께서 직접 시공사를 선택할 수 있도록 해드립니다. 홈리에종 시공사, 디자이너가 데려온 시공사, 턴키 업체 등과 진행하실 수 있으며, <b%공정별 시공 계약은 선택이 불가%b>하십니다."
+            },
+            {
+              "title": "직접 계약",
+              "contents": "고객님은 <b%홈스타일링 계약과는 별개로 시공사와 직접 계약을 체결%b>하여 시공을 진행하시게 됩니다. 시공 대금의 지불, 감리, 하자 보수 등의 모든 사항은 고객님이 체결한 시공사 계약에 따릅니다."
+            }
+          ]
+        },
+        {
+          "title": "시공 진행 과정",
+          "children": [
+            {
+              "title": "시공 리스트",
+              "contents": "디자이너는 완성된 <b%디자인안을 바탕으로 필요한 시공 리스트를 작성%b>하여 어떤 시공을 어떻게 할지 명확하게 정하게 됩니다."
+            },
+            {
+              "title": "공정표 제공",
+              "contents": "시공이 <b%시작되면 시공사가 공정표를 제공%b>합니다. 공정표는 일반적으로 철거 -&gt 전기, 설비 -&gt 목공 -&gt 도장 -&gt 타일 -&gt 금속 -&gt 마감 순으로 되어 있습니다. 현장 상황에 따라 구체적인 순서는 달라질 수 있습니다."
+            },
+            {
+              "title": "추가 공사 방지",
+              "contents": "견적대로 진행하는 것이 중요하며, <b%부득이하게 수정 또는 추가 요청이 있을 경우, 공정상 언제 요청하는지에 따라 비용과 시간이 크게 늘어날 수%b> 있습니다."
+            }
+          ]
+        },
+        {
+          "title": "시공 하자 보수",
+          "children": [
+            {
+              "title": "AS의 책임",
+              "contents": "시공 계약과 홈스타일링 계약은 별도로 존재하기 때문에 시공에 대한 하자 보수 요청이나 불만 사항은 <b%계약된 시공 업체와 소통%b>하셔야 합니다. 홈리에종 시공사와 계약을 하신 경우에만 홈리에종에서 적극적으로 응대를 도와 드립니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "제품 리스트",
+      "checklist": [
+        {
+          "title": "기본 사항",
+          "children": [
+            {
+              "title": "제품 리스트",
+              "contents": "디자이너는 공간별 구체적인 제품과 그 제품의 구매처(링크)를 제공합니다. 디자이너가 제시해준 구매처로 들어가 <b%직접 고객님께서 결제를 진행%b>하시고 구매를 해주시면 됩니다."
+            },
+            {
+              "title": "구매 대행",
+              "contents": "<b%구매 대행은 제공하지 않습니다.%b> 제공하지 않는 이유는 회사에 금전 거래가 발생할 시 일어나는 세금 문제가 있고, 구매 과정에서 이슈가 발생할 시 매우 복잡한 상황이 유발되기 때문입니다."
+            },
+            {
+              "title": "하자 보수",
+              "contents": "구매하신 제품에서 하자와 보수할 내용이 생기는 경우, 해당 구매 업체에 요청해주시면 됩니다. <b%구매한 제품에 대한 하자와 보수의 문제는 해당 업체에 책임이%b> 있습니다."
+            }
+          ]
+        },
+        {
+          "title": "권장 구매 방법",
+          "children": [
+            {
+              "title": "선택의 이유",
+              "contents": "디자이너는 제품 자체가 그냥 예뻐서 제안하는 것이 아니라 전체적인 공간의 조화와 컨셉에 맞춰 적절한 제품을 제안합니다. 제품 자체가 엄청 예쁘지 않아도 공간 속에 놓일 때 확 분위기를 바꿔줄 수도 있고, 제품 자체가 아무리 예뻐도 조화롭지 않아 이상한 제품들이 있기 마련입니다. 따라서 <b%디자이너를 믿고 제품을 그대로 구입해주시는 것이 가장 좋습니다.%b>"
+            },
+            {
+              "title": "유사 제품",
+              "contents": "추천받은 것과 생김새가 비슷해 보이는 제품이 단순히 더 싸서 구입하실 경우, 문제가 발생할 수 있습니다. <b%제품의 디테일이나 내구성, 사용성 부분에서 차이가 날 수도%b> 있기 때문입니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "세팅 안내",
+      "checklist": [
+        {
+          "title": "세팅 안내",
+          "children": [
+            {
+              "title": "기본적인 배치",
+              "contents": "<b%이사하는 날 디자이너가 현장에 가지 않기%b> 때문에, 배송된 제품의 수령, 언박싱, 조립, 1차 배치는 고객님께서 진행해주셔야 합니다. 디자이너는 배송 제품을 받아주거나 설치를 해주어야 하는 의무가 없다는 점을 인지해주셔야 합니다."
+            },
+            {
+              "title": "촬영을 위한 세팅",
+              "contents": "촬영일이 정해지면 <b%디자이너와 사진 작가가 현장에 방문하여 디자이너의 터치가 들어간 배치가 시작되고 동시에 현장 촬영%b>이 진행됩니다. 촬영된 현장 사진은 보정되어 고객님께 드립니다."
+            }
+          ]
+        },
+        {
+          "title": "촬영 안내",
+          "children": [
+            {
+              "title": "인터뷰 진행",
+              "contents": "디자이너와 사진 작가가 세팅과 촬영을 진행할 때, <b%홈리에종 직원과 함께 고객 인터뷰를 진행%b>하게 됩니다. 인터뷰는 간단한 형식으로 진행되며 일정한 형식으로 편집되어 고객 후기로 웹사이트로 발행됩니다."
+            },
+            {
+              "title": "컨텐츠 발행",
+              "contents": "인터뷰와 함께 디자이너 또한 해당 <b%현장에 대한 디자인 의도가 담긴 글을 작성하여 포트폴리오 형식으로 웹사이트에 발행%b>됩니다. 이 컨텐츠들은 향후 디자이너를 홍보하는 데에 활용됩니다."
+            }
+          ]
+        }
+      ]
+    }
+  ];
+
+  return contents;
+}
+
 DesignManualJs.prototype.insertInitBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
@@ -243,7 +682,6 @@ DesignManualJs.prototype.insertProcessBox = function () {
   let textSize, textWeight;
   let textMarginLeft;
 
-
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
   paddingTop =  <%% 52, 52, 44, 36, 6 %%>;
@@ -264,15 +702,7 @@ DesignManualJs.prototype.insertProcessBox = function () {
   textMarginLeft = <%% 50, 50, 50, 50, 50 %%>;
 
   contents = {
-    process: [
-      "현장 미팅",
-      "일정 안내",
-      "1차 제안",
-      "수정 제안",
-      "시공 의뢰서",
-      "제품 리스트",
-      "세팅 안내"
-    ]
+    process: this.staticSetting().map((obj) => { return obj.title }),
   };
 
   whiteBlock = createNode({
@@ -357,7 +787,20 @@ DesignManualJs.prototype.insertProcessBox = function () {
 
 }
 
-DesignManualJs.prototype.insertNoticeBox = function () {
+DesignManualJs.prototype.contentsLoop = function () {
+  const instance = this;
+  const { ea, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const targetContents = this.staticSetting();
+
+  for (let { title } of targetContents) {
+    this.insertChecklistBox(title);
+  }
+
+}
+
+DesignManualJs.prototype.insertChecklistBox = function (titleKey) {
   const instance = this;
   const mother = this.mother;
   const { client, ea, baseTong, media, project } = this;
@@ -365,43 +808,8 @@ DesignManualJs.prototype.insertNoticeBox = function () {
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
-  const mainContents = [
-    {
-      title: "고객 안내 사항과 서비스 구성",
-      contents: [
-        "디자이너와 카톡(문자)/전화/메일 등의 채널을 통해 커뮤니케이션 하면서 전체 스타일링을 완성합니다. 커뮤니케이션에 적극적으로 참여해주시면 더 좋은 결과물을 얻으실 수 있습니다.",
-        "디자이너와 현장 미팅을 진행하며 집컨디션/취향/생활특징/예산을 고려하여 컨설팅 해드립니다.",
-        "시공팀은 추천하는 시공팀 외에 고객이 개별적으로 알아본 시공팀과 진행 가능합니다.",
-        "시공 진행시 디자이너는 시공 방향 제시 및 전체 마감재를 셀렉해드립니다.",
-        "기존에 사용하시는 가구들 중 가져갈 가구와 버릴가구 선택 및 배치/활용 제안 드립니다. 새로 구매하실 가구, 조명, 패브릭(커튼, 베딩, 러그, 쿠션), 소품(식물, 액자, 시계 등)을 제안해드립니다.",
-        "디자이너의 제안에 따라 패브릭 및 가구의 맞춤 제작이 가능합니다.",
-        "생활용품, 식기, 가전은 스타일링 제안 범위에 포함되지 않습니다. 다만 선택하신 후 제품 외관의 디자인 옵션(컬러 등)을 의논하실 경우 전체 디자인을 고려하여 골라드립니다. 생활용품과 식기의 경우, 고객님께서 찾으신 3~4품목중에서 셀렉은 가능합니다.",
-        "디자이너 제안 후 고객 컨펌이 완료된 구매제품은 고객이 구매하실 수 있도록 안내드립니다. 연계 업체의 제품 구매시에는 할인혜택을 받으실 수 있습니다. 모든 제품이 해당되는 것은 아니며 업체마다 차이가 있습니다.",
-        "제품 구매에 소요되는 배송비, 조립 및 설치비는 고객님께서 부담하시게 됩니다. 배송된 제품의 수령, 언박싱, 조립, 1차배치는 고객님께서 진행하시게 됩니다. 구매 및 물품배치가 완료되면 디자이너의 마무리터치 후 인터뷰와 촬영을 진행합니다."
-      ],
-    },
-    {
-      title: "시공 연계 수수료 안내",
-      contents: [
-        "고객이 시공 계약을 체결한 곳에 공사진행과 A/S에 대한 책임이 있습니다. (고객에게 동일하게 안내합니다.)",
-        "고객이 데려온 시공팀과 진행할 경우 디자이너는 시공자재 셀렉과 필요시 시공관련 커뮤니케이션 업무가 있을 수 있습니다.",
-        "고객이 실장님 또는 실장님과 협업하시는 시공사와 시공 계약을 체결할 경우 전체 계약 금액의 5%가 시공 연계 수수료 입니다.",
-        "홈리에종은 적법한 방식의 시공계약을 권장하며, (세금 없는) 현금 거래로 시공을 진행했을 경우에도 시공 연계 수수료는 공급가에 VAT 10%를 더한 금액으로 전자세금계산서를 발행합니다. 입금하실 때에도 공급가에 VAT10% 더한 금액을 입금해주셔야합니다."
-      ],
-    },
-    {
-      title: "정산 안내",
-      contents: [
-        "홈리에종에서 받은 서비스비는 수수료를 제하고 스타일링 시작 후 실장님께 선금 50%를 먼저 정산하고",
-        "스타일링이 마무리되면 나머지 50%를 정산합니다.",
-        "스타일링 마무리는",
-        "1) 스타일링 제안이 마무리되어 제품들이 배송단계에 있고",
-        "2) 촬영일이 (변동되더라도) 어느정도 정해지고",
-        "3) 실장님께서 디자이너의 디자인 의도가 담긴 글(폼을 따로 드립니다) 저희쪽에 주시면",
-        "4) 홈리에종에서 고객님께 정산 여부를 확인 후 정산을 진행합니다.",
-      ]
-    }
-  ];
+  const mainTitle = titleKey;
+  const mainContents = this.staticSetting().find((obj) => { return obj.title === titleKey }).checklist;
   let paddingTop;
   let block;
   let whiteBlock, whiteTong;
@@ -438,6 +846,7 @@ DesignManualJs.prototype.insertNoticeBox = function () {
   let mobileContentsWordingSize;
   let wordings;
   let lineTop, linePadding;
+  let checkBoxAreaWidth;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -483,8 +892,8 @@ DesignManualJs.prototype.insertNoticeBox = function () {
 
   checkBoxWidth = <%% 10, 10, 10, 10, 2 %%>;
   arrowBoxWidth = <%% 9, 8, 8, 8, 1.8 %%>;
-  checkBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.6 %%>;
-  arrowBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.5 %%>;
+  checkBoxTop = <%% (isMac() ? 7 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.6 %%>;
+  arrowBoxTop = <%% (isMac() ? 7 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.5 %%>;
 
   contentsMarginBottom0 = <%% 4, 4, 4, 4, 2 %%>;
   contentsMarginBottom1 = <%% 32, 32, 30, 28, 3 %%>;
@@ -495,6 +904,8 @@ DesignManualJs.prototype.insertNoticeBox = function () {
   mobilePaddingLeft = 6;
 
   mobileContentsWordingSize = 3.2;
+
+  checkBoxAreaWidth = <%% 16, 16, 16, 16, 3 %%>;
 
   this.whiteMargin = (desktop ? margin : 0);
 
@@ -542,7 +953,7 @@ DesignManualJs.prototype.insertNoticeBox = function () {
         },
         children: [
           {
-            text: "현장 미팅",
+            text: mainTitle,
             style: {
               position: "relative",
               display: "inline-block",
@@ -579,15 +990,15 @@ DesignManualJs.prototype.insertNoticeBox = function () {
   tong = block.lastChild;
 
   num = 0;
-  for (let { title, contents } of mainContents) {
+  for (let { title, children } of mainContents) {
     num2 = 0;
-    for (let str of contents) {
+    for (let { title: str, contents } of children) {
       createNode({
         mother: tong,
         style: {
           display: "block",
           position: "relative",
-          marginBottom: String(num2 === contents.length - 1 ? contentsMarginBottom1 : contentsMarginBottom0) + ea,
+          marginBottom: String(num2 === children.length - 1 ? contentsMarginBottom1 : contentsMarginBottom0) + ea,
           marginTop: desktop ? "" : ((num === 0 || num2 !== 0) ? "" : String(6) + ea)
         },
         children: [
@@ -631,7 +1042,7 @@ DesignManualJs.prototype.insertNoticeBox = function () {
                   display: desktop ? "inline-block" : "block",
                   position: "relative",
                   fontSize: String(contentsWordingSize) + ea,
-                  fontWeight: String(600),
+                  fontWeight: String(800),
                   lineHeight: String(1.6),
                   color: colorChip.black,
                   textAlign: "left",
@@ -640,7 +1051,7 @@ DesignManualJs.prototype.insertNoticeBox = function () {
                 },
                 bold: {
                   fontSize: String(contentsWordingSize) + ea,
-                  fontWeight: String(600),
+                  fontWeight: String(800),
                   color: colorChip.green,
                 },
               }
@@ -661,27 +1072,41 @@ DesignManualJs.prototype.insertNoticeBox = function () {
             },
           },
           {
-            text: str,
+            text: "<u%" + str + ":%u>&nbsp;&nbsp;&nbsp;" + contents,
             style: {
               display: "inline-block",
+              position: "relative",
               fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
               fontWeight: String(400),
               verticalAlign: "top",
               lineHeight: String(1.6),
-              width: withOut(desktop ? zeroWidth + zeroMarginRight + firstWidth + secondWidth + secondMarginRight : secondWidth + secondMarginRight, ea),
+              paddingLeft: String(checkBoxAreaWidth) + ea,
+              width: withOut(desktop ? zeroWidth + zeroMarginRight + firstWidth + secondWidth + secondMarginRight + checkBoxAreaWidth : secondWidth + secondMarginRight + checkBoxAreaWidth, ea),
               textAlign: "left",
               color: colorChip.black,
             },
             bold: {
               fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
               fontWeight: String(600),
-              color: colorChip.black,
+              color: colorChip.green,
             },
             under: {
               fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
-              fontWeight: String(600),
-              color: colorChip.green,
+              fontWeight: String(800),
+              color: colorChip.black,
             },
+            children: [
+              {
+                mode: "svg",
+                source: instance.mother.returnCheckBox(colorChip.green),
+                style: {
+                  top: String(checkBoxTop) + ea,
+                  left: String(0),
+                  position: "absolute",
+                  width: String(checkBoxWidth) + ea,
+                }
+              }
+            ]
           },
         ]
       });
@@ -733,7 +1158,7 @@ DesignManualJs.prototype.launching = async function (loading) {
         try {
           instance.insertInitBox();
           instance.insertProcessBox();
-          instance.insertNoticeBox();
+          instance.contentsLoop();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "DesignManualJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
