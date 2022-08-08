@@ -446,6 +446,161 @@ DesignerBoardJs.prototype.insertRouterBox = function () {
 
 }
 
+DesignerBoardJs.prototype.projectPopup = function (proid) {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, ajaxJson, homeliaisonAnalytics } = GeneralJs;
+  const { ea, naviHeight, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  const whitePopupClassName = "whitePopupClassName";
+  const totalContents = document.getElementById("totalcontents");
+  const zIndex = 4;
+  return (e) => {
+    let grayBack, whiteBase;
+    let whiteWidth;
+    let whiteMargin;
+    let innerMargin;
+    let contentsTong;
+    let titleArea, formArea, paymentArea;
+    let titleHeight, formHeight, paymentHeight;
+    let titleSize, titleWeight, titleLineHeight, titleTop;
+    let formPaddingTop;
+    let formBox;
+
+    whiteWidth = <%% 1000, 1000, 800, 660, 88 %%>;
+    whiteMargin = <%% 54, 54, 54, 54, 6 %%>;
+    innerMargin = <%% 54, 54, 54, 54, 6 %%>;
+
+    titleHeight = <%% 41, 39, 37, 35, 8 %%>;
+    paymentHeight = <%% 70, 70, 70, 70, 14 %%>;
+
+    titleSize = <%% 24, 23, 22, 22, 4 %%>;
+    titleWeight = <%% 700, 700, 700, 700, 700 %%>;
+    titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
+    titleTop = <%% (isMac() ? -10 : -7), (isMac() ? -10 : -7), (isMac() ? -10 : -7), (isMac() ? -10 : -7), -0.2 %%>;
+
+    formPaddingTop = <%% 40, 40, 40, 40, 6 %%>;
+
+    grayBack = createNode({
+      mother: totalContents,
+      event: {
+        click: (e) => {
+          const removeTargets = document.querySelectorAll('.' + whitePopupClassName);
+          for (let dom of removeTargets) {
+            dom.remove();
+          }
+        }
+      },
+      class: [ whitePopupClassName ],
+      style: {
+        position: "fixed",
+        top: String(0),
+        left: String(0),
+        width: withOut(0),
+        height: withOut(0),
+        opacity: String(0.3),
+        background: colorChip.black,
+        zIndex: String(zIndex),
+      }
+    });
+
+    whiteBase = createNode({
+      mother: totalContents,
+      class: [ whitePopupClassName ],
+      style: {
+        position: "fixed",
+        width: String(whiteWidth) + ea,
+        height: "calc(calc(100% - " + String(naviHeight) + "px" + ") - " + String((whiteMargin * 2) + innerMargin) + ea + ")",
+        top: "calc(" + String(naviHeight) + "px" + " + " + String(whiteMargin) + ea + ")",
+        left: "calc(50% - " + String(whiteWidth / 2) + ea + ")",
+        borderRadius: String(5) + "px",
+        background: colorChip.white,
+        boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
+        animation: "fadeuporiginal 0.3s ease forwards",
+        paddingTop: String(innerMargin) + ea,
+        zIndex: String(zIndex),
+      }
+    });
+
+    contentsTong = createNode({
+      mother: whiteBase,
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(innerMargin * 2, ea),
+        height: withOut(innerMargin, ea),
+        marginLeft: String(innerMargin) + ea,
+        marginRight: String(innerMargin) + ea,
+      }
+    });
+
+    // title
+    titleArea = createNode({
+      mother: contentsTong,
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(0, ea),
+        height: String(titleHeight) + ea,
+        borderBottom: "1px solid " + colorChip.black,
+      },
+      children: [
+        {
+          text: "서비스 신청",
+          style: {
+            textAlign: "left",
+            position: "absolute",
+            fontSize: String(titleSize) + ea,
+            fontWeight: String(titleWeight),
+            color: colorChip.black,
+            lineHeight: String(titleLineHeight),
+            top: String(titleTop) + ea,
+            left: String(0),
+          }
+        }
+      ]
+    });
+
+    //form
+    formArea = createNode({
+      mother: contentsTong,
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(0),
+        height: withOut(titleHeight + paymentHeight + formPaddingTop, ea),
+        paddingTop: String(formPaddingTop) + ea,
+        overflow: "scroll",
+      }
+    });
+
+    formBox = createNode({
+      mother: formArea,
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(0),
+      }
+    });
+
+
+    paymentArea = createNode({
+      mother: contentsTong,
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(0, ea),
+        height: String(paymentHeight) + ea,
+        borderTop: "1px dashed " + colorChip.gray4,
+        textAlign: "right",
+      }
+    });
+
+  }
+}
+
 DesignerBoardJs.prototype.insertProcessBox = function () {
   const instance = this;
   const mother = this.mother;
@@ -720,6 +875,15 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
 
       whiteBaseTong = createNode({
         mother: grayTong,
+        attribute: {
+          proid: targets[i].proid
+        },
+        event: {
+          click: function (e) {
+            const proid = this.getAttribute("proid");
+            instance.projectPopup(proid).call(this, e);
+          }
+        },
         style: {
           display: desktop ? "inline-flex" : "block",
           position: "relative",
@@ -818,12 +982,6 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
         mode: "svg",
         attribute: {
           proid: targets[i].proid
-        },
-        event: {
-          click: function (e) {
-            const proid = this.getAttribute("proid");
-            selfHref(FRONTHOST + "/designer/request.php?proid=" + proid);
-          }
         },
         source: svgMaker.horizontalArrow(circleWidth, arrowHeight),
         style: {
