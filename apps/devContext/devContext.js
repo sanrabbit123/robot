@@ -2786,7 +2786,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p190");
+    // await this.getCorePortfolio("a98");
 
 
     // aspirant to designer
@@ -2800,17 +2800,17 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2206_aa02s", [
-    //   { porlid: "ghost", index: 1 },
-    //   { porlid: "ghost", index: 3 },
-    //   { porlid: "ghost", index: 4 },
-    //   { porlid: "ghost", index: 6 },
+    // await this.setProposalSettingForDesigner("d2207_aa01s", [
     //   { porlid: "ghost", index: 5 },
-    //   { porlid: "ghost", index: 6 },
+    //   { porlid: "ghost", index: 4 },
+    //   { porlid: "ghost", index: 14 },
+    //   { porlid: "ghost", index: 12 },
+    //   { porlid: "ghost", index: 7 },
+    //   { porlid: "ghost", index: 8 },
     // ], [
-    //   "공간을 디자인 함에 있어 그 퀄리티를 결정하는 마지막 요소는 ‘디테일’이 될 것입니다.",
-    //   "사용자와 디자이너의 원활한 소통을 매우 중요시 생각합니다.",
-    //   "사용자의 원하는 바와 디자이너의 디자인 의도가 일치할 때를 추구합니다."
+    //   "디자이너의 손길로 비어 있지만 결코 비어 있지 않은 공간을 만든어 드립니다.",
+    //   "고객님의 라이프 스타일과 예산을 중요하게 생각하고 함께 고민합니다.",
+    //   "미니멀한 스타일에 능하며 비어 보이지 않는 미니멀리즘을 추구합니다."
     // ]);
 
 
