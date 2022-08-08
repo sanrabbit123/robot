@@ -94,7 +94,7 @@ DesignManualJs.prototype.staticSetting = function () {
           "children": [
             {
               "title": "예산 확인",
-              "contents": "니즈와 항상 더불어 고려해야 하는 것은 예산입니다. 디자이너는 <b%예산에 대한 범위 확인과 어떻게 나누어 쓸 지를 파악%b>하게 됩니다."
+              "contents": "니즈와 항상 더불어 고려해야 하는 것은 예산입니다. 디자이너는 <b%예산에 대한 범위 확인과 어떻게 나누어 쓸지를 파악%b>하게 됩니다."
             },
             {
               "title": "용도 확인",
@@ -689,25 +689,28 @@ DesignManualJs.prototype.insertProcessBox = function () {
   let textTop;
   let textSize, textWeight;
   let textMarginLeft;
+  let mobileVisualPaddingValue;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
-  paddingTop =  <%% 52, 52, 44, 36, 6 %%>;
+  paddingTop = <%% 52, 52, 44, 36, 6 %%>;
 
-  whiteBottomMargin = <%% 58, 58, 58, 58, 6 %%>;
+  whiteBottomMargin = <%% 55, 55, 47, 39, 6 %%>;
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
 
-  innerMargin = <%% 40, 40, 40, 40, 4 %%>;
+  innerMargin = <%% 40, 30, 24, 16, 4 %%>;
 
-  arrowBetween = <%% 5, 5, 5, 5, 4 %%>;
-  arrowWidth = <%% 204, 203, 203, 203, 203 %%>;
-  arrowHeight = <%% 100, 100, 100, 100, 100 %%>;
+  arrowBetween = <%% 5, 5, 5, 3, 1.5 %%>;
+  arrowWidth = <%% 204, 153, 132, 105, 36 %%>;
+  arrowHeight = <%% 100, 90, 80, 60, 12 %%>;
 
-  textTop = <%% -2, -2, -2, -2, -2 %%>;
-  textSize = <%% 16, 16, 16, 16, 16 %%>;
+  textTop = <%% -2, -2, -2, -2, -0.3 %%>;
+  textSize = <%% 16, 14, 13, 12, 3.3 %%>;
   textWeight = <%% 800, 800, 800, 800, 800 %%>;
-  textMarginLeft = <%% 50, 50, 50, 50, 50 %%>;
+  textMarginLeft = <%% 50, 48, 45, 30, 3 %%>;
+
+  mobileVisualPaddingValue = 0.2;
 
   contents = {
     process: this.staticSetting(),
@@ -744,8 +747,8 @@ DesignManualJs.prototype.insertProcessBox = function () {
       position: "relative",
       paddingTop: String(innerMargin) + ea,
       paddingBottom: String(innerMargin) + ea,
-      paddingLeft: String(innerMargin) + ea,
-      paddingRight: String(innerMargin) + ea,
+      paddingLeft: String(desktop ? innerMargin : (innerMargin - mobileVisualPaddingValue)) + ea,
+      paddingRight: String(desktop ? innerMargin : (innerMargin + mobileVisualPaddingValue)) + ea,
       width: withOut(innerMargin * 2, ea),
       background: colorChip.gradientGray,
       borderRadius: String(8) + "px",
@@ -811,7 +814,8 @@ DesignManualJs.prototype.insertProcessBox = function () {
       style: {
         display: "inline-flex",
         position: "relative",
-        width: "calc(calc(100% - " + String(arrowBetween * (contents.process.length - 1)) + ea + ") / " + String(contents.process.length) + ")",
+        width: desktop ? "calc(calc(100% - " + String(arrowBetween * (contents.process.length - 1)) + ea + ") / " + String(contents.process.length) + ")" : "calc(calc(100% - " + String(arrowBetween * (2 - 1)) + ea + ") / " + String(2) + ")",
+        marginBottom: desktop ? "" : String(arrowBetween) + ea,
         height: String(arrowHeight) + ea,
         justifyContent: "center",
         alignItems: "center",
@@ -838,6 +842,54 @@ DesignManualJs.prototype.insertProcessBox = function () {
             }
           },
           text: contents.process[i].title,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(textTop) + ea,
+            fontSize: String(textSize) + ea,
+            fontWeight: String(textWeight),
+            color: colorChip.black,
+            marginLeft: String(textMarginLeft) + ea,
+          }
+        }
+      ]
+    });
+  }
+
+  if (mobile) {
+    createNode({
+      mother: grayTong,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        width: desktop ? "calc(calc(100% - " + String(arrowBetween * (contents.process.length - 1)) + ea + ") / " + String(contents.process.length) + ")" : "calc(calc(100% - " + String(arrowBetween * (2 - 1)) + ea + ") / " + String(2) + ")",
+        marginBottom: desktop ? "" : String(arrowBetween) + ea,
+        height: String(arrowHeight) + ea,
+        justifyContent: "center",
+        alignItems: "center",
+        textAlign: "center",
+        cursor: "pointer",
+      },
+      children: [
+        {
+          mode: "svg",
+          source: svgMaker.processArrow(arrowWidth, arrowHeight, colorChip.white),
+          style: {
+            position: "absolute",
+            top: String(0),
+            left: String(0),
+            width: String(arrowWidth) + ea,
+            height: String(arrowHeight) + ea,
+            opacity: String(0.9),
+          }
+        },
+        {
+          event: {
+            selectstart: function (e) {
+              e.preventDefault();
+            }
+          },
+          text: "현장 완료",
           style: {
             display: "inline-block",
             position: "relative",
@@ -1198,7 +1250,6 @@ DesignManualJs.prototype.insertButtonBox = function () {
   const buttonsClassName = "buttonsClassName";
   let margin;
   let paddingTop;
-  let whiteBottomMargin;
   let titleFontSize;
   let bottomMargin;
   let whiteBlock;
@@ -1216,8 +1267,6 @@ DesignManualJs.prototype.insertButtonBox = function () {
   margin = <%% 55, 55, 47, 39, 6 %%>;
   paddingTop =  <%% 52, 52, 44, 36, 6 %%>;
 
-  whiteBottomMargin = <%% 58, 58, 58, 58, 6 %%>;
-
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
 
   innerMargin = <%% 40, 40, 40, 40, 4 %%>;
@@ -1226,15 +1275,15 @@ DesignManualJs.prototype.insertButtonBox = function () {
   arrowWidth = <%% 204, 203, 203, 203, 203 %%>;
   arrowHeight = <%% 100, 100, 100, 100, 100 %%>;
 
-  textTop = <%% -1, -1, -1, -1, -1 %%>;
-  textSize = <%% 17, 17, 17, 17, 17 %%>;
+  textTop = <%% -1, -1, -1, -1, -0.3 %%>;
+  textSize = <%% 17, 17, 15, 14, 3.2 %%>;
   textWeight = <%% 700, 700, 700, 700, 700 %%>;
   textMarginLeft = <%% 50, 50, 50, 50, 50 %%>;
 
-  buttonPadding = <%% 22, 22, 22, 22, 20 %%>;
-  buttonHeight = <%% 45, 45, 45, 45, 45 %%>;
+  buttonPadding = <%% 22, 22, 18, 18, 3.5 %%>;
+  buttonHeight = <%% 45, 45, 40, 36, 8 %%>;
 
-  buttonBetween = <%% 8, 8, 8, 8, 8 %%>;
+  buttonBetween = <%% 8, 8, 6, 6, 1 %%>;
 
   whiteBlock = createNode({
     mother: baseTong,
