@@ -132,7 +132,7 @@ GeneralJs.prototype.setNavigator = function (designer) {
   hamburgerTop = 21;
   searchWidth = <%% 22.5, 22.5, 21, 18, 20 %%>;
   searchWidthMinus = <%% 23, 23, 21, 18.5, 2 %%>;
-  mobileMenuHeight = 174;
+  mobileMenuHeight = 210;
   mobileFirstTop = 11;
   mobileVerticalBetween = 37;
 
@@ -156,6 +156,11 @@ GeneralJs.prototype.setNavigator = function (designer) {
     {
       title: "프로젝트 의뢰서",
       href: FRONTHOST + "/designer/requests.php?desid=" + designer.desid,
+      green: [],
+    },
+    {
+      title: "제공 내역",
+      href: FRONTHOST + "/designer/manual.php?desid=" + designer.desid,
       green: [],
     },
   ];
