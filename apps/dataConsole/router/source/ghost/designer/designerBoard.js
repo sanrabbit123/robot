@@ -585,7 +585,6 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
       }
     });
 
-
     paymentArea = createNode({
       mother: contentsTong,
       style: {
