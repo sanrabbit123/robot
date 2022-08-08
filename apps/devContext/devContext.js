@@ -88,11 +88,19 @@ DevContext.prototype.launching = async function () {
     // console.log(pastProposal[0].project.detail);
 
 
-    const ago = new Date();
-    ago.setDate(ago.getDate() - 60);
+
+
+
 
     const app = new GoogleAnalytics();
-    await app.analyticsToMongo(ago);
+    await app.analyticsToMongo(new Date(2022, 4, 1), new Date(2022, 5, 12));
+
+
+
+
+
+
+
 
 
 
