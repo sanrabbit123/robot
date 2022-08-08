@@ -93,7 +93,7 @@ DevContext.prototype.launching = async function () {
 
 
     const app = new GoogleAnalytics();
-    await app.analyticsToMongo(new Date(2022, 4, 1), new Date(2022, 5, 12));
+    await app.analyticsToMongo("2022-05-01", "2022-06-12");
 
 
 
