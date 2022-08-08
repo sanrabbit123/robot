@@ -469,6 +469,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
     let titleSize, titleWeight, titleLineHeight, titleTop;
     let formPaddingTop;
     let formBox;
+    let grayTong;
 
     whiteWidth = <%% 1000, 1000, 800, 660, 88 %%>;
     whiteMargin = <%% 54, 54, 54, 54, 6 %%>;
@@ -585,6 +586,23 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
         width: withOut(0),
       }
     });
+
+
+    grayTong = createNode({
+      mother: formBox,
+      style: {
+        display: "block",
+        padding: String(40) + ea,
+        width: withOut(40 * 2, ea),
+        borderRadius: String(5) + "px",
+        background: colorChip.gradientGray,
+      }
+    });
+
+    for (let i = 0; i < 8; i++) {
+      
+    }
+
 
     paymentArea = createNode({
       mother: contentsTong,
