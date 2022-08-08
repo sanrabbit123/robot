@@ -699,13 +699,13 @@ DesignManualJs.prototype.insertProcessBox = function () {
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
 
-  innerMargin = <%% 40, 30, 24, 16, 4 %%>;
+  innerMargin = <%% 38, 28, 24, (isMac() ? 16 : 14), 4 %%>;
 
   arrowBetween = <%% 5, 5, 5, 3, 1.5 %%>;
   arrowWidth = <%% 204, 153, 132, 105, 36 %%>;
   arrowHeight = <%% 100, 90, 80, 60, 12 %%>;
 
-  textTop = <%% -2, -2, -2, -2, -0.3 %%>;
+  textTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.3 %%>;
   textSize = <%% 16, 14, 13, 12, 3.3 %%>;
   textWeight = <%% 800, 800, 800, 800, 800 %%>;
   textMarginLeft = <%% 50, 48, 45, 30, 3 %%>;
@@ -1275,13 +1275,13 @@ DesignManualJs.prototype.insertButtonBox = function () {
   arrowWidth = <%% 204, 203, 203, 203, 203 %%>;
   arrowHeight = <%% 100, 100, 100, 100, 100 %%>;
 
-  textTop = <%% -1, -1, -1, -1, -0.3 %%>;
-  textSize = <%% 17, 17, 15, 14, 3.2 %%>;
+  textTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
+  textSize = <%% 17, 17, 15, 14, 3.1 %%>;
   textWeight = <%% 700, 700, 700, 700, 700 %%>;
   textMarginLeft = <%% 50, 50, 50, 50, 50 %%>;
 
-  buttonPadding = <%% 22, 22, 18, 18, 3.5 %%>;
-  buttonHeight = <%% 45, 45, 40, 36, 8 %%>;
+  buttonPadding = <%% 22, 22, 18, 18, 3.6 %%>;
+  buttonHeight = <%% 45, 45, 40, 36, 8.2 %%>;
 
   buttonBetween = <%% 8, 8, 6, 6, 1 %%>;
 
