@@ -1194,7 +1194,8 @@ DesignManualJs.prototype.insertButtonBox = function () {
   const { client, ea, baseTong, media, project } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker, downloadFile } = GeneralJs;
+  const buttonsClassName = "buttonsClassName";
   let margin;
   let paddingTop;
   let whiteBottomMargin;
@@ -1208,6 +1209,8 @@ DesignManualJs.prototype.insertButtonBox = function () {
   let textTop;
   let textSize, textWeight;
   let textMarginLeft;
+  let buttonHeight, buttonPadding;
+  let buttonBetween;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -1223,10 +1226,15 @@ DesignManualJs.prototype.insertButtonBox = function () {
   arrowWidth = <%% 204, 203, 203, 203, 203 %%>;
   arrowHeight = <%% 100, 100, 100, 100, 100 %%>;
 
-  textTop = <%% -2, -2, -2, -2, -2 %%>;
-  textSize = <%% 16, 16, 16, 16, 16 %%>;
-  textWeight = <%% 800, 800, 800, 800, 800 %%>;
+  textTop = <%% -1, -1, -1, -1, -1 %%>;
+  textSize = <%% 17, 17, 17, 17, 17 %%>;
+  textWeight = <%% 700, 700, 700, 700, 700 %%>;
   textMarginLeft = <%% 50, 50, 50, 50, 50 %%>;
+
+  buttonPadding = <%% 22, 22, 22, 22, 20 %%>;
+  buttonHeight = <%% 45, 45, 45, 45, 45 %%>;
+
+  buttonBetween = <%% 8, 8, 8, 8, 8 %%>;
 
   whiteBlock = createNode({
     mother: baseTong,
@@ -1236,7 +1244,7 @@ DesignManualJs.prototype.insertButtonBox = function () {
       width: String(100) + '%',
       background: colorChip.white,
       paddingTop: String(paddingTop) + ea,
-      paddingBottom: String(whiteBottomMargin) + ea,
+      paddingBottom: String(paddingTop) + ea,
       marginBottom: String(bottomMargin) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
     },
@@ -1255,12 +1263,136 @@ DesignManualJs.prototype.insertButtonBox = function () {
   grayTong = createNode({
     mother: whiteTong,
     style: {
-      display: "block",
+      display: "flex",
       position: "relative",
-      width: withOut(innerMargin * 2, ea),
-      background: colorChip.gradientGray,
-      borderRadius: String(8) + "px",
+      width: withOut(0, ea),
+      justifyContent: "center",
+      alignItems: "center",
+      textAlign: "center",
     }
+  });
+
+  createNode({
+    mother: grayTong,
+    event: {
+      click: function (e) {
+        const buttons = [ ...document.querySelectorAll('.' + buttonsClassName) ];
+        for (let dom of instance.whiteBlocks) {
+          dom.style.display = "block";
+          dom.setAttribute("toggle", "on");
+        }
+        for (let dom of buttons) {
+          dom.setAttribute("toggle", "off");
+          dom.children[1].style.color = colorChip.black;
+        }
+      }
+    },
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      paddingLeft: String(buttonPadding) + ea,
+      paddingRight: String(buttonPadding) + ea,
+      marginRight: String(buttonBetween) + ea,
+      height: String(buttonHeight) + ea,
+      borderRadius: String(5) + "px",
+      background: colorChip.gradientGreen,
+      justifyContent: "center",
+      alignItems: "center",
+      textAlign: "center",
+      cursor: "pointer",
+    },
+    children: [
+      {
+        text: "전체 보기",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(textTop) + ea,
+          fontSize: String(textSize) + ea,
+          fontWeight: String(textWeight),
+          color: colorChip.white,
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: grayTong,
+    event: {
+      click: async function (e) {
+        try {
+          const loading = instance.mother.grayLoading();
+          const res = await ajaxJson({ url: window.encodeURIComponent(window.location.href) }, "/ghostPass_pageToPdf");
+          downloadFile(window.decodeURIComponent(res.url));
+          loading.remove();
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    },
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      paddingLeft: String(buttonPadding) + ea,
+      paddingRight: String(buttonPadding) + ea,
+      marginRight: String(buttonBetween) + ea,
+      height: String(buttonHeight) + ea,
+      borderRadius: String(5) + "px",
+      background: colorChip.gradientGreen,
+      justifyContent: "center",
+      alignItems: "center",
+      textAlign: "center",
+      cursor: "pointer",
+    },
+    children: [
+      {
+        text: "PDF 출력",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(textTop) + ea,
+          fontSize: String(textSize) + ea,
+          fontWeight: String(textWeight),
+          color: colorChip.white,
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: grayTong,
+    event: {
+      click: function (e) {
+        window.alert("준비중인 기능입니다!");
+      }
+    },
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      paddingLeft: String(buttonPadding) + ea,
+      paddingRight: String(buttonPadding) + ea,
+      marginRight: String(buttonBetween) + ea,
+      height: String(buttonHeight) + ea,
+      borderRadius: String(5) + "px",
+      background: colorChip.deactive,
+      justifyContent: "center",
+      alignItems: "center",
+      textAlign: "center",
+      cursor: "pointer",
+    },
+    children: [
+      {
+        text: "템플릿 다운로드",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(textTop) + ea,
+          fontSize: String(textSize) + ea,
+          fontWeight: String(textWeight),
+          color: colorChip.darkShadow,
+        }
+      }
+    ]
   });
 
 
