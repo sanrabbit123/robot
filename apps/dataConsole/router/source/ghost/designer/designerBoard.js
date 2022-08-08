@@ -449,7 +449,8 @@ DesignerBoardJs.prototype.insertRouterBox = function () {
 DesignerBoardJs.prototype.projectPopup = function (proid) {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, ajaxJson, homeliaisonAnalytics } = GeneralJs;
-  const { ea, naviHeight, media } = this;
+  const { ea, naviHeight, media, projects } = this;
+  const project = projects.find((obj) => { return obj.proid === proid });
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
@@ -473,7 +474,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
     whiteMargin = <%% 54, 54, 54, 54, 6 %%>;
     innerMargin = <%% 54, 54, 54, 54, 6 %%>;
 
-    titleHeight = <%% 41, 39, 37, 35, 8 %%>;
+    titleHeight = <%% 36, 36, 35, 35, 8 %%>;
     paymentHeight = <%% 70, 70, 70, 70, 14 %%>;
 
     titleSize = <%% 24, 23, 22, 22, 4 %%>;
@@ -548,7 +549,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
       },
       children: [
         {
-          text: "서비스 신청",
+          text: project.name + " 고객님",
           style: {
             textAlign: "left",
             position: "absolute",
