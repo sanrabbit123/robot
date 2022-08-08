@@ -53,6 +53,7 @@ DesignManualJs.prototype.staticSetting = function () {
   contents = [
     {
       "title": "현장 미팅",
+      "key": "firstMeeting",
       "checklist": [
         {
           "title": "디자이너가 진행할 4가지",
@@ -148,6 +149,7 @@ DesignManualJs.prototype.staticSetting = function () {
     },
     {
       "title": "일정 안내",
+      "key": "wholeSchedule",
       "checklist": [
         {
           "title": "기본적인 순서",
@@ -227,6 +229,7 @@ DesignManualJs.prototype.staticSetting = function () {
     },
     {
       "title": "1차 제안",
+      "key": "firstProposal",
       "checklist": [
         {
           "title": "기본적인 구성",
@@ -298,6 +301,7 @@ DesignManualJs.prototype.staticSetting = function () {
     },
     {
       "title": "수정 제안",
+      "key": "secondProposal",
       "checklist": [
         {
           "title": "기본적인 구성",
@@ -369,6 +373,7 @@ DesignManualJs.prototype.staticSetting = function () {
     },
     {
       "title": "시공 의뢰서",
+      "key": "constructRequest",
       "checklist": [
         {
           "title": "시공사 선택",
@@ -413,6 +418,7 @@ DesignManualJs.prototype.staticSetting = function () {
     },
     {
       "title": "제품 리스트",
+      "key": "purchaseList",
       "checklist": [
         {
           "title": "기본 사항",
@@ -448,6 +454,7 @@ DesignManualJs.prototype.staticSetting = function () {
     },
     {
       "title": "세팅 안내",
+      "key": "finalSetting",
       "checklist": [
         {
           "title": "세팅 안내",
@@ -667,6 +674,7 @@ DesignManualJs.prototype.insertProcessBox = function () {
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker } = GeneralJs;
+  const buttonsClassName = "buttonsClassName";
   let margin;
   let paddingTop;
   let whiteBottomMargin;
@@ -702,7 +710,7 @@ DesignManualJs.prototype.insertProcessBox = function () {
   textMarginLeft = <%% 50, 50, 50, 50, 50 %%>;
 
   contents = {
-    process: this.staticSetting().map((obj) => { return obj.title }),
+    process: this.staticSetting(),
   };
 
   whiteBlock = createNode({
@@ -747,6 +755,59 @@ DesignManualJs.prototype.insertProcessBox = function () {
   for (let i = 0; i < contents.process.length; i++) {
     createNode({
       mother: grayTong,
+      class: [ buttonsClassName ],
+      attribute: {
+        index: String(i),
+        key: contents.process[i].key,
+        toggle: "off",
+      },
+      event: {
+        mouseenter: function (e) {
+          e.stopPropagation();
+          e.preventDefault();
+
+          this.children[1].style.color = colorChip.green;
+
+        },
+        mouseleave: function (e) {
+          e.stopPropagation();
+          e.preventDefault();
+
+          const toggle = this.getAttribute("toggle");
+          if (toggle === "off") {
+            this.children[1].style.color = colorChip.black;
+          }
+
+        },
+        click: function (e) {
+          e.stopPropagation();
+
+          const key = this.getAttribute("key");
+          const target = instance.whiteBlocks.find((dom) => { return dom.getAttribute("key") === key });
+          const siblings = [ ...document.querySelectorAll('.' + buttonsClassName) ];
+
+          for (let dom of siblings) {
+            if (dom !== this) {
+              dom.setAttribute("toggle", "off");
+              dom.children[1].style.color = colorChip.black;
+            } else {
+              dom.setAttribute("toggle", "on");
+              dom.children[1].style.color = colorChip.green;
+            }
+          }
+
+          for (let dom of instance.whiteBlocks) {
+            if (dom !== target) {
+              dom.setAttribute("toggle", "off");
+              dom.style.display = "none";
+            } else {
+              dom.setAttribute("toggle", "on");
+              dom.style.display = "block";
+            }
+          }
+
+        }
+      },
       style: {
         display: "inline-flex",
         position: "relative",
@@ -755,6 +816,7 @@ DesignManualJs.prototype.insertProcessBox = function () {
         justifyContent: "center",
         alignItems: "center",
         textAlign: "center",
+        cursor: "pointer",
       },
       children: [
         {
@@ -770,7 +832,12 @@ DesignManualJs.prototype.insertProcessBox = function () {
           }
         },
         {
-          text: contents.process[i],
+          event: {
+            selectstart: function (e) {
+              e.preventDefault();
+            }
+          },
+          text: contents.process[i].title,
           style: {
             display: "inline-block",
             position: "relative",
@@ -794,13 +861,14 @@ DesignManualJs.prototype.contentsLoop = function () {
   const desktop = !mobile;
   const targetContents = this.staticSetting();
 
-  for (let { title } of targetContents) {
-    this.insertChecklistBox(title);
+  this.whiteBlocks = [];
+  for (let { key } of targetContents) {
+    this.whiteBlocks.push(this.insertChecklistBox(key));
   }
 
 }
 
-DesignManualJs.prototype.insertChecklistBox = function (titleKey) {
+DesignManualJs.prototype.insertChecklistBox = function (key) {
   const instance = this;
   const mother = this.mother;
   const { client, ea, baseTong, media, project } = this;
@@ -808,8 +876,8 @@ DesignManualJs.prototype.insertChecklistBox = function (titleKey) {
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
-  const mainTitle = titleKey;
-  const mainContents = this.staticSetting().find((obj) => { return obj.title === titleKey }).checklist;
+  const mainTitle = this.staticSetting().find((obj) => { return obj.key === key }).title;
+  const mainContents = this.staticSetting().find((obj) => { return obj.key === key }).checklist;
   let paddingTop;
   let block;
   let whiteBlock, whiteTong;
@@ -860,8 +928,8 @@ DesignManualJs.prototype.insertChecklistBox = function (titleKey) {
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
-  titleBottom = <%% (isMac() ? 18 : 16), (isMac() ? 18 : 16), (isMac() ? 18 : 16), (isMac() ? 18 : 16), 0 %%>;
-  contentsAreaPaddingTop = <%% 34, 34, 34, 34, 6 %%>;
+  titleBottom = <%% (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 15 : 14), 0 %%>;
+  contentsAreaPaddingTop = <%% 36, 36, 36, 36, 6 %%>;
 
   mobileTitleLeft = 1.5;
   mobileTitleTop = -8.7;
@@ -911,6 +979,7 @@ DesignManualJs.prototype.insertChecklistBox = function (titleKey) {
 
   whiteBlock = createNode({
     mother: baseTong,
+    attribute: { key, toggle: "on" },
     style: {
       position: "relative",
       borderRadius: String(desktop ? 8 : 1) + ea,
@@ -1092,7 +1161,7 @@ DesignManualJs.prototype.insertChecklistBox = function (titleKey) {
             },
             under: {
               fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
-              fontWeight: String(800),
+              fontWeight: String(700),
               color: colorChip.black,
             },
             children: [
@@ -1115,6 +1184,85 @@ DesignManualJs.prototype.insertChecklistBox = function (titleKey) {
     }
     num++;
   }
+
+  return whiteBlock;
+}
+
+DesignManualJs.prototype.insertButtonBox = function () {
+  const instance = this;
+  const mother = this.mother;
+  const { client, ea, baseTong, media, project } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker } = GeneralJs;
+  let margin;
+  let paddingTop;
+  let whiteBottomMargin;
+  let titleFontSize;
+  let bottomMargin;
+  let whiteBlock;
+  let grayTong;
+  let arrowBetween;
+  let innerMargin;
+  let arrowWidth, arrowHeight;
+  let textTop;
+  let textSize, textWeight;
+  let textMarginLeft;
+
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  margin = <%% 55, 55, 47, 39, 6 %%>;
+  paddingTop =  <%% 52, 52, 44, 36, 6 %%>;
+
+  whiteBottomMargin = <%% 58, 58, 58, 58, 6 %%>;
+
+  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+
+  innerMargin = <%% 40, 40, 40, 40, 4 %%>;
+
+  arrowBetween = <%% 5, 5, 5, 5, 4 %%>;
+  arrowWidth = <%% 204, 203, 203, 203, 203 %%>;
+  arrowHeight = <%% 100, 100, 100, 100, 100 %%>;
+
+  textTop = <%% -2, -2, -2, -2, -2 %%>;
+  textSize = <%% 16, 16, 16, 16, 16 %%>;
+  textWeight = <%% 800, 800, 800, 800, 800 %%>;
+  textMarginLeft = <%% 50, 50, 50, 50, 50 %%>;
+
+  whiteBlock = createNode({
+    mother: baseTong,
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      background: colorChip.white,
+      paddingTop: String(paddingTop) + ea,
+      paddingBottom: String(whiteBottomMargin) + ea,
+      marginBottom: String(bottomMargin) + ea,
+      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+    },
+    children: [
+      {
+        display: "block",
+        position: "relative",
+        width: withOut(margin * 2, ea),
+        height: String(100) + '%',
+        marginLeft: String(margin) + ea,
+      }
+    ]
+  });
+  whiteTong = whiteBlock.firstChild;
+
+  grayTong = createNode({
+    mother: whiteTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: withOut(innerMargin * 2, ea),
+      background: colorChip.gradientGray,
+      borderRadius: String(8) + "px",
+    }
+  });
+
 
 }
 
@@ -1159,6 +1307,7 @@ DesignManualJs.prototype.launching = async function (loading) {
           instance.insertInitBox();
           instance.insertProcessBox();
           instance.contentsLoop();
+          instance.insertButtonBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "DesignManualJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
