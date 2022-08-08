@@ -634,6 +634,49 @@ SecondRouter.prototype.rou_post_designerProjects = function () {
   return obj;
 }
 
+SecondRouter.prototype.rou_post_getChecklist = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const { requestSystem, messageSend, fileSystem, setQueue, sleep, shellExec, shellLink, errorLog, messageLog } = this.mother;
+  let obj = {};
+  obj.link = [ "/getChecklist" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      const selfMongo = instance.mongo;
+      const collection = "service";
+      const services = await back.mongoRead(collection, { kind: "checklist" }, { selfMongo });
+      let contents;
+
+      services.sort((a, b) => { return Number(a.serid.replace(/[^0-9]/gi, '')) - Number(b.serid.replace(/[^0-9]/gi, '')) });
+
+      contents = services.map((obj) => {
+        return {
+          title: obj.setting.contents.title,
+          key: obj.key,
+          checklist: obj.setting.contents.checklist
+        }
+      });
+
+      res.send(JSON.stringify(contents));
+
+    } catch (e) {
+      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_getChecklist): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 SecondRouter.prototype.getAll = function () {
