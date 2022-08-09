@@ -515,6 +515,9 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
     let buttonWeight;
     let thisStatusNumber;
     let setDescription;
+    let statusButtonWidth, statusButtonHeight;
+    let statusButtonBetween;
+    let statusTextTop, statusSize, statusBetween;
 
     whiteWidth = <%% 1000, 1000, 800, 660, 88 %%>;
     whiteMargin = <%% 54, 54, 54, 54, 6 %%>;
@@ -554,7 +557,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
     contentsMarginBottom0 = <%% 6, 6, 6, 4, 2 %%>;
     contentsMarginBottom1 = <%% 32, 32, 30, 28, 3 %%>;
 
-    contentsWordingSize = <%% 14, 14, 14, 13, 3.5 %%>;
+    contentsWordingSize = <%% 13, 13, 12, 11, 3.5 %%>;
     contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
 
     zeroWidth = <%% 8, 8, 8, 8, 10 %%>;
@@ -563,11 +566,11 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
     secondWidth = <%% 15, 15, 15, 15, 2 %%>;
     secondMarginRight = <%% 10, 10, 10, 10, 2 %%>;
 
-    checkBoxWidth = <%% 10, 10, 10, 10, 2 %%>;
+    checkBoxWidth = <%% 9, 9, 9, 8, 2 %%>;
     arrowBoxWidth = <%% 9, 8, 8, 8, 1.8 %%>;
     checkBoxTop = <%% (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 4), 1.6 %%>;
     arrowBoxTop = <%% (isMac() ? 7 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.5 %%>;
-    checkBoxAreaWidth = <%% 16, 16, 16, 16, 3 %%>;
+    checkBoxAreaWidth = <%% 14, 14, 14, 12, 3 %%>;
 
     lineTop = <%% 10, 10, 10, 10, 10 %%>;
     linePadding = <%% 12, 12, 12, 12, 12 %%>;
@@ -583,9 +586,15 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
     buttonSize = <%% 15, 15, 15, 15, 15 %%>;
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    console.log(serviceContents);
+    statusButtonWidth = <%% 120, 120, 120, 120, 120 %%>;
+    statusButtonHeight = <%% 40, 40, 40, 40, 40 %%>;
+    statusButtonBetween = <%% 8, 8, 8, 8, 8 %%>;
 
-    thisStatusNumber = 2;
+    statusTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    statusSize = <%% 14, 14, 14, 14, 14 %%>;
+    statusBetween = <%% 500, 500, 500, 500, 500 %%>;
+
+    thisStatusNumber = serviceContents.findIndex((obj) => { return obj.target.includes(project.process.action) });
 
     setDescription = () => {};
 
@@ -994,12 +1003,102 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
 
     createNode({
       mother: paymentArea,
+      event: {
+        click: function (e) {
+          const targetMother = this.parentElement.parentElement.parentElement;
+          let cancelBack, whitePrompt;
+
+          cancelBack = createNode({
+            mother: targetMother,
+            event: {
+              click: function (e) {
+                targetMother.removeChild(targetMother.lastChild);
+                targetMother.removeChild(targetMother.lastChild);
+              }
+            },
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(0),
+              width: withOut(0),
+              height: withOut(0),
+              background: colorChip.black,
+              opacity: String(0.2),
+            }
+          });
+
+          whitePrompt = createNode({
+            mother: targetMother,
+            style: {
+              position: "absolute",
+              top: withOut(50, (((statusButtonHeight * 4) + (statusButtonBetween * 3) + (grayInnerPadding * 2)) / 2), ea),
+              left: withOut(50, (((statusButtonWidth * 2) + statusButtonBetween + (grayInnerPadding * 2)) / 2), ea),
+              width: String((statusButtonWidth * 2) + statusButtonBetween) + ea,
+              height: String((statusButtonHeight * 4) + (statusButtonBetween * 4)) + ea,
+              background: colorChip.gray2,
+              borderRadius: String(5) + "px",
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+              animation: "fadeuplite 0.3s ease forwards",
+              padding: String(grayInnerPadding) + ea,
+              paddingBottom: String(grayInnerPadding - statusButtonBetween) + ea,
+            },
+            children: [
+              {
+                style: {
+                  display: "block",
+                  top: String(0),
+                  left: String(0),
+                  width: withOut(0),
+                  height: withOut(0),
+                  position: "relative",
+                }
+              }
+            ]
+          });
+
+          for (let i = 0; i < titleTargets.length; i++) {
+            createNode({
+              mother: whitePrompt.firstChild,
+              attribute: { index: String(i) },
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: String(statusButtonWidth) + ea,
+                height: String(statusButtonHeight) + ea,
+                background: colorChip.white,
+                borderRadius: String(5) + "px",
+                boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                marginRight: String(i % 2 === 0 ? statusButtonBetween : 0) + ea,
+                marginBottom: String(statusButtonBetween) + ea,
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+                cursor: "pointer",
+              },
+              children: [
+                {
+                  text: titleTargets[i].title,
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    top: String(statusTextTop) + ea,
+                    fontSize: String(statusSize) + ea,
+                    fontWeight: String(statusBetween),
+                    color: colorChip.black,
+                  }
+                }
+              ]
+            });
+          }
+
+        }
+      },
       style: {
         display: "inline-flex",
         paddingLeft: String(buttonPadding) + ea,
         paddingRight: String(buttonPadding) + ea,
         height: String(buttonHeight) + ea,
-        background: colorChip.gradientGray,
+        background: colorChip.gradientGreen,
         borderRadius: String(5) + "px",
         marginTop: String(buttonMarginTop) + ea,
         marginRight: String(buttonBetween) + ea,
@@ -1030,7 +1129,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
         paddingLeft: String(buttonPadding) + ea,
         paddingRight: String(buttonPadding) + ea,
         height: String(buttonHeight) + ea,
-        background: colorChip.gradientGray,
+        background: colorChip.gray3,
         borderRadius: String(5) + "px",
         marginTop: String(buttonMarginTop) + ea,
         justifyContent: "center",
@@ -1047,7 +1146,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
             top: String(buttonTextTop) + ea,
             fontSize: String(buttonSize) + ea,
             fontWeight: String(buttonWeight),
-            color: colorChip.white,
+            color: colorChip.deactive,
           }
         }
       ]
