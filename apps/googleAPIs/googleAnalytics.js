@@ -610,7 +610,7 @@ GoogleAnalytics.prototype.getSearchData = async function (startDay = "2020-01-01
 
 GoogleAnalytics.prototype.analyticsToMongo = async function (startDate = "default", endDate = "default") {
   const instance = this;
-  const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo } = this.mother;
+  const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo, dateToString, equalJson } = this.mother;
   const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
   const collection = "googleAnalytics";
   try {
@@ -701,6 +701,7 @@ GoogleAnalytics.prototype.analyticsToMongo = async function (startDate = "defaul
     let tempArr;
     let already;
     let submitClients, submitClientsIds;
+    let alreadyHistory;
 
     tempDir = process.cwd() + "/temp";
     fileNameArr = [];
@@ -754,6 +755,17 @@ GoogleAnalytics.prototype.analyticsToMongo = async function (startDate = "defaul
 
         already = await this.back.mongoRead(collection, { "userid": i.userid }, { selfMongo: MONGOLOCALC });
         if (already.length !== 0) {
+          alreadyHistory = already[0].history;
+          for (let z = 0; z < alreadyHistory.length; z++) {
+            if (!i.history.map((obj) => { return dateToString(obj.time, true).slice(0, -3) }).includes(dateToString(alreadyHistory[z].time, true).slice(0, -3))) {
+              i.history.push(equalJson(JSON.stringify(alreadyHistory[z])));
+            }
+          }
+          i.history.sort((a, b) => { return a.time.valueOf() - b.time.valueOf() });
+          if (i.history.length > 0) {
+            i.firstTimeline = i.history[0].time;
+            i.latestTimeline = i.history[i.history.length - 1].time;
+          }
           await this.back.mongoDelete(collection, i, { selfMongo: MONGOLOCALC });
         }
         await this.back.mongoCreate(collection, i, { selfMongo: MONGOLOCALC });
