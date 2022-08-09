@@ -448,14 +448,15 @@ DesignerBoardJs.prototype.insertRouterBox = function () {
 
 DesignerBoardJs.prototype.projectPopup = function (proid) {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, ajaxJson, homeliaisonAnalytics } = GeneralJs;
-  const { ea, naviHeight, media, projects } = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, ajaxJson, homeliaisonAnalytics, cleanChildren } = GeneralJs;
+  const { ea, naviHeight, media, projects, contents: serviceContents } = this;
   const project = projects.find((obj) => { return obj.proid === proid });
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
   const whitePopupClassName = "whitePopupClassName";
+  const processTargetsClassName = "processTargetsClassName";
   const totalContents = document.getElementById("totalcontents");
   const zIndex = 4;
   return (e) => {
@@ -470,6 +471,50 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
     let formPaddingTop;
     let formBox;
     let grayTong;
+    let grayInnerPadding;
+    let arrowBetween;
+    let arrowHeight;
+    let arrowWidth;
+    let grayInnerPaddingRight;
+    let grayCenterMargin;
+    let divideNumber;
+    let textTop;
+    let textSize;
+    let textWeight;
+    let textMarginLeft;
+    let titleTargets;
+    let grayDescriptionTong;
+    let grayWhiteBase;
+    let num, num2;
+    let contentsMarginBottom0, contentsMarginBottom1;
+    let contentsWordingSize;
+    let contentsBottom;
+    let zeroWidth;
+    let zeroMarginRight;
+    let firstWidth;
+    let secondWidth;
+    let secondMarginRight;
+    let checkBoxWidth;
+    let arrowBoxWidth;
+    let checkBoxTop;
+    let arrowBoxTop;
+    let lineTop;
+    let linePadding;
+    let mobileContentsWordingSize;
+    let checkBoxAreaWidth;
+    let grayDescriptionTongMarginTop;
+    let grayDescriptionTitleSize;
+    let grayDescriptionTitleWeight;
+    let grayDescriptionTitleMarginBottom;
+    let buttonPadding;
+    let buttonHeight;
+    let buttonMarginTop;
+    let buttonBetween;
+    let buttonTextTop;
+    let buttonSize;
+    let buttonWeight;
+    let thisStatusNumber;
+    let setDescription;
 
     whiteWidth = <%% 1000, 1000, 800, 660, 88 %%>;
     whiteMargin = <%% 54, 54, 54, 54, 6 %%>;
@@ -483,7 +528,73 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
     titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
     titleTop = <%% (isMac() ? -10 : -7), (isMac() ? -10 : -7), (isMac() ? -10 : -7), (isMac() ? -10 : -7), -0.2 %%>;
 
-    formPaddingTop = <%% 40, 40, 40, 40, 6 %%>;
+    formPaddingTop = <%% 36, 36, 36, 36, 6 %%>;
+
+    grayInnerPadding = <%% 24, 24, 20, 20, 4 %%>;
+    grayInnerPaddingRight = <%% 40, 40, 36, 36, 4 %%>;
+    grayCenterMargin = <%% 12, 12, 12, 12, 1 %%>;
+
+    arrowBetween = <%% 5, 5, 5, 3, 1.5 %%>;
+    arrowHeight = <%% 60, 60, 60, 60, 6 %%>;
+    arrowWidth = <%% 224, 224, 224, 220, 22 %%>;
+
+    divideNumber = <%% 4, 4, 4, 4, 2 %%>;
+
+    textTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.3 %%>;
+    textSize = <%% 15, 14, 13, 12, 3.3 %%>;
+    textWeight = <%% 700, 700, 700, 700, 700 %%>;
+    textMarginLeft = <%% 28, 28, 28, 28, 3 %%>;
+
+    grayDescriptionTongMarginTop = <%% 16, 16, 16, 16, 1 %%>;
+
+    grayDescriptionTitleSize = <%% 18, 18, 18, 18, 18 %%>;
+    grayDescriptionTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+    grayDescriptionTitleMarginBottom = <%% 16, 16, 16, 16, 16 %%>;
+
+    contentsMarginBottom0 = <%% 6, 6, 6, 4, 2 %%>;
+    contentsMarginBottom1 = <%% 32, 32, 30, 28, 3 %%>;
+
+    contentsWordingSize = <%% 14, 14, 14, 13, 3.5 %%>;
+    contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
+
+    zeroWidth = <%% 8, 8, 8, 8, 10 %%>;
+    zeroMarginRight = <%% 10, 10, 10, 10, 10 %%>;
+    firstWidth = <%% 180, 180, 170, 170, 10 %%>;
+    secondWidth = <%% 15, 15, 15, 15, 2 %%>;
+    secondMarginRight = <%% 10, 10, 10, 10, 2 %%>;
+
+    checkBoxWidth = <%% 10, 10, 10, 10, 2 %%>;
+    arrowBoxWidth = <%% 9, 8, 8, 8, 1.8 %%>;
+    checkBoxTop = <%% (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 4), 1.6 %%>;
+    arrowBoxTop = <%% (isMac() ? 7 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.5 %%>;
+    checkBoxAreaWidth = <%% 16, 16, 16, 16, 3 %%>;
+
+    lineTop = <%% 10, 10, 10, 10, 10 %%>;
+    linePadding = <%% 12, 12, 12, 12, 12 %%>;
+
+    mobileContentsWordingSize = 3.2;
+
+    buttonPadding = <%% 18, 18, 18, 18, 18 %%>;
+    buttonHeight = <%% 38, 38, 38, 38, 38 %%>;
+    buttonMarginTop = <%% 28, 28, 28, 28, 28 %%>;
+    buttonBetween = <%% 6, 6, 6, 6, 6 %%>;
+
+    buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    buttonSize = <%% 15, 15, 15, 15, 15 %%>;
+    buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+    console.log(serviceContents);
+
+    thisStatusNumber = 2;
+
+    setDescription = () => {};
+
+    titleTargets = serviceContents.map((obj) => { return { title: obj.title, key: obj.key } });
+    titleTargets.push({
+      title: "현장 완료",
+      key: null,
+      checklist: null,
+    });
 
     grayBack = createNode({
       mother: totalContents,
@@ -538,7 +649,8 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
       }
     });
 
-    // title
+    // title area
+
     titleArea = createNode({
       mother: contentsTong,
       style: {
@@ -565,7 +677,8 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
       ]
     });
 
-    //form
+    // contents area
+
     formArea = createNode({
       mother: contentsTong,
       style: {
@@ -584,37 +697,362 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
         display: "block",
         position: "relative",
         width: withOut(0),
+        paddingBottom: String(formPaddingTop) + ea,
       }
     });
-
 
     grayTong = createNode({
       mother: formBox,
       style: {
         display: "block",
-        padding: String(40) + ea,
-        width: withOut(40 * 2, ea),
+        padding: String(grayInnerPadding) + ea,
+        paddingRight: String(grayInnerPaddingRight) + ea,
+        width: withOut(grayInnerPadding + grayInnerPaddingRight, ea),
         borderRadius: String(5) + "px",
-        background: colorChip.gradientGray,
+        background: colorChip.gray2,
       }
     });
 
-    for (let i = 0; i < 8; i++) {
-      
+    for (let i = 0; i < titleTargets.length; i++) {
+      createNode({
+        mother: grayTong,
+        class: [ processTargetsClassName ],
+        attribute: {
+          index: String(i),
+        },
+        event: {
+          click: function (e) {
+            const self = this;
+            const index = Number(this.getAttribute("index"));
+            const targets = document.querySelectorAll('.' + processTargetsClassName);
+
+            for (let dom of targets) {
+              if (dom === self) {
+                if (index === thisStatusNumber) {
+                  dom.querySelector("path").setAttribute("fill", colorChip.green);
+                  dom.children[1].style.color = colorChip.white;
+                } else {
+                  dom.querySelector("path").setAttribute("fill", colorChip.yellow);
+                  dom.children[1].style.color = colorChip.white;
+                }
+              } else {
+                if (thisStatusNumber === Number(dom.getAttribute("index"))) {
+                  dom.querySelector("path").setAttribute("fill", colorChip.whiteGreen);
+                  dom.children[1].style.color = colorChip.white;
+                } else {
+                  dom.querySelector("path").setAttribute("fill", colorChip.white);
+                  if (index === thisStatusNumber) {
+                    dom.children[1].style.color = colorChip.black;
+                  } else {
+                    dom.children[1].style.color = colorChip.deactive;
+                  }
+                }
+              }
+            }
+
+            setDescription(index);
+          }
+        },
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          height: String(arrowHeight) + ea,
+          width: "calc(calc(100% - " + String(arrowBetween * divideNumber) + ea + ") / " + String(divideNumber) + ")",
+          marginRight: String(arrowBetween) + ea,
+          marginBottom: String(i / divideNumber < 1 ? grayCenterMargin : 0) + ea,
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          cursor: "pointer",
+          transition: "all 0.2s ease",
+        },
+        children: [
+          {
+            mode: "svg",
+            source: svgMaker.processArrow(arrowWidth, arrowHeight, (i === thisStatusNumber ? colorChip.green : colorChip.white)),
+            style: {
+              position: "absolute",
+              top: String(0),
+              left: String(0),
+              width: String(arrowWidth) + ea,
+              height: String(arrowHeight) + ea,
+              transition: "all 0.2s ease",
+            }
+          },
+          {
+            text: titleTargets[i].title,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(textTop) + ea,
+              fontSize: String(textSize) + ea,
+              fontWeight: String(textWeight),
+              color: i === thisStatusNumber ? colorChip.white : colorChip.black,
+              marginLeft: String(textMarginLeft) + ea,
+              transition: "all 0.2s ease",
+            }
+          }
+        ]
+      });
     }
 
+    // description area
+
+    grayDescriptionTong = createNode({
+      mother: formBox,
+      style: {
+        display: "block",
+        padding: String(grayInnerPadding) + ea,
+        width: withOut(grayInnerPadding * 2, ea),
+        borderRadius: String(5) + "px",
+        background: colorChip.gray2,
+        marginTop: String(grayDescriptionTongMarginTop) + ea,
+      }
+    });
+
+    grayWhiteBase = createNode({
+      mother: grayDescriptionTong,
+      style: {
+        display: "block",
+        width: withOut(0, ea),
+        background: colorChip.white,
+        borderRadius: String(5) + "px",
+        boxShadow: "0px 5px 15px -9px " + colorChip.shadow,
+        paddingTop: String(grayInnerPadding) + ea,
+        paddingBottom: String(grayInnerPadding) + ea,
+      }
+    });
+
+    setDescription = (thisStatusNumber) => {
+      cleanChildren(grayWhiteBase);
+      createNode({
+        mother: grayWhiteBase,
+        text: titleTargets[thisStatusNumber].title,
+        style: {
+          display: "block",
+          position: "relative",
+          fontSize: String(grayDescriptionTitleSize) + ea,
+          fontWeight: String(grayDescriptionTitleWeight),
+          color: colorChip.black,
+          marginLeft: String(grayInnerPadding) + ea,
+          marginBottom: String(grayDescriptionTitleMarginBottom) + ea,
+        },
+      });
+
+      if (serviceContents[thisStatusNumber] !== undefined) {
+        num = 0;
+        for (let { title, children } of serviceContents[thisStatusNumber].checklist) {
+          num2 = 0;
+          for (let { title: str, contents } of children) {
+            createNode({
+              mother: grayWhiteBase,
+              style: {
+                display: "block",
+                position: "relative",
+                marginBottom: String(num2 === children.length - 1 ? contentsMarginBottom1 : contentsMarginBottom0) + ea,
+                marginTop: desktop ? "" : ((num === 0 || num2 !== 0) ? "" : String(6) + ea),
+                marginLeft: String(grayInnerPadding) + ea,
+                width: withOut(grayInnerPadding * 2, ea),
+              },
+              children: [
+                {
+                  text: (num2 === 0 ? String(num + 1) : ""),
+                  style: {
+                    display: desktop ? "inline-block" : "none",
+                    fontSize: String(contentsWordingSize) + ea,
+                    fontWeight: String(600),
+                    verticalAlign: "top",
+                    lineHeight: String(1.6),
+                    width: String(zeroWidth) + ea,
+                    marginRight: String(zeroMarginRight) + ea,
+                    textAlign: "right",
+                    color: colorChip.green,
+                  }
+                },
+                {
+                  style: {
+                    display: desktop ? "inline-block" : "block",
+                    position: "relative",
+                    verticalAlign: "top",
+                    width: desktop ? String(firstWidth) + ea : String(100) + '%',
+                    marginBottom: desktop ? "" : String(1.5) + ea,
+                  },
+                  children: [
+                    {
+                      style: {
+                        display: num2 === 0 ? "block" : "none",
+                        position: "absolute",
+                        top: String(0),
+                        left: String(0),
+                        height: String(lineTop) + ea,
+                        width: withOut(0),
+                        borderBottom: desktop ? "1px solid " + colorChip.gray3 : "",
+                      }
+                    },
+                    {
+                      text: (num2 === 0 ? (desktop ? title : "<b%" + String(num + 1) + "%b>" + blank + title) : ""),
+                      style: {
+                        display: desktop ? "inline-block" : "block",
+                        position: "relative",
+                        fontSize: String(contentsWordingSize) + ea,
+                        fontWeight: String(700),
+                        lineHeight: String(1.6),
+                        color: colorChip.black,
+                        textAlign: "left",
+                        background: colorChip.white,
+                        paddingRight: String(linePadding) + ea,
+                      },
+                      bold: {
+                        fontSize: String(contentsWordingSize) + ea,
+                        fontWeight: String(700),
+                        color: colorChip.green,
+                      },
+                    }
+                  ]
+                },
+                {
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(contentsWordingSize) + ea,
+                    fontWeight: String(600),
+                    verticalAlign: "top",
+                    lineHeight: String(1.6),
+                    width: String(secondWidth) + ea,
+                    marginRight: String(secondMarginRight) + ea,
+                    textAlign: desktop ? "right" : "left",
+                    color: colorChip.green,
+                  },
+                },
+                {
+                  text: "<u%" + str + ":%u>&nbsp;&nbsp;&nbsp;" + contents,
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+                    fontWeight: String(400),
+                    verticalAlign: "top",
+                    lineHeight: String(1.6),
+                    paddingLeft: String(checkBoxAreaWidth) + ea,
+                    width: withOut(desktop ? zeroWidth + zeroMarginRight + firstWidth + secondWidth + secondMarginRight + checkBoxAreaWidth : secondWidth + secondMarginRight + checkBoxAreaWidth, ea),
+                    textAlign: "left",
+                    color: colorChip.black,
+                  },
+                  bold: {
+                    fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+                    fontWeight: String(600),
+                    color: colorChip.green,
+                  },
+                  under: {
+                    fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+                    fontWeight: String(700),
+                    color: colorChip.black,
+                  },
+                  children: [
+                    {
+                      mode: "svg",
+                      source: instance.mother.returnCheckBox(colorChip.green),
+                      style: {
+                        top: String(checkBoxTop) + ea,
+                        left: String(0),
+                        position: "absolute",
+                        width: String(checkBoxWidth) + ea,
+                      }
+                    }
+                  ]
+                },
+              ]
+            });
+
+            num2++;
+          }
+          num++;
+        }
+
+      }
+
+    };
+
+    setDescription(thisStatusNumber);
+
+    // payment area
 
     paymentArea = createNode({
       mother: contentsTong,
       style: {
-        display: "block",
+        display: "flex",
+        flexDirection: "row",
         position: "relative",
         width: withOut(0, ea),
         height: String(paymentHeight) + ea,
         borderTop: "1px dashed " + colorChip.gray4,
         textAlign: "right",
+        alignItems: "center",
+        justifyContent: "end",
       }
     });
+
+    createNode({
+      mother: paymentArea,
+      style: {
+        display: "inline-flex",
+        paddingLeft: String(buttonPadding) + ea,
+        paddingRight: String(buttonPadding) + ea,
+        height: String(buttonHeight) + ea,
+        background: colorChip.gradientGray,
+        borderRadius: String(5) + "px",
+        marginTop: String(buttonMarginTop) + ea,
+        marginRight: String(buttonBetween) + ea,
+        justifyContent: "center",
+        alignItems: "center",
+        textAlign: "center",
+        cursor: "pointer",
+      },
+      children: [
+        {
+          text: "상태 변경",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(buttonTextTop) + ea,
+            fontSize: String(buttonSize) + ea,
+            fontWeight: String(buttonWeight),
+            color: colorChip.white,
+          }
+        }
+      ]
+    });
+
+    createNode({
+      mother: paymentArea,
+      style: {
+        display: "inline-flex",
+        paddingLeft: String(buttonPadding) + ea,
+        paddingRight: String(buttonPadding) + ea,
+        height: String(buttonHeight) + ea,
+        background: colorChip.gradientGray,
+        borderRadius: String(5) + "px",
+        marginTop: String(buttonMarginTop) + ea,
+        justifyContent: "center",
+        alignItems: "center",
+        textAlign: "center",
+        cursor: "pointer",
+      },
+      children: [
+        {
+          text: "템플릿 다운로드",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(buttonTextTop) + ea,
+            fontSize: String(buttonSize) + ea,
+            fontWeight: String(buttonWeight),
+            color: colorChip.white,
+          }
+        }
+      ]
+    });
+
 
   }
 }
@@ -2837,6 +3275,8 @@ DesignerBoardJs.prototype.launching = async function (loading) {
 
     ghostContents = await ajaxJson({ desid: designer.desid, mode: "full" }, BACKHOST + "/getDesignerGhost", { equal: true });
     this.ghostContents = ghostContents;
+
+    this.contents = await ajaxJson({}, SECONDHOST + "/getChecklist", { equal: true });
 
     await this.mother.ghostDesignerLaunching({
       name: "designerBoard",
