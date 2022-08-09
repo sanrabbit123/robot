@@ -757,7 +757,7 @@ GoogleAnalytics.prototype.analyticsToMongo = async function (startDate = "defaul
         if (already.length !== 0) {
           alreadyHistory = already[0].history;
           for (let z = 0; z < alreadyHistory.length; z++) {
-            if (!i.history.map((obj) => { return dateToString(obj.time, true).slice(0, -3) }).includes(dateToString(alreadyHistory[z].time, true).slice(0, -3))) {
+            if (!i.history.map((obj) => { return dateToString(obj.time, true) }).includes(dateToString(alreadyHistory[z].time, true))) {
               i.history.push(equalJson(JSON.stringify(alreadyHistory[z])));
             }
           }
