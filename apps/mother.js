@@ -2823,6 +2823,9 @@ Mother.prototype.stringToDate = function (str) {
   if (str instanceof Date) {
     return str;
   }
+  if (typeof str === "number") {
+    return new Date(str);
+  }
   if (typeof str !== "string") {
     throw new Error("invaild input");
   }

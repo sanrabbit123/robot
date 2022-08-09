@@ -523,10 +523,10 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
     whiteMargin = <%% 54, 54, 54, 54, 6 %%>;
     innerMargin = <%% 54, 54, 54, 54, 6 %%>;
 
-    titleHeight = <%% 36, 36, 35, 35, 8 %%>;
+    titleHeight = <%% 36, 36, 30, 30, 8 %%>;
     paymentHeight = <%% 70, 70, 70, 70, 14 %%>;
 
-    titleSize = <%% 24, 23, 22, 22, 4 %%>;
+    titleSize = <%% 24, 23, 21, 20, 4 %%>;
     titleWeight = <%% 700, 700, 700, 700, 700 %%>;
     titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
     titleTop = <%% (isMac() ? -10 : -7), (isMac() ? -10 : -7), (isMac() ? -10 : -7), (isMac() ? -10 : -7), -0.2 %%>;
@@ -538,21 +538,21 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
     grayCenterMargin = <%% 12, 12, 12, 12, 1 %%>;
 
     arrowBetween = <%% 5, 5, 5, 3, 1.5 %%>;
-    arrowHeight = <%% 60, 60, 60, 60, 6 %%>;
-    arrowWidth = <%% 224, 224, 224, 220, 22 %%>;
+    arrowHeight = <%% 60, 60, 54, 48, 6 %%>;
+    arrowWidth = <%% 224, 224, 176, 220, 22 %%>;
 
     divideNumber = <%% 4, 4, 4, 4, 2 %%>;
 
     textTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.3 %%>;
     textSize = <%% 15, 14, 13, 12, 3.3 %%>;
     textWeight = <%% 700, 700, 700, 700, 700 %%>;
-    textMarginLeft = <%% 28, 28, 28, 28, 3 %%>;
+    textMarginLeft = <%% 28, 28, 22, 21, 3 %%>;
 
-    grayDescriptionTongMarginTop = <%% 16, 16, 16, 16, 1 %%>;
+    grayDescriptionTongMarginTop = <%% 16, 16, 12, 12, 1 %%>;
 
-    grayDescriptionTitleSize = <%% 18, 18, 18, 18, 18 %%>;
+    grayDescriptionTitleSize = <%% 18, 18, 16, 15, 18 %%>;
     grayDescriptionTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
-    grayDescriptionTitleMarginBottom = <%% 16, 16, 16, 16, 16 %%>;
+    grayDescriptionTitleMarginBottom = <%% 16, 16, 12, 10, 16 %%>;
 
     contentsMarginBottom0 = <%% 6, 6, 6, 4, 2 %%>;
     contentsMarginBottom1 = <%% 32, 32, 30, 28, 3 %%>;
@@ -562,7 +562,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
 
     zeroWidth = <%% 8, 8, 8, 8, 10 %%>;
     zeroMarginRight = <%% 10, 10, 10, 10, 10 %%>;
-    firstWidth = <%% 180, 180, 170, 170, 10 %%>;
+    firstWidth = <%% 180, 180, 120, 100, 10 %%>;
     secondWidth = <%% 15, 15, 15, 15, 2 %%>;
     secondMarginRight = <%% 10, 10, 10, 10, 2 %%>;
 
@@ -1287,7 +1287,7 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
       [ 86, 102, 73, 150, 150, 170, 150 ] |
       [ 86, 100, 62, 140, 140, 160, 140 ] |
       [ 80, 91, 54, 116, 116, 132, 116 ] |
-      [ 78, 88, 54, 116, 116, 116, 116 ] |
+      [ 78, 88, 54, 116, 116, 116 ] |
       [ 6, 11, 12, 7, 14, 15, 15 ]
     &&>;
 
@@ -1743,7 +1743,7 @@ DesignerBoardJs.prototype.insertCommentsBox = function (whiteBlock) {
       [ 86, 102, 73, 150, 150, 170, 150 ] |
       [ 86, 100, 62, 140, 140, 160, 140 ] |
       [ 80, 91, 54, 116, 116, 132, 116 ] |
-      [ 78, 88, 54, 116, 116, 116, 116 ] |
+      [ 78, 88, 54, 116, 116, 116 ] |
       [ 6, 11, 12, 7, 14, 15, 15 ]
     &&>;
 

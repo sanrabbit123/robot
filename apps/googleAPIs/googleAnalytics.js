@@ -296,6 +296,7 @@ GoogleAnalytics.prototype.getClientById = async function (clientId) {
 GoogleAnalytics.prototype.getUsersByDate = async function (date = "aMonthAgo", end = "today") {
   const instance = this;
   const queryString = require('querystring');
+  const { stringToDate, equalJson } = this.mother;
   const zeroAddtion = function (num) {
     if (num < 10) {
       return `0${String(num)}`;
@@ -327,6 +328,10 @@ GoogleAnalytics.prototype.getUsersByDate = async function (date = "aMonthAgo", e
     let filteredArr;
     let temp;
     let num;
+    let eventStandard;
+    let newObj;
+    let eventObj;
+    let eventDate;
 
     if (end === "today") {
       endDate = zeroAddtion(today.getFullYear()) + '-' + zeroAddtion(today.getMonth() + 1) + '-' + zeroAddtion(today.getDate());
@@ -362,6 +367,12 @@ GoogleAnalytics.prototype.getUsersByDate = async function (date = "aMonthAgo", e
         { name: "ga:campaign" },
         { name: "ga:userType" },
       ],
+      [
+        { name: "ga:eventCategory" },
+      ],
+      [
+        { name: "ga:eventLabel" },
+      ]
     ];
 
     resultObj = {};
@@ -394,13 +405,48 @@ GoogleAnalytics.prototype.getUsersByDate = async function (date = "aMonthAgo", e
           tempObj[resultObj[i][j].timeline] = {};
         }
         for (let k in resultObj[i][j]) {
-          tempObj[resultObj[i][j].timeline][k] = resultObj[i][j][k];
+          if (k !== "eventLabel") {
+            tempObj[resultObj[i][j].timeline][k] = resultObj[i][j][k];
+          }
         }
       }
-      finalObj[i] = Object.values(tempObj);
+
+      eventStandard = resultObj[i].filter((obj) => { return typeof obj.eventLabel === "string" }).filter((obj) => { return /^\{/.test(obj.eventLabel); });
+
+      finalObj[i] = [];
+      for (let { timeline, eventLabel } of eventStandard) {
+
+        if (tempObj[timeline] === undefined) {
+          newObj = {};
+        } else {
+          newObj = equalJson(JSON.stringify(tempObj[timeline]));
+        }
+
+        eventObj = equalJson(eventLabel);
+        eventDate = stringToDate(eventObj.date);
+        delete eventObj.date;
+        delete eventObj.standard;
+        delete eventObj.googleId;
+        delete eventObj.id;
+        delete eventObj.cliid;
+
+        newObj.event = { rawJson: eventLabel, date: eventDate, ...eventObj };
+
+        if (typeof newObj.event.href === "string") {
+          newObj.event.href = global.decodeURIComponent(newObj.event.href);
+        }
+
+        finalObj[i].push(newObj);
+      }
+
+      if (finalObj[i].length === 0) {
+        console.log(resultObj[i]);
+      }
+
     }
 
     filteredArr = [];
+    /*
     for (let i in finalObj) {
 
       finalObj[i].sort((a, b) => { return Number(a.timeline) - Number(b.timeline); });
@@ -458,10 +504,10 @@ GoogleAnalytics.prototype.getUsersByDate = async function (date = "aMonthAgo", e
       }
       filteredArr.push(tempObj);
     }
-
     filteredArr.sort((a, b) => {
       return Number(b.latestTimeline.replace(/[^0-9]/g, '')) - Number(a.latestTimeline.replace(/[^0-9]/g, ''));
     });
+    */
 
     return filteredArr;
   } catch (e) {
