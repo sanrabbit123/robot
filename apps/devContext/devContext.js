@@ -92,8 +92,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const app = new GoogleAnalytics();
-    await app.analyticsToMongo("2022-01-01", "2022-03-03");
+    // const app = new GoogleAnalytics();
+    // await app.analyticsToMongo("2022-01-01", "2022-03-03");
 
 
 
@@ -2782,7 +2782,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("a98");
+    // await this.getRawPortfolio("p193");
 
 
     // get corePortfolio by pid
