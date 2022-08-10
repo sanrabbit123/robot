@@ -2915,6 +2915,7 @@ DesignerBoardJs.prototype.insertforeContentsBox = function (whiteBlock) {
     const firstDate = project.process.calculation.payments.first.date.valueOf();
     return ((new Date(2000, 0, 1)).valueOf() < firstDate && firstDate < (new Date(3000, 0, 1)).valueOf());
   });
+
   ghostCopied = equalJson(JSON.stringify(ghostContents));
 
   targetsRaw.sort((a, b) => { return b.process.calculation.payments.first.date.valueOf() - a.process.calculation.payments.first.date.valueOf() });
@@ -2924,7 +2925,6 @@ DesignerBoardJs.prototype.insertforeContentsBox = function (whiteBlock) {
     if (ghostIndex !== -1) {
       obj.pid = ghostContents[ghostIndex].pid;
       targets.push(obj);
-      delete ghostCopied[ghostIndex];
     }
   }
 
