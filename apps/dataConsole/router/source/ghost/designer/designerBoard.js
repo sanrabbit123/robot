@@ -457,6 +457,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
   const small = !big;
   const whitePopupClassName = "whitePopupClassName";
   const processTargetsClassName = "processTargetsClassName";
+  const blank = "&nbsp;&nbsp;&nbsp;";
   const totalContents = document.getElementById("totalcontents");
   const zIndex = 4;
   return (e) => {
@@ -518,6 +519,8 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
     let statusButtonWidth, statusButtonHeight;
     let statusButtonBetween;
     let statusTextTop, statusSize, statusBetween;
+    let mobileArrowMarginBottom;
+    let mobileInnerPaddingBottom;
 
     whiteWidth = <%% 1000, 1000, 800, 660, 88 %%>;
     whiteMargin = <%% 54, 54, 54, 54, 6 %%>;
@@ -531,67 +534,71 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
     titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
     titleTop = <%% (isMac() ? -10 : -7), (isMac() ? -10 : -7), (isMac() ? -10 : -7), (isMac() ? -10 : -7), -0.2 %%>;
 
-    formPaddingTop = <%% 36, 36, 36, 36, 6 %%>;
+    formPaddingTop = <%% 36, 36, 32, 25, 5 %%>;
 
     grayInnerPadding = <%% 24, 24, 20, 20, 4 %%>;
-    grayInnerPaddingRight = <%% 40, 40, 36, 36, 4 %%>;
+    grayInnerPaddingRight = <%% 40, 40, 36, 28, 6 %%>;
     grayCenterMargin = <%% 12, 12, 12, 12, 1 %%>;
 
     arrowBetween = <%% 5, 5, 5, 3, 1.5 %%>;
-    arrowHeight = <%% 60, 60, 54, 48, 6 %%>;
-    arrowWidth = <%% 224, 224, 176, 220, 22 %%>;
+    arrowHeight = <%% 60, 60, 54, 40, 10 %%>;
+    arrowWidth = <%% 224, 224, 176, 136, 24.6 %%>;
 
-    divideNumber = <%% 4, 4, 4, 4, 2 %%>;
+    mobileArrowMarginBottom = 2.5;
 
-    textTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.3 %%>;
-    textSize = <%% 15, 14, 13, 12, 3.3 %%>;
+    mobileInnerPaddingBottom = 7;
+
+    divideNumber = <%% 4, 4, 4, 4, 3 %%>;
+
+    textTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isIphone() ? 0 : -0.3) %%>;
+    textSize = <%% 15, 14, 13, 12, 2.8 %%>;
     textWeight = <%% 700, 700, 700, 700, 700 %%>;
-    textMarginLeft = <%% 28, 28, 22, 21, 3 %%>;
+    textMarginLeft = <%% 28, 28, 22, 14, 5 %%>;
 
     grayDescriptionTongMarginTop = <%% 16, 16, 12, 12, 1 %%>;
 
-    grayDescriptionTitleSize = <%% 18, 18, 16, 15, 18 %%>;
+    grayDescriptionTitleSize = <%% 18, 18, 16, 14, 3.5 %%>;
     grayDescriptionTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
-    grayDescriptionTitleMarginBottom = <%% 16, 16, 12, 10, 16 %%>;
+    grayDescriptionTitleMarginBottom = <%% 20, 20, 18, 16, 3 %%>;
 
     contentsMarginBottom0 = <%% 6, 6, 6, 4, 2 %%>;
-    contentsMarginBottom1 = <%% 32, 32, 30, 28, 3 %%>;
+    contentsMarginBottom1 = <%% 32, 32, 30, 28, 0 %%>;
 
-    contentsWordingSize = <%% 13, 13, 12, 11, 3.5 %%>;
+    contentsWordingSize = <%% 13, 13, 12, 11, 3 %%>;
     contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
 
     zeroWidth = <%% 8, 8, 8, 8, 10 %%>;
     zeroMarginRight = <%% 10, 10, 10, 10, 10 %%>;
-    firstWidth = <%% 180, 180, 120, 100, 10 %%>;
-    secondWidth = <%% 15, 15, 15, 15, 2 %%>;
+    firstWidth = <%% 150, 150, 120, 90, 10 %%>;
+    secondWidth = <%% 15, 15, 15, 10, 2 %%>;
     secondMarginRight = <%% 10, 10, 10, 10, 2 %%>;
 
-    checkBoxWidth = <%% 9, 9, 9, 8, 2 %%>;
+    checkBoxWidth = <%% 9, 9, 9, 7, 2 %%>;
     arrowBoxWidth = <%% 9, 8, 8, 8, 1.8 %%>;
     checkBoxTop = <%% (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 4), 1.6 %%>;
     arrowBoxTop = <%% (isMac() ? 7 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.5 %%>;
     checkBoxAreaWidth = <%% 14, 14, 14, 12, 3 %%>;
 
-    lineTop = <%% 10, 10, 10, 10, 10 %%>;
-    linePadding = <%% 12, 12, 12, 12, 12 %%>;
+    lineTop = <%% (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 9 : 7), (isMac() ? 8 : 6), 10 %%>;
+    linePadding = <%% 12, 12, 12, 10, 12 %%>;
 
-    mobileContentsWordingSize = 3.2;
+    mobileContentsWordingSize = 2.7;
 
-    buttonPadding = <%% 18, 18, 18, 18, 18 %%>;
-    buttonHeight = <%% 38, 38, 38, 38, 38 %%>;
-    buttonMarginTop = <%% 28, 28, 28, 28, 28 %%>;
-    buttonBetween = <%% 6, 6, 6, 6, 6 %%>;
+    buttonPadding = <%% 18, 18, 18, 16, 3.2 %%>;
+    buttonHeight = <%% 38, 38, 38, 34, 7.2 %%>;
+    buttonMarginTop = <%% 28, 28, 28, 28, 2 %%>;
+    buttonBetween = <%% 6, 6, 6, 6, 1 %%>;
 
-    buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
-    buttonSize = <%% 15, 15, 15, 15, 15 %%>;
+    buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isIphone() ? -0.1 : -0.3) %%>;
+    buttonSize = <%% 15, 15, 15, 13, 3 %%>;
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    statusButtonWidth = <%% 120, 120, 120, 120, 120 %%>;
-    statusButtonHeight = <%% 40, 40, 40, 40, 40 %%>;
-    statusButtonBetween = <%% 8, 8, 8, 8, 8 %%>;
+    statusButtonWidth = <%% 120, 120, 110, 100, 24 %%>;
+    statusButtonHeight = <%% 40, 40, 40, 36, 8 %%>;
+    statusButtonBetween = <%% 8, 8, 8, 6, 1 %%>;
 
-    statusTextTop = <%% -1, -1, -1, -1, -1 %%>;
-    statusSize = <%% 14, 14, 14, 14, 14 %%>;
+    statusTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isIphone() ? -0.2 : -0.3) %%>;
+    statusSize = <%% 14, 14, 13, 12, 3 %%>;
     statusBetween = <%% 500, 500, 500, 500, 500 %%>;
 
     thisStatusNumber = serviceContents.findIndex((obj) => { return obj.target.includes(project.process.action) });
@@ -715,6 +722,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
       style: {
         display: "block",
         padding: String(grayInnerPadding) + ea,
+        paddingBottom: String(desktop ? grayInnerPadding : grayInnerPadding - mobileArrowMarginBottom) + ea,
         paddingRight: String(grayInnerPaddingRight) + ea,
         width: withOut(grayInnerPadding + grayInnerPaddingRight, ea),
         borderRadius: String(5) + "px",
@@ -768,12 +776,13 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
           height: String(arrowHeight) + ea,
           width: "calc(calc(100% - " + String(arrowBetween * divideNumber) + ea + ") / " + String(divideNumber) + ")",
           marginRight: String(arrowBetween) + ea,
-          marginBottom: String(i / divideNumber < 1 ? grayCenterMargin : 0) + ea,
+          marginBottom: desktop ? String(i / divideNumber < 1 ? grayCenterMargin : 0) + ea : String(mobileArrowMarginBottom) + ea,
           justifyContent: "center",
           alignItems: "center",
           textAlign: "center",
           cursor: "pointer",
           transition: "all 0.2s ease",
+          verticalAlign: "top",
         },
         children: [
           {
@@ -805,6 +814,40 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
       });
     }
 
+    if (mobile) {
+      createNode({
+        mother: grayTong,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          height: String(arrowHeight) + ea,
+          width: "calc(calc(100% - " + String(arrowBetween * divideNumber) + ea + ") / " + String(divideNumber) + ")",
+          marginRight: String(arrowBetween) + ea,
+          marginBottom: String(mobileArrowMarginBottom) + ea,
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          cursor: "pointer",
+          transition: "all 0.2s ease",
+          verticalAlign: "top",
+        },
+        children: [
+          {
+            mode: "svg",
+            source: svgMaker.processArrow(arrowWidth, arrowHeight, colorChip.gray0),
+            style: {
+              position: "absolute",
+              top: String(0),
+              left: String(0),
+              width: String(arrowWidth) + ea,
+              height: String(arrowHeight) + ea,
+              transition: "all 0.2s ease",
+            }
+          },
+        ]
+      });
+    }
+
     // description area
 
     grayDescriptionTong = createNode({
@@ -828,7 +871,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
         borderRadius: String(5) + "px",
         boxShadow: "0px 5px 15px -9px " + colorChip.shadow,
         paddingTop: String(grayInnerPadding) + ea,
-        paddingBottom: String(grayInnerPadding) + ea,
+        paddingBottom: String(desktop ? grayInnerPadding : mobileInnerPaddingBottom) + ea,
       }
     });
 
@@ -859,7 +902,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
                 display: "block",
                 position: "relative",
                 marginBottom: String(num2 === children.length - 1 ? contentsMarginBottom1 : contentsMarginBottom0) + ea,
-                marginTop: desktop ? "" : ((num === 0 || num2 !== 0) ? "" : String(6) + ea),
+                marginTop: desktop ? "" : ((num === 0 || num2 !== 0) ? "" : String(5) + ea),
                 marginLeft: String(grayInnerPadding) + ea,
                 width: withOut(grayInnerPadding * 2, ea),
               },
@@ -884,7 +927,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
                     position: "relative",
                     verticalAlign: "top",
                     width: desktop ? String(firstWidth) + ea : String(100) + '%',
-                    marginBottom: desktop ? "" : String(1.5) + ea,
+                    marginBottom: desktop ? "" : String(1) + ea,
                   },
                   children: [
                     {

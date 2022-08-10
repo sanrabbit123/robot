@@ -300,7 +300,7 @@ DesignManualJs.prototype.insertProcessBox = function () {
       display: "block",
       position: "relative",
       paddingTop: String(innerMargin) + ea,
-      paddingBottom: String(innerMargin) + ea,
+      paddingBottom: String(desktop ? innerMargin : innerMargin - arrowBetween) + ea,
       paddingLeft: String(desktop ? innerMargin : (innerMargin - mobileVisualPaddingValue)) + ea,
       paddingRight: String(desktop ? innerMargin : (innerMargin + mobileVisualPaddingValue)) + ea,
       width: withOut(innerMargin * 2, ea),
@@ -521,6 +521,7 @@ DesignManualJs.prototype.insertChecklistBox = function (key) {
   let wordings;
   let lineTop, linePadding;
   let checkBoxAreaWidth;
+  let mobileInnerPaddingBottom;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -535,15 +536,17 @@ DesignManualJs.prototype.insertChecklistBox = function (key) {
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
   titleBottom = <%% (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 15 : 14), 0 %%>;
-  contentsAreaPaddingTop = <%% 36, 36, 36, 36, 6 %%>;
+  contentsAreaPaddingTop = <%% 36, 36, 36, 36, 7 %%>;
 
   mobileTitleLeft = 1.5;
   mobileTitleTop = -8.7;
 
+  mobileInnerPaddingBottom = 8;
+
   secondBlockWidth = <%% 300, 300, 300, 300, 330 %%>;
   secondBlockMargin = <%% 36, 36, 36, 36, 33 %%>;
 
-  contentsWordingSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
+  contentsWordingSize = <%% 14.5, 14, 14, 13, 3.4 %%>;
   contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
 
   contentsTitleMarginTop = <%% 14, 14, 14, 14, 1 %%>;
@@ -570,14 +573,14 @@ DesignManualJs.prototype.insertChecklistBox = function (key) {
   arrowBoxTop = <%% (isMac() ? 7 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.5 %%>;
 
   contentsMarginBottom0 = <%% 4, 4, 4, 4, 2 %%>;
-  contentsMarginBottom1 = <%% 32, 32, 30, 28, 3 %%>;
+  contentsMarginBottom1 = <%% 32, 32, 30, 28, 0 %%>;
 
-  lineTop = <%% 10, 10, 10, 10, 10 %%>;
-  linePadding = <%% 12, 12, 12, 12, 12 %%>;
+  lineTop = <%% (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 9 : 7), 10 %%>;
+  linePadding = <%% 12, 12, 12, 10, 12 %%>;
 
   mobilePaddingLeft = 6;
 
-  mobileContentsWordingSize = 3.2;
+  mobileContentsWordingSize = 3;
 
   checkBoxAreaWidth = <%% 16, 16, 16, 16, 3 %%>;
 
@@ -657,7 +660,7 @@ DesignManualJs.prototype.insertChecklistBox = function (key) {
           borderTop: desktop ? "1px solid " + colorChip.shadow : "",
           paddingLeft: desktop ? "" : String(mobilePaddingLeft) + ea,
           paddingRight: desktop ? "" : String(mobilePaddingLeft) + ea,
-          paddingBottom: desktop ? "" : String(9.5) + ea,
+          paddingBottom: desktop ? "" : String(mobileInnerPaddingBottom) + ea,
         }
       },
     ]
