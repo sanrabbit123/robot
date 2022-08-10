@@ -297,6 +297,7 @@ GoogleAnalytics.prototype.getUsersByDate = async function (date = "aMonthAgo", e
   const instance = this;
   const queryString = require('querystring');
   const { stringToDate, equalJson } = this.mother;
+  const splitToken = "_____split_____";
   const zeroAddtion = function (num) {
     if (num < 10) {
       return `0${String(num)}`;
@@ -332,6 +333,8 @@ GoogleAnalytics.prototype.getUsersByDate = async function (date = "aMonthAgo", e
     let newObj;
     let eventObj;
     let eventDate;
+    let timePathArr;
+    let timePathResult;
 
     if (end === "today") {
       endDate = zeroAddtion(today.getFullYear()) + '-' + zeroAddtion(today.getMonth() + 1) + '-' + zeroAddtion(today.getDate());
@@ -368,9 +371,6 @@ GoogleAnalytics.prototype.getUsersByDate = async function (date = "aMonthAgo", e
         { name: "ga:userType" },
       ],
       [
-        { name: "ga:eventCategory" },
-      ],
-      [
         { name: "ga:eventLabel" },
       ]
     ];
@@ -399,54 +399,38 @@ GoogleAnalytics.prototype.getUsersByDate = async function (date = "aMonthAgo", e
 
     finalObj = {};
     for (let i in resultObj) {
+
+      timePathArr = resultObj[i].filter((obj) => { return typeof obj.pagePath === "string" }).map((obj) => {
+        return obj.timeline + splitToken + obj.pagePath + splitToken + obj.pageTitle;
+      });
+
       tempObj = {};
       for (let j = 0; j < resultObj[i].length; j++) {
         if (tempObj[resultObj[i][j].timeline] === undefined) {
           tempObj[resultObj[i][j].timeline] = {};
         }
         for (let k in resultObj[i][j]) {
-          if (k !== "eventLabel") {
+          if (k !== "eventLabel" && k !== "pagePath" && k !== "pageTitle" && k !== "timeline") {
             tempObj[resultObj[i][j].timeline][k] = resultObj[i][j][k];
           }
         }
       }
 
-      eventStandard = resultObj[i].filter((obj) => { return typeof obj.eventLabel === "string" }).filter((obj) => { return /^\{/.test(obj.eventLabel); });
-
-      finalObj[i] = [];
-      for (let { timeline, eventLabel } of eventStandard) {
-
-        if (tempObj[timeline] === undefined) {
-          newObj = {};
-        } else {
-          newObj = equalJson(JSON.stringify(tempObj[timeline]));
+      timePathResult = timePathArr.map((str) => {
+        const [ timeline, pagePath, pageTitle ] = str.split(splitToken);
+        return {
+          timeline,
+          pagePath,
+          pageTitle,
+          ...tempObj[timeline]
         }
+      });
 
-        eventObj = equalJson(eventLabel);
-        eventDate = stringToDate(eventObj.date);
-        delete eventObj.date;
-        delete eventObj.standard;
-        delete eventObj.googleId;
-        delete eventObj.id;
-        delete eventObj.cliid;
-
-        newObj.event = { rawJson: eventLabel, date: eventDate, ...eventObj };
-
-        if (typeof newObj.event.href === "string") {
-          newObj.event.href = global.decodeURIComponent(newObj.event.href);
-        }
-
-        finalObj[i].push(newObj);
-      }
-
-      if (finalObj[i].length === 0) {
-        console.log(resultObj[i]);
-      }
+      finalObj[i] = timePathResult;
 
     }
 
     filteredArr = [];
-    /*
     for (let i in finalObj) {
 
       finalObj[i].sort((a, b) => { return Number(a.timeline) - Number(b.timeline); });
@@ -507,7 +491,6 @@ GoogleAnalytics.prototype.getUsersByDate = async function (date = "aMonthAgo", e
     filteredArr.sort((a, b) => {
       return Number(b.latestTimeline.replace(/[^0-9]/g, '')) - Number(a.latestTimeline.replace(/[^0-9]/g, ''));
     });
-    */
 
     return filteredArr;
   } catch (e) {
