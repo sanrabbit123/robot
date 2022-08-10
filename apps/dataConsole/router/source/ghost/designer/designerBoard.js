@@ -1103,6 +1103,34 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
             createNode({
               mother: whitePrompt.firstChild,
               attribute: { index: String(i) },
+              event: {
+                click: async function (e) {
+                  try {
+                    const index = Number(this.getAttribute("index"));
+                    if (serviceContents[index] !== undefined) {
+                      let value;
+                      let whereQuery, updateQuery;
+
+                      value = serviceContents[index].target[0];
+
+                      whereQuery = { proid: project.proid };
+                      updateQuery = {};
+                      updateQuery["process.action"] = value;
+
+                      if (window.confirm("업데이트를 진행하시겠습니까?")) {
+                        await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateProject");
+                        window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + instance.designer.desid + "&proid=" + project.proid;
+                      }
+
+                    } else {
+                      window.alert("프로젝트 완료는 홈리에종에 직접 문의해주세요!");
+                    }
+                  } catch (e) {
+                    console.log(e);
+                    window.location.reload();
+                  }
+                }
+              },
               style: {
                 display: "inline-flex",
                 position: "relative",
@@ -1207,7 +1235,8 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, selfHref } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, selfHref, returnGet } = GeneralJs;
+  const getObj = returnGet();
   let paddingTop;
   let block;
   let whiteBlock, whiteTong;
@@ -1244,6 +1273,7 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
   let targetLength;
   let arrowHeight;
   let grayBetween;
+  let whiteBaseTongDictionary;
 
   grayBetween = <%% 40, 40, 36, 36, 5 %%>;
 
@@ -1466,6 +1496,7 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
     }
   }
 
+  whiteBaseTongDictionary = {};
   for (let i = 0; i < targets.length; i++) {
 
     if (targets[i] !== null) {
@@ -1591,6 +1622,9 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
           cursor: "pointer",
         }
       });
+
+      whiteBaseTongDictionary[targets[i].proid] = whiteBaseTong;
+
     } else {
 
       whiteBaseTong = createNode({
@@ -1615,6 +1649,12 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
     }
 
   }
+
+  if (targets.map((project) => { return project.proid }).includes(typeof getObj.proid === "string" ? getObj.proid : "")) {
+    whiteBaseTongDictionary[getObj.proid].click();
+  }
+
+
 
   return whiteBlock;
 }
