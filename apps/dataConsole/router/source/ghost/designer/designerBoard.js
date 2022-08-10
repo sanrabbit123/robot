@@ -1199,6 +1199,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
       attribute: {
         proid: project.proid,
         desid: instance.designer.desid,
+        designer: instance.designer.designer,
         name: project.name,
       },
       event: {
@@ -1207,6 +1208,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
             const proid = this.getAttribute("proid");
             const desid = this.getAttribute("desid");
             const name = this.getAttribute("name");
+            const designer = this.getAttribute("designer");
             let input;
 
             input = createNode({
@@ -1219,6 +1221,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
                     const proid = this.getAttribute("proid");
                     const desid = this.getAttribute("desid");
                     const client = this.getAttribute("client");
+                    const designer = this.getAttribute("designer");
                     let thisFiles, formData, res;
                     let removeTargets;
 
@@ -1235,7 +1238,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
                       }
 
                       res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
-                      await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 현장의 중간 사진을 업로드 했습니다!", channel: "#300_designer" }, BACKHOST + "/sendSlack");
+                      await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 현장의 중간 사진을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
                       window.alert("업로드가 완료되었습니다!");
 
                       removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
@@ -1246,6 +1249,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
                     }
 
                   } catch (e) {
+                    console.log(e);
                     window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
                     window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + instance.designer.desid + "&proid=" + project.proid;
                   }
@@ -1259,6 +1263,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
                 proid,
                 desid,
                 client: name,
+                designer,
               },
               style: {
                 display: "none",
@@ -1268,6 +1273,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
             input.click();
 
           } catch (e) {
+            console.log(e);
             window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
             window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + instance.designer.desid + "&proid=" + project.proid;
           }
