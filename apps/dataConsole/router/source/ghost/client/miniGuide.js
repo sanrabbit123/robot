@@ -1127,6 +1127,7 @@ MiniGuideJs.prototype.insertRequestBox = function () {
                     formData.append("upload", instance.fileInput.files[i]);
                   }
                 }
+                await ajaxJson({ message: instance.user.name + " 고객님이 실측 가이드 페이지에서 사진을 전송하셨어요! 디자이너에게 알려주세요.", channel: "#405_mini", voice: true }, BACKHOST + "/sendSlack");
                 await ajaxForm(formData, BRIDGEHOST + "/userBinary");
               }
 

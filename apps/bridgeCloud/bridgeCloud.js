@@ -310,7 +310,7 @@ BridgeCloud.prototype.parsingAddress = async function (id, rawString, MONGOC) {
 
 BridgeCloud.prototype.bridgeServer = function (needs) {
   const instance = this;
-  const { fileSystem, requestSystem, shell, shellExec, shellLink, todayMaker, ghostRequest, dateToString, headRequest, sleep, equalJson, diskReading, messageSend, errorLog, messageLog } = this.mother;
+  const { fileSystem, requestSystem, shell, shellExec, shellLink, todayMaker, ghostRequest, dateToString, headRequest, sleep, equalJson, diskReading, messageSend, errorLog, messageLog, uniqueValue } = this.mother;
   const GoogleCalendar = require(process.cwd() + "/apps/googleAPIs/googleCalendar.js");
   const ExcelReader = require(process.cwd() + "/apps/excelReader/excelReader.js");
   const { filterAll, filterName, filterDate, filterCont, filterNull } = BridgeCloud.clientFilters;
@@ -1452,6 +1452,57 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
             file = files[key];
             execName = file.originalFilename.split(".")[file.originalFilename.split(".").length - 1];
             await shellExec(`mv ${shellLink(file.filepath)} ${instance.address.officeinfo.ghost.file.static + instance.address.officeinfo.ghost.file.office}/${folderConst}/${designer}_${client}_디자이너글_${proid}.${execName};`);
+          }
+
+          res.send('success');
+
+        } else {
+          await errorLog("디자이너글 파일 서버 문제 생김 (post_commentsBinary) : " + JSON.stringify(fields) + "\n" + err.message);
+          res.send('error');
+        }
+      });
+    } catch (e) {
+      await errorLog("디자이너글 파일 서버 문제 생김 (post_commentsBinary) : " + e.message);
+      res.send('error');
+    }
+  }
+
+  //POST - middle photo binary files
+  funcObj.post_middlePhotoBinary = async function (req, res) {
+    res.set({
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      console.log("file request get");
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (9000 * 1024 * 1024) });
+      form.parse(req, async function (err, fields, files) {
+        res.set({
+          "Content-Type": "text/plain",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        });
+        if (!err) {
+          const folderConst = instance.address.officeinfo.ghost.file.static + instance.address.officeinfo.ghost.file.designerMiddle;
+          const { proid, desid, client } = fields;
+          let execName, file;
+
+          for (let key in files) {
+            file = files[key];
+            execName = file.originalFilename.split(".")[file.originalFilename.split(".").length - 1];
+
+            if (!(await fileSystem(`exist`, [ `${folderConst}/${desid}` ]))) {
+              await fileSystem(`mkdir`, [ `${folderConst}/${desid}` ]);
+            }
+
+            if (!(await fileSystem(`exist`, [ `${folderConst}/${desid}/${proid}` ]))) {
+              await fileSystem(`mkdir`, [ `${folderConst}/${desid}/${proid}` ]);
+            }
+
+            await shellExec(`mv ${shellLink(file.filepath)} ${folderConst}/${desid}/${proid}/${desid}_${proid}_${client}_중간사진_${uniqueValue("hex")}.${execName};`);
           }
 
           res.send('success');

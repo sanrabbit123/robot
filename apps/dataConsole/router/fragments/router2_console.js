@@ -1625,7 +1625,7 @@ DataRouter.prototype.rou_post_sendSlack = function () {
         if (req.body.channel === "#error_log") {
           await errorLog(req.body.message);
         } else {
-          await messageSend({ text: req.body.message, channel: req.body.channel });
+          await messageSend({ text: req.body.message, channel: req.body.channel, voice: (req.body.voice !== undefined ? true : false) });
         }
 
       }

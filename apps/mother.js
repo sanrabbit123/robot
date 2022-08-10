@@ -318,6 +318,7 @@ Mother.prototype.fileSystem = function (sw, arr) {
         const stream = fs.createReadStream(arr[0])
         resolve(stream);
       });
+      break;
     case "write":
       return new Promise(function (resolve, reject) {
         if (arr.length !== 2) { reject("second argument must be length 2 array"); }
@@ -357,6 +358,7 @@ Mother.prototype.fileSystem = function (sw, arr) {
         du.stderr.on("data", (data) => { reject(String(data)); });
         du.on("close", (code) => { resolve(Number((String(out).split("\t"))[0]) * 1000); });
       });
+      break;
     case "mkdir":
       return new Promise(function (resolve, reject) {
         if (arr.length !== 1) { reject("second argument must be length 1 array"); }
@@ -368,6 +370,7 @@ Mother.prototype.fileSystem = function (sw, arr) {
         mkdir.stderr.on("data", (data) => { reject(String(data)); });
         mkdir.on("close", (code) => { resolve(arr[0]); });
       });
+      break;
     case "exist":
       return new Promise(function(resolve, reject) {
         if (arr.length !== 1) { reject("second argument must be length 1 array"); }
@@ -383,6 +386,7 @@ Mother.prototype.fileSystem = function (sw, arr) {
           }
         });
       });
+      break;
     case "isDir":
       return new Promise(function(resolve, reject) {
         if (arr.length !== 1) { reject("second argument must be length 1 array"); }
@@ -394,6 +398,7 @@ Mother.prototype.fileSystem = function (sw, arr) {
           }
         });
       });
+      break;
     case "remove":
       return new Promise(function (resolve, reject) {
         if (arr.length !== 1) { reject("second argument must be length 1 array"); }
@@ -405,6 +410,7 @@ Mother.prototype.fileSystem = function (sw, arr) {
         mkdir.stderr.on("data", (data) => { reject(String(data)); });
         mkdir.on("close", (code) => { resolve(arr[0]); });
       });
+      break;
     case "open":
       return new Promise(function (resolve, reject) {
         if (arr.length !== 1) { reject("second argument must be length 1 array"); }
@@ -416,6 +422,7 @@ Mother.prototype.fileSystem = function (sw, arr) {
         open.stderr.on("data", (data) => { reject(String(data)); });
         open.on("close", (code) => { resolve(arr[0]); });
       });
+      break;
   }
 }
 

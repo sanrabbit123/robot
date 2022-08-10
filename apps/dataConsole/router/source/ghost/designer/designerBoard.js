@@ -448,7 +448,7 @@ DesignerBoardJs.prototype.insertRouterBox = function () {
 
 DesignerBoardJs.prototype.projectPopup = function (proid) {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, ajaxJson, homeliaisonAnalytics, cleanChildren } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, ajaxJson, homeliaisonAnalytics, cleanChildren, ajaxForm } = GeneralJs;
   const { ea, naviHeight, media, projects, contents: serviceContents } = this;
   const project = projects.find((obj) => { return obj.proid === proid });
   const mobile = media[4];
@@ -457,6 +457,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
   const small = !big;
   const whitePopupClassName = "whitePopupClassName";
   const processTargetsClassName = "processTargetsClassName";
+  const fileInputClassName = "fileInputClassName";
   const blank = "&nbsp;&nbsp;&nbsp;";
   const totalContents = document.getElementById("totalcontents");
   const zIndex = 4;
@@ -1181,6 +1182,114 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
       children: [
         {
           text: "상태 변경",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(buttonTextTop) + ea,
+            fontSize: String(buttonSize) + ea,
+            fontWeight: String(buttonWeight),
+            color: colorChip.white,
+          }
+        }
+      ]
+    });
+
+    createNode({
+      mother: paymentArea,
+      attribute: {
+        proid: project.proid,
+        desid: instance.designer.desid,
+        name: project.name,
+      },
+      event: {
+        click: async function (e) {
+          try {
+            const proid = this.getAttribute("proid");
+            const desid = this.getAttribute("desid");
+            const name = this.getAttribute("name");
+            let input;
+
+            input = createNode({
+              mother: document.body,
+              class: [ fileInputClassName ],
+              mode: "input",
+              event: {
+                change: async function (e) {
+                  try {
+                    const proid = this.getAttribute("proid");
+                    const desid = this.getAttribute("desid");
+                    const client = this.getAttribute("client");
+                    let thisFiles, formData, res;
+                    let removeTargets;
+
+                    thisFiles = [ ...this.files ];
+
+                    if (thisFiles.length >= 1) {
+                      formData = new FormData();
+                      formData.enctype = "multipart/form-data";
+                      formData.append("proid", proid);
+                      formData.append("desid", desid);
+                      formData.append("client", client);
+                      for (let i = 0; i < thisFiles.length; i++) {
+                        formData.append("photo" + String(i), thisFiles[i]);
+                      }
+
+                      res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
+                      await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 현장의 중간 사진을 업로드 했습니다!", channel: "#300_designer" }, BACKHOST + "/sendSlack");
+                      window.alert("업로드가 완료되었습니다!");
+
+                      removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
+                      for (let dom of removeTargets) {
+                        dom.remove();
+                      }
+
+                    }
+
+                  } catch (e) {
+                    window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+                    window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + instance.designer.desid + "&proid=" + project.proid;
+                  }
+                }
+              },
+              attribute: {
+                type: "file",
+                name: "designerPhoto",
+                accept: "image/*, application/pdf",
+                multiple: "true",
+                proid,
+                desid,
+                client: name,
+              },
+              style: {
+                display: "none",
+              }
+            });
+
+            input.click();
+
+          } catch (e) {
+            window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+            window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + instance.designer.desid + "&proid=" + project.proid;
+          }
+        }
+      },
+      style: {
+        display: "inline-flex",
+        paddingLeft: String(buttonPadding) + ea,
+        paddingRight: String(buttonPadding) + ea,
+        height: String(buttonHeight) + ea,
+        background: colorChip.gradientGreen,
+        borderRadius: String(5) + "px",
+        marginTop: String(buttonMarginTop) + ea,
+        marginRight: String(buttonBetween) + ea,
+        justifyContent: "center",
+        alignItems: "center",
+        textAlign: "center",
+        cursor: "pointer",
+      },
+      children: [
+        {
+          text: "중간 사진 전송",
           style: {
             display: "inline-block",
             position: "relative",

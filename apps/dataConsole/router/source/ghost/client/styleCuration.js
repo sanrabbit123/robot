@@ -4047,7 +4047,7 @@ StyleCurationJs.prototype.insertPhotoBox = function () {
         attribute: [
           { type: "file" },
           { name: "upload" },
-          { accept: "image/*" },
+          { accept: "image/*,  application/pdf" },
           { multiple: "true" },
           { cancel: JSON.stringify([]) }
         ],
