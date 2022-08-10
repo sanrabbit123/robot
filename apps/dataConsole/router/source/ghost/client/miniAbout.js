@@ -4126,6 +4126,8 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
                     window.IMP.init("imp71921105");
                     if (desktop) {
                       window.IMP.request_pay({
+                          pg: "inicis",
+                          pay_method: "card",
                           merchant_uid: map.oid,
                           name: "HomeLiaison Mini",
                           amount: Math.floor((map.targets * initialPrice) - 30000),
@@ -4168,6 +4170,8 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
                       ({ key } = await ajaxJson({ mode: "store", oid: map.oid, data: map }, "/generalImpPayment"));
 
                       window.IMP.request_pay({
+                          pg: "inicis",
+                          pay_method: "card",
                           merchant_uid: map.oid,
                           name: "HomeLiaison Mini",
                           amount: Math.floor((map.targets * initialPrice) - 30000),

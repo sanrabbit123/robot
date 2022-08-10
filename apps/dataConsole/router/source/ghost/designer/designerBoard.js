@@ -1391,6 +1391,8 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
                   if (desktop) {
 
                     window.IMP.request_pay({
+                        pg: "inicis",
+                        pay_method: "card",
                         merchant_uid: oid,
                         name: "현장 촬영비",
                         amount: Math.floor(165000),
@@ -1417,6 +1419,8 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
 
                     const { key } = await ajaxJson({ mode: "store", oid, data: { designer, desid, client, proid, oid } }, BACKHOST + "/generalImpPayment");
                     window.IMP.request_pay({
+                        pg: "inicis",
+                        pay_method: "card",
                         merchant_uid: oid,
                         name: "현장 촬영비",
                         amount: Math.floor(165000),
