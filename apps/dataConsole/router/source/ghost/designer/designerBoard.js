@@ -1258,7 +1258,6 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
               attribute: {
                 type: "file",
                 name: "designerPhoto",
-                accept: "image/*, application/pdf",
                 multiple: "true",
                 proid,
                 desid,
