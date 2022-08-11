@@ -3180,7 +3180,7 @@ DesignerBoardJs.prototype.insertCalendarBox = function () {
               top: String(titleTopNumber) + ea,
               fontSize: String(titleFontSize) + ea,
               fontWeight: String(600),
-              background: colorChip.gray1,
+              background: desktop ? colorChip.white : colorChip.gray1,
               paddingRight: String(numberRight) + ea,
               color: colorChip.black,
             },
