@@ -75,7 +75,10 @@ DesignManualJs.prototype.returnDesignerContract = function () {
               description: "고객에게 제공받은 정보(기본정보, 이사갈 현장사진, 선호사진 등)와 상담을 통해 고객에게 가장 알맞은 홈스타일링 서비스 및 적합한 디자이너를 추천합니다.",
             },
             {
-              description: "홈리에종은 디자이너의 서비스 제공 영역, 서비스 종료별 용역 대금, 활동 지역 및 디자인 스타일, 일정을 고려하여 2~3명의 디자이너를 추천합니다. 3) 홈리에종은 자율적으로 디자이너를 추천하고, 특수한 고객의 경우 디자이너에게 건별 진행 의사 여부를 확인할 수 있습니다.",
+              description: "홈리에종은 디자이너의 서비스 제공 영역, 서비스 종료별 용역 대금, 활동 지역 및 디자인 스타일, 일정을 고려하여 2~3명의 디자이너를 추천합니다.",
+            },
+            {
+              description: "홈리에종은 자율적으로 디자이너를 추천하고, 특수한 고객의 경우 디자이너에게 건별 진행 의사 여부를 확인할 수 있습니다."
             }
           ]
         }
@@ -303,7 +306,10 @@ DesignManualJs.prototype.returnDesignerContract = function () {
               description: "홈스타일링 서비스의 계약금은 300,000(VAT별도)이며 고객이 계약금을 지불하면 디자이너와 대면 미팅을 할 수 있도록 안내합니다.",
             },
             {
-              description: "고객은 디자이너와의 대면 미팅 후 계약금을 제외한 총액을 홈리에종에 지불합니다. 입금이 확인되면 고객의 프로젝트 진행을 확정합니다. 3) 홈스타일링 온라인 서비스는 계약금이 없이 전액 선불입니다.",
+              description: "고객은 디자이너와의 대면 미팅 후 계약금을 제외한 총액을 홈리에종에 지불합니다. 입금이 확인되면 고객의 프로젝트 진행을 확정합니다.",
+            },
+            {
+              description: "홈스타일링 온라인 서비스는 계약금이 없이 전액 선불입니다.",
             }
           ]
         },
@@ -638,17 +644,91 @@ DesignManualJs.prototype.returnDesignerContract = function () {
           description: "계약의 모든 사항은 계약 기간 및 계약 종료 후에도 기밀이며 서비스를 진행하며 알게 된 시설,영업 비밀, 지적 재산, 고객에 대한 어떠한 정보도 상호간의 동의를 얻지 않고 외부로 유출 및 공개하거나 고유 목적 이외의 용도로 사용할 수 없습니다.",
         }
       ]
-    }
-
-
-
-
-  ]
-
-
-
-
-
+    },
+    {
+      title: "계약의 변경 및 합의 해지",
+      children: [
+        {
+          title: "계약 내용의 변경",
+          children: [
+            {
+              description: "정책 또는 계약의 세부사항은 필요에 따라 변경될 수 있습니다.",
+            },
+            {
+              description: "변경시에는 변경사항에 대한 안내를 사전에 진행합니다.",
+            },
+            {
+              description: "홈리에종과 디자이너간 상호 협의 후 변경합니다.",
+            },
+          ]
+        },
+        {
+          title: "계약의 해지",
+          children: [
+            {
+              description: "상호 협의 후 계약의 해지가 가능합니다.",
+            },
+            {
+              description: "계약 해지 의사가 있을 경우 1개월 전에 협의를 통해 결정해야 합니다.",
+            },
+            {
+              description: "진행 중 프로젝트가 있을 시 완료될 때까지 계약은 해지되지 않습니다.",
+            },
+          ]
+        }
+      ]
+    },
+    {
+      title: "권리 / 책임과 의무의 양도 금지",
+      description: "홈리에종과 사전 서면 동의 없이 본 계약에 따르는 권리와 의무를 제 3자에게 양도, 이전, 담보제공, 업무의 위임 등을 할 수 없습니다.",
+    },
+    {
+      title: "비밀유지서약",
+      description: "홈리에종의 각종 문서 서식과 정책 사항을 위부로 유출할 수 없습니다. 이로 인해 홈리에종의 이미지에 타격이 있거나 경제적 손실이 발생하는 경우 계약을 파기하고, 추정되는 손실 금액을 배상합니다.",
+    },
+    {
+      title: "지식재산권",
+      children: [
+        {
+          description: "홈리에종의 저작물에 대한 저작권 및 소유권은 홈리에종에 속하고, 디자이너는 계약에서 합의한 용도 이외의 목적으로 홈리에종의 지식 재산을 사용할 수 없습니다.",
+        },
+        {
+          description: "홈리에종은 계약의 이행을 위하여 필요한 범위에 한하여 디자이너의 지식 재산을 사용할 수 있습니다. 디자이너의 원저작물을 2차적 저작물 및 편집저작물로 사용 및 활용 할 수 있고, 진행 과정에서 나온 2차적 저작물 및 편집저작물은 홈리에종에 귀속합니다.",
+        }
+      ]
+    },
+    {
+      title: "손해배상",
+      children: [
+        {
+          description: "디자이너가 프로젝트 진행 이후 업무를 수행하지 못하거나 지연되어 홈리에종 또는 고객이 손해를 입는 경우 이를 배상하여야 하고 업무 지연에 책임져야 합니다.",
+        },
+        {
+          description: "디자이너가 업무 수행 중 디자이너의 귀책 사유로 인하여 결과물 및 제 3자에 대하여 손해를 발생시킨 경우 그 배상에 대한 책임을 부담합니다.",
+        },
+        {
+          description: "민원 처리에 있어 디자이너의 중요 귀책 사유가 발견될 경우 해당 민원에 대한 처리 및 관련하여 발생되는 비용과 손해에 대해서는 디자이너의 책임으로 합니다.",
+        },
+        {
+          description: "홈리에종과 디자이너가 협의 하에 다양한 신규 프로젝트를 진행하는 경우 해당 프로젝트의 조건에 따르되 문제가 있는 경우 귀책 사유가 있는 자의 부담으로 하고 책임 소재가 불명확한 경우에는 디자이너와 홈리에종이 협의하여 비율대로 비용을 분담합니다.",
+        },
+        {
+          description: "천재지변, 기타 불가항력적인 사유로 인하여 발생한 손해에 대해서는 상호 책임을 물을 수 없습니다.",
+        },
+      ]
+    },
+    {
+      title: "분쟁의 해결 및 관할",
+      children: [
+        {
+          description: "계약의 당사자는 본 계약의 내용을 신의 성실에 의거하여 준수하여야 합니다. 계약 기간 중 계약의 변경은 당사자의 서면 합의에 의해서만 변경될 수 있으며 서면 날인 된 문서를 본 계약서에 첨부하고, 본 계약서에서 명시되지 않은 부분에 대하여는 관련 법규 및 상관습에 따르기로 합니다.",
+        },
+        {
+          description: "본 계약과 관련하여 양 당사자간의 분쟁이 발생한 경우, 원칙적으로 디자이너와 고객간의 합의에 의해 해결합니다. 그럼에도 불구하고 분쟁이 해결되지 않을 경우 ‘을’의 주소지 관할 지방 법원을 그 관할 법원으로 합니다.",
+        }
+      ]
+    },
+  ];
 
   return contents;
 }
@@ -1493,15 +1573,11 @@ DesignManualJs.prototype.insertButtonBox = function () {
     mother: grayTong,
     event: {
       click: function (e) {
-        const buttons = [ ...document.querySelectorAll('.' + buttonsClassName) ];
-        for (let dom of instance.whiteBlocks) {
-          dom.style.display = "block";
-          dom.setAttribute("toggle", "on");
-        }
-        for (let dom of buttons) {
-          dom.setAttribute("toggle", "off");
-          dom.children[1].style.color = colorChip.black;
-        }
+        cleanChildren(baseTong);
+        instance.insertContractInitBox();
+        instance.insertContractBox();
+        instance.insertContractButtonBox();
+        window.scroll(0, 0);
       }
     },
     style: {
@@ -1520,7 +1596,7 @@ DesignManualJs.prototype.insertButtonBox = function () {
     },
     children: [
       {
-        text: "전체 보기",
+        text: "계약 내역 보기",
         style: {
           display: "inline-block",
           position: "relative",
@@ -1539,7 +1615,7 @@ DesignManualJs.prototype.insertButtonBox = function () {
       click: async function (e) {
         try {
           const loading = instance.mother.grayLoading();
-          const res = await ajaxJson({ url: window.encodeURIComponent(window.location.href) }, "/ghostPass_pageToPdf");
+          const res = await ajaxJson({ url: window.encodeURIComponent(window.location.href + "&mode=styling") }, "/ghostPass_pageToPdf");
           downloadFile(window.decodeURIComponent(res.url));
           loading.remove();
         } catch (e) {
@@ -1615,6 +1691,945 @@ DesignManualJs.prototype.insertButtonBox = function () {
 
 }
 
+DesignManualJs.prototype.insertContractInitBox = function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { ea, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  let whiteBlock;
+  let style;
+  let blockHeight;
+  let leftBox, rightBox;
+  let titleBox, barBox, indexBox;
+  let margin;
+  let quoteWidth;
+  let quoteHeight;
+  let titleFontSize, titleFontWeight;
+  let serviceChildren;
+  let searchTags;
+  let titleWording;
+  let servicePaddingLeft;
+  let serviceSize;
+  let serviceBlockPaddingTop;
+  let whiteBlockPaddingTop, whiteBlockPaddingBottom;
+  let quotoTongHeight;
+  let searchBarPaddingTop;
+  let searchBarHeight;
+  let searchBarWidth;
+  let searchIconHeight;
+  let searchIconRight, searchIconTop;
+  let whiteBlockMarginBottom;
+  let inputWithoutHeight;
+  let serviceButtonClassName;
+  let serviceBlock;
+  let inputSize, inputWeight;
+  let placeholder;
+  let titleTop;
+  let servicePaddingTop, servicePaddingBottom;
+  let serviceMarginRight;
+  let subTitleMarginTop, subTitleFontSize, subTitleWeight;
+  let subTitleContents;
+  let middleBox;
+  let tagTextTop;
+  let tagTongBottom;
+  let boxTopVisual;
+  let mobileBlockTop;
+
+  margin = <%% 30, 30, 30, 30, 30 %%>;
+
+  whiteBlockMarginBottom = <%% 90, 80, 74, 60, 14.5 %%>;
+
+  quoteHeight = <%% 15, 15, 15, 15, 2.5 %%>;
+  quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
+  titleFontSize = <%% 35, 33, 32, 30, 6.4 %%>;
+  titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
+  titleTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 4) %%>;
+
+  servicePaddingTop = <%% 7, 7, 7, 7, 7 %%>;
+  servicePaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
+  servicePaddingLeft = <%% 13, 13, 13, 12, 2.2 %%>;
+  serviceMarginRight = <%% 6, 6, 6, 6, 6 %%>;
+  serviceSize = <%% 13, 13, 13, 12, 3.3 %%>;
+  serviceBlockPaddingTop = <%% (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), 5 %%>;
+
+  whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
+  whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
+
+  searchBarPaddingTop = <%% 220, 220, 192, 164, 12.5 %%>;
+  searchBarHeight = <%% 40, 40, 40, 36, 8 %%>;
+  searchBarWidth = <%% 690, 516, 516, 420, 88 %%>;
+
+  searchIconHeight = <%% 20, 20, 20, 20, 4 %%>;
+  searchIconRight = <%% 11, 11, 11, 11, 2 %%>;
+  searchIconTop = <%% 10, 10, 10, 10, 1.8 %%>;
+
+  inputWithoutHeight = <%% (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), 0.8 %%>;
+
+  inputSize = <%% 15, 15, 15, 14, 3.1 %%>;
+  inputWeight = <%% 300, 300, 300, 300, 300 %%>;
+
+  subTitleMarginTop = <%% 2, 2, 1, 1, 0.2 %%>;
+  subTitleFontSize = <%% 16, 16, 16, 15, 3.2 %%>;
+  subTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
+
+  tagTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
+  tagTongBottom = <%% 3, 3, 1, 1, 0 %%>;
+  boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
+
+  titleWording = "디자이너 계약 내역";
+  subTitleContents = "디자이너 파트너십 계약서 내용";
+
+  mobileBlockTop = 4.5;
+
+  whiteBlock = createNode({
+    mother: this.baseTong,
+    style: {
+      display: "block",
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      marginBottom: String(whiteBlockMarginBottom) + ea,
+      top: String(-1 * boxTopVisual) + ea,
+      paddingTop: desktop ? "" : String(mobileBlockTop) + ea,
+    }
+  });
+
+  createNode({
+    mother: whiteBlock,
+    style: {
+      display: "flex",
+      position: "relative",
+      textAlign: "center",
+      justifyContent: "center",
+      alignItems: "center",
+      height: String(quotoTongHeight) + ea,
+      opacity: String(0.6),
+    },
+    children: [
+      {
+        mode: "svg",
+        source: svgMaker.serifAsterisk(colorChip.white),
+        style: {
+          display: "inline-block",
+          height: String(quoteHeight) + ea,
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: whiteBlock,
+    style: {
+      display: "flex",
+      position: "relative",
+      textAlign: "center",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    children: [
+      {
+        text: titleWording,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: mobile ? "" : String(titleTop) + ea,
+          fontSize: String(titleFontSize) + ea,
+          fontWeight: String(titleFontWeight),
+          color: colorChip.white,
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: whiteBlock,
+    style: {
+      display: "flex",
+      position: "relative",
+      textAlign: "center",
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: String(subTitleMarginTop) + ea,
+    },
+    children: [
+      {
+        text: subTitleContents,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: mobile ? "" : String(0) + ea,
+          fontSize: String(subTitleFontSize) + ea,
+          fontWeight: String(subTitleWeight),
+          color: colorChip.white,
+        }
+      }
+    ]
+  });
+
+}
+
+DesignManualJs.prototype.insertContractBox = function () {
+  const instance = this;
+  const mother = this.mother;
+  const { client, ea, baseTong, media, project } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, setDebounce } = GeneralJs;
+  const blank = "&nbsp;&nbsp;&nbsp;";
+  const mainContents = this.returnDesignerContract();
+  let paddingTop;
+  let block;
+  let whiteBlock, whiteTong;
+  let bottomMargin;
+  let titleFontSize;
+  let num, num2, num3, num4;
+  let numberRight;
+  let titleTop, titleTopNumber;
+  let titleBottom;
+  let index;
+  let mobileTitleLeft, mobileTitleTop;
+  let secondBlockWidth, secondBlockMargin;
+  let tong;
+  let contentsWordingSize;
+  let contentsBottom;
+  let whiteBottomMargin;
+  let contentsTitleMarginTop, contentsMarginTop;
+  let contentsPaddingLeft;
+  let arrowWidth;
+  let arrowTop;
+  let arrorLeft;
+  let bigNumberSize;
+  let bigNumberBetween;
+  let bigNumberMargin;
+  let bigNumberBetweenMargin;
+  let matrix;
+  let firstWidth, secondWidth, secondMarginRight;
+  let contentsAreaPaddingTop;
+  let zeroWidth, zeroMarginRight;
+  let checkBoxWidth, checkBoxTop;
+  let arrowBoxWidth, arrowBoxTop;
+  let contentsMarginBottom0, contentsMarginBottom1;
+  let mobilePaddingLeft;
+  let mobileContentsWordingSize;
+  let wordings;
+  let lineTop, linePadding;
+  let checkBoxAreaWidth;
+  let mobileInnerPaddingBottom;
+  let tapSize;
+  let whiteNum;
+  let whiteMother;
+  let grayMother;
+  let whiteTopMargin;
+  let contractLoad;
+  let contentsLineHeight;
+  let contentsMarginBottom;
+  let searchMotherHeight, searchMotherPaddingTop;
+  let searchBoxWidth, searchBoxHeight;
+  let searchIconWidth, searchIconTop, searchIconRight;
+  let searchInputHeightVisual;
+  let searchSize, searchWeight;
+
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  margin = <%% 55, 55, 47, 39, 4.7 %%>;
+  paddingTop =  <%% 52, 52, 44, 36, 4 %%>;
+
+  whiteTopMargin = <%% 36, 36, 28, 24, 4 %%>;
+  whiteBottomMargin = <%% 40, 40, 32, 28, 0 %%>;
+
+  titleFontSize = <%% 18, 18, 16, 15, 3.6 %%>;
+  numberRight = <%% 12, 12, 12, 12, 3 %%>;
+
+  titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
+  titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
+
+  titleBottom = <%% 15, 15, 12, 10, 0 %%>;
+  contentsAreaPaddingTop = <%% 36, 36, 36, 36, 7 %%>;
+
+  mobileTitleLeft = 1;
+  mobileTitleTop = -7.8;
+
+  secondBlockWidth = <%% 300, 300, 300, 300, 330 %%>;
+  secondBlockMargin = <%% 36, 36, 36, 36, 33 %%>;
+
+  contentsWordingSize = <%% 14.5, 14, 14, 13, 3 %%>;
+  contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
+
+  contentsTitleMarginTop = <%% 14, 14, 14, 14, 1 %%>;
+  contentsMarginTop = <%% 36, 36, 36, 36, 1 %%>;
+  contentsPaddingLeft = <%% 14, 14, 14, 14, 0 %%>;
+  arrowWidth = <%% 8, 8, 7, 6, 1.6 %%>;
+  arrowTop = <%% 6, 6, 6, 6, 0.3 %%>;
+  arrorLeft = <%% 1, 1, 1, 1, 0 %%>;
+
+  bigNumberSize = <%% 37, 37, 37, 37, 5 %%>;
+  bigNumberBetween = <%% -3, -3, -3, -3, 0 %%>;
+  bigNumberMargin = <%% 0, 0, 0, 0, 0 %%>;
+  bigNumberBetweenMargin = <%% 28, 28, 28, 28, 0 %%>;
+
+  zeroWidth = <%% 8, 8, 8, 8, 10 %%>;
+  zeroMarginRight = <%% 10, 10, 10, 10, 10 %%>;
+  firstWidth = <%% 240, 240, 190, 170, 10 %%>;
+  secondWidth = <%% 15, 15, 15, 15, 2 %%>;
+  secondMarginRight = <%% 10, 10, 10, 10, 2 %%>;
+
+  checkBoxWidth = <%% 10, 10, 10, 10, 2 %%>;
+  arrowBoxWidth = <%% 9, 8, 8, 8, 1.8 %%>;
+  checkBoxTop = <%% (isMac() ? 7 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.6 %%>;
+  arrowBoxTop = <%% (isMac() ? 7 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.5 %%>;
+
+  contentsMarginBottom0 = <%% 4, 4, 4, 4, 2 %%>;
+  contentsMarginBottom1 = <%% 32, 32, 30, 28, 0 %%>;
+
+  lineTop = <%% (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 9 : 7), 10 %%>;
+  linePadding = <%% 12, 12, 12, 10, 12 %%>;
+
+  mobilePaddingLeft = 6;
+  mobileInnerPaddingBottom = 5;
+
+  mobileContentsWordingSize = 3;
+
+  checkBoxAreaWidth = <%% 16, 16, 16, 16, 3 %%>;
+
+  tapSize = <%% 24, 24, 24, 24, 4 %%>;
+
+  contentsLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+  contentsMarginBottom = <%% 2, 2, 1, 1, 0 %%>;
+
+  searchMotherHeight = <%% 80, 80, 75, 70, 12.5 %%>;
+  searchMotherPaddingTop = <%% 20, 20, 16, 12, 3.5 %%>;
+
+  searchBoxWidth = <%% 420, 420, 420, 360, 60 %%>;
+  searchBoxHeight = <%% 38, 38, 36, 32, 7 %%>;
+
+  searchIconWidth = <%% 18, 18, 16, 14, 3.6 %%>;
+  searchIconTop = <%% 9, 9, 9, 8, 1.4 %%>;
+  searchIconRight = <%% 11, 11, 11, 10, 1.6 %%>;
+
+  searchInputHeightVisual = <%% 2, 2, 2, 2, 0.5 %%>;
+
+  searchSize = <%% 14, 14, 13, 12, 3 %%>;
+  searchWeight = <%% 400, 400, 400, 400, 400 %%>;
+
+  this.whiteMargin = (desktop ? margin : 0);
+
+  contractLoad = () => {}
+
+  whiteMother = createNode({
+    mother: baseTong,
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      background: colorChip.white,
+      paddingTop: String(margin) + ea,
+      paddingBottom: String(margin) + ea,
+      marginBottom: String(bottomMargin) + ea,
+      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+    },
+    children: [
+      {
+        display: "block",
+        position: "relative",
+        width: withOut(margin * 2, ea),
+        height: String(100) + '%',
+        marginLeft: String(margin) + ea,
+      }
+    ]
+  }).firstChild;
+
+  createNode({
+    mother: whiteMother,
+    style: {
+      display: "flex",
+      width: withOut(0),
+      height: String(searchMotherHeight) + ea,
+      justifyContent: "center",
+      paddingTop: String(searchMotherPaddingTop) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: String(searchBoxWidth) + ea,
+          height: String(searchBoxHeight) + ea,
+          borderRadius: String(5) + "px",
+          position: "relative",
+          background: colorChip.gray1,
+        },
+        children: [
+          {
+            mode: "svg",
+            source: instance.mother.returnSearch(colorChip.black),
+            style: {
+              position: "absolute",
+              width: String(searchIconWidth) + ea,
+              top: String(searchIconTop) + ea,
+              right: String(searchIconRight) + ea,
+              cursor: "pointer",
+            }
+          },
+          {
+            mode: "input",
+            attribute: { type: "text" },
+            event: {
+              keyup: function (e) {
+                setDebounce(() => {
+                  const search = this.value.replace(/[^가-힣 ]/gi, '').trim();
+                  let filteredContents;
+                  if (search !== "") {
+                    filteredContents = mainContents.filter((obj) => {
+                      return (new RegExp(search, "gi")).test(JSON.stringify(obj));
+                    });
+                    contractLoad(filteredContents);
+                  } else {
+                    contractLoad(mainContents);
+                  }
+                });
+              }
+            },
+            style: {
+              position: "absolute",
+              width: String(searchBoxWidth - searchIconWidth - searchIconRight) + ea,
+              top: String(0) + ea,
+              height: withOut(searchInputHeightVisual, ea),
+              left: String(0),
+              border: String(0),
+              outline: String(0),
+              background: "transparent",
+              fontSize: String(searchSize) + ea,
+              fontWeight: String(searchWeight),
+              color: colorChip.black,
+              textAlign: "center",
+            }
+          }
+        ]
+      }
+    ]
+  })
+
+  grayMother = createNode({
+    mother: whiteMother,
+    style: {
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      background: desktop ? colorChip.gray2 : colorChip.gray1,
+      paddingTop: String(whiteTopMargin) + ea,
+      paddingBottom: String(whiteTopMargin) + ea,
+    },
+    children: [
+      {
+        display: "block",
+        position: "relative",
+        width: withOut(whiteTopMargin * 2, ea),
+        height: String(100) + '%',
+        marginLeft: String(whiteTopMargin) + ea,
+      }
+    ]
+  }).firstChild;
+
+  contractLoad = (mainContents) => {
+
+    cleanChildren(grayMother);
+
+    whiteNum = 1;
+    for (let obj0 of mainContents) {
+
+      whiteBlock = createNode({
+        mother: grayMother,
+        style: {
+          position: "relative",
+          borderRadius: String(desktop ? 8 : 1) + ea,
+          width: String(100) + '%',
+          background: desktop ? colorChip.white : "",
+          paddingTop: desktop ? String(whiteTopMargin) + ea : "",
+          paddingBottom: desktop ? String(whiteBottomMargin) + ea : "",
+          marginBottom: String(mainContents.length === whiteNum ? 0 : bottomMargin) + ea,
+          boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.shadow : "",
+        },
+        children: [
+          {
+            display: "block",
+            position: "relative",
+            width: desktop ? withOut(whiteBottomMargin * 2, ea) : String(100) + '%',
+            height: String(100) + '%',
+            marginLeft: String(desktop ? whiteBottomMargin : 0) + ea,
+          }
+        ]
+      });
+      whiteTong = whiteBlock.firstChild;
+
+      block = createNode({
+        mother: whiteTong,
+        style: {
+          display: "block",
+          position: "relative",
+          width: String(100) + '%',
+        },
+        children: [
+          {
+            style: {
+              display: "block",
+              position: mobile ? "absolute" : "relative",
+              left: desktop ? "" : String(mobileTitleLeft) + ea,
+              top: desktop ? "" : String(mobileTitleTop) + ea,
+              width: desktop ? String(100) + '%' : withOut((mobileTitleLeft * 2), ea),
+              marginBottom: String(titleBottom) + ea,
+              zIndex: mobile ? String(1) : "",
+            },
+            children: [
+              {
+                text: obj0.title,
+                style: {
+                  position: "relative",
+                  display: "inline-block",
+                  top: String(titleTopNumber) + ea,
+                  fontSize: String(titleFontSize) + ea,
+                  fontWeight: String(700),
+                  background: desktop ? colorChip.white : colorChip.gray1,
+                  paddingRight: String(numberRight) + ea,
+                  color: colorChip.black,
+                }
+              },
+              {
+                text: String(whiteNum),
+                style: {
+                  position: "absolute",
+                  right: String(0),
+                  display: "inline-block",
+                  top: String(titleTopNumber) + ea,
+                  fontSize: String(titleFontSize) + ea,
+                  fontWeight: String(200),
+                  background: desktop ? colorChip.white : colorChip.gray1,
+                  paddingLeft: String(numberRight) + ea,
+                  color: colorChip.green,
+                }
+              },
+            ]
+          },
+          {
+            style: {
+              display: "block",
+              position: "relative",
+              width: desktop ? String(100) + '%' : withOut(mobilePaddingLeft * 2, ea),
+              background: desktop ? "" : colorChip.white,
+              boxShadow: mobile ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+              borderRadius: mobile ? String(1) + ea : "",
+              overflow: "hidden",
+              marginBottom: String(0) + ea,
+              marginTop: desktop ? "" : String(whiteNum === 1 ? 9 : 14) + ea,
+              paddingLeft: desktop ? "" : String(mobilePaddingLeft) + ea,
+              paddingRight: desktop ? "" : String(mobilePaddingLeft) + ea,
+              paddingTop: desktop ? "" : String(mobileInnerPaddingBottom) + ea,
+              paddingBottom: desktop ? "" : String(mobileInnerPaddingBottom) + ea,
+            }
+          },
+        ]
+      });
+      tong = block.lastChild;
+
+      if (typeof obj0.description === "string") {
+
+        createNode({
+          mother: tong,
+          text: obj0.description,
+          style: {
+            display: "block",
+            fontSize: String(contentsWordingSize) + ea,
+            fontWeight: String(500),
+            color: colorChip.black,
+            lineHeight: String(contentsLineHeight),
+          }
+        });
+
+      }
+      if (Array.isArray(obj0.children)) {
+
+        for (let obj1 of obj0.children) {
+
+          if (typeof obj1.title === "string") {
+            createNode({
+              mother: tong,
+              text: "-&nbsp;&nbsp;" + obj1.title,
+              style: {
+                display: "block",
+                fontSize: String(contentsWordingSize) + ea,
+                paddingLeft: String(tapSize * 0) + ea,
+                fontWeight: String(500),
+                color: colorChip.black,
+                lineHeight: String(contentsLineHeight),
+                marginBottom: String(contentsMarginBottom) + ea,
+              }
+            });
+          }
+
+          if (typeof obj1.description === "string") {
+            createNode({
+              mother: tong,
+              text: "-&nbsp;&nbsp;" + obj1.description,
+              style: {
+                display: "block",
+                fontSize: String(contentsWordingSize) + ea,
+                paddingLeft: String(tapSize * 0) + ea,
+                fontWeight: String(500),
+                color: colorChip.black,
+                lineHeight: String(contentsLineHeight),
+                marginBottom: String(contentsMarginBottom) + ea,
+              }
+            });
+          }
+
+          if (Array.isArray(obj1.children)) {
+
+            num = 1;
+            for (let obj2 of obj1.children) {
+
+              if (typeof obj2.title === "string") {
+                createNode({
+                  mother: tong,
+                  text: String(num) + ". " + obj2.title + (typeof obj2.description === "string" ? " :&nbsp;&nbsp;" +  obj2.description : ""),
+                  style: {
+                    display: "block",
+                    fontSize: String(contentsWordingSize) + ea,
+                    paddingLeft: String(tapSize * 1) + ea,
+                    fontWeight: String(500),
+                    color: colorChip.black,
+                    lineHeight: String(contentsLineHeight),
+                    marginBottom: String(contentsMarginBottom) + ea,
+                  }
+                })
+                num++;
+              }
+
+              if (typeof obj2.description === "string") {
+                if (typeof obj2.title !== "string") {
+                  createNode({
+                    mother: tong,
+                    text: String(num) + ". " + obj2.description,
+                    style: {
+                      display: "block",
+                      fontSize: String(contentsWordingSize) + ea,
+                      paddingLeft: String(tapSize * 1) + ea,
+                      fontWeight: String(500),
+                      color: colorChip.black,
+                      lineHeight: String(contentsLineHeight),
+                      marginBottom: String(contentsMarginBottom) + ea,
+                    }
+                  });
+                  num++;
+                }
+              }
+
+              if (Array.isArray(obj2.children)) {
+
+                num2 = 1;
+                for (let obj3 of obj2.children) {
+
+                  if (typeof obj3.title === "string") {
+                    createNode({
+                      mother: tong,
+                      text: String(num2) + ") " + obj3.title + (typeof obj3.description === "string" ? " :&nbsp;&nbsp;" +  obj3.description : ""),
+                      style: {
+                        display: "block",
+                        fontSize: String(contentsWordingSize) + ea,
+                        paddingLeft: String(tapSize * 2) + ea,
+                        fontWeight: String(500),
+                        color: colorChip.black,
+                        lineHeight: String(contentsLineHeight),
+                        marginBottom: String(contentsMarginBottom) + ea,
+                      }
+                    })
+                    num2++;
+                  }
+
+                  if (typeof obj3.description === "string") {
+                    if (typeof obj3.title !== "string") {
+                      createNode({
+                        mother: tong,
+                        text: String(num2) + ") " + obj3.description,
+                        style: {
+                          display: "block",
+                          fontSize: String(contentsWordingSize) + ea,
+                          paddingLeft: String(tapSize * 2) + ea,
+                          fontWeight: String(500),
+                          color: colorChip.black,
+                          lineHeight: String(contentsLineHeight),
+                          marginBottom: String(contentsMarginBottom) + ea,
+                        }
+                      });
+                      num2++;
+                    }
+                  }
+
+                  if (Array.isArray(obj3.children)) {
+
+                    num3 = 1;
+                    for (let obj4 of obj3.children) {
+
+                      if (typeof obj4.title === "string") {
+                        createNode({
+                          mother: tong,
+                          text: String(num3) + "] " + obj4.title + (typeof obj4.description === "string" ? " :&nbsp;&nbsp;" +  obj4.description : ""),
+                          style: {
+                            display: "block",
+                            fontSize: String(contentsWordingSize) + ea,
+                            paddingLeft: String(tapSize * 3) + ea,
+                            fontWeight: String(500),
+                            color: colorChip.black,
+                            lineHeight: String(contentsLineHeight),
+                            marginBottom: String(contentsMarginBottom) + ea,
+                          }
+                        })
+                        num3++;
+                      }
+
+                      if (typeof obj4.description === "string") {
+                        if (typeof obj4.title !== "string") {
+                          createNode({
+                            mother: tong,
+                            text: String(num3) + "] " + obj4.description,
+                            style: {
+                              display: "block",
+                              fontSize: String(contentsWordingSize) + ea,
+                              paddingLeft: String(tapSize * 3) + ea,
+                              fontWeight: String(500),
+                              color: colorChip.black,
+                              lineHeight: String(contentsLineHeight),
+                              marginBottom: String(contentsMarginBottom) + ea,
+                            }
+                          });
+                          num3++;
+                        }
+                      }
+
+                      if (Array.isArray(obj4.children)) {
+
+                        num4 = 1;
+                        for (let obj5 of obj4.children) {
+
+                          if (typeof obj5.title === "string") {
+                            createNode({
+                              mother: tong,
+                              text: String(num4) + " | " + obj5.title + (typeof obj5.description === "string" ? " :&nbsp;&nbsp;" +  obj5.description : ""),
+                              style: {
+                                display: "block",
+                                fontSize: String(contentsWordingSize) + ea,
+                                paddingLeft: String(tapSize * 4) + ea,
+                                fontWeight: String(500),
+                                color: colorChip.black,
+                                lineHeight: String(contentsLineHeight),
+                                marginBottom: String(contentsMarginBottom) + ea,
+                              }
+                            })
+                            num4++;
+                          }
+
+                          if (typeof obj5.description === "string") {
+                            if (typeof obj5.title !== "string") {
+                              createNode({
+                                mother: tong,
+                                text: String(num4) + " | " + obj5.description,
+                                style: {
+                                  display: "block",
+                                  fontSize: String(contentsWordingSize) + ea,
+                                  paddingLeft: String(tapSize * 4) + ea,
+                                  fontWeight: String(500),
+                                  color: colorChip.black,
+                                  lineHeight: String(contentsLineHeight),
+                                  marginBottom: String(contentsMarginBottom) + ea,
+                                }
+                              });
+                              num4++;
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      whiteNum++;
+    }
+
+  };
+
+  contractLoad(mainContents);
+
+}
+
+DesignManualJs.prototype.insertContractButtonBox = function () {
+  const instance = this;
+  const mother = this.mother;
+  const { client, ea, baseTong, media, project } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker, downloadFile } = GeneralJs;
+  const buttonsClassName = "buttonsClassName";
+  let margin;
+  let paddingTop;
+  let titleFontSize;
+  let bottomMargin;
+  let whiteBlock;
+  let grayTong;
+  let arrowBetween;
+  let innerMargin;
+  let arrowWidth, arrowHeight;
+  let textTop;
+  let textSize, textWeight;
+  let textMarginLeft;
+  let buttonHeight, buttonPadding;
+  let buttonBetween;
+
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  margin = <%% 55, 55, 47, 39, 6 %%>;
+  paddingTop =  <%% 52, 52, 44, 36, 6 %%>;
+
+  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+
+  innerMargin = <%% 40, 40, 40, 40, 4 %%>;
+
+  arrowBetween = <%% 5, 5, 5, 5, 4 %%>;
+  arrowWidth = <%% 204, 203, 203, 203, 203 %%>;
+  arrowHeight = <%% 100, 100, 100, 100, 100 %%>;
+
+  textTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
+  textSize = <%% 17, 17, 15, 14, 3.1 %%>;
+  textWeight = <%% 700, 700, 700, 700, 700 %%>;
+  textMarginLeft = <%% 50, 50, 50, 50, 50 %%>;
+
+  buttonPadding = <%% 22, 22, 18, 18, 3.6 %%>;
+  buttonHeight = <%% 45, 45, 40, 36, 8.2 %%>;
+
+  buttonBetween = <%% 8, 8, 6, 6, 1 %%>;
+
+  whiteBlock = createNode({
+    mother: baseTong,
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      background: colorChip.white,
+      paddingTop: String(paddingTop) + ea,
+      paddingBottom: String(paddingTop) + ea,
+      marginBottom: String(bottomMargin) + ea,
+      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+    },
+    children: [
+      {
+        display: "block",
+        position: "relative",
+        width: withOut(margin * 2, ea),
+        height: String(100) + '%',
+        marginLeft: String(margin) + ea,
+      }
+    ]
+  });
+  whiteTong = whiteBlock.firstChild;
+
+  grayTong = createNode({
+    mother: whiteTong,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: withOut(0, ea),
+      justifyContent: "center",
+      alignItems: "center",
+      textAlign: "center",
+    }
+  });
+
+  createNode({
+    mother: grayTong,
+    event: {
+      click: function (e) {
+        cleanChildren(baseTong);
+        instance.insertInitBox();
+        instance.insertProcessBox();
+        instance.contentsLoop();
+        instance.insertButtonBox();
+        window.scroll(0, 0);
+      }
+    },
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      paddingLeft: String(buttonPadding) + ea,
+      paddingRight: String(buttonPadding) + ea,
+      marginRight: String(buttonBetween) + ea,
+      height: String(buttonHeight) + ea,
+      borderRadius: String(5) + "px",
+      background: colorChip.gradientGreen,
+      justifyContent: "center",
+      alignItems: "center",
+      textAlign: "center",
+      cursor: "pointer",
+    },
+    children: [
+      {
+        text: "제공 내역 보기",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(textTop) + ea,
+          fontSize: String(textSize) + ea,
+          fontWeight: String(textWeight),
+          color: colorChip.white,
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: grayTong,
+    event: {
+      click: async function (e) {
+        try {
+          const loading = instance.mother.grayLoading();
+          const res = await ajaxJson({ url: window.encodeURIComponent(window.location.href + "&mode=contract") }, "/ghostPass_pageToPdf");
+          downloadFile(window.decodeURIComponent(res.url));
+          loading.remove();
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    },
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      paddingLeft: String(buttonPadding) + ea,
+      paddingRight: String(buttonPadding) + ea,
+      marginRight: String(buttonBetween) + ea,
+      height: String(buttonHeight) + ea,
+      borderRadius: String(5) + "px",
+      background: colorChip.gradientGreen,
+      justifyContent: "center",
+      alignItems: "center",
+      textAlign: "center",
+      cursor: "pointer",
+    },
+    children: [
+      {
+        text: "PDF 출력",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(textTop) + ea,
+          fontSize: String(textSize) + ea,
+          fontWeight: String(textWeight),
+          color: colorChip.white,
+        }
+      }
+    ]
+  });
+
+}
+
 DesignManualJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
@@ -1655,10 +2670,16 @@ DesignManualJs.prototype.launching = async function (loading) {
       },
       local: async () => {
         try {
-          instance.insertInitBox();
-          instance.insertProcessBox();
-          instance.contentsLoop();
-          instance.insertButtonBox();
+          if (GeneralJs.returnGet().mode === "contract") {
+            instance.insertContractInitBox();
+            instance.insertContractBox();
+            instance.insertContractButtonBox();
+          } else {
+            instance.insertInitBox();
+            instance.insertProcessBox();
+            instance.contentsLoop();
+            instance.insertButtonBox();
+          }
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "DesignManualJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
