@@ -1301,7 +1301,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
       },
       children: [
         {
-          text: desktop ? "중간 사진 전송" : "사진 전송",
+          text: "파일 전송",
           style: {
             display: "inline-block",
             position: "relative",
@@ -1535,7 +1535,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
         background: colorChip.gradientGreen,
         borderRadius: String(5) + "px",
         marginTop: String(buttonMarginTop) + ea,
-        marginRight: String(buttonBetween) + ea,
+        // marginRight: String(buttonBetween) + ea,
         justifyContent: "center",
         alignItems: "center",
         textAlign: "center",
@@ -1556,40 +1556,40 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
       ]
     });
 
-    createNode({
-      mother: paymentArea,
-      event: {
-        click: function (e) {
-          window.alert("준비중인 기능입니다!");
-        }
-      },
-      style: {
-        display: "inline-flex",
-        paddingLeft: String(buttonPadding) + ea,
-        paddingRight: String(buttonPadding) + ea,
-        height: String(buttonHeight) + ea,
-        background: colorChip.gray3,
-        borderRadius: String(5) + "px",
-        marginTop: String(buttonMarginTop) + ea,
-        justifyContent: "center",
-        alignItems: "center",
-        textAlign: "center",
-        cursor: "pointer",
-      },
-      children: [
-        {
-          text: "시공 의뢰",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(buttonTextTop) + ea,
-            fontSize: String(buttonSize) + ea,
-            fontWeight: String(buttonWeight),
-            color: colorChip.deactive,
-          }
-        }
-      ]
-    });
+    // createNode({
+    //   mother: paymentArea,
+    //   event: {
+    //     click: function (e) {
+    //       window.alert("준비중인 기능입니다!");
+    //     }
+    //   },
+    //   style: {
+    //     display: "inline-flex",
+    //     paddingLeft: String(buttonPadding) + ea,
+    //     paddingRight: String(buttonPadding) + ea,
+    //     height: String(buttonHeight) + ea,
+    //     background: colorChip.gray3,
+    //     borderRadius: String(5) + "px",
+    //     marginTop: String(buttonMarginTop) + ea,
+    //     justifyContent: "center",
+    //     alignItems: "center",
+    //     textAlign: "center",
+    //     cursor: "pointer",
+    //   },
+    //   children: [
+    //     {
+    //       text: "시공 의뢰",
+    //       style: {
+    //         display: "inline-block",
+    //         position: "relative",
+    //         top: String(buttonTextTop) + ea,
+    //         fontSize: String(buttonSize) + ea,
+    //         fontWeight: String(buttonWeight),
+    //         color: colorChip.deactive,
+    //       }
+    //     }
+    //   ]
+    // });
 
   }
 }

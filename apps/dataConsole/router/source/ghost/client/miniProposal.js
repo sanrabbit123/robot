@@ -1332,8 +1332,18 @@ MiniProposalJs.prototype.insertSecondBox = async function () {
 
             createNode({
               mother: tempTong,
+              attribute: {
+                j: String(j),
+                i: String(i),
+              },
               text: "Link",
-              event: (e) => { blankHref(tableColumnsFactor[j].source(list.detail[i])) },
+              event: {
+                click: function (e) {
+                  const j = Number(this.getAttribute('j'));
+                  const i = Number(this.getAttribute('i'));
+                  blankHref(window.decodeURIComponent(tableColumnsFactor[j].source(list.detail[i])));
+                }
+              },
               style: {
                 display: "inline-block",
                 position: "relative",
