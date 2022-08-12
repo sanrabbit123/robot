@@ -187,9 +187,9 @@ MagazineDetailJs.prototype.magazineInitBox = function () {
           left: String(0),
           width: String(100) + '%',
           height: String(100) + '%',
-          borderTopRightRadius: mobile ? String(8) + "px" : "",
-          borderBottomRightRadius: mobile ? String(8) + "px" : "",
           borderRadius: desktop ? String(8) + "px" : "",
+          borderTopRightRadius: String(8) + "px",
+          borderBottomRightRadius: String(8) + "px",
           background: desktop ? "" : colorChip.white,
           boxShadow: desktop ? "" : "0px 0px 15px -9px " + colorChip.shadow,
         }
@@ -263,6 +263,8 @@ MagazineDetailJs.prototype.magazineContentsBox = function () {
   let editorBetween;
   let num;
   let grayTong;
+  let subMargin;
+  let middleSize;
 
   binaryPath = MagazineDetailJs.binaryPath + this.mid;
   ({ contents, editor } = this.magazine);
@@ -287,6 +289,9 @@ MagazineDetailJs.prototype.magazineContentsBox = function () {
   blankMargin = <%% 100, 100, 100, 70, 11 %%>;
   blankMargin2 = <%% 100, 100, 100, 70, 10 %%>;
   blankMarginLast = <%% 200, 200, 200, 170, 20 %%>;
+
+  subMargin = <%% 25, 25, 25, 20, 3 %%>;
+  middleSize = <%% 20, 20, 20, 18, 4 %%>;
 
   editorBetween = <%% 8, 8, 8, 7, 1.5 %%>;
   editorTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
@@ -333,8 +338,8 @@ MagazineDetailJs.prototype.magazineContentsBox = function () {
   for (let obj of contents.detail) {
     if (num !== 0) {
       type = obj.type;
-      if (/^blank/i.test(type)) {
 
+      if (/^blank/i.test(type)) {
         if (mobile && num === 2 && type === "blankImage") {
           // pass
         } else {
@@ -346,9 +351,21 @@ MagazineDetailJs.prototype.magazineContentsBox = function () {
             }
           });
         }
-
+      } else if (/^double/i.test(type)) {
+        if (mobile && num === 2 && type === "doubleImage") {
+          // pass
+        } else {
+          createNode({
+            mother: mainTong,
+            style: {
+              display: "block",
+              height: String(blankMargin * 2) + ea,
+            }
+          });
+        }
       }
-      if (type.replace(/^general/i, '').replace(/^blank/i, '') === "Title") {
+
+      if (type.replace(/^general/i, '').replace(/^blank/i, '').replace(/^double/i, '') === "Title") {
         createNode({
           mother: mainTong,
           text: obj.text.join("\n"),
@@ -381,7 +398,7 @@ MagazineDetailJs.prototype.magazineContentsBox = function () {
             }
           ]
         });
-      } else if (type.replace(/^general/i, '').replace(/^blank/i, '') === "Description") {
+      } else if (type.replace(/^general/i, '').replace(/^blank/i, '').replace(/^double/i, '') === "Description") {
         createNode({
           mother: (num === 1 ? grayTong.firstChild : mainTong),
           text: obj.text.join("\n\n"),
@@ -397,7 +414,7 @@ MagazineDetailJs.prototype.magazineContentsBox = function () {
             paddingRight: mobile ? String(mobileDescriptionPadding) + ea : 0,
           }
         });
-      } else if (type.replace(/^general/i, '').replace(/^blank/i, '') === "Image") {
+      } else if (type.replace(/^general/i, '').replace(/^blank/i, '').replace(/^double/i, '') === "Image") {
         if (obj.gs === 'g') {
           createNode({
             mother: mainTong,
@@ -449,7 +466,67 @@ MagazineDetailJs.prototype.magazineContentsBox = function () {
             }
           });
         }
+      } else if (type.replace(/^general/i, '').replace(/^blank/i, '').replace(/^double/i, '') === "Sub") {
+        createNode({
+          mother: mainTong,
+          text: obj.text.join("\n"),
+          style: {
+            display: "block",
+            position: "relative",
+            textAlign: "left",
+            fontSize: String(contentsSize) + ea,
+            fontWeight: String(titleWeight),
+            lineHeight: String(titleLineHeight),
+            color: colorChip.black,
+            width: withOut(desktop ? 0 : (mobileDescriptionPadding * 2), ea),
+            paddingLeft: mobile ? String(mobileDescriptionPadding) + ea : 0,
+            paddingRight: mobile ? String(mobileDescriptionPadding) + ea : 0,
+            marginBottom: String(photoMargin) + ea,
+            paddingTop: /general/gi.test(type) ? String(subMargin) + ea : "",
+          }
+        });
+
+      } else if (type.replace(/^general/i, '').replace(/^blank/i, '').replace(/^double/i, '') === "Middle") {
+        createNode({
+          mother: mainTong,
+          text: obj.text.join("\n"),
+          style: {
+            display: "block",
+            position: "relative",
+            textAlign: "left",
+            fontSize: String(middleSize) + ea,
+            fontWeight: String(titleWeight),
+            lineHeight: String(contentsLineHeight),
+            color: colorChip.black,
+            width: withOut(desktop ? 0 : (mobileDescriptionPadding * 2), ea),
+            paddingLeft: mobile ? String(mobileDescriptionPadding) + ea : 0,
+            paddingRight: mobile ? String(mobileDescriptionPadding) + ea : 0,
+          }
+        });
+        createNode({
+          mother: mainTong,
+          style: {
+            display: "block",
+            position: "relative",
+            textAlign: "left",
+            marginTop: String(titleBarMarginTop) + ea,
+            marginBottom: String(titleBarMarginBottom) + ea,
+            width: withOut(desktop ? 0 : (mobileDescriptionPadding * 2), ea),
+            paddingLeft: mobile ? String(mobileDescriptionPadding) + ea : 0,
+            paddingRight: mobile ? String(mobileDescriptionPadding) + ea : 0,
+          },
+          children: [
+            {
+              style: {
+                display: "inline-block",
+                width: String(titleBarWidth) + ea,
+                borderBottom: "1px solid " + colorChip.gray3,
+              }
+            }
+          ]
+        });
       }
+
     }
     num++;
   }

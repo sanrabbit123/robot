@@ -705,6 +705,8 @@ ResourceMaker.prototype.magazineMaker = async function (mid) {
     let rows;
     let latestPast;
     let editor;
+    let category;
+    let tag;
 
     await MONGOC.connect();
 
@@ -719,6 +721,16 @@ ResourceMaker.prototype.magazineMaker = async function (mid) {
       bd: "blankDescription",
       gi: "generalImage",
       bi: "blankImage",
+      bs: "blankSub",
+      gs: "generalSub",
+      dt: "doubleTitle",
+      dd: "doubleDescription",
+      di: "doubleImage",
+      ds: "doubleSub",
+      gm: "generalMiddle",
+      bm: "blankMiddle",
+      dm: "doubleMiddle",
+      ta: "tag",
     };
 
     note = new AppleNotes({ folder: "magazine", subject: mid });
@@ -726,6 +738,7 @@ ResourceMaker.prototype.magazineMaker = async function (mid) {
     contents = {};
 
     contents.init = targetArr[1].replace(/\^ma\: /gi, "").split('|').map((str) => { return str.trim(); });
+    category = contents.init.pop();
     editor = contents.init.pop();
     targetArr = targetArr.slice(2);
 
@@ -785,6 +798,20 @@ ResourceMaker.prototype.magazineMaker = async function (mid) {
         } else {
           obj.text = obj.data[0].trim().split("|").map((str) => { return str.trim() });
         }
+      } else if (/Middle/gi.test(obj.type)) {
+        if (obj.data[0].trim() === '') {
+          obj.text = [];
+        } else {
+          obj.text = obj.data[0].trim().split("|").map((str) => { return str.trim() });
+        }
+      } else if (/Sub/gi.test(obj.type)) {
+        if (obj.data[0].trim() === '') {
+          obj.text = [];
+        } else {
+          obj.text = obj.data[0].trim().split("|").map((str) => { return str.trim() });
+        }
+      } else if (/tag/gi.test(obj.type)) {
+        tag = obj.data[0].trim().split(",").map((str) => { return str.trim(); });
       }
     }
 
@@ -793,7 +820,13 @@ ResourceMaker.prototype.magazineMaker = async function (mid) {
     }
 
     contents.detail = equalJson(JSON.stringify(matrix));
+
+    contents.category = category;
+    contents.tag = tag;
+
     magazine = { magid: back.idMaker(latestPast.magid), mid, editor, date: new Date(), contents };
+
+    console.log(magazine);
 
     await back.mongoCreate(collection, magazine, { selfMongo: MONGOC });
 
