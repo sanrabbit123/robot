@@ -373,9 +373,9 @@ DataRouter.prototype.rou_post_styleCuration_pageInitComplete = function () {
             await messageSend({ text: client.name + " 고객님께 신청 완료하라고 독촉했어요.", channel: "#404_curation", voice: false });
           }
         } catch (e) {
-          await errorLog("독촉하는 과정중 오류남");
+          await errorLog("독촉하는 과정중 오류남 : " + e.message);
         }
-      }, 20 * 60 * 1000);
+      }, 2 * 60 * 1000);
 
       res.send(JSON.stringify({ message: "done" }));
 
