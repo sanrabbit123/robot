@@ -350,30 +350,32 @@ DataRouter.prototype.rou_post_styleCuration_pageInitComplete = function () {
       let text, channel;
 
       text = name + " 고객님이 스타일 찾기 페이지에 진입하셨어요.";
-      channel = "#404_curation";
+      channel = "#error_log";
 
-      // if (phone !== "010-2747-3403") {
-      //   messageSend({ text, channel, voice: false }).catch((e) => {
-      //     console.log(e);
-      //   });
-      // }
+      messageSend({ text, channel, voice: false }).catch((e) => {
+        console.log(e);
+      });
 
       if (DataRouter.timeouts["styleCuration_pageInitComplete_" + cliid] !== undefined && DataRouter.timeouts["styleCuration_pageInitComplete_" + cliid] !== null) {
         clearTimeout(DataRouter.timeouts["styleCuration_pageInitComplete_" + cliid]);
         DataRouter.timeouts["styleCuration_pageInitComplete_" + cliid] = null;
       }
       DataRouter.timeouts["styleCuration_pageInitComplete_" + cliid] = setTimeout(async () => {
-        const client = await back.getClientById(cliid, { selfMongo: instance.mongo });
-        if (client.requests[0].analytics.response.status.value === "응대중" && client.requests[0].analytics.response.action.value === "1차 응대 예정") {
-          await kakao.sendTalk("pushClient", client.name, client.phone, {
-            client: client.name,
-            host: address.frontinfo.host,
-            path: "curation",
-            cliid: cliid,
-          });
-          await messageSend({ text: client.name + " 고객님께 신청 완료하라고 독촉했어요.", channel: "#404_curation", voice: false });
+        try {
+          const client = await back.getClientById(cliid, { selfMongo: instance.mongo });
+          if (client.requests[0].analytics.response.status.value === "응대중" && client.requests[0].analytics.response.action.value === "1차 응대 예정") {
+            await kakao.sendTalk("pushClient", client.name, client.phone, {
+              client: client.name,
+              host: address.frontinfo.host,
+              path: "curation",
+              cliid: cliid,
+            });
+            await messageSend({ text: client.name + " 고객님께 신청 완료하라고 독촉했어요.", channel: "#404_curation", voice: false });
+          }
+        } catch (e) {
+          await errorLog("독촉하는 과정중 오류남");
         }
-      }, 40 * 60 * 1000);
+      }, 20 * 60 * 1000);
 
       res.send(JSON.stringify({ message: "done" }));
 
