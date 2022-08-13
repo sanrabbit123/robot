@@ -2791,7 +2791,7 @@ GeneralJs.selfHref = function (link) {
   if (link === undefined) {
     throw new Error("must be link");
   }
-  window.location.href = link;
+  window.location.assign(link);
 }
 
 GeneralJs.styleInjection = function (dom, styleObj) {
