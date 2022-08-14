@@ -448,7 +448,7 @@ DesignerBoardJs.prototype.insertRouterBox = function () {
 
 DesignerBoardJs.prototype.projectPopup = function (proid) {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, ajaxJson, homeliaisonAnalytics, cleanChildren, ajaxForm } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, ajaxJson, homeliaisonAnalytics, cleanChildren, ajaxForm, colorCalendar } = GeneralJs;
   const { ea, naviHeight, media, projects, contents: serviceContents } = this;
   const project = projects.find((obj) => { return obj.proid === proid });
   const mobile = media[4];
@@ -461,6 +461,9 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
   const blank = "&nbsp;&nbsp;&nbsp;";
   const totalContents = document.getElementById("totalcontents");
   const zIndex = 4;
+  const isDateValid = (date) => {
+    return ((new Date(2000, 0, 1)).valueOf() <= date.valueOf() && (new Date(3000, 0, 1)).valueOf() > date.valueOf());
+  }
   return (e) => {
     let grayBack, whiteBase;
     let whiteWidth;
@@ -522,6 +525,10 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
     let statusTextTop, statusSize, statusBetween;
     let mobileArrowMarginBottom;
     let mobileInnerPaddingBottom;
+    let dateArr;
+    let grayCalendarTong;
+    let buttonList;
+    let setButtons;
 
     whiteWidth = <%% 1000, 1000, 800, 660, 88 %%>;
     whiteMargin = <%% 54, 54, 54, 54, 6 %%>;
@@ -537,12 +544,12 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
 
     formPaddingTop = <%% 36, 36, 32, 25, 5 %%>;
 
-    grayInnerPadding = <%% 24, 24, 20, 20, 4 %%>;
-    grayInnerPaddingRight = <%% 40, 40, 36, 28, 6 %%>;
+    grayInnerPadding = <%% 20, 20, 16, 16, 4 %%>;
+    grayInnerPaddingRight = <%% 32, 32, 30, 28, 6 %%>;
     grayCenterMargin = <%% 12, 12, 12, 12, 1 %%>;
 
     arrowBetween = <%% 5, 5, 5, 3, 1.5 %%>;
-    arrowHeight = <%% 60, 60, 54, 40, 10 %%>;
+    arrowHeight = <%% 48, 46, 44, 30, 10 %%>;
     arrowWidth = <%% 224, 224, 176, 136, 24.6 %%>;
 
     mobileArrowMarginBottom = 2.5;
@@ -552,13 +559,13 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
     divideNumber = <%% 4, 4, 4, 4, 3 %%>;
 
     textTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isIphone() ? 0 : -0.3) %%>;
-    textSize = <%% 15, 14, 13, 12, 2.8 %%>;
+    textSize = <%% 14, 14, 13, 12, 2.8 %%>;
     textWeight = <%% 700, 700, 700, 700, 700 %%>;
-    textMarginLeft = <%% 28, 28, 22, 14, 5 %%>;
+    textMarginLeft = <%% 20, 18, 16, 14, 5 %%>;
 
-    grayDescriptionTongMarginTop = <%% 16, 16, 12, 12, 1 %%>;
+    grayDescriptionTongMarginTop = <%% 24, 24, 20, 16, 1 %%>;
 
-    grayDescriptionTitleSize = <%% 18, 18, 16, 14, 3.5 %%>;
+    grayDescriptionTitleSize = <%% 17, 17, 16, 14, 3.5 %%>;
     grayDescriptionTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
     grayDescriptionTitleMarginBottom = <%% 20, 20, 18, 16, 3 %%>;
 
@@ -604,7 +611,9 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
 
     thisStatusNumber = serviceContents.findIndex((obj) => { return obj.target.includes(project.process.action) });
 
+    buttonList = [];
     setDescription = () => {};
+    setButtons = () => {};
 
     titleTargets = serviceContents.map((obj) => { return { title: obj.title, key: obj.key } });
     titleTargets.push({
@@ -612,6 +621,72 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
       key: null,
       checklist: null,
     });
+
+    dateArr = [
+      {
+        contents: {
+          color: colorChip.red,
+          description: "",
+          title: "오늘",
+        },
+        date: {
+          start: new Date(),
+          end: new Date(),
+        }
+      },
+    ];
+    if (isDateValid(project.process.contract.form.date.from)) {
+      dateArr.push({
+        contents: {
+          color: colorChip.green,
+          description: "",
+          title: project.name + " 시작일",
+        },
+        date: {
+          start: project.process.contract.form.date.from,
+          end: project.process.contract.form.date.from,
+        }
+      });
+    }
+    if (isDateValid(project.process.contract.form.date.to)) {
+      dateArr.push({
+        contents: {
+          color: colorChip.green,
+          description: "",
+          title: project.name + " 종료일",
+        },
+        date: {
+          start: project.process.contract.form.date.to,
+          end: project.process.contract.form.date.to,
+        }
+      });
+    }
+    if (isDateValid(project.process.contract.meeting.date)) {
+      dateArr.push({
+        contents: {
+          color: colorChip.purple,
+          description: "",
+          title: project.name + " 현장 미팅",
+        },
+        date: {
+          start: project.process.contract.meeting.date,
+          end: project.process.contract.meeting.date,
+        }
+      });
+    }
+    if (isDateValid(project.contents.photo.date)) {
+      dateArr.push({
+        contents: {
+          color: colorChip.yellow,
+          description: "",
+          title: project.name + " 촬영",
+        },
+        date: {
+          start: project.contents.photo.date,
+          end: project.contents.photo.date,
+        }
+      });
+    }
 
     grayBack = createNode({
       mother: totalContents,
@@ -718,6 +793,9 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
       }
     });
 
+
+    // arrow area
+
     grayTong = createNode({
       mother: formBox,
       style: {
@@ -769,6 +847,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
             }
 
             setDescription(index);
+            setButtons(index);
           }
         },
         style: {
@@ -848,6 +927,21 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
         ]
       });
     }
+
+
+    // calendar area
+
+    grayCalendarTong = createNode({
+      mother: formBox,
+      style: {
+        display: "block",
+        width: withOut(0, ea),
+        borderRadius: String(5) + "px",
+        marginTop: String(grayDescriptionTongMarginTop) + ea,
+      }
+    });
+
+    colorCalendar(grayCalendarTong, dateArr, { smallMode: true });
 
     // description area
 
@@ -1025,10 +1119,9 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
       }
 
     };
-
     setDescription(thisStatusNumber);
 
-    // payment area
+    // button area
 
     paymentArea = createNode({
       mother: contentsTong,
@@ -1045,551 +1138,808 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
       }
     });
 
-    createNode({
-      mother: paymentArea,
-      event: {
-        click: function (e) {
-          const targetMother = this.parentElement.parentElement.parentElement;
-          let cancelBack, whitePrompt;
+    setButtons = (thisStatusNumber) => {
+      buttonList = [
+        {
+          name: "상태 변경",
+          event: function () {
+            return function (e) {
+              const targetMother = this.parentElement.parentElement.parentElement;
+              let cancelBack, whitePrompt;
 
-          cancelBack = createNode({
-            mother: targetMother,
-            event: {
-              click: function (e) {
-                targetMother.removeChild(targetMother.lastChild);
-                targetMother.removeChild(targetMother.lastChild);
-              }
-            },
-            style: {
-              position: "fixed",
-              top: String(0),
-              left: String(0),
-              width: withOut(0),
-              height: withOut(0),
-              background: colorChip.black,
-              opacity: String(0.2),
-            }
-          });
-
-          whitePrompt = createNode({
-            mother: targetMother,
-            style: {
-              position: "absolute",
-              top: withOut(50, (((statusButtonHeight * 4) + (statusButtonBetween * 3) + (grayInnerPadding * 2)) / 2), ea),
-              left: withOut(50, (((statusButtonWidth * 2) + statusButtonBetween + (grayInnerPadding * 2)) / 2), ea),
-              width: String((statusButtonWidth * 2) + statusButtonBetween) + ea,
-              height: String((statusButtonHeight * 4) + (statusButtonBetween * 4)) + ea,
-              background: colorChip.gray2,
-              borderRadius: String(5) + "px",
-              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-              animation: "fadeuplite 0.3s ease forwards",
-              padding: String(grayInnerPadding) + ea,
-              paddingBottom: String(grayInnerPadding - statusButtonBetween) + ea,
-            },
-            children: [
-              {
+              cancelBack = createNode({
+                mother: targetMother,
+                event: {
+                  click: function (e) {
+                    targetMother.removeChild(targetMother.lastChild);
+                    targetMother.removeChild(targetMother.lastChild);
+                  }
+                },
                 style: {
-                  display: "block",
+                  position: "fixed",
                   top: String(0),
                   left: String(0),
                   width: withOut(0),
                   height: withOut(0),
-                  position: "relative",
+                  background: colorChip.black,
+                  opacity: String(0.2),
                 }
-              }
-            ]
-          });
+              });
 
-          for (let i = 0; i < titleTargets.length; i++) {
-            createNode({
-              mother: whitePrompt.firstChild,
-              attribute: { index: String(i) },
-              event: {
-                click: async function (e) {
-                  try {
-                    const index = Number(this.getAttribute("index"));
-                    if (serviceContents[index] !== undefined) {
-                      let value;
-                      let whereQuery, updateQuery;
-
-                      value = serviceContents[index].target[0];
-
-                      whereQuery = { proid: project.proid };
-                      updateQuery = {};
-                      updateQuery["process.action"] = value;
-
-                      if (window.confirm("업데이트를 진행하시겠습니까?")) {
-                        await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateProject");
-                        await ajaxJson({ message: instance.designer.designer + " 실장님이 콘솔을 통해 " + project.name + " 고객님 상태를 변경했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
-
-                        window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + instance.designer.desid + "&proid=" + project.proid;
-                      }
-
-                    } else {
-                      window.alert("프로젝트 완료는 홈리에종에 직접 문의해주세요!");
+              whitePrompt = createNode({
+                mother: targetMother,
+                style: {
+                  position: "absolute",
+                  top: withOut(50, (((statusButtonHeight * 4) + (statusButtonBetween * 3) + (grayInnerPadding * 2)) / 2), ea),
+                  left: withOut(50, (((statusButtonWidth * 2) + statusButtonBetween + (grayInnerPadding * 2)) / 2), ea),
+                  width: String((statusButtonWidth * 2) + statusButtonBetween) + ea,
+                  height: String((statusButtonHeight * 4) + (statusButtonBetween * 4)) + ea,
+                  background: colorChip.gray2,
+                  borderRadius: String(5) + "px",
+                  boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                  animation: "fadeuplite 0.3s ease forwards",
+                  padding: String(grayInnerPadding) + ea,
+                  paddingBottom: String(grayInnerPadding - statusButtonBetween) + ea,
+                },
+                children: [
+                  {
+                    style: {
+                      display: "block",
+                      top: String(0),
+                      left: String(0),
+                      width: withOut(0),
+                      height: withOut(0),
+                      position: "relative",
                     }
-                  } catch (e) {
-                    console.log(e);
-                    window.location.reload();
                   }
-                }
-              },
-              style: {
-                display: "inline-flex",
-                position: "relative",
-                width: String(statusButtonWidth) + ea,
-                height: String(statusButtonHeight) + ea,
-                background: colorChip.white,
-                borderRadius: String(5) + "px",
-                boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-                marginRight: String(i % 2 === 0 ? statusButtonBetween : 0) + ea,
-                marginBottom: String(statusButtonBetween) + ea,
-                justifyContent: "center",
-                alignItems: "center",
-                textAlign: "center",
-                cursor: "pointer",
-              },
-              children: [
-                {
-                  text: titleTargets[i].title,
-                  style: {
-                    display: "inline-block",
-                    position: "relative",
-                    top: String(statusTextTop) + ea,
-                    fontSize: String(statusSize) + ea,
-                    fontWeight: String(statusBetween),
-                    color: colorChip.black,
-                  }
-                }
-              ]
-            });
-          }
+                ]
+              });
 
-        }
-      },
-      style: {
-        display: "inline-flex",
-        paddingLeft: String(buttonPadding) + ea,
-        paddingRight: String(buttonPadding) + ea,
-        height: String(buttonHeight) + ea,
-        background: colorChip.gradientGreen,
-        borderRadius: String(5) + "px",
-        marginTop: String(buttonMarginTop) + ea,
-        marginRight: String(buttonBetween) + ea,
-        justifyContent: "center",
-        alignItems: "center",
-        textAlign: "center",
-        cursor: "pointer",
-      },
-      children: [
-        {
-          text: "상태 변경",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(buttonTextTop) + ea,
-            fontSize: String(buttonSize) + ea,
-            fontWeight: String(buttonWeight),
-            color: colorChip.white,
-          }
-        }
-      ]
-    });
-
-    createNode({
-      mother: paymentArea,
-      attribute: {
-        proid: project.proid,
-        desid: instance.designer.desid,
-        designer: instance.designer.designer,
-        name: project.name,
-      },
-      event: {
-        click: async function (e) {
-          try {
-            const proid = this.getAttribute("proid");
-            const desid = this.getAttribute("desid");
-            const name = this.getAttribute("name");
-            const designer = this.getAttribute("designer");
-            let input, removeTargets;
-
-            removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
-            for (let dom of removeTargets) {
-              dom.remove();
-            }
-
-            input = createNode({
-              mother: document.body,
-              class: [ fileInputClassName ],
-              mode: "input",
-              event: {
-                change: async function (e) {
-                  try {
-                    const proid = this.getAttribute("proid");
-                    const desid = this.getAttribute("desid");
-                    const client = this.getAttribute("client");
-                    const designer = this.getAttribute("designer");
-                    let thisFiles, formData, res;
-                    let removeTargets;
-
-                    thisFiles = [ ...this.files ];
-
-                    if (thisFiles.length >= 1) {
-                      formData = new FormData();
-                      formData.enctype = "multipart/form-data";
-                      formData.append("proid", proid);
-                      formData.append("desid", desid);
-                      formData.append("client", client);
-                      for (let i = 0; i < thisFiles.length; i++) {
-                        formData.append("photo" + String(i), thisFiles[i]);
-                      }
-
-                      res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
-                      await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 현장의 중간 사진을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
-                      window.alert("업로드가 완료되었습니다!");
-
-                      removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
-                      for (let dom of removeTargets) {
-                        dom.remove();
-                      }
-
-                    }
-
-                  } catch (e) {
-                    console.log(e);
-                    window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
-                    window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + instance.designer.desid + "&proid=" + project.proid;
-                  }
-                }
-              },
-              attribute: {
-                type: "file",
-                name: "designerPhoto",
-                multiple: "true",
-                proid,
-                desid,
-                client: name,
-                designer,
-              },
-              style: {
-                display: "none",
-              }
-            });
-
-            input.click();
-
-          } catch (e) {
-            console.log(e);
-            window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
-            window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + instance.designer.desid + "&proid=" + project.proid;
-          }
-        }
-      },
-      style: {
-        display: "inline-flex",
-        paddingLeft: String(buttonPadding) + ea,
-        paddingRight: String(buttonPadding) + ea,
-        height: String(buttonHeight) + ea,
-        background: colorChip.gradientGreen,
-        borderRadius: String(5) + "px",
-        marginTop: String(buttonMarginTop) + ea,
-        marginRight: String(buttonBetween) + ea,
-        justifyContent: "center",
-        alignItems: "center",
-        textAlign: "center",
-        cursor: "pointer",
-      },
-      children: [
-        {
-          text: "파일 전송",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(buttonTextTop) + ea,
-            fontSize: String(buttonSize) + ea,
-            fontWeight: String(buttonWeight),
-            color: colorChip.white,
-          }
-        }
-      ]
-    });
-
-    createNode({
-      mother: paymentArea,
-      attribute: {
-        designer: instance.designer.designer,
-        desid: instance.designer.desid,
-        client: project.name,
-        proid: project.proid,
-      },
-      event: {
-        click: function (e) {
-          const designer = this.getAttribute("designer");
-          const desid = this.getAttribute("desid");
-          const client = this.getAttribute("client");
-          const proid = this.getAttribute("proid");
-          const targetMother = this.parentElement.parentElement.parentElement;
-          let photoTargets, cancelBack, whitePrompt;
-
-          cancelBack = {};
-          whitePrompt = {};
-
-          photoTargets = [
-            {
-              title: "촬영 요청",
-              event: async function (e) {
-                try {
-                  const designer = this.getAttribute("designer");
-                  const desid = this.getAttribute("desid");
-                  const client = this.getAttribute("client");
-                  const proid = this.getAttribute("proid");
-
-                  await ajaxJson({ message: designer + " 실장님이 " + project.name + " 고객님 현장 촬영을 하고 싶다고 의사 표현하셨습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
-                  window.alert("홈리에종에 촬영 진행 의견을 전달하였습니다!");
-                  cancelBack.click();
-
-                } catch (e) {
-                  console.log(e);
-                }
-              }
-            },
-            {
-              title: "촬영 미진행",
-              event: async function (e) {
-                try {
-                  const designer = this.getAttribute("designer");
-                  const desid = this.getAttribute("desid");
-                  const client = this.getAttribute("client");
-                  const proid = this.getAttribute("proid");
-
-                  await ajaxJson({ message: designer + " 실장님이 " + project.name + " 고객님 현장 촬영을 진행을 하고 싶지 않아 하십니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
-                  window.alert("홈리에종에 촬영 미진행 의견을 전달하였습니다!");
-                  cancelBack.click();
-
-                } catch (e) {
-                  console.log(e);
-                }
-              }
-            },
-            {
-              title: "촬영비 결제",
-              event: async function (e) {
-                try {
-                  const designer = this.getAttribute("designer");
-                  const desid = this.getAttribute("desid");
-                  const client = this.getAttribute("client");
-                  const proid = this.getAttribute("proid");
-                  const { pluginScript, oidConst } = await ajaxJson({ mode: "script", oidKey: "mini" }, BACKHOST + "/generalImpPayment");
-                  let plugin, oid;
-
-                  oid = oidConst + instance.designer.information.phone.replace(/[^0-9]/gi, '') + "_" + String((new Date()).valueOf());
-
-                  plugin = new Function(pluginScript);
-                  plugin();
-                  window.IMP.init("imp71921105");
-
-                  if (desktop) {
-
-                    window.IMP.request_pay({
-                        pg: "inicis",
-                        pay_method: "card",
-                        merchant_uid: oid,
-                        name: "현장 촬영비",
-                        amount: Math.floor(165000),
-                        buyer_email: instance.designer.information.email,
-                        buyer_name: instance.designer.designer,
-                        buyer_tel: instance.designer.information.phone,
-                    }, async (rsp) => {
+              for (let i = 0; i < titleTargets.length; i++) {
+                createNode({
+                  mother: whitePrompt.firstChild,
+                  attribute: { index: String(i) },
+                  event: {
+                    click: async function (e) {
                       try {
-                        if (typeof rsp.status === "string" && /paid/gi.test(rsp.status)) {
-                          await ajaxJson({ message: designer + " 실장님이 " + project.name + " 고객님 현장 촬영의 촬영비를 결제하셨습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
-                          window.alert("결제가 완료되었습니다!");
-                          cancelBack.click();
+                        const index = Number(this.getAttribute("index"));
+                        if (serviceContents[index] !== undefined) {
+                          let value;
+                          let whereQuery, updateQuery;
+
+                          value = serviceContents[index].target[0];
+
+                          whereQuery = { proid: project.proid };
+                          updateQuery = {};
+                          updateQuery["process.action"] = value;
+
+                          if (window.confirm("업데이트를 진행하시겠습니까?")) {
+                            await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateProject");
+                            await ajaxJson({ message: instance.designer.designer + " 실장님이 콘솔을 통해 " + project.name + " 고객님 상태를 변경했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+
+                            window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + instance.designer.desid + "&proid=" + project.proid;
+                          }
+
                         } else {
-                          window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
-                          window.location.reload();
+                          window.alert("프로젝트 완료는 홈리에종에 직접 문의해주세요!");
                         }
                       } catch (e) {
-                        window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+                        console.log(e);
                         window.location.reload();
                       }
-                    });
+                    }
+                  },
+                  style: {
+                    display: "inline-flex",
+                    position: "relative",
+                    width: String(statusButtonWidth) + ea,
+                    height: String(statusButtonHeight) + ea,
+                    background: colorChip.white,
+                    borderRadius: String(5) + "px",
+                    boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                    marginRight: String(i % 2 === 0 ? statusButtonBetween : 0) + ea,
+                    marginBottom: String(statusButtonBetween) + ea,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    cursor: "pointer",
+                  },
+                  children: [
+                    {
+                      text: titleTargets[i].title,
+                      style: {
+                        display: "inline-block",
+                        position: "relative",
+                        top: String(statusTextTop) + ea,
+                        fontSize: String(statusSize) + ea,
+                        fontWeight: String(statusBetween),
+                        color: colorChip.black,
+                      }
+                    }
+                  ]
+                });
+              }
 
-                  } else {
+            }
+          }
+        }
+      ];
 
-                    const { key } = await ajaxJson({ mode: "store", oid, data: { designer, desid, client, proid, oid } }, BACKHOST + "/generalImpPayment");
-                    window.IMP.request_pay({
-                        pg: "inicis",
-                        pay_method: "card",
-                        merchant_uid: oid,
-                        name: "현장 촬영비",
-                        amount: Math.floor(165000),
-                        buyer_email: instance.designer.information.email,
-                        buyer_name: instance.designer.designer,
-                        buyer_tel: instance.designer.information.phone,
-                        m_redirect_url: window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + desid + "&mobilecard=" + key,
-                    }, (rsp) => {});
+      if (thisStatusNumber === 1) {
+        buttonList.push({
+          name: "일정 안내 문서 전송",
+          event: function () {
+            return async function (e) {
+              try {
+                const proid = this.getAttribute("proid");
+                const desid = this.getAttribute("desid");
+                const name = this.getAttribute("name");
+                const designer = this.getAttribute("designer");
+                let input, removeTargets;
 
-                  }
-
-                } catch (e) {
-                  console.log(e);
+                removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
+                for (let dom of removeTargets) {
+                  dom.remove();
                 }
+
+                input = createNode({
+                  mother: document.body,
+                  class: [ fileInputClassName ],
+                  mode: "input",
+                  event: {
+                    change: async function (e) {
+                      try {
+                        const proid = this.getAttribute("proid");
+                        const desid = this.getAttribute("desid");
+                        const client = this.getAttribute("client");
+                        const designer = this.getAttribute("designer");
+                        let thisFiles, formData, res;
+                        let removeTargets;
+
+                        thisFiles = [ ...this.files ];
+
+                        if (thisFiles.length >= 1) {
+                          formData = new FormData();
+                          formData.enctype = "multipart/form-data";
+                          formData.append("proid", proid);
+                          formData.append("desid", desid);
+                          formData.append("client", client);
+                          for (let i = 0; i < thisFiles.length; i++) {
+                            formData.append("photo" + String(i), thisFiles[i]);
+                          }
+
+                          res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
+                          await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 현장의 중간 사진을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+                          window.alert("업로드가 완료되었습니다!");
+
+                          removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
+                          for (let dom of removeTargets) {
+                            dom.remove();
+                          }
+
+                        }
+
+                      } catch (e) {
+                        console.log(e);
+                        window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+                        window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + instance.designer.desid + "&proid=" + project.proid;
+                      }
+                    }
+                  },
+                  attribute: {
+                    type: "file",
+                    name: "designerPhoto",
+                    multiple: "true",
+                    proid,
+                    desid,
+                    client: name,
+                    designer,
+                  },
+                  style: {
+                    display: "none",
+                  }
+                });
+
+                input.click();
+
+              } catch (e) {
+                console.log(e);
+                window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+                window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + instance.designer.desid + "&proid=" + project.proid;
               }
             }
-          ];
+          }
+        });
+      } else if (thisStatusNumber === 2) {
+        buttonList.push({
+          name: "1차 제안 문서 전송",
+          event: function () {
+            return async function (e) {
+              try {
+                const proid = this.getAttribute("proid");
+                const desid = this.getAttribute("desid");
+                const name = this.getAttribute("name");
+                const designer = this.getAttribute("designer");
+                let input, removeTargets;
 
-          cancelBack = createNode({
-            mother: targetMother,
-            event: {
-              click: function (e) {
-                targetMother.removeChild(targetMother.lastChild);
-                targetMother.removeChild(targetMother.lastChild);
+                removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
+                for (let dom of removeTargets) {
+                  dom.remove();
+                }
+
+                input = createNode({
+                  mother: document.body,
+                  class: [ fileInputClassName ],
+                  mode: "input",
+                  event: {
+                    change: async function (e) {
+                      try {
+                        const proid = this.getAttribute("proid");
+                        const desid = this.getAttribute("desid");
+                        const client = this.getAttribute("client");
+                        const designer = this.getAttribute("designer");
+                        let thisFiles, formData, res;
+                        let removeTargets;
+
+                        thisFiles = [ ...this.files ];
+
+                        if (thisFiles.length >= 1) {
+                          formData = new FormData();
+                          formData.enctype = "multipart/form-data";
+                          formData.append("proid", proid);
+                          formData.append("desid", desid);
+                          formData.append("client", client);
+                          for (let i = 0; i < thisFiles.length; i++) {
+                            formData.append("photo" + String(i), thisFiles[i]);
+                          }
+
+                          res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
+                          await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 현장의 중간 사진을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+                          window.alert("업로드가 완료되었습니다!");
+
+                          removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
+                          for (let dom of removeTargets) {
+                            dom.remove();
+                          }
+
+                        }
+
+                      } catch (e) {
+                        console.log(e);
+                        window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+                        window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + instance.designer.desid + "&proid=" + project.proid;
+                      }
+                    }
+                  },
+                  attribute: {
+                    type: "file",
+                    name: "designerPhoto",
+                    multiple: "true",
+                    proid,
+                    desid,
+                    client: name,
+                    designer,
+                  },
+                  style: {
+                    display: "none",
+                  }
+                });
+
+                input.click();
+
+              } catch (e) {
+                console.log(e);
+                window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+                window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + instance.designer.desid + "&proid=" + project.proid;
               }
-            },
-            style: {
-              position: "fixed",
-              top: String(0),
-              left: String(0),
-              width: withOut(0),
-              height: withOut(0),
-              background: colorChip.black,
-              opacity: String(0.2),
             }
-          });
+          }
+        });
+      } else if (thisStatusNumber === 3) {
+        buttonList.push({
+          name: "수정 제안 문서 전송",
+          event: function () {
+            return async function (e) {
+              try {
+                const proid = this.getAttribute("proid");
+                const desid = this.getAttribute("desid");
+                const name = this.getAttribute("name");
+                const designer = this.getAttribute("designer");
+                let input, removeTargets;
 
-          whitePrompt = createNode({
-            mother: targetMother,
-            style: {
-              position: "absolute",
-              top: withOut(50, (((statusButtonHeight * 3) + (statusButtonBetween * 2) + (grayInnerPadding * 2)) / 2), ea),
-              left: withOut(50, (((statusButtonWidth * 1) + (grayInnerPadding * 2)) / 2), ea),
-              width: String((statusButtonWidth * 1)) + ea,
-              height: String((statusButtonHeight * 3) + (statusButtonBetween * 3)) + ea,
-              background: colorChip.gray2,
-              borderRadius: String(5) + "px",
-              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-              animation: "fadeuplite 0.3s ease forwards",
-              padding: String(grayInnerPadding) + ea,
-              paddingBottom: String(grayInnerPadding - statusButtonBetween) + ea,
-            },
-            children: [
-              {
+                removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
+                for (let dom of removeTargets) {
+                  dom.remove();
+                }
+
+                input = createNode({
+                  mother: document.body,
+                  class: [ fileInputClassName ],
+                  mode: "input",
+                  event: {
+                    change: async function (e) {
+                      try {
+                        const proid = this.getAttribute("proid");
+                        const desid = this.getAttribute("desid");
+                        const client = this.getAttribute("client");
+                        const designer = this.getAttribute("designer");
+                        let thisFiles, formData, res;
+                        let removeTargets;
+
+                        thisFiles = [ ...this.files ];
+
+                        if (thisFiles.length >= 1) {
+                          formData = new FormData();
+                          formData.enctype = "multipart/form-data";
+                          formData.append("proid", proid);
+                          formData.append("desid", desid);
+                          formData.append("client", client);
+                          for (let i = 0; i < thisFiles.length; i++) {
+                            formData.append("photo" + String(i), thisFiles[i]);
+                          }
+
+                          res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
+                          await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 현장의 중간 사진을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+                          window.alert("업로드가 완료되었습니다!");
+
+                          removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
+                          for (let dom of removeTargets) {
+                            dom.remove();
+                          }
+
+                        }
+
+                      } catch (e) {
+                        console.log(e);
+                        window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+                        window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + instance.designer.desid + "&proid=" + project.proid;
+                      }
+                    }
+                  },
+                  attribute: {
+                    type: "file",
+                    name: "designerPhoto",
+                    multiple: "true",
+                    proid,
+                    desid,
+                    client: name,
+                    designer,
+                  },
+                  style: {
+                    display: "none",
+                  }
+                });
+
+                input.click();
+
+              } catch (e) {
+                console.log(e);
+                window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+                window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + instance.designer.desid + "&proid=" + project.proid;
+              }
+            }
+          }
+        });
+      } else if (thisStatusNumber === 4) {
+        buttonList.push({
+          name: "시공 의뢰서 전송",
+          event: function () {
+            return async function (e) {
+              try {
+                const proid = this.getAttribute("proid");
+                const desid = this.getAttribute("desid");
+                const name = this.getAttribute("name");
+                const designer = this.getAttribute("designer");
+                let input, removeTargets;
+
+                removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
+                for (let dom of removeTargets) {
+                  dom.remove();
+                }
+
+                input = createNode({
+                  mother: document.body,
+                  class: [ fileInputClassName ],
+                  mode: "input",
+                  event: {
+                    change: async function (e) {
+                      try {
+                        const proid = this.getAttribute("proid");
+                        const desid = this.getAttribute("desid");
+                        const client = this.getAttribute("client");
+                        const designer = this.getAttribute("designer");
+                        let thisFiles, formData, res;
+                        let removeTargets;
+
+                        thisFiles = [ ...this.files ];
+
+                        if (thisFiles.length >= 1) {
+                          formData = new FormData();
+                          formData.enctype = "multipart/form-data";
+                          formData.append("proid", proid);
+                          formData.append("desid", desid);
+                          formData.append("client", client);
+                          for (let i = 0; i < thisFiles.length; i++) {
+                            formData.append("photo" + String(i), thisFiles[i]);
+                          }
+
+                          res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
+                          await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 현장의 중간 사진을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+                          window.alert("업로드가 완료되었습니다!");
+
+                          removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
+                          for (let dom of removeTargets) {
+                            dom.remove();
+                          }
+
+                        }
+
+                      } catch (e) {
+                        console.log(e);
+                        window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+                        window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + instance.designer.desid + "&proid=" + project.proid;
+                      }
+                    }
+                  },
+                  attribute: {
+                    type: "file",
+                    name: "designerPhoto",
+                    multiple: "true",
+                    proid,
+                    desid,
+                    client: name,
+                    designer,
+                  },
+                  style: {
+                    display: "none",
+                  }
+                });
+
+                input.click();
+
+              } catch (e) {
+                console.log(e);
+                window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+                window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + instance.designer.desid + "&proid=" + project.proid;
+              }
+            }
+          }
+        });
+      } else if (thisStatusNumber === 5) {
+        buttonList.push({
+          name: "제품 리스트 전송",
+          event: function () {
+            return async function (e) {
+              try {
+                const proid = this.getAttribute("proid");
+                const desid = this.getAttribute("desid");
+                const name = this.getAttribute("name");
+                const designer = this.getAttribute("designer");
+                let input, removeTargets;
+
+                removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
+                for (let dom of removeTargets) {
+                  dom.remove();
+                }
+
+                input = createNode({
+                  mother: document.body,
+                  class: [ fileInputClassName ],
+                  mode: "input",
+                  event: {
+                    change: async function (e) {
+                      try {
+                        const proid = this.getAttribute("proid");
+                        const desid = this.getAttribute("desid");
+                        const client = this.getAttribute("client");
+                        const designer = this.getAttribute("designer");
+                        let thisFiles, formData, res;
+                        let removeTargets;
+
+                        thisFiles = [ ...this.files ];
+
+                        if (thisFiles.length >= 1) {
+                          formData = new FormData();
+                          formData.enctype = "multipart/form-data";
+                          formData.append("proid", proid);
+                          formData.append("desid", desid);
+                          formData.append("client", client);
+                          for (let i = 0; i < thisFiles.length; i++) {
+                            formData.append("photo" + String(i), thisFiles[i]);
+                          }
+
+                          res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
+                          await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 현장의 중간 사진을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+                          window.alert("업로드가 완료되었습니다!");
+
+                          removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
+                          for (let dom of removeTargets) {
+                            dom.remove();
+                          }
+
+                        }
+
+                      } catch (e) {
+                        console.log(e);
+                        window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+                        window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + instance.designer.desid + "&proid=" + project.proid;
+                      }
+                    }
+                  },
+                  attribute: {
+                    type: "file",
+                    name: "designerPhoto",
+                    multiple: "true",
+                    proid,
+                    desid,
+                    client: name,
+                    designer,
+                  },
+                  style: {
+                    display: "none",
+                  }
+                });
+
+                input.click();
+
+              } catch (e) {
+                console.log(e);
+                window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+                window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + instance.designer.desid + "&proid=" + project.proid;
+              }
+            }
+          }
+        });
+      } else if (thisStatusNumber === 6) {
+        buttonList.push({
+          name: "촬영 여부",
+          event: function () {
+            return function (e) {
+              const designer = this.getAttribute("designer");
+              const desid = this.getAttribute("desid");
+              const client = this.getAttribute("client");
+              const proid = this.getAttribute("proid");
+              const targetMother = this.parentElement.parentElement.parentElement;
+              let photoTargets, cancelBack, whitePrompt;
+
+              cancelBack = {};
+              whitePrompt = {};
+
+              photoTargets = [
+                {
+                  title: "촬영 요청",
+                  event: async function (e) {
+                    try {
+                      const designer = this.getAttribute("designer");
+                      const desid = this.getAttribute("desid");
+                      const client = this.getAttribute("client");
+                      const proid = this.getAttribute("proid");
+
+                      await ajaxJson({ message: designer + " 실장님이 " + project.name + " 고객님 현장 촬영을 하고 싶다고 의사 표현하셨습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+                      window.alert("홈리에종에 촬영 진행 의견을 전달하였습니다!");
+                      cancelBack.click();
+
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  }
+                },
+                {
+                  title: "촬영 미진행",
+                  event: async function (e) {
+                    try {
+                      const designer = this.getAttribute("designer");
+                      const desid = this.getAttribute("desid");
+                      const client = this.getAttribute("client");
+                      const proid = this.getAttribute("proid");
+
+                      await ajaxJson({ message: designer + " 실장님이 " + project.name + " 고객님 현장 촬영을 진행을 하고 싶지 않아 하십니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+                      window.alert("홈리에종에 촬영 미진행 의견을 전달하였습니다!");
+                      cancelBack.click();
+
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  }
+                },
+                {
+                  title: "촬영비 결제",
+                  event: async function (e) {
+                    try {
+                      const designer = this.getAttribute("designer");
+                      const desid = this.getAttribute("desid");
+                      const client = this.getAttribute("client");
+                      const proid = this.getAttribute("proid");
+                      const { pluginScript, oidConst } = await ajaxJson({ mode: "script", oidKey: "mini" }, BACKHOST + "/generalImpPayment");
+                      let plugin, oid;
+
+                      oid = oidConst + instance.designer.information.phone.replace(/[^0-9]/gi, '') + "_" + String((new Date()).valueOf());
+
+                      plugin = new Function(pluginScript);
+                      plugin();
+                      window.IMP.init("imp71921105");
+
+                      if (desktop) {
+
+                        window.IMP.request_pay({
+                            pg: "inicis",
+                            pay_method: "card",
+                            merchant_uid: oid,
+                            name: "현장 촬영비",
+                            amount: Math.floor(165000),
+                            buyer_email: instance.designer.information.email,
+                            buyer_name: instance.designer.designer,
+                            buyer_tel: instance.designer.information.phone,
+                        }, async (rsp) => {
+                          try {
+                            if (typeof rsp.status === "string" && /paid/gi.test(rsp.status)) {
+                              await ajaxJson({ message: designer + " 실장님이 " + project.name + " 고객님 현장 촬영의 촬영비를 결제하셨습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+                              window.alert("결제가 완료되었습니다!");
+                              cancelBack.click();
+                            } else {
+                              window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+                              window.location.reload();
+                            }
+                          } catch (e) {
+                            window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+                            window.location.reload();
+                          }
+                        });
+
+                      } else {
+
+                        const { key } = await ajaxJson({ mode: "store", oid, data: { designer, desid, client, proid, oid } }, BACKHOST + "/generalImpPayment");
+                        window.IMP.request_pay({
+                            pg: "inicis",
+                            pay_method: "card",
+                            merchant_uid: oid,
+                            name: "현장 촬영비",
+                            amount: Math.floor(165000),
+                            buyer_email: instance.designer.information.email,
+                            buyer_name: instance.designer.designer,
+                            buyer_tel: instance.designer.information.phone,
+                            m_redirect_url: window.location.protocol + "//" + window.location.host + window.location.pathname + "?desid=" + desid + "&mobilecard=" + key,
+                        }, (rsp) => {});
+
+                      }
+
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  }
+                }
+              ];
+
+              cancelBack = createNode({
+                mother: targetMother,
+                event: {
+                  click: function (e) {
+                    targetMother.removeChild(targetMother.lastChild);
+                    targetMother.removeChild(targetMother.lastChild);
+                  }
+                },
                 style: {
-                  display: "block",
+                  position: "fixed",
                   top: String(0),
                   left: String(0),
                   width: withOut(0),
                   height: withOut(0),
-                  position: "relative",
+                  background: colorChip.black,
+                  opacity: String(0.2),
                 }
-              }
-            ]
-          });
+              });
 
-          for (let i = 0; i < photoTargets.length; i++) {
-            createNode({
-              mother: whitePrompt.firstChild,
-              attribute: { index: String(i), designer, desid, client, proid },
-              event: {
-                click: photoTargets[i].event
-              },
-              style: {
-                display: "inline-flex",
-                position: "relative",
-                width: String(statusButtonWidth) + ea,
-                height: String(statusButtonHeight) + ea,
-                background: colorChip.white,
-                borderRadius: String(5) + "px",
-                boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-                marginRight: String(i % 2 === 0 ? statusButtonBetween : 0) + ea,
-                marginBottom: String(statusButtonBetween) + ea,
-                justifyContent: "center",
-                alignItems: "center",
-                textAlign: "center",
-                cursor: "pointer",
-              },
-              children: [
-                {
-                  text: photoTargets[i].title,
-                  style: {
-                    display: "inline-block",
-                    position: "relative",
-                    top: String(statusTextTop) + ea,
-                    fontSize: String(statusSize) + ea,
-                    fontWeight: String(statusBetween),
-                    color: colorChip.black,
+              whitePrompt = createNode({
+                mother: targetMother,
+                style: {
+                  position: "absolute",
+                  top: withOut(50, (((statusButtonHeight * 3) + (statusButtonBetween * 2) + (grayInnerPadding * 2)) / 2), ea),
+                  left: withOut(50, (((statusButtonWidth * 1) + (grayInnerPadding * 2)) / 2), ea),
+                  width: String((statusButtonWidth * 1)) + ea,
+                  height: String((statusButtonHeight * 3) + (statusButtonBetween * 3)) + ea,
+                  background: colorChip.gray2,
+                  borderRadius: String(5) + "px",
+                  boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                  animation: "fadeuplite 0.3s ease forwards",
+                  padding: String(grayInnerPadding) + ea,
+                  paddingBottom: String(grayInnerPadding - statusButtonBetween) + ea,
+                },
+                children: [
+                  {
+                    style: {
+                      display: "block",
+                      top: String(0),
+                      left: String(0),
+                      width: withOut(0),
+                      height: withOut(0),
+                      position: "relative",
+                    }
                   }
-                }
-              ]
-            });
-          }
+                ]
+              });
 
-        }
-      },
-      style: {
-        display: "inline-flex",
-        paddingLeft: String(buttonPadding) + ea,
-        paddingRight: String(buttonPadding) + ea,
-        height: String(buttonHeight) + ea,
-        background: colorChip.gradientGreen,
-        borderRadius: String(5) + "px",
-        marginTop: String(buttonMarginTop) + ea,
-        // marginRight: String(buttonBetween) + ea,
-        justifyContent: "center",
-        alignItems: "center",
-        textAlign: "center",
-        cursor: "pointer",
-      },
-      children: [
-        {
-          text: desktop ? "촬영 여부" : "촬영",
+              for (let i = 0; i < photoTargets.length; i++) {
+                createNode({
+                  mother: whitePrompt.firstChild,
+                  attribute: { index: String(i), designer, desid, client, proid },
+                  event: {
+                    click: photoTargets[i].event
+                  },
+                  style: {
+                    display: "inline-flex",
+                    position: "relative",
+                    width: String(statusButtonWidth) + ea,
+                    height: String(statusButtonHeight) + ea,
+                    background: colorChip.white,
+                    borderRadius: String(5) + "px",
+                    boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                    marginRight: String(i % 2 === 0 ? statusButtonBetween : 0) + ea,
+                    marginBottom: String(statusButtonBetween) + ea,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    cursor: "pointer",
+                  },
+                  children: [
+                    {
+                      text: photoTargets[i].title,
+                      style: {
+                        display: "inline-block",
+                        position: "relative",
+                        top: String(statusTextTop) + ea,
+                        fontSize: String(statusSize) + ea,
+                        fontWeight: String(statusBetween),
+                        color: colorChip.black,
+                      }
+                    }
+                  ]
+                });
+              }
+
+            }
+          }
+        });
+      }
+
+      cleanChildren(paymentArea);
+
+      for (let i = 0; i < buttonList.length; i++) {
+        createNode({
+          mother: paymentArea,
+          event: {
+            click: buttonList[i].event(),
+          },
           style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(buttonTextTop) + ea,
-            fontSize: String(buttonSize) + ea,
-            fontWeight: String(buttonWeight),
-            color: colorChip.white,
-          }
-        }
-      ]
-    });
-
-    // createNode({
-    //   mother: paymentArea,
-    //   event: {
-    //     click: function (e) {
-    //       window.alert("준비중인 기능입니다!");
-    //     }
-    //   },
-    //   style: {
-    //     display: "inline-flex",
-    //     paddingLeft: String(buttonPadding) + ea,
-    //     paddingRight: String(buttonPadding) + ea,
-    //     height: String(buttonHeight) + ea,
-    //     background: colorChip.gray3,
-    //     borderRadius: String(5) + "px",
-    //     marginTop: String(buttonMarginTop) + ea,
-    //     justifyContent: "center",
-    //     alignItems: "center",
-    //     textAlign: "center",
-    //     cursor: "pointer",
-    //   },
-    //   children: [
-    //     {
-    //       text: "시공 의뢰",
-    //       style: {
-    //         display: "inline-block",
-    //         position: "relative",
-    //         top: String(buttonTextTop) + ea,
-    //         fontSize: String(buttonSize) + ea,
-    //         fontWeight: String(buttonWeight),
-    //         color: colorChip.deactive,
-    //       }
-    //     }
-    //   ]
-    // });
+            display: "inline-flex",
+            paddingLeft: String(buttonPadding) + ea,
+            paddingRight: String(buttonPadding) + ea,
+            height: String(buttonHeight) + ea,
+            background: colorChip.gradientGreen,
+            borderRadius: String(5) + "px",
+            marginTop: String(buttonMarginTop) + ea,
+            marginRight: i === buttonList.length - 1 ? "" : String(buttonBetween) + ea,
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            cursor: "pointer",
+          },
+          children: [
+            {
+              text: buttonList[i].name,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(buttonTextTop) + ea,
+                fontSize: String(buttonSize) + ea,
+                fontWeight: String(buttonWeight),
+                color: colorChip.white,
+              }
+            }
+          ]
+        });
+      }
+    };
+    setButtons(thisStatusNumber);
 
   }
 }

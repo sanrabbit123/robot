@@ -1906,37 +1906,71 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
 
   if (option.heightMode !== true) {
     if (window.innerWidth > 1450) {
-      ea = "px";
-      calendarVisualLeft = 1;
-      bigCalendarTitleBottom = 22;
-      bigCalendarTitleSize = 32;
-      bigCalendarTitleWeight = 300;
-      weekBlockHeight = 48;
-      weekBlockSize = 14;
-      weekBlockWeight = 600;
-      weekBlockTextTop = (GeneralJs.isMac() ? -2 : -1);
-      arrowWidth = 12;
-      arrowTop = 18;
-      dateBlockHeight = 120;
-      dateBlockPaddingTop = 40;
-      dateBlockPaddingBottom = 20;
-      dateBlockWeight = 300;
-      datePositionTop = 10;
-      datePositionLeft = 18;
-      barMotherHeight = 25;
-      colorSqureTop = 4;
-      colorSqureHeight = 20;
-      colorSqureIndent = 25;
-      colorSqureWordingSize = 11;
-      colorSqureWordingTop = (GeneralJs.isMac() ? 1 : 2);
-      colorSqureWordingLeft = 7;
-      colorSqureWordingWeight = 800;
-      calendarTitleTop = -32;
-      calendarTitleSize = 13;
-      calendarTitlePaddingTop = (GeneralJs.isMac() ? 5 : 7);
-      calendarTitlePaddingBottom = 6;
-      calendarTitlePaddingLeft = 12;
-      calendarTitlePaddingRight = 12;
+      if (option.smallMode !== true) {
+        ea = "px";
+        calendarVisualLeft = 1;
+        bigCalendarTitleBottom = 22;
+        bigCalendarTitleSize = 32;
+        bigCalendarTitleWeight = 300;
+        weekBlockHeight = 48;
+        weekBlockSize = 14;
+        weekBlockWeight = 600;
+        weekBlockTextTop = (GeneralJs.isMac() ? -2 : -1);
+        arrowWidth = 12;
+        arrowTop = 18;
+        dateBlockHeight = 120;
+        dateBlockPaddingTop = 40;
+        dateBlockPaddingBottom = 20;
+        dateBlockWeight = 300;
+        datePositionTop = 10;
+        datePositionLeft = 18;
+        barMotherHeight = 25;
+        colorSqureTop = 4;
+        colorSqureHeight = 20;
+        colorSqureIndent = 25;
+        colorSqureWordingSize = 11;
+        colorSqureWordingTop = (GeneralJs.isMac() ? 1 : 2);
+        colorSqureWordingLeft = 7;
+        colorSqureWordingWeight = 800;
+        calendarTitleTop = -32;
+        calendarTitleSize = 13;
+        calendarTitlePaddingTop = (GeneralJs.isMac() ? 5 : 7);
+        calendarTitlePaddingBottom = 6;
+        calendarTitlePaddingLeft = 12;
+        calendarTitlePaddingRight = 12;
+      } else {
+        ea = "px";
+        calendarVisualLeft = 1;
+        bigCalendarTitleBottom = 16;
+        bigCalendarTitleSize = 26;
+        bigCalendarTitleWeight = 300;
+        weekBlockHeight = 38;
+        weekBlockSize = 13;
+        weekBlockWeight = 600;
+        weekBlockTextTop = (GeneralJs.isMac() ? -2 : -1);
+        arrowWidth = 10;
+        arrowTop = 14;
+        dateBlockHeight = 120;
+        dateBlockPaddingTop = 32;
+        dateBlockPaddingBottom = 16;
+        dateBlockWeight = 300;
+        datePositionTop = 10;
+        datePositionLeft = 16;
+        barMotherHeight = 25;
+        colorSqureTop = 4;
+        colorSqureHeight = 20;
+        colorSqureIndent = 25;
+        colorSqureWordingSize = 11;
+        colorSqureWordingTop = (GeneralJs.isMac() ? 1 : 2);
+        colorSqureWordingLeft = 7;
+        colorSqureWordingWeight = 800;
+        calendarTitleTop = -32;
+        calendarTitleSize = 13;
+        calendarTitlePaddingTop = (GeneralJs.isMac() ? 5 : 7);
+        calendarTitlePaddingBottom = 6;
+        calendarTitlePaddingLeft = 12;
+        calendarTitlePaddingRight = 12;
+      }
     } else if (window.innerWidth <= 1450 && window.innerWidth > 1100) {
       ea = "px";
       calendarVisualLeft = 1;
@@ -2163,6 +2197,9 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
         children: [
           {
             text: weekWordings[i],
+            event: {
+              selectstart: (e) => { e.preventDefault(); },
+            },
             style: {
               fontSize: String(weekBlockSize) + ea,
               fontWeight: String(weekBlockWeight),
@@ -2655,6 +2692,9 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
     children: [
       {
         text: GeneralJs.dateToString(new Date()).split('-').slice(0, 2).join(". "),
+        event: {
+          selectstart: (e) => { e.preventDefault(); }
+        },
         style: {
           fontSize: String(bigCalendarTitleSize) + ea,
           fontWeight: String(bigCalendarTitleWeight),
@@ -2671,7 +2711,8 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
             dateMatrix = dateMatrix.previousSundayMatrix();
             this.parentElement.firstChild.textContent = String(dateMatrix.year) + ". " + zeroAddition(dateMatrix.month + 1)
             blockInsert(dateMatrix, children, this.parentElement.nextElementSibling);
-          }
+          },
+          selectstart: (e) => { e.preventDefault(); }
         },
         style: {
           position: "absolute",
@@ -2689,7 +2730,8 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
             dateMatrix = dateMatrix.nextSundayMatrix();
             this.parentElement.firstChild.textContent = String(dateMatrix.year) + ". " + zeroAddition(dateMatrix.month + 1)
             blockInsert(dateMatrix, children, this.parentElement.nextElementSibling);
-          }
+          },
+          selectstart: (e) => { e.preventDefault(); }
         },
         style: {
           position: "absolute",
