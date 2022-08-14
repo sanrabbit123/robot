@@ -531,8 +531,8 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
     let setButtons;
 
     whiteWidth = <%% 1000, 1000, 800, 660, 88 %%>;
-    whiteMargin = <%% 54, 54, 54, 54, 6 %%>;
-    innerMargin = <%% 54, 54, 54, 54, 6 %%>;
+    whiteMargin = <%% 54, 54, 54, 48, 6 %%>;
+    innerMargin = <%% 54, 54, 54, 48, 6 %%>;
 
     titleHeight = <%% 36, 36, 30, 30, 8 %%>;
     paymentHeight = <%% 70, 70, 70, 70, 14 %%>;
@@ -540,17 +540,17 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
     titleSize = <%% 24, 23, 21, 20, 4 %%>;
     titleWeight = <%% 700, 700, 700, 700, 700 %%>;
     titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
-    titleTop = <%% (isMac() ? -10 : -7), (isMac() ? -10 : -7), (isMac() ? -10 : -7), (isMac() ? -10 : -7), -0.2 %%>;
+    titleTop = <%% (isMac() ? -10 : -7), (isMac() ? -10 : -7), (isMac() ? -9 : -6), (isMac() ? -8 : -5), -0.2 %%>;
 
     formPaddingTop = <%% 36, 36, 32, 25, 5 %%>;
 
     grayInnerPadding = <%% 20, 20, 16, 16, 4 %%>;
-    grayInnerPaddingRight = <%% 32, 32, 30, 28, 6 %%>;
+    grayInnerPaddingRight = <%% 32, 32, 30, 22, 6 %%>;
     grayCenterMargin = <%% 12, 12, 12, 12, 1 %%>;
 
     arrowBetween = <%% 5, 5, 5, 3, 1.5 %%>;
     arrowHeight = <%% 48, 46, 44, 30, 10 %%>;
-    arrowWidth = <%% 224, 224, 176, 136, 24.6 %%>;
+    arrowWidth = <%% 224, 224, 175, 140, 24.6 %%>;
 
     mobileArrowMarginBottom = 2.5;
 
@@ -558,10 +558,10 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
 
     divideNumber = <%% 4, 4, 4, 4, 3 %%>;
 
-    textTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isIphone() ? 0 : -0.3) %%>;
-    textSize = <%% 14, 14, 13, 12, 2.8 %%>;
+    textTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -1 : 1), (isIphone() ? 0 : -0.3) %%>;
+    textSize = <%% 14, 14, 13, 11, 2.8 %%>;
     textWeight = <%% 700, 700, 700, 700, 700 %%>;
-    textMarginLeft = <%% 20, 18, 16, 14, 5 %%>;
+    textMarginLeft = <%% 20, 18, 16, 10, 5 %%>;
 
     grayDescriptionTongMarginTop = <%% 24, 24, 20, 16, 1 %%>;
 

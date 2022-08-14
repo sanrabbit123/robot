@@ -375,7 +375,7 @@ DataRouter.prototype.rou_post_styleCuration_pageInitComplete = function () {
         } catch (e) {
           await errorLog("독촉하는 과정중 오류남 : " + e.message);
         }
-      }, 20 * 60 * 1000);
+      }, 30 * 60 * 1000);
 
       res.send(JSON.stringify({ message: "done" }));
 
