@@ -5543,9 +5543,11 @@ StyleCurationJs.prototype.forceConverting = async function () {
           boo = false;
           for (let obj of clientHistory.curation.analytics.send) {
             if (obj.page === "designerProposal") {
-              boo = true;
-              firstBoo = false;
-              break;
+              if (obj.date.valueOf() > client.requests[0].request.timeline.valueOf()) {
+                boo = true;
+                firstBoo = false;
+                break;
+              }
             }
           }
 
@@ -5630,7 +5632,7 @@ StyleCurationJs.prototype.launching = async function (loading) {
     this.contentsArr = contentsPhotoObj.contentsArr;
     this.designers = contentsPhotoObj.designers;
     this.client = client;
-    this.clientHistory = await ajaxJson({ id: client.cliid, rawMode: true }, BACKHOST + "/getClientHistory");
+    this.clientHistory = await ajaxJson({ id: client.cliid, rawMode: true }, BACKHOST + "/getClientHistory", { equal: true });
 
     if (!liteMode) {
       liteForce = false;
