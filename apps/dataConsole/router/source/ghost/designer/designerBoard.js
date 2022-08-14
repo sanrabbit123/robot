@@ -2017,11 +2017,11 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
 
   }
 
-  if (targets.map((project) => { return project.proid }).includes(typeof getObj.proid === "string" ? getObj.proid : "")) {
-    whiteBaseTongDictionary[getObj.proid].click();
+  if (typeof getObj.proid === "string") {
+    if (targets.filter((project) => { return project !== null }).map((project) => { return project.proid }).includes(getObj.proid)) {
+      whiteBaseTongDictionary[getObj.proid].click();
+    }
   }
-
-
 
   return whiteBlock;
 }
