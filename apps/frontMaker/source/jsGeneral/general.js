@@ -4880,6 +4880,67 @@ GeneralJs.prototype.greenTalk = function (input) {
     eventFunc = function (e) {
       selfHref("/portfolio.php");
     }
+  } else if (event === "chat") {
+    eventFunc = function (e) {
+      createNode({
+        mother: totalContents,
+        class: [ "backblurwhite" ],
+        style: {
+          display: "inline-flex",
+          position: "fixed",
+          width: String(360) + ea,
+          height: String(480) + ea,
+          borderRadius: String(8) + "px",
+          right: String(right) + ea,
+          bottom: String(bottom + baseWidth + 16) + ea,
+          boxShadow: "0px 6px 20px -10px " + colorChip.shadow,
+          animation: "talkfade 0.3s ease forwards",
+          overflow: "hidden",
+        },
+        children: [
+          {
+            style: {
+              display: "flex",
+              position: "relative",
+              top: String(0),
+              left: String(0),
+              width: withOut(0),
+              height: withOut(0),
+            },
+            children: [
+              {
+                style: {
+                  display: "flex",
+                  position: "absolute",
+                  borderTop: "1px solid " + colorChip.gray3,
+                  bottom: String(0),
+                  left: String(0),
+                  width: withOut(0),
+                  height: String(72) + ea,
+                  background: colorChip.white,
+                  opacity: String(0.8),
+                  justifyContent: "center",
+                  alignItems: "center",
+                  textAlign: "center",
+                },
+                children: [
+                  {
+                    style: {
+                      display: "inline-flex",
+                      width: String(320) + ea,
+                      height: String(34) + ea,
+                      position: "relative",
+                      background: colorChip.gray2,
+                      borderRadius: String(34) + ea,
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      });
+    }
   }
 
   greenBase = createNode({
@@ -5011,11 +5072,11 @@ GeneralJs.prototype.greenTalk = function (input) {
       }
     },
     style: {
+      display: "inline-flex",
       position: "relative",
       top: String(0),
       left: String(0),
       height: withOut(0),
-      display: "inline-flex",
       justifyContent: "center",
       alignItems: "center",
       textAlign: "center",
@@ -5034,9 +5095,9 @@ GeneralJs.prototype.greenTalk = function (input) {
           left: String(0),
           width: withOut(0),
           height: withOut(0),
-          background: "white",
+          background: colorChip.white,
           borderRadius: String(5) + "px",
-          boxShadow: "2px 2px 18px -10px #a0a0a0",
+          boxShadow: "2px 2px 18px -10px " + colorChip.shadow,
           transition: "all 0s ease",
           opacity: String(opacity),
         }
@@ -5151,67 +5212,69 @@ GeneralJs.prototype.greenTalk = function (input) {
 
   }
 
-  window.addEventListener("scroll", (e) => {
-    setDebounce(() => {
-      let scrollMin, scrollSecondMin;
-      let redDot, whitePopup;
+  if (text.trim() !== "") {
+    window.addEventListener("scroll", (e) => {
+      setDebounce(() => {
+        let scrollMin, scrollSecondMin;
+        let redDot, whitePopup;
 
-      scrollMin = <%% 100, 100, 80, 50, 50 %%>;
-      scrollSecondMin = <%% 3600, 3600, 3000, 2400, 2000 %%>;
+        scrollMin = <%% 100, 100, 80, 50, 50 %%>;
+        scrollSecondMin = <%% 3600, 3600, 3000, 2400, 2000 %%>;
 
-      redDot = document.querySelector('.' + redDotClassName);
-      whitePopup = document.querySelector('.' + whitePopupClassName);
-      secondPopup = document.querySelector('.' + secondPopupClassName);
+        redDot = document.querySelector('.' + redDotClassName);
+        whitePopup = document.querySelector('.' + whitePopupClassName);
+        secondPopup = document.querySelector('.' + secondPopupClassName);
 
-      if (window.scrollY > scrollMin) {
-        if (whitePopup.getAttribute("toggle") === "off") {
+        if (window.scrollY > scrollMin) {
+          if (whitePopup.getAttribute("toggle") === "off") {
 
-          if (!second || window.scrollY <= scrollSecondMin) {
-            redDot.style.transform = "scale(1)";
-            whitePopup.style.animation = "talkwhitefadein 0.5s ease forwards";
-            redDot.setAttribute("toggle", "on");
-            whitePopup.setAttribute("toggle", "on");
+            if (!second || window.scrollY <= scrollSecondMin) {
+              redDot.style.transform = "scale(1)";
+              whitePopup.style.animation = "talkwhitefadein 0.5s ease forwards";
+              redDot.setAttribute("toggle", "on");
+              whitePopup.setAttribute("toggle", "on");
 
-            GeneralJs.stacks[redDotTimeOutEventName] = setTimeout(() => {
+              GeneralJs.stacks[redDotTimeOutEventName] = setTimeout(() => {
+                redDot.style.transform = "scale(0)";
+                redDot.setAttribute("toggle", "off");
+                if (GeneralJs.stacks[redDotTimeOutEventName] !== null && GeneralJs.stacks[redDotTimeOutEventName] !== undefined) {
+                  clearTimeout(GeneralJs.stacks[redDotTimeOutEventName]);
+                  GeneralJs.stacks[redDotTimeOutEventName] = null;
+                }
+              }, 5000);
+            }
+
+          }
+        }
+
+        if (second) {
+          if (window.scrollY > scrollSecondMin) {
+            if (redDot.getAttribute("toggle") === "on") {
               redDot.style.transform = "scale(0)";
               redDot.setAttribute("toggle", "off");
-              if (GeneralJs.stacks[redDotTimeOutEventName] !== null && GeneralJs.stacks[redDotTimeOutEventName] !== undefined) {
-                clearTimeout(GeneralJs.stacks[redDotTimeOutEventName]);
-                GeneralJs.stacks[redDotTimeOutEventName] = null;
-              }
-            }, 5000);
-          }
-
-        }
-      }
-
-      if (second) {
-        if (window.scrollY > scrollSecondMin) {
-          if (redDot.getAttribute("toggle") === "on") {
-            redDot.style.transform = "scale(0)";
-            redDot.setAttribute("toggle", "off");
-          }
-          if (whitePopup.getAttribute("toggle") === "on") {
-            whitePopup.style.animation = "talkwhitefadeout 0.5s ease forwards";
-            whitePopup.setAttribute("toggle", "off");
-            redDot.style.transform = "scale(0)";
-            redDot.setAttribute("toggle", "off");
-          }
-          if (secondPopup.getAttribute("toggle") === "off") {
-            secondPopup.style.animation = "talksecondfadein 1s ease forwards";
-            secondPopup.setAttribute("toggle", "on");
-          }
-        } else {
-          if (secondPopup.getAttribute("toggle") === "on") {
-            secondPopup.style.animation = "talksecondfadeout 1s ease forwards";
-            secondPopup.setAttribute("toggle", "off");
+            }
+            if (whitePopup.getAttribute("toggle") === "on") {
+              whitePopup.style.animation = "talkwhitefadeout 0.5s ease forwards";
+              whitePopup.setAttribute("toggle", "off");
+              redDot.style.transform = "scale(0)";
+              redDot.setAttribute("toggle", "off");
+            }
+            if (secondPopup.getAttribute("toggle") === "off") {
+              secondPopup.style.animation = "talksecondfadein 1s ease forwards";
+              secondPopup.setAttribute("toggle", "on");
+            }
+          } else {
+            if (secondPopup.getAttribute("toggle") === "on") {
+              secondPopup.style.animation = "talksecondfadeout 1s ease forwards";
+              secondPopup.setAttribute("toggle", "off");
+            }
           }
         }
-      }
 
 
-    }, "greenTalkSystemDebounce");
-  });
+      }, "greenTalkSystemDebounce");
+    });
+  }
 
   this.talkIcon = { dom: greenBase };
 }

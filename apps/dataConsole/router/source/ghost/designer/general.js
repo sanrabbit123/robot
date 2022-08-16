@@ -438,6 +438,11 @@ GeneralJs.prototype.ghostDesignerLaunching = async function (obj) {
     this.setGeneralBase(base, designer);
     await local();
     this.footerMake(colorChip.gradientBlack);
+    this.greenTalk({
+      text: "",
+      event: "chat"
+    });
+
     this.totalContents.style.height = "auto";
 
   } catch (e) {
