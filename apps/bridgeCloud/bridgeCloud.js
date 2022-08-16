@@ -1487,11 +1487,16 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         });
         if (!err) {
           const folderConst = instance.address.officeinfo.ghost.file.static + instance.address.officeinfo.ghost.file.designerMiddle;
-          const { proid, desid, client } = fields;
+          const { proid, desid, client, positionKey } = fields;
+          const requestNow = new Date();
+          const requestNowValue = requestNow.valueOf();
+          const token = "__split__";
           let execName, file;
+          let fileNameConst, positionKey, order;
 
           for (let key in files) {
             file = files[key];
+            [ fileNameConst, positionKey, order ] = key.split("_");
             execName = file.originalFilename.split(".")[file.originalFilename.split(".").length - 1];
 
             if (!(await fileSystem(`exist`, [ `${folderConst}/${desid}` ]))) {
@@ -1502,7 +1507,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
               await fileSystem(`mkdir`, [ `${folderConst}/${desid}/${proid}` ]);
             }
 
-            await shellExec(`mv ${shellLink(file.filepath)} ${folderConst}/${desid}/${proid}/${desid}_${proid}_${client}_중간사진_${uniqueValue("hex")}.${execName};`);
+            await shellExec(`mv ${shellLink(file.filepath)} ${folderConst}/${desid}/${proid}/${desid}${token}${proid}${token}${client}${token}${positionKey}${token}${String(requestNowValue)}${token}${order}${token}${uniqueValue("hex")}.${execName};`);
           }
 
           res.send('success');

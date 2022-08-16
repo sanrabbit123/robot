@@ -558,7 +558,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
 
     divideNumber = <%% 4, 4, 4, 4, 3 %%>;
 
-    textTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -1 : 1), (isIphone() ? 0 : -0.3) %%>;
+    textTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isIphone() ? 0 : -0.3) %%>;
     textSize = <%% 14, 14, 13, 11, 2.6 %%>;
     textWeight = <%% 700, 700, 700, 700, 700 %%>;
     textMarginLeft = <%% 20, 18, 16, 10, 4.2 %%>;
@@ -1305,11 +1305,11 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
                           formData.append("desid", desid);
                           formData.append("client", client);
                           for (let i = 0; i < thisFiles.length; i++) {
-                            formData.append("photo" + String(i), thisFiles[i]);
+                            formData.append("file_" + serviceContents[1].key + "_" + String(i), thisFiles[i]);
                           }
 
                           res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
-                          await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 현장의 중간 사진을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+                          await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 현장의 일정 안내 파일을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
                           window.alert("업로드가 완료되었습니다!");
 
                           removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
@@ -1328,7 +1328,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
                   },
                   attribute: {
                     type: "file",
-                    name: "designerPhoto",
+                    name: serviceContents[1].key,
                     multiple: "true",
                     proid,
                     desid,
@@ -1390,11 +1390,11 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
                           formData.append("desid", desid);
                           formData.append("client", client);
                           for (let i = 0; i < thisFiles.length; i++) {
-                            formData.append("photo" + String(i), thisFiles[i]);
+                            formData.append("file_" + serviceContents[2].key + "_" + String(i), thisFiles[i]);
                           }
 
                           res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
-                          await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 현장의 중간 사진을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+                          await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 현장의 1차 제안서 파일을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
                           window.alert("업로드가 완료되었습니다!");
 
                           removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
@@ -1413,7 +1413,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
                   },
                   attribute: {
                     type: "file",
-                    name: "designerPhoto",
+                    name: serviceContents[2].key,
                     multiple: "true",
                     proid,
                     desid,
@@ -1475,11 +1475,11 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
                           formData.append("desid", desid);
                           formData.append("client", client);
                           for (let i = 0; i < thisFiles.length; i++) {
-                            formData.append("photo" + String(i), thisFiles[i]);
+                            formData.append("file_" + serviceContents[3].key + "_" + String(i), thisFiles[i]);
                           }
 
                           res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
-                          await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 현장의 중간 사진을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+                          await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 현장의 수정 제안서 파일을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
                           window.alert("업로드가 완료되었습니다!");
 
                           removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
@@ -1498,7 +1498,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
                   },
                   attribute: {
                     type: "file",
-                    name: "designerPhoto",
+                    name: serviceContents[3].key,
                     multiple: "true",
                     proid,
                     desid,
@@ -1560,11 +1560,11 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
                           formData.append("desid", desid);
                           formData.append("client", client);
                           for (let i = 0; i < thisFiles.length; i++) {
-                            formData.append("photo" + String(i), thisFiles[i]);
+                            formData.append("file_" + serviceContents[4].key + "_" + String(i), thisFiles[i]);
                           }
 
                           res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
-                          await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 현장의 중간 사진을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+                          await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 현장의 시공 의뢰서를 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
                           window.alert("업로드가 완료되었습니다!");
 
                           removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
@@ -1583,7 +1583,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
                   },
                   attribute: {
                     type: "file",
-                    name: "designerPhoto",
+                    name: serviceContents[4].key,
                     multiple: "true",
                     proid,
                     desid,
@@ -1645,11 +1645,11 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
                           formData.append("desid", desid);
                           formData.append("client", client);
                           for (let i = 0; i < thisFiles.length; i++) {
-                            formData.append("photo" + String(i), thisFiles[i]);
+                            formData.append("file_" + serviceContents[5].key + "_" + String(i), thisFiles[i]);
                           }
 
                           res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
-                          await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 현장의 중간 사진을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+                          await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 현장의 제품 리스트를 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
                           window.alert("업로드가 완료되었습니다!");
 
                           removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
@@ -1668,7 +1668,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
                   },
                   attribute: {
                     type: "file",
-                    name: "designerPhoto",
+                    name: serviceContents[5].key,
                     multiple: "true",
                     proid,
                     desid,
