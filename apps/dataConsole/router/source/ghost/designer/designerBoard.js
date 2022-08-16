@@ -537,10 +537,10 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
     titleHeight = <%% 36, 36, 30, 30, 8 %%>;
     paymentHeight = <%% 70, 70, 70, 70, 14 %%>;
 
-    titleSize = <%% 24, 23, 21, 20, 4 %%>;
+    titleSize = <%% 24, 23, 21, 19, 4 %%>;
     titleWeight = <%% 700, 700, 700, 700, 700 %%>;
     titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
-    titleTop = <%% (isMac() ? -10 : -7), (isMac() ? -10 : -7), (isMac() ? -9 : -6), (isMac() ? -8 : -5), -0.2 %%>;
+    titleTop = <%% (isMac() ? -10 : -7), (isMac() ? -10 : -7), (isMac() ? -9 : -6), (isMac() ? -6 : -4), -0.2 %%>;
 
     formPaddingTop = <%% 36, 36, 32, 25, 5 %%>;
 
@@ -563,7 +563,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
     textWeight = <%% 700, 700, 700, 700, 700 %%>;
     textMarginLeft = <%% 20, 18, 16, 10, 4.2 %%>;
 
-    grayDescriptionTongMarginTop = <%% 24, 24, 20, 16, 3.2 %%>;
+    grayDescriptionTongMarginTop = <%% 24, 24, 20, 16, 3.5 %%>;
 
     grayDescriptionTitleSize = <%% 17, 17, 16, 14, 3.5 %%>;
     grayDescriptionTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -597,7 +597,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
     buttonMarginTop = <%% 28, 28, 28, 28, 2 %%>;
     buttonBetween = <%% 6, 6, 6, 6, 1 %%>;
 
-    buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isIphone() ? -0.1 : -0.3) %%>;
+    buttonTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isIphone() ? -0.1 : -0.3) %%>;
     buttonSize = <%% 14, 14, 14, 13, 3 %%>;
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
@@ -1295,6 +1295,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
                         const designer = this.getAttribute("designer");
                         let thisFiles, formData, res;
                         let removeTargets;
+                        let loading;
 
                         thisFiles = [ ...this.files ];
 
@@ -1308,9 +1309,13 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
                             formData.append("file_" + serviceContents[1].key + "_" + String(i), thisFiles[i]);
                           }
 
+                          loading = instance.mother.grayLoading();
+
                           res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
                           await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 현장의 일정 안내 파일을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
                           window.alert("업로드가 완료되었습니다!");
+
+                          loading.remove();
 
                           removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
                           for (let dom of removeTargets) {
@@ -1380,6 +1385,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
                         const designer = this.getAttribute("designer");
                         let thisFiles, formData, res;
                         let removeTargets;
+                        let loading;
 
                         thisFiles = [ ...this.files ];
 
@@ -1393,9 +1399,13 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
                             formData.append("file_" + serviceContents[2].key + "_" + String(i), thisFiles[i]);
                           }
 
+                          loading = instance.mother.grayLoading();
+
                           res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
                           await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 현장의 1차 제안서 파일을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
                           window.alert("업로드가 완료되었습니다!");
+
+                          loading.remove();
 
                           removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
                           for (let dom of removeTargets) {
@@ -1446,6 +1456,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
                 const name = this.getAttribute("name");
                 const designer = this.getAttribute("designer");
                 let input, removeTargets;
+                let loading;
 
                 removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
                 for (let dom of removeTargets) {
@@ -1478,9 +1489,13 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
                             formData.append("file_" + serviceContents[3].key + "_" + String(i), thisFiles[i]);
                           }
 
+                          loading = instance.mother.grayLoading();
+
                           res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
                           await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 현장의 수정 제안서 파일을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
                           window.alert("업로드가 완료되었습니다!");
+
+                          loading.remove();
 
                           removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
                           for (let dom of removeTargets) {
@@ -1531,6 +1546,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
                 const name = this.getAttribute("name");
                 const designer = this.getAttribute("designer");
                 let input, removeTargets;
+                let loading;
 
                 removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
                 for (let dom of removeTargets) {
@@ -1563,9 +1579,13 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
                             formData.append("file_" + serviceContents[4].key + "_" + String(i), thisFiles[i]);
                           }
 
+                          loading = instance.mother.grayLoading();
+
                           res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
                           await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 현장의 시공 의뢰서를 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
                           window.alert("업로드가 완료되었습니다!");
+
+                          loading.remove();
 
                           removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
                           for (let dom of removeTargets) {
@@ -1616,6 +1636,7 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
                 const name = this.getAttribute("name");
                 const designer = this.getAttribute("designer");
                 let input, removeTargets;
+                let loading;
 
                 removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
                 for (let dom of removeTargets) {
@@ -1648,9 +1669,13 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
                             formData.append("file_" + serviceContents[5].key + "_" + String(i), thisFiles[i]);
                           }
 
+                          loading = instance.mother.grayLoading();
+
                           res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
                           await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 현장의 제품 리스트를 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
                           window.alert("업로드가 완료되었습니다!");
+
+                          loading.remove();
 
                           removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
                           for (let dom of removeTargets) {
