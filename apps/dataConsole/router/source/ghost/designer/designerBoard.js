@@ -1909,6 +1909,12 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
           event: {
             click: buttonList[i].event(),
           },
+          attribute: {
+            proid: project.proid,
+            desid: instance.designer.desid,
+            name: project.name,
+            designer: instance.designer.designer,
+          },
           style: {
             display: "inline-flex",
             paddingLeft: String(buttonPadding) + ea,

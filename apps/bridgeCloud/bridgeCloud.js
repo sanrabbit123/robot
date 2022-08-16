@@ -1490,7 +1490,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           const { proid, desid, client } = fields;
           const requestNow = new Date();
           const requestNowValue = requestNow.valueOf();
-          const token = "__split__";
+          const token = "_";
           let execName, file;
           let fileNameConst, positionKey, order;
 
@@ -1507,7 +1507,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
               await fileSystem(`mkdir`, [ `${folderConst}/${desid}/${proid}` ]);
             }
 
-            await shellExec(`mv ${shellLink(file.filepath)} ${folderConst}/${desid}/${proid}/${desid}${token}${proid}${token}${client}${token}${positionKey}${token}${String(requestNowValue)}${token}${order}${token}${uniqueValue("hex")}.${execName};`);
+            await shellExec(`mv ${shellLink(file.filepath)} ${folderConst}/${desid}/${proid}/${positionKey}${token}${String(requestNowValue)}${token}${order}${token}${uniqueValue("hex")}.${execName};`);
           }
 
           res.send('success');
