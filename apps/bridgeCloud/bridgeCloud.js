@@ -1487,7 +1487,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         });
         if (!err) {
           const folderConst = instance.address.officeinfo.ghost.file.static + instance.address.officeinfo.ghost.file.designerMiddle;
-          const { proid, desid, client, positionKey } = fields;
+          const { proid, desid, client } = fields;
           const requestNow = new Date();
           const requestNowValue = requestNow.valueOf();
           const token = "__split__";
