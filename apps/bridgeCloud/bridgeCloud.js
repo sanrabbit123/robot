@@ -1620,6 +1620,36 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
     }
   }
 
+  //POST - user binary files
+  funcObj.post_receiveEmail = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (3000 * 1024 * 1024) });
+      form.parse(req, async function (err, fields, files) {
+        try {
+          if (!err) {
+
+            console.log(fields, files);
+            res.send(JSON.stringify({ message: "success" }));
+          } else {
+            throw new Error(err.message);
+          }
+        } catch (e) {
+          await errorLog("유저 파일 서버 문제 생김 (post_userBinary) : " + e.message);
+          res.send(JSON.stringify({ error: e.message }));
+        }
+      });
+    } catch (e) {
+      await errorLog("유저 파일 서버 문제 생김 (post_userBinary) : " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+
   //end : set router
   let resultObj = { get: [], post: [] };
   for (let i in funcObj) {
