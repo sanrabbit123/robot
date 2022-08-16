@@ -1628,7 +1628,7 @@ DesignManualJs.prototype.insertButtonBox = function () {
       position: "relative",
       paddingLeft: String(buttonPadding) + ea,
       paddingRight: String(buttonPadding) + ea,
-      marginRight: String(buttonBetween) + ea,
+      // marginRight: String(buttonBetween) + ea,
       height: String(buttonHeight) + ea,
       borderRadius: String(5) + "px",
       background: colorChip.gradientGreen,
@@ -1652,41 +1652,41 @@ DesignManualJs.prototype.insertButtonBox = function () {
     ]
   });
 
-  createNode({
-    mother: grayTong,
-    event: {
-      click: function (e) {
-        window.alert("준비중인 기능입니다!");
-      }
-    },
-    style: {
-      display: "inline-flex",
-      position: "relative",
-      paddingLeft: String(buttonPadding) + ea,
-      paddingRight: String(buttonPadding) + ea,
-      marginRight: String(buttonBetween) + ea,
-      height: String(buttonHeight) + ea,
-      borderRadius: String(5) + "px",
-      background: colorChip.deactive,
-      justifyContent: "center",
-      alignItems: "center",
-      textAlign: "center",
-      cursor: "pointer",
-    },
-    children: [
-      {
-        text: "템플릿 다운로드",
-        style: {
-          display: "inline-block",
-          position: "relative",
-          top: String(textTop) + ea,
-          fontSize: String(textSize) + ea,
-          fontWeight: String(textWeight),
-          color: colorChip.darkShadow,
-        }
-      }
-    ]
-  });
+  // createNode({
+  //   mother: grayTong,
+  //   event: {
+  //     click: function (e) {
+  //       window.alert("준비중인 기능입니다!");
+  //     }
+  //   },
+  //   style: {
+  //     display: "inline-flex",
+  //     position: "relative",
+  //     paddingLeft: String(buttonPadding) + ea,
+  //     paddingRight: String(buttonPadding) + ea,
+  //     marginRight: String(buttonBetween) + ea,
+  //     height: String(buttonHeight) + ea,
+  //     borderRadius: String(5) + "px",
+  //     background: colorChip.deactive,
+  //     justifyContent: "center",
+  //     alignItems: "center",
+  //     textAlign: "center",
+  //     cursor: "pointer",
+  //   },
+  //   children: [
+  //     {
+  //       text: "템플릿 다운로드",
+  //       style: {
+  //         display: "inline-block",
+  //         position: "relative",
+  //         top: String(textTop) + ea,
+  //         fontSize: String(textSize) + ea,
+  //         fontWeight: String(textWeight),
+  //         color: colorChip.darkShadow,
+  //       }
+  //     }
+  //   ]
+  // });
 
 
 }

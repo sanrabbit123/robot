@@ -4776,7 +4776,7 @@ GeneralJs.prototype.greenTalk = function (input) {
   }
 
   const instance = this;
-  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, blankHref, setDebounce, setQueue, selfHref } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, blankHref, setDebounce, setQueue, selfHref, cleanChildren } = GeneralJs;
   const media = GeneralJs.stacks.updateMiddleMedialQueryConditions;
   const mobile = media[4];
   const desktop = !mobile;
@@ -4818,6 +4818,26 @@ GeneralJs.prototype.greenTalk = function (input) {
   let secondPopupImageHeight;
   let secondSize, secondWeight, secondLineHeight, secondTextTop;
   let secondImage, secondWords;
+  let chatBaseWidth;
+  let chatBaseHeight;
+  let chatBase;
+  let chatBaseBetween;
+  let chattingZone;
+  let chattingInput;
+  let chattingZoneHeight;
+  let chattingInputHeight;
+  let chattingInputWidth;
+  let chattingSize, chattingWeight;
+  let chattingInputVisual;
+  let chattingArray;
+  let chatHistoryZone;
+  let setChatHistory;
+  let chatHistoryInnerPadding;
+  let chatBlockBetween;
+  let chatBlockPaddingTop;
+  let chatBlockPaddingBottom;
+  let chatBlockPaddingLeft;
+  let chatBlockBorderRadius;
 
   baseWidth = desktop ? 68 : 12;
   right = desktop ? 38 : 5.2;
@@ -4866,6 +4886,50 @@ GeneralJs.prototype.greenTalk = function (input) {
 
   secondPopup = null;
 
+  chatBaseWidth = <%% 360, 360, 360, 360, 36 %%>;
+  chatBaseHeight = <%% 480, 480, 480, 480, 48 %%>;
+  chatBaseBetween = <%% 16, 16, 16, 16, 2 %%>;
+
+  chattingZoneHeight = <%% 72, 72, 72, 72, 7 %%>;
+  chattingInputWidth = <%% 320, 320, 320, 320, 34 %%>;
+  chattingInputHeight = <%% 34, 34, 34, 34, 3 %%>;
+
+  chattingInputVisual = <%% 2, 2, 2, 2, 2 %%>;
+
+  chattingSize = <%% 14, 14, 14, 14, 14 %%>;
+  chattingWeight = <%% 500, 500, 500, 500, 500 %%>;
+
+  chatHistoryInnerPadding = <%% 20, 20, 20, 20, 20 %%>;
+
+  chatBlockBetween = <%% 4, 4, 4, 4, 1 %%>;
+
+  chatBlockPaddingTop = <%% 6, 6, 6, 6, 6 %%>;
+  chatBlockPaddingBottom = <%% 8, 8, 8, 8, 8 %%>;
+
+  chatBlockPaddingLeft = <%% 15, 15, 15, 15, 15 %%>;
+
+  chatBlockBorderRadius = <%% 12, 12, 12, 12, 12 %%>;
+
+  setChatHistory = () => {};
+
+  chattingArray = [
+    {
+      text: "얼마나 걸릴지는 모르겠네요.",
+      who: 0,
+      date: new Date(),
+    },
+    {
+      text: "볼품이 없었나",
+      who: 0,
+      date: new Date(),
+    },
+    {
+      text: "빙빙 돌아 얽혀버린 실타래를",
+      who: 0,
+      date: new Date(),
+    },
+  ];
+
   if (event === "consulting") {
     eventFunc = instance.consultingPopup();
   } else if (event === "channel") {
@@ -4882,17 +4946,18 @@ GeneralJs.prototype.greenTalk = function (input) {
     }
   } else if (event === "chat") {
     eventFunc = function (e) {
-      createNode({
+
+      chatBase = createNode({
         mother: totalContents,
         class: [ "backblurwhite" ],
         style: {
           display: "inline-flex",
           position: "fixed",
-          width: String(360) + ea,
-          height: String(480) + ea,
+          width: String(chatBaseWidth) + ea,
+          height: String(chatBaseHeight) + ea,
           borderRadius: String(8) + "px",
           right: String(right) + ea,
-          bottom: String(bottom + baseWidth + 16) + ea,
+          bottom: String(bottom + baseWidth + chatBaseBetween) + ea,
           boxShadow: "0px 6px 20px -10px " + colorChip.shadow,
           animation: "talkfade 0.3s ease forwards",
           overflow: "hidden",
@@ -4906,40 +4971,133 @@ GeneralJs.prototype.greenTalk = function (input) {
               left: String(0),
               width: withOut(0),
               height: withOut(0),
+              flexDirection: "column",
+            }
+          }
+        ]
+      }).firstChild;
+
+      chatHistoryZone = createNode({
+        mother: chatBase,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0),
+          height: "calc(calc(100% - 1px) - " + String(chattingZoneHeight + chatHistoryInnerPadding) + ea + ")",
+          paddingBottom: String(chatHistoryInnerPadding) + ea,
+          flexDirection: "column-reverse",
+        }
+      })
+
+      chattingZone = createNode({
+        mother: chatBase,
+        style: {
+          display: "flex",
+          position: "relative",
+          borderTop: "1px solid " + colorChip.gray3,
+          width: withOut(0),
+          height: String(chattingZoneHeight) + ea,
+          background: colorChip.white,
+          opacity: String(0.8),
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+        },
+      });
+
+      chattingInput = createNode({
+        mother: chattingZone,
+        style: {
+          display: "inline-flex",
+          width: String(chattingInputWidth) + ea,
+          height: String(chattingInputHeight) + ea,
+          position: "relative",
+          background: colorChip.gray2,
+          borderRadius: String(chattingInputHeight) + ea,
+        },
+        children: [
+          {
+            mode: "input",
+            attribute: {
+              type: "text",
+              placeholder: "메세지를 입력하세요.",
+            },
+            event: {
+              keyup: function (e) {
+                if (e.key === "Enter") {
+                  if (this.value.trim() !== "") {
+                    const value = this.value.trim();
+                    this.value = "";
+                    chattingArray.unshift({
+                      text: value,
+                      who: 0,
+                      date: new Date(),
+                    });
+                    setChatHistory();
+                  }
+                }
+              }
+            },
+            style: {
+              display: "inline-block",
+              position: "relative",
+              height: withOut(chattingInputVisual, ea),
+              width: withOut(chattingInputHeight, ea),
+              left: String(chattingInputHeight / 2) + ea,
+              top: String(0),
+              fontSize: String(chattingSize) + ea,
+              fontWeight: String(chattingWeight),
+              color: colorChip.black,
+              background: "transparent",
+              border: String(0),
+              outline: String(0),
+            }
+          }
+        ]
+      }).firstChild;
+
+      setChatHistory = () => {
+        cleanChildren(chatHistoryZone);
+        for (let { text, who, date } of chattingArray) {
+          createNode({
+            mother: chatHistoryZone,
+            style: {
+              display: "flex",
+              position: "relative",
+              width: withOut(chatHistoryInnerPadding * 2, ea),
+              paddingTop: String(chatBlockBetween) + ea,
+              paddingBottom: String(chatBlockBetween) + ea,
+              paddingRight: String(chatHistoryInnerPadding) + ea,
+              paddingLeft: String(chatHistoryInnerPadding) + ea,
+              justifyContent: "end",
+              alignItems: "center",
             },
             children: [
               {
+                text,
                 style: {
-                  display: "flex",
-                  position: "absolute",
-                  borderTop: "1px solid " + colorChip.gray3,
-                  bottom: String(0),
-                  left: String(0),
-                  width: withOut(0),
-                  height: String(72) + ea,
-                  background: colorChip.white,
-                  opacity: String(0.8),
-                  justifyContent: "center",
+                  display: "inline-block",
+                  paddingLeft: String(chatBlockPaddingLeft) + ea,
+                  paddingRight: String(chatBlockPaddingLeft) + ea,
+                  paddingTop: String(chatBlockPaddingTop) + ea,
+                  paddingBottom: String(chatBlockPaddingBottom) + ea,
+                  borderRadius: String(chatBlockBorderRadius) + ea,
+                  fontSize: String(chattingSize) + ea,
+                  fontWeight: String(chattingWeight),
+                  color: colorChip.white,
+                  background: colorChip.gradientGreen,
                   alignItems: "center",
-                  textAlign: "center",
-                },
-                children: [
-                  {
-                    style: {
-                      display: "inline-flex",
-                      width: String(320) + ea,
-                      height: String(34) + ea,
-                      position: "relative",
-                      background: colorChip.gray2,
-                      borderRadius: String(34) + ea,
-                    }
-                  }
-                ]
+                }
               }
             ]
-          }
-        ]
-      });
+          });
+        }
+      }
+
+      setChatHistory();
+
+      chattingInput.focus();
+
     }
   }
 
