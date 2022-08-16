@@ -33,6 +33,22 @@ LogRouter.prototype.baseMaker = function (target, req = null) {
 
 //GET ---------------------------------------------------------------------------------------------
 
+LogRouter.prototype.rou_get_Root = function () {
+  const instance = this;
+  const address = this.address;
+  let obj = {};
+  obj.link = '/';
+  obj.func = async function (req, res) {
+    try {
+      res.redirect("https://" + address.frontinfo.host);
+    } catch (e) {
+      instance.mother.errorLog("Log Console 서버 문제 생김 (rou_get_Root): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 LogRouter.prototype.rou_get_First = function () {
   const instance = this;
   const { diskReading } = this.mother;
