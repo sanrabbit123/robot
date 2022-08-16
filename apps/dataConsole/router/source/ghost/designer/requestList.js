@@ -280,10 +280,10 @@ RequestListJs.prototype.insertInformationBox = function () {
 
   mobileTitleLeft = 6;
 
-  grayMargin = <%% 16, 16, 14, 12, 2.5 %%>;
+  grayMargin = <%% 12, 12, 10, 10, 2 %%>;
   grayPadding = <%% 14, 14, 10, 10, 2.5 %%>;
 
-  tongMargin = <%% 6, 6, 6, 6, 1 %%>;
+  tongMargin = <%% 2, 2, 2, 2, 1 %%>;
 
   tongHeight = <%% 50, 50, 42, 42, 9 %%>;
 

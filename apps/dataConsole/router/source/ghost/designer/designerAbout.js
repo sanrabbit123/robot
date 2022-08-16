@@ -475,6 +475,42 @@ DesignerAboutJs.prototype.contentsCenter = function () {
       whiteType: 1,
       contents: [
         {
+          property: "상태",
+          returnValue: (designer) => { return [
+            "신규",
+            "일반",
+            "메인",
+          ] },
+          selectValue: (designer) => {
+            return [ designer.analytics.grade + 1 ];
+          },
+          multiple: false,
+          updateValue: async (raw, columns, designer) => {
+            try {
+              let text, whereQuery, updateQuery;
+
+              whereQuery = { desid };
+              updateQuery = {};
+
+              text = columns[raw.findIndex((num) => { return num === 1 })];
+              if (typeof text !== "string") {
+                text = columns[1];
+              }
+
+              await ajaxJson({ message: designer.designer + " 실장님이 콘솔을 통해 상태 변경을 시도하셨습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+              window.alert("상태 변경시, 홈리에종에 직접 문의해주세요!");
+
+              // instance.designer.analytics.grade = columns.findIndex((str) => { return str === text }) - 1;
+              // updateQuery["analytics.grade"] = columns.findIndex((str) => { return str === text }) - 1;
+              //
+              // await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
+        },
+        {
           property: "유관 경력",
           returnValue: (designer) => {
             return `총 ${String(designer.information.business.career.relatedY)}년 ${String(designer.information.business.career.relatedM)}개월`;

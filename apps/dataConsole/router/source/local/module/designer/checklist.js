@@ -61,20 +61,23 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           value: function (designer) {
             let contents, value;
             contents = [
-              "메인",
-              "일반"
+              "신규",
+              "일반",
+              "메인"
             ];
             value = [
+              (designer.analytics.grade === -1) ? 1 : 0,
+              (designer.analytics.grade === 0) ? 1 : 0,
               (designer.analytics.grade === 1) ? 1 : 0,
-              (designer.analytics.grade === 1) ? 0 : 1,
             ];
             return { contents, value };
           },
           update: function (value, designer) {
             let contents, target;
             contents = [
-              "메인",
-              "일반"
+              "신규",
+              "일반",
+              "메인"
             ];
             target = null;
             for (let i = 0; i < value.length; i++) {
@@ -86,7 +89,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
             if (target === null) {
               target = contents[1];
             }
-            return { "analytics.grade": (target === contents[0] ? 1 : 0) };
+            return { "analytics.grade": contents.findIndex((str) => { return str === target }) - 1 };
           },
           height: factorHeight * 1.1,
           width: factorWidth,

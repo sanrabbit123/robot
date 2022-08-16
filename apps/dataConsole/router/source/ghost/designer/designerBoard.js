@@ -129,7 +129,7 @@ DesignerBoardJs.prototype.insertInitBox = function () {
   tagTongBottom = <%% 3, 3, 1, 1, 0 %%>;
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
-  titleWording = "디자이너 콘솔";
+  titleWording = "프로젝트 관리";
   subTitleContents = "홈리에종 프로젝트 제어 콘솔";
 
   mobileBlockTop = 4.5;
@@ -283,10 +283,10 @@ DesignerBoardJs.prototype.insertRouterBox = function () {
 
   mobileTitleLeft = 6;
 
-  grayMargin = <%% 16, 16, 14, 12, 0 %%>;
+  grayMargin = <%% 12, 12, 10, 10, 0 %%>;
   grayPadding = <%% 14, 14, 10, 10, 0 %%>;
 
-  tongMargin = <%% 10, 10, 10, 10, 1 %%>;
+  tongMargin = <%% 6, 6, 6, 6, 1 %%>;
 
   tongHeight = <%% 120, 120, 110, 100, 16 %%>;
 
@@ -2041,10 +2041,10 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
 
   mobileTitleLeft = 6;
 
-  grayMargin = <%% 16, 16, 14, 12, 2.5 %%>;
+  grayMargin = <%% 12, 12, 10, 10, 2 %%>;
   grayPadding = <%% 14, 14, 10, 10, 2.5 %%>;
 
-  tongMargin = <%% 6, 6, 6, 6, 1 %%>;
+  tongMargin = <%% 2, 2, 2, 2, 1 %%>;
 
   tongHeight = <%% 50, 50, 42, 42, 15.64 %%>;
 
@@ -2488,10 +2488,10 @@ DesignerBoardJs.prototype.insertCommentsBox = function (whiteBlock) {
 
   mobileTitleLeft = 6;
 
-  grayMargin = <%% 16, 16, 14, 12, 2.5 %%>;
+  grayMargin = <%% 12, 12, 10, 10, 2 %%>;
   grayPadding = <%% 14, 14, 10, 10, 2.5 %%>;
 
-  tongMargin = <%% 6, 6, 6, 6, 1 %%>;
+  tongMargin = <%% 2, 2, 2, 2, 1 %%>;
 
   tongHeight = <%% 50, 50, 42, 42, 15.64 %%>;
 
@@ -3112,10 +3112,10 @@ DesignerBoardJs.prototype.insertforeContentsBox = function (whiteBlock) {
 
   mobileTitleLeft = 6;
 
-  grayMargin = <%% 16, 16, 14, 12, 2.5 %%>;
+  grayMargin = <%% 12, 12, 10, 10, 2 %%>;
   grayPadding = <%% 14, 14, 10, 10, 2.5 %%>;
 
-  tongMargin = <%% 6, 6, 6, 6, 1 %%>;
+  tongMargin = <%% 2, 2, 2, 2, 1 %%>;
 
   tongHeight = <%% 50, 50, 42, 42, 15.64 %%>;
 
@@ -3866,7 +3866,7 @@ DesignerBoardJs.prototype.portfolioBlock = function () {
   arrowBottom = <%% 3, 3, 3, 2, 1 %%>;
   arrowReviewBottom = <%% 5, 4, 4, 4, 1 %%>;
 
-  baseBlock = baseTong.children[5];
+  baseBlock = baseTong.children[4];
   cleanChildren(baseBlock);
 
   if (limitLength !== 0) {
@@ -4220,7 +4220,6 @@ DesignerBoardJs.prototype.launching = async function (loading) {
         try {
           let whiteBlock;
           instance.insertInitBox();
-          instance.insertRouterBox();
           whiteBlock = instance.insertProcessBox();
           instance.insertCommentsBox(whiteBlock);
           instance.insertforeContentsBox(whiteBlock);
