@@ -90,14 +90,23 @@ DevContext.prototype.launching = async function () {
 
 
 
+    // designer checklist
+    // https://www.notion.so/home-liaison/607a9bee4d2748cb9e4d1ea01afe7ac8
+    //
+    // birth
+    // marry true / false
+    // children: [
+    //   {
+    //     birthYear
+    //     gender
+    //   }
+    // ]
+    // dog true / false
+    // cat true / false
 
-
-
-
-
-
-
-
+    const photoRequest = ghostRequest().bind("photo");
+    const zipLinks = await photoRequest("zip", { pid: "p229", pay: 1 });
+    console.log(zipLinks)
 
 
 
@@ -2766,9 +2775,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: null,
-    //     designer: "오정언",
-    //     link: "https://drive.google.com/drive/folders/1AJuKZgB2yMurtsnS_XigTw-AZ4GNLQ9u",
+    //     client: "권은비",
+    //     designer: "박주령",
+    //     link: "https://drive.google.com/drive/folders/1zmTEDXlAr27rLUSonIe1kXVXrXoqtqLb",
     //     pay: true
     //   },
     // ]);
