@@ -4989,7 +4989,7 @@ Q. 새롭게 이사를 하게 되신 것이 어떻게 보면 기회가 되었던
         contents: sampleContents,
       },
       {
-        title: "가족 구성",
+        title: "자녀 및 반려 동물",
         contents: sampleContents,
       },
       {
@@ -5009,7 +5009,7 @@ Q. 새롭게 이사를 하게 되신 것이 어떻게 보면 기회가 되었던
         contents: sampleContents,
       },
       {
-        title: "일반 메모",
+        title: "기타 메모",
         contents: sampleContents,
       }
     ];

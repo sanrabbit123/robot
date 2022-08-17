@@ -96,7 +96,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
     // const selfMongo = this.MONGOC;
     // const projects = await back.getProjectsByQuery({}, { selfMongo });
     // let whereQuery, updateQuery;
