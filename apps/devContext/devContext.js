@@ -96,6 +96,7 @@ DevContext.prototype.launching = async function () {
 
 
 
+
     // const selfMongo = this.MONGOC;
     // const projects = await back.getProjectsByQuery({}, { selfMongo });
     // let whereQuery, updateQuery;
@@ -2778,7 +2779,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("a98");
+    // await this.getCorePortfolio("p196");
 
 
     // aspirant to designer

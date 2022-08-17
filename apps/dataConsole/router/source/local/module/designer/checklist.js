@@ -4935,9 +4935,84 @@ DesignerJs.prototype.checklistMemoSystem = async function (desid) {
   const { createNode, withOut, colorChip, ajaxJson } = GeneralJs;
   const { ea, totalContents, belowHeight, grayBarWidth, designers } = this;
   const designer = designers.pick(desid);
-  try {
-    let memoBase;
+  const sampleContents = `네 맞아요. 이번 집이 신혼집 이후 두 번째 집인데요, 처음 신혼살림을 차릴 때 예쁘게 살고 싶은 마음에 열심히 몇 개월을 인테리어 사이트를 돌아다니며 예쁜 제품들을 찾아 스타일링을 해보았는데 분명 제품 자체는 예쁜 것 같은데 우리 집에 두면 잘 어울리지 않은 것 같아 여러 번 사고 실패하는 과정을 겪었어요. 그러다 보니 힘들기도 하고 지치기도 하고 속상하기도 했던 기억이 있어 이번에 이사를 하면서는 전문가의 도움을 받아 스타일링을 하고 싶은 마음에 홈리에종을 찾게 되었어요.
 
+Q. 새롭게 이사를 하게 되신 것이 어떻게 보면 기회가 되었던 걸까요?
+맞아요. 사실 갑자기 이사를 하게 된 상황이었고 집을 구하는 과정도 쉽지만은 않았어요. 그렇지만 예쁘게 스타일링 할 수 있는 두 번째 기회가 온 것 같다고 생각되어 놓치지 Q. 새롭게 이사를 하게 되신 것이 어떻게 보면 기회가 되었던 걸까요?
+맞아요. 사실 갑자기 이사를 하게 된 상황이었고 집을 구하는 과정도 쉽지만은 않았어요. 그렇지만 예쁘게 스타일링 할 수 있는 두 번째 기회가 온 것 같다고 생각되어 놓치 Q. 새롭게 이사를 하게 되신 것이 어떻게 보면 기회가 되었던 걸까요?
+맞아요. 사실 갑자기 이사를 하게 된 상황이었고 집을 구하는 과정도 쉽지만은 않았어요. 그렇지만 예쁘게 스타일링 할 수 있는 두 번째 기회가 온 것 같다고 생각되어 놓치 않기로 했어요. 마침 제가 출산 휴가 후 복직을 했는데 여러 일들로 굉장히 정신이 없고 바빴기에 더욱 누군가와 같이 하고 싶다는 생각이 컸어요.`;
+  try {
+    let memoBase, memoTong;
+    let motherMargin;
+    let innerMotherMargin;
+    let tongBetween;
+    let titleLineTop;
+    let titleSize, titleWeight;
+    let titleWhitePadding;
+    let boxContents;
+    let boxInnerPaddingLeft;
+    let boxInnerPaddingTop;
+    let contentsSize, contentsWeight, contentsLineHeight;
+    let contentsPaddingBottom;
+    let whiteOuterMargin;
+
+    motherMargin = 24;
+    innerMotherMargin = 6;
+    tongBetween = 16;
+    titleLineTop = 10;
+
+    titleSize = 16;
+    titleWeight = 700;
+    titleWhitePadding = 10;
+
+    boxInnerPaddingLeft = 20;
+    boxInnerPaddingTop = 20;
+
+    contentsSize = 14;
+    contentsWeight = 400;
+    contentsLineHeight = 1.7;
+    contentsPaddingBottom = 160;
+
+    whiteOuterMargin = 72;
+
+    boxContents = [
+      {
+        title: "VOC",
+        contents: sampleContents,
+      },
+      {
+        title: "VOD",
+        contents: sampleContents,
+      },
+      {
+        title: "경력 상세",
+        contents: sampleContents,
+      },
+      {
+        title: "가족 구성",
+        contents: sampleContents,
+      },
+      {
+        title: "파트너 시공사 특징",
+        contents: sampleContents,
+      },
+      {
+        title: "제작 가구 패브릭",
+        contents: sampleContents,
+      },
+      {
+        title: "응대 방식",
+        contents: sampleContents,
+      },
+      {
+        title: "디자인 경향",
+        contents: sampleContents,
+      },
+      {
+        title: "일반 메모",
+        contents: sampleContents,
+      }
+    ];
 
     memoBase = createNode({
       mother: totalContents,
@@ -4958,20 +5033,152 @@ DesignerJs.prototype.checklistMemoSystem = async function (desid) {
             left: String(0),
             width: withOut(0),
             height: withOut(0),
-            background: "aqua",
+            background: colorChip.white,
           }
         }
       ]
     }).children[0];
 
+    memoTong = createNode({
+      mother: memoBase,
+      style: {
+        display: "block",
+        position: "relative",
+        top: String(motherMargin) + ea,
+        marginLeft: String(motherMargin) + ea,
+        paddingTop: String(innerMotherMargin) + ea,
+        paddingBottom: String(innerMotherMargin - tongBetween) + ea,
+        paddingLeft: String(innerMotherMargin) + ea,
+        paddingRight: String(innerMotherMargin - tongBetween) + ea,
+        width: withOut((motherMargin * 2) + (innerMotherMargin * 2) - tongBetween, ea),
+        height: withOut((motherMargin * 2) + (innerMotherMargin * 2) - tongBetween, ea),
+      }
+    });
+
+    for (let i = 0; i < boxContents.length; i++) {
+      createNode({
+        mother: memoTong,
+        event: {
+          mouseenter: function (e) {
+            this.children[0].children[0].children[0].style.color = colorChip.black;
+            this.children[1].style.color = colorChip.green;
+          },
+          mouseleave: function (e) {
+            this.children[0].children[0].children[0].style.color = colorChip.deactive;
+            this.children[1].style.color = colorChip.black;
+          }
+        },
+        style: {
+          display: "inline-block",
+          position: "relative",
+          verticalAlign: "top",
+          width: "calc(calc(100% - " + String(tongBetween * 3) + ea + ") / " + String(3) + ")",
+          paddingTop: String(titleLineTop) + ea,
+          height: "calc(calc(calc(100% - " + String(tongBetween * 3) + ea + ") / " + String(3) + ") - " + String(titleLineTop) + ea + ")",
+          marginRight: String(tongBetween) + ea,
+          marginBottom: String(tongBetween) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: "flex",
+              position: "relative",
+              width: withOut(0),
+              height: withOut(0),
+              border: "1px solid " + colorChip.gray4,
+              boxSizing: "border-box",
+              borderRadius: String(5) + "px",
+              justifyContent: "center",
+              alignItems: "end",
+            },
+            children: [
+              {
+                style: {
+                  display: "inline-block",
+                  verticalAlign: "top",
+                  position: "relative",
+                  width: withOut(boxInnerPaddingLeft * 2, ea),
+                  height: withOut(boxInnerPaddingTop, ea),
+                  overflow: "scroll",
+                },
+                children: [
+                  {
+                    text: boxContents[i].contents,
+                    style: {
+                      display: "block",
+                      position: "relative",
+                      fontSize: String(contentsSize) + ea,
+                      fontWeight: String(contentsWeight),
+                      color: colorChip.deactive,
+                      lineHeight: String(contentsLineHeight),
+                      paddingBottom: String(contentsPaddingBottom) + ea,
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            text: boxContents[i].title,
+            attribute: {
+              index: String(),
+            },
+            event: {
+              click: function (e) {
+                let cancelBack, whiteBase;
+
+                cancelBack = createNode({
+                  mother: totalContents,
+                  style: {
+                    position: "fixed",
+                    top: String(0),
+                    left: String(grayBarWidth) + ea,
+                    height: withOut(belowHeight, ea),
+                    width: withOut(grayBarWidth, ea),
+                    zIndex: String(5),
+                    background: colorChip.black,
+                    opacity: String(0.2),
+                  }
+                });
+
+                whiteBase = createNode({
+                  mother: totalContents,
+                  style: {
+                    position: "fixed",
+                    top: String(whiteOuterMargin) + ea,
+                    left: String(grayBarWidth + whiteOuterMargin) + ea,
+                    width: withOut(grayBarWidth + (whiteOuterMargin * 2), ea),
+                    height: withOut(belowHeight + (whiteOuterMargin * 2), ea),
+                    zIndex: String(5),
+                    background: colorChip.white,
+                    borderRadius: String(8) + "px",
+                    boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                  }
+                })
 
 
 
-    
 
-
-
-
+              }
+            },
+            style: {
+              display: "inline-block",
+              position: "absolute",
+              paddingLeft: String(titleWhitePadding) + ea,
+              paddingRight: String(titleWhitePadding) + ea,
+              background: colorChip.white,
+              zIndex: String(1),
+              top: String(0),
+              left: String(titleWhitePadding) + ea,
+              fontSize: String(titleSize) + ea,
+              fontWeight: String(titleWeight),
+              color: colorChip.black,
+              cursor: "pointer",
+            }
+          }
+        ]
+      });
+    }
 
   } catch (e) {
     console.log(e);
