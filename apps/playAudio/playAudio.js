@@ -111,7 +111,7 @@ PlayAudio.prototype.textToMp3 = async function (text = "안녕하세요?") {
 
     randoms = await returnRandoms();
     text = text.replace(/[\[\]\{\}\"\'\<\>\/\\\~\`\+\=\-\_\@\#\$\%\^\&\*\(\)\:\;]/g, '');
-    text = text.replace(/[^가-힣0-9\?\!\.]/gi, '');
+    text = text.replace(/[^가-힣\?\!\.]/gi, '');
     tempDir = process.cwd() + "/temp";
     fileName = `tempVoiceRecord_${String((new Date()).valueOf())}_${String(randoms[0])}.mp3`;
 
