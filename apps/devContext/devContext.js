@@ -90,23 +90,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // designer checklist
-    // https://www.notion.so/home-liaison/607a9bee4d2748cb9e4d1ea01afe7ac8
-    //
-    // birth
-    // marry true / false
-    // children: [
-    //   {
-    //     birthYear
-    //     gender
-    //   }
-    // ]
-    // dog true / false
-    // cat true / false
 
-    const photoRequest = ghostRequest().bind("photo");
-    const zipLinks = await photoRequest("zip", { pid: "p229", pay: 1 });
-    console.log(zipLinks)
+
 
 
 

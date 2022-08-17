@@ -12,6 +12,7 @@ module.exports = {
           },
           phone: "",
           email: "",
+          birth: new Date(1800, 0, 1),
           did: "",
           address: [],
           personalSystem: {
@@ -107,7 +108,9 @@ module.exports = {
                 contract: [ "협업사 계약" ],
                 possible: [],
               }
-            ]
+            ],
+            partner: "",
+            major: "",
           },
           styling: {
             level: 1,

@@ -399,6 +399,8 @@ const ConstructAnalytics = function (json) {
   this.level = json.level;
   this.possible = new ConstructPossible(json.possible);
   this.case = new ConstructCases(json.case);
+  this.partner = json.partner;
+  this.major = json.major;
 }
 
 ConstructAnalytics.prototype.toNormal = function () {
@@ -406,6 +408,8 @@ ConstructAnalytics.prototype.toNormal = function () {
   obj.level = this.level;
   obj.possible = this.possible.toNormal();
   obj.case = this.case.toNormal();
+  obj.partner = this.partner;
+  obj.major = this.major;
   return obj;
 }
 

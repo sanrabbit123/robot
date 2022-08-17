@@ -3300,11 +3300,11 @@ Ghost.prototype.photoRouter = function (needs) {
             zipLinkClient = await googleDrive.read_webView_inPython(zipIdClient);
           }
 
-          // await shellExec([
-          //   [ `rm`, [ `-rf`, `${process.env.HOME}/${tempFolderName}/${shareClientName}` ] ],
-          //   [ `rm`, [ `-rf`, `${process.env.HOME}/${tempFolderName}/${shareDesignerName}` ] ],
-          //   [ `rm`, [ `-rf`, `${process.env.HOME}/${tempTempFolderName}` ] ],
-          // ]);
+          await shellExec([
+            [ `rm`, [ `-rf`, `${process.env.HOME}/${tempFolderName}/${shareClientName}` ] ],
+            [ `rm`, [ `-rf`, `${process.env.HOME}/${tempFolderName}/${shareDesignerName}` ] ],
+            [ `rm`, [ `-rf`, `${process.env.HOME}/${tempTempFolderName}` ] ],
+          ]);
 
           res.send(JSON.stringify({ designer: zipLinkDesigner, client: zipLinkClient }));
 
