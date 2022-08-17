@@ -49,6 +49,48 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           type: "string",
         },
         {
+          name: "생일",
+          value: function (designer) {
+            return `${String(designer.information.birth.getFullYear())}년 ${String(designer.information.birth.getMonth() + 1)}월 ${String(designer.information.birth.getDate())}일`;
+          },
+          update: function (text, designer) {
+            const errorObj = { updateQuery: "error", text: "error" };
+            let updateQuery;
+            let year, month, date;
+            let rawArr;
+
+            updateQuery = {};
+
+            if (!/년/gi.test(text)) {
+              return errorObj;
+            }
+            if (!/월/gi.test(text)) {
+              return errorObj;
+            }
+            if (!/일/gi.test(text)) {
+              return errorObj;
+            }
+            rawArr = text.split(/[년월]/gi);
+
+            if (rawArr.length !== 3) {
+              return errorObj;
+            }
+
+            [ year, month, date ] = rawArr.map((str) => { return Number(str.trim().replace(/[^0-9]/gi, '')) });
+            month = month - 1;
+
+            if (year < 1000) {
+              return errorObj;
+            }
+
+            updateQuery["information.birth"] = new Date(year, month, date);
+
+            return { updateQuery, text: `${String(year)}년 ${String(month + 1)}월 ${String(date)}일` };
+          },
+          height: factorHeight,
+          type: "string",
+        },
+        {
           name: "계약 상태",
           value: function (designer) {
             return designer.information.contract.status;
@@ -91,7 +133,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
             }
             return { "analytics.grade": contents.findIndex((str) => { return str === target }) - 1 };
           },
-          height: factorHeight * 1.1,
+          height: factorHeight,
           width: factorWidth,
           totalWidth: factorWidth * 4,
           factorHeight: factorHeight,
@@ -1653,12 +1695,64 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
             updateQuery[position] = target;
             return updateQuery;
           },
-          height: desktop ? factorHeight * 1.1 : factorHeight * 2.9,
+          height: desktop ? factorHeight : factorHeight * 3.8,
           width: factorWidth,
           totalWidth: factorWidth * 4,
           factorHeight: factorHeight,
           type: "matrix",
           multiple: true,
+        },
+        {
+          name: "파트너 시공사",
+          value: function (designer) {
+            return (designer.analytics.construct.partner === '') ? "파트너 시공사 없음" : designer.analytics.construct.partner;
+          },
+          update: function (text, designer) {
+            const errorObj = { updateQuery: "error", text: "error" };
+            let updateQuery;
+            let divText;
+            let tempArr, tempObj;
+            updateQuery = {};
+            divText = "";
+            if (text.trim() === '') {
+              text = "파트너 시공사 없음";
+            }
+            if (/없음/gi.test(text)) {
+              return { updateQuery: { "analytics.construct.partner": "" }, text: "파트너 시공사 없음" };
+            } else {
+              updateQuery["analytics.construct.partner"] = text.trim();
+              divText = text.trim();
+            }
+            return { updateQuery, text: divText };
+          },
+          height: factorHeight,
+          type: "string",
+        },
+        {
+          name: "주로 이용 시공사",
+          value: function (designer) {
+            return (designer.analytics.construct.major === '') ? "주이용 시공사 없음" : designer.analytics.construct.major;
+          },
+          update: function (text, designer) {
+            const errorObj = { updateQuery: "error", text: "error" };
+            let updateQuery;
+            let divText;
+            let tempArr, tempObj;
+            updateQuery = {};
+            divText = "";
+            if (text.trim() === '') {
+              text = "주이용 시공사 없음";
+            }
+            if (/없음/gi.test(text)) {
+              return { updateQuery: { "analytics.construct.major": "" }, text: "주이용 시공사 없음" };
+            } else {
+              updateQuery["analytics.construct.major"] = text.trim();
+              divText = text.trim();
+            }
+            return { updateQuery, text: divText };
+          },
+          height: factorHeight,
+          type: "string",
         },
       ]
     },
@@ -3051,6 +3145,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
           color: colorChip.green,
           height: String(checkListData[i].children[j].height) + ea,
           width: String(alphabetWidth) + ea,
+          verticalAlign: "top",
         }
       };
       tempArr.push(tempObj);
@@ -3065,6 +3160,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
           color: colorChip.black,
           height: String(checkListData[i].children[j].height) + ea,
           width: withOut(alphabetWidth, ea),
+          verticalAlign: "top",
         }
       };
       tempArr.push(tempObj);
@@ -3133,8 +3229,10 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                                   if (updateQuery === "error" || !confirm) {
                                     this.value = this.getAttribute("past");
                                   } else {
-                                    this.parentElement.removeChild(this.parentElement.firstChild);
-                                    this.parentElement.insertAdjacentHTML("beforeend", text);
+                                    if (this.parentElement !== null) {
+                                      this.parentElement.removeChild(this.parentElement.firstChild);
+                                      this.parentElement.insertAdjacentHTML("beforeend", text);
+                                    }
                                     await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
                                     await ajaxJson({
                                       mode: "sse",
@@ -3153,8 +3251,12 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                                     }, "/ghostDesigner_updateAnalytics");
                                     instance.designers.update([ whereQuery, updateQuery ]);
                                   }
-                                  this.parentElement.removeChild(this.parentElement.querySelector("aside"));
-                                  this.parentElement.removeChild(this.parentElement.querySelector("input"));
+                                  if (this.parentElement !== null) {
+                                    this.parentElement.removeChild(this.parentElement.querySelector("aside"));
+                                  }
+                                  if (this.parentElement !== null) {
+                                    this.parentElement.removeChild(this.parentElement.querySelector("input"));
+                                  }
                                 }
                               } catch (err) {
                                 console.log(err);
@@ -3195,6 +3297,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
             color: colorChip.black,
             height: String(checkListData[i].children[j].height) + ea,
             cursor: "pointer",
+            verticalAlign: "top",
           }
         };
         tempArr.push(tempObj);
@@ -3214,6 +3317,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
             color: colorChip.black,
             width: desktop ? String(checkListData[i].children[j].totalWidth) + ea : String(100) + '%',
             height: String(checkListData[i].children[j].height) + ea,
+            verticalAlign: "top",
           }
         };
         tempArr.push(tempObj);
@@ -3329,6 +3433,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
             height: String(checkListData[i].children[j].height - (desktop ? 0 : mobileTendencyTop)) + ea,
             paddingTop: desktop ? "" : String(mobileTendencyTop) + ea,
             left: desktop ? "" : String(0 - level1Width) + ea,
+            verticalAlign: "top",
           }
         };
         tempArr.push(tempObj);
@@ -3467,6 +3572,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
             height: String(checkListData[i].children[j].height) + ea,
             cursor: "pointer",
             overflow: "scroll",
+            verticalAlign: "top",
           }
         };
         tempArr.push(tempObj);
@@ -3573,6 +3679,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
             color: colorChip.gray4,
             height: String(checkListData[i].children[j].height) + ea,
             cursor: "pointer",
+            verticalAlign: "top",
           }
         };
         tempArr.push(tempObj);
