@@ -4223,19 +4223,7 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
 
   mInitialIcon.addEventListener("click", async function (e) {
     try {
-      e.preventDefault();
-      e.stopPropagation();
-      const links = await GeneralJs.ajaxJson({
-        mode: "read",
-        db: "console",
-        collection: "folderDesigner",
-        whereQuery: { desid }
-      }, "/generalMongo", { equal: true });
-      if (links.length === 0) {
-        alert("만들어진 문서가 없습니다!");
-      } else {
-        GeneralJs.blankHref(links[0].docs);
-      }
+      await instance.checklistMemoSystem(desid);
     } catch (e) {
       console.log(e);
     }
@@ -4940,6 +4928,54 @@ DesignerJs.prototype.checkListDetailSearchParsing = function () {
     }, 0);
   }
 
+}
+
+DesignerJs.prototype.checklistMemoSystem = async function (desid) {
+  const instance = this;
+  const { createNode, withOut, colorChip, ajaxJson } = GeneralJs;
+  const { ea, totalContents, belowHeight, grayBarWidth, designers } = this;
+  const designer = designers.pick(desid);
+  try {
+    let memoBase;
+
+
+    memoBase = createNode({
+      mother: totalContents,
+      style: {
+        position: "fixed",
+        top: String(0),
+        left: String(grayBarWidth) + ea,
+        height: withOut(belowHeight, ea),
+        width: withOut(grayBarWidth, ea),
+        zIndex: String(4),
+      },
+      children: [
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            top: String(0),
+            left: String(0),
+            width: withOut(0),
+            height: withOut(0),
+            background: "aqua",
+          }
+        }
+      ]
+    }).children[0];
+
+
+
+
+    
+
+
+
+
+
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 DesignerJs.prototype.checkListView = async function () {
