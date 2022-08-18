@@ -5422,7 +5422,7 @@ DesignerJs.prototype.checklistMemoSystem = async function (desid) {
                                           window.localStorage.clear();
                                           window.location.reload();
                                         }
-                                        thisMember = await ajaxJson({ type: "boo", value: profile.homeliaisonConsoleLoginedEmail }, "/getMembers");
+                                        thisMember = (await ajaxJson({ type: "boo", value: profile.homeliaisonConsoleLoginedEmail }, "/getMembers")).result;
 
                                         text = "-------- " + dateToString(new Date(), true) + " / " + thisMember.name + " --------";
                                         text += "\n\n";
