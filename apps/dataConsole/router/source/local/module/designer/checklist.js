@@ -5410,10 +5410,21 @@ DesignerJs.prototype.checklistMemoSystem = async function (desid) {
                                       let areaTarget;
                                       let updateValue;
                                       let updateTargets;
+                                      let profile;
+                                      let thisMember;
 
                                       if (baseTarget.querySelector("textarea") === null) {
 
-                                        text = "-------- " + dateToString(new Date(), true) + " / " + JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedName + " --------";
+
+                                        profile = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
+                                        if (profile === null) {
+                                          window.alert("허가된 멤버가 아닙니다!");
+                                          window.localStorage.clear();
+                                          window.location.reload();
+                                        }
+                                        thisMember = await ajaxJson({ type: "boo", value: profile.homeliaisonConsoleLoginedEmail }, "/getMembers");
+
+                                        text = "-------- " + dateToString(new Date(), true) + " / " + thisMember.name + " --------";
                                         text += "\n\n";
                                         text += "\n\n";
                                         text += "----------------------------------------------";
