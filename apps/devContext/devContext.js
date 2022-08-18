@@ -89,6 +89,8 @@ DevContext.prototype.launching = async function () {
 
 
 
+    console.log(await ajaxJson({}, "http://localhost:55556/memberInfo"));
+
 
     // const selfMongo = this.MONGOC;
     // const db = "miro81";
