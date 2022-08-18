@@ -304,6 +304,7 @@ const DesignerInformation = function (json) {
   this.phone = json.phone;
   this.email = json.email;
   this.birth = new DateParse(json.birth);
+  this.marry = json.marry;
   this.did = json.did;
   this.address = new Addresses();
   for (let i of json.address) {
@@ -320,6 +321,7 @@ DesignerInformation.prototype.toNormal = function () {
   obj.phone = this.phone;
   obj.email = this.email;
   obj.birth = this.birth.toNormal();
+  obj.marry = this.marry;
   obj.did = this.did;
   obj.address = this.address.toNormal();
   obj.personalSystem = this.personalSystem.toNormal();

@@ -13,6 +13,7 @@ module.exports = {
           phone: "",
           email: "",
           birth: new Date(1800, 0, 1),
+          marry: false,
           did: "",
           address: [],
           personalSystem: {
