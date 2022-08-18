@@ -91,12 +91,76 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           type: "string",
         },
         {
-          name: "계약 상태",
+          name: "결혼 여부",
           value: function (designer) {
-            return designer.information.contract.status;
+            let contents, value;
+            contents = [
+              "결혼",
+              "미혼"
+            ];
+            value = [
+              designer.information.marry ? 1 : 0,
+              designer.information.marry ? 0 : 1,
+            ];
+            return { contents, value };
+          },
+          update: function (value, designer) {
+            const position = "information.marry";
+            let updateQuery;
+            updateQuery = {};
+            updateQuery[position] = (value[0] === 1);
+            return updateQuery;
           },
           height: factorHeight,
-          type: "string",
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "계약 상태",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "협약 완료",
+              "협약 휴직",
+              "협약 해지",
+              "신청 대기",
+            ];
+            value = [];
+            for (let i of contents) {
+              if (i === designer.information.contract.status) {
+                value.push(1);
+              } else {
+                value.push(0);
+              }
+            }
+            return { contents, value };
+          },
+          update: function (value, designer) {
+            let contents, target;
+            contents = [
+              "협약 완료",
+              "협약 휴직",
+              "협약 해지",
+              "신청 대기",
+            ];
+            target = null;
+            for (let i = 0; i < contents.length; i++) {
+              if (value[i] === 1) {
+                target = contents[i];
+              }
+            }
+            if (target === null) {
+              target = contents[3];
+            }
+            return { "information.contract.status": target };
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
         },
         {
           name: "메인 디자이너",
