@@ -90,7 +90,22 @@ DevContext.prototype.launching = async function () {
 
 
 
-
+    // const selfMongo = this.MONGOC;
+    // const db = "miro81";
+    // const collection = "designer";
+    // const designers = await selfMongo.db(db).collection(collection).find({}).toArray();
+    // let whereQuery, updateQuery;
+    //
+    // for (let { desid } of designers) {
+    //   whereQuery = { desid };
+    //   updateQuery = {};
+    //   updateQuery["analytics.construct.partner"] = false;
+    //   updateQuery["analytics.construct.range"] = 2;
+    //
+    //   await selfMongo.db(db).collection(collection).updateOne(whereQuery, { $set: updateQuery });
+    //   console.log(whereQuery);
+    //
+    // }
 
 
 

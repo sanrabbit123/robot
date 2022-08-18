@@ -400,6 +400,7 @@ const ConstructAnalytics = function (json) {
   this.possible = new ConstructPossible(json.possible);
   this.case = new ConstructCases(json.case);
   this.partner = json.partner;
+  this.range = json.range;
   this.major = json.major;
 }
 
@@ -409,6 +410,7 @@ ConstructAnalytics.prototype.toNormal = function () {
   obj.possible = this.possible.toNormal();
   obj.case = this.case.toNormal();
   obj.partner = this.partner;
+  obj.range = this.range;
   obj.major = this.major;
   return obj;
 }

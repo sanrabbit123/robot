@@ -251,8 +251,10 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               whereQuery = { desid };
               updateQuery = {};
               updateQuery["designer"] = text;
-              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
-              return text;
+              window.alert("성함 변경은 홈리에종에 직접 문의해주세요!");
+              // await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              // return text;
+              return designer.designer;
             } catch (e) {
               console.log(e);
             }
@@ -280,6 +282,48 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               return text;
             } catch (e) {
               console.log(e);
+            }
+          },
+        },
+        {
+          property: "생일",
+          returnValue: (designer) => {
+            return `${String(designer.information.birth.getFullYear())}년 ${String(designer.information.birth.getMonth() + 1)}월 ${String(designer.information.birth.getDate())}일`;
+          },
+          renderValue: (text) => {
+            return text;
+          },
+          updateValue: async (raw, designer) => {
+            try {
+              if (!/년/gi.test(raw)) {
+                throw new Error("올바른 형태로 적어주세요! => 0000년 00월 00일");
+              }
+              if (!/월/gi.test(raw)) {
+                throw new Error("올바른 형태로 적어주세요! => 0000년 00월 00일");
+              }
+              if (!/일/gi.test(raw)) {
+                throw new Error("올바른 형태로 적어주세요! => 0000년 00월 00일");
+              }
+              const [ year, month, date ] = raw.split(/[년월]/gi).map((str) => { return Number(str.replace(/[^0-9]/gi, '')) });
+              let newDate;
+              let whereQuery, updateQuery;
+
+              if (Number.isNaN(year) || Number.isNaN(month) || Number.isNaN(date)) {
+                throw new Error("올바른 형태로 적어주세요! => 0000년 00월 00일");
+              }
+              if (year < 1000) {
+                throw new Error("올바른 형태로 적어주세요! => 0000년 00월 00일");
+              }
+
+              whereQuery = { desid };
+              updateQuery = {};
+              updateQuery["information.birth"] = new Date(year, month - 1, date);
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+              return `${String(year)}년 ${String(month)}월 ${String(date)}일`;
+            } catch (e) {
+              window.alert(e.message);
+              return `${String(designer.information.birth.getFullYear())}년 ${String(designer.information.birth.getMonth() + 1)}월 ${String(designer.information.birth.getDate())}일`;
             }
           },
         },

@@ -110,7 +110,8 @@ module.exports = {
                 possible: [],
               }
             ],
-            partner: "",
+            partner: false,
+            range: 2,
             major: "",
           },
           styling: {
