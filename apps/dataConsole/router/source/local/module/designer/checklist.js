@@ -2840,20 +2840,8 @@ DesignerJs.prototype.checkListDetailLaunching = function (desid, callback = null
   const totalMother = document.querySelector(".totalMother");
   const standardBar = this.standardDoms[0].parentElement;
   const { scrollTo, ajaxJson, colorChip } = GeneralJs;
-  let target, pastScrollTop;
-
   const memoBaseClassName = "memoBaseClassName";
-  const memoWhitePopupClassName = "memoWhitePopupClassName";
-
-  if ([ ...document.querySelectorAll('.' + memoBaseClassName) ].length > 0) {
-    document.querySelector('.' + memoBaseClassName).remove();
-    if ([ ...document.querySelectorAll('.' + memoWhitePopupClassName) ].length > 0) {
-      const removeTargets = document.querySelectorAll('.' + memoWhitePopupClassName);
-      for (let dom of removeTargets) {
-        dom.remove();
-      }
-    }
-  }
+  let target, pastScrollTop;
 
   if (middleMode) {
     if (typeof GeneralJs.stacks["designerConsoleSseEvent"] === "function") {
@@ -2937,6 +2925,10 @@ DesignerJs.prototype.checkListDetailLaunching = function (desid, callback = null
     if (typeof callback === "function") {
       callback();
     }
+  }
+
+  if ([ ...document.querySelectorAll('.' + memoBaseClassName) ].length > 0 && typeof instance.checklistMemoSystem === "function") {
+    instance.checklistMemoSystem(desid).catch((err) => { console.log(err); });
   }
 }
 
@@ -4979,6 +4971,7 @@ DesignerJs.prototype.checklistMemoSystem = async function (desid) {
     let plusWeight;
     let plusTextTop;
     let thisDesignerHistory;
+    let renderMemo;
 
     motherMargin = 24;
     innerMotherMargin = 0;
@@ -5017,19 +5010,7 @@ DesignerJs.prototype.checklistMemoSystem = async function (desid) {
     plusWeight = 500;
     plusTextTop = -3;
 
-    if ([ ...document.querySelectorAll('.' + memoBaseClassName) ].length > 0) {
-      document.querySelector('.' + memoBaseClassName).remove();
-      if ([ ...document.querySelectorAll('.' + memoWhitePopupClassName) ].length > 0) {
-        const removeTargets = document.querySelectorAll('.' + memoWhitePopupClassName);
-        for (let dom of removeTargets) {
-          dom.remove();
-        }
-      }
-      return;
-    }
-
     thisDesignerHistory = (await ajaxJson({ method: "designer", idArr: [ desid ] }, "/getHistoryTotal", { equal: true }))[desid];
-
     boxContents = [
       {
         title: "VOC",
@@ -5078,8 +5059,408 @@ DesignerJs.prototype.checklistMemoSystem = async function (desid) {
       }
     ];
 
+    renderMemo = (desid, boxContents) => {
+      cleanChildren(document.querySelector('.' + memoBaseClassName).firstChild);
+      memoTong = createNode({
+        mother: document.querySelector('.' + memoBaseClassName).firstChild,
+        style: {
+          display: "block",
+          position: "relative",
+          top: String(motherMargin) + ea,
+          marginLeft: String(motherMargin) + ea,
+          paddingTop: String(innerMotherMargin) + ea,
+          paddingBottom: String(innerMotherMargin - tongBetween) + ea,
+          paddingLeft: String(innerMotherMargin) + ea,
+          paddingRight: String(innerMotherMargin - tongBetween) + ea,
+          width: withOut((motherMargin * 2) + (innerMotherMargin * 2) - tongBetween, ea),
+          height: withOut((motherMargin * 2) + (innerMotherMargin * 2) - tongBetween, ea),
+        }
+      });
+      for (let i = 0; i < boxContents.length; i++) {
+        createNode({
+          mother: memoTong,
+          event: {
+            mouseenter: function (e) {
+              this.children[0].children[0].children[0].style.color = colorChip.black;
+              this.children[1].style.color = colorChip.green;
+            },
+            mouseleave: function (e) {
+              this.children[0].children[0].children[0].style.color = colorChip.deactive;
+              this.children[1].style.color = colorChip.black;
+            }
+          },
+          style: {
+            display: "inline-block",
+            position: "relative",
+            verticalAlign: "top",
+            width: "calc(calc(100% - " + String(tongBetween * 3) + ea + ") / " + String(3) + ")",
+            paddingTop: String(titleLineTop) + ea,
+            height: "calc(calc(calc(100% - " + String(tongBetween * 3) + ea + ") / " + String(3) + ") - " + String(titleLineTop) + ea + ")",
+            marginRight: String(tongBetween) + ea,
+            marginBottom: String(tongBetween) + ea,
+          },
+          children: [
+            {
+              style: {
+                display: "flex",
+                position: "relative",
+                width: withOut(0),
+                height: withOut(0),
+                border: "1px solid " + colorChip.gray4,
+                boxSizing: "border-box",
+                borderRadius: String(5) + "px",
+                justifyContent: "center",
+                alignItems: "end",
+              },
+              children: [
+                {
+                  style: {
+                    display: "inline-block",
+                    verticalAlign: "top",
+                    position: "relative",
+                    width: withOut(boxInnerPaddingLeft * 2, ea),
+                    height: withOut(boxInnerPaddingTop, ea),
+                    overflow: "scroll",
+                  },
+                  children: [
+                    {
+                      class: [ textUpdateTargetClassName ],
+                      attribute: { index: String(i) },
+                      text: boxContents[i].contents,
+                      style: {
+                        display: "block",
+                        position: "relative",
+                        fontSize: String(contentsSize) + ea,
+                        fontWeight: String(contentsWeight),
+                        color: colorChip.deactive,
+                        lineHeight: String(contentsLineHeight),
+                        paddingBottom: String(contentsPaddingBottom) + ea,
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              text: boxContents[i].title,
+              attribute: {
+                index: String(i),
+              },
+              event: {
+                click: function (e) {
+                  const index = Number(this.getAttribute("index"));
+                  const thisContents = boxContents[index];
+                  let cancelBack, whiteBase;
+
+                  cancelBack = createNode({
+                    mother: totalContents,
+                    class: [ memoWhitePopupClassName ],
+                    event: {
+                      click: function (e) {
+                        const removeTargets = document.querySelectorAll('.' + memoWhitePopupClassName);
+                        for (let dom of removeTargets) {
+                          dom.remove();
+                        }
+                      }
+                    },
+                    style: {
+                      position: "fixed",
+                      top: String(0),
+                      left: String(grayBarWidth) + ea,
+                      height: withOut(belowHeight, ea),
+                      width: withOut(grayBarWidth, ea),
+                      zIndex: String(5),
+                      background: colorChip.black,
+                      opacity: String(0.2),
+                    }
+                  });
+
+                  whiteBase = createNode({
+                    mother: totalContents,
+                    attribute: { index: String(index) },
+                    class: [ memoWhitePopupClassName ],
+                    style: {
+                      position: "fixed",
+                      top: String(whiteOuterMargin) + ea,
+                      left: String(grayBarWidth + whiteOuterMargin) + ea,
+                      width: withOut(grayBarWidth + (whiteOuterMargin * 2), ea),
+                      height: withOut(belowHeight + (whiteOuterMargin * 2), ea),
+                      zIndex: String(5),
+                      background: colorChip.white,
+                      borderRadius: String(8) + "px",
+                      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                      opacity: String(0),
+                      animation: "fadeuplite 0.3s ease forwards",
+                    }
+                  });
+
+                  createNode({
+                    mother: whiteBase,
+                    style: {
+                      display: "block",
+                      position: "relative",
+                      paddingTop: String(whiteInnerMargin) + ea,
+                      paddingBottom: String(whiteInnerMargin) + ea,
+                      height: withOut(whiteInnerMargin * 2, ea),
+                      width: withOut(0),
+                    },
+                    children: [
+                      {
+                        style: {
+                          display: "block",
+                          position: "relative",
+                          marginLeft: String(whiteInnerMargin) + ea,
+                          width: withOut(whiteInnerMargin * 2, ea),
+                          height: withOut(0),
+                        },
+                        children: [
+                          {
+                            style: {
+                              display: "flex",
+                              position: "relative",
+                              justifyContent: "left",
+                              alignItems: "start",
+                              width: withOut(0),
+                              height: String(whiteTitleHeight) + ea,
+                            },
+                            children: [
+                              {
+                                text: thisContents.title,
+                                style: {
+                                  display: "inline-block",
+                                  position: "relative",
+                                  fontSize: String(whiteTitleSize) + ea,
+                                  fontWeight: String(whiteTitleWeight),
+                                  color: colorChip.black,
+                                  top: String(whiteTitleTextTop) + ea,
+                                  left: String(whiteTitleLeftVisual) + ea,
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            style: {
+                              display: "flex",
+                              position: "relative",
+                              width: withOut(0),
+                              height: withOut(whiteTitleHeight, ea),
+                              border: "1px solid " + colorChip.gray3,
+                              borderRadius: String(8) + "px",
+                              justifyContent: "center",
+                              alignItems: "end",
+                            },
+                            children: [
+                              {
+                                style: {
+                                  display: "inline-block",
+                                  position: "relative",
+                                  overflow: "scroll",
+                                  width: withOut(whiteInnerDescriptionPadding * 2, ea),
+                                  height: withOut(whiteInnerDescriptionPadding, ea),
+                                },
+                                children: [
+                                  {
+                                    class: [ textUpdateTargetClassName ],
+                                    attribute: { index: String(index) },
+                                    text: thisContents.contents,
+                                    style: {
+                                      display: "block",
+                                      position: "relative",
+                                      fontSize: String(contentsSize) + ea,
+                                      fontWeight: String(contentsWeight),
+                                      lineHeight: String(contentsLineHeight),
+                                      paddingBottom: String(contentsPaddingBottom) + ea,
+                                      color: colorChip.black,
+                                    }
+                                  }
+                                ]
+                              },
+                              {
+                                event: {
+                                  selectstart: (e) => { e.preventDefault(); },
+                                  click: async function (e) {
+                                    try {
+                                      const index = Number(this.getAttribute("index"));
+                                      const baseTarget = this.parentElement.children[0];
+                                      let textArea, text;
+                                      let areaTarget;
+                                      let updateValue;
+                                      let updateTargets;
+
+                                      if (baseTarget.querySelector("textarea") === null) {
+
+                                        text = "-------- " + dateToString(new Date(), true) + " / 홍길동" + " --------";
+                                        text += "\n\n";
+                                        text += "\n\n";
+                                        text += "----------------------------------------------";
+                                        text += "\n\n";
+                                        text += thisContents.contents;
+
+                                        textArea = createNode({
+                                          mother: baseTarget,
+                                          mode: "textarea",
+                                          attribute: { index: String(index) },
+                                          event: {
+                                            keydown: function (e) {
+                                              if (e.key === "Tab") {
+                                                e.preventDefault();
+                                              }
+                                            },
+                                            keyup: async function (e) {
+                                              try {
+                                                if (e.key === "Tab") {
+                                                  const index = Number(this.getAttribute("index"));
+
+                                                  updateValue = this.value.trim();
+                                                  await ajaxJson({ id: desid, column: boxContents[index].property, value: updateValue, email: null }, "/updateDesignerHistory");
+
+                                                  boxContents[index].contents = updateValue;
+                                                  thisContents.contents = updateValue;
+
+                                                  updateTargets = document.querySelectorAll('.' + textUpdateTargetClassName);
+                                                  for (let dom of updateTargets) {
+                                                    if (Number(dom.getAttribute("index")) === index) {
+                                                      cleanChildren(dom);
+                                                      dom.insertAdjacentHTML("beforeend", updateValue.replace(/\n/gi, "<br>"));
+                                                    }
+                                                  }
+
+                                                  this.remove();
+
+                                                }
+                                              } catch (e) {
+                                                console.log(e);
+                                              }
+                                            }
+                                          },
+                                          text,
+                                          style: {
+                                            display: "block",
+                                            position: "absolute",
+                                            top: String(0),
+                                            left: String(0),
+                                            paddingBottom: String(contentsPaddingBottom) + ea,
+                                            width: withOut(0, ea),
+                                            height: withOut(0, ea),
+                                            background: colorChip.white,
+                                            border: String(0),
+                                            outline: String(0),
+                                            fontSize: String(contentsSize) + ea,
+                                            fontWeight: String(contentsWeight),
+                                            lineHeight: String(contentsLineHeight),
+                                            color: colorChip.green,
+                                          }
+                                        });
+
+                                        textArea.focus();
+
+                                      } else {
+
+                                        areaTarget = baseTarget.querySelector("textarea");
+                                        updateValue = areaTarget.value.trim();
+                                        await ajaxJson({ id: desid, column: boxContents[index].property, value: updateValue, email: null }, "/updateDesignerHistory");
+
+                                        boxContents[index].contents = updateValue;
+                                        thisContents.contents = updateValue;
+
+                                        updateTargets = document.querySelectorAll('.' + textUpdateTargetClassName);
+                                        for (let dom of updateTargets) {
+                                          if (Number(dom.getAttribute("index")) === index) {
+                                            cleanChildren(dom);
+                                            dom.insertAdjacentHTML("beforeend", updateValue.replace(/\n/gi, "<br>"));
+                                          }
+                                        }
+
+                                        areaTarget.remove();
+
+                                      }
+
+                                    } catch (err) {
+                                      console.log(err);
+                                    }
+                                  }
+                                },
+                                attribute: { index: String(index) },
+                                style: {
+                                  display: "inline-flex",
+                                  position: "absolute",
+                                  width: String(plusCircleWidth) + ea,
+                                  height: String(plusCircleWidth) + ea,
+                                  borderRadius: String(plusCircleWidth) + ea,
+                                  background: colorChip.gradientGreen,
+                                  bottom: String(plusCircleBottom) + ea,
+                                  right: String(plusCircleRight) + ea,
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                                  cursor: "pointer",
+                                },
+                                children: [
+                                  {
+                                    text: "+",
+                                    attribute: { index: String(index) },
+                                    event: {
+                                      selectstart: (e) => { e.preventDefault(); },
+                                    },
+                                    style: {
+                                      fontSize: String(plusSize) + ea,
+                                      fontWeight: String(plusWeight),
+                                      color: colorChip.white,
+                                      fontFamily: "graphik",
+                                      position: "relative",
+                                      top: String(plusTextTop) + ea,
+                                    }
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  });
+
+                }
+              },
+              style: {
+                display: "inline-block",
+                position: "absolute",
+                paddingLeft: String(titleWhitePadding) + ea,
+                paddingRight: String(titleWhitePadding) + ea,
+                background: colorChip.white,
+                zIndex: String(1),
+                top: String(0),
+                left: String(titleWhitePadding) + ea,
+                fontSize: String(titleSize) + ea,
+                fontWeight: String(titleWeight),
+                color: colorChip.black,
+                cursor: "pointer",
+              }
+            }
+          ]
+        });
+      }
+    }
+
+    if ([ ...document.querySelectorAll('.' + memoBaseClassName) ].length > 0) {
+      if ([ ...document.querySelectorAll('.' + memoWhitePopupClassName) ].length > 0) {
+        const removeTargets = document.querySelectorAll('.' + memoWhitePopupClassName);
+        for (let dom of removeTargets) {
+          dom.remove();
+        }
+      }
+      if (document.querySelector('.' + memoBaseClassName).getAttribute("desid") === desid) {
+        document.querySelector('.' + memoBaseClassName).remove();
+      } else {
+        document.querySelector('.' + memoBaseClassName).setAttribute("desid", desid);
+        renderMemo(desid, boxContents);
+      }
+
+      return;
+    }
+
     memoBase = createNode({
       mother: totalContents,
+      attribute: { desid },
       class: [ memoBaseClassName ],
       style: {
         position: "fixed",
@@ -5104,385 +5485,7 @@ DesignerJs.prototype.checklistMemoSystem = async function (desid) {
       ]
     }).children[0];
 
-    memoTong = createNode({
-      mother: memoBase,
-      style: {
-        display: "block",
-        position: "relative",
-        top: String(motherMargin) + ea,
-        marginLeft: String(motherMargin) + ea,
-        paddingTop: String(innerMotherMargin) + ea,
-        paddingBottom: String(innerMotherMargin - tongBetween) + ea,
-        paddingLeft: String(innerMotherMargin) + ea,
-        paddingRight: String(innerMotherMargin - tongBetween) + ea,
-        width: withOut((motherMargin * 2) + (innerMotherMargin * 2) - tongBetween, ea),
-        height: withOut((motherMargin * 2) + (innerMotherMargin * 2) - tongBetween, ea),
-      }
-    });
-
-    for (let i = 0; i < boxContents.length; i++) {
-      createNode({
-        mother: memoTong,
-        event: {
-          mouseenter: function (e) {
-            this.children[0].children[0].children[0].style.color = colorChip.black;
-            this.children[1].style.color = colorChip.green;
-          },
-          mouseleave: function (e) {
-            this.children[0].children[0].children[0].style.color = colorChip.deactive;
-            this.children[1].style.color = colorChip.black;
-          }
-        },
-        style: {
-          display: "inline-block",
-          position: "relative",
-          verticalAlign: "top",
-          width: "calc(calc(100% - " + String(tongBetween * 3) + ea + ") / " + String(3) + ")",
-          paddingTop: String(titleLineTop) + ea,
-          height: "calc(calc(calc(100% - " + String(tongBetween * 3) + ea + ") / " + String(3) + ") - " + String(titleLineTop) + ea + ")",
-          marginRight: String(tongBetween) + ea,
-          marginBottom: String(tongBetween) + ea,
-        },
-        children: [
-          {
-            style: {
-              display: "flex",
-              position: "relative",
-              width: withOut(0),
-              height: withOut(0),
-              border: "1px solid " + colorChip.gray4,
-              boxSizing: "border-box",
-              borderRadius: String(5) + "px",
-              justifyContent: "center",
-              alignItems: "end",
-            },
-            children: [
-              {
-                style: {
-                  display: "inline-block",
-                  verticalAlign: "top",
-                  position: "relative",
-                  width: withOut(boxInnerPaddingLeft * 2, ea),
-                  height: withOut(boxInnerPaddingTop, ea),
-                  overflow: "scroll",
-                },
-                children: [
-                  {
-                    class: [ textUpdateTargetClassName ],
-                    attribute: { index: String(i) },
-                    text: boxContents[i].contents,
-                    style: {
-                      display: "block",
-                      position: "relative",
-                      fontSize: String(contentsSize) + ea,
-                      fontWeight: String(contentsWeight),
-                      color: colorChip.deactive,
-                      lineHeight: String(contentsLineHeight),
-                      paddingBottom: String(contentsPaddingBottom) + ea,
-                    }
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            text: boxContents[i].title,
-            attribute: {
-              index: String(i),
-            },
-            event: {
-              click: function (e) {
-                const index = Number(this.getAttribute("index"));
-                const thisContents = boxContents[index];
-                let cancelBack, whiteBase;
-
-                cancelBack = createNode({
-                  mother: totalContents,
-                  class: [ memoWhitePopupClassName ],
-                  event: {
-                    click: function (e) {
-                      const removeTargets = document.querySelectorAll('.' + memoWhitePopupClassName);
-                      for (let dom of removeTargets) {
-                        dom.remove();
-                      }
-                    }
-                  },
-                  style: {
-                    position: "fixed",
-                    top: String(0),
-                    left: String(grayBarWidth) + ea,
-                    height: withOut(belowHeight, ea),
-                    width: withOut(grayBarWidth, ea),
-                    zIndex: String(5),
-                    background: colorChip.black,
-                    opacity: String(0.2),
-                  }
-                });
-
-                whiteBase = createNode({
-                  mother: totalContents,
-                  attribute: { index: String(index) },
-                  class: [ memoWhitePopupClassName ],
-                  style: {
-                    position: "fixed",
-                    top: String(whiteOuterMargin) + ea,
-                    left: String(grayBarWidth + whiteOuterMargin) + ea,
-                    width: withOut(grayBarWidth + (whiteOuterMargin * 2), ea),
-                    height: withOut(belowHeight + (whiteOuterMargin * 2), ea),
-                    zIndex: String(5),
-                    background: colorChip.white,
-                    borderRadius: String(8) + "px",
-                    boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-                    opacity: String(0),
-                    animation: "fadeuplite 0.3s ease forwards",
-                  }
-                });
-
-                createNode({
-                  mother: whiteBase,
-                  style: {
-                    display: "block",
-                    position: "relative",
-                    paddingTop: String(whiteInnerMargin) + ea,
-                    paddingBottom: String(whiteInnerMargin) + ea,
-                    height: withOut(whiteInnerMargin * 2, ea),
-                    width: withOut(0),
-                  },
-                  children: [
-                    {
-                      style: {
-                        display: "block",
-                        position: "relative",
-                        marginLeft: String(whiteInnerMargin) + ea,
-                        width: withOut(whiteInnerMargin * 2, ea),
-                        height: withOut(0),
-                      },
-                      children: [
-                        {
-                          style: {
-                            display: "flex",
-                            position: "relative",
-                            justifyContent: "left",
-                            alignItems: "start",
-                            width: withOut(0),
-                            height: String(whiteTitleHeight) + ea,
-                          },
-                          children: [
-                            {
-                              text: thisContents.title,
-                              style: {
-                                display: "inline-block",
-                                position: "relative",
-                                fontSize: String(whiteTitleSize) + ea,
-                                fontWeight: String(whiteTitleWeight),
-                                color: colorChip.black,
-                                top: String(whiteTitleTextTop) + ea,
-                                left: String(whiteTitleLeftVisual) + ea,
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          style: {
-                            display: "flex",
-                            position: "relative",
-                            width: withOut(0),
-                            height: withOut(whiteTitleHeight, ea),
-                            border: "1px solid " + colorChip.gray3,
-                            borderRadius: String(8) + "px",
-                            justifyContent: "center",
-                            alignItems: "end",
-                          },
-                          children: [
-                            {
-                              style: {
-                                display: "inline-block",
-                                position: "relative",
-                                overflow: "scroll",
-                                width: withOut(whiteInnerDescriptionPadding * 2, ea),
-                                height: withOut(whiteInnerDescriptionPadding, ea),
-                              },
-                              children: [
-                                {
-                                  class: [ textUpdateTargetClassName ],
-                                  attribute: { index: String(index) },
-                                  text: thisContents.contents,
-                                  style: {
-                                    display: "block",
-                                    position: "relative",
-                                    fontSize: String(contentsSize) + ea,
-                                    fontWeight: String(contentsWeight),
-                                    lineHeight: String(contentsLineHeight),
-                                    paddingBottom: String(contentsPaddingBottom) + ea,
-                                    color: colorChip.black,
-                                  }
-                                }
-                              ]
-                            },
-                            {
-                              event: {
-                                selectstart: (e) => { e.preventDefault(); },
-                                click: async function (e) {
-                                  try {
-                                    const index = Number(this.getAttribute("index"));
-                                    const baseTarget = this.parentElement.children[0];
-                                    let textArea, text;
-                                    let areaTarget;
-                                    let updateValue;
-                                    let updateTargets;
-
-                                    if (baseTarget.querySelector("textarea") === null) {
-
-                                      text = "-------- " + dateToString(new Date(), true) + " / 홍길동" + " --------";
-                                      text += "\n\n";
-                                      text += "\n\n";
-                                      text += "----------------------------------------------";
-                                      text += "\n\n";
-                                      text += thisContents.contents;
-
-                                      textArea = createNode({
-                                        mother: baseTarget,
-                                        mode: "textarea",
-                                        attribute: { index: String(index) },
-                                        event: {
-                                          keydown: function (e) {
-                                            if (e.key === "Tab") {
-                                              e.preventDefault();
-                                            }
-                                          },
-                                          keyup: async function (e) {
-                                            try {
-                                              if (e.key === "Tab") {
-                                                const index = Number(this.getAttribute("index"));
-
-                                                updateValue = this.value.trim();
-                                                await ajaxJson({ id: desid, column: boxContents[index].property, value: updateValue, email: null }, "/updateDesignerHistory");
-
-                                                boxContents[index].contents = updateValue;
-                                                thisContents.contents = updateValue;
-
-                                                updateTargets = document.querySelectorAll('.' + textUpdateTargetClassName);
-                                                for (let dom of updateTargets) {
-                                                  if (Number(dom.getAttribute("index")) === index) {
-                                                    cleanChildren(dom);
-                                                    dom.insertAdjacentHTML("beforeend", updateValue.replace(/\n/gi, "<br>"));
-                                                  }
-                                                }
-
-                                                this.remove();
-
-                                              }
-                                            } catch (e) {
-                                              console.log(e);
-                                            }
-                                          }
-                                        },
-                                        text,
-                                        style: {
-                                          display: "block",
-                                          position: "absolute",
-                                          top: String(0),
-                                          left: String(0),
-                                          paddingBottom: String(contentsPaddingBottom) + ea,
-                                          width: withOut(0, ea),
-                                          height: withOut(0, ea),
-                                          background: colorChip.white,
-                                          border: String(0),
-                                          outline: String(0),
-                                          fontSize: String(contentsSize) + ea,
-                                          fontWeight: String(contentsWeight),
-                                          lineHeight: String(contentsLineHeight),
-                                          color: colorChip.green,
-                                        }
-                                      });
-
-                                      textArea.focus();
-
-                                    } else {
-
-                                      areaTarget = baseTarget.querySelector("textarea");
-                                      updateValue = areaTarget.value.trim();
-                                      await ajaxJson({ id: desid, column: boxContents[index].property, value: updateValue, email: null }, "/updateDesignerHistory");
-
-                                      boxContents[index].contents = updateValue;
-                                      thisContents.contents = updateValue;
-
-                                      updateTargets = document.querySelectorAll('.' + textUpdateTargetClassName);
-                                      for (let dom of updateTargets) {
-                                        if (Number(dom.getAttribute("index")) === index) {
-                                          cleanChildren(dom);
-                                          dom.insertAdjacentHTML("beforeend", updateValue.replace(/\n/gi, "<br>"));
-                                        }
-                                      }
-
-                                      areaTarget.remove();
-
-                                    }
-
-                                  } catch (err) {
-                                    console.log(err);
-                                  }
-                                }
-                              },
-                              attribute: { index: String(index) },
-                              style: {
-                                display: "inline-flex",
-                                position: "absolute",
-                                width: String(plusCircleWidth) + ea,
-                                height: String(plusCircleWidth) + ea,
-                                borderRadius: String(plusCircleWidth) + ea,
-                                background: colorChip.gradientGreen,
-                                bottom: String(plusCircleBottom) + ea,
-                                right: String(plusCircleRight) + ea,
-                                justifyContent: "center",
-                                alignItems: "center",
-                                cursor: "pointer",
-                              },
-                              children: [
-                                {
-                                  text: "+",
-                                  attribute: { index: String(index) },
-                                  event: {
-                                    selectstart: (e) => { e.preventDefault(); },
-                                  },
-                                  style: {
-                                    fontSize: String(plusSize) + ea,
-                                    fontWeight: String(plusWeight),
-                                    color: colorChip.white,
-                                    fontFamily: "graphik",
-                                    position: "relative",
-                                    top: String(plusTextTop) + ea,
-                                  }
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                });
-
-              }
-            },
-            style: {
-              display: "inline-block",
-              position: "absolute",
-              paddingLeft: String(titleWhitePadding) + ea,
-              paddingRight: String(titleWhitePadding) + ea,
-              background: colorChip.white,
-              zIndex: String(1),
-              top: String(0),
-              left: String(titleWhitePadding) + ea,
-              fontSize: String(titleSize) + ea,
-              fontWeight: String(titleWeight),
-              color: colorChip.black,
-              cursor: "pointer",
-            }
-          }
-        ]
-      });
-    }
+    renderMemo(desid, boxContents);
 
   } catch (e) {
     console.log(e);

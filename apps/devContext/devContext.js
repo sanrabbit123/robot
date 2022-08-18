@@ -91,34 +91,9 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // await this.MONGOCONSOLEC.connect();
-    //
-    // const selfMongo = this.MONGOCONSOLEC;
-    // const db = "miro81";
-    // const collection = "designerHistory";
-    //
-    // const rows = await selfMongo.db(db).collection(collection).find({}).toArray();
-    // let whereQuery, updateQuery;
-    //
-    // console.log(rows);
-    // for (let { desid } of rows) {
-    //   whereQuery = { desid };
-    //   updateQuery = {};
-    //   updateQuery["family"] = "";
-    //   updateQuery["partner"] = "";
-    //   updateQuery["craft"] = "";
-    //   updateQuery["styling"] = "";
-    //   updateQuery["reception"] = "";
-    //   updateQuery["etc"] = "";
-    //
-    //   await selfMongo.db(db).collection(collection).updateOne(whereQuery, { $set: updateQuery });
-    //   console.log(whereQuery)
-    // }
-    // console.log(whereQuery)
-    //
-    // await this.MONGOCONSOLEC.close();
 
 
+    
 
 
 
