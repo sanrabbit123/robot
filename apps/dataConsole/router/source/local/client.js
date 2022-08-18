@@ -3099,15 +3099,12 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         }, "/callTo");
         if (response.message === "error") {
           window.localStorage.clear();
-          let obj = {};
-          obj["homeliaisonConsoleLoginedName"] = '';
-          obj["homeliaisonConsoleLoginedEmail"] = '';
-          obj["homeliaisonConsoleLoginedBoolean"] = '';
-          setCookie(obj, true);
           window.location.reload();
         }
       }
     } catch (e) {
+      window.localStorage.clear();
+      window.location.reload();
       console.log(e);
     }
   };
