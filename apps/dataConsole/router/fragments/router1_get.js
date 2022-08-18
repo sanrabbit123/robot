@@ -244,6 +244,8 @@ DataRouter.prototype.rou_get_First = function () {
             target = "contents";
           } else if (/^fil/i.test(req.params.id)) {
             target = "file";
+          } else if (/^flo/i.test(req.params.id)) {
+            target = "flow";
           } else if (/^use/i.test(req.params.id)) {
             target = "user";
           } else if (/^ana/i.test(req.params.id)) {
