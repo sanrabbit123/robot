@@ -255,13 +255,13 @@ DesignerJs.prototype.possibleContents = function (desid, realtimeDesigner) {
 
 DesignerJs.prototype.possibleUpdate = async function (desid) {
   const instance = this;
-  const { ajaxJson, createNode, withOut, colorChip, setQueue, equalJson, dateToString, stringToDate, sleep, getCookiesAll } = GeneralJs;
+  const { ajaxJson, createNode, withOut, colorChip, setQueue, equalJson, dateToString, stringToDate, sleep } = GeneralJs;
   const { totalMother, ea, grayBarWidth, belowHeight, possibleConst } = this;
   const mobile = this.media[4];
   const desktop = !mobile;
   const designer = this.designers.pick(desid);
   const projects = designer.projects === undefined ? [] : designer.projects;
-  const cookies = getCookiesAll();
+  const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
   try {
     const dateDoms = instance.dateDoms;
     const onDoms = dateDoms.filter((d) => { return d.getAttribute("toggle") === "on"; });
@@ -405,7 +405,7 @@ DesignerJs.prototype.possibleUpdate = async function (desid) {
       db: "console",
       collection: "sse_possibleDesigner",
       log: true,
-      who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
+      who: (instance.middleMode ? instance.designer.information.phone : JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail),
       updateQuery: {
         desid,
         type: "possible",
@@ -415,7 +415,7 @@ DesignerJs.prototype.possibleUpdate = async function (desid) {
       return ajaxJson({
         page: "possible",
         mode: "update",
-        who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
+        who: (instance.middleMode ? instance.designer.information.phone : JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail),
         update: [ Object.keys(updateQuery), Object.values(updateQuery) ],
         desid,
       }, "/ghostDesigner_updateAnalytics");
@@ -430,13 +430,13 @@ DesignerJs.prototype.possibleUpdate = async function (desid) {
 
 DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDesigner) {
   const instance = this;
-  const { ajaxJson, createNode, withOut, colorChip, getCookiesAll, getDateMatrix, findByAttribute, setQueue, setDebounce, equalJson, dateToString, stringToDate, isMac, swipePatch, sleep } = GeneralJs;
+  const { ajaxJson, createNode, withOut, colorChip, getDateMatrix, findByAttribute, setQueue, setDebounce, equalJson, dateToString, stringToDate, isMac, swipePatch, sleep } = GeneralJs;
   const { totalMother, ea, grayBarWidth, belowHeight, possibleConst } = this;
   const mobile = this.media[4];
   const desktop = !mobile;
   const designer = this.designers.pick(desid);
   const projects = designer.projects === undefined ? [] : designer.projects;
-  const cookies = getCookiesAll();
+  const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
   const now = new Date();
   const nowValue = now.valueOf();
   const between = "&nbsp;&nbsp;&nbsp;&nbsp;";
@@ -2171,7 +2171,7 @@ DesignerJs.prototype.possibleIconSet = function (desid) {
         return GeneralJs.ajaxJson({
           page: "possible",
           mode: "send",
-          who: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+          who: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
           desid: designer.desid,
         }, "/ghostDesigner_updateAnalytics");
       }).then(() => {

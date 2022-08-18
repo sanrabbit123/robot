@@ -3,7 +3,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
   const { ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const cookies = GeneralJs.getCookiesAll();
+  const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
   const checkListData = [
     {
       name: "일반",
@@ -395,7 +395,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                                               await ajaxJson({
                                                 page: "checklist",
                                                 mode: "update",
-                                                who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
+                                                who: (instance.middleMode ? instance.designer.information.phone : JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail),
                                                 update: [ Object.keys(updateQuery), Object.values(updateQuery) ],
                                                 desid,
                                               }, "/ghostDesigner_updateAnalytics");
@@ -553,7 +553,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                                               await ajaxJson({
                                                 page: "checklist",
                                                 mode: "update",
-                                                who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
+                                                who: (instance.middleMode ? instance.designer.information.phone : JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail),
                                                 update: [ Object.keys(updateQuery), Object.values(updateQuery) ],
                                                 desid,
                                               }, "/ghostDesigner_updateAnalytics");
@@ -3061,10 +3061,10 @@ DesignerJs.prototype.checkListDetail = function (desid) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, getCookiesAll } = GeneralJs;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac } = GeneralJs;
   const { totalMother, ea, grayBarWidth } = this;
   const matrixButtonConst = "matrixButtons_" + desid;
-  const cookies = getCookiesAll();
+  const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
   const mobile = this.media[4];
   const desktop = !mobile;
   let designer;
@@ -3374,7 +3374,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                                     await ajaxJson({
                                       page: "checklist",
                                       mode: "update",
-                                      who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
+                                      who: (instance.middleMode ? instance.designer.information.phone : JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail),
                                       update: [ Object.keys(updateQuery), Object.values(updateQuery) ],
                                       desid,
                                     }, "/ghostDesigner_updateAnalytics");
@@ -3517,7 +3517,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                       await ajaxJson({
                         page: "checklist",
                         mode: "update",
-                        who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
+                        who: (instance.middleMode ? instance.designer.information.phone : JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail),
                         update: [ Object.keys(updateQuery), Object.values(updateQuery) ],
                         desid,
                       }, "/ghostDesigner_updateAnalytics");
@@ -3650,7 +3650,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                         await ajaxJson({
                           page: "checklist",
                           mode: "update",
-                          who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
+                          who: (instance.middleMode ? instance.designer.information.phone : JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail),
                           update: [ Object.keys(updateQuery), Object.values(updateQuery) ],
                           desid,
                         }, "/ghostDesigner_updateAnalytics");
@@ -3759,7 +3759,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                         await ajaxJson({
                           page: "checklist",
                           mode: "update",
-                          who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
+                          who: (instance.middleMode ? instance.designer.information.phone : JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail),
                           update: [ Object.keys(updateQuery), Object.values(updateQuery) ],
                           desid,
                         }, "/ghostDesigner_updateAnalytics");
@@ -3958,7 +3958,7 @@ DesignerJs.prototype.checkListDesignerMemo = function (desid) {
                     id: desid,
                     column: "career",
                     value: this.value,
-                    email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail
+                    email: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail
                   }, "/updateHistory").catch((err) => { console.log(err); });
                 }
               },
@@ -3971,7 +3971,7 @@ DesignerJs.prototype.checkListDesignerMemo = function (desid) {
                       id: desid,
                       column: "career",
                       value: this.value,
-                      email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail
+                      email: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail
                     }, "/updateHistory").catch((err) => { console.log(err); });
                   }
                 }
@@ -4394,7 +4394,7 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
         return GeneralJs.ajaxJson({
           page: "checklist",
           mode: "send",
-          who: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+          who: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
           desid: designer.desid,
         }, "/ghostDesigner_updateAnalytics");
       }).then(() => {

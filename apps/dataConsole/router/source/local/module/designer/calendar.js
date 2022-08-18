@@ -1776,7 +1776,7 @@ DesignerJs.prototype.calendarView = async function () {
     this.calendarMonthY = {};
     this.calendarPastQueries = [];
     this.calendarPastTranslate = "translateX(0px)";
-    this.cookies = GeneralJs.getCookiesAll();
+    this.cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
     this.cookiesWho = this.cookies.homeliaisonConsoleLoginedName;
 
     this.mother.belowButtons.arrow.right.addEventListener("click", (e) => { instance.calendarPastTranslate = document.querySelector(".moveTarget").style.transform; });

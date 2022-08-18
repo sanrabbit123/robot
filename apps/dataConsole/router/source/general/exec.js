@@ -143,7 +143,7 @@ document.addEventListener("DOMContentLoaded", async function (e) {
               //end
             } else if (obj.email !== undefined && obj.prompt !== undefined && obj.url !== undefined) {
               if (Array.isArray(obj.email)) {
-                if (obj.email.includes(GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail)) {
+                if (obj.email.includes(JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail)) {
                   GeneralJs.prompt(obj.prompt).then((promptResult) => {
                     return GeneralJs.ajaxPromise({ result: (promptResult ? 1 : 0) }, obj.url);
                   }).catch((err) => {

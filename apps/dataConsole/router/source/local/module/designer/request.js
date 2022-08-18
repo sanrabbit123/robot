@@ -258,7 +258,7 @@ DesignerJs.prototype.requestReturnStatic = function (designer, project, client, 
                   id: proid,
                   column,
                   value,
-                  email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail
+                  email: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail
                 }, "/updateProjectHistory");
                 for (let dom of targets) {
                   dom.parentElement.removeChild(dom);
@@ -442,9 +442,9 @@ DesignerJs.prototype.requestList = function (desid) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, getCookiesAll, dateToString } = GeneralJs;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString } = GeneralJs;
   const { totalMother, ea, grayBarWidth } = this;
-  const cookies = getCookiesAll();
+  const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
   const mobile = this.media[4];
   const desktop = !mobile;
   let designer;
@@ -815,7 +815,7 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
           id: proid,
           column: "request",
           value: projectHistory.request,
-          email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail
+          email: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail
         }, "/updateProjectHistory");
       }
 
@@ -1771,7 +1771,7 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
                 id: proid,
                 column: position,
                 value: tempArr,
-                email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail
+                email: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail
               }, "/updateProjectHistory");
               mainContents[index].contents = tempArr;
               value = tempArr.map((i) => { return (i === '' ? "" : `<b style="${colorChip.gray4}">-</b> ${i}`); }).join("<br>");
@@ -3456,7 +3456,7 @@ DesignerJs.prototype.requestIconSet = function (desid) {
           return GeneralJs.ajaxJson({
             page: "request",
             mode: "send",
-            who: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+            who: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
             desid: designer.desid,
           }, "/ghostDesigner_updateAnalytics");
         }).then(() => {
@@ -3486,7 +3486,7 @@ DesignerJs.prototype.requestIconSet = function (desid) {
           return GeneralJs.ajaxJson({
             page: "request",
             mode: "send",
-            who: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+            who: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
             desid: designer.desid,
             cliid: instance.client.cliid,
           }, "/ghostDesigner_updateAnalytics");

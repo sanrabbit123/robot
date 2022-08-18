@@ -1554,7 +1554,7 @@ DesignerJs.prototype.spreadData = async function (search = null, localMode = fal
 
 DesignerJs.prototype.makeImportantEvent = function (id, update = true) {
   const instance = this;
-  const cookies = GeneralJs.getCookiesAll();
+  const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
   return async function (e) {
     if (e.cancelable) {
       e.preventDefault();

@@ -589,7 +589,7 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
 
                     const removeTargets = mother.querySelectorAll("aside");
                     const value = this.value;
-                    const cookies = GeneralJs.getCookiesAll();
+                    const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
 
                     (mother.querySelectorAll('b'))[0].textContent = value.trim().split("\n")[0].slice(0, 40);
                     aspirant.information.career.detail = value.trim();

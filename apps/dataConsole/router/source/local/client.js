@@ -1547,10 +1547,10 @@ ClientJs.prototype.boardGrayBar = function (divisionMap, cases, staticList) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const { createNode, colorChip, withOut, equalJson, isMac, ajaxJson, getCookiesAll, findByAttribute, uniqueValue, cleanChildren, setQueue } = GeneralJs;
+  const { createNode, colorChip, withOut, equalJson, isMac, ajaxJson, findByAttribute, uniqueValue, cleanChildren, setQueue } = GeneralJs;
   const { ea, token, actionClass, statusClass, actionArea } = staticList;
   const clientMap = DataPatch.clientMap();
-  const cookies = getCookiesAll();
+  const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
   const dashboardTarget = {
     status: {
       items: clientMap.status.items,
@@ -2067,7 +2067,7 @@ ClientJs.prototype.makeBoard = function (cases) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const { createNode, colorChip, withOut, equalJson, isMac, findByAttribute, ajaxJson, getCookiesAll, uniqueValue, cleanChildren, setQueue } = GeneralJs;
+  const { createNode, colorChip, withOut, equalJson, isMac, findByAttribute, ajaxJson, uniqueValue, cleanChildren, setQueue } = GeneralJs;
   const staticList = {
     ea: "px",
     token: "__split__",
@@ -2076,7 +2076,7 @@ ClientJs.prototype.makeBoard = function (cases) {
     actionArea: "mainArea_actionArea",
   };
   const { ea, token, actionClass, statusClass, actionArea } = staticList;
-  const cookies = getCookiesAll();
+  const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
   const map = DataPatch.clientMap();
   const totalFather = this.totalFather;
   const scrollTong = totalFather.children[1].children[0];
@@ -3044,7 +3044,7 @@ ClientJs.prototype.cardViewMaker = function () {
 
 ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   const instance = this;
-  const cookies = GeneralJs.getCookiesAll();
+  const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
   let { standard, info } = DataPatch.clientWhiteViewStandard();
   let div_clone, div_clone2, div_clone3, div_clone4, div_clone5, textArea_clone;
   let propertyBox, historyBox;
@@ -3094,7 +3094,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     try {
       if (window.confirm(thisCase.name + " 고객님께 전화를 걸까요?")) {
         const response = await GeneralJs.ajaxJson({
-          who: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+          who: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
           phone: thisCase.phone.replace(/[^0-9]/gi, '')
         }, "/callTo");
         if (response.message === "error") {
@@ -6866,7 +6866,7 @@ ClientJs.prototype.makeClipBoardEvent = function (text) {
 
 ClientJs.prototype.makeImportantEvent = function (id, update, color = "red") {
   const instance = this;
-  const cookies = GeneralJs.getCookiesAll();
+  const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
   return async function (e) {
     if (e.cancelable) {
       e.preventDefault();
@@ -6968,7 +6968,7 @@ ClientJs.prototype.globalChaining = async function (thisCase, column, value, pas
     const map = DataPatch.clientMap();
     const dictionary = {
       service: async function (thisCase, column, value, pastValue) {
-        const cookies = GeneralJs.getCookiesAll();
+        const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
         const { ajaxJson } = GeneralJs;
         const { cliid, service } = thisCase;
         try {
@@ -7129,7 +7129,7 @@ ClientJs.prototype.communicationRender = function () {
                   id: cliid,
                   column: "curation.service.serid",
                   value: [ serid ],
-                  email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+                  email: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
                   send: "styleCuration_general",
                 }, "/updateClientHistory");
 
@@ -7146,7 +7146,7 @@ ClientJs.prototype.communicationRender = function () {
                   db: "console",
                   collection: "sse_clientCard",
                   log: true,
-                  who: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+                  who: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
                   updateQuery: {
                     cliid,
                     requestNumber,
@@ -7175,7 +7175,7 @@ ClientJs.prototype.communicationRender = function () {
                   id: cliid,
                   column: "curation.service.serid",
                   value: [ serid ],
-                  email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+                  email: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
                   send: "styleCuration_lite",
                 }, "/updateClientHistory");
 
@@ -7285,7 +7285,7 @@ ClientJs.prototype.communicationRender = function () {
                 id: cliid,
                 column: "curation.service.serid",
                 value: [ serid ],
-                email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+                email: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
                 send: "styleCuration_lite",
               }, "/updateClientHistory");
 
@@ -7302,7 +7302,7 @@ ClientJs.prototype.communicationRender = function () {
                 db: "console",
                 collection: "sse_clientCard",
                 log: true,
-                who: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+                who: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
                 updateQuery: {
                   cliid,
                   requestNumber,
@@ -7389,7 +7389,7 @@ ClientJs.prototype.communicationRender = function () {
               id: cliid,
               column: "curation.analytics.full",
               value: false,
-              email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+              email: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
             }, "/updateClientHistory");
 
             await ajaxJson({ cliid, serid, silent: true }, "/proposalCreate");
@@ -7441,7 +7441,7 @@ ClientJs.prototype.communicationRender = function () {
               id: cliid,
               column: null,
               value: null,
-              email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+              email: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
               send: "pureOutOfClient",
             }, "/updateClientHistory");
 
@@ -7501,7 +7501,7 @@ ClientJs.prototype.communicationRender = function () {
               id: cliid,
               column: null,
               value: null,
-              email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+              email: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
               send: "finalPush",
             }, "/updateClientHistory");
 

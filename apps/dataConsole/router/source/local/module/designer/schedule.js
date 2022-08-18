@@ -141,9 +141,9 @@ DesignerJs.prototype.scheduleList = function (desid) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, getCookiesAll, dateToString } = GeneralJs;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString } = GeneralJs;
   const { totalMother, ea, grayBarWidth, belowHeight } = this;
-  const cookies = getCookiesAll();
+  const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
   const statusColors = [
     {
       color: colorChip.gray3,
@@ -803,8 +803,8 @@ DesignerJs.prototype.scheduleChildrenUpdate = async function (proid, children) {
   }
   const instance = this;
   try {
-    const { ajaxJson, getCookiesAll } = GeneralJs;
-    const cookies = getCookiesAll();
+    const { ajaxJson } = GeneralJs;
+    const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
 
     await ajaxJson({
       method: "project",
@@ -2406,7 +2406,7 @@ DesignerJs.prototype.scheduleIconSet = function (desid) {
           return GeneralJs.ajaxJson({
             page: "schedule",
             mode: "send",
-            who: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+            who: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
             desid: designer.desid,
           }, "/ghostDesigner_updateAnalytics");
         }).then(() => {
@@ -2437,7 +2437,7 @@ DesignerJs.prototype.scheduleIconSet = function (desid) {
           return GeneralJs.ajaxJson({
             page: "schedule",
             mode: "send",
-            who: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+            who: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
             desid: designer.desid,
             cliid: instance.client.cliid,
           }, "/ghostDesigner_updateAnalytics");

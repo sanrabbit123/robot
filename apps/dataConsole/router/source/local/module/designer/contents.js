@@ -2478,7 +2478,7 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
 
                   const removeTargets = mother.querySelectorAll("aside");
                   const value = this.value;
-                  const cookies = GeneralJs.getCookiesAll();
+                  const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
 
                   (mother.querySelectorAll('b'))[0].textContent = value.slice(0, 40);
                   await GeneralJs.ajaxJson({

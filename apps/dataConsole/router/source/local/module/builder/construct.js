@@ -1154,7 +1154,7 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
                             id: project.proid,
                             column,
                             value,
-                            email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail
+                            email: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail
                           }, "/updateProjectHistory");
                           instance.projects.search("proid", project.proid).history[key === "historyName" ? "name" : "address"] = value;
                           div.textContent = value;
@@ -2458,7 +2458,7 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
               id: project.proid,
               column: "construct.payments.first.date",
               value: dateValue,
-              email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+              email: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
             }, "/updateHistory");
 
             valueDom.textContent = value;
@@ -2641,7 +2641,7 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
               id: project.proid,
               column: "construct.payments.start.date",
               value: dateValue,
-              email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+              email: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
             }, "/updateHistory");
 
             valueDom.textContent = value;
@@ -2824,7 +2824,7 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
               id: project.proid,
               column: "construct.payments.middle.date",
               value: dateValue,
-              email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+              email: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
             }, "/updateHistory");
 
             valueDom.textContent = value;
@@ -3007,7 +3007,7 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
               id: project.proid,
               column: "construct.payments.remain.date",
               value: dateValue,
-              email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+              email: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
             }, "/updateHistory");
 
             valueDom.textContent = value;

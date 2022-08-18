@@ -2142,7 +2142,7 @@ DesignerJs.prototype.projectIconSet = function (desid) {
         return GeneralJs.ajaxJson({
           page: "project",
           mode: "send",
-          who: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+          who: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
           desid: designer.desid,
         }, "/ghostDesigner_updateAnalytics");
       }).then(() => {

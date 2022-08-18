@@ -1590,12 +1590,12 @@ DesignerJs.prototype.reportDetail = function (desid) {
   }
   const instance = this;
   const mother = this.mother;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, getCookiesAll, equalJson } = GeneralJs;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, equalJson } = GeneralJs;
   const { totalMother, ea, grayBarWidth, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const matrixButtonConst = "matrixButtons_" + desid;
-  const cookies = getCookiesAll();
+  const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
   const overConst = 3;
   const today = new Date();
   const thisReport = this.reports.pick(desid);
@@ -2737,7 +2737,7 @@ DesignerJs.prototype.reportIconSet = function (desid) {
         return GeneralJs.ajaxJson({
           page: "report",
           mode: "send",
-          who: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+          who: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
           desid: designer.desid,
         }, "/ghostDesigner_updateAnalytics");
       }).then(() => {

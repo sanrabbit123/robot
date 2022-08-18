@@ -173,20 +173,17 @@ GeneralJs.updateValue = async function (dataObj) {
   if (dataObj === undefined) {
     throw new Error("invaild arguments");
   }
+  if (window.localStorage.getItem("GoogleClientProfile") === null) {
+    throw new Error("not allowed");
+  }
   const instance = this;
-  const cookies = GeneralJs.getCookiesAll();
+  const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
   try {
     let dataString, response;
 
     if (cookies.homeliaisonConsoleLoginedName !== undefined && cookies.homeliaisonConsoleLoginedEmail !== undefined) {
       //set user
       dataObj.user = cookies.homeliaisonConsoleLoginedName + "__split__" + cookies.homeliaisonConsoleLoginedEmail;
-      //contents lock
-      if (window.location.pathname === "/contents") {
-        if (cookies.homeliaisonConsoleLoginedEmail !== "uragenbooks@gmail.com") {
-          dataObj.value = dataObj.pastValue;
-        }
-      }
     } else {
       //set user
       dataObj.user = "unknown" + "__split__" + "unknown@unknown";
@@ -427,7 +424,7 @@ GeneralJs.moneyBoo = function (column) {
 }
 
 GeneralJs.getUser = function () {
-  const cookies = GeneralJs.getCookiesAll();
+  const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
   return {
     name: cookies["homeliaisonConsoleLoginedName"],
     email: cookies["homeliaisonConsoleLoginedEmail"],
@@ -1125,7 +1122,10 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
   let thisPathName = pathArr[0].replace(/\//g, '');
   const { targetColumn, barWidth, barLeft, secondWidth, secondLeft, secondUpdateWidth, updateWidth, columnIndent } = DataPatch.toolsGrayLeftStandard(thisPathName);
   const UPDATE_WORD = "담당자";
-  const cookies = GeneralJs.getCookiesAll();
+  if (window.localStorage.getItem("GoogleClientProfile") === null) {
+    throw new Error("now allowed");
+  }
+  const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
   GeneralJs.stacks["grayTitle"] = null;
   GeneralJs.stacks["grayData"] = null;
   GeneralJs.stacks["grayDataDoms"] = null;
@@ -3179,7 +3179,6 @@ GeneralJs.prototype.greenAlert = async function (message, blackMode = false) {
 GeneralJs.prototype.loginBox = async function () {
   const instance = this;
   try {
-    const cookies = GeneralJs.getCookiesAll();
     let div_clone;
     let style;
     let ea = "px";
@@ -3195,19 +3194,8 @@ GeneralJs.prototype.loginBox = async function () {
 
     storage = window.localStorage.getItem("GoogleClientProfile");
     if (storage === null) {
-      if (cookies.hasOwnProperty("homeliaisonConsoleLoginedEmail")) {
-        response = await GeneralJs.ajaxJson({
-          type: "boo",
-          value: cookies.homeliaisonConsoleLoginedEmail
-        }, "/getMembers");
-        if (response.result !== null) {
-          memberBoo = true;
-          thisMember = response.result;
-        } else {
-          memberBoo = false;
-          thisMember = null;
-        }
-      }
+      memberBoo = false;
+      thisMember = null;
     } else {
       storageCookie = JSON.parse(storage);
       response = await GeneralJs.ajaxJson({
@@ -3266,7 +3254,6 @@ GeneralJs.prototype.loginBox = async function () {
       GeneralJs.stacks["GoogleClientProfile"].homeliaisonConsoleLoginedName = name;
       GeneralJs.stacks["GoogleClientProfile"].homeliaisonConsoleLoginedEmail = email;
       GeneralJs.stacks["GoogleClientProfile"].homeliaisonConsoleLoginedBoolean = true;
-      GeneralJs.setCookie(GeneralJs.stacks["GoogleClientProfile"]);
 
       window.localStorage.setItem("GoogleClientProfile", JSON.stringify(GeneralJs.stacks["GoogleClientProfile"]));
 
@@ -3282,7 +3269,7 @@ GeneralJs.prototype.loginBox = async function () {
         }, 201);
       } else {
         window.alert("허가된 멤버가 아닙니다.");
-        window.location.href = "https://home-liaison.com";
+        window.location.href = FRONTHOST;
       }
     }
 

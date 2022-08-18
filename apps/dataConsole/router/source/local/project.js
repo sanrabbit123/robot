@@ -1657,10 +1657,10 @@ ProjectJs.prototype.boardGrayBar = function (divisionMap, cases, staticList) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const { createNode, colorChip, withOut, equalJson, isMac, ajaxJson, getCookiesAll, findByAttribute, uniqueValue, cleanChildren, setQueue } = GeneralJs;
+  const { createNode, colorChip, withOut, equalJson, isMac, ajaxJson, findByAttribute, uniqueValue, cleanChildren, setQueue } = GeneralJs;
   const { ea, token, actionClass, statusClass, actionArea } = staticList;
   const projectMap = DataPatch.projectMap();
-  const cookies = getCookiesAll();
+  const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
   const dashboardTarget = {
     status: {
       items: projectMap.status.items,
@@ -2347,7 +2347,7 @@ ProjectJs.prototype.makeBoard = function (cases) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const { createNode, colorChip, withOut, equalJson, isMac, findByAttribute, ajaxJson, getCookiesAll, uniqueValue, cleanChildren, setQueue } = GeneralJs;
+  const { createNode, colorChip, withOut, equalJson, isMac, findByAttribute, ajaxJson, uniqueValue, cleanChildren, setQueue } = GeneralJs;
   const staticList = {
     ea: "px",
     token: "__split__",
@@ -2356,7 +2356,7 @@ ProjectJs.prototype.makeBoard = function (cases) {
     actionArea: "mainArea_actionArea",
   };
   const { ea, token, actionClass, statusClass, actionArea } = staticList;
-  const cookies = getCookiesAll();
+  const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
   const map = DataPatch.projectMap();
   const totalFather = this.totalFather;
   const scrollTong = totalFather.children[1].children[0];
@@ -3405,7 +3405,7 @@ ProjectJs.prototype.cardViewMaker = function () {
 
 ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   const instance = this;
-  const cookies = GeneralJs.getCookiesAll();
+  const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
   const map = DataPatch.projectMap();
   const { chainingTargets, chainingMethods } = DataPatch.projectChainingTarget();
   const thisProjectBill = "thisProjectBill";
@@ -3451,7 +3451,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     try {
       if (window.confirm(thisCase.name + " 고객님께 전화를 걸까요?")) {
         const response = await GeneralJs.ajaxJson({
-          who: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+          who: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
           proid: thisCase.proid
         }, "/callTo");
         if (response.message === "error") {
@@ -5705,7 +5705,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                         id: client.cliid,
                                         column: null,
                                         value: null,
-                                        email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+                                        email: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
                                         send: "universalEstimation",
                                       }, "/updateClientHistory");
                                       await ajaxJson({
@@ -5890,7 +5890,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                         id: client.cliid,
                                         column: null,
                                         value: null,
-                                        email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+                                        email: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
                                         send: "universalEstimation",
                                       }, "/updateClientHistory");
                                       await ajaxJson({
@@ -8015,7 +8015,7 @@ ProjectJs.prototype.makeClipBoardEvent = function (id) {
 
 ProjectJs.prototype.makeImportantEvent = function (id, update = true) {
   const instance = this;
-  const cookies = GeneralJs.getCookiesAll();
+  const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
   return async function (e) {
     if (e.cancelable) {
       e.preventDefault();
