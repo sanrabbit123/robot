@@ -2842,6 +2842,19 @@ DesignerJs.prototype.checkListDetailLaunching = function (desid, callback = null
   const { scrollTo, ajaxJson, colorChip } = GeneralJs;
   let target, pastScrollTop;
 
+  const memoBaseClassName = "memoBaseClassName";
+  const memoWhitePopupClassName = "memoWhitePopupClassName";
+
+  if ([ ...document.querySelectorAll('.' + memoBaseClassName) ].length > 0) {
+    document.querySelector('.' + memoBaseClassName).remove();
+    if ([ ...document.querySelectorAll('.' + memoWhitePopupClassName) ].length > 0) {
+      const removeTargets = document.querySelectorAll('.' + memoWhitePopupClassName);
+      for (let dom of removeTargets) {
+        dom.remove();
+      }
+    }
+  }
+
   if (middleMode) {
     if (typeof GeneralJs.stacks["designerConsoleSseEvent"] === "function") {
       GeneralJs.stacks["designerConsoleSseSource"].removeEventListener("updateTong", GeneralJs.stacks["designerConsoleSseEvent"]);
@@ -4932,48 +4945,12 @@ DesignerJs.prototype.checkListDetailSearchParsing = function () {
 
 DesignerJs.prototype.checklistMemoSystem = async function (desid) {
   const instance = this;
-  const { createNode, withOut, colorChip, ajaxJson } = GeneralJs;
+  const { createNode, withOut, colorChip, ajaxJson, dateToString, cleanChildren } = GeneralJs;
   const { ea, totalContents, belowHeight, grayBarWidth, designers } = this;
   const designer = designers.pick(desid);
-  const sampleContents = `네 맞아요. 이번 집이 신혼집 이후 두 번째 집인데요, 처음 신혼살림을 차릴 때 예쁘게 살고 싶은 마음에 열심히 몇 개월을 인테리어 사이트를 돌아다니며 예쁜 제품들을 찾아 스타일링을 해보았는데 분명 제품 자체는 예쁜 것 같은데 우리 집에 두면 잘 어울리지 않은 것 같아 여러 번 사고 실패하는 과정을 겪었어요. 그러다 보니 힘들기도 하고 지치기도 하고 속상하기도 했던 기억이 있어 이번에 이사를 하면서는 전문가의 도움을 받아 스타일링을 하고 싶은 마음에 홈리에종을 찾게 되었어요.
-
-Q. 새롭게 이사를 하게 되신 것이 어떻게 보면 기회가 되었던 걸까요?
-맞아요. 사실 갑자기 이사를 하게 된 상황이었고 집을 구하는 과정도 쉽지만은 않았어요. 그렇지만 예쁘게 스타일링 할 수 있는 두 번째 기회가 온 것 같다고 생각되어 놓치지 Q. 새롭게 이사를 하게 되신 것이 어떻게 보면 기회가 되었던 걸까요?
-맞아요. 사실 갑자기 이사를 하게 된 상황이었고 집을 구하는 과정도 쉽지만은 않았어요. 그렇지만 예쁘게 스타일링 할 수 있는 두 번째 기회가 온 것 같다고 생각되어 놓치 Q. 새롭게 이사를 하게 되신 것이 어떻게 보면 기회가 되었던 걸까요?
-맞아요. 사실 갑자기 이사를 하게 된 상황이었고 집을 구하는 과정도 쉽지만은 않았어요. 그렇지만 예쁘게 스타일링 할 수 있는 두 번째 기회가 온 것 같다고 생각되어 놓치 않기로 했어요. 마침 제가 출산 휴가 후 복직을 했는데 여러 일들로 굉장히 정신이 없고 바빴기에 더욱 누군가와 같이 하고 싶다는 생각이 컸어요.
-
-6개월 된 아이를 사랑으로 키우고 있는 고객님은 결혼 전부터 신혼집 스타일링을 혼자서는 자신이 없어 홈리에종의 도움을 받고 싶었다고 해요. 꾸미고 싶은 생각은 있어도 워킹맘으로 시간도 부족하고, 재능도 없어 전문가의 도움이 필요하다고 판단하셨다고 합니다. 전셋집이기에 큰 시공은 못하더라도 전체적인 톤을 맞추고, 육아를 하는데 불편함 없는 아늑한 공간을 원하셨어요. 깔끔한 화이트와 편안한 우드 계열을 베이스로, 해맑게 웃는 아이의 웃음만큼 공간마다 컬러를 더해 고객님의 니즈를 충족시켜 드렸어요.
-
-1 - 5
-
-Living room
-
-고객님의 거실은 아이의 성장 공간과 부부의 휴식 공간을 생각해야 했어요. 낮에는 아이가 마음껏 놀 수 있는 공간으로 넓게 사용하고 싶다고 하셔서, 쇼파 구매는 잠시 보류하였고, 밤이면 티비 시청으로 힐링하는 부부를 위해 러그와 좌식용 등받이 쿠션을 놓아드렸어요. 기존에 있던 거실 조명은 너무 화려해 전체 분위기와 이질감이 있어 심플한 형태로 제안해 드렸어요. 고객님께선 그 심플함에 만족도가 매우 높으셨고요.
-
-
-
-6 - 8
-
-Kitchen
-
-리모델링이 되어 있는 화이트 싱크대와 수납공간은 깔끔했지만 수시로 사용하는 가전제품을 배치할 오픈 수납공간은 부족한 상황이었어요. 그래서 화이트 오픈 수납장 구매를 제안드렸고 아이용 전자제품과 식품들 위주로 두어 수납공간을 어른용과 구분하도록 배치해 드렸어요. 기존에 사용하던 접이식 식탁은 세월감은 없지만 불편함이 있어 새로 구매를 원하셨고, 넓지 않은 공간이라 원형 식탁을 제안드렸습니다. 화이트와 우드가 조합된 식탁에 각기 다른 컬러의 의자로 포인트를 주어 쇼파가 없는 대신 개방형 주방 속 작은 카페 느낌으로 생기를 더했어요. 기존 식탁은 발코니로 이동시켜 선반으로 활용하도록 배치해 드렸습니다.
-
-
-9 - 11
-
-Bed room
-
-기존 집에서는 침대와 옷장을 함께 배치하였으나 공간이 늘어남에 따라 드레스룸을 별도로 두기로 하여 침실에는 침대와 작은 서랍장 정도만 생각했었어요. 그러나 늘어난 육아용품과 이불 보관이 시급하여 조금은 큰 수납장을 추천해 드렸고, 슬라이딩 도어와 깊이감이 있는 수납공간 덕분에 활용도가 좋다며 만족해하셨어요. 전체적으로 우드톤을 맞추고 포인트로는 민트 색상의 베딩을 추천하여 고객님이 애정 하는 레이스 커튼과 어울리도록 편안한 분위기를 주었어요. 베이지톤의 수유 체어 위에는 포근한 꿈을 연상케 하는 미니멀한 그림을 제안드려 조금 더 아늑한 침실을 만들어 드렸어요.
-
-
-
-12 - 14
-
-Kid’s room
-
-아직은 어리고 잠자리 독립도 멀었지만 미래를 위해 아이 공간을 만들어 두었어요. 포근한 느낌의 크림 색상 베이비 옷장과 수납장을 구매하여 아이 용품을 별도 수납하고, 순수한 동화 속을 연상케 하는 오브제를 두어 키즈룸의 분위기를 만들어 드렸어요. 은은한 민트 색상의 허니콤 블라인드는 키즈룸의 컬러 포인트로 제안드렸고 앞으로 채워질 물건들을 위해 여백의 공간도 두었어요.
-
-고객님은 첫 미팅 후, ‘다 버리라고 할 줄 알았는데 안 그러시네요.’라고 하셨어요. 스타일링을 의뢰했으니 당연히 제품 구매를 주목적으로 할 줄 알았다며, 그러지 않고 기존 가구들을 모두 활용해 주셔서 감사하다고 하셨어요. 2년밖에 안 된 신혼 가구들이라 상태가 매우 양호한데 무조건 비울 수는 없었고, 공간이 넓어짐에 따라 필요한 제품을 구매하여 기존 가구와 이질감 없이 끼리끼리 묶어 배치하는 것 이 더 중요한 작업이라고 생각했어요. 수납과 정리에 취약하기에 스타일링을 받아도 효과가 있을까 사진을 찍을 만한 집이 될까 걱정이 많으신 고객님이셨기에 소소한 수납 방법부터 설명드리고 배치에 대하여 여러 방법을 시각화로 확인할 수 있도록 보여드렸더니 매우 만족해 하시고, 걱정도 조금씩 내려 두셨던 것 같아요. 정리된 공간에서 아이의 웃음만큼 행복 가득하시길 바랍니다.`;
+  const memoBaseClassName = "memoBaseClassName";
+  const memoWhitePopupClassName = "memoWhitePopupClassName";
+  const textUpdateTargetClassName = "textUpdateTargetClassName";
   try {
     let memoBase, memoTong;
     let motherMargin;
@@ -5001,6 +4978,7 @@ Kid’s room
     let plusSize;
     let plusWeight;
     let plusTextTop;
+    let thisDesignerHistory;
 
     motherMargin = 24;
     innerMotherMargin = 0;
@@ -5039,47 +5017,70 @@ Kid’s room
     plusWeight = 500;
     plusTextTop = -3;
 
+    if ([ ...document.querySelectorAll('.' + memoBaseClassName) ].length > 0) {
+      document.querySelector('.' + memoBaseClassName).remove();
+      if ([ ...document.querySelectorAll('.' + memoWhitePopupClassName) ].length > 0) {
+        const removeTargets = document.querySelectorAll('.' + memoWhitePopupClassName);
+        for (let dom of removeTargets) {
+          dom.remove();
+        }
+      }
+      return;
+    }
+
+    thisDesignerHistory = (await ajaxJson({ method: "designer", idArr: [ desid ] }, "/getHistoryTotal", { equal: true }))[desid];
+
     boxContents = [
       {
         title: "VOC",
-        contents: sampleContents,
+        contents: thisDesignerHistory.history,
+        property: "history",
       },
       {
         title: "VOD",
-        contents: sampleContents,
+        contents: thisDesignerHistory.issue,
+        property: "issue",
       },
       {
         title: "경력 상세",
-        contents: sampleContents,
+        contents: thisDesignerHistory.career,
+        property: "career",
       },
       {
         title: "자녀 및 반려 동물",
-        contents: sampleContents,
+        contents: thisDesignerHistory.family,
+        property: "family",
       },
       {
         title: "파트너 시공사 특징",
-        contents: sampleContents,
+        contents: thisDesignerHistory.partner,
+        property: "partner",
       },
       {
         title: "제작 가구 패브릭",
-        contents: sampleContents,
+        contents: thisDesignerHistory.craft,
+        property: "craft",
       },
       {
         title: "응대 방식",
-        contents: sampleContents,
+        contents: thisDesignerHistory.reception,
+        property: "reception",
       },
       {
         title: "디자인 경향",
-        contents: sampleContents,
+        contents: thisDesignerHistory.styling,
+        property: "styling",
       },
       {
         title: "기타 메모",
-        contents: sampleContents,
+        contents: thisDesignerHistory.etc,
+        property: "etc",
       }
     ];
 
     memoBase = createNode({
       mother: totalContents,
+      class: [ memoBaseClassName ],
       style: {
         position: "fixed",
         top: String(0),
@@ -5167,6 +5168,8 @@ Kid’s room
                 },
                 children: [
                   {
+                    class: [ textUpdateTargetClassName ],
+                    attribute: { index: String(i) },
                     text: boxContents[i].contents,
                     style: {
                       display: "block",
@@ -5195,6 +5198,15 @@ Kid’s room
 
                 cancelBack = createNode({
                   mother: totalContents,
+                  class: [ memoWhitePopupClassName ],
+                  event: {
+                    click: function (e) {
+                      const removeTargets = document.querySelectorAll('.' + memoWhitePopupClassName);
+                      for (let dom of removeTargets) {
+                        dom.remove();
+                      }
+                    }
+                  },
                   style: {
                     position: "fixed",
                     top: String(0),
@@ -5209,6 +5221,8 @@ Kid’s room
 
                 whiteBase = createNode({
                   mother: totalContents,
+                  attribute: { index: String(index) },
+                  class: [ memoWhitePopupClassName ],
                   style: {
                     position: "fixed",
                     top: String(whiteOuterMargin) + ea,
@@ -5290,6 +5304,8 @@ Kid’s room
                               },
                               children: [
                                 {
+                                  class: [ textUpdateTargetClassName ],
+                                  attribute: { index: String(index) },
                                   text: thisContents.contents,
                                   style: {
                                     display: "block",
@@ -5298,14 +5314,117 @@ Kid’s room
                                     fontWeight: String(contentsWeight),
                                     lineHeight: String(contentsLineHeight),
                                     paddingBottom: String(contentsPaddingBottom) + ea,
+                                    color: colorChip.black,
                                   }
                                 }
                               ]
                             },
                             {
                               event: {
-                                selectstart: (e) => { e.preventDefault(); }
+                                selectstart: (e) => { e.preventDefault(); },
+                                click: async function (e) {
+                                  try {
+                                    const index = Number(this.getAttribute("index"));
+                                    const baseTarget = this.parentElement.children[0];
+                                    let textArea, text;
+                                    let areaTarget;
+                                    let updateValue;
+                                    let updateTargets;
+
+                                    if (baseTarget.querySelector("textarea") === null) {
+
+                                      text = "-------- " + dateToString(new Date(), true) + " / 홍길동" + " --------";
+                                      text += "\n\n";
+                                      text += "\n\n";
+                                      text += "----------------------------------------------";
+                                      text += "\n\n";
+                                      text += thisContents.contents;
+
+                                      textArea = createNode({
+                                        mother: baseTarget,
+                                        mode: "textarea",
+                                        attribute: { index: String(index) },
+                                        event: {
+                                          keydown: function (e) {
+                                            if (e.key === "Tab") {
+                                              e.preventDefault();
+                                            }
+                                          },
+                                          keyup: async function (e) {
+                                            try {
+                                              if (e.key === "Tab") {
+                                                const index = Number(this.getAttribute("index"));
+
+                                                updateValue = this.value.trim();
+                                                await ajaxJson({ id: desid, column: boxContents[index].property, value: updateValue, email: null }, "/updateDesignerHistory");
+
+                                                boxContents[index].contents = updateValue;
+                                                thisContents.contents = updateValue;
+
+                                                updateTargets = document.querySelectorAll('.' + textUpdateTargetClassName);
+                                                for (let dom of updateTargets) {
+                                                  if (Number(dom.getAttribute("index")) === index) {
+                                                    cleanChildren(dom);
+                                                    dom.insertAdjacentHTML("beforeend", updateValue.replace(/\n/gi, "<br>"));
+                                                  }
+                                                }
+
+                                                this.remove();
+
+                                              }
+                                            } catch (e) {
+                                              console.log(e);
+                                            }
+                                          }
+                                        },
+                                        text,
+                                        style: {
+                                          display: "block",
+                                          position: "absolute",
+                                          top: String(0),
+                                          left: String(0),
+                                          paddingBottom: String(contentsPaddingBottom) + ea,
+                                          width: withOut(0, ea),
+                                          height: withOut(0, ea),
+                                          background: colorChip.white,
+                                          border: String(0),
+                                          outline: String(0),
+                                          fontSize: String(contentsSize) + ea,
+                                          fontWeight: String(contentsWeight),
+                                          lineHeight: String(contentsLineHeight),
+                                          color: colorChip.green,
+                                        }
+                                      });
+
+                                      textArea.focus();
+
+                                    } else {
+
+                                      areaTarget = baseTarget.querySelector("textarea");
+                                      updateValue = areaTarget.value.trim();
+                                      await ajaxJson({ id: desid, column: boxContents[index].property, value: updateValue, email: null }, "/updateDesignerHistory");
+
+                                      boxContents[index].contents = updateValue;
+                                      thisContents.contents = updateValue;
+
+                                      updateTargets = document.querySelectorAll('.' + textUpdateTargetClassName);
+                                      for (let dom of updateTargets) {
+                                        if (Number(dom.getAttribute("index")) === index) {
+                                          cleanChildren(dom);
+                                          dom.insertAdjacentHTML("beforeend", updateValue.replace(/\n/gi, "<br>"));
+                                        }
+                                      }
+
+                                      areaTarget.remove();
+
+                                    }
+
+                                  } catch (err) {
+                                    console.log(err);
+                                  }
+                                }
                               },
+                              attribute: { index: String(index) },
                               style: {
                                 display: "inline-flex",
                                 position: "absolute",
@@ -5322,8 +5441,9 @@ Kid’s room
                               children: [
                                 {
                                   text: "+",
+                                  attribute: { index: String(index) },
                                   event: {
-                                    selectstart: (e) => { e.preventDefault(); }
+                                    selectstart: (e) => { e.preventDefault(); },
                                   },
                                   style: {
                                     fontSize: String(plusSize) + ea,

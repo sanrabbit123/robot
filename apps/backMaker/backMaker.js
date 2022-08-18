@@ -3446,6 +3446,12 @@ BackMaker.prototype.createHistory = async function (method, updateQuery, option 
         history: "",
         career: "",
         issue: "",
+        family: "",
+        partner: "",
+        craft: "",
+        styling: "",
+        reception: "",
+        etc: "",
         manager: "-",
         console: {
           analytics: {
