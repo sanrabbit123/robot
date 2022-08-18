@@ -1769,54 +1769,114 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
         {
           name: "파트너 시공사",
           value: function (designer) {
-            return (designer.analytics.construct.partner === '') ? "파트너 시공사 없음" : designer.analytics.construct.partner;
+            let contents, value;
+            contents = [
+              "있음",
+              "없음"
+            ];
+            value = [
+              designer.analytics.construct.partner ? 1 : 0,
+              designer.analytics.construct.partner ? 0 : 1,
+            ];
+            return { contents, value };
           },
-          update: function (text, designer) {
-            const errorObj = { updateQuery: "error", text: "error" };
+          update: function (value, designer) {
+            const position = "analytics.construct.partner";
             let updateQuery;
-            let divText;
-            let tempArr, tempObj;
             updateQuery = {};
-            divText = "";
-            if (text.trim() === '') {
-              text = "파트너 시공사 없음";
-            }
-            if (/없음/gi.test(text)) {
-              return { updateQuery: { "analytics.construct.partner": "" }, text: "파트너 시공사 없음" };
-            } else {
-              updateQuery["analytics.construct.partner"] = text.trim();
-              divText = text.trim();
-            }
-            return { updateQuery, text: divText };
+            updateQuery[position] = (value[0] === 1);
+            return updateQuery;
           },
           height: factorHeight,
-          type: "string",
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
         },
         {
-          name: "주로 이용 시공사",
+          name: "파트너 가능 범위",
           value: function (designer) {
-            return (designer.analytics.construct.major === '') ? "주이용 시공사 없음" : designer.analytics.construct.major;
+            let contents, value;
+            contents = [
+              "홈스타일링",
+              "토탈 스타일링",
+              "엑스트라 스타일링",
+            ];
+            value = [];
+            for (let i = 0; i < contents.length; i++) {
+              value.push(designer.analytics.construct.range - 2 === i ? 1 : 0);
+            }
+            return { contents, value };
           },
-          update: function (text, designer) {
-            const errorObj = { updateQuery: "error", text: "error" };
-            let updateQuery;
-            let divText;
-            let tempArr, tempObj;
+          update: function (value, designer) {
+            const position = "analytics.construct.range";
+            let contents, updateQuery, target;
+            contents = [
+              "홈스타일링",
+              "토탈 스타일링",
+              "엑스트라 스타일링",
+            ];
+            target = null;
+            for (let i = 0; i < contents.length; i++) {
+              if (value[i] === 1) {
+                target = i + 2;
+              }
+            }
+            if (target === null) {
+              target = 0 + 2;
+            }
             updateQuery = {};
-            divText = "";
-            if (text.trim() === '') {
-              text = "주이용 시공사 없음";
-            }
-            if (/없음/gi.test(text)) {
-              return { updateQuery: { "analytics.construct.major": "" }, text: "주이용 시공사 없음" };
-            } else {
-              updateQuery["analytics.construct.major"] = text.trim();
-              divText = text.trim();
-            }
-            return { updateQuery, text: divText };
+            updateQuery[position] = target;
+            return updateQuery;
           },
-          height: factorHeight,
-          type: "string",
+          height: desktop ? factorHeight : factorHeight * 3.8,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+
+        {
+          name: "주 이용 시공사",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "고객 시공사",
+              "홈리에종 시공사",
+              "디자이너 시공사",
+            ];
+            value = [];
+            for (let i of contents) {
+              value.push(designer.analytics.construct.major === i ? 1 : 0);
+            }
+            return { contents, value };
+          },
+          update: function (value, designer) {
+            const position = "analytics.construct.major";
+            let contents, updateQuery, target;
+            contents = [
+              "고객 시공사",
+              "홈리에종 시공사",
+              "디자이너 시공사",
+            ];
+            target = null;
+            for (let i = 0; i < contents.length; i++) {
+              if (value[i] === 1) {
+                target = contents[i];
+              }
+            }
+            if (target === null) {
+              target = contents[1];
+            }
+            updateQuery = {};
+            updateQuery[position] = target;
+            return updateQuery;
+          },
+          height: desktop ? factorHeight : factorHeight * 3.8,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
         },
       ]
     },
