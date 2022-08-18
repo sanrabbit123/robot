@@ -1089,6 +1089,113 @@ DesignerAboutJs.prototype.contentsCenter = function () {
       ]
     },
     {
+      title: "시공 관련",
+      whiteType: 1,
+      contents: [
+        {
+          property: desktop ? "파트너 시공사" : "파트너",
+          returnValue: (designer) => { return [
+            "있음",
+            "없음",
+          ] },
+          selectValue: (designer) => {
+            if (designer.analytics.construct.partner) {
+              return [ 0 ];
+            } else {
+              return [ 1 ];
+            }
+          },
+          multiple: false,
+          updateValue: async (raw, columns, designer) => {
+            try {
+              let text, whereQuery, updateQuery;
+
+              whereQuery = { desid };
+              updateQuery = {};
+
+              text = columns[raw.findIndex((num) => { return num === 1 })];
+
+              instance.designer.analytics.construct.partner = (text === "있음");
+              updateQuery["analytics.construct.partner"] = (text === "있음");
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
+        },
+        {
+          property: desktop ? "파트너 가능 범위" : "가능 범위",
+          returnValue: (designer) => { return [
+            "홈스타일링",
+            "토탈 스타일링",
+            "엑스트라"
+          ] },
+          selectValue: (designer) => {
+            return [ designer.analytics.construct.range - 2 ];
+          },
+          multiple: false,
+          updateValue: async (raw, columns, designer) => {
+            try {
+              let index, whereQuery, updateQuery;
+
+              whereQuery = { desid };
+              updateQuery = {};
+
+              index = raw.findIndex((num) => { return num === 1 });
+
+              instance.designer.analytics.construct.range = index + 2;
+              updateQuery["analytics.construct.range"] = index + 2;
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
+        },
+        {
+          property: desktop ? "주 이용 시공사" : "주 이용",
+          returnValue: (designer) => { return [
+            "고객 시공사",
+            "홈리에종 시공사",
+            "디자이너 시공사",
+          ] },
+          selectValue: (designer) => {
+            if (designer.analytics.construct.major === "고객 시공사") {
+              return [ 0 ];
+            } else if (designer.analytics.construct.major === "홈리에종 시공사") {
+              return [ 1 ];
+            } else if (designer.analytics.construct.major === "디자이너 시공사") {
+              return [ 2 ];
+            } else {
+              return [ 1 ];
+            }
+          },
+          multiple: false,
+          updateValue: async (raw, columns, designer) => {
+            try {
+              let text, whereQuery, updateQuery;
+
+              whereQuery = { desid };
+              updateQuery = {};
+
+              text = columns[raw.findIndex((num) => { return num === 1 })];
+
+              instance.designer.analytics.construct.major = text;
+              updateQuery["analytics.construct.major"] = text;
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
+        },
+      ]
+    },
+    {
       title: "제작 관련",
       whiteType: 1,
       contents: [
