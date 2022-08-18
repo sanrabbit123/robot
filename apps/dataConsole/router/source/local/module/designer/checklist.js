@@ -5413,7 +5413,7 @@ DesignerJs.prototype.checklistMemoSystem = async function (desid) {
 
                                       if (baseTarget.querySelector("textarea") === null) {
 
-                                        text = "-------- " + dateToString(new Date(), true) + " / " + ((await ajaxJson({ type: "boo", value: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail }, "/getMembers")).result.name) + " --------";
+                                        text = "-------- " + dateToString(new Date(), true) + " / 홍길동 --------";
                                         text += "\n\n";
                                         text += "\n\n";
                                         text += "----------------------------------------------";
