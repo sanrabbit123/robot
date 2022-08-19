@@ -5415,7 +5415,6 @@ DesignerJs.prototype.checklistMemoSystem = async function (desid) {
 
                                       if (baseTarget.querySelector("textarea") === null) {
 
-
                                         profile = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
                                         if (profile === null) {
                                           window.alert("허가된 멤버가 아닙니다!");

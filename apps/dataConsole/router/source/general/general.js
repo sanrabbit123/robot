@@ -1124,6 +1124,8 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
   const UPDATE_WORD = "담당자";
   if (window.localStorage.getItem("GoogleClientProfile") === null) {
     throw new Error("now allowed");
+    window.localStorage.clear();
+    window.location.reload();
   }
   const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
   GeneralJs.stacks["grayTitle"] = null;

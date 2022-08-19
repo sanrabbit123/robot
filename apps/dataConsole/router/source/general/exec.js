@@ -18,11 +18,12 @@ document.addEventListener("DOMContentLoaded", async function (e) {
       GeneralJs.colorMode = window.localStorage.getItem("colorMode");
     }
 
+    await local_funcs.mother.loginBox();
+
     local_funcs.mother.generalCss();
     local_funcs.mother.greenBar();
     local_funcs.mother.communicationBox();
     await local_funcs.launching();
-    await local_funcs.mother.loginBox();
     // local_funcs.mother.dashboardBox();
     local_funcs.mother.generalStacks();
 
