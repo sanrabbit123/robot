@@ -319,7 +319,7 @@ DataRouter.prototype.rou_get_Root = function () {
   obj.link = '/';
   obj.func = async function (req, res) {
     try {
-      res.redirect("/dashboard");
+      res.redirect("/flow");
     } catch (e) {
       instance.mother.errorLog("Console 서버 문제 생김 (rou_get_Root): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
@@ -421,7 +421,7 @@ DataRouter.prototype.rou_get_First = function () {
           } else if (/^ana/i.test(req.params.id)) {
             target = "analytics";
           } else {
-            target = "dashboard";
+            target = "flow";
           }
 
           instance.baseMaker(target, "first", null).then(function (html) {

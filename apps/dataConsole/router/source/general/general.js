@@ -2249,7 +2249,7 @@ GeneralJs.prototype.greenBar = function () {
     "/project",
     "/designer",
     "/designer?mode=contents",
-    "/dashboard",
+    "/flow",
   ];
   naviIconsContextLinks = [
     "/analytics",

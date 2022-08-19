@@ -7,31 +7,276 @@ const FlowJs = function () {
   this.mother = new GeneralJs();
   this.totalContents = this.mother.totalContents;
   this.ea = "px";
+  this.baseClassName = "baseClassName";
 }
 
-FlowJs.prototype.baseMaker = function () {
+FlowJs.prototype.returnDiagramMap = function (svgName) {
+  const instance = this;
+  const { selfHref } = GeneralJs;
+  let tong;
+
+  if (svgName === "console") {
+    tong = {
+      client: {
+        c1: {
+          name: "1차 응대",
+          event: function (e) {
+            selfHref("https://" + GHOSTHOST + "/client");
+          }
+        },
+        c2: {
+          name: "응대 리포트",
+          event: function (e) {
+            selfHref("https://" + GHOSTHOST + "/client");
+          }
+        },
+      },
+      project: {
+        p1: {
+          name: "프로젝트 관리",
+          event: function (e) {
+            selfHref("https://" + GHOSTHOST + "/project");
+          }
+        },
+        p2: {
+          name: "프로젝트 현황",
+          event: function (e) {
+            selfHref("https://" + GHOSTHOST + "/project");
+          }
+        },
+        p3: {
+          name: "프로젝트 상세",
+          event: function (e) {
+            selfHref("https://" + GHOSTHOST + "/project");
+          }
+        },
+        p4: {
+          name: "서비스 리포트",
+          event: function (e) {
+            selfHref("https://" + GHOSTHOST + "/project");
+          }
+        },
+        p5: {
+          name: "제안서 리스트",
+          event: function (e) {
+            selfHref("https://" + GHOSTHOST + "/proposal");
+          }
+        },
+        p6: {
+          name: "제안서 제작",
+          event: function (e) {
+            selfHref("https://" + GHOSTHOST + "/proposal");
+          }
+        },
+        p7: {
+          name: "촬영 관리",
+          event: function (e) {
+            selfHref("https://" + GHOSTHOST + "/designer?mode=contents");
+          }
+        },
+        p8: {
+          name: "컨텐츠 관리",
+          event: function (e) {
+            selfHref("https://" + GHOSTHOST + "/designer?mode=contents");
+          }
+        },
+        p9: {
+          name: "컨텐츠 제어",
+          event: function (e) {
+            selfHref("https://" + GHOSTHOST + "/contents");
+          }
+        },
+      },
+      designer: {
+        d1: {
+          name: "디자이너 관리",
+          event: function (e) {
+            selfHref("https://" + GHOSTHOST + "/designer");
+          }
+        },
+        d2: {
+          name: "디자이너 기본",
+          event: function (e) {
+            selfHref("https://" + GHOSTHOST + "/designer?mode=general");
+          }
+        },
+        d3: {
+          name: "체크리스트",
+          event: function (e) {
+            selfHref("https://" + GHOSTHOST + "/designer?mode=checklist");
+          }
+        },
+        d4: {
+          name: "상세 리포트",
+          event: function (e) {
+            selfHref("https://" + GHOSTHOST + "/designer?mode=report");
+          }
+        },
+        d5: {
+          name: "새로운 신청자",
+          event: function (e) {
+            selfHref("https://" + GHOSTHOST + "/designer?mode=aspirant");
+          }
+        },
+        d6: {
+          name: "일정 관리",
+          event: function (e) {
+            selfHref("https://" + GHOSTHOST + "/designer?mode=possible");
+          }
+        },
+        d7: {
+          name: "의뢰서 관리",
+          event: function (e) {
+            selfHref("https://" + GHOSTHOST + "/designer?mode=request");
+          }
+        },
+        d8: {
+          name: "정산 정보",
+          event: function (e) {
+            selfHref("https://" + GHOSTHOST + "/designer?mode=calculation");
+          }
+        },
+        d9: {
+          name: "가격 정보",
+          event: function (e) {
+            selfHref("https://" + GHOSTHOST + "/designer?mode=price");
+          }
+        },
+        d10: {
+          name: "프로젝트 뷰",
+          event: function (e) {
+            selfHref("https://" + GHOSTHOST + "/designer?mode=project");
+          }
+        },
+      },
+      construct: {
+        t1: {
+          name: "시공 관리",
+          event: function (e) {
+            selfHref("https://" + GHOSTHOST + "/builder");
+          }
+        },
+        t2: {
+          name: "시공 기본",
+          event: function (e) {
+            selfHref("https://" + GHOSTHOST + "/builder?mode=construct");
+          }
+        },
+        t3: {
+          name: "파트너 정보",
+        },
+        t4: {
+          name: "디자이너사",
+        },
+        t5: {
+          name: "의뢰서 관리",
+        },
+        t6: {
+          name: "견적서 관리",
+        },
+        t7: {
+          name: "수수료 관리",
+        },
+        t8: {
+          name: "정산 관리",
+        },
+        t9: {
+          name: "공정표 관리",
+        },
+      },
+      etc: {
+        e1: {
+          name: "파일 탐색기",
+          event: function (e) {
+            selfHref("https://" + GHOSTHOST + "/file");
+          }
+        },
+        e2: {
+          name: "플로우 관리",
+          event: function (e) {
+            selfHref("https://" + GHOSTHOST + "/flow");
+          }
+        },
+        e3: {
+          name: "미니 서비스",
+          event: function (e) {
+            selfHref("https://" + GHOSTHOST + "/user");
+          }
+        },
+      },
+    };
+  } else if (svgName === "flow") {
+    tong = {
+
+    };
+  } else if (svgName === "server") {
+    tong = {
+
+    };
+  } else {
+    tong = {};
+  }
+
+  return tong;
+}
+
+FlowJs.prototype.launchingDiagram = function (svgName) {
   const instance = this;
   const { createNode, colorChip, withOut } = GeneralJs;
-  const { ea, totalContents, belowHeight } = this;
+  const { ea, totalContents, belowHeight, baseClassName } = this;
   let base, graphic;
+  let map;
+  let idList;
+  let domList;
+  let flatMap;
+  let values;
 
-  base = createNode({
-    mother: totalContents,
-    style: {
-      position: "absolute",
-      top: String(0),
-      left: String(0) + ea,
-      width: withOut(0, ea),
-      height: withOut(belowHeight, ea),
-    }
-  });
+  if (document.querySelector('.' + baseClassName) !== null) {
+    document.querySelector('.' + baseClassName).remove();
+  }
 
-  graphic = window.archer.create(base);
+  return new Promise((resolve, reject) => {
+    base = createNode({
+      mother: totalContents,
+      class: [ baseClassName ],
+      style: {
+        position: "absolute",
+        top: String(0),
+        left: String(0) + ea,
+        width: withOut(0, ea),
+        height: withOut(belowHeight, ea),
+      }
+    });
 
-  graphic.loadUrl("https://" + FILEHOST + "/flow.svg", "https://" + FILEHOST + "/archer.config.json");
-  graphic.on('ready', function () {
-      graphic.view.zoomToFit(200, true);
-      graphic.view.enableMouse(true, true);
+    graphic = window.archer.create(base);
+
+    graphic.loadUrl("https://" + FILEHOST + "/" + svgName + ".svg", "https://" + FILEHOST + "/archer.config.json");
+    graphic.on("ready", () => {
+        graphic.view.zoomToFit(200, true);
+        graphic.view.enableMouse(true, true);
+
+        map = instance.returnDiagramMap(svgName);
+        values = Object.values(map);
+        idList = values.map((obj) => { return Object.keys(obj) }).flat();
+        domList = idList.map((id) => { return base.querySelector('#' + id); }).filter((dom) => { return dom !== null });
+
+        flatMap = {};
+        for (let obj of values) {
+          for (let key in obj) {
+            flatMap[key] = obj[key];
+          }
+        }
+
+        for (let dom of domList) {
+          dom.classList.add("hoverDefault_lite");
+          dom.setAttribute("value", flatMap[dom.id].name);
+          if (typeof flatMap[dom.id].event === "function") {
+            dom.addEventListener("click", flatMap[dom.id].event);
+          }
+        }
+
+        resolve(base);
+    });
   });
 
 }
@@ -65,14 +310,23 @@ FlowJs.prototype.grayLeftPopup = function () {
 
   contents = [
     {
-      title: "홈리에종 서비스 플로우",
-    },
-    {
       title: "홈리에종 콘솔 트리",
+      event: function (e) {
+        instance.launchingDiagram("console").catch((err) => { console.log(err) });
+      }
     },
     {
-      title: "홈리에종 서버 트리"
-    }
+      title: "홈리에종 서비스 플로우",
+      event: function (e) {
+        instance.launchingDiagram("flow").catch((err) => { console.log(err) });
+      }
+    },
+    {
+      title: "홈리에종 서버 트리",
+      event: function (e) {
+        instance.launchingDiagram("server").catch((err) => { console.log(err) });
+      }
+    },
   ]
 
   button.addEventListener("click", function (e) {
@@ -90,6 +344,7 @@ FlowJs.prototype.grayLeftPopup = function () {
           borderRadius: String(5) + "px",
           background: colorChip.gray1,
           animation: "fadeuplite 0.3s ease forwards",
+          zIndex: String(4),
         },
         children: [
           {
@@ -106,10 +361,13 @@ FlowJs.prototype.grayLeftPopup = function () {
       }).firstChild;
 
       num = 1;
-      for (let { title } of contents) {
+      for (let { title, event } of contents) {
         createNode({
           mother: grayBox,
           class: [ "hoverDefault_lite" ],
+          event: {
+            click: event
+          },
           style: {
             display: "flex",
             position: "relative",
@@ -156,7 +414,7 @@ FlowJs.prototype.grayLeftPopup = function () {
 
 FlowJs.prototype.launching = async function () {
   const instance = this;
-  const { createNode, colorChip, withOut } = GeneralJs;
+  const { returnGet, setQueue } = GeneralJs;
   try {
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
@@ -165,8 +423,14 @@ FlowJs.prototype.launching = async function () {
     document.getElementById("moveLeftArea").remove();
     document.getElementById("moveRightArea").remove();
 
-    this.baseMaker();
     this.grayLeftPopup();
+    await this.launchingDiagram(typeof returnGet().mode === "string" ? returnGet().mode : "console");
+
+    setQueue(() => {
+      if (document.getElementById("grayLeftOpenButton") !== null) {
+        document.getElementById("grayLeftOpenButton").click();
+      }
+    }, 1000);
 
   } catch (e) {
     GeneralJs.ajax("message=" + e.message + "&channel=#error_log", "/sendSlack", function () {});
