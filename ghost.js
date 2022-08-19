@@ -3003,7 +3003,7 @@ Ghost.prototype.designerRouter = function (needs) {
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         "Access-Control-Allow-Headers": '*',
       });
-      fileSystem(`readDir`, [ sambaDir ]).then((list) => {
+      fileSystem(`readDir`, [ sambaDir + "/partnership" ]).then((list) => {
         let list_refined = [];
         for (let i of list) {
           if (!/^\._/.test(i) && !/DS_Store/gi.test(i)) {
@@ -3053,7 +3053,7 @@ Ghost.prototype.designerRouter = function (needs) {
       targetDIds = [];
       finalList = [];
 
-      fileSystem(`readDir`, [ sambaDir ]).then((list) => {
+      fileSystem(`readDir`, [ sambaDir + "/partnership" ]).then((list) => {
         allList = [];
         for (let i of list) {
           if (!/^\._/.test(i) && !/DS_Store/gi.test(i)) {
