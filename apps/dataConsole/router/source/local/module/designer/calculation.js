@@ -1133,6 +1133,7 @@ DesignerJs.prototype.calculationView = async function () {
       whereQuery: {
         $and: [
           { desid: { $regex: "^d" } },
+          { "process.status": { $regex: "^[대진완]" } },
           { "proposal.date": { $gt: limitAgo } },
           { "process.contract.remain.date": { $gt: new Date(2000, 0, 1) } }
         ]

@@ -3080,12 +3080,18 @@ Ghost.prototype.designerRouter = function (needs) {
   funcObj.post_createFolder = {
     link: [ "/create", "/createFolder" ],
     func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
       try {
         const GoogleDrive = require(process.cwd() + "/apps/googleAPIs/googleDrive.js");
         const GoogleDocs = require(process.cwd() + "/apps/googleAPIs/googleDocs.js");
         const drive = new GoogleDrive();
         const docs = new GoogleDocs();
-        const designerFolderId = "1mS2U7UzV9AbwVLGXzdakaDh-Mp1eXP4b";
+        const designerFolderId = "1-xcQct5wXg8am57W1e8xXKwSQyLWAsMP";
         let basicList = [
           "포트폴리오",
           "등록서류",
@@ -3095,12 +3101,6 @@ Ghost.prototype.designerRouter = function (needs) {
         let folderName;
         let folderId, docsId;
         let num;
-        res.set({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": '*',
-          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-          "Access-Control-Allow-Headers": '*',
-        });
         if (req.body.name !== undefined && req.body.subid !== undefined) {
           folderName = req.body.subid + "_" + req.body.name;
 
@@ -3109,15 +3109,15 @@ Ghost.prototype.designerRouter = function (needs) {
 
           await sleep(2000);
           num = 0;
-          while ((!(await fileSystem(`exist`, [ `${sambaDir}/${folderName}` ]))) && (num < 10)) {
+          while ((!(await fileSystem(`exist`, [ `${sambaDir}/partnership/${folderName}` ]))) && (num < 10)) {
             await sleep(2000);
             num++;
           }
 
-          if (await fileSystem(`exist`, [ `${sambaDir}/${folderName}` ])) {
+          if (await fileSystem(`exist`, [ `${sambaDir}/partnership/${folderName}` ])) {
             for (let b of basicList) {
-              if (!(await fileSystem(`exist`, [ `${sambaDir}/${folderName}/${b}` ]))) {
-                await fileSystem(`mkdir`, [ `${sambaDir}/${folderName}/${b}` ]);
+              if (!(await fileSystem(`exist`, [ `${sambaDir}/partnership/${folderName}/${b}` ]))) {
+                await fileSystem(`mkdir`, [ `${sambaDir}/partnership/${folderName}/${b}` ]);
               }
             }
           }
@@ -3136,6 +3136,7 @@ Ghost.prototype.designerRouter = function (needs) {
 
       } catch (e) {
         console.log(e);
+        res.send(JSON.stringify({ error: e.message }));
       }
     }
   };
