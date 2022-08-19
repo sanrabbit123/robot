@@ -268,7 +268,7 @@ FlowJs.prototype.launchingDiagram = function (svgName) {
         }
 
         for (let dom of domList) {
-          dom.classList.add("hoverDefault_lite");
+          dom.style.cursor = "pointer";
           dom.setAttribute("value", flatMap[dom.id].name);
           if (typeof flatMap[dom.id].event === "function") {
             dom.addEventListener("click", flatMap[dom.id].event);
