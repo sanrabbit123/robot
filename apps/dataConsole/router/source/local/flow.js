@@ -12,7 +12,7 @@ const FlowJs = function () {
 FlowJs.prototype.baseMaker = function () {
   const instance = this;
   const { createNode, colorChip, withOut } = GeneralJs;
-  const { ea, totalContents } = this;
+  const { ea, totalContents, belowHeight } = this;
   let base, graphic;
 
   base = createNode({
@@ -20,9 +20,9 @@ FlowJs.prototype.baseMaker = function () {
     style: {
       position: "absolute",
       top: String(0),
-      left: String(0),
-      width: withOut(0),
-      height: withOut(this.belowHeight, ea),
+      left: String(0) + ea,
+      width: withOut(0, ea),
+      height: withOut(belowHeight, ea),
     }
   });
 
@@ -32,6 +32,124 @@ FlowJs.prototype.baseMaker = function () {
   graphic.on('ready', function () {
       graphic.view.zoomToFit(200, true);
       graphic.view.enableMouse(true, true);
+  });
+
+}
+
+FlowJs.prototype.grayLeftPopup = function () {
+  const instance = this;
+  const button = document.getElementById("grayLeftOpenButton");
+  const { createNode, colorChip, withOut } = GeneralJs;
+  const { ea, totalContents, grayBarWidth, belowHeight } = this;
+  const grayBoxClassName = "grayBoxClassName";
+  let grayBox, grayBoxMargin;
+  let grayBoxWidth;
+  let grayBoxHeight;
+  let grayBoxInnerPadding;
+  let grayBoxInnerPaddingTop;
+  let contents;
+  let num;
+  let buttonSize;
+  let buttonWeight;
+  let buttonUnitHeight;
+
+  grayBoxMargin = 45;
+  grayBoxWidth = 230;
+  grayBoxHeight = 280;
+  grayBoxInnerPadding = 24;
+  grayBoxInnerPaddingTop = 14;
+
+  buttonSize = 14;
+  buttonWeight = 700;
+  buttonUnitHeight = 28;
+
+  contents = [
+    {
+      title: "홈리에종 서비스 플로우",
+    },
+    {
+      title: "홈리에종 콘솔 트리",
+    },
+    {
+      title: "홈리에종 서버 트리"
+    }
+  ]
+
+  button.addEventListener("click", function (e) {
+
+    if (document.querySelector('.' + grayBoxClassName) === null) {
+
+      grayBox = createNode({
+        mother: totalContents,
+        class: [ grayBoxClassName ],
+        style: {
+          position: "absolute",
+          bottom: String(belowHeight + grayBoxMargin) + ea,
+          right: String(grayBoxMargin) + ea,
+          width: String(grayBoxWidth) + ea,
+          borderRadius: String(5) + "px",
+          background: colorChip.gray1,
+          animation: "fadeuplite 0.3s ease forwards",
+        },
+        children: [
+          {
+            style: {
+              display: "block",
+              position: "relative",
+              paddingTop: String(grayBoxInnerPaddingTop) + ea,
+              paddingBottom: String(grayBoxInnerPaddingTop) + ea,
+              paddingLeft: String(grayBoxInnerPadding) + ea,
+              width: withOut(grayBoxInnerPadding * 2, ea),
+            }
+          }
+        ]
+      }).firstChild;
+
+      num = 1;
+      for (let { title } of contents) {
+        createNode({
+          mother: grayBox,
+          class: [ "hoverDefault_lite" ],
+          style: {
+            display: "flex",
+            position: "relative",
+            height: String(buttonUnitHeight) + ea,
+            width: withOut(0),
+            justifyContent: "end",
+            alignItems: "center",
+          },
+          children: [
+            {
+              text: title,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(buttonSize) + ea,
+                fontWeight: String(buttonWeight),
+                color: colorChip.black,
+              }
+            },
+            {
+              text: String(num),
+              style: {
+                position: "absolute",
+                fontSize: String(buttonSize) + ea,
+                fontWeight: String(300),
+                color: colorChip.deactive,
+                left: String(0),
+              }
+            }
+          ]
+        })
+        num++;
+      }
+
+    } else {
+
+      document.querySelector('.' + grayBoxClassName).remove();
+
+    }
+
   });
 
 }
@@ -48,6 +166,7 @@ FlowJs.prototype.launching = async function () {
     document.getElementById("moveRightArea").remove();
 
     this.baseMaker();
+    this.grayLeftPopup();
 
   } catch (e) {
     GeneralJs.ajax("message=" + e.message + "&channel=#error_log", "/sendSlack", function () {});
