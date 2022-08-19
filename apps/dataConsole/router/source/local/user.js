@@ -926,7 +926,7 @@ UserJs.prototype.launching = async function () {
     users = await ajaxJson({ whereQuery: {} }, "/getUsers", { equal: true });
     designers = await ajaxJson({ noFlat: true, whereQuery: {} }, "/getDesigners", { equal: true });
     miniDesigners = [
-      "d1701_aa01s",
+      "d2104_aa02s",
       "d1904_aa12s",
       "d1908_aa02s"
     ];

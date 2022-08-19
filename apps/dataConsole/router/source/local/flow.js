@@ -9,10 +9,36 @@ const FlowJs = function () {
   this.ea = "px";
 }
 
-FlowJs.prototype.launching = async function () {
+FlowJs.prototype.baseMaker = function () {
   const instance = this;
   const { createNode, colorChip, withOut } = GeneralJs;
   const { ea, totalContents } = this;
+  let base, graphic;
+
+  base = createNode({
+    mother: totalContents,
+    style: {
+      position: "absolute",
+      top: String(0),
+      left: String(0),
+      width: withOut(0),
+      height: withOut(this.belowHeight, ea),
+    }
+  });
+
+  graphic = window.archer.create(base);
+
+  graphic.loadUrl("https://" + FILEHOST + "/flow.svg", "https://" + FILEHOST + "/archer.config.json");
+  graphic.on('ready', function () {
+      graphic.view.zoomToFit(200, true);
+      graphic.view.enableMouse(true, true);
+  });
+
+}
+
+FlowJs.prototype.launching = async function () {
+  const instance = this;
+  const { createNode, colorChip, withOut } = GeneralJs;
   try {
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
@@ -21,30 +47,10 @@ FlowJs.prototype.launching = async function () {
     document.getElementById("moveLeftArea").remove();
     document.getElementById("moveRightArea").remove();
 
-    let base, graphic;
-
-    base = createNode({
-      mother: totalContents,
-      style: {
-        position: "absolute",
-        top: String(0),
-        left: String(0),
-        width: withOut(0),
-        height: withOut(this.belowHeight, ea),
-      }
-    });
-
-    graphic = window.archer.create(base);
-
-    graphic.loadUrl("https://" + FILEHOST + "/flow.svg", "https://" + FILEHOST + "/archer.config.json");
-    graphic.on('ready', function () {
-        graphic.view.zoomToFit(200, true);
-        graphic.view.enableMouse(true, true);
-    });
-
+    this.baseMaker();
 
   } catch (e) {
-    GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
+    GeneralJs.ajax("message=" + e.message + "&channel=#error_log", "/sendSlack", function () {});
     console.log(e);
   }
 }
