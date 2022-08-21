@@ -235,6 +235,110 @@ DesignerPossibleJs.prototype.calendarChain = function () {
   }
 }
 
+DesignerPossibleJs.prototype.possiblePrompt = function () {
+  const instance = this;
+  const { clients, projects, requestNumber, ea, baseTong, media, totalContents } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, colorCalendar } = GeneralJs;
+  const possiblePromptClassName = "possiblePromptClassName";
+  let cancelBack, whitePrompt;
+  let zIndex;
+  let whiteWidth, whiteHeight;
+  let selectionReset;
+
+  whiteWidth = 324;
+  whiteHeight = 200;
+  zIndex = 4;
+
+  selectionReset = () => {
+    for (let { dom } of instance.possibleBoxes) {
+      dom.style.background = colorChip.white;
+      dom.parentNode.firstChild.style.color = dom.parentNode.firstChild.getAttribute("color");
+      dom.firstChild.style.color = colorChip.green;
+      dom.setAttribute("toggle", "off");
+    }
+    instance.selection = [];
+  }
+
+  cancelBack = createNode({
+    mother: totalContents,
+    class: [ possiblePromptClassName ],
+    event: {
+      click: function (e) {
+        const removeTargets = document.querySelectorAll('.' + possiblePromptClassName);
+        for (let dom of removeTargets) {
+          dom.remove();
+        }
+        selectionReset();
+      }
+    },
+    style: {
+      display: "block",
+      position: "fixed",
+      top: String(0),
+      left: String(0),
+      width: withOut(0),
+      height: withOut(0),
+      background: colorChip.black,
+      opacity: String(0.3),
+      zIndex: String(zIndex),
+    }
+  });
+
+  whitePrompt = createNode({
+    mother: totalContents,
+    class: [ possiblePromptClassName ],
+    style: {
+      display: "inline-block",
+      position: "fixed",
+      top: withOut(50, (whiteHeight / 2), ea),
+      left: withOut(50, (whiteWidth / 2), ea),
+      width: String(whiteWidth) + ea,
+      height: String(whiteHeight) + ea,
+      background: colorChip.white,
+      borderRadius: String(8) + "px",
+      boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
+      animation: "fadeuphard 0.5s ease forwards",
+      overflow: "hidden",
+      zIndex: String(zIndex),
+      background: colorChip.white,
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: "relative",
+          top: String(0),
+          left: String(0),
+          width: withOut(0),
+          height: withOut(16 * 2, ea),
+          paddingTop: String(30) + ea,
+        },
+        children: [
+          {
+            text: "가능한 프로젝트 건수를 알려주세요!",
+            style: {
+              display: "block",
+              position: "relative",
+              fontSize: String(18) + ea,
+              fontWeight: String(700),
+              color: colorChip.black,
+              paddingLeft: String(36) + ea,
+            }
+          }
+        ]
+      }
+    ]
+  })
+
+
+
+
+}
+
 DesignerPossibleJs.prototype.insertCalendarBox = function (standardIndex = 0) {
   const instance = this;
   const mother = this.mother;
@@ -414,7 +518,7 @@ DesignerPossibleJs.prototype.insertCalendarBox = function (standardIndex = 0) {
             if (instance.selection.length === 1) {
 
               // pass
-              
+
             } else if (instance.selection.length === 2) {
 
               valueRange = [ stringToDate(instance.selection[0].value).valueOf(), stringToDate(instance.selection[1].value).valueOf() ];
@@ -430,7 +534,7 @@ DesignerPossibleJs.prototype.insertCalendarBox = function (standardIndex = 0) {
               }
 
               setQueue(() => {
-                console.log("pop up");
+                instance.possiblePrompt();
               });
 
             } else {
