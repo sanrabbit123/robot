@@ -243,7 +243,7 @@ DesignerPossibleJs.prototype.insertCalendarBox = function (standardIndex = 0) {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, colorCalendar } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, colorCalendar, setQueue } = GeneralJs;
   const isDateValid = (date) => {
     return ((new Date(2000, 0, 1)).valueOf() <= date.valueOf() && (new Date(3000, 0, 1)).valueOf() > date.valueOf());
   }
@@ -267,6 +267,8 @@ DesignerPossibleJs.prototype.insertCalendarBox = function (standardIndex = 0) {
   let possibleSize;
   let possibleWeight;
   let possibleTextTop;
+  let possibleBox;
+  let valueRange;
 
   grayBetween = <%% 40, 40, 36, 36, 3 %%>;
 
@@ -371,8 +373,84 @@ DesignerPossibleJs.prototype.insertCalendarBox = function (standardIndex = 0) {
 
   for (let mother of dateBoxes) {
 
-    createNode({
+    mother.firstChild.style.zIndex = String(1);
+    mother.firstChild.setAttribute("color", mother.firstChild.style.color);
+
+    possibleBox = createNode({
       mother,
+      attribute: {
+        toggle: "off",
+        value: dateToString(new Date(standardDate.getFullYear(), standardDate.getMonth(), Number(mother.firstChild.textContent))),
+      },
+      event: {
+        mouseenter: function (e) {
+          const toggle = this.getAttribute("toggle");
+          if (toggle === "off") {
+            this.style.background = colorChip.liteGreen;
+            this.parentNode.firstChild.style.color = colorChip.green;
+          }
+        },
+        mouseleave: function (e) {
+          const toggle = this.getAttribute("toggle");
+          if (toggle === "off") {
+            this.style.background = colorChip.white;
+            this.parentNode.firstChild.style.color = this.parentNode.firstChild.getAttribute("color");
+          }
+        },
+        click: function (e) {
+          const value = this.getAttribute("value");
+          const toggle = this.getAttribute("toggle");
+          if (toggle === "off") {
+            this.style.background = colorChip.green;
+            this.parentNode.firstChild.style.color = colorChip.white;
+            this.firstChild.style.color = colorChip.white;
+            this.setAttribute("toggle", "on");
+
+            instance.selection.push({
+              value,
+              dom: this,
+            });
+
+            if (instance.selection.length === 1) {
+
+              // pass
+              
+            } else if (instance.selection.length === 2) {
+
+              valueRange = [ stringToDate(instance.selection[0].value).valueOf(), stringToDate(instance.selection[1].value).valueOf() ];
+              valueRange.sort((a, b) => { return a - b; });
+
+              for (let { value, dom } of instance.possibleBoxes) {
+                if (valueRange[0] < stringToDate(value).valueOf() && stringToDate(value).valueOf() < valueRange[1]) {
+                  dom.style.background = colorChip.green;
+                  dom.parentNode.firstChild.style.color = colorChip.white;
+                  dom.firstChild.style.color = colorChip.white;
+                  dom.setAttribute("toggle", "on");
+                }
+              }
+
+              setQueue(() => {
+                console.log("pop up");
+              });
+
+            } else {
+              for (let { dom } of instance.possibleBoxes) {
+                dom.style.background = colorChip.white;
+                dom.parentNode.firstChild.style.color = dom.parentNode.firstChild.getAttribute("color");
+                dom.firstChild.style.color = colorChip.green;
+                dom.setAttribute("toggle", "off");
+              }
+              instance.selection = [];
+            }
+
+          } else {
+            this.style.background = colorChip.white;
+            this.parentNode.firstChild.style.color = this.parentNode.firstChild.getAttribute("color");
+            this.firstChild.style.color = colorChip.green;
+            this.setAttribute("toggle", "off");
+          }
+        }
+      },
       style: {
         display: "flex",
         position: "absolute",
@@ -383,6 +461,7 @@ DesignerPossibleJs.prototype.insertCalendarBox = function (standardIndex = 0) {
         justifyContent: "center",
         alignItems: "center",
         textAlign: "center",
+        background: colorChip.white,
       },
       children: [
         {
@@ -398,7 +477,10 @@ DesignerPossibleJs.prototype.insertCalendarBox = function (standardIndex = 0) {
         }
       ]
     })
-
+    this.possibleBoxes.push({
+      value: dateToString(new Date(standardDate.getFullYear(), standardDate.getMonth(), Number(mother.firstChild.textContent))),
+      dom: possibleBox,
+    });
   }
 
 }
@@ -792,6 +874,9 @@ DesignerPossibleJs.prototype.launching = async function (loading) {
     for (let project of projects) {
       project.name = clients.find((obj) => { return obj.cliid === project.cliid }).name;
     }
+
+    this.selection = [];
+    this.possibleBoxes = [];
 
     await this.mother.ghostDesignerLaunching({
       name: "designerPossible",
