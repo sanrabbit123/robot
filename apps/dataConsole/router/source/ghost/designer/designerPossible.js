@@ -489,9 +489,16 @@ DesignerPossibleJs.prototype.insertCalendarBox = function (standardIndex = 0) {
       event: {
         mouseenter: function (e) {
           const toggle = this.getAttribute("toggle");
-          if (toggle === "off") {
-            this.style.background = colorChip.liteGreen;
-            this.parentNode.firstChild.style.color = colorChip.green;
+          if (!instance.isMouseDown) {
+            if (toggle === "off") {
+              this.style.background = colorChip.liteGreen;
+              this.parentNode.firstChild.style.color = colorChip.green;
+            }
+          } else {
+
+
+
+
           }
         },
         mouseleave: function (e) {
@@ -500,6 +507,14 @@ DesignerPossibleJs.prototype.insertCalendarBox = function (standardIndex = 0) {
             this.style.background = colorChip.white;
             this.parentNode.firstChild.style.color = this.parentNode.firstChild.getAttribute("color");
           }
+        },
+        mousedown: function (e) {
+          instance.isMouseDown = true;
+          console.log(instance.isMouseDown);
+        },
+        mouseup: function (e) {
+          instance.isMouseDown = false;
+          console.log(instance.isMouseDown);
         },
         click: function (e) {
           const value = this.getAttribute("value");
@@ -981,6 +996,10 @@ DesignerPossibleJs.prototype.launching = async function (loading) {
 
     this.selection = [];
     this.possibleBoxes = [];
+    this.isMouseDown = false;
+    document.body.addEventListener("mouseup", (e) => {
+      instance.isMouseDown = false;
+    });
 
     await this.mother.ghostDesignerLaunching({
       name: "designerPossible",
