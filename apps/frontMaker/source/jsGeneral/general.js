@@ -1903,6 +1903,7 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
   let calendarTitlePaddingBottom;
   let calendarTitlePaddingLeft;
   let calendarTitlePaddingRight;
+  let standardDate;
 
   if (option.heightMode !== true) {
     if (window.innerWidth > 1450) {
@@ -2271,6 +2272,13 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
     calendarTitlePaddingBottom = Math.floor(0.6 * (0.01 * option.height));
     calendarTitlePaddingLeft = Math.floor(1.2 * (0.01 * option.height));
     calendarTitlePaddingRight = Math.floor(1.2 * (0.01 * option.height));
+  }
+
+  standardDate = new Date();
+  if (typeof option.standardDate === "object") {
+    if (option.standardDate instanceof Date) {
+      standardDate = option.standardDate;
+    }
   }
 
   GeneralJs.cleanChildren(mother);
@@ -2806,7 +2814,7 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
 
   }
 
-  dateMatrix = GeneralJs.getDateMatrix(new Date()).sundayConvert();
+  dateMatrix = GeneralJs.getDateMatrix(standardDate).sundayConvert();
   bigCalendar = GeneralJs.createNode({
     mother,
     style: {
@@ -2827,7 +2835,7 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
     },
     children: [
       {
-        text: GeneralJs.dateToString(new Date()).split('-').slice(0, 2).join(". "),
+        text: GeneralJs.dateToString(standardDate).split('-').slice(0, 2).join(". "),
         event: {
           selectstart: (e) => { e.preventDefault(); }
         },
@@ -2891,6 +2899,8 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
     },
   });
   blockInsert(dateMatrix, children, bigCalendarContentsZone);
+
+  return bigCalendar;
 }
 
 GeneralJs.sleep = function (time) {

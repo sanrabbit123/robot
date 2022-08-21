@@ -18,11 +18,11 @@
   "meta": {
     "title": [
       "thisPerson",
-      "return ('디자이너 콘솔 | 홈리에종');"
+      "return ('프로젝트 관리 | 홈리에종');"
     ],
     "description": [
       "thisPerson",
-      "return ('디자이너 콘솔 | 홈리에종');"
+      "return ('프로젝트 관리 | 홈리에종');"
     ],
     "image": [
       "thisPerson",
