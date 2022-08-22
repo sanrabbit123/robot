@@ -287,6 +287,7 @@ DesignerPossibleJs.prototype.boxToPossible = async function () {
     updateQuery = {};
     updateQuery["possible"] = this.realtimeDesigner.possible;
     await ajaxJson({ mode: "update", desid: instance.designer.desid, updateQuery }, BACKHOST + "/realtimeDesigner");
+    await ajaxJson({ message: instance.designer.designer + " 실장님이 콘솔을 통해 가능 일정 스케쥴을 조정하셨습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
 
   } catch (e) {
     console.log(e);
@@ -815,10 +816,13 @@ DesignerPossibleJs.prototype.insertCalendarBox = function (standardIndex = 0) {
             }
 
           } else {
-            this.style.background = colorChip.white;
-            this.parentNode.firstChild.style.color = this.parentNode.firstChild.getAttribute("color");
-            this.firstChild.style.color = colorChip.green;
-            this.setAttribute("toggle", "off");
+
+            instance.selection.push({ value, dom: this });
+
+            setQueue(() => {
+              instance.possiblePrompt();
+            });
+
           }
         }
       },

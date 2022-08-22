@@ -2782,6 +2782,14 @@ DevContext.prototype.launching = async function () {
     //   },
     // ]);
 
+    // rawtoraw designer fail
+    // const kakaoInstance = new KakaoTalk();
+    // await kakaoInstance.ready();
+    // const desid = "d2104_aa03s";
+    // const shareGoogleIdDesigner = "1swWfL16Ks9cg7d623sUGwuNOzfQ4ge-l";
+    // const targetDesigner = await back.getDesignerById(desid, { selfMongo: this.MONGOC });
+    // await kakaoInstance.sendTalk("photoShareAKeywordDesigner", targetDesigner.designer, targetDesigner.information.phone, { designer: targetDesigner.designer, file: shareGoogleIdDesigner });
+    // await messageSend({ text: `${targetDesigner.designer} 디자이너님께 사진 공유 알림톡을 전송하였습니다!`, channel: `#502_sns_contents` });
 
     // get photo folder
     // const drive = new GoogleDrive();
