@@ -2398,6 +2398,9 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
           },
           children: [
             {
+              event: {
+                selectstart: (e) => { e.preventDefault() },
+              },
               text: dateMatrix.matrix[i][j] !== null ? String(dateMatrix.matrix[i][j].date) : "",
               style: {
                 fontSize: String(weekBlockSize) + ea,
