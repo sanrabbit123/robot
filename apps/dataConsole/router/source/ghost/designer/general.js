@@ -132,7 +132,7 @@ GeneralJs.prototype.setNavigator = function (designer) {
   hamburgerTop = 21;
   searchWidth = <%% 22.5, 22.5, 21, 18, 20 %%>;
   searchWidthMinus = <%% 23, 23, 21, 18.5, 2 %%>;
-  mobileMenuHeight = 210;
+  mobileMenuHeight = 240;
   mobileFirstTop = 11;
   mobileVerticalBetween = 37;
 
@@ -144,22 +144,27 @@ GeneralJs.prototype.setNavigator = function (designer) {
       green: [],
     },
     {
+      title: "일정 관리",
+      href: FRONTHOST + "/designer/possible.php?desid=" + designer.desid,
+      green: [],
+    },
+    {
       title: "기본 정보",
       href: FRONTHOST + "/designer/about.php?desid=" + designer.desid,
       green: [],
     },
     {
-      title: "정산 리포트",
+      title: "정산 내역",
       href: FRONTHOST + "/designer/report.php?desid=" + designer.desid,
       green: [],
     },
     {
-      title: "프로젝트 의뢰서",
+      title: "의뢰서 관리",
       href: FRONTHOST + "/designer/requests.php?desid=" + designer.desid,
       green: [],
     },
     {
-      title: "제공 내역",
+      title: "파트너십",
       href: FRONTHOST + "/designer/manual.php?desid=" + designer.desid,
       green: [],
     },
@@ -221,7 +226,7 @@ GeneralJs.prototype.setNavigator = function (designer) {
         top: String(wordTop) + "px",
         right: desktop ? "calc(50% - " + String(standardWidth / 2) + ea + ")" : String(mobileMargin) + ea,
         height: String(wordHeight) + "px",
-        width: String(600) + "px",
+        width: String(750) + "px",
         fontSize: String(wordSize) + "px",
         fontWeight: String(500),
         textAlign: "right",

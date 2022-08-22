@@ -313,26 +313,28 @@ DesignerPossibleJs.prototype.possiblePrompt = function () {
   let inputSize, inputWeight;
   let loadingHeight;
   let loadingBetween;
+  let questionTextTop;
 
-  whiteWidth = <%% 324, 324, 324, 324, 324 %%>;
-  whiteHeight = <%% 138, 138, 138, 138, 138 %%>;
+  whiteWidth = <%% 324, 324, 308, 294, 58.5 %%>;
+  whiteHeight = <%% 136, 136, 130, 122, 21.6 %%>;
   zIndex = 4;
 
-  innerPaddingTop = <%% 30, 30, 30, 30, 30 %%>;
-  innerPaddingLeft = <%% 36, 36, 36, 36, 36 %%>;
+  innerPaddingTop = <%% 30, 30, 28, 26, 4 %%>;
+  innerPaddingLeft = <%% 36, 36, 36, 36, 5 %%>;
 
-  questionSize = <%% 18, 18, 18, 18, 18 %%>;
+  questionSize = <%% 18, 18, 17, 16, 3.5 %%>;
   questionWeight = <%% 700, 700, 700, 700, 700 %%>;
+  questionTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
-  grayMarginTop = <%% 14, 14, 14, 14, 14 %%>;
-  grayWidth = <%% 210, 210, 210, 210, 210 %%>;
-  grayHeight = <%% 32, 32, 32, 32, 32 %%>;
+  grayMarginTop = <%% 14, 14, 13, 12, 1.8 %%>;
+  grayWidth = <%% 210, 210, 198, 184, 42.5 %%>;
+  grayHeight = <%% 32, 32, 30, 30, 5.6 %%>;
 
-  inputSize = <%% 14, 14, 14, 14, 14 %%>;
+  inputSize = <%% 14, 14, 13, 13, 2.6 %%>;
   inputWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  loadingBetween = <%% 11, 11, 11, 11, 11 %%>;
-  loadingHeight = <%% 30, 30, 30, 30, 30 %%>;
+  loadingBetween = <%% 11, 11, 10, 10, 1.8 %%>;
+  loadingHeight = <%% 30, 30, 28, 28, 4.2 %%>;
 
   selectionReset = () => {
     for (let { dom } of instance.possibleBoxes) {
@@ -415,6 +417,7 @@ DesignerPossibleJs.prototype.possiblePrompt = function () {
               fontWeight: String(questionWeight),
               color: colorChip.black,
               paddingLeft: String(innerPaddingLeft) + ea,
+              top: String(questionTextTop) + ea,
             }
           },
           {
@@ -460,7 +463,7 @@ DesignerPossibleJs.prototype.possiblePrompt = function () {
                                 for (let { value, dom } of instance.possibleBoxes) {
                                   if (range[0].valueOf() <= stringToDate(value).valueOf() && stringToDate(value).valueOf() <= range[1].valueOf()) {
                                     dom.firstChild.setAttribute("possible", String(possibleValue));
-                                    dom.firstChild.textContent = String(possibleValue) + "건 가능";
+                                    dom.firstChild.textContent = String(possibleValue) + (desktop ? "건 가능" : "건");
                                   }
                                 }
 
@@ -558,11 +561,11 @@ DesignerPossibleJs.prototype.insertCalendarBox = function (standardIndex = 0) {
 
   grayBetween = <%% 40, 40, 36, 36, 3 %%>;
 
-  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  bottomMargin = <%% 16, 16, 16, 12, 0 %%>;
   margin = <%% 55, 55, 47, 39, 0 %%>;
   paddingTop =  <%% 52, 52, 44, 36, 6 %%>;
 
-  whiteBottomMargin = <%% 20, 20, 16, 8, 0.5 %%>;
+  whiteBottomMargin = <%% 20, 20, 16, 8, 0 %%>;
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
   numberRight = <%% 12, 12, 12, 12, 2 %%>;
@@ -572,7 +575,7 @@ DesignerPossibleJs.prototype.insertCalendarBox = function (standardIndex = 0) {
 
   titleBottom = <%% (isMac() ? 18 : 16), (isMac() ? 18 : 16), (isMac() ? 15 : 13), (isMac() ? 15 : 13), 3 %%>;
 
-  possibleSize = <%% 19, 19, 19, 19, 19 %%>;
+  possibleSize = <%% 19, 18, 16, 14, 3 %%>;
   possibleWeight = <%% 200, 200, 200, 200, 200 %%>;
   possibleTextTop = <%% 0, 0, 0, 0, 0 %%>;
 
@@ -837,6 +840,7 @@ DesignerPossibleJs.prototype.insertCalendarBox = function (standardIndex = 0) {
         alignItems: "center",
         textAlign: "center",
         background: colorChip.white,
+        transition: "all 0.3s ease",
       },
       children: [
         {
@@ -847,7 +851,7 @@ DesignerPossibleJs.prototype.insertCalendarBox = function (standardIndex = 0) {
             color: thisPossible === 0 ? colorChip.deactive : colorChip.green,
             possible: String(thisPossible),
           },
-          text: String(thisPossible) + "건 가능",
+          text: String(thisPossible) + (desktop ? "건 가능" : "건"),
           style: {
             display: "inline-block",
             position: "relative",
@@ -877,9 +881,8 @@ DesignerPossibleJs.prototype.insertNoticeBox = function () {
   const blank = "&nbsp;&nbsp;&nbsp;";
   const mainContents = [
     {
-      title: "프로젝트 가능 건",
+      title: "프로젝트 가능 건 표시",
       contents: [
-        "각 날짜별로 동시에 진행 가능한 프로젝트를 표시하는 콘솔입니다.",
         "해당 날짜에 표시된 숫자는 진행 가능한 디자이너 판단의 기준이 되며, 자동 큐레이션이 진행될 시 중요한 연산 기준이 됩니다.",
       ],
     },
@@ -887,7 +890,6 @@ DesignerPossibleJs.prototype.insertNoticeBox = function () {
       title: "콘솔 이용 방법",
       contents: [
         "날짜 범위를 선택하면, 그 범위에 가능한 프로젝트 가능 건수를 묻는 팝업이 제시됩니다.",
-        "날짜 범위를 선택하는 방법은 <b%시작 날짜를 먼저 선택 후, 종료 날짜를 선택하면 그 사이의 범위가 선택%b>됩니다.",
         "하루를 선택하기 위해선 <b%해당 날짜를 두 번 클릭%b>하시면 선택이 되고, 건수를 묻습니다."
       ],
     },
@@ -942,7 +944,7 @@ DesignerPossibleJs.prototype.insertNoticeBox = function () {
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
   titleBottom = <%% (isMac() ? 18 : 16), (isMac() ? 18 : 16), (isMac() ? 18 : 16), (isMac() ? 18 : 16), 0 %%>;
-  contentsAreaPaddingTop = <%% 34, 34, 34, 34, 6 %%>;
+  contentsAreaPaddingTop = <%% 34, 34, 34, 34, 7 %%>;
 
   mobileTitleLeft = 1.5;
   mobileTitleTop = -8.7;
@@ -1022,7 +1024,7 @@ DesignerPossibleJs.prototype.insertNoticeBox = function () {
     children: [
       {
         style: {
-          display: "block",
+          display: desktop ? "block" : "none",
           position: mobile ? "absolute" : "relative",
           left: desktop ? "" : String(mobileTitleLeft) + ea,
           top: desktop ? "" : String(mobileTitleTop) + ea,
@@ -1061,7 +1063,7 @@ DesignerPossibleJs.prototype.insertNoticeBox = function () {
           borderTop: desktop ? "1px solid " + colorChip.shadow : "",
           paddingLeft: desktop ? "" : String(mobilePaddingLeft) + ea,
           paddingRight: desktop ? "" : String(mobilePaddingLeft) + ea,
-          paddingBottom: desktop ? "" : String(9.5) + ea,
+          paddingBottom: desktop ? "" : String(5.5) + ea,
         }
       },
     ]
@@ -1258,7 +1260,6 @@ DesignerPossibleJs.prototype.launching = async function (loading) {
     }
 
     this.realtimeDesigner = await ajaxJson({ mode: "get", desid }, BACKHOST + "/realtimeDesigner", { equal: true });
-    console.log(this.realtimeDesigner);
 
     this.selection = [];
     this.possibleBoxes = [];

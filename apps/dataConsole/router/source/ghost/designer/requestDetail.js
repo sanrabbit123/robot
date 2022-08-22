@@ -1119,7 +1119,7 @@ RequestDetailJs.prototype.insertDetailBox = function (indexNumber) {
           borderTop: desktop ? "1px solid " + colorChip.shadow : "",
           paddingLeft: desktop ? "" : String(mobilePaddingLeft) + ea,
           paddingRight: desktop ? "" : String(mobilePaddingLeft) + ea,
-          paddingBottom: desktop ? "" : String(9.5) + ea,
+          paddingBottom: desktop ? "" : String(6) + ea,
         }
       },
     ]
@@ -1910,7 +1910,7 @@ RequestDetailJs.prototype.insertNoticeBox = function (indexNumber) {
           borderTop: desktop ? "1px solid " + colorChip.shadow : "",
           paddingLeft: desktop ? "" : String(mobilePaddingLeft) + ea,
           paddingRight: desktop ? "" : String(mobilePaddingLeft) + ea,
-          paddingBottom: desktop ? "" : String(9.5) + ea,
+          paddingBottom: desktop ? "" : String(6) + ea,
         }
       },
     ]
