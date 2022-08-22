@@ -3236,7 +3236,6 @@ Ghost.prototype.photoRouter = function (needs) {
           const list = await fileSystem(`readDir`, [ sambaDir ]);
           const homeFolder = await fileSystem(`readDir`, [ process.env.HOME ]);
           const tempFolderName = "temp";
-          const tempTempFolderName = "tempTemp" + String((new Date()).valueOf()) + "__" + String(Math.round(Math.random() * 100000));
           let list_refined = [];
           let folderName;
           let shareClientName, shareDesignerName;
@@ -3249,11 +3248,6 @@ Ghost.prototype.photoRouter = function (needs) {
           if (!homeFolder.includes(tempFolderName)) {
             await shellExec(`mkdir`, [ `${process.env.HOME}/${tempFolderName}` ]);
           }
-
-          if (homeFolder.includes(tempTempFolderName)) {
-            await shellExec(`rm`, [ `-rf`, `${process.env.HOME}/${tempTempFolderName}` ]);
-          }
-          await shellExec(`mkdir`, [ `${process.env.HOME}/${tempTempFolderName}` ]);
 
           for (let i of list) {
             if (!/^\./.test(i) && !/DS_Store/gi.test(i)) {
@@ -3301,11 +3295,10 @@ Ghost.prototype.photoRouter = function (needs) {
             zipLinkClient = await googleDrive.read_webView_inPython(zipIdClient);
           }
 
-          await shellExec([
-            [ `rm`, [ `-rf`, `${process.env.HOME}/${tempFolderName}/${shareClientName}` ] ],
-            [ `rm`, [ `-rf`, `${process.env.HOME}/${tempFolderName}/${shareDesignerName}` ] ],
-            [ `rm`, [ `-rf`, `${process.env.HOME}/${tempTempFolderName}` ] ],
-          ]);
+          // await shellExec([
+          //   [ `rm`, [ `-rf`, `${process.env.HOME}/${tempFolderName}/${shareClientName}` ] ],
+          //   [ `rm`, [ `-rf`, `${process.env.HOME}/${tempFolderName}/${shareDesignerName}` ] ],
+          // ]);
 
           res.send(JSON.stringify({ designer: zipLinkDesigner, client: zipLinkClient }));
 
