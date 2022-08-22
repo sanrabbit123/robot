@@ -4157,6 +4157,18 @@ DataRouter.prototype.rou_post_realtimeDesigner = function () {
           throw new Error(JSON.stringify(response));
         }
 
+      } else if (mode === "update") {
+
+        if (req.body.desid === undefined) {
+          throw new Error("invaild post");
+        }
+        if (req.body.updateQuery === undefined) {
+          throw new Error("invaild post");
+        }
+        const { desid, updateQuery } = equalJson(req.body);
+        await back.mongoUpdate(collection, [ { desid }, updateQuery ], { selfMongo: instance.mongolocal });
+        result = { message: "done" };
+
       }
 
       res.send(JSON.stringify(result));

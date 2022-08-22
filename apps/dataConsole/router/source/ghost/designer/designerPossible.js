@@ -286,7 +286,7 @@ DesignerPossibleJs.prototype.boxToPossible = async function () {
 
     updateQuery = {};
     updateQuery["possible"] = this.realtimeDesigner.possible;
-    await ajaxJson({ mode: "update", desid: instance.designer.desid, updateQuery }, "/realtimeDesigner");
+    await ajaxJson({ mode: "update", desid: instance.designer.desid, updateQuery }, BACKHOST + "/realtimeDesigner");
 
   } catch (e) {
     console.log(e);
@@ -1253,7 +1253,7 @@ DesignerPossibleJs.prototype.launching = async function (loading) {
       project.name = clients.find((obj) => { return obj.cliid === project.cliid }).name;
     }
 
-    this.realtimeDesigner = await ajaxJson({ mode: "get", desid }, "/realtimeDesigner", { equal: true });
+    this.realtimeDesigner = await ajaxJson({ mode: "get", desid }, BACKHOST + "/realtimeDesigner", { equal: true });
     console.log(this.realtimeDesigner);
 
     this.selection = [];
