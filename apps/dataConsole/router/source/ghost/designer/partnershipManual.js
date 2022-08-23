@@ -405,7 +405,7 @@ PartnershipManualJs.prototype.insertContextBox = function () {
   grayInnerPadding = <%% 40, 40, 40, 40, 30 %%>;
   grayInnerPaddingLeft = <%% 72, 72, 72, 72, 40 %%>;
 
-  titleSize = <%% 20, 20, 20, 20, 20 %%>;
+  titleSize = <%% 19, 19, 19, 19, 19 %%>;
   titleWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleMarginBottom = <%% 16, 16, 16, 16, 16 %%>;
 
