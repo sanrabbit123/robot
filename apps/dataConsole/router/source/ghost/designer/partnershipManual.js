@@ -380,13 +380,15 @@ PartnershipManualJs.prototype.insertContextBox = function () {
   const { client, ea, baseTong, media, project } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker } = GeneralJs;
   let paddingTop;
   let whiteBlock, whiteTong;
   let bottomMargin;
   let whiteBottomMargin;
   let grayInnerPadding;
   let contents;
+  let contextTong;
+  let grayInnerPaddingLeft;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -394,15 +396,17 @@ PartnershipManualJs.prototype.insertContextBox = function () {
 
   whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
 
-  grayInnerPadding = <%% 30, 30, 30, 30, 30 %%>;
+  grayInnerPadding = <%% 40, 40, 40, 40, 30 %%>;
+  grayInnerPaddingLeft = <%% 72, 72, 72, 72, 40 %%>;
 
   contents = [
     {
-      title: "프로젝트 운영을 위한 사전 준비",
+      title: "프로젝트 사전 준비",
       context: [
         "디자이너 교육 이수",
-        "활동 가능 영역 및 서비스 비용 책정",
-        "디자이너 작업 가능 일정 / 특이사항",
+        "활동 가능 영역 책정",
+        "서비스 비용 책정",
+        "디자이너 작업 가능 일정",
       ]
     },
     {
@@ -410,21 +414,27 @@ PartnershipManualJs.prototype.insertContextBox = function () {
       context: [
         "첫 프로젝트 응대",
         "디자이너 직접 시공",
-        "현장 촬영 및 디자이너 글 가이드",
-        "콘텐츠 활용 가이드",
+        "현장 촬영",
+        "디자이너 글 가이드",
+      ]
+    },
+    {
+      title: "컨텐츠 가이드",
+      context: [
+        "컨텐츠 활용 방법",
         "홈리에종 제공 컨텐츠",
       ]
     },
     {
       title: "디자이너 프로젝트 진행",
       context: [
-        "디자이너 현장미팅 준비/응대",
+        "디자이너 현장미팅 준비 / 응대",
         "디자이너 작성 폼",
         "시공사 선택",
         "디자이너 소통",
       ]
     },
-  ]
+  ];
 
   whiteBlock = createNode({
     mother: baseTong,
@@ -453,8 +463,88 @@ PartnershipManualJs.prototype.insertContextBox = function () {
   });
   whiteTong = whiteBlock.firstChild;
 
-  
+  for (let i = 0; i < contents.length; i++) {
 
+    contextTong = createNode({
+      mother: whiteTong,
+      style: {
+        display: "inline-block",
+        width: "calc(calc(100% - " + String(grayInnerPaddingLeft * 2) + ea + ") / " + String(contents.length) + ")",
+        verticalAlign: "top",
+        marginLeft: (i === 0 ? String(grayInnerPaddingLeft) + ea : ""),
+        marginRight: (i === contents.length - 1 ? String(grayInnerPaddingLeft) + ea : ""),
+      },
+      children: [
+        {
+          text: contents[i].title,
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(20) + ea,
+            fontWeight: String(700),
+            color: colorChip.black,
+            marginBottom: String(16) + ea,
+          }
+        },
+        {
+          style: {
+            display: "block",
+            position: "relative",
+          }
+        }
+      ]
+    }).children[1];
+
+    for (let j = 0; j < contents[i].context.length; j++) {
+
+      createNode({
+        mother: contextTong,
+        style: {
+          display: "block",
+          position: "relative",
+          marginBottom: String(6) + ea,
+          paddingLeft: String(56) + ea,
+        },
+        children: [
+          {
+            mode: "svg",
+            source: svgMaker.horizontalArrow(48, 6, colorChip.gray4),
+            style: {
+              position: "absolute",
+              left: String(0),
+              top: String(7) + ea,
+              width: String(48) + ea,
+            }
+          },
+          {
+            text: String(i + 1) + "-" + String(j + 1),
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(15) + ea,
+              fontWeight: String(300),
+              color: colorChip.green,
+              verticalAlign: "top",
+              width: String(30) + ea,
+            }
+          },
+          {
+            text: contents[i].context[j],
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(15) + ea,
+              fontWeight: String(600),
+              color: colorChip.black,
+              verticalAlign: "top",
+            }
+          }
+        ]
+      });
+
+    }
+
+  }
 
 }
 
