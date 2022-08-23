@@ -1667,6 +1667,7 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
   let contentsHeight;
   let factorBoxTop, factorBoxLeft;
   let factorLineTop, factorLineLeft, factorLineWidth, factorLineHeight;
+  let preContents;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -1735,32 +1736,52 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
   factorLineWidth = <%% 22, 22, 22, 22, 22 %%>;
   factorLineHeight = <%% 123, 123, 123, 123, 123 %%>;
 
-  mainTitle = "첫 프로젝트 운영";
+  mainTitle = "촬영 및 세팅 가이드";
   mainContents = [
     {
-      title: "첫 프로젝트 응대",
-      contents: [
-        "고객 첫 응대 시 홈리에종과 함께 프로젝트를 진행하는 협업의 관계라는 점과 디자인을 진행하면서\n불편 사항이 있는 경우 홈리에종을 통해 연락해달라고 안내해주세요.",
-        "프로젝트를 마무리 후 인터뷰와 촬영을 진행하는데 <b%이는 프로젝트 검수(정산)와 디자이너를 지원하기 위해 중요한 과정임을 함께 설명%b>해주세요.\n모든 고객이 디자이너의 포트폴리오를 보고 선택하신 것처럼 최신의 포트폴리오가 누적되어야 디자이너가 계속해서 성장할 수 있기에 소중하게 관리되고 있으며 개인정보 노출 정도는 홈리에종과 조율할 수 있습니다.",
+      preContents: [
+        "홈리에종과의 협업 포트폴리오는 가능한 현장을 정돈한 후 촬영하여 보존합니다.",
+        "1) 프로젝트의 종료를 검수하는 의미와 2) 디자이너의 지속적인 성장을 지원하고자 하는 두 가지 의미를 가집니다.",
       ],
-    },
-    {
-      title: "디자이너 시공사의\n직접 시공",
       contents: [
-        "<b%디자이너가 직접 시공을 진행했을 경우 시공 계약서와 세부 내용이 담긴 견적서를 보내주세요!%b> 디자이너 직영 시공사가 있는 경우 사전에",
-        "홈리에종과의 미팅을 통해서 시공 파트너사 등록을 진행해야 합니다. 디자이너 직영 시공사와 진행하는 과정에서 문제가 발생한 경우 홈리에종이 고객의 불편 사항 접수를 받게되고, 책임과 평가에 직접적으로 영향을 받기 때문에 필수적인 정책 등의 과정이 필요합니다.",
-      ],
-    },
-    {
-      title: "시공사와 계약시",
-      contents: [
-        "공정별 계약은 불가하며,",
-        "선택하신 시공사와 직접 계약을 맺습니다.",
-        "시공에 대한 모든 책임은 계약한 시공사에 있고,",
-        "시공 복잡도에 따라 디자이너의 감리 비용이 일부 책정될 수 있습니다.",
-        "모든 시공사는 경험에 따라 시공 방법이나 견적에 차이가 있을 수 있습니다.",
+        "디자이너는 고객, 홈리에종과 촬영 일자를 맞추고 촬영 전 고객과 부족한 부분은 없는 지, 사전에 논의하여 촬영 준비를 합니다.",
+        "디자이너가 준비할 수 있는 소품이 있다면 현장에서 배치를 해도 무방합니다.",
+        "포토 실장님께 각 공간별 디자이너의 의도를 전달하며 원하는 촬영 부분에 대해 논의합니다.",
       ]
-    }
+    },
+    {
+      title: "촬영 세팅 TIP",
+      contents: [
+        {
+          title: "선 정리",
+          contents: [
+            "전자제품, 문어발 콘센트, TV케이블, 마우스 선 등을 정리해주시면 훨씬 깔끔한 사진을 얻을 수 있습니다.",
+          ]
+        },
+        {
+          title: "패브릭 정돈",
+          contents: [
+            "커튼 : 주름이 잘 잡히는 소재의 커튼이 아니라면 손으로 주름을 잡아주세요. 커튼 연 것, 친 것 모두 촬영하셔도 됩니다.",
+            "쿠션 : 쪼글쪼글하지 않도록 탁탁 쳐서 볼륨감을 살려주세요.",
+            "베딩 : 정면에서는 자락이 양쪽으로 균등하게 떨어지게 하는 것이 안정감있습니다. 촬영 방향에 따라 한 쪽을 당겨 프레임이나 어수선한 부분을 가려도 좋아요.",
+          ]
+        },
+        {
+          title: "물건 정리",
+          contents: [
+            "텅 빈 집처럼 치우는 것보다는 적당한 사람냄새가 묻어나는 것이 좋아요. 그래도 수세미, 음식, 쓰레기통 등이 생활감이 많이 묻어나는 것들은 숨겨주세요.",
+          ]
+        },
+        {
+          title: "소품 세팅",
+          contents: [
+            "고객님이 구매하신 것 활용 : 같은 소품도 어떻게 배치하고 활용하는 지에 따라 확 다르다는 것을 고객님께 보여드릴 수 있어요.",
+            "고객 후기에서도 많이 언급해 주시는데, 디자이너님이 손을 대주시니까 확 달라졌다고요!",
+            "디자이너 준비 : 소품이 부족한 경우, 디자이너가 준비하여 추가 세팅하고 촬영합니다. 화병, 액자, 오브제, 쿠션, 조명 등을 챙겨오시는 편이에요. 홈리에종 디자이너님들 중에는 플로리스트 공부하시는 분들도 있답니다.",
+          ]
+        },
+      ],
+    },
   ];
 
   whiteBlock = createNode({
@@ -1845,84 +1866,86 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
 
   // 1
 
-  ({ title, contents } = mainContents[0]);
+  ({ preContents, contents } = mainContents[0]);
 
-  createNode({
-    mother: tong,
-    style: {
-      display: "block",
-      position: "relative",
-      marginBottom: String(contentsMarginBottom1) + ea,
-    },
-    children: [
-      {
-        style: {
-          display: desktop ? "inline-block" : "block",
-          position: "relative",
-          verticalAlign: "top",
-          width: desktop ? String(firstWidth) + ea : String(100) + '%',
-          marginBottom: desktop ? "" : String(1.5) + ea,
-        },
-        children: [
-          {
-            text: title,
-            style: {
-              display: desktop ? "inline-block" : "block",
-              position: "relative",
-              fontSize: String(contentsWordingSize) + ea,
-              fontWeight: String(700),
-              lineHeight: String(1.7),
-              color: colorChip.black,
-              textAlign: "left",
-              background: colorChip.white,
-              paddingRight: String(linePadding) + ea,
-            },
-            bold: {
-              fontSize: String(contentsWordingSize) + ea,
-              fontWeight: String(700),
-              color: colorChip.green,
-            },
-          }
-        ]
-      },
-      {
-        style: {
-          display: "inline-block",
-          position: "relative",
-          fontSize: String(contentsWordingSize) + ea,
-          fontWeight: String(700),
-          verticalAlign: "top",
-          lineHeight: String(1.7),
-          width: String(secondWidth) + ea,
-          marginRight: String(secondMarginRight) + ea,
-          color: colorChip.green,
-        },
-      },
-      {
-        text: contents.join("\n\n"),
-        style: {
-          display: "inline-block",
-          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
-          fontWeight: String(400),
-          verticalAlign: "top",
-          lineHeight: String(1.7),
-          width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight : secondWidth + secondMarginRight, ea),
-          textAlign: "left",
-          color: colorChip.black,
-        },
-        bold: {
-          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
-          fontWeight: String(700),
-          color: colorChip.black,
-        },
-        under: {
-          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
-          fontWeight: String(700),
-          color: colorChip.green,
-        },
-      },
-    ]
-  });
+  console.log(preContents, contents);
+
+  // createNode({
+  //   mother: tong,
+  //   style: {
+  //     display: "block",
+  //     position: "relative",
+  //     marginBottom: String(contentsMarginBottom1) + ea,
+  //   },
+  //   children: [
+  //     {
+  //       style: {
+  //         display: desktop ? "inline-block" : "block",
+  //         position: "relative",
+  //         verticalAlign: "top",
+  //         width: desktop ? String(firstWidth) + ea : String(100) + '%',
+  //         marginBottom: desktop ? "" : String(1.5) + ea,
+  //       },
+  //       children: [
+  //         {
+  //           text: title,
+  //           style: {
+  //             display: desktop ? "inline-block" : "block",
+  //             position: "relative",
+  //             fontSize: String(contentsWordingSize) + ea,
+  //             fontWeight: String(700),
+  //             lineHeight: String(1.7),
+  //             color: colorChip.black,
+  //             textAlign: "left",
+  //             background: colorChip.white,
+  //             paddingRight: String(linePadding) + ea,
+  //           },
+  //           bold: {
+  //             fontSize: String(contentsWordingSize) + ea,
+  //             fontWeight: String(700),
+  //             color: colorChip.green,
+  //           },
+  //         }
+  //       ]
+  //     },
+  //     {
+  //       style: {
+  //         display: "inline-block",
+  //         position: "relative",
+  //         fontSize: String(contentsWordingSize) + ea,
+  //         fontWeight: String(700),
+  //         verticalAlign: "top",
+  //         lineHeight: String(1.7),
+  //         width: String(secondWidth) + ea,
+  //         marginRight: String(secondMarginRight) + ea,
+  //         color: colorChip.green,
+  //       },
+  //     },
+  //     {
+  //       text: contents.join("\n\n"),
+  //       style: {
+  //         display: "inline-block",
+  //         fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+  //         fontWeight: String(400),
+  //         verticalAlign: "top",
+  //         lineHeight: String(1.7),
+  //         width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight : secondWidth + secondMarginRight, ea),
+  //         textAlign: "left",
+  //         color: colorChip.black,
+  //       },
+  //       bold: {
+  //         fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+  //         fontWeight: String(700),
+  //         color: colorChip.black,
+  //       },
+  //       under: {
+  //         fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+  //         fontWeight: String(700),
+  //         color: colorChip.green,
+  //       },
+  //     },
+  //   ]
+  // });
 
   // 2
 
@@ -2001,149 +2024,6 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
           fontWeight: String(700),
           color: colorChip.green,
         },
-      },
-    ]
-  });
-
-  // 3
-
-  ({ title, contents } = mainContents[2]);
-
-  createNode({
-    mother: tong,
-    style: {
-      display: "block",
-      position: "relative",
-      paddingTop: String(34) + ea,
-      marginBottom: String(contentsMarginBottom0) + ea,
-    },
-    children: [
-      {
-        style: {
-          display: desktop ? "inline-block" : "block",
-          position: "relative",
-          verticalAlign: "top",
-          width: desktop ? String(firstWidth) + ea : String(100) + '%',
-          marginBottom: desktop ? "" : String(1.5) + ea,
-        },
-        children: [
-          {
-            style: {
-              display: desktop ? "inline-block" : "block",
-              position: "relative",
-              fontSize: String(contentsWordingSize) + ea,
-              fontWeight: String(700),
-              lineHeight: String(1.7),
-              color: colorChip.black,
-              textAlign: "left",
-              background: colorChip.white,
-              paddingRight: String(linePadding) + ea,
-            },
-            bold: {
-              fontSize: String(contentsWordingSize) + ea,
-              fontWeight: String(700),
-              color: colorChip.green,
-            },
-          }
-        ]
-      },
-      {
-        style: {
-          display: "inline-block",
-          position: "relative",
-          fontSize: String(contentsWordingSize) + ea,
-          fontWeight: String(700),
-          verticalAlign: "top",
-          lineHeight: String(1.7),
-          width: String(secondWidth) + ea,
-          marginRight: String(secondMarginRight) + ea,
-          color: colorChip.green,
-        },
-      },
-      {
-        style: {
-          display: "inline-block",
-          position: "relative",
-          verticalAlign: "top",
-          width: withOut(firstWidth + secondWidth + secondMarginRight + (12 * 2), ea),
-          textAlign: "left",
-          background: colorChip.gray2,
-          borderRadius: String(5) + "px",
-          padding: String(12) + ea,
-        },
-        children: [
-          {
-            text: title,
-            style: {
-              position: "absolute",
-              top: String(-28) + ea,
-              left: String(0),
-              fontSize: String(contentsWordingSize) + ea,
-              fontWeight: String(700),
-              color: colorChip.green,
-            }
-          },
-          {
-            style: {
-              display: "flex",
-              flexDirection: "row",
-              position: "relative",
-              background: colorChip.white,
-              borderRadius: String(5) + "px",
-              width: withOut(22 * 2, ea),
-              paddingLeft: String(22) + ea,
-              paddingRight: String(22) + ea,
-              paddingTop: String(16) + ea,
-              paddingBottom: String(4) + ea,
-            },
-            children: [
-              {
-                text: (new Array(contents.length)).fill(1).map((num, index) => { return '0' + String(num + index) }).join("\n"),
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  fontSize: String(contentsWordingSize) + ea,
-                  fontWeight: String(700),
-                  lineHeight: String(2),
-                  color: colorChip.black,
-                  width: String(20) + ea,
-                  textAlign: "center",
-                }
-              },
-              {
-                style: {
-                  display: "inline-flex",
-                  flexDirection: "column",
-                  position: "relative",
-                  width: String(110) + ea,
-                  paddingTop: String(14) + ea,
-                  paddingLeft: String(10) + ea,
-                },
-                children: (new Array(contents.length)).fill(null).map((n) => {
-                  return {
-                    style: {
-                      position: "relative",
-                      width: String(100) + ea,
-                      height: String(28) + ea,
-                      borderTop: "1px solid " + colorChip.gray3,
-                    }
-                  }
-                }),
-              },
-              {
-                text: contents.join("\n"),
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  fontSize: String(contentsWordingSize) + ea,
-                  fontWeight: String(700),
-                  lineHeight: String(2),
-                  color: colorChip.black,
-                }
-              }
-            ]
-          }
-        ],
       },
     ]
   });
