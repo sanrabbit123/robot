@@ -41,7 +41,7 @@ const PartnershipManualJs = function () {
   this.mother = new GeneralJs();
 }
 
-PartnershipManualJs.binaryPath = FRONTHOST + "/middle/console/possible";
+PartnershipManualJs.binaryPath = FRONTHOST + "/middle/console/partnership";
 
 PartnershipManualJs.prototype.insertInitBox = function () {
   const instance = this;
@@ -129,8 +129,8 @@ PartnershipManualJs.prototype.insertInitBox = function () {
   tagTongBottom = <%% 3, 3, 1, 1, 0 %%>;
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
-  titleWording = "가능 일정 관리";
-  subTitleContents = "프로젝트 가능 일정 제어 콘솔";
+  titleWording = "파트너십 매뉴얼";
+  subTitleContents = "홈리에종 디자이너 파트너십 매뉴얼";
 
   mobileBlockTop = 4.5;
 
@@ -221,65 +221,23 @@ PartnershipManualJs.prototype.insertInitBox = function () {
 
 }
 
-PartnershipManualJs.prototype.insertNoticeBox = function () {
+PartnershipManualJs.prototype.insertFirstBox = function () {
   const instance = this;
   const mother = this.mother;
   const { client, ea, baseTong, media, project } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
-  const blank = "&nbsp;&nbsp;&nbsp;";
-  const mainContents = [
-    {
-      title: "프로젝트 가능 건 표시",
-      contents: [
-        "해당 날짜에 표시된 숫자는 진행 가능한 디자이너 판단의 기준이 되며, 자동 큐레이션이 진행될 시 중요한 연산 기준이 됩니다.",
-      ],
-    },
-    {
-      title: "콘솔 이용 방법",
-      contents: [
-        "날짜 범위를 선택하면, 그 범위에 가능한 프로젝트 가능 건수를 묻는 팝업이 제시됩니다.",
-        "하루를 선택하기 위해선 <b%해당 날짜를 두 번 클릭%b>하시면 선택이 되고, 건수를 묻습니다."
-      ],
-    },
-  ];
   let paddingTop;
-  let block;
   let whiteBlock, whiteTong;
   let bottomMargin;
-  let titleFontSize;
-  let num, num2;
-  let numberRight;
-  let titleTop, titleTopNumber;
-  let titleBottom;
-  let index;
-  let mobileTitleLeft, mobileTitleTop;
-  let secondBlockWidth, secondBlockMargin;
-  let tong;
-  let contentsWordingSize;
-  let contentsBottom;
   let whiteBottomMargin;
-  let contentsTitleMarginTop, contentsMarginTop;
-  let contentsPaddingLeft;
-  let arrowWidth;
-  let arrowTop;
-  let arrorLeft;
-  let bigNumberSize;
-  let bigNumberBetween;
-  let bigNumberMargin;
-  let bigNumberBetweenMargin;
-  let matrix;
-  let firstWidth, secondWidth, secondMarginRight;
-  let contentsAreaPaddingTop;
-  let zeroWidth, zeroMarginRight;
-  let checkBoxWidth, checkBoxTop;
-  let arrowBoxWidth, arrowBoxTop;
-  let contentsMarginBottom0, contentsMarginBottom1;
-  let mobilePaddingLeft;
-  let mobileContentsWordingSize;
-  let wordings;
-  let lineTop, linePadding;
+  let firstWidth;
+  let firstPaddingLeft;
+  let titleSize, titleWeight, titleLineHeight;
+  let barTop, barWidth, barHeight;
+  let contentsSize, contentsWeight, contentsLineHeight, contentsBetween;
+  let contents;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -287,58 +245,37 @@ PartnershipManualJs.prototype.insertNoticeBox = function () {
 
   whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
 
-  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
-  numberRight = <%% 12, 12, 12, 12, 3 %%>;
+  firstWidth = <%% 572, 572, 572, 572, 50 %%>;
+  firstPaddingLeft = <%% 28, 28, 28, 28, 2 %%>;
 
-  titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
-  titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
+  barTop = <%% 11, 11, 11, 11, 11 %%>;
+  barWidth = <%% 6, 6, 6, 6, 6 %%>;
+  barHeight = <%% 64, 64, 64, 64, 64 %%>;
 
-  titleBottom = <%% (isMac() ? 18 : 16), (isMac() ? 18 : 16), (isMac() ? 18 : 16), (isMac() ? 18 : 16), 0 %%>;
-  contentsAreaPaddingTop = <%% 34, 34, 34, 34, 7 %%>;
+  titleSize = <%% 28, 28, 28, 28, 28 %%>;
+  titleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  titleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  mobileTitleLeft = 1.5;
-  mobileTitleTop = -8.7;
+  contentsSize = <%% 15, 15, 15, 15, 15 %%>;
+  contentsWeight = <%% 600, 600, 600, 600, 600 %%>;
+  contentsLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
+  contentsBetween = <%% 20, 20, 20, 20, 20 %%>;
 
-  secondBlockWidth = <%% 300, 300, 300, 300, 330 %%>;
-  secondBlockMargin = <%% 36, 36, 36, 36, 33 %%>;
-
-  contentsWordingSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
-  contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
-
-  contentsTitleMarginTop = <%% 14, 14, 14, 14, 1 %%>;
-  contentsMarginTop = <%% 36, 36, 36, 36, 1 %%>;
-  contentsPaddingLeft = <%% 14, 14, 14, 14, 0 %%>;
-  arrowWidth = <%% 8, 8, 7, 6, 1.6 %%>;
-  arrowTop = <%% 6, 6, 6, 6, 0.3 %%>;
-  arrorLeft = <%% 1, 1, 1, 1, 0 %%>;
-
-  bigNumberSize = <%% 37, 37, 37, 37, 5 %%>;
-  bigNumberBetween = <%% -3, -3, -3, -3, 0 %%>;
-  bigNumberMargin = <%% 0, 0, 0, 0, 0 %%>;
-  bigNumberBetweenMargin = <%% 28, 28, 28, 28, 0 %%>;
-
-  zeroWidth = <%% 8, 8, 8, 8, 10 %%>;
-  zeroMarginRight = <%% 10, 10, 10, 10, 10 %%>;
-  firstWidth = <%% 240, 240, 190, 170, 10 %%>;
-  secondWidth = <%% 15, 15, 15, 15, 2 %%>;
-  secondMarginRight = <%% 10, 10, 10, 10, 2 %%>;
-
-  checkBoxWidth = <%% 10, 10, 10, 10, 2 %%>;
-  arrowBoxWidth = <%% 9, 8, 8, 8, 1.8 %%>;
-  checkBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.6 %%>;
-  arrowBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.5 %%>;
-
-  contentsMarginBottom0 = <%% 4, 4, 4, 4, 2 %%>;
-  contentsMarginBottom1 = <%% 32, 32, 30, 28, 3 %%>;
-
-  lineTop = <%% 10, 10, 10, 10, 10 %%>;
-  linePadding = <%% 12, 12, 12, 12, 12 %%>;
-
-  mobilePaddingLeft = 6;
-
-  mobileContentsWordingSize = 3.2;
-
-  this.whiteMargin = (desktop ? margin : 0);
+  contents = {
+    title: [
+      "홈리에종과 파트너십 디자이너가",
+      "지속적으로 협업하기 위한 정책 안내"
+    ],
+    description: [
+      [
+        "홈리에종은 집을 디자인하는 새로운 방법을 안내합니다.",
+        "디자이너의 성장을 위해 디자이너 역량 관리, 인프라 제공, 교육 등을 지원하고, 고객에게 가장 효과적이고, 만족스러운 홈스타일링이 되도록 혁신적인 서비스를 제공하고자 노력하며, 모두가 만족스러운 결과를 얻도록 고객 중심의 프로젝트를 홈리에종이 함께 케어합니다."
+      ],
+      [
+        "홈리에종은 파트너입니다. 고객에게는 만족스러운 집과 편리한 서비스로, 디자이너에게는 지속적인 성장을 위한 폭넓은 지원으로 함께 의논하면서 함께 성장합니다."
+      ]
+    ]
+  };
 
   whiteBlock = createNode({
     mother: baseTong,
@@ -347,8 +284,8 @@ PartnershipManualJs.prototype.insertNoticeBox = function () {
       borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
       background: desktop ? colorChip.white : "",
-      paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
-      paddingBottom: desktop ? String(whiteBottomMargin) + ea : "",
+      paddingTop: desktop ? String(paddingTop) + ea : "",
+      paddingBottom: desktop ? String(paddingTop) + ea : "",
       marginBottom: String(bottomMargin) + ea,
       boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
     },
@@ -364,174 +301,160 @@ PartnershipManualJs.prototype.insertNoticeBox = function () {
   });
   whiteTong = whiteBlock.firstChild;
 
-  block = createNode({
+
+  createNode({
     mother: whiteTong,
     style: {
-      display: "block",
+      display: "inline-block",
       position: "relative",
-      width: String(100) + '%',
+      width: String(firstWidth - firstPaddingLeft) + ea,
+      paddingLeft: String(firstPaddingLeft) + ea,
+      verticalAlign: "top",
     },
     children: [
       {
         style: {
-          display: desktop ? "block" : "none",
-          position: mobile ? "absolute" : "relative",
-          left: desktop ? "" : String(mobileTitleLeft) + ea,
-          top: desktop ? "" : String(mobileTitleTop) + ea,
-          width: desktop ? String(100) + '%' : withOut((mobileTitleLeft * 2), ea),
-          marginBottom: String(titleBottom) + ea,
-          zIndex: mobile ? String(1) : "",
-        },
-        children: [
-          {
-            text: "가능 일정 표시 안내",
-            style: {
-              position: "relative",
-              display: "inline-block",
-              top: String(titleTopNumber) + ea,
-              fontSize: String(titleFontSize) + ea,
-              fontWeight: String(600),
-              background: desktop ? colorChip.white : colorChip.gray1,
-              paddingRight: String(numberRight) + ea,
-              color: colorChip.black,
-            }
-          },
-        ]
+          position: "absolute",
+          top: String(barTop) + ea,
+          left: String(0),
+          width: String(barWidth) + ea,
+          height: String(barHeight) + ea,
+          borderRadius: String(5) + "px",
+          background: colorChip.gray3,
+        }
       },
       {
+        text: contents.title.join("\n"),
         style: {
           display: "block",
           position: "relative",
-          width: desktop ? String(100) + '%' : withOut(mobilePaddingLeft * 2, ea),
-          background: desktop ? "" : colorChip.white,
-          boxShadow: mobile ? "0px 5px 12px -10px " + colorChip.gray5 : "",
-          borderRadius: mobile ? String(1) + ea : "",
-          overflow: "hidden",
-          marginBottom: String(0) + ea,
-          marginTop: desktop ? "" : String(14) + ea,
-          paddingTop: String(contentsAreaPaddingTop) + ea,
-          borderTop: desktop ? "1px solid " + colorChip.shadow : "",
-          paddingLeft: desktop ? "" : String(mobilePaddingLeft) + ea,
-          paddingRight: desktop ? "" : String(mobilePaddingLeft) + ea,
-          paddingBottom: desktop ? "" : String(5.5) + ea,
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(titleWeight),
+          color: colorChip.black,
+          lineHeight: String(titleLineHeight),
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: whiteTong,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      width: withOut(firstWidth, ea),
+      verticalAlign: "top",
+    },
+    children: [
+      {
+        text: contents.description[0].join("\n"),
+        style: {
+          display: "block",
+          position: "relative",
+          fontSize: String(contentsSize) + ea,
+          fontWeight: String(contentsWeight),
+          color: colorChip.black,
+          lineHeight: String(contentsLineHeight),
+        }
+      },
+      {
+        text: contents.description[1].join("\n"),
+        style: {
+          display: "block",
+          position: "relative",
+          fontSize: String(contentsSize) + ea,
+          fontWeight: String(contentsWeight),
+          color: colorChip.black,
+          lineHeight: String(contentsLineHeight),
+          marginTop: String(contentsBetween) + ea,
         }
       },
     ]
   });
-  tong = block.lastChild;
 
-  num = 0;
-  for (let { title, contents } of mainContents) {
-    num2 = 0;
-    for (let str of contents) {
-      createNode({
-        mother: tong,
-        style: {
-          display: "block",
-          position: "relative",
-          marginBottom: String(num2 === contents.length - 1 ? contentsMarginBottom1 : contentsMarginBottom0) + ea,
-          marginTop: desktop ? "" : ((num === 0 || num2 !== 0) ? "" : String(6) + ea)
-        },
-        children: [
-          {
-            text: (num2 === 0 ? String(num + 1) : ""),
-            style: {
-              display: desktop ? "inline-block" : "none",
-              fontSize: String(contentsWordingSize) + ea,
-              fontWeight: String(600),
-              verticalAlign: "top",
-              lineHeight: String(1.6),
-              width: String(zeroWidth) + ea,
-              marginRight: String(zeroMarginRight) + ea,
-              textAlign: "right",
-              color: colorChip.green,
-            }
-          },
-          {
-            style: {
-              display: desktop ? "inline-block" : "block",
-              position: "relative",
-              verticalAlign: "top",
-              width: desktop ? String(firstWidth) + ea : String(100) + '%',
-              marginBottom: desktop ? "" : String(1.5) + ea,
-            },
-            children: [
-              {
-                style: {
-                  display: num2 === 0 ? "block" : "none",
-                  position: "absolute",
-                  top: String(0),
-                  left: String(0),
-                  height: String(lineTop) + ea,
-                  width: withOut(0),
-                  borderBottom: desktop ? "1px solid " + colorChip.gray3 : "",
-                }
-              },
-              {
-                text: (num2 === 0 ? (desktop ? title : "<b%" + String(num + 1) + "%b>" + blank + title) : ""),
-                style: {
-                  display: desktop ? "inline-block" : "block",
-                  position: "relative",
-                  fontSize: String(contentsWordingSize) + ea,
-                  fontWeight: String(600),
-                  lineHeight: String(1.6),
-                  color: colorChip.black,
-                  textAlign: "left",
-                  background: colorChip.white,
-                  paddingRight: String(linePadding) + ea,
-                },
-                bold: {
-                  fontSize: String(contentsWordingSize) + ea,
-                  fontWeight: String(600),
-                  color: colorChip.green,
-                },
-              }
-            ]
-          },
-          {
-            style: {
-              display: "inline-block",
-              position: "relative",
-              fontSize: String(contentsWordingSize) + ea,
-              fontWeight: String(600),
-              verticalAlign: "top",
-              lineHeight: String(1.6),
-              width: String(secondWidth) + ea,
-              marginRight: String(secondMarginRight) + ea,
-              textAlign: desktop ? "right" : "left",
-              color: colorChip.green,
-            },
-          },
-          {
-            text: str,
-            style: {
-              display: "inline-block",
-              fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
-              fontWeight: String(400),
-              verticalAlign: "top",
-              lineHeight: String(1.6),
-              width: withOut(desktop ? zeroWidth + zeroMarginRight + firstWidth + secondWidth + secondMarginRight : secondWidth + secondMarginRight, ea),
-              textAlign: "left",
-              color: colorChip.black,
-            },
-            bold: {
-              fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
-              fontWeight: String(600),
-              color: colorChip.black,
-            },
-            under: {
-              fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
-              fontWeight: String(600),
-              color: colorChip.green,
-            },
-          },
-        ]
-      });
+}
 
-      num2++;
-    }
-    num++;
-  }
+PartnershipManualJs.prototype.insertContextBox = function () {
+  const instance = this;
+  const mother = this.mother;
+  const { client, ea, baseTong, media, project } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
+  let paddingTop;
+  let whiteBlock, whiteTong;
+  let bottomMargin;
+  let whiteBottomMargin;
+  let grayInnerPadding;
+  let contents;
+
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  margin = <%% 55, 55, 47, 39, 4.7 %%>;
+  paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
+
+  whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
+
+  grayInnerPadding = <%% 30, 30, 30, 30, 30 %%>;
+
+  contents = [
+    {
+      title: "프로젝트 운영을 위한 사전 준비",
+      context: [
+        "디자이너 교육 이수",
+        "활동 가능 영역 및 서비스 비용 책정",
+        "디자이너 작업 가능 일정 / 특이사항",
+      ]
+    },
+    {
+      title: "첫 프로젝트 운영",
+      context: [
+        "첫 프로젝트 응대",
+        "디자이너 직접 시공",
+        "현장 촬영 및 디자이너 글 가이드",
+        "콘텐츠 활용 가이드",
+        "홈리에종 제공 컨텐츠",
+      ]
+    },
+    {
+      title: "디자이너 프로젝트 진행",
+      context: [
+        "디자이너 현장미팅 준비/응대",
+        "디자이너 작성 폼",
+        "시공사 선택",
+        "디자이너 소통",
+      ]
+    },
+  ]
+
+  whiteBlock = createNode({
+    mother: baseTong,
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      background: desktop ? colorChip.white : "",
+      paddingTop: desktop ? String(paddingTop) + ea : "",
+      paddingBottom: desktop ? String(paddingTop) + ea : "",
+      marginBottom: String(bottomMargin) + ea,
+      boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+    },
+    children: [
+      {
+        display: "block",
+        position: "relative",
+        width: withOut(margin * 2, ea),
+        marginLeft: String(desktop ? margin : 0) + ea,
+        borderRadius: String(desktop ? 8 : 1) + ea,
+        paddingTop: String(grayInnerPadding) + ea,
+        paddingBottom: String(grayInnerPadding) + ea,
+        background: colorChip.gray1,
+      }
+    ]
+  });
+  whiteTong = whiteBlock.firstChild;
+
+  
+
 
 }
 
@@ -603,7 +526,8 @@ PartnershipManualJs.prototype.launching = async function (loading) {
         try {
           let whiteBlock;
           instance.insertInitBox();
-          instance.insertNoticeBox();
+          instance.insertFirstBox();
+          instance.insertContextBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "PartnershipManualJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
