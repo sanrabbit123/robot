@@ -595,6 +595,7 @@ PartnershipManualJs.prototype.insertpreprojectBox = function () {
   let mainContents;
   let mainTitle;
   let title, contents;
+  let factors;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -643,7 +644,7 @@ PartnershipManualJs.prototype.insertpreprojectBox = function () {
   checkBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.6 %%>;
   arrowBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.5 %%>;
 
-  contentsMarginBottom0 = <%% 4, 4, 4, 4, 2 %%>;
+  contentsMarginBottom0 = <%% 24, 24, 24, 24, 2 %%>;
   contentsMarginBottom1 = <%% 32, 32, 30, 28, 3 %%>;
 
   lineTop = <%% 10, 10, 10, 10, 10 %%>;
@@ -662,6 +663,28 @@ PartnershipManualJs.prototype.insertpreprojectBox = function () {
         "디자이너의 프로젝트 운영 방식을 이해하기 위한 과정으로 이수한 디자이너에게 우선적으로 프로젝트 참여 자격이 주어집니다.",
       ],
     },
+    {
+      title: "활동 가능 영역 및 서비스 비용 책정",
+      contents: [
+        "각 디자이너의 프로젝트 운영 방식을 이해하기 위한 과정으로 전체 내용은 공통 교육에서 우선적으로 설명 후,",
+        "홈리에종 담당자가 개별적으로 연락을 취하여 확인합니다.",
+      ],
+      factors: [
+        "서비스 제공 가능 지역",
+        "활동 가능 서비스 영역",
+        "프로젝트 운영(스케쥴 및 예산 운영)",
+        "디자인 제안 방식",
+        "시공 운영 방식",
+        "스타일링 운영 방식(가구 및 패브릭 발주 가능 여부 등)",
+      ],
+    },
+    {
+      title: "디자이너 작업 가능 일정",
+      contents: [
+        "디자이너의 일정은 매월 마지막주 정기적으로 익월 일정을 확인합니다. 상시로 일정 변동이 있기 때문에 매월 확인한 일정 외에 변동사항이 생길 때마다 홈리에종 채널로 변동 일정을 공유해주셔야 합니다. 초기 계약시 [활동 대기] 단계에서 일정을 확인합니다. 디자이너는 홈리에종의 서비스 유형(F, S, T, XT) 에 대하여 활동 가능 영역을 결정하고, 이에 따라 서비스 비용을 책정합니다. 초기 계약시 책정한 서비스 비용은 프로젝트 누적 수량에 따라 달라질 수 있습니다. 작업 일정에 대한 답이 없다면, 계속 진행 가능함으로 판단하고 추천서에 등록되게 됩니다.",
+        "이후부터 홈리에종은 디자이너 추천을 시작하고 고객의 선택을 기다리게 됩니다. 프로젝트 계약이 확정되고 첫번째 현장 미팅이 잡히기까지의 소요시간을 예상할 수 없습니다.",
+      ]
+    }
   ];
 
   whiteBlock = createNode({
@@ -744,7 +767,6 @@ PartnershipManualJs.prototype.insertpreprojectBox = function () {
   });
   tong = block.lastChild;
 
-
   ({ title, contents } = mainContents[0]);
 
   createNode({
@@ -820,6 +842,104 @@ PartnershipManualJs.prototype.insertpreprojectBox = function () {
           fontWeight: String(600),
           color: colorChip.green,
         },
+      },
+    ]
+  });
+
+  ({ title, contents, factors } = mainContents[1]);
+
+  createNode({
+    mother: tong,
+    style: {
+      display: "block",
+      position: "relative",
+      marginBottom: String(contentsMarginBottom0) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: desktop ? "inline-block" : "block",
+          position: "relative",
+          verticalAlign: "top",
+          width: desktop ? String(firstWidth) + ea : String(100) + '%',
+          marginBottom: desktop ? "" : String(1.5) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: desktop ? "inline-block" : "block",
+              position: "relative",
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              lineHeight: String(1.7),
+              color: colorChip.black,
+              textAlign: "left",
+              background: colorChip.white,
+              paddingRight: String(linePadding) + ea,
+            },
+            bold: {
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              color: colorChip.green,
+            },
+          }
+        ]
+      },
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(contentsWordingSize) + ea,
+          fontWeight: String(700),
+          verticalAlign: "top",
+          lineHeight: String(1.7),
+          width: String(secondWidth) + ea,
+          marginRight: String(secondMarginRight) + ea,
+          color: colorChip.green,
+        },
+      },
+      {
+        text: "<b%< " + title + " >%b>\n" + contents.join("\n"),
+        style: {
+          display: "inline-block",
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(400),
+          verticalAlign: "top",
+          lineHeight: String(1.7),
+          width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight : secondWidth + secondMarginRight, ea),
+          textAlign: "left",
+          color: colorChip.black,
+          height: String(200) + ea,
+        },
+        bold: {
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(800),
+          color: colorChip.black,
+        },
+        under: {
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(800),
+          color: colorChip.green,
+        },
+        children: [
+          {
+            text: factors.map((str, index) => { return "<b%" + String(index + 1) + ".%b> " + str }).join("\n"),
+            style: {
+              position: "absolute",
+              top: String(25) + ea,
+              left: String(960) + ea,
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(400),
+              color: colorChip.black,
+              lineHeight: String(1.7),
+            },
+            bold: {
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(400),
+              color: colorChip.green,
+            }
+          }
+        ]
       },
     ]
   });
