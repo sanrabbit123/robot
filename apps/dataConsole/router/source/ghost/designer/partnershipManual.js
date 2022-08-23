@@ -1589,7 +1589,7 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
                   return {
                     style: {
                       position: "relative",
-                      width: String(90) + ea,
+                      width: String(100) + ea,
                       height: String(28) + ea,
                       borderTop: "1px solid " + colorChip.gray3,
                     }
