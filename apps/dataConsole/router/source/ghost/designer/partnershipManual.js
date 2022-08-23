@@ -389,6 +389,12 @@ PartnershipManualJs.prototype.insertContextBox = function () {
   let contents;
   let contextTong;
   let grayInnerPaddingLeft;
+  let titleSize, titleWeight, titleMarginBottom;
+  let contextPadding;
+  let arrowWidth, arrowHeight, arrowTop;
+  let contextBetween;
+  let contentsSize, contentsWeight;
+  let numberWeight, numberWidth;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -398,6 +404,24 @@ PartnershipManualJs.prototype.insertContextBox = function () {
 
   grayInnerPadding = <%% 40, 40, 40, 40, 30 %%>;
   grayInnerPaddingLeft = <%% 72, 72, 72, 72, 40 %%>;
+
+  titleSize = <%% 20, 20, 20, 20, 20 %%>;
+  titleWeight = <%% 700, 700, 700, 700, 700 %%>;
+  titleMarginBottom = <%% 16, 16, 16, 16, 16 %%>;
+
+  contextPadding = <%% 56, 56, 56, 56, 56 %%>;
+
+  arrowWidth = <%% 48, 48, 48, 48, 48 %%>;
+  arrowHeight = <%% 6, 6, 6, 6, 6 %%>;
+  arrowTop = <%% 7, 7, 7, 7, 7 %%>;
+
+  contextBetween = <%% 6, 6, 6, 6, 6 %%>;
+
+  contentsSize = <%% 15, 15, 15, 15, 15 %%>;
+  contentsWeight = <%% 600, 600, 600, 600, 600 %%>;
+
+  numberWeight = <%% 300, 300, 300, 300, 300 %%>;
+  numberWidth = <%% 30, 30, 30, 30, 30 %%>;
 
   contents = [
     {
@@ -480,10 +504,10 @@ PartnershipManualJs.prototype.insertContextBox = function () {
           style: {
             display: "block",
             position: "relative",
-            fontSize: String(20) + ea,
-            fontWeight: String(700),
+            fontSize: String(titleSize) + ea,
+            fontWeight: String(titleWeight),
             color: colorChip.black,
-            marginBottom: String(16) + ea,
+            marginBottom: String(titleMarginBottom) + ea,
           }
         },
         {
@@ -502,18 +526,18 @@ PartnershipManualJs.prototype.insertContextBox = function () {
         style: {
           display: "block",
           position: "relative",
-          marginBottom: String(6) + ea,
-          paddingLeft: String(56) + ea,
+          marginBottom: String(contextBetween) + ea,
+          paddingLeft: String(contextPadding) + ea,
         },
         children: [
           {
             mode: "svg",
-            source: svgMaker.horizontalArrow(48, 6, colorChip.gray4),
+            source: svgMaker.horizontalArrow(arrowWidth, arrowHeight, colorChip.gray4),
             style: {
               position: "absolute",
               left: String(0),
-              top: String(7) + ea,
-              width: String(48) + ea,
+              top: String(arrowTop) + ea,
+              width: String(arrowWidth) + ea,
             }
           },
           {
@@ -521,11 +545,11 @@ PartnershipManualJs.prototype.insertContextBox = function () {
             style: {
               display: "inline-block",
               position: "relative",
-              fontSize: String(15) + ea,
-              fontWeight: String(300),
+              fontSize: String(contentsSize) + ea,
+              fontWeight: String(numberWeight),
               color: colorChip.green,
               verticalAlign: "top",
-              width: String(30) + ea,
+              width: String(numberWidth) + ea,
             }
           },
           {
@@ -533,8 +557,8 @@ PartnershipManualJs.prototype.insertContextBox = function () {
             style: {
               display: "inline-block",
               position: "relative",
-              fontSize: String(15) + ea,
-              fontWeight: String(600),
+              fontSize: String(contentsSize) + ea,
+              fontWeight: String(contentsWeight),
               color: colorChip.black,
               verticalAlign: "top",
             }
@@ -596,6 +620,9 @@ PartnershipManualJs.prototype.insertpreprojectBox = function () {
   let mainTitle;
   let title, contents;
   let factors;
+  let contentsHeight;
+  let factorBoxTop, factorBoxLeft;
+  let factorLineTop, factorLineLeft, factorLineWidth, factorLineHeight;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -653,6 +680,16 @@ PartnershipManualJs.prototype.insertpreprojectBox = function () {
   mobilePaddingLeft = 6;
 
   mobileContentsWordingSize = 3.2;
+
+  contentsHeight = <%% 180, 180, 180, 180, 180 %%>;
+
+  factorBoxTop = <%% 25, 25, 25, 25, 25 %%>;
+  factorBoxLeft = <%% 920, 920, 920, 920, 920 %%>;
+
+  factorLineTop = <%% 36, 36, 36, 36, 36 %%>;
+  factorLineLeft = <%% 888, 888, 888, 888, 888 %%>;
+  factorLineWidth = <%% 22, 22, 22, 22, 22 %%>;
+  factorLineHeight = <%% 123, 123, 123, 123, 123 %%>;
 
   mainTitle = "프로젝트 운영을 위한 사전 준비";
   mainContents = [
@@ -914,7 +951,7 @@ PartnershipManualJs.prototype.insertpreprojectBox = function () {
           width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight : secondWidth + secondMarginRight, ea),
           textAlign: "left",
           color: colorChip.black,
-          height: String(180) + ea,
+          height: String(contentsHeight) + ea,
         },
         bold: {
           fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
@@ -930,10 +967,10 @@ PartnershipManualJs.prototype.insertpreprojectBox = function () {
           {
             style: {
               position: "absolute",
-              top: String(36) + ea,
-              left: String(888) + ea,
-              width: String(22) + ea,
-              height: String(123) + ea,
+              top: String(factorLineTop) + ea,
+              left: String(factorLineLeft) + ea,
+              width: String(factorLineWidth) + ea,
+              height: String(factorLineHeight) + ea,
               border: "1px solid " + colorChip.gray3,
               borderTopLeftRadius: String(8) + "px",
               borderBottomLeftRadius: String(8) + "px",
@@ -944,8 +981,8 @@ PartnershipManualJs.prototype.insertpreprojectBox = function () {
             text: factors.map((str, index) => { return "<b%" + String(index + 1) + ".%b> " + str }).join("\n"),
             style: {
               position: "absolute",
-              top: String(25) + ea,
-              left: String(920) + ea,
+              top: String(factorBoxTop) + ea,
+              left: String(factorBoxLeft) + ea,
               fontSize: String(contentsWordingSize) + ea,
               fontWeight: String(400),
               color: colorChip.black,
