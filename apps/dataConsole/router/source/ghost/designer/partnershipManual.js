@@ -250,9 +250,9 @@ PartnershipManualJs.prototype.insertFirstBox = function () {
 
   barTop = <%% 11, 11, 11, 11, 11 %%>;
   barWidth = <%% 6, 6, 6, 6, 6 %%>;
-  barHeight = <%% 64, 64, 64, 64, 64 %%>;
+  barHeight = <%% 62, 62, 62, 62, 62 %%>;
 
-  titleSize = <%% 28, 28, 28, 28, 28 %%>;
+  titleSize = <%% 27, 27, 27, 27, 27 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
@@ -1480,6 +1480,7 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
     style: {
       display: "block",
       position: "relative",
+      paddingTop: String(34) + ea,
       marginBottom: String(contentsMarginBottom0) + ea,
     },
     children: [
@@ -1526,27 +1527,89 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
         },
       },
       {
-        text: contents.join("\n"),
         style: {
           display: "inline-block",
-          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
-          fontWeight: String(400),
+          position: "relative",
           verticalAlign: "top",
-          lineHeight: String(1.7),
-          width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight : secondWidth + secondMarginRight, ea),
+          width: withOut(firstWidth + secondWidth + secondMarginRight + (12 * 2), ea),
           textAlign: "left",
-          color: colorChip.black,
+          background: colorChip.gray2,
+          borderRadius: String(5) + "px",
+          padding: String(12) + ea,
         },
-        bold: {
-          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
-          fontWeight: String(700),
-          color: colorChip.black,
-        },
-        under: {
-          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
-          fontWeight: String(700),
-          color: colorChip.green,
-        },
+        children: [
+          {
+            text: title,
+            style: {
+              position: "absolute",
+              top: String(-28) + ea,
+              left: String(0),
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              color: colorChip.green,
+            }
+          },
+          {
+            style: {
+              display: "flex",
+              flexDirection: "row",
+              position: "relative",
+              background: colorChip.white,
+              borderRadius: String(5) + "px",
+              width: withOut(22 * 2, ea),
+              paddingLeft: String(22) + ea,
+              paddingRight: String(22) + ea,
+              paddingTop: String(16) + ea,
+              paddingBottom: String(4) + ea,
+            },
+            children: [
+              {
+                text: (new Array(contents.length)).fill(1).map((num, index) => { return '0' + String(num + index) }).join("\n"),
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(contentsWordingSize) + ea,
+                  fontWeight: String(700),
+                  lineHeight: String(2),
+                  color: colorChip.black,
+                  width: String(20) + ea,
+                  textAlign: "center",
+                }
+              },
+              {
+                style: {
+                  display: "inline-flex",
+                  flexDirection: "column",
+                  position: "relative",
+                  width: String(110) + ea,
+                  paddingTop: String(14) + ea,
+                  paddingLeft: String(10) + ea,
+                },
+                children: (new Array(contents.length)).fill(null).map((n) => {
+                  return {
+                    style: {
+                      position: "relative",
+                      width: String(90) + ea,
+                      height: String(28) + ea,
+                      borderTop: "1px solid " + colorChip.gray3,
+                    }
+                  }
+                }),
+              },
+              {
+                text: contents.join("\n"),
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(contentsWordingSize) + ea,
+                  fontWeight: String(700),
+                  lineHeight: String(2),
+                  color: colorChip.black,
+                }
+              }
+            ]
+          }
+        ],
       },
     ]
   });
