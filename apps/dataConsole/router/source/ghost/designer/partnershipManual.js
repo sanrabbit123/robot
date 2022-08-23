@@ -1213,10 +1213,20 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
     {
       title: "디자이너 시공사의\n직접 시공",
       contents: [
-        "디자이너가 직접 시공을 진행했을 경우 시공계약서와 세부내용이 담긴 견적서를 보내주세요! 디자이너 직영 시공사가 있는 경우 사전에",
+        "<b%디자이너가 직접 시공을 진행했을 경우 시공 계약서와 세부 내용이 담긴 견적서를 보내주세요!%b> 디자이너 직영 시공사가 있는 경우 사전에",
         "홈리에종과의 미팅을 통해서 시공 파트너사 등록을 진행해야 합니다. 디자이너 직영 시공사와 진행하는 과정에서 문제가 발생한 경우 홈리에종이 고객의 불편 사항 접수를 받게되고, 책임과 평가에 직접적으로 영향을 받기 때문에 필수적인 정책 등의 과정이 필요합니다.",
       ],
     },
+    {
+      title: "시공사와 계약시",
+      contents: [
+        "공정별 계약은 불가하며,",
+        "선택하신 시공사와 직접 계약을 맺습니다.",
+        "시공에 대한 모든 책임은 계약한 시공사에 있고,",
+        "시공 복잡도에 따라 디자이너의 감리 비용이 일부 책정될 수 있습니다.",
+        "모든 시공사는 경험에 따라 시공 방법이나 견적에 차이가 있을 수 있습니다.",
+      ]
+    }
   ];
 
   whiteBlock = createNode({
@@ -1403,6 +1413,86 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
         children: [
           {
             text: title,
+            style: {
+              display: desktop ? "inline-block" : "block",
+              position: "relative",
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              lineHeight: String(1.7),
+              color: colorChip.black,
+              textAlign: "left",
+              background: colorChip.white,
+              paddingRight: String(linePadding) + ea,
+            },
+            bold: {
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              color: colorChip.green,
+            },
+          }
+        ]
+      },
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(contentsWordingSize) + ea,
+          fontWeight: String(700),
+          verticalAlign: "top",
+          lineHeight: String(1.7),
+          width: String(secondWidth) + ea,
+          marginRight: String(secondMarginRight) + ea,
+          color: colorChip.green,
+        },
+      },
+      {
+        text: contents.join("\n"),
+        style: {
+          display: "inline-block",
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(400),
+          verticalAlign: "top",
+          lineHeight: String(1.7),
+          width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight : secondWidth + secondMarginRight, ea),
+          textAlign: "left",
+          color: colorChip.black,
+        },
+        bold: {
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.black,
+        },
+        under: {
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.green,
+        },
+      },
+    ]
+  });
+
+  // 3
+
+  ({ title, contents } = mainContents[2]);
+
+  createNode({
+    mother: tong,
+    style: {
+      display: "block",
+      position: "relative",
+      marginBottom: String(contentsMarginBottom0) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: desktop ? "inline-block" : "block",
+          position: "relative",
+          verticalAlign: "top",
+          width: desktop ? String(firstWidth) + ea : String(100) + '%',
+          marginBottom: desktop ? "" : String(1.5) + ea,
+        },
+        children: [
+          {
             style: {
               display: desktop ? "inline-block" : "block",
               position: "relative",
