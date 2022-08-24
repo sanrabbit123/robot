@@ -1763,7 +1763,7 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
           contents: [
             "커튼 : 주름이 잘 잡히는 소재의 커튼이 아니라면 손으로 주름을 잡아주세요. 커튼 연 것, 친 것 모두 촬영하셔도 됩니다.",
             "쿠션 : 쪼글쪼글하지 않도록 탁탁 쳐서 볼륨감을 살려주세요.",
-            "베딩 : 정면에서는 자락이 양쪽으로 균등하게 떨어지게 하는 것이 안정감있습니다. 촬영 방향에 따라 한 쪽을 당겨 프레임이나 어수선한 부분을 가려도 좋아요.",
+            "베딩 : 정면에서는 자락이 양쪽으로 균등하게 떨어지게 하는 것이 안정감 있습니다. 방향에 따라 한 쪽을 당겨 프레임이나 어수선한 부분을 가려도 좋아요.",
           ]
         },
         {
@@ -1991,82 +1991,109 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
 
   ({ title, contents } = mainContents[1]);
 
-  createNode({
-    mother: tong,
-    style: {
-      display: "block",
-      position: "relative",
-      marginBottom: String(contentsMarginBottom0) + ea,
-    },
-    children: [
-      {
-        style: {
-          display: desktop ? "inline-block" : "block",
-          position: "relative",
-          verticalAlign: "top",
-          width: desktop ? String(firstWidth) + ea : String(100) + '%',
-          marginBottom: desktop ? "" : String(1.5) + ea,
-        },
-        children: [
-          {
-            text: title,
-            style: {
-              display: desktop ? "inline-block" : "block",
-              position: "relative",
-              fontSize: String(contentsWordingSize) + ea,
-              fontWeight: String(700),
-              lineHeight: String(1.7),
-              color: colorChip.black,
-              textAlign: "left",
-              background: colorChip.white,
-              paddingRight: String(linePadding) + ea,
-            },
-            bold: {
-              fontSize: String(contentsWordingSize) + ea,
-              fontWeight: String(700),
-              color: colorChip.green,
-            },
-          }
-        ]
+  num = 0;
+  for (let obj of contents) {
+    createNode({
+      mother: tong,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(contentsMarginBottom0) + ea,
       },
-      {
-        style: {
-          display: "inline-block",
-          position: "relative",
-          fontSize: String(contentsWordingSize) + ea,
-          fontWeight: String(700),
-          verticalAlign: "top",
-          lineHeight: String(1.7),
-          width: String(secondWidth) + ea,
-          marginRight: String(secondMarginRight) + ea,
-          color: colorChip.green,
+      children: [
+        {
+          style: {
+            display: desktop ? "inline-block" : "block",
+            position: "relative",
+            verticalAlign: "top",
+            width: desktop ? String(firstWidth) + ea : String(100) + '%',
+            marginBottom: desktop ? "" : String(1.5) + ea,
+          },
+          children: [
+            {
+              text: num === 0 ? title : "",
+              style: {
+                display: desktop ? "inline-block" : "block",
+                position: "relative",
+                fontSize: String(contentsWordingSize) + ea,
+                fontWeight: String(700),
+                lineHeight: String(1.7),
+                color: colorChip.black,
+                textAlign: "left",
+                background: colorChip.white,
+                paddingRight: String(linePadding) + ea,
+              },
+              bold: {
+                fontSize: String(contentsWordingSize) + ea,
+                fontWeight: String(700),
+                color: colorChip.green,
+              },
+            }
+          ]
         },
-      },
-      {
-        text: contents.join("\n"),
-        style: {
-          display: "inline-block",
-          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
-          fontWeight: String(400),
-          verticalAlign: "top",
-          lineHeight: String(1.7),
-          width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight : secondWidth + secondMarginRight, ea),
-          textAlign: "left",
-          color: colorChip.black,
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(contentsWordingSize) + ea,
+            fontWeight: String(700),
+            verticalAlign: "top",
+            lineHeight: String(1.7),
+            width: String(secondWidth) + ea,
+            marginRight: String(secondMarginRight) + ea,
+            color: colorChip.green,
+          },
         },
-        bold: {
-          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
-          fontWeight: String(700),
-          color: colorChip.black,
+        {
+          text: obj.title,
+          style: {
+            display: "inline-block",
+            fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+            fontWeight: String(700),
+            verticalAlign: "top",
+            lineHeight: String(1.7),
+            width: String(175) + ea,
+            textAlign: "left",
+            color: colorChip.black,
+          },
+          bold: {
+            fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+            fontWeight: String(700),
+            color: colorChip.black,
+          },
+          under: {
+            fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+            fontWeight: String(700),
+            color: colorChip.green,
+          },
         },
-        under: {
-          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
-          fontWeight: String(700),
-          color: colorChip.green,
+        {
+          text: obj.contents.join("\n"),
+          style: {
+            display: "inline-block",
+            fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+            fontWeight: String(400),
+            verticalAlign: "top",
+            lineHeight: String(1.7),
+            width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight + 175 : secondWidth + secondMarginRight, ea),
+            textAlign: "left",
+            color: colorChip.black,
+          },
+          bold: {
+            fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+            fontWeight: String(700),
+            color: colorChip.black,
+          },
+          under: {
+            fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+            fontWeight: String(700),
+            color: colorChip.green,
+          },
         },
-      },
-    ]
-  });
+      ]
+    });
+    num++;
+  }
 
 }
 
