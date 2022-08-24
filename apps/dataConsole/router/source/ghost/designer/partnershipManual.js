@@ -1668,6 +1668,7 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
   let factorBoxTop, factorBoxLeft;
   let factorLineTop, factorLineLeft, factorLineWidth, factorLineHeight;
   let preContents;
+  let middleSecondWidth;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -1736,6 +1737,8 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
   factorLineWidth = <%% 22, 22, 22, 22, 22 %%>;
   factorLineHeight = <%% 123, 123, 123, 123, 123 %%>;
 
+  middleSecondWidth = <%% 175, 175, 175, 175, 175 %%>;
+
   mainTitle = "촬영 및 세팅 가이드";
   mainContents = [
     {
@@ -1781,6 +1784,51 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
           ]
         },
       ],
+    },
+    {
+      title: "촬영 경우의 수",
+      contents: [
+        {
+          type: "first",
+          contents: [ "홈리에종이 촬영하는 경우, 고객의 사정이나 지역의 특이성에 의해 디자이너가 직접 촬영한 후 전달하는 경우 혹은 개인 정보 등의 문제로 촬영을 진행하지 않기로 결정하는 3가지 경우가 있습니다." ],
+        },
+        {
+          type: "second",
+          title: "홈리에종이\n촬영하는 경우",
+          contents: [
+            "프로젝트 종료 시점에 촬영 작가, 디자이너, 홈리에종 담당자가 고객의 집에 방문하여 촬영합니다. 디자이너는 촬영일 당일 디자인 의도에 맞추어 촬영할 수 있는 상태로 현장을 세팅해야 합니다. 홈리에종 담당자는 사전에 고객에게 정리 정돈을 부탁하고 촬영일에 인터뷰를 진행하며 필요에 따라 현장 지원합니다.",
+            "<b%촬영 비용 : 1건당 165,000원 (vat포함) 디자이너 부담률 50% + 홈리에종 부담률 50%%b>",
+          ]
+        },
+        {
+          type: "gray",
+          title: "홈리에종\n촬영 가이드",
+          contents: [
+            "스타일링이 완성된 공간별, 가로 비율 1장 이상의 사진",
+            "공간별 세로 비율의 사진이 있는 경우, 2장이 한 번에 묶여 게시물에 게시되기 때문에 최소 2장 이상의 컷 필요 (짝수컷 필요) - 전체 조화를 강조해야하기 때문에 전체 공간이 보이는 광각 사진 (14mm 이하의 렌즈) 1장 이상이 포함된 사진 필요",
+            "사진은 원본 해상도로, 사진의 긴 쪽 최소 픽셀이 2000px 이상",
+            "필터는 사용되어서는 안 됨",
+            "공간 디자인 설명을 위해 가구, 소품의 색상을 정확하게 보여줄 수 있도록 화이트 밸런스 맞추기",
+            "사진상 가구나 소품의 왜곡이 없어야 함",
+          ]
+        },
+        {
+          type: "second",
+          title: "디자이너가 촬영한\n사진을 전달하는 경우",
+          contents: [
+            "디자이너님이 직접 촬영 또는 외부 포토그래퍼를 이용하시는 것도 가능합니다. 디자이너 직접 촬영 또는 외부 포토그래퍼 촬영시에도 홈리에종은 현장에 동행하여 고객인터뷰를 진행할 수 있습니다. 여건에 따라 전화 인터뷰를 진행할 수 있으며 외부 포토그래퍼",
+            "촬영 시에는 원활한 일정 조율을 위하여 사전에 홈리에종과 협의 부탁드립니다.",
+          ]
+        },
+        {
+          type: "second",
+          title: "",
+          contents: [
+            "디자이너가 직접 촬영한 사진으로 프로젝트 종료를 검수하는 경우 디자이너는 최대한 성의 있게 촬영하여 홈리에종과 공유합니다. 고성능 휴대폰으로 촬영한 사진도 사용 가능합니다. 다만 모든 사진은 필터를 적용하지 않고 찍은 원본 사진을 보내주셔야 합니다. 프로젝트 단위로 압축하셔서 이메일로 전송해주세요.",
+            "admin@home-liaison.com",
+          ]
+        },
+      ]
     },
   ];
 
@@ -2052,7 +2100,7 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
             fontWeight: String(700),
             verticalAlign: "top",
             lineHeight: String(1.7),
-            width: String(175) + ea,
+            width: String(middleSecondWidth) + ea,
             textAlign: "left",
             color: colorChip.black,
           },
@@ -2075,7 +2123,7 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
             fontWeight: String(400),
             verticalAlign: "top",
             lineHeight: String(1.7),
-            width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight + 175 : secondWidth + secondMarginRight, ea),
+            width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight + middleSecondWidth : secondWidth + secondMarginRight, ea),
             textAlign: "left",
             color: colorChip.black,
           },
@@ -2094,6 +2142,12 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
     });
     num++;
   }
+
+
+  // 3
+
+  ({ title, contents } = mainContents[2]);
+
 
 }
 
