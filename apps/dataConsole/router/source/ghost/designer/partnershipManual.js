@@ -1987,87 +1987,86 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
     ]
   });
 
-
   // 2
 
   ({ title, contents } = mainContents[1]);
 
-  // createNode({
-  //   mother: tong,
-  //   style: {
-  //     display: "block",
-  //     position: "relative",
-  //     marginBottom: String(contentsMarginBottom0) + ea,
-  //   },
-  //   children: [
-  //     {
-  //       style: {
-  //         display: desktop ? "inline-block" : "block",
-  //         position: "relative",
-  //         verticalAlign: "top",
-  //         width: desktop ? String(firstWidth) + ea : String(100) + '%',
-  //         marginBottom: desktop ? "" : String(1.5) + ea,
-  //       },
-  //       children: [
-  //         {
-  //           text: title,
-  //           style: {
-  //             display: desktop ? "inline-block" : "block",
-  //             position: "relative",
-  //             fontSize: String(contentsWordingSize) + ea,
-  //             fontWeight: String(700),
-  //             lineHeight: String(1.7),
-  //             color: colorChip.black,
-  //             textAlign: "left",
-  //             background: colorChip.white,
-  //             paddingRight: String(linePadding) + ea,
-  //           },
-  //           bold: {
-  //             fontSize: String(contentsWordingSize) + ea,
-  //             fontWeight: String(700),
-  //             color: colorChip.green,
-  //           },
-  //         }
-  //       ]
-  //     },
-  //     {
-  //       style: {
-  //         display: "inline-block",
-  //         position: "relative",
-  //         fontSize: String(contentsWordingSize) + ea,
-  //         fontWeight: String(700),
-  //         verticalAlign: "top",
-  //         lineHeight: String(1.7),
-  //         width: String(secondWidth) + ea,
-  //         marginRight: String(secondMarginRight) + ea,
-  //         color: colorChip.green,
-  //       },
-  //     },
-  //     {
-  //       text: contents.join("\n"),
-  //       style: {
-  //         display: "inline-block",
-  //         fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
-  //         fontWeight: String(400),
-  //         verticalAlign: "top",
-  //         lineHeight: String(1.7),
-  //         width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight : secondWidth + secondMarginRight, ea),
-  //         textAlign: "left",
-  //         color: colorChip.black,
-  //       },
-  //       bold: {
-  //         fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
-  //         fontWeight: String(700),
-  //         color: colorChip.black,
-  //       },
-  //       under: {
-  //         fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
-  //         fontWeight: String(700),
-  //         color: colorChip.green,
-  //       },
-  //     },
-  //   ]
-  // });
+  createNode({
+    mother: tong,
+    style: {
+      display: "block",
+      position: "relative",
+      marginBottom: String(contentsMarginBottom0) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: desktop ? "inline-block" : "block",
+          position: "relative",
+          verticalAlign: "top",
+          width: desktop ? String(firstWidth) + ea : String(100) + '%',
+          marginBottom: desktop ? "" : String(1.5) + ea,
+        },
+        children: [
+          {
+            text: title,
+            style: {
+              display: desktop ? "inline-block" : "block",
+              position: "relative",
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              lineHeight: String(1.7),
+              color: colorChip.black,
+              textAlign: "left",
+              background: colorChip.white,
+              paddingRight: String(linePadding) + ea,
+            },
+            bold: {
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              color: colorChip.green,
+            },
+          }
+        ]
+      },
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(contentsWordingSize) + ea,
+          fontWeight: String(700),
+          verticalAlign: "top",
+          lineHeight: String(1.7),
+          width: String(secondWidth) + ea,
+          marginRight: String(secondMarginRight) + ea,
+          color: colorChip.green,
+        },
+      },
+      {
+        text: contents.join("\n"),
+        style: {
+          display: "inline-block",
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(400),
+          verticalAlign: "top",
+          lineHeight: String(1.7),
+          width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight : secondWidth + secondMarginRight, ea),
+          textAlign: "left",
+          color: colorChip.black,
+        },
+        bold: {
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.black,
+        },
+        under: {
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.green,
+        },
+      },
+    ]
+  });
 
 }
 
