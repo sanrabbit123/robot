@@ -416,6 +416,8 @@ DataRouter.prototype.rou_get_First = function () {
             target = "file";
           } else if (/^flo/i.test(req.params.id)) {
             target = "flow";
+          } else if (/^mes/i.test(req.params.id)) {
+            target = "message";
           } else if (/^use/i.test(req.params.id)) {
             target = "user";
           } else if (/^ana/i.test(req.params.id)) {
