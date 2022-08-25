@@ -589,7 +589,6 @@ PartnershipManualJs.prototype.insertContextBox = function () {
       verticalAlign: "top",
     }
   });
-
   createNode({
     mother: searchTong,
     style: {
@@ -602,6 +601,11 @@ PartnershipManualJs.prototype.insertContextBox = function () {
     },
     children: [
       {
+        event: {
+          click: function (e) {
+            GeneralJs.selfHref(FRONTHOST + "/designer/manual.php?desid=" + instance.designer.desid + "&mode=styling");
+          }
+        },
         style: {
           display: "inline-flex",
           position: "relative",
@@ -631,6 +635,11 @@ PartnershipManualJs.prototype.insertContextBox = function () {
         ]
       },
       {
+        event: {
+          click: function (e) {
+            GeneralJs.selfHref(FRONTHOST + "/designer/manual.php?desid=" + instance.designer.desid + "&mode=contract");
+          }
+        },
         style: {
           display: "inline-flex",
           position: "relative",
