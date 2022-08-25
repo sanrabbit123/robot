@@ -395,6 +395,12 @@ PartnershipManualJs.prototype.insertContextBox = function () {
   let contextBetween;
   let contentsSize, contentsWeight;
   let numberWeight, numberWidth;
+  let searchTong;
+  let searchTongMarginBottom;
+  let searchWidth, searchHeight, searchMarginRight;
+  let searchIconWidth, searchIconTop;
+  let buttonPaddingLeft;
+  let buttonSize, buttonWeight, buttonTextTop;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -422,6 +428,21 @@ PartnershipManualJs.prototype.insertContextBox = function () {
 
   numberWeight = <%% 300, 300, 300, 300, 300 %%>;
   numberWidth = <%% 30, 30, 30, 30, 30 %%>;
+
+  searchTongMarginBottom = <%% 15, 15, 15, 15, 2 %%>;
+
+  searchWidth = <%% 450, 450, 450, 450, 450 %%>;
+  searchHeight = <%% 36, 36, 36, 36, 36 %%>;
+  searchMarginRight = <%% 12, 12, 12, 12, 12 %%>;
+
+  searchIconWidth = <%% 22, 22, 22, 22, 22 %%>;
+  searchIconTop = <%% 6, 6, 6, 6, 6 %%>;
+
+  buttonPaddingLeft = <%% 15, 15, 15, 15, 15 %%>;
+
+  buttonSize = <%% 14, 14, 14, 14, 14 %%>;
+  buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
+  buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
   contents = [
     {
@@ -474,18 +495,150 @@ PartnershipManualJs.prototype.insertContextBox = function () {
     },
     children: [
       {
-        display: "block",
-        position: "relative",
-        width: withOut(margin * 2, ea),
-        marginLeft: String(desktop ? margin : 0) + ea,
-        borderRadius: String(desktop ? 8 : 1) + ea,
-        paddingTop: String(grayInnerPadding) + ea,
-        paddingBottom: String(grayInnerPadding) + ea,
-        background: colorChip.gray1,
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(margin * 2, ea),
+          marginLeft: String(desktop ? margin : 0) + ea,
+          marginBottom: String(searchTongMarginBottom) + ea,
+        }
+      },
+      {
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(margin * 2, ea),
+          marginLeft: String(desktop ? margin : 0) + ea,
+          borderRadius: String(desktop ? 8 : 1) + ea,
+          paddingTop: String(grayInnerPadding) + ea,
+          paddingBottom: String(grayInnerPadding) + ea,
+          background: colorChip.gray1,
+        }
       }
     ]
   });
-  whiteTong = whiteBlock.firstChild;
+  searchTong = whiteBlock.children[0];
+  whiteTong = whiteBlock.children[1];
+
+  createNode({
+    mother: searchTong,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      width: String(searchWidth) + ea,
+      height: String(searchHeight) + ea,
+      borderRadius: String(5) + "px",
+      background: colorChip.gray1,
+      marginRight: String(searchMarginRight) + ea,
+      verticalAlign: "top",
+    },
+    children: [
+      {
+        mode: "input",
+        attribute: {
+          type: "text",
+          placeholder: "정책 검색...",
+        },
+        style: {
+          display: "block",
+          border: String(0),
+          width: withOut(0),
+          height: withOut(3, '%'),
+          outline: String(0),
+          fontSize: String(buttonSize) + ea,
+          fontWeight: String(400),
+          color: colorChip.black,
+          textAlign: "center",
+          background: "transparent",
+        }
+      }
+    ]
+  });
+  createNode({
+    mother: searchTong,
+    class: [ "hoverDefault_lite" ],
+    mode: "svg",
+    source: instance.mother.returnSearch(colorChip.black),
+    style: {
+      display: "inline-block",
+      position: "relative",
+      width: String(searchIconWidth) + ea,
+      top: String(searchIconTop) + ea,
+      verticalAlign: "top",
+    }
+  });
+
+  createNode({
+    mother: searchTong,
+    style: {
+      display: "inline-block",
+      position: "absolute",
+      verticalAlign: "top",
+      top: String(0),
+      right: String(0),
+      height: String(searchHeight) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          height: withOut(0),
+          paddingLeft: String(buttonPaddingLeft) + ea,
+          paddingRight: String(buttonPaddingLeft) + ea,
+          background: colorChip.gradientGray,
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          borderRadius: String(5) + "px",
+          cursor: "pointer",
+          marginRight: String(6) + ea,
+        },
+        children: [
+          {
+            text: "홈스타일링 제공 내역",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(buttonTextTop) + ea,
+              fontSize: String(buttonSize) + ea,
+              fontWeight: String(buttonWeight),
+              color: colorChip.white,
+            }
+          }
+        ]
+      },
+      {
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          height: withOut(0),
+          paddingLeft: String(buttonPaddingLeft) + ea,
+          paddingRight: String(buttonPaddingLeft) + ea,
+          background: colorChip.gradientGray,
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          borderRadius: String(5) + "px",
+          cursor: "pointer",
+        },
+        children: [
+          {
+            text: "디자이너 계약서",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(buttonTextTop) + ea,
+              fontSize: String(buttonSize) + ea,
+              fontWeight: String(buttonWeight),
+              color: colorChip.white,
+            }
+          }
+        ]
+      },
+    ]
+  });
+
 
   for (let i = 0; i < contents.length; i++) {
 
