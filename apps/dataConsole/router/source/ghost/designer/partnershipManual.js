@@ -452,7 +452,13 @@ PartnershipManualJs.prototype.insertContextBox = function () {
         "활동 가능 영역 책정",
         "서비스 비용 책정",
         "디자이너 작업 가능 일정",
-      ]
+      ],
+      scroll: [
+        200,
+        200,
+        200,
+        200
+      ],
     },
     {
       title: "첫 프로젝트 운영",
@@ -461,14 +467,24 @@ PartnershipManualJs.prototype.insertContextBox = function () {
         "디자이너 직접 시공",
         "현장 촬영",
         "디자이너 글 가이드",
-      ]
+      ],
+      scroll: [
+        200,
+        200,
+        200,
+        200
+      ],
     },
     {
       title: "컨텐츠 가이드",
       context: [
         "컨텐츠 활용 방법",
         "홈리에종 제공 컨텐츠",
-      ]
+      ],
+      scroll: [
+        200,
+        200,
+      ],
     },
     {
       title: "디자이너 프로젝트 진행",
@@ -477,7 +493,13 @@ PartnershipManualJs.prototype.insertContextBox = function () {
         "디자이너 작성 폼",
         "시공사 선택",
         "디자이너 소통",
-      ]
+      ],
+      scroll: [
+        200,
+        200,
+        200,
+        200
+      ],
     },
   ];
 
@@ -676,11 +698,23 @@ PartnershipManualJs.prototype.insertContextBox = function () {
 
       createNode({
         mother: contextTong,
+        attribute: {
+          i: String(i),
+          j: String(j),
+        },
+        event: {
+          click: function (e) {
+            const i = Number(this.getAttribute('i'));
+            const j = Number(this.getAttribute('j'));
+            GeneralJs.scrollTo(window, contents[i].scroll[j]);
+          }
+        },
         style: {
           display: "block",
           position: "relative",
           marginBottom: String(contextBetween) + ea,
           paddingLeft: String(contextPadding) + ea,
+          cursor: "pointer",
         },
         children: [
           {
