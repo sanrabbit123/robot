@@ -1669,6 +1669,15 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
   let factorLineTop, factorLineLeft, factorLineWidth, factorLineHeight;
   let preContents;
   let middleSecondWidth;
+  let grayPadding;
+  let grayPaddingLeft, grayPaddingTop;
+  let final;
+  let gray;
+  let bigPaddingWidth;
+  let bigPaddingPaddingVisual;
+  let lineBoxPaddingTop;
+  let lineBoxHeight;
+  let bigPaddingNumberWidth;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -1739,6 +1748,18 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
 
   middleSecondWidth = <%% 175, 175, 175, 175, 175 %%>;
 
+  grayPadding = <%% 12, 12, 12, 12, 12 %%>;
+
+  grayPaddingLeft = <%% 30, 30, 30, 30, 30 %%>;
+  grayPaddingTop = <%% 22, 22, 22, 22, 22 %%>;
+
+  bigPaddingWidth = <%% 424, 424, 424, 424, 424 %%>;
+  bigPaddingPaddingVisual = <%% 16, 16, 16, 16, 16 %%>;
+  lineBoxPaddingTop = <%% 13, 13, 13, 13, 13 %%>;
+  lineBoxHeight = <%% 23, 23, 23, 23, 23 %%>;
+
+  bigPaddingNumberWidth = <%% 12, 12, 12, 12, 12 %%>;
+
   mainTitle = "촬영 및 세팅 가이드";
   mainContents = [
     {
@@ -1790,7 +1811,7 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
       contents: [
         {
           type: "first",
-          contents: [ "홈리에종이 촬영하는 경우, 고객의 사정이나 지역의 특이성에 의해 디자이너가 직접 촬영한 후 전달하는 경우 혹은 개인 정보 등의 문제로 촬영을 진행하지 않기로 결정하는 3가지 경우가 있습니다." ],
+          contents: [ "홈리에종이 촬영하는 경우, 고객의 사정이나 지역의 특이성에 의해 디자이너가 직접 촬영한 후 전달하는 경우,", "혹은 개인 정보 등의 문제로 촬영을 진행하지 않기로 결정하는 3가지 경우가 있습니다." ],
         },
         {
           type: "second",
@@ -1805,7 +1826,8 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
           title: "홈리에종\n촬영 가이드",
           contents: [
             "스타일링이 완성된 공간별, 가로 비율 1장 이상의 사진",
-            "공간별 세로 비율의 사진이 있는 경우, 2장이 한 번에 묶여 게시물에 게시되기 때문에 최소 2장 이상의 컷 필요 (짝수컷 필요) - 전체 조화를 강조해야하기 때문에 전체 공간이 보이는 광각 사진 (14mm 이하의 렌즈) 1장 이상이 포함된 사진 필요",
+            "공간별 세로 비율의 사진이 있는 경우, 2장이 한 번에 묶여 게시물에 게시되기 때문에 최소 2장 이상의 컷 필요 (짝수컷 필요)",
+            "전체 조화를 강조해야하기 때문에 전체 공간이 보이는 광각 사진 (14mm 이하의 렌즈) 1장 이상이 포함된 사진 필요",
             "사진은 원본 해상도로, 사진의 긴 쪽 최소 픽셀이 2000px 이상",
             "필터는 사용되어서는 안 됨",
             "공간 디자인 설명을 위해 가구, 소품의 색상을 정확하게 보여줄 수 있도록 화이트 밸런스 맞추기",
@@ -1824,11 +1846,39 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
           type: "second",
           title: "",
           contents: [
-            "디자이너가 직접 촬영한 사진으로 프로젝트 종료를 검수하는 경우 디자이너는 최대한 성의 있게 촬영하여 홈리에종과 공유합니다. 고성능 휴대폰으로 촬영한 사진도 사용 가능합니다. 다만 모든 사진은 필터를 적용하지 않고 찍은 원본 사진을 보내주셔야 합니다. 프로젝트 단위로 압축하셔서 이메일로 전송해주세요.",
-            "admin@home-liaison.com",
+            "디자이너가 직접 촬영한 사진으로 프로젝트 종료를 검수하는 경우 디자이너는 최대한 성의 있게 촬영하여 홈리에종과 공유합니다. 고성능 휴대폰으로 촬영한 사진도 사용 가능합니다. 다만 모든 사진은 필터를 적용하지 않고 찍은 원본 사진을 보내주셔야 합니다. 프로젝트 단위로 압축하셔서 이메일로 전송해주세요. admin@home-liaison.com",
           ]
         },
       ]
+    },
+    {
+      title: "포트폴리오 설명",
+      contents: [
+        "촬영을 진행했거나 그렇지 못한 모든 경우에 포트폴리오에 대한 설명을 작성하여 보내주세요. <b%포트폴리오 설명을 확인한 후 서비스 비용(잔금)을 정산합니다.%b> 보내주시는 콘텐츠는 홈리에종의 웹사이트 / SNS 채널에 노출하며 디자이너 추천 및 브랜딩 용도로 사용합니다.",
+        "‘포트폴리오 작성 형식'은 2부 5)에서안내해드린 방식과 같습니다.",
+      ]
+    },
+    {
+      title: "디자이너 글 가이드",
+      contents: [
+        "완성된 현장의 사진은 텍스트와 함께 홈리에종의 웹사이트 / SNS 채널에 노출하며, 고객제안 및 디자이너 브랜딩 용도로 사용합니다.",
+        "포트폴리오 텍스트 작성 순서는 아래와 같습니다. 홈리에종내에서 보정 및 편집 과정을 거치므로 편안한 마음으로 작성해 주시면 됩니다 ^^",
+      ],
+      gray: [
+        "1) 고객 상황에 대한 이야기",
+        "2) 고객이 원하는 스타일에 대한 이야기 ",
+        "3) 디자이너의 공간별 디자인 의도 이야기 ",
+        "4) 현장 진행소감",
+        "5) 공간정보",
+        "공간정보 : 00py, 아파트/주택/타운하우스 등, 방0+화장실0+거실+주방 등",
+        "가족구성 :",
+        "기간 :",
+        "예산 :",
+      ],
+      final: [
+        "레퍼런스를 보내드립니다. 참고해서 작성해 주시면 됩니다.",
+        "https://blog.naver.com/homeliaison/221486291912",
+      ],
     },
   ];
 
@@ -1956,7 +2006,6 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
       },
     ]
   });
-
   createNode({
     mother: tong,
     style: {
@@ -1978,10 +2027,10 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
             style: {
               display: "inline-block",
               position: "relative",
-              width: String(424) + ea,
-              paddingRight: String(16) + ea,
+              width: String(bigPaddingWidth) + ea,
+              paddingRight: String(bigPaddingPaddingVisual) + ea,
               verticalAlign: "top",
-              paddingTop: String(13) + ea,
+              paddingTop: String(lineBoxPaddingTop) + ea,
             },
             children: (new Array(contents.length)).fill(null).map((n, index) => {
               return {
@@ -1989,7 +2038,7 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
                   display: "block",
                   position: "relative",
                   borderTop: "1px solid " + colorChip.gray3,
-                  height: String(23) + ea,
+                  height: String(index === contents.length - 1 ? 0 : lineBoxHeight) + ea,
                 }
               };
             }),
@@ -2006,7 +2055,7 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
               textAlign: "left",
               background: colorChip.white,
               paddingRight: String(linePadding) + ea,
-              width: String(12) + ea,
+              width: String(bigPaddingNumberWidth) + ea,
               verticalAlign: "top",
             }
           },
@@ -2046,7 +2095,7 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
       style: {
         display: "block",
         position: "relative",
-        marginBottom: String(contentsMarginBottom0) + ea,
+        marginBottom: String(num === contents.length - 1 ? contentsMarginBottom1 : contentsMarginBottom0) + ea,
       },
       children: [
         {
@@ -2148,6 +2197,622 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
 
   ({ title, contents } = mainContents[2]);
 
+  num = 0;
+  for (let obj of contents) {
+
+    if (obj.type === "first") {
+
+      createNode({
+        mother: tong,
+        style: {
+          display: "block",
+          position: "relative",
+          marginBottom: String(num === contents.length - 1 ? contentsMarginBottom1 : contentsMarginBottom0) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: desktop ? "inline-block" : "block",
+              position: "relative",
+              verticalAlign: "top",
+              width: desktop ? String(firstWidth) + ea : String(100) + '%',
+              marginBottom: desktop ? "" : String(1.5) + ea,
+            },
+            children: [
+              {
+                text: num === 0 ? title : "",
+                style: {
+                  display: desktop ? "inline-block" : "block",
+                  position: "relative",
+                  fontSize: String(contentsWordingSize) + ea,
+                  fontWeight: String(700),
+                  lineHeight: String(1.7),
+                  color: colorChip.black,
+                  textAlign: "left",
+                  background: colorChip.white,
+                  paddingRight: String(linePadding) + ea,
+                },
+                bold: {
+                  fontSize: String(contentsWordingSize) + ea,
+                  fontWeight: String(700),
+                  color: colorChip.green,
+                },
+              }
+            ]
+          },
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              verticalAlign: "top",
+              lineHeight: String(1.7),
+              width: String(secondWidth) + ea,
+              marginRight: String(secondMarginRight) + ea,
+              color: colorChip.green,
+            },
+          },
+          {
+            text: obj.contents.join("\n"),
+            style: {
+              display: "inline-block",
+              fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+              fontWeight: String(400),
+              verticalAlign: "top",
+              lineHeight: String(1.7),
+              width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight : secondWidth + secondMarginRight, ea),
+              textAlign: "left",
+              color: colorChip.black,
+            },
+            bold: {
+              fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+              fontWeight: String(700),
+              color: colorChip.black,
+            },
+            under: {
+              fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+              fontWeight: String(700),
+              color: colorChip.green,
+            },
+          },
+        ]
+      });
+
+    } else if (obj.type === "second") {
+
+      createNode({
+        mother: tong,
+        style: {
+          display: "block",
+          position: "relative",
+          marginBottom: String(num === contents.length - 1 ? contentsMarginBottom1 : contentsMarginBottom0) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: desktop ? "inline-block" : "block",
+              position: "relative",
+              verticalAlign: "top",
+              width: desktop ? String(firstWidth) + ea : String(100) + '%',
+              marginBottom: desktop ? "" : String(1.5) + ea,
+            },
+            children: [
+              {
+                text: num === 0 ? title : "",
+                style: {
+                  display: desktop ? "inline-block" : "block",
+                  position: "relative",
+                  fontSize: String(contentsWordingSize) + ea,
+                  fontWeight: String(700),
+                  lineHeight: String(1.7),
+                  color: colorChip.black,
+                  textAlign: "left",
+                  background: colorChip.white,
+                  paddingRight: String(linePadding) + ea,
+                },
+                bold: {
+                  fontSize: String(contentsWordingSize) + ea,
+                  fontWeight: String(700),
+                  color: colorChip.green,
+                },
+              }
+            ]
+          },
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              verticalAlign: "top",
+              lineHeight: String(1.7),
+              width: String(secondWidth) + ea,
+              marginRight: String(secondMarginRight) + ea,
+              color: colorChip.green,
+            },
+          },
+          {
+            text: obj.title,
+            style: {
+              display: "inline-block",
+              fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+              fontWeight: String(700),
+              verticalAlign: "top",
+              lineHeight: String(1.7),
+              width: String(middleSecondWidth) + ea,
+              textAlign: "left",
+              color: colorChip.black,
+            },
+            bold: {
+              fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+              fontWeight: String(700),
+              color: colorChip.black,
+            },
+            under: {
+              fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+              fontWeight: String(700),
+              color: colorChip.green,
+            },
+          },
+          {
+            text: obj.contents.join("\n"),
+            style: {
+              display: "inline-block",
+              fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+              fontWeight: String(400),
+              verticalAlign: "top",
+              lineHeight: String(1.7),
+              width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight + middleSecondWidth : secondWidth + secondMarginRight, ea),
+              textAlign: "left",
+              color: colorChip.black,
+            },
+            bold: {
+              fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+              fontWeight: String(700),
+              color: colorChip.black,
+            },
+            under: {
+              fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+              fontWeight: String(700),
+              color: colorChip.green,
+            },
+          },
+        ]
+      });
+
+
+    } else if (obj.type === "gray") {
+
+      createNode({
+        mother: tong,
+        style: {
+          display: "block",
+          position: "relative",
+          marginBottom: String(num === contents.length - 1 ? contentsMarginBottom1 : contentsMarginBottom0) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: desktop ? "inline-block" : "block",
+              position: "relative",
+              verticalAlign: "top",
+              width: desktop ? String(firstWidth) + ea : String(100) + '%',
+              marginBottom: desktop ? "" : String(1.5) + ea,
+            },
+            children: [
+              {
+                text: num === 0 ? title : "",
+                style: {
+                  display: desktop ? "inline-block" : "block",
+                  position: "relative",
+                  fontSize: String(contentsWordingSize) + ea,
+                  fontWeight: String(700),
+                  lineHeight: String(1.7),
+                  color: colorChip.black,
+                  textAlign: "left",
+                  background: colorChip.white,
+                  paddingRight: String(linePadding) + ea,
+                },
+                bold: {
+                  fontSize: String(contentsWordingSize) + ea,
+                  fontWeight: String(700),
+                  color: colorChip.green,
+                },
+              }
+            ]
+          },
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              verticalAlign: "top",
+              lineHeight: String(1.7),
+              width: String(secondWidth) + ea,
+              marginRight: String(secondMarginRight) + ea,
+              color: colorChip.green,
+            },
+          },
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              verticalAlign: "top",
+              width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight : secondWidth + secondMarginRight, ea),
+              paddingTop: String(grayPaddingTop) + ea,
+              paddingBottom: String(grayPaddingTop) + ea,
+              background: colorChip.gray1,
+              borderRadius: String(8) + "px",
+            },
+            children: [
+              {
+                text: obj.title,
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(contentsWordingSize) + ea,
+                  fontWeight: String(700),
+                  verticalAlign: "bottom",
+                  lineHeight: String(1.7),
+                  color: colorChip.black,
+                  paddingLeft: String(grayPaddingLeft) + ea,
+                  width: String(middleSecondWidth - grayPaddingLeft) + ea,
+                }
+              },
+              {
+                text: obj.contents.map((str) => { return `- ${str}`; }).join("\n"),
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(contentsWordingSize) + ea,
+                  fontWeight: String(400),
+                  verticalAlign: "top",
+                  lineHeight: String(1.7),
+                  color: colorChip.black,
+                }
+              },
+            ]
+          },
+        ]
+      });
+
+    }
+
+    num++;
+  }
+
+
+  // 4
+
+  ({ title, contents } = mainContents[3]);
+
+  createNode({
+    mother: tong,
+    style: {
+      display: "block",
+      position: "relative",
+      marginBottom: String(contentsMarginBottom1) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: desktop ? "inline-block" : "block",
+          position: "relative",
+          verticalAlign: "top",
+          width: desktop ? String(firstWidth) + ea : String(100) + '%',
+          marginBottom: desktop ? "" : String(1.5) + ea,
+        },
+        children: [
+          {
+            text: title,
+            style: {
+              display: desktop ? "inline-block" : "block",
+              position: "relative",
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              lineHeight: String(1.7),
+              color: colorChip.black,
+              textAlign: "left",
+              background: colorChip.white,
+              paddingRight: String(linePadding) + ea,
+            },
+            bold: {
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              color: colorChip.green,
+            },
+          }
+        ]
+      },
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(contentsWordingSize) + ea,
+          fontWeight: String(700),
+          verticalAlign: "top",
+          lineHeight: String(1.7),
+          width: String(secondWidth) + ea,
+          marginRight: String(secondMarginRight) + ea,
+          color: colorChip.green,
+        },
+      },
+      {
+        text: contents.join("\n"),
+        style: {
+          display: "inline-block",
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(400),
+          verticalAlign: "top",
+          lineHeight: String(1.7),
+          width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight : secondWidth + secondMarginRight, ea),
+          textAlign: "left",
+          color: colorChip.black,
+        },
+        bold: {
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.black,
+        },
+        under: {
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.green,
+        },
+      },
+    ]
+  });
+
+
+  // 5
+
+  ({ title, contents, final, gray } = mainContents[4]);
+
+  createNode({
+    mother: tong,
+    style: {
+      display: "block",
+      position: "relative",
+      marginBottom: String(contentsMarginBottom0) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: desktop ? "inline-block" : "block",
+          position: "relative",
+          verticalAlign: "top",
+          width: desktop ? String(firstWidth) + ea : String(100) + '%',
+          marginBottom: desktop ? "" : String(1.5) + ea,
+        },
+        children: [
+          {
+            text: title,
+            style: {
+              display: desktop ? "inline-block" : "block",
+              position: "relative",
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              lineHeight: String(1.7),
+              color: colorChip.black,
+              textAlign: "left",
+              background: colorChip.white,
+              paddingRight: String(linePadding) + ea,
+            },
+            bold: {
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              color: colorChip.green,
+            },
+          }
+        ]
+      },
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(contentsWordingSize) + ea,
+          fontWeight: String(700),
+          verticalAlign: "top",
+          lineHeight: String(1.7),
+          width: String(secondWidth) + ea,
+          marginRight: String(secondMarginRight) + ea,
+          color: colorChip.green,
+        },
+      },
+      {
+        text: contents.join("\n"),
+        style: {
+          display: "inline-block",
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(400),
+          verticalAlign: "top",
+          lineHeight: String(1.7),
+          width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight : secondWidth + secondMarginRight, ea),
+          textAlign: "left",
+          color: colorChip.black,
+        },
+        bold: {
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.black,
+        },
+        under: {
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.green,
+        },
+      },
+    ]
+  });
+  createNode({
+    mother: tong,
+    style: {
+      display: "block",
+      position: "relative",
+      marginBottom: String(contentsMarginBottom0) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: desktop ? "inline-block" : "block",
+          position: "relative",
+          verticalAlign: "top",
+          width: desktop ? String(firstWidth) + ea : String(100) + '%',
+          marginBottom: desktop ? "" : String(1.5) + ea,
+        },
+        children: [
+          {
+            text: "",
+            style: {
+              display: desktop ? "inline-block" : "block",
+              position: "relative",
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              lineHeight: String(1.7),
+              color: colorChip.black,
+              textAlign: "left",
+              background: colorChip.white,
+              paddingRight: String(linePadding) + ea,
+            },
+            bold: {
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              color: colorChip.green,
+            },
+          }
+        ]
+      },
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(contentsWordingSize) + ea,
+          fontWeight: String(700),
+          verticalAlign: "top",
+          lineHeight: String(1.7),
+          width: String(secondWidth) + ea,
+          marginRight: String(secondMarginRight) + ea,
+          color: colorChip.green,
+        },
+      },
+      {
+        style: {
+          display: "inline-block",
+          verticalAlign: "top",
+          width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight + (grayPadding * 2) : secondWidth + secondMarginRight, ea),
+          borderRadius: String(8) + "px",
+          position: "relative",
+          background: colorChip.gray2,
+          padding: String(grayPadding) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: "block",
+              paddingTop: String(grayPaddingTop) + ea,
+              paddingBottom: String(grayPaddingTop) + ea,
+              paddingLeft: String(grayPaddingLeft) + ea,
+              paddingRight: String(grayPaddingLeft) + ea,
+              width: withOut(grayPaddingLeft * 2, ea),
+              borderRadius: String(8) + "px",
+              position: "relative",
+              background: colorChip.white,
+            },
+            children: [
+              {
+                text: gray.join("\n"),
+                style: {
+                  position: "relative",
+                  fontSize: String(contentsWordingSize) + ea,
+                  fontWeight: String(600),
+                  verticalAlign: "top",
+                  lineHeight: String(2),
+                  color: colorChip.black,
+                }
+              }
+            ]
+          }
+        ]
+      },
+    ]
+  });
+  createNode({
+    mother: tong,
+    style: {
+      display: "block",
+      position: "relative",
+      marginBottom: String(contentsMarginBottom0) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: desktop ? "inline-block" : "block",
+          position: "relative",
+          verticalAlign: "top",
+          width: desktop ? String(firstWidth) + ea : String(100) + '%',
+          marginBottom: desktop ? "" : String(1.5) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: desktop ? "inline-block" : "block",
+              position: "relative",
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              lineHeight: String(1.7),
+              color: colorChip.black,
+              textAlign: "left",
+              background: colorChip.white,
+              paddingRight: String(linePadding) + ea,
+            },
+            bold: {
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              color: colorChip.green,
+            },
+          }
+        ]
+      },
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(contentsWordingSize) + ea,
+          fontWeight: String(700),
+          verticalAlign: "top",
+          lineHeight: String(1.7),
+          width: String(secondWidth) + ea,
+          marginRight: String(secondMarginRight) + ea,
+          color: colorChip.green,
+        },
+      },
+      {
+        text: final.join("\n"),
+        style: {
+          display: "inline-block",
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(400),
+          verticalAlign: "top",
+          lineHeight: String(1.7),
+          width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight : secondWidth + secondMarginRight, ea),
+          textAlign: "left",
+          color: colorChip.black,
+        },
+        bold: {
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.black,
+        },
+        under: {
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.green,
+        },
+      },
+    ]
+  });
 
 }
 
