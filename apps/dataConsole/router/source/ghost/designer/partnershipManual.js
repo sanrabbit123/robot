@@ -381,6 +381,7 @@ PartnershipManualJs.prototype.insertContextBox = function () {
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker } = GeneralJs;
+  const contextButtonClassName = "contextButtonClassName";
   let paddingTop;
   let whiteBlock, whiteTong;
   let bottomMargin;
@@ -561,6 +562,24 @@ PartnershipManualJs.prototype.insertContextBox = function () {
           type: "text",
           placeholder: "정책 검색...",
         },
+        event: {
+          keyup: function (e) {
+            if (e.key === "Enter") {
+              if (this.value.trim() !== "") {
+                const searchTargets = [ ...document.querySelectorAll('.' + contextButtonClassName) ];
+                const typing = this.value;
+                const target = searchTargets.find((dom) => {
+                  return (new RegExp(typing, "gi")).test(dom.getAttribute("value"));
+                });
+
+                if (target !== undefined) {
+                  target.click();
+                }
+
+              }
+            }
+          }
+        },
         style: {
           display: "block",
           border: String(0),
@@ -670,7 +689,6 @@ PartnershipManualJs.prototype.insertContextBox = function () {
     ]
   });
 
-
   for (let i = 0; i < contents.length; i++) {
 
     contextTong = createNode({
@@ -707,9 +725,11 @@ PartnershipManualJs.prototype.insertContextBox = function () {
 
       createNode({
         mother: contextTong,
+        class: [ contextButtonClassName ],
         attribute: {
           i: String(i),
           j: String(j),
+          value: contents[i].context[j],
         },
         event: {
           click: function (e) {
