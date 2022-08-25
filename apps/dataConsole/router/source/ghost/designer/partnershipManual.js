@@ -1133,6 +1133,15 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
   let contentsHeight;
   let factorBoxTop, factorBoxLeft;
   let factorLineTop, factorLineLeft, factorLineWidth, factorLineHeight;
+  let noticeBoxPaddingTop;
+  let noticeGrayPadding;
+  let noticeTitleTop;
+  let noticePaddingLeft;
+  let noticePaddingTop;
+  let noticePaddingBottom;
+  let noticeNumberWidth;
+  let noticeLineBoxWidth;
+  let noticeLineBoxPaddingTop, noticeLineBoxPadding, noticeLineHeight;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -1200,6 +1209,21 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
   factorLineLeft = <%% 888, 888, 888, 888, 888 %%>;
   factorLineWidth = <%% 22, 22, 22, 22, 22 %%>;
   factorLineHeight = <%% 123, 123, 123, 123, 123 %%>;
+
+  noticeBoxPaddingTop = <%% 34, 34, 34, 34, 34 %%>;
+  noticeGrayPadding = <%% 12, 12, 12, 12, 12 %%>;
+  noticeTitleTop = <%% -28, -28, -28, -28, -28 %%>;
+
+  noticePaddingLeft = <%% 22, 22, 22, 22, 22 %%>;
+  noticePaddingTop = <%% 16, 16, 16, 16, 16 %%>;
+  noticePaddingBottom = <%% 4, 4, 4, 4, 4 %%>;
+
+  noticeNumberWidth = <%% 20, 20, 20, 20, 20 %%>;
+  noticeLineBoxWidth = <%% 110, 110, 110, 110, 110 %%>;
+
+  noticeLineBoxPaddingTop = <%% 14, 14, 14, 14, 14 %%>;
+  noticeLineBoxPadding = <%% 10, 10, 10, 10, 10 %%>;
+  noticeLineHeight = <%% 28, 28, 28, 28, 28 %%>;
 
   mainTitle = "첫 프로젝트 운영";
   mainContents = [
@@ -1480,7 +1504,7 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
     style: {
       display: "block",
       position: "relative",
-      paddingTop: String(34) + ea,
+      paddingTop: String(noticeBoxPaddingTop) + ea,
       marginBottom: String(contentsMarginBottom0) + ea,
     },
     children: [
@@ -1531,18 +1555,18 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
           display: "inline-block",
           position: "relative",
           verticalAlign: "top",
-          width: withOut(firstWidth + secondWidth + secondMarginRight + (12 * 2), ea),
+          width: withOut(firstWidth + secondWidth + secondMarginRight + (noticeGrayPadding * 2), ea),
           textAlign: "left",
           background: colorChip.gray2,
           borderRadius: String(5) + "px",
-          padding: String(12) + ea,
+          padding: String(noticeGrayPadding) + ea,
         },
         children: [
           {
             text: title,
             style: {
               position: "absolute",
-              top: String(-28) + ea,
+              top: String(noticeTitleTop) + ea,
               left: String(0),
               fontSize: String(contentsWordingSize) + ea,
               fontWeight: String(700),
@@ -1556,11 +1580,11 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
               position: "relative",
               background: colorChip.white,
               borderRadius: String(5) + "px",
-              width: withOut(22 * 2, ea),
-              paddingLeft: String(22) + ea,
-              paddingRight: String(22) + ea,
-              paddingTop: String(16) + ea,
-              paddingBottom: String(4) + ea,
+              width: withOut(noticePaddingLeft * 2, ea),
+              paddingLeft: String(noticePaddingLeft) + ea,
+              paddingRight: String(noticePaddingLeft) + ea,
+              paddingTop: String(noticePaddingTop) + ea,
+              paddingBottom: String(noticePaddingBottom) + ea,
             },
             children: [
               {
@@ -1572,7 +1596,7 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
                   fontWeight: String(700),
                   lineHeight: String(2),
                   color: colorChip.black,
-                  width: String(20) + ea,
+                  width: String(noticeNumberWidth) + ea,
                   textAlign: "center",
                 }
               },
@@ -1581,16 +1605,16 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
                   display: "inline-flex",
                   flexDirection: "column",
                   position: "relative",
-                  width: String(110) + ea,
-                  paddingTop: String(14) + ea,
-                  paddingLeft: String(10) + ea,
+                  width: String(noticeLineBoxWidth) + ea,
+                  paddingTop: String(noticeLineBoxPaddingTop) + ea,
+                  paddingLeft: String(noticeLineBoxPadding) + ea,
                 },
                 children: (new Array(contents.length)).fill(null).map((n) => {
                   return {
                     style: {
                       position: "relative",
-                      width: String(100) + ea,
-                      height: String(28) + ea,
+                      width: String(noticeLineBoxWidth - noticeLineBoxPadding) + ea,
+                      height: String(noticeLineHeight) + ea,
                       borderTop: "1px solid " + colorChip.gray3,
                     }
                   }
@@ -2816,6 +2840,1674 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
 
 }
 
+PartnershipManualJs.prototype.insertContentsBox = function () {
+  const instance = this;
+  const mother = this.mother;
+  const { client, ea, baseTong, media, project } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
+  const blank = "&nbsp;&nbsp;&nbsp;";
+  let paddingTop;
+  let block;
+  let whiteBlock, whiteTong;
+  let bottomMargin;
+  let titleFontSize;
+  let num, num2;
+  let numberRight;
+  let titleTop, titleTopNumber;
+  let titleBottom;
+  let index;
+  let mobileTitleLeft, mobileTitleTop;
+  let secondBlockWidth, secondBlockMargin;
+  let tong;
+  let contentsWordingSize;
+  let contentsBottom;
+  let whiteBottomMargin;
+  let contentsTitleMarginTop, contentsMarginTop;
+  let contentsPaddingLeft;
+  let arrowWidth;
+  let arrowTop;
+  let arrorLeft;
+  let bigNumberSize;
+  let bigNumberBetween;
+  let bigNumberMargin;
+  let bigNumberBetweenMargin;
+  let matrix;
+  let firstWidth, secondWidth, secondMarginRight;
+  let contentsAreaPaddingTop;
+  let zeroWidth, zeroMarginRight;
+  let checkBoxWidth, checkBoxTop;
+  let arrowBoxWidth, arrowBoxTop;
+  let contentsMarginBottom0, contentsMarginBottom1;
+  let mobilePaddingLeft;
+  let mobileContentsWordingSize;
+  let wordings;
+  let lineTop, linePadding;
+  let mainContents;
+  let mainTitle;
+  let title, contents;
+  let factors;
+  let contentsHeight;
+  let factorBoxTop, factorBoxLeft;
+  let factorLineTop, factorLineLeft, factorLineWidth, factorLineHeight;
+  let preContents;
+  let middleSecondWidth;
+  let grayPadding;
+  let grayPaddingLeft, grayPaddingTop;
+  let final;
+  let gray;
+  let bigPaddingWidth;
+  let bigPaddingPaddingVisual;
+  let lineBoxPaddingTop;
+  let lineBoxHeight;
+  let bigPaddingNumberWidth;
+
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  margin = <%% 55, 55, 47, 39, 4.7 %%>;
+  paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
+
+  whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
+
+  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+  numberRight = <%% 12, 12, 12, 12, 3 %%>;
+
+  titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
+  titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
+
+  titleBottom = <%% (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), 0 %%>;
+  contentsAreaPaddingTop = <%% 34, 34, 34, 34, 6 %%>;
+
+  mobileTitleLeft = 1.5;
+  mobileTitleTop = -8.7;
+
+  secondBlockWidth = <%% 300, 300, 300, 300, 330 %%>;
+  secondBlockMargin = <%% 36, 36, 36, 36, 33 %%>;
+
+  contentsWordingSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
+  contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
+
+  contentsTitleMarginTop = <%% 14, 14, 14, 14, 1 %%>;
+  contentsMarginTop = <%% 36, 36, 36, 36, 1 %%>;
+  contentsPaddingLeft = <%% 14, 14, 14, 14, 0 %%>;
+  arrowWidth = <%% 8, 8, 7, 6, 1.6 %%>;
+  arrowTop = <%% 6, 6, 6, 6, 0.3 %%>;
+  arrorLeft = <%% 1, 1, 1, 1, 0 %%>;
+
+  bigNumberSize = <%% 37, 37, 37, 37, 5 %%>;
+  bigNumberBetween = <%% -3, -3, -3, -3, 0 %%>;
+  bigNumberMargin = <%% 0, 0, 0, 0, 0 %%>;
+  bigNumberBetweenMargin = <%% 28, 28, 28, 28, 0 %%>;
+
+  zeroWidth = <%% 8, 8, 8, 8, 10 %%>;
+  zeroMarginRight = <%% 10, 10, 10, 10, 10 %%>;
+  firstWidth = <%% 240, 240, 190, 170, 10 %%>;
+  secondWidth = <%% 15, 15, 15, 15, 2 %%>;
+  secondMarginRight = <%% 10, 10, 10, 10, 2 %%>;
+
+  checkBoxWidth = <%% 10, 10, 10, 10, 2 %%>;
+  arrowBoxWidth = <%% 9, 8, 8, 8, 1.8 %%>;
+  checkBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.6 %%>;
+  arrowBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.5 %%>;
+
+  contentsMarginBottom0 = <%% 24, 24, 24, 24, 2 %%>;
+  contentsMarginBottom1 = <%% 60, 60, 58, 56, 3 %%>;
+
+  lineTop = <%% 10, 10, 10, 10, 10 %%>;
+  linePadding = <%% 12, 12, 12, 12, 12 %%>;
+
+  mobilePaddingLeft = 6;
+
+  mobileContentsWordingSize = 3.2;
+
+  contentsHeight = <%% 180, 180, 180, 180, 180 %%>;
+
+  factorBoxTop = <%% 25, 25, 25, 25, 25 %%>;
+  factorBoxLeft = <%% 920, 920, 920, 920, 920 %%>;
+
+  factorLineTop = <%% 36, 36, 36, 36, 36 %%>;
+  factorLineLeft = <%% 888, 888, 888, 888, 888 %%>;
+  factorLineWidth = <%% 22, 22, 22, 22, 22 %%>;
+  factorLineHeight = <%% 123, 123, 123, 123, 123 %%>;
+
+  middleSecondWidth = <%% 175, 175, 175, 175, 175 %%>;
+
+  grayPadding = <%% 12, 12, 12, 12, 12 %%>;
+
+  grayPaddingLeft = <%% 30, 30, 30, 30, 30 %%>;
+  grayPaddingTop = <%% 22, 22, 22, 22, 22 %%>;
+
+  bigPaddingWidth = <%% 424, 424, 424, 424, 424 %%>;
+  bigPaddingPaddingVisual = <%% 16, 16, 16, 16, 16 %%>;
+  lineBoxPaddingTop = <%% 13, 13, 13, 13, 13 %%>;
+  lineBoxHeight = <%% 23, 23, 23, 23, 23 %%>;
+
+  bigPaddingNumberWidth = <%% 12, 12, 12, 12, 12 %%>;
+
+  mainTitle = "콘텐츠 활용 가이드";
+  mainContents = [
+    {
+      preContents: [
+        "홈리에종 프로젝트의 포트폴리오를 개인 채널에서 활용하실 경우, 필수로 기재해주셔야하는 내용을 안내드립니다.",
+        "<b%협업 파트너십을 유지하기 위한 기본적인 사항으로 꼭 기재%b>해주시기를 요청드리며, 기재가 되어있지 않을 경우, 별도로 추가 요청을 드릴 수 있습니다.",
+      ],
+      contents: [
+        "홈리에종에서 제공받은 현장의 사진을 사용할 때에는 홈리에종의 컨텐츠 활용 가이드라인을 지킵니다.",
+        "디자이너가 사용하는 모든 SNS채널, 웹페이지, 유튜브 채널에 공통적으로 적용됩니다.",
+        "1회에 한정되는 것이 아니라 현장 포트폴리오를 사용할 때마다 적용됩니다.",
+      ]
+    },
+    {
+      title: "채널별 컨텐츠 사용 권한",
+      contents: [
+        {
+          title: "인스타그램, 페이스북",
+          contents: [
+            "<b%인물 해시 태그%b> : 피드 게시물 사진에 직접 인물 해시 태그",
+            "<b%내용 해시 태그%b> : #홈리에종 @home-liaison",
+            "<b%내용 필수 문구%b> : 협업 사실 명시 => 이 프로젝트는 디자이너와 함께하는 홈스타일링 플랫폼, 홈리에종을 통해 진행했습니다. www.home-liaison.com",
+          ]
+        },
+        {
+          title: "유튜브",
+          contents: [
+            "<b%내용 필수 문구%b> : 홈리에종과 협업 사실 명시",
+            "<b%자막 2-3초%b> : 이 프로젝트는 디자이너와 함께하는 홈스타일링 플랫폼, 홈리에종을 통해 진행했습니다.",
+            "<b%내용 해시 태그%b> : #홈리에종",
+            "<b%영상 타이틀%b> : 타이틀에 홈리에종 기입, 홈리에종 기업명은 항상 가장 좌측에 위치",
+          ]
+        },
+        {
+          title: "블로그",
+          contents: [
+            "<b%홈리에종 로고 삽입%b> : 메인 사진 아래에 홈리에종 지정 로고 삽입",
+            "<b%지정 문구 삽입%b> : 협업 사실 명시 => 이 프로젝트는 디자이너와 함께하는 홈스타일링 플랫폼, 홈리에종을 통해 진행했습니다.",
+            "<b%해시 태그%b> : #홈리에종",
+            "<b%링크 삽입%b> : home-liaison.com",
+          ]
+        }
+      ]
+    },
+    {
+      title: "홈리에종 컨텐츠 공유 방법",
+      contents: [
+        "홈리에종에서 촬영한 촬영본은 홈리에종 촬영 컨텐츠 활용 가이드에 맞게 사용하여야 하며, 다른 상업적인 용도로 활용할 수가 없음을 안내드립니다.",
+        "포토 실장님과 진행 시 홈리에종과 디자이너가 각각 50% 씩 비용을 부담하며, 디자이너는 워터마크 없는 촬영본을 공유받을 수 있습니다.",
+        "고객에겐 워터마크가 찍힌 사진을 제공하고, 제품 구매의 후기 사진 등, 타 회사의 상업적 용도로 사용될 수 없음을 미리 안내드립니다.",
+      ]
+    }
+  ];
+
+  whiteBlock = createNode({
+    mother: baseTong,
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      background: desktop ? colorChip.white : "",
+      paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
+      paddingBottom: desktop ? String(whiteBottomMargin) + ea : "",
+      marginBottom: String(bottomMargin) + ea,
+      boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+    },
+    children: [
+      {
+        display: "block",
+        position: "relative",
+        width: desktop ? withOut(margin * 2, ea) : String(100) + '%',
+        height: String(100) + '%',
+        marginLeft: String(desktop ? margin : 0) + ea,
+      }
+    ]
+  });
+  whiteTong = whiteBlock.firstChild;
+
+  block = createNode({
+    mother: whiteTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: mobile ? "absolute" : "relative",
+          left: desktop ? "" : String(mobileTitleLeft) + ea,
+          top: desktop ? "" : String(mobileTitleTop) + ea,
+          width: desktop ? String(100) + '%' : withOut((mobileTitleLeft * 2), ea),
+          marginBottom: String(titleBottom) + ea,
+          zIndex: mobile ? String(1) : "",
+        },
+        children: [
+          {
+            text: mainTitle,
+            style: {
+              position: "relative",
+              display: "inline-block",
+              top: String(titleTopNumber) + ea,
+              fontSize: String(titleFontSize) + ea,
+              fontWeight: String(800),
+              background: desktop ? colorChip.white : colorChip.gray1,
+              paddingRight: String(numberRight) + ea,
+              color: colorChip.black,
+            }
+          },
+        ]
+      },
+      {
+        style: {
+          display: "block",
+          position: "relative",
+          width: desktop ? String(100) + '%' : withOut(mobilePaddingLeft * 2, ea),
+          background: desktop ? "" : colorChip.white,
+          boxShadow: mobile ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+          borderRadius: mobile ? String(1) + ea : "",
+          overflow: "hidden",
+          marginBottom: String(0) + ea,
+          marginTop: desktop ? "" : String(14) + ea,
+          paddingTop: String(contentsAreaPaddingTop) + ea,
+          borderTop: desktop ? "1px solid " + colorChip.shadow : "",
+          paddingLeft: desktop ? "" : String(mobilePaddingLeft) + ea,
+          paddingRight: desktop ? "" : String(mobilePaddingLeft) + ea,
+          paddingBottom: desktop ? "" : String(6) + ea,
+        }
+      },
+    ]
+  });
+  tong = block.lastChild;
+
+  // 1
+
+  ({ preContents, contents } = mainContents[0]);
+
+  createNode({
+    mother: tong,
+    style: {
+      display: "block",
+      position: "relative",
+      marginBottom: String(contentsMarginBottom0) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: desktop ? "inline-block" : "block",
+          position: "relative",
+          verticalAlign: "top",
+          width: String(100) + '%',
+          marginBottom: desktop ? "" : String(1.5) + ea,
+        },
+        children: [
+          {
+            text: preContents.join("\n"),
+            style: {
+              display: desktop ? "inline-block" : "block",
+              position: "relative",
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(400),
+              lineHeight: String(1.7),
+              color: colorChip.black,
+              textAlign: "left",
+              background: colorChip.white,
+              paddingRight: String(linePadding) + ea,
+            },
+            bold: {
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              color: colorChip.black,
+            },
+          }
+        ]
+      },
+    ]
+  });
+  createNode({
+    mother: tong,
+    style: {
+      display: "block",
+      position: "relative",
+      marginBottom: String(contentsMarginBottom1) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: desktop ? "inline-block" : "block",
+          position: "relative",
+          verticalAlign: "top",
+          width: withOut(0, ea),
+          marginBottom: desktop ? "" : String(1.5) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(bigPaddingWidth) + ea,
+              paddingRight: String(bigPaddingPaddingVisual) + ea,
+              verticalAlign: "top",
+              paddingTop: String(lineBoxPaddingTop) + ea,
+            },
+            children: (new Array(contents.length)).fill(null).map((n, index) => {
+              return {
+                style: {
+                  display: "block",
+                  position: "relative",
+                  borderTop: "1px solid " + colorChip.gray3,
+                  height: String(index === contents.length - 1 ? 0 : lineBoxHeight) + ea,
+                }
+              };
+            }),
+          },
+          {
+            text: (new Array(contents.length)).fill(null).map((n, index) => { return `${String(index + 1)}) ` }),
+            style: {
+              display: desktop ? "inline-block" : "block",
+              position: "relative",
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(400),
+              lineHeight: String(1.7),
+              color: colorChip.deactive,
+              textAlign: "left",
+              background: colorChip.white,
+              paddingRight: String(linePadding) + ea,
+              width: String(bigPaddingNumberWidth) + ea,
+              verticalAlign: "top",
+            }
+          },
+          {
+            text: contents.join("\n"),
+            style: {
+              display: desktop ? "inline-block" : "block",
+              position: "relative",
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(400),
+              lineHeight: String(1.7),
+              color: colorChip.black,
+              textAlign: "left",
+              background: colorChip.white,
+              paddingRight: String(linePadding) + ea,
+              verticalAlign: "top",
+            },
+            bold: {
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              color: colorChip.green,
+            },
+          }
+        ]
+      },
+    ]
+  });
+
+  // 2
+
+  ({ title, contents } = mainContents[1]);
+
+  num = 0;
+  for (let obj of contents) {
+    createNode({
+      mother: tong,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(num === contents.length - 1 ? contentsMarginBottom1 : contentsMarginBottom0) + ea,
+      },
+      children: [
+        {
+          style: {
+            display: desktop ? "inline-block" : "block",
+            position: "relative",
+            verticalAlign: "top",
+            width: desktop ? String(firstWidth) + ea : String(100) + '%',
+            marginBottom: desktop ? "" : String(1.5) + ea,
+          },
+          children: [
+            {
+              text: num === 0 ? title : "",
+              style: {
+                display: desktop ? "inline-block" : "block",
+                position: "relative",
+                fontSize: String(contentsWordingSize) + ea,
+                fontWeight: String(700),
+                lineHeight: String(1.7),
+                color: colorChip.black,
+                textAlign: "left",
+                background: colorChip.white,
+                paddingRight: String(linePadding) + ea,
+              },
+              bold: {
+                fontSize: String(contentsWordingSize) + ea,
+                fontWeight: String(700),
+                color: colorChip.green,
+              },
+            }
+          ]
+        },
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(contentsWordingSize) + ea,
+            fontWeight: String(700),
+            verticalAlign: "top",
+            lineHeight: String(1.7),
+            width: String(secondWidth) + ea,
+            marginRight: String(secondMarginRight) + ea,
+            color: colorChip.green,
+          },
+        },
+        {
+          text: obj.title,
+          style: {
+            display: "inline-block",
+            fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+            fontWeight: String(700),
+            verticalAlign: "top",
+            lineHeight: String(1.7),
+            width: String(middleSecondWidth) + ea,
+            textAlign: "left",
+            color: colorChip.black,
+          },
+          bold: {
+            fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+            fontWeight: String(700),
+            color: colorChip.black,
+          },
+          under: {
+            fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+            fontWeight: String(700),
+            color: colorChip.green,
+          },
+        },
+        {
+          text: obj.contents.join("\n"),
+          style: {
+            display: "inline-block",
+            fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+            fontWeight: String(400),
+            verticalAlign: "top",
+            lineHeight: String(1.7),
+            width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight + middleSecondWidth : secondWidth + secondMarginRight, ea),
+            textAlign: "left",
+            color: colorChip.black,
+          },
+          bold: {
+            fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+            fontWeight: String(400),
+            color: colorChip.green,
+          },
+          under: {
+            fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+            fontWeight: String(400),
+            color: colorChip.green,
+          },
+        },
+      ]
+    });
+    num++;
+  }
+
+  // 3
+
+  ({ title, contents } = mainContents[2]);
+
+  createNode({
+    mother: tong,
+    style: {
+      display: "block",
+      position: "relative",
+      marginBottom: String(contentsMarginBottom1) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: desktop ? "inline-block" : "block",
+          position: "relative",
+          verticalAlign: "top",
+          width: desktop ? String(firstWidth) + ea : String(100) + '%',
+          marginBottom: desktop ? "" : String(1.5) + ea,
+        },
+        children: [
+          {
+            text: title,
+            style: {
+              display: desktop ? "inline-block" : "block",
+              position: "relative",
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              lineHeight: String(1.7),
+              color: colorChip.black,
+              textAlign: "left",
+              background: colorChip.white,
+              paddingRight: String(linePadding) + ea,
+            },
+            bold: {
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              color: colorChip.green,
+            },
+          }
+        ]
+      },
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(contentsWordingSize) + ea,
+          fontWeight: String(700),
+          verticalAlign: "top",
+          lineHeight: String(1.7),
+          width: String(secondWidth) + ea,
+          marginRight: String(secondMarginRight) + ea,
+          color: colorChip.green,
+        },
+      },
+      {
+        text: contents.join("\n"),
+        style: {
+          display: "inline-block",
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(400),
+          verticalAlign: "top",
+          lineHeight: String(1.7),
+          width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight : secondWidth + secondMarginRight, ea),
+          textAlign: "left",
+          color: colorChip.black,
+        },
+        bold: {
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.black,
+        },
+        under: {
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.green,
+        },
+      },
+    ]
+  });
+
+
+}
+
+PartnershipManualJs.prototype.insertProcessBox = function () {
+  const instance = this;
+  const mother = this.mother;
+  const { client, ea, baseTong, media, project } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
+  const blank = "&nbsp;&nbsp;&nbsp;";
+  let paddingTop;
+  let block;
+  let whiteBlock, whiteTong;
+  let bottomMargin;
+  let titleFontSize;
+  let num, num2;
+  let numberRight;
+  let titleTop, titleTopNumber;
+  let titleBottom;
+  let index;
+  let mobileTitleLeft, mobileTitleTop;
+  let secondBlockWidth, secondBlockMargin;
+  let tong;
+  let contentsWordingSize;
+  let contentsBottom;
+  let whiteBottomMargin;
+  let contentsTitleMarginTop, contentsMarginTop;
+  let contentsPaddingLeft;
+  let arrowWidth;
+  let arrowTop;
+  let arrorLeft;
+  let bigNumberSize;
+  let bigNumberBetween;
+  let bigNumberMargin;
+  let bigNumberBetweenMargin;
+  let matrix;
+  let firstWidth, secondWidth, secondMarginRight;
+  let contentsAreaPaddingTop;
+  let zeroWidth, zeroMarginRight;
+  let arrowBoxWidth, arrowBoxTop;
+  let contentsMarginBottom0, contentsMarginBottom1;
+  let mobilePaddingLeft;
+  let mobileContentsWordingSize;
+  let wordings;
+  let lineTop, linePadding;
+  let mainContents;
+  let mainTitle;
+  let title, contents;
+  let factors;
+  let contentsHeight;
+  let factorBoxTop, factorBoxLeft;
+  let factorLineTop, factorLineLeft, factorLineWidth, factorLineHeight;
+  let checkBoxTongWidth;
+  let checkBoxTongPaddingTop;
+  let checkBoxWidth;
+  let checkboxBetween;
+  let numberTongWidth;
+
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  margin = <%% 55, 55, 47, 39, 4.7 %%>;
+  paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
+
+  whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
+
+  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+  numberRight = <%% 12, 12, 12, 12, 3 %%>;
+
+  titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
+  titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
+
+  titleBottom = <%% (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), 0 %%>;
+  contentsAreaPaddingTop = <%% 34, 34, 34, 34, 6 %%>;
+
+  mobileTitleLeft = 1.5;
+  mobileTitleTop = -8.7;
+
+  secondBlockWidth = <%% 300, 300, 300, 300, 330 %%>;
+  secondBlockMargin = <%% 36, 36, 36, 36, 33 %%>;
+
+  contentsWordingSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
+  contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
+
+  contentsTitleMarginTop = <%% 14, 14, 14, 14, 1 %%>;
+  contentsMarginTop = <%% 36, 36, 36, 36, 1 %%>;
+  contentsPaddingLeft = <%% 14, 14, 14, 14, 0 %%>;
+  arrowWidth = <%% 8, 8, 7, 6, 1.6 %%>;
+  arrowTop = <%% 6, 6, 6, 6, 0.3 %%>;
+  arrorLeft = <%% 1, 1, 1, 1, 0 %%>;
+
+  bigNumberSize = <%% 37, 37, 37, 37, 5 %%>;
+  bigNumberBetween = <%% -3, -3, -3, -3, 0 %%>;
+  bigNumberMargin = <%% 0, 0, 0, 0, 0 %%>;
+  bigNumberBetweenMargin = <%% 28, 28, 28, 28, 0 %%>;
+
+  zeroWidth = <%% 8, 8, 8, 8, 10 %%>;
+  zeroMarginRight = <%% 10, 10, 10, 10, 10 %%>;
+  firstWidth = <%% 240, 240, 190, 170, 10 %%>;
+  secondWidth = <%% 15, 15, 15, 15, 2 %%>;
+  secondMarginRight = <%% 10, 10, 10, 10, 2 %%>;
+
+  checkBoxWidth = <%% 10, 10, 10, 10, 2 %%>;
+  arrowBoxWidth = <%% 9, 8, 8, 8, 1.8 %%>;
+  checkBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.6 %%>;
+  arrowBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.5 %%>;
+
+  contentsMarginBottom0 = <%% 24, 24, 24, 24, 2 %%>;
+  contentsMarginBottom1 = <%% 60, 60, 58, 56, 3 %%>;
+
+  lineTop = <%% 10, 10, 10, 10, 10 %%>;
+  linePadding = <%% 12, 12, 12, 12, 12 %%>;
+
+  mobilePaddingLeft = 6;
+
+  mobileContentsWordingSize = 3.2;
+
+  contentsHeight = <%% 180, 180, 180, 180, 180 %%>;
+
+  factorBoxTop = <%% 25, 25, 25, 25, 25 %%>;
+  factorBoxLeft = <%% 920, 920, 920, 920, 920 %%>;
+
+  factorLineTop = <%% 36, 36, 36, 36, 36 %%>;
+  factorLineLeft = <%% 888, 888, 888, 888, 888 %%>;
+  factorLineWidth = <%% 22, 22, 22, 22, 22 %%>;
+  factorLineHeight = <%% 123, 123, 123, 123, 123 %%>;
+
+  checkBoxTongWidth = <%% 20, 20, 20, 20, 20 %%>;
+  checkBoxTongPaddingTop = <%% 8, 8, 8, 8, 8 %%>;
+  checkBoxWidth = <%% 11, 11, 11, 11, 11 %%>;
+  checkboxBetween = <%% 15, 15, 15, 15, 15 %%>;
+
+  numberTongWidth = <%% 32, 32, 32, 32, 30 %%>;
+
+  mainTitle = "디자이너 프로젝트 진행";
+  mainContents = [
+    {
+      title: "디자이너 현장 미팅 준비",
+      contents: [
+        "고객과 약속된 현장 미팅 일자 기준 2-3일 전, 사전에 연락합니다. 홈리에종에서는 3일 기준으로 안내문을 발송합니다.",
+        "담당 디자이너 인사, 디자이너의 업무 방식에 따라 필요로 하는 자료가 있다면 고객에게 요청합니다.",
+        "홈리에종은 기본적으로 <b%1) 현장의 도면 2) 재배치가 필요한 가전, 가구, 3) 정확한 예산, 4) 방 마다의 사용 목적%b> 을 가지고 디자이너를 만날 것을 권장하고 있습니다.",
+      ],
+    },
+    {
+      title: "디자이너 현장 미팅 응대",
+      contents: [
+        "고객이 준비한 도면을 받더라도 실측은 정확하게 합니다.",
+        "고객의 예산을 분명히 확인하고, 예산 모두를 사용하지 않더라도 최대 가용 예산의 범위를 있는 지 꼭 확인합니다.",
+        "현장 미팅 후, 구두로 전할 수 있는 상담을 진행합니다. 이 미팅을 통해 최종 계약 여부가 확정되기 때문에 성실하게 미팅하되 미팅 후 디자인 작업을 시작하지 않습니다.",
+        "고객에게 프로젝트 전체 프로세스를 설명하고, 디자이너의 작업 기간과 방식에 대해 명확하게 설명합니다.",
+        "시공이 있는 경우 사전에 일자 협의가 완료되면 시공 소장님과 함께 현장을 방문하여 시공 범위를 조정합니다.",
+        "소장님과 현장에 함께 가지 못하게 되는 경우 소장님이 현장을 방문하였을때 이해하기 쉽도록 정리하여 소장님께 내용을 공유합니다.",
+        "시공이 있는 경우 미팅 완료 이후에 정리된 시공 범위를 시공의뢰서로 작성하여 홈리에종으로 공유합니다.",
+        "현장 미팅이 끝나고 홈리에종으로부터 진행 확인을 받은 후에 프로젝트를 진행합니다.",
+        "현장 미팅 이후, 고객이 디자이너와 진행하지 않음을 선택하거나 디자이너 변경을 요청할 수 있으며, 이 같은 경우에는 <b%디자이너에게 출장 비용 (110,000 vat포함)만 지급%b>됩니다. ",
+      ],
+    },
+    {
+      title: "디자이너 작성 폼 / 디자인",
+      contents: [
+        "디자이너가 고객에게 제공할 제안서의 가이드 폼은 공유하나, 디자이너 개개인의 작업 방식을 존중합니다.",
+        "다양한 작업 방식을 허용하더라도, 홈리에종에서 제공하는 가이드 폼에 들어있는 필수적인 내용은 공통으로 포함되어 있어야 합니다.",
+        "필수적인 내용 : <b%1) 프로젝트 캘린더 2) 컨셉 제안서 3) 디자인 제안서 4) 제품 구매리스트%b>",
+      ]
+    },
+    {
+      title: "시공사 선택",
+      contents: [
+        "홈리에종은 고객님이 시공사를 자유롭게 선택하실 수 있도록 해드립니다.",
+        "모든 시공사는 경험에 따라 시공 방법 및 견적 금액이 다를 수 있습니다. 지나치게 저렴하거나 비싼 경우는 피하는 것이 좋습니다.",
+        "시공사 선택지 중, 홈리에종의 직영 시공사도 있으며 검증된 시공퀄리티, <b%확실한 하자 보수, 합리적인 견적을 원하신다면 홈리에종 시공사를 추천%b>해드립니다."
+      ]
+    },
+    {
+      title: "",
+      contents: [
+        "선택하신 시공사와 직접 고객이 계약을 맺습니다.",
+        "시공에 대한 모든 책임은 계약한 시공사에 있습니다.",
+        "시공 복잡도에 따라 디자이너의 시공 감리 비용을 책정하실 수 있으며 이 때 ‘시공 감리’ 라고 명하거나 기업 이윤 내에 반영해야 합니다.",
+        "디자이너와 연계된 시공사의 경우 홈리에종에서 견적 확인 후 고객에게 안내할 수 있습니다.",
+      ]
+    },
+    {
+      title: "디자이너 작성 폼 / 시공의뢰서",
+      contents: [
+        "시공이 있는 경우, 디자이너는 고객의 맞춤 시공을 위해 시공사에게 가능 여부와 견적을 의뢰합니다.",
+        "시공의뢰서는 반드시 필요하며, <b%홈리에종 직영 시공을 선택 시, 홈리에종의 시공의뢰서 가이드 라인%b>을 따릅니다."
+      ]
+    },
+    {
+      title: "",
+      contents: [
+        "디자이너는 고객과 합의된 내용을 바탕으로 시공 의뢰서를 작성합니다.",
+        "홈리에종 시공의뢰서에 표기해야할 모든 셀의 내용은 입력하며, 꼭 사진을 첨부합니다.",
+        "수량을 셀 수 있는 시공의 경우에는 개수를 꼭 표기하며, 견적을 의뢰하고 사용할 자재명이 정해져있다면 기입해줍니다.",
+        "도면 이미지를 첨부하여 시공사가 현장을 방문했을 때, 도면을 보고 쉽게 파악할 수 있도록 시공이 필요한 위치를 자세히 표현합니다.",
+        "시공의뢰서 확인을 위해 홈리에종 소장님이 연락할 수 있습니다.",
+      ]
+    },
+    {
+      title: "디자이너 소통",
+      contents: [
+        "현장 미팅 후, 디자이너는 홈리에종 카카오톡 채널 플러스 친구를 통해 홈리에종으로 현장 미팅 종료 상황에 대해 공유합니다.",
+        "현장 미팅 이후, <b%현장에 대한 이슈가 발생했거나, 혹은 사전에 홈리에종으로부터 안내받은 내용과 현장 상황이 다른 부분이 있다면 홈리에종과 확인 후 프로젝트를 진행%b>해야 합니다.",
+        "고객과 커뮤니케이션을 위해 연락 방법과 디자이너의 개인 사정으로 연락이 불가한 시간대에 대해 고객에게 설명합니다.",
+      ],
+    },
+  ];
+
+  whiteBlock = createNode({
+    mother: baseTong,
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      background: desktop ? colorChip.white : "",
+      paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
+      paddingBottom: desktop ? String(whiteBottomMargin) + ea : "",
+      marginBottom: String(bottomMargin) + ea,
+      boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+    },
+    children: [
+      {
+        display: "block",
+        position: "relative",
+        width: desktop ? withOut(margin * 2, ea) : String(100) + '%',
+        height: String(100) + '%',
+        marginLeft: String(desktop ? margin : 0) + ea,
+      }
+    ]
+  });
+  whiteTong = whiteBlock.firstChild;
+
+  block = createNode({
+    mother: whiteTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: mobile ? "absolute" : "relative",
+          left: desktop ? "" : String(mobileTitleLeft) + ea,
+          top: desktop ? "" : String(mobileTitleTop) + ea,
+          width: desktop ? String(100) + '%' : withOut((mobileTitleLeft * 2), ea),
+          marginBottom: String(titleBottom) + ea,
+          zIndex: mobile ? String(1) : "",
+        },
+        children: [
+          {
+            text: mainTitle,
+            style: {
+              position: "relative",
+              display: "inline-block",
+              top: String(titleTopNumber) + ea,
+              fontSize: String(titleFontSize) + ea,
+              fontWeight: String(800),
+              background: desktop ? colorChip.white : colorChip.gray1,
+              paddingRight: String(numberRight) + ea,
+              color: colorChip.black,
+            }
+          },
+        ]
+      },
+      {
+        style: {
+          display: "block",
+          position: "relative",
+          width: desktop ? String(100) + '%' : withOut(mobilePaddingLeft * 2, ea),
+          background: desktop ? "" : colorChip.white,
+          boxShadow: mobile ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+          borderRadius: mobile ? String(1) + ea : "",
+          overflow: "hidden",
+          marginBottom: String(0) + ea,
+          marginTop: desktop ? "" : String(14) + ea,
+          paddingTop: String(contentsAreaPaddingTop) + ea,
+          borderTop: desktop ? "1px solid " + colorChip.shadow : "",
+          paddingLeft: desktop ? "" : String(mobilePaddingLeft) + ea,
+          paddingRight: desktop ? "" : String(mobilePaddingLeft) + ea,
+          paddingBottom: desktop ? "" : String(6) + ea,
+        }
+      },
+    ]
+  });
+  tong = block.lastChild;
+
+  // 1
+
+  ({ title, contents } = mainContents[0]);
+
+  createNode({
+    mother: tong,
+    style: {
+      display: "block",
+      position: "relative",
+      marginBottom: String(contentsMarginBottom1) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: desktop ? "inline-block" : "block",
+          position: "relative",
+          verticalAlign: "top",
+          width: desktop ? String(firstWidth) + ea : String(100) + '%',
+          marginBottom: desktop ? "" : String(1.5) + ea,
+        },
+        children: [
+          {
+            text: title,
+            style: {
+              display: desktop ? "inline-block" : "block",
+              position: "relative",
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              lineHeight: String(1.7),
+              color: colorChip.black,
+              textAlign: "left",
+              background: colorChip.white,
+              paddingRight: String(linePadding) + ea,
+            },
+            bold: {
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              color: colorChip.green,
+            },
+          }
+        ]
+      },
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(contentsWordingSize) + ea,
+          fontWeight: String(700),
+          verticalAlign: "top",
+          lineHeight: String(1.7),
+          width: String(secondWidth) + ea,
+          marginRight: String(secondMarginRight) + ea,
+          color: colorChip.green,
+        },
+      },
+      {
+        text: contents.join("\n"),
+        style: {
+          display: "inline-block",
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(400),
+          verticalAlign: "top",
+          lineHeight: String(1.7),
+          width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight : secondWidth + secondMarginRight, ea),
+          textAlign: "left",
+          color: colorChip.black,
+        },
+        bold: {
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.black,
+        },
+        under: {
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.green,
+        },
+      },
+    ]
+  });
+
+
+  // 2
+
+  ({ title, contents } = mainContents[1]);
+
+  createNode({
+    mother: tong,
+    style: {
+      display: "block",
+      position: "relative",
+      marginBottom: String(contentsMarginBottom1) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: desktop ? "inline-block" : "block",
+          position: "relative",
+          verticalAlign: "top",
+          width: desktop ? String(firstWidth) + ea : String(100) + '%',
+          marginBottom: desktop ? "" : String(1.5) + ea,
+        },
+        children: [
+          {
+            text: title,
+            style: {
+              display: desktop ? "inline-block" : "block",
+              position: "relative",
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              lineHeight: String(1.7),
+              color: colorChip.black,
+              textAlign: "left",
+              background: colorChip.white,
+              paddingRight: String(linePadding) + ea,
+            },
+            bold: {
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              color: colorChip.green,
+            },
+          }
+        ]
+      },
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(contentsWordingSize) + ea,
+          fontWeight: String(700),
+          verticalAlign: "top",
+          lineHeight: String(1.7),
+          width: String(secondWidth) + ea,
+          marginRight: String(secondMarginRight) + ea,
+          color: colorChip.green,
+        },
+      },
+      {
+        style: {
+          display: "inline-block",
+          verticalAlign: "top",
+          width: String(checkBoxTongWidth) + ea,
+          textAlign: "left",
+          color: colorChip.deactive,
+          paddingTop: String(checkBoxTongPaddingTop) + ea,
+        },
+        children: (new Array(contents.length)).fill(null).map((n, index) => {
+          return {
+            mode: "svg",
+            source: instance.mother.returnCheckBox(colorChip.green),
+            style: {
+              display: "block",
+              width: String(checkBoxWidth) + ea,
+              marginBottom: String(checkboxBetween) + ea,
+            }
+          };
+        })
+      },
+      {
+        text: (new Array(contents.length)).fill(1).map((num, index) => { return `${String(num + index)}) ` }).join("\n"),
+        style: {
+          display: "inline-block",
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(400),
+          verticalAlign: "top",
+          lineHeight: String(1.8),
+          width: String(numberTongWidth) + ea,
+          textAlign: "left",
+          color: colorChip.deactive,
+        },
+      },
+      {
+        text: contents.join("\n"),
+        style: {
+          display: "inline-block",
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(400),
+          verticalAlign: "top",
+          lineHeight: String(1.8),
+          width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight + checkBoxTongWidth + numberTongWidth : secondWidth + secondMarginRight, ea),
+          textAlign: "left",
+          color: colorChip.black,
+        },
+        bold: {
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.black,
+        },
+        under: {
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.green,
+        },
+      },
+    ]
+  });
+
+  // 3
+
+  ({ title, contents } = mainContents[2]);
+
+  createNode({
+    mother: tong,
+    style: {
+      display: "block",
+      position: "relative",
+      marginBottom: String(contentsMarginBottom1) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: desktop ? "inline-block" : "block",
+          position: "relative",
+          verticalAlign: "top",
+          width: desktop ? String(firstWidth) + ea : String(100) + '%',
+          marginBottom: desktop ? "" : String(1.5) + ea,
+        },
+        children: [
+          {
+            text: title,
+            style: {
+              display: desktop ? "inline-block" : "block",
+              position: "relative",
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              lineHeight: String(1.7),
+              color: colorChip.black,
+              textAlign: "left",
+              background: colorChip.white,
+              paddingRight: String(linePadding) + ea,
+            },
+            bold: {
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              color: colorChip.green,
+            },
+          }
+        ]
+      },
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(contentsWordingSize) + ea,
+          fontWeight: String(700),
+          verticalAlign: "top",
+          lineHeight: String(1.7),
+          width: String(secondWidth) + ea,
+          marginRight: String(secondMarginRight) + ea,
+          color: colorChip.green,
+        },
+      },
+      {
+        style: {
+          display: "inline-block",
+          verticalAlign: "top",
+          width: String(checkBoxTongWidth) + ea,
+          textAlign: "left",
+          color: colorChip.deactive,
+          paddingTop: String(checkBoxTongPaddingTop) + ea,
+        },
+        children: (new Array(contents.length)).fill(null).map((n, index) => {
+          return {
+            mode: "svg",
+            source: instance.mother.returnCheckBox(colorChip.green),
+            style: {
+              display: "block",
+              width: String(checkBoxWidth) + ea,
+              marginBottom: String(checkboxBetween) + ea,
+            }
+          };
+        })
+      },
+      {
+        text: (new Array(contents.length)).fill(1).map((num, index) => { return `${String(num + index)}) ` }).join("\n"),
+        style: {
+          display: "inline-block",
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(400),
+          verticalAlign: "top",
+          lineHeight: String(1.8),
+          width: String(numberTongWidth) + ea,
+          textAlign: "left",
+          color: colorChip.deactive,
+        },
+      },
+      {
+        text: contents.join("\n"),
+        style: {
+          display: "inline-block",
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(400),
+          verticalAlign: "top",
+          lineHeight: String(1.8),
+          width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight + checkBoxTongWidth + numberTongWidth : secondWidth + secondMarginRight, ea),
+          textAlign: "left",
+          color: colorChip.black,
+        },
+        bold: {
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.black,
+        },
+        under: {
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.green,
+        },
+      },
+    ]
+  });
+
+  // 4
+
+  ({ title, contents } = mainContents[3]);
+
+  createNode({
+    mother: tong,
+    style: {
+      display: "block",
+      position: "relative",
+      marginBottom: String(contentsMarginBottom0) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: desktop ? "inline-block" : "block",
+          position: "relative",
+          verticalAlign: "top",
+          width: desktop ? String(firstWidth) + ea : String(100) + '%',
+          marginBottom: desktop ? "" : String(1.5) + ea,
+        },
+        children: [
+          {
+            text: title,
+            style: {
+              display: desktop ? "inline-block" : "block",
+              position: "relative",
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              lineHeight: String(1.7),
+              color: colorChip.black,
+              textAlign: "left",
+              background: colorChip.white,
+              paddingRight: String(linePadding) + ea,
+            },
+            bold: {
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              color: colorChip.green,
+            },
+          }
+        ]
+      },
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(contentsWordingSize) + ea,
+          fontWeight: String(700),
+          verticalAlign: "top",
+          lineHeight: String(1.7),
+          width: String(secondWidth) + ea,
+          marginRight: String(secondMarginRight) + ea,
+          color: colorChip.green,
+        },
+      },
+      {
+        text: contents.join("\n"),
+        style: {
+          display: "inline-block",
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(400),
+          verticalAlign: "top",
+          lineHeight: String(1.7),
+          width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight : secondWidth + secondMarginRight, ea),
+          textAlign: "left",
+          color: colorChip.black,
+        },
+        bold: {
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.black,
+        },
+        under: {
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.green,
+        },
+      },
+    ]
+  });
+
+  // 5
+
+  ({ title, contents } = mainContents[4]);
+
+  createNode({
+    mother: tong,
+    style: {
+      display: "block",
+      position: "relative",
+      marginBottom: String(contentsMarginBottom1) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: desktop ? "inline-block" : "block",
+          position: "relative",
+          verticalAlign: "top",
+          width: desktop ? String(firstWidth) + ea : String(100) + '%',
+          marginBottom: desktop ? "" : String(1.5) + ea,
+        },
+        children: [
+          {
+            text: title,
+            style: {
+              display: desktop ? "inline-block" : "block",
+              position: "relative",
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              lineHeight: String(1.7),
+              color: colorChip.black,
+              textAlign: "left",
+              background: colorChip.white,
+              paddingRight: String(linePadding) + ea,
+            },
+            bold: {
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              color: colorChip.green,
+            },
+          }
+        ]
+      },
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(contentsWordingSize) + ea,
+          fontWeight: String(700),
+          verticalAlign: "top",
+          lineHeight: String(1.7),
+          width: String(secondWidth) + ea,
+          marginRight: String(secondMarginRight) + ea,
+          color: colorChip.green,
+        },
+      },
+      {
+        style: {
+          display: "inline-block",
+          verticalAlign: "top",
+          width: String(checkBoxTongWidth) + ea,
+          textAlign: "left",
+          color: colorChip.deactive,
+          paddingTop: String(checkBoxTongPaddingTop) + ea,
+        },
+        children: (new Array(contents.length)).fill(null).map((n, index) => {
+          return {
+            mode: "svg",
+            source: instance.mother.returnCheckBox(colorChip.green),
+            style: {
+              display: "block",
+              width: String(checkBoxWidth) + ea,
+              marginBottom: String(checkboxBetween) + ea,
+            }
+          };
+        })
+      },
+      {
+        text: (new Array(contents.length)).fill(1).map((num, index) => { return `${String(num + index)}) ` }).join("\n"),
+        style: {
+          display: "inline-block",
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(400),
+          verticalAlign: "top",
+          lineHeight: String(1.8),
+          width: String(numberTongWidth) + ea,
+          textAlign: "left",
+          color: colorChip.deactive,
+        },
+      },
+      {
+        text: contents.join("\n"),
+        style: {
+          display: "inline-block",
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(400),
+          verticalAlign: "top",
+          lineHeight: String(1.8),
+          width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight + checkBoxTongWidth + numberTongWidth : secondWidth + secondMarginRight, ea),
+          textAlign: "left",
+          color: colorChip.black,
+        },
+        bold: {
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.black,
+        },
+        under: {
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.green,
+        },
+      },
+    ]
+  });
+
+
+  // 6
+
+  ({ title, contents } = mainContents[5]);
+
+  createNode({
+    mother: tong,
+    style: {
+      display: "block",
+      position: "relative",
+      marginBottom: String(contentsMarginBottom0) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: desktop ? "inline-block" : "block",
+          position: "relative",
+          verticalAlign: "top",
+          width: desktop ? String(firstWidth) + ea : String(100) + '%',
+          marginBottom: desktop ? "" : String(1.5) + ea,
+        },
+        children: [
+          {
+            text: title,
+            style: {
+              display: desktop ? "inline-block" : "block",
+              position: "relative",
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              lineHeight: String(1.7),
+              color: colorChip.black,
+              textAlign: "left",
+              background: colorChip.white,
+              paddingRight: String(linePadding) + ea,
+            },
+            bold: {
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              color: colorChip.green,
+            },
+          }
+        ]
+      },
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(contentsWordingSize) + ea,
+          fontWeight: String(700),
+          verticalAlign: "top",
+          lineHeight: String(1.7),
+          width: String(secondWidth) + ea,
+          marginRight: String(secondMarginRight) + ea,
+          color: colorChip.green,
+        },
+      },
+      {
+        text: contents.join("\n"),
+        style: {
+          display: "inline-block",
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(400),
+          verticalAlign: "top",
+          lineHeight: String(1.7),
+          width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight : secondWidth + secondMarginRight, ea),
+          textAlign: "left",
+          color: colorChip.black,
+        },
+        bold: {
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.black,
+        },
+        under: {
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.green,
+        },
+      },
+    ]
+  });
+
+  // 7
+
+  ({ title, contents } = mainContents[6]);
+
+  createNode({
+    mother: tong,
+    style: {
+      display: "block",
+      position: "relative",
+      marginBottom: String(contentsMarginBottom1) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: desktop ? "inline-block" : "block",
+          position: "relative",
+          verticalAlign: "top",
+          width: desktop ? String(firstWidth) + ea : String(100) + '%',
+          marginBottom: desktop ? "" : String(1.5) + ea,
+        },
+        children: [
+          {
+            text: title,
+            style: {
+              display: desktop ? "inline-block" : "block",
+              position: "relative",
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              lineHeight: String(1.7),
+              color: colorChip.black,
+              textAlign: "left",
+              background: colorChip.white,
+              paddingRight: String(linePadding) + ea,
+            },
+            bold: {
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              color: colorChip.green,
+            },
+          }
+        ]
+      },
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(contentsWordingSize) + ea,
+          fontWeight: String(700),
+          verticalAlign: "top",
+          lineHeight: String(1.7),
+          width: String(secondWidth) + ea,
+          marginRight: String(secondMarginRight) + ea,
+          color: colorChip.green,
+        },
+      },
+      {
+        style: {
+          display: "inline-block",
+          verticalAlign: "top",
+          width: String(checkBoxTongWidth) + ea,
+          textAlign: "left",
+          color: colorChip.deactive,
+          paddingTop: String(checkBoxTongPaddingTop) + ea,
+        },
+        children: (new Array(contents.length)).fill(null).map((n, index) => {
+          return {
+            mode: "svg",
+            source: instance.mother.returnCheckBox(colorChip.green),
+            style: {
+              display: "block",
+              width: String(checkBoxWidth) + ea,
+              marginBottom: String(checkboxBetween) + ea,
+            }
+          };
+        })
+      },
+      {
+        text: (new Array(contents.length)).fill(1).map((num, index) => { return `${String(num + index)}) ` }).join("\n"),
+        style: {
+          display: "inline-block",
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(400),
+          verticalAlign: "top",
+          lineHeight: String(1.8),
+          width: String(numberTongWidth) + ea,
+          textAlign: "left",
+          color: colorChip.deactive,
+        },
+      },
+      {
+        text: contents.join("\n"),
+        style: {
+          display: "inline-block",
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(400),
+          verticalAlign: "top",
+          lineHeight: String(1.8),
+          width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight + checkBoxTongWidth + numberTongWidth : secondWidth + secondMarginRight, ea),
+          textAlign: "left",
+          color: colorChip.black,
+        },
+        bold: {
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.black,
+        },
+        under: {
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.green,
+        },
+      },
+    ]
+  });
+
+
+  // 8
+
+  ({ title, contents } = mainContents[7]);
+
+  createNode({
+    mother: tong,
+    style: {
+      display: "block",
+      position: "relative",
+      marginBottom: String(contentsMarginBottom1) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: desktop ? "inline-block" : "block",
+          position: "relative",
+          verticalAlign: "top",
+          width: desktop ? String(firstWidth) + ea : String(100) + '%',
+          marginBottom: desktop ? "" : String(1.5) + ea,
+        },
+        children: [
+          {
+            text: title,
+            style: {
+              display: desktop ? "inline-block" : "block",
+              position: "relative",
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              lineHeight: String(1.7),
+              color: colorChip.black,
+              textAlign: "left",
+              background: colorChip.white,
+              paddingRight: String(linePadding) + ea,
+            },
+            bold: {
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(700),
+              color: colorChip.green,
+            },
+          }
+        ]
+      },
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(contentsWordingSize) + ea,
+          fontWeight: String(700),
+          verticalAlign: "top",
+          lineHeight: String(1.7),
+          width: String(secondWidth) + ea,
+          marginRight: String(secondMarginRight) + ea,
+          color: colorChip.green,
+        },
+      },
+      {
+        text: contents.join("\n"),
+        style: {
+          display: "inline-block",
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(400),
+          verticalAlign: "top",
+          lineHeight: String(1.7),
+          width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight : secondWidth + secondMarginRight, ea),
+          textAlign: "left",
+          color: colorChip.black,
+        },
+        bold: {
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.black,
+        },
+        under: {
+          fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.green,
+        },
+      },
+    ]
+  });
+
+
+}
+
 PartnershipManualJs.prototype.launching = async function (loading) {
   const instance = this;
   const { returnGet, ajaxJson, serviceParsing, colorChip } = GeneralJs;
@@ -2889,6 +4581,8 @@ PartnershipManualJs.prototype.launching = async function (loading) {
           instance.insertPreProjectBox();
           instance.insertFirstProjectBox();
           instance.insertPhotoSettingBox();
+          instance.insertContentsBox();
+          instance.insertProcessBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "PartnershipManualJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
