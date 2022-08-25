@@ -454,10 +454,10 @@ PartnershipManualJs.prototype.insertContextBox = function () {
         "디자이너 작업 가능 일정",
       ],
       scroll: [
-        200,
-        200,
-        200,
-        200
+        1000,
+        1100,
+        1100,
+        1400
       ],
     },
     {
@@ -469,10 +469,10 @@ PartnershipManualJs.prototype.insertContextBox = function () {
         "디자이너 글 가이드",
       ],
       scroll: [
-        200,
-        200,
-        200,
-        200
+        1600,
+        1900,
+        2400,
+        3800
       ],
     },
     {
@@ -482,8 +482,8 @@ PartnershipManualJs.prototype.insertContextBox = function () {
         "홈리에종 제공 컨텐츠",
       ],
       scroll: [
-        200,
-        200,
+        4440,
+        4600,
       ],
     },
     {
@@ -495,10 +495,10 @@ PartnershipManualJs.prototype.insertContextBox = function () {
         "디자이너 소통",
       ],
       scroll: [
-        200,
-        200,
-        200,
-        200
+        5350,
+        5800,
+        6000,
+        6200
       ],
     },
   ];
