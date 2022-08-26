@@ -245,18 +245,18 @@ PartnershipManualJs.prototype.insertFirstBox = function () {
 
   whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
 
-  firstWidth = <%% 572, 572, 572, 572, 50 %%>;
-  firstPaddingLeft = <%% 28, 28, 28, 28, 2 %%>;
+  firstWidth = <%% 572, 465, 397, 318, 50 %%>;
+  firstPaddingLeft = <%% 28, 24, 22, 18, 2 %%>;
 
-  barTop = <%% 11, 11, 11, 11, 11 %%>;
-  barWidth = <%% 6, 6, 6, 6, 6 %%>;
-  barHeight = <%% 62, 62, 62, 62, 62 %%>;
+  barTop = <%% 11, 10, 8, 7, 11 %%>;
+  barWidth = <%% 6, 6, 6, 5, 1 %%>;
+  barHeight = <%% 62, 59, 53, 42, 62 %%>;
 
-  titleSize = <%% 27, 27, 27, 27, 27 %%>;
+  titleSize = <%% 27, 25, 22, 18, 27 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  contentsSize = <%% 15, 15, 15, 15, 15 %%>;
+  contentsSize = <%% 15, 15, 14, 13, 15 %%>;
   contentsWeight = <%% 600, 600, 600, 600, 600 %%>;
   contentsLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
   contentsBetween = <%% 20, 20, 20, 20, 20 %%>;
@@ -380,6 +380,8 @@ PartnershipManualJs.prototype.insertContextBox = function () {
   const { client, ea, baseTong, media, project } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker } = GeneralJs;
   const contextButtonClassName = "contextButtonClassName";
   let paddingTop;
@@ -409,39 +411,39 @@ PartnershipManualJs.prototype.insertContextBox = function () {
 
   whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
 
-  grayInnerPadding = <%% 40, 40, 40, 40, 30 %%>;
-  grayInnerPaddingLeft = <%% 72, 72, 72, 72, 40 %%>;
+  grayInnerPadding = <%% 40, 30, 28, 24, 30 %%>;
+  grayInnerPaddingLeft = <%% 72, 45, 42, 32, 40 %%>;
 
-  titleSize = <%% 19, 19, 19, 19, 19 %%>;
+  titleSize = <%% 19, 17, 16, 13, 19 %%>;
   titleWeight = <%% 700, 700, 700, 700, 700 %%>;
-  titleMarginBottom = <%% 16, 16, 16, 16, 16 %%>;
+  titleMarginBottom = <%% 16, 12, 10, 8, 16 %%>;
 
-  contextPadding = <%% 56, 56, 56, 56, 56 %%>;
+  contextPadding = <%% 56, 20, 0, 0, 0 %%>;
 
-  arrowWidth = <%% 48, 48, 48, 48, 48 %%>;
-  arrowHeight = <%% 6, 6, 6, 6, 6 %%>;
+  arrowWidth = <%% 48, 14, 0, 0, 0 %%>;
+  arrowHeight = <%% 6, 4, 4, 4, 6 %%>;
   arrowTop = <%% 7, 7, 7, 7, 7 %%>;
 
-  contextBetween = <%% 6, 6, 6, 6, 6 %%>;
+  contextBetween = <%% 6, 6, 6, 4, 1 %%>;
 
-  contentsSize = <%% 15, 15, 15, 15, 15 %%>;
+  contentsSize = <%% 15, 14, 13, 11, 15 %%>;
   contentsWeight = <%% 600, 600, 600, 600, 600 %%>;
 
   numberWeight = <%% 300, 300, 300, 300, 300 %%>;
-  numberWidth = <%% 30, 30, 30, 30, 30 %%>;
+  numberWidth = <%% 30, 30, 28, 22, 30 %%>;
 
   searchTongMarginBottom = <%% 15, 15, 15, 15, 2 %%>;
 
-  searchWidth = <%% 450, 450, 450, 450, 450 %%>;
-  searchHeight = <%% 36, 36, 36, 36, 36 %%>;
+  searchWidth = <%% 450, 420, 360, 320, 450 %%>;
+  searchHeight = <%% 36, 32, 32, 26, 36 %%>;
   searchMarginRight = <%% 12, 12, 12, 12, 12 %%>;
 
-  searchIconWidth = <%% 22, 22, 22, 22, 22 %%>;
-  searchIconTop = <%% 6, 6, 6, 6, 6 %%>;
+  searchIconWidth = <%% 22, 22, 22, 20, 22 %%>;
+  searchIconTop = <%% 6, 5, 4, 2, 6 %%>;
 
-  buttonPaddingLeft = <%% 15, 15, 15, 15, 15 %%>;
+  buttonPaddingLeft = <%% 15, 15, 15, 13, 15 %%>;
 
-  buttonSize = <%% 14, 14, 14, 14, 14 %%>;
+  buttonSize = <%% 14, 13, 13, 11, 14 %%>;
   buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
   buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
@@ -490,7 +492,7 @@ PartnershipManualJs.prototype.insertContextBox = function () {
     {
       title: "디자이너 프로젝트 진행",
       context: [
-        "디자이너 현장미팅 준비 / 응대",
+        big ? "디자이너 현장미팅 준비 / 응대" : "디자이너 현장미팅 준비",
         "디자이너 작성 폼",
         "시공사 선택",
         "디자이너 소통",
@@ -794,6 +796,8 @@ PartnershipManualJs.prototype.insertPreProjectBox = function () {
   const { client, ea, baseTong, media, project } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   let paddingTop;
@@ -844,7 +848,7 @@ PartnershipManualJs.prototype.insertPreProjectBox = function () {
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
   paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
 
-  whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
+  whiteBottomMargin = <%% 42, 42, 42, 36, 0 %%>;
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
@@ -852,7 +856,7 @@ PartnershipManualJs.prototype.insertPreProjectBox = function () {
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
-  titleBottom = <%% (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), 0 %%>;
+  titleBottom = <%% (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 14 : 12), 0 %%>;
   contentsAreaPaddingTop = <%% 34, 34, 34, 34, 6 %%>;
 
   mobileTitleLeft = 1.5;
@@ -878,8 +882,8 @@ PartnershipManualJs.prototype.insertPreProjectBox = function () {
 
   zeroWidth = <%% 8, 8, 8, 8, 10 %%>;
   zeroMarginRight = <%% 10, 10, 10, 10, 10 %%>;
-  firstWidth = <%% 240, 240, 190, 170, 10 %%>;
-  secondWidth = <%% 15, 15, 15, 15, 2 %%>;
+  firstWidth = <%% 240, 180, 170, 150, 10 %%>;
+  secondWidth = <%% 15, 15, 8, 0, 2 %%>;
   secondMarginRight = <%% 10, 10, 10, 10, 2 %%>;
 
   checkBoxWidth = <%% 10, 10, 10, 10, 2 %%>;
@@ -897,13 +901,13 @@ PartnershipManualJs.prototype.insertPreProjectBox = function () {
 
   mobileContentsWordingSize = 3.2;
 
-  contentsHeight = <%% 180, 180, 180, 180, 180 %%>;
+  contentsHeight = <%% 180, 192, 180, 180, 180 %%>;
 
   factorBoxTop = <%% 25, 25, 25, 25, 25 %%>;
-  factorBoxLeft = <%% 920, 920, 920, 920, 920 %%>;
+  factorBoxLeft = <%% 920, 600, 600, 600, 920 %%>;
 
   factorLineTop = <%% 36, 36, 36, 36, 36 %%>;
-  factorLineLeft = <%% 888, 888, 888, 888, 888 %%>;
+  factorLineLeft = <%% 888, 588, 588, 588, 888 %%>;
   factorLineWidth = <%% 22, 22, 22, 22, 22 %%>;
   factorLineHeight = <%% 123, 123, 123, 123, 123 %%>;
 
@@ -1077,7 +1081,7 @@ PartnershipManualJs.prototype.insertPreProjectBox = function () {
         },
       },
       {
-        text: contents.join("\n"),
+        text: media[0] ? contents.join("\n") : contents.join(" "),
         style: {
           display: "inline-block",
           fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
@@ -1157,7 +1161,7 @@ PartnershipManualJs.prototype.insertPreProjectBox = function () {
         },
       },
       {
-        text: "<b%< " + title + " >%b>\n" + contents.join("\n"),
+        text: "<b%< " + title + " >%b>\n" + (big ? contents.join("\n") : contents.join(" ")),
         style: {
           display: "inline-block",
           fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
@@ -1167,7 +1171,7 @@ PartnershipManualJs.prototype.insertPreProjectBox = function () {
           width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight : secondWidth + secondMarginRight, ea),
           textAlign: "left",
           color: colorChip.black,
-          height: String(contentsHeight) + ea,
+          height: media[0] ? String(contentsHeight) + ea : "",
         },
         bold: {
           fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
@@ -1182,6 +1186,7 @@ PartnershipManualJs.prototype.insertPreProjectBox = function () {
         children: [
           {
             style: {
+              display: media[0] ? "block" : "none",
               position: "absolute",
               top: String(factorLineTop) + ea,
               left: String(factorLineLeft) + ea,
@@ -1196,9 +1201,10 @@ PartnershipManualJs.prototype.insertPreProjectBox = function () {
           {
             text: factors.map((str, index) => { return "<b%" + String(index + 1) + ".%b> " + str }).join("\n"),
             style: {
-              position: "absolute",
-              top: String(factorBoxTop) + ea,
-              left: String(factorBoxLeft) + ea,
+              display: "block",
+              position: media[0] ? "absolute" : "relative",
+              top: media[0] ? String(factorBoxTop) + ea : "",
+              left: media[0] ? String(factorBoxLeft) + ea : "",
               fontSize: String(contentsWordingSize) + ea,
               fontWeight: String(400),
               color: colorChip.black,
@@ -1304,6 +1310,8 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
   const { client, ea, baseTong, media, project } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   let paddingTop;
@@ -1371,7 +1379,7 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
-  titleBottom = <%% (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), 0 %%>;
+  titleBottom = <%% (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 14 : 12), 0 %%>;
   contentsAreaPaddingTop = <%% 34, 34, 34, 34, 6 %%>;
 
   mobileTitleLeft = 1.5;
@@ -1397,8 +1405,8 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
 
   zeroWidth = <%% 8, 8, 8, 8, 10 %%>;
   zeroMarginRight = <%% 10, 10, 10, 10, 10 %%>;
-  firstWidth = <%% 240, 240, 190, 170, 10 %%>;
-  secondWidth = <%% 15, 15, 15, 15, 2 %%>;
+  firstWidth = <%% 240, 180, 170, 150, 10 %%>;
+  secondWidth = <%% 15, 15, 8, 0, 2 %%>;
   secondMarginRight = <%% 10, 10, 10, 10, 2 %%>;
 
   checkBoxWidth = <%% 10, 10, 10, 10, 2 %%>;
@@ -1407,7 +1415,7 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
   arrowBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.5 %%>;
 
   contentsMarginBottom0 = <%% 24, 24, 24, 24, 2 %%>;
-  contentsMarginBottom1 = <%% 60, 60, 58, 56, 3 %%>;
+  contentsMarginBottom1 = <%% 60, 56, 48, 42, 3 %%>;
 
   lineTop = <%% 10, 10, 10, 10, 10 %%>;
   linePadding = <%% 12, 12, 12, 12, 12 %%>;
@@ -1427,19 +1435,19 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
   factorLineHeight = <%% 123, 123, 123, 123, 123 %%>;
 
   noticeBoxPaddingTop = <%% 34, 34, 34, 34, 34 %%>;
-  noticeGrayPadding = <%% 12, 12, 12, 12, 12 %%>;
-  noticeTitleTop = <%% -28, -28, -28, -28, -28 %%>;
+  noticeGrayPadding = <%% 12, 12, 10, 8, 12 %%>;
+  noticeTitleTop = <%% -28, -28, -28, -26, -28 %%>;
 
   noticePaddingLeft = <%% 22, 22, 22, 22, 22 %%>;
-  noticePaddingTop = <%% 16, 16, 16, 16, 16 %%>;
-  noticePaddingBottom = <%% 4, 4, 4, 4, 4 %%>;
+  noticePaddingTop = <%% 16, 16, 16, 12, 16 %%>;
+  noticePaddingBottom = <%% 4, 4, 4, 2, 4 %%>;
 
-  noticeNumberWidth = <%% 20, 20, 20, 20, 20 %%>;
-  noticeLineBoxWidth = <%% 110, 110, 110, 110, 110 %%>;
+  noticeNumberWidth = <%% 20, 20, 20, 16, 20 %%>;
+  noticeLineBoxWidth = <%% 110, 110, 100, 16, 110 %%>;
 
-  noticeLineBoxPaddingTop = <%% 14, 14, 14, 14, 14 %%>;
-  noticeLineBoxPadding = <%% 10, 10, 10, 10, 10 %%>;
-  noticeLineHeight = <%% 28, 28, 28, 28, 28 %%>;
+  noticeLineBoxPaddingTop = <%% 14, 14, 14, 13, 14 %%>;
+  noticeLineBoxPadding = <%% 10, 10, 10, 8, 10 %%>;
+  noticeLineHeight = <%% 28, 27, 26, 25, 28 %%>;
 
   mainTitle = "첫 프로젝트 운영";
   mainContents = [
@@ -1447,7 +1455,7 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
       title: "첫 프로젝트 응대",
       contents: [
         "고객 첫 응대 시 홈리에종과 함께 프로젝트를 진행하는 협업의 관계라는 점과 디자인을 진행하면서\n불편 사항이 있는 경우 홈리에종을 통해 연락해달라고 안내해주세요.",
-        "프로젝트를 마무리 후 인터뷰와 촬영을 진행하는데 <b%이는 프로젝트 검수(정산)와 디자이너를 지원하기 위해 중요한 과정임을 함께 설명%b>해주세요.\n모든 고객이 디자이너의 포트폴리오를 보고 선택하신 것처럼 최신의 포트폴리오가 누적되어야 디자이너가 계속해서 성장할 수 있기에 소중하게 관리되고 있으며 개인정보 노출 정도는 홈리에종과 조율할 수 있습니다.",
+        "프로젝트를 마무리 후 인터뷰와 촬영을 진행하는데 <b%이는 프로젝트 검수(정산)와 디자이너를 지원하기 위해 중요한 과정임을 함께 설명%b>해주세요." + (media[0] ? "\n" : " ") + "모든 고객이 디자이너의 포트폴리오를 보고 선택하신 것처럼 최신의 포트폴리오가 누적되어야 디자이너가 계속해서 성장할 수 있기에 소중하게 관리되고 있으며 개인정보 노출 정도는 홈리에종과 조율할 수 있습니다.",
       ],
     },
     {
@@ -1686,7 +1694,7 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
         },
       },
       {
-        text: contents.join("\n"),
+        text: media[0] ? contents.join("\n") : contents.join(" "),
         style: {
           display: "inline-block",
           fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
@@ -1862,6 +1870,8 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
   const { client, ea, baseTong, media, project } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   let paddingTop;
@@ -1931,7 +1941,7 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
-  titleBottom = <%% (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), 0 %%>;
+  titleBottom = <%% (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 14 : 12), 0 %%>;
   contentsAreaPaddingTop = <%% 34, 34, 34, 34, 6 %%>;
 
   mobileTitleLeft = 1.5;
@@ -1957,8 +1967,8 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
 
   zeroWidth = <%% 8, 8, 8, 8, 10 %%>;
   zeroMarginRight = <%% 10, 10, 10, 10, 10 %%>;
-  firstWidth = <%% 240, 240, 190, 170, 10 %%>;
-  secondWidth = <%% 15, 15, 15, 15, 2 %%>;
+  firstWidth = <%% 240, 180, 170, 150, 10 %%>;
+  secondWidth = <%% 15, 15, 8, 0, 2 %%>;
   secondMarginRight = <%% 10, 10, 10, 10, 2 %%>;
 
   checkBoxWidth = <%% 10, 10, 10, 10, 2 %%>;
@@ -1967,7 +1977,7 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
   arrowBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.5 %%>;
 
   contentsMarginBottom0 = <%% 24, 24, 24, 24, 2 %%>;
-  contentsMarginBottom1 = <%% 60, 60, 58, 56, 3 %%>;
+  contentsMarginBottom1 = <%% 60, 56, 48, 42, 3 %%>;
 
   lineTop = <%% 10, 10, 10, 10, 10 %%>;
   linePadding = <%% 12, 12, 12, 12, 12 %%>;
@@ -3062,6 +3072,8 @@ PartnershipManualJs.prototype.insertContentsBox = function () {
   const { client, ea, baseTong, media, project } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   let paddingTop;
@@ -3131,7 +3143,7 @@ PartnershipManualJs.prototype.insertContentsBox = function () {
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
-  titleBottom = <%% (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), 0 %%>;
+  titleBottom = <%% (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 14 : 12), 0 %%>;
   contentsAreaPaddingTop = <%% 34, 34, 34, 34, 6 %%>;
 
   mobileTitleLeft = 1.5;
@@ -3157,8 +3169,8 @@ PartnershipManualJs.prototype.insertContentsBox = function () {
 
   zeroWidth = <%% 8, 8, 8, 8, 10 %%>;
   zeroMarginRight = <%% 10, 10, 10, 10, 10 %%>;
-  firstWidth = <%% 240, 240, 190, 170, 10 %%>;
-  secondWidth = <%% 15, 15, 15, 15, 2 %%>;
+  firstWidth = <%% 240, 180, 170, 150, 10 %%>;
+  secondWidth = <%% 15, 15, 8, 0, 2 %%>;
   secondMarginRight = <%% 10, 10, 10, 10, 2 %%>;
 
   checkBoxWidth = <%% 10, 10, 10, 10, 2 %%>;
@@ -3167,7 +3179,7 @@ PartnershipManualJs.prototype.insertContentsBox = function () {
   arrowBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.5 %%>;
 
   contentsMarginBottom0 = <%% 24, 24, 24, 24, 2 %%>;
-  contentsMarginBottom1 = <%% 60, 60, 58, 56, 3 %%>;
+  contentsMarginBottom1 = <%% 60, 56, 48, 42, 3 %%>;
 
   lineTop = <%% 10, 10, 10, 10, 10 %%>;
   linePadding = <%% 12, 12, 12, 12, 12 %%>;
@@ -3654,6 +3666,8 @@ PartnershipManualJs.prototype.insertProcessBox = function () {
   const { client, ea, baseTong, media, project } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   let paddingTop;
@@ -3716,7 +3730,7 @@ PartnershipManualJs.prototype.insertProcessBox = function () {
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
-  titleBottom = <%% (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), 0 %%>;
+  titleBottom = <%% (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 14 : 12), 0 %%>;
   contentsAreaPaddingTop = <%% 34, 34, 34, 34, 6 %%>;
 
   mobileTitleLeft = 1.5;
@@ -3742,8 +3756,8 @@ PartnershipManualJs.prototype.insertProcessBox = function () {
 
   zeroWidth = <%% 8, 8, 8, 8, 10 %%>;
   zeroMarginRight = <%% 10, 10, 10, 10, 10 %%>;
-  firstWidth = <%% 240, 240, 190, 170, 10 %%>;
-  secondWidth = <%% 15, 15, 15, 15, 2 %%>;
+  firstWidth = <%% 240, 180, 170, 150, 10 %%>;
+  secondWidth = <%% 15, 15, 8, 0, 2 %%>;
   secondMarginRight = <%% 10, 10, 10, 10, 2 %%>;
 
   checkBoxWidth = <%% 10, 10, 10, 10, 2 %%>;
@@ -3752,7 +3766,7 @@ PartnershipManualJs.prototype.insertProcessBox = function () {
   arrowBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.5 %%>;
 
   contentsMarginBottom0 = <%% 24, 24, 24, 24, 2 %%>;
-  contentsMarginBottom1 = <%% 60, 60, 58, 56, 3 %%>;
+  contentsMarginBottom1 = <%% 60, 56, 48, 42, 3 %%>;
 
   lineTop = <%% 10, 10, 10, 10, 10 %%>;
   linePadding = <%% 12, 12, 12, 12, 12 %%>;
