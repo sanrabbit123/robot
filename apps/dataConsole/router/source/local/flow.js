@@ -269,9 +269,13 @@ FlowJs.prototype.launchingDiagram = function (svgName) {
 
         for (let dom of domList) {
           dom.style.cursor = "pointer";
-          dom.setAttribute("value", flatMap[dom.id].name);
-          if (typeof flatMap[dom.id].event === "function") {
-            dom.addEventListener("click", flatMap[dom.id].event);
+          if (typeof flatMap[dom.id] === "object" && flatMap[dom.id] !== null) {
+            if (typeof flatMap[dom.id].name === "string") {
+              dom.setAttribute("value", flatMap[dom.id].name);
+            }
+            if (typeof flatMap[dom.id].event === "function") {
+              dom.addEventListener("click", flatMap[dom.id].event);
+            }
           }
         }
 
