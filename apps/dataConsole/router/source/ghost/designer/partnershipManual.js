@@ -243,7 +243,7 @@ PartnershipManualJs.prototype.insertFirstBox = function () {
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
   paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
 
-  whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
+  whiteBottomMargin = <%% 42, 42, 42, 36, 0 %%>;
 
   firstWidth = <%% 572, 465, 397, 318, 50 %%>;
   firstPaddingLeft = <%% 28, 24, 22, 18, 2 %%>;
@@ -409,7 +409,7 @@ PartnershipManualJs.prototype.insertContextBox = function () {
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
   paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
 
-  whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
+  whiteBottomMargin = <%% 42, 42, 42, 36, 0 %%>;
 
   grayInnerPadding = <%% 40, 30, 28, 24, 30 %%>;
   grayInnerPaddingLeft = <%% 72, 45, 42, 32, 40 %%>;
@@ -938,7 +938,7 @@ PartnershipManualJs.prototype.insertPreProjectBox = function () {
     {
       title: "디자이너 작업 가능 일정",
       contents: [
-        "디자이너의 일정은 매월 마지막주 정기적으로 익월 일정을 확인합니다. 상시로 일정 변동이 있기 때문에 매월 확인한 일정 외에 변동사항이 생길 때마다 홈리에종 채널로 변동 일정을 공유해주셔야 합니다. 초기 계약시 [활동 대기] 단계에서 일정을 확인합니다. 디자이너는 <b%홈리에종의 서비스 유형(F, S, T, XT) 에 대하여 활동 가능 영역을 결정하고, 이에 따라 서비스 비용을 책정%b>합니다. 초기 계약시 책정한 서비스 비용은 프로젝트 누적 수량에 따라 달라질 수 있습니다. 작업 일정에 대한 답이 없다면, 계속 진행 가능함으로 판단하고 추천서에 등록되게 됩니다.",
+        "디자이너의 일정은 매월 마지막주 정기적으로 익월 일정을 확인합니다. 상시로 일정 변동이 있기 때문에 매월 확인한 일정 외에 변동사항이 생길 때마다 홈리에종 채널로 변동 일정을 공유해주셔야 합니다. 초기 계약시 [활동 대기] 단계에서 일정을 확인합니다. 디자이너는 <b%홈리에종의 서비스 유형(F, S, T, XT) 에 대하여 활동 가능 영역을 결정하고, 이에 따라 서비스 비용을 책정%b>합니다. 초기 계약시 책정한 서비스 비용은 프로젝트 누적 수량에 따라 달라질 수 있습니다. 일정에 대한 답이 없다면, 계속 진행 가능함으로 판단하고 추천서에 등록되게 됩니다.",
         "이후부터 홈리에종은 디자이너 추천을 시작하고 고객의 선택을 기다리게 됩니다.\n프로젝트 계약이 확정되고 첫번째 현장 미팅이 잡히기까지의 소요시간을 예상할 수 없습니다.",
       ]
     }
@@ -1371,7 +1371,7 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
   paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
 
-  whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
+  whiteBottomMargin = <%% 42, 42, 42, 36, 0 %%>;
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
@@ -1445,9 +1445,9 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
   noticeNumberWidth = <%% 20, 20, 20, 16, 20 %%>;
   noticeLineBoxWidth = <%% 110, 110, 100, 16, 110 %%>;
 
-  noticeLineBoxPaddingTop = <%% 14, 14, 14, 13, 14 %%>;
+  noticeLineBoxPaddingTop = <%% 14, 13, 13, 13, 14 %%>;
   noticeLineBoxPadding = <%% 10, 10, 10, 8, 10 %%>;
-  noticeLineHeight = <%% 28, 27, 26, 25, 28 %%>;
+  noticeLineHeight = <%% 28, 27, 27, 25, 28 %%>;
 
   mainTitle = "첫 프로젝트 운영";
   mainContents = [
@@ -1933,7 +1933,7 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
   paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
 
-  whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
+  whiteBottomMargin = <%% 42, 42, 42, 36, 0 %%>;
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
@@ -1996,19 +1996,19 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
   factorLineWidth = <%% 22, 22, 22, 22, 22 %%>;
   factorLineHeight = <%% 123, 123, 123, 123, 123 %%>;
 
-  middleSecondWidth = <%% 175, 175, 175, 175, 175 %%>;
+  middleSecondWidth = <%% 175, 140, 125, 110, 17 %%>;
 
-  grayPadding = <%% 12, 12, 12, 12, 12 %%>;
+  grayPadding = <%% 12, 12, 12, 8, 12 %%>;
 
-  grayPaddingLeft = <%% 30, 30, 30, 30, 30 %%>;
-  grayPaddingTop = <%% 22, 22, 22, 22, 22 %%>;
+  grayPaddingLeft = <%% 30, 30, 30, 24, 30 %%>;
+  grayPaddingTop = <%% 22, 20, 18, 16, 22 %%>;
 
-  bigPaddingWidth = <%% 424, 424, 424, 424, 424 %%>;
-  bigPaddingPaddingVisual = <%% 16, 16, 16, 16, 16 %%>;
-  lineBoxPaddingTop = <%% 13, 13, 13, 13, 13 %%>;
-  lineBoxHeight = <%% 23, 23, 23, 23, 23 %%>;
+  bigPaddingWidth = <%% 424, 188, 172, 148, 12 %%>;
+  bigPaddingPaddingVisual = <%% 16, 16, 16, 12, 16 %%>;
+  lineBoxPaddingTop = <%% 13, 12, 11, 10, 13 %%>;
+  lineBoxHeight = <%% 23, 22, 21, 21, 23 %%>;
 
-  bigPaddingNumberWidth = <%% 12, 12, 12, 12, 12 %%>;
+  bigPaddingNumberWidth = <%% 12, 12, 12, 9, 12 %%>;
 
   mainTitle = "촬영 및 세팅 가이드";
   mainContents = [
@@ -2018,7 +2018,7 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
         "<b%1) 프로젝트의 종료를 검수하는 의미와 2) 디자이너의 지속적인 성장을 지원하고자 하는%b> 두 가지 의미를 가집니다.",
       ],
       contents: [
-        "디자이너는 고객, 홈리에종과 촬영 일자를 맞추고 촬영 전 고객과 부족한 부분은 없는 지, 사전에 논의하여 촬영 준비를 합니다.",
+        big ? "디자이너는 고객과 촬영 일자를 맞추고 촬영 전 고객과 부족한 부분은 없는 지 논의하여 촬영 준비를 합니다." : "디자이너는 고객과 촬영 일자를 맞추고 촬영 전 촬영 준비를 합니다.",
         "디자이너가 준비할 수 있는 소품이 있다면 현장에서 배치를 해도 무방합니다.",
         "포토 실장님께 각 공간별 디자이너의 의도를 전달하며 원하는 촬영 부분에 대해 논의합니다.",
       ]
@@ -2037,13 +2037,13 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
           contents: [
             "커튼 : 주름이 잘 잡히는 소재의 커튼이 아니라면 손으로 주름을 잡아주세요. 커튼 연 것, 친 것 모두 촬영하셔도 됩니다.",
             "쿠션 : 쪼글쪼글하지 않도록 탁탁 쳐서 볼륨감을 살려주세요.",
-            "베딩 : 정면에서는 자락이 양쪽으로 균등하게 떨어지게 하는 것이 안정감 있습니다. 방향에 따라 한 쪽을 당겨 프레임이나 어수선한 부분을 가려도 좋아요.",
+            "베딩 : 정면에서는 자락이 양쪽으로 균등하게 떨어지는 것이 안정감 있습니다. 방향에 따라 한 쪽을 당겨 프레임이나 어수선한 부분을 가려도 좋아요.",
           ]
         },
         {
           title: "물건 정리",
           contents: [
-            "텅 빈 집처럼 치우는 것보다는 적당한 사람냄새가 묻어나는 것이 좋아요. 그래도 수세미, 음식, 쓰레기통 등이 생활감이 많이 묻어나는 것들은 숨겨주세요.",
+            "텅 빈 집처럼 치우는 것보다는 적당한 생활감이 묻어나는 것이 좋아요. 그래도 수세미, 음식, 쓰레기통 등이 생활감이 많이 묻어나는 것들은 숨겨주세요.",
           ]
         },
         {
@@ -2076,17 +2076,17 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
           title: "홈리에종\n촬영 가이드",
           contents: [
             "스타일링이 완성된 공간별, 가로 비율 1장 이상의 사진",
-            "공간별 세로 비율의 사진이 있는 경우, 2장이 한 번에 묶여 게시물에 게시되기 때문에 최소 2장 이상의 컷 필요 (짝수컷 필요)",
-            "전체 조화를 강조해야하기 때문에 전체 공간이 보이는 광각 사진 (14mm 이하의 렌즈) 1장 이상이 포함된 사진 필요",
+            "세로 비율의 사진일 경우, 최소 2장 이상의 컷 필요 (짝수컷 필요)",
+            "공간당 전체가 보이는 광각 사진 (14mm 이하의 렌즈) 1장 이상씩 필요",
             "사진은 원본 해상도로, 사진의 긴 쪽 최소 픽셀이 2000px 이상",
             "필터는 사용되어서는 안 됨",
-            "공간 디자인 설명을 위해 가구, 소품의 색상을 정확하게 보여줄 수 있도록 화이트 밸런스 맞추기",
+            "가구, 소품의 색상을 정확하게 보여줄 수 있도록 화이트 밸런스 맞추기",
             "사진상 가구나 소품의 왜곡이 없어야 함",
           ]
         },
         {
           type: "second",
-          title: "디자이너가 촬영한\n사진을 전달하는 경우",
+          title: "디자이너가\n촬영하는 경우",
           contents: [
             "디자이너님이 직접 촬영 또는 외부 포토그래퍼를 이용하시는 것도 가능합니다. 디자이너 직접 촬영 또는 외부 포토그래퍼 촬영시에도 홈리에종은 현장에 동행하여 고객인터뷰를 진행할 수 있습니다. 여건에 따라 전화 인터뷰를 진행할 수 있으며 외부 포토그래퍼",
             "촬영 시에는 원활한 일정 조율을 위하여 사전에 홈리에종과 협의 부탁드립니다.",
@@ -2096,7 +2096,7 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
           type: "second",
           title: "",
           contents: [
-            "디자이너가 직접 촬영한 사진으로 프로젝트 종료를 검수하는 경우 디자이너는 최대한 성의 있게 촬영하여 홈리에종과 공유합니다. 고성능 휴대폰으로 촬영한 사진도 사용 가능합니다. 다만 모든 사진은 필터를 적용하지 않고 찍은 원본 사진을 보내주셔야 합니다. 프로젝트 단위로 압축하셔서 이메일로 전송해주세요. admin@home-liaison.com",
+            "디자이너가 직접 촬영한 사진으로 프로젝트 종료를 검수하는 경우 디자이너는 최대한 성의 있게 촬영하여 홈리에종과 공유합니다. 고성능 휴대폰으로 촬영한 사진도 사용 가능합니다. 다만 모든 사진은 필터를 적용하지 않고 찍은 원본 사진을 보내주셔야 합니다. 프로젝트 단위로 압축하셔서 이메일로 전송해주세요.\nadmin@home-liaison.com",
           ]
         },
       ]
@@ -2504,7 +2504,7 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
             },
           },
           {
-            text: obj.contents.join("\n"),
+            text: big ? obj.contents.join("\n") : obj.contents.join(" "),
             style: {
               display: "inline-block",
               fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
@@ -2606,7 +2606,7 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
             },
           },
           {
-            text: obj.contents.join("\n"),
+            text: big ? obj.contents.join("\n") : obj.contents.join(" "),
             style: {
               display: "inline-block",
               fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
@@ -3135,7 +3135,7 @@ PartnershipManualJs.prototype.insertContentsBox = function () {
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
   paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
 
-  whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
+  whiteBottomMargin = <%% 42, 42, 42, 36, 0 %%>;
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
@@ -3198,19 +3198,19 @@ PartnershipManualJs.prototype.insertContentsBox = function () {
   factorLineWidth = <%% 22, 22, 22, 22, 22 %%>;
   factorLineHeight = <%% 123, 123, 123, 123, 123 %%>;
 
-  middleSecondWidth = <%% 175, 175, 175, 175, 175 %%>;
+  middleSecondWidth = <%% 175, 140, 125, 110, 17 %%>;
 
-  grayPadding = <%% 12, 12, 12, 12, 12 %%>;
+  grayPadding = <%% 12, 12, 12, 8, 12 %%>;
 
-  grayPaddingLeft = <%% 30, 30, 30, 30, 30 %%>;
-  grayPaddingTop = <%% 22, 22, 22, 22, 22 %%>;
+  grayPaddingLeft = <%% 30, 30, 30, 24, 30 %%>;
+  grayPaddingTop = <%% 22, 20, 18, 16, 22 %%>;
 
-  bigPaddingWidth = <%% 424, 424, 424, 424, 424 %%>;
-  bigPaddingPaddingVisual = <%% 16, 16, 16, 16, 16 %%>;
-  lineBoxPaddingTop = <%% 13, 13, 13, 13, 13 %%>;
-  lineBoxHeight = <%% 23, 23, 23, 23, 23 %%>;
+  bigPaddingWidth = <%% 424, 188, 172, 148, 12 %%>;
+  bigPaddingPaddingVisual = <%% 16, 16, 16, 12, 16 %%>;
+  lineBoxPaddingTop = <%% 13, 12, 11, 10, 13 %%>;
+  lineBoxHeight = <%% 23, 22, 21, 21, 23 %%>;
 
-  bigPaddingNumberWidth = <%% 12, 12, 12, 12, 12 %%>;
+  bigPaddingNumberWidth = <%% 12, 12, 12, 9, 12 %%>;
 
   mainTitle = "콘텐츠 활용 가이드";
   mainContents = [
@@ -3220,16 +3220,16 @@ PartnershipManualJs.prototype.insertContentsBox = function () {
         "<b%협업 파트너십을 유지하기 위한 기본적인 사항으로 꼭 기재%b>해주시기를 요청드리며, 기재가 되어있지 않을 경우, 별도로 추가 요청을 드릴 수 있습니다.",
       ],
       contents: [
-        "홈리에종에서 제공받은 현장의 사진을 사용할 때에는 홈리에종의 컨텐츠 활용 가이드라인을 지킵니다.",
+        big ? "홈리에종에서 제공받은 현장의 사진을 사용할 때에는 홈리에종의 컨텐츠 활용 가이드 라인을 지킵니다." : "홈리에종에서 제공받은 사진을 사용할 때에는 홈리에종의 가이드를 지킵니다.",
         "디자이너가 사용하는 모든 SNS채널, 웹페이지, 유튜브 채널에 공통적으로 적용됩니다.",
         "1회에 한정되는 것이 아니라 현장 포트폴리오를 사용할 때마다 적용됩니다.",
       ]
     },
     {
-      title: "채널별 컨텐츠 사용 권한",
+      title: "채널별 사용 권한",
       contents: [
         {
-          title: "인스타그램, 페이스북",
+          title: "인스타그램",
           contents: [
             "<b%인물 해시 태그%b> : 피드 게시물 사진에 직접 인물 해시 태그",
             "<b%내용 해시 태그%b> : #홈리에종 @home-liaison",
@@ -3257,10 +3257,10 @@ PartnershipManualJs.prototype.insertContentsBox = function () {
       ]
     },
     {
-      title: "홈리에종 컨텐츠 공유 방법",
+      title: "홈리에종 컨텐츠 공유",
       contents: [
-        "홈리에종에서 촬영한 촬영본은 홈리에종 촬영 컨텐츠 활용 가이드에 맞게 사용하여야 하며, 다른 상업적인 용도로 활용할 수가 없음을 안내드립니다.",
-        "포토 실장님과 진행 시 홈리에종과 디자이너가 각각 50% 씩 비용을 부담하며, 디자이너는 워터마크 없는 촬영본을 공유받을 수 있습니다.",
+        "홈리에종의 촬영본은 홈리에종 촬영 컨텐츠 활용 가이드에 맞게 사용하여야 하며, 다른 상업적인 용도로 활용할 수가 없음을 안내드립니다.",
+        "포토 실장님과 진행 시 홈리에종과 디자이너가 각각 50%씩 부담하며, 디자이너는 워터마크 없는 촬영본을 공유받을 수 있습니다.",
         "고객에겐 워터마크가 찍힌 사진을 제공하고, 제품 구매의 후기 사진 등, 타 회사의 상업적 용도로 사용될 수 없음을 미리 안내드립니다.",
       ]
     }
@@ -3632,7 +3632,7 @@ PartnershipManualJs.prototype.insertContentsBox = function () {
         },
       },
       {
-        text: contents.join("\n"),
+        text: media[0] ? contents.join("\n") : contents.join(" "),
         style: {
           display: "inline-block",
           fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
@@ -3722,7 +3722,7 @@ PartnershipManualJs.prototype.insertProcessBox = function () {
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
   paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
 
-  whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
+  whiteBottomMargin = <%% 42, 42, 42, 36, 0 %%>;
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
@@ -3760,7 +3760,7 @@ PartnershipManualJs.prototype.insertProcessBox = function () {
   secondWidth = <%% 15, 15, 8, 0, 2 %%>;
   secondMarginRight = <%% 10, 10, 10, 10, 2 %%>;
 
-  checkBoxWidth = <%% 10, 10, 10, 10, 2 %%>;
+  checkBoxWidth = <%% 10, 9, 8, 7, 2 %%>;
   arrowBoxWidth = <%% 9, 8, 8, 8, 1.8 %%>;
   checkBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.6 %%>;
   arrowBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.5 %%>;
@@ -3785,10 +3785,10 @@ PartnershipManualJs.prototype.insertProcessBox = function () {
   factorLineWidth = <%% 22, 22, 22, 22, 22 %%>;
   factorLineHeight = <%% 123, 123, 123, 123, 123 %%>;
 
-  checkBoxTongWidth = <%% 20, 20, 20, 20, 20 %%>;
+  checkBoxTongWidth = <%% 20, 20, 20, 16, 20 %%>;
   checkBoxTongPaddingTop = <%% 8, 8, 8, 8, 8 %%>;
-  checkBoxWidth = <%% 11, 11, 11, 11, 11 %%>;
-  checkboxBetween = <%% 15, 15, 15, 15, 15 %%>;
+  checkBoxWidth = <%% 11, 10, 10, 9, 11 %%>;
+  checkboxBetween = <%% 15, 15.2, 15.2, 14.4, 15 %%>;
 
   numberTongWidth = <%% 32, 32, 32, 32, 30 %%>;
 
@@ -3797,7 +3797,7 @@ PartnershipManualJs.prototype.insertProcessBox = function () {
     {
       title: "디자이너 현장 미팅 준비",
       contents: [
-        "고객과 약속된 현장 미팅 일자 기준 2-3일 전, 사전에 연락합니다. 홈리에종에서는 3일 기준으로 안내문을 발송합니다.",
+        "약속된 현장 미팅 일자 기준 2-3일 전, 사전에 연락합니다. 홈리에종에서는 3일 기준으로 안내문을 발송합니다.",
         "담당 디자이너 인사, 디자이너의 업무 방식에 따라 필요로 하는 자료가 있다면 고객에게 요청합니다.",
         "홈리에종은 기본적으로 <b%1) 현장의 도면 2) 재배치가 필요한 가전, 가구, 3) 정확한 예산, 4) 방 마다의 사용 목적%b> 을 가지고 디자이너를 만날 것을 권장하고 있습니다.",
       ],
@@ -3806,21 +3806,22 @@ PartnershipManualJs.prototype.insertProcessBox = function () {
       title: "디자이너 현장 미팅 응대",
       contents: [
         "고객이 준비한 도면을 받더라도 실측은 정확하게 합니다.",
-        "고객의 예산을 분명히 확인하고, 예산 모두를 사용하지 않더라도 최대 가용 예산의 범위를 있는 지 꼭 확인합니다.",
-        "현장 미팅 후, 구두로 전할 수 있는 상담을 진행합니다. 이 미팅을 통해 최종 계약 여부가 확정되기 때문에 성실하게 미팅하되 미팅 후 디자인 작업을 시작하지 않습니다.",
-        "고객에게 프로젝트 전체 프로세스를 설명하고, 디자이너의 작업 기간과 방식에 대해 명확하게 설명합니다.",
-        "시공이 있는 경우 사전에 일자 협의가 완료되면 시공 소장님과 함께 현장을 방문하여 시공 범위를 조정합니다.",
-        "소장님과 현장에 함께 가지 못하게 되는 경우 소장님이 현장을 방문하였을때 이해하기 쉽도록 정리하여 소장님께 내용을 공유합니다.",
-        "시공이 있는 경우 미팅 완료 이후에 정리된 시공 범위를 시공의뢰서로 작성하여 홈리에종으로 공유합니다.",
+        "고객의 예산을 분명히 확인하고, 최대 가용 예산 범위가 있는 지 확인합니다.",
+        big ? "현장 미팅 후, 구두로 전할 수 있는 상담을 진행합니다. 미팅 후 디자인 작업을 시작하지 않습니다." : "현장 미팅 후, 상담을 진행합니다. 미팅 후 디자인 작업을 시작하지 않습니다.",
+        big ? "고객에게 프로젝트 전체 프로세스를 설명하고, 디자이너의 작업 기간과 방식에 대해 명확하게 설명합니다." : "고객에게 프로세스를 설명하고, 작업 기간과 방식에 대해 명확하게 설명합니다.",
+        big ? "시공이 있는 경우 사전에 일자 협의가 완료되면 소장님과 함께 현장을 방문하여 시공 범위를 조정합니다." : "시공이 있는 경우 소장님과 함께 현장을 방문하여 시공 범위를 조정합니다.",
+        big ? "소장님과 현장에 함께 가지 못하게 되는 경우, 소장님이 이해하기 쉽도록 정리하여 내용을 공유합니다." : "현장에 함께 가지 못하게 되는 경우, 소장님이 이해하기 쉽도록 정리하여 공유합니다.",
+        big ? "시공이 있는 경우 미팅 완료 이후에 정리된 시공 범위를 시공의뢰서로 작성하여 홈리에종으로 공유합니다." : "정리된 시공 범위를 시공의뢰서로 작성하여 홈리에종으로 공유합니다.",
         "현장 미팅이 끝나고 홈리에종으로부터 진행 확인을 받은 후에 프로젝트를 진행합니다.",
-        "현장 미팅 이후, 고객이 디자이너와 진행하지 않음을 선택하거나 디자이너 변경을 요청할 수 있으며, 이 같은 경우에는 <b%디자이너에게 출장 비용 (110,000 vat포함)만 지급%b>됩니다. ",
+        big ? "현장 미팅 이후, 고객이 디자이너와 진행하지 않음을 선택하거나 디자이너 변경을 요청할 수 있습니다." : "현장 미팅 이후, 고객이 진행하지 않거나 디자이너 변경을 요청할 수 있습니다.",
+        "위와 같은 경우에는 <b%디자이너에게 출장 비용 (110,000 vat포함)만 지급%b>됩니다. ",
       ],
     },
     {
-      title: "디자이너 작성 폼 / 디자인",
+      title: "디자인 제안 폼",
       contents: [
-        "디자이너가 고객에게 제공할 제안서의 가이드 폼은 공유하나, 디자이너 개개인의 작업 방식을 존중합니다.",
-        "다양한 작업 방식을 허용하더라도, 홈리에종에서 제공하는 가이드 폼에 들어있는 필수적인 내용은 공통으로 포함되어 있어야 합니다.",
+        big ? "디자이너가 고객에게 제공할 제안서의 가이드 폼은 공유하나, 디자이너 개개인의 작업 방식을 존중합니다." : "디자이너가 제공할 제안서의 가이드 폼은 공유하나, 개개인의 작업 방식을 존중합니다.",
+        big ? "작업 방식을 허용하더라도, 홈리에종 가이드 폼에 들어있는 필수 내용은 포함되어 있어야 합니다." : "홈리에종 가이드 폼에 들어있는 필수 내용은 포함되어 있어야 합니다.",
         "필수적인 내용 : <b%1) 프로젝트 캘린더 2) 컨셉 제안서 3) 디자인 제안서 4) 제품 구매리스트%b>",
       ]
     },
@@ -3829,7 +3830,7 @@ PartnershipManualJs.prototype.insertProcessBox = function () {
       contents: [
         "홈리에종은 고객님이 시공사를 자유롭게 선택하실 수 있도록 해드립니다.",
         "모든 시공사는 경험에 따라 시공 방법 및 견적 금액이 다를 수 있습니다. 지나치게 저렴하거나 비싼 경우는 피하는 것이 좋습니다.",
-        "시공사 선택지 중, 홈리에종의 직영 시공사도 있으며 검증된 시공퀄리티, <b%확실한 하자 보수, 합리적인 견적을 원하신다면 홈리에종 시공사를 추천%b>해드립니다."
+        "선택지 중, 홈리에종 시공사도 있으며 <b%시공 퀄리티, 합리적인 견적을 원하신다면 추천%b>해드립니다."
       ]
     },
     {
@@ -3837,14 +3838,15 @@ PartnershipManualJs.prototype.insertProcessBox = function () {
       contents: [
         "선택하신 시공사와 직접 고객이 계약을 맺습니다.",
         "시공에 대한 모든 책임은 계약한 시공사에 있습니다.",
-        "시공 복잡도에 따라 디자이너의 시공 감리 비용을 책정하실 수 있으며 이 때 ‘시공 감리’ 라고 명하거나 기업 이윤 내에 반영해야 합니다.",
-        "디자이너와 연계된 시공사의 경우 홈리에종에서 견적 확인 후 고객에게 안내할 수 있습니다.",
+        "시공 복잡도에 따라 디자이너의 시공 감리 비용을 책정할 수 있습니다.",
+        "감리 비용은 ‘시공 감리’라고 명하고 기업 이윤 내에 반영해야 합니다.",
+        "디자이너 연계 시공사의 경우 홈리에종에서 견적 확인 후 고객에게 안내할 수 있습니다.",
       ]
     },
     {
-      title: "디자이너 작성 폼 / 시공의뢰서",
+      title: "시공의뢰서",
       contents: [
-        "시공이 있는 경우, 디자이너는 고객의 맞춤 시공을 위해 시공사에게 가능 여부와 견적을 의뢰합니다.",
+        "시공이 있는 경우, 디자이너는 시공사에게 가능 여부와 견적을 의뢰합니다.",
         "시공의뢰서는 반드시 필요하며, <b%홈리에종 직영 시공을 선택 시, 홈리에종의 시공의뢰서 가이드 라인%b>을 따릅니다."
       ]
     },
@@ -3853,17 +3855,17 @@ PartnershipManualJs.prototype.insertProcessBox = function () {
       contents: [
         "디자이너는 고객과 합의된 내용을 바탕으로 시공 의뢰서를 작성합니다.",
         "홈리에종 시공의뢰서에 표기해야할 모든 셀의 내용은 입력하며, 꼭 사진을 첨부합니다.",
-        "수량을 셀 수 있는 시공의 경우에는 개수를 꼭 표기하며, 견적을 의뢰하고 사용할 자재명이 정해져있다면 기입해줍니다.",
-        "도면 이미지를 첨부하여 시공사가 현장을 방문했을 때, 도면을 보고 쉽게 파악할 수 있도록 시공이 필요한 위치를 자세히 표현합니다.",
+        "수량을 셀 수 있는 경우에는 개수를 꼭 표기하며, 자재명이 정해져 있다면 기입해줍니다.",
+        big ? "도면을 첨부하여 시공사가 현장을 방문했을 때 쉽게 파악할 수 있도록 시공 위치를 자세히 표현합니다." : "시공사가 쉽게 파악할 수 있도록 시공 위치를 자세히 표현합니다.",
         "시공의뢰서 확인을 위해 홈리에종 소장님이 연락할 수 있습니다.",
       ]
     },
     {
       title: "디자이너 소통",
       contents: [
-        "현장 미팅 후, 디자이너는 홈리에종 카카오톡 채널 플러스 친구를 통해 홈리에종으로 현장 미팅 종료 상황에 대해 공유합니다.",
+        "현장 미팅 후, 디자이너는 홈리에종 카카오톡 채널을 통해 홈리에종으로 현장 미팅 종료 상황에 대해 공유합니다.",
         "현장 미팅 이후, <b%현장에 대한 이슈가 발생했거나, 혹은 사전에 홈리에종으로부터 안내받은 내용과 현장 상황이 다른 부분이 있다면 홈리에종과 확인 후 프로젝트를 진행%b>해야 합니다.",
-        "고객과 커뮤니케이션을 위해 연락 방법과 디자이너의 개인 사정으로 연락이 불가한 시간대에 대해 고객에게 설명합니다.",
+        "고객과 커뮤니케이션을 위해 연락 방법과 디자이너의 개인 사정으로 연락이 불가한 시간대에 대해 설명합니다.",
       ],
     },
   ];
@@ -4004,7 +4006,7 @@ PartnershipManualJs.prototype.insertProcessBox = function () {
         },
       },
       {
-        text: contents.join("\n"),
+        text: big ? contents.join("\n") : contents.join(" "),
         style: {
           display: "inline-block",
           fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
