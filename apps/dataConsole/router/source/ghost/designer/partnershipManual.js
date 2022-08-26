@@ -248,9 +248,9 @@ PartnershipManualJs.prototype.insertFirstBox = function () {
   firstWidth = <%% 572, 465, 397, 318, 50 %%>;
   firstPaddingLeft = <%% 28, 24, 22, 18, 2 %%>;
 
-  barTop = <%% 11, 10, 8, 7, 11 %%>;
+  barTop = <%% (isMac() ? 11 : 8), (isMac() ? 10 : 7), (isMac() ? 8 : 6), (isMac() ? 7 : 5), 11 %%>;
   barWidth = <%% 6, 6, 6, 5, 1 %%>;
-  barHeight = <%% 62, 59, 53, 42, 62 %%>;
+  barHeight = <%% 62, 59, 52, 42, 62 %%>;
 
   titleSize = <%% 27, 25, 22, 18, 27 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -404,6 +404,7 @@ PartnershipManualJs.prototype.insertContextBox = function () {
   let searchIconWidth, searchIconTop;
   let buttonPaddingLeft;
   let buttonSize, buttonWeight, buttonTextTop;
+  let textTop;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -420,9 +421,11 @@ PartnershipManualJs.prototype.insertContextBox = function () {
 
   contextPadding = <%% 56, 20, 0, 0, 0 %%>;
 
+  textTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
+
   arrowWidth = <%% 48, 14, 0, 0, 0 %%>;
   arrowHeight = <%% 6, 4, 4, 4, 6 %%>;
-  arrowTop = <%% 7, 7, 7, 7, 7 %%>;
+  arrowTop = <%% 7, (isMac() ? 8 : 9), 7, 7, 7 %%>;
 
   contextBetween = <%% 6, 6, 6, 4, 1 %%>;
 
@@ -445,7 +448,7 @@ PartnershipManualJs.prototype.insertContextBox = function () {
 
   buttonSize = <%% 14, 13, 13, 11, 14 %%>;
   buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
-  buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
+  buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -1 %%>;
 
   contents = [
     {
@@ -712,6 +715,7 @@ PartnershipManualJs.prototype.insertContextBox = function () {
             fontWeight: String(titleWeight),
             color: colorChip.black,
             marginBottom: String(titleMarginBottom) + ea,
+            top: String(textTop) + ea,
           }
         },
         {
@@ -768,6 +772,7 @@ PartnershipManualJs.prototype.insertContextBox = function () {
               color: colorChip.green,
               verticalAlign: "top",
               width: String(numberWidth) + ea,
+              top: String(textTop) + ea,
             }
           },
           {
@@ -779,6 +784,7 @@ PartnershipManualJs.prototype.insertContextBox = function () {
               fontWeight: String(contentsWeight),
               color: colorChip.black,
               verticalAlign: "top",
+              top: String(textTop) + ea,
             }
           }
         ]
@@ -906,7 +912,7 @@ PartnershipManualJs.prototype.insertPreProjectBox = function () {
   factorBoxTop = <%% 25, 25, 25, 25, 25 %%>;
   factorBoxLeft = <%% 920, 600, 600, 600, 920 %%>;
 
-  factorLineTop = <%% 36, 36, 36, 36, 36 %%>;
+  factorLineTop = <%% (isMac() ? 36 : 34), 36, 36, 36, 36 %%>;
   factorLineLeft = <%% 888, 588, 588, 588, 888 %%>;
   factorLineWidth = <%% 22, 22, 22, 22, 22 %%>;
   factorLineHeight = <%% 123, 123, 123, 123, 123 %%>;
@@ -1366,6 +1372,9 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
   let noticeNumberWidth;
   let noticeLineBoxWidth;
   let noticeLineBoxPaddingTop, noticeLineBoxPadding, noticeLineHeight;
+  let textTop;
+
+  textTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -1790,7 +1799,7 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
             text: title,
             style: {
               position: "absolute",
-              top: String(noticeTitleTop) + ea,
+              top: String(noticeTitleTop + textTop) + ea,
               left: String(0),
               fontSize: String(contentsWordingSize) + ea,
               fontWeight: String(700),
@@ -1822,6 +1831,7 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
                   color: colorChip.black,
                   width: String(noticeNumberWidth) + ea,
                   textAlign: "center",
+                  top: String(textTop) + ea,
                 }
               },
               {
@@ -1853,6 +1863,7 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
                   fontWeight: String(700),
                   lineHeight: String(2),
                   color: colorChip.black,
+                  top: String(textTop) + ea,
                 }
               }
             ]
@@ -1928,6 +1939,9 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
   let lineBoxPaddingTop;
   let lineBoxHeight;
   let bigPaddingNumberWidth;
+  let textTop;
+
+  textTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -2005,8 +2019,8 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
 
   bigPaddingWidth = <%% 424, 188, 172, 148, 12 %%>;
   bigPaddingPaddingVisual = <%% 16, 16, 16, 12, 16 %%>;
-  lineBoxPaddingTop = <%% 13, 12, 11, 10, 13 %%>;
-  lineBoxHeight = <%% 23, 22, 21, 21, 23 %%>;
+  lineBoxPaddingTop = <%% 12, 12, 12, 11, 13 %%>;
+  lineBoxHeight = <%% 23, 22, 22, 21, 23 %%>;
 
   bigPaddingNumberWidth = <%% 12, 12, 12, 9, 12 %%>;
 
@@ -2307,6 +2321,7 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
               paddingRight: String(linePadding) + ea,
               width: String(bigPaddingNumberWidth) + ea,
               verticalAlign: "top",
+              top: String(textTop) + ea,
             }
           },
           {
@@ -2322,6 +2337,7 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
               background: colorChip.white,
               paddingRight: String(linePadding) + ea,
               verticalAlign: "top",
+              top: String(textTop) + ea,
             },
             bold: {
               fontSize: String(contentsWordingSize) + ea,
@@ -3130,6 +3146,9 @@ PartnershipManualJs.prototype.insertContentsBox = function () {
   let lineBoxPaddingTop;
   let lineBoxHeight;
   let bigPaddingNumberWidth;
+  let textTop;
+
+  textTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -3207,8 +3226,8 @@ PartnershipManualJs.prototype.insertContentsBox = function () {
 
   bigPaddingWidth = <%% 424, 188, 172, 148, 12 %%>;
   bigPaddingPaddingVisual = <%% 16, 16, 16, 12, 16 %%>;
-  lineBoxPaddingTop = <%% 13, 12, 11, 10, 13 %%>;
-  lineBoxHeight = <%% 23, 22, 21, 21, 23 %%>;
+  lineBoxPaddingTop = <%% 12, 12, 12, 11, 13 %%>;
+  lineBoxHeight = <%% 23, 22, 22, 21, 23 %%>;
 
   bigPaddingNumberWidth = <%% 12, 12, 12, 9, 12 %%>;
 
@@ -3441,6 +3460,7 @@ PartnershipManualJs.prototype.insertContentsBox = function () {
               paddingRight: String(linePadding) + ea,
               width: String(bigPaddingNumberWidth) + ea,
               verticalAlign: "top",
+              top: String(textTop) + ea,
             }
           },
           {
@@ -3456,6 +3476,7 @@ PartnershipManualJs.prototype.insertContentsBox = function () {
               background: colorChip.white,
               paddingRight: String(linePadding) + ea,
               verticalAlign: "top",
+              top: String(textTop) + ea,
             },
             bold: {
               fontSize: String(contentsWordingSize) + ea,
@@ -3786,7 +3807,7 @@ PartnershipManualJs.prototype.insertProcessBox = function () {
   factorLineHeight = <%% 123, 123, 123, 123, 123 %%>;
 
   checkBoxTongWidth = <%% 20, 20, 20, 16, 20 %%>;
-  checkBoxTongPaddingTop = <%% 8, 8, 8, 8, 8 %%>;
+  checkBoxTongPaddingTop = <%% (isMac() ? 8 : 6), (isMac() ? 8 : 6), (isMac() ? 8 : 7), (isMac() ? 8 : 6), 0 %%>;
   checkBoxWidth = <%% 11, 10, 10, 9, 11 %%>;
   checkboxBetween = <%% 15, 15.2, 15.2, 14.4, 15 %%>;
 
