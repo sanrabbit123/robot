@@ -3809,7 +3809,7 @@ PartnershipManualJs.prototype.insertProcessBox = function () {
   checkBoxTongWidth = <%% 20, 20, 20, 16, 20 %%>;
   checkBoxTongPaddingTop = <%% (isMac() ? 8 : 6), (isMac() ? 8 : 6), (isMac() ? 8 : 7), (isMac() ? 8 : 6), 0 %%>;
   checkBoxWidth = <%% 11, 10, 10, 9, 11 %%>;
-  checkboxBetween = <%% 15, 15.2, 15.2, 14.4, 15 %%>;
+  checkboxBetween = <%% 15.2, 15.2, 15.2, 14.4, 15 %%>;
 
   numberTongWidth = <%% 32, 32, 32, 32, 30 %%>;
 
