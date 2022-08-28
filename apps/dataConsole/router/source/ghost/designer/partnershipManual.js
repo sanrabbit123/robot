@@ -241,8 +241,8 @@ PartnershipManualJs.prototype.insertFirstBox = function () {
   let mobileFirstMarginBottom;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 55, 55, 47, 39, 7 %%>;
-  paddingTop =  <%% 52, 52, 44, 36, 7 %%>;
+  margin = <%% 55, 55, 47, 39, 8 %%>;
+  paddingTop =  <%% 52, 52, 44, 36, 8 %%>;
 
   whiteBottomMargin = <%% 42, 42, 42, 36, 0 %%>;
 
@@ -1387,6 +1387,7 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
   let noticeLineBoxWidth;
   let noticeLineBoxPaddingTop, noticeLineBoxPadding, noticeLineHeight;
   let textTop;
+  let mobilePaddingMinus;
 
   textTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
@@ -1458,12 +1459,12 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
   factorLineHeight = <%% 123, 123, 123, 123, 123 %%>;
 
   noticeBoxPaddingTop = <%% 34, 34, 34, 34, 8 %%>;
-  noticeGrayPadding = <%% 12, 12, 10, 8, 12 %%>;
-  noticeTitleTop = <%% -28, -28, -28, -26, -8 %%>;
+  noticeGrayPadding = <%% 12, 12, 10, 8, 3 %%>;
+  noticeTitleTop = <%% -28, -28, -28, -26, -7 %%>;
 
-  noticePaddingLeft = <%% 22, 22, 22, 22, 2 %%>;
-  noticePaddingTop = <%% 16, 16, 16, 12, 1 %%>;
-  noticePaddingBottom = <%% 4, 4, 4, 2, 4 %%>;
+  noticePaddingLeft = <%% 22, 22, 22, 22, 4.5 %%>;
+  noticePaddingTop = <%% 16, 16, 16, 12, 3 %%>;
+  noticePaddingBottom = <%% 4, 4, 4, 2, 3 %%>;
 
   noticeNumberWidth = <%% 20, 20, 20, 16, 4 %%>;
   noticeLineBoxWidth = <%% 110, 110, 100, 16, 11 %%>;
@@ -1471,6 +1472,9 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
   noticeLineBoxPaddingTop = <%% 14, 13, 13, 13, 14 %%>;
   noticeLineBoxPadding = <%% 10, 10, 10, 8, 10 %%>;
   noticeLineHeight = <%% 28, 27, 27, 25, 28 %%>;
+
+  mobilePaddingMinus = 11;
+
 
   mainTitle = "첫 프로젝트 운영";
   mainContents = [
@@ -1492,8 +1496,8 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
       title: "시공사와 계약시",
       contents: [
         "공정별 계약은 불가하며,",
-        "선택하신 시공사와 직접 계약을 맺습니다.",
-        "시공에 대한 모든 책임은 계약한 시공사에 있고,",
+        "선택하신 시공사와 " + (desktop ? "직접 " : "") + "계약을 맺습니다.",
+        "시공" + (desktop ? "에 대한 모든 " : " ") + "책임은 계약한 시공사에 있고,",
         "시공 복잡도에 따라 디자이너의 감리 비용이 일부 책정될 수 있습니다.",
         "모든 시공사는 경험에 따라 시공 방법이나 견적에 차이가 있을 수 있습니다.",
       ]
@@ -1802,7 +1806,7 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
           display: "inline-block",
           position: "relative",
           verticalAlign: "top",
-          width: withOut(firstWidth + secondWidth + secondMarginRight + (noticeGrayPadding * 2), ea),
+          width: desktop ? withOut(firstWidth + secondWidth + secondMarginRight + (noticeGrayPadding * 2), ea) : withOut(mobilePaddingMinus, ea),
           textAlign: "left",
           background: colorChip.gray2,
           borderRadius: String(5) + "px",
@@ -1837,7 +1841,7 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
               {
                 text: (new Array(contents.length)).fill(1).map((num, index) => { return '0' + String(num + index) }).join("\n"),
                 style: {
-                  display: "inline-block",
+                  display: desktop ? "inline-block" : "none",
                   position: "relative",
                   fontSize: String(contentsWordingSize) + ea,
                   fontWeight: String(700),
@@ -1850,7 +1854,7 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
               },
               {
                 style: {
-                  display: "inline-flex",
+                  display: desktop ? "inline-flex" : "none",
                   flexDirection: "column",
                   position: "relative",
                   width: String(noticeLineBoxWidth) + ea,
@@ -1869,13 +1873,13 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
                 }),
               },
               {
-                text: contents.join("\n"),
+                text: desktop ? contents.join("\n") : contents.map((str, index) => { return `${String(index + 1)}) ${str}` }).join("\n"),
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(contentsWordingSize) + ea,
-                  fontWeight: String(700),
-                  lineHeight: String(2),
+                  fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+                  fontWeight: String(desktop ? 700 : 600),
+                  lineHeight: String(desktop ? 2 : 1.8),
                   color: colorChip.black,
                   top: String(textTop) + ea,
                 }
@@ -1954,6 +1958,11 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
   let lineBoxHeight;
   let bigPaddingNumberWidth;
   let textTop;
+  let mobileGrayPaddingTop;
+  let mobileGrayMarginBottom;
+
+  mobileGrayPaddingTop = 1;
+  mobileGrayMarginBottom = 4.5;
 
   textTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
@@ -1995,9 +2004,9 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
 
   zeroWidth = <%% 8, 8, 8, 8, 10 %%>;
   zeroMarginRight = <%% 10, 10, 10, 10, 10 %%>;
-  firstWidth = <%% 240, 180, 170, 150, 10 %%>;
+  firstWidth = <%% 240, 180, 170, 150, 0 %%>;
   secondWidth = <%% 15, 15, 8, 0, 2 %%>;
-  secondMarginRight = <%% 10, 10, 10, 10, 2 %%>;
+  secondMarginRight = <%% 10, 10, 10, 10, 0 %%>;
 
   checkBoxWidth = <%% 10, 10, 10, 10, 2 %%>;
   arrowBoxWidth = <%% 9, 8, 8, 8, 1.8 %%>;
@@ -2005,10 +2014,10 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
   arrowBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.5 %%>;
 
   contentsMarginBottom0 = <%% 24, 24, 24, 24, 2 %%>;
-  contentsMarginBottom1 = <%% 60, 56, 48, 42, 3 %%>;
+  contentsMarginBottom1 = <%% 60, 56, 48, 42, 6 %%>;
 
   lineTop = <%% 10, 10, 10, 10, 10 %%>;
-  linePadding = <%% 12, 12, 12, 12, 12 %%>;
+  linePadding = <%% 12, 12, 12, 12, 0 %%>;
 
   mobilePaddingLeft = 6;
 
@@ -2024,19 +2033,19 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
   factorLineWidth = <%% 22, 22, 22, 22, 22 %%>;
   factorLineHeight = <%% 123, 123, 123, 123, 123 %%>;
 
-  middleSecondWidth = <%% 175, 140, 125, 110, 17 %%>;
+  middleSecondWidth = <%% 175, 140, 125, 110, 22 %%>;
 
-  grayPadding = <%% 12, 12, 12, 8, 12 %%>;
+  grayPadding = <%% 12, 12, 12, 8, 3 %%>;
 
-  grayPaddingLeft = <%% 30, 30, 30, 24, 30 %%>;
-  grayPaddingTop = <%% 22, 20, 18, 16, 22 %%>;
+  grayPaddingLeft = <%% 30, 30, 30, 24, 4.5 %%>;
+  grayPaddingTop = <%% 22, 20, 18, 16, 3 %%>;
 
   bigPaddingWidth = <%% 424, 188, 172, 148, 12 %%>;
-  bigPaddingPaddingVisual = <%% 16, 16, 16, 12, 16 %%>;
-  lineBoxPaddingTop = <%% 12, 12, 12, 11, 13 %%>;
-  lineBoxHeight = <%% 23, 22, 22, 21, 23 %%>;
+  bigPaddingPaddingVisual = <%% 16, 16, 16, 12, 2 %%>;
+  lineBoxPaddingTop = <%% 12, 12, 12, 11, 2.5 %%>;
+  lineBoxHeight = <%% 23, 22, 22, 21, 10.7 %%>;
 
-  bigPaddingNumberWidth = <%% 12, 12, 12, 9, 12 %%>;
+  bigPaddingNumberWidth = <%% 12, 12, 12, 9, 4 %%>;
 
   mainTitle = "촬영 및 세팅 가이드";
   mainContents = [
@@ -2093,7 +2102,7 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
         },
         {
           type: "second",
-          title: "홈리에종이\n촬영하는 경우",
+          title: desktop ? "홈리에종이\n촬영하는 경우" : "홈리에종\n촬영",
           contents: [
             "프로젝트 종료 시점에 촬영 작가, 디자이너, 홈리에종 담당자가 고객의 집에 방문하여 촬영합니다. 디자이너는 촬영일 당일 디자인 의도에 맞추어 촬영할 수 있는 상태로 현장을 세팅해야 합니다. 홈리에종 담당자는 사전에 고객에게 정리 정돈을 부탁하고 촬영일에 인터뷰를 진행하며 필요에 따라 현장 지원합니다.",
             "<b%촬영 비용 : 1건당 165,000원 (vat포함) 디자이너 부담률 50% + 홈리에종 부담률 50%%b>",
@@ -2101,23 +2110,23 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
         },
         {
           type: "gray",
-          title: "홈리에종\n촬영 가이드",
+          title: desktop ? "홈리에종\n촬영 가이드" : "촬영\n가이드",
           contents: [
             "스타일링이 완성된 공간별, 가로 비율 1장 이상의 사진",
             "세로 비율의 사진일 경우, 최소 2장 이상의 컷 필요 (짝수컷 필요)",
             "공간당 전체가 보이는 광각 사진 (14mm 이하의 렌즈) 1장 이상씩 필요",
             "사진은 원본 해상도로, 사진의 긴 쪽 최소 픽셀이 2000px 이상",
             "필터는 사용되어서는 안 됨",
-            "가구, 소품의 색상을 정확하게 보여줄 수 있도록 화이트 밸런스 맞추기",
-            "사진상 가구나 소품의 왜곡이 없어야 함",
+            "색상을 정확하게 보여줄 수 있도록 화이트 밸런스 맞추기",
+            "가구나 소품의 왜곡이 없어야 함",
           ]
         },
         {
           type: "second",
-          title: "디자이너가\n촬영하는 경우",
+          title: desktop ? "디자이너가\n촬영하는 경우" : "디자이너\n촬영",
           contents: [
-            "디자이너님이 직접 촬영 또는 외부 포토그래퍼를 이용하시는 것도 가능합니다. 디자이너 직접 촬영 또는 외부 포토그래퍼 촬영시에도 홈리에종은 현장에 동행하여 고객인터뷰를 진행할 수 있습니다. 여건에 따라 전화 인터뷰를 진행할 수 있으며 외부 포토그래퍼",
-            "촬영 시에는 원활한 일정 조율을 위하여 사전에 홈리에종과 협의 부탁드립니다.",
+            "디자이너님이 직접 촬영 또는 외부 포토그래퍼를 이용하시는 것도 가능합니다. 디자이너 직접 촬영 또는 외부 포토그래퍼 촬영 시 홈리에종은 현장에 동행하여 고객 인터뷰를 진행할 수 있습니다. 여건에 따라 전화 인터뷰를 진행할 수 있으며 외부 포토그래퍼",
+            "촬영 시 원활한 일정 조율을 위하여 사전에 홈리에종과 협의 부탁드립니다.",
           ]
         },
         {
@@ -2262,11 +2271,11 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
         },
         children: [
           {
-            text: preContents.join("\n"),
+            text: desktop ? preContents.join("\n") : preContents.join(" "),
             style: {
               display: desktop ? "inline-block" : "block",
               position: "relative",
-              fontSize: String(contentsWordingSize) + ea,
+              fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
               fontWeight: String(400),
               lineHeight: String(1.7),
               color: colorChip.black,
@@ -2275,7 +2284,7 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
               paddingRight: String(linePadding) + ea,
             },
             bold: {
-              fontSize: String(contentsWordingSize) + ea,
+              fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
               fontWeight: String(700),
               color: colorChip.black,
             },
@@ -2324,9 +2333,9 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
           {
             text: (new Array(contents.length)).fill(null).map((n, index) => { return `${String(index + 1)}) ` }),
             style: {
-              display: desktop ? "inline-block" : "block",
+              display: desktop ? "inline-block" : "none",
               position: "relative",
-              fontSize: String(contentsWordingSize) + ea,
+              fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
               fontWeight: String(400),
               lineHeight: String(1.7),
               color: colorChip.deactive,
@@ -2339,11 +2348,11 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
             }
           },
           {
-            text: contents.join("\n"),
+            text: desktop ? contents.join("\n") : contents.map((str, index) => { return `${String(index + 1)}) ${str}` }).join("\n"),
             style: {
-              display: desktop ? "inline-block" : "block",
+              display: "inline-block",
               position: "relative",
-              fontSize: String(contentsWordingSize) + ea,
+              fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
               fontWeight: String(400),
               lineHeight: String(1.7),
               color: colorChip.black,
@@ -2352,9 +2361,10 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
               paddingRight: String(linePadding) + ea,
               verticalAlign: "top",
               top: String(textTop) + ea,
+              width: desktop ? "" : withOut(bigPaddingWidth + bigPaddingPaddingVisual, ea),
             },
             bold: {
-              fontSize: String(contentsWordingSize) + ea,
+              fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
               fontWeight: String(700),
               color: colorChip.green,
             },
@@ -2452,7 +2462,7 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
             fontWeight: String(400),
             verticalAlign: "top",
             lineHeight: String(1.7),
-            width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight + middleSecondWidth : secondWidth + secondMarginRight, ea),
+            width: withOut(firstWidth + secondWidth + secondMarginRight + middleSecondWidth, ea),
             textAlign: "left",
             color: colorChip.black,
           },
@@ -2643,7 +2653,7 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
               fontWeight: String(400),
               verticalAlign: "top",
               lineHeight: String(1.7),
-              width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight + middleSecondWidth : secondWidth + secondMarginRight, ea),
+              width: withOut(firstWidth + secondWidth + secondMarginRight + middleSecondWidth, ea),
               textAlign: "left",
               color: colorChip.black,
             },
@@ -2669,7 +2679,8 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
         style: {
           display: "block",
           position: "relative",
-          marginBottom: String(num === contents.length - 1 ? contentsMarginBottom1 : contentsMarginBottom0) + ea,
+          marginBottom: desktop ? String(num === contents.length - 1 ? contentsMarginBottom1 : contentsMarginBottom0) + ea : String(mobileGrayMarginBottom) + ea,
+          paddingTop: desktop ? "" : String(mobileGrayPaddingTop) + ea,
         },
         children: [
           {
@@ -2686,7 +2697,7 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
                 style: {
                   display: desktop ? "inline-block" : "block",
                   position: "relative",
-                  fontSize: String(contentsWordingSize) + ea,
+                  fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
                   fontWeight: String(700),
                   lineHeight: String(1.7),
                   color: colorChip.black,
@@ -2695,7 +2706,7 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
                   paddingRight: String(linePadding) + ea,
                 },
                 bold: {
-                  fontSize: String(contentsWordingSize) + ea,
+                  fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
                   fontWeight: String(700),
                   color: colorChip.green,
                 },
@@ -2706,7 +2717,7 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
             style: {
               display: "inline-block",
               position: "relative",
-              fontSize: String(contentsWordingSize) + ea,
+              fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
               fontWeight: String(700),
               verticalAlign: "top",
               lineHeight: String(1.7),
@@ -2732,7 +2743,7 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(contentsWordingSize) + ea,
+                  fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
                   fontWeight: String(700),
                   verticalAlign: "bottom",
                   lineHeight: String(1.7),
@@ -2746,11 +2757,12 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(contentsWordingSize) + ea,
+                  fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
                   fontWeight: String(400),
                   verticalAlign: "top",
                   lineHeight: String(1.7),
                   color: colorChip.black,
+                  width: desktop ? "" : withOut(middleSecondWidth + grayPaddingLeft, ea),
                 }
               },
             ]
@@ -2931,7 +2943,8 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
     style: {
       display: "block",
       position: "relative",
-      marginBottom: String(contentsMarginBottom0) + ea,
+      marginBottom: desktop ? String(contentsMarginBottom0) + ea : String(mobileGrayMarginBottom) + ea,
+      paddingTop: desktop ? "" : String(mobileGrayPaddingTop) + ea,
     },
     children: [
       {
@@ -2981,7 +2994,7 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
         style: {
           display: "inline-block",
           verticalAlign: "top",
-          width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight + (grayPadding * 2) : secondWidth + secondMarginRight, ea),
+          width: withOut(firstWidth + secondWidth + secondMarginRight + (grayPadding * 2), ea),
           borderRadius: String(8) + "px",
           position: "relative",
           background: colorChip.gray2,
@@ -3005,10 +3018,10 @@ PartnershipManualJs.prototype.insertPhotoSettingBox = function () {
                 text: gray.join("\n"),
                 style: {
                   position: "relative",
-                  fontSize: String(contentsWordingSize) + ea,
+                  fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
                   fontWeight: String(600),
                   verticalAlign: "top",
-                  lineHeight: String(2),
+                  lineHeight: String(desktop ? 2 : 1.8),
                   color: colorChip.black,
                 }
               }
