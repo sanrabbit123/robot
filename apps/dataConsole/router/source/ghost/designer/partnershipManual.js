@@ -238,28 +238,31 @@ PartnershipManualJs.prototype.insertFirstBox = function () {
   let barTop, barWidth, barHeight;
   let contentsSize, contentsWeight, contentsLineHeight, contentsBetween;
   let contents;
+  let mobileFirstMarginBottom;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 55, 55, 47, 39, 4.7 %%>;
-  paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
+  margin = <%% 55, 55, 47, 39, 7 %%>;
+  paddingTop =  <%% 52, 52, 44, 36, 7 %%>;
 
   whiteBottomMargin = <%% 42, 42, 42, 36, 0 %%>;
 
   firstWidth = <%% 572, 465, 397, 318, 50 %%>;
-  firstPaddingLeft = <%% 28, 24, 22, 18, 2 %%>;
+  firstPaddingLeft = <%% 28, 24, 22, 18, 4 %%>;
 
-  barTop = <%% (isMac() ? 11 : 8), (isMac() ? 10 : 7), (isMac() ? 8 : 6), (isMac() ? 7 : 5), 11 %%>;
+  barTop = <%% (isMac() ? 11 : 8), (isMac() ? 10 : 7), (isMac() ? 8 : 6), (isMac() ? 7 : 5), 1.4 %%>;
   barWidth = <%% 6, 6, 6, 5, 1 %%>;
-  barHeight = <%% 62, 59, 52, 42, 62 %%>;
+  barHeight = <%% 62, 59, 52, 42, 10.6 %%>;
 
-  titleSize = <%% 27, 25, 22, 18, 27 %%>;
+  titleSize = <%% 27, 25, 22, 18, 4.3 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  contentsSize = <%% 15, 15, 14, 13, 15 %%>;
+  contentsSize = <%% 15, 15, 14, 13, 3.2 %%>;
   contentsWeight = <%% 600, 600, 600, 600, 600 %%>;
   contentsLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
-  contentsBetween = <%% 20, 20, 20, 20, 20 %%>;
+  contentsBetween = <%% 20, 20, 20, 20, 4 %%>;
+
+  mobileFirstMarginBottom = 4;
 
   contents = {
     title: [
@@ -283,19 +286,19 @@ PartnershipManualJs.prototype.insertFirstBox = function () {
       position: "relative",
       borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
-      background: desktop ? colorChip.white : "",
-      paddingTop: desktop ? String(paddingTop) + ea : "",
-      paddingBottom: desktop ? String(paddingTop) + ea : "",
+      background: colorChip.white,
+      paddingTop: String(paddingTop) + ea,
+      paddingBottom: String(paddingTop) + ea,
       marginBottom: String(bottomMargin) + ea,
-      boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
     },
     children: [
       {
         display: "block",
         position: "relative",
-        width: desktop ? withOut(margin * 2, ea) : String(100) + '%',
+        width: withOut(margin * 2, ea),
         height: String(100) + '%',
-        marginLeft: String(desktop ? margin : 0) + ea,
+        marginLeft: String(margin) + ea,
       }
     ]
   });
@@ -305,11 +308,12 @@ PartnershipManualJs.prototype.insertFirstBox = function () {
   createNode({
     mother: whiteTong,
     style: {
-      display: "inline-block",
+      display: desktop ? "inline-block" : "block",
       position: "relative",
-      width: String(firstWidth - firstPaddingLeft) + ea,
+      width: desktop ? String(firstWidth - firstPaddingLeft) + ea : "",
       paddingLeft: String(firstPaddingLeft) + ea,
       verticalAlign: "top",
+      marginBottom: desktop ? "" : String(mobileFirstMarginBottom) + ea,
     },
     children: [
       {
@@ -340,9 +344,9 @@ PartnershipManualJs.prototype.insertFirstBox = function () {
   createNode({
     mother: whiteTong,
     style: {
-      display: "inline-block",
+      display: desktop ? "inline-block" : "block",
       position: "relative",
-      width: withOut(firstWidth, ea),
+      width: desktop ? withOut(firstWidth, ea) : "",
       verticalAlign: "top",
     },
     children: [
@@ -405,59 +409,63 @@ PartnershipManualJs.prototype.insertContextBox = function () {
   let buttonPaddingLeft;
   let buttonSize, buttonWeight, buttonTextTop;
   let textTop;
+  let buttonBetween;
+  let mobileContextBetween;
 
-  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 55, 55, 47, 39, 4.7 %%>;
-  paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
+  bottomMargin = <%% 16, 16, 16, 12, 18 %%>;
+  margin = <%% 55, 55, 47, 39, 6 %%>;
+  paddingTop =  <%% 52, 52, 44, 36, 6 %%>;
 
   whiteBottomMargin = <%% 42, 42, 42, 36, 0 %%>;
 
-  grayInnerPadding = <%% 40, 30, 28, 24, 30 %%>;
-  grayInnerPaddingLeft = <%% 72, 45, 42, 32, 40 %%>;
+  grayInnerPadding = <%% 40, 30, 28, 24, 5 %%>;
+  grayInnerPaddingLeft = <%% 72, 45, 42, 32, 6 %%>;
 
-  titleSize = <%% 19, 17, 16, 13, 19 %%>;
+  titleSize = <%% 19, 17, 16, 13, 3.5 %%>;
   titleWeight = <%% 700, 700, 700, 700, 700 %%>;
-  titleMarginBottom = <%% 16, 12, 10, 8, 16 %%>;
+  titleMarginBottom = <%% 16, 12, 10, 8, 1.5 %%>;
 
-  contextPadding = <%% 56, 20, 0, 0, 0 %%>;
+  contextPadding = <%% 56, 20, 0, 0, 2.5 %%>;
 
   textTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
   arrowWidth = <%% 48, 14, 0, 0, 0 %%>;
-  arrowHeight = <%% 6, 4, 4, 4, 6 %%>;
+  arrowHeight = <%% 6, 4, 4, 4, 1 %%>;
   arrowTop = <%% 7, (isMac() ? 8 : 9), 7, 7, 7 %%>;
 
   contextBetween = <%% 6, 6, 6, 4, 1 %%>;
 
-  contentsSize = <%% 15, 14, 13, 11, 15 %%>;
+  contentsSize = <%% 15, 14, 13, 11, 2.8 %%>;
   contentsWeight = <%% 600, 600, 600, 600, 600 %%>;
 
   numberWeight = <%% 300, 300, 300, 300, 300 %%>;
-  numberWidth = <%% 30, 30, 28, 22, 30 %%>;
+  numberWidth = <%% 30, 30, 28, 22, 6 %%>;
 
-  searchTongMarginBottom = <%% 15, 15, 15, 15, 2 %%>;
+  searchTongMarginBottom = <%% 15, 15, 15, 15, 3 %%>;
 
-  searchWidth = <%% 450, 420, 360, 320, 450 %%>;
-  searchHeight = <%% 36, 32, 32, 26, 36 %%>;
-  searchMarginRight = <%% 12, 12, 12, 12, 12 %%>;
+  searchWidth = <%% 450, 420, 360, 320, 30 %%>;
+  searchHeight = <%% 36, 32, 32, 26, 7 %%>;
+  searchMarginRight = <%% 12, 12, 12, 12, 1 %%>;
 
-  searchIconWidth = <%% 22, 22, 22, 20, 22 %%>;
-  searchIconTop = <%% 6, 5, 4, 2, 6 %%>;
+  searchIconWidth = <%% 22, 22, 22, 20, 3 %%>;
+  searchIconTop = <%% 6, 5, 4, 2, 1 %%>;
 
-  buttonPaddingLeft = <%% 15, 15, 15, 13, 15 %%>;
-
-  buttonSize = <%% 14, 13, 13, 11, 14 %%>;
+  buttonPaddingLeft = <%% 15, 15, 15, 13, 3 %%>;
+  buttonBetween = <%% 6, 6, 6, 6, 1.2 %%>;
+  buttonSize = <%% 14, 13, 13, 11, 3 %%>;
   buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
-  buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -1 %%>;
+  buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
+
+  mobileContextBetween = 3;
 
   contents = [
     {
-      title: "프로젝트 사전 준비",
+      title: desktop ? "프로젝트 사전 준비" : "프로젝트 준비",
       context: [
-        "디자이너 교육 이수",
-        "활동 가능 영역 책정",
+        desktop ? "디자이너 교육 이수" : "교육 이수",
+        desktop ? "활동 가능 영역 책정" : "활동 가능 영역",
         "서비스 비용 책정",
-        "디자이너 작업 가능 일정",
+        big ? "디자이너 작업 가능 일정" : "작업 가능 일정",
       ],
       scroll: [
         1000,
@@ -467,7 +475,7 @@ PartnershipManualJs.prototype.insertContextBox = function () {
       ],
     },
     {
-      title: "첫 프로젝트 운영",
+      title: desktop ? "첫 프로젝트 운영" : "프로젝트 운영",
       context: [
         "첫 프로젝트 응대",
         "디자이너 직접 시공",
@@ -485,7 +493,7 @@ PartnershipManualJs.prototype.insertContextBox = function () {
       title: "컨텐츠 가이드",
       context: [
         "컨텐츠 활용 방법",
-        "홈리에종 제공 컨텐츠",
+        desktop ? "홈리에종 제공 컨텐츠" : "홈리에종 컨텐츠",
       ],
       scroll: [
         4440,
@@ -493,9 +501,9 @@ PartnershipManualJs.prototype.insertContextBox = function () {
       ],
     },
     {
-      title: "디자이너 프로젝트 진행",
+      title: "프로젝트 진행",
       context: [
-        big ? "디자이너 현장미팅 준비 / 응대" : "디자이너 현장미팅 준비",
+        big ? "디자이너 현장미팅 준비 / 응대" : (desktop ? "디자이너 현장미팅 준비" : "현장미팅 준비"),
         "디자이너 작성 폼",
         "시공사 선택",
         "디자이너 소통",
@@ -515,11 +523,11 @@ PartnershipManualJs.prototype.insertContextBox = function () {
       position: "relative",
       borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
-      background: desktop ? colorChip.white : "",
-      paddingTop: desktop ? String(paddingTop) + ea : "",
-      paddingBottom: desktop ? String(paddingTop) + ea : "",
+      background: colorChip.white,
+      paddingTop: String(paddingTop) + ea,
+      paddingBottom: String(paddingTop) + ea,
       marginBottom: String(bottomMargin) + ea,
-      boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
     },
     children: [
       {
@@ -527,8 +535,9 @@ PartnershipManualJs.prototype.insertContextBox = function () {
           display: "block",
           position: "relative",
           width: withOut(margin * 2, ea),
-          marginLeft: String(desktop ? margin : 0) + ea,
+          marginLeft: String(margin) + ea,
           marginBottom: String(searchTongMarginBottom) + ea,
+          height: desktop ? "" : String(searchHeight) + ea,
         }
       },
       {
@@ -536,7 +545,7 @@ PartnershipManualJs.prototype.insertContextBox = function () {
           display: "block",
           position: "relative",
           width: withOut(margin * 2, ea),
-          marginLeft: String(desktop ? margin : 0) + ea,
+          marginLeft: String(margin) + ea,
           borderRadius: String(desktop ? 8 : 1) + ea,
           paddingTop: String(grayInnerPadding) + ea,
           paddingBottom: String(grayInnerPadding) + ea,
@@ -548,80 +557,84 @@ PartnershipManualJs.prototype.insertContextBox = function () {
   searchTong = whiteBlock.children[0];
   whiteTong = whiteBlock.children[1];
 
-  createNode({
-    mother: searchTong,
-    style: {
-      display: "inline-block",
-      position: "relative",
-      width: String(searchWidth) + ea,
-      height: String(searchHeight) + ea,
-      borderRadius: String(5) + "px",
-      background: colorChip.gray1,
-      marginRight: String(searchMarginRight) + ea,
-      verticalAlign: "top",
-    },
-    children: [
-      {
-        mode: "input",
-        attribute: {
-          type: "text",
-          placeholder: "정책 검색...",
-        },
-        event: {
-          keyup: function (e) {
-            if (e.key === "Enter") {
-              if (this.value.trim() !== "") {
-                const searchTargets = [ ...document.querySelectorAll('.' + contextButtonClassName) ];
-                const typing = this.value;
-                const target = searchTargets.find((dom) => {
-                  return (new RegExp(typing, "gi")).test(dom.getAttribute("value"));
-                });
+  if (desktop) {
+    createNode({
+      mother: searchTong,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: String(searchWidth) + ea,
+        height: String(searchHeight) + ea,
+        borderRadius: String(5) + "px",
+        background: colorChip.gray1,
+        marginRight: String(searchMarginRight) + ea,
+        verticalAlign: "top",
+      },
+      children: [
+        {
+          mode: "input",
+          attribute: {
+            type: "text",
+            placeholder: "정책 검색...",
+          },
+          event: {
+            keyup: function (e) {
+              if (e.key === "Enter") {
+                if (this.value.trim() !== "") {
+                  const searchTargets = [ ...document.querySelectorAll('.' + contextButtonClassName) ];
+                  const typing = this.value;
+                  const target = searchTargets.find((dom) => {
+                    return (new RegExp(typing, "gi")).test(dom.getAttribute("value"));
+                  });
 
-                if (target !== undefined) {
-                  target.click();
+                  if (target !== undefined) {
+                    target.click();
+                  }
+
                 }
-
               }
             }
+          },
+          style: {
+            display: "block",
+            border: String(0),
+            width: withOut(0),
+            height: withOut(3, '%'),
+            outline: String(0),
+            fontSize: String(buttonSize) + ea,
+            fontWeight: String(400),
+            color: colorChip.black,
+            textAlign: "center",
+            background: "transparent",
           }
-        },
-        style: {
-          display: "block",
-          border: String(0),
-          width: withOut(0),
-          height: withOut(3, '%'),
-          outline: String(0),
-          fontSize: String(buttonSize) + ea,
-          fontWeight: String(400),
-          color: colorChip.black,
-          textAlign: "center",
-          background: "transparent",
         }
+      ]
+    });
+    createNode({
+      mother: searchTong,
+      class: [ "hoverDefault_lite" ],
+      mode: "svg",
+      source: instance.mother.returnSearch(colorChip.black),
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: String(searchIconWidth) + ea,
+        top: String(searchIconTop) + ea,
+        verticalAlign: "top",
       }
-    ]
-  });
-  createNode({
-    mother: searchTong,
-    class: [ "hoverDefault_lite" ],
-    mode: "svg",
-    source: instance.mother.returnSearch(colorChip.black),
-    style: {
-      display: "inline-block",
-      position: "relative",
-      width: String(searchIconWidth) + ea,
-      top: String(searchIconTop) + ea,
-      verticalAlign: "top",
-    }
-  });
+    });
+  }
   createNode({
     mother: searchTong,
     style: {
-      display: "inline-block",
-      position: "absolute",
+      display: desktop ? "inline-block" : "flex",
+      position: desktop ? "absolute" : "relative",
       verticalAlign: "top",
       top: String(0),
       right: String(0),
       height: String(searchHeight) + ea,
+      width: desktop ? "" : withOut(0),
+      justifyContent: desktop ? "" : "center",
     },
     children: [
       {
@@ -642,7 +655,7 @@ PartnershipManualJs.prototype.insertContextBox = function () {
           textAlign: "center",
           borderRadius: String(5) + "px",
           cursor: "pointer",
-          marginRight: String(6) + ea,
+          marginRight: String(buttonBetween) + ea,
         },
         children: [
           {
@@ -700,10 +713,11 @@ PartnershipManualJs.prototype.insertContextBox = function () {
       mother: whiteTong,
       style: {
         display: "inline-block",
-        width: "calc(calc(100% - " + String(grayInnerPaddingLeft * 2) + ea + ") / " + String(contents.length) + ")",
+        width: "calc(calc(100% - " + String(grayInnerPaddingLeft * 2) + ea + ") / " + String(desktop ? contents.length : 2) + ")",
         verticalAlign: "top",
-        marginLeft: (i === 0 ? String(grayInnerPaddingLeft) + ea : ""),
+        marginLeft: desktop ? (i === 0 ? String(grayInnerPaddingLeft) + ea : "") : (i % 2 === 0 ? String(grayInnerPaddingLeft) + ea : ""),
         marginRight: (i === contents.length - 1 ? String(grayInnerPaddingLeft) + ea : ""),
+        marginBottom: desktop ? "" : (Math.floor(i / 2) === 0 ? String(mobileContextBetween) + ea : ""),
       },
       children: [
         {
@@ -898,7 +912,7 @@ PartnershipManualJs.prototype.insertPreProjectBox = function () {
   arrowBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.5 %%>;
 
   contentsMarginBottom0 = <%% 24, 24, 24, 24, 2 %%>;
-  contentsMarginBottom1 = <%% 32, 32, 30, 28, 3 %%>;
+  contentsMarginBottom1 = <%% 32, 32, 30, 28, 6 %%>;
 
   lineTop = <%% 10, 10, 10, 10, 10 %%>;
   linePadding = <%% 12, 12, 12, 12, 12 %%>;
@@ -935,17 +949,17 @@ PartnershipManualJs.prototype.insertPreProjectBox = function () {
       factors: [
         "서비스 제공 가능 지역",
         "활동 가능 서비스 영역",
-        "프로젝트 운영(스케쥴 및 예산 운영)",
+        "프로젝트 운영 (스케쥴, 예산 운영)",
         "디자인 제안 방식",
         "시공 운영 방식",
-        "스타일링 운영 방식(가구 및 패브릭 발주 가능 여부 등)",
+        big ? "스타일링 운영 방식 (가구 및 패브릭 발주 가능 여부 등)" : "스타일링 운영 방식",
       ],
     },
     {
       title: "디자이너 작업 가능 일정",
       contents: [
         "디자이너의 일정은 매월 마지막주 정기적으로 익월 일정을 확인합니다. 상시로 일정 변동이 있기 때문에 매월 확인한 일정 외에 변동사항이 생길 때마다 홈리에종 채널로 변동 일정을 공유해주셔야 합니다. 초기 계약시 [활동 대기] 단계에서 일정을 확인합니다. 디자이너는 <b%홈리에종의 서비스 유형(F, S, T, XT) 에 대하여 활동 가능 영역을 결정하고, 이에 따라 서비스 비용을 책정%b>합니다. 초기 계약시 책정한 서비스 비용은 프로젝트 누적 수량에 따라 달라질 수 있습니다. 일정에 대한 답이 없다면, 계속 진행 가능함으로 판단하고 추천서에 등록되게 됩니다.",
-        "이후부터 홈리에종은 디자이너 추천을 시작하고 고객의 선택을 기다리게 됩니다.\n프로젝트 계약이 확정되고 첫번째 현장 미팅이 잡히기까지의 소요시간을 예상할 수 없습니다.",
+        "이후부터 홈리에종은 디자이너 추천을 시작하고 고객의 선택을 기다리게 됩니다." + (desktop ? "\n" : " ") + "프로젝트 계약이 확정되고 첫번째 현장 미팅이 잡히기까지의 소요시간을 예상할 수 없습니다.",
       ]
     }
   ];
@@ -1121,7 +1135,7 @@ PartnershipManualJs.prototype.insertPreProjectBox = function () {
     style: {
       display: "block",
       position: "relative",
-      marginBottom: String(contentsMarginBottom0) + ea,
+      marginBottom: String(desktop ? contentsMarginBottom0 : contentsMarginBottom1) + ea,
     },
     children: [
       {
@@ -1424,7 +1438,7 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
   arrowBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.5 %%>;
 
   contentsMarginBottom0 = <%% 24, 24, 24, 24, 2 %%>;
-  contentsMarginBottom1 = <%% 60, 56, 48, 42, 3 %%>;
+  contentsMarginBottom1 = <%% 60, 56, 48, 42, 6 %%>;
 
   lineTop = <%% 10, 10, 10, 10, 10 %%>;
   linePadding = <%% 12, 12, 12, 12, 12 %%>;
@@ -1443,16 +1457,16 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
   factorLineWidth = <%% 22, 22, 22, 22, 22 %%>;
   factorLineHeight = <%% 123, 123, 123, 123, 123 %%>;
 
-  noticeBoxPaddingTop = <%% 34, 34, 34, 34, 34 %%>;
+  noticeBoxPaddingTop = <%% 34, 34, 34, 34, 8 %%>;
   noticeGrayPadding = <%% 12, 12, 10, 8, 12 %%>;
-  noticeTitleTop = <%% -28, -28, -28, -26, -28 %%>;
+  noticeTitleTop = <%% -28, -28, -28, -26, -8 %%>;
 
-  noticePaddingLeft = <%% 22, 22, 22, 22, 22 %%>;
-  noticePaddingTop = <%% 16, 16, 16, 12, 16 %%>;
+  noticePaddingLeft = <%% 22, 22, 22, 22, 2 %%>;
+  noticePaddingTop = <%% 16, 16, 16, 12, 1 %%>;
   noticePaddingBottom = <%% 4, 4, 4, 2, 4 %%>;
 
-  noticeNumberWidth = <%% 20, 20, 20, 16, 20 %%>;
-  noticeLineBoxWidth = <%% 110, 110, 100, 16, 110 %%>;
+  noticeNumberWidth = <%% 20, 20, 20, 16, 4 %%>;
+  noticeLineBoxWidth = <%% 110, 110, 100, 16, 11 %%>;
 
   noticeLineBoxPaddingTop = <%% 14, 13, 13, 13, 14 %%>;
   noticeLineBoxPadding = <%% 10, 10, 10, 8, 10 %%>;
@@ -1463,12 +1477,12 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
     {
       title: "첫 프로젝트 응대",
       contents: [
-        "고객 첫 응대 시 홈리에종과 함께 프로젝트를 진행하는 협업의 관계라는 점과 디자인을 진행하면서\n불편 사항이 있는 경우 홈리에종을 통해 연락해달라고 안내해주세요.",
+        "고객 첫 응대 시 홈리에종과 함께 프로젝트를 진행하는 협업의 관계라는 점과 디자인을 진행하면서" + (desktop ? "\n" : " ") + "불편 사항이 있는 경우 홈리에종을 통해 연락해달라고 안내해주세요.",
         "프로젝트를 마무리 후 인터뷰와 촬영을 진행하는데 <b%이는 프로젝트 검수(정산)와 디자이너를 지원하기 위해 중요한 과정임을 함께 설명%b>해주세요." + (media[0] ? "\n" : " ") + "모든 고객이 디자이너의 포트폴리오를 보고 선택하신 것처럼 최신의 포트폴리오가 누적되어야 디자이너가 계속해서 성장할 수 있기에 소중하게 관리되고 있으며 개인정보 노출 정도는 홈리에종과 조율할 수 있습니다.",
       ],
     },
     {
-      title: "디자이너 시공사의\n직접 시공",
+      title: "디자이너 시공사의" + (desktop ? "\n" : " ") + "직접 시공",
       contents: [
         "<b%디자이너가 직접 시공을 진행했을 경우 시공 계약서와 세부 내용이 담긴 견적서를 보내주세요!%b> 디자이너 직영 시공사가 있는 경우 사전에",
         "홈리에종과의 미팅을 통해서 시공 파트너사 등록을 진행해야 합니다. 디자이너 직영 시공사와 진행하는 과정에서 문제가 발생한 경우 홈리에종이 고객의 불편 사항 접수를 받게되고, 책임과 평가에 직접적으로 영향을 받기 때문에 필수적인 정책 등의 과정이 필요합니다.",
@@ -1622,7 +1636,7 @@ PartnershipManualJs.prototype.insertFirstProjectBox = function () {
         },
       },
       {
-        text: contents.join("\n\n"),
+        text: contents.join(desktop ? "\n\n" : "\n"),
         style: {
           display: "inline-block",
           fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
