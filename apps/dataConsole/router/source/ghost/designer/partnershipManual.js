@@ -3174,6 +3174,11 @@ PartnershipManualJs.prototype.insertContentsBox = function () {
   let lineBoxHeight;
   let bigPaddingNumberWidth;
   let textTop;
+  let mobileGrayPaddingTop;
+  let mobileGrayMarginBottom;
+
+  mobileGrayPaddingTop = 1;
+  mobileGrayMarginBottom = 4.5;
 
   textTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
@@ -3215,9 +3220,9 @@ PartnershipManualJs.prototype.insertContentsBox = function () {
 
   zeroWidth = <%% 8, 8, 8, 8, 10 %%>;
   zeroMarginRight = <%% 10, 10, 10, 10, 10 %%>;
-  firstWidth = <%% 240, 180, 170, 150, 10 %%>;
+  firstWidth = <%% 240, 180, 170, 150, 0 %%>;
   secondWidth = <%% 15, 15, 8, 0, 2 %%>;
-  secondMarginRight = <%% 10, 10, 10, 10, 2 %%>;
+  secondMarginRight = <%% 10, 10, 10, 10, 0 %%>;
 
   checkBoxWidth = <%% 10, 10, 10, 10, 2 %%>;
   arrowBoxWidth = <%% 9, 8, 8, 8, 1.8 %%>;
@@ -3225,10 +3230,10 @@ PartnershipManualJs.prototype.insertContentsBox = function () {
   arrowBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.5 %%>;
 
   contentsMarginBottom0 = <%% 24, 24, 24, 24, 2 %%>;
-  contentsMarginBottom1 = <%% 60, 56, 48, 42, 3 %%>;
+  contentsMarginBottom1 = <%% 60, 56, 48, 42, 6 %%>;
 
   lineTop = <%% 10, 10, 10, 10, 10 %%>;
-  linePadding = <%% 12, 12, 12, 12, 12 %%>;
+  linePadding = <%% 12, 12, 12, 12, 0 %%>;
 
   mobilePaddingLeft = 6;
 
@@ -3244,19 +3249,19 @@ PartnershipManualJs.prototype.insertContentsBox = function () {
   factorLineWidth = <%% 22, 22, 22, 22, 22 %%>;
   factorLineHeight = <%% 123, 123, 123, 123, 123 %%>;
 
-  middleSecondWidth = <%% 175, 140, 125, 110, 17 %%>;
+  middleSecondWidth = <%% 175, 140, 125, 110, 22 %%>;
 
-  grayPadding = <%% 12, 12, 12, 8, 12 %%>;
+  grayPadding = <%% 12, 12, 12, 8, 3 %%>;
 
-  grayPaddingLeft = <%% 30, 30, 30, 24, 30 %%>;
-  grayPaddingTop = <%% 22, 20, 18, 16, 22 %%>;
+  grayPaddingLeft = <%% 30, 30, 30, 24, 4.5 %%>;
+  grayPaddingTop = <%% 22, 20, 18, 16, 3 %%>;
 
   bigPaddingWidth = <%% 424, 188, 172, 148, 12 %%>;
-  bigPaddingPaddingVisual = <%% 16, 16, 16, 12, 16 %%>;
-  lineBoxPaddingTop = <%% 12, 12, 12, 11, 13 %%>;
-  lineBoxHeight = <%% 23, 22, 22, 21, 23 %%>;
+  bigPaddingPaddingVisual = <%% 16, 16, 16, 12, 2 %%>;
+  lineBoxPaddingTop = <%% 12, 12, 12, 11, 2.5 %%>;
+  lineBoxHeight = <%% 23, 22, 22, 21, 10.7 %%>;
 
-  bigPaddingNumberWidth = <%% 12, 12, 12, 9, 12 %%>;
+  bigPaddingNumberWidth = <%% 12, 12, 12, 9, 4 %%>;
 
   mainTitle = "콘텐츠 활용 가이드";
   mainContents = [
@@ -3278,14 +3283,14 @@ PartnershipManualJs.prototype.insertContentsBox = function () {
           title: "인스타그램",
           contents: [
             "<b%인물 해시 태그%b> : 피드 게시물 사진에 직접 인물 해시 태그",
-            "<b%내용 해시 태그%b> : #홈리에종 @home-liaison",
+            "<b%내용 해시 태그%b> : #홈리에종",
             "<b%내용 필수 문구%b> : 협업 사실 명시 => 이 프로젝트는 디자이너와 함께하는 홈스타일링 플랫폼, 홈리에종을 통해 진행했습니다. www.home-liaison.com",
           ]
         },
         {
           title: "유튜브",
           contents: [
-            "<b%내용 필수 문구%b> : 홈리에종과 협업 사실 명시",
+            "<b%내용 필수 문구%b> : 홈리에종 협업 사실 명시",
             "<b%자막 2-3초%b> : 이 프로젝트는 디자이너와 함께하는 홈스타일링 플랫폼, 홈리에종을 통해 진행했습니다.",
             "<b%내용 해시 태그%b> : #홈리에종",
             "<b%영상 타이틀%b> : 타이틀에 홈리에종 기입, 홈리에종 기업명은 항상 가장 좌측에 위치",
@@ -3414,11 +3419,11 @@ PartnershipManualJs.prototype.insertContentsBox = function () {
         },
         children: [
           {
-            text: preContents.join("\n"),
+            text: desktop ? preContents.join("\n") : preContents.join(" "),
             style: {
               display: desktop ? "inline-block" : "block",
               position: "relative",
-              fontSize: String(contentsWordingSize) + ea,
+              fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
               fontWeight: String(400),
               lineHeight: String(1.7),
               color: colorChip.black,
@@ -3427,7 +3432,7 @@ PartnershipManualJs.prototype.insertContentsBox = function () {
               paddingRight: String(linePadding) + ea,
             },
             bold: {
-              fontSize: String(contentsWordingSize) + ea,
+              fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
               fontWeight: String(700),
               color: colorChip.black,
             },
@@ -3476,7 +3481,7 @@ PartnershipManualJs.prototype.insertContentsBox = function () {
           {
             text: (new Array(contents.length)).fill(null).map((n, index) => { return `${String(index + 1)}) ` }),
             style: {
-              display: desktop ? "inline-block" : "block",
+              display: desktop ? "inline-block" : "none",
               position: "relative",
               fontSize: String(contentsWordingSize) + ea,
               fontWeight: String(400),
@@ -3491,11 +3496,11 @@ PartnershipManualJs.prototype.insertContentsBox = function () {
             }
           },
           {
-            text: contents.join("\n"),
+            text: desktop ? contents.join("\n") : contents.map((str, index) => { return `${String(index + 1)}) ${str}` }).join("\n"),
             style: {
-              display: desktop ? "inline-block" : "block",
+              display: "inline-block",
               position: "relative",
-              fontSize: String(contentsWordingSize) + ea,
+              fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
               fontWeight: String(400),
               lineHeight: String(1.7),
               color: colorChip.black,
@@ -3504,9 +3509,10 @@ PartnershipManualJs.prototype.insertContentsBox = function () {
               paddingRight: String(linePadding) + ea,
               verticalAlign: "top",
               top: String(textTop) + ea,
+              width: desktop ? "" : withOut(bigPaddingWidth + bigPaddingPaddingVisual, ea),
             },
             bold: {
-              fontSize: String(contentsWordingSize) + ea,
+              fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
               fontWeight: String(700),
               color: colorChip.green,
             },
@@ -3604,7 +3610,7 @@ PartnershipManualJs.prototype.insertContentsBox = function () {
             fontWeight: String(400),
             verticalAlign: "top",
             lineHeight: String(1.7),
-            width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight + middleSecondWidth : secondWidth + secondMarginRight, ea),
+            width: withOut(firstWidth + secondWidth + secondMarginRight + middleSecondWidth, ea),
             textAlign: "left",
             color: colorChip.black,
           },
@@ -3633,7 +3639,7 @@ PartnershipManualJs.prototype.insertContentsBox = function () {
     style: {
       display: "block",
       position: "relative",
-      marginBottom: String(contentsMarginBottom1) + ea,
+      marginBottom: String(desktop ? contentsMarginBottom1 : contentsMarginBottom0) + ea,
     },
     children: [
       {
@@ -3804,9 +3810,9 @@ PartnershipManualJs.prototype.insertProcessBox = function () {
 
   zeroWidth = <%% 8, 8, 8, 8, 10 %%>;
   zeroMarginRight = <%% 10, 10, 10, 10, 10 %%>;
-  firstWidth = <%% 240, 180, 170, 150, 10 %%>;
+  firstWidth = <%% 240, 180, 170, 150, 0 %%>;
   secondWidth = <%% 15, 15, 8, 0, 2 %%>;
-  secondMarginRight = <%% 10, 10, 10, 10, 2 %%>;
+  secondMarginRight = <%% 10, 10, 10, 10, 0 %%>;
 
   checkBoxWidth = <%% 10, 9, 8, 7, 2 %%>;
   arrowBoxWidth = <%% 9, 8, 8, 8, 1.8 %%>;
@@ -3814,7 +3820,7 @@ PartnershipManualJs.prototype.insertProcessBox = function () {
   arrowBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.5 %%>;
 
   contentsMarginBottom0 = <%% 24, 24, 24, 24, 2 %%>;
-  contentsMarginBottom1 = <%% 60, 56, 48, 42, 3 %%>;
+  contentsMarginBottom1 = <%% 60, 56, 48, 42, 6 %%>;
 
   lineTop = <%% 10, 10, 10, 10, 10 %%>;
   linePadding = <%% 12, 12, 12, 12, 12 %%>;
@@ -3833,12 +3839,12 @@ PartnershipManualJs.prototype.insertProcessBox = function () {
   factorLineWidth = <%% 22, 22, 22, 22, 22 %%>;
   factorLineHeight = <%% 123, 123, 123, 123, 123 %%>;
 
-  checkBoxTongWidth = <%% 20, 20, 20, 16, 20 %%>;
+  checkBoxTongWidth = <%% 20, 20, 20, 16, 0 %%>;
   checkBoxTongPaddingTop = <%% (isMac() ? 8 : 6), (isMac() ? 8 : 6), (isMac() ? 8 : 7), (isMac() ? 8 : 6), 0 %%>;
-  checkBoxWidth = <%% 11, 10, 10, 9, 11 %%>;
-  checkboxBetween = <%% 15.2, 15.2, 15.2, 14.4, 15 %%>;
+  checkBoxWidth = <%% 11, 10, 10, 9, 0 %%>;
+  checkboxBetween = <%% 15.2, 15.2, 15.2, 14.4, 1 %%>;
 
-  numberTongWidth = <%% 32, 32, 32, 32, 30 %%>;
+  numberTongWidth = <%% 32, 32, 32, 32, 0 %%>;
 
   mainTitle = "디자이너 프로젝트 진행";
   mainContents = [
@@ -3853,7 +3859,7 @@ PartnershipManualJs.prototype.insertProcessBox = function () {
     {
       title: "디자이너 현장 미팅 응대",
       contents: [
-        "고객이 준비한 도면을 받더라도 실측은 정확하게 합니다.",
+        desktop ? "고객이 준비한 도면을 받더라도 실측은 정확하게 합니다." : "고객에게 도면을 받더라도 실측은 정확하게 합니다.",
         "고객의 예산을 분명히 확인하고, 최대 가용 예산 범위가 있는 지 확인합니다.",
         big ? "현장 미팅 후, 구두로 전할 수 있는 상담을 진행합니다. 미팅 후 디자인 작업을 시작하지 않습니다." : "현장 미팅 후, 상담을 진행합니다. 미팅 후 디자인 작업을 시작하지 않습니다.",
         big ? "고객에게 프로젝트 전체 프로세스를 설명하고, 디자이너의 작업 기간과 방식에 대해 명확하게 설명합니다." : "고객에게 프로세스를 설명하고, 작업 기간과 방식에 대해 명확하게 설명합니다.",
@@ -3912,7 +3918,7 @@ PartnershipManualJs.prototype.insertProcessBox = function () {
       title: "디자이너 소통",
       contents: [
         "현장 미팅 후, 디자이너는 홈리에종 카카오톡 채널을 통해 홈리에종으로 현장 미팅 종료 상황에 대해 공유합니다.",
-        "현장 미팅 이후, <b%현장에 대한 이슈가 발생했거나, 혹은 사전에 홈리에종으로부터 안내받은 내용과 현장 상황이 다른 부분이 있다면 홈리에종과 확인 후 프로젝트를 진행%b>해야 합니다.",
+        "현장 미팅 후, <b%현장에 대한 이슈가 발생했거나, 혹은 사전에 홈리에종으로부터 안내받은 내용과 현장 상황이 다른 부분이 있다면 홈리에종과 확인 후 프로젝트를 진행%b>해야 합니다.",
         "고객과 커뮤니케이션을 위해 연락 방법과 디자이너의 개인 사정으로 연락이 불가한 시간대에 대해 설명합니다.",
       ],
     },
@@ -4159,25 +4165,26 @@ PartnershipManualJs.prototype.insertProcessBox = function () {
       {
         text: (new Array(contents.length)).fill(1).map((num, index) => { return `${String(num + index)}) ` }).join("\n"),
         style: {
-          display: "inline-block",
+          display: desktop ? "inline-block" : "none",
           fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
           fontWeight: String(400),
           verticalAlign: "top",
-          lineHeight: String(1.8),
+          lineHeight: String(desktop ? 1.8 : 1.6),
           width: String(numberTongWidth) + ea,
           textAlign: "left",
           color: colorChip.deactive,
         },
       },
       {
-        text: contents.join("\n"),
+        text: desktop ? contents.join("\n") : contents.map((str, index) => { return `<div style="display:inline-block;position:relative;width:2.5vw;height:2.5vw;margin-right:1vw;top:0.1vw">${instance.mother.returnCheckBox(colorChip.green)}</div>&nbsp;<u%${String(index + 1)})%u>&nbsp;${str}`; }).join("\n"),
         style: {
           display: "inline-block",
+          position: "relative",
           fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
           fontWeight: String(400),
           verticalAlign: "top",
-          lineHeight: String(1.8),
-          width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight + checkBoxTongWidth + numberTongWidth : secondWidth + secondMarginRight, ea),
+          lineHeight: String(desktop ? 1.8 : 1.7),
+          width: withOut(firstWidth + secondWidth + secondMarginRight + checkBoxTongWidth + numberTongWidth, ea),
           textAlign: "left",
           color: colorChip.black,
         },
@@ -4188,8 +4195,8 @@ PartnershipManualJs.prototype.insertProcessBox = function () {
         },
         under: {
           fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
-          fontWeight: String(700),
-          color: colorChip.green,
+          fontWeight: String(desktop ? 700 : 400),
+          color: desktop ? colorChip.green : colorChip.deactive,
         },
       },
     ]
@@ -4274,25 +4281,26 @@ PartnershipManualJs.prototype.insertProcessBox = function () {
       {
         text: (new Array(contents.length)).fill(1).map((num, index) => { return `${String(num + index)}) ` }).join("\n"),
         style: {
-          display: "inline-block",
+          display: desktop ? "inline-block" : "none",
           fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
           fontWeight: String(400),
           verticalAlign: "top",
-          lineHeight: String(1.8),
+          lineHeight: String(desktop ? 1.8 : 1.6),
           width: String(numberTongWidth) + ea,
           textAlign: "left",
           color: colorChip.deactive,
         },
       },
       {
-        text: contents.join("\n"),
+        text: desktop ? contents.join("\n") : contents.map((str, index) => { return `<div style="display:inline-block;position:relative;width:2.5vw;height:2.5vw;margin-right:1vw;top:0.1vw">${instance.mother.returnCheckBox(colorChip.green)}</div>&nbsp;<u%${String(index + 1)})%u>&nbsp;${str}`; }).join("\n"),
         style: {
           display: "inline-block",
+          position: "relative",
           fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
           fontWeight: String(400),
           verticalAlign: "top",
-          lineHeight: String(1.8),
-          width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight + checkBoxTongWidth + numberTongWidth : secondWidth + secondMarginRight, ea),
+          lineHeight: String(desktop ? 1.8 : 1.7),
+          width: withOut(firstWidth + secondWidth + secondMarginRight + checkBoxTongWidth + numberTongWidth, ea),
           textAlign: "left",
           color: colorChip.black,
         },
@@ -4303,8 +4311,8 @@ PartnershipManualJs.prototype.insertProcessBox = function () {
         },
         under: {
           fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
-          fontWeight: String(700),
-          color: colorChip.green,
+          fontWeight: String(desktop ? 700 : 400),
+          color: desktop ? colorChip.green : colorChip.deactive,
         },
       },
     ]
@@ -4366,7 +4374,7 @@ PartnershipManualJs.prototype.insertProcessBox = function () {
         },
       },
       {
-        text: contents.join("\n"),
+        text: desktop ? contents.join("\n") : contents.join(" "),
         style: {
           display: "inline-block",
           fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
@@ -4470,25 +4478,26 @@ PartnershipManualJs.prototype.insertProcessBox = function () {
       {
         text: (new Array(contents.length)).fill(1).map((num, index) => { return `${String(num + index)}) ` }).join("\n"),
         style: {
-          display: "inline-block",
+          display: desktop ? "inline-block" : "none",
           fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
           fontWeight: String(400),
           verticalAlign: "top",
-          lineHeight: String(1.8),
+          lineHeight: String(desktop ? 1.8 : 1.6),
           width: String(numberTongWidth) + ea,
           textAlign: "left",
           color: colorChip.deactive,
         },
       },
       {
-        text: contents.join("\n"),
+        text: desktop ? contents.join("\n") : contents.map((str, index) => { return `<div style="display:inline-block;position:relative;width:2.5vw;height:2.5vw;margin-right:1vw;top:0.1vw">${instance.mother.returnCheckBox(colorChip.green)}</div>&nbsp;<u%${String(index + 1)})%u>&nbsp;${str}`; }).join("\n"),
         style: {
           display: "inline-block",
+          position: "relative",
           fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
           fontWeight: String(400),
           verticalAlign: "top",
-          lineHeight: String(1.8),
-          width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight + checkBoxTongWidth + numberTongWidth : secondWidth + secondMarginRight, ea),
+          lineHeight: String(desktop ? 1.8 : 1.7),
+          width: withOut(firstWidth + secondWidth + secondMarginRight + checkBoxTongWidth + numberTongWidth, ea),
           textAlign: "left",
           color: colorChip.black,
         },
@@ -4499,8 +4508,8 @@ PartnershipManualJs.prototype.insertProcessBox = function () {
         },
         under: {
           fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
-          fontWeight: String(700),
-          color: colorChip.green,
+          fontWeight: String(desktop ? 700 : 400),
+          color: desktop ? colorChip.green : colorChip.deactive,
         },
       },
     ]
@@ -4563,7 +4572,7 @@ PartnershipManualJs.prototype.insertProcessBox = function () {
         },
       },
       {
-        text: contents.join("\n"),
+        text: desktop ? contents.join("\n") : contents.join(" "),
         style: {
           display: "inline-block",
           fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
@@ -4667,25 +4676,26 @@ PartnershipManualJs.prototype.insertProcessBox = function () {
       {
         text: (new Array(contents.length)).fill(1).map((num, index) => { return `${String(num + index)}) ` }).join("\n"),
         style: {
-          display: "inline-block",
+          display: desktop ? "inline-block" : "none",
           fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
           fontWeight: String(400),
           verticalAlign: "top",
-          lineHeight: String(1.8),
+          lineHeight: String(desktop ? 1.8 : 1.6),
           width: String(numberTongWidth) + ea,
           textAlign: "left",
           color: colorChip.deactive,
         },
       },
       {
-        text: contents.join("\n"),
+        text: desktop ? contents.join("\n") : contents.map((str, index) => { return `<div style="display:inline-block;position:relative;width:2.5vw;height:2.5vw;margin-right:1vw;top:0.1vw">${instance.mother.returnCheckBox(colorChip.green)}</div>&nbsp;<u%${String(index + 1)})%u>&nbsp;${str}`; }).join("\n"),
         style: {
           display: "inline-block",
+          position: "relative",
           fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
           fontWeight: String(400),
           verticalAlign: "top",
-          lineHeight: String(1.8),
-          width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight + checkBoxTongWidth + numberTongWidth : secondWidth + secondMarginRight, ea),
+          lineHeight: String(desktop ? 1.8 : 1.7),
+          width: withOut(firstWidth + secondWidth + secondMarginRight + checkBoxTongWidth + numberTongWidth, ea),
           textAlign: "left",
           color: colorChip.black,
         },
@@ -4696,8 +4706,8 @@ PartnershipManualJs.prototype.insertProcessBox = function () {
         },
         under: {
           fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
-          fontWeight: String(700),
-          color: colorChip.green,
+          fontWeight: String(desktop ? 700 : 400),
+          color: desktop ? colorChip.green : colorChip.deactive,
         },
       },
     ]
@@ -4713,7 +4723,7 @@ PartnershipManualJs.prototype.insertProcessBox = function () {
     style: {
       display: "block",
       position: "relative",
-      marginBottom: String(contentsMarginBottom1) + ea,
+      marginBottom: String(desktop ? contentsMarginBottom1 : contentsMarginBottom0) + ea,
     },
     children: [
       {
