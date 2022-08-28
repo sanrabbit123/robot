@@ -20,29 +20,25 @@ FlowJs.prototype.returnDiagramMap = function (svgName) {
       client: {
         c1: {
           name: "1차 응대",
-          event: function (e) {
-            selfHref("https://" + GHOSTHOST + "/client");
-          }
+          description: [],
+          href: "https://" + GHOSTHOST + "/client",
         },
         c2: {
           name: "응대 리포트",
-          event: function (e) {
-            selfHref("https://" + GHOSTHOST + "/client");
-          }
+          description: [],
+          href: "https://" + GHOSTHOST + "/client",
         },
       },
       project: {
         p1: {
           name: "프로젝트 관리",
-          event: function (e) {
-            selfHref("https://" + GHOSTHOST + "/project");
-          }
+          description: [],
+          href: "https://" + GHOSTHOST + "/project",
         },
         p2: {
           name: "프로젝트 현황",
-          event: function (e) {
-            selfHref("https://" + GHOSTHOST + "/project");
-          }
+          description: [],
+          href: "https://" + GHOSTHOST + "/project",
         },
         p3: {
           name: "프로젝트 상세",
@@ -274,7 +270,9 @@ FlowJs.prototype.launchingDiagram = function (svgName) {
               dom.setAttribute("value", flatMap[dom.id].name);
             }
             if (typeof flatMap[dom.id].event === "function") {
-              dom.addEventListener("click", flatMap[dom.id].event);
+              dom.addEventListener("click", function (e) {
+                window.alert("test");
+              });
             }
           }
         }
@@ -301,12 +299,14 @@ FlowJs.prototype.grayLeftPopup = function () {
   let buttonSize;
   let buttonWeight;
   let buttonUnitHeight;
+  let grayBoxInnerPaddingBottom;
 
   grayBoxMargin = 45;
-  grayBoxWidth = 230;
+  grayBoxWidth = 240;
   grayBoxHeight = 280;
-  grayBoxInnerPadding = 24;
-  grayBoxInnerPaddingTop = 14;
+  grayBoxInnerPadding = 32;
+  grayBoxInnerPaddingTop = 19;
+  grayBoxInnerPaddingBottom = 22;
 
   buttonSize = 14;
   buttonWeight = 700;
@@ -339,15 +339,13 @@ FlowJs.prototype.grayLeftPopup = function () {
 
       grayBox = createNode({
         mother: totalContents,
-        class: [ grayBoxClassName ],
+        class: [ grayBoxClassName, "backblurgray" ],
         style: {
           position: "absolute",
-          bottom: String(belowHeight + grayBoxMargin) + ea,
-          right: String(grayBoxMargin) + ea,
+          top: String(0) + ea,
+          left: String(0) + ea,
+          height: withOut(belowHeight, ea),
           width: String(grayBoxWidth) + ea,
-          borderRadius: String(5) + "px",
-          background: colorChip.gray1,
-          animation: "fadeuplite 0.3s ease forwards",
           zIndex: String(4),
         },
         children: [
@@ -356,9 +354,11 @@ FlowJs.prototype.grayLeftPopup = function () {
               display: "block",
               position: "relative",
               paddingTop: String(grayBoxInnerPaddingTop) + ea,
-              paddingBottom: String(grayBoxInnerPaddingTop) + ea,
+              paddingBottom: String(grayBoxInnerPaddingBottom) + ea,
               paddingLeft: String(grayBoxInnerPadding) + ea,
+              paddingRight: String(grayBoxInnerPadding) + ea,
               width: withOut(grayBoxInnerPadding * 2, ea),
+              background: colorChip.gradientGray,
             }
           }
         ]
@@ -388,7 +388,7 @@ FlowJs.prototype.grayLeftPopup = function () {
                 position: "relative",
                 fontSize: String(buttonSize) + ea,
                 fontWeight: String(buttonWeight),
-                color: colorChip.black,
+                color: colorChip.white,
               }
             },
             {
@@ -397,7 +397,7 @@ FlowJs.prototype.grayLeftPopup = function () {
                 position: "absolute",
                 fontSize: String(buttonSize) + ea,
                 fontWeight: String(300),
-                color: colorChip.deactive,
+                color: colorChip.white,
                 left: String(0),
               }
             }
@@ -414,6 +414,8 @@ FlowJs.prototype.grayLeftPopup = function () {
 
   });
 
+  button.click();
+
 }
 
 FlowJs.prototype.launching = async function () {
@@ -429,12 +431,6 @@ FlowJs.prototype.launching = async function () {
 
     this.grayLeftPopup();
     await this.launchingDiagram(typeof returnGet().mode === "string" ? returnGet().mode : "console");
-
-    setQueue(() => {
-      if (document.getElementById("grayLeftOpenButton") !== null) {
-        document.getElementById("grayLeftOpenButton").click();
-      }
-    }, 1000);
 
   } catch (e) {
     GeneralJs.ajax("message=" + e.message + "&channel=#error_log", "/sendSlack", function () {});
