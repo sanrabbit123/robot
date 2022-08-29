@@ -18,11 +18,11 @@
   "meta": {
     "title": [
       "thisPerson",
-      "return ('파트너십 매뉴얼 | 홈리에종');"
+      "return ('유의 사항 안내 | 홈리에종');"
     ],
     "description": [
       "thisPerson",
-      "return ('파트너십 매뉴얼 | 홈리에종');"
+      "return ('유의 사항 안내 | 홈리에종');"
     ],
     "image": [
       "thisPerson",
@@ -31,7 +31,7 @@
     "module": false
   },
   "name": "contractCaution",
-  "hangul": "파트너십 매뉴얼",
+  "hangul": "유의 사항 안내",
   "route": [
     "contractCaution"
   ]
@@ -41,7 +41,7 @@ const ContractCautionJs = function () {
   this.mother = new GeneralJs();
 }
 
-ContractCautionJs.binaryPath = FRONTHOST + "/middle/console/partnership";
+ContractCautionJs.binaryPath = FRONTHOST + "/middle/console/possible";
 
 ContractCautionJs.prototype.insertInitBox = function () {
   const instance = this;
@@ -92,7 +92,7 @@ ContractCautionJs.prototype.insertInitBox = function () {
 
   whiteBlockMarginBottom = <%% 90, 80, 74, 60, 14.5 %%>;
 
-  quoteHeight = <%% 15, 15, 15, 15, 2.5 %%>;
+  quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
   titleFontSize = <%% 35, 33, 32, 30, 6.4 %%>;
   titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -129,8 +129,8 @@ ContractCautionJs.prototype.insertInitBox = function () {
   tagTongBottom = <%% 3, 3, 1, 1, 0 %%>;
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
-  titleWording = "파트너십 매뉴얼";
-  subTitleContents = "홈리에종 디자이너 파트너십 매뉴얼";
+  titleWording = "유의 사항 안내";
+  subTitleContents = "디자이너와 진행 시 유의 사항 안내";
 
   mobileBlockTop = 4.5;
 
@@ -147,6 +147,7 @@ ContractCautionJs.prototype.insertInitBox = function () {
     }
   });
 
+  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.white))) * quoteHeight;
   createNode({
     mother: whiteBlock,
     style: {
@@ -161,10 +162,11 @@ ContractCautionJs.prototype.insertInitBox = function () {
     children: [
       {
         mode: "svg",
-        source: svgMaker.serifAsterisk(colorChip.white),
+        source: svgMaker.doubleQuote(colorChip.white),
         style: {
           display: "inline-block",
           height: String(quoteHeight) + ea,
+          width: String(quoteWidth) + ea,
         }
       }
     ]
@@ -266,16 +268,16 @@ ContractCautionJs.prototype.insertFirstBox = function () {
 
   contents = {
     title: [
-      "홈리에종과 파트너십 디자이너가",
-      "지속적으로 협업하기 위한 정책 안내"
+      "인테리어 프로젝트 진행 시",
+      "유의 사항 종합 안내"
     ],
     description: [
       [
         "홈리에종은 집을 디자인하는 새로운 방법을 안내합니다.",
-        "디자이너의 성장을 위해 디자이너 역량 관리, 인프라 제공, 교육 등을 지원하고, 고객에게 가장 효과적이고, 만족스러운 홈스타일링이 되도록 혁신적인 서비스를 제공하고자 노력하며, 모두가 만족스러운 결과를 얻도록 고객 중심의 프로젝트를 홈리에종이 함께 케어합니다."
+        "고객에게 가장 효과적이고, 만족스러운 홈스타일링이 되도록 혁신적인 서비스를 제공하고자 노력하며, 모두가 만족스러운 결과를 얻도록 고객 중심의 프로젝트를 홈리에종이 함께 케어합니다."
       ],
       [
-        "홈리에종은 파트너입니다. 고객에게는 만족스러운 집과 편리한 서비스로, 디자이너에게는 지속적인 성장을 위한 폭넓은 지원으로 함께 의논하면서 함께 성장합니다."
+        "고객님께 홈리에종의 파트너 디자이너와 인테리어 프로젝트를 진행하는 데 있어 주의하실 점들을 주제별로 정리하여 페이지 형태로 보내드립니다. 디자이너와 현장 미팅 전, 한 번씩은 꼭 읽어주시길 바랍니다.",
       ]
     ]
   };
@@ -536,16 +538,6 @@ ContractCautionJs.prototype.insertContextBox = function () {
           position: "relative",
           width: withOut(margin * 2, ea),
           marginLeft: String(margin) + ea,
-          marginBottom: String(searchTongMarginBottom) + ea,
-          height: desktop ? "" : String(searchHeight) + ea,
-        }
-      },
-      {
-        style: {
-          display: "block",
-          position: "relative",
-          width: withOut(margin * 2, ea),
-          marginLeft: String(margin) + ea,
           borderRadius: String(desktop ? 8 : 1) + ea,
           paddingTop: String(grayInnerPadding) + ea,
           paddingBottom: String(grayInnerPadding) + ea,
@@ -554,158 +546,7 @@ ContractCautionJs.prototype.insertContextBox = function () {
       }
     ]
   });
-  searchTong = whiteBlock.children[0];
-  whiteTong = whiteBlock.children[1];
-
-  if (desktop) {
-    createNode({
-      mother: searchTong,
-      style: {
-        display: "inline-block",
-        position: "relative",
-        width: String(searchWidth) + ea,
-        height: String(searchHeight) + ea,
-        borderRadius: String(5) + "px",
-        background: colorChip.gray1,
-        marginRight: String(searchMarginRight) + ea,
-        verticalAlign: "top",
-      },
-      children: [
-        {
-          mode: "input",
-          attribute: {
-            type: "text",
-            placeholder: "정책 검색...",
-          },
-          event: {
-            keyup: function (e) {
-              if (e.key === "Enter") {
-                if (this.value.trim() !== "") {
-                  const searchTargets = [ ...document.querySelectorAll('.' + contextButtonClassName) ];
-                  const typing = this.value;
-                  const target = searchTargets.find((dom) => {
-                    return (new RegExp(typing, "gi")).test(dom.getAttribute("value"));
-                  });
-
-                  if (target !== undefined) {
-                    target.click();
-                  }
-
-                }
-              }
-            }
-          },
-          style: {
-            display: "block",
-            border: String(0),
-            width: withOut(0),
-            height: withOut(3, '%'),
-            outline: String(0),
-            fontSize: String(buttonSize) + ea,
-            fontWeight: String(400),
-            color: colorChip.black,
-            textAlign: "center",
-            background: "transparent",
-          }
-        }
-      ]
-    });
-    createNode({
-      mother: searchTong,
-      class: [ "hoverDefault_lite" ],
-      mode: "svg",
-      source: instance.mother.returnSearch(colorChip.black),
-      style: {
-        display: "inline-block",
-        position: "relative",
-        width: String(searchIconWidth) + ea,
-        top: String(searchIconTop) + ea,
-        verticalAlign: "top",
-      }
-    });
-  }
-  createNode({
-    mother: searchTong,
-    style: {
-      display: desktop ? "inline-block" : "flex",
-      position: desktop ? "absolute" : "relative",
-      verticalAlign: "top",
-      top: String(0),
-      right: String(0),
-      height: String(searchHeight) + ea,
-      width: desktop ? "" : withOut(0),
-      justifyContent: desktop ? "" : "center",
-    },
-    children: [
-      {
-        event: {
-          click: function (e) {
-            GeneralJs.selfHref(FRONTHOST + "/designer/manual.php?desid=" + instance.designer.desid + "&mode=styling");
-          }
-        },
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          height: withOut(0),
-          paddingLeft: String(buttonPaddingLeft) + ea,
-          paddingRight: String(buttonPaddingLeft) + ea,
-          background: colorChip.gradientGray,
-          justifyContent: "center",
-          alignItems: "center",
-          textAlign: "center",
-          borderRadius: String(5) + "px",
-          cursor: "pointer",
-          marginRight: String(buttonBetween) + ea,
-        },
-        children: [
-          {
-            text: "홈스타일링 제공 내역",
-            style: {
-              display: "inline-block",
-              position: "relative",
-              top: String(buttonTextTop) + ea,
-              fontSize: String(buttonSize) + ea,
-              fontWeight: String(buttonWeight),
-              color: colorChip.white,
-            }
-          }
-        ]
-      },
-      {
-        event: {
-          click: function (e) {
-            GeneralJs.selfHref(FRONTHOST + "/designer/manual.php?desid=" + instance.designer.desid + "&mode=contract");
-          }
-        },
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          height: withOut(0),
-          paddingLeft: String(buttonPaddingLeft) + ea,
-          paddingRight: String(buttonPaddingLeft) + ea,
-          background: colorChip.gradientGray,
-          justifyContent: "center",
-          alignItems: "center",
-          textAlign: "center",
-          borderRadius: String(5) + "px",
-          cursor: "pointer",
-        },
-        children: [
-          {
-            text: "디자이너 계약서",
-            style: {
-              display: "inline-block",
-              position: "relative",
-              top: String(buttonTextTop) + ea,
-              fontSize: String(buttonSize) + ea,
-              fontWeight: String(buttonWeight),
-              color: colorChip.white,
-            }
-          }
-        ]
-      },
-    ]
-  });
+  whiteTong = whiteBlock.children[0];
 
   for (let i = 0; i < contents.length; i++) {
 
@@ -4848,7 +4689,7 @@ ContractCautionJs.prototype.launching = async function (loading) {
       base: {
         instance: this,
         binaryPath: ContractCautionJs.binaryPath,
-        subTitle: "인테리어 주의 사항",
+        subTitle: "유의 사항 안내",
         secondBackground: false,
         backgroundType: 0,
         talk: {
