@@ -1402,12 +1402,89 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   });
 
 
-  // box 3 ---------------------------------------------------------------------------------------------------
+  // white area ---------------------------------------------------------------------------------------------------
 
-  /*
+  baseTong3 = baseTong.cloneNode(false);
+  baseTong3Back = baseTong.cloneNode(false);
+  baseTong.parentNode.appendChild(baseTong3Back);
+  baseTong3Back.appendChild(baseTong3);
+  baseTong3Back.style.background = colorChip.white;
+  baseTong3Back.style.marginBottom = "";
+  baseTong3Back.style.paddingBottom = String(contents3GrayTongMarginBottom) + ea;
+  baseTong3.style.marginBottom = "";
+  baseTong3.style.paddingTop = String(0) + ea;
+  baseTong3Back.style.paddingTop = String(0) + ea;
+  baseTong3Back.style.width = String(100) + '%';
+  baseTong3Back.style.left = String(0);
+  baseTong2Back.style.paddingBottom = String(middleTongPaddingBottom) + ea;
+
+  // box 3 - (new) homeliaison appeal ---------------------------------------------------------------------------------------------------
+
+  whiteBlock4 = createNode({
+    mother: baseTong3,
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 3) + "px",
+      width: withOut(0 * 2, ea),
+      background: "transparent",
+      marginBottom: String(middleTitleMarginBottom) + ea,
+    }
+  });
+
+  createNode({
+    mother: whiteBlock4,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      textAlign: "center",
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: "absolute",
+          width: String(100) + '%',
+          height: String(middleTitleLineTop) + ea,
+          top: String(0),
+          left: String(0),
+          borderBottom: "1px solid " + colorChip.gray4,
+        }
+      },
+      {
+        text: "서비스 기간은 어떻게 되나요?",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(middleTitleSize) + ea,
+          fontWeight: String(middleTitleWeight),
+          color: colorChip.black,
+          textAlign: "center",
+          paddingLeft: String(middleTitlePadding) + ea,
+          paddingRight: String(middleTitlePadding) + ea,
+          background: colorChip.white,
+          top: String(middleTitleTextTop) + ea,
+        }
+      },
+      {
+        text: "너무나도 할 게 많은 인테리어 실패의 경험도 많고 어쩌구 저쩌구리\n알라딸라숑 알아 볼 것은 정말 많고 시간은 없어서 혼자서 어떻게 할지 정말 감이 안 잡힙니다.",
+        style: {
+          display: "block",
+          position: "relative",
+          fontSize: String(contents0InfoSize) + ea,
+          fontWeight: String(400),
+          lineHeight: String(1.6),
+          color: colorChip.black,
+          textAlign: "center",
+          paddingTop: String(middleTitlePadding) + ea,
+          top: String(middleTitleTextTop) + ea,
+        }
+      }
+    ]
+  });
 
   whiteBlock3 = createNode({
-    mother: baseTong2,
+    mother: baseTong3,
     style: {
       position: "relative",
       borderRadius: String(desktop ? 8 : 3) + "px",
@@ -1442,7 +1519,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
       fontSize: String(titleFont) + ea,
       fontWeight: String(titleFontWeight),
       wordSpacing: String(wordSpacing) + "px",
-      top: String(titleVisualTop) + ea,
+      top: String(0) + ea,
       marginLeft: big ? String(titleLeft) + ea : "",
       marginBottom: big ? "" : String(titleMarginBottom) + ea,
       color: colorChip.black,
@@ -1595,306 +1672,6 @@ AboutServiceJs.prototype.insertServiceBox = function () {
 
   }
 
-  */
-
-  // gray area ---------------------------------------------------------------------------------------------------
-
-  baseTong3 = baseTong.cloneNode(false);
-  baseTong3Back = baseTong.cloneNode(false);
-  baseTong.parentNode.appendChild(baseTong3Back);
-  baseTong3Back.appendChild(baseTong3);
-  baseTong3Back.style.marginBottom = String(contents3GrayTongMarginBottom) + ea;
-  baseTong3.style.marginBottom = "";
-  baseTong3.style.paddingTop = String(0) + ea;
-  baseTong3Back.style.paddingTop = String(middleAreaPaddingTop) + ea;
-  baseTong3Back.style.width = String(100) + '%';
-  baseTong3Back.style.left = String(0);
-  baseTong2Back.style.paddingBottom = String(middleTongPaddingBottom) + ea;
-
-  // box 4 - (new) designer appeal ---------------------------------------------------------------------------------------------------
-
-  whiteBlock4 = createNode({
-    mother: baseTong3,
-    style: {
-      position: "relative",
-      borderRadius: String(desktop ? 8 : 3) + "px",
-      width: withOut(0 * 2, ea),
-      background: "transparent",
-      paddingTop: String(middleTongPaddinngTop) + ea,
-    }
-  });
-
-  createNode({
-    mother: whiteBlock4,
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(100) + '%',
-      textAlign: "center",
-    },
-    children: [
-      {
-        style: {
-          display: "block",
-          position: "absolute",
-          width: String(100) + '%',
-          height: String(middleTitleLineTop) + ea,
-          top: String(0),
-          left: String(0),
-          borderBottom: "1px solid " + colorChip.gray4,
-        }
-      },
-      {
-        text: "홈리에종 프로세스, 궁금해요!",
-        style: {
-          display: "inline-block",
-          position: "relative",
-          fontSize: String(middleTitleSize) + ea,
-          fontWeight: String(middleTitleWeight),
-          color: colorChip.black,
-          textAlign: "center",
-          paddingLeft: String(middleTitlePadding) + ea,
-          paddingRight: String(middleTitlePadding) + ea,
-          background: colorChip.gray1,
-          top: String(middleTitleTextTop) + ea,
-        }
-      },
-      {
-        text: "너무나도 할 게 많은 인테리어 실패의 경험도 많고 어쩌구 저쩌구리\n알라딸라숑 알아 볼 것은 정말 많고 시간은 없어서 혼자서 어떻게 할지 정말 감이 안 잡힙니다.",
-        style: {
-          display: "block",
-          position: "relative",
-          fontSize: String(contents0InfoSize) + ea,
-          fontWeight: String(400),
-          lineHeight: String(1.6),
-          color: colorChip.black,
-          textAlign: "center",
-          paddingTop: String(middleTitlePadding) + ea,
-          top: String(middleTitleTextTop) + ea,
-        }
-      }
-    ]
-  });
-
-  contents4Tong = createNode({
-    mother: whiteBlock4,
-    style: {
-      display: "block",
-      position: "relative",
-      width: withOut(margin * 2, ea),
-      paddingTop: String(margin) + ea,
-      paddingBottom: String(margin) + ea,
-      paddingLeft: String(margin) + ea,
-      paddingRight: String(margin) + ea,
-      background: colorChip.white,
-      borderRadius: String(8) + "px",
-      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-      marginTop: String(middleTitleMarginBottom) + ea,
-    }
-  });
-
-  leftBox4 = createNode({
-    mother: contents4Tong,
-    style: {
-      display: big ? "inline-block" : "block",
-      position: "relative",
-      width: big ? String(leftBoxWidth) + ea : String(100) + '%',
-      height: big ? String(100) + '%' : "",
-      verticalAlign: "top",
-    }
-  });
-
-  createNode({
-    mother: leftBox4,
-    text: "프로세스 안내",
-    style: {
-      display: "inline-block",
-      position: "relative",
-      fontSize: String(titleFont) + ea,
-      fontWeight: String(titleFontWeight),
-      wordSpacing: String(wordSpacing) + "px",
-      top: String(titleVisualTop) + ea,
-      marginLeft: big ? String(titleLeft) + ea : "",
-      marginBottom: big ? "" : String(titleMarginBottom) + ea,
-      color: colorChip.black,
-      width: big ? "" : String(100) + '%',
-      textAlign: desktop ? "" : "center",
-      lineHeight: String(lineHeight),
-    }
-  });
-
-  rightBox4 = createNode({
-    mother: contents4Tong,
-    style: {
-      display: big ? "inline-block" : "block",
-      position: "relative",
-      width: big ? withOut(leftBoxWidth, ea) : String(100) + '%',
-      height: String(100) + '%',
-      verticalAlign: "top",
-      paddingTop: String(rightBoxPaddingTop) + ea,
-    }
-  });
-
-  createNode({
-    mother: rightBox4,
-    mode: "img",
-    attribute: { src: AboutServiceJs.binaryPath + "/" + contents4.image },
-    style: {
-      display: "block",
-      width: withOut(0 * 2, ea),
-    }
-  });
-
-
-  // white area ---------------------------------------------------------------------------------------------------
-
-  baseTong3 = baseTong.cloneNode(false);
-  baseTong3Back = baseTong.cloneNode(false);
-  baseTong.parentNode.appendChild(baseTong3Back);
-  baseTong3Back.appendChild(baseTong3);
-  baseTong3Back.style.background = colorChip.white;
-  baseTong3Back.style.marginBottom = "";
-  baseTong3Back.style.paddingBottom = String(contents3GrayTongMarginBottom) + ea;
-  baseTong3.style.marginBottom = "";
-  baseTong3.style.paddingTop = String(0) + ea;
-  baseTong3Back.style.paddingTop = String(middleAreaPaddingTop) + ea;
-  baseTong3Back.style.width = String(100) + '%';
-  baseTong3Back.style.left = String(0);
-  baseTong2Back.style.paddingBottom = String(middleTongPaddingBottom) + ea;
-
-  // box 4 - (new) homeliaison appeal ---------------------------------------------------------------------------------------------------
-
-  whiteBlock4 = createNode({
-    mother: baseTong3,
-    style: {
-      position: "relative",
-      borderRadius: String(desktop ? 8 : 3) + "px",
-      width: withOut(0 * 2, ea),
-      background: "transparent",
-      paddingTop: String(middleTongPaddinngTop) + ea,
-    }
-  });
-
-  createNode({
-    mother: whiteBlock4,
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(100) + '%',
-      textAlign: "center",
-    },
-    children: [
-      {
-        style: {
-          display: "block",
-          position: "absolute",
-          width: String(100) + '%',
-          height: String(middleTitleLineTop) + ea,
-          top: String(0),
-          left: String(0),
-          borderBottom: "1px solid " + colorChip.gray4,
-        }
-      },
-      {
-        text: "홈리에종 프로세스, 궁금해요!",
-        style: {
-          display: "inline-block",
-          position: "relative",
-          fontSize: String(middleTitleSize) + ea,
-          fontWeight: String(middleTitleWeight),
-          color: colorChip.black,
-          textAlign: "center",
-          paddingLeft: String(middleTitlePadding) + ea,
-          paddingRight: String(middleTitlePadding) + ea,
-          background: colorChip.white,
-          top: String(middleTitleTextTop) + ea,
-        }
-      },
-      {
-        text: "너무나도 할 게 많은 인테리어 실패의 경험도 많고 어쩌구 저쩌구리\n알라딸라숑 알아 볼 것은 정말 많고 시간은 없어서 혼자서 어떻게 할지 정말 감이 안 잡힙니다.",
-        style: {
-          display: "block",
-          position: "relative",
-          fontSize: String(contents0InfoSize) + ea,
-          fontWeight: String(400),
-          lineHeight: String(1.6),
-          color: colorChip.black,
-          textAlign: "center",
-          paddingTop: String(middleTitlePadding) + ea,
-          top: String(middleTitleTextTop) + ea,
-        }
-      }
-    ]
-  });
-
-  contents4Tong = createNode({
-    mother: whiteBlock4,
-    style: {
-      display: "block",
-      position: "relative",
-      width: withOut(margin * 2, ea),
-      paddingTop: String(margin) + ea,
-      paddingBottom: String(margin) + ea,
-      paddingLeft: String(margin) + ea,
-      paddingRight: String(margin) + ea,
-      background: colorChip.white,
-      borderRadius: String(8) + "px",
-      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-      marginTop: String(middleTitleMarginBottom) + ea,
-    }
-  });
-
-  leftBox4 = createNode({
-    mother: contents4Tong,
-    style: {
-      display: big ? "inline-block" : "block",
-      position: "relative",
-      width: big ? String(leftBoxWidth) + ea : String(100) + '%',
-      height: big ? String(100) + '%' : "",
-      verticalAlign: "top",
-    }
-  });
-
-  createNode({
-    mother: leftBox4,
-    text: "프로세스 안내",
-    style: {
-      display: "inline-block",
-      position: "relative",
-      fontSize: String(titleFont) + ea,
-      fontWeight: String(titleFontWeight),
-      wordSpacing: String(wordSpacing) + "px",
-      top: String(titleVisualTop) + ea,
-      marginLeft: big ? String(titleLeft) + ea : "",
-      marginBottom: big ? "" : String(titleMarginBottom) + ea,
-      color: colorChip.black,
-      width: big ? "" : String(100) + '%',
-      textAlign: desktop ? "" : "center",
-      lineHeight: String(lineHeight),
-    }
-  });
-
-  rightBox4 = createNode({
-    mother: contents4Tong,
-    style: {
-      display: big ? "inline-block" : "block",
-      position: "relative",
-      width: big ? withOut(leftBoxWidth, ea) : String(100) + '%',
-      height: String(100) + '%',
-      verticalAlign: "top",
-      paddingTop: String(rightBoxPaddingTop) + ea,
-    }
-  });
-
-  createNode({
-    mother: rightBox4,
-    mode: "img",
-    attribute: { src: AboutServiceJs.binaryPath + "/" + contents4.image },
-    style: {
-      display: "block",
-      width: withOut(0 * 2, ea),
-    }
-  });
 
 
   // gray area ---------------------------------------------------------------------------------------------------
@@ -2457,7 +2234,7 @@ AboutServiceJs.prototype.launching = async function (loading) {
 
     this.totalContents.children[0].style.background = colorChip.gray1;
     this.totalContents.children[1].style.transition = "all 0s ease";
-    this.totalContents.children[1].style.height = String(<&& 560 | 560 | 560 | 560 | 56 &&>) + this.ea;
+    this.totalContents.children[1].style.height = String(<&& 600 | 600 | 560 | 560 | 56 &&>) + this.ea;
 
   } catch (err) {
     console.log(err);
