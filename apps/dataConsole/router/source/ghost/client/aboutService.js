@@ -600,7 +600,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
 
   middleTitleSize = <%% 23, 23, 21, 18, 4.3 %%>;
   middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-  middleTitlePadding = <%% 18, 18, 18, 18, 3 %%>;
+  middleTitlePadding = <%% 16, 16, 16, 16, 3 %%>;
   middleTitleLineTop = <%% 14, 14, 13, 11, (isIphone() ? 2.9 : 2.6) %%>;
   middleTitleTextTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), 0 %%>;
 
