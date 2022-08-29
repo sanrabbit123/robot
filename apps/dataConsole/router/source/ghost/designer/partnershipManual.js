@@ -755,7 +755,9 @@ PartnershipManualJs.prototype.insertContextBox = function () {
           click: function (e) {
             const i = Number(this.getAttribute('i'));
             const j = Number(this.getAttribute('j'));
-            GeneralJs.scrollTo(window, contents[i].scroll[j]);
+            if (big) {
+              GeneralJs.scrollTo(window, contents[i].scroll[j]);
+            }
           }
         },
         style: {
