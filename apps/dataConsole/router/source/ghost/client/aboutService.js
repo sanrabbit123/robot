@@ -266,20 +266,22 @@ AboutServiceJs.prototype.insertPeopleBox = function () {
   let mobileLeftBoxHeight;
   let titleTop;
   let descriptionSize;
+  let descriptionBottom;
 
-  blockHeight = <%% 383, 326, 293, 246, 121 %%>;
+  blockHeight = <%% 383, 316, 273, 246, 121 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
   margin = <%% 52, 52, 44, 32, 52 %%>;
   marginTop = <%% 52, 50, 40, 32, 52 %%>;
   leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
 
-  titleFont = <%% 22, 22, 23, 19, 5.4 %%>;
+  titleFont = <%% 22, 22, 20, 19, 5.4 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
   titleFontWeight = <%% 800, 800, 800, 800, 500 %%>;
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
 
-  titleTop = <%% 110, 110, 110, 110, 110 %%>;
-  descriptionSize = <%% 14, 14, 14, 14, 14 %%>;
+  titleTop = <%% 110, 54, 40, 36, 5 %%>;
+  descriptionSize = <%% 14, 14, 13, 13, 3 %%>;
+  descriptionBottom = <%% 0, -8, -7, -2, 0 %%>;
 
   barWidth = <%% 70, 80, 80, 80, 80 %%>;
   barLeft = <%% 240, titleLeft + 234, titleLeft + 234, titleLeft + 234, titleLeft + 234 %%>;
@@ -287,7 +289,7 @@ AboutServiceJs.prototype.insertPeopleBox = function () {
   indexFont = <%% 19, 19, 19, 19, 19 %%>;
   indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
 
-  leftWidth = <%% 340, 232, 200, 164, 300 %%>;
+  leftWidth = <%% 340, 260, 250, 164, 300 %%>;
 
   initWordingHeight = <%% 20, 20, 20, 20, 9 %%>;
   initWordingSize = <%% 15.5, 15, 14.5, 13.5, 3.5 %%>;
@@ -386,7 +388,7 @@ AboutServiceJs.prototype.insertPeopleBox = function () {
         ].join("\n"),
         style: {
           position: "absolute",
-          bottom: String(0),
+          bottom: String(descriptionBottom) + ea,
           left: String(titleLeft) + ea,
           color: colorChip.black,
           textAlign: desktop ? "" : "center",
@@ -583,7 +585,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
 
   margin = <%% 52, 52, 44, 32, 6 %%>;
 
-  titleFont = <%% 22, 22, 21, 17, 4.2 %%>;
+  titleFont = <%% 22, 22, 18, 16, 4.2 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
   titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
@@ -600,13 +602,13 @@ AboutServiceJs.prototype.insertServiceBox = function () {
 
   middleTitleSize = <%% 23, 23, 21, 18, 4.3 %%>;
   middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-  middleTitlePadding = <%% 16, 16, 16, 16, 3 %%>;
+  middleTitlePadding = <%% 16, 16, 12, 10, 3 %%>;
   middleTitleLineTop = <%% 14, 14, 13, 11, (isIphone() ? 2.9 : 2.6) %%>;
   middleTitleTextTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), 0 %%>;
 
-  middleTongPaddinngTop = <%% 108, 72, 64, 45, 8 %%>;
+  middleTongPaddinngTop = <%% 108, 84, 72, 45, 8 %%>;
   middleTongPaddingBottom = <%% 150, 130, 100, 70, 14.5 %%>;
-  middleTitleMarginBottom = <%% 50, 50, 42, 34, 6 %%>;
+  middleTitleMarginBottom = <%% 50, 45, 40, 34, 6 %%>;
 
   middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
 
@@ -642,14 +644,14 @@ AboutServiceJs.prototype.insertServiceBox = function () {
 
   contents0Columns = <%% 2, 2, 2, 2, 1 %%>;
 
-  contents0TongBoxHeight = <%% 145, 145, 145, 126, 26 %%>;
-  contents0TongPhotoWidth = <%% 425, 250, 183, 150, 39 %%>;
+  contents0TongBoxHeight = <%% 145, 145, 138, 126, 26 %%>;
+  contents0TongPhotoWidth = <%% 425, 250, 190, 150, 39 %%>;
 
   contents0ArrowWidth = <%% 34, 34, 24, 0, 4.8 %%>;
   contents0ArrowHeight = <%% 8, 8, 8, 8, 1.8 %%>;
-  contents0ArrowTop = <%% 86, 86, 86, 80, 15.6 %%>;
+  contents0ArrowTop = <%% 86, 86, 79, 80, 15.6 %%>;
 
-  contents1TitleSize = <%% 17, 17, 17, 15, 4.2 %%>;
+  contents1TitleSize = <%% 17, 17, 16, 15, 4.2 %%>;
   contents1TitleWeight = <%% 700, 700, 700, 700, 700 %%>;
   contents1TitleBetween = <%% 16, 14, 14, 12, 6 %%>;
   contents1Between = <%% 45, 40, 30, 22, 8 %%>;
@@ -672,7 +674,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   contents1UpBoxWhitePaddingTop = <%% (isMac() ? 16 : 17), (isMac() ? 16 : 17), (isMac() ? 16 : 17), (isMac() ? 13 : 14), 3 %%>;
   contents1UpBoxWhitePaddingBottom = <%% (isMac() ? 21 : 19), (isMac() ? 21 : 19), (isMac() ? 21 : 19), (isMac() ? 18 : 16), 3.5 %%>;
 
-  contents1UpBoxWhiteSize = <%% 14, 13, 14, 11, 2.8 %%>;
+  contents1UpBoxWhiteSize = <%% 14, 13, 13, 11, 2.8 %%>;
   contents1UpBoxWhiteWeight = <%% 400, 400, 400, 400, 400 %%>;
   contents1UpBoxWhiteWeightBold = <%% 700, 700, 700, 700, 700 %%>;
   contents1UpBoxWhiteLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
@@ -2250,7 +2252,7 @@ AboutServiceJs.prototype.launching = async function (loading) {
 
     this.totalContents.children[0].style.background = colorChip.gray1;
     this.totalContents.children[1].style.transition = "all 0s ease";
-    this.totalContents.children[1].style.height = String(<&& 600 | 600 | 560 | 560 | 56 &&>) + this.ea;
+    this.totalContents.children[1].style.height = String(<&& 600 | 540 | 460 | 460 | 56 &&>) + this.ea;
 
   } catch (err) {
     console.log(err);
