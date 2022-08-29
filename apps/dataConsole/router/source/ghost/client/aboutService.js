@@ -45,6 +45,186 @@ AboutServiceJs.binaryPath = "/middle/curation";
 
 AboutServiceJs.prototype.insertInitBox = function () {
   const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { ea, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  let whiteBlock;
+  let style;
+  let blockHeight;
+  let leftBox, rightBox;
+  let titleBox, barBox, indexBox;
+  let margin;
+  let quoteWidth;
+  let quoteHeight;
+  let titleFontSize, titleFontWeight;
+  let serviceChildren;
+  let searchTags;
+  let titleWording;
+  let servicePaddingLeft;
+  let serviceSize;
+  let serviceBlockPaddingTop;
+  let whiteBlockPaddingTop, whiteBlockPaddingBottom;
+  let quotoTongHeight;
+  let searchBarPaddingTop;
+  let searchBarHeight;
+  let searchBarWidth;
+  let searchIconHeight;
+  let searchIconRight, searchIconTop;
+  let whiteBlockMarginBottom;
+  let inputWithoutHeight;
+  let serviceButtonClassName;
+  let serviceBlock;
+  let inputSize, inputWeight;
+  let placeholder;
+  let titleTop;
+  let servicePaddingTop, servicePaddingBottom;
+  let serviceMarginRight;
+  let subTitleMarginTop, subTitleFontSize, subTitleWeight;
+  let subTitleContents;
+  let middleBox;
+  let tagTextTop;
+  let tagTongBottom;
+  let boxTopVisual;
+  let mobileBlockTop;
+
+  margin = <%% 30, 30, 30, 30, 30 %%>;
+
+  whiteBlockMarginBottom = <%% 90, 80, 74, 60, 14.5 %%>;
+
+  quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
+  quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
+  titleFontSize = <%% 35, 33, 32, 30, 6.4 %%>;
+  titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
+  titleTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 4) %%>;
+
+  servicePaddingTop = <%% 7, 7, 7, 7, 7 %%>;
+  servicePaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
+  servicePaddingLeft = <%% 13, 13, 13, 12, 2.2 %%>;
+  serviceMarginRight = <%% 6, 6, 6, 6, 6 %%>;
+  serviceSize = <%% 13, 13, 13, 12, 3.3 %%>;
+  serviceBlockPaddingTop = <%% (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), 5 %%>;
+
+  whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
+  whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
+
+  searchBarPaddingTop = <%% 220, 220, 192, 164, 12.5 %%>;
+  searchBarHeight = <%% 40, 40, 40, 36, 8 %%>;
+  searchBarWidth = <%% 690, 516, 516, 420, 88 %%>;
+
+  searchIconHeight = <%% 20, 20, 20, 20, 4 %%>;
+  searchIconRight = <%% 11, 11, 11, 11, 2 %%>;
+  searchIconTop = <%% 10, 10, 10, 10, 1.8 %%>;
+
+  inputWithoutHeight = <%% (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), 0.8 %%>;
+
+  inputSize = <%% 15, 15, 15, 14, 3.1 %%>;
+  inputWeight = <%% 300, 300, 300, 300, 300 %%>;
+
+  subTitleMarginTop = <%% 2, 2, 1, 1, 0.2 %%>;
+  subTitleFontSize = <%% 16, 16, 16, 15, 3.2 %%>;
+  subTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
+
+  tagTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
+  tagTongBottom = <%% 3, 3, 1, 1, 0 %%>;
+  boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
+
+  titleWording = "홈리에종 서비스";
+  subTitleContents = "홈리에종 서비스에 대한 상세한 안내";
+
+  mobileBlockTop = 4.5;
+
+  whiteBlock = createNode({
+    mother: this.baseTong,
+    style: {
+      display: "block",
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      marginBottom: String(whiteBlockMarginBottom) + ea,
+      top: String(-1 * boxTopVisual) + ea,
+      paddingTop: desktop ? "" : String(mobileBlockTop) + ea,
+    }
+  });
+
+  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.white))) * quoteHeight;
+  createNode({
+    mother: whiteBlock,
+    style: {
+      display: "flex",
+      position: "relative",
+      textAlign: "center",
+      justifyContent: "center",
+      alignItems: "center",
+      height: String(quotoTongHeight) + ea,
+      opacity: String(0.6),
+    },
+    children: [
+      {
+        mode: "svg",
+        source: svgMaker.doubleQuote(colorChip.white),
+        style: {
+          display: "inline-block",
+          height: String(quoteHeight) + ea,
+          width: String(quoteWidth) + ea,
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: whiteBlock,
+    style: {
+      display: "flex",
+      position: "relative",
+      textAlign: "center",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    children: [
+      {
+        text: titleWording,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: mobile ? "" : String(titleTop) + ea,
+          fontSize: String(titleFontSize) + ea,
+          fontWeight: String(titleFontWeight),
+          color: colorChip.white,
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: whiteBlock,
+    style: {
+      display: "flex",
+      position: "relative",
+      textAlign: "center",
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: String(subTitleMarginTop) + ea,
+    },
+    children: [
+      {
+        text: subTitleContents,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: mobile ? "" : String(0) + ea,
+          fontSize: String(subTitleFontSize) + ea,
+          fontWeight: String(subTitleWeight),
+          color: colorChip.white,
+        }
+      }
+    ]
+  });
+
+}
+
+AboutServiceJs.prototype.insertPeopleBox = function () {
+  const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
   const { client, ea, media, osException, testMode } = this;
   const mobile = media[4];
@@ -85,17 +265,22 @@ AboutServiceJs.prototype.insertInitBox = function () {
   let grayBoxImageVisualWidth;
   let marginTop;
   let mobileLeftBoxHeight;
+  let titleTop;
+  let descriptionSize;
 
-  blockHeight = <%% 396, 326, 293, 246, 121 %%>;
+  blockHeight = <%% 383, 326, 293, 246, 121 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
   margin = <%% 52, 52, 44, 32, 52 %%>;
   marginTop = <%% 52, 50, 40, 32, 52 %%>;
   leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
 
-  titleFont = <%% 31, 26, 23, 19, 5.4 %%>;
+  titleFont = <%% 22, 22, 23, 19, 5.4 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
-  titleFontWeight = <%% 500, 500, 600, 600, 500 %%>;
+  titleFontWeight = <%% 800, 800, 800, 800, 500 %%>;
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
+
+  titleTop = <%% 110, 110, 110, 110, 110 %%>;
+  descriptionSize = <%% 14, 14, 14, 14, 14 %%>;
 
   barWidth = <%% 70, 80, 80, 80, 80 %%>;
   barLeft = <%% 240, titleLeft + 234, titleLeft + 234, titleLeft + 234, titleLeft + 234 %%>;
@@ -103,7 +288,7 @@ AboutServiceJs.prototype.insertInitBox = function () {
   indexFont = <%% 19, 19, 19, 19, 19 %%>;
   indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
 
-  leftWidth = <%% 300, 232, 200, 164, 300 %%>;
+  leftWidth = <%% 340, 232, 200, 164, 300 %%>;
 
   initWordingHeight = <%% 20, 20, 20, 20, 9 %%>;
   initWordingSize = <%% 15.5, 15, 14.5, 13.5, 3.5 %%>;
@@ -189,12 +374,24 @@ AboutServiceJs.prototype.insertInitBox = function () {
           position: "absolute",
           fontSize: String(titleFont) + ea,
           fontWeight: String(titleFontWeight),
-          wordSpacing: String(wordSpacing) + "px",
-          top: desktop ? (String((media[0] ? 0 : media[1] ? 1 : 3) + (isMac() || mobile ? 0 : 2)) + ea) : String(9) + ea,
+          top: String(titleTop) + ea,
           left: String(titleLeft) + ea,
           color: colorChip.black,
           width: desktop ? "" : String(100) + '%',
           textAlign: desktop ? "" : "center",
+        }
+      },
+      {
+        text: "실패의 경험도 많고 어쩌구 저쩌구리\n알라딸라숑 알아 볼 것은 정말 많고\n시간은 없어서 혼자서 어떻게 할지\n정말 감이 안 잡힙니다. 어쩌구리",
+        style: {
+          position: "absolute",
+          bottom: String(0),
+          left: String(titleLeft) + ea,
+          color: colorChip.black,
+          textAlign: desktop ? "" : "center",
+          fontSize: String(descriptionSize) + ea,
+          fontWeight: String(400),
+          lineHeight: String(1.6),
         }
       }
     ]
@@ -375,16 +572,19 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   let contents5Tong;
   let photoMargin;
   let middleTitleTextTop;
+  let bottomMargin;
+  let contents0InfoSize;
 
+  bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
   blockMarginBottom = <%% 16, 16, 16, 16, 2 %%>;
 
   lastBlockMarginBottom = <%% 160, 160, 160, 80, 12 %%>;
 
   margin = <%% 52, 52, 44, 32, 6 %%>;
 
-  titleFont = <%% 26, 24, 21, 17, 4.2 %%>;
+  titleFont = <%% 22, 22, 21, 17, 4.2 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
-  titleFontWeight = <%% 500, 500, 600, 600, 600 %%>;
+  titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
   titleMarginBottom = <%% 0, 0, 18, 12, 0.5 %%>;
 
@@ -397,15 +597,15 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   rightBoxPaddingTop = <%% 7, 5, 7, 7, 6.5 %%>;
   rightBoxPaddingTopFontVersion = <%% 2, 2, 2, 2, 7 %%>;
 
-  middleTitleSize = <%% 26, 24, 21, 18, 4.3 %%>;
-  middleTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
-  middleTitlePadding = <%% 20, 20, 20, 20, 3 %%>;
-  middleTitleLineTop = <%% 17, 17, 13, 11, (isIphone() ? 2.9 : 2.6) %%>;
+  middleTitleSize = <%% 23, 23, 21, 18, 4.3 %%>;
+  middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  middleTitlePadding = <%% 18, 18, 18, 18, 3 %%>;
+  middleTitleLineTop = <%% 14, 14, 13, 11, (isIphone() ? 2.9 : 2.6) %%>;
   middleTitleTextTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), 0 %%>;
 
-  middleTongPaddinngTop = <%% 90, 72, 64, 45, 8 %%>;
+  middleTongPaddinngTop = <%% 120, 72, 64, 45, 8 %%>;
   middleTongPaddingBottom = <%% 150, 130, 100, 70, 14.5 %%>;
-  middleTitleMarginBottom = <%% 54, 50, 42, 34, 6 %%>;
+  middleTitleMarginBottom = <%% 50, 50, 42, 34, 6 %%>;
 
   middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
 
@@ -424,9 +624,11 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   contents0PaddingTop = <%% (isMac() ? 24 : 25), (isMac() ? 24 : 25), (isMac() ? 24 : 25), (isMac() ? 20 : 21), 3.5 %%>;
   contents0PaddingBottom = <%% (isMac() ? 9 : 7), (isMac() ? 9 : 7), (isMac() ? 9 : 7), (isMac() ? 9 : 7), 2 %%>;
 
-  contents0TitleSize = <%% 16, 16, 15, 13, 3.1 %%>;
+  contents0InfoSize = <%% 14, 14, 14, 14, 3 %%>;
+
+  contents0TitleSize = <%% 15, 15, 14, 13, 3.1 %%>;
   contents0TitleWeight = <%% 600, 600, 600, 600, 600 %%>;
-  contents0TitleWhiteBoxMargin = <%% 24, 12, 14, 10, 2 %%>;
+  contents0TitleWhiteBoxMargin = <%% 10, 10, 10, 10, 2 %%>;
   contents0TitleLineHeight = <%% 1.45, 1.45, 1.45, 1.45, 1.45 %%>;
 
   contents0DescriptionSize = <%% 13, 13, 13, 12, 2.6 %%>;
@@ -440,14 +642,14 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   contents0Columns = <%% 2, 2, 2, 2, 1 %%>;
 
   contents0TongBoxHeight = <%% 145, 145, 145, 126, 26 %%>;
-  contents0TongPhotoWidth = <%% 420, 250, 183, 150, 39 %%>;
+  contents0TongPhotoWidth = <%% 425, 250, 183, 150, 39 %%>;
 
   contents0ArrowWidth = <%% 34, 34, 24, 0, 4.8 %%>;
   contents0ArrowHeight = <%% 8, 8, 8, 8, 1.8 %%>;
   contents0ArrowTop = <%% 86, 86, 86, 80, 15.6 %%>;
 
-  contents1TitleSize = <%% 19, 18, 17, 15, 4.2 %%>;
-  contents1TitleWeight = <%% 600, 600, 600, 600, 600 %%>;
+  contents1TitleSize = <%% 17, 17, 17, 15, 4.2 %%>;
+  contents1TitleWeight = <%% 700, 700, 700, 700, 700 %%>;
   contents1TitleBetween = <%% 16, 14, 14, 12, 6 %%>;
   contents1Between = <%% 45, 40, 30, 22, 8 %%>;
 
@@ -493,7 +695,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   contents2LineTitleSize = <%% 14, 13, 14, 14, 14 %%>;
   contents2LineTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-  contents2ImageTop = <%% 75, 75, 54, 40, 6 %%>;
+  contents2ImageTop = <%% 80, 80, 54, 40, 6 %%>;
   contents2ImageBottom = <%% 30, 30, 30, 24, 11 %%>;
 
   contents2BoxMarginTop = <%% 25, 18, 20, 25, 25 %%>;
@@ -528,6 +730,8 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   contents3GrayChildrenMarginTop = <%% 20, 15, 20, 20, 20 %%>;
   contents3GrayChildrenWeight = <%% 600, 600, 600, 600, 600 %%>;
   contents3GrayChildrenPaddingTop = <%% 3, 3, 3, 3, 3 %%>;
+  contents3GrayTongMarginBottom = <%% 170, 170, 170, 170, 17 %%>;
+
 
   contents3PictureHeight = <%% 160, 120, 138, 110, 26 %%>;
 
@@ -674,8 +878,8 @@ AboutServiceJs.prototype.insertServiceBox = function () {
       position: "relative",
       borderRadius: String(desktop ? 8 : 3) + "px",
       width: withOut(0 * 2, ea),
-      background: "transparent",
       paddingTop: String(middleTongPaddinngTop) + ea,
+      paddingBottom: String(margin) + ea,
     }
   });
 
@@ -700,7 +904,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
         }
       },
       {
-        text: "이젠 디자이너와 함께 진행하세요!",
+        text: "이젠, 디자이너와 함께 진행하세요!",
         style: {
           display: "inline-block",
           position: "relative",
@@ -710,7 +914,21 @@ AboutServiceJs.prototype.insertServiceBox = function () {
           textAlign: "center",
           paddingLeft: String(middleTitlePadding) + ea,
           paddingRight: String(middleTitlePadding) + ea,
-          background: desktop ? colorChip.gray0 : colorChip.gray1,
+          top: String(middleTitleTextTop) + ea,
+          background: colorChip.gray1,
+        }
+      },
+      {
+        text: "너무나도 할 게 많은 인테리어 실패의 경험도 많고 어쩌구 저쩌구리\n알라딸라숑 알아 볼 것은 정말 많고 시간은 없어서 혼자서 어떻게 할지 정말 감이 안 잡힙니다.",
+        style: {
+          display: "block",
+          position: "relative",
+          fontSize: String(contents0InfoSize) + ea,
+          fontWeight: String(400),
+          lineHeight: String(1.6),
+          color: colorChip.black,
+          textAlign: "center",
+          paddingTop: String(middleTitlePadding) + ea,
           top: String(middleTitleTextTop) + ea,
         }
       }
@@ -806,6 +1024,59 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   }
 
   // box 1 ---------------------------------------------------------------------------------------------------
+
+  createNode({
+    mother: whiteBlock0,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      textAlign: "center",
+      marginTop: String(middleTongPaddinngTop + bottomMargin) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: "absolute",
+          width: String(100) + '%',
+          height: String(middleTitleLineTop) + ea,
+          top: String(0),
+          left: String(0),
+          borderBottom: "1px solid " + colorChip.gray4,
+        }
+      },
+      {
+        text: "디자이너와 함께 하면, 제공받는 것들",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(middleTitleSize) + ea,
+          fontWeight: String(middleTitleWeight),
+          color: colorChip.black,
+          textAlign: "center",
+          paddingLeft: String(middleTitlePadding) + ea,
+          paddingRight: String(middleTitlePadding) + ea,
+          top: String(middleTitleTextTop) + ea,
+          background: colorChip.gray1,
+        }
+      },
+      {
+        text: "너무나도 할 게 많은 인테리어 실패의 경험도 많고 어쩌구 저쩌구리\n알라딸라숑 알아 볼 것은 정말 많고 시간은 없어서 혼자서 어떻게 할지 정말 감이 안 잡힙니다.",
+        style: {
+          display: "block",
+          position: "relative",
+          fontSize: String(contents0InfoSize) + ea,
+          fontWeight: String(400),
+          lineHeight: String(1.6),
+          color: colorChip.black,
+          textAlign: "center",
+          paddingTop: String(middleTitlePadding) + ea,
+          top: String(middleTitleTextTop) + ea,
+        }
+      }
+    ]
+  });
 
   whiteBlock1 = createNode({
     mother: baseTong,
@@ -1099,6 +1370,20 @@ AboutServiceJs.prototype.insertServiceBox = function () {
           background: colorChip.white,
           top: String(middleTitleTextTop) + ea,
         }
+      },
+      {
+        text: "너무나도 할 게 많은 인테리어 실패의 경험도 많고 어쩌구 저쩌구리\n알라딸라숑 알아 볼 것은 정말 많고 시간은 없어서 혼자서 어떻게 할지 정말 감이 안 잡힙니다.",
+        style: {
+          display: "block",
+          position: "relative",
+          fontSize: String(contents0InfoSize) + ea,
+          fontWeight: String(400),
+          lineHeight: String(1.6),
+          color: colorChip.black,
+          textAlign: "center",
+          paddingTop: String(middleTitlePadding) + ea,
+          top: String(middleTitleTextTop) + ea,
+        }
       }
     ]
   });
@@ -1117,9 +1402,9 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   });
 
 
-
-
   // box 3 ---------------------------------------------------------------------------------------------------
+
+  /*
 
   whiteBlock3 = createNode({
     mother: baseTong2,
@@ -1310,6 +1595,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
 
   }
 
+  */
 
   // gray area ---------------------------------------------------------------------------------------------------
 
@@ -1317,11 +1603,12 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   baseTong3Back = baseTong.cloneNode(false);
   baseTong.parentNode.appendChild(baseTong3Back);
   baseTong3Back.appendChild(baseTong3);
+  baseTong3Back.style.marginBottom = String(contents3GrayTongMarginBottom) + ea;
+  baseTong3.style.marginBottom = "";
   baseTong3.style.paddingTop = String(0) + ea;
   baseTong3Back.style.paddingTop = String(middleAreaPaddingTop) + ea;
   baseTong3Back.style.width = String(100) + '%';
   baseTong3Back.style.left = String(0);
-  baseTong3Back.style.background = colorChip.gray0;
   baseTong2Back.style.paddingBottom = String(middleTongPaddingBottom) + ea;
 
   // box 4 ---------------------------------------------------------------------------------------------------
@@ -1368,7 +1655,21 @@ AboutServiceJs.prototype.insertServiceBox = function () {
           textAlign: "center",
           paddingLeft: String(middleTitlePadding) + ea,
           paddingRight: String(middleTitlePadding) + ea,
-          background: colorChip.gray0,
+          background: colorChip.gray1,
+          top: String(middleTitleTextTop) + ea,
+        }
+      },
+      {
+        text: "너무나도 할 게 많은 인테리어 실패의 경험도 많고 어쩌구 저쩌구리\n알라딸라숑 알아 볼 것은 정말 많고 시간은 없어서 혼자서 어떻게 할지 정말 감이 안 잡힙니다.",
+        style: {
+          display: "block",
+          position: "relative",
+          fontSize: String(contents0InfoSize) + ea,
+          fontWeight: String(400),
+          lineHeight: String(1.6),
+          color: colorChip.black,
+          textAlign: "center",
+          paddingTop: String(middleTitlePadding) + ea,
           top: String(middleTitleTextTop) + ea,
         }
       }
@@ -1817,8 +2118,7 @@ AboutServiceJs.prototype.launching = async function (loading) {
       }
     }
 
-
-    const { returnGet, ajaxJson, requestPromise, setDebounce } = GeneralJs;
+    const { returnGet, ajaxJson, requestPromise, setDebounce, colorChip } = GeneralJs;
     const getObj = returnGet();
     let response;
 
@@ -1835,7 +2135,7 @@ AboutServiceJs.prototype.launching = async function (loading) {
         binaryPath: AboutServiceJs.binaryPath,
         subTitle: "홈리에종 서비스 설명",
         secondBackground: false,
-        backgroundType: 1,
+        backgroundType: 0,
         talk: {
           text: "기타 문의 사항은 홈리에종 채널에 주세요!",
           event: "channel",
@@ -1844,6 +2144,7 @@ AboutServiceJs.prototype.launching = async function (loading) {
       local: async () => {
         try {
           instance.insertInitBox();
+          instance.insertPeopleBox();
           instance.insertServiceBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "AboutServiceJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
@@ -1852,6 +2153,10 @@ AboutServiceJs.prototype.launching = async function (loading) {
     });
 
     loading.parentNode.removeChild(loading);
+
+    this.totalContents.children[0].style.background = colorChip.gray1;
+    this.totalContents.children[1].style.transition = "all 0s ease";
+    this.totalContents.children[1].style.height = String(<&& 560 | 560 | 560 | 560 | 56 &&>) + this.ea;
 
   } catch (err) {
     console.log(err);
