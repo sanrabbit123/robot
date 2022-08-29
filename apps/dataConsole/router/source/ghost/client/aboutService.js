@@ -41,7 +41,7 @@ const AboutServiceJs = function () {
   this.mother = new GeneralJs();
 }
 
-AboutServiceJs.binaryPath = "/middle/curation";
+AboutServiceJs.binaryPath = FRONTHOST + "/middle/curation";
 
 AboutServiceJs.prototype.insertInitBox = function () {
   const instance = this;
@@ -603,7 +603,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   middleTitleLineTop = <%% 14, 14, 13, 11, (isIphone() ? 2.9 : 2.6) %%>;
   middleTitleTextTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), 0 %%>;
 
-  middleTongPaddinngTop = <%% 120, 72, 64, 45, 8 %%>;
+  middleTongPaddinngTop = <%% 108, 72, 64, 45, 8 %%>;
   middleTongPaddingBottom = <%% 150, 130, 100, 70, 14.5 %%>;
   middleTitleMarginBottom = <%% 50, 50, 42, 34, 6 %%>;
 
