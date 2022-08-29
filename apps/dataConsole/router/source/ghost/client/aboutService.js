@@ -244,7 +244,6 @@ AboutServiceJs.prototype.insertPeopleBox = function () {
   let quoteTop, quoteLeft, quoteHeight, quoteWidth, quoteMarginBottom;
   let initWordingSize, initWordingHeight, initWordingWordSpacing, initWordingLineHeight;
   let indexNumberBottom;
-  let initWording0, initWording1;
   let grayBox;
   let grayBoxMarginTop;
   let grayBoxTitleSize, grayBoxTitleWeight, grayBoxTitleTop, grayBoxTitleLeft;
@@ -339,9 +338,6 @@ AboutServiceJs.prototype.insertPeopleBox = function () {
   grayUpWordings = [ "프로세스", "후 시공 / 구매", "선 디자인 / 기획", "디자이너 선택" ];
   grayDownWordings = [ "비용 구성", "시공 비용", "구매 비용", "디자인비" ];
 
-  initWording0 = "본격적인 인테리어는 고객님과 맞는 <b%디자이너가 매칭된 이후%b> 진행되며,";
-  initWording1 = "<b%이를 위해 상세 큐레이션%b>이 꼭 필요합니다. 다음 질문들에 꼭 답변해주세요!";
-
   whiteBlock = createNode({
     mother: this.baseTong,
     style: {
@@ -382,7 +378,12 @@ AboutServiceJs.prototype.insertPeopleBox = function () {
         }
       },
       {
-        text: "실패의 경험도 많고 어쩌구 저쩌구리\n알라딸라숑 알아 볼 것은 정말 많고\n시간은 없어서 혼자서 어떻게 할지\n정말 감이 안 잡힙니다. 어쩌구리",
+        text: [
+          "알아보면 알아볼수록 해야 할 것이",
+          "너무나도 많은 인테리어, 준비하다 보면",
+          "막히는 부분도 많고, 구입하다 보면",
+          "실패도 많이 하기 마련입니다.",
+        ].join("\n"),
         style: {
           position: "absolute",
           bottom: String(0),
@@ -664,7 +665,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   contents1UpBoxCheckWidth = <%% 11, 11, 11, 10, 2.6 %%>;
   contents1UpBoxCheckMarginRight = <%% 6, 6, 6, 6, 6 %%>;
 
-  contents1UpBoxTitleSize = <%% 16, 15, 16, 14, 3.5 %%>;
+  contents1UpBoxTitleSize = <%% 15, 15, 15, 14, 3.5 %%>;
   contents1UpBoxTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
 
   contents1UpBoxWhiteMarginTop = <%% (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 8 : 6), 3 %%>;
@@ -919,7 +920,10 @@ AboutServiceJs.prototype.insertServiceBox = function () {
         }
       },
       {
-        text: "너무나도 할 게 많은 인테리어 실패의 경험도 많고 어쩌구 저쩌구리\n알라딸라숑 알아 볼 것은 정말 많고 시간은 없어서 혼자서 어떻게 할지 정말 감이 안 잡힙니다.",
+        text: [
+          "막힘도 실패도 많은 인테리어, 혼자 하려 하지 말고 전문가의 도움을 받아보세요!",
+          "인테리어 전 과정 속에서 도움을 받으며 수월하고 확실하게 결과를 보실 수 있답니다."
+        ].join("\n"),
         style: {
           display: "block",
           position: "relative",
@@ -1062,7 +1066,10 @@ AboutServiceJs.prototype.insertServiceBox = function () {
         }
       },
       {
-        text: "너무나도 할 게 많은 인테리어 실패의 경험도 많고 어쩌구 저쩌구리\n알라딸라숑 알아 볼 것은 정말 많고 시간은 없어서 혼자서 어떻게 할지 정말 감이 안 잡힙니다.",
+        text: [
+          "디자이너는 단순히 디자인만 하는 것이 아니라, 예산에 맞춰 공간 계획을 세우고",
+          "전체적인 일정을 조율하며 인테리어가 잘 완성되도록 운영합니다. 구체적인 제공물은 아래와 같습니다."
+        ].join("\n"),
         style: {
           display: "block",
           position: "relative",
@@ -1372,7 +1379,10 @@ AboutServiceJs.prototype.insertServiceBox = function () {
         }
       },
       {
-        text: "너무나도 할 게 많은 인테리어 실패의 경험도 많고 어쩌구 저쩌구리\n알라딸라숑 알아 볼 것은 정말 많고 시간은 없어서 혼자서 어떻게 할지 정말 감이 안 잡힙니다.",
+        text: [
+          "인테리어 비용은 크게 시공 비용, 제품 구매 비용, 디자인 비용으로 나뉩니다.",
+          "디자이너는 예산에 맞춰 시공 비용과 제품 구매 비용의 한계를 정하고 그에 맞춰 구체적인 계획을 세웁니다."
+        ].join("\n"),
         style: {
           display: "block",
           position: "relative",
@@ -1467,7 +1477,10 @@ AboutServiceJs.prototype.insertServiceBox = function () {
         }
       },
       {
-        text: "너무나도 할 게 많은 인테리어 실패의 경험도 많고 어쩌구 저쩌구리\n알라딸라숑 알아 볼 것은 정말 많고 시간은 없어서 혼자서 어떻게 할지 정말 감이 안 잡힙니다.",
+        text: [
+          "인테리어에 드는 기간은 시공 정도에 따라 다르게 설정됩니다.",
+          "각각의 경우에 따라 필요한 소요 시간은 아래 표와 같습니다."
+        ],
         style: {
           display: "block",
           position: "relative",
@@ -1737,7 +1750,10 @@ AboutServiceJs.prototype.insertServiceBox = function () {
         }
       },
       {
-        text: "너무나도 할 게 많은 인테리어 실패의 경험도 많고 어쩌구 저쩌구리\n알라딸라숑 알아 볼 것은 정말 많고 시간은 없어서 혼자서 어떻게 할지 정말 감이 안 잡힙니다.",
+        text: [
+          "홈리에종의 프로세스는 먼저 디자이너를 선택하는 과정부터 시작됩니다.",
+          "디자이너와 매칭이 되면, 디자인이 시작되고 그 디자인에 맞춰 시공과 구매가 진행되는 형식입니다."
+        ].join("\n"),
         style: {
           display: "block",
           position: "relative",
