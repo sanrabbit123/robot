@@ -268,19 +268,19 @@ AboutServiceJs.prototype.insertPeopleBox = function () {
   let descriptionSize;
   let descriptionBottom;
 
-  blockHeight = <%% 383, 316, 273, 246, 121 %%>;
+  blockHeight = <%% 383, 316, 273, 226, 129.5 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
   margin = <%% 52, 52, 44, 32, 52 %%>;
   marginTop = <%% 52, 50, 40, 32, 52 %%>;
   leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
 
-  titleFont = <%% 22, 22, 20, 19, 5.4 %%>;
+  titleFont = <%% 22, 22, 20, 17, 4.5 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
-  titleFontWeight = <%% 800, 800, 800, 800, 500 %%>;
+  titleFontWeight = <%% 800, 800, 800, 800, 800 %%>;
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
 
-  titleTop = <%% 110, 54, 40, 36, 5 %%>;
-  descriptionSize = <%% 14, 14, 13, 13, 3 %%>;
+  titleTop = <%% 110, 54, 40, 30, 8.5 %%>;
+  descriptionSize = <%% 14, 14, 13, 12, 3 %%>;
   descriptionBottom = <%% 0, -8, -7, -2, 0 %%>;
 
   barWidth = <%% 70, 80, 80, 80, 80 %%>;
@@ -289,7 +289,7 @@ AboutServiceJs.prototype.insertPeopleBox = function () {
   indexFont = <%% 19, 19, 19, 19, 19 %%>;
   indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
 
-  leftWidth = <%% 340, 260, 250, 164, 300 %%>;
+  leftWidth = <%% 340, 260, 250, 210, 300 %%>;
 
   initWordingHeight = <%% 20, 20, 20, 20, 9 %%>;
   initWordingSize = <%% 15.5, 15, 14.5, 13.5, 3.5 %%>;
@@ -333,7 +333,7 @@ AboutServiceJs.prototype.insertPeopleBox = function () {
 
   mobileGrayUpHeight = 18;
   mobileRightBoxHeight = 78;
-  mobileLeftBoxHeight = 29;
+  mobileLeftBoxHeight = 37.5;
 
   grayBoxImageVisualWidth = <%% 16, 4, 0, 0, 19 %%>;
 
@@ -381,10 +381,10 @@ AboutServiceJs.prototype.insertPeopleBox = function () {
       },
       {
         text: [
-          "알아보면 알아볼수록 해야 할 것이",
-          "너무나도 많은 인테리어, 준비하다 보면",
-          "막히는 부분도 많고, 구입하다 보면",
-          "실패도 많이 하기 마련입니다.",
+          desktop ? "알아보면 알아볼수록 해야 할 것이" : "알아볼수록 해야할 것이 너무 많은 인테리어,",
+          desktop ? "너무나도 많은 인테리어, 준비하다 보면" : "막히는 부분도 많고 실패도 많이 하기 마련입니다.",
+          desktop ? "막히는 부분도 많고, 구입하다 보면" : "",
+          desktop ? "실패도 많이 하기 마련입니다." : "",
         ].join("\n"),
         style: {
           position: "absolute",
@@ -392,6 +392,7 @@ AboutServiceJs.prototype.insertPeopleBox = function () {
           left: String(titleLeft) + ea,
           color: colorChip.black,
           textAlign: desktop ? "" : "center",
+          width: desktop ? "" : withOut(0),
           fontSize: String(descriptionSize) + ea,
           fontWeight: String(400),
           lineHeight: String(1.6),
@@ -600,15 +601,16 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   rightBoxPaddingTop = <%% 7, 5, 7, 7, 6.5 %%>;
   rightBoxPaddingTopFontVersion = <%% 2, 2, 2, 2, 7 %%>;
 
-  middleTitleSize = <%% 23, 23, 21, 18, 4.3 %%>;
+  middleTitleSize = <%% 23, 23, 21, 18, 4.2 %%>;
   middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-  middleTitlePadding = <%% 16, 16, 12, 10, 3 %%>;
+  middleTitlePadding = <%% 16, 16, 12, 10, 2 %%>;
   middleTitleLineTop = <%% 14, 14, 13, 11, (isIphone() ? 2.9 : 2.6) %%>;
-  middleTitleTextTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), 0 %%>;
+  middleTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
-  middleTongPaddinngTop = <%% 108, 84, 72, 45, 8 %%>;
-  middleTongPaddingBottom = <%% 150, 130, 100, 70, 14.5 %%>;
-  middleTitleMarginBottom = <%% 50, 45, 40, 34, 6 %%>;
+
+  middleTongPaddinngTop = <%% 108, 84, 72, 52, 10 %%>;
+  middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
+  middleTitleMarginBottom = <%% 50, 42, 40, 34, 7.5 %%>;
 
   middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
 
@@ -627,7 +629,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   contents0PaddingTop = <%% (isMac() ? 24 : 25), (isMac() ? 24 : 25), (isMac() ? 24 : 25), (isMac() ? 20 : 21), 3.5 %%>;
   contents0PaddingBottom = <%% (isMac() ? 9 : 7), (isMac() ? 9 : 7), (isMac() ? 9 : 7), (isMac() ? 9 : 7), 2 %%>;
 
-  contents0InfoSize = <%% 14, 14, 14, 14, 3 %%>;
+  contents0InfoSize = <%% 14, 14, 14, 13, 3 %%>;
 
   contents0TitleSize = <%% 15, 15, 14, 13, 3.1 %%>;
   contents0TitleWeight = <%% 600, 600, 600, 600, 600 %%>;
@@ -733,7 +735,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   contents3GrayChildrenMarginTop = <%% 20, 15, 20, 20, 20 %%>;
   contents3GrayChildrenWeight = <%% 600, 600, 600, 600, 600 %%>;
   contents3GrayChildrenPaddingTop = <%% 3, 3, 3, 3, 3 %%>;
-  contents3GrayTongMarginBottom = <%% 170, 170, 170, 170, 17 %%>;
+  contents3GrayTongMarginBottom = <%% 170, 150, 110, 80, 17 %%>;
 
 
   contents3PictureHeight = <%% 160, 120, 138, 110, 26 %%>;
@@ -882,7 +884,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
       borderRadius: String(desktop ? 8 : 3) + "px",
       width: withOut(0 * 2, ea),
       paddingTop: String(middleTongPaddinngTop) + ea,
-      paddingBottom: String(margin) + ea,
+      paddingBottom: String(middleTitleMarginBottom) + ea,
     }
   });
 
@@ -923,8 +925,8 @@ AboutServiceJs.prototype.insertServiceBox = function () {
       },
       {
         text: [
-          "막힘도 실패도 많은 인테리어, 혼자 하려 하지 말고 전문가의 도움을 받아보세요!",
-          "인테리어 전 과정 속에서 도움을 받으며 수월하고 확실하게 결과를 보실 수 있답니다."
+          desktop ? "막힘도 실패도 많은 인테리어, 혼자 하려 하지 말고 전문가의 도움을 받아보세요!" : "막힘이 많은 인테리어, 혼자 하지 말고 전문가의 도움을 받아보세요!",
+          desktop ? "인테리어 전 과정 속에서 도움을 받으며 수월하고 확실하게 결과를 보실 수 있답니다." : "인테리어 전 과정에서 도움을 받으며 수월하게 결과를 보실 수 있답니다.",
         ].join("\n"),
         style: {
           display: "block",
@@ -935,7 +937,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
           color: colorChip.black,
           textAlign: "center",
           paddingTop: String(middleTitlePadding) + ea,
-          top: String(middleTitleTextTop) + ea,
+          top: String(0) + ea,
         }
       }
     ]
@@ -1069,8 +1071,8 @@ AboutServiceJs.prototype.insertServiceBox = function () {
       },
       {
         text: [
-          "디자이너는 단순히 디자인만 하는 것이 아니라, 예산에 맞춰 공간 계획을 세우고",
-          "전체적인 일정을 조율하며 인테리어가 잘 완성되도록 운영합니다. 구체적인 제공물은 아래와 같습니다."
+          desktop ? "디자이너는 단순히 디자인만 하는 것이 아니라, 예산에 맞춰 공간 계획을 세우고" : "디자이너는 디자인 뿐만 아니라, 예산에 맞춰 공간 계획을 세우고",
+          desktop ? "전체적인 일정을 조율하며 인테리어가 잘 완성되도록 운영합니다. 구체적인 제공물은 아래와 같습니다." : "일정을 조율하며 운영합니다. 구체적인 제공물은 아래와 같습니다.",
         ].join("\n"),
         style: {
           display: "block",
@@ -1081,7 +1083,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
           color: colorChip.black,
           textAlign: "center",
           paddingTop: String(middleTitlePadding) + ea,
-          top: String(middleTitleTextTop) + ea,
+          top: String(0) + ea,
         }
       }
     ]
@@ -1382,8 +1384,8 @@ AboutServiceJs.prototype.insertServiceBox = function () {
       },
       {
         text: [
-          "인테리어 비용은 크게 시공 비용, 제품 구매 비용, 디자인 비용으로 나뉩니다.",
-          "디자이너는 예산에 맞춰 시공 비용과 제품 구매 비용의 한계를 정하고 그에 맞춰 구체적인 계획을 세웁니다."
+          desktop ? "인테리어 비용은 크게 시공 비용, 제품 구매 비용, 디자인 비용으로 나뉩니다." : "인테리어 비용은 크게 시공, 제품 구매, 디자인 비용으로 나뉩니다.",
+          desktop ? "디자이너는 예산에 따라 시공 비용과 제품 구매 비용의 한계를 정하고 그에 맞춰 구체적인 계획을 세웁니다." : "디자이너는 시공, 구매 비용의 한계를 정하고 그에 맞춰 계획을 세웁니다.",
         ].join("\n"),
         style: {
           display: "block",
@@ -1394,7 +1396,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
           color: colorChip.black,
           textAlign: "center",
           paddingTop: String(middleTitlePadding) + ea,
-          top: String(middleTitleTextTop) + ea,
+          top: String(0) + ea,
         }
       }
     ]
@@ -1492,7 +1494,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
           color: colorChip.black,
           textAlign: "center",
           paddingTop: String(middleTitlePadding) + ea,
-          top: String(middleTitleTextTop) + ea,
+          top: String(0) + ea,
         }
       }
     ]
@@ -1753,8 +1755,8 @@ AboutServiceJs.prototype.insertServiceBox = function () {
       },
       {
         text: [
-          "홈리에종의 프로세스는 먼저 디자이너를 선택하는 과정부터 시작됩니다.",
-          "디자이너와 매칭이 되면, 디자인이 시작되고 그 디자인에 맞춰 시공과 구매가 진행되는 형식입니다."
+          desktop ? "홈리에종의 프로세스는 먼저 디자이너를 선택하는 과정부터 시작됩니다." : "홈리에종의 프로세스는 디자이너를 선택하는 과정부터 시작됩니다.",
+          desktop ? "디자이너와 매칭이 되면, 디자인이 시작되고 그 디자인에 맞춰 시공과 구매가 진행되는 형식입니다." : "매칭이 되면, 디자인이 시작되고 그에 맞춰 시공과 구매가 진행됩니다.",
         ].join("\n"),
         style: {
           display: "block",
@@ -1765,7 +1767,7 @@ AboutServiceJs.prototype.insertServiceBox = function () {
           color: colorChip.black,
           textAlign: "center",
           paddingTop: String(middleTitlePadding) + ea,
-          top: String(middleTitleTextTop) + ea,
+          top: String(0) + ea,
         }
       }
     ]
@@ -2252,7 +2254,7 @@ AboutServiceJs.prototype.launching = async function (loading) {
 
     this.totalContents.children[0].style.background = colorChip.gray1;
     this.totalContents.children[1].style.transition = "all 0s ease";
-    this.totalContents.children[1].style.height = String(<&& 600 | 540 | 460 | 460 | 56 &&>) + this.ea;
+    this.totalContents.children[1].style.height = String(<&& 600 | 540 | 460 | 400 | 118 &&>) + this.ea;
 
   } catch (err) {
     console.log(err);
