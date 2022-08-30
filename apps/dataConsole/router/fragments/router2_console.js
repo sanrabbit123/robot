@@ -2488,7 +2488,7 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       }).then((message) => {
         console.log(cliid, "case update " + message);
       }).catch((err) => {
-        errorLog("Bridge 서버 문제 생김 (submit, case 연산) : " + err.message).catch((e) => { console.log(e); });
+        errorLog("Console 서버 문제 생김 (submit, case 연산) : " + err.message).catch((e) => { console.log(e); });
       });
 
       thisClient = await back.getClientById(cliid, { selfMongo, withTools: true });
@@ -2498,7 +2498,7 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       await messageSend({ text: message, channel: "#401_consulting" });
 
       ghostRequest("/print", { cliid, voice: message.split("\n")[0] + " 성함은 " + thisClient.name + "입니다!" }).catch((err) => {
-        errorLog("Bridge 서버 문제 생김 (print) : " + err.message).catch((e) => { console.log(e); });
+        errorLog("Ghost 서버 문제 생김 (print) : " + err.message).catch((e) => { console.log(e); });
       });
 
       res.send(JSON.stringify({ cliid }));

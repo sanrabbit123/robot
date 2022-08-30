@@ -105,7 +105,7 @@ Ghost.prototype.clientPrint = async function (cliid, MONGOC = null) {
   }
   const instance = this;
   const back = this.back;
-  const { fileSystem, shellExec, shellLink } = this.mother;
+  const { fileSystem, shellExec, shellLink, errorLog } = this.mother;
   const fontName = `/home/homeliaison/font/NanumGothicEco.ttf`;
   const getPrinterName = function () {
     const { spawn } = require("child_process");
@@ -142,11 +142,12 @@ Ghost.prototype.clientPrint = async function (cliid, MONGOC = null) {
     printer = await getPrinterName();
 
     await shellExec(getPrintCommand(printer, targetFile));
-    await shellExec(`rm -rf ${targetFile}`);
+    await shellExec("rm", [ "-rf", targetFile ]);
 
     return client;
 
   } catch (e) {
+    errorLog("Ghost clientPrint error : " + e.message).catch((err) => { console.log(err); });
     console.log(e);
   }
 }
@@ -2664,7 +2665,9 @@ Ghost.prototype.ghostRouter = function (needs) {
       });
 
       if (typeof req.body.voice === "string") {
-        ghostRequest("voice", { text: req.body.voice });
+        ghostRequest("voice", { text: req.body.voice }).catch((err) => {
+          errorLog(err.message).catch((e) => { console.log(e); });
+        });
       }
 
       res.set({
