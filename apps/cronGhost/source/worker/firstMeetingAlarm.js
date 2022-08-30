@@ -85,7 +85,7 @@ const worker = async function (package) {
                 day: dayConst[meetingDate.getDay()],
                 hour: String(meetingDate.getHours()),
                 minute: String(meetingDate.getMinutes()),
-                host: address.homeinfo.ghost.host,
+                host: address.frontinfo.host,
                 path: "meeting",
                 proid: project.proid,
               });
