@@ -2661,13 +2661,11 @@ Ghost.prototype.ghostRouter = function (needs) {
     func: function (req, res) {
 
       instance.clientPrint(req.body.cliid, MONGOC).catch((err) => {
-        console.log(err);
+        errorLog(err.message).catch((e) => { console.log(e); });
       });
 
       if (typeof req.body.voice === "string") {
-        ghostRequest("voice", { text: req.body.voice }).catch((err) => {
-          errorLog(err.message).catch((e) => { console.log(e); });
-        });
+        audio.textToVoice(req.body.voice).catch((err) => { console.log(err) });
       }
 
       res.set({
@@ -2691,9 +2689,6 @@ Ghost.prototype.ghostRouter = function (needs) {
         "Access-Control-Allow-Headers": '*',
       });
       const text = (typeof req.body.text !== "string" ? "안녕하세요!" : req.body.text);
-      // requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(instance.address.officeinfo.ghost.second.port) + "/textToVoice", { text }, { headers: { "Content-Type": "application/json" } }).catch((err) => {
-      //   console.log(err);
-      // });
 
       audio.textToVoice(text).catch((err) => { console.log(err) });
 
