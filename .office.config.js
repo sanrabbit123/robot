@@ -1,13 +1,6 @@
 module.exports = {
   apps: [
     {
-      name: "alien",
-      script: "./alien.js",
-      instances: 1,
-      exec_mode: "cluster",
-      args: [ "office" ]
-    },
-    {
       name: "robot",
       script: "./robot.js",
       instances: 2,
