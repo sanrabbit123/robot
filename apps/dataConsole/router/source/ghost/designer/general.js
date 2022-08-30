@@ -165,7 +165,7 @@ GeneralJs.prototype.setNavigator = function (designer) {
     },
     {
       title: "파트너십",
-      href: FRONTHOST + "/designer/manual.php?desid=" + designer.desid,
+      href: FRONTHOST + "/designer/partnership.php?desid=" + designer.desid,
       green: [],
     },
   ];
