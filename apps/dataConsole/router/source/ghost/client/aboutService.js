@@ -737,7 +737,6 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   contents3GrayChildrenPaddingTop = <%% 3, 3, 3, 3, 3 %%>;
   contents3GrayTongMarginBottom = <%% 170, 150, 110, 80, 17 %%>;
 
-
   contents3PictureHeight = <%% 160, 120, 138, 110, 26 %%>;
 
   photoMargin = <%% 20, 18, 18, 16, 3 %%>;

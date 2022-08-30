@@ -306,7 +306,6 @@ ContractCautionJs.prototype.insertFirstBox = function () {
   });
   whiteTong = whiteBlock.firstChild;
 
-
   createNode({
     mother: whiteTong,
     style: {
@@ -462,27 +461,25 @@ ContractCautionJs.prototype.insertContextBox = function () {
 
   contents = [
     {
-      title: desktop ? "프로젝트 사전 준비" : "프로젝트 준비",
+      title: "계약 및 환불",
       context: [
-        desktop ? "디자이너 교육 이수" : "교육 이수",
-        desktop ? "활동 가능 영역 책정" : "활동 가능 영역",
-        "서비스 비용 책정",
-        big ? "디자이너 작업 가능 일정" : "작업 가능 일정",
+        "계약금 및 미팅",
+        "계약서 서명 및 잔금 입금",
+        "환불 및 기타 사항"
       ],
       scroll: [
         1000,
         1100,
         1100,
-        1400
       ],
     },
     {
-      title: desktop ? "첫 프로젝트 운영" : "프로젝트 운영",
+      title: "시공 유의 사항",
       context: [
-        "첫 프로젝트 응대",
-        "디자이너 직접 시공",
-        "현장 촬영",
-        "디자이너 글 가이드",
+        "시공사 선택",
+        "시공사 계약",
+        "홈리에종 시공사",
+        "기타 시공 관련",
       ],
       scroll: [
         1600,
@@ -492,29 +489,29 @@ ContractCautionJs.prototype.insertContextBox = function () {
       ],
     },
     {
-      title: "컨텐츠 가이드",
+      title: "디자인 관련 사항",
       context: [
-        "컨텐츠 활용 방법",
-        desktop ? "홈리에종 제공 컨텐츠" : "홈리에종 컨텐츠",
+        "디자인 진행",
+        "디자인비 조정",
+        "세팅 및 촬영",
       ],
       scroll: [
         4440,
         4600,
+        4600,
       ],
     },
     {
-      title: "프로젝트 진행",
+      title: "구매 유의 사항",
       context: [
-        big ? "디자이너 현장미팅 준비 / 응대" : (desktop ? "디자이너 현장미팅 준비" : "현장미팅 준비"),
-        "디자이너 작성 폼",
-        "시공사 선택",
-        "디자이너 소통",
+        "제품 구매",
+        "제품 수령 및 세팅",
+        "최종 결정권",
       ],
       scroll: [
         5350,
         5800,
         6000,
-        6200
       ],
     },
   ];
