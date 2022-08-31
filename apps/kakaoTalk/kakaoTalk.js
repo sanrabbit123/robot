@@ -179,18 +179,19 @@ KakaoTalk.prototype.templateTong = function (target) {
       convert: null
     },
     designerCheckList: {
-      name: "체크리스트 진짜 최종",
-      id: "TI_1024",
+      name: "체크리스트 진짜 최종 수정",
+      id: "TJ_8591",
       needs: [
-        "date",
+        "designer",
         "host",
+        "path",
         "desid"
       ],
       convert: function (obj) {
         return [
           { from: "designer", to: obj.name },
-          { from: "date", to: obj.date },
           { from: "host", to: obj.host },
+          { from: "path", to: obj.path },
           { from: "desid", to: obj.desid },
         ];
       },
@@ -414,16 +415,20 @@ KakaoTalk.prototype.templateTong = function (target) {
       },
     },
     paymentAndChannel: {
-      name: "계약금 입금 및 등록",
-      id: "TF_5340",
+      name: "계약금 입금 및 등록 수정",
+      id: "TJ_8587",
       needs: [
         "client",
-        "designer"
+        "designer",
+        "host",
+        "path",
       ],
       convert: function (obj) {
         return [
           { from: "client", to: obj.client },
           { from: "designer", to: obj.designer },
+          { from: "host", to: obj.host },
+          { from: "path", to: obj.path },
         ];
       },
     },
@@ -644,8 +649,8 @@ KakaoTalk.prototype.templateTong = function (target) {
       },
     },
     designerConsole: {
-      name: "디자이너 콘솔 전송",
-      id: "TF_9056",
+      name: "디자이너 콘솔 전송 수정 수정",
+      id: "TJ_8643",
       needs: [
         "designer",
         "host",
@@ -678,16 +683,15 @@ KakaoTalk.prototype.templateTong = function (target) {
       },
     },
     designerConsoleRequest: {
-      name: "홈스타일링 의뢰서 전송",
-      id: "TF_9057",
+      name: "홈스타일링 의뢰서 전송 수정",
+      id: "TJ_8592",
       needs: [
         "designer",
         "client",
         "host",
         "path",
         "desid",
-        "mode",
-        "cliid"
+        "proid",
       ],
       convert: function (obj) {
         return [
@@ -696,8 +700,7 @@ KakaoTalk.prototype.templateTong = function (target) {
           { from: "host", to: obj.host },
           { from: "path", to: obj.path },
           { from: "desid", to: obj.desid },
-          { from: "mode", to: obj.mode },
-          { from: "cliid", to: obj.cliid },
+          { from: "proid", to: obj.proid },
         ];
       },
     },

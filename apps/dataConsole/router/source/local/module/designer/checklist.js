@@ -4381,14 +4381,14 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
   aInitialIcon.addEventListener("click", function (e) {
     if (window.confirm(designer.designer + " 디자이너님에게 디자이너 콘솔 알림톡을 전송합니다. 확실합니까?")) {
       GeneralJs.ajaxJson({
-        method: "designerConsole",
+        method: "designerCheckList",
         name: designer.designer,
         phone: designer.information.phone,
         option: {
           desid: designer.desid,
           designer: designer.designer,
-          host: GHOSTHOST,
-          path: "console",
+          host: FRONTHOST.replace(/https\:\/\//gi, "").trim(),
+          path: "about",
         }
       }, "/alimTalk").then(() => {
         return GeneralJs.ajaxJson({

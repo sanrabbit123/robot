@@ -3449,8 +3449,8 @@ DesignerJs.prototype.requestIconSet = function (desid) {
           option: {
             desid: designer.desid,
             designer: designer.designer,
-            host: GHOSTHOST,
-            path: "console",
+            host: FRONTHOST.replace(/https\:\/\//gi, "").trim(),
+            path: "requests",
           }
         }, "/alimTalk").then(() => {
           return GeneralJs.ajaxJson({
@@ -3477,10 +3477,9 @@ DesignerJs.prototype.requestIconSet = function (desid) {
             desid: designer.desid,
             designer: designer.designer,
             client: instance.client.name,
-            host: GHOSTHOST,
-            path: "console",
-            mode: "request",
-            cliid: instance.client.cliid,
+            host: FRONTHOST.replace(/https\:\/\//gi, "").trim(),
+            path: "request",
+            proid: instance.proid,
           }
         }, "/alimTalk").then(() => {
           return GeneralJs.ajaxJson({

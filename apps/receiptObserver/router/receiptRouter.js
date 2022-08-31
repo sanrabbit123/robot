@@ -1242,6 +1242,8 @@ ReceiptRouter.prototype.sync_paymentProject = async function (bilid, requestNumb
         instance.kakao.sendTalk("paymentAndChannel", client.name, client.phone, {
           client: client.name,
           designer: designer.designer,
+          host: instance.address.frontinfo.host,
+          path: "caution",
         }).catch((err) => {
           console.log(err);
         });

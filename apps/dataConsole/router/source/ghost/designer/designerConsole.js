@@ -2771,7 +2771,7 @@ DesignerConsoleJs.prototype.consoleView = async function () {
 DesignerConsoleJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
-    const { returnGet, ajaxJson, protoPatch } = GeneralJs;
+    const { returnGet, ajaxJson, protoPatch, selfHref } = GeneralJs;
     const getObj = returnGet();
     const desid = getObj.desid;
     const modulePath = "/module/designer";
@@ -2784,6 +2784,26 @@ DesignerConsoleJs.prototype.launching = async function (loading) {
       "project.js",
       "schedule.js",
     ];
+    let motherHost;
+    let targetHref;
+
+
+    motherHost = FRONTHOST + "/designer";
+    if (getObj.mode === "checklist") {
+      targetHref = motherHost + "/about.php?desid=" + desid;
+    } else if (getObj.mode === "report") {
+      targetHref = motherHost + "/report.php?desid=" + desid;
+    } else if (getObj.mode === "request") {
+      targetHref = motherHost + "/requests.php?desid=" + desid;
+    } else if (getObj.mode === "possible") {
+      targetHref = motherHost + "/possible.php?desid=" + desid;
+    } else if (getObj.mode === "project") {
+      targetHref = motherHost + "/dashboard.php?desid=" + desid;
+    } else {
+      targetHref = motherHost + "/dashboard.php?desid=" + desid;
+    }
+
+    selfHref(targetHref);
 
     await protoPatch(instance, moduleList.map((m) => { return `${modulePath}/${m}`; }), `DesignerJs`);
 

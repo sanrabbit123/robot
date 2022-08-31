@@ -2399,8 +2399,8 @@ DesignerJs.prototype.scheduleIconSet = function (desid) {
           option: {
             desid: designer.desid,
             designer: designer.designer,
-            host: GHOSTHOST,
-            path: "console",
+            host: FRONTHOST.replace(/https\:\/\//gi, "").trim(),
+            path: "dashboard",
           }
         }, "/alimTalk").then(() => {
           return GeneralJs.ajaxJson({
