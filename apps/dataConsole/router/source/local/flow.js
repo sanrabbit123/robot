@@ -429,8 +429,7 @@ FlowJs.prototype.launching = async function () {
     document.getElementById("moveLeftArea").remove();
     document.getElementById("moveRightArea").remove();
 
-    this.grayLeftPopup();
-    await this.launchingDiagram(typeof returnGet().mode === "string" ? returnGet().mode : "console");
+    await this.launchingDiagram("service");
 
   } catch (e) {
     GeneralJs.ajax("message=" + e.message + "&channel=#error_log", "/sendSlack", function () {});
