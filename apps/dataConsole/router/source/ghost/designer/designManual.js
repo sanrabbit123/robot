@@ -31,7 +31,7 @@
     "module": false
   },
   "name": "designManual",
-  "hangul": "의뢰서 리스트",
+  "hangul": "제공 내역",
   "route": [
     "designManual"
   ]
@@ -733,7 +733,6 @@ DesignManualJs.prototype.returnDesignerContract = function () {
   return contents;
 }
 
-
 DesignManualJs.prototype.insertInitBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
@@ -944,14 +943,14 @@ DesignManualJs.prototype.insertProcessBox = function () {
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
 
-  innerMargin = <%% 38, 28, 24, (isMac() ? 16 : 14), 4 %%>;
+  innerMargin = <%% 0, 0, 0, 0, 1 %%>;
 
-  arrowBetween = <%% 5, 5, 5, 3, 1.5 %%>;
-  arrowWidth = <%% 204, 153, 132, 105, 36 %%>;
+  arrowBetween = <%% 5, 5, 5, 3, 1 %%>;
+  arrowWidth = <%% 214, 160, 138, 109, 40 %%>;
   arrowHeight = <%% 100, 90, 80, 60, 12 %%>;
 
   textTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.3 %%>;
-  textSize = <%% 16, 14, 13, 12, 3.3 %%>;
+  textSize = <%% 16, 14, 13, 11, 3.3 %%>;
   textWeight = <%% 800, 800, 800, 800, 800 %%>;
   textMarginLeft = <%% 50, 48, 45, 30, 3 %%>;
 
@@ -995,7 +994,7 @@ DesignManualJs.prototype.insertProcessBox = function () {
       paddingLeft: String(desktop ? innerMargin : (innerMargin - mobileVisualPaddingValue)) + ea,
       paddingRight: String(desktop ? innerMargin : (innerMargin + mobileVisualPaddingValue)) + ea,
       width: withOut(innerMargin * 2, ea),
-      background: colorChip.gradientGray,
+      background: colorChip.white,
       borderRadius: String(8) + "px",
     }
   });
@@ -1014,7 +1013,12 @@ DesignManualJs.prototype.insertProcessBox = function () {
           e.stopPropagation();
           e.preventDefault();
 
-          this.children[1].style.color = colorChip.green;
+          const toggle = this.getAttribute("toggle");
+          if (toggle === "off") {
+            this.children[1].style.color = colorChip.green;
+          } else {
+            this.children[1].style.color = colorChip.white;
+          }
 
         },
         mouseleave: function (e) {
@@ -1024,6 +1028,8 @@ DesignManualJs.prototype.insertProcessBox = function () {
           const toggle = this.getAttribute("toggle");
           if (toggle === "off") {
             this.children[1].style.color = colorChip.black;
+          } else {
+            this.children[1].style.color = colorChip.white;
           }
 
         },
@@ -1033,15 +1039,20 @@ DesignManualJs.prototype.insertProcessBox = function () {
           const key = this.getAttribute("key");
           const target = instance.whiteBlocks.find((dom) => { return dom.getAttribute("key") === key });
           const siblings = [ ...document.querySelectorAll('.' + buttonsClassName) ];
+          let sNum;
 
+          sNum = 0;
           for (let dom of siblings) {
             if (dom !== this) {
               dom.setAttribute("toggle", "off");
+              dom.children[0].querySelector("path").setAttribute("fill", sNum % 2 === 0 ? colorChip.gray3 : colorChip.gray1);
               dom.children[1].style.color = colorChip.black;
             } else {
               dom.setAttribute("toggle", "on");
-              dom.children[1].style.color = colorChip.green;
+              dom.children[0].querySelector("path").setAttribute("fill", colorChip.green);
+              dom.children[1].style.color = colorChip.white;
             }
+            sNum++;
           }
 
           for (let dom of instance.whiteBlocks) {
@@ -1066,18 +1077,18 @@ DesignManualJs.prototype.insertProcessBox = function () {
         alignItems: "center",
         textAlign: "center",
         cursor: "pointer",
+        transition: "all 0.1s ease",
       },
       children: [
         {
           mode: "svg",
-          source: svgMaker.processArrow(arrowWidth, arrowHeight, colorChip.white),
+          source: svgMaker.processArrow(arrowWidth, arrowHeight, (i % 2 === 0 ? colorChip.gray3 : colorChip.gray1)),
           style: {
             position: "absolute",
             top: String(0),
             left: String(0),
             width: String(arrowWidth) + ea,
             height: String(arrowHeight) + ea,
-            opacity: String(i % 2 === 0 ? 1 : 0.9),
           }
         },
         {
@@ -1118,7 +1129,7 @@ DesignManualJs.prototype.insertProcessBox = function () {
       children: [
         {
           mode: "svg",
-          source: svgMaker.processArrow(arrowWidth, arrowHeight, colorChip.white),
+          source: svgMaker.processArrow(arrowWidth, arrowHeight, colorChip.gray1),
           style: {
             position: "absolute",
             top: String(0),
@@ -2640,7 +2651,7 @@ DesignManualJs.prototype.launching = async function (loading) {
     let cliid, clients, client;
     let proid, projects, project;
     let whereQuery;
-    let designers, designer;
+    let desid, designers, designer;
     let requestNumber;
     let service;
 

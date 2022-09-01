@@ -974,7 +974,7 @@ RequestListJs.prototype.launching = async function (loading) {
     let cliid, clients, client;
     let proid, projects, project;
     let whereQuery;
-    let designers, designer;
+    let desid, designers, designer;
     let requestNumber;
     let service;
 
