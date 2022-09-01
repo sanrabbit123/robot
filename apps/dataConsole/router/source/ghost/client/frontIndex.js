@@ -2363,7 +2363,7 @@ FrontIndexJs.prototype.launching = async function (loading) {
           instance.insertStrongBox();
           instance.insertNewsBox();
           instance.insertEndBox();
-          instance.popupLaunching();
+          // instance.popupLaunching();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "FrontIndexJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
