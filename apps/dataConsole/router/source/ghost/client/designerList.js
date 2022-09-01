@@ -1027,7 +1027,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
             width: String(photoWidth) + ea,
             height: String(photoWidth) + ea,
             background: colorChip.gray1,
-            // background: designer.analytics.grade === 1 ? colorChip.gradientGreen : colorChip.gray1,
+            background: designer.analytics.grade === 1 ? colorChip.gradientGreen : colorChip.gray1,
             verticalAlign: "top",
             cursor: "pointer",
             justifyContent: "center",
@@ -1144,7 +1144,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
           source: instance.mother.returnMainMark(colorChip.green),
           style: {
             display: "none",
-            // display: designer.analytics.grade === 1 ? "inline-block" : "none",
+            display: designer.analytics.grade === 1 ? "inline-block" : "none",
             position: "absolute",
             width: String(markWidth) + ea,
             right: String(0),
