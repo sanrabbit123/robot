@@ -2258,7 +2258,11 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
           click: function (e) {
             const proid = this.getAttribute("proid");
             selfHref(FRONTHOST + "/designer/process.php?proid=" + proid);
-            // instance.projectPopup(proid).call(this, e);
+          },
+          contextmenu: function (e) {
+            e.preventDefault();
+            const proid = this.getAttribute("proid");
+            instance.projectPopup(proid).call(this, e);
           }
         },
         style: {
