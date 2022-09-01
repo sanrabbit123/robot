@@ -793,7 +793,6 @@ DesignerBoardJs.prototype.projectPopup = function (proid) {
       }
     });
 
-
     // arrow area
 
     grayTong = createNode({
