@@ -730,6 +730,11 @@ ResourceMaker.prototype.magazineMaker = async function (mid) {
       gm: "generalMiddle",
       bm: "blankMiddle",
       dm: "doubleMiddle",
+      ht: "halfTitle",
+      hd: "halfDescription",
+      hi: "halfImage",
+      hs: "halfSub",
+      hm: "halfMiddle",
       ta: "tag",
     };
 

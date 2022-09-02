@@ -3753,8 +3753,7 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
               finalPrice = Math.floor(initialPrice * finalNumber);
               priceTarget.setAttribute("price", String(finalPrice));
               priceTarget.textContent = "";
-              priceTarget.insertAdjacentHTML("beforeend", autoComma(Math.floor(finalPrice)) + "원<b style=\"color:" + colorChip.green + "\"> - 30,000원 </b><b style=\"color:" + colorChip.green + ";font-size:" + String(paymentAmountSizeSub) + ea + "\">* 프로모션 적용중</b>")
-              // priceTarget.textContent = autoComma(finalPrice) + '원';
+              priceTarget.insertAdjacentHTML("beforeend", autoComma(Math.floor(finalPrice)) + "원");
             }
           },
           style: {
@@ -4003,7 +4002,7 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
       attribute: {
         price: String(Math.floor(initialPrice)),
       },
-      text: autoComma(Math.floor(initialPrice)) + "원<b style=\"color:" + colorChip.green + "\"> - 30,000원 </b><b style=\"color:" + colorChip.green + ";font-size:" + String(paymentAmountSizeSub) + ea + "\">* 프로모션 적용중</b>",
+      text: autoComma(Math.floor(initialPrice)) + "원",
       style: {
         display: "inline-block",
         position: "relative",
@@ -4130,7 +4129,7 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
                           pay_method: "card",
                           merchant_uid: map.oid,
                           name: "HomeLiaison Mini",
-                          amount: Math.floor((map.targets * initialPrice) - 30000),
+                          amount: Math.floor(map.targets * initialPrice),
                           buyer_email: map.email,
                           buyer_name: map.name,
                           buyer_tel: map.phone,
@@ -4174,7 +4173,7 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
                           pay_method: "card",
                           merchant_uid: map.oid,
                           name: "HomeLiaison Mini",
-                          amount: Math.floor((map.targets * initialPrice) - 30000),
+                          amount: Math.floor(map.targets * initialPrice),
                           buyer_email: map.email,
                           buyer_name: map.name,
                           buyer_tel: map.phone,

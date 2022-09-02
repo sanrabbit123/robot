@@ -265,6 +265,7 @@ MagazineDetailJs.prototype.magazineContentsBox = function () {
   let grayTong;
   let subMargin;
   let middleSize;
+  let halfBlankMargin;
 
   binaryPath = MagazineDetailJs.binaryPath + this.mid;
   ({ contents, editor } = this.magazine);
@@ -287,6 +288,7 @@ MagazineDetailJs.prototype.magazineContentsBox = function () {
   photoMargin = <%% 8, 8, 8, 8, 1 %%>;
   blankMarginFirst = <%% 126, 126, 126, 96, 13.5 %%>;
   blankMargin = <%% 100, 100, 100, 70, 11 %%>;
+  halfBlankMargin = <%% 50, 50, 50, 40, 8 %%>;
   blankMargin2 = <%% 100, 100, 100, 70, 10 %%>;
   blankMarginLast = <%% 200, 200, 200, 170, 20 %%>;
 
@@ -363,9 +365,21 @@ MagazineDetailJs.prototype.magazineContentsBox = function () {
             }
           });
         }
+      } else if (/^half/i.test(type)) {
+        if (mobile && num === 2 && type === "halfImage") {
+          // pass
+        } else {
+          createNode({
+            mother: mainTong,
+            style: {
+              display: "block",
+              height: String(halfBlankMargin) + ea,
+            }
+          });
+        }
       }
 
-      if (type.replace(/^general/i, '').replace(/^blank/i, '').replace(/^double/i, '') === "Title") {
+      if (type.replace(/^general/i, '').replace(/^blank/i, '').replace(/^double/i, '').replace(/^half/i, '') === "Title") {
         createNode({
           mother: mainTong,
           text: obj.text.join("\n"),
@@ -398,7 +412,7 @@ MagazineDetailJs.prototype.magazineContentsBox = function () {
             }
           ]
         });
-      } else if (type.replace(/^general/i, '').replace(/^blank/i, '').replace(/^double/i, '') === "Description") {
+      } else if (type.replace(/^general/i, '').replace(/^blank/i, '').replace(/^double/i, '').replace(/^half/i, '') === "Description") {
         createNode({
           mother: (num === 1 ? grayTong.firstChild : mainTong),
           text: obj.text.join("\n\n"),
@@ -414,7 +428,7 @@ MagazineDetailJs.prototype.magazineContentsBox = function () {
             paddingRight: mobile ? String(mobileDescriptionPadding) + ea : 0,
           }
         });
-      } else if (type.replace(/^general/i, '').replace(/^blank/i, '').replace(/^double/i, '') === "Image") {
+      } else if (type.replace(/^general/i, '').replace(/^blank/i, '').replace(/^double/i, '').replace(/^half/i, '') === "Image") {
         if (obj.gs === 'g') {
           createNode({
             mother: mainTong,
@@ -466,7 +480,7 @@ MagazineDetailJs.prototype.magazineContentsBox = function () {
             }
           });
         }
-      } else if (type.replace(/^general/i, '').replace(/^blank/i, '').replace(/^double/i, '') === "Sub") {
+      } else if (type.replace(/^general/i, '').replace(/^blank/i, '').replace(/^double/i, '').replace(/^half/i, '') === "Sub") {
         createNode({
           mother: mainTong,
           text: obj.text.join("\n"),
@@ -486,7 +500,7 @@ MagazineDetailJs.prototype.magazineContentsBox = function () {
           }
         });
 
-      } else if (type.replace(/^general/i, '').replace(/^blank/i, '').replace(/^double/i, '') === "Middle") {
+      } else if (type.replace(/^general/i, '').replace(/^blank/i, '').replace(/^double/i, '').replace(/^half/i, '') === "Middle") {
         createNode({
           mother: mainTong,
           text: obj.text.join("\n"),

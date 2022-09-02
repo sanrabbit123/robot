@@ -4332,7 +4332,7 @@ GeneralJs.prototype.footerMake = function (backgroundColor = null) {
     ],
     right: {
       support: {
-        title: "INFO & SUPPROT",
+        title: "INFO & SUPPORT",
         contents: [
           "홈리에종 FAQ",
           "이용 약관 및 개인정보 이용방침",

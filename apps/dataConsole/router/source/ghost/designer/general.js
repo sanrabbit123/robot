@@ -201,10 +201,10 @@ GeneralJs.prototype.setNavigator = function (designer) {
     class: [ desktop ? "hoverDefault" : "hoverDefault_mobile" ],
     event: {
       click: (e) => {
-        selfHref(frontPage);
+        selfHref(FRONTHOST + "/designer/dashboard.php?desid=" + designer.desid);
       },
       touchstart: (e) => {
-        selfHref(frontPage);
+        selfHref(FRONTHOST + "/designer/dashboard.php?desid=" + designer.desid);
       },
     },
     style: {

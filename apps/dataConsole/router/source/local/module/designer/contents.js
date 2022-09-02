@@ -2522,7 +2522,7 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
   displayBoo = true;
   if (this.type === "contents" || this.type === "share") {
     if (photoActionList.includes(project.contents.raw.photo.status)) {
-      displayBoo = false;
+      // displayBoo = false;
     }
   }
   if (titleMode) {
