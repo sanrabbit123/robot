@@ -1283,9 +1283,16 @@ DesignerReportJs.prototype.launching = async function (loading) {
       normal.proposal.name = thisClient.name;
 
       if (thisClient.requests[requestNumber].request.space.partial.boo) {
-        normal.proposal.pyeong = thisClient.requests[requestNumber].request.space.partial.pyeong;
+        if (thisClient.requests[requestNumber].request.space.partial.pyeong === 0) {
+          normal.proposal.pyeong = thisClient.requests[requestNumber].request.space.pyeong;
+        } else {
+          normal.proposal.pyeong = thisClient.requests[requestNumber].request.space.partial.pyeong;
+        }
       } else {
         normal.proposal.pyeong = thisClient.requests[requestNumber].request.space.pyeong;
+      }
+      if (normal.proposal.pyeong === 0) {
+        normal.proposal.pyeong = 1;
       }
 
       normal.proposal.proid = normal.proid;
@@ -1341,10 +1348,18 @@ DesignerReportJs.prototype.launching = async function (loading) {
 
       normal.name = thisClient.name;
       if (thisClient.requests[requestNumber].request.space.partial.boo) {
-        normal.pyeong = thisClient.requests[requestNumber].request.space.partial.pyeong;
+        if (thisClient.requests[requestNumber].request.space.partial.pyeong !== 0) {
+          normal.pyeong = thisClient.requests[requestNumber].request.space.partial.pyeong;
+        } else {
+          normal.pyeong = thisClient.requests[requestNumber].request.space.pyeong;
+        }
       } else {
         normal.pyeong = thisClient.requests[requestNumber].request.space.pyeong;
       }
+      if (normal.pyeong === 0) {
+        normal.pyeong = 1;
+      }
+
       normal.serviceName = serviceParsing(normal.service).replace(/[a-zA-Z]/gi, '').trim();
 
       return normal;
@@ -1368,7 +1383,7 @@ DesignerReportJs.prototype.launching = async function (loading) {
           instance.contentsCenter();
           instance.insertNoticeBox();
         } catch (e) {
-          await GeneralJs.ajaxJson({ message: "DesignerReportJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
+          await GeneralJs.ajaxJson({ message: "DesignerReportJs.launching.ghostDesignerLaunching : " + instance.designer.desid + " : " + e.message }, BACKHOST + "/errorLog");
         }
       }
     });
@@ -1377,6 +1392,6 @@ DesignerReportJs.prototype.launching = async function (loading) {
 
   } catch (err) {
     console.log(err);
-    await GeneralJs.ajaxJson({ message: "DesignerReportJs.launching 에러 일어남 => " + err.message }, BACKHOST + "/errorLog");
+    await GeneralJs.ajaxJson({ message: "DesignerReportJs.launching 에러 일어남 => " + err }, BACKHOST + "/errorLog");
   }
 }

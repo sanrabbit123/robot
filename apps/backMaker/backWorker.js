@@ -962,6 +962,7 @@ BackWorker.prototype.designerFeeTable = async function (desid, option = { selfMo
 
   } catch (e) {
     console.log(e);
+    return { error: e.message };
   } finally {
     if (option.selfMongo === null || option.selfMongo === undefined) {
       await MONGOC.close();
