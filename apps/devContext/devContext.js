@@ -88,6 +88,45 @@ DevContext.prototype.launching = async function () {
     // console.log(pastProposal[0].project.detail);
 
 
+    // const toId = (num) => {
+    //   let length = 3 - String(num).length;
+    //   let str;
+    //   str = '';
+    //   for (let i = 0; i < length; i++) {
+    //     str += '0';
+    //   }
+    //   str += String(num);
+    //   return str;
+    // }
+    //
+    // let sheetsId;
+    // let rows;
+    // let matrix;
+    // let arr;
+    // let index;
+    // let thisId;
+    //
+    // sheetsId = "1l5OpdpKDtes3hwJCNq1b-a8BpJ5wLuBU1dsGQPavZT0";
+    //
+    // rows = await sheets.get_value_inPython(sheetsId, "default!B2:F");
+    //
+    // matrix = [ [ "아이디", "이름", "형태", "주체", "완성", "발생 조건" ] ];
+    //
+    // index = 0;
+    // for (let [ name, type, who, complete, trigger ] of rows) {
+    //   thisId = type.slice(0, 1) + who.slice(0, 1) + toId(index);
+    //   arr = [ thisId, name, type, who, complete, (typeof trigger === "string" ? trigger : '-') ];
+    //   matrix.push(arr);
+    //   index++;
+    // }
+    //
+    // console.log(matrix);
+    // await sheets.update_value_inPython(sheetsId, "", matrix);
+    //
+
+
+
+
 
 
 
