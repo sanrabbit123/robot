@@ -88,7 +88,24 @@ DevContext.prototype.launching = async function () {
     // console.log(pastProposal[0].project.detail);
 
 
-    await findCode("855866308109037")
+
+    const facebookToken = "EAAZBU9pw9OFcBAHfuxRlFDU7pT6toCQkjATCGMQVLmyIDa6ZBwtw8ZAhsJ2pfIP0s6ZCStt3aHl3cBBUby6ZCy4MlsxiducFY9D8aJZA6FhDyS823KPv0H0fBv0C5MTATm4X3UBKcWjiw43LQY0BVarQbwkkAZAZAugNYrV5XHqaXYVyycoFZBoF8";
+    const facebookPageId = "290144638061244";
+    const instagramId = "17841405547472752";
+
+
+    let res;
+
+    res = await requestSystem("https://graph.facebook.com/v14.0/" + instagramId + "/insights", {
+      metric: "impressions,reach,profile_views",
+      period: "day",
+      since: String(Math.floor((new Date(2022, 7, 26, 7, 0, 0)).valueOf() / 1000)),
+      until: String(Math.floor((new Date(2022, 8, 3, 7, 0, 0)).valueOf() / 1000)),
+      access_token: facebookToken
+    }, { method: "get" });
+
+    console.log(...res.data.data);
+
 
 
 

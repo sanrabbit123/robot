@@ -2304,7 +2304,7 @@ FrontIndexJs.prototype.popupLaunching = function () {
 
 FrontIndexJs.prototype.launching = async function (loading) {
   const instance = this;
-  const { returnGet, ajaxJson, setQueue, setDebounce, serviceParsing } = GeneralJs;
+  const { returnGet, ajaxJson, setQueue, setDebounce, serviceParsing, facebookSdkPatch } = GeneralJs;
   try {
     this.mother.setGeneralProperties(this);
 
@@ -2371,6 +2371,12 @@ FrontIndexJs.prototype.launching = async function (loading) {
     });
 
     loading.parentNode.removeChild(loading);
+
+    setQueue(() => {
+      facebookSdkPatch().catch((err) => {
+        console.log(err);
+      });
+    });
 
   } catch (err) {
     console.log(err);

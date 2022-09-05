@@ -5764,7 +5764,7 @@ GeneralJs.facebookSdkPatch = function () {
   const autoLogAppEvents = true;
   const xfbml = true;
   const version = "v14.0"
-  window.fbAsyncInit = () => { FB.init({ appId, autoLogAppEvents, xfbml, version }); }
+  window.fbAsyncInit = () => { FB.init({ appId, autoLogAppEvents, xfbml, version }); FB.AppEvents.logPageView(); }
   return new Promise((resolve, reject) => {
     GeneralJs.ajaxJson({ url: window.encodeURIComponent("https://connect.facebook.net/en_US/sdk.js") }, "/requestScript").then((obj) => {
       const { data } = obj;
