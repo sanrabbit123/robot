@@ -480,6 +480,70 @@ FlowJs.prototype.launchingDiagram = function (svgName) {
           attribute: {
             blockid: block.id,
           },
+          event: {
+            click: function (e) {
+              const self = this;
+              let cancelBack, whiteInput;
+
+              whiteInput = createNode({
+                mother: self,
+                mode: "textarea",
+                event: {
+                  click: (e) => { e.stopPropagation() },
+                  keydown: function (e) {
+                    if (e.key === "Tab" || e.key === "Enter") {
+                      e.preventDefault();
+                    }
+                  },
+                  keyup: function (e) {
+                    if (e.key === "Tab" || e.key === "Enter") {
+                      this.blur();
+                    }
+                  },
+                  blur: async function (e) {
+                    try {
+                      const value = this.value.trim();
+                      let whereQuery, updateQuery;
+                      whereQuery = { id: self.getAttribute("blockid") };
+                      updateQuery = {};
+                      if (value === '' || value === "없음" || value === "내용 없음" || value === "내용없음") {
+                        updateQuery["composition.wordings"] = "";
+                        instance.map.find((obj) => { return obj.id === self.getAttribute("blockid") }).composition.wordings = '';
+                        await ajaxJson({ mode: "update", whereQuery, updateQuery }, BACKHOST + "/flowBlock");
+                        self.textContent = "내용 없음";
+                      } else {
+                        updateQuery["composition.wordings"] = value;
+                        instance.map.find((obj) => { return obj.id === self.getAttribute("blockid") }).composition.wordings = value;
+                        await ajaxJson({ mode: "update", whereQuery, updateQuery }, BACKHOST + "/flowBlock");
+                        self.textContent = this.value;
+                      }
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  }
+                },
+                text: this.textContent,
+                attribute: { value: this.textContent },
+                style: {
+                  position: "absolute",
+                  top: String(0),
+                  left: String(0),
+                  width: withOut(0),
+                  height: withOut(0),
+                  fontSize: String(whiteSize) + ea,
+                  fontWeight: String(descriptionWeight),
+                  color: colorChip.green,
+                  lineHeight: String(descriptionLineHeight),
+                  textAlign: "left",
+                  border: String(0),
+                  outline: String(0),
+                  background: colorChip.white,
+                }
+              });
+
+              whiteInput.focus();
+            }
+          },
           style: {
             display: "block",
             position: "relative",
@@ -737,7 +801,7 @@ FlowJs.prototype.grayRightPopup = function () {
     children: [
       {
         style: {
-          display: "block",
+          display: "none",
           position: "relative",
           paddingTop: String(grayBoxInnerPaddingTop) + ea,
           paddingBottom: String(grayBoxInnerPaddingBottom) + ea,
