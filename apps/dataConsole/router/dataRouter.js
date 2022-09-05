@@ -5639,6 +5639,11 @@ DataRouter.prototype.rou_post_flowBlock = function () {
         const { whereQuery } = equalJson(req.body);
         resultObj = await back.mongoRead(collection, whereQuery, { selfMongo });
       } else if (mode === "update") {
+        if (req.body.whereQuery === undefined || req.body.updateQuery === undefined) {
+          throw new Error("invaild post");
+        }
+        const { whereQuery, updateQuery } = equalJson(req.body);
+        await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
         resultObj = { message: "success" };
       }
 

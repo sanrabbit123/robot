@@ -218,17 +218,382 @@ FlowJs.prototype.returnDiagramMap = function (svgName) {
 
 FlowJs.prototype.launchingDiagram = function (svgName) {
   const instance = this;
-  const { createNode, colorChip, withOut, ajaxJson } = GeneralJs;
-  const { ea, totalContents, belowHeight, baseClassName } = this;
+  const { createNode, colorChip, withOut, ajaxJson, cleanChildren } = GeneralJs;
+  const { ea, totalContents, belowHeight, baseClassName, typeCase, targetCase } = this;
   let base, graphic;
   let map;
   let idList;
   let domList;
   let flatMap;
   let values;
+  let mouseEnterEvent;
+  let mouseLeaveEvent;
+  let renderContents;
+  let titleSize, descriptionSize;
+  let titleWeight, descriptionWeight;
+  let titleLineHeight, descriptionLineHeight;
+  let titleMarginTop, descriptionMarginTop;
+  let mouseClickEvent;
+  let mouseClickCancelEvent;
+  let whiteSize;
+  let whiteLineHeight;
+  let whitePaddingTop;
+  let whitePaddingLeft;
+  let whiteMarginTop;
+  let alarmBase;
+  let whitePaddingBottom;
+  let whiteBetween;
+
+  titleSize = 18;
+  titleWeight = 800;
+  titleLineHeight = 1.5;
+  titleMarginTop = 3;
+
+  descriptionSize = 14;
+  descriptionWeight = 500;
+  descriptionLineHeight = 1.5;
+  descriptionMarginTop = 6;
+
+  whiteSize = 13;
+  whiteLineHeight = 1.7;
+
+  whitePaddingTop = 12;
+  whitePaddingBottom = 15;
+  whitePaddingLeft = 18;
+  whiteMarginTop = 20;
+
+  whiteBetween = 6;
 
   if (document.querySelector('.' + baseClassName) !== null) {
     document.querySelector('.' + baseClassName).remove();
+  }
+
+  renderContents = (block, deactive = true) => {
+    const base = instance.contentsBox;
+    let whiteBase;
+
+    if (block !== null) {
+      createNode({
+        mother: base,
+        text: block.name,
+        style: {
+          marginTop: String(titleMarginTop) + ea,
+          display: "block",
+          position: "relative",
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(titleWeight),
+          color: colorChip.black,
+          lineHeight: String(titleLineHeight),
+          opacity: String(deactive ? 0.4 : 1),
+        }
+      });
+      createNode({
+        mother: base,
+        text: block.contents.description,
+        style: {
+          marginTop: String(descriptionMarginTop) + ea,
+          display: "block",
+          position: "relative",
+          fontSize: String(descriptionSize) + ea,
+          fontWeight: String(descriptionWeight),
+          color: colorChip.black,
+          lineHeight: String(descriptionLineHeight),
+          opacity: String(deactive ? 0.4 : 1),
+        }
+      });
+
+      whiteBase = createNode({
+        mother: base,
+        style: {
+          marginTop: String(whiteMarginTop) + ea,
+          paddingTop: String(whitePaddingTop) + ea,
+          paddingBottom: String(whitePaddingTop) + ea,
+          paddingLeft: String(whitePaddingLeft) + ea,
+          paddingRight: String(whitePaddingLeft) + ea,
+          width: withOut(whitePaddingLeft * 2, ea),
+          background: colorChip.white,
+          display: "block",
+          position: "relative",
+          borderRadius: String(5) + "px",
+          opacity: String(deactive ? 0.4 : 1),
+          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+        }
+      });
+
+      createNode({
+        mother: whiteBase,
+        text: instance.propertyCase.join("\n"),
+        style: {
+          display: "block",
+          position: "relative",
+          fontSize: String(whiteSize) + ea,
+          fontWeight: String(descriptionWeight),
+          color: colorChip.green,
+          lineHeight: String(whiteLineHeight),
+          textAlign: "left",
+        }
+      });
+
+      createNode({
+        mother: whiteBase,
+        text: [ typeCase[block.feature.type.code - 1], targetCase[block.feature.target.code - 1], "<b%" + block.project.status + "%b>" ].join("\n"),
+        style: {
+          display: "block",
+          position: "absolute",
+          fontSize: String(whiteSize) + ea,
+          fontWeight: String(titleWeight),
+          color: colorChip.black,
+          lineHeight: String(whiteLineHeight),
+          textAlign: "right",
+          top: String(whitePaddingTop) + ea,
+          left: String(whitePaddingLeft) + ea,
+          width: withOut(whitePaddingLeft * 2, ea),
+        },
+        bold: {
+          fontSize: String(whiteSize) + ea,
+          fontWeight: String(titleWeight),
+          color: block.project.complete ? colorChip.black : colorChip.red,
+        }
+      });
+
+      if (block.feature.type.code === 3) {
+        alarmBase = createNode({
+          mother: base,
+          style: {
+            marginTop: String(whiteBetween) + ea,
+            paddingTop: String(whitePaddingTop) + ea,
+            paddingBottom: String(whitePaddingBottom) + ea,
+            paddingLeft: String(whitePaddingLeft) + ea,
+            paddingRight: String(whitePaddingLeft) + ea,
+            width: withOut(whitePaddingLeft * 2, ea),
+            background: colorChip.white,
+            display: "block",
+            position: "relative",
+            borderRadius: String(5) + "px",
+            opacity: String(deactive ? 0.4 : 1),
+            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          }
+        });
+
+        createNode({
+          mother: alarmBase,
+          text: block.contents.trigger.trim() === '' ? "내용 없음" : block.contents.trigger.trim(),
+          attribute: {
+            blockid: block.id,
+          },
+          event: {
+            click: function (e) {
+              const self = this;
+              let cancelBack, whiteInput;
+
+              whiteInput = createNode({
+                mother: self,
+                mode: "textarea",
+                event: {
+                  click: (e) => { e.stopPropagation() },
+                  keydown: function (e) {
+                    if (e.key === "Tab" || e.key === "Enter") {
+                      e.preventDefault();
+                    }
+                  },
+                  keyup: function (e) {
+                    if (e.key === "Tab" || e.key === "Enter") {
+                      this.blur();
+                    }
+                  },
+                  blur: async function (e) {
+                    try {
+                      const value = this.value.trim();
+                      let whereQuery, updateQuery;
+                      whereQuery = { id: self.getAttribute("blockid") };
+                      updateQuery = {};
+                      if (value === '' || value === "없음" || value === "내용 없음" || value === "내용없음") {
+                        updateQuery["contents.trigger"] = "";
+                        instance.map.find((obj) => { return obj.id === self.getAttribute("blockid") }).contents.trigger = '';
+                        await ajaxJson({ mode: "update", whereQuery, updateQuery }, BACKHOST + "/flowBlock");
+                        self.textContent = "내용 없음";
+                      } else {
+                        updateQuery["contents.trigger"] = value;
+                        instance.map.find((obj) => { return obj.id === self.getAttribute("blockid") }).contents.trigger = value;
+                        await ajaxJson({ mode: "update", whereQuery, updateQuery }, BACKHOST + "/flowBlock");
+                        self.textContent = this.value;
+                      }
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  }
+                },
+                text: this.textContent,
+                attribute: { value: this.textContent },
+                style: {
+                  position: "absolute",
+                  top: String(0),
+                  left: String(0),
+                  width: withOut(0),
+                  height: withOut(0),
+                  fontSize: String(whiteSize) + ea,
+                  fontWeight: String(descriptionWeight),
+                  color: colorChip.green,
+                  lineHeight: String(descriptionLineHeight),
+                  textAlign: "left",
+                  border: String(0),
+                  outline: String(0),
+                  background: colorChip.white,
+                }
+              });
+
+              whiteInput.focus();
+            }
+          },
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(whiteSize) + ea,
+            fontWeight: String(descriptionWeight),
+            color: colorChip.black,
+            lineHeight: String(descriptionLineHeight),
+            textAlign: "left",
+          }
+        });
+
+        alarmBase = createNode({
+          mother: base,
+          style: {
+            marginTop: String(whiteBetween) + ea,
+            paddingTop: String(whitePaddingTop) + ea,
+            paddingBottom: String(whitePaddingBottom) + ea,
+            paddingLeft: String(whitePaddingLeft) + ea,
+            paddingRight: String(whitePaddingLeft) + ea,
+            width: withOut(whitePaddingLeft * 2, ea),
+            background: colorChip.white,
+            display: "block",
+            position: "relative",
+            borderRadius: String(5) + "px",
+            opacity: String(deactive ? 0.4 : 1),
+            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          }
+        });
+
+        createNode({
+          mother: alarmBase,
+          text: block.composition.wordings.trim() === '' ? "내용 없음" : block.composition.wordings.trim(),
+          attribute: {
+            blockid: block.id,
+          },
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(whiteSize) + ea,
+            fontWeight: String(descriptionWeight),
+            color: colorChip.black,
+            lineHeight: String(descriptionLineHeight),
+            textAlign: "left",
+          }
+        });
+
+      } else if (block.feature.type.code === 1) {
+
+        alarmBase = createNode({
+          mother: base,
+          style: {
+            marginTop: String(whiteBetween) + ea,
+            paddingTop: String(whitePaddingTop) + ea,
+            paddingBottom: String(whitePaddingBottom) + ea,
+            paddingLeft: String(whitePaddingLeft) + ea,
+            paddingRight: String(whitePaddingLeft) + ea,
+            width: withOut(whitePaddingLeft * 2, ea),
+            background: colorChip.white,
+            display: "block",
+            position: "relative",
+            borderRadius: String(5) + "px",
+            opacity: String(deactive ? 0.4 : 1),
+            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          }
+        });
+
+        createNode({
+          mother: alarmBase,
+          text: block.composition.link.trim() === '' ? "링크 없음" : block.composition.link.trim(),
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(whiteSize) + ea,
+            fontWeight: String(descriptionWeight),
+            color: colorChip.black,
+            lineHeight: String(descriptionLineHeight),
+            textAlign: "left",
+          }
+        });
+
+      }
+
+    }
+  }
+
+  mouseEnterEvent = function (e) {
+    const id = this.id;
+    const block = instance.map.find((obj) => { return obj.id === id });
+    const base = instance.contentsBox;
+
+    if (instance.thisBlock === null) {
+      cleanChildren(base);
+      renderContents(block, true);
+    }
+
+    this.style.cursor = "pointer";
+  }
+
+  mouseLeaveEvent = function (e) {
+    const id = this.id;
+    const block = instance.map.find((obj) => { return obj.id === id });
+    const base = instance.contentsBox;
+
+    this.style.cursor = "";
+
+    cleanChildren(base);
+    renderContents(instance.thisBlock, false);
+
+  }
+
+  mouseClickCancelEvent = function (e) {
+    e.preventDefault();
+    const base = instance.contentsBox;
+    let pathArr;
+
+    instance.thisBlock = null;
+    cleanChildren(base);
+
+    for (let { block } of instance.map) {
+      pathArr = [ ...block.querySelectorAll("path") ];
+      pathArr[0].style.fill = block.getAttribute("color");
+      block.setAttribute("toggle", "off");
+    }
+  }
+
+  mouseClickEvent = function (e) {
+
+    e.stopPropagation();
+
+    const id = this.id;
+    const block = instance.map.find((obj) => { return obj.id === id });
+    const base = instance.contentsBox;
+    let pathArr;
+
+    instance.thisBlock = block;
+
+    cleanChildren(base);
+    renderContents(block, false);
+
+    for (let { block } of instance.map) {
+      pathArr = [ ...block.querySelectorAll("path") ];
+      pathArr[0].style.fill = block.getAttribute("color");
+      block.setAttribute("toggle", "off");
+    }
+
+    pathArr = [ ...this.querySelectorAll("path") ];
+    pathArr[0].style.fill = colorChip.green;
+    this.setAttribute("toggle", "on");
+
   }
 
   return new Promise((resolve, reject) => {
@@ -252,9 +617,21 @@ FlowJs.prototype.launchingDiagram = function (svgName) {
         graphic.view.enableMouse(true, true);
 
         ajaxJson({ mode: "get", whereQuery: { "feature.mode": svgName } }, BACKHOST + "/flowBlock", { equal: true }).then((blocks) => {
-          console.log(blocks);
+          base.addEventListener("contextmenu", mouseClickCancelEvent);
+          for (let obj of blocks) {
+            obj.block = base.querySelector('#' + obj.id);
+            if (obj.block === null) {
+              console.log(obj);
+            } else {
+              obj.block.setAttribute("toggle", "off");
+              obj.block.setAttribute("color", obj.block.querySelector("path").style.fill);
+              obj.block.addEventListener("click", mouseClickEvent);
+              obj.block.addEventListener("mouseenter", mouseEnterEvent);
+              obj.block.addEventListener("mouseleave", mouseLeaveEvent);
+            }
+          }
+          instance.map = blocks;
           resolve(base);
-
         }).catch((err) => {
           reject(err);
         });
@@ -264,7 +641,7 @@ FlowJs.prototype.launchingDiagram = function (svgName) {
 
 }
 
-FlowJs.prototype.grayLeftPopup = function () {
+FlowJs.prototype.grayRightPopup = function () {
   const instance = this;
   const button = document.getElementById("grayLeftOpenButton");
   const { createNode, colorChip, withOut } = GeneralJs;
@@ -281,121 +658,451 @@ FlowJs.prototype.grayLeftPopup = function () {
   let buttonWeight;
   let buttonUnitHeight;
   let grayBoxInnerPaddingBottom;
+  let grayMother;
+  let grayContentsBox;
+  let whitePaddingTop;
+  let whitePaddingBottom;
+  let whitePaddingLeft;
+  let whiteBase;
+  let whiteSize;
+  let whiteLineHeight;
+  let buttonHeight;
+  let buttonTop0, buttonTop1, buttonTop2, buttonTop3;
+  let buttonWidth;
+  let buttonRingBetween;
+  let deactiveOpacity;
 
   grayBoxMargin = 45;
   grayBoxWidth = 240;
   grayBoxHeight = 280;
-  grayBoxInnerPadding = 32;
-  grayBoxInnerPaddingTop = 19;
+  grayBoxInnerPadding = 26;
+  grayBoxInnerPaddingTop = 20;
   grayBoxInnerPaddingBottom = 22;
 
   buttonSize = 14;
   buttonWeight = 700;
   buttonUnitHeight = 28;
 
+  whitePaddingTop = 12;
+  whitePaddingBottom = 15;
+  whitePaddingLeft = 18;
+
+  whiteSize = 13;
+  whiteLineHeight = 1.7;
+
+  buttonHeight = 14;
+
+  buttonTop0 = 16;
+  buttonTop1 = 38;
+  buttonTop2 = 60;
+  buttonTop3 = 82;
+
+  buttonWidth = 30;
+  buttonRingBetween = 2;
+
+  deactiveOpacity = 0.2;
+
   contents = [
-    {
-      title: "홈리에종 콘솔 트리",
-      event: function (e) {
-        instance.launchingDiagram("console").catch((err) => { console.log(err) });
-      }
-    },
     {
       title: "홈리에종 서비스 플로우",
       event: function (e) {
-        instance.launchingDiagram("flow").catch((err) => { console.log(err) });
+        instance.launchingDiagram("service").catch((err) => { console.log(err) });
       }
     },
     {
-      title: "홈리에종 서버 트리",
+      title: "홈리에종 업무 플로우",
       event: function (e) {
-        instance.launchingDiagram("server").catch((err) => { console.log(err) });
+
       }
     },
-  ]
+    {
+      title: "홈리에종 서버 상태",
+      event: function (e) {
 
-  button.addEventListener("click", function (e) {
+      }
+    },
+  ];
 
-    if (document.querySelector('.' + grayBoxClassName) === null) {
-
-      grayBox = createNode({
-        mother: totalContents,
-        class: [ grayBoxClassName, "backblurgray" ],
+  grayMother = createNode({
+    mother: totalContents,
+    class: [ grayBoxClassName, "backblurgray" ],
+    style: {
+      position: "absolute",
+      top: String(0) + ea,
+      right: String(0) + ea,
+      height: withOut(belowHeight, ea),
+      width: String(grayBoxWidth) + ea,
+      zIndex: String(4),
+    },
+    children: [
+      {
         style: {
+          display: "block",
+          position: "relative",
+          paddingTop: String(grayBoxInnerPaddingTop) + ea,
+          paddingBottom: String(grayBoxInnerPaddingBottom) + ea,
+          paddingLeft: String(grayBoxInnerPadding) + ea,
+          paddingRight: String(grayBoxInnerPadding) + ea,
+          width: withOut(grayBoxInnerPadding * 2, ea),
+          background: colorChip.gradientGray,
+        }
+      },
+      {
+        style: {
+          display: "block",
+          position: "relative",
+          paddingTop: String(grayBoxInnerPaddingTop) + ea,
+          paddingLeft: String(grayBoxInnerPadding) + ea,
+          paddingRight: String(grayBoxInnerPadding) + ea,
+          width: withOut(grayBoxInnerPadding * 2, ea),
+        }
+      },
+      {
+        style: {
+          display: "block",
           position: "absolute",
-          top: String(0) + ea,
-          left: String(0) + ea,
-          height: withOut(belowHeight, ea),
-          width: String(grayBoxWidth) + ea,
-          zIndex: String(4),
+          bottom: String(grayBoxInnerPadding) + ea,
+          left: String(grayBoxInnerPadding) + ea,
+          width: withOut((grayBoxInnerPadding * 2) + (whitePaddingLeft * 2), ea),
+          paddingTop: String(whitePaddingTop) + ea,
+          paddingBottom: String(whitePaddingTop) + ea,
+          paddingLeft: String(whitePaddingLeft) + ea,
+          paddingRight: String(whitePaddingLeft) + ea,
+          background: colorChip.white,
+          borderRadius: String(5) + "px",
+          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+        }
+      }
+    ]
+  });
+
+  [ grayBox, grayContentsBox, whiteBase ] = [ ...grayMother.children ];
+
+  num = 1;
+  for (let { title, event } of contents) {
+    createNode({
+      mother: grayBox,
+      class: [ "hoverDefault_lite" ],
+      event: {
+        click: event
+      },
+      style: {
+        display: "flex",
+        position: "relative",
+        height: String(buttonUnitHeight) + ea,
+        width: withOut(0),
+        justifyContent: "end",
+        alignItems: "center",
+      },
+      children: [
+        {
+          text: title,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(buttonSize) + ea,
+            fontWeight: String(buttonWeight),
+            color: colorChip.white,
+          }
+        },
+        {
+          text: String(num),
+          style: {
+            position: "absolute",
+            fontSize: String(buttonSize) + ea,
+            fontWeight: String(300),
+            color: colorChip.white,
+            left: String(0),
+          }
+        }
+      ]
+    })
+    num++;
+  }
+
+  this.contentsBox = grayContentsBox;
+
+  createNode({
+    mother: whiteBase,
+    text: instance.typeCase.join("\n") + "\n" + "베이스",
+    style: {
+      display: "block",
+      position: "relative",
+      fontSize: String(whiteSize) + ea,
+      fontWeight: String(800),
+      color: colorChip.black,
+      lineHeight: String(whiteLineHeight),
+      textAlign: "left",
+    }
+  });
+
+  createNode({
+    mother: whiteBase,
+    attribute: {
+      toggle: "on",
+    },
+    event: {
+      click: function (e) {
+        const toggle = this.getAttribute("toggle");
+        const blocks = instance.map;
+        if (toggle === "on") {
+          for (let { block, feature } of blocks) {
+            if (feature.type.code === 1) {
+              block.style.opacity = String(deactiveOpacity);
+            }
+          }
+          this.style.background = colorChip.gray5;
+          this.firstChild.firstChild.style.left = String(buttonRingBetween) + ea;
+          this.setAttribute("toggle", "off");
+        } else {
+          for (let { block, feature } of blocks) {
+            if (feature.type.code === 1) {
+              block.style.opacity = String(1);
+            }
+          }
+          this.style.background = colorChip.green;
+          this.firstChild.firstChild.style.left = String(buttonWidth - (buttonHeight - (buttonRingBetween * 2)) - buttonRingBetween) + ea;
+          this.setAttribute("toggle", "on");
+        }
+      }
+    },
+    style: {
+      display: "inline-block",
+      position: "absolute",
+      top: String(buttonTop0) + ea,
+      right: String(whitePaddingLeft) + ea,
+      height: String(buttonHeight) + ea,
+      width: String(buttonWidth) + ea,
+      borderRadius: String(buttonHeight) + ea,
+      background: colorChip.green,
+      cursor: "pointer",
+    },
+    children: [
+      {
+        style: {
+          top: String(0),
+          left: String(0),
+          width: withOut(0),
+          height: withOut(0),
+          display: "block",
+          position: "relative",
         },
         children: [
           {
             style: {
-              display: "block",
-              position: "relative",
-              paddingTop: String(grayBoxInnerPaddingTop) + ea,
-              paddingBottom: String(grayBoxInnerPaddingBottom) + ea,
-              paddingLeft: String(grayBoxInnerPadding) + ea,
-              paddingRight: String(grayBoxInnerPadding) + ea,
-              width: withOut(grayBoxInnerPadding * 2, ea),
-              background: colorChip.gradientGray,
+              display: "inline-block",
+              position: "absolute",
+              top: String(buttonRingBetween) + ea,
+              left: String(buttonWidth - (buttonHeight - (buttonRingBetween * 2)) - buttonRingBetween) + ea,
+              width: String(buttonHeight - (buttonRingBetween * 2)) + ea,
+              height: String(buttonHeight - (buttonRingBetween * 2)) + ea,
+              borderRadius: String(buttonHeight - (buttonRingBetween * 2)) + ea,
+              background: colorChip.white,
             }
           }
         ]
-      }).firstChild;
-
-      num = 1;
-      for (let { title, event } of contents) {
-        createNode({
-          mother: grayBox,
-          class: [ "hoverDefault_lite" ],
-          event: {
-            click: event
-          },
-          style: {
-            display: "flex",
-            position: "relative",
-            height: String(buttonUnitHeight) + ea,
-            width: withOut(0),
-            justifyContent: "end",
-            alignItems: "center",
-          },
-          children: [
-            {
-              text: title,
-              style: {
-                display: "inline-block",
-                position: "relative",
-                fontSize: String(buttonSize) + ea,
-                fontWeight: String(buttonWeight),
-                color: colorChip.white,
-              }
-            },
-            {
-              text: String(num),
-              style: {
-                position: "absolute",
-                fontSize: String(buttonSize) + ea,
-                fontWeight: String(300),
-                color: colorChip.white,
-                left: String(0),
-              }
-            }
-          ]
-        })
-        num++;
       }
-
-    } else {
-
-      document.querySelector('.' + grayBoxClassName).remove();
-
-    }
-
+    ]
   });
 
-  button.click();
+  createNode({
+    mother: whiteBase,
+    attribute: {
+      toggle: "on",
+    },
+    event: {
+      click: function (e) {
+        const toggle = this.getAttribute("toggle");
+        const blocks = instance.map;
+        if (toggle === "on") {
+          for (let { block, feature } of blocks) {
+            if (feature.type.code === 2) {
+              block.style.opacity = String(deactiveOpacity);
+            }
+          }
+          this.style.background = colorChip.gray5;
+          this.firstChild.firstChild.style.left = String(buttonRingBetween) + ea;
+          this.setAttribute("toggle", "off");
+        } else {
+          for (let { block, feature } of blocks) {
+            if (feature.type.code === 2) {
+              block.style.opacity = String(1);
+            }
+          }
+          this.style.background = colorChip.green;
+          this.firstChild.firstChild.style.left = String(buttonWidth - (buttonHeight - (buttonRingBetween * 2)) - buttonRingBetween) + ea;
+          this.setAttribute("toggle", "on");
+        }
+      }
+    },
+    style: {
+      display: "inline-block",
+      position: "absolute",
+      top: String(buttonTop1) + ea,
+      right: String(whitePaddingLeft) + ea,
+      height: String(buttonHeight) + ea,
+      width: String(buttonWidth) + ea,
+      borderRadius: String(buttonHeight) + ea,
+      background: colorChip.green,
+      cursor: "pointer",
+    },
+    children: [
+      {
+        style: {
+          top: String(0),
+          left: String(0),
+          width: withOut(0),
+          height: withOut(0),
+          display: "block",
+          position: "relative",
+        },
+        children: [
+          {
+            style: {
+              display: "inline-block",
+              position: "absolute",
+              top: String(buttonRingBetween) + ea,
+              left: String(buttonWidth - (buttonHeight - (buttonRingBetween * 2)) - buttonRingBetween) + ea,
+              width: String(buttonHeight - (buttonRingBetween * 2)) + ea,
+              height: String(buttonHeight - (buttonRingBetween * 2)) + ea,
+              borderRadius: String(buttonHeight - (buttonRingBetween * 2)) + ea,
+              background: colorChip.white,
+            }
+          }
+        ]
+      }
+    ]
+  });
+
+  createNode({
+    mother: whiteBase,
+    attribute: {
+      toggle: "on",
+    },
+    event: {
+      click: function (e) {
+        const toggle = this.getAttribute("toggle");
+        const blocks = instance.map;
+        if (toggle === "on") {
+          for (let { block, feature } of blocks) {
+            if (feature.type.code === 3) {
+              block.style.opacity = String(deactiveOpacity);
+            }
+          }
+          this.style.background = colorChip.gray5;
+          this.firstChild.firstChild.style.left = String(buttonRingBetween) + ea;
+          this.setAttribute("toggle", "off");
+        } else {
+          for (let { block, feature } of blocks) {
+            if (feature.type.code === 3) {
+              block.style.opacity = String(1);
+            }
+          }
+          this.style.background = colorChip.green;
+          this.firstChild.firstChild.style.left = String(buttonWidth - (buttonHeight - (buttonRingBetween * 2)) - buttonRingBetween) + ea;
+          this.setAttribute("toggle", "on");
+        }
+      }
+    },
+    style: {
+      display: "inline-block",
+      position: "absolute",
+      top: String(buttonTop2) + ea,
+      right: String(whitePaddingLeft) + ea,
+      height: String(buttonHeight) + ea,
+      width: String(buttonWidth) + ea,
+      borderRadius: String(buttonHeight) + ea,
+      background: colorChip.green,
+      cursor: "pointer",
+    },
+    children: [
+      {
+        style: {
+          top: String(0),
+          left: String(0),
+          width: withOut(0),
+          height: withOut(0),
+          display: "block",
+          position: "relative",
+        },
+        children: [
+          {
+            style: {
+              display: "inline-block",
+              position: "absolute",
+              top: String(buttonRingBetween) + ea,
+              left: String(buttonWidth - (buttonHeight - (buttonRingBetween * 2)) - buttonRingBetween) + ea,
+              width: String(buttonHeight - (buttonRingBetween * 2)) + ea,
+              height: String(buttonHeight - (buttonRingBetween * 2)) + ea,
+              borderRadius: String(buttonHeight - (buttonRingBetween * 2)) + ea,
+              background: colorChip.white,
+            }
+          }
+        ]
+      }
+    ]
+  });
+
+  createNode({
+    mother: whiteBase,
+    attribute: {
+      toggle: "on",
+    },
+    event: {
+      click: function (e) {
+        const toggle = this.getAttribute("toggle");
+        const blocks = instance.map;
+        if (toggle === "on") {
+          document.getElementById("base").style.opacity = String(deactiveOpacity);
+          this.style.background = colorChip.gray5;
+          this.firstChild.firstChild.style.left = String(buttonRingBetween) + ea;
+          this.setAttribute("toggle", "off");
+        } else {
+          document.getElementById("base").style.opacity = String(1);
+          this.style.background = colorChip.green;
+          this.firstChild.firstChild.style.left = String(buttonWidth - (buttonHeight - (buttonRingBetween * 2)) - buttonRingBetween) + ea;
+          this.setAttribute("toggle", "on");
+        }
+      }
+    },
+    style: {
+      display: "inline-block",
+      position: "absolute",
+      top: String(buttonTop3) + ea,
+      right: String(whitePaddingLeft) + ea,
+      height: String(buttonHeight) + ea,
+      width: String(buttonWidth) + ea,
+      borderRadius: String(buttonHeight) + ea,
+      background: colorChip.green,
+      cursor: "pointer",
+    },
+    children: [
+      {
+        style: {
+          top: String(0),
+          left: String(0),
+          width: withOut(0),
+          height: withOut(0),
+          display: "block",
+          position: "relative",
+        },
+        children: [
+          {
+            style: {
+              display: "inline-block",
+              position: "absolute",
+              top: String(buttonRingBetween) + ea,
+              left: String(buttonWidth - (buttonHeight - (buttonRingBetween * 2)) - buttonRingBetween) + ea,
+              width: String(buttonHeight - (buttonRingBetween * 2)) + ea,
+              height: String(buttonHeight - (buttonRingBetween * 2)) + ea,
+              borderRadius: String(buttonHeight - (buttonRingBetween * 2)) + ea,
+              background: colorChip.white,
+            }
+          }
+        ]
+      }
+    ]
+  });
 
 }
 
@@ -403,6 +1110,9 @@ FlowJs.prototype.launching = async function () {
   const instance = this;
   const { returnGet, setQueue, ajaxJson } = GeneralJs;
   try {
+    const propertyCase = [ "형태", "대상", "구축" ];
+    const typeCase = [ "페이지", "액션", "알림" ];
+    const targetCase = [ "고객", "디자이너", "홈리에종" ];
     let blocks;
 
     this.belowHeight = this.mother.belowHeight;
@@ -411,7 +1121,16 @@ FlowJs.prototype.launching = async function () {
 
     document.getElementById("moveLeftArea").remove();
     document.getElementById("moveRightArea").remove();
+    document.getElementById("grayLeftOpenButton").remove();
 
+    this.propertyCase = propertyCase;
+    this.typeCase = typeCase;
+    this.targetCase = targetCase;
+    this.contentsBox = null;
+    this.thisBlock = null;
+    this.map = [];
+
+    this.grayRightPopup();
     await this.launchingDiagram("service");
 
   } catch (e) {

@@ -685,9 +685,9 @@ GeneralJs.prototype.generalCss = function () {
     background: rgb(255, 255, 255, 0.8);
   }
   .backblurgray {
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
-    background: rgb(236, 236, 236, 0.7);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    background: rgb(236, 236, 236, 0.9);
   }
   .backblurtransparent {
     -webkit-backdrop-filter: blur(4px);
