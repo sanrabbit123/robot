@@ -88,6 +88,71 @@ DevContext.prototype.launching = async function () {
     // console.log(pastProposal[0].project.detail);
 
 
+    // const selfMongo = this.MONGOCONSOLEC;
+    //
+    // await selfMongo.connect();
+    //
+    // const collection = "flowBlock";
+    // const typeCode = [ "page", "action", "alarm" ];
+    // const targetCode = [ "client", "designer", "homeliaison" ];
+    // let sheetsId;
+    // let rows;
+    // let matrix;
+    // let tong;
+    // let tempObj;
+    // let status;
+    //
+    // sheetsId = "1l5OpdpKDtes3hwJCNq1b-a8BpJ5wLuBU1dsGQPavZT0";
+    //
+    // rows = await sheets.get_value_inPython(sheetsId, "default!A2:I");
+    //
+    // tong = [];
+    // for (let [ id, name, description, type, target, complete, trigger, link, wordings ] of rows) {
+    //   tempObj = {
+    //     id,
+    //     name,
+    //     feature: {
+    //       type: {
+    //         code: typeCode.findIndex((str) => { return str === type.trim() }) + 1,
+    //         key: type.trim(),
+    //       },
+    //       target: {
+    //         code: targetCode.findIndex((str) => { return str === target.trim() }) + 1,
+    //         key: target.trim(),
+    //       },
+    //       code: ((typeCode.findIndex((str) => { return str === type.trim() }) + 1) * 10) + (targetCode.findIndex((str) => { return str === target.trim() }) + 1),
+    //     },
+    //     project: {
+    //       date: {
+    //         update: new Date(),
+    //         start: new Date(),
+    //         end: (complete === "TRUE" ? new Date() : new Date(3800, 0, 1)),
+    //       },
+    //       complete: (complete === "TRUE"),
+    //       status: (complete === "TRUE" ? "완료" : "예정"),
+    //     },
+    //     contents: {
+    //       description,
+    //       trigger: trigger === '-' ? '' : trigger,
+    //     },
+    //     composition: {
+    //       wordings: wordings === '-' ? '' : wordings,
+    //       link: link === '-' ? '' : link,
+    //     }
+    //   };
+    //   tong.push(tempObj);
+    // }
+    //
+    // for (let json of tong) {
+    //   await back.mongoCreate(collection, json, { selfMongo });
+    //   console.log(json);
+    // }
+    //
+    // await selfMongo.close();
+
+
+
+
     // const toId = (num) => {
     //   let length = 3 - String(num).length;
     //   let str;
