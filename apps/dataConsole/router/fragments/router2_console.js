@@ -4889,3 +4889,40 @@ DataRouter.prototype.rou_post_designerFeeTable = function () {
   }
   return obj;
 }
+
+DataRouter.prototype.rou_post_flowBlock = function () {
+  const instance = this;
+  const { errorLog } = this.mother;
+  const back = this.back;
+  let obj = {};
+  obj.link = [ "/flowBlock" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.mode === undefined) {
+        throw new Error("invaild post");
+      }
+      const collection = "flowBlock";
+      const selfMongo = instance.mongolocal;
+      const { mode } = req.body;
+      let resultObj;
+
+      if (mode === "get") {
+        resultObj = await back.mongoRead(collection, {}, { selfMongo });
+      } else if (mode === "update") {
+        resultObj = { message: "success" };
+      }
+
+      res.send(resultObj);
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_designerFeeTable): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}

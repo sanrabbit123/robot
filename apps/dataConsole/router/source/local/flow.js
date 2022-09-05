@@ -251,32 +251,6 @@ FlowJs.prototype.launchingDiagram = function (svgName) {
         graphic.view.zoomToFit(200, true);
         graphic.view.enableMouse(true, true);
 
-        map = instance.returnDiagramMap(svgName);
-        values = Object.values(map);
-        idList = values.map((obj) => { return Object.keys(obj) }).flat();
-        domList = idList.map((id) => { return base.querySelector('#' + id); }).filter((dom) => { return dom !== null });
-
-        flatMap = {};
-        for (let obj of values) {
-          for (let key in obj) {
-            flatMap[key] = obj[key];
-          }
-        }
-
-        for (let dom of domList) {
-          dom.style.cursor = "pointer";
-          if (typeof flatMap[dom.id] === "object" && flatMap[dom.id] !== null) {
-            if (typeof flatMap[dom.id].name === "string") {
-              dom.setAttribute("value", flatMap[dom.id].name);
-            }
-            if (typeof flatMap[dom.id].event === "function") {
-              dom.addEventListener("click", function (e) {
-                window.alert("test");
-              });
-            }
-          }
-        }
-
         resolve(base);
     });
   });
@@ -420,14 +394,20 @@ FlowJs.prototype.grayLeftPopup = function () {
 
 FlowJs.prototype.launching = async function () {
   const instance = this;
-  const { returnGet, setQueue } = GeneralJs;
+  const { returnGet, setQueue, ajaxJson } = GeneralJs;
   try {
+    let blocks;
+
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
     this.grayBarWidth = this.mother.grayBarWidth;
 
     document.getElementById("moveLeftArea").remove();
     document.getElementById("moveRightArea").remove();
+
+    blocks = await ajaxJson({ mode: "get" }, "/flowBlock", { equal: true });
+
+    console.log(blocks);
 
     await this.launchingDiagram("service");
 
