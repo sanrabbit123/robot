@@ -88,10 +88,16 @@ DevContext.prototype.launching = async function () {
     // console.log(pastProposal[0].project.detail);
 
 
+
+
+
+
+
+
+
+
     // const selfMongo = this.MONGOCONSOLEC;
-    //
     // await selfMongo.connect();
-    //
     // const collection = "flowBlock";
     // const typeCode = [ "page", "action", "alarm" ];
     // const targetCode = [ "client", "designer", "homeliaison" ];
@@ -112,6 +118,8 @@ DevContext.prototype.launching = async function () {
     //     id,
     //     name,
     //     feature: {
+    //       mode: "service",
+    //       code: ((typeCode.findIndex((str) => { return str === type.trim() }) + 1) * 10) + (targetCode.findIndex((str) => { return str === target.trim() }) + 1),
     //       type: {
     //         code: typeCode.findIndex((str) => { return str === type.trim() }) + 1,
     //         key: type.trim(),
@@ -120,7 +128,6 @@ DevContext.prototype.launching = async function () {
     //         code: targetCode.findIndex((str) => { return str === target.trim() }) + 1,
     //         key: target.trim(),
     //       },
-    //       code: ((typeCode.findIndex((str) => { return str === type.trim() }) + 1) * 10) + (targetCode.findIndex((str) => { return str === target.trim() }) + 1),
     //     },
     //     project: {
     //       date: {
@@ -153,41 +160,13 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const toId = (num) => {
-    //   let length = 3 - String(num).length;
-    //   let str;
-    //   str = '';
-    //   for (let i = 0; i < length; i++) {
-    //     str += '0';
-    //   }
-    //   str += String(num);
-    //   return str;
-    // }
-    //
-    // let sheetsId;
-    // let rows;
-    // let matrix;
-    // let arr;
-    // let index;
-    // let thisId;
-    //
-    // sheetsId = "1l5OpdpKDtes3hwJCNq1b-a8BpJ5wLuBU1dsGQPavZT0";
-    //
-    // rows = await sheets.get_value_inPython(sheetsId, "default!B2:F");
-    //
-    // matrix = [ [ "아이디", "이름", "형태", "주체", "완성", "발생 조건" ] ];
-    //
-    // index = 0;
-    // for (let [ name, type, who, complete, trigger ] of rows) {
-    //   thisId = type.slice(0, 1) + who.slice(0, 1) + toId(index);
-    //   arr = [ thisId, name, type, who, complete, (typeof trigger === "string" ? trigger : '-') ];
-    //   matrix.push(arr);
-    //   index++;
-    // }
-    //
-    // console.log(matrix);
-    // await sheets.update_value_inPython(sheetsId, "", matrix);
-    //
+
+
+
+
+
+
+
 
 
 

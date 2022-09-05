@@ -218,7 +218,7 @@ FlowJs.prototype.returnDiagramMap = function (svgName) {
 
 FlowJs.prototype.launchingDiagram = function (svgName) {
   const instance = this;
-  const { createNode, colorChip, withOut } = GeneralJs;
+  const { createNode, colorChip, withOut, ajaxJson } = GeneralJs;
   const { ea, totalContents, belowHeight, baseClassName } = this;
   let base, graphic;
   let map;
@@ -251,7 +251,14 @@ FlowJs.prototype.launchingDiagram = function (svgName) {
         graphic.view.zoomToFit(200, true);
         graphic.view.enableMouse(true, true);
 
-        resolve(base);
+        ajaxJson({ mode: "get", whereQuery: { "feature.mode": svgName } }, BACKHOST + "/flowBlock", { equal: true }).then((blocks) => {
+          console.log(blocks);
+          resolve(base);
+
+        }).catch((err) => {
+          reject(err);
+        });
+
     });
   });
 
@@ -404,10 +411,6 @@ FlowJs.prototype.launching = async function () {
 
     document.getElementById("moveLeftArea").remove();
     document.getElementById("moveRightArea").remove();
-
-    blocks = await ajaxJson({ mode: "get" }, "/flowBlock", { equal: true });
-
-    console.log(blocks);
 
     await this.launchingDiagram("service");
 

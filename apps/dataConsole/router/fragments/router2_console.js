@@ -4892,7 +4892,7 @@ DataRouter.prototype.rou_post_designerFeeTable = function () {
 
 DataRouter.prototype.rou_post_flowBlock = function () {
   const instance = this;
-  const { errorLog } = this.mother;
+  const { errorLog, equalJson } = this.mother;
   const back = this.back;
   let obj = {};
   obj.link = [ "/flowBlock" ];
@@ -4913,7 +4913,11 @@ DataRouter.prototype.rou_post_flowBlock = function () {
       let resultObj;
 
       if (mode === "get") {
-        resultObj = await back.mongoRead(collection, {}, { selfMongo });
+        if (req.body.whereQuery === undefined) {
+          throw new Error("invaild post");
+        }
+        const { whereQuery } = equalJson(req.body);
+        resultObj = await back.mongoRead(collection, whereQuery, { selfMongo });
       } else if (mode === "update") {
         resultObj = { message: "success" };
       }
