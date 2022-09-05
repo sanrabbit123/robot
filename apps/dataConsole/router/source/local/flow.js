@@ -218,7 +218,7 @@ FlowJs.prototype.returnDiagramMap = function (svgName) {
 
 FlowJs.prototype.launchingDiagram = function (svgName) {
   const instance = this;
-  const { createNode, colorChip, withOut, ajaxJson, cleanChildren } = GeneralJs;
+  const { createNode, colorChip, withOut, ajaxJson, cleanChildren, isMac } = GeneralJs;
   const { ea, totalContents, belowHeight, baseClassName, typeCase, targetCase } = this;
   let base, graphic;
   let map;
@@ -257,8 +257,8 @@ FlowJs.prototype.launchingDiagram = function (svgName) {
   whiteSize = 13;
   whiteLineHeight = 1.7;
 
-  whitePaddingTop = 12;
-  whitePaddingBottom = 15;
+  whitePaddingTop = isMac() ? 12 : 14;
+  whitePaddingBottom = isMac() ? 15 : 14;
   whitePaddingLeft = 18;
   whiteMarginTop = 20;
 
