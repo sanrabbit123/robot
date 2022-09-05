@@ -258,7 +258,7 @@ FlowJs.prototype.launchingDiagram = function (svgName) {
   whiteLineHeight = 1.7;
 
   whitePaddingTop = isMac() ? 12 : 14;
-  whitePaddingBottom = isMac() ? 15 : 14;
+  whitePaddingBottom = isMac() ? 15 : 13;
   whitePaddingLeft = 18;
   whiteMarginTop = 20;
 

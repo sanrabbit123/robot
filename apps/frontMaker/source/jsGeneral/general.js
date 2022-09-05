@@ -5760,7 +5760,7 @@ GeneralJs.homeliaisonAnalytics = function (obj) {
 }
 
 GeneralJs.facebookSdkPatch = function () {
-  const appId = "855866308109037";
+  const appId = "4385911554783319";
   const autoLogAppEvents = true;
   const xfbml = true;
   const version = "v14.0"
