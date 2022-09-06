@@ -61,7 +61,7 @@ DevContext.prototype.launching = async function () {
   const instance = this;
   const rethink = new RethinkAccess();
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongotestinfo } = this.mother;
-  const { consoleQ, fileSystem, shellExec, shellLink, orderSystem, ghostFileUpload, ghostFileList, curlRequest, diskReading, requestSystem, ajaxJson, uniqueValue, getDateMatrix, ghostRequest, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether, serviceParsing, localUnique, processSystem } = this.mother;
+  const { consoleQ, fileSystem, shellExec, shellLink, orderSystem, ghostFileUpload, ghostFileList, curlRequest, diskReading, requestSystem, ajaxJson, uniqueValue, getDateMatrix, ghostRequest, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether, serviceParsing, localUnique, processSystem, sha256Hmac } = this.mother;
   try {
     await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
@@ -89,25 +89,134 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
+
     const facebookToken = "EAAZBU9pw9OFcBAHfuxRlFDU7pT6toCQkjATCGMQVLmyIDa6ZBwtw8ZAhsJ2pfIP0s6ZCStt3aHl3cBBUby6ZCy4MlsxiducFY9D8aJZA6FhDyS823KPv0H0fBv0C5MTATm4X3UBKcWjiw43LQY0BVarQbwkkAZAZAugNYrV5XHqaXYVyycoFZBoF8";
     const facebookPageId = "290144638061244";
     const instagramId = "17841405547472752";
+    const facebookAdId = "505249990112820";
+    const naverToken = "01000000001df72459c6f186739e0778461122cfee6a0fddea2bb30df35e82c92f20944587";
+    const naverSecret = "AQAAAAAd9yRZxvGGc54HeEYRIs/uQCeezUnYnLfpaLvLRNMcyg==";
+    const naverId = "1608132";
+    const naverUrl = "https://api.naver.com";
+    let res, now, url;
+
+    now = new Date();
 
 
-    let res;
+    // facebook
 
-    res = await requestSystem("https://graph.facebook.com/v14.0/" + instagramId + "/insights", {
-      metric: "impressions,reach,profile_views",
-      period: "day",
-      since: String(Math.floor((new Date(2022, 7, 26, 7, 0, 0)).valueOf() / 1000)),
-      until: String(Math.floor((new Date(2022, 8, 3, 7, 0, 0)).valueOf() / 1000)),
-      access_token: facebookToken
-    }, { method: "get" });
+    // res = await requestSystem("https://graph.facebook.com/v14.0/" + instagramId + "/insights", {
+    //   metric: "impressions,reach,profile_views",
+    //   period: "day",
+    //   since: String(Math.floor((new Date(2022, 7, 26, 7, 0, 0)).valueOf() / 1000)),
+    //   until: String(Math.floor((new Date(2022, 8, 3, 7, 0, 0)).valueOf() / 1000)),
+    //   access_token: facebookToken
+    // }, { method: "get" });
 
-    console.log(...res.data.data);
+    // console.log(...res.data.data);
+
+    // res = await requestSystem("https://graph.facebook.com/v14.0/act_" + facebookAdId + "/insights", {
+    //   // level: "campaign",
+    //   fields: "impressions,spend,clicks",
+    //   time_range: JSON.stringify({
+    //     since: dateToString(new Date(2022, 7, 1)),
+    //     until: dateToString(new Date(2022, 8, 1)),
+    //   }),
+    //   access_token: facebookToken
+    // }, { method: "get" });
+    //
+    // console.log(res.data);
 
 
 
+
+
+
+    // naver
+
+    // url = "/ncc/campaigns";
+    // res = await requestSystem(naverUrl + url, {
+    //   recordSize: 200,
+    // }, {
+    //   method: "get",
+    //   headers: {
+    //     "X-Timestamp": String(now.valueOf()),
+    //     "X-API-KEY": naverToken,
+    //     "X-Customer": naverId,
+    //     "X-Signature": sha256Hmac(naverSecret, String(now.valueOf()) + ".GET." + url)
+    //   }
+    // });
+    // console.log(res.data);
+
+    // url = "/stats";
+    // res = await requestSystem(naverUrl + url, {
+    //   id: "cmp-a001-01-000000004441942",
+    //   fields: JSON.stringify([ "impCnt", "clkCnt", "salesAmt", "ccnt" ]),
+    //   timeRange: JSON.stringify({
+    //     since: dateToString(new Date(2022, 7, 1)),
+    //     until: dateToString(new Date(2022, 8, 1)),
+    //   }),
+    // }, {
+    //   method: "get",
+    //   headers: {
+    //     "X-Timestamp": String(now.valueOf()),
+    //     "X-API-KEY": naverToken,
+    //     "X-Customer": naverId,
+    //     "X-Signature": sha256Hmac(naverSecret, String(now.valueOf()) + ".GET." + url)
+    //   }
+    // });
+    // console.log(res.data);
+
+
+
+
+
+
+    // google
+
+
+
+
+    // youtube
+
+
+
+
+    // carrot
+
+
+
+
+    // kakao
+
+    // ??
+
+
+
+
+
+
+
+
+    // // paid
+    // 예산
+    // 노출수
+    // 클릭수
+    // 광고 유입수
+    //
+    // // non-paid
+    // 인스타
+    // 블로그
+    // 네이버 검색
+    // 구글 검색
+    // 기타 검색
+    //
+    //
+    // 유입량 체크
+    //
+    // 문의를 한 사람의 출저
 
 
 

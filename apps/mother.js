@@ -3788,4 +3788,9 @@ Mother.prototype.processSystem = async function (mode, processNameKeywords = [])
   }
 }
 
+Mother.prototype.sha256Hmac = function (key, message, type = "base64") {
+  const crypto = require("crypto");
+  return crypto.createHmac("sha256", key).update(message).digest(type);
+}
+
 module.exports = Mother;

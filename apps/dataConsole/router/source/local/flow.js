@@ -491,12 +491,12 @@ FlowJs.prototype.launchingDiagram = function (svgName) {
                 event: {
                   click: (e) => { e.stopPropagation() },
                   keydown: function (e) {
-                    if (e.key === "Tab" || e.key === "Enter") {
+                    if (e.key === "Tab") {
                       e.preventDefault();
                     }
                   },
                   keyup: function (e) {
-                    if (e.key === "Tab" || e.key === "Enter") {
+                    if (e.key === "Tab") {
                       this.blur();
                     }
                   },
