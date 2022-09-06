@@ -29,6 +29,7 @@ class RobotInstall:
             [ "xlrd" ],
             [ "numpy" ],
             [ "pillow" ],
+            [ "google-ads" ],
         ]
 
         self.upgrade = [

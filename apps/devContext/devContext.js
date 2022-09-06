@@ -131,9 +131,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
     // naver
 
     // url = "/ncc/campaigns";
@@ -171,10 +168,12 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
     // google
+
+
+
+
+
 
 
 
@@ -2987,9 +2986,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "공춘식",
+    //     client: "오지원",
     //     designer: "이미영",
-    //     link: "https://drive.google.com/drive/folders/1HSERI09wXGuH2Es7BuavAaqSoEUHljT-",
+    //     link: "https://drive.google.com/drive/folders/132J5JNSzCUDC4EppU_FJKUxbu9p9PWsH",
     //     pay: true
     //   },
     // ]);
@@ -3075,7 +3074,7 @@ DevContext.prototype.launching = async function () {
     // const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
     // const human = new HumanPacket();
     // const name = "이선경";
-    // const amount = 5744000;
+    // const amount = 718000;
     // await human.sendSms({
     //   name: "",
     //   phone: "01055432039",
