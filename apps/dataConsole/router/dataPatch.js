@@ -5800,6 +5800,7 @@ DataPatch.prototype.projectMap = function () {
           updateQuery["process.calculation.payments.remain.amount"] = calculate - updateQuery["process.calculation.payments.first.amount"];
 
           await GeneralJs.ajaxJson({ whereQuery, updateQuery }, "/rawUpdateProject");
+          await GeneralJs.ajaxJson({ proid }, PYTHONHOST + "/stylingAmountSync");
 
           window.location.href = window.location.protocol + "//" + window.location.host + "/project?proid=" + proid;
 
