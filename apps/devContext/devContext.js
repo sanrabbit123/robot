@@ -129,18 +129,22 @@ DevContext.prototype.launching = async function () {
 
 
     /*
-
     motherTong = [];
 
-    startDate = new Date(2021, 7, 1, 12, 0, 0);
+    startDate = new Date(2022, 7, 26, 12, 0, 0);
 
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 20; i++) {
 
-      from = new Date(JSON.stringify(startDate).slice(1, -1));
-      from.setDate(from.getDate() + i);
+      await sleep(200);
 
-      to = new Date(JSON.stringify(startDate).slice(1, -1));
-      to.setDate(to.getDate() + i + 1);
+      if (i === 0) {
+        from = new Date(JSON.stringify(startDate).slice(1, -1));
+        to = new Date(JSON.stringify(startDate).slice(1, -1));
+        to.setDate(to.getDate() + 1);
+      } else {
+        from.setDate(from.getDate() + 1);
+        to.setDate(to.getDate() + 1);
+      }
 
       res = await requestSystem("https://graph.facebook.com/v14.0/act_" + facebookAdId + "/insights", {
         level: "campaign",
@@ -182,6 +186,7 @@ DevContext.prototype.launching = async function () {
             name: obj.campaign_name,
           }
         };
+        await back.mongoCreate(tempCollection, json, { selfMongo })
         console.log(json);
         motherTong.push(json);
       }
@@ -189,94 +194,97 @@ DevContext.prototype.launching = async function () {
     }
 
     await fileSystem("writeJson", [ process.cwd() + "/temp/facebookCampaignMotherTong.json", motherTong ]);
-    console.log(motherTong);
-
     */
 
 
     // naver
 
-    startDate = new Date(2021, 7, 10, 12, 0, 0);
-
-    url = "/ncc/campaigns";
-    res = await requestSystem(naverUrl + url, {
-      recordSize: 200,
-      timeRange: JSON.stringify({
-        since: dateToString(startDate),
-        until: dateToString(new Date()),
-      }),
-    }, {
-      method: "get",
-      headers: {
-        "X-Timestamp": String(now.valueOf()),
-        "X-API-KEY": naverToken,
-        "X-Customer": naverId,
-        "X-Signature": sha256Hmac(naverSecret, String(now.valueOf()) + ".GET." + url)
-      }
-    });
-
-    for (let i = 0; i < 7; i++) {
-
-      await sleep(1000);
-
-      url = "/stats";
-      for (let { nccCampaignId, customerId, name, campaignTp } of res.data) {
-
-        await sleep(500);
-
-        from = new Date(JSON.stringify(startDate).slice(1, -1));
-        from.setDate(from.getDate() + i);
-
-        to = new Date(JSON.stringify(startDate).slice(1, -1));
-        to.setDate(to.getDate() + i + 1);
-
-        try {
-          res2 = await requestSystem(naverUrl + url, {
-            id: nccCampaignId,
-            fields: JSON.stringify([ "impCnt", "clkCnt", "salesAmt", "ccnt" ]),
-            timeRange: JSON.stringify({
-              since: dateToString(from),
-              until: dateToString(from),
-            }),
-          }, {
-            method: "get",
-            headers: {
-              "X-Timestamp": String(now.valueOf()),
-              "X-API-KEY": naverToken,
-              "X-Customer": naverId,
-              "X-Signature": sha256Hmac(naverSecret, String(now.valueOf()) + ".GET." + url)
-            }
-          });
-          if (!(res2.data.data[0].impCnt === 0 && res2.data.data[0].clkCnt === 0 && res2.data.data[0].salesAmt === 0)) {
-
-            json = {
-              camid: "",
-              date: { from, to },
-              value: {
-                charge: Number(res2.data.data[0].salesAmt),
-                performance: {
-                  impressions: Number(res2.data.data[0].impCnt),
-                  clicks: Number(res2.data.data[0].clkCnt),
-                },
-              },
-              information: {
-                mother: "naver",
-                type: campaignTp,
-                id: {
-                  account: String(customerId),
-                  campaign: nccCampaignId,
-                },
-                name: name,
-              }
-            };
-            console.log(json);
-
-          }
-        } catch (e) {
-          console.log("there is nothing")
-        }
-      }
-    }
+    // startDate = new Date(2022, 8, 3, 21, 0, 0);
+    //
+    // url = "/ncc/campaigns";
+    // res = await requestSystem(naverUrl + url, {
+    //   recordSize: 200,
+    //   timeRange: JSON.stringify({
+    //     since: dateToString(startDate),
+    //     until: dateToString(new Date()),
+    //   }),
+    // }, {
+    //   method: "get",
+    //   headers: {
+    //     "X-Timestamp": String(now.valueOf()),
+    //     "X-API-KEY": naverToken,
+    //     "X-Customer": naverId,
+    //     "X-Signature": sha256Hmac(naverSecret, String(now.valueOf()) + ".GET." + url)
+    //   }
+    // });
+    //
+    // for (let i = 0; i < 20; i++) {
+    //
+    //   await sleep(500);
+    //
+    //   if (i === 0) {
+    //     from = new Date(JSON.stringify(startDate).slice(1, -1));
+    //     to = new Date(JSON.stringify(startDate).slice(1, -1));
+    //     to.setDate(to.getDate() + 1);
+    //   } else {
+    //     from.setDate(from.getDate() + 1);
+    //     to.setDate(to.getDate() + 1);
+    //   }
+    //
+    //
+    //   url = "/stats";
+    //   for (let { nccCampaignId, customerId, name, campaignTp } of res.data) {
+    //
+    //     await sleep(100);
+    //
+    //     try {
+    //       res2 = await requestSystem(naverUrl + url, {
+    //         id: nccCampaignId,
+    //         fields: JSON.stringify([ "impCnt", "clkCnt", "salesAmt", "ccnt" ]),
+    //         timeRange: JSON.stringify({
+    //           since: dateToString(from),
+    //           until: dateToString(from),
+    //         }),
+    //       }, {
+    //         method: "get",
+    //         headers: {
+    //           "X-Timestamp": String(now.valueOf()),
+    //           "X-API-KEY": naverToken,
+    //           "X-Customer": naverId,
+    //           "X-Signature": sha256Hmac(naverSecret, String(now.valueOf()) + ".GET." + url)
+    //         }
+    //       });
+    //       if (!(res2.data.data[0].impCnt === 0 && res2.data.data[0].clkCnt === 0 && res2.data.data[0].salesAmt === 0)) {
+    //
+    //         json = {
+    //           camid: "",
+    //           date: { from, to },
+    //           value: {
+    //             charge: Number(res2.data.data[0].salesAmt),
+    //             performance: {
+    //               impressions: Number(res2.data.data[0].impCnt),
+    //               clicks: Number(res2.data.data[0].clkCnt),
+    //             },
+    //           },
+    //           information: {
+    //             mother: "naver",
+    //             type: campaignTp,
+    //             id: {
+    //               account: String(customerId),
+    //               campaign: nccCampaignId,
+    //             },
+    //             name: name,
+    //           }
+    //         };
+    //         await back.mongoCreate(tempCollection, json, { selfMongo })
+    //         console.log(json);
+    //
+    //       }
+    //     } catch (e) {
+    //       console.log("there is nothing")
+    //     }
+    //   }
+    // }
 
 
 
