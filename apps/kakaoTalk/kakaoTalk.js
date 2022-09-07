@@ -474,7 +474,7 @@ KakaoTalk.prototype.templateTong = function (target) {
     },
     realAccount: {
       name: "홈리에종 계좌 안내 수정",
-      id: "TG_5195",
+      id: "TJ_9111",
       needs: [
         "client",
         "goodName",
@@ -482,7 +482,6 @@ KakaoTalk.prototype.templateTong = function (target) {
         "account",
         "to",
         "amount",
-        "date",
       ],
       convert: function (obj) {
         return [
@@ -492,7 +491,6 @@ KakaoTalk.prototype.templateTong = function (target) {
           { from: "account", to: obj.account },
           { from: "to", to: obj.to },
           { from: "amount", to: obj.amount },
-          { from: "date", to: obj.date },
         ];
       },
     },

@@ -1585,7 +1585,6 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
               account: data.VACT_Num,
               to: data.VACT_Name,
               amount: autoComma(amount),
-              date: data.VACT_Date.slice(0, 4) + "년 " + data.VACT_Date.slice(4, -2) + "월 " + data.VACT_Date.slice(-2) + "일",
             }).catch((err) => {
               console.log(err);
             });
