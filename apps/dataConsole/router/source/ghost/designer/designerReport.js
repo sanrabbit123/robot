@@ -252,7 +252,6 @@ DesignerReportJs.prototype.contentsCenter = function () {
       "제안 날짜",
       "제안 금액",
       "평단가",
-      "계약 여부",
     ]
   ] : [
     [
@@ -296,9 +295,7 @@ DesignerReportJs.prototype.contentsCenter = function () {
     tempArr.push(dateToString(proposal.date));
     tempArr.push(autoComma(proposal.detail.fee.amount) + "원");
     tempArr.push(autoComma(Math.round(proposal.detail.fee.amount / proposal.pyeong)) + "원");
-    if (desktop) {
-      tempArr.push(proposal.desid.trim() !== "" ? "O" : "X");
-    }
+
     proposalMatrix.push(tempArr);
 
     a += proposal.pyeong;
@@ -480,10 +477,10 @@ DesignerReportJs.prototype.contentsCenter = function () {
       title: "추천 리포트",
       contents: {
         width: <&&
-          [ 40, 140, 70, 200, 150, 150, 150, 80, ] |
-          [ 30, 120, 70, 200, 140, 140, 140, 80, ] |
-          [ 24, 100, 60, 170, 120, 120, 120, 60, ] |
-          [ 16, 90, 50, 140, 95, 95, 95, 50, ] |
+          [ 40, 140, 100, 220, 160, 160, 160, ] |
+          [ 30, 120, 100, 220, 150, 150, 150, ] |
+          [ 24, 100, 70, 205, 125, 125, 125, ] |
+          [ 16, 90, 55, 155, 105, 105, 105, ] |
           [ 10, 10, 19, 19, 16 ]
         &&>,
         matrix: proposalMatrix,

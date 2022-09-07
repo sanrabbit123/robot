@@ -92,6 +92,12 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
+
+
+    const selfMongo = this.MONGOLOCALC;
+    const tempCollection = "tempCampaignStorage";
     const facebookToken = "EAAZBU9pw9OFcBAHfuxRlFDU7pT6toCQkjATCGMQVLmyIDa6ZBwtw8ZAhsJ2pfIP0s6ZCStt3aHl3cBBUby6ZCy4MlsxiducFY9D8aJZA6FhDyS823KPv0H0fBv0C5MTATm4X3UBKcWjiw43LQY0BVarQbwkkAZAZAugNYrV5XHqaXYVyycoFZBoF8";
     const facebookPageId = "290144638061244";
     const instagramId = "17841405547472752";
@@ -100,7 +106,11 @@ DevContext.prototype.launching = async function () {
     const naverSecret = "AQAAAAAd9yRZxvGGc54HeEYRIs/uQCeezUnYnLfpaLvLRNMcyg==";
     const naverId = "1608132";
     const naverUrl = "https://api.naver.com";
-    let res, now, url;
+    let res, res2, now, url;
+    let json;
+    let from, to;
+    let motherTong;
+    let startDate;
 
     now = new Date();
 
@@ -114,57 +124,160 @@ DevContext.prototype.launching = async function () {
     //   until: String(Math.floor((new Date(2022, 8, 3, 7, 0, 0)).valueOf() / 1000)),
     //   access_token: facebookToken
     // }, { method: "get" });
-
+    //
     // console.log(...res.data.data);
 
-    // res = await requestSystem("https://graph.facebook.com/v14.0/act_" + facebookAdId + "/insights", {
-    //   // level: "campaign",
-    //   fields: "impressions,spend,clicks",
-    //   time_range: JSON.stringify({
-    //     since: dateToString(new Date(2022, 7, 1)),
-    //     until: dateToString(new Date(2022, 8, 1)),
-    //   }),
-    //   access_token: facebookToken
-    // }, { method: "get" });
-    //
-    // console.log(res.data);
 
+    /*
+
+    motherTong = [];
+
+    startDate = new Date(2021, 7, 1, 12, 0, 0);
+
+    for (let i = 0; i < 30; i++) {
+
+      from = new Date(JSON.stringify(startDate).slice(1, -1));
+      from.setDate(from.getDate() + i);
+
+      to = new Date(JSON.stringify(startDate).slice(1, -1));
+      to.setDate(to.getDate() + i + 1);
+
+      res = await requestSystem("https://graph.facebook.com/v14.0/act_" + facebookAdId + "/insights", {
+        level: "campaign",
+        fields: [
+          "account_id",
+          "campaign_id",
+          "campaign_name",
+          "impressions",
+          "spend",
+          "clicks",
+          "date_start",
+          "date_stop",
+        ].join(","),
+        time_range: JSON.stringify({
+          since: dateToString(from),
+          until: dateToString(to),
+        }),
+        access_token: facebookToken
+      }, { method: "get" });
+
+      for (let obj of res.data.data) {
+        json = {
+          camid: "",
+          date: { from, to },
+          value: {
+            charge: Number(obj.spend),
+            performance: {
+              impressions: Number(obj.impressions),
+              clicks: Number(obj.clicks),
+            },
+          },
+          information: {
+            mother: "facebook",
+            type: "instagram",
+            id: {
+              account: obj.account_id,
+              campaign: obj.campaign_id,
+            },
+            name: obj.campaign_name,
+          }
+        };
+        console.log(json);
+        motherTong.push(json);
+      }
+
+    }
+
+    await fileSystem("writeJson", [ process.cwd() + "/temp/facebookCampaignMotherTong.json", motherTong ]);
+    console.log(motherTong);
+
+    */
 
 
     // naver
 
-    // url = "/ncc/campaigns";
-    // res = await requestSystem(naverUrl + url, {
-    //   recordSize: 200,
-    // }, {
-    //   method: "get",
-    //   headers: {
-    //     "X-Timestamp": String(now.valueOf()),
-    //     "X-API-KEY": naverToken,
-    //     "X-Customer": naverId,
-    //     "X-Signature": sha256Hmac(naverSecret, String(now.valueOf()) + ".GET." + url)
-    //   }
-    // });
-    // console.log(res.data);
+    startDate = new Date(2021, 7, 10, 12, 0, 0);
 
-    // url = "/stats";
-    // res = await requestSystem(naverUrl + url, {
-    //   id: "cmp-a001-01-000000004441942",
-    //   fields: JSON.stringify([ "impCnt", "clkCnt", "salesAmt", "ccnt" ]),
-    //   timeRange: JSON.stringify({
-    //     since: dateToString(new Date(2022, 7, 1)),
-    //     until: dateToString(new Date(2022, 8, 1)),
-    //   }),
-    // }, {
-    //   method: "get",
-    //   headers: {
-    //     "X-Timestamp": String(now.valueOf()),
-    //     "X-API-KEY": naverToken,
-    //     "X-Customer": naverId,
-    //     "X-Signature": sha256Hmac(naverSecret, String(now.valueOf()) + ".GET." + url)
-    //   }
-    // });
-    // console.log(res.data);
+    url = "/ncc/campaigns";
+    res = await requestSystem(naverUrl + url, {
+      recordSize: 200,
+      timeRange: JSON.stringify({
+        since: dateToString(startDate),
+        until: dateToString(new Date()),
+      }),
+    }, {
+      method: "get",
+      headers: {
+        "X-Timestamp": String(now.valueOf()),
+        "X-API-KEY": naverToken,
+        "X-Customer": naverId,
+        "X-Signature": sha256Hmac(naverSecret, String(now.valueOf()) + ".GET." + url)
+      }
+    });
+
+    for (let i = 0; i < 7; i++) {
+
+      await sleep(1000);
+
+      url = "/stats";
+      for (let { nccCampaignId, customerId, name, campaignTp } of res.data) {
+
+        await sleep(500);
+
+        from = new Date(JSON.stringify(startDate).slice(1, -1));
+        from.setDate(from.getDate() + i);
+
+        to = new Date(JSON.stringify(startDate).slice(1, -1));
+        to.setDate(to.getDate() + i + 1);
+
+        try {
+          res2 = await requestSystem(naverUrl + url, {
+            id: nccCampaignId,
+            fields: JSON.stringify([ "impCnt", "clkCnt", "salesAmt", "ccnt" ]),
+            timeRange: JSON.stringify({
+              since: dateToString(from),
+              until: dateToString(from),
+            }),
+          }, {
+            method: "get",
+            headers: {
+              "X-Timestamp": String(now.valueOf()),
+              "X-API-KEY": naverToken,
+              "X-Customer": naverId,
+              "X-Signature": sha256Hmac(naverSecret, String(now.valueOf()) + ".GET." + url)
+            }
+          });
+          if (!(res2.data.data[0].impCnt === 0 && res2.data.data[0].clkCnt === 0 && res2.data.data[0].salesAmt === 0)) {
+
+            json = {
+              camid: "",
+              date: { from, to },
+              value: {
+                charge: Number(res2.data.data[0].salesAmt),
+                performance: {
+                  impressions: Number(res2.data.data[0].impCnt),
+                  clicks: Number(res2.data.data[0].clkCnt),
+                },
+              },
+              information: {
+                mother: "naver",
+                type: campaignTp,
+                id: {
+                  account: String(customerId),
+                  campaign: nccCampaignId,
+                },
+                name: name,
+              }
+            };
+            console.log(json);
+
+          }
+        } catch (e) {
+          console.log("there is nothing")
+        }
+      }
+    }
+
 
 
 
