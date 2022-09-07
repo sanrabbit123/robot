@@ -98,7 +98,7 @@ DevContext.prototype.launching = async function () {
 
     const selfMongo = this.MONGOLOCALC;
     const tempCollection = "tempCampaignStorage";
-    const facebookToken = "EAAZBU9pw9OFcBAHfuxRlFDU7pT6toCQkjATCGMQVLmyIDa6ZBwtw8ZAhsJ2pfIP0s6ZCStt3aHl3cBBUby6ZCy4MlsxiducFY9D8aJZA6FhDyS823KPv0H0fBv0C5MTATm4X3UBKcWjiw43LQY0BVarQbwkkAZAZAugNYrV5XHqaXYVyycoFZBoF8";
+    const facebookToken = "EAAZBU9pw9OFcBABhn4FhSiBVlS3JbZBhEZCtCtNoXcgjcPRV8ZAxO6RqKvQ60BMpt2IPidg7NEjKyV4STXGOaxS3TMtHfcYqiei6PrU9UzT6m7vUQ3UEZC2f47xE7ZCvvZAMYVd2es6fAjcpr48pl7zoSEhmYf5Ys8IqFoDdN4hvZBi4pZBJusOuD";
     const facebookPageId = "290144638061244";
     const instagramId = "17841405547472752";
     const facebookAdId = "505249990112820";
@@ -115,7 +115,7 @@ DevContext.prototype.launching = async function () {
     now = new Date();
 
 
-    // facebook
+    // instagram
 
     // res = await requestSystem("https://graph.facebook.com/v14.0/" + instagramId + "/insights", {
     //   metric: "impressions,reach,profile_views",
@@ -128,7 +128,15 @@ DevContext.prototype.launching = async function () {
     // console.log(...res.data.data);
 
 
-    /*
+
+
+
+
+
+    // /*
+
+    // facebook
+
     motherTong = [];
 
     startDate = new Date(2022, 7, 26, 12, 0, 0);
@@ -186,7 +194,7 @@ DevContext.prototype.launching = async function () {
             name: obj.campaign_name,
           }
         };
-        await back.mongoCreate(tempCollection, json, { selfMongo })
+        // await back.mongoCreate(tempCollection, json, { selfMongo })
         console.log(json);
         motherTong.push(json);
       }
@@ -194,7 +202,7 @@ DevContext.prototype.launching = async function () {
     }
 
     await fileSystem("writeJson", [ process.cwd() + "/temp/facebookCampaignMotherTong.json", motherTong ]);
-    */
+    // */
 
 
     // naver
