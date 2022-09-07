@@ -5142,7 +5142,6 @@ GeneralJs.prototype.greenTalk = function (input) {
       right: String(right) + ea,
       borderRadius: String(baseWidth) + ea,
       background: colorChip.gradientGreen,
-      boxShadow: "0px 6px 20px -10px " + colorChip.shadow,
       animation: "talkfade 1.2s ease forwards",
       zIndex: String(zIndex),
       justifyContent: "center",

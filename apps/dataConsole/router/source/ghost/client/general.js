@@ -378,7 +378,7 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
           fontWeight: String(400),
           fontFamily: "graphik",
           fontStyle: "italic",
-          color: modeNumber === 2 ? colorChip.white : colorChip.green,
+          color: modeNumber === 2 ? colorChip.white : colorChip.black,
           top: String(iconTop) + ea,
           left: desktop ? "calc(50% + " + String((standardWidth / 2) - searchWidthMinus) + ea + ")" : String(mobileMargin) + ea,
           width: String(searchWidth) + ea,
@@ -580,7 +580,7 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
     this.setGeneralBase(base, typeof obj.background === "number" ? obj.background : 0, mode, name);
     await local();
     if (mode === "front") {
-      this.footerMake();
+      this.footerMake(colorChip.gradientBlack);
     } else {
       this.footerMake(colorChip.gradientBlack);
     }
