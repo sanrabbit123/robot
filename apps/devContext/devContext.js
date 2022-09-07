@@ -98,7 +98,7 @@ DevContext.prototype.launching = async function () {
 
     const selfMongo = this.MONGOLOCALC;
     const tempCollection = "tempCampaignStorage";
-    const facebookToken = "EAAZBU9pw9OFcBABhn4FhSiBVlS3JbZBhEZCtCtNoXcgjcPRV8ZAxO6RqKvQ60BMpt2IPidg7NEjKyV4STXGOaxS3TMtHfcYqiei6PrU9UzT6m7vUQ3UEZC2f47xE7ZCvvZAMYVd2es6fAjcpr48pl7zoSEhmYf5Ys8IqFoDdN4hvZBi4pZBJusOuD";
+    const facebookToken = "EAAZBU9pw9OFcBAFScXv1FdfOpRSybLX1JyAb85sy6mgtu1Gyum7jyQVDMIhNQp6qVZCoFwrSnxJNsMUbmLpNeEwn4pqYjvxIK3RTpL8zMjG9korM4T9aZBIi2KIJWdalC2nBn50RQTcZCU3UG3EBMVD9cQo0ZC94qjXREIodvpbgr5EOcTVNl";
     const facebookPageId = "290144638061244";
     const instagramId = "17841405547472752";
     const facebookAdId = "505249990112820";
@@ -118,10 +118,10 @@ DevContext.prototype.launching = async function () {
     // instagram
 
     // res = await requestSystem("https://graph.facebook.com/v14.0/" + instagramId + "/insights", {
-    //   metric: "impressions,reach,profile_views",
+    //   metric: "impressions,reach,profile_views,follower_count,website_clicks",
     //   period: "day",
-    //   since: String(Math.floor((new Date(2022, 7, 26, 7, 0, 0)).valueOf() / 1000)),
-    //   until: String(Math.floor((new Date(2022, 8, 3, 7, 0, 0)).valueOf() / 1000)),
+    //   since: String(Math.floor((new Date(2022, 7, 26, 12, 0, 0)).valueOf() / 1000)),
+    //   until: String(Math.floor((new Date(2022, 7, 27, 12, 0, 0)).valueOf() / 1000)),
     //   access_token: facebookToken
     // }, { method: "get" });
     //
@@ -129,11 +129,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
-
-    // /*
+    /*
 
     // facebook
 
@@ -194,7 +190,7 @@ DevContext.prototype.launching = async function () {
             name: obj.campaign_name,
           }
         };
-        // await back.mongoCreate(tempCollection, json, { selfMongo })
+        await back.mongoCreate(tempCollection, json, { selfMongo })
         console.log(json);
         motherTong.push(json);
       }
@@ -202,7 +198,7 @@ DevContext.prototype.launching = async function () {
     }
 
     await fileSystem("writeJson", [ process.cwd() + "/temp/facebookCampaignMotherTong.json", motherTong ]);
-    // */
+    */
 
 
     // naver
