@@ -27,7 +27,7 @@ class GoogleYoutube:
             if creds and creds.expired and creds.refresh_token:
                 creds.refresh(Request())
             else:
-                flow = InstalledAppFlow.from_client_secrets_file(thisFolderPath + ('/tokens/youtube_client_secrets.json'), [ 'https://www.googleapis.com/auth/yt-analytics.readonly' ])
+                flow = InstalledAppFlow.from_client_secrets_file(thisFolderPath + ('/tokens/youtube_client_secrets.json'), [ 'https://www.googleapis.com/auth/yt-analytics.readonly', 'https://www.googleapis.com/auth/youtube' ])
                 creds = flow.run_local_server(port=0)
 
             with open((thisFolderPath + '/tokens/youtubeToken.pickle'), 'wb') as token:
@@ -40,7 +40,7 @@ class GoogleYoutube:
 
     def channelsList(self):
         print(self.app.reports().query(ids='channel==MINE', startDate='2022-05-01', endDate='2022-06-30', dimensions="channel", metrics='views,likes,subscribersGained').execute())
-
+        # print(self.app.reports().query(ids='channel==MINE', startDate='2022-05-01', endDate='2022-06-30', dimensions="adType", metrics='grossRevenue,adImpressions,cpm').execute())
 
 
 
