@@ -87,7 +87,7 @@ LogRouter.prototype.rou_get_Root = function () {
 
 LogRouter.prototype.rou_get_First = function () {
   const instance = this;
-  const { diskReading } = this.mother;
+  const { diskReading, errorLog } = this.mother;
   const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
   const reflection = new MongoReflection();
   let obj = {};
@@ -110,6 +110,8 @@ LogRouter.prototype.rou_get_First = function () {
         const disk = await diskReading();
         reflection.frontReflection().then(() => {
           return instance.dailyAnalytics(instance.mongo);
+        }).then(() => {
+          return errorLog("front reflection, daily analytics done");
         }).catch((err) => { console.log(err); });
         res.send(JSON.stringify({ disk: disk.toArray() }));
 
@@ -122,7 +124,7 @@ LogRouter.prototype.rou_get_First = function () {
       }
 
     } catch (e) {
-      instance.mother.errorLog("Log Console 서버 문제 생김 (rou_get_First): " + e.message).catch((e) => { console.log(e); });
+      errorLog("Log Console 서버 문제 생김 (rou_get_First): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }
