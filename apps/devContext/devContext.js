@@ -95,7 +95,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const LogRouter = require(`${this.dir}/router/logRouter.js`);
+    const LogRouter = require(`${process.cwd()}/apps/logConsole/router/logRouter.js`);
     const router = new LogRouter(this.MONGOLOCALC);
 
     await router.dailyAnalytics(this.MONGOLOCALC);
@@ -3142,7 +3142,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p226");
+    // await this.getRawPortfolio("p201");
 
 
     // get corePortfolio by pid
