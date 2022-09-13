@@ -857,6 +857,13 @@ GoogleAnalytics.prototype.reportParsing = function (reports) {
 GoogleAnalytics.prototype.generalMetric = async function (startDate, endDate) {
   const instance = this;
   const { dateToString, stringToDate } = this.mother;
+  const zeroAddtion = function (num) {
+    if (num < 10) {
+      return `0${String(num)}`;
+    } else {
+      return `${String(num)}`;
+    }
+  }
   try {
 
     if (startDate === undefined || endDate === undefined) {
@@ -916,7 +923,7 @@ GoogleAnalytics.prototype.generalMetric = async function (startDate, endDate) {
     end = stringToDate(endDate);
 
     finalObj = {
-      anaid: "",
+      anaid: ('n' + String(start.getFullYear()).slice(2) + zeroAddtion(start.getMonth() + 1) + '_' + "aa" + zeroAddtion(start.getDate()) + 's'),
       date: {
         from: start,
         to: (endDate === startDate ? next : end),

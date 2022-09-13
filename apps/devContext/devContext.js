@@ -48,11 +48,12 @@ const LogConsole = require(APP_PATH + "/logConsole/logConsole.js");
 const DevContext = function () {
   this.mother = new Mother();
   this.back = new BackMaker();
-  const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongotestinfo } = this.mother;
   this.MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   this.MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
   this.MONGOPYTHONC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
   this.MONGOCONSOLEC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+  this.MONGOLOGC = new mongo(mongotestinfo, { useUnifiedTopology: true })
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.dir = `${process.cwd()}/apps/devContext`;
 }
@@ -94,25 +95,34 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const selfMongo = this.MONGOLOCALC;
-    const tempCollection = "tempAnalyticsStorage";
+    const selfMongo = this.MONGOLOGC;
+    const analyticsCollection = "dailyAnalytics";
     const analytics = new GoogleAnalytics();
     let result;
     let date;
+    let anaid;
+    let rows;
 
-    date = new Date(2021, 8, 1);
+    await selfMongo.connect();
 
-    for (let i = 0; i < 40; i++) {
+    date = new Date(2021, 9, 1);
+
+    for (let i = 0; i < 33; i++) {
       result = await analytics.generalMetric(date, date);
-      await back.mongoCreate(tempCollection, result, { selfMongo });
+      anaid = result.anaid;
+      rows = await back.mongoRead(analyticsCollection, { anaid }, { selfMongo });
+      if (rows.length !== 0) {
+        await back.mongoDelete(analyticsCollection, { anaid }, { selfMongo })
+      }
+      await back.mongoCreate(analyticsCollection, result, { selfMongo });
       console.log(result);
       console.log(dateToString(date));
       date.setDate(date.getDate() + 1);
-      await sleep(1000);
+      await sleep(3000);
     }
 
 
-
+    await selfMongo.close();
 
 
 
