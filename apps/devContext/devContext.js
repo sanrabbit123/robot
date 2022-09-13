@@ -95,6 +95,9 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const LogRouter = require(`${process.cwd()}/apps/logConsole/router/logRouter.js`);
+    const router = new LogRouter();
+    await router.dailyCampaign(this.MONGOLOCALC);
 
 
 
@@ -103,9 +106,12 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+    /*
 
     const selfMongo = this.MONGOLOGC;
     const campaignCollection = "dailyCampaign";
+
     const facebookToken = "EAAZBU9pw9OFcBAFScXv1FdfOpRSybLX1JyAb85sy6mgtu1Gyum7jyQVDMIhNQp6qVZCoFwrSnxJNsMUbmLpNeEwn4pqYjvxIK3RTpL8zMjG9korM4T9aZBIi2KIJWdalC2nBn50RQTcZCU3UG3EBMVD9cQo0ZC94qjXREIodvpbgr5EOcTVNl";
     const facebookPageId = "290144638061244";
     const instagramId = "17841405547472752";
@@ -118,7 +124,6 @@ DevContext.prototype.launching = async function () {
     let res, res2, now, url;
     let json;
     let from, to;
-    let motherTong;
     let startDate;
     let num, num2;
     let key;
@@ -126,193 +131,6 @@ DevContext.prototype.launching = async function () {
     await selfMongo.connect();
 
     now = new Date();
-
-    // facebook
-
-    /*
-
-    motherTong = [];
-
-    startDate = new Date(2022, 8, 1);
-
-    for (let i = 0; i < 12; i++) {
-
-      await sleep(200);
-
-      if (i === 0) {
-        from = new Date(JSON.stringify(startDate).slice(1, -1));
-        to = new Date(JSON.stringify(startDate).slice(1, -1));
-        to.setDate(to.getDate() + 1);
-      } else {
-        from.setDate(from.getDate() + 1);
-        to.setDate(to.getDate() + 1);
-      }
-
-      res = await requestSystem("https://graph.facebook.com/v14.0/act_" + facebookAdId + "/insights", {
-        level: "campaign",
-        fields: [
-          "account_id",
-          "campaign_id",
-          "campaign_name",
-          "impressions",
-          "spend",
-          "clicks",
-          "date_start",
-          "date_stop",
-        ].join(","),
-        time_range: JSON.stringify({
-          since: dateToString(from),
-          until: dateToString(from),
-        }),
-        access_token: facebookToken
-      }, { method: "get" });
-
-      num = 0;
-      for (let obj of res.data.data) {
-
-        key = dateToString(from).replace(/\-/gi, '') + "_" + obj.campaign_id
-
-        json = {
-          camid: 'g' + String(from.getFullYear()).slice(2) + zeroAddition(from.getMonth() + 1) + '_' + 'f' + String.fromCharCode(97 + num) + zeroAddition(from.getDate()) + 's',
-          key,
-          date: { from, to },
-          value: {
-            charge: Number(obj.spend),
-            performance: {
-              impressions: Number(obj.impressions),
-              clicks: Number(obj.clicks),
-            },
-          },
-          information: {
-            mother: "facebook",
-            type: "instagram",
-            id: {
-              account: obj.account_id,
-              campaign: obj.campaign_id,
-            },
-            name: obj.campaign_name,
-          }
-        };
-
-        tempRows = await back.mongoRead(campaignCollection, { key }, { selfMongo });
-        if (tempRows.length !== 0) {
-          await back.mongoDelete(campaignCollection, { key }, { selfMongo });
-        }
-        await back.mongoCreate(campaignCollection, json, { selfMongo })
-        console.log(json);
-        motherTong.push(json);
-        num++;
-      }
-
-    }
-
-    */
-
-
-    // naver
-
-    /*
-
-    startDate = new Date(2022, 8, 6);
-
-    url = "/ncc/campaigns";
-    res = await requestSystem(naverUrl + url, {
-      recordSize: 200,
-      timeRange: JSON.stringify({
-        since: dateToString(startDate),
-        until: dateToString(new Date()),
-      }),
-    }, {
-      method: "get",
-      headers: {
-        "X-Timestamp": String(now.valueOf()),
-        "X-API-KEY": naverToken,
-        "X-Customer": naverId,
-        "X-Signature": sha256Hmac(naverSecret, String(now.valueOf()) + ".GET." + url)
-      }
-    });
-
-    for (let i = 0; i < 7; i++) {
-
-      await sleep(1000);
-
-      if (i === 0) {
-        from = new Date(JSON.stringify(startDate).slice(1, -1));
-        to = new Date(JSON.stringify(startDate).slice(1, -1));
-        to.setDate(to.getDate() + 1);
-      } else {
-        from.setDate(from.getDate() + 1);
-        to.setDate(to.getDate() + 1);
-      }
-
-      url = "/stats";
-      num2 = 0;
-      for (let { nccCampaignId, customerId, name, campaignTp } of res.data) {
-
-        await sleep(100);
-
-        try {
-          res2 = await requestSystem(naverUrl + url, {
-            id: nccCampaignId,
-            fields: JSON.stringify([ "impCnt", "clkCnt", "salesAmt", "ccnt" ]),
-            timeRange: JSON.stringify({
-              since: dateToString(from),
-              until: dateToString(from),
-            }),
-          }, {
-            method: "get",
-            headers: {
-              "X-Timestamp": String(now.valueOf()),
-              "X-API-KEY": naverToken,
-              "X-Customer": naverId,
-              "X-Signature": sha256Hmac(naverSecret, String(now.valueOf()) + ".GET." + url)
-            }
-          });
-          if (!(res2.data.data[0].impCnt === 0 && res2.data.data[0].clkCnt === 0 && res2.data.data[0].salesAmt === 0)) {
-
-            key = dateToString(from).replace(/\-/gi, '') + "_" + nccCampaignId;
-
-            json = {
-              camid: 'g' + String(from.getFullYear()).slice(2) + zeroAddition(from.getMonth() + 1) + '_' + 'n' + String.fromCharCode(97 + num2) + zeroAddition(from.getDate()) + 's',
-              key,
-              date: { from, to },
-              value: {
-                charge: Number(res2.data.data[0].salesAmt),
-                performance: {
-                  impressions: Number(res2.data.data[0].impCnt),
-                  clicks: Number(res2.data.data[0].clkCnt),
-                },
-              },
-              information: {
-                mother: "naver",
-                type: campaignTp,
-                id: {
-                  account: String(customerId),
-                  campaign: nccCampaignId,
-                },
-                name: name,
-              }
-            };
-
-            tempRows = await back.mongoRead(campaignCollection, { key }, { selfMongo });
-            if (tempRows.length !== 0) {
-              await back.mongoDelete(campaignCollection, { key }, { selfMongo });
-            }
-
-            await back.mongoCreate(campaignCollection, json, { selfMongo })
-            console.log(json);
-
-            num2++
-          }
-        } catch (e) {
-          console.log("there is nothing")
-        }
-      }
-    }
-
-    */
-
-
 
     // instagram
 
@@ -327,24 +145,13 @@ DevContext.prototype.launching = async function () {
     // console.log(...res.data.data);
 
 
-
-
     // google
-
-
-
 
 
     // youtube
 
 
     await selfMongo.close();
-
-
-
-
-
-
 
     // // paid
     // 예산
@@ -365,7 +172,7 @@ DevContext.prototype.launching = async function () {
     // 문의를 한 사람의 출저
 
 
-
+    */
 
 
 
