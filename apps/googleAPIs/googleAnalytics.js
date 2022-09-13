@@ -816,28 +816,40 @@ GoogleAnalytics.prototype.analyticsToMongo = async function (startDate = "defaul
 
 GoogleAnalytics.prototype.reportParsing = function (reports) {
   const instance = this;
-  const { reports: [ { data: { rows } } ] } = reports;
+  const { reports: [ { data } ] } = reports;
   let result, tong, total, kinds;
+  let rows;
 
   result = {};
   tong = [];
   total = 0;
-  kinds = rows.length;
 
-  for (let { dimensions, metrics } of rows) {
-    if (dimensions.length === 1) {
-      tong.push({ case: String(dimensions[0]), value: Number(metrics[0].values[0]) });
-    } else if (dimensions.length > 1) {
-      tong.push({ case: dimensions.join("__split__"), value: Number(metrics[0].values[0]) });
+  if (Array.isArray(data.rows)) {
+    rows = data.rows;
+    kinds = rows.length;
+    for (let { dimensions, metrics } of rows) {
+      if (dimensions.length === 1) {
+        tong.push({ case: String(dimensions[0]), value: Number(metrics[0].values[0]) });
+      } else if (dimensions.length > 1) {
+        tong.push({ case: dimensions.join("__split__"), value: Number(metrics[0].values[0]) });
+      }
+      total = total + Number(metrics[0].values[0]);
     }
-    total = total + Number(metrics[0].values[0]);
+
+    tong.sort((a, b) => { return b.value - a.value; });
+
+    result.cases = tong;
+    result.total = total;
+    result.kinds = kinds;
+  } else {
+
+    result = {
+      cases: [],
+      total: 0,
+      kinds: 0
+    }
+
   }
-
-  tong.sort((a, b) => { return b.value - a.value; });
-
-  result.cases = tong;
-  result.total = total;
-  result.kinds = kinds;
 
   return result;
 }

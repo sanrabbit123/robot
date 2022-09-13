@@ -105,6 +105,7 @@ DevContext.prototype.launching = async function () {
     for (let i = 0; i < 40; i++) {
       result = await analytics.generalMetric(date, date);
       await back.mongoCreate(tempCollection, result, { selfMongo });
+      console.log(result);
       console.log(dateToString(date));
       date.setDate(date.getDate() + 1);
       await sleep(1000);
