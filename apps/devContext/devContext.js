@@ -91,25 +91,36 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
     const selfMongo = this.MONGOLOCALC;
-    const tempCollection = "tempCampaignStorage";
+    const tempCollection = "tempAnalyticsStorage";
+    const analytics = new GoogleAnalytics();
+    let result;
+    let date;
+
+    date = new Date(2021, 8, 1);
+
+    for (let i = 0; i < 40; i++) {
+      result = await analytics.generalMetric(date, date);
+      await back.mongoCreate(tempCollection, result, { selfMongo });
+      console.log(dateToString(date));
+      date.setDate(date.getDate() + 1);
+      await sleep(1000);
+    }
+
+
+
+
+
+
+
+
+
+
+    // const selfMongo = this.MONGOLOCALC;
+    // const tempCollection = "tempCampaignStorage";
     const facebookToken = "EAAZBU9pw9OFcBAFScXv1FdfOpRSybLX1JyAb85sy6mgtu1Gyum7jyQVDMIhNQp6qVZCoFwrSnxJNsMUbmLpNeEwn4pqYjvxIK3RTpL8zMjG9korM4T9aZBIi2KIJWdalC2nBn50RQTcZCU3UG3EBMVD9cQo0ZC94qjXREIodvpbgr5EOcTVNl";
     const facebookPageId = "290144638061244";
     const instagramId = "17841405547472752";
@@ -320,14 +331,9 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // carrot
 
 
 
-
-    // kakao
-
-    // ??
 
 
 

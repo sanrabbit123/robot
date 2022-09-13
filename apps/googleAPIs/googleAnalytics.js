@@ -835,7 +835,7 @@ GoogleAnalytics.prototype.reportParsing = function (reports) {
 
   tong.sort((a, b) => { return b.value - a.value; });
 
-  result.tong = tong;
+  result.cases = tong;
   result.total = total;
   result.kinds = kinds;
 
@@ -844,33 +844,44 @@ GoogleAnalytics.prototype.reportParsing = function (reports) {
 
 GoogleAnalytics.prototype.generalMetric = async function (startDate, endDate) {
   const instance = this;
+  const { dateToString, stringToDate } = this.mother;
   try {
 
     if (startDate === undefined || endDate === undefined) {
       throw new Error("must be start-date and end-date");
     }
 
+    if (startDate instanceof Date) {
+      startDate = dateToString(startDate);
+    }
+
+    if (endDate instanceof Date) {
+      endDate = dateToString(endDate);
+    }
+
     const dimensions = [
       { name: "ga:pagePath", meaning: "페이지 경로" },
-      { name: "ga:pageTitle", meaning: "페이지 제목" },
+      // { name: "ga:pageTitle", meaning: "페이지 제목" },
       { name: "ga:userDefinedValue", meaning: "레퍼럴" },
       { name: "ga:source", meaning: "소스" },
       { name: "ga:deviceCategory", meaning: "디바이스" },
       { name: "ga:operatingSystem", meaning: "운영 체제" },
       { name: "ga:campaign", meaning: "캠페인" },
-      { name: "ga:mobileDeviceModel", meaning: "핸드폰 기종" },
-      { name: "ga:country", meaning: "국가" },
+      // { name: "ga:mobileDeviceModel", meaning: "핸드폰 기종" },
+      // { name: "ga:country", meaning: "국가" },
       { name: "ga:city", meaning: "도시" },
       { name: "ga:userType", meaning: "유저 타입" },
       { name: "ga:userAgeBracket", meaning: "나이대" },
       { name: "ga:userGender", meaning: "성별" },
     ];
-    let temp, tempObj, result, matrix, tempArr;
-    let resultCopied;
-    let maxKinds;
+    let temp, tempObj, result, tempArr;
+    let totalNumbers;
+    let finalObj;
+    let detailObj;
+    let keyArr;
+    let start, next, end;
 
     result = [];
-    matrix = [];
 
     for (let i of dimensions) {
       temp = [];
@@ -879,132 +890,32 @@ GoogleAnalytics.prototype.generalMetric = async function (startDate, endDate) {
       result.push(this.reportParsing(tempObj));
     }
 
-    resultCopied = JSON.parse(JSON.stringify(result));
-    resultCopied.sort((a, b) => {
-      return b.kinds - a.kinds;
-    });
-    maxKinds = resultCopied[0].kinds;
+    totalNumbers = result.map((obj) => { return obj.total });
 
-    matrix.push([]);
-    for (let { meaning } of dimensions) {
-      matrix[0].push(meaning);
-      matrix[0].push("");
+    detailObj = {};
+    keyArr = dimensions.map((obj) => { return obj.name.replace(/ga\:/gi, '') })
+    for (let i = 0; i < keyArr.length; i++) {
+      detailObj[keyArr[i]] = result[i];
     }
 
-    for (let i = 0; i < maxKinds; i++) {
-      matrix.push([]);
-    }
+    start = stringToDate(startDate);
+    next = stringToDate(startDate);
+    next.setDate(next.getDate() + 1);
+    end = stringToDate(endDate);
 
-    for (let { tong } of result) {
-      for (let j = 0; j < maxKinds; j++) {
-        if (tong[j] !== undefined) {
-          matrix[j + 1].push(tong[j].case);
-          matrix[j + 1].push(tong[j].value);
-        } else {
-          matrix[j + 1].push("");
-          matrix[j + 1].push("");
-        }
+    finalObj = {
+      anaid: "",
+      date: {
+        from: start,
+        to: (endDate === startDate ? next : end),
+      },
+      data: {
+        total: totalNumbers.reduce((acc, cur) => { return (acc >= cur ? acc : cur) }, 0),
+        detail: detailObj,
       }
-    }
+    };
 
-    return { data: result, matrix: matrix };
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-GoogleAnalytics.prototype.xyMetric = async function (standard, startDate, endDate) {
-  const instance = this;
-  try {
-
-    if (standard === undefined || startDate === undefined || endDate === undefined) {
-      throw new Error("must be standard and start-date and end-date");
-    }
-
-    const dimensions = [
-      { name: "ga:pagePath", meaning: "페이지 경로" },
-      { name: "ga:pageTitle", meaning: "페이지 제목" },
-      { name: "ga:userDefinedValue", meaning: "레퍼럴" },
-      { name: "ga:source", meaning: "소스" },
-      { name: "ga:deviceCategory", meaning: "디바이스" },
-      { name: "ga:operatingSystem", meaning: "운영 체제" },
-      { name: "ga:mobileDeviceModel", meaning: "핸드폰 기종" },
-      { name: "ga:country", meaning: "국가" },
-      { name: "ga:city", meaning: "도시" },
-      { name: "ga:userType", meaning: "유저 타입" },
-      { name: "ga:userAgeBracket", meaning: "나이대" },
-      { name: "ga:userGender", meaning: "성별" },
-    ];
-    let temp, tempObj, result, matrix, tempArr;
-    let temp0, temp1;
-    let matrixFactors;
-    let x, y;
-    let num;
-
-    result = [];
-
-    for (let i of dimensions) {
-      temp = [ { name: standard } ];
-      temp.push({ name: i.name });
-      tempObj = await this.mother.pythonExecute(this.pythonApp, [ "analytics", "generalMetric" ], { startDate, endDate, dimensions: temp });
-      result.push(this.reportParsing(tempObj));
-    }
-
-    matrix = [];
-    num = 0;
-    for (let { tong } of result) {
-      temp0 = [];
-      temp1 = [];
-      for (let obj of tong) {
-        tempArr = obj.case.split("__split__");
-        temp0.push(tempArr[0]);
-        temp1.push(tempArr[1]);
-      }
-
-      temp0 = Array.from(new Set(temp0));
-      temp1 = Array.from(new Set(temp1));
-
-      matrixFactors = new Array(temp1.length + 1);
-
-      temp = [ '' ];
-      for (let i of temp0) {
-        temp.push(i);
-      }
-      matrixFactors[0] = temp;
-
-      for (let i = 1; i < temp1.length + 1; i++) {
-        temp = [ '' ];
-        for (let j = 0; j < temp0.length; j++) {
-          temp.push(0);
-        }
-        temp[0] = temp1[i - 1];
-        matrixFactors[i] = temp;
-      }
-
-      for (let obj of tong) {
-        x = 0;
-        y = 0;
-        tempArr = obj.case.split("__split__");
-        for (let i = 0; i < temp0.length; i++) {
-          if (tempArr[0] === temp0[i]) {
-            x = i;
-          }
-        }
-        for (let i = 0; i < temp1.length; i++) {
-          if (tempArr[1] === temp1[i]) {
-            y = i;
-          }
-        }
-        matrixFactors[y + 1][x + 1] = obj.value;
-        matrixFactors[0][0] = dimensions[num].meaning;
-      }
-
-      matrix.push(matrixFactors);
-      num++;
-    }
-
-    return { data: result, matrix: matrix };
-
+    return finalObj;
   } catch (e) {
     console.log(e);
   }
