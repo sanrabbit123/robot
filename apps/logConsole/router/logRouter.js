@@ -31,6 +31,42 @@ LogRouter.prototype.baseMaker = function (target, req = null) {
   });
 }
 
+LogRouter.prototype.dailyAnalytics = async function (selfMongo) {
+  const instance = this;
+  const back = this.back;
+  const { sleep, dateToString } = this.mother;
+  const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
+  try {
+    const analyticsCollection = "dailyAnalytics";
+    const analytics = new GoogleAnalytics();
+    let result;
+    let date;
+    let anaid;
+    let rows;
+
+    date = new Date();
+    date.setDate(date.getDate() - 1);
+    date.setDate(date.getDate() - 1);
+
+    for (let i = 0; i < 2; i++) {
+      result = await analytics.generalMetric(date, date);
+      anaid = result.anaid;
+      rows = await back.mongoRead(analyticsCollection, { anaid }, { selfMongo });
+      if (rows.length !== 0) {
+        await back.mongoDelete(analyticsCollection, { anaid }, { selfMongo })
+      }
+      await back.mongoCreate(analyticsCollection, result, { selfMongo });
+      console.log(result);
+      console.log(dateToString(date));
+      date.setDate(date.getDate() + 1);
+      await sleep(1000);
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 //GET ---------------------------------------------------------------------------------------------
 
 LogRouter.prototype.rou_get_Root = function () {
@@ -72,7 +108,9 @@ LogRouter.prototype.rou_get_First = function () {
       } else if (req.params.id === "disk") {
 
         const disk = await diskReading();
-        reflection.frontReflection().catch((err) => { console.log(err); });
+        reflection.frontReflection().then(() => {
+          return instance.dailyAnalytics(instance.mongo);
+        }).catch((err) => { console.log(err); });
         res.send(JSON.stringify({ disk: disk.toArray() }));
 
       } else {

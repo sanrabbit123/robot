@@ -95,34 +95,10 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const selfMongo = this.MONGOLOGC;
-    const analyticsCollection = "dailyAnalytics";
-    const analytics = new GoogleAnalytics();
-    let result;
-    let date;
-    let anaid;
-    let rows;
+    const LogRouter = require(`${this.dir}/router/logRouter.js`);
+    const router = new LogRouter(this.MONGOLOCALC);
 
-    await selfMongo.connect();
-
-    date = new Date(2021, 9, 1);
-
-    for (let i = 0; i < 33; i++) {
-      result = await analytics.generalMetric(date, date);
-      anaid = result.anaid;
-      rows = await back.mongoRead(analyticsCollection, { anaid }, { selfMongo });
-      if (rows.length !== 0) {
-        await back.mongoDelete(analyticsCollection, { anaid }, { selfMongo })
-      }
-      await back.mongoCreate(analyticsCollection, result, { selfMongo });
-      console.log(result);
-      console.log(dateToString(date));
-      date.setDate(date.getDate() + 1);
-      await sleep(3000);
-    }
-
-
-    await selfMongo.close();
+    await router.dailyAnalytics(this.MONGOLOCALC);
 
 
 
@@ -130,8 +106,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const selfMongo = this.MONGOLOCALC;
-    // const tempCollection = "tempCampaignStorage";
+    const selfMongo = this.MONGOLOCALC;
+    const tempCollection = "tempCampaignStorage";
     const facebookToken = "EAAZBU9pw9OFcBAFScXv1FdfOpRSybLX1JyAb85sy6mgtu1Gyum7jyQVDMIhNQp6qVZCoFwrSnxJNsMUbmLpNeEwn4pqYjvxIK3RTpL8zMjG9korM4T9aZBIi2KIJWdalC2nBn50RQTcZCU3UG3EBMVD9cQo0ZC94qjXREIodvpbgr5EOcTVNl";
     const facebookPageId = "290144638061244";
     const instagramId = "17841405547472752";
@@ -3140,9 +3116,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "오지원",
-    //     designer: "이미영",
-    //     link: "https://drive.google.com/drive/folders/132J5JNSzCUDC4EppU_FJKUxbu9p9PWsH",
+    //     client: "안창규",
+    //     designer: "권미정",
+    //     link: "https://drive.google.com/drive/folders/1Bc6W7kx9JJcdO4IxdU2JOCXPUnT79ovY",
     //     pay: true
     //   },
     // ]);
