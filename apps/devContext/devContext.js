@@ -95,10 +95,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const LogRouter = require(`${process.cwd()}/apps/logConsole/router/logRouter.js`);
-    const router = new LogRouter(this.MONGOLOCALC);
 
-    await router.dailyAnalytics(this.MONGOLOCALC);
 
 
 
