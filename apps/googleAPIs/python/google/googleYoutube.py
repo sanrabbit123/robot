@@ -37,12 +37,6 @@ class GoogleYoutube:
         youtube = build('youtubeAnalytics', 'v2', credentials=creds)
         self.app = youtube
 
-
-    def channelsList(self):
-        print(self.app.reports().query(ids='channel==MINE', startDate='2022-05-01', endDate='2022-06-30', dimensions="channel", metrics='views,likes,subscribersGained').execute())
-        # print(self.app.reports().query(ids='channel==MINE', startDate='2022-05-01', endDate='2022-06-30', dimensions="adType", metrics='grossRevenue,adImpressions,cpm').execute())
-
-
-
-app = GoogleYoutube()
-app.channelsList()
+    def channelNumbers(self, startDate, endDate):
+        result = self.app.reports().query(ids='channel==MINE', startDate=startDate, endDate=endDate, dimensions="channel", metrics='views,likes,subscribersGained').execute()
+        return result['rows'][0][1:]

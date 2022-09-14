@@ -134,7 +134,7 @@ FacebookAPIs.prototype.dailyInstagram = async function (selfMongo) {
     let key;
     let tempRows;
 
-    dayNumber = 30;
+    dayNumber = 7;
 
     startDate = new Date();
     for (let i = 0; i < (dayNumber - 1); i++) {
@@ -156,7 +156,7 @@ FacebookAPIs.prototype.dailyInstagram = async function (selfMongo) {
       to = stringToDate(impressions.values[i].end_time.slice(0, 10));
       to.setDate(to.getDate() + 1);
 
-      key = dateToString(from).replace(/\-/gi, '') + "_" + "instagram"
+      key = dateToString(from).replace(/\-/gi, '') + "_" + "instagram";
 
       json = {
         camid: 'h' + String(from.getFullYear()).slice(2) + zeroAddition(from.getMonth() + 1) + '_' + 'f' + 'i' + zeroAddition(from.getDate()) + 's',
@@ -176,13 +176,13 @@ FacebookAPIs.prototype.dailyInstagram = async function (selfMongo) {
           mother: "facebook",
           type: "instagram",
         }
-      }
+      };
 
       tempRows = await back.mongoRead(channelCollection, { key }, { selfMongo });
       if (tempRows.length !== 0) {
         await back.mongoDelete(channelCollection, { key }, { selfMongo });
       }
-      await back.mongoCreate(channelCollection, json, { selfMongo })
+      await back.mongoCreate(channelCollection, json, { selfMongo });
       console.log(json);
     }
 

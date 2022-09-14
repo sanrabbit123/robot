@@ -6039,9 +6039,6 @@ GeneralJs.prototype.consultingPopup = function () {
             value: "",
           },
           event: {
-            keyup: function (e) {
-              this.value = this.value.replace(/[^a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣]/gi, '');
-            },
             blur: function (e) {
               this.value = this.value.replace(/[^a-zA-Z가-힣]/gi, '');
               if (this.value !== '') {

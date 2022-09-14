@@ -93,6 +93,15 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const GoogleYoutube = require(`${process.cwd()}/apps/googleAPIs/googleYoutube.js`);
+    const youtube = new GoogleYoutube();
+    await youtube.dailyYoutube(this.MONGOLOCALC);
+
+
+
+
+
+
 
     // const selfMongo = this.MONGOC;
     //
@@ -156,17 +165,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
-
-
-    const FacebookAPIs = require(`${process.cwd()}/apps/facebookAPIs/facebookAPIs.js`);
-    const facebook = new FacebookAPIs();
-
-    await facebook.dailyInstagram(this.MONGOLOCALC);
-
-    
 
 
 
