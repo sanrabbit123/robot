@@ -15,7 +15,7 @@ module.exports = function (proid, info) {
         await clickElement(document.getElementById("pw"));
         await clickElement(document.getElementById("pw"));
         await sleep(500);
-        await injectionInput(document.getElementById("pw"), "Vndkwp941!");
+        await injectionInput(document.getElementById("pw"), "Hlo!fwis83!");
         await sleep(500);
 
         await clickElement(document.getElementById("log.login"));
