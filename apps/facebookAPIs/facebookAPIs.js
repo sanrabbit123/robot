@@ -117,4 +117,78 @@ FacebookAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3)
   }
 }
 
+FacebookAPIs.prototype.dailyInstagram = async function (selfMongo) {
+  const instance = this;
+  const back = this.back;
+  const { facebookAppId, facebookToken, facebookPageId, instagramId, facebookAdId } = this;
+  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem } = this.mother;
+  const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
+  try {
+    const channelCollection = "dailyChannel";
+    let res;
+    let dayNumber;
+    let startDate;
+    let impressions, profile, follower, website;
+    let json;
+    let from, to;
+    let key;
+    let tempRows;
+
+    dayNumber = 30;
+
+    startDate = new Date();
+    for (let i = 0; i < (dayNumber - 1); i++) {
+      startDate.setDate(startDate.getDate() - 1);
+    }
+
+    res = await requestSystem("https://graph.facebook.com/v14.0/" + instagramId + "/insights", {
+      metric: "impressions,profile_views,follower_count,website_clicks",
+      period: "day",
+      since: dateToString(startDate),
+      access_token: facebookToken
+    }, { method: "get" });
+
+    [ impressions, profile, follower, website ] = res.data.data;
+
+    for (let i = 0; i < impressions.values.length; i++) {
+
+      from = stringToDate(impressions.values[i].end_time.slice(0, 10));
+      to = stringToDate(impressions.values[i].end_time.slice(0, 10));
+      to.setDate(to.getDate() + 1);
+
+      key = dateToString(from).replace(/\-/gi, '') + "_" + "instagram"
+
+      json = {
+        camid: 'h' + String(from.getFullYear()).slice(2) + zeroAddition(from.getMonth() + 1) + '_' + 'f' + 'i' + zeroAddition(from.getDate()) + 's',
+        key,
+        date: { from, to },
+        value: {
+          profile: {
+            views: profile.values[i].value,
+            followers: follower.values[i].value,
+          },
+          performance: {
+            impressions: impressions.values[i].value,
+            clicks: website.values[i].value,
+          }
+        },
+        information: {
+          mother: "facebook",
+          type: "instagram",
+        }
+      }
+
+      tempRows = await back.mongoRead(channelCollection, { key }, { selfMongo });
+      if (tempRows.length !== 0) {
+        await back.mongoDelete(channelCollection, { key }, { selfMongo });
+      }
+      await back.mongoCreate(channelCollection, json, { selfMongo })
+      console.log(json);
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 module.exports = FacebookAPIs;

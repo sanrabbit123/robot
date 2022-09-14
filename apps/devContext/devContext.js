@@ -94,129 +94,79 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const selfMongo = this.MONGOC;
-
-    const clients = await back.getClientsByQuery({}, { selfMongo, withTools: true });
-    const projects = await back.getProjectsByQuery({}, { selfMongo, withTools: true });
-    const histories = [ ...(await back.getHistoriesByQuery("client", {}, { fromConsole: true })) ];
-    const requests = clients.getRequestsTong();
-    let from, to;
-    let filtered;
-    let cliidArr;
-    let managerArr;
-    let standard;
-    let projectArr;
-
-    from = new Date(2022, 7, 1);
-    to = new Date(2022, 8, 1);
-
-    filtered = requests.filter((req) => {
-      return req.request.timeline.toNormal().valueOf() >= from.valueOf() && req.request.timeline.toNormal().valueOf() < to.valueOf();
-    })
-
-    cliidArr = [ ...filtered.map((req) => { return req.cliid }) ];
-    managerArr = cliidArr.map((cliid) => {
-      if (histories.find((obj) => { return obj.cliid === cliid }) === undefined) {
-        console.log(cliid);
-        return "";
-      } else {
-        return histories.find((obj) => { return obj.cliid === cliid }).manager;
-      }
-    });
-
-    console.log(cliidArr.length);
-    standard = [ ...new Set(managerArr) ];
-    for (let name of standard) {
-      console.log(name, managerArr.filter((n) => { return n === name }).length);
-    }
-
-
-
-    projectArr = projects.toNormal().filter((obj) => { return cliidArr.includes(obj.cliid) }).filter((obj) => {
-      return obj.desid.trim() !== '';
-    });
-
-
-    console.log(projectArr.length);
-
-
-
-
-
-
-
-
-
-    // const selfMongo = this.MONGOLOGC;
-    // const channelCollection = "dailyChannel";
+    // const selfMongo = this.MONGOC;
     //
-    // const facebookToken = "EAAZBU9pw9OFcBAFScXv1FdfOpRSybLX1JyAb85sy6mgtu1Gyum7jyQVDMIhNQp6qVZCoFwrSnxJNsMUbmLpNeEwn4pqYjvxIK3RTpL8zMjG9korM4T9aZBIi2KIJWdalC2nBn50RQTcZCU3UG3EBMVD9cQo0ZC94qjXREIodvpbgr5EOcTVNl";
-    // const facebookPageId = "290144638061244";
-    // const instagramId = "17841405547472752";
-    // const facebookAdId = "505249990112820";
-    //
-    // let res;
-    // let dayNumber;
-    // let startDate;
-    // let impressions, profile, follower, website;
-    // let json;
+    // const clients = await back.getClientsByQuery({}, { selfMongo, withTools: true });
+    // const projects = await back.getProjectsByQuery({}, { selfMongo, withTools: true });
+    // const histories = [ ...(await back.getHistoriesByQuery("client", {}, { fromConsole: true })) ];
+    // const requests = clients.getRequestsTong();
     // let from, to;
+    // let filtered;
+    // let cliidArr;
+    // let managerArr;
+    // let standard;
+    // let projectArr;
+    // let month;
     //
-    // // await selfMongo.connect();
+    // standard = [ "강해진", "이큰별", "임지민" ];
+    // month = 1;
     //
+    // from = new Date(2022, (month - 1), 1);
+    // to = new Date(2022, ((month - 1) + 1), 1);
     //
-    // dayNumber = 30;
+    // filtered = requests.filter((req) => {
+    //   return req.request.timeline.toNormal().valueOf() >= from.valueOf() && req.request.timeline.toNormal().valueOf() < to.valueOf();
+    // })
     //
-    // startDate = new Date();
-    // for (let i = 0; i < (dayNumber - 1); i++) {
-    //   startDate.setDate(startDate.getDate() - 1);
-    // }
-    //
-    // // instagram
-    //
-    // res = await requestSystem("https://graph.facebook.com/v14.0/" + instagramId + "/insights", {
-    //   metric: "impressions,profile_views,follower_count,website_clicks",
-    //   period: "day",
-    //   since: dateToString(startDate),
-    //   access_token: facebookToken
-    // }, { method: "get" });
-    //
-    // [ impressions, profile, follower, website ] = res.data.data;
-    //
-    //
-    // for (let i = 0; i < impressions.values.length; i++) {
-    //
-    //   from = stringToDate(impressions.values[i].end_time.slice(0, 10));
-    //   to = stringToDate(impressions.values[i].end_time.slice(0, 10));
-    //   to.setDate(to.getDate() + 1);
-    //
-    //   json = {
-    //     chaid: "h2201_aa01s",
-    //     key: "20220101_instagram",
-    //     date: { from, to },
-    //     value: {
-    //       profile: {
-    //         views: impressions.values[i].value,
-    //         followers: 0,
-    //       },
-    //       performance: {
-    //         impressions: 0,
-    //         clicks: 0,
-    //       }
-    //     },
-    //     information: {
-    //       mother: "facebook",
-    //       type: "instagram",
-    //     }
+    // cliidArr = [ ...filtered.map((req) => { return req.cliid }) ];
+    // managerArr = cliidArr.map((cliid) => {
+    //   if (histories.find((obj) => { return obj.cliid === cliid }) === undefined) {
+    //     console.log(cliid);
+    //     return "";
+    //   } else {
+    //     return histories.find((obj) => { return obj.cliid === cliid }).manager;
     //   }
+    // });
     //
-    //
+    // for (let name of standard) {
+    //   console.log(name, managerArr.filter((n) => { return n === name }).length);
     // }
+    // console.log(cliidArr.length);
+    //
+    // filtered = filtered.filter((req) => {
+    //   return !/드[롭랍]/gi.test(req.analytics.response.status);
+    // });
+    // cliidArr = [ ...filtered.map((req) => { return req.cliid }) ];
+    // projectArr = projects.toNormal().filter((obj) => { return cliidArr.includes(obj.cliid) }).filter((obj) => {
+    //   return obj.desid.trim() !== '';
+    // });
+    //
+    // projectArr = projectArr.map((obj) => {
+    //   obj.manager = histories.find((obj2) => { return obj2.cliid === obj.cliid }).manager;
+    //   return obj;
+    // })
+    //
+    // managerArr = projectArr.map((obj) => { return obj.manager });
+    //
+    // for (let name of standard) {
+    //   console.log(name, managerArr.filter((n) => { return n === name }).length);
+    // }
+    // console.log(projectArr.length);
 
 
 
 
 
+
+
+
+
+    const FacebookAPIs = require(`${process.cwd()}/apps/facebookAPIs/facebookAPIs.js`);
+    const facebook = new FacebookAPIs();
+
+    await facebook.dailyInstagram(this.MONGOLOCALC);
+
+    
 
 
 
@@ -228,7 +178,7 @@ DevContext.prototype.launching = async function () {
     // youtube
 
 
-    // await selfMongo.close();
+
 
     // // paid
     // 지출
