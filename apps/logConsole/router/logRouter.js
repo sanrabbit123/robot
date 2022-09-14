@@ -73,6 +73,7 @@ LogRouter.prototype.dailyCampaign = async function (selfMongo) {
   const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem } = this.mother;
   const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
   try {
+    const dayNumber = 3;
     const campaignCollection = "dailyCampaign";
     const facebookToken = "EAAZBU9pw9OFcBAFScXv1FdfOpRSybLX1JyAb85sy6mgtu1Gyum7jyQVDMIhNQp6qVZCoFwrSnxJNsMUbmLpNeEwn4pqYjvxIK3RTpL8zMjG9korM4T9aZBIi2KIJWdalC2nBn50RQTcZCU3UG3EBMVD9cQo0ZC94qjXREIodvpbgr5EOcTVNl";
     const facebookPageId = "290144638061244";
@@ -96,11 +97,11 @@ LogRouter.prototype.dailyCampaign = async function (selfMongo) {
     // facebook
 
     startDate = new Date();
-    startDate.setDate(startDate.getDate() - 1);
-    startDate.setDate(startDate.getDate() - 1);
-    startDate.setDate(startDate.getDate() - 1);
+    for (let i = 0; i < dayNumber; i++) {
+      startDate.setDate(startDate.getDate() - 1);
+    }
 
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < dayNumber; i++) {
 
       await sleep(200);
 
@@ -173,9 +174,9 @@ LogRouter.prototype.dailyCampaign = async function (selfMongo) {
     // naver
 
     startDate = new Date();
-    startDate.setDate(startDate.getDate() - 1);
-    startDate.setDate(startDate.getDate() - 1);
-    startDate.setDate(startDate.getDate() - 1);
+    for (let i = 0; i < dayNumber; i++) {
+      startDate.setDate(startDate.getDate() - 1);
+    }
 
     url = "/ncc/campaigns";
     res = await requestSystem(naverUrl + url, {
@@ -194,7 +195,7 @@ LogRouter.prototype.dailyCampaign = async function (selfMongo) {
       }
     });
 
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < dayNumber; i++) {
 
       await sleep(1000);
 
@@ -322,7 +323,9 @@ LogRouter.prototype.rou_get_First = function () {
         reflection.frontReflection().then(() => {
           return instance.dailyAnalytics(instance.mongo);
         }).then(() => {
-          return errorLog("front reflection, daily analytics done");
+          return instance.dailyCampaign(instance.mongo);
+        }).then(() => {
+          return errorLog("front reflection, daily analytics, daily campaign done");
         }).catch((err) => { console.log(err); });
         res.send(JSON.stringify({ disk: disk.toArray() }));
 
