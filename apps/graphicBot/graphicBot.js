@@ -354,7 +354,7 @@ GraphicBot.prototype.chromeHistoryClean = async function () {
     let consoleX, consoleY;
     let buttonX, buttonY;
     if (os === "mac") {
-      buttonX = 50;
+      buttonX = 20;
       buttonY = 36;
     } else {
       buttonX = 50;
@@ -1292,54 +1292,6 @@ GraphicBot.prototype.botRouter = function () {
     }
   };
 
-  funcObj.post_form = {
-    link: [ "/form" ],
-    func: async function (req, res) {
-      try {
-        const taskNumber = 1;
-        await fileSystem(`write`, [ `${tong}/${orderConst}_${String(taskNumber)}_${String((new Date()).valueOf())}`, JSON.stringify(req.body) ]);
-        if (instance.task !== null) {
-          clearTimeout(instance.task);
-          instance.task = null;
-        }
-        instance.task = setTimeout(instance.startWork(), 3000);
-        res.set({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-        });
-        res.send({ message: "will do" });
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  };
-
-  funcObj.post_constructForm = {
-    link: [ "/constructForm" ],
-    func: async function (req, res) {
-      try {
-        const taskNumber = 4;
-        await fileSystem(`write`, [ `${tong}/${orderConst}_${String(taskNumber)}_${String((new Date()).valueOf())}`, JSON.stringify(req.body) ]);
-        if (instance.task !== null) {
-          clearTimeout(instance.task);
-          instance.task = null;
-        }
-        instance.task = setTimeout(instance.startWork(), 3000);
-        res.set({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-        });
-        res.send({ message: "will do" });
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  };
-
   funcObj.post_receiptSend = {
     link: [ "/receiptSend" ],
     func: async function (req, res) {
@@ -1384,34 +1336,6 @@ GraphicBot.prototype.botRouter = function () {
         res.send({ message: "will do" });
       } catch (e) {
         console.log(e);
-      }
-    }
-  };
-
-  funcObj.post_pdf = {
-    link: [ "/pdf" ],
-    func: async function (req, res) {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      try {
-        const home = "/Users/uragen";
-        const staticFolder = "pdf";
-        await chromeGhost.pdfPrint(req.body.link, `${home}/${staticFolder}/${req.body.name}`, false);
-        setQueue(async () => {
-          try {
-            await shellExec(`rm`, [ `-rf`, `${home}/${staticFolder}/${req.body.name}` ]);
-          } catch (e) {
-            console.log(e);
-          }
-        }, 15 * 60 * 1000);
-        res.send({ link: `https://${instance.address.homeinfo.ghost.host}:${String(instance.address.homeinfo.ghost.pdf.port[0])}/` + shellLink(req.body.name) });
-      } catch (e) {
-        console.log(e);
-        res.send({ message: "error : " + e.message });
       }
     }
   };
