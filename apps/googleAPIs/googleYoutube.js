@@ -14,14 +14,13 @@ const GoogleYoutube = function (mother = null, back = null, address = null) {
   this.dir = process.cwd() + "/apps/googleAPIs";
 }
 
-GoogleYoutube.prototype.dailyYoutube = async function (selfMongo) {
+GoogleYoutube.prototype.dailyYoutube = async function (selfMongo, dayNumber = 7) {
   const instance = this;
   const back = this.back;
   const { sleep, dateToString, stringToDate, requestSystem, pythonExecute } = this.mother;
   const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
   try {
     const channelCollection = "dailyChannel";
-    let dayNumber;
     let startDate;
     let res;
     let from, to;
@@ -29,8 +28,6 @@ GoogleYoutube.prototype.dailyYoutube = async function (selfMongo) {
     let json;
     let tempRows;
     let views, likes, subscribers;
-
-    dayNumber = 7;
 
     startDate = new Date();
     for (let i = 0; i < (dayNumber - 1); i++) {

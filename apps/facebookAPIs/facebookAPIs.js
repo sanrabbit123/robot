@@ -117,7 +117,7 @@ FacebookAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3)
   }
 }
 
-FacebookAPIs.prototype.dailyInstagram = async function (selfMongo) {
+FacebookAPIs.prototype.dailyInstagram = async function (selfMongo, dayNumber = 7) {
   const instance = this;
   const back = this.back;
   const { facebookAppId, facebookToken, facebookPageId, instagramId, facebookAdId } = this;
@@ -126,15 +126,12 @@ FacebookAPIs.prototype.dailyInstagram = async function (selfMongo) {
   try {
     const channelCollection = "dailyChannel";
     let res;
-    let dayNumber;
     let startDate;
     let impressions, profile, follower, website;
     let json;
     let from, to;
     let key;
     let tempRows;
-
-    dayNumber = 7;
 
     startDate = new Date();
     for (let i = 0; i < (dayNumber - 1); i++) {

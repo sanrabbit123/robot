@@ -93,9 +93,9 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const GoogleYoutube = require(`${process.cwd()}/apps/googleAPIs/googleYoutube.js`);
-    const youtube = new GoogleYoutube();
-    await youtube.dailyYoutube(this.MONGOLOCALC);
+    const LogRouter = require(`${process.cwd()}/apps/logConsole/router/logRouter.js`);
+    const router = new LogRouter();
+    await router.dailyChannel(this.MONGOLOCALC);
 
 
 

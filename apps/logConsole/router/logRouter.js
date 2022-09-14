@@ -84,6 +84,23 @@ LogRouter.prototype.dailyCampaign = async function (selfMongo) {
   }
 }
 
+LogRouter.prototype.dailyChannel = async function (selfMongo) {
+  const instance = this;
+  const FacebookAPIs = require(`${process.cwd()}/apps/facebookAPIs/facebookAPIs.js`);
+  const GoogleYoutube = require(`${process.cwd()}/apps/googleAPIs/googleYoutube.js`);
+  try {
+    const facebook = new FacebookAPIs();
+    const youtube = new GoogleYoutube();
+    const dayNumber = 7;
+
+    await facebook.dailyInstagram(selfMongo, dayNumber);
+    await youtube.dailyYoutube(selfMongo, dayNumber);
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 //GET ---------------------------------------------------------------------------------------------
 
 LogRouter.prototype.rou_get_Root = function () {
