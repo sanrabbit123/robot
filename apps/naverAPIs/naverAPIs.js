@@ -1,8 +1,149 @@
-const NaverAPIs = function () {
-  const Mother = require(process.cwd() + "/apps/mother.js");
-  this.mother = new Mother();
+const NaverAPIs = function (mother = null, back = null, address = null) {
+  if (mother !== null && back !== null && address !== null) {
+    this.mother = mother;
+    this.back = back;
+    this.address = address;
+  } else {
+    const Mother = require(process.cwd() + "/apps/mother.js");
+    const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
+    const ADDRESS = require(process.cwd() + "/apps/infoObj.js");
+    this.mother = new Mother();
+    this.back = new BackMaker();
+    this.address = ADDRESS;
+  }
   this.dir = process.cwd() + "/apps/naverAPIs";
   this.pythonApp = this.dir + "/python/app.py";
+
+  this.naverToken = "01000000001df72459c6f186739e0778461122cfee6a0fddea2bb30df35e82c92f20944587";
+  this.naverSecret = "AQAAAAAd9yRZxvGGc54HeEYRIs/uQCeezUnYnLfpaLvLRNMcyg==";
+  this.naverId = "1608132";
+  this.naverUrl = "https://api.naver.com";
+
+}
+
+LogRouter.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3) {
+  const instance = this;
+  const back = this.back;
+  const { naverToken, naverSecret, naverId, naverUrl } = this;
+  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem } = this.mother;
+  const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
+  try {
+    const campaignCollection = "dailyCampaign";
+    let tempRows;
+    let res, res2, url;
+    let json;
+    let from, to;
+    let startDate;
+    let num, num2;
+    let key;
+    let now;
+
+    now = new Date();
+
+    startDate = new Date();
+    for (let i = 0; i < dayNumber; i++) {
+      startDate.setDate(startDate.getDate() - 1);
+    }
+
+    url = "/ncc/campaigns";
+    res = await requestSystem(naverUrl + url, {
+      recordSize: 200,
+      timeRange: JSON.stringify({
+        since: dateToString(startDate),
+        until: dateToString(new Date()),
+      }),
+    }, {
+      method: "get",
+      headers: {
+        "X-Timestamp": String(now.valueOf()),
+        "X-API-KEY": naverToken,
+        "X-Customer": naverId,
+        "X-Signature": sha256Hmac(naverSecret, String(now.valueOf()) + ".GET." + url)
+      }
+    });
+
+    for (let i = 0; i < dayNumber; i++) {
+
+      await sleep(1000);
+
+      if (i === 0) {
+        from = new Date(JSON.stringify(startDate).slice(1, -1));
+        to = new Date(JSON.stringify(startDate).slice(1, -1));
+        to.setDate(to.getDate() + 1);
+      } else {
+        from.setDate(from.getDate() + 1);
+        to.setDate(to.getDate() + 1);
+      }
+
+      url = "/stats";
+      num2 = 0;
+      for (let { nccCampaignId, customerId, name, campaignTp } of res.data) {
+
+        await sleep(100);
+
+        try {
+          res2 = await requestSystem(naverUrl + url, {
+            id: nccCampaignId,
+            fields: JSON.stringify([ "impCnt", "clkCnt", "salesAmt", "ccnt" ]),
+            timeRange: JSON.stringify({
+              since: dateToString(from),
+              until: dateToString(from),
+            }),
+          }, {
+            method: "get",
+            headers: {
+              "X-Timestamp": String(now.valueOf()),
+              "X-API-KEY": naverToken,
+              "X-Customer": naverId,
+              "X-Signature": sha256Hmac(naverSecret, String(now.valueOf()) + ".GET." + url)
+            }
+          });
+          if (!(res2.data.data[0].impCnt === 0 && res2.data.data[0].clkCnt === 0 && res2.data.data[0].salesAmt === 0)) {
+
+            key = dateToString(from).replace(/\-/gi, '') + "_" + nccCampaignId;
+
+            json = {
+              camid: 'g' + String(from.getFullYear()).slice(2) + zeroAddition(from.getMonth() + 1) + '_' + 'n' + String.fromCharCode(97 + num2) + zeroAddition(from.getDate()) + 's',
+              key,
+              date: { from, to },
+              value: {
+                charge: Number(res2.data.data[0].salesAmt),
+                performance: {
+                  impressions: Number(res2.data.data[0].impCnt),
+                  clicks: Number(res2.data.data[0].clkCnt),
+                },
+              },
+              information: {
+                mother: "naver",
+                type: campaignTp,
+                id: {
+                  account: String(customerId),
+                  campaign: nccCampaignId,
+                },
+                name: name,
+              }
+            };
+
+            tempRows = await back.mongoRead(campaignCollection, { key }, { selfMongo });
+            if (tempRows.length !== 0) {
+              await back.mongoDelete(campaignCollection, { key }, { selfMongo });
+            }
+
+            await back.mongoCreate(campaignCollection, json, { selfMongo })
+            console.log(json);
+
+            num2++
+          }
+        } catch (e) {
+          console.log("there is nothing")
+        }
+      }
+    }
+
+
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 NaverAPIs.prototype.spellChecker = async function (text) {
