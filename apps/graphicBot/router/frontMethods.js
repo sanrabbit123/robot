@@ -15,7 +15,7 @@ FrontMethods.prototype.addFrontMethods = async function () {
     tempPath = `${process.cwd()}/temp/frontGeneral.js`;
 
     frontGeneralString = await fileSystem(`readString`, [ generalPath ]);
-    frontGeneralString = "const document = { createElement: (str) => {} };\n\n" + mediaQuery(frontGeneralString);
+    frontGeneralString = "const document = { createElement: (str) => {} };\n\n" + mediaQuery(frontGeneralString).code;
     frontGeneralString += "\n\n" + "module.exports = GeneralJs";
     await fileSystem(`write`, [ tempPath, frontGeneralString ]);
     frontGeneral = require(tempPath);
