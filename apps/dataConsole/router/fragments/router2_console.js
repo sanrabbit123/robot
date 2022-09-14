@@ -968,7 +968,9 @@ DataRouter.prototype.rou_post_getClientReport = function () {
           //process start
           cliidArr_raw = clients.map((obj) => { return obj.cliid; });
           cliidArr_raw = Array.from(new Set(cliidArr_raw));
-          process = motherProjects_raw.filter((obj) => { return cliidArr_raw.includes(obj.cliid) });
+          process = motherProjects_raw.filter((obj) => { return cliidArr_raw.includes(obj.cliid) }).filter((obj) => {
+            return obj.desid.trim() !== '';
+          });
           obj.process = process.length;
           obj.cliid.process = [ ...new Set(process.map((obj) => { return obj.cliid })) ];
           obj.proid.process = [ ...new Set(process.map((obj) => { return obj.proid })) ];
