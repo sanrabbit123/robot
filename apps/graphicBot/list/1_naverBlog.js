@@ -12,9 +12,13 @@ module.exports = function (proid, info) {
         await sleep(500);
         await injectionInput(document.getElementById("id"), "homeliaison");
         await sleep(500);
-        await clickElement(document.getElementById("id"));
+        await clickElement(document.getElementById("pw"));
+        await clickElement(document.getElementById("pw"));
         await sleep(500);
-        await injectionInput(document.getElementById("id"), "Vndkwp941!");
+        await injectionInput(document.getElementById("pw"), "Vndkwp941!");
+        await sleep(500);
+
+        await clickElement(document.getElementById("log.login"));
 
       } catch (e) {
         console.log(e);
