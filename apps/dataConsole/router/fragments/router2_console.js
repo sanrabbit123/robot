@@ -938,7 +938,7 @@ DataRouter.prototype.rou_post_getClientReport = function () {
           obj.endDay = `${zeroAddition(arr[1].getFullYear())}-${zeroAddition(arr[1].getMonth() + 1)}-${zeroAddition(arr[1].getDate())}`;
 
           //client
-          clients = motherClients.filter((obj) => { return obj.timeline >= arr[0].valueOf() && obj.timeline < arr[2].valueOf() });
+          clients = motherClients.filter((obj) => { return obj.timeline.valueOf() >= arr[0].valueOf() && obj.timeline.valueOf() < arr[2].valueOf() });
           obj.client = clients.length;
           obj.cliid.client = clients.map((obj) => { return obj.cliid; });
           obj.proid.client = [];
