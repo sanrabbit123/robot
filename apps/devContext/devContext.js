@@ -94,52 +94,132 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const selfMongo = this.MONGOC;
 
-
-
-
-
-
-
-
-
-
-    /*
-
-    const selfMongo = this.MONGOLOGC;
-    const campaignCollection = "dailyCampaign";
-
-    const facebookToken = "EAAZBU9pw9OFcBAFScXv1FdfOpRSybLX1JyAb85sy6mgtu1Gyum7jyQVDMIhNQp6qVZCoFwrSnxJNsMUbmLpNeEwn4pqYjvxIK3RTpL8zMjG9korM4T9aZBIi2KIJWdalC2nBn50RQTcZCU3UG3EBMVD9cQo0ZC94qjXREIodvpbgr5EOcTVNl";
-    const facebookPageId = "290144638061244";
-    const instagramId = "17841405547472752";
-    const facebookAdId = "505249990112820";
-    const naverToken = "01000000001df72459c6f186739e0778461122cfee6a0fddea2bb30df35e82c92f20944587";
-    const naverSecret = "AQAAAAAd9yRZxvGGc54HeEYRIs/uQCeezUnYnLfpaLvLRNMcyg==";
-    const naverId = "1608132";
-    const naverUrl = "https://api.naver.com";
-    let tempRows;
-    let res, res2, now, url;
-    let json;
+    const clients = await back.getClientsByQuery({}, { selfMongo, withTools: true });
+    const projects = await back.getProjectsByQuery({}, { selfMongo, withTools: true });
+    const histories = [ ...(await back.getHistoriesByQuery("client", {}, { fromConsole: true })) ];
+    const requests = clients.getRequestsTong();
     let from, to;
-    let startDate;
-    let num, num2;
-    let key;
+    let filtered;
+    let cliidArr;
+    let managerArr;
+    let standard;
+    let projectArr;
 
-    await selfMongo.connect();
+    from = new Date(2022, 7, 1);
+    to = new Date(2022, 8, 1);
 
-    now = new Date();
+    filtered = requests.filter((req) => {
+      return req.request.timeline.toNormal().valueOf() >= from.valueOf() && req.request.timeline.toNormal().valueOf() < to.valueOf();
+    })
 
-    // instagram
+    cliidArr = [ ...filtered.map((req) => { return req.cliid }) ];
+    managerArr = cliidArr.map((cliid) => {
+      if (histories.find((obj) => { return obj.cliid === cliid }) === undefined) {
+        console.log(cliid);
+        return "";
+      } else {
+        return histories.find((obj) => { return obj.cliid === cliid }).manager;
+      }
+    });
 
+    console.log(cliidArr.length);
+    standard = [ ...new Set(managerArr) ];
+    for (let name of standard) {
+      console.log(name, managerArr.filter((n) => { return n === name }).length);
+    }
+
+
+
+    projectArr = projects.toNormal().filter((obj) => { return cliidArr.includes(obj.cliid) }).filter((obj) => {
+      return obj.desid.trim() !== '';
+    });
+
+
+    console.log(projectArr.length);
+
+
+
+
+
+
+
+
+
+    // const selfMongo = this.MONGOLOGC;
+    // const channelCollection = "dailyChannel";
+    //
+    // const facebookToken = "EAAZBU9pw9OFcBAFScXv1FdfOpRSybLX1JyAb85sy6mgtu1Gyum7jyQVDMIhNQp6qVZCoFwrSnxJNsMUbmLpNeEwn4pqYjvxIK3RTpL8zMjG9korM4T9aZBIi2KIJWdalC2nBn50RQTcZCU3UG3EBMVD9cQo0ZC94qjXREIodvpbgr5EOcTVNl";
+    // const facebookPageId = "290144638061244";
+    // const instagramId = "17841405547472752";
+    // const facebookAdId = "505249990112820";
+    //
+    // let res;
+    // let dayNumber;
+    // let startDate;
+    // let impressions, profile, follower, website;
+    // let json;
+    // let from, to;
+    //
+    // // await selfMongo.connect();
+    //
+    //
+    // dayNumber = 30;
+    //
+    // startDate = new Date();
+    // for (let i = 0; i < (dayNumber - 1); i++) {
+    //   startDate.setDate(startDate.getDate() - 1);
+    // }
+    //
+    // // instagram
+    //
     // res = await requestSystem("https://graph.facebook.com/v14.0/" + instagramId + "/insights", {
-    //   metric: "impressions,reach,profile_views,follower_count,website_clicks",
+    //   metric: "impressions,profile_views,follower_count,website_clicks",
     //   period: "day",
-    //   since: String(Math.floor((new Date(2022, 7, 26, 12, 0, 0)).valueOf() / 1000)),
-    //   until: String(Math.floor((new Date(2022, 7, 27, 12, 0, 0)).valueOf() / 1000)),
+    //   since: dateToString(startDate),
     //   access_token: facebookToken
     // }, { method: "get" });
     //
-    // console.log(...res.data.data);
+    // [ impressions, profile, follower, website ] = res.data.data;
+    //
+    //
+    // for (let i = 0; i < impressions.values.length; i++) {
+    //
+    //   from = stringToDate(impressions.values[i].end_time.slice(0, 10));
+    //   to = stringToDate(impressions.values[i].end_time.slice(0, 10));
+    //   to.setDate(to.getDate() + 1);
+    //
+    //   json = {
+    //     chaid: "h2201_aa01s",
+    //     key: "20220101_instagram",
+    //     date: { from, to },
+    //     value: {
+    //       profile: {
+    //         views: impressions.values[i].value,
+    //         followers: 0,
+    //       },
+    //       performance: {
+    //         impressions: 0,
+    //         clicks: 0,
+    //       }
+    //     },
+    //     information: {
+    //       mother: "facebook",
+    //       type: "instagram",
+    //     }
+    //   }
+    //
+    //
+    // }
+
+
+
+
+
+
+
+
 
 
     // google
@@ -148,10 +228,10 @@ DevContext.prototype.launching = async function () {
     // youtube
 
 
-    await selfMongo.close();
+    // await selfMongo.close();
 
     // // paid
-    // 예산
+    // 지출
     // 노출수
     // 클릭수
     // 광고 유입수
@@ -169,7 +249,6 @@ DevContext.prototype.launching = async function () {
     // 문의를 한 사람의 출저
 
 
-    */
 
 
 

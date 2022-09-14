@@ -13,6 +13,7 @@ const FacebookAPIs = function (mother = null, back = null, address = null) {
   }
   this.dir = process.cwd() + "/apps/facebookAPIs";
 
+  this.facebookAppId = "4385911554783319";
   this.facebookToken = "EAAZBU9pw9OFcBAFScXv1FdfOpRSybLX1JyAb85sy6mgtu1Gyum7jyQVDMIhNQp6qVZCoFwrSnxJNsMUbmLpNeEwn4pqYjvxIK3RTpL8zMjG9korM4T9aZBIi2KIJWdalC2nBn50RQTcZCU3UG3EBMVD9cQo0ZC94qjXREIodvpbgr5EOcTVNl";
   this.facebookPageId = "290144638061244";
   this.instagramId = "17841405547472752";
@@ -23,7 +24,7 @@ const FacebookAPIs = function (mother = null, back = null, address = null) {
 FacebookAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3) {
   const instance = this;
   const back = this.back;
-  const { facebookToken, facebookPageId, instagramId, facebookAdId } = this;
+  const { facebookAppId, facebookToken, facebookPageId, instagramId, facebookAdId } = this;
   const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem } = this.mother;
   const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
   try {
@@ -115,6 +116,5 @@ FacebookAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3)
     console.log(e);
   }
 }
-
 
 module.exports = FacebookAPIs;
