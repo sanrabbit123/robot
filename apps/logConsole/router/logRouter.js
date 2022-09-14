@@ -147,7 +147,9 @@ LogRouter.prototype.rou_get_First = function () {
         }).then(() => {
           return instance.dailyCampaign(instance.mongo);
         }).then(() => {
-          return errorLog("front reflection, daily analytics, daily campaign done");
+          return instance.dailyChannel(instance.mongo);
+        }).then(() => {
+          return errorLog("front reflection, daily analytics, daily campaign, daily channel done");
         }).catch((err) => { console.log(err); });
         res.send(JSON.stringify({ disk: disk.toArray() }));
 
