@@ -21,7 +21,7 @@ const NaverAPIs = function (mother = null, back = null, address = null) {
 
 }
 
-LogRouter.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3) {
+NaverAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3) {
   const instance = this;
   const back = this.back;
   const { naverToken, naverSecret, naverId, naverUrl } = this;
