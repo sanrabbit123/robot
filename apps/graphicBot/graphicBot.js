@@ -1292,6 +1292,30 @@ GraphicBot.prototype.botRouter = function () {
     }
   };
 
+  funcObj.get_blog = {
+    link: [ "/blog" ],
+    func: async function (req, res) {
+      try {
+        const taskNumber = 1;
+        await fileSystem(`write`, [ `${tong}/${orderConst}_${String(taskNumber)}_${String((new Date()).valueOf())}`, "" ]);
+        if (instance.task !== null) {
+          clearTimeout(instance.task);
+          instance.task = null;
+        }
+        instance.task = setTimeout(instance.startWork(), 3000);
+        res.set({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        });
+        res.send({ message: "will do" });
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
+
   funcObj.post_receiptSend = {
     link: [ "/receiptSend" ],
     func: async function (req, res) {
