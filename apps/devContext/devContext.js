@@ -91,7 +91,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(address.officeinfo.ghost.second.port) + "/cash");
+
 
 
 
