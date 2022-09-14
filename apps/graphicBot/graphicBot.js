@@ -27,6 +27,7 @@ const GraphicBot = function () {
   this.back = new BackMaker();
   this.chromeGhost = new GoogleChrome();
 
+  this.bot = require("robotjs");
   if (/Linux/gi.test(thisOs)) {
     this.bot = require(`${process.cwd()}/apps/graphicBot/os/linux/build/Release/robotjs.node`);
     this.os = "linux";

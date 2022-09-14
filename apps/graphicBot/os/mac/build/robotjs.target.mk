@@ -37,7 +37,7 @@ CFLAGS_C_Debug := \
 
 # Flags passed to only C++ files.
 CFLAGS_CC_Debug := \
-	-std=gnu++17 \
+	-std=gnu++14 \
 	-stdlib=libc++ \
 	-fno-rtti \
 	-fno-exceptions \
@@ -50,13 +50,13 @@ CFLAGS_OBJC_Debug :=
 CFLAGS_OBJCC_Debug :=
 
 INCS_Debug := \
-	-I/Users/uragen/Library/Caches/node-gyp/17.3.0/include/node \
-	-I/Users/uragen/Library/Caches/node-gyp/17.3.0/src \
-	-I/Users/uragen/Library/Caches/node-gyp/17.3.0/deps/openssl/config \
-	-I/Users/uragen/Library/Caches/node-gyp/17.3.0/deps/openssl/openssl/include \
-	-I/Users/uragen/Library/Caches/node-gyp/17.3.0/deps/uv/include \
-	-I/Users/uragen/Library/Caches/node-gyp/17.3.0/deps/zlib \
-	-I/Users/uragen/Library/Caches/node-gyp/17.3.0/deps/v8/include \
+	-I/Users/graphic/Library/Caches/node-gyp/16.17.0/include/node \
+	-I/Users/graphic/Library/Caches/node-gyp/16.17.0/src \
+	-I/Users/graphic/Library/Caches/node-gyp/16.17.0/deps/openssl/config \
+	-I/Users/graphic/Library/Caches/node-gyp/16.17.0/deps/openssl/openssl/include \
+	-I/Users/graphic/Library/Caches/node-gyp/16.17.0/deps/uv/include \
+	-I/Users/graphic/Library/Caches/node-gyp/16.17.0/deps/zlib \
+	-I/Users/graphic/Library/Caches/node-gyp/16.17.0/deps/v8/include \
 	-I$(srcdir)/../nan \
 	-I$(srcdir)/System/Library/Frameworks/CoreFoundation.Framework/Headers \
 	-I$(srcdir)/System/Library/Frameworks/Carbon.Framework/Headers \
@@ -95,7 +95,7 @@ CFLAGS_C_Release := \
 
 # Flags passed to only C++ files.
 CFLAGS_CC_Release := \
-	-std=gnu++17 \
+	-std=gnu++14 \
 	-stdlib=libc++ \
 	-fno-rtti \
 	-fno-exceptions \
@@ -108,13 +108,13 @@ CFLAGS_OBJC_Release :=
 CFLAGS_OBJCC_Release :=
 
 INCS_Release := \
-	-I/Users/uragen/Library/Caches/node-gyp/17.3.0/include/node \
-	-I/Users/uragen/Library/Caches/node-gyp/17.3.0/src \
-	-I/Users/uragen/Library/Caches/node-gyp/17.3.0/deps/openssl/config \
-	-I/Users/uragen/Library/Caches/node-gyp/17.3.0/deps/openssl/openssl/include \
-	-I/Users/uragen/Library/Caches/node-gyp/17.3.0/deps/uv/include \
-	-I/Users/uragen/Library/Caches/node-gyp/17.3.0/deps/zlib \
-	-I/Users/uragen/Library/Caches/node-gyp/17.3.0/deps/v8/include \
+	-I/Users/graphic/Library/Caches/node-gyp/16.17.0/include/node \
+	-I/Users/graphic/Library/Caches/node-gyp/16.17.0/src \
+	-I/Users/graphic/Library/Caches/node-gyp/16.17.0/deps/openssl/config \
+	-I/Users/graphic/Library/Caches/node-gyp/16.17.0/deps/openssl/openssl/include \
+	-I/Users/graphic/Library/Caches/node-gyp/16.17.0/deps/uv/include \
+	-I/Users/graphic/Library/Caches/node-gyp/16.17.0/deps/zlib \
+	-I/Users/graphic/Library/Caches/node-gyp/16.17.0/deps/v8/include \
 	-I$(srcdir)/../nan \
 	-I$(srcdir)/System/Library/Frameworks/CoreFoundation.Framework/Headers \
 	-I$(srcdir)/System/Library/Frameworks/Carbon.Framework/Headers \

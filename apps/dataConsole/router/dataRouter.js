@@ -1638,7 +1638,7 @@ DataRouter.prototype.rou_post_getClientReport = function () {
         }
       }
 
-      motherClients = (await back.getClientsByQuery({}, { selfMongo: instance.mongo, withTools: true })).getRequestsTong().map((arr) => { let obj = arr[0].toNormal(); obj.cliid = arr.cliid; return obj; });
+      motherClients = (await back.getClientsByQuery({}, { selfMongo: instance.mongo, withTools: true })).getRequestsTong().map((arr) => { let obj = arr[0].toNormal(); obj.cliid = arr.cliid; obj.analytics = arr[1].toNormal(); return obj; });
       motherClientHistories = await back.mongoRead("clientHistory", {}, { selfMongo: instance.mongolocal });
       motherProjects_raw = (await back.getProjectsByQuery({}, { selfMongo: instance.mongo })).toNormal();
       motherProjects = motherProjects_raw.filter((obj) => {  return obj.process.contract.first.date.valueOf() >= (new Date(2000, 0, 1)).valueOf() });
@@ -1658,7 +1658,7 @@ DataRouter.prototype.rou_post_getClientReport = function () {
           obj.endDay = `${zeroAddition(arr[1].getFullYear())}-${zeroAddition(arr[1].getMonth() + 1)}-${zeroAddition(arr[1].getDate())}`;
 
           //client
-          clients = motherClients.filter((obj) => { return obj.timeline >= arr[0].valueOf() && obj.timeline < arr[2].valueOf() });
+          clients = motherClients.filter((obj) => { return obj.timeline.valueOf() >= arr[0].valueOf() && obj.timeline.valueOf() < arr[2].valueOf() });
           obj.client = clients.length;
           obj.cliid.client = clients.map((obj) => { return obj.cliid; });
           obj.proid.client = [];
@@ -1686,9 +1686,11 @@ DataRouter.prototype.rou_post_getClientReport = function () {
           obj.proid.contract = contracts.map((obj) => { return obj.proid });
 
           //process start
-          cliidArr_raw = clients.map((obj) => { return obj.cliid; });
+          cliidArr_raw = clients.filter((obj) => { return !/드[롭랍]/gi.test(obj.analytics.response.status) }).map((obj) => { return obj.cliid; });
           cliidArr_raw = Array.from(new Set(cliidArr_raw));
-          process = motherProjects.filter((obj) => { return cliidArr_raw.includes(obj.cliid) });
+          process = motherProjects_raw.filter((obj) => { return cliidArr_raw.includes(obj.cliid) }).filter((obj) => {
+            return obj.desid.trim() !== '';
+          });
           obj.process = process.length;
           obj.cliid.process = [ ...new Set(process.map((obj) => { return obj.cliid })) ];
           obj.proid.process = [ ...new Set(process.map((obj) => { return obj.proid })) ];
