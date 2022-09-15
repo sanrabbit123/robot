@@ -96,13 +96,12 @@ DevContext.prototype.launching = async function () {
 
     thisDate = new Date(2022, 8, 1);
 
-    analytics.generalMetric(thisDate, thisDate).then((result) => {
+    analytics.getSubmitClients(thisDate, instance.MONGOC).then((result) => {
       console.log(result);
-      return requestSystem("https://" + address.testinfo.host + "/analyticsGeneral", { result }, { headers: { "Content-Type": "application/json" } });
+      return requestSystem("https://" + address.testinfo.host + "/analyticsClients", { result }, { headers: { "Content-Type": "application/json" } });
     }).catch((err) => {
       console.log(err);
     });
-
 
 
 
