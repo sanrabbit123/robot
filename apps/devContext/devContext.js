@@ -94,25 +94,25 @@ DevContext.prototype.launching = async function () {
 
 
 
-    let requestString;
-    let month;
-    let startDate;
-    let res;
-
-
-    month = 3;
-
-
-    startDate = new Date(2022, month - 1, 1);
-    requestString = [];
-    while (startDate.getMonth() + 1 === month) {
-      requestString.push(dateToString(startDate));
-      startDate.setDate(startDate.getDate() + 1);
-    }
-
-    requestString = requestString.join(",")
-    res = await requestSystem("https://" + instance.address.backinfo.host + "/analyticsDaily", { date: requestString }, { headers: { "Content-Type": "application/json" } });
-    console.log(res.data);
+    // let requestString;
+    // let month;
+    // let startDate;
+    // let res;
+    //
+    //
+    // month = 3;
+    //
+    //
+    // startDate = new Date(2022, month - 1, 1);
+    // requestString = [];
+    // while (startDate.getMonth() + 1 === month) {
+    //   requestString.push(dateToString(startDate));
+    //   startDate.setDate(startDate.getDate() + 1);
+    // }
+    //
+    // requestString = requestString.join(",")
+    // res = await requestSystem("https://" + instance.address.backinfo.host + "/analyticsDaily", { date: requestString }, { headers: { "Content-Type": "application/json" } });
+    // console.log(res.data);
 
 
 
