@@ -92,16 +92,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const analytics = new GoogleAnalytics();
-
-    thisDate = new Date(2022, 8, 1);
-
-    analytics.getSubmitClients(thisDate, instance.MONGOC).then((result) => {
-      console.log(result);
-      return requestSystem("https://" + address.testinfo.host + "/analyticsClients", { result }, { headers: { "Content-Type": "application/json" } });
-    }).catch((err) => {
-      console.log(err);
-    });
 
 
 
