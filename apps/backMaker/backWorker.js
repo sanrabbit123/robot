@@ -1388,12 +1388,12 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
         onlineFeeCase = 0;
       }
 
-      if (y >= 2 && distanceBoo) {
-        comment = "Distance over, unable in totalStyling";
-        fee = 0;
-        offlineFeeCase = 0;
-        onlineFeeCase = 0;
-      }
+      // if (y >= 2 && distanceBoo) {
+      //   comment = "Distance over, unable in totalStyling";
+      //   fee = 0;
+      //   offlineFeeCase = 0;
+      //   onlineFeeCase = 0;
+      // }
 
       if (comment === "" && fee === 0) {
         comment = "Zero in table";

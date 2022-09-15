@@ -4885,9 +4885,11 @@ DataRouter.prototype.rou_post_analyticsGeneral = function () {
 
       thisDate = stringToDate(date);
 
-      analytics.generalMetric(thisDate, thisDate)
+      analytics.generalMetric(thisDate, thisDate).then((result) => {
 
-
+      }).catch((err) => {
+        console.log(err);
+      });
       res.send({ message: "will do" });
     } catch (e) {
       await errorLog("Console 서버 문제 생김 (rou_post_analyticsGeneral): " + e.message);
