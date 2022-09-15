@@ -25,7 +25,7 @@ FacebookAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3)
   const instance = this;
   const back = this.back;
   const { facebookAppId, facebookToken, facebookPageId, instagramId, facebookAdId } = this;
-  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem } = this.mother;
+  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog } = this.mother;
   const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
   try {
     const campaignCollection = "dailyCampaign";
@@ -113,6 +113,7 @@ FacebookAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3)
     }
 
   } catch (e) {
+    await errorLog("FacebookAPIs.dailyCampaign error : " + e.message);
     console.log(e);
   }
 }
@@ -121,7 +122,7 @@ FacebookAPIs.prototype.dailyInstagram = async function (selfMongo, dayNumber = 7
   const instance = this;
   const back = this.back;
   const { facebookAppId, facebookToken, facebookPageId, instagramId, facebookAdId } = this;
-  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem } = this.mother;
+  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog } = this.mother;
   const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
   try {
     const channelCollection = "dailyChannel";
@@ -184,6 +185,7 @@ FacebookAPIs.prototype.dailyInstagram = async function (selfMongo, dayNumber = 7
     }
 
   } catch (e) {
+    await errorLog("FacebookAPIs.dailyInstagram error : " + e.message);
     console.log(e);
   }
 }
