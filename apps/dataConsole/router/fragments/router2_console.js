@@ -4862,7 +4862,7 @@ DataRouter.prototype.rou_post_flowBlock = function () {
 
 DataRouter.prototype.rou_post_analyticsGeneral = function () {
   const instance = this;
-  const { errorLog, equalJson, stringToDate, requestSystem } = this.mother;
+  const { errorLog, equalJson, stringToDate, requestSystem, sleep } = this.mother;
   const analytics = this.analytics;
   const address = this.address;
   let obj = {};
@@ -4902,6 +4902,7 @@ DataRouter.prototype.rou_post_analyticsGeneral = function () {
           for (let thisDate of dateArr) {
             result = await analytics.generalMetric(thisDate, thisDate);
             await requestSystem("https://" + address.testinfo.host + "/analyticsGeneral", { result }, { headers: { "Content-Type": "application/json" } });
+            await sleep(1000);
           }
         })().catch((err) => {
           console.log(err);
@@ -4920,7 +4921,7 @@ DataRouter.prototype.rou_post_analyticsGeneral = function () {
 
 DataRouter.prototype.rou_post_analyticsClients = function () {
   const instance = this;
-  const { errorLog, equalJson, stringToDate, requestSystem } = this.mother;
+  const { errorLog, equalJson, stringToDate, requestSystem, sleep } = this.mother;
   const analytics = this.analytics;
   const address = this.address;
   let obj = {};
@@ -4960,6 +4961,7 @@ DataRouter.prototype.rou_post_analyticsClients = function () {
           for (let thisDate of dateArr) {
             result = await analytics.getSubmitClients(thisDate, instance.mongo);
             await requestSystem("https://" + address.testinfo.host + "/analyticsClients", { result }, { headers: { "Content-Type": "application/json" } });
+            await sleep(1000);
           }
         })().catch((err) => {
           console.log(err);

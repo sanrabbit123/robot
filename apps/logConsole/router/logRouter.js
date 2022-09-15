@@ -31,77 +31,38 @@ LogRouter.prototype.baseMaker = function (target, req = null) {
   });
 }
 
-LogRouter.prototype.dailyAnalytics = async function (selfMongo) {
+LogRouter.prototype.dailyAnalytics = async function () {
   const instance = this;
   const back = this.back;
-  const { sleep, dateToString } = this.mother;
-  const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
+  const { dateToString, requestSystem, sleep } = this.mother;
   try {
-    const analyticsCollection = "dailyAnalytics";
-    const analytics = new GoogleAnalytics();
-    let result;
     let date;
-    let anaid;
-    let rows;
+    let requestString;
 
     date = new Date();
     date.setDate(date.getDate() - 1);
     date.setDate(date.getDate() - 1);
+    date.setDate(date.getDate() - 1);
 
-    for (let i = 0; i < 2; i++) {
-      result = await analytics.generalMetric(date, date);
-      anaid = result.anaid;
-      rows = await back.mongoRead(analyticsCollection, { anaid }, { selfMongo });
-      if (rows.length !== 0) {
-        await back.mongoDelete(analyticsCollection, { anaid }, { selfMongo })
-      }
-      await back.mongoCreate(analyticsCollection, result, { selfMongo });
-      console.log(result);
-      console.log(dateToString(date));
-      date.setDate(date.getDate() + 1);
-      await sleep(1000);
-    }
+    requestString = '';
+    requestString += dateToString(date);
+    requestString += ',';
+    date.setDate(date.getDate() + 1);
+    requestString += dateToString(date);
+    requestString += ',';
+    date.setDate(date.getDate() + 1);
+    requestString += dateToString(date);
+
+    await requestSystem("https://" + instance.address.backinfo.host + "/analyticsGeneral", { date: requestString }, { headers: { "Content-Type": "application/json" } });
+
+    await sleep(20 * 1000);
+
+    await requestSystem("https://" + instance.address.backinfo.host + "/analyticsClients", { date: requestString }, { headers: { "Content-Type": "application/json" } });
 
   } catch (e) {
     console.log(e);
   }
 }
-
-// LogRouter.prototype.dailyClients = async function (selfMongo) {
-//   const instance = this;
-//   const back = this.back;
-//   const { sleep, dateToString } = this.mother;
-//   const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
-//   try {
-//     const analyticsCollection = "dailyClients";
-//     const analytics = new GoogleAnalytics();
-//     let result;
-//     let date;
-//     let ancid;
-//     let rows;
-//
-//     date = new Date();
-//     date.setDate(date.getDate() - 1);
-//     date.setDate(date.getDate() - 1);
-//
-//     for (let i = 0; i < 2; i++) {
-//       result = await analytics.getSubmitClients(date, selfMongo);
-//       ancid = result.ancid;
-//       rows = await back.mongoRead(analyticsCollection, { ancid }, { selfMongo });
-//       if (rows.length !== 0) {
-//         await back.mongoDelete(analyticsCollection, { ancid }, { selfMongo })
-//       }
-//       await back.mongoCreate(analyticsCollection, result, { selfMongo });
-//       console.log(result);
-//       console.log(dateToString(date));
-//       date.setDate(date.getDate() + 1);
-//       await sleep(1000);
-//     }
-//
-//   } catch (e) {
-//     console.log(e);
-//   }
-// }
 
 LogRouter.prototype.dailyCampaign = async function (selfMongo) {
   const instance = this;
@@ -179,13 +140,13 @@ LogRouter.prototype.rou_get_First = function () {
 
         const disk = await diskReading();
         reflection.frontReflection().then(() => {
-          return instance.dailyAnalytics(instance.mongo);
-        }).then(() => {
           return instance.dailyCampaign(instance.mongo);
         }).then(() => {
           return instance.dailyChannel(instance.mongo);
         }).then(() => {
-          return errorLog("front reflection, daily analytics, daily campaign, daily channel done");
+          return instance.dailyAnalytics();
+        }).then(() => {
+          return errorLog("front reflection, daily campaign, daily channel done");
         }).catch((err) => { console.log(err); });
         res.send(JSON.stringify({ disk: disk.toArray() }));
 
@@ -608,7 +569,7 @@ LogRouter.prototype.rou_post_getContents = function () {
 LogRouter.prototype.rou_post_analyticsGeneral = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, errorLog } = this.mother;
+  const { equalJson, errorLog, dateToString } = this.mother;
   let obj = {};
   obj.link = [ "/analyticsGeneral" ];
   obj.func = async function (req, res) {
@@ -632,7 +593,7 @@ LogRouter.prototype.rou_post_analyticsGeneral = function () {
       }
       await back.mongoCreate(analyticsCollection, result, { selfMongo });
 
-      errorLog("daily analytics done").catch((err) => { console.log(err); });
+      errorLog("daily analytics done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
 
       res.send({ message: "success" });
     } catch (e) {
@@ -646,7 +607,7 @@ LogRouter.prototype.rou_post_analyticsGeneral = function () {
 LogRouter.prototype.rou_post_analyticsClients = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, errorLog } = this.mother;
+  const { equalJson, errorLog, dateToString } = this.mother;
   let obj = {};
   obj.link = [ "/analyticsClients" ];
   obj.func = async function (req, res) {
@@ -670,7 +631,7 @@ LogRouter.prototype.rou_post_analyticsClients = function () {
       }
       await back.mongoCreate(analyticsCollection, result, { selfMongo });
 
-      errorLog("daily clients done").catch((err) => { console.log(err); });
+      errorLog("daily clients done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
 
       res.send({ message: "success" });
     } catch (e) {
