@@ -4860,13 +4860,13 @@ DataRouter.prototype.rou_post_flowBlock = function () {
   return obj;
 }
 
-DataRouter.prototype.rou_post_analyticsGeneral = function () {
+DataRouter.prototype.rou_post_analyticsDaily = function () {
   const instance = this;
   const { errorLog, equalJson, stringToDate, requestSystem, sleep } = this.mother;
   const analytics = this.analytics;
   const address = this.address;
   let obj = {};
-  obj.link = [ "/analyticsGeneral" ];
+  obj.link = [ "/analyticsDaily" ];
   obj.func = async function (req, res) {
     res.set({
       "Content-Type": "application/json",
@@ -4887,6 +4887,10 @@ DataRouter.prototype.rou_post_analyticsGeneral = function () {
         thisDate = stringToDate(date);
         analytics.generalMetric(thisDate, thisDate).then((result) => {
           return requestSystem("https://" + address.testinfo.host + "/analyticsGeneral", { result }, { headers: { "Content-Type": "application/json" } });
+        }).then(() => {
+          return analytics.getSubmitClients(thisDate, instance.mongo);
+        }).then((result) => {
+          return requestSystem("https://" + address.testinfo.host + "/analyticsClients", { result }, { headers: { "Content-Type": "application/json" } });
         }).catch((err) => {
           console.log(err);
         });
@@ -4904,60 +4908,6 @@ DataRouter.prototype.rou_post_analyticsGeneral = function () {
             await requestSystem("https://" + address.testinfo.host + "/analyticsGeneral", { result }, { headers: { "Content-Type": "application/json" } });
             await sleep(1000);
           }
-        })().catch((err) => {
-          console.log(err);
-        });
-
-      }
-
-      res.send({ message: "will do" });
-    } catch (e) {
-      await errorLog("Console 서버 문제 생김 (rou_post_analyticsGeneral): " + e.message);
-      res.send(JSON.stringify({ error: e.message }));
-    }
-  }
-  return obj;
-}
-
-DataRouter.prototype.rou_post_analyticsClients = function () {
-  const instance = this;
-  const { errorLog, equalJson, stringToDate, requestSystem, sleep } = this.mother;
-  const analytics = this.analytics;
-  const address = this.address;
-  let obj = {};
-  obj.link = [ "/analyticsClients" ];
-  obj.func = async function (req, res) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      const { date } = equalJson(req.body);
-      let thisDate;
-      let dateArr;
-
-      if (typeof date !== "string") {
-        throw new Error("invaild post");
-      }
-      if (date.length === 10) {
-
-        thisDate = stringToDate(date);
-        analytics.getSubmitClients(thisDate, instance.mongo).then((result) => {
-          return requestSystem("https://" + address.testinfo.host + "/analyticsClients", { result }, { headers: { "Content-Type": "application/json" } });
-        }).catch((err) => {
-          console.log(err);
-        });
-
-      } else {
-
-        dateArr = date.split(",").map((str) => { return str.trim(); });
-        if (!(dateArr.every((str) => { return str.length === 10 }))) {
-          throw new Error("invaild post");
-        }
-        (async () => {
-          let result;
           for (let thisDate of dateArr) {
             result = await analytics.getSubmitClients(thisDate, instance.mongo);
             await requestSystem("https://" + address.testinfo.host + "/analyticsClients", { result }, { headers: { "Content-Type": "application/json" } });
@@ -4971,7 +4921,7 @@ DataRouter.prototype.rou_post_analyticsClients = function () {
 
       res.send({ message: "will do" });
     } catch (e) {
-      await errorLog("Console 서버 문제 생김 (rou_post_analyticsClients): " + e.message);
+      await errorLog("Console 서버 문제 생김 (rou_post_analyticsDaily): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
   }
