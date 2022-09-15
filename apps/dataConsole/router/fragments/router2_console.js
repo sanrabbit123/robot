@@ -4876,20 +4876,38 @@ DataRouter.prototype.rou_post_analyticsGeneral = function () {
     });
     try {
       const { date } = equalJson(req.body);
+      let thisDate;
+      let dateArr;
+
       if (typeof date !== "string") {
         throw new Error("invaild post");
       }
-      if (date.length !== 10) {
-        throw new Error("invaild post");
-      }
-      let thisDate;
+      if (date.length === 10) {
 
-      thisDate = stringToDate(date);
-      analytics.generalMetric(thisDate, thisDate).then((result) => {
-        return requestSystem("https://" + address.testinfo.host + "/analyticsGeneral", { result }, { headers: { "Content-Type": "application/json" } });
-      }).catch((err) => {
-        console.log(err);
-      });
+        thisDate = stringToDate(date);
+        analytics.generalMetric(thisDate, thisDate).then((result) => {
+          return requestSystem("https://" + address.testinfo.host + "/analyticsGeneral", { result }, { headers: { "Content-Type": "application/json" } });
+        }).catch((err) => {
+          console.log(err);
+        });
+
+      } else {
+
+        dateArr = date.split(",").map((str) => { return str.trim(); });
+        if (!(dateArr.every((str) => { return str.length === 10 }))) {
+          throw new Error("invaild post");
+        }
+        (async () => {
+          let result;
+          for (let thisDate of dateArr) {
+            result = await analytics.generalMetric(thisDate, thisDate);
+            await requestSystem("https://" + address.testinfo.host + "/analyticsGeneral", { result }, { headers: { "Content-Type": "application/json" } });
+          }
+        })().catch((err) => {
+          console.log(err);
+        });
+
+      }
 
       res.send({ message: "will do" });
     } catch (e) {
@@ -4916,20 +4934,38 @@ DataRouter.prototype.rou_post_analyticsClients = function () {
     });
     try {
       const { date } = equalJson(req.body);
+      let thisDate;
+      let dateArr;
+
       if (typeof date !== "string") {
         throw new Error("invaild post");
       }
-      if (date.length !== 10) {
-        throw new Error("invaild post");
-      }
-      let thisDate;
+      if (date.length === 10) {
 
-      thisDate = stringToDate(date);
-      analytics.getSubmitClients(thisDate, instance.mongo).then((result) => {
-        return requestSystem("https://" + address.testinfo.host + "/analyticsClients", { result }, { headers: { "Content-Type": "application/json" } });
-      }).catch((err) => {
-        console.log(err);
-      });
+        thisDate = stringToDate(date);
+        analytics.getSubmitClients(thisDate, instance.mongo).then((result) => {
+          return requestSystem("https://" + address.testinfo.host + "/analyticsClients", { result }, { headers: { "Content-Type": "application/json" } });
+        }).catch((err) => {
+          console.log(err);
+        });
+
+      } else {
+
+        dateArr = date.split(",").map((str) => { return str.trim(); });
+        if (!(dateArr.every((str) => { return str.length === 10 }))) {
+          throw new Error("invaild post");
+        }
+        (async () => {
+          let result;
+          for (let thisDate of dateArr) {
+            result = await analytics.getSubmitClients(thisDate, instance.mongo);
+            await requestSystem("https://" + address.testinfo.host + "/analyticsClients", { result }, { headers: { "Content-Type": "application/json" } });
+          }
+        })().catch((err) => {
+          console.log(err);
+        });
+
+      }
 
       res.send({ message: "will do" });
     } catch (e) {
