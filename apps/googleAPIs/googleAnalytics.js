@@ -78,9 +78,11 @@ GoogleAnalytics.prototype.getSubmitClients = async function (thisDate, selfMongo
     for (let cliid of cliidArr) {
       ({ reports: [ { data: result } ] } = await pythonExecute(this.pythonApp, [ "analytics", "getSubmitClients" ], { startDate: thisDate, endDate: thisDate, cliid }));
       if (!Array.isArray(result.rows)) {
-        throw new Error("cannot find by this cliid");
+        await errorLog("cannot find by this cliid : " + cliid);
+        cliidTong[cliid] = [];
+      } else {
+        cliidTong[cliid] = result.rows.map((obj) => { return obj.dimensions[0] });
       }
-      cliidTong[cliid] = result.rows.map((obj) => { return obj.dimensions[0] });
     }
 
     console.log("target tong : ", cliidTong);
