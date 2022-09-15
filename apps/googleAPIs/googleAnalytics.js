@@ -22,7 +22,7 @@ GoogleAnalytics.prototype.returnDate = function (str) {
 GoogleAnalytics.prototype.getSubmitClients = async function (thisDate, selfMongo) {
   const instance = this;
   const back = this.back;
-  const { pythonExecute, dateToString, stringToDate } = this.mother;
+  const { pythonExecute, dateToString, stringToDate, errorLog } = this.mother;
   const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
   try {
     const withTools = true;
@@ -115,6 +115,7 @@ GoogleAnalytics.prototype.getSubmitClients = async function (thisDate, selfMongo
     return finalObj;
 
   } catch (e) {
+    await errorLog("GoogleAnalytics getSubmitClients error : " + e.message);
     console.log(e);
   }
 }
