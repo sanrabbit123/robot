@@ -91,12 +91,18 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const selfMongo = this.MONGOLOCALC;
-    const withTools = true;
+
     const analytics = new GoogleAnalytics();
 
+    thisDate = new Date(2022, 8, 1);
 
-    const finalObj = await analytics.getSubmitClients(new Date(2022, 2, 1), selfMongo);
+    analytics.generalMetric(thisDate, thisDate).then((result) => {
+      console.log(result);
+      return requestSystem("https://" + address.testinfo.host + "/analyticsGeneral", { result }, { headers: { "Content-Type": "application/json" } });
+    }).catch((err) => {
+      console.log(err);
+    });
+
 
 
 
