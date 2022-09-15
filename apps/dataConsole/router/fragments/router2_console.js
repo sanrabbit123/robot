@@ -4864,6 +4864,7 @@ DataRouter.prototype.rou_post_analyticsGeneral = function () {
   const instance = this;
   const { errorLog, equalJson, stringToDate, requestSystem } = this.mother;
   const analytics = this.analytics;
+  const address = this.address;
   let obj = {};
   obj.link = [ "/analyticsGeneral" ];
   obj.func = async function (req, res) {
@@ -4884,12 +4885,12 @@ DataRouter.prototype.rou_post_analyticsGeneral = function () {
       let thisDate;
 
       thisDate = stringToDate(date);
-
       analytics.generalMetric(thisDate, thisDate).then((result) => {
-
+        return requestSystem("https://" + address.testinfo.host + "/analyticsGeneral", { result }, { headers: { "Content-Type": "application/json" } });
       }).catch((err) => {
         console.log(err);
       });
+
       res.send({ message: "will do" });
     } catch (e) {
       await errorLog("Console 서버 문제 생김 (rou_post_analyticsGeneral): " + e.message);
@@ -4903,6 +4904,7 @@ DataRouter.prototype.rou_post_analyticsClients = function () {
   const instance = this;
   const { errorLog, equalJson, stringToDate, requestSystem } = this.mother;
   const analytics = this.analytics;
+  const address = this.address;
   let obj = {};
   obj.link = [ "/analyticsClients" ];
   obj.func = async function (req, res) {
@@ -4923,8 +4925,11 @@ DataRouter.prototype.rou_post_analyticsClients = function () {
       let thisDate;
 
       thisDate = stringToDate(date);
-
-
+      analytics.getSubmitClients(thisDate, instance.mongo).then((result) => {
+        return requestSystem("https://" + address.testinfo.host + "/analyticsClients", { result }, { headers: { "Content-Type": "application/json" } });
+      }).catch((err) => {
+        console.log(err);
+      });
 
       res.send({ message: "will do" });
     } catch (e) {

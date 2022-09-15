@@ -605,6 +605,82 @@ LogRouter.prototype.rou_post_getContents = function () {
   return obj;
 }
 
+LogRouter.prototype.rou_post_analyticsGeneral = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, errorLog } = this.mother;
+  let obj = {};
+  obj.link = [ "/analyticsGeneral" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const selfMongo = instance.mongo;
+      const analyticsCollection = "dailyAnalytics";
+      const { result } = equalJson(req.body);
+      let anaid;
+      let rows;
+
+      anaid = result.anaid;
+      rows = await back.mongoRead(analyticsCollection, { anaid }, { selfMongo });
+      if (rows.length !== 0) {
+        await back.mongoDelete(analyticsCollection, { anaid }, { selfMongo })
+      }
+      await back.mongoCreate(analyticsCollection, result, { selfMongo });
+
+      errorLog("daily analytics done").catch((err) => { console.log(err); });
+
+      res.send({ message: "success" });
+    } catch (e) {
+      await errorLog("Log Console 서버 문제 생김 (rou_post_analyticsGeneral): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+LogRouter.prototype.rou_post_analyticsClients = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, errorLog } = this.mother;
+  let obj = {};
+  obj.link = [ "/analyticsClients" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const selfMongo = instance.mongo;
+      const analyticsCollection = "dailyClients";
+      const { result } = equalJson(req.body);
+      let ancid;
+      let rows;
+
+      ancid = result.ancid;
+      rows = await back.mongoRead(analyticsCollection, { ancid }, { selfMongo });
+      if (rows.length !== 0) {
+        await back.mongoDelete(analyticsCollection, { ancid }, { selfMongo })
+      }
+      await back.mongoCreate(analyticsCollection, result, { selfMongo });
+
+      errorLog("daily clients done").catch((err) => { console.log(err); });
+
+      res.send({ message: "success" });
+    } catch (e) {
+      await errorLog("Log Console 서버 문제 생김 (rou_post_analyticsClients): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 LogRouter.policy = function () {
