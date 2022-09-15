@@ -91,6 +91,13 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const selfMongo = this.MONGOLOCALC;
+    const withTools = true;
+    const analytics = new GoogleAnalytics();
+
+
+    const finalObj = await analytics.getSubmitClients(new Date(2022, 2, 1), selfMongo);
+
 
 
 
@@ -166,34 +173,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
-    // google
-
-
-    // youtube
-
-
-
-
-    // // paid
-    // 지출
-    // 노출수
-    // 클릭수
-    // 광고 유입수
-    //
-    // // non-paid
-    // 인스타
-    // 블로그
-    // 네이버 검색
-    // 구글 검색
-    // 기타 검색
-    //
-    //
-    // 유입량 체크
-    //
-    // 문의를 한 사람의 출저
 
 
 
@@ -2996,7 +2975,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p203");
+    // await this.getCorePortfolio("a96");
 
 
     // aspirant to designer
@@ -3010,17 +2989,17 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2207_aa01s", [
-    //   { porlid: "ghost", index: 5 },
-    //   { porlid: "ghost", index: 4 },
-    //   { porlid: "ghost", index: 14 },
-    //   { porlid: "ghost", index: 12 },
-    //   { porlid: "ghost", index: 7 },
-    //   { porlid: "ghost", index: 8 },
+    // await this.setProposalSettingForDesigner("d2206_aa01s", [
+    //   { porlid: "a96", index: 4 },
+    //   { porlid: "a96", index: 2 },
+    //   { porlid: "a96", index: 12 },
+    //   { porlid: "a96", index: 15 },
+    //   { porlid: "a96", index: 7 },
+    //   { porlid: "a96", index: 8 },
     // ], [
-    //   "디자이너의 손길로 비어 있지만 결코 비어 있지 않은 공간을 만든어 드립니다.",
-    //   "고객님의 라이프 스타일과 예산을 중요하게 생각하고 함께 고민합니다.",
-    //   "미니멀한 스타일에 능하며 비어 보이지 않는 미니멀리즘을 추구합니다."
+    //   "고객님의 라이프스타일과 취향이 반영된 공간이 될 수 있도록 함께 하겠습니다.",
+    //   "고객님만의 유니크한 스타일을 구현하는 데 초점을 맞추고 진행합니다.",
+    //   "가볍지 않으면서도 답답하지 않은, 안정감이 느껴지는 공간을 만들어 드립니다."
     // ]);
 
 

@@ -393,16 +393,6 @@ Robot.prototype.bridgeCloud = async function (sw) {
   }
 }
 
-Robot.prototype.analyticsParsing = async function () {
-  try {
-    const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
-    const app = new GoogleAnalytics();
-    await app.analyticsToMongo();
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 Robot.prototype.tellVoice = async function () {
   try {
     const PlayAudio = require(`${process.cwd()}/apps/playAudio/playAudio.js`);

@@ -36,6 +36,7 @@ class RobotInstall:
             [ "google-api-core" ],
             [ "google-api-python-client", "google-auth-httplib2", "google-auth-oauthlib" ],
             [ "oauth2client" ],
+            [ "google-analytics-data" ],
         ]
 
         self.homeDir = str(Path.home())

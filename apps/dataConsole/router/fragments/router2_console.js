@@ -4853,7 +4853,80 @@ DataRouter.prototype.rou_post_flowBlock = function () {
 
       res.send(resultObj);
     } catch (e) {
-      await errorLog("Console 서버 문제 생김 (rou_post_designerFeeTable): " + e.message);
+      await errorLog("Console 서버 문제 생김 (rou_post_flowBlock): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_analyticsGeneral = function () {
+  const instance = this;
+  const { errorLog, equalJson, stringToDate, requestSystem } = this.mother;
+  const analytics = this.analytics;
+  let obj = {};
+  obj.link = [ "/analyticsGeneral" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const { date } = equalJson(req.body);
+      if (typeof date !== "string") {
+        throw new Error("invaild post");
+      }
+      if (date.length !== 10) {
+        throw new Error("invaild post");
+      }
+      let thisDate;
+
+      thisDate = stringToDate(date);
+
+      analytics.generalMetric(thisDate, thisDate)
+
+
+      res.send({ message: "will do" });
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_analyticsGeneral): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_analyticsClients = function () {
+  const instance = this;
+  const { errorLog, equalJson, stringToDate, requestSystem } = this.mother;
+  const analytics = this.analytics;
+  let obj = {};
+  obj.link = [ "/analyticsClients" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const { date } = equalJson(req.body);
+      if (typeof date !== "string") {
+        throw new Error("invaild post");
+      }
+      if (date.length !== 10) {
+        throw new Error("invaild post");
+      }
+      let thisDate;
+
+      thisDate = stringToDate(date);
+
+
+
+      res.send({ message: "will do" });
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_analyticsClients): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
   }

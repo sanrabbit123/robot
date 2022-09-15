@@ -905,18 +905,6 @@ Ghost.prototype.ultimateReflection = async function () {
   }
 }
 
-Ghost.prototype.analyticsToMongo = async function () {
-  try {
-    const GoogleAnalytics = require(process.cwd() + "/apps/googleAPIs/googleAnalytics.js");
-    const app = new GoogleAnalytics();
-    await app.analyticsToMongo();
-
-    return `analytics to mongo done`;
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 Ghost.prototype.clientReport = async function () {
   try {
     const sheets = this.sheets;

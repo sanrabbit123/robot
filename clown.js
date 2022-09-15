@@ -425,16 +425,6 @@ Clown.prototype.bridgeCloud = async function (sw) {
   }
 }
 
-Clown.prototype.analyticsParsing = async function () {
-  try {
-    const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
-    const app = new GoogleAnalytics();
-    await app.analyticsToMongo();
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 Clown.prototype.tellVoice = async function () {
   try {
     const PlayAudio = require(`${process.cwd()}/apps/playAudio/playAudio.js`);

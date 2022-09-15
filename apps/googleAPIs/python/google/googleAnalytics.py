@@ -36,95 +36,7 @@ class GoogleAnalytics:
         self.app = build('analyticsreporting', 'v4', http=http)
 
 
-    def getAMonthAgo(self):
-        dic = {}
-        now = time.localtime(time.time())
-        monthAgo = time.localtime(time.time() - (60 * 60 * 24 * 30 * 3))
-
-        now_year = str(now.tm_year)
-        if now.tm_mon < 10:
-            now_month = '0' + str(now.tm_mon)
-        else:
-            now_month = str(now.tm_mon)
-        if now.tm_mday < 10:
-            now_day = '0' + str(now.tm_mday)
-        else:
-            now_day = str(now.tm_mday)
-
-        past_year = str(monthAgo.tm_year)
-        if monthAgo.tm_mon < 10:
-            past_month = '0' + str(monthAgo.tm_mon)
-        else:
-            past_month = str(monthAgo.tm_mon)
-        if monthAgo.tm_mday < 10:
-            past_day = '0' + str(monthAgo.tm_mday)
-        else:
-            past_day = str(monthAgo.tm_mday)
-
-        dic["startDate"] = past_year + "-" + past_month + "-" + past_day
-        dic["endDate"] = now_year + "-" + now_month + "-" + now_day
-
-        return dic
-
-
-    def clientsIdTesting(self, startDate, endDate):
-        total = self.app.reports().batchGet(body={ "reportRequests": [ { "viewId": self.viewId, "pageSize": 100000, "dateRanges": [ { "startDate": startDate, "endDate": endDate } ], "dimensions": [], "metrics": [ { "expression": "ga:users" } ] } ] }).execute()
-        result = self.app.reports().batchGet(
-            body={
-                "reportRequests": [
-                    {
-                        "viewId": self.viewId,
-                        "pageSize": 100000,
-                        "dateRanges": [
-                            { "startDate": startDate, "endDate": endDate }
-                        ],
-                        "dimensions": [
-                            { "name": "ga:clientId" },
-                        ],
-                        "metrics": [
-                            { "expression": "ga:users" },
-                        ]
-                    }
-                ]
-            }).execute()
-        return dumps({ "totalNum": int(total["reports"][0]["data"]["totals"][0]["values"][0]), "data": result["reports"][0]["data"] })
-
-
-    def getTodayClients(self):
-        result = self.app.reports().batchGet(
-            body={
-                "reportRequests": [
-                    {
-                        "viewId": self.viewId,
-                        "pageSize": 100000,
-                        "dateRanges": [
-                            { "startDate": "yesterday", "endDate": "today" }
-                        ],
-                        "dimensions": [
-                            { "name": "ga:clientId" },
-                            { "name": "ga:dateHourMinute" },
-                        ],
-                        "dimensionFilterClauses": [
-                            {
-                                "filters": [
-                                    {
-                                        "dimensionName": "ga:eventAction",
-                                        "expressions": [ "login" ],
-                                    }
-                                ]
-                            }
-                        ],
-                        "metrics": [
-                            { "expression": "ga:pageviews" },
-                        ]
-                    }
-                ]
-            }).execute()
-
-        return dumps(result)
-
-
-    def getClientsHistory(self, startDate, startAgoDate, endDate):
+    def getSubmitClients(self, startDate, endDate, cliid):
         result = self.app.reports().batchGet(
             body={
                 "reportRequests": [
@@ -141,8 +53,9 @@ class GoogleAnalytics:
                             {
                                 "filters": [
                                     {
-                                        "dimensionName": "ga:eventAction",
-                                        "expressions": [ "login" ],
+                                        "dimensionName": "ga:pagePath",
+                                        "operator": "REGEXP",
+                                        "expressions": [ cliid ],
                                     }
                                 ]
                             }
@@ -154,120 +67,6 @@ class GoogleAnalytics:
                 ]
             }).execute()
 
-        clientIds = []
-        if "rows" in result["reports"][0]["data"]:
-            for obj in result["reports"][0]["data"]["rows"]:
-                for id in obj["dimensions"]:
-                    clientIds.append(id)
-
-        clientDic = {}
-        for id in clientIds:
-            historyResult = self.app.reports().batchGet(
-                body={
-                    "reportRequests": [
-                        {
-                            "viewId": self.viewId,
-                            "pageSize": 100000,
-                            "dateRanges": [
-                                { "startDate": startAgoDate, "endDate": "today" }
-                            ],
-                            "dimensions": [
-                                { "name": "ga:pagePath" },
-                                { "name": "ga:pageTitle" },
-                                { "name": "ga:dateHourMinute" }
-                            ],
-                            "dimensionFilterClauses": [
-                                {
-                                    "filters": [
-                                        {
-                                            "dimensionName": "ga:clientId",
-                                            "expressions": [ id ],
-                                        }
-                                    ]
-                                }
-                            ],
-                            "metrics": [
-                                { "expression": "ga:pageviews" },
-                            ]
-                        }
-                    ]
-                }).execute()
-            eventResult = self.app.reports().batchGet(
-                body={
-                    "reportRequests": [
-                        {
-                            "viewId": self.viewId,
-                            "pageSize": 100000,
-                            "dateRanges": [
-                                { "startDate": startAgoDate, "endDate": "today" }
-                            ],
-                            "dimensions": [
-                                { "name": "ga:eventAction" },
-                                { "name": "ga:dateHourMinute" }
-                            ],
-                            "dimensionFilterClauses": [
-                                {
-                                    "filters": [
-                                        {
-                                            "dimensionName": "ga:clientId",
-                                            "expressions": [ id ],
-                                        }
-                                    ]
-                                }
-                            ],
-                            "metrics": [
-                                { "expression": "ga:pageviews" },
-                            ]
-                        }
-                    ]
-                }).execute()
-            clientDic[id] = {}
-            clientDic[id]["history"] = historyResult["reports"][0]["data"]["rows"]
-            clientDic[id]["event"] = eventResult["reports"][0]["data"]["rows"]
-
-        return dumps(clientDic)
-
-
-    def getClientsByDate(self, startDate, endDate, dimensions, submit=False):
-        dimensions.insert(0, { "name": "ga:clientId" })
-        dimensions.insert(0, { "name": "ga:dateHourMinute" })
-
-        if submit:
-            bodyDict = {
-                "reportRequests": [
-                    {
-                        "viewId": self.viewId,
-                        "pageSize": 100000,
-                        "dateRanges": [ { "startDate": startDate, "endDate": endDate } ],
-                        "dimensions": dimensions,
-                        "dimensionFilterClauses": [
-                            {
-                                "filters": [
-                                    {
-                                        "dimensionName": "ga:eventAction",
-                                        "expressions": [ "login" ],
-                                    }
-                                ]
-                            }
-                        ],
-                        "metrics": [ { "expression": "ga:pageviews" } ]
-                    }
-                ]
-            }
-        else:
-            bodyDict = {
-                "reportRequests": [
-                    {
-                        "viewId": self.viewId,
-                        "pageSize": 100000,
-                        "dateRanges": [ { "startDate": startDate, "endDate": endDate } ],
-                        "dimensions": dimensions,
-                        "metrics": [ { "expression": "ga:pageviews" } ]
-                    }
-                ]
-            }
-
-        result = self.app.reports().batchGet(body=bodyDict).execute()
         return dumps(result)
 
 
@@ -292,8 +91,8 @@ class GoogleAnalytics:
         return dumps(result)
 
 
-    def getClientById(self, clientId, dimensions):
-        aMonthAgo = self.getAMonthAgo()
+    def getUserById(self, startDate, endDate, clientId, dimensions):
+        dimensions.insert(0, { "name": "ga:dateHourMinute" })
         result = self.app.reports().batchGet(
             body={
                 "reportRequests": [
@@ -301,7 +100,7 @@ class GoogleAnalytics:
                         "viewId": self.viewId,
                         "pageSize": 100000,
                         "dateRanges": [
-                            { "startDate": aMonthAgo["startDate"], "endDate": aMonthAgo["endDate"] }
+                            { "startDate": startDate, "endDate": endDate }
                         ],
                         "dimensions": dimensions,
                         "dimensionFilterClauses": [
@@ -322,63 +121,3 @@ class GoogleAnalytics:
             }).execute()
 
         return dumps(result)
-
-
-    def getUserNumber(self, consulting=False):
-        requestObj = {
-            "viewId": self.viewId,
-            "pageSize": 100000,
-            "dateRanges": [
-                { "startDate": "2019-03-01", "endDate": "today" }
-            ],
-            "dimensions": [
-                { "name": "ga:year" },
-                { "name": "ga:month" }
-            ],
-            "metrics": [
-                { "expression": "ga:users" },
-            ]
-        }
-        if consulting:
-            requestObj["dimensionFilterClauses"] = [
-                {
-                    "filters": [
-                        {
-                            "dimensionName": "ga:pagePath",
-                            "expressions": [ "consulting" ],
-                        }
-                    ]
-                }
-            ]
-
-        result = self.app.reports().batchGet(
-            body={
-                "reportRequests": [ requestObj ]
-            }).execute()
-
-        return dumps(result)
-
-
-    def getAgeGender(self):
-        def returnObj(dimension):
-            return {
-                "viewId": self.viewId,
-                "pageSize": 100000,
-                "dateRanges": [
-                    { "startDate": "2019-03-01", "endDate": "today" }
-                ],
-                "dimensions": [
-                    dimension,
-                ],
-                "metrics": [
-                    { "expression": "ga:users" },
-                ]
-            }
-
-        dic0 = returnObj({ "name": "ga:userAgeBracket" })
-        dic1 = returnObj({ "name": "ga:userGender" })
-
-        result0 = self.app.reports().batchGet(body={ "reportRequests": [ dic0 ] }).execute()
-        result1 = self.app.reports().batchGet(body={ "reportRequests": [ dic1 ] }).execute()
-
-        return dumps({ "age": result0, "gender": result1 })

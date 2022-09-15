@@ -67,6 +67,42 @@ LogRouter.prototype.dailyAnalytics = async function (selfMongo) {
   }
 }
 
+// LogRouter.prototype.dailyClients = async function (selfMongo) {
+//   const instance = this;
+//   const back = this.back;
+//   const { sleep, dateToString } = this.mother;
+//   const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
+//   try {
+//     const analyticsCollection = "dailyClients";
+//     const analytics = new GoogleAnalytics();
+//     let result;
+//     let date;
+//     let ancid;
+//     let rows;
+//
+//     date = new Date();
+//     date.setDate(date.getDate() - 1);
+//     date.setDate(date.getDate() - 1);
+//
+//     for (let i = 0; i < 2; i++) {
+//       result = await analytics.getSubmitClients(date, selfMongo);
+//       ancid = result.ancid;
+//       rows = await back.mongoRead(analyticsCollection, { ancid }, { selfMongo });
+//       if (rows.length !== 0) {
+//         await back.mongoDelete(analyticsCollection, { ancid }, { selfMongo })
+//       }
+//       await back.mongoCreate(analyticsCollection, result, { selfMongo });
+//       console.log(result);
+//       console.log(dateToString(date));
+//       date.setDate(date.getDate() + 1);
+//       await sleep(1000);
+//     }
+//
+//   } catch (e) {
+//     console.log(e);
+//   }
+// }
+
 LogRouter.prototype.dailyCampaign = async function (selfMongo) {
   const instance = this;
   const FacebookAPIs = require(`${process.cwd()}/apps/facebookAPIs/facebookAPIs.js`);

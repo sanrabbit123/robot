@@ -65,54 +65,19 @@ try:
 
     data = getBridge()
 
-    if argv[1] == 'analytics' and argv[2] == 'clientsIdTesting':
+    if argv[1] == 'analytics' and argv[2] == 'getSubmitClients':
         analyticsApp = GoogleAnalytics()
-        result = analyticsApp.clientsIdTesting(data["startDate"], data["endDate"])
+        result = analyticsApp.getSubmitClients(data["startDate"], data["endDate"], data["cliid"])
         print(result)
 
-    elif argv[1] == 'analytics' and argv[2] == 'getTodayClients':
+    elif argv[1] == 'analytics' and argv[2] == 'getUserById':
         analyticsApp = GoogleAnalytics()
-        result = analyticsApp.getTodayClients()
-        print(result)
-
-    elif argv[1] == 'analytics' and argv[2] == 'getClientsHistory':
-        analyticsApp = GoogleAnalytics()
-        result = analyticsApp.getClientsHistory(data["startDate"], data["startAgoDate"], data["endDate"])
-        print(result)
-
-    elif argv[1] == 'analytics' and argv[2] == 'getClientsByDate':
-        analyticsApp = GoogleAnalytics()
-        result = analyticsApp.getClientsByDate(data["startDate"], data["endDate"], data["dimensions"])
-        print(result)
-
-    elif argv[1] == 'analytics' and argv[2] == 'getSubmitClientsByDate':
-        analyticsApp = GoogleAnalytics()
-        result = analyticsApp.getClientsByDate(data["startDate"], data["endDate"], data["dimensions"], True)
-        print(result)
-
-    elif argv[1] == 'analytics' and argv[2] == 'getClientById':
-        analyticsApp = GoogleAnalytics()
-        result = analyticsApp.getClientById(data["clientId"], data["dimensions"])
-        print(result)
-
-    elif argv[1] == 'analytics' and argv[2] == 'getUsers':
-        analyticsApp = GoogleAnalytics()
-        result = analyticsApp.getUserNumber(data["consulting"])
-        print(result)
-
-    elif argv[1] == 'analytics' and argv[2] == 'getAgeGender':
-        analyticsApp = GoogleAnalytics()
-        result = analyticsApp.getAgeGender()
+        result = analyticsApp.getUserById(data["startDate"], data["endDate"], data["clientId"], data["dimensions"])
         print(result)
 
     elif argv[1] == 'analytics' and argv[2] == 'generalMetric':
         analytics = GoogleAnalytics()
         result = analytics.getGeneralMetric(data["startDate"], data["endDate"], data["dimensions"])
-        print(result)
-
-    elif argv[1] == 'analytics' and argv[2] == 'monthSearch':
-        analyticsApp = GoogleSearchConsole()
-        result = analyticsApp.getAllMonthData(data["monthBox"])
         print(result)
 
     elif argv[1] == 'sheets' and argv[2] == 'get':
