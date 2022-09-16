@@ -874,6 +874,10 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
   let uploadCirclePadding;
   let uploadIconWidth;
   let uploadIconTop;
+  let panMotherMinHeight;
+  let contentsPan;
+  let contentsPanPaddingTop;
+  let contentsPanPaddingBottom;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -946,6 +950,11 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
   uploadCirclePadding = <%% 16, 16, 16, 12, 4 %%>;
   uploadIconWidth = <%% 13, 13, 13, 12, 4 %%>;
   uploadIconTop = <%% -1, -1, -1, 0, 0 %%>;
+
+  panMotherMinHeight = <%% 500, 480, 420, 400, 54 %%>;
+
+  contentsPanPaddingTop = <%% 12, 12, 12, 10, 4 %%>;
+  contentsPanPaddingBottom = <%% 60, 60, 60, 54, 12 %%>;
 
   this.whiteMargin = (desktop ? margin : 0);
 
@@ -1033,7 +1042,6 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
     style: {
       display: "block",
       position: "relative",
-      height: String(600) + ea,
       borderRadius: String(5) + "px",
       background: colorChip.gray3,
       width: withOut(panMotherInnerPadding * 2, ea),
@@ -1046,10 +1054,11 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
       mother: panMother,
       style: {
         display: "inline-block",
+        verticalAlign: "top",
         position: "relative",
         width: "calc(calc(100% - " + String(panBetween * (this.contents.length - 1)) + ea + ") / " + String(this.contents.length) + ")",
         marginRight: String((i === (this.contents.length - 1)) ? 0 : panBetween) + ea,
-        height: withOut(0),
+        "min-height": String(panMotherMinHeight) + ea,
         background: colorChip.gray0,
         borderRadius: String(5) + "px",
       }
@@ -1083,6 +1092,20 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
       ]
     });
 
+    contentsPan = createNode({
+      mother: basePan,
+      attribute: {
+        key: this.contents[i].key,
+      },
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(0),
+        paddingTop: String(contentsPanPaddingTop) + ea,
+        paddingBottom: String(contentsPanPaddingBottom) + ea,
+      }
+    });
+
     createNode({
       mother: basePan,
       style: {
@@ -1112,10 +1135,122 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
       ]
     });
 
+    this.panList.push(contentsPan);
   }
 
+  this.setPanBlocks().catch((err) => { console.log(err) });
 
   return whiteBlock;
+}
+
+ProcessDetailJs.prototype.setPanBlocks = async function () {
+  const instance = this;
+  const { ea, targetDrive } = this;
+  const { ajaxJson, createNode, colorChip, withOut, cleanChildren, dateToString } = GeneralJs;
+  try {
+    let itemList;
+    let mothers;
+    let itemBetween;
+    let itemTongHeight;
+    let itemTongMarginLeft;
+    let itemBlock;
+    let motherMatrix;
+    let motherMaxNumber;
+    let transparentItemsMatrix;
+    let index;
+    let textTop, textSize, textWeight;
+
+    itemBetween = <%% 6, 6, 5, 4, 1 %%>;
+    itemTongHeight = <%% 40, 40, 36, 32, 3 %%>;
+    itemTongMarginLeft = <%% 12, 12, 12, 10, 1 %%>;
+
+    textTop = <%% -2, -2, -2, -2, -2 %%>;
+    textSize = <%% 14, 14, 14, 14, 14 %%>;
+    textWeight = <%% 600, 600, 600, 600, 600 %%>;
+
+    mothers = this.panList;
+    itemList = await ajaxJson({ target: this.targetDrive }, "/ghostPass_readDir", { equal: true });
+
+    for (let mother of mothers) {
+      cleanChildren(mother);
+    }
+
+    itemList = itemList.map((raw) => {
+      const [ key, time, order, hex ] = raw.split("_");
+      const [ , exe ] = hex.split(".");
+      return [ key, new Date(Number(time)), String(Number(order) + 1) + "." + exe, Number(order) ];
+    }).map(([ key, date, name, order ]) => {
+      return { key, date, name, order };
+    });
+
+    itemList.sort((a, b) => { return a.order - b.order });
+    itemList.sort((a, b) => { return a.date.valueOf() - b.date.valueOf() });
+
+    for (let item of itemList) {
+      for (let i = 0; i < this.contents.length; i++) {
+        if (this.contents[i].key === item.key) {
+          item.mother = mothers[i];
+          item.motherNumber = i;
+        }
+      }
+    }
+
+    motherMatrix = (new Array(this.contents.length)).fill(0, 0);
+
+    for (let { mother, key, date, name, order, motherNumber } of itemList) {
+      itemBlock = createNode({
+        mother,
+        style: {
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: withOut(itemTongMarginLeft * 2, ea),
+          marginLeft: String(itemTongMarginLeft) + ea,
+          height: String(itemTongHeight) + ea,
+          marginBottom: String(itemBetween) + ea,
+          borderRadius: String(5) + "px",
+          background: colorChip.gray3,
+        },
+        children: [
+          {
+            text: dateToString(date).replace(/\-/gi, '').slice(2) + "_" + name,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(textTop) + ea,
+              fontSize: String(textSize) + ea,
+              fontWeight: String(textWeight),
+              color: colorChip.black,
+            }
+          }
+        ]
+      });
+      motherMatrix[motherNumber] = motherMatrix[motherNumber] + 1;
+    }
+
+    motherMaxNumber = motherMatrix.reduce((acc, curr) => { return (acc >= curr ? acc : curr) }, 0);
+    transparentItemsMatrix = motherMatrix.map((num) => { return Math.abs(motherMaxNumber - num) });
+
+    index = 0;
+    for (let num of transparentItemsMatrix) {
+      for (let i = 0; i < num; i++) {
+        createNode({
+          mother: mothers[index],
+          style: {
+            display: "block",
+            width: withOut(itemTongMarginLeft * 2, ea),
+            marginLeft: String(itemTongMarginLeft) + ea,
+            height: String(itemTongHeight) + ea,
+            marginBottom: String(itemBetween) + ea,
+          }
+        });
+      }
+      index++;
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 ProcessDetailJs.prototype.insertCalendarBox = function () {
@@ -3053,6 +3188,8 @@ ProcessDetailJs.prototype.launching = async function (loading) {
     }
 
     this.targetIndex = targetIndex;
+    this.targetDrive = "__project__/" + this.designer.desid + "/" + this.project.proid;
+    this.panList = [];
 
     if (typeof getObj.mobilecard === "string") {
       const response = await ajaxJson({ mode: "open", key: getObj.mobilecard }, BACKHOST + "/generalImpPayment", { equal: true });
@@ -3080,9 +3217,6 @@ ProcessDetailJs.prototype.launching = async function (loading) {
     }
 
     this.initComplete = 0;
-
-    const test = await ajaxJson({ target: "__project__" }, "/ghostPass_readDir", { equal: true });
-    console.log(test);
 
     await this.mother.ghostDesignerLaunching({
       name: "processDetail",
