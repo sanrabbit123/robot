@@ -93,9 +93,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
     /*
 
     22년 6월 이후부터 적어서 다 낼 것
@@ -106,6 +103,7 @@ DevContext.prototype.launching = async function () {
     캠패인 총 노출수
     캠패인 총 클릭수
 
+    MAU
     전체 페이지뷰 수
     컨설팅 페이지뷰 수
     이벤트 액션 수

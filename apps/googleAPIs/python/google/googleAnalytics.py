@@ -131,6 +131,27 @@ class GoogleAnalytics:
         return dumps(result)
 
 
+    def getUserMetric(self, startDate, endDate, dimensions):
+        result = self.app.reports().batchGet(
+            body={
+                "reportRequests": [
+                    {
+                        "viewId": self.viewId,
+                        "pageSize": 100000,
+                        "dateRanges": [
+                            { "startDate": startDate, "endDate": endDate }
+                        ],
+                        "dimensions": dimensions,
+                        "metrics": [
+                            { "expression": "ga:users" },
+                        ]
+                    }
+                ]
+            }).execute()
+
+        return dumps(result)
+
+
     def getEventMetric(self, startDate, endDate, dimensions):
         result = self.app.reports().batchGet(
             body={

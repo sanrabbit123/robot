@@ -403,6 +403,15 @@ GoogleAnalytics.prototype.generalMetric = async function (startDate, endDate) {
       endDate = dateToString(endDate);
     }
 
+    const userDimensions = [
+      { name: "ga:userType", meaning: "유저 타입" },
+      { name: "ga:country", meaning: "국가" },
+      { name: "ga:city", meaning: "도시" },
+      { name: "ga:userAgeBracket", meaning: "나이대" },
+      { name: "ga:userGender", meaning: "성별" },
+      { name: "ga:campaign", meaning: "캠페인" },
+      { name: "ga:source", meaning: "소스" },
+    ];
     const dimensions = [
       { name: "ga:pagePath", meaning: "페이지 경로" },
       { name: "ga:userDefinedValue", meaning: "레퍼럴" },
@@ -410,10 +419,6 @@ GoogleAnalytics.prototype.generalMetric = async function (startDate, endDate) {
       { name: "ga:deviceCategory", meaning: "디바이스" },
       { name: "ga:operatingSystem", meaning: "운영 체제" },
       { name: "ga:campaign", meaning: "캠페인" },
-      { name: "ga:city", meaning: "도시" },
-      { name: "ga:userType", meaning: "유저 타입" },
-      { name: "ga:userAgeBracket", meaning: "나이대" },
-      { name: "ga:userGender", meaning: "성별" },
     ];
     const eventDimensions = [
       { name: "ga:eventAction", meaning: "이벤트 액션" },
@@ -433,6 +438,32 @@ GoogleAnalytics.prototype.generalMetric = async function (startDate, endDate) {
     let start, next, end;
     let conversion;
     let conversionObj;
+    let users;
+    let usersDetail;
+    let userResult;
+    let userTotalNumbers;
+    let userDetailObj;
+
+    // users
+
+    userResult = [];
+    for (let i of userDimensions) {
+      temp = [];
+      temp.push({ name: i.name });
+      tempObj = await pythonExecute(this.pythonApp, [ "analytics", "getUserMetric" ], { startDate, endDate, dimensions: temp });
+      userResult.push(this.reportParsing(tempObj));
+    }
+
+    userTotalNumbers = userResult.map((obj) => { return obj.total });
+
+    userDetailObj = {};
+    keyArr = userDimensions.map((obj) => { return obj.name.replace(/ga\:/gi, '') })
+    for (let i = 0; i < keyArr.length; i++) {
+      userDetailObj[keyArr[i]] = userResult[i];
+    }
+
+
+    // page views
 
     result = [];
 
@@ -516,8 +547,14 @@ GoogleAnalytics.prototype.generalMetric = async function (startDate, endDate) {
         to: (endDate === startDate ? next : end),
       },
       data: {
-        total: totalNumbers.reduce((acc, cur) => { return (acc >= cur ? acc : cur) }, 0),
-        detail: detailObj,
+        users: {
+          total: userTotalNumbers.reduce((acc, cur) => { return (acc >= cur ? acc : cur) }, 0),
+          detail: userDetailObj,
+        },
+        views: {
+          total: totalNumbers.reduce((acc, cur) => { return (acc >= cur ? acc : cur) }, 0),
+          detail: detailObj,
+        },
         conversion,
       }
     };

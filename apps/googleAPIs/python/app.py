@@ -75,6 +75,11 @@ try:
         result = analyticsApp.getInputBlurUsers(data["startDate"], data["endDate"])
         print(result)
 
+    elif argv[1] == 'analytics' and argv[2] == 'getUserMetric':
+        analyticsApp = GoogleAnalytics()
+        result = analyticsApp.getUserMetric(data["startDate"], data["endDate"], data["dimensions"])
+        print(result)
+
     elif argv[1] == 'analytics' and argv[2] == 'getUserById':
         analyticsApp = GoogleAnalytics()
         result = analyticsApp.getUserById(data["startDate"], data["endDate"], data["clientId"], data["dimensions"])
