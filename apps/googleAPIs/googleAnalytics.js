@@ -38,6 +38,14 @@ GoogleAnalytics.prototype.getSubmitClients = async function (thisDate, selfMongo
     let finalObj;
     let start;
     let end;
+    let targetCliidSet;
+    let rawData;
+    let rawSet;
+    let subtractSet;
+    let subtractObj;
+    let subtractMatrix;
+    let problemClients;
+    let subtractMatrixFiltered;
 
     if (typeof thisDate !== "string") {
       thisDate = dateToString(thisDate);
@@ -75,15 +83,62 @@ GoogleAnalytics.prototype.getSubmitClients = async function (thisDate, selfMongo
     cliidArr = thisDateRequests.map((obj) => { return obj.cliid });
 
     cliidTong = {};
+    problemClients = [];
     for (let cliid of cliidArr) {
       ({ reports: [ { data: result } ] } = await pythonExecute(this.pythonApp, [ "analytics", "getSubmitClients" ], { startDate: thisDate, endDate: thisDate, cliid }));
       if (!Array.isArray(result.rows)) {
         await errorLog("cannot find by this cliid : " + cliid);
         cliidTong[cliid] = [];
+        problemClients.push(thisDateRequests.find((obj) => { return obj.cliid === cliid }));
       } else {
         cliidTong[cliid] = result.rows.map((obj) => { return obj.dimensions[0] });
       }
     }
+
+    if (Object.values(cliidTong).some((arr) => { return arr.length === 0 })) {
+
+      targetCliidSet = Object.values(cliidTong).flat();
+      targetCliidSet = Array.from(new Set(targetCliidSet));
+
+      ({ reports: [ { data: result } ] } = await pythonExecute(this.pythonApp, [ "analytics", "getInputBlurUsers" ], { startDate: thisDate, endDate: thisDate }));
+      rawData = result.rows.map((obj) => { return obj.dimensions });
+      rawSet = [ ...new Set(rawData.map((arr) => { return arr[0] })) ];
+
+      subtractSet = rawSet.filter((id) => { return !targetCliidSet.includes(id) });
+      subtractObj = {};
+      for (let id of subtractSet) {
+        subtractObj[id] = [];
+        for (let [ i, t ] of rawData) {
+          if (i === id) {
+            subtractObj[id].push(this.returnDate(t));
+          }
+        }
+        subtractObj[id].sort((a, b) => { return b.valueOf() - a.valueOf() })
+      }
+
+      subtractMatrix = [];
+      for (let id in subtractObj) {
+        if (subtractObj[id].length >= 1) {
+          subtractMatrix.push([
+            id,
+            subtractObj[id][0]
+          ]);
+        }
+      }
+
+      if (Object.values(cliidTong).filter((arr) => { return arr.length === 0 }).length <= subtractMatrix.length) {
+        for (let problemClient of problemClients) {
+          subtractMatrixFiltered = subtractMatrix.filter((arr) => { return arr[1].valueOf() <= problemClient.request.timeline.valueOf() });
+          if (subtractMatrixFiltered.length !== 0) {
+            subtractMatrixFiltered.sort((a, b) => { return Math.abs(problemClient.request.timeline.valueOf() - a[1].valueOf()) - Math.abs(problemClient.request.timeline.valueOf() - b[1].valueOf()) });
+            cliidTong[problemClient.cliid].push(subtractMatrixFiltered[0][0]);
+            await errorLog("find missing cliid : " + problemClient.cliid + " => " + subtractMatrixFiltered[0][0]);
+          }
+        }
+      }
+
+    }
+
 
     console.log("target tong : ", cliidTong);
 

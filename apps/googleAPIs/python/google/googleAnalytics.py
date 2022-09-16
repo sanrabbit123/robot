@@ -70,6 +70,46 @@ class GoogleAnalytics:
         return dumps(result)
 
 
+    def getInputBlurUsers(self, startDate, endDate):
+        result = self.app.reports().batchGet(
+            body={
+                "reportRequests": [
+                    {
+                        "viewId": self.viewId,
+                        "pageSize": 100000,
+                        "dateRanges": [
+                            { "startDate": startDate, "endDate": endDate }
+                        ],
+                        "dimensions": [
+                            { "name": "ga:clientId" },
+                            { "name": "ga:dateHourMinute" },
+                        ],
+                        "dimensionFilterClauses": [
+                            {
+                                "filters": [
+                                    {
+                                        "dimensionName": "ga:eventAction",
+                                        "operator": "REGEXP",
+                                        "expressions": [ "input" ],
+                                    },
+                                    {
+                                        "dimensionName": "ga:eventAction",
+                                        "operator": "REGEXP",
+                                        "expressions": [ "address" ],
+                                    }
+                                ]
+                            }
+                        ],
+                        "metrics": [
+                            { "expression": "ga:pageviews" },
+                        ]
+                    }
+                ]
+            }).execute()
+
+        return dumps(result)
+
+
     def getGeneralMetric(self, startDate, endDate, dimensions):
         result = self.app.reports().batchGet(
             body={

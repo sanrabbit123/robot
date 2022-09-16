@@ -70,6 +70,11 @@ try:
         result = analyticsApp.getSubmitClients(data["startDate"], data["endDate"], data["cliid"])
         print(result)
 
+    elif argv[1] == 'analytics' and argv[2] == 'getInputBlurUsers':
+        analyticsApp = GoogleAnalytics()
+        result = analyticsApp.getInputBlurUsers(data["startDate"], data["endDate"])
+        print(result)
+
     elif argv[1] == 'analytics' and argv[2] == 'getUserById':
         analyticsApp = GoogleAnalytics()
         result = analyticsApp.getUserById(data["startDate"], data["endDate"], data["clientId"], data["dimensions"])
