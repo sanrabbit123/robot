@@ -98,10 +98,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
     // 캠패인
-    //
+
     // 비용
     // 노출수
     // 클릭수
@@ -112,8 +110,6 @@ DevContext.prototype.launching = async function () {
     // 컨설팅 페이지뷰
     // 이벤트 액션 수
     // 문의수
-
-
 
 
     // let requestString;

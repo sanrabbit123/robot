@@ -10,6 +10,7 @@ const DataRouter = function (DataPatch, DataMiddle, MONGOC, MONGOLOCALC, kakaoIn
   const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
   const GoogleCalendar = require(`${process.cwd()}/apps/googleAPIs/googleCalendar.js`);
+  const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
   this.mother = new Mother();
   this.back = new BackMaker();
   this.work = new BackWorker();
@@ -19,6 +20,7 @@ const DataRouter = function (DataPatch, DataMiddle, MONGOC, MONGOLOCALC, kakaoIn
   this.sheets = new GoogleSheet();
   this.drive = new GoogleDrive();
   this.calendar = new GoogleCalendar();
+  this.analytics = new GoogleAnalytics();
   this.mongo = MONGOC;
   this.mongolocal = MONGOLOCALC;
   this.pythonApp = this.dir + "/python/app.py";
@@ -4536,7 +4538,7 @@ DataRouter.prototype.rou_post_ghostPass = function () {
   const address = this.address;
   const { ghostRequest, equalJson } = this.mother;
   let obj = {};
-  obj.link = [ "/ghostPass_clientPhoto", "/ghostPass_photoParsing", "/ghostPass_listFiles", "/ghostPass_deliveryFiles", "/ghostPass_searchFiles", "/ghostPass_dirParsing", "/ghostPass_pdfPrint", "/ghostPass_pageToPng", "/ghostPass_pageToPdf", "/ghostPass_staticDelete", "/ghostPass_designerPhoto", "/ghostPass_userPhoto", "/ghostPass_userKey" ];
+  obj.link = [ "/ghostPass_clientPhoto", "/ghostPass_photoParsing", "/ghostPass_listFiles", "/ghostPass_deliveryFiles", "/ghostPass_searchFiles", "/ghostPass_dirParsing", "/ghostPass_pdfPrint", "/ghostPass_pageToPng", "/ghostPass_pageToPdf", "/ghostPass_staticDelete", "/ghostPass_designerPhoto", "/ghostPass_userPhoto", "/ghostPass_userKey", "/ghostPass_readDir" ];
   obj.func = async function (req, res) {
     res.set({
       "Content-Type": "application/json",
@@ -5573,7 +5575,75 @@ DataRouter.prototype.rou_post_flowBlock = function () {
 
       res.send(resultObj);
     } catch (e) {
-      await errorLog("Console 서버 문제 생김 (rou_post_designerFeeTable): " + e.message);
+      await errorLog("Console 서버 문제 생김 (rou_post_flowBlock): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_analyticsDaily = function () {
+  const instance = this;
+  const { errorLog, equalJson, stringToDate, requestSystem, sleep } = this.mother;
+  const analytics = this.analytics;
+  const address = this.address;
+  let obj = {};
+  obj.link = [ "/analyticsDaily" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const { date } = equalJson(req.body);
+      let thisDate;
+      let dateArr;
+
+      if (typeof date !== "string") {
+        throw new Error("invaild post");
+      }
+      if (date.length === 10) {
+
+        thisDate = stringToDate(date);
+        analytics.generalMetric(thisDate, thisDate).then((result) => {
+          return requestSystem("https://" + address.testinfo.host + "/analyticsGeneral", { result }, { headers: { "Content-Type": "application/json" } });
+        }).then(() => {
+          return analytics.getSubmitClients(thisDate, instance.mongo);
+        }).then((result) => {
+          return requestSystem("https://" + address.testinfo.host + "/analyticsClients", { result }, { headers: { "Content-Type": "application/json" } });
+        }).catch((err) => {
+          console.log(err);
+        });
+
+      } else {
+
+        dateArr = date.split(",").map((str) => { return str.trim(); });
+        if (!(dateArr.every((str) => { return str.length === 10 }))) {
+          throw new Error("invaild post");
+        }
+        (async () => {
+          let result;
+          for (let thisDate of dateArr) {
+            result = await analytics.generalMetric(thisDate, thisDate);
+            await requestSystem("https://" + address.testinfo.host + "/analyticsGeneral", { result }, { headers: { "Content-Type": "application/json" } });
+            await sleep(1000);
+          }
+          for (let thisDate of dateArr) {
+            result = await analytics.getSubmitClients(thisDate, instance.mongo);
+            await requestSystem("https://" + address.testinfo.host + "/analyticsClients", { result }, { headers: { "Content-Type": "application/json" } });
+            await sleep(1000);
+          }
+        })().catch((err) => {
+          console.log(err);
+        });
+
+      }
+
+      res.send({ message: "will do" });
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_analyticsDaily): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
   }

@@ -3816,7 +3816,7 @@ DataRouter.prototype.rou_post_ghostPass = function () {
   const address = this.address;
   const { ghostRequest, equalJson } = this.mother;
   let obj = {};
-  obj.link = [ "/ghostPass_clientPhoto", "/ghostPass_photoParsing", "/ghostPass_listFiles", "/ghostPass_deliveryFiles", "/ghostPass_searchFiles", "/ghostPass_dirParsing", "/ghostPass_pdfPrint", "/ghostPass_pageToPng", "/ghostPass_pageToPdf", "/ghostPass_staticDelete", "/ghostPass_designerPhoto", "/ghostPass_userPhoto", "/ghostPass_userKey" ];
+  obj.link = [ "/ghostPass_clientPhoto", "/ghostPass_photoParsing", "/ghostPass_listFiles", "/ghostPass_deliveryFiles", "/ghostPass_searchFiles", "/ghostPass_dirParsing", "/ghostPass_pdfPrint", "/ghostPass_pageToPng", "/ghostPass_pageToPdf", "/ghostPass_staticDelete", "/ghostPass_designerPhoto", "/ghostPass_userPhoto", "/ghostPass_userKey", "/ghostPass_readDir" ];
   obj.func = async function (req, res) {
     res.set({
       "Content-Type": "application/json",

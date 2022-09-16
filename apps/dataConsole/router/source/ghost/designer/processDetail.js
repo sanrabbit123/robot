@@ -129,7 +129,7 @@ ProcessDetailJs.prototype.insertInitBox = function () {
   tagTongBottom = <%% 3, 3, 1, 1, 0 %%>;
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
-  titleWording = this.contents[this.targetIndex].title + " 매뉴얼";
+  titleWording = "프로젝트 상세";
   subTitleContents = this.client.name + " 고객님 프로젝트 상세";
 
   mobileBlockTop = 4.5;
@@ -813,6 +813,307 @@ ProcessDetailJs.prototype.insertChecklistBox = function (key) {
     }
     num++;
   }
+
+  return whiteBlock;
+}
+
+ProcessDetailJs.prototype.insertUploadBox = function () {
+  const instance = this;
+  const mother = this.mother;
+  const { client, ea, baseTong, media, project } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
+  const blank = "&nbsp;&nbsp;&nbsp;";
+  const mainTitle = "파일 업로드";
+  let paddingTop;
+  let block;
+  let whiteBlock, whiteTong;
+  let bottomMargin;
+  let titleFontSize;
+  let num, num2;
+  let numberRight;
+  let titleTop, titleTopNumber;
+  let titleBottom;
+  let index;
+  let mobileTitleLeft, mobileTitleTop;
+  let secondBlockWidth, secondBlockMargin;
+  let tong;
+  let contentsWordingSize;
+  let contentsBottom;
+  let whiteBottomMargin;
+  let contentsTitleMarginTop, contentsMarginTop;
+  let contentsPaddingLeft;
+  let arrowWidth;
+  let arrowTop;
+  let arrorLeft;
+  let bigNumberSize;
+  let bigNumberBetween;
+  let bigNumberMargin;
+  let bigNumberBetweenMargin;
+  let matrix;
+  let firstWidth, secondWidth, secondMarginRight;
+  let contentsAreaPaddingTop;
+  let zeroWidth, zeroMarginRight;
+  let checkBoxWidth, checkBoxTop;
+  let arrowBoxWidth, arrowBoxTop;
+  let contentsMarginBottom0, contentsMarginBottom1;
+  let mobilePaddingLeft;
+  let mobileContentsWordingSize;
+  let wordings;
+  let lineTop, linePadding;
+  let checkBoxAreaWidth;
+  let mobileInnerPaddingBottom;
+  let panMother;
+  let panMotherInnerPadding;
+  let panBetween;
+  let basePan;
+  let contentsTextTop;
+  let panTitleBoxHeight;
+  let uploadCircleWidth;
+  let uploadCirclePadding;
+  let uploadIconWidth;
+  let uploadIconTop;
+
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  margin = <%% 55, 55, 47, 39, 4.7 %%>;
+  paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
+
+  whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
+
+  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+  numberRight = <%% 12, 12, 12, 12, 3 %%>;
+
+  titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
+  titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
+
+  titleBottom = <%% (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 15 : 14), 0 %%>;
+  contentsAreaPaddingTop = <%% 36, 36, 36, 36, 7 %%>;
+
+  mobileTitleLeft = 1.5;
+  mobileTitleTop = -8.7;
+
+  mobileInnerPaddingBottom = 8;
+
+  secondBlockWidth = <%% 300, 300, 300, 300, 330 %%>;
+  secondBlockMargin = <%% 36, 36, 36, 36, 33 %%>;
+
+  contentsWordingSize = <%% 15, 15, 14, 13, 3.4 %%>;
+  contentsTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), 0 %%>;
+
+  contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
+
+  contentsTitleMarginTop = <%% 14, 14, 14, 14, 1 %%>;
+  contentsMarginTop = <%% 36, 36, 36, 36, 1 %%>;
+  contentsPaddingLeft = <%% 14, 14, 14, 14, 0 %%>;
+  arrowWidth = <%% 8, 8, 7, 6, 1.6 %%>;
+  arrowTop = <%% 6, 6, 6, 6, 0.3 %%>;
+  arrorLeft = <%% 1, 1, 1, 1, 0 %%>;
+
+  bigNumberSize = <%% 37, 37, 37, 37, 5 %%>;
+  bigNumberBetween = <%% -3, -3, -3, -3, 0 %%>;
+  bigNumberMargin = <%% 0, 0, 0, 0, 0 %%>;
+  bigNumberBetweenMargin = <%% 28, 28, 28, 28, 0 %%>;
+
+  zeroWidth = <%% 8, 8, 8, 8, 10 %%>;
+  zeroMarginRight = <%% 10, 10, 10, 10, 10 %%>;
+  firstWidth = <%% 240, 240, 190, 170, 10 %%>;
+  secondWidth = <%% 15, 15, 15, 15, 2 %%>;
+  secondMarginRight = <%% 10, 10, 10, 10, 2 %%>;
+
+  checkBoxWidth = <%% 10, 10, 10, 10, 2 %%>;
+  arrowBoxWidth = <%% 9, 8, 8, 8, 1.8 %%>;
+  checkBoxTop = <%% (isMac() ? 7 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.6 %%>;
+  arrowBoxTop = <%% (isMac() ? 7 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.5 %%>;
+
+  contentsMarginBottom0 = <%% 4, 4, 4, 4, 2 %%>;
+  contentsMarginBottom1 = <%% 32, 32, 30, 28, 0 %%>;
+
+  lineTop = <%% (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 9 : 7), 10 %%>;
+  linePadding = <%% 12, 12, 12, 10, 12 %%>;
+
+  mobilePaddingLeft = 6;
+
+  mobileContentsWordingSize = 3;
+
+  checkBoxAreaWidth = <%% 16, 16, 16, 16, 3 %%>;
+
+  panMotherInnerPadding = <%% 20, 20, 20, 20, 4 %%>;
+  panBetween = <%% 8, 8, 8, 8, 1 %%>;
+  panTitleBoxHeight = <%% 58, 58, 58, 56, 5 %%>;
+
+  uploadCircleWidth = <%% 28, 28, 28, 24, 6 %%>;
+  uploadCirclePadding = <%% 16, 16, 16, 12, 4 %%>;
+  uploadIconWidth = <%% 13, 13, 13, 12, 4 %%>;
+  uploadIconTop = <%% -1, -1, -1, 0, 0 %%>;
+
+  this.whiteMargin = (desktop ? margin : 0);
+
+  whiteBlock = createNode({
+    mother: baseTong,
+    attribute: { toggle: "on" },
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      background: desktop ? colorChip.white : "",
+      paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
+      paddingBottom: desktop ? String(margin) + ea : "",
+      marginBottom: String(bottomMargin) + ea,
+      boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+    },
+    children: [
+      {
+        display: "block",
+        position: "relative",
+        width: desktop ? withOut(margin * 2, ea) : String(100) + '%',
+        height: String(100) + '%',
+        marginLeft: String(desktop ? margin : 0) + ea,
+      }
+    ]
+  });
+  whiteTong = whiteBlock.firstChild;
+
+  block = createNode({
+    mother: whiteTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: mobile ? "absolute" : "relative",
+          left: desktop ? "" : String(mobileTitleLeft) + ea,
+          top: desktop ? "" : String(mobileTitleTop) + ea,
+          width: desktop ? String(100) + '%' : withOut((mobileTitleLeft * 2), ea),
+          marginBottom: String(titleBottom) + ea,
+          zIndex: mobile ? String(1) : "",
+        },
+        children: [
+          {
+            text: mainTitle,
+            style: {
+              position: "relative",
+              display: "inline-block",
+              top: String(titleTopNumber) + ea,
+              fontSize: String(titleFontSize) + ea,
+              fontWeight: String(600),
+              background: desktop ? colorChip.white : colorChip.gray1,
+              paddingRight: String(numberRight) + ea,
+              color: colorChip.black,
+            }
+          },
+        ]
+      },
+      {
+        style: {
+          display: "block",
+          position: "relative",
+          width: desktop ? String(100) + '%' : withOut(mobilePaddingLeft * 2, ea),
+          background: desktop ? "" : colorChip.white,
+          boxShadow: mobile ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+          borderRadius: mobile ? String(1) + ea : "",
+          overflow: "hidden",
+          marginBottom: String(0) + ea,
+          marginTop: desktop ? "" : String(14) + ea,
+          paddingLeft: desktop ? "" : String(mobilePaddingLeft) + ea,
+          paddingRight: desktop ? "" : String(mobilePaddingLeft) + ea,
+          paddingBottom: desktop ? "" : String(mobileInnerPaddingBottom) + ea,
+        }
+      },
+    ]
+  });
+  tong = block.lastChild;
+
+  panMother = createNode({
+    mother: tong,
+    style: {
+      display: "block",
+      position: "relative",
+      height: String(600) + ea,
+      borderRadius: String(5) + "px",
+      background: colorChip.gray3,
+      width: withOut(panMotherInnerPadding * 2, ea),
+      padding: String(panMotherInnerPadding) + ea,
+    }
+  });
+
+  for (let i = 0; i < this.contents.length; i++) {
+    basePan = createNode({
+      mother: panMother,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: "calc(calc(100% - " + String(panBetween * (this.contents.length - 1)) + ea + ") / " + String(this.contents.length) + ")",
+        marginRight: String((i === (this.contents.length - 1)) ? 0 : panBetween) + ea,
+        height: withOut(0),
+        background: colorChip.gray0,
+        borderRadius: String(5) + "px",
+      }
+    });
+
+    createNode({
+      mother: basePan,
+      style: {
+        display: "flex",
+        position: "relative",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+        width: withOut(0),
+        height: String(panTitleBoxHeight) + ea,
+        background: colorChip.white,
+        borderRadius: String(5) + "px",
+        boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      },
+      children: [
+        {
+          text: this.contents[i].title,
+          style: {
+            position: "relative",
+            top: String(contentsTextTop) + ea,
+            fontSize: String(contentsWordingSize) + ea,
+            fontWeight: String(800),
+            color: i === this.targetIndex ? colorChip.green : colorChip.black,
+          }
+        }
+      ]
+    });
+
+    createNode({
+      mother: basePan,
+      style: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: String(uploadCircleWidth) + ea,
+        height: String(uploadCircleWidth) + ea,
+        position: "absolute",
+        bottom: String(uploadCirclePadding) + ea,
+        right: String(uploadCirclePadding) + ea,
+        borderRadius: String(uploadCircleWidth) + ea,
+        background: i === this.targetIndex ? colorChip.gradientGreen : colorChip.gray5,
+        cursor: "pointer",
+      },
+      children: [
+        {
+          mode: "svg",
+          source: instance.mother.returnExtract(colorChip.white),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(uploadIconTop) + ea,
+            width: String(uploadIconWidth) + ea,
+          }
+        }
+      ]
+    });
+
+  }
+
 
   return whiteBlock;
 }
@@ -2780,6 +3081,9 @@ ProcessDetailJs.prototype.launching = async function (loading) {
 
     this.initComplete = 0;
 
+    const test = await ajaxJson({ target: "__project__" }, "/ghostPass_readDir", { equal: true });
+    console.log(test);
+
     await this.mother.ghostDesignerLaunching({
       name: "processDetail",
       designer: this.designer,
@@ -2792,6 +3096,7 @@ ProcessDetailJs.prototype.launching = async function (loading) {
         try {
           instance.insertInitBox();
           instance.insertProcessBox();
+          instance.insertUploadBox();
           instance.contentsLoop();
           instance.insertCalendarBox();
           instance.insertInformationBox();

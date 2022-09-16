@@ -1015,16 +1015,19 @@ Ghost.prototype.requestObject = async function () {
 Ghost.prototype.dirParsing = function (dir) {
   const instance = this;
   if (/__home__/g.test(dir)) {
-    dir = dir.replace(/__home__/, process.env.HOME);
+    dir = dir.replace(/__home__/g, process.env.HOME);
   }
   if (/__samba__/g.test(dir)) {
-    dir = dir.replace(/__samba__/, instance.homeliaisonServer);
+    dir = dir.replace(/__samba__/g, instance.homeliaisonServer);
   }
   if (/__photo__/g.test(dir)) {
-    dir = dir.replace(/__photo__/, instance.photoServerClient);
+    dir = dir.replace(/__photo__/g, instance.photoServerClient);
   }
   if (/__designer__/g.test(dir)) {
-    dir = dir.replace(/__designer__/, instance.photoServerDesigner);
+    dir = dir.replace(/__designer__/g, instance.photoServerDesigner);
+  }
+  if (/__project__/g.test(dir)) {
+    dir = dir.replace(/__project__/g, instance.photoServer + "/designer");
   }
   return dir;
 }
@@ -1315,36 +1318,6 @@ Ghost.prototype.ghostRouter = function (needs) {
           console.log(e);
         }
       });
-    }
-  };
-
-  //POST - shell
-  funcObj.post_shell = {
-    link: [ "/shell" ],
-    func: function (req, res) {
-      let order;
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
-      });
-      if (req.body.command === undefined) {
-        console.log(req.body);
-        res.send(JSON.stringify({ error: "must be property 'command'" }));
-      } else {
-        const { command } = req.body;
-        order = '';
-        if (Array.isArray(command)) {
-          for (let c of command) {
-            order += c + ';';
-          }
-        } else {
-          order = command;
-        }
-        shell.exec(order, { async: true });
-        res.send(JSON.stringify({ message: "success" }));
-      }
     }
   };
 
