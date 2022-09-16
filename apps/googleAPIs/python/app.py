@@ -90,6 +90,16 @@ try:
         result = analytics.getEventMetric(data["startDate"], data["endDate"], data["dimensions"])
         print(result)
 
+    elif argv[1] == 'analytics' and argv[2] == 'getPopupOpenDetail':
+        analytics = GoogleAnalytics()
+        result = analytics.getPopupOpenDetail(data["startDate"], data["endDate"], data["dimensions"])
+        print(result)
+
+    elif argv[1] == 'analytics' and argv[2] == 'getConsultingPageDetail':
+        analytics = GoogleAnalytics()
+        result = analytics.getConsultingPageDetail(data["startDate"], data["endDate"], data["dimensions"])
+        print(result)
+
     elif argv[1] == 'sheets' and argv[2] == 'get':
         sheetsApp = GoogleSheet()
         result = sheetsApp.getValue(data["id"], data["range"])

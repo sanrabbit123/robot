@@ -152,6 +152,70 @@ class GoogleAnalytics:
         return dumps(result)
 
 
+    def getPopupOpenDetail(self, startDate, endDate, dimensions):
+        result = self.app.reports().batchGet(
+            body={
+                "reportRequests": [
+                    {
+                        "viewId": self.viewId,
+                        "pageSize": 100000,
+                        "dateRanges": [
+                            { "startDate": startDate, "endDate": endDate }
+                        ],
+                        "dimensions": dimensions,
+                        "dimensionFilterClauses": [
+                            {
+                                "filters": [
+                                    {
+                                        "dimensionName": "ga:eventAction",
+                                        "operator": "REGEXP",
+                                        "expressions": [ "popupOpen" ],
+                                    }
+                                ]
+                            }
+                        ],
+                        "metrics": [
+                            { "expression": "ga:totalEvents" },
+                        ]
+                    }
+                ]
+            }).execute()
+
+        return dumps(result)
+
+
+    def getConsultingPageDetail(self, startDate, endDate, dimensions):
+        result = self.app.reports().batchGet(
+            body={
+                "reportRequests": [
+                    {
+                        "viewId": self.viewId,
+                        "pageSize": 100000,
+                        "dateRanges": [
+                            { "startDate": startDate, "endDate": endDate }
+                        ],
+                        "dimensions": dimensions,
+                        "dimensionFilterClauses": [
+                            {
+                                "filters": [
+                                    {
+                                        "dimensionName": "ga:pagePath",
+                                        "operator": "REGEXP",
+                                        "expressions": [ "consulting.php" ],
+                                    }
+                                ]
+                            }
+                        ],
+                        "metrics": [
+                            { "expression": "ga:pageviews" },
+                        ]
+                    }
+                ]
+            }).execute()
+
+        return dumps(result)
+
+
     def getUserById(self, startDate, endDate, clientId, dimensions):
         dimensions.insert(0, { "name": "ga:dateHourMinute" })
         result = self.app.reports().batchGet(

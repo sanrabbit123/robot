@@ -418,12 +418,21 @@ GoogleAnalytics.prototype.generalMetric = async function (startDate, endDate) {
     const eventDimensions = [
       { name: "ga:eventAction", meaning: "이벤트 액션" },
     ];
+    const conversionDimensions = [
+      { name: "ga:campaign", meaning: "캠페인" },
+      { name: "ga:userDefinedValue", meaning: "레퍼럴" },
+      { name: "ga:source", meaning: "소스" },
+      { name: "ga:deviceCategory", meaning: "디바이스" },
+      { name: "ga:userType", meaning: "유저 타입" },
+    ];
     let temp, tempObj, result, tempArr;
     let totalNumbers;
     let finalObj;
     let detailObj;
     let keyArr;
     let start, next, end;
+    let conversion;
+    let conversionObj;
 
     result = [];
 
@@ -443,7 +452,6 @@ GoogleAnalytics.prototype.generalMetric = async function (startDate, endDate) {
       result.push(this.reportParsing(tempObj));
     }
 
-
     detailObj = {};
     keyArr = dimensions.map((obj) => { return obj.name.replace(/ga\:/gi, '') })
     for (let i = 0; i < keyArr.length; i++) {
@@ -453,6 +461,48 @@ GoogleAnalytics.prototype.generalMetric = async function (startDate, endDate) {
     for (let i = 0; i < keyArr.length; i++) {
       detailObj[keyArr[i]] = result[dimensions.length + i];
     }
+
+
+    // conversion
+    conversion = [];
+
+    // conversion - popupOpen
+    conversionObj = {};
+    conversionObj.name = "popupOpen";
+    conversionObj.type = "event";
+    conversionObj.metric = "ga:totalEvents";
+    conversionObj.filter = {
+      dimensionName: "ga:eventAction",
+      operator: "REGEXP",
+      expressions: "popupOpen",
+    };
+    conversionObj.detail = {};
+    for (let i of conversionDimensions) {
+      temp = [];
+      temp.push({ name: i.name });
+      tempObj = await pythonExecute(this.pythonApp, [ "analytics", "getPopupOpenDetail" ], { startDate, endDate, dimensions: temp });
+      conversionObj.detail[i.name.replace(/ga\:/gi, '')] = this.reportParsing(tempObj);
+    }
+    conversion.push(conversionObj);
+
+    // conversion - consulting
+    conversionObj = {};
+    conversionObj.name = "consultingPage";
+    conversionObj.type = "page";
+    conversionObj.metric = "ga:pageviews";
+    conversionObj.filter = {
+      dimensionName: "ga:pagePath",
+      operator: "REGEXP",
+      expressions: "consulting.php",
+    };
+    conversionObj.detail = {};
+    for (let i of conversionDimensions) {
+      temp = [];
+      temp.push({ name: i.name });
+      tempObj = await pythonExecute(this.pythonApp, [ "analytics", "getConsultingPageDetail" ], { startDate, endDate, dimensions: temp });
+      conversionObj.detail[i.name.replace(/ga\:/gi, '')] = this.reportParsing(tempObj);
+    }
+    conversion.push(conversionObj);
 
     start = stringToDate(startDate);
     next = stringToDate(startDate);
@@ -468,6 +518,7 @@ GoogleAnalytics.prototype.generalMetric = async function (startDate, endDate) {
       data: {
         total: totalNumbers.reduce((acc, cur) => { return (acc >= cur ? acc : cur) }, 0),
         detail: detailObj,
+        conversion,
       }
     };
 

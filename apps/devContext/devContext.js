@@ -94,6 +94,8 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
     /*
 
     22년 6월 이후부터 적어서 다 낼 것
@@ -122,7 +124,7 @@ DevContext.prototype.launching = async function () {
     < 3번 보고서 - 문의자 특징 보고서 >
     각 문의자에 대한 상세 정보 / 히스토리
 
-    
+
     형태 => 1. SQL / 2. phpmysql / 3. 시트 / 4. 엑셀
 
     */
