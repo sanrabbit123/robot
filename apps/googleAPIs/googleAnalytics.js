@@ -381,7 +381,7 @@ GoogleAnalytics.prototype.reportParsing = function (reports) {
 
 GoogleAnalytics.prototype.generalMetric = async function (startDate, endDate) {
   const instance = this;
-  const { dateToString, stringToDate } = this.mother;
+  const { dateToString, stringToDate, pythonExecute } = this.mother;
   const zeroAddition = function (num) {
     if (num < 10) {
       return `0${String(num)}`;
@@ -415,6 +415,9 @@ GoogleAnalytics.prototype.generalMetric = async function (startDate, endDate) {
       { name: "ga:userAgeBracket", meaning: "나이대" },
       { name: "ga:userGender", meaning: "성별" },
     ];
+    const eventDimensions = [
+      { name: "ga:eventAction", meaning: "이벤트 액션" },
+    ];
     let temp, tempObj, result, tempArr;
     let totalNumbers;
     let finalObj;
@@ -427,16 +430,28 @@ GoogleAnalytics.prototype.generalMetric = async function (startDate, endDate) {
     for (let i of dimensions) {
       temp = [];
       temp.push({ name: i.name });
-      tempObj = await this.mother.pythonExecute(this.pythonApp, [ "analytics", "generalMetric" ], { startDate, endDate, dimensions: temp });
+      tempObj = await pythonExecute(this.pythonApp, [ "analytics", "generalMetric" ], { startDate, endDate, dimensions: temp });
       result.push(this.reportParsing(tempObj));
     }
 
     totalNumbers = result.map((obj) => { return obj.total });
 
+    for (let i of eventDimensions) {
+      temp = [];
+      temp.push({ name: i.name });
+      tempObj = await pythonExecute(this.pythonApp, [ "analytics", "eventMetric" ], { startDate, endDate, dimensions: temp });
+      result.push(this.reportParsing(tempObj));
+    }
+
+
     detailObj = {};
     keyArr = dimensions.map((obj) => { return obj.name.replace(/ga\:/gi, '') })
     for (let i = 0; i < keyArr.length; i++) {
       detailObj[keyArr[i]] = result[i];
+    }
+    keyArr = eventDimensions.map((obj) => { return obj.name.replace(/ga\:/gi, '') })
+    for (let i = 0; i < keyArr.length; i++) {
+      detailObj[keyArr[i]] = result[dimensions.length + i];
     }
 
     start = stringToDate(startDate);

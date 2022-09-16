@@ -97,13 +97,32 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
+
+    // 캠패인
+    //
+    // 비용
+    // 노출수
+    // 클릭수
+    // 페이지뷰 수
+    // 추정 페북으로부터
+    // 추정 네이버 광고로부터
+    // 추정 자연 검색으로부터
+    // 컨설팅 페이지뷰
+    // 이벤트 액션 수
+    // 문의수
+
+
+
+
     // let requestString;
     // let month;
     // let startDate;
     // let res;
     //
     //
-    // month = 8;
+    // month = 6;
     //
     //
     // startDate = new Date(2022, month - 1, 1);

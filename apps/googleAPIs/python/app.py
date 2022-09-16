@@ -85,6 +85,11 @@ try:
         result = analytics.getGeneralMetric(data["startDate"], data["endDate"], data["dimensions"])
         print(result)
 
+    elif argv[1] == 'analytics' and argv[2] == 'eventMetric':
+        analytics = GoogleAnalytics()
+        result = analytics.getEventMetric(data["startDate"], data["endDate"], data["dimensions"])
+        print(result)
+
     elif argv[1] == 'sheets' and argv[2] == 'get':
         sheetsApp = GoogleSheet()
         result = sheetsApp.getValue(data["id"], data["range"])
