@@ -93,8 +93,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const facebook = new FacebookAPIs();
-    await facebook.dailyCampaign(this.MONGOLOCALC);
 
 
 
