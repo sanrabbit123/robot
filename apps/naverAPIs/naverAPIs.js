@@ -39,8 +39,7 @@ NaverAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3) {
     let now;
 
     now = new Date();
-
-    startDate = new Date();
+    startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     for (let i = 0; i < dayNumber; i++) {
       startDate.setDate(startDate.getDate() - 1);
     }

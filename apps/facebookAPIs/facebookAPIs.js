@@ -36,15 +36,17 @@ FacebookAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3)
     let startDate;
     let num;
     let key;
+    let now;
 
-    startDate = new Date();
+    now = new Date();
+    startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     for (let i = 0; i < dayNumber; i++) {
       startDate.setDate(startDate.getDate() - 1);
     }
 
     for (let i = 0; i < dayNumber; i++) {
 
-      await sleep(200);
+      await sleep(1000);
 
       if (i === 0) {
         from = new Date(JSON.stringify(startDate).slice(1, -1));
@@ -61,6 +63,7 @@ FacebookAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3)
           "account_id",
           "campaign_id",
           "campaign_name",
+          "reach",
           "impressions",
           "spend",
           "clicks",
@@ -75,6 +78,7 @@ FacebookAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3)
       }, { method: "get" });
 
       num = 0;
+
       for (let obj of res.data.data) {
 
         key = dateToString(from).replace(/\-/gi, '') + "_" + obj.campaign_id
@@ -86,6 +90,7 @@ FacebookAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3)
           value: {
             charge: Number(obj.spend),
             performance: {
+              reach: Number(obj.reach),
               impressions: Number(obj.impressions),
               clicks: Number(obj.clicks),
             },
@@ -133,8 +138,10 @@ FacebookAPIs.prototype.dailyInstagram = async function (selfMongo, dayNumber = 7
     let from, to;
     let key;
     let tempRows;
+    let now;
 
-    startDate = new Date();
+    now = new Date();
+    startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     for (let i = 0; i < (dayNumber - 1); i++) {
       startDate.setDate(startDate.getDate() - 1);
     }

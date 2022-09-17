@@ -28,8 +28,10 @@ GoogleYoutube.prototype.dailyYoutube = async function (selfMongo, dayNumber = 7)
     let json;
     let tempRows;
     let views, likes, subscribers;
+    let now;
 
-    startDate = new Date();
+    now = new Date();
+    startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     for (let i = 0; i < (dayNumber - 1); i++) {
       startDate.setDate(startDate.getDate() - 1);
     }

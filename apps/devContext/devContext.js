@@ -92,6 +92,18 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+    const facebook = new FacebookAPIs();
+    await facebook.dailyCampaign(this.MONGOLOCALC);
+
+
+
+
+
+
+
+    /*
+
     const selfMongo = this.MONGOLOGC;
     await selfMongo.connect();
 
@@ -180,7 +192,7 @@ DevContext.prototype.launching = async function () {
 
     await selfMongo.close();
 
-
+    */
 
 
 
