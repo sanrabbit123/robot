@@ -92,6 +92,100 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const selfMongo = this.MONGOLOGC;
+    await selfMongo.connect();
+
+    const target = new Date(2022, 5, 10);
+
+    const campaignCollection = "dailyCampaign";
+    const analyticsCollection = "dailyAnalytics";
+    const clientsCollection = "dailyClients";
+    const keyMaker = (date) => {
+      const keyRegMaker = (date) => {
+        return `${String(date.getFullYear())}${zeroAddition(date.getMonth() + 1)}${zeroAddition(date.getDate())}_`;
+      }
+      const analyticsIdMaker = (date) => {
+        return `n${String(date.getFullYear()).slice(2)}${zeroAddition(date.getMonth() + 1)}_aa${zeroAddition(date.getDate())}s`;
+      }
+      const clientsIdMaker = (date) => {
+        return `y${String(date.getFullYear()).slice(2)}${zeroAddition(date.getMonth() + 1)}_aa${zeroAddition(date.getDate())}s`;
+      }
+      return {
+        campaign: keyRegMaker(date),
+        analytics: analyticsIdMaker(date),
+        clients: clientsIdMaker(date),
+      }
+    };
+
+    const {
+      campaign: campaignKey,
+      analytics: analyticsKey,
+      clients: clientsKey
+    } = keyMaker(target);
+
+    let campaignRows, analyticsRows, clientsRows;
+    let campaignCharge, campaignImpressions, campaignClicks;
+    let totalUsers, pageViews;
+    let consultingViews;
+    let popupOpenEvents;
+
+
+    // get data
+
+    campaignRows = await back.mongoRead(campaignCollection, { key: { $regex: "^" + campaignKey } }, { selfMongo });
+    [ analyticsRows ] = await back.mongoRead(analyticsCollection, { anaid: analyticsKey }, { selfMongo });
+    [ clientsRows ] = await back.mongoRead(clientsCollection, { ancid: clientsKey }, { selfMongo });
+    if (analyticsRows === undefined || clientsRows === undefined) {
+      throw new Error("invaild date");
+    }
+
+
+    // 1
+
+    campaignCharge = campaignRows.reduce((acc, curr) => {
+      return acc + curr.value.charge;
+    }, 0);
+    campaignImpressions = campaignRows.reduce((acc, curr) => {
+      return acc + curr.value.performance.impressions;
+    }, 0);
+    campaignClicks = campaignRows.reduce((acc, curr) => {
+      return acc + curr.value.performance.clicks;
+    }, 0);
+
+    totalUsers = analyticsRows.data.users.total;
+    pageViews = analyticsRows.data.views.total;
+
+    consultingViews = analyticsRows.data.views.detail.pagePath.cases.filter((obj) => {
+      return /consulting\.php/gi.test(obj.case)
+    }).reduce((acc, curr) => {
+      return acc + curr.value;
+    }, 0);
+
+    popupOpenEvents = analyticsRows.data.views.detail.eventAction.cases.filter((obj) => {
+      return /popupOpen/gi.test(obj.case)
+    }).reduce((acc, curr) => {
+      return acc + curr.value;
+    }, 0);
+
+
+    console.log(campaignCharge);
+    console.log(campaignImpressions);
+    console.log(campaignClicks);
+    console.log(totalUsers);
+    console.log(pageViews);
+    console.log(consultingViews);
+    console.log(popupOpenEvents);
+
+
+
+    await selfMongo.close();
+
+
+
+
+
+
+
 
     /*
 
@@ -107,9 +201,6 @@ DevContext.prototype.launching = async function () {
     전체 페이지뷰 수
     컨설팅 페이지뷰 수
     이벤트 액션 수
-
-    캠패인별 컨설팅 페이지뷰 수
-    캠패인별 이벤트 액션 수
 
     문의수
     계약수
