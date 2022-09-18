@@ -159,6 +159,7 @@ DevContext.prototype.launching = async function () {
       let naverFromClicks;
       let naverFromPopups;
       let naverFromSubmit;
+      let clientsTarget;
 
       from = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
       to = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
@@ -172,6 +173,7 @@ DevContext.prototype.launching = async function () {
       if (analyticsRows === undefined || clientsRows === undefined) {
         throw new Error("invaild date");
       }
+
 
       // 1
 
@@ -221,8 +223,8 @@ DevContext.prototype.launching = async function () {
       console.log(contractsNumber);
       console.log(`=============================================================================`);
 
-      // 2
 
+      // 2
       // facebook
 
       facebookRows = campaignRows.filter((obj) => {
@@ -283,9 +285,7 @@ DevContext.prototype.launching = async function () {
 
 
       // 3
-
       // naver
-
 
       naverRows = campaignRows.filter((obj) => {
         return /naver/gi.test(obj.information.mother);
@@ -339,12 +339,24 @@ DevContext.prototype.launching = async function () {
       console.log(`=============================================================================`);
 
 
+      // 4
+
+      clientsTarget = clientsRows.data.detail.map((obj) => { return { cliid: obj.cliid, ids: obj.users.map((user) => { return user.id }).join(", ") } });
+      clientsTarget = clientsTarget.map(({ cliid, ids }) => {
+        const targetRequest = requests.find((obj) => { return obj.cliid === cliid });
+        return [
+          cliid,
+          ids,
+          dateToString(targetRequest.request.timeline, true),
+          targetRequest.request.space.address.value,
+          targetRequest.request.space.pyeong.value,
+          (targetRequest.request.space.resident.living ? "거주중" : "이사"),
+          dateToString(targetRequest.request.space.resident.expected),
+        ];
+      })
 
 
-      // console.log(analyticsRows.data.users.detail.campaign.cases.filter((obj) => {
-      //   return naverCampaignBoo(obj.case);
-      // }));
-
+      console.log(clientsTarget)
 
 
 
