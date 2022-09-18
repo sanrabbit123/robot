@@ -93,7 +93,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    /*
 
     const clients = await back.getClientsByQuery({}, { selfMongo: this.MONGOC, withTools: true });
     const projects = await back.getProjectsByQuery({}, { selfMongo: this.MONGOC, withTools: true });
@@ -101,7 +100,7 @@ DevContext.prototype.launching = async function () {
     const selfMongo = this.MONGOLOGC;
     await selfMongo.connect();
 
-    const targetDate = new Date(2022, 7, 13);
+    const targetDate = new Date(2022, 7, 14);
 
     const getReportsByDate = async (targetDate, clients, projects, selfMongo) => {
       const campaignCollection = "dailyCampaign";
@@ -124,10 +123,10 @@ DevContext.prototype.launching = async function () {
         }
       };
       const facebookCampaignBoo = (str) => {
-        return ((/^[A-Z]/.test(str) || /^t/.test(str)) && !/home/g.test(str) && !/link/g.test(str) && !/apart/g.test(str) && !/interior/g.test(str) && !/consulting/g.test(str) && !/not set/g.test(str));
+        return ((/^[A-Z]/.test(str) || /^t/.test(str) || /^s/.test(str) || /^link/.test(str) || /^facebook/.test(str) || /^main_video/.test(str) || /^Mag/.test(str) || /^maposketch/.test(str) || /^MV/.test(str) || /^appeal/.test(str) || /^De_image/.test(str) || /^video_mom/.test(str)) && !/^home/.test(str) && !/^PO3/.test(str) && !/^M_DA/.test(str) && !/^apart/.test(str) && !/^interior/.test(str) && !/^about/.test(str) && !/^local/.test(str) && !/^consul/.test(str) && !/not set/g.test(str) && !/^mini/.test(str) && !/^local/.test(str) && !/^naver/.test(str));
       }
       const naverCampaignBoo = (str) => {
-        return ((/^home/.test(str) || /^[0-9]/.test(str) || /^link/.test(str) || /^apart/.test(str) || /^interior/.test(str)) && !/not set/g.test(str));
+        return ((/^home/.test(str) || /^naver/.test(str) || /^[0-9]/.test(str) || /^PO3/.test(str) || /^M_DA/.test(str) || /^conver/.test(str) || /^mini/.test(str) || /^local/.test(str) || /^conver/.test(str)  || /^apart/.test(str) || /^about/.test(str)  || /^interior/.test(str) || /^new/.test(str) || /^port/.test(str) || /^recruit/.test(str) || /^review/.test(str) || /^traffic/.test(str) || /^consul/.test(str)) && !/not set/g.test(str) && !/^link/g.test(str) && !/^facebook/g.test(str) && !/^main_video/g.test(str));
       }
       const {
         campaign: campaignKey,
@@ -152,6 +151,14 @@ DevContext.prototype.launching = async function () {
       let facebookFromClicks;
       let facebookFromPopups;
       let facebookFromSubmit;
+      let naverRows;
+      let naverCharge;
+      let naverImpressions;
+      let naverClicks;
+      let naverFromUsers;
+      let naverFromClicks;
+      let naverFromPopups;
+      let naverFromSubmit;
 
       from = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
       to = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
@@ -212,7 +219,7 @@ DevContext.prototype.launching = async function () {
       console.log(popupOpenEvents);
       console.log(requestsNumber);
       console.log(contractsNumber);
-
+      console.log(`=============================================================================`);
 
       // 2
 
@@ -259,12 +266,80 @@ DevContext.prototype.launching = async function () {
         return acc + curr.value;
       }, 0);
 
+      facebookFromSubmit = clientsRows.data.detail.map((obj) => { return obj.users }).flat().map((obj) => {
+        return obj.source.campaign;
+      }).filter((str) => { return facebookCampaignBoo(str) }).length;
 
-      console.log(clientsRows.data.detail.map((obj) => { return obj.users }).flat());
+
+      console.log(facebookCharge);
+      console.log(facebookReach);
+      console.log(facebookImpressions);
+      console.log(facebookClicks);
+      console.log(facebookFromUsers);
+      console.log(facebookFromClicks);
+      console.log(facebookFromPopups);
+      console.log(facebookFromSubmit);
+      console.log(`=============================================================================`);
 
 
+      // 3
 
       // naver
+
+
+      naverRows = campaignRows.filter((obj) => {
+        return /naver/gi.test(obj.information.mother);
+      });
+      if (naverRows.length > 0) {
+        naverCharge = naverRows.reduce((acc, curr) => {
+          return acc + curr.value.charge;
+        }, 0);
+        naverImpressions = naverRows.reduce((acc, curr) => {
+          return acc + curr.value.performance.impressions;
+        }, 0);
+        naverClicks = naverRows.reduce((acc, curr) => {
+          return acc + curr.value.performance.clicks;
+        }, 0);
+      } else {
+        naverCharge = 0;
+        naverImpressions = 0;
+        naverClicks = 0;
+      }
+
+      naverFromUsers = analyticsRows.data.users.detail.campaign.cases.filter((obj) => {
+        return naverCampaignBoo(obj.case);
+      }).reduce((acc, curr) => {
+        return acc + curr.value;
+      }, 0);
+
+      naverFromClicks = analyticsRows.data.conversion[1].detail.campaign.cases.filter((obj) => {
+        return naverCampaignBoo(obj.case);
+      }).reduce((acc, curr) => {
+        return acc + curr.value;
+      }, 0);
+
+      naverFromPopups = analyticsRows.data.conversion[0].detail.campaign.cases.filter((obj) => {
+        return naverCampaignBoo(obj.case);
+      }).reduce((acc, curr) => {
+        return acc + curr.value;
+      }, 0);
+
+      naverFromSubmit = clientsRows.data.detail.map((obj) => { return obj.users }).flat().map((obj) => {
+        return obj.source.campaign;
+      }).filter((str) => { return naverCampaignBoo(str) }).length;
+
+
+      console.log(naverCharge);
+      console.log(naverImpressions);
+      console.log(naverClicks);
+      console.log(naverFromUsers);
+      console.log(naverFromClicks);
+      console.log(naverFromPopups);
+      console.log(naverFromSubmit);
+      console.log(`=============================================================================`);
+
+
+
 
       // console.log(analyticsRows.data.users.detail.campaign.cases.filter((obj) => {
       //   return naverCampaignBoo(obj.case);
