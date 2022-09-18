@@ -237,12 +237,12 @@ DevContext.prototype.launching = async function () {
     // let res;
     //
     //
-    // month = 6;
+    // month = 9;
     //
     //
     // startDate = new Date(2022, month - 1, 1);
     // requestString = [];
-    // while (startDate.getMonth() + 1 === month) {
+    // while (startDate.getDate() !== (new Date()).getDate()) {
     //   requestString.push(dateToString(startDate));
     //   startDate.setDate(startDate.getDate() + 1);
     // }
