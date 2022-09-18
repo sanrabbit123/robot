@@ -318,10 +318,14 @@ GoogleAnalytics.prototype.getUserById = async function (date, clientId) {
     ({ reports: [ { data: result } ] } = await pythonExecute(this.pythonApp, [ "analytics", "getUserById" ], { startDate: dateToString(startDate), endDate: dateToString(endDate), clientId, dimensions: dimensionsArr[7] }));
     matrix = result.rows.map((obj) => { return obj.dimensions });
     matrix.sort((a, b) => { return Number(a[0]) - Number(b[0]) });
+    matrix = matrix.filter((arr) => {
+      return arr[1] !== "(not set)";
+    });
     if (matrix.length > 0) {
       userTong.source.campaign = matrix[0][1];
+    } else {
+      userTong.source.campaign = "(not set)";
     }
-
 
     // user type
     ({ reports: [ { data: result } ] } = await pythonExecute(this.pythonApp, [ "analytics", "getUserById" ], { startDate: dateToString(startDate), endDate: dateToString(endDate), clientId, dimensions: dimensionsArr[8] }));

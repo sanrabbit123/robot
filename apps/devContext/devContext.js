@@ -93,114 +93,197 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
-
-
-
-
     /*
+
+    const clients = await back.getClientsByQuery({}, { selfMongo: this.MONGOC, withTools: true });
+    const projects = await back.getProjectsByQuery({}, { selfMongo: this.MONGOC, withTools: true });
 
     const selfMongo = this.MONGOLOGC;
     await selfMongo.connect();
 
-    const target = new Date(2022, 5, 10);
+    const targetDate = new Date(2022, 7, 13);
 
-    const campaignCollection = "dailyCampaign";
-    const analyticsCollection = "dailyAnalytics";
-    const clientsCollection = "dailyClients";
-    const keyMaker = (date) => {
-      const keyRegMaker = (date) => {
-        return `${String(date.getFullYear())}${zeroAddition(date.getMonth() + 1)}${zeroAddition(date.getDate())}_`;
+    const getReportsByDate = async (targetDate, clients, projects, selfMongo) => {
+      const campaignCollection = "dailyCampaign";
+      const analyticsCollection = "dailyAnalytics";
+      const clientsCollection = "dailyClients";
+      const keyMaker = (date) => {
+        const keyRegMaker = (date) => {
+          return `${String(date.getFullYear())}${zeroAddition(date.getMonth() + 1)}${zeroAddition(date.getDate())}_`;
+        }
+        const analyticsIdMaker = (date) => {
+          return `n${String(date.getFullYear()).slice(2)}${zeroAddition(date.getMonth() + 1)}_aa${zeroAddition(date.getDate())}s`;
+        }
+        const clientsIdMaker = (date) => {
+          return `y${String(date.getFullYear()).slice(2)}${zeroAddition(date.getMonth() + 1)}_aa${zeroAddition(date.getDate())}s`;
+        }
+        return {
+          campaign: keyRegMaker(date),
+          analytics: analyticsIdMaker(date),
+          clients: clientsIdMaker(date),
+        }
+      };
+      const facebookCampaignBoo = (str) => {
+        return ((/^[A-Z]/.test(str) || /^t/.test(str)) && !/home/g.test(str) && !/link/g.test(str) && !/apart/g.test(str) && !/interior/g.test(str) && !/consulting/g.test(str) && !/not set/g.test(str));
       }
-      const analyticsIdMaker = (date) => {
-        return `n${String(date.getFullYear()).slice(2)}${zeroAddition(date.getMonth() + 1)}_aa${zeroAddition(date.getDate())}s`;
+      const naverCampaignBoo = (str) => {
+        return ((/^home/.test(str) || /^[0-9]/.test(str) || /^link/.test(str) || /^apart/.test(str) || /^interior/.test(str)) && !/not set/g.test(str));
       }
-      const clientsIdMaker = (date) => {
-        return `y${String(date.getFullYear()).slice(2)}${zeroAddition(date.getMonth() + 1)}_aa${zeroAddition(date.getDate())}s`;
+      const {
+        campaign: campaignKey,
+        analytics: analyticsKey,
+        clients: clientsKey
+      } = keyMaker(targetDate);
+      const requests = clients.getRequestsTong();
+      let campaignRows, analyticsRows, clientsRows;
+      let campaignCharge, campaignImpressions, campaignClicks;
+      let totalUsers, pageViews;
+      let consultingViews;
+      let popupOpenEvents;
+      let from, to;
+      let requestsNumber;
+      let contractsNumber;
+      let facebookRows;
+      let facebookCharge;
+      let facebookReach;
+      let facebookImpressions;
+      let facebookClicks;
+      let facebookFromUsers;
+      let facebookFromClicks;
+      let facebookFromPopups;
+      let facebookFromSubmit;
+
+      from = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
+      to = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
+      to.setDate(to.getDate() + 1);
+
+      // get data
+
+      campaignRows = await back.mongoRead(campaignCollection, { key: { $regex: "^" + campaignKey } }, { selfMongo });
+      [ analyticsRows ] = await back.mongoRead(analyticsCollection, { anaid: analyticsKey }, { selfMongo });
+      [ clientsRows ] = await back.mongoRead(clientsCollection, { ancid: clientsKey }, { selfMongo });
+      if (analyticsRows === undefined || clientsRows === undefined) {
+        throw new Error("invaild date");
       }
-      return {
-        campaign: keyRegMaker(date),
-        analytics: analyticsIdMaker(date),
-        clients: clientsIdMaker(date),
+
+      // 1
+
+      campaignCharge = campaignRows.reduce((acc, curr) => {
+        return acc + curr.value.charge;
+      }, 0);
+      campaignImpressions = campaignRows.reduce((acc, curr) => {
+        return acc + curr.value.performance.impressions;
+      }, 0);
+      campaignClicks = campaignRows.reduce((acc, curr) => {
+        return acc + curr.value.performance.clicks;
+      }, 0);
+
+      totalUsers = analyticsRows.data.users.total;
+      pageViews = analyticsRows.data.views.total;
+
+      consultingViews = analyticsRows.data.views.detail.pagePath.cases.filter((obj) => {
+        return /consulting\.php/gi.test(obj.case)
+      }).reduce((acc, curr) => {
+        return acc + curr.value;
+      }, 0);
+
+      popupOpenEvents = analyticsRows.data.views.detail.eventAction.cases.filter((obj) => {
+        return /popupOpen/gi.test(obj.case)
+      }).reduce((acc, curr) => {
+        return acc + curr.value;
+      }, 0);
+
+      requestsNumber = requests.filter(({ request }) => {
+        const thisValue = request.timeline.toNormal().valueOf();
+        return thisValue >= from.valueOf() && thisValue < to.valueOf();
+      }).length;
+
+      contractsNumber = projects.toNormal().filter(({ process }) => {
+        const thisValue = process.contract.first.date.valueOf();
+        return thisValue >= from.valueOf() && thisValue < to.valueOf();
+      }).length;
+
+      console.log(campaignCharge);
+      console.log(campaignImpressions);
+      console.log(campaignClicks);
+      console.log(totalUsers);
+      console.log(pageViews);
+      console.log(consultingViews);
+      console.log(popupOpenEvents);
+      console.log(requestsNumber);
+      console.log(contractsNumber);
+
+
+      // 2
+
+      // facebook
+
+      facebookRows = campaignRows.filter((obj) => {
+        return /facebook/gi.test(obj.information.mother);
+      });
+      if (facebookRows.length > 0) {
+        facebookCharge = facebookRows.reduce((acc, curr) => {
+          return acc + curr.value.charge;
+        }, 0);
+        facebookReach = facebookRows.reduce((acc, curr) => {
+          return acc + curr.value.performance.reach;
+        }, 0);
+        facebookImpressions = facebookRows.reduce((acc, curr) => {
+          return acc + curr.value.performance.impressions;
+        }, 0);
+        facebookClicks = facebookRows.reduce((acc, curr) => {
+          return acc + curr.value.performance.clicks;
+        }, 0);
+      } else {
+        facebookCharge = 0;
+        facebookReach = 0;
+        facebookImpressions = 0;
+        facebookClicks = 0;
       }
-    };
 
-    const {
-      campaign: campaignKey,
-      analytics: analyticsKey,
-      clients: clientsKey
-    } = keyMaker(target);
+      facebookFromUsers = analyticsRows.data.users.detail.campaign.cases.filter((obj) => {
+        return facebookCampaignBoo(obj.case);
+      }).reduce((acc, curr) => {
+        return acc + curr.value;
+      }, 0);
 
-    let campaignRows, analyticsRows, clientsRows;
-    let campaignCharge, campaignImpressions, campaignClicks;
-    let totalUsers, pageViews;
-    let consultingViews;
-    let popupOpenEvents;
+      facebookFromClicks = analyticsRows.data.conversion[1].detail.campaign.cases.filter((obj) => {
+        return facebookCampaignBoo(obj.case);
+      }).reduce((acc, curr) => {
+        return acc + curr.value;
+      }, 0);
+
+      facebookFromPopups = analyticsRows.data.conversion[0].detail.campaign.cases.filter((obj) => {
+        return facebookCampaignBoo(obj.case);
+      }).reduce((acc, curr) => {
+        return acc + curr.value;
+      }, 0);
 
 
-    // get data
+      console.log(clientsRows.data.detail.map((obj) => { return obj.users }).flat());
 
-    campaignRows = await back.mongoRead(campaignCollection, { key: { $regex: "^" + campaignKey } }, { selfMongo });
-    [ analyticsRows ] = await back.mongoRead(analyticsCollection, { anaid: analyticsKey }, { selfMongo });
-    [ clientsRows ] = await back.mongoRead(clientsCollection, { ancid: clientsKey }, { selfMongo });
-    if (analyticsRows === undefined || clientsRows === undefined) {
-      throw new Error("invaild date");
+
+
+      // naver
+
+      // console.log(analyticsRows.data.users.detail.campaign.cases.filter((obj) => {
+      //   return naverCampaignBoo(obj.case);
+      // }));
+
+
+
+
     }
 
-
-    // 1
-
-    campaignCharge = campaignRows.reduce((acc, curr) => {
-      return acc + curr.value.charge;
-    }, 0);
-    campaignImpressions = campaignRows.reduce((acc, curr) => {
-      return acc + curr.value.performance.impressions;
-    }, 0);
-    campaignClicks = campaignRows.reduce((acc, curr) => {
-      return acc + curr.value.performance.clicks;
-    }, 0);
-
-    totalUsers = analyticsRows.data.users.total;
-    pageViews = analyticsRows.data.views.total;
-
-    consultingViews = analyticsRows.data.views.detail.pagePath.cases.filter((obj) => {
-      return /consulting\.php/gi.test(obj.case)
-    }).reduce((acc, curr) => {
-      return acc + curr.value;
-    }, 0);
-
-    popupOpenEvents = analyticsRows.data.views.detail.eventAction.cases.filter((obj) => {
-      return /popupOpen/gi.test(obj.case)
-    }).reduce((acc, curr) => {
-      return acc + curr.value;
-    }, 0);
-
-
-    console.log(campaignCharge);
-    console.log(campaignImpressions);
-    console.log(campaignClicks);
-    console.log(totalUsers);
-    console.log(pageViews);
-    console.log(consultingViews);
-    console.log(popupOpenEvents);
-
+    await getReportsByDate(targetDate, clients, projects, selfMongo);
 
 
     await selfMongo.close();
-
-    */
-
-
-
-
 
 
     /*
 
     22년 6월 이후부터 적어서 다 낼 것
-
 
     < 1번 보고서 - 유입 보고서 >
     캠패인 총 비용
