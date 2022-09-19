@@ -14,6 +14,9 @@ module.exports = {
           email: "",
           birth: new Date(1800, 0, 1),
           marry: false,
+          child: [],
+          cat: false,
+          dog: false,
           did: "",
           address: [],
           personalSystem: {
@@ -151,7 +154,9 @@ module.exports = {
             },
             furniture: {
               builtin: false,
-              design: false
+              builtinDetail: [],
+              design: false,
+              designDetail: [],
             },
             fabric: {
               curtain: [ "업체 연결" ],

@@ -170,12 +170,24 @@ StylingFabric.prototype.toNormal = function () {
 const StylingFurniture = function (json) {
   this.builtin = json.builtin;
   this.design = json.design;
+  this.builtinDetail = new Menu(json.builtinDetail, [
+    "도면",
+    "3D",
+    "AS 가능"
+  ], true);
+  this.designDetail = new Menu(json.designDetail, [
+    "도면",
+    "3D",
+    "AS 가능"
+  ], true);
 }
 
 StylingFurniture.prototype.toNormal = function () {
   let obj = {};
   obj.builtin = this.builtin;
   obj.design = this.design;
+  obj.builtinDetail = this.builtinDetail.toNormal();
+  obj.designDetail = this.designDetail.toNormal();
   return obj;
 }
 
