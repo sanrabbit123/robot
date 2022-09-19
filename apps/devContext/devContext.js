@@ -91,8 +91,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const res = await requestSystem("https://home-liaison.info/basicReport", { message: "do it" }, { headers: { "Content-Type": "application/json" } });
-    console.log(res);
 
 
 

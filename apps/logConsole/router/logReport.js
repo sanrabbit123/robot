@@ -12,7 +12,7 @@ LogReport.prototype.dailyReports = async function () {
   const instance = this;
   const back = this.back;
   const { host } = this;
-  const { mongo, mongoinfo, requestSystem, autoComma, dateToString, stringToDate, errorLog, messageLog, messageSend, sha256Hmac } = this.mother;
+  const { mongo, mongoinfo, requestSystem, autoComma, dateToString, stringToDate, errorLog, messageLog, messageSend } = this.mother;
   const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
   try {
     const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
@@ -27,6 +27,7 @@ LogReport.prototype.dailyReports = async function () {
 
     await selfCoreMongo.connect();
 
+    // day report
     const marketingBasicMatrix = async (startDate) => {
       try {
         const clients = await back.getClientsByQuery({}, { selfMongo: selfCoreMongo, withTools: true });
@@ -109,6 +110,8 @@ LogReport.prototype.dailyReports = async function () {
           let naverSubmitChargeConverting;
           let naverSubmitConverting;
           let naverClicksChargeConverting;
+          let fifthMatrix;
+          let fifthMatrixFactorArr;
 
           from = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
           to = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
@@ -366,26 +369,91 @@ LogReport.prototype.dailyReports = async function () {
 
           // 4
 
-          fourthMatrix = clientsRows.data.detail.map((obj) => { return { cliid: obj.cliid, ids: obj.users.map((user) => { return user.id }).join(", ") } });
-          fourthMatrix = fourthMatrix.map(({ cliid, ids }) => {
+          fourthMatrix = clientsRows.data.detail.map((obj) => { return { cliid: obj.cliid, users: obj.users, ids: obj.users.map((user) => { return user.id }).join(", ") } });
+          fourthMatrix = fourthMatrix.map(({ cliid, users, ids }) => {
             const targetRequest = requests.find((obj) => { return obj.cliid === cliid });
+            let returnType;
+            let source, sourceArr;
+            let campaign, campaignArr;
+            let device;
+            let referrer, referrerArr;
+
+
+            if (users.every((obj) => { return /^New/.test(obj.type); })) {
+              returnType = "신규";
+            } else {
+              returnType = "재방문";
+            }
+
+            sourceArr = users.map((obj) => { return obj.source.mother }).filter((str) => { return str !== "(direct)" });
+            campaignArr = users.map((obj) => { return obj.source.campaign }).filter((str) => { return str !== "(not set)" });
+
+            if (sourceArr.length > 0) {
+              source = sourceArr[0];
+            } else {
+              source = "(direct)";
+            }
+
+            if (campaignArr.length > 0) {
+              campaign = campaignArr[0];
+            } else {
+              campaign = "(not set)";
+            }
+
+            if (users.length > 0) {
+              device = users[0].device.kinds;
+            } else {
+              device = "(not set)";
+            }
+
+            referrerArr = users.map((obj) => { return obj.source.referrer }).flat();
+            referrerArr.sort((a, b) => { return b.length - a.length });
+            if (referrerArr.length > 0) {
+              referrer = referrerArr[0];
+            } else {
+              referrer = "(not set)";
+            }
+
             return [
               dateToString(targetDate),
               cliid,
               ids,
               dateToString(targetRequest.request.timeline, true),
+              returnType,
+              source,
+              campaign,
+              device,
+              referrer,
               targetRequest.request.space.address.value,
               targetRequest.request.space.pyeong.value,
               (targetRequest.request.space.resident.living ? "거주중" : "이사"),
               (targetRequest.request.space.resident.living ? "해당 없음" : dateToString(targetRequest.request.space.resident.expected)),
             ];
-          })
+          });
+
+          // 5
+
+          fifthMatrix = [];
+
+          for (let campaignRow of campaignRows) {
+            fifthMatrixFactorArr = [];
+            fifthMatrixFactorArr.push(dateToString(targetDate));
+            fifthMatrixFactorArr.push(campaignRow.information.mother);
+            fifthMatrixFactorArr.push(campaignRow.information.type);
+            fifthMatrixFactorArr.push(campaignRow.information.id.campaign);
+            fifthMatrixFactorArr.push(campaignRow.information.name);
+            fifthMatrixFactorArr.push(campaignRow.value.charge);
+            fifthMatrixFactorArr.push(campaignRow.value.performance.impressions);
+            fifthMatrixFactorArr.push(campaignRow.value.performance.clicks);
+            fifthMatrix.push(fifthMatrixFactorArr);
+          }
 
           return [
             firstMatrix,
             secondMatrix,
             thirdMatrix,
-            fourthMatrix
+            fourthMatrix,
+            fifthMatrix,
           ];
         }
 
@@ -453,10 +521,27 @@ LogReport.prototype.dailyReports = async function () {
               "아이디",
               "GA",
               "문의일",
+              "재방문 여부",
+              "소스",
+              "캠패인",
+              "디바이스",
+              "레퍼럴",
               "주소",
               "평수",
               "거주중 여부",
               "입주 예정일",
+            ]
+          ],
+          [
+            [
+              "날짜",
+              "채널",
+              "종류",
+              "아이디",
+              "이름",
+              "비용",
+              "노출",
+              "클릭",
             ]
           ],
         ];
@@ -492,35 +577,138 @@ LogReport.prototype.dailyReports = async function () {
       }
     }
 
+    // week report
+    const saDefaultMatrix = async (startDate) => {
+      try {
+        const now = new Date();
+        const res = await requestSystem("https://home-liaison.servehttp.com/getClientReport", {
+          startYear: String(startDate.getFullYear()),
+          startMonth: String(startDate.getMonth() + 1),
+          endYear: String(now.getFullYear()),
+          endMonth: String(now.getMonth() + 1),
+        }, {
+          headers: { "Content-Type": "application/json" }
+        });
+        let weekMatrix;
+        let thisYear, thisMonth;
+        let clientSum, proposalSum, recommendSum, contractSum, processSum;
+
+        weekMatrix = [];
+        weekMatrix.push([ "년도", "월", "주 시작일", "주 종료일", "문의수", "제안수", "추천수", "계약수", "진행수" ]);
+
+        for (let arr of res.data) {
+
+          clientSum = 0;
+          proposalSum = 0;
+          recommendSum = 0;
+          contractSum = 0;
+          processSum = 0;
+
+          for (let { startDay, endDay, client, proposal, recommend, contract, process } of arr) {
+            [ thisYear, thisMonth ] = startDay.split('-').map((str) => { return Number(str); });
+            weekMatrix.push([
+              thisYear,
+              thisMonth,
+              startDay,
+              endDay,
+              client,
+              proposal,
+              recommend,
+              contract,
+              process
+            ]);
+
+            clientSum += client;
+            proposalSum += proposal;
+            recommendSum += recommend;
+            contractSum += contract;
+            processSum += process;
+
+          }
+
+          weekMatrix.push([
+            '',
+            '',
+            '',
+            String(thisMonth) + "월 총합",
+            clientSum,
+            proposalSum,
+            recommendSum,
+            contractSum,
+            processSum,
+          ]);
+
+          weekMatrix.push([
+            '',
+            '',
+            '',
+            '',
+            '',
+            "제안율",
+            (clientSum === 0 ? 0 : String((Math.round((proposalSum / clientSum) * 10000)) / 100) + '%'),
+            "진행율",
+            (clientSum === 0 ? 0 : String((Math.round((processSum / clientSum) * 10000)) / 100) + '%'),
+          ]);
+
+          weekMatrix.push([
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+          ]);
+
+        }
+
+        return [ weekMatrix ];
+
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
     const firstSheetsId = "1QaJfS2EkrPxek3l1OFBFBoJrOjDh7BiEXFO5tx4rJP4";
     const secondSheetsId = "14xqEKuEhIlTEQL44RlgwPGgdO3TiI8SidNCb7k1y4PU";
     const thirdSheetsId = "1X3PeZPj06C6hTsVJWQKCQ8WCF05NhmqUWd6Huyhnd0k";
     const fourthSheetsId = "13wUb5uTXktWHRTAezsKKMXO0b7P6slsSQWboeItsYQU";
-    const [ first, second, third, fourth ] = await marketingBasicMatrix(startDay);
+    const fifthSheetsId = "1QFr_a5cnexPyvcKAsIDvcq7SCwHKLAbiQcQGkcoeuAo";
+    const sixthSheetsId = "1TPSsXlaNz8ZssqImPZUYTZvnsqRuInSQXaAoFJ-CttU";
+    const [ first, second, third, fourth, fifth ] = await marketingBasicMatrix(startDay);
+    const [ sixth ] = await saDefaultMatrix(startDay);
 
-    console.log(first, second, third, fourth);
+    console.log(first, second, third, fourth, fifth, sixth);
 
     await sheets.update_value_inPython(firstSheetsId, "", first);
     await sheets.update_value_inPython(secondSheetsId, "", second);
     await sheets.update_value_inPython(thirdSheetsId, "", third);
     await sheets.update_value_inPython(fourthSheetsId, "", fourth);
+    await sheets.update_value_inPython(fifthSheetsId, "", fifth);
+    await sheets.update_value_inPython(sixthSheetsId, "", sixth);
 
     console.log("sheets update all done");
 
     await selfCoreMongo.close();
 
     slackMessage = '';
-    slackMessage += dateToString(today) + " =============================";
+    slackMessage += dateToString(today) + " ====================================================";
     slackMessage += "\n";
     slackMessage += dateToString(startDay) + " ~ " + dateToString(yesterday) + " 기간의 지표를 업데이트하였습니다!";
     slackMessage += "\n";
-    slackMessage += "1) Total funnul : " + "https://docs.google.com/spreadsheets/d/" + firstSheetsId + "/edit?usp=sharing";
+    slackMessage += "1) Total funnel : " + "https://docs.google.com/spreadsheets/d/" + firstSheetsId + "/edit?usp=sharing";
     slackMessage += "\n";
-    slackMessage += "2) Clients info : " + "https://docs.google.com/spreadsheets/d/" + secondSheetsId + "/edit?usp=sharing";
+    slackMessage += "2) Clients info : " + "https://docs.google.com/spreadsheets/d/" + fourthSheetsId + "/edit?usp=sharing";
     slackMessage += "\n";
-    slackMessage += "3) Facebook paid : " + "https://docs.google.com/spreadsheets/d/" + thirdSheetsId + "/edit?usp=sharing";
+    slackMessage += "3) Statistics monthly : " + "https://docs.google.com/spreadsheets/d/" + sixthSheetsId + "/edit?usp=sharing";
     slackMessage += "\n";
-    slackMessage += "4) Naver paid : " + "https://docs.google.com/spreadsheets/d/" + fourthSheetsId + "/edit?usp=sharing";
+    slackMessage += "4) Facebook paid : " + "https://docs.google.com/spreadsheets/d/" + secondSheetsId + "/edit?usp=sharing";
+    slackMessage += "\n";
+    slackMessage += "5) Naver paid : " + "https://docs.google.com/spreadsheets/d/" + thirdSheetsId + "/edit?usp=sharing";
+    slackMessage += "\n";
+    slackMessage += "6) Campaign paid : " + "https://docs.google.com/spreadsheets/d/" + fifthSheetsId + "/edit?usp=sharing";
 
     await requestSystem("https://" + host + "/marketingMessage", {
       text: slackMessage,
