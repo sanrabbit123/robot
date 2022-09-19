@@ -730,6 +730,8 @@ Ghost.prototype.recordBackup = async function () {
       dom = new JSDOM(res.data);
       trArr = [ ...dom.window.document.querySelector('.contents_area').querySelector('.table_type01').querySelectorAll('tr') ];
 
+      console.log(trArr);
+
       aArr = [];
       for (let tr of trArr) {
         aNode = tr.querySelector('a');
@@ -737,6 +739,9 @@ Ghost.prototype.recordBackup = async function () {
           aArr.push(aNode.getAttribute("href"));
         }
       }
+
+      console.log(aArr);
+
       aArr = aArr.map((str) => { return str.trim(); }).filter((str) => { return str !== '#'; }).map((str) => {
         return str + splitToken + String(pageNum);
       });
@@ -4142,4 +4147,6 @@ if (process.argv[2] === undefined || /server/gi.test(process.argv[2]) || /ghost/
   app.wssLaunching().catch((err) => { console.log(err); });
 } else if (/print/gi.test(process.argv[2])) {
   app.clientPrint(process.argv[3].trim(), null).catch((err) => { console.log(err); });
+} else if (/record/gi.test(process.argv[2])) {
+  app.recordBackup().catch((err) => { console.log(err); });
 }
