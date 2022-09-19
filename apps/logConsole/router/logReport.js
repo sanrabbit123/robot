@@ -702,7 +702,7 @@ LogReport.prototype.dailyReports = async function () {
     slackMessage += "\n";
     slackMessage += "2) Clients info : " + "https://docs.google.com/spreadsheets/d/" + fourthSheetsId + "/edit?usp=sharing";
     slackMessage += "\n";
-    slackMessage += "3) Statistics monthly : " + "https://docs.google.com/spreadsheets/d/" + sixthSheetsId + "/edit?usp=sharing";
+    slackMessage += "3) Statistics weekly : " + "https://docs.google.com/spreadsheets/d/" + sixthSheetsId + "/edit?usp=sharing";
     slackMessage += "\n";
     slackMessage += "4) Facebook paid : " + "https://docs.google.com/spreadsheets/d/" + secondSheetsId + "/edit?usp=sharing";
     slackMessage += "\n";
