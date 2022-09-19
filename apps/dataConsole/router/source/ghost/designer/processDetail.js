@@ -1108,6 +1108,16 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
 
     createNode({
       mother: basePan,
+      attribute: {
+        index: String(i),
+        proid: project.proid,
+        desid: instance.designer.desid,
+        name: project.name,
+        designer: instance.designer.designer,
+      },
+      event: {
+        click: instance.uploadFiles(i),
+      },
       style: {
         display: "flex",
         justifyContent: "center",
@@ -1164,9 +1174,9 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
     itemTongHeight = <%% 40, 40, 36, 32, 3 %%>;
     itemTongMarginLeft = <%% 12, 12, 12, 10, 1 %%>;
 
-    textTop = <%% -2, -2, -2, -2, -2 %%>;
+    textTop = <%% -1, -1, -1, -1, 0 %%>;
     textSize = <%% 14, 14, 14, 14, 14 %%>;
-    textWeight = <%% 600, 600, 600, 600, 600 %%>;
+    textWeight = <%% 400, 400, 400, 400, 400 %%>;
 
     mothers = this.panList;
     itemList = await ajaxJson({ target: this.targetDrive }, "/ghostPass_readDir", { equal: true });
@@ -1200,6 +1210,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
     for (let { mother, key, date, name, order, motherNumber } of itemList) {
       itemBlock = createNode({
         mother,
+        class: [ "hoverDefault_lite" ],
         style: {
           display: "flex",
           justifyContent: "center",
@@ -2186,450 +2197,35 @@ ProcessDetailJs.prototype.returnButtonList = function (thisStatusNumber) {
     buttonList.push({
       name: "일정 안내 문서 전송",
       event: function () {
-        return async function (e) {
-          try {
-            const proid = this.getAttribute("proid");
-            const desid = this.getAttribute("desid");
-            const name = this.getAttribute("name");
-            const designer = this.getAttribute("designer");
-            let input, removeTargets;
-
-            removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
-            for (let dom of removeTargets) {
-              dom.remove();
-            }
-
-            input = createNode({
-              mother: document.body,
-              class: [ fileInputClassName ],
-              mode: "input",
-              event: {
-                change: async function (e) {
-                  try {
-                    const proid = this.getAttribute("proid");
-                    const desid = this.getAttribute("desid");
-                    const client = this.getAttribute("client");
-                    const designer = this.getAttribute("designer");
-                    let thisFiles, formData, res;
-                    let removeTargets;
-                    let loading;
-
-                    thisFiles = [ ...this.files ];
-
-                    if (thisFiles.length >= 1) {
-                      formData = new FormData();
-                      formData.enctype = "multipart/form-data";
-                      formData.append("proid", proid);
-                      formData.append("desid", desid);
-                      formData.append("client", client);
-                      for (let i = 0; i < thisFiles.length; i++) {
-                        formData.append("file_" + serviceContents[1].key + "_" + String(i), thisFiles[i]);
-                      }
-
-                      loading = instance.mother.grayLoading();
-
-                      res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
-                      await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 현장의 일정 안내 파일을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
-                      window.alert("업로드가 완료되었습니다!");
-
-                      loading.remove();
-
-                      removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
-                      for (let dom of removeTargets) {
-                        dom.remove();
-                      }
-
-                    }
-
-                  } catch (e) {
-                    console.log(e);
-                    window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
-                    window.location.reload();
-                  }
-                }
-              },
-              attribute: {
-                type: "file",
-                name: serviceContents[1].key,
-                multiple: "true",
-                proid,
-                desid,
-                client: name,
-                designer,
-              },
-              style: {
-                display: "none",
-              }
-            });
-
-            input.click();
-
-          } catch (e) {
-            console.log(e);
-            window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
-            window.location.reload();
-          }
-        }
+        return instance.uploadFiles(thisStatusNumber);
       }
     });
   } else if (thisStatusNumber === 2) {
     buttonList.push({
       name: "1차 제안 문서 전송",
       event: function () {
-        return async function (e) {
-          try {
-            const proid = this.getAttribute("proid");
-            const desid = this.getAttribute("desid");
-            const name = this.getAttribute("name");
-            const designer = this.getAttribute("designer");
-            let input, removeTargets;
-
-            removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
-            for (let dom of removeTargets) {
-              dom.remove();
-            }
-
-            input = createNode({
-              mother: document.body,
-              class: [ fileInputClassName ],
-              mode: "input",
-              event: {
-                change: async function (e) {
-                  try {
-                    const proid = this.getAttribute("proid");
-                    const desid = this.getAttribute("desid");
-                    const client = this.getAttribute("client");
-                    const designer = this.getAttribute("designer");
-                    let thisFiles, formData, res;
-                    let removeTargets;
-                    let loading;
-
-                    thisFiles = [ ...this.files ];
-
-                    if (thisFiles.length >= 1) {
-                      formData = new FormData();
-                      formData.enctype = "multipart/form-data";
-                      formData.append("proid", proid);
-                      formData.append("desid", desid);
-                      formData.append("client", client);
-                      for (let i = 0; i < thisFiles.length; i++) {
-                        formData.append("file_" + serviceContents[2].key + "_" + String(i), thisFiles[i]);
-                      }
-
-                      loading = instance.mother.grayLoading();
-
-                      res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
-                      await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 현장의 1차 제안서 파일을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
-                      window.alert("업로드가 완료되었습니다!");
-
-                      loading.remove();
-
-                      removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
-                      for (let dom of removeTargets) {
-                        dom.remove();
-                      }
-
-                    }
-
-                  } catch (e) {
-                    console.log(e);
-                    window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
-                    window.location.reload();
-                  }
-                }
-              },
-              attribute: {
-                type: "file",
-                name: serviceContents[2].key,
-                multiple: "true",
-                proid,
-                desid,
-                client: name,
-                designer,
-              },
-              style: {
-                display: "none",
-              }
-            });
-
-            input.click();
-
-          } catch (e) {
-            console.log(e);
-            window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
-            window.location.reload();
-          }
-        }
+        return instance.uploadFiles(thisStatusNumber);
       }
     });
   } else if (thisStatusNumber === 3) {
     buttonList.push({
       name: "수정 제안 문서 전송",
       event: function () {
-        return async function (e) {
-          try {
-            const proid = this.getAttribute("proid");
-            const desid = this.getAttribute("desid");
-            const name = this.getAttribute("name");
-            const designer = this.getAttribute("designer");
-            let input, removeTargets;
-            let loading;
-
-            removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
-            for (let dom of removeTargets) {
-              dom.remove();
-            }
-
-            input = createNode({
-              mother: document.body,
-              class: [ fileInputClassName ],
-              mode: "input",
-              event: {
-                change: async function (e) {
-                  try {
-                    const proid = this.getAttribute("proid");
-                    const desid = this.getAttribute("desid");
-                    const client = this.getAttribute("client");
-                    const designer = this.getAttribute("designer");
-                    let thisFiles, formData, res;
-                    let removeTargets;
-
-                    thisFiles = [ ...this.files ];
-
-                    if (thisFiles.length >= 1) {
-                      formData = new FormData();
-                      formData.enctype = "multipart/form-data";
-                      formData.append("proid", proid);
-                      formData.append("desid", desid);
-                      formData.append("client", client);
-                      for (let i = 0; i < thisFiles.length; i++) {
-                        formData.append("file_" + serviceContents[3].key + "_" + String(i), thisFiles[i]);
-                      }
-
-                      loading = instance.mother.grayLoading();
-
-                      res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
-                      await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 현장의 수정 제안서 파일을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
-                      window.alert("업로드가 완료되었습니다!");
-
-                      loading.remove();
-
-                      removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
-                      for (let dom of removeTargets) {
-                        dom.remove();
-                      }
-
-                    }
-
-                  } catch (e) {
-                    console.log(e);
-                    window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
-                    window.location.reload();
-                  }
-                }
-              },
-              attribute: {
-                type: "file",
-                name: serviceContents[3].key,
-                multiple: "true",
-                proid,
-                desid,
-                client: name,
-                designer,
-              },
-              style: {
-                display: "none",
-              }
-            });
-
-            input.click();
-
-          } catch (e) {
-            console.log(e);
-            window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
-            window.location.reload();
-          }
-        }
+        return instance.uploadFiles(thisStatusNumber);
       }
     });
   } else if (thisStatusNumber === 4) {
     buttonList.push({
       name: "시공 의뢰서 전송",
       event: function () {
-        return async function (e) {
-          try {
-            const proid = this.getAttribute("proid");
-            const desid = this.getAttribute("desid");
-            const name = this.getAttribute("name");
-            const designer = this.getAttribute("designer");
-            let input, removeTargets;
-            let loading;
-
-            removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
-            for (let dom of removeTargets) {
-              dom.remove();
-            }
-
-            input = createNode({
-              mother: document.body,
-              class: [ fileInputClassName ],
-              mode: "input",
-              event: {
-                change: async function (e) {
-                  try {
-                    const proid = this.getAttribute("proid");
-                    const desid = this.getAttribute("desid");
-                    const client = this.getAttribute("client");
-                    const designer = this.getAttribute("designer");
-                    let thisFiles, formData, res;
-                    let removeTargets;
-
-                    thisFiles = [ ...this.files ];
-
-                    if (thisFiles.length >= 1) {
-                      formData = new FormData();
-                      formData.enctype = "multipart/form-data";
-                      formData.append("proid", proid);
-                      formData.append("desid", desid);
-                      formData.append("client", client);
-                      for (let i = 0; i < thisFiles.length; i++) {
-                        formData.append("file_" + serviceContents[4].key + "_" + String(i), thisFiles[i]);
-                      }
-
-                      loading = instance.mother.grayLoading();
-
-                      res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
-                      await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 현장의 시공 의뢰서를 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
-                      window.alert("업로드가 완료되었습니다!");
-
-                      loading.remove();
-
-                      removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
-                      for (let dom of removeTargets) {
-                        dom.remove();
-                      }
-
-                    }
-
-                  } catch (e) {
-                    console.log(e);
-                    window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
-                    window.location.reload();
-                  }
-                }
-              },
-              attribute: {
-                type: "file",
-                name: serviceContents[4].key,
-                multiple: "true",
-                proid,
-                desid,
-                client: name,
-                designer,
-              },
-              style: {
-                display: "none",
-              }
-            });
-
-            input.click();
-
-          } catch (e) {
-            console.log(e);
-            window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
-            window.location.reload();
-          }
-        }
+        return instance.uploadFiles(thisStatusNumber);
       }
     });
   } else if (thisStatusNumber === 5) {
     buttonList.push({
       name: "제품 리스트 전송",
       event: function () {
-        return async function (e) {
-          try {
-            const proid = this.getAttribute("proid");
-            const desid = this.getAttribute("desid");
-            const name = this.getAttribute("name");
-            const designer = this.getAttribute("designer");
-            let input, removeTargets;
-            let loading;
-
-            removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
-            for (let dom of removeTargets) {
-              dom.remove();
-            }
-
-            input = createNode({
-              mother: document.body,
-              class: [ fileInputClassName ],
-              mode: "input",
-              event: {
-                change: async function (e) {
-                  try {
-                    const proid = this.getAttribute("proid");
-                    const desid = this.getAttribute("desid");
-                    const client = this.getAttribute("client");
-                    const designer = this.getAttribute("designer");
-                    let thisFiles, formData, res;
-                    let removeTargets;
-
-                    thisFiles = [ ...this.files ];
-
-                    if (thisFiles.length >= 1) {
-                      formData = new FormData();
-                      formData.enctype = "multipart/form-data";
-                      formData.append("proid", proid);
-                      formData.append("desid", desid);
-                      formData.append("client", client);
-                      for (let i = 0; i < thisFiles.length; i++) {
-                        formData.append("file_" + serviceContents[5].key + "_" + String(i), thisFiles[i]);
-                      }
-
-                      loading = instance.mother.grayLoading();
-
-                      res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
-                      await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 현장의 제품 리스트를 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
-                      window.alert("업로드가 완료되었습니다!");
-
-                      loading.remove();
-
-                      removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
-                      for (let dom of removeTargets) {
-                        dom.remove();
-                      }
-
-                    }
-
-                  } catch (e) {
-                    console.log(e);
-                    window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
-                    window.location.reload();
-                  }
-                }
-              },
-              attribute: {
-                type: "file",
-                name: serviceContents[5].key,
-                multiple: "true",
-                proid,
-                desid,
-                client: name,
-                designer,
-              },
-              style: {
-                display: "none",
-              }
-            });
-
-            input.click();
-
-          } catch (e) {
-            console.log(e);
-            window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
-            window.location.reload();
-          }
-        }
+        return instance.uploadFiles(thisStatusNumber);
       }
     });
   } else if (thisStatusNumber === 6) {
@@ -3099,6 +2695,633 @@ ProcessDetailJs.prototype.insertButtonBox = function () {
     });
   }
 
+}
+
+ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber) {
+  const instance = this;
+  const mother = this.mother;
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker } = GeneralJs;
+  const { project, requestNumber, ea, baseTong, media, totalContents } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  const fileInputClassName = "fileInputClassName";
+  let serviceContents;
+
+  serviceContents = this.contents;
+
+  if (thisStatusNumber === 0) {
+    return async function (e) {
+      try {
+        const proid = this.getAttribute("proid");
+        const desid = this.getAttribute("desid");
+        const name = this.getAttribute("name");
+        const designer = this.getAttribute("designer");
+        let input, removeTargets;
+
+        removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
+        for (let dom of removeTargets) {
+          dom.remove();
+        }
+
+        input = createNode({
+          mother: document.body,
+          class: [ fileInputClassName ],
+          mode: "input",
+          event: {
+            change: async function (e) {
+              try {
+                const proid = this.getAttribute("proid");
+                const desid = this.getAttribute("desid");
+                const client = this.getAttribute("client");
+                const designer = this.getAttribute("designer");
+                let thisFiles, formData, res;
+                let removeTargets;
+                let loading;
+
+                thisFiles = [ ...this.files ];
+
+                if (thisFiles.length >= 1) {
+                  formData = new FormData();
+                  formData.enctype = "multipart/form-data";
+                  formData.append("proid", proid);
+                  formData.append("desid", desid);
+                  formData.append("client", client);
+                  for (let i = 0; i < thisFiles.length; i++) {
+                    formData.append("file_" + serviceContents[0].key + "_" + String(i), thisFiles[i]);
+                  }
+
+                  loading = instance.mother.grayLoading();
+
+                  res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
+                  await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 현장 미팅 관련 파일을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+                  window.alert("업로드가 완료되었습니다!");
+
+                  await instance.setPanBlocks();
+
+                  loading.remove();
+
+                  removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
+                  for (let dom of removeTargets) {
+                    dom.remove();
+                  }
+
+                }
+
+              } catch (e) {
+                console.log(e);
+                window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+                window.location.reload();
+              }
+            }
+          },
+          attribute: {
+            type: "file",
+            name: serviceContents[0].key,
+            multiple: "true",
+            proid,
+            desid,
+            client: name,
+            designer,
+          },
+          style: {
+            display: "none",
+          }
+        });
+
+        input.click();
+
+      } catch (e) {
+        console.log(e);
+        window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+        window.location.reload();
+      }
+    }
+  } else if (thisStatusNumber === 1) {
+    return async function (e) {
+      try {
+        const proid = this.getAttribute("proid");
+        const desid = this.getAttribute("desid");
+        const name = this.getAttribute("name");
+        const designer = this.getAttribute("designer");
+        let input, removeTargets;
+
+        removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
+        for (let dom of removeTargets) {
+          dom.remove();
+        }
+
+        input = createNode({
+          mother: document.body,
+          class: [ fileInputClassName ],
+          mode: "input",
+          event: {
+            change: async function (e) {
+              try {
+                const proid = this.getAttribute("proid");
+                const desid = this.getAttribute("desid");
+                const client = this.getAttribute("client");
+                const designer = this.getAttribute("designer");
+                let thisFiles, formData, res;
+                let removeTargets;
+                let loading;
+
+                thisFiles = [ ...this.files ];
+
+                if (thisFiles.length >= 1) {
+                  formData = new FormData();
+                  formData.enctype = "multipart/form-data";
+                  formData.append("proid", proid);
+                  formData.append("desid", desid);
+                  formData.append("client", client);
+                  for (let i = 0; i < thisFiles.length; i++) {
+                    formData.append("file_" + serviceContents[1].key + "_" + String(i), thisFiles[i]);
+                  }
+
+                  loading = instance.mother.grayLoading();
+
+                  res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
+                  await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 현장의 일정 안내 파일을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+                  window.alert("업로드가 완료되었습니다!");
+
+                  await instance.setPanBlocks();
+
+                  loading.remove();
+
+                  removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
+                  for (let dom of removeTargets) {
+                    dom.remove();
+                  }
+
+                }
+
+              } catch (e) {
+                console.log(e);
+                window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+                window.location.reload();
+              }
+            }
+          },
+          attribute: {
+            type: "file",
+            name: serviceContents[1].key,
+            multiple: "true",
+            proid,
+            desid,
+            client: name,
+            designer,
+          },
+          style: {
+            display: "none",
+          }
+        });
+
+        input.click();
+
+      } catch (e) {
+        console.log(e);
+        window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+        window.location.reload();
+      }
+    }
+  } else if (thisStatusNumber === 2) {
+    return async function (e) {
+      try {
+        const proid = this.getAttribute("proid");
+        const desid = this.getAttribute("desid");
+        const name = this.getAttribute("name");
+        const designer = this.getAttribute("designer");
+        let input, removeTargets;
+
+        removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
+        for (let dom of removeTargets) {
+          dom.remove();
+        }
+
+        input = createNode({
+          mother: document.body,
+          class: [ fileInputClassName ],
+          mode: "input",
+          event: {
+            change: async function (e) {
+              try {
+                const proid = this.getAttribute("proid");
+                const desid = this.getAttribute("desid");
+                const client = this.getAttribute("client");
+                const designer = this.getAttribute("designer");
+                let thisFiles, formData, res;
+                let removeTargets;
+                let loading;
+
+                thisFiles = [ ...this.files ];
+
+                if (thisFiles.length >= 1) {
+                  formData = new FormData();
+                  formData.enctype = "multipart/form-data";
+                  formData.append("proid", proid);
+                  formData.append("desid", desid);
+                  formData.append("client", client);
+                  for (let i = 0; i < thisFiles.length; i++) {
+                    formData.append("file_" + serviceContents[2].key + "_" + String(i), thisFiles[i]);
+                  }
+
+                  loading = instance.mother.grayLoading();
+
+                  res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
+                  await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 현장의 1차 제안서 파일을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+                  window.alert("업로드가 완료되었습니다!");
+
+                  await instance.setPanBlocks();
+
+                  loading.remove();
+
+                  removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
+                  for (let dom of removeTargets) {
+                    dom.remove();
+                  }
+
+                }
+
+              } catch (e) {
+                console.log(e);
+                window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+                window.location.reload();
+              }
+            }
+          },
+          attribute: {
+            type: "file",
+            name: serviceContents[2].key,
+            multiple: "true",
+            proid,
+            desid,
+            client: name,
+            designer,
+          },
+          style: {
+            display: "none",
+          }
+        });
+
+        input.click();
+
+      } catch (e) {
+        console.log(e);
+        window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+        window.location.reload();
+      }
+    }
+  } else if (thisStatusNumber === 3) {
+    return async function (e) {
+      try {
+        const proid = this.getAttribute("proid");
+        const desid = this.getAttribute("desid");
+        const name = this.getAttribute("name");
+        const designer = this.getAttribute("designer");
+        let input, removeTargets;
+        let loading;
+
+        removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
+        for (let dom of removeTargets) {
+          dom.remove();
+        }
+
+        input = createNode({
+          mother: document.body,
+          class: [ fileInputClassName ],
+          mode: "input",
+          event: {
+            change: async function (e) {
+              try {
+                const proid = this.getAttribute("proid");
+                const desid = this.getAttribute("desid");
+                const client = this.getAttribute("client");
+                const designer = this.getAttribute("designer");
+                let thisFiles, formData, res;
+                let removeTargets;
+
+                thisFiles = [ ...this.files ];
+
+                if (thisFiles.length >= 1) {
+                  formData = new FormData();
+                  formData.enctype = "multipart/form-data";
+                  formData.append("proid", proid);
+                  formData.append("desid", desid);
+                  formData.append("client", client);
+                  for (let i = 0; i < thisFiles.length; i++) {
+                    formData.append("file_" + serviceContents[3].key + "_" + String(i), thisFiles[i]);
+                  }
+
+                  loading = instance.mother.grayLoading();
+
+                  res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
+                  await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 현장의 수정 제안서 파일을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+                  window.alert("업로드가 완료되었습니다!");
+
+                  await instance.setPanBlocks();
+
+                  loading.remove();
+
+                  removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
+                  for (let dom of removeTargets) {
+                    dom.remove();
+                  }
+
+                }
+
+              } catch (e) {
+                console.log(e);
+                window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+                window.location.reload();
+              }
+            }
+          },
+          attribute: {
+            type: "file",
+            name: serviceContents[3].key,
+            multiple: "true",
+            proid,
+            desid,
+            client: name,
+            designer,
+          },
+          style: {
+            display: "none",
+          }
+        });
+
+        input.click();
+
+      } catch (e) {
+        console.log(e);
+        window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+        window.location.reload();
+      }
+    }
+  } else if (thisStatusNumber === 4) {
+    return async function (e) {
+      try {
+        const proid = this.getAttribute("proid");
+        const desid = this.getAttribute("desid");
+        const name = this.getAttribute("name");
+        const designer = this.getAttribute("designer");
+        let input, removeTargets;
+        let loading;
+
+        removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
+        for (let dom of removeTargets) {
+          dom.remove();
+        }
+
+        input = createNode({
+          mother: document.body,
+          class: [ fileInputClassName ],
+          mode: "input",
+          event: {
+            change: async function (e) {
+              try {
+                const proid = this.getAttribute("proid");
+                const desid = this.getAttribute("desid");
+                const client = this.getAttribute("client");
+                const designer = this.getAttribute("designer");
+                let thisFiles, formData, res;
+                let removeTargets;
+
+                thisFiles = [ ...this.files ];
+
+                if (thisFiles.length >= 1) {
+                  formData = new FormData();
+                  formData.enctype = "multipart/form-data";
+                  formData.append("proid", proid);
+                  formData.append("desid", desid);
+                  formData.append("client", client);
+                  for (let i = 0; i < thisFiles.length; i++) {
+                    formData.append("file_" + serviceContents[4].key + "_" + String(i), thisFiles[i]);
+                  }
+
+                  loading = instance.mother.grayLoading();
+
+                  res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
+                  await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 현장의 시공 의뢰서를 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+                  window.alert("업로드가 완료되었습니다!");
+
+                  await instance.setPanBlocks();
+
+                  loading.remove();
+
+                  removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
+                  for (let dom of removeTargets) {
+                    dom.remove();
+                  }
+
+                }
+
+              } catch (e) {
+                console.log(e);
+                window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+                window.location.reload();
+              }
+            }
+          },
+          attribute: {
+            type: "file",
+            name: serviceContents[4].key,
+            multiple: "true",
+            proid,
+            desid,
+            client: name,
+            designer,
+          },
+          style: {
+            display: "none",
+          }
+        });
+
+        input.click();
+
+      } catch (e) {
+        console.log(e);
+        window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+        window.location.reload();
+      }
+    }
+  } else if (thisStatusNumber === 5) {
+    return async function (e) {
+      try {
+        const proid = this.getAttribute("proid");
+        const desid = this.getAttribute("desid");
+        const name = this.getAttribute("name");
+        const designer = this.getAttribute("designer");
+        let input, removeTargets;
+        let loading;
+
+        removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
+        for (let dom of removeTargets) {
+          dom.remove();
+        }
+
+        input = createNode({
+          mother: document.body,
+          class: [ fileInputClassName ],
+          mode: "input",
+          event: {
+            change: async function (e) {
+              try {
+                const proid = this.getAttribute("proid");
+                const desid = this.getAttribute("desid");
+                const client = this.getAttribute("client");
+                const designer = this.getAttribute("designer");
+                let thisFiles, formData, res;
+                let removeTargets;
+
+                thisFiles = [ ...this.files ];
+
+                if (thisFiles.length >= 1) {
+                  formData = new FormData();
+                  formData.enctype = "multipart/form-data";
+                  formData.append("proid", proid);
+                  formData.append("desid", desid);
+                  formData.append("client", client);
+                  for (let i = 0; i < thisFiles.length; i++) {
+                    formData.append("file_" + serviceContents[5].key + "_" + String(i), thisFiles[i]);
+                  }
+
+                  loading = instance.mother.grayLoading();
+
+                  res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
+                  await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 현장의 제품 리스트를 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+                  window.alert("업로드가 완료되었습니다!");
+
+                  await instance.setPanBlocks();
+
+                  loading.remove();
+
+                  removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
+                  for (let dom of removeTargets) {
+                    dom.remove();
+                  }
+
+                }
+
+              } catch (e) {
+                console.log(e);
+                window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+                window.location.reload();
+              }
+            }
+          },
+          attribute: {
+            type: "file",
+            name: serviceContents[5].key,
+            multiple: "true",
+            proid,
+            desid,
+            client: name,
+            designer,
+          },
+          style: {
+            display: "none",
+          }
+        });
+
+        input.click();
+
+      } catch (e) {
+        console.log(e);
+        window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+        window.location.reload();
+      }
+    }
+  } else if (thisStatusNumber === 6) {
+    return async function (e) {
+      try {
+        const proid = this.getAttribute("proid");
+        const desid = this.getAttribute("desid");
+        const name = this.getAttribute("name");
+        const designer = this.getAttribute("designer");
+        let input, removeTargets;
+
+        removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
+        for (let dom of removeTargets) {
+          dom.remove();
+        }
+
+        input = createNode({
+          mother: document.body,
+          class: [ fileInputClassName ],
+          mode: "input",
+          event: {
+            change: async function (e) {
+              try {
+                const proid = this.getAttribute("proid");
+                const desid = this.getAttribute("desid");
+                const client = this.getAttribute("client");
+                const designer = this.getAttribute("designer");
+                let thisFiles, formData, res;
+                let removeTargets;
+                let loading;
+
+                thisFiles = [ ...this.files ];
+
+                if (thisFiles.length >= 1) {
+                  formData = new FormData();
+                  formData.enctype = "multipart/form-data";
+                  formData.append("proid", proid);
+                  formData.append("desid", desid);
+                  formData.append("client", client);
+                  for (let i = 0; i < thisFiles.length; i++) {
+                    formData.append("file_" + serviceContents[6].key + "_" + String(i), thisFiles[i]);
+                  }
+
+                  loading = instance.mother.grayLoading();
+
+                  res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
+                  await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 촬영 관련 파일을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+                  window.alert("업로드가 완료되었습니다!");
+
+                  await instance.setPanBlocks();
+
+                  loading.remove();
+
+                  removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
+                  for (let dom of removeTargets) {
+                    dom.remove();
+                  }
+
+                }
+
+              } catch (e) {
+                console.log(e);
+                window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+                window.location.reload();
+              }
+            }
+          },
+          attribute: {
+            type: "file",
+            name: serviceContents[6].key,
+            multiple: "true",
+            proid,
+            desid,
+            client: name,
+            designer,
+          },
+          style: {
+            display: "none",
+          }
+        });
+
+        input.click();
+
+      } catch (e) {
+        console.log(e);
+        window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+        window.location.reload();
+      }
+    }
+
+  }
 }
 
 ProcessDetailJs.prototype.launching = async function (loading) {
