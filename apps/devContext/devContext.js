@@ -91,14 +91,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await requestSystem("https://home-liaison.info/marketingMessage", {
-      text: "안녕하세요, 홈리에종 마케팅 채널의 새로운 봇입니다.",
-      channel: "#marketing",
-    }, {
-      headers: { "Content-Type": "application/json" }
-    });
-
-
+    const res = await requestSystem("https://home-liaison.info/basicReport", { message: "do it" }, { headers: { "Content-Type": "application/json" } });
+    console.log(res);
 
 
 

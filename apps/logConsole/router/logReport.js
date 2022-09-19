@@ -21,7 +21,7 @@ LogReport.prototype.dailyReports = async function () {
     const sheets = new GoogleSheet();
     const today = new Date();
     const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate());
+    yesterday.setDate(yesterday.getDate() - 1);
     const startDay = new Date(2022, 5, 1);
     let slackMessage;
 
