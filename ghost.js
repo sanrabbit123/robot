@@ -729,9 +729,6 @@ Ghost.prototype.recordBackup = async function () {
       res = await requestSystem(url, postData, { headers: { Cookie: session } });
       dom = new JSDOM(res.data);
       trArr = [ ...dom.window.document.querySelector('.contents_area').querySelector('.table_type01').querySelectorAll('tr') ];
-
-      console.log(trArr);
-
       aArr = [];
       for (let tr of trArr) {
         aNode = tr.querySelector('a');
@@ -739,8 +736,6 @@ Ghost.prototype.recordBackup = async function () {
           aArr.push(aNode.getAttribute("href"));
         }
       }
-
-      console.log(aArr);
 
       aArr = aArr.map((str) => { return str.trim(); }).filter((str) => { return str !== '#'; }).map((str) => {
         return str + splitToken + String(pageNum);
