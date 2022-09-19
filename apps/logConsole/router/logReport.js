@@ -5,11 +5,13 @@ const LogReport = function (MONGOC) {
   this.back = new BackMaker();
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.mongo = MONGOC;
+  this.host = this.address.testinfo.host;
 }
 
 LogReport.prototype.dailyReports = async function () {
   const instance = this;
   const back = this.back;
+  const { host } = this;
   const { mongo, mongoinfo, requestSystem, autoComma, dateToString, stringToDate, errorLog, messageLog, messageSend, sha256Hmac } = this.mother;
   const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
   try {
@@ -17,6 +19,11 @@ LogReport.prototype.dailyReports = async function () {
     const selfCoreMongo = new mongo(mongoinfo, { useUnifiedTopology: true });
     const selfMongo = this.mongo;
     const sheets = new GoogleSheet();
+    const today = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate());
+    const startDay = new Date(2022, 5, 1);
+    let slackMessage;
 
     await selfCoreMongo.connect();
 
@@ -489,7 +496,7 @@ LogReport.prototype.dailyReports = async function () {
     const secondSheetsId = "14xqEKuEhIlTEQL44RlgwPGgdO3TiI8SidNCb7k1y4PU";
     const thirdSheetsId = "1X3PeZPj06C6hTsVJWQKCQ8WCF05NhmqUWd6Huyhnd0k";
     const fourthSheetsId = "13wUb5uTXktWHRTAezsKKMXO0b7P6slsSQWboeItsYQU";
-    const [ first, second, third, fourth ] = await marketingBasicMatrix(new Date(2022, 5, 1));
+    const [ first, second, third, fourth ] = await marketingBasicMatrix(startDay);
 
     console.log(first, second, third, fourth);
 
@@ -501,6 +508,26 @@ LogReport.prototype.dailyReports = async function () {
     console.log("sheets update all done");
 
     await selfCoreMongo.close();
+
+    slackMessage = '';
+    slackMessage += dateToString(today) + " =============================";
+    slackMessage += "\n";
+    slackMessage += dateToString(startDay) + " ~ " + dateToString(yesterday) + " 기간의 지표를 업데이트하였습니다!";
+    slackMessage += "\n";
+    slackMessage += "1) Total funnul : " + "https://docs.google.com/spreadsheets/d/" + firstSheetsId + "/edit?usp=sharing";
+    slackMessage += "\n";
+    slackMessage += "2) Clients info : " + "https://docs.google.com/spreadsheets/d/" + secondSheetsId + "/edit?usp=sharing";
+    slackMessage += "\n";
+    slackMessage += "3) Facebook paid : " + "https://docs.google.com/spreadsheets/d/" + thirdSheetsId + "/edit?usp=sharing";
+    slackMessage += "\n";
+    slackMessage += "4) Naver paid : " + "https://docs.google.com/spreadsheets/d/" + fourthSheetsId + "/edit?usp=sharing";
+
+    await requestSystem("https://" + host + "/marketingMessage", {
+      text: slackMessage,
+      channel: "#marketing",
+    }, {
+      headers: { "Content-Type": "application/json" }
+    });
 
   } catch (e) {
     console.log(e);
