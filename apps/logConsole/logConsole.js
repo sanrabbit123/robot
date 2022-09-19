@@ -7,6 +7,10 @@ const LogConsole = function () {
   this.dir = process.cwd() + "/apps/logConsole";
   this.console = process.cwd() + "/apps/dataConsole";
   this.sourceDir = this.dir + "/router/source";
+
+  const { WebClient } = require("@slack/web-api");
+  this.slack_token = "xoxb-4088608221477-4095446877285-jtvkvipa2umku2S1Qy3do4Lo";
+  this.slack_bot = new WebClient(this.slack_token);
 }
 
 LogConsole.prototype.renderStatic = async function (staticFolder) {
@@ -209,7 +213,7 @@ LogConsole.prototype.logConnect = async function () {
 
     //set router
     const LogRouter = require(`${this.dir}/router/logRouter.js`);
-    const router = new LogRouter(MONGOC);
+    const router = new LogRouter(this.slack_bot, MONGOC);
 
     const rouObj = router.getAll();
     for (let obj of rouObj.get) {

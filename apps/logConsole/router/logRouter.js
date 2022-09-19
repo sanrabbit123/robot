@@ -1,11 +1,14 @@
-const LogRouter = function (MONGOC) {
+const LogRouter = function (slack_bot, MONGOC) {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
+  const LogReport = require(`${process.cwd()}/apps/logConsole/router/logReport.js`);
   this.mother = new Mother();
   this.back = new BackMaker();
   this.mongo = MONGOC;
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
+  this.report = new LogReport(MONGOC);
   this.host = this.address.testinfo.host;
+  this.slack_bot = slack_bot;
 }
 
 LogRouter.prototype.baseMaker = function (target, req = null) {
@@ -633,6 +636,60 @@ LogRouter.prototype.rou_post_analyticsClients = function () {
     } catch (e) {
       await errorLog("Log Console 서버 문제 생김 (rou_post_analyticsClients): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+LogRouter.prototype.rou_post_basicReport = function () {
+  const instance = this;
+  const report = this.report;
+  const { errorLog } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/basicReport" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      report.dailyReports().catch((err) => {
+        errorLog("Log console, basic dailyReports error : " + err.message).catch((err) => { console.log(err) });
+      });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      instance.mother.errorLog("Log console 서버 문제 생김 (rou_post_basicReport): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+LogRouter.prototype.rou_post_marketingMessage = function () {
+  const instance = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/marketingMessage" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.text === undefined || req.body.channel === undefined) {
+        throw new Error("invaild post, must be text, channel");
+      }
+      const { text, channel } = req.body;
+      await instance.slack_bot.chat.postMessage({ text, channel });
+      res.send(JSON.stringify({ message: "done" }));
+    } catch (e) {
+      instance.mother.errorLog("Log console 서버 문제 생김 (rou_post_marketingMessage): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
   return obj;
