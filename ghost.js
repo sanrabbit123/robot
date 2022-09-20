@@ -1111,7 +1111,7 @@ Ghost.prototype.ghostRouter = function (needs) {
         }).then(() => {
           return instance.callHistory(MONGOC, MONGOCONSOLEC);
         }).then(() => {
-          return messageLog("callHistory update success : " + JSON.stringify(new Date()));
+          return errorLog("callHistory update success : " + JSON.stringify(new Date()));
         }).then(() => {
           return instance.slackToMongo(MONGOLOCALC);
         }).catch((err) => {
