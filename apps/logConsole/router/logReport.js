@@ -67,10 +67,13 @@ LogReport.prototype.dailyReports = async function () {
             }
           };
           const facebookCampaignBoo = (str) => {
-            return ((/^[A-Z]/.test(str) || /^t/.test(str) || /^s/.test(str) || /^link/.test(str) || /^facebook/.test(str) || /^main_video/.test(str) || /^Mag/.test(str) || /^maposketch/.test(str) || /^MV/.test(str) || /^appeal/.test(str) || /^De_image/.test(str) || /^video_mom/.test(str)) && !/^home/.test(str) && !/^PO3/.test(str) && !/^M_DA/.test(str) && !/^apart/.test(str) && !/^interior/.test(str) && !/^about/.test(str) && !/^local/.test(str) && !/^consul/.test(str) && !/not set/g.test(str) && !/^mini/.test(str) && !/^local/.test(str) && !/^naver/.test(str));
+            return ((/^[A-Z]/.test(str) || /^t/.test(str) || /^s/.test(str) || /^link/.test(str) || /^facebook/.test(str) || /^main_video/.test(str) || /^Mag/.test(str) || /^maposketch/.test(str) || /^MV/.test(str) || /^appeal/.test(str) || /^De_image/.test(str) || /^video_mom/.test(str)) && !/^home/.test(str) && !/^PO3/.test(str) && !/^M_DA/.test(str) && !/^apart/.test(str) && !/^interior/.test(str) && !/^about/.test(str) && !/^local/.test(str) && !/^consul/.test(str) && !/not set/g.test(str) && !/^mini/.test(str) && !/^local/.test(str) && !/^naver/.test(str) && !/^google/.test(str));
           }
           const naverCampaignBoo = (str) => {
-            return ((/^home/.test(str) || /^naver/.test(str) || /^[0-9]/.test(str) || /^PO3/.test(str) || /^M_DA/.test(str) || /^conver/.test(str) || /^mini/.test(str) || /^local/.test(str) || /^conver/.test(str)  || /^apart/.test(str) || /^about/.test(str)  || /^interior/.test(str) || /^new/.test(str) || /^port/.test(str) || /^recruit/.test(str) || /^review/.test(str) || /^traffic/.test(str) || /^consul/.test(str)) && !/not set/g.test(str) && !/^link/g.test(str) && !/^facebook/g.test(str) && !/^main_video/g.test(str));
+            return ((/^home/.test(str) || /^naver/.test(str) || /^[0-9]/.test(str) || /^PO3/.test(str) || /^M_DA/.test(str) || /^conver/.test(str) || /^mini/.test(str) || /^local/.test(str) || /^conver/.test(str)  || /^apart/.test(str) || /^about/.test(str)  || /^interior/.test(str) || /^new/.test(str) || /^port/.test(str) || /^recruit/.test(str) || /^review/.test(str) || /^traffic/.test(str) || /^consul/.test(str)) && !/not set/g.test(str) && !/^link/g.test(str) && !/^facebook/g.test(str) && !/^main_video/g.test(str) && !/^google/.test(str));
+          }
+          const googleCampaignBoo = (str) => {
+            return ((/^[ㄱ-ㅎ]/.test(str) || /^[가-힣]/.test(str) || /^google/.test(str)) && !/not set/g.test(str) && !/^home/g.test(str) && !/^facebook/g.test(str) && !/^link/g.test(str) && !/^local/g.test(str) && !/^naver/g.test(str));
           }
           const {
             campaign: campaignKey,
@@ -122,6 +125,22 @@ LogReport.prototype.dailyReports = async function () {
           let fifthMatrix;
           let fifthMatrixFactorArr;
           let sixthMatrix;
+          let googleRows;
+          let googleCharge;
+          let googleImpressions;
+          let googleClicks;
+          let googleFromUsers;
+          let googleFromClicks;
+          let googleFromPopups;
+          let googleFromSubmit;
+          let googleCtr;
+          let googleCpc;
+          let googleClicksConverting;
+          let googleClicksChargeConverting;
+          let googleSubmitConverting;
+          let googleSubmitChargeConverting;
+          let seventhMatrix;
+
 
           from = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
           to = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
@@ -467,6 +486,7 @@ LogReport.prototype.dailyReports = async function () {
             fifthMatrix.push(fifthMatrixFactorArr);
           }
 
+
           // 6
 
           sixthMatrix = clientsRows.data.detail.map((obj) => { return { cliid: obj.cliid, users: obj.users, ids: obj.users.map((user) => { return user.id }).join(", ") } });
@@ -565,6 +585,99 @@ LogReport.prototype.dailyReports = async function () {
             }
           });
 
+
+          // 7
+          // google
+
+          googleRows = campaignRows.filter((obj) => {
+            return /google/gi.test(obj.information.mother);
+          });
+          if (googleRows.length > 0) {
+            googleCharge = googleRows.reduce((acc, curr) => {
+              return acc + curr.value.charge;
+            }, 0);
+            googleImpressions = googleRows.reduce((acc, curr) => {
+              return acc + curr.value.performance.impressions;
+            }, 0);
+            googleClicks = googleRows.reduce((acc, curr) => {
+              return acc + curr.value.performance.clicks;
+            }, 0);
+          } else {
+            googleCharge = 0;
+            googleImpressions = 0;
+            googleClicks = 0;
+          }
+
+          googleFromUsers = analyticsRows.data.users.detail.campaign.cases.filter((obj) => {
+            return googleCampaignBoo(obj.case);
+          }).reduce((acc, curr) => {
+            return acc + curr.value;
+          }, 0);
+
+          googleFromClicks = analyticsRows.data.conversion[1].detail.campaign.cases.filter((obj) => {
+            return googleCampaignBoo(obj.case);
+          }).reduce((acc, curr) => {
+            return acc + curr.value;
+          }, 0);
+
+          googleFromPopups = analyticsRows.data.conversion[0].detail.campaign.cases.filter((obj) => {
+            return googleCampaignBoo(obj.case);
+          }).reduce((acc, curr) => {
+            return acc + curr.value;
+          }, 0);
+
+          googleFromSubmit = clientsRows.data.detail.map((obj) => { return obj.users }).flat().map((obj) => {
+            return obj.source.campaign;
+          }).filter((str) => { return googleCampaignBoo(str) }).length;
+
+          googleCtr = 0;
+          googleCpc = 0;
+          googleClicksConverting = 0;
+          googleClicksChargeConverting = 0;
+          googleSubmitConverting = 0;
+          googleSubmitChargeConverting = 0;
+
+          if (googleImpressions !== 0) {
+            googleCtr = googleClicks / googleImpressions;
+            googleCtr = Math.floor(googleCtr * 10000) / 10000;
+          }
+          if (googleClicks !== 0) {
+            googleCpc = Math.round(googleCharge / googleClicks);
+          }
+          if (googleClicks !== 0) {
+            googleClicksConverting = (googleFromClicks + googleFromPopups) / googleClicks;
+            googleClicksConverting = Math.floor(googleClicksConverting * 10000) / 10000;
+          }
+          if (googleFromClicks + googleFromPopups !== 0) {
+            googleClicksChargeConverting = Math.round(googleCharge / (googleFromClicks + googleFromPopups));
+          }
+          if (googleClicks !== 0) {
+            googleSubmitConverting = googleFromSubmit / googleClicks;
+            googleSubmitConverting = Math.floor(googleSubmitConverting * 10000) / 10000;
+          }
+          if (googleFromSubmit !== 0) {
+            googleSubmitChargeConverting = Math.round(googleCharge / googleFromSubmit);
+          }
+
+          seventhMatrix = [
+            [
+              dateToString(targetDate),
+              googleCharge,
+              googleImpressions,
+              googleClicks,
+              googleFromUsers,
+              googleFromClicks,
+              googleFromPopups,
+              googleFromSubmit,
+              googleCtr,
+              googleCpc,
+              googleClicksConverting,
+              googleClicksChargeConverting,
+              googleSubmitConverting,
+              googleSubmitChargeConverting,
+            ]
+          ];
+
           return [
             firstMatrix,
             secondMatrix,
@@ -572,6 +685,7 @@ LogReport.prototype.dailyReports = async function () {
             fourthMatrix,
             fifthMatrix,
             sixthMatrix,
+            seventhMatrix,
           ];
         }
 
@@ -685,6 +799,24 @@ LogReport.prototype.dailyReports = async function () {
               "온라인 여부",
               "희망 서비스",
               "계약 서비스",
+            ]
+          ],
+          [
+            [
+              "날짜",
+              "비용",
+              "노출",
+              "클릭",
+              "사용자수",
+              "신청 페이지뷰",
+              "신청 팝업수",
+              "문의수",
+              "CTR",
+              "CPC",
+              "전환율",
+              "전환당 비용",
+              "문의율",
+              "문의당 비용",
             ]
           ],
         ];
@@ -820,9 +952,10 @@ LogReport.prototype.dailyReports = async function () {
     const fourthSheetsId = "13wUb5uTXktWHRTAezsKKMXO0b7P6slsSQWboeItsYQU";
     const fifthSheetsId = "1QFr_a5cnexPyvcKAsIDvcq7SCwHKLAbiQcQGkcoeuAo";
     const sixthSheetsId = "1d64IEb9S4MIfb0rTQW1ojWI9Tq6utyzdE6MEsEbVvcs";
-    const seventhSheetsId = "1TPSsXlaNz8ZssqImPZUYTZvnsqRuInSQXaAoFJ-CttU";
-    const [ first, second, third, fourth, fifth, sixth ] = await marketingBasicMatrix(startDay);
-    const [ seventh ] = await saDefaultMatrix(startDay);
+    const seventhSheetsId = "1XvZGAalipoQFzwWM178_c8Ect6n2hRf_MV5OfSXGfl8";
+    const eighthSheetsId = "1TPSsXlaNz8ZssqImPZUYTZvnsqRuInSQXaAoFJ-CttU";
+    const [ first, second, third, fourth, fifth, sixth, seventh ] = await marketingBasicMatrix(startDay);
+    const [ eighth ] = await saDefaultMatrix(startDay);
 
     console.log(first, second, third, fourth, fifth, sixth, seventh);
 
@@ -833,6 +966,7 @@ LogReport.prototype.dailyReports = async function () {
     await sheets.update_value_inPython(fifthSheetsId, "", fifth);
     await sheets.update_value_inPython(sixthSheetsId, "", sixth);
     await sheets.update_value_inPython(seventhSheetsId, "", seventh);
+    await sheets.update_value_inPython(eighthSheetsId, "", eighth);
 
     console.log("sheets update all done");
 
@@ -849,13 +983,15 @@ LogReport.prototype.dailyReports = async function () {
     slackMessage += "\n";
     slackMessage += "3) Contracts info : " + "https://docs.google.com/spreadsheets/d/" + sixthSheetsId + "/edit?usp=sharing";
     slackMessage += "\n";
-    slackMessage += "4) Statistics weekly : " + "https://docs.google.com/spreadsheets/d/" + seventhSheetsId + "/edit?usp=sharing";
+    slackMessage += "4) Statistics weekly : " + "https://docs.google.com/spreadsheets/d/" + eighthSheetsId + "/edit?usp=sharing";
     slackMessage += "\n";
     slackMessage += "5) Facebook paid : " + "https://docs.google.com/spreadsheets/d/" + secondSheetsId + "/edit?usp=sharing";
     slackMessage += "\n";
     slackMessage += "6) Naver paid : " + "https://docs.google.com/spreadsheets/d/" + thirdSheetsId + "/edit?usp=sharing";
     slackMessage += "\n";
-    slackMessage += "7) Campaign paid : " + "https://docs.google.com/spreadsheets/d/" + fifthSheetsId + "/edit?usp=sharing";
+    slackMessage += "7) Google paid : " + "https://docs.google.com/spreadsheets/d/" + seventhSheetsId + "/edit?usp=sharing";
+    slackMessage += "\n";
+    slackMessage += "8) Campaign paid : " + "https://docs.google.com/spreadsheets/d/" + fifthSheetsId + "/edit?usp=sharing";
 
     await requestSystem("https://" + host + "/marketingMessage", {
       text: slackMessage,
