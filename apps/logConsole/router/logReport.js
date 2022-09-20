@@ -453,6 +453,7 @@ LogReport.prototype.dailyReports = async function () {
 
             return [
               dateToString(targetDate),
+              cliid,
               targetRequest.name,
               ids,
               dateToString(targetRequest.request.timeline, true),
@@ -555,7 +556,8 @@ LogReport.prototype.dailyReports = async function () {
 
             return [
               dateToString(targetDate),
-              targetRequest.name,
+              cliid,
+              targetRequest.name
               ids,
               dateToString(targetRequest.request.timeline, true),
               targetProject === null ? "1800-01-01" : dateToString(targetProject.process.contract.first.date, true),
@@ -750,6 +752,7 @@ LogReport.prototype.dailyReports = async function () {
           [
             [
               "날짜",
+              "아이디",
               "고객명",
               "GA",
               "문의일",
@@ -780,6 +783,7 @@ LogReport.prototype.dailyReports = async function () {
           [
             [
               "날짜",
+              "아이디",
               "고객명",
               "GA",
               "문의일",
@@ -993,12 +997,12 @@ LogReport.prototype.dailyReports = async function () {
     slackMessage += "\n";
     slackMessage += "8) Campaign paid : " + "https://docs.google.com/spreadsheets/d/" + fifthSheetsId + "/edit?usp=sharing";
 
-    await requestSystem("https://" + host + "/marketingMessage", {
-      text: slackMessage,
-      channel: "#marketing",
-    }, {
-      headers: { "Content-Type": "application/json" }
-    });
+    // await requestSystem("https://" + host + "/marketingMessage", {
+    //   text: slackMessage,
+    //   channel: "#marketing",
+    // }, {
+    //   headers: { "Content-Type": "application/json" }
+    // });
 
   } catch (e) {
     console.log(e);
