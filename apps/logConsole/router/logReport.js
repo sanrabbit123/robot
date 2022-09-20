@@ -997,12 +997,12 @@ LogReport.prototype.dailyReports = async function () {
     slackMessage += "\n";
     slackMessage += "8) Campaign paid : " + "https://docs.google.com/spreadsheets/d/" + fifthSheetsId + "/edit?usp=sharing";
 
-    // await requestSystem("https://" + host + "/marketingMessage", {
-    //   text: slackMessage,
-    //   channel: "#marketing",
-    // }, {
-    //   headers: { "Content-Type": "application/json" }
-    // });
+    await requestSystem("https://" + host + "/marketingMessage", {
+      text: slackMessage,
+      channel: "#marketing",
+    }, {
+      headers: { "Content-Type": "application/json" }
+    });
 
   } catch (e) {
     console.log(e);
