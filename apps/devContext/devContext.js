@@ -2932,9 +2932,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "정선희",
-    //     designer: "김윤진",
-    //     link: "https://drive.google.com/drive/folders/1-zig0ASleKj1g5JvBHMdvkMeePUinFsI",
+    //     client: "이민희",
+    //     designer: "박주령",
+    //     link: "https://drive.google.com/drive/folders/1DDcpQmodU4QkdeMA1L4ZH-PH8-C9W3ZP",
     //     pay: true
     //   },
     // ]);
@@ -2958,7 +2958,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p204");
+    // await this.getRawPortfolio("p230");
 
 
     // get corePortfolio by pid
