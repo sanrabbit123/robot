@@ -60,6 +60,7 @@ from google.googleSheet import GoogleSheet
 from google.googleDrive import GoogleDrive
 from google.googleDocs import GoogleDocs
 from google.googleYoutube import GoogleYoutube
+from google.googleAds import GoogleAds
 
 try:
 
@@ -103,6 +104,11 @@ try:
     elif argv[1] == 'analytics' and argv[2] == 'getConsultingPageDetail':
         analytics = GoogleAnalytics()
         result = analytics.getConsultingPageDetail(data["startDate"], data["endDate"], data["dimensions"])
+        print(result)
+
+    elif argv[1] == 'ads' and argv[2] == 'getCampaignList':
+        ads = GoogleAds()
+        result = ads.getCampaignList(data["date"])
         print(result)
 
     elif argv[1] == 'sheets' and argv[2] == 'get':

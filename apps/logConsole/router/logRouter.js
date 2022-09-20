@@ -67,13 +67,16 @@ LogRouter.prototype.dailyCampaign = async function (selfMongo) {
   const instance = this;
   const FacebookAPIs = require(`${process.cwd()}/apps/facebookAPIs/facebookAPIs.js`);
   const NaverAPIs = require(`${process.cwd()}/apps/naverAPIs/naverAPIs.js`);
+  const GoogleAds = require(`${process.cwd()}/apps/googleAPIs/googleAds.js`);
   try {
     const facebook = new FacebookAPIs();
     const naver = new NaverAPIs();
+    const google = new GoogleAds();
     const dayNumber = 3;
 
     await facebook.dailyCampaign(selfMongo, dayNumber);
     await naver.dailyCampaign(selfMongo, dayNumber);
+    await google.dailyCampaign(selfMongo, dayNumber);
 
   } catch (e) {
     console.log(e);

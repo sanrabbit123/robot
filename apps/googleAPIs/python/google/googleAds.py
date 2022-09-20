@@ -14,6 +14,7 @@ class GoogleAds:
 
         self.token = "AwmracVDQzHAuSXbwPgeEA"
         self.id = 9572526494
+        self.childId = 3902376917
 
         # make this folder path
         thisAppPath = osPath.abspath(__file__)
@@ -59,12 +60,20 @@ class GoogleAds:
         self.yaml = thisFolderPath + '/tokens/ads.yaml'
         self.app = GoogleAdsClient.load_from_storage(self.yaml)
 
-    def campaignList(self):
+    def getCampaignList(self, targetDate):
         ga_service = self.app.get_service("GoogleAdsService")
-        query = "SELECT campaign.id, campaign.name FROM campaign ORDER BY campaign.id"
-        stream = ga_service.search_stream(customer_id=str(self.id), query=query)
-
-
-
-app = GoogleAds()
-app.campaignList()
+        query = f"SELECT campaign.id, campaign.name, campaign.advertising_channel_type, metrics.impressions, metrics.clicks, metrics.cost_micros FROM campaign WHERE segments.date >= '{targetDate}' AND segments.date <= '{targetDate}'"
+        stream = ga_service.search_stream(customer_id=str(self.childId), query=query)
+        tong = []
+        for batch in stream:
+            for row in batch.results:
+                tong.append({
+                    "account": str(self.childId),
+                    "id": str(row.campaign.id),
+                    "name": str(row.campaign.name),
+                    "type": str(row.campaign.advertising_channel_type),
+                    "cost_micros": str(row.metrics.cost_micros),
+                    "impressions": str(row.metrics.impressions),
+                    "clicks": str(row.metrics.clicks),
+                })
+        return dumps(tong)
