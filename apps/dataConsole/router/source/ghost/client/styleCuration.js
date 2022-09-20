@@ -712,45 +712,45 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
         ]
       });
 
-      // this.wordings.center.push({
-      //   name: "furniture",
-      //   title: "가구",
-      //   callback: "blockCheck",
-      //   children: [
-      //     {
-      //       name: "purchaseRatio",
-      //       type: "opposite",
-      //       half: false,
-      //       required: false,
-      //       question: [
-      //         "가구와 소품의 <b%기존 제품 구매와 재사용의%b>",
-      //         "<b%비율%b>을 알려주세요!"
-      //       ],
-      //       items: [
-      //         "재사용",
-      //         "새로 구입",
-      //       ],
-      //       total: 100,
-      //       ea: '%',
-      //       value: function (request, history, self) {
-      //         return history.curation.furniture.ratio;
-      //       },
-      //       update: function (value, siblings, client) {
-      //         if (value !== null) {
-      //           let updateQuery;
-      //           updateQuery = {};
-      //           updateQuery["curation.furniture.ratio"] = value.value;
-      //           return {
-      //             history: updateQuery,
-      //             core: null
-      //           };
-      //         } else {
-      //           return { history: null, core: null };
-      //         }
-      //       }
-      //     }
-      //   ]
-      // });
+      this.wordings.center.push({
+        name: "furniture",
+        title: "가구",
+        callback: "blockCheck",
+        children: [
+          {
+            name: "purchaseRatio",
+            type: "opposite",
+            half: false,
+            required: false,
+            question: [
+              "가구와 소품의 <b%기존 제품 구매와 재사용의%b>",
+              "<b%비율%b>을 알려주세요!"
+            ],
+            items: [
+              "재사용",
+              "새로 구입",
+            ],
+            total: 100,
+            ea: '%',
+            value: function (request, history, self) {
+              return history.curation.furniture.ratio;
+            },
+            update: function (value, siblings, client) {
+              if (value !== null) {
+                let updateQuery;
+                updateQuery = {};
+                updateQuery["curation.furniture.ratio"] = value.value;
+                return {
+                  history: updateQuery,
+                  core: null
+                };
+              } else {
+                return { history: null, core: null };
+              }
+            }
+          }
+        ]
+      });
 
       this.wordings.center.push({
         name: "construct",
