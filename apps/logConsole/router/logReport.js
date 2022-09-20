@@ -132,6 +132,7 @@ LogReport.prototype.dailyReports = async function () {
           analyticsRows = analyticsEntireRows.find((obj) => { return obj.anaid === analyticsKey });
           clientsRows = clientsEntireRows.find((obj) => { return obj.ancid === clientsKey });
           if (analyticsRows === undefined || clientsRows === undefined) {
+            console.log(analyticsKey, clientsKey);
             throw new Error("invaild date");
           }
 
