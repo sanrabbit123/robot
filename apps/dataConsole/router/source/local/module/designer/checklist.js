@@ -118,6 +118,100 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           type: "matrix",
         },
         {
+          name: "자녀 여부",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "미취학",
+              "어린이",
+              "청소년",
+              "성인",
+            ];
+            value = [];
+            for (let i of contents) {
+              value.push(designer.information.child.includes(i) ? 1 : 0);
+            }
+            return { contents, value };
+          },
+          update: function (value, designer) {
+            let contents, target;
+            contents = [
+              "미취학",
+              "어린이",
+              "청소년",
+              "성인",
+            ];
+            target = [];
+            for (let i = 0; i < contents.length; i++) {
+              if (value[i] === 1) {
+                target.push(contents[i]);
+              }
+            }
+            return { "analytics.project.paperWork": target };
+          },
+          height: desktop ? factorHeight * 2.1 : factorHeight * 3.8,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+          multiple: true,
+          half: true
+        },
+        {
+          name: "반려견 여부",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "있음",
+              "없음"
+            ];
+            value = [
+              designer.information.dog ? 1 : 0,
+              designer.information.dog ? 0 : 1,
+            ];
+            return { contents, value };
+          },
+          update: function (value, designer) {
+            const position = "information.dog";
+            let updateQuery;
+            updateQuery = {};
+            updateQuery[position] = (value[0] === 1);
+            return updateQuery;
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "반려묘 여부",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "있음",
+              "없음"
+            ];
+            value = [
+              designer.information.cat ? 1 : 0,
+              designer.information.cat ? 0 : 1,
+            ];
+            return { contents, value };
+          },
+          update: function (value, designer) {
+            const position = "information.cat";
+            let updateQuery;
+            updateQuery = {};
+            updateQuery[position] = (value[0] === 1);
+            return updateQuery;
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
           name: "계약 상태",
           value: function (designer) {
             let contents, value;

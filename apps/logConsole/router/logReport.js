@@ -453,7 +453,7 @@ LogReport.prototype.dailyReports = async function () {
 
             return [
               dateToString(targetDate),
-              cliid,
+              targetRequest.name,
               ids,
               dateToString(targetRequest.request.timeline, true),
               returnType,
@@ -555,7 +555,7 @@ LogReport.prototype.dailyReports = async function () {
 
             return [
               dateToString(targetDate),
-              cliid,
+              targetRequest.name,
               ids,
               dateToString(targetRequest.request.timeline, true),
               targetProject === null ? "1800-01-01" : dateToString(targetProject.process.contract.first.date, true),
@@ -750,7 +750,7 @@ LogReport.prototype.dailyReports = async function () {
           [
             [
               "날짜",
-              "아이디",
+              "고객명",
               "GA",
               "문의일",
               "재방문 여부",
@@ -780,7 +780,7 @@ LogReport.prototype.dailyReports = async function () {
           [
             [
               "날짜",
-              "아이디",
+              "고객명",
               "GA",
               "문의일",
               "계약일",
