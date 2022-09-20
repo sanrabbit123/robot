@@ -97,7 +97,7 @@ DevContext.prototype.launching = async function () {
 
     const LogReport = require(`${process.cwd()}/apps/logConsole/router/logReport.js`);
     const report = new LogReport(selfMongo);
-    await report.dailyReports()
+    await report.dailyReports();
 
     await selfMongo.close();
 
