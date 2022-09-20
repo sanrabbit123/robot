@@ -147,9 +147,9 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                 target.push(contents[i]);
               }
             }
-            return { "analytics.project.paperWork": target };
+            return { "information.child": target };
           },
-          height: desktop ? factorHeight * 2.1 : factorHeight * 3.8,
+          height: factorHeight,
           width: factorWidth,
           totalWidth: factorWidth * 4,
           factorHeight: factorHeight,
