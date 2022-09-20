@@ -1758,7 +1758,7 @@ DataPatch.prototype.clientMap = function () {
     phone: { name: "연락처", position: "phone", type: "string", searchBoo: true, },
     email: { name: "이메일", position: "email", type: "string", searchBoo: true, },
     timeline: { name: "문의일", position: "requests.0.request.timeline", type: "date", searchBoo: true, },
-    budget: { name: "예산", position: "requests.0.request.budget", type: "string", items: [ "500만원 이하", "1,000만원", "1,500만원", "2,000만원", "2,500만원", "3,000만원", "3,500만원", "4,000만원", "4,500만원", "5,000만원 이상" ], searchBoo: true, },
+    budget: { name: "예산", position: "requests.0.request.budget", type: "string", items: [ '500만원 이하', '1,000만원', '1,500만원', '2,000만원', '2,500만원', '3,000만원', '3,500만원', '4,000만원', '4,500만원', '5,000만원 이상', '6,000만원 이상', '7,000만원 이상', '8,000만원 이상', '9,000만원 이상', '1억원 이상', '1억 5,000만원 이상', '2억원 이상', '3억원 이상', '5억원 이상', '10억원 이상', ], searchBoo: true, },
     family: { name: "가족 구성원", position: "requests.0.request.family", type: "string", searchBoo: true, },
     address: { name: "주소", position: "requests.0.request.space.address", type: "string", address: true, searchBoo: true, },
     contract: { name: "계약 상태", position: "requests.0.request.space.contract", type: "string", items: [ "자가", "전월세" ], searchBoo: true, },

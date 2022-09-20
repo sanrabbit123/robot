@@ -2250,7 +2250,7 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
     try {
       const selfMongo = instance.mongo;
       const { map } = equalJson(req.body);
-      const budgetArr = [ "500만원 이하", "1,000만원", "1,500만원", "2,000만원", "2,500만원", "3,000만원", "3,500만원", "4,000만원", "4,500만원", "5,000만원 이상" ];
+      const budgetArr = [ '500만원 이하', '1,000만원', '1,500만원', '2,000만원', '2,500만원', '3,000만원', '3,500만원', '4,000만원', '4,500만원', '5,000만원 이상', '6,000만원 이상', '7,000만원 이상', '8,000만원 이상', '9,000만원 이상', '1억원 이상', '1억 5,000만원 이상', '2억원 이상', '3억원 이상', '5억원 이상', '10억원 이상', ];
       const ignorePhone = [ "010-2747-3403" ];
       const defaultPyeong = 34;
       const moveinConst0 = 60;

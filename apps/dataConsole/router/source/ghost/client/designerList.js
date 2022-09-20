@@ -908,8 +908,8 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
   blockHeight = <%% (isMac() ? 178 : 176), 160, (isMac() ? 178 : 176), 170, 25 %%>;
   photoWidth = blockHeight - (contentsPaddingTop * 2);
 
-  whiteCircleWidth = photoWidth * 0.94;
-  realPhotoCircleWidth = photoWidth * (desktop ? 0.9 : 0.89);
+  whiteCircleWidth = photoWidth * 0.98;
+  realPhotoCircleWidth = photoWidth * (desktop ? 0.95 : 0.94);
 
   photoMargin = <%% 30, 25, 30, 30, 4 %%>;
 

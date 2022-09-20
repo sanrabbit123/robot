@@ -121,6 +121,7 @@ LogReport.prototype.dailyReports = async function () {
           let naverClicksChargeConverting;
           let fifthMatrix;
           let fifthMatrixFactorArr;
+          let sixthMatrix;
 
           from = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
           to = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
@@ -466,12 +467,111 @@ LogReport.prototype.dailyReports = async function () {
             fifthMatrix.push(fifthMatrixFactorArr);
           }
 
+          // 6
+
+          sixthMatrix = clientsRows.data.detail.map((obj) => { return { cliid: obj.cliid, users: obj.users, ids: obj.users.map((user) => { return user.id }).join(", ") } });
+          sixthMatrix = sixthMatrix.map(({ cliid, users, ids }) => {
+            const targetRequest = requests.find((obj) => { return obj.cliid === cliid });
+            const targetHistory = clientHistories[cliid];
+            const targetProjects = projects.toNormal().filter((obj) => { return obj.cliid === cliid });
+            let targetProject;
+            let returnType;
+            let source, sourceArr;
+            let campaign, campaignArr;
+            let device;
+            let referrer, referrerArr;
+            let service;
+
+            if (users.every((obj) => { return /^New/.test(obj.type); })) {
+              returnType = "신규";
+            } else {
+              returnType = "재방문";
+            }
+
+            sourceArr = users.map((obj) => { return obj.source.mother }).filter((str) => { return str !== "(direct)" });
+            campaignArr = users.map((obj) => { return obj.source.campaign }).filter((str) => { return str !== "(not set)" });
+
+            if (sourceArr.length > 0) {
+              source = sourceArr[0];
+            } else {
+              source = "(direct)";
+            }
+
+            if (campaignArr.length > 0) {
+              campaign = campaignArr[0];
+            } else {
+              campaign = "(not set)";
+            }
+
+            if (users.length > 0) {
+              device = users[0].device.kinds;
+            } else {
+              device = "(not set)";
+            }
+
+            referrerArr = users.map((obj) => { return obj.source.referrer }).flat();
+            referrerArr.sort((a, b) => { return b.length - a.length });
+            if (referrerArr.length > 0) {
+              referrer = referrerArr[0];
+            } else {
+              referrer = "(not set)";
+            }
+
+            if (targetHistory.service.serid.length > 0) {
+              service = serviceParsing(targetHistory.service.serid[0]);
+            } else {
+              service = "알 수 없음";
+            }
+
+            targetProject = targetProjects.find((obj) => {
+              obj.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf();
+            });
+            if (targetProject === undefined && targetProjects.length > 0) {
+              targetProject = targetProjects[0];
+            }
+            if (targetProject === undefined) {
+              targetProject = null;
+            }
+
+            return [
+              dateToString(targetDate),
+              cliid,
+              ids,
+              dateToString(targetRequest.request.timeline, true),
+              targetProject === null ? "1800-01-01" : dateToString(targetProject.process.contract.first.date, true),
+              returnType,
+              source,
+              campaign,
+              device,
+              referrer,
+              targetRequest.request.space.address.value,
+              targetRequest.request.space.pyeong.value,
+              targetRequest.request.budget.value,
+              targetRequest.request.family.value,
+              (targetRequest.request.space.resident.living ? "거주중" : "이사"),
+              (targetRequest.request.space.resident.living ? "해당 없음" : dateToString(targetRequest.request.space.resident.expected)),
+              (targetRequest.request.space.partial.boo ? "부분 공간" : "전체 공간"),
+              targetProject === null ? "알 수 없음" : (targetProject.service.online ? "온라인" : "오프라인"),
+              service,
+              targetProject === null ? "알 수 없음" : serviceParsing(targetProject.service.serid),
+            ];
+          }).filter((arr) => {
+            const cliid = arr[1];
+            const targetProject = projects.toNormal().find((obj) => { return obj.cliid === cliid });
+            if (targetProject === undefined || targetProject === null) {
+              return false;
+            } else {
+              return targetProject.process.contract.first.date.valueOf() >= (new Date(2000, 0, 1)).valueOf();
+            }
+          });
+
           return [
             firstMatrix,
             secondMatrix,
             thirdMatrix,
             fourthMatrix,
             fifthMatrix,
+            sixthMatrix,
           ];
         }
 
@@ -561,6 +661,30 @@ LogReport.prototype.dailyReports = async function () {
               "비용",
               "노출",
               "클릭",
+            ]
+          ],
+          [
+            [
+              "날짜",
+              "아이디",
+              "GA",
+              "문의일",
+              "계약일",
+              "재방문 여부",
+              "소스",
+              "캠패인",
+              "디바이스",
+              "레퍼럴",
+              "주소",
+              "평수",
+              "예산",
+              "가족 구성원",
+              "거주중 여부",
+              "입주 예정일",
+              "부분 여부",
+              "온라인 여부",
+              "희망 서비스",
+              "계약 서비스",
             ]
           ],
         ];
@@ -695,11 +819,12 @@ LogReport.prototype.dailyReports = async function () {
     const thirdSheetsId = "1X3PeZPj06C6hTsVJWQKCQ8WCF05NhmqUWd6Huyhnd0k";
     const fourthSheetsId = "13wUb5uTXktWHRTAezsKKMXO0b7P6slsSQWboeItsYQU";
     const fifthSheetsId = "1QFr_a5cnexPyvcKAsIDvcq7SCwHKLAbiQcQGkcoeuAo";
-    const sixthSheetsId = "1TPSsXlaNz8ZssqImPZUYTZvnsqRuInSQXaAoFJ-CttU";
-    const [ first, second, third, fourth, fifth ] = await marketingBasicMatrix(startDay);
-    const [ sixth ] = await saDefaultMatrix(startDay);
+    const sixthSheetsId = "1d64IEb9S4MIfb0rTQW1ojWI9Tq6utyzdE6MEsEbVvcs";
+    const seventhSheetsId = "1TPSsXlaNz8ZssqImPZUYTZvnsqRuInSQXaAoFJ-CttU";
+    const [ first, second, third, fourth, fifth, sixth ] = await marketingBasicMatrix(startDay);
+    const [ seventh ] = await saDefaultMatrix(startDay);
 
-    console.log(first, second, third, fourth, fifth, sixth);
+    console.log(first, second, third, fourth, fifth, sixth, seventh);
 
     await sheets.update_value_inPython(firstSheetsId, "", first);
     await sheets.update_value_inPython(secondSheetsId, "", second);
@@ -707,6 +832,7 @@ LogReport.prototype.dailyReports = async function () {
     await sheets.update_value_inPython(fourthSheetsId, "", fourth);
     await sheets.update_value_inPython(fifthSheetsId, "", fifth);
     await sheets.update_value_inPython(sixthSheetsId, "", sixth);
+    await sheets.update_value_inPython(seventhSheetsId, "", seventh);
 
     console.log("sheets update all done");
 
@@ -721,13 +847,15 @@ LogReport.prototype.dailyReports = async function () {
     slackMessage += "\n";
     slackMessage += "2) Clients info : " + "https://docs.google.com/spreadsheets/d/" + fourthSheetsId + "/edit?usp=sharing";
     slackMessage += "\n";
-    slackMessage += "3) Statistics weekly : " + "https://docs.google.com/spreadsheets/d/" + sixthSheetsId + "/edit?usp=sharing";
+    slackMessage += "3) Contracts info : " + "https://docs.google.com/spreadsheets/d/" + sixthSheetsId + "/edit?usp=sharing";
     slackMessage += "\n";
-    slackMessage += "4) Facebook paid : " + "https://docs.google.com/spreadsheets/d/" + secondSheetsId + "/edit?usp=sharing";
+    slackMessage += "4) Statistics weekly : " + "https://docs.google.com/spreadsheets/d/" + seventhSheetsId + "/edit?usp=sharing";
     slackMessage += "\n";
-    slackMessage += "5) Naver paid : " + "https://docs.google.com/spreadsheets/d/" + thirdSheetsId + "/edit?usp=sharing";
+    slackMessage += "5) Facebook paid : " + "https://docs.google.com/spreadsheets/d/" + secondSheetsId + "/edit?usp=sharing";
     slackMessage += "\n";
-    slackMessage += "6) Campaign paid : " + "https://docs.google.com/spreadsheets/d/" + fifthSheetsId + "/edit?usp=sharing";
+    slackMessage += "6) Naver paid : " + "https://docs.google.com/spreadsheets/d/" + thirdSheetsId + "/edit?usp=sharing";
+    slackMessage += "\n";
+    slackMessage += "7) Campaign paid : " + "https://docs.google.com/spreadsheets/d/" + fifthSheetsId + "/edit?usp=sharing";
 
     await requestSystem("https://" + host + "/marketingMessage", {
       text: slackMessage,

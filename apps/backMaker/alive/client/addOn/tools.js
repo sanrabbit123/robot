@@ -533,7 +533,17 @@ const withToolsArr = function (Clients) {
         { name: "2,000만원", from: 2000, to: 3000, value: 0, ratio: 0, cliidArr: [] },
         { name: "3,000만원", from: 3000, to: 4000, value: 0, ratio: 0, cliidArr: [] },
         { name: "4,000만원", from: 4000, to: 5000, value: 0, ratio: 0, cliidArr: [] },
-        { name: "5,000만원 이상", from: 5000, to: 900000000, value: 0, ratio: 0, cliidArr: [] },
+        { name: "5,000만원 이상", from: 5000, to: 6000, value: 0, ratio: 0, cliidArr: [] },
+        { name: "6,000만원 이상", from: 6000, to: 7000, value: 0, ratio: 0, cliidArr: [] },
+        { name: "7,000만원 이상", from: 7000, to: 8000, value: 0, ratio: 0, cliidArr: [] },
+        { name: "8,000만원 이상", from: 8000, to: 9000, value: 0, ratio: 0, cliidArr: [] },
+        { name: "9,000만원 이상", from: 9000, to: 10000, value: 0, ratio: 0, cliidArr: [] },
+        { name: "1억원 이상", from: 10000, to: 15000, value: 0, ratio: 0, cliidArr: [] },
+        { name: "1억 5,000만원 이상", from: 15000, to: 20000, value: 0, ratio: 0, cliidArr: [] },
+        { name: "2억원 이상", from: 20000, to: 30000, value: 0, ratio: 0, cliidArr: [] },
+        { name: "3억원 이상", from: 30000, to: 50000, value: 0, ratio: 0, cliidArr: [] },
+        { name: "5억원 이상", from: 50000, to: 100000, value: 0, ratio: 0, cliidArr: [] },
+        { name: "10억원 이상", from: 100000, to: 900000000, value: 0, ratio: 0, cliidArr: [] },
       ];
       const targetArr = tong.getBudget();
       let total = 0;
