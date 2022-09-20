@@ -727,8 +727,9 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
               "<b%비율%b>을 알려주세요!"
             ],
             items: [
-              "재사용",
-              "새로 구입",
+              "전체 구매",
+              "일부 구매 <b%+ 재배치%b>",
+              "재배치",
             ],
             total: 100,
             ea: '%',
@@ -1703,9 +1704,9 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
     }
   }
 
-  barTop = <%% 16, 16, 16, 16, 1.5 %%>;
+  barTop = <%% 28, 28, 28, 28, 1.5 %%>;
   barHeight = <%% 4, 4, 4, 4, 2 %%>;
-  barTextTop = <%% 10.5, 10.5, 10.5, 10.5, 4.5 %%>;
+  barTextTop = <%% 3, 3, 3, 3, 4.8 %%>;
   if (desktop) {
     if (!isMac()) {
       barTextTop = barTextTop + 1;
@@ -1713,9 +1714,9 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
   }
   barTextMargin = <%% 10, 10, 10, 10, 5 %%>;
 
-  barMotherHeight = <%% 30, 30, 30, 30, 5 %%>;
+  barMotherHeight = <%% 49, 49, 49, 49, 5 %%>;
 
-  barButtonTop = <%% 12, 12, 12, 12, 1 %%>;
+  barButtonTop = <%% 24, 24, 24, 24, 1 %%>;
   barButtonRadius = <%% 5.5, 5.5, 5.5, 5.5, 1.3 %%>;
 
   listAreaPaddingTop = <%% 13, 13, 13, 13, 1 %%>;
@@ -2242,7 +2243,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
           top: String(barTop) + ea,
           height: String(barHeight) + ea,
           borderRadius: String(barHeight + 1) + ea,
-          background: colorChip.green,
+          background: colorChip.gray3,
           width: String(100) + '%',
           left: String(0) + ea,
         }
@@ -2254,27 +2255,46 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
           display: "inline-block",
           position: "relative",
           fontSize: String(standardSize) + ea,
-          fontWeight: String(400),
-          color: colorChip.shadow,
+          fontWeight: String(700),
+          color: colorChip.black,
           top: String(barTextTop) + ea,
         }
       });
-      barText1 = createNode({
+      createNode({
         mother: answerArea,
         text: obj.items[1],
         style: {
           position: "absolute",
           fontSize: String(standardSize) + ea,
-          fontWeight: String(400),
-          color: colorChip.green,
+          fontWeight: String(700),
+          color: colorChip.black,
+          left: String(<&& 363 | 222 | 166 | 115 | 27 &&>) + ea,
+          top: String(barTextTop) + ea,
+        },
+        bold: {
+          fontSize: String(standardSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.shadow,
+        }
+      });
+      barText1 = createNode({
+        mother: answerArea,
+        text: obj.items[2],
+        style: {
+          position: "absolute",
+          fontSize: String(standardSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.shadow,
           right: String(0) + ea,
           top: String(barTextTop) + ea,
         }
       });
 
       if (desktop) {
-        bar.style.width = withOut(barText0.getBoundingClientRect().width + barText1.getBoundingClientRect().width + (barTextMargin * 2), "px");
-        barLeft = barText0.getBoundingClientRect().width + barTextMargin;
+        // bar.style.width = withOut(barText0.getBoundingClientRect().width + barText1.getBoundingClientRect().width + (barTextMargin * 2), "px");
+        // barLeft = barText0.getBoundingClientRect().width + barTextMargin;
+        bar.style.width = withOut(0, "px");
+        barLeft = 0;
         bar.style.left = String(barLeft) + "px";
       } else {
         barLeft = 0;
@@ -2286,17 +2306,19 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
           position: "absolute",
           left: String(barLeft) + ea,
           top: String(0) + ea,
-          width: desktop ? "calc(calc(100% - " + String(barText0.getBoundingClientRect().width + barText1.getBoundingClientRect().width + (barTextMargin * 2)) + "px" + ") / 2)" : String(50) + '%',
+          // width: desktop ? "calc(calc(100% - " + String(barText0.getBoundingClientRect().width + barText1.getBoundingClientRect().width + (barTextMargin * 2)) + "px" + ") / 2)" : String(50) + '%',
+          width: String(50) + '%',
           height: String(100) + '%',
-          background: colorChip.white,
+          // background: colorChip.white,
           transition: "all 0s ease",
         }
       });
       if (desktop) {
         barBox.style.width = String(barBox.getBoundingClientRect().width) + "px";
       }
+
       barBox.setAttribute("width", String(barBox.getBoundingClientRect().width));
-      barBox.setAttribute("entire", String(barBox.getBoundingClientRect().width * 2));
+      barBox.setAttribute("entire", String(bar.getBoundingClientRect().width));
       barBox.setAttribute("value", String(barEntireValue / 2));
       barBox.setAttribute("x", name);
       barBox.setAttribute("y", String(y));
@@ -2304,7 +2326,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
       barClone = bar.cloneNode(true);
       barClone.style.width = String(100) + '%';
       barClone.style.left = String(0) + ea;
-      barClone.style.background = colorChip.gray3;
+      barClone.style.background = colorChip.green;
       barBox.appendChild(barClone);
 
       barButton = createNode({
@@ -2377,10 +2399,12 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
           x = e.pageX - barButton.offsetLeft;
           walk = x - GeneralJs.stacks[thisName + "_startX"];
 
-          newWidth = Number(barBox.getAttribute("width")) + walk;
-          barBox.style.width = String(newWidth) + "px";
-          barBox.setAttribute("width", String(newWidth));
-          barBox.setAttribute("value", String(Math.round(Math.round((newWidth / Number(barBox.getAttribute("entire"))) * 10000) / 100)));
+          if (Number(barBox.getAttribute("width")) + walk > 0) {
+            newWidth = Number(barBox.getAttribute("width")) + walk;
+            barBox.style.width = String(newWidth) + "px";
+            barBox.setAttribute("width", String(newWidth));
+            barBox.setAttribute("value", String(Math.round(Math.round((newWidth / Number(barBox.getAttribute("entire"))) * 10000) / 100)));
+          }
 
           answerArea.style.cursor = "grabbing";
           barBox.style.cursor = "grabbing";
@@ -2419,10 +2443,12 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
 
       if (updateValue !== null) {
         if (desktop) {
-          barBox.style.width = "calc(calc(100% - " + String(barText0.getBoundingClientRect().width + barText1.getBoundingClientRect().width + (barTextMargin * 2)) + "px" + ") * " + String(updateValue / 100) + ")";
+          // barBox.style.width = "calc(calc(100% - " + String(barText0.getBoundingClientRect().width + barText1.getBoundingClientRect().width + (barTextMargin * 2)) + "px" + ") * " + String(updateValue / 100) + ")";
+          barBox.style.width = "calc(100% * " + String(updateValue / 100) + ")";
         } else {
           barBox.style.width = String(updateValue) + '%';
         }
+        barBox.setAttribute("width", String(barBox.getBoundingClientRect().width));
         barBox.setAttribute("value", String(updateValue));
         barEndEvent({});
       }
