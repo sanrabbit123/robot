@@ -11,8 +11,9 @@ const LogReport = function (MONGOC) {
 LogReport.prototype.dailyReports = async function () {
   const instance = this;
   const back = this.back;
+  const address = this.address;
   const { host } = this;
-  const { mongo, mongoinfo, requestSystem, autoComma, dateToString, stringToDate, errorLog, messageLog, messageSend } = this.mother;
+  const { mongo, mongoinfo, requestSystem, autoComma, dateToString, stringToDate, errorLog, messageLog, messageSend, serviceParsing } = this.mother;
   const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
   try {
     const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
@@ -30,14 +31,22 @@ LogReport.prototype.dailyReports = async function () {
     // day report
     const marketingBasicMatrix = async (startDate) => {
       try {
-        const clients = await back.getClientsByQuery({}, { selfMongo: selfCoreMongo, withTools: true });
-        const projects = await back.getProjectsByQuery({}, { selfMongo: selfCoreMongo, withTools: true });
+        const queryStandardDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+        queryStandardDate.setMonth(queryStandardDate.getMonth() - 3);
+
+        const clients = await back.getClientsByQuery({ requests: { $elemMatch: { "request.timeline": { $gte: queryStandardDate } } } }, { selfMongo: selfCoreMongo, withTools: true });
+        const projects = await back.getProjectsByQuery({ "proposal.date": { $gte: queryStandardDate } }, { selfMongo: selfCoreMongo, withTools: true });
+        const clientHistories = (await requestSystem("https://" + address.backinfo.host + "/getHistoryProperty", {
+          idArr: clients.toNormal().map((obj) => { return obj.cliid }),
+          property: "curation",
+          method: "client",
+        }, { headers: { "Content-Type": "application/json" } })).data;
 
         const campaignEntireRows = await back.mongoRead("dailyCampaign", {}, { selfMongo });
         const analyticsEntireRows = await back.mongoRead("dailyAnalytics", {}, { selfMongo });
         const clientsEntireRows = await back.mongoRead("dailyClients", {}, { selfMongo });
 
-        const getReportsByDate = async (targetDate, campaignEntireRows, analyticsEntireRows, clientsEntireRows, clients, projects) => {
+        const getReportsByDate = async (targetDate, campaignEntireRows, analyticsEntireRows, clientsEntireRows, clients, projects, clientHistories) => {
           const campaignCollection = "dailyCampaign";
           const analyticsCollection = "dailyAnalytics";
           const clientsCollection = "dailyClients";
@@ -372,12 +381,13 @@ LogReport.prototype.dailyReports = async function () {
           fourthMatrix = clientsRows.data.detail.map((obj) => { return { cliid: obj.cliid, users: obj.users, ids: obj.users.map((user) => { return user.id }).join(", ") } });
           fourthMatrix = fourthMatrix.map(({ cliid, users, ids }) => {
             const targetRequest = requests.find((obj) => { return obj.cliid === cliid });
+            const targetHistory = clientHistories[cliid];
             let returnType;
             let source, sourceArr;
             let campaign, campaignArr;
             let device;
             let referrer, referrerArr;
-
+            let service;
 
             if (users.every((obj) => { return /^New/.test(obj.type); })) {
               returnType = "신규";
@@ -414,6 +424,12 @@ LogReport.prototype.dailyReports = async function () {
               referrer = "(not set)";
             }
 
+            if (targetHistory.service.serid.length > 0) {
+              service = serviceParsing(targetHistory.service.serid[0]);
+            } else {
+              service = "알 수 없음";
+            }
+
             return [
               dateToString(targetDate),
               cliid,
@@ -428,6 +444,7 @@ LogReport.prototype.dailyReports = async function () {
               targetRequest.request.space.pyeong.value,
               (targetRequest.request.space.resident.living ? "거주중" : "이사"),
               (targetRequest.request.space.resident.living ? "해당 없음" : dateToString(targetRequest.request.space.resident.expected)),
+              service,
             ];
           });
 
@@ -530,6 +547,7 @@ LogReport.prototype.dailyReports = async function () {
               "평수",
               "거주중 여부",
               "입주 예정일",
+              "희망 서비스",
             ]
           ],
           [
@@ -561,7 +579,7 @@ LogReport.prototype.dailyReports = async function () {
         }
 
         for (let i = 0; i < dateNumber; i++) {
-          resMatrix = await getReportsByDate(standardDate, campaignEntireRows, analyticsEntireRows, clientsEntireRows, clients, projects);
+          resMatrix = await getReportsByDate(standardDate, campaignEntireRows, analyticsEntireRows, clientsEntireRows, clients, projects, clientHistories);
           for (let i = 0; i < matrix.length; i++) {
             for (let arr of resMatrix[i]) {
               matrix[i].push(arr);
@@ -581,7 +599,7 @@ LogReport.prototype.dailyReports = async function () {
     const saDefaultMatrix = async (startDate) => {
       try {
         const now = new Date();
-        const res = await requestSystem("https://home-liaison.servehttp.com/getClientReport", {
+        const res = await requestSystem("https://" + address.backinfo.host + "/getClientReport", {
           startYear: String(startDate.getFullYear()),
           startMonth: String(startDate.getMonth() + 1),
           endYear: String(now.getFullYear()),
