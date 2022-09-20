@@ -2079,6 +2079,44 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           type: "matrix",
         },
         {
+          name: "빌트인 상세",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "도면",
+              "3D",
+              "AS 가능"
+            ];
+            value = [];
+            for (let i of contents) {
+              value.push(designer.analytics.styling.furniture.builtinDetail.includes(i) ? 1 : 0);
+            }
+            return { contents, value };
+          },
+          update: function (value, designer) {
+            let contents, target;
+            contents = [
+              "도면",
+              "3D",
+              "AS 가능"
+            ];
+            target = [];
+            for (let i = 0; i < contents.length; i++) {
+              if (value[i] === 1) {
+                target.push(contents[i]);
+              }
+            }
+            return { "analytics.styling.furniture.builtinDetail": target };
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+          multiple: true,
+          half: true
+        },
+        {
           name: "가구 제작",
           value: function (designer) {
             let contents, value;
@@ -2104,6 +2142,44 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           totalWidth: factorWidth * 4,
           factorHeight: factorHeight,
           type: "matrix",
+        },
+        {
+          name: "가구 상세",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "도면",
+              "3D",
+              "AS 가능"
+            ];
+            value = [];
+            for (let i of contents) {
+              value.push(designer.analytics.styling.furniture.designDetail.includes(i) ? 1 : 0);
+            }
+            return { contents, value };
+          },
+          update: function (value, designer) {
+            let contents, target;
+            contents = [
+              "도면",
+              "3D",
+              "AS 가능"
+            ];
+            target = [];
+            for (let i = 0; i < contents.length; i++) {
+              if (value[i] === 1) {
+                target.push(contents[i]);
+              }
+            }
+            return { "analytics.styling.furniture.designDetail": target };
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+          multiple: true,
+          half: true
         },
         {
           name: "커튼 패브릭",
