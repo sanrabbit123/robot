@@ -723,7 +723,7 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
             half: false,
             required: false,
             question: [
-              "가구와 소품의 <b%기존 제품 구매와 재사용의%b>",
+              "가구, 소품의 <b%새로운 제품 구매와 기존 제품 재사용의%b>",
               "<b%비율%b>을 알려주세요!"
             ],
             items: [
