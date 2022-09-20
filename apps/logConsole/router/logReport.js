@@ -557,7 +557,7 @@ LogReport.prototype.dailyReports = async function () {
             return [
               dateToString(targetDate),
               cliid,
-              targetRequest.name
+              targetRequest.name,
               ids,
               dateToString(targetRequest.request.timeline, true),
               targetProject === null ? "1800-01-01" : dateToString(targetProject.process.contract.first.date, true),
