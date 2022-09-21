@@ -91,7 +91,12 @@ DevContext.prototype.launching = async function () {
     // console.log(pastProposal[0].project.detail);
 
 
-
+    const selfMongo = this.MONGOLOGC;
+    await selfMongo.connect();
+    const LogReport = require(`${process.cwd()}/apps/logConsole/router/logReport.js`);
+    const app = new LogReport(selfMongo);
+    await app.dailyReports();
+    await selfMongo.close();
 
 
 
@@ -3019,8 +3024,8 @@ DevContext.prototype.launching = async function () {
     // send sms
     // const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
     // const human = new HumanPacket();
-    // const name = "박희상";
-    // const amount = 3752000;
+    // const name = "이지현";
+    // const amount = 3234132;
     // await human.sendSms({
     //   name: "",
     //   phone: "01055432039",

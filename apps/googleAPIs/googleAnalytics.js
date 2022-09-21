@@ -22,7 +22,7 @@ GoogleAnalytics.prototype.returnDate = function (str) {
 GoogleAnalytics.prototype.getSubmitClients = async function (thisDate, selfMongo) {
   const instance = this;
   const back = this.back;
-  const { pythonExecute, dateToString, stringToDate, errorLog } = this.mother;
+  const { pythonExecute, dateToString, stringToDate, errorLog, sleep } = this.mother;
   const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
   try {
     const withTools = true;
@@ -46,6 +46,7 @@ GoogleAnalytics.prototype.getSubmitClients = async function (thisDate, selfMongo
     let subtractMatrix;
     let problemClients;
     let subtractMatrixFiltered;
+    let safeNum;
 
     if (typeof thisDate !== "string") {
       thisDate = dateToString(thisDate);
@@ -148,6 +149,15 @@ GoogleAnalytics.prototype.getSubmitClients = async function (thisDate, selfMongo
       tempObj.users = [];
       for (let id of cliidTong[cliid]) {
         userTong = await this.getUserById(thisDate, id);
+        safeNum = 0;
+        while (userTong === null && safeNum < 10) {
+          await sleep(1000);
+          userTong = await this.getUserById(thisDate, id);
+          safeNum++;
+        }
+        if (userTong) {
+          await errorLog("GoogleAnalytics getSubmitClients error : cannot find user info => cliid " + cliid + " / id " + id);
+        }
         tempObj.users.push(userTong);
       }
       clientsArr.push(tempObj);

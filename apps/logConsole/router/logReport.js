@@ -252,9 +252,15 @@ LogReport.prototype.dailyReports = async function () {
             return acc + curr.value;
           }, 0);
 
-          facebookFromSubmit = clientsRows.data.detail.map((obj) => { return obj.users }).flat().map((obj) => {
-            return obj.source.campaign;
-          }).filter((str) => { return facebookCampaignBoo(str) }).length;
+          facebookFromSubmit = clientsRows.data.detail.map((obj) => { return obj.users }).filter((arr) => {
+            return arr.some((obj) => {
+              if (obj === null) {
+                return false;
+              } else {
+                return facebookCampaignBoo(obj.source.campaign)
+              }
+            });
+          }).length;
 
           facebookCtr = 0;
           facebookCpc = 0;
@@ -345,9 +351,15 @@ LogReport.prototype.dailyReports = async function () {
             return acc + curr.value;
           }, 0);
 
-          naverFromSubmit = clientsRows.data.detail.map((obj) => { return obj.users }).flat().map((obj) => {
-            return obj.source.campaign;
-          }).filter((str) => { return naverCampaignBoo(str) }).length;
+          naverFromSubmit = clientsRows.data.detail.map((obj) => { return obj.users }).filter((arr) => {
+            return arr.some((obj) => {
+              if (obj === null) {
+                return false;
+              } else {
+                return naverCampaignBoo(obj.source.campaign)
+              }
+            });
+          }).length;
 
           naverCtr = 0;
           naverCpc = 0;
@@ -399,7 +411,9 @@ LogReport.prototype.dailyReports = async function () {
 
           // 4
 
-          fourthMatrix = clientsRows.data.detail.map((obj) => { return { cliid: obj.cliid, users: obj.users, ids: obj.users.map((user) => { return user.id }).join(", ") } });
+          fourthMatrix = clientsRows.data.detail.map((obj) => {
+            return { cliid: obj.cliid, users: obj.users, ids: obj.users.map((user) => { return user === null ? "" : user.id }).join(", ") }
+          });
           fourthMatrix = fourthMatrix.map(({ cliid, users, ids }) => {
             const targetRequest = requests.find((obj) => { return obj.cliid === cliid });
             const targetHistory = clientHistories[cliid];
@@ -410,7 +424,7 @@ LogReport.prototype.dailyReports = async function () {
             let referrer, referrerArr;
             let service;
 
-            if (users.every((obj) => { return /^New/.test(obj.type); })) {
+            if (users.every((obj) => { return obj === null ? true : /^New/.test(obj.type); })) {
               returnType = "신규";
             } else {
               returnType = "재방문";
@@ -628,9 +642,15 @@ LogReport.prototype.dailyReports = async function () {
             return acc + curr.value;
           }, 0);
 
-          googleFromSubmit = clientsRows.data.detail.map((obj) => { return obj.users }).flat().map((obj) => {
-            return obj.source.campaign;
-          }).filter((str) => { return googleCampaignBoo(str) }).length;
+          googleFromSubmit = clientsRows.data.detail.map((obj) => { return obj.users }).filter((arr) => {
+            return arr.some((obj) => {
+              if (obj === null) {
+                return false;
+              } else {
+                return googleCampaignBoo(obj.source.campaign)
+              }
+            });
+          }).length;
 
           googleCtr = 0;
           googleCpc = 0;
