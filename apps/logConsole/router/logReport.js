@@ -13,7 +13,7 @@ LogReport.prototype.dailyReports = async function () {
   const back = this.back;
   const address = this.address;
   const { host } = this;
-  const { mongo, mongoinfo, requestSystem, autoComma, dateToString, stringToDate, errorLog, messageLog, messageSend, serviceParsing } = this.mother;
+  const { mongo, mongoinfo, requestSystem, autoComma, dateToString, stringToDate, equalJson, errorLog, messageLog, messageSend, serviceParsing, getDateMatrix } = this.mother;
   const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
   try {
     const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
@@ -156,7 +156,7 @@ LogReport.prototype.dailyReports = async function () {
             throw new Error("invaild date");
           }
 
-          // 1
+          // 1 - total funnel
 
           campaignCharge = campaignRows.reduce((acc, curr) => {
             return acc + curr.value.charge;
@@ -208,8 +208,7 @@ LogReport.prototype.dailyReports = async function () {
             ]
           ];
 
-          // 2
-          // facebook
+          // 2 - facebook
 
           facebookRows = campaignRows.filter((obj) => {
             return /facebook/gi.test(obj.information.mother);
@@ -311,8 +310,7 @@ LogReport.prototype.dailyReports = async function () {
             ]
           ];
 
-          // 3
-          // naver
+          // 3 - naver
 
           naverRows = campaignRows.filter((obj) => {
             return /naver/gi.test(obj.information.mother);
@@ -409,7 +407,7 @@ LogReport.prototype.dailyReports = async function () {
             ]
           ];
 
-          // 4
+          // 4 - clients
 
           fourthMatrix = clientsRows.data.detail.map((obj) => {
             return { cliid: obj.cliid, users: obj.users, ids: obj.users.map((user) => { return user === null ? "" : user.id }).join(", ") }
@@ -484,7 +482,7 @@ LogReport.prototype.dailyReports = async function () {
             ];
           });
 
-          // 5
+          // 5 - campaign
 
           fifthMatrix = [];
 
@@ -502,7 +500,7 @@ LogReport.prototype.dailyReports = async function () {
           }
 
 
-          // 6
+          // 6 - contract
 
           sixthMatrix = clientsRows.data.detail.map((obj) => { return { cliid: obj.cliid, users: obj.users, ids: obj.users.map((user) => { return user.id }).join(", ") } });
           sixthMatrix = sixthMatrix.map(({ cliid, users, ids }) => {
@@ -602,8 +600,7 @@ LogReport.prototype.dailyReports = async function () {
           });
 
 
-          // 7
-          // google
+          // 7 - google
 
           googleRows = campaignRows.filter((obj) => {
             return /google/gi.test(obj.information.mother);
@@ -716,6 +713,17 @@ LogReport.prototype.dailyReports = async function () {
         let standardDate;
         let dateNumber;
         let numberDate;
+        let totalFunnelCopied, totalFunnelWeekMatrix, totalFunnelMonthMatrix;
+        let facebookPaidCopied, facebookPaidMonthMatrix, facebookPaidWeekMatrix;
+        let naverPaidCopied, naverPaidMonthMatrix, naverPaidWeekMatrix;
+        let googlePaidCopied, googlePaidMonthMatrix, googlePaidWeekMatrix;
+        let tempArr;
+        let monthStartDate;
+        let monthArr;
+        let weekArr;
+        let thisIndex;
+        let ratioConverting;
+        let weekSpread;
 
         matrix = [
           [
@@ -869,7 +877,390 @@ LogReport.prototype.dailyReports = async function () {
           standardDate.setDate(standardDate.getDate() - 1);
         }
 
-        return matrix;
+        // weekly, monthy standard
+
+        monthStartDate = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
+
+        monthArr = [];
+        while (!(monthStartDate.getFullYear() === now.getFullYear() && monthStartDate.getMonth() === now.getMonth())) {
+          monthArr.push([
+            monthStartDate.getFullYear(),
+            monthStartDate.getMonth() + 1
+          ]);
+          monthStartDate.setMonth(monthStartDate.getMonth() + 1);
+        }
+        monthArr.push([
+          monthStartDate.getFullYear(),
+          monthStartDate.getMonth() + 1
+        ]);
+
+        weekArr = monthArr.map(([ year, month ]) => {
+          return getDateMatrix(year, month - 1);
+        }).map(({ matrix }) => {
+          return matrix.map((arr) => {
+            const weekArr = arr.filter((obj) => { return obj !== null }).map((obj) => {
+              return obj.dateObject;
+            });
+            return { start: dateToString(weekArr[0]), end: dateToString(weekArr[weekArr.length - 1]) };
+          });
+        }).flat();
+
+        monthArr = monthArr.map(([ year, month ]) => {
+          return { year, month };
+        })
+
+        monthArr.reverse();
+        weekArr.reverse();
+
+        ratioConverting = (mode) => {
+          return (arr) => {
+            let charge;
+            let impressions;
+            let clicks;
+            let fromUsers;
+            let fromClicks;
+            let fromPopups;
+            let fromSubmit;
+            let ctr;
+            let cpc;
+            let clicksConverting;
+            let clicksChargeConverting;
+            let submitConverting;
+            let submitChargeConverting;
+
+            charge = arr[1];
+            if (mode === "facebook") {
+              impressions = arr[3];
+              clicks = arr[4];
+              fromUsers = arr[5];
+              fromClicks = arr[6];
+              fromPopups = arr[7];
+              fromSubmit = arr[8];
+            } else {
+              impressions = arr[2];
+              clicks = arr[3];
+              fromUsers = arr[4];
+              fromClicks = arr[5];
+              fromPopups = arr[6];
+              fromSubmit = arr[7];
+            }
+
+            ctr = 0;
+            cpc = 0;
+            clicksConverting = 0;
+            clicksChargeConverting = 0;
+            submitConverting = 0;
+            submitChargeConverting = 0;
+
+            if (impressions !== 0) {
+              ctr = clicks / impressions;
+              ctr = Math.floor(ctr * 10000) / 10000;
+            }
+            if (clicks !== 0) {
+              cpc = Math.round(charge / clicks);
+            }
+            if (clicks !== 0) {
+              clicksConverting = (fromClicks + fromPopups) / clicks;
+              clicksConverting = Math.floor(clicksConverting * 10000) / 10000;
+            }
+            if (fromClicks + fromPopups !== 0) {
+              clicksChargeConverting = Math.round(charge / (fromClicks + fromPopups));
+            }
+            if (clicks !== 0) {
+              submitConverting = fromSubmit / clicks;
+              submitConverting = Math.floor(submitConverting * 10000) / 10000;
+            }
+            if (fromSubmit !== 0) {
+              submitChargeConverting = Math.round(charge / fromSubmit);
+            }
+
+            if (mode === "facebook") {
+              arr[9] = ctr;
+              arr[10] = cpc;
+              arr[11] = clicksConverting;
+              arr[12] = clicksChargeConverting;
+              arr[13] = submitConverting;
+              arr[14] = submitChargeConverting;
+            } else {
+              arr[8] = ctr;
+              arr[9] = cpc;
+              arr[10] = clicksConverting;
+              arr[11] = clicksChargeConverting;
+              arr[12] = submitConverting;
+              arr[13] = submitChargeConverting;
+            }
+          }
+        };
+
+        weekSpread = (arr) => {
+          if (arr[0] === "날짜") {
+            arr[0] = [ "주 시작일", "주 종료일" ];
+          } else {
+            arr[0] = arr[0].split(" ~ ");
+          }
+          arr = arr.flat();
+          return arr;
+        };
+
+        // total funnel
+        thisIndex = 0;
+        totalFunnelCopied = equalJson(JSON.stringify(matrix[thisIndex])).slice(1);
+        totalFunnelMonthMatrix = equalJson(JSON.stringify(monthArr));
+        totalFunnelWeekMatrix = equalJson(JSON.stringify(weekArr));
+
+        totalFunnelMonthMatrix.forEach((obj) => {
+          let target;
+          target = [];
+          for (let arr of totalFunnelCopied) {
+            if ((new RegExp("^" + String(obj.year) + "-" + zeroAddition(obj.month))).test(arr[0])) {
+              target.push(equalJson(JSON.stringify(arr)));
+            }
+          }
+          if (target.length === 0) {
+            obj.matrix = target;
+          } else {
+            target = target.reduce((acc, curr) => {
+              for (let i = 0; i < curr.length; i++) {
+                if (i !== 0) {
+                  acc[i] = acc[i] + curr[i];
+                }
+              }
+              return acc;
+            }, new Array(target[0].length).fill(0, 0))
+            obj.matrix = target;
+          }
+        });
+        totalFunnelMonthMatrix = totalFunnelMonthMatrix.filter((obj) => { return obj.matrix.length !== 0 }).map(({ year, month, matrix }) => {
+          matrix[0] = String(year) + "년 " + String(month) + "월";
+          return matrix;
+        });
+        totalFunnelMonthMatrix.unshift(equalJson(JSON.stringify(matrix[thisIndex][0])));
+
+        totalFunnelWeekMatrix.forEach((obj) => {
+          let target;
+          target = [];
+          for (let arr of totalFunnelCopied) {
+            if (stringToDate(obj.start).valueOf() <= stringToDate(arr[0]).valueOf() && stringToDate(obj.end).valueOf() >= stringToDate(arr[0]).valueOf()) {
+              target.push(equalJson(JSON.stringify(arr)));
+            }
+          }
+          if (target.length === 0) {
+            obj.matrix = target;
+          } else {
+            target = target.reduce((acc, curr) => {
+              for (let i = 0; i < curr.length; i++) {
+                if (i !== 0) {
+                  acc[i] = acc[i] + curr[i];
+                }
+              }
+              return acc;
+            }, new Array(target[0].length).fill(0, 0))
+            obj.matrix = target;
+          }
+        });
+        totalFunnelWeekMatrix = totalFunnelWeekMatrix.filter((obj) => { return obj.matrix.length !== 0 }).map(({ start, end, matrix }) => {
+          matrix[0] = String(start) + " ~ " + String(end);
+          return matrix;
+        });
+        totalFunnelWeekMatrix.unshift(equalJson(JSON.stringify(matrix[thisIndex][0])));
+        totalFunnelWeekMatrix = totalFunnelWeekMatrix.map(weekSpread);
+
+        // facebook paid
+        thisIndex = 1;
+        facebookPaidCopied = equalJson(JSON.stringify(matrix[thisIndex])).slice(1);
+        facebookPaidMonthMatrix = equalJson(JSON.stringify(monthArr));
+        facebookPaidWeekMatrix = equalJson(JSON.stringify(weekArr));
+
+        facebookPaidMonthMatrix.forEach((obj) => {
+          let target;
+          target = [];
+          for (let arr of facebookPaidCopied) {
+            if ((new RegExp("^" + String(obj.year) + "-" + zeroAddition(obj.month))).test(arr[0])) {
+              target.push(equalJson(JSON.stringify(arr)));
+            }
+          }
+          if (target.length === 0) {
+            obj.matrix = target;
+          } else {
+            target = target.reduce((acc, curr) => {
+              for (let i = 0; i < curr.length; i++) {
+                if (i !== 0) {
+                  acc[i] = acc[i] + curr[i];
+                }
+              }
+              return acc;
+            }, new Array(target[0].length).fill(0, 0))
+            obj.matrix = target;
+          }
+        });
+        facebookPaidMonthMatrix = facebookPaidMonthMatrix.filter((obj) => { return obj.matrix.length !== 0 }).map(({ year, month, matrix }) => {
+          matrix[0] = String(year) + "년 " + String(month) + "월";
+          return matrix;
+        });
+        facebookPaidMonthMatrix.forEach(ratioConverting("facebook"));
+        facebookPaidMonthMatrix.unshift(equalJson(JSON.stringify(matrix[thisIndex][0])));
+
+        facebookPaidWeekMatrix.forEach((obj) => {
+          let target;
+          target = [];
+          for (let arr of facebookPaidCopied) {
+            if (stringToDate(obj.start).valueOf() <= stringToDate(arr[0]).valueOf() && stringToDate(obj.end).valueOf() >= stringToDate(arr[0]).valueOf()) {
+              target.push(equalJson(JSON.stringify(arr)));
+            }
+          }
+          if (target.length === 0) {
+            obj.matrix = target;
+          } else {
+            target = target.reduce((acc, curr) => {
+              for (let i = 0; i < curr.length; i++) {
+                if (i !== 0) {
+                  acc[i] = acc[i] + curr[i];
+                }
+              }
+              return acc;
+            }, new Array(target[0].length).fill(0, 0))
+            obj.matrix = target;
+          }
+        });
+        facebookPaidWeekMatrix = facebookPaidWeekMatrix.filter((obj) => { return obj.matrix.length !== 0 }).map(({ start, end, matrix }) => {
+          matrix[0] = String(start) + " ~ " + String(end);
+          return matrix;
+        });
+        facebookPaidWeekMatrix.forEach(ratioConverting("facebook"));
+        facebookPaidWeekMatrix.unshift(equalJson(JSON.stringify(matrix[thisIndex][0])));
+        facebookPaidWeekMatrix = facebookPaidWeekMatrix.map(weekSpread);
+
+        // naver paid
+        thisIndex = 2;
+        naverPaidCopied = equalJson(JSON.stringify(matrix[thisIndex])).slice(1);
+        naverPaidMonthMatrix = equalJson(JSON.stringify(monthArr));
+        naverPaidWeekMatrix = equalJson(JSON.stringify(weekArr));
+
+        naverPaidMonthMatrix.forEach((obj) => {
+          let target;
+          target = [];
+          for (let arr of naverPaidCopied) {
+            if ((new RegExp("^" + String(obj.year) + "-" + zeroAddition(obj.month))).test(arr[0])) {
+              target.push(equalJson(JSON.stringify(arr)));
+            }
+          }
+          if (target.length === 0) {
+            obj.matrix = target;
+          } else {
+            target = target.reduce((acc, curr) => {
+              for (let i = 0; i < curr.length; i++) {
+                if (i !== 0) {
+                  acc[i] = acc[i] + curr[i];
+                }
+              }
+              return acc;
+            }, new Array(target[0].length).fill(0, 0))
+            obj.matrix = target;
+          }
+        });
+        naverPaidMonthMatrix = naverPaidMonthMatrix.filter((obj) => { return obj.matrix.length !== 0 }).map(({ year, month, matrix }) => {
+          matrix[0] = String(year) + "년 " + String(month) + "월";
+          return matrix;
+        });
+        naverPaidMonthMatrix.forEach(ratioConverting("naver"));
+        naverPaidMonthMatrix.unshift(equalJson(JSON.stringify(matrix[thisIndex][0])));
+
+        naverPaidWeekMatrix.forEach((obj) => {
+          let target;
+          target = [];
+          for (let arr of naverPaidCopied) {
+            if (stringToDate(obj.start).valueOf() <= stringToDate(arr[0]).valueOf() && stringToDate(obj.end).valueOf() >= stringToDate(arr[0]).valueOf()) {
+              target.push(equalJson(JSON.stringify(arr)));
+            }
+          }
+          if (target.length === 0) {
+            obj.matrix = target;
+          } else {
+            target = target.reduce((acc, curr) => {
+              for (let i = 0; i < curr.length; i++) {
+                if (i !== 0) {
+                  acc[i] = acc[i] + curr[i];
+                }
+              }
+              return acc;
+            }, new Array(target[0].length).fill(0, 0))
+            obj.matrix = target;
+          }
+        });
+        naverPaidWeekMatrix = naverPaidWeekMatrix.filter((obj) => { return obj.matrix.length !== 0 }).map(({ start, end, matrix }) => {
+          matrix[0] = String(start) + " ~ " + String(end);
+          return matrix;
+        });
+        naverPaidWeekMatrix.forEach(ratioConverting("naver"));
+        naverPaidWeekMatrix.unshift(equalJson(JSON.stringify(matrix[thisIndex][0])));
+        naverPaidWeekMatrix = naverPaidWeekMatrix.map(weekSpread);
+
+        // google paid
+        thisIndex = 6;
+        googlePaidCopied = equalJson(JSON.stringify(matrix[thisIndex])).slice(1);
+        googlePaidMonthMatrix = equalJson(JSON.stringify(monthArr));
+        googlePaidWeekMatrix = equalJson(JSON.stringify(weekArr));
+
+        googlePaidMonthMatrix.forEach((obj) => {
+          let target;
+          target = [];
+          for (let arr of googlePaidCopied) {
+            if ((new RegExp("^" + String(obj.year) + "-" + zeroAddition(obj.month))).test(arr[0])) {
+              target.push(equalJson(JSON.stringify(arr)));
+            }
+          }
+          if (target.length === 0) {
+            obj.matrix = target;
+          } else {
+            target = target.reduce((acc, curr) => {
+              for (let i = 0; i < curr.length; i++) {
+                if (i !== 0) {
+                  acc[i] = acc[i] + curr[i];
+                }
+              }
+              return acc;
+            }, new Array(target[0].length).fill(0, 0))
+            obj.matrix = target;
+          }
+        });
+        googlePaidMonthMatrix = googlePaidMonthMatrix.filter((obj) => { return obj.matrix.length !== 0 }).map(({ year, month, matrix }) => {
+          matrix[0] = String(year) + "년 " + String(month) + "월";
+          return matrix;
+        });
+        googlePaidMonthMatrix.forEach(ratioConverting("google"));
+        googlePaidMonthMatrix.unshift(equalJson(JSON.stringify(matrix[thisIndex][0])));
+
+        googlePaidWeekMatrix.forEach((obj) => {
+          let target;
+          target = [];
+          for (let arr of googlePaidCopied) {
+            if (stringToDate(obj.start).valueOf() <= stringToDate(arr[0]).valueOf() && stringToDate(obj.end).valueOf() >= stringToDate(arr[0]).valueOf()) {
+              target.push(equalJson(JSON.stringify(arr)));
+            }
+          }
+          if (target.length === 0) {
+            obj.matrix = target;
+          } else {
+            target = target.reduce((acc, curr) => {
+              for (let i = 0; i < curr.length; i++) {
+                if (i !== 0) {
+                  acc[i] = acc[i] + curr[i];
+                }
+              }
+              return acc;
+            }, new Array(target[0].length).fill(0, 0))
+            obj.matrix = target;
+          }
+        });
+        googlePaidWeekMatrix = googlePaidWeekMatrix.filter((obj) => { return obj.matrix.length !== 0 }).map(({ start, end, matrix }) => {
+          matrix[0] = String(start) + " ~ " + String(end);
+          return matrix;
+        });
+        googlePaidWeekMatrix.forEach(ratioConverting("google"));
+        googlePaidWeekMatrix.unshift(equalJson(JSON.stringify(matrix[thisIndex][0])));
+        googlePaidWeekMatrix = googlePaidWeekMatrix.map(weekSpread);
+
+        return { matrix, month: { totalFunnelMonthMatrix, facebookPaidMonthMatrix, naverPaidMonthMatrix, googlePaidMonthMatrix }, week: { totalFunnelWeekMatrix, facebookPaidWeekMatrix, naverPaidWeekMatrix, googlePaidWeekMatrix } };
 
       } catch (e) {
         console.log(e);
@@ -978,10 +1369,27 @@ LogReport.prototype.dailyReports = async function () {
     const sixthSheetsId = "1d64IEb9S4MIfb0rTQW1ojWI9Tq6utyzdE6MEsEbVvcs";
     const seventhSheetsId = "1XvZGAalipoQFzwWM178_c8Ect6n2hRf_MV5OfSXGfl8";
     const eighthSheetsId = "1TPSsXlaNz8ZssqImPZUYTZvnsqRuInSQXaAoFJ-CttU";
-    const [ first, second, third, fourth, fifth, sixth, seventh ] = await marketingBasicMatrix(startDay);
-    const [ eighth ] = await saDefaultMatrix(startDay);
 
-    console.log(first, second, third, fourth, fifth, sixth, seventh);
+    const monthSheets = {
+      totalFunnelMonthMatrix: "1jmbTM-pKZ6hwWtQyEsQPuKsT2t3YtVsEo6XuU6kqENU",
+      facebookPaidMonthMatrix: "1EVBjmpFlqmitvQkkWM6K2NWH7h8I-r0vxe7Dub2HLZM",
+      naverPaidMonthMatrix: "1xkcwOZRAwsXC6JGeSio-Ubm--dr4ddxgG6gdGZb52xc",
+      googlePaidMonthMatrix: "1w_SCBYBlocVsD5QQNR-1l3i-mYOODbSFxmJnL75inag",
+    };
+
+    const weekSheets = {
+      totalFunnelWeekMatrix: "19ed2yeKFQvYIHOHSQ14BK8vAj-H6_jrCviQWfLzOTzw",
+      facebookPaidWeekMatrix: "1-A0v7Ox22l5wcS2H-gYkq200BZrAakKBMa3muwm8eKg",
+      naverPaidWeekMatrix: "1q3NFIYnbFCuQUgJRWvgchFOdAeIQxaWmkbAPIuqY1AU",
+      googlePaidWeekMatrix: "15Rd2JbqCcm9LjIIMuPVm0U13cDJC_uYxyPdFRjf4b2Y",
+    };
+
+    const {
+      matrix: [ first, second, third, fourth, fifth, sixth, seventh ],
+      month: { totalFunnelMonthMatrix, facebookPaidMonthMatrix, naverPaidMonthMatrix, googlePaidMonthMatrix },
+      week: { totalFunnelWeekMatrix, facebookPaidWeekMatrix, naverPaidWeekMatrix, googlePaidWeekMatrix }
+    } = await marketingBasicMatrix(startDay);
+    const [ eighth ] = await saDefaultMatrix(startDay);
 
     await sheets.update_value_inPython(firstSheetsId, "", first);
     await sheets.update_value_inPython(secondSheetsId, "", second);
@@ -991,6 +1399,16 @@ LogReport.prototype.dailyReports = async function () {
     await sheets.update_value_inPython(sixthSheetsId, "", sixth);
     await sheets.update_value_inPython(seventhSheetsId, "", seventh);
     await sheets.update_value_inPython(eighthSheetsId, "", eighth);
+
+    await sheets.update_value_inPython(monthSheets.totalFunnelMonthMatrix, "", totalFunnelMonthMatrix);
+    await sheets.update_value_inPython(monthSheets.facebookPaidMonthMatrix, "", facebookPaidMonthMatrix);
+    await sheets.update_value_inPython(monthSheets.naverPaidMonthMatrix, "", naverPaidMonthMatrix);
+    await sheets.update_value_inPython(monthSheets.googlePaidMonthMatrix, "", googlePaidMonthMatrix);
+
+    await sheets.update_value_inPython(weekSheets.totalFunnelWeekMatrix, "", totalFunnelWeekMatrix);
+    await sheets.update_value_inPython(weekSheets.facebookPaidWeekMatrix, "", facebookPaidWeekMatrix);
+    await sheets.update_value_inPython(weekSheets.naverPaidWeekMatrix, "", naverPaidWeekMatrix);
+    await sheets.update_value_inPython(weekSheets.googlePaidWeekMatrix, "", googlePaidWeekMatrix);
 
     console.log("sheets update all done");
 

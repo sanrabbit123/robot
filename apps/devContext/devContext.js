@@ -91,12 +91,13 @@ DevContext.prototype.launching = async function () {
     // console.log(pastProposal[0].project.detail);
 
 
-    const selfMongo = this.MONGOLOGC;
-    await selfMongo.connect();
-    const LogReport = require(`${process.cwd()}/apps/logConsole/router/logReport.js`);
-    const app = new LogReport(selfMongo);
-    await app.dailyReports();
-    await selfMongo.close();
+
+    // const selfMongo = this.MONGOLOGC;
+    // await selfMongo.connect();
+    // const LogReport = require(`${process.cwd()}/apps/logConsole/router/logReport.js`);
+    // const app = new LogReport(selfMongo);
+    // await app.dailyReports();
+    // await selfMongo.close();
 
 
 
@@ -116,7 +117,7 @@ DevContext.prototype.launching = async function () {
     // let month;
     //
     // standard = [ "강해진", "이큰별", "임지민" ];
-    // month = 1;
+    // month = 9;
     //
     // from = new Date(2022, (month - 1), 1);
     // to = new Date(2022, ((month - 1) + 1), 1);
@@ -3024,8 +3025,8 @@ DevContext.prototype.launching = async function () {
     // send sms
     // const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
     // const human = new HumanPacket();
-    // const name = "이지현";
-    // const amount = 3234132;
+    // const name = "신은경";
+    // const amount = 11278000;
     // await human.sendSms({
     //   name: "",
     //   phone: "01055432039",
