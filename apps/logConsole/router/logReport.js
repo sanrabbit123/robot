@@ -15,11 +15,13 @@ LogReport.prototype.dailyReports = async function () {
   const { host } = this;
   const { mongo, mongoinfo, requestSystem, autoComma, dateToString, stringToDate, equalJson, errorLog, messageLog, messageSend, serviceParsing, getDateMatrix } = this.mother;
   const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
+  const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
   try {
     const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
     const selfCoreMongo = new mongo(mongoinfo, { useUnifiedTopology: true });
     const selfMongo = this.mongo;
     const sheets = new GoogleSheet();
+    const analytics = new GoogleAnalytics();
     const today = new Date();
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
@@ -46,6 +48,16 @@ LogReport.prototype.dailyReports = async function () {
         const analyticsEntireRows = await back.mongoRead("dailyAnalytics", {}, { selfMongo });
         const clientsEntireRows = await back.mongoRead("dailyClients", {}, { selfMongo });
 
+        const facebookCampaignBoo = (str) => {
+          return ((/^[A-Z]/.test(str) || /^t/.test(str) || /^s/.test(str) || /^link/.test(str) || /^facebook/.test(str) || /^main_video/.test(str) || /^Mag/.test(str) || /^maposketch/.test(str) || /^MV/.test(str) || /^appeal/.test(str) || /^De_image/.test(str) || /^video_mom/.test(str)) && !/^home/.test(str) && !/^PO3/.test(str) && !/^M_DA/.test(str) && !/^apart/.test(str) && !/^interior/.test(str) && !/^about/.test(str) && !/^local/.test(str) && !/^consul/.test(str) && !/not set/g.test(str) && !/^mini/.test(str) && !/^local/.test(str) && !/^naver/.test(str) && !/^google/.test(str));
+        }
+        const naverCampaignBoo = (str) => {
+          return ((/^home/.test(str) || /^naver/.test(str) || /^[0-9]/.test(str) || /^PO3/.test(str) || /^M_DA/.test(str) || /^conver/.test(str) || /^mini/.test(str) || /^local/.test(str) || /^conver/.test(str)  || /^apart/.test(str) || /^about/.test(str)  || /^interior/.test(str) || /^new/.test(str) || /^port/.test(str) || /^recruit/.test(str) || /^review/.test(str) || /^traffic/.test(str) || /^consul/.test(str)) && !/not set/g.test(str) && !/^link/g.test(str) && !/^facebook/g.test(str) && !/^main_video/g.test(str) && !/^google/.test(str));
+        }
+        const googleCampaignBoo = (str) => {
+          return ((/^[ㄱ-ㅎ]/.test(str) || /^[가-힣]/.test(str) || /^google/.test(str)) && !/not set/g.test(str) && !/^home/g.test(str) && !/^facebook/g.test(str) && !/^link/g.test(str) && !/^local/g.test(str) && !/^naver/g.test(str));
+        }
+
         const getReportsByDate = async (targetDate, campaignEntireRows, analyticsEntireRows, clientsEntireRows, clients, projects, clientHistories) => {
           const campaignCollection = "dailyCampaign";
           const analyticsCollection = "dailyAnalytics";
@@ -66,15 +78,6 @@ LogReport.prototype.dailyReports = async function () {
               clients: clientsIdMaker(date),
             }
           };
-          const facebookCampaignBoo = (str) => {
-            return ((/^[A-Z]/.test(str) || /^t/.test(str) || /^s/.test(str) || /^link/.test(str) || /^facebook/.test(str) || /^main_video/.test(str) || /^Mag/.test(str) || /^maposketch/.test(str) || /^MV/.test(str) || /^appeal/.test(str) || /^De_image/.test(str) || /^video_mom/.test(str)) && !/^home/.test(str) && !/^PO3/.test(str) && !/^M_DA/.test(str) && !/^apart/.test(str) && !/^interior/.test(str) && !/^about/.test(str) && !/^local/.test(str) && !/^consul/.test(str) && !/not set/g.test(str) && !/^mini/.test(str) && !/^local/.test(str) && !/^naver/.test(str) && !/^google/.test(str));
-          }
-          const naverCampaignBoo = (str) => {
-            return ((/^home/.test(str) || /^naver/.test(str) || /^[0-9]/.test(str) || /^PO3/.test(str) || /^M_DA/.test(str) || /^conver/.test(str) || /^mini/.test(str) || /^local/.test(str) || /^conver/.test(str)  || /^apart/.test(str) || /^about/.test(str)  || /^interior/.test(str) || /^new/.test(str) || /^port/.test(str) || /^recruit/.test(str) || /^review/.test(str) || /^traffic/.test(str) || /^consul/.test(str)) && !/not set/g.test(str) && !/^link/g.test(str) && !/^facebook/g.test(str) && !/^main_video/g.test(str) && !/^google/.test(str));
-          }
-          const googleCampaignBoo = (str) => {
-            return ((/^[ㄱ-ㅎ]/.test(str) || /^[가-힣]/.test(str) || /^google/.test(str)) && !/not set/g.test(str) && !/^home/g.test(str) && !/^facebook/g.test(str) && !/^link/g.test(str) && !/^local/g.test(str) && !/^naver/g.test(str));
-          }
           const {
             campaign: campaignKey,
             analytics: analyticsKey,
@@ -724,6 +727,10 @@ LogReport.prototype.dailyReports = async function () {
         let thisIndex;
         let ratioConverting;
         let weekSpread;
+        let target;
+        let startD, endD;
+        let simpleRes;
+        let simpleRows;
 
         matrix = [
           [
@@ -1008,17 +1015,17 @@ LogReport.prototype.dailyReports = async function () {
         totalFunnelMonthMatrix = equalJson(JSON.stringify(monthArr));
         totalFunnelWeekMatrix = equalJson(JSON.stringify(weekArr));
 
-        totalFunnelMonthMatrix.forEach((obj) => {
-          let target;
+        for (let obj of totalFunnelMonthMatrix) {
           target = [];
           for (let arr of totalFunnelCopied) {
             if ((new RegExp("^" + String(obj.year) + "-" + zeroAddition(obj.month))).test(arr[0])) {
               target.push(equalJson(JSON.stringify(arr)));
             }
           }
-          if (target.length === 0) {
-            obj.matrix = target;
-          } else {
+
+          if (target.length !== 0) {
+            endD = target[0][0];
+            startD = target[target.length - 1][0];
             target = target.reduce((acc, curr) => {
               for (let i = 0; i < curr.length; i++) {
                 if (i !== 0) {
@@ -1026,27 +1033,37 @@ LogReport.prototype.dailyReports = async function () {
                 }
               }
               return acc;
-            }, new Array(target[0].length).fill(0, 0))
-            obj.matrix = target;
+            }, new Array(target[0].length).fill(0, 0));
+
+            simpleRows = await back.mongoRead("simpleAnalytics", { key: "simple_analytics_" + startD.replace(/\-/gi, '') + "_" + endD.replace(/\-/gi, '') }, { selfMongo });
+            if (simpleRows.length === 0) {
+              simpleRes = await analytics.simpleMetric(startD, endD);
+              await back.mongoCreate("simpleAnalytics", simpleRes, { selfMongo });
+            } else {
+              simpleRes = simpleRows[0];
+            }
+            target[4] = simpleRes.data.users.total;
+
           }
-        });
+          obj.matrix = target;
+        }
         totalFunnelMonthMatrix = totalFunnelMonthMatrix.filter((obj) => { return obj.matrix.length !== 0 }).map(({ year, month, matrix }) => {
           matrix[0] = String(year) + "년 " + String(month) + "월";
           return matrix;
         });
         totalFunnelMonthMatrix.unshift(equalJson(JSON.stringify(matrix[thisIndex][0])));
 
-        totalFunnelWeekMatrix.forEach((obj) => {
-          let target;
+        for (let obj of totalFunnelWeekMatrix) {
           target = [];
           for (let arr of totalFunnelCopied) {
             if (stringToDate(obj.start).valueOf() <= stringToDate(arr[0]).valueOf() && stringToDate(obj.end).valueOf() >= stringToDate(arr[0]).valueOf()) {
               target.push(equalJson(JSON.stringify(arr)));
             }
           }
-          if (target.length === 0) {
-            obj.matrix = target;
-          } else {
+
+          if (target.length !== 0) {
+            endD = target[0][0];
+            startD = target[target.length - 1][0];
             target = target.reduce((acc, curr) => {
               for (let i = 0; i < curr.length; i++) {
                 if (i !== 0) {
@@ -1054,10 +1071,20 @@ LogReport.prototype.dailyReports = async function () {
                 }
               }
               return acc;
-            }, new Array(target[0].length).fill(0, 0))
-            obj.matrix = target;
+            }, new Array(target[0].length).fill(0, 0));
+
+            simpleRows = await back.mongoRead("simpleAnalytics", { key: "simple_analytics_" + startD.replace(/\-/gi, '') + "_" + endD.replace(/\-/gi, '') }, { selfMongo });
+            if (simpleRows.length === 0) {
+              simpleRes = await analytics.simpleMetric(startD, endD);
+              await back.mongoCreate("simpleAnalytics", simpleRes, { selfMongo });
+            } else {
+              simpleRes = simpleRows[0];
+            }
+            target[4] = simpleRes.data.users.total;
+
           }
-        });
+          obj.matrix = target;
+        }
         totalFunnelWeekMatrix = totalFunnelWeekMatrix.filter((obj) => { return obj.matrix.length !== 0 }).map(({ start, end, matrix }) => {
           matrix[0] = String(start) + " ~ " + String(end);
           return matrix;
@@ -1071,17 +1098,17 @@ LogReport.prototype.dailyReports = async function () {
         facebookPaidMonthMatrix = equalJson(JSON.stringify(monthArr));
         facebookPaidWeekMatrix = equalJson(JSON.stringify(weekArr));
 
-        facebookPaidMonthMatrix.forEach((obj) => {
-          let target;
+        for (let obj of facebookPaidMonthMatrix) {
           target = [];
           for (let arr of facebookPaidCopied) {
             if ((new RegExp("^" + String(obj.year) + "-" + zeroAddition(obj.month))).test(arr[0])) {
               target.push(equalJson(JSON.stringify(arr)));
             }
           }
-          if (target.length === 0) {
-            obj.matrix = target;
-          } else {
+
+          if (target.length !== 0) {
+            endD = target[0][0];
+            startD = target[target.length - 1][0];
             target = target.reduce((acc, curr) => {
               for (let i = 0; i < curr.length; i++) {
                 if (i !== 0) {
@@ -1089,10 +1116,24 @@ LogReport.prototype.dailyReports = async function () {
                 }
               }
               return acc;
-            }, new Array(target[0].length).fill(0, 0))
-            obj.matrix = target;
+            }, new Array(target[0].length).fill(0, 0));
+
+            simpleRows = await back.mongoRead("simpleAnalytics", { key: "simple_analytics_" + startD.replace(/\-/gi, '') + "_" + endD.replace(/\-/gi, '') }, { selfMongo });
+            if (simpleRows.length === 0) {
+              simpleRes = await analytics.simpleMetric(startD, endD);
+              await back.mongoCreate("simpleAnalytics", simpleRes, { selfMongo });
+            } else {
+              simpleRes = simpleRows[0];
+            }
+            target[5] = simpleRes.data.users.detail.campaign.cases.filter((obj) => {
+              return facebookCampaignBoo(obj.case);
+            }).reduce((acc, curr) => {
+              return acc + curr.value;
+            }, 0);
+
           }
-        });
+          obj.matrix = target;
+        }
         facebookPaidMonthMatrix = facebookPaidMonthMatrix.filter((obj) => { return obj.matrix.length !== 0 }).map(({ year, month, matrix }) => {
           matrix[0] = String(year) + "년 " + String(month) + "월";
           return matrix;
@@ -1100,17 +1141,16 @@ LogReport.prototype.dailyReports = async function () {
         facebookPaidMonthMatrix.forEach(ratioConverting("facebook"));
         facebookPaidMonthMatrix.unshift(equalJson(JSON.stringify(matrix[thisIndex][0])));
 
-        facebookPaidWeekMatrix.forEach((obj) => {
-          let target;
+        for (let obj of facebookPaidWeekMatrix) {
           target = [];
           for (let arr of facebookPaidCopied) {
             if (stringToDate(obj.start).valueOf() <= stringToDate(arr[0]).valueOf() && stringToDate(obj.end).valueOf() >= stringToDate(arr[0]).valueOf()) {
               target.push(equalJson(JSON.stringify(arr)));
             }
           }
-          if (target.length === 0) {
-            obj.matrix = target;
-          } else {
+          if (target.length !== 0) {
+            endD = target[0][0];
+            startD = target[target.length - 1][0];
             target = target.reduce((acc, curr) => {
               for (let i = 0; i < curr.length; i++) {
                 if (i !== 0) {
@@ -1118,10 +1158,25 @@ LogReport.prototype.dailyReports = async function () {
                 }
               }
               return acc;
-            }, new Array(target[0].length).fill(0, 0))
-            obj.matrix = target;
+            }, new Array(target[0].length).fill(0, 0));
+
+            simpleRows = await back.mongoRead("simpleAnalytics", { key: "simple_analytics_" + startD.replace(/\-/gi, '') + "_" + endD.replace(/\-/gi, '') }, { selfMongo });
+            if (simpleRows.length === 0) {
+              simpleRes = await analytics.simpleMetric(startD, endD);
+              await back.mongoCreate("simpleAnalytics", simpleRes, { selfMongo });
+            } else {
+              simpleRes = simpleRows[0];
+            }
+            target[5] = simpleRes.data.users.detail.campaign.cases.filter((obj) => {
+              return facebookCampaignBoo(obj.case);
+            }).reduce((acc, curr) => {
+              return acc + curr.value;
+            }, 0);
+
           }
-        });
+          obj.matrix = target;
+        }
+
         facebookPaidWeekMatrix = facebookPaidWeekMatrix.filter((obj) => { return obj.matrix.length !== 0 }).map(({ start, end, matrix }) => {
           matrix[0] = String(start) + " ~ " + String(end);
           return matrix;
@@ -1136,17 +1191,16 @@ LogReport.prototype.dailyReports = async function () {
         naverPaidMonthMatrix = equalJson(JSON.stringify(monthArr));
         naverPaidWeekMatrix = equalJson(JSON.stringify(weekArr));
 
-        naverPaidMonthMatrix.forEach((obj) => {
-          let target;
+        for (let obj of naverPaidMonthMatrix) {
           target = [];
           for (let arr of naverPaidCopied) {
             if ((new RegExp("^" + String(obj.year) + "-" + zeroAddition(obj.month))).test(arr[0])) {
               target.push(equalJson(JSON.stringify(arr)));
             }
           }
-          if (target.length === 0) {
-            obj.matrix = target;
-          } else {
+          if (target.length !== 0) {
+            endD = target[0][0];
+            startD = target[target.length - 1][0];
             target = target.reduce((acc, curr) => {
               for (let i = 0; i < curr.length; i++) {
                 if (i !== 0) {
@@ -1154,10 +1208,24 @@ LogReport.prototype.dailyReports = async function () {
                 }
               }
               return acc;
-            }, new Array(target[0].length).fill(0, 0))
-            obj.matrix = target;
+            }, new Array(target[0].length).fill(0, 0));
+
+            simpleRows = await back.mongoRead("simpleAnalytics", { key: "simple_analytics_" + startD.replace(/\-/gi, '') + "_" + endD.replace(/\-/gi, '') }, { selfMongo });
+            if (simpleRows.length === 0) {
+              simpleRes = await analytics.simpleMetric(startD, endD);
+              await back.mongoCreate("simpleAnalytics", simpleRes, { selfMongo });
+            } else {
+              simpleRes = simpleRows[0];
+            }
+            target[4] = simpleRes.data.users.detail.campaign.cases.filter((obj) => {
+              return naverCampaignBoo(obj.case);
+            }).reduce((acc, curr) => {
+              return acc + curr.value;
+            }, 0);
+
           }
-        });
+          obj.matrix = target;
+        }
         naverPaidMonthMatrix = naverPaidMonthMatrix.filter((obj) => { return obj.matrix.length !== 0 }).map(({ year, month, matrix }) => {
           matrix[0] = String(year) + "년 " + String(month) + "월";
           return matrix;
@@ -1165,17 +1233,16 @@ LogReport.prototype.dailyReports = async function () {
         naverPaidMonthMatrix.forEach(ratioConverting("naver"));
         naverPaidMonthMatrix.unshift(equalJson(JSON.stringify(matrix[thisIndex][0])));
 
-        naverPaidWeekMatrix.forEach((obj) => {
-          let target;
+        for (let obj of naverPaidWeekMatrix) {
           target = [];
           for (let arr of naverPaidCopied) {
             if (stringToDate(obj.start).valueOf() <= stringToDate(arr[0]).valueOf() && stringToDate(obj.end).valueOf() >= stringToDate(arr[0]).valueOf()) {
               target.push(equalJson(JSON.stringify(arr)));
             }
           }
-          if (target.length === 0) {
-            obj.matrix = target;
-          } else {
+          if (target.length !== 0) {
+            endD = target[0][0];
+            startD = target[target.length - 1][0];
             target = target.reduce((acc, curr) => {
               for (let i = 0; i < curr.length; i++) {
                 if (i !== 0) {
@@ -1183,10 +1250,24 @@ LogReport.prototype.dailyReports = async function () {
                 }
               }
               return acc;
-            }, new Array(target[0].length).fill(0, 0))
-            obj.matrix = target;
+            }, new Array(target[0].length).fill(0, 0));
+
+            simpleRows = await back.mongoRead("simpleAnalytics", { key: "simple_analytics_" + startD.replace(/\-/gi, '') + "_" + endD.replace(/\-/gi, '') }, { selfMongo });
+            if (simpleRows.length === 0) {
+              simpleRes = await analytics.simpleMetric(startD, endD);
+              await back.mongoCreate("simpleAnalytics", simpleRes, { selfMongo });
+            } else {
+              simpleRes = simpleRows[0];
+            }
+            target[4] = simpleRes.data.users.detail.campaign.cases.filter((obj) => {
+              return naverCampaignBoo(obj.case);
+            }).reduce((acc, curr) => {
+              return acc + curr.value;
+            }, 0);
+
           }
-        });
+          obj.matrix = target;
+        }
         naverPaidWeekMatrix = naverPaidWeekMatrix.filter((obj) => { return obj.matrix.length !== 0 }).map(({ start, end, matrix }) => {
           matrix[0] = String(start) + " ~ " + String(end);
           return matrix;
@@ -1201,17 +1282,16 @@ LogReport.prototype.dailyReports = async function () {
         googlePaidMonthMatrix = equalJson(JSON.stringify(monthArr));
         googlePaidWeekMatrix = equalJson(JSON.stringify(weekArr));
 
-        googlePaidMonthMatrix.forEach((obj) => {
-          let target;
+        for (let obj of googlePaidMonthMatrix) {
           target = [];
           for (let arr of googlePaidCopied) {
             if ((new RegExp("^" + String(obj.year) + "-" + zeroAddition(obj.month))).test(arr[0])) {
               target.push(equalJson(JSON.stringify(arr)));
             }
           }
-          if (target.length === 0) {
-            obj.matrix = target;
-          } else {
+          if (target.length !== 0) {
+            endD = target[0][0];
+            startD = target[target.length - 1][0];
             target = target.reduce((acc, curr) => {
               for (let i = 0; i < curr.length; i++) {
                 if (i !== 0) {
@@ -1219,10 +1299,24 @@ LogReport.prototype.dailyReports = async function () {
                 }
               }
               return acc;
-            }, new Array(target[0].length).fill(0, 0))
-            obj.matrix = target;
+            }, new Array(target[0].length).fill(0, 0));
+
+            simpleRows = await back.mongoRead("simpleAnalytics", { key: "simple_analytics_" + startD.replace(/\-/gi, '') + "_" + endD.replace(/\-/gi, '') }, { selfMongo });
+            if (simpleRows.length === 0) {
+              simpleRes = await analytics.simpleMetric(startD, endD);
+              await back.mongoCreate("simpleAnalytics", simpleRes, { selfMongo });
+            } else {
+              simpleRes = simpleRows[0];
+            }
+            target[4] = simpleRes.data.users.detail.campaign.cases.filter((obj) => {
+              return googleCampaignBoo(obj.case);
+            }).reduce((acc, curr) => {
+              return acc + curr.value;
+            }, 0);
+
           }
-        });
+          obj.matrix = target;
+        }
         googlePaidMonthMatrix = googlePaidMonthMatrix.filter((obj) => { return obj.matrix.length !== 0 }).map(({ year, month, matrix }) => {
           matrix[0] = String(year) + "년 " + String(month) + "월";
           return matrix;
@@ -1230,17 +1324,16 @@ LogReport.prototype.dailyReports = async function () {
         googlePaidMonthMatrix.forEach(ratioConverting("google"));
         googlePaidMonthMatrix.unshift(equalJson(JSON.stringify(matrix[thisIndex][0])));
 
-        googlePaidWeekMatrix.forEach((obj) => {
-          let target;
+        for (let obj of googlePaidWeekMatrix) {
           target = [];
           for (let arr of googlePaidCopied) {
             if (stringToDate(obj.start).valueOf() <= stringToDate(arr[0]).valueOf() && stringToDate(obj.end).valueOf() >= stringToDate(arr[0]).valueOf()) {
               target.push(equalJson(JSON.stringify(arr)));
             }
           }
-          if (target.length === 0) {
-            obj.matrix = target;
-          } else {
+          if (target.length !== 0) {
+            endD = target[0][0];
+            startD = target[target.length - 1][0];
             target = target.reduce((acc, curr) => {
               for (let i = 0; i < curr.length; i++) {
                 if (i !== 0) {
@@ -1248,10 +1341,24 @@ LogReport.prototype.dailyReports = async function () {
                 }
               }
               return acc;
-            }, new Array(target[0].length).fill(0, 0))
-            obj.matrix = target;
+            }, new Array(target[0].length).fill(0, 0));
+
+            simpleRows = await back.mongoRead("simpleAnalytics", { key: "simple_analytics_" + startD.replace(/\-/gi, '') + "_" + endD.replace(/\-/gi, '') }, { selfMongo });
+            if (simpleRows.length === 0) {
+              simpleRes = await analytics.simpleMetric(startD, endD);
+              await back.mongoCreate("simpleAnalytics", simpleRes, { selfMongo });
+            } else {
+              simpleRes = simpleRows[0];
+            }
+            target[4] = simpleRes.data.users.detail.campaign.cases.filter((obj) => {
+              return googleCampaignBoo(obj.case);
+            }).reduce((acc, curr) => {
+              return acc + curr.value;
+            }, 0);
+
           }
-        });
+          obj.matrix = target;
+        }
         googlePaidWeekMatrix = googlePaidWeekMatrix.filter((obj) => { return obj.matrix.length !== 0 }).map(({ start, end, matrix }) => {
           matrix[0] = String(start) + " ~ " + String(end);
           return matrix;

@@ -579,4 +579,89 @@ GoogleAnalytics.prototype.generalMetric = async function (startDate, endDate) {
   }
 }
 
+GoogleAnalytics.prototype.simpleMetric = async function (startDate, endDate) {
+  const instance = this;
+  const { dateToString, stringToDate, pythonExecute } = this.mother;
+  const zeroAddition = function (num) {
+    if (num < 10) {
+      return `0${String(num)}`;
+    } else {
+      return `${String(num)}`;
+    }
+  }
+  try {
+
+    if (startDate === undefined || endDate === undefined) {
+      throw new Error("must be start-date and end-date");
+    }
+
+    if (startDate instanceof Date) {
+      startDate = dateToString(startDate);
+    }
+
+    if (endDate instanceof Date) {
+      endDate = dateToString(endDate);
+    }
+
+    const userDimensions = [
+      { name: "ga:userType", meaning: "유저 타입" },
+      { name: "ga:campaign", meaning: "캠페인" },
+    ];
+    let temp, tempObj, result, tempArr;
+    let totalNumbers;
+    let finalObj;
+    let detailObj;
+    let keyArr;
+    let start, next, end;
+    let conversion;
+    let conversionObj;
+    let users;
+    let usersDetail;
+    let userResult;
+    let userTotalNumbers;
+    let userDetailObj;
+
+    // users
+
+    userResult = [];
+    for (let i of userDimensions) {
+      temp = [];
+      temp.push({ name: i.name });
+      tempObj = await pythonExecute(this.pythonApp, [ "analytics", "getUserMetric" ], { startDate, endDate, dimensions: temp });
+      userResult.push(this.reportParsing(tempObj));
+    }
+
+    userTotalNumbers = userResult.map((obj) => { return obj.total });
+
+    userDetailObj = {};
+    keyArr = userDimensions.map((obj) => { return obj.name.replace(/ga\:/gi, '') })
+    for (let i = 0; i < keyArr.length; i++) {
+      userDetailObj[keyArr[i]] = userResult[i];
+    }
+
+    start = stringToDate(startDate);
+    next = stringToDate(startDate);
+    next.setDate(next.getDate() + 1);
+    end = stringToDate(endDate);
+
+    finalObj = {
+      key: "simple_analytics_" + startDate.replace(/\-/gi, '') + "_" + endDate.replace(/\-/gi, ''),
+      date: {
+        from: start,
+        to: (endDate === startDate ? next : end),
+      },
+      data: {
+        users: {
+          total: userTotalNumbers.reduce((acc, cur) => { return (acc >= cur ? acc : cur) }, 0),
+          detail: userDetailObj,
+        },
+      }
+    };
+
+    return finalObj;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 module.exports = GoogleAnalytics;
