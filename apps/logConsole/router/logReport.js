@@ -172,13 +172,13 @@ LogReport.prototype.dailyReports = async function () {
           pageViews = analyticsRows.data.views.total;
 
           consultingViews = analyticsRows.data.views.detail.pagePath.cases.filter((obj) => {
-            return /consulting\.php/gi.test(obj.case)
+            return /consulting\.php/gi.test(obj.case);
           }).reduce((acc, curr) => {
             return acc + curr.value;
           }, 0);
 
           popupOpenEvents = analyticsRows.data.views.detail.eventAction.cases.filter((obj) => {
-            return /popupOpen/gi.test(obj.case)
+            return /popupOpen/gi.test(obj.case);
           }).reduce((acc, curr) => {
             return acc + curr.value;
           }, 0);
