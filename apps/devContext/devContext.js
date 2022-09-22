@@ -91,39 +91,44 @@ DevContext.prototype.launching = async function () {
     // console.log(pastProposal[0].project.detail);
 
 
-    
 
-    // const designerCoreSheetsId = "1LYJvGiIyh1nfn8DpKX6s6o61p6ghF3RJvazmkcRc3bw";
-    // const selfMongo = this.MONGOC;
-    // const designers = await back.getDesignersByQuery({}, { selfMongo });
-    // let matrix;
-    // let tempArr;
-    //
-    // matrix = [
-    //   [
-    //     "아이디",
-    //     "성함",
-    //     "연락처",
-    //     "계약 상태",
-    //     "종류",
-    //     "시공 레벨",
-    //     "스타일링 레벨",
-    //     "분류 필요",
-    //     "메모",
-    //   ]
-    // ];
-    //
-    // for (let designer of designers) {
-    //   tempArr = [];
-    //   tempArr.push(designer.desid);
-    //   tempArr.push(designer.designer);
-    //   tempArr.push(designer.information.phone);
-    //
-    //
-    //   matrix.push(tempArr);
-    // }
-    //
-    // console.log(matrix)
+    const designerCoreSheetsId = "1LYJvGiIyh1nfn8DpKX6s6o61p6ghF3RJvazmkcRc3bw";
+    const selfMongo = this.MONGOC;
+    const designers = await back.getDesignersByQuery({}, { selfMongo });
+    let matrix;
+    let tempArr;
+
+    matrix = [
+      [
+        "아이디",
+        "성함",
+        "연락처",
+        "계약 상태",
+        "계약일",
+        "종류",
+        "시공 레벨",
+        "스타일링 레벨",
+        "체크리스트",
+      ]
+    ];
+
+    for (let designer of designers) {
+      tempArr = [];
+      tempArr.push(designer.desid);
+      tempArr.push(designer.designer);
+      tempArr.push(designer.information.phone);
+      tempArr.push(designer.information.contract.status.value);
+      tempArr.push(dateToString(designer.information.contract.date));
+      tempArr.push([ "신진", "일반", "메인" ][designer.analytics.grade + 1]);
+      tempArr.push([ "하", "중", "상" ][designer.analytics.construct.level - 1]);
+      tempArr.push([ "하", "중", "상" ][designer.analytics.styling.level - 1]);
+      tempArr.push("https://" + address.backinfo.host + "/designer?desid=" + designer.desid);
+      matrix.push(tempArr);
+    }
+
+
+    await sheets.update_value_inPython(designerCoreSheetsId, "분류", matrix)
+    console.log(matrix)
 
 
 
