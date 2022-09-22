@@ -91,7 +91,7 @@ DevContext.prototype.launching = async function () {
     // console.log(pastProposal[0].project.detail);
 
 
-
+    
 
     // const designerCoreSheetsId = "1LYJvGiIyh1nfn8DpKX6s6o61p6ghF3RJvazmkcRc3bw";
     // const selfMongo = this.MONGOC;

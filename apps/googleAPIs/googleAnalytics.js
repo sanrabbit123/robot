@@ -155,7 +155,7 @@ GoogleAnalytics.prototype.getSubmitClients = async function (thisDate, selfMongo
           userTong = await this.getUserById(thisDate, id);
           safeNum++;
         }
-        if (userTong) {
+        if (userTong === null) {
           await errorLog("GoogleAnalytics getSubmitClients error : cannot find user info => cliid " + cliid + " / id " + id);
         }
         tempObj.users.push(userTong);
