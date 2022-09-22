@@ -92,6 +92,46 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+    // const designerCoreSheetsId = "1LYJvGiIyh1nfn8DpKX6s6o61p6ghF3RJvazmkcRc3bw";
+    // const selfMongo = this.MONGOC;
+    // const designers = await back.getDesignersByQuery({}, { selfMongo });
+    // let matrix;
+    // let tempArr;
+    //
+    // matrix = [
+    //   [
+    //     "아이디",
+    //     "성함",
+    //     "연락처",
+    //     "계약 상태",
+    //     "종류",
+    //     "시공 레벨",
+    //     "스타일링 레벨",
+    //     "분류 필요",
+    //     "메모",
+    //   ]
+    // ];
+    //
+    // for (let designer of designers) {
+    //   tempArr = [];
+    //   tempArr.push(designer.desid);
+    //   tempArr.push(designer.designer);
+    //   tempArr.push(designer.information.phone);
+    //
+    //
+    //   matrix.push(tempArr);
+    // }
+    //
+    // console.log(matrix)
+
+
+
+
+
+
+
+
     // const selfMongo = this.MONGOLOGC;
     // await selfMongo.connect();
     // const LogReport = require(`${process.cwd()}/apps/logConsole/router/logReport.js`);
