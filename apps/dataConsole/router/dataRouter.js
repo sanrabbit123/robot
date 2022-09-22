@@ -1121,8 +1121,8 @@ DataRouter.prototype.rou_post_updateDocument = function () {
 
       switch (map[column].type) {
         case "string":
-          finalValue = String(value);
-          pastFinalValue = String(pastValue);
+          finalValue = String(value).trim().replace(/\t/gi, '');
+          pastFinalValue = String(pastValue).trim().replace(/\t/gi, '');
           break;
         case "number":
           if (Number.isNaN(Number(value.replace(/[^0-9\.\-]/g, '')))) {
