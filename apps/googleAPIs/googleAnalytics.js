@@ -664,4 +664,65 @@ GoogleAnalytics.prototype.simpleMetric = async function (startDate, endDate) {
   }
 }
 
+GoogleAnalytics.prototype.queryMetric = async function (targetDate) {
+  const instance = this;
+  const { dateToString, stringToDate, pythonExecute, equalJson } = this.mother;
+  const zeroAddition = function (num) {
+    if (num < 10) {
+      return `0${String(num)}`;
+    } else {
+      return `${String(num)}`;
+    }
+  }
+  try {
+
+    if (targetDate === undefined) {
+      throw new Error("must be targetDate");
+    }
+
+    if (targetDate instanceof Date) {
+      targetDate = dateToString(targetDate);
+    }
+
+    let res;
+    let report;
+    let start, end, next;
+
+    start = stringToDate(targetDate);
+    end = stringToDate(targetDate);
+    end.setDate(end.getDate() + 1);
+
+    report = {
+      key: "google_query_" + targetDate.replace(/\-/gi, ''),
+      date: {
+        from: start,
+        to: end,
+      },
+      data: {
+        clicks: 0,
+        impressions: 0,
+        detail: [],
+      }
+    };
+
+    res = equalJson(await pythonExecute(this.pythonApp, [ "analytics", "basicImpressions" ], { startDate: targetDate, endDate: targetDate }));
+    report.data.clicks = res.rows[0].clicks;
+    report.data.impressions = res.rows[0].impressions;
+
+    res = equalJson(await pythonExecute(this.pythonApp, [ "analytics", "queryImpressions" ], { startDate: targetDate, endDate: targetDate }));
+    report.data.detail = res.rows.map((obj) => {
+      return {
+        query: obj.keys[0],
+        clicks: obj.clicks,
+        impressions: obj.impressions
+      }
+    });
+
+    return report;
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 module.exports = GoogleAnalytics;

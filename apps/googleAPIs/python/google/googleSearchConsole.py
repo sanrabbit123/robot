@@ -17,7 +17,7 @@ class GoogleSearchConsole:
         thisFolderPath = '/'.join(thisAppPathArr)
 
         # make access token
-        clientSecrets = thisFolderPath + '/tokens/client_secrets.json'
+        clientSecrets = thisFolderPath + '/tokens/search_client_secrets.json'
         parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, parents=[ tools.argparser ])
         flags = parser.parse_args([])
         flow = client.flow_from_clientsecrets(clientSecrets, scope=[ 'https://www.googleapis.com/auth/webmasters' ], message=tools.message_if_missing(clientSecrets))
@@ -29,13 +29,12 @@ class GoogleSearchConsole:
 
         self.app = build('webmasters', 'v3', http=http)
 
-    def monthView(self, startDate, endDate):
-        request = { 'startDate': startDate, 'endDate': endDate }
+    def basicImpressions(self, startDate, endDate):
+        request = { "startDate": startDate, "endDate": endDate, "dimensions": [ "date" ] }
         response = self.app.searchanalytics().query(siteUrl="https://home-liaison.com", body=request).execute()
         return response
 
-    def getAllMonthData(self, monthBox):
-        result = []
-        for dic in monthBox:
-            result.append(self.monthView(dic["startDate"], dic["endDate"]))
-        return dumps(result)
+    def queryImpressions(self, startDate, endDate):
+        request = { "startDate": startDate, "endDate": endDate, "dimensions": [ "query" ] }
+        response = self.app.searchanalytics().query(siteUrl="https://home-liaison.com", body=request).execute()
+        return response
