@@ -1587,8 +1587,6 @@ LogReport.prototype.dailyReports = async function () {
     slackMessage += "\n";
     slackMessage += "MPR 통합관리장표 : " + "https://docs.google.com/spreadsheets/d/" + zeroSheetsId + "/edit?usp=sharing";
 
-    console.log(slackMessage);
-
     await requestSystem("https://" + host + "/marketingMessage", {
       text: slackMessage,
       channel: "#marketing",
