@@ -665,7 +665,7 @@ SecondRouter.prototype.rou_post_getChecklist = function () {
           key: obj.key,
           target: obj.setting.target.action,
           checklist: obj.setting.contents.checklist,
-          children: obj.setting.contents.children,
+          children: obj.setting.children,
         }
       });
 
