@@ -4763,11 +4763,12 @@ GeneralJs.prototype.footerMake = function (backgroundColor = null) {
 }
 
 GeneralJs.prototype.greenTalk = function (input) {
-  let text, event, second;
+  let text, event, second, color;
   if (input === undefined) {
     event = "consulting";
     text = "홈리에종을 통해 1:1 상담을 받아보세요!";
     second = false;
+    color = "green";
   } else if (typeof input === "object") {
     if (input === null) {
       event = "consulting";
@@ -4781,11 +4782,18 @@ GeneralJs.prototype.greenTalk = function (input) {
       } else {
         second = false;
       }
+      color = "green";
+      if (typeof input.color === "string") {
+        color = "black";
+      }
     } else {
       throw new Error("invaild object input");
     }
   } else {
     throw new Error("invaild input");
+  }
+  if (typeof color !== "string") {
+    color = "green";
   }
 
   const instance = this;
@@ -5141,7 +5149,7 @@ GeneralJs.prototype.greenTalk = function (input) {
       bottom: String(bottom) + ea,
       right: String(right) + ea,
       borderRadius: String(baseWidth) + ea,
-      background: colorChip.gradientGreen,
+      background: color === "black" ? colorChip.gradientBlack : colorChip.gradientGreen,
       animation: "talkfade 1.2s ease forwards",
       zIndex: String(zIndex),
       justifyContent: "center",

@@ -445,7 +445,8 @@ GeneralJs.prototype.ghostDesignerLaunching = async function (obj) {
     this.footerMake(colorChip.gradientBlack);
     this.greenTalk({
       text: "",
-      event: "channel"
+      event: "channel",
+      color: "black",
     });
 
     this.totalContents.style.height = "auto";

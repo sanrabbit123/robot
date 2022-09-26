@@ -364,7 +364,7 @@ ProcessDetailJs.prototype.insertProcessBox = function () {
                 dom.children[1].style.color = colorChip.black;
               } else {
                 dom.setAttribute("toggle", "on");
-                dom.children[0].querySelector("path").setAttribute("fill", colorChip.green);
+                dom.children[0].querySelector("path").setAttribute("fill", colorChip.black);
                 dom.children[1].style.color = colorChip.white;
               }
               sNum++;
@@ -398,7 +398,7 @@ ProcessDetailJs.prototype.insertProcessBox = function () {
       children: [
         {
           mode: "svg",
-          source: svgMaker.processArrow(arrowWidth, arrowHeight, (i % 2 === 0 ? colorChip.gray3 : colorChip.gray1)),
+          source: svgMaker.processArrow(arrowWidth, arrowHeight, (i % 2 === 0 ? colorChip.gray2 : colorChip.gray0)),
           style: {
             position: "absolute",
             top: String(0),
@@ -878,6 +878,16 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
   let contentsPan;
   let contentsPanPaddingTop;
   let contentsPanPaddingBottom;
+  let panTitleBoxWidth;
+  let itemBetween;
+  let statusPadding;
+  let statusOpacity;
+  let subButtonPaddingRight;
+  let subButtonSize, subButtonWeight;
+  let subButtonVisualTop;
+  let subButtonPaddingBottom;
+  let buttonBetween;
+  let plusIconTop, plusIconWidth;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -944,17 +954,33 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
 
   panMotherInnerPadding = <%% 20, 20, 20, 20, 4 %%>;
   panBetween = <%% 8, 8, 8, 8, 1 %%>;
-  panTitleBoxHeight = <%% 58, 58, 58, 56, 5 %%>;
+  panTitleBoxWidth = <%% 124, 124, 124, 120, 12 %%>;
+  panTitleBoxHeight = <%% 52, 52, 50, 48, 5 %%>;
 
   uploadCircleWidth = <%% 28, 28, 28, 24, 6 %%>;
   uploadCirclePadding = <%% 16, 16, 16, 12, 4 %%>;
   uploadIconWidth = <%% 13, 13, 13, 12, 4 %%>;
   uploadIconTop = <%% -1, -1, -1, 0, 0 %%>;
 
+  plusIconTop = <%% 0, 0, 0, 0, 0 %%>;
+  plusIconWidth = <%% 14, 14, 13, 12, 3 %%>;
+
   panMotherMinHeight = <%% 500, 480, 420, 400, 54 %%>;
 
-  contentsPanPaddingTop = <%% 12, 12, 12, 10, 4 %%>;
+  contentsPanPaddingTop = <%% 18, 18, 16, 12, 4 %%>;
   contentsPanPaddingBottom = <%% 60, 60, 60, 54, 12 %%>;
+  itemBetween = <%% 6, 6, 5, 4, 1 %%>;
+
+  statusPadding = <%% 21, 21, 18, 18, 4 %%>;
+  statusOpacity = <%% 0.4, 0.4, 0.4, 0.4, 0.4 %%>;
+
+  subButtonPaddingRight = <%% 18, 18, 18, 16, 1 %%>;
+  subButtonSize = <%% 12, 12, 11, 10, 2.5 %%>;
+  subButtonWeight = <%% 800, 800, 800, 800, 800 %%>;
+  subButtonVisualTop = <%% 3, 3, 2, 1, 0.3 %%>;
+  subButtonPaddingBottom = <%% 3, 3, 2, 1, 0.3 %%>;
+
+  buttonBetween = <%% 5, 5, 5, 4, 1 %%>;
 
   this.whiteMargin = (desktop ? margin : 0);
 
@@ -1056,9 +1082,8 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
         display: "inline-block",
         verticalAlign: "top",
         position: "relative",
-        width: "calc(calc(100% - " + String(panBetween * (this.contents.length - 1)) + ea + ") / " + String(this.contents.length) + ")",
-        marginRight: String((i === (this.contents.length - 1)) ? 0 : panBetween) + ea,
-        "min-height": String(panMotherMinHeight) + ea,
+        width: withOut(0),
+        marginBottom: String((i === (this.contents.length - 1)) ? 0 : panBetween) + ea,
         background: colorChip.gray0,
         borderRadius: String(5) + "px",
       }
@@ -1067,12 +1092,12 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
     createNode({
       mother: basePan,
       style: {
-        display: "flex",
+        display: "inline-flex",
         position: "relative",
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column",
-        width: withOut(0),
+        width: String(panTitleBoxWidth) + ea,
         height: String(panTitleBoxHeight) + ea,
         background: colorChip.white,
         borderRadius: String(5) + "px",
@@ -1092,6 +1117,61 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
       ]
     });
 
+    createNode({
+      mother: basePan,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        justifyContent: "center",
+        alignItems: "start",
+        flexDirection: "column",
+        width: String(panTitleBoxWidth) + ea,
+        height: String(panTitleBoxHeight) + ea,
+        paddingLeft: String(statusPadding) + ea,
+      },
+      children: [
+        {
+          text: "진행중",
+          style: {
+            position: "relative",
+            top: String(contentsTextTop) + ea,
+            fontSize: String(contentsWordingSize) + ea,
+            fontWeight: String(300),
+            color: colorChip.black,
+            opacity: String(statusOpacity),
+          }
+        }
+      ]
+    });
+
+    createNode({
+      mother: basePan,
+      style: {
+        display: "inline-flex",
+        position: "absolute",
+        justifyContent: "center",
+        flexDirection: "column",
+        height: String(panTitleBoxHeight) + ea,
+        paddingRight: String(subButtonPaddingRight) + ea,
+        right: String(0),
+        top: String(subButtonVisualTop) + ea,
+      },
+      children: [
+        {
+          text: "디자인 제안 파일 고객에게 보내기",
+          style: {
+            position: "relative",
+            top: String(contentsTextTop) + ea,
+            fontSize: String(subButtonSize) + ea,
+            fontWeight: String(subButtonWeight),
+            color: colorChip.darkShadow,
+            paddingBottom: String(subButtonPaddingBottom) + ea,
+            borderBottom: "1px solid " + colorChip.gray3,
+          }
+        }
+      ]
+    });
+
     contentsPan = createNode({
       mother: basePan,
       attribute: {
@@ -1100,9 +1180,11 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
       style: {
         display: "block",
         position: "relative",
-        width: withOut(0),
+        width: withOut((contentsPanPaddingTop * 2) - itemBetween, ea),
         paddingTop: String(contentsPanPaddingTop) + ea,
         paddingBottom: String(contentsPanPaddingBottom) + ea,
+        paddingLeft: String(contentsPanPaddingTop) + ea,
+        paddingRight: String(contentsPanPaddingTop - itemBetween) + ea,
       }
     });
 
@@ -1128,7 +1210,7 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
         bottom: String(uploadCirclePadding) + ea,
         right: String(uploadCirclePadding) + ea,
         borderRadius: String(uploadCircleWidth) + ea,
-        background: i === this.targetIndex ? colorChip.gradientGreen : colorChip.gray5,
+        background: colorChip.gradientGray,
         cursor: "pointer",
       },
       children: [
@@ -1140,6 +1222,45 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
             position: "relative",
             top: String(uploadIconTop) + ea,
             width: String(uploadIconWidth) + ea,
+          }
+        }
+      ]
+    });
+
+    createNode({
+      mother: basePan,
+      attribute: {
+        index: String(i),
+        proid: project.proid,
+        desid: instance.designer.desid,
+        name: project.name,
+        designer: instance.designer.designer,
+      },
+      // event: {
+      //   click: instance.uploadFiles(i),
+      // },
+      style: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: String(uploadCircleWidth) + ea,
+        height: String(uploadCircleWidth) + ea,
+        position: "absolute",
+        bottom: String(uploadCirclePadding) + ea,
+        right: String((uploadCirclePadding + uploadCircleWidth) + buttonBetween) + ea,
+        borderRadius: String(uploadCircleWidth) + ea,
+        background: colorChip.gradientGray,
+        cursor: "pointer",
+      },
+      children: [
+        {
+          mode: "svg",
+          source: instance.mother.returnPlus(colorChip.white),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(plusIconTop) + ea,
+            width: String(plusIconWidth) + ea,
           }
         }
       ]
@@ -1212,11 +1333,11 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
         mother,
         class: [ "hoverDefault_lite" ],
         style: {
-          display: "flex",
+          display: "inline-flex",
           justifyContent: "center",
           alignItems: "center",
-          width: withOut(itemTongMarginLeft * 2, ea),
-          marginLeft: String(itemTongMarginLeft) + ea,
+          width: "calc(calc(100% - " + String(itemBetween * 9) + ea + ") / " + String(9) + ")",
+          marginRight: String(itemBetween) + ea,
           height: String(itemTongHeight) + ea,
           marginBottom: String(itemBetween) + ea,
           borderRadius: String(5) + "px",
@@ -1241,23 +1362,6 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
 
     motherMaxNumber = motherMatrix.reduce((acc, curr) => { return (acc >= curr ? acc : curr) }, 0);
     transparentItemsMatrix = motherMatrix.map((num) => { return Math.abs(motherMaxNumber - num) });
-
-    index = 0;
-    for (let num of transparentItemsMatrix) {
-      for (let i = 0; i < num; i++) {
-        createNode({
-          mother: mothers[index],
-          style: {
-            display: "block",
-            width: withOut(itemTongMarginLeft * 2, ea),
-            marginLeft: String(itemTongMarginLeft) + ea,
-            height: String(itemTongHeight) + ea,
-            marginBottom: String(itemBetween) + ea,
-          }
-        });
-      }
-      index++;
-    }
 
   } catch (e) {
     console.log(e);
@@ -2193,251 +2297,215 @@ ProcessDetailJs.prototype.returnButtonList = function (thisStatusNumber) {
     }
   ];
 
-  if (thisStatusNumber === 1) {
-    buttonList.push({
-      name: "일정 안내 문서 전송",
-      event: function () {
-        return instance.uploadFiles(thisStatusNumber);
-      }
-    });
-  } else if (thisStatusNumber === 2) {
-    buttonList.push({
-      name: "1차 제안 문서 전송",
-      event: function () {
-        return instance.uploadFiles(thisStatusNumber);
-      }
-    });
-  } else if (thisStatusNumber === 3) {
-    buttonList.push({
-      name: "수정 제안 문서 전송",
-      event: function () {
-        return instance.uploadFiles(thisStatusNumber);
-      }
-    });
-  } else if (thisStatusNumber === 4) {
-    buttonList.push({
-      name: "시공 의뢰서 전송",
-      event: function () {
-        return instance.uploadFiles(thisStatusNumber);
-      }
-    });
-  } else if (thisStatusNumber === 5) {
-    buttonList.push({
-      name: "제품 리스트 전송",
-      event: function () {
-        return instance.uploadFiles(thisStatusNumber);
-      }
-    });
-  } else if (thisStatusNumber === 6) {
-    buttonList.push({
-      name: "촬영 여부",
-      event: function () {
-        return function (e) {
-          const designer = this.getAttribute("designer");
-          const desid = this.getAttribute("desid");
-          const client = this.getAttribute("client");
-          const proid = this.getAttribute("proid");
-          const targetMother = totalContents;
-          let photoTargets, cancelBack, whitePrompt;
+  buttonList.push({
+    name: "촬영 여부",
+    event: function () {
+      return function (e) {
+        const designer = this.getAttribute("designer");
+        const desid = this.getAttribute("desid");
+        const client = this.getAttribute("client");
+        const proid = this.getAttribute("proid");
+        const targetMother = totalContents;
+        let photoTargets, cancelBack, whitePrompt;
 
-          cancelBack = {};
-          whitePrompt = {};
+        cancelBack = {};
+        whitePrompt = {};
 
-          photoTargets = [
-            {
-              title: "촬영 요청",
-              event: async function (e) {
-                try {
-                  const designer = this.getAttribute("designer");
-                  const desid = this.getAttribute("desid");
-                  const client = this.getAttribute("client");
-                  const proid = this.getAttribute("proid");
+        photoTargets = [
+          {
+            title: "촬영 요청",
+            event: async function (e) {
+              try {
+                const designer = this.getAttribute("designer");
+                const desid = this.getAttribute("desid");
+                const client = this.getAttribute("client");
+                const proid = this.getAttribute("proid");
 
-                  await ajaxJson({ message: designer + " 실장님이 " + project.name + " 고객님 현장 촬영을 하고 싶다고 의사 표현하셨습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
-                  window.alert("홈리에종에 촬영 진행 의견을 전달하였습니다!");
-                  cancelBack.click();
+                await ajaxJson({ message: designer + " 실장님이 " + project.name + " 고객님 현장 촬영을 하고 싶다고 의사 표현하셨습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+                window.alert("홈리에종에 촬영 진행 의견을 전달하였습니다!");
+                cancelBack.click();
 
-                } catch (e) {
-                  console.log(e);
-                }
+              } catch (e) {
+                console.log(e);
               }
-            },
-            {
-              title: "촬영 미진행",
-              event: async function (e) {
-                try {
-                  const designer = this.getAttribute("designer");
-                  const desid = this.getAttribute("desid");
-                  const client = this.getAttribute("client");
-                  const proid = this.getAttribute("proid");
+            }
+          },
+          {
+            title: "촬영 미진행",
+            event: async function (e) {
+              try {
+                const designer = this.getAttribute("designer");
+                const desid = this.getAttribute("desid");
+                const client = this.getAttribute("client");
+                const proid = this.getAttribute("proid");
 
-                  await ajaxJson({ message: designer + " 실장님이 " + project.name + " 고객님 현장 촬영을 진행을 하고 싶지 않아 하십니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
-                  window.alert("홈리에종에 촬영 미진행 의견을 전달하였습니다!");
-                  cancelBack.click();
+                await ajaxJson({ message: designer + " 실장님이 " + project.name + " 고객님 현장 촬영을 진행을 하고 싶지 않아 하십니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+                window.alert("홈리에종에 촬영 미진행 의견을 전달하였습니다!");
+                cancelBack.click();
 
-                } catch (e) {
-                  console.log(e);
-                }
+              } catch (e) {
+                console.log(e);
               }
-            },
-            {
-              title: "촬영비 결제",
-              event: async function (e) {
-                try {
-                  const designer = this.getAttribute("designer");
-                  const desid = this.getAttribute("desid");
-                  const client = this.getAttribute("client");
-                  const proid = this.getAttribute("proid");
-                  const { pluginScript, oidConst } = await ajaxJson({ mode: "script", oidKey: "mini" }, BACKHOST + "/generalImpPayment");
-                  let plugin, oid;
+            }
+          },
+          {
+            title: "촬영비 결제",
+            event: async function (e) {
+              try {
+                const designer = this.getAttribute("designer");
+                const desid = this.getAttribute("desid");
+                const client = this.getAttribute("client");
+                const proid = this.getAttribute("proid");
+                const { pluginScript, oidConst } = await ajaxJson({ mode: "script", oidKey: "mini" }, BACKHOST + "/generalImpPayment");
+                let plugin, oid;
 
-                  oid = oidConst + instance.designer.information.phone.replace(/[^0-9]/gi, '') + "_" + String((new Date()).valueOf());
+                oid = oidConst + instance.designer.information.phone.replace(/[^0-9]/gi, '') + "_" + String((new Date()).valueOf());
 
-                  plugin = new Function(pluginScript);
-                  plugin();
-                  window.IMP.init("imp71921105");
+                plugin = new Function(pluginScript);
+                plugin();
+                window.IMP.init("imp71921105");
 
-                  if (desktop) {
+                if (desktop) {
 
-                    window.IMP.request_pay({
-                        pg: "inicis",
-                        pay_method: "card",
-                        merchant_uid: oid,
-                        name: "현장 촬영비",
-                        amount: Math.floor(165000),
-                        buyer_email: instance.designer.information.email,
-                        buyer_name: instance.designer.designer,
-                        buyer_tel: instance.designer.information.phone,
-                    }, async (rsp) => {
-                      try {
-                        if (typeof rsp.status === "string" && /paid/gi.test(rsp.status)) {
-                          await ajaxJson({ message: designer + " 실장님이 " + project.name + " 고객님 현장 촬영의 촬영비를 결제하셨습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
-                          window.alert("결제가 완료되었습니다!");
-                          cancelBack.click();
-                        } else {
-                          window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
-                          window.location.reload();
-                        }
-                      } catch (e) {
+                  window.IMP.request_pay({
+                      pg: "inicis",
+                      pay_method: "card",
+                      merchant_uid: oid,
+                      name: "현장 촬영비",
+                      amount: Math.floor(165000),
+                      buyer_email: instance.designer.information.email,
+                      buyer_name: instance.designer.designer,
+                      buyer_tel: instance.designer.information.phone,
+                  }, async (rsp) => {
+                    try {
+                      if (typeof rsp.status === "string" && /paid/gi.test(rsp.status)) {
+                        await ajaxJson({ message: designer + " 실장님이 " + project.name + " 고객님 현장 촬영의 촬영비를 결제하셨습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+                        window.alert("결제가 완료되었습니다!");
+                        cancelBack.click();
+                      } else {
                         window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
                         window.location.reload();
                       }
-                    });
+                    } catch (e) {
+                      window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+                      window.location.reload();
+                    }
+                  });
 
-                  } else {
+                } else {
 
-                    const { key } = await ajaxJson({ mode: "store", oid, data: { designer, desid, client, proid, oid } }, BACKHOST + "/generalImpPayment");
-                    window.IMP.request_pay({
-                        pg: "inicis",
-                        pay_method: "card",
-                        merchant_uid: oid,
-                        name: "현장 촬영비",
-                        amount: Math.floor(165000),
-                        buyer_email: instance.designer.information.email,
-                        buyer_name: instance.designer.designer,
-                        buyer_tel: instance.designer.information.phone,
-                        m_redirect_url: window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + proid + "&mobilecard=" + key,
-                    }, (rsp) => {});
+                  const { key } = await ajaxJson({ mode: "store", oid, data: { designer, desid, client, proid, oid } }, BACKHOST + "/generalImpPayment");
+                  window.IMP.request_pay({
+                      pg: "inicis",
+                      pay_method: "card",
+                      merchant_uid: oid,
+                      name: "현장 촬영비",
+                      amount: Math.floor(165000),
+                      buyer_email: instance.designer.information.email,
+                      buyer_name: instance.designer.designer,
+                      buyer_tel: instance.designer.information.phone,
+                      m_redirect_url: window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + proid + "&mobilecard=" + key,
+                  }, (rsp) => {});
 
-                  }
-
-                } catch (e) {
-                  console.log(e);
                 }
+
+              } catch (e) {
+                console.log(e);
               }
             }
-          ];
+          }
+        ];
 
-          cancelBack = createNode({
-            mother: targetMother,
-            event: {
-              click: function (e) {
-                targetMother.removeChild(targetMother.lastChild);
-                targetMother.removeChild(targetMother.lastChild);
+        cancelBack = createNode({
+          mother: targetMother,
+          event: {
+            click: function (e) {
+              targetMother.removeChild(targetMother.lastChild);
+              targetMother.removeChild(targetMother.lastChild);
+            }
+          },
+          style: {
+            position: "fixed",
+            top: String(0),
+            left: String(0),
+            width: withOut(0),
+            height: withOut(0),
+            background: colorChip.black,
+            opacity: String(0.2),
+          }
+        });
+
+        whitePrompt = createNode({
+          mother: targetMother,
+          style: {
+            position: "fixed",
+            top: withOut(50, (((statusButtonHeight * 3) + (statusButtonBetween * 2) + (grayInnerPadding * 2)) / 2), ea),
+            left: withOut(50, (((statusButtonWidth * 1) + (grayInnerPadding * 2)) / 2), ea),
+            width: String((statusButtonWidth * 1)) + ea,
+            height: String((statusButtonHeight * 3) + (statusButtonBetween * 3)) + ea,
+            background: colorChip.gray2,
+            borderRadius: String(5) + "px",
+            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+            animation: "fadeuplite 0.3s ease forwards",
+            padding: String(grayInnerPadding) + ea,
+            paddingBottom: String(grayInnerPadding - statusButtonBetween) + ea,
+          },
+          children: [
+            {
+              style: {
+                display: "block",
+                top: String(0),
+                left: String(0),
+                width: withOut(0),
+                height: withOut(0),
+                position: "relative",
               }
+            }
+          ]
+        });
+
+        for (let i = 0; i < photoTargets.length; i++) {
+          createNode({
+            mother: whitePrompt.firstChild,
+            attribute: { index: String(i), designer, desid, client, proid },
+            event: {
+              click: photoTargets[i].event
             },
             style: {
-              position: "fixed",
-              top: String(0),
-              left: String(0),
-              width: withOut(0),
-              height: withOut(0),
-              background: colorChip.black,
-              opacity: String(0.2),
-            }
-          });
-
-          whitePrompt = createNode({
-            mother: targetMother,
-            style: {
-              position: "fixed",
-              top: withOut(50, (((statusButtonHeight * 3) + (statusButtonBetween * 2) + (grayInnerPadding * 2)) / 2), ea),
-              left: withOut(50, (((statusButtonWidth * 1) + (grayInnerPadding * 2)) / 2), ea),
-              width: String((statusButtonWidth * 1)) + ea,
-              height: String((statusButtonHeight * 3) + (statusButtonBetween * 3)) + ea,
-              background: colorChip.gray2,
+              display: "inline-flex",
+              position: "relative",
+              width: String(statusButtonWidth) + ea,
+              height: String(statusButtonHeight) + ea,
+              background: colorChip.white,
               borderRadius: String(5) + "px",
               boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-              animation: "fadeuplite 0.3s ease forwards",
-              padding: String(grayInnerPadding) + ea,
-              paddingBottom: String(grayInnerPadding - statusButtonBetween) + ea,
+              marginRight: String(i % 2 === 0 ? statusButtonBetween : 0) + ea,
+              marginBottom: String(statusButtonBetween) + ea,
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              cursor: "pointer",
             },
             children: [
               {
+                text: photoTargets[i].title,
                 style: {
-                  display: "block",
-                  top: String(0),
-                  left: String(0),
-                  width: withOut(0),
-                  height: withOut(0),
+                  display: "inline-block",
                   position: "relative",
+                  top: String(statusTextTop) + ea,
+                  fontSize: String(statusSize) + ea,
+                  fontWeight: String(statusBetween),
+                  color: colorChip.black,
                 }
               }
             ]
           });
-
-          for (let i = 0; i < photoTargets.length; i++) {
-            createNode({
-              mother: whitePrompt.firstChild,
-              attribute: { index: String(i), designer, desid, client, proid },
-              event: {
-                click: photoTargets[i].event
-              },
-              style: {
-                display: "inline-flex",
-                position: "relative",
-                width: String(statusButtonWidth) + ea,
-                height: String(statusButtonHeight) + ea,
-                background: colorChip.white,
-                borderRadius: String(5) + "px",
-                boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-                marginRight: String(i % 2 === 0 ? statusButtonBetween : 0) + ea,
-                marginBottom: String(statusButtonBetween) + ea,
-                justifyContent: "center",
-                alignItems: "center",
-                textAlign: "center",
-                cursor: "pointer",
-              },
-              children: [
-                {
-                  text: photoTargets[i].title,
-                  style: {
-                    display: "inline-block",
-                    position: "relative",
-                    top: String(statusTextTop) + ea,
-                    fontSize: String(statusSize) + ea,
-                    fontWeight: String(statusBetween),
-                    color: colorChip.black,
-                  }
-                }
-              ]
-            });
-          }
-
         }
+
       }
-    });
-  }
+    }
+  });
+
 
   return buttonList;
 }
@@ -2471,16 +2539,16 @@ ProcessDetailJs.prototype.insertGreenButtons = function () {
   let basePadding;
 
   baseWidth = desktop ? 68 : 12;
-  right = desktop ? 38 : 5.2;
+  right = desktop ? 40 : 5.2;
   bottom = desktop ? 39 : 6.2;
 
   zIndex = 4;
 
-  chatBaseWidth = <%% 150, 150, 150, 150, 36 %%>;
+  chatBaseWidth = <%% 120, 120, 120, 120, 36 %%>;
   chatBaseHeight = <%% 480, 480, 480, 480, 48 %%>;
   chatBaseBetween = <%% 16, 16, 16, 16, 2 %%>;
 
-  buttonPadding = <%% 18, 18, 18, 16, 3.2 %%>;
+  buttonPadding = <%% 12, 12, 12, 10, 3.2 %%>;
   buttonHeight = <%% 36, 36, 36, 33, 7.2 %%>;
   buttonMarginTop = <%% 6, 6, 6, 6, 2 %%>;
   buttonBetween = <%% 6, 6, 6, 6, 1 %%>;
@@ -2489,11 +2557,10 @@ ProcessDetailJs.prototype.insertGreenButtons = function () {
   buttonSize = <%% 14, 14, 14, 13, 3 %%>;
   buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  basePadding = <%% 18, 18, 16, 12, 4 %%>;
+  basePadding = <%% 12, 12, 12, 10, 4 %%>;
 
   buttonBase = createNode({
     mother: totalContents,
-    class: [ "backblurwhite" ],
     style: {
       display: "inline-flex",
       position: "fixed",
@@ -2504,6 +2571,7 @@ ProcessDetailJs.prototype.insertGreenButtons = function () {
       boxShadow: "0px 6px 20px -10px " + colorChip.shadow,
       animation: "talkfade 0.3s ease forwards",
       overflow: "hidden",
+      background: colorChip.gray3,
       padding: String(basePadding) + ea,
       zIndex: String(zIndex),
     },
@@ -2541,7 +2609,7 @@ ProcessDetailJs.prototype.insertGreenButtons = function () {
           display: "flex",
           width: withOut(0),
           height: String(buttonHeight) + ea,
-          background: colorChip.gradientGreen,
+          background: colorChip.white,
           borderRadius: String(5) + "px",
           marginTop: String(i === 0 ? 0 : buttonMarginTop) + ea,
           justifyContent: "center",
@@ -2558,7 +2626,7 @@ ProcessDetailJs.prototype.insertGreenButtons = function () {
               top: String(buttonTextTop) + ea,
               fontSize: String(buttonSize) + ea,
               fontWeight: String(buttonWeight),
-              color: colorChip.white,
+              color: colorChip.black,
             }
           }
         ]
@@ -3389,8 +3457,7 @@ ProcessDetailJs.prototype.launching = async function (loading) {
     this.designer = designer;
 
     this.contents = await ajaxJson({}, SECONDHOST + "/getChecklist", { equal: true });
-
-    console.log(this.contents);
+    this.panContents = this.contents.map((obj) => { return obj.children }).flat();
 
     targetIndex = -1;
     if (typeof getObj.index === "string") {
@@ -3457,10 +3524,9 @@ ProcessDetailJs.prototype.launching = async function (loading) {
           instance.insertProcessBox();
           instance.insertUploadBox();
           instance.contentsLoop();
-          instance.insertCalendarBox();
+          // instance.insertCalendarBox();
           instance.insertInformationBox();
           instance.insertGreenButtons();
-          instance.insertButtonBox();
 
           if (instance.targetIndex !== -1) {
             if (instance.buttons[instance.targetIndex] !== undefined) {
