@@ -44,9 +44,9 @@ LogReport.prototype.dailyReports = async function () {
           method: "client",
         }, { headers: { "Content-Type": "application/json" } })).data;
 
-        const campaignEntireRows = await back.mongoRead("dailyCampaign", {}, { selfMongo });
-        const analyticsEntireRows = await back.mongoRead("dailyAnalytics", {}, { selfMongo });
-        const clientsEntireRows = await back.mongoRead("dailyClients", {}, { selfMongo });
+        const campaignEntireRows = await back.mongoRead("dailyCampaign", { "date.from": { $gte: queryStandardDate } }, { selfMongo });
+        const analyticsEntireRows = await back.mongoRead("dailyAnalytics", { "date.from": { $gte: queryStandardDate } }, { selfMongo });
+        const clientsEntireRows = await back.mongoRead("dailyClients", { "date.from": { $gte: queryStandardDate } }, { selfMongo });
 
         const facebookCampaignBoo = (str) => {
           return ((/^[A-Z]/.test(str) || /^t/.test(str) || /^s/.test(str) || /^link/.test(str) || /^facebook/.test(str) || /^main_video/.test(str) || /^Mag/.test(str) || /^maposketch/.test(str) || /^MV/.test(str) || /^appeal/.test(str) || /^De_image/.test(str) || /^video_mom/.test(str)) && !/^home/.test(str) && !/^PO3/.test(str) && !/^M_DA/.test(str) && !/^apart/.test(str) && !/^interior/.test(str) && !/^about/.test(str) && !/^local/.test(str) && !/^consul/.test(str) && !/not set/g.test(str) && !/^mini/.test(str) && !/^local/.test(str) && !/^naver/.test(str) && !/^google/.test(str));
@@ -1468,6 +1468,62 @@ LogReport.prototype.dailyReports = async function () {
       }
     }
 
+    // sub analytics report
+    const subAnalyticsMatrix = async (startDate) => {
+      try {
+        const queryStandardDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+        queryStandardDate.setMonth(queryStandardDate.getMonth() - 3);
+
+        const queryEntireRows = await back.mongoRead("queryAnalytics", { "date.from": { $gte: queryStandardDate } }, { selfMongo });
+        let middleMatrix;
+        let lengthMax;
+        let matrix;
+        let tempArr;
+
+        queryEntireRows.sort((a, b) => {
+          return b.date.from.valueOf() - a.date.from.valueOf();
+        });
+
+        middleMatrix = queryEntireRows.map((obj) => {
+          return [
+            dateToString(obj.date.from),
+            ...obj.data.detail
+          ]
+        });
+
+        lengthMax = middleMatrix.map((arr) => { return arr.length }).reduce((acc, curr) => { return acc >= curr ? acc : curr }, 0)
+
+        matrix = [];
+
+        for (let i = 0; i < lengthMax; i++) {
+          tempArr = [];
+          if (i === 0) {
+            for (let arr of middleMatrix) {
+              tempArr.push(arr[i]);
+              tempArr.push('');
+            }
+          } else {
+            for (let arr of middleMatrix) {
+              if (arr[i] !== undefined) {
+                tempArr.push(arr[i].case);
+                tempArr.push(arr[i].value);
+              } else {
+                tempArr.push('');
+                tempArr.push('');
+              }
+            }
+          }
+          matrix.push(tempArr);
+        }
+
+        return [ matrix ];
+
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    const zeroSheetsId = "1tS-lRBb3yXIC9N-1jgQH--rbigqujGcLRRXEXWCG7xk";
     const firstSheetsId = "1QaJfS2EkrPxek3l1OFBFBoJrOjDh7BiEXFO5tx4rJP4";
     const secondSheetsId = "14xqEKuEhIlTEQL44RlgwPGgdO3TiI8SidNCb7k1y4PU";
     const thirdSheetsId = "1X3PeZPj06C6hTsVJWQKCQ8WCF05NhmqUWd6Huyhnd0k";
@@ -1476,6 +1532,7 @@ LogReport.prototype.dailyReports = async function () {
     const sixthSheetsId = "1d64IEb9S4MIfb0rTQW1ojWI9Tq6utyzdE6MEsEbVvcs";
     const seventhSheetsId = "1XvZGAalipoQFzwWM178_c8Ect6n2hRf_MV5OfSXGfl8";
     const eighthSheetsId = "1TPSsXlaNz8ZssqImPZUYTZvnsqRuInSQXaAoFJ-CttU";
+    const ninthSheetsId = "1ocaqxxtKIXdyEKV9SodBQW-IzoCWUe8L_dTjKOLGMe8";
 
     const monthSheets = {
       totalFunnelMonthMatrix: "1jmbTM-pKZ6hwWtQyEsQPuKsT2t3YtVsEo6XuU6kqENU",
@@ -1497,6 +1554,7 @@ LogReport.prototype.dailyReports = async function () {
       week: { totalFunnelWeekMatrix, facebookPaidWeekMatrix, naverPaidWeekMatrix, googlePaidWeekMatrix }
     } = await marketingBasicMatrix(startDay);
     const [ eighth ] = await saDefaultMatrix(startDay);
+    const [ ninth ] = await subAnalyticsMatrix(startDay);
 
     await sheets.update_value_inPython(firstSheetsId, "", first);
     await sheets.update_value_inPython(secondSheetsId, "", second);
@@ -1506,6 +1564,7 @@ LogReport.prototype.dailyReports = async function () {
     await sheets.update_value_inPython(sixthSheetsId, "", sixth);
     await sheets.update_value_inPython(seventhSheetsId, "", seventh);
     await sheets.update_value_inPython(eighthSheetsId, "", eighth);
+    await sheets.update_value_inPython(ninthSheetsId, "", ninth);
 
     await sheets.update_value_inPython(monthSheets.totalFunnelMonthMatrix, "", totalFunnelMonthMatrix);
     await sheets.update_value_inPython(monthSheets.facebookPaidMonthMatrix, "", facebookPaidMonthMatrix);
@@ -1526,21 +1585,9 @@ LogReport.prototype.dailyReports = async function () {
     slackMessage += "\n";
     slackMessage += dateToString(startDay) + " ~ " + dateToString(yesterday) + " 기간의 지표를 업데이트하였습니다!";
     slackMessage += "\n";
-    slackMessage += "1) Total funnel : " + "https://docs.google.com/spreadsheets/d/" + firstSheetsId + "/edit?usp=sharing";
-    slackMessage += "\n";
-    slackMessage += "2) Clients info : " + "https://docs.google.com/spreadsheets/d/" + fourthSheetsId + "/edit?usp=sharing";
-    slackMessage += "\n";
-    slackMessage += "3) Contracts info : " + "https://docs.google.com/spreadsheets/d/" + sixthSheetsId + "/edit?usp=sharing";
-    slackMessage += "\n";
-    slackMessage += "4) Statistics weekly : " + "https://docs.google.com/spreadsheets/d/" + eighthSheetsId + "/edit?usp=sharing";
-    slackMessage += "\n";
-    slackMessage += "5) Facebook paid : " + "https://docs.google.com/spreadsheets/d/" + secondSheetsId + "/edit?usp=sharing";
-    slackMessage += "\n";
-    slackMessage += "6) Naver paid : " + "https://docs.google.com/spreadsheets/d/" + thirdSheetsId + "/edit?usp=sharing";
-    slackMessage += "\n";
-    slackMessage += "7) Google paid : " + "https://docs.google.com/spreadsheets/d/" + seventhSheetsId + "/edit?usp=sharing";
-    slackMessage += "\n";
-    slackMessage += "8) Campaign paid : " + "https://docs.google.com/spreadsheets/d/" + fifthSheetsId + "/edit?usp=sharing";
+    slackMessage += "MPR 통합관리장표 : " + "https://docs.google.com/spreadsheets/d/" + zeroSheetsId + "/edit?usp=sharing";
+
+    console.log(slackMessage);
 
     await requestSystem("https://" + host + "/marketingMessage", {
       text: slackMessage,

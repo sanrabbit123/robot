@@ -686,7 +686,7 @@ GoogleAnalytics.prototype.dailyQuery = async function (selfMongo, dayNumber = 3)
 
     for (let i = 0; i < dayNumber; i++) {
 
-      await sleep(1000);
+      await sleep(500);
 
       if (i === 0) {
         from = new Date(JSON.stringify(startDate).slice(1, -1));
