@@ -164,7 +164,7 @@ FacebookAPIs.prototype.dailyInstagram = async function (selfMongo, dayNumber = 7
       key = dateToString(from).replace(/\-/gi, '') + "_" + "instagram";
 
       json = {
-        camid: 'h' + String(from.getFullYear()).slice(2) + zeroAddition(from.getMonth() + 1) + '_' + 'f' + 'i' + zeroAddition(from.getDate()) + 's',
+        chaid: 'h' + String(from.getFullYear()).slice(2) + zeroAddition(from.getMonth() + 1) + '_' + 'f' + 'i' + zeroAddition(from.getDate()) + 's',
         key,
         date: { from, to },
         value: {

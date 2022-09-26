@@ -664,7 +664,189 @@ GoogleAnalytics.prototype.simpleMetric = async function (startDate, endDate) {
   }
 }
 
-GoogleAnalytics.prototype.queryMetric = async function (targetDate) {
+GoogleAnalytics.prototype.dailyQuery = async function (selfMongo, dayNumber = 3) {
+  const instance = this;
+  const back = this.back;
+  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog } = this.mother;
+  const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
+  try {
+    const queryCollection = "queryAnalytics";
+    let from, to;
+    let startDate;
+    let now;
+    let key;
+    let json;
+    let tempRows;
+
+    now = new Date();
+    startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    for (let i = 0; i < dayNumber; i++) {
+      startDate.setDate(startDate.getDate() - 1);
+    }
+
+    for (let i = 0; i < dayNumber; i++) {
+
+      await sleep(1000);
+
+      if (i === 0) {
+        from = new Date(JSON.stringify(startDate).slice(1, -1));
+        to = new Date(JSON.stringify(startDate).slice(1, -1));
+        to.setDate(to.getDate() + 1);
+      } else {
+        from.setDate(from.getDate() + 1);
+        to.setDate(to.getDate() + 1);
+      }
+
+      json = await this.queryParsing(from, selfMongo);
+
+      if (json !== null) {
+        key = json.key;
+
+        tempRows = await back.mongoRead(queryCollection, { key }, { selfMongo });
+        if (tempRows.length !== 0) {
+          await back.mongoDelete(queryCollection, { key }, { selfMongo });
+        }
+        await back.mongoCreate(queryCollection, json, { selfMongo })
+        console.log(json);
+      } else {
+        console.log(from, null);
+      }
+
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+GoogleAnalytics.prototype.queryParsing = async function (targetDate, selfMongo) {
+  const instance = this;
+  const { dateToString, stringToDate, pythonExecute, equalJson } = this.mother;
+  const back = this.back;
+  const querystring = require("querystring");
+  const zeroAddition = function (num) {
+    if (num < 10) {
+      return `0${String(num)}`;
+    } else {
+      return `${String(num)}`;
+    }
+  }
+  try {
+
+    if (targetDate === undefined) {
+      throw new Error("must be targetDate");
+    }
+
+    if (targetDate instanceof Date) {
+      targetDate = dateToString(targetDate);
+    }
+
+    const collection = "dailyAnalytics";
+    let key;
+    let start, end;
+    let targetReport;
+    let targetCases;
+    let res;
+    let tong;
+    let googleRes;
+    let result;
+    let finalObj;
+
+    start = stringToDate(targetDate);
+    end = stringToDate(targetDate);
+    end.setDate(end.getDate() + 1);
+    key = ('n' + String(start.getFullYear()).slice(2) + zeroAddition(start.getMonth() + 1) + '_' + "aa" + zeroAddition(start.getDate()) + 's');
+    [ targetReport ] = await back.mongoRead(collection, { anaid: key }, { selfMongo });
+    if (targetReport !== undefined) {
+
+
+      // from referrer
+
+      targetCases = targetReport.data.views.detail.userDefinedValue.cases;
+
+      res = targetCases.map((obj) => {
+        return obj.case;
+      }).filter((str) => {
+        return /\?/gi.test(str)
+      }).map((str) => {
+        return querystring.parse(str.split('?')[1])
+      }).map((obj) => {
+        return Object.values(obj);
+      }).map((arr) => {
+        return arr.filter((str) => { return /[ㄱ-ㅎㅏ-ㅣ가-힣]/gi.test(str) })
+      }).flat(10).map((str) => {
+        return str.trim();
+      });
+
+      tong = [ ...new Set(res) ].map((str) => {
+        return { case: str, value: 0 };
+      });
+
+      for (let str of res) {
+        for (let obj of tong) {
+          if (str === obj.case) {
+            obj.value = obj.value + 1;
+          }
+        }
+      }
+
+      tong.sort((a, b) => { return b.value - a.value });
+
+
+
+      // from google
+
+      googleRes = (await this.googleQuery(targetDate)).data.detail;
+      googleRes = googleRes.filter((obj) => { return obj.clicks >= 1 }).map((obj) => { obj.query = obj.query.trim(); return obj; });
+
+      for (let z of googleRes) {
+        for (let obj of tong) {
+          if (obj.case === z.query) {
+            obj.value = obj.value + z.clicks;
+            z.done = true;
+          }
+        }
+      }
+      googleRes = googleRes.filter((obj) => { return obj.done !== true });
+      for (let { query, clicks } of googleRes) {
+        tong.push({
+          case: query,
+          value: clicks,
+        });
+      }
+
+      tong.sort((a, b) => { return b.value - a.value });
+
+
+      // result
+
+      finalObj = {
+        key: targetDate.replace(/\-/gi, '') + "_query",
+        date: {
+          from: start,
+          to: end,
+        },
+        data: {
+          total: tong.reduce((acc, curr) => { return acc + curr.value }, 0),
+          detail: tong
+        }
+      };
+
+      return finalObj;
+
+    } else {
+
+      return null;
+
+    }
+
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
+GoogleAnalytics.prototype.googleQuery = async function (targetDate) {
   const instance = this;
   const { dateToString, stringToDate, pythonExecute, equalJson } = this.mother;
   const zeroAddition = function (num) {
@@ -693,7 +875,7 @@ GoogleAnalytics.prototype.queryMetric = async function (targetDate) {
     end.setDate(end.getDate() + 1);
 
     report = {
-      key: "google_query_" + targetDate.replace(/\-/gi, ''),
+      key: targetDate.replace(/\-/gi, '') + "_googleQuery",
       date: {
         from: start,
         to: end,
@@ -706,17 +888,21 @@ GoogleAnalytics.prototype.queryMetric = async function (targetDate) {
     };
 
     res = equalJson(await pythonExecute(this.pythonApp, [ "analytics", "basicImpressions" ], { startDate: targetDate, endDate: targetDate }));
-    report.data.clicks = res.rows[0].clicks;
-    report.data.impressions = res.rows[0].impressions;
+    if (Array.isArray(res.rows)) {
+      report.data.clicks = res.rows[0].clicks;
+      report.data.impressions = res.rows[0].impressions;
+    }
 
     res = equalJson(await pythonExecute(this.pythonApp, [ "analytics", "queryImpressions" ], { startDate: targetDate, endDate: targetDate }));
-    report.data.detail = res.rows.map((obj) => {
-      return {
-        query: obj.keys[0],
-        clicks: obj.clicks,
-        impressions: obj.impressions
-      }
-    });
+    if (Array.isArray(res.rows)) {
+      report.data.detail = res.rows.map((obj) => {
+        return {
+          query: obj.keys[0],
+          clicks: obj.clicks,
+          impressions: obj.impressions
+        }
+      });
+    }
 
     return report;
 

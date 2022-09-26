@@ -90,10 +90,24 @@ LogRouter.prototype.dailyChannel = async function (selfMongo) {
   try {
     const facebook = new FacebookAPIs();
     const youtube = new GoogleYoutube();
-    const dayNumber = 7;
+    const dayNumber = 3;
 
     await facebook.dailyInstagram(selfMongo, dayNumber);
     await youtube.dailyYoutube(selfMongo, dayNumber);
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+LogRouter.prototype.dailySubAnalytics = async function (selfMongo) {
+  const instance = this;
+  const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
+  try {
+    const analytics = new GoogleAnalytics();
+    const dayNumber = 3;
+
+    await analytics.dailyQuery(selfMongo, dayNumber);
 
   } catch (e) {
     console.log(e);

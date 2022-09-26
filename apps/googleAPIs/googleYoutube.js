@@ -48,7 +48,7 @@ GoogleYoutube.prototype.dailyYoutube = async function (selfMongo, dayNumber = 7)
 
       if (typeof views === "number" && typeof likes === "number" && typeof subscribers === "number") {
         json = {
-          camid: 'h' + String(from.getFullYear()).slice(2) + zeroAddition(from.getMonth() + 1) + '_' + 'g' + 'y' + zeroAddition(from.getDate()) + 's',
+          chaid: 'h' + String(from.getFullYear()).slice(2) + zeroAddition(from.getMonth() + 1) + '_' + 'g' + 'y' + zeroAddition(from.getDate()) + 's',
           key,
           date: { from, to },
           value: {
