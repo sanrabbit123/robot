@@ -3390,6 +3390,8 @@ ProcessDetailJs.prototype.launching = async function (loading) {
 
     this.contents = await ajaxJson({}, SECONDHOST + "/getChecklist", { equal: true });
 
+    console.log(this.contents);
+
     targetIndex = -1;
     if (typeof getObj.index === "string") {
       if (!Number.isNaN(Number(getObj.index.replace(/[^0-9]/gi, '')))) {
