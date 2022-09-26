@@ -92,12 +92,23 @@ DevContext.prototype.launching = async function () {
 
 
 
+    /*
+
+    시장에 대한 분석
+
+    분석의 순서
+
+    >>> 조사
+
+    1. 내부 데이터 나이대 조사
+    2. 성별 조사
+    3. 부부 여부 조사
+    4. 지역 조사
+    5. 지역에 따른 타겟 숫자 조사
+    6. 해당 연령대의 자가 비율
 
 
-
-    
-
-
+    */
 
 
 
@@ -2952,9 +2963,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "이민희",
-    //     designer: "박주령",
-    //     link: "https://drive.google.com/drive/folders/1DDcpQmodU4QkdeMA1L4ZH-PH8-C9W3ZP",
+    //     client: "강윤지",
+    //     designer: "우다미",
+    //     link: "https://drive.google.com/drive/folders/1reTqPCnjkbP5lFbUpGb0hVJcqsokHazR",
     //     pay: true
     //   },
     // ]);
