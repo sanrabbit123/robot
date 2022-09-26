@@ -91,17 +91,9 @@ DevContext.prototype.launching = async function () {
     // console.log(pastProposal[0].project.detail);
 
 
-    const selfMongo = this.MONGOLOCALC;
 
 
-    const LogRouter = require(`${process.cwd()}/apps/logConsole/router/logRouter.js`);
-
-
-
-    const app = new LogRouter(selfMongo);
-    await app.dailySubAnalytics(selfMongo);
-
-
+    
 
 
 
