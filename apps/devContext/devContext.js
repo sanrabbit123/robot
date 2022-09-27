@@ -91,7 +91,7 @@ DevContext.prototype.launching = async function () {
     // console.log(pastProposal[0].project.detail);
 
 
-    await findCode("secondinfo")
+
 
 
 
@@ -3035,8 +3035,8 @@ DevContext.prototype.launching = async function () {
     // send sms
     // const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
     // const human = new HumanPacket();
-    // const name = "배창규";
-    // const amount = 2098000;
+    // const name = "신은경";
+    // const amount = 11278000;
     // await human.sendSms({
     //   name: "",
     //   phone: "01055432039",
