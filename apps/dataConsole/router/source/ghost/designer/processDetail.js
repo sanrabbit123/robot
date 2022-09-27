@@ -3239,6 +3239,7 @@ ProcessDetailJs.prototype.plusMemo = function (thisStatusNumber) {
   let titleContentsBetween;
   let titleSize, titleWeight;
   let contentsSize, contentsWeight, contentsLineHeight;
+  let memoJson;
 
   serviceContents = this.panContents;
   thisKey = serviceContents[thisStatusNumber].key;
@@ -3262,22 +3263,6 @@ ProcessDetailJs.prototype.plusMemo = function (thisStatusNumber) {
   contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
   contentsLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
 
-  memoContents = `고객님이 가장 좋아하는 공간이며, 자주 머무는 공간이기에 TV와 심플한 소파만 두어 답답하지 않은 공간을 원하셨어요. 유일하게 처음부터 강조하셨던 품목이 탄 컬러 가죽의 소파라고 하셨기에 다리가 있는 미니멀한 멋이 느껴지는 소파로 제안드렸어요. 혹시나.. 가죽 컬러에서 느껴지는 올드함이 있을까 염려되어 그림과 쿠션의 컬러에 신경 썼고 철제 소재의 사이드 테이블로 포인트를
-
-주어 모던한 분위기를 만들었어요~
-따뜻함이 느껴지는 원단 소재의 장스탠드와 남편분께서 유일하게 의견 주신 구아바 나무가 정감 넘치는 부부의 모습을 보여주는 듯합니다.
-
-님이 가장 좋아하는 공간이며, 자주 머무는 공간이기에 TV와 심플한 소파만 두어 답답하지 않은 공간을 원하셨어요. 유일하게 처음부터 강조하셨던 품목이 탄 컬러 가죽의 소파라고 하셨기에 다리가 있는 미니멀한 멋이 느껴지는 소파로 제안드렸어요. 혹시나.. 가죽 컬러에서 느껴지는 올드함이 있을까 염려되어 그림과 쿠션의 컬러에 신경 썼고 철제 소재의 사이드 테이블로 포인트를
-
-주어 모던한 분위기를 만들었어요~ 따뜻함이 느껴지는 원단 소재의 장스탠드와 남편분께서 유일하게 의견 주신 구아바 나무가 정감 넘치는 부부의 모습을 보여주는 듯합니다.
-
-님이 가장 좋아하는 공간이며, 자주 머무는 공간이기에 TV와 심플한 소파만 두어 답답하지 않은 공간을 원하셨어요. 유일하게 처음부터 강조하셨던 품목이 탄 컬러 가죽의 소파라고 하셨기에 다리가 있는 미니멀한 멋이 느껴지는 소파로 제안드렸어요. 혹시나.. 가죽 컬러에서 느껴지는 올드함이 있을까 염려되어 그림과 쿠션의 컬러에 신경 썼고 철제 소재의 사이드 테이블로 포인트를 주어 모던한 분위기를 만들었어요~ 따뜻함이 느껴지는 원단 소재의 장스탠드와 남편분께서 유일하게 의견 주신 구아바 나무가 정감 넘치는 부부의 모습을 보여주는 듯합니다.
-
-님이 가장 좋아하는 공간이며, 자주 머무는 공간이기에 TV와 심플한 소파만 두어 답답하지 않은 공간을 원하셨어요. 유일하게 처음부터 강조하셨던 품목이 탄 컬러 가죽의 소파라고 하셨기에 다리가 있는 미니멀한 멋이 느껴지는 소파로 제안드렸어요. 혹시나.. 가죽 컬러에서 느껴지는 올드함이 있을까 염려되어 그림과 쿠션의 컬러에 신경 썼고 철제 소재의 사이드 테이블로 포인트를 주어 모던한 분위기를 만들었어요~ 따뜻함이 느껴지는 원단 소재의 장스탠드와 남편분께서 유일하게 의견 주신 구아바 나무가 정감 넘치는 부부의 모습을 보여주는 듯합니다.
-
-님이 가장 좋아하는 공간이며, 자주 머무는 공간이기에 TV와 심플한 소파만 두어 답답하지 않은 공간을 원하셨어요. 유일하게 처음부터 강조하셨던 품목이 탄 컬러 가죽의 소파라고 하셨기에 다리가 있는 미니멀한 멋이 느껴지는 소파로 제안드렸어요. 혹시나.. 가죽 컬러에서 느껴지는 올드함이 있을까 염려되어 그림과 쿠션의 컬러에 신경 썼고 철제 소재의 사이드 테이블로 포인트를 주어 모던한 분위기를 만들었어요~ 따뜻함이 느껴지는 원단 소재의 장스탠드와 남편분께서 유일하게 의견 주신 구아바 나무가 정감 넘치는 부부의 모습을 보여주는 듯합니다.
-`;
-
   return async function (e) {
     try {
       const proid = this.getAttribute("proid");
@@ -3285,6 +3270,16 @@ ProcessDetailJs.prototype.plusMemo = function (thisStatusNumber) {
       const name = this.getAttribute("name");
       const designer = this.getAttribute("designer");
       const zIndex = 4;
+
+      memoJson = await ajaxJson({
+        mode: "get",
+        proid: project.proid,
+        desid: instance.designer.desid,
+        key: thisKey,
+        memo: "",
+      }, SECONDHOST + "/projectDesignerMemo", { equal: true });
+
+      memoContents = memoJson.contents.memo;
 
       cancelBack = createNode({
         mother: totalContents,
@@ -3386,6 +3381,13 @@ ProcessDetailJs.prototype.plusMemo = function (thisStatusNumber) {
                   blur: async function (e) {
                     try {
                       this.style.color = colorChip.black;
+                      await ajaxJson({
+                        mode: "update",
+                        proid: project.proid,
+                        desid: instance.designer.desid,
+                        key: thisKey,
+                        memo: this.value.trim(),
+                      }, SECONDHOST + "/projectDesignerMemo");
                     } catch (e) {
                       console.log(e);
                     }
