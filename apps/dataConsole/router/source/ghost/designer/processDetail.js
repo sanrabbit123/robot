@@ -3234,20 +3234,49 @@ ProcessDetailJs.prototype.plusMemo = function (thisStatusNumber) {
   let titleArea, contentsArea;
   let cancelBack;
   let whitePrompt;
-  let titleAreaPaddingBottom;
+  let titleAreaHeight;
+  let memoContents;
+  let titleContentsBetween;
+  let titleSize, titleWeight;
+  let contentsSize, contentsWeight, contentsLineHeight;
 
   serviceContents = this.panContents;
   thisKey = serviceContents[thisStatusNumber].key;
   thisTitle = serviceContents[thisStatusNumber].title;
 
   whitePromptWidth = <%% 900, 800, 700, 700, 30 %%>;
-  whitePromptHeight = <%% 540, 540, 540, 540, 30 %%>;
+  whitePromptHeight = <%% 492, 492, 492, 492, 30 %%>;
 
-  whitePromptInnerPaddingLeft = <%% 40, 40, 40, 40, 30 %%>;
-  whitePromptInnerPaddingTop = <%% 36, 36, 36, 36, 24 %%>;
-  whitePromptInnerPaddingBottom = <%% 36, 36, 36, 36, 24 %%>;
+  whitePromptInnerPaddingLeft = <%% 44, 44, 44, 44, 30 %%>;
+  whitePromptInnerPaddingTop = <%% 38, 38, 38, 38, 24 %%>;
+  whitePromptInnerPaddingBottom = <%% 44, 44, 44, 44, 30 %%>;
 
-  titleAreaPaddingBottom = <%% 10, 10, 9, 8, 1 %%>;
+  titleAreaHeight = <%% 40, 40, 40, 40, 1 %%>;
+
+  titleContentsBetween = <%% 24, 24, 24, 16, 2 %%>;
+
+  titleSize = <%% 21, 21, 21, 21, 21 %%>;
+  titleWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+  contentsSize = <%% 14, 14, 14, 14, 14 %%>;
+  contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
+  contentsLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
+
+  memoContents = `고객님이 가장 좋아하는 공간이며, 자주 머무는 공간이기에 TV와 심플한 소파만 두어 답답하지 않은 공간을 원하셨어요. 유일하게 처음부터 강조하셨던 품목이 탄 컬러 가죽의 소파라고 하셨기에 다리가 있는 미니멀한 멋이 느껴지는 소파로 제안드렸어요. 혹시나.. 가죽 컬러에서 느껴지는 올드함이 있을까 염려되어 그림과 쿠션의 컬러에 신경 썼고 철제 소재의 사이드 테이블로 포인트를
+
+주어 모던한 분위기를 만들었어요~
+따뜻함이 느껴지는 원단 소재의 장스탠드와 남편분께서 유일하게 의견 주신 구아바 나무가 정감 넘치는 부부의 모습을 보여주는 듯합니다.
+
+님이 가장 좋아하는 공간이며, 자주 머무는 공간이기에 TV와 심플한 소파만 두어 답답하지 않은 공간을 원하셨어요. 유일하게 처음부터 강조하셨던 품목이 탄 컬러 가죽의 소파라고 하셨기에 다리가 있는 미니멀한 멋이 느껴지는 소파로 제안드렸어요. 혹시나.. 가죽 컬러에서 느껴지는 올드함이 있을까 염려되어 그림과 쿠션의 컬러에 신경 썼고 철제 소재의 사이드 테이블로 포인트를
+
+주어 모던한 분위기를 만들었어요~ 따뜻함이 느껴지는 원단 소재의 장스탠드와 남편분께서 유일하게 의견 주신 구아바 나무가 정감 넘치는 부부의 모습을 보여주는 듯합니다.
+
+님이 가장 좋아하는 공간이며, 자주 머무는 공간이기에 TV와 심플한 소파만 두어 답답하지 않은 공간을 원하셨어요. 유일하게 처음부터 강조하셨던 품목이 탄 컬러 가죽의 소파라고 하셨기에 다리가 있는 미니멀한 멋이 느껴지는 소파로 제안드렸어요. 혹시나.. 가죽 컬러에서 느껴지는 올드함이 있을까 염려되어 그림과 쿠션의 컬러에 신경 썼고 철제 소재의 사이드 테이블로 포인트를 주어 모던한 분위기를 만들었어요~ 따뜻함이 느껴지는 원단 소재의 장스탠드와 남편분께서 유일하게 의견 주신 구아바 나무가 정감 넘치는 부부의 모습을 보여주는 듯합니다.
+
+님이 가장 좋아하는 공간이며, 자주 머무는 공간이기에 TV와 심플한 소파만 두어 답답하지 않은 공간을 원하셨어요. 유일하게 처음부터 강조하셨던 품목이 탄 컬러 가죽의 소파라고 하셨기에 다리가 있는 미니멀한 멋이 느껴지는 소파로 제안드렸어요. 혹시나.. 가죽 컬러에서 느껴지는 올드함이 있을까 염려되어 그림과 쿠션의 컬러에 신경 썼고 철제 소재의 사이드 테이블로 포인트를 주어 모던한 분위기를 만들었어요~ 따뜻함이 느껴지는 원단 소재의 장스탠드와 남편분께서 유일하게 의견 주신 구아바 나무가 정감 넘치는 부부의 모습을 보여주는 듯합니다.
+
+님이 가장 좋아하는 공간이며, 자주 머무는 공간이기에 TV와 심플한 소파만 두어 답답하지 않은 공간을 원하셨어요. 유일하게 처음부터 강조하셨던 품목이 탄 컬러 가죽의 소파라고 하셨기에 다리가 있는 미니멀한 멋이 느껴지는 소파로 제안드렸어요. 혹시나.. 가죽 컬러에서 느껴지는 올드함이 있을까 염려되어 그림과 쿠션의 컬러에 신경 썼고 철제 소재의 사이드 테이블로 포인트를 주어 모던한 분위기를 만들었어요~ 따뜻함이 느껴지는 원단 소재의 장스탠드와 남편분께서 유일하게 의견 주신 구아바 나무가 정감 넘치는 부부의 모습을 보여주는 듯합니다.
+`;
 
   return async function (e) {
     try {
@@ -3309,7 +3338,7 @@ ProcessDetailJs.prototype.plusMemo = function (thisStatusNumber) {
           display: "block",
           position: "relative",
           borderBottom: "1px solid " + colorChip.black,
-          paddingBottom: String(titleAreaPaddingBottom) + ea,
+          height: String(titleAreaHeight) + ea,
         },
         children: [
           {
@@ -3317,8 +3346,8 @@ ProcessDetailJs.prototype.plusMemo = function (thisStatusNumber) {
             style: {
               display: "inline-block",
               position: "relative",
-              fontSize: String(21) + ea,
-              fontWeight: String(700),
+              fontSize: String(titleSize) + ea,
+              fontWeight: String(titleWeight),
               color: colorChip.black,
             }
           }
@@ -3330,10 +3359,56 @@ ProcessDetailJs.prototype.plusMemo = function (thisStatusNumber) {
         style: {
           display: "block",
           position: "relative",
-        }
+          paddingTop: String(titleContentsBetween) + ea,
+          width: withOut(0),
+          height: withOut(titleAreaHeight + titleContentsBetween, ea),
+          borderBottom: "1px solid " + colorChip.gray3,
+        },
+        children: [
+          {
+            style: {
+              display: "block",
+              position: "relative",
+              overflow: "scroll",
+              top: String(0),
+              left: String(0),
+              width: withOut(0),
+              height: withOut(0),
+            },
+            children: [
+              {
+                mode: "textarea",
+                text: memoContents,
+                event: {
+                  focus: function (e) {
+                    this.style.color = colorChip.green;
+                  },
+                  blur: async function (e) {
+                    try {
+                      this.style.color = colorChip.black;
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  }
+                },
+                style: {
+                  position: "relative",
+                  fontSize: String(contentsSize) + ea,
+                  fontWeight: String(contentsWeight),
+                  color: colorChip.black,
+                  lineHeight: String(contentsLineHeight),
+                  width: withOut(0),
+                  height: withOut(0),
+                  outline: String(0),
+                  border: String(0),
+                  background: "transparent",
+                }
+              }
+            ]
+          }
+        ]
       });
 
-      
 
     } catch (e) {
       console.log(e);
