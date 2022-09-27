@@ -1246,9 +1246,9 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
         name: project.name,
         designer: instance.designer.designer,
       },
-      // event: {
-      //   click: instance.uploadFiles(i),
-      // },
+      event: {
+        click: instance.plusMemo(i),
+      },
       style: {
         display: "flex",
         justifyContent: "center",
@@ -1286,8 +1286,12 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
 
 ProcessDetailJs.prototype.setPanBlocks = async function () {
   const instance = this;
-  const { ea, targetDrive } = this;
+  const { ea, targetDrive, targetHref } = this;
   const { ajaxJson, createNode, colorChip, withOut, cleanChildren, dateToString } = GeneralJs;
+  const motherChildPhotoTongClassName = "motherChildPhotoTongClassName";
+  const photoItemInitClassName = "photoItemInitClassName";
+  const bigPhotoClassName = "bigPhotoClassName";
+  const bigPhotoFixedTargetsClassName = "bigPhotoFixedTargetsClassName";
   try {
     let itemList;
     let mothers;
@@ -1300,6 +1304,13 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
     let transparentItemsMatrix;
     let index;
     let textTop, textSize, textWeight;
+    let divideNumber;
+    let bigPhotoPadding;
+    let arrowButtonWidth;
+    let arrowButtonMargin;
+    let bigPhotoClickEvent;
+    let fileItemSelectEvent;
+    let photoItemSelectEvent;
 
     itemBetween = <%% 6, 6, 5, 4, 1 %%>;
     itemTongHeight = <%% 40, 40, 36, 32, 3 %%>;
@@ -1309,6 +1320,202 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
     textSize = <%% 14, 14, 14, 14, 14 %%>;
     textWeight = <%% 400, 400, 400, 400, 400 %%>;
 
+    divideNumber = <%% 5, 5, 4, 3, 2 %%>;
+
+    bigPhotoPadding = <%% 48, 48, 48, 40, 10 %%>;
+
+    arrowButtonWidth = <%% 16, 16, 16, 16, 10 %%>;
+    arrowButtonMargin = <%% 20, 20, 20, 20, 2 %%>;
+
+    bigPhotoClickEvent = function (e) {
+      const self = this;
+      const totalContents = document.getElementById("totalcontents");
+      const motherNumber = Number(this.getAttribute("number"));
+      const zIndex = 4;
+      let order, key, next, previous;
+      let cancelBack, photoPrompt;
+      let renderPhoto;
+
+      next = {};
+      previous = {};
+
+      renderPhoto = (targetDom) => {
+        const width = Number(targetDom.getAttribute("width"));
+        const height = Number(targetDom.getAttribute("height"));
+        const original = targetDom.getAttribute("original");
+        const ratio = width / height;
+        let thisWidth, thisHeight;
+
+        order = Number(targetDom.getAttribute("order"));
+        key = targetDom.getAttribute("key");
+        next = document.querySelector('.' + photoItemInitClassName + "_" + key + "_" + String(order + 1));
+        if (next === null) {
+          next = document.querySelector('.' + photoItemInitClassName + "_" + key + "_" + String(0));
+        }
+        previous = document.querySelector('.' + photoItemInitClassName + "_" + key + "_" + String(order - 1));
+        if (previous === null) {
+          previous = document.querySelector('.' + photoItemInitClassName + "_" + key + "_" + String(motherMatrix[motherNumber] - 1));
+        }
+
+        if (document.querySelector('.' + bigPhotoClassName) !== null) {
+          document.querySelector('.' + bigPhotoClassName).remove();
+        }
+
+        if (((window.innerHeight - instance.naviHeight) - (bigPhotoPadding * 2)) * ratio > window.innerWidth - (bigPhotoPadding * 2)) {
+          thisWidth = window.innerWidth - (bigPhotoPadding * 2);
+          thisHeight = thisWidth / ratio;
+        } else {
+          thisHeight = (window.innerHeight - instance.naviHeight) - (bigPhotoPadding * 2);
+          thisWidth = thisHeight * ratio;
+        }
+
+        createNode({
+          mother: totalContents,
+          mode: "img",
+          class: [ bigPhotoClassName, bigPhotoFixedTargetsClassName ],
+          event: {
+            selectstart: (e) => { e.preventDefault(); },
+          },
+          attribute: {
+            src: original
+          },
+          style: {
+            display: "block",
+            position: "fixed",
+            top: "calc(calc(calc(calc(100% - " + String(instance.naviHeight) + ea + ") / 2) - " + String(thisHeight / 2) + ea + ") + " + String(instance.naviHeight) + ea + ")",
+            left: withOut(50, (thisWidth / 2), ea),
+            width: String(thisWidth) + ea,
+            height: String(thisHeight) + ea,
+            zIndex: String(zIndex),
+            borderRadius: String(5) + "px",
+          }
+        });
+      }
+
+      cancelBack = createNode({
+        mother: totalContents,
+        class: [ bigPhotoFixedTargetsClassName ],
+        event: {
+          click: function (e) {
+            const removeTargets = document.querySelectorAll('.' + bigPhotoFixedTargetsClassName);
+            for (let dom of removeTargets) {
+              dom.remove();
+            }
+          }
+        },
+        style: {
+          display: "block",
+          position: "fixed",
+          top: String(0),
+          left: String(0),
+          width: withOut(0),
+          height: withOut(0),
+          background: colorChip.realBlack,
+          opacity: String(0.7),
+          zIndex: String(zIndex),
+        }
+      });
+
+      createNode({
+        mother: totalContents,
+        class: [ "hoverDefault_lite", bigPhotoFixedTargetsClassName ],
+        mode: "svg",
+        source: instance.mother.returnArrow("left", colorChip.white),
+        event: {
+          selectstart: (e) => { e.preventDefault(); },
+          click: function (e) {
+            renderPhoto(previous);
+          }
+        },
+        style: {
+          display: "block",
+          position: "fixed",
+          top: "calc(calc(calc(calc(100% - " + String(instance.naviHeight) + ea + ") / 2) - " + String(arrowButtonWidth / 2) + ea + ") + " + String(instance.naviHeight) + ea + ")",
+          left: String(arrowButtonMargin) + ea,
+          width: String(arrowButtonWidth) + ea,
+          zIndex: String(zIndex),
+        }
+      });
+
+      createNode({
+        mother: totalContents,
+        class: [ "hoverDefault_lite", bigPhotoFixedTargetsClassName ],
+        mode: "svg",
+        source: instance.mother.returnArrow("right", colorChip.white),
+        event: {
+          selectstart: (e) => { e.preventDefault(); },
+          click: function (e) {
+            renderPhoto(next);
+          }
+        },
+        style: {
+          display: "block",
+          position: "fixed",
+          top: "calc(calc(calc(calc(100% - " + String(instance.naviHeight) + ea + ") / 2) - " + String(arrowButtonWidth / 2) + ea + ") + " + String(instance.naviHeight) + ea + ")",
+          right: String(arrowButtonMargin) + ea,
+          width: String(arrowButtonWidth) + ea,
+          zIndex: String(zIndex),
+        }
+      });
+
+      renderPhoto(self);
+
+    }
+
+    fileItemSelectEvent = function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const original = this.getAttribute("original");
+      const key = this.getAttribute("key");
+      const toggle = this.getAttribute("toggle");
+
+      if (toggle === "off") {
+
+        this.style.background = colorChip.green;
+        this.firstChild.style.color = colorChip.white;
+
+        this.setAttribute("toggle", "on");
+        instance.itemList.push({ original, key });
+      } else {
+
+        this.style.background = colorChip.gray3;
+        this.firstChild.style.color = colorChip.black;
+
+        instance.itemList.splice(instance.itemList.findIndex((obj) => {
+          return obj.original === original;
+        }), 1);
+        this.setAttribute("toggle", "off");
+      }
+
+      instance.reloadGreenButtons();
+    }
+
+    photoItemSelectEvent = function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const original = this.getAttribute("original");
+      const key = this.getAttribute("key");
+      const toggle = this.getAttribute("toggle");
+
+      if (toggle === "off") {
+
+        this.lastChild.style.opacity = String(0.6);
+
+        this.setAttribute("toggle", "on");
+        instance.itemList.push({ original, key });
+      } else {
+
+        this.lastChild.style.opacity = String(0);
+
+        instance.itemList.splice(instance.itemList.findIndex((obj) => {
+          return obj.original === original;
+        }), 1);
+        this.setAttribute("toggle", "off");
+      }
+
+      instance.reloadGreenButtons();
+    }
+
     mothers = this.panList;
     itemList = await ajaxJson({ target: this.targetDrive }, "/ghostPass_readDir", { equal: true });
 
@@ -1317,11 +1524,12 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
     }
 
     itemList = itemList.map((raw) => {
+      const original = raw;
       const [ key, time, order, hex ] = raw.split("_");
       const [ , exe ] = hex.split(".");
-      return [ key, new Date(Number(time)), String(Number(order) + 1) + "." + exe, Number(order) ];
-    }).map(([ key, date, name, order ]) => {
-      return { key, date, name, order };
+      return [ key, new Date(Number(time)), String(Number(order) + 1) + "." + exe, Number(order), targetHref + "/" + original ];
+    }).map(([ key, date, name, order, original ]) => {
+      return { key, date, name, order, original };
     });
 
     itemList.sort((a, b) => { return a.order - b.order });
@@ -1332,41 +1540,117 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
         if (this.panContents[i].key === item.key) {
           item.mother = mothers[i];
           item.motherNumber = i;
+          item.type = this.panContents[i].type;
         }
       }
     }
 
     motherMatrix = (new Array(this.panContents.length)).fill(0, 0);
 
-    for (let { mother, key, date, name, order, motherNumber } of itemList) {
-      itemBlock = createNode({
-        mother,
-        class: [ "hoverDefault_lite" ],
-        style: {
-          display: "inline-flex",
-          justifyContent: "center",
-          alignItems: "center",
-          width: "calc(calc(100% - " + String(itemBetween * 9) + ea + ") / " + String(9) + ")",
-          marginRight: String(itemBetween) + ea,
-          height: String(itemTongHeight) + ea,
-          marginBottom: String(itemBetween) + ea,
-          borderRadius: String(5) + "px",
-          background: colorChip.gray3,
-        },
-        children: [
-          {
-            text: dateToString(date).replace(/\-/gi, '').slice(2) + "_" + name,
-            style: {
-              display: "inline-block",
-              position: "relative",
-              top: String(textTop) + ea,
-              fontSize: String(textSize) + ea,
-              fontWeight: String(textWeight),
-              color: colorChip.black,
+    for (let { mother, key, date, name, order, motherNumber, type, original } of itemList) {
+      if (type === "file") {
+        itemBlock = createNode({
+          mother,
+          class: [ "hoverDefault_lite" ],
+          attribute: {
+            original,
+            key,
+            toggle: "off",
+          },
+          event: {
+            click: fileItemSelectEvent,
+            contextmenu: fileItemSelectEvent
+          },
+          style: {
+            display: "inline-flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "calc(calc(100% - " + String(itemBetween * 9) + ea + ") / " + String(9) + ")",
+            marginRight: String(itemBetween) + ea,
+            height: String(itemTongHeight) + ea,
+            marginBottom: String(itemBetween) + ea,
+            borderRadius: String(5) + "px",
+            background: colorChip.gray3,
+          },
+          children: [
+            {
+              text: dateToString(date).replace(/\-/gi, '').slice(2) + "_" + name,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(textTop) + ea,
+                fontSize: String(textSize) + ea,
+                fontWeight: String(textWeight),
+                color: colorChip.black,
+              }
             }
+          ]
+        });
+      } else {
+
+        if (mother.querySelector('.' + motherChildPhotoTongClassName) === null) {
+          for (let i = 0; i < divideNumber; i++) {
+            createNode({
+              mother,
+              class: [ motherChildPhotoTongClassName ],
+              style: {
+                display: "inline-block",
+                position: "relative",
+                verticalAlign: "top",
+                width: "calc(calc(100% - " + String(itemBetween * divideNumber) + ea + ") / " + String(divideNumber) + ")",
+                marginRight: String(itemBetween) + ea,
+                borderRadius: String(5) + "px",
+              },
+            });
           }
-        ]
-      });
+        }
+
+        itemBlock = createNode({
+          mother: [ ...mother.querySelectorAll('.' + motherChildPhotoTongClassName) ][(motherMatrix[motherNumber] % divideNumber)],
+          class: [ "hoverDefault_lite", (photoItemInitClassName + "_" + key + "_" + String(motherMatrix[motherNumber])) ],
+          attribute: { key, original, order: String(motherMatrix[motherNumber]), number: String(motherNumber), toggle: "off" },
+          event: {
+            click: bigPhotoClickEvent,
+            contextmenu: photoItemSelectEvent
+          },
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(0),
+            borderRadius: String(5) + "px",
+            marginBottom: String(itemBetween) + ea,
+            overflow: "hidden",
+          },
+          children: [
+            {
+              mode: "img",
+              attribute: { src: original },
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(0),
+              }
+            },
+            {
+              style: {
+                display: "block",
+                position: "absolute",
+                top: String(0),
+                left: String(0),
+                width: withOut(0),
+                height: withOut(0),
+                background: colorChip.green,
+                opacity: String(0),
+              }
+            }
+          ]
+        });
+
+        itemBlock.setAttribute("width", String(itemBlock.getBoundingClientRect().width));
+        itemBlock.setAttribute("height", String(itemBlock.getBoundingClientRect().height));
+
+      }
+
       motherMatrix[motherNumber] = motherMatrix[motherNumber] + 1;
     }
 
@@ -2140,7 +2424,7 @@ ProcessDetailJs.prototype.insertInformationBox = function () {
 ProcessDetailJs.prototype.returnButtonList = function (thisStatusNumber) {
   const instance = this;
   const mother = this.mother;
-  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, downloadFile } = GeneralJs;
   const { project, requestNumber, ea, baseTong, media, totalContents } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -2181,341 +2465,359 @@ ProcessDetailJs.prototype.returnButtonList = function (thisStatusNumber) {
     checklist: null,
   });
 
-  buttonList = [
-    {
-      name: "상태 변경",
-      event: function () {
-        return function (e) {
-          const targetMother = totalContents;
-          let cancelBack, whitePrompt;
+  // buttonList = [
+  //   {
+  //     name: "상태 변경",
+  //     event: function () {
+  //       return function (e) {
+  //         const targetMother = totalContents;
+  //         let cancelBack, whitePrompt;
+  //
+  //         cancelBack = createNode({
+  //           mother: targetMother,
+  //           event: {
+  //             click: function (e) {
+  //               targetMother.removeChild(targetMother.lastChild);
+  //               targetMother.removeChild(targetMother.lastChild);
+  //             }
+  //           },
+  //           style: {
+  //             position: "fixed",
+  //             top: String(0),
+  //             left: String(0),
+  //             width: withOut(0),
+  //             height: withOut(0),
+  //             background: colorChip.black,
+  //             opacity: String(0.2),
+  //           }
+  //         });
+  //
+  //         whitePrompt = createNode({
+  //           mother: targetMother,
+  //           style: {
+  //             position: "fixed",
+  //             top: withOut(50, (((statusButtonHeight * 4) + (statusButtonBetween * 3) + (grayInnerPadding * 2)) / 2), ea),
+  //             left: withOut(50, (((statusButtonWidth * 2) + statusButtonBetween + (grayInnerPadding * 2)) / 2), ea),
+  //             width: String((statusButtonWidth * 2) + statusButtonBetween) + ea,
+  //             height: String((statusButtonHeight * 4) + (statusButtonBetween * 4)) + ea,
+  //             background: colorChip.gray2,
+  //             borderRadius: String(5) + "px",
+  //             boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+  //             animation: "fadeuplite 0.3s ease forwards",
+  //             padding: String(grayInnerPadding) + ea,
+  //             paddingBottom: String(grayInnerPadding - statusButtonBetween) + ea,
+  //           },
+  //           children: [
+  //             {
+  //               style: {
+  //                 display: "block",
+  //                 top: String(0),
+  //                 left: String(0),
+  //                 width: withOut(0),
+  //                 height: withOut(0),
+  //                 position: "relative",
+  //               }
+  //             }
+  //           ]
+  //         });
+  //
+  //         for (let i = 0; i < titleTargets.length; i++) {
+  //           createNode({
+  //             mother: whitePrompt.firstChild,
+  //             attribute: { index: String(i) },
+  //             event: {
+  //               click: async function (e) {
+  //                 try {
+  //                   const index = Number(this.getAttribute("index"));
+  //                   if (serviceContents[index] !== undefined) {
+  //                     let value;
+  //                     let whereQuery, updateQuery;
+  //
+  //                     value = serviceContents[index].target[0];
+  //
+  //                     whereQuery = { proid: project.proid };
+  //                     updateQuery = {};
+  //                     updateQuery["process.action"] = value;
+  //
+  //                     if (window.confirm("업데이트를 진행하시겠습니까?")) {
+  //                       await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateProject");
+  //                       await ajaxJson({ message: instance.designer.designer + " 실장님이 콘솔을 통해 " + project.name + " 고객님 상태를 변경했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+  //
+  //                       window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + project.proid + "&index=" + String(index);
+  //                     }
+  //
+  //                   } else {
+  //                     window.alert("프로젝트 완료는 홈리에종에 직접 문의해주세요!");
+  //                   }
+  //                 } catch (e) {
+  //                   console.log(e);
+  //                   window.location.reload();
+  //                 }
+  //               }
+  //             },
+  //             style: {
+  //               display: "inline-flex",
+  //               position: "relative",
+  //               width: String(statusButtonWidth) + ea,
+  //               height: String(statusButtonHeight) + ea,
+  //               background: colorChip.white,
+  //               borderRadius: String(5) + "px",
+  //               boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+  //               marginRight: String(i % 2 === 0 ? statusButtonBetween : 0) + ea,
+  //               marginBottom: String(statusButtonBetween) + ea,
+  //               justifyContent: "center",
+  //               alignItems: "center",
+  //               textAlign: "center",
+  //               cursor: "pointer",
+  //             },
+  //             children: [
+  //               {
+  //                 text: titleTargets[i].title,
+  //                 style: {
+  //                   display: "inline-block",
+  //                   position: "relative",
+  //                   top: String(statusTextTop) + ea,
+  //                   fontSize: String(statusSize) + ea,
+  //                   fontWeight: String(statusBetween),
+  //                   color: colorChip.black,
+  //                 }
+  //               }
+  //             ]
+  //           });
+  //         }
+  //
+  //       }
+  //     }
+  //   }
+  // ];
+  // buttonList.push({
+  //   name: "선택 파일 다운로드",
+  //   event: function () {
+  //     return function (e) {
+  //       const designer = this.getAttribute("designer");
+  //       const desid = this.getAttribute("desid");
+  //       const client = this.getAttribute("client");
+  //       const proid = this.getAttribute("proid");
+  //       const targetMother = totalContents;
+  //       let photoTargets, cancelBack, whitePrompt;
+  //
+  //       cancelBack = {};
+  //       whitePrompt = {};
+  //
+  //       photoTargets = [
+  //         {
+  //           title: "촬영 요청",
+  //           event: async function (e) {
+  //             try {
+  //               const designer = this.getAttribute("designer");
+  //               const desid = this.getAttribute("desid");
+  //               const client = this.getAttribute("client");
+  //               const proid = this.getAttribute("proid");
+  //
+  //               await ajaxJson({ message: designer + " 실장님이 " + project.name + " 고객님 현장 촬영을 하고 싶다고 의사 표현하셨습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+  //               window.alert("홈리에종에 촬영 진행 의견을 전달하였습니다!");
+  //               cancelBack.click();
+  //
+  //             } catch (e) {
+  //               console.log(e);
+  //             }
+  //           }
+  //         },
+  //         {
+  //           title: "촬영 미진행",
+  //           event: async function (e) {
+  //             try {
+  //               const designer = this.getAttribute("designer");
+  //               const desid = this.getAttribute("desid");
+  //               const client = this.getAttribute("client");
+  //               const proid = this.getAttribute("proid");
+  //
+  //               await ajaxJson({ message: designer + " 실장님이 " + project.name + " 고객님 현장 촬영을 진행을 하고 싶지 않아 하십니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+  //               window.alert("홈리에종에 촬영 미진행 의견을 전달하였습니다!");
+  //               cancelBack.click();
+  //
+  //             } catch (e) {
+  //               console.log(e);
+  //             }
+  //           }
+  //         },
+  //         {
+  //           title: "촬영비 결제",
+  //           event: async function (e) {
+  //             try {
+  //               const designer = this.getAttribute("designer");
+  //               const desid = this.getAttribute("desid");
+  //               const client = this.getAttribute("client");
+  //               const proid = this.getAttribute("proid");
+  //               const { pluginScript, oidConst } = await ajaxJson({ mode: "script", oidKey: "mini" }, BACKHOST + "/generalImpPayment");
+  //               let plugin, oid;
+  //
+  //               oid = oidConst + instance.designer.information.phone.replace(/[^0-9]/gi, '') + "_" + String((new Date()).valueOf());
+  //
+  //               plugin = new Function(pluginScript);
+  //               plugin();
+  //               window.IMP.init("imp71921105");
+  //
+  //               if (desktop) {
+  //
+  //                 window.IMP.request_pay({
+  //                     pg: "inicis",
+  //                     pay_method: "card",
+  //                     merchant_uid: oid,
+  //                     name: "현장 촬영비",
+  //                     amount: Math.floor(165000),
+  //                     buyer_email: instance.designer.information.email,
+  //                     buyer_name: instance.designer.designer,
+  //                     buyer_tel: instance.designer.information.phone,
+  //                 }, async (rsp) => {
+  //                   try {
+  //                     if (typeof rsp.status === "string" && /paid/gi.test(rsp.status)) {
+  //                       await ajaxJson({ message: designer + " 실장님이 " + project.name + " 고객님 현장 촬영의 촬영비를 결제하셨습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+  //                       window.alert("결제가 완료되었습니다!");
+  //                       cancelBack.click();
+  //                     } else {
+  //                       window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+  //                       window.location.reload();
+  //                     }
+  //                   } catch (e) {
+  //                     window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+  //                     window.location.reload();
+  //                   }
+  //                 });
+  //
+  //               } else {
+  //
+  //                 const { key } = await ajaxJson({ mode: "store", oid, data: { designer, desid, client, proid, oid } }, BACKHOST + "/generalImpPayment");
+  //                 window.IMP.request_pay({
+  //                     pg: "inicis",
+  //                     pay_method: "card",
+  //                     merchant_uid: oid,
+  //                     name: "현장 촬영비",
+  //                     amount: Math.floor(165000),
+  //                     buyer_email: instance.designer.information.email,
+  //                     buyer_name: instance.designer.designer,
+  //                     buyer_tel: instance.designer.information.phone,
+  //                     m_redirect_url: window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + proid + "&mobilecard=" + key,
+  //                 }, (rsp) => {});
+  //
+  //               }
+  //
+  //             } catch (e) {
+  //               console.log(e);
+  //             }
+  //           }
+  //         }
+  //       ];
+  //
+  //       cancelBack = createNode({
+  //         mother: targetMother,
+  //         event: {
+  //           click: function (e) {
+  //             targetMother.removeChild(targetMother.lastChild);
+  //             targetMother.removeChild(targetMother.lastChild);
+  //           }
+  //         },
+  //         style: {
+  //           position: "fixed",
+  //           top: String(0),
+  //           left: String(0),
+  //           width: withOut(0),
+  //           height: withOut(0),
+  //           background: colorChip.black,
+  //           opacity: String(0.2),
+  //         }
+  //       });
+  //
+  //       whitePrompt = createNode({
+  //         mother: targetMother,
+  //         style: {
+  //           position: "fixed",
+  //           top: withOut(50, (((statusButtonHeight * 3) + (statusButtonBetween * 2) + (grayInnerPadding * 2)) / 2), ea),
+  //           left: withOut(50, (((statusButtonWidth * 1) + (grayInnerPadding * 2)) / 2), ea),
+  //           width: String((statusButtonWidth * 1)) + ea,
+  //           height: String((statusButtonHeight * 3) + (statusButtonBetween * 3)) + ea,
+  //           background: colorChip.gray2,
+  //           borderRadius: String(5) + "px",
+  //           boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+  //           animation: "fadeuplite 0.3s ease forwards",
+  //           padding: String(grayInnerPadding) + ea,
+  //           paddingBottom: String(grayInnerPadding - statusButtonBetween) + ea,
+  //         },
+  //         children: [
+  //           {
+  //             style: {
+  //               display: "block",
+  //               top: String(0),
+  //               left: String(0),
+  //               width: withOut(0),
+  //               height: withOut(0),
+  //               position: "relative",
+  //             }
+  //           }
+  //         ]
+  //       });
+  //
+  //       for (let i = 0; i < photoTargets.length; i++) {
+  //         createNode({
+  //           mother: whitePrompt.firstChild,
+  //           attribute: { index: String(i), designer, desid, client, proid },
+  //           event: {
+  //             click: photoTargets[i].event
+  //           },
+  //           style: {
+  //             display: "inline-flex",
+  //             position: "relative",
+  //             width: String(statusButtonWidth) + ea,
+  //             height: String(statusButtonHeight) + ea,
+  //             background: colorChip.white,
+  //             borderRadius: String(5) + "px",
+  //             boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+  //             marginRight: String(i % 2 === 0 ? statusButtonBetween : 0) + ea,
+  //             marginBottom: String(statusButtonBetween) + ea,
+  //             justifyContent: "center",
+  //             alignItems: "center",
+  //             textAlign: "center",
+  //             cursor: "pointer",
+  //           },
+  //           children: [
+  //             {
+  //               text: photoTargets[i].title,
+  //               style: {
+  //                 display: "inline-block",
+  //                 position: "relative",
+  //                 top: String(statusTextTop) + ea,
+  //                 fontSize: String(statusSize) + ea,
+  //                 fontWeight: String(statusBetween),
+  //                 color: colorChip.black,
+  //               }
+  //             }
+  //           ]
+  //         });
+  //       }
+  //
+  //     }
+  //   }
+  // });
 
-          cancelBack = createNode({
-            mother: targetMother,
-            event: {
-              click: function (e) {
-                targetMother.removeChild(targetMother.lastChild);
-                targetMother.removeChild(targetMother.lastChild);
-              }
-            },
-            style: {
-              position: "fixed",
-              top: String(0),
-              left: String(0),
-              width: withOut(0),
-              height: withOut(0),
-              background: colorChip.black,
-              opacity: String(0.2),
-            }
-          });
-
-          whitePrompt = createNode({
-            mother: targetMother,
-            style: {
-              position: "fixed",
-              top: withOut(50, (((statusButtonHeight * 4) + (statusButtonBetween * 3) + (grayInnerPadding * 2)) / 2), ea),
-              left: withOut(50, (((statusButtonWidth * 2) + statusButtonBetween + (grayInnerPadding * 2)) / 2), ea),
-              width: String((statusButtonWidth * 2) + statusButtonBetween) + ea,
-              height: String((statusButtonHeight * 4) + (statusButtonBetween * 4)) + ea,
-              background: colorChip.gray2,
-              borderRadius: String(5) + "px",
-              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-              animation: "fadeuplite 0.3s ease forwards",
-              padding: String(grayInnerPadding) + ea,
-              paddingBottom: String(grayInnerPadding - statusButtonBetween) + ea,
-            },
-            children: [
-              {
-                style: {
-                  display: "block",
-                  top: String(0),
-                  left: String(0),
-                  width: withOut(0),
-                  height: withOut(0),
-                  position: "relative",
-                }
-              }
-            ]
-          });
-
-          for (let i = 0; i < titleTargets.length; i++) {
-            createNode({
-              mother: whitePrompt.firstChild,
-              attribute: { index: String(i) },
-              event: {
-                click: async function (e) {
-                  try {
-                    const index = Number(this.getAttribute("index"));
-                    if (serviceContents[index] !== undefined) {
-                      let value;
-                      let whereQuery, updateQuery;
-
-                      value = serviceContents[index].target[0];
-
-                      whereQuery = { proid: project.proid };
-                      updateQuery = {};
-                      updateQuery["process.action"] = value;
-
-                      if (window.confirm("업데이트를 진행하시겠습니까?")) {
-                        await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateProject");
-                        await ajaxJson({ message: instance.designer.designer + " 실장님이 콘솔을 통해 " + project.name + " 고객님 상태를 변경했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
-
-                        window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + project.proid + "&index=" + String(index);
-                      }
-
-                    } else {
-                      window.alert("프로젝트 완료는 홈리에종에 직접 문의해주세요!");
-                    }
-                  } catch (e) {
-                    console.log(e);
-                    window.location.reload();
-                  }
-                }
-              },
-              style: {
-                display: "inline-flex",
-                position: "relative",
-                width: String(statusButtonWidth) + ea,
-                height: String(statusButtonHeight) + ea,
-                background: colorChip.white,
-                borderRadius: String(5) + "px",
-                boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-                marginRight: String(i % 2 === 0 ? statusButtonBetween : 0) + ea,
-                marginBottom: String(statusButtonBetween) + ea,
-                justifyContent: "center",
-                alignItems: "center",
-                textAlign: "center",
-                cursor: "pointer",
-              },
-              children: [
-                {
-                  text: titleTargets[i].title,
-                  style: {
-                    display: "inline-block",
-                    position: "relative",
-                    top: String(statusTextTop) + ea,
-                    fontSize: String(statusSize) + ea,
-                    fontWeight: String(statusBetween),
-                    color: colorChip.black,
-                  }
-                }
-              ]
-            });
-          }
-
-        }
-      }
-    }
-  ];
-
+  buttonList = [];
   buttonList.push({
-    name: "촬영 여부",
+    name: "선택 파일 다운로드",
     event: function () {
-      return function (e) {
-        const designer = this.getAttribute("designer");
-        const desid = this.getAttribute("desid");
-        const client = this.getAttribute("client");
-        const proid = this.getAttribute("proid");
-        const targetMother = totalContents;
-        let photoTargets, cancelBack, whitePrompt;
-
-        cancelBack = {};
-        whitePrompt = {};
-
-        photoTargets = [
-          {
-            title: "촬영 요청",
-            event: async function (e) {
-              try {
-                const designer = this.getAttribute("designer");
-                const desid = this.getAttribute("desid");
-                const client = this.getAttribute("client");
-                const proid = this.getAttribute("proid");
-
-                await ajaxJson({ message: designer + " 실장님이 " + project.name + " 고객님 현장 촬영을 하고 싶다고 의사 표현하셨습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
-                window.alert("홈리에종에 촬영 진행 의견을 전달하였습니다!");
-                cancelBack.click();
-
-              } catch (e) {
-                console.log(e);
-              }
-            }
-          },
-          {
-            title: "촬영 미진행",
-            event: async function (e) {
-              try {
-                const designer = this.getAttribute("designer");
-                const desid = this.getAttribute("desid");
-                const client = this.getAttribute("client");
-                const proid = this.getAttribute("proid");
-
-                await ajaxJson({ message: designer + " 실장님이 " + project.name + " 고객님 현장 촬영을 진행을 하고 싶지 않아 하십니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
-                window.alert("홈리에종에 촬영 미진행 의견을 전달하였습니다!");
-                cancelBack.click();
-
-              } catch (e) {
-                console.log(e);
-              }
-            }
-          },
-          {
-            title: "촬영비 결제",
-            event: async function (e) {
-              try {
-                const designer = this.getAttribute("designer");
-                const desid = this.getAttribute("desid");
-                const client = this.getAttribute("client");
-                const proid = this.getAttribute("proid");
-                const { pluginScript, oidConst } = await ajaxJson({ mode: "script", oidKey: "mini" }, BACKHOST + "/generalImpPayment");
-                let plugin, oid;
-
-                oid = oidConst + instance.designer.information.phone.replace(/[^0-9]/gi, '') + "_" + String((new Date()).valueOf());
-
-                plugin = new Function(pluginScript);
-                plugin();
-                window.IMP.init("imp71921105");
-
-                if (desktop) {
-
-                  window.IMP.request_pay({
-                      pg: "inicis",
-                      pay_method: "card",
-                      merchant_uid: oid,
-                      name: "현장 촬영비",
-                      amount: Math.floor(165000),
-                      buyer_email: instance.designer.information.email,
-                      buyer_name: instance.designer.designer,
-                      buyer_tel: instance.designer.information.phone,
-                  }, async (rsp) => {
-                    try {
-                      if (typeof rsp.status === "string" && /paid/gi.test(rsp.status)) {
-                        await ajaxJson({ message: designer + " 실장님이 " + project.name + " 고객님 현장 촬영의 촬영비를 결제하셨습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
-                        window.alert("결제가 완료되었습니다!");
-                        cancelBack.click();
-                      } else {
-                        window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
-                        window.location.reload();
-                      }
-                    } catch (e) {
-                      window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
-                      window.location.reload();
-                    }
-                  });
-
-                } else {
-
-                  const { key } = await ajaxJson({ mode: "store", oid, data: { designer, desid, client, proid, oid } }, BACKHOST + "/generalImpPayment");
-                  window.IMP.request_pay({
-                      pg: "inicis",
-                      pay_method: "card",
-                      merchant_uid: oid,
-                      name: "현장 촬영비",
-                      amount: Math.floor(165000),
-                      buyer_email: instance.designer.information.email,
-                      buyer_name: instance.designer.designer,
-                      buyer_tel: instance.designer.information.phone,
-                      m_redirect_url: window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + proid + "&mobilecard=" + key,
-                  }, (rsp) => {});
-
-                }
-
-              } catch (e) {
-                console.log(e);
-              }
+      return async function (e) {
+        try {
+          if (instance.itemList.length === 0) {
+            window.alert("파일을 먼저 선택해주세요! (우클릭으로 파일 선택)");
+          } else {
+            for (let { original } of instance.itemList) {
+              await downloadFile(original);
             }
           }
-        ];
-
-        cancelBack = createNode({
-          mother: targetMother,
-          event: {
-            click: function (e) {
-              targetMother.removeChild(targetMother.lastChild);
-              targetMother.removeChild(targetMother.lastChild);
-            }
-          },
-          style: {
-            position: "fixed",
-            top: String(0),
-            left: String(0),
-            width: withOut(0),
-            height: withOut(0),
-            background: colorChip.black,
-            opacity: String(0.2),
-          }
-        });
-
-        whitePrompt = createNode({
-          mother: targetMother,
-          style: {
-            position: "fixed",
-            top: withOut(50, (((statusButtonHeight * 3) + (statusButtonBetween * 2) + (grayInnerPadding * 2)) / 2), ea),
-            left: withOut(50, (((statusButtonWidth * 1) + (grayInnerPadding * 2)) / 2), ea),
-            width: String((statusButtonWidth * 1)) + ea,
-            height: String((statusButtonHeight * 3) + (statusButtonBetween * 3)) + ea,
-            background: colorChip.gray2,
-            borderRadius: String(5) + "px",
-            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-            animation: "fadeuplite 0.3s ease forwards",
-            padding: String(grayInnerPadding) + ea,
-            paddingBottom: String(grayInnerPadding - statusButtonBetween) + ea,
-          },
-          children: [
-            {
-              style: {
-                display: "block",
-                top: String(0),
-                left: String(0),
-                width: withOut(0),
-                height: withOut(0),
-                position: "relative",
-              }
-            }
-          ]
-        });
-
-        for (let i = 0; i < photoTargets.length; i++) {
-          createNode({
-            mother: whitePrompt.firstChild,
-            attribute: { index: String(i), designer, desid, client, proid },
-            event: {
-              click: photoTargets[i].event
-            },
-            style: {
-              display: "inline-flex",
-              position: "relative",
-              width: String(statusButtonWidth) + ea,
-              height: String(statusButtonHeight) + ea,
-              background: colorChip.white,
-              borderRadius: String(5) + "px",
-              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-              marginRight: String(i % 2 === 0 ? statusButtonBetween : 0) + ea,
-              marginBottom: String(statusButtonBetween) + ea,
-              justifyContent: "center",
-              alignItems: "center",
-              textAlign: "center",
-              cursor: "pointer",
-            },
-            children: [
-              {
-                text: photoTargets[i].title,
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  top: String(statusTextTop) + ea,
-                  fontSize: String(statusSize) + ea,
-                  fontWeight: String(statusBetween),
-                  color: colorChip.black,
-                }
-              }
-            ]
-          });
+        } catch (e) {
+          window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
         }
-
       }
     }
   });
-
 
   return buttonList;
 }
@@ -2525,6 +2827,7 @@ ProcessDetailJs.prototype.insertGreenButtons = function () {
   const mother = this.mother;
   const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker } = GeneralJs;
   const { project, requestNumber, ea, baseTong, media, totalContents } = this;
+  const greenButtonClassName = "greenButtonClassName";
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
@@ -2554,7 +2857,7 @@ ProcessDetailJs.prototype.insertGreenButtons = function () {
 
   zIndex = 4;
 
-  chatBaseWidth = <%% 120, 120, 120, 120, 36 %%>;
+  chatBaseWidth = <%% 140, 140, 140, 140, 36 %%>;
   chatBaseHeight = <%% 480, 480, 480, 480, 48 %%>;
   chatBaseBetween = <%% 16, 16, 16, 16, 2 %%>;
 
@@ -2581,7 +2884,7 @@ ProcessDetailJs.prototype.insertGreenButtons = function () {
       boxShadow: "0px 6px 20px -10px " + colorChip.shadow,
       animation: "talkfade 0.3s ease forwards",
       overflow: "hidden",
-      background: colorChip.gray3,
+      background: colorChip.white,
       padding: String(basePadding) + ea,
       zIndex: String(zIndex),
     },
@@ -2606,6 +2909,7 @@ ProcessDetailJs.prototype.insertGreenButtons = function () {
     for (let i = 0; i < buttonList.length; i++) {
       createNode({
         mother: buttonBase,
+        class: [ greenButtonClassName ],
         event: {
           click: buttonList[i].event(),
         },
@@ -2619,7 +2923,7 @@ ProcessDetailJs.prototype.insertGreenButtons = function () {
           display: "flex",
           width: withOut(0),
           height: String(buttonHeight) + ea,
-          background: colorChip.white,
+          background: colorChip.gray3,
           borderRadius: String(5) + "px",
           marginTop: String(i === 0 ? 0 : buttonMarginTop) + ea,
           justifyContent: "center",
@@ -2636,7 +2940,7 @@ ProcessDetailJs.prototype.insertGreenButtons = function () {
               top: String(buttonTextTop) + ea,
               fontSize: String(buttonSize) + ea,
               fontWeight: String(buttonWeight),
-              color: colorChip.black,
+              color: colorChip.deactive,
             }
           }
         ]
@@ -2644,6 +2948,32 @@ ProcessDetailJs.prototype.insertGreenButtons = function () {
     }
   };
   setButtons(this.targetIndex);
+
+}
+
+ProcessDetailJs.prototype.reloadGreenButtons = function () {
+  const instance = this;
+  const greenButtonClassName = "greenButtonClassName";
+  const { colorChip } = GeneralJs;
+  let targets;
+
+  targets = document.querySelectorAll('.' + greenButtonClassName);
+
+  if (this.itemList.length > 0) {
+
+    for (let dom of targets) {
+      dom.style.background = colorChip.green;
+      dom.firstChild.style.color = colorChip.white;
+    }
+
+  } else {
+
+    for (let dom of targets) {
+      dom.style.background = colorChip.gray3;
+      dom.firstChild.style.color = colorChip.deactive;
+    }
+
+  }
 
 }
 
@@ -2884,6 +3214,133 @@ ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber) {
   }
 }
 
+ProcessDetailJs.prototype.plusMemo = function (thisStatusNumber) {
+  const instance = this;
+  const mother = this.mother;
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker } = GeneralJs;
+  const { project, requestNumber, ea, baseTong, media, totalContents } = this;
+  const memoFixedTargetsClassName = "memoFixedTargetsClassName";
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  let serviceContents;
+  let thisKey;
+  let thisTitle;
+  let whitePromptWidth, whitePromptHeight;
+  let whitePromptInnerPaddingTop;
+  let whitePromptInnerPaddingLeft;
+  let whitePromptInnerPaddingBottom;
+  let titleArea, contentsArea;
+  let cancelBack;
+  let whitePrompt;
+  let titleAreaPaddingBottom;
+
+  serviceContents = this.panContents;
+  thisKey = serviceContents[thisStatusNumber].key;
+  thisTitle = serviceContents[thisStatusNumber].title;
+
+  whitePromptWidth = <%% 900, 800, 700, 700, 30 %%>;
+  whitePromptHeight = <%% 540, 540, 540, 540, 30 %%>;
+
+  whitePromptInnerPaddingLeft = <%% 40, 40, 40, 40, 30 %%>;
+  whitePromptInnerPaddingTop = <%% 36, 36, 36, 36, 24 %%>;
+  whitePromptInnerPaddingBottom = <%% 36, 36, 36, 36, 24 %%>;
+
+  titleAreaPaddingBottom = <%% 10, 10, 9, 8, 1 %%>;
+
+  return async function (e) {
+    try {
+      const proid = this.getAttribute("proid");
+      const desid = this.getAttribute("desid");
+      const name = this.getAttribute("name");
+      const designer = this.getAttribute("designer");
+      const zIndex = 4;
+
+      cancelBack = createNode({
+        mother: totalContents,
+        class: [ memoFixedTargetsClassName ],
+        event: {
+          click: function (e) {
+            const removeTargets = document.querySelectorAll('.' + memoFixedTargetsClassName);
+            for (let dom of removeTargets) {
+              dom.remove();
+            }
+          }
+        },
+        style: {
+          display: "block",
+          position: "fixed",
+          top: String(0),
+          left: String(0),
+          width: withOut(0),
+          height: withOut(0),
+          background: colorChip.realBlack,
+          opacity: String(0.7),
+          zIndex: String(zIndex),
+        }
+      });
+
+      whitePrompt = createNode({
+        mother: totalContents,
+        class: [ memoFixedTargetsClassName ],
+        style: {
+          display: "block",
+          position: "fixed",
+          paddingLeft: String(whitePromptInnerPaddingLeft) + ea,
+          paddingRight: String(whitePromptInnerPaddingLeft) + ea,
+          paddingTop: String(whitePromptInnerPaddingTop) + ea,
+          paddingBottom: String(whitePromptInnerPaddingBottom) + ea,
+          width: String(whitePromptWidth - (whitePromptInnerPaddingLeft * 2)) + ea,
+          height: String(whitePromptHeight - (whitePromptInnerPaddingTop + whitePromptInnerPaddingBottom)) + ea,
+          top: "calc(calc(calc(calc(100% - " + String(instance.naviHeight) + ea + ") / 2) - " + String(whitePromptHeight / 2) + ea + ") + " + String(instance.naviHeight) + ea + ")",
+          left: withOut(50, whitePromptWidth / 2, ea),
+          background: colorChip.white,
+          borderRadius: String(5) + "px",
+          boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
+          animation: "fadeuplite 0.3s ease forwards",
+          zIndex: String(zIndex),
+        }
+      });
+
+      titleArea = createNode({
+        mother: whitePrompt,
+        style: {
+          display: "block",
+          position: "relative",
+          borderBottom: "1px solid " + colorChip.black,
+          paddingBottom: String(titleAreaPaddingBottom) + ea,
+        },
+        children: [
+          {
+            text: thisTitle + " 관련 MEMO",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(21) + ea,
+              fontWeight: String(700),
+              color: colorChip.black,
+            }
+          }
+        ]
+      });
+
+      contentsArea = createNode({
+        mother: whitePrompt,
+        style: {
+          display: "block",
+          position: "relative",
+        }
+      });
+
+      
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
 ProcessDetailJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
@@ -2972,8 +3429,10 @@ ProcessDetailJs.prototype.launching = async function (loading) {
     }
 
     this.targetIndex = targetIndex;
-    this.targetDrive = "__project__/" + this.designer.desid + "/" + this.project.proid;
+    this.targetHref = "https://" + FILEHOST + "/photo/designer" + "/" + this.designer.desid + "/" + this.project.proid;
+    this.targetDrive = "__project__" + "/" + this.designer.desid + "/" + this.project.proid;
     this.panList = [];
+    this.itemList = [];
 
     if (typeof getObj.mobilecard === "string") {
       const response = await ajaxJson({ mode: "open", key: getObj.mobilecard }, BACKHOST + "/generalImpPayment", { equal: true });
