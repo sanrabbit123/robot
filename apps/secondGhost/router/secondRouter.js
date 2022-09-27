@@ -1,4 +1,4 @@
-const SecondRouter = function (slack_bot, MONGOC) {
+const SecondRouter = function (slack_bot, MONGOC, MONGOLOCALC) {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
 
@@ -7,6 +7,7 @@ const SecondRouter = function (slack_bot, MONGOC) {
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.host = this.address.secondinfo.host;
   this.mongo = MONGOC;
+  this.mongolocal = MONGOLOCALC;
   this.timeouts = {};
 
   this.slack_bot = slack_bot;
@@ -88,8 +89,6 @@ SecondRouter.prototype.fireWall = function (req) {
 SecondRouter.prototype.rou_get_First = function () {
   const instance = this;
   const { errorLog, diskReading } = this.mother;
-  const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
-  const reflection = new MongoReflection();
   let obj = {};
   obj.link = "/:id";
   obj.func = async function (req, res) {
@@ -162,65 +161,6 @@ SecondRouter.prototype.rou_post_messageLog = function () {
     } catch (e) {
       instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_messageLog): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
-    }
-  }
-  return obj;
-}
-
-SecondRouter.prototype.rou_post_mysqlQuery = function () {
-  const instance = this;
-  const back = this.back;
-  const { mysqlQuery } = this.mother;
-  let obj = {};
-  let ipTong;
-
-  ipTong = [ 1, 127001, 19216801 ];
-  for (let info in instance.address) {
-    if (instance.address[info].ip.outer.length > 0) {
-      ipTong.push(Number(instance.address[info].ip.outer.replace(/[^0-9]/g, '')));
-    }
-    if (instance.address[info].ip.inner.length > 0) {
-      ipTong.push(Number(instance.address[info].ip.inner.replace(/[^0-9]/g, '')));
-    }
-  }
-  ipTong = Array.from(new Set(ipTong));
-
-  obj.link = [ "/mysqlQuery" ];
-  obj.func = async function (req, res) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      let query, response, ip;
-      if (typeof req.body.query !== "string") {
-        throw new Error("invaild post");
-      }
-      ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-      if (/;$/.test(req.body.query.trim())) {
-        query = req.body.query.trim();
-      } else {
-        query = req.body.query.trim() + ';';
-      }
-      if (!/drop/gi.test(query) && !/delete/gi.test(query) && /^select/gi.test(query)) {
-        if (typeof ip === "string") {
-          if (ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, '')))) {
-            response = await mysqlQuery(query, { local: true });
-          } else {
-            response = [];
-          }
-        } else {
-          response = [];
-        }
-      } else {
-        response = [];
-      }
-      res.send(JSON.stringify(response));
-    } catch (e) {
-      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_mysqlQuery): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -673,6 +613,77 @@ SecondRouter.prototype.rou_post_getChecklist = function () {
 
     } catch (e) {
       instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_getChecklist): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+SecondRouter.prototype.rou_post_projectDesignerMemo = function () {
+  const instance = this;
+  const back = this.back;
+  const { requestSystem, messageSend, fileSystem, setQueue, sleep, shellExec, shellLink, errorLog, messageLog } = this.mother;
+  let obj = {};
+  obj.link = [ "/projectDesignerMemo" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.mode === undefined || req.body.desid === undefined || req.body.proid === undefined || req.body.key === undefined || req.body.memo === undefined) {
+        throw new Error("invaild post");
+      }
+      const selfMongo = instance.mongolocal;
+      const collection = "projectDesignerMemo";
+      const { mode, desid, proid, key, memo } = req.body;
+      let resultObj;
+      let rows;
+      let json;
+      let id;
+
+      id = proid + "_" + key;
+      json = {
+        proid,
+        desid,
+        key: id,
+        contents: {
+          memo,
+          type: key,
+        }
+      };
+
+      if (mode === "get") {
+
+        rows = await back.mongoRead(collection, { key: id }, { selfMongo });
+        if (rows.length === 0) {
+          await back.mongoCreate(collection, json, { selfMongo });
+          resultObj = json;
+        } else {
+          resultObj = rows[0];
+        }
+
+      } else if (mode === "update") {
+
+        rows = await back.mongoRead(collection, { key: id }, { selfMongo });
+        if (rows.length === 0) {
+          await back.mongoCreate(collection, json, { selfMongo });
+        } else {
+          await back.mongoUpdate(collection, [ { key: id }, { "contents.memo": memo } ], { selfMongo });
+        }
+
+        resultObj = { message: "success" };
+      }
+
+      res.send(JSON.stringify(resultObj));
+
+    } catch (e) {
+      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_projectDesignerMemo): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }

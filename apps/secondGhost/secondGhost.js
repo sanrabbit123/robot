@@ -19,7 +19,7 @@ const SecondGhost = function (mother = null, back = null, address = null) {
 
 SecondGhost.prototype.ghostConnect = async function () {
   const instance = this;
-  const { fileSystem, shellExec, shellLink, mongo, mongoinfo, errorLog, messageLog, setQueue, requestSystem, dateToString, sleep } = this.mother;
+  const { fileSystem, shellExec, shellLink, mongo, mongoinfo, mongolocalinfo, errorLog, messageLog, setQueue, requestSystem, dateToString, sleep } = this.mother;
   const PORT = 3000;
   const https = require("https");
   const express = require("express");
@@ -41,11 +41,13 @@ SecondGhost.prototype.ghostConnect = async function () {
     console.log(``);
 
     //set mongo connetion
-    let MONGOC;
+    let MONGOC, MONGOLOCALC;
     MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+    MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
     console.log(`\x1b[33m%s\x1b[0m`, `set DB server => ${this.address.mongoinfo.host}`);
     console.log(``);
     await MONGOC.connect();
+    await MONGOLOCALC.connect();
 
     //set pem key
     let pems, pemsLink;
@@ -78,7 +80,7 @@ SecondGhost.prototype.ghostConnect = async function () {
 
     //set router
     const SecondRouter = require(`${this.dir}/router/secondRouter.js`);
-    const router = new SecondRouter(this.slack_bot, MONGOC);
+    const router = new SecondRouter(this.slack_bot, MONGOC, MONGOLOCALC);
 
     const rouObj = router.getAll();
     for (let obj of rouObj.get) {
