@@ -746,7 +746,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         note = new AppleNotes({ folder: "portfolio", subject: nextPid + "(발행대기)" });
         await note.createNote(`${designer} 실장님 ${client} 고객님`);
 
-        folderPath = await drive.get_folder(link, nextPid, true);
+        folderPath = await drive.get_folder_inPython(link, nextPid, true);
         folderPathList_raw = await fileSystem(`readDir`, [ folderPath ]);
         folderPathList = folderPathList_raw.filter((name) => { return (name !== ".DS_Store"); });
 
@@ -848,7 +848,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         note = new AppleNotes({ folder: "portfolio", subject: nextPid + "(발행대기)" });
         await note.createNote(`${designer} 실장님`);
 
-        folderPath = await drive.get_folder(link, nextPid, true);
+        folderPath = await drive.get_folder_inPython(link, nextPid, true);
         folderPathList_raw = await fileSystem(`readDir`, [ folderPath ]);
         folderPathList = folderPathList_raw.filter((name) => { return (name !== ".DS_Store"); });
 

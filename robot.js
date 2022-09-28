@@ -268,19 +268,6 @@ Robot.prototype.portfolioFilter = function (boo, clientName, apartName, designer
   }
 }
 
-Robot.prototype.googleAPIs = function (button) {
-  const GoogleAPIs = require(process.cwd() + "/apps/googleAPIs/googleAPIs.js");
-  const GoogleAnalytics = require(process.cwd() + "/apps/googleAPIs/googleAnalytics.js");
-  let app;
-  if (button === "token" || button === "1") {
-    app = new GoogleAPIs();
-    app.generate_tokens();
-  } else if (button === "analytics" || button === "2") {
-    app = new GoogleAnalytics();
-    app.getClients();
-  }
-}
-
 Robot.prototype.frontSource = function (argv) {
   const AiFront = require(process.cwd() + "/apps/contentsMaker/aiFront.js");
   let fobot = new AiFront();

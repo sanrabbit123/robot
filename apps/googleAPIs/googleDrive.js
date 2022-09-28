@@ -1,97 +1,28 @@
-const GoogleDrive = function (credentials = "default") {
-  const GoogleAPIs = require(process.cwd() + "/apps/googleAPIs/googleAPIs.js");
-  this.general = new GoogleAPIs(credentials);
-  this.drive = {};
+const GoogleDrive = function () {
+  const Mother = require(`${process.cwd()}/apps/mother.js`);
+  this.mother = new Mother();
   this.dir = process.cwd() + "/apps/googleAPIs";
   this.pythonApp = this.dir + "/python/app.py";
 }
 
-GoogleDrive.prototype.read_folder = function (folder_id) {
+GoogleDrive.prototype.get_folder_inPython = async function (folder_id, folder_name = null, is_photo = false) {
   const instance = this;
-  if (/^http/.test(folder_id) || /google/gi.test(folder_id)) {
-    folder_id = this.general.parsingId(folder_id);
-  }
-  return new Promise(function (resolve, reject) {
-    instance.general.get_app("drive").then(function (drive) {
-      drive.files.list({ q: `'${folder_id}' in parents` }, (err, res) => {
-        if (err) {
-          return reject(err);
-        } else {
-          resolve(res.data.files);
-        }
-      });
-    });
-  });
-}
-
-GoogleDrive.prototype.get_file = function (file_id) {
-  const instance = this;
-  const fs = require("fs");
-  if (/^http/.test(file_id) || /google/gi.test(file_id)) {
-    file_id = this.general.parsingId(file_id);
-  }
-  return new Promise(function (resolve, reject) {
-    let fileName, saveFile, drive, dest;
-    instance.general.get_app("drive").then(function (thisApp) {
-      drive = thisApp;
-      return drive.files.get({ fileId: file_id });
-    }).then(function (file) {
-      fileName = file.data.name;
-      saveFile = process.cwd() + "/temp/" + fileName;
-      dest = fs.createWriteStream(saveFile);
-      drive.files.get({
-        fileId: file_id,
-        alt: "media"
-      }, {
-        responseType: "stream"
-      }).then(function (stream) {
-        stream.data.on("end", function () {
-          resolve(saveFile);
-        }).on("error", function (err) {
-          reject(err);
-        }).pipe(dest);
-      }).catch(function (err) {
-        reject(err);
-      });
-    }).catch(function (err) {
-      reject(err);
-    });
-  });
-}
-
-GoogleDrive.prototype.get_folder = async function (folder_id, folder_name = null, is_photo = false) {
-  const instance = this;
-  const { fileSystem, shellLink } = this.general;
-  const shell = require("shelljs");
-  const fileSave = function (drive, file_id, file_name, target_folder) {
-    const fs = require("fs");
-    let saveFile, dest;
-    return new Promise(function (resolve, reject) {
-      saveFile = target_folder + "/" + file_name;
-      dest = fs.createWriteStream(saveFile);
-      drive.files.get({
-        fileId: file_id,
-        alt: "media"
-      }, {
-        responseType: "stream"
-      }).then(function (stream) {
-        stream.data.on("end", function () {
-          resolve(saveFile);
-        }).on("error", function (err) {
-          reject(err);
-        }).pipe(dest);
-      }).catch(function (err) {
-        reject(err);
-      });
-    });
+  const { fileSystem, shellExec, shellLink, sleep, pythonExecute } = this.mother;
+  const fileSave = async function (file_id, file_name, target_folder) {
+    try {
+      const res = await pythonExecute(instance.pythonApp, [ "drive", "downloadFile" ], { targetId: file_id, targetFolder: target_folder });
+      return res;
+    } catch (e) {
+      console.log(file_name, "error : " + e.message);
+    }
   }
   if (/^http/.test(folder_id) || /google/gi.test(folder_id)) {
-    folder_id = this.general.parsingId(folder_id);
+    folder_id = this.parsingId(folder_id);
   }
   try {
-    const drive = await this.general.get_app("drive");
-    const { data: { name: folderName } } = await drive.files.get({ fileId: folder_id });
-    const { data: { files } } = await drive.files.list({ q: `'${folder_id}' in parents` });
+    const folder_info = await pythonExecute(this.pythonApp, [ "drive", "getTargetInfo" ], { targetId: folder_id });
+    const folderName = folder_info.name;
+    const files = await pythonExecute(this.pythonApp, [ "drive", "readFolderFiles" ], { targetId: folder_id });
     const targetFolderNameConst = "drive";
     const tempFolder = process.cwd() + "/temp";
     const tempFolderDir = await fileSystem(`readDir`, [ tempFolder ]);
@@ -103,21 +34,21 @@ GoogleDrive.prototype.get_folder = async function (folder_id, folder_name = null
 
     //init setting
     if (!tempFolderDir.includes(targetFolderNameConst)) {
-      shell.exec(`mkdir ${shellLink(tempFolder + "/" + targetFolderNameConst)}`);
+      await shellExec(`mkdir ${shellLink(tempFolder + "/" + targetFolderNameConst)}`);
     }
     driveFolderDir = await fileSystem(`readDir`, [ tempFolder + "/" + targetFolderNameConst ]);
     for (let i of driveFolderDir) {
-      shell.exec(`rm -rf ${shellLink(tempFolder + "/" + targetFolderNameConst + "/" + i)}`);
+      await shellExec(`rm -rf ${shellLink(tempFolder + "/" + targetFolderNameConst + "/" + i)}`);
     }
 
     //make folder in process temp folder
-    shell.exec(`mkdir ${shellLink(folderPath)}`);
+    await shellExec(`mkdir ${shellLink(folderPath)}`);
 
     //download files
     index = 0;
     for (let { id, name } of files) {
-      await this.sleep(500);
-      console.log(index, await fileSave(drive, id, name, folderPath));
+      await sleep(1000);
+      console.log(index, await fileSave(id, name, folderPath));
       index = index + 1;
     }
 
@@ -132,7 +63,7 @@ GoogleDrive.prototype.get_folder = async function (folder_id, folder_name = null
           } else {
             throw new Error("must be photo");
           }
-          shell.exec(`mv ${shellLink(folderPath + "/" + folderInside[i])} ${shellLink(folderPath)}/photo${String(i + 1)}${thisExec}`);
+          await shellExec(`mv ${shellLink(folderPath + "/" + folderInside[i])} ${shellLink(folderPath)}/photo${String(i + 1)}${thisExec}`);
         }
       }
     }
@@ -148,164 +79,25 @@ GoogleDrive.prototype.get_folder = async function (folder_id, folder_name = null
 
     if (folder_name !== null) {
       if (shellLink(folderPath) !== shellLink(motherPath + "/" + folder_name)) {
-        shell.exec(`mv ${shellLink(folderPath)} ${shellLink(motherPath)}/${shellLink(folder_name)}`);
+        await shellExec(`mv ${shellLink(folderPath)} ${shellLink(motherPath)}/${shellLink(folder_name)}`);
       }
     }
-    shell.exec(`open ${shellLink(motherPath)}`);
+    await shellExec(`open ${shellLink(motherPath)}`);
     console.log(`total: ${String(index)}`);
     if (folder_name !== null) {
       return `${motherPath}/${folder_name}`;
     } else {
       return folderPath;
     }
+
   } catch (e) {
     console.log(e);
   }
 }
 
-GoogleDrive.prototype.read_webView = function (file_id) {
-  const instance = this;
-  return new Promise(function (resolve, reject) {
-    instance.drive.files.get({ fileId: file_id, fields: 'webViewLink' }, (err, res) => {
-      if (err) { return reject(err) };
-      resolve(res.data.webViewLink);
-    });
-  });
-}
-
-GoogleDrive.prototype.permissions_on = function (file_id) {
-  const instance = this;
-  return new Promise(function (resolve, reject) {
-    instance.drive.permissions.create({ fileId: file_id, requestBody: { role: 'reader', type: 'anyone', } }, (err) => {
-      if (err) { return reject(err) };
-      resolve('success');
-    });
-  });
-}
-
-GoogleDrive.prototype.upload = function (folder_id, file) {
-  const instance = this;
-  let fs = require('fs');
-  return new Promise(function (resolve, reject) {
-    instance.drive.files.create({
-      resource: { name: (file.split('/'))[file.split('/').length - 1], parents: [ folder_id ], },
-      media: { body: fs.createReadStream(file), },
-      fields: 'id',
-    }, (err, file) => {
-      if (err) { reject(err); }
-      else {
-        resolve(file.data.id);
-      }
-    });
-  });
-}
-
-GoogleDrive.prototype.upload_andView = async function (folder_id, file) {
-  const instance = this;
-  try {
-    this.drive = await this.general.get_app("drive");
-    let id = await this.upload(folder_id, file);
-    await this.permissions_on(id);
-    return (await this.read_webView(id));
-  } catch (e) {
-    console.log(e.message);
-  }
-}
-
-GoogleDrive.prototype.makeFolder = function (folderName) {
-  const instance = this;
-  let fileMetadata = {
-    'name': folderName,
-    'mimeType': 'application/vnd.google-apps.folder'
-  };
-  return new Promise(function (resolve, reject) {
-    instance.drive.files.create({
-      resource: fileMetadata,
-      fields: 'id'
-    }, function (err, file) {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(file.data.id);
-      }
-    });
-  });
-}
-
-GoogleDrive.prototype.moveFolder = function (targetId, parent) {
-  const instance = this;
-  return new Promise(function (resolve, reject) {
-      let fileId = targetId;
-      let folderId = parent;
-      instance.drive.files.get({
-        fileId: fileId,
-        fields: 'parents'
-      }, function (err, file) {
-        if (err) {
-          reject(err);
-        } else {
-          let previousParents = file.data.parents.join(',');
-          instance.drive.files.update({
-            fileId: fileId,
-            addParents: folderId,
-            removeParents: previousParents,
-            fields: 'id, parents'
-          }, function (err, file) {
-            if (err) {
-              reject(err);
-            } else {
-              resolve(targetId);
-            }
-          });
-        }
-      });
-  });
-}
-
-GoogleDrive.prototype.moveFile = async function (targetId, parent) {
-  const instance = this;
-  try {
-    this.drive = await this.general.get_app("drive");
-    return (await this.moveFolder(targetId, parent));
-  } catch (e) {
-    console.log(e.message);
-  }
-}
-
-GoogleDrive.prototype.makeFolder_andMove = async function (folderName, parent) {
-  const instance = this;
-  try {
-    this.drive = await this.general.get_app("drive");
-    let id = await this.makeFolder(folderName);
-    return (await this.moveFolder(id, parent));
-  } catch (e) {
-    console.log(e.message);
-  }
-}
-
-GoogleDrive.prototype.searchId = async function (name) {
-  const instance = this;
-  try {
-    this.drive = await this.general.get_app("drive");
-    const drive = this.drive;
-    const response = await drive.files.list({ q: `name contains '${name}'` });
-    if (response.status < 200 || response.status >= 300) {
-      throw new Error("response error");
-    }
-    const { data: { files } } = response;
-    if (files.length === 0) {
-      return null;
-    } else {
-      return files[0].id;
-    }
-  } catch (e) {
-    console.log(e.message);
-  }
-}
-
 GoogleDrive.prototype.searchId_inPython = async function (name) {
   const instance = this;
-  const mother = this.general;
+  const mother = this.mother;
   try {
     let result = await mother.pythonExecute(this.pythonApp, [ "drive", "searchId" ], { name });
     return result.id;
@@ -316,7 +108,7 @@ GoogleDrive.prototype.searchId_inPython = async function (name) {
 
 GoogleDrive.prototype.upload_inPython = async function (folder_id, file) {
   const instance = this;
-  const mother = this.general;
+  const mother = this.mother;
   try {
     let result = await mother.pythonExecute(this.pythonApp, [ "drive", "fileUpload" ], { folder_id, file });
     return result.id;
@@ -327,9 +119,9 @@ GoogleDrive.prototype.upload_inPython = async function (folder_id, file) {
 
 GoogleDrive.prototype.delete_inPython = async function (id) {
   const instance = this;
-  const mother = this.general;
+  const mother = this.mother;
   try {
-    let result = await mother.pythonExecute(this.pythonApp, [ "drive", "delete" ], { targetId: this.general.parsingId(id) });
+    let result = await mother.pythonExecute(this.pythonApp, [ "drive", "delete" ], { targetId: this.parsingId(id) });
     return result.id;
   } catch (e) {
     console.log(e.message);
@@ -338,7 +130,7 @@ GoogleDrive.prototype.delete_inPython = async function (id) {
 
 GoogleDrive.prototype.makeFolder_inPython = async function (folderName) {
   const instance = this;
-  const mother = this.general;
+  const mother = this.mother;
   try {
     let result = await mother.pythonExecute(this.pythonApp, [ "drive", "makeFolder" ], { folderName });
     return result.id;
@@ -349,7 +141,7 @@ GoogleDrive.prototype.makeFolder_inPython = async function (folderName) {
 
 GoogleDrive.prototype.moveFolder_inPython = async function (targetId, parent) {
   const instance = this;
-  const mother = this.general;
+  const mother = this.mother;
   try {
     let result = await mother.pythonExecute(this.pythonApp, [ "drive", "moveFolder" ], { targetId, parent });
     return result.message;
@@ -371,7 +163,7 @@ GoogleDrive.prototype.makeFolder_andMove_inPython = async function (folderName, 
 
 GoogleDrive.prototype.read_webView_inPython = async function (targetId) {
   const instance = this;
-  const mother = this.general;
+  const mother = this.mother;
   try {
     let result = await mother.pythonExecute(this.pythonApp, [ "drive", "permissionsOn" ], { targetId });
     let resultObj = JSON.parse(result.slice(/\{/.exec(result).index, /\}/.exec(result).index + 1));
@@ -383,7 +175,7 @@ GoogleDrive.prototype.read_webView_inPython = async function (targetId) {
 
 GoogleDrive.prototype.webPublish_inPython = async function (targetId) {
   const instance = this;
-  const mother = this.general;
+  const mother = this.mother;
   try {
     let result = await mother.pythonExecute(this.pythonApp, [ "drive", "webPublish" ], { targetId });
     return result.link;
@@ -392,14 +184,21 @@ GoogleDrive.prototype.webPublish_inPython = async function (targetId) {
   }
 }
 
-GoogleDrive.prototype.sleep = function (time) {
-  const instance = this;
-  return new Promise(function (resolve, reject) {
-    setTimeout(function(){
-      resolve('awake');
-    }, time);
-  });
+GoogleDrive.prototype.parsingId = function (link) {
+  let linkArr, target;
+  if (/^http/i.test(link)) {
+    linkArr = (link.split('?'))[0].split('/');
+    for (let i of linkArr) {
+      if (!/docs/gi.test(i) && !/document/gi.test(i) && !/spreadsheets/gi.test(i) && !/drive/gi.test(i) && !/google/gi.test(i) && !/file/gi.test(i) && !/folders/gi.test(i) && !/view/gi.test(i)) {
+        if (i.length > 12) {
+          target = i;
+        }
+      }
+    }
+  } else {
+    target = link;
+  }
+  return target;
 }
-
 
 module.exports = GoogleDrive;

@@ -5,12 +5,10 @@ const BackMaker = require(APP_PATH + "/backMaker/backMaker.js");
 const BackReport = require(APP_PATH + "/backMaker/backReport.js");
 const BackWorker = require(APP_PATH + "/backMaker/backWorker.js");
 const BridgeCloud = require(APP_PATH + "/bridgeCloud/bridgeCloud.js");
-const GoogleAPIs = require(APP_PATH + "/googleAPIs/googleAPIs.js");
 const GoogleAnalytics = require(APP_PATH + "/googleAPIs/googleAnalytics.js");
 const GoogleSheet = require(APP_PATH + "/googleAPIs/googleSheet.js");
 const GoogleDrive = require(APP_PATH + "/googleAPIs/googleDrive.js");
 const GoogleCalendar = require(APP_PATH + "/googleAPIs/googleCalendar.js");
-const GoogleMail = require(APP_PATH + "/googleAPIs/googleMail.js");
 const GoogleDocs = require(APP_PATH + "/googleAPIs/googleDocs.js");
 const GoogleChrome = require(APP_PATH + "/googleAPIs/googleChrome.js");
 const GoogleAds = require(APP_PATH + "/googleAPIs/googleAds.js");
@@ -94,6 +92,38 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
+
+
+
+
+
+
+
+    // {
+    //   kind: 'calendar#event',
+    //   etag: '"3244534255086000"',
+    //   id: '0255qk0lf44s0h9itpqopbp37i',
+    //   status: 'confirmed',
+    //   htmlLink: 'https://www.google.com/calendar/event?eid=MDI1NXFrMGxmNDRzMGg5aXRwcW9wYnAzN2kgZDVxbzJqZjEyYmFuZm8ybTY2dXM5cWhjcDRAZw&ctz=Asia/Seoul',
+    //   created: '2020-11-13T08:00:40.000Z',
+    //   updated: '2021-05-29T05:45:27.543Z',
+    //   summary: '촬영 w 김다혜_김소영_김다현, 박혜연, 배창규, 임혜령',
+    //   creator: { email: 'homeliaisonstaff201102aa01@gmail.com' },
+    //   organizer: {
+    //     email: 'd5qo2jf12banfo2m66us9qhcp4@group.calendar.google.com',
+    //     displayName: '현장촬영 w_C/D/P/I',
+    //     self: true
+    //   },
+    //   start: { dateTime: '2020-11-28T10:30:00+09:00', timeZone: 'Asia/Seoul' },
+    //   end: { dateTime: '2020-11-28T13:00:00+09:00', timeZone: 'Asia/Seoul' },
+    //   transparency: 'transparent',
+    //   iCalUID: '0255qk0lf44s0h9itpqopbp37i@google.com',
+    //   sequence: 5,
+    //   reminders: { useDefault: true },
+    //   eventType: 'default'
+    // },
 
 
 
@@ -2899,7 +2929,7 @@ DevContext.prototype.launching = async function () {
 
     // get drive folder
     // const drive = new GoogleDrive();
-    // await drive.get_folder("https://drive.google.com/drive/folders/1rsLsiAo012dAsjHx97-urGsyxUma2trz");
+    // await drive.get_folder_inPython("https://drive.google.com/drive/folders/1rsLsiAo012dAsjHx97-urGsyxUma2trz");
 
 
     // naverBlog to json
@@ -2966,7 +2996,7 @@ DevContext.prototype.launching = async function () {
 
     // get photo folder
     // const drive = new GoogleDrive();
-    // await drive.get_folder("https://drive.google.com/drive/folders/1RD8A65ghQe4oPruXYJ4Koieny0n3jYO9", "test");
+    // await drive.get_folder_inPython("https://drive.google.com/drive/folders/1RD8A65ghQe4oPruXYJ4Koieny0n3jYO9", "test");
 
 
     // spell check

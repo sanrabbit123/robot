@@ -61,6 +61,7 @@ from google.googleDrive import GoogleDrive
 from google.googleDocs import GoogleDocs
 from google.googleYoutube import GoogleYoutube
 from google.googleAds import GoogleAds
+from google.googleCalendar import GoogleCalendar
 
 try:
 
@@ -186,6 +187,21 @@ try:
         result = driveApp.deleteFile(data["targetId"])
         print(result)
 
+    elif argv[1] == 'drive' and argv[2] == 'readFolderFiles':
+        driveApp = GoogleDrive()
+        result = driveApp.readFolderFiles(data["targetId"])
+        print(result)
+
+    elif argv[1] == 'drive' and argv[2] == 'getTargetInfo':
+        driveApp = GoogleDrive()
+        result = driveApp.getTargetInfo(data["targetId"])
+        print(result)
+
+    elif argv[1] == 'drive' and argv[2] == 'downloadFile':
+        driveApp = GoogleDrive()
+        result = driveApp.downloadFile(data["targetId"], data["targetFolder"])
+        print(result)
+
     elif argv[1] == 'docs' and argv[2] == 'readDocs':
         docsApp = GoogleDocs()
         result = docsApp.readDocs(data["id"])
@@ -219,6 +235,26 @@ try:
     elif argv[1] == 'youtube' and argv[2] == 'channelNumbers':
         youtubeApp = GoogleYoutube()
         result = youtubeApp.channelNumbers(data["startDate"], data["endDate"])
+        print(result)
+
+    elif argv[1] == 'calendar' and argv[2] == 'listEvents':
+        calendarApp = GoogleCalendar()
+        result = calendarApp.listEvents(data["targetId"], data["query"])
+        print(result)
+
+    elif argv[1] == 'calendar' and argv[2] == 'makeSchedule':
+        calendarApp = GoogleCalendar()
+        result = calendarApp.makeSchedule(data["targetId"], data["body"])
+        print(result)
+
+    elif argv[1] == 'calendar' and argv[2] == 'updateSchedule':
+        calendarApp = GoogleCalendar()
+        result = calendarApp.updateSchedule(data["targetId"], data["eventId"], data["body"])
+        print(result)
+
+    elif argv[1] == 'calendar' and argv[2] == 'deleteSchedule':
+        calendarApp = GoogleCalendar()
+        result = calendarApp.deleteSchedule(data["targetId"], data["eventId"])
         print(result)
 
 except Exception as e:

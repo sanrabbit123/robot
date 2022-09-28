@@ -85,13 +85,11 @@ class CalendarEvents extends Array {
   }
 }
 
-const GoogleCalendar = function (credentials = "default") {
-  const GoogleAPIs = require(process.cwd() + "/apps/googleAPIs/googleAPIs.js");
-  this.general = new GoogleAPIs(credentials);
-  this.calendar = {};
+const GoogleCalendar = function () {
+  const Mother = require(`${process.cwd()}/apps/mother.js`);
+  this.mother = new Mother();
   this.dir = process.cwd() + "/apps/googleAPIs";
   this.pythonApp = this.dir + "/python/app.py";
-  this.readyState = 0;
 }
 
 GoogleCalendar.prototype.returnCalendarIds = function () {
@@ -108,18 +106,9 @@ GoogleCalendar.prototype.findCalendarId = function (button) {
   return dictionary[button];
 }
 
-GoogleCalendar.prototype.ready = async function () {
-  const instance = this;
-  try {
-    this.calendar = await this.general.get_app("calendar");
-    this.readyState = 1;
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 GoogleCalendar.prototype.makeSchedule = async function (to, title, description, start, end = null) {
   const instance = this;
+  const { pythonExecute, errorLog } = this.mother;
   const zeroAddition = function (num) {
     if (num < 10) {
       return `0${String(num)}`;
@@ -128,12 +117,10 @@ GoogleCalendar.prototype.makeSchedule = async function (to, title, description, 
     }
   }
   try {
-    if (this.readyState === 0) {
-      this.calendar = await this.general.get_app("calendar");
-    }
     let eventObj, runEvent;
     let finalStart, finalEnd;
     let temp, temp2, temp3, tempObj;
+    let res;
 
     if (end === null || end === undefined) {
       end = start;
@@ -188,24 +175,12 @@ GoogleCalendar.prototype.makeSchedule = async function (to, title, description, 
       },
     };
 
-    runEvent = function () {
-      return new Promise(function (resolve, reject) {
-        instance.calendar.events.insert({
-          auth: instance.general.oAuth2Client,
-          calendarId: instance.findCalendarId(to),
-          resource: eventObj,
-        }, function (err, event) {
-          if (!err) {
-            const { id, htmlLink } = event.data;
-            resolve({ calendarId: instance.findCalendarId(to), eventId: id, link: htmlLink });
-          } else {
-            reject(err);
-          }
-        });
-      });
-    }
-
-    return (await runEvent());
+    res = await pythonExecute(this.pythonApp, [ "calendar", "makeSchedule" ], { targetId: this.findCalendarId(to), body: eventObj });
+    return {
+      calendarId: instance.findCalendarId(to),
+      id: res.id,
+      link: res.link
+    };
 
   } catch (e) {
     console.log(e);
@@ -214,79 +189,60 @@ GoogleCalendar.prototype.makeSchedule = async function (to, title, description, 
 
 GoogleCalendar.prototype.getSchedule = async function (from, id) {
   const instance = this;
+  const { pythonExecute, errorLog } = this.mother;
   try {
-    if (this.readyState === 0) {
-      this.calendar = await this.general.get_app("calendar");
+    let requestObj, resultObj;
+    let index;
+
+    const items = await pythonExecute(this.pythonApp, [ "calendar", "listEvents" ], { targetId: this.findCalendarId(from), query: "" });
+    if (!Array.isArray(items)) {
+      throw new Error("google calendar error : python error(getSchedule)");
     }
 
-    let resultObj;
-
-    const { data, status, statusText } = await this.calendar.events.get({
-      calendarId: this.findCalendarId(from),
-      eventId: id,
-      timeZone: 'Asia/Seoul',
-    });
-
-    if (status === 200) {
-      resultObj = new CalendarEvent(data);
-      return resultObj;
+    index = items.findIndex((obj) => { return obj.id === id })
+    if (index === -1) {
+      return null;
     } else {
-      throw new Error(statusText);
+      return new CalendarEvent(items[index]);
     }
 
   } catch (e) {
+    await errorLog("google calendar api error(getSchedule) : " + e.message);
     console.log(e);
   }
 }
 
 GoogleCalendar.prototype.listEvents = async function (from, search = null) {
   const instance = this;
+  const { pythonExecute, errorLog } = this.mother;
   try {
-    if (this.readyState === 0) {
-      this.calendar = await this.general.get_app("calendar");
-    }
     let requestObj, resultObj;
 
-    requestObj = {
-      calendarId: this.findCalendarId(from),
-      showDeleted: false,
-      showHiddenInvitations: true,
-      singleEvents: true,
-      timeZone: 'Asia/Seoul'
-    };
-
-    if (search !== null) {
-      requestObj.q = search;
+    const items = await pythonExecute(this.pythonApp, [ "calendar", "listEvents" ], { targetId: this.findCalendarId(from), query: search === null ? "" : search });
+    if (!Array.isArray(items)) {
+      throw new Error("google calendar error : python error(listEvents)");
     }
 
-    const { data: { items }, status, statusText } = await this.calendar.events.list(requestObj);
-
-    if (status === 200) {
-      resultObj = new CalendarEvents();
-      if (items.length > 0) {
-        resultObj.setEvents(items);
-      }
-      return resultObj;
-    } else {
-      throw new Error(statusText);
+    resultObj = new CalendarEvents();
+    if (items.length > 0) {
+      resultObj.setEvents(items);
     }
+    return resultObj;
 
   } catch (e) {
+    await errorLog("google calendar api error(listEvents) : " + e.message);
     console.log(e);
   }
 }
 
 GoogleCalendar.prototype.updateSchedule = async function (from, id, updateQuery) {
   const instance = this;
+  const { pythonExecute, errorLog } = this.mother;
   try {
-    if (this.readyState === 0) {
-      this.calendar = await this.general.get_app("calendar");
-    }
-
     const past = await this.getSchedule(from, id);
-
     let queryObj;
     let startDate, endDate;
+    let res;
 
     if (updateQuery.end !== undefined) {
       startDate = new Date(updateQuery.start.getFullYear(), updateQuery.start.getMonth(), updateQuery.start.getDate(), updateQuery.start.getHours() + 12);
@@ -295,7 +251,6 @@ GoogleCalendar.prototype.updateSchedule = async function (from, id, updateQuery)
       startDate = updateQuery.start;
       endDate = updateQuery.start;
     }
-
 
     queryObj = {};
     queryObj.start = {};
@@ -309,11 +264,8 @@ GoogleCalendar.prototype.updateSchedule = async function (from, id, updateQuery)
       queryObj.summary = past.title;
     }
 
-    await this.calendar.events.update({
-      calendarId: this.findCalendarId(from),
-      eventId: id,
-      requestBody: queryObj
-    });
+    res = await pythonExecute(this.pythonApp, [ "calendar", "updateSchedule" ], { targetId: this.findCalendarId(from), eventId: id, body: queryObj });
+    return res;
 
   } catch (e) {
     console.log(e);
@@ -322,28 +274,20 @@ GoogleCalendar.prototype.updateSchedule = async function (from, id, updateQuery)
 
 GoogleCalendar.prototype.deleteSchedule = async function (from, id) {
   const instance = this;
+  const { pythonExecute, errorLog } = this.mother;
   try {
-    if (this.readyState === 0) {
-      this.calendar = await this.general.get_app("calendar");
-    }
+    let res;
     if (Array.isArray(id)) {
       for (let i of id) {
-        try {
-          await this.calendar.events.delete({
-            calendarId: this.findCalendarId(from),
-            eventId: i
-          });
-        } catch (e) {}
+        await pythonExecute(this.pythonApp, [ "calendar", "deleteSchedule" ], { targetId: this.findCalendarId(from), eventId: i });
       }
+      res = { message: "done" };
     } else {
-      await this.calendar.events.delete({
-        calendarId: this.findCalendarId(from),
-        eventId: id
-      });
+      res = await pythonExecute(this.pythonApp, [ "calendar", "deleteSchedule" ], { targetId: this.findCalendarId(from), eventId: id });
     }
-    return 'done';
+    return res;
   } catch (e) {
-    return 'done';
+    console.log(e);
   }
 }
 

@@ -2,10 +2,12 @@ from __future__ import print_function
 import pickle
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
+from googleapiclient.http import MediaIoBaseDownload
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from json import dumps
 from os import path as osPath
+import io
 
 class GoogleDrive:
 
@@ -98,9 +100,39 @@ class GoogleDrive:
         return dumps({ "message": "done" })
 
     def searchId(self, name):
-        response = self.app.files().list(q=f"name contains '{name}'", spaces='drive').execute()
+        response = self.app.files().list(q=f"name contains '{name}'", spaces='drive', fields="files(id, name)").execute()
         id = None
         for file in response.get('files', []):
             id = file.get('id')
             break
         return dumps({ "id": id })
+
+    def getTargetInfo(self, target_id):
+        response = self.app.files().get(fileId=target_id).execute()
+        return dumps(response)
+
+    def readFolderFiles(self, folder_id):
+        files = []
+        page_token = None
+        while True:
+            response = self.app.files().list(q=f"'{folder_id}' in parents",
+                                            spaces="drive",
+                                            fields="nextPageToken, files(id, name)",
+                                            pageToken=page_token).execute()
+            files.extend(response.get('files', []))
+            page_token = response.get('nextPageToken', None)
+            if page_token is None:
+                break
+        return dumps(files)
+
+    def downloadFile(self, target_id, target_folder):
+        info = self.app.files().get(fileId=target_id).execute()
+        request = self.app.files().get_media(fileId=target_id)
+        file = io.BytesIO()
+        downloader = MediaIoBaseDownload(file, request)
+        done = False
+        while done is False:
+            (status, done) = downloader.next_chunk()
+        with open(target_folder + "/" + info["name"], "wb") as f:
+            f.write(file.getvalue())
+        return dumps({ "message": info["name"] + " download done" })

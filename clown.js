@@ -313,19 +313,6 @@ Clown.prototype.portfolioFilter = function (boo, clientName, apartName, designer
   }
 }
 
-Clown.prototype.googleAPIs = function (button) {
-  const GoogleAPIs = require(process.cwd() + "/apps/googleAPIs/googleAPIs.js");
-  const GoogleAnalytics = require(process.cwd() + "/apps/googleAPIs/googleAnalytics.js");
-  let app;
-  if (button === "token" || button === "1") {
-    app = new GoogleAPIs();
-    app.generate_tokens();
-  } else if (button === "analytics" || button === "2") {
-    app = new GoogleAnalytics();
-    app.getClients();
-  }
-}
-
 Clown.prototype.frontSource = function (argv) {
   const AiFront = require(process.cwd() + "/apps/contentsMaker/aiFront.js");
   let fobot = new AiFront();
@@ -839,7 +826,6 @@ Clown.prototype.launching = async function () {
     //google
     } else if (re === "google" || re === "5") {
       re2 = await consoleQ(`Choose commands : 1.token 2.analytics\n`);
-      this.googleAPIs(re2);
 
     //front
     } else if (re === "front" || re === "6") {
