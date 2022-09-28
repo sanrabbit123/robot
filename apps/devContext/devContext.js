@@ -89,41 +89,366 @@ DevContext.prototype.launching = async function () {
     // console.log(pastProposal[0].project.detail);
 
 
+    //  monthly GA report
+
+    // const selfMongo = this.MONGOLOGC;
+    // const app = new GoogleAnalytics();
+    // const collection = "complexAnalytics";
+    // await selfMongo.connect();
+    // const res = await app.complexMetric(new Date(2022, 7, 1), new Date(2022, 7, 31));
+    // await back.mongoCreate(collection, res, { selfMongo });
+    // console.log(res);
+    // await selfMongo.close();
 
 
 
 
 
 
+    const selfMongo = this.MONGOLOGC;
+    const collection = "complexAnalytics";
+    await selfMongo.connect();
+    const [ { data } ] = await back.mongoRead(collection, { key: "complex_analytics_20220801_20220831" }, { selfMongo });
+    await selfMongo.close();
+
+    const sourceSet = [
+      {
+        case: "메타",
+        value: 0,
+      },
+      {
+        case: "네이버",
+        value: 0,
+      },
+      {
+        case: "구글",
+        value: 0,
+      },
+      {
+        case: "유튜브",
+        value: 0,
+      },
+      {
+        case: "카카오",
+        value: 0,
+      },
+      {
+        case: "기타",
+        value: 0,
+      }
+    ];
+    let resultObj;
+    let ageTotal;
+    let genderTotal;
+    let typeTotal;
+    let sourceTotal;
+    let sourceArr;
+    let adArr;
+    let adTotal;
+    let deviceTotal;
+    let sessionSourceTotal;
+    let sessionSourceArr;
+    let timeSourceTotal;
+    let timeSourceArr;
+    let boundSourceTotal;
+    let boundSourceArr;
+
+    resultObj = {};
+
+
+    // total numbers
+
+    resultObj.total = {
+      users: data.users.total,
+      sessions: data.sessions.total,
+      views: data.views.total,
+    };
+
+
+
+    // age bracket
+
+    resultObj.age = data.users.detail.userAgeBracket.cases;
+    ageTotal = resultObj.age.reduce((acc, curr) => {
+      return acc + curr.value;
+    }, 0);
+    resultObj.age = resultObj.age.map((obj) => {
+      return {
+        case: obj.case,
+        value: obj.value,
+        ratio: ageTotal === 0 ? 0 : (obj.value / ageTotal),
+      }
+    });
+    resultObj.age.sort((a, b) => { return Number(a.case.slice(0, 2)) - Number(b.case.slice(0, 2)) })
+
+
+
+    // gender
+
+    resultObj.gender = data.users.detail.userGender.cases;
+    genderTotal = resultObj.gender.reduce((acc, curr) => {
+      return acc + curr.value;
+    }, 0);
+    resultObj.gender = resultObj.gender.map((obj) => {
+      return {
+        case: obj.case === "male" ? "남성" : "여성",
+        value: obj.value,
+        ratio: genderTotal === 0 ? 0 : (obj.value / genderTotal),
+      }
+    });
+
+
+    // type
+
+    resultObj.type = data.users.detail.userType.cases;
+    typeTotal = resultObj.type.reduce((acc, curr) => {
+      return acc + curr.value;
+    }, 0);
+    resultObj.type = resultObj.type.map((obj) => {
+      return {
+        case: /New/gi.test(obj.case) ? "신규" : "재방문",
+        value: obj.value,
+        ratio: typeTotal === 0 ? 0 : (obj.value / typeTotal),
+      }
+    });
+
+
+    // source
+
+    resultObj.source = data.views.detail.source.cases;
+    sourceTotal = resultObj.source.reduce((acc, curr) => {
+      return acc + curr.value;
+    }, 0);
+
+    sourceArr = equalJson(JSON.stringify(sourceSet));
+
+    for (let obj of resultObj.source) {
+      if (/facebook/gi.test(obj.case) || /instagram/gi.test(obj.case)) {
+        sourceArr[0].value += obj.value;
+      } else if (/naver/gi.test(obj.case)) {
+        sourceArr[1].value += obj.value;
+      } else if (/google/gi.test(obj.case)) {
+        sourceArr[2].value += obj.value;
+      } else if (/youtube/gi.test(obj.case)) {
+        sourceArr[3].value += obj.value;
+      } else if (/daum/gi.test(obj.case) || /kakao/gi.test(obj.case)) {
+        sourceArr[4].value += obj.value;
+      } else {
+        sourceArr[5].value += obj.value;
+      }
+    }
+
+    sourceArr = sourceArr.map((obj) => {
+      return {
+        case: obj.case,
+        value: obj.value,
+        ratio: sourceTotal === 0 ? 0 : (obj.value / sourceTotal),
+      }
+    });
+
+    resultObj.source = sourceArr;
+
+
+    // ad ratio
+
+    resultObj.ad = data.source.detail.campaign.cases;
+    adArr = equalJson(JSON.stringify(sourceSet));
+
+    for (let obj of resultObj.ad) {
+      if (!/\(not set\)/gi.test(obj.case)) {
+        if (/facebook/gi.test(obj.case) || /instagram/gi.test(obj.case)) {
+          adArr[0].value += obj.value;
+        } else if (/naver/gi.test(obj.case)) {
+          adArr[1].value += obj.value;
+        } else if (/google/gi.test(obj.case)) {
+          adArr[2].value += obj.value;
+        } else if (/youtube/gi.test(obj.case)) {
+          adArr[3].value += obj.value;
+        } else if (/daum/gi.test(obj.case) || /kakao/gi.test(obj.case)) {
+          adArr[4].value += obj.value;
+        } else {
+          adArr[5].value += obj.value;
+        }
+      }
+    }
+
+    adTotal = adArr.reduce((acc, curr) => {
+      return acc + curr.value;
+    }, 0);
+
+    resultObj.ad = {
+      total: {
+        case: "광고",
+        value: adTotal,
+        opposite: sourceTotal - adTotal,
+        ratio: sourceTotal === 0 ? 0 : adTotal / sourceTotal,
+      },
+      detail: adArr.map((obj, index) => {
+        return {
+          case: obj.case,
+          value: obj.value,
+          opposite: resultObj.source[index].value - obj.value,
+          ratio: resultObj.source[index].value === 0 ? 0 : obj.value / resultObj.source[index].value
+        }
+      })
+    }
+
+
+    // device
+
+    resultObj.device = data.views.detail.deviceCategory.cases;
+    deviceTotal = resultObj.device.reduce((acc, curr) => {
+      return acc + curr.value;
+    }, 0);
+    resultObj.device = resultObj.device.map((obj) => {
+      return {
+        case: /mobile/gi.test(obj.case) ? "모바일" : (/desktop/gi.test(obj.case) ? "데스크탑" : "태블릿"),
+        value: obj.value,
+        ratio: deviceTotal === 0 ? 0 : (obj.value / deviceTotal),
+      }
+    });
+
+
+    // sessionSource
+
+    resultObj.sessionSource = data.sessions.detail.source.cases;
+    sessionSourceTotal = resultObj.sessionSource.reduce((acc, curr) => {
+      return acc + curr.value;
+    }, 0);
+
+    sessionSourceArr = equalJson(JSON.stringify(sourceSet));
+
+    for (let obj of resultObj.sessionSource) {
+      if (/facebook/gi.test(obj.case) || /instagram/gi.test(obj.case)) {
+        sessionSourceArr[0].value += obj.value;
+      } else if (/naver/gi.test(obj.case)) {
+        sessionSourceArr[1].value += obj.value;
+      } else if (/google/gi.test(obj.case)) {
+        sessionSourceArr[2].value += obj.value;
+      } else if (/youtube/gi.test(obj.case)) {
+        sessionSourceArr[3].value += obj.value;
+      } else if (/daum/gi.test(obj.case) || /kakao/gi.test(obj.case)) {
+        sessionSourceArr[4].value += obj.value;
+      } else {
+        sessionSourceArr[5].value += obj.value;
+      }
+    }
+
+    sessionSourceArr = sessionSourceArr.map((obj) => {
+      return {
+        case: obj.case,
+        value: obj.value,
+        ratio: sessionSourceTotal === 0 ? 0 : (obj.value / sessionSourceTotal),
+      }
+    });
+
+    resultObj.sessionSource = sessionSourceArr;
+
+
+
+    // timeSource
+
+    resultObj.timeSource = data.time.detail.source.cases;
+    timeSourceTotal = resultObj.timeSource.reduce((acc, curr) => {
+      return acc + curr.value;
+    }, 0);
+
+    timeSourceArr = equalJson(JSON.stringify(sourceSet));
+
+    for (let obj of resultObj.timeSource) {
+      if (/facebook/gi.test(obj.case) || /instagram/gi.test(obj.case)) {
+        timeSourceArr[0].value += obj.value;
+      } else if (/naver/gi.test(obj.case)) {
+        timeSourceArr[1].value += obj.value;
+      } else if (/google/gi.test(obj.case)) {
+        timeSourceArr[2].value += obj.value;
+      } else if (/youtube/gi.test(obj.case)) {
+        timeSourceArr[3].value += obj.value;
+      } else if (/daum/gi.test(obj.case) || /kakao/gi.test(obj.case)) {
+        timeSourceArr[4].value += obj.value;
+      } else {
+        timeSourceArr[5].value += obj.value;
+      }
+    }
+
+    timeSourceArr = timeSourceArr.map((obj) => {
+      return {
+        case: obj.case,
+        value: obj.value,
+        ratio: timeSourceTotal === 0 ? 0 : (obj.value / timeSourceTotal),
+      }
+    });
+
+    resultObj.timeSource = timeSourceArr;
 
 
 
 
+    // boundSource
+
+    resultObj.boundSource = data.out.detail.source.cases;
+    boundSourceTotal = resultObj.boundSource.reduce((acc, curr) => {
+      return acc + curr.value;
+    }, 0);
+
+    boundSourceArr = equalJson(JSON.stringify(sourceSet));
+
+    for (let obj of resultObj.boundSource) {
+      if (/facebook/gi.test(obj.case) || /instagram/gi.test(obj.case)) {
+        boundSourceArr[0].value += obj.value;
+      } else if (/naver/gi.test(obj.case)) {
+        boundSourceArr[1].value += obj.value;
+      } else if (/google/gi.test(obj.case)) {
+        boundSourceArr[2].value += obj.value;
+      } else if (/youtube/gi.test(obj.case)) {
+        boundSourceArr[3].value += obj.value;
+      } else if (/daum/gi.test(obj.case) || /kakao/gi.test(obj.case)) {
+        boundSourceArr[4].value += obj.value;
+      } else {
+        boundSourceArr[5].value += obj.value;
+      }
+    }
+
+    boundSourceArr = boundSourceArr.map((obj) => {
+      return {
+        case: obj.case,
+        value: obj.value,
+        ratio: boundSourceTotal === 0 ? 0 : (obj.value / boundSourceTotal),
+      }
+    });
+
+    resultObj.boundSource = boundSourceArr;
 
 
-    // {
-    //   kind: 'calendar#event',
-    //   etag: '"3244534255086000"',
-    //   id: '0255qk0lf44s0h9itpqopbp37i',
-    //   status: 'confirmed',
-    //   htmlLink: 'https://www.google.com/calendar/event?eid=MDI1NXFrMGxmNDRzMGg5aXRwcW9wYnAzN2kgZDVxbzJqZjEyYmFuZm8ybTY2dXM5cWhjcDRAZw&ctz=Asia/Seoul',
-    //   created: '2020-11-13T08:00:40.000Z',
-    //   updated: '2021-05-29T05:45:27.543Z',
-    //   summary: '촬영 w 김다혜_김소영_김다현, 박혜연, 배창규, 임혜령',
-    //   creator: { email: 'homeliaisonstaff201102aa01@gmail.com' },
-    //   organizer: {
-    //     email: 'd5qo2jf12banfo2m66us9qhcp4@group.calendar.google.com',
-    //     displayName: '현장촬영 w_C/D/P/I',
-    //     self: true
-    //   },
-    //   start: { dateTime: '2020-11-28T10:30:00+09:00', timeZone: 'Asia/Seoul' },
-    //   end: { dateTime: '2020-11-28T13:00:00+09:00', timeZone: 'Asia/Seoul' },
-    //   transparency: 'transparent',
-    //   iCalUID: '0255qk0lf44s0h9itpqopbp37i@google.com',
-    //   sequence: 5,
-    //   reminders: { useDefault: true },
-    //   eventType: 'default'
-    // },
+    // session per
+
+    resultObj.source.forEach((obj, index) => {
+      if (resultObj.sessionSource[index].value !== 0) {
+        obj.sessionPer = Math.round(obj.value / resultObj.sessionSource[index].value);
+      } else {
+        obj.sessionPer = 0;
+      }
+    });
+
+    resultObj.timeSource.forEach((obj, index) => {
+      if (resultObj.sessionSource[index].value !== 0) {
+        obj.sessionPer = Math.round(obj.value / resultObj.sessionSource[index].value);
+      } else {
+        obj.sessionPer = 0;
+      }
+    });
+
+    resultObj.boundSource.forEach((obj, index) => {
+      if (resultObj.sessionSource[index].value !== 0) {
+        obj.boundRate = obj.value / resultObj.sessionSource[index].value;
+      } else {
+        obj.boundRate = 0;
+      }
+    });
+
+    console.log(resultObj);
+
+
 
 
 

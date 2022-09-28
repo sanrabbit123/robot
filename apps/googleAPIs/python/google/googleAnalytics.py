@@ -152,6 +152,69 @@ class GoogleAnalytics:
         return dumps(result)
 
 
+    def getTimeMetric(self, startDate, endDate, dimensions):
+        result = self.app.reports().batchGet(
+            body={
+                "reportRequests": [
+                    {
+                        "viewId": self.viewId,
+                        "pageSize": 100000,
+                        "dateRanges": [
+                            { "startDate": startDate, "endDate": endDate }
+                        ],
+                        "dimensions": dimensions,
+                        "metrics": [
+                            { "expression": "ga:sessionDuration" },
+                        ]
+                    }
+                ]
+            }).execute()
+
+        return dumps(result)
+
+
+    def getOutMetric(self, startDate, endDate, dimensions):
+        result = self.app.reports().batchGet(
+            body={
+                "reportRequests": [
+                    {
+                        "viewId": self.viewId,
+                        "pageSize": 100000,
+                        "dateRanges": [
+                            { "startDate": startDate, "endDate": endDate }
+                        ],
+                        "dimensions": dimensions,
+                        "metrics": [
+                            { "expression": "ga:bounces" },
+                        ]
+                    }
+                ]
+            }).execute()
+
+        return dumps(result)
+
+
+    def getSessionMetric(self, startDate, endDate, dimensions):
+        result = self.app.reports().batchGet(
+            body={
+                "reportRequests": [
+                    {
+                        "viewId": self.viewId,
+                        "pageSize": 100000,
+                        "dateRanges": [
+                            { "startDate": startDate, "endDate": endDate }
+                        ],
+                        "dimensions": dimensions,
+                        "metrics": [
+                            { "expression": "ga:sessions" },
+                        ]
+                    }
+                ]
+            }).execute()
+
+        return dumps(result)
+
+
     def getEventMetric(self, startDate, endDate, dimensions):
         result = self.app.reports().batchGet(
             body={

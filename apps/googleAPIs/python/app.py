@@ -82,6 +82,21 @@ try:
         result = analyticsApp.getUserMetric(data["startDate"], data["endDate"], data["dimensions"])
         print(result)
 
+    elif argv[1] == 'analytics' and argv[2] == 'getTimeMetric':
+        analyticsApp = GoogleAnalytics()
+        result = analyticsApp.getTimeMetric(data["startDate"], data["endDate"], data["dimensions"])
+        print(result)
+
+    elif argv[1] == 'analytics' and argv[2] == 'getOutMetric':
+        analyticsApp = GoogleAnalytics()
+        result = analyticsApp.getOutMetric(data["startDate"], data["endDate"], data["dimensions"])
+        print(result)
+
+    elif argv[1] == 'analytics' and argv[2] == 'getSessionMetric':
+        analyticsApp = GoogleAnalytics()
+        result = analyticsApp.getSessionMetric(data["startDate"], data["endDate"], data["dimensions"])
+        print(result)
+
     elif argv[1] == 'analytics' and argv[2] == 'getUserById':
         analyticsApp = GoogleAnalytics()
         result = analyticsApp.getUserById(data["startDate"], data["endDate"], data["clientId"], data["dimensions"])

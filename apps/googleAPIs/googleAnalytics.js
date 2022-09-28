@@ -450,6 +450,7 @@ GoogleAnalytics.prototype.generalMetric = async function (startDate, endDate) {
     let detailObj;
     let keyArr;
     let start, next, end;
+    let endNext;
     let conversion;
     let conversionObj;
     let users;
@@ -553,12 +554,14 @@ GoogleAnalytics.prototype.generalMetric = async function (startDate, endDate) {
     next = stringToDate(startDate);
     next.setDate(next.getDate() + 1);
     end = stringToDate(endDate);
+    endNext = stringToDate(endDate);
+    endNext.setDate(endNext.getDate() + 1);
 
     finalObj = {
       anaid: ('n' + String(start.getFullYear()).slice(2) + zeroAddition(start.getMonth() + 1) + '_' + "aa" + zeroAddition(start.getDate()) + 's'),
       date: {
         from: start,
-        to: (endDate === startDate ? next : end),
+        to: (endDate === startDate ? next : endNext),
       },
       data: {
         users: {
@@ -613,6 +616,7 @@ GoogleAnalytics.prototype.simpleMetric = async function (startDate, endDate) {
     let detailObj;
     let keyArr;
     let start, next, end;
+    let endNext;
     let conversion;
     let conversionObj;
     let users;
@@ -643,18 +647,316 @@ GoogleAnalytics.prototype.simpleMetric = async function (startDate, endDate) {
     next = stringToDate(startDate);
     next.setDate(next.getDate() + 1);
     end = stringToDate(endDate);
+    endNext = stringToDate(endDate);
+    endNext.setDate(endNext.getDate() + 1);
 
     finalObj = {
       key: "simple_analytics_" + startDate.replace(/\-/gi, '') + "_" + endDate.replace(/\-/gi, ''),
       date: {
         from: start,
-        to: (endDate === startDate ? next : end),
+        to: (endDate === startDate ? next : endNext),
       },
       data: {
         users: {
           total: userTotalNumbers.reduce((acc, cur) => { return (acc >= cur ? acc : cur) }, 0),
           detail: userDetailObj,
         },
+      }
+    };
+
+    return finalObj;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+GoogleAnalytics.prototype.complexMetric = async function (startDate, endDate) {
+  const instance = this;
+  const { dateToString, stringToDate, pythonExecute } = this.mother;
+  const zeroAddition = function (num) {
+    if (num < 10) {
+      return `0${String(num)}`;
+    } else {
+      return `${String(num)}`;
+    }
+  }
+  try {
+
+    if (startDate === undefined || endDate === undefined) {
+      throw new Error("must be start-date and end-date");
+    }
+
+    if (startDate instanceof Date) {
+      startDate = dateToString(startDate);
+    }
+
+    if (endDate instanceof Date) {
+      endDate = dateToString(endDate);
+    }
+
+    const userDimensions = [
+      { name: "ga:userType", meaning: "유저 타입" },
+      { name: "ga:userAgeBracket", meaning: "나이대" },
+      { name: "ga:userGender", meaning: "성별" },
+      { name: "ga:source", meaning: "소스" },
+    ];
+    const dimensions = [
+      { name: "ga:pagePath", meaning: "페이지 경로" },
+      { name: "ga:userDefinedValue", meaning: "레퍼럴" },
+      { name: "ga:source", meaning: "소스" },
+      { name: "ga:deviceCategory", meaning: "디바이스" },
+      { name: "ga:campaign", meaning: "캠페인" },
+    ];
+    const eventDimensions = [
+      { name: "ga:eventAction", meaning: "이벤트 액션" },
+    ];
+    const sourceDimensions = [
+      { name: "ga:campaign", meaning: "캠페인" },
+    ];
+    const conversionDimensions = [
+      { name: "ga:campaign", meaning: "캠페인" },
+      { name: "ga:userDefinedValue", meaning: "레퍼럴" },
+      { name: "ga:source", meaning: "소스" },
+      { name: "ga:deviceCategory", meaning: "디바이스" },
+      { name: "ga:userType", meaning: "유저 타입" },
+    ];
+    const timeDimensions = [
+      { name: "ga:source", meaning: "소스" },
+    ];
+    const outDimensions = [
+      { name: "ga:source", meaning: "소스" },
+    ];
+    const sessionDimensions = [
+      { name: "ga:source", meaning: "소스" },
+    ];
+    let temp, tempObj, result, tempArr;
+    let totalNumbers;
+    let finalObj;
+    let detailObj;
+    let keyArr;
+    let start, next, end;
+    let endNext;
+    let conversion;
+    let conversionObj;
+    let usersDetail;
+    let userResult;
+    let userTotalNumbers;
+    let userDetailObj;
+    let timeResult;
+    let timeTotalNumbers;
+    let timeDetailObj;
+    let outResult;
+    let outTotalNumbers;
+    let outDetailObj;
+    let withResult;
+    let withTotalNumbers;
+    let withDetailObj;
+    let sessionResult;
+    let sessionTotalNumbers;
+    let sessionDetailObj;
+
+    // users
+
+    userResult = [];
+    for (let i of userDimensions) {
+      temp = [];
+      temp.push({ name: i.name });
+      tempObj = await pythonExecute(this.pythonApp, [ "analytics", "getUserMetric" ], { startDate, endDate, dimensions: temp });
+      userResult.push(this.reportParsing(tempObj));
+    }
+
+    userTotalNumbers = userResult.map((obj) => { return obj.total });
+
+    userDetailObj = {};
+    keyArr = userDimensions.map((obj) => { return obj.name.replace(/ga\:/gi, '') })
+    for (let i = 0; i < keyArr.length; i++) {
+      userDetailObj[keyArr[i]] = userResult[i];
+    }
+
+
+    // time
+
+    timeResult = [];
+    for (let i of timeDimensions) {
+      temp = [];
+      temp.push({ name: i.name });
+      tempObj = await pythonExecute(this.pythonApp, [ "analytics", "getTimeMetric" ], { startDate, endDate, dimensions: temp });
+      timeResult.push(this.reportParsing(tempObj));
+    }
+
+    timeTotalNumbers = timeResult.map((obj) => { return obj.total });
+
+    timeDetailObj = {};
+    keyArr = timeDimensions.map((obj) => { return obj.name.replace(/ga\:/gi, '') })
+    for (let i = 0; i < keyArr.length; i++) {
+      timeDetailObj[keyArr[i]] = timeResult[i];
+    }
+
+
+    // out
+
+    outResult = [];
+    for (let i of outDimensions) {
+      temp = [];
+      temp.push({ name: i.name });
+      tempObj = await pythonExecute(this.pythonApp, [ "analytics", "getOutMetric" ], { startDate, endDate, dimensions: temp });
+      outResult.push(this.reportParsing(tempObj));
+    }
+
+    outTotalNumbers = outResult.map((obj) => { return obj.total });
+
+    outDetailObj = {};
+    keyArr = outDimensions.map((obj) => { return obj.name.replace(/ga\:/gi, '') })
+    for (let i = 0; i < keyArr.length; i++) {
+      outDetailObj[keyArr[i]] = outResult[i];
+    }
+
+
+    // session
+
+    sessionResult = [];
+    for (let i of sessionDimensions) {
+      temp = [];
+      temp.push({ name: i.name });
+      tempObj = await pythonExecute(this.pythonApp, [ "analytics", "getSessionMetric" ], { startDate, endDate, dimensions: temp });
+      sessionResult.push(this.reportParsing(tempObj));
+    }
+
+    sessionTotalNumbers = sessionResult.map((obj) => { return obj.total });
+
+    sessionDetailObj = {};
+    keyArr = sessionDimensions.map((obj) => { return obj.name.replace(/ga\:/gi, '') })
+    for (let i = 0; i < keyArr.length; i++) {
+      sessionDetailObj[keyArr[i]] = sessionResult[i];
+    }
+
+
+    // page views
+
+    result = [];
+
+    for (let i of dimensions) {
+      temp = [];
+      temp.push({ name: i.name });
+      tempObj = await pythonExecute(this.pythonApp, [ "analytics", "generalMetric" ], { startDate, endDate, dimensions: temp });
+      result.push(this.reportParsing(tempObj));
+    }
+
+    totalNumbers = result.map((obj) => { return obj.total });
+
+    for (let i of eventDimensions) {
+      temp = [];
+      temp.push({ name: i.name });
+      tempObj = await pythonExecute(this.pythonApp, [ "analytics", "eventMetric" ], { startDate, endDate, dimensions: temp });
+      result.push(this.reportParsing(tempObj));
+    }
+
+    detailObj = {};
+    keyArr = dimensions.map((obj) => { return obj.name.replace(/ga\:/gi, '') })
+    for (let i = 0; i < keyArr.length; i++) {
+      detailObj[keyArr[i]] = result[i];
+    }
+    keyArr = eventDimensions.map((obj) => { return obj.name.replace(/ga\:/gi, '') })
+    for (let i = 0; i < keyArr.length; i++) {
+      detailObj[keyArr[i]] = result[dimensions.length + i];
+    }
+
+
+    // with
+
+    withResult = [];
+    for (let i of sourceDimensions) {
+      temp = [];
+      temp.push({ name: i.name });
+      temp.push({ name: "ga:source" })
+      tempObj = await pythonExecute(this.pythonApp, [ "analytics", "generalMetric" ], { startDate, endDate, dimensions: temp });
+      withResult.push(this.reportParsing(tempObj));
+    }
+
+    withDetailObj = {};
+    keyArr = sourceDimensions.map((obj) => { return obj.name.replace(/ga\:/gi, '') })
+    for (let i = 0; i < keyArr.length; i++) {
+      withDetailObj[keyArr[i]] = withResult[i];
+    }
+
+
+    // conversion
+    conversion = [];
+
+    // conversion - popupOpen
+    conversionObj = {};
+    conversionObj.name = "popupOpen";
+    conversionObj.type = "event";
+    conversionObj.metric = "ga:totalEvents";
+    conversionObj.filter = {
+      dimensionName: "ga:eventAction",
+      operator: "REGEXP",
+      expressions: "popupOpen",
+    };
+    conversionObj.detail = {};
+    for (let i of conversionDimensions) {
+      temp = [];
+      temp.push({ name: i.name });
+      tempObj = await pythonExecute(this.pythonApp, [ "analytics", "getPopupOpenDetail" ], { startDate, endDate, dimensions: temp });
+      conversionObj.detail[i.name.replace(/ga\:/gi, '')] = this.reportParsing(tempObj);
+    }
+    conversion.push(conversionObj);
+
+    // conversion - consulting
+    conversionObj = {};
+    conversionObj.name = "consultingPage";
+    conversionObj.type = "page";
+    conversionObj.metric = "ga:pageviews";
+    conversionObj.filter = {
+      dimensionName: "ga:pagePath",
+      operator: "REGEXP",
+      expressions: "consulting.php",
+    };
+    conversionObj.detail = {};
+    for (let i of conversionDimensions) {
+      temp = [];
+      temp.push({ name: i.name });
+      tempObj = await pythonExecute(this.pythonApp, [ "analytics", "getConsultingPageDetail" ], { startDate, endDate, dimensions: temp });
+      conversionObj.detail[i.name.replace(/ga\:/gi, '')] = this.reportParsing(tempObj);
+    }
+    conversion.push(conversionObj);
+
+    start = stringToDate(startDate);
+    next = stringToDate(startDate);
+    next.setDate(next.getDate() + 1);
+    end = stringToDate(endDate);
+    endNext = stringToDate(endDate);
+    endNext.setDate(endNext.getDate() + 1);
+
+    finalObj = {
+      key: "complex_analytics_" + startDate.replace(/\-/gi, '') + "_" + endDate.replace(/\-/gi, ''),
+      date: {
+        from: start,
+        to: (endDate === startDate ? next : endNext),
+      },
+      data: {
+        users: {
+          total: userTotalNumbers.reduce((acc, cur) => { return (acc >= cur ? acc : cur) }, 0),
+          detail: userDetailObj,
+        },
+        views: {
+          total: totalNumbers.reduce((acc, cur) => { return (acc >= cur ? acc : cur) }, 0),
+          detail: detailObj,
+        },
+        sessions: {
+          total: sessionTotalNumbers.reduce((acc, cur) => { return (acc >= cur ? acc : cur) }, 0),
+          detail: sessionDetailObj,
+        },
+        time: {
+          detail: timeDetailObj,
+        },
+        out: {
+          detail: outDetailObj,
+        },
+        source: {
+          detail: withDetailObj,
+        },
+        conversion,
       }
     };
 
