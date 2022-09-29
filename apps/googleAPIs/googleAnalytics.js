@@ -995,7 +995,7 @@ GoogleAnalytics.prototype.complexStore = async function (year, month, selfMongo)
 GoogleAnalytics.prototype.complexReport = async function (year, month, selfMongo, selfCoreMongo) {
   const instance = this;
   const back = this.back;
-  const { dateToString, stringToDate, equalJson } = this.mother;
+  const { dateToString, stringToDate, equalJson, serviceParsing } = this.mother;
   const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
   try {
     const collection = "complexReport";
@@ -1051,6 +1051,14 @@ GoogleAnalytics.prototype.complexReport = async function (year, month, selfMongo
     let referrersTotal;
     let finalObj;
     let rows;
+    let thisClients;
+    let thisProjects;
+    let pyeongSet;
+    let pyeongArr;
+    let pyeongTotal;
+    let pyeongAverage;
+    let serviceArr;
+    let serviceSet;
 
     resultObj = {};
     finalObj = {};
@@ -1063,13 +1071,15 @@ GoogleAnalytics.prototype.complexReport = async function (year, month, selfMongo
       views: data.views.total,
     };
 
-    resultObj.total.request = requests.filter((obj) => {
+    thisClients = requests.filter((obj) => {
       return obj.request.timeline.valueOf() >= (new Date(year, month - 1, 1)).valueOf() && obj.request.timeline.valueOf() < (new Date((month === 12 ? year + 1 : year), (month === 12 ? 0 : month), 1)).valueOf();
-    }).length;
+    });
+    resultObj.total.request = thisClients.length;
 
-    resultObj.total.contract = projects.toNormal().filter((obj) => {
+    thisProjects = projects.toNormal().filter((obj) => {
       return obj.process.contract.first.date.valueOf() >= (new Date(year, month - 1, 1)).valueOf() && obj.process.contract.first.date.valueOf() < (new Date((month === 12 ? year + 1 : year), (month === 12 ? 0 : month), 1)).valueOf();
-    }).length;
+    });
+    resultObj.total.contract = thisProjects.length;
 
 
     // age bracket
@@ -1425,6 +1435,149 @@ GoogleAnalytics.prototype.complexReport = async function (year, month, selfMongo
     };
 
 
+
+    // pyeong
+
+    pyeongArr = thisClients.map(({ request }) => {
+      return request.space.pyeong.value;
+    });
+
+    pyeongTotal = pyeongArr.reduce((acc, curr) => {
+      return acc + curr;
+    }, 0)
+
+    pyeongAverage = Math.floor((pyeongArr.length === 0 ? 0 : pyeongTotal / pyeongArr.length) * 100) / 100;
+
+    pyeongSet = [
+      {
+        case: "10평 미만",
+        value: 0,
+      },
+      {
+        case: "10평대",
+        value: 0,
+      },
+      {
+        case: "20평대",
+        value: 0,
+      },
+      {
+        case: "30평대",
+        value: 0,
+      },
+      {
+        case: "40평대",
+        value: 0,
+      },
+      {
+        case: "50평대",
+        value: 0,
+      },
+      {
+        case: "60평 이상",
+        value: 0,
+      }
+    ];
+
+    for (let number of pyeongArr) {
+      if (number < 10) {
+        pyeongSet[0].value = pyeongSet[0].value + 1;
+      } else if (number >= 10 && number < 20) {
+        pyeongSet[1].value = pyeongSet[1].value + 1;
+      } else if (number >= 20 && number < 30) {
+        pyeongSet[2].value = pyeongSet[2].value + 1;
+      } else if (number >= 30 && number < 40) {
+        pyeongSet[3].value = pyeongSet[3].value + 1;
+      } else if (number >= 40 && number < 50) {
+        pyeongSet[4].value = pyeongSet[4].value + 1;
+      } else if (number >= 50 && number < 60) {
+        pyeongSet[5].value = pyeongSet[5].value + 1;
+      } else {
+        pyeongSet[6].value = pyeongSet[6].value + 1;
+      }
+    }
+
+    pyeongSet.forEach((obj, index) => {
+      obj.ratio = pyeongArr.length === 0 ? 0 : obj.value / pyeongArr.length
+    });
+
+    resultObj.pyeong = {
+      total: {
+        average: pyeongAverage,
+      },
+      detail: pyeongSet
+    }
+
+
+
+    // service
+
+    serviceArr = thisProjects.map((project) => {
+      return serviceParsing(project.service);
+    });
+
+    serviceSet = [
+      {
+        case: "홈퍼니싱",
+        value: 0,
+      },
+      {
+        case: "홈스타일링",
+        value: 0,
+      },
+      {
+        case: "토탈 스타일링",
+        value: 0,
+      },
+      {
+        case: "엑스트라",
+        value: 0,
+      },
+    ]
+
+    for (let str of serviceArr) {
+      if (/퍼니싱/gi.test(str)) {
+        serviceSet[0].value = serviceSet[0].value + 1;
+      } else if (/홈스타일링/gi.test(str)) {
+        serviceSet[1].value = serviceSet[1].value + 1;
+      } else if (/토탈/gi.test(str)) {
+        serviceSet[2].value = serviceSet[2].value + 1;
+      } else {
+        serviceSet[3].value = serviceSet[3].value + 1;
+      }
+    }
+
+    serviceSet.forEach((obj, index) => {
+      obj.ratio = serviceArr.length === 0 ? 0 : obj.value / serviceArr.length
+    });
+
+    resultObj.service = {
+      detail: serviceSet
+    };
+
+
+    // region
+
+
+
+
+
+    // design fee
+
+
+
+
+
+    // family
+
+
+
+
+
+
+
+
+
     // end
     finalObj = {
       key: key.replace(/^complex_analytics_/i, "complex_report_"),
@@ -1433,13 +1586,16 @@ GoogleAnalytics.prototype.complexReport = async function (year, month, selfMongo
     };
 
     // store
-    rows = await back.mongoRead(collection, { key: finalObj.key }, { selfMongo });
-    if (rows.length !== 0) {
-      await back.mongoDelete(collection, { key: finalObj.key }, { selfMongo });
-    }
-    await back.mongoCreate(collection, finalObj, { selfMongo });
+    // rows = await back.mongoRead(collection, { key: finalObj.key }, { selfMongo });
+    // if (rows.length !== 0) {
+    //   await back.mongoDelete(collection, { key: finalObj.key }, { selfMongo });
+    // }
+    // await back.mongoCreate(collection, finalObj, { selfMongo });
 
-    console.log(finalObj);
+    // console.log(finalObj.data);
+
+
+
 
     return finalObj;
 

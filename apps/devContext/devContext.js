@@ -88,19 +88,22 @@ DevContext.prototype.launching = async function () {
     // const pastProposal = equalJson(JSON.stringify(await ghostRequest("pastProposal", { proid: "p2202_aa43s" })));
     // console.log(pastProposal[0].project.detail);
 
-
     // monthly GA report
     // const app = new GoogleAnalytics();
     // await app.complexMonthly(2022, 8);
 
 
+    const selfMongo = this.MONGOLOGC;
+    await selfMongo.connect();
+
+    const selfCoreMongo = this.MONGOC;
+
+    const app = new GoogleAnalytics();
+    await app.complexReport(2022, 8, selfMongo, selfCoreMongo);
 
     
 
-
-
-
-
+    await selfMongo.close();
 
 
 
