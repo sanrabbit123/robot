@@ -909,13 +909,13 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
   mobileTitleLeft = 1.5;
   mobileTitleTop = -8.7;
 
-  mobileInnerPaddingBottom = 8;
+  mobileInnerPaddingBottom = 0;
 
   secondBlockWidth = <%% 300, 300, 300, 300, 330 %%>;
   secondBlockMargin = <%% 36, 36, 36, 36, 33 %%>;
 
-  contentsWordingSize = <%% 15, 15, 14, 13, 3.4 %%>;
-  contentsTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), 0 %%>;
+  contentsWordingSize = <%% 15, 15, 14, 13, 3 %%>;
+  contentsTextTop = <%% (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), -0.2 %%>;
 
   contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
 
@@ -948,20 +948,20 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
   lineTop = <%% (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 9 : 7), 10 %%>;
   linePadding = <%% 12, 12, 12, 10, 12 %%>;
 
-  mobilePaddingLeft = 6;
+  mobilePaddingLeft = 0;
 
   mobileContentsWordingSize = 3;
 
   checkBoxAreaWidth = <%% 16, 16, 16, 16, 3 %%>;
 
-  panMotherInnerPadding = <%% 20, 20, 20, 20, 4 %%>;
+  panMotherInnerPadding = <%% 20, 20, 16, 12, 3 %%>;
   panBetween = <%% 8, 8, 8, 8, 1 %%>;
-  panTitleBoxWidth = <%% 124, 124, 124, 120, 12 %%>;
-  panTitleBoxHeight = <%% 52, 52, 50, 48, 5 %%>;
+  panTitleBoxWidth = <%% 124, 120, 114, 108, 22 %%>;
+  panTitleBoxHeight = <%% 52, 48, 45, 40, 9 %%>;
 
   uploadCircleWidth = <%% 28, 28, 28, 24, 6 %%>;
   uploadCirclePadding = <%% 16, 16, 16, 12, 4 %%>;
-  uploadIconWidth = <%% 13, 13, 13, 12, 4 %%>;
+  uploadIconWidth = <%% 13, 13, 13, 12, 3 %%>;
   uploadIconTop = <%% 0, 0, 0, 0, 0 %%>;
 
   plusIconTop = <%% 0, 0, 0, 0, 0 %%>;
@@ -976,7 +976,7 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
   statusPadding = <%% 21, 21, 18, 18, 4 %%>;
   statusOpacity = <%% 0.4, 0.4, 0.4, 0.4, 0.4 %%>;
 
-  subButtonPaddingRight = <%% 18, 18, 18, 16, 1 %%>;
+  subButtonPaddingRight = <%% 18, 18, 18, 16, 4 %%>;
   subButtonSize = <%% 12, 12, 11, 10, 2.5 %%>;
   subButtonWeight = <%% 800, 800, 800, 800, 800 %%>;
   subButtonVisualTop = <%% 3, 3, 2, 1, 0.3 %%>;
@@ -1162,6 +1162,12 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
       },
     });
 
+    if (mobile) {
+      if (this.panContents[i].action.length > 1) {
+        this.panContents[i].action = [ this.panContents[i].action[1] ];
+      }
+    }
+
     for (let { title, key } of this.panContents[i].action) {
       createNode({
         mother: subButtonsBasePan,
@@ -1311,16 +1317,18 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
     let bigPhotoClickEvent;
     let fileItemSelectEvent;
     let photoItemSelectEvent;
+    let itemDivide;
 
     itemBetween = <%% 6, 6, 5, 4, 1 %%>;
     itemTongHeight = <%% 40, 40, 36, 32, 3 %%>;
     itemTongMarginLeft = <%% 12, 12, 12, 10, 1 %%>;
+    itemDivide = <%% 9, 6, 5, 5, 2 %%>;
 
-    textTop = <%% -1, -1, -1, -1, 0 %%>;
-    textSize = <%% 14, 14, 14, 14, 14 %%>;
+    textTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), 0 %%>;
+    textSize = <%% 14, 14, 13, 12, 2.5 %%>;
     textWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-    divideNumber = <%% 5, 5, 4, 3, 2 %%>;
+    divideNumber = <%% 5, 4, 3, 3, 2 %%>;
 
     bigPhotoPadding = <%% 48, 48, 48, 40, 10 %%>;
 
@@ -1340,8 +1348,8 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
       previous = {};
 
       renderPhoto = (targetDom) => {
-        const width = Number(targetDom.getAttribute("width"));
-        const height = Number(targetDom.getAttribute("height"));
+        const width = targetDom.getBoundingClientRect().width;
+        const height = targetDom.getBoundingClientRect().height;
         const original = targetDom.getAttribute("original");
         const ratio = width / height;
         let thisWidth, thisHeight;
@@ -1565,7 +1573,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
             display: "inline-flex",
             justifyContent: "center",
             alignItems: "center",
-            width: "calc(calc(100% - " + String(itemBetween * 9) + ea + ") / " + String(9) + ")",
+            width: "calc(calc(100% - " + String(itemBetween * itemDivide) + ea + ") / " + String(itemDivide) + ")",
             marginRight: String(itemBetween) + ea,
             height: String(itemTongHeight) + ea,
             marginBottom: String(itemBetween) + ea,
@@ -1645,9 +1653,6 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
             }
           ]
         });
-
-        itemBlock.setAttribute("width", String(itemBlock.getBoundingClientRect().width));
-        itemBlock.setAttribute("height", String(itemBlock.getBoundingClientRect().height));
 
       }
 

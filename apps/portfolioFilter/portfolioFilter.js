@@ -796,9 +796,9 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         shareLinkClient = zipLinks.client;
         shareLinkDeginer = zipLinks.designer;
         if (shareLinkClient !== null) {
-          shareGoogleIdClient = drive.general.parsingId(shareLinkClient);
+          shareGoogleIdClient = drive.parsingId(shareLinkClient);
         }
-        shareGoogleIdDesigner = drive.general.parsingId(shareLinkDeginer);
+        shareGoogleIdDesigner = drive.parsingId(shareLinkDeginer);
 
         shell.exec(`rm -rf ${shellLink(folderPath)};`);
 
