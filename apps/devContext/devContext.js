@@ -93,6 +93,11 @@ DevContext.prototype.launching = async function () {
     // await app.complexMonthly(2022, 8);
 
 
+
+
+
+
+
     const selfMongo = this.MONGOLOGC;
     await selfMongo.connect();
 
@@ -101,9 +106,13 @@ DevContext.prototype.launching = async function () {
     const app = new GoogleAnalytics();
     await app.complexReport(2022, 8, selfMongo, selfCoreMongo);
 
-    
-
     await selfMongo.close();
+
+
+
+
+
+
 
 
 
@@ -2982,7 +2991,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p208");
+    // await this.getRawPortfolio("p202");
 
 
     // get corePortfolio by pid
