@@ -1177,7 +1177,7 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
         style: {
           display: "inline-block",
           position: "relative",
-          top: String(contentsTextTop) + ea,
+          top: String(desktop ? contentsTextTop : 0) + ea,
           fontSize: String(subButtonSize) + ea,
           fontWeight: String(subButtonWeight),
           color: colorChip.darkShadow,
@@ -1292,8 +1292,10 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
 
 ProcessDetailJs.prototype.setPanBlocks = async function () {
   const instance = this;
-  const { ea, targetDrive, targetHref } = this;
-  const { ajaxJson, createNode, colorChip, withOut, cleanChildren, dateToString } = GeneralJs;
+  const { ea, targetDrive, targetHref, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { ajaxJson, createNode, colorChip, withOut, cleanChildren, dateToString, isMac, swipePatch } = GeneralJs;
   const motherChildPhotoTongClassName = "motherChildPhotoTongClassName";
   const photoItemInitClassName = "photoItemInitClassName";
   const bigPhotoClassName = "bigPhotoClassName";
@@ -1320,20 +1322,20 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
     let itemDivide;
 
     itemBetween = <%% 6, 6, 5, 4, 1 %%>;
-    itemTongHeight = <%% 40, 40, 36, 32, 3 %%>;
+    itemTongHeight = <%% 40, 40, 36, 32, 8 %%>;
     itemTongMarginLeft = <%% 12, 12, 12, 10, 1 %%>;
     itemDivide = <%% 9, 6, 5, 5, 2 %%>;
 
-    textTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), 0 %%>;
-    textSize = <%% 14, 14, 13, 12, 2.5 %%>;
+    textTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
+    textSize = <%% 14, 14, 13, 12, 2.7 %%>;
     textWeight = <%% 400, 400, 400, 400, 400 %%>;
 
     divideNumber = <%% 5, 4, 3, 3, 2 %%>;
 
-    bigPhotoPadding = <%% 48, 48, 48, 40, 10 %%>;
+    bigPhotoPadding = <%% 48, 48, 48, 40, 24 %%>;
 
-    arrowButtonWidth = <%% 16, 16, 16, 16, 10 %%>;
-    arrowButtonMargin = <%% 20, 20, 20, 20, 2 %%>;
+    arrowButtonWidth = <%% 16, 16, 16, 16, 2.5 %%>;
+    arrowButtonMargin = <%% 20, 20, 20, 20, 2.5 %%>;
 
     bigPhotoClickEvent = function (e) {
       const self = this;
@@ -1353,6 +1355,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
         const original = targetDom.getAttribute("original");
         const ratio = width / height;
         let thisWidth, thisHeight;
+        let bigPhoto;
 
         order = Number(targetDom.getAttribute("order"));
         key = targetDom.getAttribute("key");
@@ -1377,7 +1380,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
           thisWidth = thisHeight * ratio;
         }
 
-        createNode({
+        bigPhoto = createNode({
           mother: totalContents,
           mode: "img",
           class: [ bigPhotoClassName, bigPhotoFixedTargetsClassName ],
@@ -1390,14 +1393,24 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
           style: {
             display: "block",
             position: "fixed",
-            top: "calc(calc(calc(calc(100% - " + String(instance.naviHeight) + ea + ") / 2) - " + String(thisHeight / 2) + ea + ") + " + String(instance.naviHeight) + ea + ")",
-            left: withOut(50, (thisWidth / 2), ea),
-            width: String(thisWidth) + ea,
-            height: String(thisHeight) + ea,
+            top: "calc(calc(calc(calc(100% - " + String(instance.naviHeight) + "px" + ") / 2) - " + String(thisHeight / 2) + "px" + ") + " + String(instance.naviHeight) + "px" + ")",
+            left: withOut(50, (thisWidth / 2), "px"),
+            width: String(thisWidth) + "px",
+            height: String(thisHeight) + "px",
             zIndex: String(zIndex),
             borderRadius: String(5) + "px",
           }
         });
+
+        if (mobile) {
+          swipePatch("left", function () {
+            renderPhoto(next);
+          }, bigPhoto);
+          swipePatch("right", function () {
+            renderPhoto(previous);
+          }, bigPhoto);
+        }
+
       }
 
       cancelBack = createNode({
@@ -1424,47 +1437,49 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
         }
       });
 
-      createNode({
-        mother: totalContents,
-        class: [ "hoverDefault_lite", bigPhotoFixedTargetsClassName ],
-        mode: "svg",
-        source: instance.mother.returnArrow("left", colorChip.white),
-        event: {
-          selectstart: (e) => { e.preventDefault(); },
-          click: function (e) {
-            renderPhoto(previous);
+      if (desktop) {
+        createNode({
+          mother: totalContents,
+          class: [ "hoverDefault_lite", bigPhotoFixedTargetsClassName ],
+          mode: "svg",
+          source: instance.mother.returnArrow("left", colorChip.white),
+          event: {
+            selectstart: (e) => { e.preventDefault(); },
+            click: function (e) {
+              renderPhoto(previous);
+            }
+          },
+          style: {
+            display: "block",
+            position: "fixed",
+            top: "calc(calc(calc(calc(100% - " + String(instance.naviHeight) + "px" + ") / 2) - " + String(arrowButtonWidth / 2) + ea + ") + " + String(instance.naviHeight) + "px" + ")",
+            left: String(arrowButtonMargin) + ea,
+            width: String(arrowButtonWidth) + ea,
+            zIndex: String(zIndex),
           }
-        },
-        style: {
-          display: "block",
-          position: "fixed",
-          top: "calc(calc(calc(calc(100% - " + String(instance.naviHeight) + ea + ") / 2) - " + String(arrowButtonWidth / 2) + ea + ") + " + String(instance.naviHeight) + ea + ")",
-          left: String(arrowButtonMargin) + ea,
-          width: String(arrowButtonWidth) + ea,
-          zIndex: String(zIndex),
-        }
-      });
+        });
 
-      createNode({
-        mother: totalContents,
-        class: [ "hoverDefault_lite", bigPhotoFixedTargetsClassName ],
-        mode: "svg",
-        source: instance.mother.returnArrow("right", colorChip.white),
-        event: {
-          selectstart: (e) => { e.preventDefault(); },
-          click: function (e) {
-            renderPhoto(next);
+        createNode({
+          mother: totalContents,
+          class: [ "hoverDefault_lite", bigPhotoFixedTargetsClassName ],
+          mode: "svg",
+          source: instance.mother.returnArrow("right", colorChip.white),
+          event: {
+            selectstart: (e) => { e.preventDefault(); },
+            click: function (e) {
+              renderPhoto(next);
+            }
+          },
+          style: {
+            display: "block",
+            position: "fixed",
+            top: "calc(calc(calc(calc(100% - " + String(instance.naviHeight) + "px" + ") / 2) - " + String(arrowButtonWidth / 2) + ea + ") + " + String(instance.naviHeight) + "px" + ")",
+            right: String(arrowButtonMargin) + ea,
+            width: String(arrowButtonWidth) + ea,
+            zIndex: String(zIndex),
           }
-        },
-        style: {
-          display: "block",
-          position: "fixed",
-          top: "calc(calc(calc(calc(100% - " + String(instance.naviHeight) + ea + ") / 2) - " + String(arrowButtonWidth / 2) + ea + ") + " + String(instance.naviHeight) + ea + ")",
-          right: String(arrowButtonMargin) + ea,
-          width: String(arrowButtonWidth) + ea,
-          zIndex: String(zIndex),
-        }
-      });
+        });
+      }
 
       renderPhoto(self);
 
@@ -2862,7 +2877,7 @@ ProcessDetailJs.prototype.insertGreenButtons = function () {
 
   zIndex = 4;
 
-  chatBaseWidth = <%% 140, 140, 140, 140, 36 %%>;
+  chatBaseWidth = <%% 140, 140, 140, 140, 32 %%>;
   chatBaseHeight = <%% 480, 480, 480, 480, 48 %%>;
   chatBaseBetween = <%% 16, 16, 16, 16, 2 %%>;
 
@@ -2875,7 +2890,7 @@ ProcessDetailJs.prototype.insertGreenButtons = function () {
   buttonSize = <%% 14, 14, 14, 13, 3 %%>;
   buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  basePadding = <%% 12, 12, 12, 10, 4 %%>;
+  basePadding = <%% 12, 12, 12, 10, 2.4 %%>;
 
   buttonBase = createNode({
     mother: totalContents,
@@ -3173,7 +3188,7 @@ ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber) {
                 loading = instance.mother.grayLoading();
 
                 res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
-                await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 " + thisTitle + " 관련 파일을 업로드 했습니다!", channel: "#300_designer", voice: false }, BACKHOST + "/sendSlack");
+                await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 " + thisTitle + " 관련 파일을 업로드 했습니다!", channel: "#300_designer" }, BACKHOST + "/sendSlack");
                 window.alert(thisTitle + " 관련 파일 업로드가 완료되었습니다!");
 
                 await instance.setPanBlocks();
@@ -3250,21 +3265,21 @@ ProcessDetailJs.prototype.plusMemo = function (thisStatusNumber) {
   thisKey = serviceContents[thisStatusNumber].key;
   thisTitle = serviceContents[thisStatusNumber].title;
 
-  whitePromptWidth = <%% 900, 800, 700, 700, 30 %%>;
-  whitePromptHeight = <%% 492, 492, 492, 492, 30 %%>;
+  whitePromptWidth = <%% 900, 800, 700, 600, 88 %%>;
+  whitePromptHeight = <%% 492, 492, 492, 420, 120 %%>;
 
-  whitePromptInnerPaddingLeft = <%% 44, 44, 44, 44, 30 %%>;
-  whitePromptInnerPaddingTop = <%% 38, 38, 38, 38, 24 %%>;
-  whitePromptInnerPaddingBottom = <%% 44, 44, 44, 44, 30 %%>;
+  whitePromptInnerPaddingLeft = <%% 44, 44, 40, 36, 6 %%>;
+  whitePromptInnerPaddingTop = <%% 38, 38, 36, 32, 6 %%>;
+  whitePromptInnerPaddingBottom = <%% 44, 44, 40, 36, 6 %%>;
 
-  titleAreaHeight = <%% 40, 40, 40, 40, 1 %%>;
+  titleAreaHeight = <%% 40, 40, 38, 36, 7.5 %%>;
 
-  titleContentsBetween = <%% 24, 24, 24, 16, 2 %%>;
+  titleContentsBetween = <%% 24, 24, 24, 16, 3.6 %%>;
 
-  titleSize = <%% 21, 21, 21, 21, 21 %%>;
+  titleSize = <%% 21, 21, 20, 18, 4 %%>;
   titleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  contentsSize = <%% 14, 14, 14, 14, 14 %%>;
+  contentsSize = <%% 14, 14, 14, 13, 2.8 %%>;
   contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
   contentsLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
 
@@ -3322,7 +3337,7 @@ ProcessDetailJs.prototype.plusMemo = function (thisStatusNumber) {
           paddingBottom: String(whitePromptInnerPaddingBottom) + ea,
           width: String(whitePromptWidth - (whitePromptInnerPaddingLeft * 2)) + ea,
           height: String(whitePromptHeight - (whitePromptInnerPaddingTop + whitePromptInnerPaddingBottom)) + ea,
-          top: "calc(calc(calc(calc(100% - " + String(instance.naviHeight) + ea + ") / 2) - " + String(whitePromptHeight / 2) + ea + ") + " + String(instance.naviHeight) + ea + ")",
+          top: "calc(calc(calc(calc(100% - " + String(instance.naviHeight) + "px" + ") / 2) - " + String(whitePromptHeight / 2) + ea + ") + " + String(instance.naviHeight) + "px" + ")",
           left: withOut(50, whitePromptWidth / 2, ea),
           background: colorChip.white,
           borderRadius: String(5) + "px",
