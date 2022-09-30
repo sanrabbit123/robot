@@ -98,15 +98,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const selfMongo = this.MONGOLOGC;
-    await selfMongo.connect();
 
-    const selfCoreMongo = this.MONGOC;
 
-    const app = new GoogleAnalytics();
-    await app.complexReport(2022, 8, selfMongo, selfCoreMongo);
-
-    await selfMongo.close();
 
 
 
@@ -2965,9 +2958,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "최윤화",
-    //     designer: "권미정",
-    //     link: "https://drive.google.com/drive/folders/1q7z_b1K7_Fs4cFvztiquHvMYdlMsUKv-",
+    //     client: "박혜경",
+    //     designer: "이정아",
+    //     link: "https://drive.google.com/drive/folders/14XV9szsWWyCm-s4AyX1DW_Lo3KoUrRNz",
     //     pay: true
     //   },
     // ]);
@@ -2995,7 +2988,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("a96");
+    // await this.getCorePortfolio("p202");
 
 
     // aspirant to designer
@@ -3052,8 +3045,8 @@ DevContext.prototype.launching = async function () {
     // send sms
     // const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
     // const human = new HumanPacket();
-    // const name = "신은경";
-    // const amount = 11278000;
+    // const name = "박희상";
+    // const amount = 518000;
     // await human.sendSms({
     //   name: "",
     //   phone: "01055432039",

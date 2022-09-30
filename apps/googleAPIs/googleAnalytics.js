@@ -1059,6 +1059,19 @@ GoogleAnalytics.prototype.complexReport = async function (year, month, selfMongo
     let pyeongAverage;
     let serviceArr;
     let serviceSet;
+    let regionSet;
+    let regionArr;
+    let regionTotal;
+    let feeArr;
+    let feeTotal;
+    let feeAverage;
+    let feeSet;
+    let familyArr;
+    let familySet;
+    let livingArr;
+    let livingSet;
+    let contractArr;
+    let contractSet;
 
     resultObj = {};
     finalObj = {};
@@ -1533,7 +1546,7 @@ GoogleAnalytics.prototype.complexReport = async function (year, month, selfMongo
         case: "엑스트라",
         value: 0,
       },
-    ]
+    ];
 
     for (let str of serviceArr) {
       if (/퍼니싱/gi.test(str)) {
@@ -1558,24 +1571,265 @@ GoogleAnalytics.prototype.complexReport = async function (year, month, selfMongo
 
     // region
 
+    regionSet = [
+      {
+        case: "서울",
+        value: 0,
+      },
+      {
+        case: "경기",
+        value: 0,
+      },
+      {
+        case: "충청",
+        value: 0,
+      },
+      {
+        case: "강원",
+        value: 0,
+      },
+      {
+        case: "경상",
+        value: 0,
+      },
+      {
+        case: "전라",
+        value: 0,
+      },
+      {
+        case: "제주",
+        value: 0,
+      },
+      {
+        case: "기타",
+        value: 0,
+      },
+    ];
 
+    regionArr = thisClients.map(({ request }) => {
+      return request.space.address.value.trim();
+    });
 
+    for (let str of regionArr) {
+      if (/^서울/gi.test(str) || /^강서/gi.test(str) || /^양천/gi.test(str) || /^구로/gi.test(str) || /^영등포/gi.test(str) || /^금천/gi.test(str)|| /^동작/gi.test(str)|| /^관악/gi.test(str)|| /^서초/gi.test(str)|| /^강남/gi.test(str)|| /^송파/gi.test(str)|| /^강동/gi.test(str)|| /^광진/gi.test(str)|| /^동대문/gi.test(str)|| /^성동/gi.test(str)|| /^중랑/gi.test(str)|| /^성북/gi.test(str)|| /^강북/gi.test(str)|| /^도봉/gi.test(str)|| /^노원/gi.test(str)|| /^종로/gi.test(str)|| /^서대문/gi.test(str)|| /^마포/gi.test(str)|| /^용산/gi.test(str)|| /^은평/gi.test(str)) {
+        regionSet[0].value = regionSet[0].value + 1;
+      } else if (/^경기/gi.test(str) || /^인천/gi.test(str) || /^수원/gi.test(str) || /^부평/gi.test(str) || /^의정부/gi.test(str) || /^부천/gi.test(str) || /^과천/gi.test(str) || /^고양/gi.test(str) || /^시흥/gi.test(str) || /^성남/gi.test(str) || /^파주/gi.test(str) || /^김포/gi.test(str) || /^양주/gi.test(str) || /^남양주/gi.test(str) || /^포천/gi.test(str) || /^안양/gi.test(str) || /^의왕/gi.test(str) || /^광명/gi.test(str) || /^동두천/gi.test(str) || /^화성/gi.test(str) || /^오산/gi.test(str) || /^안성/gi.test(str) || /^평택/gi.test(str) || /^이천/gi.test(str) || /^여주/gi.test(str) || /^안산/gi.test(str) || /^가평/gi.test(str) || /^양평/gi.test(str)) {
+        regionSet[1].value = regionSet[1].value + 1;
+      } else if (/^충청/gi.test(str) || /^충북/gi.test(str) || /^충남/gi.test(str) || /^세종/gi.test(str) || /^대전/gi.test(str) || /^충주/gi.test(str)) {
+        regionSet[2].value = regionSet[2].value + 1;
+      } else if (/^강원/gi.test(str) || /^원주/gi.test(str) || /^강릉/gi.test(str) || /^속초/gi.test(str)) {
+        regionSet[3].value = regionSet[3].value + 1;
+      } else if (/^경상/gi.test(str) || /^경북/gi.test(str) || /^경남/gi.test(str) || /^부산/gi.test(str) || /^울산/gi.test(str) || /^대구/gi.test(str)) {
+        regionSet[4].value = regionSet[4].value + 1;
+      } else if (/^전라/gi.test(str) || /^전북/gi.test(str) || /^전남/gi.test(str) || /^광주/gi.test(str) || /^전주/gi.test(str)) {
+        regionSet[5].value = regionSet[5].value + 1;
+      } else if (/^제주/gi.test(str)) {
+        regionSet[6].value = regionSet[6].value + 1;
+      } else {
+        console.log(str);
+        regionSet[7].value = regionSet[7].value + 1;
+      }
+    }
+
+    regionSet.forEach((obj, index) => {
+      obj.ratio = regionArr.length === 0 ? 0 : obj.value / regionArr.length
+    });
+
+    resultObj.region = {
+      total: {
+        metropolitan: {
+          value: regionSet[0].value + regionSet[1].value,
+          ratio: regionSet[0].ratio + regionSet[1].ratio,
+        },
+        nonMetropolitan: {
+          value: regionSet[2].value + regionSet[3].value + regionSet[4].value + regionSet[5].value + regionSet[6].value + regionSet[7].value,
+          ratio: 1 - (regionSet[0].ratio + regionSet[1].ratio),
+        }
+      },
+      detail: regionSet
+    };
 
 
     // design fee
 
+    feeArr = thisProjects.map(({ process }) => {
+      return process.contract.remain.calculation.amount.consumer;
+    });
+
+    feeTotal = feeArr.reduce((acc, curr) => {
+      return acc + curr;
+    }, 0)
+
+    feeAverage = Math.floor((feeArr.length === 0 ? 0 : feeTotal / feeArr.length));
+
+    feeSet = [
+      {
+        case: "100만원 이하",
+        value: 0,
+      },
+      {
+        case: "100만원대",
+        value: 0,
+      },
+      {
+        case: "200만원대",
+        value: 0,
+      },
+      {
+        case: "300만원대",
+        value: 0,
+      },
+      {
+        case: "400만원대",
+        value: 0,
+      },
+      {
+        case: "500만원대",
+        value: 0,
+      },
+      {
+        case: "600만원 이상",
+        value: 0,
+      }
+    ];
 
 
+    for (let number of feeArr) {
+      if (number < 1000000) {
+        feeSet[0].value = feeSet[0].value + 1;
+      } else if (number >= 1000000 && number < 2000000) {
+        feeSet[1].value = feeSet[1].value + 1;
+      } else if (number >= 2000000 && number < 3000000) {
+        feeSet[2].value = feeSet[2].value + 1;
+      } else if (number >= 3000000 && number < 4000000) {
+        feeSet[3].value = feeSet[3].value + 1;
+      } else if (number >= 4000000 && number < 5000000) {
+        feeSet[4].value = feeSet[4].value + 1;
+      } else if (number >= 5000000 && number < 6000000) {
+        feeSet[5].value = feeSet[5].value + 1;
+      } else {
+        feeSet[6].value = feeSet[6].value + 1;
+      }
+    }
+
+    feeSet.forEach((obj, index) => {
+      obj.ratio = feeArr.length === 0 ? 0 : obj.value / feeArr.length
+    });
+
+    resultObj.fee = {
+      total: {
+        average: feeAverage,
+      },
+      detail: feeSet
+    }
 
 
     // family
 
+    familyArr = thisClients.map(({ request }) => {
+      return request.family.value;
+    });
+
+    familySet = [
+      {
+        case: "1인 가구",
+        value: 0,
+      },
+      {
+        case: "부부",
+        value: 0,
+      },
+      {
+        case: "기타",
+        value: 0,
+      },
+    ];
+
+    for (let str of familyArr) {
+      if (/1인/gi.test(str)) {
+        familySet[0].value = familySet[0].value + 1;
+      } else if (/부부/gi.test(str)) {
+        familySet[1].value = familySet[1].value + 1;
+      } else {
+        familySet[2].value = familySet[2].value + 1;
+      }
+    }
+
+    familySet.forEach((obj, index) => {
+      obj.ratio = familyArr.length === 0 ? 0 : obj.value / familyArr.length
+    });
+
+    resultObj.family = {
+      detail: familySet
+    };
 
 
 
+    // living
 
+    livingArr = thisClients.map(({ request }) => {
+      return request.space.resident.living;
+    });
 
+    livingSet = [
+      {
+        case: "이사",
+        value: 0,
+      },
+      {
+        case: "거주중",
+        value: 0,
+      },
+    ];
 
+    for (let boo of livingArr) {
+      if (!boo) {
+        livingSet[0].value = livingSet[0].value + 1;
+      } else {
+        livingSet[1].value = livingSet[1].value + 1;
+      }
+    }
+
+    livingSet.forEach((obj, index) => {
+      obj.ratio = livingArr.length === 0 ? 0 : obj.value / livingArr.length
+    });
+
+    resultObj.living = {
+      detail: livingSet
+    };
+
+    // contract
+
+    contractArr = thisClients.map(({ request }) => {
+      return request.space.contract.value;
+    });
+
+    contractSet = [
+      {
+        case: "자가",
+        value: 0,
+      },
+      {
+        case: "전월세",
+        value: 0,
+      },
+    ];
+
+    for (let str of contractArr) {
+      if (/자가/gi.test(str)) {
+        contractSet[0].value = contractSet[0].value + 1;
+      } else if (/전월세/gi.test(str)) {
+        contractSet[1].value = contractSet[1].value + 1;
+      }
+    }
+
+    contractSet.forEach((obj, index) => {
+      obj.ratio = contractArr.length === 0 ? 0 : obj.value / contractArr.length
+    });
+
+    resultObj.contract = {
+      detail: contractSet
+    };
 
 
     // end
@@ -1586,16 +1840,13 @@ GoogleAnalytics.prototype.complexReport = async function (year, month, selfMongo
     };
 
     // store
-    // rows = await back.mongoRead(collection, { key: finalObj.key }, { selfMongo });
-    // if (rows.length !== 0) {
-    //   await back.mongoDelete(collection, { key: finalObj.key }, { selfMongo });
-    // }
-    // await back.mongoCreate(collection, finalObj, { selfMongo });
+    rows = await back.mongoRead(collection, { key: finalObj.key }, { selfMongo });
+    if (rows.length !== 0) {
+      await back.mongoDelete(collection, { key: finalObj.key }, { selfMongo });
+    }
+    await back.mongoCreate(collection, finalObj, { selfMongo });
 
-    // console.log(finalObj.data);
-
-
-
+    console.log(finalObj.data);
 
     return finalObj;
 
@@ -1657,9 +1908,37 @@ GoogleAnalytics.prototype.complexMatrix = async function (year, month, selfMongo
       [ data.device[1].case, data.device[1].value, data.device[1].ratio, "", "", "", "", "", data.boundSource[2].case, "비율 (%)", data.boundSource[2].boundRate, "" ],
       [ data.device[2].case, data.device[2].value, data.device[2].ratio, "", "전환 비율", "", "", "", data.boundSource[3].case, "비율 (%)", data.boundSource[3].boundRate, "" ],
       [ "", "", "", "", "유형", "값", "비율", "", data.boundSource[4].case, "비율 (%)", data.boundSource[4].boundRate, "" ],
-      [ "", "", "", "", "전체", data.conversion.total.value, data.conversion.total.ratio, "", data.boundSource[5].case, "비율 (%)", data.boundSource[5].boundRate, "" ],
-      [ "", "", "", "", "신청 페이지", data.conversion.consultingPage.value, data.conversion.consultingPage.ratio, "", ],
-      [ "", "", "", "", "신청 팝업", data.conversion.popupOpen.value, data.conversion.popupOpen.ratio, "", ],
+      [ "평수", "", "", "", "전체", data.conversion.total.value, data.conversion.total.ratio, "", data.boundSource[5].case, "비율 (%)", data.boundSource[5].boundRate, "" ],
+      [ "전체 평균", data.pyeong.total.average, "평", "", "신청 페이지", data.conversion.consultingPage.value, data.conversion.consultingPage.ratio, "", ],
+      [ "유형", "값", "비율", "", "신청 팝업", data.conversion.popupOpen.value, data.conversion.popupOpen.ratio, "", ],
+      [ data.pyeong.detail[0].case, data.pyeong.detail[0].value, data.pyeong.detail[0].ratio, "", "", "", "", "", ],
+      [ data.pyeong.detail[1].case, data.pyeong.detail[1].value, data.pyeong.detail[1].ratio, "", "서비스", "", "", "", ],
+      [ data.pyeong.detail[2].case, data.pyeong.detail[2].value, data.pyeong.detail[2].ratio, "", "유형", "값", "비율", "", ],
+      [ data.pyeong.detail[3].case, data.pyeong.detail[3].value, data.pyeong.detail[3].ratio, "", data.service.detail[0].case, data.service.detail[0].value, data.service.detail[0].ratio, "", ],
+      [ data.pyeong.detail[4].case, data.pyeong.detail[4].value, data.pyeong.detail[4].ratio, "", data.service.detail[1].case, data.service.detail[1].value, data.service.detail[1].ratio, "", ],
+      [ data.pyeong.detail[5].case, data.pyeong.detail[5].value, data.pyeong.detail[5].ratio, "", data.service.detail[2].case, data.service.detail[2].value, data.service.detail[2].ratio, "", ],
+      [ data.pyeong.detail[6].case, data.pyeong.detail[6].value, data.pyeong.detail[6].ratio, "", data.service.detail[3].case, data.service.detail[3].value, data.service.detail[3].ratio, "", ],
+      [ "", "", "", "", "", "", "", "", ],
+      [ "지역", "", "", "", "디자인비", "", "", "", ],
+      [ "수도권", data.region.total.metropolitan.value, data.region.total.metropolitan.ratio, "", "전체 평균", data.fee.total.average, "원", "", ],
+      [ "비수도권", data.region.total.nonMetropolitan.value, data.region.total.nonMetropolitan.ratio, "", "유형", "값", "비율", "", ],
+      [ "유형", "값", "비율", "", data.fee.detail[0].case, data.fee.detail[0].value, data.fee.detail[0].ratio, "", ],
+      [ data.region.detail[0].case, data.region.detail[0].value, data.region.detail[0].ratio, "", data.fee.detail[1].case, data.fee.detail[1].value, data.fee.detail[1].ratio, "", ],
+      [ data.region.detail[1].case, data.region.detail[1].value, data.region.detail[1].ratio, "", data.fee.detail[2].case, data.fee.detail[2].value, data.fee.detail[2].ratio, "", ],
+      [ data.region.detail[2].case, data.region.detail[2].value, data.region.detail[2].ratio, "", data.fee.detail[3].case, data.fee.detail[3].value, data.fee.detail[3].ratio, "", ],
+      [ data.region.detail[3].case, data.region.detail[3].value, data.region.detail[3].ratio, "", data.fee.detail[4].case, data.fee.detail[4].value, data.fee.detail[4].ratio, "", ],
+      [ data.region.detail[4].case, data.region.detail[4].value, data.region.detail[4].ratio, "", data.fee.detail[5].case, data.fee.detail[5].value, data.fee.detail[5].ratio, "", ],
+      [ data.region.detail[5].case, data.region.detail[5].value, data.region.detail[5].ratio, "", data.fee.detail[6].case, data.fee.detail[6].value, data.fee.detail[6].ratio, "", ],
+      [ data.region.detail[6].case, data.region.detail[6].value, data.region.detail[6].ratio, "", "", "", "", "", ],
+      [ data.region.detail[7].case, data.region.detail[7].value, data.region.detail[6].ratio, "", "이사 여부", "", "", "", ],
+      [ "", "", "", "", "유형", "값", "비율", "", ],
+      [ "가족 구성", "", "", "", data.living.detail[0].case, data.living.detail[0].value, data.living.detail[0].ratio, "", ],
+      [ "유형", "값", "비율", "", data.living.detail[1].case, data.living.detail[1].value, data.living.detail[1].ratio, "", ],
+      [ data.family.detail[0].case, data.family.detail[0].value, data.family.detail[0].ratio, "", "", "", "", "", ],
+      [ data.family.detail[1].case, data.family.detail[1].value, data.family.detail[1].ratio, "", "계약 상태", "", "", "", ],
+      [ data.family.detail[2].case, data.family.detail[2].value, data.family.detail[2].ratio, "", "유형", "값", "비율", "", ],
+      [ "", "", "", "", data.contract.detail[0].case, data.contract.detail[0].value, data.contract.detail[0].ratio, "", ],
+      [ "", "", "", "", data.contract.detail[1].case, data.contract.detail[1].value, data.contract.detail[1].ratio, "", ],
     ];
 
     lengthMax = matrix.reduce((acc, curr) => {
@@ -1706,6 +1985,343 @@ GoogleAnalytics.prototype.complexMatrix = async function (year, month, selfMongo
   }
 }
 
+GoogleAnalytics.prototype.complexGraph = async function (selfMongo) {
+  const instance = this;
+  const back = this.back;
+  const { dateToString, stringToDate, equalJson } = this.mother;
+  const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
+  const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
+  const sheets = new GoogleSheet();
+  try {
+    const sheetsId = "1wKBOkcUB9eHfI8KgFp-s0IcLFO58B390Z6ghFdOMr_U";
+    const collection = "complexReport";
+    let matrix;
+    let columns;
+    let tempArr;
+    let rows;
+
+    rows = await back.mongoRead(collection, {}, { selfMongo });
+    rows.sort((a, b) => { return a.date.valueOf() - b.date.valueOf() });
+
+    // total - web
+    columns = [
+      "날짜",
+      "MAU",
+      "세션",
+      "페이지뷰",
+    ];
+    matrix = [ columns ];
+    for (let { date, data } of rows) {
+      matrix.push([
+        dateToString(date.from).replace(/\-/gi, ". ").slice(0, 8),
+        data.total.users,
+        data.total.sessions,
+        data.total.views,
+      ]);
+    }
+    await sheets.update_value_inPython(sheetsId, "raw_web", matrix);
+    console.log(matrix);
+
+
+    // total - clients
+    columns = [
+      "날짜",
+      "문의",
+      "계약",
+    ];
+    matrix = [ columns ];
+    for (let { date, data } of rows) {
+      matrix.push([
+        dateToString(date.from).replace(/\-/gi, ". ").slice(0, 8),
+        data.total.request,
+        data.total.contract,
+      ]);
+    }
+    await sheets.update_value_inPython(sheetsId, "raw_clients", matrix);
+    console.log(matrix);
+
+
+    // age
+    columns = [
+      "날짜",
+      rows[0].data.age[0].case,
+      rows[0].data.age[1].case,
+      rows[0].data.age[2].case,
+      rows[0].data.age[3].case,
+      rows[0].data.age[4].case,
+      rows[0].data.age[5].case,
+    ];
+    matrix = [ columns ];
+    for (let { date, data } of rows) {
+      matrix.push([
+        dateToString(date.from).replace(/\-/gi, ". ").slice(0, 8),
+        data.age[0].ratio,
+        data.age[1].ratio,
+        data.age[2].ratio,
+        data.age[3].ratio,
+        data.age[4].ratio,
+        data.age[5].ratio,
+      ]);
+    }
+    await sheets.update_value_inPython(sheetsId, "raw_age", matrix);
+    console.log(matrix);
+
+    // gender
+    columns = [
+      "날짜",
+      rows[0].data.gender[0].case === "여성" ? rows[0].data.gender[0].case : rows[0].data.gender[1].case,
+      rows[0].data.gender[0].case === "여성" ? rows[0].data.gender[1].case : rows[0].data.gender[0].case,
+    ];
+    matrix = [ columns ];
+    for (let { date, data } of rows) {
+      matrix.push([
+        dateToString(date.from).replace(/\-/gi, ". ").slice(0, 8),
+        data.gender[0].case === "여성" ? data.gender[0].ratio : data.gender[1].ratio,
+        data.gender[0].case === "여성" ? data.gender[1].ratio : data.gender[0].ratio,
+      ]);
+    }
+    await sheets.update_value_inPython(sheetsId, "raw_gender", matrix);
+    console.log(matrix);
+
+    // type
+    columns = [
+      "날짜",
+      rows[0].data.type[0].case === "신규" ? rows[0].data.type[0].case : rows[0].data.type[1].case,
+      rows[0].data.type[0].case === "신규" ? rows[0].data.type[1].case : rows[0].data.type[0].case,
+    ];
+    matrix = [ columns ];
+    for (let { date, data } of rows) {
+      matrix.push([
+        dateToString(date.from).replace(/\-/gi, ". ").slice(0, 8),
+        data.type[0].case === "신규" ? data.type[0].ratio : data.type[1].ratio,
+        data.type[0].case === "신규" ? data.type[1].ratio : data.type[0].ratio,
+      ]);
+    }
+    await sheets.update_value_inPython(sheetsId, "raw_type", matrix);
+    console.log(matrix);
+
+    // pyeong
+    columns = [
+      "날짜",
+      rows[0].data.pyeong.detail[0].case,
+      rows[0].data.pyeong.detail[1].case,
+      rows[0].data.pyeong.detail[2].case,
+      rows[0].data.pyeong.detail[3].case,
+      rows[0].data.pyeong.detail[4].case,
+      rows[0].data.pyeong.detail[5].case,
+      rows[0].data.pyeong.detail[6].case,
+    ];
+    matrix = [ columns ];
+    for (let { date, data } of rows) {
+      matrix.push([
+        dateToString(date.from).replace(/\-/gi, ". ").slice(0, 8),
+        data.pyeong.detail[0].ratio,
+        data.pyeong.detail[1].ratio,
+        data.pyeong.detail[2].ratio,
+        data.pyeong.detail[3].ratio,
+        data.pyeong.detail[4].ratio,
+        data.pyeong.detail[5].ratio,
+        data.pyeong.detail[6].ratio,
+      ]);
+    }
+    await sheets.update_value_inPython(sheetsId, "raw_pyeong", matrix);
+    console.log(matrix);
+
+    // region
+    columns = [
+      "날짜",
+      rows[0].data.region.detail[0].case,
+      rows[0].data.region.detail[1].case,
+      rows[0].data.region.detail[2].case,
+      rows[0].data.region.detail[3].case,
+      rows[0].data.region.detail[4].case,
+      rows[0].data.region.detail[5].case,
+      rows[0].data.region.detail[6].case,
+      rows[0].data.region.detail[7].case,
+    ];
+    matrix = [ columns ];
+    for (let { date, data } of rows) {
+      matrix.push([
+        dateToString(date.from).replace(/\-/gi, ". ").slice(0, 8),
+        data.region.detail[0].ratio,
+        data.region.detail[1].ratio,
+        data.region.detail[2].ratio,
+        data.region.detail[3].ratio,
+        data.region.detail[4].ratio,
+        data.region.detail[5].ratio,
+        data.region.detail[6].ratio,
+        data.region.detail[7].ratio,
+      ]);
+    }
+    await sheets.update_value_inPython(sheetsId, "raw_region", matrix);
+    console.log(matrix);
+
+    // family
+    columns = [
+      "날짜",
+      rows[0].data.family.detail[0].case,
+      rows[0].data.family.detail[1].case,
+      rows[0].data.family.detail[2].case,
+    ];
+    matrix = [ columns ];
+    for (let { date, data } of rows) {
+      matrix.push([
+        dateToString(date.from).replace(/\-/gi, ". ").slice(0, 8),
+        data.family.detail[0].ratio,
+        data.family.detail[1].ratio,
+        data.family.detail[2].ratio,
+      ]);
+    }
+    await sheets.update_value_inPython(sheetsId, "raw_family", matrix);
+    console.log(matrix);
+
+    // service
+    columns = [
+      "날짜",
+      rows[0].data.service.detail[0].case,
+      rows[0].data.service.detail[1].case,
+      rows[0].data.service.detail[2].case,
+      rows[0].data.service.detail[3].case,
+    ];
+    matrix = [ columns ];
+    for (let { date, data } of rows) {
+      matrix.push([
+        dateToString(date.from).replace(/\-/gi, ". ").slice(0, 8),
+        data.service.detail[0].ratio,
+        data.service.detail[1].ratio,
+        data.service.detail[2].ratio,
+        data.service.detail[3].ratio,
+      ]);
+    }
+    await sheets.update_value_inPython(sheetsId, "raw_service", matrix);
+    console.log(matrix);
+
+    // fee
+    columns = [
+      "날짜",
+      rows[0].data.fee.detail[0].case,
+      rows[0].data.fee.detail[1].case,
+      rows[0].data.fee.detail[2].case,
+      rows[0].data.fee.detail[3].case,
+      rows[0].data.fee.detail[4].case,
+      rows[0].data.fee.detail[5].case,
+      rows[0].data.fee.detail[6].case,
+    ];
+    matrix = [ columns ];
+    for (let { date, data } of rows) {
+      matrix.push([
+        dateToString(date.from).replace(/\-/gi, ". ").slice(0, 8),
+        data.fee.detail[0].value,
+        data.fee.detail[1].value,
+        data.fee.detail[2].value,
+        data.fee.detail[3].value,
+        data.fee.detail[4].value,
+        data.fee.detail[5].value,
+        data.fee.detail[6].value,
+      ]);
+    }
+    await sheets.update_value_inPython(sheetsId, "raw_fee", matrix);
+    console.log(matrix);
+
+    // source
+    columns = [
+      "날짜",
+      rows[0].data.source[0].case,
+      rows[0].data.source[1].case,
+      rows[0].data.source[2].case,
+      rows[0].data.source[3].case,
+      rows[0].data.source[4].case,
+      rows[0].data.source[5].case,
+    ];
+    matrix = [ columns ];
+    for (let { date, data } of rows) {
+      matrix.push([
+        dateToString(date.from).replace(/\-/gi, ". ").slice(0, 8),
+        data.source[0].ratio,
+        data.source[1].ratio,
+        data.source[2].ratio,
+        data.source[3].ratio,
+        data.source[4].ratio,
+        data.source[5].ratio,
+      ]);
+    }
+    await sheets.update_value_inPython(sheetsId, "raw_source", matrix);
+    console.log(matrix);
+
+    // paid
+    columns = [
+      "날짜",
+      "paid",
+      "non-paid",
+    ];
+    matrix = [ columns ];
+    for (let { date, data } of rows) {
+      matrix.push([
+        dateToString(date.from).replace(/\-/gi, ". ").slice(0, 8),
+        data.ad.total.ratio,
+        1 - data.ad.total.ratio,
+      ]);
+    }
+    await sheets.update_value_inPython(sheetsId, "raw_paid", matrix);
+    console.log(matrix);
+
+    // conversion
+    columns = [
+      "날짜",
+      "전체",
+    ];
+    matrix = [ columns ];
+    for (let { date, data } of rows) {
+      matrix.push([
+        dateToString(date.from).replace(/\-/gi, ". ").slice(0, 8),
+        data.conversion.total.value,
+      ]);
+    }
+    await sheets.update_value_inPython(sheetsId, "raw_conversion", matrix);
+    console.log(matrix);
+
+
+    // living
+    columns = [
+      "날짜",
+      rows[0].data.living.detail[0].case,
+      rows[0].data.living.detail[1].case,
+    ];
+    matrix = [ columns ];
+    for (let { date, data } of rows) {
+      matrix.push([
+        dateToString(date.from).replace(/\-/gi, ". ").slice(0, 8),
+        data.living.detail[0].ratio,
+        data.living.detail[1].ratio,
+      ]);
+    }
+    await sheets.update_value_inPython(sheetsId, "raw_living", matrix);
+    console.log(matrix);
+
+
+    // contract
+    columns = [
+      "날짜",
+      rows[0].data.contract.detail[0].case,
+      rows[0].data.contract.detail[1].case,
+    ];
+    matrix = [ columns ];
+    for (let { date, data } of rows) {
+      matrix.push([
+        dateToString(date.from).replace(/\-/gi, ". ").slice(0, 8),
+        data.contract.detail[0].ratio,
+        data.contract.detail[1].ratio,
+      ]);
+    }
+    await sheets.update_value_inPython(sheetsId, "raw_contract", matrix);
+    console.log(matrix);
+
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 GoogleAnalytics.prototype.complexMonthly = async function (year, month) {
   const instance = this;
   const { mongo, mongoinfo, mongotestinfo, sleep } = this.mother;
@@ -1725,6 +2341,10 @@ GoogleAnalytics.prototype.complexMonthly = async function (year, month) {
     await sleep(1000);
 
     await this.complexMatrix(year, month, selfMongo);
+
+    await sleep(1000);
+
+    await this.complexGraph(selfMongo);
 
     await selfMongo.close();
     await selfCoreMongo.close();
