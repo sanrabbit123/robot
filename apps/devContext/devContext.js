@@ -94,6 +94,20 @@ DevContext.prototype.launching = async function () {
 
 
 
+    // const selfMongo = this.MONGOLOGC;
+    // const collection = "realEstate";
+    //
+    // await selfMongo.connect();
+    //
+    // const rows = await back.mongoRead(collection, {}, { selfMongo });
+    //
+    // await selfMongo.close();
+    //
+    // for (let { data } of rows) {
+    //   console.log(data.trade.detail);
+    // }
+
+
 
 
     /*
@@ -231,7 +245,7 @@ DevContext.prototype.launching = async function () {
         totalArea = dataArray.find((obj) => { return obj["REGION_NM"] === "전국" });
 
         dataObject = {
-          total: {
+          value: {
             total: (totalArea["BULD_USE11_CNT"] + totalArea["BULD_USE12_CNT"] + totalArea["BULD_USE13_CNT"] + totalArea["BULD_USE14_CNT"] + totalArea["BULD_USE15_CNT"] + totalArea["BULD_USE21_CNT"]),
             detail: {
               single: (totalArea["BULD_USE11_CNT"] + totalArea["BULD_USE12_CNT"]),
@@ -250,7 +264,7 @@ DevContext.prototype.launching = async function () {
             name: obj["REGION_NM"],
             code: obj["REGION_CD"],
             metropolitan: (obj["REGION_NM"] === "서울" || obj["REGION_NM"] === "경기" || obj["REGION_NM"] === "인천"),
-            total: {
+            value: {
               total: (obj["BULD_USE11_CNT"] + obj["BULD_USE12_CNT"] + obj["BULD_USE13_CNT"] + obj["BULD_USE14_CNT"] + obj["BULD_USE15_CNT"] + obj["BULD_USE21_CNT"]),
               detail: {
                 single: (obj["BULD_USE11_CNT"] + obj["BULD_USE12_CNT"]),
