@@ -118,7 +118,7 @@ DevContext.prototype.launching = async function () {
     await selfMongo.connect();
 
     const keyConst = "realEstate_contract";
-    const key = "jn8TzcbXN+A7unOqQCG/v/5heYxXqAUyel6pgWL8WvF/XpoX7pcPBL4nffqnL6/yHmOnNA/4Mcugfot/idvTHQ==";
+    const key = "7VuaiHtcKan1rHFT1huoXCufMJYJnmRl0Y5j5E5dyNnrDu2+bNqF2CzcA6M9RZ6n7GTO9xV74nwHxkNv9bkn/Q==";
     const url = "https://api.odcloud.kr/api/RealEstateTradingSvc/v1/getRealEstateTradingCountBuildType";
     const contractUrl = {
       single: "http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcSHRent",
@@ -169,6 +169,15 @@ DevContext.prototype.launching = async function () {
       "cond[DEAL_OBJ::EQ]": "03",
       serviceKey: key
     };
+
+
+    */
+
+
+
+
+
+    /*
 
     index = 1;
     tong = [];
@@ -386,7 +395,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < codeMap.length; i++) {
 
       console.log(codeMap[i].name);
 
