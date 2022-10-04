@@ -727,9 +727,9 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
               "<b%비율%b>을 알려주세요!"
             ],
             items: [
-              "전체 구매",
-              "일부 구매 <b%+ 재배치%b>",
               "재배치",
+              "<b%재배치 + %b>일부 구매",
+              "전체 구매",
             ],
             total: 100,
             ea: '%',
@@ -2256,7 +2256,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
           position: "relative",
           fontSize: String(standardSize) + ea,
           fontWeight: String(700),
-          color: colorChip.black,
+          color: colorChip.shadow,
           top: String(barTextTop) + ea,
         }
       });
@@ -2284,7 +2284,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
           position: "absolute",
           fontSize: String(standardSize) + ea,
           fontWeight: String(700),
-          color: colorChip.shadow,
+          color: colorChip.black,
           right: String(0) + ea,
           top: String(barTextTop) + ea,
         }
