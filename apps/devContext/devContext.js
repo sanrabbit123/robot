@@ -89,24 +89,25 @@ DevContext.prototype.launching = async function () {
     // console.log(pastProposal[0].project.detail);
 
 
+
     // monthly GA report
+
     // const app = new GoogleAnalytics();
-    // await app.complexMonthly(2022, 9);
+    // let pastMonthDate;
+    // pastMonthDate = new Date();
+    // pastMonthDate.setMonth(pastMonthDate.getMonth() - 1);
+    // await app.complexMonthly(pastMonthDate.getFullYear(), pastMonthDate.getMonth() + 1);
+
 
 
     // monthly real estate parsing
+
     // const selfMongo = this.MONGOLOGC;
     // await selfMongo.connect();
     // const LogReport = require(`${process.cwd()}/apps/logConsole/router/logReport.js`);
     // const app = new LogReport(selfMongo);
     // await app.miningRealEstate();
     // await selfMongo.close();
-
-
-
-
-
-
 
 
 
