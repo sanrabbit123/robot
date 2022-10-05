@@ -880,19 +880,16 @@ LogReport.prototype.reportRealEstate = async function () {
     matrix = [
       [
         "날짜",
-
         "전체",
         "거래",
         "매매",
         "분양",
         "전월세",
-
         "수도권 전체",
         "수도권 거래",
         "수도권 매매",
         "수도권 분양",
         "수도권 전월세",
-
         "30-50 수도권 전체",
         "30-50 수도권 거래",
         "30-50 수도권 매매",
@@ -902,36 +899,29 @@ LogReport.prototype.reportRealEstate = async function () {
     ]
 
     for (let obj of rows) {
-
       metropolitanTargets = obj.data.age.detail.filter((o) => { return o.metropolitan });
       metropolitanTotalAge = metropolitanTargets.reduce((acc, curr) => { return acc + curr.value.total }, 0);
       metropolitanTargetAge = metropolitanTargets.map((o) => { return o.value.detail }).map((o) => { return o["age30"] + o["age40"] + o["age50"] }).reduce((acc, curr) => { return acc + curr }, 0);
       metropolitanAgeTargetRatio = (metropolitanTargetAge / metropolitanTotalAge);
-
       tradeRatio = obj.data.type.value.total === 0 ? 0 : obj.data.type.value.detail.trade / obj.data.type.value.total;
       preRatio = obj.data.type.value.total === 0 ? 0 : obj.data.type.value.detail.pre / obj.data.type.value.total;
-
       tradeMetropolitanRatio = obj.data.type.detail.filter((o) => { return o.metropolitan }).reduce((acc, curr) => { return acc + curr.value.total }, 0) === 0 ? 0 : obj.data.type.detail.filter((o) => { return o.metropolitan }).reduce((acc, curr) => { return acc + curr.value.detail.trade }, 0) / obj.data.type.detail.filter((o) => { return o.metropolitan }).reduce((acc, curr) => { return acc + curr.value.total }, 0);
       preMetropolitanRatio = obj.data.type.detail.filter((o) => { return o.metropolitan }).reduce((acc, curr) => { return acc + curr.value.total }, 0) === 0 ? 0 : obj.data.type.detail.filter((o) => { return o.metropolitan }).reduce((acc, curr) => { return acc + curr.value.detail.pre }, 0) / obj.data.type.detail.filter((o) => { return o.metropolitan }).reduce((acc, curr) => { return acc + curr.value.total }, 0);
-
       tradeMetropolitan = obj.data.trade.detail.filter((o) => { return o.metropolitan }).reduce((acc, curr) => { return acc + curr.value.total }, 0);
       rentMetropolitan = obj.data.rent.detail.filter((o) => { return o.metropolitan }).reduce((acc, curr) => { return acc + curr.value.total }, 0);
 
       tempArr = [
         obj.key.split("_")[2].slice(0, -2).slice(0, 4) + ". " + obj.key.split("_")[2].slice(0, -2).slice(-2),
-
         obj.data.trade.value.total + obj.data.rent.value.total,
         obj.data.trade.value.total,
         Math.floor(obj.data.trade.value.total * tradeRatio),
         Math.floor(obj.data.trade.value.total * preRatio),
         obj.data.rent.value.total,
-
         tradeMetropolitan + rentMetropolitan,
         tradeMetropolitan,
         Math.floor(tradeMetropolitan * tradeMetropolitanRatio),
         Math.floor(tradeMetropolitan * preMetropolitanRatio),
         rentMetropolitan,
-
         Math.floor((tradeMetropolitan + rentMetropolitan) * metropolitanAgeTargetRatio),
         Math.floor(tradeMetropolitan * metropolitanAgeTargetRatio),
         Math.floor(tradeMetropolitan * tradeMetropolitanRatio * metropolitanAgeTargetRatio),
@@ -954,9 +944,10 @@ LogReport.prototype.dailyReports = async function () {
   const back = this.back;
   const address = this.address;
   const { host } = this;
-  const { mongo, mongoinfo, requestSystem, autoComma, dateToString, stringToDate, equalJson, errorLog, messageLog, messageSend, serviceParsing, getDateMatrix } = this.mother;
+  const { mongo, mongoinfo, fileSystem, requestSystem, autoComma, dateToString, stringToDate, equalJson, errorLog, messageLog, messageSend, serviceParsing, getDateMatrix } = this.mother;
   const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
   const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
+  const querystring = require("querystring");
   try {
     const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
     const selfCoreMongo = new mongo(mongoinfo, { useUnifiedTopology: true });
@@ -1458,6 +1449,7 @@ LogReport.prototype.dailyReports = async function () {
             let device;
             let referrer, referrerArr;
             let service;
+            let query;
 
             if (users.every((obj) => { return /^New/.test(obj.type); })) {
               returnType = "신규";
@@ -1510,6 +1502,19 @@ LogReport.prototype.dailyReports = async function () {
               targetProject = null;
             }
 
+            query = [];
+            for (let user of users) {
+              for (let { path } of user.history) {
+                query.push(path);
+              }
+              for (let str of user.source.referrer) {
+                query.push(str);
+              }
+            }
+            query = query.filter((str) => { return /\?/gi.test(str); });
+            query = query.map((str) => { return Object.values(querystring.parse(str.split("?")[1])) }).flat();
+            query = [ ...new Set(query.filter((str) => { return /[가-힣ㄱ-ㅎㅏ-ㅣ]/gi.test(str) })) ];
+
             return [
               dateToString(targetDate),
               cliid,
@@ -1532,6 +1537,9 @@ LogReport.prototype.dailyReports = async function () {
               targetProject === null ? "알 수 없음" : (targetProject.service.online ? "온라인" : "오프라인"),
               service,
               targetProject === null ? "알 수 없음" : serviceParsing(targetProject.service.serid),
+              targetRequest.request.etc.comment,
+              targetProject === null ? 0 : targetProject.process.contract.remain.calculation.amount.consumer,
+              query.join(", "),
             ];
           }).filter((arr) => {
             const cliid = arr[1];
@@ -1779,6 +1787,9 @@ LogReport.prototype.dailyReports = async function () {
               "온라인 여부",
               "희망 서비스",
               "계약 서비스",
+              "요청사항",
+              "계약 디자인비",
+              "검색어",
             ]
           ],
           [
@@ -2464,6 +2475,489 @@ LogReport.prototype.dailyReports = async function () {
       }
     }
 
+    // contract clients report
+    const tenthParsingMatrix = async (sixth) => {
+      try {
+        const tenth = equalJson(JSON.stringify(sixth)).slice(1);
+        const length = tenth.length;
+        let regionSet;
+        let pyeongSet;
+        let serviceSet;
+        let familySet;
+        let livingSet;
+        let sourceSet;
+        let budgetSet;
+        let feeSet;
+        let adSet;
+        let ratioFunction, sortFunction, mapFunction;
+        let maxLength;
+        let mapArr;
+
+        ratioFunction = (obj, index) => {
+          obj.ratio = length === 0 ? 0 : obj.value / length
+        };
+        sortFunction = (a, b) => { return b.ratio - a.ratio };
+        mapFunction = (obj) => {
+          return [ obj.case, obj.value, obj.ratio ];
+        };
+
+        regionSet = [
+          {
+            case: "서울",
+            value: 0,
+          },
+          {
+            case: "경기",
+            value: 0,
+          },
+          {
+            case: "충청",
+            value: 0,
+          },
+          {
+            case: "강원",
+            value: 0,
+          },
+          {
+            case: "경상",
+            value: 0,
+          },
+          {
+            case: "전라",
+            value: 0,
+          },
+          {
+            case: "제주",
+            value: 0,
+          },
+          {
+            case: "기타",
+            value: 0,
+          },
+        ];
+
+        pyeongSet = [
+          {
+            case: "10평 미만",
+            value: 0,
+          },
+          {
+            case: "10평대",
+            value: 0,
+          },
+          {
+            case: "20평대",
+            value: 0,
+          },
+          {
+            case: "30평대",
+            value: 0,
+          },
+          {
+            case: "40평대",
+            value: 0,
+          },
+          {
+            case: "50평대",
+            value: 0,
+          },
+          {
+            case: "60평 이상",
+            value: 0,
+          }
+        ];
+
+        serviceSet = [
+          {
+            case: "홈퍼니싱",
+            value: 0,
+          },
+          {
+            case: "홈스타일링",
+            value: 0,
+          },
+          {
+            case: "토탈 스타일링",
+            value: 0,
+          },
+          {
+            case: "엑스트라",
+            value: 0,
+          },
+        ];
+
+        familySet = [
+          {
+            case: "1인 가구",
+            value: 0,
+          },
+          {
+            case: "부부",
+            value: 0,
+          },
+          {
+            case: "기타",
+            value: 0,
+          },
+        ];
+
+        livingSet = [
+          {
+            case: "이사",
+            value: 0,
+          },
+          {
+            case: "거주중",
+            value: 0,
+          },
+        ];
+
+        sourceSet = [
+          {
+            case: "메타",
+            value: 0,
+          },
+          {
+            case: "네이버",
+            value: 0,
+          },
+          {
+            case: "구글",
+            value: 0,
+          },
+          {
+            case: "유튜브",
+            value: 0,
+          },
+          {
+            case: "카카오",
+            value: 0,
+          },
+          {
+            case: "기타",
+            value: 0,
+          }
+        ];
+
+        budgetSet = [
+          {
+            case: "500만원 이하",
+            value: 0,
+          },
+          {
+            case: "1,000만원대",
+            value: 0,
+          },
+          {
+            case: "2,000만원대",
+            value: 0,
+          },
+          {
+            case: "3,000만원대",
+            value: 0,
+          },
+          {
+            case: "4,000만원대",
+            value: 0,
+          },
+          {
+            case: "5,000만원대",
+            value: 0,
+          },
+          {
+            case: "6,000만원대",
+            value: 0,
+          },
+          {
+            case: "7,000만원대",
+            value: 0,
+          },
+          {
+            case: "8,000만원대",
+            value: 0,
+          },
+          {
+            case: "9,000만원대",
+            value: 0,
+          },
+          {
+            case: "1억원대",
+            value: 0,
+          },
+        ];
+
+        feeSet = [
+          {
+            case: "100만원 이하",
+            value: 0,
+          },
+          {
+            case: "100만원대",
+            value: 0,
+          },
+          {
+            case: "200만원대",
+            value: 0,
+          },
+          {
+            case: "300만원대",
+            value: 0,
+          },
+          {
+            case: "400만원대",
+            value: 0,
+          },
+          {
+            case: "500만원대",
+            value: 0,
+          },
+          {
+            case: "600만원 이상",
+            value: 0,
+          }
+        ];
+
+        adSet = [
+          {
+            case: "광고 유입",
+            value: 0,
+          },
+          {
+            case: "비광고",
+            value: 0,
+          },
+        ];
+
+        for (let [ date, cliid, name, ids, timeline, contract, type, source, campaign, device, referer, address, pyeong, budget, family, living, expected, total, onoff, service0, service1, comment, fee, query ] of tenth) {
+
+          if (/^서울/gi.test(address) || /^강서/gi.test(address) || /^양천/gi.test(address) || /^구로/gi.test(address) || /^영등포/gi.test(address) || /^금천/gi.test(address)|| /^동작/gi.test(address)|| /^관악/gi.test(address)|| /^서초/gi.test(address)|| /^강남/gi.test(address)|| /^송파/gi.test(address)|| /^강동/gi.test(address)|| /^광진/gi.test(address)|| /^동대문/gi.test(address)|| /^성동/gi.test(address)|| /^중랑/gi.test(address)|| /^성북/gi.test(address)|| /^강북/gi.test(address)|| /^도봉/gi.test(address)|| /^노원/gi.test(address)|| /^종로/gi.test(address)|| /^서대문/gi.test(address)|| /^마포/gi.test(address)|| /^용산/gi.test(address)|| /^은평/gi.test(address)) {
+            regionSet[0].value = regionSet[0].value + 1;
+          } else if (/^경기/gi.test(address) || /^인천/gi.test(address) || /^수원/gi.test(address) || /^부평/gi.test(address) || /^의정부/gi.test(address) || /^부천/gi.test(address) || /^과천/gi.test(address) || /^고양/gi.test(address) || /^시흥/gi.test(address) || /^성남/gi.test(address) || /^파주/gi.test(address) || /^김포/gi.test(address) || /^양주/gi.test(address) || /^남양주/gi.test(address) || /^포천/gi.test(address) || /^안양/gi.test(address) || /^의왕/gi.test(address) || /^광명/gi.test(address) || /^동두천/gi.test(address) || /^화성/gi.test(address) || /^오산/gi.test(address) || /^안성/gi.test(address) || /^평택/gi.test(address) || /^이천/gi.test(address) || /^여주/gi.test(address) || /^안산/gi.test(address) || /^가평/gi.test(address) || /^양평/gi.test(address)) {
+            regionSet[1].value = regionSet[1].value + 1;
+          } else if (/^충청/gi.test(address) || /^충북/gi.test(address) || /^충남/gi.test(address) || /^세종/gi.test(address) || /^대전/gi.test(address) || /^충주/gi.test(address)) {
+            regionSet[2].value = regionSet[2].value + 1;
+          } else if (/^강원/gi.test(address) || /^원주/gi.test(address) || /^강릉/gi.test(address) || /^속초/gi.test(address)) {
+            regionSet[3].value = regionSet[3].value + 1;
+          } else if (/^경상/gi.test(address) || /^경북/gi.test(address) || /^경남/gi.test(address) || /^부산/gi.test(address) || /^울산/gi.test(address) || /^대구/gi.test(address)) {
+            regionSet[4].value = regionSet[4].value + 1;
+          } else if (/^전라/gi.test(address) || /^전북/gi.test(address) || /^전남/gi.test(address) || /^광주/gi.test(address) || /^전주/gi.test(address)) {
+            regionSet[5].value = regionSet[5].value + 1;
+          } else if (/^제주/gi.test(address)) {
+            regionSet[6].value = regionSet[6].value + 1;
+          } else {
+            regionSet[7].value = regionSet[7].value + 1;
+          }
+
+          if (pyeong < 10) {
+            pyeongSet[0].value = pyeongSet[0].value + 1;
+          } else if (pyeong >= 10 && pyeong < 20) {
+            pyeongSet[1].value = pyeongSet[1].value + 1;
+          } else if (pyeong >= 20 && pyeong < 30) {
+            pyeongSet[2].value = pyeongSet[2].value + 1;
+          } else if (pyeong >= 30 && pyeong < 40) {
+            pyeongSet[3].value = pyeongSet[3].value + 1;
+          } else if (pyeong >= 40 && pyeong < 50) {
+            pyeongSet[4].value = pyeongSet[4].value + 1;
+          } else if (pyeong >= 50 && pyeong < 60) {
+            pyeongSet[5].value = pyeongSet[5].value + 1;
+          } else {
+            pyeongSet[6].value = pyeongSet[6].value + 1;
+          }
+
+          if (/1인/gi.test(family)) {
+            familySet[0].value = familySet[0].value + 1;
+          } else if (/부부/gi.test(family)) {
+            familySet[1].value = familySet[1].value + 1;
+          } else {
+            familySet[2].value = familySet[2].value + 1;
+          }
+
+          if (living === "이사") {
+            livingSet[0].value = livingSet[0].value + 1;
+          } else {
+            livingSet[1].value = livingSet[1].value + 1;
+          }
+
+          if (/퍼니싱/gi.test(service1)) {
+            serviceSet[0].value = serviceSet[0].value + 1;
+          } else if (/홈스타일링/gi.test(service1)) {
+            serviceSet[1].value = serviceSet[1].value + 1;
+          } else if (/토탈/gi.test(service1)) {
+            serviceSet[2].value = serviceSet[2].value + 1;
+          } else {
+            serviceSet[3].value = serviceSet[3].value + 1;
+          }
+
+          if (fee < 1000000) {
+            feeSet[0].value = feeSet[0].value + 1;
+          } else if (fee >= 1000000 && fee < 2000000) {
+            feeSet[1].value = feeSet[1].value + 1;
+          } else if (fee >= 2000000 && fee < 3000000) {
+            feeSet[2].value = feeSet[2].value + 1;
+          } else if (fee >= 3000000 && fee < 4000000) {
+            feeSet[3].value = feeSet[3].value + 1;
+          } else if (fee >= 4000000 && fee < 5000000) {
+            feeSet[4].value = feeSet[4].value + 1;
+          } else if (fee >= 5000000 && fee < 6000000) {
+            feeSet[5].value = feeSet[5].value + 1;
+          } else {
+            feeSet[6].value = feeSet[6].value + 1;
+          }
+
+          budget = Number(budget.replace(/[^0-9]/gi, '')) * 10000;
+
+          if (budget < 10000000) {
+            budgetSet[0].value = budgetSet[0].value + 1;
+          } else if (budget >= 10000000 && budget < 20000000) {
+            budgetSet[1].value = budgetSet[1].value + 1;
+          } else if (budget >= 20000000 && budget < 30000000) {
+            budgetSet[2].value = budgetSet[2].value + 1;
+          } else if (budget >= 30000000 && budget < 40000000) {
+            budgetSet[3].value = budgetSet[3].value + 1;
+          } else if (budget >= 40000000 && budget < 50000000) {
+            budgetSet[4].value = budgetSet[4].value + 1;
+          } else if (budget >= 50000000 && budget < 60000000) {
+            budgetSet[5].value = budgetSet[5].value + 1;
+          } else if (budget >= 60000000 && budget < 70000000) {
+            budgetSet[6].value = budgetSet[6].value + 1;
+          } else if (budget >= 70000000 && budget < 80000000) {
+            budgetSet[7].value = budgetSet[7].value + 1;
+          } else if (budget >= 80000000 && budget < 90000000) {
+            budgetSet[8].value = budgetSet[8].value + 1;
+          } else if (budget >= 90000000 && budget < 100000000) {
+            budgetSet[9].value = budgetSet[9].value + 1;
+          } else {
+            budgetSet[10].value = budgetSet[10].value + 1;
+          }
+
+          if (/facebook/gi.test(source) || /instagram/gi.test(source)) {
+            sourceSet[0].value = sourceSet[0].value + 1;
+          } else if (/naver/gi.test(source)) {
+            sourceSet[1].value = sourceSet[1].value + 1;
+          } else if (/google/gi.test(source)) {
+            sourceSet[2].value = sourceSet[2].value + 1;
+          } else if (/youtube/gi.test(source)) {
+            sourceSet[3].value = sourceSet[3].value + 1;
+          } else if (/daum/gi.test(source) || /kakao/gi.test(source)) {
+            sourceSet[4].value = sourceSet[4].value + 1;
+          } else {
+            sourceSet[5].value = sourceSet[5].value + 1;
+          }
+
+          if (campaign.trim() === "" || /not set/gi.test(campaign.trim())) {
+            adSet[1].value = adSet[1].value + 1;
+          } else {
+            adSet[0].value = adSet[0].value + 1;
+          }
+
+        }
+
+        regionSet.forEach(ratioFunction);
+        regionSet.sort(sortFunction);
+
+        pyeongSet.forEach(ratioFunction);
+        pyeongSet.sort(sortFunction);
+
+        serviceSet.forEach(ratioFunction);
+        serviceSet.sort(sortFunction);
+
+        familySet.forEach(ratioFunction);
+        familySet.sort(sortFunction);
+
+        livingSet.forEach(ratioFunction);
+        livingSet.sort(sortFunction);
+
+        sourceSet.forEach(ratioFunction);
+        sourceSet.sort(sortFunction);
+
+        budgetSet.forEach(ratioFunction);
+        budgetSet.sort(sortFunction);
+
+        feeSet.forEach(ratioFunction);
+        feeSet.sort(sortFunction);
+
+        adSet.forEach(ratioFunction);
+        adSet.sort(sortFunction);
+
+
+        mapArr = [
+          regionSet.map(mapFunction),
+          pyeongSet.map(mapFunction),
+          serviceSet.map(mapFunction),
+          familySet.map(mapFunction),
+          livingSet.map(mapFunction),
+          sourceSet.map(mapFunction),
+          budgetSet.map(mapFunction),
+          feeSet.map(mapFunction),
+          adSet.map(mapFunction),
+        ];
+
+        maxLength = mapArr.reduce((acc, curr) => { return acc >= curr.length ? acc : curr.length }, 0);
+        mapArr = mapArr.map((arr) => {
+          let thisLength;
+          thisLength = arr.length;
+          for (let i = 0; i < maxLength - thisLength; i++) {
+            arr.push([ "", "", "" ]);
+          }
+          return arr;
+        })
+
+        for (let z = 1; z < mapArr.length; z++) {
+          for (let i = 0; i < mapArr[0].length; i++) {
+            mapArr[0][i].push('');
+            mapArr[0][i].push(mapArr[z][i][0]);
+            mapArr[0][i].push(mapArr[z][i][1]);
+            mapArr[0][i].push(mapArr[z][i][2]);
+          }
+        }
+
+        mapArr = mapArr[0];
+        mapArr.unshift([
+          "지역",
+          "",
+          "",
+          "",
+          "평",
+          "",
+          "",
+          "",
+          "서비스",
+          "",
+          "",
+          "",
+          "가족 구성",
+          "",
+          "",
+          "",
+          "이사 여부",
+          "",
+          "",
+          "",
+          "소스",
+          "",
+          "",
+          "",
+          "예산",
+          "",
+          "",
+          "",
+          "디자인비",
+          "",
+          "",
+          "",
+          "광고 여부",
+          "",
+          "",
+          "",
+        ])
+
+        return mapArr;
+
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
     const zeroSheetsId = "1tS-lRBb3yXIC9N-1jgQH--rbigqujGcLRRXEXWCG7xk";
     const firstSheetsId = "1QaJfS2EkrPxek3l1OFBFBoJrOjDh7BiEXFO5tx4rJP4";
     const secondSheetsId = "14xqEKuEhIlTEQL44RlgwPGgdO3TiI8SidNCb7k1y4PU";
@@ -2474,6 +2968,7 @@ LogReport.prototype.dailyReports = async function () {
     const seventhSheetsId = "1XvZGAalipoQFzwWM178_c8Ect6n2hRf_MV5OfSXGfl8";
     const eighthSheetsId = "1TPSsXlaNz8ZssqImPZUYTZvnsqRuInSQXaAoFJ-CttU";
     const ninthSheetsId = "1ocaqxxtKIXdyEKV9SodBQW-IzoCWUe8L_dTjKOLGMe8";
+    const tenthSheetsId = "18-Kpl062mlA9fyTXgP_RWZvmhCZsg1sMi0Y0cx4qaS0";
 
     const monthSheets = {
       totalFunnelMonthMatrix: "1jmbTM-pKZ6hwWtQyEsQPuKsT2t3YtVsEo6XuU6kqENU",
@@ -2496,6 +2991,9 @@ LogReport.prototype.dailyReports = async function () {
     } = await marketingBasicMatrix(startDay);
     const [ eighth ] = await saDefaultMatrix(startDay);
     const [ ninth ] = await subAnalyticsMatrix(startDay);
+    const tenth = await tenthParsingMatrix(sixth);
+
+    // sheets update
 
     await sheets.update_value_inPython(firstSheetsId, "", first);
     await sheets.update_value_inPython(secondSheetsId, "", second);
@@ -2506,6 +3004,7 @@ LogReport.prototype.dailyReports = async function () {
     await sheets.update_value_inPython(seventhSheetsId, "", seventh);
     await sheets.update_value_inPython(eighthSheetsId, "", eighth);
     await sheets.update_value_inPython(ninthSheetsId, "", ninth);
+    await sheets.update_value_inPython(tenthSheetsId, "", tenth);
 
     await sheets.update_value_inPython(monthSheets.totalFunnelMonthMatrix, "", totalFunnelMonthMatrix);
     await sheets.update_value_inPython(monthSheets.facebookPaidMonthMatrix, "", facebookPaidMonthMatrix);

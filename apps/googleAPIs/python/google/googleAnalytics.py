@@ -131,6 +131,37 @@ class GoogleAnalytics:
         return dumps(result)
 
 
+    def getGeneralMetricById(self, startDate, endDate, clientId, dimensions):
+        result = self.app.reports().batchGet(
+            body={
+                "reportRequests": [
+                    {
+                        "viewId": self.viewId,
+                        "pageSize": 100000,
+                        "dateRanges": [
+                            { "startDate": startDate, "endDate": endDate }
+                        ],
+                        "dimensions": dimensions,
+                        "dimensionFilterClauses": [
+                            {
+                                "filters": [
+                                    {
+                                        "dimensionName": "ga:clientId",
+                                        "expressions": [ clientId ],
+                                    }
+                                ]
+                            }
+                        ],
+                        "metrics": [
+                            { "expression": "ga:pageviews" },
+                        ]
+                    }
+                ]
+            }).execute()
+
+        return dumps(result)
+
+
     def getUserMetric(self, startDate, endDate, dimensions):
         result = self.app.reports().batchGet(
             body={

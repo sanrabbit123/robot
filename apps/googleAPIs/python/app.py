@@ -107,6 +107,11 @@ try:
         result = analytics.getGeneralMetric(data["startDate"], data["endDate"], data["dimensions"])
         print(result)
 
+    elif argv[1] == 'analytics' and argv[2] == 'getGeneralMetricById':
+        analytics = GoogleAnalytics()
+        result = analytics.getGeneralMetricById(data["startDate"], data["endDate"], data["clientId"], data["dimensions"])
+        print(result)
+
     elif argv[1] == 'analytics' and argv[2] == 'eventMetric':
         analytics = GoogleAnalytics()
         result = analytics.getEventMetric(data["startDate"], data["endDate"], data["dimensions"])
