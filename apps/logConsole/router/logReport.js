@@ -483,6 +483,10 @@ LogReport.prototype.miningRealEstate = async function () {
 
     await this.miningAgeTrade();
 
+    await sleep(1000);
+
+    await this.miningTradeType();
+
     await sleep(2000);
 
     await this.reportRealEstate();
@@ -673,6 +677,178 @@ LogReport.prototype.miningAgeTrade = async function () {
   }
 }
 
+LogReport.prototype.miningTradeType = async function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const { host } = this;
+  const { collection, key, keyConst } = this.realEstate;
+  const { fileSystem, requestSystem, autoComma, dateToString, stringToDate, equalJson, errorLog, messageLog, messageSend, serviceParsing, getDateMatrix, sleep } = this.mother;
+  const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
+  try {
+    const selfMongo = this.mongo;
+    const url = "https://api.odcloud.kr/api/RealEstateTradingSvc/v1/getRealEstateTradingCountReason";
+    let res;
+    let now, treeMonthAgo;
+    let index, tong;
+    let filteredTong;
+    let year;
+    let month;
+    let yearMonthTargets;
+    let thisDate;
+    let tong2;
+    let nextDate;
+    let endDate;
+    let tempObj;
+    let dataArray;
+    let dataObject;
+    let thisKey;
+    let whereQuery, updateQuery;
+
+    now = new Date();
+
+    treeMonthAgo = new Date();
+    treeMonthAgo.setMonth(treeMonthAgo.getMonth() - 1);
+    treeMonthAgo.setMonth(treeMonthAgo.getMonth() - 1);
+    treeMonthAgo.setMonth(treeMonthAgo.getMonth() - 1);
+
+    year = treeMonthAgo.getFullYear();
+    month = treeMonthAgo.getMonth() + 1;
+
+    yearMonthTargets = [];
+    while (true) {
+      if (((year * 12) + month) >= (((now.getFullYear() * 12) + (now.getMonth() + 1)))) {
+        break;
+      }
+      yearMonthTargets.push(String(year) + zeroAddition(month));
+      thisDate = new Date(year, month - 1, 1);
+      thisDate.setMonth(thisDate.getMonth() + 1);
+      year = thisDate.getFullYear();
+      month = thisDate.getMonth() + 1;
+    }
+
+    requestObj = {
+      returnType: "JSON",
+      "cond[RESEARCH_DATE::GTE]": String(treeMonthAgo.getFullYear()) + zeroAddition(treeMonthAgo.getMonth() + 1),
+      "cond[DEAL_OBJ::EQ]": "03",
+      serviceKey: key
+    };
+
+    index = 1;
+    tong = [];
+
+    do {
+
+      try {
+
+        console.log("try " + String(index) + " page request");
+
+        res = await requestSystem(url, {
+          page: index,
+          perPage: 100,
+          ...requestObj
+        }, {
+          method: "get",
+          headers: {
+            Authorization: key
+          }
+        });
+
+        if (typeof res.data === "object" && res.data !== null) {
+          if (Array.isArray(res.data.data)) {
+            if (res.data.data.length > 0) {
+              for (let obj of res.data.data) {
+                tong.push(equalJson(JSON.stringify(obj)));
+              }
+            } else {
+              break;
+            }
+          } else {
+            break;
+          }
+        } else {
+          throw new Error("");
+        }
+
+        index++;
+
+        await sleep(500);
+
+      } catch (e) {
+        console.log(e);
+        console.log("try again : " + String(index))
+      }
+
+    } while (true);
+
+
+    tong.sort((a, b) => { return Number(a["RESEARCH_DATE"]) - Number(b["RESEARCH_DATE"]) });
+    filteredTong = tong.filter((obj) => { return /000$/.test(obj["REGION_CD"]) });
+
+    tong2 = [];
+    for (let str of yearMonthTargets) {
+
+      dataArray = filteredTong.filter((obj) => { return obj["RESEARCH_DATE"] === str });
+      if (dataArray.length > 0) {
+
+        thisDate = new Date(Number(str.slice(0, 4)), Number(str.slice(-2)) - 1, 1);
+        nextDate = new Date(Number(str.slice(0, 4)), Number(str.slice(-2)) - 1, 1);
+        nextDate.setMonth(nextDate.getMonth() + 1);
+        endDate = new Date(Number(str.slice(0, 4)), Number(str.slice(-2)) - 1, 1);
+        endDate.setMonth(endDate.getMonth() + 1);
+        endDate.setDate(endDate.getDate() - 1);
+
+        thisKey = keyConst + "_" + dateToString(thisDate).replace(/\-/gi, '') + "_" + dateToString(endDate).replace(/\-/gi, '');
+
+        totalArea = dataArray.find((obj) => { return obj["REGION_NM"] === "전국" });
+
+        dataObject = {
+          value: {
+            total: totalArea["ALL_CNT"],
+            detail: {
+              trade: totalArea["DEAL1_CNT"],
+              pre: totalArea["DEAL990_CNT"] + totalArea["DEAL991_CNT"] + totalArea["DEAL992_CNT"],
+              etc: totalArea["ALL_CNT"] - totalArea["DEAL1_CNT"] - (totalArea["DEAL990_CNT"] + totalArea["DEAL991_CNT"] + totalArea["DEAL992_CNT"]),
+            }
+          },
+          detail: [],
+        };
+
+        dataArray = dataArray.filter((obj) => { return obj["REGION_NM"] !== "전국" });
+
+        for (let obj of dataArray) {
+          dataObject.detail.push({
+            name: obj["REGION_NM"],
+            code: obj["REGION_CD"],
+            metropolitan: (obj["REGION_NM"] === "서울" || obj["REGION_NM"] === "경기" || obj["REGION_NM"] === "인천"),
+            value: {
+              total: obj["ALL_CNT"],
+              detail: {
+                trade: obj["DEAL1_CNT"],
+                pre: obj["DEAL990_CNT"] + obj["DEAL991_CNT"] + obj["DEAL992_CNT"],
+                etc: obj["ALL_CNT"] - obj["DEAL1_CNT"] - (obj["DEAL990_CNT"] + obj["DEAL991_CNT"] + obj["DEAL992_CNT"]),
+              }
+            }
+          });
+        }
+
+        dataObject.detail.sort((a, b) => { return Number(a.code) - Number(b.code) });
+
+        whereQuery = { key: thisKey };
+        updateQuery = {};
+        updateQuery["data.type"] = dataObject;
+        await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+
+        console.log(whereQuery, updateQuery);
+
+      }
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 LogReport.prototype.reportRealEstate = async function () {
   const instance = this;
   const back = this.back;
@@ -691,6 +867,11 @@ LogReport.prototype.reportRealEstate = async function () {
     let matrix;
     let metropolitanTargets;
     let metropolitanTotalAge, metropolitanTargetAge;
+    let metropolitanAgeTargetRatio;
+    let preRatio, tradeRatio;
+    let preMetropolitanRatio, tradeMetropolitanRatio;
+    let tradeMetropolitan;
+    let rentMetropolitan;
 
     rows = await back.mongoRead(collection, {}, { selfMongo });
 
@@ -699,33 +880,63 @@ LogReport.prototype.reportRealEstate = async function () {
     matrix = [
       [
         "날짜",
+
         "전체",
+        "거래",
         "매매",
+        "분양",
         "전월세",
+
         "수도권 전체",
+        "수도권 거래",
         "수도권 매매",
+        "수도권 분양",
         "수도권 전월세",
+
         "30-50 수도권 전체",
+        "30-50 수도권 거래",
         "30-50 수도권 매매",
+        "30-50 수도권 분양",
         "30-50 수도권 전월세",
       ]
     ]
 
     for (let obj of rows) {
+
       metropolitanTargets = obj.data.age.detail.filter((o) => { return o.metropolitan });
       metropolitanTotalAge = metropolitanTargets.reduce((acc, curr) => { return acc + curr.value.total }, 0);
       metropolitanTargetAge = metropolitanTargets.map((o) => { return o.value.detail }).map((o) => { return o["age30"] + o["age40"] + o["age50"] }).reduce((acc, curr) => { return acc + curr }, 0);
+      metropolitanAgeTargetRatio = (metropolitanTargetAge / metropolitanTotalAge);
+
+      tradeRatio = obj.data.type.value.total === 0 ? 0 : obj.data.type.value.detail.trade / obj.data.type.value.total;
+      preRatio = obj.data.type.value.total === 0 ? 0 : obj.data.type.value.detail.pre / obj.data.type.value.total;
+
+      tradeMetropolitanRatio = obj.data.type.detail.filter((o) => { return o.metropolitan }).reduce((acc, curr) => { return acc + curr.value.total }, 0) === 0 ? 0 : obj.data.type.detail.filter((o) => { return o.metropolitan }).reduce((acc, curr) => { return acc + curr.value.detail.trade }, 0) / obj.data.type.detail.filter((o) => { return o.metropolitan }).reduce((acc, curr) => { return acc + curr.value.total }, 0);
+      preMetropolitanRatio = obj.data.type.detail.filter((o) => { return o.metropolitan }).reduce((acc, curr) => { return acc + curr.value.total }, 0) === 0 ? 0 : obj.data.type.detail.filter((o) => { return o.metropolitan }).reduce((acc, curr) => { return acc + curr.value.detail.pre }, 0) / obj.data.type.detail.filter((o) => { return o.metropolitan }).reduce((acc, curr) => { return acc + curr.value.total }, 0);
+
+      tradeMetropolitan = obj.data.trade.detail.filter((o) => { return o.metropolitan }).reduce((acc, curr) => { return acc + curr.value.total }, 0);
+      rentMetropolitan = obj.data.rent.detail.filter((o) => { return o.metropolitan }).reduce((acc, curr) => { return acc + curr.value.total }, 0);
+
       tempArr = [
         obj.key.split("_")[2].slice(0, -2).slice(0, 4) + ". " + obj.key.split("_")[2].slice(0, -2).slice(-2),
+
         obj.data.trade.value.total + obj.data.rent.value.total,
         obj.data.trade.value.total,
+        Math.floor(obj.data.trade.value.total * tradeRatio),
+        Math.floor(obj.data.trade.value.total * preRatio),
         obj.data.rent.value.total,
-        (obj.data.trade.detail.filter((o) => { return o.metropolitan }).reduce((acc, curr) => { return acc + curr.value.total }, 0) + obj.data.rent.detail.filter((o) => { return o.metropolitan }).reduce((acc, curr) => { return acc + curr.value.total }, 0)),
-        obj.data.trade.detail.filter((o) => { return o.metropolitan }).reduce((acc, curr) => { return acc + curr.value.total }, 0),
-        obj.data.rent.detail.filter((o) => { return o.metropolitan }).reduce((acc, curr) => { return acc + curr.value.total }, 0),
-        Math.floor((obj.data.trade.detail.filter((o) => { return o.metropolitan }).reduce((acc, curr) => { return acc + curr.value.total }, 0) + obj.data.rent.detail.filter((o) => { return o.metropolitan }).reduce((acc, curr) => { return acc + curr.value.total }, 0)) * (metropolitanTargetAge / metropolitanTotalAge)),
-        Math.floor(obj.data.trade.detail.filter((o) => { return o.metropolitan }).reduce((acc, curr) => { return acc + curr.value.total }, 0) * (metropolitanTargetAge / metropolitanTotalAge)),
-        Math.floor(obj.data.rent.detail.filter((o) => { return o.metropolitan }).reduce((acc, curr) => { return acc + curr.value.total }, 0) * (metropolitanTargetAge / metropolitanTotalAge)),
+
+        tradeMetropolitan + rentMetropolitan,
+        tradeMetropolitan,
+        Math.floor(tradeMetropolitan * tradeMetropolitanRatio),
+        Math.floor(tradeMetropolitan * preMetropolitanRatio),
+        rentMetropolitan,
+
+        Math.floor((tradeMetropolitan + rentMetropolitan) * metropolitanAgeTargetRatio),
+        Math.floor(tradeMetropolitan * metropolitanAgeTargetRatio),
+        Math.floor(tradeMetropolitan * tradeMetropolitanRatio * metropolitanAgeTargetRatio),
+        Math.floor(tradeMetropolitan * preMetropolitanRatio * metropolitanAgeTargetRatio),
+        Math.floor(rentMetropolitan * metropolitanAgeTargetRatio),
       ];
       matrix.push(tempArr);
     }

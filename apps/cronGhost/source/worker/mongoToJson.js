@@ -29,7 +29,7 @@ const worker = async function (package) {
       [ "mongoinfo", "mongo" ],
       [ "backinfo", "console" ],
       [ "pythoninfo", "python" ],
-      // [ "testinfo", "log" ],
+      [ "testinfo", "log" ],
     ];
     const robotDirArr = process.cwd().split("/");
     robotDirArr.pop();
