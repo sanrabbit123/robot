@@ -329,7 +329,7 @@ ProcessDetailJs.prototype.insertProcessBox = function () {
           if (toggle === "off") {
             this.children[1].style.color = colorChip.green;
           } else {
-            this.children[1].style.color = colorChip.white;
+            this.children[1].style.color = colorChip.green;
           }
 
         },
@@ -341,7 +341,7 @@ ProcessDetailJs.prototype.insertProcessBox = function () {
           if (toggle === "off") {
             this.children[1].style.color = colorChip.black;
           } else {
-            this.children[1].style.color = colorChip.white;
+            this.children[1].style.color = colorChip.black;
           }
 
         },
@@ -360,12 +360,12 @@ ProcessDetailJs.prototype.insertProcessBox = function () {
             for (let dom of siblings) {
               if (dom !== this) {
                 dom.setAttribute("toggle", "off");
-                dom.children[0].querySelector("path").setAttribute("fill", sNum % 2 === 0 ? colorChip.gray3 : colorChip.gray1);
+                // dom.children[0].querySelector("path").setAttribute("fill", sNum % 2 === 0 ? colorChip.gray3 : colorChip.gray1);
                 dom.children[1].style.color = colorChip.black;
               } else {
                 dom.setAttribute("toggle", "on");
-                dom.children[0].querySelector("path").setAttribute("fill", colorChip.black);
-                dom.children[1].style.color = colorChip.white;
+                // dom.children[0].querySelector("path").setAttribute("fill", colorChip.green);
+                dom.children[1].style.color = colorChip.black;
               }
               sNum++;
             }
@@ -398,7 +398,7 @@ ProcessDetailJs.prototype.insertProcessBox = function () {
       children: [
         {
           mode: "svg",
-          source: svgMaker.processArrow(arrowWidth, arrowHeight, (i % 2 === 0 ? colorChip.gray2 : colorChip.gray0)),
+          source: desktop ? svgMaker.processArrow(arrowWidth, arrowHeight, (i % 2 === 0 ? colorChip.gray2 : colorChip.gray0)) : svgMaker.processArrow(arrowWidth, arrowHeight, ((i === 0 || i === 3 || i === 4 || i === 7) ? colorChip.gray2 : colorChip.gray0)),
           style: {
             position: "absolute",
             top: String(0),
@@ -447,7 +447,7 @@ ProcessDetailJs.prototype.insertProcessBox = function () {
       children: [
         {
           mode: "svg",
-          source: svgMaker.processArrow(arrowWidth, arrowHeight, colorChip.gray1),
+          source: svgMaker.processArrow(arrowWidth, arrowHeight, colorChip.gray2),
           style: {
             position: "absolute",
             top: String(0),
@@ -1115,7 +1115,8 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
             top: String(contentsTextTop) + ea,
             fontSize: String(contentsWordingSize) + ea,
             fontWeight: String(800),
-            color: i === this.targetIndex ? colorChip.green : colorChip.black,
+            // color: i === this.targetIndex ? colorChip.green : colorChip.black,
+            color: colorChip.black,
           }
         }
       ]
