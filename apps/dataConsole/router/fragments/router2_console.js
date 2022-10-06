@@ -2203,6 +2203,7 @@ DataRouter.prototype.rou_post_sendCertification = function () {
   const back = this.back;
   const human = this.human;
   const kakao = this.kakao;
+  const { errorLog } = this.mother;
   let obj = {};
   obj.link = [ "/sendCertification" ];
   obj.func = async function (req, res) {
@@ -2214,6 +2215,7 @@ DataRouter.prototype.rou_post_sendCertification = function () {
     });
     try {
       const { name, phone, certification } = req.body;
+      errorLog("인증번호 요청 감지 : " + name + " / " + phone + " / " + certification).catch((e) => { console.log(e); });
       await human.sendSms({
         name,
         phone,
@@ -2227,7 +2229,7 @@ DataRouter.prototype.rou_post_sendCertification = function () {
       });
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_sendCertification): " + e.message).catch((e) => { console.log(e); });
+      errorLog("Console 서버 문제 생김 (rou_post_sendCertification): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
