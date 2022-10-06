@@ -2215,18 +2215,26 @@ DataRouter.prototype.rou_post_sendCertification = function () {
     });
     try {
       const { name, phone, certification } = req.body;
+
       errorLog("인증번호 요청 감지 : " + name + " / " + phone + " / " + certification).catch((e) => { console.log(e); });
+
       human.sendSms({
         name,
         phone,
         subject: "휴대폰 인증",
         contents: "[홈리에종] 안녕하세요! " + name + "님,\n휴대폰 인증번호를 보내드립니다.\n\n인증번호 : " + certification + "\n\n인증번호를 팝업창에 입력해주세요!"
+      }).then(() => {
+        return errorLog("인증번호 문자 전송 완료");
       }).catch((e) => { console.log(e); });
+
       kakao.sendTalk("certification", name, phone, {
         company: "홈리에종",
         name,
         certification
+      }).then(() => {
+        return errorLog("인증번호 카카오 전송 완료");
       }).catch((e) => { console.log(e); });
+
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
       errorLog("Console 서버 문제 생김 (rou_post_sendCertification): " + e.message).catch((e) => { console.log(e); });
