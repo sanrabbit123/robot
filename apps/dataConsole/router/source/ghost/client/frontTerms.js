@@ -298,7 +298,7 @@ FrontTermsJs.prototype.insertTermsBox = async function () {
 
     mobileQuestionMarginBottom = 1.5;
 
-    ({ policy } = await ajaxJson({}, "https://" + GHOSTHOST + "/designerProposal_policy"));
+    ({ policy } = await ajaxJson({}, BACKHOST + "/designerProposal_policy"));
 
     whiteBlock = createNode({
       mother: baseTong,

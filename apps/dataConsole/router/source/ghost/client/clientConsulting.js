@@ -2175,7 +2175,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       b.style.fontWeight = String(600);
     }
   }).catch(function (err) {
-    throw new Error(err);
+    console.log(err);
   });
 
 }

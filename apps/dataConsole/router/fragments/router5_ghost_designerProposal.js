@@ -97,7 +97,10 @@ DataRouter.prototype.rou_post_designerProposal_policy = function () {
       res.send(JSON.stringify(resultObj));
     } catch (e) {
       await errorLog("Console 서버 문제 생김 (rou_post_designerProposal_policy): " + e.message);
-      console.log(e);
+      res.send(JSON.stringify({
+        policy: DataRouter.policy(),
+        button: DataRouter.policyButton(),
+      }));
     }
   }
   return obj;
