@@ -2925,6 +2925,7 @@ DataRouter.prototype.rou_post_sendCertification = function () {
   const back = this.back;
   const human = this.human;
   const kakao = this.kakao;
+  const { errorLog } = this.mother;
   let obj = {};
   obj.link = [ "/sendCertification" ];
   obj.func = async function (req, res) {
@@ -2936,20 +2937,29 @@ DataRouter.prototype.rou_post_sendCertification = function () {
     });
     try {
       const { name, phone, certification } = req.body;
-      await human.sendSms({
+
+      errorLog("인증번호 요청 감지 : " + name + " / " + phone + " / " + certification).catch((e) => { console.log(e); });
+
+      human.sendSms({
         name,
         phone,
         subject: "휴대폰 인증",
         contents: "[홈리에종] 안녕하세요! " + name + "님,\n휴대폰 인증번호를 보내드립니다.\n\n인증번호 : " + certification + "\n\n인증번호를 팝업창에 입력해주세요!"
-      });
-      await kakao.sendTalk("certification", name, phone, {
+      }).then(() => {
+        return errorLog("인증번호 문자 전송 완료");
+      }).catch((e) => { console.log(e); });
+
+      kakao.sendTalk("certification", name, phone, {
         company: "홈리에종",
         name,
         certification
-      });
-      res.send(JSON.stringify({ message: "success" }));
+      }).then(() => {
+        return errorLog("인증번호 카카오 전송 완료");
+      }).catch((e) => { console.log(e); });
+
+      res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_sendCertification): " + e.message).catch((e) => { console.log(e); });
+      errorLog("Console 서버 문제 생김 (rou_post_sendCertification): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -5913,7 +5923,10 @@ DataRouter.prototype.rou_post_designerProposal_policy = function () {
       res.send(JSON.stringify(resultObj));
     } catch (e) {
       await errorLog("Console 서버 문제 생김 (rou_post_designerProposal_policy): " + e.message);
-      console.log(e);
+      res.send(JSON.stringify({
+        policy: DataRouter.policy(),
+        button: DataRouter.policyButton(),
+      }));
     }
   }
   return obj;
