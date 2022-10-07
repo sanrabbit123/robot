@@ -109,7 +109,7 @@ DevContext.prototype.launching = async function () {
     // await selfMongo.close();
 
 
-    
+
 
 
 
@@ -2969,9 +2969,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "김민영",
-    //     designer: "우다미",
-    //     link: "https://drive.google.com/drive/folders/1kL3Uo-iytxWixdYJNIh8f_qwjwL3WipK",
+    //     client: "서신혜",
+    //     designer: "김윤진",
+    //     link: "https://drive.google.com/drive/folders/1T5aug535XCwqxsDWz1MNm-3Hq3r2KKYp",
     //     pay: true
     //   },
     // ]);
