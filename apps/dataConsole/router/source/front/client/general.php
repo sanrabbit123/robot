@@ -16,9 +16,11 @@ class GeneralPhp {
     $gtagId = "UA-97880990-1";
     $googleSearchId = "YRxCc6xhQlM3qTygta5Qw0CObJJrLDYmUE8_wCR0AQc";
     $naverSearchId = "59096f538ddb9a8704025cefc11269d504f62aac";
+    $naverLogId = "s_dc977e44f53";
     $facebookId = "814052605684956";
     $indexName = "frontIndex";
     $hostLink = "https://".$this->host;
+    $curationName = "styleCuration";
 
     // head
     $html = '<!DOCTYPE html>'."\n";
@@ -64,11 +66,44 @@ class GeneralPhp {
     $html .= '}'."\n";
     $html .= '</script>'."\n";
 
+    // facebook
+    $html .= '<!-- Meta Pixel Code -->'."\n";
+    $html .= '<script>'."\n";
+    $html .= '!function(f,b,e,v,n,t,s)'."\n";
+    $html .= '{if(f.fbq)return;n=f.fbq=function(){n.callMethod?'."\n";
+    $html .= 'n.callMethod.apply(n,arguments):n.queue.push(arguments)};'."\n";
+    $html .= 'if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version="2.0";'."\n";
+    $html .= 'n.queue=[];t=b.createElement(e);t.async=!0;'."\n";
+    $html .= 't.src=v;s=b.getElementsByTagName(e)[0];'."\n";
+    $html .= 's.parentNode.insertBefore(t,s)}(window, document,"script","https://connect.facebook.net/en_US/fbevents.js");'."\n";
+    $html .= 'fbq("init", "'.$facebookId.'");'."\n";
+    $html .= 'fbq("track", "PageView");'."\n";
+    $html .= '</script>'."\n";
+    $html .= '<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id='.$facebookId.'&ev=PageView&noscript=1" /></noscript>'."\n";
+    $html .= '<!-- End Meta Pixel Code -->'."\n";
+
     // body
     $html .= '</head><body>'."\n";
     $html .= '<div style="display: none;position: absolute;opacity: 0;font-size: 0px;">'.$this->hiddenHtml($hiddenString).'</div>'."\n";
     $html .= '<div id="totalcontents"></div>'."\n";
     $html .= '<script src="/middle/'.$name.'.js"></script>'."\n";
+
+    // naver
+    $html .= '<script type="text/javascript" src="//wcs.naver.net/wcslog.js"></script>'."\n";
+    if ($name === $curationName) {
+      $html .= '<script type="text/javascript">'."\n";
+      $html .= 'var _nasa = {};'."\n";
+      $html .= 'if (window.wcs) { _nasa["cnv"] = wcs.cnv("4","1"); }'."\n";
+      $html .= '</script>'."\n";
+    }
+    $html .= '<script type="text/javascript">'."\n";
+    $html .= 'if (!wcs_add) { var wcs_add = {}; }'."\n";
+    $html .= 'wcs_add["wa"] = "'.$naverLogId.'";'."\n";
+    $html .= 'if (!_nasa) { var _nasa={}; }'."\n";
+    $html .= 'if (window.wcs) { wcs.inflow(); wcs_do(_nasa); }'."\n";
+    $html .= '</script>'."\n";
+
+    // body end
     $html .= '</body></html>';
 
     return $html;

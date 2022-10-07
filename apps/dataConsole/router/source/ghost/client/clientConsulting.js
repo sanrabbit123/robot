@@ -774,7 +774,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
           {
             mode: "iframe",
             attribute: [
-              { src: window.location.protocol + "//" + GHOSTHOST + "/tools/addressLite" },
+              { src: FRONTHOST + "/engine/address.php" },
               { width: String(100) + '%' },
               { height: String(100) + '%' },
             ],
