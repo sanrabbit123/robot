@@ -332,10 +332,8 @@ GoogleAnalytics.prototype.getUserById = async function (date, clientId) {
       return arr[1] !== "(not set)";
     });
 
-    console.log(matrix);
-
     if (matrix.length > 0) {
-      userTong.source.campaign = matrix[0][1];
+      userTong.source.campaign = matrix.reduce((acc, arr) => { return acc + arr[1] + ", " }, "").slice(0, -2);
     } else {
       userTong.source.campaign = "(not set)";
     }
