@@ -2184,7 +2184,7 @@ ClientConsultingJs.prototype.finalSubmit = function () {
   const instance = this;
   const inputClassName = "inputClassName";
   const agreeTargetClassName = "agreeTargetClassName";
-  const { ajaxJson, colorChip, findByAttribute, scrollTo, dateToString, sleep, selfHref, homeliaisonAnalytics } = GeneralJs;
+  const { ajaxJson, colorChip, findByAttribute, scrollTo, dateToString, sleep, selfHref, homeliaisonAnalytics, setQueue } = GeneralJs;
   return async function (e) {
     try {
       const property = "property";
@@ -2329,6 +2329,11 @@ ClientConsultingJs.prototype.finalSubmit = function () {
                 document.body.removeChild(back);
                 selfHref(FRONTHOST + "/curation.php?cliid=" + cliid);
               });
+              setQueue(() => {
+                document.body.removeChild(box);
+                document.body.removeChild(back);
+                selfHref(FRONTHOST + "/curation.php?cliid=" + cliid);
+              }, 30 * 1000);
             } catch (e) {
               await ajaxJson({ message: "FrontAboutJs.certificationBox : " + e.message }, BACKHOST + "/errorLog");
             }

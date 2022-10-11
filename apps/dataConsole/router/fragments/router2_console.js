@@ -1862,7 +1862,7 @@ DataRouter.prototype.rou_post_proposalReset = function () {
                   requestObj.silent = true;
                 }
 
-                requestSystem("https://" + address.homeinfo.ghost.host + "/styleCuration_updateCalculation", requestObj, { headers: { "origin": "https://" + address.homeinfo.ghost.host, "Content-Type": "application/json" } }).then(() => {
+                requestSystem("https://" + address.backinfo.host + "/styleCuration_updateCalculation", requestObj, { headers: { "origin": "https://" + address.backinfo.host, "Content-Type": "application/json" } }).then(() => {
                   //pass
                 }).catch((err) => {
                   console.log(err);
@@ -4316,7 +4316,7 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
         const now = new Date();
         const client = await back.getClientById(project.cliid, { selfMongo: instance.mongo });
         const cliid = client.cliid;
-        const host = instance.address.homeinfo.ghost.host;
+        const host = instance.address.backinfo.host;
         const path = "estimation";
         const needs = "style," + project.desid + "," + project.proid + "," + (project.service.online ? "online" : "offline");
         const name = client.name;
@@ -4749,7 +4749,7 @@ DataRouter.prototype.rou_post_userSubmit = function () {
       // alimtalk
       await kakao.sendTalk("miniConsulting", name, phone, {
         client: name,
-        host: instance.address.homeinfo.ghost.host,
+        host: instance.address.backinfo.host,
         path: "miniGuide",
         useid: useid,
       });

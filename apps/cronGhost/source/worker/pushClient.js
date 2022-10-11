@@ -34,7 +34,6 @@ const worker = async function (package) {
     })
 
     for (let request of requests) {
-      console.log(request.name, request.phone, request.cliid, address.homeinfo.ghost.host, "curation");
       await kakao.sendTalk("pushClient", request.name, request.phone, {
         client: request.name,
         host: address.frontinfo.host,

@@ -46,7 +46,7 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
             to: action,
             randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
           }
-        }, { headers: { "origin": "https://" + address.homeinfo.ghost.host, "Content-Type": "application/json" } });
+        }, { headers: { "origin": "https://" + address.backinfo.host, "Content-Type": "application/json" } });
       }).then(() => {
         let updateObj;
         updateObj = {};
@@ -59,7 +59,7 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
       await instance.kakao.sendTalk("designerSelect", name, phone, {
         client: name,
         designer: designer,
-        host: address.homeinfo.ghost.host,
+        host: address.backinfo.host,
         path: "estimation",
         cliid: cliid,
         needs: ("style," + desid + "," + proid + "," + method),

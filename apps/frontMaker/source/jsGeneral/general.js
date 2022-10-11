@@ -5758,6 +5758,8 @@ GeneralJs.homeliaisonAnalytics = function (obj) {
           } else {
             reject("input must be { page: String, standard: Date, action: String, data: Object } }");
           }
+        } else {
+          reject("invaild input");
         }
       } else {
         reject("there is no gtag");

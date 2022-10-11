@@ -191,7 +191,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
               position: "requests." + String(requestNumber) + ".analytics.response.action",
               pastValue: client.requests[requestNumber].analytics.response.action.value,
               finalValue: action
-            }, { headers: { "origin": "https://" + address.homeinfo.ghost.host, "Content-Type": "application/json" } });
+            }, { headers: { "origin": "https://" + address.backinfo.host, "Content-Type": "application/json" } });
           // } else {
           //   return passPromise();
           // }
@@ -213,7 +213,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
                 to: action,
                 randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
               }
-            }, { headers: { "origin": "https://" + address.homeinfo.ghost.host, "Content-Type": "application/json" } });
+            }, { headers: { "origin": "https://" + address.backinfo.host, "Content-Type": "application/json" } });
           // } else {
           //   return passPromise();
           // }
@@ -258,7 +258,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
         if (Number(req.body.fromConsole) !== 1) {
           await instance.kakao.sendTalk("curationComplete", client.name, client.phone, {
             client: client.name,
-            // host: instance.address.homeinfo.ghost.host,
+            // host: instance.address.backinfo.host,
             // path: "aboutService",
             // cliid: client.cliid,
           });
@@ -309,10 +309,10 @@ DataRouter.prototype.rou_post_styleCuration_styleCheckComplete = function () {
       //   DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] = null;
       // }
       // DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] = setTimeout(async () => {
-      //   await requestSystem("https://" + instance.address.homeinfo.ghost.host + "/styleCuration_updateCalculation", { cliid, coreQuery: {}, historyQuery: {}, mode: "" }, {
+      //   await requestSystem("https://" + instance.address.backinfo.host + "/styleCuration_updateCalculation", { cliid, coreQuery: {}, historyQuery: {}, mode: "" }, {
       //     headers: {
       //       "Content-Type": "application/json",
-      //       "origin": instance.address.homeinfo.ghost.host,
+      //       "origin": instance.address.backinfo.host,
       //     }
       //   })
       // }, 30 * 60 * 1000);
