@@ -207,7 +207,7 @@ StylePartsJs.prototype.insertInitBox = function () {
       display: "inline-flex",
       position: "relative",
       flexDirection: "column",
-      paddingTop: String(200) + ea,
+      paddingTop: String(210) + ea,
     },
     children: [
       {
