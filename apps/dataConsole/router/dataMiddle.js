@@ -91,7 +91,7 @@ MiddleCommunication.prototype.baseHtml = async function (target, req, selfMongo,
     if (/localhost/gi.test(req.get("host"))) {
       gtagId = "G-6KYB6YEQLS";
       gtagManagerId = "GTM-KWJRN5N";
-    } else if (req.get("host").trim() === address.homeinfo.ghost.host.trim()) {
+    } else if (req.get("host").trim() === address.backinfo.host.trim()) {
       gtagId = "G-N81TTVHYK4";
       gtagManagerId = "GTM-W6FSR8M";
     } else {

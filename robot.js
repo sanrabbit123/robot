@@ -195,7 +195,7 @@ Robot.prototype.proposalMaker = function (button, arg) {
         position: "requests." + String(requestNumber) + ".analytics.response.action",
         pastValue: client.requests[requestNumber].analytics.response.action.value,
         finalValue: action
-      }, { headers: { "origin": "https://" + instance.address.homeinfo.ghost.host, "Content-Type": "application/json" } });
+      }, { headers: { "origin": "https://" + instance.address.backinfo.host, "Content-Type": "application/json" } });
 
     }).then(() => {
 
@@ -226,7 +226,7 @@ Robot.prototype.proposalMaker = function (button, arg) {
           to: action,
           randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
         }
-      }, { headers: { "origin": "https://" + instance.address.homeinfo.ghost.host, "Content-Type": "application/json" } });
+      }, { headers: { "origin": "https://" + instance.address.backinfo.host, "Content-Type": "application/json" } });
 
     }).then(() => {
 
@@ -355,16 +355,6 @@ Robot.prototype.taxBill = async function () {
     const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
     const app = new BillMaker();
     await app.taxBill();
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-Robot.prototype.cashReceipt = async function () {
-  try {
-    const { shell, shellLink } = this.mother;
-    const url = "https://" + this.address.homeinfo.ghost.host + ":" + String(this.address.homeinfo.ghost.graphic.port[0]) + "/cash";
-    shell.exec(`curl ${url}`);
   } catch (e) {
     console.log(e);
   }
@@ -1179,13 +1169,6 @@ const MENU = {
   graphicServer: async function () {
     try {
       await robot.graphicServer();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  cashReceipt: async function () {
-    try {
-      await robot.cashReceipt();
     } catch (e) {
       console.log(e);
     }

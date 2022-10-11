@@ -2333,7 +2333,7 @@ ClientConsultingJs.prototype.finalSubmit = function () {
                 document.body.removeChild(box);
                 document.body.removeChild(back);
                 selfHref(FRONTHOST + "/curation.php?cliid=" + cliid);
-              }, 30 * 1000);
+              }, 20 * 1000);
             } catch (e) {
               await ajaxJson({ message: "FrontAboutJs.certificationBox : " + e.message }, BACKHOST + "/errorLog");
             }

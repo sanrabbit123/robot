@@ -1013,7 +1013,7 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
           }).then(() => {
             errorLog("현금 영수증 관련 핸드폰 번호 감지 => " + phone).catch((e) => { console.log(e); });
             // if (/^010/.test(phone)) {
-            //   return requestSystem(`https://${instance.address.homeinfo.ghost.host}:${String(instance.address.homeinfo.ghost.graphic.port[0])}/receiptSend`, {
+            //   return requestSystem(`https://${instance.address.backinfo.host}:${String(instance.address.backinfo.graphic.port[0])}/receiptSend`, {
             //     amount: String(amount),
             //     phone,
             //   }, { headers: { "Content-Type": "application/json" } });
@@ -2064,7 +2064,7 @@ ReceiptRouter.prototype.rou_post_serviceConverting = function () {
             pastservice: serviceParsing(report.service.from),
             newservice: serviceParsing(report.service.to),
             total: autoComma(Math.abs(report.request.from.consumer - report.request.to.consumer)),
-            host: address.homeinfo.ghost.host,
+            host: address.backinfo.host,
             path: "estimation",
             cliid: client.cliid,
             needs: "style," + project.desid + "," + proid + "," + (report.service.to.online ? "online" : "offline"),
@@ -2203,7 +2203,7 @@ ReceiptRouter.prototype.rou_post_designerConverting = function () {
           client: client.name,
           pastdesigner: pastDesigner.designer,
           newdesigner: designer.designer,
-          host: address.homeinfo.ghost.host,
+          host: address.backinfo.host,
           total: autoComma(Math.abs(report.request.from.consumer - report.request.to.consumer)),
           path: "estimation",
           cliid: client.cliid,

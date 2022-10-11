@@ -894,7 +894,7 @@ DataConsole.prototype.connect = async function () {
       isLocal = false;
       MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
       console.log(`\x1b[33m%s\x1b[0m`, `set DB server => ${this.address.mongoinfo.host}`);
-      MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
       console.log(`\x1b[33m%s\x1b[0m`, `set SSE server => ${this.address.backinfo.host}`);
     }
     console.log(``);
@@ -960,6 +960,8 @@ DataConsole.prototype.connect = async function () {
             instance.address.frontinfo.host + ":3000",
             instance.address.homeinfo.ghost.host,
             instance.address.homeinfo.ghost.host + ":3000",
+            instance.address.backinfo.host,
+            instance.address.backinfo.host + ":3000",
             instance.address.pythoninfo.host,
             instance.address.pythoninfo.host + ":3000",
             instance.address.testinfo.host,

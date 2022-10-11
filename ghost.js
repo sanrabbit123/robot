@@ -2672,7 +2672,7 @@ Ghost.prototype.ghostRouter = function (needs) {
           throw new Error("invalid post");
         }
         const { data } = equalJson(req.body);
-        await requestSystem("https://" + instance.address.homeinfo.ghost.host + ":" + String(instance.address.homeinfo.ghost.graphic.port[0]) + "/apartment", data, { headers: { "Content-Type": "application/json" } });
+
         res.send(JSON.stringify({ message: "done" }));
       } catch (e) {
         res.send(JSON.stringify({ message: "error : " + e.message }));
