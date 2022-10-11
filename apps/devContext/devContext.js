@@ -2969,9 +2969,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "서신혜",
-    //     designer: "김윤진",
-    //     link: "https://drive.google.com/drive/folders/1T5aug535XCwqxsDWz1MNm-3Hq3r2KKYp",
+    //     client: "박희상",
+    //     designer: "박미연",
+    //     link: "https://drive.google.com/drive/folders/1wwQf0aiq6h1d8kEXXg9yFW0EAtEZU-9S",
     //     pay: true
     //   },
     // ]);
@@ -2988,11 +2988,11 @@ DevContext.prototype.launching = async function () {
     // let clientName, designerName;
     //
     //
-    // clientName = "김민영";
-    // designerName = "우다미";
+    // clientName = "박희상";
+    // designerName = "박미연";
     //
-    // shareGoogleIdClient = "1UDF4NTH7srZ_hPdLGKqOdBR-29DN33uu";
-    // shareGoogleIdDesigner = "1Lzn5jfsSC5NaqW_GjGtlSKFlq0v6_Rv1";
+    // shareGoogleIdClient = "1ArLBJJnPiOJLrOQWqQTkY24akgmudkPr";
+    // shareGoogleIdDesigner = "1PJczF03e1yGO5bfV27deHj7MpgT9040L";
     //
     //
     // projects = await back.getProjectsByNames([ clientName, designerName ]);
@@ -3014,7 +3014,7 @@ DevContext.prototype.launching = async function () {
     //     if (/OK/gi.test(consoleQInput.trim())) {
     //       await kakaoInstance.sendTalk("photoShareClient", clientObj.name, clientObj.phone, { client: clientObj.name, file: shareGoogleIdClient });
     //       await kakaoInstance.sendTalk("photoShareDesigner", designerObj.designer, designerObj.information.phone, { client: clientObj.name, designer: designerObj.designer, file: shareGoogleIdDesigner });
-    //       await messageSend({ text: `${designerObj.designer} 디자이너, ${clientObj.name} 고객님께 사진 공유 알림톡을 전송하였습니다!`, channel: `#502_sns_contents` });
+    //       await messageSend({ text: `${designerObj.designer} 디자이너, ${clientObj.name} 고객님께 사진 공유 알림톡을 전송하였습니다!`, channel: `#502_sns_contents`, voice: true });
     //     }
     //   }
     // }

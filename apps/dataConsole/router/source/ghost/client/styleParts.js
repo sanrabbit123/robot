@@ -111,14 +111,134 @@ StylePartsJs.prototype.slimNavigator = function () {
 
 StylePartsJs.prototype.insertInitBox = function () {
   const instance = this;
-  const { totalContents, ea, standardWidth, media } = this;
+  const { totalContents, ea, standardWidth, media, baseTong } = this;
   const { createNode, withOut, colorChip, cleanChildren, selfHref } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
+  let baseMother;
+  let svgBox;
+  let contents;
+  let initSize, initWeight;
+  let initBoldWeight, initLineHeight;
+  let initSecondMarginTop;
 
+  initSize = <%% 15, 15, 14, 13, 3 %%>;
+  initWeight = <%% 400, 400, 400, 400, 400 %%>;
+  initBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+  initLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
+  initSecondMarginTop = <%% 16, 16, 16, 16, 16 %%>;
 
+  svgBox = this.returnSvgBox();
+  contents = {
+    year: (new Date()).getFullYear(),
+    init: [
+      [
+        "최소한의 시공으로 내 집과",
+        "나에게 적합한 컨디션의 스타일링.",
+        "<b%시공 비용은 줄이고, 집 전체 스타일링",
+        "결과물에 대한 만족도는 올리고,%b>",
+      ],
+      [
+        "홈리에종은 시공부터 시작하여",
+        "가구, 패브릭, 소품까지 전문적인",
+        "<b%스타일링을 완성하는 고객 맞춤형",
+        "인테리어를 지향%b>합니다.",
+      ]
+    ],
+    context: [
+      {
+        title: "HomeLiaison",
+        hangul: "홈리에종 소개",
+      },
+      {
+        title: "About",
+        hangul: "서비스 소개",
+      },
+      {
+        title: "Style parts",
+        hangul: "스타일 파츠",
+      },
+      {
+        title: "Benefits",
+        hangul: "서비스 혜택"
+      },
+      {
+        title: "Process",
+        hangul: "서비스 과정",
+      }
+    ]
+  };
 
+  baseMother = createNode({
+    mother: baseTong,
+    style: {
+      display: "flex",
+      position: "relative",
+      flexDirection: "row",
+      width: String(standardWidth) + ea,
+      left: withOut(50, standardWidth / 2, ea),
+      height: String(800) + ea,
+    }
+  });
 
+  createNode({
+    mother: baseMother,
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      flexDirection: "column",
+    },
+    children: [
+      {
+        mode: "svg",
+        source: svgBox.init.title(colorChip.realBlack),
+        style: {
+          display: "block",
+          position: "relative",
+          width: String(270) + ea,
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: baseMother,
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      flexDirection: "column",
+      paddingTop: String(200) + ea,
+    },
+    children: [
+      {
+        text: contents.init[0].join("\n"),
+        style: {
+          fontSize: String(initSize) + ea,
+          fontWeight: String(initWeight),
+          color: colorChip.black,
+          lineHeight: String(initLineHeight),
+        },
+        bold: {
+          fontWeight: String(initBoldWeight),
+          color: colorChip.black,
+        }
+      },
+      {
+        text: contents.init[1].join("\n"),
+        style: {
+          marginTop: String(initSecondMarginTop) + ea,
+          fontSize: String(initSize) + ea,
+          fontWeight: String(initWeight),
+          color: colorChip.black,
+          lineHeight: String(initLineHeight),
+        },
+        bold: {
+          fontWeight: String(initBoldWeight),
+          color: colorChip.black,
+        }
+      }
+    ]
+  });
 
 }
 
