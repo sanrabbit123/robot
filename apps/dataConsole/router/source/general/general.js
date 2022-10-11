@@ -4537,7 +4537,7 @@ GeneralJs.prototype.certificationBox = function (name, phone, callback) {
   GeneralJs.ajaxJson({
     message: "인증번호 감지 (브라우저)",
     channel: "#error_log",
-  }, BACKHOST + "/sendSlack").catch((err) => {});
+  }, LOGHOST + "/errorMessage").catch((err) => {});
 
   GeneralJs.ajaxJson({
     name,
@@ -4547,7 +4547,7 @@ GeneralJs.prototype.certificationBox = function (name, phone, callback) {
     GeneralJs.ajaxJson({
       message: "인증번호 오류 (브라우저) => " + err.message,
       channel: "#error_log",
-    }, BACKHOST + "/sendSlack").catch((err) => {});
+    }, LOGHOST + "/errorMessage").catch((err) => {});
     GeneralJs.ajaxJson({
       name,
       phone,

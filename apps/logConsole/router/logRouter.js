@@ -714,6 +714,34 @@ LogRouter.prototype.rou_post_marketingMessage = function () {
   return obj;
 }
 
+LogRouter.prototype.rou_post_errorMessage = function () {
+  const instance = this;
+  const { errorLog } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/errorMessage" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.text === undefined) {
+        throw new Error("invaild post, must be text");
+      }
+      const { text } = req.body;
+      await errorLog(text);
+      res.send(JSON.stringify({ message: "done" }));
+    } catch (e) {
+      errorLog("Log console 서버 문제 생김 (rou_post_errorMessage): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 LogRouter.policy = function () {
