@@ -112,7 +112,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await findCode("servehttp");
+
 
 
 
@@ -3093,8 +3093,8 @@ DevContext.prototype.launching = async function () {
     // send sms
     // const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
     // const human = new HumanPacket();
-    // const name = "신은경";
-    // const amount = 4138000;
+    // const name = "이지현";
+    // const amount = 9179500;
     // await human.sendSms({
     //   name: "",
     //   phone: "01055432039",
