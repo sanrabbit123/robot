@@ -197,6 +197,7 @@ GoogleAnalytics.prototype.getUserById = async function (date, clientId) {
     let result;
     let matrix;
     let userTong;
+    let sourceMotherArr, campaignArr;
 
     console.log(`parsing ${clientId}...`);
 
@@ -284,7 +285,22 @@ GoogleAnalytics.prototype.getUserById = async function (date, clientId) {
     matrix = result.rows.map((obj) => { return obj.dimensions });
     matrix.sort((a, b) => { return Number(a[0]) - Number(b[0]) });
     if (matrix.length > 0) {
-      userTong.source.mother = matrix[0][1];
+
+      sourceMotherArr = matrix.map((arr) => { return arr[1]; });
+      sourceMotherArr = sourceMotherArr.map((str) => {
+        if (/naver/gi.test(str)) {
+          return "naver";
+        } else if (/instagram/gi.test(str) || /facebook/gi.test(str)) {
+          return "facebook";
+        } else {
+          return str;
+        }
+      });
+      sourceMotherArr = [ ...new Set(sourceMotherArr) ];
+
+      userTong.source.mother = sourceMotherArr.join(", ");
+    } else {
+      userTong.source.mother = "(direct)";
     }
 
 
@@ -333,7 +349,9 @@ GoogleAnalytics.prototype.getUserById = async function (date, clientId) {
     });
 
     if (matrix.length > 0) {
-      userTong.source.campaign = matrix.reduce((acc, arr) => { return acc + arr[1] + ", " }, "").slice(0, -2);
+      campaignArr = matrix.map((arr) => { return arr[1]; });
+      campaignArr = [ ...new Set(campaignArr) ];
+      userTong.source.campaign = campaignArr.join(", ");
     } else {
       userTong.source.campaign = "(not set)";
     }
