@@ -4544,15 +4544,24 @@ GeneralJs.prototype.certificationBox = function (name, phone, callback) {
     phone,
     certification: randomValue
   }, BACKHOST + "/sendCertification").catch((err) => {
-    GeneralJs.ajax({
-      message: "인증번호 전송 오류 => " + JSON.stringify(err).replace(/[\&\=]/g, '') + ", " + err.message,
+    GeneralJs.ajaxJson({
+      message: "인증번호 오류 (브라우저) => " + err.message,
       channel: "#error_log",
-    }, BACKHOST + "/sendSlack", () => {});
-    GeneralJs.ajax({
+    }, BACKHOST + "/sendSlack").catch((err) => {});
+    GeneralJs.ajaxJson({
       name,
       phone,
       certification: randomValue
-    }, BACKHOST + "/sendCertification", () => {});
+    }, BACKHOST + "/sendCertification").catch((err) => {
+      GeneralJs.ajaxJson({
+        name,
+        phone,
+        certification: randomValue
+      }, BACKHOST + "/sendCertification").catch((err) => {
+        window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+        window.location.reload();
+      });
+    });
   });
 
   let div_back, div_clone, div_clone2, svg_clone;
