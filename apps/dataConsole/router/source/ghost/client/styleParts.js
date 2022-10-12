@@ -112,7 +112,7 @@ StylePartsJs.prototype.slimNavigator = function () {
 StylePartsJs.prototype.insertInitBox = function () {
   const instance = this;
   const { totalContents, ea, standardWidth, media, baseTong } = this;
-  const { createNode, withOut, colorChip, cleanChildren, selfHref } = GeneralJs;
+  const { createNode, withOut, colorChip, cleanChildren, selfHref, ajaxJson } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
   let baseMother;
@@ -174,71 +174,134 @@ StylePartsJs.prototype.insertInitBox = function () {
     style: {
       display: "flex",
       position: "relative",
-      flexDirection: "row",
+      flexDirection: "column",
       width: String(standardWidth) + ea,
       left: withOut(50, standardWidth / 2, ea),
       height: String(800) + ea,
     }
   });
 
+
+  // createNode({
+  //   mother: baseMother,
+  //   style: {
+  //     display: "inline-flex",
+  //     position: "relative",
+  //     flexDirection: "column",
+  //   },
+  //   children: [
+  //     {
+  //       mode: "svg",
+  //       source: svgBox.init.title(colorChip.realBlack),
+  //       style: {
+  //         display: "block",
+  //         position: "relative",
+  //         width: String(270) + ea,
+  //       }
+  //     }
+  //   ]
+  // });
+  //
+  // createNode({
+  //   mother: baseMother,
+  //   style: {
+  //     display: "inline-flex",
+  //     position: "relative",
+  //     flexDirection: "column",
+  //     paddingTop: String(210) + ea,
+  //   },
+  //   children: [
+  //     {
+  //       text: contents.init[0].join("\n"),
+  //       style: {
+  //         fontSize: String(initSize) + ea,
+  //         fontWeight: String(initWeight),
+  //         color: colorChip.black,
+  //         lineHeight: String(initLineHeight),
+  //       },
+  //       bold: {
+  //         fontWeight: String(initBoldWeight),
+  //         color: colorChip.black,
+  //       }
+  //     },
+  //     {
+  //       text: contents.init[1].join("\n"),
+  //       style: {
+  //         marginTop: String(initSecondMarginTop) + ea,
+  //         fontSize: String(initSize) + ea,
+  //         fontWeight: String(initWeight),
+  //         color: colorChip.black,
+  //         lineHeight: String(initLineHeight),
+  //       },
+  //       bold: {
+  //         fontWeight: String(initBoldWeight),
+  //         color: colorChip.black,
+  //       }
+  //     }
+  //   ]
+  // });
+
+
   createNode({
     mother: baseMother,
-    style: {
-      display: "inline-flex",
-      position: "relative",
-      flexDirection: "column",
+    mode: "input",
+    attribute: {
+      type: "text",
     },
-    children: [
-      {
-        mode: "svg",
-        source: svgBox.init.title(colorChip.realBlack),
-        style: {
-          display: "block",
-          position: "relative",
-          width: String(270) + ea,
-        }
-      }
-    ]
+    style: {
+      width: String(200) + ea,
+      height: String(24) + ea,
+      fontSize: String(14) + ea,
+    }
+  });
+
+  const passwords = createNode({
+    mother: baseMother,
+    mode: "input",
+    attribute: {
+      type: "password",
+    },
+    style: {
+      width: String(200) + ea,
+      height: String(24) + ea,
+      fontSize: String(14) + ea,
+      marginTop: String(20) + ea,
+    }
   });
 
   createNode({
     mother: baseMother,
+    event: {
+      click: async function (e) {
+        const message = passwords.value.trim();
+        await ajaxJson({ channel: "#error_log", message }, "/sendSlack");
+
+      }
+    },
     style: {
       display: "inline-flex",
       position: "relative",
-      flexDirection: "column",
-      paddingTop: String(210) + ea,
+      alignItems: "center",
+      width: String(72) + ea,
+      height: String(32) + ea,
+      borderRadius: String(5) + "px",
+      background: colorChip.green,
+      marginTop: String(20) + ea,
+      justifyContent: "center",
+      cursor: "pointer",
     },
     children: [
       {
-        text: contents.init[0].join("\n"),
+        text: "Login",
         style: {
-          fontSize: String(initSize) + ea,
-          fontWeight: String(initWeight),
-          color: colorChip.black,
-          lineHeight: String(initLineHeight),
-        },
-        bold: {
-          fontWeight: String(initBoldWeight),
-          color: colorChip.black,
-        }
-      },
-      {
-        text: contents.init[1].join("\n"),
-        style: {
-          marginTop: String(initSecondMarginTop) + ea,
-          fontSize: String(initSize) + ea,
-          fontWeight: String(initWeight),
-          color: colorChip.black,
-          lineHeight: String(initLineHeight),
-        },
-        bold: {
-          fontWeight: String(initBoldWeight),
-          color: colorChip.black,
+          position: "relative",
+          top: String(-2) + ea,
+          fontSize: String(14) + ea,
+          color: colorChip.white,
         }
       }
     ]
-  });
+  })
 
 }
 

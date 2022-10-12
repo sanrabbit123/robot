@@ -5535,7 +5535,7 @@ BillMaker.prototype.taxBill = async function (pastDateNumber = 2) {
     const host = "imap.daum.net";
     const port = 993;
     const id = "hijinijini0311";
-    const hash = "d3e48a26c2203b3f57af7489f4357a49c1336757d65d49d31455414c3c84e54e";
+    const hash = "3adb36bbfb05e1d4417989068149965e02a70a066a6f84804f8703971d6b2d51";
     const password = "homeliaison";
     const homeTaxEmail = "hometaxadmin@hometax.go.kr";
     const jsdom = require("jsdom");
