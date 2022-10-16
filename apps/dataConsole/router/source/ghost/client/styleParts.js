@@ -343,7 +343,7 @@ StylePartsJs.prototype.insertHeadlineBox = function () {
   let titleSize, titleWeight;
   let wordingBoldWeight;
 
-  leftMotherWidth = <%% 490, 490, 490, 490, 56 %%>;
+  leftMotherWidth = <%% 500, 500, 500, 500, 56 %%>;
   paddingTop = <%% 72, 72, 72, 72, 7 %%>;
   paddingLeft = <%% 72, 72, 72, 72, 7 %%>;
 
@@ -384,7 +384,6 @@ StylePartsJs.prototype.insertHeadlineBox = function () {
       display: "flex",
       flexDirection: "row",
       position: "relative",
-      marginBottom: String(800) + ea,
     }
   });
 
@@ -401,7 +400,6 @@ StylePartsJs.prototype.insertHeadlineBox = function () {
       borderBottomLeftRadius: String(8) + "px",
     }
   });
-
 
   leftMother = createNode({
     mother: baseMother,
@@ -477,7 +475,7 @@ StylePartsJs.prototype.insertHeadlineBox = function () {
       fontWeight: String(wordingBoldWeight),
       color: colorChip.black,
     }
-  })
+  });
 
   createNode({
     mother: leftMother,
@@ -496,11 +494,7 @@ StylePartsJs.prototype.insertHeadlineBox = function () {
       fontWeight: String(wordingBoldWeight),
       color: colorChip.black,
     }
-  })
-
-
-
-
+  });
 
   rightMother = createNode({
     mother: baseMother,
@@ -523,10 +517,140 @@ StylePartsJs.prototype.insertHeadlineBox = function () {
       height: withOut(paddingTop, ea),
       borderTopLeftRadius: String(5) + "px",
       borderTopRightRadius: String(5) + "px",
-      background: colorChip.green,
-      boxShadow: "5px 0px 17px -9px " + colorChip.shadow,
+      backgroundImage: "url('" + StylePartsJs.binaryPath + "/back.jpg" + "')",
+      backgroundSize: "100% auto",
+      backgroundPosition: "0% 0%",
+      boxShadow: "4px 4px 13px -9px " + colorChip.shadow,
     }
   });
+
+  createNode({
+    mother: baseMother,
+    style: {
+      display: "block",
+      position: "absolute",
+      left: String(0) + ea,
+      width: String(window.innerWidth - ((window.innerWidth - standardWidth) / 2)) + ea,
+      height: String(30) + ea,
+      bottom: String(-30) + ea,
+      background: colorChip.white,
+    }
+  });
+
+}
+
+StylePartsJs.prototype.insertLeadBox = function () {
+  const instance = this;
+  const { totalContents, ea, standardWidth, media, baseTong } = this;
+  const { createNode, withOut, colorChip, cleanChildren, selfHref, ajaxJson } = GeneralJs;
+  const mobile = media[4];
+  const desktop = !mobile;
+  let baseMother;
+  let paddingTop;
+  let descriptionBox;
+  let contents;
+
+
+  paddingTop = <%% 168, 168, 168, 168, 16 %%>;
+
+  contents = {
+    title: "디자이너가 이끄는 인테리어",
+    sub: "homeliaison styling",
+    description: [
+      "홈리에종은 과도한 리모델링을 지양하고 꼭 필요한 시공만을 진행하며,",
+      "<b%디자인을 먼저 하는 방식을 통해 인테리어의 효율성을 올리는 방식%b>을 지향합니다.",
+    ]
+  };
+
+  baseMother = createNode({
+    mother: baseTong,
+    style: {
+      display: "flex",
+      position: "relative",
+      flexDirection: "column",
+      width: String(standardWidth) + ea,
+      left: withOut(50, standardWidth / 2, ea),
+      paddingTop: String(paddingTop) + ea,
+      marginBottom: String(800) + ea,
+    }
+  });
+
+  createNode({
+    mother: baseMother,
+    text: contents.title,
+    style: {
+      display: "block",
+      position: "relative",
+      fontSize: String(28) + ea,
+      fontWeight: String(800),
+      color: colorChip.black,
+      width: withOut(0, ea),
+      textAlign: "center",
+      paddingBottom: String(1) + ea,
+    }
+  });
+
+  createNode({
+    mother: baseMother,
+    text: contents.sub,
+    style: {
+      display: "block",
+      position: "relative",
+      fontSize: String(18) + ea,
+      fontWeight: String(500),
+      color: colorChip.deactive,
+      fontFamily: "graphik",
+      fontStyle: "italic",
+      textAlign: "center",
+    }
+  })
+
+  descriptionBox = createNode({
+    mother: baseMother,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: withOut(0, ea),
+      paddingTop: String(32) + ea,
+      textAlign: "center",
+      justifyContent: "center",
+    }
+  });
+
+  createNode({
+    mother: descriptionBox,
+    style: {
+      position: "absolute",
+      height: String(20) + ea,
+      width: withOut(0, ea),
+      borderBottom: "1px solid " + colorChip.gray3,
+    }
+  })
+
+  createNode({
+    mother: descriptionBox,
+    text: contents.description.join("\n"),
+    style: {
+      display: "inline-block",
+      position: "relative",
+      fontSize: String(15) + ea,
+      fontWeight: String(400),
+      color: colorChip.black,
+      lineHeight: String(1.6),
+      textAlign: "center",
+      paddingLeft: String(36) + ea,
+      paddingRight: String(36) + ea,
+      background: colorChip.white,
+    },
+    bold: {
+      fontSize: String(15) + ea,
+      fontWeight: String(700),
+      color: colorChip.black,
+    }
+  })
+
+
+
 
 }
 
@@ -559,6 +683,7 @@ StylePartsJs.prototype.launching = async function (loading) {
           instance.slimNavigator();
           instance.insertInitBox();
           instance.insertHeadlineBox();
+          instance.insertLeadBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "StylePartsJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
         }
