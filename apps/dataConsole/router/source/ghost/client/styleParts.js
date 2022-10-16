@@ -41,7 +41,7 @@ const StylePartsJs = function () {
   this.mother = new GeneralJs();
 }
 
-StylePartsJs.binaryPath = FRONTHOST + "/middle/curation";
+StylePartsJs.binaryPath = "/middle/parts";
 
 StylePartsJs.prototype.returnSvgBox = function () {
   const instance = this;
@@ -121,28 +121,39 @@ StylePartsJs.prototype.insertInitBox = function () {
   let initSize, initWeight;
   let initBoldWeight, initLineHeight;
   let initSecondMarginTop;
+  let leftMother, rightMother;
+  let leftMotherWidth;
+  let initPaddingTop;
+  let titleLogWidth;
+  let titleLogTop;
+  let baseMotherMarginBottom;
 
-  initSize = <%% 15, 15, 14, 13, 3 %%>;
+  initSize = <%% 15, 15, 15, 14, 3 %%>;
   initWeight = <%% 400, 400, 400, 400, 400 %%>;
   initBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   initLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
-  initSecondMarginTop = <%% 16, 16, 16, 16, 16 %%>;
+  initSecondMarginTop = <%% 12, 12, 12, 12, 12 %%>;
+
+  initPaddingTop = <%% 180, 180, 180, 180, 36 %%>;
+
+  leftMotherWidth = <%% 600, 600, 600, 560, 56 %%>;
+
+  titleLogWidth = <%% 250, 250, 250, 230, 40 %%>;
+  titleLogTop = <%% 96, 96, 96, 90, 9 %%>;
+
+  baseMotherMarginBottom = <%% 168, 168, 168, 168, 17 %%>;
 
   svgBox = this.returnSvgBox();
   contents = {
     year: (new Date()).getFullYear(),
     init: [
       [
-        "최소한의 시공으로 내 집과",
-        "나에게 적합한 컨디션의 스타일링.",
-        "<b%시공 비용은 줄이고, 집 전체 스타일링",
-        "결과물에 대한 만족도는 올리고,%b>",
+        "최소한의 시공으로 내 집과 나에게 적합한 컨디션의 스타일링.",
+        "<b%시공 비용은 줄이고, 집 전체 스타일링 결과물에 대한 만족도는 올리고,%b>",
       ],
       [
-        "홈리에종은 시공부터 시작하여",
-        "가구, 패브릭, 소품까지 전문적인",
-        "<b%스타일링을 완성하는 고객 맞춤형",
-        "인테리어를 지향%b>합니다.",
+        "홈리에종은 시공부터 시작하여 가구, 패브릭, 소품까지 전문적인",
+        "<b%스타일링을 완성하는 고객 맞춤형 인테리어를 지향%b>합니다.",
       ]
     ],
     context: [
@@ -174,134 +185,348 @@ StylePartsJs.prototype.insertInitBox = function () {
     style: {
       display: "flex",
       position: "relative",
-      flexDirection: "column",
+      flexDirection: "row",
       width: String(standardWidth) + ea,
       left: withOut(50, standardWidth / 2, ea),
-      height: String(800) + ea,
+      marginBottom: String(baseMotherMarginBottom) + ea,
     }
   });
 
 
-  // createNode({
-  //   mother: baseMother,
-  //   style: {
-  //     display: "inline-flex",
-  //     position: "relative",
-  //     flexDirection: "column",
-  //   },
-  //   children: [
-  //     {
-  //       mode: "svg",
-  //       source: svgBox.init.title(colorChip.realBlack),
-  //       style: {
-  //         display: "block",
-  //         position: "relative",
-  //         width: String(270) + ea,
-  //       }
-  //     }
-  //   ]
-  // });
-  //
-  // createNode({
-  //   mother: baseMother,
-  //   style: {
-  //     display: "inline-flex",
-  //     position: "relative",
-  //     flexDirection: "column",
-  //     paddingTop: String(210) + ea,
-  //   },
-  //   children: [
-  //     {
-  //       text: contents.init[0].join("\n"),
-  //       style: {
-  //         fontSize: String(initSize) + ea,
-  //         fontWeight: String(initWeight),
-  //         color: colorChip.black,
-  //         lineHeight: String(initLineHeight),
-  //       },
-  //       bold: {
-  //         fontWeight: String(initBoldWeight),
-  //         color: colorChip.black,
-  //       }
-  //     },
-  //     {
-  //       text: contents.init[1].join("\n"),
-  //       style: {
-  //         marginTop: String(initSecondMarginTop) + ea,
-  //         fontSize: String(initSize) + ea,
-  //         fontWeight: String(initWeight),
-  //         color: colorChip.black,
-  //         lineHeight: String(initLineHeight),
-  //       },
-  //       bold: {
-  //         fontWeight: String(initBoldWeight),
-  //         color: colorChip.black,
-  //       }
-  //     }
-  //   ]
-  // });
-
-
-  createNode({
+  leftMother = createNode({
     mother: baseMother,
-    mode: "input",
-    attribute: {
-      type: "text",
-    },
-    style: {
-      width: String(200) + ea,
-      height: String(24) + ea,
-      fontSize: String(14) + ea,
-    }
-  });
-
-  const passwords = createNode({
-    mother: baseMother,
-    mode: "input",
-    attribute: {
-      type: "password",
-    },
-    style: {
-      width: String(200) + ea,
-      height: String(24) + ea,
-      fontSize: String(14) + ea,
-      marginTop: String(20) + ea,
-    }
-  });
-
-  createNode({
-    mother: baseMother,
-    event: {
-      click: async function (e) {
-        const message = passwords.value.trim();
-        await ajaxJson({ channel: "#error_log", message }, "/sendSlack");
-
-      }
-    },
     style: {
       display: "inline-flex",
       position: "relative",
-      alignItems: "center",
-      width: String(72) + ea,
-      height: String(32) + ea,
-      borderRadius: String(5) + "px",
-      background: colorChip.green,
-      marginTop: String(20) + ea,
-      justifyContent: "center",
-      cursor: "pointer",
+      flexDirection: "column",
+      width: String(leftMotherWidth) + ea,
+    }
+  })
+
+  createNode({
+    mother: leftMother,
+    style: {
+      display: "flex",
+      position: "relative",
+      flexDirection: "column",
     },
     children: [
       {
-        text: "Login",
+        mode: "svg",
+        source: svgBox.init.title(colorChip.realBlack),
         style: {
+          display: "block",
           position: "relative",
-          top: String(-2) + ea,
-          fontSize: String(14) + ea,
-          color: colorChip.white,
+          width: String(titleLogWidth) + ea,
+          top: String(titleLogTop) + ea,
+        }
+      }
+    ]
+  });
+
+
+  createNode({
+    mother: leftMother,
+    mode: "img",
+    attribute: {
+      src: StylePartsJs.binaryPath + "/initparts.png",
+    },
+    style: {
+      marginTop: String(initPaddingTop) + ea,
+      width: String(100) + ea,
+    }
+  })
+
+  createNode({
+    mother: leftMother,
+    style: {
+      display: "flex",
+      position: "relative",
+      flexDirection: "column",
+      paddingTop: String(21) + ea,
+    },
+    children: [
+      {
+        text: contents.init[0].join("\n"),
+        style: {
+          fontSize: String(initSize) + ea,
+          fontWeight: String(initWeight),
+          color: colorChip.black,
+          lineHeight: String(initLineHeight),
+        },
+        bold: {
+          fontWeight: String(initBoldWeight),
+          color: colorChip.black,
+        }
+      },
+      {
+        text: contents.init[1].join("\n"),
+        style: {
+          marginTop: String(initSecondMarginTop) + ea,
+          fontSize: String(initSize) + ea,
+          fontWeight: String(initWeight),
+          color: colorChip.black,
+          lineHeight: String(initLineHeight),
+        },
+        bold: {
+          fontWeight: String(initBoldWeight),
+          color: colorChip.black,
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: leftMother,
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      borderBottom: "1px solid " + colorChip.gray3,
+      width: String(400) + ea,
+      height: String(40) + ea,
+    }
+  });
+
+  rightMother = createNode({
+    mother: baseMother,
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      flexDirection: "column",
+      width: withOut(leftMotherWidth, ea),
+    }
+  })
+
+  createNode({
+    mother: rightMother,
+    style: {
+      display: "block",
+      position: "relative",
+      width: withOut(0, ea),
+      height: withOut(0, ea),
+      backgroundImage: "url('" + StylePartsJs.binaryPath + "/a1.jpg" + "')",
+      backgroundPosition: "50% 50%",
+      backgroundSize: "100% auto",
+      borderRadius: String(5) + "px",
+      boxShadow: "3px 3px 15px -9px " + colorChip.shadow,
+    }
+  });
+
+  // createNode({
+  //   mother: rightMother,
+  //   style: {
+  //     position: "absolute",
+  //     height: withOut(0, ea),
+  //     width: String((window.innerWidth - standardWidth) / 2) + ea,
+  //     top: String(0),
+  //     right: String(((window.innerWidth - standardWidth) / 2) * -1) + ea,
+  //     background: "#cfb9ad",
+  //   }
+  // });
+
+}
+
+StylePartsJs.prototype.insertHeadlineBox = function () {
+  const instance = this;
+  const { totalContents, ea, standardWidth, media, baseTong } = this;
+  const { createNode, withOut, colorChip, cleanChildren, selfHref, ajaxJson } = GeneralJs;
+  const mobile = media[4];
+  const desktop = !mobile;
+  let baseMother;
+  let rightMother, leftMother;
+  let leftMotherWidth;
+  let paddingTop;
+  let paddingLeft;
+  let wordingSize, wordingWeight;
+  let contents;
+  let aboutSize, aboutWeight;
+  let titleSize, titleWeight;
+  let wordingBoldWeight;
+
+  leftMotherWidth = <%% 490, 490, 490, 490, 56 %%>;
+  paddingTop = <%% 72, 72, 72, 72, 7 %%>;
+  paddingLeft = <%% 72, 72, 72, 72, 7 %%>;
+
+  aboutSize = <%% 13, 13, 12, 11, 3 %%>;
+  aboutWeight = <%% 500, 500, 500, 500, 500 %%>;
+
+  titleSize = <%% 24, 24, 24, 24, 5 %%>;
+  titleWeight = <%% 800, 800, 800, 800, 800 %%>;
+
+  wordingSize = <%% 14, 14, 13, 12, 4 %%>;
+  wordingWeight = <%% 400, 400, 400, 400, 400 %%>;
+  wordingBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+  contents = {
+    about: "about\nHomeLiaison",
+    title: "홈리에종과\n아파트멘터리가 만났다!",
+    description: [
+      [
+        "아파트멘터리가 홈스타일링 전문",
+        "플랫폼, 홈리에종과 만났습니다.",
+        "<b%홈리에종의 디자이너, 아파트멘터리 파츠",
+        "자재의 만남%b>으로 내 집의 컨디션을",
+        "잘 아는 디자이너와 맞춤 홈스타일링을",
+        "진행하실 수 있어요!",
+      ],
+      [
+        "<b%아파트멘터리 파츠의 엄선된 자재로",
+        "홈리에종 디자이너와 함께%b> 합리적으로",
+        "인테리어를 진행해보세요!",
+      ],
+    ]
+  };
+
+
+  baseMother = createNode({
+    mother: baseTong,
+    style: {
+      display: "flex",
+      flexDirection: "row",
+      position: "relative",
+      marginBottom: String(800) + ea,
+    }
+  });
+
+  createNode({
+    mother: baseMother,
+    style: {
+      display: "block",
+      position: "absolute",
+      left: String(0) + ea,
+      width: String(window.innerWidth - ((window.innerWidth - standardWidth) / 2)) + ea,
+      height: withOut(0, ea),
+      background: colorChip.gray1,
+      borderTopLeftRadius: String(8) + "px",
+      borderBottomLeftRadius: String(8) + "px",
+    }
+  });
+
+
+  leftMother = createNode({
+    mother: baseMother,
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      flexDirection: "column",
+      width: String(leftMotherWidth - paddingLeft) + ea,
+      paddingTop: String(paddingTop) + ea,
+      paddingLeft: String(paddingLeft) + ea,
+      paddingBottom: String(paddingTop) + ea,
+      height: withOut(paddingTop, ea),
+      verticalAlign: "top",
+    }
+  });
+
+  createNode({
+    mother: leftMother,
+    text: contents.about,
+    style: {
+      display: "block",
+      position: "relative",
+      fontSize: String(aboutSize) + ea,
+      fontWeight: String(aboutWeight),
+      fontFamily: "graphik",
+      fontStyle: "italic",
+      color: colorChip.black,
+    }
+  });
+
+  createNode({
+    mother: leftMother,
+    text: contents.title,
+    style: {
+      display: "block",
+      position: "relative",
+      fontSize: String(titleSize) + ea,
+      fontWeight: String(titleWeight),
+      lineHeight: String(1.4),
+      marginTop: String(60) + ea,
+      paddingLeft: String(22) + ea,
+      color: colorChip.black,
+    },
+    children: [
+      {
+        style: {
+          position: "absolute",
+          top: String(8) + ea,
+          left: String(0),
+          width: String(5) + ea,
+          height: withOut(13, ea),
+          background: colorChip.black,
+          borderRadius: String(5) + "px",
         }
       }
     ]
   })
+
+  createNode({
+    mother: leftMother,
+    text: contents.description[0].join("\n"),
+    style: {
+      display: "block",
+      position: "relative",
+      fontSize: String(wordingSize) + ea,
+      fontWeight: String(wordingWeight),
+      lineHeight: String(1.7),
+      color: colorChip.black,
+      marginTop: String(52) + ea,
+    },
+    bold: {
+      fontSize: String(wordingSize) + ea,
+      fontWeight: String(wordingBoldWeight),
+      color: colorChip.black,
+    }
+  })
+
+  createNode({
+    mother: leftMother,
+    text: contents.description[1].join("\n"),
+    style: {
+      display: "block",
+      position: "relative",
+      fontSize: String(wordingSize) + ea,
+      fontWeight: String(wordingWeight),
+      lineHeight: String(1.7),
+      color: colorChip.black,
+      marginTop: String(16) + ea,
+    },
+    bold: {
+      fontSize: String(wordingSize) + ea,
+      fontWeight: String(wordingBoldWeight),
+      color: colorChip.black,
+    }
+  })
+
+
+
+
+
+  rightMother = createNode({
+    mother: baseMother,
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      width: withOut(leftMotherWidth, ea),
+      overflow: "visible",
+    }
+  });
+
+  createNode({
+    mother: rightMother,
+    style: {
+      display: "block",
+      position: "absolute",
+      width: withOut(0, ea),
+      left: String(0),
+      top: String(paddingTop) + ea,
+      height: withOut(paddingTop, ea),
+      borderTopLeftRadius: String(5) + "px",
+      borderTopRightRadius: String(5) + "px",
+      background: colorChip.green,
+      boxShadow: "5px 0px 17px -9px " + colorChip.shadow,
+    }
+  });
 
 }
 
@@ -333,7 +558,7 @@ StylePartsJs.prototype.launching = async function (loading) {
         try {
           instance.slimNavigator();
           instance.insertInitBox();
-
+          instance.insertHeadlineBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "StylePartsJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
         }
