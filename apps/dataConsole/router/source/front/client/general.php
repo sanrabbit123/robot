@@ -95,7 +95,7 @@ class GeneralPhp {
     $html .= 'wcs_add["wa"] = "'.$naverLogId.'";'."\n";
     $html .= 'if (!_nasa) { var _nasa={}; }'."\n";
     if ($name === $curationName) {
-      $html .= 'if (window.wcs) { _nasa["cnv"] = wcs.cnv("4", "1"); wcs.inflow(); wcs_do(_nasa); }'."\n";
+      $html .= 'if (window.wcs) { _nasa["cnv"] = wcs.cnv("1", "10"); wcs.inflow(); wcs_do(_nasa); }'."\n";
     } else {
       $html .= 'if (window.wcs) { wcs.inflow(); wcs_do(_nasa); }'."\n";
     }

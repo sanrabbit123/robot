@@ -549,9 +549,91 @@ StylePartsJs.prototype.insertLeadBox = function () {
   let paddingTop;
   let descriptionBox;
   let contents;
+  let imageBox;
+  let titleSize, titleWeight;
+  let titlePaddingBottom;
+  let subSize, subWeight;
+  let descriptionBoxPaddingTop;
+  let descriptionSize, descriptionWeight, descriptionBoldWeight;
+  let descriptionLineHeight, descriptionPaddingLeft;
+  let descriptionLineBottom;
+  let num;
+  let diagramTitleSize, diagramTitleWeight;
+  let diagramSubSize, diagramSubWeight;
+  let diagramDescriptionSize, diagramDescriptionWeight, diagramDescriptionLineHeight;
+  let diagramTextBetween;
+  let imageMiddleBox;
+  let imageWidth, imageMargin;
+  let firstPaddingTop;
+  let secondLeft;
+  let thirdMarginTop;
+  let barBox;
+  let imageBoxPaddingTop;
+  let barTitleSize, barTitleWeight;
+  let barHeight;
+  let barBetween;
+  let barPaddingTop;
+  let barFirstWidth, barSecondWidth;
+  let barTextSize, barTextWeight;
+  let barTextBottom;
+  let barNoticeBox;
+  let barBoxPaddingTop;
+  let barNoticeBoxPaddingTop;
+  let barNoticeSize, barNoticeWeight, barNoticeMarginBottom;
 
+  paddingTop = <%% 200, 200, 180, 168, 16 %%>;
 
-  paddingTop = <%% 168, 168, 168, 168, 16 %%>;
+  titleSize = <%% 27, 27, 27, 27, 27 %%>;
+  titleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  titlePaddingBottom = <%% 1, 1, 1, 1, 1 %%>;
+
+  subSize = <%% 18, 18, 18, 18, 18 %%>;
+  subWeight = <%% 500, 500, 500, 500, 500 %%>;
+
+  descriptionBoxPaddingTop = <%% 28, 28, 28, 28, 3 %%>;
+  imageBoxPaddingTop = <%% 28, 28, 28, 28, 3 %%>;
+  barBoxPaddingTop = <%% 2, 2, 2, 2, 2 %%>;
+
+  descriptionSize = <%% 15, 15, 15, 15, 15 %%>;
+  descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+  descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+  descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+  descriptionPaddingLeft = <%% 36, 36, 36, 36, 36 %%>;
+  descriptionLineBottom = <%% 27, 27, 27, 27, 27 %%>;
+
+  diagramTitleSize = <%% 30, 30, 28, 28, 28 %%>;
+  diagramTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
+  diagramSubSize = <%% 18, 18, 16, 16, 16 %%>;
+  diagramSubWeight = <%% 800, 800, 800, 800, 800 %%>;
+  diagramDescriptionSize = <%% 14, 14, 14, 13, 13 %%>;
+  diagramDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+  diagramDescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+  diagramTextBetween = <%% 7, 7, 7, 7, 7 %%>;
+
+  imageWidth = <%% 960, 960, 960, 960, 960 %%>;
+  imageMargin = <%% 20, 20, 20, 20, 2 %%>;
+
+  firstPaddingTop = <%% 145, 144, 144, 144, 144 %%>;
+  secondLeft = <%% -126, -126, -126, -126, -126 %%>;
+  thirdMarginTop = <%% 267, 267, 267, 267, 267 %%>;
+
+  barTitleSize = <%% 20, 20, 20, 20, 21 %%>;
+  barTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  barPaddingTop = <%% 13, 13, 13, 13, 15 %%>;
+  barHeight = <%% 20, 20, 20, 20, 2 %%>;
+  barBetween = <%% 6, 6, 6, 6, 6 %%>;
+
+  barFirstWidth = <%% 200, 200, 200, 200, 20 %%>;
+  barSecondWidth = <%% 500, 500, 500, 500, 50 %%>;
+
+  barTextSize = <%% 15, 15, 15, 15, 15 %%>;
+  barTextWeight = <%% 800, 800, 800, 800, 800 %%>;
+  barTextBottom = <%% -28, -28, -27, -27, -27 %%>;
+
+  barNoticeBoxPaddingTop = <%% 40, 40, 36, 36, 36 %%>;
+  barNoticeSize = <%% 13, 13, 13, 13, 13 %%>;
+  barNoticeWeight = <%% 400, 400, 400, 400, 400 %%>;
+  barNoticeMarginBottom = <%% 4, 4, 4, 4, 4 %%>;
 
   contents = {
     title: "디자이너가 이끄는 인테리어",
@@ -559,7 +641,45 @@ StylePartsJs.prototype.insertLeadBox = function () {
     description: [
       "홈리에종은 과도한 리모델링을 지양하고 꼭 필요한 시공만을 진행하며,",
       "<b%디자인을 먼저 하는 방식을 통해 인테리어의 효율성을 올리는 방식%b>을 지향합니다.",
-    ]
+    ],
+    diagram: [
+      {
+        title: "Design",
+        sub: "디자인 기획",
+        description: [
+          "디자인을 먼저 진행하여",
+          "시공 범위를 조절",
+        ],
+      },
+      {
+        title: "Construction",
+        sub: "톤보정 시공",
+        description: [
+          "시공 범위와 자재, 디자인",
+          "시공사에 따라 변동",
+        ],
+      },
+      {
+        title: "Styling",
+        sub: "스타일링",
+        description: [
+          "스타일링 중심의 인테리어로",
+          "효과와 완성도를 높임",
+        ],
+      },
+    ],
+    bar: {
+      title: "비용의 구성",
+      fators:[
+        "디자인 비용",
+        "시공 비용",
+        "제품 비용",
+      ],
+      notice: [
+        "시공 범위에 따라 시공 비용의 비율은 조정될 수 있습니다.",
+        "시공비, 구매비와는 별도로 디자인비가 발생합니다.",
+      ]
+    }
   };
 
   baseMother = createNode({
@@ -571,7 +691,6 @@ StylePartsJs.prototype.insertLeadBox = function () {
       width: String(standardWidth) + ea,
       left: withOut(50, standardWidth / 2, ea),
       paddingTop: String(paddingTop) + ea,
-      marginBottom: String(800) + ea,
     }
   });
 
@@ -581,12 +700,12 @@ StylePartsJs.prototype.insertLeadBox = function () {
     style: {
       display: "block",
       position: "relative",
-      fontSize: String(28) + ea,
-      fontWeight: String(800),
+      fontSize: String(titleSize) + ea,
+      fontWeight: String(titleWeight),
       color: colorChip.black,
       width: withOut(0, ea),
       textAlign: "center",
-      paddingBottom: String(1) + ea,
+      paddingBottom: String(titlePaddingBottom) + ea,
     }
   });
 
@@ -596,8 +715,8 @@ StylePartsJs.prototype.insertLeadBox = function () {
     style: {
       display: "block",
       position: "relative",
-      fontSize: String(18) + ea,
-      fontWeight: String(500),
+      fontSize: String(subSize) + ea,
+      fontWeight: String(subWeight),
       color: colorChip.deactive,
       fontFamily: "graphik",
       fontStyle: "italic",
@@ -611,7 +730,7 @@ StylePartsJs.prototype.insertLeadBox = function () {
       display: "flex",
       position: "relative",
       width: withOut(0, ea),
-      paddingTop: String(32) + ea,
+      paddingTop: String(descriptionBoxPaddingTop) + ea,
       textAlign: "center",
       justifyContent: "center",
     }
@@ -621,11 +740,12 @@ StylePartsJs.prototype.insertLeadBox = function () {
     mother: descriptionBox,
     style: {
       position: "absolute",
-      height: String(20) + ea,
+      height: String(0) + ea,
       width: withOut(0, ea),
+      bottom: String(descriptionLineBottom) + ea,
       borderBottom: "1px solid " + colorChip.gray3,
     }
-  })
+  });
 
   createNode({
     mother: descriptionBox,
@@ -633,24 +753,590 @@ StylePartsJs.prototype.insertLeadBox = function () {
     style: {
       display: "inline-block",
       position: "relative",
-      fontSize: String(15) + ea,
-      fontWeight: String(400),
+      fontSize: String(descriptionSize) + ea,
+      fontWeight: String(descriptionWeight),
       color: colorChip.black,
-      lineHeight: String(1.6),
+      lineHeight: String(descriptionLineHeight),
       textAlign: "center",
-      paddingLeft: String(36) + ea,
-      paddingRight: String(36) + ea,
+      paddingLeft: String(descriptionPaddingLeft) + ea,
+      paddingRight: String(descriptionPaddingLeft) + ea,
       background: colorChip.white,
     },
     bold: {
-      fontSize: String(15) + ea,
-      fontWeight: String(700),
+      fontSize: String(descriptionSize) + ea,
+      fontWeight: String(descriptionBoldWeight),
+      color: colorChip.black,
+    }
+  });
+
+
+  imageBox = createNode({
+    mother: baseMother,
+    event: {
+      selectstart: (e) => { e.preventDefault(); },
+    },
+    style: {
+      display: "flex",
+      position: "relative",
+      width: withOut(0, ea),
+      paddingTop: String(imageBoxPaddingTop) + ea,
+      textAlign: "center",
+      justifyContent: "center",
+      alignItems: "center",
+    }
+  });
+
+  num = 0;
+  for (let { title, sub, description } of contents.diagram) {
+    if (num === 0) {
+
+      createNode({
+        mother: imageBox,
+        event: {
+          selectstart: (e) => { e.preventDefault(); },
+        },
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          textAlign: "center",
+          justifyContent: "center",
+          flexDirection: "column",
+          paddingTop: String(firstPaddingTop) + ea,
+        },
+        children: [
+          {
+            text: title,
+            event: {
+              selectstart: (e) => { e.preventDefault(); },
+            },
+            style: {
+              display: "block",
+              fontSize: String(diagramTitleSize) + ea,
+              fontWeight: String(diagramTitleWeight),
+              fontFamily: "graphik",
+              fontStyle: "italic",
+              color: "#8f5e53",
+            }
+          },
+          {
+            text: sub,
+            event: {
+              selectstart: (e) => { e.preventDefault(); },
+            },
+            style: {
+              display: "block",
+              fontSize: String(diagramSubSize) + ea,
+              fontWeight: String(diagramSubWeight),
+              color: colorChip.black,
+              marginTop: String(diagramTextBetween) + ea,
+            }
+          },
+          {
+            text: description.join("\n"),
+            event: {
+              selectstart: (e) => { e.preventDefault(); },
+            },
+            style: {
+              display: "block",
+              fontSize: String(diagramDescriptionSize) + ea,
+              fontWeight: String(diagramDescriptionWeight),
+              color: colorChip.black,
+              lineHeight: String(diagramDescriptionLineHeight),
+              marginTop: String(diagramTextBetween) + ea,
+            }
+          },
+        ]
+      });
+
+      createNode({
+        mother: imageBox,
+        mode: "img",
+        attribute: {
+          src: StylePartsJs.binaryPath + "/lead0.png",
+        },
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: String(imageWidth) + ea,
+          marginLeft: String(imageMargin) + ea,
+          marginRight: String(imageMargin) + ea,
+        }
+      });
+
+    } else if (num === 1) {
+
+      imageMiddleBox = createNode({
+        mother: imageBox,
+        event: {
+          selectstart: (e) => { e.preventDefault(); },
+        },
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          textAlign: "left",
+          justifyContent: "left",
+          flexDirection: "column",
+        },
+      })
+
+      createNode({
+        mother: imageMiddleBox,
+        event: {
+          selectstart: (e) => { e.preventDefault(); },
+        },
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          textAlign: "left",
+          justifyContent: "left",
+          flexDirection: "column",
+          left: String(secondLeft) + ea,
+        },
+        children: [
+          {
+            text: title,
+            event: {
+              selectstart: (e) => { e.preventDefault(); },
+            },
+            style: {
+              display: "block",
+              fontSize: String(diagramTitleSize) + ea,
+              fontWeight: String(diagramTitleWeight),
+              fontFamily: "graphik",
+              fontStyle: "italic",
+              color: "#cfb9ad",
+            }
+          },
+          {
+            text: sub,
+            event: {
+              selectstart: (e) => { e.preventDefault(); },
+            },
+            style: {
+              display: "block",
+              fontSize: String(diagramSubSize) + ea,
+              fontWeight: String(diagramSubWeight),
+              color: colorChip.black,
+              marginTop: String(diagramTextBetween) + ea,
+            }
+          },
+          {
+            text: description.join("\n"),
+            event: {
+              selectstart: (e) => { e.preventDefault(); },
+            },
+            style: {
+              display: "block",
+              fontSize: String(diagramDescriptionSize) + ea,
+              fontWeight: String(diagramDescriptionWeight),
+              color: colorChip.black,
+              lineHeight: String(diagramDescriptionLineHeight),
+              marginTop: String(diagramTextBetween) + ea,
+            }
+          },
+        ]
+      });
+
+    } else if (num === 2) {
+
+      createNode({
+        mother: imageMiddleBox,
+        event: {
+          selectstart: (e) => { e.preventDefault(); },
+        },
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          textAlign: "left",
+          justifyContent: "left",
+          flexDirection: "column",
+          marginTop: String(thirdMarginTop) + ea,
+        },
+        children: [
+          {
+            text: title,
+            event: {
+              selectstart: (e) => { e.preventDefault(); },
+            },
+            style: {
+              display: "block",
+              fontSize: String(diagramTitleSize) + ea,
+              fontWeight: String(diagramTitleWeight),
+              fontFamily: "graphik",
+              fontStyle: "italic",
+              color: "#cfb9ad",
+            }
+          },
+          {
+            text: sub,
+            event: {
+              selectstart: (e) => { e.preventDefault(); },
+            },
+            style: {
+              display: "block",
+              fontSize: String(diagramSubSize) + ea,
+              fontWeight: String(diagramSubWeight),
+              color: colorChip.black,
+              marginTop: String(diagramTextBetween) + ea,
+            }
+          },
+          {
+            text: description.join("\n"),
+            event: {
+              selectstart: (e) => { e.preventDefault(); },
+            },
+            style: {
+              display: "block",
+              fontSize: String(diagramDescriptionSize) + ea,
+              fontWeight: String(diagramDescriptionWeight),
+              color: colorChip.black,
+              lineHeight: String(diagramDescriptionLineHeight),
+              marginTop: String(diagramTextBetween) + ea,
+            }
+          },
+        ]
+      });
+
+    }
+    num++;
+  }
+
+
+  barBox = createNode({
+    mother: baseMother,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: withOut(0, ea),
+      paddingTop: String(barBoxPaddingTop) + ea,
+      textAlign: "left",
+      justifyContent: "left",
+      flexDirection: "column",
+    }
+  });
+
+  createNode({
+    mother: barBox,
+    text: contents.bar.title,
+    style: {
+      fontSize: String(barTitleSize) + ea,
+      fontWeight: String(barTitleWeight),
       color: colorChip.black,
     }
   })
 
+  createNode({
+    mother: barBox,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: withOut(0, ea),
+      flexDirection: "row",
+      height: String(barHeight) + ea,
+      paddingTop: String(barPaddingTop) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: String(barFirstWidth) + ea,
+          height: withOut(0),
+          borderRadius: String(5) + "px",
+          background: "#8f5e53",
+          marginRight: String(barBetween) + ea,
+        },
+        children: [
+          {
+            text: contents.bar.fators[0],
+            style: {
+              position: "absolute",
+              width: withOut(0, ea),
+              textAlign: "center",
+              fontSize: String(barTextSize) + ea,
+              fontWeight: String(barTextWeight),
+              color: "#8f5e53",
+              bottom: String(barTextBottom) + ea,
+            }
+          }
+        ]
+      },
+      {
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: String(barSecondWidth) + ea,
+          height: withOut(0),
+          borderRadius: String(5) + "px",
+          background: colorChip.gray5,
+          marginRight: String(barBetween) + ea,
+        },
+        children: [
+          {
+            text: contents.bar.fators[1],
+            style: {
+              position: "absolute",
+              width: withOut(0, ea),
+              textAlign: "center",
+              fontSize: String(barTextSize) + ea,
+              fontWeight: String(barTextWeight),
+              color: colorChip.black,
+              bottom: String(barTextBottom) + ea,
+            }
+          }
+        ]
+      },
+      {
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: withOut(barFirstWidth + barSecondWidth + (barBetween * 2), ea),
+          height: withOut(0),
+          borderRadius: String(5) + "px",
+          background: colorChip.gray3,
+        },
+        children: [
+          {
+            text: contents.bar.fators[2],
+            style: {
+              position: "absolute",
+              width: withOut(0, ea),
+              textAlign: "center",
+              fontSize: String(barTextSize) + ea,
+              fontWeight: String(barTextWeight),
+              color: colorChip.black,
+              bottom: String(barTextBottom) + ea,
+            }
+          }
+        ]
+      },
+    ]
+  })
+
+  barNoticeBox = createNode({
+    mother: barBox,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: withOut(0, ea),
+      flexDirection: "column",
+      paddingTop: String(barNoticeBoxPaddingTop) + ea,
+      justifyContent: "end",
+      alignItems: "end",
+    }
+  });
+
+  for (let notice of contents.bar.notice) {
+    createNode({
+      mother: barNoticeBox,
+      text: "* " + notice,
+      style: {
+        fontSize: String(barNoticeSize) + ea,
+        fontWeight: String(barNoticeWeight),
+        marginBottom: String(barNoticeMarginBottom) + ea,
+        color: colorChip.black,
+      }
+    })
+  }
+
+}
+
+StylePartsJs.prototype.insertMatchupBox = function () {
+  const instance = this;
+  const { totalContents, ea, standardWidth, media, baseTong } = this;
+  const { createNode, withOut, colorChip, cleanChildren, selfHref, ajaxJson } = GeneralJs;
+  const mobile = media[4];
+  const desktop = !mobile;
+  let paddingTop;
+  let baseMother;
+  let contents;
+  let titleSize;
+  let titleWeight;
+  let titlePaddingBottom;
+  let subSize;
+  let subWeight;
+  let firstWhiteBox;
+  let secondWhiteBox;
+  let firstDescriptionBox;
+  let seondDescriptionBox;
+  let whiteInnerPaddingTop;
+  let whiteInnerPaddingLeft;
+  let firstDescriptionBoxWidth;
+  let firstImageBox;
+  let firstImageBoxOver;
+
+  paddingTop = <%% 200, 200, 180, 168, 16 %%>;
+
+  titleSize = <%% 27, 27, 27, 27, 27 %%>;
+  titleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  titlePaddingBottom = <%% 1, 1, 1, 1, 1 %%>;
+
+  subSize = <%% 18, 18, 18, 18, 18 %%>;
+  subWeight = <%% 500, 500, 500, 500, 500 %%>;
+
+  whiteInnerPaddingTop = <%% 48, 48, 40, 40, 72 %%>;
+  whiteInnerPaddingLeft = <%% 48, 48, 40, 40, 72 %%>;
+
+  firstDescriptionBoxWidth = <%% 448, 448, 448, 448, 448 %%>;
+
+  firstImageBoxOver = <%% 160, 160, 160, 160, 160 %%>;
+
+  contents = {
+    title: "톤보정 시공이란?",
+    sub: "Tone match-up",
+    description: [
+      "홈리에종에서 제안하는 톤보정 시공은 디자이너와",
+      "함께 원하는 스타일에 맞추어 큰 구조의 변경이나",
+      "<b%전체 시공 없이 기존 자재의 거슬리는 컬러, 톤, 무늬 등을",
+      "새로운 자재로 드레스업하여 배경을 새로 만들어내는%b>",
+      "비교적 간단한 부분 시공 서비스입니다.",
+    ],
+  };
 
 
+  baseMother = createNode({
+    mother: baseTong,
+    style: {
+      display: "flex",
+      position: "relative",
+      flexDirection: "column",
+      width: String(standardWidth) + ea,
+      left: withOut(50, standardWidth / 2, ea),
+      paddingTop: String(paddingTop) + ea,
+      marginTop: String(paddingTop) + ea,
+      marginBottom: String(800) + ea,
+    },
+    children: [
+      {
+        style: {
+          position: "absolute",
+          top: String(0),
+          left: String(((window.innerWidth - standardWidth) / 2) * -1) + ea,
+          width: String(window.innerWidth) + ea,
+          height: withOut(0),
+          background: colorChip.gray1,
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: baseMother,
+    text: contents.title,
+    style: {
+      display: "block",
+      position: "relative",
+      fontSize: String(titleSize) + ea,
+      fontWeight: String(titleWeight),
+      color: colorChip.black,
+      width: withOut(0, ea),
+      textAlign: "center",
+      paddingBottom: String(titlePaddingBottom) + ea,
+    }
+  });
+
+  createNode({
+    mother: baseMother,
+    text: contents.sub,
+    style: {
+      display: "block",
+      position: "relative",
+      fontSize: String(subSize) + ea,
+      fontWeight: String(subWeight),
+      color: colorChip.deactive,
+      fontFamily: "graphik",
+      fontStyle: "italic",
+      textAlign: "center",
+    }
+  });
+
+  firstWhiteBox = createNode({
+    mother: baseMother,
+    style: {
+      display: "flex",
+      position: "relative",
+      flexDirection: "row",
+      marginTop: String(200) + ea,
+      width: withOut(0, ea),
+      height: String(400) + ea,
+      borderRadius: String(8) + "px",
+      background: colorChip.white,
+      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      marginBottom: String(16) + ea,
+    }
+  });
+
+  firstDescriptionBox = createNode({
+    mother: firstWhiteBox,
+    style: {
+      display: "inline-flex",
+      width: String(firstDescriptionBoxWidth - whiteInnerPaddingLeft) + ea,
+      height: withOut(whiteInnerPaddingTop * 2, ea),
+      paddingTop: String(whiteInnerPaddingTop) + ea,
+      paddingBottom: String(whiteInnerPaddingTop) + ea,
+      paddingLeft: String(whiteInnerPaddingLeft) + ea,
+      flexDirection: "column",
+      justifyContent: "end",
+    }
+  });
+
+  createNode({
+    mother: firstDescriptionBox,
+    text: contents.sub,
+    style: {
+      display: "block",
+      position: "relative",
+      fontSize: String(17) + ea,
+      fontWeight: String(500),
+      color: colorChip.black,
+      fontFamily: "graphik",
+      fontStyle: "italic",
+    }
+  });
+
+  createNode({
+    mother: firstDescriptionBox,
+    text: contents.description.join("\n"),
+    style: {
+      display: "block",
+      position: "relative",
+      fontSize: String(14) + ea,
+      fontWeight: String(400),
+      lineHeight: String(1.6),
+      color: colorChip.black,
+      marginTop: String(10) + ea,
+    },
+    bold: {
+      fontSize: String(14) + ea,
+      fontWeight: String(700),
+      color: colorChip.black,
+    }
+  });
+
+  firstImageBox = createNode({
+    mother: firstWhiteBox,
+    style: {
+      display: "inline-block",
+      width: withOut(firstDescriptionBoxWidth, ea),
+      position: "relative",
+      height: "calc(100% + " + String(firstImageBoxOver) + ea + ")",
+      top: String(-1 * firstImageBoxOver) + ea,
+    }
+  });
+
+  secondWhiteBox = createNode({
+    mother: baseMother,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: withOut(0, ea),
+      height: String(400) + ea,
+      borderRadius: String(8) + "px",
+      background: colorChip.white,
+      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      marginBottom: String(paddingTop) + ea,
+    }
+  });
 
 }
 
@@ -684,6 +1370,7 @@ StylePartsJs.prototype.launching = async function (loading) {
           instance.insertInitBox();
           instance.insertHeadlineBox();
           instance.insertLeadBox();
+          instance.insertMatchupBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "StylePartsJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
         }
