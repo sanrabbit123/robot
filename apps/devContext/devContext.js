@@ -111,6 +111,14 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const selfMongo = this.MONGOC;
+    const motherProjects_raw = (await back.getProjectsByQuery({}, { selfMongo })).toNormal();
+    const motherProjects = motherProjects_raw.filter((obj) => {  return obj.process.contract.first.date.valueOf() >= (new Date(2000, 0, 1)).valueOf() });
+
+
+    console.log(motherProjects.filter((obj) => { return obj.desid === '' }));
+
+
 
 
 
