@@ -111,12 +111,12 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const selfMongo = this.MONGOC;
-    const motherProjects_raw = (await back.getProjectsByQuery({}, { selfMongo })).toNormal();
-    const motherProjects = motherProjects_raw.filter((obj) => {  return obj.process.contract.first.date.valueOf() >= (new Date(2000, 0, 1)).valueOf() });
-
-
-    console.log(motherProjects.filter((obj) => { return obj.desid === '' }));
+    // const selfMongo = this.MONGOC;
+    // const motherProjects_raw = (await back.getProjectsByQuery({}, { selfMongo })).toNormal();
+    // const motherProjects = motherProjects_raw.filter((obj) => {  return obj.process.contract.first.date.valueOf() >= (new Date(2000, 0, 1)).valueOf() });
+    //
+    //
+    // console.log(motherProjects.filter((obj) => { return obj.desid === '' }));
 
 
 
@@ -2975,9 +2975,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "박희상",
-    //     designer: "박미연",
-    //     link: "https://drive.google.com/drive/folders/1wwQf0aiq6h1d8kEXXg9yFW0EAtEZU-9S",
+    //     client: "최고원",
+    //     designer: "김소영",
+    //     link: "https://drive.google.com/drive/folders/1KDLsOwIzJ7_bUXx6-BzONjICdrB2In1S",
     //     pay: true
     //   },
     // ]);

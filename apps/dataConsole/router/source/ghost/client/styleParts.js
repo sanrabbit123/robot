@@ -295,7 +295,7 @@ StylePartsJs.prototype.insertInitBox = function () {
       flexDirection: "column",
       width: withOut(leftMotherWidth, ea),
     }
-  })
+  });
 
   createNode({
     mother: rightMother,
@@ -311,18 +311,6 @@ StylePartsJs.prototype.insertInitBox = function () {
       boxShadow: "3px 3px 15px -9px " + colorChip.shadow,
     }
   });
-
-  // createNode({
-  //   mother: rightMother,
-  //   style: {
-  //     position: "absolute",
-  //     height: withOut(0, ea),
-  //     width: String((window.innerWidth - standardWidth) / 2) + ea,
-  //     top: String(0),
-  //     right: String(((window.innerWidth - standardWidth) / 2) * -1) + ea,
-  //     background: "#cfb9ad",
-  //   }
-  // });
 
 }
 
@@ -1164,6 +1152,16 @@ StylePartsJs.prototype.insertMatchupBox = function () {
   let firstDescriptionBoxWidth;
   let firstImageBox;
   let firstImageBoxOver;
+  let imageBetweenSero;
+  let imageBetweenGaro;
+  let overMargin;
+  let whiteBoxHeight;
+  let subTitleSize, subTitleWeight;
+  let descriptionSize, descriptionWeight;
+  let descriptionBoldWeight;
+  let descriptionLineHeight;
+  let descriptionMarginTop;
+  let whiteBetween;
 
   paddingTop = <%% 200, 200, 180, 168, 16 %%>;
 
@@ -1179,7 +1177,24 @@ StylePartsJs.prototype.insertMatchupBox = function () {
 
   firstDescriptionBoxWidth = <%% 448, 448, 448, 448, 448 %%>;
 
-  firstImageBoxOver = <%% 160, 160, 160, 160, 160 %%>;
+  firstImageBoxOver = <%% 180, 180, 180, 180, 180 %%>;
+  overMargin = <%% 220, 220, 220, 220, 220 %%>;
+
+  imageBetweenSero = <%% 10, 10, 10, 10, 10 %%>;
+  imageBetweenGaro = <%% 30, 30, 30, 30, 30 %%>;
+
+  whiteBoxHeight = <%% 420, 420, 420, 420, 420 %%>;
+
+  subTitleSize = <%% 17, 17, 17, 17, 17 %%>;
+  subTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
+
+  descriptionSize = <%% 14, 14, 14, 14, 14 %%>;
+  descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+  descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+  descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+  descriptionMarginTop = <%% 10, 10, 10, 10, 10 %%>;
+
+  whiteBetween = <%% 16, 16, 16, 16, 16 %%>;
 
   contents = {
     title: "톤보정 시공이란?",
@@ -1256,13 +1271,13 @@ StylePartsJs.prototype.insertMatchupBox = function () {
       display: "flex",
       position: "relative",
       flexDirection: "row",
-      marginTop: String(200) + ea,
+      marginTop: String(overMargin) + ea,
       width: withOut(0, ea),
-      height: String(400) + ea,
+      height: String(whiteBoxHeight) + ea,
       borderRadius: String(8) + "px",
       background: colorChip.white,
       boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-      marginBottom: String(16) + ea,
+      marginBottom: String(whiteBetween) + ea,
     }
   });
 
@@ -1286,8 +1301,8 @@ StylePartsJs.prototype.insertMatchupBox = function () {
     style: {
       display: "block",
       position: "relative",
-      fontSize: String(17) + ea,
-      fontWeight: String(500),
+      fontSize: String(subTitleSize) + ea,
+      fontWeight: String(subTitleWeight),
       color: colorChip.black,
       fontFamily: "graphik",
       fontStyle: "italic",
@@ -1300,15 +1315,15 @@ StylePartsJs.prototype.insertMatchupBox = function () {
     style: {
       display: "block",
       position: "relative",
-      fontSize: String(14) + ea,
-      fontWeight: String(400),
-      lineHeight: String(1.6),
+      fontSize: String(descriptionSize) + ea,
+      fontWeight: String(descriptionWeight),
+      lineHeight: String(descriptionLineHeight),
       color: colorChip.black,
-      marginTop: String(10) + ea,
+      marginTop: String(descriptionMarginTop) + ea,
     },
     bold: {
-      fontSize: String(14) + ea,
-      fontWeight: String(700),
+      fontSize: String(descriptionSize) + ea,
+      fontWeight: String(descriptionBoldWeight),
       color: colorChip.black,
     }
   });
@@ -1324,13 +1339,67 @@ StylePartsJs.prototype.insertMatchupBox = function () {
     }
   });
 
+  createNode({
+    mother: firstImageBox,
+    style: {
+      display: "inline-block",
+      width: "calc(calc(calc(100% - " + String(whiteInnerPaddingLeft) + ea + ") - " + String(imageBetweenSero) + ea + ") / 2)",
+      height: "calc(calc(calc(100% - " + String(whiteInnerPaddingLeft) + ea + ") - " + String(imageBetweenGaro) + ea + ") / 2)",
+      background: colorChip.green,
+      marginRight: String(imageBetweenSero) + ea,
+      marginBottom: String(imageBetweenGaro) + ea,
+      borderRadius: String(5) + "px",
+      boxShadow: "0px 4px 18px -9px " + colorChip.shadow,
+    }
+  })
+
+  createNode({
+    mother: firstImageBox,
+    style: {
+      display: "inline-block",
+      width: "calc(calc(calc(100% - " + String(whiteInnerPaddingLeft) + ea + ") - " + String(imageBetweenSero) + ea + ") / 2)",
+      height: "calc(calc(calc(100% - " + String(whiteInnerPaddingLeft) + ea + ") - " + String(imageBetweenGaro) + ea + ") / 2)",
+      background: colorChip.green,
+      marginBottom: String(imageBetweenGaro) + ea,
+      borderRadius: String(5) + "px",
+      boxShadow: "0px 4px 18px -9px " + colorChip.shadow,
+    }
+  })
+
+  createNode({
+    mother: firstImageBox,
+    style: {
+      display: "inline-block",
+      width: "calc(calc(calc(100% - " + String(whiteInnerPaddingLeft) + ea + ") - " + String(imageBetweenSero) + ea + ") / 2)",
+      height: "calc(calc(calc(100% - " + String(whiteInnerPaddingLeft) + ea + ") - " + String(imageBetweenGaro) + ea + ") / 2)",
+      background: colorChip.green,
+      marginRight: String(imageBetweenSero) + ea,
+      borderRadius: String(5) + "px",
+      boxShadow: "0px 4px 18px -9px " + colorChip.shadow,
+    }
+  })
+
+  createNode({
+    mother: firstImageBox,
+    style: {
+      display: "inline-block",
+      width: "calc(calc(calc(100% - " + String(whiteInnerPaddingLeft) + ea + ") - " + String(imageBetweenSero) + ea + ") / 2)",
+      height: "calc(calc(calc(100% - " + String(whiteInnerPaddingLeft) + ea + ") - " + String(imageBetweenGaro) + ea + ") / 2)",
+      background: colorChip.green,
+      borderRadius: String(5) + "px",
+      boxShadow: "0px 4px 18px -9px " + colorChip.shadow,
+    }
+  })
+
+
+
   secondWhiteBox = createNode({
     mother: baseMother,
     style: {
       display: "flex",
       position: "relative",
       width: withOut(0, ea),
-      height: String(400) + ea,
+      height: String(whiteBoxHeight) + ea,
       borderRadius: String(8) + "px",
       background: colorChip.white,
       boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
