@@ -111,12 +111,297 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const selfMongo = this.MONGOC;
-    // const motherProjects_raw = (await back.getProjectsByQuery({}, { selfMongo })).toNormal();
-    // const motherProjects = motherProjects_raw.filter((obj) => {  return obj.process.contract.first.date.valueOf() >= (new Date(2000, 0, 1)).valueOf() });
-    //
-    //
-    // console.log(motherProjects.filter((obj) => { return obj.desid === '' }));
+
+
+
+
+
+    /*
+
+    const selfPythonMongo = this.MONGOPYTHONC;
+
+    await selfPythonMongo.connect();
+
+
+    const selfMongo = this.MONGOC;
+    const clients = (await back.getClientsByQuery({}, { selfMongo })).toNormal();
+    const motherProjects_raw = (await back.getProjectsByQuery({}, { selfMongo })).toNormal();
+    const motherProjects = motherProjects_raw.filter((obj) => {  return obj.process.contract.first.date.valueOf() >= (new Date(2000, 0, 1)).valueOf() });
+    const collection = "generalBill";
+    const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
+    let first, second;
+    let standard;
+    let rows;
+    let thisBill;
+    let thisClient;
+    let name;
+    let requestItem, requestPay, requestCancel;
+    let tempArr;
+    let thisItems;
+    let matrix;
+    let sheetsId;
+
+    standard = 210900;
+
+    first = motherProjects.filter((obj) => {
+      return Number(obj.proid.replace(/[^0-9]/gi, '')) >= standard
+    });
+
+    second = motherProjects.filter((obj) => {
+      return Number(obj.proid.replace(/[^0-9]/gi, '')) < standard
+    });
+
+
+    matrix = []
+
+    for (let { proid, cliid, service, process } of first) {
+
+      thisClient = clients.find((obj) => { return obj.cliid === cliid });
+      name = thisClient.name;
+      [ thisBill ] = await back.mongoRead(collection, { $and: [ { "links.proid": proid }, { "links.method": (service.online ? "online" : "offline") } ] }, { selfMongo: selfPythonMongo });
+
+      thisItems = [];
+      for (let request of thisBill.requests) {
+
+        tempArr = [];
+
+        tempArr.push(proid);
+        tempArr.push(cliid);
+        tempArr.push(name);
+        tempArr.push(process.status);
+
+        tempArr.push(request.name);
+
+        requestItem = Math.floor(request.items.reduce((acc, curr) => { return acc + curr.amount.consumer }, 0));
+        requestPay = Math.floor(request.pay.reduce((acc, curr) => { return acc + curr.amount }, 0));
+        requestCancel = Math.floor(request.cancel.reduce((acc, curr) => { return acc + curr.amount }, 0));
+
+        tempArr.push(requestItem);
+        tempArr.push(requestPay);
+        tempArr.push(requestCancel);
+
+        if (request.pay.length > 0) {
+          tempArr.push(dateToString(request.pay[0].date));
+        } else {
+          tempArr.push("1800-01-01");
+        }
+
+        if (request.cancel.length > 0) {
+          tempArr.push(dateToString(request.cancel[0].date));
+        } else {
+          tempArr.push("1800-01-01");
+        }
+
+        if (requestItem === 0 && requestPay === 0) {
+          // pass
+        } else {
+          thisItems.push(tempArr);
+        }
+
+      }
+
+
+      tempArr = [];
+      tempArr.push(proid);
+      tempArr.push(cliid);
+      tempArr.push(name);
+      tempArr.push(process.status);
+      tempArr.push("디자이너 선금");
+      tempArr.push(process.calculation.payments.first.amount);
+
+      if (process.calculation.payments.first.date.valueOf() > emptyDateValue) {
+        tempArr.push(process.calculation.payments.first.amount);
+      } else {
+        tempArr.push(0);
+      }
+
+      if (process.calculation.payments.first.cancel.valueOf() > emptyDateValue) {
+        tempArr.push(process.calculation.payments.first.amount);
+      } else {
+        tempArr.push(0);
+      }
+
+      tempArr.push(process.calculation.payments.first.date.valueOf() > emptyDateValue ? dateToString(process.calculation.payments.first.date) : "1800-01-01");
+      tempArr.push(process.calculation.payments.first.cancel.valueOf() > emptyDateValue ? dateToString(process.calculation.payments.first.cancel) : "1800-01-01");
+
+      thisItems.push(tempArr);
+
+
+      tempArr = [];
+
+      tempArr.push(proid);
+      tempArr.push(cliid);
+      tempArr.push(name);
+      tempArr.push(process.status);
+      tempArr.push("디자이너 잔금");
+      tempArr.push(process.calculation.payments.remain.amount);
+
+      if (process.calculation.payments.remain.date.valueOf() > emptyDateValue) {
+        tempArr.push(process.calculation.payments.remain.amount);
+      } else {
+        tempArr.push(0);
+      }
+
+      if (process.calculation.payments.remain.cancel.valueOf() > emptyDateValue) {
+        tempArr.push(process.calculation.payments.remain.amount);
+      } else {
+        tempArr.push(0);
+      }
+
+      tempArr.push(process.calculation.payments.remain.date.valueOf() > emptyDateValue ? dateToString(process.calculation.payments.remain.date) : "1800-01-01");
+      tempArr.push(process.calculation.payments.remain.cancel.valueOf() > emptyDateValue ? dateToString(process.calculation.payments.remain.cancel) : "1800-01-01");
+
+      thisItems.push(tempArr);
+
+      matrix = matrix.concat(equalJson(JSON.stringify(thisItems)));
+
+    }
+
+
+    for (let { proid, cliid, service, process } of second) {
+
+      thisClient = clients.find((obj) => { return obj.cliid === cliid });
+      name = thisClient.name;
+
+      thisItems = [];
+
+
+
+
+      tempArr = [];
+      tempArr.push(proid);
+      tempArr.push(cliid);
+      tempArr.push(name);
+      tempArr.push(process.status);
+      tempArr.push("홈리에종 계약금");
+      tempArr.push(process.contract.first.calculation.amount);
+
+      if (process.contract.first.date.valueOf() > emptyDateValue) {
+        tempArr.push(process.contract.first.calculation.amount);
+      } else {
+        tempArr.push(0);
+      }
+
+      if (process.contract.first.cancel.valueOf() > emptyDateValue) {
+        tempArr.push(process.contract.first.calculation.amount);
+      } else {
+        tempArr.push(0);
+      }
+
+      tempArr.push(process.contract.first.date.valueOf() > emptyDateValue ? dateToString(process.contract.first.date) : "1800-01-01");
+      tempArr.push(process.contract.first.cancel.valueOf() > emptyDateValue ? dateToString(process.contract.first.cancel) : "1800-01-01");
+
+      thisItems.push(tempArr);
+
+
+
+      tempArr = [];
+      tempArr.push(proid);
+      tempArr.push(cliid);
+      tempArr.push(name);
+      tempArr.push(process.status);
+      tempArr.push("홈리에종 잔금");
+      tempArr.push(process.contract.remain.calculation.amount.consumer - process.contract.first.calculation.amount);
+
+      if (process.contract.remain.date.valueOf() > emptyDateValue) {
+        tempArr.push(process.contract.remain.calculation.amount.consumer - process.contract.first.calculation.amount);
+      } else {
+        tempArr.push(0);
+      }
+
+      if (process.contract.remain.cancel.valueOf() > emptyDateValue) {
+        tempArr.push(process.contract.remain.calculation.amount.consumer - process.contract.first.calculation.amount);
+      } else {
+        tempArr.push(0);
+      }
+
+      tempArr.push(process.contract.remain.date.valueOf() > emptyDateValue ? dateToString(process.contract.remain.date) : "1800-01-01");
+      tempArr.push(process.contract.remain.cancel.valueOf() > emptyDateValue ? dateToString(process.contract.remain.cancel) : "1800-01-01");
+
+      thisItems.push(tempArr);
+
+
+
+
+      tempArr = [];
+      tempArr.push(proid);
+      tempArr.push(cliid);
+      tempArr.push(name);
+      tempArr.push(process.status);
+      tempArr.push("디자이너 선금");
+      tempArr.push(process.calculation.payments.first.amount);
+
+      if (process.calculation.payments.first.date.valueOf() > emptyDateValue) {
+        tempArr.push(process.calculation.payments.first.amount);
+      } else {
+        tempArr.push(0);
+      }
+
+      if (process.calculation.payments.first.cancel.valueOf() > emptyDateValue) {
+        tempArr.push(process.calculation.payments.first.amount);
+      } else {
+        tempArr.push(0);
+      }
+
+      tempArr.push(process.calculation.payments.first.date.valueOf() > emptyDateValue ? dateToString(process.calculation.payments.first.date) : "1800-01-01");
+      tempArr.push(process.calculation.payments.first.cancel.valueOf() > emptyDateValue ? dateToString(process.calculation.payments.first.cancel) : "1800-01-01");
+
+      thisItems.push(tempArr);
+
+
+      tempArr = [];
+
+      tempArr.push(proid);
+      tempArr.push(cliid);
+      tempArr.push(name);
+      tempArr.push(process.status);
+      tempArr.push("디자이너 잔금");
+      tempArr.push(process.calculation.payments.remain.amount);
+
+      if (process.calculation.payments.remain.date.valueOf() > emptyDateValue) {
+        tempArr.push(process.calculation.payments.remain.amount);
+      } else {
+        tempArr.push(0);
+      }
+
+      if (process.calculation.payments.remain.cancel.valueOf() > emptyDateValue) {
+        tempArr.push(process.calculation.payments.remain.amount);
+      } else {
+        tempArr.push(0);
+      }
+
+      tempArr.push(process.calculation.payments.remain.date.valueOf() > emptyDateValue ? dateToString(process.calculation.payments.remain.date) : "1800-01-01");
+      tempArr.push(process.calculation.payments.remain.cancel.valueOf() > emptyDateValue ? dateToString(process.calculation.payments.remain.cancel) : "1800-01-01");
+
+      thisItems.push(tempArr);
+
+      matrix = matrix.concat(equalJson(JSON.stringify(thisItems)));
+
+    }
+
+
+    matrix.forEach((arr) => {
+      const [ year, month, date ] = arr[8].split("-");
+      arr.push(Number(year));
+      arr.push(Number(month));
+    })
+
+
+    matrix.unshift([ "p아이디", "c아이디", "성함", "상태", "구분", "계약 금액", "입금액", "환불액", "입금일", "환불일", "년", "월" ])
+
+
+    sheetsId = await sheets.create_newSheets_inPython("기본 추출", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
+    await sheets.setting_cleanView_inPython(sheetsId);
+    await sheets.update_value_inPython(sheetsId, "", matrix);
+
+    console.log(matrix);
+
+
+
+    await selfPythonMongo.close();
+
+    */
+
 
 
 
