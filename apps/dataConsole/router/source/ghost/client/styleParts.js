@@ -3008,7 +3008,8 @@ StylePartsJs.prototype.insertProcessBox = function () {
       "본 서비스는 홈리에종의 사정에 따라 별도 고지 없이 변경 또는 중단될 수 있습니다.",
       "본 서비스는 홈리에종의 메인 서비스인 홈스타일링 서비스가 포함되어 있습니다.",
       "시공 자재 선택은 서비스 계약 확정 후, 디자이너와의 상담을 통해 결정됩니다.",
-    ]
+    ],
+    faq: "홈리에종 FAQ",
   };
 
   baseMother = createNode({
@@ -3222,7 +3223,7 @@ StylePartsJs.prototype.insertProcessBox = function () {
     },
     children: [
       {
-        text: "홈리에종 FAQ",
+        text: contents.faq,
         style: {
           display: "inline-flex",
           position: "absolute",
