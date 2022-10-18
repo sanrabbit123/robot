@@ -1900,7 +1900,7 @@ StylePartsJs.prototype.insertStyleBox = function () {
   imageTitleMarginTop = <%% 20, 20, 20, 20, 20 %%>;
   imageDescriptionSize = <%% 14, 14, 14, 14, 14 %%>;
   imageDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
-  imageDescriptionMarginTop = <%% 8, 8, 8, 8, 8 %%>;
+  imageDescriptionMarginTop = <%% 10, 10, 10, 10, 10 %%>;
   imageDescriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   imageDescriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
@@ -1914,7 +1914,7 @@ StylePartsJs.prototype.insertStyleBox = function () {
   imageTagSize = <%% 12, 12, 12, 12, 12 %%>;
   imageTagWeight = <%% 500, 500, 500, 500, 500 %%>;
 
-  imageBoxMarginTop = <%% 100, 100, 100, 100, 100 %%>;
+  imageBoxMarginTop = <%% 110, 110, 110, 110, 110 %%>;
   imageBoxMarginTopBig = <%% 190, 190, 190, 190, 190 %%>;
 
   moreBoxHeight = <%% 40, 40, 40, 40, 40 %%>;
@@ -2627,58 +2627,89 @@ StylePartsJs.prototype.insertBenefitsBox = function () {
   const mobile = media[4];
   const desktop = !mobile;
   let baseMother;
-  let rightMother, leftMother;
-  let leftMotherWidth;
   let paddingTop;
   let paddingLeft;
-  let wordingSize, wordingWeight;
-  let contents;
-  let aboutSize, aboutWeight;
-  let titleSize, titleWeight;
-  let wordingBoldWeight;
+  let titleSize;
+  let titleWeight;
+  let titlePaddingBottom;
+  let subSize;
+  let subWeight;
+  let contentsBase;
+  let contentsTong;
+  let benefitsTong;
+  let contentsTongBetween;
+  let benefitLeftWidth;
+  let benefitFactorBoxHeight;
+  let benefitNumberWidth;
+  let benefitNumberSize;
+  let benefitNumberWeight;
+  let benefitFactorPaddingLeft;
+  let benefitFactorWidth;
+  let benefitFactorHeight;
+  let benefitFactorSize;
+  let benefitFactorWeight;
+  let benefitFactorTextTop;
+  let descriptionSize;
+  let descriptionWeight;
+  let descriptionBoldWeight;
+  let descriptionLineHeight;
+  let descriptionTop;
 
-  leftMotherWidth = <%% 500, 500, 500, 500, 56 %%>;
-  paddingTop = <%% 72, 72, 72, 72, 7 %%>;
-  paddingLeft = <%% 72, 72, 72, 72, 7 %%>;
+  paddingTop = <%% 100, 100, 100, 100, 7 %%>;
+  paddingLeft = <%% 100, 100, 100, 100, 7 %%>;
 
-  aboutSize = <%% 13, 13, 12, 11, 3 %%>;
-  aboutWeight = <%% 500, 500, 500, 500, 500 %%>;
-
-  titleSize = <%% 24, 24, 24, 24, 5 %%>;
+  titleSize = <%% 27, 27, 27, 27, 27 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  titlePaddingBottom = <%% 1, 1, 1, 1, 1 %%>;
 
-  wordingSize = <%% 14, 14, 13, 12, 4 %%>;
-  wordingWeight = <%% 400, 400, 400, 400, 400 %%>;
-  wordingBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+  subSize = <%% 18, 18, 18, 18, 18 %%>;
+  subWeight = <%% 500, 500, 500, 500, 500 %%>;
+
+  contentsTongBetween = <%% 40, 40, 40, 40, 40 %%>;
+
+  benefitLeftWidth = <%% 1040, 1040, 1040, 1040, 1040 %%>;
+  benefitFactorBoxHeight = <%% 96, 96, 96, 96, 96 %%>;
+
+  benefitNumberWidth = <%% 240, 240, 240, 240, 240 %%>;
+  benefitNumberSize = <%% 30, 30, 30, 30, 30 %%>;
+  benefitNumberWeight = <%% 500, 500, 500, 500, 500 %%>;
+
+  benefitFactorPaddingLeft = <%% 30, 30, 30, 30, 30 %%>;
+  benefitFactorWidth = <%% 720, 720, 720, 720, 720 %%>;
+  benefitFactorHeight = <%% 64, 64, 64, 64, 64 %%>;
+
+  benefitFactorSize = <%% 20, 20, 20, 20, 20 %%>;
+  benefitFactorWeight = <%% 700, 700, 700, 700, 700 %%>;
+  benefitFactorTextTop = <%% -1, -1, -1, -1, -1 %%>;
+
+  descriptionSize = <%% 14, 14, 14, 14, 14 %%>;
+  descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+  descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+  descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+  descriptionTop = <%% -10, -10, -10, -10, -10 %%>;
 
   contents = {
-    about: "about\nHomeLiaison",
-    title: "홈리에종과\n아파트멘터리가 만났다!",
+    title: "고객님들을 위한 혜택",
+    sub: "Benefits",
+    benefits: [
+      [ "One", "상담 후, 홈리에종 서비스 계약시 5% 할인 혜택" ],
+      [ "Two", "상담 후, 홈리에종 서비스 계약시 5% 할인 혜택" ],
+      [ "Three", "상담 후, 홈리에종 서비스 계약시 5% 할인 혜택" ],
+    ],
     description: [
-      [
-        "아파트멘터리가 홈스타일링 전문",
-        "플랫폼, 홈리에종과 만났습니다.",
-        "<b%홈리에종의 디자이너, 아파트멘터리 파츠",
-        "자재의 만남%b>으로 내 집의 컨디션을",
-        "잘 아는 디자이너와 맞춤 홈스타일링을",
-        "진행하실 수 있어요!",
-      ],
-      [
-        "<b%아파트멘터리 파츠의 엄선된 자재로",
-        "홈리에종 디자이너와 함께%b> 합리적으로",
-        "인테리어를 진행해보세요!",
-      ],
-    ]
+      "스타일 파츠를 이용하시는 <b%모든 고객님들께",
+      "홈리에종은 위와 같은 3가지 혜택을 제공%b>해드립니다.",
+      "오직 스타일 파츠만을 위한 혜택들을 통해",
+      "좋은 기회에 좋은 가격으로 인테리어를 진행해보세요!",
+    ],
   };
-
 
   baseMother = createNode({
     mother: baseTong,
     style: {
       display: "flex",
-      flexDirection: "row",
+      flexDirection: "column",
       position: "relative",
-      marginBottom: String(800) + ea,
     }
   });
 
@@ -2696,140 +2727,455 @@ StylePartsJs.prototype.insertBenefitsBox = function () {
     }
   });
 
-  leftMother = createNode({
+  contentsBase = createNode({
     mother: baseMother,
     style: {
+      display: "block",
+      width: withOut(0, ea),
+      position: "relative",
+      paddingTop: String(paddingTop) + ea,
+      paddingBottom: String(paddingTop - 6) + ea,
+    },
+    children: [
+      {
+        text: contents.title,
+        style: {
+          display: "block",
+          position: "relative",
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(titleWeight),
+          color: colorChip.white,
+          width: withOut(0, ea),
+          textAlign: "center",
+          paddingBottom: String(titlePaddingBottom) + ea,
+        }
+      },
+      {
+        text: contents.sub,
+        style: {
+          display: "block",
+          position: "relative",
+          fontSize: String(subSize) + ea,
+          fontWeight: String(subWeight),
+          color: colorChip.white,
+          fontFamily: "graphik",
+          fontStyle: "italic",
+          textAlign: "center",
+          opacity: String(0.4),
+        }
+      }
+    ]
+  });
+
+  contentsTong = createNode({
+    mother: contentsBase,
+    style: {
+      display: "flex",
+      flexDirection: "row",
+      position: "relative",
+      width: withOut(0, ea),
+      paddingTop: String(contentsTongBetween) + ea,
+    }
+  });
+
+  benefitsTong = createNode({
+    mother: contentsTong,
+    style: {
       display: "inline-flex",
+      flexDirection: "column",
+      position: "relative",
+      width: String(benefitLeftWidth) + ea,
+    }
+  });
+
+  for (let [ number, benefit ] of contents.benefits) {
+    createNode({
+      mother: benefitsTong,
+      style: {
+        display: "flex",
+        position: "relative",
+        flexDirection: "row",
+        width: withOut(0, ea),
+        height: String(benefitFactorBoxHeight) + ea,
+        alignItems: "center",
+      },
+      children: [
+        {
+          text: number,
+          style: {
+            display: "inline-block",
+            width: String(benefitNumberWidth) + ea,
+            position: "relative",
+            fontSize: String(benefitNumberSize) + ea,
+            fontWeight: String(benefitNumberWeight),
+            fontFamily: "graphik",
+            fontStyle: "italic",
+            color: colorChip.white,
+          }
+        },
+        {
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            justifyContent: "left",
+            alignItems: "center",
+            paddingLeft: String(benefitFactorPaddingLeft) + ea,
+            width: String(benefitFactorWidth) + ea,
+            height: String(benefitFactorHeight) + ea,
+            borderRadius: String(5) + "px",
+            background: colorChip.white,
+            boxShadow: "0px 3px 15px -9px " + colorChip.realBlack,
+          },
+          children: [
+            {
+              text: benefit,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(benefitFactorSize) + ea,
+                fontWeight: String(benefitFactorWeight),
+                color: colorChip.black,
+                top: String(benefitFactorTextTop) + ea,
+              }
+            }
+          ]
+        }
+      ]
+    });
+  }
+
+  createNode({
+    mother: contentsTong,
+    style: {
+      display: "inline-flex",
+      flexDirection: "column-reverse",
+      position: "relative",
+      width: withOut(benefitLeftWidth, ea),
+    },
+    children: [
+      {
+        text: contents.description.join("\n"),
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(descriptionSize) + ea,
+          fontWeight: String(descriptionWeight),
+          color: colorChip.white,
+          lineHeight: String(descriptionLineHeight),
+          top: String(descriptionTop) + ea,
+        },
+        bold: {
+          fontSize: String(descriptionSize) + ea,
+          fontWeight: String(descriptionBoldWeight),
+          color: colorChip.white,
+        }
+      }
+    ]
+  });
+
+}
+
+StylePartsJs.prototype.insertProcessBox = function () {
+  const instance = this;
+  const { totalContents, ea, standardWidth, media, baseTong, localColor } = this;
+  const { createNode, withOut, colorChip, cleanChildren, selfHref, ajaxJson, svgMaker } = GeneralJs;
+  const mobile = media[4];
+  const desktop = !mobile;
+  let baseMother;
+  let paddingTop;
+  let descriptionBox;
+  let contents;
+  let imageBox;
+  let titleSize, titleWeight;
+  let titlePaddingBottom;
+  let subSize, subWeight;
+  let descriptionBoxPaddingTop;
+  let descriptionSize, descriptionWeight, descriptionBoldWeight;
+  let descriptionLineHeight, descriptionPaddingLeft;
+  let descriptionLineBottom;
+  let num;
+
+  paddingTop = <%% 200, 200, 180, 168, 16 %%>;
+
+  titleSize = <%% 27, 27, 27, 27, 27 %%>;
+  titleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  titlePaddingBottom = <%% 1, 1, 1, 1, 1 %%>;
+
+  subSize = <%% 18, 18, 18, 18, 18 %%>;
+  subWeight = <%% 500, 500, 500, 500, 500 %%>;
+
+  descriptionBoxPaddingTop = <%% 28, 28, 28, 28, 3 %%>;
+  imageBoxPaddingTop = <%% 28, 28, 28, 28, 3 %%>;
+  barBoxPaddingTop = <%% 2, 2, 2, 2, 2 %%>;
+
+  descriptionSize = <%% 15, 15, 15, 15, 15 %%>;
+  descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+  descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+  descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+  descriptionPaddingLeft = <%% 36, 36, 36, 36, 36 %%>;
+  descriptionLineBottom = <%% 36, 36, 36, 36, 36 %%>;
+
+  contents = {
+    title: "스타일링 프로세스",
+    sub: "Styling process",
+    description: [
+      "홈리에종의 스타일링 서비스는 한 명의 디자이너와 우리집 시공부터",
+      "홈스타일링까지 전 과정을 함께하고, 디자이너와의 프로젝트가 잘 진행될 수",
+      "있도록 <b%홈리에종이 프로젝트 케어를 제공%b>합니다.",
+    ],
+    subDescription: [
+      "홈리에종 서비스는 보편 상담부터 가구 배치가 완료되는 과정은 <b%보편 1달 반 정도의 기간이 소요%b>됩니다.",
+      "상담 문의는 소요되는 기간을 고려하여 서비스 신청 시, 디자이너의 선택 폭이 넓어집니다.",
+    ],
+    button: "상담 신청",
+    finalNotice: [
+      "1. 홈리에종의 스타일링 서비스는 한 명의 디자이너와 우리집 시공부터 홈스타일링까지 전 과정을 함께하고, 디자이너와의 프로젝트가 잘 진행될 수 있도록 홈리에종이 프로젝트 케어를 제공합니다.",
+      "2. 홈리에종 서비스는 고관여 서비스로 상담을 통해 나의 상황에 맞는 서비스 유형과 디자이너의 선택에 도움을 받을 수 있습니다.",
+      "3. 홈리에종의 프로세스는 디자이너와 1:1로 만나 인테리어의 전반적인 과정을 같이 진행하는 형식이기 때문에 시공비, 구매비와는 별도로 디자인비가 발생합니다.",
+      "4. 홈리에종 서비스는 보편 상담부터 가구 배치가 완료되는 과정은 보편 1달 반 정도의 기간이 소요됩니다. 상담 문의는 소요되는 기간을 고려하여 서비스 신청 시, 디자이너의 선택 폭이 넓어집니다.",
+      "5. 홈리에종 서비스는 시공만을 단독으로 진행하지는 않습니다. 예산과 기획에 맞는 시공 디자인부터 스타일링까지 디자이너가 함께합니다.",
+      "",
+      "톤보정 시공 - ( tone match-up)",
+      "홈리에종에서 제안하는 톤보정 시공은 디자이너와 함께 원하는 스타일에 맞추어 큰 구조의 변경이나 전체 시공 없이 기존 자재의 거슬리는 컬러, 톤, 무늬 등을",
+      "새로운 자재로 드레스업하여 배경을 새로 만들어내는 비교적 간단한 부분 시공 서비스입니다.",
+      "",
+      "본 서비스는 홈리에종의 사정에 따라 별도 고지 없이 변경 또는 중단될 수 있습니다.",
+      "본 서비스는 홈리에종의 메인 서비스인 홈스타일링 서비스가 포함되어 있습니다.",
+      "시공 자재 선택은 서비스 계약 확정 후, 디자이너와의 상담을 통해 결정됩니다.",
+    ]
+  };
+
+  baseMother = createNode({
+    mother: baseTong,
+    style: {
+      display: "flex",
       position: "relative",
       flexDirection: "column",
-      width: String(leftMotherWidth - paddingLeft) + ea,
+      alignItems: "center",
+      width: String(standardWidth) + ea,
+      left: withOut(50, standardWidth / 2, ea),
       paddingTop: String(paddingTop) + ea,
-      paddingLeft: String(paddingLeft) + ea,
-      paddingBottom: String(paddingTop) + ea,
-      height: withOut(paddingTop, ea),
-      verticalAlign: "top",
+      marginBottom: String(paddingTop) + ea,
     }
   });
 
   createNode({
-    mother: leftMother,
-    text: contents.about,
-    style: {
-      display: "block",
-      position: "relative",
-      fontSize: String(aboutSize) + ea,
-      fontWeight: String(aboutWeight),
-      fontFamily: "graphik",
-      fontStyle: "italic",
-      color: colorChip.black,
-    }
-  });
-
-  createNode({
-    mother: leftMother,
+    mother: baseMother,
     text: contents.title,
     style: {
       display: "block",
       position: "relative",
       fontSize: String(titleSize) + ea,
       fontWeight: String(titleWeight),
-      lineHeight: String(1.4),
-      marginTop: String(60) + ea,
-      paddingLeft: String(22) + ea,
+      color: colorChip.black,
+      width: withOut(0, ea),
+      textAlign: "center",
+      paddingBottom: String(titlePaddingBottom) + ea,
+    }
+  });
+
+  createNode({
+    mother: baseMother,
+    text: contents.sub,
+    style: {
+      display: "block",
+      position: "relative",
+      fontSize: String(subSize) + ea,
+      fontWeight: String(subWeight),
+      color: colorChip.deactive,
+      fontFamily: "graphik",
+      fontStyle: "italic",
+      textAlign: "center",
+    }
+  })
+
+  descriptionBox = createNode({
+    mother: baseMother,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: withOut(0, ea),
+      paddingTop: String(descriptionBoxPaddingTop) + ea,
+      textAlign: "center",
+      justifyContent: "center",
+    }
+  });
+
+  createNode({
+    mother: descriptionBox,
+    style: {
+      position: "absolute",
+      height: String(0) + ea,
+      width: withOut(0, ea),
+      bottom: String(descriptionLineBottom) + ea,
+      borderBottom: "1px solid " + colorChip.gray3,
+    }
+  });
+
+  createNode({
+    mother: descriptionBox,
+    text: contents.description.join("\n"),
+    style: {
+      display: "inline-block",
+      position: "relative",
+      fontSize: String(descriptionSize) + ea,
+      fontWeight: String(descriptionWeight),
+      color: colorChip.black,
+      lineHeight: String(descriptionLineHeight),
+      textAlign: "center",
+      paddingLeft: String(descriptionPaddingLeft) + ea,
+      paddingRight: String(descriptionPaddingLeft) + ea,
+      background: colorChip.white,
+    },
+    bold: {
+      fontSize: String(descriptionSize) + ea,
+      fontWeight: String(descriptionBoldWeight),
+      color: colorChip.black,
+    }
+  });
+
+
+  createNode({
+    mother: baseMother,
+    text: "홈리에종 케어",
+    style: {
+      display: "block",
+      position: "relative",
+      fontSize: String(20) + ea,
+      fontWeight: String(titleWeight),
+      color: localColor.brown2,
+      width: withOut(0, ea),
+      textAlign: "center",
+      paddingTop: String(60) + ea,
+      paddingBottom: String(titlePaddingBottom) + ea,
+    }
+  });
+
+  createNode({
+    mother: baseMother,
+    mode: "img",
+    attribute: {
+      src: StylePartsJs.binaryPath + "/process0.png",
+    },
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(1300) + ea,
+    }
+  });
+
+
+  createNode({
+    mother: baseMother,
+    text: contents.subDescription.join("\n"),
+    style: {
+      display: "inline-block",
+      position: "relative",
+      fontSize: String(descriptionSize) + ea,
+      fontWeight: String(descriptionWeight),
+      color: colorChip.black,
+      lineHeight: String(descriptionLineHeight),
+      textAlign: "center",
+      paddingLeft: String(descriptionPaddingLeft) + ea,
+      paddingRight: String(descriptionPaddingLeft) + ea,
+      background: colorChip.white,
+      marginBottom: String(24) + ea,
+    },
+    bold: {
+      fontSize: String(descriptionSize) + ea,
+      fontWeight: String(descriptionBoldWeight),
+      color: colorChip.black,
+    }
+  });
+
+
+  createNode({
+    mother: baseMother,
+    mode: "svg",
+    source: svgMaker.verticalArrow(12, 240, localColor.brown2),
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(12) + ea,
+    }
+  })
+
+  createNode({
+    mother: baseMother,
+    style: {
+      display: "inline-flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      textAlign: "center",
+      alignItems: "center",
+      width: String(140) + ea,
+      height: String(56) + ea,
+      borderRadius: String(5) + "px",
+      background: localColor.brown2,
+      marginTop: String(20) + ea,
+    },
+    children: [
+      {
+        text: contents.button,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(20) + ea,
+          fontWeight: String(700),
+          color: colorChip.white,
+          top: String(-2) + ea,
+        }
+      }
+    ]
+  });
+
+
+  createNode({
+    mother: baseMother,
+    text: contents.finalNotice.join("\n"),
+    style: {
+      display: "inline-block",
+      position: "relative",
+      fontSize: String(13) + ea,
+      fontWeight: String(descriptionWeight),
+      color: colorChip.black,
+      lineHeight: String(descriptionLineHeight),
+      textAlign: "left",
+      paddingTop: String(descriptionPaddingLeft) + ea,
+      paddingBottom: String(descriptionPaddingLeft) + ea,
+      paddingLeft: String(descriptionPaddingLeft) + ea,
+      paddingRight: String(descriptionPaddingLeft) + ea,
+      width: withOut(descriptionPaddingLeft * 2, ea),
+      background: colorChip.gray1,
+      borderRadius: String(5) + "px",
+      marginTop: String(120) + ea,
+    },
+    bold: {
+      fontSize: String(descriptionSize) + ea,
+      fontWeight: String(descriptionBoldWeight),
       color: colorChip.black,
     },
     children: [
       {
+        text: "홈리에종 FAQ",
         style: {
+          display: "inline-flex",
           position: "absolute",
-          top: String(8) + ea,
-          left: String(0),
-          width: String(5) + ea,
-          height: withOut(13, ea),
-          background: colorChip.black,
+          width: String(120) + ea,
+          height: String(36) + ea,
           borderRadius: String(5) + "px",
+          background: localColor.brown2,
+          fontSize: String(15) + ea,
+          fontWeight: String(700),
+          color: colorChip.white,
+          justifyContent: "center",
+          alignItems: "center",
+          bottom: String(descriptionPaddingLeft) + ea,
+          right: String(descriptionPaddingLeft) + ea,
+          paddingBottom: String(2) + ea,
         }
       }
     ]
-  })
-
-  createNode({
-    mother: leftMother,
-    text: contents.description[0].join("\n"),
-    style: {
-      display: "block",
-      position: "relative",
-      fontSize: String(wordingSize) + ea,
-      fontWeight: String(wordingWeight),
-      lineHeight: String(1.7),
-      color: colorChip.black,
-      marginTop: String(52) + ea,
-    },
-    bold: {
-      fontSize: String(wordingSize) + ea,
-      fontWeight: String(wordingBoldWeight),
-      color: colorChip.black,
-    }
-  });
-
-  createNode({
-    mother: leftMother,
-    text: contents.description[1].join("\n"),
-    style: {
-      display: "block",
-      position: "relative",
-      fontSize: String(wordingSize) + ea,
-      fontWeight: String(wordingWeight),
-      lineHeight: String(1.7),
-      color: colorChip.black,
-      marginTop: String(16) + ea,
-    },
-    bold: {
-      fontSize: String(wordingSize) + ea,
-      fontWeight: String(wordingBoldWeight),
-      color: colorChip.black,
-    }
-  });
-
-  rightMother = createNode({
-    mother: baseMother,
-    style: {
-      display: "inline-flex",
-      position: "relative",
-      width: withOut(leftMotherWidth, ea),
-      overflow: "visible",
-    }
-  });
-
-  createNode({
-    mother: rightMother,
-    style: {
-      display: "block",
-      position: "absolute",
-      width: withOut(0, ea),
-      left: String(0),
-      top: String(paddingTop) + ea,
-      height: withOut(paddingTop, ea),
-      borderTopLeftRadius: String(5) + "px",
-      borderTopRightRadius: String(5) + "px",
-      backgroundImage: "url('" + StylePartsJs.binaryPath + "/back.jpg" + "')",
-      backgroundSize: "100% auto",
-      backgroundPosition: "0% 0%",
-      boxShadow: "4px 4px 13px -9px " + colorChip.shadow,
-    }
-  });
-
-  createNode({
-    mother: baseMother,
-    style: {
-      display: "block",
-      position: "absolute",
-      left: String(0) + ea,
-      width: String(window.innerWidth - ((window.innerWidth - standardWidth) / 2)) + ea,
-      height: String(30) + ea,
-      bottom: String(-30) + ea,
-      background: colorChip.white,
-    }
   });
 
 }
@@ -2867,6 +3213,7 @@ StylePartsJs.prototype.launching = async function (loading) {
           instance.insertMatchupBox();
           instance.insertStyleBox();
           instance.insertBenefitsBox();
+          instance.insertProcessBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "StylePartsJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
         }
