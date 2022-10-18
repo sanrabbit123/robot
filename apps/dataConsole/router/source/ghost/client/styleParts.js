@@ -137,6 +137,10 @@ StylePartsJs.prototype.insertInitBox = function () {
   let titleLogWidth;
   let titleLogTop;
   let baseMotherMarginBottom;
+  let descriptionPaddingTop;
+  let partsWidth;
+  let bottomLineWidth;
+  let bottomLineHeight;
 
   initSize = <%% 15, 15, 15, 14, 3 %%>;
   initWeight = <%% 400, 400, 400, 400, 400 %%>;
@@ -152,6 +156,12 @@ StylePartsJs.prototype.insertInitBox = function () {
   titleLogTop = <%% 96, 96, 96, 90, 9 %%>;
 
   baseMotherMarginBottom = <%% 168, 168, 168, 168, 17 %%>;
+
+  descriptionPaddingTop = <%% 21, 21, 21, 21, 21 %%>;
+  partsWidth = <%% 100, 100, 100, 100, 100 %%>;
+
+  bottomLineWidth = <%% 400, 400, 400, 400, 400 %%>;
+  bottomLineHeight = <%% 40, 40, 40, 40, 40 %%>;
 
   svgBox = this.returnSvgBox();
   contents = {
@@ -243,9 +253,9 @@ StylePartsJs.prototype.insertInitBox = function () {
     },
     style: {
       marginTop: String(initPaddingTop) + ea,
-      width: String(100) + ea,
+      width: String(partsWidth) + ea,
     }
-  })
+  });
 
   createNode({
     mother: leftMother,
@@ -253,7 +263,7 @@ StylePartsJs.prototype.insertInitBox = function () {
       display: "flex",
       position: "relative",
       flexDirection: "column",
-      paddingTop: String(21) + ea,
+      paddingTop: String(descriptionPaddingTop) + ea,
     },
     children: [
       {
@@ -292,8 +302,8 @@ StylePartsJs.prototype.insertInitBox = function () {
       display: "inline-flex",
       position: "relative",
       borderBottom: "1px solid " + colorChip.gray3,
-      width: String(400) + ea,
-      height: String(40) + ea,
+      width: String(bottomLineWidth) + ea,
+      height: String(bottomLineHeight) + ea,
     }
   });
 
@@ -340,6 +350,12 @@ StylePartsJs.prototype.insertHeadlineBox = function () {
   let aboutSize, aboutWeight;
   let titleSize, titleWeight;
   let wordingBoldWeight;
+  let titleLineHeight;
+  let titleMarginTop, titlePaddingLeft;
+  let titleBarTop, titleBarWidth, titleBarHeight;
+  let wordingLineHeight, wordingMarginTop;
+  let wordingSecondMarginTop;
+  let whitePanHeight;
 
   leftMotherWidth = <%% 500, 500, 500, 500, 56 %%>;
   paddingTop = <%% 72, 72, 72, 72, 7 %%>;
@@ -350,10 +366,23 @@ StylePartsJs.prototype.insertHeadlineBox = function () {
 
   titleSize = <%% 24, 24, 24, 24, 5 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
+  titleMarginTop = <%% 60, 60, 60, 60, 60 %%>;
+  titlePaddingLeft = <%% 22, 22, 22, 22, 22 %%>;
 
   wordingSize = <%% 14, 14, 13, 12, 4 %%>;
   wordingWeight = <%% 400, 400, 400, 400, 400 %%>;
   wordingBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+  wordingLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
+  wordingMarginTop = <%% 52, 52, 52, 52, 52 %%>;
+  wordingSecondMarginTop = <%% 16, 16, 16, 16, 16 %%>;
+
+  titleBarTop = <%% 8, 8, 8, 8, 8 %%>;
+  titleBarWidth = <%% 5, 5, 5, 5, 5 %%>;
+  titleBarHeight = <%% 13, 13, 13, 13, 13 %%>;
+
+  whitePanHeight = <%% 30, 30, 30, 30, 30 %%>;
 
   contents = {
     about: "about\nHomeLiaison",
@@ -436,19 +465,19 @@ StylePartsJs.prototype.insertHeadlineBox = function () {
       position: "relative",
       fontSize: String(titleSize) + ea,
       fontWeight: String(titleWeight),
-      lineHeight: String(1.4),
-      marginTop: String(60) + ea,
-      paddingLeft: String(22) + ea,
+      lineHeight: String(titleLineHeight),
+      marginTop: String(titleMarginTop) + ea,
+      paddingLeft: String(titlePaddingLeft) + ea,
       color: colorChip.black,
     },
     children: [
       {
         style: {
           position: "absolute",
-          top: String(8) + ea,
+          top: String(titleBarTop) + ea,
           left: String(0),
-          width: String(5) + ea,
-          height: withOut(13, ea),
+          width: String(titleBarWidth) + ea,
+          height: withOut(titleBarHeight, ea),
           background: colorChip.black,
           borderRadius: String(5) + "px",
         }
@@ -464,9 +493,9 @@ StylePartsJs.prototype.insertHeadlineBox = function () {
       position: "relative",
       fontSize: String(wordingSize) + ea,
       fontWeight: String(wordingWeight),
-      lineHeight: String(1.7),
+      lineHeight: String(wordingLineHeight),
       color: colorChip.black,
-      marginTop: String(52) + ea,
+      marginTop: String(wordingMarginTop) + ea,
     },
     bold: {
       fontSize: String(wordingSize) + ea,
@@ -483,9 +512,9 @@ StylePartsJs.prototype.insertHeadlineBox = function () {
       position: "relative",
       fontSize: String(wordingSize) + ea,
       fontWeight: String(wordingWeight),
-      lineHeight: String(1.7),
+      lineHeight: String(wordingLineHeight),
       color: colorChip.black,
-      marginTop: String(16) + ea,
+      marginTop: String(wordingSecondMarginTop) + ea,
     },
     bold: {
       fontSize: String(wordingSize) + ea,
@@ -529,8 +558,8 @@ StylePartsJs.prototype.insertHeadlineBox = function () {
       position: "absolute",
       left: String(0) + ea,
       width: String(window.innerWidth - ((window.innerWidth - standardWidth) / 2)) + ea,
-      height: String(30) + ea,
-      bottom: String(-30) + ea,
+      height: String(whitePanHeight) + ea,
+      bottom: String(-1 * whitePanHeight) + ea,
       background: colorChip.white,
     }
   });
@@ -2894,6 +2923,15 @@ StylePartsJs.prototype.insertProcessBox = function () {
   let descriptionLineHeight, descriptionPaddingLeft;
   let descriptionLineBottom;
   let num;
+  let careSize, carePaddingTop;
+  let processImageWidth;
+  let subDescriptionMarginBottom;
+  let belowArrowWidth, belowArrowHeight;
+  let buttonWidth, buttonHeight, buttonMarginTop;
+  let buttonSize, buttonWeight, buttonTextTop;
+  let noticeSize, noticeMarginTop;
+  let faqButtonWidth, faqButtonHeight;
+  let faqSize, faqWeight, faqPaddingBottom;
 
   paddingTop = <%% 200, 200, 180, 168, 16 %%>;
 
@@ -2915,6 +2953,32 @@ StylePartsJs.prototype.insertProcessBox = function () {
   descriptionPaddingLeft = <%% 36, 36, 36, 36, 36 %%>;
   descriptionLineBottom = <%% 36, 36, 36, 36, 36 %%>;
 
+  careSize = <%% 20, 20, 20, 20, 20 %%>;
+  carePaddingTop = <%% 60, 60, 60, 60, 60 %%>;
+
+  processImageWidth = <%% 1300, 1300, 1300, 1300, 1300 %%>;
+  subDescriptionMarginBottom = <%% 24, 24, 24, 24, 24 %%>;
+
+  belowArrowWidth = <%% 12, 12, 12, 12, 12 %%>;
+  belowArrowHeight = <%% 240, 240, 240, 240, 240 %%>;
+
+  buttonWidth = <%% 140, 140, 140, 140, 140 %%>;
+  buttonHeight = <%% 56, 56, 56, 56, 56 %%>;
+  buttonMarginTop = <%% 20, 20, 20, 20, 20 %%>;
+  buttonSize = <%% 20, 20, 20, 20, 20 %%>;
+  buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
+  buttonTextTop = <%% -2, -2, -2, -2, -2 %%>;
+
+  noticeSize = <%% 13, 13, 13, 13, 13 %%>;
+  noticeMarginTop = <%% 120, 120, 120, 120, 120 %%>;
+
+  faqButtonWidth = <%% 120, 120, 120, 120, 120 %%>;
+  faqButtonHeight = <%% 36, 36, 36, 36, 36 %%>;
+
+  faqSize = <%% 15, 15, 15, 15, 15 %%>;
+  faqWeight = <%% 700, 700, 700, 700, 700 %%>;
+  faqPaddingBottom = <%% 2, 2, 2, 2, %%>;
+
   contents = {
     title: "스타일링 프로세스",
     sub: "Styling process",
@@ -2927,6 +2991,8 @@ StylePartsJs.prototype.insertProcessBox = function () {
       "홈리에종 서비스는 보편 상담부터 가구 배치가 완료되는 과정은 <b%보편 1달 반 정도의 기간이 소요%b>됩니다.",
       "상담 문의는 소요되는 기간을 고려하여 서비스 신청 시, 디자이너의 선택 폭이 넓어집니다.",
     ],
+    care: "홈리에종 케어",
+    process: "/process0.png",
     button: "상담 신청",
     finalNotice: [
       "1. 홈리에종의 스타일링 서비스는 한 명의 디자이너와 우리집 시공부터 홈스타일링까지 전 과정을 함께하고, 디자이너와의 프로젝트가 잘 진행될 수 있도록 홈리에종이 프로젝트 케어를 제공합니다.",
@@ -3037,16 +3103,16 @@ StylePartsJs.prototype.insertProcessBox = function () {
 
   createNode({
     mother: baseMother,
-    text: "홈리에종 케어",
+    text: contents.care,
     style: {
       display: "block",
       position: "relative",
-      fontSize: String(20) + ea,
+      fontSize: String(careSize) + ea,
       fontWeight: String(titleWeight),
       color: localColor.brown2,
       width: withOut(0, ea),
       textAlign: "center",
-      paddingTop: String(60) + ea,
+      paddingTop: String(carePaddingTop) + ea,
       paddingBottom: String(titlePaddingBottom) + ea,
     }
   });
@@ -3055,12 +3121,12 @@ StylePartsJs.prototype.insertProcessBox = function () {
     mother: baseMother,
     mode: "img",
     attribute: {
-      src: StylePartsJs.binaryPath + "/process0.png",
+      src: StylePartsJs.binaryPath + contents.process,
     },
     style: {
       display: "block",
       position: "relative",
-      width: String(1300) + ea,
+      width: String(processImageWidth) + ea,
     }
   });
 
@@ -3079,7 +3145,7 @@ StylePartsJs.prototype.insertProcessBox = function () {
       paddingLeft: String(descriptionPaddingLeft) + ea,
       paddingRight: String(descriptionPaddingLeft) + ea,
       background: colorChip.white,
-      marginBottom: String(24) + ea,
+      marginBottom: String(subDescriptionMarginBottom) + ea,
     },
     bold: {
       fontSize: String(descriptionSize) + ea,
@@ -3092,11 +3158,11 @@ StylePartsJs.prototype.insertProcessBox = function () {
   createNode({
     mother: baseMother,
     mode: "svg",
-    source: svgMaker.verticalArrow(12, 240, localColor.brown2),
+    source: svgMaker.verticalArrow(belowArrowWidth, belowArrowHeight, localColor.brown2),
     style: {
       display: "block",
       position: "relative",
-      width: String(12) + ea,
+      width: String(belowArrowWidth) + ea,
     }
   })
 
@@ -3108,11 +3174,11 @@ StylePartsJs.prototype.insertProcessBox = function () {
       justifyContent: "center",
       textAlign: "center",
       alignItems: "center",
-      width: String(140) + ea,
-      height: String(56) + ea,
+      width: String(buttonWidth) + ea,
+      height: String(buttonHeight) + ea,
       borderRadius: String(5) + "px",
       background: localColor.brown2,
-      marginTop: String(20) + ea,
+      marginTop: String(buttonMarginTop) + ea,
     },
     children: [
       {
@@ -3120,15 +3186,14 @@ StylePartsJs.prototype.insertProcessBox = function () {
         style: {
           display: "inline-block",
           position: "relative",
-          fontSize: String(20) + ea,
-          fontWeight: String(700),
+          fontSize: String(buttonSize) + ea,
+          fontWeight: String(buttonWeight),
           color: colorChip.white,
-          top: String(-2) + ea,
+          top: String(buttonTextTop) + ea,
         }
       }
     ]
   });
-
 
   createNode({
     mother: baseMother,
@@ -3136,7 +3201,7 @@ StylePartsJs.prototype.insertProcessBox = function () {
     style: {
       display: "inline-block",
       position: "relative",
-      fontSize: String(13) + ea,
+      fontSize: String(noticeSize) + ea,
       fontWeight: String(descriptionWeight),
       color: colorChip.black,
       lineHeight: String(descriptionLineHeight),
@@ -3148,7 +3213,7 @@ StylePartsJs.prototype.insertProcessBox = function () {
       width: withOut(descriptionPaddingLeft * 2, ea),
       background: colorChip.gray1,
       borderRadius: String(5) + "px",
-      marginTop: String(120) + ea,
+      marginTop: String(noticeMarginTop) + ea,
     },
     bold: {
       fontSize: String(descriptionSize) + ea,
@@ -3161,18 +3226,18 @@ StylePartsJs.prototype.insertProcessBox = function () {
         style: {
           display: "inline-flex",
           position: "absolute",
-          width: String(120) + ea,
-          height: String(36) + ea,
+          width: String(faqButtonWidth) + ea,
+          height: String(faqButtonHeight) + ea,
           borderRadius: String(5) + "px",
           background: localColor.brown2,
-          fontSize: String(15) + ea,
-          fontWeight: String(700),
+          fontSize: String(faqSize) + ea,
+          fontWeight: String(faqWeight),
           color: colorChip.white,
           justifyContent: "center",
           alignItems: "center",
           bottom: String(descriptionPaddingLeft) + ea,
           right: String(descriptionPaddingLeft) + ea,
-          paddingBottom: String(2) + ea,
+          paddingBottom: String(faqPaddingBottom) + ea,
         }
       }
     ]
