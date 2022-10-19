@@ -5844,8 +5844,6 @@ BillMaker.prototype.taxBill_test = async function () {
 
       console.log(resultObjTong);
 
-
-
       await shellExec("rm", [ "-rf", tempDir + "/" + moduleName ]);
       await shellExec("rm", [ "-rf", mailBoxDir ]);
 
@@ -5858,9 +5856,7 @@ BillMaker.prototype.taxBill_test = async function () {
       if (finalRows.length === 0) {
         await back.mongoCreate(collection, json, { selfMongo });
         console.log("mongo insert");
-        if (json.who.from.business !== "221-81-49759") {
-          await messageSend({ text: json.toMessage(), channel: "#701_taxbill" });
-        }
+        await messageSend({ text: json.toMessage(), channel: "#701_taxbill" });
       }
     }
 
