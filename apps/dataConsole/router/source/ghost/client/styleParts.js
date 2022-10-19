@@ -46,7 +46,7 @@ const StylePartsJs = function () {
   }
 }
 
-StylePartsJs.binaryPath = "/middle/parts";
+StylePartsJs.binaryPath = FRONTHOST + "/middle/parts";
 
 StylePartsJs.prototype.returnSvgBox = function () {
   const instance = this;
@@ -172,8 +172,8 @@ StylePartsJs.prototype.insertInitBox = function () {
         "<b%시공 비용은 줄이고, 집 전체 스타일링 결과물에 대한 만족도는 올리고,%b>",
       ],
       [
-        "홈리에종은 시공부터 시작하여 가구, 패브릭, 소품까지 전문적인",
-        "<b%스타일링을 완성하는 고객 맞춤형 인테리어를 지향%b>합니다.",
+        "시공부터 스타일링까지, <b%전체 풀 프로세스를 홈리에종 디자이너와 함께%b>",
+        "아파트멘터리의 자재를 고르는 스타일 파츠 서비스로 진행해보세요.",
       ]
     ],
     context: [
@@ -364,7 +364,7 @@ StylePartsJs.prototype.insertHeadlineBox = function () {
   aboutSize = <%% 13, 13, 12, 11, 3 %%>;
   aboutWeight = <%% 500, 500, 500, 500, 500 %%>;
 
-  titleSize = <%% 24, 24, 24, 24, 5 %%>;
+  titleSize = <%% 23, 23, 22, 21, 5 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
   titleMarginTop = <%% 60, 60, 60, 60, 60 %%>;
@@ -386,15 +386,15 @@ StylePartsJs.prototype.insertHeadlineBox = function () {
 
   contents = {
     about: "about\nHomeLiaison",
-    title: "홈리에종과\n아파트멘터리가 만났다!",
+    title: "홈리에종 디자이너와\n아파트멘터리 파츠가 만났다!",
     description: [
       [
-        "아파트멘터리가 홈스타일링 전문",
-        "플랫폼, 홈리에종과 만났습니다.",
-        "<b%홈리에종의 디자이너, 아파트멘터리 파츠",
-        "자재의 만남%b>으로 내 집의 컨디션을",
-        "잘 아는 디자이너와 맞춤 홈스타일링을",
-        "진행하실 수 있어요!",
+        "내 집의 컨디션을 가장 잘 아는 디자이너와",
+        "맞춤 홈스타일링을 진행해보세요.",
+        "<b%홈스타일링 전문 플랫폼, 홈리에종은",
+        "다양한 디자이너와 함께 홈스타일링을",
+        "제공%b>합니다. 아파트멘터리의 파츠 제품으로",
+        "시공 선택시 디자인비 할인 혜택도 드려요.",
       ],
       [
         "<b%아파트멘터리 파츠의 엄선된 자재로",
@@ -403,7 +403,6 @@ StylePartsJs.prototype.insertHeadlineBox = function () {
       ],
     ]
   };
-
 
   baseMother = createNode({
     mother: baseTong,
@@ -612,10 +611,10 @@ StylePartsJs.prototype.insertLeadBox = function () {
 
   titleSize = <%% 27, 27, 27, 27, 27 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
-  titlePaddingBottom = <%% 1, 1, 1, 1, 1 %%>;
+  titlePaddingBottom = <%% 4, 4, 4, 4, 4 %%>;
 
-  subSize = <%% 18, 18, 18, 18, 18 %%>;
-  subWeight = <%% 500, 500, 500, 500, 500 %%>;
+  subSize = <%% 15, 15, 15, 15, 15 %%>;
+  subWeight = <%% 400, 400, 400, 400, 400 %%>;
 
   descriptionBoxPaddingTop = <%% 28, 28, 28, 28, 3 %%>;
   imageBoxPaddingTop = <%% 28, 28, 28, 28, 3 %%>;
@@ -657,17 +656,17 @@ StylePartsJs.prototype.insertLeadBox = function () {
   barTextWeight = <%% 800, 800, 800, 800, 800 %%>;
   barTextBottom = <%% -28, -28, -27, -27, -27 %%>;
 
-  barNoticeBoxPaddingTop = <%% 40, 40, 36, 36, 36 %%>;
-  barNoticeSize = <%% 13, 13, 13, 13, 13 %%>;
+  barNoticeBoxPaddingTop = <%% 72, 72, 36, 36, 36 %%>;
+  barNoticeSize = <%% 14, 14, 14, 14, 13 %%>;
   barNoticeWeight = <%% 400, 400, 400, 400, 400 %%>;
-  barNoticeMarginBottom = <%% 4, 4, 4, 4, 4 %%>;
+  barNoticeMarginBottom = <%% 5, 5, 5, 5, 4 %%>;
 
   contents = {
-    title: "디자이너가 이끄는 인테리어",
-    sub: "Homeliaison styling",
+    title: "홈리에종 소개",
+    sub: "디자이너가 이끄는 인테리어",
     description: [
       "홈리에종은 과도한 리모델링을 지양하고 꼭 필요한 시공만을 진행하며,",
-      "<b%디자인을 먼저 하는 방식을 통해 인테리어의 효율성을 올리는 방식%b>을 지향합니다.",
+      "<b%디자인을 선기획하여 인테리어의 효율성을 올리는%b> 방식을 지향합니다.",
     ],
     diagram: [
       {
@@ -675,15 +674,15 @@ StylePartsJs.prototype.insertLeadBox = function () {
         sub: "디자인 기획",
         description: [
           "디자인을 먼저 진행하여",
-          "시공 범위를 조절",
+          "시공 범위의 밸런스를 조절",
         ],
       },
       {
         title: "Construction",
         sub: "톤보정 시공",
         description: [
-          "시공 범위와 자재, 디자인",
-          "시공사에 따라 변동",
+          "시공 범위를 조정하여",
+          "톤에 맞는 부분 시공 위주",
         ],
       },
       {
@@ -703,8 +702,8 @@ StylePartsJs.prototype.insertLeadBox = function () {
         "제품 비용",
       ],
       notice: [
-        "시공 범위에 따라 시공 비용의 비율은 조정될 수 있습니다.",
-        "시공비, 구매비와는 별도로 디자인비가 발생합니다.",
+        "디자인 비용은 크게  디자인 비용 / 시공 비용 / 제품 구매 비용으로 나누어집니다.",
+        "디자이너가 고객과의 상담 이후 시공 비용과 제품 구매 비용의 밸런스를 균형있게 맞추어 완성도 있는 집을 디자인합니다. ",
       ]
     }
   };
@@ -745,8 +744,6 @@ StylePartsJs.prototype.insertLeadBox = function () {
       fontSize: String(subSize) + ea,
       fontWeight: String(subWeight),
       color: colorChip.deactive,
-      fontFamily: "graphik",
-      fontStyle: "italic",
       textAlign: "center",
     }
   })
@@ -1149,7 +1146,7 @@ StylePartsJs.prototype.insertLeadBox = function () {
       flexDirection: "column",
       paddingTop: String(barNoticeBoxPaddingTop) + ea,
       justifyContent: "end",
-      alignItems: "end",
+      alignItems: "center",
     }
   });
 
@@ -1221,10 +1218,10 @@ StylePartsJs.prototype.insertMatchupBox = function () {
 
   titleSize = <%% 27, 27, 27, 27, 27 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
-  titlePaddingBottom = <%% 1, 1, 1, 1, 1 %%>;
+  titlePaddingBottom = <%% 4, 4, 4, 4, 4 %%>;
 
-  subSize = <%% 18, 18, 18, 18, 18 %%>;
-  subWeight = <%% 500, 500, 500, 500, 500 %%>;
+  subSize = <%% 15, 15, 15, 15, 15 %%>;
+  subWeight = <%% 400, 400, 400, 400, 400 %%>;
 
   whiteInnerPaddingTop = <%% 48, 48, 40, 40, 72 %%>;
   whiteInnerPaddingLeft = <%% 48, 48, 40, 40, 72 %%>;
@@ -1240,7 +1237,7 @@ StylePartsJs.prototype.insertMatchupBox = function () {
   whiteBoxHeight = <%% 420, 420, 420, 420, 420 %%>;
 
   subTitleSize = <%% 17, 17, 17, 17, 17 %%>;
-  subTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
+  subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
 
   descriptionSize = <%% 14, 14, 14, 14, 14 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
@@ -1274,7 +1271,8 @@ StylePartsJs.prototype.insertMatchupBox = function () {
 
   contents = {
     title: "톤보정 시공이란?",
-    sub: "Tone match-up",
+    sub: "홈리에종에서 제안하는 시공 방식",
+    subTitle: "톤보정 시공 (tone match-up)",
     description: [
       "홈리에종에서 제안하는 톤보정 시공은 디자이너와",
       "함께 원하는 스타일에 맞추어 큰 구조의 변경이나",
@@ -1288,37 +1286,37 @@ StylePartsJs.prototype.insertMatchupBox = function () {
       "/before10.jpg",
       "/after10.jpg",
     ],
-    secondSub: "이제 시공 걱정하지 마세요!",
+    secondSub: "홈리에종 직영 시공사",
     secondDescription: [
-      "홈리에종에서 제안하는 톤보정 시공은 디자이너와",
-      "함께 원하는 스타일에 맞추어 큰 구조의 변경이나",
-      "<b%전체 시공 없이 기존 자재의 거슬리는 컬러, 톤, 무늬 등을",
-      "새로운 자재로 드레스업하여 배경을 새로 만들어내는%b>",
-      "비교적 간단한 부분 시공 서비스입니다.",
+      "이제 시공 걱정하지 마세요! 홈리에종 시공사와 진행 시,",
+      "실시간 채팅을 통해 상황을 빠르게 공유합니다. 그리고",
+      "투명한 견적서를 제공하며, 신뢰할 수 있는 결제 시스템을",
+      "통해 안정적인 시공을 진행할 수 있습니다. 하자 보수 또한",
+      "프로젝트가 끝날 때까지 전체적으로 진행합니다.",
     ],
     secondImage: [
       {
         source: "/second00.jpg",
-        title: "재빠른 시공",
+        title: "시공 상황 공유",
         description: [
-          "따뜻한 마루 컬러에 화이트 배경은",
-          "기본중의 기본이죠. 다양한 가구 중",
+          "실시간 채팅을 통해",
+          "상황을 빠르게 공유드립니다.",
         ]
       },
       {
         source: "/second10.jpg",
         title: "정확한 견적",
         description: [
-          "따뜻한 마루 컬러에 화이트 배경은",
-          "기본중의 기본이죠. 다양한 가구 중",
+          "투명한 견적서를 제공하며",
+          "신뢰할 수 있는 결제 시스템을 이용합니다.",
         ]
       },
       {
         source: "/second20.jpg",
-        title: "신뢰할 수 있는 결제",
+        title: "확실한 하자보수",
         description: [
-          "따뜻한 마루 컬러에 화이트 배경은",
-          "기본중의 기본이죠. 다양한 가구 중",
+          "프로젝트가 끝날때까지",
+          "확실하게 하자 보수를 진행합니다.",
         ]
       },
     ]
@@ -1374,8 +1372,6 @@ StylePartsJs.prototype.insertMatchupBox = function () {
       fontSize: String(subSize) + ea,
       fontWeight: String(subWeight),
       color: colorChip.deactive,
-      fontFamily: "graphik",
-      fontStyle: "italic",
       textAlign: "center",
     }
   });
@@ -1455,15 +1451,13 @@ StylePartsJs.prototype.insertMatchupBox = function () {
         }
       },
       {
-        text: contents.sub,
+        text: contents.subTitle,
         style: {
           display: "block",
           position: "relative",
           fontSize: String(subTitleSize) + ea,
           fontWeight: String(subTitleWeight),
           color: colorChip.black,
-          fontFamily: "graphik",
-          fontStyle: "italic",
         }
       },
       {
@@ -1834,7 +1828,7 @@ StylePartsJs.prototype.insertStyleBox = function () {
   let descriptionSize, descriptionWeight, descriptionBoldWeight;
   let descriptionLineHeight, descriptionPaddingLeft;
   let descriptionLineBottom;
-  let num;
+  let num, num2;
   let whiteBox;
   let svgBox;
   let whiteBetween;
@@ -1876,10 +1870,10 @@ StylePartsJs.prototype.insertStyleBox = function () {
 
   titleSize = <%% 27, 27, 27, 27, 27 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
-  titlePaddingBottom = <%% 1, 1, 1, 1, 1 %%>;
+  titlePaddingBottom = <%% 4, 4, 4, 4, 4 %%>;
 
-  subSize = <%% 18, 18, 18, 18, 18 %%>;
-  subWeight = <%% 500, 500, 500, 500, 500 %%>;
+  subSize = <%% 15, 15, 15, 15, 15 %%>;
+  subWeight = <%% 400, 400, 400, 400, 400 %%>;
 
   descriptionBoxPaddingTop = <%% 28, 28, 28, 28, 3 %%>;
   imageBoxPaddingTop = <%% 28, 28, 28, 28, 3 %%>;
@@ -1952,10 +1946,10 @@ StylePartsJs.prototype.insertStyleBox = function () {
 
   contents = {
     title: "스타일 파츠",
-    sub: "Style parts",
+    sub: "스타일링과 자재의 만남",
     description: [
-      "스타일 파츠는 그러한 <b%톤 보정 시공과 함께 홈리에종 스타일링%b>으로",
-      "집 안 분위기와 스타일을 효과적으로 바꾸는 인테리어 서비스입니다.",
+      "스타일 파츠는 톤보정 시공과 함께 인기 있는 4가지의 스타일에 맞는 자재 찾기처럼,",
+      "<b%원하는 스타일에 맞게 디자이너와 자재 매칭%b>을 하여 현장을 만들어내는 서비스입니다. ",
     ],
     white: {
       main: [
@@ -1975,6 +1969,7 @@ StylePartsJs.prototype.insertStyleBox = function () {
         "아파트멘터리의 파츠 제품을 사용할 경우에만 스타일 파츠에 해당됩니다.",
         "도배 / 필름 한정 단품 시공도 준비되어 있어요!",
         "모든 서비스에는 홈리에종 스타일링 서비스가 필수로 포함됩니다.",
+        "[ 아파트멘터리 파츠 자재 보기 ]",
       ]
     },
     image: {
@@ -2095,8 +2090,6 @@ StylePartsJs.prototype.insertStyleBox = function () {
       fontSize: String(subSize) + ea,
       fontWeight: String(subWeight),
       color: colorChip.deactive,
-      fontFamily: "graphik",
-      fontStyle: "italic",
       textAlign: "center",
     }
   });
@@ -2277,6 +2270,7 @@ StylePartsJs.prototype.insertStyleBox = function () {
     ]
   });
 
+  num2 = 0;
   for (let n of contents.white.notice) {
     createNode({
       mother: whiteBox.lastChild,
@@ -2286,11 +2280,12 @@ StylePartsJs.prototype.insertStyleBox = function () {
         position: "relative",
         textAlign: "right",
         fontWeight: String(noticeWeight),
-        color: localColor.brown0,
+        color: num2 === contents.white.notice.length - 1 ? localColor.brown2 : localColor.brown0,
         fontSize: String(noticeSize) + ea,
         marginBottom: String(noticeBetween) + ea,
       }
-    })
+    });
+    num2++;
   }
 
   for (let i = 0; i < contents.image.main.length; i++) {
@@ -2689,10 +2684,10 @@ StylePartsJs.prototype.insertBenefitsBox = function () {
 
   titleSize = <%% 27, 27, 27, 27, 27 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
-  titlePaddingBottom = <%% 1, 1, 1, 1, 1 %%>;
+  titlePaddingBottom = <%% 4, 4, 4, 4, 4 %%>;
 
-  subSize = <%% 18, 18, 18, 18, 18 %%>;
-  subWeight = <%% 500, 500, 500, 500, 500 %%>;
+  subSize = <%% 15, 15, 15, 15, 15 %%>;
+  subWeight = <%% 400, 400, 400, 400, 400 %%>;
 
   contentsTongBetween = <%% 40, 40, 40, 40, 40 %%>;
 
@@ -2719,11 +2714,11 @@ StylePartsJs.prototype.insertBenefitsBox = function () {
 
   contents = {
     title: "고객님들을 위한 혜택",
-    sub: "Benefits",
+    sub: "스타일 파츠 이용 고객 대상",
     benefits: [
-      [ "One", "상담 후, 홈리에종 서비스 계약시 5% 할인 혜택" ],
-      [ "Two", "상담 후, 홈리에종 서비스 계약시 5% 할인 혜택" ],
-      [ "Three", "상담 후, 홈리에종 서비스 계약시 5% 할인 혜택" ],
+      [ "One", "아파트멘터리 mms를 통한 계약 고객 디자인비 5% 할인 혜택" ],
+      [ "Two", "Parts 자재사용 및  홈리에종 시공사 이용 시 추가 상품권 증정" ],
+      [ "Three", "블로그 / 유튜브 촬영 등 서비스 후기 작성시 상품권 증정" ],
     ],
     description: [
       "스타일 파츠를 이용하시는 <b%모든 고객님들께",
@@ -2787,8 +2782,6 @@ StylePartsJs.prototype.insertBenefitsBox = function () {
           fontSize: String(subSize) + ea,
           fontWeight: String(subWeight),
           color: colorChip.white,
-          fontFamily: "graphik",
-          fontStyle: "italic",
           textAlign: "center",
           opacity: String(0.4),
         }
@@ -2937,10 +2930,10 @@ StylePartsJs.prototype.insertProcessBox = function () {
 
   titleSize = <%% 27, 27, 27, 27, 27 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
-  titlePaddingBottom = <%% 1, 1, 1, 1, 1 %%>;
+  titlePaddingBottom = <%% 4, 4, 4, 4, 4 %%>;
 
-  subSize = <%% 18, 18, 18, 18, 18 %%>;
-  subWeight = <%% 500, 500, 500, 500, 500 %%>;
+  subSize = <%% 15, 15, 15, 15, 15 %%>;
+  subWeight = <%% 400, 400, 400, 400, 400 %%>;
 
   descriptionBoxPaddingTop = <%% 28, 28, 28, 28, 3 %%>;
   imageBoxPaddingTop = <%% 28, 28, 28, 28, 3 %%>;
@@ -2977,14 +2970,14 @@ StylePartsJs.prototype.insertProcessBox = function () {
 
   faqSize = <%% 15, 15, 15, 15, 15 %%>;
   faqWeight = <%% 700, 700, 700, 700, 700 %%>;
-  faqPaddingBottom = <%% 2, 2, 2, 2, %%>;
+  faqPaddingBottom = <%% 2, 2, 2, 2, 2 %%>;
 
   contents = {
     title: "스타일링 프로세스",
-    sub: "Styling process",
+    sub: "디자이너는 디자인에 집중하세요",
     description: [
       "홈리에종의 스타일링 서비스는 한 명의 디자이너와 우리집 시공부터",
-      "홈스타일링까지 전 과정을 함께하고, 디자이너와의 프로젝트가 잘 진행될 수",
+      "홈스타일링까지 전 과정을 함께 합니다. 디자이너와의 프로젝트가 잘 진행될 수",
       "있도록 <b%홈리에종이 프로젝트 케어를 제공%b>합니다.",
     ],
     subDescription: [
@@ -3050,8 +3043,6 @@ StylePartsJs.prototype.insertProcessBox = function () {
       fontSize: String(subSize) + ea,
       fontWeight: String(subWeight),
       color: colorChip.deactive,
-      fontFamily: "graphik",
-      fontStyle: "italic",
       textAlign: "center",
     }
   })
