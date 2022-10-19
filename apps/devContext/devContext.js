@@ -110,7 +110,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await bill.taxBill_test();
+    await bill.taxBill();
 
 
 
