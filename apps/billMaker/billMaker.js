@@ -5534,10 +5534,10 @@ BillMaker.prototype.taxBill = async function () {
 
     const mailBoxName = "mailBox";
     const moduleName = "getMail.py";
-    const areaToken = "____split____"
-    const returnToken = "____return____"
-    const nameToken = "____name____"
-    const targetEmail = "hometaxadmin@hometax.go.kr"
+    const areaToken = "____split____";
+    const returnToken = "____return____";
+    const nameToken = "____name____";
+    const targetEmail = "hometaxadmin@hometax.go.kr";
     const collection = "taxBill";
 
     const { dir, mapDir } = this;
