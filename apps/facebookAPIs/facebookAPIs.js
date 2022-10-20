@@ -14,7 +14,8 @@ const FacebookAPIs = function (mother = null, back = null, address = null) {
   this.dir = process.cwd() + "/apps/facebookAPIs";
 
   this.facebookAppId = "4385911554783319";
-  this.facebookToken = "EAAZBU9pw9OFcBAFScXv1FdfOpRSybLX1JyAb85sy6mgtu1Gyum7jyQVDMIhNQp6qVZCoFwrSnxJNsMUbmLpNeEwn4pqYjvxIK3RTpL8zMjG9korM4T9aZBIi2KIJWdalC2nBn50RQTcZCU3UG3EBMVD9cQo0ZC94qjXREIodvpbgr5EOcTVNl";
+  this.facebookAppSecret = "5c9ad0873f5983081b8ad1ba1855806e";
+  this.facebookToken = "EAAZBU9pw9OFcBAC04DxfOzEz5Jsk6HJxZBRuxDZCPHjLFSVSJLmYg9ZBWIfBuxjhIC9KsHLZA1H73OjVQSjGZCTK2e7rJIp7XZBQD9ZCZBrW87rbcBki1H25iywoTFrhoMjF238rxFlAshSUbar6TyxLFt8CMf5Bv3bNIvZBfmBZBq1q7qiSS4ZAdqox";
   this.facebookPageId = "290144638061244";
   this.instagramId = "17841405547472752";
   this.facebookAdId = "505249990112820";
@@ -193,6 +194,30 @@ FacebookAPIs.prototype.dailyInstagram = async function (selfMongo, dayNumber = 7
 
   } catch (e) {
     await errorLog("FacebookAPIs.dailyInstagram error : " + e.message);
+    console.log(e);
+  }
+}
+
+FacebookAPIs.prototype.getAccessToken = async function () {
+  const instance = this;
+  const { requestSystem } = this.mother;
+  const { facebookAppId, facebookAppSecret, facebookPageId, instagramId, facebookAdId } = this;
+  try {
+    const url = "https://graph.facebook.com/oauth/access_token";
+    let res, token;
+
+    token = "EAAZBU9pw9OFcBAJamBM5nKa39Lk8gWlvsnVqcyXI2OXLnamQ2H0ji9qmsJNiCfDia0lzLXUxlZAqfJQSYN2UFZAFQQbLXJGPXiZAq879J8UGrhyKOULwSTAGzYhSSEVitBsDMSwy5RwExtPWBIMg8Gcwb33XfrphievgRDptvNTcEWTlX50aZCmV2wvFA4NqSrEM7fICFq7SY3LGfz5Ft8wJZByZAxJZCMhA1Gehe2L9bTPNKzABRg3YIswpS4gu2lcZD";
+
+    res = await requestSystem(url, {
+      grant_type: "fb_exchange_token",
+      client_id: facebookAppId,
+      client_secret: facebookAppSecret,
+      fb_exchange_token: token,
+    }, { method: "get" })
+
+    console.log(res);
+
+  } catch (e) {
     console.log(e);
   }
 }

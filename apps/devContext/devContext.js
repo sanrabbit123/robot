@@ -89,6 +89,11 @@ DevContext.prototype.launching = async function () {
     // console.log(pastProposal[0].project.detail);
 
 
+    // facebook token
+    // const facebook = new FacebookAPIs();
+    // await facebook.getAccessToken();
+
+
     // monthly GA report
 
     // const app = new GoogleAnalytics();
@@ -107,10 +112,6 @@ DevContext.prototype.launching = async function () {
     // const app = new LogReport(selfMongo);
     // await app.miningRealEstate();
     // await selfMongo.close();
-
-
-
-
 
 
 
