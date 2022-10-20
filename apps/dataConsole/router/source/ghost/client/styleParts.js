@@ -142,26 +142,26 @@ StylePartsJs.prototype.insertInitBox = function () {
   let bottomLineWidth;
   let bottomLineHeight;
 
-  initSize = <%% 15, 15, 15, 14, 3 %%>;
+  initSize = <%% 15, 14, 13, 12, 3 %%>;
   initWeight = <%% 400, 400, 400, 400, 400 %%>;
   initBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   initLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
   initSecondMarginTop = <%% 12, 12, 12, 12, 12 %%>;
 
-  initPaddingTop = <%% 180, 180, 180, 180, 36 %%>;
+  initPaddingTop = <%% 180, 110, 110, 100, 36 %%>;
 
-  leftMotherWidth = <%% 600, 600, 600, 560, 56 %%>;
+  leftMotherWidth = <%% 600, 460, 460, 460, 56 %%>;
 
-  titleLogWidth = <%% 250, 250, 250, 230, 40 %%>;
-  titleLogTop = <%% 96, 96, 96, 90, 9 %%>;
+  titleLogWidth = <%% 250, 216, 200, 180, 40 %%>;
+  titleLogTop = <%% 96, 66, 60, 48, 9 %%>;
 
   baseMotherMarginBottom = <%% 168, 168, 168, 168, 17 %%>;
 
   descriptionPaddingTop = <%% 21, 21, 21, 21, 21 %%>;
-  partsWidth = <%% 100, 100, 100, 100, 100 %%>;
+  partsWidth = <%% 100, 96, 96, 96, 96 %%>;
 
-  bottomLineWidth = <%% 400, 400, 400, 400, 400 %%>;
-  bottomLineHeight = <%% 40, 40, 40, 40, 40 %%>;
+  bottomLineWidth = <%% 400, 0, 0, 0, 0 %%>;
+  bottomLineHeight = <%% 40, 0, 0, 0, 0 %%>;
 
   svgBox = this.returnSvgBox();
   contents = {
@@ -743,7 +743,7 @@ StylePartsJs.prototype.insertLeadBox = function () {
       position: "relative",
       fontSize: String(subSize) + ea,
       fontWeight: String(subWeight),
-      color: colorChip.deactive,
+      color: colorChip.gray5,
       textAlign: "center",
     }
   })
@@ -1371,7 +1371,7 @@ StylePartsJs.prototype.insertMatchupBox = function () {
       position: "relative",
       fontSize: String(subSize) + ea,
       fontWeight: String(subWeight),
-      color: colorChip.deactive,
+      color: colorChip.gray5,
       textAlign: "center",
     }
   });
@@ -2089,7 +2089,7 @@ StylePartsJs.prototype.insertStyleBox = function () {
       position: "relative",
       fontSize: String(subSize) + ea,
       fontWeight: String(subWeight),
-      color: colorChip.deactive,
+      color: colorChip.gray5,
       textAlign: "center",
     }
   });
@@ -3042,7 +3042,7 @@ StylePartsJs.prototype.insertProcessBox = function () {
       position: "relative",
       fontSize: String(subSize) + ea,
       fontWeight: String(subWeight),
-      color: colorChip.deactive,
+      color: colorChip.gray5,
       textAlign: "center",
     }
   })
