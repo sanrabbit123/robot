@@ -103,7 +103,6 @@ DevContext.prototype.launching = async function () {
     // await app.complexMonthly(pastMonthDate.getFullYear(), pastMonthDate.getMonth() + 1);
 
 
-
     // monthly real estate parsing
 
     // const selfMongo = this.MONGOLOGC;
@@ -112,6 +111,64 @@ DevContext.prototype.launching = async function () {
     // const app = new LogReport(selfMongo);
     // await app.miningRealEstate();
     // await selfMongo.close();
+
+
+
+
+    // 혜령님께 전달
+
+    // const selfMongo = this.MONGOC;
+    // const clients = await back.getClientsByQuery({}, { selfMongo, withTools: true });
+    // const requests = clients.getRequestsTong();
+    // const standardDate = new Date(2022, 6, 1, 0, 0, 0);
+    // const standardValue = standardDate.valueOf();
+    // const targets = requests.filter((obj) => {
+    //   return obj.request.timeline.valueOf() >= standardValue;
+    // }).filter((obj) => {
+    //   return /^드/gi.test(obj.analytics.response.status.value)
+    // })
+    // const matrix = targets.map((obj) => {
+    //   let arr;
+    //   arr = [];
+    //   arr.push(obj.cliid);
+    //   arr.push(obj.name);
+    //   arr.push(obj.phone);
+    //   arr.push(dateToString(obj.request.timeline, true));
+    //   arr.push(dateToString(obj.request.space.resident.expected));
+    //   arr.push(dateToString(obj.analytics.date.space.precheck));
+    //   arr.push(dateToString(obj.analytics.date.space.empty));
+    //   arr.push(dateToString(obj.analytics.date.space.movein));
+    //   arr.push(obj.analytics.response.outreason.values.join(", "));
+    //   arr.push(serviceParsing(obj.analytics.response.service));
+    //   return arr;
+    // });
+    //
+    // matrix.unshift([
+    //   "아이디",
+    //   "성함",
+    //   "연락처",
+    //   "문의일",
+    //   "예상 종료일",
+    //   "사전 점검일",
+    //   "집 비는 날",
+    //   "입주 예정일",
+    //   "유출 이유",
+    //   "예상 서비스",
+    // ]);
+    //
+    // const sheetsMother = "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF";
+    // const sheetsId = await sheets.create_newSheets_inPython("혜령님께 전달", sheetsMother);
+    // await sheets.setting_cleanView_inPython(sheetsId);
+    // await sheets.update_value_inPython(sheetsId, "", matrix);
+
+
+
+
+
+
+
+
+
 
 
 
