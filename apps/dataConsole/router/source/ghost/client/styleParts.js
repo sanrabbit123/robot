@@ -153,9 +153,9 @@ StylePartsJs.prototype.insertInitBox = function () {
   leftMotherWidth = <%% 600, 460, 460, 460, 56 %%>;
 
   titleLogWidth = <%% 250, 216, 200, 180, 40 %%>;
-  titleLogTop = <%% 96, 66, 60, 48, 9 %%>;
+  titleLogTop = <%% 96, 64, 60, 48, 9 %%>;
 
-  baseMotherMarginBottom = <%% 168, 168, 168, 168, 17 %%>;
+  baseMotherMarginBottom = <%% 168, 160, 160, 160, 17 %%>;
 
   descriptionPaddingTop = <%% 21, 21, 21, 21, 21 %%>;
   partsWidth = <%% 100, 96, 96, 96, 96 %%>;
@@ -357,17 +357,17 @@ StylePartsJs.prototype.insertHeadlineBox = function () {
   let wordingSecondMarginTop;
   let whitePanHeight;
 
-  leftMotherWidth = <%% 500, 500, 500, 500, 56 %%>;
+  leftMotherWidth = <%% 500, 460, 460, 460, 56 %%>;
   paddingTop = <%% 72, 72, 72, 72, 7 %%>;
   paddingLeft = <%% 72, 72, 72, 72, 7 %%>;
 
-  aboutSize = <%% 13, 13, 12, 11, 3 %%>;
+  aboutSize = <%% 13, 12, 11, 10, 3 %%>;
   aboutWeight = <%% 500, 500, 500, 500, 500 %%>;
 
   titleSize = <%% 23, 23, 22, 21, 5 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
-  titleMarginTop = <%% 60, 60, 60, 60, 60 %%>;
+  titleMarginTop = <%% 60, 42, 42, 42, 42 %%>;
   titlePaddingLeft = <%% 22, 22, 22, 22, 22 %%>;
 
   wordingSize = <%% 14, 14, 13, 12, 4 %%>;
@@ -375,7 +375,7 @@ StylePartsJs.prototype.insertHeadlineBox = function () {
   wordingBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
 
   wordingLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
-  wordingMarginTop = <%% 52, 52, 52, 52, 52 %%>;
+  wordingMarginTop = <%% 52, 36, 36, 36, 36 %%>;
   wordingSecondMarginTop = <%% 16, 16, 16, 16, 16 %%>;
 
   titleBarTop = <%% 8, 8, 8, 8, 8 %%>;
@@ -386,7 +386,7 @@ StylePartsJs.prototype.insertHeadlineBox = function () {
 
   contents = {
     about: "about\nHomeLiaison",
-    title: "홈리에종 디자이너와\n아파트멘터리 파츠가 만났다!",
+    title: <&& "홈리에종 디자이너와\n아파트멘터리 파츠가 만났다!" | "홈리에종과\n아파트멘터리가 만났다!" | "홈리에종과\n아파트멘터리가 만났다!" | "홈리에종과\n아파트멘터리가 만났다!" | "홈리에종과\n아파트멘터리가 만났다!" &&>,
     description: [
       [
         "내 집의 컨디션을 가장 잘 아는 디자이너와",
@@ -607,7 +607,7 @@ StylePartsJs.prototype.insertLeadBox = function () {
   let barNoticeBoxPaddingTop;
   let barNoticeSize, barNoticeWeight, barNoticeMarginBottom;
 
-  paddingTop = <%% 200, 200, 180, 168, 16 %%>;
+  paddingTop = <%% 200, 160, 160, 160, 16 %%>;
 
   titleSize = <%% 27, 27, 27, 27, 27 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -617,7 +617,7 @@ StylePartsJs.prototype.insertLeadBox = function () {
   subWeight = <%% 400, 400, 400, 400, 400 %%>;
 
   descriptionBoxPaddingTop = <%% 28, 28, 28, 28, 3 %%>;
-  imageBoxPaddingTop = <%% 28, 28, 28, 28, 3 %%>;
+  imageBoxPaddingTop = <%% 28, 22, 22, 22, 3 %%>;
   barBoxPaddingTop = <%% 2, 2, 2, 2, 2 %%>;
 
   descriptionSize = <%% 15, 15, 15, 15, 15 %%>;
@@ -627,23 +627,23 @@ StylePartsJs.prototype.insertLeadBox = function () {
   descriptionPaddingLeft = <%% 36, 36, 36, 36, 36 %%>;
   descriptionLineBottom = <%% 27, 27, 27, 27, 27 %%>;
 
-  diagramTitleSize = <%% 30, 30, 28, 28, 28 %%>;
+  diagramTitleSize = <%% 30, 25, 25, 22, 28 %%>;
   diagramTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
-  diagramSubSize = <%% 18, 18, 16, 16, 16 %%>;
+  diagramSubSize = <%% 18, 15, 15, 15, 16 %%>;
   diagramSubWeight = <%% 800, 800, 800, 800, 800 %%>;
-  diagramDescriptionSize = <%% 14, 14, 14, 13, 13 %%>;
+  diagramDescriptionSize = <%% 14, 12, 12, 11, 3 %%>;
   diagramDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   diagramDescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
   diagramTextBetween = <%% 7, 7, 7, 7, 7 %%>;
 
-  imageWidth = <%% 960, 960, 960, 960, 960 %%>;
+  imageWidth = <%% 960, 730, 730, 730, 78 %%>;
   imageMargin = <%% 20, 20, 20, 20, 2 %%>;
 
   firstPaddingTop = <%% 145, 144, 144, 144, 144 %%>;
-  secondLeft = <%% -126, -126, -126, -126, -126 %%>;
+  secondLeft = <%% -126, -110, -100, -100, -100 %%>;
   thirdMarginTop = <%% 267, 267, 267, 267, 267 %%>;
 
-  barTitleSize = <%% 20, 20, 20, 20, 21 %%>;
+  barTitleSize = <%% 20, 18, 17, 16, 21 %%>;
   barTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
   barPaddingTop = <%% 13, 13, 13, 13, 15 %%>;
   barHeight = <%% 20, 20, 20, 20, 2 %%>;
@@ -652,11 +652,11 @@ StylePartsJs.prototype.insertLeadBox = function () {
   barFirstWidth = <%% 200, 200, 200, 200, 20 %%>;
   barSecondWidth = <%% 500, 500, 500, 500, 50 %%>;
 
-  barTextSize = <%% 15, 15, 15, 15, 15 %%>;
+  barTextSize = <%% 15, 14, 14, 13, 15 %%>;
   barTextWeight = <%% 800, 800, 800, 800, 800 %%>;
   barTextBottom = <%% -28, -28, -27, -27, -27 %%>;
 
-  barNoticeBoxPaddingTop = <%% 72, 72, 36, 36, 36 %%>;
+  barNoticeBoxPaddingTop = <%% 72, 64, 60, 60, 36 %%>;
   barNoticeSize = <%% 14, 14, 14, 14, 13 %%>;
   barNoticeWeight = <%% 400, 400, 400, 400, 400 %%>;
   barNoticeMarginBottom = <%% 5, 5, 5, 5, 4 %%>;
@@ -1214,7 +1214,7 @@ StylePartsJs.prototype.insertMatchupBox = function () {
   let secondImageDescriptionWeight;
   let secondImageDescriptionLineHeight;
 
-  paddingTop = <%% 200, 200, 180, 168, 16 %%>;
+  paddingTop = <%% 200, 160, 160, 160, 16 %%>;
 
   titleSize = <%% 27, 27, 27, 27, 27 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -1866,7 +1866,7 @@ StylePartsJs.prototype.insertStyleBox = function () {
 
   svgBox = this.returnSvgBox();
 
-  paddingTop = <%% 200, 200, 180, 168, 16 %%>;
+  paddingTop = <%% 200, 160, 160, 160, 16 %%>;
 
   titleSize = <%% 27, 27, 27, 27, 27 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -2926,7 +2926,7 @@ StylePartsJs.prototype.insertProcessBox = function () {
   let faqButtonWidth, faqButtonHeight;
   let faqSize, faqWeight, faqPaddingBottom;
 
-  paddingTop = <%% 200, 200, 180, 168, 16 %%>;
+  paddingTop = <%% 200, 160, 160, 160, 16 %%>;
 
   titleSize = <%% 27, 27, 27, 27, 27 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
