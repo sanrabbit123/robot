@@ -5847,24 +5847,24 @@ BillMaker.prototype.taxBill = async function () {
       await shellExec("rm", [ "-rf", tempDir + "/" + moduleName ]);
       await shellExec("rm", [ "-rf", mailBoxDir ]);
 
+      for (let json of resultObjTong) {
+        finalRows = await back.mongoRead(collection, { id: json.id }, { selfMongo });
+        if (finalRows.length === 0) {
+          await back.mongoCreate(collection, json, { selfMongo });
+          console.log("mongo insert");
+          await messageSend({ text: json.toMessage(), channel: "#701_taxbill" });
+        }
+      }
+
     } else {
       throw new Error("python script error");
-    }
-
-    for (let json of resultObjTong) {
-      finalRows = await back.mongoRead(collection, { id: json.id }, { selfMongo });
-      if (finalRows.length === 0) {
-        await back.mongoCreate(collection, json, { selfMongo });
-        console.log("mongo insert");
-        await messageSend({ text: json.toMessage(), channel: "#701_taxbill" });
-      }
     }
 
   } catch (e) {
     await errorLog(e.message);
   } finally {
     await MONGOLOCALC.close();
-    await errorLog("taxBill success : " + JSON.stringify(new Date()));
+    await errorLog("taxBill done : " + JSON.stringify(new Date()));
   }
 }
 
