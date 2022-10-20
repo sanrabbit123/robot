@@ -112,7 +112,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-
+    await bill.taxBill();
 
 
 
@@ -3390,7 +3390,7 @@ DevContext.prototype.launching = async function () {
     // const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
     // const human = new HumanPacket();
     // const name = "이지현";
-    // const amount = 9179500;
+    // const amount = 2273000;
     // await human.sendSms({
     //   name: "",
     //   phone: "01055432039",
