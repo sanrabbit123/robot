@@ -5779,7 +5779,7 @@ DataPatch.prototype.projectMap = function () {
           designer = (await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { desid } }, "/getDesigners", { equal: true }))[0];
 
           discount = percentage / 100;
-          newSupply = supplyOriginal - supply;
+          newSupply = Math.floor((supplyOriginal - supply) / 10) * 10;
           newVat = newSupply * (0.1);
           newConsumer = newSupply + newVat;
 
