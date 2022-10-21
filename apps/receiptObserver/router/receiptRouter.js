@@ -878,6 +878,7 @@ ReceiptRouter.prototype.rou_post_stylingAmountSync = function () {
       const { proid } = equalJson(req.body);
       const find0 = "홈리에종 잔금";
       const find1 = "디자인비";
+      const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
       let bills, bilid, tempIndex, targetIndex, targetBill;
       let itemIndex;
       let whereQuery, updateQuery;
@@ -885,6 +886,12 @@ ReceiptRouter.prototype.rou_post_stylingAmountSync = function () {
       let supply;
       let vat;
       let consumer;
+      let firstTargetIndex, firstItemIndex;
+      let firstConsumer;
+      let firstVat;
+      let firstSupply;
+      let firstIndex;
+      let remainIndex;
 
       project = await back.getProjectById(proid, { selfMongo: instance.mongo });
       if (project === null) {
@@ -920,7 +927,12 @@ ReceiptRouter.prototype.rou_post_stylingAmountSync = function () {
 
       consumer = Math.floor(project.process.contract.remain.calculation.amount.consumer - project.process.contract.first.calculation.amount);
       vat = Math.floor(consumer / 11);
-      supply = consumer - vat;
+      supply = Math.floor(consumer - vat);
+
+      firstConsumer = Math.floor(project.process.contract.first.calculation.amount);
+      firstVat = Math.floor(firstConsumer / 11);
+      firstSupply = Math.floor(firstConsumer - firstVat);
+
 
       itemIndex = -1;
       for (let i = 0; i < targetBill.requests[targetIndex].items.length; i++) {
@@ -929,12 +941,117 @@ ReceiptRouter.prototype.rou_post_stylingAmountSync = function () {
           break;
         }
       }
+
+      firstTargetIndex = -1;
+      firstItemIndex = -1;
+      for (let i = 0; i < targetBill.requests.length; i++) {
+        if (/홈리에종 계약금/gi.test(targetBill.requests[i].name)) {
+          firstTargetIndex = i;
+          break;
+        }
+      }
+
+      for (let i = 0; i < targetBill.requests[firstTargetIndex].items.length; i++) {
+        if (/디자인비/gi.test(targetBill.requests[firstTargetIndex].items[i].name)) {
+          firstItemIndex = i;
+          break;
+        }
+      }
+
+
       whereQuery = { bilid };
       updateQuery = {};
+
+      if (firstTargetIndex !== -1 && firstItemIndex !== -1) {
+        updateQuery["requests." + String(firstTargetIndex) + ".items." + String(firstItemIndex) + ".unit.price"] = firstSupply;
+        updateQuery["requests." + String(firstTargetIndex) + ".items." + String(firstItemIndex) + ".amount.supply"] = firstSupply;
+        updateQuery["requests." + String(firstTargetIndex) + ".items." + String(firstItemIndex) + ".amount.vat"] = firstVat;
+        updateQuery["requests." + String(firstTargetIndex) + ".items." + String(firstItemIndex) + ".amount.consumer"] = firstConsumer;
+      }
+
       updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".unit.price"] = supply;
       updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.supply"] = supply;
       updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.vat"] = vat;
       updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.consumer"] = consumer;
+
+
+      remainIndex = 0;
+      firstIndex = 0;
+      for (let i = 0; i < targetBill.responses.length; i++) {
+        if (/홈리에종 잔금/gi.test(targetBill.responses[i].name)) {
+          remainIndex = i;
+        }
+        if (/홈리에종 선금/gi.test(targetBill.responses[i].name)) {
+          firstIndex = i;
+        }
+      }
+
+      updateQuery["responses." + String(firstIndex) + ".items.0.unit.price"] = Math.floor(project.process.calculation.payments.first.amount)
+      updateQuery["responses." + String(firstIndex) + ".items.0.amount.pure"] = Math.floor(project.process.calculation.payments.first.amount)
+      updateQuery["responses." + String(firstIndex) + ".items.0.amount.commission"] = Math.floor((project.process.contract.remain.calculation.amount.supply - project.process.calculation.payments.totalAmount) / 2)
+
+      updateQuery["responses." + String(remainIndex) + ".items.0.unit.price"] = Math.floor(project.process.calculation.payments.remain.amount)
+      updateQuery["responses." + String(remainIndex) + ".items.0.amount.pure"] = Math.floor(project.process.calculation.payments.remain.amount)
+      updateQuery["responses." + String(remainIndex) + ".items.0.amount.commission"] = Math.floor((project.process.contract.remain.calculation.amount.supply - project.process.calculation.payments.totalAmount) / 2)
+
+      if (project.process.calculation.payments.first.date.valueOf() > emptyDateValue) {
+        updateQuery["responses." + String(firstIndex) + ".pay"] = [
+          {
+            date: project.process.calculation.payments.first.date,
+            amount: Math.floor(project.process.calculation.payments.first.amount),
+            oid: ""
+          }
+        ]
+        updateQuery["responses." + String(firstIndex) + ".proofs"] = [
+          {
+            date: project.process.calculation.payments.first.date,
+            method: "계좌 이체",
+            proof: project.process.calculation.info.proof,
+            to: project.process.calculation.info.to,
+          }
+        ]
+      }
+
+      if (project.process.calculation.payments.first.cancel.valueOf() > emptyDateValue) {
+        updateQuery["responses." + String(firstIndex) + ".cancel"] = [
+          {
+            date: project.process.calculation.payments.first.cancel,
+            amount: Math.floor(project.process.calculation.payments.first.refund),
+            oid: ""
+          }
+        ]
+      }
+
+      if (project.process.calculation.payments.remain.date.valueOf() > emptyDateValue) {
+        updateQuery["responses." + String(remainIndex) + ".pay"] = [
+          {
+            date: project.process.calculation.payments.remain.date,
+            amount: Math.floor(project.process.calculation.payments.remain.amount),
+            oid: ""
+          }
+        ]
+        updateQuery["responses." + String(remainIndex) + ".proofs"] = [
+          {
+            date: project.process.calculation.payments.remain.date,
+            method: "계좌 이체",
+            proof: project.process.calculation.info.proof,
+            to: project.process.calculation.info.to,
+          }
+        ]
+      }
+
+      if (project.process.calculation.payments.remain.cancel.valueOf() > emptyDateValue) {
+        updateQuery["responses." + String(remainIndex) + ".cancel"] = [
+          {
+            date: project.process.calculation.payments.remain.cancel,
+            amount: Math.floor(project.process.calculation.payments.remain.refund),
+            oid: ""
+          }
+        ]
+      }
+
+      console.log(whereQuery, updateQuery);
+
       await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
 
       res.send(JSON.stringify({ message: "success" }));

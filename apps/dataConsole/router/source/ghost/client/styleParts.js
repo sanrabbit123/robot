@@ -364,7 +364,7 @@ StylePartsJs.prototype.insertHeadlineBox = function () {
   aboutSize = <%% 13, 12, 11, 10, 3 %%>;
   aboutWeight = <%% 500, 500, 500, 500, 500 %%>;
 
-  titleSize = <%% 23, 23, 22, 21, 5 %%>;
+  titleSize = <%% 23, 22, 22, 21, 5 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
   titleMarginTop = <%% 60, 42, 42, 42, 42 %%>;
@@ -616,11 +616,11 @@ StylePartsJs.prototype.insertLeadBox = function () {
   subSize = <%% 15, 15, 15, 15, 15 %%>;
   subWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  descriptionBoxPaddingTop = <%% 28, 28, 28, 28, 3 %%>;
-  imageBoxPaddingTop = <%% 28, 22, 22, 22, 3 %%>;
+  descriptionBoxPaddingTop = <%% 28, 24, 23, 22, 3 %%>;
+  imageBoxPaddingTop = <%% 28, 24, 23, 22, 3 %%>;
   barBoxPaddingTop = <%% 2, 2, 2, 2, 2 %%>;
 
-  descriptionSize = <%% 15, 15, 15, 15, 15 %%>;
+  descriptionSize = <%% 15, 14, 14, 13, 15 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
@@ -1228,13 +1228,13 @@ StylePartsJs.prototype.insertMatchupBox = function () {
 
   firstDescriptionBoxWidth = <%% 448, 448, 448, 448, 448 %%>;
 
-  firstImageBoxOver = <%% 180, 180, 180, 180, 180 %%>;
-  overMargin = <%% 220, 220, 220, 220, 220 %%>;
+  firstImageBoxOver = <%% 180, 160, 120, 100, 100 %%>;
+  overMargin = <%% 220, 196, 196, 196, 196 %%>;
 
-  imageBetweenSero = <%% 10, 10, 10, 10, 10 %%>;
-  imageBetweenGaro = <%% 30, 30, 30, 30, 30 %%>;
+  imageBetweenSero = <%% 10, 10, 10, 8, 10 %%>;
+  imageBetweenGaro = <%% 30, 20, 10, 8, 30 %%>;
 
-  whiteBoxHeight = <%% 420, 420, 420, 420, 420 %%>;
+  whiteBoxHeight = <%% 420, 320, 320, 320, 340 %%>;
 
   subTitleSize = <%% 17, 17, 17, 17, 17 %%>;
   subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -1247,25 +1247,25 @@ StylePartsJs.prototype.insertMatchupBox = function () {
 
   whiteBetween = <%% 16, 16, 16, 16, 16 %%>;
 
-  chipWidth = <%% 32, 32, 32, 32, 32 %%>;
+  chipWidth = <%% 32, 28, 28, 28, 28 %%>;
   chipBetween = <%% 6, 6, 6, 6, 6 %%>;
 
-  circleWidth = <%% 54, 54, 54, 54, 54 %%>;
+  circleWidth = <%% 54, 50, 50, 50, 54 %%>;
   circleMargin = <%% 20, 20, 20, 20, 20 %%>;
   circleOpacity = <%% 0.7, 0.7, 0.7, 0.7, 0.7 %%>;
-  circleSize = <%% 12, 12, 12, 12, 12 %%>;
+  circleSize = <%% 12, 11, 10, 10, 12 %%>;
   circleWeight = <%% 500, 500, 500, 500, 500 %%>;
   circleTextTop = <%% -2, -2, -2, -2, -2 %%>;
 
   secondImageBetween = <%% 10, 10, 10, 10, 10 %%>;
 
-  secondImageHeight = <%% 200, 200, 200, 200, 200 %%>;
-  secondImageTitleMarginTop = <%% 23, 23, 23, 23, 23 %%>;
-  secondImageTitleSize = <%% 18, 18, 18, 18, 18 %%>;
+  secondImageHeight = <%% 200, 120, 120, 120, 120 %%>;
+  secondImageTitleMarginTop = <%% 23, 20, 20, 20, 20 %%>;
+  secondImageTitleSize = <%% 18, 15, 15, 15, 15 %%>;
   secondImageTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
   secondImageDescriptionMarginTop = <%% 7, 7, 7, 7, 7 %%>;
-  secondImageDescriptionSize = <%% 13, 13, 13, 13, 13 %%>;
+  secondImageDescriptionSize = <%% 13, 11, 11, 11, 12 %%>;
   secondImageDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   secondImageDescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
@@ -1308,7 +1308,7 @@ StylePartsJs.prototype.insertMatchupBox = function () {
         title: "정확한 견적",
         description: [
           "투명한 견적서를 제공하며",
-          "신뢰할 수 있는 결제 시스템을 이용합니다.",
+          "인증된 결제 시스템을 이용합니다.",
         ]
       },
       {
@@ -1498,7 +1498,7 @@ StylePartsJs.prototype.insertMatchupBox = function () {
           height: "calc(calc(calc(100% - " + String(whiteInnerPaddingLeft) + ea + ") - " + String(imageBetweenGaro) + ea + ") / 2)",
           backgroundImage: "url('" + StylePartsJs.binaryPath + contents.image[0] + "')",
           backgroundPosition: "50% 50%",
-          backgroundSize: "100% auto",
+          backgroundSize: media[0] ? "100% auto" : "auto 100%",
           marginRight: String(imageBetweenSero) + ea,
           marginBottom: String(imageBetweenGaro) + ea,
           borderRadius: String(5) + "px",
@@ -1546,7 +1546,7 @@ StylePartsJs.prototype.insertMatchupBox = function () {
           height: "calc(calc(calc(100% - " + String(whiteInnerPaddingLeft) + ea + ") - " + String(imageBetweenGaro) + ea + ") / 2)",
           backgroundImage: "url('" + StylePartsJs.binaryPath + contents.image[1] + "')",
           backgroundPosition: "50% 50%",
-          backgroundSize: "100% auto",
+          backgroundSize: media[0] ? "100% auto" : "auto 100%",
           marginBottom: String(imageBetweenGaro) + ea,
           borderRadius: String(5) + "px",
           boxShadow: "0px 4px 18px -9px " + colorChip.shadow,
@@ -1593,7 +1593,7 @@ StylePartsJs.prototype.insertMatchupBox = function () {
           height: "calc(calc(calc(100% - " + String(whiteInnerPaddingLeft) + ea + ") - " + String(imageBetweenGaro) + ea + ") / 2)",
           backgroundImage: "url('" + StylePartsJs.binaryPath + contents.image[2] + "')",
           backgroundPosition: "50% 50%",
-          backgroundSize: "100% auto",
+          backgroundSize: media[0] ? "100% auto" : "auto 100%",
           marginRight: String(imageBetweenSero) + ea,
           borderRadius: String(5) + "px",
           boxShadow: "0px 4px 18px -9px " + colorChip.shadow,
@@ -1640,7 +1640,7 @@ StylePartsJs.prototype.insertMatchupBox = function () {
           height: "calc(calc(calc(100% - " + String(whiteInnerPaddingLeft) + ea + ") - " + String(imageBetweenGaro) + ea + ") / 2)",
           backgroundImage: "url('" + StylePartsJs.binaryPath + contents.image[3] + "')",
           backgroundPosition: "50% 50%",
-          backgroundSize: "100% auto",
+          backgroundSize: media[0] ? "100% auto" : "auto 100%",
           borderRadius: String(5) + "px",
           boxShadow: "0px 4px 18px -9px " + colorChip.shadow,
         },
@@ -1875,37 +1875,37 @@ StylePartsJs.prototype.insertStyleBox = function () {
   subSize = <%% 15, 15, 15, 15, 15 %%>;
   subWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  descriptionBoxPaddingTop = <%% 28, 28, 28, 28, 3 %%>;
-  imageBoxPaddingTop = <%% 28, 28, 28, 28, 3 %%>;
+  descriptionBoxPaddingTop = <%% 28, 24, 23, 22, 3 %%>;
+  imageBoxPaddingTop = <%% 28, 24, 23, 22, 3 %%>;
   barBoxPaddingTop = <%% 2, 2, 2, 2, 2 %%>;
 
-  descriptionSize = <%% 15, 15, 15, 15, 15 %%>;
+  descriptionSize = <%% 15, 14, 14, 13, 15 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
   descriptionPaddingLeft = <%% 36, 36, 36, 36, 36 %%>;
   descriptionLineBottom = <%% 27, 27, 27, 27, 27 %%>;
 
-  whiteBetween = <%% 36, 36, 36, 36, 36 %%>;
+  whiteBetween = <%% 36, 20, 24, 24, 24 %%>;
   whiteBoxHeight = <%% 200, 200, 200, 200, 200 %%>;
   whiteBoxMarginTop = <%% 40, 40, 40, 40, 40 %%>;
-  whiteInnerPaddingLeft = <%% 60, 60, 60, 60, 60 %%>;
+  whiteInnerPaddingLeft = <%% 60, 48, 48, 48, 60 %%>;
 
-  whiteLogoWidth = <%% 190, 190, 190, 190, 190 %%>;
+  whiteLogoWidth = <%% 190, 162, 190, 190, 190 %%>;
   whiteLogoTop = <%% 2, 2, 2, 2, 2 %%>;
 
-  whiteInnerSize = <%% 22, 22, 22, 22, 22 %%>;
-  whitePlusSize = <%% 32, 32, 32, 32, 32 %%>;
+  whiteInnerSize = <%% 22, 18, 22, 22, 22 %%>;
+  whitePlusSize = <%% 32, 24, 32, 32, 32 %%>;
   whiteInnerWeight = <%% 600, 600, 600, 600, 600 %%>;
   whiteInnerBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
 
   whiteInnerLineHeight = <%% 3, 3, 3, 3, 3 %%>;
 
-  whiteLineWidth = <%% 40, 40, 40, 40, 40 %%>;
-  whiteVerticalLineWidth = <%% 16, 16, 16, 16, 16 %%>;
+  whiteLineWidth = <%% 40, 12, 24, 24, 40 %%>;
+  whiteVerticalLineWidth = <%% 16, 8, 16, 16, 16 %%>;
   whiteVerticalLineHeight = <%% 64, 64, 64, 64, 64 %%>;
 
-  noticeSize = <%% 12, 12, 12, 12, 12 %%>;
+  noticeSize = <%% 12, 11, 10, 10, 12 %%>;
   noticeWeight = <%% 600, 600, 600, 600, 600 %%>;
   noticeBetween = <%% 3, 3, 3, 3, 3 %%>;
   noticeBoxBottom = <%% 18, 18, 18, 18, 18 %%>;
