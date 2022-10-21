@@ -994,6 +994,7 @@ ReceiptRouter.prototype.rou_post_stylingAmountSync = function () {
       updateQuery["responses." + String(remainIndex) + ".items.0.amount.pure"] = Math.floor(project.process.calculation.payments.remain.amount)
       updateQuery["responses." + String(remainIndex) + ".items.0.amount.commission"] = Math.floor((project.process.contract.remain.calculation.amount.supply - project.process.calculation.payments.totalAmount) / 2)
 
+
       if (project.process.calculation.payments.first.date.valueOf() > emptyDateValue) {
         updateQuery["responses." + String(firstIndex) + ".pay"] = [
           {
