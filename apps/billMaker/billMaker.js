@@ -4882,22 +4882,36 @@ BillMaker.prototype.amountConverting = async function (bilid, option = { selfMon
       throw new Error("invaild case");
     }
 
-    if (project.process.calculation.payments.first.date.valueOf() > emptyDateValue && project.process.calculation.payments.first.cancel.valueOf() < emptyDateValue) {
+    if (project.process.calculation.payments.first.date.valueOf() > emptyDateValue) {
       payObject = this.returnBillDummies("pay");
       payObject.date = project.process.calculation.payments.first.date.toNormal();
       payObject.amount = project.process.calculation.payments.first.amount;
-      payArr = thisBill.responses[firstIndex].pay.toNormal();
-      payArr.unshift(payObject);
+      payArr = [ payObject ];
       updateQuery["responses." + String(firstIndex) + ".pay"] = payArr;
     }
 
-    if (project.process.calculation.payments.remain.date.valueOf() > emptyDateValue && project.process.calculation.payments.remain.cancel.valueOf() < emptyDateValue) {
+    if (project.process.calculation.payments.remain.date.valueOf() > emptyDateValue) {
       payObject = this.returnBillDummies("pay");
       payObject.date = project.process.calculation.payments.remain.date.toNormal();
       payObject.amount = project.process.calculation.payments.remain.amount;
-      payArr = thisBill.responses[secondIndex].pay.toNormal();
-      payArr.unshift(payObject);
+      payArr = [ payObject ];
       updateQuery["responses." + String(secondIndex) + ".pay"] = payArr;
+    }
+
+    if (project.process.calculation.payments.first.cancel.valueOf() > emptyDateValue) {
+      payObject = this.returnBillDummies("pay");
+      payObject.date = project.process.calculation.payments.first.cancel.toNormal();
+      payObject.amount = project.process.calculation.payments.first.refund;
+      payArr = [ payObject ];
+      updateQuery["responses." + String(firstIndex) + ".cancel"] = payArr;
+    }
+
+    if (project.process.calculation.payments.remain.cancel.valueOf() > emptyDateValue) {
+      payObject = this.returnBillDummies("pay");
+      payObject.date = project.process.calculation.payments.remain.cancel.toNormal();
+      payObject.amount = project.process.calculation.payments.remain.refund;
+      payArr = [ payObject ];
+      updateQuery["responses." + String(secondIndex) + ".cancel"] = payArr;
     }
 
     await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });

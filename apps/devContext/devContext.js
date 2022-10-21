@@ -113,7 +113,7 @@ DevContext.prototype.launching = async function () {
     // await selfMongo.close();
 
 
-
+    await findCode("stylingAmountSync")
 
 
 

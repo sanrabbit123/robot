@@ -5804,7 +5804,7 @@ DataPatch.prototype.projectMap = function () {
           await GeneralJs.ajaxJson({ proid }, PYTHONHOST + "/stylingAmountSync");
 
           window.location.href = window.location.protocol + "//" + window.location.host + "/project?proid=" + proid;
-          
+
         } catch (e) {
           console.log(e);
         }

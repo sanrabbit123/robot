@@ -2383,6 +2383,12 @@ ReceiptRouter.prototype.rou_post_amountConverting = function () {
   let obj = {};
   obj.link = "/amountConverting";
   obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       if (req.body.bilid === undefined) {
         throw new Error("invaild post");
@@ -2390,22 +2396,9 @@ ReceiptRouter.prototype.rou_post_amountConverting = function () {
       const selfMongo = instance.mongolocal;
       const { bilid } = equalJson(req.body);
       await bill.amountConverting(bilid, { selfMongo, selfCoreMongo: instance.mongo });
-
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
       instance.mother.errorLog("Python 서버 문제 생김 (rou_post_amountConverting): " + e.message).catch((e) => { console.log(e); });
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
       res.send(JSON.stringify({ message: "error" }));
       console.log(e);
     }
