@@ -893,6 +893,7 @@ ReceiptRouter.prototype.rou_post_stylingAmountSync = function () {
       let firstIndex;
       let remainIndex;
 
+
       project = await back.getProjectById(proid, { selfMongo: instance.mongo });
       if (project === null) {
         throw new Error("invaild post");
