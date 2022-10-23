@@ -148,17 +148,17 @@ StylePartsJs.prototype.insertInitBox = function () {
   initLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
   initSecondMarginTop = <%% 12, 12, 12, 12, 12 %%>;
 
-  initPaddingTop = <%% 180, 110, 110, 100, 36 %%>;
+  initPaddingTop = <%% 180, 110, 110, 82, 36 %%>;
 
-  leftMotherWidth = <%% 600, 460, 284, 260, 56 %%>;
+  leftMotherWidth = <%% 600, 460, 284, 250, 56 %%>;
 
-  titleLogWidth = <%% 250, 216, 160, 150, 40 %%>;
+  titleLogWidth = <%% 250, 216, 160, 140, 40 %%>;
   titleLogTop = <%% 96, 64, 60, 48, 9 %%>;
 
-  baseMotherMarginBottom = <%% 168, 160, 140, 130, 17 %%>;
+  baseMotherMarginBottom = <%% 168, 160, 140, 110, 17 %%>;
 
   descriptionPaddingTop = <%% 21, 21, 8, 6, 21 %%>;
-  partsWidth = <%% 100, 96, 90, 90, 90 %%>;
+  partsWidth = <%% 100, 96, 90, 88, 90 %%>;
 
   bottomLineWidth = <%% 400, 0, 0, 0, 0 %%>;
   bottomLineHeight = <%% 40, 0, 0, 0, 0 %%>;
@@ -371,18 +371,18 @@ StylePartsJs.prototype.insertHeadlineBox = function () {
   let wordingSecondMarginTop;
   let whitePanHeight;
 
-  leftMotherWidth = <%% 500, 460, 370, 460, 56 %%>;
-  paddingTop = <%% 72, 60, 50, 48, 7 %%>;
-  paddingLeft = <%% 72, 60, 50, 48, 7 %%>;
+  leftMotherWidth = <%% 500, 460, 370, 320, 56 %%>;
+  paddingTop = <%% 72, 60, 50, 42, 7 %%>;
+  paddingLeft = <%% 72, 60, 50, 42, 7 %%>;
 
   aboutSize = <%% 13, 12, 11, 10, 3 %%>;
   aboutWeight = <%% 500, 500, 500, 500, 500 %%>;
 
-  titleSize = <%% 23, 22, 20, 18, 5 %%>;
+  titleSize = <%% 23, 22, 20, 17, 5 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
-  titleMarginTop = <%% 60, 42, 40, 42, 42 %%>;
-  titlePaddingLeft = <%% 22, 22, 21, 20, 22 %%>;
+  titleMarginTop = <%% 60, 42, 40, 36, 42 %%>;
+  titlePaddingLeft = <%% 22, 22, 21, 16, 22 %%>;
 
   wordingSize = <%% 14, 14, 13, 12, 4 %%>;
   wordingWeight = <%% 400, 400, 400, 400, 400 %%>;
@@ -392,9 +392,9 @@ StylePartsJs.prototype.insertHeadlineBox = function () {
   wordingMarginTop = <%% 52, 36, 34, 32, 3 %%>;
   wordingSecondMarginTop = <%% 16, 16, 16, 16, 16 %%>;
 
-  titleBarTop = <%% 8, 8, 8, 8, 8 %%>;
-  titleBarWidth = <%% 5, 5, 4, 4, 5 %%>;
-  titleBarHeight = <%% 13, 13, 14, 13, 13 %%>;
+  titleBarTop = <%% 8, 8, 8, 6, 8 %%>;
+  titleBarWidth = <%% 5, 5, 4, 3, 5 %%>;
+  titleBarHeight = <%% 13, 13, 14, 11, 13 %%>;
 
   whitePanHeight = <%% 30, 30, 30, 30, 30 %%>;
 
@@ -621,25 +621,25 @@ StylePartsJs.prototype.insertLeadBox = function () {
   let barNoticeBoxPaddingTop;
   let barNoticeSize, barNoticeWeight, barNoticeMarginBottom;
 
-  paddingTop = <%% 200, 160, 130, 120, 16 %%>;
+  paddingTop = <%% 200, 160, 130, 110, 16 %%>;
 
-  titleSize = <%% 27, 26, 23, 23, 4 %%>;
+  titleSize = <%% 27, 26, 23, 21, 4 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
-  titlePaddingBottom = <%% 4, 4, 4, 4, 4 %%>;
+  titlePaddingBottom = <%% 4, 4, 4, 3, 1 %%>;
 
-  subSize = <%% 15, 15, 14, 14, 15 %%>;
+  subSize = <%% 15, 15, 14, 13, 15 %%>;
   subWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  descriptionBoxPaddingTop = <%% 28, 24, 21, 21, 3 %%>;
+  descriptionBoxPaddingTop = <%% 28, 24, 21, 18, 3 %%>;
   imageBoxPaddingTop = <%% 28, 24, 24, 22, 3 %%>;
   barBoxPaddingTop = <%% 2, 2, 2, 2, 2 %%>;
 
-  descriptionSize = <%% 15, 14, 13, 13, 15 %%>;
+  descriptionSize = <%% 15, 14, 13, 12, 15 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
   descriptionPaddingLeft = <%% 36, 36, 36, 36, 36 %%>;
-  descriptionLineBottom = <%% 27, 27, 23, 22, 27 %%>;
+  descriptionLineBottom = <%% 27, 27, 23, 20, 27 %%>;
 
   diagramTitleSize = <%% 30, 25, 22, 21, 28 %%>;
   diagramTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
@@ -1228,13 +1228,13 @@ StylePartsJs.prototype.insertMatchupBox = function () {
   let secondImageDescriptionWeight;
   let secondImageDescriptionLineHeight;
 
-  paddingTop = <%% 200, 160, 130, 120, 16 %%>;
+  paddingTop = <%% 200, 160, 130, 110, 16 %%>;
 
-  titleSize = <%% 27, 26, 23, 23, 4 %%>;
+  titleSize = <%% 27, 26, 23, 21, 4 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
-  titlePaddingBottom = <%% 4, 4, 4, 4, 4 %%>;
+  titlePaddingBottom = <%% 4, 4, 4, 3, 1 %%>;
 
-  subSize = <%% 15, 15, 14, 14, 15 %%>;
+  subSize = <%% 15, 15, 14, 13, 15 %%>;
   subWeight = <%% 400, 400, 400, 400, 400 %%>;
 
   whiteInnerPaddingTop = <%% 48, 48, 36, 32, 72 %%>;
@@ -1880,25 +1880,25 @@ StylePartsJs.prototype.insertStyleBox = function () {
 
   svgBox = this.returnSvgBox();
 
-  paddingTop = <%% 200, 160, 130, 120, 16 %%>;
+  paddingTop = <%% 200, 160, 130, 110, 16 %%>;
 
-  titleSize = <%% 27, 26, 23, 23, 4 %%>;
+  titleSize = <%% 27, 26, 23, 21, 4 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
-  titlePaddingBottom = <%% 4, 4, 4, 4, 4 %%>;
+  titlePaddingBottom = <%% 4, 4, 4, 3, 1 %%>;
 
-  subSize = <%% 15, 15, 14, 14, 15 %%>;
+  subSize = <%% 15, 15, 14, 13, 15 %%>;
   subWeight = <%% 400, 400, 400, 400, 400 %%>;
 
   descriptionBoxPaddingTop = <%% 28, 24, 23, 22, 3 %%>;
   imageBoxPaddingTop = <%% 28, 24, 23, 22, 3 %%>;
   barBoxPaddingTop = <%% 2, 2, 2, 2, 2 %%>;
 
-  descriptionSize = <%% 15, 14, 13, 13, 15 %%>;
+  descriptionSize = <%% 15, 14, 13, 12, 15 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
   descriptionPaddingLeft = <%% 36, 36, 36, 36, 36 %%>;
-  descriptionLineBottom = <%% 27, 27, 23, 22, 27 %%>;
+  descriptionLineBottom = <%% 27, 27, 23, 20, 27 %%>;
 
   whiteBetween = <%% 36, 20, 24, 24, 24 %%>;
   whiteBoxHeight = <%% 200, 200, 180, 180, 200 %%>;
@@ -2696,11 +2696,11 @@ StylePartsJs.prototype.insertBenefitsBox = function () {
   paddingTop = <%% 100, 100, 72, 64, 7 %%>;
   paddingLeft = <%% 100, 100, 72, 64, 7 %%>;
 
-  titleSize = <%% 27, 26, 23, 23, 4 %%>;
+  titleSize = <%% 27, 26, 23, 21, 4 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
-  titlePaddingBottom = <%% 4, 4, 4, 4, 4 %%>;
+  titlePaddingBottom = <%% 4, 4, 4, 3, 1 %%>;
 
-  subSize = <%% 15, 15, 14, 14, 15 %%>;
+  subSize = <%% 15, 15, 14, 13, 15 %%>;
   subWeight = <%% 400, 400, 400, 400, 400 %%>;
 
   contentsTongBetween = <%% 40, 40, 40, 40, 40 %%>;
@@ -2940,20 +2940,20 @@ StylePartsJs.prototype.insertProcessBox = function () {
   let faqButtonWidth, faqButtonHeight;
   let faqSize, faqWeight, faqPaddingBottom;
 
-  paddingTop = <%% 200, 160, 130, 120, 16 %%>;
+  paddingTop = <%% 200, 160, 130, 110, 16 %%>;
 
-  titleSize = <%% 27, 26, 23, 23, 4 %%>;
+  titleSize = <%% 27, 26, 23, 21, 4 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
-  titlePaddingBottom = <%% 4, 4, 4, 4, 4 %%>;
+  titlePaddingBottom = <%% 4, 4, 4, 3, 1 %%>;
 
-  subSize = <%% 15, 15, 14, 14, 15 %%>;
+  subSize = <%% 15, 15, 14, 13, 15 %%>;
   subWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  descriptionBoxPaddingTop = <%% 28, 24, 21, 21, 3 %%>;
+  descriptionBoxPaddingTop = <%% 28, 24, 21, 18, 3 %%>;
   imageBoxPaddingTop = <%% 28, 24, 24, 24, 3 %%>;
   barBoxPaddingTop = <%% 2, 2, 2, 2, 2 %%>;
 
-  descriptionSize = <%% 15, 14, 13, 13, 14 %%>;
+  descriptionSize = <%% 15, 14, 13, 12, 15 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
