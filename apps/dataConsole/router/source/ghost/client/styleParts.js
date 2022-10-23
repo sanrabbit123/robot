@@ -585,6 +585,8 @@ StylePartsJs.prototype.insertLeadBox = function () {
   const { createNode, withOut, colorChip, cleanChildren, selfHref, ajaxJson } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
+  const big = (media[0] || media[1] || media[1]);
+  const small = !big;
   let baseMother;
   let paddingTop;
   let descriptionBox;
@@ -621,7 +623,7 @@ StylePartsJs.prototype.insertLeadBox = function () {
   let barNoticeBoxPaddingTop;
   let barNoticeSize, barNoticeWeight, barNoticeMarginBottom;
 
-  paddingTop = <%% 200, 160, 130, 110, 16 %%>;
+  paddingTop = <%% 200, 160, 130, 100, 16 %%>;
 
   titleSize = <%% 27, 26, 23, 21, 4 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -631,7 +633,7 @@ StylePartsJs.prototype.insertLeadBox = function () {
   subWeight = <%% 400, 400, 400, 400, 400 %%>;
 
   descriptionBoxPaddingTop = <%% 28, 24, 21, 18, 3 %%>;
-  imageBoxPaddingTop = <%% 28, 24, 24, 22, 3 %%>;
+  imageBoxPaddingTop = <%% 28, 24, 24, 18, 3 %%>;
   barBoxPaddingTop = <%% 2, 2, 2, 2, 2 %%>;
 
   descriptionSize = <%% 15, 14, 13, 12, 15 %%>;
@@ -650,27 +652,27 @@ StylePartsJs.prototype.insertLeadBox = function () {
   diagramDescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
   diagramTextBetween = <%% 7, 7, 6, 6, 7 %%>;
 
-  imageWidth = <%% 960, 730, 610, 730, 78 %%>;
+  imageWidth = <%% 960, 730, 610, 720, 78 %%>;
   imageMargin = <%% 20, 20, 20, 20, 2 %%>;
 
   firstPaddingTop = <%% 145, 144, 144, 144, 144 %%>;
   secondLeft = <%% -126, -110, -100, -100, -100 %%>;
   thirdMarginTop = <%% 267, 267, 267, 267, 267 %%>;
 
-  barTitleSize = <%% 20, 18, 16, 16, 21 %%>;
+  barTitleSize = <%% 20, 18, 16, 15, 3 %%>;
   barTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-  barPaddingTop = <%% 13, 13, 12, 12, 15 %%>;
+  barPaddingTop = <%% 13, 13, 12, 9, 2 %%>;
   barHeight = <%% 20, 20, 20, 20, 2 %%>;
   barBetween = <%% 6, 6, 6, 6, 6 %%>;
 
-  barFirstWidth = <%% 200, 200, 200, 200, 20 %%>;
-  barSecondWidth = <%% 500, 500, 500, 500, 50 %%>;
+  barFirstWidth = <%% 200, 200, 200, 140, 20 %%>;
+  barSecondWidth = <%% 500, 500, 500, 240, 50 %%>;
 
   barTextSize = <%% 15, 14, 13, 12, 15 %%>;
   barTextWeight = <%% 800, 800, 800, 800, 800 %%>;
-  barTextBottom = <%% -28, -28, -27, -27, -27 %%>;
+  barTextBottom = <%% -28, -28, -27, -23, -27 %%>;
 
-  barNoticeBoxPaddingTop = <%% 72, 64, 60, 60, 36 %%>;
+  barNoticeBoxPaddingTop = <%% 72, 64, 60, 48, 36 %%>;
   barNoticeSize = <%% 14, 14, 13, 12, 13 %%>;
   barNoticeWeight = <%% 400, 400, 400, 400, 400 %%>;
   barNoticeMarginBottom = <%% 5, 5, 5, 5, 4 %%>;
@@ -834,7 +836,7 @@ StylePartsJs.prototype.insertLeadBox = function () {
           selectstart: (e) => { e.preventDefault(); },
         },
         style: {
-          display: "inline-flex",
+          display: big ? "inline-flex" : "none",
           position: "relative",
           textAlign: "center",
           justifyContent: "center",
@@ -896,8 +898,8 @@ StylePartsJs.prototype.insertLeadBox = function () {
           display: "inline-flex",
           position: "relative",
           width: String(imageWidth) + ea,
-          marginLeft: String(imageMargin) + ea,
-          marginRight: String(imageMargin) + ea,
+          marginLeft: big ? String(imageMargin) + ea : "",
+          marginRight: big ? String(imageMargin) + ea : "",
         }
       });
 
@@ -909,7 +911,7 @@ StylePartsJs.prototype.insertLeadBox = function () {
           selectstart: (e) => { e.preventDefault(); },
         },
         style: {
-          display: "inline-flex",
+          display: big ? "inline-flex" : "none",
           position: "relative",
           textAlign: "left",
           justifyContent: "left",
@@ -983,7 +985,7 @@ StylePartsJs.prototype.insertLeadBox = function () {
           selectstart: (e) => { e.preventDefault(); },
         },
         style: {
-          display: "inline-flex",
+          display: big ? "inline-flex" : "none",
           position: "relative",
           textAlign: "left",
           justifyContent: "left",
@@ -1185,6 +1187,8 @@ StylePartsJs.prototype.insertMatchupBox = function () {
   const { createNode, withOut, colorChip, cleanChildren, selfHref, ajaxJson } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
   let paddingTop;
   let baseMother;
   let contents;
@@ -1228,7 +1232,7 @@ StylePartsJs.prototype.insertMatchupBox = function () {
   let secondImageDescriptionWeight;
   let secondImageDescriptionLineHeight;
 
-  paddingTop = <%% 200, 160, 130, 110, 16 %%>;
+  paddingTop = <%% 200, 160, 130, 100, 16 %%>;
 
   titleSize = <%% 27, 26, 23, 21, 4 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -1237,49 +1241,49 @@ StylePartsJs.prototype.insertMatchupBox = function () {
   subSize = <%% 15, 15, 14, 13, 15 %%>;
   subWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  whiteInnerPaddingTop = <%% 48, 48, 36, 32, 72 %%>;
-  whiteInnerPaddingLeft = <%% 48, 48, 36, 32, 72 %%>;
+  whiteInnerPaddingTop = <%% 48, 48, 36, 24, 72 %%>;
+  whiteInnerPaddingLeft = <%% 48, 48, 36, 24, 72 %%>;
 
-  firstDescriptionBoxWidth = <%% 448, 448, 330, 330, 33 %%>;
+  firstDescriptionBoxWidth = <%% 448, 448, 330, 290, 33 %%>;
 
-  firstImageBoxOver = <%% 180, 160, 120, 100, 100 %%>;
-  overMargin = <%% 220, 196, 156, 154, 196 %%>;
+  firstImageBoxOver = <%% 180, 160, 120, 92, 100 %%>;
+  overMargin = <%% 220, 196, 156, 110, 196 %%>;
 
   imageBetweenSero = <%% 10, 10, 10, 8, 10 %%>;
   imageBetweenGaro = <%% 30, 20, 10, 8, 30 %%>;
 
-  whiteBoxHeight = <%% 420, 320, 300, 300, 340 %%>;
+  whiteBoxHeight = <%% 420, 320, 300, 230, 34 %%>;
 
-  subTitleSize = <%% 17, 17, 16, 16, 4 %%>;
+  subTitleSize = <%% 17, 17, 16, 14, 4 %%>;
   subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
 
   descriptionSize = <%% 14, 14, 13, 12, 14 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
-  descriptionMarginTop = <%% 10, 10, 10, 10, 10 %%>;
+  descriptionMarginTop = <%% 10, 10, 10, 6, 10 %%>;
 
-  whiteBetween = <%% 16, 16, 16, 16, 16 %%>;
+  whiteBetween = <%% 16, 16, 16, 8, 16 %%>;
 
-  chipWidth = <%% 32, 28, 24, 28, 28 %%>;
-  chipBetween = <%% 6, 6, 6, 6, 6 %%>;
+  chipWidth = <%% 32, 28, 24, 20, 28 %%>;
+  chipBetween = <%% 6, 6, 6, 4, 6 %%>;
 
-  circleWidth = <%% 54, 50, 45, 48, 54 %%>;
-  circleMargin = <%% 20, 20, 15, 14, 20 %%>;
+  circleWidth = <%% 54, 50, 45, 40, 54 %%>;
+  circleMargin = <%% 20, 20, 15, 11, 20 %%>;
   circleOpacity = <%% 0.7, 0.7, 0.7, 0.7, 0.7 %%>;
-  circleSize = <%% 12, 11, 10, 10, 12 %%>;
+  circleSize = <%% 12, 11, 10, 9, 12 %%>;
   circleWeight = <%% 500, 500, 500, 500, 500 %%>;
   circleTextTop = <%% -2, -2, -2, -2, -2 %%>;
 
   secondImageBetween = <%% 10, 10, 10, 10, 10 %%>;
 
-  secondImageHeight = <%% 200, 120, 125, 125, 120 %%>;
-  secondImageTitleMarginTop = <%% 23, 20, 20, 20, 20 %%>;
-  secondImageTitleSize = <%% 18, 15, 14, 13, 15 %%>;
+  secondImageHeight = <%% 200, 120, 125, 100, 120 %%>;
+  secondImageTitleMarginTop = <%% 23, 20, 20, 15, 20 %%>;
+  secondImageTitleSize = <%% 18, 15, 14, 12, 15 %%>;
   secondImageTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  secondImageDescriptionMarginTop = <%% 7, 7, 5, 7, 7 %%>;
-  secondImageDescriptionSize = <%% 13, 11, 11, 11, 12 %%>;
+  secondImageDescriptionMarginTop = <%% 7, 7, 5, 4, 7 %%>;
+  secondImageDescriptionSize = <%% 13, 11, 11, 10, 12 %%>;
   secondImageDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   secondImageDescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
@@ -1314,7 +1318,7 @@ StylePartsJs.prototype.insertMatchupBox = function () {
         title: "시공 상황 공유",
         description: [
           "실시간 채팅을 통해",
-          "상황을 빠르게 공유드립니다.",
+          (big ? "상황을 빠르게 공유드립니다." : "상황을 공유드립니다."),
         ]
       },
       {
@@ -1880,7 +1884,7 @@ StylePartsJs.prototype.insertStyleBox = function () {
 
   svgBox = this.returnSvgBox();
 
-  paddingTop = <%% 200, 160, 130, 110, 16 %%>;
+  paddingTop = <%% 200, 160, 130, 100, 16 %%>;
 
   titleSize = <%% 27, 26, 23, 21, 4 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -1889,7 +1893,7 @@ StylePartsJs.prototype.insertStyleBox = function () {
   subSize = <%% 15, 15, 14, 13, 15 %%>;
   subWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  descriptionBoxPaddingTop = <%% 28, 24, 23, 22, 3 %%>;
+  descriptionBoxPaddingTop = <%% 28, 24, 23, 18, 3 %%>;
   imageBoxPaddingTop = <%% 28, 24, 23, 22, 3 %%>;
   barBoxPaddingTop = <%% 2, 2, 2, 2, 2 %%>;
 
@@ -1900,29 +1904,29 @@ StylePartsJs.prototype.insertStyleBox = function () {
   descriptionPaddingLeft = <%% 36, 36, 36, 36, 36 %%>;
   descriptionLineBottom = <%% 27, 27, 23, 20, 27 %%>;
 
-  whiteBetween = <%% 36, 20, 24, 24, 24 %%>;
-  whiteBoxHeight = <%% 200, 200, 180, 180, 200 %%>;
-  whiteBoxMarginTop = <%% 40, 40, 40, 40, 40 %%>;
-  whiteInnerPaddingLeft = <%% 60, 48, 36, 48, 60 %%>;
+  whiteBetween = <%% 36, 20, 24, 16, 24 %%>;
+  whiteBoxHeight = <%% 200, 200, 180, 124, 200 %%>;
+  whiteBoxMarginTop = <%% 40, 40, 40, 32, 40 %%>;
+  whiteInnerPaddingLeft = <%% 60, 48, 36, 32, 60 %%>;
 
   whiteLogoWidth = <%% 190, 162, 190, 190, 190 %%>;
   whiteLogoTop = <%% 2, 2, 2, 2, 2 %%>;
 
-  whiteInnerSize = <%% 22, 18, 17, 16, 22 %%>;
-  whitePlusSize = <%% 32, 24, 23, 24, 32 %%>;
+  whiteInnerSize = <%% 22, 18, 17, 15, 22 %%>;
+  whitePlusSize = <%% 32, 24, 23, 18, 32 %%>;
   whiteInnerWeight = <%% 600, 600, 600, 600, 600 %%>;
   whiteInnerBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
 
   whiteInnerLineHeight = <%% 3, 3, 3, 3, 3 %%>;
 
-  whiteLineWidth = <%% 40, 12, 64, 24, 40 %%>;
-  whiteVerticalLineWidth = <%% 16, 8, 16, 16, 16 %%>;
-  whiteVerticalLineHeight = <%% 64, 64, 52, 52, 64 %%>;
+  whiteLineWidth = <%% 40, 12, 64, 28, 40 %%>;
+  whiteVerticalLineWidth = <%% 16, 8, 16, 8, 16 %%>;
+  whiteVerticalLineHeight = <%% 64, 64, 52, 42, 64 %%>;
 
   noticeSize = <%% 12, 11, 10, 10, 12 %%>;
   noticeWeight = <%% 600, 600, 600, 600, 600 %%>;
   noticeBetween = <%% 3, 3, 3, 3, 3 %%>;
-  noticeBoxBottom = <%% 18, 18, 18, 18, 18 %%>;
+  noticeBoxBottom = <%% 18, 18, 18, 12, 18 %%>;
 
   imageWidth = <%% 504, 704, 570, 500, 500 %%>;
   imageHeight = <%% 290, 290, 260, 260, 290 %%>;
@@ -2940,7 +2944,7 @@ StylePartsJs.prototype.insertProcessBox = function () {
   let faqButtonWidth, faqButtonHeight;
   let faqSize, faqWeight, faqPaddingBottom;
 
-  paddingTop = <%% 200, 160, 130, 110, 16 %%>;
+  paddingTop = <%% 200, 160, 130, 100, 16 %%>;
 
   titleSize = <%% 27, 26, 23, 21, 4 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
