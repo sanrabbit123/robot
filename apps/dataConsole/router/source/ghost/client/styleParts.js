@@ -1247,7 +1247,7 @@ StylePartsJs.prototype.insertMatchupBox = function () {
   firstDescriptionBoxWidth = <%% 448, 448, 330, 290, 33 %%>;
 
   firstImageBoxOver = <%% 180, 160, 120, 92, 100 %%>;
-  overMargin = <%% 220, 196, 156, 110, 196 %%>;
+  overMargin = <%% 220, 196, 156, 118, 196 %%>;
 
   imageBetweenSero = <%% 10, 10, 10, 8, 10 %%>;
   imageBetweenGaro = <%% 30, 20, 10, 8, 30 %%>;
@@ -1928,20 +1928,20 @@ StylePartsJs.prototype.insertStyleBox = function () {
   noticeBetween = <%% 3, 3, 3, 3, 3 %%>;
   noticeBoxBottom = <%% 18, 18, 18, 12, 18 %%>;
 
-  imageWidth = <%% 504, 704, 570, 500, 500 %%>;
-  imageHeight = <%% 290, 290, 260, 260, 290 %%>;
+  imageWidth = <%% 504, 704, 570, 420, 500 %%>;
+  imageHeight = <%% 290, 290, 260, 230, 290 %%>;
   imageBetween = <%% 12, 12, 12, 12, 12 %%>;
   imageLineInnerBetween = <%% 48, 40, 40, 36, 4 %%>;
 
-  imageDescriptionPaddingTop = <%% 44, 44, 44, 44, 44 %%>;
-  imagePartsWidth = <%% 125, 125, 110, 90, 125 %%>;
+  imageDescriptionPaddingTop = <%% 44, 44, 44, 36, 44 %%>;
+  imagePartsWidth = <%% 125, 125, 110, 84, 125 %%>;
 
-  imageTitleSize = <%% 22, 22, 18, 17, 22 %%>;
+  imageTitleSize = <%% 22, 22, 18, 16, 22 %%>;
   imageTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
   imageTitleMarginTop = <%% 20, 20, 16, 16, 16 %%>;
   imageDescriptionSize = <%% 14, 14, 13, 12, 14 %%>;
   imageDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
-  imageDescriptionMarginTop = <%% 10, 10, 10, 10, 10 %%>;
+  imageDescriptionMarginTop = <%% 10, 10, 10, 8, 10 %%>;
   imageDescriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   imageDescriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
@@ -1955,8 +1955,8 @@ StylePartsJs.prototype.insertStyleBox = function () {
   imageTagSize = <%% 12, 12, 12, 12, 12 %%>;
   imageTagWeight = <%% 500, 500, 500, 500, 500 %%>;
 
-  imageBoxMarginTop = <%% 110, 84, 72, 72, 20 %%>;
-  imageBoxMarginTopBig = <%% 190, 136, 112, 120, 14 %%>;
+  imageBoxMarginTop = <%% 110, 84, 72, 65, 20 %%>;
+  imageBoxMarginTopBig = <%% 190, 136, 112, 110, 14 %%>;
 
   moreBoxHeight = <%% 40, 40, 40, 40, 40 %%>;
   moreCircleWidth = <%% 8, 8, 8, 8, 8 %%>;
@@ -2668,6 +2668,8 @@ StylePartsJs.prototype.insertBenefitsBox = function () {
   const { createNode, withOut, colorChip, cleanChildren, selfHref, ajaxJson } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
   let baseMother;
   let paddingTop;
   let paddingLeft;
@@ -2707,20 +2709,20 @@ StylePartsJs.prototype.insertBenefitsBox = function () {
   subSize = <%% 15, 15, 14, 13, 15 %%>;
   subWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  contentsTongBetween = <%% 40, 40, 40, 40, 40 %%>;
+  contentsTongBetween = <%% 40, 40, 40, 32, 40 %%>;
 
-  benefitLeftWidth = <%% 1040, 700, 585, 630, 70 %%>;
-  benefitFactorBoxHeight = <%% 96, 80, 75, 80, 80 %%>;
+  benefitLeftWidth = <%% 1040, 700, 585, 485, 70 %%>;
+  benefitFactorBoxHeight = <%% 96, 80, 75, 60, 80 %%>;
 
-  benefitNumberWidth = <%% 240, 160, 120, 110, 160 %%>;
-  benefitNumberSize = <%% 30, 30, 26, 25, 30 %%>;
+  benefitNumberWidth = <%% 240, 160, 120, 100, 160 %%>;
+  benefitNumberSize = <%% 30, 30, 26, 23, 30 %%>;
   benefitNumberWeight = <%% 500, 500, 500, 500, 500 %%>;
 
-  benefitFactorPaddingLeft = <%% 30, 30, 28, 28, 30 %%>;
-  benefitFactorWidth = <%% 720, 480, 400, 400, 42 %%>;
-  benefitFactorHeight = <%% 64, 60, 50, 54, 60 %%>;
+  benefitFactorPaddingLeft = <%% 30, 30, 28, 24, 30 %%>;
+  benefitFactorWidth = <%% 720, 480, 400, 330, 42 %%>;
+  benefitFactorHeight = <%% 64, 60, 50, 42, 60 %%>;
 
-  benefitFactorSize = <%% 20, 18, 15, 14, 4 %%>;
+  benefitFactorSize = <%% 20, 18, 15, 13, 4 %%>;
   benefitFactorWeight = <%% 700, 700, 700, 700, 700 %%>;
   benefitFactorTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
@@ -2740,9 +2742,9 @@ StylePartsJs.prototype.insertBenefitsBox = function () {
     ],
     description: [
       "스타일 파츠를 이용하시는 <b%모든 고객님들께",
-      "홈리에종은 위와 같은 3가지 혜택을 제공%b>해드립니다.",
+      big ? "홈리에종은 위와 같은 3가지 혜택을 제공%b>해드립니다." : "홈리에종은 3가지 혜택을 제공%b>해드립니다.",
       "오직 스타일 파츠만을 위한 혜택들을 통해",
-      "좋은 기회에 좋은 가격으로 인테리어를 진행해보세요!",
+      big ? "좋은 기회에 좋은 가격으로 인테리어를 진행해보세요!" : "좋은 기회로 인테리어를 진행해보세요!",
     ],
   };
 
@@ -2962,26 +2964,26 @@ StylePartsJs.prototype.insertProcessBox = function () {
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
   descriptionPaddingLeft = <%% 36, 36, 36, 36, 36 %%>;
-  descriptionLineBottom = <%% 36, 36, 31, 31, 36 %%>;
+  descriptionLineBottom = <%% 36, 36, 31, 29, 36 %%>;
 
   careSize = <%% 20, 18, 16, 15, 18 %%>;
-  carePaddingTop = <%% 60, 54, 50, 48, 54 %%>;
+  carePaddingTop = <%% 60, 54, 50, 40, 54 %%>;
 
-  processImageWidth = <%% 1300, 1050, 900, 900, 1300 %%>;
+  processImageWidth = <%% 1300, 1050, 900, 720, 1300 %%>;
   subDescriptionMarginBottom = <%% 24, 24, 24, 24, 24 %%>;
 
   belowArrowWidth = <%% 12, 12, 12, 12, 12 %%>;
   belowArrowHeight = <%% 240, 240, 240, 240, 240 %%>;
 
-  buttonWidth = <%% 140, 140, 130, 120, 140 %%>;
-  buttonHeight = <%% 56, 56, 50, 50, 56 %%>;
+  buttonWidth = <%% 140, 140, 130, 110, 140 %%>;
+  buttonHeight = <%% 56, 56, 50, 42, 56 %%>;
   buttonMarginTop = <%% 20, 20, 16, 20, 20 %%>;
-  buttonSize = <%% 20, 20, 18, 18, 20 %%>;
+  buttonSize = <%% 20, 20, 18, 16, 20 %%>;
   buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
   buttonTextTop = <%% -2, -2, -2, -2, -2 %%>;
 
-  noticeSize = <%% 13, 13, 12, 12, 13 %%>;
-  noticeMarginTop = <%% 120, 120, 120, 120, 120 %%>;
+  noticeSize = <%% 13, 13, 12, 10, 13 %%>;
+  noticeMarginTop = <%% 120, 120, 120, 90, 120 %%>;
 
   faqButtonWidth = <%% 120, 120, 120, 120, 120 %%>;
   faqButtonHeight = <%% 36, 36, 36, 36, 36 %%>;
