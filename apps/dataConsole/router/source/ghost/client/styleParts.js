@@ -615,8 +615,8 @@ StylePartsJs.prototype.insertHeadlineBox = function () {
         justifyContent: "center",
         alignItems: "center",
         position: "absolute",
-        left: String(76) + ea,
-        width: String(18) + ea,
+        left: String(77) + ea,
+        width: String(17) + ea,
         top: String(13) + ea,
         height: withOut(26, ea),
         background: localColor.brown1,
@@ -1334,7 +1334,7 @@ StylePartsJs.prototype.insertMatchupBox = function () {
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
   descriptionMarginTop = <%% 10, 10, 10, 6, 1.5 %%>;
 
-  whiteBetween = <%% 16, 16, 16, 8, 13 %%>;
+  whiteBetween = <%% 16, 16, 16, 8, 14 %%>;
 
   chipWidth = <%% 32, 28, 24, 20, 28 %%>;
   chipBetween = <%% 6, 6, 6, 4, 6 %%>;
@@ -1781,7 +1781,7 @@ StylePartsJs.prototype.insertMatchupBox = function () {
         flexDirection: "column",
         justifyContent: "center",
         textAlign: "center",
-        paddingTop: String(6) + ea,
+        paddingTop: String(6.5) + ea,
       },
       children: [
         {
@@ -2000,6 +2000,7 @@ StylePartsJs.prototype.insertStyleBox = function () {
   let imageBoxMarginTop, imageBoxMarginTopBig;
   let moreBoxHeight;
   let moreCircleWidth, moreCircleBetween;
+  let imageTong;
 
   svgBox = this.returnSvgBox();
 
@@ -2025,14 +2026,14 @@ StylePartsJs.prototype.insertStyleBox = function () {
 
   whiteBetween = <%% 36, 20, 24, 16, 1 %%>;
   whiteBoxHeight = <%% 200, 200, 180, 124, 20 %%>;
-  whiteBoxMarginTop = <%% 40, 40, 40, 32, 4 %%>;
+  whiteBoxMarginTop = <%% 40, 40, 40, 32, 6 %%>;
   whiteInnerPaddingLeft = <%% 60, 48, 36, 32, 6 %%>;
 
   whiteLogoWidth = <%% 190, 162, 190, 190, 190 %%>;
   whiteLogoTop = <%% 2, 2, 2, 2, 2 %%>;
 
   whiteInnerSize = <%% 22, 18, 17, 15, 4 %%>;
-  whitePlusSize = <%% 32, 24, 23, 18, 4 %%>;
+  whitePlusSize = <%% 32, 24, 23, 18, 5 %%>;
   whiteInnerWeight = <%% 600, 600, 600, 600, 600 %%>;
   whiteInnerBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
 
@@ -2045,41 +2046,41 @@ StylePartsJs.prototype.insertStyleBox = function () {
   noticeSize = <%% 12, 11, 10, 10, 2.5 %%>;
   noticeWeight = <%% 600, 600, 600, 600, 600 %%>;
   noticeBetween = <%% 3, 3, 3, 3, 1 %%>;
-  noticeBoxBottom = <%% 18, 18, 18, 12, 2 %%>;
+  noticeBoxBottom = <%% 18, 18, 18, 12, 30 %%>;
 
-  imageWidth = <%% 504, 704, 570, 420, 500 %%>;
-  imageHeight = <%% 290, 290, 260, 230, 290 %%>;
+  imageWidth = <%% 504, 704, 570, 420, 82 %%>;
+  imageHeight = <%% 290, 290, 260, 230, 45 %%>;
   imageBetween = <%% 12, 12, 12, 12, 12 %%>;
   imageLineInnerBetween = <%% 48, 40, 40, 32, 4 %%>;
 
-  imageDescriptionPaddingTop = <%% 44, 44, 44, 36, 44 %%>;
-  imagePartsWidth = <%% 125, 125, 110, 84, 125 %%>;
+  imageDescriptionPaddingTop = <%% 44, 44, 44, 36, 3 %%>;
+  imagePartsWidth = <%% 125, 125, 110, 84, 21 %%>;
 
-  imageTitleSize = <%% 22, 21, 18, 16, 22 %%>;
+  imageTitleSize = <%% 22, 21, 18, 16, 4.4 %%>;
   imageTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-  imageTitleMarginTop = <%% 20, 20, 16, 16, 16 %%>;
-  imageDescriptionSize = <%% 14, 14, 13, 12, 14 %%>;
+  imageTitleMarginTop = <%% 20, 20, 16, 16, 1.5 %%>;
+  imageDescriptionSize = <%% 14, 14, 13, 12, 3.2 %%>;
   imageDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
-  imageDescriptionMarginTop = <%% 10, 10, 10, 8, 10 %%>;
+  imageDescriptionMarginTop = <%% 10, 10, 10, 8, 2 %%>;
   imageDescriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   imageDescriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
-  imagePortfolioSize = <%% 11, 11, 11, 11, 11 %%>;
+  imagePortfolioSize = <%% 11, 11, 11, 11, 3 %%>;
   imagePortfolioWeight = <%% 600, 600, 600, 600, 600 %%>;
-  imagePortfolioArrowWidth = <%% 20, 20, 20, 20, 20 %%>;
-  imagePortfolioArrowHeight = <%% 6, 6, 6, 6, 6 %%>;
-  imagePortfolioArrowMarginLeft = <%% 6, 6, 6, 6, 6 %%>;
-  imagePortfolioArrowTop = <%% 5, 5, 5, 5, 5 %%>;
+  imagePortfolioArrowWidth = <%% 20, 20, 20, 20, 6 %%>;
+  imagePortfolioArrowHeight = <%% 6, 6, 6, 6, 1.2 %%>;
+  imagePortfolioArrowMarginLeft = <%% 6, 6, 6, 6, 2 %%>;
+  imagePortfolioArrowTop = <%% 5, 5, 5, 5, 1.5 %%>;
 
-  imageTagSize = <%% 12, 12, 12, 12, 12 %%>;
+  imageTagSize = <%% 12, 12, 12, 12, 3 %%>;
   imageTagWeight = <%% 500, 500, 500, 500, 500 %%>;
 
-  imageBoxMarginTop = <%% 110, 84, 72, 65, 20 %%>;
-  imageBoxMarginTopBig = <%% 190, 136, 112, 110, 14 %%>;
+  imageBoxMarginTop = <%% 110, 84, 72, 65, 11 %%>;
+  imageBoxMarginTopBig = <%% 190, 136, 112, 110, 31 %%>;
 
-  moreBoxHeight = <%% 40, 40, 40, 40, 40 %%>;
-  moreCircleWidth = <%% 8, 8, 8, 8, 8 %%>;
-  moreCircleBetween = <%% 6, 6, 6, 6, 6 %%>;
+  moreBoxHeight = <%% 40, 40, 40, 40, 9 %%>;
+  moreCircleWidth = <%% 8, 8, 8, 8, 2 %%>;
+  moreCircleBetween = <%% 6, 6, 6, 6, 1.5 %%>;
 
   contents = {
     title: "스타일 파츠",
@@ -2098,7 +2099,7 @@ StylePartsJs.prototype.insertStyleBox = function () {
           "Simple set",
         ].join("\n"),
         [
-          ": 마루 + 도배 + 필름 + (다운라이트 + 중문)",
+          desktop ? ": 마루 + 도배 + 필름 + (다운라이트 + 중문)" : ": 마루 + 도배 + 필름",
           ": 도배 + 필름"
         ].join("\n")
       ],
@@ -2121,7 +2122,7 @@ StylePartsJs.prototype.insertStyleBox = function () {
           title: "시크한 스타일 만들고 싶다면?",
           description: [
             "기존과 다르게 저채도의 바닥과",
-            "어두운 컬러의 필름지로 포인트 컬러들을 살려보세요!",
+            desktop ? "어두운 컬러의 필름지로 포인트 컬러들을 살려보세요!" : "어두운 컬러의 필름지로 공간의 포인트 컬러들을 효과적으로 살려보세요!",
           ],
           tag: [
             "시크",
@@ -2139,7 +2140,7 @@ StylePartsJs.prototype.insertStyleBox = function () {
           title: "힙하고 트렌디한 우리집 만들기!",
           description: [
             "타일 느낌나는 마루와 화이트 배경 만들어",
-            "미드센추리모던 스타일을 극대화 시킬 수 있어요.",
+            desktop ? "미드 센추리 모던 스타일을 극대화 시킬 수 있어요." : "멋지고 힙한 미드 센추리 모던 스타일을 극대화 시킬 수 있어요.",
           ],
           tag: [
             "트렌디",
@@ -2155,8 +2156,8 @@ StylePartsJs.prototype.insertStyleBox = function () {
           parts: "/parts20.png",
           title: "누구나 꿈꾸는 화이트 앤 우드",
           description: [
-            "따뜻한 마루 컬러에 화이트 배경은 기본중의 기본이죠.",
-            "다양한 가구 중 내 우드 가구톤에 맞추어 자재를 골라봐요!",
+            desktop ? "따뜻한 마루 컬러에 화이트 배경은 기본중의 기본이죠." : "따뜻한 마루 컬러에 화이트 배경은 기본중의 기본이죠. 다양한 가구 중 내 우드 가구톤에 맞추어 자재를 골라봐요!",
+            desktop ? "다양한 가구 중 내 우드 가구톤에 맞추어 자재를 골라봐요!" : "",
           ],
           tag: [
             "화이트",
@@ -2173,8 +2174,8 @@ StylePartsJs.prototype.insertStyleBox = function () {
           parts: "/parts30.png",
           title: "전체적으로 화사한 글램 스타일",
           description: [
-            "글램한 집을 원한다면, 기본 시공은 물론 조명으로",
-            "집을 확실히 밝혀주어 곳곳에 포인트를 주어요!",
+            desktop ? "글램한 집을 원한다면, 기본 시공은 물론 조명으로" : "글램한 집을 원한다면, 기본 시공은 물론\n다운라이트 조명과 펜던트로 집을 확실히 밝혀주어 곳곳에 포인트를 주어요!",
+            desktop ? "집을 확실히 밝혀주어 곳곳에 포인트를 주어요!" : "",
           ],
           tag: [
             "글램",
@@ -2292,6 +2293,7 @@ StylePartsJs.prototype.insertStyleBox = function () {
       boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
       borderRadius: String(8) + "px",
       marginTop: String(whiteBoxMarginTop) + ea,
+      paddingTop: desktop ? "" : String(6) + ea,
     },
     children: [
       {
@@ -2340,15 +2342,20 @@ StylePartsJs.prototype.insertStyleBox = function () {
       },
       {
         style: {
-          display: "inline-block",
-          width: String(whiteLineWidth) + ea,
-          height: String(0),
-          borderBottom: "1px solid " + colorChip.gray3,
+          display: desktop ? "inline-block" : "flex",
+          flexDirection: desktop ? "" : "row",
+          width: desktop ? String(whiteLineWidth) + ea : "",
+          height: desktop ? String(0) : "",
+          borderBottom: desktop ? "1px solid " + colorChip.gray3 : "",
+          marginTop: desktop ? "" : String(1) + ea,
+          marginBottom: desktop ? "" : String(7) + ea,
+          alignItems: "center",
+          justifyContent: "center",
         }
       },
       {
         style: {
-          display: "inline-block",
+          display: desktop ? "inline-block" : "none",
           width: String(whiteVerticalLineWidth) + ea,
           height: String(whiteVerticalLineHeight) + ea,
           borderTop: "1px solid " + colorChip.gray3,
@@ -2361,7 +2368,7 @@ StylePartsJs.prototype.insertStyleBox = function () {
       {
         text: contents.white.main[3],
         style: {
-          display: "inline-block",
+          display: desktop ? "inline-block" : "none",
           position: "relative",
           fontSize: String(whiteInnerSize) + ea,
           fontWeight: String(500),
@@ -2376,7 +2383,7 @@ StylePartsJs.prototype.insertStyleBox = function () {
       {
         text: contents.white.main[4],
         style: {
-          display: "inline-block",
+          display: desktop ? "inline-block" : "none",
           position: "relative",
           fontSize: String(whiteInnerSize) + ea,
           fontWeight: String(whiteInnerWeight),
@@ -2387,7 +2394,7 @@ StylePartsJs.prototype.insertStyleBox = function () {
       },
       {
         style: {
-          display: "inline-block",
+          display: desktop ? "inline-block" : "none",
           width: String(whiteVerticalLineWidth) + ea,
           height: String(whiteVerticalLineHeight) + ea,
           borderTop: "1px solid " + colorChip.gray3,
@@ -2399,7 +2406,7 @@ StylePartsJs.prototype.insertStyleBox = function () {
       },
       {
         style: {
-          display: "inline-block",
+          display: desktop ? "inline-block" : "block",
           position: "absolute",
           right: String(0),
           top: String(whiteBoxHeight + noticeBoxBottom) + ea,
@@ -2407,6 +2414,71 @@ StylePartsJs.prototype.insertStyleBox = function () {
       }
     ]
   });
+
+  if (mobile) {
+
+    createNode({
+      mother: whiteBox.children[4],
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: String(3) + ea,
+        height: String(8) + ea,
+        top: String(0.3) + ea,
+        border: "1px solid " + colorChip.gray3,
+        borderRight: "0px solid " + colorChip.gray3,
+        borderTopLeftRadius: String(5) + "px",
+        borderBottomLeftRadius: String(5) + "px",
+        marginRight: String(3) + ea,
+      }
+    });
+
+    createNode({
+      mother: whiteBox.children[4],
+      text: contents.white.main[3],
+      style: {
+        display: "inline-block",
+        position: "relative",
+        fontSize: String(whiteInnerSize) + ea,
+        fontWeight: String(500),
+        color: colorChip.black,
+        fontFamily: "graphik",
+        lineHeight: String(1.8),
+      }
+    });
+
+    createNode({
+      mother: whiteBox.children[4],
+      text: contents.white.main[4],
+      style: {
+        display: "inline-block",
+        position: "relative",
+        fontSize: String(whiteInnerSize) + ea,
+        fontWeight: String(600),
+        color: colorChip.black,
+        lineHeight: String(1.8),
+        paddingLeft: String(5) + ea,
+      }
+    });
+
+    createNode({
+      mother: whiteBox.children[4],
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: String(3) + ea,
+        height: String(8) + ea,
+        top: String(0.3) + ea,
+        border: "1px solid " + colorChip.gray3,
+        borderLeft: "0px solid " + colorChip.gray3,
+        borderTopRightRadius: String(5) + "px",
+        borderBottomRightRadius: String(5) + "px",
+        marginLeft: String(3) + ea,
+      }
+    });
+
+  }
+
 
   num2 = 0;
   for (let n of contents.white.notice) {
@@ -2428,21 +2500,21 @@ StylePartsJs.prototype.insertStyleBox = function () {
 
   for (let i = 0; i < contents.image.main.length; i++) {
     if (contents.image.main[i].type === "left") {
-      createNode({
+      imageTong = createNode({
         mother: baseMother,
         style: {
           display: "flex",
           position: "relative",
-          flexDirection: "row",
+          flexDirection: desktop ? "row" : "column",
           alignItems: "center",
           paddingBottom: String(imageLineInnerBetween) + ea,
           marginTop: String(i === 0 ? imageBoxMarginTopBig : imageBoxMarginTop) + ea,
-          borderBottom: "1px solid " + colorChip.gray3,
+          borderBottom: desktop ? "1px solid " + colorChip.gray3 : "",
         },
         children: [
           {
             style: {
-              display: "inline-block",
+              display: desktop ? "inline-block" : "block",
               position: "relative",
               width: String(imageWidth) + ea,
               height: String(imageHeight) + ea,
@@ -2451,7 +2523,7 @@ StylePartsJs.prototype.insertStyleBox = function () {
               backgroundImage: "url('" + StylePartsJs.binaryPath + contents.image.main[i].photo[0] + "')",
               backgroundPosition: "50% 50%",
               backgroundSize: "100% auto",
-              marginRight: media[0] ? String(imageBetween) + ea : String(imageLineInnerBetween) + ea,
+              marginRight: media[0] ? String(imageBetween) + ea : (desktop ? String(imageLineInnerBetween) + ea : ""),
             }
           },
           {
@@ -2470,12 +2542,12 @@ StylePartsJs.prototype.insertStyleBox = function () {
           },
           {
             style: {
-              display: "inline-flex",
+              display: desktop ? "inline-flex" : "block",
               flexDirection: "column",
               position: "relative",
               paddingTop: String(imageDescriptionPaddingTop) + ea,
-              width: media[0] ? withOut(imageWidth + imageBetween + imageWidth + imageLineInnerBetween, ea) : withOut(imageWidth + imageLineInnerBetween, ea),
-              height: String(imageHeight - imageDescriptionPaddingTop) + ea,
+              width: media[0] ? withOut(imageWidth + imageBetween + imageWidth + imageLineInnerBetween, ea) : (desktop ? withOut(imageWidth + imageLineInnerBetween, ea) : String(82) + ea),
+              height: desktop ? String(imageHeight - imageDescriptionPaddingTop) + ea : "",
               verticalAlign: "top",
             },
             children: [
@@ -2485,7 +2557,7 @@ StylePartsJs.prototype.insertStyleBox = function () {
                   src: StylePartsJs.binaryPath + contents.image.main[i].parts,
                 },
                 style: {
-                  display: "block",
+                  display: desktop ? "block" : "inline-block",
                   position: "relative",
                   width: String(imagePartsWidth) + ea,
                 }
@@ -2504,13 +2576,15 @@ StylePartsJs.prototype.insertStyleBox = function () {
               {
                 text: contents.image.main[i].description.join("\n"),
                 style: {
-                  display: "block",
+                  display: desktop ? "block" : "inline-block",
                   position: "relative",
                   fontSize: String(imageDescriptionSize) + ea,
                   fontWeight: String(imageDescriptionWeight),
                   color: colorChip.black,
                   lineHeight: String(imageDescriptionLineHeight),
                   marginTop: String(imageDescriptionMarginTop) + ea,
+                  marginLeft: desktop ? "" : String(5) + ea,
+                  width: desktop ? "" : String(56) + ea,
                 },
                 bold: {
                   fontSize: String(imageDescriptionSize) + ea,
@@ -2522,9 +2596,10 @@ StylePartsJs.prototype.insertStyleBox = function () {
                 style: {
                   display: "block",
                   width: withOut(0),
-                  position: "absolute",
+                  position: desktop ? "absolute" : "relative",
                   bottom: String(0),
                   left: String(0),
+                  marginTop: desktop ? "" : String(4) + ea,
                 },
                 children: [
                   {
@@ -2569,150 +2644,298 @@ StylePartsJs.prototype.insertStyleBox = function () {
           }
         ]
       });
-
     } else {
-      createNode({
-        mother: baseMother,
-        style: {
-          display: "flex",
-          position: "relative",
-          flexDirection: "row",
-          alignItems: "center",
-          paddingBottom: String(imageLineInnerBetween) + ea,
-          marginTop: String(imageBoxMarginTop) + ea,
-          borderBottom: "1px solid " + colorChip.gray3,
-        },
-        children: [
-          {
-            style: {
-              display: "inline-flex",
-              flexDirection: "column",
-              position: "relative",
-              paddingTop: String(imageDescriptionPaddingTop) + ea,
-              width: media[0] ? withOut(imageWidth + imageBetween + imageWidth + imageLineInnerBetween, ea) : withOut(imageWidth + imageLineInnerBetween, ea),
-              height: String(imageHeight - imageDescriptionPaddingTop) + ea,
-              verticalAlign: "top",
-              marginRight: String(imageLineInnerBetween) + ea,
-            },
-            children: [
-              {
-                mode: "img",
-                attribute: {
-                  src: StylePartsJs.binaryPath + contents.image.main[i].parts,
-                },
-                style: {
-                  display: "block",
-                  position: "relative",
-                  width: String(imagePartsWidth) + ea,
-                }
+      if (desktop) {
+        imageTong = createNode({
+          mother: baseMother,
+          style: {
+            display: "flex",
+            position: "relative",
+            flexDirection: desktop ? "row" : "column",
+            alignItems: "center",
+            paddingBottom: String(imageLineInnerBetween) + ea,
+            marginTop: String(imageBoxMarginTop) + ea,
+            borderBottom: desktop ? "1px solid " + colorChip.gray3 : "",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                flexDirection: "column",
+                position: "relative",
+                paddingTop: String(imageDescriptionPaddingTop) + ea,
+                width: media[0] ? withOut(imageWidth + imageBetween + imageWidth + imageLineInnerBetween, ea) : withOut(imageWidth + imageLineInnerBetween, ea),
+                height: String(imageHeight - imageDescriptionPaddingTop) + ea,
+                verticalAlign: "top",
+                marginRight: String(imageLineInnerBetween) + ea,
               },
-              {
-                text: contents.image.main[i].title,
-                style: {
-                  display: "block",
-                  position: "relative",
-                  fontSize: String(imageTitleSize) + ea,
-                  fontWeight: String(imageTitleWeight),
-                  color: colorChip.black,
-                  marginTop: String(imageTitleMarginTop) + ea,
-                }
-              },
-              {
-                text: contents.image.main[i].description.join("\n"),
-                style: {
-                  display: "block",
-                  position: "relative",
-                  fontSize: String(imageDescriptionSize) + ea,
-                  fontWeight: String(imageDescriptionWeight),
-                  color: colorChip.black,
-                  lineHeight: String(imageDescriptionLineHeight),
-                  marginTop: String(imageDescriptionMarginTop) + ea,
-                },
-                bold: {
-                  fontSize: String(imageDescriptionSize) + ea,
-                  fontWeight: String(imageDescriptionBoldWeight),
-                  color: colorChip.black,
-                }
-              },
-              {
-                style: {
-                  display: "block",
-                  width: withOut(0),
-                  position: "absolute",
-                  bottom: String(0),
-                  left: String(0),
-                },
-                children: [
-                  {
-                    text: "portfolio list",
-                    style: {
-                      display: "inline-block",
-                      verticalAlign: "top",
-                      position: "relative",
-                      fontSize: String(imagePortfolioSize) + ea,
-                      fontWeight: String(imagePortfolioWeight),
-                      fontFamily: "graphik",
-                      fontStyle: "italic",
-                      color: colorChip.black,
-                    }
+              children: [
+                {
+                  mode: "img",
+                  attribute: {
+                    src: StylePartsJs.binaryPath + contents.image.main[i].parts,
                   },
-                  {
-                    mode: "svg",
-                    source: svgMaker.horizontalArrow(imagePortfolioArrowWidth, imagePortfolioArrowHeight, colorChip.black),
-                    style: {
-                      display: "inline-block",
-                      verticalAlign: "top",
-                      position: "relative",
-                      width: String(imagePortfolioArrowWidth) + ea,
-                      marginLeft: String(imagePortfolioArrowMarginLeft) + ea,
-                      top: String(imagePortfolioArrowTop) + ea,
-                    }
-                  },
-                  {
-                    text: contents.image.main[i].tag.map((str) => { return '#' + str }).join("&nbsp;&nbsp;&nbsp;"),
-                    style: {
-                      fontSize: String(imageTagSize) + ea,
-                      fontWeight: String(imageTagWeight),
-                      color: localColor.brown0,
-                      position: "absolute",
-                      right: String(0),
-                      top: String(0),
-                    }
+                  style: {
+                    display: "block",
+                    position: "relative",
+                    width: String(imagePartsWidth) + ea,
                   }
-                ]
+                },
+                {
+                  text: contents.image.main[i].title,
+                  style: {
+                    display: "block",
+                    position: "relative",
+                    fontSize: String(imageTitleSize) + ea,
+                    fontWeight: String(imageTitleWeight),
+                    color: colorChip.black,
+                    marginTop: String(imageTitleMarginTop) + ea,
+                  }
+                },
+                {
+                  text: contents.image.main[i].description.join("\n"),
+                  style: {
+                    display: "block",
+                    position: "relative",
+                    fontSize: String(imageDescriptionSize) + ea,
+                    fontWeight: String(imageDescriptionWeight),
+                    color: colorChip.black,
+                    lineHeight: String(imageDescriptionLineHeight),
+                    marginTop: String(imageDescriptionMarginTop) + ea,
+                  },
+                  bold: {
+                    fontSize: String(imageDescriptionSize) + ea,
+                    fontWeight: String(imageDescriptionBoldWeight),
+                    color: colorChip.black,
+                  }
+                },
+                {
+                  style: {
+                    display: "block",
+                    width: withOut(0),
+                    position: "absolute",
+                    bottom: String(0),
+                    left: String(0),
+                  },
+                  children: [
+                    {
+                      text: "portfolio list",
+                      style: {
+                        display: "inline-block",
+                        verticalAlign: "top",
+                        position: "relative",
+                        fontSize: String(imagePortfolioSize) + ea,
+                        fontWeight: String(imagePortfolioWeight),
+                        fontFamily: "graphik",
+                        fontStyle: "italic",
+                        color: colorChip.black,
+                      }
+                    },
+                    {
+                      mode: "svg",
+                      source: svgMaker.horizontalArrow(imagePortfolioArrowWidth, imagePortfolioArrowHeight, colorChip.black),
+                      style: {
+                        display: "inline-block",
+                        verticalAlign: "top",
+                        position: "relative",
+                        width: String(imagePortfolioArrowWidth) + ea,
+                        marginLeft: String(imagePortfolioArrowMarginLeft) + ea,
+                        top: String(imagePortfolioArrowTop) + ea,
+                      }
+                    },
+                    {
+                      text: contents.image.main[i].tag.map((str) => { return '#' + str }).join("&nbsp;&nbsp;&nbsp;"),
+                      style: {
+                        fontSize: String(imageTagSize) + ea,
+                        fontWeight: String(imageTagWeight),
+                        color: localColor.brown0,
+                        position: "absolute",
+                        right: String(0),
+                        top: String(0),
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: String(imageWidth) + ea,
+                height: String(imageHeight) + ea,
+                verticalAlign: "top",
+                borderRadius: String(5) + "px",
+                backgroundImage: "url('" + StylePartsJs.binaryPath + contents.image.main[i].photo[0] + "')",
+                backgroundPosition: "50% 50%",
+                backgroundSize: "100% auto",
+                marginRight: media[0] ? String(imageBetween) + ea : "",
               }
-            ]
-          },
-          {
-            style: {
-              display: "inline-block",
-              position: "relative",
-              width: String(imageWidth) + ea,
-              height: String(imageHeight) + ea,
-              verticalAlign: "top",
-              borderRadius: String(5) + "px",
-              backgroundImage: "url('" + StylePartsJs.binaryPath + contents.image.main[i].photo[0] + "')",
-              backgroundPosition: "50% 50%",
-              backgroundSize: "100% auto",
-              marginRight: media[0] ? String(imageBetween) + ea : "",
+            },
+            {
+              style: {
+                display: media[0] ? "inline-block" : "none",
+                position: "relative",
+                width: String(imageWidth) + ea,
+                height: String(imageHeight) + ea,
+                verticalAlign: "top",
+                borderRadius: String(5) + "px",
+                backgroundImage: "url('" + StylePartsJs.binaryPath + contents.image.main[i].photo[1] + "')",
+                backgroundPosition: "50% 50%",
+                backgroundSize: "100% auto",
+              }
             }
+          ]
+        });
+      } else {
+        imageTong = createNode({
+          mother: baseMother,
+          style: {
+            display: "flex",
+            position: "relative",
+            flexDirection: desktop ? "row" : "column",
+            alignItems: "center",
+            paddingBottom: String(imageLineInnerBetween) + ea,
+            marginTop: String(i === 0 ? imageBoxMarginTopBig : imageBoxMarginTop) + ea,
+            borderBottom: desktop ? "1px solid " + colorChip.gray3 : "",
           },
-          {
-            style: {
-              display: media[0] ? "inline-block" : "none",
-              position: "relative",
-              width: String(imageWidth) + ea,
-              height: String(imageHeight) + ea,
-              verticalAlign: "top",
-              borderRadius: String(5) + "px",
-              backgroundImage: "url('" + StylePartsJs.binaryPath + contents.image.main[i].photo[1] + "')",
-              backgroundPosition: "50% 50%",
-              backgroundSize: "100% auto",
+          children: [
+            {
+              style: {
+                display: desktop ? "inline-block" : "block",
+                position: "relative",
+                width: String(imageWidth) + ea,
+                height: String(imageHeight) + ea,
+                verticalAlign: "top",
+                borderRadius: String(5) + "px",
+                backgroundImage: "url('" + StylePartsJs.binaryPath + contents.image.main[i].photo[0] + "')",
+                backgroundPosition: "50% 50%",
+                backgroundSize: "100% auto",
+                marginRight: media[0] ? String(imageBetween) + ea : (desktop ? String(imageLineInnerBetween) + ea : ""),
+              }
+            },
+            {
+              style: {
+                display: media[0] ? "inline-block" : "none",
+                position: "relative",
+                width: String(imageWidth) + ea,
+                height: String(imageHeight) + ea,
+                verticalAlign: "top",
+                borderRadius: String(5) + "px",
+                backgroundImage: "url('" + StylePartsJs.binaryPath + contents.image.main[i].photo[1] + "')",
+                backgroundPosition: "50% 50%",
+                backgroundSize: "100% auto",
+                marginRight: String(imageLineInnerBetween) + ea,
+              }
+            },
+            {
+              style: {
+                display: desktop ? "inline-flex" : "block",
+                flexDirection: "column",
+                position: "relative",
+                paddingTop: String(imageDescriptionPaddingTop) + ea,
+                width: media[0] ? withOut(imageWidth + imageBetween + imageWidth + imageLineInnerBetween, ea) : (desktop ? withOut(imageWidth + imageLineInnerBetween, ea) : String(82) + ea),
+                height: desktop ? String(imageHeight - imageDescriptionPaddingTop) + ea : "",
+                verticalAlign: "top",
+              },
+              children: [
+                {
+                  mode: "img",
+                  attribute: {
+                    src: StylePartsJs.binaryPath + contents.image.main[i].parts,
+                  },
+                  style: {
+                    display: desktop ? "block" : "inline-block",
+                    position: "relative",
+                    width: String(imagePartsWidth) + ea,
+                  }
+                },
+                {
+                  text: contents.image.main[i].title,
+                  style: {
+                    display: "block",
+                    position: "relative",
+                    fontSize: String(imageTitleSize) + ea,
+                    fontWeight: String(imageTitleWeight),
+                    color: colorChip.black,
+                    marginTop: String(imageTitleMarginTop) + ea,
+                  }
+                },
+                {
+                  text: contents.image.main[i].description.join("\n"),
+                  style: {
+                    display: desktop ? "block" : "inline-block",
+                    position: "relative",
+                    fontSize: String(imageDescriptionSize) + ea,
+                    fontWeight: String(imageDescriptionWeight),
+                    color: colorChip.black,
+                    lineHeight: String(imageDescriptionLineHeight),
+                    marginTop: String(imageDescriptionMarginTop) + ea,
+                    marginLeft: desktop ? "" : String(5) + ea,
+                    width: desktop ? "" : String(56) + ea,
+                  },
+                  bold: {
+                    fontSize: String(imageDescriptionSize) + ea,
+                    fontWeight: String(imageDescriptionBoldWeight),
+                    color: colorChip.black,
+                  }
+                },
+                {
+                  style: {
+                    display: "block",
+                    width: withOut(0),
+                    position: desktop ? "absolute" : "relative",
+                    bottom: String(0),
+                    left: String(0),
+                    marginTop: desktop ? "" : String(4) + ea,
+                  },
+                  children: [
+                    {
+                      text: "portfolio list",
+                      style: {
+                        display: "inline-block",
+                        verticalAlign: "top",
+                        position: "relative",
+                        fontSize: String(imagePortfolioSize) + ea,
+                        fontWeight: String(imagePortfolioWeight),
+                        fontFamily: "graphik",
+                        fontStyle: "italic",
+                        color: colorChip.black,
+                      }
+                    },
+                    {
+                      mode: "svg",
+                      source: svgMaker.horizontalArrow(imagePortfolioArrowWidth, imagePortfolioArrowHeight, colorChip.black),
+                      style: {
+                        display: "inline-block",
+                        verticalAlign: "top",
+                        position: "relative",
+                        width: String(imagePortfolioArrowWidth) + ea,
+                        marginLeft: String(imagePortfolioArrowMarginLeft) + ea,
+                        top: String(imagePortfolioArrowTop) + ea,
+                      }
+                    },
+                    {
+                      text: contents.image.main[i].tag.map((str) => { return '#' + str }).join("&nbsp;&nbsp;&nbsp;"),
+                      style: {
+                        fontSize: String(imageTagSize) + ea,
+                        fontWeight: String(imageTagWeight),
+                        color: localColor.brown0,
+                        position: "absolute",
+                        right: String(0),
+                        top: String(0),
+                      }
+                    }
+                  ]
+                }
+              ]
             }
-          }
-        ]
-      });
-
+          ]
+        });
+      }
+    }
+    if (mobile) {
+      imageTong.children[2].insertBefore(imageTong.children[2].children[1], imageTong.children[2].firstChild);
     }
   }
 
@@ -2819,34 +3042,34 @@ StylePartsJs.prototype.insertBenefitsBox = function () {
   let descriptionLineHeight;
   let descriptionTop;
 
-  paddingTop = <%% 100, 100, 72, 64, 7 %%>;
+  paddingTop = <%% 100, 100, 72, 64, 13 %%>;
   paddingLeft = <%% 100, 100, 72, 64, 7 %%>;
 
-  titleSize = <%% 27, 26, 23, 21, 4 %%>;
+  titleSize = <%% 27, 26, 23, 21, 5.1 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titlePaddingBottom = <%% 4, 4, 4, 3, 1 %%>;
 
-  subSize = <%% 15, 15, 14, 13, 15 %%>;
+  subSize = <%% 15, 15, 14, 13, 3.5 %%>;
   subWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  contentsTongBetween = <%% 40, 40, 40, 32, 40 %%>;
+  contentsTongBetween = <%% 40, 40, 40, 32, 6 %%>;
 
-  benefitLeftWidth = <%% 1040, 700, 585, 485, 70 %%>;
-  benefitFactorBoxHeight = <%% 96, 80, 75, 60, 80 %%>;
+  benefitLeftWidth = <%% 1040, 700, 585, 485, 82 %%>;
+  benefitFactorBoxHeight = <%% 96, 80, 75, 60, 14 %%>;
 
-  benefitNumberWidth = <%% 240, 160, 120, 100, 160 %%>;
-  benefitNumberSize = <%% 30, 30, 26, 23, 30 %%>;
+  benefitNumberWidth = <%% 240, 160, 120, 100, 22 %%>;
+  benefitNumberSize = <%% 30, 30, 26, 23, 5 %%>;
   benefitNumberWeight = <%% 500, 500, 500, 500, 500 %%>;
 
-  benefitFactorPaddingLeft = <%% 30, 30, 28, 24, 30 %%>;
-  benefitFactorWidth = <%% 720, 480, 400, 330, 42 %%>;
-  benefitFactorHeight = <%% 64, 60, 50, 42, 60 %%>;
+  benefitFactorPaddingLeft = <%% 30, 30, 28, 24, 6 %%>;
+  benefitFactorWidth = <%% 720, 480, 400, 330, 82 %%>;
+  benefitFactorHeight = <%% 64, 60, 50, 42, 12 %%>;
 
-  benefitFactorSize = <%% 20, 18, 15, 13, 4 %%>;
+  benefitFactorSize = <%% 20, 18, 15, 13, 3.8 %%>;
   benefitFactorWeight = <%% 700, 700, 700, 700, 700 %%>;
-  benefitFactorTextTop = <%% -1, -1, -1, -1, -1 %%>;
+  benefitFactorTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
 
-  descriptionSize = <%% 14, 14, 13, 12, 14 %%>;
+  descriptionSize = <%% 14, 14, 13, 12, 3.2 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
@@ -2856,9 +3079,9 @@ StylePartsJs.prototype.insertBenefitsBox = function () {
     title: "고객님들을 위한 혜택",
     sub: "스타일 파츠 이용 고객 대상",
     benefits: [
-      [ "One", "아파트멘터리 mms를 통한 계약 고객 디자인비 5% 할인 혜택" ],
-      [ "Two", "Parts 자재사용 및  홈리에종 시공사 이용 시 추가 상품권 증정" ],
-      [ "Three", "블로그 / 유튜브 촬영 등 서비스 후기 작성시 상품권 증정" ],
+      [ "One", desktop ? "아파트멘터리 mms를 통한 계약 고객 디자인비 5% 할인 혜택" : "아파트멘터리 mms를 통한 고객 5% 할인 혜택" ],
+      [ "Two", desktop ? "Parts 자재 사용 및 홈리에종 시공사 이용 시 추가 상품권 증정" : "Parts 사용, 홈리에종 시공사 이용 시 상품권" ],
+      [ "Three", desktop ? "블로그 / 유튜브 촬영 등 서비스 후기 작성시 상품권 증정" : "블로그, 유튜브 등 후기 작성시 상품권 증정" ],
     ],
     description: [
       "스타일 파츠를 이용하시는 <b%모든 고객님들께",
@@ -2882,12 +3105,12 @@ StylePartsJs.prototype.insertBenefitsBox = function () {
     style: {
       display: "block",
       position: "absolute",
-      left: String(-1 * ((window.innerWidth - standardWidth) / 2)) + ea,
-      width: String(window.innerWidth - ((window.innerWidth - standardWidth) / 2)) + ea,
+      left: desktop ? String(-1 * ((window.innerWidth - standardWidth) / 2)) + ea : String(-6) + ea,
+      width: desktop ? String(window.innerWidth - ((window.innerWidth - standardWidth) / 2)) + ea : String(100) + ea,
       height: withOut(0, ea),
       background: colorChip.darkDarkShadow,
-      borderTopRightRadius: String(8) + "px",
-      borderBottomRightRadius: String(8) + "px",
+      borderTopRightRadius: desktop ? String(8) + "px" : "",
+      borderBottomRightRadius: desktop ? String(8) + "px" : "",
     }
   });
 
@@ -2933,7 +3156,7 @@ StylePartsJs.prototype.insertBenefitsBox = function () {
     mother: contentsBase,
     style: {
       display: "flex",
-      flexDirection: "row",
+      flexDirection: desktop ? "row" : "column",
       position: "relative",
       width: withOut(0, ea),
       paddingTop: String(contentsTongBetween) + ea,
@@ -2947,6 +3170,7 @@ StylePartsJs.prototype.insertBenefitsBox = function () {
       flexDirection: "column",
       position: "relative",
       width: String(benefitLeftWidth) + ea,
+      left: desktop ? "" : String(3) + ea,
     }
   });
 
@@ -2965,7 +3189,7 @@ StylePartsJs.prototype.insertBenefitsBox = function () {
         {
           text: number,
           style: {
-            display: "inline-block",
+            display: desktop ? "inline-block" : "none",
             width: String(benefitNumberWidth) + ea,
             position: "relative",
             fontSize: String(benefitNumberSize) + ea,
@@ -2979,9 +3203,9 @@ StylePartsJs.prototype.insertBenefitsBox = function () {
           style: {
             display: "inline-flex",
             position: "relative",
-            justifyContent: "left",
+            justifyContent: desktop ? "left" : "center",
             alignItems: "center",
-            paddingLeft: String(benefitFactorPaddingLeft) + ea,
+            paddingLeft: desktop ? String(benefitFactorPaddingLeft) + ea : "",
             width: String(benefitFactorWidth) + ea,
             height: String(benefitFactorHeight) + ea,
             borderRadius: String(5) + "px",
@@ -3012,19 +3236,22 @@ StylePartsJs.prototype.insertBenefitsBox = function () {
       display: "inline-flex",
       flexDirection: "column-reverse",
       position: "relative",
-      width: withOut(benefitLeftWidth, ea),
+      width: desktop ? withOut(benefitLeftWidth, ea) : String(82) + ea,
+      left: desktop ? "" : String(3) + ea,
+      paddingTop: desktop ? "" : String(3) + ea,
+      textAlign: desktop ? "" : "center",
     },
     children: [
       {
-        text: contents.description.join("\n"),
+        text: contents.description.join(desktop ? "\n" : " "),
         style: {
-          display: "inline-block",
+          display: desktop ? "inline-block" : "block",
           position: "relative",
           fontSize: String(descriptionSize) + ea,
           fontWeight: String(descriptionWeight),
           color: colorChip.white,
           lineHeight: String(descriptionLineHeight),
-          top: String(descriptionTop) + ea,
+          top: desktop ? String(descriptionTop) + ea : "",
         },
         bold: {
           fontSize: String(descriptionSize) + ea,
@@ -3070,47 +3297,47 @@ StylePartsJs.prototype.insertProcessBox = function () {
 
   paddingTop = <%% 200, 160, 130, 100, 13 %%>;
 
-  titleSize = <%% 27, 26, 23, 21, 4 %%>;
+  titleSize = <%% 27, 26, 23, 21, 5.1 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titlePaddingBottom = <%% 4, 4, 4, 3, 1 %%>;
 
-  subSize = <%% 15, 15, 14, 13, 15 %%>;
+  subSize = <%% 15, 15, 14, 13, 3.5 %%>;
   subWeight = <%% 400, 400, 400, 400, 400 %%>;
 
   descriptionBoxPaddingTop = <%% 28, 24, 21, 18, 4 %%>;
   imageBoxPaddingTop = <%% 28, 24, 24, 24, 3 %%>;
   barBoxPaddingTop = <%% 2, 2, 2, 2, 2 %%>;
 
-  descriptionSize = <%% 15, 14, 13, 12, 15 %%>;
+  descriptionSize = <%% 15, 14, 13, 12, 3.2 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
-  descriptionPaddingLeft = <%% 36, 36, 36, 36, 36 %%>;
-  descriptionLineBottom = <%% 36, 36, 31, 29, 36 %%>;
+  descriptionPaddingLeft = <%% 36, 36, 36, 36, 4 %%>;
+  descriptionLineBottom = <%% 36, 36, 31, 29, 4 %%>;
 
-  careSize = <%% 20, 18, 16, 15, 18 %%>;
-  carePaddingTop = <%% 60, 54, 50, 40, 54 %%>;
+  careSize = <%% 20, 18, 16, 15, 4 %%>;
+  carePaddingTop = <%% 60, 54, 50, 40, 8 %%>;
 
-  processImageWidth = <%% 1300, 1050, 900, 720, 1300 %%>;
+  processImageWidth = <%% 1300, 1050, 900, 720, 82 %%>;
   subDescriptionMarginBottom = <%% 24, 24, 24, 24, 24 %%>;
 
   belowArrowWidth = <%% 12, 12, 12, 12, 12 %%>;
-  belowArrowHeight = <%% 240, 240, 240, 240, 240 %%>;
+  belowArrowHeight = <%% 240, 240, 240, 240, 20 %%>;
 
-  buttonWidth = <%% 140, 140, 130, 110, 140 %%>;
-  buttonHeight = <%% 56, 56, 50, 42, 56 %%>;
+  buttonWidth = <%% 140, 140, 130, 110, 60 %%>;
+  buttonHeight = <%% 56, 56, 50, 42, 10 %%>;
   buttonMarginTop = <%% 20, 20, 16, 20, 20 %%>;
-  buttonSize = <%% 20, 20, 18, 16, 20 %%>;
+  buttonSize = <%% 20, 20, 18, 16, 3 %%>;
   buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
   buttonTextTop = <%% -2, -2, -2, -2, -2 %%>;
 
-  noticeSize = <%% 13, 13, 12, 10, 13 %%>;
-  noticeMarginTop = <%% 120, 120, 120, 90, 120 %%>;
+  noticeSize = <%% 13, 13, 12, 10, 2.5 %%>;
+  noticeMarginTop = <%% 120, 120, 120, 90, 24 %%>;
 
-  faqButtonWidth = <%% 120, 120, 120, 120, 120 %%>;
+  faqButtonWidth = <%% 120, 120, 120, 120, 24 %%>;
   faqButtonHeight = <%% 36, 36, 36, 36, 36 %%>;
 
-  faqSize = <%% 15, 15, 14, 13, 15 %%>;
+  faqSize = <%% 15, 15, 14, 13, 3.2 %%>;
   faqWeight = <%% 700, 700, 700, 700, 700 %%>;
   faqPaddingBottom = <%% 2, 2, 2, 2, 2 %%>;
 
@@ -3204,6 +3431,7 @@ StylePartsJs.prototype.insertProcessBox = function () {
   createNode({
     mother: descriptionBox,
     style: {
+      display: desktop ? "block" : "none",
       position: "absolute",
       height: String(0) + ea,
       width: withOut(0, ea),
@@ -3214,7 +3442,7 @@ StylePartsJs.prototype.insertProcessBox = function () {
 
   createNode({
     mother: descriptionBox,
-    text: contents.description.join("\n"),
+    text: contents.description.join(desktop ? "\n" : " "),
     style: {
       display: "inline-block",
       position: "relative",
