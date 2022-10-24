@@ -154,13 +154,13 @@ StylePartsJs.prototype.insertInitBox = function () {
   let bottomLineHeight;
   let mobileStandardWidth;
 
-  initSize = <%% 15, 14, 13, 12, 3 %%>;
+  initSize = <%% 15, 14, 13, 12, 3.2 %%>;
   initWeight = <%% 400, 400, 400, 400, 400 %%>;
   initBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   initLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
   initSecondMarginTop = <%% 12, 12, 12, 12, 4 %%>;
 
-  initPaddingTop = <%% 180, 110, 110, 82, 8 %%>;
+  initPaddingTop = <%% 180, 110, 110, 82, 9 %%>;
 
   leftMotherWidth = <%% 600, 460, 284, 250, 82 %%>;
 
@@ -170,7 +170,7 @@ StylePartsJs.prototype.insertInitBox = function () {
   baseMotherMarginBottom = <%% 168, 160, 140, 110, 2 %%>;
 
   descriptionPaddingTop = <%% 21, 21, 8, 6, 0.5 %%>;
-  partsWidth = <%% 100, 96, 90, 88, 34 %%>;
+  partsWidth = <%% 100, 96, 90, 88, 33 %%>;
 
   bottomLineWidth = <%% 400, 0, 0, 0, 0 %%>;
   bottomLineHeight = <%% 40, 0, 0, 0, 0 %%>;
@@ -186,7 +186,7 @@ StylePartsJs.prototype.insertInitBox = function () {
         desktop ? "<b%시공 비용은 줄이고, 집 전체 스타일링 결과물에 대한 만족도는 올리고,%b>" : "\n<b%시공 비용은 줄이고, 집 전체 결과물에 대한 만족도는 올리고,%b>",
       ],
       [
-        desktop ? "시공부터 스타일링까지, <b%전체 풀 프로세스를 홈리에종 디자이너와 함께%b>" : "시공부터 스타일링까지, <b%전체 프로세스를 홈리에종 디자이너와 함께%b>",
+        desktop ? "시공부터 스타일링까지, <b%전체 풀 프로세스를 홈리에종 디자이너와 함께%b>" : "시공부터 스타일링까지,\n<b%전체 프로세스를 홈리에종 디자이너와 함께%b>",
         "아파트멘터리의 자재를 고르는 스타일 파츠 서비스로 진행해보세요.",
       ]
     ],
@@ -288,7 +288,7 @@ StylePartsJs.prototype.insertInitBox = function () {
       position: "relative",
       flexDirection: "column",
       paddingTop: String(descriptionPaddingTop) + ea,
-      paddingLeft: desktop ? "" : String(43) + ea,
+      paddingLeft: desktop ? "" : String(41) + ea,
       top: desktop ? "" : String(-22) + ea,
     },
     children: [
@@ -343,7 +343,7 @@ StylePartsJs.prototype.insertInitBox = function () {
       flexDirection: "column",
       width: desktop ? withOut(leftMotherWidth, ea) : withOut(0, ea),
       height: desktop ? "" : String(44) + ea,
-      top: desktop ? "" : String(-14) + ea,
+      top: desktop ? "" : String(-13) + ea,
     }
   });
 
@@ -396,7 +396,7 @@ StylePartsJs.prototype.insertHeadlineBox = function () {
   paddingTop = <%% 72, 60, 50, 42, 7 %%>;
   paddingLeft = <%% 72, 60, 50, 42, 3 %%>;
 
-  aboutSize = <%% 13, 12, 11, 10, 3 %%>;
+  aboutSize = <%% 13, 12, 11, 10, 3.2 %%>;
   aboutWeight = <%% 500, 500, 500, 500, 500 %%>;
 
   titleSize = <%% 23, 22, 20, 17, 5.1 %%>;
@@ -405,7 +405,7 @@ StylePartsJs.prototype.insertHeadlineBox = function () {
   titleMarginTop = <%% 60, 42, 40, 36, 6 %%>;
   titlePaddingLeft = <%% 22, 22, 21, 16, 2 %%>;
 
-  wordingSize = <%% 14, 14, 13, 12, 3 %%>;
+  wordingSize = <%% 14, 14, 13, 12, 3.2 %%>;
   wordingWeight = <%% 400, 400, 400, 400, 400 %%>;
   wordingBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
 
@@ -630,8 +630,8 @@ StylePartsJs.prototype.insertHeadlineBox = function () {
           style: {
             display: "inline-block",
             position: "relative",
-            width: String(3.3) + ea,
-            left: String(0.4) + ea,
+            width: String(3.4) + ea,
+            left: String(0.5) + ea,
           }
         }
       ]
@@ -698,57 +698,57 @@ StylePartsJs.prototype.insertLeadBox = function () {
   imageBoxPaddingTop = <%% 28, 24, 24, 18, 6 %%>;
   barBoxPaddingTop = <%% 2, 2, 2, 2, 2 %%>;
 
-  descriptionSize = <%% 15, 14, 13, 12, 3 %%>;
+  descriptionSize = <%% 15, 14, 13, 12, 3.2 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
   descriptionPaddingLeft = <%% 36, 36, 36, 36, 3 %%>;
   descriptionLineBottom = <%% 27, 27, 23, 20, 27 %%>;
 
-  diagramTitleSize = <%% 30, 25, 22, 20, 28 %%>;
+  diagramTitleSize = <%% 30, 25, 22, 20, 3.5 %%>;
   diagramTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
-  diagramSubSize = <%% 18, 15, 14, 13, 16 %%>;
+  diagramSubSize = <%% 18, 15, 14, 13, 2.7 %%>;
   diagramSubWeight = <%% 800, 800, 800, 800, 800 %%>;
-  diagramDescriptionSize = <%% 14, 12, 11, 10, 3 %%>;
+  diagramDescriptionSize = <%% 14, 12, 11, 10, 2.7 %%>;
   diagramDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   diagramDescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
-  diagramTextBetween = <%% 7, 7, 6, 6, 7 %%>;
+  diagramTextBetween = <%% 7, 7, 6, 6, 1.5 %%>;
 
-  imageWidth = <%% 960, 730, 610, 520, 82 %%>;
+  imageWidth = <%% 960, 730, 610, 520, 90 %%>;
   imageMargin = <%% 20, 20, 20, 20, 2 %%>;
 
-  firstPaddingTop = <%% 145, 144, 144, 144, 144 %%>;
+  firstPaddingTop = <%% 145, 144, 144, 144, 0 %%>;
   secondLeft = <%% -126, -110, -100, -60, -100 %%>;
   thirdMarginTop = <%% 267, 267, 267, 267, 267 %%>;
 
-  barTitleSize = <%% 20, 18, 16, 15, 3 %%>;
+  barTitleSize = <%% 20, 18, 16, 15, 3.2 %%>;
   barTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-  barPaddingTop = <%% 13, 13, 12, 9, 2 %%>;
-  barHeight = <%% 20, 20, 20, 20, 2 %%>;
-  barBetween = <%% 6, 6, 6, 6, 1 %%>;
+  barPaddingTop = <%% 13, 13, 12, 9, 1.5 %%>;
+  barHeight = <%% 20, 20, 20, 20, 2.5 %%>;
+  barBetween = <%% 6, 6, 6, 6, 0.5 %%>;
 
   barFirstWidth = <%% 200, 200, 200, 140, 18 %%>;
   barSecondWidth = <%% 500, 500, 500, 240, 40 %%>;
 
   barTextSize = <%% 15, 14, 13, 12, 2.5 %%>;
   barTextWeight = <%% 800, 800, 800, 800, 800 %%>;
-  barTextBottom = <%% -28, -28, -27, -23, -4.8 %%>;
+  barTextBottom = <%% -28, -28, -27, -23, -4.5 %%>;
 
   barNoticeBoxPaddingTop = <%% 72, 64, 60, 48, 12 %%>;
-  barNoticeSize = <%% 14, 14, 13, 12, 3 %%>;
+  barNoticeSize = <%% 14, 14, 13, 12, 2.8 %%>;
   barNoticeWeight = <%% 400, 400, 400, 400, 400 %%>;
-  barNoticeMarginBottom = <%% 5, 5, 5, 5, 4 %%>;
+  barNoticeMarginBottom = <%% 5, 5, 5, 5, 2 %%>;
 
   contents = {
     title: "홈리에종 소개",
     sub: "디자이너가 이끄는 인테리어",
     description: [
-      "홈리에종은 과도한 리모델링을 지양하고 꼭 필요한 시공만을 진행하며,",
-      "<b%디자인을 선기획하여 인테리어의 효율성을 올리는%b> 방식을 지향합니다.",
+      desktop ? "홈리에종은 과도한 리모델링을 지양하고 꼭 필요한 시공만을 진행하며," : "홈리에종은 과도한 리모델링을 지양하고 필요한 시공만을 진행하며,",
+      desktop ? "<b%디자인을 선기획하여 인테리어의 효율성을 올리는%b> 방식을 지향합니다." : "<b%디자인을 먼저 기획하여 효율성을 올리는%b> 방식을 지향합니다.",
     ],
     diagram: [
       {
-        title: "Design",
+        title: desktop ? "Design" : "Design first",
         sub: "디자인 기획",
         description: [
           "디자인을 먼저 진행하여",
@@ -780,7 +780,7 @@ StylePartsJs.prototype.insertLeadBox = function () {
         "제품 비용",
       ],
       notice: [
-        "디자인 비용은 크게  디자인 비용 / 시공 비용 / 제품 구매 비용으로 나누어집니다.",
+        "인테리어 비용은 디자인 / 시공 / 제품 구매 비용으로 나누어집니다.",
         "디자이너가 고객과의 상담 이후 시공 비용과 제품 구매 비용의 밸런스를 균형있게 맞추어 완성도 있는 집을 디자인합니다. ",
       ]
     }
@@ -899,14 +899,16 @@ StylePartsJs.prototype.insertLeadBox = function () {
           selectstart: (e) => { e.preventDefault(); },
         },
         style: {
-          display: desktop ? "inline-flex" : "none",
+          display: desktop ? "inline-flex" : "block",
           position: big ? "relative" : "absolute",
-          textAlign: "center",
-          justifyContent: "center",
+          textAlign: desktop ? "center" : "end",
+          justifyContent: desktop ? "center" : "end",
           flexDirection: "column",
           paddingTop: String(firstPaddingTop) + ea,
-          left: big ? "" : String(0) + ea,
-          top: big ? "" : String(85) + ea,
+          left: big ? "" : (desktop ? String(0) + ea : ""),
+          right: mobile ? String(2) + ea : "",
+          top: big ? "" : (desktop ? String(85) + ea : String(8) + ea),
+          zIndex: String(1),
         },
         children: [
           {
@@ -929,7 +931,7 @@ StylePartsJs.prototype.insertLeadBox = function () {
               selectstart: (e) => { e.preventDefault(); },
             },
             style: {
-              display: "block",
+              display: desktop ? "block" : "none",
               fontSize: String(diagramSubSize) + ea,
               fontWeight: String(diagramSubWeight),
               color: colorChip.black,
@@ -957,7 +959,7 @@ StylePartsJs.prototype.insertLeadBox = function () {
         mother: imageBox,
         mode: "img",
         attribute: {
-          src: StylePartsJs.binaryPath + (<&& "/lead0.png" | "/lead0.png" | "/lead2.png" | "/lead2.png" | "/lead2.png" &&>),
+          src: StylePartsJs.binaryPath + (<&& "/lead0.png" | "/lead0.png" | "/lead2.png" | "/lead2.png" | "/lead3.png" &&>),
         },
         style: {
           display: "inline-flex",
@@ -1231,7 +1233,7 @@ StylePartsJs.prototype.insertLeadBox = function () {
       flexDirection: "column",
       paddingTop: String(barNoticeBoxPaddingTop) + ea,
       justifyContent: "end",
-      alignItems: "center",
+      alignItems: desktop ? "center" : "start",
     }
   });
 
@@ -1310,39 +1312,39 @@ StylePartsJs.prototype.insertMatchupBox = function () {
   subSize = <%% 15, 15, 14, 13, 3.5 %%>;
   subWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  whiteInnerPaddingTop = <%% 48, 48, 36, 24, 72 %%>;
-  whiteInnerPaddingLeft = <%% 48, 48, 36, 24, 72 %%>;
+  whiteInnerPaddingTop = <%% 48, 48, 36, 24, 0 %%>;
+  whiteInnerPaddingLeft = <%% 48, 48, 36, 24, 0 %%>;
 
   firstDescriptionBoxWidth = <%% 448, 448, 330, 290, 0 %%>;
 
-  firstImageBoxOver = <%% 180, 160, 120, 92, 100 %%>;
-  overMargin = <%% 220, 196, 156, 118, 196 %%>;
+  firstImageBoxOver = <%% 180, 160, 120, 92, 10 %%>;
+  overMargin = <%% 220, 196, 156, 118, 8 %%>;
 
-  imageBetweenSero = <%% 10, 10, 10, 8, 10 %%>;
-  imageBetweenGaro = <%% 30, 20, 10, 8, 30 %%>;
+  imageBetweenSero = <%% 10, 10, 10, 8, 1 %%>;
+  imageBetweenGaro = <%% 30, 20, 10, 8, 1 %%>;
 
-  whiteBoxHeight = <%% 420, 320, 300, 230, 34 %%>;
+  whiteBoxHeight = <%% 420, 320, 300, 230, 60 %%>;
 
-  subTitleSize = <%% 17, 17, 16, 14, 4 %%>;
+  subTitleSize = <%% 17, 17, 16, 14, 3.5 %%>;
   subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
 
-  descriptionSize = <%% 14, 14, 13, 12, 3 %%>;
+  descriptionSize = <%% 14, 14, 13, 12, 3.2 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
-  descriptionMarginTop = <%% 10, 10, 10, 6, 10 %%>;
+  descriptionMarginTop = <%% 10, 10, 10, 6, 1.5 %%>;
 
-  whiteBetween = <%% 16, 16, 16, 8, 16 %%>;
+  whiteBetween = <%% 16, 16, 16, 8, 13 %%>;
 
   chipWidth = <%% 32, 28, 24, 20, 28 %%>;
   chipBetween = <%% 6, 6, 6, 4, 6 %%>;
 
-  circleWidth = <%% 54, 50, 45, 40, 54 %%>;
-  circleMargin = <%% 20, 20, 15, 11, 20 %%>;
+  circleWidth = <%% 54, 50, 45, 40, 8 %%>;
+  circleMargin = <%% 20, 20, 15, 11, 2.4 %%>;
   circleOpacity = <%% 0.7, 0.7, 0.7, 0.7, 0.7 %%>;
-  circleSize = <%% 12, 11, 10, 9, 2 %%>;
+  circleSize = <%% 12, 11, 10, 9, 2.2 %%>;
   circleWeight = <%% 500, 500, 500, 500, 500 %%>;
-  circleTextTop = <%% -2, -2, -2, -2, -2 %%>;
+  circleTextTop = <%% -2, -2, -2, -2, -0.2 %%>;
 
   secondImageBetween = <%% 10, 10, 10, 10, 10 %%>;
 
@@ -1364,7 +1366,7 @@ StylePartsJs.prototype.insertMatchupBox = function () {
       ((media[0] || media[1]) ? "홈리에종에서 제안하는 톤보정 시공은 디자이너와" : "홈리에종에서 제안하는 톤보정은 디자이너와"),
       ((media[0] || media[1]) ? "함께 원하는 스타일에 맞추어 큰 구조의 변경이나" : "원하는 스타일에 맞추어 구조의 변경이나"),
       ((media[0] || media[1]) ? "<b%전체 시공 없이 기존 자재의 거슬리는 컬러, 톤, 무늬 등을" : "<b%전체 시공 없이 거슬리는 컬러, 톤, 무늬 등을"),
-      ((media[0] || media[1]) ? "새로운 자재로 드레스업하여 배경을 새로 만들어내는%b>" : "새로운 자재로 드레스업하여 배경을 만들어내는%b>"),
+      ((media[0] || media[1]) ? "새로운 자재로 드레스업하여 배경을 새로 만들어내는%b>" : "새로운 자재로 배경을 만들어내는%b>"),
       ((media[0] || media[1]) ? "비교적 간단한 부분 시공 서비스입니다." : "간단한 부분 시공 서비스입니다."),
     ],
     image: [
@@ -1468,113 +1470,114 @@ StylePartsJs.prototype.insertMatchupBox = function () {
     style: {
       display: "flex",
       position: "relative",
-      flexDirection: "row",
+      flexDirection: desktop ? "row" : "column",
       marginTop: String(overMargin) + ea,
       width: withOut(0, ea),
-      height: String(whiteBoxHeight) + ea,
       borderRadius: String(8) + "px",
-      background: colorChip.white,
-      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      background: desktop ? colorChip.white : "",
+      boxShadow: desktop ? "0px 3px 15px -9px " + colorChip.shadow : "",
       marginBottom: String(whiteBetween) + ea,
     }
   });
 
-  firstDescriptionBox = createNode({
-    mother: firstWhiteBox,
-    style: {
-      display: "inline-flex",
-      position: "relative",
-      width: String(firstDescriptionBoxWidth - whiteInnerPaddingLeft) + ea,
-      height: withOut(whiteInnerPaddingTop * 2, ea),
-      paddingTop: String(whiteInnerPaddingTop) + ea,
-      paddingBottom: String(whiteInnerPaddingTop) + ea,
-      paddingLeft: String(whiteInnerPaddingLeft) + ea,
-      flexDirection: "column",
-      justifyContent: "end",
-    },
-    children: [
-      {
-        style: {
-          position: "absolute",
-          width: String(chipWidth) + ea,
-          height: String(chipWidth) + ea,
-          top: String(-1 * (chipWidth + whiteBetween)) + ea,
-          left: String(0),
-          background: colorChip.white,
-          borderRadius: String(5) + "px",
-        }
+  if (desktop) {
+    firstDescriptionBox = createNode({
+      mother: firstWhiteBox,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        width: String(firstDescriptionBoxWidth - whiteInnerPaddingLeft) + ea,
+        height: withOut(whiteInnerPaddingTop * 2, ea),
+        paddingTop: String(whiteInnerPaddingTop) + ea,
+        paddingBottom: String(whiteInnerPaddingTop) + ea,
+        paddingLeft: String(whiteInnerPaddingLeft) + ea,
+        flexDirection: "column",
+        justifyContent: "end",
       },
-      {
-        style: {
-          position: "absolute",
-          width: String(chipWidth) + ea,
-          height: String(chipWidth) + ea,
-          top: String(-1 * (chipWidth + whiteBetween)) + ea,
-          left: String(chipWidth + chipBetween) + ea,
-          background: localColor.brown0,
-          borderRadius: String(5) + "px",
-        }
-      },
-      {
-        style: {
-          position: "absolute",
-          width: String(chipWidth) + ea,
-          height: String(chipWidth) + ea,
-          top: String(-1 * (chipWidth + whiteBetween)) + ea,
-          left: String((chipWidth + chipBetween) * 2) + ea,
-          background: localColor.brown1,
-          borderRadius: String(5) + "px",
-        }
-      },
-      {
-        style: {
-          position: "absolute",
-          width: String(chipWidth) + ea,
-          height: String(chipWidth) + ea,
-          top: String(-1 * (chipWidth + whiteBetween)) + ea,
-          left: String((chipWidth + chipBetween) * 3) + ea,
-          background: localColor.brown2,
-          borderRadius: String(5) + "px",
-        }
-      },
-      {
-        text: contents.subTitle,
-        style: {
-          display: "block",
-          position: "relative",
-          fontSize: String(subTitleSize) + ea,
-          fontWeight: String(subTitleWeight),
-          color: colorChip.black,
-        }
-      },
-      {
-        text: contents.description.join("\n"),
-        style: {
-          display: "block",
-          position: "relative",
-          fontSize: String(descriptionSize) + ea,
-          fontWeight: String(descriptionWeight),
-          lineHeight: String(descriptionLineHeight),
-          color: colorChip.black,
-          marginTop: String(descriptionMarginTop) + ea,
+      children: [
+        {
+          style: {
+            position: "absolute",
+            width: String(chipWidth) + ea,
+            height: String(chipWidth) + ea,
+            top: String(-1 * (chipWidth + whiteBetween)) + ea,
+            left: String(0),
+            background: colorChip.white,
+            borderRadius: String(5) + "px",
+          }
         },
-        bold: {
-          fontSize: String(descriptionSize) + ea,
-          fontWeight: String(descriptionBoldWeight),
-          color: colorChip.black,
+        {
+          style: {
+            position: "absolute",
+            width: String(chipWidth) + ea,
+            height: String(chipWidth) + ea,
+            top: String(-1 * (chipWidth + whiteBetween)) + ea,
+            left: String(chipWidth + chipBetween) + ea,
+            background: localColor.brown0,
+            borderRadius: String(5) + "px",
+          }
+        },
+        {
+          style: {
+            position: "absolute",
+            width: String(chipWidth) + ea,
+            height: String(chipWidth) + ea,
+            top: String(-1 * (chipWidth + whiteBetween)) + ea,
+            left: String((chipWidth + chipBetween) * 2) + ea,
+            background: localColor.brown1,
+            borderRadius: String(5) + "px",
+          }
+        },
+        {
+          style: {
+            position: "absolute",
+            width: String(chipWidth) + ea,
+            height: String(chipWidth) + ea,
+            top: String(-1 * (chipWidth + whiteBetween)) + ea,
+            left: String((chipWidth + chipBetween) * 3) + ea,
+            background: localColor.brown2,
+            borderRadius: String(5) + "px",
+          }
+        },
+        {
+          text: contents.subTitle,
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(subTitleSize) + ea,
+            fontWeight: String(subTitleWeight),
+            color: colorChip.black,
+          }
+        },
+        {
+          text: contents.description.join("\n"),
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(descriptionSize) + ea,
+            fontWeight: String(descriptionWeight),
+            lineHeight: String(descriptionLineHeight),
+            color: colorChip.black,
+            marginTop: String(descriptionMarginTop) + ea,
+          },
+          bold: {
+            fontSize: String(descriptionSize) + ea,
+            fontWeight: String(descriptionBoldWeight),
+            color: colorChip.black,
+          }
         }
-      }
-    ]
-  });
+      ]
+    });
+  }
 
   firstImageBox = createNode({
     mother: firstWhiteBox,
     style: {
       display: "inline-block",
-      width: withOut(firstDescriptionBoxWidth, ea),
+      width: desktop ? withOut(firstDescriptionBoxWidth, ea) : String(82) + ea,
       position: "relative",
-      height: "calc(100% + " + String(firstImageBoxOver) + ea + ")",
-      top: String(-1 * firstImageBoxOver) + ea,
+      height: desktop ? "calc(100% + " + String(firstImageBoxOver) + ea + ")" : String(whiteBoxHeight) + ea,
+      top: desktop ? String(-1 * firstImageBoxOver) + ea : "",
     },
     children: [
       {
@@ -1768,131 +1771,178 @@ StylePartsJs.prototype.insertMatchupBox = function () {
     ]
   });
 
-  secondWhiteBox = createNode({
-    mother: baseMother,
-    style: {
-      display: "flex",
-      position: "relative",
-      width: withOut(0, ea),
-      height: String(whiteBoxHeight) + ea,
-      borderRadius: String(8) + "px",
-      background: colorChip.white,
-      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-      marginBottom: String(paddingTop) + ea,
-    }
-  });
-
-  secondDescriptionBox = createNode({
-    mother: secondWhiteBox,
-    style: {
-      display: "inline-flex",
-      position: "relative",
-      width: String(firstDescriptionBoxWidth - whiteInnerPaddingLeft) + ea,
-      height: withOut(whiteInnerPaddingTop * 2, ea),
-      paddingTop: String(whiteInnerPaddingTop) + ea,
-      paddingBottom: String(whiteInnerPaddingTop) + ea,
-      paddingLeft: String(whiteInnerPaddingLeft) + ea,
-      flexDirection: "column",
-      justifyContent: "end",
-    },
-    children: [
-      {
-        text: contents.secondSub,
-        style: {
-          display: "block",
-          position: "relative",
-          fontSize: String(subTitleSize) + ea,
-          fontWeight: String(800),
-          color: colorChip.black,
-        }
-      },
-      {
-        text: contents.secondDescription.join("\n"),
-        style: {
-          display: "block",
-          position: "relative",
-          fontSize: String(descriptionSize) + ea,
-          fontWeight: String(descriptionWeight),
-          lineHeight: String(descriptionLineHeight),
-          color: colorChip.black,
-          marginTop: String(descriptionMarginTop) + ea,
-        },
-        bold: {
-          fontSize: String(descriptionSize) + ea,
-          fontWeight: String(descriptionBoldWeight),
-          color: colorChip.black,
-        }
-      }
-    ]
-  });
-
-  secondImageBox = createNode({
-    mother: secondWhiteBox,
-    style: {
-      display: "inline-block",
-      width: withOut(firstDescriptionBoxWidth, ea),
-      position: "relative",
-      height: withOut(whiteInnerPaddingTop * 2, ea),
-      paddingTop: String(whiteInnerPaddingTop) + ea,
-      paddingBottom: String(whiteInnerPaddingTop) + ea,
-    },
-  });
-
-  for (let i = 0; i < contents.secondImage.length; i++) {
+  if (mobile) {
     createNode({
-      mother: secondImageBox,
+      mother: firstWhiteBox,
       style: {
-        display: "inline-block",
+        display: "flex",
         position: "relative",
-        width: "calc(calc(calc(100% - " + String(whiteInnerPaddingLeft) + ea + ") - " + String(secondImageBetween * (contents.secondImage.length - 1)) + ea + ") / " + String(contents.secondImage.length) + ")",
-        marginRight: String(secondImageBetween) + ea,
-        height: withOut(0, ea),
-        background: colorChip.gray1,
-        borderRadius: String(5) + "px",
-        verticalAlign: "top",
+        width: String(82) + ea,
+        flexDirection: "column",
+        justifyContent: "center",
+        textAlign: "center",
+        paddingTop: String(6) + ea,
       },
       children: [
         {
+          text: contents.subTitle,
           style: {
             display: "block",
-            width: withOut(0, ea),
-            height: String(secondImageHeight) + ea,
-            backgroundImage: "url('" + StylePartsJs.binaryPath + contents.secondImage[i].source + "')",
-            backgroundPosition: "50% 50%",
-            backgroundSize: "auto 100%",
-            borderRadius: String(5) + "px",
-            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+            position: "relative",
+            fontSize: String(subTitleSize) + ea,
+            fontWeight: String(subTitleWeight),
+            color: colorChip.black,
           }
         },
         {
-          text: contents.secondImage[i].title,
+          text: contents.description.join(" "),
           style: {
             display: "block",
-            marginTop: String(secondImageTitleMarginTop) + ea,
-            fontSize: String(secondImageTitleSize) + ea,
-            fontWeight: String(secondImageTitleWeight),
-            color: colorChip.black,
             position: "relative",
-            width: withOut(0, ea),
-            textAlign: "center",
-          }
-        },
-        {
-          text: contents.secondImage[i].description.join("\n"),
-          style: {
-            display: "block",
-            marginTop: String(secondImageDescriptionMarginTop) + ea,
-            fontSize: String(secondImageDescriptionSize) + ea,
-            fontWeight: String(secondImageDescriptionWeight),
-            lineHeight: String(secondImageDescriptionLineHeight),
+            fontSize: String(descriptionSize) + ea,
+            fontWeight: String(descriptionWeight),
+            lineHeight: String(descriptionLineHeight),
             color: colorChip.black,
-            position: "relative",
-            width: withOut(0, ea),
-            textAlign: "center",
+            marginTop: String(descriptionMarginTop) + ea,
+          },
+          bold: {
+            fontSize: String(descriptionSize) + ea,
+            fontWeight: String(descriptionBoldWeight),
+            color: colorChip.black,
           }
-        },
+        }
       ]
     });
+  }
+
+  if (desktop) {
+
+    secondWhiteBox = createNode({
+      mother: baseMother,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        height: String(whiteBoxHeight) + ea,
+        borderRadius: String(8) + "px",
+        background: desktop ? colorChip.white : "",
+        boxShadow: desktop ? "0px 3px 15px -9px " + colorChip.shadow : "",
+        marginBottom: String(paddingTop) + ea,
+      }
+    });
+
+    secondDescriptionBox = createNode({
+      mother: secondWhiteBox,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        width: String(firstDescriptionBoxWidth - whiteInnerPaddingLeft) + ea,
+        height: withOut(whiteInnerPaddingTop * 2, ea),
+        paddingTop: String(whiteInnerPaddingTop) + ea,
+        paddingBottom: String(whiteInnerPaddingTop) + ea,
+        paddingLeft: String(whiteInnerPaddingLeft) + ea,
+        flexDirection: "column",
+        justifyContent: "end",
+      },
+      children: [
+        {
+          text: contents.secondSub,
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(subTitleSize) + ea,
+            fontWeight: String(800),
+            color: colorChip.black,
+          }
+        },
+        {
+          text: contents.secondDescription.join("\n"),
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(descriptionSize) + ea,
+            fontWeight: String(descriptionWeight),
+            lineHeight: String(descriptionLineHeight),
+            color: colorChip.black,
+            marginTop: String(descriptionMarginTop) + ea,
+          },
+          bold: {
+            fontSize: String(descriptionSize) + ea,
+            fontWeight: String(descriptionBoldWeight),
+            color: colorChip.black,
+          }
+        }
+      ]
+    });
+
+    secondImageBox = createNode({
+      mother: secondWhiteBox,
+      style: {
+        display: "inline-block",
+        width: withOut(firstDescriptionBoxWidth, ea),
+        position: "relative",
+        height: withOut(whiteInnerPaddingTop * 2, ea),
+        paddingTop: String(whiteInnerPaddingTop) + ea,
+        paddingBottom: String(whiteInnerPaddingTop) + ea,
+      },
+    });
+
+    for (let i = 0; i < contents.secondImage.length; i++) {
+      createNode({
+        mother: secondImageBox,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: "calc(calc(calc(100% - " + String(whiteInnerPaddingLeft) + ea + ") - " + String(secondImageBetween * (contents.secondImage.length - 1)) + ea + ") / " + String(contents.secondImage.length) + ")",
+          marginRight: String(secondImageBetween) + ea,
+          height: withOut(0, ea),
+          background: colorChip.gray1,
+          borderRadius: String(5) + "px",
+          verticalAlign: "top",
+        },
+        children: [
+          {
+            style: {
+              display: "block",
+              width: withOut(0, ea),
+              height: String(secondImageHeight) + ea,
+              backgroundImage: "url('" + StylePartsJs.binaryPath + contents.secondImage[i].source + "')",
+              backgroundPosition: "50% 50%",
+              backgroundSize: "auto 100%",
+              borderRadius: String(5) + "px",
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+            }
+          },
+          {
+            text: contents.secondImage[i].title,
+            style: {
+              display: "block",
+              marginTop: String(secondImageTitleMarginTop) + ea,
+              fontSize: String(secondImageTitleSize) + ea,
+              fontWeight: String(secondImageTitleWeight),
+              color: colorChip.black,
+              position: "relative",
+              width: withOut(0, ea),
+              textAlign: "center",
+            }
+          },
+          {
+            text: contents.secondImage[i].description.join("\n"),
+            style: {
+              display: "block",
+              marginTop: String(secondImageDescriptionMarginTop) + ea,
+              fontSize: String(secondImageDescriptionSize) + ea,
+              fontWeight: String(secondImageDescriptionWeight),
+              lineHeight: String(secondImageDescriptionLineHeight),
+              color: colorChip.black,
+              position: "relative",
+              width: withOut(0, ea),
+              textAlign: "center",
+            }
+          },
+        ]
+      });
+    }
   }
 
 }
@@ -1955,47 +2005,47 @@ StylePartsJs.prototype.insertStyleBox = function () {
 
   paddingTop = <%% 200, 160, 130, 100, 13 %%>;
 
-  titleSize = <%% 27, 26, 23, 21, 4 %%>;
+  titleSize = <%% 27, 26, 23, 21, 5.1 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titlePaddingBottom = <%% 4, 4, 4, 3, 1 %%>;
 
-  subSize = <%% 15, 15, 14, 13, 15 %%>;
+  subSize = <%% 15, 15, 14, 13, 3.5 %%>;
   subWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  descriptionBoxPaddingTop = <%% 28, 24, 23, 18, 3 %%>;
+  descriptionBoxPaddingTop = <%% 28, 24, 23, 18, 4 %%>;
   imageBoxPaddingTop = <%% 28, 24, 23, 22, 3 %%>;
   barBoxPaddingTop = <%% 2, 2, 2, 2, 2 %%>;
 
-  descriptionSize = <%% 15, 14, 13, 12, 15 %%>;
+  descriptionSize = <%% 15, 14, 13, 12, 3.2 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
-  descriptionPaddingLeft = <%% 36, 36, 36, 36, 36 %%>;
-  descriptionLineBottom = <%% 27, 27, 23, 20, 27 %%>;
+  descriptionPaddingLeft = <%% 36, 36, 36, 36, 3 %%>;
+  descriptionLineBottom = <%% 27, 27, 23, 20, 2 %%>;
 
-  whiteBetween = <%% 36, 20, 24, 16, 24 %%>;
-  whiteBoxHeight = <%% 200, 200, 180, 124, 200 %%>;
-  whiteBoxMarginTop = <%% 40, 40, 40, 32, 40 %%>;
-  whiteInnerPaddingLeft = <%% 60, 48, 36, 32, 60 %%>;
+  whiteBetween = <%% 36, 20, 24, 16, 1 %%>;
+  whiteBoxHeight = <%% 200, 200, 180, 124, 20 %%>;
+  whiteBoxMarginTop = <%% 40, 40, 40, 32, 4 %%>;
+  whiteInnerPaddingLeft = <%% 60, 48, 36, 32, 6 %%>;
 
   whiteLogoWidth = <%% 190, 162, 190, 190, 190 %%>;
   whiteLogoTop = <%% 2, 2, 2, 2, 2 %%>;
 
-  whiteInnerSize = <%% 22, 18, 17, 15, 22 %%>;
-  whitePlusSize = <%% 32, 24, 23, 18, 32 %%>;
+  whiteInnerSize = <%% 22, 18, 17, 15, 4 %%>;
+  whitePlusSize = <%% 32, 24, 23, 18, 4 %%>;
   whiteInnerWeight = <%% 600, 600, 600, 600, 600 %%>;
   whiteInnerBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
 
   whiteInnerLineHeight = <%% 3, 3, 3, 3, 3 %%>;
 
-  whiteLineWidth = <%% 40, 12, 64, 28, 40 %%>;
-  whiteVerticalLineWidth = <%% 16, 8, 16, 8, 16 %%>;
-  whiteVerticalLineHeight = <%% 64, 64, 52, 42, 64 %%>;
+  whiteLineWidth = <%% 40, 12, 64, 28, 4 %%>;
+  whiteVerticalLineWidth = <%% 16, 8, 16, 8, 1 %%>;
+  whiteVerticalLineHeight = <%% 64, 64, 52, 42, 6 %%>;
 
-  noticeSize = <%% 12, 11, 10, 10, 12 %%>;
+  noticeSize = <%% 12, 11, 10, 10, 2.5 %%>;
   noticeWeight = <%% 600, 600, 600, 600, 600 %%>;
-  noticeBetween = <%% 3, 3, 3, 3, 3 %%>;
-  noticeBoxBottom = <%% 18, 18, 18, 12, 18 %%>;
+  noticeBetween = <%% 3, 3, 3, 3, 1 %%>;
+  noticeBoxBottom = <%% 18, 18, 18, 12, 2 %%>;
 
   imageWidth = <%% 504, 704, 570, 420, 500 %%>;
   imageHeight = <%% 290, 290, 260, 230, 290 %%>;
@@ -2206,7 +2256,7 @@ StylePartsJs.prototype.insertStyleBox = function () {
 
   createNode({
     mother: descriptionBox,
-    text: contents.description.join("\n"),
+    text: contents.description.join(desktop ? "\n" : " "),
     style: {
       display: "inline-block",
       position: "relative",
@@ -2231,12 +2281,13 @@ StylePartsJs.prototype.insertStyleBox = function () {
     style: {
       display: "flex",
       position: "relative",
-      flexDirection: "row",
+      flexDirection: desktop ? "row" : "column",
       alignItems: "center",
       paddingLeft: String(whiteInnerPaddingLeft) + ea,
       paddingRight: String(whiteInnerPaddingLeft) + ea,
-      width: withOut(whiteInnerPaddingLeft * 2, ea),
-      height: String(whiteBoxHeight) + ea,
+      width: desktop ? withOut(whiteInnerPaddingLeft * 2, ea) : String(82 - (whiteInnerPaddingLeft * 2)) + ea,
+      height: desktop ? String(whiteBoxHeight) + ea : "",
+      left: desktop ? "" : String(3) + ea,
       background: colorChip.white,
       boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
       borderRadius: String(8) + "px",
@@ -3026,7 +3077,7 @@ StylePartsJs.prototype.insertProcessBox = function () {
   subSize = <%% 15, 15, 14, 13, 15 %%>;
   subWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  descriptionBoxPaddingTop = <%% 28, 24, 21, 18, 3 %%>;
+  descriptionBoxPaddingTop = <%% 28, 24, 21, 18, 4 %%>;
   imageBoxPaddingTop = <%% 28, 24, 24, 24, 3 %%>;
   barBoxPaddingTop = <%% 2, 2, 2, 2, 2 %%>;
 
