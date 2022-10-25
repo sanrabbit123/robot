@@ -3509,7 +3509,7 @@ Ghost.prototype.serverLaunching = async function () {
     server = https.createServer(pems, app);
 
     //server on
-    server.listen(address.port, address.ip.inner, () => {
+    server.listen(8080, address.ip.inner, () => {
       console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
     });
 
