@@ -5675,7 +5675,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                       break;
                                     }
                                   }
-                                  url = "https://" + GHOSTHOST + "/middle/estimation?cliid=" + cliid + "&needs=" + ([ kind, desid, proid, method ]).join(',') + "&view=test&request=" + String(thisIndex);
+                                  url = BACKHOST + "/middle/estimation?cliid=" + cliid + "&needs=" + ([ kind, desid, proid, method ]).join(',') + "&view=test&request=" + String(thisIndex);
                                   GeneralJs.blankHref(url);
                                 }
                               },
@@ -5716,7 +5716,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                           client: client.name,
                                           unit: GeneralJs.autoComma(targetItem.amount.consumer / targetItem.unit.number),
                                           total: GeneralJs.autoComma(targetItem.amount.consumer),
-                                          host: GHOSTHOST,
+                                          host: BACKHOST.slice(8, -5),
                                           path: "estimation",
                                           cliid: cliid,
                                           needs: "style," + desid + "," + proid + "," + method,
@@ -5866,7 +5866,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                       break;
                                     }
                                   }
-                                  url = "https://" + GHOSTHOST + "/middle/estimation?cliid=" + cliid + "&needs=" + ([ kind, desid, proid, method ]).join(',') + "&view=test&request=" + String(thisIndex);
+                                  url = BACKHOST + "/middle/estimation?cliid=" + cliid + "&needs=" + ([ kind, desid, proid, method ]).join(',') + "&view=test&request=" + String(thisIndex);
                                   GeneralJs.blankHref(url);
                                 }
                               },
@@ -5899,7 +5899,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                         phone: client.phone,
                                         option: {
                                           client: client.name,
-                                          host: GHOSTHOST,
+                                          host: BACKHOST.slice(8, -5),
                                           path: "estimation",
                                           cliid: cliid,
                                           needs: "style," + desid + "," + proid + "," + method,
@@ -8449,7 +8449,7 @@ ProjectJs.prototype.communicationRender = function () {
               phone: client.phone,
               option: {
                 client: client.name,
-                host: GHOSTHOST,
+                host: BACKHOST.slice(8, -5),
                 path: "estimation",
                 cliid: client.cliid,
                 needs: "style," + desid + "," + proid + "," + onoff,
@@ -8517,7 +8517,7 @@ ProjectJs.prototype.communicationRender = function () {
               phone: client.phone,
               option: {
                 client: client.name,
-                host: GHOSTHOST,
+                host: BACKHOST.slice(8, -5),
                 path: "estimation",
                 cliid: client.cliid,
                 needs: "style," + desid + "," + proid + "," + onoff,

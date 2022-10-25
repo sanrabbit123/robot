@@ -1194,7 +1194,7 @@ DesignerJs.prototype.requestStaticHtml = function (designer, project, client, cl
         const imageLink = "/corePortfolio/listImage";
         let pid;
         pid = image.split('.')[0].replace(/^t[0-9]+/gi, '');
-        return "https://" + GHOSTHOST + imageLink + "/" + pid + "/" + image;
+        return S3HOST + imageLink + "/" + pid + "/" + image;
       });
       siteImages = clientPhoto.sitePhoto;
       preferImages = clientPhoto.preferredPhoto;
@@ -1996,7 +1996,7 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
       const imageLink = "/corePortfolio/listImage";
       let pid;
       pid = image.split('.')[0].replace(/^t[0-9]+/gi, '');
-      return "https://" + GHOSTHOST + imageLink + "/" + pid + "/" + image;
+      return S3HOST + imageLink + "/" + pid + "/" + image;
     });
 
     if (images.length > 0) {

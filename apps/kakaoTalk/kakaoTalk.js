@@ -10,7 +10,7 @@ const KakaoTalk = function () {
   this.senderPhone = "0220392252";
   this.ip = {
     office: address.officeinfo.ip.outer,
-    home: address.homeinfo.ip.outer,
+    home: address.backinfo.ip.outer,
     console: address.backinfo.ip.outer,
     front: address.frontinfo.ip.outer,
     python: address.pythoninfo.ip.outer,

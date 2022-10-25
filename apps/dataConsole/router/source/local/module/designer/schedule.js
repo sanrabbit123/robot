@@ -128,7 +128,7 @@ DesignerJs.prototype.scheduleReturnStatic = function (designer, project, client,
   const cliid = project.cliid;
 
   const title = desktop ? client.name + "님 상세 일정표" : "상세 일정표";
-  const initialContents = "안녕하세요, <b%" + designer.designer + "%b> 실장님!\n" + client.name +  " 고객님 <b%상세 일정 사항 기입%b>을 부탁드립니다. 해당 사항을 클릭하여 수정하실 수 있으며,\n수정된 내용을 바탕으로 고객님께 안내될 페이지는 다음 페이지 링크에서 보실 수 있습니다!\n<u%https://" + GHOSTHOST + "/middle/schedule?proid=" + proid + "%u>";
+  const initialContents = "안녕하세요, <b%" + designer.designer + "%b> 실장님!\n" + client.name +  " 고객님 <b%상세 일정 사항 기입%b>을 부탁드립니다. 해당 사항을 클릭하여 수정하실 수 있으며,\n수정된 내용을 바탕으로 고객님께 안내될 페이지는 다음 페이지 링크에서 보실 수 있습니다!";
 
   return {
     title,
@@ -2428,7 +2428,7 @@ DesignerJs.prototype.scheduleIconSet = function (desid) {
             designer: designer.designer,
             client: instance.client.name,
             cliid: instance.client.cliid,
-            host: GHOSTHOST,
+            host: BACKHOST.slice(8, -5),
             path: "console",
             mode: "schedule",
             date: dateToString(instance.project.process.contract.form.date.from).replace(/\-/gi, ".").slice(2),

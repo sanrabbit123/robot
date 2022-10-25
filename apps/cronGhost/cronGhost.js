@@ -25,7 +25,7 @@ CronGhost.prototype.aliveTest = async function () {
 
     targets = [
       { name: "python", protocol: "https:", host: address.pythoninfo.host, port: generalPort, },
-      { name: "home", protocol: "https:", host: address.homeinfo.ghost.host, port: generalPort, },
+      { name: "post", protocol: "https:", host: address.backinfo.host, port: generalPort, },
       { name: "office", protocol: "https:", host: address.officeinfo.ghost.host, port: ghostPort, },
       { name: "log", protocol: "https:", host: address.testinfo.host, port: generalPort, },
       { name: "second", protocol: "https:", host: address.secondinfo.host, port: generalPort, },
@@ -92,7 +92,7 @@ CronGhost.prototype.diskTest = async function () {
   const { requestSystem } = this.mother;
   try {
     const targets = [
-      { name: "home", host: instance.address.homeinfo.ghost.host },
+      { name: "post", host: instance.address.backinfo.host },
       { name: "office", host: instance.address.officeinfo.ghost.host },
       { name: "python", host: instance.address.pythoninfo.host },
       { name: "log", host: instance.address.testinfo.host },

@@ -996,7 +996,7 @@ BuilderJs.prototype.estimationDocument = function (mother, invoice, pastNumber =
               phone: thisClient.phone,
               option: {
                 client: thisClient.name,
-                host: GHOSTHOST,
+                host: BACKHOST.slice(8, -5),
                 path: "cestimation",
                 proid: invoice.links.proid,
                 buiid: invoice.links.buiid

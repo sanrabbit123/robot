@@ -3977,7 +3977,7 @@ DesignerProposalJs.prototype.submitEvent = function (desid, designer, method) {
         document.body.removeChild(back);
         window.localStorage.clear();
 
-        selfHref("https://" + GHOSTHOST + "/middle/estimation?cliid=" + instance.client.cliid + "&needs=style," + desid + "," + instance.project.proid + "," + method);
+        selfHref(BACKHOST + "/middle/estimation?cliid=" + instance.client.cliid + "&needs=style," + desid + "," + instance.project.proid + "," + method);
 
       } catch (e) {
         await ajaxJson({ message: "DesignerProposalJs.submitEvent.certificationBox : " + e.message }, BACKHOST + "/errorLog");

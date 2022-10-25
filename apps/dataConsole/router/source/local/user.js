@@ -87,7 +87,7 @@ UserJs.prototype.baseMaker = function () {
               phone: user.phone,
               option: {
                 client: user.name,
-                host: GHOSTHOST,
+                host: BACKHOST.slice(8, -5),
                 path: "miniProposal",
                 useid: useid,
               }
@@ -146,7 +146,7 @@ UserJs.prototype.baseMaker = function () {
           const useid = this.getAttribute("useid");
           const user = instance.users.find((obj) => { return obj.useid === useid });
           if (user.response.design.length > 0) {
-            blankHref("https://" + GHOSTHOST + "/middle/miniProposal?useid=" + useid);
+            blankHref(BACKHOST + "/middle/miniProposal?useid=" + useid);
           } else {
             window.alert("현재 단계에서는 할 수 없습니다!");
           }
@@ -168,7 +168,7 @@ UserJs.prototype.baseMaker = function () {
       click: async function (e) {
         try {
           const useid = this.getAttribute("useid");
-          blankHref("https://" + GHOSTHOST + "/middle/miniRequest?useid=" + useid);
+          blankHref(BACKHOST + "/middle/miniRequest?useid=" + useid);
         } catch (e) {
           console.log(e);
         }
@@ -283,7 +283,7 @@ UserJs.prototype.baseMaker = function () {
                       option: {
                         designer: name,
                         client: user.name,
-                        host: GHOSTHOST,
+                        host: BACKHOST.slice(8, -5),
                         path: "miniRequest",
                         useid: useid,
                       }
@@ -364,7 +364,7 @@ UserJs.prototype.baseMaker = function () {
       click: async function (e) {
         try {
           const useid = this.getAttribute("useid");
-          blankHref("https://" + GHOSTHOST + "/middle/miniGuide?useid=" + useid);
+          blankHref(BACKHOST + "/middle/miniGuide?useid=" + useid);
         } catch (e) {
           console.log(e);
         }

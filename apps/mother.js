@@ -8,7 +8,7 @@ const Mother = function () {
   this.mongoinfo = "mongodb://" + infoObj.mongoinfo.user + ':' + infoObj.mongoinfo.password + '@' + infoObj.mongoinfo.host + ':' + String(infoObj.mongoinfo.port) + "/admin";
   this.mongopythoninfo = "mongodb://" + infoObj.pythoninfo.user + ':' + infoObj.pythoninfo.password + '@' + infoObj.pythoninfo.host + ':' + String(infoObj.pythoninfo.port) + "/admin";
   this.mongoconsoleinfo = "mongodb://" + infoObj.backinfo.user + ':' + infoObj.backinfo.password + '@' + infoObj.backinfo.host + ':' + String(infoObj.backinfo.port) + "/admin";
-  this.mongohomeinfo = "mongodb://" + infoObj.homeinfo.user + ':' + infoObj.homeinfo.password + '@' + infoObj.homeinfo.ip.outer + ':' + String(infoObj.homeinfo.port) + "/admin";
+  this.mongohomeinfo = "mongodb://" + infoObj.backinfo.user + ':' + infoObj.backinfo.password + '@' + infoObj.backinfo.host + ':' + String(infoObj.backinfo.port) + "/admin";
   this.mongolocalinfo = "mongodb://" + infoObj.mongoinfo.user + ':' + infoObj.mongoinfo.password + '@' + "127.0.0.1" + ':' + String(infoObj.mongoinfo.port) + "/admin";
   this.mongobridgeinfo = "mongodb://" + infoObj.bridgeinfo.user + ':' + infoObj.bridgeinfo.password + '@' + infoObj.bridgeinfo.host + ':' + String(infoObj.bridgeinfo.port) + "/admin";
   this.mongotestinfo = "mongodb://" + infoObj.testinfo.user + ':' + infoObj.testinfo.password + '@' + infoObj.testinfo.host + ':' + String(infoObj.testinfo.port) + "/admin";
@@ -867,9 +867,9 @@ Mother.prototype.ghostRequest = function (path = "", data = {}) {
       let order, url;
 
       if (bind === "file") {
-        ddns = address.homeinfo.ghost.ddns;
-        port = address.homeinfo.ghost.file.port;
-        protocol = address.homeinfo.ghost.protocol;
+        ddns = address.officeinfo.ghost.ddns;
+        port = address.officeinfo.ghost.port;
+        protocol = address.officeinfo.ghost.protocol;
 
         const crypto = require('crypto');
         const algorithm = 'aes-192-cbc';
@@ -1282,7 +1282,7 @@ Mother.prototype.ghostFileUpload = function (fromArr, toArr) {
             num++;
           }
           formHeaders = form.getHeaders();
-          axios.post(`${ADDRESS.homeinfo.ghost.protocol}://${ADDRESS.homeinfo.ghost.host}:${String(ADDRESS.homeinfo.ghost.file.port)}/file?hash=${encrypted}&uragenGhostFinalRandomAccessKeyArraySubwayHomeLiaisonStyle=a19OyoZjf9xQJXykapple3kE5ySgBW39IjxQJXyk3homeliaisonkE5uf9uuuySgBW3ULXHF1CdjxGGPCQJsubwayXyk3kE5ySgBW3f9y2Y2lotionpuk0dQF9ruhcs`, form, {
+          axios.post(`https://${ADDRESS.officeinfo.ghost.host}:${String(8080)}/file`, form, {
             headers: { ...formHeaders },
             maxContentLength: Infinity,
             maxBodyLength: Infinity,
@@ -1314,9 +1314,9 @@ Mother.prototype.ghostFileList = function (dir) {
   let url, order, data;
   let ddns, port, protocol;
   data = { target: dir };
-  ddns = ADDRESS.homeinfo.ghost.ddns;
-  port = ADDRESS.homeinfo.ghost.file.port;
-  protocol = ADDRESS.homeinfo.ghost.protocol;
+  ddns = ADDRESS.officeinfo.ghost.ddns;
+  port = ADDRESS.officeinfo.ghost.file.port;
+  protocol = ADDRESS.officeinfo.ghost.protocol;
   return new Promise(function (resolve, reject) {
     crypto.scrypt("homeliaison", 'salt', 24, function (err, key) {
       if (err) {

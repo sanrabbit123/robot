@@ -187,7 +187,7 @@ StylePartsJs.prototype.insertInitBox = function () {
       ],
       [
         desktop ? "시공부터 스타일링까지, <b%전체 풀 프로세스를 홈리에종 디자이너와 함께%b>" : "시공부터 스타일링까지,\n<b%전체 프로세스를 홈리에종 디자이너와 함께%b>",
-        "아파트멘터리의 자재를 고르는 스타일 파츠 서비스로 진행해보세요.",
+        "파츠 자재를 사용하여 홈스타일링 서비스로 진행해보세요.",
       ]
     ],
     context: [
@@ -2094,7 +2094,7 @@ StylePartsJs.prototype.insertStyleBox = function () {
       main: [
         "홈리에종 홈스타일링",
         "+",
-        "톤 보정 시공",
+        "톤보정 시공",
         [
           "Basic set",
           "Simple set",

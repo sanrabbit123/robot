@@ -21,65 +21,65 @@ FlowJs.prototype.returnDiagramMap = function (svgName) {
         c1: {
           name: "1차 응대",
           description: [],
-          href: "https://" + GHOSTHOST + "/client",
+          href: BACKHOST + "/client",
         },
         c2: {
           name: "응대 리포트",
           description: [],
-          href: "https://" + GHOSTHOST + "/client",
+          href: BACKHOST + "/client",
         },
       },
       project: {
         p1: {
           name: "프로젝트 관리",
           description: [],
-          href: "https://" + GHOSTHOST + "/project",
+          href: BACKHOST + "/project",
         },
         p2: {
           name: "프로젝트 현황",
           description: [],
-          href: "https://" + GHOSTHOST + "/project",
+          href: BACKHOST + "/project",
         },
         p3: {
           name: "프로젝트 상세",
           event: function (e) {
-            selfHref("https://" + GHOSTHOST + "/project");
+            selfHref(BACKHOST + "/project");
           }
         },
         p4: {
           name: "서비스 리포트",
           event: function (e) {
-            selfHref("https://" + GHOSTHOST + "/project");
+            selfHref(BACKHOST + "/project");
           }
         },
         p5: {
           name: "제안서 리스트",
           event: function (e) {
-            selfHref("https://" + GHOSTHOST + "/proposal");
+            selfHref(BACKHOST + "/proposal");
           }
         },
         p6: {
           name: "제안서 제작",
           event: function (e) {
-            selfHref("https://" + GHOSTHOST + "/proposal");
+            selfHref(BACKHOST + "/proposal");
           }
         },
         p7: {
           name: "촬영 관리",
           event: function (e) {
-            selfHref("https://" + GHOSTHOST + "/designer?mode=contents");
+            selfHref(BACKHOST + "/designer?mode=contents");
           }
         },
         p8: {
           name: "컨텐츠 관리",
           event: function (e) {
-            selfHref("https://" + GHOSTHOST + "/designer?mode=contents");
+            selfHref(BACKHOST + "/designer?mode=contents");
           }
         },
         p9: {
           name: "컨텐츠 제어",
           event: function (e) {
-            selfHref("https://" + GHOSTHOST + "/contents");
+            selfHref(BACKHOST + "/contents");
           }
         },
       },
@@ -87,61 +87,61 @@ FlowJs.prototype.returnDiagramMap = function (svgName) {
         d1: {
           name: "디자이너 관리",
           event: function (e) {
-            selfHref("https://" + GHOSTHOST + "/designer");
+            selfHref(BACKHOST + "/designer");
           }
         },
         d2: {
           name: "디자이너 기본",
           event: function (e) {
-            selfHref("https://" + GHOSTHOST + "/designer?mode=general");
+            selfHref(BACKHOST + "/designer?mode=general");
           }
         },
         d3: {
           name: "체크리스트",
           event: function (e) {
-            selfHref("https://" + GHOSTHOST + "/designer?mode=checklist");
+            selfHref(BACKHOST + "/designer?mode=checklist");
           }
         },
         d4: {
           name: "상세 리포트",
           event: function (e) {
-            selfHref("https://" + GHOSTHOST + "/designer?mode=report");
+            selfHref(BACKHOST + "/designer?mode=report");
           }
         },
         d5: {
           name: "새로운 신청자",
           event: function (e) {
-            selfHref("https://" + GHOSTHOST + "/designer?mode=aspirant");
+            selfHref(BACKHOST + "/designer?mode=aspirant");
           }
         },
         d6: {
           name: "일정 관리",
           event: function (e) {
-            selfHref("https://" + GHOSTHOST + "/designer?mode=possible");
+            selfHref(BACKHOST + "/designer?mode=possible");
           }
         },
         d7: {
           name: "의뢰서 관리",
           event: function (e) {
-            selfHref("https://" + GHOSTHOST + "/designer?mode=request");
+            selfHref(BACKHOST + "/designer?mode=request");
           }
         },
         d8: {
           name: "정산 정보",
           event: function (e) {
-            selfHref("https://" + GHOSTHOST + "/designer?mode=calculation");
+            selfHref(BACKHOST + "/designer?mode=calculation");
           }
         },
         d9: {
           name: "가격 정보",
           event: function (e) {
-            selfHref("https://" + GHOSTHOST + "/designer?mode=price");
+            selfHref(BACKHOST + "/designer?mode=price");
           }
         },
         d10: {
           name: "프로젝트 뷰",
           event: function (e) {
-            selfHref("https://" + GHOSTHOST + "/designer?mode=project");
+            selfHref(BACKHOST + "/designer?mode=project");
           }
         },
       },
@@ -149,13 +149,13 @@ FlowJs.prototype.returnDiagramMap = function (svgName) {
         t1: {
           name: "시공 관리",
           event: function (e) {
-            selfHref("https://" + GHOSTHOST + "/builder");
+            selfHref(BACKHOST + "/builder");
           }
         },
         t2: {
           name: "시공 기본",
           event: function (e) {
-            selfHref("https://" + GHOSTHOST + "/builder?mode=construct");
+            selfHref(BACKHOST + "/builder?mode=construct");
           }
         },
         t3: {
@@ -184,19 +184,19 @@ FlowJs.prototype.returnDiagramMap = function (svgName) {
         e1: {
           name: "파일 탐색기",
           event: function (e) {
-            selfHref("https://" + GHOSTHOST + "/file");
+            selfHref(BACKHOST + "/file");
           }
         },
         e2: {
           name: "플로우 관리",
           event: function (e) {
-            selfHref("https://" + GHOSTHOST + "/flow");
+            selfHref(BACKHOST + "/flow");
           }
         },
         e3: {
           name: "미니 서비스",
           event: function (e) {
-            selfHref("https://" + GHOSTHOST + "/user");
+            selfHref(BACKHOST + "/user");
           }
         },
       },

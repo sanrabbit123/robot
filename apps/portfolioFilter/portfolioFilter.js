@@ -636,7 +636,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
   const photoFolderConst = "사진_등록_포트폴리오";
   const sambaPhotoPath = `${this.address.officeinfo.ghost.file.static}${this.address.officeinfo.ghost.file.office}/${photoFolderConst}`;
   const foreCastContant = `/corePortfolio/forecast`;
-  const forecastPath = this.address.homeinfo.ghost.file.static + foreCastContant;
+  const forecastPath = this.address.officeinfo.ghost.file.static + foreCastContant;
   class RawArray extends Array {
     constructor(arr) {
       super();
@@ -785,7 +785,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         finalObj = { pid: nextPid, desid: targetDesigner.desid, client, forecast };
         await back.mongoCreate("foreContents", finalObj, { console: true });
 
-        shell.exec(`scp -r ${shellLink(folderPath)} ${this.address.homeinfo.ghost.user}@${this.address.homeinfo.ghost.host}:${shellLink(forecastPath)}/`);
+        shell.exec(`scp -r ${shellLink(folderPath)} ${this.address.officeinfo.ghost.user}@${this.address.officeinfo.ghost.host}:${shellLink(forecastPath)}/`);
 
         for (let z = 0; z < 5; z++) {
           console.log(`scp waiting... ${String(5 - z)}s`);

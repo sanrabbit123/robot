@@ -1038,7 +1038,7 @@ Ghost.prototype.ghostRouter = function (needs) {
   const address = this.address;
   const { webHook, serverTempFolder } = this;
   const [ MONGOC, MONGOLOCALC, MONGOCONSOLEC, rethink ] = needs;
-  const { fileSystem, headRequest, requestSystem, shell, shellExec, shellLink, ghostRequest, dateToString, todayMaker, mongo, mongoinfo, mongolocalinfo, sleep, equalJson, leafParsing, uniqueValue, setQueue, ipParsing, errorLog, messageSend, messageLog, mysqlQuery } = this.mother;
+  const { fileSystem, headRequest, requestSystem, shell, shellExec, shellLink, ghostRequest, dateToString, todayMaker, mongo, mongoinfo, mongolocalinfo, sleep, equalJson, leafParsing, uniqueValue, setQueue, ipParsing, errorLog, messageSend, messageLog, mysqlQuery, treeParsing } = this.mother;
   const querystring = require("querystring");
   const PlayAudio = require(process.cwd() + "/apps/playAudio/playAudio.js");
   const ParsingHangul = require(process.cwd() + "/apps/parsingHangul/parsingHangul.js");
@@ -1259,7 +1259,7 @@ Ghost.prototype.ghostRouter = function (needs) {
   //POST - file upload
   funcObj.post_fileUpload = {
     binary: true,
-    link: [ "/fileUpload" ],
+    link: [ "/fileUpload", "/file", "/upload" ],
     func: function (req, res) {
       const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (10000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
@@ -1874,6 +1874,39 @@ Ghost.prototype.ghostRouter = function (needs) {
           res.send(JSON.stringify({ message: "error : " + err.message }));
         });
 
+      }
+    }
+  };
+
+  //POST - list
+  funcObj.post_list = {
+    link: [ "/list" ],
+    func: function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      let target;
+      if (typeof req.body.target !== "string") {
+        res.send(JSON.stringify({ message: "error" }));
+      } else {
+        target = req.body.target;
+        if (/\/$/.test(target)) {
+          target = target.slice(0, -1);
+        }
+        if (/^\//.test(target)) {
+          target = target.slice(1);
+        }
+        target = address.officeinfo.ghost.file.static + "/" + target;
+        treeParsing(target, true, (i) => {
+          return i.slice(address.officeinfo.ghost.file.static.length);
+        }).then((arr) => {
+          res.send(JSON.stringify(arr));
+        }).catch((err) => {
+          res.send(JSON.stringify({ message: "error" }));
+        });
       }
     }
   };
@@ -3373,303 +3406,6 @@ Ghost.prototype.photoRouter = function (needs) {
   return resultObj;
 }
 
-Ghost.prototype.fileRouter = function (static) {
-  const instance = this;
-  const back = this.back;
-  const address = this.address;
-  const staticDir = static;
-  const { fileSystem, requestSystem, shell, shellLink, todayMaker, mongo, mongoinfo, mongolocalinfo, cryptoString, decryptoHash, treeParsing } = this.mother;
-  let funcObj = {};
-  const ghostWall = function (callback, binary = false) {
-    const banCode = "<html><head><title>error</title></head><body><script>window.close();</script></body></html>"
-    let property, ipTong;
-    if (binary) {
-      property = "query";
-    } else {
-      property = "body";
-    }
-    ipTong = [ 127001, 172301254 ];
-    for (let info in instance.address) {
-      if (instance.address[info].ip.outer.length > 0) {
-        ipTong.push(Number(instance.address[info].ip.outer.replace(/[^0-9]/g, '')));
-      }
-      if (instance.address[info].ip.inner.length > 0) {
-        ipTong.push(Number(instance.address[info].ip.inner.replace(/[^0-9]/g, '')));
-      }
-    }
-    ipTong = Array.from(new Set(ipTong));
-    return function (req, res) {
-      const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-      if (!ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, ''))) && req[property].hash === undefined) {
-        res.set("Content-Type", "text/html");
-        res.send(banCode);
-      } else {
-        decryptoHash("homeliaison", req[property].hash).then(function (string) {
-          if (string === instance.address.s3info.boto3.key) {
-            if (req[property].uragenGhostFinalRandomAccessKeyArraySubwayHomeLiaisonStyle === "a19OyoZjf9xQJXykapple3kE5ySgBW39IjxQJXyk3homeliaisonkE5uf9uuuySgBW3ULXHF1CdjxGGPCQJsubwayXyk3kE5ySgBW3f9y2Y2lotionpuk0dQF9ruhcs") {
-              callback(req, res);
-            } else {
-              res.set("Content-Type", "text/html");
-              res.send(banCode);
-            }
-          } else {
-            res.set("Content-Type", "text/html");
-            res.send(banCode);
-          }
-        }).catch(function (err) {
-          res.set("Content-Type", "text/html");
-          res.send(banCode);
-        });
-      }
-    }
-  }
-
-  //POST - file upload
-  funcObj.post_file = {
-    binary: true,
-    link: [ "/file", "/upload" ],
-    func: function (req, res) {
-      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (10000 * 1024 * 1024) });
-      form.parse(req, async function (err, fields, files) {
-        try {
-          if (err) {
-            throw new Error(err);
-            return;
-          } else {
-            res.set({
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Origin": '*',
-              "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-              "Access-Control-Allow-Headers": '*',
-            });
-
-            const staticFolder = instance.address.homeinfo.ghost.file.static;
-            const toArr = JSON.parse(fields.toArr);
-            let filesKey, fromArr, num;
-            let tempArr, tempString, tempDir;
-
-            filesKey = Object.keys(files);
-            filesKey.sort((a, b) => {
-              return Number(a.replace(/[^0-9]/gi, '')) - Number(b.replace(/[^0-9]/gi, ''));
-            });
-
-            fromArr = [];
-            for (let key of filesKey) {
-              fromArr.push(files[key]);
-            }
-
-            num = 0;
-            for (let { filepath: path } of fromArr) {
-              tempArr = toArr[num].split("/");
-              tempString = staticFolder;
-              if (tempArr.length === 0) {
-                throw new Error("invaild to array");
-              }
-              for (let i = 0; i < tempArr.length - 1; i++) {
-                tempDir = await fileSystem(`readDir`, [ tempString ]);
-                if (!tempDir.includes(tempArr[i]) && tempArr[i] !== '') {
-                  shell.exec(`mkdir ${shellLink(tempString + "/" + tempArr[i])}`);
-                }
-                tempString += '/';
-                tempString += tempArr[i];
-              }
-              shell.exec(`mv ${shellLink(path)} ${shellLink(staticFolder + "/" + toArr[num])}`);
-              num++;
-            }
-
-            res.send(JSON.stringify({ message: "done" }));
-          }
-        } catch (e) {
-          console.log(e);
-        }
-      });
-    }
-  };
-
-  //POST - mkdir
-  funcObj.post_mkdir = {
-    binary: false,
-    link: [ "/mkdir", "/rm", "/touch" ],
-    func: function (req, res) {
-      let command;
-      let order;
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
-      });
-      if (req.body.target === undefined) {
-        console.log(req.body);
-        res.send(JSON.stringify({ error: "must be property 'target'" }));
-      } else {
-        if (req.url === "/mkdir") {
-          order = "mkdir";
-        } else if (req.url === "/rm") {
-          order = "rm -rf";
-        } else if (req.url === "/touch") {
-          order = "touch";
-        }
-        let { target } = req.body;
-        command = '';
-        if (Array.isArray(target)) {
-          for (let d of target) {
-            d = instance.dirParsing(d);
-            command += `${order} ${shellLink(d)};`;
-          }
-        } else {
-          target = instance.dirParsing(target);
-          command = `${order} ${shellLink(target)}`;
-        }
-        shell.exec(command, { async: true });
-        res.send(JSON.stringify({ message: "success" }));
-      }
-    }
-  };
-
-  //POST - list
-  funcObj.post_list = {
-    binary: false,
-    link: [ "/list" ],
-    func: function (req, res) {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
-      });
-      let target;
-      if (typeof req.body.target !== "string") {
-        res.send(JSON.stringify({ message: "error" }));
-      } else {
-        target = req.body.target;
-        if (/\/$/.test(target)) {
-          target = target.slice(0, -1);
-        }
-        if (/^\//.test(target)) {
-          target = target.slice(1);
-        }
-        target = address.homeinfo.ghost.file.static + "/" + target;
-        treeParsing(target, true, (i) => {
-          return i.slice(address.homeinfo.ghost.file.static.length);
-        }).then((arr) => {
-          res.send(JSON.stringify(arr));
-        }).catch((err) => {
-          res.send(JSON.stringify({ message: "error" }));
-        });
-      }
-    }
-  };
-
-  //POST - readDir
-  funcObj.post_readDir = {
-    binary: false,
-    link: [ "/readDir", "/ls" ],
-    func: function (req, res) {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
-      });
-
-      let target;
-      if (req.body.target === undefined) {
-        target = instance.address.homeinfo.ghost.file.static;
-      } else {
-        target = req.body.target;
-      }
-
-      fileSystem(`readDir`, [ target ]).then((list) => {
-        let list_refined = [];
-        for (let i of list) {
-          if (!/^\._/.test(i) && !/DS_Store/gi.test(i)) {
-            list_refined.push(i);
-          }
-        }
-        res.send(JSON.stringify(list_refined));
-      }).catch((e) => { throw new Error(e); });
-    }
-  };
-
-  //POST - robot do
-  funcObj.post_robotDo = {
-    binary: false,
-    link: [ "/robot" ],
-    func: function (req, res) {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
-      });
-      if (req.body.command === undefined) {
-        console.log(req.body);
-        res.send(JSON.stringify({ error: "must be property 'command'" }));
-      } else {
-        let { command } = req.body;
-        if (Array.isArray(command)) {
-          command = command.join(" ");
-        }
-        if (req.body.await === true) {
-          const { stdout } = shell.exec(`node ${shellLink(instance.robot)} ${command}`);
-          res.send(JSON.stringify({ stdout }));
-        } else {
-          shell.exec(`node ${shellLink(instance.robot)} ${command}`, { async: true }, function (err, stdout, stderr) {
-            if (err) {
-              console.log(err);
-            } else {
-              console.log(stdout);
-            }
-          });
-          res.send(JSON.stringify({ message: "will do" }));
-        }
-      }
-    }
-  }
-
-  //POST - robot will do
-  funcObj.post_robotWillDo = {
-    binary: false,
-    link: [ "/robotWill", "/robotWillDo", "/robotTimer", "/timer" ],
-    func: function (req, res) {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
-      });
-      if (req.body.command === undefined || req.body.time === undefined || typeof req.body.time !== "object") {
-        console.log(req.body);
-        res.send(JSON.stringify({ error: "must be property 'String or Array: command, Object: time'" }));
-      } else {
-        let { command, time } = req.body;
-        if (Array.isArray(command)) {
-          command = command.join(" ");
-        }
-        instance.setTimer(function () {
-          shell.exec(`node ${shellLink(instance.robot)} ${command}`, { async: true }, function (err, stdout, stderr) {
-            if (err) {
-              console.log(err);
-            } else {
-              console.log(stdout);
-            }
-          });
-        }, time);
-        res.send(JSON.stringify({ message: "will do" }));
-      }
-    }
-  }
-
-  //end : set router
-  let resultObj = { get: [], post: [] };
-  for (let i in funcObj) {
-    funcObj[i].func = ghostWall(funcObj[i].func, funcObj[i].binary);
-    resultObj[i.split('_')[0]].push(funcObj[i]);
-  }
-  return resultObj;
-}
-
 Ghost.prototype.serverLaunching = async function () {
   const instance = this;
   const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo } = this.mother;
@@ -3777,84 +3513,6 @@ Ghost.prototype.serverLaunching = async function () {
       console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
     });
 
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-Ghost.prototype.fileLaunching = async function () {
-  const instance = this;
-  const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo } = this.mother;
-  const https = require("https");
-  const express = require("express");
-  const useragent = require("express-useragent");
-  const app = express();
-
-  app.use(useragent.express());
-  app.use(express.json({ limit : "50mb" }));
-  app.use(express.urlencoded({ limit: "50mb", extended: true }));
-
-  try {
-    let message = '';
-
-    //set address info
-    const { name, rawObj: address } = await this.mother.ipCheck();
-    let isGhost = (address.isGhost === true);
-    if (name === "unknown") {
-      throw new Error("invalid address");
-    }
-
-    if (isGhost) {
-
-      console.log(``);
-      console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching file ghost in ${name.replace(/info/i, '')} ==============`);
-      console.log(``);
-
-      //set pem key
-      let pems = {};
-      let pemsLink = process.cwd() + "/pems/" + address.host;
-      let certDir, keyDir, caDir;
-      let routerObj;
-
-      certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
-      keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
-      caDir = await fileSystem(`readDir`, [ `${pemsLink}/ca` ]);
-
-      for (let i of certDir) {
-        if (i !== `.DS_Store`) {
-          pems.cert = await fileSystem(`read`, [ `${pemsLink}/cert/${i}` ]);
-        }
-      }
-      for (let i of keyDir) {
-        if (i !== `.DS_Store`) {
-          pems.key = await fileSystem(`read`, [ `${pemsLink}/key/${i}` ]);
-        }
-      }
-      pems.ca = [];
-      for (let i of caDir) {
-        if (i !== `.DS_Store`) {
-          pems.ca.push(await fileSystem(`read`, [ `${pemsLink}/ca/${i}` ]));
-        }
-      }
-      pems.allowHTTP1 = true;
-
-      //set router
-      const { get, post } = this.fileRouter(address.file.static);
-      for (let obj of get) {
-        app.get(obj.link, obj.func);
-      }
-      for (let obj of post) {
-        app.post(obj.link, obj.func);
-      }
-
-      //server on
-      https.createServer(pems, app).listen(address.file.port, address.ip.inner, () => {
-        console.log(`\x1b[33m%s\x1b[0m`, `Server running in ${String(address.file.port)}`);
-      });
-
-    } else {
-      console.log(`file server can work in ghost`);
-    }
   } catch (e) {
     console.log(e);
   }
@@ -4134,8 +3792,6 @@ Ghost.prototype.wssLaunching = async function () {
 const app = new Ghost();
 if (process.argv[2] === undefined || /server/gi.test(process.argv[2]) || /ghost/gi.test(process.argv[2])) {
   app.serverLaunching().catch((err) => { console.log(err); });
-} else if (/file/gi.test(process.argv[2]) || /ftp/gi.test(process.argv[2])) {
-  app.fileLaunching().catch((err) => { console.log(err); });
 } else if (/ai/gi.test(process.argv[2]) || /robot/gi.test(process.argv[2]) || /pass/gi.test(process.argv[2])) {
   app.robotPassLaunching().catch((err) => { console.log(err); });
 } else if (/wss/gi.test(process.argv[2])) {

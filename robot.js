@@ -476,8 +476,8 @@ Robot.prototype.localReflection = async function (arg = null) {
         target = "mongoinfo";
       } else if (/console/gi.test(arg) || /back/gi.test(arg)) {
         target = "backinfo";
-      } else if (/home/gi.test(arg)) {
-        target = "homeinfo";
+      } else if (/log/gi.test(arg)) {
+        target = "testinfo";
       } else if (/python/gi.test(arg)) {
         target = "pythoninfo";
       } else {
@@ -560,7 +560,7 @@ Robot.prototype.staticInSync = async function () {
     }
 
     order = "scp -r ";
-    order += this.address.homeinfo.ghost.user + "@" + this.address.homeinfo.ghost.host + ":" + shellLink(this.address.homeinfo.ghost.file.static);
+    order += this.address.officeinfo.ghost.user + "@" + this.address.officeinfo.ghost.host + ":" + shellLink(this.address.officeinfo.ghost.file.static);
     order += " ";
     order += shellLink(home + "/" + driveName);
     console.log(order);

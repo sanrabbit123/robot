@@ -15,10 +15,9 @@ const DataConsole = function () {
 DataConsole.prototype.renderStatic = async function (staticFolder, address, DataPatch) {
   const instance = this;
   const { fileSystem, shell, shellLink, sleep, mediaQuery } = this.mother;
-  const S3HOST = this.address.homeinfo.ghost.protocol + "://" + this.address.homeinfo.ghost.host;
+  const S3HOST = "https://" + this.address.officeinfo.ghost.host;
   const SSEHOST = address.host;
   const SSEHOST_CONSOLE = this.address.backinfo.host;
-  const GHOSTHOST = this.address.homeinfo.ghost.host;
   const FILEHOST = this.address.officeinfo.ghost.host;
   const BRIDGEHOST = "https://" + this.address.officeinfo.ghost.host + ":3000";
   const PYTHONHOST = "https://" + this.address.pythoninfo.host + ":3000";
@@ -130,7 +129,6 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
     s3String = "const S3HOST = \"" + S3HOST + "\";";
     sseString = "const SSEHOST = \"" + SSEHOST + "\";";
     sseConsoleString = "const SSEHOST_CONSOLE = \"" + SSEHOST_CONSOLE + "\";";
-    ghostString = "const GHOSTHOST = \"" + GHOSTHOST + "\";";
     pythonString = "const PYTHONHOST = \"" + PYTHONHOST + "\";";
     bridgeString = "const BRIDGEHOST = \"" + BRIDGEHOST + "\";";
     logString = "const LOGHOST = \"" + LOGHOST + "\";";
@@ -177,7 +175,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
       }
 
       //merge
-      code0 = svgTongString + "\n\n" + s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + logString + "\n\n" + backString + "\n\n" + secondString + "\n\n" + frontWebString + "\n\n" + officeString + "\n\n";
+      code0 = svgTongString + "\n\n" + s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + logString + "\n\n" + backString + "\n\n" + secondString + "\n\n" + frontWebString + "\n\n" + officeString + "\n\n";
       code1 = dataPatchScript;
       code2 = generalString + "\n\n" + consoleGeneralString;
       code3 = fileString + "\n\n" + execString;
@@ -223,10 +221,9 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
   const instance = this;
   const { fileSystem, shell, shellLink, treeParsing, mediaQuery } = this.mother;
   const { minify } = require("terser");
-  const S3HOST = this.address.homeinfo.ghost.protocol + "://" + this.address.homeinfo.ghost.host;
+  const S3HOST = "https://" + this.address.officeinfo.ghost.host;
   const SSEHOST = address.host;
   const SSEHOST_CONSOLE = this.address.backinfo.host;
-  const GHOSTHOST = this.address.homeinfo.ghost.host;
   const FILEHOST = this.address.officeinfo.ghost.host;
   const PYTHONHOST = "https://" + this.address.pythoninfo.host + ":3000";
   const BRIDGEHOST = "https://" + this.address.officeinfo.ghost.host + ":3000";
@@ -343,7 +340,6 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     s3String = "const S3HOST = \"" + S3HOST + "\";";
     sseString = "const SSEHOST = \"" + SSEHOST + "\";";
     sseConsoleString = "const SSEHOST_CONSOLE = \"" + SSEHOST_CONSOLE + "\";";
-    ghostString = "const GHOSTHOST = \"" + GHOSTHOST + "\";";
     pythonString = "const PYTHONHOST = \"" + PYTHONHOST + "\";";
     bridgeString = "const BRIDGEHOST = \"" + BRIDGEHOST + "\";";
     logString = "const LOGHOST = \"" + LOGHOST + "\";";
@@ -423,7 +419,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
       }
 
       //merge
-      code0 = svgTongString + "\n\n" + s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + logString + "\n\n" + backString + "\n\n" + secondString + "\n\n" + frontWebString + "\n\n" + officeString + "\n\n";
+      code0 = svgTongString + "\n\n" + s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + logString + "\n\n" + backString + "\n\n" + secondString + "\n\n" + frontWebString + "\n\n" + officeString + "\n\n";
       code1 = dataPatchScript + "\n\n";
       if (kinds === "MIDDLE") {
         code2 = generalString + "\n\n" + consoleGeneralString + "\n\n" + frontClassString + "\n\n";
@@ -760,7 +756,7 @@ DataConsole.prototype.setBinary = async function () {
   const { fileSystem, shell, shellLink, ghostFileList, binaryRequest } = this.mother;
   const address = this.address;
   const staticFolder = process.env.HOME + "/static";
-  const FILEHOST = address.homeinfo.ghost.host;
+  const FILEHOST = address.officeinfo.ghost.host;
   try {
 
     const targetName = "dataConsole";
@@ -959,8 +955,6 @@ DataConsole.prototype.connect = async function () {
           __vailHosts = [
             instance.address.frontinfo.host,
             instance.address.frontinfo.host + ":3000",
-            instance.address.homeinfo.ghost.host,
-            instance.address.homeinfo.ghost.host + ":3000",
             instance.address.backinfo.host,
             instance.address.backinfo.host + ":3000",
             instance.address.pythoninfo.host,

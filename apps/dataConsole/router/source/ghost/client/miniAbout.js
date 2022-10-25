@@ -3525,7 +3525,7 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
                   {
                     mode: "iframe",
                     attribute: [
-                      { src: window.location.protocol + "//" + GHOSTHOST + "/tools/addressLite" },
+                      { src: BACKHOST + "/tools/addressLite" },
                       { width: String(100) + '%' },
                       { height: String(100) + '%' },
                     ],
@@ -3910,7 +3910,7 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
       ]
     }).firstChild.firstChild.firstChild;
 
-    ajaxJson({}, "https://" + GHOSTHOST + "/designerProposal_policy").then(function (res) {
+    ajaxJson({}, BACKHOST + "/designerProposal_policy").then(function (res) {
       const { policy, button } = res;
       let bTags;
 
@@ -4147,11 +4147,11 @@ MiniAboutJs.prototype.whiteSubmitEvent = function () {
                             }).then(() => {
                               document.body.removeChild(box);
                               document.body.removeChild(back);
-                              selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/miniGuide?useid=" + useid);
+                              selfHref(BACKHOST + "/middle/miniGuide?useid=" + useid);
                             }).catch((err) => {
                               document.body.removeChild(box);
                               document.body.removeChild(back);
-                              selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/miniGuide?useid=" + useid);
+                              selfHref(BACKHOST + "/middle/miniGuide?useid=" + useid);
                             });
 
                           } else {
@@ -4268,9 +4268,9 @@ MiniAboutJs.prototype.launching = async function (loading) {
           action: "miniSubmit",
           data: { useid },
         }).then(() => {
-          selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/miniGuide?useid=" + useid);
+          selfHref(BACKHOST + "/middle/miniGuide?useid=" + useid);
         }).catch((err) => {
-          selfHref(window.location.protocol + "//" + GHOSTHOST + "/middle/miniGuide?useid=" + useid);
+          selfHref(BACKHOST + "/middle/miniGuide?useid=" + useid);
         });
 
       }

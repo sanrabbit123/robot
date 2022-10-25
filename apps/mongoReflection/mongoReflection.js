@@ -175,11 +175,7 @@ MongoReflection.prototype.mongoMigration = async function (to = "local", from = 
     let rows;
 
     fromDB = from;
-    if (/home/gi.test(from)) {
-      fromHost = this.address["homeinfo"]["ghost"].host;
-    } else {
-      fromHost = this.address[fromDB].host;
-    }
+    fromHost = this.address[fromDB].host;
     toDB = to;
 
     fromString = "mongodb://" + this.address[fromDB].user + ':' + this.address[fromDB].password + '@' + fromHost + ':' + String(this.address[fromDB].port) + "/admin";
@@ -426,11 +422,7 @@ MongoReflection.prototype.coreReflection = async function (to = "local") {
       console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, consoleWording);
 
       fromDB = from;
-      if (/home/gi.test(from)) {
-        fromHost = this.address["homeinfo"]["ghost"].host;
-      } else {
-        fromHost = this.address[fromDB].host;
-      }
+      fromHost = this.address[fromDB].host;
       toDB = to;
       fromString = "mongodb://" + this.address[fromDB].user + ':' + this.address[fromDB].password + '@' + fromHost + ':' + String(this.address[fromDB].port) + "/admin";
       if (toDB === "local") {
@@ -677,11 +669,7 @@ MongoReflection.prototype.frontReflection = async function (to = "local") {
       console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, consoleWording);
 
       fromDB = from;
-      if (/home/gi.test(from)) {
-        fromHost = this.address["homeinfo"]["ghost"].host;
-      } else {
-        fromHost = this.address[fromDB].host;
-      }
+      fromHost = this.address[fromDB].host;
       toDB = to;
       fromString = "mongodb://" + this.address[fromDB].user + ':' + this.address[fromDB].password + '@' + fromHost + ':' + String(this.address[fromDB].port) + "/admin";
       if (toDB === "local") {

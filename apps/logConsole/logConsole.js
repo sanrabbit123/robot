@@ -16,10 +16,9 @@ const LogConsole = function () {
 LogConsole.prototype.renderStatic = async function (staticFolder) {
   const instance = this;
   const { fileSystem, shell, shellLink, sleep, mediaQuery } = this.mother;
-  const S3HOST = this.address.homeinfo.ghost.protocol + "://" + this.address.homeinfo.ghost.host;
+  const S3HOST = "https://" + this.address.officeinfo.ghost.host;
   const SSEHOST = this.address.testinfo.host;
   const SSEHOST_CONSOLE = this.address.testinfo.host;
-  const GHOSTHOST = this.address.homeinfo.ghost.host;
   const FILEHOST = this.address.officeinfo.ghost.host;
   const PYTHONHOST = "https://" + this.address.pythoninfo.host + ":3000";
   const BRIDGEHOST = "https://" + this.address.officeinfo.ghost.host + ":3000";
@@ -50,7 +49,6 @@ LogConsole.prototype.renderStatic = async function (staticFolder) {
     s3String = "const S3HOST = \"" + S3HOST + "\";";
     sseString = "const SSEHOST = \"" + SSEHOST + "\";";
     sseConsoleString = "const SSEHOST_CONSOLE = \"" + SSEHOST_CONSOLE + "\";";
-    ghostString = "const GHOSTHOST = \"" + GHOSTHOST + "\";";
     pythonString = "const PYTHONHOST = \"" + PYTHONHOST + "\";";
     bridgeString = "const BRIDGEHOST = \"" + BRIDGEHOST + "\";";
     frontWebString = "const FRONTHOST = \"" + FRONTHOST + "\";";
@@ -107,7 +105,7 @@ LogConsole.prototype.renderStatic = async function (staticFolder) {
       fileString = await fileSystem(`readString`, [ path ]);
 
       //merge
-      code0 = svgTongString + "\n\n" + trapString + "\n\n" + s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + frontWebString + "\n\n" + officeString + "\n\n";
+      code0 = svgTongString + "\n\n" + trapString + "\n\n" + s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + frontWebString + "\n\n" + officeString + "\n\n";
       code1 = "";
       code2 = generalString + "\n\n" + consoleGeneralString;
       code3 = fileString + "\n\n" + execString;

@@ -162,7 +162,7 @@ ContentsJs.prototype.spreadContents = function (search = null) {
         {
           mode: "img",
           attribute: {
-            src: `https://${GHOSTHOST}/corePortfolio/listImage/${contents.contents.portfolio.pid}/${photoChar + String(contents.contents.portfolio.detailInfo.photodae[1]) + contents.contents.portfolio.pid + ".jpg"}`,
+            src: `${S3HOST}/corePortfolio/listImage/${contents.contents.portfolio.pid}/${photoChar + String(contents.contents.portfolio.detailInfo.photodae[1]) + contents.contents.portfolio.pid + ".jpg"}`,
           },
           style: {
             position: "relative",
@@ -446,7 +446,7 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
 
     seroNum = 0;
     for (let { index, gs } of photos.detail) {
-      source = `https://${GHOSTHOST}/corePortfolio/listImage/${pid}/${photoChar + String(index) + pid + ".jpg"}`;
+      source = `${S3HOST}/corePortfolio/listImage/${pid}/${photoChar + String(index) + pid + ".jpg"}`;
       createNode({
         mother: leftTong,
         mode: "img",
@@ -899,7 +899,7 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
         mode: "img",
         class: [ "hoverDefault_lite" ],
         attribute: {
-          src: `https://${GHOSTHOST}/corePortfolio/listImage/${pid}/${photoChar + String(garo) + pid + ".jpg"}`,
+          src: `${S3HOST}/corePortfolio/listImage/${pid}/${photoChar + String(garo) + pid + ".jpg"}`,
           pid: pid,
           conid: c
         },

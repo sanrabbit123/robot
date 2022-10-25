@@ -74,7 +74,7 @@ const GraphicBot = function () {
   this.frontProcess = null;
   this.frontProblem = false;
   this.info = null;
-  for (let obj of ADDRESS.homeinfo.map) {
+  for (let obj of ADDRESS.officeinfo.map) {
     if (obj.name === "graphic") {
       this.info = new InfoArray(obj.info);
     }
@@ -521,7 +521,7 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
     frontFirst += "const ENDCONST = \"" + this.localhost + "/frontEnd\";\n\n";
     frontFirst += "const HOSTCONST = \"" + this.localhost + "\";\n\n";
     frontFirst += "const ACCUMULATIONCONST = \"" + this.localhost + "/accumulation\";\n\n";
-    frontFirst += "const INFO = " + JSON.stringify(this.address.homeinfo.map.find((obj) => { return obj.name === "graphic" }).info, null, 2) + ";\n\n";
+    frontFirst += "const INFO = " + JSON.stringify(this.address.officeinfo.map.find((obj) => { return obj.name === "graphic" }).info, null, 2) + ";\n\n";
 
     frontFirst += "const equalJson = " + this.frontGeneral.equalJson.toString() + ";\n\n";
     frontFirst += "const ajaxPromise = " + this.frontGeneral.ajaxPromise.toString() + ";\n\n";
@@ -787,14 +787,16 @@ GraphicBot.prototype.botRouter = function () {
   const map = function (to) {
     if (/python/gi.test(to)) {
       return "https://" + address.pythoninfo.host + ":3000";
-    } else if (/back/gi.test(to)) {
+    } else if (/back/gi.test(to) || /home/gi.test(to)) {
       return "https://" + address.backinfo.host + ":3000";
     } else if (/bridge/gi.test(to)) {
       return "https://" + address.officeinfo.ghost.host + ":3000";
     } else if (/office/gi.test(to)) {
       return "https://" + address.officeinfo.ghost.host;
-    } else if (/home/gi.test(to)) {
-      return "https://" + address.homeinfo.ghost.host;
+    } else if (/log/gi.test(to)) {
+      return "https://" + address.testinfo.ghost.host + ":3000";
+    } else if (/second/gi.test(to)) {
+      return "https://" + address.secondinfo.ghost.host + ":3000";
     } else {
       throw new Error("invaild input");
     }

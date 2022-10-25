@@ -8,7 +8,7 @@ const ResourceMaker = function (p_id) {
   this.mother = new Mother();
   this.back = new BackMaker();
   this.address = ADDRESS;
-  this.s3Host = `${ADDRESS.homeinfo.ghost.protocol}://${ADDRESS.homeinfo.ghost.host}`;
+  this.s3Host = `https://${ADDRESS.officeinfo.ghost.host}`;
   for (let i = 0; i < 5; i++) {
     p_id = p_id.replace(/^ /g, '').replace(/ $/g, '').toLowerCase();
   }
