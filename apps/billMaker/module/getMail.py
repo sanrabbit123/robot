@@ -21,13 +21,37 @@ def extractMails(popObject, id):
         fromString = ''
 
         for i in popObject.retr(z + 1)[1]:
-            if i.decode("utf-8").strip() == '':
+            decodedString = ''
+            try:
+                decodedString = i.decode("utf-8")
+            except Exception as e:
+                decodedString = ''
+                continue
+
+            if decodedString.strip() == '':
                 if passNum == 0:
                     headers = result.split(returnToken)
+
                     r = re.compile("^Date: ")
-                    timeString = list(filter(r.match, headers))[0].split(": ")[1]
+                    timeArr = list(filter(r.match, headers))
+                    timeString = timeArr[0].split(": ")[1]
+
                     r = re.compile("^From: ")
-                    fromString = list(filter(r.match, headers))[0].split(": ")[1].split("<")[1][0:-1]
+                    fromArr = list(filter(r.match, headers))
+                    rawFrontString = fromArr[0].split(": ")[1].strip()
+
+                    fromString = ''
+                    if rawFrontString.split("<").__len__() > 1:
+                        fromString = rawFrontString.split("<")[1][0:-1]
+                    else:
+                        fromString = "what?"
+                        regComplie = re.compile(r'([a-z\-\_0-9]+)@([a-z\-\_0-9]+)\.([a-z\-\_0-9]+)')
+                        matchResult = regComplie.match(rawFrontString.split("<")[0])
+                        if matchResult is None:
+                            fromString = "unknown@unknown.unknown"
+                        else:
+                            fromString = matchResult.group()
+
                     dateObject = datetime.strptime(timeString.split(", ")[1].split("+")[0].strip(), '%d %b %Y %H:%M:%S')
                     if fromString == targetEmail and int(beforeWeek.strftime("%Y%m%d")) <= int(dateObject.strftime("%Y%m%d")):
                         passNum = 1
@@ -38,7 +62,7 @@ def extractMails(popObject, id):
                 else:
                     result += areaToken + returnToken
             else:
-                result += i.decode("utf-8") + returnToken
+                result += decodedString + returnToken
 
         if passNum == 2:
             continue
