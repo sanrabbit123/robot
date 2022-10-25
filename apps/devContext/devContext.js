@@ -3243,6 +3243,8 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
     // const kakao = new KakaoTalk();
     // await kakao.ready();
     // await kakao.sendTalk("firstMeetingDayAgo", "리에종", "010-5543-2039", {
