@@ -113,7 +113,7 @@ DevContext.prototype.launching = async function () {
     // await selfMongo.close();
 
 
-    console.log(this.mother.ipCheck());
+    console.log(await this.mother.ipCheck());
 
 
 
