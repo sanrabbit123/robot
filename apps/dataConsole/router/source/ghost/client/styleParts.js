@@ -167,7 +167,7 @@ StylePartsJs.prototype.insertInitBox = function () {
   titleLogWidth = <%% 250, 216, 160, 140, 34 %%>;
   titleLogTop = <%% 96, 64, 60, 48, 2 %%>;
 
-  baseMotherMarginBottom = <%% 168, 160, 140, 110, 2 %%>;
+  baseMotherMarginBottom = <%% 168, 160, 140, 110, 3 %%>;
 
   descriptionPaddingTop = <%% 21, 21, 8, 6, 0.5 %%>;
   partsWidth = <%% 100, 96, 90, 88, 33 %%>;
@@ -368,7 +368,7 @@ StylePartsJs.prototype.insertInitBox = function () {
 StylePartsJs.prototype.insertHeadlineBox = function () {
   const instance = this;
   const { totalContents, ea, standardWidth, media, baseTong, localColor } = this;
-  const { createNode, withOut, colorChip, cleanChildren, selfHref, ajaxJson } = GeneralJs;
+  const { createNode, withOut, colorChip, cleanChildren, selfHref, ajaxJson, isMac } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
   let baseMother;
@@ -393,7 +393,7 @@ StylePartsJs.prototype.insertHeadlineBox = function () {
   svgBox = this.returnSvgBox();
 
   leftMotherWidth = <%% 500, 460, 370, 320, 88 %%>;
-  paddingTop = <%% 72, 60, 50, 42, 7 %%>;
+  paddingTop = <%% 72, 60, 50, 42, 8 %%>;
   paddingLeft = <%% 72, 60, 50, 42, 3 %%>;
 
   aboutSize = <%% 13, 12, 11, 10, 3.2 %%>;
@@ -413,7 +413,7 @@ StylePartsJs.prototype.insertHeadlineBox = function () {
   wordingMarginTop = <%% 52, 36, 34, 32, 7 %%>;
   wordingSecondMarginTop = <%% 16, 16, 16, 16, 3 %%>;
 
-  titleBarTop = <%% 8, 8, 8, 6, 1 %%>;
+  titleBarTop = <%% (isMac() ? 8 : 5), (isMac() ? 8 : 5), (isMac() ? 8 : 5), (isMac() ? 6 : 4), 1 %%>;
   titleBarWidth = <%% 5, 5, 4, 3, 2 %%>;
   titleBarHeight = <%% 13, 13, 14, 11, 3 %%>;
 
@@ -685,7 +685,7 @@ StylePartsJs.prototype.insertLeadBox = function () {
   let barNoticeBoxPaddingTop;
   let barNoticeSize, barNoticeWeight, barNoticeMarginBottom;
 
-  paddingTop = <%% 200, 160, 130, 100, 13 %%>;
+  paddingTop = <%% 200, 160, 130, 100, 14 %%>;
 
   titleSize = <%% 27, 26, 23, 21, 5.1 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -1255,7 +1255,7 @@ StylePartsJs.prototype.insertLeadBox = function () {
 StylePartsJs.prototype.insertMatchupBox = function () {
   const instance = this;
   const { totalContents, ea, standardWidth, media, baseTong, localColor } = this;
-  const { createNode, withOut, colorChip, cleanChildren, selfHref, ajaxJson } = GeneralJs;
+  const { createNode, withOut, colorChip, cleanChildren, selfHref, ajaxJson, isMac } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
@@ -1303,7 +1303,7 @@ StylePartsJs.prototype.insertMatchupBox = function () {
   let secondImageDescriptionWeight;
   let secondImageDescriptionLineHeight;
 
-  paddingTop = <%% 200, 160, 130, 100, 13 %%>;
+  paddingTop = <%% 200, 160, 130, 100, 14 %%>;
 
   titleSize = <%% 27, 26, 23, 21, 5.1 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -1334,7 +1334,7 @@ StylePartsJs.prototype.insertMatchupBox = function () {
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
   descriptionMarginTop = <%% 10, 10, 10, 6, 1.5 %%>;
 
-  whiteBetween = <%% 16, 16, 16, 8, 14 %%>;
+  whiteBetween = <%% 16, 16, 16, 8, 15 %%>;
 
   chipWidth = <%% 32, 28, 24, 20, 28 %%>;
   chipBetween = <%% 6, 6, 6, 4, 6 %%>;
@@ -1349,7 +1349,7 @@ StylePartsJs.prototype.insertMatchupBox = function () {
   secondImageBetween = <%% 10, 10, 10, 10, 10 %%>;
 
   secondImageHeight = <%% 200, 120, 125, 100, 120 %%>;
-  secondImageTitleMarginTop = <%% 23, 20, 20, 15, 20 %%>;
+  secondImageTitleMarginTop = <%% (isMac() ? 23 : 26), (isMac() ? 20 : 22), (isMac() ? 20 : 22), (isMac() ? 15 : 17), 20 %%>;
   secondImageTitleSize = <%% 18, 15, 14, 12, 3 %%>;
   secondImageTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
@@ -1473,6 +1473,7 @@ StylePartsJs.prototype.insertMatchupBox = function () {
       flexDirection: desktop ? "row" : "column",
       marginTop: String(overMargin) + ea,
       width: withOut(0, ea),
+      height: desktop ? String(whiteBoxHeight) + ea : "",
       borderRadius: String(8) + "px",
       background: desktop ? colorChip.white : "",
       boxShadow: desktop ? "0px 3px 15px -9px " + colorChip.shadow : "",
@@ -1950,7 +1951,7 @@ StylePartsJs.prototype.insertMatchupBox = function () {
 StylePartsJs.prototype.insertStyleBox = function () {
   const instance = this;
   const { totalContents, ea, standardWidth, media, baseTong, localColor } = this;
-  const { createNode, withOut, colorChip, cleanChildren, selfHref, ajaxJson, svgMaker } = GeneralJs;
+  const { createNode, withOut, colorChip, cleanChildren, selfHref, ajaxJson, svgMaker, isMac, blankHref } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
   let baseMother;
@@ -2004,7 +2005,7 @@ StylePartsJs.prototype.insertStyleBox = function () {
 
   svgBox = this.returnSvgBox();
 
-  paddingTop = <%% 200, 160, 130, 100, 13 %%>;
+  paddingTop = <%% 200, 160, 130, 100, 14 %%>;
 
   titleSize = <%% 27, 26, 23, 21, 5.1 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -2030,7 +2031,7 @@ StylePartsJs.prototype.insertStyleBox = function () {
   whiteInnerPaddingLeft = <%% 60, 48, 36, 32, 6 %%>;
 
   whiteLogoWidth = <%% 190, 162, 190, 190, 190 %%>;
-  whiteLogoTop = <%% 2, 2, 2, 2, 2 %%>;
+  whiteLogoTop = <%% (isMac() ? 2 : -1), (isMac() ? 2 : -1), (isMac() ? 2 : -1), (isMac() ? 2 : -1), 2 %%>;
 
   whiteInnerSize = <%% 22, 18, 17, 15, 4 %%>;
   whitePlusSize = <%% 32, 24, 23, 18, 5 %%>;
@@ -2078,8 +2079,8 @@ StylePartsJs.prototype.insertStyleBox = function () {
   imageBoxMarginTop = <%% 110, 84, 72, 65, 11 %%>;
   imageBoxMarginTopBig = <%% 190, 136, 112, 110, 31 %%>;
 
-  moreBoxHeight = <%% 40, 40, 40, 40, 9 %%>;
-  moreCircleWidth = <%% 8, 8, 8, 8, 2 %%>;
+  moreBoxHeight = <%% 40, 40, 40, 40, 7 %%>;
+  moreCircleWidth = <%% 8, 8, 8, 8, 1.8 %%>;
   moreCircleBetween = <%% 6, 6, 6, 6, 1.5 %%>;
 
   contents = {
@@ -2604,6 +2605,9 @@ StylePartsJs.prototype.insertStyleBox = function () {
                 children: [
                   {
                     text: "portfolio list",
+                    event: {
+                      click: (e) => { blankHref(FRONTHOST + "/portfolio.php"); }
+                    },
                     style: {
                       display: "inline-block",
                       verticalAlign: "top",
@@ -2613,11 +2617,15 @@ StylePartsJs.prototype.insertStyleBox = function () {
                       fontFamily: "graphik",
                       fontStyle: "italic",
                       color: colorChip.black,
+                      cursor: "pointer",
                     }
                   },
                   {
                     mode: "svg",
                     source: svgMaker.horizontalArrow(imagePortfolioArrowWidth, imagePortfolioArrowHeight, colorChip.black),
+                    event: {
+                      click: (e) => { blankHref(FRONTHOST + "/portfolio.php"); }
+                    },
                     style: {
                       display: "inline-block",
                       verticalAlign: "top",
@@ -2625,6 +2633,7 @@ StylePartsJs.prototype.insertStyleBox = function () {
                       width: String(imagePortfolioArrowWidth) + ea,
                       marginLeft: String(imagePortfolioArrowMarginLeft) + ea,
                       top: String(imagePortfolioArrowTop) + ea,
+                      cursor: "pointer",
                     }
                   },
                   {
@@ -2720,6 +2729,9 @@ StylePartsJs.prototype.insertStyleBox = function () {
                   children: [
                     {
                       text: "portfolio list",
+                      event: {
+                        click: (e) => { blankHref(FRONTHOST + "/portfolio.php"); }
+                      },
                       style: {
                         display: "inline-block",
                         verticalAlign: "top",
@@ -2729,11 +2741,15 @@ StylePartsJs.prototype.insertStyleBox = function () {
                         fontFamily: "graphik",
                         fontStyle: "italic",
                         color: colorChip.black,
+                        cursor: "pointer",
                       }
                     },
                     {
                       mode: "svg",
                       source: svgMaker.horizontalArrow(imagePortfolioArrowWidth, imagePortfolioArrowHeight, colorChip.black),
+                      event: {
+                        click: (e) => { blankHref(FRONTHOST + "/portfolio.php"); }
+                      },
                       style: {
                         display: "inline-block",
                         verticalAlign: "top",
@@ -2741,6 +2757,7 @@ StylePartsJs.prototype.insertStyleBox = function () {
                         width: String(imagePortfolioArrowWidth) + ea,
                         marginLeft: String(imagePortfolioArrowMarginLeft) + ea,
                         top: String(imagePortfolioArrowTop) + ea,
+                        cursor: "pointer",
                       }
                     },
                     {
@@ -2892,6 +2909,9 @@ StylePartsJs.prototype.insertStyleBox = function () {
                   children: [
                     {
                       text: "portfolio list",
+                      event: {
+                        click: (e) => { blankHref(FRONTHOST + "/portfolio.php"); }
+                      },
                       style: {
                         display: "inline-block",
                         verticalAlign: "top",
@@ -2901,11 +2921,15 @@ StylePartsJs.prototype.insertStyleBox = function () {
                         fontFamily: "graphik",
                         fontStyle: "italic",
                         color: colorChip.black,
+                        cursor: "pointer",
                       }
                     },
                     {
                       mode: "svg",
                       source: svgMaker.horizontalArrow(imagePortfolioArrowWidth, imagePortfolioArrowHeight, colorChip.black),
+                      event: {
+                        click: (e) => { blankHref(FRONTHOST + "/portfolio.php"); }
+                      },
                       style: {
                         display: "inline-block",
                         verticalAlign: "top",
@@ -2913,6 +2937,7 @@ StylePartsJs.prototype.insertStyleBox = function () {
                         width: String(imagePortfolioArrowWidth) + ea,
                         marginLeft: String(imagePortfolioArrowMarginLeft) + ea,
                         top: String(imagePortfolioArrowTop) + ea,
+                        cursor: "pointer",
                       }
                     },
                     {
@@ -2943,10 +2968,13 @@ StylePartsJs.prototype.insertStyleBox = function () {
     mother: baseMother,
     text: contents.more.title,
     class: [ "hoverDefault_lite" ],
+    event: {
+      click: (e) => { blankHref(FRONTHOST + "/portfolio.php"); }
+    },
     style: {
       display: "block",
       position: "relative",
-      fontSize: String(imageTitleSize) + ea,
+      fontSize: String(desktop ? imageTitleSize : 3.8) + ea,
       fontWeight: String(titleWeight),
       color: colorChip.black,
       width: withOut(0, ea),
@@ -2958,6 +2986,9 @@ StylePartsJs.prototype.insertStyleBox = function () {
   createNode({
     mother: baseMother,
     class: [ "hoverDefault_lite" ],
+    event: {
+      click: (e) => { blankHref(FRONTHOST + "/portfolio.php"); }
+    },
     style: {
       display: "flex",
       position: "relative",
@@ -3008,7 +3039,7 @@ StylePartsJs.prototype.insertStyleBox = function () {
 StylePartsJs.prototype.insertBenefitsBox = function () {
   const instance = this;
   const { totalContents, ea, standardWidth, media, baseTong, localColor } = this;
-  const { createNode, withOut, colorChip, cleanChildren, selfHref, ajaxJson } = GeneralJs;
+  const { createNode, withOut, colorChip, cleanChildren, selfHref, ajaxJson, isMac } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
@@ -3042,7 +3073,7 @@ StylePartsJs.prototype.insertBenefitsBox = function () {
   let descriptionLineHeight;
   let descriptionTop;
 
-  paddingTop = <%% 100, 100, 72, 64, 13 %%>;
+  paddingTop = <%% 100, 100, 72, 64, 14 %%>;
   paddingLeft = <%% 100, 100, 72, 64, 7 %%>;
 
   titleSize = <%% 27, 26, 23, 21, 5.1 %%>;
@@ -3067,7 +3098,7 @@ StylePartsJs.prototype.insertBenefitsBox = function () {
 
   benefitFactorSize = <%% 20, 18, 15, 13, 3.8 %%>;
   benefitFactorWeight = <%% 700, 700, 700, 700, 700 %%>;
-  benefitFactorTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
+  benefitFactorTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.1 %%>;
 
   descriptionSize = <%% 14, 14, 13, 12, 3.2 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
@@ -3267,7 +3298,7 @@ StylePartsJs.prototype.insertBenefitsBox = function () {
 StylePartsJs.prototype.insertProcessBox = function () {
   const instance = this;
   const { totalContents, ea, standardWidth, media, baseTong, localColor } = this;
-  const { createNode, withOut, colorChip, cleanChildren, selfHref, ajaxJson, svgMaker } = GeneralJs;
+  const { createNode, withOut, colorChip, cleanChildren, selfHref, ajaxJson, svgMaker, isMac, blankHref } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
@@ -3295,7 +3326,7 @@ StylePartsJs.prototype.insertProcessBox = function () {
   let faqButtonWidth, faqButtonHeight;
   let faqSize, faqWeight, faqPaddingBottom;
 
-  paddingTop = <%% 200, 160, 130, 100, 13 %%>;
+  paddingTop = <%% 200, 160, 130, 100, 14 %%>;
 
   titleSize = <%% 27, 26, 23, 21, 5.1 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -3315,31 +3346,31 @@ StylePartsJs.prototype.insertProcessBox = function () {
   descriptionPaddingLeft = <%% 36, 36, 36, 36, 4 %%>;
   descriptionLineBottom = <%% 36, 36, 31, 29, 4 %%>;
 
-  careSize = <%% 20, 18, 16, 15, 4 %%>;
+  careSize = <%% 20, 18, 16, 15, 3.5 %%>;
   carePaddingTop = <%% 60, 54, 50, 40, 8 %%>;
 
   processImageWidth = <%% 1300, 1050, 900, 720, 82 %%>;
-  subDescriptionMarginBottom = <%% 24, 24, 24, 24, 24 %%>;
+  subDescriptionMarginBottom = <%% 24, 24, 24, 24, 3 %%>;
 
-  belowArrowWidth = <%% 12, 12, 12, 12, 12 %%>;
-  belowArrowHeight = <%% 240, 240, 240, 240, 20 %%>;
+  belowArrowWidth = <%% 12, 12, 12, 12, 3 %%>;
+  belowArrowHeight = <%% 240, 240, 240, 240, 25 %%>;
 
-  buttonWidth = <%% 140, 140, 130, 110, 60 %%>;
+  buttonWidth = <%% 140, 140, 130, 110, 24 %%>;
   buttonHeight = <%% 56, 56, 50, 42, 10 %%>;
-  buttonMarginTop = <%% 20, 20, 16, 20, 20 %%>;
-  buttonSize = <%% 20, 20, 18, 16, 3 %%>;
+  buttonMarginTop = <%% 20, 20, 16, 20, 4 %%>;
+  buttonSize = <%% 20, 20, 18, 16, 3.8 %%>;
   buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
-  buttonTextTop = <%% -2, -2, -2, -2, -2 %%>;
+  buttonTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.6 %%>;
 
   noticeSize = <%% 13, 13, 12, 10, 2.5 %%>;
-  noticeMarginTop = <%% 120, 120, 120, 90, 24 %%>;
+  noticeMarginTop = <%% 120, 120, 120, 90, 13 %%>;
 
   faqButtonWidth = <%% 120, 120, 120, 120, 24 %%>;
   faqButtonHeight = <%% 36, 36, 36, 36, 36 %%>;
 
   faqSize = <%% 15, 15, 14, 13, 3.2 %%>;
   faqWeight = <%% 700, 700, 700, 700, 700 %%>;
-  faqPaddingBottom = <%% 2, 2, 2, 2, 2 %%>;
+  faqPaddingBottom = <%% (isMac() ? 2 : 0), (isMac() ? 2 : 0), (isMac() ? 2 : 0), (isMac() ? 2 : 0), 2 %%>;
 
   contents = {
     title: "스타일링 프로세스",
@@ -3354,7 +3385,7 @@ StylePartsJs.prototype.insertProcessBox = function () {
       "상담 문의는 소요되는 기간을 고려하여 서비스 신청 시, 디자이너의 선택 폭이 넓어집니다.",
     ],
     care: "홈리에종 케어",
-    process: (<&& "/process0.png" | "/process0.png" | "/process0.png" | "/process2.png" | "/process0.png" &&>),
+    process: (<&& "/process0.png" | "/process0.png" | "/process0.png" | "/process2.png" | "/process3.png" &&>),
     button: "상담 신청",
     finalNotice: [
       "1. 홈리에종의 스타일링 서비스는 한 명의 디자이너와 우리집 시공부터 홈스타일링까지 전 과정을 함께하고, 디자이너와의 프로젝트가 잘 진행될 수 있도록 홈리에종이 프로젝트 케어를 제공합니다.",
@@ -3475,7 +3506,7 @@ StylePartsJs.prototype.insertProcessBox = function () {
       width: withOut(0, ea),
       textAlign: "center",
       paddingTop: String(carePaddingTop) + ea,
-      paddingBottom: String(titlePaddingBottom) + ea,
+      paddingBottom: String(desktop ? titlePaddingBottom : 2) + ea,
     }
   });
 
@@ -3495,7 +3526,7 @@ StylePartsJs.prototype.insertProcessBox = function () {
 
   createNode({
     mother: baseMother,
-    text: contents.subDescription.join("\n"),
+    text: contents.subDescription.join(desktop ? "\n" : " "),
     style: {
       display: "inline-block",
       position: "relative",
@@ -3508,6 +3539,7 @@ StylePartsJs.prototype.insertProcessBox = function () {
       paddingRight: String(descriptionPaddingLeft) + ea,
       background: colorChip.white,
       marginBottom: String(subDescriptionMarginBottom) + ea,
+      marginTop: desktop ? "" : String(4) + ea,
     },
     bold: {
       fontSize: String(descriptionSize) + ea,
@@ -3530,6 +3562,10 @@ StylePartsJs.prototype.insertProcessBox = function () {
 
   createNode({
     mother: baseMother,
+    class: [ "hoverDefault_lite" ],
+    event: {
+      click: (e) => { blankHref(FRONTHOST + "/consulting.php") }
+    },
     style: {
       display: "inline-flex",
       flexDirection: "column",
@@ -3585,8 +3621,12 @@ StylePartsJs.prototype.insertProcessBox = function () {
     children: [
       {
         text: contents.faq,
+        class: [ "hoverDefault_lite" ],
+        event: {
+          click: (e) => { blankHref(FRONTHOST + "/faq.php") }
+        },
         style: {
-          display: "inline-flex",
+          display: desktop ? "inline-flex" : "none",
           position: "absolute",
           width: String(faqButtonWidth) + ea,
           height: String(faqButtonHeight) + ea,
