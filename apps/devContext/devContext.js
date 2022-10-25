@@ -113,8 +113,7 @@ DevContext.prototype.launching = async function () {
     // await selfMongo.close();
 
 
-    const reflection = new MongoReflection();
-    await reflection.mongoMigration("local", "backinfo");
+    console.log(this.mother.ipCheck());
 
 
 
