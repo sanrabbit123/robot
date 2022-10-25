@@ -3265,9 +3265,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "최고원",
-    //     designer: "김소영",
-    //     link: "https://drive.google.com/drive/folders/1KDLsOwIzJ7_bUXx6-BzONjICdrB2In1S",
+    //     client: "김연정",
+    //     designer: "한혜원",
+    //     link: "https://drive.google.com/drive/folders/1o_FVNq7RxcN41Rij9GSld_E_GTV42T17",
     //     pay: true
     //   },
     // ]);
@@ -3328,7 +3328,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p219");
+    // await this.getRawPortfolio("p245");
 
 
     // get corePortfolio by pid

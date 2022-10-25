@@ -34,6 +34,7 @@ const SecondRouter = function (slack_bot, MONGOC, MONGOLOCALC) {
     this.address.pythoninfo.host,
     this.address.testinfo.host,
     this.address.officeinfo.ghost.host,
+    "home-liaison.servehttp.com",
     "localhost:3000",
     "192.168.0.14:3000",
   ];
