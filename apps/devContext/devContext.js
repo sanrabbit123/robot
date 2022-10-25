@@ -113,7 +113,7 @@ DevContext.prototype.launching = async function () {
     // await selfMongo.close();
 
 
-    console.log(await this.mother.ipCheck());
+
 
 
 
@@ -3226,8 +3226,8 @@ DevContext.prototype.launching = async function () {
 
 
     // kakao token
-    // const app = new KakaoTalk();
-    // await app.generateToken();
+    const app = new KakaoTalk();
+    await app.generateToken();
 
 
     // kakao test
