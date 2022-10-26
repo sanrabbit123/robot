@@ -1245,31 +1245,6 @@ GraphicBot.prototype.botRouter = function () {
     }
   };
 
-  funcObj.get_print = {
-    link: [ "/print" ],
-    func: async function (req, res) {
-      try {
-        const taskNumber = 0;
-        let latest;
-        await fileSystem(`write`, [ `${tong}/${orderConst}_${String(taskNumber)}_${String((new Date()).valueOf())}`, '' ]);
-        if (instance.task !== null) {
-          clearTimeout(instance.task);
-          instance.task = null;
-        }
-        instance.task = setTimeout(instance.startWork(), 1000);
-        res.set({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-        });
-        res.send({ message: "will do" });
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  };
-
   funcObj.get_cash = {
     link: [ "/cash" ],
     func: async function (req, res) {
