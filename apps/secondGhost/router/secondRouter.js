@@ -713,14 +713,73 @@ SecondRouter.prototype.rou_post_voice = function () {
       if (req.body.text === undefined) {
         throw new Error("invaild post");
       }
-      await requestSystem("https://" + secondHost + "/voice", {
+      requestSystem("https://" + secondHost + "/voice", {
         text: req.body.text,
       }, {
         headers: { "Content-Type": "application/json" }
-      });
+      }).catch((err) => { console.log(err); });
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
       instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_voice): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+SecondRouter.prototype.rou_post_receiptSend = function () {
+  const instance = this;
+  const back = this.back;
+  const { secondHost } = this;
+  const { requestSystem, messageSend, errorLog, messageLog } = this.mother;
+  let obj = {};
+  obj.link = [ "/receiptSend" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.amount === undefined || req.body.phone === undefined) {
+        throw new Error("invaild post");
+      }
+      const { amount, phone } = req.body;
+      requestSystem("https://" + secondHost + "/receiptSend", {
+        amount: req.body.amount,
+        phone: req.body.phone,
+      }, {
+        headers: { "Content-Type": "application/json" }
+      }).catch((err) => { console.log(err); });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_receiptSend): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+SecondRouter.prototype.rou_post_cashReceipt = function () {
+  const instance = this;
+  const back = this.back;
+  const { secondHost } = this;
+  const { requestSystem, messageSend, errorLog, messageLog } = this.mother;
+  let obj = {};
+  obj.link = [ "/cashReceipt" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      requestSystem("https://" + secondHost + "/cash").catch((err) => { console.log(err); });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_cashReceipt): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }

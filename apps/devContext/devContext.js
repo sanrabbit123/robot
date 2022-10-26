@@ -126,7 +126,11 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
+    await requestSystem("https://home-liaison.net/cashReceipt", {
+      text: "안녕하세요!",
+    }, {
+      headers: { "Content-Type": "application/json" }
+    });
 
 
 
