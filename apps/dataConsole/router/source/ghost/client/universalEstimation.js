@@ -1571,7 +1571,8 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
         } else {
 
           if (desktop) {
-            if (/vbank/gi.test(motherMethod) || /card/gi.test(motherMethod)) {
+            // if (/vbank/gi.test(motherMethod) || /card/gi.test(motherMethod)) {
+            if (/vbank/gi.test(motherMethod)) {
 
               for (let name in formValue) {
                 value = String(formValue[name]);
@@ -1585,8 +1586,37 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
               plugin = new Function(`${pluginScript}\n\nINIStdPay.pay(${formId});`);
               plugin();
 
+            } else if (/card/gi.test(motherMethod)) {
+
+              window.removeEventListener("message", GeneralJs.stacks.messageCancelEvent);
+              plugin = new Function(pluginScript);
+              plugin();
+              window.IMP.init("imp71921105");
+              window.IMP.request_pay({
+                pg: "inicis",
+                pay_method: "card",
+                merchant_uid: formValue.oid,
+                name: formValue.goodname,
+                amount: Math.floor(request.amount),
+                buyer_email: instance.client.email,
+                buyer_name: instance.client.name,
+                buyer_tel: instance.client.phone,
+              }, (rsp) => {
+                try {
+                  if (typeof rsp.status === "string" && /paid/gi.test(rsp.status)) {
+                    window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mobilecard=true&mid=" + formValue.mid + "&oid=" + formValue.oid + "&imp_uid=" + rsp.imp_uid + "&merchant_uid=" + formValue.oid + "&imp_success=true";
+                  } else {
+                    window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+                  }
+                } catch (e) {
+                  window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+                }
+              });
+
             }
+
           } else {
+
             if (/vbank/gi.test(motherMethod)) {
               form.setAttribute("method", "post");
               form.setAttribute("accept-charset", "euc-kr");
@@ -1622,15 +1652,18 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
               plugin();
               window.IMP.init("imp71921105");
               window.IMP.request_pay({
-                  merchant_uid: formValue.oid,
-                  name: formValue.goodname,
-                  amount: Math.floor(request.amount),
-                  buyer_email: instance.client.email,
-                  buyer_name: instance.client.name,
-                  buyer_tel: instance.client.phone,
-                  m_redirect_url: window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mobilecard=true&mid=" + formValue.mid + "&oid=" + formValue.oid,
+                pg: "inicis",
+                pay_method: "card",
+                merchant_uid: formValue.oid,
+                name: formValue.goodname,
+                amount: Math.floor(request.amount),
+                buyer_email: instance.client.email,
+                buyer_name: instance.client.name,
+                buyer_tel: instance.client.phone,
+                m_redirect_url: window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mobilecard=true&mid=" + formValue.mid + "&oid=" + formValue.oid,
               }, (rsp) => {});
             }
+
           }
 
         }
@@ -1679,6 +1712,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
       ]
     });
 
+    /*
     createNode({
       mother: greenButtonBase,
       class: [ "hoverDefault_lite" ],
@@ -1702,6 +1736,43 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
       children: [
         {
           text: wordings.button[1],
+          style: {
+            position: "absolute",
+            top: String(greenButtonTextTop) + ea,
+            width: String(100) + '%',
+            left: String(0),
+            fontSize: String(greenButtonFontSize) + ea,
+            fontWeight: String(400),
+            color: colorChip.white,
+            textAlign: "center",
+          }
+        }
+      ]
+    });
+    */
+
+    createNode({
+      mother: greenButtonBase,
+      class: [ "hoverDefault_lite" ],
+      events: [
+        {
+          type: "click",
+          event: paymentEvent("account"),
+        }
+      ],
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: String(greenButtonWidth) + ea,
+        height: String(greenButtonHeight) + ea,
+        background: colorChip.green,
+        textAlign: "center",
+        borderRadius: String(3) + "px",
+        marginLeft: String(greenButtonBetween) + ea,
+      },
+      children: [
+        {
+          text: wordings.button[2],
           style: {
             position: "absolute",
             top: String(greenButtonTextTop) + ea,
@@ -1753,7 +1824,6 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
         }
       ]
     });
-
 
   }
 

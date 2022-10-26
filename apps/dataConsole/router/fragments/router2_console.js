@@ -3532,7 +3532,8 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
           closeUrl = req.body.currentPage + "/tools/trigger";
         }
 
-        if (device === "mobile" && gopaymethod === "Card") {
+        // if (device === "mobile" && gopaymethod === "Card") {
+        if (gopaymethod === "Card") {
           pluginScript = '';
           pluginScript += (await requestSystem("https://code.jquery.com/jquery-1.12.4.min.js")).data;
           pluginScript += "\n";

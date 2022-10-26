@@ -2969,7 +2969,7 @@ DataRouter.prototype.rou_post_sendCertification = function () {
 DataRouter.prototype.rou_post_clientSubmit = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, stringToDate, errorLog, messageSend, messageLog, ghostRequest } = this.mother;
+  const { equalJson, stringToDate, errorLog, messageSend, messageLog, ghostRequest, requestSystem } = this.mother;
   let obj = {};
   obj.link = [ "/clientSubmit" ];
   obj.func = async function (req, res) {
@@ -3154,6 +3154,12 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       message += "\n";
       message += "구글 아이디 : " + googleId;
       await messageSend({ text: message, channel: "#401_consulting" });
+      await requestSystem("https://" + instance.address.testinfo.host + "/marketingMessage", {
+        text: message,
+        channel: "#consulting",
+      }, {
+        headers: { "Content-Type": "application/json" }
+      });
 
       ghostRequest("/print", { cliid, voice: message.split("\n")[0] + " 성함은 " + thisClient.name + "입니다!" }).catch((err) => {
         errorLog("Ghost 서버 문제 생김 (print) : " + err.message).catch((e) => { console.log(e); });
@@ -4248,7 +4254,8 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
           closeUrl = req.body.currentPage + "/tools/trigger";
         }
 
-        if (device === "mobile" && gopaymethod === "Card") {
+        // if (device === "mobile" && gopaymethod === "Card") {
+        if (gopaymethod === "Card") {
           pluginScript = '';
           pluginScript += (await requestSystem("https://code.jquery.com/jquery-1.12.4.min.js")).data;
           pluginScript += "\n";
