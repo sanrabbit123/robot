@@ -126,12 +126,9 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await requestSystem("https://" + host + "/marketingMessage", {
-      text: slackMessage,
-      channel: "#marketing",
-    }, {
-      headers: { "Content-Type": "application/json" }
-    });
+    
+
+
 
 
 

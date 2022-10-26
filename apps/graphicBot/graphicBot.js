@@ -1248,6 +1248,12 @@ GraphicBot.prototype.botRouter = function () {
   funcObj.get_cash = {
     link: [ "/cash" ],
     func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
       try {
         const taskNumber = 2;
         await fileSystem(`write`, [ `${tong}/${orderConst}_${String(taskNumber)}_${String((new Date()).valueOf())}`, "" ]);
@@ -1256,15 +1262,10 @@ GraphicBot.prototype.botRouter = function () {
           instance.task = null;
         }
         instance.task = setTimeout(instance.startWork(), 3000);
-        res.set({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-        });
         res.send({ message: "will do" });
       } catch (e) {
         console.log(e);
+        res.send({ error: e.message });
       }
     }
   };
@@ -1272,6 +1273,12 @@ GraphicBot.prototype.botRouter = function () {
   funcObj.get_blog = {
     link: [ "/blog" ],
     func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
       try {
         const taskNumber = 1;
         await fileSystem(`write`, [ `${tong}/${orderConst}_${String(taskNumber)}_${String((new Date()).valueOf())}`, "" ]);
@@ -1280,15 +1287,10 @@ GraphicBot.prototype.botRouter = function () {
           instance.task = null;
         }
         instance.task = setTimeout(instance.startWork(), 3000);
-        res.set({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-        });
         res.send({ message: "will do" });
       } catch (e) {
         console.log(e);
+        res.send({ error: e.message });
       }
     }
   };
@@ -1296,6 +1298,12 @@ GraphicBot.prototype.botRouter = function () {
   funcObj.post_receiptSend = {
     link: [ "/receiptSend" ],
     func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
       try {
         const taskNumber = 5;
         await fileSystem(`write`, [ `${tong}/${orderConst}_${String(taskNumber)}_${String((new Date()).valueOf())}`, JSON.stringify(req.body) ]);
@@ -1304,15 +1312,33 @@ GraphicBot.prototype.botRouter = function () {
           instance.task = null;
         }
         instance.task = setTimeout(instance.startWork(), 3000);
-        res.set({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-        });
         res.send({ message: "will do" });
       } catch (e) {
         console.log(e);
+        res.send({ error: e.message });
+      }
+    }
+  };
+
+  funcObj.post_voice = {
+    link: [ "/voice" ],
+    func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      try {
+        if (req.body.text === undefined) {
+          throw new Error("invaild post");
+        }
+        const { text } = req.body;
+        shellExec("say", [ text ]).catch((err) => { console.log(err); });
+        res.send({ message: "will do" });
+      } catch (e) {
+        console.log(e);
+        res.send({ error: e.message });
       }
     }
   };
@@ -1320,6 +1346,12 @@ GraphicBot.prototype.botRouter = function () {
   funcObj.post_apartment = {
     link: [ "/apartment" ],
     func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
       try {
         const taskNumber = 3;
         await fileSystem(`write`, [ `${tong}/${orderConst}_${String(taskNumber)}_${String((new Date()).valueOf())}`, JSON.stringify(req.body) ]);
@@ -1328,15 +1360,10 @@ GraphicBot.prototype.botRouter = function () {
           instance.task = null;
         }
         instance.task = setTimeout(instance.startWork(), 3000);
-        res.set({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-        });
         res.send({ message: "will do" });
       } catch (e) {
         console.log(e);
+        res.send({ error: e.message });
       }
     }
   };
