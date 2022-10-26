@@ -27,6 +27,9 @@ const SecondRouter = function (slack_bot, MONGOC, MONGOLOCALC) {
     channel: "#error_log"
   };
 
+  this.secondPort = this.address.officeinfo.ghost.second.port;
+  this.secondHost = this.address.officeinfo.ghost.host + ":" + String(this.secondPort);
+
   this.vaildHost = [
     this.address.frontinfo.host,
     this.address.secondinfo.host,
@@ -691,6 +694,39 @@ SecondRouter.prototype.rou_post_projectDesignerMemo = function () {
   }
   return obj;
 }
+
+SecondRouter.prototype.rou_post_voice = function () {
+  const instance = this;
+  const back = this.back;
+  const { secondHost } = this;
+  const { requestSystem, messageSend, errorLog, messageLog } = this.mother;
+  let obj = {};
+  obj.link = [ "/voice" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.text === undefined) {
+        throw new Error("invaild post");
+      }
+      await requestSystem("https://" + secondHost + "/voice", {
+        text: req.body.text,
+      }, {
+        headers: { "Content-Type": "application/json" }
+      });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_voice): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 
 //ROUTING ----------------------------------------------------------------------
 
