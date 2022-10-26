@@ -8,6 +8,11 @@ module.exports = function (arg, info) {
         id: "iptUserId",
         pwd: "iptUserPw"
       };
+
+      while (document.getElementById(idLoginButtonId) === null) {
+        await sleep(500);
+      }
+      
       document.getElementById(idLoginButtonId).click();
       document.getElementById(inputs.id).value = INFO.find((obj) => { return obj.name === "hometax"; }).user;
       document.getElementById(inputs.pwd).value = INFO.find((obj) => { return obj.name === "hometax"; }).password;
