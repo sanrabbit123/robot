@@ -702,6 +702,36 @@ KakaoTalk.prototype.templateTong = function (target) {
         ];
       },
     },
+    designerConsoleRequestFirstMeeting: {
+      name: "홈스타일링 의뢰서 현장 미팅 수정",
+      id: "TK_4070",
+      needs: [
+        "designer",
+        "client",
+        "date",
+        "day",
+        "hour",
+        "minute",
+        "host",
+        "path",
+        "desid",
+        "proid",
+      ],
+      convert: function (obj) {
+        return [
+          { from: "designer", to: obj.designer },
+          { from: "client", to: obj.client },
+          { from: "date", to: obj.date },
+          { from: "day", to: obj.day },
+          { from: "hour", to: obj.hour },
+          { from: "minute", to: obj.minute },
+          { from: "host", to: obj.host },
+          { from: "path", to: obj.path },
+          { from: "desid", to: obj.desid },
+          { from: "proid", to: obj.proid },
+        ];
+      },
+    },
     photoShareAKeywordDesigner: {
       name: "디자이너 개인 포트폴리오 공유",
       id: "TG_0998",

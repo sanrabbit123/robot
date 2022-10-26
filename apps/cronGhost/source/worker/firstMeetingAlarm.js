@@ -19,85 +19,77 @@ const worker = async function (package) {
     const selfMongo = mongo;
     const today = new Date();
     const dayConst = [ '일', '월', '화', '수', '목', '금', '토' ];
-    const logCollection = "firstMeetingLog";
-    const dayTargets = [
-      [ 5, 7, "firstMeetingWeekAgo" ],
-      [ 1, 2, "firstMeetingDayAgo" ],
-    ]
-    let standardDay0, standardDay1;
     let projects;
-    let clients;
+    let clients, client;
     let clientIndex;
-    let client;
     let meetingDate;
-    let log;
-    let boo;
+    let delta;
+    let todayValue;
+    let rawDelta;
+    let designer;
 
-    for (let [ futureConst0, futureConst1, talkKey ] of dayTargets) {
+    today.setHours(9);
+    todayValue = today.valueOf();
 
-      standardDay0 = new Date();
-      standardDay0.setHours(1);
-      standardDay0.setDate(standardDay0.getDate() + futureConst0);
+    projects = await back.getProjectsByQuery({
+      $and: [
+        { "desid": { $regex: "^d" } },
+        { "process.status": { $regex: "^[대진완홀]" } },
+        { "process.contract.meeting.date": { $gt: new Date() } },
+      ]
+    }, { selfMongo });
 
-      standardDay1 = new Date();
-      standardDay1.setHours(22);
-      standardDay1.setDate(standardDay1.getDate() + futureConst1);
+    if (projects.length > 0) {
 
-      projects = await back.getProjectsByQuery({
-        $and: [
-          { "desid": { $regex: "^d" } },
-          { "process.contract.meeting.date": { $gte: standardDay0 } },
-          { "process.contract.meeting.date": { $lte: standardDay1 } },
-        ]
+      clients = await back.getClientsByQuery({
+        $or: [ ...new Set(projects.toNormal().map((pr) => { return pr.cliid; })) ].map((cliid) => { return { cliid } }),
       }, { selfMongo });
 
-      if (projects.length > 0) {
+      for (let project of projects) {
+        clientIndex = clients.toNormal().findIndex((obj) => { return obj.cliid === project.cliid });
+        if (clientIndex !== -1) {
+          meetingDate = project.process.contract.meeting.date;
+          client = clients.toNormal()[clientIndex];
 
-        clients = await back.getClientsByQuery({
-          $or: [ ...new Set(projects.toNormal().map((pr) => { return pr.cliid; })) ].map((cliid) => { return { cliid } }),
-        }, { selfMongo });
+          rawDelta = (((Math.abs(meetingDate.valueOf() - todayValue) / 1000) / 60) / 60) / 24;
+          delta = Math.floor(rawDelta);
 
-        for (let project of projects) {
-          clientIndex = clients.toNormal().findIndex((obj) => { return obj.cliid === project.cliid });
-          if (clientIndex !== -1) {
+          if (delta === 3 || delta === 7) {
 
-            meetingDate = project.process.contract.meeting.date;
-            client = clients.toNormal()[clientIndex];
-            log = await rethink.rethinkRead(logCollection, { proid: project.proid });
-            boo = true;
-            if (log.length === 0) {
-              await rethink.rethinkCreate(logCollection, { date: new Date(), proid: project.proid, method: [ futureConst0 ] });
-              boo = true;
-            } else {
-              if (log[0].method.includes(futureConst0)) {
-                boo = false;
-              } else {
-                log[0].method.push(futureConst0);
-                await rethink.rethinkUpdate(logCollection, [ { proid: project.proid }, { date: new Date(), method: equalJson(JSON.stringify(log[0].method)) } ]);
-                boo = true;
-              }
-            }
+            designer = await back.getDesignerById(project.desid, { selfMongo });
 
-            if (boo) {
-              await kakao.sendTalk(talkKey, client.name, client.phone, {
-                client: client.name,
-                date: String(meetingDate.getMonth() + 1) + "월 " + String(meetingDate.getDate()) + "일",
-                day: dayConst[meetingDate.getDay()],
-                hour: String(meetingDate.getHours()),
-                minute: String(meetingDate.getMinutes()),
-                host: address.frontinfo.host,
-                path: "meeting",
-                proid: project.proid,
-              });
-              await messageSend(client.name + " 고객님께 현장 미팅 알림을 전송하였어요.", "#400_customer", true);
-            }
+            await kakao.sendTalk("firstMeetingWeekAgo", client.name, client.phone, {
+              client: client.name,
+              date: String(meetingDate.getMonth() + 1) + "월 " + String(meetingDate.getDate()) + "일",
+              day: dayConst[meetingDate.getDay()],
+              hour: String(meetingDate.getHours()),
+              minute: String(meetingDate.getMinutes()),
+              host: address.frontinfo.host,
+              path: "meeting",
+              proid: project.proid,
+            });
+
+            await kakao.sendTalk("designerConsoleRequestFirstMeeting", designer.designer, designer.information.phone, {
+              designer: designer.designer,
+              client: client.name,
+              date: String(meetingDate.getMonth() + 1) + "월 " + String(meetingDate.getDate()) + "일",
+              day: dayConst[meetingDate.getDay()],
+              hour: String(meetingDate.getHours()),
+              minute: String(meetingDate.getMinutes()),
+              host: address.frontinfo.host,
+              path: "request",
+              desid: designer.desid,
+              proid: project.proid,
+            });
+
+            await messageSend(client.name + " 고객님과 " + designer.designer + " 실장님께 현장 미팅 알림을 전송하였어요.", "#400_customer", true);
           }
+
         }
       }
-
     }
 
-    await messageLog("first meeting alarm done");
+    await errorLog("first meeting alarm done");
     return true;
   } catch (e) {
     await errorLog("first meeting alarm error : " + e.message);
