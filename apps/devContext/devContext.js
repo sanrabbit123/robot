@@ -114,13 +114,10 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // 3. 무통장 입금을 그냥 계좌로 바꾸기
-    // 4. universalEstimation iamport로 통일하기
-    // 5. universalEstimation home-liaison.com 으로 옮기기
-    // 6. 알림톡 수정
 
 
 
+    
 
 
 
