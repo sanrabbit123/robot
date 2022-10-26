@@ -12,9 +12,10 @@ if (!isset($_GET["cliid"])) {
 
 $cliid = $_GET["cliid"];
 $client = $general->getClient($cliid);
+$needs = $_GET["needs"];
 
 $name = "universalEstimation";
-$fullLink = $hostLink."/estimation.php?cliid=".$cliid;
+$fullLink = $hostLink."/estimation.php?cliid=".$cliid."&needs=".$needs;
 
 $titleString = "결제 안내 | 홈리에종";
 $descriptionString = $client->name." 고객님의 결제 안내 페이지입니다.";

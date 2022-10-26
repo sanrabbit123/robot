@@ -68,7 +68,7 @@ AiContents.prototype.photo_search = async function () {
     for (let i of targetPathArr) {
       tempName = (i.split('/'))[i.split('/').length - 1];
       // tempObject = await binaryRequest(ADDRESS.s3info.host + i);
-      tempObject = await binaryRequest(ADDRESS.homeinfo.ghost.protocol + "://" + ADDRESS.homeinfo.ghost.host + i);
+      tempObject = await binaryRequest("https://" + ADDRESS.officeinfo.ghost.host + i);
       await fileSystem(`writeBinary`, [ this.options.photo_dir + "/" + tempName, tempObject ]);
       console.log(`download success`);
     }
@@ -609,7 +609,7 @@ AiContents.prototype.to_google = async function (pid) {
     const docs = new GoogleDocs();
     const drive = new GoogleDrive();
     const today = new Date();
-    const server = this.address.homeinfo.ghost.protocol + "://" + this.address.homeinfo.ghost.host;
+    const server = "https://" + this.address.officeinfo.ghost.host;
     const portfolioLink = "https://" + this.address.frontinfo.host + "/portdetail.php?pid=";
     const reviewLink = "https://" + this.address.frontinfo.host + "/revdetail.php?pid=";
     const makeLink = (id) => { return `https://docs.google.com/document/d/${id}/edit?usp=sharing`; };
