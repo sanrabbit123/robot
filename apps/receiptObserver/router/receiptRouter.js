@@ -1147,16 +1147,20 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
             headers: { "Content-Type": "application/json" }
           }).then(() => {
             errorLog("현금 영수증 관련 핸드폰 번호 감지 => " + phone).catch((e) => { console.log(e); });
-            // if (/^010/.test(phone)) {
-            //   return requestSystem(`https://${instance.address.backinfo.host}:${String(instance.address.backinfo.graphic.port[0])}/receiptSend`, {
-            //     amount: String(amount),
-            //     phone,
-            //   }, { headers: { "Content-Type": "application/json" } });
-            // } else {
+            if (/^010/.test(phone)) {
+              return requestSystem(`https://${instance.address.secondinfo.host}/receiptSend`, {
+                amount: String(amount),
+                phone,
+              }, { headers: { "Content-Type": "application/json" } });
+            } else {
               return emptyPromise();
-            // }
+            }
           }).then((promiseData) => {
-            return messageSend(`${name} 고객님의 현금 영수증을 발행해주세요!\n번호 : ${phone}\n가격 : ${autoComma(amount)}원`, "#700_operation", false);
+            if (/^010/.test(phone)) {
+              return messageSend(`${name} 고객님의 현금 영수증을 발행하였습니다!\n번호 : ${phone}\n가격 : ${autoComma(amount)}원`, "#700_operation", false);
+            } else {
+              return messageSend(`${name} 고객님의 세금계산서를 발행해주세요!\n번호 : ${phone}\n가격 : ${autoComma(amount)}원`, "#700_operation", false);
+            }
           }).catch((err) => {
             console.log(err);
           });
