@@ -1461,19 +1461,19 @@ DevContext.prototype.launching = async function () {
 
 
     // push client
-    const cliid = "c2208_aa13s";
-    const kakao = new KakaoTalk();
-    await kakao.ready();
-    const client = await back.getClientById(cliid, { selfMongo: this.MONGOC });
-    if (client.requests[0].analytics.response.status.value === "응대중" && client.requests[0].analytics.response.action.value === "1차 응대 예정") {
-      await kakao.sendTalk("pushClient", client.name, client.phone, {
-        client: client.name,
-        host: address.frontinfo.host,
-        path: "curation",
-        cliid: cliid,
-      });
-      await messageSend({ text: client.name + " 고객님께 신청 완료하라고 독촉했어요.", channel: "#404_curation", voice: true });
-    }
+    // const cliid = "c2208_aa13s";
+    // const kakao = new KakaoTalk();
+    // await kakao.ready();
+    // const client = await back.getClientById(cliid, { selfMongo: this.MONGOC });
+    // if (client.requests[0].analytics.response.status.value === "응대중" && client.requests[0].analytics.response.action.value === "1차 응대 예정") {
+    //   await kakao.sendTalk("pushClient", client.name, client.phone, {
+    //     client: client.name,
+    //     host: address.frontinfo.host,
+    //     path: "curation",
+    //     cliid: cliid,
+    //   });
+    //   await messageSend({ text: client.name + " 고객님께 신청 완료하라고 독촉했어요.", channel: "#404_curation", voice: true });
+    // }
 
 
 
