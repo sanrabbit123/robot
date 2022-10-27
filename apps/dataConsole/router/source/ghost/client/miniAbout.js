@@ -4259,20 +4259,26 @@ MiniAboutJs.prototype.launching = async function (loading) {
       if (response.data !== undefined && response.rsp !== undefined) {
         const { data: map, rsp } = response;
 
-        map.rsp = JSON.parse(JSON.stringify(rsp));
-        const { useid } = await ajaxJson({ map }, "/userSubmit");
+        if (typeof rsp.status === "string" && /paid/gi.test(rsp.status)) {
+          map.rsp = JSON.parse(JSON.stringify(rsp));
+          const { useid } = await ajaxJson({ map }, "/userSubmit");
+          homeliaisonAnalytics({
+            page: instance.pageName,
+            standard: instance.firstPageViewTime,
+            action: "miniSubmit",
+            data: { useid },
+          }).then(() => {
+            selfHref(BACKHOST + "/middle/miniGuide?useid=" + useid);
+          }).catch((err) => {
+            selfHref(BACKHOST + "/middle/miniGuide?useid=" + useid);
+          });
 
-        homeliaisonAnalytics({
-          page: instance.pageName,
-          standard: instance.firstPageViewTime,
-          action: "miniSubmit",
-          data: { useid },
-        }).then(() => {
-          selfHref(BACKHOST + "/middle/miniGuide?useid=" + useid);
-        }).catch((err) => {
-          selfHref(BACKHOST + "/middle/miniGuide?useid=" + useid);
-        });
+        } else {
+          window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+        }
 
+      } else {
+        window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
       }
 
       grayLoadingIcon.remove();

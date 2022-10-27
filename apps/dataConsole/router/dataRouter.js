@@ -4353,8 +4353,8 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
         const convertingData = {
           goodName: paymentData.name,
           goodsName: paymentData.name,
-          resultCode: (paymentData.status.trim() === "paid" ? "0000" : "4000"),
-          resultMsg: (paymentData.status.trim() === "paid" ? "성공적으로 처리 하였습니다." : "결제 실패 : " + String(paymentData.fail_reason)),
+          resultCode: ((typeof paymentData.status === "string" && paymentData.status.trim() === "paid") ? "0000" : "4000"),
+          resultMsg: ((typeof paymentData.status === "string" && paymentData.status.trim() === "paid") ? "성공적으로 처리 하였습니다." : "결제 실패 : " + String(paymentData.fail_reason)),
           tid: paymentData.pg_tid,
           payMethod: "CARD",
           applDate: `${String(today.getFullYear())}${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`,
@@ -5469,7 +5469,7 @@ DataRouter.prototype.rou_post_userSubmit = function () {
       }
       updateQuery["request.payment.amount.vat"] = Math.floor(updateQuery["request.payment.amount.consumer"] / 11);
       updateQuery["request.payment.amount.supply"] = Math.floor(updateQuery["request.payment.amount.consumer"] - updateQuery["request.payment.amount.vat"]);
-      updateQuery["request.payment.info.method"] = "카드(" + rsp.card_name.replace(/카드/gi, '') + ")";
+      updateQuery["request.payment.info.method"] = "카드(" + (typeof rsp.card_name === "string" ? rsp.card_name.replace(/카드/gi, '') : "알 수 없음") + ")";
       updateQuery["request.payment.info.proof"] = "이니시스";
       updateQuery["request.payment.info.to"] = name;
       updateQuery["request.payment.info.data"] = [ rsp ];

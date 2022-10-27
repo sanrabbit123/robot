@@ -3629,8 +3629,8 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
         const convertingData = {
           goodName: paymentData.name,
           goodsName: paymentData.name,
-          resultCode: (paymentData.status.trim() === "paid" ? "0000" : "4000"),
-          resultMsg: (paymentData.status.trim() === "paid" ? "성공적으로 처리 하였습니다." : "결제 실패 : " + String(paymentData.fail_reason)),
+          resultCode: ((typeof paymentData.status === "string" && paymentData.status.trim() === "paid") ? "0000" : "4000"),
+          resultMsg: ((typeof paymentData.status === "string" && paymentData.status.trim() === "paid") ? "성공적으로 처리 하였습니다." : "결제 실패 : " + String(paymentData.fail_reason)),
           tid: paymentData.pg_tid,
           payMethod: "CARD",
           applDate: `${String(today.getFullYear())}${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`,

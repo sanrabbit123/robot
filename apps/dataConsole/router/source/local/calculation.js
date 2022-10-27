@@ -28,12 +28,34 @@ CalculationJs.prototype.baseMaker = function () {
   let buttonWidth;
   let num;
   let buttonBetween;
-  let idWidth, nameWidth, phoneWidth, requestWidth, responseWidth;
+  let nameWidth, designerWidth, idWidth, requestWidth, responseWidth;
   let contentsLoad;
   let requestTable, responseTable;
   let requestBlock, responseBlock;
+  let tableBlockHeight;
+  let tableBlockFactorWidth;
+  let tableBetween;
+  let firstMargin;
+  let tableSize, tableWeight, tableBoldWeight;
+  let tableTextTop;
+  let requestColumns, responseColumns;
 
-  console.log(projects);
+  requestColumns = [
+    "구분",
+    "소비자가",
+    "확정가",
+    "입금일",
+    "환불액",
+    "환불일",
+  ];
+  responseColumns = [
+    "구분",
+    "총액",
+    "미지급액",
+    "지급액",
+    "지급일",
+    "환수액",
+  ];
 
   outerMargin = 30;
   innerPadding = 20;
@@ -47,23 +69,25 @@ CalculationJs.prototype.baseMaker = function () {
   barWidth = 4;
   barMargin = 6;
 
-  minimumBetween = 19;
+  firstMargin = 20;
+  minimumBetween = 12;
 
   alarmCircleRadius = 8;
 
-  idWidth = 88;
-  nameWidth = 60;
-  phoneWidth = 122;
-  requestWidth = 600;
-  responseWidth = 600;
+  tableBlockHeight = 34;
+  tableBlockFactorWidth = 110;
+  tableBetween = 20;
 
-  buttonTextTop = isMac() ? -1 : 0;
-  buttonSize = 12;
-  buttonWeight = 700;
-  buttonHeight = 28;
-  buttongTop = 8;
-  buttonWidth = 90;
-  buttonBetween = 6;
+  nameWidth = 50;
+  designerWidth = 60;
+  idWidth = 82;
+  requestWidth = tableBlockFactorWidth * requestColumns.length;
+  responseWidth = tableBlockFactorWidth * responseColumns.length;
+
+  tableSize = 13;
+  tableWeight = 400;
+  tableBoldWeight = 700;
+  tableTextTop = (isMac() ? -2 : 0);
 
   contentsLoad = () => {};
 
@@ -173,26 +197,12 @@ CalculationJs.prototype.baseMaker = function () {
         fontWeight: String(700),
         color: colorChip.white,
         top: String(textTop) + ea,
-        marginLeft: String(minimumBetween) + ea,
+        marginLeft: String(firstMargin) + ea,
       }
     });
     createNode({
       mother: targetTong,
-      text: '|',
-      style: {
-        width: String(barWidth) + ea,
-        display: "inline-block",
-        position: "relative",
-        fontSize: String(textSize) + ea,
-        fontWeight: String(700),
-        color: colorChip.gray4,
-        top: String(textTop) + ea,
-        marginLeft: String(barMargin) + ea,
-      }
-    });
-    createNode({
-      mother: targetTong,
-      text: "이름",
+      text: "고객",
       style: {
         width: String(nameWidth) + ea,
         display: "inline-block",
@@ -206,9 +216,9 @@ CalculationJs.prototype.baseMaker = function () {
     });
     createNode({
       mother: targetTong,
-      text: "연락처",
+      text: "디자이너",
       style: {
-        width: String(phoneWidth) + ea,
+        width: String(designerWidth) + ea,
         display: "inline-block",
         position: "relative",
         fontSize: String(textSize) + ea,
@@ -243,10 +253,9 @@ CalculationJs.prototype.baseMaker = function () {
         fontWeight: String(700),
         color: colorChip.white,
         top: String(textTop) + ea,
-        marginLeft: String(minimumBetween) + ea,
+        marginLeft: String(tableBetween) + ea,
       }
     });
-
 
     for (let project of projects) {
 
@@ -306,29 +315,15 @@ CalculationJs.prototype.baseMaker = function () {
           verticalAlign: "top",
           fontSize: String(textSize) + ea,
           fontWeight: String(400),
-          color: colorChip.black,
+          color: colorChip.deactive,
           top: String(textTop) + ea,
-          marginLeft: String(minimumBetween) + ea,
+          marginLeft: String(firstMargin) + ea,
         }
       });
+
       createNode({
         mother: targetTong,
-        text: '|',
-        style: {
-          width: String(barWidth) + ea,
-          display: "inline-block",
-          position: "relative",
-          verticalAlign: "top",
-          fontSize: String(textSize) + ea,
-          fontWeight: String(400),
-          color: colorChip.gray4,
-          top: String(textTop) + ea,
-          marginLeft: String(barMargin) + ea,
-        }
-      });
-      createNode({
-        mother: targetTong,
-        text: project.name.slice(0, 3),
+        text: project.name.slice(0, 3) + "<b% C%b>",
         style: {
           width: String(nameWidth) + ea,
           display: "inline-block",
@@ -339,34 +334,43 @@ CalculationJs.prototype.baseMaker = function () {
           color: colorChip.black,
           top: String(textTop) + ea,
           marginLeft: String(minimumBetween) + ea,
+        },
+        bold: {
+          fontSize: String(textSize) + ea,
+          fontWeight: String(300),
+          color: colorChip.deactive,
         }
       });
       createNode({
         mother: targetTong,
-        text: project.phone,
+        text: project.designer.designer.slice(0, 3) + "<b% D%b>",
         style: {
-          width: String(phoneWidth) + ea,
+          width: String(designerWidth) + ea,
           display: "inline-block",
-          verticalAlign: "top",
           position: "relative",
+          verticalAlign: "top",
           fontSize: String(textSize) + ea,
-          fontWeight: String(400),
+          fontWeight: String(700),
           color: colorChip.black,
           top: String(textTop) + ea,
           marginLeft: String(minimumBetween) + ea,
+        },
+        bold: {
+          fontSize: String(textSize) + ea,
+          fontWeight: String(300),
+          color: colorChip.deactive,
         }
       });
+
+      // request
 
       requestTable = createNode({
         mother: targetTong,
         style: {
-          width: String(600) + ea,
+          width: String(requestWidth) + ea,
           display: "inline-block",
           verticalAlign: "top",
           position: "relative",
-          fontSize: String(textSize) + ea,
-          fontWeight: String(400),
-          color: colorChip.black,
           marginTop: String(textTop) + ea,
           marginLeft: String(minimumBetween) + ea,
           marginBottom: String(textTop) + ea,
@@ -382,68 +386,103 @@ CalculationJs.prototype.baseMaker = function () {
           display: "block",
           position: "relative",
           width: withOut(0, ea),
-          height: String(36) + ea,
+          height: String(tableBlockHeight) + ea,
           overflow: "hidden",
           borderRadius: String(5) + "px",
         }
       });
-
-      createNode({
-        mother: requestBlock,
-        style: {
-          display: "inline-flex",
-          justifyContent: "center",
-          alignItems: "center",
-          position: "relative",
-          background: colorChip.gray1,
-          height: withOut(0, ea),
-          width: String(80) + ea,
-          borderRight: "1px solid " + colorChip.gray3,
-        },
-        children: [
-          {
-            text: "구분",
-            style: {
-              display: "inline-block",
-              position: "relative",
-              fontSize: String(13) + ea,
-              fontWeight: String(700),
-              color: colorChip.black,
-              top: String(-2) + ea,
+      for (let i = 0; i < requestColumns.length; i++) {
+        createNode({
+          mother: requestBlock,
+          style: {
+            display: "inline-flex",
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+            background: colorChip.gray1,
+            height: withOut(0, ea),
+            width: i === requestColumns.length - 1 ? String(tableBlockFactorWidth) + ea : String(tableBlockFactorWidth - 1) + ea,
+            borderRight: i === requestColumns.length - 1 ?  "" : "1px solid " + colorChip.gray3,
+          },
+          children: [
+            {
+              text: requestColumns[i],
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(tableSize) + ea,
+                fontWeight: String(tableBoldWeight),
+                color: colorChip.black,
+                top: String(tableTextTop) + ea,
+              }
             }
-          }
-        ]
+          ]
+        });
+      }
+
+      
+
+
+
+
+
+      // response
+
+      responseTable = createNode({
+        mother: targetTong,
+        style: {
+          width: String(responseWidth) + ea,
+          display: "inline-block",
+          verticalAlign: "top",
+          position: "relative",
+          marginTop: String(textTop) + ea,
+          marginLeft: String(tableBetween) + ea,
+          marginBottom: String(textTop) + ea,
+          borderRadius: String(5) + "px",
+          border: "1px solid " + colorChip.gray3,
+          overflow: "hidden",
+        }
       });
 
-      createNode({
-        mother: requestBlock,
+      responseBlock = createNode({
+        mother: responseTable,
         style: {
-          display: "inline-flex",
-          justifyContent: "center",
-          alignItems: "center",
+          display: "block",
           position: "relative",
-          background: colorChip.gray1,
-          height: withOut(0, ea),
-          width: String(80) + ea,
-        },
-        children: [
-          {
-            text: "구분",
-            style: {
-              display: "inline-block",
-              position: "relative",
-              fontSize: String(13) + ea,
-              fontWeight: String(700),
-              color: colorChip.black,
-              top: String(-2) + ea,
-            }
-          }
-        ]
+          width: withOut(0, ea),
+          height: String(tableBlockHeight) + ea,
+          overflow: "hidden",
+          borderRadius: String(5) + "px",
+        }
       });
-
-
-
-
+      for (let i = 0; i < responseColumns.length; i++) {
+        createNode({
+          mother: responseBlock,
+          style: {
+            display: "inline-flex",
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+            background: colorChip.gray1,
+            height: withOut(0, ea),
+            width: i === responseColumns.length - 1 ? String(tableBlockFactorWidth) + ea : String(tableBlockFactorWidth - 1) + ea,
+            borderRight: i === responseColumns.length - 1 ?  "" : "1px solid " + colorChip.gray3,
+          },
+          children: [
+            {
+              text: responseColumns[i],
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(tableSize) + ea,
+                fontWeight: String(tableBoldWeight),
+                color: colorChip.black,
+                top: String(tableTextTop) + ea,
+              }
+            }
+          ]
+        });
+      }
 
     }
 
