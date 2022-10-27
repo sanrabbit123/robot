@@ -424,6 +424,8 @@ DataRouter.prototype.rou_get_First = function () {
             target = "user";
           } else if (/^ana/i.test(req.params.id)) {
             target = "analytics";
+          } else if (/^ca/i.test(req.params.id)) {
+            target = "calculation";
           } else {
             target = "flow";
           }

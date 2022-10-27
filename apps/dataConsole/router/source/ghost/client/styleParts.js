@@ -3656,6 +3656,10 @@ StylePartsJs.prototype.launching = async function (loading) {
     const getObj = returnGet();
     let response;
 
+    window.addEventListener("resize", (e) => {
+      window.location.reload();
+    });
+
     await this.mother.ghostClientLaunching({
       mode: "ghost",
       name: "styleParts",

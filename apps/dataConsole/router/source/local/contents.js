@@ -978,7 +978,7 @@ ContentsJs.prototype.launching = async function () {
 
     window.addEventListener("resize", (e) => {
       window.location.reload();
-    })
+    });
     this.searchInput.addEventListener("keypress", function (e) {
       if (e.key === "Enter") {
         if (this.value.trim() === '') {
