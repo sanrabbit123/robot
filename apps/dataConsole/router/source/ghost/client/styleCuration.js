@@ -723,7 +723,7 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
             half: false,
             required: false,
             question: [
-              "가구, 소품의 <b%새로운 제품 구매와 기존 제품 재사용의%b>",
+              "가구, 소품의 <b%새로운 구매와 기존 제품 재사용의%b>",
               "<b%비율%b>을 알려주세요!"
             ],
             items: [
@@ -744,6 +744,89 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
                 return {
                   history: updateQuery,
                   core: null
+                };
+              } else {
+                return { history: null, core: null };
+              }
+            }
+          }
+        ]
+      });
+
+      this.wordings.center.push({
+        name: "budget",
+        title: "예산",
+        callback: "blockCheck",
+        children: [
+          {
+            name: "budgetReady",
+            type: "budget",
+            half: false,
+            required: false,
+            question: [
+              "인테리어에 사용하실 <b%전체 예산을 알려주세요!%b>",
+              "(스타일링, 시공 포함 / 가전 예산은 제외)"
+            ],
+            items: [
+              desktop ? "1,000만원 이하" : "1천만원",
+              desktop ? "3,000만원" : "3천만원",
+              desktop ? "5,000만원" : "5천만원",
+              desktop ? "7,000만원" : "7천만원",
+              desktop ? "1억원 이상" : "1억원",
+            ],
+            total: 100,
+            ea: '%',
+            value: function (request, history, self) {
+              return (Number(request.request.budget.replace(/[^0-9]/gi, '')) === 1 ? 10000 : Number(request.request.budget.replace(/[^0-9]/gi, ''))) / 100;
+            },
+            update: function (value, siblings, client) {
+              if (value !== null) {
+                const menu = [ '500만원 이하', '1,000만원', '1,500만원', '2,000만원', '2,500만원', '3,000만원', '3,500만원', '4,000만원', '4,500만원', '5,000만원 이상', '6,000만원 이상', '7,000만원 이상', '8,000만원 이상', '9,000만원 이상', '1억원 이상', '1억 5,000만원 이상', '2억원 이상', '3억원 이상', '5억원 이상', '10억원 이상', ];
+                const man = 10000;
+                const standardValue = 10000 * man;
+                let updateQuery;
+                let thisValue;
+                let finalValue;
+
+                thisValue = standardValue * (value.value / 100);
+                finalValue = menu[0];
+
+                if (thisValue <= 1200 * man) {
+                  finalValue = menu[1];
+                } else if (thisValue > 1200 * man && thisValue <= 1700 * man) {
+                  finalValue = menu[2];
+                } else if (thisValue > 1700 * man && thisValue <= 2200 * man) {
+                  finalValue = menu[3];
+                } else if (thisValue > 2200 * man && thisValue <= 2700 * man) {
+                  finalValue = menu[4];
+                } else if (thisValue > 2700 * man && thisValue <= 3200 * man) {
+                  finalValue = menu[5];
+                } else if (thisValue > 3200 * man && thisValue <= 3700 * man) {
+                  finalValue = menu[6];
+                } else if (thisValue > 3700 * man && thisValue <= 4200 * man) {
+                  finalValue = menu[7];
+                } else if (thisValue > 4200 * man && thisValue <= 4700 * man) {
+                  finalValue = menu[8];
+                } else if (thisValue > 4700 * man && thisValue <= 5700 * man) {
+                  finalValue = menu[9];
+                } else if (thisValue > 5700 * man && thisValue <= 6700 * man) {
+                  finalValue = menu[10];
+                } else if (thisValue > 6700 * man && thisValue <= 7700 * man) {
+                  finalValue = menu[11];
+                } else if (thisValue > 7700 * man && thisValue <= 8700 * man) {
+                  finalValue = menu[12];
+                } else if (thisValue > 8700 * man && thisValue <= 9700 * man) {
+                  finalValue = menu[13];
+                } else {
+                  finalValue = menu[14];
+                }
+
+                updateQuery = {};
+                updateQuery["requests.0.request.budget"] = finalValue;
+
+                return {
+                  history: null,
+                  core: updateQuery
                 };
               } else {
                 return { history: null, core: null };
@@ -1610,6 +1693,8 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
   const { client, ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
   const { createNode, createNodes, withOut, colorChip, isMac, dateToString, stringToDate, ajaxJson, returnGet } = GeneralJs;
   const token = '_';
   const listToken = '__list__';
@@ -1705,7 +1790,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
   }
 
   barTop = <%% 28, 28, 28, 28, 1.5 %%>;
-  barHeight = <%% 4, 4, 4, 4, 2 %%>;
+  barHeight = <%% 9, 9, 9, 9, 2 %%>;
   barTextTop = <%% 3, 3, 3, 3, 4.8 %%>;
   if (desktop) {
     if (!isMac()) {
@@ -1716,7 +1801,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
 
   barMotherHeight = <%% 49, 49, 49, 49, 5 %%>;
 
-  barButtonTop = <%% 24, 24, 24, 24, 1 %%>;
+  barButtonTop = <%% 26, 26, 26, 26, 1 %%>;
   barButtonRadius = <%% 5.5, 5.5, 5.5, 5.5, 1.3 %%>;
 
   listAreaPaddingTop = <%% 13, 13, 13, 13, 1 %%>;
@@ -2224,6 +2309,219 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
       }
       instance.firstClick = false;
 
+    } else if (obj.type === "budget") {
+
+      if (mobile) {
+        answerArea.style.marginLeft = String(qWidth) + ea;
+        answerArea.style.width = withOut(qWidth, ea);
+        answerArea.style.marginBottom = String(10) + ea;
+      }
+
+      answerArea.style.textAlign = "left";
+      answerArea.style.height = String(barMotherHeight) + ea;
+      answerArea.style.cursor = "pointer";
+
+      bar = createNode({
+        mother: answerArea,
+        style: {
+          position: "absolute",
+          top: String(barTop) + ea,
+          height: String(barHeight) + ea,
+          borderRadius: String(barHeight + 1) + ea,
+          background: colorChip.gray3,
+          width: String(100) + '%',
+          left: String(0) + ea,
+        }
+      });
+      barText0 = createNode({
+        mother: answerArea,
+        text: obj.items[0],
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(standardSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.black,
+          top: String(barTextTop) + ea,
+        }
+      });
+      if (!media[3]) {
+        createNode({
+          mother: answerArea,
+          text: obj.items[1],
+          style: {
+            position: "absolute",
+            fontSize: String(standardSize) + ea,
+            fontWeight: String(700),
+            color: colorChip.black,
+            left: String(<&& 192 | 122 | 100 | 57 | 16.5 &&>) + ea,
+            top: String(barTextTop) + ea,
+          }
+        });
+      }
+      createNode({
+        mother: answerArea,
+        text: obj.items[2],
+        style: {
+          position: "absolute",
+          fontSize: String(standardSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.black,
+          left: String(<&& 378 | 236 | 192 | 130 | 33 &&>) + ea,
+          top: String(barTextTop) + ea,
+        }
+      });
+      if (!media[3]) {
+        createNode({
+          mother: answerArea,
+          text: obj.items[3],
+          style: {
+            position: "absolute",
+            fontSize: String(standardSize) + ea,
+            fontWeight: String(700),
+            color: colorChip.black,
+            left: String(<&& 570 | 360 | 282 | 172 | 50 &&>) + ea,
+            top: String(barTextTop) + ea,
+          }
+        });
+      }
+      barText1 = createNode({
+        mother: answerArea,
+        text: obj.items[4],
+        style: {
+          position: "absolute",
+          fontSize: String(standardSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.black,
+          right: String(0) + ea,
+          top: String(barTextTop) + ea,
+        }
+      });
+
+      if (desktop) {
+        bar.style.width = withOut(0, "px");
+        barLeft = 0;
+        bar.style.left = String(barLeft) + "px";
+      } else {
+        barLeft = 0;
+      }
+
+      barBox = createNode({
+        mother: answerArea,
+        style: {
+          position: "absolute",
+          left: String(barLeft) + ea,
+          top: String(0) + ea,
+          width: String(50) + '%',
+          height: String(100) + '%',
+          transition: "all 0s ease",
+        }
+      });
+      if (desktop) {
+        barBox.style.width = String(barBox.getBoundingClientRect().width) + "px";
+      }
+
+      barBox.setAttribute("width", String(barBox.getBoundingClientRect().width));
+      barBox.setAttribute("entire", String(bar.getBoundingClientRect().width));
+      barBox.setAttribute("value", String(barEntireValue / 2));
+      barBox.setAttribute("x", name);
+      barBox.setAttribute("y", String(y));
+
+      barClone = bar.cloneNode(true);
+      barClone.style.width = String(100) + '%';
+      barClone.style.left = String(0) + ea;
+      barClone.style.background = colorChip.black;
+      barBox.appendChild(barClone);
+
+      barButton = createNode({
+        mother: barBox,
+        style: {
+          position: "absolute",
+          top: String(barButtonTop) + ea,
+          right: String(-1 * barButtonRadius) + ea,
+          width: String(barButtonRadius * 2) + ea,
+          height: String(barButtonRadius * 2) + ea,
+          borderRadius: String(barButtonRadius + 1) + ea,
+          background: colorChip.white,
+          border: "1px solid " + colorChip.gray4,
+          cursor: "pointer",
+        }
+      });
+
+      thisName = name + token + String(y);
+      GeneralJs.stacks[thisName + "_isDown"] = false;
+      GeneralJs.stacks[thisName + "_startX"] = false;
+      GeneralJs.stacks[thisName + "_scrollLeft"] = false;
+      barEndEvent = function (e) {
+        GeneralJs.stacks[thisName + "_isDown"] = false;
+        answerArea.style.cursor = "pointer";
+        barBox.style.cursor = "pointer";
+        barButton.style.cursor = "pointer";
+
+        const x = barBox.getAttribute('x');
+        const y = Number(barBox.getAttribute('y'));
+        let thisValue, oppositeValue;
+
+        thisValue = Number(barBox.getAttribute("value"));
+        oppositeValue = barEntireValue - thisValue;
+
+        instance.values[x][y].value = {
+          entire: barEntireValue,
+          value: thisValue,
+          opposite: oppositeValue,
+          values: [ thisValue, oppositeValue ]
+        };
+
+        ajaxJson({
+          page: "styleCuration",
+          mode: "update",
+          cliid: instance.client.cliid,
+          update: { x, y, value: instance.values[x][y].value },
+          updateQuery: obj.update(instance.values[x][y].value, instance.values, instance.client)
+        }, BACKHOST + "/ghostClient_updateAnalytics").catch((err) => {
+          console.log(err);
+        });
+      }
+
+      createNode({
+        mother: answerArea,
+        events: [
+          {
+            type: "click",
+            event: function (e) {
+              const x = e.x;
+              const { left, width } = bar.getBoundingClientRect();
+              let percentage;
+              percentage = ((x - left) / width) * 100;
+              barBox.style.transition = "all 0.3s ease";
+              barBox.style.width = String(percentage) + '%';
+              barBox.setAttribute("value", String(percentage));
+              barEndEvent.call(this, e);
+            }
+          }
+        ],
+        style: {
+          position: "absolute",
+          top: String(0) + ea,
+          height: String(barHeight * (desktop ? 7 : 4)) + ea,
+          borderRadius: String(barHeight + 1) + ea,
+          background: "transparent",
+          width: String(100) + '%',
+          left: String(0) + ea,
+        }
+      });
+
+      if (updateValue !== null) {
+        if (desktop) {
+          barBox.style.width = "calc(100% * " + String(updateValue / 100) + ")";
+        } else {
+          barBox.style.width = String(updateValue) + '%';
+        }
+        barBox.setAttribute("width", String(barBox.getBoundingClientRect().width));
+        barBox.setAttribute("value", String(updateValue));
+        barEndEvent({});
+      }
+
     } else if (obj.type === "opposite") {
 
       if (mobile) {
@@ -2379,71 +2677,36 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
         });
       }
 
-      if (desktop) {
-        barButton.addEventListener("mousedown", function (e) {
-          GeneralJs.stacks[thisName + "_isDown"] = true;
-          GeneralJs.stacks[thisName + "_startX"] = e.pageX - this.offsetLeft;
-          GeneralJs.stacks[thisName + "_scrollLeft"] = this.scrollLeft;
-          answerArea.style.cursor = "grabbing";
-          barBox.style.cursor = "grabbing";
-          barButton.style.cursor = "grabbing";
-        });
-        answerArea.addEventListener("mouseleave", barEndEvent);
-        answerArea.addEventListener("mouseup", barEndEvent);
-        answerArea.addEventListener("mousemove", function (e) {
-          let x, walk, newWidth;
-          if (!GeneralJs.stacks[thisName + "_isDown"]) {
-            return;
-          }
-          e.preventDefault();
-          x = e.pageX - barButton.offsetLeft;
-          walk = x - GeneralJs.stacks[thisName + "_startX"];
-
-          if (Number(barBox.getAttribute("width")) + walk > 0) {
-            newWidth = Number(barBox.getAttribute("width")) + walk;
-            barBox.style.width = String(newWidth) + "px";
-            barBox.setAttribute("width", String(newWidth));
-            barBox.setAttribute("value", String(Math.round(Math.round((newWidth / Number(barBox.getAttribute("entire"))) * 10000) / 100)));
-          }
-
-          answerArea.style.cursor = "grabbing";
-          barBox.style.cursor = "grabbing";
-          barButton.style.cursor = "grabbing";
-        });
-      }
-      if (mobile) {
-        createNode({
-          mother: answerArea,
-          events: [
-            {
-              type: "click",
-              event: function (e) {
-                const x = e.x;
-                const { left, width } = bar.getBoundingClientRect();
-                let percentage;
-                percentage = ((x - left) / width) * 100;
-                barBox.style.transition = "all 0.3s ease";
-                barBox.style.width = String(percentage) + '%';
-                barBox.setAttribute("value", String(percentage));
-                barEndEvent.call(this, e);
-              }
+      createNode({
+        mother: answerArea,
+        events: [
+          {
+            type: "click",
+            event: function (e) {
+              const x = e.x;
+              const { left, width } = bar.getBoundingClientRect();
+              let percentage;
+              percentage = ((x - left) / width) * 100;
+              barBox.style.transition = "all 0.3s ease";
+              barBox.style.width = String(percentage) + '%';
+              barBox.setAttribute("value", String(percentage));
+              barEndEvent.call(this, e);
             }
-          ],
-          style: {
-            position: "absolute",
-            top: String(barTop) + ea,
-            height: String(barHeight) + ea,
-            borderRadius: String(barHeight + 1) + ea,
-            background: "transparent",
-            width: String(100) + '%',
-            left: String(0) + ea,
           }
-        });
-      }
+        ],
+        style: {
+          position: "absolute",
+          top: String(0) + ea,
+          height: String(barHeight * (desktop ? 7 : 4)) + ea,
+          borderRadius: String(barHeight + 1) + ea,
+          background: "transparent",
+          width: String(100) + '%',
+          left: String(0) + ea,
+        }
+      });
 
       if (updateValue !== null) {
         if (desktop) {
-          // barBox.style.width = "calc(calc(100% - " + String(barText0.getBoundingClientRect().width + barText1.getBoundingClientRect().width + (barTextMargin * 2)) + "px" + ") * " + String(updateValue / 100) + ")";
           barBox.style.width = "calc(100% * " + String(updateValue / 100) + ")";
         } else {
           barBox.style.width = String(updateValue) + '%';
@@ -2452,6 +2715,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
         barBox.setAttribute("value", String(updateValue));
         barEndEvent({});
       }
+
 
     } else if (obj.type === "list") {
 
