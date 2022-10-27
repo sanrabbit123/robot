@@ -17,7 +17,7 @@ const worker = async function (package) {
   const { requestSystem, messageLog, errorLog, dateToString, stringToDate, equalJson } = mother;
   try {
     const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
-    const selfPythonMongo = mongo;
+    const selfPythonMongo = mongopython;
     const selfMongo = mongo;
 
     const clients = (await back.getClientsByQuery({}, { selfMongo })).toNormal();

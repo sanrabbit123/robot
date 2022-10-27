@@ -644,6 +644,8 @@ CalculationJs.prototype.baseMaker = function () {
       }
     });
 
+    /*
+
     for (let user of users) {
 
       motherBlock = createNode({
@@ -905,10 +907,11 @@ CalculationJs.prototype.baseMaker = function () {
 
     }
 
+    */
+
   }
 
   contentsLoad();
-
 
 }
 
@@ -916,29 +919,30 @@ CalculationJs.prototype.launching = async function () {
   const instance = this;
   const { ajaxJson, equalJson } = GeneralJs;
   try {
-    let users;
-    let designers;
+    const emptyDate = () => { return new Date(1800, 0, 1) };
+    const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
+    let projects, projectsRaw;
+    let loading;
 
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
     this.grayBarWidth = this.mother.grayBarWidth;
 
-    users = await ajaxJson({ whereQuery: {} }, "/getUsers", { equal: true });
-    designers = await ajaxJson({ noFlat: true, whereQuery: {} }, "/getDesigners", { equal: true });
-    miniDesigners = [
-      "d2104_aa02s",
-      "d1904_aa12s",
-      "d1908_aa02s"
-    ];
+    loading = this.mother.grayLoading();
 
-    this.users = users;
-    this.designers = designers;
-    this.miniDesigners = miniDesigners;
+    projectsRaw = await ajaxJson({ noFlat: true, whereQuery: {} }, "/getProjects", { equal: true });
+    projects = projectsRaw.filter((obj) => {  return obj.process.contract.first.date.valueOf() >= emptyDateValue });
+
+    this.projects = projects;
+
+    console.log(projects);
 
     this.baseMaker();
 
     document.getElementById("moveLeftArea").remove();
     document.getElementById("moveRightArea").remove();
+
+    loading.remove();
 
   } catch (e) {
     GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
