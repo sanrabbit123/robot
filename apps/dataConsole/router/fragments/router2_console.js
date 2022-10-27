@@ -4745,7 +4745,7 @@ DataRouter.prototype.rou_post_userSubmit = function () {
       }
       updateQuery["request.payment.amount.vat"] = Math.floor(updateQuery["request.payment.amount.consumer"] / 11);
       updateQuery["request.payment.amount.supply"] = Math.floor(updateQuery["request.payment.amount.consumer"] - updateQuery["request.payment.amount.vat"]);
-      updateQuery["request.payment.info.method"] = "카드(" + rsp.card_name.replace(/카드/gi, '') + ")";
+      updateQuery["request.payment.info.method"] = "카드(" + (typeof rsp.card_name === "string" ? rsp.card_name.replace(/카드/gi, '') : "알 수 없음") + ")";
       updateQuery["request.payment.info.proof"] = "이니시스";
       updateQuery["request.payment.info.to"] = name;
       updateQuery["request.payment.info.data"] = [ rsp ];

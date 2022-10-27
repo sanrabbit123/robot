@@ -132,9 +132,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
     /*
 
     const selfPythonMongo = this.MONGOPYTHONC;
@@ -423,15 +420,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
-
-
-
-
-
-
     // const selfMongo = this.MONGOLOGC;
     // await selfMongo.connect();
     // const LogReport = require(`${process.cwd()}/apps/logConsole/router/logReport.js`);
@@ -458,7 +446,7 @@ DevContext.prototype.launching = async function () {
     // let month;
     //
     // standard = [ "강해진", "이큰별", "임지민" ];
-    // month = 9;
+    // month = 10;
     //
     // from = new Date(2022, (month - 1), 1);
     // to = new Date(2022, ((month - 1) + 1), 1);
