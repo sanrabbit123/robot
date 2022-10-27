@@ -1682,7 +1682,7 @@ DataRouter.prototype.rou_post_getClientReport = function () {
           obj.proid.recommend = [ ...new Set(process.filter((obj) => { return histories.map((o) => { return o.cliid }).includes(obj.cliid) }).map((obj) => { return obj.proid })) ];
 
           //contract
-          contracts = motherProjects.filter((obj) => { return obj.process.contract.first.date >= arr[0].valueOf() && obj.process.contract.first.date < arr[2].valueOf() });
+          contracts = motherProjects.filter((obj) => { return obj.process.contract.first.date.valueOf() >= arr[0].valueOf() && obj.process.contract.first.date.valueOf() < arr[2].valueOf() });
           obj.contract = contracts.length;
           obj.cliid.contract = [ ...new Set(contracts.map((obj) => { return obj.cliid; })) ];
           obj.proid.contract = contracts.map((obj) => { return obj.proid });
@@ -5045,7 +5045,7 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
         const now = new Date();
         const client = await back.getClientById(project.cliid, { selfMongo: instance.mongo });
         const cliid = client.cliid;
-        const host = instance.address.backinfo.host;
+        const host = instance.address.frontinfo.host;
         const path = "estimation";
         const needs = "style," + project.desid + "," + project.proid + "," + (project.service.online ? "online" : "offline");
         const name = client.name;
