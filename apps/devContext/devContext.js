@@ -44,6 +44,7 @@ const ExcelReader = require(APP_PATH + "/excelReader/excelReader.js");
 const ImageReader = require(APP_PATH + "/imageReader/imageReader.js");
 const LogConsole = require(APP_PATH + "/logConsole/logConsole.js");
 const FacebookAPIs = require(APP_PATH + "/facebookAPIs/facebookAPIs.js");
+const HumanPacket = require(APP_PATH + "/humanPacket/humanPacket.js");
 
 const DevContext = function () {
   this.mother = new Mother();
@@ -114,21 +115,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const Pop3Client = require(`${process.cwd()}/pop3.js`);
-    const client = new Pop3Client(110, "webmail.home-liaison.com", {
-        tlserrs: false,
-        enabletls: false,
-        debug: false
-    });
-
-    await client.connect();
-
-    await client.login("help@home-liaison.com", "hlofwis83!");
-    const { count } = await client.list();
-    let data;
-    ({ data } = await client.retr(2));
-    console.log(data);
-    await client.quit();
+    const human = new HumanPacket();
+    const mails = await human.getMailsAll("help", "hlofwis83!");
 
 
 

@@ -1,23 +1,23 @@
 const HumanPacket = function () {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   this.mother = new Mother();
-  this.dir = process.cwd() + "/apps/sendMail";
+  this.address = require(`${process.cwd()}/apps/infoObj.js`);
+  this.dir = process.cwd() + "/apps/humanPacket";
+  this.moduleDir = this.dir + "/module";
   this.url = {
-    email: "https://api.sendgrid.com/v3/mail/send",
     sms: "https://apis.aligo.in/send/",
   };
   this.user = {
-    email: "uragenbooks@gmail.com",
     sms: "hliaison",
   };
   this.apiKey = {
-    email: "Bearer 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",
     sms: "mnpm8c1h078n2gtpoqgzck6gpfvg0dq2",
   };
   this.sender = {
-    email: "admin@home-liaison.xyz",
     sms: "0220392252",
   };
+  this.webmailHostConst = "webmail";
+  this.webmailPort = 110;
 }
 
 HumanPacket.prototype.sendPacket = async function (toObj, subject, contents) {
@@ -40,131 +40,50 @@ HumanPacket.prototype.sendPacket = async function (toObj, subject, contents) {
       throw new Error("invaild arguments");
     }
 
-    let mode;
-
-    mode = null;
-    if (Array.isArray(toObj)) {
-      for (let i of toObj) {
-        if (typeof i !== "string") {
-          throw new Error("invaild to argument");
-        }
-        if (/\@/gi.test(toObj)) {
-          mode = "email";
-          break;
-        } else {
-          mode = "sms";
-          break;
-        }
-      }
-    } else if (typeof toObj === "string") {
-      if (/\@/gi.test(toObj)) {
-        mode = "email";
-      } else if (/\_/gi.test(toObj)) {
-        mode = "sms";
-      }
-    } else {
-      throw new Error("invaild to argument");
-    }
-
-    if (mode === null) {
-      throw new Error("invaild to argument");
-    }
-
-    const user = this.user[mode];
-    const apiKey = this.apiKey[mode];
-    const sender = this.sender[mode];
+    const user = this.user.sms;
+    const apiKey = this.apiKey.sms;
+    const sender = this.sender.sms;
 
     let to = [];
     let postData, headers;
     let responseRaw, response;
 
-    if (mode === "email") {
-
-      if (Array.isArray(toObj)) {
-        for (let i of toObj) {
-          if (typeof i !== "string") {
-            throw new Error("invaild to argument");
-          }
-          to.push({ email: i });
+    if (Array.isArray(toObj)) {
+      for (let i of toObj) {
+        if (typeof i !== "string") {
+          throw new Error("invaild to argument");
         }
-      } else if (typeof toObj === "string") {
-        to.push({ email: toObj });
+        to.push(i);
       }
+    } else if (typeof toObj === "string") {
+      to.push(toObj);
+    }
 
-      postData = { personalizations: [ { to } ], from: { email: sender }, subject, content: [ { "type": "text/plain", "value": contents } ] };
-      headers = { headers: { "Content-Type": "application/json", "Authorization": apiKey } };
-
-      responseRaw = await requestSystem(this.url[mode], postData, headers);
-      if (responseRaw.status >= 200 && responseRaw.status < 300) {
-        console.log("send email success : " + toObj);
+    for (let i = 0; i < to.length; i++) {
+      postData = {
+        user_id: user,
+        key: apiKey,
+        msg: contents,
+        receiver: to[i].split('_')[0].replace(/\-/g, ''),
+        destination: to[i].split('_')[1],
+        sender: sender,
+        rdate: "",
+        rtime: "",
+        testmode_yn: "N",
+        title: subject,
+        msg_type: "LMS",
+      };
+      responseRaw = await requestSystem(this.url.sms, postData);
+      response = responseRaw.data;
+      if (response.result_code !== '1') {
+        throw new Error("fail sms : " + to[i]);
       } else {
-        throw new Error("fail email : " + toObj);
+        console.log("send sms success : " + to[i]);
       }
-
-    } else if (mode === "sms") {
-
-      if (Array.isArray(toObj)) {
-        for (let i of toObj) {
-          if (typeof i !== "string") {
-            throw new Error("invaild to argument");
-          }
-          to.push(i);
-        }
-      } else if (typeof toObj === "string") {
-        to.push(toObj);
-      }
-
-      for (let i = 0; i < to.length; i++) {
-        postData = {
-          user_id: user,
-          key: apiKey,
-          msg: contents,
-          receiver: to[i].split('_')[0].replace(/\-/g, ''),
-          destination: to[i].split('_')[1],
-          sender: sender,
-          rdate: "",
-          rtime: "",
-          testmode_yn: "N",
-          title: subject,
-          msg_type: "LMS",
-        };
-        responseRaw = await requestSystem(this.url[mode], postData);
-        response = responseRaw.data;
-        if (response.result_code !== '1') {
-          throw new Error("fail sms : " + to[i]);
-        } else {
-          console.log("send sms success : " + to[i]);
-        }
-      }
-
     }
 
     return true;
 
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-HumanPacket.prototype.sendEmail = async function (toObj, subject, contents) {
-  const instance = this;
-  try {
-    if (typeof toObj === "object" && !Array.isArray(toObj) && subject === undefined && contents === undefined) {
-      if (toObj.to === undefined || toObj.subject === undefined || toObj.contents === undefined) {
-        throw new Error("invaild arguments : object type => { to: string or array, subject: string, contents: string }");
-      } else {
-        if ((typeof toObj.to === "string" || Array.isArray(toObj.to)) && typeof toObj.subject === "string" && typeof toObj.contents === "string") {
-          subject = toObj.subject;
-          contents = toObj.contents;
-          toObj = toObj.to;
-        } else {
-          throw new Error("invaild arguments : object type => { to: string or array, subject: string, contents: string }");
-        }
-      }
-    } else if (toObj === undefined || subject === undefined || contents === undefined) {
-      throw new Error("invaild arguments");
-    }
-    return await this.sendPacket(toObj, subject, contents);
   } catch (e) {
     console.log(e);
   }
@@ -209,5 +128,75 @@ HumanPacket.prototype.sendSms = async function (name, phone, subject, contents) 
     console.log(e);
   }
 }
+
+HumanPacket.prototype.homeliaisonLogin = async function (id, pwd) {
+  const instance = this;
+  const address = this.address;
+  const { moduleDir, webmailHostConst, webmailPort } = this;
+  try {
+    const host = webmailHostConst + "." + address.frontinfo.host;
+    const Pop3Client = require(`${moduleDir}/pop3.js`);
+    const client = new Pop3Client(webmailPort, host, {
+      tlserrs: false,
+      enabletls: false,
+      debug: false
+    });
+
+    await client.connect();
+    await client.login(id + "@" + address.frontinfo.host, pwd);
+    client.id = id;
+
+    return client;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+HumanPacket.prototype.getMailsAll = async function (id, pwd) {
+  const instance = this;
+  try {
+    const client = await this.homeliaisonLogin(id, pwd);
+    const { count } = await client.list();
+    let tong;
+    let rawData;
+    let tempObj;
+    let dateString, fromString;
+    let rawArr;
+    let dateObject;
+
+    tong = [];
+    for (let i = 0; i < count; i++) {
+      ({ data: rawData } = await client.retr(i + 1));
+
+      rawArr = rawData.split("\r\n");
+
+      dateString = rawArr.find((str) => { return /^Date: /i.test(str) }).slice(6, 37)
+      dateObject = new Date(dateString);
+
+      console.log(rawArr)
+
+      tempObj = {
+        id: "",
+        date: dateObject,
+        from: "",
+        to: "",
+        contents: {
+          title: "",
+          description: "",
+          attachment: "",
+        }
+      };
+      tempObj.raw = rawArr;
+      tong.push(tempObj);
+    }
+
+    await client.quit();
+
+    return tong;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 
 module.exports = HumanPacket;
