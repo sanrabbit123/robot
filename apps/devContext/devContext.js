@@ -114,7 +114,34 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const Pop3Client = require(`${process.cwd()}/pop3.js`);
+    const client = new Pop3Client(110, "webmail.home-liaison.com", {
+        tlserrs: false,
+        enabletls: false,
+        debug: false
+    });
 
+    await client.connect();
+
+    await client.login("help@home-liaison.com", "hlofwis83!");
+    const { count } = await client.list();
+    let data;
+    ({ data } = await client.retr(2));
+    console.log(data);
+    await client.quit();
+
+
+
+
+
+
+
+    // client.on("quit", function(status, rawdata) {
+    //
+    //     if (status === true) console.log("QUIT success");
+    //     else console.log("QUIT failed");
+    //
+    // });
 
 
 
