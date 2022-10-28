@@ -7,7 +7,7 @@ const CalculationJs = function () {
 CalculationJs.prototype.baseMaker = function () {
   const instance = this;
   const { totalContents, ea, belowHeight, projects } = this;
-  const { createNode, withOut, colorChip, isMac, dateToString, blankHref, ajaxJson, cleanChildren } = GeneralJs;
+  const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate } = GeneralJs;
   let outerMargin;
   let innerPadding;
   let grayBack;
@@ -39,6 +39,14 @@ CalculationJs.prototype.baseMaker = function () {
   let tableSize, tableWeight, tableBoldWeight;
   let tableTextTop;
   let requestColumns, responseColumns;
+  let thisRequest, thisResponse;
+  let currentState;
+  let confirmState;
+  let requestName;
+  let payDate, cancelAmount, cancelDate;
+  let requestValueArr;
+  let tableValueBlockHeight;
+  let blockVisualPadding;
 
   requestColumns = [
     "구분",
@@ -75,8 +83,11 @@ CalculationJs.prototype.baseMaker = function () {
   alarmCircleRadius = 8;
 
   tableBlockHeight = 34;
+  tableValueBlockHeight = 28;
   tableBlockFactorWidth = 110;
   tableBetween = 20;
+
+  blockVisualPadding = 8;
 
   nameWidth = 50;
   designerWidth = 60;
@@ -420,7 +431,113 @@ CalculationJs.prototype.baseMaker = function () {
         });
       }
 
-      
+      for (let z = 0; z < project.bill.requests.length; z++) {
+        thisRequest = project.bill.requests[z];
+
+        requestName = thisRequest.name;
+        confirmState = Math.floor(thisRequest.items.reduce((acc, curr) => { return acc + curr.amount.consumer }, 0));
+
+        if (requestName === "홈리에종 잔금") {
+          currentState = 1 - project.process.contract.remain.calculation.discount;
+          currentState = Math.floor(project.process.contract.remain.calculation.amount.consumer / currentState);
+          currentState = Math.floor(currentState - project.process.contract.first.calculation.amount);
+        } else {
+          currentState = Math.floor(thisRequest.items.reduce((acc, curr) => { return acc + curr.amount.consumer }, 0));
+        }
+
+        if (/^드/gi.test(project.process.status)) {
+          if (thisRequest.pay.length === 0) {
+            confirmState = 0;
+          }
+        }
+
+        payDate = '-';
+        if (thisRequest.pay.length > 0) {
+          payDate = dateToString(thisRequest.pay[0].date);
+        }
+
+        cancelAmount = 0;
+        cancelDate = '-';
+
+        if (thisRequest.cancel.length > 0) {
+          cancelAmount = thisRequest.cancel.reduce((acc, curr) => { return acc + curr.amount }, 0);
+          cancelDate = dateToString(thisRequest.cancel[0].date);
+        }
+
+        requestValueArr = [
+          {
+            value: requestName,
+            color: colorChip.black,
+          },
+          {
+            value: autoComma(currentState),
+            color: colorChip.black,
+          },
+          {
+            value: autoComma(confirmState),
+            color: confirmState === 0 ? colorChip.black : (payDate === '-' ? colorChip.red : colorChip.black),
+          },
+          {
+            value: payDate,
+            color: colorChip.black,
+          },
+          {
+            value: autoComma(cancelAmount),
+            color: colorChip.black,
+          },
+          {
+            value: cancelDate,
+            color: colorChip.black,
+          }
+        ];
+
+        requestBlock = createNode({
+          mother: requestTable,
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(0, ea),
+            overflow: "hidden",
+            borderRadius: String(5) + "px",
+          }
+        });
+
+        for (let i = 0; i < requestValueArr.length; i++) {
+          createNode({
+            mother: requestBlock,
+            style: {
+              display: "inline-flex",
+              justifyContent: "center",
+              alignItems: "center",
+              position: "relative",
+              background: colorChip.white,
+              height: String(tableValueBlockHeight) + ea,
+              paddingTop: String(z === 0 ? blockVisualPadding : 0) + ea,
+              paddingBottom: String(z === project.bill.requests.length - 1 ? blockVisualPadding : 0) + ea,
+              width: i === requestColumns.length - 1 ? String(tableBlockFactorWidth) + ea : String(tableBlockFactorWidth - 1) + ea,
+              borderRight: i === requestColumns.length - 1 ?  "" : "1px solid " + colorChip.gray3,
+            },
+            children: [
+              {
+                text: requestValueArr[i].value,
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(tableSize) + ea,
+                  fontWeight: String(tableWeight),
+                  color: requestValueArr[i].color,
+                  top: String(tableTextTop) + ea,
+                }
+              }
+            ]
+          });
+        }
+
+      }
+
+
+
+      console.log(project.bill.requests)
 
 
 
@@ -499,6 +616,7 @@ CalculationJs.prototype.launching = async function () {
     const emptyDate = () => { return new Date(1800, 0, 1) };
     const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
     let projects, projectsRaw;
+    let clients, designers;
     let loading;
     let bills;
     let proid, cliid, desid, service;
@@ -534,6 +652,10 @@ CalculationJs.prototype.launching = async function () {
       project.name = thisClient.name;
       project.phone = thisClient.phone;
     }
+
+    projects = projects.filter((obj) => {
+      return obj.proid !== "p1801_aa01s" && obj.proid !== "p1801_aa02s";
+    })
 
     this.projects = projects;
     this.baseMaker();
