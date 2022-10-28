@@ -42,11 +42,17 @@ CalculationJs.prototype.baseMaker = function () {
   let thisRequest, thisResponse;
   let currentState;
   let confirmState;
-  let requestName;
+  let requestName, responseName;
   let payDate, cancelAmount, cancelDate;
   let requestValueArr;
   let tableValueBlockHeight;
   let blockVisualPadding;
+  let responseValueArr;
+  let payAmount, nonPayAmount;
+  let refundAmount;
+  let requestSumConsumer, requestSumConfirm, requestSumRefund;
+  let requestSumIncome;
+  let responseSumTotal, responseSumNon, responseSumPaid, responseSumRefund;
 
   requestColumns = [
     "구분",
@@ -84,7 +90,7 @@ CalculationJs.prototype.baseMaker = function () {
 
   tableBlockHeight = 34;
   tableValueBlockHeight = 28;
-  tableBlockFactorWidth = 110;
+  tableBlockFactorWidth = 120;
   tableBetween = 20;
 
   blockVisualPadding = 8;
@@ -431,6 +437,11 @@ CalculationJs.prototype.baseMaker = function () {
         });
       }
 
+      requestSumConsumer = 0;
+      requestSumConfirm = 0;
+      requestSumRefund = 0;
+      requestSumIncome = 0;
+
       for (let z = 0; z < project.bill.requests.length; z++) {
         thisRequest = project.bill.requests[z];
 
@@ -462,6 +473,13 @@ CalculationJs.prototype.baseMaker = function () {
         if (thisRequest.cancel.length > 0) {
           cancelAmount = thisRequest.cancel.reduce((acc, curr) => { return acc + curr.amount }, 0);
           cancelDate = dateToString(thisRequest.cancel[0].date);
+        }
+
+        requestSumConsumer += currentState;
+        requestSumConfirm += confirmState;
+        requestSumRefund += cancelAmount;
+        if (payDate !== '-') {
+          requestSumIncome += confirmState;
         }
 
         requestValueArr = [
@@ -536,12 +554,72 @@ CalculationJs.prototype.baseMaker = function () {
       }
 
 
+      requestValueArr = [
+        {
+          value: "총계",
+          color: colorChip.black,
+        },
+        {
+          value: autoComma(requestSumConsumer),
+          color: colorChip.black,
+        },
+        {
+          value: autoComma(requestSumConfirm),
+          color: colorChip.black,
+        },
+        {
+          value: autoComma(requestSumIncome),
+          color: colorChip.black,
+        },
+        {
+          value: autoComma(requestSumRefund),
+          color: colorChip.black,
+        },
+        {
+          value: '-',
+          color: colorChip.black,
+        }
+      ];
 
-      console.log(project.bill.requests)
+      requestBlock = createNode({
+        mother: requestTable,
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(0, ea),
+          overflow: "hidden",
+          borderRadius: String(5) + "px",
+        }
+      });
 
-
-
-
+      for (let i = 0; i < requestValueArr.length; i++) {
+        createNode({
+          mother: requestBlock,
+          style: {
+            display: "inline-flex",
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+            background: colorChip.gray0,
+            height: String(tableBlockHeight) + ea,
+            width: i === requestColumns.length - 1 ? String(tableBlockFactorWidth) + ea : String(tableBlockFactorWidth - 1) + ea,
+            borderRight: i === requestColumns.length - 1 ?  "" : "1px solid " + colorChip.gray3,
+          },
+          children: [
+            {
+              text: requestValueArr[i].value,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(tableSize) + ea,
+                fontWeight: String(tableWeight),
+                color: requestValueArr[i].color,
+                top: String(tableTextTop) + ea,
+              }
+            }
+          ]
+        });
+      }
 
       // response
 
@@ -601,8 +679,169 @@ CalculationJs.prototype.baseMaker = function () {
         });
       }
 
-    }
+      responseSumTotal = 0;
+      responseSumNon = 0;
+      responseSumPaid = 0;
+      responseSumRefund = 0;
 
+      for (let z = 0; z < project.bill.responses.length; z++) {
+        thisResponse = project.bill.responses[z];
+
+        responseName = thisResponse.name;
+
+        confirmState = Math.floor(thisResponse.items.reduce((acc, curr) => { return acc + curr.amount.pure }, 0));
+        payAmount = Math.floor(thisResponse.pay.reduce((acc, curr) => { return acc + curr.amount }, 0));
+        refundAmount = Math.floor(thisResponse.cancel.reduce((acc, curr) => { return acc + curr.amount }, 0));
+        nonPayAmount = confirmState - payAmount;
+        payDate = '-';
+        if (thisResponse.pay.length > 0) {
+          payDate = dateToString(thisResponse.pay[0].date);
+        }
+
+        responseSumTotal += confirmState;
+        responseSumNon += nonPayAmount;
+        responseSumPaid += payAmount;
+        responseSumRefund += refundAmount;
+
+        responseValueArr = [
+          {
+            value: responseName,
+            color: colorChip.black,
+          },
+          {
+            value: autoComma(confirmState),
+            color: colorChip.black,
+          },
+          {
+            value: autoComma(nonPayAmount),
+            color: nonPayAmount !== 0 ? colorChip.purple : colorChip.black,
+          },
+          {
+            value: autoComma(payAmount),
+            color: colorChip.black,
+          },
+          {
+            value: payDate,
+            color: colorChip.black,
+          },
+          {
+            value: autoComma(refundAmount),
+            color: colorChip.black,
+          },
+        ];
+
+        responseBlock = createNode({
+          mother: responseTable,
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(0, ea),
+            overflow: "hidden",
+            borderRadius: String(5) + "px",
+          }
+        });
+
+        for (let i = 0; i < responseValueArr.length; i++) {
+          createNode({
+            mother: responseBlock,
+            style: {
+              display: "inline-flex",
+              justifyContent: "center",
+              alignItems: "center",
+              position: "relative",
+              background: colorChip.white,
+              height: String(tableValueBlockHeight) + ea,
+              paddingTop: String(z === 0 ? blockVisualPadding : 0) + ea,
+              paddingBottom: String(z === project.bill.responses.length - 1 ? blockVisualPadding : 0) + ea,
+              width: i === responseColumns.length - 1 ? String(tableBlockFactorWidth) + ea : String(tableBlockFactorWidth - 1) + ea,
+              borderRight: i === responseColumns.length - 1 ?  "" : "1px solid " + colorChip.gray3,
+            },
+            children: [
+              {
+                text: responseValueArr[i].value,
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(tableSize) + ea,
+                  fontWeight: String(tableWeight),
+                  color: responseValueArr[i].color,
+                  top: String(tableTextTop) + ea,
+                }
+              }
+            ]
+          });
+        }
+      }
+
+      responseValueArr = [
+        {
+          value: "총계",
+          color: colorChip.black,
+        },
+        {
+          value: autoComma(responseSumTotal),
+          color: colorChip.black,
+        },
+        {
+          value: autoComma(responseSumNon),
+          color: colorChip.black,
+        },
+        {
+          value: autoComma(responseSumPaid),
+          color: colorChip.black,
+        },
+        {
+          value: '-',
+          color: colorChip.black,
+        },
+        {
+          value: autoComma(responseSumRefund),
+          color: colorChip.black,
+        },
+      ];
+
+      responseBlock = createNode({
+        mother: responseTable,
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(0, ea),
+          overflow: "hidden",
+          borderRadius: String(5) + "px",
+        }
+      });
+
+      for (let i = 0; i < responseValueArr.length; i++) {
+        createNode({
+          mother: responseBlock,
+          style: {
+            display: "inline-flex",
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+            background: colorChip.gray0,
+            height: String(tableBlockHeight) + ea,
+            width: i === responseColumns.length - 1 ? String(tableBlockFactorWidth) + ea : String(tableBlockFactorWidth - 1) + ea,
+            borderRight: i === responseColumns.length - 1 ?  "" : "1px solid " + colorChip.gray3,
+          },
+          children: [
+            {
+              text: responseValueArr[i].value,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(tableSize) + ea,
+                fontWeight: String(tableWeight),
+                color: responseValueArr[i].color,
+                top: String(tableTextTop) + ea,
+              }
+            }
+          ]
+        });
+      }
+
+
+    }
   }
 
   contentsLoad();
