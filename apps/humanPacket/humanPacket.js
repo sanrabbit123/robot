@@ -157,12 +157,17 @@ HumanPacket.prototype.getMailsAll = async function (id, pwd) {
   try {
     const client = await this.homeliaisonLogin(id, pwd);
     const { count } = await client.list();
+    const areaSplitToken = "____areaSplit____";
     let tong;
     let rawData;
     let tempObj;
     let dateString, fromString;
     let rawArr;
     let dateObject;
+    let rawTong;
+    let tempArr;
+    let areaSplitTong;
+    let rawMatrix;
 
     tong = [];
     for (let i = 0; i < count; i++) {
@@ -173,7 +178,26 @@ HumanPacket.prototype.getMailsAll = async function (id, pwd) {
       dateString = rawArr.find((str) => { return /^Date: /i.test(str) }).slice(6, 37)
       dateObject = new Date(dateString);
 
-      console.log(rawArr)
+      areaSplitTong = rawArr.map((str) => {
+        if (str.trim() === '') {
+          return areaSplitToken;
+        } else {
+          return str;
+        }
+      });
+
+      rawTong = [];
+      tempArr = [];
+      for (let str of areaSplitTong) {
+        if (str === areaSplitToken) {
+          rawTong.push(tempArr);
+          tempArr = [];
+        } else {
+          tempArr.push(str);
+        }
+      }
+
+      rawMatrix = rawTong.filter((arr) => { return arr.length !== 0 });
 
       tempObj = {
         id: "",
@@ -186,7 +210,7 @@ HumanPacket.prototype.getMailsAll = async function (id, pwd) {
           attachment: "",
         }
       };
-      tempObj.raw = rawArr;
+      tempObj.raw = rawMatrix;
       tong.push(tempObj);
     }
 
