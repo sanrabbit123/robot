@@ -1034,6 +1034,9 @@ CalculationJs.prototype.whiteCardView = function (proid) {
       let payDate;
       let cancelAmount;
       let cancelDate;
+      let valueSize, valueWeight, valueBoldWeight;
+      let valueTextTop;
+      let blockMarginBottom;
 
       whiteOuterMargin = 40;
       whiteInnerMargin = 50;
@@ -1059,6 +1062,13 @@ CalculationJs.prototype.whiteCardView = function (proid) {
       grayInnerPadding = 10;
 
       blockHeight = 40;
+
+      valueSize = 13;
+      valueWeight = 400;
+      valueBoldWeight = 800;
+      valueTextTop = -1;
+
+      blockMarginBottom = 2;
 
       leftColumns = [
         "구분",
@@ -1241,7 +1251,7 @@ CalculationJs.prototype.whiteCardView = function (proid) {
           height: String(blockHeight) + ea,
           background: colorChip.gradientGreen,
           borderRadius: String(5) + "px",
-          marginBottom: String(2) + ea,
+          marginBottom: String(blockMarginBottom) + ea,
           zIndex: String(1),
         }
       });
@@ -1261,11 +1271,11 @@ CalculationJs.prototype.whiteCardView = function (proid) {
             {
               text: column,
               style: {
-                fontSize: String(13) + ea,
-                fontWeight: String(800),
+                fontSize: String(valueSize) + ea,
+                fontWeight: String(valueBoldWeight),
                 color: colorChip.white,
                 position: "relative",
-                top: String(-1) + ea,
+                top: String(valueTextTop) + ea,
               }
             }
           ]
@@ -1314,7 +1324,7 @@ CalculationJs.prototype.whiteCardView = function (proid) {
             height: String(blockHeight) + ea,
             background: colorChip.white,
             borderRadius: String(5) + "px",
-            marginBottom: String(2) + ea,
+            marginBottom: String(blockMarginBottom) + ea,
           }
         });
 
@@ -1332,11 +1342,11 @@ CalculationJs.prototype.whiteCardView = function (proid) {
             {
               text: requestName,
               style: {
-                fontSize: String(13) + ea,
-                fontWeight: String(400),
+                fontSize: String(valueSize) + ea,
+                fontWeight: String(valueWeight),
                 color: colorChip.black,
                 position: "relative",
-                top: String(-1) + ea,
+                top: String(valueTextTop) + ea,
               }
             }
           ]
@@ -1356,11 +1366,11 @@ CalculationJs.prototype.whiteCardView = function (proid) {
             {
               text: autoComma(currentState),
               style: {
-                fontSize: String(13) + ea,
-                fontWeight: String(400),
+                fontSize: String(valueSize) + ea,
+                fontWeight: String(valueWeight),
                 color: colorChip.black,
                 position: "relative",
-                top: String(-1) + ea,
+                top: String(valueTextTop) + ea,
               }
             }
           ]
@@ -1380,11 +1390,11 @@ CalculationJs.prototype.whiteCardView = function (proid) {
             {
               text: autoComma(confirmState),
               style: {
-                fontSize: String(13) + ea,
-                fontWeight: String(400),
+                fontSize: String(valueSize) + ea,
+                fontWeight: String(valueWeight),
                 color: colorChip.black,
                 position: "relative",
-                top: String(-1) + ea,
+                top: String(valueTextTop) + ea,
               }
             }
           ]
@@ -1404,11 +1414,11 @@ CalculationJs.prototype.whiteCardView = function (proid) {
             {
               text: payDate === '-' ? String(0) : autoComma(confirmState),
               style: {
-                fontSize: String(13) + ea,
-                fontWeight: String(400),
+                fontSize: String(valueSize) + ea,
+                fontWeight: String(valueWeight),
                 color: colorChip.black,
                 position: "relative",
-                top: String(-1) + ea,
+                top: String(valueTextTop) + ea,
               }
             }
           ]
@@ -1429,11 +1439,11 @@ CalculationJs.prototype.whiteCardView = function (proid) {
             {
               text: payDate,
               style: {
-                fontSize: String(13) + ea,
-                fontWeight: String(400),
+                fontSize: String(valueSize) + ea,
+                fontWeight: String(valueWeight),
                 color: colorChip.black,
                 position: "relative",
-                top: String(-1) + ea,
+                top: String(valueTextTop) + ea,
               }
             }
           ]
@@ -1453,11 +1463,11 @@ CalculationJs.prototype.whiteCardView = function (proid) {
             {
               text: autoComma(cancelAmount),
               style: {
-                fontSize: String(13) + ea,
-                fontWeight: String(400),
+                fontSize: String(valueSize) + ea,
+                fontWeight: String(valueWeight),
                 color: colorChip.black,
                 position: "relative",
-                top: String(-1) + ea,
+                top: String(valueTextTop) + ea,
               }
             }
           ]
@@ -1477,11 +1487,11 @@ CalculationJs.prototype.whiteCardView = function (proid) {
             {
               text: cancelDate,
               style: {
-                fontSize: String(13) + ea,
-                fontWeight: String(400),
+                fontSize: String(valueSize) + ea,
+                fontWeight: String(valueWeight),
                 color: colorChip.black,
                 position: "relative",
-                top: String(-1) + ea,
+                top: String(valueTextTop) + ea,
               }
             }
           ]
@@ -1498,7 +1508,7 @@ CalculationJs.prototype.whiteCardView = function (proid) {
           flexDirection: "row",
           width: withOut(0),
           height: String(blockHeight) + ea,
-          background: colorChip.black,
+          background: colorChip.gray0,
           borderRadius: String(5) + "px",
           marginBottom: String(80) + ea,
         }
