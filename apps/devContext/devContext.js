@@ -115,8 +115,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const human = new HumanPacket();
-    const mails = await human.getMailsAll("help", "hlofwis83!");
+    // const human = new HumanPacket();
+    // const mails = await human.getMailsAll("help", "hlofwis83!");
 
 
 
@@ -3271,12 +3271,13 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "신은경",
+    //     client: "박선정",
     //     designer: "손민선",
-    //     link: "https://drive.google.com/drive/folders/1_IuWPxVDnTXceRfnPCMjBxVOe7ZuAhja",
+    //     link: "https://drive.google.com/drive/folders/1lKtad7ym04FV2ENzSmVwOwN1Whm-9Mtr",
     //     pay: true
     //   },
     // ]);
+
 
     // when rawtoraw fail
 

@@ -1020,14 +1020,28 @@ CalculationJs.prototype.whiteCardView = function (proid) {
       let statusTextTop;
       let contentsAreaBetween;
       let contentsAreaPaddingTop;
+      let grayInnerPadding;
+      let contentsAreaLeft;
+      let contentsAreaRight;
+      let blockHeight;
+      let leftColumns;
+      let rightColumns;
+      let greenTong, whiteTong, blackTong;
+      let thisRequest;
+      let requestName;
+      let currentState;
+      let confirmState;
+      let payDate;
+      let cancelAmount;
+      let cancelDate;
 
       whiteOuterMargin = 40;
-      whiteInnerMargin = 60;
+      whiteInnerMargin = 50;
 
       titleAreaHeight = 63;
       buttonAreaHeight = 120;
 
-      titleAreaPaddingBottom = 8;
+      titleAreaPaddingBottom = 6;
 
       nameSize = 32;
       nameWeight = 800;
@@ -1040,7 +1054,31 @@ CalculationJs.prototype.whiteCardView = function (proid) {
       statusTextTop = 27;
 
       contentsAreaBetween = 10;
-      contentsAreaPaddingTop = 32;
+      contentsAreaPaddingTop = 30;
+
+      grayInnerPadding = 10;
+
+      blockHeight = 40;
+
+      leftColumns = [
+        "구분",
+        "소비자가",
+        "확정가",
+        "입금액",
+        "입금일",
+        "환불액",
+        "환불일",
+      ]
+
+      rightColumns = [
+        "구분",
+        "총액",
+        "미지급액",
+        "지급액",
+        "지급일",
+        "환수액",
+        "환수일",
+      ]
 
       cancelBack = createNode({
         mother: totalContents,
@@ -1165,30 +1203,333 @@ CalculationJs.prototype.whiteCardView = function (proid) {
         }
       });
 
-      createNode({
+      contentsAreaLeft = createNode({
         mother: contentsArea,
         style: {
           display: "inline-flex",
           position: "relative",
-          width: "calc(calc(100% - " + String(contentsAreaBetween) + ea + ") / 2)",
-          height: withOut(0),
+          width: "calc(calc(calc(100% - " + String(contentsAreaBetween) + ea + ") / 2) - " + String(grayInnerPadding * 2) + ea + ")",
+          height: withOut(grayInnerPadding * 2, ea),
           borderRadius: String(5) + "px",
+          padding: String(grayInnerPadding) + ea,
           background: colorChip.gray2,
           marginRight: String(contentsAreaBetween) + ea,
+          alignItems: "center",
+          justifyContent: "center",
+        },
+        children: [
+          {
+            style: {
+              display: "block",
+              position: "relative",
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              overflow: "scroll",
+            }
+          }
+        ]
+      }).firstChild;
+
+      greenTong = createNode({
+        mother: contentsAreaLeft,
+        style: {
+          display: "flex",
+          position: "sticky",
+          flexDirection: "row",
+          top: String(0),
+          width: withOut(0),
+          height: String(blockHeight) + ea,
+          background: colorChip.gradientGreen,
+          borderRadius: String(5) + "px",
+          marginBottom: String(2) + ea,
+          zIndex: String(1),
         }
       });
 
+      for (let column of leftColumns) {
+        createNode({
+          mother: greenTong,
+          style: {
+            display: "inline-flex",
+            width: "calc(100% / " + String(leftColumns.length) + ")",
+            height: withOut(0, ea),
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+          },
+          children: [
+            {
+              text: column,
+              style: {
+                fontSize: String(13) + ea,
+                fontWeight: String(800),
+                color: colorChip.white,
+                position: "relative",
+                top: String(-1) + ea,
+              }
+            }
+          ]
+        });
+      }
+
+      for (let z = 0; z < project.bill.requests.length; z++) {
+        thisRequest = project.bill.requests[z];
+        requestName = thisRequest.name;
+        confirmState = Math.floor(thisRequest.items.reduce((acc, curr) => { return acc + curr.amount.consumer }, 0));
+
+        if (requestName === "홈리에종 잔금") {
+          currentState = 1 - project.process.contract.remain.calculation.discount;
+          currentState = Math.floor(project.process.contract.remain.calculation.amount.consumer / currentState);
+          currentState = Math.floor(currentState - project.process.contract.first.calculation.amount);
+        } else {
+          currentState = Math.floor(thisRequest.items.reduce((acc, curr) => { return acc + curr.amount.consumer }, 0));
+        }
+
+        if (/^드/gi.test(project.process.status)) {
+          if (thisRequest.pay.length === 0) {
+            confirmState = 0;
+          }
+        }
+
+        payDate = '-';
+        if (thisRequest.pay.length > 0) {
+          payDate = dateToString(thisRequest.pay[0].date);
+        }
+
+        cancelAmount = 0;
+        cancelDate = '-';
+
+        if (thisRequest.cancel.length > 0) {
+          cancelAmount = thisRequest.cancel.reduce((acc, curr) => { return acc + curr.amount }, 0);
+          cancelDate = dateToString(thisRequest.cancel[0].date);
+        }
+
+        whiteTong = createNode({
+          mother: contentsAreaLeft,
+          style: {
+            display: "flex",
+            position: "relative",
+            flexDirection: "row",
+            width: withOut(0),
+            height: String(blockHeight) + ea,
+            background: colorChip.white,
+            borderRadius: String(5) + "px",
+            marginBottom: String(2) + ea,
+          }
+        });
+
+        createNode({
+          mother: whiteTong,
+          style: {
+            display: "inline-flex",
+            width: "calc(100% / " + String(leftColumns.length) + ")",
+            height: withOut(0, ea),
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+          },
+          children: [
+            {
+              text: requestName,
+              style: {
+                fontSize: String(13) + ea,
+                fontWeight: String(400),
+                color: colorChip.black,
+                position: "relative",
+                top: String(-1) + ea,
+              }
+            }
+          ]
+        });
+
+        createNode({
+          mother: whiteTong,
+          style: {
+            display: "inline-flex",
+            width: "calc(100% / " + String(leftColumns.length) + ")",
+            height: withOut(0, ea),
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+          },
+          children: [
+            {
+              text: autoComma(currentState),
+              style: {
+                fontSize: String(13) + ea,
+                fontWeight: String(400),
+                color: colorChip.black,
+                position: "relative",
+                top: String(-1) + ea,
+              }
+            }
+          ]
+        });
+
+        createNode({
+          mother: whiteTong,
+          style: {
+            display: "inline-flex",
+            width: "calc(100% / " + String(leftColumns.length) + ")",
+            height: withOut(0, ea),
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+          },
+          children: [
+            {
+              text: autoComma(confirmState),
+              style: {
+                fontSize: String(13) + ea,
+                fontWeight: String(400),
+                color: colorChip.black,
+                position: "relative",
+                top: String(-1) + ea,
+              }
+            }
+          ]
+        });
+
+        createNode({
+          mother: whiteTong,
+          style: {
+            display: "inline-flex",
+            width: "calc(100% / " + String(leftColumns.length) + ")",
+            height: withOut(0, ea),
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+          },
+          children: [
+            {
+              text: payDate === '-' ? String(0) : autoComma(confirmState),
+              style: {
+                fontSize: String(13) + ea,
+                fontWeight: String(400),
+                color: colorChip.black,
+                position: "relative",
+                top: String(-1) + ea,
+              }
+            }
+          ]
+        });
+
+
+        createNode({
+          mother: whiteTong,
+          style: {
+            display: "inline-flex",
+            width: "calc(100% / " + String(leftColumns.length) + ")",
+            height: withOut(0, ea),
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+          },
+          children: [
+            {
+              text: payDate,
+              style: {
+                fontSize: String(13) + ea,
+                fontWeight: String(400),
+                color: colorChip.black,
+                position: "relative",
+                top: String(-1) + ea,
+              }
+            }
+          ]
+        });
+
+        createNode({
+          mother: whiteTong,
+          style: {
+            display: "inline-flex",
+            width: "calc(100% / " + String(leftColumns.length) + ")",
+            height: withOut(0, ea),
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+          },
+          children: [
+            {
+              text: autoComma(cancelAmount),
+              style: {
+                fontSize: String(13) + ea,
+                fontWeight: String(400),
+                color: colorChip.black,
+                position: "relative",
+                top: String(-1) + ea,
+              }
+            }
+          ]
+        });
+
+        createNode({
+          mother: whiteTong,
+          style: {
+            display: "inline-flex",
+            width: "calc(100% / " + String(leftColumns.length) + ")",
+            height: withOut(0, ea),
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+          },
+          children: [
+            {
+              text: cancelDate,
+              style: {
+                fontSize: String(13) + ea,
+                fontWeight: String(400),
+                color: colorChip.black,
+                position: "relative",
+                top: String(-1) + ea,
+              }
+            }
+          ]
+        });
+
+
+      }
+
       createNode({
+        mother: contentsAreaLeft,
+        style: {
+          display: "flex",
+          position: "relative",
+          flexDirection: "row",
+          width: withOut(0),
+          height: String(blockHeight) + ea,
+          background: colorChip.black,
+          borderRadius: String(5) + "px",
+          marginBottom: String(80) + ea,
+        }
+      })
+
+
+      contentsAreaRight = createNode({
         mother: contentsArea,
         style: {
           display: "inline-flex",
           position: "relative",
-          width: "calc(calc(100% - " + String(contentsAreaBetween) + ea + ") / 2)",
-          height: withOut(0),
+          width: "calc(calc(calc(100% - " + String(contentsAreaBetween) + ea + ") / 2) - " + String(grayInnerPadding * 2) + ea + ")",
+          height: withOut(grayInnerPadding * 2, ea),
           borderRadius: String(5) + "px",
+          padding: String(grayInnerPadding) + ea,
           background: colorChip.gray2,
-        }
-      });
+          alignItems: "center",
+          justifyContent: "center",
+        },
+        children: [
+          {
+            style: {
+              display: "block",
+              position: "relative",
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              overflow: "scroll",
+            }
+          }
+        ]
+      }).firstChild;
 
 
 
