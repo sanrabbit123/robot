@@ -53,7 +53,22 @@ CalculationJs.prototype.baseMaker = function () {
   let requestSumConsumer, requestSumConfirm, requestSumRefund;
   let requestSumIncome;
   let responseSumTotal, responseSumNon, responseSumPaid, responseSumRefund;
+  let mainColumns;
+  let tempArr;
+  let emptyRow;
+  let startRow;
+  let matrixColumns;
+  let requestLength, responseLength, longLength;
+  let requestArr, responseArr;
 
+  mainColumns = [
+    "아이디",
+    "고객",
+    "디자이너",
+    "상태",
+    "매출",
+    "매입",
+  ];
   requestColumns = [
     "구분",
     "소비자가",
@@ -70,6 +85,44 @@ CalculationJs.prototype.baseMaker = function () {
     "지급일",
     "환수액",
   ];
+  matrixColumns = [
+    "아이디",
+    "고객",
+    "디자이너",
+    "상태",
+    "매출",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "매입",
+    "",
+    "",
+    "",
+    "",
+    "",
+  ];
+  startRow = [
+    "",
+    "",
+    "",
+    "",
+    "구분",
+    "소비자가",
+    "확정가",
+    "입금일",
+    "환불액",
+    "환불일",
+    "구분",
+    "총액",
+    "미지급액",
+    "지급액",
+    "지급일",
+    "환수액",
+  ];
+  emptyRow = (new Array(matrixColumns.length)).fill("");
+  this.matrix = [ matrixColumns ];
 
   outerMargin = 30;
   innerPadding = 20;
@@ -247,6 +300,20 @@ CalculationJs.prototype.baseMaker = function () {
     });
     createNode({
       mother: targetTong,
+      text: "상태",
+      style: {
+        width: String(designerWidth) + ea,
+        display: "inline-block",
+        position: "relative",
+        fontSize: String(textSize) + ea,
+        fontWeight: String(700),
+        color: colorChip.white,
+        top: String(textTop) + ea,
+        marginLeft: String(minimumBetween) + ea,
+      }
+    });
+    createNode({
+      mother: targetTong,
       text: "매출",
       style: {
         width: String(requestWidth) + ea,
@@ -275,6 +342,8 @@ CalculationJs.prototype.baseMaker = function () {
     });
 
     for (let project of projects) {
+
+      instance.matrix.push(startRow);
 
       motherBlock = createNode({
         mother: grayTong,
@@ -325,6 +394,9 @@ CalculationJs.prototype.baseMaker = function () {
       createNode({
         mother: targetTong,
         text: project.proid,
+        event: {
+          click: instance.whiteCardView(project.proid),
+        },
         style: {
           width: String(idWidth) + ea,
           display: "inline-block",
@@ -335,12 +407,15 @@ CalculationJs.prototype.baseMaker = function () {
           color: colorChip.deactive,
           top: String(textTop) + ea,
           marginLeft: String(firstMargin) + ea,
+          cursor: "pointer",
         }
       });
-
       createNode({
         mother: targetTong,
         text: project.name.slice(0, 3) + "<b% C%b>",
+        event: {
+          click: instance.whiteCardView(project.proid),
+        },
         style: {
           width: String(nameWidth) + ea,
           display: "inline-block",
@@ -348,9 +423,10 @@ CalculationJs.prototype.baseMaker = function () {
           verticalAlign: "top",
           fontSize: String(textSize) + ea,
           fontWeight: String(700),
-          color: colorChip.black,
+          color: /^드/.test(project.process.status) ? colorChip.deactive : colorChip.black,
           top: String(textTop) + ea,
           marginLeft: String(minimumBetween) + ea,
+          cursor: "pointer",
         },
         bold: {
           fontSize: String(textSize) + ea,
@@ -361,6 +437,9 @@ CalculationJs.prototype.baseMaker = function () {
       createNode({
         mother: targetTong,
         text: project.designer.designer.slice(0, 3) + "<b% D%b>",
+        event: {
+          click: instance.whiteCardView(project.proid),
+        },
         style: {
           width: String(designerWidth) + ea,
           display: "inline-block",
@@ -368,14 +447,40 @@ CalculationJs.prototype.baseMaker = function () {
           verticalAlign: "top",
           fontSize: String(textSize) + ea,
           fontWeight: String(700),
+          color: /^드/.test(project.process.status) ? colorChip.deactive : colorChip.black,
+          top: String(textTop) + ea,
+          marginLeft: String(minimumBetween) + ea,
+          cursor: "pointer",
+        },
+        bold: {
+          fontSize: String(textSize) + ea,
+          fontWeight: String(300),
+          color: colorChip.deactive,
+        }
+      });
+      createNode({
+        mother: targetTong,
+        text: (/^드/.test(project.process.status) ? "<b%" + project.process.status + "%b>" : (/^대/.test(project.process.status) ? "<u%" + project.process.status + "%u>" : project.process.status)),
+        style: {
+          width: String(designerWidth) + ea,
+          display: "inline-block",
+          position: "relative",
+          verticalAlign: "top",
+          fontSize: String(textSize) + ea,
+          fontWeight: String(400),
           color: colorChip.black,
           top: String(textTop) + ea,
           marginLeft: String(minimumBetween) + ea,
         },
         bold: {
           fontSize: String(textSize) + ea,
-          fontWeight: String(300),
+          fontWeight: String(400),
           color: colorChip.deactive,
+        },
+        under: {
+          fontSize: String(textSize) + ea,
+          fontWeight: String(400),
+          color: colorChip.red,
         }
       });
 
@@ -396,7 +501,6 @@ CalculationJs.prototype.baseMaker = function () {
           overflow: "hidden",
         }
       });
-
       requestBlock = createNode({
         mother: requestTable,
         style: {
@@ -441,7 +545,7 @@ CalculationJs.prototype.baseMaker = function () {
       requestSumConfirm = 0;
       requestSumRefund = 0;
       requestSumIncome = 0;
-
+      requestArr = [];
       for (let z = 0; z < project.bill.requests.length; z++) {
         thisRequest = project.bill.requests[z];
 
@@ -519,7 +623,6 @@ CalculationJs.prototype.baseMaker = function () {
             borderRadius: String(5) + "px",
           }
         });
-
         for (let i = 0; i < requestValueArr.length; i++) {
           createNode({
             mother: requestBlock,
@@ -550,9 +653,8 @@ CalculationJs.prototype.baseMaker = function () {
             ]
           });
         }
-
+        requestArr.push(requestValueArr.map((obj) => { return obj.value }));
       }
-
 
       requestValueArr = [
         {
@@ -580,7 +682,6 @@ CalculationJs.prototype.baseMaker = function () {
           color: colorChip.black,
         }
       ];
-
       requestBlock = createNode({
         mother: requestTable,
         style: {
@@ -591,7 +692,6 @@ CalculationJs.prototype.baseMaker = function () {
           borderRadius: String(5) + "px",
         }
       });
-
       for (let i = 0; i < requestValueArr.length; i++) {
         createNode({
           mother: requestBlock,
@@ -620,6 +720,8 @@ CalculationJs.prototype.baseMaker = function () {
           ]
         });
       }
+      requestArr.push(requestValueArr.map((obj) => { return obj.value }));
+      requestLength = requestArr.length;
 
       // response
 
@@ -638,7 +740,6 @@ CalculationJs.prototype.baseMaker = function () {
           overflow: "hidden",
         }
       });
-
       responseBlock = createNode({
         mother: responseTable,
         style: {
@@ -683,7 +784,7 @@ CalculationJs.prototype.baseMaker = function () {
       responseSumNon = 0;
       responseSumPaid = 0;
       responseSumRefund = 0;
-
+      responseArr = [];
       for (let z = 0; z < project.bill.responses.length; z++) {
         thisResponse = project.bill.responses[z];
 
@@ -740,7 +841,6 @@ CalculationJs.prototype.baseMaker = function () {
             borderRadius: String(5) + "px",
           }
         });
-
         for (let i = 0; i < responseValueArr.length; i++) {
           createNode({
             mother: responseBlock,
@@ -771,6 +871,7 @@ CalculationJs.prototype.baseMaker = function () {
             ]
           });
         }
+        responseArr.push(responseValueArr.map((obj) => { return obj.value }));
       }
 
       responseValueArr = [
@@ -799,7 +900,6 @@ CalculationJs.prototype.baseMaker = function () {
           color: colorChip.black,
         },
       ];
-
       responseBlock = createNode({
         mother: responseTable,
         style: {
@@ -810,7 +910,6 @@ CalculationJs.prototype.baseMaker = function () {
           borderRadius: String(5) + "px",
         }
       });
-
       for (let i = 0; i < responseValueArr.length; i++) {
         createNode({
           mother: responseBlock,
@@ -839,13 +938,264 @@ CalculationJs.prototype.baseMaker = function () {
           ]
         });
       }
+      responseArr.push(responseValueArr.map((obj) => { return obj.value }));
+      responseLength = responseArr.length;
 
+      longLength = (requestLength >= responseLength ? requestLength : responseLength);
+      for (let i = 0; i < longLength; i++) {
+        instance.matrix.push([
+          project.proid,
+          project.name,
+          project.designer.designer,
+          project.process.status,
+          requestArr[i] === undefined ? "" : requestArr[i][0],
+          requestArr[i] === undefined ? "" : requestArr[i][1],
+          requestArr[i] === undefined ? "" : requestArr[i][2],
+          requestArr[i] === undefined ? "" : requestArr[i][3],
+          requestArr[i] === undefined ? "" : requestArr[i][4],
+          requestArr[i] === undefined ? "" : requestArr[i][5],
+          responseArr[i] === undefined ? "" : responseArr[i][0],
+          responseArr[i] === undefined ? "" : responseArr[i][1],
+          responseArr[i] === undefined ? "" : responseArr[i][2],
+          responseArr[i] === undefined ? "" : responseArr[i][3],
+          responseArr[i] === undefined ? "" : responseArr[i][4],
+          responseArr[i] === undefined ? "" : responseArr[i][5],
+        ]);
+      }
+
+      instance.matrix.push(emptyRow);
 
     }
   }
 
   contentsLoad();
+}
 
+CalculationJs.prototype.extractMatrix = function () {
+  const instance = this;
+  const { totalContents, ea, belowHeight, projects } = this;
+  const { ajaxJson, uniqueValue, blankHref } = GeneralJs;
+  const { belowButtons: { sub: { extractIcon } } } = this.mother;
+  const parentId = "1JcUBOu9bCrFBQfBAG-yXFcD9gqYMRC1c";
+
+  extractIcon.addEventListener("click", async function () {
+    try {
+      const loading = instance.mother.grayLoading();
+      let matrix, res, link;
+
+      matrix = instance.matrix;
+      res = await ajaxJson({
+        values: matrix,
+        newMake: true,
+        parentId: parentId,
+        sheetName: "fromDB_calculation_" + uniqueValue("hex")
+      }, "/sendSheets");
+      link = res.link;
+      blankHref(link);
+      loading.remove();
+
+    } catch (e) {
+      console.log(e);
+    }
+  });
+}
+
+CalculationJs.prototype.whiteCardView = function (proid) {
+  const instance = this;
+  const { totalContents, ea, belowHeight, projects } = this;
+  const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate } = GeneralJs;
+  return async function (e) {
+    try {
+      const project = projects.find((obj) => { return obj.proid === proid });
+      const zIndex = 4;
+      const blank = "&nbsp;&nbsp;&nbsp;";
+      let cancelBack, whiteCard;
+      let whiteOuterMargin;
+      let whiteInnerMargin;
+      let titleArea, contentsArea, buttonArea;
+      let titleAreaHeight;
+      let titleAreaPaddingBottom;
+      let nameSize, nameWeight;
+      let subSize, subWeight, subMarginLeft, subTextTop;
+      let statusTextTop;
+      let contentsAreaBetween;
+      let contentsAreaPaddingTop;
+
+      whiteOuterMargin = 40;
+      whiteInnerMargin = 60;
+
+      titleAreaHeight = 63;
+      buttonAreaHeight = 120;
+
+      titleAreaPaddingBottom = 8;
+
+      nameSize = 32;
+      nameWeight = 800;
+
+      subSize = 17;
+      subWeight = 400;
+      subMarginLeft = 13;
+      subTextTop = 7;
+
+      statusTextTop = 27;
+
+      contentsAreaBetween = 10;
+      contentsAreaPaddingTop = 32;
+
+      cancelBack = createNode({
+        mother: totalContents,
+        style: {
+          position: "fixed",
+          top: String(0),
+          left: String(0),
+          width: withOut(0, ea),
+          height: withOut(belowHeight, ea),
+          background: colorChip.black,
+          opacity: String(0.4),
+          zIndex: String(zIndex),
+        }
+      });
+
+      whiteCard = createNode({
+        mother: totalContents,
+        style: {
+          position: "fixed",
+          top: String(whiteOuterMargin) + ea,
+          left: String(whiteOuterMargin) + ea,
+          width: withOut((whiteOuterMargin * 2) + (whiteInnerMargin * 2), ea),
+          height: withOut((whiteOuterMargin * 2) + belowHeight + (whiteInnerMargin * 2), ea),
+          padding: String(whiteInnerMargin) + ea,
+          background: colorChip.white,
+          borderRadius: String(5) + "px",
+          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          animation: "fadeuplite 0.3s ease forwards",
+          zIndex: String(zIndex),
+        },
+        children: [
+          {
+            style: {
+              position: "relative",
+              display: "block",
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              borderRadius: String(5) + "px",
+              overflow: "hidden",
+            },
+          }
+        ]
+      }).firstChild;
+
+
+      // title area
+
+      titleArea = createNode({
+        mother: whiteCard,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          height: String(titleAreaHeight) + ea,
+          paddingBottom: String(titleAreaPaddingBottom) + ea,
+          alignItems: "center",
+          borderBottom: "1px solid " + colorChip.gray3,
+        }
+      })
+      createNode({
+        mother: titleArea,
+        text: project.name,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          fontSize: String(nameSize) + ea,
+          fontWeight: String(nameWeight),
+          color: colorChip.black,
+        }
+      });
+      createNode({
+        mother: titleArea,
+        text: project.proid + blank + "/" + blank + project.designer.designer + " 디자이너",
+        style: {
+          display: "inline-flex",
+          fontSize: String(subSize) + ea,
+          fontWeight: String(subWeight),
+          color: colorChip.deactive,
+          marginLeft: String(subMarginLeft) + ea,
+          position: "relative",
+          top: String(subTextTop) + ea,
+        }
+      });
+      createNode({
+        mother: titleArea,
+        text: project.process.status,
+        style: {
+          display: "inline-flex",
+          fontSize: String(subSize) + ea,
+          fontWeight: String(subWeight),
+          color: ((status) => {
+            if (status === "대기") {
+              return colorChip.red;
+            } else if (status === "진행중") {
+              return colorChip.black;
+            } else if (status === "드랍") {
+              return colorChip.deactive;
+            } else if (status === "완료") {
+              return colorChip.green;
+            } else {
+              return colorChip.black;
+            }
+          })(project.process.status),
+          position: "absolute",
+          right: String(0),
+          top: String(statusTextTop) + ea,
+        }
+      });
+
+
+      // contents area
+
+      contentsArea = createNode({
+        mother: whiteCard,
+        style: {
+          display: "flex",
+          position: "relative",
+          flexDirection: "row",
+          paddingTop: String(contentsAreaPaddingTop) + ea,
+          height: withOut(titleAreaHeight + buttonAreaHeight + titleAreaPaddingBottom + contentsAreaPaddingTop, ea),
+          width: withOut(0, ea),
+        }
+      });
+
+      createNode({
+        mother: contentsArea,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: "calc(calc(100% - " + String(contentsAreaBetween) + ea + ") / 2)",
+          height: withOut(0),
+          borderRadius: String(5) + "px",
+          background: colorChip.gray2,
+          marginRight: String(contentsAreaBetween) + ea,
+        }
+      });
+
+      createNode({
+        mother: contentsArea,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: "calc(calc(100% - " + String(contentsAreaBetween) + ea + ") / 2)",
+          height: withOut(0),
+          borderRadius: String(5) + "px",
+          background: colorChip.gray2,
+        }
+      });
+
+
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
 }
 
 CalculationJs.prototype.launching = async function () {
@@ -897,7 +1247,9 @@ CalculationJs.prototype.launching = async function () {
     })
 
     this.projects = projects;
+    this.matrix = [];
     this.baseMaker();
+    this.extractMatrix();
 
     document.getElementById("moveLeftArea").remove();
     document.getElementById("moveRightArea").remove();
