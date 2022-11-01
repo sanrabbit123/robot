@@ -60,6 +60,7 @@ CalculationJs.prototype.baseMaker = function () {
   let matrixColumns;
   let requestLength, responseLength, longLength;
   let requestArr, responseArr;
+  let nameDom;
 
   mainColumns = [
     "아이디",
@@ -341,6 +342,7 @@ CalculationJs.prototype.baseMaker = function () {
       }
     });
 
+    instance.names = [];
     for (let project of projects) {
 
       instance.matrix.push(startRow);
@@ -410,9 +412,12 @@ CalculationJs.prototype.baseMaker = function () {
           cursor: "pointer",
         }
       });
-      createNode({
+      nameDom = createNode({
         mother: targetTong,
         text: project.name.slice(0, 3) + "<b% C%b>",
+        attribute: {
+          name: project.proid + project.cliid + project.desid + project.name + project.designer.designer,
+        },
         event: {
           click: instance.whiteCardView(project.proid),
         },
@@ -434,6 +439,7 @@ CalculationJs.prototype.baseMaker = function () {
           color: colorChip.deactive,
         }
       });
+      instance.names.push(nameDom);
       createNode({
         mother: targetTong,
         text: project.designer.designer.slice(0, 3) + "<b% D%b>",
@@ -971,35 +977,6 @@ CalculationJs.prototype.baseMaker = function () {
   contentsLoad();
 }
 
-CalculationJs.prototype.extractMatrix = function () {
-  const instance = this;
-  const { totalContents, ea, belowHeight, projects } = this;
-  const { ajaxJson, uniqueValue, blankHref } = GeneralJs;
-  const { belowButtons: { sub: { extractIcon } } } = this.mother;
-  const parentId = "1JcUBOu9bCrFBQfBAG-yXFcD9gqYMRC1c";
-
-  extractIcon.addEventListener("click", async function () {
-    try {
-      const loading = instance.mother.grayLoading();
-      let matrix, res, link;
-
-      matrix = instance.matrix;
-      res = await ajaxJson({
-        values: matrix,
-        newMake: true,
-        parentId: parentId,
-        sheetName: "fromDB_calculation_" + uniqueValue("hex")
-      }, "/sendSheets");
-      link = res.link;
-      blankHref(link);
-      loading.remove();
-
-    } catch (e) {
-      console.log(e);
-    }
-  });
-}
-
 CalculationJs.prototype.whiteCardView = function (proid) {
   const instance = this;
   const { totalContents, ea, belowHeight, projects } = this;
@@ -1102,7 +1079,7 @@ CalculationJs.prototype.whiteCardView = function (proid) {
         "환불일",
         "환불 비율",
         "환불 진행",
-      ]
+      ];
 
       rightColumns = [
         "구분",
@@ -1118,7 +1095,7 @@ CalculationJs.prototype.whiteCardView = function (proid) {
         "환수일",
         "지급 진행",
         "환수 진행",
-      ]
+      ];
 
       cancelBack = createNode({
         mother: totalContents,
@@ -1904,6 +1881,76 @@ CalculationJs.prototype.whiteCardView = function (proid) {
   }
 }
 
+CalculationJs.prototype.extractMatrix = function () {
+  const instance = this;
+  const { totalContents, ea, belowHeight, projects } = this;
+  const { ajaxJson, uniqueValue, blankHref } = GeneralJs;
+  const { belowButtons: { sub: { extractIcon } } } = this.mother;
+  const parentId = "1JcUBOu9bCrFBQfBAG-yXFcD9gqYMRC1c";
+
+  extractIcon.addEventListener("click", async function () {
+    try {
+      const loading = instance.mother.grayLoading();
+      let matrix, res, link;
+
+      matrix = instance.matrix;
+      res = await ajaxJson({
+        values: matrix,
+        newMake: true,
+        parentId: parentId,
+        sheetName: "fromDB_calculation_" + uniqueValue("hex")
+      }, "/sendSheets");
+      link = res.link;
+      blankHref(link);
+      loading.remove();
+
+    } catch (e) {
+      console.log(e);
+    }
+  });
+}
+
+CalculationJs.prototype.searchMatrix = function () {
+  const instance = this;
+  const { totalContents, ea, belowHeight, projects } = this;
+  const { ajaxJson, uniqueValue, blankHref, setDebounce } = GeneralJs;
+  const whiteCardClassName = "whiteCardClassName";
+  let searchEvent;
+
+  searchEvent = (value, e) => {
+    return () => {
+      const removeTargets = document.querySelectorAll('.' + whiteCardClassName);
+      for (let dom of removeTargets) {
+        dom.remove();
+      }
+      let target;
+      if (value.trim() === '') {
+        for (let dom of instance.names) {
+          dom.parentElement.parentElement.parentElement.style.display = "block";
+        }
+      } else {
+        target = instance.names.find((dom) => { return (new RegExp(value.trim().replace(/ /gi, ''), "gi")).test(dom.getAttribute("name")) });
+        if (target !== undefined) {
+          for (let dom of instance.names) {
+            if (dom === target) {
+              dom.parentElement.parentElement.parentElement.style.display = "block";
+            } else {
+              dom.parentElement.parentElement.parentElement.style.display = "none";
+            }
+          }
+          if (e.key === "Enter") {
+            target.click();
+          }
+        }
+      }
+    }
+  }
+
+  this.searchInput.addEventListener("keyup", function (e) {
+    setDebounce(searchEvent(this.value, e), "__searchMatrix__", 200);
+  });
+}
+
 CalculationJs.prototype.launching = async function () {
   const instance = this;
   const { ajaxJson, equalJson } = GeneralJs;
@@ -1954,8 +2001,10 @@ CalculationJs.prototype.launching = async function () {
 
     this.projects = projects;
     this.matrix = [];
+    this.names = [];
     this.baseMaker();
     this.extractMatrix();
+    this.searchMatrix();
 
     document.getElementById("moveLeftArea").remove();
     document.getElementById("moveRightArea").remove();
