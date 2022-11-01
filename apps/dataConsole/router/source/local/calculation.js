@@ -2,11 +2,12 @@ const CalculationJs = function () {
   this.mother = new GeneralJs();
   this.totalContents = this.mother.totalContents;
   this.ea = "px";
+  this.media = GeneralJs.stacks.updateMiddleMedialQueryConditions;
 }
 
 CalculationJs.prototype.baseMaker = function () {
   const instance = this;
-  const { totalContents, ea, belowHeight, projects } = this;
+  const { totalContents, ea, belowHeight, projects, media } = this;
   const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate } = GeneralJs;
   let outerMargin;
   let innerPadding;
@@ -262,7 +263,7 @@ CalculationJs.prototype.baseMaker = function () {
       text: "아이디",
       style: {
         width: String(idWidth) + ea,
-        display: "inline-block",
+        display: media[0] ? "inline-block" : "none",
         position: "relative",
         fontSize: String(textSize) + ea,
         fontWeight: String(700),
@@ -304,7 +305,7 @@ CalculationJs.prototype.baseMaker = function () {
       text: "상태",
       style: {
         width: String(designerWidth) + ea,
-        display: "inline-block",
+        display: media[0] ? "inline-block" : "none",
         position: "relative",
         fontSize: String(textSize) + ea,
         fontWeight: String(700),
@@ -401,7 +402,7 @@ CalculationJs.prototype.baseMaker = function () {
         },
         style: {
           width: String(idWidth) + ea,
-          display: "inline-block",
+          display: media[0] ? "inline-block" : "none",
           position: "relative",
           verticalAlign: "top",
           fontSize: String(textSize) + ea,
@@ -469,7 +470,7 @@ CalculationJs.prototype.baseMaker = function () {
         text: (/^드/.test(project.process.status) ? "<b%" + project.process.status + "%b>" : (/^대/.test(project.process.status) ? "<u%" + project.process.status + "%u>" : project.process.status)),
         style: {
           width: String(designerWidth) + ea,
-          display: "inline-block",
+          display: media[0] ? "inline-block" : "none",
           position: "relative",
           verticalAlign: "top",
           fontSize: String(textSize) + ea,
@@ -1034,34 +1035,34 @@ CalculationJs.prototype.whiteCardView = function (proid) {
       let payMethod, payProof;
       let requestSumVat, requestSumSupply;
 
-      whiteOuterMargin = 40;
-      whiteInnerMargin = 50;
+      whiteOuterMargin = <%% 40, 20, 20, 20, 10 %%>;
+      whiteInnerMargin = <%% 50, 30, 30, 30, 20 %%>;
 
-      titleAreaHeight = 63;
+      titleAreaHeight = <%% 63, 42, 42, 42, 42 %%>;
 
       titleAreaPaddingBottom = 6;
 
-      nameSize = 32;
+      nameSize = <%% 32, 24, 24, 24, 24 %%>;
       nameWeight = 800;
 
-      subSize = 17;
+      subSize = <%% 17, 15, 15, 15, 15 %%>;
       subWeight = 400;
       subMarginLeft = 13;
-      subTextTop = 7;
+      subTextTop = <%% 7, 5, 5, 5, 3 %%>;
 
-      statusTextTop = 27;
+      statusTextTop = <%% 27, 18, 18, 18, 18 %%>;
 
       contentsAreaBetween = 10;
-      contentsAreaPaddingTop = 30;
+      contentsAreaPaddingTop = <%% 30, 15, 15, 15, 15 %%>;
 
       grayInnerPadding = 10;
 
-      blockHeight = 40;
+      blockHeight = <%% 40, 36, 36, 36, 36 %%>;
 
-      valueSize = 13;
+      valueSize = <%% 13, 12, 12, 11, 3 %%>;
       valueWeight = 400;
       valueBoldWeight = 800;
-      valueTextTop = -1;
+      valueTextTop = isMac() ? -1 : 1;
 
       blockMarginBottom = 2;
 
