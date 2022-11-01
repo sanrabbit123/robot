@@ -1048,7 +1048,7 @@ CalculationJs.prototype.whiteCardView = function (proid) {
       subSize = <%% 17, 15, 15, 15, 15 %%>;
       subWeight = 400;
       subMarginLeft = 13;
-      subTextTop = <%% 7, 5, 5, 5, 3 %%>;
+      subTextTop = <%% (isMac() ? 7 : 5), 5, 5, 5, 3 %%>;
 
       statusTextTop = <%% 27, 18, 18, 18, 18 %%>;
 
