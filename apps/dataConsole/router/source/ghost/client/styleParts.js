@@ -161,6 +161,15 @@ StylePartsJs.prototype.insertNewsBox = function () {
   let between;
   let photoBetween;
   let photoHeight;
+  let photoWidth;
+  let titleTongHeight;
+  let titleSize, titleWeight, titleLineHeight, titlePadding;
+  let titleLineTop;
+  let logoWidth;
+  let photoTongMarginTop;
+  let contentsSize, contentsWeight;
+  let contentsLineHeight;
+  let subTitleSize, subTitleWeight, subTitleMarginBottom;
 
   initSize = <%% 15, 14, 13, 12, 3.2 %%>;
   initWeight = <%% 400, 400, 400, 400, 400 %%>;
@@ -175,7 +184,7 @@ StylePartsJs.prototype.insertNewsBox = function () {
   titleLogWidth = <%% 250, 216, 160, 140, 34 %%>;
   titleLogTop = <%% 96, 64, 60, 48, 2 %%>;
 
-  baseMotherMarginBottom = <%% 200, 160, 140, 110, 3 %%>;
+  baseMotherMarginBottom = <%% 200, 190, 140, 110, 3 %%>;
 
   descriptionPaddingTop = <%% 21, 21, 8, 6, 0.5 %%>;
   partsWidth = <%% 100, 96, 90, 88, 33 %%>;
@@ -186,9 +195,30 @@ StylePartsJs.prototype.insertNewsBox = function () {
   mobileStandardWidth = 80;
 
   photoBetween = <%% 40, 40, 36, 36, 36 %%>;
-  between = <%% 30, 30, 30, 30, 30 %%>;
+  between = <%% 30, 24, 24, 20, 30 %%>;
 
   photoHeight = <%% 380, 380, 380, 380, 380 %%>;
+  photoWidth = <%% 692, 628, 628, 628, 628 %%>;
+
+  titleTongHeight = <%% 72, 64, 72, 72, 72 %%>;
+
+  logoWidth = <%% 438, 430, 438, 438, 438 %%>;
+
+  titleSize = <%% 21, 20, 21, 21, 21 %%>;
+  titleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  titleLineHeight = <%% 1.56, 1.56, 1.56, 1.56, 1.56 %%>;
+  titlePadding = <%% 40, 40, 40, 40, 40 %%>;
+  titleLineTop = <%% 35, 30, 30, 30, 30 %%>;
+
+  photoTongMarginTop = <%% 90, 90, 90, 90, 90 %%>;
+
+  contentsSize = <%% 14, 14, 13, 12, 14 %%>;
+  contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
+  contentsLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
+
+  subTitleSize = <%% 15, 15, 15, 15, 15 %%>;
+  subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  subTitleMarginBottom = <%% 12, 12, 12, 12, 12 %%>;
 
   svgBox = this.returnSvgBox();
   contents = {
@@ -229,7 +259,7 @@ StylePartsJs.prototype.insertNewsBox = function () {
       justifyContent: "center",
       alignItems: "center",
       width: withOut(0, ea),
-      height: String(72) + ea,
+      height: String(titleTongHeight) + ea,
     },
     children: [
       {
@@ -237,7 +267,7 @@ StylePartsJs.prototype.insertNewsBox = function () {
         source: svgBox.news.multiple(colorChip.black),
         style: {
           display: "inline-block",
-          width: String(438) + ea,
+          width: String(logoWidth) + ea,
           position: "relative",
         }
       }
@@ -252,7 +282,7 @@ StylePartsJs.prototype.insertNewsBox = function () {
       justifyContent: "center",
       alignItems: "center",
       width: withOut(0, ea),
-      height: String(72) + ea,
+      height: String(titleTongHeight) + ea,
     },
     children: [
       {
@@ -261,7 +291,7 @@ StylePartsJs.prototype.insertNewsBox = function () {
           position: "absolute",
           width: withOut(0, ea),
           top: String(0),
-          height: String(35) + ea,
+          height: String(titleLineTop) + ea,
           borderBottom: "1px solid " + colorChip.gray3,
         }
       },
@@ -270,13 +300,13 @@ StylePartsJs.prototype.insertNewsBox = function () {
         style: {
           display: "inline-block",
           position: "relative",
-          fontSize: String(21) + ea,
-          fontWeight: String(800),
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(titleWeight),
           color: colorChip.black,
           textAlign: "center",
-          lineHeight: String(1.56),
-          paddingRight: String(40) + ea,
-          paddingLeft: String(40) + ea,
+          lineHeight: String(titleLineHeight),
+          paddingRight: String(titlePadding) + ea,
+          paddingLeft: String(titlePadding) + ea,
           background: colorChip.white,
         }
       }
@@ -291,7 +321,7 @@ StylePartsJs.prototype.insertNewsBox = function () {
       position: "relative",
       flexDirection: "row",
       width: withOut(0, ea),
-      marginTop: String(90) + ea,
+      marginTop: String(photoTongMarginTop) + ea,
     },
     children: [
       {
@@ -299,7 +329,7 @@ StylePartsJs.prototype.insertNewsBox = function () {
           display: "inline-block",
           verticalAlign: "top",
           position: "relative",
-          width: String(692) + ea,
+          width: String(photoWidth) + ea,
           height: String(photoHeight) + ea,
           backgroundImage: "url('" + StylePartsJs.binaryPath + "/news.jpg" + "')",
           backgroundPosition: "50% 50%",
@@ -313,7 +343,7 @@ StylePartsJs.prototype.insertNewsBox = function () {
           display: "inline-flex",
           verticalAlign: "top",
           flexDirection: "column-reverse",
-          width: "calc(calc(calc(100% - " + String(692) + ea + ") - " + String(between + photoBetween) + ea + ") / " + String(2) + ")",
+          width: "calc(calc(calc(100% - " + String(photoWidth) + ea + ") - " + String(between + photoBetween) + ea + ") / " + String(2) + ")",
           height: String(photoHeight) + ea,
           marginRight: String(between) + ea,
           borderBottom: "1px solid " + colorChip.gray3,
@@ -324,10 +354,10 @@ StylePartsJs.prototype.insertNewsBox = function () {
             style: {
               display: "block",
               position: "relative",
-              fontSize: String(14) + ea,
-              fontWeight: String(400),
+              fontSize: String(contentsSize) + ea,
+              fontWeight: String(contentsWeight),
               color: colorChip.black,
-              lineHeight: String(1.7),
+              lineHeight: String(contentsLineHeight),
               marginBottom: String(between) + ea,
             }
           },
@@ -336,10 +366,10 @@ StylePartsJs.prototype.insertNewsBox = function () {
             style: {
               display: "block",
               position: "relative",
-              fontSize: String(15) + ea,
-              fontWeight: String(800),
+              fontSize: String(subTitleSize) + ea,
+              fontWeight: String(subTitleWeight),
               color: colorChip.black,
-              marginBottom: String(12) + ea,
+              marginBottom: String(subTitleMarginBottom) + ea,
             }
           }
         ]
@@ -349,7 +379,7 @@ StylePartsJs.prototype.insertNewsBox = function () {
           display: "inline-flex",
           verticalAlign: "top",
           flexDirection: "column-reverse",
-          width: "calc(calc(calc(100% - " + String(692) + ea + ") - " + String(between + photoBetween) + ea + ") / " + String(2) + ")",
+          width: "calc(calc(calc(100% - " + String(photoWidth) + ea + ") - " + String(between + photoBetween) + ea + ") / " + String(2) + ")",
           height: String(photoHeight) + ea,
           borderBottom: "1px solid " + colorChip.gray3,
         },
@@ -359,10 +389,10 @@ StylePartsJs.prototype.insertNewsBox = function () {
             style: {
               display: "block",
               position: "relative",
-              fontSize: String(14) + ea,
-              fontWeight: String(400),
+              fontSize: String(contentsSize) + ea,
+              fontWeight: String(contentsWeight),
               color: colorChip.black,
-              lineHeight: String(1.7),
+              lineHeight: String(contentsLineHeight),
               marginBottom: String(between) + ea,
             }
           }
@@ -370,10 +400,6 @@ StylePartsJs.prototype.insertNewsBox = function () {
       },
     ]
   });
-
-
-
-
 
 }
 
@@ -615,9 +641,10 @@ StylePartsJs.prototype.insertInitBox = function () {
 StylePartsJs.prototype.insertHeadlineBox = function () {
   const instance = this;
   const { totalContents, ea, standardWidth, media, baseTong, localColor } = this;
-  const { createNode, withOut, colorChip, cleanChildren, selfHref, ajaxJson, isMac } = GeneralJs;
+  const { createNode, withOut, colorChip, cleanChildren, selfHref, ajaxJson, isMac, returnGet } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
+  const getObj = returnGet();
   let baseMother;
   let rightMother, leftMother;
   let leftMotherWidth;
@@ -687,6 +714,10 @@ StylePartsJs.prototype.insertHeadlineBox = function () {
       ],
     ]
   };
+
+  if (getObj.mode === "inner") {
+    contents.title = "전문 디자이너와\n엄선된 자재의 만남";
+  }
 
   baseMother = createNode({
     mother: baseTong,
@@ -891,11 +922,12 @@ StylePartsJs.prototype.insertHeadlineBox = function () {
 StylePartsJs.prototype.insertLeadBox = function () {
   const instance = this;
   const { totalContents, ea, standardWidth, media, baseTong, localColor } = this;
-  const { createNode, withOut, colorChip, cleanChildren, selfHref, ajaxJson } = GeneralJs;
+  const { createNode, withOut, colorChip, cleanChildren, selfHref, ajaxJson, returnGet } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
+  const getObj = returnGet();
   let baseMother;
   let paddingTop;
   let descriptionBox;
@@ -987,7 +1019,7 @@ StylePartsJs.prototype.insertLeadBox = function () {
   barNoticeMarginBottom = <%% 5, 5, 5, 5, 2 %%>;
 
   contents = {
-    title: "홈리에종 소개",
+    title: (getObj.mode === "inner" ? "새로운 인테리어" : "홈리에종 소개"),
     sub: "디자이너가 이끄는 인테리어",
     description: [
       desktop ? "홈리에종은 과도한 리모델링을 지양하고 꼭 필요한 시공만을 진행하며," : "홈리에종은 과한 리모델링을 지양하고 필요한 시공만 진행하며,",
@@ -3925,8 +3957,11 @@ StylePartsJs.prototype.launching = async function (loading) {
       local: async () => {
         try {
           instance.slimNavigator();
-          // instance.insertInitBox();
-          instance.insertNewsBox();
+          if (getObj.mode === "inner") {
+            instance.insertNewsBox();
+          } else {
+            instance.insertInitBox();
+          }
           instance.insertHeadlineBox();
           instance.insertLeadBox();
           instance.insertMatchupBox();
