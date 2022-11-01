@@ -119,7 +119,7 @@ DevContext.prototype.launching = async function () {
     // const mails = await human.getMailsAll("help", "hlofwis83!");
 
 
-
+    // await ghostRequest("print", { cliid: "c2210_ab39s" })
 
 
 

@@ -1009,6 +1009,7 @@ CalculationJs.prototype.whiteCardView = function (proid) {
       const project = projects.find((obj) => { return obj.proid === proid });
       const zIndex = 4;
       const blank = "&nbsp;&nbsp;&nbsp;";
+      const whiteCardClassName = "whiteCardClassName";
       let cancelBack, whiteCard;
       let whiteOuterMargin;
       let whiteInnerMargin;
@@ -1026,7 +1027,7 @@ CalculationJs.prototype.whiteCardView = function (proid) {
       let blockHeight;
       let leftColumns;
       let rightColumns;
-      let greenTong, whiteTong, blackTong;
+      let greenTong, whiteTong, blackTong, grayTong;
       let thisRequest;
       let requestName;
       let currentState;
@@ -1037,12 +1038,29 @@ CalculationJs.prototype.whiteCardView = function (proid) {
       let valueSize, valueWeight, valueBoldWeight;
       let valueTextTop;
       let blockMarginBottom;
+      let requestSumConsumer;
+      let requestSumConfirm;
+      let requestSumRefund;
+      let requestSumIncome;
+      let requestValueArr, responseValueArr;
+      let thisResponse;
+      let responseName;
+      let payAmount;
+      let refundAmount;
+      let nonPayAmount;
+      let responseSumTotal;
+      let responseSumNon;
+      let responseSumPaid;
+      let responseSumRefund;
+      let refundDate;
+      let vatAmount, supplyAmount;
+      let payMethod, payProof;
+      let requestSumVat, requestSumSupply;
 
       whiteOuterMargin = 40;
       whiteInnerMargin = 50;
 
       titleAreaHeight = 63;
-      buttonAreaHeight = 120;
 
       titleAreaPaddingBottom = 6;
 
@@ -1072,26 +1090,47 @@ CalculationJs.prototype.whiteCardView = function (proid) {
 
       leftColumns = [
         "구분",
+        "공급가",
+        "VAT",
         "소비자가",
         "확정가",
         "입금액",
         "입금일",
+        "입금 수단",
+        "입금 증빙",
         "환불액",
         "환불일",
+        "환불 비율",
+        "환불 진행",
       ]
 
       rightColumns = [
         "구분",
+        "종류",
+        "수수료",
+        "증빙",
         "총액",
         "미지급액",
         "지급액",
         "지급일",
+        "지급 수단",
         "환수액",
         "환수일",
+        "지급 진행",
+        "환수 진행",
       ]
 
       cancelBack = createNode({
         mother: totalContents,
+        class: [ whiteCardClassName ],
+        event: {
+          click: function (e) {
+            const targets = [ ...document.querySelectorAll('.' + whiteCardClassName) ];
+            for (let dom of targets) {
+              dom.remove();
+            }
+          }
+        },
         style: {
           position: "fixed",
           top: String(0),
@@ -1106,6 +1145,7 @@ CalculationJs.prototype.whiteCardView = function (proid) {
 
       whiteCard = createNode({
         mother: totalContents,
+        class: [ whiteCardClassName ],
         style: {
           position: "fixed",
           top: String(whiteOuterMargin) + ea,
@@ -1147,7 +1187,7 @@ CalculationJs.prototype.whiteCardView = function (proid) {
           alignItems: "center",
           borderBottom: "1px solid " + colorChip.gray3,
         }
-      })
+      });
       createNode({
         mother: titleArea,
         text: project.name,
@@ -1206,24 +1246,26 @@ CalculationJs.prototype.whiteCardView = function (proid) {
         style: {
           display: "flex",
           position: "relative",
-          flexDirection: "row",
+          flexDirection: "column",
           paddingTop: String(contentsAreaPaddingTop) + ea,
-          height: withOut(titleAreaHeight + buttonAreaHeight + titleAreaPaddingBottom + contentsAreaPaddingTop, ea),
+          height: withOut(titleAreaHeight + titleAreaPaddingBottom + contentsAreaPaddingTop, ea),
           width: withOut(0, ea),
         }
       });
 
+      // contents area up - request
+
       contentsAreaLeft = createNode({
         mother: contentsArea,
         style: {
-          display: "inline-flex",
+          display: "flex",
           position: "relative",
-          width: "calc(calc(calc(100% - " + String(contentsAreaBetween) + ea + ") / 2) - " + String(grayInnerPadding * 2) + ea + ")",
-          height: withOut(grayInnerPadding * 2, ea),
+          height: "calc(calc(calc(100% - " + String(contentsAreaBetween) + ea + ") / 2) - " + String(grayInnerPadding * 2) + ea + ")",
+          width: withOut(grayInnerPadding * 2, ea),
           borderRadius: String(5) + "px",
           padding: String(grayInnerPadding) + ea,
           background: colorChip.gray2,
-          marginRight: String(contentsAreaBetween) + ea,
+          marginBottom: String(contentsAreaBetween) + ea,
           alignItems: "center",
           justifyContent: "center",
         },
@@ -1255,7 +1297,6 @@ CalculationJs.prototype.whiteCardView = function (proid) {
           zIndex: String(1),
         }
       });
-
       for (let column of leftColumns) {
         createNode({
           mother: greenTong,
@@ -1282,6 +1323,12 @@ CalculationJs.prototype.whiteCardView = function (proid) {
         });
       }
 
+      requestSumConsumer = 0;
+      requestSumConfirm = 0;
+      requestSumRefund = 0;
+      requestSumIncome = 0;
+      requestSumVat = 0;
+      requestSumSupply = 0;
       for (let z = 0; z < project.bill.requests.length; z++) {
         thisRequest = project.bill.requests[z];
         requestName = thisRequest.name;
@@ -1295,6 +1342,9 @@ CalculationJs.prototype.whiteCardView = function (proid) {
           currentState = Math.floor(thisRequest.items.reduce((acc, curr) => { return acc + curr.amount.consumer }, 0));
         }
 
+        vatAmount = Math.floor(currentState / 11);
+        supplyAmount = Math.floor(currentState - vatAmount);
+
         if (/^드/gi.test(project.process.status)) {
           if (thisRequest.pay.length === 0) {
             confirmState = 0;
@@ -1306,6 +1356,20 @@ CalculationJs.prototype.whiteCardView = function (proid) {
           payDate = dateToString(thisRequest.pay[0].date);
         }
 
+        if (payDate === '-') {
+          payMethod = "-";
+          payProof = "-";
+        } else {
+          payMethod = "알 수 없음";
+          if (thisRequest.proofs.length > 0) {
+            payMethod = thisRequest.proofs[0].method;
+          }
+          payProof = "알 수 없음";
+          if (thisRequest.proofs.length > 0) {
+            payProof = thisRequest.proofs[0].proof;
+          }
+        }
+
         cancelAmount = 0;
         cancelDate = '-';
 
@@ -1313,6 +1377,81 @@ CalculationJs.prototype.whiteCardView = function (proid) {
           cancelAmount = thisRequest.cancel.reduce((acc, curr) => { return acc + curr.amount }, 0);
           cancelDate = dateToString(thisRequest.cancel[0].date);
         }
+
+        requestSumConsumer += currentState;
+        requestSumConfirm += confirmState;
+        requestSumRefund += cancelAmount;
+        requestSumIncome += (payDate === '-' ? 0 : confirmState);
+        requestSumVat += vatAmount;
+        requestSumSupply += supplyAmount;
+
+        requestValueArr = [
+          {
+            value: requestName,
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: autoComma(supplyAmount),
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: autoComma(vatAmount),
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: autoComma(currentState),
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: autoComma(confirmState),
+            color: confirmState === 0 ? colorChip.black : (payDate === '-' ? colorChip.red : colorChip.black),
+            pointer: false,
+          },
+          {
+            value: payDate === '-' ? String(0) : autoComma(confirmState),
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: payDate,
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: payMethod,
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: payProof,
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: autoComma(cancelAmount),
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: cancelDate,
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: cancelDate === '-' ? "0%" : String(Math.floor(cancelAmount / confirmState)) + '%',
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: "환불 진행",
+            color: colorChip.green,
+            pointer: true,
+          },
+        ];
 
         whiteTong = createNode({
           mother: contentsAreaLeft,
@@ -1327,180 +1466,89 @@ CalculationJs.prototype.whiteCardView = function (proid) {
             marginBottom: String(blockMarginBottom) + ea,
           }
         });
-
-        createNode({
-          mother: whiteTong,
-          style: {
-            display: "inline-flex",
-            width: "calc(100% / " + String(leftColumns.length) + ")",
-            height: withOut(0, ea),
-            justifyContent: "center",
-            alignItems: "center",
-            position: "relative",
-          },
-          children: [
-            {
-              text: requestName,
-              style: {
-                fontSize: String(valueSize) + ea,
-                fontWeight: String(valueWeight),
-                color: colorChip.black,
-                position: "relative",
-                top: String(valueTextTop) + ea,
+        for (let { value, color, pointer } of requestValueArr) {
+          createNode({
+            mother: whiteTong,
+            style: {
+              display: "inline-flex",
+              width: "calc(100% / " + String(leftColumns.length) + ")",
+              height: withOut(0, ea),
+              justifyContent: "center",
+              alignItems: "center",
+              position: "relative",
+              cursor: pointer ? "pointer" : "",
+            },
+            children: [
+              {
+                text: value,
+                style: {
+                  fontSize: String(valueSize) + ea,
+                  fontWeight: String(valueWeight),
+                  color: color,
+                  position: "relative",
+                  top: String(valueTextTop) + ea,
+                }
               }
-            }
-          ]
-        });
-
-        createNode({
-          mother: whiteTong,
-          style: {
-            display: "inline-flex",
-            width: "calc(100% / " + String(leftColumns.length) + ")",
-            height: withOut(0, ea),
-            justifyContent: "center",
-            alignItems: "center",
-            position: "relative",
-          },
-          children: [
-            {
-              text: autoComma(currentState),
-              style: {
-                fontSize: String(valueSize) + ea,
-                fontWeight: String(valueWeight),
-                color: colorChip.black,
-                position: "relative",
-                top: String(valueTextTop) + ea,
-              }
-            }
-          ]
-        });
-
-        createNode({
-          mother: whiteTong,
-          style: {
-            display: "inline-flex",
-            width: "calc(100% / " + String(leftColumns.length) + ")",
-            height: withOut(0, ea),
-            justifyContent: "center",
-            alignItems: "center",
-            position: "relative",
-          },
-          children: [
-            {
-              text: autoComma(confirmState),
-              style: {
-                fontSize: String(valueSize) + ea,
-                fontWeight: String(valueWeight),
-                color: colorChip.black,
-                position: "relative",
-                top: String(valueTextTop) + ea,
-              }
-            }
-          ]
-        });
-
-        createNode({
-          mother: whiteTong,
-          style: {
-            display: "inline-flex",
-            width: "calc(100% / " + String(leftColumns.length) + ")",
-            height: withOut(0, ea),
-            justifyContent: "center",
-            alignItems: "center",
-            position: "relative",
-          },
-          children: [
-            {
-              text: payDate === '-' ? String(0) : autoComma(confirmState),
-              style: {
-                fontSize: String(valueSize) + ea,
-                fontWeight: String(valueWeight),
-                color: colorChip.black,
-                position: "relative",
-                top: String(valueTextTop) + ea,
-              }
-            }
-          ]
-        });
-
-
-        createNode({
-          mother: whiteTong,
-          style: {
-            display: "inline-flex",
-            width: "calc(100% / " + String(leftColumns.length) + ")",
-            height: withOut(0, ea),
-            justifyContent: "center",
-            alignItems: "center",
-            position: "relative",
-          },
-          children: [
-            {
-              text: payDate,
-              style: {
-                fontSize: String(valueSize) + ea,
-                fontWeight: String(valueWeight),
-                color: colorChip.black,
-                position: "relative",
-                top: String(valueTextTop) + ea,
-              }
-            }
-          ]
-        });
-
-        createNode({
-          mother: whiteTong,
-          style: {
-            display: "inline-flex",
-            width: "calc(100% / " + String(leftColumns.length) + ")",
-            height: withOut(0, ea),
-            justifyContent: "center",
-            alignItems: "center",
-            position: "relative",
-          },
-          children: [
-            {
-              text: autoComma(cancelAmount),
-              style: {
-                fontSize: String(valueSize) + ea,
-                fontWeight: String(valueWeight),
-                color: colorChip.black,
-                position: "relative",
-                top: String(valueTextTop) + ea,
-              }
-            }
-          ]
-        });
-
-        createNode({
-          mother: whiteTong,
-          style: {
-            display: "inline-flex",
-            width: "calc(100% / " + String(leftColumns.length) + ")",
-            height: withOut(0, ea),
-            justifyContent: "center",
-            alignItems: "center",
-            position: "relative",
-          },
-          children: [
-            {
-              text: cancelDate,
-              style: {
-                fontSize: String(valueSize) + ea,
-                fontWeight: String(valueWeight),
-                color: colorChip.black,
-                position: "relative",
-                top: String(valueTextTop) + ea,
-              }
-            }
-          ]
-        });
-
-
+            ]
+          });
+        }
       }
 
-      createNode({
+      requestValueArr = [
+        {
+          value: "총계",
+          color: colorChip.black,
+        },
+        {
+          value: autoComma(requestSumSupply),
+          color: colorChip.black,
+        },
+        {
+          value: autoComma(requestSumVat),
+          color: colorChip.black,
+        },
+        {
+          value: autoComma(requestSumConsumer),
+          color: colorChip.black,
+        },
+        {
+          value: autoComma(requestSumConfirm),
+          color: colorChip.black,
+        },
+        {
+          value: autoComma(requestSumIncome),
+          color: colorChip.black,
+        },
+        {
+          value: '-',
+          color: colorChip.black,
+        },
+        {
+          value: '-',
+          color: colorChip.black,
+        },
+        {
+          value: '-',
+          color: colorChip.black,
+        },
+        {
+          value: autoComma(requestSumRefund),
+          color: colorChip.black,
+        },
+        {
+          value: '-',
+          color: colorChip.black,
+        },
+        {
+          value: '-',
+          color: colorChip.black,
+        },
+        {
+          value: '-',
+          color: colorChip.black,
+        },
+      ];
+      grayTong = createNode({
         mother: contentsAreaLeft,
         style: {
           display: "flex",
@@ -1510,18 +1558,44 @@ CalculationJs.prototype.whiteCardView = function (proid) {
           height: String(blockHeight) + ea,
           background: colorChip.gray0,
           borderRadius: String(5) + "px",
-          marginBottom: String(80) + ea,
+          marginBottom: String(blockMarginBottom) + ea,
         }
-      })
+      });
+      for (let { value, color } of requestValueArr) {
+        createNode({
+          mother: grayTong,
+          style: {
+            display: "inline-flex",
+            width: "calc(100% / " + String(leftColumns.length) + ")",
+            height: withOut(0, ea),
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+          },
+          children: [
+            {
+              text: value,
+              style: {
+                fontSize: String(valueSize) + ea,
+                fontWeight: String(600),
+                color: colorChip.black,
+                position: "relative",
+                top: String(valueTextTop) + ea,
+              }
+            }
+          ]
+        });
+      }
 
+      // contents area down - response
 
       contentsAreaRight = createNode({
         mother: contentsArea,
         style: {
-          display: "inline-flex",
+          display: "flex",
           position: "relative",
-          width: "calc(calc(calc(100% - " + String(contentsAreaBetween) + ea + ") / 2) - " + String(grayInnerPadding * 2) + ea + ")",
-          height: withOut(grayInnerPadding * 2, ea),
+          height: "calc(calc(calc(100% - " + String(contentsAreaBetween) + ea + ") / 2) - " + String(grayInnerPadding * 2) + ea + ")",
+          width: withOut(grayInnerPadding * 2, ea),
           borderRadius: String(5) + "px",
           padding: String(grayInnerPadding) + ea,
           background: colorChip.gray2,
@@ -1541,7 +1615,288 @@ CalculationJs.prototype.whiteCardView = function (proid) {
         ]
       }).firstChild;
 
+      blackTong = createNode({
+        mother: contentsAreaRight,
+        style: {
+          display: "flex",
+          position: "sticky",
+          flexDirection: "row",
+          top: String(0),
+          width: withOut(0),
+          height: String(blockHeight) + ea,
+          background: colorChip.gradientGray,
+          borderRadius: String(5) + "px",
+          marginBottom: String(blockMarginBottom) + ea,
+          zIndex: String(1),
+        }
+      });
+      for (let column of rightColumns) {
+        createNode({
+          mother: blackTong,
+          style: {
+            display: "inline-flex",
+            width: "calc(100% / " + String(leftColumns.length) + ")",
+            height: withOut(0, ea),
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+          },
+          children: [
+            {
+              text: column,
+              style: {
+                fontSize: String(valueSize) + ea,
+                fontWeight: String(valueBoldWeight),
+                color: colorChip.white,
+                position: "relative",
+                top: String(valueTextTop) + ea,
+              }
+            }
+          ]
+        });
+      }
 
+      responseSumTotal = 0;
+      responseSumNon = 0;
+      responseSumPaid = 0;
+      responseSumRefund = 0;
+      for (let z = 0; z < project.bill.responses.length; z++) {
+        thisResponse = project.bill.responses[z];
+        responseName = thisResponse.name;
+
+        confirmState = Math.floor(thisResponse.items.reduce((acc, curr) => { return acc + curr.amount.pure }, 0));
+        payAmount = Math.floor(thisResponse.pay.reduce((acc, curr) => { return acc + curr.amount }, 0));
+        refundAmount = Math.floor(thisResponse.cancel.reduce((acc, curr) => { return acc + curr.amount }, 0));
+        nonPayAmount = confirmState - payAmount;
+        payDate = '-';
+        if (thisResponse.pay.length > 0) {
+          payDate = dateToString(thisResponse.pay[0].date);
+        }
+        refundDate = '-';
+        if (thisResponse.cancel.length > 0) {
+          refundDate = dateToString(thisResponse.cancel[0].date);
+        }
+        if (payDate === '-') {
+          payMethod = "-";
+          payProof = "-";
+        } else {
+          payMethod = "알 수 없음";
+          if (thisResponse.proofs.length > 0) {
+            payMethod = thisResponse.proofs[0].method;
+          }
+          payProof = "알 수 없음";
+          if (thisResponse.proofs.length > 0) {
+            payProof = thisResponse.proofs[0].proof;
+          }
+        }
+
+
+        responseSumTotal += confirmState;
+        responseSumNon += nonPayAmount;
+        responseSumPaid += payAmount;
+        responseSumRefund += refundAmount;
+
+        responseValueArr = [
+          {
+            value: responseName,
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: project.process.calculation.method,
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: String(project.process.calculation.percentage) + '%',
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: '-',
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: autoComma(confirmState),
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: autoComma(nonPayAmount),
+            color: nonPayAmount !== 0 ? colorChip.purple : colorChip.black,
+            pointer: false,
+          },
+          {
+            value: autoComma(payAmount),
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: payDate,
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: payMethod,
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: autoComma(refundAmount),
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: refundDate,
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: "지급 진행",
+            color: colorChip.green,
+            pointer: true,
+          },
+          {
+            value: "환수 진행",
+            color: colorChip.green,
+            pointer: true,
+          },
+        ];
+
+        whiteTong = createNode({
+          mother: contentsAreaRight,
+          style: {
+            display: "flex",
+            position: "relative",
+            flexDirection: "row",
+            width: withOut(0),
+            height: String(blockHeight) + ea,
+            background: colorChip.white,
+            borderRadius: String(5) + "px",
+            marginBottom: String(blockMarginBottom) + ea,
+          }
+        });
+        for (let { value, color, pointer } of responseValueArr) {
+          createNode({
+            mother: whiteTong,
+            style: {
+              display: "inline-flex",
+              width: "calc(100% / " + String(leftColumns.length) + ")",
+              height: withOut(0, ea),
+              justifyContent: "center",
+              alignItems: "center",
+              position: "relative",
+              cursor: pointer ? "pointer" : "",
+            },
+            children: [
+              {
+                text: value,
+                style: {
+                  fontSize: String(valueSize) + ea,
+                  fontWeight: String(valueWeight),
+                  color: color,
+                  position: "relative",
+                  top: String(valueTextTop) + ea,
+                }
+              }
+            ]
+          });
+        }
+      }
+
+      responseValueArr = [
+        {
+          value: "총계",
+          color: colorChip.black,
+        },
+        {
+          value: '-',
+          color: colorChip.black,
+        },
+        {
+          value: '-',
+          color: colorChip.black,
+        },
+        {
+          value: '-',
+          color: colorChip.black,
+        },
+        {
+          value: autoComma(responseSumTotal),
+          color: colorChip.black,
+        },
+        {
+          value: autoComma(responseSumNon),
+          color: colorChip.black,
+        },
+        {
+          value: autoComma(responseSumPaid),
+          color: colorChip.black,
+        },
+        {
+          value: '-',
+          color: colorChip.black,
+        },
+        {
+          value: '-',
+          color: colorChip.black,
+        },
+        {
+          value: autoComma(responseSumRefund),
+          color: colorChip.black,
+        },
+        {
+          value: '-',
+          color: colorChip.black,
+        },
+        {
+          value: '-',
+          color: colorChip.black,
+        },
+        {
+          value: '-',
+          color: colorChip.black,
+        },
+      ];
+      grayTong = createNode({
+        mother: contentsAreaRight,
+        style: {
+          display: "flex",
+          position: "relative",
+          flexDirection: "row",
+          width: withOut(0),
+          height: String(blockHeight) + ea,
+          background: colorChip.gray0,
+          borderRadius: String(5) + "px",
+          marginBottom: String(blockMarginBottom) + ea,
+        }
+      });
+      for (let { value, color } of responseValueArr) {
+        createNode({
+          mother: grayTong,
+          style: {
+            display: "inline-flex",
+            width: "calc(100% / " + String(leftColumns.length) + ")",
+            height: withOut(0, ea),
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+          },
+          children: [
+            {
+              text: value,
+              style: {
+                fontSize: String(valueSize) + ea,
+                fontWeight: String(600),
+                color: colorChip.black,
+                position: "relative",
+                top: String(valueTextTop) + ea,
+              }
+            }
+          ]
+        });
+      }
 
     } catch (e) {
       console.log(e);
