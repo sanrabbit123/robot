@@ -3792,4 +3792,14 @@ Mother.prototype.sha256Hmac = function (key, message, type = "base64") {
   return crypto.createHmac("sha256", key).update(message).digest(type);
 }
 
+Mother.prototype.stringToBase64 = function (str) {
+  const iconv = require("iconv-lite");
+  return iconv.encode(str, "utf-8").toString("base64");
+}
+
+Mother.prototype.base64ToString = function (data) {
+  const iconv = require("iconv-lite");
+  return iconv.decode(Buffer.from(data, "base64"), "utf-8");
+}
+
 module.exports = Mother;

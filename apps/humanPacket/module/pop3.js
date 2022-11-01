@@ -75,7 +75,7 @@ const Pop3Client = function (port, host, options = {}) {
   this.getMultiline = function() { return multiline; };
 
   // Writes to remote server socket
-  this.write = function(command, argument) {
+  this.write = function (command, argument) {
     let text = command;
 
     if (argument !== undefined) text = text + " " + argument + "\r\n";
@@ -155,6 +155,7 @@ const Pop3Client = function (port, host, options = {}) {
   function onData(data) {
 
     data = data.toString("ascii");
+    console.log(data);
     bufferedData += data;
 
     if (debug) console.log("Server: " + util.inspect(data));
@@ -684,16 +685,16 @@ Pop3Client.prototype.retr = function (msgnumber) {
     else {
 
       self.setLocked(true);
-      self.setCallback(function(resp, data) {
+      self.setCallback(function (resp, data) {
 
         let returnValue = null;
         self.setLocked(false);
-        self.setCallback(function() {});
+        self.setCallback(function () {});
 
         if (resp !== false) {
           let startOffset = data.indexOf("\r\n", 0) + 2;
           let endOffset = data.indexOf("\r\n.\r\n", 0);
-          returnValue = data.substr(startOffset, endOffset-startOffset);
+          returnValue = data.substr(startOffset, endOffset - startOffset);
         }
 
         if (resp) {

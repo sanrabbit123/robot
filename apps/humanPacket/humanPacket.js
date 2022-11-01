@@ -152,11 +152,36 @@ HumanPacket.prototype.homeliaisonLogin = async function (id, pwd) {
   }
 }
 
-HumanPacket.prototype.getMailsAll = async function (id, pwd) {
+HumanPacket.prototype.getMails = async function (id, pwd) {
   const instance = this;
+  const { stringToBase64, base64ToString } = this.mother;
   try {
     const client = await this.homeliaisonLogin(id, pwd);
     const { count } = await client.list();
+    const iconv = require("iconv-lite");
+    const base64Decode = (data, charset) => {
+      try {
+        return iconv.decode(Buffer.from(data, "base64"), charset);
+      } catch (e) {
+        return '';
+      }
+    }
+    const quotedDecode = (data, charset) => {
+      let bits;
+      try {
+        data = data.replace(/(\r\n|\n|\r)/g, "\n");
+        data = data.replace(/=\n/g, "");
+
+        bits = data.split("%");
+        for (let i = 0; i < bits.length; i++) {
+          bits[i] = bits[i].replace(/=/g, "%");
+          bits[i] = global.decodeURIComponent(bits[i]);
+        }
+        return bits.join("%");
+      } catch (e) {
+        return base64Decode(data, charset);
+      }
+    }
     const areaSplitToken = "____areaSplit____";
     let tong;
     let rawData;
@@ -168,6 +193,9 @@ HumanPacket.prototype.getMailsAll = async function (id, pwd) {
     let tempArr;
     let areaSplitTong;
     let rawMatrix;
+    let headers;
+    let tempStr;
+    let matchArr;
 
     tong = [];
     for (let i = 0; i < count; i++) {
@@ -175,42 +203,72 @@ HumanPacket.prototype.getMailsAll = async function (id, pwd) {
 
       rawArr = rawData.split("\r\n");
 
-      dateString = rawArr.find((str) => { return /^Date: /i.test(str) }).slice(6, 37)
-      dateObject = new Date(dateString);
+      headers = {};
+      tempStr = '';
+      for (let str of rawArr) {
+        if (/^[a-zA-Z][^\:]+\:/i.test(str)) {
+          tempArr = str.split(":").map((s) => { return s.trim(); });
+          tempStr = tempArr[0];
+          if (tempArr.length > 1) {
+            headers[tempStr] = tempArr.slice(1).join(':');
+          } else {
+            headers[tempStr] = '';
+          }
+        } else if (str.trim() === '') {
+          break;
+        } else {
+          headers[tempStr] += str;
+        }
+      }
+      headers["Date"] = headers["Date"].replace(/  /gi, ' ').replace(/\([^\)]+\)/gi, '').trim();
+      if (/^[A-Z][a-z][a-z], [0-9] /.test(headers["Date"])) {
+        headers["Date"] = headers["Date"].split(", ")[0] + ', 0' + headers["Date"].split(", ")[1];
+      }
+      headers["Date"] = new Date(headers["Date"].trim());
 
-      areaSplitTong = rawArr.map((str) => {
-        if (str.trim() === '') {
-          return areaSplitToken;
+      fromString = headers["From"].trim();
+      if (/\<[^\>]+\>/gi.test(fromString)) {
+        fromString = [ ...fromString.matchAll(/\<[^\>]+\>/gi) ][0][0].slice(1, -1);
+      } else {
+        matchArr = [ ...fromString.matchAll(/[^@]+@[^\.]+\.[a-zA-Z0-9]+/gi) ];
+        if (matchArr.length > 0) {
+          fromString = matchArr[0][0].trim();
+        } else {
+          fromString = "unknown@unknown.unknown";
+        }
+      }
+      headers["From"] = fromString.trim();
+
+      headers["Subject"] = headers["Subject"].split(/[ \n\t]/).map((str) => { return str.trim() }).map((str) => {
+        let tempArr;
+        let charset, baseBoo, data;
+        if (/^\=\?/.test(str) && /\?\=$/.test(str)) {
+          tempArr = str.slice(2, -2).split('?');
+          charset = tempArr[0];
+          baseBoo = tempArr[1];
+          data = tempArr.slice(2).join('?');
+          if (baseBoo === 'B' || baseBoo === 'b') {
+            return base64Decode(data, charset);
+          } else {
+            return quotedDecode(data, charset);
+          }
         } else {
           return str;
         }
-      });
+      }).join('');
 
-      rawTong = [];
-      tempArr = [];
-      for (let str of areaSplitTong) {
-        if (str === areaSplitToken) {
-          rawTong.push(tempArr);
-          tempArr = [];
-        } else {
-          tempArr.push(str);
-        }
-      }
-
-      rawMatrix = rawTong.filter((arr) => { return arr.length !== 0 });
+      headers["Subject"] = stringToBase64(headers["Subject"]);
 
       tempObj = {
-        id: "",
-        date: dateObject,
-        from: "",
-        to: "",
-        contents: {
-          title: "",
-          description: "",
-          attachment: "",
+        date: headers["Date"],
+        from: headers["From"],
+        subject: headers["Subject"],
+        data: {
+          headers: headers,
+          raw: rawArr,
         }
       };
-      tempObj.raw = rawMatrix;
+
       tong.push(tempObj);
     }
 

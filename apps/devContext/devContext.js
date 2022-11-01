@@ -116,20 +116,46 @@ DevContext.prototype.launching = async function () {
 
 
     // const human = new HumanPacket();
-    // const mails = await human.getMailsAll("help", "hlofwis83!");
+    // await human.getMails("help", "hlofwis83!")
+    // await human.getMails("master", "hlofwis83!");
 
 
-    // await ghostRequest("print", { cliid: "c2210_ab39s" })
+    const getHeader = (number) => {
+      return new Promise((resolve, reject) => {
+        const net = require("net");
+        const socket = net.createConnection(110, "webmail.home-liaison.com");
+        let head;
+        head = '';
+        socket.on("data", (data) => {
+          data = data.toString();
+          if (/\+OK logged in/gi.test(data)) {
+            socket.write("RETR " + String(number) + "\r\n");
+          }
+          if (/\+OK [0-9]+ octets follow/.test(data)) {
+            head += data;
+            socket.emit("head");
+          }
+        });
+        socket.on("head", () => {
+          const value = head.split("\r\n").slice(1, head.split("\r\n").findIndex((s) => { return s.trim() === '' }));
+          socket.write("QUIT \r\n");
+          resolve(value);
+        })
+        socket.on("error", (err) => {
+          reject(err);
+        })
+        socket.write("USER help@home-liaison.com\r\nPASS hlofwis83!\r\n");
+      });
+    }
+
+
+    for (let i = 1; i < 54; i++) {
+      console.log(await getHeader(i));
+    }
 
 
 
 
-    // client.on("quit", function(status, rawdata) {
-    //
-    //     if (status === true) console.log("QUIT success");
-    //     else console.log("QUIT failed");
-    //
-    // });
 
 
 
@@ -3396,8 +3422,8 @@ DevContext.prototype.launching = async function () {
     // send sms
     // const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
     // const human = new HumanPacket();
-    // const name = "이지현";
-    // const amount = 2273000;
+    // const name = "조영원";
+    // const amount = 5336000;
     // await human.sendSms({
     //   name: "",
     //   phone: "01055432039",
