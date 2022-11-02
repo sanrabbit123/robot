@@ -53,9 +53,9 @@ def extractMails(popObject, id):
                             fromString = matchResult.group()
 
                     try:
-                        dateObject = datetime.strptime(timeString.split(",")[1].strip().split("+")[0].strip()[0:20], '%d %b %Y %H:%M:%S')
+                        dateObject = datetime.strptime(timeString.split(", ")[1].split("+")[0].strip()[0:20], '%d %b %Y %H:%M:%S')
                     except Exception as e:
-                        dateObject = datetime.strptime(timeString.strip().split("+")[0].strip()[0:20], '%d %b %Y %H:%M:%S')
+                        dateObject = datetime.strptime(timeString.split(", ")[0].split("+")[0].strip()[0:20], '%d %b %Y %H:%M:%S')
 
                     if fromString == targetEmail and int(beforeWeek.strftime("%Y%m%d")) <= int(dateObject.strftime("%Y%m%d")):
                         passNum = 1
