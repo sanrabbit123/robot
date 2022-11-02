@@ -155,7 +155,6 @@ const Pop3Client = function (port, host, options = {}) {
   function onData(data) {
 
     data = data.toString("ascii");
-    console.log(data);
     bufferedData += data;
 
     if (debug) console.log("Server: " + util.inspect(data));
@@ -183,7 +182,7 @@ const Pop3Client = function (port, host, options = {}) {
 
     if (checkResp === false) {
 
-      if (multiline === true && (response === false || bufferedData.substr(bufferedData.length-5) === "\r\n.\r\n")) {
+      if (multiline === true && (response === false || bufferedData.substr(bufferedData.length - 5) === "\r\n.\r\n")) {
 
         // Make a copy to avoid race conditions
         let responseCopy = response;

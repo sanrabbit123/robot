@@ -32,13 +32,13 @@ def extractMails(popObject, id):
                 if passNum == 0:
                     headers = result.split(returnToken)
 
-                    r = re.compile("^Date: ")
+                    r = re.compile("^Date:")
                     timeArr = list(filter(r.match, headers))
-                    timeString = timeArr[0].split(": ")[1]
+                    timeString = timeArr[0].split(":")[1].strip()
 
-                    r = re.compile("^From: ")
+                    r = re.compile("^From:")
                     fromArr = list(filter(r.match, headers))
-                    rawFrontString = fromArr[0].split(": ")[1].strip()
+                    rawFrontString = fromArr[0].split(":")[1].strip()
 
                     fromString = ''
                     if rawFrontString.split("<").__len__() > 1:
@@ -52,7 +52,11 @@ def extractMails(popObject, id):
                         else:
                             fromString = matchResult.group()
 
-                    dateObject = datetime.strptime(timeString.split(", ")[1].split("+")[0].strip()[0:20], '%d %b %Y %H:%M:%S')
+                    try:
+                        dateObject = datetime.strptime(timeString.split(",")[1].strip().split("+")[0].strip()[0:20], '%d %b %Y %H:%M:%S')
+                    except Exception as e:
+                        dateObject = datetime.strptime(timeString.strip().split("+")[0].strip()[0:20], '%d %b %Y %H:%M:%S')
+
                     if fromString == targetEmail and int(beforeWeek.strftime("%Y%m%d")) <= int(dateObject.strftime("%Y%m%d")):
                         passNum = 1
                         result += areaToken + returnToken

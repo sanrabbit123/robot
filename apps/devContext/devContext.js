@@ -115,43 +115,15 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const human = new HumanPacket();
-    // await human.getMails("help", "hlofwis83!")
-    // await human.getMails("master", "hlofwis83!");
 
 
-    const getHeader = (number) => {
-      return new Promise((resolve, reject) => {
-        const net = require("net");
-        const socket = net.createConnection(110, "webmail.home-liaison.com");
-        let head;
-        head = '';
-        socket.on("data", (data) => {
-          data = data.toString();
-          if (/\+OK logged in/gi.test(data)) {
-            socket.write("RETR " + String(number) + "\r\n");
-          }
-          if (/\+OK [0-9]+ octets follow/.test(data)) {
-            head += data;
-            socket.emit("head");
-          }
-        });
-        socket.on("head", () => {
-          const value = head.split("\r\n").slice(1, head.split("\r\n").findIndex((s) => { return s.trim() === '' }));
-          socket.write("QUIT \r\n");
-          resolve(value);
-        })
-        socket.on("error", (err) => {
-          reject(err);
-        })
-        socket.write("USER help@home-liaison.com\r\nPASS hlofwis83!\r\n");
-      });
-    }
 
 
-    for (let i = 1; i < 54; i++) {
-      console.log(await getHeader(i));
-    }
+
+
+
+
+
 
 
 
@@ -3361,7 +3333,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p217");
+    // await this.getRawPortfolio("p222");
 
 
     // get corePortfolio by pid
