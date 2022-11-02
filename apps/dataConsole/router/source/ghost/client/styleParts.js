@@ -138,7 +138,7 @@ StylePartsJs.prototype.slimNavigator = function () {
 StylePartsJs.prototype.insertNewsBox = function () {
   const instance = this;
   const { totalContents, ea, standardWidth, media, baseTong, localColor } = this;
-  const { createNode, withOut, colorChip, cleanChildren, selfHref, ajaxJson } = GeneralJs;
+  const { nodeQueue, createNode, withOut, colorChip, cleanChildren, selfHref, ajaxJson, isMac } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
   let baseMother;
@@ -184,7 +184,7 @@ StylePartsJs.prototype.insertNewsBox = function () {
   titleLogWidth = <%% 250, 216, 160, 140, 34 %%>;
   titleLogTop = <%% 96, 64, 60, 48, 2 %%>;
 
-  baseMotherMarginBottom = <%% 200, 190, 140, 110, 3 %%>;
+  baseMotherMarginBottom = <%% 200, 190, 140, 110, 15 %%>;
 
   descriptionPaddingTop = <%% 21, 21, 8, 6, 0.5 %%>;
   partsWidth = <%% 100, 96, 90, 88, 33 %%>;
@@ -195,30 +195,30 @@ StylePartsJs.prototype.insertNewsBox = function () {
   mobileStandardWidth = 80;
 
   photoBetween = <%% 40, 40, 36, 30, 36 %%>;
-  between = <%% 30, 24, 24, 20, 30 %%>;
+  between = <%% 30, 24, 24, 20, 6 %%>;
 
-  photoHeight = <%% 380, 380, 360, 280, 38 %%>;
-  photoWidth = <%% 692, 628, 540, 360, 62 %%>;
+  photoHeight = <%% 380, 380, 360, 280, 50 %%>;
+  photoWidth = <%% 692, 628, 540, 360, 64 %%>;
 
-  titleTongHeight = <%% 72, 64, 62, 56, 7 %%>;
+  titleTongHeight = <%% 72, 64, 62, 56, 10.6 %%>;
 
-  logoWidth = <%% 438, 430, 430, 370, 43 %%>;
+  logoWidth = <%% 438, 430, 430, 370, 69 %%>;
 
-  titleSize = <%% 21, 20, 20, 16, 4 %%>;
+  titleSize = <%% 21, 20, 20, 16, 3.5 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.56, 1.56, 1.56, 1.56, 1.56 %%>;
   titlePadding = <%% 40, 40, 40, 30, 4 %%>;
-  titleLineTop = <%% 35, 30, 30, 28, 3 %%>;
+  titleLineTop = <%% (isMac() ? 35 : 33), (isMac() ? 30 : 28), (isMac() ? 30 : 28), 28, 5 %%>;
 
   photoTongMarginTop = <%% 90, 90, 75, 64, 9 %%>;
 
-  contentsSize = <%% 14, 14, 13, 12, 3 %%>;
+  contentsSize = <%% 14, 14, 13, 12, 3.2 %%>;
   contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
   contentsLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
-  subTitleSize = <%% 15, 15, 15, 14, 4 %%>;
+  subTitleSize = <%% 15, 15, 15, 14, 3.5 %%>;
   subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-  subTitleMarginBottom = <%% 20, 20, 18, 16, 20 %%>;
+  subTitleMarginBottom = <%% 20, 20, 18, 16, 4 %%>;
 
   svgBox = this.returnSvgBox();
   contents = {
@@ -241,54 +241,40 @@ StylePartsJs.prototype.insertNewsBox = function () {
 
   baseMother = createNode({
     mother: baseTong,
+    flex: true,
     style: {
-      display: "flex",
-      position: "relative",
-      flexDirection: "column",
       width: desktop ? String(standardWidth) + ea : String(mobileStandardWidth + 2) + ea,
-      left: desktop ? withOut(50, standardWidth / 2, ea) : withOut(50, mobileStandardWidth / 2, ea),
+      left: desktop ? withOut(50, standardWidth / 2, ea) : withOut(50, (mobileStandardWidth + 2) / 2, ea),
       marginBottom: String(baseMotherMarginBottom) + ea,
+    },
+    child: {
+      center: true,
+      style: {
+        width: withOut(0, ea),
+        height: String(titleTongHeight) + ea,
+      },
+      child: {
+        mode: "svg",
+        source: svgBox.news.multiple(colorChip.black),
+        inline: true,
+        style: {
+          width: String(logoWidth) + ea,
+        }
+      }
     }
   });
 
-  createNode({
+  nodeQueue({
     mother: baseMother,
+    center: true,
     style: {
-      display: "flex",
-      position: "relative",
-      justifyContent: "center",
-      alignItems: "center",
       width: withOut(0, ea),
       height: String(titleTongHeight) + ea,
     },
     children: [
       {
-        mode: "svg",
-        source: svgBox.news.multiple(colorChip.black),
+        absolute: true,
         style: {
-          display: "inline-block",
-          width: String(logoWidth) + ea,
-          position: "relative",
-        }
-      }
-    ]
-  })
-
-  createNode({
-    mother: baseMother,
-    style: {
-      display: "flex",
-      position: "relative",
-      justifyContent: "center",
-      alignItems: "center",
-      width: withOut(0, ea),
-      height: String(titleTongHeight) + ea,
-    },
-    children: [
-      {
-        style: {
-          display: "block",
-          position: "absolute",
           width: withOut(0, ea),
           top: String(0),
           height: String(titleLineTop) + ea,
@@ -297,9 +283,8 @@ StylePartsJs.prototype.insertNewsBox = function () {
       },
       {
         text: contents.title.join("\n"),
+        inline: true,
         style: {
-          display: "inline-block",
-          position: "relative",
           fontSize: String(titleSize) + ea,
           fontWeight: String(titleWeight),
           color: colorChip.black,
@@ -311,70 +296,69 @@ StylePartsJs.prototype.insertNewsBox = function () {
         }
       }
     ]
-  });
+  }).then(() => {
 
-
-  createNode({
-    mother: baseMother,
-    style: {
-      display: "flex",
-      position: "relative",
-      flexDirection: "row",
-      width: withOut(0, ea),
-      marginTop: String(photoTongMarginTop) + ea,
-    },
-    children: [
-      {
-        style: {
-          display: "inline-block",
-          verticalAlign: "top",
-          position: "relative",
-          width: String(photoWidth) + ea,
-          height: String(photoHeight) + ea,
-          backgroundImage: "url('" + StylePartsJs.binaryPath + "/news.jpg" + "')",
-          backgroundPosition: "50% 50%",
-          backgroundSize: "auto 100%",
-          borderRadius: String(5) + "px",
-          marginRight: String(photoBetween) + ea,
-        }
+    return nodeQueue({
+      mother: baseMother,
+      flex: true,
+      style: {
+        flexDirection: desktop ? "row" : "column",
+        width: withOut(0, ea),
+        marginTop: String(photoTongMarginTop) + ea,
       },
-      {
-        style: {
-          display: "inline-flex",
-          verticalAlign: "top",
-          flexDirection: "column-reverse",
-          width: "calc(calc(calc(100% - " + String(photoWidth) + ea + ") - " + String(photoBetween) + ea + ") / " + String(1) + ")",
-          height: String(photoHeight) + ea,
-          borderBottom: "1px solid " + colorChip.gray3,
-        },
-        children: [
-          {
-            text: contents.description[0].join("\n") + "\n\n" + contents.description[1].join("\n"),
-            style: {
-              display: "block",
-              position: "relative",
-              fontSize: String(contentsSize) + ea,
-              fontWeight: String(contentsWeight),
-              color: colorChip.black,
-              lineHeight: String(contentsLineHeight),
-              marginBottom: String(between) + ea,
-            }
-          },
-          {
-            text: contents.sub.join("\n"),
-            style: {
-              display: "block",
-              position: "relative",
-              fontSize: String(subTitleSize) + ea,
-              fontWeight: String(subTitleWeight),
-              color: colorChip.black,
-              marginBottom: String(subTitleMarginBottom) + ea,
-            }
+      children: [
+        {
+          inline: true,
+          style: {
+            width: desktop ? String(photoWidth) + ea : withOut(0, ea),
+            height: String(photoHeight) + ea,
+            backgroundImage: "url('" + StylePartsJs.binaryPath + "/news.jpg" + "')",
+            backgroundPosition: "50% 50%",
+            backgroundSize: "auto 100%",
+            borderRadius: String(5) + "px",
+            marginRight: desktop ? String(photoBetween) + ea : "",
           }
-        ]
-      },
-    ]
-  });
+        },
+        {
+          inline: true,
+          style: {
+            flexDirection: "column-reverse",
+            width: desktop ? "calc(calc(calc(100% - " + String(photoWidth) + ea + ") - " + String(photoBetween) + ea + ") / " + String(1) + ")" : withOut(0, ea),
+            height: desktop ? String(photoHeight) + ea : "",
+            borderBottom: "1px solid " + colorChip.gray3,
+          },
+          children: [
+            {
+              flex: true,
+              text: contents.description[0].join("\n") + "\n\n" + contents.description[1].join("\n"),
+              style: {
+                fontSize: String(contentsSize) + ea,
+                fontWeight: String(contentsWeight),
+                color: colorChip.black,
+                lineHeight: String(contentsLineHeight),
+                marginBottom: String(between) + ea,
+              }
+            },
+            {
+              flex: true,
+              text: contents.sub.join("\n"),
+              style: {
+                fontSize: String(subTitleSize) + ea,
+                fontWeight: String(subTitleWeight),
+                color: colorChip.black,
+                marginBottom: String(subTitleMarginBottom) + ea,
+                textAlign: desktop ? "left" : "center",
+                marginTop: desktop ? "" : String(12) + ea,
+              }
+            }
+          ]
+        },
+      ]
+    });
+
+  }).catch((err) => {
+    console.log(err);
+  })
 
 }
 
@@ -3910,9 +3894,9 @@ StylePartsJs.prototype.launching = async function (loading) {
     const getObj = returnGet();
     let response;
 
-    window.addEventListener("resize", (e) => {
-      window.location.reload();
-    });
+    // window.addEventListener("resize", (e) => {
+    //   window.location.reload();
+    // });
 
     await this.mother.ghostClientLaunching({
       mode: "ghost",

@@ -679,7 +679,7 @@ GeneralJs.scrollTo = function (from, valueOrTo, visualSpecific = 0) {
 GeneralJs.createNode = function (mode, source, style, mother = null) {
   /* append style object properties */
   /*
-  style = {
+  dom = {
     mode: "div",
     source: "",
     mother: base,
@@ -754,6 +754,12 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
       mother = style.mother;
     }
     delete style.mother;
+  }
+  if (style.child !== undefined && typeof style.child === "object") {
+    if (style.child !== null && !Array.isArray(style.child)) {
+      children.push(style.child);
+    }
+    delete style.child;
   }
   if (style.children !== undefined) {
     if (Array.isArray(style.children)) {
@@ -870,6 +876,57 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
         }
         delete style.attribute;
       }
+
+      if (typeof style.style === "object" && style.style !== null) {
+        if (style.block !== undefined) {
+          style.style.display = "block";
+          if (typeof style.style.position !== "string") {
+            style.style.position = "relative";
+          }
+          delete style.flex;
+        }
+        if (style.flex !== undefined) {
+          style.style.display = "flex";
+          if (typeof style.style.position !== "string") {
+            style.style.position = "relative";
+          }
+          if (typeof style.style.flexDirection !== "string") {
+            style.style.flexDirection = "column";
+          }
+          delete style.flex;
+        }
+        if (style.center !== undefined) {
+          style.style.display = "flex";
+          if (typeof style.style.position !== "string") {
+            style.style.position = "relative";
+          }
+          if (typeof style.style.flexDirection !== "string") {
+            style.style.flexDirection = "column";
+          }
+          style.style.justifyContent = "center";
+          style.style.alignItems = "center";
+          delete style.flex;
+        }
+        if (style.inline !== undefined) {
+          style.style.display = "inline-flex";
+          if (typeof style.style.position !== "string") {
+            style.style.position = "relative";
+          }
+          style.style.verticalAlign = "top";
+          if (typeof style.style.flexDirection !== "string") {
+            style.style.flexDirection = "column";
+          }
+          delete style.inline;
+        }
+        if (style.absolute !== undefined) {
+          if (typeof style.style.display !== "string") {
+            style.style.display = "block";
+          }
+          style.style.position = "absolute";
+          delete style.absolute;
+        }
+      }
+
       if (style.style !== undefined) {
         if (typeof style.style === "object") {
           targetStyle = style.style;
@@ -993,6 +1050,57 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
         }
         delete style.attribute;
       }
+
+      if (typeof style.style === "object" && style.style !== null) {
+        if (style.block !== undefined) {
+          style.style.display = "block";
+          if (typeof style.style.position !== "string") {
+            style.style.position = "relative";
+          }
+          delete style.flex;
+        }
+        if (style.flex !== undefined) {
+          style.style.display = "flex";
+          if (typeof style.style.position !== "string") {
+            style.style.position = "relative";
+          }
+          if (typeof style.style.flexDirection !== "string") {
+            style.style.flexDirection = "column";
+          }
+          delete style.flex;
+        }
+        if (style.center !== undefined) {
+          style.style.display = "flex";
+          if (typeof style.style.position !== "string") {
+            style.style.position = "relative";
+          }
+          if (typeof style.style.flexDirection !== "string") {
+            style.style.flexDirection = "column";
+          }
+          style.style.justifyContent = "center";
+          style.style.alignItems = "center";
+          delete style.flex;
+        }
+        if (style.inline !== undefined) {
+          style.style.display = "inline-flex";
+          if (typeof style.style.position !== "string") {
+            style.style.position = "relative";
+          }
+          style.style.verticalAlign = "top";
+          if (typeof style.style.flexDirection !== "string") {
+            style.style.flexDirection = "column";
+          }
+          delete style.inline;
+        }
+        if (style.absolute !== undefined) {
+          if (typeof style.style.display !== "string") {
+            style.style.display = "block";
+          }
+          style.style.position = "absolute";
+          delete style.absolute;
+        }
+      }
+
       if (style.style !== undefined) {
         if (typeof style.style === "object") {
           targetStyle = style.style;
@@ -1146,6 +1254,19 @@ GeneralJs.createNodes = function (arr) {
 }
 
 GeneralJs.createElements = GeneralJs.createNodes;
+
+GeneralJs.nodeQueue = function (obj) {
+  return new Promise((resolve, reject) => {
+    if (typeof obj === "object" && obj !== null) {
+      try {
+        const dom = GeneralJs.createNode(obj);
+        resolve(dom);
+      } catch (e) {
+        reject(e);
+      }
+    }
+  });
+}
 
 GeneralJs.withOut = function (percent, num, ea) {
   if (typeof percent === "number" && typeof num !== undefined && typeof ea === "string") {
