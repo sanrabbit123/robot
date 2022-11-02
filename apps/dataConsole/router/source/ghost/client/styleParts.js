@@ -194,31 +194,31 @@ StylePartsJs.prototype.insertNewsBox = function () {
 
   mobileStandardWidth = 80;
 
-  photoBetween = <%% 40, 40, 36, 36, 36 %%>;
+  photoBetween = <%% 40, 40, 36, 30, 36 %%>;
   between = <%% 30, 24, 24, 20, 30 %%>;
 
-  photoHeight = <%% 380, 380, 380, 380, 380 %%>;
-  photoWidth = <%% 692, 628, 628, 628, 628 %%>;
+  photoHeight = <%% 380, 380, 360, 280, 38 %%>;
+  photoWidth = <%% 692, 628, 540, 360, 62 %%>;
 
-  titleTongHeight = <%% 72, 64, 72, 72, 72 %%>;
+  titleTongHeight = <%% 72, 64, 62, 56, 7 %%>;
 
-  logoWidth = <%% 438, 430, 438, 438, 438 %%>;
+  logoWidth = <%% 438, 430, 430, 370, 43 %%>;
 
-  titleSize = <%% 21, 20, 21, 21, 21 %%>;
+  titleSize = <%% 21, 20, 20, 16, 4 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.56, 1.56, 1.56, 1.56, 1.56 %%>;
-  titlePadding = <%% 40, 40, 40, 40, 40 %%>;
-  titleLineTop = <%% 35, 30, 30, 30, 30 %%>;
+  titlePadding = <%% 40, 40, 40, 30, 4 %%>;
+  titleLineTop = <%% 35, 30, 30, 28, 3 %%>;
 
-  photoTongMarginTop = <%% 90, 90, 90, 90, 90 %%>;
+  photoTongMarginTop = <%% 90, 90, 75, 64, 9 %%>;
 
-  contentsSize = <%% 14, 14, 13, 12, 14 %%>;
+  contentsSize = <%% 14, 14, 13, 12, 3 %%>;
   contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
-  contentsLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
+  contentsLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
-  subTitleSize = <%% 15, 15, 15, 15, 15 %%>;
+  subTitleSize = <%% 15, 15, 15, 14, 4 %%>;
   subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-  subTitleMarginBottom = <%% 12, 12, 12, 12, 12 %%>;
+  subTitleMarginBottom = <%% 20, 20, 18, 16, 20 %%>;
 
   svgBox = this.returnSvgBox();
   contents = {
@@ -231,7 +231,7 @@ StylePartsJs.prototype.insertNewsBox = function () {
     ],
     description: [
       [
-        "리모델링 스타트업을 넘어 라이프스타일 플랫폼으로서의 입지를 꾸준히 다져온 아파트멘터리 그리고 생활을 위한 디자인으로 집의 가치를 전하고자 홈스타일링 플랫폼으로서 자리를 굳건히 지켜온 홈리에종이 집이라는 공간에서 더 나은 삶을 영위하도록 하겠다는 미션 아래 만나게 되었습니다.",
+        "리모델링 스타트업을 넘어 라이프스타일 플랫폼으로서의 입지를 꾸준히 다져온 아파트멘터리, 생활을 위한 디자인으로 집의 가치를 전하고자 홈스타일링 플랫폼으로서 자리를 굳건히 지켜온 홈리에종이 집이라는 공간에서 더 나은 삶을 영위하도록 하겠다는 미션 아래 만나게 되었습니다.",
       ],
       [
         "앞으로 양사는 끊임없는 협력으로 다양한 고객층의 니즈를 충족하고, 인테리어에 대한 부정적인 인식을 ‘긍정’으로 변화시켜나가고자 합니다. 더불어 우리 홈리에종 파트너 디자이너님들께 더 발전적인 프로젝트 운영을 도울 수 있도록 재밌고 실질적인 방법들을 모색해 볼게요.",
@@ -343,14 +343,13 @@ StylePartsJs.prototype.insertNewsBox = function () {
           display: "inline-flex",
           verticalAlign: "top",
           flexDirection: "column-reverse",
-          width: "calc(calc(calc(100% - " + String(photoWidth) + ea + ") - " + String(between + photoBetween) + ea + ") / " + String(2) + ")",
+          width: "calc(calc(calc(100% - " + String(photoWidth) + ea + ") - " + String(photoBetween) + ea + ") / " + String(1) + ")",
           height: String(photoHeight) + ea,
-          marginRight: String(between) + ea,
           borderBottom: "1px solid " + colorChip.gray3,
         },
         children: [
           {
-            text: contents.description[0].join("\n"),
+            text: contents.description[0].join("\n") + "\n\n" + contents.description[1].join("\n"),
             style: {
               display: "block",
               position: "relative",
@@ -370,30 +369,6 @@ StylePartsJs.prototype.insertNewsBox = function () {
               fontWeight: String(subTitleWeight),
               color: colorChip.black,
               marginBottom: String(subTitleMarginBottom) + ea,
-            }
-          }
-        ]
-      },
-      {
-        style: {
-          display: "inline-flex",
-          verticalAlign: "top",
-          flexDirection: "column-reverse",
-          width: "calc(calc(calc(100% - " + String(photoWidth) + ea + ") - " + String(between + photoBetween) + ea + ") / " + String(2) + ")",
-          height: String(photoHeight) + ea,
-          borderBottom: "1px solid " + colorChip.gray3,
-        },
-        children: [
-          {
-            text: contents.description[1].join("\n"),
-            style: {
-              display: "block",
-              position: "relative",
-              fontSize: String(contentsSize) + ea,
-              fontWeight: String(contentsWeight),
-              color: colorChip.black,
-              lineHeight: String(contentsLineHeight),
-              marginBottom: String(between) + ea,
             }
           }
         ]
