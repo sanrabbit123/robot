@@ -32,9 +32,9 @@ def extractMails(popObject, id):
                 if passNum == 0:
                     headers = result.split(returnToken)
 
-                    r = re.compile("^Date:")
+                    r = re.compile("^Date: ")
                     timeArr = list(filter(r.match, headers))
-                    timeString = timeArr[0].split(":")[1].strip()
+                    timeString = timeArr[0].split(": ")[1].strip()
 
                     r = re.compile("^From:")
                     fromArr = list(filter(r.match, headers))
@@ -82,11 +82,6 @@ try:
     pop0.user("____id0____@____host____")
     pop0.pass_("____password0____")
     extractMails(pop0, "____id0____")
-
-    pop1 = poplib.POP3("webmail.____host____", port=110)
-    pop1.user("____id1____@____host____")
-    pop1.pass_("____password1____")
-    extractMails(pop1, "____id1____")
 
     print(json.dumps({ "message": "done" }))
 except Exception as e:
