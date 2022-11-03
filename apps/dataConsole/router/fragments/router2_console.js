@@ -872,6 +872,8 @@ DataRouter.prototype.rou_post_getClientReport = function () {
   obj.func = async function (req, res) {
     try {
       const today = new Date();
+      const proposalStandardDate = new Date(2021, 8, 1);
+      const proposalStandardDateValue = proposalStandardDate.valueOf();
       let dateMatrix;
       let searchQuery, clients, proposals, contracts, process;
       let processTong;
@@ -944,14 +946,23 @@ DataRouter.prototype.rou_post_getClientReport = function () {
           obj.proid.client = [];
 
           //proposal
-          cliidArr_raw = clients.map((obj) => { return obj.cliid; });
-          cliidArr_raw = Array.from(new Set(cliidArr_raw));
-          process = motherProjects_raw.filter((obj) => { return cliidArr_raw.includes(obj.cliid) });
-          histories = motherClientHistories.filter((obj) => { return process.map((o) => { return o.cliid; }).includes(obj.cliid) });
-          histories = histories.filter((obj) => { return obj.curation.analytics.send.some((o) => { return /designerProposal/gi.test(o.page) }) });
-          obj.proposal = histories.length;
-          obj.cliid.proposal = [ ...new Set(histories.map((obj) => { return obj.cliid })) ];
-          obj.proid.proposal = [ ...new Set(process.filter((obj) => { return histories.map((o) => { return o.cliid }).includes(obj.cliid) }).map((obj) => { return obj.proid })) ];
+          if (arr[0].valueOf() > proposalStandardDateValue) {
+            cliidArr_raw = clients.map((obj) => { return obj.cliid; });
+            cliidArr_raw = Array.from(new Set(cliidArr_raw));
+            process = motherProjects_raw.filter((obj) => { return cliidArr_raw.includes(obj.cliid) });
+            histories = motherClientHistories.filter((obj) => { return process.map((o) => { return o.cliid; }).includes(obj.cliid) });
+            histories = histories.filter((obj) => { return obj.curation.analytics.send.some((o) => { return /designerProposal/gi.test(o.page) }) });
+            obj.proposal = histories.length;
+            obj.cliid.proposal = [ ...new Set(histories.map((obj) => { return obj.cliid })) ];
+            obj.proid.proposal = [ ...new Set(process.filter((obj) => { return histories.map((o) => { return o.cliid }).includes(obj.cliid) }).map((obj) => { return obj.proid })) ];
+          } else {
+            cliidArr_raw = clients.map((obj) => { return obj.cliid; });
+            cliidArr_raw = Array.from(new Set(cliidArr_raw));
+            process = motherProjects_raw.filter((obj) => { return cliidArr_raw.includes(obj.cliid) });
+            obj.proposal = process.length;
+            obj.cliid.proposal = [ ...new Set(process.map((obj) => { return obj.cliid })) ];
+            obj.proid.proposal = [ ...new Set(process.map((obj) => { return obj.proid })) ];
+          }
 
           //recommend
           histories = histories.filter((obj) => { return obj.curation.analytics.page.some((o) => { return /designerProposal/gi.test(o.page) }) });
