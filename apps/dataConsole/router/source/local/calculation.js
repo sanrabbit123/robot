@@ -1954,6 +1954,16 @@ CalculationJs.prototype.searchMatrix = function () {
   });
 }
 
+CalculationJs.prototype.reportMatrix = function () {
+  const instance = this;
+  const { totalContents, ea, belowHeight, projects } = this;
+  const { ajaxJson, uniqueValue, blankHref } = GeneralJs;
+  const { belowButtons: { square: { reportIcon } } } = this.mother;
+
+  reportIcon.addEventListener("click", this.queueView());
+}
+
+
 CalculationJs.prototype.queueView = function () {
   const instance = this;
   const { totalContents, ea, belowHeight, projects, bills } = this;
@@ -2006,6 +2016,11 @@ CalculationJs.prototype.queueView = function () {
       let payProof;
       let responseValueArr;
       let whiteTong;
+      let responseSumTotal;
+      let responseSumNon;
+      let responseSumPaid;
+      let grayTong;
+      let loading;
 
       whiteOuterMargin = <%% 40, 20, 20, 20, 10 %%>;
       whiteInnerMargin = <%% 50, 30, 30, 30, 20 %%>;
@@ -2053,6 +2068,11 @@ CalculationJs.prototype.queueView = function () {
         "지급 진행",
       ];
 
+      contentsAreaLeft = {};
+      contentsAreaRight = {};
+
+      loading = instance.mother.grayLoading();
+
       responses = await ajaxJson({ mode: "get" }, PYTHONHOST + "/nonPaidResponses");
 
       forEachFunction = (obj) => {
@@ -2064,8 +2084,12 @@ CalculationJs.prototype.queueView = function () {
       responses.pending.forEach(forEachFunction);
       ({ needs, pending } = responses);
 
-
       // base
+
+      const targets = [ ...document.querySelectorAll('.' + whiteCardClassName) ];
+      for (let dom of targets) {
+        dom.remove();
+      }
 
       cancelBack = createNode({
         mother: totalContents,
@@ -2119,6 +2143,8 @@ CalculationJs.prototype.queueView = function () {
       }).firstChild;
 
 
+      loading.remove();
+
       // title
 
       createNode({
@@ -2134,7 +2160,7 @@ CalculationJs.prototype.queueView = function () {
         },
         children: [
           {
-            text: "정산 리포트",
+            text: "미정산 리포트",
             style: {
               display: "inline-flex",
               position: "relative",
@@ -2154,10 +2180,35 @@ CalculationJs.prototype.queueView = function () {
               position: "relative",
               top: String(subTextTop) + ea,
             }
+          },
+          {
+            text: "전체 보기",
+            event: {
+              click: function (e) {
+                if (this.textContent.trim() === "전체 보기") {
+                  contentsAreaLeft.parentElement.style.display = "none";
+                  contentsAreaRight.parentElement.style.display = "flex";
+                  this.textContent = "정산 대상";
+                } else {
+                  contentsAreaLeft.parentElement.style.display = "flex";
+                  contentsAreaRight.parentElement.style.display = "none";
+                  this.textContent = "전체 보기";
+                }
+              },
+            },
+            style: {
+              display: "inline-flex",
+              fontSize: String(subSize) + ea,
+              fontWeight: String(subWeight),
+              color: colorChip.red,
+              position: "absolute",
+              cursor: "pointer",
+              right: String(0),
+              top: String(statusTextTop) + ea,
+            }
           }
         ]
       });
-
 
       // contents area
 
@@ -2173,14 +2224,14 @@ CalculationJs.prototype.queueView = function () {
         }
       });
 
-      // contents area up - request
+      // contents area up - needs response
 
       contentsAreaLeft = createNode({
         mother: contentsArea,
         style: {
           display: "flex",
           position: "relative",
-          height: "calc(calc(calc(100% - " + String(contentsAreaBetween) + ea + ") / 2) - " + String(grayInnerPadding * 2) + ea + ")",
+          height: withOut(grayInnerPadding * 2, ea),
           width: withOut(grayInnerPadding * 2, ea),
           borderRadius: String(5) + "px",
           padding: String(grayInnerPadding) + ea,
@@ -2243,6 +2294,9 @@ CalculationJs.prototype.queueView = function () {
         });
       }
 
+      responseSumTotal = 0;
+      responseSumNon = 0;
+      responseSumPaid = 0;
       for (let z = 0; z < needs.length; z++) {
         thisResponse = needs[z].bill.responseObject;
         responseName = thisResponse.name;
@@ -2267,6 +2321,10 @@ CalculationJs.prototype.queueView = function () {
             payProof = thisResponse.proofs[0].proof;
           }
         }
+
+        responseSumTotal += confirmState;
+        responseSumNon += nonPayAmount;
+        responseSumPaid += payAmount;
 
         responseValueArr = [
           {
@@ -2330,7 +2388,6 @@ CalculationJs.prototype.queueView = function () {
             pointer: true,
           },
         ];
-
         whiteTong = createNode({
           mother: contentsAreaLeft,
           style: {
@@ -2372,14 +2429,116 @@ CalculationJs.prototype.queueView = function () {
         }
       }
 
-      // contents area down - response
+      responseValueArr = [
+        {
+          value: "총계",
+          color: colorChip.black,
+          pointer: true,
+        },
+        {
+          value: "-",
+          color: colorChip.black,
+          pointer: false,
+        },
+        {
+          value: "-",
+          color: colorChip.black,
+          pointer: false,
+        },
+        {
+          value: "-",
+          color: colorChip.black,
+          pointer: false,
+        },
+        {
+          value: "-",
+          color: colorChip.black,
+          pointer: false,
+        },
+        {
+          value: "-",
+          color: colorChip.black,
+          pointer: false,
+        },
+        {
+          value: autoComma(responseSumTotal),
+          color: colorChip.black,
+          pointer: false,
+        },
+        {
+          value: autoComma(responseSumNon),
+          color: colorChip.black,
+          pointer: false,
+        },
+        {
+          value: autoComma(responseSumPaid),
+          color: colorChip.black,
+          pointer: false,
+        },
+        {
+          value: "-",
+          color: colorChip.black,
+          pointer: false,
+        },
+        {
+          value: "-",
+          color: colorChip.black,
+          pointer: false,
+        },
+        {
+          value: "-",
+          color: colorChip.green,
+          pointer: true,
+        },
+      ];
+      grayTong = createNode({
+        mother: contentsAreaLeft,
+        style: {
+          display: "flex",
+          position: "relative",
+          flexDirection: "row",
+          width: withOut(0),
+          height: String(blockHeight) + ea,
+          background: colorChip.gray0,
+          borderRadius: String(5) + "px",
+          marginBottom: String(blockMarginBottom) + ea,
+        }
+      });
+      for (let { value, color } of responseValueArr) {
+        createNode({
+          mother: grayTong,
+          style: {
+            display: "inline-flex",
+            width: "calc(100% / " + String(columns.length) + ")",
+            height: withOut(0, ea),
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+          },
+          children: [
+            {
+              text: value,
+              style: {
+                fontSize: String(valueSize) + ea,
+                fontWeight: String(600),
+                color: colorChip.black,
+                position: "relative",
+                top: String(valueTextTop) + ea,
+              }
+            }
+          ]
+        });
+      }
+
+
+      // contents area down - pending response
 
       contentsAreaRight = createNode({
         mother: contentsArea,
         style: {
-          display: "flex",
+          display: "none",
           position: "relative",
-          height: "calc(calc(calc(100% - " + String(contentsAreaBetween) + ea + ") / 2) - " + String(grayInnerPadding * 2) + ea + ")",
+          height: withOut(grayInnerPadding * 2, ea),
           width: withOut(grayInnerPadding * 2, ea),
           borderRadius: String(5) + "px",
           padding: String(grayInnerPadding) + ea,
@@ -2441,6 +2600,9 @@ CalculationJs.prototype.queueView = function () {
         });
       }
 
+      responseSumTotal = 0;
+      responseSumNon = 0;
+      responseSumPaid = 0;
       for (let z = 0; z < pending.length; z++) {
         thisResponse = pending[z].bill.responseObject;
         responseName = thisResponse.name;
@@ -2465,6 +2627,10 @@ CalculationJs.prototype.queueView = function () {
             payProof = thisResponse.proofs[0].proof;
           }
         }
+
+        responseSumTotal += confirmState;
+        responseSumNon += nonPayAmount;
+        responseSumPaid += payAmount;
 
         responseValueArr = [
           {
@@ -2569,6 +2735,239 @@ CalculationJs.prototype.queueView = function () {
           });
         }
       }
+      for (let z = 0; z < needs.length; z++) {
+        thisResponse = needs[z].bill.responseObject;
+        responseName = thisResponse.name;
+
+        confirmState = Math.floor(thisResponse.items.reduce((acc, curr) => { return acc + curr.amount.pure }, 0));
+        payAmount = Math.floor(thisResponse.pay.reduce((acc, curr) => { return acc + curr.amount }, 0));
+        nonPayAmount = confirmState - payAmount;
+        payDate = '-';
+        if (thisResponse.pay.length > 0) {
+          payDate = dateToString(thisResponse.pay[0].date);
+        }
+        if (payDate === '-') {
+          payMethod = "-";
+          payProof = "-";
+        } else {
+          payMethod = "알 수 없음";
+          if (thisResponse.proofs.length > 0) {
+            payMethod = thisResponse.proofs[0].method;
+          }
+          payProof = "알 수 없음";
+          if (thisResponse.proofs.length > 0) {
+            payProof = thisResponse.proofs[0].proof;
+          }
+        }
+
+        responseSumTotal += confirmState;
+        responseSumNon += nonPayAmount;
+        responseSumPaid += payAmount;
+
+        responseValueArr = [
+          {
+            value: needs[z].proid,
+            color: colorChip.black,
+            pointer: true,
+          },
+          {
+            value: needs[z].names.name,
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: needs[z].names.designer,
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: responseName,
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: needs[z].classification.classification,
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: needs[z].classification.free ? "프리랜서 정산" : (needs[z].classification.simple ? "현금 영수증 확인" : "세금 계산서 확인"),
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: autoComma(confirmState),
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: autoComma(nonPayAmount),
+            color: nonPayAmount !== 0 ? colorChip.purple : colorChip.black,
+            pointer: false,
+          },
+          {
+            value: autoComma(payAmount),
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: payDate,
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: payMethod,
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: "지급 진행",
+            color: colorChip.green,
+            pointer: true,
+          },
+        ];
+        whiteTong = createNode({
+          mother: contentsAreaRight,
+          style: {
+            display: "flex",
+            position: "relative",
+            flexDirection: "row",
+            width: withOut(0),
+            height: String(blockHeight) + ea,
+            background: colorChip.white,
+            borderRadius: String(5) + "px",
+            marginBottom: String(blockMarginBottom) + ea,
+          }
+        });
+        for (let { value, color, pointer } of responseValueArr) {
+          createNode({
+            mother: whiteTong,
+            style: {
+              display: "inline-flex",
+              width: "calc(100% / " + String(columns.length) + ")",
+              height: withOut(0, ea),
+              justifyContent: "center",
+              alignItems: "center",
+              position: "relative",
+              cursor: pointer ? "pointer" : "",
+            },
+            children: [
+              {
+                text: value,
+                style: {
+                  fontSize: String(valueSize) + ea,
+                  fontWeight: String(valueWeight),
+                  color: color,
+                  position: "relative",
+                  top: String(valueTextTop) + ea,
+                }
+              }
+            ]
+          });
+        }
+      }
+
+      responseValueArr = [
+        {
+          value: "총계",
+          color: colorChip.black,
+          pointer: true,
+        },
+        {
+          value: "-",
+          color: colorChip.black,
+          pointer: false,
+        },
+        {
+          value: "-",
+          color: colorChip.black,
+          pointer: false,
+        },
+        {
+          value: "-",
+          color: colorChip.black,
+          pointer: false,
+        },
+        {
+          value: "-",
+          color: colorChip.black,
+          pointer: false,
+        },
+        {
+          value: "-",
+          color: colorChip.black,
+          pointer: false,
+        },
+        {
+          value: autoComma(responseSumTotal),
+          color: colorChip.black,
+          pointer: false,
+        },
+        {
+          value: autoComma(responseSumNon),
+          color: colorChip.black,
+          pointer: false,
+        },
+        {
+          value: autoComma(responseSumPaid),
+          color: colorChip.black,
+          pointer: false,
+        },
+        {
+          value: "-",
+          color: colorChip.black,
+          pointer: false,
+        },
+        {
+          value: "-",
+          color: colorChip.black,
+          pointer: false,
+        },
+        {
+          value: "-",
+          color: colorChip.green,
+          pointer: true,
+        },
+      ];
+      grayTong = createNode({
+        mother: contentsAreaRight,
+        style: {
+          display: "flex",
+          position: "relative",
+          flexDirection: "row",
+          width: withOut(0),
+          height: String(blockHeight) + ea,
+          background: colorChip.gray0,
+          borderRadius: String(5) + "px",
+          marginBottom: String(blockMarginBottom) + ea,
+        }
+      });
+      for (let { value, color } of responseValueArr) {
+        createNode({
+          mother: grayTong,
+          style: {
+            display: "inline-flex",
+            width: "calc(100% / " + String(columns.length) + ")",
+            height: withOut(0, ea),
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+          },
+          children: [
+            {
+              text: value,
+              style: {
+                fontSize: String(valueSize) + ea,
+                fontWeight: String(600),
+                color: colorChip.black,
+                position: "relative",
+                top: String(valueTextTop) + ea,
+              }
+            }
+          ]
+        });
+      }
+
 
     } catch (e) {
       console.log(e);
@@ -2578,8 +2977,9 @@ CalculationJs.prototype.queueView = function () {
 
 CalculationJs.prototype.launching = async function () {
   const instance = this;
-  const { ajaxJson, equalJson } = GeneralJs;
+  const { ajaxJson, equalJson, returnGet } = GeneralJs;
   try {
+    const getObj = returnGet();
     const emptyDate = () => { return new Date(1800, 0, 1) };
     const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
     let projects, projectsRaw;
@@ -2631,9 +3031,11 @@ CalculationJs.prototype.launching = async function () {
     this.baseMaker();
     this.extractMatrix();
     this.searchMatrix();
+    this.reportMatrix();
 
-    // dev
-    (this.queueView())();
+    if (getObj.mode === "report") {
+      (this.queueView())();
+    }
 
     document.getElementById("moveLeftArea").remove();
     document.getElementById("moveRightArea").remove();
