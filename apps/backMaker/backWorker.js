@@ -706,8 +706,8 @@ BackWorker.prototype.designerCalculation = async function (alarm = true) {
         { "process.status": { $regex: "^[대진완]" } },
         { "proposal.date": { $gt: limitAgo } },
         { "process.contract.remain.date": { $gt: new Date(2000, 0, 1) } },
-        { proid: { $not: "p1801_aa01s" } },
-        { proid: { $not: "p1801_aa02s" } },
+        { proid: { $not: { $regex: "p1801_aa01s" } } },
+        { proid: { $not: { $regex: "p1801_aa02s" } } },
       ]
     };
 
