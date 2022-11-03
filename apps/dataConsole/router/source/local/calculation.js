@@ -1952,6 +1952,155 @@ CalculationJs.prototype.searchMatrix = function () {
   });
 }
 
+CalculationJs.prototype.queueView = function () {
+  const instance = this;
+  const { totalContents, ea, belowHeight, projects } = this;
+  const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate } = GeneralJs;
+  return async function (e) {
+    try {
+      const zIndex = 4;
+      const whiteCardClassName = "whiteCardClassName";
+      let cancelBack, whiteCard;
+      let whiteOuterMargin;
+      let whiteInnerMargin;
+      let titleAreaHeight;
+      let titleAreaPaddingBottom;
+      let nameSize;
+      let nameWeight;
+      let subSize;
+      let subWeight;
+      let subMarginLeft;
+      let subTextTop;
+      let statusTextTop;
+      let titleArea;
+
+      
+
+
+
+      whiteOuterMargin = <%% 40, 20, 20, 20, 10 %%>;
+      whiteInnerMargin = <%% 50, 30, 30, 30, 20 %%>;
+
+      titleAreaHeight = <%% 63, 42, 42, 42, 42 %%>;
+
+      titleAreaPaddingBottom = 6;
+
+      nameSize = <%% 32, 24, 24, 24, 24 %%>;
+      nameWeight = 800;
+
+      subSize = <%% 17, 15, 15, 15, 15 %%>;
+      subWeight = 400;
+      subMarginLeft = 13;
+      subTextTop = <%% (isMac() ? 7 : 5), 5, 5, 5, 3 %%>;
+
+      statusTextTop = <%% 27, 18, 18, 18, 18 %%>;
+
+
+      cancelBack = createNode({
+        mother: totalContents,
+        class: [ whiteCardClassName ],
+        event: {
+          click: function (e) {
+            const targets = [ ...document.querySelectorAll('.' + whiteCardClassName) ];
+            for (let dom of targets) {
+              dom.remove();
+            }
+          }
+        },
+        style: {
+          position: "fixed",
+          top: String(0),
+          left: String(0),
+          width: withOut(0, ea),
+          height: withOut(belowHeight, ea),
+          background: colorChip.black,
+          opacity: String(0.4),
+          zIndex: String(zIndex),
+        }
+      });
+
+      whiteCard = createNode({
+        mother: totalContents,
+        class: [ whiteCardClassName ],
+        style: {
+          position: "fixed",
+          top: String(whiteOuterMargin) + ea,
+          left: String(whiteOuterMargin) + ea,
+          width: withOut((whiteOuterMargin * 2) + (whiteInnerMargin * 2), ea),
+          height: withOut((whiteOuterMargin * 2) + belowHeight + (whiteInnerMargin * 2), ea),
+          padding: String(whiteInnerMargin) + ea,
+          background: colorChip.white,
+          borderRadius: String(5) + "px",
+          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          animation: "fadeuplite 0.3s ease forwards",
+          zIndex: String(zIndex),
+        },
+        children: [
+          {
+            set: "block",
+            style: {
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              borderRadius: String(5) + "px",
+              overflow: "hidden",
+            },
+          }
+        ]
+      }).firstChild;
+
+
+      // title
+
+      createNode({
+        mother: whiteCard,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          height: String(titleAreaHeight) + ea,
+          paddingBottom: String(titleAreaPaddingBottom) + ea,
+          alignItems: "center",
+          borderBottom: "1px solid " + colorChip.gray3,
+        },
+        children: [
+          {
+            text: "정산 리포트",
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              fontSize: String(nameSize) + ea,
+              fontWeight: String(nameWeight),
+              color: colorChip.black,
+            }
+          },
+          {
+            text: dateToString(new Date(), true),
+            style: {
+              display: "inline-flex",
+              fontSize: String(subSize) + ea,
+              fontWeight: String(subWeight),
+              color: colorChip.deactive,
+              marginLeft: String(subMarginLeft) + ea,
+              position: "relative",
+              top: String(subTextTop) + ea,
+            }
+          }
+        ]
+      });
+
+
+
+
+
+
+
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
 CalculationJs.prototype.launching = async function () {
   const instance = this;
   const { ajaxJson, equalJson } = GeneralJs;
@@ -2006,6 +2155,9 @@ CalculationJs.prototype.launching = async function () {
     this.baseMaker();
     this.extractMatrix();
     this.searchMatrix();
+
+    // dev
+    (this.queueView())();
 
     document.getElementById("moveLeftArea").remove();
     document.getElementById("moveRightArea").remove();

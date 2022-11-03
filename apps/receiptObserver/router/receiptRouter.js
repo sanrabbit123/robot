@@ -2830,31 +2830,50 @@ ReceiptRouter.prototype.rou_post_taxBill = function () {
 ReceiptRouter.prototype.rou_post_weeklyCalculation = function () {
   const instance = this;
   const work = this.work;
-  const { equalJson } = this.mother;
+  const { equalJson, errorLog } = this.mother;
   let obj = {};
   obj.link = "/weeklyCalculation";
   obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       work.designerCalculation().then(() => {
         console.log("weeklyCalculation success");
       }).catch((e) => {
-        throw new Error(e);
-      });
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        errorLog("Python 서버 문제 생김 (rou_post_weeklyCalculation): " + e.message).catch((e) => { console.log(e); });
       });
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_weeklyCalculation): " + e.message).catch((e) => { console.log(e); });
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
+      errorLog("Python 서버 문제 생김 (rou_post_weeklyCalculation): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error" }));
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+ReceiptRouter.prototype.rou_post_nonPaidResponses = function () {
+  const instance = this;
+  const work = this.work;
+  const { equalJson, errorLog } = this.mother;
+  let obj = {};
+  obj.link = "/nonPaidResponses";
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const result = await work.designerCalculation(false);
+      res.send(JSON.stringify(result));
+    } catch (e) {
+      errorLog("Python 서버 문제 생김 (rou_post_nonPaidResponses): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error" }));
       console.log(e);
     }
