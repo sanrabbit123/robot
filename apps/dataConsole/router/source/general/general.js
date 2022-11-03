@@ -2254,7 +2254,7 @@ GeneralJs.prototype.greenBar = function () {
     "/project",
     "/designer",
     "/designer?mode=contents",
-    "/flow",
+    "/calculation",
   ];
   naviIconsContextLinks = [
     "/analytics",
@@ -2262,7 +2262,7 @@ GeneralJs.prototype.greenBar = function () {
     "/builder?mode=construct",
     "/builder",
     "/contents",
-    "/dashboard",
+    "/flow",
   ];
   naviIconsLeftException = [
     0,

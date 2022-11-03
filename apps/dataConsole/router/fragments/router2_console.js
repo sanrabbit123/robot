@@ -965,10 +965,16 @@ DataRouter.prototype.rou_post_getClientReport = function () {
           }
 
           //recommend
-          histories = histories.filter((obj) => { return obj.curation.analytics.page.some((o) => { return /designerProposal/gi.test(o.page) }) });
-          obj.recommend = histories.length;
-          obj.cliid.recommend = [ ...new Set(histories.map((obj) => { return obj.cliid })) ];
-          obj.proid.recommend = [ ...new Set(process.filter((obj) => { return histories.map((o) => { return o.cliid }).includes(obj.cliid) }).map((obj) => { return obj.proid })) ];
+          if (arr[0].valueOf() > proposalStandardDateValue) {
+            histories = histories.filter((obj) => { return obj.curation.analytics.page.some((o) => { return /designerProposal/gi.test(o.page) }) });
+            obj.recommend = histories.length;
+            obj.cliid.recommend = [ ...new Set(histories.map((obj) => { return obj.cliid })) ];
+            obj.proid.recommend = [ ...new Set(process.filter((obj) => { return histories.map((o) => { return o.cliid }).includes(obj.cliid) }).map((obj) => { return obj.proid })) ];
+          } else {
+            obj.recommend = 0;
+            obj.cliid.recommend = [];
+            obj.proid.recommend = [];
+          }
 
           //contract
           contracts = motherProjects.filter((obj) => { return obj.process.contract.first.date.valueOf() >= arr[0].valueOf() && obj.process.contract.first.date.valueOf() < arr[2].valueOf() });
