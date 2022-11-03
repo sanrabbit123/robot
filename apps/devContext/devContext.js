@@ -115,9 +115,11 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
 
 
+
+
+    await work.designerCalculation(false);
 
 
 

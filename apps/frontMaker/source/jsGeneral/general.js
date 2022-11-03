@@ -698,8 +698,19 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
     ]
   }
   */
-  let dom_clone, targetStyle, ea, ratio, temp, boldObject, underObject, children, tempIndex;
+  let dom_clone;
+  let targetStyle;
+  let ea;
+  let ratio;
+  let temp, tempIndex;
+  let boldObject, underObject;
+  let children;
+  let nextObject, previousObject, previousDom;
+
   children = [];
+  nextObject = null;
+  previousObject = null;
+
   if (mode === undefined && source === undefined && style === undefined) {
     throw new Error("arguments must be mode(dom node name), style");
     return null;
@@ -755,8 +766,8 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
     }
     delete style.mother;
   }
-  if (style.child !== undefined && typeof style.child === "object") {
-    if (style.child !== null && !Array.isArray(style.child)) {
+  if (style.child !== undefined) {
+    if (typeof style.child === "object" && style.child !== null && !Array.isArray(style.child)) {
       children.push(style.child);
     }
     delete style.child;
@@ -767,6 +778,19 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
     }
     delete style.children;
   }
+  if (style.next !== undefined) {
+    if (typeof style.next === "object" && style.next !== null && !Array.isArray(style.next)) {
+      nextObject = style.next;
+    }
+    delete style.next;
+  }
+  if (style.previous !== undefined) {
+    if (typeof style.previous === "object" && style.previous !== null && !Array.isArray(style.previous)) {
+      previousObject = style.previous;
+    }
+    delete style.previous;
+  }
+
   if (!/svg/gi.test(mode)) {
     if (GeneralJs.nodes[mode] === undefined || typeof style !== "object") {
       throw new Error("invaild arguments");
@@ -877,15 +901,14 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
         delete style.attribute;
       }
 
-      if (typeof style.style === "object" && style.style !== null) {
-        if (style.block !== undefined) {
+      if (typeof style.style === "object" && style.style !== null && typeof style.set === "string") {
+        if (style.set === "block") {
           style.style.display = "block";
           if (typeof style.style.position !== "string") {
             style.style.position = "relative";
           }
-          delete style.flex;
         }
-        if (style.flex !== undefined) {
+        if (style.set === "flex") {
           style.style.display = "flex";
           if (typeof style.style.position !== "string") {
             style.style.position = "relative";
@@ -893,9 +916,8 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
           if (typeof style.style.flexDirection !== "string") {
             style.style.flexDirection = "column";
           }
-          delete style.flex;
         }
-        if (style.center !== undefined) {
+        if (style.set === "center") {
           style.style.display = "flex";
           if (typeof style.style.position !== "string") {
             style.style.position = "relative";
@@ -905,9 +927,8 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
           }
           style.style.justifyContent = "center";
           style.style.alignItems = "center";
-          delete style.flex;
         }
-        if (style.inline !== undefined) {
+        if (style.set === "inline") {
           style.style.display = "inline-flex";
           if (typeof style.style.position !== "string") {
             style.style.position = "relative";
@@ -916,15 +937,14 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
           if (typeof style.style.flexDirection !== "string") {
             style.style.flexDirection = "column";
           }
-          delete style.inline;
         }
-        if (style.absolute !== undefined) {
+        if (style.set === "absolute") {
           if (typeof style.style.display !== "string") {
             style.style.display = "block";
           }
           style.style.position = "absolute";
-          delete style.absolute;
         }
+        delete style.set;
       }
 
       if (style.style !== undefined) {
@@ -1012,6 +1032,15 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
           }
         }
       }
+      if (typeof nextObject === "object" && nextObject !== null && !Array.isArray(nextObject)) {
+        nextObject.mother = mother;
+        GeneralJs.createNode(nextObject);
+      }
+      if (typeof previousObject === "object" && previousObject !== null && !Array.isArray(previousObject)) {
+        previousObject.mother = mother;
+        previousDom = GeneralJs.createNode(previousObject);
+        mother.insertBefore(previousDom, dom_clone);
+      }
       return dom_clone;
     }
   } else {
@@ -1051,15 +1080,14 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
         delete style.attribute;
       }
 
-      if (typeof style.style === "object" && style.style !== null) {
-        if (style.block !== undefined) {
+      if (typeof style.style === "object" && style.style !== null && typeof style.set === "string") {
+        if (style.set === "block") {
           style.style.display = "block";
           if (typeof style.style.position !== "string") {
             style.style.position = "relative";
           }
-          delete style.flex;
         }
-        if (style.flex !== undefined) {
+        if (style.set === "flex") {
           style.style.display = "flex";
           if (typeof style.style.position !== "string") {
             style.style.position = "relative";
@@ -1067,9 +1095,8 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
           if (typeof style.style.flexDirection !== "string") {
             style.style.flexDirection = "column";
           }
-          delete style.flex;
         }
-        if (style.center !== undefined) {
+        if (style.set === "center") {
           style.style.display = "flex";
           if (typeof style.style.position !== "string") {
             style.style.position = "relative";
@@ -1079,9 +1106,8 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
           }
           style.style.justifyContent = "center";
           style.style.alignItems = "center";
-          delete style.flex;
         }
-        if (style.inline !== undefined) {
+        if (style.set === "inline") {
           style.style.display = "inline-flex";
           if (typeof style.style.position !== "string") {
             style.style.position = "relative";
@@ -1090,15 +1116,14 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
           if (typeof style.style.flexDirection !== "string") {
             style.style.flexDirection = "column";
           }
-          delete style.inline;
         }
-        if (style.absolute !== undefined) {
+        if (style.set === "absolute") {
           if (typeof style.style.display !== "string") {
             style.style.display = "block";
           }
           style.style.position = "absolute";
-          delete style.absolute;
         }
+        delete style.set;
       }
 
       if (style.style !== undefined) {
@@ -1187,6 +1212,15 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
           mother.insertBefore(dom_clone, style.before);
         }
       }
+      if (typeof nextObject === "object" && nextObject !== null && !Array.isArray(nextObject)) {
+        nextObject.mother = mother;
+        GeneralJs.createNode(nextObject);
+      }
+      if (typeof previousObject === "object" && previousObject !== null && !Array.isArray(previousObject)) {
+        previousObject.mother = mother;
+        previousDom = GeneralJs.createNode(previousObject);
+        mother.insertBefore(previousDom, dom_clone);
+      }
       return dom_clone;
     } else {
       throw new Error("invaild arguments");
@@ -1267,6 +1301,8 @@ GeneralJs.nodeQueue = function (obj) {
     }
   });
 }
+
+GeneralJs.elementQueue = GeneralJs.nodeQueue;
 
 GeneralJs.withOut = function (percent, num, ea) {
   if (typeof percent === "number" && typeof num !== undefined && typeof ea === "string") {

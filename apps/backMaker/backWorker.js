@@ -648,7 +648,7 @@ BackWorker.prototype.newDesignerToFront = async function (desidArr, option = { s
   }
 }
 
-BackWorker.prototype.designerCalculation = async function () {
+BackWorker.prototype.designerCalculation = async function (alarm = true) {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, dateToString, autoComma, messageSend } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
@@ -663,6 +663,7 @@ BackWorker.prototype.designerCalculation = async function () {
     const bar1 = "================================================================";
     const collection = "taxBill";
     const collection2 = "cashReceipt";
+    const collection3 = "generalBill";
     const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
     let projects, clients, designers;
     let desidArr_raw, desidArr;
@@ -673,12 +674,24 @@ BackWorker.prototype.designerCalculation = async function () {
     let condition0, condition1;
     let name;
     let tempString;
-    let infoTong, infoDetail;
+    let needsResponses, pendingResponses, infoDetail;
     let rows, boo;
     let tempDate;
     let ago, agoValue;
     let greateStandard;
     let limitAgo;
+    let bills;
+    let thisBill;
+    let proid;
+    let thisResponses, thisRequests;
+    let itemAmount, payAmount;
+    let requestRemain;
+    let condition;
+    let taxBills, cashReceipts;
+    let businessNumber;
+    let cliid;
+    let requestTravel;
+    let bilid, responseIndex;
 
     ago = new Date();
     ago.setDate(ago.getDate() - 28);
@@ -730,145 +743,244 @@ BackWorker.prototype.designerCalculation = async function () {
     designers.setClients(clients.toNormal());
     designers = designers.returnDoingDesigners();
 
-    infoTong = [];
+    taxBills = await back.mongoRead(collection, {}, { selfMongo: PYTHONMONGOC });
+    cashReceipts = await back.mongoRead(collection2, {}, { selfMongo: PYTHONMONGOC });
+    bills = await back.mongoRead(collection3, {}, { selfMongo: PYTHONMONGOC });
+
+    needsResponses = [];
+    pendingResponses = [];
     for (let designer of designers) {
-      infoDetail = {
-        desid: designer.desid,
-        designer: designer.designer,
-        classification: designer.information.business.businessInfo.classification,
-        free: (/프리/gi.test(designer.information.business.businessInfo.classification)),
-        simple: (/간이/gi.test(designer.information.business.businessInfo.classification)),
-        business: /프리/gi.test(designer.information.business.businessInfo.classification) ? "" : designer.information.business.businessInfo.businessNumber.replace(/-/g, ''),
-        first: [],
-        remain: [],
-      };
       for (let i = 0; i < designer.projects.length; i++) {
         name = designer.projects[i].name;
-        amount0 = designer.projects[i].process.calculation.payments.first.amount;
-        condition0 = (designer.projects[i].process.calculation.payments.first.date.valueOf() > emptyDateValue);
-        if (!condition0) {
-          tempDate = designer.projects[i].process.contract.meeting.date;
-          tempDate.setDate(tempDate.getDate() + 1);
-          infoDetail.first.push({ name, amount: amount0, proposal: tempDate, receipt: true });
+        cliid = designer.projects[i].cliid;
+        proid = designer.projects[i].proid;
+
+        thisBill = null;
+        thisBill = bills.find((bill) => {
+          return ((bill.links.proid === proid) && (bill.links.method === (designer.projects[i].service.online ? "online" : "offline")))
+        });
+        if (thisBill === null || thisBill === undefined) {
+          continue;
         }
-        amount1 = designer.projects[i].process.calculation.payments.remain.amount;
-        if (designer.projects[i].process.calculation.payments.remain.date.valueOf() <= emptyDateValue) {
-          if (([ '세팅 대기', '원본 요청 요망', '원본 요청 완료', '해당 없음' ]).includes(designer.projects[i].contents.raw.portfolio.status)) {
-            condition1 = true;
-          } else {
-            if (designer.projects[i].contents.photo.boo) {
-              if (/완료/gi.test(designer.projects[i].contents.photo.status) && (/디자이너/gi.test(designer.projects[i].contents.photo.info.photographer) || /고객/gi.test(designer.projects[i].contents.photo.info.photographer))) {
-                condition1 = false;
-              } else {
-                if (designer.projects[i].contents.photo.date.valueOf() < (new Date(3000, 0, 1)).valueOf() && designer.projects[i].contents.photo.date.valueOf() > (new Date(2000, 0, 1)).valueOf()) {
-                  condition1 = false;
+        thisResponses = thisBill.responses;
+        thisRequests = thisBill.requests;
+        bilid = thisBill.bilid;
+
+        responseIndex = 0;
+        for (let response of thisResponses) {
+
+          itemAmount = Math.floor(response.items.reduce((acc, curr) => {
+            return acc + curr.amount.pure;
+          }, 0))
+          payAmount = Math.floor(response.pay.reduce((acc, curr) => {
+            return acc + curr.amount;
+          }, 0))
+
+          if (itemAmount > 0) {
+            if (itemAmount > payAmount) {
+              if (/홈리에종 선금/gi.test(response.name)) {
+
+                requestRemain = thisRequests.find((obj) => { return /홈리에종 잔금/gi.test(obj.name) })
+                if (requestRemain === undefined) {
+                  condition = false;
                 } else {
-                  condition1 = true;
+                  if (Math.floor(requestRemain.items.reduce((acc, curr) => { return acc + curr.amount.consumer; }, 0)) <= Math.floor(requestRemain.pay.reduce((acc, curr) => { return acc + curr.amount; }, 0))) {
+                    businessNumber = designer.information.business.businessInfo.businessNumber.replace(/-/g, '');
+                    if (/프리/gi.test(designer.information.business.businessInfo.classification)) {
+                      condition = true;
+                    } else if (/간이/gi.test(designer.information.business.businessInfo.classification)) {
+                      condition = (cashReceipts.filter((obj) => {
+                        return obj.method === 1;
+                      }).filter((obj) => {
+                        return obj.who.business.replace(/\-/gi, '') === businessNumber
+                      }).filter((obj) => {
+                        return obj.amount.total === itemAmount
+                      }).filter((obj) => {
+                        return obj.date.valueOf() > designer.projects[i].process.contract.meeting.date.valueOf()
+                      }).length > 0);
+                    } else {
+                      condition = (taxBills.filter((obj) => {
+                        return obj.who.from.business.replace(/\-/gi, '') === businessNumber
+                      }).filter((obj) => {
+                        return obj.sum.total === itemAmount
+                      }).filter((obj) => {
+                        return obj.date.valueOf() > designer.projects[i].process.contract.meeting.date.valueOf()
+                      }).length > 0);
+                    }
+                  } else {
+                    condition = false;
+                  }
                 }
+
+              } else if (/홈리에종 잔금/gi.test(response.name)) {
+
+                requestRemain = thisRequests.find((obj) => { return /홈리에종 잔금/gi.test(obj.name) })
+                if (requestRemain === undefined) {
+                  condition = false;
+                } else {
+
+                  if (Math.floor(requestRemain.items.reduce((acc, curr) => { return acc + curr.amount.consumer; }, 0)) <= Math.floor(requestRemain.pay.reduce((acc, curr) => { return acc + curr.amount; }, 0))) {
+                    if (designer.projects[i].process.calculation.payments.remain.date.valueOf() <= emptyDateValue) {
+                      if (([ '세팅 대기', '원본 요청 요망', '원본 요청 완료', '해당 없음' ]).includes(designer.projects[i].contents.raw.portfolio.status)) {
+                        condition = false;
+                      } else {
+                        if (designer.projects[i].contents.photo.boo) {
+                          if (/완료/gi.test(designer.projects[i].contents.photo.status) && (/디자이너/gi.test(designer.projects[i].contents.photo.info.photographer) || /고객/gi.test(designer.projects[i].contents.photo.info.photographer))) {
+                            condition = true;
+                          } else {
+                            if (designer.projects[i].contents.photo.date.valueOf() < (new Date(3000, 0, 1)).valueOf() && designer.projects[i].contents.photo.date.valueOf() > (new Date(2000, 0, 1)).valueOf()) {
+                              condition = true;
+                            } else {
+                              condition = false;
+                            }
+                          }
+                        } else {
+                          condition = true;
+                        }
+                      }
+                    } else {
+                      condition = false;
+                    }
+                  } else {
+                    condition = false;
+                  }
+                }
+
+                if (condition) {
+                  businessNumber = designer.information.business.businessInfo.businessNumber.replace(/-/g, '');
+                  if (/프리/gi.test(designer.information.business.businessInfo.classification)) {
+                    condition = true;
+                  } else if (/간이/gi.test(designer.information.business.businessInfo.classification)) {
+                    condition = (cashReceipts.filter((obj) => {
+                      return obj.method === 1;
+                    }).filter((obj) => {
+                      return obj.who.business.replace(/\-/gi, '') === businessNumber
+                    }).filter((obj) => {
+                      return obj.amount.total === itemAmount
+                    }).filter((obj) => {
+                      return obj.date.valueOf() > designer.projects[i].process.calculation.payments.first.date.valueOf()
+                    }).length > 0);
+                  } else {
+                    condition = (taxBills.filter((obj) => {
+                      return obj.who.from.business.replace(/\-/gi, '') === businessNumber
+                    }).filter((obj) => {
+                      return obj.sum.total === itemAmount
+                    }).filter((obj) => {
+                      return obj.date.valueOf() > designer.projects[i].process.calculation.payments.first.date.valueOf()
+                    }).length > 0);
+                  }
+                }
+
+              } else if (/출장비/gi.test(response.name)) {
+
+                requestTravel = thisRequests.find((obj) => { return /출장비/gi.test(obj.name) })
+                if (requestTravel === undefined) {
+                  requestTravel = thisRequests.find((obj) => {
+                    return obj.items.some((o) => {
+                      return /출장/gi.test(o.name);
+                    })
+                  })
+                  if (requestTravel === undefined) {
+                    condition = false;
+                  } else {
+                    if (Math.floor(requestTravel.items.reduce((acc, curr) => { return acc + curr.amount.consumer; }, 0)) <= Math.floor(requestTravel.pay.reduce((acc, curr) => { return acc + curr.amount; }, 0))) {
+                      condition = true;
+                    } else {
+                      condition = false;
+                    }
+                  }
+                } else {
+                  if (Math.floor(requestTravel.items.reduce((acc, curr) => { return acc + curr.amount.consumer; }, 0)) <= Math.floor(requestTravel.pay.reduce((acc, curr) => { return acc + curr.amount; }, 0))) {
+                    condition = true;
+                  } else {
+                    condition = false;
+                  }
+                }
+
+              } else if (/시공 계약금/gi.test(response.name)) {
+                condition = false;
+              } else if (/시공 착수금/gi.test(response.name)) {
+                condition = false;
+              } else if (/시공 중도금/gi.test(response.name)) {
+                condition = false;
+              } else if (/시공 잔금/gi.test(response.name)) {
+                condition = false;
+              } else {
+                condition = false;
               }
-            } else {
-              condition1 = false;
+
+              if (condition) {
+                needsResponses.push({
+                  cliid,
+                  proid,
+                  desid: designer.desid,
+                  bill: {
+                    bilid,
+                    responseIndex: responseIndex,
+                  },
+                  names: {
+                    name,
+                    designer: designer.designer,
+                  },
+                  item: {
+                    name: response.name,
+                    amount: itemAmount,
+                  },
+                  classification: {
+                    classification: designer.information.business.businessInfo.classification,
+                    free: /프리/gi.test(designer.information.business.businessInfo.classification),
+                    simple: /간이/gi.test(designer.information.business.businessInfo.classification),
+                  },
+                });
+              } else {
+                pendingResponses.push({
+                  cliid,
+                  proid,
+                  desid: designer.desid,
+                  bill: {
+                    bilid,
+                    responseIndex: responseIndex,
+                  },
+                  names: {
+                    name,
+                    designer: designer.designer,
+                  },
+                  item: {
+                    name: response.name,
+                    amount: itemAmount,
+                  },
+                  classification: {
+                    classification: designer.information.business.businessInfo.classification,
+                    free: /프리/gi.test(designer.information.business.businessInfo.classification),
+                    simple: /간이/gi.test(designer.information.business.businessInfo.classification),
+                  },
+                });
+              }
+
             }
           }
-        } else {
-          condition1 = true;
-        }
-        if (!condition1) {
-          tempDate = designer.projects[i].process.calculation.payments.first.date;
-          tempDate.setDate(tempDate.getDate() + 1);
-          infoDetail.remain.push({ name, amount: amount1, firstCalculation: tempDate, receipt: true });
+
+          responseIndex++;
         }
       }
-
-      infoTong.push(infoDetail);
     }
 
-    infoTong = infoTong.filter((obj) => { return (obj.first.length > 0 || obj.remain.length > 0); });
-    for (let { desid, designer, free, simple, business, first, remain } of infoTong) {
-      if (business !== "") {
-        for (let obj of first) {
-          greateStandard = (obj.proposal.valueOf() >= agoValue ? obj.proposal : ago);
-          rows = await back.mongoRead(collection, { date: { $gt: greateStandard } }, { selfMongo: PYTHONMONGOC });
-          rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
-          boo = false;
-          for (let i of rows) {
-            if (i.who.from.business.replace(/-/g, '') === business) {
-              for (let { supply, vat } of i.items) {
-                if (supply + vat === obj.amount) {
-                  boo = true;
-                  break;
-                }
-              }
-            }
-          }
-          if (simple) {
-            rows = await back.mongoRead(collection2, { $and: [ { method: 1 }, { date: { $gt: greateStandard } } ] }, { selfMongo: PYTHONMONGOC });
-            rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
-            for (let i of rows) {
-              if (i.who.business.replace(/-/g, '') === business) {
-                if (i.amount.total === obj.amount || i.amount.supply === obj.amount) {
-                  boo = true;
-                  break;
-                }
-              }
-            }
-          }
-          obj.receipt = free ? true : boo;
-        }
-        for (let obj of remain) {
-          greateStandard = (obj.firstCalculation.valueOf() >= agoValue ? obj.firstCalculation : ago);
-          rows = await back.mongoRead(collection, { date: { $gt: greateStandard } }, { selfMongo: PYTHONMONGOC });
-          rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
-          boo = false;
-          for (let i of rows) {
-            if (i.who.from.business.replace(/-/g, '') === business) {
-              for (let { supply, vat } of i.items) {
-                if (supply + vat === obj.amount) {
-                  boo = true;
-                  break;
-                }
-              }
-            }
-          }
-          if (simple) {
-            rows = await back.mongoRead(collection2, { $and: [ { method: 1 }, { date: { $gt: greateStandard } } ] }, { selfMongo: PYTHONMONGOC });
-            rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
-            for (let i of rows) {
-              if (i.who.business.replace(/-/g, '') === business) {
-                if (i.amount.total === obj.amount || i.amount.supply === obj.amount) {
-                  boo = true;
-                  break;
-                }
-              }
-            }
-          }
-          obj.receipt = free ? true : boo;
-        }
+    if (alarm) {
+      tong = [];
+      tong.push(`${dateToString(new Date())} 디자이너 디자인비 정산 명단입니다!`);
+      tong.push(`상세 : https://${ADDRESS["backinfo"]["host"]}/calculation`);
+      tong.push(bar1);
+      for (let { names: { name, designer }, classification: { free, simple, classification }, item: { name: itemName, amount } } of needsResponses) {
+        tong.push(`- ${designer}D ${name}C : ${itemName.replace(/ 정산/gi, '')} ${autoComma(amount)}원 / ${free ? classification : (simple ? "현금 영수증 확인" : "세금 계산서 발행 완료")}`);
       }
+      tong.push(bar1);
+      await messageSend({ text: tong.join("\n"), channel: "#700_operation" });
     }
 
-    tong = [];
-
-    tong.push(`${dateToString(new Date())} 디자이너 디자인비 정산 명단입니다!`);
-    tong.push(`상세 : https://${ADDRESS["backinfo"]["host"]}/designer?mode=calculation`);
-    tong.push(bar1);
-    for (let { designer, free, simple, classification, first, remain } of infoTong) {
-      for (let { name, amount, receipt } of first) {
-        if (receipt) {
-          tong.push(`- ${designer}D ${name}C : 선금 ${autoComma(amount)}원 / ${free ? classification : (simple ? "현금 영수증 확인" : "세금 계산서 발행 완료")}`);
-        }
-      }
-      for (let { name, amount, receipt } of remain) {
-        if (receipt) {
-          tong.push(`- ${designer}D ${name}C : 잔금 ${autoComma(amount)}원 / ${free ? classification : (simple ? "현금 영수증 확인" : "세금 계산서 발행 완료")}`);
-        }
-      }
-    }
-    tong.push(bar1);
-
-    await messageSend({ text: tong.join("\n"), channel: "#700_operation" });
-
-    return infoTong;
+    return {
+      needs: needsResponses,
+      pending: pendingResponses
+    };
   } catch (e) {
     console.log(e);
   } finally {

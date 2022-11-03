@@ -239,16 +239,16 @@ StylePartsJs.prototype.insertNewsBox = function () {
     ],
   };
 
-  baseMother = createNode({
+  createNode({
     mother: baseTong,
-    flex: true,
+    set: "flex",
     style: {
       width: desktop ? String(standardWidth) + ea : String(mobileStandardWidth + 2) + ea,
       left: desktop ? withOut(50, standardWidth / 2, ea) : withOut(50, (mobileStandardWidth + 2) / 2, ea),
       marginBottom: String(baseMotherMarginBottom) + ea,
     },
     child: {
-      center: true,
+      set: "center",
       style: {
         width: withOut(0, ea),
         height: String(titleTongHeight) + ea,
@@ -256,109 +256,95 @@ StylePartsJs.prototype.insertNewsBox = function () {
       child: {
         mode: "svg",
         source: svgBox.news.multiple(colorChip.black),
-        inline: true,
+        set: "inline",
         style: {
           width: String(logoWidth) + ea,
+        }
+      },
+      next: {
+        set: "center",
+        style: {
+          width: withOut(0, ea),
+          height: String(titleTongHeight) + ea,
+        },
+        child: {
+          text: contents.title.join("\n"),
+          set: "inline",
+          style: {
+            fontSize: String(titleSize) + ea,
+            fontWeight: String(titleWeight),
+            color: colorChip.black,
+            textAlign: "center",
+            lineHeight: String(titleLineHeight),
+            paddingRight: String(titlePadding) + ea,
+            paddingLeft: String(titlePadding) + ea,
+            background: colorChip.white,
+          },
+          previous: {
+            set: "absolute",
+            style: {
+              width: withOut(0, ea),
+              top: String(0),
+              height: String(titleLineTop) + ea,
+              borderBottom: "1px solid " + colorChip.gray3,
+            }
+          }
+        },
+        next: {
+          set: "flex",
+          style: {
+            flexDirection: desktop ? "row" : "column",
+            width: withOut(0, ea),
+            marginTop: String(photoTongMarginTop) + ea,
+          },
+          child: {
+            set: "inline",
+            style: {
+              width: desktop ? String(photoWidth) + ea : withOut(0, ea),
+              height: String(photoHeight) + ea,
+              backgroundImage: "url('" + StylePartsJs.binaryPath + "/news.jpg" + "')",
+              backgroundPosition: "50% 50%",
+              backgroundSize: "auto 100%",
+              borderRadius: String(5) + "px",
+              marginRight: desktop ? String(photoBetween) + ea : "",
+            },
+            next: {
+              set: "inline",
+              style: {
+                flexDirection: "column-reverse",
+                width: desktop ? "calc(calc(calc(100% - " + String(photoWidth) + ea + ") - " + String(photoBetween) + ea + ") / " + String(1) + ")" : withOut(0, ea),
+                height: desktop ? String(photoHeight) + ea : "",
+                borderBottom: "1px solid " + colorChip.gray3,
+              },
+              child: {
+                set: "flex",
+                text: contents.sub.join("\n"),
+                style: {
+                  fontSize: String(subTitleSize) + ea,
+                  fontWeight: String(subTitleWeight),
+                  color: colorChip.black,
+                  marginBottom: String(subTitleMarginBottom) + ea,
+                  textAlign: desktop ? "left" : "center",
+                  marginTop: desktop ? "" : String(12) + ea,
+                },
+                previous: {
+                  set: "flex",
+                  text: contents.description[0].join("\n") + "\n\n" + contents.description[1].join("\n"),
+                  style: {
+                    fontSize: String(contentsSize) + ea,
+                    fontWeight: String(contentsWeight),
+                    color: colorChip.black,
+                    lineHeight: String(contentsLineHeight),
+                    marginBottom: String(between) + ea,
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
   });
-
-  nodeQueue({
-    mother: baseMother,
-    center: true,
-    style: {
-      width: withOut(0, ea),
-      height: String(titleTongHeight) + ea,
-    },
-    children: [
-      {
-        absolute: true,
-        style: {
-          width: withOut(0, ea),
-          top: String(0),
-          height: String(titleLineTop) + ea,
-          borderBottom: "1px solid " + colorChip.gray3,
-        }
-      },
-      {
-        text: contents.title.join("\n"),
-        inline: true,
-        style: {
-          fontSize: String(titleSize) + ea,
-          fontWeight: String(titleWeight),
-          color: colorChip.black,
-          textAlign: "center",
-          lineHeight: String(titleLineHeight),
-          paddingRight: String(titlePadding) + ea,
-          paddingLeft: String(titlePadding) + ea,
-          background: colorChip.white,
-        }
-      }
-    ]
-  }).then(() => {
-
-    return nodeQueue({
-      mother: baseMother,
-      flex: true,
-      style: {
-        flexDirection: desktop ? "row" : "column",
-        width: withOut(0, ea),
-        marginTop: String(photoTongMarginTop) + ea,
-      },
-      children: [
-        {
-          inline: true,
-          style: {
-            width: desktop ? String(photoWidth) + ea : withOut(0, ea),
-            height: String(photoHeight) + ea,
-            backgroundImage: "url('" + StylePartsJs.binaryPath + "/news.jpg" + "')",
-            backgroundPosition: "50% 50%",
-            backgroundSize: "auto 100%",
-            borderRadius: String(5) + "px",
-            marginRight: desktop ? String(photoBetween) + ea : "",
-          }
-        },
-        {
-          inline: true,
-          style: {
-            flexDirection: "column-reverse",
-            width: desktop ? "calc(calc(calc(100% - " + String(photoWidth) + ea + ") - " + String(photoBetween) + ea + ") / " + String(1) + ")" : withOut(0, ea),
-            height: desktop ? String(photoHeight) + ea : "",
-            borderBottom: "1px solid " + colorChip.gray3,
-          },
-          children: [
-            {
-              flex: true,
-              text: contents.description[0].join("\n") + "\n\n" + contents.description[1].join("\n"),
-              style: {
-                fontSize: String(contentsSize) + ea,
-                fontWeight: String(contentsWeight),
-                color: colorChip.black,
-                lineHeight: String(contentsLineHeight),
-                marginBottom: String(between) + ea,
-              }
-            },
-            {
-              flex: true,
-              text: contents.sub.join("\n"),
-              style: {
-                fontSize: String(subTitleSize) + ea,
-                fontWeight: String(subTitleWeight),
-                color: colorChip.black,
-                marginBottom: String(subTitleMarginBottom) + ea,
-                textAlign: desktop ? "left" : "center",
-                marginTop: desktop ? "" : String(12) + ea,
-              }
-            }
-          ]
-        },
-      ]
-    });
-
-  }).catch((err) => {
-    console.log(err);
-  })
 
 }
 
