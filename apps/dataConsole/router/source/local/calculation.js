@@ -1098,6 +1098,9 @@ CalculationJs.prototype.whiteCardView = function (proid) {
         "환수 진행",
       ];
 
+
+      // base
+
       cancelBack = createNode({
         mother: totalContents,
         class: [ whiteCardClassName ],
@@ -1120,7 +1123,6 @@ CalculationJs.prototype.whiteCardView = function (proid) {
           zIndex: String(zIndex),
         }
       });
-
       whiteCard = createNode({
         mother: totalContents,
         class: [ whiteCardClassName ],
@@ -1954,8 +1956,8 @@ CalculationJs.prototype.searchMatrix = function () {
 
 CalculationJs.prototype.queueView = function () {
   const instance = this;
-  const { totalContents, ea, belowHeight, projects } = this;
-  const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate } = GeneralJs;
+  const { totalContents, ea, belowHeight, projects, bills } = this;
+  const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, copyJson } = GeneralJs;
   return async function (e) {
     try {
       const zIndex = 4;
@@ -1973,10 +1975,37 @@ CalculationJs.prototype.queueView = function () {
       let subTextTop;
       let statusTextTop;
       let titleArea;
-
-      
-
-
+      let responses;
+      let thisBill;
+      let forEachFunction;
+      let needs, pending;
+      let contentsAreaBetween;
+      let contentsAreaPaddingTop;
+      let grayInnerPadding;
+      let blockHeight;
+      let valueSize;
+      let valueWeight;
+      let valueBoldWeight;
+      let valueTextTop;
+      let blockMarginBottom;
+      let columns;
+      let contentsArea;
+      let contentsAreaLeft;
+      let contentsAreaRight;
+      let greenTong;
+      let blackTong;
+      let thisResponse;
+      let responseName;
+      let confirmState;
+      let payAmount;
+      let refundAmount;
+      let nonPayAmount;
+      let payDate;
+      let refundDate;
+      let payMethod;
+      let payProof;
+      let responseValueArr;
+      let whiteTong;
 
       whiteOuterMargin = <%% 40, 20, 20, 20, 10 %%>;
       whiteInnerMargin = <%% 50, 30, 30, 30, 20 %%>;
@@ -1995,6 +2024,48 @@ CalculationJs.prototype.queueView = function () {
 
       statusTextTop = <%% 27, 18, 18, 18, 18 %%>;
 
+      contentsAreaBetween = 10;
+      contentsAreaPaddingTop = <%% 30, 15, 15, 15, 15 %%>;
+
+      grayInnerPadding = 10;
+
+      blockHeight = <%% 40, 36, 36, 36, 36 %%>;
+
+      valueSize = <%% 13, 12, 12, 11, 3 %%>;
+      valueWeight = 400;
+      valueBoldWeight = 800;
+      valueTextTop = isMac() ? -1 : 1;
+
+      blockMarginBottom = 2;
+
+      columns = [
+        "아이디",
+        "고객",
+        "디자이너",
+        "구분",
+        "종류",
+        "확인",
+        "총액",
+        "미지급액",
+        "지급액",
+        "지급일",
+        "지급 수단",
+        "지급 진행",
+      ];
+
+      responses = await ajaxJson({ mode: "get" }, PYTHONHOST + "/nonPaidResponses");
+
+      forEachFunction = (obj) => {
+        thisBill = copyJson(bills.find((o) => { return o.bilid === obj.bill.bilid; }));
+        obj.bill.bill = thisBill;
+        obj.bill.responseObject = thisBill.responses[obj.bill.responseIndex];
+      }
+      responses.needs.forEach(forEachFunction);
+      responses.pending.forEach(forEachFunction);
+      ({ needs, pending } = responses);
+
+
+      // base
 
       cancelBack = createNode({
         mother: totalContents,
@@ -2018,7 +2089,6 @@ CalculationJs.prototype.queueView = function () {
           zIndex: String(zIndex),
         }
       });
-
       whiteCard = createNode({
         mother: totalContents,
         class: [ whiteCardClassName ],
@@ -2089,11 +2159,416 @@ CalculationJs.prototype.queueView = function () {
       });
 
 
+      // contents area
 
+      contentsArea = createNode({
+        mother: whiteCard,
+        style: {
+          display: "flex",
+          position: "relative",
+          flexDirection: "column",
+          paddingTop: String(contentsAreaPaddingTop) + ea,
+          height: withOut(titleAreaHeight + titleAreaPaddingBottom + contentsAreaPaddingTop, ea),
+          width: withOut(0, ea),
+        }
+      });
 
+      // contents area up - request
 
+      contentsAreaLeft = createNode({
+        mother: contentsArea,
+        style: {
+          display: "flex",
+          position: "relative",
+          height: "calc(calc(calc(100% - " + String(contentsAreaBetween) + ea + ") / 2) - " + String(grayInnerPadding * 2) + ea + ")",
+          width: withOut(grayInnerPadding * 2, ea),
+          borderRadius: String(5) + "px",
+          padding: String(grayInnerPadding) + ea,
+          background: colorChip.gray2,
+          marginBottom: String(contentsAreaBetween) + ea,
+          alignItems: "center",
+          justifyContent: "center",
+        },
+        children: [
+          {
+            style: {
+              display: "block",
+              position: "relative",
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              overflow: "scroll",
+            }
+          }
+        ]
+      }).firstChild;
 
+      greenTong = createNode({
+        mother: contentsAreaLeft,
+        style: {
+          display: "flex",
+          position: "sticky",
+          flexDirection: "row",
+          top: String(0),
+          width: withOut(0),
+          height: String(blockHeight) + ea,
+          background: colorChip.gradientGreen,
+          borderRadius: String(5) + "px",
+          marginBottom: String(blockMarginBottom) + ea,
+          zIndex: String(1),
+        }
+      });
+      for (let column of columns) {
+        createNode({
+          mother: greenTong,
+          style: {
+            display: "inline-flex",
+            width: "calc(100% / " + String(columns.length) + ")",
+            height: withOut(0, ea),
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+          },
+          children: [
+            {
+              text: column,
+              style: {
+                fontSize: String(valueSize) + ea,
+                fontWeight: String(valueBoldWeight),
+                color: colorChip.white,
+                position: "relative",
+                top: String(valueTextTop) + ea,
+              }
+            }
+          ]
+        });
+      }
 
+      for (let z = 0; z < needs.length; z++) {
+        thisResponse = needs[z].bill.responseObject;
+        responseName = thisResponse.name;
+
+        confirmState = Math.floor(thisResponse.items.reduce((acc, curr) => { return acc + curr.amount.pure }, 0));
+        payAmount = Math.floor(thisResponse.pay.reduce((acc, curr) => { return acc + curr.amount }, 0));
+        nonPayAmount = confirmState - payAmount;
+        payDate = '-';
+        if (thisResponse.pay.length > 0) {
+          payDate = dateToString(thisResponse.pay[0].date);
+        }
+        if (payDate === '-') {
+          payMethod = "-";
+          payProof = "-";
+        } else {
+          payMethod = "알 수 없음";
+          if (thisResponse.proofs.length > 0) {
+            payMethod = thisResponse.proofs[0].method;
+          }
+          payProof = "알 수 없음";
+          if (thisResponse.proofs.length > 0) {
+            payProof = thisResponse.proofs[0].proof;
+          }
+        }
+
+        responseValueArr = [
+          {
+            value: needs[z].proid,
+            color: colorChip.black,
+            pointer: true,
+          },
+          {
+            value: needs[z].names.name,
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: needs[z].names.designer,
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: responseName,
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: needs[z].classification.classification,
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: needs[z].classification.free ? "프리랜서 정산" : (needs[z].classification.simple ? "현금 영수증 확인" : "세금 계산서 확인"),
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: autoComma(confirmState),
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: autoComma(nonPayAmount),
+            color: nonPayAmount !== 0 ? colorChip.purple : colorChip.black,
+            pointer: false,
+          },
+          {
+            value: autoComma(payAmount),
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: payDate,
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: payMethod,
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: "지급 진행",
+            color: colorChip.green,
+            pointer: true,
+          },
+        ];
+
+        whiteTong = createNode({
+          mother: contentsAreaLeft,
+          style: {
+            display: "flex",
+            position: "relative",
+            flexDirection: "row",
+            width: withOut(0),
+            height: String(blockHeight) + ea,
+            background: colorChip.white,
+            borderRadius: String(5) + "px",
+            marginBottom: String(blockMarginBottom) + ea,
+          }
+        });
+        for (let { value, color, pointer } of responseValueArr) {
+          createNode({
+            mother: whiteTong,
+            style: {
+              display: "inline-flex",
+              width: "calc(100% / " + String(columns.length) + ")",
+              height: withOut(0, ea),
+              justifyContent: "center",
+              alignItems: "center",
+              position: "relative",
+              cursor: pointer ? "pointer" : "",
+            },
+            children: [
+              {
+                text: value,
+                style: {
+                  fontSize: String(valueSize) + ea,
+                  fontWeight: String(valueWeight),
+                  color: color,
+                  position: "relative",
+                  top: String(valueTextTop) + ea,
+                }
+              }
+            ]
+          });
+        }
+      }
+
+      // contents area down - response
+
+      contentsAreaRight = createNode({
+        mother: contentsArea,
+        style: {
+          display: "flex",
+          position: "relative",
+          height: "calc(calc(calc(100% - " + String(contentsAreaBetween) + ea + ") / 2) - " + String(grayInnerPadding * 2) + ea + ")",
+          width: withOut(grayInnerPadding * 2, ea),
+          borderRadius: String(5) + "px",
+          padding: String(grayInnerPadding) + ea,
+          background: colorChip.gray2,
+          alignItems: "center",
+          justifyContent: "center",
+        },
+        children: [
+          {
+            style: {
+              display: "block",
+              position: "relative",
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              overflow: "scroll",
+            }
+          }
+        ]
+      }).firstChild;
+
+      blackTong = createNode({
+        mother: contentsAreaRight,
+        style: {
+          display: "flex",
+          position: "sticky",
+          flexDirection: "row",
+          top: String(0),
+          width: withOut(0),
+          height: String(blockHeight) + ea,
+          background: colorChip.gradientGray,
+          borderRadius: String(5) + "px",
+          marginBottom: String(blockMarginBottom) + ea,
+          zIndex: String(1),
+        }
+      });
+      for (let column of columns) {
+        createNode({
+          mother: blackTong,
+          style: {
+            display: "inline-flex",
+            width: "calc(100% / " + String(columns.length) + ")",
+            height: withOut(0, ea),
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+          },
+          children: [
+            {
+              text: column,
+              style: {
+                fontSize: String(valueSize) + ea,
+                fontWeight: String(valueBoldWeight),
+                color: colorChip.white,
+                position: "relative",
+                top: String(valueTextTop) + ea,
+              }
+            }
+          ]
+        });
+      }
+
+      for (let z = 0; z < pending.length; z++) {
+        thisResponse = pending[z].bill.responseObject;
+        responseName = thisResponse.name;
+
+        confirmState = Math.floor(thisResponse.items.reduce((acc, curr) => { return acc + curr.amount.pure }, 0));
+        payAmount = Math.floor(thisResponse.pay.reduce((acc, curr) => { return acc + curr.amount }, 0));
+        nonPayAmount = confirmState - payAmount;
+        payDate = '-';
+        if (thisResponse.pay.length > 0) {
+          payDate = dateToString(thisResponse.pay[0].date);
+        }
+        if (payDate === '-') {
+          payMethod = "-";
+          payProof = "-";
+        } else {
+          payMethod = "알 수 없음";
+          if (thisResponse.proofs.length > 0) {
+            payMethod = thisResponse.proofs[0].method;
+          }
+          payProof = "알 수 없음";
+          if (thisResponse.proofs.length > 0) {
+            payProof = thisResponse.proofs[0].proof;
+          }
+        }
+
+        responseValueArr = [
+          {
+            value: pending[z].proid,
+            color: colorChip.black,
+            pointer: true,
+          },
+          {
+            value: pending[z].names.name,
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: pending[z].names.designer,
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: responseName,
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: pending[z].classification.classification,
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: '-',
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: autoComma(confirmState),
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: autoComma(nonPayAmount),
+            color: nonPayAmount !== 0 ? colorChip.purple : colorChip.black,
+            pointer: false,
+          },
+          {
+            value: autoComma(payAmount),
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: payDate,
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: payMethod,
+            color: colorChip.black,
+            pointer: false,
+          },
+          {
+            value: "지급 진행",
+            color: colorChip.green,
+            pointer: true,
+          },
+        ];
+
+        whiteTong = createNode({
+          mother: contentsAreaRight,
+          style: {
+            display: "flex",
+            position: "relative",
+            flexDirection: "row",
+            width: withOut(0),
+            height: String(blockHeight) + ea,
+            background: colorChip.white,
+            borderRadius: String(5) + "px",
+            marginBottom: String(blockMarginBottom) + ea,
+          }
+        });
+        for (let { value, color, pointer } of responseValueArr) {
+          createNode({
+            mother: whiteTong,
+            style: {
+              display: "inline-flex",
+              width: "calc(100% / " + String(columns.length) + ")",
+              height: withOut(0, ea),
+              justifyContent: "center",
+              alignItems: "center",
+              position: "relative",
+              cursor: pointer ? "pointer" : "",
+            },
+            children: [
+              {
+                text: value,
+                style: {
+                  fontSize: String(valueSize) + ea,
+                  fontWeight: String(valueWeight),
+                  color: color,
+                  position: "relative",
+                  top: String(valueTextTop) + ea,
+                }
+              }
+            ]
+          });
+        }
+      }
 
     } catch (e) {
       console.log(e);
@@ -2149,6 +2624,7 @@ CalculationJs.prototype.launching = async function () {
       return obj.proid !== "p1801_aa01s" && obj.proid !== "p1801_aa02s";
     })
 
+    this.bills = bills;
     this.projects = projects;
     this.matrix = [];
     this.names = [];
