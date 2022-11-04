@@ -976,6 +976,8 @@ CalculationJs.prototype.baseMaker = function () {
   }
 
   contentsLoad();
+
+  this.contentsLoad = contentsLoad;
 }
 
 CalculationJs.prototype.whiteCardView = function (proid) {
@@ -1034,6 +1036,7 @@ CalculationJs.prototype.whiteCardView = function (proid) {
       let vatAmount, supplyAmount;
       let payMethod, payProof;
       let requestSumVat, requestSumSupply;
+      let whiteTongDom;
 
       whiteOuterMargin = <%% 40, 20, 20, 20, 10 %%>;
       whiteInnerMargin = <%% 50, 30, 30, 30, 20 %%>;
@@ -1100,6 +1103,11 @@ CalculationJs.prototype.whiteCardView = function (proid) {
 
 
       // base
+
+      const targets = [ ...document.querySelectorAll('.' + whiteCardClassName) ];
+      for (let dom of targets) {
+        dom.remove();
+      }
 
       cancelBack = createNode({
         mother: totalContents,
@@ -1681,66 +1689,79 @@ CalculationJs.prototype.whiteCardView = function (proid) {
             value: responseName,
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: project.process.calculation.method,
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: String(project.process.calculation.percentage) + '%',
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: '-',
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: autoComma(confirmState),
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: autoComma(nonPayAmount),
             color: nonPayAmount !== 0 ? colorChip.purple : colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: autoComma(payAmount),
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: payDate,
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: payMethod,
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: autoComma(refundAmount),
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: refundDate,
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: "지급 진행",
             color: colorChip.green,
             pointer: true,
+            event: instance.makeExcuteEvent(project.bill.bilid, z, project.proid),
           },
           {
             value: "환수 진행",
             color: colorChip.green,
             pointer: true,
+            event: null,
           },
         ];
 
@@ -1757,9 +1778,10 @@ CalculationJs.prototype.whiteCardView = function (proid) {
             marginBottom: String(blockMarginBottom) + ea,
           }
         });
-        for (let { value, color, pointer } of responseValueArr) {
+        for (let { value, color, pointer, event } of responseValueArr) {
           createNode({
             mother: whiteTong,
+            event,
             style: {
               display: "inline-flex",
               width: "calc(100% / " + String(leftColumns.length) + ")",
@@ -1943,6 +1965,10 @@ CalculationJs.prototype.searchMatrix = function () {
           }
           if (e.key === "Enter") {
             target.click();
+          }
+        } else {
+          for (let dom of instance.names) {
+            dom.parentElement.parentElement.parentElement.style.display = "none";
           }
         }
       }
@@ -2330,61 +2356,73 @@ CalculationJs.prototype.queueView = function () {
             value: needs[z].proid,
             color: colorChip.black,
             pointer: true,
+            event: null,
           },
           {
             value: needs[z].names.name,
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: needs[z].names.designer,
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: responseName,
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: needs[z].classification.classification,
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: needs[z].classification.free ? "프리랜서 정산" : (needs[z].classification.simple ? "현금 영수증 확인" : "세금 계산서 확인"),
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: autoComma(confirmState),
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: autoComma(nonPayAmount),
             color: nonPayAmount !== 0 ? colorChip.purple : colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: autoComma(payAmount),
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: payDate,
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: payMethod,
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: "지급 진행",
             color: colorChip.green,
             pointer: true,
+            event: instance.makeExcuteEvent(needs[z].bill.bilid, needs[z].bill.responseIndex, needs[z].proid, true),
           },
         ];
         whiteTong = createNode({
@@ -2400,9 +2438,10 @@ CalculationJs.prototype.queueView = function () {
             marginBottom: String(blockMarginBottom) + ea,
           }
         });
-        for (let { value, color, pointer } of responseValueArr) {
+        for (let { value, color, pointer, event } of responseValueArr) {
           createNode({
             mother: whiteTong,
+            event,
             style: {
               display: "inline-flex",
               width: "calc(100% / " + String(columns.length) + ")",
@@ -2636,61 +2675,73 @@ CalculationJs.prototype.queueView = function () {
             value: pending[z].proid,
             color: colorChip.black,
             pointer: true,
+            event: null,
           },
           {
             value: pending[z].names.name,
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: pending[z].names.designer,
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: responseName,
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: pending[z].classification.classification,
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: '-',
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: autoComma(confirmState),
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: autoComma(nonPayAmount),
             color: nonPayAmount !== 0 ? colorChip.purple : colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: autoComma(payAmount),
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: payDate,
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: payMethod,
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: "지급 진행",
             color: colorChip.green,
             pointer: true,
+            event: instance.makeExcuteEvent(pending[z].bill.bilid, pending[z].bill.responseIndex, pending[z].proid, true),
           },
         ];
 
@@ -2707,9 +2758,10 @@ CalculationJs.prototype.queueView = function () {
             marginBottom: String(blockMarginBottom) + ea,
           }
         });
-        for (let { value, color, pointer } of responseValueArr) {
+        for (let { value, color, pointer, event } of responseValueArr) {
           createNode({
             mother: whiteTong,
+            event,
             style: {
               display: "inline-flex",
               width: "calc(100% / " + String(columns.length) + ")",
@@ -2768,61 +2820,73 @@ CalculationJs.prototype.queueView = function () {
             value: needs[z].proid,
             color: colorChip.black,
             pointer: true,
+            event: null,
           },
           {
             value: needs[z].names.name,
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: needs[z].names.designer,
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: responseName,
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: needs[z].classification.classification,
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: needs[z].classification.free ? "프리랜서 정산" : (needs[z].classification.simple ? "현금 영수증 확인" : "세금 계산서 확인"),
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: autoComma(confirmState),
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: autoComma(nonPayAmount),
             color: nonPayAmount !== 0 ? colorChip.purple : colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: autoComma(payAmount),
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: payDate,
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: payMethod,
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: "지급 진행",
             color: colorChip.green,
             pointer: true,
+            event: instance.makeExcuteEvent(needs[z].bill.bilid, needs[z].bill.responseIndex, needs[z].proid, true),
           },
         ];
         whiteTong = createNode({
@@ -2838,9 +2902,10 @@ CalculationJs.prototype.queueView = function () {
             marginBottom: String(blockMarginBottom) + ea,
           }
         });
-        for (let { value, color, pointer } of responseValueArr) {
+        for (let { value, color, pointer, event } of responseValueArr) {
           createNode({
             mother: whiteTong,
+            event,
             style: {
               display: "inline-flex",
               width: "calc(100% / " + String(columns.length) + ")",
@@ -2974,6 +3039,29 @@ CalculationJs.prototype.queueView = function () {
   }
 }
 
+CalculationJs.prototype.makeExcuteEvent = function (bilid, responseIndex, proid, queueMode = false) {
+  const instance = this;
+  const { setQueue } = GeneralJs;
+  return async function (e) {
+    try {
+      await instance.excuteResponse(bilid, responseIndex, new Date());
+      window.alert("업데이트 되었습니다!");
+      const loading = instance.mother.grayLoading();
+      setQueue(() => {
+        instance.contentsLoad();
+        if (!queueMode) {
+          (instance.whiteCardView(proid))();
+        } else {
+          (instance.queueView())();
+        }
+        loading.remove();
+      }, 500);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
 CalculationJs.prototype.excuteResponse = async function (bilid, responseIndex, date) {
   if (typeof bilid !== "string" || typeof responseIndex !== "number" || typeof date !== "object") {
     throw new Error("input => [ bilid, responseIndex, amount, date ]");
@@ -3030,6 +3118,9 @@ CalculationJs.prototype.excuteResponse = async function (bilid, responseIndex, d
       updateQuery
     }, PYTHONHOST + "/generalMongo");
 
+    thisBill.responses[responseIndex].pay = [ { amount, date, oid } ];
+    thisBill.responses[responseIndex].proofs = [ { date, method, proof: thisProject.process.calculation.info.proof, to: thisProject.process.calculation.info.to } ];
+
 
     if (/홈리에종 선금/gi.test(name) || /홈리에종 잔금/gi.test(name)) {
 
@@ -3042,10 +3133,17 @@ CalculationJs.prototype.excuteResponse = async function (bilid, responseIndex, d
         projectUpdateQuery["process.calculation.payments.first.date"] = date;
         projectUpdateQuery["process.calculation.payments.remain.amount"] = Math.floor(thisProject.process.calculation.payments.totalAmount - amount);
 
+        thisProject.process.calculation.payments.first.amount = projectUpdateQuery["process.calculation.payments.first.amount"];
+        thisProject.process.calculation.payments.first.date = projectUpdateQuery["process.calculation.payments.first.date"];
+        thisProject.process.calculation.payments.remain.amount = projectUpdateQuery["process.calculation.payments.remain.amount"];
+
       } else if (/홈리에종 잔금/gi.test(name)) {
 
         projectUpdateQuery["process.calculation.payments.remain.amount"] = Math.floor(amount);
         projectUpdateQuery["process.calculation.payments.remain.date"] = date;
+
+        thisProject.process.calculation.payments.remain.amount = projectUpdateQuery["process.calculation.payments.remain.amount"];
+        thisProject.process.calculation.payments.remain.date = projectUpdateQuery["process.calculation.payments.remain.date"];
 
       }
 

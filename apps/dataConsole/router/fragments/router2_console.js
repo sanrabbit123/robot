@@ -682,7 +682,12 @@ DataRouter.prototype.rou_post_rawUpdateDocument = function () {
   let obj = {};
   obj.link = [ "/rawUpdateClient", "/rawUpdateDesigner", "/rawUpdateProject", "/rawUpdateContents", "/rawUpdateAspirant" ];
   obj.func = async function (req, res) {
-    res.set("Content-Type", "application/json");
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       let raw_data;
       let whereQuery, updateQuery, dateQuery;

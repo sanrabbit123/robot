@@ -1462,7 +1462,7 @@ DataRouter.prototype.rou_post_rawUpdateDocument = function () {
         }
       }
 
-      messageLog("raw update 감지 => " + JSON.stringify(updateTong, null, 2)).catch((err) => { console.log(err); });
+      errorLog("raw update 감지 => " + JSON.stringify(updateTong, null, 2)).catch((err) => { console.log(err); });
 
       back.mongoCreate((req.url.replace(/^\/rawU/, 'u') + "Log"), updateTong, { selfMongo: instance.mongolocal }).catch(function (e) {
         throw new Error(e);
@@ -1471,7 +1471,7 @@ DataRouter.prototype.rou_post_rawUpdateDocument = function () {
       res.send(JSON.stringify({ message: raw_data }));
 
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_rawUpdateDocument): " + e.message).catch((e) => { console.log(e); });
+      errorLog("Console 서버 문제 생김 (rou_post_rawUpdateDocument): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }

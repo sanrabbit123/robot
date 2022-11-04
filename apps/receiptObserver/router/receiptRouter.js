@@ -125,6 +125,12 @@ ReceiptRouter.prototype.rou_post_generalMongo = function () {
   let obj = {};
   obj.link = "/generalMongo";
   obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       if (req.body.mode === undefined) {
         throw new Error("must be mode => [ create, read, update, delete, sse ]");
@@ -195,17 +201,11 @@ ReceiptRouter.prototype.rou_post_generalMongo = function () {
       } else {
         throw new Error("must be mode => [ create, read, update, delete, sse ]");
       }
-
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
       res.send(JSON.stringify(result));
     } catch (e) {
       instance.mother.errorLog("Python 서버 문제 생김 (rou_post_generalMongo): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
