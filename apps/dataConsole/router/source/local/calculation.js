@@ -983,7 +983,7 @@ CalculationJs.prototype.baseMaker = function () {
 CalculationJs.prototype.whiteCardView = function (proid) {
   const instance = this;
   const { totalContents, ea, belowHeight, projects } = this;
-  const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate } = GeneralJs;
+  const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, removeByClass } = GeneralJs;
   return async function (e) {
     try {
       const project = projects.find((obj) => { return obj.proid === proid });
@@ -1104,27 +1104,16 @@ CalculationJs.prototype.whiteCardView = function (proid) {
 
       // base
 
-      const targets = [ ...document.querySelectorAll('.' + whiteCardClassName) ];
-      for (let dom of targets) {
-        dom.remove();
-      }
+      removeByClass(whiteCardClassName);
 
       cancelBack = createNode({
         mother: totalContents,
         class: [ whiteCardClassName ],
-        event: {
-          click: function (e) {
-            const targets = [ ...document.querySelectorAll('.' + whiteCardClassName) ];
-            for (let dom of targets) {
-              dom.remove();
-            }
-          }
+        event: (e) => {
+          removeByClass(whiteCardClassName);
         },
+        set: "fixed",
         style: {
-          position: "fixed",
-          top: String(0),
-          left: String(0),
-          width: withOut(0, ea),
           height: withOut(belowHeight, ea),
           background: colorChip.black,
           opacity: String(0.4),
@@ -1992,7 +1981,7 @@ CalculationJs.prototype.reportMatrix = function () {
 CalculationJs.prototype.queueView = function () {
   const instance = this;
   const { totalContents, ea, belowHeight, projects, bills } = this;
-  const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, copyJson } = GeneralJs;
+  const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, copyJson, removeByClass } = GeneralJs;
   return async function (e) {
     try {
       const zIndex = 4;
@@ -2111,27 +2100,16 @@ CalculationJs.prototype.queueView = function () {
 
       // base
 
-      const targets = [ ...document.querySelectorAll('.' + whiteCardClassName) ];
-      for (let dom of targets) {
-        dom.remove();
-      }
+      removeByClass(whiteCardClassName);
 
       cancelBack = createNode({
         mother: totalContents,
         class: [ whiteCardClassName ],
-        event: {
-          click: function (e) {
-            const targets = [ ...document.querySelectorAll('.' + whiteCardClassName) ];
-            for (let dom of targets) {
-              dom.remove();
-            }
-          }
+        event: (e) => {
+          removeByClass(whiteCardClassName);
         },
+        set: "fixed",
         style: {
-          position: "fixed",
-          top: String(0),
-          left: String(0),
-          width: withOut(0, ea),
           height: withOut(belowHeight, ea),
           background: colorChip.black,
           opacity: String(0.4),
@@ -2409,8 +2387,8 @@ CalculationJs.prototype.queueView = function () {
           {
             value: payDate,
             color: colorChip.black,
-            pointer: false,
-            event: null,
+            pointer: true,
+            event: instance.dateFixEvent(needs[z].bill.bilid, needs[z].bill.responseIndex, needs[z].proid, true),
           },
           {
             value: payMethod,
@@ -2728,8 +2706,8 @@ CalculationJs.prototype.queueView = function () {
           {
             value: payDate,
             color: colorChip.black,
-            pointer: false,
-            event: null,
+            pointer: true,
+            event: instance.dateFixEvent(pending[z].bill.bilid, pending[z].bill.responseIndex, pending[z].proid, true),
           },
           {
             value: payMethod,
@@ -2873,8 +2851,8 @@ CalculationJs.prototype.queueView = function () {
           {
             value: payDate,
             color: colorChip.black,
-            pointer: false,
-            event: null,
+            pointer: true,
+            event: instance.dateFixEvent(needs[z].bill.bilid, needs[z].bill.responseIndex, needs[z].proid, true),
           },
           {
             value: payMethod,
@@ -3268,9 +3246,9 @@ CalculationJs.prototype.launching = async function () {
       project.phone = thisClient.phone;
     }
 
-    // projects = projects.filter((obj) => {
-    //   return obj.proid !== "p1801_aa01s" && obj.proid !== "p1801_aa02s";
-    // })
+    projects = projects.filter((obj) => {
+      return obj.proid !== "p1801_aa01s" && obj.proid !== "p1801_aa02s";
+    })
 
     this.bills = bills;
     this.projects = projects;
