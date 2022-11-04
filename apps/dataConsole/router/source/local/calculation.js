@@ -2974,8 +2974,8 @@ CalculationJs.prototype.queueView = function () {
   }
 }
 
-CalculationJs.prototype.excuteResponse = async function (bilid, responseIndex, amount, date) {
-  if (typeof bilid !== "string" || typeof responseIndex !== "number" || typeof amount !== "number" || typeof date !== "object") {
+CalculationJs.prototype.excuteResponse = async function (bilid, responseIndex, date) {
+  if (typeof bilid !== "string" || typeof responseIndex !== "number" || typeof date !== "object") {
     throw new Error("input => [ bilid, responseIndex, amount, date ]");
   }
   if (!(date instanceof Date)) {
@@ -2986,6 +2986,7 @@ CalculationJs.prototype.excuteResponse = async function (bilid, responseIndex, a
   const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, copyJson } = GeneralJs;
   try {
     const oid = "";
+    const method = "계좌 이체";
     const thisBill = bills.find((obj) => { return obj.bilid === bilid });
     if (thisBill === undefined) {
       throw new Error("invaild bilid");
@@ -2993,33 +2994,67 @@ CalculationJs.prototype.excuteResponse = async function (bilid, responseIndex, a
     if (thisBill.responses[responseIndex] === undefined) {
       throw new Error("invaild index");
     }
+    const proid = thisBill.links.proid;
+    const thisProject = projects.find((obj) => { return obj.proid === proid });
     const thisResponse = thisBill.responses[responseIndex];
-    const { pay } = thisResponse;
+    const { pay, name, target } = thisResponse;
     let whereQuery, updateQuery;
+    let projectWhereQuery, projectUpdateQuery;
+    let amount;
 
+    amount = Math.floor(thisResponse.items.reduce((acc, curr) => { return acc + curr.amount.pure }, 0));
 
     whereQuery = { bilid };
+    updateQuery = {};
 
     if (pay.length === 0) {
-
       updateQuery["responses." + String(responseIndex) + ".pay"] = [ { amount, date, oid } ];
-
-
+      updateQuery["responses." + String(responseIndex) + ".proofs"] = [ { date, method, proof: thisProject.process.calculation.info.proof, to: thisProject.process.calculation.info.to } ];
     } else if (pay.length === 1) {
-
-
-
+      updateQuery["responses." + String(responseIndex) + ".pay." + String(0) + ".amount"] = amount;
+      updateQuery["responses." + String(responseIndex) + ".pay." + String(0) + ".date"] = date;
+      updateQuery["responses." + String(responseIndex) + ".proofs." + String(0) + ".date"] = date;
+      updateQuery["responses." + String(responseIndex) + ".proofs." + String(0) + ".method"] = method;
+      updateQuery["responses." + String(responseIndex) + ".proofs." + String(0) + ".proof"] = thisProject.process.calculation.info.proof;
+      updateQuery["responses." + String(responseIndex) + ".proofs." + String(0) + ".to"] = thisProject.process.calculation.info.to;
     } else {
-
-
-
+      updateQuery["responses." + String(responseIndex) + ".pay"] = [ { amount, date, oid } ];
+      updateQuery["responses." + String(responseIndex) + ".proofs"] = [ { date, method, proof: thisProject.process.calculation.info.proof, to: thisProject.process.calculation.info.to } ];
     }
 
+    await ajaxJson({
+      mode: "update",
+      collection: "generalBill",
+      db: "python",
+      whereQuery,
+      updateQuery
+    }, PYTHONHOST + "/generalMongo");
 
 
+    if (/홈리에종 선금/gi.test(name) || /홈리에종 잔금/gi.test(name)) {
 
+      projectWhereQuery = { proid };
+      projectUpdateQuery = {};
 
+      if (/홈리에종 선금/gi.test(name)) {
 
+        projectUpdateQuery["process.calculation.payments.first.amount"] = Math.floor(amount);
+        projectUpdateQuery["process.calculation.payments.first.date"] = date;
+        projectUpdateQuery["process.calculation.payments.remain.amount"] = Math.floor(thisProject.process.calculation.payments.totalAmount - amount);
+
+      } else if (/홈리에종 잔금/gi.test(name)) {
+
+        projectUpdateQuery["process.calculation.payments.remain.amount"] = Math.floor(amount);
+        projectUpdateQuery["process.calculation.payments.remain.date"] = date;
+
+      }
+
+      await ajaxJson({
+        whereQuery: projectWhereQuery,
+        updateQuery: projectUpdateQuery
+      }, BACKHOST + "/rawUpdateProject");
+
+    }
 
   } catch (e) {
     console.log(e);
