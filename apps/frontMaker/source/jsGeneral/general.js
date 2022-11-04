@@ -944,6 +944,24 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
           }
           style.style.position = "absolute";
         }
+        if (style.set === "fixed") {
+          if (typeof style.style.display !== "string") {
+            style.style.display = "block";
+          }
+          if (typeof style.style.top !== "string") {
+            style.style.top = "0";
+          }
+          if (typeof style.style.left !== "string") {
+            style.style.left = "0";
+          }
+          if (typeof style.style.width !== "string") {
+            style.style.width = "100%";
+          }
+          if (typeof style.style.height !== "string") {
+            style.style.height = "100%";
+          }
+          style.style.position = "fixed";
+        }
         delete style.set;
       }
 
@@ -1124,6 +1142,24 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
             style.style.display = "block";
           }
           style.style.position = "absolute";
+        }
+        if (style.set === "fixed") {
+          if (typeof style.style.display !== "string") {
+            style.style.display = "block";
+          }
+          if (typeof style.style.top !== "string") {
+            style.style.top = "0";
+          }
+          if (typeof style.style.left !== "string") {
+            style.style.left = "0";
+          }
+          if (typeof style.style.width !== "string") {
+            style.style.width = "100%";
+          }
+          if (typeof style.style.height !== "string") {
+            style.style.height = "100%";
+          }
+          style.style.position = "fixed";
         }
         delete style.set;
       }
@@ -6108,4 +6144,11 @@ GeneralJs.injectVideo = function (obj) {
   targetDom.insertAdjacentHTML("beforeend", htmlString);
 
   return targetDom;
+}
+
+GeneralJs.removeByClass = function (className) {
+  const targets = [ ...document.querySelectorAll('.' + className) ];
+  for (let dom of targets) {
+    dom.remove();
+  }
 }

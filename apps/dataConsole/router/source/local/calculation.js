@@ -1730,8 +1730,8 @@ CalculationJs.prototype.whiteCardView = function (proid) {
           {
             value: payDate,
             color: colorChip.black,
-            pointer: false,
-            event: null,
+            pointer: true,
+            event: instance.dateFixEvent(project.bill.bilid, z, project.proid),
           },
           {
             value: payMethod,
@@ -3062,6 +3062,70 @@ CalculationJs.prototype.makeExcuteEvent = function (bilid, responseIndex, proid,
   }
 }
 
+CalculationJs.prototype.dateFixEvent = function (bilid, responseIndex, proid, queueMode = false) {
+  const instance = this;
+  const { totalContents, ea } = this;
+  const { setQueue, colorChip, createNode, withOut, removeByClass, stringToDate } = GeneralJs;
+  return async function (e) {
+    try {
+      const dateFixTargetClassName = "dateFixTargetClassName";
+      const zIndex = 5;
+      const thisBilid = bilid;
+      const thisIndex = responseIndex;
+      const calendar = instance.mother.makeCalendar(new Date(), async function (e) {
+        try {
+          const targetDate = stringToDate(this.getAttribute("buttonValue"));
+          await instance.excuteResponse(thisBilid, thisIndex, targetDate);
+          window.alert("업데이트 되었습니다!");
+          removeByClass(dateFixTargetClassName);
+          const loading = instance.mother.grayLoading();
+          setQueue(() => {
+            instance.contentsLoad();
+            if (!queueMode) {
+              (instance.whiteCardView(proid))();
+            } else {
+              (instance.queueView())();
+            }
+            loading.remove();
+          }, 500);
+        } catch (e) {
+          console.log(e);
+        }
+      });
+      const { top, left, height } = this.getBoundingClientRect();
+      const margin = 6;
+
+      createNode({
+        mother: totalContents,
+        class: [ dateFixTargetClassName ],
+        event: (e) => {
+          removeByClass(dateFixTargetClassName);
+        },
+        set: "fixed",
+        style: {
+          background: "transparent",
+          zIndex: String(zIndex),
+        }
+      });
+
+      calendar.calendarBase.classList.add("dateFixTargetClassName");
+      calendar.calendarBase.style.position = "fixed";
+      calendar.calendarBase.style.background = colorChip.white;
+      calendar.calendarBase.style.zIndex = String(zIndex);
+      calendar.calendarBase.style.top = String(top + height + margin) + ea;
+      calendar.calendarBase.style.left = String(left) + ea;
+      calendar.calendarBase.style.borderRadius = String(5) + "px";
+      calendar.calendarBase.style.boxShadow = "0px 5px 15px -9px " + colorChip.shadow;
+      calendar.calendarBase.style.animation = "fadeuplite 0.3s ease";
+
+      totalContents.appendChild(calendar.calendarBase);
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
 CalculationJs.prototype.excuteResponse = async function (bilid, responseIndex, date) {
   if (typeof bilid !== "string" || typeof responseIndex !== "number" || typeof date !== "object") {
     throw new Error("input => [ bilid, responseIndex, amount, date ]");
@@ -3204,9 +3268,9 @@ CalculationJs.prototype.launching = async function () {
       project.phone = thisClient.phone;
     }
 
-    projects = projects.filter((obj) => {
-      return obj.proid !== "p1801_aa01s" && obj.proid !== "p1801_aa02s";
-    })
+    // projects = projects.filter((obj) => {
+    //   return obj.proid !== "p1801_aa01s" && obj.proid !== "p1801_aa02s";
+    // })
 
     this.bills = bills;
     this.projects = projects;
