@@ -1963,7 +1963,6 @@ CalculationJs.prototype.reportMatrix = function () {
   reportIcon.addEventListener("click", this.queueView());
 }
 
-
 CalculationJs.prototype.queueView = function () {
   const instance = this;
   const { totalContents, ea, belowHeight, projects, bills } = this;
@@ -2972,6 +2971,58 @@ CalculationJs.prototype.queueView = function () {
     } catch (e) {
       console.log(e);
     }
+  }
+}
+
+CalculationJs.prototype.excuteResponse = async function (bilid, responseIndex, amount, date) {
+  if (typeof bilid !== "string" || typeof responseIndex !== "number" || typeof amount !== "number" || typeof date !== "object") {
+    throw new Error("input => [ bilid, responseIndex, amount, date ]");
+  }
+  if (!(date instanceof Date)) {
+    throw new Error("must be date object");
+  }
+  const instance = this;
+  const { totalContents, ea, belowHeight, projects, bills } = this;
+  const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, copyJson } = GeneralJs;
+  try {
+    const oid = "";
+    const thisBill = bills.find((obj) => { return obj.bilid === bilid });
+    if (thisBill === undefined) {
+      throw new Error("invaild bilid");
+    }
+    if (thisBill.responses[responseIndex] === undefined) {
+      throw new Error("invaild index");
+    }
+    const thisResponse = thisBill.responses[responseIndex];
+    const { pay } = thisResponse;
+    let whereQuery, updateQuery;
+
+
+    whereQuery = { bilid };
+
+    if (pay.length === 0) {
+
+      updateQuery["responses." + String(responseIndex) + ".pay"] = [ { amount, date, oid } ];
+
+
+    } else if (pay.length === 1) {
+
+
+
+    } else {
+
+
+
+    }
+
+
+
+
+
+
+
+  } catch (e) {
+    console.log(e);
   }
 }
 
