@@ -2540,7 +2540,6 @@ ReceiptRouter.prototype.rou_post_requestRefund = function () {
 
       }
 
-
     } catch (e) {
       instance.mother.errorLog("Python 서버 문제 생김 (rou_post_requestRefund): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error" }));
