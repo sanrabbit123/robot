@@ -5115,6 +5115,7 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
 
     infoCopied = thisRequest.info.toNormal();
     infoCopiedCopied = equalJson(JSON.stringify(infoCopied));
+    // needs upgrade
     infoCopiedCopied = infoCopiedCopied.filter((obj) => {
       return (typeof obj.data === "object");
     }).filter((obj) => {
@@ -5367,6 +5368,7 @@ BillMaker.prototype.cashRefund = async function (mode, bilid, requestIndex, payI
 
     infoCopied = thisRequest.info.toNormal();
     infoCopiedCopied = equalJson(JSON.stringify(infoCopied));
+    // needs upgrade
     infoCopiedCopied = infoCopiedCopied.filter((obj) => {
       return (typeof obj.data === "object");
     }).filter((obj) => {
@@ -5413,7 +5415,7 @@ BillMaker.prototype.cashRefund = async function (mode, bilid, requestIndex, payI
 
       slackMessage = [
         thisBill.participant.customer.name + " 고객님, ",
-        thisBill.participant.deisnger.name + " 디자이너님 현장의 ",
+        thisBill.participant.designer.name + " 디자이너님 현장의 ",
         thisRequest.name + " ",
         String(percentage) + "% 환불을 ",
         "요청합니다! => ",
