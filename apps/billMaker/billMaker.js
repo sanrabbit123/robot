@@ -5115,16 +5115,17 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
 
     infoCopied = thisRequest.info.toNormal();
     infoCopiedCopied = equalJson(JSON.stringify(infoCopied));
-    // needs upgrade
     infoCopiedCopied = infoCopiedCopied.filter((obj) => {
       return (typeof obj.data === "object");
     }).filter((obj) => {
       return (obj.data.mid !== undefined && obj.data.tid !== undefined && obj.data.TotPrice !== undefined && obj.data.MOID !== undefined);
     });
-    if (infoCopiedCopied[payIndex] === undefined) {
-      throw new Error("invaild pay index");
+    thisData = infoCopiedCopied.find((obj) => {
+      return obj.data.MOID === thisRequest.pay[payIndex].oid;
+    });
+    if (thisData === undefined) {
+      throw new Error("invaild oid data");
     }
-    thisData = infoCopiedCopied[payIndex];
     originalPrice = Number(thisData.data.TotPrice.replace(/[^0-9\.\-]/gi, ''));
 
     if (typeof option.percentage === "number") {
@@ -5330,6 +5331,7 @@ BillMaker.prototype.cashRefund = async function (mode, bilid, requestIndex, payI
     let percentage, price;
     let infoCopiedUnshift;
     let slackMessage;
+    let resultObj;
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
       selfBoo = false;
@@ -5368,16 +5370,17 @@ BillMaker.prototype.cashRefund = async function (mode, bilid, requestIndex, payI
 
     infoCopied = thisRequest.info.toNormal();
     infoCopiedCopied = equalJson(JSON.stringify(infoCopied));
-    // needs upgrade
     infoCopiedCopied = infoCopiedCopied.filter((obj) => {
       return (typeof obj.data === "object");
     }).filter((obj) => {
       return (obj.data.mid !== undefined && obj.data.tid !== undefined && obj.data.TotPrice !== undefined && obj.data.MOID !== undefined);
     });
-    if (infoCopiedCopied[payIndex] === undefined) {
-      throw new Error("invaild pay index");
+    thisData = infoCopiedCopied.find((obj) => {
+      return obj.data.MOID === thisRequest.pay[payIndex].oid;
+    });
+    if (thisData === undefined) {
+      throw new Error("invaild oid data");
     }
-    thisData = infoCopiedCopied[payIndex];
     originalPrice = Number(thisData.data.TotPrice.replace(/[^0-9\.\-]/gi, ''));
 
     if (typeof option.percentage === "number") {
@@ -5393,12 +5396,15 @@ BillMaker.prototype.cashRefund = async function (mode, bilid, requestIndex, payI
       percentage = Math.floor(((option.refundPrice / originalPrice) * 100) * 100) / 100;
     }
 
+    resultObj = { message: "success" };
+
     if (mode === "request") {
 
       infoCopiedUnshift = equalJson(JSON.stringify(infoCopied));
       infoCopiedUnshift.unshift({
         key: "refundReceipt",
         data: {
+          oid: thisRequest.pay[payIndex].oid,
           original: originalPrice,
           refund: price
         }
@@ -5422,6 +5428,8 @@ BillMaker.prototype.cashRefund = async function (mode, bilid, requestIndex, payI
         autoComma(price) + "원 환불",
       ].join("");
       messageSend({ text: slackMessage, channel: "#700_operation", voice: true }).catch((err) => { console.log(err); });
+
+      resultObj.bill = await this.getBillById(bilid, { selfMongo: MONGOC });
 
     } else if (mode === "execute") {
 
@@ -5447,7 +5455,7 @@ BillMaker.prototype.cashRefund = async function (mode, bilid, requestIndex, payI
       await MONGOCOREC.close();
     }
 
-    return { message: "success" };
+    return resultObj;
 
   } catch (e) {
     console.log(e);

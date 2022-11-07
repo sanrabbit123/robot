@@ -2533,7 +2533,7 @@ ReceiptRouter.prototype.rou_post_requestRefund = function () {
 
         report = await bill.cashRefund("request", bilid, requestIndex, payIndex, option);
         if (report.message === "success") {
-          res.send(JSON.stringify({ message: "success" }));
+          res.send(JSON.stringify(report));
         } else {
           throw new Error(report.message);
         }
