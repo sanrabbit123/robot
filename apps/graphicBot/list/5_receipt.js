@@ -22,9 +22,9 @@ module.exports = function (arg, info) {
     async function () {
       const { amount, phone } = equalJson(JSON.stringify(POSTCONST));
       await sleep(1000);
-      await injectionInput(document.getElementById("trsAmt"), String(amount), true);
+      await injectionInput(document.getElementById("trsAmt"), String(amount).replace(/[^0-9]/gi, ''), true);
       await sleep(1000);
-      await injectionInput(document.getElementById("spstCnfrNoEncCntn"), String(phone), true);
+      await injectionInput(document.getElementById("spstCnfrNoEncCntn"), String(phone).replace(/[^0-9]/gi, ''), true);
       await sleep(1000);
       await clickElement(document.querySelector("#trigger4"), false, null, true, true);
       await sleep(1000);

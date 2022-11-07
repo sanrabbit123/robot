@@ -5299,6 +5299,65 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
   }
 }
 
+BillMaker.prototype.cashRefund = async function (bilid, requestIndex, payIndex, option = { selfMongo: null, selfCoreMongo: null }) {
+  const instance = this;
+  const address = this.address;
+  const back = this.back;
+  const { mongo, mongoinfo, mongopythoninfo } = this.mother;
+  try {
+    let selfBoo;
+    let selfCoreBoo;
+    let thisBill;
+    let thisRequest;
+    let MONGOC, MONGOCOREC;
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      selfBoo = false;
+    } else {
+      selfBoo = true;
+    }
+    if (option.selfCoreMongo === undefined || option.selfCoreMongo === null) {
+      selfCoreBoo = false;
+    } else {
+      selfCoreBoo = true;
+    }
+    if (!selfBoo) {
+      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
+    } else {
+      MONGOC = option.selfMongo;
+    }
+    if (!selfCoreBoo) {
+      MONGOCOREC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      await MONGOCOREC.connect();
+    } else {
+      MONGOCOREC = option.selfCoreMongo;
+    }
+
+    thisBill = await this.getBillById(bilid, { selfMongo: MONGOC });
+    if (thisBill === null) {
+      throw new Error("invaild bilid");
+    }
+    if (thisBill.requests[requestIndex] === undefined) {
+      throw new Error("invaild request index");
+    }
+    thisRequest = thisBill.requests[requestIndex];
+    if (thisRequest.pay[payIndex] === undefined) {
+      throw new Error("invaild pay index");
+    }
+
+    if (!selfBoo) {
+      await MONGOC.close();
+    }
+    if (!selfCoreBoo) {
+      await MONGOCOREC.close();
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 BillMaker.prototype.contractCancel = async function (bilid, option = { selfMongo: null, selfCoreMongo: null }) {
   if (typeof bilid !== "string") {
     throw new Error("invaild input");

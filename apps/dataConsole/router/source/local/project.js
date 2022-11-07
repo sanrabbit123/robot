@@ -5538,6 +5538,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                           let res;
                                           let entire;
                                           let ratio;
+                                          let refundPrice;
 
                                           try {
                                             if (!cancel && window.confirm("환불을 진행할까요?")) {
@@ -5548,6 +5549,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                               if (!window.confirm("전체 환불을 진행할까요? (부분일시, '취소')")) {
 
                                                 entire = false;
+                                                refundPrice = 0;
 
                                                 if (window.confirm("비율로 환불을 할까요, 금액으로 환불을 할까요? (비율 => '확인' / 금액 => '취소')")) {
 
@@ -5569,11 +5571,11 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                                   do {
                                                     raw = await GeneralJs.prompt("돌려줄 금액을 원 단위로 알려주세요! (예: 1,000,000원)");
                                                     if (raw !== null) {
-                                                      raw = Number(raw.replace(/[^0-9]/gi, ''));
+                                                      refundPrice = Number(raw.replace(/[^0-9]/gi, ''));
                                                     } else {
-                                                      raw = 0;
+                                                      refundPrice = 0;
                                                     }
-                                                  } while (raw === 0 || Number.isNaN(raw))
+                                                  } while (refundPrice === 0 || Number.isNaN(refundPrice))
 
                                                   percentage = (Math.floor((raw / amount) * 100000) / 100000) * 100;
 
@@ -5601,8 +5603,8 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                                     requestLoad();
                                                   }
                                                 } else {
-                                                  if (window.confirm("카드 " + autoComma(raw) + "원 환불을 진행합니다. 확실합니까?")) {
-                                                    res = await GeneralJs.ajaxJson({ kind, bilid, requestIndex, payIndex, percentage, refundPrice: raw }, PYTHONHOST + "/requestRefund", { equal: true });
+                                                  if (window.confirm("카드 " + autoComma(refundPrice) + "원 환불을 진행합니다. 확실합니까?")) {
+                                                    res = await GeneralJs.ajaxJson({ kind, bilid, requestIndex, payIndex, percentage, refundPrice }, PYTHONHOST + "/requestRefund", { equal: true });
                                                     GeneralJs.stacks[thisProjectBill] = res.bill;
                                                     cleanChildren(scrollTong);
                                                     requestArrMake();
@@ -5660,8 +5662,8 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                                     requestLoad();
                                                   }
                                                 } else {
-                                                  if (window.confirm("무통장 " + String(raw) + "원 환불을 진행합니다.(" + bankName + " " + accountNumber + " " + accountName + ") 확실합니까?")) {
-                                                    res = await GeneralJs.ajaxJson({ kind, bilid, requestIndex, payIndex, percentage, accountNumber, bankName, accountName, refundPrice: raw }, PYTHONHOST + "/requestRefund", { equal: true });
+                                                  if (window.confirm("무통장 " + String(refundPrice) + "원 환불을 진행합니다.(" + bankName + " " + accountNumber + " " + accountName + ") 확실합니까?")) {
+                                                    res = await GeneralJs.ajaxJson({ kind, bilid, requestIndex, payIndex, percentage, accountNumber, bankName, accountName, refundPrice }, PYTHONHOST + "/requestRefund", { equal: true });
                                                     GeneralJs.stacks[thisProjectBill] = res.bill;
                                                     cleanChildren(scrollTong);
                                                     requestArrMake();
@@ -5672,7 +5674,63 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
                                               } else {
 
-                                                kind = "account" + (percentage === 100 ? "Entire" : "Partial");
+                                                kind = "cash" + (percentage === 100 ? "Entire" : "Partial");
+                                                bankCode = await GeneralJs.ajaxJson({}, PYTHONHOST + "/returnBankCode");
+
+                                                do {
+                                                  raw = await GeneralJs.prompt("은행 이름을 알려주세요!");
+                                                  if (raw !== null) {
+                                                    raw = raw.trim();
+                                                    bankName = null;
+                                                    for (let arr of bankCode) {
+                                                      if ((new RegExp(arr[0], "gi")).test(raw)) {
+                                                        if (window.confirm("은행 이름이 '" + arr[0] + "'가 맞나요?")) {
+                                                          bankName = arr[0];
+                                                        }
+                                                      }
+                                                    }
+                                                  } else {
+                                                    bankName = null;
+                                                  }
+                                                } while (bankName === null)
+                                                do {
+                                                  raw = await GeneralJs.prompt("계좌 번호를 알려주세요!");
+                                                  if (raw !== null) {
+                                                    accountNumber = null;
+                                                    accountNumber = raw.replace(/[^0-9]/gi, '').trim();
+                                                  } else {
+                                                    accountNumber = null;
+                                                  }
+                                                } while (accountNumber === null)
+                                                do {
+                                                  raw = await GeneralJs.prompt("예금주를 알려주세요!");
+                                                  if (raw !== null) {
+                                                    accountName = null;
+                                                    accountName = raw.trim();
+                                                  } else {
+                                                    accountName = null;
+                                                  }
+                                                } while (accountName === null)
+
+                                                if (ratio) {
+                                                  if (window.confirm("계좌 이체 " + String(percentage) + "% 환불 요청을 진행합니다.(" + bankName + " " + accountNumber + " " + accountName + ") 확실합니까?")) {
+                                                    res = await GeneralJs.ajaxJson({ kind, bilid, requestIndex, payIndex, percentage, accountNumber, bankName, accountName }, PYTHONHOST + "/requestRefund", { equal: true });
+                                                    GeneralJs.stacks[thisProjectBill] = res.bill;
+                                                    cleanChildren(scrollTong);
+                                                    requestArrMake();
+                                                    responseArrMake();
+                                                    requestLoad();
+                                                  }
+                                                } else {
+                                                  if (window.confirm("계좌 이체 " + String(refundPrice) + "원 환불 요청을 진행합니다.(" + bankName + " " + accountNumber + " " + accountName + ") 확실합니까?")) {
+                                                    res = await GeneralJs.ajaxJson({ kind, bilid, requestIndex, payIndex, percentage, accountNumber, bankName, accountName, refundPrice }, PYTHONHOST + "/requestRefund", { equal: true });
+                                                    GeneralJs.stacks[thisProjectBill] = res.bill;
+                                                    cleanChildren(scrollTong);
+                                                    requestArrMake();
+                                                    responseArrMake();
+                                                    requestLoad();
+                                                  }
+                                                }
 
                                               }
 
@@ -5877,51 +5935,6 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                             ];
                           } else {
                             menuContents = [
-                              // {
-                              //   text: "출장비 추가",
-                              //   eventFunction: async function (e) {
-                              //     e.preventDefault();
-                              //     e.stopPropagation();
-                              //     try {
-                              //       let position, number, bill, tempObj, promptValue;
-                              //       promptValue = await GeneralJs.prompt("출장비를 몇 회로 설정할까요?");
-                              //       if (promptValue !== null) {
-                              //         number = promptValue.trim();
-                              //         number = Number(String(number).replace(/[^0-9]/gi, ''));
-                              //         if (Number.isNaN(number)) {
-                              //           number = 2;
-                              //         }
-                              //         bill = await ajaxJson({ injectionCase: /잔금/gi.test(name) ? "remain" : "first", proid, method, number }, PYTHONHOST + "/travelInjection", { equal: true });
-                              //         GeneralJs.stacks[thisProjectBill] = bill;
-                              //         cleanChildren(scrollTong);
-                              //         requestArrMake();
-                              //         responseArrMake();
-                              //         requestLoad();
-                              //       }
-                              //     } catch (e) {
-                              //       console.log(e);
-                              //     }
-                              //   }
-                              // },
-                              // {
-                              //   text: "출장비 삭제",
-                              //   eventFunction: async function (e) {
-                              //     e.preventDefault();
-                              //     e.stopPropagation();
-                              //     try {
-                              //       let position, index, bill, tempObj;
-                              //       index = 0;
-                              //       bill = await ajaxJson({ injectionCase: /잔금/gi.test(name) ? "remain" : "first", proid, method, index }, PYTHONHOST + "/travelEjection", { equal: true });
-                              //       GeneralJs.stacks[thisProjectBill] = bill;
-                              //       cleanChildren(scrollTong);
-                              //       requestArrMake();
-                              //       responseArrMake();
-                              //       requestLoad();
-                              //     } catch (e) {
-                              //       console.log(e);
-                              //     }
-                              //   }
-                              // },
                               {
                                 text: "견적서 보기",
                                 eventFunction: function (e) {

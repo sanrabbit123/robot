@@ -2434,8 +2434,8 @@ ReceiptRouter.prototype.rou_post_requestRefund = function () {
       const { kind, bilid } = equalJson(req.body);
       const requestIndex = Number(req.body.requestIndex);
       const payIndex = Number(req.body.payIndex);
-      if (!([ "cardEntire", "cardPartial", "vaccountEntire", "vaccountPartial" ]).includes(kind)) {
-        throw new Error("invaild post, kind must be : [ cardEntire, cardPartial, vaccountEntire, vaccountPartial ]");
+      if (!([ "cardEntire", "cardPartial", "vaccountEntire", "vaccountPartial", "cashEntire", "cashPartial" ]).includes(kind)) {
+        throw new Error("invaild post, kind must be : [ cardEntire, cardPartial, vaccountEntire, vaccountPartial, cashEntire, cashPartial ]");
       }
       if (Number.isNaN(requestIndex) || Number.isNaN(payIndex)) {
         throw new Error("invaild post 1");
@@ -2476,57 +2476,66 @@ ReceiptRouter.prototype.rou_post_requestRefund = function () {
         }
       }
 
-      report = await bill.requestRefund(kind, bilid, requestIndex, payIndex, option);
-      await messageLog("환불 감지 : " + JSON.stringify(report, null, 2));
-      report.bill = report.bill.toNormal();
-      report.pastProject = report.pastProject.toNormal();
-      report.project = report.project.toNormal();
-      report.client = report.client.toNormal();
-      client = report.client;
-      pastProject = report.pastProject;
-      project = report.project;
-      proid = project.proid;
-      designer = await back.getDesignerById(report.desid, { selfMongo: instance.mongo });
+      if (!/^cash/i.test(kind)) {
+        report = await bill.requestRefund(kind, bilid, requestIndex, payIndex, option);
+        await messageLog("환불 감지 : " + JSON.stringify(report, null, 2));
+        report.bill = report.bill.toNormal();
+        report.pastProject = report.pastProject.toNormal();
+        report.project = report.project.toNormal();
+        report.client = report.client.toNormal();
+        client = report.client;
+        pastProject = report.pastProject;
+        project = report.project;
+        proid = project.proid;
+        designer = await back.getDesignerById(report.desid, { selfMongo: instance.mongo });
 
-      timeConst = 410;
-      map = [
-        {
-          column: "paymentsTotalAmount",
-          position: "process.calculation.payments.totalAmount",
-          pastValue: pastProject.process.calculation.payments.totalAmount,
-          finalValue: project.process.calculation.payments.totalAmount,
-        },
-        {
-          column: "paymentsFirstAmount",
-          position: "process.calculation.payments.first.amount",
-          pastValue: pastProject.process.calculation.payments.first.amount,
-          finalValue: project.process.calculation.payments.first.amount,
-        },
-        {
-          column: "paymentsRemainAmount",
-          position: "process.calculation.payments.remain.amount",
-          pastValue: pastProject.process.calculation.payments.remain.amount,
-          finalValue: project.process.calculation.payments.remain.amount,
-        },
-      ];
+        timeConst = 410;
+        map = [
+          {
+            column: "paymentsTotalAmount",
+            position: "process.calculation.payments.totalAmount",
+            pastValue: pastProject.process.calculation.payments.totalAmount,
+            finalValue: project.process.calculation.payments.totalAmount,
+          },
+          {
+            column: "paymentsFirstAmount",
+            position: "process.calculation.payments.first.amount",
+            pastValue: pastProject.process.calculation.payments.first.amount,
+            finalValue: project.process.calculation.payments.first.amount,
+          },
+          {
+            column: "paymentsRemainAmount",
+            position: "process.calculation.payments.remain.amount",
+            pastValue: pastProject.process.calculation.payments.remain.amount,
+            finalValue: project.process.calculation.payments.remain.amount,
+          },
+        ];
 
-      for (let { column, position, pastValue, finalValue } of map) {
-        await requestSystem("https://" + address.backinfo.host + ":3000/updateLog", { id: proid, column, position, pastValue, finalValue }, { headers: { "origin": "https://" + address.pythoninfo.host, "Content-Type": "application/json" } });
-        await sleep(timeConst);
+        for (let { column, position, pastValue, finalValue } of map) {
+          await requestSystem("https://" + address.backinfo.host + ":3000/updateLog", { id: proid, column, position, pastValue, finalValue }, { headers: { "origin": "https://" + address.pythoninfo.host, "Content-Type": "application/json" } });
+          await sleep(timeConst);
+        }
+
+        kakao.sendTalk((/card/gi.test(kind) ? "refundCard" : "refundVAccount"), client.name, client.phone, {
+          client: client.name,
+          designer: designer.designer,
+          percentage: (!Number.isNaN(Number(req.body.percentage)) ? Number(req.body.percentage) : 100),
+          amount: report.price.refund
+        }).then(() => {
+          return messageSend({ text: client.name + " 고객님의 환불 요청이 완료되었습니다!", channel: "#700_operation", voice: true });
+        }).catch((err) => {
+          console.log(err);
+        });
+
+        res.send(JSON.stringify(report));
+
+      } else {
+
+        await bill.cashRefund(bilid, requestIndex, payIndex, option);
+        res.send(JSON.stringify({ message: "success" }));
       }
 
-      kakao.sendTalk((/card/gi.test(kind) ? "refundCard" : "refundVAccount"), client.name, client.phone, {
-        client: client.name,
-        designer: designer.designer,
-        percentage: (!Number.isNaN(Number(req.body.percentage)) ? Number(req.body.percentage) : 100),
-        amount: report.price.refund
-      }).then(() => {
-        return messageSend({ text: client.name + " 고객님의 환불 요청이 완료되었습니다!", channel: "#700_operation", voice: true });
-      }).catch((err) => {
-        console.log(err);
-      });
 
-      res.send(JSON.stringify(report));
     } catch (e) {
       instance.mother.errorLog("Python 서버 문제 생김 (rou_post_requestRefund): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error" }));
