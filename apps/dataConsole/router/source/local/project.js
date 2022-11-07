@@ -5515,6 +5515,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                       { method: i.method },
                                       { cancel: i.cancel ? "true" : "false" },
                                       { pay: String(tempNum) },
+                                      { amount: String(i.amount) },
                                     ],
                                     events: [
                                       {
@@ -5526,39 +5527,93 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                         event: async function (e) {
                                           e.stopPropagation();
                                           e.preventDefault();
-                                          const method = /카/gi.test(this.getAttribute("method"));
+                                          const method = this.getAttribute("method");
                                           const cancel = this.getAttribute("cancel") === "true";
                                           const payIndex = Number(this.getAttribute("pay"));
+                                          const amount = Number(this.getAttribute("amount"));
                                           let raw;
                                           let percentage, accountNumber, bankName, accountName;
                                           let bankCode;
                                           let kind;
                                           let res;
+                                          let entire;
+                                          let ratio;
+
                                           try {
                                             if (!cancel && window.confirm("환불을 진행할까요?")) {
                                               percentage = 100;
+
+                                              // ratio
+
                                               if (!window.confirm("전체 환불을 진행할까요? (부분일시, '취소')")) {
-                                                do {
-                                                  raw = await GeneralJs.prompt("돌려줄 금액의 비율을 알려주세요! (예: 50%)");
-                                                  if (raw !== null) {
-                                                    percentage = Number(raw.replace(/[^0-9]/gi, ''));
-                                                  } else {
-                                                    percentage = 0;
-                                                  }
-                                                } while (percentage === 0 || Number.isNaN(percentage))
-                                              }
-                                              if (method) {
-                                                kind = "card" + (percentage === 100 ? "Entire" : "Partial");
-                                                if (window.confirm("카드 " + String(percentage) + "% 환불을 진행합니다. 확실합니까?")) {
-                                                  res = await GeneralJs.ajaxJson({ kind, bilid, requestIndex, payIndex, percentage }, PYTHONHOST + "/requestRefund", { equal: true });
-                                                  GeneralJs.stacks[thisProjectBill] = res.bill;
-                                                  cleanChildren(scrollTong);
-                                                  requestArrMake();
-                                                  responseArrMake();
-                                                  requestLoad();
+
+                                                entire = false;
+
+                                                if (window.confirm("비율로 환불을 할까요, 금액으로 환불을 할까요? (비율 => '확인' / 금액 => '취소')")) {
+
+                                                  ratio = true;
+
+                                                  do {
+                                                    raw = await GeneralJs.prompt("돌려줄 금액의 비율을 알려주세요! (예: 50%)");
+                                                    if (raw !== null) {
+                                                      percentage = Number(raw.replace(/[^0-9]/gi, ''));
+                                                    } else {
+                                                      percentage = 0;
+                                                    }
+                                                  } while (percentage === 0 || Number.isNaN(percentage))
+
+                                                } else {
+
+                                                  ratio = false;
+
+                                                  do {
+                                                    raw = await GeneralJs.prompt("돌려줄 금액을 원 단위로 알려주세요! (예: 1,000,000원)");
+                                                    if (raw !== null) {
+                                                      raw = Number(raw.replace(/[^0-9]/gi, ''));
+                                                    } else {
+                                                      raw = 0;
+                                                    }
+                                                  } while (raw === 0 || Number.isNaN(raw))
+
+                                                  percentage = (Math.floor((raw / amount) * 100000) / 100000) * 100;
+
                                                 }
+
                                               } else {
-                                                kind = "vaccount" + (percentage === 100 ? "Entire" : "Partial");
+                                                entire = true;
+                                                ratio = true;
+                                              }
+
+
+                                              // method
+
+                                              if (/카드/gi.test(method)) {
+
+                                                kind = "card" + ((entire || percentage === 100) ? "Entire" : "Partial");
+
+                                                if (ratio) {
+                                                  if (window.confirm("카드 " + String(percentage) + "% 환불을 진행합니다. 확실합니까?")) {
+                                                    res = await GeneralJs.ajaxJson({ kind, bilid, requestIndex, payIndex, percentage }, PYTHONHOST + "/requestRefund", { equal: true });
+                                                    GeneralJs.stacks[thisProjectBill] = res.bill;
+                                                    cleanChildren(scrollTong);
+                                                    requestArrMake();
+                                                    responseArrMake();
+                                                    requestLoad();
+                                                  }
+                                                } else {
+                                                  if (window.confirm("카드 " + autoComma(raw) + "원 환불을 진행합니다. 확실합니까?")) {
+                                                    res = await GeneralJs.ajaxJson({ kind, bilid, requestIndex, payIndex, percentage, refundPrice: raw }, PYTHONHOST + "/requestRefund", { equal: true });
+                                                    GeneralJs.stacks[thisProjectBill] = res.bill;
+                                                    cleanChildren(scrollTong);
+                                                    requestArrMake();
+                                                    responseArrMake();
+                                                    requestLoad();
+                                                  }
+                                                }
+
+                                              } else if (/^무/gi.test(method)) {
+
+                                                kind = "vaccount" + ((entire || percentage === 100) ? "Entire" : "Partial");
                                                 bankCode = await GeneralJs.ajaxJson({}, PYTHONHOST + "/returnBankCode");
                                                 do {
                                                   raw = await GeneralJs.prompt("은행 이름을 알려주세요!");
@@ -5595,14 +5650,29 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                                   }
                                                 } while (accountName === null)
 
-                                                if (window.confirm("무통장 " + String(percentage) + "% 환불을 진행합니다.(" + bankName + " " + accountNumber + " " + accountName + ") 확실합니까?")) {
-                                                  res = await GeneralJs.ajaxJson({ kind, bilid, requestIndex, payIndex, percentage, accountNumber, bankName, accountName }, PYTHONHOST + "/requestRefund", { equal: true });
-                                                  GeneralJs.stacks[thisProjectBill] = res.bill;
-                                                  cleanChildren(scrollTong);
-                                                  requestArrMake();
-                                                  responseArrMake();
-                                                  requestLoad();
+                                                if (ratio) {
+                                                  if (window.confirm("무통장 " + String(percentage) + "% 환불을 진행합니다.(" + bankName + " " + accountNumber + " " + accountName + ") 확실합니까?")) {
+                                                    res = await GeneralJs.ajaxJson({ kind, bilid, requestIndex, payIndex, percentage, accountNumber, bankName, accountName }, PYTHONHOST + "/requestRefund", { equal: true });
+                                                    GeneralJs.stacks[thisProjectBill] = res.bill;
+                                                    cleanChildren(scrollTong);
+                                                    requestArrMake();
+                                                    responseArrMake();
+                                                    requestLoad();
+                                                  }
+                                                } else {
+                                                  if (window.confirm("무통장 " + String(raw) + "원 환불을 진행합니다.(" + bankName + " " + accountNumber + " " + accountName + ") 확실합니까?")) {
+                                                    res = await GeneralJs.ajaxJson({ kind, bilid, requestIndex, payIndex, percentage, accountNumber, bankName, accountName, refundPrice: raw }, PYTHONHOST + "/requestRefund", { equal: true });
+                                                    GeneralJs.stacks[thisProjectBill] = res.bill;
+                                                    cleanChildren(scrollTong);
+                                                    requestArrMake();
+                                                    responseArrMake();
+                                                    requestLoad();
+                                                  }
                                                 }
+
+                                              } else {
+
+                                                kind = "account" + (percentage === 100 ? "Entire" : "Partial");
 
                                               }
 

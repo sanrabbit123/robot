@@ -3400,7 +3400,7 @@ DevContext.prototype.launching = async function () {
     // const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
     // const human = new HumanPacket();
     // const name = "조영원";
-    // const amount = 5336000;
+    // const amount = 667000;
     // await human.sendSms({
     //   name: "",
     //   phone: "01055432039",

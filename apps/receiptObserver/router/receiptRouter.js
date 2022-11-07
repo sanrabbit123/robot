@@ -2440,13 +2440,23 @@ ReceiptRouter.prototype.rou_post_requestRefund = function () {
       if (Number.isNaN(requestIndex) || Number.isNaN(payIndex)) {
         throw new Error("invaild post 1");
       }
+      let refundPrice;
       let report, option, client, designer, project, pastProject, proid;
       let timeConst, map;
+
+      if (req.body.refundPrice !== undefined) {
+        refundPrice = Number(req.body.refundPrice);
+        if (refundPrice === 0 || Number.isNaN(refundPrice)) {
+          refundPrice = null;
+        }
+      } else {
+        refundPrice = null;
+      }
 
       option = { selfMongo, selfCoreMongo: instance.mongo };
       if (req.body.percentage !== undefined) {
         if (typeof req.body.percentage === "string") {
-          if (!Number.isNaN(Number(req.body.percentage.replace(/[^0-9]/gi, '')))) {
+          if (!Number.isNaN(Number(req.body.percentage.replace(/[^0-9\.]/gi, '')))) {
             option.percentage = Number(req.body.percentage);
           }
         } else if (typeof req.body.percentage === "number") {
@@ -2459,6 +2469,11 @@ ReceiptRouter.prototype.rou_post_requestRefund = function () {
         option.accountNumber = req.body.accountNumber;
         option.bankName = req.body.bankName;
         option.accountName = req.body.accountName;
+      }
+      if (refundPrice !== undefined && refundPrice !== null) {
+        if (typeof refundPrice === "number") {
+          option.refundPrice = refundPrice;
+        }
       }
 
       report = await bill.requestRefund(kind, bilid, requestIndex, payIndex, option);
