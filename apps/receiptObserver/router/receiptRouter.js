@@ -2531,8 +2531,13 @@ ReceiptRouter.prototype.rou_post_requestRefund = function () {
 
       } else {
 
-        await bill.cashRefund(bilid, requestIndex, payIndex, option);
-        res.send(JSON.stringify({ message: "success" }));
+        report = await bill.cashRefund("request", bilid, requestIndex, payIndex, option);
+        if (report.message === "success") {
+          res.send(JSON.stringify({ message: "success" }));
+        } else {
+          throw new Error(report.message);
+        }
+
       }
 
 

@@ -5138,6 +5138,7 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
     if (typeof option.refundPrice === "number") {
       price = Math.floor(option.refundPrice);
       confirmPrice = originalPrice - price;
+      percentage = Math.floor(((option.refundPrice / originalPrice) * 100) * 100) / 100;
     }
 
     timestamp = dateToTimestamp(now);
@@ -5307,17 +5308,27 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
   }
 }
 
-BillMaker.prototype.cashRefund = async function (bilid, requestIndex, payIndex, option = { selfMongo: null, selfCoreMongo: null }) {
+BillMaker.prototype.cashRefund = async function (mode, bilid, requestIndex, payIndex, option = { selfMongo: null, selfCoreMongo: null }) {
   const instance = this;
   const address = this.address;
   const back = this.back;
-  const { mongo, mongoinfo, mongopythoninfo } = this.mother;
+  const { mongo, mongopythoninfo, mongoinfo, cryptoString, requestSystem, ipCheck, equalJson, errorLog, autoComma, messageSend } = this.mother;
   try {
     let selfBoo;
     let selfCoreBoo;
     let thisBill;
     let thisRequest;
     let MONGOC, MONGOCOREC;
+    let status;
+    let whereQuery;
+    let updateQuery;
+    let infoCopied;
+    let thisData;
+    let infoCopiedCopied;
+    let originalPrice;
+    let percentage, price;
+    let infoCopiedUnshift;
+    let slackMessage;
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
       selfBoo = false;
@@ -5354,6 +5365,63 @@ BillMaker.prototype.cashRefund = async function (bilid, requestIndex, payIndex, 
       throw new Error("invaild pay index");
     }
 
+    infoCopied = thisRequest.info.toNormal();
+    infoCopiedCopied = equalJson(JSON.stringify(infoCopied));
+    infoCopiedCopied = infoCopiedCopied.filter((obj) => {
+      return (typeof obj.data === "object");
+    }).filter((obj) => {
+      return (obj.data.mid !== undefined && obj.data.tid !== undefined && obj.data.TotPrice !== undefined && obj.data.MOID !== undefined);
+    });
+    if (infoCopiedCopied[payIndex] === undefined) {
+      throw new Error("invaild pay index");
+    }
+    thisData = infoCopiedCopied[payIndex];
+    originalPrice = Number(thisData.data.TotPrice.replace(/[^0-9\.\-]/gi, ''));
+
+    if (typeof option.percentage === "number") {
+      percentage = option.percentage;
+    } else {
+      percentage = 100;
+    }
+
+    price = Math.floor((originalPrice * (percentage / 100)) / 10) * 10;
+
+    if (typeof option.refundPrice === "number") {
+      price = Math.floor(option.refundPrice);
+      percentage = Math.floor(((option.refundPrice / originalPrice) * 100) * 100) / 100;
+    }
+
+    if (mode === "request") {
+
+      infoCopiedUnshift = equalJson(JSON.stringify(infoCopied));
+      infoCopiedUnshift.unshift({
+        key: "refundReceipt",
+        data: {
+          original: originalPrice,
+          refund: price
+        }
+      });
+
+      whereQuery = { bilid };
+      updateQuery = {};
+      status = "환불 요청";
+
+      updateQuery["requests." + String(requestIndex) + ".status"] = status;
+      updateQuery["requests." + String(requestIndex) + ".info"] = infoCopiedUnshift;
+
+      await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
+
+      slackMessage = [
+        thisBill.participant.customer.name + " 고객님, ",
+        thisBill.participant.deisnger.name + " 디자이너님 현장의 ",
+        thisRequest.name + " ",
+        String(percentage) + "% 환불을 ",
+        "요청합니다! => ",
+        autoComma(price) + "원 환불",
+      ].join("");
+      messageSend({ text: slackMessage, channel: "#700_operation", voice: true }).catch((err) => { console.log(err); });
+
+    } else if (mode === "execute") {
 
 
 
@@ -5365,6 +5433,10 @@ BillMaker.prototype.cashRefund = async function (bilid, requestIndex, payIndex, 
 
 
 
+
+
+
+    }
 
     if (!selfBoo) {
       await MONGOC.close();
@@ -5373,8 +5445,11 @@ BillMaker.prototype.cashRefund = async function (bilid, requestIndex, payIndex, 
       await MONGOCOREC.close();
     }
 
+    return { message: "success" };
+
   } catch (e) {
     console.log(e);
+    return { message: "error : " + e.message };
   }
 }
 
