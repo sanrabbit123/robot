@@ -187,7 +187,7 @@ StylePartsJs.prototype.insertNewsBox = function () {
   titleLogWidth = <%% 250, 216, 160, 140, 34 %%>;
   titleLogTop = <%% 96, 64, 60, 48, 2 %%>;
 
-  baseMotherMarginBottom = <%% 200, 190, 140, 110, 15 %%>;
+  baseMotherMarginBottom = <%% 12, 12, 10, 10, 15 %%>;
 
   descriptionPaddingTop = <%% 21, 21, 8, 6, 0.5 %%>;
   partsWidth = <%% 100, 96, 90, 88, 33 %%>;
@@ -394,21 +394,6 @@ StylePartsJs.prototype.insertNewsBox = function () {
       },
       children: [
         {
-          text: contents.sub[0],
-          style: {
-            display: "block",
-            fontSize: String(initSize) + ea,
-            fontWeight: String(initBoldWeight),
-            color: colorChip.black,
-            lineHeight: String(initLineHeight),
-            width: String(75) + '%',
-          },
-          bold: {
-            fontWeight: String(initBoldWeight),
-            color: colorChip.black,
-          }
-        },
-        {
           text: contents.description[0].join("\n"),
           style: {
             display: "block",
@@ -480,6 +465,190 @@ StylePartsJs.prototype.insertNewsBox = function () {
   }
 
 }
+
+StylePartsJs.prototype.insertSubInitBox = function () {
+  const instance = this;
+  const { totalContents, ea, standardWidth, media, baseTong, localColor } = this;
+  const { createNode, withOut, colorChip, cleanChildren, selfHref, ajaxJson } = GeneralJs;
+  const mobile = media[4];
+  const desktop = !mobile;
+  let baseMother;
+  let svgBox;
+  let contents;
+  let initSize, initWeight;
+  let initBoldWeight, initLineHeight;
+  let initSecondMarginTop;
+  let leftMother, rightMother;
+  let leftMotherWidth;
+  let initPaddingTop;
+  let titleLogWidth;
+  let titleLogTop;
+  let baseMotherMarginBottom;
+  let descriptionPaddingTop;
+  let partsWidth;
+  let bottomLineWidth;
+  let bottomLineHeight;
+  let mobileStandardWidth;
+
+  initSize = <%% 14, 14, 13, 12, 3.2 %%>;
+  initWeight = <%% 400, 400, 400, 400, 400 %%>;
+  initBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+  initLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
+  initSecondMarginTop = <%% 12, 12, 12, 12, 4 %%>;
+
+  initPaddingTop = <%% 180, 110, 110, 82, 9 %%>;
+
+  leftMotherWidth = <%% 560, 460, 284, 250, 82 %%>;
+
+  titleLogWidth = <%% 250, 216, 160, 140, 34 %%>;
+  titleLogTop = <%% 96, 64, 60, 48, 2 %%>;
+
+  baseMotherMarginBottom = <%% 240, 240, 210, 200, 3 %%>;
+
+  descriptionPaddingTop = <%% 21, 21, 8, 6, 0.5 %%>;
+  partsWidth = <%% 100, 96, 90, 88, 33 %%>;
+
+  bottomLineWidth = <%% 400, 0, 0, 0, 0 %%>;
+  bottomLineHeight = <%% 40, 0, 0, 0, 0 %%>;
+
+  mobileStandardWidth = 80;
+
+  svgBox = this.returnSvgBox();
+  contents = {
+    year: (new Date()).getFullYear(),
+    init: [
+      [
+        "3500여개의 추천 경험과 디자이너 케어 시스템을 바탕으로 누적된 디자이너",
+        "운영 경험하여 검증된 디자이너와 엄선된 품질의 자재가 함께합니다.",
+      ]
+    ],
+    context: [
+      {
+        title: "HomeLiaison",
+        hangul: "홈리에종 소개",
+      },
+      {
+        title: "About",
+        hangul: "서비스 소개",
+      },
+      {
+        title: "Style parts",
+        hangul: "스타일 파츠",
+      },
+      {
+        title: "Benefits",
+        hangul: "서비스 혜택"
+      },
+      {
+        title: "Process",
+        hangul: "서비스 과정",
+      }
+    ]
+  };
+
+  if (media[2] || media[3]) {
+    contents.init = [
+      [],
+      [
+        "시공부터 스타일링까지, <b%전체적인",
+        "프로세스를 홈리에종 디자이너와 함께%b>",
+        "아파트멘터리의 자재를 고르는",
+        "스타일 파츠 서비스로 진행해보세요.",
+      ]
+    ];
+  }
+
+  baseMother = createNode({
+    mother: baseTong,
+    style: {
+      display: "flex",
+      position: "relative",
+      flexDirection: desktop ? "row" : "column",
+      width: desktop ? String(standardWidth) + ea : String(mobileStandardWidth + 2) + ea,
+      left: desktop ? withOut(50, standardWidth / 2, ea) : withOut(50, mobileStandardWidth / 2, ea),
+      marginBottom: String(baseMotherMarginBottom) + ea,
+    }
+  });
+
+  leftMother = createNode({
+    mother: baseMother,
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      flexDirection: "column",
+      width: withOut(0),
+      alignItems: "center",
+      textAlign: "center",
+    }
+  })
+
+  createNode({
+    mother: leftMother,
+    style: {
+      display: "flex",
+      position: "relative",
+      flexDirection: "column",
+    },
+  });
+
+  createNode({
+    mother: leftMother,
+    mode: "img",
+    attribute: {
+      src: StylePartsJs.binaryPath + "/initparts.png",
+    },
+    style: {
+      marginTop: String(initPaddingTop) + ea,
+      width: String(partsWidth) + ea,
+    }
+  });
+
+  createNode({
+    mother: leftMother,
+    style: {
+      display: "flex",
+      position: "relative",
+      flexDirection: "column",
+      paddingTop: String(descriptionPaddingTop) + ea,
+      paddingLeft: desktop ? "" : String(41) + ea,
+      top: desktop ? "" : String(-22) + ea,
+    },
+    children: [
+      {
+        text: "<b%첫 번째 프로젝트, 디자이너 그리고 자재%b>",
+        style: {
+          display: (media[2] || media[3]) ? "none" : "block",
+          fontSize: String(<&& 18 | 18 | 17 | 16 | 3.5 &&>) + ea,
+          marginBottom: String(<&& 8 | 8 | 8 | 8 | 1 &&>) + ea,
+          fontWeight: String(initWeight),
+          color: colorChip.black,
+          lineHeight: String(initLineHeight),
+        },
+        bold: {
+          fontWeight: String(initBoldWeight),
+          color: colorChip.black,
+        }
+      },
+      {
+        text: contents.init[0].join(desktop ? "\n" : " "),
+        style: {
+          display: (media[2] || media[3]) ? "none" : "block",
+          fontSize: String(initSize) + ea,
+          fontWeight: String(initWeight),
+          color: colorChip.black,
+          lineHeight: String(initLineHeight),
+        },
+        bold: {
+          fontWeight: String(initBoldWeight),
+          color: colorChip.black,
+        }
+      },
+    ]
+  });
+
+
+}
+
 
 StylePartsJs.prototype.insertInitBox = function () {
   const instance = this;
@@ -792,10 +961,6 @@ StylePartsJs.prototype.insertHeadlineBox = function () {
       ],
     ]
   };
-
-  if (getObj.mode === "inner") {
-    contents.title = "첫 번째 프로젝트,\n디자이너 그리고 자재";
-  }
 
   baseMother = createNode({
     mother: baseTong,
@@ -4037,6 +4202,7 @@ StylePartsJs.prototype.launching = async function (loading) {
           instance.slimNavigator();
           if (getObj.mode === "inner") {
             instance.insertNewsBox();
+            instance.insertSubInitBox();
           } else {
             instance.insertInitBox();
           }

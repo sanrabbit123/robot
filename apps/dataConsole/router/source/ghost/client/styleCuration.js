@@ -853,8 +853,8 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
             multiple: false,
             items: [
               "시공 없이 홈퍼니싱만",
-              "5개 이내의 부분 시공과 홈스타일링",
-              "전체 리모델링의 토탈 스타일링",
+              "부분 시공과 홈스타일링",
+              "전체 시공의 토탈 스타일링",
               "구조 변경을 포함한 고급 시공"
             ],
             realItems: [

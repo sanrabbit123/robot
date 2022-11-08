@@ -5335,6 +5335,8 @@ BillMaker.prototype.cashRefund = async function (mode, bilid, requestIndex, payI
     let accountNumber;
     let bankName;
     let accountName;
+    let cancelCopied, proofsCopied;
+    let now;
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
       selfBoo = false;
@@ -5442,17 +5444,43 @@ BillMaker.prototype.cashRefund = async function (mode, bilid, requestIndex, payI
     } else if (mode === "execute") {
 
 
+      whereQuery = { bilid };
+      updateQuery = {};
+      status = (percentage !== 100 ? "부분 환불" : "전체 환불");
+
+      cancelCopied = equalJson(JSON.stringify(thisRequest.cancel));
+      proofsCopied = equalJson(JSON.stringify(thisRequest.proofs));
+
+      now = new Date();
+
+      cancelCopied.unshift({
+        date: now,
+        amount: price,
+        oid: thisRequest.pay[payIndex].oid
+      });
+
+      proofsCopied.unshift({
+        date: now,
+        method: "계좌 이체 취소",
+        proof: "현금영수증",
+        to: thisBill.participant.customer.name
+      });
+
+      updateQuery["requests." + String(requestIndex) + ".status"] = status;
+      updateQuery["requests." + String(requestIndex) + ".cancel"] = cancelCopied;
+      updateQuery["requests." + String(requestIndex) + ".proofs"] = proofsCopied;
+
+      await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
+
+      // project update
+
+      // kakao alarm talk
+
+      // slack
 
 
 
-
-
-
-
-
-
-
-
+      resultObj.bill = await this.getBillById(bilid, { selfMongo: MONGOC });
 
     }
 

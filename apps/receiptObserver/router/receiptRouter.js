@@ -2531,7 +2531,11 @@ ReceiptRouter.prototype.rou_post_requestRefund = function () {
 
       } else {
 
-        report = await bill.cashRefund("request", bilid, requestIndex, payIndex, option);
+        if (req.body.mode === undefined || req.body.mode === null || req.body.mode === "request") {
+          report = await bill.cashRefund("request", bilid, requestIndex, payIndex, option);
+        } else if (req.body.mode === "execute") {
+          report = await bill.cashRefund("execute", bilid, requestIndex, payIndex, option);
+        }
         if (report.message === "success") {
           res.send(JSON.stringify(report));
         } else {

@@ -3104,13 +3104,16 @@ CalculationJs.prototype.refundView = function () {
       let refundDate;
       let payMethod;
       let payProof;
-      let responseValueArr;
+      let requestValueArr;
       let whiteTong;
       let responseSumTotal;
       let responseSumNon;
       let responseSumPaid;
       let grayTong;
       let loading;
+      let targetRequestsTong;
+      let refundReceipt;
+      let thisProject;
 
       whiteOuterMargin = <%% 40, 20, 20, 20, 10 %%>;
       whiteInnerMargin = <%% 50, 30, 30, 30, 20 %%>;
@@ -3143,19 +3146,40 @@ CalculationJs.prototype.refundView = function () {
 
       blockMarginBottom = 2;
 
+      targetRequestsTong = [];
+      for (let bill of bills) {
+        for (let request of bill.requests) {
+          refundReceipt = null;
+          refundReceipt = request.info.find((o) => {
+            return (typeof o === "object" && o.key === "refundReceipt" && o.oid !== undefined);
+          });
+          if (refundReceipt !== undefined && refundReceipt !== null) {
+            if (!request.cancel.map((o) => { return o.oid }).includes(refundReceipt.oid)) {
+              thisProject = projects.find((o) => {
+                return o.cliid === bill.participant.customer.id && o.desid === bill.participant.designer.id;
+              });
+              targetRequestsTong.push({
+                bill: copyJson(bill),
+                project: copyJson(thisProject),
+                request: copyJson(request),
+                refundReceipt: copyJson(refundReceipt)
+              });
+            }
+          }
+        }
+      }
+
       columns = [
         "아이디",
         "고객",
         "디자이너",
         "구분",
-        "확정가",
         "입금액",
-        "입금일",
-        "입금 수단",
-        "입금 증빙",
         "환불액",
-        "환불일",
         "환불 비율",
+        "환불 계좌",
+        "계좌명",
+        "환불 진행",
       ];
 
       contentsAreaLeft = {};
@@ -3336,6 +3360,118 @@ CalculationJs.prototype.refundView = function () {
         });
       }
 
+      for (let z = 0; z < targetRequestsTong.length; z++) {
+
+        requestValueArr = [
+          {
+            value: targetRequestsTong[z].project.proid,
+            color: colorChip.black,
+            pointer: true,
+            event: null,
+          },
+          {
+            value: targetRequestsTong[z].bill.participant.customer.name,
+            color: colorChip.black,
+            pointer: false,
+            event: null,
+          },
+          {
+            value: targetRequestsTong[z].bill.participant.designer.name,
+            color: colorChip.black,
+            pointer: false,
+            event: null,
+          },
+          {
+            value: targetRequestsTong[z].request.name,
+            color: colorChip.black,
+            pointer: false,
+            event: null,
+          },
+          {
+            value: autoComma(Math.floor(targetRequestsTong[z].request.pay.reduce((acc, curr) => { return acc + curr.amount }, 0))),
+            color: colorChip.black,
+            pointer: false,
+            event: null,
+          },
+          {
+            value: autoComma(targetRequestsTong[z].refundReceipt.data.refund),
+            color: colorChip.black,
+            pointer: true,
+            event: null,
+          },
+          {
+            value: String(Math.floor((targetRequestsTong[z].refundReceipt.data.refund / targetRequestsTong[z].request.pay.reduce((acc, curr) => { return acc + curr.amount }, 0)) * 10000) / 100) + '%',
+            color: colorChip.black,
+            pointer: true,
+            event: null,
+          },
+          {
+            value: targetRequestsTong[z].refundReceipt.data.info.bankName + " " + targetRequestsTong[z].refundReceipt.data.info.accountNumber,
+            color: colorChip.black,
+            pointer: false,
+            event: null,
+          },
+          {
+            value: targetRequestsTong[z].refundReceipt.data.info.accountName,
+            color: colorChip.black,
+            pointer: false,
+            event: null,
+          },
+          {
+            value: "환불 진행",
+            color: colorChip.green,
+            pointer: true,
+            event: instance.makeCashRefundEvent(copyJson(targetRequestsTong[z])),
+          },
+        ];
+
+
+        whiteTong = createNode({
+          mother: contentsAreaLeft,
+          style: {
+            display: "flex",
+            position: "relative",
+            flexDirection: "row",
+            width: withOut(0),
+            height: String(blockHeight) + ea,
+            background: colorChip.white,
+            borderRadius: String(5) + "px",
+            marginBottom: String(blockMarginBottom) + ea,
+          }
+        });
+
+        for (let { value, color, pointer, event } of requestValueArr) {
+          createNode({
+            mother: whiteTong,
+            event,
+            style: {
+              display: "inline-flex",
+              width: "calc(100% / " + String(columns.length) + ")",
+              height: withOut(0, ea),
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              position: "relative",
+              cursor: pointer ? "pointer" : "",
+            },
+            children: [
+              {
+                text: value,
+                style: {
+                  fontSize: String(valueSize) + ea,
+                  fontWeight: String(valueWeight),
+                  color: color,
+                  position: "relative",
+                  top: String(valueTextTop) + ea,
+                  textAlign: "center",
+                }
+              }
+            ]
+          });
+        }
+
+      }
+
 
     } catch (e) {
       console.log(e);
@@ -3386,6 +3522,60 @@ CalculationJs.prototype.makeRefundEvent = function (bilid, requestIndex, proid) 
     } catch (e) {
       console.log(e);
     }
+  }
+}
+
+CalculationJs.prototype.makeCashRefundEvent = function (refundRequest) {
+  const instance = this;
+  const { setQueue } = GeneralJs;
+  const refundRequestString = JSON.stringify(refundRequest);
+  return async function (e) {
+    try {
+      await instance.cashRefund(refundRequestString);
+      const loading = instance.mother.grayLoading();
+      for (let project of instance.projects) {
+        project.bill = instance.bills.find((obj) => {
+          return ((obj.links.proid === project.proid) && (obj.links.method === (project.service.online ? "online" : "offline")))
+        });
+      }
+      setQueue(() => {
+        instance.contentsLoad();
+        (instance.refundView())({ preventDefault() { return null } });
+        loading.remove();
+      }, 500);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
+CalculationJs.prototype.cashRefund = async function (refundRequestString) {
+  const instance = this;
+  const { totalContents, ea, belowHeight, projects, bills } = this;
+  const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, copyJson, equalJson } = GeneralJs;
+  const refundRequest = equalJson(refundRequestString);
+  try {
+    const {
+      bill: thisBill,
+      request: thisRequest,
+      project: thisProject,
+      refundReceipt
+    } = refundRequest;
+    const { bilid } = thisBill;
+    const thisBillIndex = bills.findIndex((o) => { return o.bilid === thisBill.bilid });
+    const requestIndex = thisBill.requests.findIndex((o) => { return o.id === thisRequest.id });
+    const payIndex = thisRequest.pay.findIndex((o) => { return o.oid === refundReceipt.oid });
+    const { accountNumber, bankName, accountName } = refundReceipt.data.info;
+    const refundPrice = refundReceipt.data.refund;
+    const percentage = (refundReceipt.data.refund / refundReceipt.data.original) * 100;
+    const kind = percentage === 100 ? "cashEntire" : "cashPartial";
+    let res;
+
+    res = await ajaxJson({ mode: "execute", kind, bilid, requestIndex, payIndex, percentage, accountNumber, bankName, accountName, refundPrice }, PYTHONHOST + "/requestRefund", { equal: true });
+    instance.bills[thisBillIndex] = res.bill;
+
+  } catch (e) {
+    console.log(e);
   }
 }
 
