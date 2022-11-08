@@ -1037,6 +1037,10 @@ CalculationJs.prototype.whiteCardView = function (proid) {
       let payMethod, payProof;
       let requestSumVat, requestSumSupply;
       let whiteTongDom;
+      let payRealAmount;
+      let refundGo;
+      let oidArr;
+      let refundReceipt;
 
       whiteOuterMargin = <%% 40, 20, 20, 20, 10 %%>;
       whiteInnerMargin = <%% 50, 30, 30, 30, 20 %%>;
@@ -1329,8 +1333,10 @@ CalculationJs.prototype.whiteCardView = function (proid) {
         }
 
         payDate = '-';
+        payRealAmount = 0;
         if (thisRequest.pay.length > 0) {
           payDate = dateToString(thisRequest.pay[0].date);
+          payRealAmount = thisRequest.pay.reduce((acc, curr) => { return acc + curr.amount }, 0);
         }
 
         if (payDate === '-') {
@@ -1355,6 +1361,19 @@ CalculationJs.prototype.whiteCardView = function (proid) {
           cancelDate = dateToString(thisRequest.cancel[0].date);
         }
 
+        refundGo = "환불 진행";
+        refundReceipt = null;
+        oidArr = thisRequest.pay.map((o) => { return o.oid }).filter((oid) => { return oid !== '' });
+        refundReceipt = thisRequest.info.find((o) => {
+          return typeof o === "object" && o.key === "refundReceipt" && oidArr.includes(o.oid)
+        });
+        if (refundReceipt !== null && refundReceipt !== undefined) {
+          refundGo = "환불 요청";
+        }
+        if (cancelAmount !== 0) {
+          refundGo = "환불 완료";
+        }
+
         requestSumConsumer += currentState;
         requestSumConfirm += confirmState;
         requestSumRefund += cancelAmount;
@@ -1367,66 +1386,79 @@ CalculationJs.prototype.whiteCardView = function (proid) {
             value: requestName,
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: autoComma(supplyAmount),
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: autoComma(vatAmount),
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: autoComma(currentState),
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: autoComma(confirmState),
             color: confirmState === 0 ? colorChip.black : (payDate === '-' ? colorChip.red : colorChip.black),
             pointer: false,
+            event: null,
           },
           {
-            value: payDate === '-' ? String(0) : autoComma(confirmState),
+            value: payDate === '-' ? String(0) : autoComma(payRealAmount),
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: payDate,
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: payMethod,
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: payProof,
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: autoComma(cancelAmount),
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
             value: cancelDate,
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
-            value: cancelDate === '-' ? "0%" : String(Math.floor(cancelAmount / confirmState)) + '%',
+            value: (payRealAmount === 0 ? "0%" : (String(Math.floor((cancelAmount / payRealAmount) * 10000) / 100) + '%')),
             color: colorChip.black,
             pointer: false,
+            event: null,
           },
           {
-            value: "환불 진행",
-            color: colorChip.green,
-            pointer: true,
+            value: refundGo,
+            color: (/진행/gi.test(refundGo) ? colorChip.green : (/요청/gi.test(refundGo) ? colorChip.black : colorChip.deactive)),
+            pointer: /진행/gi.test(refundGo),
+            event: (/진행/gi.test(refundGo) ? instance.makeRefundEvent(project.bill.bilid, z, project.proid) : null),
           },
         ];
 
@@ -1443,9 +1475,10 @@ CalculationJs.prototype.whiteCardView = function (proid) {
             marginBottom: String(blockMarginBottom) + ea,
           }
         });
-        for (let { value, color, pointer } of requestValueArr) {
+        for (let { value, color, pointer, event } of requestValueArr) {
           createNode({
             mother: whiteTong,
+            event,
             style: {
               display: "inline-flex",
               width: "calc(100% / " + String(leftColumns.length) + ")",
@@ -1976,6 +2009,7 @@ CalculationJs.prototype.reportMatrix = function () {
   const { belowButtons: { square: { reportIcon } } } = this.mother;
 
   reportIcon.addEventListener("click", this.queueView());
+  reportIcon.addEventListener("contextmenu", this.refundView());
 }
 
 CalculationJs.prototype.queueView = function () {
@@ -3017,6 +3051,298 @@ CalculationJs.prototype.queueView = function () {
   }
 }
 
+CalculationJs.prototype.refundView = function () {
+  const instance = this;
+  const { totalContents, ea, belowHeight, projects, bills } = this;
+  const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, copyJson, removeByClass } = GeneralJs;
+  return async function (e) {
+    try {
+
+      e.preventDefault();
+
+      const zIndex = 4;
+      const whiteCardClassName = "whiteCardClassName";
+      let cancelBack, whiteCard;
+      let whiteOuterMargin;
+      let whiteInnerMargin;
+      let titleAreaHeight;
+      let titleAreaPaddingBottom;
+      let nameSize;
+      let nameWeight;
+      let subSize;
+      let subWeight;
+      let subMarginLeft;
+      let subTextTop;
+      let statusTextTop;
+      let titleArea;
+      let responses;
+      let thisBill;
+      let forEachFunction;
+      let needs, pending;
+      let contentsAreaBetween;
+      let contentsAreaPaddingTop;
+      let grayInnerPadding;
+      let blockHeight;
+      let valueSize;
+      let valueWeight;
+      let valueBoldWeight;
+      let valueTextTop;
+      let blockMarginBottom;
+      let columns;
+      let contentsArea;
+      let contentsAreaLeft;
+      let contentsAreaRight;
+      let greenTong;
+      let blackTong;
+      let thisResponse;
+      let responseName;
+      let confirmState;
+      let payAmount;
+      let refundAmount;
+      let nonPayAmount;
+      let payDate;
+      let refundDate;
+      let payMethod;
+      let payProof;
+      let responseValueArr;
+      let whiteTong;
+      let responseSumTotal;
+      let responseSumNon;
+      let responseSumPaid;
+      let grayTong;
+      let loading;
+
+      whiteOuterMargin = <%% 40, 20, 20, 20, 10 %%>;
+      whiteInnerMargin = <%% 50, 30, 30, 30, 20 %%>;
+
+      titleAreaHeight = <%% 63, 42, 42, 42, 42 %%>;
+
+      titleAreaPaddingBottom = 6;
+
+      nameSize = <%% 32, 24, 24, 24, 24 %%>;
+      nameWeight = 800;
+
+      subSize = <%% 17, 15, 15, 15, 15 %%>;
+      subWeight = 400;
+      subMarginLeft = 13;
+      subTextTop = <%% (isMac() ? 7 : 5), 5, 5, 5, 3 %%>;
+
+      statusTextTop = <%% 27, 18, 18, 18, 18 %%>;
+
+      contentsAreaBetween = 10;
+      contentsAreaPaddingTop = <%% 30, 15, 15, 15, 15 %%>;
+
+      grayInnerPadding = 10;
+
+      blockHeight = <%% 40, 36, 36, 36, 36 %%>;
+
+      valueSize = <%% 13, 12, 12, 11, 3 %%>;
+      valueWeight = 400;
+      valueBoldWeight = 800;
+      valueTextTop = isMac() ? -1 : 1;
+
+      blockMarginBottom = 2;
+
+      columns = [
+        "아이디",
+        "고객",
+        "디자이너",
+        "구분",
+        "확정가",
+        "입금액",
+        "입금일",
+        "입금 수단",
+        "입금 증빙",
+        "환불액",
+        "환불일",
+        "환불 비율",
+      ];
+
+      contentsAreaLeft = {};
+      contentsAreaRight = {};
+
+      loading = instance.mother.grayLoading();
+
+      // base
+
+      removeByClass(whiteCardClassName);
+
+      cancelBack = createNode({
+        mother: totalContents,
+        class: [ whiteCardClassName ],
+        event: (e) => {
+          removeByClass(whiteCardClassName);
+        },
+        set: "fixed",
+        style: {
+          height: withOut(belowHeight, ea),
+          background: colorChip.black,
+          opacity: String(0.4),
+          zIndex: String(zIndex),
+        }
+      });
+      whiteCard = createNode({
+        mother: totalContents,
+        class: [ whiteCardClassName ],
+        style: {
+          position: "fixed",
+          top: String(whiteOuterMargin) + ea,
+          left: String(whiteOuterMargin) + ea,
+          width: withOut((whiteOuterMargin * 2) + (whiteInnerMargin * 2), ea),
+          height: withOut((whiteOuterMargin * 2) + belowHeight + (whiteInnerMargin * 2), ea),
+          padding: String(whiteInnerMargin) + ea,
+          background: colorChip.white,
+          borderRadius: String(5) + "px",
+          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          animation: "fadeuplite 0.3s ease forwards",
+          zIndex: String(zIndex),
+        },
+        children: [
+          {
+            set: "block",
+            style: {
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              borderRadius: String(5) + "px",
+              overflow: "hidden",
+            },
+          }
+        ]
+      }).firstChild;
+
+
+      loading.remove();
+
+      // title
+
+      createNode({
+        mother: whiteCard,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          height: String(titleAreaHeight) + ea,
+          paddingBottom: String(titleAreaPaddingBottom) + ea,
+          alignItems: "center",
+          borderBottom: "1px solid " + colorChip.gray3,
+        },
+        children: [
+          {
+            text: "환불 리스트",
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              fontSize: String(nameSize) + ea,
+              fontWeight: String(nameWeight),
+              color: colorChip.black,
+            }
+          },
+          {
+            text: dateToString(new Date(), true),
+            style: {
+              display: "inline-flex",
+              fontSize: String(subSize) + ea,
+              fontWeight: String(subWeight),
+              color: colorChip.deactive,
+              marginLeft: String(subMarginLeft) + ea,
+              position: "relative",
+              top: String(subTextTop) + ea,
+            }
+          }
+        ]
+      });
+
+      // contents area
+
+      contentsArea = createNode({
+        mother: whiteCard,
+        style: {
+          display: "flex",
+          position: "relative",
+          flexDirection: "column",
+          paddingTop: String(contentsAreaPaddingTop) + ea,
+          height: withOut(titleAreaHeight + titleAreaPaddingBottom + contentsAreaPaddingTop, ea),
+          width: withOut(0, ea),
+        }
+      });
+
+      // contents area up - needs response
+
+      contentsAreaLeft = createNode({
+        mother: contentsArea,
+        style: {
+          display: "flex",
+          position: "relative",
+          height: withOut(grayInnerPadding * 2, ea),
+          width: withOut(grayInnerPadding * 2, ea),
+          borderRadius: String(5) + "px",
+          padding: String(grayInnerPadding) + ea,
+          background: colorChip.gray2,
+          marginBottom: String(contentsAreaBetween) + ea,
+          alignItems: "center",
+          justifyContent: "center",
+        },
+        children: [
+          {
+            style: {
+              display: "block",
+              position: "relative",
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              overflow: "scroll",
+            }
+          }
+        ]
+      }).firstChild;
+
+      greenTong = createNode({
+        mother: contentsAreaLeft,
+        style: {
+          display: "flex",
+          position: "sticky",
+          flexDirection: "row",
+          top: String(0),
+          width: withOut(0),
+          height: String(blockHeight) + ea,
+          background: colorChip.gradientGreen,
+          borderRadius: String(5) + "px",
+          marginBottom: String(blockMarginBottom) + ea,
+          zIndex: String(1),
+        }
+      });
+      for (let column of columns) {
+        createNode({
+          mother: greenTong,
+          style: {
+            display: "inline-flex",
+            width: "calc(100% / " + String(columns.length) + ")",
+            height: withOut(0, ea),
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+          },
+          children: [
+            {
+              text: column,
+              style: {
+                fontSize: String(valueSize) + ea,
+                fontWeight: String(valueBoldWeight),
+                color: colorChip.white,
+                position: "relative",
+                top: String(valueTextTop) + ea,
+              }
+            }
+          ]
+        });
+      }
+
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
 CalculationJs.prototype.makeExcuteEvent = function (bilid, responseIndex, proid, queueMode = false) {
   const instance = this;
   const { setQueue } = GeneralJs;
@@ -3032,6 +3358,29 @@ CalculationJs.prototype.makeExcuteEvent = function (bilid, responseIndex, proid,
         } else {
           (instance.queueView())();
         }
+        loading.remove();
+      }, 500);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
+CalculationJs.prototype.makeRefundEvent = function (bilid, requestIndex, proid) {
+  const instance = this;
+  const { setQueue } = GeneralJs;
+  return async function (e) {
+    try {
+      await instance.excuteRefund(bilid, requestIndex, proid);
+      const loading = instance.mother.grayLoading();
+      for (let project of instance.projects) {
+        project.bill = instance.bills.find((obj) => {
+          return ((obj.links.proid === project.proid) && (obj.links.method === (project.service.online ? "online" : "offline")))
+        });
+      }
+      setQueue(() => {
+        instance.contentsLoad();
+        (instance.whiteCardView(proid))();
         loading.remove();
       }, 500);
     } catch (e) {
@@ -3193,6 +3542,217 @@ CalculationJs.prototype.excuteResponse = async function (bilid, responseIndex, d
         whereQuery: projectWhereQuery,
         updateQuery: projectUpdateQuery
       }, BACKHOST + "/rawUpdateProject");
+
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+CalculationJs.prototype.excuteRefund = async function (bilid, requestIndex, proid) {
+  if (typeof bilid !== "string" || typeof requestIndex !== "number" || typeof proid !== "string") {
+    throw new Error("input => [ bilid, requestIndex, string ]");
+  }
+  const instance = this;
+  const { totalContents, ea, belowHeight, projects, bills } = this;
+  const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, copyJson } = GeneralJs;
+  try {
+    const thisBill = bills.find((obj) => { return obj.bilid === bilid });
+    const thisBillIndex = bills.findIndex((obj) => { return obj.bilid === bilid });
+    if (thisBill === undefined) {
+      throw new Error("invaild bilid");
+    }
+    const thisProject = projects.find((obj) => { return obj.proid === proid });
+    const thisRequest = thisBill.requests[requestIndex];
+    if (thisRequest.pay.length === 0 || thisRequest.proofs.length === 0) {
+      window.alert("이 건에 대해서는 환불을 진행할 수 없습니다!");
+      return 0;
+    }
+    if (thisRequest.pay.length > 1) {
+      window.alert("다중 결제 건의 환불에 대해서는 ca 콘솔을 이용하거나 별도 문의해주세요!");
+    }
+    const method = thisRequest.proofs[0].method;
+    const cancel = (thisRequest.cancel.length !== 0);
+    const amount = thisRequest.pay.reduce((acc, curr) => { return acc + curr.amount }, 0);
+    const payIndex = 0;
+    let raw;
+    let percentage, accountNumber, bankName, accountName;
+    let bankCode;
+    let kind;
+    let res;
+    let entire;
+    let ratio;
+    let refundPrice;
+
+    if (!cancel && window.confirm("환불을 진행할까요?")) {
+      percentage = 100;
+
+      // ratio
+
+      if (!window.confirm("전체 환불을 진행할까요? (부분일시, '취소')")) {
+
+        entire = false;
+        refundPrice = 0;
+
+        if (window.confirm("비율로 환불을 할까요, 금액으로 환불을 할까요? (비율 => '확인' / 금액 => '취소')")) {
+
+          ratio = true;
+
+          do {
+            raw = await GeneralJs.prompt("돌려줄 금액의 비율을 알려주세요! (예: 50%)");
+            if (raw !== null) {
+              percentage = Number(raw.replace(/[^0-9]/gi, ''));
+            } else {
+              percentage = 0;
+            }
+          } while (percentage === 0 || Number.isNaN(percentage))
+
+        } else {
+
+          ratio = false;
+
+          do {
+            raw = await GeneralJs.prompt("돌려줄 금액을 원 단위로 알려주세요! (예: 1,000,000원)");
+            if (raw !== null) {
+              refundPrice = Number(raw.replace(/[^0-9]/gi, ''));
+            } else {
+              refundPrice = 0;
+            }
+          } while (refundPrice === 0 || Number.isNaN(refundPrice))
+
+          percentage = (Math.floor((raw / amount) * 100000) / 100000) * 100;
+
+        }
+
+      } else {
+        entire = true;
+        ratio = true;
+      }
+
+
+      // method
+
+      if (/카드/gi.test(method)) {
+
+        kind = "card" + ((entire || percentage === 100) ? "Entire" : "Partial");
+
+        if (ratio) {
+          if (window.confirm("카드 " + String(percentage) + "% 환불을 진행합니다. 확실합니까?")) {
+            res = await GeneralJs.ajaxJson({ kind, bilid, requestIndex, payIndex, percentage }, PYTHONHOST + "/requestRefund", { equal: true });
+            instance.bills[thisBillIndex] = res.bill;
+          }
+        } else {
+          if (window.confirm("카드 " + autoComma(refundPrice) + "원 환불을 진행합니다. 확실합니까?")) {
+            res = await GeneralJs.ajaxJson({ kind, bilid, requestIndex, payIndex, percentage, refundPrice }, PYTHONHOST + "/requestRefund", { equal: true });
+            instance.bills[thisBillIndex] = res.bill;
+          }
+        }
+
+      } else if (/^무/gi.test(method)) {
+
+        kind = "vaccount" + ((entire || percentage === 100) ? "Entire" : "Partial");
+        bankCode = await GeneralJs.ajaxJson({}, PYTHONHOST + "/returnBankCode");
+        do {
+          raw = await GeneralJs.prompt("은행 이름을 알려주세요!");
+          if (raw !== null) {
+            raw = raw.trim();
+            bankName = null;
+            for (let arr of bankCode) {
+              if ((new RegExp(arr[0], "gi")).test(raw)) {
+                if (window.confirm("은행 이름이 '" + arr[0] + "'가 맞나요?")) {
+                  bankName = arr[0];
+                }
+              }
+            }
+          } else {
+            bankName = null;
+          }
+        } while (bankName === null)
+        do {
+          raw = await GeneralJs.prompt("계좌 번호를 알려주세요!");
+          if (raw !== null) {
+            accountNumber = null;
+            accountNumber = raw.replace(/[^0-9]/gi, '').trim();
+          } else {
+            accountNumber = null;
+          }
+        } while (accountNumber === null)
+        do {
+          raw = await GeneralJs.prompt("예금주를 알려주세요!");
+          if (raw !== null) {
+            accountName = null;
+            accountName = raw.trim();
+          } else {
+            accountName = null;
+          }
+        } while (accountName === null)
+
+        if (ratio) {
+          if (window.confirm("무통장 " + String(percentage) + "% 환불을 진행합니다.(" + bankName + " " + accountNumber + " " + accountName + ") 확실합니까?")) {
+            res = await GeneralJs.ajaxJson({ kind, bilid, requestIndex, payIndex, percentage, accountNumber, bankName, accountName }, PYTHONHOST + "/requestRefund", { equal: true });
+            instance.bills[thisBillIndex] = res.bill;
+          }
+        } else {
+          if (window.confirm("무통장 " + String(refundPrice) + "원 환불을 진행합니다.(" + bankName + " " + accountNumber + " " + accountName + ") 확실합니까?")) {
+            res = await GeneralJs.ajaxJson({ kind, bilid, requestIndex, payIndex, percentage, accountNumber, bankName, accountName, refundPrice }, PYTHONHOST + "/requestRefund", { equal: true });
+            instance.bills[thisBillIndex] = res.bill;
+          }
+        }
+
+      } else {
+
+        kind = "cash" + (percentage === 100 ? "Entire" : "Partial");
+        bankCode = await GeneralJs.ajaxJson({}, PYTHONHOST + "/returnBankCode");
+
+        do {
+          raw = await GeneralJs.prompt("은행 이름을 알려주세요!");
+          if (raw !== null) {
+            raw = raw.trim();
+            bankName = null;
+            for (let arr of bankCode) {
+              if ((new RegExp(arr[0], "gi")).test(raw)) {
+                if (window.confirm("은행 이름이 '" + arr[0] + "'가 맞나요?")) {
+                  bankName = arr[0];
+                }
+              }
+            }
+          } else {
+            bankName = null;
+          }
+        } while (bankName === null)
+        do {
+          raw = await GeneralJs.prompt("계좌 번호를 알려주세요!");
+          if (raw !== null) {
+            accountNumber = null;
+            accountNumber = raw.replace(/[^0-9]/gi, '').trim();
+          } else {
+            accountNumber = null;
+          }
+        } while (accountNumber === null)
+        do {
+          raw = await GeneralJs.prompt("예금주를 알려주세요!");
+          if (raw !== null) {
+            accountName = null;
+            accountName = raw.trim();
+          } else {
+            accountName = null;
+          }
+        } while (accountName === null)
+
+        if (ratio) {
+          if (window.confirm("계좌 이체 " + String(percentage) + "% 환불 요청을 진행합니다.(" + bankName + " " + accountNumber + " " + accountName + ") 확실합니까?")) {
+            res = await GeneralJs.ajaxJson({ kind, bilid, requestIndex, payIndex, percentage, accountNumber, bankName, accountName }, PYTHONHOST + "/requestRefund", { equal: true });
+            instance.bills[thisBillIndex] = res.bill;
+          }
+        } else {
+          if (window.confirm("계좌 이체 " + String(refundPrice) + "원 환불 요청을 진행합니다.(" + bankName + " " + accountNumber + " " + accountName + ") 확실합니까?")) {
+            res = await GeneralJs.ajaxJson({ kind, bilid, requestIndex, payIndex, percentage, accountNumber, bankName, accountName, refundPrice }, PYTHONHOST + "/requestRefund", { equal: true });
+            instance.bills[thisBillIndex] = res.bill;
+          }
+        }
+
+      }
 
     }
 
