@@ -5208,6 +5208,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                 }
                                 pay = pay.map((obj, index) => {
                                   let total, amount;
+                                  let refundReceipt;
                                   obj.payMethod = /CARD/gi.test(infoCopied[index].data.payMethod) ? "카드" : (infoCopied[index].data.payMethod !== "ACCOUNT" ? "무통장" : "계좌 이체");
                                   obj.detail = obj.payMethod === "카드" ? infoCopied[index].data.P_FN_NM : infoCopied[index].data.vactBankName;
                                   if (typeof obj.detail === "string") {
@@ -5231,7 +5232,12 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                     }
                                   }
 
-                                  if (/환불 요청/gi.test(thisRequest.status) && obj.cancelDetail === '') {
+                                  refundReceipt = null;
+                                  refundReceipt = thisRequest.info.find((o) => {
+                                    return (typeof o === "object" && o.key === "refundReceipt" && o.oid === obj.oid);
+                                  });
+
+                                  if (refundReceipt !== null && refundReceipt !== undefined && obj.cancelDetail === '') {
                                     obj.cancel = true;
                                     obj.cancelDetail = thisRequest.status;
                                   }
