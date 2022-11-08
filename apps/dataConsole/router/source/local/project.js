@@ -5219,6 +5219,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                   obj.payMethod = obj.payMethod + "(" + obj.detail + ") : " + GeneralJs.autoComma(obj.amount) + "원";
                                   obj.cancel = false;
                                   obj.cancelDetail = "";
+
                                   for (let i of cancel) {
                                     if (obj.oid === i.oid) {
                                       obj.cancel = true;
@@ -5229,6 +5230,12 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                       }
                                     }
                                   }
+
+                                  if (/환불 요청/gi.test(thisRequest.status) && obj.cancelDetail === '') {
+                                    obj.cancel = true;
+                                    obj.cancelDetail = thisRequest.status;
+                                  }
+
                                   return obj;
                                 });
                                 itemTong = [];

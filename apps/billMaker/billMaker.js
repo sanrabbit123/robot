@@ -5332,6 +5332,9 @@ BillMaker.prototype.cashRefund = async function (mode, bilid, requestIndex, payI
     let infoCopiedUnshift;
     let slackMessage;
     let resultObj;
+    let accountNumber;
+    let bankName;
+    let accountName;
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
       selfBoo = false;
@@ -5396,6 +5399,10 @@ BillMaker.prototype.cashRefund = async function (mode, bilid, requestIndex, payI
       percentage = Math.floor(((option.refundPrice / originalPrice) * 100) * 100) / 100;
     }
 
+    accountNumber = option.accountNumber;
+    bankName = option.bankName;
+    accountName = option.accountName;
+
     resultObj = { message: "success" };
 
     if (mode === "request") {
@@ -5403,10 +5410,11 @@ BillMaker.prototype.cashRefund = async function (mode, bilid, requestIndex, payI
       infoCopiedUnshift = equalJson(JSON.stringify(infoCopied));
       infoCopiedUnshift.unshift({
         key: "refundReceipt",
+        oid: thisRequest.pay[payIndex].oid,
         data: {
-          oid: thisRequest.pay[payIndex].oid,
           original: originalPrice,
-          refund: price
+          refund: price,
+          info: { accountNumber, bankName, accountName }
         }
       });
 
