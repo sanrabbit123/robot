@@ -3657,7 +3657,7 @@ CalculationJs.prototype.excuteResponse = async function (bilid, responseIndex, d
 
     const res = await ajaxJson({ bilid, responseIndex, date }, PYTHONHOST + "/excuteResponse", { equal: true });
     if (res.message === "success") {
-      const thisBillIndex = bills.findInex((obj) => { return obj.bilid === res.bilid });
+      const thisBillIndex = bills.findIndex((obj) => { return obj.bilid === res.bilid });
       const thisProjectIndex = projects.findIndex((obj) => { return obj.proid === res.proid });
       instance.bills[thisBillIndex] = res.bill;
       instance.projects[thisProjectIndex] = res.project;
