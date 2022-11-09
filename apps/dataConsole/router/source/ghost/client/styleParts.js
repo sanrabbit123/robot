@@ -496,7 +496,7 @@ StylePartsJs.prototype.insertSubInitBox = function () {
   initLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
   initSecondMarginTop = <%% 12, 12, 12, 12, 4 %%>;
 
-  initPaddingTop = <%% 240, 240, 240, 200, 9 %%>;
+  initPaddingTop = <%% 190, 190, 190, 200, 9 %%>;
 
   leftMotherWidth = <%% 560, 460, 284, 250, 82 %%>;
 
@@ -506,7 +506,7 @@ StylePartsJs.prototype.insertSubInitBox = function () {
   baseMotherMarginBottom = <%% 240, 240, 210, 200, 3 %%>;
 
   descriptionPaddingTop = <%% 21, 21, 8, 6, 0.5 %%>;
-  partsWidth = <%% 100, 96, 90, 88, 33 %%>;
+  partsWidth = <%% 130, 130, 90, 88, 33 %%>;
 
   bottomLineWidth = <%% 400, 0, 0, 0, 0 %%>;
   bottomLineHeight = <%% 40, 0, 0, 0, 0 %%>;

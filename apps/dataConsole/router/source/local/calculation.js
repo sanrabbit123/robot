@@ -3996,9 +3996,9 @@ CalculationJs.prototype.launching = async function () {
       project.phone = thisClient.phone;
     }
 
-    // projects = projects.filter((obj) => {
-    //   return obj.proid !== "p1801_aa01s" && obj.proid !== "p1801_aa02s";
-    // })
+    projects = projects.filter((obj) => {
+      return obj.proid !== "p1801_aa01s" && obj.proid !== "p1801_aa02s";
+    })
 
     this.bills = bills;
     this.projects = projects;
