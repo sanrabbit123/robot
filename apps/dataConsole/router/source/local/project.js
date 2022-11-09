@@ -8347,6 +8347,51 @@ ProjectJs.prototype.globalChaining = async function (thisCase, column, value, pa
         console.log(e);
       }
     }
+    const excuteResponse = async function (thisCase, column, value, pastValue) {
+      try {
+        const { ajaxJson, sleep, stringToDate } = GeneralJs;
+        const { proid } = thisCase;
+        const project = (await ajaxJson({ noFlat: true, whereQuery: { proid } }, "/getProjects", { equal: true }))[0];
+        const desid = proid.desid;
+        const cliid = proid.cliid;
+        const method = (project.service.online ? "online" : "offline");
+        const date = stringToDate(value);
+        let thisBill, bilid;
+        let responseIndex;
+        if (desid !== '') {
+          thisBill = await ajaxJson({
+            mode: "read",
+            whereQuery: {
+              $and: [
+                { "links.proid": proid },
+                { "links.desid": desid },
+                { "links.cliid": cliid },
+                { "links.method": method },
+              ]
+            }
+          }, PYTHONHOST + "/generalBill");
+          if (thisBill.length > 0) {
+            thisBill = thisBill[0];
+            bilid = thisBill.bilid;
+
+
+            if (column === "paymentsFirstDate") {
+              responseIndex = thisBill.responses.findIndex((obj) => {
+                return /홈리에종 선금 정산/gi.test(obj.name);
+              });
+            } else {
+              responseIndex = thisBill.responses.findIndex((obj) => {
+                return /홈리에종 잔금 정산/gi.test(obj.name);
+              });
+            }
+
+            await ajaxJson({ bilid, responseIndex, date }, PYTHONHOST + "/excuteResponse", { equal: true });
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
     const dictionary = {
       meetingDate: realtimeDesigner,
       formDateFrom: realtimeDesigner,
@@ -8360,8 +8405,8 @@ ProjectJs.prototype.globalChaining = async function (thisCase, column, value, pa
       paymentsTotalAmount: syncBill,
       paymentsFirstAmount: syncBill,
       paymentsRemainAmount: syncBill,
-      paymentsFirstDate: syncBill,
-      paymentsRemainDate: syncBill,
+      paymentsFirstDate: excuteResponse,
+      paymentsRemainDate: excuteResponse,
     };
 
     let tempFunction;
