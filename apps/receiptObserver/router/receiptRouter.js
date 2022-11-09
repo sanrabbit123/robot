@@ -2928,6 +2928,113 @@ ReceiptRouter.prototype.rou_post_nonPaidResponses = function () {
   return obj;
 }
 
+ReceiptRouter.prototype.rou_post_excuteResponse = function () {
+  const instance = this;
+  const back = this.back;
+  const bill = this.bill;
+  const { equalJson, errorLog } = this.mother;
+  let obj = {};
+  obj.link = "/excuteResponse";
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.bilid === undefined || req.body.responseIndex === undefined || req.body.date === undefined) {
+        throw new Error("invaild post");
+      }
+      let { bilid, responseIndex, date } = equalJson(req.body);
+      let thisBill;
+      let oid;
+      let method;
+      let proid;
+      let thisProject;
+      let thisResponse;
+      let pay, name, target;
+      let whereQuery, updateQuery;
+      let projectWhereQuery, projectUpdateQuery;
+      let amount;
+
+      responseIndex = Number(responseIndex);
+      if (Number.isNaN(responseIndex)) {
+        throw new Error("invaild post");
+      }
+
+      thisBill = await bill.getBillById(bilid, { selfMongo: instance.mongolocal });
+      if (thisBill.responses[responseIndex] === undefined) {
+        throw new Error("invaild index");
+      }
+
+      oid = "";
+      method = "계좌 이체";
+      proid = thisBill.links.proid;
+      thisProject = await back.getProjectById(proid, { selfMongo: instance.mongo });
+
+      thisResponse = thisBill.responses[responseIndex];
+      ({ pay, name, target } = thisResponse);
+
+      amount = Math.floor(thisResponse.items.reduce((acc, curr) => { return acc + curr.amount.pure }, 0));
+
+      whereQuery = { bilid };
+      updateQuery = {};
+
+      if (pay.length === 0) {
+        updateQuery["responses." + String(responseIndex) + ".pay"] = [ { amount, date, oid } ];
+        updateQuery["responses." + String(responseIndex) + ".proofs"] = [ { date, method, proof: thisProject.process.calculation.info.proof, to: thisProject.process.calculation.info.to } ];
+      } else if (pay.length === 1) {
+        updateQuery["responses." + String(responseIndex) + ".pay." + String(0) + ".amount"] = amount;
+        updateQuery["responses." + String(responseIndex) + ".pay." + String(0) + ".date"] = date;
+        updateQuery["responses." + String(responseIndex) + ".proofs." + String(0) + ".date"] = date;
+        updateQuery["responses." + String(responseIndex) + ".proofs." + String(0) + ".method"] = method;
+        updateQuery["responses." + String(responseIndex) + ".proofs." + String(0) + ".proof"] = thisProject.process.calculation.info.proof;
+        updateQuery["responses." + String(responseIndex) + ".proofs." + String(0) + ".to"] = thisProject.process.calculation.info.to;
+      } else {
+        updateQuery["responses." + String(responseIndex) + ".pay"] = [ { amount, date, oid } ];
+        updateQuery["responses." + String(responseIndex) + ".proofs"] = [ { date, method, proof: thisProject.process.calculation.info.proof, to: thisProject.process.calculation.info.to } ];
+      }
+
+      await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+      thisBill = await bill.getBillById(bilid, { selfMongo: instance.mongolocal });
+
+      if (/홈리에종 선금/gi.test(name) || /홈리에종 잔금/gi.test(name)) {
+
+        projectWhereQuery = { proid };
+        projectUpdateQuery = {};
+
+        if (/홈리에종 선금/gi.test(name)) {
+          projectUpdateQuery["process.calculation.payments.first.amount"] = Math.floor(amount);
+          projectUpdateQuery["process.calculation.payments.first.date"] = date;
+          projectUpdateQuery["process.calculation.payments.remain.amount"] = Math.floor(thisProject.process.calculation.payments.totalAmount - amount);
+        } else if (/홈리에종 잔금/gi.test(name)) {
+          projectUpdateQuery["process.calculation.payments.remain.amount"] = Math.floor(amount);
+          projectUpdateQuery["process.calculation.payments.remain.date"] = date;
+        }
+
+        await back.updateProject([ projectWhereQuery, projectUpdateQuery ], { selfMongo: instance.mongo });
+        thisProject = await back.getProjectById(proid, { selfMongo: instance.mongo });
+
+      }
+
+      res.send(JSON.stringify({
+        message: "success",
+        bilid,
+        proid,
+        bill: thisBill.toNormal(),
+        project: thisProject.toNormal(),
+      }));
+
+    } catch (e) {
+      errorLog("Python 서버 문제 생김 (rou_post_excuteResponse): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+      res.send(JSON.stringify({ message: "error" }));
+    }
+  }
+  return obj;
+}
+
 ReceiptRouter.prototype.getAll = function () {
   let result, result_arr;
 
