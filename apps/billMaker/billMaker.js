@@ -5107,9 +5107,6 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
     }
     remainBoo = (Math.floor(totalNumR1) <= Math.floor(payNumR1 - cancelNumR1));
 
-
-
-
     client = await back.getClientById(thisBill.links.cliid, { selfMongo: MONGOCOREC });
     project = await back.getProjectById(thisBill.links.proid, { selfMongo: MONGOCOREC });
 
@@ -5324,6 +5321,8 @@ BillMaker.prototype.cashRefund = async function (mode, bilid, requestIndex, payI
     let status;
     let whereQuery;
     let updateQuery;
+    let projectWhereQuery;
+    let projectUpdateQuery;
     let infoCopied;
     let thisData;
     let infoCopiedCopied;
@@ -5337,6 +5336,28 @@ BillMaker.prototype.cashRefund = async function (mode, bilid, requestIndex, payI
     let accountName;
     let cancelCopied, proofsCopied;
     let now;
+    let proid;
+    let client;
+    let project;
+    let firstResponse;
+    let secondResponse;
+    let firstResponseIndexItemIndex;
+    let secondResponseIndexItemIndex;
+    let num;
+    let firstBoo;
+    let remainBoo;
+    let totalNumR0;
+    let payNumR0;
+    let cancelNumR0;
+    let totalNumR1;
+    let payNumR1;
+    let cancelNumR1;
+    let allCancelPrice;
+    let refreshTotalAmountRaw;
+    let classification;
+    let calculate;
+    let commission;
+    let refreshTotalAmount;
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
       selfBoo = false;
@@ -5443,13 +5464,17 @@ BillMaker.prototype.cashRefund = async function (mode, bilid, requestIndex, payI
 
     } else if (mode === "execute") {
 
+      proid = thisBill.links.proid;
+
+      client = await back.getClientById(thisBill.links.cliid, { selfMongo: MONGOCOREC });
+      project = await back.getProjectById(thisBill.links.proid, { selfMongo: MONGOCOREC });
 
       whereQuery = { bilid };
       updateQuery = {};
       status = (percentage !== 100 ? "부분 환불" : "전체 환불");
 
-      cancelCopied = equalJson(JSON.stringify(thisRequest.cancel));
-      proofsCopied = equalJson(JSON.stringify(thisRequest.proofs));
+      cancelCopied = equalJson(JSON.stringify(thisRequest.cancel.toNormal()));
+      proofsCopied = equalJson(JSON.stringify(thisRequest.proofs.toNormal()));
 
       now = new Date();
 
@@ -5470,18 +5495,135 @@ BillMaker.prototype.cashRefund = async function (mode, bilid, requestIndex, payI
       updateQuery["requests." + String(requestIndex) + ".cancel"] = cancelCopied;
       updateQuery["requests." + String(requestIndex) + ".proofs"] = proofsCopied;
 
+      // project update
+      if (/홈리에종 계약금/gi.test(thisRequest.name) || /홈리에종 잔금/gi.test(thisRequest.name)) {
+
+        firstResponse = null;
+        secondResponse = null;
+        firstResponseIndexItemIndex = null;
+        secondResponseIndexItemIndex = null;
+        num = 0;
+        for (let res of thisBill.responses) {
+          if (res.name === BillMaker.billDictionary.styling.responses.firstDesignFee.name) {
+            firstResponse = res;
+            firstResponseIndex = num;
+            break;
+          }
+          num++;
+        }
+        num = 0;
+        for (let item of thisBill.responses[firstResponseIndex].items) {
+          if (item.class === "designerFeeFirst") {
+            firstResponseIndexItemIndex = num;
+          }
+          num++;
+        }
+        num = 0;
+        for (let res of thisBill.responses) {
+          if (res.name === BillMaker.billDictionary.styling.responses.secondDesignFee.name) {
+            secondResponse = res;
+            secondResponseIndex = num;
+            break;
+          }
+          num++;
+        }
+        num = 0;
+        for (let item of thisBill.responses[secondResponseIndex].items) {
+          if (item.class === "designerFeeRemain") {
+            secondResponseIndexItemIndex = num;
+          }
+          num++;
+        }
+
+        firstBoo = false;
+        remainBoo = false;
+        totalNumR0 = 0;
+        for (let { amount: { pure } } of firstResponse.items) {
+          totalNumR0 += pure;
+        }
+        payNumR0 = 0;
+        for (let { amount } of firstResponse.pay) {
+          payNumR0 += amount;
+        }
+        cancelNumR0 = 0;
+        for (let { amount } of firstResponse.cancel) {
+          cancelNumR0 += amount;
+        }
+        firstBoo = (Math.floor(totalNumR0) <= Math.floor(payNumR0 - cancelNumR0));
+        totalNumR1 = 0;
+        for (let { amount: { pure } } of secondResponse.items) {
+          totalNumR1 += pure;
+        }
+        payNumR1 = 0;
+        for (let { amount } of secondResponse.pay) {
+          payNumR1 += amount;
+        }
+        cancelNumR1 = 0;
+        for (let { amount } of secondResponse.cancel) {
+          cancelNumR1 += amount;
+        }
+        remainBoo = (Math.floor(totalNumR1) <= Math.floor(payNumR1 - cancelNumR1));
+
+
+        allCancelPrice = 0;
+        for (let { amount } of cancelCopied) {
+          allCancelPrice += amount;
+        }
+
+        refreshTotalAmountRaw = project.process.contract.remain.calculation.amount.supply - Math.round(allCancelPrice * (10 / 11));
+        if (refreshTotalAmountRaw < 10) {
+          refreshTotalAmountRaw = 0;
+        }
+        classification = project.process.calculation.method;
+        [ calculate, commission ] = BillMaker.designerCalculation(refreshTotalAmountRaw, classification, project.process.calculation.percentage, client, { toArray: true });
+        refreshTotalAmount = Math.floor(calculate / 10) * 10;
+
+
+        projectWhereQuery = { proid };
+        projectUpdateQuery = {};
+
+        if (!firstBoo && !remainBoo) {
+
+          updateQuery["responses." + String(firstResponseIndex) + ".items." + String(firstResponseIndexItemIndex) + ".unit.price"] = (refreshTotalAmount / 2);
+          updateQuery["responses." + String(firstResponseIndex) + ".items." + String(firstResponseIndexItemIndex) + ".amount.pure"] = (refreshTotalAmount / 2);
+          updateQuery["responses." + String(firstResponseIndex) + ".items." + String(firstResponseIndexItemIndex) + ".amount.commission"] = (commission / 2);
+          updateQuery["responses." + String(secondResponseIndex) + ".items." + String(secondResponseIndexItemIndex) + ".unit.price"] = (refreshTotalAmount / 2);
+          updateQuery["responses." + String(secondResponseIndex) + ".items." + String(secondResponseIndexItemIndex) + ".amount.pure"] = (refreshTotalAmount / 2);
+          updateQuery["responses." + String(secondResponseIndex) + ".items." + String(secondResponseIndexItemIndex) + ".amount.commission"] = (commission / 2);
+
+          projectUpdateQuery["process.calculation.payments.totalAmount"] = refreshTotalAmount;
+          projectUpdateQuery["process.calculation.payments.first.amount"] = (refreshTotalAmount / 2);
+          projectUpdateQuery["process.calculation.payments.remain.amount"] = (refreshTotalAmount / 2);
+
+        } else {
+
+          refreshRemainAmount = refreshTotalAmount - thisBill.responses[firstResponseIndex].items[firstResponseIndexItemIndex].unit.price;
+          commission = commission - thisBill.responses[firstResponseIndex].items[firstResponseIndexItemIndex].amount.commission;
+          updateQuery["responses." + String(secondResponseIndex) + ".items." + String(secondResponseIndexItemIndex) + ".unit.price"] = refreshRemainAmount;
+          updateQuery["responses." + String(secondResponseIndex) + ".items." + String(secondResponseIndexItemIndex) + ".amount.pure"] = refreshRemainAmount;
+          updateQuery["responses." + String(secondResponseIndex) + ".items." + String(secondResponseIndexItemIndex) + ".amount.commission"] = commission;
+
+          projectUpdateQuery["process.calculation.payments.totalAmount"] = refreshTotalAmount;
+          projectUpdateQuery["process.calculation.payments.remain.amount"] = refreshRemainAmount;
+
+        }
+
+        if (/홈리에종 계약금/gi.teset(thisRequest.name)) {
+          projectUpdateQuery["process.contract.first.cancel"] = now;
+          projectUpdateQuery["process.contract.first.calculation.refund"] = price;
+        } else if (/홈리에종 잔금/gi.test(thisRequest.name)) {
+          projectUpdateQuery["process.contract.remain.cancel"] = now;
+          projectUpdateQuery["process.contract.remain.calculation.refund"] = price;
+        }
+        projectUpdateQuery["process.contract.form.date.cancel"] = now;
+
+        await back.updateProject([ projectWhereQuery, projectUpdateQuery ], { selfMongo: MONGOCOREC });
+
+      }
+
       await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
 
-      // project update
-
-      // kakao alarm talk
-
-      // slack
-
-
-
       resultObj.bill = await this.getBillById(bilid, { selfMongo: MONGOC });
-
     }
 
     if (!selfBoo) {
