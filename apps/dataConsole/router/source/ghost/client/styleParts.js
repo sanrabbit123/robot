@@ -496,7 +496,7 @@ StylePartsJs.prototype.insertSubInitBox = function () {
   initLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
   initSecondMarginTop = <%% 12, 12, 12, 12, 4 %%>;
 
-  initPaddingTop = <%% 180, 110, 110, 82, 9 %%>;
+  initPaddingTop = <%% 240, 240, 240, 200, 9 %%>;
 
   leftMotherWidth = <%% 560, 460, 284, 250, 82 %%>;
 
@@ -618,7 +618,7 @@ StylePartsJs.prototype.insertSubInitBox = function () {
         text: "<b%첫 번째 프로젝트, 디자이너 그리고 자재%b>",
         style: {
           display: (media[2] || media[3]) ? "none" : "block",
-          fontSize: String(<&& 18 | 18 | 17 | 16 | 3.5 &&>) + ea,
+          fontSize: String(<&& 24 | 24 | 24 | 24 | 3.5 &&>) + ea,
           marginBottom: String(<&& 8 | 8 | 8 | 8 | 1 &&>) + ea,
           fontWeight: String(initWeight),
           color: colorChip.black,

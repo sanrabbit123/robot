@@ -5609,7 +5609,7 @@ BillMaker.prototype.cashRefund = async function (mode, bilid, requestIndex, payI
 
         }
 
-        if (/홈리에종 계약금/gi.teset(thisRequest.name)) {
+        if (/홈리에종 계약금/gi.test(thisRequest.name)) {
           projectUpdateQuery["process.contract.first.cancel"] = now;
           projectUpdateQuery["process.contract.first.calculation.refund"] = price;
         } else if (/홈리에종 잔금/gi.test(thisRequest.name)) {
