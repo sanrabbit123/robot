@@ -2519,7 +2519,7 @@ ReceiptRouter.prototype.rou_post_requestRefund = function () {
         kakao.sendTalk((/card/gi.test(kind) ? "refundCard" : "refundVAccount"), client.name, client.phone, {
           client: client.name,
           designer: designer.designer,
-          percentage: (!Number.isNaN(Number(req.body.percentage)) ? Number(req.body.percentage) : 100),
+          percentage: (!Number.isNaN(Number(report.price.percentage)) ? report.price.percentage : 100),
           amount: report.price.refund
         }).then(() => {
           return messageSend({ text: client.name + " 고객님의 환불 요청이 완료되었습니다!", channel: "#700_operation", voice: true });
@@ -2535,6 +2535,21 @@ ReceiptRouter.prototype.rou_post_requestRefund = function () {
           report = await bill.cashRefund("request", bilid, requestIndex, payIndex, option);
         } else if (req.body.mode === "execute") {
           report = await bill.cashRefund("execute", bilid, requestIndex, payIndex, option);
+
+          client = report.client;
+          designer = await back.getDesignerById(report.desid, { selfMongo: instance.mongo });
+
+          kakao.sendTalk("refundVAccount", client.name, client.phone, {
+            client: client.name,
+            designer: designer.designer,
+            percentage: (!Number.isNaN(Number(report.price.percentage)) ? report.price.percentage : 100),
+            amount: report.price.refund
+          }).then(() => {
+            return messageSend({ text: client.name + " 고객님의 환불 요청이 완료되었습니다!", channel: "#700_operation", voice: true });
+          }).catch((err) => {
+            console.log(err);
+          });
+
         }
         if (report.message === "success") {
           res.send(JSON.stringify(report));

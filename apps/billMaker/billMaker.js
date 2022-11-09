@@ -5205,6 +5205,7 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
       resultObj.price.partial = (price !== originalPrice);
       resultObj.price.refund = price;
       resultObj.price.original = originalPrice;
+      resultObj.price.percentage = percentage;
       resultObj.rawData = res.data;
 
       whereQuery = { bilid };
@@ -5624,6 +5625,17 @@ BillMaker.prototype.cashRefund = async function (mode, bilid, requestIndex, payI
       await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
 
       resultObj.bill = await this.getBillById(bilid, { selfMongo: MONGOC });
+      resultObj.bilid = resultObj.bill.bilid;
+      resultObj.proid = project.proid;
+      resultObj.cliid = project.cliid;
+      resultObj.desid = resultObj.bill.links.desid;
+      resultObj.project = project;
+      resultObj.client = client;
+      resultObj.price = {};
+      resultObj.price.refund = price;
+      resultObj.price.original = originalPrice;
+      resultObj.price.percentage = percentage;
+
     }
 
     if (!selfBoo) {
