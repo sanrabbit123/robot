@@ -2958,9 +2958,6 @@ ReceiptRouter.prototype.rou_post_excuteResponse = function () {
       let projectWhereQuery, projectUpdateQuery;
       let amount;
 
-      console.log(date);
-      console.log(date instanceof Date)
-
       responseIndex = Number(responseIndex);
       if (Number.isNaN(responseIndex)) {
         throw new Error("invaild post");

@@ -3654,98 +3654,21 @@ CalculationJs.prototype.excuteResponse = async function (bilid, responseIndex, d
   const { totalContents, ea, belowHeight, projects, bills } = this;
   const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, copyJson } = GeneralJs;
   try {
-
     const res = await ajaxJson({ bilid, responseIndex, date }, PYTHONHOST + "/excuteResponse", { equal: true });
     if (res.message === "success") {
       const thisBillIndex = bills.findIndex((obj) => { return obj.bilid === res.bilid });
       const thisProjectIndex = projects.findIndex((obj) => { return obj.proid === res.proid });
       instance.bills[thisBillIndex] = res.bill;
-      instance.projects[thisProjectIndex] = res.project;
+      instance.projects[thisProjectIndex].bill = res.bill;
+      instance.projects[thisProjectIndex].process.calculation.payments.first.amount = res.project.process.calculation.payments.first.amount;
+      instance.projects[thisProjectIndex].process.calculation.payments.first.date = res.project.process.calculation.payments.first.date;
+      instance.projects[thisProjectIndex].process.calculation.payments.remain.amount = res.project.process.calculation.payments.remain.amount;
+      instance.projects[thisProjectIndex].process.calculation.payments.remain.amount = res.project.process.calculation.payments.remain.amount;
+      instance.projects[thisProjectIndex].process.calculation.payments.remain.date = res.project.process.calculation.payments.remain.date;
+    } else {
+      window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+      window.location.reload();
     }
-
-
-
-    // const oid = "";
-    // const method = "계좌 이체";
-    // const thisBill = bills.find((obj) => { return obj.bilid === bilid });
-    // if (thisBill === undefined) {
-    //   throw new Error("invaild bilid");
-    // }
-    // if (thisBill.responses[responseIndex] === undefined) {
-    //   throw new Error("invaild index");
-    // }
-    // const proid = thisBill.links.proid;
-    // const thisProject = projects.find((obj) => { return obj.proid === proid });
-    // const thisResponse = thisBill.responses[responseIndex];
-    // const { pay, name, target } = thisResponse;
-    // let whereQuery, updateQuery;
-    // let projectWhereQuery, projectUpdateQuery;
-    // let amount;
-    //
-    // amount = Math.floor(thisResponse.items.reduce((acc, curr) => { return acc + curr.amount.pure }, 0));
-    //
-    // whereQuery = { bilid };
-    // updateQuery = {};
-    //
-    // if (pay.length === 0) {
-    //   updateQuery["responses." + String(responseIndex) + ".pay"] = [ { amount, date, oid } ];
-    //   updateQuery["responses." + String(responseIndex) + ".proofs"] = [ { date, method, proof: thisProject.process.calculation.info.proof, to: thisProject.process.calculation.info.to } ];
-    // } else if (pay.length === 1) {
-    //   updateQuery["responses." + String(responseIndex) + ".pay." + String(0) + ".amount"] = amount;
-    //   updateQuery["responses." + String(responseIndex) + ".pay." + String(0) + ".date"] = date;
-    //   updateQuery["responses." + String(responseIndex) + ".proofs." + String(0) + ".date"] = date;
-    //   updateQuery["responses." + String(responseIndex) + ".proofs." + String(0) + ".method"] = method;
-    //   updateQuery["responses." + String(responseIndex) + ".proofs." + String(0) + ".proof"] = thisProject.process.calculation.info.proof;
-    //   updateQuery["responses." + String(responseIndex) + ".proofs." + String(0) + ".to"] = thisProject.process.calculation.info.to;
-    // } else {
-    //   updateQuery["responses." + String(responseIndex) + ".pay"] = [ { amount, date, oid } ];
-    //   updateQuery["responses." + String(responseIndex) + ".proofs"] = [ { date, method, proof: thisProject.process.calculation.info.proof, to: thisProject.process.calculation.info.to } ];
-    // }
-    //
-    // await ajaxJson({
-    //   mode: "update",
-    //   collection: "generalBill",
-    //   db: "python",
-    //   whereQuery,
-    //   updateQuery
-    // }, PYTHONHOST + "/generalMongo");
-    //
-    // thisBill.responses[responseIndex].pay = [ { amount, date, oid } ];
-    // thisBill.responses[responseIndex].proofs = [ { date, method, proof: thisProject.process.calculation.info.proof, to: thisProject.process.calculation.info.to } ];
-    //
-    //
-    // if (/홈리에종 선금/gi.test(name) || /홈리에종 잔금/gi.test(name)) {
-    //
-    //   projectWhereQuery = { proid };
-    //   projectUpdateQuery = {};
-    //
-    //   if (/홈리에종 선금/gi.test(name)) {
-    //
-    //     projectUpdateQuery["process.calculation.payments.first.amount"] = Math.floor(amount);
-    //     projectUpdateQuery["process.calculation.payments.first.date"] = date;
-    //     projectUpdateQuery["process.calculation.payments.remain.amount"] = Math.floor(thisProject.process.calculation.payments.totalAmount - amount);
-    //
-    //     thisProject.process.calculation.payments.first.amount = projectUpdateQuery["process.calculation.payments.first.amount"];
-    //     thisProject.process.calculation.payments.first.date = projectUpdateQuery["process.calculation.payments.first.date"];
-    //     thisProject.process.calculation.payments.remain.amount = projectUpdateQuery["process.calculation.payments.remain.amount"];
-    //
-    //   } else if (/홈리에종 잔금/gi.test(name)) {
-    //
-    //     projectUpdateQuery["process.calculation.payments.remain.amount"] = Math.floor(amount);
-    //     projectUpdateQuery["process.calculation.payments.remain.date"] = date;
-    //
-    //     thisProject.process.calculation.payments.remain.amount = projectUpdateQuery["process.calculation.payments.remain.amount"];
-    //     thisProject.process.calculation.payments.remain.date = projectUpdateQuery["process.calculation.payments.remain.date"];
-    //
-    //   }
-    //
-    //   await ajaxJson({
-    //     whereQuery: projectWhereQuery,
-    //     updateQuery: projectUpdateQuery
-    //   }, BACKHOST + "/rawUpdateProject");
-    //
-    // }
-
   } catch (e) {
     console.log(e);
   }
