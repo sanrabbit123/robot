@@ -205,7 +205,7 @@ const withTools = function (Client) {
     message += "이메일 : " + this.email + "\n";
     message += "주소 : " + request.space.address.value + "\n";
     // message += "가족 구성원 : " + request.family.value + "\n";
-    // message += "예산 : " + request.budget.value + "\n";
+    message += "예산 : " + request.budget.value + "\n";
     message += "평수 : " + request.space.pyeong.toMessage() + "\n";
     message += "입주 예정일 : " + request.space.resident.expected.toString() + "\n";
     message += "계약 형태 : " + request.space.contract.value + "\n";
@@ -230,7 +230,7 @@ const withTools = function (Client) {
     documentArr.push(bar + "\n");
     documentArr.push(`${this.name} (${this.phone})\n`);
     documentArr.push("주소 : " + request.space.address.value + "\n");
-    documentArr.push("가족 구성원 : " + request.family.value + "\n");
+    // documentArr.push("가족 구성원 : " + request.family.value + "\n");
     documentArr.push("예산 : " + request.budget.value + "\n");
     documentArr.push("평수 : " + request.space.pyeong.toMessage() + "\n");
     if (!request.space.resident.living) {
@@ -390,7 +390,7 @@ const withTools = function (Client) {
     let tong = [];
     let temp;
 
-    for (let { request: { timeline, budget, family, space: { address, contract, pyeong, spec: { room, bathroom, valcony }, resident: { living, expected }, partial: { boo: partialBoo, pyeong: partialPyeong, detail: partialDetail } }, etc: { comment, channel } }, analytics: { response: { status, action, outreason, kakao, service }, date: { call: { next, history: callHistory }, space: { precheck, empty, movein } }, picture: { space: spacePicture, prefer: preferPicture } } } of client.requests) {
+    for (let { request: { timeline, budget, family, furniture, space: { address, contract, pyeong, spec: { room, bathroom, valcony }, resident: { living, expected }, partial: { boo: partialBoo, pyeong: partialPyeong, detail: partialDetail } }, etc: { comment, channel } }, analytics: { response: { status, action, outreason, kakao, service }, date: { call: { next, history: callHistory }, space: { precheck, empty, movein } }, picture: { space: spacePicture, prefer: preferPicture } } } of client.requests) {
 
       temp = {};
       temp.standard = {
@@ -423,6 +423,7 @@ const withTools = function (Client) {
         bathroom,
         valcony,
         family,
+        furniture,
         comment,
         channel,
         partialBoo: (partialBoo ? "부분" : "전체"),
