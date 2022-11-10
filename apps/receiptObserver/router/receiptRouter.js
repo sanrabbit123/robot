@@ -3035,6 +3035,113 @@ ReceiptRouter.prototype.rou_post_excuteResponse = function () {
   return obj;
 }
 
+ReceiptRouter.prototype.rou_post_excuteRepay = function () {
+  const instance = this;
+  const back = this.back;
+  const bill = this.bill;
+  const { equalJson, errorLog } = this.mother;
+  let obj = {};
+  obj.link = "/excuteRepay";
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.bilid === undefined || req.body.responseIndex === undefined || req.body.date === undefined || req.body.amount === undefined) {
+        throw new Error("invaild post");
+      }
+      let { bilid, responseIndex, date, amount } = equalJson(req.body);
+      let thisBill;
+      let oid;
+      let method;
+      let proid;
+      let thisProject;
+      let thisResponse;
+      let cancel, name, target, proofs;
+      let whereQuery, updateQuery;
+      let projectWhereQuery, projectUpdateQuery;
+      let cancelArr, proofsArr;
+      let proof, to;
+
+      responseIndex = Number(responseIndex);
+      if (Number.isNaN(responseIndex)) {
+        throw new Error("invaild post");
+      }
+
+      amount = Number(amount);
+      if (Number.isNaN(amount)) {
+        throw new Error("invaild post");
+      }
+
+      thisBill = await bill.getBillById(bilid, { selfMongo: instance.mongolocal });
+      if (thisBill.responses[responseIndex] === undefined) {
+        throw new Error("invaild index");
+      }
+
+      oid = "";
+      method = "계좌 이체 취소";
+      proof = "현금 영수증";
+      to = "주식회사 홈리에종";
+
+      proid = thisBill.links.proid;
+      thisProject = await back.getProjectById(proid, { selfMongo: instance.mongo });
+
+      thisResponse = thisBill.responses[responseIndex];
+      ({ cancel, proofs, name, target } = thisResponse);
+
+      cancelArr = equalJson(JSON.stringify(cancel));
+      proofsArr = equalJson(JSON.stringify(proofs));
+
+      whereQuery = { bilid };
+      updateQuery = {};
+
+      cancelArr.unshift({ date, amount, oid });
+      proofsArr.unshift({ date, method, proof, to });
+
+      updateQuery["responses." + String(responseIndex) + ".cancel"] = cancelArr;
+      updateQuery["responses." + String(responseIndex) + ".proofs"] = proofsArr;
+
+      await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+      thisBill = await bill.getBillById(bilid, { selfMongo: instance.mongolocal });
+
+      if (/홈리에종 선금/gi.test(name) || /홈리에종 잔금/gi.test(name)) {
+
+        projectWhereQuery = { proid };
+        projectUpdateQuery = {};
+
+        if (/홈리에종 선금/gi.test(name)) {
+          projectUpdateQuery["process.calculation.payments.first.refund"] = Math.floor(amount);
+          projectUpdateQuery["process.calculation.payments.first.cancel"] = date;
+        } else if (/홈리에종 잔금/gi.test(name)) {
+          projectUpdateQuery["process.calculation.payments.remain.refund"] = Math.floor(amount);
+          projectUpdateQuery["process.calculation.payments.remain.cancel"] = date;
+        }
+
+        await back.updateProject([ projectWhereQuery, projectUpdateQuery ], { selfMongo: instance.mongo });
+        thisProject = await back.getProjectById(proid, { selfMongo: instance.mongo });
+
+      }
+
+      res.send(JSON.stringify({
+        message: "success",
+        bilid,
+        proid,
+        bill: thisBill.toNormal(),
+        project: thisProject.toNormal(),
+      }));
+
+    } catch (e) {
+      errorLog("Python 서버 문제 생김 (rou_post_excuteRepay): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+      res.send(JSON.stringify({ message: "error" }));
+    }
+  }
+  return obj;
+}
+
 ReceiptRouter.prototype.getAll = function () {
   let result, result_arr;
 

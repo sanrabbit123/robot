@@ -1102,7 +1102,7 @@ CalculationJs.prototype.whiteCardView = function (proid) {
         "환수액",
         "환수일",
         "지급 진행",
-        "환수 진행",
+        "환수 확인",
       ];
 
 
@@ -1780,10 +1780,10 @@ CalculationJs.prototype.whiteCardView = function (proid) {
             event: instance.makeExcuteEvent(project.bill.bilid, z, project.proid),
           },
           {
-            value: "환수 진행",
+            value: "환수 확인",
             color: colorChip.green,
             pointer: true,
-            event: null,
+            event: instance.makeRepayEvent(project.bill.bilid, z, project.proid),
           },
         ];
 
@@ -3549,6 +3549,36 @@ CalculationJs.prototype.makeCashRefundEvent = function (refundRequest) {
   }
 }
 
+CalculationJs.prototype.makeRepayEvent = function (bilid, responseIndex, proid) {
+  const instance = this;
+  const { setQueue } = GeneralJs;
+  return async function (e) {
+    try {
+      let amount;
+
+      do {
+        amount = await GeneralJs.prompt("돌려 받은 금액을 원 단위로 알려주세요! (예: 1000000원)");
+        if (amount !== null) {
+          amount = Number(amount.replace(/[^0-9]/gi, ''));
+        } else {
+          amount = 0;
+        }
+      } while (amount === 0 || Number.isNaN(amount))
+
+      await instance.excuteRepay(bilid, responseIndex, new Date(), amount);
+      window.alert("업데이트 되었습니다!");
+      const loading = instance.mother.grayLoading();
+      setQueue(() => {
+        instance.contentsLoad();
+        (instance.whiteCardView(proid))();
+        loading.remove();
+      }, 500);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
 CalculationJs.prototype.cashRefund = async function (refundRequestString) {
   const instance = this;
   const { totalContents, ea, belowHeight, projects, bills } = this;
@@ -3879,6 +3909,35 @@ CalculationJs.prototype.excuteRefund = async function (bilid, requestIndex, proi
       }
 
     }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+CalculationJs.prototype.excuteRepay = async function (bilid, responseIndex, date, amount) {
+  if (typeof bilid !== "string" || typeof responseIndex !== "number" || typeof date !== "object" || typeof amount !== "number") {
+    throw new Error("input => [ bilid, responseIndex, amount, date ]");
+  }
+  if (!(date instanceof Date)) {
+    throw new Error("must be date object");
+  }
+  const instance = this;
+  const { totalContents, ea, belowHeight, projects, bills } = this;
+  const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, copyJson } = GeneralJs;
+  try {
+    const res = await ajaxJson({ bilid, responseIndex, date, amount }, PYTHONHOST + "/excuteRepay", { equal: true });
+
+
+
+
+
+
+
+
+
+
+
 
   } catch (e) {
     console.log(e);
