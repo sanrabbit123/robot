@@ -18,6 +18,8 @@ const HumanPacket = function () {
   };
   this.webmailHostConst = "webmail";
   this.webmailPort = 110;
+  this.webmailSmtpHost = "smtp.cafe24.com";
+  this.webmailSmtpPort = 587;
 }
 
 HumanPacket.prototype.sendPacket = async function (toObj, subject, contents) {
@@ -522,5 +524,34 @@ HumanPacket.prototype.mailFilter = async function (id, pwd, from, date) {
   }
 }
 
+HumanPacket.prototype.sendMail = async function (obj) {
+  if (typeof obj !== "obj" || obj === null) {
+    throw new Error("invaild input");
+  }
+  if (obj.to === undefined || obj.subject === undefined || obj.body === undefined) {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  const { fileSystem } = this.mother;
+  const { dir, moduleDir } = this;
+  const { to, subject, body } = obj;
+  try {
+    let pythonScript;
+
+
+
+    pythonScript = await fileSystem(`readString`, [ `${moduleDir}/smtp.py` ]);
+
+
+
+
+
+
+
+
+  } catch (e) {
+    console.log(e);
+  }
+}
 
 module.exports = HumanPacket;

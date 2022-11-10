@@ -65,7 +65,7 @@ DevContext.prototype.launching = async function () {
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongotestinfo } = this.mother;
   const { consoleQ, fileSystem, shellExec, shellLink, orderSystem, ghostFileUpload, ghostFileList, curlRequest, diskReading, requestSystem, ajaxJson, uniqueValue, getDateMatrix, ghostRequest, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether, serviceParsing, localUnique, processSystem, sha256Hmac } = this.mother;
   try {
-    await this.MONGOC.connect();
+    // await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
     const address = this.address;
     const back = this.back;
@@ -128,6 +128,7 @@ DevContext.prototype.launching = async function () {
     //   await selfMongo.db("miro81").collection("client").updateOne(whereQuery, { $set: updateQuery });
     //   console.log(whereQuery, updateQuery);
     // }
+
 
 
 
@@ -3479,7 +3480,7 @@ DevContext.prototype.launching = async function () {
 
   } catch (e) {
     console.log(e);
-    await this.MONGOC.close();
+    // await this.MONGOC.close();
     await this.MONGOLOCALC.close();
     // await rethink.close();
     console.log(`error`);
