@@ -204,8 +204,6 @@ const withTools = function (Client) {
     message += "연락처 : " + this.phone + "\n";
     message += "이메일 : " + this.email + "\n";
     message += "주소 : " + request.space.address.value + "\n";
-    // message += "가족 구성원 : " + request.family.value + "\n";
-    message += "예산 : " + request.budget.value + "\n";
     message += "평수 : " + request.space.pyeong.toMessage() + "\n";
     message += "입주 예정일 : " + request.space.resident.expected.toString() + "\n";
     message += "계약 형태 : " + request.space.contract.value + "\n";
@@ -230,8 +228,6 @@ const withTools = function (Client) {
     documentArr.push(bar + "\n");
     documentArr.push(`${this.name} (${this.phone})\n`);
     documentArr.push("주소 : " + request.space.address.value + "\n");
-    // documentArr.push("가족 구성원 : " + request.family.value + "\n");
-    documentArr.push("예산 : " + request.budget.value + "\n");
     documentArr.push("평수 : " + request.space.pyeong.toMessage() + "\n");
     if (!request.space.resident.living) {
       documentArr.push("입주 예정일 : " + request.space.resident.expected.toString() + "\n");
