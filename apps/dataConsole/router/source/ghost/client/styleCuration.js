@@ -734,16 +734,35 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
             total: 100,
             ea: '%',
             value: function (request, history, self) {
-              return history.curation.furniture.ratio;
+              let thisValue;
+              if (request.request.furniture === "재배치") {
+                thisValue = 0;
+              } else if (request.request.furniture === "일부 구매" || request.request.furniture === "알 수 없음") {
+                thisValue = 50;
+              } else {
+                thisValue = 100;
+              }
+              return thisValue;
             },
             update: function (value, siblings, client) {
               if (value !== null) {
+                let thisValue;
                 let updateQuery;
+
+                if (value.value < 25) {
+                  thisValue = "재배치";
+                } else if (value.value < 70) {
+                  thisValue = "일부 구매";
+                } else {
+                  thisValue = "전체 구매";
+                }
+
                 updateQuery = {};
-                updateQuery["curation.furniture.ratio"] = value.value;
+                updateQuery["requests.0.request.furniture"] = thisValue;
+
                 return {
-                  history: updateQuery,
-                  core: null
+                  history: null,
+                  core: updateQuery
                 };
               } else {
                 return { history: null, core: null };
