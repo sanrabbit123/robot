@@ -20,6 +20,7 @@ module.exports = {
           timeline: new Date(1800, 0, 1),
           notionId: "",
           budget: "알 수 없음",
+          furniture: "알 수 없음",
           family: "",
           space: {
             address: "",

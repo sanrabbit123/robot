@@ -115,6 +115,19 @@ DevContext.prototype.launching = async function () {
 
 
 
+    // const selfMongo = this.MONGOC;
+    // const clients = await back.getClientsByQuery({}, { selfMongo })
+    // let whereQuery, updateQuery;
+    //
+    // for (let client of clients) {
+    //   whereQuery = { cliid: client.cliid };
+    //   updateQuery = {};
+    //   for (let i = 0; i < client.requests.length; i++) {
+    //     updateQuery["requests." + String(i) + ".request.furniture"] = "알 수 없음";
+    //   }
+    //   await selfMongo.db("miro81").collection("client").updateOne(whereQuery, { $set: updateQuery });
+    //   console.log(whereQuery, updateQuery);
+    // }
 
 
 
