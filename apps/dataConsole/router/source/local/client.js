@@ -1495,6 +1495,8 @@ ClientJs.prototype.spreadData = async function (search = null) {
 
     const { standard, data } = clients;
 
+    console.log(data);
+
     for (let i of data) {
       standardDataTong.push(i.standard);
       infoDataTong.push(i.info);
