@@ -4276,6 +4276,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       left: String(0) + ea,
       width: "100%",
       height: String(16) + ea,
+      paddingBottom: String(i === info.length - 1 ? 300 : 0) + ea,
     };
     for (let j in style) {
       div_clone3.style[j] = style[j];

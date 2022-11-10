@@ -679,6 +679,7 @@ DataPatch.prototype.clientWhiteViewStandard = function () {
       { name: "거주중", target: "living" },
       { name: "예상 서비스", target: "service" },
       { name: "예산", target: "budget" },
+      { name: "가구 구매", target: "furniture" },
       { name: "주소", target: "address" },
       { name: "계약 상태", target: "contract" },
       { name: "평수", target: "pyeong" },
