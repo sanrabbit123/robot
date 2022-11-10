@@ -3675,7 +3675,7 @@ CalculationJs.prototype.dateFixEvent = function (bilid, responseIndex, proid, qu
 
 CalculationJs.prototype.excuteResponse = async function (bilid, responseIndex, date) {
   if (typeof bilid !== "string" || typeof responseIndex !== "number" || typeof date !== "object") {
-    throw new Error("input => [ bilid, responseIndex, amount, date ]");
+    throw new Error("input => [ bilid, responseIndex, date ]");
   }
   if (!(date instanceof Date)) {
     throw new Error("must be date object");
@@ -3692,7 +3692,6 @@ CalculationJs.prototype.excuteResponse = async function (bilid, responseIndex, d
       instance.projects[thisProjectIndex].bill = res.bill;
       instance.projects[thisProjectIndex].process.calculation.payments.first.amount = res.project.process.calculation.payments.first.amount;
       instance.projects[thisProjectIndex].process.calculation.payments.first.date = res.project.process.calculation.payments.first.date;
-      instance.projects[thisProjectIndex].process.calculation.payments.remain.amount = res.project.process.calculation.payments.remain.amount;
       instance.projects[thisProjectIndex].process.calculation.payments.remain.amount = res.project.process.calculation.payments.remain.amount;
       instance.projects[thisProjectIndex].process.calculation.payments.remain.date = res.project.process.calculation.payments.remain.date;
     } else {
@@ -3927,18 +3926,19 @@ CalculationJs.prototype.excuteRepay = async function (bilid, responseIndex, date
   const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, copyJson } = GeneralJs;
   try {
     const res = await ajaxJson({ bilid, responseIndex, date, amount }, PYTHONHOST + "/excuteRepay", { equal: true });
-
-
-
-
-
-
-
-
-
-
-
-
+    if (res.message === "success") {
+      const thisBillIndex = bills.findIndex((obj) => { return obj.bilid === res.bilid });
+      const thisProjectIndex = projects.findIndex((obj) => { return obj.proid === res.proid });
+      instance.bills[thisBillIndex] = res.bill;
+      instance.projects[thisProjectIndex].bill = res.bill;
+      instance.projects[thisProjectIndex].process.calculation.payments.first.refund = res.project.process.calculation.payments.first.refund;
+      instance.projects[thisProjectIndex].process.calculation.payments.first.cancel = res.project.process.calculation.payments.first.cancel;
+      instance.projects[thisProjectIndex].process.calculation.payments.remain.refund = res.project.process.calculation.payments.remain.refund;
+      instance.projects[thisProjectIndex].process.calculation.payments.remain.cancel = res.project.process.calculation.payments.remain.cancel;
+    } else {
+      window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+      window.location.reload();
+    }
   } catch (e) {
     console.log(e);
   }
@@ -3989,9 +3989,9 @@ CalculationJs.prototype.launching = async function () {
       project.phone = thisClient.phone;
     }
 
-    // projects = projects.filter((obj) => {
-    //   return obj.proid !== "p1801_aa01s" && obj.proid !== "p1801_aa02s";
-    // })
+    projects = projects.filter((obj) => {
+      return obj.proid !== "p1801_aa01s" && obj.proid !== "p1801_aa02s";
+    });
 
     this.bills = bills;
     this.projects = projects;
