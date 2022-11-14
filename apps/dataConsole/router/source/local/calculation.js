@@ -1734,8 +1734,8 @@ CalculationJs.prototype.whiteCardView = function (proid) {
           {
             value: autoComma(confirmState),
             color: colorChip.black,
-            pointer: false,
-            event: null,
+            pointer: true,
+            event: instance.amountFixEvent(project.bill.bilid, z, project.proid),
           },
           {
             value: autoComma(nonPayAmount),
@@ -1921,6 +1921,8 @@ CalculationJs.prototype.whiteCardView = function (proid) {
           ]
         });
       }
+
+
 
     } catch (e) {
       console.log(e);
@@ -3673,6 +3675,128 @@ CalculationJs.prototype.dateFixEvent = function (bilid, responseIndex, proid, qu
   }
 }
 
+CalculationJs.prototype.amountFixEvent = function (bilid, responseIndex, proid, queueMode = false) {
+  const instance = this;
+  const { totalContents, ea, bills } = this;
+  const { setQueue, colorChip, createNode, withOut, removeByClass, stringToDate, autoComma, isMac } = GeneralJs;
+  return async function (e) {
+    try {
+      const amountFixTargetClassName = "amountFixTargetClassName";
+      const zIndex = 5;
+      const thisBill = bills.find((obj) => { return obj.bilid === bilid });
+      const thisBilid = bilid;
+      const thisIndex = responseIndex;
+      const thisResponse = thisBill.responses[thisIndex];
+      const { top, left, height, width } = this.getBoundingClientRect();
+      let margin, whiteWidth, whiteHeight;
+      let whiteBase;
+      let size, weight;
+      let confirmState;
+
+      margin = 6;
+      whiteWidth = 160;
+      whiteHeight = 38;
+
+      size = 14;
+      weight = 400;
+
+      confirmState = Math.floor(thisResponse.items.reduce((acc, curr) => { return acc + curr.amount.pure }, 0));
+
+      createNode({
+        mother: totalContents,
+        class: [ amountFixTargetClassName ],
+        event: (e) => {
+          removeByClass(amountFixTargetClassName);
+        },
+        set: "fixed",
+        style: {
+          background: colorChip.realBlack,
+          opacity: String(0.3),
+          zIndex: String(zIndex),
+        }
+      });
+
+      whiteBase = createNode({
+        mother: totalContents,
+        class: [ amountFixTargetClassName ],
+        style: {
+          position: "fixed",
+          background: colorChip.white,
+          zIndex: String(zIndex),
+          top: String(top + height + margin) + ea,
+          left: String(left + (width / 2) - (whiteWidth / 2)) + ea,
+          borderRadius: String(5) + "px",
+          boxShadow: "0px 5px 15px -9px " + colorChip.shadow,
+          animation: "fadeuplite 0.3s ease",
+          width: String(whiteWidth) + ea,
+          height: String(whiteHeight) + ea,
+        }
+      });
+
+      whiteInput = createNode({
+        mother: whiteBase,
+        mode: "input",
+        attribute: {
+          type: "text"
+        },
+        set: "center",
+        event: {
+          keypress: async function (e) {
+            try {
+              if (e.key === "Enter") {
+                const thisValue = this.value.replace(/[^0-9]/gi, '');
+                if (thisValue !== "" && !Number.isNaN(Number(thisValue))) {
+                  const thisAmount = Number(thisValue);
+                  const res = await ajaxJson({
+                    bilid: thisBilid,
+                    responseIndex: thisIndex,
+                    amount: thisAmount,
+                  }, PYTHONHOST + "/passiveResponse", { equal: true });
+                  const thisBillIndex = bills.findIndex((obj) => { return obj.bilid === res.bilid });
+                  const thisProjectIndex = projects.findIndex((obj) => { return obj.proid === res.proid });
+                  instance.bills[thisBillIndex] = res.bill;
+                  instance.projects[thisProjectIndex].bill = res.bill;
+                  window.alert("업데이트 되었습니다!");
+                  removeByClass(amountFixTargetClassName);
+                  const loading = instance.mother.grayLoading();
+                  setQueue(() => {
+                    instance.contentsLoad();
+                    if (!queueMode) {
+                      (instance.whiteCardView(res.proid))();
+                    } else {
+                      (instance.queueView())();
+                    }
+                    loading.remove();
+                  }, 500);
+                }
+              }
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        },
+        style: {
+          width: withOut(0, ea),
+          height: String(isMac() ? 98 : 100) + '%',
+          textAlign: "center",
+          border: String(0),
+          borderRadius: String(5) + "px",
+          outline: String(0),
+          color: colorChip.green,
+          fontSize: String(size) + ea,
+          fontWeight: String(weight),
+        }
+      })
+
+      whiteInput.value = autoComma(confirmState);
+      whiteInput.focus();
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
 CalculationJs.prototype.excuteResponse = async function (bilid, responseIndex, date) {
   if (typeof bilid !== "string" || typeof responseIndex !== "number" || typeof date !== "object") {
     throw new Error("input => [ bilid, responseIndex, date ]");
@@ -3989,9 +4113,9 @@ CalculationJs.prototype.launching = async function () {
       project.phone = thisClient.phone;
     }
 
-    projects = projects.filter((obj) => {
-      return obj.proid !== "p1801_aa01s" && obj.proid !== "p1801_aa02s";
-    });
+    // projects = projects.filter((obj) => {
+    //   return obj.proid !== "p1801_aa01s" && obj.proid !== "p1801_aa02s";
+    // });
 
     this.bills = bills;
     this.projects = projects;

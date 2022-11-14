@@ -3142,6 +3142,91 @@ ReceiptRouter.prototype.rou_post_excuteRepay = function () {
   return obj;
 }
 
+ReceiptRouter.prototype.rou_post_passiveResponse = function () {
+  const instance = this;
+  const back = this.back;
+  const bill = this.bill;
+  const { equalJson, errorLog } = this.mother;
+  let obj = {};
+  obj.link = "/passiveResponse";
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.bilid === undefined || req.body.responseIndex === undefined || req.body.amount === undefined) {
+        throw new Error("invaild post");
+      }
+      let { bilid, responseIndex, amount } = equalJson(req.body);
+      let thisBill;
+      let whereQuery;
+      let updateQuery;
+      let thisResponse;
+      let thisItems;
+      let thisItem;
+
+      responseIndex = Number(responseIndex);
+      if (Number.isNaN(responseIndex)) {
+        throw new Error("invaild post");
+      }
+
+      amount = Number(amount);
+      if (Number.isNaN(amount)) {
+        throw new Error("invaild post");
+      }
+
+      thisBill = await bill.getBillById(bilid, { selfMongo: instance.mongolocal });
+      if (thisBill.responses[responseIndex] === undefined) {
+        throw new Error("invaild index");
+      }
+
+      thisResponse = thisBill.responses[responseIndex];
+      thisItems = thisResponse.items;
+      thisItem = thisItems[0];
+
+      whereQuery = { bilid };
+      updateQuery = {};
+
+      updateQuery["responses." + String(responseIndex) + ".items"] = [
+        {
+          id: thisItem.id,
+          class: thisItem.class,
+          name: thisItem.name,
+          description: thisItem.description,
+          info: thisItem.info,
+          unit: {
+            ea: thisItem.unit.ea,
+            price: amount,
+            number: 1,
+          },
+          amount: {
+            pure: amount,
+            commission: 0,
+          }
+        }
+      ];
+
+      await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+      thisBill = await bill.getBillById(bilid, { selfMongo: instance.mongolocal });
+
+      res.send(JSON.stringify({
+        bilid: thisBill.bilid,
+        proid: thisBill.links.proid,
+        bill: thisBill.toNormal()
+      }));
+
+    } catch (e) {
+      errorLog("Python 서버 문제 생김 (rou_post_passiveResponse): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+      res.send(JSON.stringify({ message: "error" }));
+    }
+  }
+  return obj;
+}
+
 ReceiptRouter.prototype.getAll = function () {
   let result, result_arr;
 
