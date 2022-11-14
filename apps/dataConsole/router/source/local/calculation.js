@@ -2405,8 +2405,8 @@ CalculationJs.prototype.queueView = function () {
           {
             value: autoComma(confirmState),
             color: colorChip.black,
-            pointer: false,
-            event: null,
+            pointer: true,
+            event: instance.amountFixEvent(needs[z].bill.bilid, needs[z].bill.responseIndex, needs[z].proid, true),
           },
           {
             value: autoComma(nonPayAmount),
@@ -2724,8 +2724,8 @@ CalculationJs.prototype.queueView = function () {
           {
             value: autoComma(confirmState),
             color: colorChip.black,
-            pointer: false,
-            event: null,
+            pointer: true,
+            event: instance.amountFixEvent(pending[z].bill.bilid, pending[z].bill.responseIndex, pending[z].proid, true),
           },
           {
             value: autoComma(nonPayAmount),
@@ -2869,8 +2869,8 @@ CalculationJs.prototype.queueView = function () {
           {
             value: autoComma(confirmState),
             color: colorChip.black,
-            pointer: false,
-            event: null,
+            pointer: true,
+            event: instance.amountFixEvent(needs[z].bill.bilid, needs[z].bill.responseIndex, needs[z].proid, true),
           },
           {
             value: autoComma(nonPayAmount),
@@ -3677,8 +3677,8 @@ CalculationJs.prototype.dateFixEvent = function (bilid, responseIndex, proid, qu
 
 CalculationJs.prototype.amountFixEvent = function (bilid, responseIndex, proid, queueMode = false) {
   const instance = this;
-  const { totalContents, ea, bills } = this;
-  const { setQueue, colorChip, createNode, withOut, removeByClass, stringToDate, autoComma, isMac } = GeneralJs;
+  const { totalContents, ea, bills, projects } = this;
+  const { setQueue, colorChip, createNode, withOut, removeByClass, stringToDate, autoComma, isMac, ajaxJson } = GeneralJs;
   return async function (e) {
     try {
       const amountFixTargetClassName = "amountFixTargetClassName";
