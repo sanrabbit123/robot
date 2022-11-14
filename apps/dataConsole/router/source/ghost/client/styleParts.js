@@ -174,334 +174,6 @@ StylePartsJs.prototype.insertNewsBox = function () {
   let contentsLineHeight;
   let subTitleSize, subTitleWeight, subTitleMarginBottom;
 
-  initSize = <%% 14, 14, 13, 12, 3.2 %%>;
-  initWeight = <%% 400, 400, 400, 400, 400 %%>;
-  initBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
-  initLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
-  initSecondMarginTop = <%% 12, 12, 12, 12, 4 %%>;
-
-  initPaddingTop = <%% 140, 110, 100, 82, 9 %%>;
-
-  leftMotherWidth = <%% 560, 460, 284, 250, 82 %%>;
-
-  titleLogWidth = <%% 250, 216, 160, 140, 34 %%>;
-  titleLogTop = <%% 96, 64, 60, 48, 2 %%>;
-
-  baseMotherMarginBottom = <%% 172, 172, 160, 160, 15 %%>;
-
-  descriptionPaddingTop = <%% 21, 21, 8, 6, 0.5 %%>;
-  partsWidth = <%% 100, 96, 90, 88, 33 %%>;
-
-  bottomLineWidth = <%% 420, 0, 0, 0, 0 %%>;
-  bottomLineHeight = <%% 40, 0, 0, 0, 0 %%>;
-
-  mobileStandardWidth = 80;
-
-  photoBetween = <%% 40, 40, 36, 30, 36 %%>;
-  between = <%% 30, 24, 24, 20, 6 %%>;
-
-  photoHeight = <%% 380, 380, 360, 280, 50 %%>;
-  photoWidth = <%% 692, 628, 540, 360, 64 %%>;
-
-  titleTongHeight = <%% 72, 64, 62, 56, 11 %%>;
-
-  logoWidth = <%% 438, 430, 430, 370, 69 %%>;
-
-  titleSize = <%% 21, 20, 20, 16, 3.5 %%>;
-  titleWeight = <%% 800, 800, 800, 800, 800 %%>;
-  titleLineHeight = <%% 1.56, 1.56, 1.56, 1.56, 1.56 %%>;
-  titlePadding = <%% 40, 40, 40, 30, 4 %%>;
-  titleLineTop = <%% (isMac() ? 35 : 33), (isMac() ? 30 : 28), (isMac() ? 30 : 28), 28, 5 %%>;
-
-  photoTongMarginTop = <%% 90, 90, 75, 64, 9 %%>;
-
-  contentsSize = <%% 14, 14, 13, 12, 3.2 %%>;
-  contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
-  contentsLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
-
-  subTitleSize = <%% 15, 15, 15, 14, 3.5 %%>;
-  subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-  subTitleMarginBottom = <%% 20, 20, 18, 16, 4 %%>;
-
-  svgBox = this.returnSvgBox();
-  contents = {
-    title: [
-      "드디어 홈리에종과",
-      "아파트멘터리가 만났습니다.",
-    ],
-    sub: [
-      (<&& "드디어 홈리에종과 아파트멘터리가 만났습니다." | "홈리에종과 아파트멘터리가 만났습니다." | "홈리에종과 아파트멘터리의 만남" | "홈리에종과 아파트멘터리의 만남" | "드디어 홈리에종과 아파트멘터리가 만났습니다." &&>),
-    ],
-    description: [
-      [
-        "라이프스타일 플랫폼으로 입지를 다져온 아파트멘터리, 집이라는 공간에서 더 나은 삶을 영위하도록 하겠다는 미션 아래 홈리에종과 만나게 되었습니다.",
-      ],
-      [
-        "양사는 다양한 고객층의 니즈를 충족하고, 인테리어에 대한 부정적인 인식을 ‘긍정’으로 변화시켜나가고자 합니다. 더불어 홈리에종 디자이너님들께 더 발전적인 프로젝트 운영을 도울 수 있도록 재밌고 실질적인 방법들을 모색해 볼게요.",
-      ]
-    ],
-  };
-
-  if (media[2] || media[3]) {
-    contents.description[1] = [
-      "양사는 다양한 고객층의 니즈를 충족하고, 인테리어에 대한 부정적인 인식을 ‘긍정’으로 변화시켜나가고자 합니다.",
-    ]
-  }
-
-  if (mobile) {
-
-    createNode({
-      mother: baseTong,
-      set: "flex",
-      style: {
-        width: desktop ? String(standardWidth) + ea : String(mobileStandardWidth + 2) + ea,
-        left: desktop ? withOut(50, standardWidth / 2, ea) : withOut(50, (mobileStandardWidth + 2) / 2, ea),
-        marginBottom: String(baseMotherMarginBottom) + ea,
-      },
-      child: {
-        set: "center",
-        style: {
-          width: withOut(0, ea),
-          height: String(titleTongHeight) + ea,
-        },
-        child: {
-          mode: "svg",
-          source: svgBox.news.multiple(colorChip.black),
-          set: "inline",
-          style: {
-            width: String(logoWidth) + ea,
-          }
-        },
-        next: {
-          set: "center",
-          style: {
-            width: withOut(0, ea),
-            height: String(titleTongHeight) + ea,
-          },
-          child: {
-            text: contents.title.join("\n"),
-            set: "inline",
-            style: {
-              fontSize: String(titleSize) + ea,
-              fontWeight: String(titleWeight),
-              color: colorChip.black,
-              textAlign: "center",
-              lineHeight: String(titleLineHeight),
-              paddingRight: String(titlePadding) + ea,
-              paddingLeft: String(titlePadding) + ea,
-              background: colorChip.white,
-            },
-            previous: {
-              set: "absolute",
-              style: {
-                width: withOut(0, ea),
-                top: String(0),
-                height: String(titleLineTop) + ea,
-                borderBottom: "1px solid " + colorChip.gray3,
-              }
-            }
-          },
-          next: {
-            set: "flex",
-            style: {
-              flexDirection: desktop ? "row" : "column",
-              width: withOut(0, ea),
-              marginTop: String(photoTongMarginTop) + ea,
-            },
-            child: {
-              set: "inline",
-              style: {
-                width: desktop ? String(photoWidth) + ea : withOut(0, ea),
-                height: String(photoHeight) + ea,
-                backgroundImage: "url('" + StylePartsJs.binaryPath + "/news.jpg" + "')",
-                backgroundPosition: "50% 50%",
-                backgroundSize: "auto 100%",
-                borderRadius: String(5) + "px",
-                marginRight: desktop ? String(photoBetween) + ea : "",
-              },
-              next: {
-                set: "inline",
-                style: {
-                  flexDirection: "column",
-                  width: desktop ? "calc(calc(calc(100% - " + String(photoWidth) + ea + ") - " + String(photoBetween) + ea + ") / " + String(1) + ")" : withOut(0, ea),
-                  height: desktop ? String(photoHeight) + ea : "",
-                  borderBottom: "1px solid " + colorChip.gray3,
-                },
-                child: {
-                  set: "flex",
-                  text: contents.description[0].join("\n") + "\n\n" + contents.description[1].join("\n"),
-                  style: {
-                    fontSize: String(contentsSize) + ea,
-                    fontWeight: String(contentsWeight),
-                    color: colorChip.black,
-                    lineHeight: String(contentsLineHeight),
-                    marginBottom: String(between) + ea,
-                    marginTop: String(12) + ea,
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    });
-
-  } else {
-
-    baseMother = createNode({
-      mother: baseTong,
-      set: "flex",
-      style: {
-        flexDirection: "row",
-        width: String(standardWidth) + ea,
-        left: withOut(50, standardWidth / 2, ea),
-        marginBottom: String(baseMotherMarginBottom) + ea,
-      }
-    });
-
-    leftMother = createNode({
-      mother: baseMother,
-      set: "inline",
-      style: {
-        width: String(leftMotherWidth) + ea,
-      },
-      child: {
-        set: "flex",
-        style: {
-          textAlign: "left",
-        },
-        child: {
-          mode: "svg",
-          source: svgBox.news.multipleDesktop(colorChip.black),
-          style: {
-            display: "block",
-            position: "relative",
-            width: String(titleLogWidth) + ea,
-            top: String(titleLogTop) + ea,
-          }
-        },
-      }
-    })
-
-    createNode({
-      mother: leftMother,
-      style: {
-        display: "flex",
-        position: "relative",
-        flexDirection: "column",
-        paddingTop: String(descriptionPaddingTop) + ea,
-        marginTop: String(initPaddingTop) + ea,
-      },
-      children: [
-        {
-          text: contents.description[0].join("\n"),
-          style: {
-            display: "block",
-            marginTop: String(initSecondMarginTop) + ea,
-            fontSize: String(initSize) + ea,
-            fontWeight: String(initWeight),
-            color: colorChip.black,
-            lineHeight: String(initLineHeight),
-            width: String(75) + '%',
-          },
-          bold: {
-            fontWeight: String(initBoldWeight),
-            color: colorChip.black,
-          }
-        },
-        {
-          text: contents.description[1].join("\n"),
-          style: {
-            display: "block",
-            marginTop: String(initSecondMarginTop) + ea,
-            fontSize: String(initSize) + ea,
-            fontWeight: String(initWeight),
-            color: colorChip.black,
-            lineHeight: String(initLineHeight),
-            width: String(75) + '%',
-          },
-          bold: {
-            fontWeight: String(initBoldWeight),
-            color: colorChip.black,
-          }
-        }
-      ]
-    });
-
-    createNode({
-      mother: leftMother,
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        borderBottom: "1px solid " + colorChip.gray3,
-        width: String(bottomLineWidth) + ea,
-        height: String(bottomLineHeight) + ea,
-      }
-    });
-
-    rightMother = createNode({
-      mother: baseMother,
-      set: "inline",
-      style: {
-        width: withOut(leftMotherWidth, ea),
-      }
-    });
-
-    createNode({
-      mother: rightMother,
-      style: {
-        display: "block",
-        position: "relative",
-        width: withOut(0, ea),
-        height: withOut(0, ea),
-        backgroundImage: "url('" + StylePartsJs.binaryPath + "/news.jpg" + "')",
-        backgroundPosition: "50% 50%",
-        backgroundSize: (<&& "100% auto" | "auto 100%" | "auto 100%" | "auto 100%" | "100% auto" &&>),
-        borderRadius: String(5) + "px",
-        boxShadow: "3px 3px 15px -9px " + colorChip.shadow,
-      }
-    });
-
-  }
-
-}
-
-StylePartsJs.prototype.insertNewsBox = function () {
-  const instance = this;
-  const { totalContents, ea, standardWidth, media, baseTong, localColor } = this;
-  const { nodeQueue, createNode, withOut, colorChip, cleanChildren, selfHref, ajaxJson, isMac } = GeneralJs;
-  const mobile = media[4];
-  const desktop = !mobile;
-  let baseMother;
-  let svgBox;
-  let contents;
-  let initSize, initWeight;
-  let initBoldWeight, initLineHeight;
-  let initSecondMarginTop;
-  let leftMother, rightMother;
-  let leftMotherWidth;
-  let initPaddingTop;
-  let titleLogWidth;
-  let titleLogTop;
-  let baseMotherMarginBottom;
-  let descriptionPaddingTop;
-  let partsWidth;
-  let bottomLineWidth;
-  let bottomLineHeight;
-  let mobileStandardWidth;
-  let between;
-  let photoBetween;
-  let photoHeight;
-  let photoWidth;
-  let titleTongHeight;
-  let titleSize, titleWeight, titleLineHeight, titlePadding;
-  let titleLineTop;
-  let logoWidth;
-  let photoTongMarginTop;
-  let contentsSize, contentsWeight;
-  let contentsLineHeight;
-  let subTitleSize, subTitleWeight, subTitleMarginBottom;
-
   initSize = <%% 15, 14, 13, 12, 3.2 %%>;
   initWeight = <%% 400, 400, 400, 400, 400 %%>;
   initBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -533,9 +205,9 @@ StylePartsJs.prototype.insertNewsBox = function () {
 
   titleTongHeight = <%% 72, 64, 62, 56, 10.6 %%>;
 
-  logoWidth = <%% 438, 430, 430, 370, 69 %%>;
+  logoWidth = <%% 445, 430, 430, 370, 70 %%>;
 
-  titleSize = <%% 21, 20, 20, 16, 3.5 %%>;
+  titleSize = <%% 20, 19, 19, 16, 3.4 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.56, 1.56, 1.56, 1.56, 1.56 %%>;
   titlePadding = <%% 40, 40, 40, 30, 4 %%>;
@@ -547,7 +219,7 @@ StylePartsJs.prototype.insertNewsBox = function () {
   contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
   contentsLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
-  subTitleSize = <%% 15, 15, 15, 14, 3.5 %%>;
+  subTitleSize = <%% 15, 15, 15, 14, 3.4 %%>;
   subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
   subTitleMarginBottom = <%% 20, 20, 18, 16, 4 %%>;
 
@@ -558,14 +230,14 @@ StylePartsJs.prototype.insertNewsBox = function () {
       "그리고 더 풍성한 삶을 위해",
     ],
     sub: [
-      "드디어 아파트멘터리와 홈리에종이 만났습니다.",
+      "드디어 홈리에종과 아파트멘터리가 만났습니다.",
     ],
     description: [
       [
-        "리모델링 스타트업을 넘어 라이프스타일 플랫폼으로서의 입지를 꾸준히 다져온 아파트멘터리, 생활을 위한 디자인으로 집의 가치를 전하고자 홈스타일링 플랫폼으로서 자리를 굳건히 지켜온 홈리에종이 집이라는 공간에서 더 나은 삶을 영위하도록 하겠다는 미션 아래 만나게 되었습니다.",
+        "생활을 위한 디자인으로 집의 가치를 전하고자 홈스타일링 플랫폼으로서 자리를 굳건히 지켜온 홈리에종과 리모델링 스타트업을 넘어 라이프스타일 플랫폼으로서의 입지를 꾸준히 다져온 아파트멘터리가 집이라는 공간에서 더 나은 삶을 영위하도록 하겠다는 미션 아래 만나게 되었습니다.",
       ],
       [
-        "앞으로 양사는 끊임없는 협력으로 다양한 고객층의 니즈를 충족하고, 인테리어에 대한 부정적인 인식을 ‘긍정’으로 변화시켜나가고자 합니다. 더불어 우리 홈리에종 파트너 디자이너님들께 더 발전적인 프로젝트 운영을 도울 수 있도록 재밌고 실질적인 방법들을 모색해 볼게요.",
+        "앞으로 양사는 끊임없는 협력으로 다양한 고객층의 니즈를 충족하고, 인테리어에 대한 부정적인 인식을 ‘긍정’으로 변화시켜나가고자 합니다. 더불어 홈리에종 파트너 디자이너님들과 함께 더 발전적으로 프로젝트 운영을 해 나갈 수 있도록 재미있고 실질적인 방법을 모색하겠습니다!",
       ]
     ],
   };
@@ -679,7 +351,6 @@ StylePartsJs.prototype.insertNewsBox = function () {
 
 }
 
-
 StylePartsJs.prototype.insertSubInitBox = function () {
   const instance = this;
   const { totalContents, ea, standardWidth, media, baseTong, localColor } = this;
@@ -710,17 +381,17 @@ StylePartsJs.prototype.insertSubInitBox = function () {
   initLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
   initSecondMarginTop = <%% 12, 12, 12, 12, 4 %%>;
 
-  initPaddingTop = <%% 100, 100, 100, 100, 9 %%>;
+  initPaddingTop = <%% 100, 80, 64, 60, 11 %%>;
 
   leftMotherWidth = <%% 560, 460, 284, 250, 82 %%>;
 
   titleLogWidth = <%% 250, 216, 160, 140, 34 %%>;
   titleLogTop = <%% 96, 64, 60, 48, 2 %%>;
 
-  baseMotherMarginBottom = <%% 120, 120, 120, 120, 3 %%>;
+  baseMotherMarginBottom = <%% 120, 100, 80, 72, 11.5 %%>;
 
-  descriptionPaddingTop = <%% 21, 21, 8, 6, 0.5 %%>;
-  partsWidth = <%% 130, 130, 90, 88, 33 %%>;
+  descriptionPaddingTop = <%% 21, 21, 10, 8, 3 %%>;
+  partsWidth = <%% 130, 130, 90, 88, 24 %%>;
 
   bottomLineWidth = <%% 400, 0, 0, 0, 0 %%>;
   bottomLineHeight = <%% 40, 0, 0, 0, 0 %%>;
@@ -732,8 +403,8 @@ StylePartsJs.prototype.insertSubInitBox = function () {
     year: (new Date()).getFullYear(),
     init: [
       [
-        "3500여개의 추천 경험과 디자이너 케어 시스템을 바탕으로 누적된 디자이너",
-        "운영 경험하여 검증된 디자이너와 엄선된 품질의 자재가 함께합니다.",
+        "3500여 개의 추천 경험과 디자이너 케어 시스템을 바탕으로 누적된 디자이너",
+        "운영 경험을 바탕으로 검증된 디자이너 프로젝트와 엄선된 품질의 자재가 함께합니다.",
       ]
     ],
     context: [
@@ -760,18 +431,6 @@ StylePartsJs.prototype.insertSubInitBox = function () {
     ]
   };
 
-  if (media[2] || media[3]) {
-    contents.init = [
-      [],
-      [
-        "시공부터 스타일링까지, <b%전체적인",
-        "프로세스를 홈리에종 디자이너와 함께%b>",
-        "아파트멘터리의 자재를 고르는",
-        "스타일 파츠 서비스로 진행해보세요.",
-      ]
-    ];
-  }
-
   baseMother = createNode({
     mother: baseTong,
     style: {
@@ -788,8 +447,8 @@ StylePartsJs.prototype.insertSubInitBox = function () {
     mother: baseMother,
     style: {
       position: "absolute",
-      width: String(window.innerWidth) + ea,
-      left: String(-1 * ((window.innerWidth - standardWidth) / 2)) + ea,
+      width: String(window.innerWidth) + "px",
+      left: desktop ? String(-1 * ((window.innerWidth - standardWidth) / 2)) + "px" : "calc(calc(calc(" + String(window.innerWidth) + "px" + " - " + String(mobileStandardWidth) + ea + ") / 2) * -1)",
       height: withOut(0, ea),
       top: String(0),
       background: colorChip.gray1,
@@ -836,16 +495,14 @@ StylePartsJs.prototype.insertSubInitBox = function () {
       position: "relative",
       flexDirection: "column",
       paddingTop: String(descriptionPaddingTop) + ea,
-      paddingLeft: desktop ? "" : String(41) + ea,
-      top: desktop ? "" : String(-22) + ea,
     },
     children: [
       {
         text: "<b%첫 번째 프로젝트, 디자이너 그리고 자재%b>",
         style: {
-          display: (media[2] || media[3]) ? "none" : "block",
-          fontSize: String(<&& 24 | 24 | 24 | 24 | 3.5 &&>) + ea,
-          marginBottom: String(<&& 8 | 8 | 8 | 8 | 1 &&>) + ea,
+          display: "block",
+          fontSize: String(<&& 24 | 24 | 22 | 19 | 4.1 &&>) + ea,
+          marginBottom: String(<&& 8 | 8 | 6 | 6 | 1 &&>) + ea,
           fontWeight: String(initWeight),
           color: colorChip.black,
           lineHeight: String(initLineHeight),
@@ -858,7 +515,7 @@ StylePartsJs.prototype.insertSubInitBox = function () {
       {
         text: contents.init[0].join(desktop ? "\n" : " "),
         style: {
-          display: (media[2] || media[3]) ? "none" : "block",
+          display: "block",
           fontSize: String(initSize) + ea,
           fontWeight: String(initWeight),
           color: colorChip.black,
@@ -2808,7 +2465,7 @@ StylePartsJs.prototype.insertStyleBox = function () {
   imageDescriptionPaddingTop = <%% 44, 44, 44, 36, 3 %%>;
   imagePartsWidth = <%% 125, 125, 110, 84, 21 %%>;
 
-  imageTitleSize = <%% 22, 21, 18, 16, 4.4 %%>;
+  imageTitleSize = <%% 22, 21, 18, 16, 4 %%>;
   imageTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
   imageTitleMarginTop = <%% 20, 20, 16, 16, 1.5 %%>;
   imageDescriptionSize = <%% 14, 14, 13, 12, 3.2 %%>;
