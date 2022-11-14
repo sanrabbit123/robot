@@ -187,7 +187,7 @@ StylePartsJs.prototype.insertNewsBox = function () {
   titleLogWidth = <%% 250, 216, 160, 140, 34 %%>;
   titleLogTop = <%% 96, 64, 60, 48, 2 %%>;
 
-  baseMotherMarginBottom = <%% 12, 12, 10, 10, 15 %%>;
+  baseMotherMarginBottom = <%% 172, 172, 160, 160, 15 %%>;
 
   descriptionPaddingTop = <%% 21, 21, 8, 6, 0.5 %%>;
   partsWidth = <%% 100, 96, 90, 88, 33 %%>;
@@ -466,6 +466,220 @@ StylePartsJs.prototype.insertNewsBox = function () {
 
 }
 
+StylePartsJs.prototype.insertNewsBox = function () {
+  const instance = this;
+  const { totalContents, ea, standardWidth, media, baseTong, localColor } = this;
+  const { nodeQueue, createNode, withOut, colorChip, cleanChildren, selfHref, ajaxJson, isMac } = GeneralJs;
+  const mobile = media[4];
+  const desktop = !mobile;
+  let baseMother;
+  let svgBox;
+  let contents;
+  let initSize, initWeight;
+  let initBoldWeight, initLineHeight;
+  let initSecondMarginTop;
+  let leftMother, rightMother;
+  let leftMotherWidth;
+  let initPaddingTop;
+  let titleLogWidth;
+  let titleLogTop;
+  let baseMotherMarginBottom;
+  let descriptionPaddingTop;
+  let partsWidth;
+  let bottomLineWidth;
+  let bottomLineHeight;
+  let mobileStandardWidth;
+  let between;
+  let photoBetween;
+  let photoHeight;
+  let photoWidth;
+  let titleTongHeight;
+  let titleSize, titleWeight, titleLineHeight, titlePadding;
+  let titleLineTop;
+  let logoWidth;
+  let photoTongMarginTop;
+  let contentsSize, contentsWeight;
+  let contentsLineHeight;
+  let subTitleSize, subTitleWeight, subTitleMarginBottom;
+
+  initSize = <%% 15, 14, 13, 12, 3.2 %%>;
+  initWeight = <%% 400, 400, 400, 400, 400 %%>;
+  initBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+  initLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
+  initSecondMarginTop = <%% 12, 12, 12, 12, 4 %%>;
+
+  initPaddingTop = <%% 180, 110, 110, 82, 9 %%>;
+
+  leftMotherWidth = <%% 600, 460, 284, 250, 82 %%>;
+
+  titleLogWidth = <%% 250, 216, 160, 140, 34 %%>;
+  titleLogTop = <%% 96, 64, 60, 48, 2 %%>;
+
+  baseMotherMarginBottom = <%% 200, 190, 140, 110, 15 %%>;
+
+  descriptionPaddingTop = <%% 21, 21, 8, 6, 0.5 %%>;
+  partsWidth = <%% 100, 96, 90, 88, 33 %%>;
+
+  bottomLineWidth = <%% 400, 0, 0, 0, 0 %%>;
+  bottomLineHeight = <%% 40, 0, 0, 0, 0 %%>;
+
+  mobileStandardWidth = 80;
+
+  photoBetween = <%% 40, 40, 36, 30, 36 %%>;
+  between = <%% 30, 24, 24, 20, 6 %%>;
+
+  photoHeight = <%% 380, 380, 360, 280, 50 %%>;
+  photoWidth = <%% 692, 628, 540, 360, 64 %%>;
+
+  titleTongHeight = <%% 72, 64, 62, 56, 10.6 %%>;
+
+  logoWidth = <%% 438, 430, 430, 370, 69 %%>;
+
+  titleSize = <%% 21, 20, 20, 16, 3.5 %%>;
+  titleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  titleLineHeight = <%% 1.56, 1.56, 1.56, 1.56, 1.56 %%>;
+  titlePadding = <%% 40, 40, 40, 30, 4 %%>;
+  titleLineTop = <%% (isMac() ? 35 : 33), (isMac() ? 30 : 28), (isMac() ? 30 : 28), 28, 5 %%>;
+
+  photoTongMarginTop = <%% 90, 90, 75, 64, 9 %%>;
+
+  contentsSize = <%% 14, 14, 13, 12, 3.2 %%>;
+  contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
+  contentsLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+
+  subTitleSize = <%% 15, 15, 15, 14, 3.5 %%>;
+  subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  subTitleMarginBottom = <%% 20, 20, 18, 16, 4 %%>;
+
+  svgBox = this.returnSvgBox();
+  contents = {
+    title: [
+      "똑같은 구조, 다른 라이프스타일",
+      "그리고 더 풍성한 삶을 위해",
+    ],
+    sub: [
+      "드디어 아파트멘터리와 홈리에종이 만났습니다.",
+    ],
+    description: [
+      [
+        "리모델링 스타트업을 넘어 라이프스타일 플랫폼으로서의 입지를 꾸준히 다져온 아파트멘터리, 생활을 위한 디자인으로 집의 가치를 전하고자 홈스타일링 플랫폼으로서 자리를 굳건히 지켜온 홈리에종이 집이라는 공간에서 더 나은 삶을 영위하도록 하겠다는 미션 아래 만나게 되었습니다.",
+      ],
+      [
+        "앞으로 양사는 끊임없는 협력으로 다양한 고객층의 니즈를 충족하고, 인테리어에 대한 부정적인 인식을 ‘긍정’으로 변화시켜나가고자 합니다. 더불어 우리 홈리에종 파트너 디자이너님들께 더 발전적인 프로젝트 운영을 도울 수 있도록 재밌고 실질적인 방법들을 모색해 볼게요.",
+      ]
+    ],
+  };
+
+  createNode({
+    mother: baseTong,
+    set: "flex",
+    style: {
+      width: desktop ? String(standardWidth) + ea : String(mobileStandardWidth + 2) + ea,
+      left: desktop ? withOut(50, standardWidth / 2, ea) : withOut(50, (mobileStandardWidth + 2) / 2, ea),
+      marginBottom: String(baseMotherMarginBottom) + ea,
+    },
+    child: {
+      set: "center",
+      style: {
+        width: withOut(0, ea),
+        height: String(titleTongHeight) + ea,
+      },
+      child: {
+        mode: "svg",
+        source: svgBox.news.multiple(colorChip.black),
+        set: "inline",
+        style: {
+          width: String(logoWidth) + ea,
+        }
+      },
+      next: {
+        set: "center",
+        style: {
+          width: withOut(0, ea),
+          height: String(titleTongHeight) + ea,
+        },
+        child: {
+          text: contents.title.join("\n"),
+          set: "inline",
+          style: {
+            fontSize: String(titleSize) + ea,
+            fontWeight: String(titleWeight),
+            color: colorChip.black,
+            textAlign: "center",
+            lineHeight: String(titleLineHeight),
+            paddingRight: String(titlePadding) + ea,
+            paddingLeft: String(titlePadding) + ea,
+            background: colorChip.white,
+          },
+          previous: {
+            set: "absolute",
+            style: {
+              width: withOut(0, ea),
+              top: String(0),
+              height: String(titleLineTop) + ea,
+              borderBottom: "1px solid " + colorChip.gray3,
+            }
+          }
+        },
+        next: {
+          set: "flex",
+          style: {
+            flexDirection: desktop ? "row" : "column",
+            width: withOut(0, ea),
+            marginTop: String(photoTongMarginTop) + ea,
+          },
+          child: {
+            set: "inline",
+            style: {
+              width: desktop ? String(photoWidth) + ea : withOut(0, ea),
+              height: String(photoHeight) + ea,
+              backgroundImage: "url('" + StylePartsJs.binaryPath + "/news.jpg" + "')",
+              backgroundPosition: "50% 50%",
+              backgroundSize: "auto 100%",
+              borderRadius: String(5) + "px",
+              marginRight: desktop ? String(photoBetween) + ea : "",
+            },
+            next: {
+              set: "inline",
+              style: {
+                flexDirection: "column-reverse",
+                width: desktop ? "calc(calc(calc(100% - " + String(photoWidth) + ea + ") - " + String(photoBetween) + ea + ") / " + String(1) + ")" : withOut(0, ea),
+                height: desktop ? String(photoHeight) + ea : "",
+                borderBottom: "1px solid " + colorChip.gray3,
+              },
+              child: {
+                set: "flex",
+                text: contents.sub.join("\n"),
+                style: {
+                  fontSize: String(subTitleSize) + ea,
+                  fontWeight: String(subTitleWeight),
+                  color: colorChip.black,
+                  marginBottom: String(subTitleMarginBottom) + ea,
+                  textAlign: desktop ? "left" : "center",
+                  marginTop: desktop ? "" : String(12) + ea,
+                },
+                previous: {
+                  set: "flex",
+                  text: contents.description[0].join("\n") + "\n\n" + contents.description[1].join("\n"),
+                  style: {
+                    fontSize: String(contentsSize) + ea,
+                    fontWeight: String(contentsWeight),
+                    color: colorChip.black,
+                    lineHeight: String(contentsLineHeight),
+                    marginBottom: String(between) + ea,
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  });
+
+}
+
+
 StylePartsJs.prototype.insertSubInitBox = function () {
   const instance = this;
   const { totalContents, ea, standardWidth, media, baseTong, localColor } = this;
@@ -496,14 +710,14 @@ StylePartsJs.prototype.insertSubInitBox = function () {
   initLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
   initSecondMarginTop = <%% 12, 12, 12, 12, 4 %%>;
 
-  initPaddingTop = <%% 190, 190, 190, 200, 9 %%>;
+  initPaddingTop = <%% 100, 100, 100, 100, 9 %%>;
 
   leftMotherWidth = <%% 560, 460, 284, 250, 82 %%>;
 
   titleLogWidth = <%% 250, 216, 160, 140, 34 %%>;
   titleLogTop = <%% 96, 64, 60, 48, 2 %%>;
 
-  baseMotherMarginBottom = <%% 240, 240, 210, 200, 3 %%>;
+  baseMotherMarginBottom = <%% 120, 120, 120, 120, 3 %%>;
 
   descriptionPaddingTop = <%% 21, 21, 8, 6, 0.5 %%>;
   partsWidth = <%% 130, 130, 90, 88, 33 %%>;
@@ -566,9 +780,21 @@ StylePartsJs.prototype.insertSubInitBox = function () {
       flexDirection: desktop ? "row" : "column",
       width: desktop ? String(standardWidth) + ea : String(mobileStandardWidth + 2) + ea,
       left: desktop ? withOut(50, standardWidth / 2, ea) : withOut(50, mobileStandardWidth / 2, ea),
-      marginBottom: String(baseMotherMarginBottom) + ea,
+      paddingBottom: String(baseMotherMarginBottom) + ea,
     }
   });
+
+  createNode({
+    mother: baseMother,
+    style: {
+      position: "absolute",
+      width: String(window.innerWidth) + ea,
+      left: String(-1 * ((window.innerWidth - standardWidth) / 2)) + ea,
+      height: withOut(0, ea),
+      top: String(0),
+      background: colorChip.gray1,
+    }
+  })
 
   leftMother = createNode({
     mother: baseMother,
@@ -648,7 +874,6 @@ StylePartsJs.prototype.insertSubInitBox = function () {
 
 
 }
-
 
 StylePartsJs.prototype.insertInitBox = function () {
   const instance = this;
@@ -1317,6 +1542,7 @@ StylePartsJs.prototype.insertLeadBox = function () {
       width: String(standardWidth) + ea,
       left: withOut(50, standardWidth / 2, ea),
       paddingTop: String(paddingTop) + ea,
+      paddingBottom: (returnGet().mode === "inner" ? String(paddingTop) + ea : ""),
     }
   });
 
@@ -2473,7 +2699,7 @@ StylePartsJs.prototype.insertMatchupBox = function () {
 StylePartsJs.prototype.insertStyleBox = function () {
   const instance = this;
   const { totalContents, ea, standardWidth, media, baseTong, localColor } = this;
-  const { createNode, withOut, colorChip, cleanChildren, selfHref, ajaxJson, svgMaker, isMac, blankHref } = GeneralJs;
+  const { createNode, withOut, colorChip, cleanChildren, selfHref, ajaxJson, svgMaker, isMac, blankHref, returnGet } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
   let baseMother;
@@ -2528,6 +2754,9 @@ StylePartsJs.prototype.insertStyleBox = function () {
   svgBox = this.returnSvgBox();
 
   paddingTop = <%% 200, 160, 130, 100, 14 %%>;
+  if (returnGet().mode === "inner") {
+    paddingTop = <%% 180, 150, 120, 100, 14 %%>;
+  }
 
   titleSize = <%% 27, 26, 23, 21, 5.1 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -4203,13 +4432,16 @@ StylePartsJs.prototype.launching = async function (loading) {
           if (getObj.mode === "inner") {
             instance.insertNewsBox();
             instance.insertSubInitBox();
+            instance.insertStyleBox();
+            instance.insertMatchupBox();
+            instance.insertLeadBox();
           } else {
             instance.insertInitBox();
+            instance.insertHeadlineBox();
+            instance.insertLeadBox();
+            instance.insertMatchupBox();
+            instance.insertStyleBox();
           }
-          instance.insertHeadlineBox();
-          instance.insertLeadBox();
-          instance.insertMatchupBox();
-          instance.insertStyleBox();
           instance.insertBenefitsBox();
           instance.insertProcessBox();
         } catch (e) {
