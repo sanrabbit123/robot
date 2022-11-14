@@ -715,7 +715,7 @@ FrontIndexJs.prototype.insertBlackBox = function () {
     class: [ bannerClassName ],
     event: {
       click: (e) => {
-        selfHref(FRONTHOST + "/miniAbout.php");
+        selfHref(FRONTHOST + "/styleparts.php?mode=inner");
       }
     },
     style: {
@@ -731,7 +731,7 @@ FrontIndexJs.prototype.insertBlackBox = function () {
 
   createNode({
     mother: blockTong,
-    text: "쓰던 가구 그대로? 가심비 스타일링의 비밀!",
+    text: (desktop ? "홈리에종 X 아파트멘터리, 스타일파츠 프로젝트" : "홈리에종 X 아파트멘터리, 스타일파츠"),
     style: {
       top: (isMac() || mobile) ? String(0) : String(3) + ea,
       fontSize: String(titleSize) + ea,
@@ -744,7 +744,7 @@ FrontIndexJs.prototype.insertBlackBox = function () {
 
   createNode({
     mother: blockTong,
-    text: "HomeLiaison Mini",
+    text: "style parts",
     style: {
       top: (isMac() || mobile) ? String(0) : String(3) + ea,
       fontSize: String(subTitleSize) + ea,
@@ -781,7 +781,7 @@ FrontIndexJs.prototype.insertBlackBox = function () {
     },
     children: [
       {
-        text: "서비스 소개",
+        text: "스타일 파츠",
         style: {
           position: "relative",
           display: "inline-block",
