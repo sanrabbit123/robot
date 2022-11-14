@@ -14,19 +14,43 @@ const HtmlMaker = function (mother = null, back = null, address = null) {
   this.dir = process.cwd() + "/apps/htmlMaker";
 }
 
-HtmlMaker.prototype.returnHtml = function () {
+HtmlMaker.prototype.returnHtml = async function (func) {
+  if (typeof func !== "function") {
+    throw new Error("invaild input");
+  }
   const instance = this;
   const jsdom = require("jsdom");
   const { JSDOM } = jsdom;
-  let rawHtml, html, dom;
+  const { mediaQuery, fileSystem } = this.mother;
+  try {
+    let rawHtml, html, dom;
+    let svgTongString;
+    let generalString;
+    let consoleGeneralString;
+    let generalCode;
+    let localCode;
 
+    svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/string/svgTong.js` ]);
+    generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
+    consoleGeneralString = await fileSystem(`readString`, [ `${process.cwd()}/apps/dataConsole/router/source/general/general.js` ]);
 
-  rawHtml = `<html><head></head><body><div id="totalcontents"></div><script>const totalContents = document.getElementById("totalcontents");\n</script></body></html>`;
+    generalCode = mediaQuery(svgTongString + "\n\n" + generalString + "\n\n" + consoleGeneralString + "\n\n");
 
-  dom = new JSDOM(rawHtml, { runScripts: "dangerously" });
-  html = dom.window.document.getElementById("totalcontents").innerHTML;
+    localCode = `
+    const LocalJs = function () { this.mother = new GeneralJs(); };
+    LocalJs.prototype.launching = ${func.toString()};
+    const app = new LocalJs();app.launching();`;
 
-  return html;
+    rawHtml = `<html><head><style></style></head><body><div id="totalcontents"></div><script>const totalContents = document.getElementById("totalcontents");\n${generalCode.code + "\n\n" + localCode}</script></body></html>`;
+
+    dom = new JSDOM(rawHtml, { runScripts: "dangerously" });
+    html = dom.window.document.getElementById("totalcontents").innerHTML;
+
+    return html;
+
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 module.exports = HtmlMaker;

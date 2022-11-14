@@ -45,6 +45,7 @@ const ImageReader = require(APP_PATH + "/imageReader/imageReader.js");
 const LogConsole = require(APP_PATH + "/logConsole/logConsole.js");
 const FacebookAPIs = require(APP_PATH + "/facebookAPIs/facebookAPIs.js");
 const HumanPacket = require(APP_PATH + "/humanPacket/humanPacket.js");
+const HtmlMaker = require(APP_PATH + "/htmlMaker/htmlMaker.js");
 
 const DevContext = function () {
   this.mother = new Mother();
@@ -128,7 +129,6 @@ DevContext.prototype.launching = async function () {
     //   await selfMongo.db("miro81").collection("client").updateOne(whereQuery, { $set: updateQuery });
     //   console.log(whereQuery, updateQuery);
     // }
-
 
 
 

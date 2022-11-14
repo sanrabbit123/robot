@@ -20,6 +20,8 @@ const HumanPacket = function () {
   this.webmailPort = 110;
   this.webmailSmtpHost = "smtp.cafe24.com";
   this.webmailSmtpPort = 587;
+  this.webmailSmtpId = "help";
+  this.webmailSmtpPwd = "hlofwis83!";
 }
 
 HumanPacket.prototype.sendPacket = async function (toObj, subject, contents) {
@@ -525,32 +527,48 @@ HumanPacket.prototype.mailFilter = async function (id, pwd, from, date) {
 }
 
 HumanPacket.prototype.sendMail = async function (obj) {
-  if (typeof obj !== "obj" || obj === null) {
+  if (typeof obj !== "object" || obj === null) {
     throw new Error("invaild input");
   }
   if (obj.to === undefined || obj.subject === undefined || obj.body === undefined) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const { fileSystem } = this.mother;
+  const { fileSystem, shellExec, pythonExecute } = this.mother;
   const { dir, moduleDir } = this;
   const { to, subject, body } = obj;
+  const tempDir = process.cwd() + "/temp";
+  const pythonTempScriptName = "pythonTempScriptName_" + String((new Date()).valueOf()) + ".py";
   try {
     let pythonScript;
-
-
+    let res;
 
     pythonScript = await fileSystem(`readString`, [ `${moduleDir}/smtp.py` ]);
 
+    pythonScript = pythonScript.replace(/____sendTo____/g, obj.to);
+    pythonScript = pythonScript.replace(/____subject____/g, obj.subject);
+    pythonScript = pythonScript.replace(/____html____/g, obj.body);
 
+    pythonScript = pythonScript.replace(/____id____/g, this.webmailSmtpId + "@" + this.address.frontinfo.host);
+    pythonScript = pythonScript.replace(/____pwd____/g, this.webmailSmtpPwd);
 
+    pythonScript = pythonScript.replace(/____host____/g, this.webmailSmtpHost);
+    pythonScript = pythonScript.replace(/____port____/g, this.webmailSmtpPort);
 
+    await fileSystem(`write`, [ `${tempDir}/${pythonTempScriptName}`, pythonScript ]);
 
+    res = await pythonExecute(`${tempDir}/${pythonTempScriptName}`);
 
-
+    if (res.message === "success") {
+      await shellExec(`rm`, [ `-rf`, `${tempDir}/${pythonTempScriptName}` ]);
+      return { message: "success" };
+    } else {
+      throw new Error("error in python");
+    }
 
   } catch (e) {
     console.log(e);
+    return { message: "error : " + e.message };
   }
 }
 

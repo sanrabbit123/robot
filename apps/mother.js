@@ -1009,7 +1009,7 @@ Mother.prototype.appleScript = function (name, contents, dir = null, clean = tru
   }
 }
 
-Mother.prototype.pythonExecute = function (target, args = [], inputObj) {
+Mother.prototype.pythonExecute = function (target, args = [], inputObj = {}) {
   const fs = require(`fs`);
   const { exec } = require("child_process");
   let targetLink, targetArr;
