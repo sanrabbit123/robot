@@ -64,7 +64,7 @@ DevContext.prototype.launching = async function () {
   const instance = this;
   const rethink = new RethinkAccess();
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongotestinfo } = this.mother;
-  const { consoleQ, fileSystem, shellExec, shellLink, orderSystem, ghostFileUpload, ghostFileList, curlRequest, diskReading, requestSystem, ajaxJson, uniqueValue, getDateMatrix, ghostRequest, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether, serviceParsing, localUnique, processSystem, sha256Hmac } = this.mother;
+  const { consoleQ, fileSystem, shellExec, shellLink, orderSystem, ghostFileUpload, ghostFileList, curlRequest, diskReading, requestSystem, ajaxJson, uniqueValue, getDateMatrix, ghostRequest, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether, serviceParsing, localUnique, processSystem, sha256Hmac, variableArray } = this.mother;
   try {
     // await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
@@ -129,8 +129,6 @@ DevContext.prototype.launching = async function () {
     //   await selfMongo.db("miro81").collection("client").updateOne(whereQuery, { $set: updateQuery });
     //   console.log(whereQuery, updateQuery);
     // }
-
-    
 
 
 
@@ -3344,7 +3342,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p224");
+    // await this.getRawPortfolio("p220");
 
 
     // get corePortfolio by pid

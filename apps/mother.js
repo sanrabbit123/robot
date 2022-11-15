@@ -3802,4 +3802,19 @@ Mother.prototype.base64ToString = function (data) {
   return iconv.decode(Buffer.from(data, "base64"), "utf-8");
 }
 
+Mother.prototype.variableArray = function (length, callback = null) {
+  if (typeof length !== "number") {
+    throw new Error("invaild input")
+  }
+  let targetArray = [];
+  for (let i = 0; i < length; i++) {
+    if (typeof callback === "function") {
+      targetArray.push(callback(i));
+    } else {
+      targetArray.push(i);
+    }
+  }
+  return targetArray;
+}
+
 module.exports = Mother;

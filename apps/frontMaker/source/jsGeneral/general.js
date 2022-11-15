@@ -6152,3 +6152,18 @@ GeneralJs.removeByClass = function (className) {
     dom.remove();
   }
 }
+
+GeneralJs.variableArray = function (length, callback = null) {
+  if (typeof length !== "number") {
+    throw new Error("invaild input")
+  }
+  let targetArray = [];
+  for (let i = 0; i < length; i++) {
+    if (typeof callback === "function") {
+      targetArray.push(callback(i));
+    } else {
+      targetArray.push(i);
+    }
+  }
+  return targetArray;
+}
