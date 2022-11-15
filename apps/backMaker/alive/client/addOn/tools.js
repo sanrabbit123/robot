@@ -235,7 +235,8 @@ const withTools = function (Client) {
       documentArr.push("입주 예정일 : " + "거주중" + "\n");
     }
     documentArr.push("계약 형태 : " + request.space.contract.value + "\n");
-    documentArr.push("공간 상태 : " + request.space.spec.toMessage() + "\n");
+    documentArr.push("예산 : " + request.budget.value + "\n");
+    documentArr.push("가구 구매 : " + request.furniture.value + "\n");
     documentArr.push("유입 경로 : " + request.etc.channel + "\n");
 
     comment = "요청 사항 : " + request.etc.comment;

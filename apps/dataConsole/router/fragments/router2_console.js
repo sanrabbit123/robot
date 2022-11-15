@@ -2459,8 +2459,8 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
         headers: { "Content-Type": "application/json" }
       });
 
-      ghostRequest("/print", { cliid, voice: message.split("\n")[0] + " 성함은 " + thisClient.name + "입니다!" }).catch((err) => {
-        errorLog("Ghost 서버 문제 생김 (print) : " + err.message).catch((e) => { console.log(e); });
+      ghostRequest("/voice", { text: message.split("\n")[0] + " 성함은 " + thisClient.name + "입니다!" }).catch((err) => {
+        errorLog("Ghost 서버 문제 생김 (voice) : " + err.message).catch((e) => { console.log(e); });
       });
 
       res.send(JSON.stringify({ cliid }));
