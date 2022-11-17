@@ -1379,8 +1379,8 @@ GraphicBot.prototype.botRouter = function () {
 GraphicBot.prototype.getChromeSize = async function () {
   const instance = this;
   const { sleep, colorParsing } = this.mother;
-  const { bot: robot } = this;
-  const urlRatio = 0.63;
+  const { bot: robot, os } = this;
+  const urlRatio = (os === "mac" ? 0.63 : 0.8);
   try {
     await this.chromeOpen("https://" + this.address.pythoninfo.host + ":3000/bluePrint");
     await this.pressKey("f12");
