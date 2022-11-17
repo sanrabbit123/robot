@@ -43,16 +43,16 @@ CFLAGS_C_Debug :=
 CFLAGS_CC_Debug := \
 	-fno-rtti \
 	-fno-exceptions \
-	-std=gnu++14
+	-std=gnu++17
 
 INCS_Debug := \
-	-I/home/uragen/.cache/node-gyp/16.13.0/include/node \
-	-I/home/uragen/.cache/node-gyp/16.13.0/src \
-	-I/home/uragen/.cache/node-gyp/16.13.0/deps/openssl/config \
-	-I/home/uragen/.cache/node-gyp/16.13.0/deps/openssl/openssl/include \
-	-I/home/uragen/.cache/node-gyp/16.13.0/deps/uv/include \
-	-I/home/uragen/.cache/node-gyp/16.13.0/deps/zlib \
-	-I/home/uragen/.cache/node-gyp/16.13.0/deps/v8/include \
+	-I/home/ubuntu/.cache/node-gyp/18.12.1/include/node \
+	-I/home/ubuntu/.cache/node-gyp/18.12.1/src \
+	-I/home/ubuntu/.cache/node-gyp/18.12.1/deps/openssl/config \
+	-I/home/ubuntu/.cache/node-gyp/18.12.1/deps/openssl/openssl/include \
+	-I/home/ubuntu/.cache/node-gyp/18.12.1/deps/uv/include \
+	-I/home/ubuntu/.cache/node-gyp/18.12.1/deps/zlib \
+	-I/home/ubuntu/.cache/node-gyp/18.12.1/deps/v8/include \
 	-I$(srcdir)/../nan
 
 DEFS_Release := \
@@ -93,16 +93,16 @@ CFLAGS_C_Release :=
 CFLAGS_CC_Release := \
 	-fno-rtti \
 	-fno-exceptions \
-	-std=gnu++14
+	-std=gnu++17
 
 INCS_Release := \
-	-I/home/uragen/.cache/node-gyp/16.13.0/include/node \
-	-I/home/uragen/.cache/node-gyp/16.13.0/src \
-	-I/home/uragen/.cache/node-gyp/16.13.0/deps/openssl/config \
-	-I/home/uragen/.cache/node-gyp/16.13.0/deps/openssl/openssl/include \
-	-I/home/uragen/.cache/node-gyp/16.13.0/deps/uv/include \
-	-I/home/uragen/.cache/node-gyp/16.13.0/deps/zlib \
-	-I/home/uragen/.cache/node-gyp/16.13.0/deps/v8/include \
+	-I/home/ubuntu/.cache/node-gyp/18.12.1/include/node \
+	-I/home/ubuntu/.cache/node-gyp/18.12.1/src \
+	-I/home/ubuntu/.cache/node-gyp/18.12.1/deps/openssl/config \
+	-I/home/ubuntu/.cache/node-gyp/18.12.1/deps/openssl/openssl/include \
+	-I/home/ubuntu/.cache/node-gyp/18.12.1/deps/uv/include \
+	-I/home/ubuntu/.cache/node-gyp/18.12.1/deps/zlib \
+	-I/home/ubuntu/.cache/node-gyp/18.12.1/deps/v8/include \
 	-I$(srcdir)/../nan
 
 OBJS := \
