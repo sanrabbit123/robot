@@ -54,7 +54,7 @@ const GraphicBot = function () {
   this.alertPosition = {
     linux: {
       x: 1142,
-      y: 210,
+      y: 212,
     },
     mac: {
       x: 1142,
