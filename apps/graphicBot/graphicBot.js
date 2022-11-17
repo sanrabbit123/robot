@@ -53,7 +53,7 @@ const GraphicBot = function () {
   };
   this.alertPosition = {
     linux: {
-      x: 1164,
+      x: 1142,
       y: 210,
     },
     mac: {
