@@ -52,7 +52,7 @@ def extractMails(popObject, id):
                         else:
                             fromString = matchResult.group()
 
-                    if timeString.split(", ").__len__() > 0:
+                    if timeString.split(", ").__len__() > 1:
                         dateObject = datetime.strptime(timeString.split(", ")[1].split("+")[0].strip()[0:20], '%d %b %Y %H:%M:%S')
                     else:
                         dateObject = datetime.strptime(timeString.split("+")[0].strip()[0:20], '%d %b %Y %H:%M:%S')
