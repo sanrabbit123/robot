@@ -654,7 +654,7 @@ GeneralJs.nodes = {
   source: document.createElement('SOURCE')
 }
 
-GeneralJs.scrollTo = function (from, valueOrTo, visualSpecific = 0) {
+GeneralJs.scrollTo = function (from, valueOrTo, visualSpecific = 0, noSmoothMode = false) {
   if (from === undefined || valueOrTo === undefined || typeof visualSpecific !== "number") {
     throw new Error("invaild input");
   }
@@ -669,9 +669,17 @@ GeneralJs.scrollTo = function (from, valueOrTo, visualSpecific = 0) {
     from.scrollTop = valueOrTo - visualSpecific;
   } else {
     if (typeof valueOrTo === "number") {
-      window.scroll({ top: valueOrTo - visualSpecific, left: 0, behavior: "smooth" });
+      if (!noSmoothMode) {
+        window.scroll({ top: valueOrTo - visualSpecific, left: 0, behavior: "smooth" });
+      } else {
+        window.scroll({ top: valueOrTo - visualSpecific, left: 0 });
+      }
     } else {
-      window.scroll({ top: Math.abs(document.body.getBoundingClientRect().top - valueOrTo.getBoundingClientRect().top) - visualSpecific, left: 0, behavior: "smooth" });
+      if (!noSmoothMode) {
+        window.scroll({ top: Math.abs(document.body.getBoundingClientRect().top - valueOrTo.getBoundingClientRect().top) - visualSpecific, left: 0, behavior: "smooth" });
+      } else {
+        window.scroll({ top: Math.abs(document.body.getBoundingClientRect().top - valueOrTo.getBoundingClientRect().top) - visualSpecific, left: 0 });
+      }
     }
   }
 }

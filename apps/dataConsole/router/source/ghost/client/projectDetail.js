@@ -30,23 +30,23 @@
     ],
     "module": false
   },
-  "name": "processDetail",
+  "name": "projectDetail",
   "hangul": "프로젝트 상세",
   "route": [
-    "processDetail"
+    "projectDetail"
   ]
 } %/%/g
 
-const ProcessDetailJs = function () {
+const ProjectDetailJs = function () {
   this.mother = new GeneralJs();
 }
 
-ProcessDetailJs.binaryPath = FRONTHOST + "/middle/console/first";
+ProjectDetailJs.binaryPath = FRONTHOST + "/middle/console/first";
 
-ProcessDetailJs.prototype.insertInitBox = function () {
+ProjectDetailJs.prototype.insertInitBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media } = this;
+  const { ea, media, client } = this;
   const mobile = media[4];
   const desktop = !mobile;
   let whiteBlock;
@@ -92,7 +92,7 @@ ProcessDetailJs.prototype.insertInitBox = function () {
 
   whiteBlockMarginBottom = <%% 90, 80, 74, 60, 14.5 %%>;
 
-  quoteHeight = <%% 15, 15, 15, 15, 2.5 %%>;
+  quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
   titleFontSize = <%% 35, 33, 32, 30, 6.4 %%>;
   titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -130,7 +130,7 @@ ProcessDetailJs.prototype.insertInitBox = function () {
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
   titleWording = "프로젝트 상세";
-  subTitleContents = this.client.name + " 고객님 프로젝트 상세";
+  subTitleContents = this.client.name + " 고객님의 프로젝트 상세입니다.";
 
   mobileBlockTop = 4.5;
 
@@ -147,6 +147,7 @@ ProcessDetailJs.prototype.insertInitBox = function () {
     }
   });
 
+  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.white))) * quoteHeight;
   createNode({
     mother: whiteBlock,
     style: {
@@ -161,10 +162,11 @@ ProcessDetailJs.prototype.insertInitBox = function () {
     children: [
       {
         mode: "svg",
-        source: svgMaker.serifAsterisk(colorChip.white),
+        source: svgMaker.doubleQuote(colorChip.white),
         style: {
           display: "inline-block",
           height: String(quoteHeight) + ea,
+          width: String(quoteWidth) + ea,
         }
       }
     ]
@@ -221,7 +223,7 @@ ProcessDetailJs.prototype.insertInitBox = function () {
 
 }
 
-ProcessDetailJs.prototype.insertProcessBox = function () {
+ProjectDetailJs.prototype.insertProcessBox = function () {
   const instance = this;
   const mother = this.mother;
   const { client, ea, baseTong, media, project } = this;
@@ -453,7 +455,7 @@ ProcessDetailJs.prototype.insertProcessBox = function () {
 
 }
 
-ProcessDetailJs.prototype.insertUploadBox = function () {
+ProjectDetailJs.prototype.insertUploadBox = function () {
   const instance = this;
   const mother = this.mother;
   const { client, ea, baseTong, media, project } = this;
@@ -802,35 +804,35 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
       },
     });
 
-    if (mobile) {
-      if (this.panContents[i].action.length > 1) {
-        this.panContents[i].action = [ this.panContents[i].action[1] ];
-      }
-    }
-
-    for (let { title, key } of this.panContents[i].action) {
-      createNode({
-        mother: subButtonsBasePan,
-        text: title,
-        attribute: { key },
-        style: {
-          display: "inline-block",
-          position: "relative",
-          top: String(subButtonsVisualTop) + ea,
-          fontSize: String(subButtonSize) + ea,
-          fontWeight: String(subButtonWeight),
-          color: colorChip.white,
-          paddingBottom: String(subButtonPaddingBottom) + ea,
-          paddingLeft: String(subButtonPaddingLeft) + ea,
-          paddingRight: String(subButtonPaddingLeft) + ea,
-          paddingTop: String(subButtonPaddingTop) + ea,
-          marginLeft: String(subButtonsBetween) + ea,
-          background: colorChip.black,
-          borderRadius: String(5) + "px",
-          cursor: "pointer",
-        }
-      });
-    }
+    // if (mobile) {
+    //   if (this.panContents[i].action.length > 1) {
+    //     this.panContents[i].action = [ this.panContents[i].action[1] ];
+    //   }
+    // }
+    //
+    // for (let { title, key } of this.panContents[i].action) {
+    //   createNode({
+    //     mother: subButtonsBasePan,
+    //     text: title,
+    //     attribute: { key },
+    //     style: {
+    //       display: "inline-block",
+    //       position: "relative",
+    //       top: String(subButtonsVisualTop) + ea,
+    //       fontSize: String(subButtonSize) + ea,
+    //       fontWeight: String(subButtonWeight),
+    //       color: colorChip.white,
+    //       paddingBottom: String(subButtonPaddingBottom) + ea,
+    //       paddingLeft: String(subButtonPaddingLeft) + ea,
+    //       paddingRight: String(subButtonPaddingLeft) + ea,
+    //       paddingTop: String(subButtonPaddingTop) + ea,
+    //       marginLeft: String(subButtonsBetween) + ea,
+    //       background: colorChip.black,
+    //       borderRadius: String(5) + "px",
+    //       cursor: "pointer",
+    //     }
+    //   });
+    // }
 
     contentsPan = createNode({
       mother: basePan,
@@ -939,7 +941,7 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
   return whiteBlock;
 }
 
-ProcessDetailJs.prototype.setPanBlocks = async function () {
+ProjectDetailJs.prototype.setPanBlocks = async function () {
   const instance = this;
   const { ea, targetDrive, targetHref, media } = this;
   const mobile = media[4];
@@ -1336,7 +1338,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
   }
 }
 
-ProcessDetailJs.prototype.tableStatic = function (designer, project, client, clientHistory, projectHistory, requestNumber) {
+ProjectDetailJs.prototype.tableStatic = function (designer, project, client, clientHistory, projectHistory, requestNumber) {
   const instance = this;
   const mother = this.mother;
   const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, autoComma } = GeneralJs;
@@ -1537,7 +1539,7 @@ ProcessDetailJs.prototype.tableStatic = function (designer, project, client, cli
   };
 }
 
-ProcessDetailJs.prototype.insertInformationBox = function () {
+ProjectDetailJs.prototype.insertInformationBox = function () {
   const instance = this;
   const mother = this.mother;
   const { client, project, projectHistory, requestNumber, ea, baseTong, media } = this;
@@ -1615,7 +1617,7 @@ ProcessDetailJs.prototype.insertInformationBox = function () {
 
   wordsTitle = wordings.title.join(" ");
 
-  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  bottomMargin = <%% 160, 160, 160, 120, 30 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
   paddingTop =  <%% 52, 52, 44, 36, 6 %%>;
 
@@ -1889,7 +1891,7 @@ ProcessDetailJs.prototype.insertInformationBox = function () {
 
 }
 
-ProcessDetailJs.prototype.returnButtonList = function () {
+ProjectDetailJs.prototype.returnButtonList = function () {
   const instance = this;
   const mother = this.mother;
   const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, downloadFile } = GeneralJs;
@@ -1956,7 +1958,7 @@ ProcessDetailJs.prototype.returnButtonList = function () {
   return buttonList;
 }
 
-ProcessDetailJs.prototype.insertGreenButtons = function () {
+ProjectDetailJs.prototype.insertGreenButtons = function () {
   const instance = this;
   const mother = this.mother;
   const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker } = GeneralJs;
@@ -2085,7 +2087,7 @@ ProcessDetailJs.prototype.insertGreenButtons = function () {
 
 }
 
-ProcessDetailJs.prototype.reloadGreenButtons = function () {
+ProjectDetailJs.prototype.reloadGreenButtons = function () {
   const instance = this;
   const greenButtonClassName = "greenButtonClassName";
   const { colorChip } = GeneralJs;
@@ -2111,7 +2113,7 @@ ProcessDetailJs.prototype.reloadGreenButtons = function () {
 
 }
 
-ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber) {
+ProjectDetailJs.prototype.uploadFiles = function (thisStatusNumber) {
   const instance = this;
   const mother = this.mother;
   const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker } = GeneralJs;
@@ -2174,7 +2176,7 @@ ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber) {
                 loading = instance.mother.grayLoading();
 
                 res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
-                await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 " + thisTitle + " 관련 파일을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+                await ajaxJson({ message: client + " 고객님이 콘솔을 통해 " + thisTitle + " 관련 파일을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
                 window.alert(thisTitle + " 관련 파일 업로드가 완료되었습니다!");
 
                 await instance.setPanBlocks();
@@ -2220,7 +2222,7 @@ ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber) {
   }
 }
 
-ProcessDetailJs.prototype.dropFiles = function (thisStatusNumber) {
+ProjectDetailJs.prototype.dropFiles = function (thisStatusNumber) {
   const instance = this;
   const mother = this.mother;
   const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, removeByClass } = GeneralJs;
@@ -2279,7 +2281,7 @@ ProcessDetailJs.prototype.dropFiles = function (thisStatusNumber) {
             loading = instance.mother.grayLoading();
 
             res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
-            await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 " + thisTitle + " 관련 파일을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+            await ajaxJson({ message: client + " 고객님이 콘솔을 통해 " + thisTitle + " 관련 파일을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
             window.alert(thisTitle + " 관련 파일 업로드가 완료되었습니다!");
 
             await instance.setPanBlocks();
@@ -2333,7 +2335,7 @@ ProcessDetailJs.prototype.dropFiles = function (thisStatusNumber) {
   }
 }
 
-ProcessDetailJs.prototype.plusMemo = function (thisStatusNumber) {
+ProjectDetailJs.prototype.plusMemo = function (thisStatusNumber) {
   const instance = this;
   const mother = this.mother;
   const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker } = GeneralJs;
@@ -2537,7 +2539,7 @@ ProcessDetailJs.prototype.plusMemo = function (thisStatusNumber) {
   }
 }
 
-ProcessDetailJs.prototype.launching = async function (loading) {
+ProjectDetailJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
     this.mother.setGeneralProperties(this);
@@ -2608,13 +2610,20 @@ ProcessDetailJs.prototype.launching = async function (loading) {
     this.panList = [];
     this.itemList = [];
 
-    await this.mother.ghostDesignerLaunching({
-      name: "processDetail",
-      designer: this.designer,
+    await this.mother.ghostClientLaunching({
+      mode: "ghost",
+      name: "projectDetail",
+      client: this.client,
       base: {
         instance: this,
-        binaryPath: ProcessDetailJs.binaryPath,
-        subTitle: "",
+        binaryPath: ProjectDetailJs.binaryPath,
+        subTitle: (this.client.name + " 고객님 프로젝트 상세"),
+        secondBackground: false,
+        backgroundType: 0,
+        talk: {
+          text: "",
+          event: "channel",
+        }
       },
       local: async () => {
         try {
@@ -2624,7 +2633,7 @@ ProcessDetailJs.prototype.launching = async function (loading) {
           instance.insertInformationBox();
           instance.insertGreenButtons();
         } catch (e) {
-          await GeneralJs.ajaxJson({ message: "ProcessDetailJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
+          await GeneralJs.ajaxJson({ message: "ProjectDetailJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
       }
     });
@@ -2633,6 +2642,6 @@ ProcessDetailJs.prototype.launching = async function (loading) {
 
   } catch (err) {
     console.log(err);
-    await GeneralJs.ajaxJson({ message: "ProcessDetailJs.launching 에러 일어남 => " + err.message }, BACKHOST + "/errorLog");
+    await GeneralJs.ajaxJson({ message: "ProjectDetailJs.launching 에러 일어남 => " + err.message }, BACKHOST + "/errorLog");
   }
 }
