@@ -1100,6 +1100,7 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
         dragenter: function (e) {
           e.preventDefault();
           e.stopPropagation();
+          this.style.background = colorChip.whiteGreen;
         },
         dragover: function (e) {
           e.preventDefault();
@@ -1108,6 +1109,7 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
         dragleave: function (e) {
           e.preventDefault();
           e.stopPropagation();
+          this.style.background = colorChip.gray0;
         },
       },
       style: {
@@ -1118,6 +1120,7 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
         marginBottom: String((i === (this.panContents.length - 1)) ? 0 : panBetween) + ea,
         background: colorChip.gray0,
         borderRadius: String(5) + "px",
+        transition: "all 0.5s ease",
       }
     });
 
@@ -1473,7 +1476,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
       if (desktop) {
         createNode({
           mother: totalContents,
-          class: [ "hoverDefault_lite", bigPhotoFixedTargetsClassName ],
+          class: [ bigPhotoFixedTargetsClassName ],
           mode: "svg",
           source: instance.mother.returnArrow("left", colorChip.white),
           event: {
@@ -1489,12 +1492,13 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
             left: String(arrowButtonMargin) + ea,
             width: String(arrowButtonWidth) + ea,
             zIndex: String(zIndex),
+            cursor: "pointer",
           }
         });
 
         createNode({
           mother: totalContents,
-          class: [ "hoverDefault_lite", bigPhotoFixedTargetsClassName ],
+          class: [ bigPhotoFixedTargetsClassName ],
           mode: "svg",
           source: instance.mother.returnArrow("right", colorChip.white),
           event: {
@@ -1510,6 +1514,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
             right: String(arrowButtonMargin) + ea,
             width: String(arrowButtonWidth) + ea,
             zIndex: String(zIndex),
+            cursor: "pointer",
           }
         });
       }
@@ -1607,7 +1612,6 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
       if (type === "file") {
         itemBlock = createNode({
           mother,
-          class: [ "hoverDefault_lite" ],
           attribute: {
             original,
             key,
@@ -1627,6 +1631,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
             marginBottom: String(itemBetween) + ea,
             borderRadius: String(5) + "px",
             background: colorChip.gray3,
+            cursor: "pointer",
           },
           children: [
             {
@@ -1663,7 +1668,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
 
         itemBlock = createNode({
           mother: [ ...mother.querySelectorAll('.' + motherChildPhotoTongClassName) ][(motherMatrix[motherNumber] % divideNumber)],
-          class: [ "hoverDefault_lite", (photoItemInitClassName + "_" + key + "_" + String(motherMatrix[motherNumber])) ],
+          class: [ (photoItemInitClassName + "_" + key + "_" + String(motherMatrix[motherNumber])) ],
           attribute: { key, original, order: String(motherMatrix[motherNumber]), number: String(motherNumber), toggle: "off" },
           event: {
             click: bigPhotoClickEvent,
@@ -1676,6 +1681,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
             borderRadius: String(5) + "px",
             marginBottom: String(itemBetween) + ea,
             overflow: "hidden",
+            cursor: "pointer",
           },
           children: [
             {
@@ -3221,7 +3227,7 @@ ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber) {
                 loading = instance.mother.grayLoading();
 
                 res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
-                await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 " + thisTitle + " 관련 파일을 업로드 했습니다!", channel: "#300_designer" }, BACKHOST + "/sendSlack");
+                await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 " + thisTitle + " 관련 파일을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
                 window.alert(thisTitle + " 관련 파일 업로드가 완료되었습니다!");
 
                 await instance.setPanBlocks();
@@ -3238,7 +3244,7 @@ ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber) {
             } catch (e) {
               console.log(e);
               window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
-              // window.location.reload();
+              window.location.reload();
             }
           }
         },
@@ -3262,7 +3268,7 @@ ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber) {
     } catch (e) {
       console.log(e);
       window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
-      // window.location.reload();
+      window.location.reload();
     }
   }
 }
@@ -3326,7 +3332,7 @@ ProcessDetailJs.prototype.dropFiles = function (thisStatusNumber) {
             loading = instance.mother.grayLoading();
 
             res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
-            await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 " + thisTitle + " 관련 파일을 업로드 했습니다!", channel: "#300_designer" }, BACKHOST + "/sendSlack");
+            await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 " + thisTitle + " 관련 파일을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
             window.alert(thisTitle + " 관련 파일 업로드가 완료되었습니다!");
 
             await instance.setPanBlocks();
@@ -3370,6 +3376,7 @@ ProcessDetailJs.prototype.dropFiles = function (thisStatusNumber) {
       });
       input.files = e.dataTransfer.files;
       changeEvent.call(input, e);
+      this.style.background = colorChip.gray0;
 
     } catch (e) {
       console.log(e);

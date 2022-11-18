@@ -2000,7 +2000,9 @@ CalculationJs.prototype.searchMatrix = function () {
   }
 
   this.searchInput.addEventListener("keyup", function (e) {
-    setDebounce(searchEvent(this.value, e), "__searchMatrix__", 200);
+    if (e.key === "Enter") {
+      setDebounce(searchEvent(this.value, e), "__searchMatrix__", 200);
+    }
   });
 }
 
