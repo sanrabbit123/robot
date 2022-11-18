@@ -823,7 +823,7 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
   const { client, ea, baseTong, media, project } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   const mainTitle = "파일 업로드";
   let paddingTop;
@@ -886,10 +886,13 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
   let subButtonSize, subButtonWeight;
   let subButtonVisualTop;
   let subButtonPaddingBottom;
+  let subButtonPaddingTop;
+  let subButtonPaddingLeft;
   let buttonBetween;
   let plusIconTop, plusIconWidth;
   let subButtonsBasePan;
   let subButtonsBetween;
+  let subButtonsVisualTop;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -976,11 +979,14 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
   statusPadding = <%% 21, 21, 18, 18, 4 %%>;
   statusOpacity = <%% 0.4, 0.4, 0.4, 0.4, 0.4 %%>;
 
-  subButtonPaddingRight = <%% 18, 18, 18, 16, 4 %%>;
-  subButtonSize = <%% 12, 12, 11, 10, 2.5 %%>;
+  subButtonPaddingRight = <%% 18, 18, 16, 12, 1.6 %%>;
+  subButtonSize = <%% 12, 12, 11, 10, 2.4 %%>;
   subButtonWeight = <%% 800, 800, 800, 800, 800 %%>;
   subButtonVisualTop = <%% 3, 3, 2, 1, 0.3 %%>;
-  subButtonPaddingBottom = <%% 3, 3, 2, 1, 0.3 %%>;
+  subButtonPaddingBottom = <%% (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 5 : 4), (isIphone() ? 1.2 : 1.4) %%>;
+  subButtonPaddingTop = <%% (isMac() ? 4 : 5), (isMac() ? 4 : 5), (isMac() ? 4 : 5), (isMac() ? 3 : 4), (isIphone() ? 1.2 : 1.2) %%>;
+  subButtonPaddingLeft = <%% 11, 11, 10, 9, 2 %%>;
+  subButtonsVisualTop = <%% 2, 3, 3, 1, 0 %%>;
 
   buttonBetween = <%% 5, 5, 5, 4, 1 %%>;
 
@@ -1082,6 +1088,28 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
   for (let i = 0; i < this.panContents.length; i++) {
     basePan = createNode({
       mother: panMother,
+      attribute: {
+        index: String(i),
+        proid: project.proid,
+        desid: instance.designer.desid,
+        name: project.name,
+        designer: instance.designer.designer,
+      },
+      event: {
+        drop: instance.dropFiles(i),
+        dragenter: function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        },
+        dragover: function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        },
+        dragleave: function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        },
+      },
       style: {
         display: "inline-block",
         verticalAlign: "top",
@@ -1173,18 +1201,22 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
       createNode({
         mother: subButtonsBasePan,
         text: title,
-        class: [ "hoverDefault_lite" ],
         attribute: { key },
         style: {
           display: "inline-block",
           position: "relative",
-          top: String(desktop ? contentsTextTop : 0) + ea,
+          top: String(subButtonsVisualTop) + ea,
           fontSize: String(subButtonSize) + ea,
           fontWeight: String(subButtonWeight),
-          color: colorChip.darkShadow,
+          color: colorChip.white,
           paddingBottom: String(subButtonPaddingBottom) + ea,
-          borderBottom: "1px solid " + colorChip.gray3,
+          paddingLeft: String(subButtonPaddingLeft) + ea,
+          paddingRight: String(subButtonPaddingLeft) + ea,
+          paddingTop: String(subButtonPaddingTop) + ea,
           marginLeft: String(subButtonsBetween) + ea,
+          background: colorChip.black,
+          borderRadius: String(5) + "px",
+          cursor: "pointer",
         }
       });
     }
@@ -3206,7 +3238,7 @@ ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber) {
             } catch (e) {
               console.log(e);
               window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
-              window.location.reload();
+              // window.location.reload();
             }
           }
         },
@@ -3226,6 +3258,118 @@ ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber) {
       });
 
       input.click();
+
+    } catch (e) {
+      console.log(e);
+      window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+      // window.location.reload();
+    }
+  }
+}
+
+ProcessDetailJs.prototype.dropFiles = function (thisStatusNumber) {
+  const instance = this;
+  const mother = this.mother;
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, removeByClass } = GeneralJs;
+  const { project, requestNumber, ea, baseTong, media, totalContents } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  const fileInputClassName = "fileInputClassName";
+  let serviceContents;
+  let thisKey;
+  let thisTitle;
+
+  serviceContents = this.panContents;
+  thisKey = serviceContents[thisStatusNumber].key;
+  thisTitle = serviceContents[thisStatusNumber].title;
+
+  return async function (e) {
+    try {
+
+      e.preventDefault();
+      e.stopPropagation();
+
+      const proid = this.getAttribute("proid");
+      const desid = this.getAttribute("desid");
+      const name = this.getAttribute("name");
+      const designer = this.getAttribute("designer");
+      let input, changeEvent;
+
+      removeByClass(fileInputClassName);
+
+      changeEvent = async function (e) {
+        try {
+          const proid = this.getAttribute("proid");
+          const desid = this.getAttribute("desid");
+          const client = this.getAttribute("client");
+          const designer = this.getAttribute("designer");
+          const thisKey = this.getAttribute("name");
+          const thisTitle = this.getAttribute("title");
+          let thisFiles, formData, res;
+          let removeTargets;
+          let loading;
+
+          thisFiles = [ ...this.files ];
+
+          if (thisFiles.length >= 1) {
+            formData = new FormData();
+            formData.enctype = "multipart/form-data";
+            formData.append("proid", proid);
+            formData.append("desid", desid);
+            formData.append("client", client);
+            for (let i = 0; i < thisFiles.length; i++) {
+              formData.append("file_" + thisKey + "_" + String(i), thisFiles[i]);
+            }
+
+            loading = instance.mother.grayLoading();
+
+            res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
+            await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 " + thisTitle + " 관련 파일을 업로드 했습니다!", channel: "#300_designer" }, BACKHOST + "/sendSlack");
+            window.alert(thisTitle + " 관련 파일 업로드가 완료되었습니다!");
+
+            await instance.setPanBlocks();
+
+            loading.remove();
+
+            removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
+            for (let dom of removeTargets) {
+              dom.remove();
+            }
+
+          }
+
+        } catch (e) {
+          console.log(e);
+          window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+          window.location.reload();
+        }
+      }
+
+      input = createNode({
+        mother: document.body,
+        class: [ fileInputClassName ],
+        mode: "input",
+        event: {
+          change: changeEvent
+        },
+        attribute: {
+          type: "file",
+          name: thisKey,
+          title: thisTitle,
+          multiple: "true",
+          proid,
+          desid,
+          client: name,
+          designer,
+        },
+        style: {
+          display: "none",
+        }
+      });
+      input.files = e.dataTransfer.files;
+      changeEvent.call(input, e);
 
     } catch (e) {
       console.log(e);

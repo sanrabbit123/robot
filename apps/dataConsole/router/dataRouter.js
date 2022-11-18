@@ -3183,8 +3183,8 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
         headers: { "Content-Type": "application/json" }
       });
 
-      ghostRequest("/print", { cliid, voice: message.split("\n")[0] + " 성함은 " + thisClient.name + "입니다!" }).catch((err) => {
-        errorLog("Ghost 서버 문제 생김 (print) : " + err.message).catch((e) => { console.log(e); });
+      ghostRequest("/voice", { text: message.split("\n")[0] + " 성함은 " + thisClient.name + "입니다!" }).catch((err) => {
+        errorLog("Ghost 서버 문제 생김 (voice) : " + err.message).catch((e) => { console.log(e); });
       });
 
       res.send(JSON.stringify({ cliid }));
@@ -6248,11 +6248,13 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
           }
 
         }).then(() => {
+
           if (detailUpdate.length > 0) {
             return messageSend({ text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다!", channel: "#404_curation", voice: true });
           } else {
             return messageSend({ text: client.name + " 고객님의 제안서를 자동으로 제작하려 했으나 매칭되는 경우가 없어요!", channel: "#404_curation", voice: true });
           }
+
         }).catch((err) => {
           console.log(err);
           messageSend({ text: client.name + " 제안서 제작 문제 생김 " + err.message, channel: "#404_curation" }).catch((e) => { console.log(e) });
@@ -6266,6 +6268,9 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
             // cliid: client.cliid,
           });
           await messageSend({ text: client.name + " 고객님께 큐레이션 완료 알림톡을 보냈어요.", channel: "#404_curation" });
+          ghostRequest("/print", { cliid: client.cliid }).catch((err) => {
+            console.log(err);
+          });
         }
 
         res.send(JSON.stringify({ service: [], client: client.toNormal(), history }));

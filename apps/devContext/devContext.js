@@ -3342,7 +3342,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p220");
+    // await this.getRawPortfolio("p223");
 
 
     // get corePortfolio by pid
@@ -3403,7 +3403,7 @@ DevContext.prototype.launching = async function () {
     // send sms
     // const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
     // const human = new HumanPacket();
-    // const name = "하미진";
+    // const name = "김혜정";
     // const amount = 330000;
     // await human.sendSms({
     //   name: "",

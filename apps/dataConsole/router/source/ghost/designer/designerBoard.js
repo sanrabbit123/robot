@@ -2517,23 +2517,23 @@ DesignerBoardJs.prototype.insertCommentsBox = function (whiteBlock) {
   colorBoxWeight = <%% 700, 700, 700, 700, 700 %%>;
   colorBoxTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isIphone() ? 0 : -0.2) %%>;
 
-  whitePromptWidth = <%% 600, 600, 600, 600, 60 %%>;
-  whitePromptPaddingTop = <%% 12, 12, 12, 12, 1 %%>;
-  whitePromptPaddingBottom = <%% 40, 40, 40, 40, 4 %%>;
-  whitePromptTitleHeight = <%% 110, 110, 110, 110, 11 %%>;
-  whitePromptButtonHeight = <%% 35, 35, 35, 35, 3 %%>;
+  whitePromptWidth = <%% 600, 600, 520, 450, 82 %%>;
+  whitePromptPaddingTop = <%% 12, 12, 10, 8, 2 %%>;
+  whitePromptPaddingBottom = <%% 40, 40, 36, 32, 5.6 %%>;
+  whitePromptTitleHeight = <%% 110, 110, 100, 80, 16 %%>;
+  whitePromptButtonHeight = <%% 35, 35, 32, 30, 6 %%>;
 
-  whitePromptTitleSize = <%% 20, 20, 20, 20, 20 %%>;
+  whitePromptTitleSize = <%% 20, 20, 18, 16, 3.2 %%>;
   whitePromptTitleWeight = <%% 400, 400, 400, 400, 400 %%>;
   whitePromptTitleBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   whitePromptTitleLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
   whitePromptTitleTextTop = <%% 0, 0, 0, 0, 0 %%>;
 
-  whitePromptButtonBetween = <%% 6, 6, 6, 6, 6 %%>;
-  whitePromptButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
-  whitePromptButtonWidth = <%% 125, 125, 125, 125, 12 %%>;
+  whitePromptButtonBetween = <%% 6, 6, 5, 4, 1 %%>;
+  whitePromptButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
+  whitePromptButtonWidth = <%% 125, 125, 125, 115, 25 %%>;
 
-  whitePromptButtonSize = <%% 13, 13, 13, 13, 13 %%>;
+  whitePromptButtonSize = <%% 13, 13, 12, 11, 2.5 %%>;
   whitePromptButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
   this.whiteMargin = (desktop ? margin : 0);
