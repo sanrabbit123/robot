@@ -804,36 +804,6 @@ ProjectDetailJs.prototype.insertUploadBox = function () {
       },
     });
 
-    // if (mobile) {
-    //   if (this.panContents[i].action.length > 1) {
-    //     this.panContents[i].action = [ this.panContents[i].action[1] ];
-    //   }
-    // }
-    //
-    // for (let { title, key } of this.panContents[i].action) {
-    //   createNode({
-    //     mother: subButtonsBasePan,
-    //     text: title,
-    //     attribute: { key },
-    //     style: {
-    //       display: "inline-block",
-    //       position: "relative",
-    //       top: String(subButtonsVisualTop) + ea,
-    //       fontSize: String(subButtonSize) + ea,
-    //       fontWeight: String(subButtonWeight),
-    //       color: colorChip.white,
-    //       paddingBottom: String(subButtonPaddingBottom) + ea,
-    //       paddingLeft: String(subButtonPaddingLeft) + ea,
-    //       paddingRight: String(subButtonPaddingLeft) + ea,
-    //       paddingTop: String(subButtonPaddingTop) + ea,
-    //       marginLeft: String(subButtonsBetween) + ea,
-    //       background: colorChip.black,
-    //       borderRadius: String(5) + "px",
-    //       cursor: "pointer",
-    //     }
-    //   });
-    // }
-
     contentsPan = createNode({
       mother: basePan,
       attribute: {

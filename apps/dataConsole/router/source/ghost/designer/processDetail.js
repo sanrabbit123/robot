@@ -802,17 +802,54 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
       },
     });
 
-    if (mobile) {
-      if (this.panContents[i].action.length > 1) {
-        this.panContents[i].action = [ this.panContents[i].action[1] ];
-      }
-    }
-
-    for (let { title, key } of this.panContents[i].action) {
+    for (let { title, to: target, name } of this.panContents[i].action) {
       createNode({
         mother: subButtonsBasePan,
         text: title,
-        attribute: { key },
+        attribute: { key: this.panContents[i].key, target, name },
+        event: {
+          click: async function (e) {
+            try {
+              const target = this.getAttribute("target");
+              const name = this.getAttribute("name");
+              const key = this.getAttribute("key");
+              const host = FRONTHOST;
+              const path = "project";
+
+              if (target === "client") {
+
+                await ajaxJson({
+                  method: "projectDetail",
+                  name: instance.client.name,
+                  phone: instance.client.phone,
+                  option: {
+                    client: instance.client.name,
+                    designer: instance.designer.designer,
+                    file: name,
+                    host: host,
+                    path: path,
+                    proid: project.proid,
+                    key: key,
+                  }
+                }, BACKHOST + "/alimTalk");
+                window.alert(instance.client.name + " 고객님에게 알림톡을 전송하였습니다!");
+
+              } else {
+
+                await ajaxJson({
+                  message: instance.designer.designer + " 실장님이 콘솔을 통해 " + instance.client.name + " 고객님 " + name + " 파일 확인을 요청하셨습니다!",
+                  channel: "#300_designer",
+                  voice: true
+                }, BACKHOST + "/sendSlack");
+                window.alert("홈리에종에 알림을 전송하였습니다!");
+
+              }
+            } catch (e) {
+              window.alert("오류가 발생하였습니다! 다시 시도해주십시오.");
+              window.location.reload();
+            }
+          }
+        },
         style: {
           display: "inline-block",
           position: "relative",
@@ -2542,7 +2579,7 @@ ProcessDetailJs.prototype.launching = async function (loading) {
   try {
     this.mother.setGeneralProperties(this);
 
-    const { returnGet, ajaxJson } = GeneralJs;
+    const { returnGet, ajaxJson, setQueue } = GeneralJs;
     const getObj = returnGet();
     let cliid, clients, client;
     let proid, projects, project;
@@ -2623,6 +2660,17 @@ ProcessDetailJs.prototype.launching = async function (loading) {
           instance.insertUploadBox();
           instance.insertInformationBox();
           instance.insertGreenButtons();
+
+          if (typeof getObj.key === "string") {
+            if (instance.buttons.map((dom) => { return JSON.parse(dom.getAttribute("children")) }).flat().includes(getObj.key)) {
+              setQueue(() => {
+                instance.buttons.find((dom) => {
+                  return JSON.parse(dom.getAttribute("children")).includes(getObj.key);
+                }).click();
+              }, 300);
+            }
+          }
+
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "ProcessDetailJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
