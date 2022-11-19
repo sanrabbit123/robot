@@ -1120,7 +1120,7 @@ Mother.prototype.ipCheck = function () {
           obj.isTest = false;
         }
 
-        if (target === "home" || target === "office") {
+        if (target === "office") {
           networkInterfaces = require("os").networkInterfaces();
           macList = [];
           for (let i in networkInterfaces) {
