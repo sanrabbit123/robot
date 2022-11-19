@@ -1116,6 +1116,30 @@ KakaoTalk.prototype.templateTong = function (target) {
         ];
       },
     },
+    projectDetail: {
+      name: "파일 전달",
+      id: "TK_7337",
+      needs: [
+        "client",
+        "designer",
+        "file",
+        "host",
+        "path",
+        "proid",
+        "key",
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "designer", to: obj.designer },
+          { from: "file", to: obj.file },
+          { from: "host", to: obj.host },
+          { from: "path", to: obj.path },
+          { from: "proid", to: obj.proid },
+          { from: "key", to: obj.key },
+        ];
+      },
+    },
   };
   if (target === "$all") {
     return tong;
