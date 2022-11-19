@@ -2514,7 +2514,7 @@ ProjectDetailJs.prototype.launching = async function (loading) {
   try {
     this.mother.setGeneralProperties(this);
 
-    const { returnGet, ajaxJson } = GeneralJs;
+    const { returnGet, ajaxJson, setQueue } = GeneralJs;
     const getObj = returnGet();
     let cliid, clients, client;
     let proid, projects, project;
@@ -2602,6 +2602,17 @@ ProjectDetailJs.prototype.launching = async function (loading) {
           instance.insertUploadBox();
           instance.insertInformationBox();
           instance.insertGreenButtons();
+
+          if (typeof getObj.key === "string") {
+            if (instance.buttons.map((dom) => { return JSON.parse(dom.getAttribute("children")) }).flat().includes(getObj.key)) {
+              setQueue(() => {
+                instance.buttons.find((dom) => {
+                  return JSON.parse(dom.getAttribute("children")).includes(getObj.key);
+                }).click();
+              }, 300);
+            }
+          }
+
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "ProjectDetailJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
