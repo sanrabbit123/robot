@@ -61,6 +61,16 @@ DesignerLoginJs.prototype.launching = async function (loading) {
       }
     }
 
+    if (typeof window.localStorage.getItem("HL_proid") === "string") {
+      const rows = await ajaxJson({ whereQuery: { proid: window.localStorage.getItem("HL_proid") } }, SECONDHOST + "/getProjects", { equal: true });
+      if (rows.length >= 1) {
+        window.localStorage.setItem("HL_proid", rows[0].proid);
+        selfHref(FRONTHOST + "/project.php?proid=" + window.localStorage.getItem("HL_proid"));
+      } else {
+        window.localStorage.clear();
+      }
+    }
+
     const { totalContents, ea } = this;
     const getObj = returnGet();
     let input;
@@ -139,7 +149,7 @@ DesignerLoginJs.prototype.launching = async function (loading) {
               const self = this;
               let newInput;
               this.value = autoHypenPhone(this.value).trim();
-              if (/^[0-9][0-9][0-9]\-[0-9][0-9][0-9][0-9]\-[0-9][0-9][0-9][0-9]$/.test(this.value) || /^[0-9][0-9][0-9]\-[0-9][0-9][0-9]\-[0-9][0-9][0-9][0-9]$/.test(this.value)) {
+              if (/^[0-9][0-9][0-9]\-[0-9][0-9][0-9][0-9]\-[0-9][0-9][0-9][0-9]$/.test(this.value) || (e.key === "Enter"  && /^[0-9][0-9][0-9]\-[0-9][0-9][0-9]\-[0-9][0-9][0-9][0-9]$/.test(this.value))) {
                 ajaxJson({ whereQuery: { "information.phone": this.value.trim() } }, SECONDHOST + "/getDesigners", { equal: true }).then((rows) => {
                   if (rows.length >= 1) {
                     const [ designer ] = rows;
@@ -201,6 +211,87 @@ DesignerLoginJs.prototype.launching = async function (loading) {
                     })
 
                     newInput.focus();
+
+                  } else {
+
+                    ajaxJson({ whereQuery: { "phone": this.value.trim() } }, SECONDHOST + "/getClients", { obj: true }).then((clients) => {
+                      if (clients.length >= 1) {
+
+                        ajaxJson({ whereQuery: { "cliid": clients[0].cliid } }, SECONDHOST + "/getProjects", { obj: true }).then((projects) => {
+                          projects = projects.filter((p) => { return p.desid !== "" });
+                          if (projects.length >= 1) {
+
+                            const [ client ] = clients;
+                            const [ project ] = projects;
+                            let randomArr, randomKey, randomStr;
+                            let randomValue;
+                            let randomValueAjaxData;
+
+                            randomArr = window.crypto.getRandomValues(new Uint32Array(10));
+                            randomKey = randomArr[Math.floor(Math.random() * 10)];
+                            randomStr = String(randomKey);
+                            if (randomStr.length > 6) {
+                              randomValue = randomStr.slice(0, 6);
+                            } else {
+                              randomValue = randomStr;
+                              for (let i = randomStr.length; i < 6; i++) {
+                                randomValue += String(Math.floor(Math.random() * 10));
+                              }
+                              randomValue = randomStr;
+                            }
+
+                            window.alert("안녕하세요, " + client.name + " 고객님! 인증번호를 보내드립니다. 인증번호를 입력해주세요!");
+                            ajaxJson({
+                              name: client.name,
+                              phone: client.phone,
+                              certification: randomValue
+                            }, BACKHOST + "/sendCertification").catch((err) => { console.log(err); });
+
+                            newInput = createNode({
+                              mother: self.parentElement,
+                              mode: "input",
+                              attribute: {
+                                type: "text",
+                                placeholder: "인증번호를 입력해주세요!",
+                              },
+                              event: {
+                                keyup: function (e) {
+                                  this.value = this.value.replace(/[^0-9]/gi, '');
+                                  if (this.value === randomValue) {
+                                    window.localStorage.setItem("HL_proid", project.proid);
+                                    selfHref(FRONTHOST + "/project.php?proid=" + project.proid);
+                                  }
+                                }
+                              },
+                              style: {
+                                position: "absolute",
+                                top: String(0),
+                                left: String(0),
+                                width: withOut(0),
+                                height: withOut(inputVisual, ea),
+                                textAlign: "center",
+                                fontSize: String(inputSize) + ea,
+                                fontWeight: String(500),
+                                color: colorChip.black,
+                                border: String(0),
+                                outline: String(0),
+                                borderRadius: String(5) + "px",
+                                background: colorChip.white,
+                              }
+                            })
+
+                            newInput.focus();
+
+                          }
+
+                        }).catch((err) => {
+                          console.log(err);
+                        })
+
+                      }
+                    }).catch((err) => {
+                      console.log(err);
+                    });
 
                   }
                 }).catch((err) => { console.log(err); })

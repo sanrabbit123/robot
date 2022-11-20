@@ -986,6 +986,8 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
   const photoItemInitClassName = "photoItemInitClassName";
   const bigPhotoClassName = "bigPhotoClassName";
   const bigPhotoFixedTargetsClassName = "bigPhotoFixedTargetsClassName";
+  const preItemMotherKey = "firstPhoto";
+  const emptyDate = new Date(1800, 0, 1);
   try {
     let itemList;
     let mothers;
@@ -1006,6 +1008,8 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
     let fileItemSelectEvent;
     let photoItemSelectEvent;
     let itemDivide;
+    let preItemList;
+    let preIndex;
 
     itemBetween = <%% 6, 6, 5, 4, 1 %%>;
     itemTongHeight = <%% 40, 40, 36, 32, 8 %%>;
@@ -1230,7 +1234,8 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
     }
 
     mothers = this.panList;
-    itemList = await ajaxJson({ target: this.targetDrive }, "/ghostPass_readDir", { equal: true });
+    itemList = await ajaxJson({ target: this.targetDrive }, BACKHOST + "/ghostPass_readDir", { equal: true });
+    preItemList = await ajaxJson({ cliid: this.client.cliid }, BACKHOST + "/ghostPass_clientPhoto", { equal: true });
 
     for (let mother of mothers) {
       cleanChildren(mother);
@@ -1240,10 +1245,30 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
       const original = raw;
       const [ key, time, order, hex ] = raw.split("_");
       const [ , exe ] = hex.split(".");
-      return [ key, new Date(Number(time)), String(Number(order) + 1) + "." + exe, Number(order), targetHref + "/" + original ];
-    }).map(([ key, date, name, order, original ]) => {
-      return { key, date, name, order, original };
+      return [ key, new Date(Number(time)), String(Number(order) + 1) + "." + exe, Number(order), targetHref + "/" + original, exe ];
+    }).map(([ key, date, name, order, original, exe ]) => {
+      return { key, date, name, order, original, exe };
     });
+
+    itemList.forEach((obj) => {
+      if (obj.key === preItemMotherKey) {
+        obj.order = preItemList.sitePhoto.length + obj.order;
+        obj.name = String(obj.order) + "." + obj.exe;
+      }
+    });
+
+    preIndex = 1;
+    for (let original of preItemList.sitePhoto) {
+      itemList.push({
+        key: preItemMotherKey,
+        date: emptyDate,
+        name: String(preIndex) + "." + original.split(".")[original.split(".").length - 1],
+        order: preIndex,
+        original: original,
+        exe: original.split(".")[original.split(".").length - 1]
+      })
+      preIndex++;
+    }
 
     itemList.sort((a, b) => { return a.order - b.order });
     itemList.sort((a, b) => { return a.date.valueOf() - b.date.valueOf() });
