@@ -4647,11 +4647,17 @@ GeneralJs.prototype.footerMake = function (backgroundColor = null) {
       mother: leftTong,
       mode: "svg",
       source: this.returnLogo(colorChip.white, logoType),
+      event: {
+        click: (e) => {
+          selfHref(FRONTHOST + "/designer/login.php");
+        },
+      },
       style: {
         display: "block",
         position: "relative",
         width: String(logoWidth) + ea,
         marginBottom: String(logoMarginBottom) + ea,
+        cursor: "pointer",
       }
     });
 
@@ -4930,6 +4936,14 @@ GeneralJs.prototype.footerMake = function (backgroundColor = null) {
     createNode({
       mother: footerBase,
       text: contents.mobileInfo.join("&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;"),
+      event: {
+        click: (e) => {
+          selfHref(FRONTHOST + "/designer/login.php");
+        },
+        touchstart: (e) => {
+          selfHref(FRONTHOST + "/designer/login.php");
+        },
+      },
       style: {
         display: "block",
         position: "relative",

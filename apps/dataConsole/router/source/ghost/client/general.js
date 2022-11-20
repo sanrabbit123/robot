@@ -277,6 +277,11 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
       touchstart: (e) => {
         selfHref(frontPage);
       },
+      contextmenu: (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        selfHref(FRONTHOST + "/designer/login.php");
+      }
     },
     style: {
       position: "absolute",
