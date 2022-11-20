@@ -2827,8 +2827,7 @@ DesignerBoardJs.prototype.insertCommentsBox = function (whiteBlock) {
             ]
           }
         ]
-      })
-
+      });
 
     }
   }
