@@ -74,7 +74,7 @@ DesignerLoginJs.prototype.launching = async function (loading) {
     titleTop = <%% 74, 74, 74, 74, 13.2 %%>;
 
     inputHeight = <%% 35, 35, 35, 35, 7 %%>;
-    inputWidth = <%% 266, 266, 266, 266, 48 %%>;
+    inputWidth = <%% 250, 250, 250, 250, 44 %%>;
 
     inputVisual = <%% 3, 3, 3, 3, 0.8 %%>;
     inputSize = <%% 14, 14, 14, 14, 3 %%>;
@@ -95,7 +95,7 @@ DesignerLoginJs.prototype.launching = async function (loading) {
 
     createNode({
       mother: totalContents,
-      text: "HL Designer <b%console%b>",
+      text: "HL project <b%console%b>",
       style: {
         fontSize: String(titleSize) + ea,
         fontWeight: String(400),

@@ -4551,19 +4551,19 @@ GeneralJs.prototype.footerMake = function (backgroundColor = null) {
           FRONTHOST + "/faq.php",
           FRONTHOST + "/terms.php",
           null,
-          null
+          null,
         ]
       },
       menu: {
         title: "MENU",
         contents: [
-          "서비스 소개",
+          "서비스 신청",
           "포트폴리오",
           "고객 후기",
           "디자이너",
         ],
         href: [
-          FRONTHOST + "/about.php",
+          FRONTHOST + "/consulting.php",
           FRONTHOST + "/portfolio.php",
           FRONTHOST + "/review.php",
           FRONTHOST + "/designer.php",
@@ -4571,7 +4571,7 @@ GeneralJs.prototype.footerMake = function (backgroundColor = null) {
       },
       final: {
         title: [
-          { text: "서비스 신청", event: (e) => { selfHref(FRONTHOST + "/consulting.php") } },
+          { text: "프로젝트 콘솔", event: (e) => { selfHref(FRONTHOST + "/designer/login.php") } },
           { text: "블로그 & 인스타그램", event: (e) => { blankHref("https://blog.naver.com/homeliaison"); blankHref("https://www.instagram.com/homeliaison"); } },
           { text: "디자이너 신청", event: (e) => { selfHref(FRONTHOST + "/aspirant.php") } },
         ],
@@ -4586,13 +4586,13 @@ GeneralJs.prototype.footerMake = function (backgroundColor = null) {
       "포트폴리오",
       "고객 후기",
       "FAQ",
-      "서비스 신청",
+      "프로젝트 콘솔",
     ],
     mobileHref: [
       FRONTHOST + "/portfolio.php",
       FRONTHOST + "/review.php",
       FRONTHOST + "/faq.php",
-      FRONTHOST + "/consulting.php"
+      FRONTHOST + "/designer/login.php"
     ],
     mobileInfo: [
       "02 - 2039 - 2252",
@@ -4649,7 +4649,7 @@ GeneralJs.prototype.footerMake = function (backgroundColor = null) {
       source: this.returnLogo(colorChip.white, logoType),
       event: {
         click: (e) => {
-          selfHref(FRONTHOST + "/designer/login.php");
+          selfHref(FRONTHOST);
         },
       },
       style: {
@@ -4936,14 +4936,6 @@ GeneralJs.prototype.footerMake = function (backgroundColor = null) {
     createNode({
       mother: footerBase,
       text: contents.mobileInfo.join("&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;"),
-      event: {
-        click: (e) => {
-          selfHref(FRONTHOST + "/designer/login.php");
-        },
-        touchstart: (e) => {
-          selfHref(FRONTHOST + "/designer/login.php");
-        },
-      },
       style: {
         display: "block",
         position: "relative",
