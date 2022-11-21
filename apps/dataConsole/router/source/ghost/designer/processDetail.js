@@ -987,6 +987,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
   const bigPhotoClassName = "bigPhotoClassName";
   const bigPhotoFixedTargetsClassName = "bigPhotoFixedTargetsClassName";
   const preItemMotherKey = "firstPhoto";
+  const linkTargetKey = [ "productLink" ];
   const emptyDate = new Date(1800, 0, 1);
   try {
     let itemList;
@@ -1010,6 +1011,8 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
     let itemDivide;
     let preItemList;
     let preIndex;
+    let linkTargets;
+    let linkContents;
 
     itemBetween = <%% 6, 6, 5, 4, 1 %%>;
     itemTongHeight = <%% 40, 40, 36, 32, 8 %%>;
@@ -1237,6 +1240,11 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
     itemList = await ajaxJson({ target: this.targetDrive }, BACKHOST + "/ghostPass_readDir", { equal: true });
     preItemList = await ajaxJson({ cliid: this.client.cliid }, BACKHOST + "/ghostPass_clientPhoto", { equal: true });
 
+    linkTargets = itemList.filter((str) => { return linkTargetKey.includes(str.split("_")[0]) });
+    linkContents = await ajaxJson({ links: linkTargets.map((file) => { return { desid: instance.designer.desid, proid: instance.project.proid, file } }) }, BACKHOST + "/ghostPass_linkParsing", { equal: true });
+
+    console.log(linkContents);
+
     for (let mother of mothers) {
       cleanChildren(mother);
     }
@@ -1324,7 +1332,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
             }
           ]
         });
-      } else {
+      } else if (type === "photo") {
 
         if (mother.querySelector('.' + motherChildPhotoTongClassName) === null) {
           for (let i = 0; i < divideNumber; i++) {
@@ -1384,6 +1392,8 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
             }
           ]
         });
+
+      } else if (type === "link") {
 
       }
 

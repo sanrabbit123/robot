@@ -14,6 +14,7 @@ const Ghost = function () {
   this.address = ADDRESS;
   this.homeliaisonServer = this.address.officeinfo.ghost.file.static + this.address.officeinfo.ghost.file.office;
   this.photoServer = this.address.officeinfo.ghost.file.static + "/photo";
+  this.projectServer = this.address.officeinfo.ghost.file.static + "/photo/designer";
   this.photoServerClient = this.photoServer + "/고객 전송 사진";
   this.photoServerDesigner = this.photoServer + "/디자이너 포트폴리오";
   this.serverTempFolder = this.address.officeinfo.ghost.file.static + "/temp";
@@ -1410,6 +1411,39 @@ Ghost.prototype.ghostRouter = function (needs) {
         res.send(JSON.stringify(list_refined));
       }).catch((e) => { throw new Error(e); });
 
+    }
+  };
+
+  funcObj.post_readDir = {
+    link: [ "/readDir", "/ls" ],
+    func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      try {
+        if (req.body.links === undefined) {
+          throw new Error("invaild post");
+        }
+        const targets = equalJson(req.body.links);
+        let tong;
+
+        tong = [];
+        for (let { desid, proid, file } of targets) {
+          tong.push({
+            desid,
+            proid,
+            file,
+            link: (await fileSystem(`readString`, [ `${instance.projectServer}/${desid}/${proid}/${file}` ])).trim();
+          });
+        }
+
+        res.send(JSON.stringify(tong));
+      } catch (e) {
+        res.send(JSON.stringify({ error: e.message }));
+      }
     }
   };
 
