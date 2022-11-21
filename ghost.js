@@ -1414,6 +1414,7 @@ Ghost.prototype.ghostRouter = function (needs) {
     }
   };
 
+  //POST - link parsing
   funcObj.post_linkParsing = {
     link: [ "/linkParsing" ],
     func: async function (req, res) {
@@ -1450,6 +1451,30 @@ Ghost.prototype.ghostRouter = function (needs) {
         }
 
         res.send(JSON.stringify(tong));
+      } catch (e) {
+        res.send(JSON.stringify({ error: e.message }));
+      }
+    }
+  };
+
+  //POST - link save
+  funcObj.post_linkSave = {
+    link: [ "/linkSave" ],
+    func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      try {
+        if (req.body.proid === undefined || req.body.desid === undefined || req.body.link === undefined || req.body.memo === undefined || req.body.key === undefined) {
+          throw new Error("invaild post");
+        }
+        const { proid, desid, link, memo, key } = req.body;
+        const now = new Date();
+        await fileSystem(`write`, [ `${instance.projectServer}/${desid}/${proid}/${key}_${String(now.valueOf())}_${String(0)}_${uniqueValue("hex")}.link`, (global.decodeURIComponent(link).trim() + "\n" + memo.trim()) ]);
+        res.send(JSON.stringify({ message: "success" }));
       } catch (e) {
         res.send(JSON.stringify({ error: e.message }));
       }

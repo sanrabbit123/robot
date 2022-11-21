@@ -529,6 +529,8 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
   let subButtonsBasePan;
   let subButtonsBetween;
   let subButtonsVisualTop;
+  let linkIconWidth;
+  let linkIconTop;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -602,6 +604,9 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
   uploadCirclePadding = <%% 16, 16, 16, 12, 4 %%>;
   uploadIconWidth = <%% 13, 13, 13, 12, 3 %%>;
   uploadIconTop = <%% 0, 0, 0, 0, 0 %%>;
+
+  linkIconWidth = <%% 15.5, 15.5, 15.5, 14, 3.4 %%>;
+  linkIconTop = <%% 0, 0, 0, 0, 0 %%>;
 
   plusIconTop = <%% 0, 0, 0, 0, 0 %%>;
   plusIconWidth = <%% 14, 14, 13, 12, 3 %%>;
@@ -890,44 +895,111 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
       }
     });
 
-    createNode({
-      mother: basePan,
-      attribute: {
-        index: String(i),
-        proid: project.proid,
-        desid: instance.designer.desid,
-        name: project.name,
-        designer: instance.designer.designer,
-      },
-      event: {
-        click: instance.uploadFiles(i),
-      },
-      style: {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        width: String(uploadCircleWidth) + ea,
-        height: String(uploadCircleWidth) + ea,
-        position: "absolute",
-        bottom: String(uploadCirclePadding) + ea,
-        right: String(uploadCirclePadding) + ea,
-        borderRadius: String(uploadCircleWidth) + ea,
-        background: colorChip.gradientGray,
-        cursor: "pointer",
-      },
-      children: [
-        {
-          mode: "svg",
-          source: instance.mother.returnExtract(colorChip.white),
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(uploadIconTop) + ea,
-            width: String(uploadIconWidth) + ea,
+    if (this.panContents[i].type === "link") {
+
+      createNode({
+        mother: basePan,
+        attribute: {
+          index: String(i),
+          key: this.panContents[i].key,
+          proid: project.proid,
+          desid: instance.designer.desid,
+          name: project.name,
+          designer: instance.designer.designer,
+        },
+        event: {
+          click: async function (e) {
+            try {
+              const proid = this.getAttribute("proid");
+              const desid = this.getAttribute("desid");
+              const key = this.getAttribute("key");
+              let link, memo, loading;
+
+              do {
+                link = await GeneralJs.prompt("제품 링크를 복사 붙여넣기 해주세요!");
+              } while (typeof link !== "string" || link === null || !/^http/.test(link));
+
+              do {
+                memo = await GeneralJs.prompt("링크에 대한 간단한 메모를 적어주세요!");
+              } while (typeof memo !== "string");
+
+              loading = instance.mother.grayLoading();
+              await ajaxJson({ proid, desid, key, link: window.encodeURIComponent(link.trim()), memo: memo.trim() }, BACKHOST + "/ghostPass_linkSave");
+              await instance.setPanBlocks();
+              loading.remove();
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
+        },
+        style: {
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: String(uploadCircleWidth) + ea,
+          height: String(uploadCircleWidth) + ea,
+          position: "absolute",
+          bottom: String(uploadCirclePadding) + ea,
+          right: String(uploadCirclePadding) + ea,
+          borderRadius: String(uploadCircleWidth) + ea,
+          background: colorChip.gradientGray,
+          cursor: "pointer",
+        },
+        children: [
+          {
+            mode: "svg",
+            source: instance.mother.returnLink(colorChip.white),
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(linkIconTop) + ea,
+              width: String(linkIconWidth) + ea,
+            }
           }
-        }
-      ]
-    });
+        ]
+      });
+
+    } else {
+      createNode({
+        mother: basePan,
+        attribute: {
+          index: String(i),
+          proid: project.proid,
+          desid: instance.designer.desid,
+          name: project.name,
+          designer: instance.designer.designer,
+        },
+        event: {
+          click: instance.uploadFiles(i),
+        },
+        style: {
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: String(uploadCircleWidth) + ea,
+          height: String(uploadCircleWidth) + ea,
+          position: "absolute",
+          bottom: String(uploadCirclePadding) + ea,
+          right: String(uploadCirclePadding) + ea,
+          borderRadius: String(uploadCircleWidth) + ea,
+          background: colorChip.gradientGray,
+          cursor: "pointer",
+        },
+        children: [
+          {
+            mode: "svg",
+            source: instance.mother.returnExtract(colorChip.white),
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(uploadIconTop) + ea,
+              width: String(uploadIconWidth) + ea,
+            }
+          }
+        ]
+      });
+    }
 
     createNode({
       mother: basePan,
@@ -1013,7 +1085,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
     let preIndex;
     let linkTargets;
     let linkContents;
-    let link;
+    let link, memo;
     let linkPhotoHeight;
     let linkPhotoMarginBottom;
 
@@ -1400,7 +1472,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
 
       } else if (type === "link") {
 
-        ({ link } = linkContents.find(({ file }) => { return (targetHref + "/" + file) === original }));
+        ({ link, memo } = linkContents.find(({ file }) => { return (targetHref + "/" + file) === original }));
 
         itemBlock = createNode({
           mother,
@@ -1452,7 +1524,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
                 background: desktop ? colorChip.gray3 : colorChip.gray0,
               },
               child: {
-                text: dateToString(date).replace(/\-/gi, '').slice(2) + "_" + name,
+                text: memo.trim() !== "" ? memo.trim() : dateToString(date).replace(/\-/gi, '').slice(2) + "_" + name,
                 style: {
                   display: "inline-block",
                   position: "relative",

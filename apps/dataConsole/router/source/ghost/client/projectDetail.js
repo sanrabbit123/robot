@@ -531,6 +531,8 @@ ProjectDetailJs.prototype.insertUploadBox = function () {
   let subButtonsBasePan;
   let subButtonsBetween;
   let subButtonsVisualTop;
+  let linkIconWidth;
+  let linkIconTop;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -604,6 +606,9 @@ ProjectDetailJs.prototype.insertUploadBox = function () {
   uploadCirclePadding = <%% 16, 16, 16, 12, 4 %%>;
   uploadIconWidth = <%% 13, 13, 13, 12, 3 %%>;
   uploadIconTop = <%% 0, 0, 0, 0, 0 %%>;
+
+  linkIconWidth = <%% 15.5, 15.5, 15.5, 14, 3.4 %%>;
+  linkIconTop = <%% 0, 0, 0, 0, 0 %%>;
 
   plusIconTop = <%% 0, 0, 0, 0, 0 %%>;
   plusIconWidth = <%% 14, 14, 13, 12, 3 %%>;
@@ -825,44 +830,111 @@ ProjectDetailJs.prototype.insertUploadBox = function () {
       }
     });
 
-    createNode({
-      mother: basePan,
-      attribute: {
-        index: String(i),
-        proid: project.proid,
-        desid: instance.designer.desid,
-        name: project.name,
-        designer: instance.designer.designer,
-      },
-      event: {
-        click: instance.uploadFiles(i),
-      },
-      style: {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        width: String(uploadCircleWidth) + ea,
-        height: String(uploadCircleWidth) + ea,
-        position: "absolute",
-        bottom: String(uploadCirclePadding) + ea,
-        right: String(uploadCirclePadding) + ea,
-        borderRadius: String(uploadCircleWidth) + ea,
-        background: colorChip.gradientGray,
-        cursor: "pointer",
-      },
-      children: [
-        {
-          mode: "svg",
-          source: instance.mother.returnExtract(colorChip.white),
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(uploadIconTop) + ea,
-            width: String(uploadIconWidth) + ea,
+    if (this.panContents[i].type === "link") {
+
+      createNode({
+        mother: basePan,
+        attribute: {
+          index: String(i),
+          key: this.panContents[i].key,
+          proid: project.proid,
+          desid: instance.designer.desid,
+          name: project.name,
+          designer: instance.designer.designer,
+        },
+        event: {
+          click: async function (e) {
+            try {
+              const proid = this.getAttribute("proid");
+              const desid = this.getAttribute("desid");
+              const key = this.getAttribute("key");
+              let link, memo, loading;
+
+              do {
+                link = await GeneralJs.prompt("제품 링크를 복사 붙여넣기 해주세요!");
+              } while (typeof link !== "string" || link === null || !/^http/.test(link));
+
+              do {
+                memo = await GeneralJs.prompt("링크에 대한 간단한 메모를 적어주세요!");
+              } while (typeof memo !== "string");
+
+              loading = instance.mother.grayLoading();
+              await ajaxJson({ proid, desid, key, link: window.encodeURIComponent(link.trim()), memo: memo.trim() }, BACKHOST + "/ghostPass_linkSave");
+              await instance.setPanBlocks();
+              loading.remove();
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
+        },
+        style: {
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: String(uploadCircleWidth) + ea,
+          height: String(uploadCircleWidth) + ea,
+          position: "absolute",
+          bottom: String(uploadCirclePadding) + ea,
+          right: String(uploadCirclePadding) + ea,
+          borderRadius: String(uploadCircleWidth) + ea,
+          background: colorChip.gradientGray,
+          cursor: "pointer",
+        },
+        children: [
+          {
+            mode: "svg",
+            source: instance.mother.returnLink(colorChip.white),
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(linkIconTop) + ea,
+              width: String(linkIconWidth) + ea,
+            }
           }
-        }
-      ]
-    });
+        ]
+      });
+
+    } else {
+      createNode({
+        mother: basePan,
+        attribute: {
+          index: String(i),
+          proid: project.proid,
+          desid: instance.designer.desid,
+          name: project.name,
+          designer: instance.designer.designer,
+        },
+        event: {
+          click: instance.uploadFiles(i),
+        },
+        style: {
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: String(uploadCircleWidth) + ea,
+          height: String(uploadCircleWidth) + ea,
+          position: "absolute",
+          bottom: String(uploadCirclePadding) + ea,
+          right: String(uploadCirclePadding) + ea,
+          borderRadius: String(uploadCircleWidth) + ea,
+          background: colorChip.gradientGray,
+          cursor: "pointer",
+        },
+        children: [
+          {
+            mode: "svg",
+            source: instance.mother.returnExtract(colorChip.white),
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(uploadIconTop) + ea,
+              width: String(uploadIconWidth) + ea,
+            }
+          }
+        ]
+      });
+    }
 
     createNode({
       mother: basePan,
@@ -916,12 +988,13 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
   const { ea, targetDrive, targetHref, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { ajaxJson, createNode, colorChip, withOut, cleanChildren, dateToString, isMac, swipePatch } = GeneralJs;
+  const { ajaxJson, createNode, colorChip, withOut, cleanChildren, dateToString, isMac, swipePatch, blankHref } = GeneralJs;
   const motherChildPhotoTongClassName = "motherChildPhotoTongClassName";
   const photoItemInitClassName = "photoItemInitClassName";
   const bigPhotoClassName = "bigPhotoClassName";
   const bigPhotoFixedTargetsClassName = "bigPhotoFixedTargetsClassName";
   const preItemMotherKey = "firstPhoto";
+  const linkTargetKey = [ "productLink" ];
   const emptyDate = new Date(1800, 0, 1);
   try {
     let itemList;
@@ -945,6 +1018,11 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
     let itemDivide;
     let preItemList;
     let preIndex;
+    let linkTargets;
+    let linkContents;
+    let link, memo;
+    let linkPhotoHeight;
+    let linkPhotoMarginBottom;
 
     itemBetween = <%% 6, 6, 5, 4, 1 %%>;
     itemTongHeight = <%% 40, 40, 36, 32, 8 %%>;
@@ -961,6 +1039,9 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
 
     arrowButtonWidth = <%% 16, 16, 16, 16, 2.5 %%>;
     arrowButtonMargin = <%% 20, 20, 20, 20, 2.5 %%>;
+
+    linkPhotoHeight = <%% 238, 211, 244, 195, 40 %%>;
+    linkPhotoMarginBottom = <%% 0, 0, 0, 0, 0 %%>;
 
     bigPhotoClickEvent = function (e) {
       e.preventDefault();
@@ -1172,6 +1253,9 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
     itemList = await ajaxJson({ target: this.targetDrive }, BACKHOST + "/ghostPass_readDir", { equal: true });
     preItemList = await ajaxJson({ cliid: this.client.cliid }, BACKHOST + "/ghostPass_clientPhoto", { equal: true });
 
+    linkTargets = itemList.filter((str) => { return linkTargetKey.includes(str.split("_")[0]) });
+    linkContents = await ajaxJson({ links: linkTargets.map((file) => { return { desid: instance.designer.desid, proid: instance.project.proid, file } }) }, BACKHOST + "/ghostPass_linkParsing", { equal: true });
+
     for (let mother of mothers) {
       cleanChildren(mother);
     }
@@ -1179,10 +1263,11 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
     itemList = itemList.map((raw) => {
       const original = raw;
       const [ key, time, order, hex ] = raw.split("_");
-      const [ , exe ] = hex.split(".");
-      return [ key, new Date(Number(time)), String(Number(order) + 1) + "." + exe, Number(order), targetHref + "/" + original, exe ];
-    }).map(([ key, date, name, order, original, exe ]) => {
-      return { key, date, name, order, original, exe };
+      const [ hexId, exe ] = hex.split(".");
+      const id = key + "_" + time + "_" + String(order) + "_" + hexId;
+      return [ key, new Date(Number(time)), String(Number(order) + 1) + "." + exe, Number(order), targetHref + "/" + original, exe, id ];
+    }).map(([ key, date, name, order, original, exe, id ]) => {
+      return { key, date, name, order, original, exe, id };
     });
 
     itemList.forEach((obj) => {
@@ -1220,7 +1305,7 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
 
     motherMatrix = (new Array(this.panContents.length)).fill(0, 0);
 
-    for (let { mother, key, date, name, order, motherNumber, type, original } of itemList) {
+    for (let { mother, key, date, name, order, motherNumber, type, original, id } of itemList) {
       if (type === "file") {
         itemBlock = createNode({
           mother,
@@ -1259,7 +1344,7 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
             }
           ]
         });
-      } else {
+      } else if (type === "photo") {
 
         if (mother.querySelector('.' + motherChildPhotoTongClassName) === null) {
           for (let i = 0; i < divideNumber; i++) {
@@ -1318,6 +1403,81 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
               }
             }
           ]
+        });
+
+      } else if (type === "link") {
+
+        ({ link, memo } = linkContents.find(({ file }) => { return (targetHref + "/" + file) === original }));
+
+        itemBlock = createNode({
+          mother,
+          attribute: {
+            link,
+            original,
+            key,
+            toggle: "off",
+          },
+          event: {
+            click: function (e) {
+              const link = this.getAttribute("link");
+              blankHref(link);
+            }
+          },
+          style: {
+            display: "inline-flex",
+            width: "calc(calc(100% - " + String(itemBetween * divideNumber) + ea + ") / " + String(divideNumber) + ")",
+            marginRight: String(itemBetween) + ea,
+            marginBottom: String(itemBetween) + ea,
+            cursor: "pointer",
+            flexDirection: "column",
+          },
+          children: [
+            {
+              id,
+              style: {
+                display: "block",
+                width: withOut(0, ea),
+                height: String(linkPhotoHeight) + ea,
+                borderTopLeftRadius: String(5) + "px",
+                borderTopRightRadius: String(5) + "px",
+                background: colorChip.white,
+                marginBottom: String(linkPhotoMarginBottom) + ea,
+                backgroundPosition: "50% 50%",
+                backgroundSize: "100% auto",
+                backgroundRepeat: "no-repeat",
+              }
+            },
+            {
+              style: {
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: withOut(0, ea),
+                height: String(itemTongHeight) + ea,
+                borderBottomLeftRadius: String(5) + "px",
+                borderBottomRightRadius: String(5) + "px",
+                background: desktop ? colorChip.gray3 : colorChip.gray0,
+              },
+              child: {
+                text: memo.trim() !== "" ? memo.trim() : dateToString(date).replace(/\-/gi, '').slice(2) + "_" + name,
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  top: String(textTop) + ea,
+                  fontSize: String(textSize) + ea,
+                  fontWeight: String(textWeight),
+                  color: colorChip.black,
+                }
+              }
+            }
+          ]
+        });
+
+        ajaxJson({ mode: "image", url: window.encodeURIComponent(link), target: id }, "/getOpenGraph").then(({ image, target }) => {
+          target = document.getElementById(target);
+          target.style.backgroundImage = "url('" + image + "')";
+        }).catch((err) => {
+          console.log(err);
         });
 
       }
