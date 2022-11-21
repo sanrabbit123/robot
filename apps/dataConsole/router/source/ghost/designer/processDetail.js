@@ -595,7 +595,7 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
 
   checkBoxAreaWidth = <%% 16, 16, 16, 16, 3 %%>;
 
-  panMotherInnerPadding = <%% 20, 20, 16, 12, 0 %%>;
+  panMotherInnerPadding = <%% 12, 12, 10, 8, 0 %%>;
   panBetween = <%% 8, 8, 8, 8, 1 %%>;
   panTitleBoxWidth = <%% 124, 120, 114, 108, 22 %%>;
   panTitleBoxHeight = <%% 52, 48, 45, 40, 9 %%>;
@@ -920,7 +920,7 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
               } while (typeof link !== "string" || link === null || !/^http/.test(link));
 
               do {
-                memo = await GeneralJs.prompt("링크에 대한 간단한 메모를 적어주세요!");
+                memo = await GeneralJs.prompt("링크에 대한 간단한 이름과 타입 등을 적어주세요! (예) 침실협탁_아이보리");
               } while (typeof memo !== "string");
 
               loading = instance.mother.grayLoading();
@@ -1397,7 +1397,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
           },
           children: [
             {
-              text: dateToString(date).replace(/\-/gi, '').slice(2) + "_" + name,
+              text: dateToString(date).slice(2) + "_" + name,
               style: {
                 display: "inline-block",
                 position: "relative",
@@ -1521,10 +1521,12 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
                 height: String(itemTongHeight) + ea,
                 borderBottomLeftRadius: String(5) + "px",
                 borderBottomRightRadius: String(5) + "px",
-                background: desktop ? colorChip.gray3 : colorChip.gray0,
+                background: desktop ? colorChip.gray2 : colorChip.gray0,
+                textAlign: "center",
+                overflow: "hidden",
               },
               child: {
-                text: memo.trim() !== "" ? memo.trim() : dateToString(date).replace(/\-/gi, '').slice(2) + "_" + name,
+                text: memo.trim() !== "" ? memo.trim() + " (" + dateToString(date).split("-").slice(1).join("/") + ")" : dateToString(date) + "_" + name,
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -3104,15 +3106,15 @@ ProcessDetailJs.prototype.launching = async function (loading) {
           instance.insertInformationBox();
           instance.insertGreenButtons();
 
-          if (typeof getObj.key === "string") {
-            if (instance.buttons.map((dom) => { return JSON.parse(dom.getAttribute("children")) }).flat().includes(getObj.key)) {
-              setQueue(() => {
-                instance.buttons.find((dom) => {
-                  return JSON.parse(dom.getAttribute("children")).includes(getObj.key);
-                }).click();
-              }, 300);
-            }
-          }
+          // if (typeof getObj.key === "string") {
+          //   if (instance.buttons.map((dom) => { return JSON.parse(dom.getAttribute("children")) }).flat().includes(getObj.key)) {
+          //     setQueue(() => {
+          //       instance.buttons.find((dom) => {
+          //         return JSON.parse(dom.getAttribute("children")).includes(getObj.key);
+          //       }).click();
+          //     }, 300);
+          //   }
+          // }
 
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "ProcessDetailJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
