@@ -1436,7 +1436,7 @@ Ghost.prototype.ghostRouter = function (needs) {
             desid,
             proid,
             file,
-            link: (await fileSystem(`readString`, [ `${instance.projectServer}/${desid}/${proid}/${file}` ])).trim();
+            link: (await fileSystem(`readString`, [ `${instance.projectServer}/${desid}/${proid}/${file}` ])).trim(),
           });
         }
 
