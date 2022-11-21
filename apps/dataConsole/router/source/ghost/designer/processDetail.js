@@ -818,7 +818,7 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
               const target = this.getAttribute("target");
               const name = this.getAttribute("name");
               const key = this.getAttribute("key");
-              const host = FRONTHOST;
+              const host = FRONTHOST.replace(/^https\:\/\//gi, '');
               const path = "project";
 
               if (target === "client") {

@@ -2151,6 +2151,12 @@ DataRouter.prototype.rou_post_alimTalk = function () {
   let obj = {};
   obj.link = "/alimTalk";
   obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": '*',
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+      "Access-Control-Allow-Headers": '*',
+    });
     try {
       if (req.body.method === undefined || req.body.name === undefined || req.body.phone === undefined) {
         throw new Error("must be method, name, phone");
@@ -2170,11 +2176,10 @@ DataRouter.prototype.rou_post_alimTalk = function () {
         }
       }
       await instance.kakao.sendTalk(req.body.method, req.body.name, req.body.phone, option);
-      res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
       instance.mother.errorLog("Console 서버 문제 생김 (rou_post_alimTalk): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
