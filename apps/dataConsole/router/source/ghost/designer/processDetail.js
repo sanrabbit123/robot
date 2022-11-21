@@ -981,7 +981,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
   const { ea, targetDrive, targetHref, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { ajaxJson, createNode, colorChip, withOut, cleanChildren, dateToString, isMac, swipePatch } = GeneralJs;
+  const { ajaxJson, createNode, colorChip, withOut, cleanChildren, dateToString, isMac, swipePatch, blankHref } = GeneralJs;
   const motherChildPhotoTongClassName = "motherChildPhotoTongClassName";
   const photoItemInitClassName = "photoItemInitClassName";
   const bigPhotoClassName = "bigPhotoClassName";
@@ -1013,6 +1013,9 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
     let preIndex;
     let linkTargets;
     let linkContents;
+    let link;
+    let linkPhotoHeight;
+    let linkPhotoMarginBottom;
 
     itemBetween = <%% 6, 6, 5, 4, 1 %%>;
     itemTongHeight = <%% 40, 40, 36, 32, 8 %%>;
@@ -1029,6 +1032,9 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
 
     arrowButtonWidth = <%% 16, 16, 16, 16, 2.5 %%>;
     arrowButtonMargin = <%% 20, 20, 20, 20, 2.5 %%>;
+
+    linkPhotoHeight = <%% 238, 211, 244, 195, 40 %%>;
+    linkPhotoMarginBottom = <%% 0, 0, 0, 0, 0 %%>;
 
     bigPhotoClickEvent = function (e) {
       e.preventDefault();
@@ -1243,8 +1249,6 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
     linkTargets = itemList.filter((str) => { return linkTargetKey.includes(str.split("_")[0]) });
     linkContents = await ajaxJson({ links: linkTargets.map((file) => { return { desid: instance.designer.desid, proid: instance.project.proid, file } }) }, BACKHOST + "/ghostPass_linkParsing", { equal: true });
 
-    console.log(linkContents);
-
     for (let mother of mothers) {
       cleanChildren(mother);
     }
@@ -1252,10 +1256,11 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
     itemList = itemList.map((raw) => {
       const original = raw;
       const [ key, time, order, hex ] = raw.split("_");
-      const [ , exe ] = hex.split(".");
-      return [ key, new Date(Number(time)), String(Number(order) + 1) + "." + exe, Number(order), targetHref + "/" + original, exe ];
-    }).map(([ key, date, name, order, original, exe ]) => {
-      return { key, date, name, order, original, exe };
+      const [ hexId, exe ] = hex.split(".");
+      const id = key + "_" + time + "_" + String(order) + "_" + hexId;
+      return [ key, new Date(Number(time)), String(Number(order) + 1) + "." + exe, Number(order), targetHref + "/" + original, exe, id ];
+    }).map(([ key, date, name, order, original, exe, id ]) => {
+      return { key, date, name, order, original, exe, id };
     });
 
     itemList.forEach((obj) => {
@@ -1293,7 +1298,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
 
     motherMatrix = (new Array(this.panContents.length)).fill(0, 0);
 
-    for (let { mother, key, date, name, order, motherNumber, type, original } of itemList) {
+    for (let { mother, key, date, name, order, motherNumber, type, original, id } of itemList) {
       if (type === "file") {
         itemBlock = createNode({
           mother,
@@ -1394,6 +1399,79 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
         });
 
       } else if (type === "link") {
+
+        ({ link } = linkContents.find(({ file }) => { return (targetHref + "/" + file) === original }));
+
+        itemBlock = createNode({
+          mother,
+          attribute: {
+            link,
+            original,
+            key,
+            toggle: "off",
+          },
+          event: {
+            click: function (e) {
+              const link = this.getAttribute("link");
+              blankHref(link);
+            }
+          },
+          style: {
+            display: "inline-flex",
+            width: "calc(calc(100% - " + String(itemBetween * divideNumber) + ea + ") / " + String(divideNumber) + ")",
+            marginRight: String(itemBetween) + ea,
+            marginBottom: String(itemBetween) + ea,
+            cursor: "pointer",
+            flexDirection: "column",
+          },
+          children: [
+            {
+              id,
+              style: {
+                display: "block",
+                width: withOut(0, ea),
+                height: String(linkPhotoHeight) + ea,
+                borderTopLeftRadius: String(5) + "px",
+                borderTopRightRadius: String(5) + "px",
+                background: colorChip.white,
+                marginBottom: String(linkPhotoMarginBottom) + ea,
+                backgroundPosition: "50% 50%",
+                backgroundSize: "100% auto",
+                backgroundRepeat: "no-repeat",
+              }
+            },
+            {
+              style: {
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: withOut(0, ea),
+                height: String(itemTongHeight) + ea,
+                borderBottomLeftRadius: String(5) + "px",
+                borderBottomRightRadius: String(5) + "px",
+                background: desktop ? colorChip.gray3 : colorChip.gray0,
+              },
+              child: {
+                text: dateToString(date).replace(/\-/gi, '').slice(2) + "_" + name,
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  top: String(textTop) + ea,
+                  fontSize: String(textSize) + ea,
+                  fontWeight: String(textWeight),
+                  color: colorChip.black,
+                }
+              }
+            }
+          ]
+        });
+
+        ajaxJson({ mode: "image", url: window.encodeURIComponent(link), target: id }, "/getOpenGraph").then(({ image, target }) => {
+          target = document.getElementById(target);
+          target.style.backgroundImage = "url('" + image + "')";
+        }).catch((err) => {
+          console.log(err);
+        });
 
       }
 

@@ -2720,7 +2720,6 @@ MiniRequestJs.prototype.insertListBox = function (mother, index) {
                       arr.unshift("사진");
                     } else {
                       ({ image } = await ajaxJson({ url: window.encodeURIComponent(arr[7]) }, "/getOpenGraph"));
-                      image = window.decodeURIComponent(image);
                       arr.unshift(image);
                     }
 
@@ -3561,7 +3560,7 @@ MiniRequestJs.prototype.launching = async function (loading) {
     this.mother.backgroundGray.style.background = this.pointColor;
     this.mother.backgroundImageBox.style.backgroundImage = "";
     this.mother.backgroundImageBox.style.background = this.pointColor;
-    
+
     loading.parentNode.removeChild(loading);
 
   } catch (err) {

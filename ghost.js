@@ -1428,16 +1428,25 @@ Ghost.prototype.ghostRouter = function (needs) {
           throw new Error("invaild post");
         }
         const targets = equalJson(req.body.links);
-        let tong;
+        let tong, raw, rawArr, link, memo;
 
         tong = [];
         for (let { desid, proid, file } of targets) {
-          tong.push({
-            desid,
-            proid,
-            file,
-            link: (await fileSystem(`readString`, [ `${instance.projectServer}/${desid}/${proid}/${file}` ])).trim(),
-          });
+
+          raw = (await fileSystem(`readString`, [ `${instance.projectServer}/${desid}/${proid}/${file}` ])).trim();
+          rawArr = raw.split("\n");
+          if (rawArr.length === 1) {
+            link = rawArr[0];
+            memo = "";
+          } else if (rawArr.length > 1) {
+            link = rawArr[0];
+            memo = rawArr[1];
+          } else {
+            link = "";
+            memo = "";
+          }
+
+          tong.push({ desid, proid, file, link, memo });
         }
 
         res.send(JSON.stringify(tong));

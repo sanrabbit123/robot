@@ -4564,7 +4564,11 @@ DataRouter.prototype.rou_post_getOpenGraph = function () {
       if (target === null) {
         result = { image: null };
       } else {
-        result = { image: global.encodeURIComponent(target) };
+        result = { image: target };
+      }
+
+      if (typeof req.body.target === "string") {
+        result.target = req.body.target;
       }
 
       res.send(JSON.stringify(result));
