@@ -1414,8 +1414,8 @@ Ghost.prototype.ghostRouter = function (needs) {
     }
   };
 
-  funcObj.post_readDir = {
-    link: [ "/readDir", "/ls" ],
+  funcObj.post_linkParsing = {
+    link: [ "/linkParsing" ],
     func: async function (req, res) {
       res.set({
         "Content-Type": "application/json",
