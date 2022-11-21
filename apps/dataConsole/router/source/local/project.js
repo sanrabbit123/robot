@@ -4651,20 +4651,6 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   div_clone2.appendChild(historyBox);
   this.whiteBox.historyBox = historyBox;
 
-  //h inital event
-  GeneralJs.stacks["hInitialBoxButtonToggle"] = 0;
-  hInitialBox.addEventListener("click", function (e) {
-    if (GeneralJs.stacks["hInitialBoxButtonToggle"] === 0) {
-      propertyBox.style.opacity = String(0);
-      historyBox.style.width = "calc(100% - " + String(leftMargin * 2) + ea + ")";
-      GeneralJs.stacks["hInitialBoxButtonToggle"] = 1;
-    } else {
-      propertyBox.style.opacity = String(1);
-      historyBox.style.width = "calc(55% - " + String(leftMargin) + ea + ")";
-      GeneralJs.stacks["hInitialBoxButtonToggle"] = 0;
-    }
-  });
-
   //r initial event
   GeneralJs.stacks[thisProjectBill] = null;
   rInitialBox.addEventListener("click", function (e) {
@@ -6906,6 +6892,81 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
       historyBox.style.animation = "fadeout 0.3s ease forwards";
       matrixBox.style.animation = "fadein 0.3s ease forwards";
+    }
+  });
+
+  //h inital event
+  hInitialBox.addEventListener("click", async function (e) {
+    try {
+      const { colorChip, createNode, createNodes, withOut, ajaxJson, stringToDate, dateToString, cleanChildren, autoComma, isMac } = GeneralJs;
+      let matrixBox;
+      let loadingWidth;
+      let tong;
+      let checklist;
+      let itemList;
+
+      loadingWidth = fontSize * (40 / 15);
+
+      if (/fadeout/gi.test(historyBox.style.animation)) {
+
+        historyBox.style.animation = "fadein 0.3s ease forwards";
+        historyBox.parentNode.removeChild(historyBox.parentNode.lastChild);
+
+      } else {
+        matrixBox = historyBox.cloneNode(false);
+        matrixBox.style.border = String("1px solid " + colorChip.gray3);
+        matrixBox.style.borderRadius = String(5) + ea;
+        matrixBox.style.opacity = String(0);
+        historyBox.parentNode.appendChild(matrixBox);
+
+        tong = createNode({
+          mother: matrixBox,
+          style: {
+            position: "relative",
+            width: String(100) + '%',
+            height: String(100) + '%',
+            overflow: "hidden"
+          },
+          child: {
+            mode: "svg",
+            source: instance.mother.returnLoading(),
+            class: [ "loading" ],
+            style: {
+              position: "absolute",
+              width: String(loadingWidth) + ea,
+              top: withOut(50, loadingWidth / 2, ea),
+              left: withOut(50, loadingWidth / 2, ea),
+            }
+          }
+        });
+
+        historyBox.style.animation = "fadeout 0.3s ease forwards";
+        matrixBox.style.animation = "fadein 0.3s ease forwards";
+
+        checklist = await ajaxJson({}, SECONDHOST + "/getChecklist", { equal: true });
+        itemList = await ajaxJson({ target: "__project__" + "/" + thisCase.designer.split(" ")[1] + "/" + thisCase.proid }, BACKHOST + "/ghostPass_readDir", { equal: true });
+
+        console.log(checklist);
+        console.log(itemList);
+        cleanChildren(tong);
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+      }
+    } catch (e) {
+      console.log(e);
     }
   });
 
