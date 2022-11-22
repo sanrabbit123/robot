@@ -6941,6 +6941,11 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       let image;
       let id;
       let linkImageHeight;
+      let subButtonTop;
+      let subButtonHeight;
+      let subButtonTextPadding;
+      let subButtonSize;
+      let subButtonWeight;
 
       loadingWidth = fontSize * (40 / 15);
       innerMargin = fontSize * (20 / 15);
@@ -6952,7 +6957,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       panPaddingLeft = fontSize * (18 / 15);
       panTitleSize = fontSize * (13 / 15);
       panTitleWeight = 700;
-      panTitleBottom = fontSize * (6 / 15);
+      panTitleBottom = fontSize * (5 / 15);
       panContentsPaddingTop = fontSize * (12 / 15);
       panContentsMinHeight = fontSize * (80 / 15);
       divideNumber = 5;
@@ -6962,6 +6967,13 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       blockSize = fontSize * (12 / 15);
       blockWeight = 400;
       linkImageHeight = fontSize * (147 / 15);
+
+      subButtonTop = fontSize * (2 / 15);
+      subButtonHeight = fontSize * (21 / 15);
+      subButtonTextPadding = fontSize * (8 / 15);
+
+      subButtonSize = fontSize * (10 / 15);
+      subButtonWeight = 800;
 
       if (/fadeout/gi.test(historyBox.style.animation)) {
 
@@ -7092,16 +7104,46 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                 set: "flex",
                 style: {
                   width: withOut(0, ea),
-                  flexDirection: "column",
-                  paddingBottom: String(panTitleBottom) + ea,
-                  borderBottom: "1px solid " + colorChip.deactive,
+                  flexDirection: "row",
                 },
                 child: {
                   text: title,
                   style: {
+                    display: "inline-block",
+                    position: "relative",
                     fontSize: String(panTitleSize) + ea,
                     fontWeight: String(panTitleWeight),
                     color: colorChip.black,
+                    paddingBottom: String(panTitleBottom) + ea,
+                    borderBottom: "1px solid " + colorChip.deactive,
+                  },
+                  next: {
+                    style: {
+                      display: "inline-flex",
+                      position: "absolute",
+                      right: String(0),
+                      top: String(subButtonTop) + ea,
+                      height: String(subButtonHeight) + ea,
+                      background: colorChip.black,
+                      borderRadius: String(5) + "px",
+                      cursor: "pointer",
+                      textAlign: "center",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    },
+                    child: {
+                      text: "디자이너에게 " + title + " 업로드 알림톡",
+                      style: {
+                        display: "inline-block",
+                        position: "relative",
+                        top: String(isMac() ? -1 : 1) + ea,
+                        fontSize: String(subButtonSize) + ea,
+                        fontWeight: String(subButtonWeight),
+                        color: colorChip.white,
+                        paddingLeft: String(subButtonTextPadding) + ea,
+                        paddingRight: String(subButtonTextPadding) + ea,
+                      }
+                    }
                   }
                 },
                 next: {

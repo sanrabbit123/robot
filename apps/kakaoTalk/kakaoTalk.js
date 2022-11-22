@@ -1140,6 +1140,28 @@ KakaoTalk.prototype.templateTong = function (target) {
         ];
       },
     },
+    pushDesignerFile: {
+      name: "파일 전달 촉구",
+      id: "TK_7715",
+      needs: [
+        "designer",
+        "client",
+        "file",
+        "host",
+        "path",
+        "proid",
+      ],
+      convert: function (obj) {
+        return [
+          { from: "designer", to: obj.designer },
+          { from: "client", to: obj.client },
+          { from: "file", to: obj.file },
+          { from: "host", to: obj.host },
+          { from: "path", to: obj.path },
+          { from: "proid", to: obj.proid },
+        ];
+      },
+    },
   };
   if (target === "$all") {
     return tong;
