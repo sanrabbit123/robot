@@ -207,9 +207,9 @@ FacebookAPIs.prototype.conversionEvent = async function (obj) {
   try {
     const url = `https://graph.facebook.com/${appVersion}/${pixelId}/events?access_token=${facebookToken}`;
     let res, data;
+    let injectionObject;
 
-    data = [];
-    data.push({
+    injectionObject = {
       event_name: obj.name,
       event_time: Math.floor((new Date()).valueOf() / 1000),
       event_source_url: "https://" + instance.address.frontinfo.host,
@@ -217,14 +217,15 @@ FacebookAPIs.prototype.conversionEvent = async function (obj) {
       user_data: {
         client_ip_address: obj.data.ip,
         client_user_agent: obj.data.userAgent,
-      }
-    })
+      },
+      custom_data: { ...obj.custom },
+    };
+
+    data = [ injectionObject ];
 
     res = await requestSystem(url, { data }, {
       headers: { "Content-Type": "application/json" }
     });
-
-    console.log(res);
 
     return { message: "success" };
 

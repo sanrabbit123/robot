@@ -761,11 +761,38 @@ LogRouter.prototype.rou_post_getAnalytics = function () {
       const rawUserAgent = req.useragent;
       const { source: userAgent, browser, os, platform } = rawUserAgent;
       const referrer = (req.headers.referer === undefined ? "" : req.headers.referer);
+      let name;
+      let ipObj, custom;
 
-      console.log(req.body);
-      console.log(ip);
-      console.log(userAgent);
-      console.log(referrer);
+      name = "fromServer_" + req.body.action + "_" + req.body.page;
+
+      ipObj = await ipParsing(ip);
+      custom = {
+        network: {
+          referrer,
+          userAgent,
+          browser,
+          os,
+          platform,
+          mobile: rawUserAgent.isMobile,
+          ...ipObj
+        },
+        date: (new Date()).valueOf(),
+        data: {
+          page: req.body.page,
+          action: req.body.action,
+          raw: req.body.data,
+        }
+      };
+
+      instance.facebook.conversionEvent({
+        name,
+        data: {
+          ip: ip,
+          userAgent: userAgent,
+        },
+        custom
+      }).catch((err) => { console.log(err); })
 
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
