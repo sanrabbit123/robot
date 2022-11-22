@@ -2894,12 +2894,20 @@ StylePartsJs.prototype.insertStyleBox = function () {
     createNode({
       mother: whiteBox.lastChild,
       text: "* " + n,
+      event: {
+        click: function (e) {
+          GeneralJs.downloadFile("https://" + FILEHOST + "/photo/sample/partsSample.pdf").catch((err) => {
+            console.log(err);
+          });
+        }
+      },
       style: {
         display: "block",
         position: "relative",
         textAlign: "right",
         fontWeight: String(noticeWeight),
         color: num2 === contents.white.notice.length - 1 ? localColor.brown2 : localColor.brown0,
+        cursor: num2 === contents.white.notice.length - 1 ? "pointer" : "",
         fontSize: String(noticeSize) + ea,
         marginBottom: String(noticeBetween) + ea,
       }
