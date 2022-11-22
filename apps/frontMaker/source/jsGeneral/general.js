@@ -5941,43 +5941,48 @@ GeneralJs.homeliaisonAnalytics = function (obj) {
         resolve(json);
       });
     } else {
-      if (typeof window.gtag === "function") {
-        if (typeof obj === "object" && obj !== null) {
-          if (typeof obj.page === "string" && obj.standard instanceof Date && typeof obj.action === "string" && typeof obj.data === "object" && obj.data !== null) {
-            window.gtag("get", window.gtagId, "client_id", (client_id) => {
-              const json = {
-                page: obj.page,
-                action: obj.action,
-                standard: obj.standard.valueOf(),
-                date: (new Date()).valueOf(),
-                googleId: client_id,
-                id: client_id,
-                ...obj.data
-              };
-              if (typeof window.fbq === "function") {
-                window.fbq("trackCustom", obj.action, json);
-              }
-              window.gtag("event", obj.action, {
-                "event_category": obj.page,
-                "event_label": JSON.stringify(json),
+
+      GeneralJs.ajaxJson(obj, LOGHOST + "/getAnalytics").then(() => {
+        if (typeof window.gtag === "function") {
+          if (typeof obj === "object" && obj !== null) {
+            if (typeof obj.page === "string" && obj.standard instanceof Date && typeof obj.action === "string" && typeof obj.data === "object" && obj.data !== null) {
+              window.gtag("get", window.gtagId, "client_id", (client_id) => {
+                const json = {
+                  page: obj.page,
+                  action: obj.action,
+                  standard: obj.standard.valueOf(),
+                  date: (new Date()).valueOf(),
+                  googleId: client_id,
+                  id: client_id,
+                  ...obj.data
+                };
+                if (typeof window.fbq === "function") {
+                  window.fbq("trackCustom", obj.action, json);
+                }
+                window.gtag("event", obj.action, {
+                  "event_category": obj.page,
+                  "event_label": JSON.stringify(json),
+                });
+                resolve({
+                  date: {
+                    standard: new Date(),
+                    now: new Date(),
+                  },
+                  data: json
+                });
               });
-              resolve({
-                date: {
-                  standard: new Date(),
-                  now: new Date(),
-                },
-                data: json
-              });
-            });
+            } else {
+              reject("input must be { page: String, standard: Date, action: String, data: Object } }");
+            }
           } else {
-            reject("input must be { page: String, standard: Date, action: String, data: Object } }");
+            reject("invaild input");
           }
         } else {
-          reject("invaild input");
+          reject("there is no gtag");
         }
-      } else {
-        reject("there is no gtag");
-      }
+      }).catch((err) => {
+        reject(err);
+      })
     }
   });
 }

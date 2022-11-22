@@ -19,13 +19,15 @@ const FacebookAPIs = function (mother = null, back = null, address = null) {
   this.facebookPageId = "290144638061244";
   this.instagramId = "17841405547472752";
   this.facebookAdId = "505249990112820";
+  this.pixelId = "814052605684956";
+  this.appVersion = "v14.0";
 
 }
 
 FacebookAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3) {
   const instance = this;
   const back = this.back;
-  const { facebookAppId, facebookToken, facebookPageId, instagramId, facebookAdId } = this;
+  const { facebookAppId, facebookToken, facebookPageId, instagramId, facebookAdId, appVersion } = this;
   const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog } = this.mother;
   const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
   try {
@@ -58,7 +60,7 @@ FacebookAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3)
         to.setDate(to.getDate() + 1);
       }
 
-      res = await requestSystem("https://graph.facebook.com/v14.0/act_" + facebookAdId + "/insights", {
+      res = await requestSystem("https://graph.facebook.com/" + appVersion + "/act_" + facebookAdId + "/insights", {
         level: "campaign",
         fields: [
           "account_id",
@@ -127,7 +129,7 @@ FacebookAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3)
 FacebookAPIs.prototype.dailyInstagram = async function (selfMongo, dayNumber = 7) {
   const instance = this;
   const back = this.back;
-  const { facebookAppId, facebookToken, facebookPageId, instagramId, facebookAdId } = this;
+  const { facebookAppId, facebookToken, facebookPageId, instagramId, facebookAdId, appVersion } = this;
   const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog } = this.mother;
   const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
   try {
@@ -147,7 +149,7 @@ FacebookAPIs.prototype.dailyInstagram = async function (selfMongo, dayNumber = 7
       startDate.setDate(startDate.getDate() - 1);
     }
 
-    res = await requestSystem("https://graph.facebook.com/v14.0/" + instagramId + "/insights", {
+    res = await requestSystem("https://graph.facebook.com/" + appVersion + "/" + instagramId + "/insights", {
       metric: "impressions,profile_views,follower_count,website_clicks",
       period: "day",
       since: dateToString(startDate),
@@ -195,6 +197,40 @@ FacebookAPIs.prototype.dailyInstagram = async function (selfMongo, dayNumber = 7
   } catch (e) {
     await errorLog("FacebookAPIs.dailyInstagram error : " + e.message);
     console.log(e);
+  }
+}
+
+FacebookAPIs.prototype.conversionEvent = async function (obj) {
+  const instance = this;
+  const { requestSystem } = this.mother;
+  const { facebookToken, pixelId, appVersion } = this;
+  try {
+    const url = `https://graph.facebook.com/${appVersion}/${pixelId}/events?access_token=${facebookToken}`;
+    let res, data;
+
+    data = [];
+    data.push({
+      event_name: obj.name,
+      event_time: Math.floor((new Date()).valueOf() / 1000),
+      event_source_url: "https://" + instance.address.frontinfo.host,
+      action_source: "website",
+      user_data: {
+        client_ip_address: obj.data.ip,
+        client_user_agent: obj.data.userAgent,
+      }
+    })
+
+    res = await requestSystem(url, { data }, {
+      headers: { "Content-Type": "application/json" }
+    });
+
+    console.log(res);
+
+    return { message: "success" };
+
+  } catch (e) {
+    console.log(e);
+    return null;
   }
 }
 

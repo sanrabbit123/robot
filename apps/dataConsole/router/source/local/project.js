@@ -6946,14 +6946,13 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         checklist = await ajaxJson({}, SECONDHOST + "/getChecklist", { equal: true });
         itemList = await ajaxJson({ target: "__project__" + "/" + thisCase.designer.split(" ")[1] + "/" + thisCase.proid }, BACKHOST + "/ghostPass_readDir", { equal: true });
 
-        console.log(checklist);
-        console.log(itemList);
         cleanChildren(tong);
 
 
+        console.log(checklist);
+        console.log(itemList);
 
 
-        
 
 
 

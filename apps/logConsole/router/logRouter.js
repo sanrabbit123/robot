@@ -2,6 +2,12 @@ const LogRouter = function (slack_bot, MONGOC) {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const LogReport = require(`${process.cwd()}/apps/logConsole/router/logReport.js`);
+
+  const FacebookAPIs = require(`${process.cwd()}/apps/facebookAPIs/facebookAPIs.js`);
+  const NaverAPIs = require(`${process.cwd()}/apps/naverAPIs/naverAPIs.js`);
+  const GoogleAds = require(`${process.cwd()}/apps/googleAPIs/googleAds.js`);
+  const GoogleYoutube = require(`${process.cwd()}/apps/googleAPIs/googleYoutube.js`);
+
   this.mother = new Mother();
   this.back = new BackMaker();
   this.mongo = MONGOC;
@@ -9,6 +15,11 @@ const LogRouter = function (slack_bot, MONGOC) {
   this.report = new LogReport(MONGOC);
   this.host = this.address.testinfo.host;
   this.slack_bot = slack_bot;
+
+  this.facebook = new FacebookAPIs();
+  this.naver = new NaverAPIs();
+  this.google = new GoogleAds();
+  this.youtube = new GoogleYoutube();
 }
 
 LogRouter.prototype.baseMaker = function (target, req = null) {
@@ -65,18 +76,12 @@ LogRouter.prototype.dailyAnalytics = async function () {
 
 LogRouter.prototype.dailyCampaign = async function (selfMongo) {
   const instance = this;
-  const FacebookAPIs = require(`${process.cwd()}/apps/facebookAPIs/facebookAPIs.js`);
-  const NaverAPIs = require(`${process.cwd()}/apps/naverAPIs/naverAPIs.js`);
-  const GoogleAds = require(`${process.cwd()}/apps/googleAPIs/googleAds.js`);
   try {
-    const facebook = new FacebookAPIs();
-    const naver = new NaverAPIs();
-    const google = new GoogleAds();
     const dayNumber = 3;
 
-    await facebook.dailyCampaign(selfMongo, dayNumber);
-    await naver.dailyCampaign(selfMongo, dayNumber);
-    await google.dailyCampaign(selfMongo, dayNumber);
+    await instance.facebook.dailyCampaign(selfMongo, dayNumber);
+    await instance.naver.dailyCampaign(selfMongo, dayNumber);
+    await instance.google.dailyCampaign(selfMongo, dayNumber);
 
   } catch (e) {
     console.log(e);
@@ -85,15 +90,11 @@ LogRouter.prototype.dailyCampaign = async function (selfMongo) {
 
 LogRouter.prototype.dailyChannel = async function (selfMongo) {
   const instance = this;
-  const FacebookAPIs = require(`${process.cwd()}/apps/facebookAPIs/facebookAPIs.js`);
-  const GoogleYoutube = require(`${process.cwd()}/apps/googleAPIs/googleYoutube.js`);
   try {
-    const facebook = new FacebookAPIs();
-    const youtube = new GoogleYoutube();
     const dayNumber = 3;
 
-    await facebook.dailyInstagram(selfMongo, dayNumber);
-    await youtube.dailyYoutube(selfMongo, dayNumber);
+    await instance.facebook.dailyInstagram(selfMongo, dayNumber);
+    await instance.youtube.dailyYoutube(selfMongo, dayNumber);
 
   } catch (e) {
     console.log(e);
@@ -736,6 +737,39 @@ LogRouter.prototype.rou_post_errorMessage = function () {
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
       errorLog("Log console 서버 문제 생김 (rou_post_errorMessage): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+LogRouter.prototype.rou_post_getAnalytics = function () {
+  const instance = this;
+  const { equalJson, ipParsing } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/getAnalytics" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const ip = String(req.headers['x-forwarded-for'] === undefined ? req.connection.remoteAddress : req.headers['x-forwarded-for']).trim().replace(/[^0-9\.]/gi, '');
+      const rawUserAgent = req.useragent;
+      const { source: userAgent, browser, os, platform } = rawUserAgent;
+      const referrer = (req.headers.referer === undefined ? "" : req.headers.referer);
+
+      console.log(req.body);
+      console.log(ip);
+      console.log(userAgent);
+      console.log(referrer);
+
+      res.send(JSON.stringify({ message: "done" }));
+    } catch (e) {
+      errorLog("Log console 서버 문제 생김 (rou_post_getAnalytics): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
