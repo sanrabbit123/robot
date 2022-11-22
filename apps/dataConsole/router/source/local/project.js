@@ -6898,14 +6898,70 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   //h inital event
   hInitialBox.addEventListener("click", async function (e) {
     try {
-      const { colorChip, createNode, createNodes, withOut, ajaxJson, stringToDate, dateToString, cleanChildren, autoComma, isMac } = GeneralJs;
+      const { colorChip, createNode, createNodes, withOut, ajaxJson, stringToDate, dateToString, cleanChildren, autoComma, isMac, findByAttribute, uniqueValue, blankHref, downloadFile } = GeneralJs;
+      const panClassName = "panClassName";
+      const preItemMotherKey = "firstPhoto";
+      const linkTargetKey = [ "productLink" ];
+      const targetHref = "https://" + FILEHOST + "/photo/designer" + "/" + thisCase.designer.split(" ")[1] + "/" + thisCase.proid;
+      const emptyDate = new Date(1800, 0, 1);
       let matrixBox;
       let loadingWidth;
       let tong;
       let checklist;
       let itemList;
+      let titleTong;
+      let innerMargin;
+      let titleHeight;
+      let titleBottom;
+      let scrollTong;
+      let type, key, title, action;
+      let scrollTongPaddingTop;
+      let panBetween;
+      let panPaddingTop, panPaddingLeft;
+      let panTitleSize;
+      let panTitleWeight;
+      let panTitleBottom;
+      let panContentsPaddingTop;
+      let panContentsMinHeight;
+      let divideNumber, photoDivideNumber;
+      let indexTong;
+      let typeObj;
+      let panContents;
+      let blockBetween;
+      let thisProject;
+      let preItemList;
+      let preIndex;
+      let tempArr;
+      let blockHeight;
+      let blockSize;
+      let blockWeight;
+      let linkTargets;
+      let linkContents;
+      let file, link, memo;
+      let image;
+      let id;
+      let linkImageHeight;
 
       loadingWidth = fontSize * (40 / 15);
+      innerMargin = fontSize * (20 / 15);
+      titleHeight = fontSize * (50 / 15);
+      titleBottom = fontSize * (9 / 15);
+      scrollTongPaddingTop = fontSize * (16 / 15);
+      panBetween = fontSize * (6 / 15);
+      panPaddingTop = fontSize * (15 / 15);
+      panPaddingLeft = fontSize * (18 / 15);
+      panTitleSize = fontSize * (13 / 15);
+      panTitleWeight = 700;
+      panTitleBottom = fontSize * (6 / 15);
+      panContentsPaddingTop = fontSize * (12 / 15);
+      panContentsMinHeight = fontSize * (80 / 15);
+      divideNumber = 5;
+      photoDivideNumber = 4;
+      blockBetween = fontSize * (5 / 15);
+      blockHeight = fontSize * (40 / 15);
+      blockSize = fontSize * (12 / 15);
+      blockWeight = 400;
+      linkImageHeight = fontSize * (147 / 15);
 
       if (/fadeout/gi.test(historyBox.style.animation)) {
 
@@ -6945,23 +7001,318 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
         checklist = await ajaxJson({}, SECONDHOST + "/getChecklist", { equal: true });
         itemList = await ajaxJson({ target: "__project__" + "/" + thisCase.designer.split(" ")[1] + "/" + thisCase.proid }, BACKHOST + "/ghostPass_readDir", { equal: true });
+        [ thisProject ] = await ajaxJson({ whereQuery: { proid: thisCase.proid } }, SECONDHOST + "/getProjects", { equal: true });
+        preItemList = await ajaxJson({ cliid: thisProject.cliid }, BACKHOST + "/ghostPass_clientPhoto", { equal: true });
+        linkTargets = itemList.filter((str) => { return linkTargetKey.includes(str.split("_")[0]) });
+        linkContents = await ajaxJson({ links: linkTargets.map((file) => { return { desid: thisCase.designer.split(" ")[1], proid: thisCase.proid, file } }) }, BACKHOST + "/ghostPass_linkParsing", { equal: true });
+
+        tempArr = [];
+        preIndex = 1;
+        for (let original of preItemList.sitePhoto) {
+          tempArr.push({
+            fileName: [
+              preItemMotherKey,
+              String(emptyDate.valueOf()),
+              String(preIndex),
+              uniqueValue("hex") + "." + original.split(".")[original.split(".").length - 1],
+            ].join("_"),
+            original,
+          });
+          preIndex++;
+        }
+        itemList = tempArr.concat(itemList);
 
         cleanChildren(tong);
 
+        titleTong = createNode({
+          mother: tong,
+          style: {
+            position: "relative",
+            marginLeft: String(innerMargin) + ea,
+            width: withOut(innerMargin * 2, ea),
+            height: String(titleHeight) + ea,
+            borderBottom: "1px solid " + colorChip.gray3
+          },
+          children: [
+            {
+              text: "프로젝트 파일",
+              style: {
+                fontSize: String(fontSize) + ea,
+                fontWeight: String(600),
+                position: "absolute",
+                bottom: String(titleBottom) + ea,
+              }
+            },
+          ]
+        });
 
-        console.log(checklist);
-        console.log(itemList);
+        scrollTong = createNode({
+          mother: tong,
+          style: {
+            position: "relative",
+            width: String(100) + '%',
+            height: withOut(titleHeight, ea),
+            overflow: "scroll"
+          },
+          child: {
+            style: {
+              display: "block",
+              position: "relative",
+              height: String(scrollTongPaddingTop) + ea,
+            }
+          }
+        });
 
+        typeObj = {};
+        for (let i = 0; i < checklist.length; i++) {
+          for (let j = 0; j < checklist[i].children.length; j++) {
 
+            type = checklist[i].children[j].type;
+            key = checklist[i].children[j].key;
+            title = checklist[i].children[j].title;
+            action = checklist[i].children[j].action;
+            typeObj[key] = type;
 
+            panContents = createNode({
+              mother: scrollTong,
+              style: {
+                display: "block",
+                position: "relative",
+                marginLeft: String(innerMargin) + ea,
+                width: withOut((innerMargin * 2) + (panPaddingLeft * 2), ea),
+                marginBottom: String(panBetween) + ea,
+                borderRadius: String(5) + "px",
+                background: colorChip.gray1,
+                paddingTop: String(panPaddingTop) + ea,
+                paddingLeft: String(panPaddingLeft) + ea,
+                paddingRight: String(panPaddingLeft) + ea,
+                paddingBottom: String(panPaddingTop) + ea,
+              },
+              child: {
+                set: "flex",
+                style: {
+                  width: withOut(0, ea),
+                  flexDirection: "column",
+                  paddingBottom: String(panTitleBottom) + ea,
+                  borderBottom: "1px solid " + colorChip.deactive,
+                },
+                child: {
+                  text: title,
+                  style: {
+                    fontSize: String(panTitleSize) + ea,
+                    fontWeight: String(panTitleWeight),
+                    color: colorChip.black,
+                  }
+                },
+                next: {
+                  attribute: {
+                    key,
+                  },
+                  class: [ panClassName ],
+                  style: {
+                    display: "block",
+                    paddingTop: String(panContentsPaddingTop) + ea,
+                    position: "relative",
+                    width: withOut(0, ea),
+                    minHeight: String(panContentsMinHeight) + ea,
+                  }
+                }
+              }
+            });
 
+            if (type === "photo") {
+              for (let i = 0; i < photoDivideNumber; i++) {
+                createNode({
+                  mother: panContents.querySelector('.' + panClassName),
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    verticalAlign: "top",
+                    width: "calc(calc(100% - " + String(blockBetween * (photoDivideNumber - 1)) + ea + ") / " + String(photoDivideNumber) + ")",
+                    marginRight: String((i === (photoDivideNumber - 1)) ? 0 : blockBetween) + ea,
+                  }
+                });
+              }
+            }
 
+          }
+        }
 
+        createNode({
+          mother: scrollTong,
+          style: {
+            display: "block",
+            position: "relative",
+            height: String(panContentsMinHeight) + ea,
+          }
+        });
 
+        indexTong = {};
+        itemList.forEach((raw) => {
+          let originalRoot;
+          if (typeof raw !== "string") {
+            originalRoot = raw.original;
+            raw = raw.fileName;
+          } else {
+            originalRoot = targetHref + "/" + raw;
+          }
+          const [ key, timeString, orderString, hex ] = raw.split("_");
+          const [ hexString, exe ] = hex.split(".");
+          const mother = findByAttribute(document.querySelectorAll('.' + panClassName), "key", key);
+          const date = dateToString(new Date(Number(timeString)));
 
+          if (indexTong[key] === undefined) {
+            indexTong[key] = 0;
+          } else {
+            indexTong[key] = indexTong[key] + 1;
+          }
 
+          if (typeObj[key] === "file") {
 
+            createNode({
+              mother,
+              attribute: {
+                src: originalRoot,
+                link: originalRoot
+              },
+              event: {
+                click: function (e) {
+                  const link = this.getAttribute("link");
+                  downloadFile(link);
+                }
+              },
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: "calc(calc(100% - " + String(blockBetween * (divideNumber - 1)) + ea + ") / " + String(divideNumber) + ")",
+                height: String(blockHeight) + ea,
+                marginRight: String((indexTong[key] % divideNumber === (divideNumber - 1)) ? 0 : blockBetween) + ea,
+                marginBottom: String(blockBetween) + ea,
+                background: colorChip.white,
+                borderRadius: String(5) + "px",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                textAlign: "center",
+                cursor: "pointer",
+              },
+              child: {
+                text: (date + "_" + orderString + "." + exe),
+                style: {
+                  fontSize: String(blockSize) + ea,
+                  fontWeight: String(blockWeight),
+                  color: colorChip.black,
+                  position: "relative",
+                  top: String(isMac() ? -1 : 1) + ea,
+                }
+              }
+            });
 
+          } else if (typeObj[key] === "photo") {
+
+            createNode({
+              mother: [ ...mother.children ][indexTong[key] % photoDivideNumber],
+              mode: "img",
+              attribute: {
+                src: originalRoot,
+                link: originalRoot
+              },
+              event: {
+                click: function (e) {
+                  const link = this.getAttribute("link");
+                  downloadFile(link);
+                }
+              },
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(0, ea),
+                marginBottom: String(blockBetween) + ea,
+                background: colorChip.white,
+                borderRadius: String(5) + "px",
+                cursor: "pointer",
+              }
+            });
+
+          } else if (typeObj[key] === "link") {
+
+            ({ link, memo } = linkContents.find(({ file }) => { return file === raw }))
+            id = raw.replace(/[\_\-\.]/gi, '');
+
+            createNode({
+              mother,
+              attribute: {
+                link,
+              },
+              event: {
+                click: function (e) {
+                  const link = this.getAttribute("link");
+                  blankHref(link);
+                }
+              },
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: "calc(calc(100% - " + String(blockBetween * (divideNumber - 1)) + ea + ") / " + String(divideNumber) + ")",
+                marginRight: String((indexTong[key] % divideNumber === (divideNumber - 1)) ? 0 : blockBetween) + ea,
+                marginBottom: String(blockBetween) + ea,
+                flexDirection: "column",
+                textAlign: "center",
+                cursor: "pointer",
+              },
+              children: [
+                {
+                  id,
+                  style: {
+                    display: "block",
+                    position: "relative",
+                    width: withOut(0, ea),
+                    height: String(linkImageHeight) + ea,
+                    background: colorChip.white,
+                    borderTopLeftRadius: String(5) + "px",
+                    borderTopRightRadius: String(5) + "px",
+                    backgroundPosition: "50% 50%",
+                    backgroundSize: "100% auto",
+                    backgroundRepeat: "no-repeat",
+                  }
+                },
+                {
+                  style: {
+                    display: "flex",
+                    position: "relative",
+                    width: withOut(0, ea),
+                    height: String(blockHeight) + ea,
+                    background: colorChip.white,
+                    borderBottomLeftRadius: String(5) + "px",
+                    borderBottomRightRadius: String(5) + "px",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    textAlign: "center",
+                  },
+                  child: {
+                    text: memo + " (" + date.split("-").slice(1).join("/") + ")",
+                    style: {
+                      fontSize: String(blockSize) + ea,
+                      fontWeight: String(blockWeight),
+                      color: colorChip.black,
+                      position: "relative",
+                      top: String(isMac() ? -1 : 1) + ea,
+                    }
+                  }
+                }
+              ]
+            });
+
+            ajaxJson({ mode: "image", url: window.encodeURIComponent(link), target: id }, "/getOpenGraph").then(({ image, target }) => {
+              target = document.getElementById(target);
+              target.style.backgroundImage = "url('" + image + "')";
+            }).catch((err) => {
+              console.log(err);
+            });
+
+          }
+        });
 
       }
     } catch (e) {

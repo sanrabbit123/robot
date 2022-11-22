@@ -3518,8 +3518,8 @@ StylePartsJs.prototype.insertBenefitsBox = function () {
     title: "고객님들을 위한 혜택",
     sub: "스타일 파츠 이용 고객 대상",
     benefits: [
-      [ "One", desktop ? "아파트멘터리 mms를 통한 계약 고객 디자인비 5% 할인 혜택" : "아파트멘터리 mms를 통한 고객 5% 할인 혜택" ],
-      [ "Two", desktop ? "Parts 자재 사용 및 홈리에종 시공사 이용 시 추가 상품권 증정" : "Parts 사용, 홈리에종 시공사 이용 시 상품권" ],
+      [ "One", desktop ? "스타일파츠 계약시 디자인비 5% 할인 적용" : "스타일파츠 계약시 디자인비 5% 할인 적용" ],
+      [ "Two", desktop ? "스타일파츠 계약시 추가 상품권 증정 *일정금액 이상" : "스타일파츠 계약시 상품권 증정 *일정금액 이상" ],
       [ "Three", desktop ? "블로그 / 유튜브 촬영 등 서비스 후기 작성시 상품권 증정" : "블로그, 유튜브 등 후기 작성시 상품권 증정" ],
     ],
     description: [
