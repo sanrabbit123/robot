@@ -1853,9 +1853,9 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong, x) {
 
             saveEvent = async (raw) => {
               try {
-                const text = await instance.contents[x].contents[z].updateValue(raw, instance.designer);
-                self.firstChild.textContent = text;
-                self.setAttribute("value", text);
+                // const text = await instance.contents[x].contents[z].updateValue(raw, instance.designer);
+                // self.firstChild.textContent = text;
+                // self.setAttribute("value", text);
               } catch (e) {
                 console.log(e);
               }
@@ -1990,56 +1990,56 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong, x) {
             selectstart: (e) => { e.preventDefault(); },
             click: function (e) {
               e.stopPropagation();
-              const self = this;
-              const toggle = this.getAttribute("toggle");
-              const x = Number(this.getAttribute("x"));
-              const z = Number(this.getAttribute("z"));
-              let targets;
-              let finalTargets;
-              let finalNumbers;
-
-              if (toggle === "on") {
-                if (instance.contents[x].contents[z].multiple) {
-                  self.style.color = colorChip.deactive;
-                } else {
-                  targets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
-                  if (targets.length === 2) {
-                    for (let dom of targets) {
-                      if (dom === self) {
-                        dom.style.color = colorChip.deactive;
-                      } else {
-                        dom.style.color = colorChip.green;
-                        dom.setAttribute("toggle", "on");
-                      }
-                    }
-                  } else {
-                    self.style.color = colorChip.deactive;
-                  }
-                }
-                self.setAttribute("toggle", "off");
-              } else {
-                if (instance.contents[x].contents[z].multiple) {
-                  self.style.color = colorChip.green;
-                } else {
-                  targets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
-                  for (let dom of targets) {
-                    if (dom === self) {
-                      dom.style.color = colorChip.green;
-                    } else {
-                      dom.style.color = colorChip.deactive;
-                      dom.setAttribute("toggle", "off");
-                    }
-                  }
-                }
-                self.setAttribute("toggle", "on");
-              }
-
-              finalTargets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
-              finalNumbers = finalTargets.map((dom) => { return dom.getAttribute("toggle") === "on" ? 1 : 0 });
-
-              instance.contents[x].contents[z].updateValue(finalNumbers, instance.contents[x].contents[z].returnValue(instance.designer), instance.designer).catch((err) => {
-                console.log(err);
-              });
+              // const self = this;
+              // const toggle = this.getAttribute("toggle");
+              // const x = Number(this.getAttribute("x"));
+              // const z = Number(this.getAttribute("z"));
+              // let targets;
+              // let finalTargets;
+              // let finalNumbers;
+              //
+              // if (toggle === "on") {
+              //   if (instance.contents[x].contents[z].multiple) {
+              //     self.style.color = colorChip.deactive;
+              //   } else {
+              //     targets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
+              //     if (targets.length === 2) {
+              //       for (let dom of targets) {
+              //         if (dom === self) {
+              //           dom.style.color = colorChip.deactive;
+              //         } else {
+              //           dom.style.color = colorChip.green;
+              //           dom.setAttribute("toggle", "on");
+              //         }
+              //       }
+              //     } else {
+              //       self.style.color = colorChip.deactive;
+              //     }
+              //   }
+              //   self.setAttribute("toggle", "off");
+              // } else {
+              //   if (instance.contents[x].contents[z].multiple) {
+              //     self.style.color = colorChip.green;
+              //   } else {
+              //     targets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
+              //     for (let dom of targets) {
+              //       if (dom === self) {
+              //         dom.style.color = colorChip.green;
+              //       } else {
+              //         dom.style.color = colorChip.deactive;
+              //         dom.setAttribute("toggle", "off");
+              //       }
+              //     }
+              //   }
+              //   self.setAttribute("toggle", "on");
+              // }
+              //
+              // finalTargets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
+              // finalNumbers = finalTargets.map((dom) => { return dom.getAttribute("toggle") === "on" ? 1 : 0 });
+              //
+              // instance.contents[x].contents[z].updateValue(finalNumbers, instance.contents[x].contents[z].returnValue(instance.designer), instance.designer).catch((err) => {
+              //   console.log(err);
+              // });
             }
           },
           style: {
