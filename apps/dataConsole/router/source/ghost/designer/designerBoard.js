@@ -2251,6 +2251,9 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
     });
 
     targets = equalJson(JSON.stringify(projects));
+    targets.sort((a, b) => {
+      return b.process.contract.form.date.from.valueOf() - a.process.contract.form.date.from.valueOf();
+    });
     targetLength = targets.length;
     if (targetLength < minimalLength) {
       for (let i = 0; i < minimalLength - targetLength; i++) {
@@ -2269,9 +2272,9 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
 
       if (targets[i] !== null) {
         state = 0;
-        if (/드[랍롭]/gi.test(projects[i].process.status) || /홀[드딩]/gi.test(projects[i].process.status)) {
+        if (/드[랍롭]/gi.test(targets[i].process.status) || /홀[드딩]/gi.test(targets[i].process.status)) {
           state = 3;
-        } else if (/완료/gi.test(projects[i].process.status)) {
+        } else if (/완료/gi.test(targets[i].process.status)) {
           state = 2;
         }
 
