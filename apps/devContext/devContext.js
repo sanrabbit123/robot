@@ -133,7 +133,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-
+    console.log(await decryptoHash("homeliaison", "cfbb4486e6a4c0cfd2a735a24ef5001cee21ef01095a1427567a8b9ff1b782011ff99346b52c5c5182547249caf639bf"))
 
 
     /*

@@ -4280,8 +4280,10 @@ GeneralJs.prompt = function (message) {
         this.parentNode.style.animation = "fadedownlite 0.2s ease forwards";
         setTimeout(() => {
           if (document.querySelector('.' + promptAsideClassName) !== null) {
-            document.body.removeChild(asideTargets[asideTargets.length - 1]);
-            resolve(finalValue);
+            try {
+              document.body.removeChild(asideTargets[asideTargets.length - 1]);
+              resolve(finalValue);
+            } catch {}
           }
         }, 201);
       }

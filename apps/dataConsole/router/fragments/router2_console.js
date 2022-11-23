@@ -4996,23 +4996,31 @@ DataRouter.prototype.rou_post_homeliaisonCrypto = function () {
       const { mode } = req.body;
       const password = "homeliaison";
       let result;
+      let resultObj;
+
+      resultObj = {};
 
       if (mode === "crypto" || mode === "cryptoString") {
         if (req.body.string === undefined) {
           throw new Error("invaild post");
         }
         result = await cryptoString(password, req.body.string);
-        res.send({ hash: result });
+        resultObj = { hash: result };
       } else if (mode === "decrypto" || mode === "decryptoHash") {
         if (req.body.hash === undefined) {
           throw new Error("invaild post");
         }
         result = await decryptoHash(password, req.body.hash);
-        res.send({ string: result });
+        resultObj = { string: result };
       } else {
         throw new Error("invaild mode");
       }
 
+      if (typeof req.body.target === "string") {
+        resultObj.target = req.body.target;
+      }
+
+      res.send(JSON.stringify(resultObj));
     } catch (e) {
       await errorLog("Console 서버 문제 생김 (rou_post_homeliaisonCrypto): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
