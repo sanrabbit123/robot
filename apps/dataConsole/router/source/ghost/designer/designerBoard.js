@@ -2021,6 +2021,8 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
   let arrowHeight;
   let grayBetween;
   let whiteBaseTongDictionary;
+  let setContents;
+  let printSize;
 
   grayBetween = <%% 40, 40, 36, 36, 5 %%>;
 
@@ -2031,6 +2033,7 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
   whiteBottomMargin = <%% 58, 56, 50, 44, 6 %%>;
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+  printSize = <%% 14, 14, 13, 12, 4 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
 
   titleTopNumber = <%% isMac() ? 0 : 1, isMac() ? 0 : 1, isMac() ? 0 : 1, isMac() ? 0 : 1, 0 %%>;
@@ -2172,241 +2175,270 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
   });
   whiteTong = whiteBlock.firstChild;
 
-  block = createNode({
-    mother: whiteTong,
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(100) + '%',
-      marginBottom: String(grayBetween) + ea,
-    },
-    children: [
-      {
-        style: {
-          display: "block",
-          position: "relative",
-          width: withOut(0),
-          marginBottom: String(titleBottom) + ea,
-          zIndex: mobile ? String(1) : "",
-        },
-        children: [
-          {
-            text: "진행중 프로젝트",
-            style: {
-              position: "relative",
-              display: "inline-block",
-              top: String(titleTopNumber) + ea,
-              fontSize: String(titleFontSize) + ea,
-              fontWeight: String(600),
-              background: colorChip.white,
-              paddingRight: String(numberRight) + ea,
-              color: colorChip.black,
+  setContents = (total = false) => {
+    cleanChildren(whiteTong);
+
+    block = createNode({
+      mother: whiteTong,
+      style: {
+        display: "block",
+        position: "relative",
+        width: String(100) + '%',
+        marginBottom: String(grayBetween) + ea,
+      },
+      children: [
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(0),
+            marginBottom: String(titleBottom) + ea,
+            zIndex: mobile ? String(1) : "",
+          },
+          children: [
+            {
+              text: "진행중 프로젝트" + (!total ? "&nbsp;&nbsp;<b%모두 보기%b>" : "&nbsp;&nbsp;<b%일부만 보기%b>"),
+              event: {
+                click: function (e) {
+                  setContents(/모두/gi.test(this.textContent));
+                },
+                selectstart: (e) => {
+                  e.preventDefault();
+                }
+              },
+              style: {
+                position: "relative",
+                display: "inline-block",
+                top: String(titleTopNumber) + ea,
+                fontSize: String(titleFontSize) + ea,
+                fontWeight: String(600),
+                background: colorChip.white,
+                paddingRight: String(numberRight) + ea,
+                color: colorChip.black,
+              },
+              bold: {
+                background: colorChip.white,
+                color: colorChip.green,
+                fontSize: String(printSize) + ea,
+                fontWeight: String(300),
+                cursor: "pointer",
+              }
             },
-            bold: {
-              background: colorChip.white,
-              color: colorChip.black,
-              fontSize: String(titleFontSize) + ea,
-              fontWeight: String(300),
-            }
-          },
-        ]
-      },
-      {
-        style: {
-          display: "block",
-          position: "relative",
-          width: String(100) + '%',
-          overflow: "hidden",
-          marginBottom: String(0) + ea,
-        }
-      },
-    ]
-  });
-  tong = block.lastChild;
-
-  grayTong = createNode({
-    mother: tong,
-    style: {
-      display: "block",
-      background: colorChip.gray3,
-      borderRadius: String(5) + "px",
-      paddingTop: String(grayMargin) + ea,
-      paddingBottom: String(grayMargin - tongMargin) + ea,
-    }
-  });
-
-  targets = equalJson(JSON.stringify(projects)).filter((project) => { return /진행/gi.test(project.process.status) });
-  targetLength = targets.length;
-  if (targetLength < minimalLength) {
-    for (let i = 0; i < minimalLength - targetLength; i++) {
-      targets.push(null);
-    }
-  }
-
-  whiteBaseTongDictionary = {};
-  for (let i = 0; i < targets.length; i++) {
-
-    if (targets[i] !== null) {
-      state = 0;
-
-      whiteBaseTong = createNode({
-        mother: grayTong,
-        attribute: {
-          proid: targets[i].proid
+          ]
         },
-        event: {
-          click: function (e) {
-            const proid = this.getAttribute("proid");
-            selfHref(FRONTHOST + "/designer/process.php?proid=" + proid);
-          },
-          contextmenu: function (e) {
-            e.preventDefault();
-            const proid = this.getAttribute("proid");
-            instance.projectPopup(proid).call(this, e);
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            width: String(100) + '%',
+            overflow: "hidden",
+            marginBottom: String(0) + ea,
           }
         },
-        style: {
-          display: desktop ? "inline-flex" : "block",
-          position: "relative",
-          marginLeft: String(grayMargin) + ea,
-          width: withOut((grayMargin * 2) + (grayPadding * 2), ea),
-          paddingLeft: String(grayPadding) + ea,
-          paddingRight: String(grayPadding) + ea,
-          height: desktop ? String(tongHeight) + ea : "",
-          borderRadius: String(5) + "px",
-          background: state >= 2 ? (state === 3 ? colorChip.gray4 : colorChip.gray1) : colorChip.white,
-          marginBottom: String(tongMargin) + ea,
-          alignItems: "center",
-          flexDirection: "row",
-          cursor: "pointer",
-          paddingTop: desktop ? "" : String(grayPadding) + ea,
-          paddingBottom: desktop ? "" : String(grayPadding - 0.8) + ea,
-        },
-      });
-      for (let j = 0; j < widthMap.length; j++) {
+      ]
+    });
+    tong = block.lastChild;
 
-        if (boxTarget[j] === null) {
+    grayTong = createNode({
+      mother: tong,
+      style: {
+        display: "block",
+        background: colorChip.gray3,
+        borderRadius: String(5) + "px",
+        paddingTop: String(grayMargin) + ea,
+        paddingBottom: String(grayMargin - tongMargin) + ea,
+      }
+    });
 
-          createNode({
-            mother: whiteBaseTong,
-            text: contentsMap(targets[i], j),
-            style: {
-              display: desktop ? "inline-block" : "block",
-              position: "relative",
-              fontSize: String(whiteSize) + ea,
-              fontWeight: String(mobile || j === 2 ? 700 : whiteWeight),
-              top: String(whiteTextTop) + ea,
-              color: state >= 2 ? colorChip.deactive : colorChip.black,
-              width: desktop ? String(widthMap[j]) + ea : "",
-              marginRight: desktop ? "" : String(1) + ea,
-              marginBottom: desktop ? "" : String(1) + ea,
-              paddingLeft: desktop ? "" : String(0.4) + ea,
-              paddingTop: desktop ? "" : String(0.2) + ea,
+    targets = equalJson(JSON.stringify(projects));
+    targetLength = targets.length;
+    if (targetLength < minimalLength) {
+      for (let i = 0; i < minimalLength - targetLength; i++) {
+        targets.push(null);
+      }
+    }
+
+    if (!total) {
+      if (targets.length > 6) {
+        targets = targets.slice(0, 6);
+      }
+    }
+
+    whiteBaseTongDictionary = {};
+    for (let i = 0; i < targets.length; i++) {
+
+      if (targets[i] !== null) {
+        state = 0;
+        if (/드[랍롭]/gi.test(projects[i].process.status) || /홀[드딩]/gi.test(projects[i].process.status)) {
+          state = 3;
+        } else if (/완료/gi.test(projects[i].process.status)) {
+          state = 2;
+        }
+
+        whiteBaseTong = createNode({
+          mother: grayTong,
+          attribute: {
+            proid: targets[i].proid
+          },
+          event: {
+            click: function (e) {
+              const proid = this.getAttribute("proid");
+              selfHref(FRONTHOST + "/designer/process.php?proid=" + proid);
             },
-            bold: {
-              fontWeight: String(whiteColumnWeight),
-              color: j === 2 ? (state >= 2 ? colorChip.deactive : colorChip.black) : colorChip.deactive,
+            contextmenu: function (e) {
+              e.preventDefault();
+              const proid = this.getAttribute("proid");
+              instance.projectPopup(proid).call(this, e);
             }
-          });
+          },
+          style: {
+            display: desktop ? "inline-flex" : "block",
+            position: "relative",
+            marginLeft: String(grayMargin) + ea,
+            width: withOut((grayMargin * 2) + (grayPadding * 2), ea),
+            paddingLeft: String(grayPadding) + ea,
+            paddingRight: String(grayPadding) + ea,
+            height: desktop ? String(tongHeight) + ea : "",
+            borderRadius: String(5) + "px",
+            background: state >= 2 ? (state === 3 ? colorChip.gray4 : colorChip.gray1) : colorChip.white,
+            marginBottom: String(tongMargin) + ea,
+            alignItems: "center",
+            flexDirection: "row",
+            cursor: "pointer",
+            paddingTop: desktop ? "" : String(grayPadding) + ea,
+            paddingBottom: desktop ? "" : String(grayPadding - 0.8) + ea,
+          },
+        });
+        for (let j = 0; j < widthMap.length; j++) {
 
-        } else {
+          if (boxTarget[j] === null) {
 
-          createNode({
-            mother: whiteBaseTong,
-            style: {
-              display: "inline-flex",
-              position: "relative",
-              alignItems: "center",
-              top: String(0),
-              height: withOut(0),
-              width: desktop ? String(widthMap[j]) + ea : "",
-              marginRight: desktop ? "" : String(1) + ea,
-              marginBottom: desktop ? "" : String(1) + ea,
-            },
-            children: [
-              {
-                style: {
-                  display: "inline-flex",
-                  position: "relative",
-                  alignItems: "center",
-                  height: String(colorBoxHeight) + ea,
-                  background: boxTarget[j](state),
-                  borderRadius: String(5) + "px",
-                  paddingLeft: String(colorBoxPadding) + ea,
-                  paddingRight: String(colorBoxPadding) + ea,
-                  width: desktop ? (forceWidth[j] === null ? "" : String(forceWidth[j]) + ea) : "",
-                  justifyContent: "center",
-                },
-                children: [
-                  {
-                    text: contentsMap(targets[i], j),
-                    style: {
-                      display: "inline-block",
-                      position: "relative",
-                      fontSize: String(colorBoxSize) + ea,
-                      fontWeight: String(colorBoxWeight),
-                      color: colorChip.white,
-                      top: String(colorBoxTextTop) + ea,
-                    }
-                  }
-                ]
+            createNode({
+              mother: whiteBaseTong,
+              text: contentsMap(targets[i], j),
+              style: {
+                display: desktop ? "inline-block" : "block",
+                position: "relative",
+                fontSize: String(whiteSize) + ea,
+                fontWeight: String(mobile || j === 2 ? 700 : whiteWeight),
+                top: String(whiteTextTop) + ea,
+                color: state >= 2 ? colorChip.deactive : colorChip.black,
+                width: desktop ? String(widthMap[j]) + ea : "",
+                marginRight: desktop ? "" : String(1) + ea,
+                marginBottom: desktop ? "" : String(1) + ea,
+                paddingLeft: desktop ? "" : String(0.4) + ea,
+                paddingTop: desktop ? "" : String(0.2) + ea,
+              },
+              bold: {
+                fontWeight: String(whiteColumnWeight),
+                color: j === 2 ? (state >= 2 ? colorChip.deactive : colorChip.black) : colorChip.deactive,
               }
-            ]
-          });
+            });
+
+          } else {
+
+            createNode({
+              mother: whiteBaseTong,
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                alignItems: "center",
+                top: String(0),
+                height: withOut(0),
+                width: desktop ? String(widthMap[j]) + ea : "",
+                marginRight: desktop ? "" : String(1) + ea,
+                marginBottom: desktop ? "" : String(1) + ea,
+              },
+              children: [
+                {
+                  style: {
+                    display: "inline-flex",
+                    position: "relative",
+                    alignItems: "center",
+                    height: String(colorBoxHeight) + ea,
+                    background: boxTarget[j](state),
+                    borderRadius: String(5) + "px",
+                    paddingLeft: String(colorBoxPadding) + ea,
+                    paddingRight: String(colorBoxPadding) + ea,
+                    width: desktop ? (forceWidth[j] === null ? "" : String(forceWidth[j]) + ea) : "",
+                    justifyContent: "center",
+                  },
+                  children: [
+                    {
+                      text: contentsMap(targets[i], j),
+                      style: {
+                        display: "inline-block",
+                        position: "relative",
+                        fontSize: String(colorBoxSize) + ea,
+                        fontWeight: String(colorBoxWeight),
+                        color: colorChip.white,
+                        top: String(colorBoxTextTop) + ea,
+                      }
+                    }
+                  ]
+                }
+              ]
+            });
+
+          }
 
         }
+
+        createNode({
+          mother: whiteBaseTong,
+          mode: "svg",
+          attribute: {
+            proid: targets[i].proid
+          },
+          source: svgMaker.horizontalArrow(circleWidth, arrowHeight, (state === 0 ? colorChip.green : colorChip.deactive)),
+          style: {
+            position: "absolute",
+            right: String(circleRight) + ea,
+            top: String(circleTop) + ea,
+            width: String(circleWidth) + ea,
+            borderRadius: String(circleWidth) + ea,
+            cursor: "pointer",
+          }
+        });
+
+        whiteBaseTongDictionary[targets[i].proid] = whiteBaseTong;
+
+      } else {
+
+        whiteBaseTong = createNode({
+          mother: grayTong,
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            marginLeft: String(grayMargin) + ea,
+            width: withOut((grayMargin * 2) + (grayPadding * 2), ea),
+            paddingLeft: String(grayPadding) + ea,
+            paddingRight: String(grayPadding) + ea,
+            height: String(tongHeight) + ea,
+            borderRadius: String(5) + "px",
+            background: colorChip.gray1,
+            marginBottom: String(tongMargin) + ea,
+            alignItems: "center",
+            flexDirection: "row",
+            cursor: "pointer",
+          },
+        });
 
       }
 
-      createNode({
-        mother: whiteBaseTong,
-        mode: "svg",
-        attribute: {
-          proid: targets[i].proid
-        },
-        source: svgMaker.horizontalArrow(circleWidth, arrowHeight),
-        style: {
-          position: "absolute",
-          right: String(circleRight) + ea,
-          top: String(circleTop) + ea,
-          width: String(circleWidth) + ea,
-          borderRadius: String(circleWidth) + ea,
-          cursor: "pointer",
-        }
-      });
-
-      whiteBaseTongDictionary[targets[i].proid] = whiteBaseTong;
-
-    } else {
-
-      whiteBaseTong = createNode({
-        mother: grayTong,
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          marginLeft: String(grayMargin) + ea,
-          width: withOut((grayMargin * 2) + (grayPadding * 2), ea),
-          paddingLeft: String(grayPadding) + ea,
-          paddingRight: String(grayPadding) + ea,
-          height: String(tongHeight) + ea,
-          borderRadius: String(5) + "px",
-          background: colorChip.gray1,
-          marginBottom: String(tongMargin) + ea,
-          alignItems: "center",
-          flexDirection: "row",
-          cursor: "pointer",
-        },
-      });
-
     }
 
+    if (typeof getObj.proid === "string") {
+      if (targets.filter((project) => { return project !== null }).map((project) => { return project.proid }).includes(getObj.proid)) {
+        whiteBaseTongDictionary[getObj.proid].click();
+      }
+    }
+
+    instance.insertCommentsBox(whiteBlock);
+    instance.insertforeContentsBox(whiteBlock);
   }
 
-  if (typeof getObj.proid === "string") {
-    if (targets.filter((project) => { return project !== null }).map((project) => { return project.proid }).includes(getObj.proid)) {
-      whiteBaseTongDictionary[getObj.proid].click();
-    }
-  }
+  setContents();
 
   return whiteBlock;
 }
@@ -4223,9 +4255,7 @@ DesignerBoardJs.prototype.launching = async function (loading) {
         try {
           let whiteBlock;
           instance.insertInitBox();
-          whiteBlock = instance.insertProcessBox();
-          instance.insertCommentsBox(whiteBlock);
-          instance.insertforeContentsBox(whiteBlock);
+          instance.insertProcessBox();
           instance.insertCalendarBox();
           instance.insertPortfolioBase();
         } catch (e) {

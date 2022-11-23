@@ -493,7 +493,7 @@ RequestListJs.prototype.insertInformationBox = function () {
         event: {
           click: function (e) {
             const proid = this.getAttribute("proid");
-            selfHref(FRONTHOST + "/designer/request.php?proid=" + proid);
+            selfHref(FRONTHOST + "/designer/process.php?proid=" + proid + "&mode=request");
           }
         },
         style: {
