@@ -3478,7 +3478,7 @@ DesignerJs.prototype.requestIconSet = function (desid) {
             designer: designer.designer,
             client: instance.client.name,
             host: FRONTHOST.replace(/https\:\/\//gi, "").trim(),
-            path: "request",
+            path: "process",
             proid: instance.proid,
           }
         }, "/alimTalk").then(() => {

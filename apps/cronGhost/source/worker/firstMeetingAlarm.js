@@ -77,8 +77,7 @@ const worker = async function (package) {
               hour: String(meetingDate.getHours()),
               minute: String(meetingDate.getMinutes()),
               host: address.frontinfo.host,
-              path: "request",
-              desid: designer.desid,
+              path: "process",
               proid: project.proid,
             });
 

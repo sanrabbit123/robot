@@ -681,8 +681,8 @@ KakaoTalk.prototype.templateTong = function (target) {
       },
     },
     designerConsoleRequest: {
-      name: "홈스타일링 의뢰서 전송 수정",
-      id: "TJ_8592",
+      name: "홈스타일링 의뢰서 전송 수정 수정",
+      id: "TK_7798",
       needs: [
         "designer",
         "client",
@@ -703,8 +703,8 @@ KakaoTalk.prototype.templateTong = function (target) {
       },
     },
     designerConsoleRequestFirstMeeting: {
-      name: "홈스타일링 의뢰서 현장 미팅 수정",
-      id: "TK_4070",
+      name: "홈스타일링 의뢰서 현장 미팅 수정 수정",
+      id: "TK_7775",
       needs: [
         "designer",
         "client",
@@ -714,7 +714,6 @@ KakaoTalk.prototype.templateTong = function (target) {
         "minute",
         "host",
         "path",
-        "desid",
         "proid",
       ],
       convert: function (obj) {
@@ -727,7 +726,6 @@ KakaoTalk.prototype.templateTong = function (target) {
           { from: "minute", to: obj.minute },
           { from: "host", to: obj.host },
           { from: "path", to: obj.path },
-          { from: "desid", to: obj.desid },
           { from: "proid", to: obj.proid },
         ];
       },
