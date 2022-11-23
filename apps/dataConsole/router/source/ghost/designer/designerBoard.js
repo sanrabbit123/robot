@@ -2262,8 +2262,8 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
     }
 
     if (!total) {
-      if (targets.length > 6) {
-        targets = targets.slice(0, 6);
+      if (targets.length > 10) {
+        targets = targets.slice(0, 10);
       }
     }
 
