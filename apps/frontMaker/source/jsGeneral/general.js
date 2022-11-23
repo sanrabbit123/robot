@@ -4102,6 +4102,7 @@ GeneralJs.confirm = function (message) {
 GeneralJs.prompt = function (message) {
   const { createNode, colorChip, withOut } = GeneralJs;
   const ea = "px";
+  const promptAsideClassName = "promptAsideClassName";
   let whiteTongBase;
   let whiteTong;
   let whiteWidth, whiteHeight;
@@ -4117,6 +4118,7 @@ GeneralJs.prompt = function (message) {
   let greenBarHeight;
   let lineHeight;
   let wordingVisual;
+  let finalEvent;
 
   whiteWidth = 320;
   whiteHeight = 150;
@@ -4141,8 +4143,8 @@ GeneralJs.prompt = function (message) {
   whiteTongBase = createNode({
     mode: "aside",
     mother: document.body,
+    class: [ promptAsideClassName ],
     event: {
-      click: (e) => { e.stopPropagation(); },
       contextmenu: (e) => { e.stopPropagation(); },
       dblclick: (e) => { e.stopPropagation(); },
       drop: (e) => { e.stopPropagation(); },
@@ -4166,6 +4168,9 @@ GeneralJs.prompt = function (message) {
 
   whiteTong = createNode({
     mother: whiteTongBase,
+    event: {
+      click: (e) => { e.stopPropagation(); },
+    },
     style: {
       display: "block",
       position: "relative",
@@ -4247,6 +4252,13 @@ GeneralJs.prompt = function (message) {
   input.focus();
 
   return new Promise((resolve, reject) => {
+
+    whiteTongBase.addEventListener("click", function (e) {
+      e.stopPropagation();
+      document.querySelector('.' + promptAsideClassName).remove();
+      resolve(null);
+    });
+
     input.addEventListener("keypress", function (e) {
       if (e.key === "Enter") {
         const finalValue = this.value.trim();
@@ -4259,6 +4271,22 @@ GeneralJs.prompt = function (message) {
         }, 201);
       }
     });
+
+    input.addEventListener("blur", function (e) {
+      if (document.querySelector('.' + promptAsideClassName) !== null) {
+        const finalValue = this.value.trim();
+        const topLevelTargets = [ ...document.body.children ];
+        const asideTargets = topLevelTargets.filter((dom) => { return /ASIDE/gi.test(dom.nodeName) }).filter((dom) => { return [ ...dom.children ].length > 0 });
+        this.parentNode.style.animation = "fadedownlite 0.2s ease forwards";
+        setTimeout(() => {
+          if (document.querySelector('.' + promptAsideClassName) !== null) {
+            document.body.removeChild(asideTargets[asideTargets.length - 1]);
+            resolve(finalValue);
+          }
+        }, 201);
+      }
+    });
+
   });
 }
 

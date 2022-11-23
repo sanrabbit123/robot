@@ -4975,3 +4975,47 @@ DataRouter.prototype.rou_post_analyticsDaily = function () {
   }
   return obj;
 }
+
+DataRouter.prototype.rou_post_homeliaisonCrypto = function () {
+  const instance = this;
+  const { errorLog, equalJson, cryptoString, decryptoHash } = this.mother;
+  const back = this.back;
+  let obj = {};
+  obj.link = [ "/homeliaisonCrypto" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.mode === undefined) {
+        throw new Error("invaild post");
+      }
+      const password = "homeliaison";
+      let result;
+
+      if (mode === "crypto" || mode === "cryptoString") {
+        if (req.body.string === undefined) {
+          throw new Error("invaild post");
+        }
+        result = await cryptoString(password, req.body.string);
+        res.send({ hash: result });
+      } else if (mode === "decrypto" || mode === "decryptoHash") {
+        if (req.body.hash === undefined) {
+          throw new Error("invaild post");
+        }
+        result = await decryptoHash(password, req.body.hash);
+        res.send({ string: result });
+      } else {
+        throw new Error("invaild mode");
+      }
+
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_homeliaisonCrypto): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
