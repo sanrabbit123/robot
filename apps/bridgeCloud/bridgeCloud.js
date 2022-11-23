@@ -765,7 +765,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
     });
     try {
       console.log("file request get");
-      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (3000 * 1024 * 1024) });
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (30000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
         let filesKeys = Object.keys(files);
         res.set({
@@ -874,7 +874,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (3000 * 1024 * 1024) });
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (30000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
         try {
           let filesKeys = Object.keys(files);
@@ -962,7 +962,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (3000 * 1024 * 1024) });
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (30000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
         try {
           let filesKeys = Object.keys(files);
@@ -1098,7 +1098,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (3000 * 1024 * 1024) });
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (30000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
         let filesKeys = Object.keys(files);
         if (!err && filesKeys.length > 0) {
@@ -1124,7 +1124,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (3000 * 1024 * 1024) });
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (30000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
         let filesKeys = Object.keys(files);
         const { designer, phone } = fields;
@@ -1210,7 +1210,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
     });
     try {
       console.log("file request get");
-      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (3000 * 1024 * 1024) });
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (30000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
         res.set({
           "Content-Type": "text/plain",
@@ -1252,7 +1252,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
     });
     try {
       console.log("file request get");
-      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (9000 * 1024 * 1024) });
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (90000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
         res.set({
           "Content-Type": "text/plain",
@@ -1404,7 +1404,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (3000 * 1024 * 1024) });
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (30000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
         try {
           if (!err) {
