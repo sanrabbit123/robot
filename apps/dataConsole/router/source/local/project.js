@@ -7014,6 +7014,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         checklist = await ajaxJson({}, SECONDHOST + "/getChecklist", { equal: true });
         itemList = await ajaxJson({ target: "__project__" + "/" + thisCase.designer.split(" ")[1] + "/" + thisCase.proid }, BACKHOST + "/ghostPass_readDir", { equal: true });
         [ thisProject ] = await ajaxJson({ whereQuery: { proid: thisCase.proid } }, SECONDHOST + "/getProjects", { equal: true });
+        [ thisDesigner ] = await ajaxJson({ whereQuery: { desid: thisCase.designer.split(" ")[1] } }, SECONDHOST + "/getDesigners", { equal: true });
         preItemList = await ajaxJson({ cliid: thisProject.cliid }, BACKHOST + "/ghostPass_clientPhoto", { equal: true });
         linkTargets = itemList.filter((str) => { return linkTargetKey.includes(str.split("_")[0]) });
         linkContents = await ajaxJson({ links: linkTargets.map((file) => { return { desid: thisCase.designer.split(" ")[1], proid: thisCase.proid, file } }) }, BACKHOST + "/ghostPass_linkParsing", { equal: true });
@@ -7118,6 +7119,48 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                     borderBottom: "1px solid " + colorChip.deactive,
                   },
                   next: {
+                    attribute: {
+                      key,
+                      title,
+                      desid: thisDesigner.desid,
+                      designer: thisDesigner.designer,
+                      proid: thisProject.proid,
+                      name: thisCase.name,
+                      phone: thisDesigner.information.phone,
+                    },
+                    event: {
+                      click: async function (e) {
+                        try {
+                          const key = this.getAttribute("key");
+                          const title = this.getAttribute("title");
+                          const desid = this.getAttribute("desid");
+                          const designer = this.getAttribute("designer");
+                          const proid = this.getAttribute("proid");
+                          const name = this.getAttribute("name");
+                          const phone = this.getAttribute("phone");
+                          const host = FRONTHOST.replace(/^https\:\/\//gi, '');
+                          const path = "process";
+
+                          await ajaxJson({
+                            method: "pushDesignerFile",
+                            name: designer,
+                            phone: phone,
+                            option: {
+                              designer: designer,
+                              client: name,
+                              file: title,
+                              host: host,
+                              path: path,
+                              proid: proid,
+                            }
+                          }, BACKHOST + "/alimTalk");
+                          window.alert(designer + " 실장님에게 알림톡을 전송하였습니다!");
+
+                        } catch (e) {
+                          console.log(e);
+                        }
+                      }
+                    },
                     style: {
                       display: "inline-flex",
                       position: "absolute",

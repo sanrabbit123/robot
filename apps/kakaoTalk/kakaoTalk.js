@@ -1141,8 +1141,8 @@ KakaoTalk.prototype.templateTong = function (target) {
       },
     },
     pushDesignerFile: {
-      name: "파일 전달 촉구",
-      id: "TK_7715",
+      name: "파일 전달 촉구 수정",
+      id: "TK_7749",
       needs: [
         "designer",
         "client",
