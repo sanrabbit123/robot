@@ -3379,7 +3379,7 @@ ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
 
                   loading = instance.mother.grayLoading();
 
-                  ({ hex } = await ajaxJson({ string: String((new Date()).valueOf()) }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
+                  ({ hex } = await ajaxJson({ mode: "crypto", string: String((new Date()).valueOf()) }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
                   formData.append("name", hex);
 
                   console.log(hex);
