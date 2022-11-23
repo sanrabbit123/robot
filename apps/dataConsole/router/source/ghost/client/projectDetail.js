@@ -1033,6 +1033,7 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
     let link, memo;
     let linkPhotoHeight;
     let linkPhotoMarginBottom;
+    let parsedHash;
 
     itemBetween = <%% 6, 6, 5, 4, 1 %%>;
     itemTongHeight = <%% 40, 40, 36, 32, 8 %%>;
@@ -1041,7 +1042,7 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
 
     textTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
     textSize = <%% 14, 14, 13, 12, 2.7 %%>;
-    textWeight = <%% 400, 400, 400, 400, 400 %%>;
+    textWeight = <%% 600, 600, 600, 600, 600 %%>;
 
     divideNumber = <%% 5, 4, 3, 3, 2 %%>;
 
@@ -1211,6 +1212,9 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
       const original = this.getAttribute("original");
       const key = this.getAttribute("key");
       const toggle = this.getAttribute("toggle");
+      const hex = this.getAttribute("hex");
+      const exe = this.getAttribute("exe");
+      const type = this.getAttribute("type");
 
       if (toggle === "off") {
 
@@ -1218,7 +1222,7 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
         this.firstChild.style.color = colorChip.white;
 
         this.setAttribute("toggle", "on");
-        instance.itemList.push({ original, key });
+        instance.itemList.push({ original, key, hex, exe, type });
       } else {
 
         this.style.background = desktop ? colorChip.gray3 : colorChip.gray0;
@@ -1239,13 +1243,16 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
       const original = this.getAttribute("original");
       const key = this.getAttribute("key");
       const toggle = this.getAttribute("toggle");
+      const hex = this.getAttribute("hex");
+      const exe = this.getAttribute("exe");
+      const type = this.getAttribute("type");
 
       if (toggle === "off") {
 
         this.lastChild.style.opacity = String(0.6);
 
         this.setAttribute("toggle", "on");
-        instance.itemList.push({ original, key });
+        instance.itemList.push({ original, key, hex, exe, type });
       } else {
 
         this.lastChild.style.opacity = String(0);
@@ -1275,9 +1282,9 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
       const [ key, time, order, hex ] = raw.split("_");
       const [ hexId, exe ] = hex.split(".");
       const id = key + "_" + time + "_" + String(order) + "_" + hexId;
-      return [ key, new Date(Number(time)), String(Number(order) + 1) + "." + exe, Number(order), targetHref + "/" + original, exe, id ];
-    }).map(([ key, date, name, order, original, exe, id ]) => {
-      return { key, date, name, order, original, exe, id };
+      return [ key, new Date(Number(time)), String(Number(order) + 1) + "." + exe, Number(order), targetHref + "/" + original, exe, id, hexId ];
+    }).map(([ key, date, name, order, original, exe, id, hexId ]) => {
+      return { key, date, name, order, original, exe, id, hexId };
     });
 
     itemList.forEach((obj) => {
@@ -1315,13 +1322,19 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
 
     motherMatrix = (new Array(this.panContents.length)).fill(0, 0);
 
-    for (let { mother, key, date, name, order, motherNumber, type, original, id } of itemList) {
+    for (let { mother, key, date, name, order, motherNumber, type, original, exe, id, hexId } of itemList) {
+
+
       if (type === "file") {
+
         itemBlock = createNode({
           mother,
           attribute: {
             original,
             key,
+            hex: hexId,
+            exe,
+            type,
             toggle: "off",
           },
           event: {
@@ -1339,9 +1352,16 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
             borderRadius: String(5) + "px",
             background: desktop ? colorChip.gray3 : colorChip.gray0,
             cursor: "pointer",
+            textAlign: "center",
+            verticalAlign: "top",
+            overflow: "hidden",
           },
           children: [
             {
+              id,
+              attribute: {
+                exe
+              },
               text: dateToString(date).slice(2) + "_" + name,
               style: {
                 display: "inline-block",
@@ -1354,6 +1374,17 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
             }
           ]
         });
+
+        ajaxJson({ mode: "decrypto", hash: hexId, target: id }, BACKHOST + "/homeliaisonCrypto", { equal: true }).then(({ string, target }) => {
+          target = document.getElementById(target);
+          if (string.trim() !== "") {
+            target.textContent = string + "." + target.getAttribute("exe");
+          }
+        }).catch((err) => {
+          console.log(err);
+        });
+
+
       } else if (type === "photo") {
 
         if (mother.querySelector('.' + motherChildPhotoTongClassName) === null) {
@@ -1376,7 +1407,16 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
         itemBlock = createNode({
           mother: [ ...mother.querySelectorAll('.' + motherChildPhotoTongClassName) ][(motherMatrix[motherNumber] % divideNumber)],
           class: [ (photoItemInitClassName + "_" + key + "_" + String(motherMatrix[motherNumber])) ],
-          attribute: { key, original, order: String(motherMatrix[motherNumber]), number: String(motherNumber), toggle: "off" },
+          attribute: {
+            key,
+            original,
+            hex: hexId,
+            exe,
+            type,
+            order: String(motherMatrix[motherNumber]),
+            number: String(motherNumber),
+            toggle: "off"
+          },
           event: {
             click: photoItemSelectEvent,
             contextmenu: bigPhotoClickEvent,
@@ -1485,7 +1525,7 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
           ]
         });
 
-        ajaxJson({ mode: "image", url: window.encodeURIComponent(link), target: id }, "/getOpenGraph").then(({ image, target }) => {
+        ajaxJson({ mode: "image", url: window.encodeURIComponent(link), target: id }, BACKHOST + "/getOpenGraph").then(({ image, target }) => {
           target = document.getElementById(target);
           target.style.backgroundImage = "url('" + image + "')";
         }).catch((err) => {
@@ -2107,15 +2147,22 @@ ProjectDetailJs.prototype.returnButtonList = function () {
     name: "선택 파일 다운로드",
     event: function () {
       return async function (e) {
+        let parsedString;
         try {
           if (instance.itemList.length === 0) {
             window.alert("파일을 먼저 선택해주세요! (우클릭으로 파일 선택)");
           } else {
-            for (let { original } of instance.itemList) {
-              await downloadFile(original);
+            for (let { original, type, hex, exe } of instance.itemList) {
+              if (type === "photo") {
+                await downloadFile(original);
+              } else {
+                parsedString = await ajaxJson({ mode: "decrypto", hash: hex }, BACKHOST + "/homeliaisonCrypto", { equal: true });
+                await downloadFile(original, parsedString.string.replace(/ /gi, "_") + "." + exe);
+              }
             }
           }
         } catch (e) {
+          console.log(e);
           window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
         }
       }

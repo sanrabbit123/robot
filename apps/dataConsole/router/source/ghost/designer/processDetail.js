@@ -1107,7 +1107,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
 
     textTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
     textSize = <%% 14, 14, 13, 12, 2.7 %%>;
-    textWeight = <%% 400, 400, 400, 400, 400 %%>;
+    textWeight = <%% 600, 600, 600, 600, 600 %%>;
 
     divideNumber = <%% 5, 4, 3, 3, 2 %%>;
 
@@ -1277,6 +1277,9 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
       const original = this.getAttribute("original");
       const key = this.getAttribute("key");
       const toggle = this.getAttribute("toggle");
+      const hex = this.getAttribute("hex");
+      const exe = this.getAttribute("exe");
+      const type = this.getAttribute("type");
 
       if (toggle === "off") {
 
@@ -1284,7 +1287,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
         this.firstChild.style.color = colorChip.white;
 
         this.setAttribute("toggle", "on");
-        instance.itemList.push({ original, key });
+        instance.itemList.push({ original, key, hex, exe, type });
       } else {
 
         this.style.background = desktop ? colorChip.gray3 : colorChip.gray0;
@@ -1305,13 +1308,16 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
       const original = this.getAttribute("original");
       const key = this.getAttribute("key");
       const toggle = this.getAttribute("toggle");
+      const hex = this.getAttribute("hex");
+      const exe = this.getAttribute("exe");
+      const type = this.getAttribute("type");
 
       if (toggle === "off") {
 
         this.lastChild.style.opacity = String(0.6);
 
         this.setAttribute("toggle", "on");
-        instance.itemList.push({ original, key });
+        instance.itemList.push({ original, key, hex, exe, type });
       } else {
 
         this.lastChild.style.opacity = String(0);
@@ -1391,6 +1397,9 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
           attribute: {
             original,
             key,
+            hex: hexId,
+            exe,
+            type,
             toggle: "off",
           },
           event: {
@@ -1408,6 +1417,9 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
             borderRadius: String(5) + "px",
             background: desktop ? colorChip.gray3 : colorChip.gray0,
             cursor: "pointer",
+            textAlign: "center",
+            verticalAlign: "top",
+            overflow: "hidden",
           },
           children: [
             {
@@ -1430,7 +1442,9 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
 
         ajaxJson({ mode: "decrypto", hash: hexId, target: id }, BACKHOST + "/homeliaisonCrypto", { equal: true }).then(({ string, target }) => {
           target = document.getElementById(target);
-          target.textContent = string + "." + target.getAttribute("exe");
+          if (string.trim() !== "") {
+            target.textContent = string + "." + target.getAttribute("exe");
+          }
         }).catch((err) => {
           console.log(err);
         });
@@ -1458,7 +1472,16 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
         itemBlock = createNode({
           mother: [ ...mother.querySelectorAll('.' + motherChildPhotoTongClassName) ][(motherMatrix[motherNumber] % divideNumber)],
           class: [ (photoItemInitClassName + "_" + key + "_" + String(motherMatrix[motherNumber])) ],
-          attribute: { key, original, order: String(motherMatrix[motherNumber]), number: String(motherNumber), toggle: "off" },
+          attribute: {
+            key,
+            original,
+            hex: hexId,
+            exe,
+            type,
+            order: String(motherMatrix[motherNumber]),
+            number: String(motherNumber),
+            toggle: "off"
+          },
           event: {
             click: photoItemSelectEvent,
             contextmenu: bigPhotoClickEvent,
@@ -2903,15 +2926,22 @@ ProcessDetailJs.prototype.returnButtonList = function () {
     deactive: false,
     event: function () {
       return async function (e) {
+        let parsedString;
         try {
           if (instance.itemList.length === 0) {
             window.alert("파일을 먼저 선택해주세요! (우클릭으로 파일 선택)");
           } else {
-            for (let { original } of instance.itemList) {
-              await downloadFile(original);
+            for (let { original, type, hex, exe } of instance.itemList) {
+              if (type === "photo") {
+                await downloadFile(original);
+              } else {
+                parsedString = await ajaxJson({ mode: "decrypto", hash: hex }, BACKHOST + "/homeliaisonCrypto", { equal: true });
+                await downloadFile(original, parsedString.string.replace(/ /gi, "_") + "." + exe);
+              }
             }
           }
         } catch (e) {
+          console.log(e);
           window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
         }
       }
