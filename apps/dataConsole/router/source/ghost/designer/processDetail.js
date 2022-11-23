@@ -3363,7 +3363,7 @@ ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
                 let thisFiles, formData, res;
                 let removeTargets;
                 let loading;
-                let hex;
+                let hash;
 
                 thisFiles = [ ...this.files ];
 
@@ -3379,14 +3379,12 @@ ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
 
                   loading = instance.mother.grayLoading();
 
-                  ({ hex } = await ajaxJson({ mode: "crypto", string: String((new Date()).valueOf()) }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
-                  formData.append("name", hex);
+                  ({ hash } = await ajaxJson({ mode: "crypto", string: String((new Date()).valueOf()) }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
+                  formData.append("name", hash);
 
-                  console.log(hex);
-
-                  // res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
-                  // await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 " + thisTitle + " 관련 파일을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
-                  // window.alert(thisTitle + " 관련 파일 업로드가 완료되었습니다!");
+                  res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
+                  await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 " + thisTitle + " 관련 파일을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+                  window.alert(thisTitle + " 관련 파일 업로드가 완료되었습니다!");
 
                   await instance.setPanBlocks();
 
@@ -3459,6 +3457,8 @@ ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
                 let thisFiles, formData, res;
                 let removeTargets;
                 let loading;
+                let hash;
+                let rawResponse;
 
                 thisFiles = [ ...this.files ];
 
@@ -3472,8 +3472,14 @@ ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
                     formData.append("file_" + thisKey + "_" + String(i), thisFiles[i]);
                   }
 
+                  rawResponse = null;
+                  do {
+                    rawResponse = await GeneralJs.prompt("파일에 대한 간단한 이름 또는 메모를 적어주세요! (예) 주방_시공의뢰서_1");
+                  } while (typeof rawResponse !== "string");
+                  rawResponse = rawResponse.replace(/[\=\/\\\(\)\?\+\&]/gi, '').replace(/ /gi, '_');
 
-
+                  ({ hash } = await ajaxJson({ mode: "crypto", string: rawResponse }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
+                  formData.append("name", hash);
 
                   loading = instance.mother.grayLoading();
 

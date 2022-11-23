@@ -5717,6 +5717,7 @@ DataRouter.prototype.rou_post_homeliaisonCrypto = function () {
       if (req.body.mode === undefined) {
         throw new Error("invaild post");
       }
+      const { mode } = req.body;
       const password = "homeliaison";
       let result;
 
