@@ -1727,7 +1727,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
 
     mothers = this.panList;
     itemList = await ajaxJson({ target: this.targetDrive }, BRIDGEHOST + "/middlePhotoRead", { equal: true });
-    preItemList = await ajaxJson({ cliid: this.client.cliid }, BACKHOST + "/ghostPass_clientPhoto", { equal: true });
+    preItemList = await ajaxJson({ cliid: this.client.cliid }, BRIDGEHOST + "/clientPhoto", { equal: true });
 
     linkTargets = itemList.filter((str) => { return linkTargetKey.includes(str.split("_")[0]) });
     linkContents = await ajaxJson({ links: linkTargets.map((file) => { return { desid: instance.designer.desid, proid: instance.project.proid, file } }) }, BRIDGEHOST + "/middleLinkParsing", { equal: true });

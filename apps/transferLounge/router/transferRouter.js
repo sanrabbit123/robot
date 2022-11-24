@@ -181,6 +181,8 @@ TransferRouter.prototype.rou_post_middlePhotoRead = function () {
 TransferRouter.prototype.rou_post_clientPhoto = function () {
   const instance = this;
   const { errorLog, fileSystem, shellExec, shellLink } = this.mother;
+  const back = this.back;
+  const { clientConst } = this;
   let obj;
   obj = {};
   obj.link = [ "/clientPhoto" ];
@@ -195,12 +197,45 @@ TransferRouter.prototype.rou_post_clientPhoto = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
+      if (req.body.cliid === undefined) {
+        throw new Error("invaild post");
+      }
+      const preferredPhotoName = "preferredPhoto";
+      const sitePhotoName = "sitePhoto";
+      const { cliid } = req.body;
+      let totalList, client, phone;
+      let preferredPhoto, sitePhoto;
+      let preferredPhotoList, sitePhotoList;
+      let root;
 
+      client = await back.getClientById(cliid, { selfMongo: instance.mongo });
+      if (client === null) {
+        throw new Error("invaild cliid");
+      }
+      phone = client.phone.replace(/[^0-9]/g, '');
+      root = clientConst;
+      totalList = await fileSystem(`readDir`, [ root ]);
+      totalList = totalList.filter((i) => { return i !== ".DS_Store" }).filter((i) => { return (new RegExp(phone, "gi")).test(i); });
 
+      preferredPhoto = [];
+      sitePhoto = [];
+      for (let t of totalList) {
+        if (await fileSystem(`exist`, [ root + "/" + t + "/" + preferredPhotoName ])) {
+          preferredPhotoList = (await fileSystem(`readDir`, [ root + "/" + t + "/" + preferredPhotoName ])).filter((i) => { return i !== `.DS_Store` && !/^\.\_/.test(i); }).map((i) => { return `${root}/${t}/${preferredPhotoName}/${i}`; });
+        } else {
+          preferredPhotoList = [];
+        }
+        if (await fileSystem(`exist`, [ root + "/" + t + "/" + sitePhotoName ])) {
+          sitePhotoList = (await fileSystem(`readDir`, [ root + "/" + t + "/" + sitePhotoName ])).filter((i) => { return i !== `.DS_Store` && !/^\.\_/.test(i); }).map((i) => { return `${root}/${t}/${sitePhotoName}/${i}`; });
+        } else {
+          sitePhotoList = [];
+        }
+        preferredPhoto = preferredPhoto.concat(preferredPhotoList);
+        sitePhoto = sitePhoto.concat(sitePhotoList);
+      }
 
+      res.send(JSON.stringify({ sitePhoto, preferredPhoto }));
 
-
-      res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
       errorLog("Transfer lounge 서버 문제 생김 (rou_post_clientPhoto): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));

@@ -3507,13 +3507,8 @@ StyleCurationJs.prototype.parsingValues = function () {
     } else {
       return new Promise((resolve, reject) => { resolve("success"); });
     }
-  }).then((data) => {
-    if (data === "success") {
+  }).then(() => {
       return ajaxJson({ cliid: instance.client.cliid, historyQuery, coreQuery, mode: "calculation", fromConsole: 0 }, BACKHOST + "/styleCuration_updateCalculation");
-    } else {
-      window.alert("사진 전송에 문제가 생겼습니다! 200MB 이하의 파일로 다시 시도해주세요!");
-      return new Promise((resolve, reject) => { resolve({ promisePass: true }); });
-    }
   }).then((obj) => {
     if (typeof obj !== "object" || Object.keys(obj).length === 0) {
       throw new Error("promise error 0");
