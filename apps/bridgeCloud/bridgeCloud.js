@@ -1523,6 +1523,8 @@ BridgeCloud.prototype.serverLaunching = async function (toss = false) {
           instance.address.testinfo.host + ":3000",
           instance.address.secondinfo.host,
           instance.address.secondinfo.host + ":3000",
+          instance.address.transinfo.host,
+          instance.address.transinfo.host + ":3000",
           instance.address.officeinfo.ghost.host,
           "localhost:3000",
           "localhost:8080",

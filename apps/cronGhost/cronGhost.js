@@ -29,6 +29,7 @@ CronGhost.prototype.aliveTest = async function () {
       { name: "office", protocol: "https:", host: address.officeinfo.ghost.host, port: ghostPort, },
       { name: "log", protocol: "https:", host: address.testinfo.host, port: generalPort, },
       { name: "second", protocol: "https:", host: address.secondinfo.host, port: generalPort, },
+      { name: "trans", protocol: "https:", host: address.transinfo.host, port: generalPort, },
     ];
 
     targetNumber = targets.length;
@@ -97,6 +98,7 @@ CronGhost.prototype.diskTest = async function () {
       { name: "python", host: instance.address.pythoninfo.host },
       { name: "log", host: instance.address.testinfo.host },
       { name: "second", host: instance.address.secondinfo.host },
+      { name: "trans", host: instance.address.transinfo.host },
     ]
     const robotPort = 3000;
     const pathConst = "/disk";

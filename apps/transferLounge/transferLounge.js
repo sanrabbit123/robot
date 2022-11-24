@@ -21,13 +21,11 @@ TransferLounge.prototype.transConnect = async function () {
   const https = require("https");
   const express = require("express");
   const app = express();
-
   const useragent = require("express-useragent");
   const staticFolder = process.env.HOME + "/static";
 
   app.use(useragent.express());
   app.use(express.json({ limit : "50mb" }));
-
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   app.use(express.static(staticFolder));
 
