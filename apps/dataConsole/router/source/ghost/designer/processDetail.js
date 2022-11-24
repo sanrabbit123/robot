@@ -3454,8 +3454,9 @@ ProcessDetailJs.prototype.returnButtonList = function () {
                     formData.append("designer", designer);
                     formData.append("client", client);
                     formData.append("comments", thisFile);
+                    formData.append("desid", instance.designer.desid);
 
-                    res = await ajaxForm(formData, BRIDGEHOST + "/commentsBinary");
+                    res = await ajaxForm(formData, BRIDGEHOST + "/middleCommentsBinary");
                     await ajaxJson({ whereQuery: { proid }, updateQuery: { "contents.raw.portfolio.status": "원본 수집 완료" } }, SECONDHOST + "/updateProject");
                     await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 디자이너 글을 업로드 했습니다!", channel: "#300_designer" }, BACKHOST + "/sendSlack");
                     window.alert("업로드가 완료되었습니다!");

@@ -1593,7 +1593,7 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
     photoMargin = <%% 10, 10, 10, 10, 1.5 %%>;
     finalBottom = <%% 240, 240, 240, 240, 10 %%>;
 
-    clientPhoto = await ajaxJson({ cliid }, "/ghostPass_clientPhoto");
+    clientPhoto = await ajaxJson({ cliid }, BRIDGEHOST + "/clientPhoto");
     siteImages = clientPhoto.sitePhoto;
     preferImages = clientPhoto.preferredPhoto;
 

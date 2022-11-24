@@ -1398,7 +1398,7 @@ FirstMeetingJs.prototype.insertPhotoBox = function (indexNumber) {
   images = [];
   ajaxJson({
     cliid
-  }, BACKHOST + "/ghostPass_clientPhoto").then((obj) => {
+  }, BRIDGEHOST + "/clientPhoto").then((obj) => {
     images = images.concat(obj.sitePhoto);
     images = images.concat(obj.preferredPhoto);
     return ajaxJson({

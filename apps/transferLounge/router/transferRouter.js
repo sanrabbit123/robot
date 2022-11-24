@@ -3,6 +3,7 @@ const TransferRouter = function (MONGOC, MONGOLOCALC) {
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const ImageReader = require(process.cwd() + "/apps/imageReader/imageReader.js");
   const ParsingHangul = require(process.cwd() + "/apps/parsingHangul/parsingHangul.js");
+  const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
 
   this.mother = new Mother();
   this.back = new BackMaker();
@@ -15,11 +16,11 @@ const TransferRouter = function (MONGOC, MONGOLOCALC) {
   this.formidable = require("formidable");
   this.imageReader = new ImageReader(this.mother, this.back, this.address);
   this.hangul = new ParsingHangul();
+  this.drive = new GoogleDrive();
 
   this.staticConst = process.env.HOME + "/static";
   this.folderConst = this.staticConst + "/photo/designer";
   this.clientConst = this.staticConst + "/photo/client";
-
 
   this.vaildHost = [
     this.address.frontinfo.host,
@@ -115,33 +116,38 @@ TransferRouter.prototype.rou_post_middlePhotoBinary = function () {
       }
       const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (90000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
-        if (!err) {
-          const { proid, desid, client, name } = fields;
-          const requestNow = new Date();
-          const requestNowValue = requestNow.valueOf();
-          const token = "_";
-          let execName, file;
-          let fileNameConst, positionKey, order;
+        try {
+          if (!err) {
+            const { proid, desid, client, name } = fields;
+            const requestNow = new Date();
+            const requestNowValue = requestNow.valueOf();
+            const token = "_";
+            let execName, file;
+            let fileNameConst, positionKey, order;
 
-          for (let key in files) {
-            file = files[key];
-            [ fileNameConst, positionKey, order ] = key.split("_");
-            execName = file.originalFilename.split(".")[file.originalFilename.split(".").length - 1];
+            for (let key in files) {
+              file = files[key];
+              [ fileNameConst, positionKey, order ] = key.split("_");
+              execName = file.originalFilename.split(".")[file.originalFilename.split(".").length - 1];
 
-            if (!(await fileSystem(`exist`, [ `${folderConst}/${desid}` ]))) {
-              await fileSystem(`mkdir`, [ `${folderConst}/${desid}` ]);
+              if (!(await fileSystem(`exist`, [ `${folderConst}/${desid}` ]))) {
+                await fileSystem(`mkdir`, [ `${folderConst}/${desid}` ]);
+              }
+
+              if (!(await fileSystem(`exist`, [ `${folderConst}/${desid}/${proid}` ]))) {
+                await fileSystem(`mkdir`, [ `${folderConst}/${desid}/${proid}` ]);
+              }
+
+              await shellExec(`mv ${shellLink(file.filepath)} ${folderConst}/${desid}/${proid}/${positionKey}${token}${String(requestNowValue)}${token}${order}${token}${name}.${execName};`);
             }
 
-            if (!(await fileSystem(`exist`, [ `${folderConst}/${desid}/${proid}` ]))) {
-              await fileSystem(`mkdir`, [ `${folderConst}/${desid}/${proid}` ]);
-            }
+            res.send(JSON.stringify({ message: "success" }));
 
-            await shellExec(`mv ${shellLink(file.filepath)} ${folderConst}/${desid}/${proid}/${positionKey}${token}${String(requestNowValue)}${token}${order}${token}${name}.${execName};`);
+          } else {
+            errorLog("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoBinary): " + e.message).catch((e) => { console.log(e); });
+            res.send(JSON.stringify({ message: "error : " + e.message }));
           }
-
-          res.send(JSON.stringify({ message: "success" }));
-
-        } else {
+        } catch (e) {
           errorLog("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoBinary): " + e.message).catch((e) => { console.log(e); });
           res.send(JSON.stringify({ message: "error : " + e.message }));
         }
@@ -283,46 +289,51 @@ TransferRouter.prototype.rou_post_clientBinary = function () {
       }
       const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (30000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
-        let filesKeys = Object.keys(files);
-        if (!err && filesKeys.length > 0) {
+        try {
+          let filesKeys = Object.keys(files);
+          if (!err && filesKeys.length > 0) {
 
-          const { name, phone } = fields;
-          const cilentFolderName = ("date" + todayMaker("total")) + '_' + name + '_' + phone.replace(/\-/g, '');
-          const uploadMap = {
-            upload0: "sitePhoto",
-            upload1: "preferredPhoto"
-          };
-          let list, clientFolder;
-          let clientRows, cliid;
+            const { name, phone } = fields;
+            const cilentFolderName = ("date" + todayMaker("total")) + '_' + name + '_' + phone.replace(/\-/g, '');
+            const uploadMap = {
+              upload0: "sitePhoto",
+              upload1: "preferredPhoto"
+            };
+            let list, clientFolder;
+            let clientRows, cliid;
 
-          clientFolder = `${clientConst}/${cilentFolderName}`;
+            clientFolder = `${clientConst}/${cilentFolderName}`;
 
-          list = [];
-          for (let i = 0; i < filesKeys.length; i++) {
-            list.push(uploadMap[filesKeys[i]]);
-          }
-
-          if (!(await fileSystem(`exist`, [ clientFolder ]))) {
-            await shellExec(`mkdir`, [ clientFolder ]);
-            for (let i = 0; i < list.length; i++) {
-              await shellExec(`mkdir`, [ `${clientFolder}/${list[i]}` ]);
+            list = [];
+            for (let i = 0; i < filesKeys.length; i++) {
+              list.push(uploadMap[filesKeys[i]]);
             }
-          }
 
-          for (let i = 0; i < list.length; i++) {
-            if (Array.isArray(files[filesKeys[i]])) {
-              for (let j of files[filesKeys[i]]) {
-                await shellExec(`mv ${shellLink(j.filepath)} ${shellLink(clientFolder + '/' + list[i] + '/' + j.originalFilename)};`);
+            if (!(await fileSystem(`exist`, [ clientFolder ]))) {
+              await shellExec(`mkdir`, [ clientFolder ]);
+              for (let i = 0; i < list.length; i++) {
+                await shellExec(`mkdir`, [ `${clientFolder}/${list[i]}` ]);
               }
-            } else {
-              await shellExec(`mv ${shellLink(files[filesKeys[i]].filepath)} ${shellLink(clientFolder + '/' + list[i] + '/' + files[filesKeys[i]].originalFilename)};`);
             }
+
+            for (let i = 0; i < list.length; i++) {
+              if (Array.isArray(files[filesKeys[i]])) {
+                for (let j of files[filesKeys[i]]) {
+                  await shellExec(`mv ${shellLink(j.filepath)} ${shellLink(clientFolder + '/' + list[i] + '/' + j.originalFilename)};`);
+                }
+              } else {
+                await shellExec(`mv ${shellLink(files[filesKeys[i]].filepath)} ${shellLink(clientFolder + '/' + list[i] + '/' + files[filesKeys[i]].originalFilename)};`);
+              }
+            }
+
+            await messageSend({ text: name + "님이 파일 전송을 시도중입니다!", channel: "#401_consulting" });
+            res.send(JSON.stringify({ message: "done" }));
+
+          } else {
+            errorLog("Transfer lounge 서버 문제 생김 (rou_post_clientBinary): " + e.message).catch((e) => { console.log(e); });
+            res.send(JSON.stringify({ message: "error : " + e.message }));
           }
-
-          await messageSend({ text: name + "님이 파일 전송을 시도중입니다!", channel: "#401_consulting" });
-          res.send(JSON.stringify({ message: "done" }));
-
-        } else {
+        } catch (e) {
           errorLog("Transfer lounge 서버 문제 생김 (rou_post_clientBinary): " + e.message).catch((e) => { console.log(e); });
           res.send(JSON.stringify({ message: "error : " + e.message }));
         }
@@ -601,6 +612,55 @@ TransferRouter.prototype.rou_post_generalFileUpload = function () {
   return obj;
 }
 
+TransferRouter.prototype.rou_post_middleCommentsBinary = function () {
+  const instance = this;
+  const { errorLog, fileSystem, shellExec, shellLink, equalJson } = this.mother;
+  const { folderConst } = this;
+  const drive = this.drive;
+  let obj;
+  obj = {};
+  obj.link = [ "/middleCommentsBinary" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (30000 * 1024 * 1024) });
+      form.parse(req, async function (err, fields, files) {
+        try {
+          if (!err) {
+            const { proid, designer, client, desid } = fields;
+            const parentsId = "1YuWV37wnTqe68nYqnn_oyu5j_p6SPuAe";
+            let file;
+            for (let key in files) {
+              file = files[key];
+              await drive.upload_inPython(parentsId, file.filepath);
+              await shellExec(`rm -rf ${shellLink(file.filepath)};`);
+            }
+            res.send(JSON.stringify({ message: "done" }));
+
+          } else {
+            errorLog("Transfer lounge 서버 문제 생김 (rou_post_middleCommentsBinary): " + e.message).catch((e) => { console.log(e); });
+            res.send(JSON.stringify({ message: "error : " + e.message }));
+          }
+        } catch (e) {
+          errorLog("Transfer lounge 서버 문제 생김 (rou_post_middleCommentsBinary): " + e.message).catch((e) => { console.log(e); });
+          res.send(JSON.stringify({ message: "error : " + e.message }));
+        }
+      });
+    } catch (e) {
+      errorLog("Transfer lounge 서버 문제 생김 (rou_post_middleCommentsBinary): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
 
 //ROUTING ----------------------------------------------------------------------
 
