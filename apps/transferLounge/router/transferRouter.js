@@ -200,7 +200,8 @@ TransferRouter.prototype.rou_post_clientPhoto = function () {
 
 TransferRouter.prototype.rou_post_middleLinkParsing = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink } = this.mother;
+  const { errorLog, fileSystem, shellExec, shellLink, equalJson } = this.mother;
+  const { folderConst } = this;
   let obj;
   obj = {};
   obj.link = [ "/middleLinkParsing" ];
@@ -212,11 +213,32 @@ TransferRouter.prototype.rou_post_middleLinkParsing = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
+      if (req.body.links === undefined) {
+        throw new Error("invaild post");
+      }
+      const targets = equalJson(req.body.links);
+      let tong, raw, rawArr, link, memo;
 
+      tong = [];
+      for (let { desid, proid, file } of targets) {
 
+        raw = (await fileSystem(`readString`, [ `${folderConst}/${desid}/${proid}/${file}` ])).trim();
+        rawArr = raw.split("\n");
+        if (rawArr.length === 1) {
+          link = rawArr[0];
+          memo = "";
+        } else if (rawArr.length > 1) {
+          link = rawArr[0];
+          memo = rawArr[1];
+        } else {
+          link = "";
+          memo = "";
+        }
 
+        tong.push({ desid, proid, file, link, memo });
+      }
 
-      res.send(JSON.stringify({ message: "done" }));
+      res.send(JSON.stringify(tong));
     } catch (e) {
       errorLog("Transfer lounge 서버 문제 생김 (rou_post_middleLinkParsing): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));

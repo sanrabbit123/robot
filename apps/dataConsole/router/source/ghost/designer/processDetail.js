@@ -1726,11 +1726,11 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
     }
 
     mothers = this.panList;
-    itemList = await ajaxJson({ target: this.targetDrive }, BACKHOST + "/ghostPass_readDir", { equal: true });
+    itemList = await ajaxJson({ target: this.targetDrive }, BRIDGEHOST + "/middlePhotoRead", { equal: true });
     preItemList = await ajaxJson({ cliid: this.client.cliid }, BACKHOST + "/ghostPass_clientPhoto", { equal: true });
 
     linkTargets = itemList.filter((str) => { return linkTargetKey.includes(str.split("_")[0]) });
-    linkContents = await ajaxJson({ links: linkTargets.map((file) => { return { desid: instance.designer.desid, proid: instance.project.proid, file } }) }, BACKHOST + "/ghostPass_linkParsing", { equal: true });
+    linkContents = await ajaxJson({ links: linkTargets.map((file) => { return { desid: instance.designer.desid, proid: instance.project.proid, file } }) }, BRIDGEHOST + "/middleLinkParsing", { equal: true });
 
     for (let mother of mothers) {
       cleanChildren(mother);
@@ -4480,7 +4480,7 @@ ProcessDetailJs.prototype.launching = async function (loading) {
     this.contents = await ajaxJson({}, SECONDHOST + "/getChecklist", { equal: true });
     this.panContents = this.contents.map((obj) => { return obj.children }).flat();
 
-    this.targetHref = "https://" + FILEHOST + "/photo/designer" + "/" + this.designer.desid + "/" + this.project.proid;
+    this.targetHref = BRIDGEHOST.replace(/\:3000/gi, '') + "/photo/designer" + "/" + this.designer.desid + "/" + this.project.proid;
     this.targetDrive = "/" + this.designer.desid + "/" + this.project.proid;
     this.panList = [];
     this.itemList = [];
