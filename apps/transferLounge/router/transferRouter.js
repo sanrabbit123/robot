@@ -207,6 +207,12 @@ TransferRouter.prototype.rou_post_clientPhoto = function () {
       let preferredPhoto, sitePhoto;
       let preferredPhotoList, sitePhotoList;
       let root;
+      let mode;
+
+      mode = "siteMode";
+      if (req.body.fileMode !== undefined) {
+        mode = "fileMode";
+      }
 
       client = await back.getClientById(cliid, { selfMongo: instance.mongo });
       if (client === null) {
@@ -232,6 +238,11 @@ TransferRouter.prototype.rou_post_clientPhoto = function () {
         }
         preferredPhoto = preferredPhoto.concat(preferredPhotoList);
         sitePhoto = sitePhoto.concat(sitePhotoList);
+      }
+
+      if (mode !== "fileMode") {
+        preferredPhoto = preferredPhoto.map((i) => { return `https://${instance.address.transinfo.host}/${global.encodeURI(i.replace(new RegExp(clientConst.split('/').slice(0, -2).join('/'), "gi"), '')).replace(/^\//, '')}`; });
+        sitePhoto = sitePhoto.map((i) => { return `https://${instance.address.transinfo.host}/${global.encodeURI(i.replace(new RegExp(clientConst.split('/').slice(0, -2).join('/'), "gi"), '')).replace(/^\//, '')}`; });
       }
 
       res.send(JSON.stringify({ sitePhoto, preferredPhoto }));
