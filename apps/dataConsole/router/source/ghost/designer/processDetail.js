@@ -625,7 +625,7 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
   subButtonWeight = <%% 800, 800, 800, 800, 800 %%>;
   subButtonVisualTop = <%% 3, 3, 2, 1, 0.3 %%>;
   subButtonPaddingBottom = <%% (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 5 : 4), (isIphone() ? 1.2 : 1.4) %%>;
-  subButtonPaddingTop = <%% (isMac() ? 4 : 5), (isMac() ? 4 : 5), (isMac() ? 4 : 5), (isMac() ? 3 : 4), (isIphone() ? 1.2 : 1.2) %%>;
+  subButtonPaddingTop = <%% (isMac() ? 4 : 6), (isMac() ? 4 : 6), (isMac() ? 4 : 6), (isMac() ? 3 : 5), (isIphone() ? 1.2 : 1.2) %%>;
   subButtonPaddingLeft = <%% 11, 11, 10, 9, 2 %%>;
   subButtonsVisualTop = <%% 2, 3, 3, 1, 0 %%>;
 
@@ -1111,7 +1111,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
     itemTongMarginLeft = <%% 12, 12, 12, 10, 1 %%>;
     itemDivide = <%% 5, 4, 3, 3, 2 %%>;
 
-    textTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
+    textTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
     textSize = <%% 14, 14, 13, 12, 2.7 %%>;
     textWeight = <%% 500, 500, 500, 500, 500 %%>;
 
@@ -3660,7 +3660,7 @@ ProcessDetailJs.prototype.insertGreenButtons = function () {
   buttonMarginTop = <%% 6, 6, 6, 6, 2 %%>;
   buttonBetween = <%% 6, 6, 6, 6, 1 %%>;
 
-  buttonTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isIphone() ? -0.1 : -0.3) %%>;
+  buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isIphone() ? -0.1 : -0.3) %%>;
   buttonSize = <%% 14, 14, 14, 13, 3 %%>;
   buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
