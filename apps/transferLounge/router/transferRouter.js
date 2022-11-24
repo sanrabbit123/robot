@@ -583,7 +583,6 @@ TransferRouter.prototype.rou_post_generalFileUpload = function () {
               await shellExec(`mv ${shellLink(path)} ${shellLink(staticConst + "/" + toArr[num])}`);
               if (/\.pdf$/i.test(toArr[num])) {
                 instance.imageReader.pdfToJpg(staticConst + "/" + toArr[num]).catch((err) => { console.log(err); });
-                await shellExec(`rm -rf ${shellLink(staticConst + "/" + toArr[num])}`);
               }
               num++;
             }
