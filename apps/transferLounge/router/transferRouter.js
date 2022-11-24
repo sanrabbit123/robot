@@ -10,7 +10,7 @@ const TransferRouter = function (MONGOC, MONGOLOCALC) {
   this.mongolocal = MONGOLOCALC;
   this.timeouts = {};
   this.formidable = require("formidable");
-  this.folderConst = process.cwd() + "/static/photo/designer";
+  this.folderConst = process.env.HOME + "/static/photo/designer";
 
   this.vaildHost = [
     this.address.frontinfo.host,
