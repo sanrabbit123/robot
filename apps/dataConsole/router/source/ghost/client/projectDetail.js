@@ -761,7 +761,7 @@ ProjectDetailJs.prototype.insertUploadBox = function () {
         position: "relative",
         width: withOut(0),
         marginBottom: String((i === (this.panContents.length - 1)) ? 0 : panBetween) + ea,
-        background: desktop ? colorChip.gray0 : colorChip.gray3,
+        background: desktop ? colorChip.gray1 : colorChip.gray3,
         borderRadius: String(5) + "px",
         transition: "all 0.5s ease",
       }
@@ -2150,7 +2150,7 @@ ProjectDetailJs.prototype.returnButtonList = function () {
         let parsedString;
         try {
           if (instance.itemList.length === 0) {
-            window.alert("파일을 먼저 선택해주세요! (우클릭으로 파일 선택)");
+            window.alert("파일을 먼저 선택해주세요!");
           } else {
             for (let { original, type, hex, exe } of instance.itemList) {
               if (type === "photo") {
