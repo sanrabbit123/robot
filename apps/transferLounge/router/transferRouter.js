@@ -282,7 +282,7 @@ TransferRouter.prototype.rou_post_middleLinkSave = function () {
 
 TransferRouter.prototype.rou_post_middlePhotoRemove = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink } = this.mother;
+  const { errorLog, fileSystem, shellExec, shellLink, equalJson } = this.mother;
   const { folderConst } = this;
   let obj;
   obj = {};
