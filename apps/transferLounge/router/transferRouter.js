@@ -10,8 +10,9 @@ const TransferRouter = function (MONGOC, MONGOLOCALC) {
   this.mongolocal = MONGOLOCALC;
   this.timeouts = {};
   this.formidable = require("formidable");
-  this.folderConst = process.env.HOME + "/static/photo/designer";
-  this.clientConst = process.env.HOME + "/static/photo/client";
+  this.staticConst = process.env.HOME + "/static";
+  this.folderConst = this.staticConst + "/photo/designer";
+  this.clientConst = this.staticConst + "/photo/client";
 
   this.vaildHost = [
     this.address.frontinfo.host,
@@ -322,6 +323,54 @@ TransferRouter.prototype.rou_post_clientBinary = function () {
 
     } catch (e) {
       errorLog("Transfer lounge 서버 문제 생김 (rou_post_clientBinary): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+TransferRouter.prototype.rou_post_clientDelete = function () {
+  const instance = this;
+  const { errorLog, fileSystem, shellExec, shellLink } = this.mother;
+  const { staticConst } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/clientDelete" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (typeof req.body.path !== "string") {
+        throw new Error("must be path");
+      }
+      if (!/^\//i.test(req.body.path)) {
+        throw new Error("invaild path");
+      }
+      const { path } = req.body;
+      let realDo;
+
+      realDo = false;
+      if (/^\/photo/gi.test(path)) {
+        if (/client/gi.test(path)) {
+          realDo = true;
+        }
+      }
+
+      if (realDo) {
+        await shellExec(`rm`, [ `-rf`, staticConst + path ]);
+      }
+
+      res.send(JSON.stringify({ message: "success" }));
+
+    } catch (e) {
+      errorLog("Transfer lounge 서버 문제 생김 (rou_post_clientDelete): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }

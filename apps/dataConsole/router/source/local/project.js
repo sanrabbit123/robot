@@ -6902,7 +6902,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       const panClassName = "panClassName";
       const preItemMotherKey = "firstPhoto";
       const linkTargetKey = [ "productLink" ];
-      const targetHref = "https://" + FILEHOST + "/photo/designer" + "/" + thisCase.designer.split(" ")[1] + "/" + thisCase.proid;
+      const targetHref = BRIDGEHOST.replace(/\:3000/gi, '') + "/photo/designer" + "/" + thisCase.designer.split(" ")[1] + "/" + thisCase.proid;
       const emptyDate = new Date(1800, 0, 1);
       let matrixBox;
       let loadingWidth;
@@ -7012,12 +7012,12 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         matrixBox.style.animation = "fadein 0.3s ease forwards";
 
         checklist = await ajaxJson({}, SECONDHOST + "/getChecklist", { equal: true });
-        itemList = await ajaxJson({ target: "__project__" + "/" + thisCase.designer.split(" ")[1] + "/" + thisCase.proid }, BACKHOST + "/ghostPass_readDir", { equal: true });
+        itemList = await ajaxJson({ target: thisCase.designer.split(" ")[1] + "/" + thisCase.proid }, BRIDGEHOST + "/middlePhotoRead", { equal: true });
         [ thisProject ] = await ajaxJson({ whereQuery: { proid: thisCase.proid } }, SECONDHOST + "/getProjects", { equal: true });
         [ thisDesigner ] = await ajaxJson({ whereQuery: { desid: thisCase.designer.split(" ")[1] } }, SECONDHOST + "/getDesigners", { equal: true });
-        preItemList = await ajaxJson({ cliid: thisProject.cliid }, BACKHOST + "/ghostPass_clientPhoto", { equal: true });
+        preItemList = await ajaxJson({ cliid: thisProject.cliid }, BRIDGEHOST + "/clientPhoto", { equal: true });
         linkTargets = itemList.filter((str) => { return linkTargetKey.includes(str.split("_")[0]) });
-        linkContents = await ajaxJson({ links: linkTargets.map((file) => { return { desid: thisCase.designer.split(" ")[1], proid: thisCase.proid, file } }) }, BACKHOST + "/ghostPass_linkParsing", { equal: true });
+        linkContents = await ajaxJson({ links: linkTargets.map((file) => { return { desid: thisCase.designer.split(" ")[1], proid: thisCase.proid, file } }) }, BRIDGEHOST + "/middleLinkParsing", { equal: true });
 
         tempArr = [];
         preIndex = 1;

@@ -4190,7 +4190,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
       ajaxJson({
         cliid: thisCase[standard[1]]
-      }, "/ghostPass_clientPhoto").then((obj) => {
+      }, BRIDGEHOST + "/clientPhoto").then((obj) => {
         images = images.concat(obj.sitePhoto);
         images = images.concat(obj.preferredPhoto);
         return ajaxJson({
@@ -4435,7 +4435,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
                 images = [];
                 ajaxForm(formData, OFFICEHOST + "/fileUpload").then(() => {
-                  return ajaxJson({ cliid }, "/ghostPass_clientPhoto");
+                  return ajaxJson({ cliid }, BRIDGEHOST + "/clientPhoto");
                 }).then((obj) => {
                   images = images.concat(obj.sitePhoto);
                   images = images.concat(obj.preferredPhoto);
@@ -4801,8 +4801,9 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                         if (window.confirm("사진을 서버로부터 삭제하시겠습니까? 한 번 삭제된 사진은 복구할 수 없습니다!")) {
 
                           images = [];
-                          ajaxJson({ path }, "/ghostPass_staticDelete").then(() => {
-                            return ajaxJson({ cliid }, "/ghostPass_clientPhoto");
+
+                          ajaxJson({ path }, BRIDGEHOST + "/clientDelete").then(() => {
+                            return ajaxJson({ cliid }, BRIDGEHOST + "/clientPhoto");
                           }).then((obj) => {
                             images = images.concat(obj.sitePhoto);
                             images = images.concat(obj.preferredPhoto);

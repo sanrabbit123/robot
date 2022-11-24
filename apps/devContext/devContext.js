@@ -131,7 +131,7 @@ DevContext.prototype.launching = async function () {
     // }
 
 
-    await findCode("BRIDGEHOST");
+    await findCode("ghostPass_clientPhoto");
 
 
 
