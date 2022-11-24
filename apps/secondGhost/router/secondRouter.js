@@ -33,6 +33,7 @@ const SecondRouter = function (slack_bot, MONGOC, MONGOLOCALC) {
   this.vaildHost = [
     this.address.frontinfo.host,
     this.address.secondinfo.host,
+    this.address.transinfo.host,
     this.address.backinfo.host,
     this.address.pythoninfo.host,
     this.address.testinfo.host,
