@@ -642,7 +642,6 @@ TransferRouter.prototype.rou_post_middleCommentsBinary = function () {
 
             for (let key in files) {
               file = files[key];
-              await drive.upload_inPython(parentsId, file.filepath);
               execName = file.originalFilename.split(".")[file.originalFilename.split(".").length - 1];
               newFileName = `${folderConst}/${desid}/${proid}/${designer}_${client}_디자이너글_${proid}.${execName}`;
               await shellExec(`mv ${shellLink(file.filepath)} ${newFileName};`);
