@@ -11,6 +11,7 @@ const TransferRouter = function (MONGOC, MONGOLOCALC) {
   this.timeouts = {};
   this.formidable = require("formidable");
   this.folderConst = process.env.HOME + "/static/photo/designer";
+  this.clientConst = process.env.HOME + "/static/photo/client";
 
   this.vaildHost = [
     this.address.frontinfo.host,
@@ -211,7 +212,7 @@ TransferRouter.prototype.rou_post_clientPhoto = function () {
 TransferRouter.prototype.rou_post_clientBinary = function () {
   const instance = this;
   const { errorLog, fileSystem, shellExec, shellLink, todayMaker, messageSend } = this.mother;
-  const { folderConst } = this;
+  const { clientConst } = this;
   let obj;
   obj = {};
   obj.link = [ "/clientBinary", "/binary" ];
@@ -240,7 +241,7 @@ TransferRouter.prototype.rou_post_clientBinary = function () {
           let list, clientFolder;
           let clientRows, cliid;
 
-          clientFolder = `${folderConst}/client/${cilentFolderName}`;
+          clientFolder = `${clientConst}/${cilentFolderName}`;
 
           list = [];
           for (let i = 0; i < filesKeys.length; i++) {
