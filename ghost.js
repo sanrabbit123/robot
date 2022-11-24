@@ -3023,7 +3023,7 @@ Ghost.prototype.ghostRouter = function (needs) {
           if (await fileSystem(`exist`, [ instance.projectServer + "/" + desid ])) {
             if (await fileSystem(`exist`, [ instance.projectServer + "/" + desid + "/" + proid ])) {
               if (await fileSystem(`exist`, [ instance.projectServer + "/" + desid + "/" + proid + "/" + fileName ])) {
-                await shellExec(`rm`, [ `-rf`, instance.projectServer + "/" + desid + "/" + proid + "/" + fileName ] ]);
+                await shellExec(`rm`, [ `-rf`, instance.projectServer + "/" + desid + "/" + proid + "/" + fileName ]);
               }
             }
           }
