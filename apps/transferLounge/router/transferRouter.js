@@ -86,7 +86,7 @@ TransferRouter.prototype.rou_get_First = function () {
 
 //POST ---------------------------------------------------------------------------------------------
 
-SecondRouter.prototype.rou_post_middlePhotoBinary = function () {
+TransferRouter.prototype.rou_post_middlePhotoBinary = function () {
   const instance = this;
   const { errorLog, fileSystem, shellExec, shellLink } = this.mother;
   const folderConst = this.folderConst;
