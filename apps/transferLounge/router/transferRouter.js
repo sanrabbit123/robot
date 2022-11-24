@@ -249,7 +249,7 @@ TransferRouter.prototype.rou_post_middleLinkParsing = function () {
 
 TransferRouter.prototype.rou_post_middleLinkSave = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink } = this.mother;
+  const { errorLog, fileSystem, shellExec, shellLink, cryptoString } = this.mother;
   const { folderConst } = this;
   let obj;
   obj = {};
@@ -267,8 +267,9 @@ TransferRouter.prototype.rou_post_middleLinkSave = function () {
       }
       const { proid, desid, link, memo, key } = req.body;
       const now = new Date();
+      const hash = await cryptoString("homeliaison", String(now.valueOf()));
 
-      await fileSystem(`write`, [ `${folderConst}/${desid}/${proid}/${key}_${String(now.valueOf())}_${String(0)}_${uniqueValue("hex")}.link`, (global.decodeURIComponent(link).trim() + "\n" + memo.trim()) ]);
+      await fileSystem(`write`, [ `${folderConst}/${desid}/${proid}/${key}_${String(now.valueOf())}_${String(0)}_${hash}.link`, (global.decodeURIComponent(link).trim() + "\n" + memo.trim()) ]);
 
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
