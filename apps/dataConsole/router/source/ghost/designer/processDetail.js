@@ -1063,7 +1063,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
   const { ea, targetDrive, targetHref, media, totalContents } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { ajaxJson, createNode, colorChip, withOut, cleanChildren, dateToString, isMac, swipePatch, blankHref, removeByClass, downloadFile } = GeneralJs;
+  const { ajaxJson, createNode, colorChip, withOut, cleanChildren, dateToString, isMac, swipePatch, blankHref, removeByClass, downloadFile, equalJson } = GeneralJs;
   const motherChildPhotoTongClassName = "motherChildPhotoTongClassName";
   const photoItemInitClassName = "photoItemInitClassName";
   const bigPhotoClassName = "bigPhotoClassName";
@@ -1357,7 +1357,11 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
         if (type !== "link") {
           forceSelect = 0;
           if (this.getAttribute("toggle") === "off") {
-            fileItemSelectEvent.call(this, e);
+            if (type === "file") {
+              fileItemSelectEvent.call(this, e);
+            } else {
+              photoItemSelectEvent.call(this, e);
+            }
             forceSelect = 1;
           }
         }
@@ -1366,12 +1370,17 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
         const { top, left, height, width } = this.getBoundingClientRect();
         let cancelBack, whitePrompt;
         let cancelEvent;
+        let link, original, key;
 
         cancelEvent = function (e) {
           removeByClass(whiteContextmenuClassName);
           if (type !== "link") {
             if (forceSelect === 1) {
-              fileItemSelectEvent.call(self, e);
+              if (type === "file") {
+                fileItemSelectEvent.call(self, e);
+              } else {
+                photoItemSelectEvent.call(self, e);
+              }
             }
           }
         }
@@ -1408,132 +1417,310 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
           }
         });
 
-        createNode({
-          mother: whitePrompt,
-          event: {
-            click: async function (e) {
-              let parsedString;
-              try {
-                if (instance.itemList.length === 0) {
-                  window.alert("파일을 먼저 선택해주세요!");
-                } else {
-                  for (let { original, type, hex, exe } of instance.itemList) {
-                    if (type === "photo") {
-                      await downloadFile(original);
-                    } else {
-                      parsedString = await ajaxJson({ mode: "decrypto", hash: hex }, BACKHOST + "/homeliaisonCrypto", { equal: true });
-                      await downloadFile(original, parsedString.string.replace(/ /gi, "_") + "." + exe);
+        if (type !== "link") {
+          createNode({
+            mother: whitePrompt,
+            event: {
+              click: async function (e) {
+                let parsedString;
+                try {
+                  if (instance.itemList.length === 0) {
+                    window.alert("파일을 먼저 선택해주세요!");
+                  } else {
+                    for (let { original, type, hex, exe } of instance.itemList) {
+                      if (type === "photo") {
+                        await downloadFile(original);
+                      } else {
+                        parsedString = await ajaxJson({ mode: "decrypto", hash: hex }, BACKHOST + "/homeliaisonCrypto", { equal: true });
+                        await downloadFile(original, parsedString.string.replace(/ /gi, "_") + "." + exe);
+                      }
                     }
+                    cancelEvent.call(self, e);
                   }
-                  cancelEvent.call(self, e);
+                } catch (e) {
+                  console.log(e);
+                  window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
                 }
-              } catch (e) {
-                console.log(e);
-                window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+              }
+            },
+            style: {
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              width: String(contextWidth) + ea,
+              height: String(contextHeight) + ea,
+              borderRadius: String(5) + "px",
+              background: colorChip.gray1,
+              marginBottom: String(itemBetween) + ea,
+              cursor: "pointer",
+            },
+            child: {
+              text: "파일 다운로드",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(contextSize) + ea,
+                fontWeight: String(textWeight),
+                color: colorChip.black,
+                top: String(textTop) + ea,
               }
             }
-          },
-          style: {
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            width: String(contextWidth) + ea,
-            height: String(contextHeight) + ea,
-            borderRadius: String(5) + "px",
-            background: colorChip.gray1,
-            marginBottom: String(itemBetween) + ea,
-            cursor: "pointer",
-          },
-          child: {
-            text: "파일 다운로드",
+          });
+          createNode({
+            mother: whitePrompt,
+            event: {
+              click: async function (e) {
+                let parsedString, fileMap;
+                try {
+                  if (instance.itemList.length === 0) {
+                    window.alert("파일을 먼저 선택해주세요!");
+                  } else {
+                    if (window.confirm("선택한 파일을 삭제하시겠습니까?")) {
+                      fileMap = instance.itemList.map(({ original }) => {
+                        const [ protocol, host, const1, const2, desid, proid, fileName ] = original.split("/").filter((str) => { return str !== '' });
+                        return { desid, proid, fileName }
+                      });
+                      await ajaxJson({ targets: fileMap }, BACKHOST + "/ghostPass_middlePhotoRemove");
+                    }
+                    cancelEvent.call(self, e);
+                    await instance.setPanBlocks();
+                  }
+                } catch (e) {
+                  console.log(e);
+                  window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+                }
+              }
+            },
             style: {
-              display: "inline-block",
-              position: "relative",
-              fontSize: String(contextSize) + ea,
-              fontWeight: String(textWeight),
-              color: colorChip.black,
-              top: String(textTop) + ea,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              width: String(contextWidth) + ea,
+              height: String(contextHeight) + ea,
+              borderRadius: String(5) + "px",
+              background: colorChip.gray1,
+              marginBottom: String(itemBetween) + ea,
+              cursor: "pointer",
+            },
+            child: {
+              text: "파일 삭제",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(contextSize) + ea,
+                fontWeight: String(textWeight),
+                color: colorChip.black,
+                top: String(textTop) + ea,
+              }
             }
-          }
-        });
+          });
+          createNode({
+            mother: whitePrompt,
+            event: {
+              click: async function (e) {
+                try {
+                  const host = FRONTHOST.replace(/^https\:\/\//gi, '');
+                  const path = "project";
 
-        createNode({
-          mother: whitePrompt,
-          event: {
-            click: async function (e) {
-              let parsedString, fileMap;
-              try {
-                if (instance.itemList.length === 0) {
-                  window.alert("파일을 먼저 선택해주세요!");
-                } else {
-                  if (window.confirm("선택한 파일을 삭제하시겠습니까?")) {
-                    fileMap = instance.itemList.map(({ original }) => {
-                      const [ protocol, host, const1, const2, desid, proid, fileName ] = original.split("/").filter((str) => { return str !== '' });
-                      return { desid, proid, fileName }
-                    });
+                  if (instance.itemList.length === 0) {
+                    window.alert("파일을 먼저 선택해주세요!");
+                  } else {
+                    const targets = equalJson(JSON.stringify(instance.panContents));
+                    const target = targets.find((obj) => { return obj.key === instance.itemList[0].key })
+                    await ajaxJson({
+                      method: "projectDetail",
+                      name: instance.client.name,
+                      phone: instance.client.phone,
+                      option: {
+                        client: instance.client.name,
+                        designer: instance.designer.designer,
+                        file: target.action[0].name,
+                        host: host,
+                        path: path,
+                        proid: instance.project.proid,
+                        key: instance.itemList[0].key,
+                      }
+                    }, BACKHOST + "/alimTalk");
+                    window.alert(instance.client.name + " 고객님에게 알림톡을 전송하였습니다!");
+                    cancelEvent.call(self, e);
+                  }
+
+                } catch (e) {
+                  console.log(e);
+                }
+              }
+            },
+            style: {
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              width: String(contextWidth) + ea,
+              height: String(contextHeight) + ea,
+              borderRadius: String(5) + "px",
+              background: colorChip.gray1,
+              cursor: "pointer",
+            },
+            child: {
+              text: "알림 보내기",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(contextSize) + ea,
+                fontWeight: String(textWeight),
+                color: colorChip.black,
+                top: String(textTop) + ea,
+              }
+            }
+          });
+        } else {
+
+          link = this.getAttribute("link");
+          original = this.getAttribute("original");
+          key = this.getAttribute("key");
+
+          createNode({
+            mother: whitePrompt,
+            attribute: {
+              link,
+            },
+            event: {
+              click: function (e) {
+                const link = this.getAttribute("link");
+                blankHref(link);
+                cancelEvent.call(self, e);
+              },
+            },
+            style: {
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              width: String(contextWidth) + ea,
+              height: String(contextHeight) + ea,
+              borderRadius: String(5) + "px",
+              background: colorChip.gray1,
+              marginBottom: String(itemBetween) + ea,
+              cursor: "pointer",
+            },
+            child: {
+              text: "링크 열기",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(contextSize) + ea,
+                fontWeight: String(textWeight),
+                color: colorChip.black,
+                top: String(textTop) + ea,
+              }
+            }
+          });
+          createNode({
+            mother: whitePrompt,
+            attribute: { original },
+            event: {
+              click: async function (e) {
+                const original = this.getAttribute("original");
+                let parsedString, fileMap;
+                try {
+                  if (window.confirm("해당 링크을 삭제하시겠습니까?")) {
+                    const [ protocol, host, const1, const2, desid, proid, fileName ] = original.split("/").filter((str) => { return str !== '' });
+                    fileMap = [ { desid, proid, fileName } ];
                     await ajaxJson({ targets: fileMap }, BACKHOST + "/ghostPass_middlePhotoRemove");
                   }
                   cancelEvent.call(self, e);
                   await instance.setPanBlocks();
+                } catch (e) {
+                  console.log(e);
+                  window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
                 }
-              } catch (e) {
-                console.log(e);
-                window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+              }
+            },
+            style: {
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              width: String(contextWidth) + ea,
+              height: String(contextHeight) + ea,
+              borderRadius: String(5) + "px",
+              background: colorChip.gray1,
+              marginBottom: String(itemBetween) + ea,
+              cursor: "pointer",
+            },
+            child: {
+              text: "링크 삭제",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(contextSize) + ea,
+                fontWeight: String(textWeight),
+                color: colorChip.black,
+                top: String(textTop) + ea,
               }
             }
-          },
-          style: {
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            width: String(contextWidth) + ea,
-            height: String(contextHeight) + ea,
-            borderRadius: String(5) + "px",
-            background: colorChip.gray1,
-            marginBottom: String(itemBetween) + ea,
-            cursor: "pointer",
-          },
-          child: {
-            text: "파일 삭제",
-            style: {
-              display: "inline-block",
-              position: "relative",
-              fontSize: String(contextSize) + ea,
-              fontWeight: String(textWeight),
-              color: colorChip.black,
-              top: String(textTop) + ea,
-            }
-          }
-        });
+          });
+          createNode({
+            mother: whitePrompt,
+            attribute: {
+              key
+            },
+            event: {
+              click: async function (e) {
+                try {
+                  const host = FRONTHOST.replace(/^https\:\/\//gi, '');
+                  const path = "project";
+                  const key = this.getAttribute("key");
+                  const targets = equalJson(JSON.stringify(instance.panContents));
+                  const target = targets.find((obj) => { return obj.key === key });
+                  await ajaxJson({
+                    method: "projectDetail",
+                    name: instance.client.name,
+                    phone: instance.client.phone,
+                    option: {
+                      client: instance.client.name,
+                      designer: instance.designer.designer,
+                      file: target.action[0].name,
+                      host: host,
+                      path: path,
+                      proid: instance.project.proid,
+                      key: key,
+                    }
+                  }, BACKHOST + "/alimTalk");
+                  window.alert(instance.client.name + " 고객님에게 알림톡을 전송하였습니다!");
+                  cancelEvent.call(self, e);
 
-        createNode({
-          mother: whitePrompt,
-          style: {
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            width: String(contextWidth) + ea,
-            height: String(contextHeight) + ea,
-            borderRadius: String(5) + "px",
-            background: colorChip.gray1,
-            cursor: "pointer",
-          },
-          child: {
-            text: "알림 보내기",
+                } catch (e) {
+                  console.log(e);
+                }
+              }
+            },
             style: {
-              display: "inline-block",
-              position: "relative",
-              fontSize: String(contextSize) + ea,
-              fontWeight: String(textWeight),
-              color: colorChip.black,
-              top: String(textTop) + ea,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              width: String(contextWidth) + ea,
+              height: String(contextHeight) + ea,
+              borderRadius: String(5) + "px",
+              background: colorChip.gray1,
+              cursor: "pointer",
+            },
+            child: {
+              text: "알림 보내기",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(contextSize) + ea,
+                fontWeight: String(textWeight),
+                color: colorChip.black,
+                top: String(textTop) + ea,
+              }
             }
-          }
-        });
-
+          });
+        }
 
       }
     }
@@ -1595,7 +1782,6 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
     motherMatrix = (new Array(this.panContents.length)).fill(0, 0);
 
     for (let { mother, key, date, name, order, motherNumber, type, original, exe, id, hexId } of itemList) {
-
 
       if (type === "file") {
 
@@ -1700,7 +1886,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
           },
           event: {
             click: photoItemSelectEvent,
-            contextmenu: bigPhotoClickEvent,
+            contextmenu: contextmenuEvent(type),
           },
           style: {
             display: "block",
@@ -1752,7 +1938,8 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
             click: function (e) {
               const link = this.getAttribute("link");
               blankHref(link);
-            }
+            },
+            contextmenu: contextmenuEvent(type),
           },
           style: {
             display: "inline-flex",
