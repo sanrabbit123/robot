@@ -4412,7 +4412,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
               if (e.dataTransfer.files.length > 0) {
                 const { name, phone, cliid } = thisCase;
                 const cilentFolderName = ("self" + uniqueValue("string")) + '_' + name + '_' + phone.replace(/\-/g, '');
-                const path = "/photo/고객 전송 사진/" + cilentFolderName + (window.confirm("해당 사진들이 현장 사진이 맞나요? 맞으면 '확인', 선호사진일 경우 '취소'") ? "/sitePhoto" : "/preferredPhoto");
+                const path = "/photo/client/" + cilentFolderName + (window.confirm("해당 사진들이 현장 사진이 맞나요? 맞으면 '확인', 선호사진일 경우 '취소'") ? "/sitePhoto" : "/preferredPhoto");
                 let formData, files, fileNames, toArr, obj, imageNothing;
 
                 formData = new FormData();
@@ -4434,7 +4434,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                 formData.append("toArr", JSON.stringify(toArr));
 
                 images = [];
-                ajaxForm(formData, OFFICEHOST + "/fileUpload").then(() => {
+                ajaxForm(formData, BRIDGEHOST + "/generalFileUpload").then(() => {
                   return ajaxJson({ cliid }, BRIDGEHOST + "/clientPhoto");
                 }).then((obj) => {
                   images = images.concat(obj.sitePhoto);
