@@ -314,6 +314,16 @@ Robot.prototype.secondConnect = async function () {
   }
 }
 
+Robot.prototype.transferConnect = async function () {
+  try {
+    const TransferLounge = require(process.cwd() + "/apps/transferLounge/transferLounge.js");
+    const app = new TransferLounge();
+    await app.transConnect();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.consoleSource = function () {
   const AiConsole = require(process.cwd() + "/apps/contentsMaker/aiConsole.js");
   let cobot = new AiConsole();
@@ -1282,7 +1292,14 @@ const MENU = {
     try {
       await robot.secondConnect();
     } catch (e) {
-      console.log();
+      console.log(e);
+    }
+  },
+  trans: async function () {
+    try {
+      await robot.transferConnect();
+    } catch (e) {
+      console.log(e);
     }
   }
 };
