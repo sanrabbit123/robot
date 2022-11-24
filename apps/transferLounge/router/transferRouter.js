@@ -145,6 +145,85 @@ TransferRouter.prototype.rou_post_middlePhotoBinary = function () {
   return obj;
 }
 
+TransferRouter.prototype.rou_post_middlePhotoRead = function () {
+  const instance = this;
+  const { errorLog, fileSystem, shellExec, shellLink } = this.mother;
+  const { folderConst } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/middlePhotoRead" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.target === undefined) {
+        throw new Error("invaild post");
+      }
+      const { target } = req.body;
+      const list = (await fileSystem(`readDir`, [ `${folderConst}/${target}` ])).filter((str) => { return (!/^\._/.test(str) && !/DS_Store/gi.test(str)) });
+      res.send(JSON.stringify(list));
+    } catch (e) {
+      errorLog("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoRead): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+TransferRouter.prototype.rou_post_clientPhoto = function () {
+  const instance = this;
+  const { errorLog, fileSystem, shellExec, shellLink } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/clientPhoto" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+
+      res.send(JSON.stringify({ message: "done" }));
+    } catch (e) {
+      errorLog("Transfer lounge 서버 문제 생김 (rou_post_clientPhoto): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+TransferRouter.prototype.rou_post_middleLinkParsing = function () {
+  const instance = this;
+  const { errorLog, fileSystem, shellExec, shellLink } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/middleLinkParsing" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+
+
+
+
+      res.send(JSON.stringify({ message: "done" }));
+    } catch (e) {
+      errorLog("Transfer lounge 서버 문제 생김 (rou_post_middleLinkParsing): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
 
 //ROUTING ----------------------------------------------------------------------
 

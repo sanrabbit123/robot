@@ -4481,7 +4481,7 @@ ProcessDetailJs.prototype.launching = async function (loading) {
     this.panContents = this.contents.map((obj) => { return obj.children }).flat();
 
     this.targetHref = "https://" + FILEHOST + "/photo/designer" + "/" + this.designer.desid + "/" + this.project.proid;
-    this.targetDrive = "__project__" + "/" + this.designer.desid + "/" + this.project.proid;
+    this.targetDrive = "/" + this.designer.desid + "/" + this.project.proid;
     this.panList = [];
     this.itemList = [];
 
