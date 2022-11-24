@@ -160,6 +160,9 @@ TransferRouter.prototype.rou_post_middlePhotoRead = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
       if (req.body.target === undefined) {
         throw new Error("invaild post");
       }
@@ -188,10 +191,90 @@ TransferRouter.prototype.rou_post_clientPhoto = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+
+
+
+
 
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
       errorLog("Transfer lounge 서버 문제 생김 (rou_post_clientPhoto): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+TransferRouter.prototype.rou_post_clientBinary = function () {
+  const instance = this;
+  const { errorLog, fileSystem, shellExec, shellLink, todayMaker, messageSend } = this.mother;
+  const { folderConst } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/clientBinary", "/binary" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (30000 * 1024 * 1024) });
+      form.parse(req, async function (err, fields, files) {
+        let filesKeys = Object.keys(files);
+        if (!err && filesKeys.length > 0) {
+
+          const { name, phone } = fields;
+          const cilentFolderName = ("date" + todayMaker("total")) + '_' + name + '_' + phone.replace(/\-/g, '');
+          const uploadMap = {
+            upload0: "sitePhoto",
+            upload1: "preferredPhoto"
+          };
+          let list, clientFolder;
+          let clientRows, cliid;
+
+          clientFolder = `${folderConst}/client/${cilentFolderName}`;
+
+          list = [];
+          for (let i = 0; i < filesKeys.length; i++) {
+            list.push(uploadMap[filesKeys[i]]);
+          }
+
+          if (!(await fileSystem(`exist`, [ clientFolder ]))) {
+            await shellExec(`mkdir`, [ clientFolder ]);
+            for (let i = 0; i < list.length; i++) {
+              await shellExec(`mkdir`, [ `${clientFolder}/${list[i]}` ]);
+            }
+          }
+
+          for (let i = 0; i < list.length; i++) {
+            if (Array.isArray(files[filesKeys[i]])) {
+              for (let j of files[filesKeys[i]]) {
+                await shellExec(`mv ${shellLink(j.filepath)} ${shellLink(clientFolder + '/' + list[i] + '/' + j.originalFilename)};`);
+              }
+            } else {
+              await shellExec(`mv ${shellLink(files[filesKeys[i]].filepath)} ${shellLink(clientFolder + '/' + list[i] + '/' + files[filesKeys[i]].originalFilename)};`);
+            }
+          }
+
+          await messageSend({ text: name + "님이 파일 전송을 시도중입니다!", channel: "#401_consulting" });
+          res.send(JSON.stringify({ message: "done" }));
+
+        } else {
+          errorLog("Transfer lounge 서버 문제 생김 (rou_post_clientBinary): " + e.message).catch((e) => { console.log(e); });
+          res.send(JSON.stringify({ message: "error : " + e.message }));
+        }
+      });
+
+    } catch (e) {
+      errorLog("Transfer lounge 서버 문제 생김 (rou_post_clientBinary): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -213,6 +296,9 @@ TransferRouter.prototype.rou_post_middleLinkParsing = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
       if (req.body.links === undefined) {
         throw new Error("invaild post");
       }
@@ -262,6 +348,9 @@ TransferRouter.prototype.rou_post_middleLinkSave = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
       if (req.body.proid === undefined || req.body.desid === undefined || req.body.link === undefined || req.body.memo === undefined || req.body.key === undefined) {
         throw new Error("invaild post");
       }
@@ -295,6 +384,9 @@ TransferRouter.prototype.rou_post_middlePhotoRemove = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
       if (req.body.targets === undefined) {
         throw new Error("invaild post, must be targets");
       }

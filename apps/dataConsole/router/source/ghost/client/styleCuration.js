@@ -3503,7 +3503,7 @@ StyleCurationJs.prototype.parsingValues = function () {
           formData.append("upload0", instance.fileInput.files[i]);
         }
       }
-      return ajaxForm(formData, BRIDGEHOST + "/binary");
+      return ajaxForm(formData, BRIDGEHOST + "/clientBinary");
     } else {
       return new Promise((resolve, reject) => { resolve("success"); });
     }

@@ -837,19 +837,11 @@ DesignerConsoleJs.prototype.initialLogin = function () {
         newInput.focus();
         pass = true;
 
-        if (designer.desid === "d1701_aa01s") {
-          return GeneralJs.ajaxPromise({
-            name: "배창규",
-            phone: "010-2747-3403",
-            certification,
-          }, BRIDGEHOST + "/certification");
-        } else {
-          return GeneralJs.ajaxPromise({
-            name: designer.designer,
-            phone: designer.information.phone,
-            certification,
-          }, BRIDGEHOST + "/certification");
-        }
+        return GeneralJs.ajaxPromise({
+          name: designer.designer,
+          phone: designer.information.phone,
+          certification,
+        }, BACKHOST + "/certification");
 
       }
     }).then((message) => {

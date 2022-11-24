@@ -21,7 +21,7 @@ LogConsole.prototype.renderStatic = async function (staticFolder) {
   const SSEHOST_CONSOLE = this.address.testinfo.host;
   const FILEHOST = this.address.officeinfo.ghost.host;
   const PYTHONHOST = "https://" + this.address.pythoninfo.host + ":3000";
-  const BRIDGEHOST = "https://" + this.address.officeinfo.ghost.host + ":3000";
+  const BRIDGEHOST = "https://" + this.address.transinfo.host + ":3000";
   const FRONTHOST = "https://" + this.address.frontinfo.host;
   const OFFICEHOST = "https://" + this.address.officeinfo.ghost.host + ":" + String(this.address.officeinfo.ghost.port);
   try {
