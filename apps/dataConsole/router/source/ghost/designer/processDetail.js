@@ -932,7 +932,7 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
                 } while (typeof memo !== "string");
 
                 loading = instance.mother.grayLoading();
-                await ajaxJson({ proid, desid, key, link: window.encodeURIComponent(link.trim()), memo: memo.trim() }, BACKHOST + "/ghostPass_linkSave");
+                await ajaxJson({ proid, desid, key, link: window.encodeURIComponent(link.trim()), memo: memo.trim() }, BRIDGEHOST + "/middleLinkSave");
               }
 
               await instance.setPanBlocks();
@@ -1481,7 +1481,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
                         const [ protocol, host, const1, const2, desid, proid, fileName ] = original.split("/").filter((str) => { return str !== '' });
                         return { desid, proid, fileName }
                       });
-                      await ajaxJson({ targets: fileMap }, BACKHOST + "/ghostPass_middlePhotoRemove");
+                      await ajaxJson({ targets: fileMap }, BRIDGEHOST + "/middlePhotoRemove");
                     }
                     cancelEvent.call(self, e);
                     await instance.setPanBlocks();
@@ -1628,7 +1628,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
                   if (window.confirm("해당 링크을 삭제하시겠습니까?")) {
                     const [ protocol, host, const1, const2, desid, proid, fileName ] = original.split("/").filter((str) => { return str !== '' });
                     fileMap = [ { desid, proid, fileName } ];
-                    await ajaxJson({ targets: fileMap }, BACKHOST + "/ghostPass_middlePhotoRemove");
+                    await ajaxJson({ targets: fileMap }, BRIDGEHOST + "/middlePhotoRemove");
                   }
                   cancelEvent.call(self, e);
                   await instance.setPanBlocks();

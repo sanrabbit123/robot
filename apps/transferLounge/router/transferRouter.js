@@ -247,6 +247,89 @@ TransferRouter.prototype.rou_post_middleLinkParsing = function () {
   return obj;
 }
 
+TransferRouter.prototype.rou_post_middleLinkSave = function () {
+  const instance = this;
+  const { errorLog, fileSystem, shellExec, shellLink } = this.mother;
+  const { folderConst } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/middleLinkSave" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.proid === undefined || req.body.desid === undefined || req.body.link === undefined || req.body.memo === undefined || req.body.key === undefined) {
+        throw new Error("invaild post");
+      }
+      const { proid, desid, link, memo, key } = req.body;
+      const now = new Date();
+
+      await fileSystem(`write`, [ `${folderConst}/${desid}/${proid}/${key}_${String(now.valueOf())}_${String(0)}_${uniqueValue("hex")}.link`, (global.decodeURIComponent(link).trim() + "\n" + memo.trim()) ]);
+
+      res.send(JSON.stringify({ message: "done" }));
+    } catch (e) {
+      errorLog("Transfer lounge 서버 문제 생김 (rou_post_middleLinkSave): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+TransferRouter.prototype.rou_post_middlePhotoRemove = function () {
+  const instance = this;
+  const { errorLog, fileSystem, shellExec, shellLink } = this.mother;
+  const { folderConst } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/middlePhotoRemove" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.targets === undefined) {
+        throw new Error("invaild post, must be targets");
+      }
+      const { targets } = equalJson(req.body);
+      if (!Array.isArray(targets)) {
+        throw new Error("invaild post, must be targets");
+      }
+      if (targets.some((obj) => { return typeof obj !== "object" })) {
+        throw new Error("invaild post, must be targets");
+      }
+      if (targets.some((obj) => { return obj === null })) {
+        throw new Error("invaild post, must be targets");
+      }
+
+      for (let { desid, proid, fileName } of targets) {
+        if (typeof desid !== "string" || typeof proid !== "string" || typeof fileName !== "string") {
+          throw new Error("invaild post, must be targets");
+        }
+        if (await fileSystem(`exist`, [ folderConst + "/" + desid ])) {
+          if (await fileSystem(`exist`, [ folderConst + "/" + desid + "/" + proid ])) {
+            if (await fileSystem(`exist`, [ folderConst + "/" + desid + "/" + proid + "/" + fileName ])) {
+              await shellExec(`rm`, [ `-rf`, folderConst + "/" + desid + "/" + proid + "/" + fileName ]);
+            }
+          }
+        }
+      }
+      res.send(JSON.stringify({ message: "done" }));
+    } catch (e) {
+      errorLog("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoRemove): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+
 //ROUTING ----------------------------------------------------------------------
 
 TransferRouter.prototype.getAll = function () {
