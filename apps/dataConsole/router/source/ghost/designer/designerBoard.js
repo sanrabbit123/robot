@@ -2033,7 +2033,7 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
   whiteBottomMargin = <%% 58, 56, 50, 44, 6 %%>;
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
-  printSize = <%% 14, 14, 13, 12, 4 %%>;
+  printSize = <%% 14, 14, 13, 12, 2.5 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
 
   titleTopNumber = <%% isMac() ? 0 : 1, isMac() ? 0 : 1, isMac() ? 0 : 1, isMac() ? 0 : 1, 0 %%>;
