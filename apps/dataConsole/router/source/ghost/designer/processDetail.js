@@ -3444,7 +3444,7 @@ ProcessDetailJs.prototype.returnButtonList = function () {
                   const proid = this.getAttribute("proid");
                   const designer = this.getAttribute("designer");
                   const client = this.getAttribute("client");
-                  let thisFile, formData, res;
+                  let thisFile, formData, res, loading;
                   if ([ ...this.files ].length === 1) {
                     thisFile = [ ...this.files ][0];
 
@@ -3456,9 +3456,14 @@ ProcessDetailJs.prototype.returnButtonList = function () {
                     formData.append("comments", thisFile);
                     formData.append("desid", instance.designer.desid);
 
+                    loading = instance.mother.grayLoading();
+
                     res = await ajaxForm(formData, BRIDGEHOST + "/middleCommentsBinary");
                     await ajaxJson({ whereQuery: { proid }, updateQuery: { "contents.raw.portfolio.status": "원본 수집 완료" } }, SECONDHOST + "/updateProject");
                     await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 디자이너 글을 업로드 했습니다!", channel: "#300_designer" }, BACKHOST + "/sendSlack");
+
+                    loading.remove();
+
                     window.alert("업로드가 완료되었습니다!");
                     cancelBack.click();
                   }

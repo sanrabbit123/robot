@@ -637,12 +637,19 @@ TransferRouter.prototype.rou_post_middleCommentsBinary = function () {
           if (!err) {
             const { proid, designer, client, desid } = fields;
             const parentsId = "1YuWV37wnTqe68nYqnn_oyu5j_p6SPuAe";
-            let file;
+            let execName, file;
+            let newFileName;
+
             for (let key in files) {
               file = files[key];
               await drive.upload_inPython(parentsId, file.filepath);
-              await shellExec(`rm -rf ${shellLink(file.filepath)};`);
+              execName = file.originalFilename.split(".")[file.originalFilename.split(".").length - 1];
+              newFileName = `${folderConst}/${desid}/${proid}/${designer}_${client}_디자이너글_${proid}.${execName}`;
+              await shellExec(`mv ${shellLink(file.filepath)} ${newFileName};`);
+              await drive.upload_inPython(parentsId, newFileName);
+              await shellExec(`rm -rf ${newFileName};`);
             }
+
             res.send(JSON.stringify({ message: "done" }));
 
           } else {
