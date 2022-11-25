@@ -182,7 +182,27 @@ TransferRouter.prototype.rou_post_middlePhotoRead = function () {
         throw new Error("invaild post");
       }
       const { target } = req.body;
-      const list = (await fileSystem(`readDir`, [ `${folderConst}/${target}` ])).filter((str) => { return (!/^\._/.test(str) && !/DS_Store/gi.test(str)) });
+      let list;
+      let finalTarget;
+      let tempArr;
+      let tempDir;
+      let tempString;
+
+      finalTarget = "/" + (/^\//.test(target) ? target.slice(1) : target);
+
+      tempArr = finalTarget.split("/");
+      tempString = folderConst;
+      for (let i = 0; i < tempArr.length - 1; i++) {
+        tempDir = await fileSystem(`readDir`, [ tempString ]);
+        if (!tempDir.includes(tempArr[i]) && tempArr[i] !== "") {
+          await shellExec(`mkdir ${shellLink(tempString + "/" + tempArr[i])}`);
+        }
+        tempString += '/';
+        tempString += tempArr[i];
+      }
+
+      list = (await fileSystem(`readDir`, [ folderConst + finalTarget ])).filter((str) => { return (!/^\._/.test(str) && !/DS_Store/gi.test(str)) });
+
       res.send(JSON.stringify(list));
     } catch (e) {
       errorLog("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoRead): " + e.message).catch((e) => { console.log(e); });
