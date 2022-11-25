@@ -192,7 +192,7 @@ TransferRouter.prototype.rou_post_middlePhotoRead = function () {
 
       tempArr = finalTarget.split("/");
       tempString = folderConst;
-      for (let i = 0; i < tempArr.length - 1; i++) {
+      for (let i = 0; i < tempArr.length; i++) {
         tempDir = await fileSystem(`readDir`, [ tempString ]);
         if (!tempDir.includes(tempArr[i]) && tempArr[i] !== "") {
           await shellExec(`mkdir ${shellLink(tempString + "/" + tempArr[i])}`);
