@@ -2415,7 +2415,7 @@ ProjectDetailJs.prototype.insertGreenButtons = function () {
 
   chatBaseWidth = <%% 140, 140, 140, 140, 28 %%>;
   chatBaseHeight = <%% 480, 480, 480, 480, 48 %%>;
-  chatBaseBetween = <%% 16, 16, 16, 16, 2 %%>;
+  buttonHeight = <%% 36, 36, 36, 33, 6.8 %%>;
 
   buttonPadding = <%% 12, 12, 12, 10, 3.2 %%>;
   buttonHeight = <%% 36, 36, 36, 33, 7 %%>;
@@ -2426,7 +2426,7 @@ ProjectDetailJs.prototype.insertGreenButtons = function () {
   buttonSize = <%% 14, 14, 14, 13, 2.6 %%>;
   buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  basePadding = <%% 12, 12, 12, 10, 2 %%>;
+  basePadding = <%% 12, 12, 12, 10, 1.6 %%>;
 
   buttonBase = createNode({
     mother: totalContents,

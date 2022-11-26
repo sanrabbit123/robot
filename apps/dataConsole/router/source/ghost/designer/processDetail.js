@@ -3638,7 +3638,7 @@ ProcessDetailJs.prototype.insertGreenButtons = function () {
   chatBaseBetween = <%% 16, 16, 16, 16, 2 %%>;
 
   buttonPadding = <%% 12, 12, 12, 10, 3.2 %%>;
-  buttonHeight = <%% 36, 36, 36, 33, 7 %%>;
+  buttonHeight = <%% 36, 36, 36, 33, 6.8 %%>;
   buttonMarginTop = <%% 6, 6, 6, 6, 1 %%>;
   buttonBetween = <%% 6, 6, 6, 6, 1 %%>;
 
@@ -3646,7 +3646,7 @@ ProcessDetailJs.prototype.insertGreenButtons = function () {
   buttonSize = <%% 14, 14, 14, 13, 2.6 %%>;
   buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  basePadding = <%% 12, 12, 12, 10, 2 %%>;
+  basePadding = <%% 12, 12, 12, 10, 1.6 %%>;
 
   buttonBase = createNode({
     mother: totalContents,
