@@ -4255,7 +4255,9 @@ GeneralJs.prompt = function (message) {
 
     whiteTongBase.addEventListener("click", function (e) {
       e.stopPropagation();
-      document.querySelector('.' + promptAsideClassName).remove();
+      if (document.querySelector('.' + promptAsideClassName) !== null) {
+        document.querySelector('.' + promptAsideClassName).remove();
+      }
       resolve(null);
     });
 
@@ -4266,7 +4268,9 @@ GeneralJs.prompt = function (message) {
         const asideTargets = topLevelTargets.filter((dom) => { return /ASIDE/gi.test(dom.nodeName) }).filter((dom) => { return [ ...dom.children ].length > 0 });
         this.parentNode.style.animation = "fadedownlite 0.2s ease forwards";
         setTimeout(() => {
-          document.body.removeChild(asideTargets[asideTargets.length - 1]);
+          if (document.querySelector('.' + promptAsideClassName) !== null) {
+            document.body.removeChild(asideTargets[asideTargets.length - 1]);
+          }
           resolve(finalValue);
         }, 201);
       }

@@ -807,72 +807,37 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
       },
     });
 
-    for (let { title, to: target, name } of this.panContents[i].action) {
-      createNode({
-        mother: subButtonsBasePan,
-        text: title,
-        attribute: { key: this.panContents[i].key, target, name },
-        event: {
-          click: async function (e) {
-            try {
-              const target = this.getAttribute("target");
-              const name = this.getAttribute("name");
-              const key = this.getAttribute("key");
-              const host = FRONTHOST.replace(/^https\:\/\//gi, '');
-              const path = "project";
-
-              if (target === "client") {
-
-                await ajaxJson({
-                  method: "projectDetail",
-                  name: instance.client.name,
-                  phone: instance.client.phone,
-                  option: {
-                    client: instance.client.name,
-                    designer: instance.designer.designer,
-                    file: name,
-                    host: host,
-                    path: path,
-                    proid: project.proid,
-                    key: key,
-                  }
-                }, BACKHOST + "/alimTalk");
-                window.alert(instance.client.name + " 고객님에게 알림톡을 전송하였습니다!");
-
-              } else {
-
-                await ajaxJson({
-                  message: instance.designer.designer + " 실장님이 콘솔을 통해 " + instance.client.name + " 고객님 " + name + " 파일 확인을 요청하셨습니다!",
-                  channel: "#300_designer",
-                  voice: true
-                }, BACKHOST + "/sendSlack");
-                window.alert("홈리에종에 알림을 전송하였습니다!");
-
-              }
-            } catch (e) {
-              window.alert("오류가 발생하였습니다! 다시 시도해주십시오.");
-              window.location.reload();
-            }
-          }
-        },
-        style: {
-          display: "inline-block",
-          position: "relative",
-          top: String(subButtonsVisualTop) + ea,
-          fontSize: String(subButtonSize) + ea,
-          fontWeight: String(subButtonWeight),
-          color: colorChip.white,
-          paddingBottom: String(subButtonPaddingBottom) + ea,
-          paddingLeft: String(subButtonPaddingLeft) + ea,
-          paddingRight: String(subButtonPaddingLeft) + ea,
-          paddingTop: String(subButtonPaddingTop) + ea,
-          marginLeft: String(subButtonsBetween) + ea,
-          background: colorChip.black,
-          borderRadius: String(5) + "px",
-          cursor: "pointer",
-        }
-      });
-    }
+    createNode({
+      mother: subButtonsBasePan,
+      text: this.panContents[i].action[0].name + " 업로드",
+      attribute: {
+        index: String(i),
+        key: this.panContents[i].key,
+        proid: project.proid,
+        desid: instance.designer.desid,
+        name: project.name,
+        designer: instance.designer.designer,
+      },
+      event: {
+        click: (this.panContents[i].type === "link" ? instance.uploadLink(i) : instance.uploadFiles(i, (this.panContents[i].type === "photo"))),
+      },
+      style: {
+        display: "inline-block",
+        position: "relative",
+        top: String(subButtonsVisualTop) + ea,
+        fontSize: String(subButtonSize) + ea,
+        fontWeight: String(subButtonWeight),
+        color: colorChip.white,
+        paddingBottom: String(subButtonPaddingBottom) + ea,
+        paddingLeft: String(subButtonPaddingLeft) + ea,
+        paddingRight: String(subButtonPaddingLeft) + ea,
+        paddingTop: String(subButtonPaddingTop) + ea,
+        marginLeft: String(subButtonsBetween) + ea,
+        background: colorChip.black,
+        borderRadius: String(5) + "px",
+        cursor: "pointer",
+      }
+    });
 
     contentsPan = createNode({
       mother: basePan,
@@ -908,40 +873,7 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
           designer: instance.designer.designer,
         },
         event: {
-          click: async function (e) {
-            try {
-              const cancelKeyword = "httpCancel";
-              const proid = this.getAttribute("proid");
-              const desid = this.getAttribute("desid");
-              const key = this.getAttribute("key");
-              let link, memo, loading;
-
-              do {
-                link = await GeneralJs.prompt("제품 링크를 복사 붙여넣기 해주세요!");
-                if (link === null) {
-                  link = cancelKeyword;
-                }
-              } while (typeof link !== "string" || !/^http/.test(link));
-
-              if (link !== cancelKeyword) {
-                do {
-                  memo = await GeneralJs.prompt("링크에 대한 간단한 이름과 타입 등을 적어주세요! (예) 침실협탁_아이보리");
-                  if (memo === null) {
-                    memo = '';
-                  }
-                } while (typeof memo !== "string");
-
-                loading = instance.mother.grayLoading();
-                await ajaxJson({ proid, desid, key, link: window.encodeURIComponent(link.trim()), memo: memo.trim() }, BRIDGEHOST + "/middleLinkSave");
-              }
-
-              await instance.setPanBlocks();
-              loading.remove();
-
-            } catch (e) {
-              console.log(e);
-            }
-          },
+          click: instance.uploadLink(i),
         },
         style: {
           display: "flex",
@@ -2001,7 +1933,9 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
 
         ajaxJson({ mode: "image", url: window.encodeURIComponent(link), target: id }, BACKHOST + "/getOpenGraph").then(({ image, target }) => {
           target = document.getElementById(target);
-          target.style.backgroundImage = "url('" + image + "')";
+          if (image !== null && image !== "null") {
+            target.style.backgroundImage = "url('" + image + "')";
+          }
         }).catch((err) => {
           console.log(err);
         });
@@ -3460,7 +3394,7 @@ ProcessDetailJs.prototype.returnButtonList = function () {
 
                     res = await ajaxForm(formData, BRIDGEHOST + "/middleCommentsBinary");
                     await ajaxJson({ whereQuery: { proid }, updateQuery: { "contents.raw.portfolio.status": "원본 수집 완료" } }, SECONDHOST + "/updateProject");
-                    await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 디자이너 글을 업로드 했습니다!", channel: "#300_designer" }, BACKHOST + "/sendSlack");
+                    await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 디자이너 글을 업로드 했습니다!", channel: "#301_console" }, BACKHOST + "/sendSlack");
 
                     loading.remove();
 
@@ -3845,7 +3779,7 @@ ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
                   formData.append("name", hash);
 
                   res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
-                  await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 " + thisTitle + " 관련 파일을 업로드 했습니다!", channel: "#300_designer" }, BACKHOST + "/sendSlack");
+                  await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 " + thisTitle + " 관련 파일을 업로드 했습니다!", channel: "#301_console" }, BACKHOST + "/sendSlack");
                   window.alert(thisTitle + " 관련 파일 업로드가 완료되었습니다!");
 
                   await instance.setPanBlocks();
@@ -3944,7 +3878,7 @@ ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
                   formData.append("name", hash);
 
                   res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
-                  await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 " + thisTitle + " 관련 파일을 업로드 했습니다!", channel: "#300_designer" }, BACKHOST + "/sendSlack");
+                  await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 " + thisTitle + " 관련 파일을 업로드 했습니다!", channel: "#301_console" }, BACKHOST + "/sendSlack");
                   window.alert(thisTitle + " 관련 파일 업로드가 완료되었습니다!");
 
                   await instance.setPanBlocks();
@@ -4056,7 +3990,7 @@ ProcessDetailJs.prototype.dropFiles = function (thisStatusNumber, photoBoo) {
               formData.append("name", hash);
 
               res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
-              await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 " + thisTitle + " 관련 파일을 업로드 했습니다!", channel: "#300_designer" }, BACKHOST + "/sendSlack");
+              await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 " + thisTitle + " 관련 파일을 업로드 했습니다!", channel: "#301_console" }, BACKHOST + "/sendSlack");
               window.alert(thisTitle + " 관련 파일 업로드가 완료되었습니다!");
 
               await instance.setPanBlocks();
@@ -4159,7 +4093,7 @@ ProcessDetailJs.prototype.dropFiles = function (thisStatusNumber, photoBoo) {
               formData.append("name", hash);
 
               res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
-              await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 " + thisTitle + " 관련 파일을 업로드 했습니다!", channel: "#300_designer" }, BACKHOST + "/sendSlack");
+              await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 " + thisTitle + " 관련 파일을 업로드 했습니다!", channel: "#301_console" }, BACKHOST + "/sendSlack");
               window.alert(thisTitle + " 관련 파일 업로드가 완료되었습니다!");
 
               await instance.setPanBlocks();
@@ -4213,6 +4147,64 @@ ProcessDetailJs.prototype.dropFiles = function (thisStatusNumber, photoBoo) {
     }
   }
 
+
+}
+
+ProcessDetailJs.prototype.uploadLink = function (thisStatusNumber) {
+  const instance = this;
+  const mother = this.mother;
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker } = GeneralJs;
+  const { project, requestNumber, ea, baseTong, media, totalContents } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  let serviceContents;
+  let thisKey;
+  let thisTitle;
+
+  serviceContents = this.panContents;
+  thisKey = serviceContents[thisStatusNumber].key;
+  thisTitle = serviceContents[thisStatusNumber].title;
+
+  return async function (e) {
+    try {
+      const cancelKeyword = "httpCancel";
+      const proid = this.getAttribute("proid");
+      const desid = this.getAttribute("desid");
+      const key = this.getAttribute("key");
+      let link, memo, loading;
+
+      loading = null;
+
+      do {
+        link = await GeneralJs.prompt("제품 링크를 복사 붙여넣기 해주세요!");
+        if (link === null) {
+          link = cancelKeyword;
+        }
+      } while (typeof link !== "string" || !/^http/.test(link));
+
+      if (link !== cancelKeyword) {
+        do {
+          memo = await GeneralJs.prompt("링크에 대한 간단한 이름과 타입 등을 적어주세요! (예) 침실협탁_아이보리");
+          if (memo === null) {
+            memo = '';
+          }
+        } while (typeof memo !== "string");
+
+        loading = instance.mother.grayLoading();
+        await ajaxJson({ proid, desid, key, link: window.encodeURIComponent(link.trim()), memo: memo.trim() }, BRIDGEHOST + "/middleLinkSave");
+      }
+
+      await instance.setPanBlocks();
+      if (loading !== null) {
+        loading.remove();
+      }
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
 }
 

@@ -851,6 +851,8 @@ ProjectDetailJs.prototype.insertUploadBox = function () {
               const key = this.getAttribute("key");
               let link, memo, loading;
 
+              loading = null;
+
               do {
                 link = await GeneralJs.prompt("제품 링크를 복사 붙여넣기 해주세요!");
                 if (link === null) {
@@ -871,7 +873,9 @@ ProjectDetailJs.prototype.insertUploadBox = function () {
               }
 
               await instance.setPanBlocks();
-              loading.remove();
+              if (loading !== null) {
+                loading.remove();
+              }
 
             } catch (e) {
               console.log(e);
@@ -1727,7 +1731,9 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
 
         ajaxJson({ mode: "image", url: window.encodeURIComponent(link), target: id }, BACKHOST + "/getOpenGraph").then(({ image, target }) => {
           target = document.getElementById(target);
-          target.style.backgroundImage = "url('" + image + "')";
+          if (image !== null && image !== "null") {
+            target.style.backgroundImage = "url('" + image + "')";
+          }
         }).catch((err) => {
           console.log(err);
         });
@@ -2595,7 +2601,7 @@ ProjectDetailJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
                   formData.append("name", hash);
 
                   res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
-                  await ajaxJson({ message: client + " 고객님이 " + thisTitle + " 관련 파일을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+                  await ajaxJson({ message: client + " 고객님이 " + thisTitle + " 관련 파일을 업로드 했습니다!", channel: "#301_console", voice: true }, BACKHOST + "/sendSlack");
                   window.alert(thisTitle + " 관련 파일 업로드가 완료되었습니다!");
 
                   await instance.setPanBlocks();
@@ -2694,7 +2700,7 @@ ProjectDetailJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
                   formData.append("name", hash);
 
                   res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
-                  await ajaxJson({ message: client + " 고객님이 " + thisTitle + " 관련 파일을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+                  await ajaxJson({ message: client + " 고객님이 " + thisTitle + " 관련 파일을 업로드 했습니다!", channel: "#301_console", voice: true }, BACKHOST + "/sendSlack");
                   window.alert(thisTitle + " 관련 파일 업로드가 완료되었습니다!");
 
                   await instance.setPanBlocks();
@@ -2806,7 +2812,7 @@ ProjectDetailJs.prototype.dropFiles = function (thisStatusNumber, photoBoo) {
               formData.append("name", hash);
 
               res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
-              await ajaxJson({ message: client + " 고객님이 " + thisTitle + " 관련 파일을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+              await ajaxJson({ message: client + " 고객님이 " + thisTitle + " 관련 파일을 업로드 했습니다!", channel: "#301_console", voice: true }, BACKHOST + "/sendSlack");
               window.alert(thisTitle + " 관련 파일 업로드가 완료되었습니다!");
 
               await instance.setPanBlocks();
@@ -2909,7 +2915,7 @@ ProjectDetailJs.prototype.dropFiles = function (thisStatusNumber, photoBoo) {
               formData.append("name", hash);
 
               res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
-              await ajaxJson({ message: client + " 고객님이 " + thisTitle + " 관련 파일을 업로드 했습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+              await ajaxJson({ message: client + " 고객님이 " + thisTitle + " 관련 파일을 업로드 했습니다!", channel: "#301_console", voice: true }, BACKHOST + "/sendSlack");
               window.alert(thisTitle + " 관련 파일 업로드가 완료되었습니다!");
 
               await instance.setPanBlocks();
