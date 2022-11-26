@@ -4535,6 +4535,10 @@ DataRouter.prototype.rou_post_getOpenGraph = function () {
       let urlArr;
       let resOpen, targets;
       let middleTarget, target;
+      let imgTargets, imgTarget;
+      let imgMiddleTarget;
+      let protocol, host;
+      let imgMiddleTargets;
 
       url = global.decodeURI(req.body.url);
       urlArr = url.split("");
@@ -4556,18 +4560,54 @@ DataRouter.prototype.rou_post_getOpenGraph = function () {
         targets = [];
       }
 
+      imgTarget = null;
+      if (targets.length === 0) {
+        try {
+          resOpen = await requestSystem(url);
+          imgMiddleTargets = [ ...resOpen.data.matchAll(/\<img[^\>]+src="[^\>]+\>/gi) ].map((arr) => { return arr[0] });
+        } catch (e) {
+          imgMiddleTargets = [];
+        }
+        imgTargets = imgMiddleTargets.filter((str) => { return !/\.svg/gi.test(str) });
+        if (imgTargets.length > 0) {
+          imgMiddleTarget = [ ...imgTargets[0].matchAll(/src\=\"[^\"]+\"/gi) ];
+          if (imgMiddleTarget.length > 0) {
+            imgTarget = imgMiddleTarget[0][0].trim().replace(/^src\=\"/gi, '').slice(0, -1);
+            if (/^\//.test(imgTarget)) {
+              [ protocol, host ] = url.split('/').filter((str) => { return str.trim() !== '' })
+              if (/^\/\//.test(imgTarget)) {
+                imgTarget = protocol + imgTarget;
+              } else {
+                imgTarget = protocol + "//" + host + imgTarget;
+              }
+            }
+          }
+        }
+      }
+
       middleTarget = [];
       target = null;
-
       if (targets.length > 0) {
         middleTarget = [ ...targets[targets.length - 1].matchAll(/content\=\"[^\"]+\"/gi) ];
         if (middleTarget.length > 0) {
           target = middleTarget[0][0].trim().replace(/^content\=\"/gi, '').slice(0, -1);
+          if (/^\//.test(target)) {
+            [ protocol, host ] = url.split('/').filter((str) => { return str.trim() !== '' })
+            if (/^\/\//.test(target)) {
+              target = protocol + target;
+            } else {
+              target = protocol + "//" + host + target;
+            }
+          }
         }
       }
 
       if (target === null) {
-        result = { image: null };
+        if (imgTarget === null) {
+          result = { image: null };
+        } else {
+          result = { image: imgTarget };
+        }
       } else {
         result = { image: target };
       }
@@ -4578,6 +4618,7 @@ DataRouter.prototype.rou_post_getOpenGraph = function () {
 
       res.send(JSON.stringify(result));
     } catch (e) {
+      console.log(e);
       await errorLog("Console 서버 문제 생김 (rou_post_getOpenGraph): " + e.message);
       res.send(JSON.stringify({ message: "error" }));
     }

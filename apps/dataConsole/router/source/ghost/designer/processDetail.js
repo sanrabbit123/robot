@@ -809,7 +809,7 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
 
     createNode({
       mother: subButtonsBasePan,
-      text: this.panContents[i].action[0].name + " 업로드",
+      text: this.panContents[i].action[0].name + (this.panContents[i].type === "file" ? " 파일 업로드" : " 업로드"),
       attribute: {
         index: String(i),
         key: this.panContents[i].key,
@@ -860,88 +860,86 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
       }
     });
 
-    if (this.panContents[i].type === "link") {
-
-      createNode({
-        mother: basePan,
-        attribute: {
-          index: String(i),
-          key: this.panContents[i].key,
-          proid: project.proid,
-          desid: instance.designer.desid,
-          name: project.name,
-          designer: instance.designer.designer,
-        },
-        event: {
-          click: instance.uploadLink(i),
-        },
-        style: {
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          width: String(uploadCircleWidth) + ea,
-          height: String(uploadCircleWidth) + ea,
-          position: "absolute",
-          bottom: String(uploadCirclePadding) + ea,
-          right: String(uploadCirclePadding) + ea,
-          borderRadius: String(uploadCircleWidth) + ea,
-          background: colorChip.gradientGray,
-          cursor: "pointer",
-        },
-        children: [
-          {
-            mode: "svg",
-            source: instance.mother.returnLink(colorChip.white),
-            style: {
-              display: "inline-block",
-              position: "relative",
-              top: String(linkIconTop) + ea,
-              width: String(linkIconWidth) + ea,
-            }
-          }
-        ]
-      });
-
-    } else {
-      createNode({
-        mother: basePan,
-        attribute: {
-          index: String(i),
-          proid: project.proid,
-          desid: instance.designer.desid,
-          name: project.name,
-          designer: instance.designer.designer,
-        },
-        event: {
-          click: instance.uploadFiles(i, (this.panContents[i].type === "photo")),
-        },
-        style: {
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          width: String(uploadCircleWidth) + ea,
-          height: String(uploadCircleWidth) + ea,
-          position: "absolute",
-          bottom: String(uploadCirclePadding) + ea,
-          right: String(uploadCirclePadding) + ea,
-          borderRadius: String(uploadCircleWidth) + ea,
-          background: colorChip.gradientGray,
-          cursor: "pointer",
-        },
-        children: [
-          {
-            mode: "svg",
-            source: instance.mother.returnExtract(colorChip.white),
-            style: {
-              display: "inline-block",
-              position: "relative",
-              top: String(uploadIconTop) + ea,
-              width: String(uploadIconWidth) + ea,
-            }
-          }
-        ]
-      });
-    }
+    // if (this.panContents[i].type === "link") {
+    //   createNode({
+    //     mother: basePan,
+    //     attribute: {
+    //       index: String(i),
+    //       key: this.panContents[i].key,
+    //       proid: project.proid,
+    //       desid: instance.designer.desid,
+    //       name: project.name,
+    //       designer: instance.designer.designer,
+    //     },
+    //     event: {
+    //       click: instance.uploadLink(i),
+    //     },
+    //     style: {
+    //       display: "flex",
+    //       justifyContent: "center",
+    //       alignItems: "center",
+    //       width: String(uploadCircleWidth) + ea,
+    //       height: String(uploadCircleWidth) + ea,
+    //       position: "absolute",
+    //       bottom: String(uploadCirclePadding) + ea,
+    //       right: String(uploadCirclePadding) + ea,
+    //       borderRadius: String(uploadCircleWidth) + ea,
+    //       background: colorChip.gradientGray,
+    //       cursor: "pointer",
+    //     },
+    //     children: [
+    //       {
+    //         mode: "svg",
+    //         source: instance.mother.returnLink(colorChip.white),
+    //         style: {
+    //           display: "inline-block",
+    //           position: "relative",
+    //           top: String(linkIconTop) + ea,
+    //           width: String(linkIconWidth) + ea,
+    //         }
+    //       }
+    //     ]
+    //   });
+    // } else {
+    //   createNode({
+    //     mother: basePan,
+    //     attribute: {
+    //       index: String(i),
+    //       proid: project.proid,
+    //       desid: instance.designer.desid,
+    //       name: project.name,
+    //       designer: instance.designer.designer,
+    //     },
+    //     event: {
+    //       click: instance.uploadFiles(i, (this.panContents[i].type === "photo")),
+    //     },
+    //     style: {
+    //       display: "flex",
+    //       justifyContent: "center",
+    //       alignItems: "center",
+    //       width: String(uploadCircleWidth) + ea,
+    //       height: String(uploadCircleWidth) + ea,
+    //       position: "absolute",
+    //       bottom: String(uploadCirclePadding) + ea,
+    //       right: String(uploadCirclePadding) + ea,
+    //       borderRadius: String(uploadCircleWidth) + ea,
+    //       background: colorChip.gradientGray,
+    //       cursor: "pointer",
+    //     },
+    //     children: [
+    //       {
+    //         mode: "svg",
+    //         source: instance.mother.returnExtract(colorChip.white),
+    //         style: {
+    //           display: "inline-block",
+    //           position: "relative",
+    //           top: String(uploadIconTop) + ea,
+    //           width: String(uploadIconWidth) + ea,
+    //         }
+    //       }
+    //     ]
+    //   });
+    // }
 
     createNode({
       mother: basePan,
@@ -963,7 +961,7 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
         height: String(uploadCircleWidth) + ea,
         position: "absolute",
         bottom: String(uploadCirclePadding) + ea,
-        right: String((uploadCirclePadding + uploadCircleWidth) + buttonBetween) + ea,
+        right: String(uploadCirclePadding) + ea,
         borderRadius: String(uploadCircleWidth) + ea,
         background: colorChip.gradientGray,
         cursor: "pointer",
