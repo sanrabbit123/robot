@@ -131,9 +131,6 @@ DevContext.prototype.launching = async function () {
     // }
 
 
-    await findCode("BRIDGEHOST");
-
-
 
 
     /*
@@ -3345,11 +3342,11 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p225");
+    // await this.getRawPortfolio("p247");
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p202");
+    // await this.getCorePortfolio("p247");
 
 
     // aspirant to designer
@@ -4698,11 +4695,11 @@ DevContext.prototype.getCorePortfolio = async function (pid) {
     if (pid === undefined) {
       throw new Error("must be pid");
     }
-    const nameConst = "static";
-    const staticConst = "/home/" + this.address.homeinfo.ghost.user + "/" + nameConst;
+    const nameConst = "samba";
+    const staticConst = "/home/" + this.address.officeinfo.ghost.user + "/" + nameConst;
     const portfolioConst = "/corePortfolio/original";
     let scpFrom, scpTo;
-    scpFrom = this.address.homeinfo.ghost.user + "@" + this.address.homeinfo.ghost.host + ":" + shellLink(staticConst + portfolioConst + "/" + pid);
+    scpFrom = this.address.officeinfo.ghost.user + "@" + this.address.officeinfo.ghost.host + ":" + shellLink(staticConst + portfolioConst + "/" + pid);
     scpTo = shellLink(process.cwd() + "/temp");
     shell.exec(`scp -r ${scpFrom} ${scpTo}`);
   } catch (e) {
