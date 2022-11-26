@@ -1339,8 +1339,8 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
           style: {
             display: "block",
             position: "fixed",
-            top: String(top + height + itemBetween) + "px",
-            left: String(e.screenX) + "px",
+            top: String(e.y) + "px",
+            left: String(e.x) + "px",
             padding: String(contextmenuPadding) + ea,
             background: colorChip.white,
             borderRadius: String(5) + "px",
@@ -3292,6 +3292,48 @@ ProcessDetailJs.prototype.returnButtonList = function () {
   });
 
   buttonList.push({
+    name: "고객 알림 보내기",
+    item: true,
+    deactive: false,
+    event: function () {
+      return async function (e) {
+        try {
+          const host = FRONTHOST.replace(/^https\:\/\//gi, '');
+          const path = "project";
+          const targets = equalJson(JSON.stringify(instance.panContents));
+          let target;
+
+          if (instance.itemList.length === 0) {
+            target = targets.find((obj) => { return obj.type === "link" })
+          } else {
+            target = targets.find((obj) => { return obj.key === instance.itemList[0].key })
+          }
+
+          await ajaxJson({
+            method: "projectDetail",
+            name: instance.client.name,
+            phone: instance.client.phone,
+            option: {
+              client: instance.client.name,
+              designer: instance.designer.designer,
+              file: target.action[0].name,
+              host: host,
+              path: path,
+              proid: instance.project.proid,
+              key: target.key,
+            }
+          }, BACKHOST + "/alimTalk");
+          window.alert(instance.client.name + " 고객님에게 알림톡을 전송하였습니다!");
+
+        } catch (e) {
+          console.log(e);
+          window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+        }
+      }
+    }
+  });
+
+  buttonList.push({
     name: "디자이너 글 업로드",
     item: false,
     deactive: false,
@@ -3586,25 +3628,25 @@ ProcessDetailJs.prototype.insertGreenButtons = function () {
   let basePadding;
 
   baseWidth = desktop ? 68 : 12;
-  right = desktop ? 40 : 5.2;
-  bottom = desktop ? 39 : 6.2;
+  right = desktop ? 40 : 5.4;
+  bottom = desktop ? 39 : 6;
 
   zIndex = 4;
 
-  chatBaseWidth = <%% 140, 140, 140, 140, 32 %%>;
+  chatBaseWidth = <%% 140, 140, 140, 140, 28 %%>;
   chatBaseHeight = <%% 480, 480, 480, 480, 48 %%>;
   chatBaseBetween = <%% 16, 16, 16, 16, 2 %%>;
 
   buttonPadding = <%% 12, 12, 12, 10, 3.2 %%>;
-  buttonHeight = <%% 36, 36, 36, 33, 7.2 %%>;
-  buttonMarginTop = <%% 6, 6, 6, 6, 2 %%>;
+  buttonHeight = <%% 36, 36, 36, 33, 7 %%>;
+  buttonMarginTop = <%% 6, 6, 6, 6, 1 %%>;
   buttonBetween = <%% 6, 6, 6, 6, 1 %%>;
 
   buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isIphone() ? -0.1 : -0.3) %%>;
-  buttonSize = <%% 14, 14, 14, 13, 3 %%>;
+  buttonSize = <%% 14, 14, 14, 13, 2.6 %%>;
   buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  basePadding = <%% 12, 12, 12, 10, 2.4 %%>;
+  basePadding = <%% 12, 12, 12, 10, 2 %%>;
 
   buttonBase = createNode({
     mother: totalContents,

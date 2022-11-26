@@ -2408,25 +2408,25 @@ ProjectDetailJs.prototype.insertGreenButtons = function () {
   let basePadding;
 
   baseWidth = desktop ? 68 : 12;
-  right = desktop ? 40 : 5.2;
-  bottom = desktop ? 39 : 6.2;
+  right = desktop ? 40 : 5.4;
+  bottom = desktop ? 39 : 6;
 
   zIndex = 4;
 
-  chatBaseWidth = <%% 140, 140, 140, 140, 32 %%>;
+  chatBaseWidth = <%% 140, 140, 140, 140, 28 %%>;
   chatBaseHeight = <%% 480, 480, 480, 480, 48 %%>;
   chatBaseBetween = <%% 16, 16, 16, 16, 2 %%>;
 
   buttonPadding = <%% 12, 12, 12, 10, 3.2 %%>;
-  buttonHeight = <%% 36, 36, 36, 33, 7.2 %%>;
-  buttonMarginTop = <%% 6, 6, 6, 6, 2 %%>;
+  buttonHeight = <%% 36, 36, 36, 33, 7 %%>;
+  buttonMarginTop = <%% 6, 6, 6, 6, 1 %%>;
   buttonBetween = <%% 6, 6, 6, 6, 1 %%>;
 
   buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isIphone() ? -0.1 : -0.3) %%>;
-  buttonSize = <%% 14, 14, 14, 13, 3 %%>;
+  buttonSize = <%% 14, 14, 14, 13, 2.6 %%>;
   buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  basePadding = <%% 12, 12, 12, 10, 2.4 %%>;
+  basePadding = <%% 12, 12, 12, 10, 2 %%>;
 
   buttonBase = createNode({
     mother: totalContents,
