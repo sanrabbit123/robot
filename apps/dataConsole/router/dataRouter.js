@@ -5281,11 +5281,8 @@ DataRouter.prototype.rou_post_getOpenGraph = function () {
         resOpen = await requestSystem(url);
         targets = [ ...resOpen.data.matchAll(/\<meta[^\>]+property=\"og\:image\"[^\>]+\>/gi) ].map((arr) => { return arr[0] });
       } catch (e) {
-        console.log(e);
         targets = [];
       }
-
-
 
       imgTarget = null;
       if (targets.length === 0) {
