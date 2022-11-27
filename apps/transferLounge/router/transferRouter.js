@@ -417,7 +417,7 @@ TransferRouter.prototype.rou_post_clientDelete = function () {
 
 TransferRouter.prototype.rou_post_middleLinkParsing = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink, equalJson } = this.mother;
+  const { errorLog, fileSystem, shellExec, shellLink, equalJson, decryptoHash } = this.mother;
   const { folderConst } = this;
   let obj;
   obj = {};
@@ -438,9 +438,15 @@ TransferRouter.prototype.rou_post_middleLinkParsing = function () {
       }
       const targets = equalJson(req.body.links);
       let tong, raw, rawArr, link, memo;
+      let key, date, order, hashRaw, hash, exe;
+      let parsedString;
 
       tong = [];
       for (let { desid, proid, file } of targets) {
+
+        [ key, date, order, hashRaw ] = file.split("_");
+        [ hash, exe ] = hashRaw.split(".");
+        parsedString = await decryptoHash("homeliaison", hash);
 
         raw = (await fileSystem(`readString`, [ `${folderConst}/${desid}/${proid}/${file}` ])).trim();
         rawArr = raw.split("\n");
@@ -453,6 +459,11 @@ TransferRouter.prototype.rou_post_middleLinkParsing = function () {
         } else {
           link = "";
           memo = "";
+        }
+
+        if (!(/^[0-9]/.test(parsedString) && /[0-9]$/.test(parsedString) && parsedString.length > 5 && parsedString.replace(/[0-9]/gi, '') === '')) {
+          await fileSystem(`write`, [ `${folderConst}/${desid}/${proid}/${file}`, link + "\n" + parsedString ]);
+          memo = parsedString;
         }
 
         tong.push({ desid, proid, file, link, memo });

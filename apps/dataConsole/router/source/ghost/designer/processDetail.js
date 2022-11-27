@@ -3185,6 +3185,15 @@ ProcessDetailJs.prototype.insertNoticeBox = function () {
 
 }
 
+ProcessDetailJs.prototype.isEmptyString = function (string) {
+  const instance = this;
+  if (/^[0-9]/.test(string) && /[0-9]$/.test(string) && string.length > 5 && string.replace(/[0-9]/gi, '') === '') {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 ProcessDetailJs.prototype.returnButtonList = function () {
   const instance = this;
   const mother = this.mother;
@@ -3323,6 +3332,9 @@ ProcessDetailJs.prototype.returnButtonList = function () {
             updateMap = [];
             for (let { hex, desid, proid, fileName } of fileMap) {
               ({ string } = await ajaxJson({ mode: "decrypto", hash: hex }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
+              if (instance.isEmptyString(string)) {
+                string = '';
+              }
 
               newString = null;
               do {

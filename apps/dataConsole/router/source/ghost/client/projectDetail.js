@@ -1746,6 +1746,9 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
     motherMaxNumber = motherMatrix.reduce((acc, curr) => { return (acc >= curr ? acc : curr) }, 0);
     transparentItemsMatrix = motherMatrix.map((num) => { return Math.abs(motherMaxNumber - num) });
 
+    this.itemList = [];
+    this.reloadGreenButtons();
+
   } catch (e) {
     console.log(e);
   }
