@@ -948,6 +948,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
     let bigPhotoClickEvent;
     let fileItemSelectEvent;
     let photoItemSelectEvent;
+    let linkItemSelectEvent;
     let itemDivide;
     let preItemList;
     let preIndex;
@@ -1165,6 +1166,43 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
         this.firstChild.style.color = colorChip.black;
         if (this.firstChild.querySelector('b') !== null) {
           this.firstChild.querySelector('b').style.color = colorChip.deactive;
+        }
+
+        instance.itemList.splice(instance.itemList.findIndex((obj) => {
+          return obj.original === original;
+        }), 1);
+        this.setAttribute("toggle", "off");
+      }
+
+      instance.reloadGreenButtons();
+    }
+
+    linkItemSelectEvent = function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const original = this.getAttribute("original");
+      const key = this.getAttribute("key");
+      const toggle = this.getAttribute("toggle");
+      const hex = this.getAttribute("hex");
+      const exe = this.getAttribute("exe");
+      const type = this.getAttribute("type");
+
+      if (toggle === "off") {
+
+        this.lastChild.style.background = colorChip.green;
+        this.lastChild.firstChild.style.color = colorChip.white;
+        if (this.lastChild.firstChild.querySelector('b') !== null) {
+          this.lastChild.firstChild.querySelector('b').style.color = colorChip.white;
+        }
+
+        this.setAttribute("toggle", "on");
+        instance.itemList.push({ original, key, hex, exe, type });
+      } else {
+
+        this.lastChild.style.background = desktop ? colorChip.white : colorChip.gray0;
+        this.lastChild.firstChild.style.color = colorChip.black;
+        if (this.lastChild.firstChild.querySelector('b') !== null) {
+          this.lastChild.firstChild.querySelector('b').style.color = colorChip.deactive;
         }
 
         instance.itemList.splice(instance.itemList.findIndex((obj) => {
@@ -1790,12 +1828,13 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
             original,
             key,
             toggle: "off",
+            hex: hexId,
+            exe,
+            type,
+            date: dateToString(date).split("-").slice(1).join("/"),
           },
           event: {
-            click: function (e) {
-              const link = this.getAttribute("link");
-              blankHref(link);
-            },
+            click: linkItemSelectEvent,
             contextmenu: contextmenuEvent(type),
           },
           style: {
@@ -1872,6 +1911,9 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
 
     motherMaxNumber = motherMatrix.reduce((acc, curr) => { return (acc >= curr ? acc : curr) }, 0);
     transparentItemsMatrix = motherMatrix.map((num) => { return Math.abs(motherMaxNumber - num) });
+
+    this.itemList = [];
+    this.reloadGreenButtons();
 
   } catch (e) {
     console.log(e);
@@ -3146,7 +3188,7 @@ ProcessDetailJs.prototype.insertNoticeBox = function () {
 ProcessDetailJs.prototype.returnButtonList = function () {
   const instance = this;
   const mother = this.mother;
-  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, downloadFile, removeByClass } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, blankHref, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, downloadFile, removeByClass } = GeneralJs;
   const { project, requestNumber, ea, baseTong, media, totalContents } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -3189,12 +3231,15 @@ ProcessDetailJs.prototype.returnButtonList = function () {
 
   buttonList = [];
   buttonList.push({
-    name: "선택 파일 다운로드",
+    name: "선택 파일 열기",
     item: true,
     deactive: false,
+    reverse: false,
     event: function () {
       return async function (e) {
         let parsedString;
+        let protocol, host, static0, static1, desid, proid, file;
+        let parsedObject;
         try {
           if (instance.itemList.length === 0) {
             window.alert("파일을 먼저 선택해주세요!");
@@ -3202,11 +3247,99 @@ ProcessDetailJs.prototype.returnButtonList = function () {
             for (let { original, type, hex, exe } of instance.itemList) {
               if (type === "photo") {
                 await downloadFile(original);
-              } else {
+              } else if (type === "file") {
                 parsedString = await ajaxJson({ mode: "decrypto", hash: hex }, BACKHOST + "/homeliaisonCrypto", { equal: true });
                 await downloadFile(original, parsedString.string.replace(/ /gi, "_") + "." + exe);
+              } else {
+                [ protocol, host, static0, static1, desid, proid, file ] = original.split("/").filter((str) => { return str !== "" });
+                parsedObject = await ajaxJson({ links: [ { desid, proid, file } ] }, BRIDGEHOST + "/middleLinkParsing", { equal: true });
+                if (Array.isArray(parsedObject) && parsedObject.length > 0) {
+                  blankHref(parsedObject[0].link);
+                }
               }
             }
+          }
+          await instance.setPanBlocks();
+        } catch (e) {
+          console.log(e);
+          window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+        }
+      }
+    }
+  });
+
+  buttonList.push({
+    name: "선택 파일 삭제",
+    item: true,
+    deactive: false,
+    reverse: false,
+    event: function () {
+      return async function (e) {
+        let parsedString, fileMap;
+        try {
+          if (instance.itemList.length === 0) {
+            window.alert("파일을 먼저 선택해주세요!");
+          } else {
+            if (window.confirm("선택한 파일을 삭제하시겠습니까?")) {
+              fileMap = instance.itemList.map(({ original }) => {
+                const [ protocol, host, const1, const2, desid, proid, fileName ] = original.split("/").filter((str) => { return str !== '' });
+                return { desid, proid, fileName }
+              });
+              await ajaxJson({ targets: fileMap }, BRIDGEHOST + "/middlePhotoRemove");
+            }
+            await instance.setPanBlocks();
+          }
+        } catch (e) {
+          console.log(e);
+          window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+        }
+      }
+    }
+  });
+
+  buttonList.push({
+    name: "메모 수정하기",
+    item: true,
+    deactive: false,
+    reverse: false,
+    event: function () {
+      return async function (e) {
+        let parsedString, fileMap;
+        let string;
+        let newString;
+        let updateMap;
+        let hash;
+        let loading;
+        try {
+          if (instance.itemList.length === 0) {
+            window.alert("파일을 먼저 선택해주세요!");
+          } else {
+
+            fileMap = instance.itemList.map(({ original, hex }) => {
+              const [ protocol, host, const1, const2, desid, proid, fileName ] = original.split("/").filter((str) => { return str !== '' });
+              return { desid, proid, fileName, hex }
+            });
+
+            updateMap = [];
+            for (let { hex, desid, proid, fileName } of fileMap) {
+              ({ string } = await ajaxJson({ mode: "decrypto", hash: hex }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
+
+              newString = null;
+              do {
+                newString = await GeneralJs.prompt("파일에 대한 간단한 이름 또는 메모를 적어주세요! (예) 주방_시공의뢰서_1", string);
+              } while (typeof newString !== "string" || newString.trim() === '');
+              newString = newString.replace(/[\=\/\\\(\)\?\+\&]/gi, '').replace(/ /gi, '_');
+
+              ({ hash } = await ajaxJson({ mode: "crypto", string: newString }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
+
+              updateMap.push({ desid, proid, fileName, hash });
+            }
+
+            loading = instance.mother.grayLoading();
+            await ajaxJson({ targets: updateMap }, BRIDGEHOST + "/middlePhotoUpdate");
+            await instance.setPanBlocks();
+
+            loading.remove();
           }
         } catch (e) {
           console.log(e);
@@ -3218,8 +3351,9 @@ ProcessDetailJs.prototype.returnButtonList = function () {
 
   buttonList.push({
     name: "고객 알림 보내기",
-    item: true,
+    item: false,
     deactive: false,
+    reverse: false,
     event: function () {
       return async function (e) {
         try {
@@ -3258,267 +3392,266 @@ ProcessDetailJs.prototype.returnButtonList = function () {
     }
   });
 
-  if (desktop) {
-    buttonList.push({
-      name: "디자이너 글 업로드",
-      item: false,
-      deactive: false,
-      event: function () {
-        return async function (e) {
-          try {
-            const commentPopupClassName = "commentPopupClassName";
-            const proid = instance.project.proid;
-            const designer = instance.designer.designer;
-            const client = instance.client.name;
-            const self = this;
-            const zIndex = String(2);
-            let cancelBack, whitePrompt, hiddenInput;
-            let whitePromptWidth;
-            let whitePromptPaddingTop;
-            let whitePromptPaddingBottom;
-            let whitePromptTitleHeight;
-            let whitePromptButtonHeight;
-            let whitePromptTitleSize;
-            let whitePromptTitleWeight;
-            let whitePromptTitleBoldWeight;
-            let whitePromptTitleLineHeight;
-            let whitePromptTitleTextTop;
-            let whitePromptButtonBetween;
-            let whitePromptButtonTextTop;
-            let whitePromptButtonWidth;
-            let whitePromptButtonSize;
-            let whitePromptButtonWeight;
+  buttonList.push({
+    name: "디자이너 글 업로드",
+    item: false,
+    deactive: false,
+    reverse: true,
+    event: function () {
+      return async function (e) {
+        try {
+          const commentPopupClassName = "commentPopupClassName";
+          const proid = instance.project.proid;
+          const designer = instance.designer.designer;
+          const client = instance.client.name;
+          const self = this;
+          const zIndex = String(2);
+          let cancelBack, whitePrompt, hiddenInput;
+          let whitePromptWidth;
+          let whitePromptPaddingTop;
+          let whitePromptPaddingBottom;
+          let whitePromptTitleHeight;
+          let whitePromptButtonHeight;
+          let whitePromptTitleSize;
+          let whitePromptTitleWeight;
+          let whitePromptTitleBoldWeight;
+          let whitePromptTitleLineHeight;
+          let whitePromptTitleTextTop;
+          let whitePromptButtonBetween;
+          let whitePromptButtonTextTop;
+          let whitePromptButtonWidth;
+          let whitePromptButtonSize;
+          let whitePromptButtonWeight;
 
-            whitePromptWidth = <%% 600, 600, 520, 450, 82 %%>;
-            whitePromptPaddingTop = <%% 12, 12, 10, 8, 2 %%>;
-            whitePromptPaddingBottom = <%% 40, 40, 36, 32, 5.6 %%>;
-            whitePromptTitleHeight = <%% 110, 110, 100, 80, 16 %%>;
-            whitePromptButtonHeight = <%% 35, 35, 32, 30, 6 %%>;
+          whitePromptWidth = <%% 600, 600, 520, 450, 82 %%>;
+          whitePromptPaddingTop = <%% 12, 12, 10, 8, 2 %%>;
+          whitePromptPaddingBottom = <%% 40, 40, 36, 32, 5.6 %%>;
+          whitePromptTitleHeight = <%% 110, 110, 100, 80, 16 %%>;
+          whitePromptButtonHeight = <%% 35, 35, 32, 30, 6 %%>;
 
-            whitePromptTitleSize = <%% 20, 20, 18, 16, 3.2 %%>;
-            whitePromptTitleWeight = <%% 400, 400, 400, 400, 400 %%>;
-            whitePromptTitleBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
-            whitePromptTitleLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
-            whitePromptTitleTextTop = <%% 0, 0, 0, 0, 0 %%>;
+          whitePromptTitleSize = <%% 20, 20, 18, 16, 3.2 %%>;
+          whitePromptTitleWeight = <%% 400, 400, 400, 400, 400 %%>;
+          whitePromptTitleBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+          whitePromptTitleLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+          whitePromptTitleTextTop = <%% 0, 0, 0, 0, 0 %%>;
 
-            whitePromptButtonBetween = <%% 6, 6, 5, 4, 1 %%>;
-            whitePromptButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
-            whitePromptButtonWidth = <%% 125, 125, 125, 115, 25 %%>;
+          whitePromptButtonBetween = <%% 6, 6, 5, 4, 1 %%>;
+          whitePromptButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
+          whitePromptButtonWidth = <%% 125, 125, 125, 115, 25 %%>;
 
-            whitePromptButtonSize = <%% 13, 13, 12, 11, 2.5 %%>;
-            whitePromptButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
+          whitePromptButtonSize = <%% 13, 13, 12, 11, 2.5 %%>;
+          whitePromptButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-            cancelBack = createNode({
-              mother: totalContents,
-              class: [ commentPopupClassName ],
-              event: {
-                click: (e) => {
-                  e.stopPropagation();
-                  removeByClass(commentPopupClassName);
-                }
-              },
-              style: {
-                top: String(0),
-                left: String(0),
-                width: withOut(0, ea),
-                height: withOut(0, ea),
-                background: colorChip.black,
-                opacity: String(0.2),
-                position: "fixed",
-                zIndex: String(zIndex),
+          cancelBack = createNode({
+            mother: totalContents,
+            class: [ commentPopupClassName ],
+            event: {
+              click: (e) => {
+                e.stopPropagation();
+                removeByClass(commentPopupClassName);
               }
-            });
+            },
+            style: {
+              top: String(0),
+              left: String(0),
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              background: colorChip.black,
+              opacity: String(0.2),
+              position: "fixed",
+              zIndex: String(zIndex),
+            }
+          });
 
-            hiddenInput = createNode({
-              mother: totalContents,
-              class: [ commentPopupClassName ],
-              mode: "input",
-              attribute: {
-                type: "file",
-                name: "comments",
-                proid,
-                designer,
-                client
-              },
-              event: {
-                change: async function (e) {
-                  try {
-                    const proid = this.getAttribute("proid");
-                    const designer = this.getAttribute("designer");
-                    const client = this.getAttribute("client");
-                    let thisFile, formData, res, loading;
-                    if ([ ...this.files ].length === 1) {
-                      thisFile = [ ...this.files ][0];
+          hiddenInput = createNode({
+            mother: totalContents,
+            class: [ commentPopupClassName ],
+            mode: "input",
+            attribute: {
+              type: "file",
+              name: "comments",
+              proid,
+              designer,
+              client
+            },
+            event: {
+              change: async function (e) {
+                try {
+                  const proid = this.getAttribute("proid");
+                  const designer = this.getAttribute("designer");
+                  const client = this.getAttribute("client");
+                  let thisFile, formData, res, loading;
+                  if ([ ...this.files ].length === 1) {
+                    thisFile = [ ...this.files ][0];
 
-                      formData = new FormData();
-                      formData.enctype = "multipart/form-data";
-                      formData.append("proid", proid);
-                      formData.append("designer", designer);
-                      formData.append("client", client);
-                      formData.append("comments", thisFile);
-                      formData.append("desid", instance.designer.desid);
+                    formData = new FormData();
+                    formData.enctype = "multipart/form-data";
+                    formData.append("proid", proid);
+                    formData.append("designer", designer);
+                    formData.append("client", client);
+                    formData.append("comments", thisFile);
+                    formData.append("desid", instance.designer.desid);
 
-                      loading = instance.mother.grayLoading();
+                    loading = instance.mother.grayLoading();
 
-                      res = await ajaxForm(formData, BRIDGEHOST + "/middleCommentsBinary");
-                      await ajaxJson({ whereQuery: { proid }, updateQuery: { "contents.raw.portfolio.status": "원본 수집 완료" } }, SECONDHOST + "/updateProject");
-                      await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 디자이너 글을 업로드 했습니다!", channel: "#301_console" }, BACKHOST + "/sendSlack");
+                    res = await ajaxForm(formData, BRIDGEHOST + "/middleCommentsBinary");
+                    await ajaxJson({ whereQuery: { proid }, updateQuery: { "contents.raw.portfolio.status": "원본 수집 완료" } }, SECONDHOST + "/updateProject");
+                    await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 디자이너 글을 업로드 했습니다!", channel: "#301_console" }, BACKHOST + "/sendSlack");
 
-                      loading.remove();
+                    loading.remove();
 
-                      window.alert("업로드가 완료되었습니다!");
-                      cancelBack.click();
-                    }
-                  } catch (e) {
-                    console.log(e);
+                    window.alert("업로드가 완료되었습니다!");
+                    cancelBack.click();
                   }
+                } catch (e) {
+                  console.log(e);
                 }
-              },
-              style: {
-                display: "none",
-                opacity: String(0),
-                position: "absolute",
               }
-            });
+            },
+            style: {
+              display: "none",
+              opacity: String(0),
+              position: "absolute",
+            }
+          });
 
-            whitePrompt = createNode({
-              mother: totalContents,
-              class: [ commentPopupClassName ],
-              event: {
-                click: (e) => { e.stopPropagation() }
-              },
-              style: {
-                display: "inline-block",
-                position: "fixed",
-                borderRadius: String(5) + "px",
-                background: colorChip.white,
-                boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-                width: String(whitePromptWidth) + ea,
-                left: withOut(50, whitePromptWidth / 2, ea),
-                top: withOut(50, ((whitePromptPaddingTop + whitePromptPaddingBottom + whitePromptTitleHeight + whitePromptButtonHeight) / 2), ea),
-                paddingTop: String(whitePromptPaddingTop) + ea,
-                paddingBottom: String(whitePromptPaddingBottom) + ea,
-                zIndex: String(zIndex),
-                animation: "fadeuplite 0.3s ease",
-              },
-              children: [
-                {
-                  style: {
-                    display: "flex",
-                    position: "relative",
-                    height: String(whitePromptTitleHeight) + ea,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    textAlign: "center",
-                    flexDirection: "column",
-                  },
-                  children: [
-                    {
-                      text: "디자이너 글 탬플릿을 활용하여\n디자이너 글을 <b%워드 / pdf / 한글 등의 파일로 업로드%b> 해주세요!",
-                      style: {
-                        display: "inline-block",
-                        position: "relative",
-                        top: String(whitePromptTitleTextTop) + ea,
-                        fontSize: String(whitePromptTitleSize) + ea,
-                        fontWeight: String(whitePromptTitleWeight),
-                        color: colorChip.black,
-                        lineHeight: String(whitePromptTitleLineHeight),
-                      },
-                      bold: {
-                        fontSize: String(whitePromptTitleSize) + ea,
-                        fontWeight: String(whitePromptTitleBoldWeight),
-                        color: colorChip.black,
-                      }
-                    }
-                  ]
+          whitePrompt = createNode({
+            mother: totalContents,
+            class: [ commentPopupClassName ],
+            event: {
+              click: (e) => { e.stopPropagation() }
+            },
+            style: {
+              display: "inline-block",
+              position: "fixed",
+              borderRadius: String(5) + "px",
+              background: colorChip.white,
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+              width: String(whitePromptWidth) + ea,
+              left: withOut(50, whitePromptWidth / 2, ea),
+              top: withOut(50, ((whitePromptPaddingTop + whitePromptPaddingBottom + whitePromptTitleHeight + whitePromptButtonHeight) / 2), ea),
+              paddingTop: String(whitePromptPaddingTop) + ea,
+              paddingBottom: String(whitePromptPaddingBottom) + ea,
+              zIndex: String(zIndex),
+              animation: "fadeuplite 0.3s ease",
+            },
+            children: [
+              {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  height: String(whitePromptTitleHeight) + ea,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  textAlign: "center",
+                  flexDirection: "column",
                 },
-                {
-                  style: {
-                    display: "flex",
-                    position: "relative",
-                    height: String(whitePromptButtonHeight) + ea,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    textAlign: "center",
-                    flexDirection: "row",
+                children: [
+                  {
+                    text: "디자이너 글 탬플릿을 활용하여\n디자이너 글을 <b%워드 / pdf / 한글 등의 파일로 업로드%b> 해주세요!",
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      top: String(whitePromptTitleTextTop) + ea,
+                      fontSize: String(whitePromptTitleSize) + ea,
+                      fontWeight: String(whitePromptTitleWeight),
+                      color: colorChip.black,
+                      lineHeight: String(whitePromptTitleLineHeight),
+                    },
+                    bold: {
+                      fontSize: String(whitePromptTitleSize) + ea,
+                      fontWeight: String(whitePromptTitleBoldWeight),
+                      color: colorChip.black,
+                    }
+                  }
+                ]
+              },
+              {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  height: String(whitePromptButtonHeight) + ea,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  textAlign: "center",
+                  flexDirection: "row",
+                },
+                children: [
+                  {
+                    event: {
+                      click: function (e) {
+                        downloadFile("https://" + FILEHOST + "/photo/sample/commentsSample.docx").catch((err) => {
+                          console.log(err);
+                        });
+                      }
+                    },
+                    style: {
+                      display: "inline-flex",
+                      width: String(whitePromptButtonWidth) + ea,
+                      height: String(whitePromptButtonHeight) + ea,
+                      borderRadius: String(5) + "px",
+                      background: colorChip.gradientGray,
+                      marginRight: String(whitePromptButtonBetween) + ea,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      textAlign: "center",
+                      cursor: "pointer",
+                    },
+                    children: [
+                      {
+                        text: "디자이너 글 탬플릿",
+                        style: {
+                          position: "relative",
+                          top: String(whitePromptButtonTextTop) + ea,
+                          fontSize: String(whitePromptButtonSize) + ea,
+                          fontWeight: String(whitePromptButtonWeight),
+                          color: colorChip.white,
+                        }
+                      }
+                    ]
                   },
-                  children: [
-                    {
-                      event: {
-                        click: function (e) {
-                          downloadFile("https://" + FILEHOST + "/photo/sample/commentsSample.docx").catch((err) => {
-                            console.log(err);
-                          });
-                        }
-                      },
-                      style: {
-                        display: "inline-flex",
-                        width: String(whitePromptButtonWidth) + ea,
-                        height: String(whitePromptButtonHeight) + ea,
-                        borderRadius: String(5) + "px",
-                        background: colorChip.gradientGray,
-                        marginRight: String(whitePromptButtonBetween) + ea,
-                        justifyContent: "center",
-                        alignItems: "center",
-                        textAlign: "center",
-                        cursor: "pointer",
-                      },
-                      children: [
-                        {
-                          text: "디자이너 글 탬플릿",
-                          style: {
-                            position: "relative",
-                            top: String(whitePromptButtonTextTop) + ea,
-                            fontSize: String(whitePromptButtonSize) + ea,
-                            fontWeight: String(whitePromptButtonWeight),
-                            color: colorChip.white,
-                          }
-                        }
-                      ]
+                  {
+                    event: {
+                      click: function (e) {
+                        const targetInput = document.querySelector("input." + commentPopupClassName);
+                        targetInput.click();
+                      }
                     },
-                    {
-                      event: {
-                        click: function (e) {
-                          const targetInput = document.querySelector("input." + commentPopupClassName);
-                          targetInput.click();
-                        }
-                      },
-                      style: {
-                        display: "inline-flex",
-                        width: String(whitePromptButtonWidth) + ea,
-                        height: String(whitePromptButtonHeight) + ea,
-                        borderRadius: String(5) + "px",
-                        background: colorChip.gradientGreen,
-                        justifyContent: "center",
-                        alignItems: "center",
-                        textAlign: "center",
-                        cursor: "pointer",
-                      },
-                      children: [
-                        {
-                          text: "디자이너 글 업로드",
-                          style: {
-                            position: "relative",
-                            top: String(whitePromptButtonTextTop) + ea,
-                            fontSize: String(whitePromptButtonSize) + ea,
-                            fontWeight: String(whitePromptButtonWeight),
-                            color: colorChip.white,
-                          }
-                        }
-                      ]
+                    style: {
+                      display: "inline-flex",
+                      width: String(whitePromptButtonWidth) + ea,
+                      height: String(whitePromptButtonHeight) + ea,
+                      borderRadius: String(5) + "px",
+                      background: colorChip.gradientGreen,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      textAlign: "center",
+                      cursor: "pointer",
                     },
-                  ]
-                }
-              ]
-            });
+                    children: [
+                      {
+                        text: "디자이너 글 업로드",
+                        style: {
+                          position: "relative",
+                          top: String(whitePromptButtonTextTop) + ea,
+                          fontSize: String(whitePromptButtonSize) + ea,
+                          fontWeight: String(whitePromptButtonWeight),
+                          color: colorChip.white,
+                        }
+                      }
+                    ]
+                  },
+                ]
+              }
+            ]
+          });
 
-          } catch (e) {
-            console.log(e);
-          }
+        } catch (e) {
+          console.log(e);
         }
       }
-    })
-  }
+    }
+  });
 
   return buttonList;
 }
@@ -3529,6 +3662,7 @@ ProcessDetailJs.prototype.insertGreenButtons = function () {
   const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker } = GeneralJs;
   const { project, requestNumber, ea, baseTong, media, totalContents } = this;
   const greenButtonClassName = "greenButtonClassName";
+  const reverseButtonClassName = "reverseButtonClassName";
   const generalButtonClassName = "generalButtonClassName";
   const mobile = media[4];
   const desktop = !mobile;
@@ -3588,7 +3722,9 @@ ProcessDetailJs.prototype.insertGreenButtons = function () {
       overflow: "hidden",
       background: colorChip.white,
       padding: String(basePadding) + ea,
+      paddingBottom: String(basePadding - buttonMarginTop) + ea,
       zIndex: String(zIndex),
+      transition: "all 0.5s ease",
     },
     children: [
       {
@@ -3600,6 +3736,7 @@ ProcessDetailJs.prototype.insertGreenButtons = function () {
           width: withOut(0),
           height: withOut(0),
           flexDirection: "column",
+          transition: "all 0.5s ease",
         }
       }
     ]
@@ -3611,7 +3748,7 @@ ProcessDetailJs.prototype.insertGreenButtons = function () {
     for (let i = 0; i < buttonList.length; i++) {
       createNode({
         mother: buttonBase,
-        class: [ (buttonList[i].item ? greenButtonClassName : generalButtonClassName) ],
+        class: [ (buttonList[i].item ? greenButtonClassName : (buttonList[i].reverse ? reverseButtonClassName : generalButtonClassName)) ],
         event: {
           click: buttonList[i].event(),
         },
@@ -3620,6 +3757,8 @@ ProcessDetailJs.prototype.insertGreenButtons = function () {
           desid: instance.designer.desid,
           name: project.name,
           designer: instance.designer.designer,
+          height: String(buttonHeight) + ea,
+          margin: String(buttonMarginTop) + ea,
         },
         style: {
           display: "flex",
@@ -3627,11 +3766,13 @@ ProcessDetailJs.prototype.insertGreenButtons = function () {
           height: String(buttonHeight) + ea,
           background: buttonList[i].item ? colorChip.gray3 : colorChip.softGreen,
           borderRadius: String(5) + "px",
-          marginTop: String(i === 0 ? 0 : buttonMarginTop) + ea,
+          marginBottom: String(buttonMarginTop) + ea,
           justifyContent: "center",
           alignItems: "center",
           textAlign: "center",
           cursor: "pointer",
+          overflow: "hidden",
+          transition: "all 0.5s ease",
         },
         children: [
           {
@@ -3651,21 +3792,38 @@ ProcessDetailJs.prototype.insertGreenButtons = function () {
   };
   setButtons();
 
+  instance.reloadGreenButtons();
+
 }
 
 ProcessDetailJs.prototype.reloadGreenButtons = function () {
   const instance = this;
   const greenButtonClassName = "greenButtonClassName";
+  const reverseButtonClassName = "reverseButtonClassName";
+  const generalButtonClassName = "generalButtonClassName";
   const { colorChip } = GeneralJs;
   let targets;
+  let reverseTargets;
 
   targets = document.querySelectorAll('.' + greenButtonClassName);
+  reverseTargets = document.querySelectorAll('.' + reverseButtonClassName);
 
   if (this.itemList.length > 0) {
 
     for (let dom of targets) {
       dom.style.background = colorChip.softGreen;
       dom.firstChild.style.color = colorChip.white;
+      dom.style.height = dom.getAttribute("height");
+      dom.style.marginBottom = dom.getAttribute("margin");
+      dom.style.animation = "fadeuplite 0.3s ease forwards";
+    }
+
+    for (let dom of reverseTargets) {
+      dom.style.background = colorChip.gray3;
+      dom.firstChild.style.color = colorChip.deactive;
+      dom.style.height = String(0);
+      dom.style.marginBottom = String(0);
+      dom.style.animation = "fadedownlite 0.3s ease forwards";
     }
 
   } else {
@@ -3673,6 +3831,17 @@ ProcessDetailJs.prototype.reloadGreenButtons = function () {
     for (let dom of targets) {
       dom.style.background = colorChip.gray3;
       dom.firstChild.style.color = colorChip.deactive;
+      dom.style.height = String(0);
+      dom.style.marginBottom = String(0);
+      dom.style.animation = "fadedownlite 0.3s ease forwards";
+    }
+
+    for (let dom of reverseTargets) {
+      dom.style.background = colorChip.softGreen;
+      dom.firstChild.style.color = colorChip.white;
+      dom.style.height = dom.getAttribute("height");
+      dom.style.marginBottom = dom.getAttribute("margin");
+      dom.style.animation = "fadeuplite 0.3s ease forwards";
     }
 
   }

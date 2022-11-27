@@ -4099,7 +4099,7 @@ GeneralJs.confirm = function (message) {
   return window.confirm(message);
 }
 
-GeneralJs.prompt = function (message) {
+GeneralJs.prompt = function (message, preValue = '') {
   const { createNode, colorChip, withOut } = GeneralJs;
   const ea = "px";
   const promptAsideClassName = "promptAsideClassName";
@@ -4249,6 +4249,7 @@ GeneralJs.prompt = function (message) {
     }
   });
 
+  input.value = (typeof preValue === "string" ? preValue : "");
   input.focus();
 
   return new Promise((resolve, reject) => {
