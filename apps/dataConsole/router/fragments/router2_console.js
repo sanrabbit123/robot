@@ -4539,6 +4539,11 @@ DataRouter.prototype.rou_post_getOpenGraph = function () {
       let imgMiddleTarget;
       let protocol, host;
       let imgMiddleTargets;
+      let requestHeaders;
+
+      requestHeaders = {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36",
+      };
 
       url = global.decodeURI(req.body.url);
       urlArr = url.split("");
@@ -4554,7 +4559,7 @@ DataRouter.prototype.rou_post_getOpenGraph = function () {
       url = urlArr.join("");
 
       try {
-        resOpen = await requestSystem(url);
+        resOpen = await requestSystem(url, {}, { method: "get", headers: requestHeaders });
         targets = [ ...resOpen.data.matchAll(/\<meta[^\>]+property=\"og\:image\"[^\>]+\>/gi) ].map((arr) => { return arr[0] });
       } catch (e) {
         targets = [];
