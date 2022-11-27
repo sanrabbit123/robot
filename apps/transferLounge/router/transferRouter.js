@@ -600,7 +600,9 @@ TransferRouter.prototype.rou_post_middlePhotoUpdate = function () {
               [ key, date, order, hashRaw ] = fileName.split("_");
               [ pastHash, exe ] = hashRaw.split(".");
               newFileName = key + "_" + date + "_" + order + "_" + hash + "." + exe;
-              await shellExec(`mv`, [ folderConst + "/" + desid + "/" + proid + "/" + fileName, folderConst + "/" + desid + "/" + proid + "/" + newFileName ]);
+              if (pastHash !== hash) {
+                await shellExec(`mv`, [ folderConst + "/" + desid + "/" + proid + "/" + fileName, folderConst + "/" + desid + "/" + proid + "/" + newFileName ]);
+              }
             }
           }
         }
