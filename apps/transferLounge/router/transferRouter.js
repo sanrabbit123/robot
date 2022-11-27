@@ -607,6 +607,7 @@ TransferRouter.prototype.rou_post_middlePhotoUpdate = function () {
       }
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
+      console.log(e);
       errorLog("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoUpdate): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
