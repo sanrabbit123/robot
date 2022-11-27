@@ -1457,7 +1457,7 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
 
     mothers = this.panList;
     itemList = await ajaxJson({ target: this.targetDrive }, BRIDGEHOST + "/middlePhotoRead", { equal: true });
-    preItemList = await ajaxJson({ cliid: this.client.cliid }, BRIDGEHOST + "/clientPhoto", { equal: true });
+    // preItemList = await ajaxJson({ cliid: this.client.cliid }, BRIDGEHOST + "/clientPhoto", { equal: true });
 
     linkTargets = itemList.filter((str) => { return linkTargetKey.includes(str.split("_")[0]) });
     linkContents = await ajaxJson({ links: linkTargets.map((file) => { return { desid: instance.designer.desid, proid: instance.project.proid, file } }) }, BRIDGEHOST + "/middleLinkParsing", { equal: true });
@@ -1476,25 +1476,25 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
       return { key, date, name, order, original, exe, id, hexId };
     });
 
-    itemList.forEach((obj) => {
-      if (obj.key === preItemMotherKey) {
-        obj.order = preItemList.sitePhoto.length + obj.order;
-        obj.name = String(obj.order) + "." + obj.exe;
-      }
-    });
-
-    preIndex = 1;
-    for (let original of preItemList.sitePhoto) {
-      itemList.push({
-        key: preItemMotherKey,
-        date: emptyDate,
-        name: String(preIndex) + "." + original.split(".")[original.split(".").length - 1],
-        order: preIndex,
-        original: original,
-        exe: original.split(".")[original.split(".").length - 1]
-      })
-      preIndex++;
-    }
+    // itemList.forEach((obj) => {
+    //   if (obj.key === preItemMotherKey) {
+    //     obj.order = preItemList.sitePhoto.length + obj.order;
+    //     obj.name = String(obj.order) + "." + obj.exe;
+    //   }
+    // });
+    //
+    // preIndex = 1;
+    // for (let original of preItemList.sitePhoto) {
+    //   itemList.push({
+    //     key: preItemMotherKey,
+    //     date: emptyDate,
+    //     name: String(preIndex) + "." + original.split(".")[original.split(".").length - 1],
+    //     order: preIndex,
+    //     original: original,
+    //     exe: original.split(".")[original.split(".").length - 1]
+    //   })
+    //   preIndex++;
+    // }
 
     itemList.sort((a, b) => { return a.order - b.order });
     itemList.sort((a, b) => { return a.date.valueOf() - b.date.valueOf() });
@@ -2418,10 +2418,10 @@ ProjectDetailJs.prototype.insertGreenButtons = function () {
 
   chatBaseWidth = <%% 140, 140, 140, 140, 28 %%>;
   chatBaseHeight = <%% 480, 480, 480, 480, 48 %%>;
-  buttonHeight = <%% 36, 36, 36, 33, 6.8 %%>;
+  chatBaseBetween = <%% 16, 16, 16, 16, 2 %%>;
 
   buttonPadding = <%% 12, 12, 12, 10, 3.2 %%>;
-  buttonHeight = <%% 36, 36, 36, 33, 7 %%>;
+  buttonHeight = <%% 36, 36, 36, 33, 6.8 %%>;
   buttonMarginTop = <%% 6, 6, 6, 6, 1 %%>;
   buttonBetween = <%% 6, 6, 6, 6, 1 %%>;
 
@@ -2507,6 +2507,8 @@ ProjectDetailJs.prototype.insertGreenButtons = function () {
     }
   };
   setButtons();
+
+  instance.reloadGreenButtons();
 
 }
 

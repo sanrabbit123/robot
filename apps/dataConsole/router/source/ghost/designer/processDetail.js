@@ -1622,7 +1622,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
 
     mothers = this.panList;
     itemList = await ajaxJson({ target: this.targetDrive }, BRIDGEHOST + "/middlePhotoRead", { equal: true });
-    preItemList = await ajaxJson({ cliid: this.client.cliid }, BRIDGEHOST + "/clientPhoto", { equal: true });
+    // preItemList = await ajaxJson({ cliid: this.client.cliid }, BRIDGEHOST + "/clientPhoto", { equal: true });
 
     linkTargets = itemList.filter((str) => { return linkTargetKey.includes(str.split("_")[0]) });
     linkContents = await ajaxJson({ links: linkTargets.map((file) => { return { desid: instance.designer.desid, proid: instance.project.proid, file } }) }, BRIDGEHOST + "/middleLinkParsing", { equal: true });
@@ -1641,25 +1641,25 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
       return { key, date, name, order, original, exe, id, hexId };
     });
 
-    itemList.forEach((obj) => {
-      if (obj.key === preItemMotherKey) {
-        obj.order = preItemList.sitePhoto.length + obj.order;
-        obj.name = String(obj.order) + "." + obj.exe;
-      }
-    });
-
-    preIndex = 1;
-    for (let original of preItemList.sitePhoto) {
-      itemList.push({
-        key: preItemMotherKey,
-        date: emptyDate,
-        name: String(preIndex) + "." + original.split(".")[original.split(".").length - 1],
-        order: preIndex,
-        original: original,
-        exe: original.split(".")[original.split(".").length - 1]
-      })
-      preIndex++;
-    }
+    // itemList.forEach((obj) => {
+    //   if (obj.key === preItemMotherKey) {
+    //     obj.order = preItemList.sitePhoto.length + obj.order;
+    //     obj.name = String(obj.order) + "." + obj.exe;
+    //   }
+    // });
+    //
+    // preIndex = 1;
+    // for (let original of preItemList.sitePhoto) {
+    //   itemList.push({
+    //     key: preItemMotherKey,
+    //     date: emptyDate,
+    //     name: String(preIndex) + "." + original.split(".")[original.split(".").length - 1],
+    //     order: preIndex,
+    //     original: original,
+    //     exe: original.split(".")[original.split(".").length - 1]
+    //   })
+    //   preIndex++;
+    // }
 
     itemList.sort((a, b) => { return a.order - b.order });
     itemList.sort((a, b) => { return a.date.valueOf() - b.date.valueOf() });
@@ -1789,7 +1789,6 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
             width: withOut(0),
             borderRadius: String(5) + "px",
             marginBottom: String(itemBetween) + ea,
-            overflow: "hidden",
             cursor: "pointer",
           },
           children: [
@@ -1800,6 +1799,45 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
                 display: "block",
                 position: "relative",
                 width: withOut(0),
+                borderTopLeftRadius: String(5) + "px",
+                borderTopRightRadius: String(5) + "px",
+              }
+            },
+            {
+              id,
+              attribute: {
+                height: String(itemTongHeight) + ea,
+                date: dateToString(date).split("-").slice(1).join("/"),
+              },
+              style: {
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: withOut(0, ea),
+                height: String(0),
+                borderBottomLeftRadius: String(5) + "px",
+                borderBottomRightRadius: String(5) + "px",
+                background: desktop ? colorChip.white : colorChip.gray0,
+                textAlign: "center",
+                overflow: "hidden",
+                boxShadow: "0px 1px 8px -6px " + colorChip.shadow,
+                transition: "all 0.3s ease",
+              },
+              child: {
+                text: "",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  top: String(textTop) + ea,
+                  fontSize: String(textSize) + ea,
+                  fontWeight: String(textWeight),
+                  color: colorChip.black,
+                },
+                bold: {
+                  fontSize: String(textSize) + ea,
+                  fontWeight: String(textWeight),
+                  color: colorChip.deactive,
+                }
               }
             },
             {
@@ -1812,9 +1850,23 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
                 height: withOut(0),
                 background: colorChip.green,
                 opacity: String(0),
+                borderRadius: String(5) + "px",
               }
             }
           ]
+        });
+
+        ajaxJson({ mode: "decrypto", hash: hexId, target: id }, BACKHOST + "/homeliaisonCrypto", { equal: true }).then(({ string, target }) => {
+          target = document.getElementById(target);
+          target.style.height = target.getAttribute("height");
+          target.firstChild.textContent = "";
+          if (!instance.isEmptyString(string)) {
+            target.firstChild.insertAdjacentHTML("beforeend", string + " <b style=\"color: " + colorChip.deactive + ";font-weight: " + String(textWeight) + "\">(" + target.getAttribute("date") + ")</b>");
+          } else {
+            target.firstChild.insertAdjacentHTML("beforeend", "- " + " <b style=\"color: " + colorChip.deactive + ";font-weight: " + String(textWeight) + "\">(" + target.getAttribute("date") + ")</b>");
+          }
+        }).catch((err) => {
+          console.log(err);
         });
 
       } else if (type === "link") {
