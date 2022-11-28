@@ -964,6 +964,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
     let contextmenuPadding;
     let contextWidth;
     let contextHeight;
+    let preItemHexId;
 
     itemBetween = <%% 6, 6, 5, 4, 1 %%>;
     itemTongHeight = <%% 40, 40, 36, 32, 8 %%>;
@@ -1667,6 +1668,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
 
     preIndex = 1;
     for (let original of preItemList.sitePhoto) {
+      preItemHexId = ((new RegExp("^" + instance.hashConst + "_", "g")).test(original.split("/")[original.split("/").length - 1]) ? original.split("/")[original.split("/").length - 1].split("_")[1] : preItemHex);
       itemList.push({
         key: preItemMotherKey,
         date: emptyDate,
@@ -1674,8 +1676,8 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
         order: preIndex,
         original: original,
         exe: original.split(".")[original.split(".").length - 1],
-        id: preItemMotherKey + "_" + String(emptyDate.valueOf()) + "_" + String(preIndex) + "_" + preItemHex,
-        hexId: preItemHex,
+        id: preItemMotherKey + "_" + String(emptyDate.valueOf()) + "_" + String(preIndex) + "_" + preItemHexId,
+        hexId: preItemHexId,
       });
       preIndex++;
     }

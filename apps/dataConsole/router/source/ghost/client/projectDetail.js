@@ -1045,7 +1045,8 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
     let contextmenuPadding;
     let contextWidth;
     let contextHeight;
-
+    let preItemHexId;
+    
     itemBetween = <%% 6, 6, 5, 4, 1 %%>;
     itemTongHeight = <%% 40, 40, 36, 32, 8 %%>;
     itemTongMarginLeft = <%% 12, 12, 12, 10, 1 %%>;
@@ -1486,6 +1487,7 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
 
     preIndex = 1;
     for (let original of preItemList.sitePhoto) {
+      preItemHexId = ((new RegExp("^" + instance.hashConst + "_", "g")).test(original.split("/")[original.split("/").length - 1]) ? original.split("/")[original.split("/").length - 1].split("_")[1] : preItemHex);
       itemList.push({
         key: preItemMotherKey,
         date: emptyDate,
@@ -1493,8 +1495,8 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
         order: preIndex,
         original: original,
         exe: original.split(".")[original.split(".").length - 1],
-        id: preItemMotherKey + "_" + String(emptyDate.valueOf()) + "_" + String(preIndex) + "_" + preItemHex,
-        hexId: preItemHex,
+        id: preItemMotherKey + "_" + String(emptyDate.valueOf()) + "_" + String(preIndex) + "_" + preItemHexId,
+        hexId: preItemHexId,
       })
       preIndex++;
     }
@@ -3250,6 +3252,7 @@ ProjectDetailJs.prototype.launching = async function (loading) {
     this.contents = await ajaxJson({}, SECONDHOST + "/getChecklist", { equal: true });
     this.panContents = this.contents.map((obj) => { return obj.children }).flat();
 
+    this.hashConst = "homeliaisonHash";
     this.targetKeywords = "/photo/designer";
     this.targetHref = BRIDGEHOST.replace(/\:3000/gi, '') + this.targetKeywords + "/" + this.designer.desid + "/" + this.project.proid;
     this.targetDrive = "/" + this.designer.desid + "/" + this.project.proid;
