@@ -135,6 +135,11 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
+
+
+
     /*
 
     const selfPythonMongo = this.MONGOPYTHONC;
@@ -3280,9 +3285,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "최주희",
-    //     designer: "박주령",
-    //     link: "https://drive.google.com/drive/folders/1NZodzFkoylp9fTpJ3Kmpzw2oHHOkIDfo",
+    //     client: "최정희",
+    //     designer: "이정아",
+    //     link: "https://drive.google.com/drive/folders/1ItA7zcK8RNrw_hnUbcd-5HXbi7KvPH3p",
     //     pay: true
     //   },
     // ]);
@@ -3340,7 +3345,7 @@ DevContext.prototype.launching = async function () {
 
 
     // spell check
-    // await this.spellCheck("p116");
+    // await this.spellCheck("p247");
 
 
     // get rawPortfolio by pid

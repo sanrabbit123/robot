@@ -517,7 +517,7 @@ TransferRouter.prototype.rou_post_middleLinkSave = function () {
 TransferRouter.prototype.rou_post_middlePhotoRemove = function () {
   const instance = this;
   const { errorLog, fileSystem, shellExec, shellLink, equalJson } = this.mother;
-  const { folderConst } = this;
+  const { folderConst, clientConst } = this;
   let obj;
   obj = {};
   obj.link = [ "/middlePhotoRemove" ];
@@ -546,18 +546,42 @@ TransferRouter.prototype.rou_post_middlePhotoRemove = function () {
         throw new Error("invaild post, must be targets");
       }
 
-      for (let { desid, proid, fileName } of targets) {
-        if (typeof desid !== "string" || typeof proid !== "string" || typeof fileName !== "string") {
+      let desid, proid, fileName;
+      let folder, kind;
+
+      for (let obj of targets) {
+        if (typeof obj !== "object" || obj === null) {
           throw new Error("invaild post, must be targets");
         }
-        if (await fileSystem(`exist`, [ folderConst + "/" + desid ])) {
-          if (await fileSystem(`exist`, [ folderConst + "/" + desid + "/" + proid ])) {
-            if (await fileSystem(`exist`, [ folderConst + "/" + desid + "/" + proid + "/" + fileName ])) {
-              await shellExec(`rm`, [ `-rf`, folderConst + "/" + desid + "/" + proid + "/" + fileName ]);
+        if (obj.mode === "designer") {
+          desid = obj.desid;
+          proid = obj.proid;
+          fileName = obj.fileName;
+
+          if (await fileSystem(`exist`, [ folderConst + "/" + desid ])) {
+            if (await fileSystem(`exist`, [ folderConst + "/" + desid + "/" + proid ])) {
+              if (await fileSystem(`exist`, [ folderConst + "/" + desid + "/" + proid + "/" + fileName ])) {
+                await shellExec(`rm`, [ `-rf`, folderConst + "/" + desid + "/" + proid + "/" + fileName ]);
+              }
             }
           }
+
+        } else {
+          folder = global.decodeURIComponent(obj.folder);
+          kind = obj.kind;
+          fileName = global.decodeURIComponent(obj.fileName);
+
+          if (await fileSystem(`exist`, [ clientConst + "/" + folder ])) {
+            if (await fileSystem(`exist`, [ clientConst + "/" + folder + "/" + kind ])) {
+              if (await fileSystem(`exist`, [ clientConst + "/" + folder + "/" + kind + "/" + fileName ])) {
+                await shellExec(`rm`, [ `-rf`, clientConst + "/" + folder + "/" + kind + "/" + fileName ]);
+              }
+            }
+          }
+
         }
       }
+
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
       errorLog("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoRemove): " + e.message).catch((e) => { console.log(e); });

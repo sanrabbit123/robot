@@ -2991,51 +2991,6 @@ Ghost.prototype.ghostRouter = function (needs) {
     }
   };
 
-  //POST - remove designer client middle files
-  funcObj.post_middlePhotoRemove = {
-    link: [ "/middlePhotoRemove" ],
-    func: async function (req, res) {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
-      });
-      try {
-        if (req.body.targets === undefined) {
-          throw new Error("invaild post, must be targets");
-        }
-        const { targets } = equalJson(req.body);
-        if (!Array.isArray(targets)) {
-          throw new Error("invaild post, must be targets");
-        }
-        if (targets.some((obj) => { return typeof obj !== "object" })) {
-          throw new Error("invaild post, must be targets");
-        }
-        if (targets.some((obj) => { return obj === null })) {
-          throw new Error("invaild post, must be targets");
-        }
-
-        for (let { desid, proid, fileName } of targets) {
-          if (typeof desid !== "string" || typeof proid !== "string" || typeof fileName !== "string") {
-            throw new Error("invaild post, must be targets");
-          }
-          if (await fileSystem(`exist`, [ instance.projectServer + "/" + desid ])) {
-            if (await fileSystem(`exist`, [ instance.projectServer + "/" + desid + "/" + proid ])) {
-              if (await fileSystem(`exist`, [ instance.projectServer + "/" + desid + "/" + proid + "/" + fileName ])) {
-                await shellExec(`rm`, [ `-rf`, instance.projectServer + "/" + desid + "/" + proid + "/" + fileName ]);
-              }
-            }
-          }
-        }
-
-        res.send(JSON.stringify({ message: "done" }));
-      } catch (e) {
-        res.send(JSON.stringify({ message: "error : " + e.message }));
-      }
-    }
-  };
-
   //end : set router
   let resultObj = { get: [], post: [] };
   for (let i in funcObj) {

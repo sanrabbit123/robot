@@ -926,9 +926,10 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
   const bigPhotoClassName = "bigPhotoClassName";
   const bigPhotoFixedTargetsClassName = "bigPhotoFixedTargetsClassName";
   const preItemMotherKey = "firstPhoto";
+  const preItemHex = "a75bf84ce74cc83927f82e166b37b73adc0cfcc1e5cc701eccd572fc1e17e755";
   const whiteContextmenuClassName = "whiteContextmenuClassName";
   const linkTargetKey = [ "productLink" ];
-  const emptyDate = new Date(1800, 0, 1);
+  const emptyDate = instance.client.requests[instance.requestNumber].request.timeline;
   try {
     let itemList;
     let mothers;
@@ -1373,8 +1374,13 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
                   } else {
                     if (window.confirm("선택한 파일을 삭제하시겠습니까?")) {
                       fileMap = instance.itemList.map(({ original }) => {
-                        const [ protocol, host, const1, const2, desid, proid, fileName ] = original.split("/").filter((str) => { return str !== '' });
-                        return { desid, proid, fileName }
+                        if ((new RegExp(instance.targetKeywords, "g")).test(original)) {
+                          const [ protocol, host, const1, const2, desid, proid, fileName ] = original.split("/").filter((str) => { return str !== '' });
+                          return { desid, proid, fileName, mode: "designer" };
+                        } else {
+                          const [ protocol, host, const1, const2, folder, kind, fileName ] = original.split("/").filter((str) => { return str !== '' });
+                          return { folder, kind, fileName, mode: "client" };
+                        }
                       });
                       await ajaxJson({ targets: fileMap }, BRIDGEHOST + "/middlePhotoRemove");
                     }
@@ -1520,13 +1526,24 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
                 const original = this.getAttribute("original");
                 let parsedString, fileMap;
                 try {
-                  if (window.confirm("해당 링크을 삭제하시겠습니까?")) {
-                    const [ protocol, host, const1, const2, desid, proid, fileName ] = original.split("/").filter((str) => { return str !== '' });
-                    fileMap = [ { desid, proid, fileName } ];
-                    await ajaxJson({ targets: fileMap }, BRIDGEHOST + "/middlePhotoRemove");
+                  if (instance.itemList.length === 0) {
+                    window.alert("파일을 먼저 선택해주세요!");
+                  } else {
+                    if (window.confirm("선택한 파일을 삭제하시겠습니까?")) {
+                      fileMap = instance.itemList.map(({ original }) => {
+                        if ((new RegExp(instance.targetKeywords, "g")).test(original)) {
+                          const [ protocol, host, const1, const2, desid, proid, fileName ] = original.split("/").filter((str) => { return str !== '' });
+                          return { desid, proid, fileName, mode: "designer" };
+                        } else {
+                          const [ protocol, host, const1, const2, folder, kind, fileName ] = original.split("/").filter((str) => { return str !== '' });
+                          return { folder, kind, fileName, mode: "client" };
+                        }
+                      });
+                      await ajaxJson({ targets: fileMap }, BRIDGEHOST + "/middlePhotoRemove");
+                    }
+                    cancelEvent.call(self, e);
+                    await instance.setPanBlocks();
                   }
-                  cancelEvent.call(self, e);
-                  await instance.setPanBlocks();
                 } catch (e) {
                   console.log(e);
                   window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
@@ -1622,7 +1639,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
 
     mothers = this.panList;
     itemList = await ajaxJson({ target: this.targetDrive }, BRIDGEHOST + "/middlePhotoRead", { equal: true });
-    // preItemList = await ajaxJson({ cliid: this.client.cliid }, BRIDGEHOST + "/clientPhoto", { equal: true });
+    preItemList = await ajaxJson({ cliid: this.client.cliid }, BRIDGEHOST + "/clientPhoto", { equal: true });
 
     linkTargets = itemList.filter((str) => { return linkTargetKey.includes(str.split("_")[0]) });
     linkContents = await ajaxJson({ links: linkTargets.map((file) => { return { desid: instance.designer.desid, proid: instance.project.proid, file } }) }, BRIDGEHOST + "/middleLinkParsing", { equal: true });
@@ -1641,25 +1658,27 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
       return { key, date, name, order, original, exe, id, hexId };
     });
 
-    // itemList.forEach((obj) => {
-    //   if (obj.key === preItemMotherKey) {
-    //     obj.order = preItemList.sitePhoto.length + obj.order;
-    //     obj.name = String(obj.order) + "." + obj.exe;
-    //   }
-    // });
-    //
-    // preIndex = 1;
-    // for (let original of preItemList.sitePhoto) {
-    //   itemList.push({
-    //     key: preItemMotherKey,
-    //     date: emptyDate,
-    //     name: String(preIndex) + "." + original.split(".")[original.split(".").length - 1],
-    //     order: preIndex,
-    //     original: original,
-    //     exe: original.split(".")[original.split(".").length - 1]
-    //   })
-    //   preIndex++;
-    // }
+    itemList.forEach((obj) => {
+      if (obj.key === preItemMotherKey) {
+        obj.order = preItemList.sitePhoto.length + obj.order;
+        obj.name = String(obj.order) + "." + obj.exe;
+      }
+    });
+
+    preIndex = 1;
+    for (let original of preItemList.sitePhoto) {
+      itemList.push({
+        key: preItemMotherKey,
+        date: emptyDate,
+        name: String(preIndex) + "." + original.split(".")[original.split(".").length - 1],
+        order: preIndex,
+        original: original,
+        exe: original.split(".")[original.split(".").length - 1],
+        id: preItemMotherKey + "_" + String(emptyDate.valueOf()) + "_" + String(preIndex) + "_" + preItemHex,
+        hexId: preItemHex,
+      });
+      preIndex++;
+    }
 
     itemList.sort((a, b) => { return a.order - b.order });
     itemList.sort((a, b) => { return a.date.valueOf() - b.date.valueOf() });
@@ -3343,8 +3362,13 @@ ProcessDetailJs.prototype.returnButtonList = function () {
           } else {
             if (window.confirm("선택한 파일을 삭제하시겠습니까?")) {
               fileMap = instance.itemList.map(({ original }) => {
-                const [ protocol, host, const1, const2, desid, proid, fileName ] = original.split("/").filter((str) => { return str !== '' });
-                return { desid, proid, fileName }
+                if ((new RegExp(instance.targetKeywords, "g")).test(original)) {
+                  const [ protocol, host, const1, const2, desid, proid, fileName ] = original.split("/").filter((str) => { return str !== '' });
+                  return { desid, proid, fileName, mode: "designer" };
+                } else {
+                  const [ protocol, host, const1, const2, folder, kind, fileName ] = original.split("/").filter((str) => { return str !== '' });
+                  return { folder, kind, fileName, mode: "client" };
+                }
               });
               await ajaxJson({ targets: fileMap }, BRIDGEHOST + "/middlePhotoRemove");
             }
@@ -4679,7 +4703,8 @@ ProcessDetailJs.prototype.launching = async function (loading) {
     this.contents = await ajaxJson({}, SECONDHOST + "/getChecklist", { equal: true });
     this.panContents = this.contents.map((obj) => { return obj.children }).flat();
 
-    this.targetHref = BRIDGEHOST.replace(/\:3000/gi, '') + "/photo/designer" + "/" + this.designer.desid + "/" + this.project.proid;
+    this.targetKeywords = "/photo/designer";
+    this.targetHref = BRIDGEHOST.replace(/\:3000/gi, '') + this.targetKeywords + "/" + this.designer.desid + "/" + this.project.proid;
     this.targetDrive = "/" + this.designer.desid + "/" + this.project.proid;
     this.panList = [];
     this.itemList = [];

@@ -1008,9 +1008,10 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
   const bigPhotoClassName = "bigPhotoClassName";
   const bigPhotoFixedTargetsClassName = "bigPhotoFixedTargetsClassName";
   const preItemMotherKey = "firstPhoto";
+  const preItemHex = "a75bf84ce74cc83927f82e166b37b73adc0cfcc1e5cc701eccd572fc1e17e755";
   const whiteContextmenuClassName = "whiteContextmenuClassName";
   const linkTargetKey = [ "productLink" ];
-  const emptyDate = new Date(1800, 0, 1);
+  const emptyDate = instance.client.requests[instance.requestNumber].request.timeline;
   try {
     let itemList;
     let mothers;
@@ -1457,7 +1458,7 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
 
     mothers = this.panList;
     itemList = await ajaxJson({ target: this.targetDrive }, BRIDGEHOST + "/middlePhotoRead", { equal: true });
-    // preItemList = await ajaxJson({ cliid: this.client.cliid }, BRIDGEHOST + "/clientPhoto", { equal: true });
+    preItemList = await ajaxJson({ cliid: this.client.cliid }, BRIDGEHOST + "/clientPhoto", { equal: true });
 
     linkTargets = itemList.filter((str) => { return linkTargetKey.includes(str.split("_")[0]) });
     linkContents = await ajaxJson({ links: linkTargets.map((file) => { return { desid: instance.designer.desid, proid: instance.project.proid, file } }) }, BRIDGEHOST + "/middleLinkParsing", { equal: true });
@@ -1476,25 +1477,27 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
       return { key, date, name, order, original, exe, id, hexId };
     });
 
-    // itemList.forEach((obj) => {
-    //   if (obj.key === preItemMotherKey) {
-    //     obj.order = preItemList.sitePhoto.length + obj.order;
-    //     obj.name = String(obj.order) + "." + obj.exe;
-    //   }
-    // });
-    //
-    // preIndex = 1;
-    // for (let original of preItemList.sitePhoto) {
-    //   itemList.push({
-    //     key: preItemMotherKey,
-    //     date: emptyDate,
-    //     name: String(preIndex) + "." + original.split(".")[original.split(".").length - 1],
-    //     order: preIndex,
-    //     original: original,
-    //     exe: original.split(".")[original.split(".").length - 1]
-    //   })
-    //   preIndex++;
-    // }
+    itemList.forEach((obj) => {
+      if (obj.key === preItemMotherKey) {
+        obj.order = preItemList.sitePhoto.length + obj.order;
+        obj.name = String(obj.order) + "." + obj.exe;
+      }
+    });
+
+    preIndex = 1;
+    for (let original of preItemList.sitePhoto) {
+      itemList.push({
+        key: preItemMotherKey,
+        date: emptyDate,
+        name: String(preIndex) + "." + original.split(".")[original.split(".").length - 1],
+        order: preIndex,
+        original: original,
+        exe: original.split(".")[original.split(".").length - 1],
+        id: preItemMotherKey + "_" + String(emptyDate.valueOf()) + "_" + String(preIndex) + "_" + preItemHex,
+        hexId: preItemHex,
+      })
+      preIndex++;
+    }
 
     itemList.sort((a, b) => { return a.order - b.order });
     itemList.sort((a, b) => { return a.date.valueOf() - b.date.valueOf() });
@@ -3247,7 +3250,8 @@ ProjectDetailJs.prototype.launching = async function (loading) {
     this.contents = await ajaxJson({}, SECONDHOST + "/getChecklist", { equal: true });
     this.panContents = this.contents.map((obj) => { return obj.children }).flat();
 
-    this.targetHref = BRIDGEHOST.replace(/\:3000/gi, '') + "/photo/designer" + "/" + this.designer.desid + "/" + this.project.proid;
+    this.targetKeywords = "/photo/designer";
+    this.targetHref = BRIDGEHOST.replace(/\:3000/gi, '') + this.targetKeywords + "/" + this.designer.desid + "/" + this.project.proid;
     this.targetDrive = "/" + this.designer.desid + "/" + this.project.proid;
     this.panList = [];
     this.itemList = [];
