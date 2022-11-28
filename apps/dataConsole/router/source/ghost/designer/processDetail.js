@@ -926,7 +926,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
   const bigPhotoClassName = "bigPhotoClassName";
   const bigPhotoFixedTargetsClassName = "bigPhotoFixedTargetsClassName";
   const preItemMotherKey = "firstPhoto";
-  const preItemHex = "a75bf84ce74cc83927f82e166b37b73adc0cfcc1e5cc701eccd572fc1e17e755";
+  const preItemHex = "070a916ebdea87fae21233050e1b322eb4694980e1bced5012199be287e2e92d";
   const whiteContextmenuClassName = "whiteContextmenuClassName";
   const linkTargetKey = [ "productLink" ];
   const emptyDate = instance.client.requests[instance.requestNumber].request.timeline;
@@ -3395,18 +3395,32 @@ ProcessDetailJs.prototype.returnButtonList = function () {
         let updateMap;
         let hash;
         let loading;
+        let hex, desid, proid, fileName;
+        let folder, kind;
+        let mode;
+
         try {
           if (instance.itemList.length === 0) {
             window.alert("파일을 먼저 선택해주세요!");
           } else {
 
             fileMap = instance.itemList.map(({ original, hex }) => {
-              const [ protocol, host, const1, const2, desid, proid, fileName ] = original.split("/").filter((str) => { return str !== '' });
-              return { desid, proid, fileName, hex }
+              if ((new RegExp(instance.targetKeywords, "g")).test(original)) {
+                const [ protocol, host, const1, const2, desid, proid, fileName ] = original.split("/").filter((str) => { return str !== '' });
+                return { desid, proid, fileName, hex, mode: "designer" };
+              } else {
+                const [ protocol, host, const1, const2, folder, kind, fileName ] = original.split("/").filter((str) => { return str !== '' });
+                return { folder, kind, fileName, hex, mode: "client" };
+              }
             });
 
             updateMap = [];
-            for (let { hex, desid, proid, fileName } of fileMap) {
+
+            for (let obj of fileMap) {
+              hex = obj.hex;
+              fileName = obj.fileName;
+              mode = obj.mode;
+
               ({ string } = await ajaxJson({ mode: "decrypto", hash: hex }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
               if (instance.isEmptyString(string)) {
                 string = '';
@@ -3417,10 +3431,17 @@ ProcessDetailJs.prototype.returnButtonList = function () {
                 newString = await GeneralJs.prompt("파일에 대한 간단한 이름 또는 메모를 적어주세요! (예) 주방_시공의뢰서_1", string);
               } while (typeof newString !== "string" || newString.trim() === '');
               newString = newString.replace(/[\=\/\\\(\)\?\+\&]/gi, '').replace(/ /gi, '_');
-
               ({ hash } = await ajaxJson({ mode: "crypto", string: newString }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
 
-              updateMap.push({ desid, proid, fileName, hash });
+              if (mode === "designer") {
+                desid = obj.desid;
+                proid = obj.proid;
+                updateMap.push({ desid, proid, fileName, hash, mode });
+              } else {
+                folder = obj.folder;
+                kind = obj.kind;
+                updateMap.push({ folder, kind, fileName, hash, mode });
+              }
             }
 
             loading = instance.mother.grayLoading();
@@ -4703,6 +4724,7 @@ ProcessDetailJs.prototype.launching = async function (loading) {
     this.contents = await ajaxJson({}, SECONDHOST + "/getChecklist", { equal: true });
     this.panContents = this.contents.map((obj) => { return obj.children }).flat();
 
+    this.hashConst = "homeliaisonHash";
     this.targetKeywords = "/photo/designer";
     this.targetHref = BRIDGEHOST.replace(/\:3000/gi, '') + this.targetKeywords + "/" + this.designer.desid + "/" + this.project.proid;
     this.targetDrive = "/" + this.designer.desid + "/" + this.project.proid;

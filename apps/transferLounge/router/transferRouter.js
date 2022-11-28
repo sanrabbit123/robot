@@ -21,6 +21,7 @@ const TransferRouter = function (MONGOC, MONGOLOCALC) {
   this.staticConst = process.env.HOME + "/static";
   this.folderConst = this.staticConst + "/photo/designer";
   this.clientConst = this.staticConst + "/photo/client";
+  this.hashConst = "homeliaisonHash";
 
   this.vaildHost = [
     this.address.frontinfo.host,
@@ -594,7 +595,7 @@ TransferRouter.prototype.rou_post_middlePhotoRemove = function () {
 TransferRouter.prototype.rou_post_middlePhotoUpdate = function () {
   const instance = this;
   const { errorLog, fileSystem, shellExec, shellLink, equalJson } = this.mother;
-  const { folderConst } = this;
+  const { folderConst, clientConst, hashConst } = this;
   let obj;
   obj = {};
   obj.link = [ "/middlePhotoUpdate" ];
@@ -624,24 +625,53 @@ TransferRouter.prototype.rou_post_middlePhotoUpdate = function () {
       }
       let key, date, order, hashRaw, pastHash, exe;
       let newFileName;
+      let desid, proid, fileName;
+      let folder, kind;
+      let hash, mode;
 
-      for (let { desid, proid, fileName, hash } of targets) {
-        if (typeof desid !== "string" || typeof proid !== "string" || typeof fileName !== "string" || typeof hash !== "string") {
+      for (let obj of targets) {
+        if (typeof obj !== "object" || obj === null) {
           throw new Error("invaild post, must be targets");
         }
-        if (await fileSystem(`exist`, [ folderConst + "/" + desid ])) {
-          if (await fileSystem(`exist`, [ folderConst + "/" + desid + "/" + proid ])) {
-            if (await fileSystem(`exist`, [ folderConst + "/" + desid + "/" + proid + "/" + fileName ])) {
-              [ key, date, order, hashRaw ] = fileName.split("_");
-              [ pastHash, exe ] = hashRaw.split(".");
-              newFileName = key + "_" + date + "_" + order + "_" + hash + "." + exe;
-              if (pastHash !== hash) {
-                await shellExec(`mv`, [ folderConst + "/" + desid + "/" + proid + "/" + fileName, folderConst + "/" + desid + "/" + proid + "/" + newFileName ]);
+
+        hash = obj.hash;
+        mode = obj.mode;
+
+        if (mode === "designer") {
+          desid = obj.desid;
+          proid = obj.proid;
+          fileName = obj.fileName;
+
+          if (await fileSystem(`exist`, [ folderConst + "/" + desid ])) {
+            if (await fileSystem(`exist`, [ folderConst + "/" + desid + "/" + proid ])) {
+              if (await fileSystem(`exist`, [ folderConst + "/" + desid + "/" + proid + "/" + fileName ])) {
+                [ key, date, order, hashRaw ] = fileName.split("_");
+                [ pastHash, exe ] = hashRaw.split(".");
+                newFileName = key + "_" + date + "_" + order + "_" + hash + "." + exe;
+                if (pastHash !== hash) {
+                  await shellExec(`mv`, [ folderConst + "/" + desid + "/" + proid + "/" + fileName, folderConst + "/" + desid + "/" + proid + "/" + newFileName ]);
+                }
               }
             }
           }
+
+        } else {
+          folder = global.decodeURIComponent(obj.folder);
+          kind = obj.kind;
+          fileName = global.decodeURIComponent(obj.fileName);
+
+          if (await fileSystem(`exist`, [ clientConst + "/" + folder ])) {
+            if (await fileSystem(`exist`, [ clientConst + "/" + folder + "/" + kind ])) {
+              if (await fileSystem(`exist`, [ clientConst + "/" + folder + "/" + kind + "/" + fileName ])) {
+                newFileName = hashConst + "_" + hash + "." + fileName.split(".")[fileName.split(".").length - 1];
+                await shellExec(`mv`, [ clientConst + "/" + folder + "/" + kind + "/" + fileName, clientConst + "/" + folder + "/" + kind + "/" + newFileName ]);
+              }
+            }
+          }
+
         }
       }
+
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
       console.log(e);
