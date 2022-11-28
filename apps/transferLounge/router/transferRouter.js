@@ -119,7 +119,7 @@ TransferRouter.prototype.rou_post_middlePhotoBinary = function () {
       form.parse(req, async function (err, fields, files) {
         try {
           if (!err) {
-            const { proid, desid, client, name } = fields;
+            const { proid, desid, client, name, type } = fields;
             const requestNow = new Date();
             const requestNowValue = requestNow.valueOf();
             const token = "_";
@@ -140,6 +140,25 @@ TransferRouter.prototype.rou_post_middlePhotoBinary = function () {
               }
 
               await shellExec(`mv ${shellLink(file.filepath)} ${folderConst}/${desid}/${proid}/${positionKey}${token}${String(requestNowValue)}${token}${order}${token}${name}.${execName};`);
+
+              if (type === "photo") {
+                if (/pdf$/i.test(execName)) {
+                  instance.imageReader.pdfToJpg(`${folderConst}/${desid}/${proid}/${positionKey}${token}${String(requestNowValue)}${token}${order}${token}${name}.${execName}`, true).then((results) => {
+                    return Promise.all(results.map((past, index) => {
+                      const exeConst = "jpg";
+                      const digitConst = 4;
+                      const pureConst = past.slice(0, -1 * (digitConst + (exeConst.length + 1)));
+                      const digitTenConst = 10 ** digitConst;
+                      const pureFileConst = pureConst.split("/")[pureConst.split("/").length - 1];
+                      const pureFolderConst = pureConst.split("/").slice(0, -1).join("/");
+                      const [ key, dateValue, order, name ] = pureFileConst.split(token);
+                      const newOrder = String((Number(order) * digitTenConst) + (index + 1));
+                      return shellExec(`mv ${shellLink(past)} ${shellLink(pureFolderConst)}/${key}${token}${dateValue}${token}${newOrder}${token}${name}.${exeConst}`);
+                    }));
+                  }).catch((err) => { console.log(err); });
+                }
+              }
+
             }
 
             res.send(JSON.stringify({ message: "success" }));

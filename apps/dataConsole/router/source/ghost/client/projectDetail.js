@@ -1046,7 +1046,7 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
     let contextWidth;
     let contextHeight;
     let preItemHexId;
-    
+
     itemBetween = <%% 6, 6, 5, 4, 1 %%>;
     itemTongHeight = <%% 40, 40, 36, 32, 8 %%>;
     itemTongMarginLeft = <%% 12, 12, 12, 10, 1 %%>;
@@ -2601,6 +2601,7 @@ ProjectDetailJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
                   formData.append("proid", proid);
                   formData.append("desid", desid);
                   formData.append("client", client);
+                  formData.append("type", "file");
                   for (let i = 0; i < thisFiles.length; i++) {
                     formData.append("file_" + thisKey + "_" + String(i), thisFiles[i]);
                   }
@@ -2696,6 +2697,7 @@ ProjectDetailJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
                   formData.append("proid", proid);
                   formData.append("desid", desid);
                   formData.append("client", client);
+                  formData.append("type", "photo");
                   formData.append("file_" + thisKey + "_" + String(0), thisFiles[0]);
 
                   rawResponse = null;
@@ -2812,6 +2814,7 @@ ProjectDetailJs.prototype.dropFiles = function (thisStatusNumber, photoBoo) {
               formData.append("proid", proid);
               formData.append("desid", desid);
               formData.append("client", client);
+              formData.append("type", "file");
               for (let i = 0; i < thisFiles.length; i++) {
                 formData.append("file_" + thisKey + "_" + String(i), thisFiles[i]);
               }
@@ -2911,6 +2914,7 @@ ProjectDetailJs.prototype.dropFiles = function (thisStatusNumber, photoBoo) {
               formData.append("proid", proid);
               formData.append("desid", desid);
               formData.append("client", client);
+              formData.append("type", "photo");
               formData.append("file_" + thisKey + "_" + String(0), thisFiles[0]);
 
               rawResponse = null;
