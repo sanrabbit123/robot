@@ -371,13 +371,19 @@ TransferRouter.prototype.rou_post_clientBinary = function () {
               if (Array.isArray(files[filesKeys[i]])) {
                 for (let j of files[filesKeys[i]]) {
                   await shellExec(`mv ${shellLink(j.filepath)} ${shellLink(clientFolder + '/' + list[i] + '/' + j.originalFilename)};`);
+                  if (/\.pdf$/.test(j.originalFilename)) {
+                    await instance.imageReader.pdfToJpg(clientFolder + '/' + list[i] + '/' + j.originalFilename, true);
+                  }
                 }
               } else {
                 await shellExec(`mv ${shellLink(files[filesKeys[i]].filepath)} ${shellLink(clientFolder + '/' + list[i] + '/' + files[filesKeys[i]].originalFilename)};`);
+                if (/\.pdf$/.test(files[filesKeys[i]].originalFilename)) {
+                  await instance.imageReader.pdfToJpg(clientFolder + '/' + list[i] + '/' + files[filesKeys[i]].originalFilename, true);
+                }
               }
             }
 
-            await messageSend({ text: name + "님이 파일 전송을 시도중입니다!", channel: "#401_consulting" });
+            await messageSend({ text: name + "님의 파일 전송을 완료하였습니다!", channel: "#404_curation" });
             res.send(JSON.stringify({ message: "done" }));
 
           } else {
