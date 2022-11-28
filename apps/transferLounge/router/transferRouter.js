@@ -180,11 +180,13 @@ TransferRouter.prototype.rou_post_middlePhotoBinary = function () {
             res.send(JSON.stringify({ message: "error : " + e.message }));
           }
         } catch (e) {
+          console.log(e);
           errorLog("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoBinary): " + e.message).catch((e) => { console.log(e); });
           res.send(JSON.stringify({ message: "error : " + e.message }));
         }
       });
     } catch (e) {
+      console.log(e);
       errorLog("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoBinary): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
