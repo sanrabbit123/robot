@@ -210,6 +210,7 @@ DesignerJs.prototype.standardBar = function (standard, localMode = false, specif
       div_clone3.style[i] = style3[i];
     }
     div_clone3.style.left = String(leftPosition[0]) + ea;
+    div_clone3.addEventListener("selectstart", (e) => { e.preventDefault() });
     if (num === 0) {
       if (!localMode) {
         div_clone3.addEventListener("contextmenu", sortEventFunction(0));
@@ -223,6 +224,7 @@ DesignerJs.prototype.standardBar = function (standard, localMode = false, specif
       div_clone3.style[i] = style3[i];
     }
     div_clone3.style.left = String(leftPosition[1]) + ea;
+    div_clone3.addEventListener("selectstart", (e) => { e.preventDefault() });
     if (num === 0) {
       if (!localMode) {
         div_clone3.addEventListener("contextmenu", sortEventFunction(1));
@@ -299,6 +301,12 @@ DesignerJs.prototype.standardBar = function (standard, localMode = false, specif
       }
     }
   });
+
+  for (let { desid, dom } of desidDom) {
+    dom.addEventListener("dblclick", function (e) {
+      GeneralJs.blankHref(FRONTHOST + "/designer/dashboard.php?desid=" + this.getAttribute("desid"));
+    });
+  }
 
 }
 

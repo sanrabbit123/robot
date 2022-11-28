@@ -724,8 +724,28 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
 
     targets = equalJson(JSON.stringify(projects));
     targets.sort((a, b) => {
-      return b.process.contract.form.date.from.valueOf() - a.process.contract.form.date.from.valueOf();
+      const emptyValue = Math.abs((new Date(1200, 0, 1)).valueOf());
+      let aConst, bConst;
+
+      if (/드[랍롭]/gi.test(a.process.status) || /홀[드딩]/gi.test(a.process.status)) {
+        aConst = 1;
+      } else if (/완료/gi.test(a.process.status)) {
+        aConst = 10000;
+      } else {
+        aConst = 100000000;
+      }
+
+      if (/드[랍롭]/gi.test(b.process.status) || /홀[드딩]/gi.test(b.process.status)) {
+        bConst = 1;
+      } else if (/완료/gi.test(b.process.status)) {
+        bConst = 10000;
+      } else {
+        bConst = 100000000;
+      }
+
+      return ((b.process.contract.form.date.from.valueOf() + emptyValue) * bConst) - ((a.process.contract.form.date.from.valueOf() + emptyValue) * aConst);
     });
+
     targetLength = targets.length;
     if (targetLength < minimalLength) {
       for (let i = 0; i < minimalLength - targetLength; i++) {
