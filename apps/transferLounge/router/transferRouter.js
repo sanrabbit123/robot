@@ -142,7 +142,10 @@ TransferRouter.prototype.rou_post_middlePhotoBinary = function () {
               await shellExec(`mv ${shellLink(file.filepath)} ${folderConst}/${desid}/${proid}/${positionKey}${token}${String(requestNowValue)}${token}${order}${token}${name}.${execName};`);
 
               if (type === "photo") {
+                console.log(execName);
                 if (/pdf$/i.test(execName)) {
+
+                  console.log("this!");
                   instance.imageReader.pdfToJpg(`${folderConst}/${desid}/${proid}/${positionKey}${token}${String(requestNowValue)}${token}${order}${token}${name}.${execName}`, true).then((results) => {
                     return Promise.all(results.map((past, index) => {
                       const exeConst = "jpg";
