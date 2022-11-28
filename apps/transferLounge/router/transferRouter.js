@@ -153,7 +153,6 @@ TransferRouter.prototype.rou_post_middlePhotoBinary = function () {
 
               if (type === "photo") {
                 if (/pdf$/i.test(execName)) {
-
                   results = await instance.imageReader.pdfToJpg(`${folderConst}/${desid}/${proid}/${positionKey}${token}${String(requestNowValue)}${token}${order}${token}${name}.${execName}`, true);
                   for (let index = 0; index < results.length; index++) {
                     past = results[index];
@@ -168,7 +167,6 @@ TransferRouter.prototype.rou_post_middlePhotoBinary = function () {
 
                     await shellExec(`mv ${shellLink(past)} ${shellLink(pureFolderConst)}/${jpgKey}${token}${jpgDateValue}${token}${newOrder}${token}${jpgName}.${exeConst}`);
                   }
-
                 }
               }
 
@@ -177,6 +175,7 @@ TransferRouter.prototype.rou_post_middlePhotoBinary = function () {
             res.send(JSON.stringify({ message: "success" }));
 
           } else {
+            console.log(e);
             errorLog("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoBinary): " + e.message).catch((e) => { console.log(e); });
             res.send(JSON.stringify({ message: "error : " + e.message }));
           }

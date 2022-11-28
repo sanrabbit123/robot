@@ -4094,6 +4094,7 @@ ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
             desid,
             client: name,
             designer,
+            accept: "image/*, application/pdf",
           },
           style: {
             display: "none",
@@ -4258,7 +4259,9 @@ ProcessDetailJs.prototype.dropFiles = function (thisStatusNumber, photoBoo) {
             let loading;
             let hash;
 
-            thisFiles = [ ...this.files ];
+            thisFiles = [ ...this.files ].filter((file) => {
+              return /^image/gi.test(file.type) || file.type.trim() === "application/pdf";
+            });
 
             if (thisFiles.length >= 1) {
               formData = new FormData();
@@ -4314,6 +4317,7 @@ ProcessDetailJs.prototype.dropFiles = function (thisStatusNumber, photoBoo) {
             desid,
             client: name,
             designer,
+            accept: "image/*, application/pdf",
           },
           style: {
             display: "none",
