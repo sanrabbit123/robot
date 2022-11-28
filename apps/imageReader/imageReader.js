@@ -59,7 +59,7 @@ ImageReader.prototype.pdfToJpg = function (filePath, removeMode = false) {
         }
       }
     });
-    gs.stderr.on("data", (data) => { reject(String(data)); });
+    // gs.stderr.on("data", (data) => { reject(String(data)); });
   });
 }
 

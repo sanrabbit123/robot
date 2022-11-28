@@ -156,15 +156,12 @@ TransferRouter.prototype.rou_post_middlePhotoBinary = function () {
                   results = await instance.imageReader.pdfToJpg(`${folderConst}/${desid}/${proid}/${positionKey}${token}${String(requestNowValue)}${token}${order}${token}${name}.${execName}`, true);
                   for (let index = 0; index < results.length; index++) {
                     past = results[index];
-
                     pureConst = past.slice(0, -1 * (digitConst + (exeConst.length + 1)));
                     digitTenConst = 10 ** digitConst;
                     pureFileConst = pureConst.split("/")[pureConst.split("/").length - 1];
                     pureFolderConst = pureConst.split("/").slice(0, -1).join("/");
-
                     [ jpgKey, jpgDateValue, jpgOrder, jpgName ] = pureFileConst.split(token);
                     newOrder = String(((Number(jpgOrder) + 1) * digitTenConst) + (index + 1));
-
                     await shellExec(`mv ${shellLink(past)} ${shellLink(pureFolderConst)}/${jpgKey}${token}${jpgDateValue}${token}${newOrder}${token}${jpgName}.${exeConst}`);
                   }
                 }
