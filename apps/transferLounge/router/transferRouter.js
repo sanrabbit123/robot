@@ -123,8 +123,18 @@ TransferRouter.prototype.rou_post_middlePhotoBinary = function () {
             const requestNow = new Date();
             const requestNowValue = requestNow.valueOf();
             const token = "_";
+            const exeConst = "jpg";
+            const digitConst = 4;
             let execName, file;
             let fileNameConst, positionKey, order;
+            let results;
+            let past;
+            let pureConst;
+            let digitTenConst;
+            let pureFileConst;
+            let pureFolderConst;
+            let jpgKey, jpgDateValue, jpgOrder, jpgName;
+            let newOrder;
 
             for (let key in files) {
               file = files[key];
@@ -141,26 +151,24 @@ TransferRouter.prototype.rou_post_middlePhotoBinary = function () {
 
               await shellExec(`mv ${shellLink(file.filepath)} ${folderConst}/${desid}/${proid}/${positionKey}${token}${String(requestNowValue)}${token}${order}${token}${name}.${execName};`);
 
-
-              console.log(type);
               if (type === "photo") {
-                console.log(execName);
                 if (/pdf$/i.test(execName)) {
 
-                  console.log("this!");
-                  instance.imageReader.pdfToJpg(`${folderConst}/${desid}/${proid}/${positionKey}${token}${String(requestNowValue)}${token}${order}${token}${name}.${execName}`, true).then((results) => {
-                    return Promise.all(results.map((past, index) => {
-                      const exeConst = "jpg";
-                      const digitConst = 4;
-                      const pureConst = past.slice(0, -1 * (digitConst + (exeConst.length + 1)));
-                      const digitTenConst = 10 ** digitConst;
-                      const pureFileConst = pureConst.split("/")[pureConst.split("/").length - 1];
-                      const pureFolderConst = pureConst.split("/").slice(0, -1).join("/");
-                      const [ key, dateValue, order, name ] = pureFileConst.split(token);
-                      const newOrder = String((Number(order) * digitTenConst) + (index + 1));
-                      return shellExec(`mv ${shellLink(past)} ${shellLink(pureFolderConst)}/${key}${token}${dateValue}${token}${newOrder}${token}${name}.${exeConst}`);
-                    }));
-                  }).catch((err) => { console.log(err); });
+                  results = await instance.imageReader.pdfToJpg(`${folderConst}/${desid}/${proid}/${positionKey}${token}${String(requestNowValue)}${token}${order}${token}${name}.${execName}`, true);
+                  for (let index = 0; index < results.length; index++) {
+                    past = results[index];
+
+                    pureConst = past.slice(0, -1 * (digitConst + (exeConst.length + 1)));
+                    digitTenConst = 10 ** digitConst;
+                    pureFileConst = pureConst.split("/")[pureConst.split("/").length - 1];
+                    pureFolderConst = pureConst.split("/").slice(0, -1).join("/");
+
+                    [ jpgKey, jpgDateValue, jpgOrder, jpgName ] = pureFileConst.split(token);
+                    newOrder = String((Number(jpgOrder) * digitTenConst) + (index + 1));
+
+                    await shellExec(`mv ${shellLink(past)} ${shellLink(pureFolderConst)}/${jpgKey}${token}${jpgDateValue}${token}${newOrder}${token}${jpgName}.${exeConst}`);
+                  }
+
                 }
               }
 

@@ -4053,7 +4053,7 @@ ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
                   formData.append("proid", proid);
                   formData.append("desid", desid);
                   formData.append("client", client);
-                  formData.append("type", "file");
+                  formData.append("type", "photo");
                   for (let i = 0; i < thisFiles.length; i++) {
                     formData.append("file_" + thisKey + "_" + String(i), thisFiles[i]);
                   }
@@ -4149,7 +4149,7 @@ ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
                   formData.append("proid", proid);
                   formData.append("desid", desid);
                   formData.append("client", client);
-                  formData.append("type", "photo");
+                  formData.append("type", "file");
                   formData.append("file_" + thisKey + "_" + String(0), thisFiles[0]);
 
                   rawResponse = null;
@@ -4266,7 +4266,7 @@ ProcessDetailJs.prototype.dropFiles = function (thisStatusNumber, photoBoo) {
               formData.append("proid", proid);
               formData.append("desid", desid);
               formData.append("client", client);
-              formData.append("type", "file");
+              formData.append("type", "photo");
               for (let i = 0; i < thisFiles.length; i++) {
                 formData.append("file_" + thisKey + "_" + String(i), thisFiles[i]);
               }
@@ -4366,7 +4366,7 @@ ProcessDetailJs.prototype.dropFiles = function (thisStatusNumber, photoBoo) {
               formData.append("proid", proid);
               formData.append("desid", desid);
               formData.append("client", client);
-              formData.append("type", "photo");
+              formData.append("type", "file");
               formData.append("file_" + thisKey + "_" + String(0), thisFiles[0]);
 
               rawResponse = null;
