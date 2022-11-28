@@ -1251,16 +1251,16 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
 
         let forceSelect;
 
-        if (type !== "link") {
-          forceSelect = 0;
-          if (this.getAttribute("toggle") === "off") {
-            if (type === "file") {
-              fileItemSelectEvent.call(this, e);
-            } else {
-              photoItemSelectEvent.call(this, e);
-            }
-            forceSelect = 1;
+        forceSelect = 0;
+        if (this.getAttribute("toggle") === "off") {
+          if (type === "file") {
+            fileItemSelectEvent.call(this, e);
+          } else if (type === "photo") {
+            photoItemSelectEvent.call(this, e);
+          } else {
+            linkItemSelectEvent.call(this, e);
           }
+          forceSelect = 1;
         }
 
         const self = this;
@@ -1271,13 +1271,13 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
 
         cancelEvent = function (e) {
           removeByClass(whiteContextmenuClassName);
-          if (type !== "link") {
-            if (forceSelect === 1) {
-              if (type === "file") {
-                fileItemSelectEvent.call(self, e);
-              } else {
-                photoItemSelectEvent.call(self, e);
-              }
+          if (forceSelect === 1) {
+            if (type === "file") {
+              fileItemSelectEvent.call(self, e);
+            } else if (type === "photo") {
+              photoItemSelectEvent.call(self, e);
+            } else {
+              linkItemSelectEvent.call(self, e);
             }
           }
         }
@@ -1418,71 +1418,10 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
               }
             }
           });
-          createNode({
-            mother: whitePrompt,
-            event: {
-              click: async function (e) {
-                try {
-                  const host = FRONTHOST.replace(/^https\:\/\//gi, '');
-                  const path = "project";
-
-                  if (instance.itemList.length === 0) {
-                    window.alert("파일을 먼저 선택해주세요!");
-                  } else {
-                    const targets = equalJson(JSON.stringify(instance.panContents));
-                    const target = targets.find((obj) => { return obj.key === instance.itemList[0].key })
-                    await ajaxJson({
-                      method: "projectDetail",
-                      name: instance.client.name,
-                      phone: instance.client.phone,
-                      option: {
-                        client: instance.client.name,
-                        designer: instance.designer.designer,
-                        file: target.action[0].name,
-                        host: host,
-                        path: path,
-                        proid: instance.project.proid,
-                        key: instance.itemList[0].key,
-                      }
-                    }, BACKHOST + "/alimTalk");
-                    window.alert(instance.client.name + " 고객님에게 알림톡을 전송하였습니다!");
-                    cancelEvent.call(self, e);
-                  }
-
-                } catch (e) {
-                  console.log(e);
-                }
-              }
-            },
-            style: {
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              width: String(contextWidth) + ea,
-              height: String(contextHeight) + ea,
-              borderRadius: String(5) + "px",
-              background: colorChip.gray1,
-              cursor: "pointer",
-            },
-            child: {
-              text: "알림 보내기",
-              style: {
-                display: "inline-block",
-                position: "relative",
-                fontSize: String(contextSize) + ea,
-                fontWeight: String(textWeight),
-                color: colorChip.black,
-                top: String(textTop) + ea,
-              }
-            }
-          });
         } else {
-
           link = this.getAttribute("link");
           original = this.getAttribute("original");
           key = this.getAttribute("key");
-
           createNode({
             mother: whitePrompt,
             attribute: {
@@ -1575,19 +1514,116 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
               }
             }
           });
-          createNode({
-            mother: whitePrompt,
-            attribute: {
-              key
-            },
-            event: {
-              click: async function (e) {
-                try {
-                  const host = FRONTHOST.replace(/^https\:\/\//gi, '');
-                  const path = "project";
-                  const key = this.getAttribute("key");
+        }
+        createNode({
+          mother: whitePrompt,
+          event: {
+            click: async function (e) {
+              let parsedString, fileMap;
+              let string;
+              let newString;
+              let updateMap;
+              let hash;
+              let loading;
+              let hex, desid, proid, fileName;
+              let folder, kind;
+              let mode;
+
+              try {
+                if (instance.itemList.length === 0) {
+                  window.alert("파일을 먼저 선택해주세요!");
+                } else {
+
+                  fileMap = instance.itemList.map(({ original, hex }) => {
+                    if ((new RegExp(instance.targetKeywords, "g")).test(original)) {
+                      const [ protocol, host, const1, const2, desid, proid, fileName ] = original.split("/").filter((str) => { return str !== '' });
+                      return { desid, proid, fileName, hex, mode: "designer" };
+                    } else {
+                      const [ protocol, host, const1, const2, folder, kind, fileName ] = original.split("/").filter((str) => { return str !== '' });
+                      return { folder, kind, fileName, hex, mode: "client" };
+                    }
+                  });
+
+                  updateMap = [];
+
+                  for (let obj of fileMap) {
+                    hex = obj.hex;
+                    fileName = obj.fileName;
+                    mode = obj.mode;
+
+                    ({ string } = await ajaxJson({ mode: "decrypto", hash: hex }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
+                    if (instance.isEmptyString(string)) {
+                      string = '';
+                    }
+
+                    newString = null;
+                    do {
+                      newString = await GeneralJs.prompt("파일에 대한 간단한 이름 또는 메모를 적어주세요! (예) 주방_시공의뢰서_1", string);
+                    } while (typeof newString !== "string" || newString.trim() === '');
+                    newString = newString.replace(/[\=\/\\\(\)\?\+\&]/gi, '').replace(/ /gi, '_');
+                    ({ hash } = await ajaxJson({ mode: "crypto", string: newString }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
+
+                    if (mode === "designer") {
+                      desid = obj.desid;
+                      proid = obj.proid;
+                      updateMap.push({ desid, proid, fileName, hash, mode });
+                    } else {
+                      folder = obj.folder;
+                      kind = obj.kind;
+                      updateMap.push({ folder, kind, fileName, hash, mode });
+                    }
+                  }
+
+                  loading = instance.mother.grayLoading();
+                  await ajaxJson({ targets: updateMap }, BRIDGEHOST + "/middlePhotoUpdate");
+                  cancelEvent.call(self, e);
+                  await instance.setPanBlocks();
+
+                  loading.remove();
+                }
+              } catch (e) {
+                console.log(e);
+                window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+              }
+            }
+          },
+          style: {
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            width: String(contextWidth) + ea,
+            height: String(contextHeight) + ea,
+            borderRadius: String(5) + "px",
+            background: colorChip.gray1,
+            marginBottom: String(itemBetween) + ea,
+            cursor: "pointer",
+          },
+          child: {
+            text: "메모 수정",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(contextSize) + ea,
+              fontWeight: String(textWeight),
+              color: colorChip.black,
+              top: String(textTop) + ea,
+            }
+          }
+        });
+        createNode({
+          mother: whitePrompt,
+          event: {
+            click: async function (e) {
+              try {
+                const host = FRONTHOST.replace(/^https\:\/\//gi, '');
+                const path = "project";
+
+                if (instance.itemList.length === 0) {
+                  window.alert("파일을 먼저 선택해주세요!");
+                } else {
                   const targets = equalJson(JSON.stringify(instance.panContents));
-                  const target = targets.find((obj) => { return obj.key === key });
+                  const target = targets.find((obj) => { return obj.key === instance.itemList[0].key })
                   await ajaxJson({
                     method: "projectDetail",
                     name: instance.client.name,
@@ -1599,41 +1635,41 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
                       host: host,
                       path: path,
                       proid: instance.project.proid,
-                      key: key,
+                      key: instance.itemList[0].key,
                     }
                   }, BACKHOST + "/alimTalk");
                   window.alert(instance.client.name + " 고객님에게 알림톡을 전송하였습니다!");
                   cancelEvent.call(self, e);
-
-                } catch (e) {
-                  console.log(e);
                 }
-              }
-            },
-            style: {
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              width: String(contextWidth) + ea,
-              height: String(contextHeight) + ea,
-              borderRadius: String(5) + "px",
-              background: colorChip.gray1,
-              cursor: "pointer",
-            },
-            child: {
-              text: "알림 보내기",
-              style: {
-                display: "inline-block",
-                position: "relative",
-                fontSize: String(contextSize) + ea,
-                fontWeight: String(textWeight),
-                color: colorChip.black,
-                top: String(textTop) + ea,
+
+              } catch (e) {
+                console.log(e);
               }
             }
-          });
-        }
+          },
+          style: {
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            width: String(contextWidth) + ea,
+            height: String(contextHeight) + ea,
+            borderRadius: String(5) + "px",
+            background: colorChip.gray1,
+            cursor: "pointer",
+          },
+          child: {
+            text: "알림 보내기",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(contextSize) + ea,
+              fontWeight: String(textWeight),
+              color: colorChip.black,
+              top: String(textTop) + ea,
+            }
+          }
+        });
 
       }
     }
