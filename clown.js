@@ -402,16 +402,6 @@ Clown.prototype.cashReceipt = async function () {
   }
 }
 
-Clown.prototype.bridgeCloud = async function (sw) {
-  try {
-    const BridgeCloud = require(`${process.cwd()}/apps/bridgeCloud/bridgeCloud.js`);
-    const app = new BridgeCloud();
-    await app.serverLaunching();
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 Clown.prototype.tellVoice = async function () {
   try {
     const PlayAudio = require(`${process.cwd()}/apps/playAudio/playAudio.js`);
@@ -936,20 +926,6 @@ const MENU = {
   pythonWatcher: async function () {
     try {
       await robot.pythonWatcher();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  bridgecloud: async function () {
-    try {
-      await robot.bridgeCloud();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  bridgeserver: async function () {
-    try {
-      await robot.bridgeCloud();
     } catch (e) {
       console.log(e);
     }

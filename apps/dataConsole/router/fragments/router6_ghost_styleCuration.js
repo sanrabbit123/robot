@@ -285,7 +285,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
 DataRouter.prototype.rou_post_styleCuration_styleCheckComplete = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, ghostRequest, requestSystem, messageSend, errorLog } = this.mother;
+  const { equalJson, requestSystem, messageSend, errorLog } = this.mother;
   let obj = {};
   obj.link = "/styleCuration_styleCheckComplete";
   obj.func = async function (req, res) {
@@ -337,7 +337,7 @@ DataRouter.prototype.rou_post_styleCuration_pageInitComplete = function () {
   const back = this.back;
   const kakao = this.kakao;
   const address = this.address;
-  const { equalJson, ghostRequest, requestSystem, messageSend, errorLog } = this.mother;
+  const { equalJson, requestSystem, messageSend, errorLog } = this.mother;
   let obj = {};
   obj.link = "/styleCuration_pageInitComplete";
   obj.func = async function (req, res) {
@@ -375,7 +375,7 @@ DataRouter.prototype.rou_post_styleCuration_pageInitComplete = function () {
               path: "curation",
               cliid: cliid,
             });
-            await messageSend({ text: client.name + " 고객님께 신청 완료하라고 독촉했어요.", channel: "#404_curation", voice: false });
+            await messageSend({ text: client.name + " 고객님께 신청 완료하라고 독촉했어요.", channel: "#404_curation", voice: true });
           }
         } catch (e) {
           await errorLog("독촉하는 과정중 오류남 : " + e.message);

@@ -4,7 +4,6 @@ const Mother = require(APP_PATH + "/mother.js");
 const BackMaker = require(APP_PATH + "/backMaker/backMaker.js");
 const BackReport = require(APP_PATH + "/backMaker/backReport.js");
 const BackWorker = require(APP_PATH + "/backMaker/backWorker.js");
-const BridgeCloud = require(APP_PATH + "/bridgeCloud/bridgeCloud.js");
 const GoogleAnalytics = require(APP_PATH + "/googleAPIs/googleAnalytics.js");
 const GoogleSheet = require(APP_PATH + "/googleAPIs/googleSheet.js");
 const GoogleDrive = require(APP_PATH + "/googleAPIs/googleDrive.js");
@@ -133,6 +132,9 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
+    
 
 
 
@@ -3411,7 +3413,7 @@ DevContext.prototype.launching = async function () {
     // const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
     // const human = new HumanPacket();
     // const name = "김혜정";
-    // const amount = 330000;
+    // const amount = 756800;
     // await human.sendSms({
     //   name: "",
     //   phone: "01055432039",

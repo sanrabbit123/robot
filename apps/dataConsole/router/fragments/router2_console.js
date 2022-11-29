@@ -4392,7 +4392,7 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
           target = "잔금";
         }
         await back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
-        messageSend({ text: name + " 고객님께 시공 " + target + " 안내 알림톡을 전송했어요.", channel: "#400_customer", voice: false }).catch((err) => {
+        messageSend({ text: name + " 고객님께 시공 " + target + " 안내 알림톡을 전송했어요.", channel: "#400_customer", voice: true }).catch((err) => {
           console.log(err);
         });
         result = { date: dateToString(now), now };
@@ -5043,30 +5043,63 @@ DataRouter.prototype.rou_post_homeliaisonCrypto = function () {
       const password = "homeliaison";
       let result;
       let resultObj;
+      let targets;
 
-      resultObj = {};
+      if (req.body.targets !== undefined && Array.isArray(equalJson(req.body.targets))) {
 
-      if (mode === "crypto" || mode === "cryptoString") {
-        if (req.body.string === undefined) {
-          throw new Error("invaild post");
+        ({ targets } = equalJson(req.body));
+        resultObj = [];
+
+        if (mode === "crypto") {
+          if (!targets.every((obj) => { return (typeof obj === "object" && obj !== null && obj.string !== undefined && obj.target !== undefined) })) {
+            throw new Error("invaild post");
+          }
+          for (let { string, target } of targets) {
+            resultObj.push({
+              hash: await cryptoString(password, string),
+              target
+            });
+          }
+        } else {
+          if (!targets.every((obj) => { return (typeof obj === "object" && obj !== null && obj.hash !== undefined && obj.target !== undefined) })) {
+            throw new Error("invaild post");
+          }
+          for (let { hash, target } of targets) {
+            resultObj.push({
+              string: await decryptoHash(password, hash),
+              target
+            });
+          }
         }
-        result = await cryptoString(password, req.body.string);
-        resultObj = { hash: result };
-      } else if (mode === "decrypto" || mode === "decryptoHash") {
-        if (req.body.hash === undefined) {
-          throw new Error("invaild post");
-        }
-        result = await decryptoHash(password, req.body.hash);
-        resultObj = { string: result };
+
       } else {
-        throw new Error("invaild mode");
-      }
 
-      if (typeof req.body.target === "string") {
-        resultObj.target = req.body.target;
+        resultObj = {};
+
+        if (mode === "crypto" || mode === "cryptoString") {
+          if (req.body.string === undefined) {
+            throw new Error("invaild post");
+          }
+          result = await cryptoString(password, req.body.string);
+          resultObj = { hash: result };
+        } else if (mode === "decrypto" || mode === "decryptoHash") {
+          if (req.body.hash === undefined) {
+            throw new Error("invaild post");
+          }
+          result = await decryptoHash(password, req.body.hash);
+          resultObj = { string: result };
+        } else {
+          throw new Error("invaild mode");
+        }
+
+        if (typeof req.body.target === "string") {
+          resultObj.target = req.body.target;
+        }
+
       }
 
       res.send(JSON.stringify(resultObj));
+
     } catch (e) {
       await errorLog("Console 서버 문제 생김 (rou_post_homeliaisonCrypto): " + e.message);
       res.send(JSON.stringify({ error: e.message }));

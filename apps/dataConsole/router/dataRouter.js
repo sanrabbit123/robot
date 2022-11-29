@@ -5116,7 +5116,7 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
           target = "잔금";
         }
         await back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
-        messageSend({ text: name + " 고객님께 시공 " + target + " 안내 알림톡을 전송했어요.", channel: "#400_customer", voice: false }).catch((err) => {
+        messageSend({ text: name + " 고객님께 시공 " + target + " 안내 알림톡을 전송했어요.", channel: "#400_customer", voice: true }).catch((err) => {
           console.log(err);
         });
         result = { date: dateToString(now), now };
@@ -5767,30 +5767,63 @@ DataRouter.prototype.rou_post_homeliaisonCrypto = function () {
       const password = "homeliaison";
       let result;
       let resultObj;
+      let targets;
 
-      resultObj = {};
+      if (req.body.targets !== undefined && Array.isArray(equalJson(req.body.targets))) {
 
-      if (mode === "crypto" || mode === "cryptoString") {
-        if (req.body.string === undefined) {
-          throw new Error("invaild post");
+        ({ targets } = equalJson(req.body));
+        resultObj = [];
+
+        if (mode === "crypto") {
+          if (!targets.every((obj) => { return (typeof obj === "object" && obj !== null && obj.string !== undefined && obj.target !== undefined) })) {
+            throw new Error("invaild post");
+          }
+          for (let { string, target } of targets) {
+            resultObj.push({
+              hash: await cryptoString(password, string),
+              target
+            });
+          }
+        } else {
+          if (!targets.every((obj) => { return (typeof obj === "object" && obj !== null && obj.hash !== undefined && obj.target !== undefined) })) {
+            throw new Error("invaild post");
+          }
+          for (let { hash, target } of targets) {
+            resultObj.push({
+              string: await decryptoHash(password, hash),
+              target
+            });
+          }
         }
-        result = await cryptoString(password, req.body.string);
-        resultObj = { hash: result };
-      } else if (mode === "decrypto" || mode === "decryptoHash") {
-        if (req.body.hash === undefined) {
-          throw new Error("invaild post");
-        }
-        result = await decryptoHash(password, req.body.hash);
-        resultObj = { string: result };
+
       } else {
-        throw new Error("invaild mode");
-      }
 
-      if (typeof req.body.target === "string") {
-        resultObj.target = req.body.target;
+        resultObj = {};
+
+        if (mode === "crypto" || mode === "cryptoString") {
+          if (req.body.string === undefined) {
+            throw new Error("invaild post");
+          }
+          result = await cryptoString(password, req.body.string);
+          resultObj = { hash: result };
+        } else if (mode === "decrypto" || mode === "decryptoHash") {
+          if (req.body.hash === undefined) {
+            throw new Error("invaild post");
+          }
+          result = await decryptoHash(password, req.body.hash);
+          resultObj = { string: result };
+        } else {
+          throw new Error("invaild mode");
+        }
+
+        if (typeof req.body.target === "string") {
+          resultObj.target = req.body.target;
+        }
+
       }
 
       res.send(JSON.stringify(resultObj));
+
     } catch (e) {
       await errorLog("Console 서버 문제 생김 (rou_post_homeliaisonCrypto): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
@@ -5963,7 +5996,7 @@ DataRouter.prototype.rou_post_ghostClient_updateAnalytics = function () {
 
 DataRouter.prototype.rou_post_designerProposal_submit = function () {
   const instance = this;
-  const { requestSystem, ghostRequest, messageSend, errorLog } = this.mother;
+  const { requestSystem, messageSend, errorLog } = this.mother;
   const back = this.back;
   const address = this.address;
   let obj = {};
@@ -5994,7 +6027,7 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
       await requestSystem("https://" + address.pythoninfo.host + ":3000/createStylingBill", { proid, desid }, { headers: { "Content-Type": "application/json" } });
       await back.updateProject([ { proid }, { "service.online": (method === "online") } ], { selfMongo: instance.mongo });
 
-      messageSend({ text: `${name} 고객님이 ${designer} 디자이너를 선택하셨어요.`, channel: "#400_customer", voice: false }).then(() => {
+      messageSend({ text: `${name} 고객님이 ${designer} 디자이너를 선택하셨어요.`, channel: "#400_customer", voice: true }).then(() => {
         return requestSystem("https://" + address.backinfo.host + ":3000/generalMongo", {
           mode: "sse",
           db: "console",
@@ -6396,7 +6429,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
 DataRouter.prototype.rou_post_styleCuration_styleCheckComplete = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, ghostRequest, requestSystem, messageSend, errorLog } = this.mother;
+  const { equalJson, requestSystem, messageSend, errorLog } = this.mother;
   let obj = {};
   obj.link = "/styleCuration_styleCheckComplete";
   obj.func = async function (req, res) {
@@ -6448,7 +6481,7 @@ DataRouter.prototype.rou_post_styleCuration_pageInitComplete = function () {
   const back = this.back;
   const kakao = this.kakao;
   const address = this.address;
-  const { equalJson, ghostRequest, requestSystem, messageSend, errorLog } = this.mother;
+  const { equalJson, requestSystem, messageSend, errorLog } = this.mother;
   let obj = {};
   obj.link = "/styleCuration_pageInitComplete";
   obj.func = async function (req, res) {
@@ -6486,7 +6519,7 @@ DataRouter.prototype.rou_post_styleCuration_pageInitComplete = function () {
               path: "curation",
               cliid: cliid,
             });
-            await messageSend({ text: client.name + " 고객님께 신청 완료하라고 독촉했어요.", channel: "#404_curation", voice: false });
+            await messageSend({ text: client.name + " 고객님께 신청 완료하라고 독촉했어요.", channel: "#404_curation", voice: true });
           }
         } catch (e) {
           await errorLog("독촉하는 과정중 오류남 : " + e.message);

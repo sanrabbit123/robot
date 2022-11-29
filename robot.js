@@ -144,7 +144,7 @@ Robot.prototype.proposalMaker = function (button, arg) {
   const path = "proposal";
   const collection = "proposalLog";
   const { host } = this.address.frontinfo;
-  const { requestSystem, ghostRequest, messageLog, errorLog, messageSend } = this.mother;
+  const { requestSystem, messageLog, errorLog, messageSend } = this.mother;
   const proid = arg;
   let kakaoInstance, cliid, name, phone, client;
   let requestNumber, action;
@@ -237,6 +237,7 @@ Robot.prototype.proposalMaker = function (button, arg) {
 
     }).then(() => {
       return messageSend({ text: name + " 고객님께 추천서를 전송하였어요.\nlink : https://" + host + "/" + path + ".php?proid=" + proid + "&mode=test", channel: "#403_proposal", voice: true });
+      
     }).catch((err) => {
       errorLog("추천서 보내는 도중 오류남 : " + err.message).catch((e) => { console.log(e); });
       reject(err);
@@ -365,16 +366,6 @@ Robot.prototype.taxBill = async function () {
     const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
     const app = new BillMaker();
     await app.taxBill();
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-Robot.prototype.bridgeCloud = async function (sw) {
-  try {
-    const BridgeCloud = require(`${process.cwd()}/apps/bridgeCloud/bridgeCloud.js`);
-    const app = new BridgeCloud();
-    await app.serverLaunching();
   } catch (e) {
     console.log(e);
   }
@@ -958,20 +949,6 @@ const MENU = {
   pythonWatcher: async function () {
     try {
       await robot.pythonWatcher();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  bridgecloud: async function () {
-    try {
-      await robot.bridgeCloud();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  bridgeserver: async function () {
-    try {
-      await robot.bridgeCloud();
     } catch (e) {
       console.log(e);
     }

@@ -16,7 +16,7 @@ const BackWorker = function () {
 BackWorker.prototype.setProposalToClient = async function (dateArray = [], option = { selfMongo: null }) {
   const instance = this;
   const back = this.back;
-  const { mongo, mongoinfo, ghostRequest } = this.mother;
+  const { mongo, mongoinfo } = this.mother;
   try {
     if (!Array.isArray(dateArray)) {
       if (dateArray === null || dateArray === undefined) {

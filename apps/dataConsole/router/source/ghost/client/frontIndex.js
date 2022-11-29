@@ -119,7 +119,7 @@ FrontIndexJs.prototype.insertSlideBox = function () {
   interval = <%% 2700, 2700, 2700, 2700, 2700 %%>;
 
   naviHeight = <%% 72, 72, 66, 60, 60 %%>;
-  mainHeight = <%% 746, 639, 560, 480, 67 %%>;
+  mainHeight = <%% 746, 639, 560, 480, 70 %%>;
 
   randomNumber = <%% 5, 5, 5, 5, 5 %%>;
   titlePadding = <%% 100, 75, 75, 90, 8 %%>;

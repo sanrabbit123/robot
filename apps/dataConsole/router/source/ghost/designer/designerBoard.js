@@ -527,10 +527,10 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
   whiteColumnWeight = <%% 200, 200, 200, 200, 200 %%>;
   whiteTextTop = <%% (isMac() ? -1 : 2), (isMac() ? -1 : 2), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
 
-  circleWidth = <%% 21, 21, 20, 20, 4 %%>;
+  circleWidth = <%% 21, 21, 20, 16, 4 %%>;
   circleTop = <%% 20, 20, 17, 17, 3 %%>;
-  circleRight = <%% 20, 20, 20, 20, 2.7 %%>;
-  arrowHeight = <%% 8, 8, 8, 8, 1.5 %%>;
+  circleRight = <%% 20, 20, 20, 12, 2.7 %%>;
+  arrowHeight = <%% 8, 8, 8, 6, 1.5 %%>;
 
   minimalLength = <%% 3, 3, 3, 3, 3 %%>;
 
@@ -579,10 +579,10 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
 
   if (desktop) {
     widthMap = <&&
-      [ 86, 102, 73, 150, 150, 170, 150 ] |
-      [ 86, 100, 62, 140, 140, 160, 140 ] |
-      [ 80, 91, 54, 116, 116, 132, 116 ] |
-      [ 78, 88, 54, 116, 116, 116 ] |
+      [ 94, 110, 73, 150, 150, 170, 150 ] |
+      [ 94, 106, 62, 140, 140, 160, 140 ] |
+      [ 88, 99, 54, 116, 116, 132, 116 ] |
+      [ 86, 96, 54, 116, 116, 116 ] |
       [ 6, 11, 12, 7, 14, 15, 15 ]
     &&>;
 
@@ -597,8 +597,8 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
     ];
 
     forceWidth = [
-      (<&& 62 | 62 | 60 | 58 | 6 &&>),
-      (<&& 62 | 62 | 60 | 58 | 6 &&>),
+      (<&& 70 | 70 | 68 | 66 | 6 &&>),
+      (<&& 70 | 70 | 68 | 66 | 6 &&>),
       null,
       null,
       null,
@@ -1031,10 +1031,10 @@ DesignerBoardJs.prototype.insertCommentsBox = function (whiteBlock) {
   whiteColumnWeight = <%% 200, 200, 200, 200, 200 %%>;
   whiteTextTop = <%% (isMac() ? -1 : 2), (isMac() ? -1 : 2), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
 
-  circleWidth = <%% 21, 21, 20, 20, 4 %%>;
+  circleWidth = <%% 21, 21, 20, 16, 4 %%>;
   circleTop = <%% 20, 20, 17, 17, 3 %%>;
-  circleRight = <%% 20, 20, 20, 20, 2.7 %%>;
-  arrowHeight = <%% 8, 8, 8, 8, 1.5 %%>;
+  circleRight = <%% 20, 20, 20, 12, 2.7 %%>;
+  arrowHeight = <%% 8, 8, 8, 6, 1.5 %%>;
 
   minimalLength = <%% 3, 3, 3, 3, 3 %%>;
 
@@ -1102,10 +1102,10 @@ DesignerBoardJs.prototype.insertCommentsBox = function (whiteBlock) {
 
   if (desktop) {
     widthMap = <&&
-      [ 86, 102, 73, 150, 150, 170, 150 ] |
-      [ 86, 100, 62, 140, 140, 160, 140 ] |
-      [ 80, 91, 54, 116, 116, 132, 116 ] |
-      [ 78, 88, 54, 116, 116, 116 ] |
+      [ 94, 110, 73, 150, 150, 170, 150 ] |
+      [ 94, 106, 62, 140, 140, 160, 140 ] |
+      [ 88, 99, 54, 116, 116, 132, 116 ] |
+      [ 86, 96, 54, 116, 116, 116 ] |
       [ 6, 11, 12, 7, 14, 15, 15 ]
     &&>;
 
@@ -1120,8 +1120,8 @@ DesignerBoardJs.prototype.insertCommentsBox = function (whiteBlock) {
     ];
 
     forceWidth = [
-      (<&& 62 | 62 | 60 | 58 | 6 &&>),
-      (<&& 62 | 62 | 60 | 58 | 6 &&>),
+      (<&& 70 | 70 | 68 | 66 | 6 &&>),
+      (<&& 70 | 70 | 68 | 66 | 6 &&>),
       null,
       null,
       null,
@@ -1660,9 +1660,9 @@ DesignerBoardJs.prototype.insertforeContentsBox = function (whiteBlock) {
   whiteColumnWeight = <%% 200, 200, 200, 200, 200 %%>;
   whiteTextTop = <%% (isMac() ? -1 : 2), (isMac() ? -1 : 2), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
 
-  circleWidth = <%% 8, 8, 8, 8, 1.2 %%>;
+  circleWidth = <%% 8, 8, 8, 6, 1.2 %%>;
   circleTop = <%% 21, 21, 17, 17, 2.7 %%>;
-  circleRight = <%% 20, 20, 20, 20, 2.7 %%>;
+  circleRight = <%% 20, 20, 20, 12, 2.7 %%>;
 
   minimalLength = <%% 3, 3, 3, 3, 3 %%>;
 
@@ -1712,10 +1712,10 @@ DesignerBoardJs.prototype.insertforeContentsBox = function (whiteBlock) {
 
   if (desktop) {
     widthMap = <&&
-      [ 86, 102, 73, 150, 150, 170, 150 ] |
-      [ 86, 100, 62, 140, 140, 160, 140 ] |
-      [ 80, 91, 54, 116, 116, 132, 116 ] |
-      [ 78, 88, 54, 116, 116, 116, 116 ] |
+      [ 94, 110, 73, 150, 150, 170, 150 ] |
+      [ 94, 106, 62, 140, 140, 160, 140 ] |
+      [ 88, 99, 54, 116, 116, 132, 116 ] |
+      [ 86, 96, 54, 116, 116, 116, 116 ] |
       [ 6, 11, 12, 7, 14, 15, 15 ]
     &&>;
 
@@ -1730,8 +1730,8 @@ DesignerBoardJs.prototype.insertforeContentsBox = function (whiteBlock) {
     ];
 
     forceWidth = [
-      (<&& 62 | 62 | 60 | 58 | 6 &&>),
-      (<&& 62 | 62 | 60 | 58 | 6 &&>),
+      (<&& 70 | 70 | 68 | 66 | 6 &&>),
+      (<&& 70 | 70 | 68 | 66 | 6 &&>),
       null,
       null,
       null,

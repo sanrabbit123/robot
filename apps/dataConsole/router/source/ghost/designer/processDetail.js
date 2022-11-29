@@ -965,6 +965,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
     let contextWidth;
     let contextHeight;
     let preItemHexId;
+    let fileItemList, photoItemList, linkItemList;
 
     itemBetween = <%% 6, 6, 5, 4, 1 %%>;
     itemTongHeight = <%% 40, 40, 36, 32, 8 %%>;
@@ -1733,6 +1734,9 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
 
     motherMatrix = (new Array(this.panContents.length)).fill(0, 0);
 
+    fileItemList = [];
+    photoItemList = [];
+    linkItemList = [];
     for (let { mother, key, date, name, order, motherNumber, type, original, exe, id, hexId } of itemList) {
 
       if (type === "file") {
@@ -1793,16 +1797,10 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
           ]
         });
 
-        ajaxJson({ mode: "decrypto", hash: hexId, target: id }, BACKHOST + "/homeliaisonCrypto", { equal: true }).then(({ string, target }) => {
-          target = document.getElementById(target);
-          if (string.trim() !== "") {
-            target.textContent = "";
-            target.insertAdjacentHTML("beforeend", string + " <b style=\"color: " + colorChip.deactive + ";font-weight: " + String(textWeight) + "\">(" + target.getAttribute("date") + ")</b>");
-          }
-        }).catch((err) => {
-          console.log(err);
+        fileItemList.push({
+          hash: hexId,
+          target: id
         });
-
 
       } else if (type === "photo") {
 
@@ -1913,17 +1911,9 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
           ]
         });
 
-        ajaxJson({ mode: "decrypto", hash: hexId, target: id }, BACKHOST + "/homeliaisonCrypto", { equal: true }).then(({ string, target }) => {
-          target = document.getElementById(target);
-          target.style.height = target.getAttribute("height");
-          target.firstChild.textContent = "";
-          if (!instance.isEmptyString(string)) {
-            target.firstChild.insertAdjacentHTML("beforeend", string + " <b style=\"color: " + colorChip.deactive + ";font-weight: " + String(textWeight) + "\">(" + target.getAttribute("date") + ")</b>");
-          } else {
-            target.firstChild.insertAdjacentHTML("beforeend", "- " + " <b style=\"color: " + colorChip.deactive + ";font-weight: " + String(textWeight) + "\">(" + target.getAttribute("date") + ")</b>");
-          }
-        }).catch((err) => {
-          console.log(err);
+        photoItemList.push({
+          hash: hexId,
+          target: id
         });
 
       } else if (type === "link") {
@@ -2004,6 +1994,11 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
           ]
         });
 
+        linkItemList.push({
+          url: window.encodeURIComponent(link),
+          target: id
+        });
+
         ajaxJson({ mode: "image", url: window.encodeURIComponent(link), target: id }, BACKHOST + "/getOpenGraph").then(({ image, target }) => {
           target = document.getElementById(target);
           if (image !== null && image !== "null") {
@@ -2017,6 +2012,33 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
 
       motherMatrix[motherNumber] = motherMatrix[motherNumber] + 1;
     }
+
+    ajaxJson({ mode: "decrypto", targets: fileItemList }, BACKHOST + "/homeliaisonCrypto", { equal: true }).then((targets) => {
+      for (let { string, target } of targets) {
+        target = document.getElementById(target);
+        if (string.trim() !== "") {
+          target.textContent = "";
+          target.insertAdjacentHTML("beforeend", string + " <b style=\"color: " + colorChip.deactive + ";font-weight: " + String(textWeight) + "\">(" + target.getAttribute("date") + ")</b>");
+        }
+      }
+    }).catch((err) => {
+      console.log(err);
+    });
+
+    ajaxJson({ mode: "decrypto", targets: photoItemList }, BACKHOST + "/homeliaisonCrypto", { equal: true }).then((targets) => {
+      for (let { string, target } of targets) {
+        target = document.getElementById(target);
+        target.style.height = target.getAttribute("height");
+        target.firstChild.textContent = "";
+        if (!instance.isEmptyString(string)) {
+          target.firstChild.insertAdjacentHTML("beforeend", string + " <b style=\"color: " + colorChip.deactive + ";font-weight: " + String(textWeight) + "\">(" + target.getAttribute("date") + ")</b>");
+        } else {
+          target.firstChild.insertAdjacentHTML("beforeend", "- " + " <b style=\"color: " + colorChip.deactive + ";font-weight: " + String(textWeight) + "\">(" + target.getAttribute("date") + ")</b>");
+        }
+      }
+    }).catch((err) => {
+      console.log(err);
+    });
 
     motherMaxNumber = motherMatrix.reduce((acc, curr) => { return (acc >= curr ? acc : curr) }, 0);
     transparentItemsMatrix = motherMatrix.map((num) => { return Math.abs(motherMaxNumber - num) });
