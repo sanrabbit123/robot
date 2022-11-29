@@ -2745,314 +2745,6 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
       ]
     },
     {
-      name: "일정",
-      children: [
-        {
-          name: "대기중",
-          value: async function (nodeArr, designer) {
-            try {
-              const [ abc, title, mother ] = nodeArr;
-              const { ajaxJson, colorChip, createNode, cleanChildren, dateToString } = GeneralJs;
-              const desid = instance.desid;
-              let h, projects;
-              let cliidArr_raw, cliidArr;
-              let clients;
-              let text;
-              let margin;
-
-              margin = 15;
-
-              projects = await ajaxJson({
-                noFlat: true,
-                whereQuery: {
-                  $and: [
-                    { "process.status": { $regex: "^[대홀]" } },
-                    { desid }
-                  ]
-                },
-              }, "/getProjects", { equal: true });
-
-              h = document.createDocumentFragment();
-
-              cliidArr_raw = [];
-              for (let { cliid } of projects) {
-                cliidArr_raw.push(cliid);
-              }
-              cliidArr = cliidArr_raw.map((c) => { return { cliid: c }; });
-
-              if (cliidArr.length > 0) {
-
-                clients = await ajaxJson({
-                  noFlat: true,
-                  whereQuery: {
-                    $or: cliidArr,
-                  },
-                }, "/getClients", { equal: true });
-
-                for (let p of projects) {
-                  for (let c of clients) {
-                    if (p.cliid === c.cliid) {
-                      p.name = c.name;
-                      p.phone = c.phone;
-                      c.requests.sort((a, b) => { return a.request.timeline.valueOf() - b.request.timeline.valueOf(); });
-                      for (let r of c.requests) {
-                        if (p.proposal.date.valueOf() >= r.request.timeline.valueOf()) {
-                          p.request = r.request;
-                        }
-                      }
-                    }
-                  }
-                }
-
-                projects.sort((a, b) => { return b.process.contract.form.date.from.valueOf() - a.process.contract.form.date.from.valueOf(); });
-
-                for (let project of projects) {
-
-                  createNode({
-                    mother: h,
-                    style: {
-                      display: "block",
-                      position: "relative",
-                      fontSize: "inherit",
-                      fontWeight: "inherit",
-                      color: "inherit",
-                      height: String(desktop ? factorHeight : factorHeight * 0.9) + ea,
-                      overflow: "hidden",
-                      width: String(1000) + ea,
-                    },
-                    children: [
-                      {
-                        text: project.name + " (" + project.phone + ")",
-                        style: {
-                          display: desktop ? "inline-block" : "block",
-                          fontSize: "inherit",
-                          fontWeight: "inherit",
-                          color: colorChip.black,
-                          marginRight: String(desktop ? margin : 0) + ea,
-                        }
-                      },
-                      {
-                        text: '|',
-                        style: {
-                          display: desktop ? "inline-block" : "none",
-                          fontSize: "inherit",
-                          fontWeight: String(200),
-                          color: colorChip.gray4,
-                          marginRight: String(margin) + ea,
-                        }
-                      },
-                      {
-                        text: project.request.space.address,
-                        style: {
-                          display: desktop ? "inline-block" : "none",
-                          fontSize: "inherit",
-                          fontWeight: "inherit",
-                          color: colorChip.black,
-                          marginRight: String(margin) + ea,
-                        }
-                      },
-                    ]
-                  });
-                }
-              } else {
-
-                createNode({
-                  mother: h,
-                  text: desktop ? "대기중 프로젝트 없음" : "없음",
-                  style: {
-                    display: "block",
-                    position: "relative",
-                    fontSize: "inherit",
-                    fontWeight: "inherit",
-                    color: "inherit",
-                    height: String(factorHeight) + ea,
-                  },
-                });
-
-              }
-
-              cleanChildren(mother);
-              mother.appendChild(h);
-              for (let dom of nodeArr) {
-                dom.style.height = String(factorHeight * (projects.length === 0 ? 1 : projects.length)) + ea;
-              }
-              mother.style.fontWeight = String(300);
-              mother.style.color = colorChip.black;
-              mother.style.overflow = "hidden";
-
-            } catch (e) {
-              console.log(e);
-            }
-          },
-          height: factorHeight,
-          type: "async",
-        },
-        {
-          name: "진행중",
-          value: async function (nodeArr, designer) {
-            try {
-              const [ abc, title, mother ] = nodeArr;
-              const { ajaxJson, colorChip, createNode, cleanChildren, dateToString } = GeneralJs;
-              const desid = instance.desid;
-              let h, projects;
-              let cliidArr_raw, cliidArr;
-              let clients;
-              let text;
-              let margin;
-
-              margin = 15;
-
-              projects = await ajaxJson({
-                noFlat: true,
-                whereQuery: {
-                  $and: [
-                    { "process.status": { $regex: "^[진홀]" } },
-                    { desid }
-                  ]
-                },
-              }, "/getProjects", { equal: true });
-
-              h = document.createDocumentFragment();
-
-              cliidArr_raw = [];
-              for (let { cliid } of projects) {
-                cliidArr_raw.push(cliid);
-              }
-              cliidArr = cliidArr_raw.map((c) => { return { cliid: c }; });
-
-              if (cliidArr.length > 0) {
-
-                clients = await ajaxJson({
-                  noFlat: true,
-                  whereQuery: {
-                    $or: cliidArr,
-                  },
-                }, "/getClients", { equal: true });
-
-                for (let p of projects) {
-                  for (let c of clients) {
-                    if (p.cliid === c.cliid) {
-                      p.name = c.name;
-                      p.phone = c.phone;
-                      c.requests.sort((a, b) => { return a.request.timeline.valueOf() - b.request.timeline.valueOf(); });
-                      for (let r of c.requests) {
-                        if (p.proposal.date.valueOf() >= r.request.timeline.valueOf()) {
-                          p.request = r.request;
-                        }
-                      }
-                    }
-                  }
-                }
-
-                projects.sort((a, b) => { return b.process.contract.form.date.from.valueOf() - a.process.contract.form.date.from.valueOf(); });
-
-                for (let project of projects) {
-                  if (project.request !== undefined) {
-                    createNode({
-                      mother: h,
-                      style: {
-                        display: "block",
-                        position: "relative",
-                        fontSize: "inherit",
-                        fontWeight: "inherit",
-                        color: "inherit",
-                        height: String(desktop ? factorHeight : factorHeight * 0.9) + ea,
-                        overflow: "hidden",
-                        width: String(1000) + ea,
-                      },
-                      children: [
-                        {
-                          text: project.name + " (" + project.phone + ")",
-                          style: {
-                            display: desktop ? "inline-block" : "block",
-                            fontSize: "inherit",
-                            fontWeight: "inherit",
-                            color: colorChip.black,
-                            marginRight: String(desktop ? margin : 0) + ea,
-                          }
-                        },
-                        {
-                          text: '|',
-                          style: {
-                            display: desktop ? "inline-block" : "none",
-                            fontSize: "inherit",
-                            fontWeight: String(200),
-                            color: colorChip.gray4,
-                            marginRight: String(margin) + ea,
-                          }
-                        },
-                        {
-                          text: dateToString(project.process.contract.form.date.from) + " ~ " + dateToString(project.process.contract.form.date.to),
-                          style: {
-                            display: desktop ? "inline-block" : "none",
-                            fontSize: "inherit",
-                            fontWeight: "inherit",
-                            color: colorChip.black,
-                            marginRight: String(margin) + ea,
-                          }
-                        },
-                        {
-                          text: '|',
-                          style: {
-                            display: desktop ? "inline-block" : "none",
-                            fontSize: "inherit",
-                            fontWeight: String(200),
-                            color: colorChip.gray4,
-                            marginRight: String(margin) + ea,
-                          }
-                        },
-                        {
-                          text: project.request.space.address,
-                          style: {
-                            display: desktop ? "inline-block" : "none",
-                            fontSize: "inherit",
-                            fontWeight: "inherit",
-                            color: colorChip.black,
-                            marginRight: String(margin) + ea,
-                          }
-                        },
-                      ]
-                    });
-                  }
-
-
-                }
-              } else {
-
-                createNode({
-                  mother: h,
-                  text: desktop ? "진행중 프로젝트 없음" : "없음",
-                  style: {
-                    display: "block",
-                    position: "relative",
-                    fontSize: "inherit",
-                    fontWeight: "inherit",
-                    color: "inherit",
-                    height: String(factorHeight) + ea,
-                  },
-                });
-
-              }
-
-              cleanChildren(mother);
-              mother.appendChild(h);
-              for (let dom of nodeArr) {
-                dom.style.height = String(factorHeight * (projects.length === 0 ? 1 : projects.length)) + ea;
-              }
-              mother.style.fontWeight = String(300);
-              mother.style.color = colorChip.black;
-              mother.style.overflow = "hidden";
-
-            } catch (e) {
-              console.log(e);
-            }
-          },
-          height: factorHeight,
-          type: "async",
-        },
-      ]
-    },
-    {
       name: "세팅",
       children: [
         {
@@ -4007,8 +3699,777 @@ DesignerJs.prototype.checkListDetail = function (desid) {
 
   }
 
+  instance.checkListProjectsView(desid, baseTong0).catch((err) => { console.log(err); });
   this.mainBaseTong = baseTong0;
 }
+
+DesignerJs.prototype.checkListProjectsView = async function (desid, base) {
+  const instance = this;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, findByAttribute, setQueue, uniqueValue } = GeneralJs;
+  const { totalMother, ea, grayBarWidth } = this;
+  const mobile = this.media[4];
+  const desktop = !mobile;
+  const panClassName = "panClassName";
+  try {
+    let designer;
+    let projects, clients;
+    let baseTong;
+    let thisMother;
+    let motherMargin;
+    let blockHeight;
+    let project;
+    let projectTong;
+    let basicSize;
+    let textTop;
+    let state;
+    let lineTop;
+    let statusWidth;
+    let blockMargin;
+    let smallSize;
+    let smallTextTop;
+    let basicMarginLeft, smallMarginLeft;
+    let circleWidth;
+    let moreWidth;
+    let projectDetailTong;
+    let checklist;
+    let type;
+    let key;
+    let title;
+    let action;
+    let typeObj;
+    let panContents;
+    let innerMargin;
+    let panPaddingLeft;
+    let panBetween;
+    let panPaddingTop;
+    let panTitleSize;
+    let panTitleWeight;
+    let panTitleBottom;
+    let subButtonTop;
+    let subButtonHeight;
+    let subButtonSize;
+    let subButtonWeight;
+    let subButtonTextPadding;
+    let panContentsPaddingTop;
+    let panContentsMinHeight;
+    let minTotalHeight;
+    let divideNumber;
+    let photoDivideNumber;
+    let blockBetween;
+    let blockHeight2;
+    let blockSize;
+    let blockWeight;
+    let linkImageHeight;
+
+    motherMargin = 34;
+    blockHeight = 52;
+    blockMargin = 4;
+
+    basicSize = 16;
+    textTop = (isMac() ? -1 : 1);
+    smallSize = 12;
+    smallTextTop = (isMac() ? 1 : 3);
+
+    lineTop = 18;
+    statusWidth = 100;
+
+    basicMarginLeft = 36;
+    smallMarginLeft = 6;
+
+    circleWidth = 6;
+    moreWidth = 90;
+
+    innerMargin = 16;
+    panBetween = 6;
+    panPaddingTop = 15;
+    panPaddingLeft = 18;
+
+    panTitleSize = 13;
+    panTitleWeight = 700;
+    panTitleBottom = 5;
+
+    subButtonTop = 2;
+    subButtonHeight = 21;
+    subButtonSize = 10;
+    subButtonWeight = 800;
+    subButtonTextPadding = 8;
+
+    panContentsPaddingTop = 12;
+    panContentsMinHeight = 80;
+
+    minTotalHeight = 1400;
+
+    divideNumber = 8;
+    photoDivideNumber = 6;
+    blockBetween = 5;
+
+    blockHeight2 = 40;
+    blockSize = 12;
+    blockWeight = 400;
+
+    linkImageHeight = 147;
+
+    typeObj = {};
+
+    designer = this.designers.pick(desid);
+    baseTong = base.firstChild;
+
+    projects = await ajaxJson({ whereQuery: { desid } }, SECONDHOST + "/getProjects", { equal: true });
+    if (projects.length > 0) {
+      clients = await ajaxJson({ whereQuery: { $or: projects.map((obj) => { return { cliid: obj.cliid } }) } }, SECONDHOST + "/getClients", { equal: true });
+    } else {
+      clients = [];
+    }
+    for (let project of projects) {
+      project.name = clients.find((obj) => { return obj.cliid === project.cliid }).name;
+    }
+    projects.sort((a, b) => {
+      const emptyValue = Math.abs((new Date(1200, 0, 1)).valueOf());
+      let aConst, bConst;
+
+      if (/드[랍롭]/gi.test(a.process.status) || /홀[드딩]/gi.test(a.process.status)) {
+        aConst = 1;
+      } else if (/완료/gi.test(a.process.status)) {
+        aConst = 10000;
+      } else {
+        aConst = 100000000;
+      }
+
+      if (/드[랍롭]/gi.test(b.process.status) || /홀[드딩]/gi.test(b.process.status)) {
+        bConst = 1;
+      } else if (/완료/gi.test(b.process.status)) {
+        bConst = 10000;
+      } else {
+        bConst = 100000000;
+      }
+
+      return ((b.process.contract.form.date.from.valueOf() + emptyValue) * bConst) - ((a.process.contract.form.date.from.valueOf() + emptyValue) * aConst);
+    });
+
+    checklist = await ajaxJson({}, SECONDHOST + "/getChecklist", { equal: true });
+
+    thisMother = createNode({
+      mother: baseTong,
+      style: {
+        display: "block",
+        position: "relative",
+        width: String(100) + '%',
+        borderTop: "1px solid " + colorChip.gray4,
+        paddingTop: String(motherMargin) + ea,
+        paddingBottom: String(motherMargin) + ea,
+      },
+      child: {
+        style: {
+          display: "block",
+          position: "relative",
+          marginLeft: String(motherMargin) + ea,
+          marginRight: String(motherMargin) + ea,
+          width: withOut(motherMargin * 2, ea),
+        }
+      }
+    }).firstChild;
+
+    this.projectAreas = [];
+    for (let i = 0; i < projects.length; i++) {
+
+      project = projects[i];
+      state = 0;
+      if (/드[랍롭]/gi.test(project.process.status) || /홀[드딩]/gi.test(project.process.status)) {
+        state = 3;
+      } else if (/완료/gi.test(project.process.status)) {
+        state = 2;
+      }
+
+      projectTong = createNode({
+        mother: thisMother,
+        attribute: {
+          proid: project.proid,
+          desid: designer.desid,
+          cliid: project.cliid,
+          name: project.name,
+          toggle: "off",
+        },
+        event: {
+          click: async function (e) {
+            const proid = this.getAttribute("proid");
+            const desid = this.getAttribute("desid");
+            const cliid = this.getAttribute("cliid");
+            const name = this.getAttribute("name");
+            const targetArea = findByAttribute(instance.projectAreas, "proid", proid);
+            const toggle = this.getAttribute("toggle");
+            const targetHref = BRIDGEHOST.replace(/\:3000/gi, '') + "/photo/designer" + "/" + desid + "/" + proid;
+            const linkTargetKey = [ "productLink" ];
+            const preItemMotherKey = "firstPhoto";
+            const load = targetArea.getAttribute("load");
+            const emptyDate = new Date(1800, 0, 1);
+            let itemList, indexTong;
+            let file, link, memo;
+            let image;
+            let id;
+            let linkTargets;
+            let linkContents;
+            let preItemList;
+            let tempArr;
+            let preIndex;
+            try {
+              if (toggle === "off") {
+
+                targetArea.style.minHeight = String(minTotalHeight) + ea;
+                targetArea.style.height = String(1) + ea;
+                setQueue(() => {
+                  targetArea.style.height = "auto";
+                }, 1001);
+                this.setAttribute("toggle", "on");
+
+                if (load === "false") {
+                  itemList = await ajaxJson({ target: desid + "/" + proid }, BRIDGEHOST + "/middlePhotoRead", { equal: true });
+                  preItemList = await ajaxJson({ cliid }, BRIDGEHOST + "/clientPhoto", { equal: true });
+
+                  linkTargets = itemList.filter((str) => { return linkTargetKey.includes(str.split("_")[0]) });
+                  linkContents = await ajaxJson({ links: linkTargets.map((file) => { return { desid, proid, file } }) }, BRIDGEHOST + "/middleLinkParsing", { equal: true });
+
+                  tempArr = [];
+                  preIndex = 1;
+                  for (let original of preItemList.sitePhoto) {
+                    tempArr.push({
+                      fileName: [
+                        preItemMotherKey,
+                        String(emptyDate.valueOf()),
+                        String(preIndex),
+                        uniqueValue("hex") + "." + original.split(".")[original.split(".").length - 1],
+                      ].join("_"),
+                      original,
+                    });
+                    preIndex++;
+                  }
+                  itemList = tempArr.concat(itemList);
+
+                  indexTong = {};
+                  itemList.forEach((raw) => {
+                    let originalRoot;
+                    if (typeof raw !== "string") {
+                      originalRoot = raw.original;
+                      raw = raw.fileName;
+                    } else {
+                      originalRoot = targetHref + "/" + raw;
+                    }
+                    const [ key, timeString, orderString, hex ] = raw.split("_");
+                    const [ hexString, exe ] = hex.split(".");
+                    const mother = findByAttribute(targetArea.querySelectorAll('.' + panClassName), "key", key);
+                    const date = dateToString(new Date(Number(timeString)));
+
+                    if (indexTong[key] === undefined) {
+                      indexTong[key] = 0;
+                    } else {
+                      indexTong[key] = indexTong[key] + 1;
+                    }
+
+                    if (typeObj[key] === "file") {
+
+                      createNode({
+                        mother,
+                        attribute: {
+                          src: originalRoot,
+                          link: originalRoot
+                        },
+                        event: {
+                          click: function (e) {
+                            const link = this.getAttribute("link");
+                            downloadFile(link);
+                          }
+                        },
+                        style: {
+                          display: "inline-flex",
+                          position: "relative",
+                          width: "calc(calc(100% - " + String(blockBetween * (divideNumber - 1)) + ea + ") / " + String(divideNumber) + ")",
+                          height: String(blockHeight2) + ea,
+                          marginRight: String((indexTong[key] % divideNumber === (divideNumber - 1)) ? 0 : blockBetween) + ea,
+                          marginBottom: String(blockBetween) + ea,
+                          background: colorChip.white,
+                          borderRadius: String(5) + "px",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          textAlign: "center",
+                          cursor: "pointer",
+                        },
+                        child: {
+                          text: (date + "_" + orderString + "." + exe),
+                          style: {
+                            fontSize: String(blockSize) + ea,
+                            fontWeight: String(blockWeight),
+                            color: colorChip.black,
+                            position: "relative",
+                            top: String(isMac() ? -1 : 1) + ea,
+                          }
+                        }
+                      });
+
+                    } else if (typeObj[key] === "photo") {
+
+                      createNode({
+                        mother: [ ...mother.children ][indexTong[key] % photoDivideNumber],
+                        mode: "img",
+                        attribute: {
+                          src: originalRoot,
+                          link: originalRoot
+                        },
+                        event: {
+                          click: function (e) {
+                            const link = this.getAttribute("link");
+                            downloadFile(link);
+                          }
+                        },
+                        style: {
+                          display: "block",
+                          position: "relative",
+                          width: withOut(0, ea),
+                          marginBottom: String(blockBetween) + ea,
+                          background: colorChip.white,
+                          borderRadius: String(5) + "px",
+                          cursor: "pointer",
+                        }
+                      });
+
+                    } else if (typeObj[key] === "link") {
+
+                      ({ link, memo } = linkContents.find(({ file }) => { return file === raw }))
+                      id = raw.replace(/[\_\-\.]/gi, '');
+
+                      createNode({
+                        mother,
+                        attribute: {
+                          link,
+                        },
+                        event: {
+                          click: function (e) {
+                            const link = this.getAttribute("link");
+                            blankHref(link);
+                          }
+                        },
+                        style: {
+                          display: "inline-flex",
+                          position: "relative",
+                          width: "calc(calc(100% - " + String(blockBetween * (divideNumber - 1)) + ea + ") / " + String(divideNumber) + ")",
+                          marginRight: String((indexTong[key] % divideNumber === (divideNumber - 1)) ? 0 : blockBetween) + ea,
+                          marginBottom: String(blockBetween) + ea,
+                          flexDirection: "column",
+                          textAlign: "center",
+                          cursor: "pointer",
+                        },
+                        children: [
+                          {
+                            id,
+                            style: {
+                              display: "block",
+                              position: "relative",
+                              width: withOut(0, ea),
+                              height: String(linkImageHeight) + ea,
+                              background: colorChip.white,
+                              borderTopLeftRadius: String(5) + "px",
+                              borderTopRightRadius: String(5) + "px",
+                              backgroundPosition: "50% 50%",
+                              backgroundSize: "100% auto",
+                              backgroundRepeat: "no-repeat",
+                            }
+                          },
+                          {
+                            style: {
+                              display: "flex",
+                              position: "relative",
+                              width: withOut(0, ea),
+                              height: String(blockHeight) + ea,
+                              background: colorChip.white,
+                              borderBottomLeftRadius: String(5) + "px",
+                              borderBottomRightRadius: String(5) + "px",
+                              flexDirection: "column",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              textAlign: "center",
+                            },
+                            child: {
+                              text: memo + " (" + date.split("-").slice(1).join("/") + ")",
+                              style: {
+                                fontSize: String(blockSize) + ea,
+                                fontWeight: String(blockWeight),
+                                color: colorChip.black,
+                                position: "relative",
+                                top: String(isMac() ? -1 : 1) + ea,
+                              }
+                            }
+                          }
+                        ]
+                      });
+
+                      ajaxJson({ mode: "image", url: window.encodeURIComponent(link), target: id }, "/getOpenGraph").then(({ image, target }) => {
+                        target = document.getElementById(target);
+                        target.style.backgroundImage = "url('" + image + "')";
+                      }).catch((err) => {
+                        console.log(err);
+                      });
+
+                    }
+                  });
+
+                  targetArea.setAttribute("load", "true");
+                }
+
+              } else {
+
+                targetArea.style.minHeight = String(0) + ea;
+                targetArea.style.height = String(0) + ea;
+                this.setAttribute("toggle", "off");
+
+              }
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        },
+        style: {
+          display: "flex",
+          flexDirection: "row",
+          position: "relative",
+          height: String(blockHeight) + ea,
+          width: withOut(0, ea),
+          borderRadius: String(5) + "px",
+          background: state >= 3 ? colorChip.gray4 : (state === 2 ? colorChip.gray2 : colorChip.gray0),
+          alignItems: "center",
+          cursor: "pointer",
+        }
+      });
+      createNode({
+        mother: projectTong,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: String(statusWidth) + ea,
+          height: withOut(0, ea),
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          textAlign: "center",
+        },
+        child: {
+          text: project.process.status,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(textTop) + ea,
+            fontSize: String(basicSize) + ea,
+            fontWeight: String(600),
+            color: state === 0 ? colorChip.black : colorChip.deactive,
+          },
+          next: {
+            style: {
+              position: "absolute",
+              right: String(0),
+              top: String(lineTop) + ea,
+              height: withOut(lineTop * 2, ea),
+              borderRight: "1px solid " + colorChip.gray4,
+            }
+          }
+        }
+      });
+      createNode({
+        mother: projectTong,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          height: withOut(0, ea),
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          textAlign: "left",
+          marginLeft: String(basicMarginLeft) + ea,
+        },
+        child: {
+          text: project.name,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(textTop) + ea,
+            fontSize: String(basicSize) + ea,
+            fontWeight: String(500),
+            color: colorChip.black,
+          }
+        }
+      });
+      createNode({
+        mother: projectTong,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          height: withOut(0, ea),
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          textAlign: "left",
+          marginLeft: String(smallMarginLeft) + ea,
+        },
+        child: {
+          text: project.proid,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(smallTextTop) + ea,
+            fontSize: String(smallSize) + ea,
+            fontWeight: String(300),
+            color: colorChip.deactive,
+          }
+        }
+      });
+      createNode({
+        mother: projectTong,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          height: withOut(0, ea),
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          textAlign: "left",
+          marginLeft: String(basicMarginLeft) + ea,
+        },
+        child: {
+          text: dateToString(project.process.contract.form.date.from).slice(2) + " ~ " + dateToString(project.process.contract.form.date.to).slice(2),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(textTop) + ea,
+            fontSize: String(basicSize) + ea,
+            fontWeight: String(300),
+            color: colorChip.deactive,
+          }
+        }
+      });
+      createNode({
+        mother: projectTong,
+        style: {
+          display: "inline-flex",
+          position: "absolute",
+          width: String(moreWidth) + ea,
+          height: withOut(0, ea),
+          right: String(0),
+          background: "transparent",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+          textAlign: "center",
+          cursor: "pointer",
+        },
+        children: [
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(circleWidth) + ea,
+              height: String(circleWidth) + ea,
+              borderRadius: String(circleWidth) + ea,
+              background: colorChip.darkShadow,
+            }
+          },
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(circleWidth) + ea,
+              height: String(circleWidth) + ea,
+              borderRadius: String(circleWidth) + ea,
+              background: colorChip.darkShadow,
+              marginLeft: String(circleWidth / 2) + ea,
+              marginRight: String(circleWidth / 2) + ea,
+            }
+          },
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(circleWidth) + ea,
+              height: String(circleWidth) + ea,
+              borderRadius: String(circleWidth) + ea,
+              background: colorChip.darkShadow,
+            }
+          },
+        ]
+      });
+
+      // detail area
+      projectDetailTong = createNode({
+        mother: thisMother,
+        attribute: {
+          proid: project.proid,
+          load: "false",
+        },
+        display: "flex",
+        minHeight: String(0) + ea,
+        height: String(0),
+        width: withOut(0, ea),
+        borderRadius: String(5) + "px",
+        background: colorChip.gray4,
+        marginBottom: String(blockMargin) + ea,
+        transition: "all 1s ease",
+        overflow: "hidden",
+        flexDirection: "column",
+      });
+
+      this.projectAreas.push(projectDetailTong);
+
+      typeObj = {};
+      for (let x = 0; x < checklist.length; x++) {
+        for (let y = 0; y < checklist[x].children.length; y++) {
+
+          type = checklist[x].children[y].type;
+          key = checklist[x].children[y].key;
+          title = checklist[x].children[y].title;
+          action = checklist[x].children[y].action;
+          typeObj[key] = type;
+
+          panContents = createNode({
+            mother: projectDetailTong,
+            style: {
+              display: "block",
+              position: "relative",
+              marginLeft: String(innerMargin) + ea,
+              width: withOut((innerMargin * 2) + (panPaddingLeft * 2), ea),
+              borderRadius: String(5) + "px",
+              background: colorChip.gray1,
+              paddingTop: String(panPaddingTop) + ea,
+              paddingLeft: String(panPaddingLeft) + ea,
+              paddingRight: String(panPaddingLeft) + ea,
+              paddingBottom: String(panPaddingTop) + ea,
+              marginTop: (x === 0 && y === 0 ? String(innerMargin) + ea : ""),
+              marginBottom: (x === checklist.length - 1 && y === checklist[x].children.length - 1 ? String(innerMargin) + ea : String(panBetween) + ea),
+            },
+            child: {
+              set: "flex",
+              style: {
+                width: withOut(0, ea),
+                flexDirection: "row",
+              },
+              child: {
+                text: title,
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(panTitleSize) + ea,
+                  fontWeight: String(panTitleWeight),
+                  color: colorChip.black,
+                  paddingBottom: String(panTitleBottom) + ea,
+                  borderBottom: "1px solid " + colorChip.deactive,
+                },
+                next: {
+                  attribute: {
+                    key,
+                    title,
+                    desid: designer.desid,
+                    designer: designer.designer,
+                    proid: project.proid,
+                    name: project.name,
+                    phone: designer.information.phone,
+                  },
+                  event: {
+                    click: async function (e) {
+                      try {
+                        const key = this.getAttribute("key");
+                        const title = this.getAttribute("title");
+                        const desid = this.getAttribute("desid");
+                        const designer = this.getAttribute("designer");
+                        const proid = this.getAttribute("proid");
+                        const name = this.getAttribute("name");
+                        const phone = this.getAttribute("phone");
+                        const host = FRONTHOST.replace(/^https\:\/\//gi, '');
+                        const path = "process";
+
+                        await ajaxJson({
+                          method: "pushDesignerFile",
+                          name: designer,
+                          phone: phone,
+                          option: {
+                            designer: designer,
+                            client: name,
+                            file: title,
+                            host: host,
+                            path: path,
+                            proid: proid,
+                          }
+                        }, BACKHOST + "/alimTalk");
+                        window.alert(designer + " 실장님에게 알림톡을 전송하였습니다!");
+
+                      } catch (e) {
+                        console.log(e);
+                      }
+                    }
+                  },
+                  style: {
+                    display: "inline-flex",
+                    position: "absolute",
+                    right: String(0),
+                    top: String(subButtonTop) + ea,
+                    height: String(subButtonHeight) + ea,
+                    background: colorChip.black,
+                    borderRadius: String(5) + "px",
+                    cursor: "pointer",
+                    textAlign: "center",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  },
+                  child: {
+                    text: "디자이너에게 " + title + " 업로드 알림톡",
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      top: String(isMac() ? -1 : 1) + ea,
+                      fontSize: String(subButtonSize) + ea,
+                      fontWeight: String(subButtonWeight),
+                      color: colorChip.white,
+                      paddingLeft: String(subButtonTextPadding) + ea,
+                      paddingRight: String(subButtonTextPadding) + ea,
+                    }
+                  }
+                }
+              },
+              next: {
+                attribute: {
+                  key,
+                },
+                class: [ panClassName ],
+                style: {
+                  display: "block",
+                  paddingTop: String(panContentsPaddingTop) + ea,
+                  position: "relative",
+                  width: withOut(0, ea),
+                  minHeight: String(panContentsMinHeight) + ea,
+                }
+              }
+            }
+          });
+          if (type === "photo") {
+            for (let z = 0; z < photoDivideNumber; z++) {
+              createNode({
+                mother: panContents.querySelector('.' + panClassName),
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  verticalAlign: "top",
+                  width: "calc(calc(100% - " + String(blockBetween * (photoDivideNumber - 1)) + ea + ") / " + String(photoDivideNumber) + ")",
+                  marginRight: String((z === (photoDivideNumber - 1)) ? 0 : blockBetween) + ea,
+                }
+              });
+            }
+          }
+
+
+        }
+      }
+
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 
 DesignerJs.prototype.checkListDesignerMemo = function (desid) {
   const instance = this;
@@ -5978,6 +6439,8 @@ DesignerJs.prototype.checkListView = async function () {
         }
       }
     });
+
+    this.projectAreas = [];
 
     //launching
     this.checkListDetailLaunching(this.desid);

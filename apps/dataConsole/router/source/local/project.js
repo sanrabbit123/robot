@@ -7206,7 +7206,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             });
 
             if (type === "photo") {
-              for (let i = 0; i < photoDivideNumber; i++) {
+              for (let k = 0; k < photoDivideNumber; k++) {
                 createNode({
                   mother: panContents.querySelector('.' + panClassName),
                   style: {
@@ -7214,7 +7214,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                     position: "relative",
                     verticalAlign: "top",
                     width: "calc(calc(100% - " + String(blockBetween * (photoDivideNumber - 1)) + ea + ") / " + String(photoDivideNumber) + ")",
-                    marginRight: String((i === (photoDivideNumber - 1)) ? 0 : blockBetween) + ea,
+                    marginRight: String((k === (photoDivideNumber - 1)) ? 0 : blockBetween) + ea,
                   }
                 });
               }

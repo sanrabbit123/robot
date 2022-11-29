@@ -997,6 +997,15 @@ ProjectDetailJs.prototype.insertUploadBox = function () {
   return whiteBlock;
 }
 
+ProjectDetailJs.prototype.isEmptyString = function (string) {
+  const instance = this;
+  if (/^[0-9]/.test(string) && /[0-9]$/.test(string) && string.length > 5 && string.replace(/[0-9]/gi, '') === '') {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 ProjectDetailJs.prototype.setPanBlocks = async function () {
   const instance = this;
   const { ea, targetDrive, targetHref, media, totalContents } = this;
@@ -1031,6 +1040,7 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
     let bigPhotoClickEvent;
     let fileItemSelectEvent;
     let photoItemSelectEvent;
+    let linkItemSelectEvent;
     let itemDivide;
     let preItemList;
     let preIndex;
@@ -1046,6 +1056,7 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
     let contextWidth;
     let contextHeight;
     let preItemHexId;
+    let fileItemList, photoItemList, linkItemList;
 
     itemBetween = <%% 6, 6, 5, 4, 1 %%>;
     itemTongHeight = <%% 40, 40, 36, 32, 8 %%>;
@@ -1260,6 +1271,43 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
       instance.reloadGreenButtons();
     }
 
+    linkItemSelectEvent = function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const original = this.getAttribute("original");
+      const key = this.getAttribute("key");
+      const toggle = this.getAttribute("toggle");
+      const hex = this.getAttribute("hex");
+      const exe = this.getAttribute("exe");
+      const type = this.getAttribute("type");
+
+      if (toggle === "off") {
+
+        this.lastChild.style.background = colorChip.green;
+        this.lastChild.firstChild.style.color = colorChip.white;
+        if (this.lastChild.firstChild.querySelector('b') !== null) {
+          this.lastChild.firstChild.querySelector('b').style.color = colorChip.white;
+        }
+
+        this.setAttribute("toggle", "on");
+        instance.itemList.push({ original, key, hex, exe, type });
+      } else {
+
+        this.lastChild.style.background = desktop ? colorChip.white : colorChip.gray0;
+        this.lastChild.firstChild.style.color = colorChip.black;
+        if (this.lastChild.firstChild.querySelector('b') !== null) {
+          this.lastChild.firstChild.querySelector('b').style.color = colorChip.deactive;
+        }
+
+        instance.itemList.splice(instance.itemList.findIndex((obj) => {
+          return obj.original === original;
+        }), 1);
+        this.setAttribute("toggle", "off");
+      }
+
+      instance.reloadGreenButtons();
+    }
+
     photoItemSelectEvent = function (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -1295,16 +1343,16 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
 
         let forceSelect;
 
-        if (type !== "link") {
-          forceSelect = 0;
-          if (this.getAttribute("toggle") === "off") {
-            if (type === "file") {
-              fileItemSelectEvent.call(this, e);
-            } else {
-              photoItemSelectEvent.call(this, e);
-            }
-            forceSelect = 1;
+        forceSelect = 0;
+        if (this.getAttribute("toggle") === "off") {
+          if (type === "file") {
+            fileItemSelectEvent.call(this, e);
+          } else if (type === "photo") {
+            photoItemSelectEvent.call(this, e);
+          } else {
+            linkItemSelectEvent.call(this, e);
           }
+          forceSelect = 1;
         }
 
         const self = this;
@@ -1315,13 +1363,13 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
 
         cancelEvent = function (e) {
           removeByClass(whiteContextmenuClassName);
-          if (type !== "link") {
-            if (forceSelect === 1) {
-              if (type === "file") {
-                fileItemSelectEvent.call(self, e);
-              } else {
-                photoItemSelectEvent.call(self, e);
-              }
+          if (forceSelect === 1) {
+            if (type === "file") {
+              fileItemSelectEvent.call(self, e);
+            } else if (type === "photo") {
+              photoItemSelectEvent.call(self, e);
+            } else {
+              linkItemSelectEvent.call(self, e);
             }
           }
         }
@@ -1348,8 +1396,8 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
           style: {
             display: "block",
             position: "fixed",
-            top: String(top + height + itemBetween) + "px",
-            left: String(e.screenX) + "px",
+            top: String(e.y) + "px",
+            left: String(e.x) + "px",
             padding: String(contextmenuPadding) + ea,
             background: colorChip.white,
             borderRadius: String(5) + "px",
@@ -1393,7 +1441,6 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
               height: String(contextHeight) + ea,
               borderRadius: String(5) + "px",
               background: colorChip.gray1,
-              // marginBottom: String(itemBetween) + ea,
               cursor: "pointer",
             },
             child: {
@@ -1408,13 +1455,10 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
               }
             }
           });
-
         } else {
-
           link = this.getAttribute("link");
           original = this.getAttribute("original");
           key = this.getAttribute("key");
-
           createNode({
             mother: whitePrompt,
             attribute: {
@@ -1436,7 +1480,6 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
               height: String(contextHeight) + ea,
               borderRadius: String(5) + "px",
               background: colorChip.gray1,
-              // marginBottom: String(itemBetween) + ea,
               cursor: "pointer",
             },
             child: {
@@ -1451,7 +1494,6 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
               }
             }
           });
-
         }
 
       }
@@ -1497,7 +1539,7 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
         exe: original.split(".")[original.split(".").length - 1],
         id: preItemMotherKey + "_" + String(emptyDate.valueOf()) + "_" + String(preIndex) + "_" + preItemHexId,
         hexId: preItemHexId,
-      })
+      });
       preIndex++;
     }
 
@@ -1516,6 +1558,9 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
 
     motherMatrix = (new Array(this.panContents.length)).fill(0, 0);
 
+    fileItemList = [];
+    photoItemList = [];
+    linkItemList = [];
     for (let { mother, key, date, name, order, motherNumber, type, original, exe, id, hexId } of itemList) {
 
       if (type === "file") {
@@ -1576,16 +1621,10 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
           ]
         });
 
-        ajaxJson({ mode: "decrypto", hash: hexId, target: id }, BACKHOST + "/homeliaisonCrypto", { equal: true }).then(({ string, target }) => {
-          target = document.getElementById(target);
-          if (string.trim() !== "") {
-            target.textContent = "";
-            target.insertAdjacentHTML("beforeend", string + " <b style=\"color: " + colorChip.deactive + ";font-weight: " + String(textWeight) + "\">(" + target.getAttribute("date") + ")</b>");
-          }
-        }).catch((err) => {
-          console.log(err);
+        fileItemList.push({
+          hash: hexId,
+          target: id
         });
-
 
       } else if (type === "photo") {
 
@@ -1629,7 +1668,6 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
             width: withOut(0),
             borderRadius: String(5) + "px",
             marginBottom: String(itemBetween) + ea,
-            overflow: "hidden",
             cursor: "pointer",
           },
           children: [
@@ -1640,6 +1678,45 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
                 display: "block",
                 position: "relative",
                 width: withOut(0),
+                borderTopLeftRadius: String(5) + "px",
+                borderTopRightRadius: String(5) + "px",
+              }
+            },
+            {
+              id,
+              attribute: {
+                height: String(itemTongHeight) + ea,
+                date: dateToString(date).split("-").slice(1).join("/"),
+              },
+              style: {
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: withOut(0, ea),
+                height: String(0),
+                borderBottomLeftRadius: String(5) + "px",
+                borderBottomRightRadius: String(5) + "px",
+                background: desktop ? colorChip.white : colorChip.gray0,
+                textAlign: "center",
+                overflow: "hidden",
+                boxShadow: "0px 1px 8px -6px " + colorChip.shadow,
+                transition: "all 0.3s ease",
+              },
+              child: {
+                text: "",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  top: String(textTop) + ea,
+                  fontSize: String(textSize) + ea,
+                  fontWeight: String(textWeight),
+                  color: colorChip.black,
+                },
+                bold: {
+                  fontSize: String(textSize) + ea,
+                  fontWeight: String(textWeight),
+                  color: colorChip.deactive,
+                }
               }
             },
             {
@@ -1652,9 +1729,15 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
                 height: withOut(0),
                 background: colorChip.green,
                 opacity: String(0),
+                borderRadius: String(5) + "px",
               }
             }
           ]
+        });
+
+        photoItemList.push({
+          hash: hexId,
+          target: id
         });
 
       } else if (type === "link") {
@@ -1668,6 +1751,10 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
             original,
             key,
             toggle: "off",
+            hex: hexId,
+            exe,
+            type,
+            date: dateToString(date).split("-").slice(1).join("/"),
           },
           event: {
             click: function (e) {
@@ -1734,6 +1821,11 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
           ]
         });
 
+        linkItemList.push({
+          url: window.encodeURIComponent(link),
+          target: id
+        });
+
         ajaxJson({ mode: "image", url: window.encodeURIComponent(link), target: id }, BACKHOST + "/getOpenGraph").then(({ image, target }) => {
           target = document.getElementById(target);
           if (image !== null && image !== "null") {
@@ -1747,6 +1839,33 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
 
       motherMatrix[motherNumber] = motherMatrix[motherNumber] + 1;
     }
+
+    ajaxJson({ mode: "decrypto", targets: fileItemList }, BACKHOST + "/homeliaisonCrypto", { equal: true }).then((targets) => {
+      for (let { string, target } of targets) {
+        target = document.getElementById(target);
+        if (string.trim() !== "") {
+          target.textContent = "";
+          target.insertAdjacentHTML("beforeend", string + " <b style=\"color: " + colorChip.deactive + ";font-weight: " + String(textWeight) + "\">(" + target.getAttribute("date") + ")</b>");
+        }
+      }
+    }).catch((err) => {
+      console.log(err);
+    });
+
+    ajaxJson({ mode: "decrypto", targets: photoItemList }, BACKHOST + "/homeliaisonCrypto", { equal: true }).then((targets) => {
+      for (let { string, target } of targets) {
+        target = document.getElementById(target);
+        target.style.height = target.getAttribute("height");
+        target.firstChild.textContent = "";
+        if (!instance.isEmptyString(string)) {
+          target.firstChild.insertAdjacentHTML("beforeend", string + " <b style=\"color: " + colorChip.deactive + ";font-weight: " + String(textWeight) + "\">(" + target.getAttribute("date") + ")</b>");
+        } else {
+          target.firstChild.insertAdjacentHTML("beforeend", "- " + " <b style=\"color: " + colorChip.deactive + ";font-weight: " + String(textWeight) + "\">(" + target.getAttribute("date") + ")</b>");
+        }
+      }
+    }).catch((err) => {
+      console.log(err);
+    });
 
     motherMaxNumber = motherMatrix.reduce((acc, curr) => { return (acc >= curr ? acc : curr) }, 0);
     transparentItemsMatrix = motherMatrix.map((num) => { return Math.abs(motherMaxNumber - num) });
