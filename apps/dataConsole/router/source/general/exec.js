@@ -27,6 +27,8 @@ document.addEventListener("DOMContentLoaded", async function (e) {
     // local_funcs.mother.dashboardBox();
     local_funcs.mother.generalStacks();
 
+    /*
+
     //SSE
     const sseTarget = [
       "client",
@@ -287,6 +289,8 @@ document.addEventListener("DOMContentLoaded", async function (e) {
         }
       });
     }
+
+    */
 
     //on green left
     // if (GeneralJs.stacks["grayLeftButton"] !== undefined && GeneralJs.stacks["grayLeftButton"] !== null) {
