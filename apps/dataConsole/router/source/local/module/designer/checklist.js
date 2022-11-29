@@ -4315,7 +4315,6 @@ DesignerJs.prototype.checkListProjectsView = async function (desid, base) {
 
       this.projectAreas.push(projectDetailTong);
 
-
       typeObj = {};
       for (let x = 0; x < checklist.length; x++) {
         for (let y = 0; y < checklist[x].children.length; y++) {
