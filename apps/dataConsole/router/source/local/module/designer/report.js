@@ -2904,10 +2904,10 @@ DesignerJs.prototype.reportView = async function () {
     this.motherHeight = motherHeight;
 
     //sse
-    const es = new EventSource("https://" + SSEHOST + ":3000/specificsse/checklistDesigner");
-    es.addEventListener("updateTong", (e) => {
-      instance.checkListSseParsing(equalJson(e.data));
-    });
+    // const es = new EventSource("https://" + SSEHOST + ":3000/specificsse/checklistDesigner");
+    // es.addEventListener("updateTong", (e) => {
+    //   instance.checkListSseParsing(equalJson(e.data));
+    // });
 
     loading.parentNode.removeChild(loading);
 

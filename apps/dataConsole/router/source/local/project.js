@@ -9316,10 +9316,10 @@ ProjectJs.prototype.launching = async function () {
     this.communicationRender();
     this.boardSwipe();
 
-    const es = new EventSource("https://" + SSEHOST + ":3000/specificsse/projectCard");
-    es.addEventListener("updateTong", (e) => {
-      instance.sseCardParsing(e.data);
-    });
+    // const es = new EventSource("https://" + SSEHOST + ":3000/specificsse/projectCard");
+    // es.addEventListener("updateTong", (e) => {
+    //   instance.sseCardParsing(e.data);
+    // });
 
     getTarget = null;
     if (typeof getObj.specificids === "string") {

@@ -6,18 +6,18 @@ DesignerJs.prototype.projectDetailLaunching = function (desid, callback = null) 
   const { scrollTo, ajaxJson, colorChip } = GeneralJs;
   let target, pastScrollTop;
 
-  if (middleMode) {
-    if (typeof GeneralJs.stacks["designerConsoleSseEvent"] === "function") {
-      GeneralJs.stacks["designerConsoleSseSource"].removeEventListener("updateTong", GeneralJs.stacks["designerConsoleSseEvent"]);
-      GeneralJs.stacks["designerConsoleSseSource"] = null;
-      GeneralJs.stacks["designerConsoleSseEvent"] = null;
-    }
-    GeneralJs.stacks["designerConsoleSseSource"] = new EventSource("https://" + SSEHOST + ":3000/specificsse/projectCard");
-    GeneralJs.stacks["designerConsoleSseEvent"] = function (e) {
-      instance.projectSseParsing(GeneralJs.equalJson(e.data));
-    }
-    GeneralJs.stacks["designerConsoleSseSource"].addEventListener("updateTong", GeneralJs.stacks["designerConsoleSseEvent"]);
-  }
+  // if (middleMode) {
+  //   if (typeof GeneralJs.stacks["designerConsoleSseEvent"] === "function") {
+  //     GeneralJs.stacks["designerConsoleSseSource"].removeEventListener("updateTong", GeneralJs.stacks["designerConsoleSseEvent"]);
+  //     GeneralJs.stacks["designerConsoleSseSource"] = null;
+  //     GeneralJs.stacks["designerConsoleSseEvent"] = null;
+  //   }
+  //   GeneralJs.stacks["designerConsoleSseSource"] = new EventSource("https://" + SSEHOST + ":3000/specificsse/projectCard");
+  //   GeneralJs.stacks["designerConsoleSseEvent"] = function (e) {
+  //     instance.projectSseParsing(GeneralJs.equalJson(e.data));
+  //   }
+  //   GeneralJs.stacks["designerConsoleSseSource"].addEventListener("updateTong", GeneralJs.stacks["designerConsoleSseEvent"]);
+  // }
 
   pastScrollTop = totalMother.scrollTop;
   this.desid = desid;
@@ -2365,12 +2365,12 @@ DesignerJs.prototype.projectView = async function () {
     this.checklist = await ajaxJson({ kind: "checklist" }, "/getServicesByKind");
 
     //sse
-    if (!this.middleMode) {
-      const es = new EventSource("https://" + SSEHOST + ":3000/specificsse/checklistDesigner");
-      es.addEventListener("updateTong", (e) => {
-        instance.projectSseParsing(equalJson(e.data));
-      });
-    }
+    // if (!this.middleMode) {
+    //   const es = new EventSource("https://" + SSEHOST + ":3000/specificsse/checklistDesigner");
+    //   es.addEventListener("updateTong", (e) => {
+    //     instance.projectSseParsing(equalJson(e.data));
+    //   });
+    // }
 
     loading.parentNode.removeChild(loading);
 
