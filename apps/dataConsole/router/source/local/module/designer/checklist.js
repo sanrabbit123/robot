@@ -4211,7 +4211,6 @@ DesignerJs.prototype.checkListProjectsView = async function (desid, base) {
                     }
                   });
 
-
                   targetArea.setAttribute("load", "true");
 
                   targets = await ajaxJson({ mode: "decrypto", targets: fileItemList }, BACKHOST + "/homeliaisonCrypto", { equal: true });
@@ -4598,11 +4597,250 @@ DesignerJs.prototype.checkListProjectsView = async function (desid, base) {
       }
     }
 
+    await instance.checkListPaperView(desid, base, projects, clients, checklist);
+
   } catch (e) {
     console.log(e);
   }
 }
 
+DesignerJs.prototype.checkListPaperView = async function (desid, base, projects, clients, checklist) {
+  const instance = this;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, stringToDate, findByAttribute, setQueue, uniqueValue, sleep, blankHref, scrollTo, returnGet } = GeneralJs;
+  const { totalMother, ea, grayBarWidth } = this;
+  const mobile = this.media[4];
+  const desktop = !mobile;
+  try {
+    let thisMother;
+    let motherMargin;
+    let designer;
+    let baseTong;
+    let blockHeight;
+    let blockMargin;
+    let basicSize;
+    let textTop;
+    let smallSize;
+    let smallTextTop;
+    let lineTop;
+    let statusWidth;
+    let basicMarginLeft;
+    let smallMarginLeft;
+    let typeObj;
+    let type;
+    let key;
+    let title;
+    let action;
+    let panContents;
+    let circleWidth;
+    let moreWidth;
+
+    motherMargin = 34;
+    blockHeight = 52;
+    blockMargin = 4;
+
+    basicSize = 16;
+    textTop = (isMac() ? -1 : 1);
+    smallSize = 12;
+    smallTextTop = (isMac() ? 1 : 3);
+
+    lineTop = 18;
+    statusWidth = 100;
+
+    basicMarginLeft = 36;
+    smallMarginLeft = 6;
+
+    circleWidth = 6;
+    moreWidth = 90;
+
+    designer = this.designers.pick(desid);
+    baseTong = base.firstChild;
+
+    thisMother = createNode({
+      mother: baseTong,
+      style: {
+        display: "block",
+        position: "relative",
+        width: String(100) + '%',
+        borderTop: "1px solid " + colorChip.gray4,
+        paddingTop: String(motherMargin) + ea,
+        paddingBottom: String(motherMargin) + ea,
+      },
+      child: {
+        style: {
+          display: "block",
+          position: "relative",
+          marginLeft: String(motherMargin) + ea,
+          marginRight: String(motherMargin) + ea,
+          width: withOut(motherMargin * 2, ea),
+        }
+      }
+    }).firstChild;
+
+
+    typeObj = {};
+    for (let x = 0; x < checklist.length; x++) {
+      for (let y = 0; y < checklist[x].children.length; y++) {
+
+        type = checklist[x].children[y].type;
+        key = checklist[x].children[y].key;
+        title = checklist[x].children[y].title;
+        action = checklist[x].children[y].action;
+        typeObj[key] = type;
+
+        panContents = createNode({
+          mother: thisMother,
+          style: {
+            display: "flex",
+            flexDirection: "row",
+            position: "relative",
+            height: String(blockHeight) + ea,
+            width: withOut(0, ea),
+            borderRadius: String(5) + "px",
+            background: type === "photo" ? colorChip.gray2 : colorChip.gray0,
+            marginBottom: String(blockMargin) + ea,
+            alignItems: "center",
+            cursor: "pointer",
+          },
+        });
+        createNode({
+          mother: panContents,
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: String(statusWidth) + ea,
+            height: withOut(0, ea),
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            textAlign: "center",
+          },
+          child: {
+            text: String(x + 1) + " - " + String(y + 1),
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(textTop) + ea,
+              fontSize: String(basicSize) + ea,
+              fontWeight: String(600),
+              color: colorChip.deactive,
+            },
+            next: {
+              style: {
+                position: "absolute",
+                right: String(0),
+                top: String(lineTop) + ea,
+                height: withOut(lineTop * 2, ea),
+                borderRight: "1px solid " + colorChip.gray4,
+              }
+            }
+          }
+        });
+        createNode({
+          mother: panContents,
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            height: withOut(0, ea),
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            textAlign: "left",
+            marginLeft: String(basicMarginLeft) + ea,
+          },
+          child: {
+            text: title,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(textTop) + ea,
+              fontSize: String(basicSize) + ea,
+              fontWeight: String(500),
+              color: colorChip.black,
+            }
+          }
+        });
+        createNode({
+          mother: panContents,
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            height: withOut(0, ea),
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            textAlign: "left",
+            marginLeft: String(smallMarginLeft) + ea,
+          },
+          child: {
+            text: (type === "photo" ? "사진" : (type === "file" ? "파일" : "링크")),
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(smallTextTop) + ea,
+              fontSize: String(smallSize) + ea,
+              fontWeight: String(300),
+              color: colorChip.deactive,
+            }
+          }
+        });
+        createNode({
+          mother: panContents,
+          style: {
+            display: "inline-flex",
+            position: "absolute",
+            width: String(moreWidth) + ea,
+            height: withOut(0, ea),
+            right: String(0),
+            background: "transparent",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            textAlign: "center",
+            cursor: "pointer",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: String(circleWidth) + ea,
+                height: String(circleWidth) + ea,
+                borderRadius: String(circleWidth) + ea,
+                background: colorChip.darkShadow,
+              }
+            },
+            {
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: String(circleWidth) + ea,
+                height: String(circleWidth) + ea,
+                borderRadius: String(circleWidth) + ea,
+                background: colorChip.darkShadow,
+                marginLeft: String(circleWidth / 2) + ea,
+                marginRight: String(circleWidth / 2) + ea,
+              }
+            },
+            {
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: String(circleWidth) + ea,
+                height: String(circleWidth) + ea,
+                borderRadius: String(circleWidth) + ea,
+                background: colorChip.darkShadow,
+              }
+            },
+          ]
+        });
+
+      }
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
 
 DesignerJs.prototype.checkListDesignerMemo = function (desid) {
   const instance = this;
