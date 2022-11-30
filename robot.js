@@ -372,6 +372,7 @@ Robot.prototype.taxBill = async function () {
 }
 
 Robot.prototype.tellVoice = async function () {
+  const instance = this;
   try {
     const { shellExec } = this.mother;
     const PlayAudio = require(`${process.cwd()}/apps/playAudio/playAudio.js`);
