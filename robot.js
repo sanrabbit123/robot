@@ -237,7 +237,7 @@ Robot.prototype.proposalMaker = function (button, arg) {
 
     }).then(() => {
       return messageSend({ text: name + " 고객님께 추천서를 전송하였어요.\nlink : https://" + host + "/" + path + ".php?proid=" + proid + "&mode=test", channel: "#403_proposal", voice: true });
-      
+
     }).catch((err) => {
       errorLog("추천서 보내는 도중 오류남 : " + err.message).catch((e) => { console.log(e); });
       reject(err);
@@ -373,6 +373,7 @@ Robot.prototype.taxBill = async function () {
 
 Robot.prototype.tellVoice = async function () {
   try {
+    const { shellExec } = this.mother;
     const PlayAudio = require(`${process.cwd()}/apps/playAudio/playAudio.js`);
     const voice = new PlayAudio();
     const http = require("http");
@@ -387,13 +388,14 @@ Robot.prototype.tellVoice = async function () {
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ message: "invaild post" }));
       } else {
-        voice.textToVoice(String(req.body.text));
+        // voice.textToVoice(String(req.body.text));
+        shellExec("say", [ req.body.text ]).catch((err) => { console.log(err); });
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ message: "will do" }));
       }
     });
 
-    http.createServer(app).listen(3000, () => {
+    http.createServer(app).listen(instance.address.officeinfo.voice.port, () => {
       console.log(``);
       console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
       console.log(``);
