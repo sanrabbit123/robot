@@ -396,7 +396,7 @@ Robot.prototype.tellVoice = async function () {
         res.send(JSON.stringify({ message: "invaild post" }));
       } else {
         // voice.textToVoice(String(req.body.text));
-        shellExec("say", [ req.body.text ]).catch((err) => { console.log(err); });
+        shellExec("say", [ req.body.text.replace(/[a-zA-Z\:\=\&\/]/gi, '') ]).catch((err) => { console.log(err); });
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ message: "will do" }));
       }
