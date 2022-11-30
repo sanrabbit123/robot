@@ -160,7 +160,7 @@ SecondRouter.prototype.rou_post_messageLog = function () {
       }
 
       if (voice) {
-        ghostRequest("voice", { text }).catch((err) => { console.log(err); });
+        requestSystem("https://" + instance.address.officeinfo.voice.host + ":" + String(instance.address.officeinfo.voice.port) + "/voice", { text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
       }
 
       res.send(JSON.stringify({ message: "done" }));

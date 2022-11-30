@@ -132,10 +132,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const res = await requestSystem("https://home-liaison.serveftp.com:53001/voice", { text: "안녕하세요" }, { headers: { "Content-Type": "application/json" } });
-    console.log(res);
-
-
+    
 
 
 
