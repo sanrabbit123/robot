@@ -4597,7 +4597,8 @@ DesignerJs.prototype.checkListProjectsView = async function (desid, base) {
       }
     }
 
-    await instance.checkListPaperView(desid, base, projects, clients, checklist);
+    // dev
+    // await instance.checkListPaperView(desid, base, projects, clients, checklist);
 
   } catch (e) {
     console.log(e);
