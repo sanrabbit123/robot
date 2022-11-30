@@ -3703,9 +3703,18 @@ DesignerJs.prototype.checkListDetail = function (desid) {
   this.mainBaseTong = baseTong0;
 }
 
+DesignerJs.prototype.isEmptyString = function (string) {
+  const instance = this;
+  if (/^[0-9]/.test(string) && /[0-9]$/.test(string) && string.length > 5 && string.replace(/[0-9]/gi, '') === '') {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 DesignerJs.prototype.checkListProjectsView = async function (desid, base) {
   const instance = this;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, findByAttribute, setQueue, uniqueValue } = GeneralJs;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, stringToDate, findByAttribute, setQueue, uniqueValue, sleep, blankHref, scrollTo, returnGet } = GeneralJs;
   const { totalMother, ea, grayBarWidth } = this;
   const mobile = this.media[4];
   const desktop = !mobile;
@@ -3713,6 +3722,8 @@ DesignerJs.prototype.checkListProjectsView = async function (desid, base) {
   try {
     let designer;
     let projects, clients;
+    let client;
+    let requestNumber;
     let baseTong;
     let thisMother;
     let motherMargin;
@@ -3760,6 +3771,7 @@ DesignerJs.prototype.checkListProjectsView = async function (desid, base) {
     let blockSize;
     let blockWeight;
     let linkImageHeight;
+    let targetProjectBlock;
 
     motherMargin = 34;
     blockHeight = 52;
@@ -3821,7 +3833,16 @@ DesignerJs.prototype.checkListProjectsView = async function (desid, base) {
       clients = [];
     }
     for (let project of projects) {
-      project.name = clients.find((obj) => { return obj.cliid === project.cliid }).name;
+      client = clients.find((obj) => { return obj.cliid === project.cliid });
+      requestNumber = 0;
+      for (let z = 0; z < client.requests.length; z++) {
+        if (client.requests[z].request.timeline.valueOf() <= project.proposal.date.valueOf()) {
+          requestNumber = z;
+          break;
+        }
+      }
+      project.name = client.name;
+      project.timeline = client.requests[requestNumber].request.timeline;
     }
     projects.sort((a, b) => {
       const emptyValue = Math.abs((new Date(1200, 0, 1)).valueOf());
@@ -3870,6 +3891,7 @@ DesignerJs.prototype.checkListProjectsView = async function (desid, base) {
     }).firstChild;
 
     this.projectAreas = [];
+    this.projectBlocks = [];
     for (let i = 0; i < projects.length; i++) {
 
       project = projects[i];
@@ -3887,6 +3909,7 @@ DesignerJs.prototype.checkListProjectsView = async function (desid, base) {
           desid: designer.desid,
           cliid: project.cliid,
           name: project.name,
+          timeline: dateToString(project.timeline),
           toggle: "off",
         },
         event: {
@@ -3895,11 +3918,14 @@ DesignerJs.prototype.checkListProjectsView = async function (desid, base) {
             const desid = this.getAttribute("desid");
             const cliid = this.getAttribute("cliid");
             const name = this.getAttribute("name");
+            const timeline = stringToDate(this.getAttribute("timeline"));
             const targetArea = findByAttribute(instance.projectAreas, "proid", proid);
             const toggle = this.getAttribute("toggle");
             const targetHref = BRIDGEHOST.replace(/\:3000/gi, '') + "/photo/designer" + "/" + desid + "/" + proid;
             const linkTargetKey = [ "productLink" ];
             const preItemMotherKey = "firstPhoto";
+            const preItemHex = "070a916ebdea87fae21233050e1b322eb4694980e1bced5012199be287e2e92d";
+            const hashConst = "homeliaisonHash";
             const load = targetArea.getAttribute("load");
             const emptyDate = new Date(1800, 0, 1);
             let itemList, indexTong;
@@ -3911,6 +3937,11 @@ DesignerJs.prototype.checkListProjectsView = async function (desid, base) {
             let preItemList;
             let tempArr;
             let preIndex;
+            let preItemHexId;
+            let fileItemList;
+            let photoItemList;
+            let targets;
+
             try {
               if (toggle === "off") {
 
@@ -3931,12 +3962,13 @@ DesignerJs.prototype.checkListProjectsView = async function (desid, base) {
                   tempArr = [];
                   preIndex = 1;
                   for (let original of preItemList.sitePhoto) {
+                    preItemHexId = ((new RegExp("^" + hashConst + "_", "g")).test(original.split("/")[original.split("/").length - 1]) ? original.split("/")[original.split("/").length - 1].split("_")[1] : preItemHex);
                     tempArr.push({
                       fileName: [
                         preItemMotherKey,
-                        String(emptyDate.valueOf()),
+                        String(timeline.valueOf()),
                         String(preIndex),
-                        uniqueValue("hex") + "." + original.split(".")[original.split(".").length - 1],
+                        preItemHexId + "." + original.split(".")[original.split(".").length - 1],
                       ].join("_"),
                       original,
                     });
@@ -3945,6 +3977,8 @@ DesignerJs.prototype.checkListProjectsView = async function (desid, base) {
                   itemList = tempArr.concat(itemList);
 
                   indexTong = {};
+                  fileItemList = [];
+                  photoItemList = [];
                   itemList.forEach((raw) => {
                     let originalRoot;
                     if (typeof raw !== "string") {
@@ -3957,6 +3991,8 @@ DesignerJs.prototype.checkListProjectsView = async function (desid, base) {
                     const [ hexString, exe ] = hex.split(".");
                     const mother = findByAttribute(targetArea.querySelectorAll('.' + panClassName), "key", key);
                     const date = dateToString(new Date(Number(timeString)));
+
+                    id = key + "_" + timeString + "_" + String(orderString) + "_" + hexString;
 
                     if (indexTong[key] === undefined) {
                       indexTong[key] = 0;
@@ -3975,7 +4011,7 @@ DesignerJs.prototype.checkListProjectsView = async function (desid, base) {
                         event: {
                           click: function (e) {
                             const link = this.getAttribute("link");
-                            downloadFile(link);
+                            blankHref(link);
                           }
                         },
                         style: {
@@ -3994,6 +4030,11 @@ DesignerJs.prototype.checkListProjectsView = async function (desid, base) {
                           cursor: "pointer",
                         },
                         child: {
+                          id,
+                          attribute: {
+                            exe,
+                            date: date.split("-").slice(1).join("/"),
+                          },
                           text: (date + "_" + orderString + "." + exe),
                           style: {
                             fontSize: String(blockSize) + ea,
@@ -4004,31 +4045,85 @@ DesignerJs.prototype.checkListProjectsView = async function (desid, base) {
                           }
                         }
                       });
+                      fileItemList.push({
+                        hash: hexString,
+                        target: id
+                      });
 
                     } else if (typeObj[key] === "photo") {
 
                       createNode({
                         mother: [ ...mother.children ][indexTong[key] % photoDivideNumber],
-                        mode: "img",
-                        attribute: {
-                          src: originalRoot,
-                          link: originalRoot
-                        },
-                        event: {
-                          click: function (e) {
-                            const link = this.getAttribute("link");
-                            downloadFile(link);
-                          }
-                        },
                         style: {
                           display: "block",
                           position: "relative",
                           width: withOut(0, ea),
                           marginBottom: String(blockBetween) + ea,
-                          background: colorChip.white,
-                          borderRadius: String(5) + "px",
                           cursor: "pointer",
-                        }
+                        },
+                        children: [
+                          {
+                            mode: "img",
+                            attribute: {
+                              src: originalRoot,
+                              link: originalRoot
+                            },
+                            event: {
+                              click: function (e) {
+                                const link = this.getAttribute("link");
+                                blankHref(link);
+                              }
+                            },
+                            style: {
+                              display: "block",
+                              position: "relative",
+                              width: withOut(0),
+                              borderTopLeftRadius: String(5) + "px",
+                              borderTopRightRadius: String(5) + "px",
+                            }
+                          },
+                          {
+                            id,
+                            attribute: {
+                              height: String(blockHeight2) + ea,
+                              date: date.split("-").slice(1).join("/"),
+                            },
+                            style: {
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              width: withOut(0, ea),
+                              height: String(0),
+                              borderBottomLeftRadius: String(5) + "px",
+                              borderBottomRightRadius: String(5) + "px",
+                              background: desktop ? colorChip.white : colorChip.gray0,
+                              textAlign: "center",
+                              overflow: "hidden",
+                              boxShadow: "0px 1px 8px -6px " + colorChip.shadow,
+                              transition: "all 0.3s ease",
+                            },
+                            child: {
+                              text: "",
+                              style: {
+                                display: "inline-block",
+                                position: "relative",
+                                top: String(isMac() ? -1 : 1) + ea,
+                                fontSize: String(blockSize) + ea,
+                                fontWeight: String(blockWeight),
+                                color: colorChip.black,
+                              },
+                              bold: {
+                                fontSize: String(blockSize) + ea,
+                                fontWeight: String(blockWeight),
+                                color: colorChip.deactive,
+                              }
+                            }
+                          }
+                        ]
+                      });
+                      photoItemList.push({
+                        hash: hexString,
+                        target: id
                       });
 
                     } else if (typeObj[key] === "link") {
@@ -4078,7 +4173,7 @@ DesignerJs.prototype.checkListProjectsView = async function (desid, base) {
                               display: "flex",
                               position: "relative",
                               width: withOut(0, ea),
-                              height: String(blockHeight) + ea,
+                              height: String(blockHeight2) + ea,
                               background: colorChip.white,
                               borderBottomLeftRadius: String(5) + "px",
                               borderBottomRightRadius: String(5) + "px",
@@ -4088,13 +4183,18 @@ DesignerJs.prototype.checkListProjectsView = async function (desid, base) {
                               textAlign: "center",
                             },
                             child: {
-                              text: memo + " (" + date.split("-").slice(1).join("/") + ")",
+                              text: memo + " <b%(" + date.split("-").slice(1).join("/") + ")%b>",
                               style: {
                                 fontSize: String(blockSize) + ea,
                                 fontWeight: String(blockWeight),
                                 color: colorChip.black,
                                 position: "relative",
                                 top: String(isMac() ? -1 : 1) + ea,
+                              },
+                              bold: {
+                                fontSize: String(blockSize) + ea,
+                                fontWeight: String(blockWeight),
+                                color: colorChip.deactive,
                               }
                             }
                           }
@@ -4102,7 +4202,7 @@ DesignerJs.prototype.checkListProjectsView = async function (desid, base) {
                       });
 
                       ajaxJson({ mode: "image", url: window.encodeURIComponent(link), target: id }, "/getOpenGraph").then(({ image, target }) => {
-                        target = document.getElementById(target);
+                        target = targetArea.querySelector('#' + target);
                         target.style.backgroundImage = "url('" + image + "')";
                       }).catch((err) => {
                         console.log(err);
@@ -4111,7 +4211,30 @@ DesignerJs.prototype.checkListProjectsView = async function (desid, base) {
                     }
                   });
 
+
                   targetArea.setAttribute("load", "true");
+
+                  targets = await ajaxJson({ mode: "decrypto", targets: fileItemList }, BACKHOST + "/homeliaisonCrypto", { equal: true });
+                  for (let { string, target } of targets) {
+                    target = targetArea.querySelector('#' + target);
+                    if (string.trim() !== "") {
+                      target.textContent = "";
+                      target.insertAdjacentHTML("beforeend", string + " <b style=\"color: " + colorChip.deactive + ";font-weight: " + String(blockWeight) + "\">(" + target.getAttribute("date") + ")</b>");
+                    }
+                  }
+
+                  targets = await ajaxJson({ mode: "decrypto", targets: photoItemList }, BACKHOST + "/homeliaisonCrypto", { equal: true });
+                  for (let { string, target } of targets) {
+                    target = targetArea.querySelector('#' + target);
+                    target.style.height = target.getAttribute("height");
+                    target.firstChild.textContent = "";
+                    if (!instance.isEmptyString(string)) {
+                      target.firstChild.insertAdjacentHTML("beforeend", string + " <b style=\"color: " + colorChip.deactive + ";font-weight: " + String(blockWeight) + "\">(" + target.getAttribute("date") + ")</b>");
+                    } else {
+                      target.firstChild.insertAdjacentHTML("beforeend", "- " + " <b style=\"color: " + colorChip.deactive + ";font-weight: " + String(blockWeight) + "\">(" + target.getAttribute("date") + ")</b>");
+                    }
+                  }
+
                 }
 
               } else {
@@ -4232,7 +4355,7 @@ DesignerJs.prototype.checkListProjectsView = async function (desid, base) {
           marginLeft: String(basicMarginLeft) + ea,
         },
         child: {
-          text: dateToString(project.process.contract.form.date.from).slice(2) + " ~ " + dateToString(project.process.contract.form.date.to).slice(2),
+          text: "문의 : " + dateToString(project.timeline).slice(2) + "&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;" + dateToString(project.process.contract.form.date.from).slice(2) + " ~ " + dateToString(project.process.contract.form.date.to).slice(2),
           style: {
             display: "inline-block",
             position: "relative",
@@ -4293,6 +4416,7 @@ DesignerJs.prototype.checkListProjectsView = async function (desid, base) {
           },
         ]
       });
+      this.projectBlocks.push(projectTong);
 
       // detail area
       projectDetailTong = createNode({
@@ -4312,7 +4436,6 @@ DesignerJs.prototype.checkListProjectsView = async function (desid, base) {
         overflow: "hidden",
         flexDirection: "column",
       });
-
       this.projectAreas.push(projectDetailTong);
 
       typeObj = {};
@@ -4381,20 +4504,22 @@ DesignerJs.prototype.checkListProjectsView = async function (desid, base) {
                         const host = FRONTHOST.replace(/^https\:\/\//gi, '');
                         const path = "process";
 
-                        await ajaxJson({
-                          method: "pushDesignerFile",
-                          name: designer,
-                          phone: phone,
-                          option: {
-                            designer: designer,
-                            client: name,
-                            file: title,
-                            host: host,
-                            path: path,
-                            proid: proid,
-                          }
-                        }, BACKHOST + "/alimTalk");
-                        window.alert(designer + " 실장님에게 알림톡을 전송하였습니다!");
+                        if (window.confirm(designer + "실장님께 알림톡을 보낼까요?")) {
+                          await ajaxJson({
+                            method: "pushDesignerFile",
+                            name: designer,
+                            phone: phone,
+                            option: {
+                              designer: designer,
+                              client: name,
+                              file: title,
+                              host: host,
+                              path: path,
+                              proid: proid,
+                            }
+                          }, BACKHOST + "/alimTalk");
+                          window.alert(designer + " 실장님에게 알림톡을 전송하였습니다!");
+                        }
 
                       } catch (e) {
                         console.log(e);
@@ -4463,6 +4588,14 @@ DesignerJs.prototype.checkListProjectsView = async function (desid, base) {
         }
       }
 
+    }
+
+    if (typeof returnGet().proid === "string") {
+      targetProjectBlock = findByAttribute(this.projectBlocks, "proid", returnGet().proid);
+      if (targetProjectBlock !== null) {
+        scrollTo(totalMother, targetProjectBlock);
+        targetProjectBlock.click();
+      }
     }
 
   } catch (e) {
@@ -6441,6 +6574,7 @@ DesignerJs.prototype.checkListView = async function () {
     });
 
     this.projectAreas = [];
+    this.projectBlocks = [];
 
     //launching
     this.checkListDetailLaunching(this.desid);

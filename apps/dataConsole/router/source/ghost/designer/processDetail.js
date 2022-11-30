@@ -995,7 +995,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
       e.preventDefault();
       e.stopPropagation();
       const self = this;
-      const totalContents = document.getElementById("totalcontents");
+      const totalContents = document.querySelector("#totalcontents");
       const motherNumber = Number(this.getAttribute("number"));
       const zIndex = 4;
       let order, key, next, previous;
@@ -2000,7 +2000,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
         });
 
         ajaxJson({ mode: "image", url: window.encodeURIComponent(link), target: id }, BACKHOST + "/getOpenGraph").then(({ image, target }) => {
-          target = document.getElementById(target);
+          target = document.querySelector('#' + target);
           if (image !== null && image !== "null") {
             target.style.backgroundImage = "url('" + image + "')";
           }
@@ -2015,7 +2015,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
 
     ajaxJson({ mode: "decrypto", targets: fileItemList }, BACKHOST + "/homeliaisonCrypto", { equal: true }).then((targets) => {
       for (let { string, target } of targets) {
-        target = document.getElementById(target);
+        target = document.querySelector('#' + target);
         if (string.trim() !== "") {
           target.textContent = "";
           target.insertAdjacentHTML("beforeend", string + " <b style=\"color: " + colorChip.deactive + ";font-weight: " + String(textWeight) + "\">(" + target.getAttribute("date") + ")</b>");
@@ -2027,7 +2027,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
 
     ajaxJson({ mode: "decrypto", targets: photoItemList }, BACKHOST + "/homeliaisonCrypto", { equal: true }).then((targets) => {
       for (let { string, target } of targets) {
-        target = document.getElementById(target);
+        target = document.querySelector('#' + target);
         target.style.height = target.getAttribute("height");
         target.firstChild.textContent = "";
         if (!instance.isEmptyString(string)) {
