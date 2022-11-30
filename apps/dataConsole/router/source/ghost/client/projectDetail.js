@@ -2731,7 +2731,7 @@ ProjectDetailJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
                   formData.append("name", hash);
 
                   res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
-                  await ajaxJson({ message: client + " 고객님이 " + thisTitle + " 관련 파일을 업로드 했습니다!", channel: "#301_console", voice: true }, BACKHOST + "/sendSlack");
+                  await ajaxJson({ designer, desid, client, proid, title: thisTitle, mode: "client" }, BRIDGEHOST + "/middlePhotoAlarm");
                   window.alert(thisTitle + " 관련 파일 업로드가 완료되었습니다!");
 
                   await instance.setPanBlocks();
@@ -2832,7 +2832,7 @@ ProjectDetailJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
                   formData.append("name", hash);
 
                   res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
-                  await ajaxJson({ message: client + " 고객님이 " + thisTitle + " 관련 파일을 업로드 했습니다!", channel: "#301_console", voice: true }, BACKHOST + "/sendSlack");
+                  await ajaxJson({ designer, desid, client, proid, title: thisTitle, mode: "client" }, BRIDGEHOST + "/middlePhotoAlarm");
                   window.alert(thisTitle + " 관련 파일 업로드가 완료되었습니다!");
 
                   await instance.setPanBlocks();
@@ -2947,7 +2947,7 @@ ProjectDetailJs.prototype.dropFiles = function (thisStatusNumber, photoBoo) {
               formData.append("name", hash);
 
               res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
-              await ajaxJson({ message: client + " 고객님이 " + thisTitle + " 관련 파일을 업로드 했습니다!", channel: "#301_console", voice: true }, BACKHOST + "/sendSlack");
+              await ajaxJson({ designer, desid, client, proid, title: thisTitle, mode: "client" }, BRIDGEHOST + "/middlePhotoAlarm");
               window.alert(thisTitle + " 관련 파일 업로드가 완료되었습니다!");
 
               await instance.setPanBlocks();
@@ -3052,7 +3052,7 @@ ProjectDetailJs.prototype.dropFiles = function (thisStatusNumber, photoBoo) {
               formData.append("name", hash);
 
               res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
-              await ajaxJson({ message: client + " 고객님이 " + thisTitle + " 관련 파일을 업로드 했습니다!", channel: "#301_console", voice: true }, BACKHOST + "/sendSlack");
+              await ajaxJson({ designer, desid, client, proid, title: thisTitle, mode: "client" }, BRIDGEHOST + "/middlePhotoAlarm");
               window.alert(thisTitle + " 관련 파일 업로드가 완료되었습니다!");
 
               await instance.setPanBlocks();

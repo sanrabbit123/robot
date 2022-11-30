@@ -850,6 +850,50 @@ TransferRouter.prototype.rou_post_middleCommentsBinary = function () {
   return obj;
 }
 
+TransferRouter.prototype.rou_post_middlePhotoAlarm = function () {
+  const instance = this;
+  const { errorLog, messageSend, equalJson } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/middlePhotoAlarm" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.designer === undefined || req.body.client === undefined || req.body.desid === undefined || req.body.proid === undefined || req.body.title === undefined || req.body.mode === undefined) {
+        throw new Error("invaild post");
+      }
+      const { designer, client, desid, proid, title, mode } = equalJson(req.body);
+      const channel = "#301_console";
+      const voice = true;
+      let text;
+
+      if (mode === "designer") {
+        text = designer + " 실장님이 콘솔을 통해 " + client + " 고객님 " + title + " 파일을 업로드했습니다!";
+      } else {
+        text = client + " 고객님이 콘솔을 통해 " + title + " 파일을 업로드했습니다!";
+      }
+      text += "\n";
+      text += "https://" + instance.address.backinfo.host + "/designer?mode=checklist&desid=" + desid + "&proid=" + proid;
+      text += "\n";
+
+      await messageSend({ text, channel, voice });
+      res.send(JSON.stringify({ message: "done" }));
+    } catch (e) {
+      errorLog("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoAlarm): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 TransferRouter.prototype.getAll = function () {
