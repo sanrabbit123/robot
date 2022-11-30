@@ -373,16 +373,22 @@ Robot.prototype.taxBill = async function () {
 
 Robot.prototype.tellVoice = async function () {
   const instance = this;
+  const address = this.address;
+  const { shellExec, fileSystem } = this.mother;
   try {
-    const { shellExec } = this.mother;
     const PlayAudio = require(`${process.cwd()}/apps/playAudio/playAudio.js`);
     const voice = new PlayAudio();
-    const http = require("http");
+    const https = require("https");
     const express = require("express");
     const app = express();
+    let pems;
+    let pemsLink;
+    let certDir;
+    let keyDir;
+    let caDir;
 
-    app.use(express.json());
-    app.use(express.urlencoded({ extended: true }));
+    app.use(express.json({ limit: "50mb" }));
+    app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
     app.post("/voice", async (req, res) => {
       if (req.body.text === undefined) {
@@ -396,7 +402,31 @@ Robot.prototype.tellVoice = async function () {
       }
     });
 
-    http.createServer(app).listen(instance.address.officeinfo.voice.port, () => {
+    pems = {};
+    pemsLink = process.cwd() + "/pems/" + address.officeinfo.ghost.host;
+    certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
+    keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
+    caDir = await fileSystem(`readDir`, [ `${pemsLink}/ca` ]);
+    for (let i of certDir) {
+      if (i !== `.DS_Store`) {
+        pems.cert = await fileSystem(`read`, [ `${pemsLink}/cert/${i}` ]);
+      }
+    }
+    for (let i of keyDir) {
+      if (i !== `.DS_Store`) {
+        pems.key = await fileSystem(`read`, [ `${pemsLink}/key/${i}` ]);
+      }
+    }
+    pems.ca = [];
+    for (let i of caDir) {
+      if (i !== `.DS_Store`) {
+        pems.ca.push(await fileSystem(`read`, [ `${pemsLink}/ca/${i}` ]));
+      }
+    }
+    pems.allowHTTP1 = true;
+
+
+    https.createServer(pems, app).listen(address.officeinfo.voice.port, () => {
       console.log(``);
       console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
       console.log(``);
