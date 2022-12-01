@@ -2,12 +2,9 @@ const Robot = function () {
   const Mother = require(process.cwd() + "/apps/mother.js");
   const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
   const ADDRESS = require(process.cwd() + "/apps/infoObj.js");
-  const { WebClient } = require("@slack/web-api");
   this.mother = new Mother();
   this.back = new BackMaker();
   this.address = ADDRESS;
-  this.slack_token = "xoxb-717757271335-2032150390679-1FTxRg4wQasMpe9kKDgAdqBv";
-  this.slack_bot = new WebClient(this.slack_token);
 }
 
 Robot.timeouts = {};
@@ -482,16 +479,6 @@ Robot.prototype.mysqlReflection = async function () {
     const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
     const reflection = new MongoReflection();
     await reflection.mysqlReflection();
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-Robot.prototype.frontReflection = async function () {
-  try {
-    const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
-    const reflection = new MongoReflection();
-    await reflection.frontReflection();
   } catch (e) {
     console.log(e);
   }

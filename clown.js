@@ -11,8 +11,7 @@ Clown.timeouts = {};
 
 Clown.prototype.mongoToJson = async function () {
   const instance = this;
-  const back = this.back;
-  const { fileSystem, shell, shellLink } = this.mother;
+  const { fileSystem, shellExec, shellLink } = this.mother;
   try {
     const today = new Date();
     const zeroAddition = function (number) {
@@ -27,33 +26,38 @@ Clown.prototype.mongoToJson = async function () {
       [ "mongoinfo", "mongo" ],
       [ "backinfo", "console" ],
       [ "pythoninfo", "python" ],
+      [ "testinfo", "log" ],
     ];
     const robotDirArr = process.cwd().split("/");
     robotDirArr.pop();
     const robotDirMother = robotDirArr.join("/");
     const robotDirMotherDetail = await fileSystem(`readDir`, [ robotDirMother ]);
     if (!robotDirMotherDetail.includes(backFolderName)) {
-      shell.exec(`mkdir ${shellLink(robotDirMother)}/${backFolderName}`);
+      await shellExec(`mkdir ${shellLink(robotDirMother)}/${backFolderName}`);
     }
     const backDir = robotDirMother + "/" + backFolderName;
-    let tempObj, tempInfo, collections, order, timeString;
-    let tempMsg;
+    let tempInfo, timeString;
 
     timeString = `${String(today.getFullYear())}${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`;
 
     for (let [ infoName, dbName ] of mongoTargets) {
-      tempObj = {};
-      tempObj[dbName] = true;
-      collections = await back.mongoListCollections(tempObj);
       tempInfo = this.address[infoName];
-      order = `mongodump --uri="mongodb://${tempInfo["host"]}/${tempInfo["database"]}" --username=${tempInfo["user"]} --password=${tempInfo["password"]} --port=${String(tempInfo["port"])} --out="${shellLink(backDir)}/${timeString}/${dbName}${timeString}.json" --authenticationDatabase admin`;
-      tempMsg = shell.exec(order);
+      await shellExec(`mongodump --uri="mongodb://${tempInfo["host"]}/${tempInfo["database"]}" --username=${tempInfo["user"]} --password=${tempInfo["password"]} --port=${String(tempInfo["port"])} --out="${shellLink(backDir)}/${timeString}/${dbName}${timeString}" --authenticationDatabase admin`);
     }
+
+    await shellExec(`cd ${shellLink(backDir)};zip -r ./${timeString}.zip ./${timeString};rm -rf ${shellLink(backDir)}/${timeString}`);
 
     return `mongo exports done`;
   } catch (e) {
     console.log(e);
   }
+}
+
+Clown.prototype.diskTest = function () {
+  const instance = this;
+  const CronGhost = require(`${process.cwd()}/apps/cronGhost/cronGhost.js`);
+  const app = new CronGhost();
+  app.diskTest().catch((err) => { console.log(err); });
 }
 
 Clown.prototype.infoObj = async function () {
@@ -90,97 +94,40 @@ Clown.prototype.memberUpdate = async function () {
 
 Clown.prototype.dataConsole = function (noStatic = false) {
   const DataConsole = require(process.cwd() + "/apps/dataConsole/dataConsole.js");
-  let app = new DataConsole();
-  app.connect(noStatic);
+  const app = new DataConsole();
+  app.connect(noStatic).catch((err) => { console.log(err); });
+}
+
+Clown.prototype.renderFrontPhp = async function () {
+  const DataConsole = require(process.cwd() + "/apps/dataConsole/dataConsole.js");
+  const app = new DataConsole();
+  await app.renderFrontPhp();
+}
+
+Clown.prototype.renderDesignerPhp = async function () {
+  const DataConsole = require(process.cwd() + "/apps/dataConsole/dataConsole.js");
+  const app = new DataConsole();
+  await app.renderDesignerPhp();
 }
 
 Clown.prototype.contentsMaker = function (button, arg) {
   const AiContents = require(process.cwd() + "/apps/contentsMaker/aiContents.js");
   const ResourceMaker = require(process.cwd() + "/apps/resourceMaker/resourceMaker.js");
   let app;
-  if (button === "make" || button === "1") {
-    app = new AiContents(arg);
-    app.total_make();
-  } else if (button === "mysql" || button === "2") {
-    app = new AiContents();
-    app.to_mysql();
-  } else if (button === "poo" || button === "3") {
-    app = new AiContents();
-    app.to_poo();
-  } else if (button === "resource" || button === "4") {
+  if (button === "resource" || button === "1") {
     app = new ResourceMaker(arg);
     app.launching();
+  } else if (button === "google" || button === "2") {
+    app = new AiContents();
+    app.to_google(arg);
   }
 }
 
-Clown.prototype.aliveTest = async function () {
+Clown.prototype.aliveTest = function () {
   const instance = this;
-  const address = this.address;
-  const { requestSystem, messageLog, errorLog } = this.mother;
-  const generalPort = 3000;
-  const ghostPort = 8080;
-  const controlPath = "/ssl";
-  let res, targets, targetNumber, successNum, failNum, message;
-  try {
-
-    targets = [
-      { name: "python", protocol: "https:", host: address.pythoninfo.host, port: generalPort, },
-      { name: "home", protocol: "https:", host: address.homeinfo.ghost.host, port: generalPort, },
-      { name: "office", protocol: "https:", host: address.officeinfo.ghost.host, port: ghostPort, },
-    ];
-
-    targetNumber = targets.length;
-    successNum = 0;
-    failNum = 0;
-    message = '';
-
-    for (let { name, protocol, host, port } of targets) {
-
-      boo = false;
-      try {
-        res = await requestSystem(protocol + "//" + host + ':' + String(port) + controlPath);
-      } catch {
-        res = null;
-      }
-
-      if (typeof res === "object" && res !== null) {
-        if (res.status !== undefined && typeof res.status === "number") {
-          if (res.status === 200) {
-            console.log("\x1b[32m%s\x1b[0m", name + " server alive");
-            successNum = successNum + 1;
-            message += "\n" +  name + " server alive";
-            boo = true;
-            if (successNum === targetNumber) {
-              console.log("\x1b[33m%s\x1b[0m", "all alive");
-              message = "server all alive";
-              await messageLog(message);
-            } else if (successNum + failNum === targetNumber) {
-              console.log("\x1b[33m%s\x1b[0m", "something death");
-              message += "\n======================================";
-              message += "\nsomething death";
-              await errorLog(message);
-            }
-          }
-        }
-      }
-
-      if (!boo) {
-        failNum = failNum + 1;
-        console.log("\x1b[32m%s\x1b[0m", name + " server death");
-        message += "\n" +  name + " server death";
-        if (successNum + failNum === targetNumber) {
-          console.log("\x1b[33m%s\x1b[0m", "something death");
-          message += "\n======================================";
-          message += "\nsomething death";
-          await errorLog(message);
-        }
-      }
-
-    }
-
-  } catch (e) {
-    await errorLog("alive test error : " + e.message);
-  }
+  const CronGhost = require(`${process.cwd()}/apps/cronGhost/cronGhost.js`);
+  const app = new CronGhost();
+  app.aliveTest().catch((err) => { console.log(err); });
 }
 
 Clown.prototype.proposalMaker = function (button, arg) {
@@ -188,105 +135,111 @@ Clown.prototype.proposalMaker = function (button, arg) {
     throw new Error("proposal must be id");
     return;
   }
-  if (button === "make" || button === "1") {
-    const AiProposal = require(process.cwd() + "/apps/contentsMaker/aiProposal.js");
-    let app;
-    app = new AiProposal(arg);
-    app.proposalLaunching();
-  } else if (button === "web") {
-    const instance = this;
-    const back = this.back;
-    const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
-    const path = "designerProposal";
-    const { host } = this.address.homeinfo.ghost;
-    const { requestSystem, ghostRequest, messageLog, errorLog, messageSend } = this.mother;
-    const proid = arg;
-    let kakaoInstance, cliid, name, phone, client;
-    let requestNumber, action;
-    let now;
-    return new Promise((resolve, reject) => {
+  const instance = this;
+  const back = this.back;
+  const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
+  const path = "proposal";
+  const collection = "proposalLog";
+  const { host } = this.address.frontinfo;
+  const { requestSystem, messageLog, errorLog, messageSend } = this.mother;
+  const proid = arg;
+  let kakaoInstance, cliid, name, phone, client;
+  let requestNumber, action;
+  let now;
+  let project;
 
-      now = new Date();
+  return new Promise((resolve, reject) => {
 
-      back.getProjectById(proid).then((project) => {
-        if (project === null) {
-          reject("There is no project");
+    now = new Date();
+
+    back.getProjectById(proid).then((thisProject) => {
+      if (thisProject === null) {
+        reject("There is no project");
+      }
+      project = thisProject;
+      cliid = thisProject.cliid;
+      return back.getClientById(cliid);
+    }).then((data) => {
+      client = data;
+      name = client.name;
+      phone = client.phone;
+
+      requestNumber = 0;
+      for (let i = 0; i < client.requests.length; i++) {
+        if (client.requests[i].request.timeline.valueOf() <= now.valueOf()) {
+          requestNumber = i;
+          break;
         }
-        cliid = project.cliid;
-        return back.getClientById(cliid);
-      }).then((data) => {
-        client = data;
-        name = client.name;
-        phone = client.phone;
+      }
 
-        requestNumber = 0;
-        for (let i = 0; i < client.requests.length; i++) {
-          if (client.requests[i].request.timeline.valueOf() <= now.valueOf()) {
-            requestNumber = i;
-            break;
-          }
+      if (client.requests[requestNumber].analytics.response.action.value === "부재중 제안 발송") {
+        action = "피드백과 응대 예정";
+      } else {
+        action = "제안 피드백 예정";
+      }
+
+      kakaoInstance = new KakaoTalk();
+      return kakaoInstance.ready();
+    }).then(() => {
+      return kakaoInstance.sendTalk("designerProposal", name, phone, { client: name, host, path, proid });
+    }).then(() => {
+      return back.updateProject([ { proid }, { "proposal.status": "완료", "proposal.date": now } ]);
+    }).then(() => {
+
+      return requestSystem("https://" + instance.address.backinfo.host + ":3000/updateLog", {
+        id: cliid,
+        column: "action",
+        position: "requests." + String(requestNumber) + ".analytics.response.action",
+        pastValue: client.requests[requestNumber].analytics.response.action.value,
+        finalValue: action
+      }, { headers: { "origin": "https://" + instance.address.backinfo.host, "Content-Type": "application/json" } });
+
+    }).then(() => {
+
+      const targetProposal = project.toNormal().proposal;
+      targetProposal.status = "완료";
+      targetProposal.date = now;
+
+      return back.mongoCreate(collection, {
+        date: new Date(),
+        method: "send",
+        proid: proid,
+        project: targetProposal,
+      }, { console: true });
+
+    }).then(() => {
+
+      return requestSystem("https://" + instance.address.backinfo.host + ":3000/generalMongo", {
+        mode: "sse",
+        db: "console",
+        collection: "sse_clientCard",
+        log: true,
+        who: "autoBot",
+        updateQuery: {
+          cliid,
+          requestNumber,
+          mode: "action",
+          from: client.requests[requestNumber].analytics.response.action.value,
+          to: action,
+          randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
         }
+      }, { headers: { "origin": "https://" + instance.address.backinfo.host, "Content-Type": "application/json" } });
 
-        if (client.requests[requestNumber].analytics.response.action.value === "부재중 제안 발송") {
-          action = "피드백과 응대 예정";
-        } else {
-          action = "제안 피드백 예정";
-        }
+    }).then(() => {
 
-        kakaoInstance = new KakaoTalk();
-        return kakaoInstance.ready();
-      }).then(() => {
-        return kakaoInstance.sendTalk("designerProposal", name, phone, { client: name, host, path, proid });
-      }).then(() => {
-        return back.updateProject([ { proid }, { "proposal.status": "완료", "proposal.date": now } ]);
-      }).then(() => {
+      let updateObj;
+      updateObj = {};
+      updateObj["requests." + String(requestNumber) + ".analytics.response.action"] = action;
+      return back.updateClient([ { cliid }, updateObj ]);
 
-        return requestSystem("https://" + instance.address.backinfo.host + ":3000/updateLog", {
-          id: cliid,
-          column: "action",
-          position: "requests." + String(requestNumber) + ".analytics.response.action",
-          pastValue: client.requests[requestNumber].analytics.response.action.value,
-          finalValue: action
-        }, { headers: { "origin": "https://" + instance.address.homeinfo.ghost.host, "Content-Type": "application/json" } });
+    }).then(() => {
+      return messageSend({ text: name + " 고객님께 추천서를 전송하였어요.\nlink : https://" + host + "/" + path + ".php?proid=" + proid + "&mode=test", channel: "#403_proposal", voice: false });
 
-      }).then(() => {
-        return requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(instance.address.officeinfo.ghost.port) + "/proposalLog", { proid }, { headers: { "origin": "https://" + instance.address.homeinfo.ghost.host, "Content-Type": "application/json" } });
-
-      }).then(() => {
-
-        return requestSystem("https://" + instance.address.backinfo.host + ":3000/generalMongo", {
-          mode: "sse",
-          db: "console",
-          collection: "sse_clientCard",
-          log: true,
-          who: "autoBot",
-          updateQuery: {
-            cliid,
-            requestNumber,
-            mode: "action",
-            from: client.requests[requestNumber].analytics.response.action.value,
-            to: action,
-            randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
-          }
-        }, { headers: { "origin": "https://" + instance.address.homeinfo.ghost.host, "Content-Type": "application/json" } });
-
-      }).then(() => {
-
-        let updateObj;
-        updateObj = {};
-        updateObj["requests." + String(requestNumber) + ".analytics.response.action"] = action;
-        return back.updateClient([ { cliid }, updateObj ]);
-
-      }).then(() => {
-        return ghostRequest("voice", { text: name + " 고객님에게 제안서 알림톡을 전송하였어요." });
-      }).then(() => {
-        return messageSend({ text: name + " 고객님에게 제안서 알림톡을 전송하였어요.\nlink : https://" + host + "/middle/" + path + "?proid=" + proid + "&mode=test", channel: "#403_proposal" });
-      }).catch((err) => {
-        errorLog("제안서 보내는 도중 오류남 : " + err.message).catch((e) => { console.log(e); });
-        reject(err);
-      });
+    }).catch((err) => {
+      errorLog("추천서 보내는 도중 오류남 : " + err.message).catch((e) => { console.log(e); });
+      reject(err);
     });
-  }
+  });
 }
 
 Clown.prototype.requestMaker = async function (arg) {
@@ -319,27 +272,51 @@ Clown.prototype.frontSource = function (argv) {
   fobot.front_maker(argv);
 }
 
-Clown.prototype.frontMaker = function (webpack) {
-  const FrontMaker = require(process.cwd() + "/apps/frontMaker/frontMaker.js");
-  let fobot = new FrontMaker();
-  fobot.totalLaunching(webpack);
-}
-
-Clown.prototype.frontUpdate = async function (testMode) {
+Clown.prototype.frontTest = async function () {
   try {
     const FrontMaker = require(process.cwd() + "/apps/frontMaker/frontMaker.js");
     let fobot = new FrontMaker();
-    await fobot.totalUpdate(testMode);
+    await fobot.totalUpdate(true);
   } catch (e) {
     console.log(e);
   }
 }
 
-Clown.prototype.playgroundConnect = async function () {
+Clown.prototype.frontUpdate = async function () {
+  try {
+    const FrontMaker = require(process.cwd() + "/apps/frontMaker/frontMaker.js");
+    let fobot = new FrontMaker();
+    await fobot.totalUpdate(false);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+Clown.prototype.logConnect = async function () {
   try {
     const LogConsole = require(process.cwd() + "/apps/logConsole/logConsole.js");
     const app = new LogConsole();
-    await app.playgroundConnect();
+    await app.logConnect();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+Clown.prototype.secondConnect = async function () {
+  try {
+    const SecondGhost = require(process.cwd() + "/apps/secondGhost/secondGhost.js");
+    const app = new SecondGhost();
+    await app.ghostConnect();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+Clown.prototype.transferConnect = async function () {
+  try {
+    const TransferLounge = require(process.cwd() + "/apps/transferLounge/transferLounge.js");
+    const app = new TransferLounge();
+    await app.transConnect();
   } catch (e) {
     console.log(e);
   }
@@ -386,45 +363,67 @@ Clown.prototype.taxBill = async function () {
     const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
     const app = new BillMaker();
     await app.taxBill();
-    await this.aliveTest();
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-Clown.prototype.cashReceipt = async function () {
-  try {
-    const { shell, shellLink } = this.mother;
-    const url = "https://" + this.address.homeinfo.ghost.host + ":" + String(this.address.homeinfo.ghost.graphic.port[0]) + "/cash";
-    shell.exec(`curl ${url}`);
   } catch (e) {
     console.log(e);
   }
 }
 
 Clown.prototype.tellVoice = async function () {
+  const instance = this;
+  const address = this.address;
+  const { shellExec, fileSystem } = this.mother;
   try {
     const PlayAudio = require(`${process.cwd()}/apps/playAudio/playAudio.js`);
     const voice = new PlayAudio();
-    const http = require("http");
+    const https = require("https");
     const express = require("express");
     const app = express();
+    let pems;
+    let pemsLink;
+    let certDir;
+    let keyDir;
+    let caDir;
 
-    app.use(express.json());
-    app.use(express.urlencoded({ extended: true }));
+    app.use(express.json({ limit: "50mb" }));
+    app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
     app.post("/voice", async (req, res) => {
       if (req.body.text === undefined) {
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ message: "invaild post" }));
       } else {
-        voice.textToVoice(String(req.body.text));
+        // voice.textToVoice(String(req.body.text));
+        shellExec("say", [ req.body.text.replace(/[a-zA-Z\:\=\&\/]/gi, '') ]).catch((err) => { console.log(err); });
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ message: "will do" }));
       }
     });
 
-    http.createServer(app).listen(3000, () => {
+    pems = {};
+    pemsLink = process.cwd() + "/pems/" + address.officeinfo.ghost.host;
+    certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
+    keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
+    caDir = await fileSystem(`readDir`, [ `${pemsLink}/ca` ]);
+    for (let i of certDir) {
+      if (i !== `.DS_Store`) {
+        pems.cert = await fileSystem(`read`, [ `${pemsLink}/cert/${i}` ]);
+      }
+    }
+    for (let i of keyDir) {
+      if (i !== `.DS_Store`) {
+        pems.key = await fileSystem(`read`, [ `${pemsLink}/key/${i}` ]);
+      }
+    }
+    pems.ca = [];
+    for (let i of caDir) {
+      if (i !== `.DS_Store`) {
+        pems.ca.push(await fileSystem(`read`, [ `${pemsLink}/ca/${i}` ]));
+      }
+    }
+    pems.allowHTTP1 = true;
+
+
+    https.createServer(pems, app).listen(address.officeinfo.voice.port, () => {
       console.log(``);
       console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
       console.log(``);
@@ -465,12 +464,21 @@ Clown.prototype.coreReflection = async function () {
   }
 }
 
+Clown.prototype.frontReflection = async function () {
+  try {
+    const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
+    const reflection = new MongoReflection();
+    await reflection.frontReflection();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Clown.prototype.mysqlReflection = async function () {
   try {
     const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
     const reflection = new MongoReflection();
     await reflection.mysqlReflection();
-    await reflection.frontReflection();
   } catch (e) {
     console.log(e);
   }
@@ -489,8 +497,8 @@ Clown.prototype.localReflection = async function (arg = null) {
         target = "mongoinfo";
       } else if (/console/gi.test(arg) || /back/gi.test(arg)) {
         target = "backinfo";
-      } else if (/home/gi.test(arg)) {
-        target = "homeinfo";
+      } else if (/log/gi.test(arg)) {
+        target = "testinfo";
       } else if (/python/gi.test(arg)) {
         target = "pythoninfo";
       } else {
@@ -573,7 +581,7 @@ Clown.prototype.staticInSync = async function () {
     }
 
     order = "scp -r ";
-    order += this.address.homeinfo.ghost.user + "@" + this.address.homeinfo.ghost.host + ":" + shellLink(this.address.homeinfo.ghost.file.static);
+    order += this.address.officeinfo.ghost.user + "@" + this.address.officeinfo.ghost.host + ":" + shellLink(this.address.officeinfo.ghost.file.static);
     order += " ";
     order += shellLink(home + "/" + driveName);
     console.log(order);
@@ -607,6 +615,17 @@ Clown.prototype.sayHello = async function (message = null) {
       text = message;
     }
     await this.mother.messageSend({ text, channel });
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+Clown.prototype.consoleHello = async function () {
+  const instance = this;
+  try {
+    setTimeout(() => {
+      console.log("hello : " + instance.mother.uniqueValue("hex"));
+    }, 3000 + (10 * 1000 * Math.random()));
   } catch (e) {
     console.log(e);
   }
@@ -705,7 +724,7 @@ Clown.prototype.cronServer = async function () {
   }
 }
 
-Clown.prototype.pureServer = async function () {
+Clown.prototype.localLog = async function () {
   const instance = this;
   const { pureServer, shellExec, shellLink, fileSystem, setQueue } = this.mother;
   try {
@@ -723,10 +742,6 @@ Clown.prototype.pureServer = async function () {
 
     app.post("/log", async (req, res) => {
       try {
-        if (typeof req.body.message !== "string" || typeof req.body.color !== "string") {
-          throw new Error("invaild post, must be text");
-        }
-
         const colorLog = function (mode, text) {
           const colors = {
             red: "\x1b[31m%s\x1b[34m > \x1b[0m%s",
@@ -753,7 +768,7 @@ Clown.prototype.pureServer = async function () {
           console.log(colors[mode], timeWording, text);
         }
 
-        colorLog(req.body.color, req.body.message);
+        colorLog("yellow", req.body.message);
 
         res.send(JSON.stringify({ message: "done" }));
       } catch (e) {
@@ -761,11 +776,67 @@ Clown.prototype.pureServer = async function () {
       }
     });
 
-    pureServer("listen", app, 8080);
+    pureServer("listen", app, 3000);
 
   } catch (e) {
     console.log(e);
   }
+}
+
+Clown.prototype.arpScan = async function () {
+  const instance = this;
+  const address = this.address;
+  const { shellExec, dateToString } = this.mother;
+  try {
+    setInterval(async () => {
+      try {
+        const bar = "=======================================";
+        const self = "bc:5f:f4:93:ca:ed";
+        const interface = [
+          "enp3s0",
+          "wlx705dccfbea68"
+        ];
+        let res;
+        let targets;
+        let matrix;
+        let index;
+        let tong;
+
+        tong = {};
+        for (let obj of address.officeinfo.map) {
+          tong[obj.name] = self === obj.mac;
+        }
+
+        console.log("\x1b[33m%s\x1b[0m%s", dateToString(new Date(), true) + " " + bar, "");
+        for (let i of interface) {
+          res = await shellExec(`arp-scan --interface=${i} --localnet`);
+          targets = res.split("\n").slice(res.split("\n").findIndex((str) => { return /^1/.test(str) }), res.split("\n").findIndex((str) => { return str.trim() === '' }));
+          matrix = targets.map((str) => { return str.split("\t") });
+          for (let [ ip, mac ] of matrix) {
+            index = address.officeinfo.map.findIndex((obj) => { return obj.mac === mac })
+            if (index !== -1) {
+              tong[address.officeinfo.map[index].name] = true;
+            }
+          }
+        }
+
+        for (let name in tong) {
+          console.log(tong[name] ? "\x1b[0m%s \x1b[33m%s" : "\x1b[0m%s \x1b[31m%s", name, tong[name] ? "alive" : "death");
+        }
+        console.log("\x1b[33m%s\x1b[0m%s", dateToString(new Date(), true) + " " + bar, "");
+      } catch (e) {
+        console.log(e);
+      }
+    }, 5 * 60 * 1000);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+Clown.prototype.magazineMaker = function (mid) {
+  const ResourceMaker = require(process.cwd() + "/apps/resourceMaker/resourceMaker.js");
+  const app = new ResourceMaker();
+  app.magazineMaker(mid).catch((err) => { console.log(err); })
 }
 
 Clown.prototype.launching = async function () {
@@ -774,28 +845,14 @@ Clown.prototype.launching = async function () {
   try {
     let re, re2, re3, re4, re5, re6;
 
-    re = await consoleQ(`Choose commands : 1.back 2.contents 3.portfolio 4.proposal 5.google 6.front 7.consulting 8.aiohttp 9.aiohttpInstall 10.exit\n`);
+    re = await consoleQ(`Choose commands : 1.contents 2.portfolio 3.magazine\n`);
 
-    //console server
-    if (re === "back" || re === "1") {
-      this.dataConsole(false);
-
-    //contents maker
-    } else if (re === "contents" || re === "2") {
-      re2 = await consoleQ(`Choose commands : 1.make 2.mysql 3.poo 4.resource 5.front\n`);
-      if (re2 === "make" || re2 === "1") {
-        re3 = await consoleQ(`Porfolio number?\n`);
-      } else if (re2 === "mysql" || re2 === "2") {
-        re3 = ``;
-      } else if (re2 === "poo" || re2 === "3") {
-        re3 = ``;
-      } else if (re2 === "resource" || re2 === "4") {
-        re3 = await consoleQ(`Porfolio number?\n`);
-      }
+    if (re === "contents" || re === "1") {
+      re2 = await consoleQ(`Choose commands : 1.resource 2.google\n`);
+      re3 = await consoleQ(`Porfolio number?\n`);
       this.contentsMaker(re2, re3);
 
-    //portfolio filter
-    } else if (re === "portfolio" || re === "3") {
+    } else if (re === "portfolio" || re === "2") {
       re2 = await consoleQ(`Choose commands : 1.portfolio 2.ghost\n`);
       if (re2 === "portfolio" || re2 === "1") {
         re3 = await consoleQ(`Client name what?\n`);
@@ -808,21 +865,11 @@ Clown.prototype.launching = async function () {
         this.portfolioFilter("ghost", "null", "", re3, "g0");
       }
 
-    //proposal
-    } else if (re === "proposal" || re === "4") {
-      re3 = await consoleQ(`Project number? (default: latest, if you want press 'none')\n`);
-      this.proposalMaker("1", re3);
+    } else if (re === "magazine" || re === "3") {
+      re3 = await consoleQ(`mid?\n`);
+      this.magazineMaker(re3);
 
-    //google
-    } else if (re === "google" || re === "5") {
-      re2 = await consoleQ(`Choose commands : 1.token 2.analytics\n`);
-
-    //front
-    } else if (re === "front" || re === "6") {
-      this.frontMaker(false);
-
-    //exit
-    } else if (re === "exit" || re === "10") {
+    } else {
       process.exit();
     }
 
@@ -875,7 +922,7 @@ const MENU = {
   },
   front: async function () {
     try {
-      robot.frontMaker(process.argv[3] === "--webpack");
+      await robot.frontTest();
     } catch (e) {
       console.log(e);
     }
@@ -891,13 +938,9 @@ const MENU = {
       console.log(e);
     }
   },
-  frontupdate: async function () {
+  frontUpdate: async function () {
     try {
-      if (process.argv[3] !== undefined) {
-        robot.frontUpdate(true);
-      } else {
-        robot.frontUpdate(false);
-      }
+      await robot.frontUpdate();
     } catch (e) {
       console.log(e);
     }
@@ -958,9 +1001,23 @@ const MENU = {
       console.log(e);
     }
   },
+  frontReflect: async function () {
+    try {
+      await robot.frontReflection();
+    } catch (e) {
+      console.log(e);
+    }
+  },
   mysqlReflect: async function () {
     try {
       await robot.mysqlReflection();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  frontReflect: async function () {
+    try {
+      await robot.frontReflection();
     } catch (e) {
       console.log(e);
     }
@@ -1123,13 +1180,6 @@ const MENU = {
       console.log(e);
     }
   },
-  cashReceipt: async function () {
-    try {
-      await robot.cashReceipt();
-    } catch (e) {
-      console.log(e);
-    }
-  },
   infoObj: async function () {
     try {
       await robot.infoObj();
@@ -1181,7 +1231,70 @@ const MENU = {
   },
   log: async function () {
     try {
-      await robot.playgroundConnect();
+      await robot.logConnect();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  php: async function () {
+    try {
+      await robot.renderFrontPhp();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  phpClient: async function () {
+    try {
+      await robot.renderFrontPhp();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  phpDesigner: async function () {
+    try {
+      await robot.renderDesignerPhp();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  consoleHello: async function () {
+    try {
+      await robot.consoleHello();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  diskTest: async function () {
+    try {
+      await robot.diskTest();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  localLog: async function () {
+    try {
+      await robot.localLog();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  arpScan: async function () {
+    try {
+      await robot.arpScan();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  second: async function () {
+    try {
+      await robot.secondConnect();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  trans: async function () {
+    try {
+      await robot.transferConnect();
     } catch (e) {
       console.log(e);
     }

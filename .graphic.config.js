@@ -13,6 +13,13 @@ module.exports = {
       instances: 1,
       exec_mode: "cluster",
       args: [ "graphicServer" ]
+    },
+    {
+      name: "clown",
+      script: "./clown.js",
+      instances: 1,
+      exec_mode: "cluster",
+      args: [ "cronServer" ]
     }
   ]
 };
