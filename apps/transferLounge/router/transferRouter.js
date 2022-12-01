@@ -387,8 +387,8 @@ TransferRouter.prototype.rou_post_clientBinary = function () {
             res.send(JSON.stringify({ message: "done" }));
 
           } else {
-            errorLog("Transfer lounge 서버 문제 생김 (rou_post_clientBinary): " + e.message).catch((e) => { console.log(e); });
-            res.send(JSON.stringify({ message: "error : " + e.message }));
+            errorLog("Transfer lounge 서버 문제 생김 (rou_post_clientBinary)").catch((e) => { console.log(e); });
+            res.send(JSON.stringify({ message: "error" }));
           }
         } catch (e) {
           errorLog("Transfer lounge 서버 문제 생김 (rou_post_clientBinary): " + e.message).catch((e) => { console.log(e); });
