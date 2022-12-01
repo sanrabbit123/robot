@@ -848,6 +848,8 @@ ServiceDetailJs.prototype.insertSlideBox = function () {
   let arrowMargin;
   let arrowTop;
   let descriptionSize, descriptionWeight, descriptionLineHeight, descriptionBoldWeight;
+  let circleWidth, circleBetween;
+  let circleBoxMarginTop, circleBoxPaddingLeft;
 
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
   slideTongHeight = <%% 340, 340, 340, 340, 340 %%>;
@@ -871,6 +873,12 @@ ServiceDetailJs.prototype.insertSlideBox = function () {
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+  circleWidth = <%% 6, 6, 6, 6, 6 %%>;
+  circleBetween = <%% 4, 4, 4, 4, 4 %%>;
+
+  circleBoxMarginTop = <%% 16, 16, 16, 16, 16 %%>;
+  circleBoxPaddingLeft = <%% 1, 1, 1, 1, 1 %%>;
 
   contents = {
     images: [
@@ -1022,7 +1030,7 @@ ServiceDetailJs.prototype.insertSlideBox = function () {
       display: "inline-flex",
       position: "relative",
       flexDirection: "column",
-      width: withOut(arrowWidth, ea),
+      width: withOut(arrowWidth + arrowMargin, ea),
     },
     children: [
       {
@@ -1040,6 +1048,50 @@ ServiceDetailJs.prototype.insertSlideBox = function () {
           fontWeight: String(descriptionBoldWeight),
           color: colorChip.black,
         }
+      },
+      {
+        style: {
+          display: "flex",
+          flexDirection: "row",
+          width: withOut(0, ea),
+          position: "relative",
+          marginTop: String(circleBoxMarginTop) + ea,
+          paddingLeft: String(circleBoxPaddingLeft) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(circleWidth) + ea,
+              height: String(circleWidth) + ea,
+              borderRadius: String(circleWidth) + ea,
+              background: colorChip.deactive,
+            }
+          },
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(circleWidth) + ea,
+              height: String(circleWidth) + ea,
+              borderRadius: String(circleWidth) + ea,
+              marginRight: String(circleBetween) + ea,
+              marginLeft: String(circleBetween) + ea,
+              background: colorChip.deactive,
+            }
+          },
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(circleWidth) + ea,
+              height: String(circleWidth) + ea,
+              borderRadius: String(circleWidth) + ea,
+              background: colorChip.deactive,
+            }
+          },
+        ]
       }
     ]
   });
