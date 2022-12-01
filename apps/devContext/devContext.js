@@ -133,6 +133,192 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*
+
+    const getMatrix = (clients, projects, histories, requests, year, month) => {
+      const cleanRatio = (num) => { return (Math.floor(num * 10000) / 10000) }
+      let from, to;
+      let filtered;
+      let cliidArr;
+      let managerArr;
+      let standard;
+      let projectArr;
+      let managerStandard;
+      let matrix;
+      let tempArr;
+      let index;
+      let totalConsultingNumber;
+      let totalProcessNumber;
+      let totalContractNumber;
+
+
+      matrix = [ [ "담당자명", "문의", "진행", "계약", "진행율", "계약율", "응대 비율", "계약 비율" ] ];
+      from = new Date(year, (month - 1), 1);
+      to = new Date(year, ((month - 1) + 1), 1);
+
+
+
+      // consulting
+
+      filtered = requests.filter((req) => {
+        return req.request.timeline.toNormal().valueOf() >= from.valueOf() && req.request.timeline.toNormal().valueOf() < to.valueOf();
+      })
+
+      cliidArr = [ ...filtered.map((req) => { return req.cliid }) ];
+      managerArr = cliidArr.map((cliid) => {
+        if (histories.find((obj) => { return obj.cliid === cliid }) === undefined) {
+          console.log(cliid);
+          return "";
+        } else {
+          return histories.find((obj) => { return obj.cliid === cliid }).manager;
+        }
+      });
+      managerStandard = [ ...new Set(managerArr) ];
+      managerStandard.sort();
+
+      for (let name of managerStandard) {
+        matrix.push([ name, 0, 0, 0, 0, 0, 0, 0 ]);
+      }
+      matrix.push([ "전체", 0, 0, 0, 0, 0, 0, 0 ]);
+
+      for (let i = 0; i < managerStandard.length; i++) {
+        matrix[i + 1][1] = managerArr.filter((n) => { return n === managerStandard[i] }).length;
+      }
+      matrix[matrix.length - 1][1] = cliidArr.length;
+      totalConsultingNumber = cliidArr.length;
+
+
+
+      // process
+
+      filtered = filtered.filter((req) => {
+        return !/드[롭랍]/gi.test(req.analytics.response.status);
+      });
+      cliidArr = [ ...filtered.map((req) => { return req.cliid }) ];
+      projectArr = projects.toNormal().filter((obj) => { return cliidArr.includes(obj.cliid) }).filter((obj) => {
+        return obj.desid.trim() !== '';
+      });
+
+      projectArr = projectArr.map((obj) => {
+        obj.manager = histories.find((obj2) => { return obj2.cliid === obj.cliid }).manager;
+        return obj;
+      })
+      managerArr = projectArr.map((obj) => { return obj.manager });
+
+      for (let i = 0; i < managerStandard.length; i++) {
+        matrix[i + 1][2] = managerArr.filter((n) => { return n === managerStandard[i] }).length;
+      }
+      matrix[matrix.length - 1][2] = projectArr.length;
+      totalProcessNumber = projectArr.length;
+
+
+      // contract
+
+      projectArr = projects.toNormal().filter((obj) => {
+        return obj.process.contract.first.date.valueOf() >= from.valueOf() && obj.process.contract.first.date.valueOf() < to.valueOf();
+      });
+      projectArr = projectArr.map((obj) => {
+        obj.manager = histories.find((obj2) => { return obj2.cliid === obj.cliid }).manager;
+        return obj;
+      })
+      managerArr = projectArr.map((obj) => { return obj.manager });
+
+      for (let i = 0; i < managerStandard.length; i++) {
+        matrix[i + 1][3] = managerArr.filter((n) => { return n === managerStandard[i] }).length;
+      }
+      matrix[matrix.length - 1][3] = projectArr.length;
+      totalContractNumber = projectArr.length;
+
+
+      // total
+
+      index = 0;
+      for (let [ name, consulting, process, contract ] of matrix) {
+        if (index !== 0) {
+          matrix[index][4] = consulting !== 0 ? cleanRatio(process / consulting) : 0;
+          matrix[index][5] = consulting !== 0 ? cleanRatio(contract / consulting) : 0;
+          matrix[index][6] = totalConsultingNumber !== 0 ? cleanRatio(consulting / totalConsultingNumber) : 0;
+          matrix[index][7] = totalContractNumber !== 0 ? cleanRatio(contract / totalContractNumber) : 0;
+        }
+        index++;
+      }
+
+      matrix.unshift([ `${String(year)}-${String(month)}`, "", "", "", "", "", "", "" ]);
+      matrix.push([ "", "", "", "", "", "", "", "" ]);
+
+      return matrix;
+    }
+    const selfMongo = this.MONGOC;
+    const clients = await back.getClientsByQuery({}, { selfMongo, withTools: true });
+    const projects = await back.getProjectsByQuery({}, { selfMongo, withTools: true });
+    const histories = [ ...(await back.getHistoriesByQuery("client", {}, { fromConsole: true })) ];
+    const requests = clients.getRequestsTong();
+    let finalMatrix, sheetsId;
+
+    finalMatrix = [];
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2022, 11))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2022, 10))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2022, 9))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2022, 8))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2022, 7))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2022, 6))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2022, 5))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2022, 4))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2022, 3))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2022, 2))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2022, 1))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2021, 12))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2021, 11))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2021, 10))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2021, 9))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2021, 8))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2021, 7))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2021, 6))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2021, 5))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2021, 4))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2021, 3))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2021, 2))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2021, 1))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2020, 12))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2020, 11))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2020, 10))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2020, 9))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2020, 8))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2020, 7))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2020, 6))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2020, 5))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2020, 4))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2020, 3))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2020, 2))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2020, 1))
+
+    sheetsId = await sheets.create_newSheets_inPython("응대자별 계약율", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
+    await sheets.setting_cleanView_inPython(sheetsId);
+    await sheets.update_value_inPython(sheetsId, "", finalMatrix);
+    */
+
+
     /*
 
     const selfPythonMongo = this.MONGOPYTHONC;

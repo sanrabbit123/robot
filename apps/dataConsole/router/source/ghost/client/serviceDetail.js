@@ -237,11 +237,34 @@ ServiceDetailJs.prototype.insertStartBox = function () {
   let leftBox;
   let rightBox;
   let contents;
+  let titleSize, titleWeight, titleBoldWeight;
+  let titleLineHeight;
+  let titleLineTop, titleLineWidth, titleLineLength, titleLineMarginRight;
+  let subBlockMarginTop;
+  let subSize, subWeight, subLineHeight;
+  let rightImagePosition;
 
   blockHeight = <%% 294, 294, 273, 226, 129.5 %%>;
-  bottomMargin = <%% 160, 16, 16, 12, 5 %%>;
+  bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
   margin = <%% 52, 50, 40, 32, 52 %%>;
   marginTop = <%% 52, 50, 40, 32, 52 %%>;
+
+  titleSize = <%% 22, 22, 22, 22, 22 %%>;
+  titleWeight = <%% 400, 400, 400, 400, 400 %%>;
+  titleBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
+  titleLineHeight = <%% 1.55, 1.55, 1.55, 1.55, 1.55 %%>;
+
+  titleLineTop = <%% 9, 9, 9, 9, 9 %%>;
+  titleLineWidth = <%% 4, 4, 4, 4, 4 %%>;
+  titleLineLength = <%% 54, 54, 54, 54, 54 %%>;
+  titleLineMarginRight = <%% 20, 20, 20, 20, 20 %%>;
+
+  subBlockMarginTop = <%% 70, 70, 70, 70, 70 %%>;
+  subSize = <%% 15, 15, 15, 15, 15 %%>;
+  subWeight = <%% 400, 400, 400, 400, 400 %%>;
+  subLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+
+  rightImagePosition = <%% 80, 80, 80, 80, 80 %%>;
 
   contents = {
     left: {
@@ -298,12 +321,12 @@ ServiceDetailJs.prototype.insertStartBox = function () {
               display: "inline-block",
               verticalAlign: "top",
               position: "relative",
-              top: String(9) + ea,
-              width: String(4) + ea,
-              height: String(54) + ea,
+              top: String(titleLineTop) + ea,
+              width: String(titleLineWidth) + ea,
+              height: String(titleLineLength) + ea,
               borderRadius: String(5) + "px",
               background: colorChip.gray3,
-              marginRight: String(20) + ea,
+              marginRight: String(titleLineMarginRight) + ea,
             }
           },
           {
@@ -312,15 +335,15 @@ ServiceDetailJs.prototype.insertStartBox = function () {
               display: "inline-block",
               verticalAlign: "top",
               position: "relative",
-              fontSize: String(22) + ea,
-              fontWeight: String(400),
+              fontSize: String(titleSize) + ea,
+              fontWeight: String(titleWeight),
               color: colorChip.black,
-              lineHeight: String(1.55),
+              lineHeight: String(titleLineHeight),
               textAlign: "left",
             },
             bold: {
-              fontSize: String(22) + ea,
-              fontWeight: String(800),
+              fontSize: String(titleSize) + ea,
+              fontWeight: String(titleBoldWeight),
               color: colorChip.black,
             }
           }
@@ -331,11 +354,11 @@ ServiceDetailJs.prototype.insertStartBox = function () {
         style: {
           display: "block",
           position: "relative",
-          marginTop: String(70) + ea,
-          fontSize: String(15) + ea,
-          fontWeight: String(400),
+          marginTop: String(subBlockMarginTop) + ea,
+          fontSize: String(subSize) + ea,
+          fontWeight: String(subWeight),
           color: colorChip.black,
-          lineHeight: String(1.6),
+          lineHeight: String(subLineHeight),
           textAlign: "right",
         },
       },
@@ -353,10 +376,126 @@ ServiceDetailJs.prototype.insertStartBox = function () {
       height: String(100) + '%',
       overflow: "hidden",
       backgroundImage: "url('" + contents.right.image + "')",
-      backgroundPosition: "50% 80%",
+      backgroundPosition: "50% " + String(rightImagePosition) + "%",
       backgroundSize: "100% auto",
     },
   });
+
+}
+
+ServiceDetailJs.prototype.insertMoodBox = function () {
+  const instance = this;
+  const { ea, media } = this;
+  const baseTong = this.baseTong;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1]);
+  const small = !big;
+  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
+  let contents;
+  let middleTongPaddinngTop;
+  let middleTongPaddingBottom;
+  let middleTong;
+  let middleTitleSize;
+  let middleTitleWeight;
+  let middleTitlePadding;
+  let middleTitleLineTop;
+  let middleTitleTextTop;
+  let middleAreaPaddingTop;
+  let middleInfoSize;
+  let middleTitleMarginBottom;
+
+  middleTongPaddinngTop = <%% 108, 84, 72, 52, 10 %%>;
+  middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
+  middleTitleMarginBottom = <%% 50, 42, 40, 34, 7.5 %%>;
+
+  middleTitleLineTop = <%% 68, 68, 68, 68, 68 %%>;
+
+  middleTitleSize = <%% 23, 23, 21, 18, 4.2 %%>;
+  middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  middleTitlePadding = <%% 16, 16, 12, 10, 2 %%>;
+  middleTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
+
+  middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
+  middleInfoSize = <%% 14, 14, 14, 13, 3 %%>;
+
+  contents = {
+    title: "디자이너가 이끄는 무드 체인지 효과",
+    description: [
+      "디자이너의 기획이 담긴 디자인 컨셉에 맞게,",
+      "제안된 스타일링으로 조화로운 완성을 이끌어 냅니다.",
+    ]
+  }
+
+
+  middleTong = createNode({
+    mother: baseTong,
+    style: {
+      position: "relative",
+      width: withOut(0 * 2, ea),
+      paddingTop: String(middleTongPaddinngTop) + ea,
+      paddingBottom: String(middleTitleMarginBottom) + ea,
+    }
+  });
+
+  createNode({
+    mother: middleTong,
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      position: "relative",
+      width: String(100) + '%',
+      textAlign: "center",
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: "absolute",
+          width: String(100) + '%',
+          height: String(middleTitleLineTop) + ea,
+          top: String(0),
+          left: String(0),
+          borderBottom: "1px solid " + colorChip.gray4,
+        }
+      },
+      {
+        text: contents.title,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(middleTitleSize) + ea,
+          fontWeight: String(middleTitleWeight),
+          color: colorChip.black,
+          textAlign: "center",
+          paddingLeft: String(middleTitlePadding) + ea,
+          paddingRight: String(middleTitlePadding) + ea,
+          top: String(middleTitleTextTop) + ea,
+          background: colorChip.gray1,
+        }
+      },
+      {
+        text: contents.description.join("\n"),
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(middleInfoSize) + ea,
+          fontWeight: String(400),
+          lineHeight: String(1.6),
+          color: colorChip.black,
+          textAlign: "center",
+          paddingTop: String(middleTitlePadding) + ea,
+          paddingLeft: String(middleTitlePadding) + ea,
+          paddingRight: String(middleTitlePadding) + ea,
+          background: colorChip.gray1,
+        }
+      }
+    ]
+  });
+
+
+
 
 
 }
@@ -388,7 +527,7 @@ ServiceDetailJs.prototype.launching = async function (loading) {
         try {
           instance.insertInitBox();
           instance.insertStartBox();
-
+          instance.insertMoodBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "ServiceDetailJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
         }
@@ -399,7 +538,7 @@ ServiceDetailJs.prototype.launching = async function (loading) {
 
     this.totalContents.children[0].style.background = colorChip.gray1;
     this.totalContents.children[1].style.transition = "all 0s ease";
-    this.totalContents.children[1].style.height = String(<&& 600 | 540 | 460 | 400 | 118 &&>) + this.ea;
+    this.totalContents.children[1].style.height = String(<&& 560 | 540 | 460 | 400 | 118 &&>) + this.ea;
 
   } catch (err) {
     console.log(err);
