@@ -41,7 +41,7 @@ const ServiceDetailJs = function () {
   this.mother = new GeneralJs();
 }
 
-ServiceDetailJs.binaryPath = FRONTHOST + "/middle/curation";
+ServiceDetailJs.binaryPath = "/middle/detail";
 
 ServiceDetailJs.prototype.insertInitBox = function () {
   const instance = this;
@@ -223,133 +223,53 @@ ServiceDetailJs.prototype.insertInitBox = function () {
 
 }
 
-ServiceDetailJs.prototype.insertPeopleBox = function () {
+ServiceDetailJs.prototype.insertStartBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
-  const { client, ea, media, osException, testMode } = this;
+  const { ea, media, baseTong } = this;
   const mobile = media[4];
   const desktop = !mobile;
   let whiteBlock;
-  let style;
-  let blockHeight, bottomMargin;
-  let leftBox, rightBox;
-  let titleBox, barBox, indexBox;
+  let blockHeight;
+  let bottomMargin;
   let margin;
-  let leftRatio;
-  let wordSpacing;
-  let titleFont, titleLeft, titleFontWeight;
-  let barWidth, barLeft;
-  let indexFont, indexFontWeight;
-  let doubleQuote;
-  let quoteTop, quoteLeft, quoteHeight, quoteWidth, quoteMarginBottom;
-  let initWordingSize, initWordingHeight, initWordingWordSpacing, initWordingLineHeight;
-  let indexNumberBottom;
-  let grayBox;
-  let grayBoxMarginTop;
-  let grayBoxTitleSize, grayBoxTitleWeight, grayBoxTitleTop, grayBoxTitleLeft;
-  let grayBoxUp, grayBoxDown;
-  let grayBoxHeight, grayBoxTop;
-  let grayBoxUpWidth0, grayBoxUpWidth1, grayBoxUpWidth2, grayBoxUpWidth3;
-  let grayBoxUpRight1, grayBoxUpRight2, grayBoxUpRight3;
-  let grayBoxDownWidth0, grayBoxDownWidth1, grayBoxDownWidth2;
-  let grayBoxDownRight1, grayBoxDownRight2;
-  let grayBoxArrowTop, grayBoxArrowHeight;
-  let overlappingWidth;
-  let grayInnerWordingSize;
-  let grayInnerWordingWeight;
-  let grayInnerWordingTextTop;
-  let grayUpWordings, grayDownWordings;
-  let mobileGrayUpHeight;
-  let mobileRightBoxHeight;
-  let grayBoxImageVisualWidth;
   let marginTop;
-  let mobileLeftBoxHeight;
-  let titleTop;
-  let descriptionSize;
-  let descriptionBottom;
+  let leftBox;
+  let rightBox;
+  let contents;
 
-  blockHeight = <%% 383, 316, 273, 226, 129.5 %%>;
-  bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
-  margin = <%% 52, 52, 44, 32, 52 %%>;
+  blockHeight = <%% 294, 294, 273, 226, 129.5 %%>;
+  bottomMargin = <%% 160, 16, 16, 12, 5 %%>;
+  margin = <%% 52, 50, 40, 32, 52 %%>;
   marginTop = <%% 52, 50, 40, 32, 52 %%>;
-  leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
 
-  titleFont = <%% 22, 22, 20, 17, 4.5 %%>;
-  titleLeft = <%% 6, 6, 6, 6, 0 %%>;
-  titleFontWeight = <%% 800, 800, 800, 800, 800 %%>;
-  wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
-
-  titleTop = <%% 110, 54, 40, 30, 8.5 %%>;
-  descriptionSize = <%% 14, 14, 13, 12, 3 %%>;
-  descriptionBottom = <%% 0, -8, -7, -2, 0 %%>;
-
-  barWidth = <%% 70, 80, 80, 80, 80 %%>;
-  barLeft = <%% 240, titleLeft + 234, titleLeft + 234, titleLeft + 234, titleLeft + 234 %%>;
-
-  indexFont = <%% 19, 19, 19, 19, 19 %%>;
-  indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
-
-  leftWidth = <%% 340, 260, 250, 210, 300 %%>;
-
-  initWordingHeight = <%% 20, 20, 20, 20, 9 %%>;
-  initWordingSize = <%% 15.5, 15, 14.5, 13.5, 3.5 %%>;
-  initWordingWordSpacing = <%% -1, -1, -1, -1, -1 %%>;
-  initWordingLineHeight = <%% 9, 9, 9, 9, 9 %%>;
-
-  indexNumberBottom = <%% 3, 4, 12, 4, 0 %%>;
-
-  grayBoxMarginTop = <%% 108, 103, 96, 86, 36 %%>;
-
-  grayBoxTitleSize = <%% 14, 14, 13, 11, 3.2 %%>;
-  grayBoxTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
-  grayBoxTitleTop = <%% (isMac() ? 36 : 38), (isMac() ? 36 : 38), (isMac() ? 36 : 38), (isMac() ? 20 : 21), 0 %%>;
-  grayBoxTitleLeft = <%% 40, 32, 30, 16, 6 %%>;
-  grayBoxHeight = <%% 36, 36, 34, 28, 7 %%>;
-  grayBoxTop = <%% 30, 30, 30, 15, 6.6 %%>;
-
-  grayBoxUpWidth0 = <%% 280, 180, 140, 120, 24 %%>;
-  grayBoxUpWidth1 = <%% 230, 160, 130, 110, 24 %%>;
-  grayBoxUpWidth2 = <%% 72, 72, 72, 72, 9 %%>;
-  grayBoxUpWidth3 = <%% 130, 112, 108, 90, 20 %%>;
-
-  grayBoxUpRight1 = <%% 310, 200, 160, 125, 28.5 %%>;
-  grayBoxUpRight2 = <%% 550, 370, 300, 244, 54 %%>;
-  grayBoxUpRight3 = <%% 622, 422, 341, 285, 62 %%>;
-
-  grayBoxDownWidth0 = <%% 280, 242, 195, 175, 30 %%>;
-  grayBoxDownWidth1 = <%% 277, 170, 142, 120, 29 %%>;
-  grayBoxDownWidth2 = <%% 175, 112, 108, 90, 20 %%>;
-
-  grayBoxDownRight1 = <%% 310, 264, 210, 179, 34 %%>;
-  grayBoxDownRight2 = <%% 577, 422, 341, 285, 62 %%>;
-
-  grayBoxArrowTop = <%% 42, 42, 42, 24, 8.8 %%>;
-  grayBoxArrowHeight = <%% 11, 11, 11, 9, 2 %%>;
-
-  overlappingWidth = <%% 10, 10, 10, 10, 0 %%>;
-  grayInnerWordingSize = <%% 13, 13, 13, 11, 2.8 %%>;
-  grayInnerWordingTextTop = desktop ? (isMac() ? -1 : 0) : -0.1;
-  grayInnerWordingWeight = 600;
-
-  mobileGrayUpHeight = 18;
-  mobileRightBoxHeight = 78;
-  mobileLeftBoxHeight = 37.5;
-
-  grayBoxImageVisualWidth = <%% 16, 4, 0, 0, 19 %%>;
-
-  grayUpWordings = [ "프로세스", "후 시공 / 구매", "선 디자인 / 기획", "디자이너 선택" ];
-  grayDownWordings = [ "비용 구성", "시공 비용", "구매 비용", "디자인비" ];
+  contents = {
+    left: {
+      title: [
+        "<b%인테리어 시공 없이 가구, 패브릭, 소품만으로%b>",
+        "우리집 무드를 변화시켜주는 스타일링",
+      ],
+      sub: [
+        "홈퍼니싱은 시공 없이 스타일링만으로 완성하는 인테리어 서비스입니다.",
+        "내 집의 컨디션에 적합한 스타일링 서비스를 경험해보세요.",
+      ]
+    },
+    right: {
+      image: ServiceDetailJs.binaryPath + "/startf0.jpg",
+    }
+  }
 
   whiteBlock = createNode({
-    mother: this.baseTong,
+    mother: baseTong,
     style: {
       position: "relative",
-      borderRadius: String(desktop ? 8 : 1) + ea,
+      borderRadius: String(5) + "px",
       width: String(100) + '%',
       height: String(blockHeight) + ea,
       background: colorChip.white,
       marginBottom: String(bottomMargin) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      overflow: "hidden",
     }
   });
 
@@ -358,46 +278,67 @@ ServiceDetailJs.prototype.insertPeopleBox = function () {
     style: {
       display: desktop ? "inline-block" : "block",
       position: "relative",
-      width: desktop ? String(leftWidth) + ea : String(100) + '%',
-      lineHeight: String(1.42),
-      height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : String(mobileLeftBoxHeight) + ea,
+      width: withOut(50, margin * 2, ea),
+      height: withOut(marginTop + margin, ea),
       marginTop: desktop ? String(marginTop) + ea : "",
       marginBottom: desktop ? String(margin) + ea : "",
       marginLeft: desktop ? String(margin) + ea : "",
+      marginRight: desktop ? String(margin) + ea : "",
     },
     children: [
       {
-        text: "인테리어, 막상 하려니\n막막하지 않으세요?",
         style: {
-          position: "absolute",
-          fontSize: String(titleFont) + ea,
-          fontWeight: String(titleFontWeight),
-          top: String(titleTop) + ea,
-          left: String(titleLeft) + ea,
-          color: colorChip.black,
-          width: desktop ? "" : String(100) + '%',
-          textAlign: desktop ? "" : "center",
-        }
+          display: "block",
+          position: "relative",
+          textAlign: "left",
+        },
+        children: [
+          {
+            style: {
+              display: "inline-block",
+              verticalAlign: "top",
+              position: "relative",
+              top: String(9) + ea,
+              width: String(4) + ea,
+              height: String(54) + ea,
+              borderRadius: String(5) + "px",
+              background: colorChip.gray3,
+              marginRight: String(20) + ea,
+            }
+          },
+          {
+            text: contents.left.title.join("\n"),
+            style: {
+              display: "inline-block",
+              verticalAlign: "top",
+              position: "relative",
+              fontSize: String(22) + ea,
+              fontWeight: String(400),
+              color: colorChip.black,
+              lineHeight: String(1.55),
+              textAlign: "left",
+            },
+            bold: {
+              fontSize: String(22) + ea,
+              fontWeight: String(800),
+              color: colorChip.black,
+            }
+          }
+        ]
       },
       {
-        text: [
-          desktop ? "알아보면 알아볼수록 해야 할 것이" : "알아볼수록 해야할 것이 너무 많은 인테리어,",
-          desktop ? "너무나도 많은 인테리어, 준비하다 보면" : "막히는 부분도 많고 실패도 많이 하기 마련입니다.",
-          desktop ? "막히는 부분도 많고, 구입하다 보면" : "",
-          desktop ? "실패도 많이 하기 마련입니다." : "",
-        ].join("\n"),
+        text: contents.left.sub.join("\n"),
         style: {
-          position: "absolute",
-          bottom: String(descriptionBottom) + ea,
-          left: String(titleLeft) + ea,
-          color: colorChip.black,
-          textAlign: desktop ? "" : "center",
-          width: desktop ? "" : withOut(0),
-          fontSize: String(descriptionSize) + ea,
+          display: "block",
+          position: "relative",
+          marginTop: String(70) + ea,
+          fontSize: String(15) + ea,
           fontWeight: String(400),
+          color: colorChip.black,
           lineHeight: String(1.6),
-        }
-      }
+          textAlign: "right",
+        },
+      },
     ]
   });
 
@@ -408,27 +349,15 @@ ServiceDetailJs.prototype.insertPeopleBox = function () {
       position: "relative",
       verticalAlign: "top",
       top: String(0) + ea,
-      width: desktop ? withOut(leftWidth + margin, ea) : String(100) + '%',
-      height: desktop ? String(100) + '%' : withOut(mobileLeftBoxHeight, ea),
-      borderRadius: String(5) + "px",
+      width: desktop ? String(50) + '%' : String(100) + '%',
+      height: String(100) + '%',
       overflow: "hidden",
+      backgroundImage: "url('" + contents.right.image + "')",
+      backgroundPosition: "50% 80%",
+      backgroundSize: "100% auto",
     },
-    children: [
-      {
-        mode: "img",
-        attribute: {
-          src: ServiceDetailJs.binaryPath + "/contents5" + String(media.findIndex(boo => boo)) + ".png",
-        },
-        style: {
-          display: "block",
-          position: "absolute",
-          width: String(100) + '%',
-          bottom: String(0),
-          right: String(0),
-        }
-      }
-    ]
   });
+
 
 }
 
@@ -458,7 +387,7 @@ ServiceDetailJs.prototype.launching = async function (loading) {
       local: async () => {
         try {
           instance.insertInitBox();
-          instance.insertPeopleBox();
+          instance.insertStartBox();
 
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "ServiceDetailJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
