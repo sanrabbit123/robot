@@ -12,7 +12,6 @@ const worker = async function (package) {
     bill,
     analytics, sheets, drive, calendar, docs,
     mongo, mongoconsole, mongopython, mongolocal,
-    rethink,
   } = package;
   const { messageLog, errorLog, equalJson, dateToString } = mother;
   try {

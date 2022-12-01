@@ -1,4 +1,4 @@
-const CronSource = function (mother, back, address, kakaoInstance, humanInstance, work, report, bill, analytics, sheets, drive, calendar, docs, MONGOC, MONGOCONSOLEC, MONGOPYTHONC, MONGOLOCALC, RETHINKC) {
+const CronSource = function (mother, back, address, kakaoInstance, humanInstance, work, report, bill, analytics, sheets, drive, calendar, docs, MONGOC, MONGOCONSOLEC, MONGOPYTHONC, MONGOLOCALC) {
   this.mother = mother;
   this.back = back;
   this.address = address;
@@ -16,7 +16,6 @@ const CronSource = function (mother, back, address, kakaoInstance, humanInstance
   this.mongoconsole = MONGOCONSOLEC;
   this.mongopython = MONGOPYTHONC;
   this.mongolocal = MONGOLOCALC;
-  this.rethink = RETHINKC;
   this.dir = process.cwd() + "/apps/cronGhost/source";
   this.sourceMap = null;
 }
@@ -83,7 +82,7 @@ CronSource.prototype.sourceLoad = async function () {
 
 CronSource.prototype.targetLauching = async function (cronId) {
   const instance = this;
-  const { sourceMap, rethink } = this;
+  const { sourceMap } = this;
   const { day: dayId, hour: hourId } = cronId;
   const package = {
     mother: this.mother,
@@ -103,7 +102,6 @@ CronSource.prototype.targetLauching = async function (cronId) {
     mongoconsole: this.mongoconsole,
     mongopython: this.mongopython,
     mongolocal: this.mongolocal,
-    rethink: this.rethink,
   };
   try {
     const { date, hour } = sourceMap;

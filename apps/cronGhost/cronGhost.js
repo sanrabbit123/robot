@@ -144,12 +144,10 @@ CronGhost.prototype.cronServer = async function () {
   const dateCopy = (dateObj) => { return new Date(JSON.stringify(dateObj).slice(1, -1)); }
   const zeroAddition = (num) => { return num < 10 ? `0${String(num)}` : String(num) }
   const CronSource = require(`${this.dir}/source/cronSource.js`);
-  const RethinkAccess = require(`${process.cwd()}/apps/rethinkAccess/rethinkAccess.js`);
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
   const MONGOCONSOLEC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
   const MONGOPYTHONC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
-  const RETHINKC = new RethinkAccess();
   const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
   const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
   const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`);
@@ -175,9 +173,6 @@ CronGhost.prototype.cronServer = async function () {
     await MONGOLOCALC.connect();
     await MONGOCONSOLEC.connect();
     await MONGOPYTHONC.connect();
-
-    await RETHINKC.connect();
-    await RETHINKC.bindCollection("cronLog");
 
     const work = new BackWorker();
     const report = new BackReport();
@@ -213,8 +208,7 @@ CronGhost.prototype.cronServer = async function () {
       MONGOC,
       MONGOCONSOLEC,
       MONGOPYTHONC,
-      MONGOLOCALC,
-      RETHINKC
+      MONGOLOCALC
     );
     await this.source.sourceLoad();
 
