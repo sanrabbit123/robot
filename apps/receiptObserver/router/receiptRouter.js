@@ -219,6 +219,12 @@ ReceiptRouter.prototype.rou_post_cashReceipt = function () {
   let obj = {};
   obj.link = "/cashReceipt";
   obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       if (req.body.json === undefined) {
         throw new Error("must be json");
@@ -251,16 +257,10 @@ ReceiptRouter.prototype.rou_post_cashReceipt = function () {
         console.log(err);
       });
 
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
       res.send(JSON.stringify({ message: "OK" }));
     } catch (e) {
       instance.mother.errorLog("Python 서버 문제 생김 (rou_post_cashReceipt): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
+      res.send(JSON.stringify({ message: "error" }));
     }
   }
   return obj;
@@ -2860,7 +2860,7 @@ ReceiptRouter.prototype.rou_post_taxBill = function () {
     });
     try {
       bill.taxBill().then(() => {
-        console.log("taxBill success");
+        return bill.parsingCashReceipt();
       }).catch((e) => {
         throw new Error(e);
       });
