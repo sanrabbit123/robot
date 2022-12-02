@@ -3372,7 +3372,7 @@ ReceiptRouter.prototype.rou_post_stylingFormSync = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      formSync().catch((err) => {
+      formSync(instance.mongo, instance.mongolocal).catch((err) => {
         errorLog("Python 서버 문제 생김 (rou_post_stylingFormSync): " + err.message).catch((e) => { console.log(e); });
       });
       res.send(JSON.stringify({ message: "will do" }));

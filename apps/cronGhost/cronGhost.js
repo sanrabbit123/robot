@@ -280,7 +280,7 @@ CronGhost.prototype.cronServer = async function () {
       intervalFunc0().catch((err) => { console.log(err); });
       setInterval(intervalFunc, interval);
       setInterval(intervalFunc0, 4 * 60 * 60 * 1000);
-      setInterval(intervalFunc1, 1 * 60 * 60 * 1000);
+      setInterval(intervalFunc1, 1 * 30 * 60 * 1000);
     }, startTime);
 
     pureServer("listen", app, port);
