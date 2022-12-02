@@ -2865,6 +2865,8 @@ ReceiptRouter.prototype.rou_post_taxBill = function () {
         return bill.parsingCashReceipt();
       }).then(() => {
         return requestSystem("https://" + address.pythoninfo.host + ":" + String(generalPort) + "/stylingFormSync", { data: null }, { headers: { "Content-Type": "application/json" } });
+      }).then(() => {
+        return requestSystem("https://" + address.backinfo.host + ":" + String(generalPort) + "/callHistory", { data: null }, { headers: { "Content-Type": "application/json" } });
       }).catch((e) => {
         throw new Error(e);
       });
