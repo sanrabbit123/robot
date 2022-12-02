@@ -2848,7 +2848,9 @@ ReceiptRouter.prototype.rou_post_invoiceCreate = function () {
 ReceiptRouter.prototype.rou_post_taxBill = function () {
   const instance = this;
   const bill = this.bill;
-  const { equalJson } = this.mother;
+  const address = this.address;
+  const { equalJson, requestSystem } = this.mother;
+  const generalPort = 3000;
   let obj = {};
   obj.link = "/taxBill";
   obj.func = async function (req, res) {
@@ -2861,6 +2863,8 @@ ReceiptRouter.prototype.rou_post_taxBill = function () {
     try {
       bill.taxBill().then(() => {
         return bill.parsingCashReceipt();
+      }).then(() => {
+        return requestSystem("https://" + address.pythoninfo.host + ":" + String(generalPort) + "/stylingFormSync", { data: null }, { headers: { "Content-Type": "application/json" } });
       }).catch((e) => {
         throw new Error(e);
       });
