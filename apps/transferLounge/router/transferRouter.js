@@ -346,7 +346,7 @@ TransferRouter.prototype.rou_post_clientBinary = function () {
               upload1: "preferredPhoto"
             };
             let list, clientFolder;
-            let clientRows, cliid;
+            let clientRows;
 
             clientFolder = `${clientConst}/${clientFolderName}`;
 
