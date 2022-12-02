@@ -3227,6 +3227,151 @@ ReceiptRouter.prototype.rou_post_passiveResponse = function () {
   return obj;
 }
 
+ReceiptRouter.prototype.rou_post_stylingFormSync = function () {
+  const instance = this;
+  const { requestSystem, equalJson, stringToDate, messageLog, errorLog, messageSend } = this.mother;
+  const { officeinfo: { widsign: { id, key, endPoint } } } = this.address;
+  const collections = [ "stylingForm", "constructForm" ];
+  const back = this.back;
+  let obj = {};
+  obj.link = "/stylingFormSync";
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const selfMongo = instance.mongolocal;
+      let eformResponse, token;
+      let num;
+      let forms, resultForms, finalForms;
+      let pageSize;
+      let monthAgoValue;
+      let boo;
+      let whereQuery, updateQuery;
+      let dbForms;
+      let target;
+      let formDetail;
+      let thisClient;
+      let text;
+
+      for (let collection of collections) {
+        monthAgoValue = new Date();
+        monthAgoValue.setMonth(monthAgoValue.getMonth() - 3);
+        monthAgoValue = monthAgoValue.valueOf();
+
+        pageSize = 30;
+        eformResponse = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
+
+        if (eformResponse.data.result_code !== 200) {
+          throw new Error("access token error");
+        } else {
+          token = eformResponse.data.access_token;
+          resultForms = [];
+          forms = [ null ];
+          num = 1;
+          while (forms.length > 0) {
+            eformResponse = await requestSystem(endPoint + "/v2/doc", { page: num, page_size: pageSize }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+            forms = equalJson(JSON.stringify(eformResponse.data.result)).map((obj) => {
+              let newObj;
+              newObj = {};
+              newObj.form = obj.form_id;
+              newObj.id = (obj.receiver_list.length > 0) ? obj.receiver_list[0] : null;
+              newObj.name = obj.title;
+              newObj.date = stringToDate(obj.created_date);
+              newObj.confirm = (obj.status === 'END');
+              return newObj;
+            });
+            if (forms.length > 0) {
+              forms.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
+              if (forms[0].date.valueOf() <= monthAgoValue) {
+                break;
+              }
+              resultForms = resultForms.concat(forms);
+            }
+            num++;
+          }
+
+          resultForms.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
+
+          finalForms = [];
+          for (let f of resultForms) {
+            boo = (finalForms.find((obj) => { return obj.name === f.name; }) !== undefined);
+            if (!boo) {
+              finalForms.push(f);
+            }
+          }
+
+          whereQuery = { $or: finalForms.map((obj) => { return { name: obj.name } }) };
+
+          dbForms = await back.mongoRead(collection, whereQuery, { selfMongo });
+          for (let f of dbForms) {
+            whereQuery = { proid: f.proid };
+            updateQuery = {};
+
+            target = null;
+            for (let i of finalForms) {
+              if (i.name === f.name) {
+                target = i;
+              }
+            }
+
+            if (target !== null) {
+              eformResponse = await requestSystem(endPoint + "/v2/doc/detail", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+              if (typeof eformResponse.data === "object") {
+                if (eformResponse.data.result !== undefined) {
+                  if (eformResponse.data.result.receiver_list.length > 0) {
+                    updateQuery["id"] = target.id;
+                    updateQuery["date"] = target.date;
+                    updateQuery["confirm"] = target.confirm;
+                    updateQuery["form"] = target.form;
+                    updateQuery["detail"] = eformResponse.data.result.receiver_list[0];
+                    eformResponse = await requestSystem(endPoint + "/v2/doc/history", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+                    if (typeof eformResponse.data === "object") {
+                      if (Array.isArray(eformResponse.data.result)) {
+                        updateQuery["history"] = eformResponse.data.result.map((obj) => {
+                          obj.date = stringToDate(obj.created_date);
+                          delete obj.created_date;
+                          return obj;
+                        });
+                        if (f.confirm !== true && target.confirm === true) {
+                          thisClient = await back.getClientById(f.client.cliid, { selfMongo: MONGOCOREC });
+                          text = thisClient.name + " 고객님이 계약서에 서명을 완료하셨습니다!";
+                          await messageSend({ text, channel: "#cx", voice: true });
+                        }
+                        await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+
+                        if (/styling/gi.test(collection)) {
+                          await back.updateProject([ { proid: f.proid }, { "process.contract.form.id": target.id } ], { selfMongo: MONGOCOREC });
+                        } else if (/construct/gi.test(collection)) {
+                          await back.updateProject([ { proid: f.proid }, { "process.design.construct.contract.form.id": target.id } ], { selfMongo: MONGOCOREC });
+                        }
+
+                      }
+                    }
+                  }
+                }
+              }
+            }
+
+          }
+        }
+
+      }
+      errorLog("styling form sync success : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
+
+      res.send(JSON.stringify({ message: "success" }));
+    } catch (e) {
+      errorLog("Python 서버 문제 생김 (rou_post_stylingFormSync): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+      res.send(JSON.stringify({ message: "error" }));
+    }
+  }
+  return obj;
+}
+
 ReceiptRouter.prototype.getAll = function () {
   let result, result_arr;
 

@@ -285,7 +285,7 @@ Ghost.prototype.stylingFormSync = async function (MONGOCOREC) {
   try {
     await MONGOC.connect();
     const selfMongo = MONGOC;
-    let res, token;
+    let eformResponse, token;
     let num;
     let forms, resultForms, finalForms;
     let pageSize;
@@ -304,18 +304,18 @@ Ghost.prototype.stylingFormSync = async function (MONGOCOREC) {
       monthAgoValue = monthAgoValue.valueOf();
 
       pageSize = 30;
-      res = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
+      eformResponse = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
 
-      if (res.data.result_code !== 200) {
+      if (eformResponse.data.result_code !== 200) {
         throw new Error("access token error");
       } else {
-        token = res.data.access_token;
+        token = eformResponse.data.access_token;
         resultForms = [];
         forms = [ null ];
         num = 1;
         while (forms.length > 0) {
-          res = await requestSystem(endPoint + "/v2/doc", { page: num, page_size: pageSize }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
-          forms = equalJson(JSON.stringify(res.data.result)).map((obj) => {
+          eformResponse = await requestSystem(endPoint + "/v2/doc", { page: num, page_size: pageSize }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+          forms = equalJson(JSON.stringify(eformResponse.data.result)).map((obj) => {
             let newObj;
             newObj = {};
             newObj.form = obj.form_id;
@@ -360,19 +360,19 @@ Ghost.prototype.stylingFormSync = async function (MONGOCOREC) {
           }
 
           if (target !== null) {
-            res = await requestSystem(endPoint + "/v2/doc/detail", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
-            if (typeof res.data === "object") {
-              if (res.data.result !== undefined) {
-                if (res.data.result.receiver_list.length > 0) {
+            eformResponse = await requestSystem(endPoint + "/v2/doc/detail", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+            if (typeof eformResponse.data === "object") {
+              if (eformResponse.data.result !== undefined) {
+                if (eformResponse.data.result.receiver_list.length > 0) {
                   updateQuery["id"] = target.id;
                   updateQuery["date"] = target.date;
                   updateQuery["confirm"] = target.confirm;
                   updateQuery["form"] = target.form;
-                  updateQuery["detail"] = res.data.result.receiver_list[0];
-                  res = await requestSystem(endPoint + "/v2/doc/history", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
-                  if (typeof res.data === "object") {
-                    if (Array.isArray(res.data.result)) {
-                      updateQuery["history"] = res.data.result.map((obj) => {
+                  updateQuery["detail"] = eformResponse.data.result.receiver_list[0];
+                  eformResponse = await requestSystem(endPoint + "/v2/doc/history", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+                  if (typeof eformResponse.data === "object") {
+                    if (Array.isArray(eformResponse.data.result)) {
+                      updateQuery["history"] = eformResponse.data.result.map((obj) => {
                         obj.date = stringToDate(obj.created_date);
                         delete obj.created_date;
                         return obj;
@@ -401,7 +401,7 @@ Ghost.prototype.stylingFormSync = async function (MONGOCOREC) {
       }
 
     }
-    await messageLog("styling form sync success : " + JSON.stringify(new Date()));
+    await errorLog("styling form sync success : " + JSON.stringify(new Date()));
   } catch (e) {
     await errorLog("ghost stylingFormSync 에러남 : " + e.message);
   } finally {
@@ -409,59 +409,19 @@ Ghost.prototype.stylingFormSync = async function (MONGOCOREC) {
   }
 }
 
-Ghost.prototype.autoHypen = function (sender) {
-  let phoneNumber, senderArr;
-  let part0, part1, part2;
-  senderArr = sender.split('');
-  phoneNumber = '';
-  part0 = '';
-  part1 = '';
-  part2 = '';
-  if (/^01/gi.test(sender)) {
-    for (let i = 0; i < 3; i++) {
-      part0 += senderArr.shift();
-    }
-    for (let i = 0; i < 4; i++) {
-      part2 = senderArr.pop() + part2;
-    }
-    part1 = senderArr.join('');
-    phoneNumber = part0 + '-' + part1 + '-' + part2;
-  } else if (/^02/gi.test(sender)) {
-    for (let i = 0; i < 2; i++) {
-      part0 += senderArr.shift();
-    }
-    for (let i = 0; i < 4; i++) {
-      part2 = senderArr.pop() + part2;
-    }
-    part1 = senderArr.join('');
-    phoneNumber = part0 + '-' + part1 + '-' + part2;
-  } else {
-    for (let i = 0; i < 3; i++) {
-      part0 += senderArr.shift();
-    }
-    for (let i = 0; i < 4; i++) {
-      part2 = senderArr.pop() + part2;
-    }
-    part1 = senderArr.join('');
-    phoneNumber = part0 + '-' + part1 + '-' + part2;
-  }
-  return phoneNumber;
-}
-
 Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
   const instance = this;
   const back = this.back;
-  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, requestSystem, stringToDate, errorLog } = this.mother;
-  const selfMongo = MONGOC;
-  const selfConsoleInfo = MONGOCONSOLEC;
+  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, requestSystem, stringToDate, errorLog, autoHypenPhone } = this.mother;
+  const url = "https://centrex.uplus.co.kr/RestApi/callhistory";
+  const { officeinfo: { phone: { numbers: phoneNumbers, password: pass } } } = instance.address;
+  const querystring = require("querystring");
+  const callConst = "c_";
+  const uniqueConst = "u_";
+  const successStandardSec = 200;
   try {
-    const url = "https://centrex.uplus.co.kr/RestApi/callhistory";
-    const { officeinfo: { phone: { numbers: phoneNumbers, password: pass } } } = this.address;
-    const querystring = require("querystring");
-    const callConst = "c_";
-    const uniqueConst = "u_";
-    const successStandardSec = 200;
-    const autoHypen = this.autoHypen;
+    const selfMongo = MONGOC;
+    const selfConsoleInfo = MONGOCONSOLEC;
     let res, tong, data, query, calltype, page;
     let outArr, inArr;
     let tempObj;
@@ -525,7 +485,7 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
       for (let obj of tong[c].out) {
         tempObj = {};
         tempObj.date = stringToDate(obj.TIME);
-        tempObj.to = autoHypen(obj.DST);
+        tempObj.to = autoHypenPhone(obj.DST);
         tempObj.duration = Number.isNaN(Number(obj.DURATION.replace(/[^0-9]/gi, ''))) ? 0 : Number(obj.DURATION.replace(/[^0-9]/gi, ''));
         if (obj.STATUS === "OK") {
           if (tempObj.duration >= successStandardSec) {
@@ -541,7 +501,7 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
       for (let obj of tong[c].in) {
         tempObj = {};
         tempObj.date = stringToDate(obj.TIME);
-        tempObj.from = autoHypen(obj.SRC);
+        tempObj.from = autoHypenPhone(obj.SRC);
         tempObj.duration = Number.isNaN(Number(obj.DURATION.replace(/[^0-9]/gi, ''))) ? 0 : Number(obj.DURATION.replace(/[^0-9]/gi, ''));
         if (obj.STATUS === "OK") {
           if (tempObj.duration >= successStandardSec) {
@@ -1108,8 +1068,6 @@ Ghost.prototype.ghostRouter = function (needs) {
     func: async function (req, res) {
       try {
         instance.stylingFormSync(MONGOC).then(() => {
-          return instance.insyncCheck();
-        }).then(() => {
           return instance.callHistory(MONGOC, MONGOCONSOLEC);
         }).then(() => {
           return errorLog("callHistory update, style form sync success : " + JSON.stringify(new Date()));
@@ -1207,8 +1165,7 @@ Ghost.prototype.ghostRouter = function (needs) {
             do {
               log = await instance.recordBackup();
               safeNum++;
-            } while (log === false || safeNum > 10);
-            await rethink.rethinkCreate(logCollection, log);
+            } while (log === false || safeNum < 10);
             await messageLog("record backup and delete done");
           } catch (e) {
             await errorLog("record backup and delete error : " + e.message);
