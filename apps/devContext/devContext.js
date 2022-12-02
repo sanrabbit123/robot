@@ -132,25 +132,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const selfMongo = this.MONGOC;
-    const folderTarget = process.env.HOME + "/static/photo/client";
-    const folderContents = (await fileSystem(`readDir`, [ folderTarget ])).filter((str) => { return str !== ".DS_Store" }).map((str) => {
-      return str.replace(/ /gi, '').trim()
-    });
-    const clients = await back.getClientsByQuery({}, { selfMongo });
-    let client;
-    let tempArr;
-
-    for (let str of folderContents) {
-      tempArr = str.split("_")
-
-      client = clients.toNormal().find((obj) => { return obj.phone === autoHypenPhone(tempArr[tempArr.length - 1]) });
-      if (client !== undefined && typeof client === "object" && client !== null && typeof client.cliid === "string") {
-        tempArr[tempArr.length - 1] = client.cliid;
-        await shellExec(`mv`, [ folderTarget + "/" + str, folderTarget + "/" + tempArr.join("_") ]);
-        console.log(str, tempArr.join("_"));
-      }
-    }
 
 
 
