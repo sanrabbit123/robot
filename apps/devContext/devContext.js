@@ -63,7 +63,7 @@ DevContext.prototype.launching = async function () {
   const instance = this;
   const rethink = new RethinkAccess();
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongotestinfo } = this.mother;
-  const { consoleQ, fileSystem, shellExec, shellLink, orderSystem, ghostFileUpload, ghostFileList, curlRequest, diskReading, requestSystem, ajaxJson, uniqueValue, getDateMatrix, ghostRequest, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether, serviceParsing, localUnique, processSystem, sha256Hmac, variableArray } = this.mother;
+  const { consoleQ, fileSystem, shellExec, shellLink, orderSystem, ghostFileUpload, ghostFileList, curlRequest, diskReading, requestSystem, ajaxJson, uniqueValue, getDateMatrix, ghostRequest, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether, serviceParsing, localUnique, processSystem, sha256Hmac, variableArray, autoHypenPhone } = this.mother;
   try {
     await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
@@ -132,8 +132,25 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const selfMongo = this.MONGOC;
+    const folderTarget = process.env.HOME + "/static/photo/client";
+    const folderContents = (await fileSystem(`readDir`, [ folderTarget ])).filter((str) => { return str !== ".DS_Store" }).map((str) => {
+      return str.replace(/ /gi, '').trim()
+    });
+    const clients = await back.getClientsByQuery({}, { selfMongo });
+    let client;
+    let tempArr;
 
+    for (let str of folderContents) {
+      tempArr = str.split("_")
 
+      client = clients.toNormal().find((obj) => { return obj.phone === autoHypenPhone(tempArr[tempArr.length - 1]) });
+      if (client !== undefined && typeof client === "object" && client !== null && typeof client.cliid === "string") {
+        tempArr[tempArr.length - 1] = client.cliid;
+        await shellExec(`mv`, [ folderTarget + "/" + str, folderTarget + "/" + tempArr.join("_") ]);
+        console.log(str, tempArr.join("_"));
+      }
+    }
 
 
 
@@ -3528,7 +3545,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p207");
+    // await this.getRawPortfolio("p237");
 
 
     // get corePortfolio by pid
@@ -3589,8 +3606,8 @@ DevContext.prototype.launching = async function () {
     // send sms
     // const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
     // const human = new HumanPacket();
-    // const name = "김혜정";
-    // const amount = 756800;
+    // const name = "윤민아";
+    // const amount = 3770000;
     // await human.sendSms({
     //   name: "",
     //   phone: "01055432039",

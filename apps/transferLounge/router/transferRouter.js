@@ -268,7 +268,7 @@ TransferRouter.prototype.rou_post_clientPhoto = function () {
       const preferredPhotoName = "preferredPhoto";
       const sitePhotoName = "sitePhoto";
       const { cliid } = req.body;
-      let totalList, client, phone;
+      let totalList, client;
       let preferredPhoto, sitePhoto;
       let preferredPhotoList, sitePhotoList;
       let root;
@@ -279,14 +279,9 @@ TransferRouter.prototype.rou_post_clientPhoto = function () {
         mode = "fileMode";
       }
 
-      client = await back.getClientById(cliid, { selfMongo: instance.mongo });
-      if (client === null) {
-        throw new Error("invaild cliid");
-      }
-      phone = client.phone.replace(/[^0-9]/g, '');
       root = clientConst;
       totalList = await fileSystem(`readDir`, [ root ]);
-      totalList = totalList.filter((i) => { return i !== ".DS_Store" }).filter((i) => { return (new RegExp(phone, "gi")).test(i); });
+      totalList = totalList.filter((i) => { return i !== ".DS_Store" }).filter((i) => { return (new RegExp(cliid, "gi")).test(i); });
 
       preferredPhoto = [];
       sitePhoto = [];
@@ -344,8 +339,8 @@ TransferRouter.prototype.rou_post_clientBinary = function () {
           let filesKeys = Object.keys(files);
           if (!err && filesKeys.length > 0) {
 
-            const { name, phone } = fields;
-            const cilentFolderName = ("date" + todayMaker("total")) + '_' + name + '_' + phone.replace(/\-/g, '');
+            const { name, cliid } = fields;
+            const clientFolderName = ("date" + todayMaker("total")) + '_' + name + '_' + cliid;
             const uploadMap = {
               upload0: "sitePhoto",
               upload1: "preferredPhoto"
@@ -353,7 +348,7 @@ TransferRouter.prototype.rou_post_clientBinary = function () {
             let list, clientFolder;
             let clientRows, cliid;
 
-            clientFolder = `${clientConst}/${cilentFolderName}`;
+            clientFolder = `${clientConst}/${clientFolderName}`;
 
             list = [];
             for (let i = 0; i < filesKeys.length; i++) {

@@ -3496,7 +3496,7 @@ StyleCurationJs.prototype.parsingValues = function () {
       formData = new FormData();
       formData.enctype = "multipart/form-data";
       formData.append("name", instance.client.name);
-      formData.append("phone", instance.client.phone);
+      formData.append("cliid", instance.client.cliid);
       cancelPhoto = JSON.parse(instance.fileInput.getAttribute("cancel"));
       for (let i = 0; i < instance.fileInput.files.length; i++) {
         if (!cancelPhoto.includes(i)) {

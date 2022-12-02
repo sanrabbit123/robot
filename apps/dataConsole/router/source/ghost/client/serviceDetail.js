@@ -850,13 +850,27 @@ ServiceDetailJs.prototype.insertSlideBox = function () {
   let descriptionSize, descriptionWeight, descriptionLineHeight, descriptionBoldWeight;
   let circleWidth, circleBetween;
   let circleBoxMarginTop, circleBoxPaddingLeft;
+  let feeTong;
+  let feeTongMarginTop;
+  let finalMarginBottom;
+  let feeTitleTongHeight;
+  let feeTitleSize, feeTitleWeight, feeTitleTextTop;
+  let feeDescriptionTongHeight;
+  let feeDescriptionLineTop;
+  let feeDescriptionSize;
+  let feeDescriptionWeight, feeDescriptionWeightBold;
+  let feeDescriptionPadding;
+  let barWidth0, barBetween;
+  let barHeight, barMarginBottom;
+  let feeBarTongHeight;
 
-  bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
+  bottomMargin = <%% 160, 160, 160, 120, 50 %%>;
   slideTongHeight = <%% 340, 340, 340, 340, 340 %%>;
   blockWidth = <%% 240, 240, 240, 240, 240 %%>;
   blockBetween = <%% 12, 12, 12, 12, 12 %%>;
 
   margin = <%% 52, 50, 40, 32, 52 %%>;
+  finalMarginBottom = <%% 72, 72, 72, 72, 72 %%>;
 
   whitePaddingTop = <%% 68, 68, 68, 68, 68 %%>;
 
@@ -879,6 +893,28 @@ ServiceDetailJs.prototype.insertSlideBox = function () {
 
   circleBoxMarginTop = <%% 16, 16, 16, 16, 16 %%>;
   circleBoxPaddingLeft = <%% 1, 1, 1, 1, 1 %%>;
+
+  feeTongMarginTop = <%% 100, 100, 100, 100, 100 %%>;
+  feeTitleTongHeight = <%% 50, 50, 50, 50, 50 %%>;
+
+  feeTitleSize = <%% 20, 20, 20, 20, 20 %%>;
+  feeTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  feeTitleTextTop = <%% -1, -1, -1, -1, -1 %%>;
+
+  feeDescriptionTongHeight = <%% 60, 60, 60, 60, 60 %%>;
+  feeDescriptionLineTop = <%% 9, 9, 9, 9, 9 %%>;
+  feeDescriptionSize = <%% 15, 15, 15, 15, 15 %%>;
+  feeDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+  feeDescriptionWeightBold = <%% 600, 600, 600, 600, 600 %%>;
+  feeDescriptionPadding = <%% 20, 20, 20, 20, 20 %%>;
+
+  barWidth0 = <%% 360, 360, 360, 360, 360 %%>;
+  barBetween = <%% 5, 5, 5, 5, 5 %%>;
+
+  barHeight = <%% 20, 20, 20, 20, 20 %%>;
+  barMarginBottom = <%% 8, 8, 8, 8, 8 %%>;
+
+  feeBarTongHeight = <%% 60, 60, 60, 60, 60 %%>;
 
   contents = {
     images: [
@@ -906,6 +942,8 @@ ServiceDetailJs.prototype.insertSlideBox = function () {
   walk = blockWidth + blockBetween;
   interval = 3000;
 
+  // base
+
   whiteBlock = createNode({
     mother: baseTong,
     style: {
@@ -919,6 +957,8 @@ ServiceDetailJs.prototype.insertSlideBox = function () {
       overflow: "hidden",
     }
   });
+
+  // slide
 
   slideTong = createNode({
     mother: whiteBlock,
@@ -939,7 +979,6 @@ ServiceDetailJs.prototype.insertSlideBox = function () {
       }
     }
   }).firstChild;
-
   for (let i = 0; i < length; i++) {
     createNode({
       mother: slideTong,
@@ -994,6 +1033,8 @@ ServiceDetailJs.prototype.insertSlideBox = function () {
     }
   }, interval);
 
+  // slide description
+
   descriptionTong = createNode({
     mother: whiteBlock,
     style: {
@@ -1001,16 +1042,13 @@ ServiceDetailJs.prototype.insertSlideBox = function () {
       flexDirection: "row",
       position: "relative",
       width: withOut(margin * 2, ea),
-      height: String(slideTongHeight) + ea,
       overflow: "hidden",
       paddingLeft: String(margin) + ea,
       paddingRight: String(margin) + ea,
-      paddingBottom: String(margin) + ea,
       paddingTop: String(margin) + ea,
       alignItems: "start",
     },
   });
-
   createNode({
     mother: descriptionTong,
     mode: "svg",
@@ -1023,7 +1061,6 @@ ServiceDetailJs.prototype.insertSlideBox = function () {
       top: String(arrowTop) + ea,
     }
   });
-
   createNode({
     mother: descriptionTong,
     style: {
@@ -1096,6 +1133,223 @@ ServiceDetailJs.prototype.insertSlideBox = function () {
     ]
   });
 
+  // fee
+  feeTong = createNode({
+    mother: whiteBlock,
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      position: "relative",
+      marginTop: String(feeTongMarginTop) + ea,
+      paddingLeft: String(margin) + ea,
+      paddingRight: String(margin) + ea,
+      paddingBottom: String(finalMarginBottom) + ea,
+      width: withOut(margin * 2, ea),
+    }
+  });
+  createNode({
+    mother: feeTong,
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      position: "relative",
+      height: String(feeTitleTongHeight) + ea,
+      width: withOut(0, ea),
+      alignItems: "center",
+      justifyContent: "center",
+      textAlign: "center",
+    },
+    child: {
+      text: "비용의 구성",
+      style: {
+        position: "relative",
+        top: String(feeTitleTextTop) + ea,
+        fontSize: String(feeTitleSize) + ea,
+        fontWeight: String(feeTitleWeight),
+        color: colorChip.black,
+      }
+    }
+  });
+  createNode({
+    mother: feeTong,
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      position: "relative",
+      width: withOut(0, ea),
+      height: String(feeDescriptionTongHeight) + ea,
+      alignItems: "center",
+      justifyContent: "start",
+    },
+    children: [
+      {
+        style: {
+          position: "absolute",
+          bottom: String(0),
+          left: String(0),
+          width: withOut(0, ea),
+          height: String(feeDescriptionTongHeight - feeDescriptionLineTop) + ea,
+          border: "1px solid " + colorChip.gray3,
+          borderTopLeftRadius: String(5) + "px",
+          borderTopRightRadius: String(5) + "px",
+          borderBottom: String(0),
+          boxSizing: "border-box",
+        }
+      },
+      {
+        text: [
+          "홈퍼니싱 서비스는 디자인비와 제품 구매비로 구성됩니다."
+        ].join("\n"),
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(feeDescriptionSize) + ea,
+          fontWeight: String(feeDescriptionWeight),
+          color: colorChip.black,
+          background: colorChip.white,
+          paddingLeft: String(feeDescriptionPadding) + ea,
+          paddingRight: String(feeDescriptionPadding) + ea,
+        }
+      }
+    ]
+  });
+  createNode({
+    mother: feeTong,
+    style: {
+      display: "flex",
+      flexDirection: "row",
+      position: "relative",
+      width: withOut(0, ea),
+      height: String(feeBarTongHeight) + ea,
+      alignItems: "end",
+      justifyContent: "start",
+    },
+    children: [
+      {
+        style: {
+          display: "inline-flex",
+          flexDirection: "column",
+          position: "relative",
+          width: String(barWidth0) + ea,
+          marginRight: String(barBetween) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: "block",
+              position: "relative",
+              width: withOut(0, ea),
+              height: String(barHeight) + ea,
+              borderRadius: String(5) + "px",
+              background: colorChip.green,
+              marginBottom: String(barMarginBottom) + ea,
+            }
+          },
+          {
+            style: {
+              display: "flex",
+              flexDirection: "column",
+              position: "relative",
+              alignItems: "center",
+              justifyContent: "center",
+              textAlign: "center",
+            },
+            child: {
+              text: "디자인 비용",
+              style: {
+                position: "relative",
+                fontSize: String(feeDescriptionSize) + ea,
+                fontWeight: String(feeDescriptionWeightBold),
+                color: colorChip.green,
+              }
+            }
+          }
+        ]
+      },
+      {
+        style: {
+          display: "inline-flex",
+          flexDirection: "column",
+          position: "relative",
+          width: withOut(barWidth0 + barBetween, ea),
+        },
+        children: [
+          {
+            style: {
+              display: "block",
+              position: "relative",
+              width: withOut(0, ea),
+              height: String(barHeight) + ea,
+              borderRadius: String(5) + "px",
+              background: colorChip.gray4,
+              marginBottom: String(barMarginBottom) + ea,
+            }
+          },
+          {
+            style: {
+              display: "flex",
+              flexDirection: "column",
+              position: "relative",
+              alignItems: "center",
+              justifyContent: "center",
+              textAlign: "center",
+            },
+            child: {
+              text: "가구 및 제안 제품 구매 비용",
+              style: {
+                position: "relative",
+                fontSize: String(feeDescriptionSize) + ea,
+                fontWeight: String(feeDescriptionWeightBold),
+                color: colorChip.black,
+              }
+            }
+          }
+        ]
+      },
+    ]
+  });
+
+}
+
+ServiceDetailJs.prototype.insertPeopleBox = function () {
+  const instance = this;
+  const { ea, media, standardWidth } = this;
+  const pastBaseTong = this.baseTong;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1]);
+  const small = !big;
+  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
+  const newBaseTong = pastBaseTong.cloneNode(false);
+  let bottomMargin;
+  let margin;
+  let baseTong;
+
+
+  bottomMargin = <%% 160, 160, 160, 120, 50 %%>;
+  margin = <%% 52, 50, 40, 32, 52 %%>;
+
+
+  pastBaseTong.parentNode.insertBefore(newBaseTong, pastBaseTong.nextElementSibling);
+  newBaseTong.style.left = String(0);
+  newBaseTong.style.width = withOut(0, ea);
+  newBaseTong.style.background = colorChip.white;
+  newBaseTong.style.paddingTop = String(bottomMargin) + ea;
+
+
+  baseTong = createNode({
+    mother: newBaseTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(standardWidth) + ea,
+      left: withOut(50, standardWidth / 2, ea),
+    }
+  });
+
+
+
+
 
 
 }
@@ -1129,6 +1383,7 @@ ServiceDetailJs.prototype.launching = async function (loading) {
           instance.insertStartBox();
           instance.insertThreeBox();
           instance.insertSlideBox();
+          instance.insertPeopleBox();
 
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "ServiceDetailJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
