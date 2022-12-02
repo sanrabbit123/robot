@@ -3233,17 +3233,9 @@ ReceiptRouter.prototype.rou_post_stylingFormSync = function () {
   const { officeinfo: { widsign: { id, key, endPoint } } } = this.address;
   const collections = [ "stylingForm", "constructForm" ];
   const back = this.back;
-  let obj = {};
-  obj.link = "/stylingFormSync";
-  obj.func = async function (req, res) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
+  const formSync = async (MONGOC, MONGOPYTHONC) => {
     try {
-      const selfMongo = instance.mongolocal;
+      const selfMongo = MONGOPYTHONC;
       let eformResponse, token;
       let num;
       let forms, resultForms, finalForms;
@@ -3337,16 +3329,16 @@ ReceiptRouter.prototype.rou_post_stylingFormSync = function () {
                           return obj;
                         });
                         if (f.confirm !== true && target.confirm === true) {
-                          thisClient = await back.getClientById(f.client.cliid, { selfMongo: instance.mongo });
+                          thisClient = await back.getClientById(f.client.cliid, { selfMongo: MONGOC });
                           text = thisClient.name + " 고객님이 계약서에 서명을 완료하셨습니다!";
                           await messageSend({ text, channel: "#cx", voice: true });
                         }
                         await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
 
                         if (/styling/gi.test(collection)) {
-                          await back.updateProject([ { proid: f.proid }, { "process.contract.form.id": target.id } ], { selfMongo: instance.mongo });
+                          await back.updateProject([ { proid: f.proid }, { "process.contract.form.id": target.id } ], { selfMongo: MONGOC });
                         } else if (/construct/gi.test(collection)) {
-                          await back.updateProject([ { proid: f.proid }, { "process.design.construct.contract.form.id": target.id } ], { selfMongo: instance.mongo });
+                          await back.updateProject([ { proid: f.proid }, { "process.design.construct.contract.form.id": target.id } ], { selfMongo: MONGOC });
                         }
 
                       }
@@ -3362,7 +3354,24 @@ ReceiptRouter.prototype.rou_post_stylingFormSync = function () {
       }
       errorLog("styling form sync success : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
 
-      res.send(JSON.stringify({ message: "success" }));
+    } catch (e) {
+      errorLog("Python 서버 문제 생김 (rou_post_stylingFormSync): " + e.message).catch((e) => { console.log(e); });
+    }
+  }
+  let obj = {};
+  obj.link = "/stylingFormSync";
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      formSync().catch((err) => {
+        errorLog("Python 서버 문제 생김 (rou_post_stylingFormSync): " + err.message).catch((e) => { console.log(e); });
+      });
+      res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
       errorLog("Python 서버 문제 생김 (rou_post_stylingFormSync): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
