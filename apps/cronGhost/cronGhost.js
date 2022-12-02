@@ -29,6 +29,7 @@ CronGhost.prototype.aliveTest = async function () {
       { name: "log", protocol: "https:", host: address.testinfo.host, port: generalPort, },
       { name: "second", protocol: "https:", host: address.secondinfo.host, port: generalPort, },
       { name: "trans", protocol: "https:", host: address.transinfo.host, port: generalPort, },
+      { name: "office", protocol: "https:", host: address.officeinfo.ghost.host, port: ghostPort, },
     ];
 
     targetNumber = targets.length;

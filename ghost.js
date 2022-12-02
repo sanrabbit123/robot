@@ -1112,9 +1112,7 @@ Ghost.prototype.ghostRouter = function (needs) {
         }).then(() => {
           return instance.callHistory(MONGOC, MONGOCONSOLEC);
         }).then(() => {
-          return errorLog("callHistory update success : " + JSON.stringify(new Date()));
-        }).then(() => {
-          return instance.slackToMongo(MONGOLOCALC);
+          return errorLog("callHistory update, style form sync success : " + JSON.stringify(new Date()));
         }).catch((err) => {
           errorLog("ghost error (ssl cron): " + err.message).catch((e) => { console.log(e); });
         });

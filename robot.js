@@ -27,6 +27,7 @@ Robot.prototype.mongoToJson = async function () {
       [ "backinfo", "console" ],
       [ "pythoninfo", "python" ],
       [ "testinfo", "log" ],
+      [ "secondinfo", "second" ],
     ];
     const robotDirArr = process.cwd().split("/");
     robotDirArr.pop();

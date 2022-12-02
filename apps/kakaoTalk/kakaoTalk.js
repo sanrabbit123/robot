@@ -10,7 +10,6 @@ const KakaoTalk = function () {
   this.senderPhone = "0220392252";
   this.ip = {
     office: address.officeinfo.ip.outer,
-    home: address.backinfo.ip.outer,
     console: address.backinfo.ip.outer,
     front: address.frontinfo.ip.outer,
     python: address.pythoninfo.ip.outer,
@@ -18,7 +17,6 @@ const KakaoTalk = function () {
   };
   this.ipRegExp = {
     office: new RegExp(this.ip.office + "\n", 'g'),
-    home: new RegExp(this.ip.home + "\n", 'g'),
     console: new RegExp(this.ip.console + "\n", 'g'),
     front: new RegExp(this.ip.front + "\n", 'g'),
     python: new RegExp(this.ip.python + "\n", 'g'),
@@ -26,7 +24,6 @@ const KakaoTalk = function () {
   };
   this.token = {
     office: '7c3384dd3b6e943f8128adb61f537bc316124b2eb2b0f03b81e76db1ccaa3e1ce057594fc9df213004416f9d049d685c8bb0675d4db0b4fdde3610085179cde3ciwCIj/6sre3xiXz5V4aCDIdUvW1oRBjGUbrPgrbNFX2XYIhQzLLtEcMxKSxRXKZztHRlWBIYBJlbOsKNUAMkA==',
-    home: '03104da420fc46c60e3cef0be1539c7b1fd7c1ddfcc6255b70d34c8e75ae2f44a186e8a7686dbacdab6e5322f5b8ee8abc3692a9c8fc1200cbdead04389ee3dbL3L46vX2uxyCPrdq54Q8syIsPXc34KaKcg9ATptqShoshq1MM4562RPdv5TlPTK+PJ04FtXcKVY++HuRdDINKQ==',
     console: '03104da420fc46c60e3cef0be1539c7b1fd7c1ddfcc6255b70d34c8e75ae2f44a186e8a7686dbacdab6e5322f5b8ee8abc3692a9c8fc1200cbdead04389ee3dbL3L46vX2uxyCPrdq54Q8syIsPXc34KaKcg9ATptqShoshq1MM4562RPdv5TlPTK+PJ04FtXcKVY++HuRdDINKQ==',
     python: '53d2f480ce9e4087b03d0fd8b8fac1e87aa47d407fefff0cadcddb4e9301cc705f5ea3c27f3bd1ad0c537daaef82b2a1ff29e2d623e3176034a9be316d1adcd7bU9USuplgt2b2Ivow9XRAwQf7dYTr+naSe5eTD6GWQIJmcJ5ARB1wx8WE2Akvm02I9yfLXlTfyAJG84jAOFPnw==',
     test: '4e8e135049172aa7c2a6df73f93e97da14a44ae587a38dc5ad528d6392301aea364391ab92849acd22f583e5ab342f98b906c22d2b27648de4d880cdd4c4e467Y2Q2mND3WGO2LKixCNvwCOrwvJOoXD3Q6/UD0G7nKK3neoTxlqXG5mvlyVbs8gnWAgEafYfhLx3ZtymgnX4E7g==',
@@ -60,8 +57,6 @@ KakaoTalk.prototype.setAuth = async function () {
 
     if (this.ipRegExp.office.test(data)) {
       this.authObj.token = this.token.office;
-    } else if (this.ipRegExp.home.test(data)) {
-      this.authObj.token = this.token.home;
     } else if (this.ipRegExp.console.test(data)) {
       this.authObj.token = this.token.console;
     } else if (this.ipRegExp.python.test(data)) {

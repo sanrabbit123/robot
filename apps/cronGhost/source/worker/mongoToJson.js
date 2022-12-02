@@ -29,6 +29,7 @@ const worker = async function (package) {
       [ "backinfo", "console" ],
       [ "pythoninfo", "python" ],
       [ "testinfo", "log" ],
+      [ "secondinfo", "second" ],
     ];
     const robotDirArr = process.cwd().split("/");
     robotDirArr.pop();
