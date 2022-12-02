@@ -3337,16 +3337,16 @@ ReceiptRouter.prototype.rou_post_stylingFormSync = function () {
                           return obj;
                         });
                         if (f.confirm !== true && target.confirm === true) {
-                          thisClient = await back.getClientById(f.client.cliid, { selfMongo: MONGOCOREC });
+                          thisClient = await back.getClientById(f.client.cliid, { selfMongo: instance.mongo });
                           text = thisClient.name + " 고객님이 계약서에 서명을 완료하셨습니다!";
                           await messageSend({ text, channel: "#cx", voice: true });
                         }
                         await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
 
                         if (/styling/gi.test(collection)) {
-                          await back.updateProject([ { proid: f.proid }, { "process.contract.form.id": target.id } ], { selfMongo: MONGOCOREC });
+                          await back.updateProject([ { proid: f.proid }, { "process.contract.form.id": target.id } ], { selfMongo: instance.mongo });
                         } else if (/construct/gi.test(collection)) {
-                          await back.updateProject([ { proid: f.proid }, { "process.design.construct.contract.form.id": target.id } ], { selfMongo: MONGOCOREC });
+                          await back.updateProject([ { proid: f.proid }, { "process.design.construct.contract.form.id": target.id } ], { selfMongo: instance.mongo });
                         }
 
                       }
