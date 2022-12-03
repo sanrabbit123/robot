@@ -864,7 +864,7 @@ ServiceDetailJs.prototype.insertSlideBox = function () {
   let barHeight, barMarginBottom;
   let feeBarTongHeight;
 
-  bottomMargin = <%% 160, 160, 160, 120, 50 %%>;
+  bottomMargin = <%% 180, 180, 180, 180, 180 %%>;
   slideTongHeight = <%% 340, 340, 340, 340, 340 %%>;
   blockWidth = <%% 240, 240, 240, 240, 240 %%>;
   blockBetween = <%% 12, 12, 12, 12, 12 %%>;
@@ -1339,8 +1339,10 @@ ServiceDetailJs.prototype.insertPeopleBox = function () {
   let peopleSize, peopleWeight, peopleBoldWeight;
   let peopleLineHeight;
   let peopleBetween, peopleMarginBottom;
+  let topMargin;
 
-  bottomMargin = <%% 160, 160, 160, 120, 50 %%>;
+  topMargin = <%% 160, 160, 160, 120, 50 %%>;
+  bottomMargin = <%% 180, 180, 180, 180, 50 %%>;
   margin = <%% 52, 50, 40, 32, 52 %%>;
 
   middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
@@ -1368,7 +1370,7 @@ ServiceDetailJs.prototype.insertPeopleBox = function () {
   newBaseTong.style.left = String(0);
   newBaseTong.style.width = withOut(0, ea);
   newBaseTong.style.background = colorChip.white;
-  newBaseTong.style.paddingTop = String(bottomMargin) + ea;
+  newBaseTong.style.paddingTop = String(topMargin) + ea;
 
   contents = {
     title: "바쁜 1, 2인 가구가 선택한 홈퍼니싱",
@@ -1544,20 +1546,144 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
   const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
   let blankBlock;
   let setBlock;
+  let contents;
+  let imageHeight;
+  let imageWidth;
+  let imageBetween;
+  let startBlankHeight;
+  let blockBetween;
+  let titleSize, titleWeight, textLineHeight;
+  let quoteWidth, quoteMarginTop, quoteMarginBottom, quoteVisual;
+  let descriptionSize, descriptionWeight;
+  let lineTop, lineBottom;
+  let tagTongHeight;
+  let tagBetween;
+  let tagTextTop, tagSize, tagWeight, tagPaddingLeft;
 
+  startBlankHeight = <%% 100, 100, 100, 100, 100 %%>;
+
+  blockBetween = <%% 40, 40, 40, 40, 40 %%>;
+
+  imageHeight = <%% 420, 420, 420, 420, 420 %%>;
+  imageWidth = <%% 890, 890, 890, 890, 890 %%>;
+  imageBetween = <%% 40, 40, 40, 40, 40 %%>;
+
+  titleSize = <%% 20, 20, 20, 20, 20 %%>;
+  titleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  textLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+
+  quoteWidth = <%% 16, 16, 16, 16, 16 %%>;
+  quoteMarginTop = <%% 14, 14, 14, 14, 14 %%>;
+  quoteMarginBottom = <%% 8, 8, 8, 8, 8 %%>;
+  quoteVisual = <%% 1, 1, 1, 1, 1 %%>;
+
+  descriptionSize = <%% 15, 15, 15, 15, 15 %%>;
+  descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+
+  lineTop = <%% 20, 20, 20, 20, 20 %%>;
+  lineBottom = <%% 22, 22, 22, 22, 22 %%>;
+
+  tagTongHeight = <%% 30, 30, 30, 30, 30 %%>;
+
+  tagBetween = <%% 4, 4, 4, 4, 4 %%>;
+
+  tagTextTop = <%% -1, -1, -1, -1, -1 %%>;
+  tagSize = <%% 12, 12, 12, 12, 12 %%>;
+  tagWeight = <%% 600, 600, 600, 600, 600 %%>;
+  tagPaddingLeft = <%% 12, 12, 12, 12, 12 %%>;
 
   blankBlock = createNode({
     mother: baseTong,
     style: {
       position: "relative",
       display: "block",
-      height: String(100) + ea,
+      height: String(startBlankHeight) + ea,
       width: withOut(0),
     }
-  })
+  });
 
-  setBlock = () => {
+  contents = [
+    {
+      image: ServiceDetailJs.binaryPath + "/review_f_0.jpg",
+      position: "50% 100%",
+      title: "DMC SK view 33py 아파트",
+      description: [
+        "임차 공간이라 시공도 어려운 상황인데 배치만으로도 확실한 변화가 있었어요.",
+        "예산도 중요했고, 결혼 준비 해보신 분들은 아실거에요.",
+        "정말 알아볼 것도 많고 준비할 것도 많은데 시간을 잘 아꼈죠.",
+        "결과적으로 디자이너님 덕에 저의 시간과 기회비용을 아낄 수 있었어요.",
+      ],
+      tag: [
+        "깔끔",
+        "심플",
+        "전체 구매",
+        "2,000 만원 초",
+        "새입주",
+        "33py",
+        "홈오피스",
+        "재택 근무",
+        "맞벌이",
+        "신혼집",
+        "신혼 부부",
+        "임차 공간",
+        "30대",
+      ],
+    },
+    {
+      image: ServiceDetailJs.binaryPath + "/review_f_1.jpg",
+      position: "50% 50%",
+      title: "광주 헤스티아 35py 빌라",
+      description: [
+        "일하면서 시간이 정말 없었어요, 솔직히 가서 보고 사도 배송 와서 보면,",
+        "잘 맞지 않을 때도 있잖아요, 디자이너님께서 주신 도면과 자료만 보고 믿고",
+        "구매했는데, 배치했을 때 마음에 들더라고요! 디자이너님이 시각화 작업을",
+        "잘하시는 편이라 자료를 토대로 믿고 구매하기 더 원활했어요. ",
+      ],
+      tag: [
+        "깔끔",
+        "심플",
+        "전체 구매",
+        "2,000 만원 초",
+        "새입주",
+        "33py",
+        "홈오피스",
+        "재택 근무",
+        "맞벌이",
+        "신혼집",
+        "신혼 부부",
+        "임차 공간",
+        "30대",
+      ],
+    },
+    {
+      image: ServiceDetailJs.binaryPath + "/review_f_2.jpg",
+      position: "50% 50%",
+      title: "서울숲 트리마제 64py 아파트",
+      description: [
+        "제가 일을 하다보니 시간이 정말 부족했어요, 그래서 디자이너님과 함께 한",
+        "과정이 정말 신의 한 수였죠. 제가 미처 생각하지 못한 부분까지 챙겨주셔서",
+        "확실히 전문가는 다르다는 것을 느끼게 되었어요. 시간이 부족한 분들에게",
+        "정말 추천하고 싶어요. 확실히 인테리어 수월해지는 것 같거든요.",
+      ],
+      tag: [
+        "깔끔",
+        "심플",
+        "전체 구매",
+        "2,000 만원 초",
+        "새입주",
+        "33py",
+        "홈오피스",
+        "재택 근무",
+        "맞벌이",
+        "신혼집",
+        "신혼 부부",
+        "임차 공간",
+        "30대",
+      ],
+    },
+  ];
 
+  setBlock = ({ image, position, title, description, tag }) => {
     createNode({
       mother: baseTong,
       style: {
@@ -1565,14 +1691,125 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
         flexDirection: "row",
         position: "relative",
         width: withOut(0),
+        justifyContent: "center",
+        alignItems: "center",
+        marginBottom: String(blockBetween) + ea,
       },
-
-    })
-
+      children: [
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(imageWidth) + ea,
+            height: String(imageHeight) + ea,
+            marginRight: String(imageBetween) + ea,
+            backgroundImage: "url('" + image + "')",
+            backgroundSize: "100% auto",
+            backgroundPosition: position,
+            borderRadius: String(5) + "px",
+            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          }
+        },
+        {
+          style: {
+            display: "inline-flex",
+            flexDirection: "column",
+            position: "relative",
+            width: withOut(imageWidth + imageBetween, ea),
+            height: String(imageHeight) + ea,
+            justifyContent: "end",
+            alignItems: "start",
+          },
+          children: [
+            {
+              text: title,
+              style: {
+                display: "block",
+                textAlign: "left",
+                position: "relative",
+                fontSize: String(titleSize) + ea,
+                fontWeight: String(titleWeight),
+                lineHeight: String(textLineHeight),
+                color: colorChip.black,
+              }
+            },
+            {
+              mode: "svg",
+              source: svgMaker.doubleQuote(colorChip.deactive),
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: String(quoteWidth) + ea,
+                marginTop: String(quoteMarginTop) + ea,
+                marginBottom: String(quoteMarginBottom) + ea,
+                marginLeft: String(quoteVisual) + ea,
+              }
+            },
+            {
+              text: description.join("\n"),
+              style: {
+                display: "block",
+                textAlign: "left",
+                position: "relative",
+                fontSize: String(descriptionSize) + ea,
+                fontWeight: String(descriptionWeight),
+                lineHeight: String(textLineHeight),
+                color: colorChip.black,
+              }
+            },
+            {
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(0),
+                height: String(lineTop) + ea,
+                marginBottom: String(lineBottom) + ea,
+                borderBottom: "1px solid " + colorChip.gray4,
+              }
+            },
+            {
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(0),
+              },
+              children: tag.map((text) => {
+                return {
+                  style: {
+                    display: "inline-flex",
+                    position: "relative",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: String(tagTongHeight) + ea,
+                    marginRight: String(tagBetween) + ea,
+                    marginBottom: String(tagBetween) + ea,
+                    borderRadius: String(8) + "px",
+                    background: colorChip.gray2,
+                  },
+                  child: {
+                    text,
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      top: String(tagTextTop) + ea,
+                      fontSize: String(tagSize) + ea,
+                      fontWeight: String(tagWeight),
+                      color: colorChip.black,
+                      paddingLeft: String(tagPaddingLeft) + ea,
+                      paddingRight: String(tagPaddingLeft) + ea,
+                    }
+                  }
+                }
+              })
+            }
+          ]
+        }
+      ]
+    });
   }
 
-  setBlock();
-
+  contents.forEach(setBlock);
 
 }
 
