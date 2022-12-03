@@ -1324,11 +1324,45 @@ ServiceDetailJs.prototype.insertPeopleBox = function () {
   let bottomMargin;
   let margin;
   let baseTong;
-
+  let contents;
+  let middleTong;
+  let middleTongPaddingBottom;
+  let middleTitleMarginBottom;
+  let middleTitleLineTop;
+  let middleTitleSize;
+  let middleTitleWeight;
+  let middleTitlePadding;
+  let middleTitleTextTop;
+  let middleAreaPaddingTop;
+  let middleInfoSize;
+  let peopleTong;
+  let peopleSize, peopleWeight, peopleBoldWeight;
+  let peopleLineHeight;
+  let peopleBetween, peopleMarginBottom;
 
   bottomMargin = <%% 160, 160, 160, 120, 50 %%>;
   margin = <%% 52, 50, 40, 32, 52 %%>;
 
+  middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
+  middleTitleMarginBottom = <%% 60, 60, 60, 60, 60 %%>;
+
+  middleTitleLineTop = <%% 68, 68, 68, 68, 68 %%>;
+
+  middleTitleSize = <%% 23, 23, 21, 18, 4.2 %%>;
+  middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  middleTitlePadding = <%% 16, 16, 12, 10, 2 %%>;
+  middleTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
+
+  middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
+  middleInfoSize = <%% 14, 14, 14, 13, 3 %%>;
+
+  peopleSize = <%% 15, 15, 15, 15, 15 %%>;
+  peopleWeight = <%% 400, 400, 400, 400, 400 %%>;
+  peopleBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
+  peopleLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+
+  peopleBetween = <%% 8, 8, 8, 8, 8 %%>;
+  peopleMarginBottom = <%% 40, 40, 40, 40, 40 %%>;
 
   pastBaseTong.parentNode.insertBefore(newBaseTong, pastBaseTong.nextElementSibling);
   newBaseTong.style.left = String(0);
@@ -1336,6 +1370,23 @@ ServiceDetailJs.prototype.insertPeopleBox = function () {
   newBaseTong.style.background = colorChip.white;
   newBaseTong.style.paddingTop = String(bottomMargin) + ea;
 
+  contents = {
+    title: "바쁜 1, 2인 가구가 선택한 홈퍼니싱",
+    description: [
+      "시간은 없고, 선택할 것은 많잖아요.",
+      "<b%디자이너가 함께하면 시간은 줄이고 확실한 변화를 느낄 수 있어요.%b>",
+    ],
+    people: {
+      title: "디자이너와 함께 할 때 효과",
+      description: [
+        "선택의 연속, 인테리어 프로세스,",
+        "모두 시간과 비용의 부담이죠.",
+        "이렇게 혼자하기 부담스러운 과정을",
+        "디자이너가 함께하면 효율적이고",
+        "합리적인 결과를 낼 수 있습니다.",
+      ]
+    }
+  }
 
   baseTong = createNode({
     mother: newBaseTong,
@@ -1344,12 +1395,183 @@ ServiceDetailJs.prototype.insertPeopleBox = function () {
       position: "relative",
       width: String(standardWidth) + ea,
       left: withOut(50, standardWidth / 2, ea),
+      paddingBottom: String(bottomMargin) + ea,
     }
   });
 
+  middleTong = createNode({
+    mother: baseTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: withOut(0 * 2, ea),
+      paddingBottom: String(middleTitleMarginBottom) + ea,
+    }
+  });
+
+  createNode({
+    mother: middleTong,
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      position: "relative",
+      width: String(100) + '%',
+      textAlign: "center",
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: "absolute",
+          width: String(100) + '%',
+          height: String(middleTitleLineTop) + ea,
+          top: String(0),
+          left: String(0),
+          borderBottom: "1px solid " + colorChip.gray4,
+        }
+      },
+      {
+        text: contents.title,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(middleTitleSize) + ea,
+          fontWeight: String(middleTitleWeight),
+          color: colorChip.black,
+          textAlign: "center",
+          paddingLeft: String(middleTitlePadding) + ea,
+          paddingRight: String(middleTitlePadding) + ea,
+          top: String(middleTitleTextTop) + ea,
+          background: colorChip.white,
+        }
+      },
+      {
+        text: contents.description.join("\n"),
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(middleInfoSize) + ea,
+          fontWeight: String(400),
+          lineHeight: String(1.6),
+          color: colorChip.black,
+          textAlign: "center",
+          paddingTop: String(middleTitlePadding) + ea,
+          paddingLeft: String(middleTitlePadding * 1.5) + ea,
+          paddingRight: String(middleTitlePadding * 1.5) + ea,
+          background: colorChip.white,
+        },
+        bold: {
+          fontSize: String(middleInfoSize) + ea,
+          fontWeight: String(700),
+          lineHeight: String(1.6),
+          color: colorChip.black,
+        }
+      }
+    ]
+  });
+
+  peopleTong = createNode({
+    mother: baseTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: withOut(0 * 2, ea),
+      borderBottom: "1px solid " + colorChip.gray4,
+    },
+    children: [
+      {
+        mode: "img",
+        attribute: {
+          src: ServiceDetailJs.binaryPath + "/people_f.svg",
+        },
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(0, ea),
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: peopleTong,
+    style: {
+      display: "flex",
+      position: "absolute",
+      right: String(0),
+      bottom: String(0),
+      flexDirection: "column-reverse",
+    },
+    children: [
+      {
+        text: contents.people.description.join("\n"),
+        style: {
+          fontSize: String(peopleSize) + ea,
+          fontWeight: String(peopleWeight),
+          color: colorChip.black,
+          position: "relative",
+          display: "block",
+          lineHeight: String(peopleLineHeight),
+          marginBottom: String(peopleMarginBottom) + ea,
+        }
+      },
+      {
+        text: contents.people.title,
+        style: {
+          fontSize: String(peopleSize) + ea,
+          fontWeight: String(peopleBoldWeight),
+          color: colorChip.black,
+          position: "relative",
+          display: "block",
+          lineHeight: String(peopleLineHeight),
+          marginBottom: String(peopleBetween) + ea,
+        }
+      },
+    ]
+  });
+
+  return [ newBaseTong, baseTong ];
+}
+
+ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
+  const instance = this;
+  const { ea, media, standardWidth } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1]);
+  const small = !big;
+  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
+  let blankBlock;
+  let setBlock;
 
 
+  blankBlock = createNode({
+    mother: baseTong,
+    style: {
+      position: "relative",
+      display: "block",
+      height: String(100) + ea,
+      width: withOut(0),
+    }
+  })
 
+  setBlock = () => {
+
+    createNode({
+      mother: baseTong,
+      style: {
+        display: "flex",
+        flexDirection: "row",
+        position: "relative",
+        width: withOut(0),
+      },
+
+    })
+
+  }
+
+  setBlock();
 
 
 }
@@ -1361,6 +1583,7 @@ ServiceDetailJs.prototype.launching = async function (loading) {
 
     const { returnGet, ajaxJson, requestPromise, setDebounce, colorChip } = GeneralJs;
     const getObj = returnGet();
+    let newBaseTong, baseTong;
 
     await this.mother.ghostClientLaunching({
       mode: "front",
@@ -1383,7 +1606,9 @@ ServiceDetailJs.prototype.launching = async function (loading) {
           instance.insertStartBox();
           instance.insertThreeBox();
           instance.insertSlideBox();
-          instance.insertPeopleBox();
+
+          [ newBaseTong, baseTong ] = instance.insertPeopleBox();
+          instance.insertReviewBox(newBaseTong, baseTong);
 
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "ServiceDetailJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
