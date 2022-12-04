@@ -2834,10 +2834,10 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
   box2Size = <%% 16, 16, 16, 16, 16 %%>;
   buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
-  box2LineTop = <%% 40, 40, 40, 40, 40 %%>;
+  box2LineTop = <%% 36, 36, 36, 36, 36 %%>;
   box2LineBottom = <%% 16, 16, 16, 16, 16 %%>;
 
-  box2DetailPaddingTop = <%% 15, 15, 15, 15, 15 %%>;
+  box2DetailPaddingTop = <%% 20, 20, 20, 20, 20 %%>;
 
   box2DetailBetween = <%% 24, 24, 24, 24, 24 %%>;
   box2NumberWidth = <%% 48, 48, 48, 48, 48 %%>;
