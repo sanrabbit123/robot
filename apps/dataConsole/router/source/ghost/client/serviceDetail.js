@@ -2261,6 +2261,911 @@ ServiceDetailJs.prototype.insertToneBox = function (pastBaseTong, baseTong) {
   return [ newBaseTong, baseTong ];
 }
 
+ServiceDetailJs.prototype.insertCareBox = function (pastBaseTong, baseTong) {
+  const instance = this;
+  const { ea, media, standardWidth } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1]);
+  const small = !big;
+  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
+  const newBaseTong = pastBaseTong.cloneNode(false);
+  let topMargin;
+  let bottomMargin;
+  let margin;
+  let middleTongPaddingBottom;
+  let middleTitleMarginBottom;
+  let middleTitleLineTop;
+  let middleTitleSize;
+  let middleTitleWeight;
+  let middleTitlePadding;
+  let middleTitleTextTop;
+  let middleAreaPaddingTop;
+  let middleInfoSize;
+  let contents;
+  let middleTong;
+  let whiteBlock;
+  let whiteTongMarginTop;
+  let blankMiddle;
+  let workBox;
+  let grayBlocksMother;
+  let leftWidth;
+  let grayBetween;
+  let grayBoxNumbers;
+  let grayHeight0, grayHeight1;
+  let box0Size, box0Weight, box0TextTop;
+  let circleWidth;
+  let titleSize, titleWeight, titleLineHeight;
+  let descriptionSize, descriptionWeight, descriptionMarginTop;
+  let box1Size0, box1Weight0, box1Size1, box1Weight1;
+  let box1TitleMarginTop, box1TitleMarginBottom, box1DescriptionBottomVisual;
+  let box2LineWidth, box2LineMargin;
+
+  topMargin = <%% 160, 160, 160, 120, 50 %%>;
+  bottomMargin = <%% 180, 180, 180, 180, 50 %%>;
+  margin = <%% 52, 50, 40, 32, 52 %%>;
+  marginTop = <%% 56, 56, 56, 56, 56 %%>;
+
+  middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
+  middleTitleMarginBottom = <%% 60, 60, 60, 60, 60 %%>;
+
+  middleTitleLineTop = <%% 68, 68, 68, 68, 68 %%>;
+
+  middleTitleSize = <%% 23, 23, 21, 18, 4.2 %%>;
+  middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  middleTitlePadding = <%% 16, 16, 12, 10, 2 %%>;
+  middleTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
+
+  middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
+  middleInfoSize = <%% 14, 14, 14, 13, 3 %%>;
+
+  whiteTongMarginTop = <%% 48, 48, 48, 48, 48 %%>;
+
+  leftWidth = <%% 390, 390, 390, 390, 390 %%>;
+
+  grayBetween = <%% 10, 10, 10, 10, 10 %%>;
+
+  grayBoxNumbers = <%% 5, 5, 5, 5, 5 %%>;
+
+  grayHeight0 = <%% 56, 56, 56, 56, 56 %%>;
+  grayHeight1 = <%% 240, 240, 240, 240, 240 %%>;
+
+  box0Size = <%% 16, 16, 16, 16, 16 %%>;
+  box0Weight = <%% 700, 700, 700, 700, 700 %%>;
+  box0TextTop = <%% -1, -1, -1, -1, -1 %%>;
+
+  circleWidth = <%% 108, 108, 108, 108, 108 %%>;
+
+  titleSize = <%% 18, 18, 18, 18, 18 %%>;
+  titleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  titleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+
+  descriptionSize = <%% 15, 15, 15, 15, 15 %%>;
+  descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+  descriptionMarginTop = <%% 12, 12, 12, 12, 12 %%>;
+
+  box1Size0 = <%% 15, 15, 15, 15, 15 %%>;
+  box1Weight0 = <%% 800, 800, 800, 800, 800 %%>;
+
+  box1Size1 = <%% 14, 14, 14, 14, 14 %%>;
+  box1Weight1 = <%% 400, 400, 400, 400, 400 %%>;
+
+  box1TitleMarginTop = <%% 16, 16, 16, 16, 16 %%>;
+  box1TitleMarginBottom = <%% 4, 4, 4, 4, 4 %%>;
+  box1DescriptionBottomVisual = <%% 1, 1, 1, 1, 1 %%>;
+
+  box2LineWidth = <%% 684, 684, 684, 684, 684 %%>;
+  box2LineMargin = <%% 20, 20, 20, 20, 20 %%>;
+
+  pastBaseTong.parentNode.insertBefore(newBaseTong, pastBaseTong.nextElementSibling);
+  newBaseTong.style.left = String(0);
+  newBaseTong.style.width = withOut(0, ea);
+  newBaseTong.style.background = colorChip.white;
+  newBaseTong.style.paddingTop = String(topMargin) + ea;
+
+  contents = {
+    title: "홈리에종의 프로젝트 케어",
+    description: [
+      "홈리에종은 프로젝트의 처음과 마무리까지의 전 과정 케어를 진행합니다.",
+      "처음이어서, 몰라서 어려웠던 인테리어 과정을 홈리에종과 함께 해요.",
+    ],
+    work: {
+      title: "디자이너는 진행 단계별\n‘이렇게’ 제공해요.",
+      description: [
+        "디자이너는 다음과 같은 단계별",
+        "페이퍼워크 제공을 통해 소통합니다.",
+      ],
+      box0: [
+        "STEP 1. 프로젝트 기획",
+        "STEP 2. 디자인",
+        "STEP 3. 구매",
+      ],
+      box1: [
+        {
+          image: ServiceDetailJs.binaryPath + "/workPaper0.svg",
+          title: "디자인 제안서",
+          description: [
+            "계약 기간 기준의",
+            "전체 일정 캘린더",
+          ],
+        },
+        {
+          image: ServiceDetailJs.binaryPath + "/workPaper1.svg",
+          title: "제품 제안",
+          description: [
+            "프로젝트에 반영될",
+            "컨셉 디자인",
+          ],
+        },
+        {
+          image: ServiceDetailJs.binaryPath + "/workPaper2.svg",
+          title: "배치도",
+          description: [
+            "시공 포함된",
+            "서비스 진행 시 해당",
+          ],
+        },
+        {
+          image: ServiceDetailJs.binaryPath + "/workPaper3.svg",
+          title: "컨셉 제안서",
+          description: [
+            "공간별 구성 및",
+            "가구/소품 배치 도면",
+          ],
+        },
+        {
+          image: ServiceDetailJs.binaryPath + "/workPaper4.svg",
+          title: "일정표",
+          description: [
+            "기존 제품 활용 제안 및",
+            "새 제품 구매 리스트",
+          ],
+        },
+      ],
+      box2: "+ 홈리에종의 토탈 케어",
+    },
+  };
+
+  baseTong = createNode({
+    mother: newBaseTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(standardWidth) + ea,
+      left: withOut(50, standardWidth / 2, ea),
+      paddingBottom: String(bottomMargin) + ea,
+    }
+  });
+
+  middleTong = createNode({
+    mother: baseTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: withOut(0 * 2, ea),
+    }
+  });
+
+  createNode({
+    mother: middleTong,
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      position: "relative",
+      width: String(100) + '%',
+      textAlign: "center",
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: "absolute",
+          width: String(100) + '%',
+          height: String(middleTitleLineTop) + ea,
+          top: String(0),
+          left: String(0),
+          borderBottom: "1px solid " + colorChip.gray4,
+        }
+      },
+      {
+        text: contents.title,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(middleTitleSize) + ea,
+          fontWeight: String(middleTitleWeight),
+          color: colorChip.black,
+          textAlign: "center",
+          paddingLeft: String(middleTitlePadding) + ea,
+          paddingRight: String(middleTitlePadding) + ea,
+          top: String(middleTitleTextTop) + ea,
+          background: colorChip.white,
+        }
+      },
+      {
+        text: contents.description.join("\n"),
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(middleInfoSize) + ea,
+          fontWeight: String(400),
+          lineHeight: String(1.6),
+          color: colorChip.black,
+          textAlign: "center",
+          paddingTop: String(middleTitlePadding) + ea,
+          paddingLeft: String(middleTitlePadding * 1.5) + ea,
+          paddingRight: String(middleTitlePadding * 1.5) + ea,
+          background: colorChip.white,
+        },
+        bold: {
+          fontSize: String(middleInfoSize) + ea,
+          fontWeight: String(700),
+          lineHeight: String(1.6),
+          color: colorChip.black,
+        }
+      }
+    ]
+  });
+
+  whiteBlock = createNode({
+    mother: baseTong,
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      marginTop: String(whiteTongMarginTop) + ea,
+      width: withOut(margin * 2, ea),
+      paddingLeft: String(margin) + ea,
+      paddingRight: String(margin) + ea,
+      paddingTop: String(marginTop) + ea,
+      paddingBottom: String(marginTop) + ea,
+      background: colorChip.white,
+      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      borderRadius: String(8) + "px",
+    }
+  });
+
+  createNode({
+    mother: whiteBlock,
+    mode: "img",
+    attribute: {
+      src: ServiceDetailJs.binaryPath + "/careBox.svg",
+    },
+    style: {
+      display: "block",
+      position: "relative",
+      width: withOut(0, ea),
+      height: "auto",
+    }
+  });
+
+  blankMiddle = createNode({
+    mother: whiteBlock,
+    style: {
+      display: "block",
+      position: "relative",
+      width: withOut(0, ea),
+      height: String(marginTop) + ea,
+    }
+  });
+
+  workBox = createNode({
+    mother: whiteBlock,
+    style: {
+      display: "flex",
+      position: "relative",
+      flexDirection: "row",
+      width: withOut(0, ea),
+    }
+  });
+
+  createNode({
+    mother: workBox,
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      flexDirection: "column",
+      width: String(leftWidth) + ea,
+    },
+    children: [
+      {
+        text: contents.work.title,
+        style: {
+          position: "relative",
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(titleWeight),
+          color: colorChip.black,
+          lineHeight: String(titleLineHeight),
+        }
+      },
+      {
+        text: contents.work.description.join("\n"),
+        style: {
+          position: "relative",
+          fontSize: String(descriptionSize) + ea,
+          fontWeight: String(descriptionWeight),
+          color: colorChip.black,
+          lineHeight: String(titleLineHeight),
+          marginTop: String(descriptionMarginTop) + ea,
+        }
+      }
+    ]
+  })
+
+  grayBlocksMother = createNode({
+    mother: workBox,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      width: withOut(leftWidth, ea),
+    }
+  });
+
+  // box0 - 3
+  for (let i = 0; i < contents.work.box0.length; i++) {
+    createNode({
+      mother: grayBlocksMother,
+      style: {
+        display: "inline-flex",
+        width: i === contents.work.box0.length - 1 ? "calc(calc(100% - " + String(grayBetween * (grayBoxNumbers - 1)) + ea + ") / " + String(grayBoxNumbers) + ")" : "calc(calc(calc(calc(100% - " + String(grayBetween * (grayBoxNumbers - 1)) + ea + ") / " + String(grayBoxNumbers) + ") * " + String(2) + ") + " + String(grayBetween * 1) + ea + ")",
+        height: String(grayHeight0) + ea,
+        background: colorChip.gray1,
+        borderRadius: String(8) + "px",
+        marginRight: String(i === contents.work.box0.length - 1 ? 0 : grayBetween) + ea,
+        marginBottom: String(grayBetween) + ea,
+        alignItems: "center",
+        justifyContent: "center",
+        verticalAlign: "top",
+      },
+      child: {
+        text: contents.work.box0[i],
+        style: {
+          fontSize: String(box0Size) + ea,
+          fontWeight: String(box0Weight),
+          color: colorChip.black,
+          position: "relative",
+          top: String(box0TextTop) + ea,
+        }
+      }
+    });
+  }
+
+  // box1 - 5
+  for (let i = 0; i < contents.work.box1.length; i++) {
+    createNode({
+      mother: grayBlocksMother,
+      style: {
+        display: "inline-flex",
+        width: "calc(calc(100% - " + String(grayBetween * (grayBoxNumbers - 1)) + ea + ") / " + String(grayBoxNumbers) + ")",
+        height: String(grayHeight1) + ea,
+        background: colorChip.gray1,
+        borderRadius: String(8) + "px",
+        marginRight: String(i === contents.work.box1.length - 1 ? 0 : grayBetween) + ea,
+        marginBottom: String(grayBetween) + ea,
+        alignItems: "center",
+        justifyContent: "center",
+        verticalAlign: "top",
+        flexDirection: "column",
+        textAlign: "center",
+      },
+      children: [
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleWidth) + ea,
+            height: String(circleWidth) + ea,
+            borderRadius: String(circleWidth) + ea,
+            background: colorChip.gray3,
+            textAlign: "center",
+            overflow: "hidden",
+          },
+          child: {
+            mode: "img",
+            attribute: {
+              src: contents.work.box1[i].image
+            },
+            style: {
+              display: "block",
+              position: "relative",
+              top: String(0),
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+            }
+          }
+        },
+        {
+          text: contents.work.box1[i].title,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(box1Size0) + ea,
+            fontWeight: String(box1Weight0),
+            color: colorChip.black,
+            textAlign: "center",
+            marginTop: String(box1TitleMarginTop) + ea,
+            marginBottom: String(box1TitleMarginBottom) + ea,
+          }
+        },
+        {
+          text: contents.work.box1[i].description.join("\n"),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(box1Size1) + ea,
+            fontWeight: String(box1Weight1),
+            color: colorChip.black,
+            textAlign: "center",
+            marginBottom: String(box1DescriptionBottomVisual) + ea,
+          }
+        },
+      ]
+    })
+  }
+
+  // box2 - 1
+  createNode({
+    mother: grayBlocksMother,
+    style: {
+      display: "inline-flex",
+      flexDirection: "row",
+      width: withOut(0, ea),
+      height: String(grayHeight0) + ea,
+      background: colorChip.gray1,
+      borderRadius: String(8) + "px",
+      position: "relative",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    child: {
+      text: contents.work.box2,
+      style: {
+        fontSize: String(box0Size) + ea,
+        fontWeight: String(box0Weight),
+        color: colorChip.green,
+        position: "relative",
+        top: String(box0TextTop) + ea,
+      },
+      previous: {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          marginRight: String(box2LineMargin) + ea,
+          width: String(box2LineWidth) + ea,
+          height: String(0),
+          borderBottom: "1px dashed " + colorChip.green
+        }
+      }
+    }
+  })
+
+
+  return [ newBaseTong, baseTong ];
+}
+
+ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
+  const instance = this;
+  const { ea, media, standardWidth } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1]);
+  const small = !big;
+  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
+  const newBaseTong = pastBaseTong.cloneNode(false);
+  let topMargin;
+  let bottomMargin;
+  let margin;
+  let middleTongPaddingBottom;
+  let middleTitleMarginBottom;
+  let middleTitleLineTop;
+  let middleTitleSize;
+  let middleTitleWeight;
+  let middleTitlePadding;
+  let middleTitleTextTop;
+  let middleAreaPaddingTop;
+  let middleInfoSize;
+  let contents;
+  let middleTong;
+  let whiteTongMarginTop;
+  let baseBlock;
+  let box0Width;
+  let boxBetween;
+  let box1Width;
+  let totalHeight;
+  let box1InnerMargin;
+  let innerMargin;
+  let box0Size, box0Weight, box0TextTop, box0LineHeight;
+  let box1TextTop, box1Size, box1Weight, box1LightWeight;
+  let buttonWidth, buttonHeight;
+  let box2Size;
+  let buttonTextTop;
+  let box2LineTop, box2LineBottom;
+  let box2DetailPaddingTop;
+  let box2DetailBetween;
+  let box2NumberWidth;
+  let box2Weight;
+  let box2DescriptionWeight, box2DescriptionLineHeight;
+  let box2NumberWeight, box2DetailWeight;
+
+  topMargin = <%% 160, 160, 160, 120, 50 %%>;
+  bottomMargin = <%% 180, 180, 180, 180, 50 %%>;
+  margin = <%% 52, 50, 40, 32, 52 %%>;
+  marginTop = <%% 56, 56, 56, 56, 56 %%>;
+
+  middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
+  middleTitleMarginBottom = <%% 60, 60, 60, 60, 60 %%>;
+
+  middleTitleLineTop = <%% 68, 68, 68, 68, 68 %%>;
+
+  middleTitleSize = <%% 23, 23, 21, 18, 4.2 %%>;
+  middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  middleTitlePadding = <%% 16, 16, 12, 10, 2 %%>;
+  middleTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
+
+  middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
+  middleInfoSize = <%% 14, 14, 14, 13, 3 %%>;
+
+  whiteTongMarginTop = <%% 48, 48, 48, 48, 48 %%>;
+
+  box0Width = <%% 170, 170, 170, 170, 170 %%>;
+  box1Width = <%% 410, 410, 410, 410, 410 %%>;
+
+  box1InnerMargin = <%% 45, 45, 45, 45, 45 %%>;
+
+  boxBetween = <%% 10, 10, 10, 10, 10 %%>;
+
+  totalHeight = <%% 400, 400, 400, 400, 400 %%>;
+
+  innerMargin = <%% 48, 48, 48, 48, 48 %%>;
+
+  box0Size = <%% 21, 21, 21, 21, 21 %%>;
+  box0Weight = <%% 800, 800, 800, 800, 800 %%>;
+  box0TextTop = <%% -1, -1, -1, -1, -1 %%>;
+  box0LineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
+
+  box1TextTop = <%% -1, -1, -1, -1, -1 %%>;
+  box1Size = <%% 18, 18, 18, 18, 18 %%>;
+  box1Weight = <%% 700, 700, 700, 700, 700 %%>;
+  box1LightWeight = <%% 300, 300, 300, 300, 300 %%>;
+
+  buttonWidth = <%% 200, 200, 200, 200, 200 %%>;
+  buttonHeight = <%% 40, 40, 40, 40, 40 %%>;
+
+  box2Size = <%% 16, 16, 16, 16, 16 %%>;
+  buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
+
+  box2LineTop = <%% 40, 40, 40, 40, 40 %%>;
+  box2LineBottom = <%% 16, 16, 16, 16, 16 %%>;
+
+  box2DetailPaddingTop = <%% 15, 15, 15, 15, 15 %%>;
+
+  box2DetailBetween = <%% 24, 24, 24, 24, 24 %%>;
+  box2NumberWidth = <%% 48, 48, 48, 48, 48 %%>;
+
+  box2Weight = <%% 800, 800, 800, 800, 800 %%>;
+
+  box2DescriptionWeight = <%% 600, 600, 600, 600, 600 %%>;
+  box2DescriptionLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
+
+  box2NumberWeight = <%% 500, 500, 500, 500, 500 %%>;
+  box2DetailWeight = <%% 600, 600, 600, 600, 600 %%>;
+
+  pastBaseTong.parentNode.insertBefore(newBaseTong, pastBaseTong.nextElementSibling);
+  newBaseTong.style.left = String(0);
+  newBaseTong.style.width = withOut(0, ea);
+  newBaseTong.style.background = colorChip.gray1;
+  newBaseTong.style.paddingTop = String(topMargin) + ea;
+
+  contents = {
+    title: "처음부터 끝까지, 홈리에종과 함께",
+    description: [
+       "상담부터 가구 배치가 완료되는 과정이 보편적으로 1달 반 정도 소요됩니다. 상담 문의는",
+       "소요되는 기간을 고려하여 미리 문의 주시면 디자이너의 선택 폭이 넓어집니다.",
+    ],
+    box0: "홈리에종\n케어",
+    box1: [
+      "홈리에종 상담 신청",
+      "스타일링",
+      "시공 / 구매",
+      "촬영 / 현장 인터뷰",
+    ],
+    box2: {
+      button: "홈리에종에 상담 신청 하기",
+      description: [
+        "홈페이지 간편 상담 신청 접수 후,",
+        "홈리에종 전담 매니저가 1-2일 내 유선 상담을 진행합니다.",
+      ],
+      detail: [
+        "나와 Fit 이 맞는 디자이너 추천",
+        "서비스 계약 안내,  디자이너 미팅 어레인지",
+        "off - 디자이너 현장 미팅, 실측 / on - 비대면 미팅, 고객 직접 실측",
+      ]
+    }
+  };
+
+  baseTong = createNode({
+    mother: newBaseTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(standardWidth) + ea,
+      left: withOut(50, standardWidth / 2, ea),
+      paddingBottom: String(bottomMargin) + ea,
+    }
+  });
+
+  middleTong = createNode({
+    mother: baseTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: withOut(0 * 2, ea),
+    }
+  });
+
+  createNode({
+    mother: middleTong,
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      position: "relative",
+      width: String(100) + '%',
+      textAlign: "center",
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: "absolute",
+          width: String(100) + '%',
+          height: String(middleTitleLineTop) + ea,
+          top: String(0),
+          left: String(0),
+          borderBottom: "1px solid " + colorChip.gray4,
+        }
+      },
+      {
+        text: contents.title,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(middleTitleSize) + ea,
+          fontWeight: String(middleTitleWeight),
+          color: colorChip.black,
+          textAlign: "center",
+          paddingLeft: String(middleTitlePadding) + ea,
+          paddingRight: String(middleTitlePadding) + ea,
+          top: String(middleTitleTextTop) + ea,
+          background: colorChip.gray1,
+        }
+      },
+      {
+        text: contents.description.join("\n"),
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(middleInfoSize) + ea,
+          fontWeight: String(400),
+          lineHeight: String(1.6),
+          color: colorChip.black,
+          textAlign: "center",
+          paddingTop: String(middleTitlePadding) + ea,
+          paddingLeft: String(middleTitlePadding * 1.5) + ea,
+          paddingRight: String(middleTitlePadding * 1.5) + ea,
+          background: colorChip.gray1,
+        },
+        bold: {
+          fontSize: String(middleInfoSize) + ea,
+          fontWeight: String(700),
+          lineHeight: String(1.6),
+          color: colorChip.black,
+        }
+      }
+    ]
+  });
+
+  baseBlock = createNode({
+    mother: baseTong,
+    style: {
+      display: "flex",
+      flexDirection: "row",
+      marginTop: String(whiteTongMarginTop) + ea,
+      width: withOut(0 * 2, ea),
+    }
+  });
+
+  createNode({
+    mother: baseBlock,
+    style: {
+      display: "inline-flex",
+      width: String(box0Width) + ea,
+      height: String(totalHeight) + ea,
+      flexDirection: "column",
+      background: colorChip.white,
+      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      borderRadius: String(8) + "px",
+      justifyContent: "center",
+      alignItems: "center",
+      marginRight: String(boxBetween) + ea,
+    },
+    child: {
+      text: contents.box0,
+      style: {
+        fontSize: String(box0Size) + ea,
+        fontWeight: String(box0Weight),
+        color: colorChip.green,
+        position: "relative",
+        top: String(box0TextTop) + ea,
+        display: "inline-block",
+        textAlign: "center",
+        lineHeight: String(box0LineHeight),
+      }
+    }
+  })
+
+  createNode({
+    mother: baseBlock,
+    style: {
+      width: String(box1Width) + ea,
+      display: "inline-flex",
+      height: String(totalHeight) + ea,
+      flexDirection: "column",
+      marginRight: String(boxBetween) + ea,
+    },
+    children: contents.box1.map((str, index) => {
+      return {
+        style: {
+          width: withOut(0, ea),
+          height: "calc(calc(100% - " + String(boxBetween * (contents.box1.length - 1)) + ea + ") / " + String(contents.box1.length) + ")",
+          marginBottom: String(index === contents.box1.length - 1 ? 0 : boxBetween) + ea,
+          background: colorChip.white,
+          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          borderRadius: String(8) + "px",
+          justifyContent: "center",
+          alignItems: "center",
+          display: "flex",
+        },
+        child: {
+          style: {
+            width: String(box1Width - (box1InnerMargin * 2)) + ea,
+            display: "inline-flex",
+            position: "relative",
+            justifyContent: "end",
+            alignItems: "center",
+            top: String(box1TextTop) + ea,
+          },
+          child: {
+            text: str,
+            style: {
+              fontSize: String(box1Size) + ea,
+              fontWeight: String(box1Weight),
+              color: colorChip.black,
+              position: "relative",
+            },
+            previous: {
+              text: String(index + 1),
+              style: {
+                fontSize: String(box1Size) + ea,
+                fontWeight: String(box1LightWeight),
+                color: colorChip.black,
+                position: "absolute",
+                top: String(0),
+                left: String(0),
+              },
+            }
+          }
+        }
+      }
+    })
+  })
+
+  createNode({
+    mother: baseBlock,
+    style: {
+      display: "inline-flex",
+      width: withOut(box0Width + box1Width + (boxBetween * 2), ea),
+      height: String(totalHeight) + ea,
+      flexDirection: "column",
+      background: colorChip.white,
+      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      borderRadius: String(8) + "px",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    child: {
+      style: {
+        width: withOut(innerMargin * 2, ea),
+        height: withOut(innerMargin * 2, ea),
+        display: "flex",
+        position: "relative",
+        flexDirection: "column",
+      },
+      children: [
+        {
+          style: {
+            display: "flex",
+            width: String(buttonWidth) + ea,
+            height: String(buttonHeight) + ea,
+            borderRadius: String(8) + "px",
+            background: colorChip.black,
+            justifyContent: "center",
+            alignItems: "center",
+          },
+          child: {
+            text: contents.box2.button,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(box2Size) + ea,
+              fontWeight: String(box2Weight),
+              color: colorChip.white,
+              top: String(buttonTextTop) + ea,
+            }
+          }
+        },
+        {
+          text: contents.box2.description.join("\n"),
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(box2Size) + ea,
+            fontWeight: String(box2DescriptionWeight),
+            lineHeight: String(box2DescriptionLineHeight),
+            color: colorChip.black,
+            paddingTop: String(box2LineTop) + ea,
+            paddingBottom: String(box2LineBottom) + ea,
+            borderBottom: "1px solid " + colorChip.black,
+          }
+        },
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(0, ea),
+            paddingTop: String(box2DetailPaddingTop) + ea,
+          },
+          children: contents.box2.detail.map((str, index) => {
+            return {
+              style: {
+                display: "flex",
+                position: "relative",
+                width: withOut(0, ea),
+                marginTop: String(box2DetailBetween) + ea,
+              },
+              children: [
+                {
+                  text: String(index + 1),
+                  style: {
+                    display: "inline-block",
+                    fontSize: String(box2Size) + ea,
+                    fontWeight: String(box2NumberWeight),
+                    fontFamily: "graphik",
+                    fontStyle: "italic",
+                    color: colorChip.green,
+                    width: String(box2NumberWidth) + ea,
+                  }
+                },
+                {
+                  text: str,
+                  style: {
+                    display: "inline-block",
+                    fontSize: String(box2Size) + ea,
+                    fontWeight: String(box2DetailWeight),
+                    color: colorChip.black,
+                  }
+                },
+              ]
+            };
+          })
+        }
+      ]
+    }
+  })
+
+  return [ newBaseTong, baseTong ];
+}
+
 ServiceDetailJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
@@ -2296,6 +3201,8 @@ ServiceDetailJs.prototype.launching = async function (loading) {
           instance.insertReviewBox(newBaseTong, baseTong);
 
           [ newBaseTong, baseTong ] = instance.insertToneBox(newBaseTong, baseTong);
+          [ newBaseTong, baseTong ] = instance.insertCareBox(newBaseTong, baseTong);
+          instance.insertWithBox(newBaseTong, baseTong);
 
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "ServiceDetailJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
