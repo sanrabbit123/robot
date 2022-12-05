@@ -5892,12 +5892,17 @@ BillMaker.prototype.constructInjection = async function (bilid, buiid, amountObj
   }
 }
 
-BillMaker.prototype.taxBill = async function () {
+BillMaker.prototype.taxBill = async function (indexArr) {
+  if (!Array.isArray(indexArr)) {
+    throw new Error("invaild input");
+  }
   const instance = this;
   const back = this.back;
   const { mongo, mongoinfo, mongolocalinfo, fileSystem, shellExec, shellLink, pythonExecute, requestSystem, decryptoHash, autoComma, messageLog, messageSend, errorLog, curlRequest, equalJson } = this.mother;
   const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
   const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+  const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
+  const human = new HumanPacket();
   try {
     await MONGOLOCALC.connect();
     const selfMongo = MONGOLOCALC;
@@ -5988,253 +5993,218 @@ BillMaker.prototype.taxBill = async function () {
     let num;
     let resultObjTong;
     let finalRows;
+    let newMail;
 
     id0 = "help";
     password0 = "hlofwis83!";
-    id1 = "master";
-    password1 = "hlofwis83!";
 
-    mailBoxDir = tempDir + "/" + mailBoxName;
-    if (await fileSystem("exist", [ mailBoxDir ])) {
-      await shellExec("rm", [ "-rf", mailBoxDir ]);
-    }
-    await shellExec("mkdir", [ mailBoxDir ]);
+    [ newMail ] = await human.getMails(id0, password0, indexArr);
 
-    if (await fileSystem("exist", [ tempDir + "/" + moduleName ])) {
-      await shellExec("rm", [ "-rf", tempDir + "/" + moduleName ]);
-    }
+    if ((new RegExp(targetEmail, "gi")).test(newMail.from)) {
 
-    finalScript = pythonScript.replace(/____id0____/gi, id0).replace(/____password0____/gi, password0).replace(/____id1____/gi, id1).replace(/____password1____/gi, password1).replace(/____host____/gi, host).replace(/____box____/gi, mailBoxDir + "/").replace(/____splitToken____/gi, areaToken).replace(/____returnToken____/gi, returnToken).replace(/____nameToken____/gi, nameToken).replace(/____targetEmail____/gi, targetEmail);
+      html = Buffer.from(newMail.data.raw.map((str) => { return str === '' ? areaToken : str }).join(returnToken).split(areaToken).filter((str) => { return str !== returnToken })[5].split(returnToken).join(""), "base64").toString("utf8");
+      search = [ ...html.matchAll(/\<script src\=\"([^\"]+)\"\>\<\/script\>/gi) ];
 
-    await fileSystem(`write`, [ tempDir + "/" + moduleName, finalScript ]);
+      localScript = '';
+      for (let arr of search) {
+        res2 = await curlRequest(arr[1]);
+        localScript += res2;
+        localScript += "\n\n";
+      }
 
-    res = equalJson(await shellExec("python3", [ tempDir + "/" + moduleName ]));
+      localScript = `<script>\n\n${localScript}\n\n</script>`;
 
-    if (res.message === "done") {
+      newHtml = html.replace(/\<script src\=\"([^\"]+)\"\>\<\/script\>/gi, '');
+      newHtml = newHtml.replace(/\<\/head\>/g, localScript + "</head>").replace(/src\=\"[^\"]+\"/gi, "").replace(/href\=\"[^\"]+\"/gi, "");
+      newHtml = newHtml.replace(/\<script defer\>[^\<]+\<\/script\>/gi, '');
+      newHtml += `\n\n<script>
+      var s = document.getElementById("idCriHeader").value;
+      var decodeHeader = CryptoJS.enc.Base64.parse(s);
+      var words = decodeHeader.words;
+      var decHeader="";
+      for(i=0; i < decodeHeader.sigBytes; i++)
+      {
+        var bite = (words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
+        var bite2 = bite ^ 0x6b;
+        decHeader = decHeader + String.fromCharCode(bite2);
+      }
+      decHeader = decHeader.replace(/\\r\\n/gi, '||');
+      decHeader = decHeader.replace(/\\n/gi, '||');
+      Cri_Header_parser(decHeader);
+      Cri_Check_Pwd("2218149759");
+      CriDisplayBody();
+      </script>`;
 
-      mailTargets = (await fileSystem(`readDir`, [ mailBoxDir ])).filter((str) => { return str !== ".DS_Store" }).map((str) => { const [ name, ymd, time ] = str.split(nameToken); return { file: `${mailBoxDir}/${str}`, date: new Date(Number(ymd.slice(0, 4)), Number(ymd.slice(4, 6)) - 1, Number(ymd.slice(6)), Number(time.slice(0, 2)), Number(time.slice(2, 4)), Number(time.slice(4))) } });
+      dom = new JSDOM(newHtml, { runScripts: "dangerously" });
+      finalText = dom.window.document.getElementById('CriMsgPosition').contentWindow.document.querySelector("table").textContent;
+      textArr = finalText.split("\n");
+      textArr = textArr.filter((i) => { return (i.trim() !== ""); });
+      textArr = new FindIndex(textArr.map((i) => { return i.trim(); }));
 
-      resultObjTong = [];
-      for (let { file, date } of mailTargets) {
+      spotTargets = [
+        { word: "번호", not: "상호", regxp: true, between: 1, start: 1, column: "business" },
+        { word: "상호\\(", not: "성명", regxp: true, between: 0, start: 0, column: "company" },
+        { word: "성명", not: "사업장", regxp: false, between: 0, start: 0, column: "name" },
+        { word: "사업장", not: "업태", regxp: false, between: 0, start: 0, column: "address" },
+        { word: "업태", not: "종목", regxp: false, between: 0, start: 0, column: "status" },
+        { word: "종목", not: "이메일", regxp: false, between: 0, start: 0, column: "detail" },
+        { word: "이메일", not: "이메일", regxp: false, between: 0, start: 0, column: "email" },
+      ];
+      resultObj = new TaxBill(null);
+      resultObj.make(textArr[2], newMail.date);
 
-        raw = await fileSystem(`readString`, [ file ]);
-        rawArr = raw.split(areaToken).map((r) => { return r.split(returnToken).map((str) => { return str.trim() }).filter((str) => { return str !== '' }) }).filter((arr) => { return arr.length !== 0 });
-        html = Buffer.from(rawArr[5].join(""), "base64").toString("utf8");
-        search = [ ...html.matchAll(/\<script src\=\"([^\"]+)\"\>\<\/script\>/gi) ];
-
-        localScript = '';
-        for (let arr of search) {
-          res2 = await curlRequest(arr[1]);
-          localScript += res2;
-          localScript += "\n\n";
-        }
-
-        localScript = `<script>\n\n${localScript}\n\n</script>`;
-
-        newHtml = html.replace(/\<script src\=\"([^\"]+)\"\>\<\/script\>/gi, '');
-        newHtml = newHtml.replace(/\<\/head\>/g, localScript + "</head>").replace(/src\=\"[^\"]+\"/gi, "").replace(/href\=\"[^\"]+\"/gi, "");
-        newHtml = newHtml.replace(/\<script defer\>[^\<]+\<\/script\>/gi, '');
-        newHtml += `\n\n<script>
-        var s = document.getElementById("idCriHeader").value;
-        var decodeHeader = CryptoJS.enc.Base64.parse(s);
-        var words = decodeHeader.words;
-        var decHeader="";
-        for(i=0; i < decodeHeader.sigBytes; i++)
-        {
-          var bite = (words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
-          var bite2 = bite ^ 0x6b;
-          decHeader = decHeader + String.fromCharCode(bite2);
-        }
-        decHeader = decHeader.replace(/\\r\\n/gi, '||');
-        decHeader = decHeader.replace(/\\n/gi, '||');
-        Cri_Header_parser(decHeader);
-        Cri_Check_Pwd("2218149759");
-        CriDisplayBody();
-        </script>`;
-
-
-        dom = new JSDOM(newHtml, { runScripts: "dangerously" });
-        finalText = dom.window.document.getElementById('CriMsgPosition').contentWindow.document.querySelector("table").textContent;
-        textArr = finalText.split("\n");
-        textArr = textArr.filter((i) => { return (i.trim() !== ""); });
-        textArr = new FindIndex(textArr.map((i) => { return i.trim(); }));
-
-        spotTargets = [
-          { word: "번호", not: "상호", regxp: true, between: 1, start: 1, column: "business" },
-          { word: "상호\\(", not: "성명", regxp: true, between: 0, start: 0, column: "company" },
-          { word: "성명", not: "사업장", regxp: false, between: 0, start: 0, column: "name" },
-          { word: "사업장", not: "업태", regxp: false, between: 0, start: 0, column: "address" },
-          { word: "업태", not: "종목", regxp: false, between: 0, start: 0, column: "status" },
-          { word: "종목", not: "이메일", regxp: false, between: 0, start: 0, column: "detail" },
-          { word: "이메일", not: "이메일", regxp: false, between: 0, start: 0, column: "email" },
-        ];
-        resultObj = new TaxBill(null);
-        resultObj.make(textArr[2], date);
-
-        for (let { word, not, regxp, between, start, column } of spotTargets) {
-          tempArr = textArr.findIndexAll(word, regxp, between, start);
-          if (tempArr.length < 2) {
-            throw new Error("invaild text");
-          }
-          resultObj.who.from[column] = textArr[tempArr[0] + 1] === not ? "" : textArr[tempArr[0] + 1];
-          resultObj.who.to[column] = textArr[tempArr[1] + 1] === not ? "" : textArr[tempArr[1] + 1];
-        }
-
-        tempArr = textArr.findIndexAll("비고");
+      for (let { word, not, regxp, between, start, column } of spotTargets) {
+        tempArr = textArr.findIndexAll(word, regxp, between, start);
         if (tempArr.length < 2) {
           throw new Error("invaild text");
         }
-        itemStart = tempArr[1] + 1;
-        tempArr = textArr.findIndexAll("합계금액");
-        if (tempArr.length < 1) {
-          throw new Error("invaild text");
-        }
-        itemEnd = tempArr[0] - 1;
-
-        textArr = Array.from(textArr);
-        textArr = textArr.slice(itemStart, itemEnd + 1);
-
-        startNums = [];
-        for (let i = 0; i < textArr.length; i++) {
-          if (i !== textArr.length - 1) {
-            if (/^[0-1][0-9]$/.test(textArr[i].trim())) {
-              if (/^[0-9][0-9]$/.test(textArr[i + 1].trim())) {
-                startNums.push(i);
-              }
-            }
-          }
-        }
-
-        orderArr = [];
-        for (let i = 0; i < startNums.length; i++) {
-          if (i === startNums.length - 1) {
-            orderArr.push([ startNums[i], textArr.length ]);
-          } else {
-            orderArr.push([ startNums[i], startNums[i + 1] ]);
-          }
-        }
-
-        items = [];
-        for (let i = 0; i < orderArr.length; i++) {
-          tempArr = [];
-          num = 0;
-          for (let j = orderArr[i][0]; j < orderArr[i][1]; j++) {
-            if (num === 0) {
-              if (/^[0-1][0-9]$/.test(textArr[j].trim())) {
-                tempArr.push(textArr[j].trim());
-              } else {
-                throw new Error("item month error");
-              }
-            } else if (num === 1) {
-              if (/^[0-4][0-9]$/.test(textArr[j].trim())) {
-                tempArr.push(textArr[j].trim());
-              } else {
-                throw new Error("item date error");
-              }
-            } else if (num === 2) {
-
-              tempNum = orderArr[i][1] - orderArr[i][0];
-              if (tempNum === 9) {
-                for (let k = 0; k < 7; k++) {
-                  tempArr.push(textArr[j + k]);
-                }
-              } else if (tempNum === 8) {
-                if (/[0-9\,\-]/g.test(textArr[orderArr[i][1] - 1].trim()) && textArr[orderArr[i][1] - 1].replace(/[0-9\,\-]/g, '') === '') {
-                  for (let k = 0; k < 6; k++) {
-                    tempArr.push(textArr[j + k]);
-                  }
-                  tempArr.push("");
-                } else {
-                  tempArr.push("");
-                  for (let k = 0; k < 6; k++) {
-                    tempArr.push(textArr[j + k]);
-                  }
-                }
-              } else if (tempNum === 7 || tempNum === 6 || tempNum === 5) {
-                if (/[0-9\,\-]/g.test(textArr[orderArr[i][1] - 1].trim()) && textArr[orderArr[i][1] - 1].replace(/[0-9\,\-]/g, '') === '') {
-                  tempArr.push(textArr[j].replace(/[0-9\,\-]/g, '') === '' ? "" : textArr[j]);
-                  tempArr.push(textArr[j + 1].replace(/[0-9\,\-]/g, '') === '' ? "" : textArr[j + 1]);
-                  tempArr.push(1);
-                  tempArr.push(textArr[orderArr[i][1] - 2]);
-                  tempArr.push(textArr[orderArr[i][1] - 2]);
-                  tempArr.push(textArr[orderArr[i][1] - 1]);
-                  tempArr.push("");
-                } else {
-                  tempArr.push(textArr[j].replace(/[0-9\,\-]/g, '') === '' ? "" : textArr[j]);
-                  tempArr.push(textArr[j + 1].replace(/[0-9\,\-]/g, '') === '' ? "" : textArr[j + 1]);
-                  tempArr.push(1);
-                  tempArr.push(textArr[orderArr[i][1] - 3]);
-                  tempArr.push(textArr[orderArr[i][1] - 3]);
-                  tempArr.push(textArr[orderArr[i][1] - 2]);
-                  tempArr.push(textArr[orderArr[i][1] - 1]);
-                }
-              } else if (tempNum === 4) {
-                tempArr.push("");
-                tempArr.push("");
-                tempArr.push(1);
-                tempArr.push(textArr[j]);
-                tempArr.push(textArr[j]);
-                tempArr.push(textArr[j + 1]);
-                tempArr.push("");
-              } else {
-                throw new Error("item error");
-              }
-            }
-            num++;
-          }
-          items.push(tempArr);
-        }
-
-        supplySum = 0;
-        vatSum = 0;
-
-        for (let arr of items) {
-          tempObj = {
-            month: Number(arr[0].replace(/^0/, '')),
-            date: Number(arr[1]),
-            name: arr[2],
-            ea: arr[3],
-            amount: Number(arr[4]),
-            unit: Number(arr[5].replace(/[^0-9\-]/g, '')),
-            supply: Number(arr[6].replace(/[^0-9\-]/g, '')),
-            vat: Number(arr[7].replace(/[^0-9\-]/g, '')),
-            etc: arr[8]
-          };
-          resultObj.items.push(tempObj);
-          supplySum += tempObj.supply;
-          vatSum += tempObj.vat;
-        }
-
-        resultObj.sum.total = supplySum + vatSum;
-        resultObj.sum.supply = supplySum;
-        resultObj.sum.vat = vatSum;
-
-        resultObjTong.push(resultObj);
-
+        resultObj.who.from[column] = textArr[tempArr[0] + 1] === not ? "" : textArr[tempArr[0] + 1];
+        resultObj.who.to[column] = textArr[tempArr[1] + 1] === not ? "" : textArr[tempArr[1] + 1];
       }
 
-      resultObjTong.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
+      tempArr = textArr.findIndexAll("비고");
+      if (tempArr.length < 2) {
+        throw new Error("invaild text");
+      }
+      itemStart = tempArr[1] + 1;
+      tempArr = textArr.findIndexAll("합계금액");
+      if (tempArr.length < 1) {
+        throw new Error("invaild text");
+      }
+      itemEnd = tempArr[0] - 1;
 
-      console.log(resultObjTong);
+      textArr = Array.from(textArr);
+      textArr = textArr.slice(itemStart, itemEnd + 1);
 
-      await shellExec("rm", [ "-rf", tempDir + "/" + moduleName ]);
-      await shellExec("rm", [ "-rf", mailBoxDir ]);
-
-      for (let json of resultObjTong) {
-        finalRows = await back.mongoRead(collection, { id: json.id }, { selfMongo });
-        if (finalRows.length === 0) {
-          await back.mongoCreate(collection, json, { selfMongo });
-          console.log("mongo insert");
-          await messageSend({ text: json.toMessage(), channel: "#701_taxbill" });
+      startNums = [];
+      for (let i = 0; i < textArr.length; i++) {
+        if (i !== textArr.length - 1) {
+          if (/^[0-1][0-9]$/.test(textArr[i].trim())) {
+            if (/^[0-9][0-9]$/.test(textArr[i + 1].trim())) {
+              startNums.push(i);
+            }
+          }
         }
+      }
+
+      orderArr = [];
+      for (let i = 0; i < startNums.length; i++) {
+        if (i === startNums.length - 1) {
+          orderArr.push([ startNums[i], textArr.length ]);
+        } else {
+          orderArr.push([ startNums[i], startNums[i + 1] ]);
+        }
+      }
+
+      items = [];
+      for (let i = 0; i < orderArr.length; i++) {
+        tempArr = [];
+        num = 0;
+        for (let j = orderArr[i][0]; j < orderArr[i][1]; j++) {
+          if (num === 0) {
+            if (/^[0-1][0-9]$/.test(textArr[j].trim())) {
+              tempArr.push(textArr[j].trim());
+            } else {
+              throw new Error("item month error");
+            }
+          } else if (num === 1) {
+            if (/^[0-4][0-9]$/.test(textArr[j].trim())) {
+              tempArr.push(textArr[j].trim());
+            } else {
+              throw new Error("item date error");
+            }
+          } else if (num === 2) {
+
+            tempNum = orderArr[i][1] - orderArr[i][0];
+            if (tempNum === 9) {
+              for (let k = 0; k < 7; k++) {
+                tempArr.push(textArr[j + k]);
+              }
+            } else if (tempNum === 8) {
+              if (/[0-9\,\-]/g.test(textArr[orderArr[i][1] - 1].trim()) && textArr[orderArr[i][1] - 1].replace(/[0-9\,\-]/g, '') === '') {
+                for (let k = 0; k < 6; k++) {
+                  tempArr.push(textArr[j + k]);
+                }
+                tempArr.push("");
+              } else {
+                tempArr.push("");
+                for (let k = 0; k < 6; k++) {
+                  tempArr.push(textArr[j + k]);
+                }
+              }
+            } else if (tempNum === 7 || tempNum === 6 || tempNum === 5) {
+              if (/[0-9\,\-]/g.test(textArr[orderArr[i][1] - 1].trim()) && textArr[orderArr[i][1] - 1].replace(/[0-9\,\-]/g, '') === '') {
+                tempArr.push(textArr[j].replace(/[0-9\,\-]/g, '') === '' ? "" : textArr[j]);
+                tempArr.push(textArr[j + 1].replace(/[0-9\,\-]/g, '') === '' ? "" : textArr[j + 1]);
+                tempArr.push(1);
+                tempArr.push(textArr[orderArr[i][1] - 2]);
+                tempArr.push(textArr[orderArr[i][1] - 2]);
+                tempArr.push(textArr[orderArr[i][1] - 1]);
+                tempArr.push("");
+              } else {
+                tempArr.push(textArr[j].replace(/[0-9\,\-]/g, '') === '' ? "" : textArr[j]);
+                tempArr.push(textArr[j + 1].replace(/[0-9\,\-]/g, '') === '' ? "" : textArr[j + 1]);
+                tempArr.push(1);
+                tempArr.push(textArr[orderArr[i][1] - 3]);
+                tempArr.push(textArr[orderArr[i][1] - 3]);
+                tempArr.push(textArr[orderArr[i][1] - 2]);
+                tempArr.push(textArr[orderArr[i][1] - 1]);
+              }
+            } else if (tempNum === 4) {
+              tempArr.push("");
+              tempArr.push("");
+              tempArr.push(1);
+              tempArr.push(textArr[j]);
+              tempArr.push(textArr[j]);
+              tempArr.push(textArr[j + 1]);
+              tempArr.push("");
+            } else {
+              throw new Error("item error");
+            }
+          }
+          num++;
+        }
+        items.push(tempArr);
+      }
+
+      supplySum = 0;
+      vatSum = 0;
+
+      for (let arr of items) {
+        tempObj = {
+          month: Number(arr[0].replace(/^0/, '')),
+          date: Number(arr[1]),
+          name: arr[2],
+          ea: arr[3],
+          amount: Number(arr[4]),
+          unit: Number(arr[5].replace(/[^0-9\-]/g, '')),
+          supply: Number(arr[6].replace(/[^0-9\-]/g, '')),
+          vat: Number(arr[7].replace(/[^0-9\-]/g, '')),
+          etc: arr[8]
+        };
+        resultObj.items.push(tempObj);
+        supplySum += tempObj.supply;
+        vatSum += tempObj.vat;
+      }
+
+      resultObj.sum.total = supplySum + vatSum;
+      resultObj.sum.supply = supplySum;
+      resultObj.sum.vat = vatSum;
+
+      finalRows = await back.mongoRead(collection, { id: resultObj.id }, { selfMongo });
+      if (finalRows.length === 0) {
+        await back.mongoCreate(collection, resultObj, { selfMongo });
+        console.log("mongo insert");
+        await messageSend({ text: resultObj.toMessage(), channel: "#701_taxbill" });
       }
 
     } else {
-      throw new Error("python script error");
+      throw new Error("invail index arr");
     }
 
   } catch (e) {
     await errorLog(e.message);
+    console.log(e);
   } finally {
     await MONGOLOCALC.close();
     await errorLog("taxBill done : " + JSON.stringify(new Date()));

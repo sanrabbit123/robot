@@ -134,9 +134,42 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
+    // const human = new HumanPacket();
+    // const standardFile = process.cwd() + "/temp/mailStandard.json";
+    // const areaToken = "____areaSplit____";
+    // const returnToken = "____returnToken____";
+    //
+    // num = 0;
+    // setInterval(async () => {
+    //   try {
+    //     const client = await human.homeliaisonLogin("help", "hlofwis83!");
+    //     let standardString, num;
+    //     let pastString;
+    //     let count;
+    //     let newMail;
+    //
+    //     const { data } = await client.list();
+    //     const arr = data.split("\r\n").map((str) => { return str.trim() }).filter((str) => { return str !== '' });
+    //     standardString = JSON.stringify(arr);
+    //     if (num !== 0) {
+    //       pastString = await fileSystem(`readString`, [ standardFile ]);
+    //       if (standardString !== pastString) {
+    //         ({ count } = await client.list());
+    //         [ newMail ] = await human.getMails("help", "hlofwis83!", [ count ]);
+    //         if (/hometaxadmin@hometax.go.kr/gi.test(newMail.from)) {
+    //           console.log(newMail.data.raw.map((str) => { return str === '' ? areaToken : str }).join(returnToken).split(areaToken).filter((str) => { return str !== returnToken })[5]);
+    //         }
+    //       }
+    //     }
+    //     await fileSystem(`write`, [ standardFile, standardString ]);
+    //
+    //     await client.quit();
+    //
+    //     num++;
+    //   } catch (e) {
+    //     console.log(e);
+    //   }
+    // }, 1000);
 
 
 

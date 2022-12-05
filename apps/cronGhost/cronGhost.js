@@ -37,7 +37,7 @@ CronGhost.prototype.aliveTest = async function () {
     failNum = 0;
     message = '';
 
-    await requestSystem("https://" + address.pythoninfo.host + ":" + String(generalPort) + "/taxBill", { data: null }, { headers: { "Content-Type": "application/json" } });
+    await requestSystem("https://" + address.pythoninfo.host + ":" + String(generalPort) + "/basicCron", { data: null }, { headers: { "Content-Type": "application/json" } });
 
     for (let { name, protocol, host, port } of targets) {
 
