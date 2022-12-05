@@ -130,10 +130,6 @@ DevContext.prototype.launching = async function () {
     // }
 
 
-    const FacebookAPIs = require(`${process.cwd()}/apps/facebookAPIs/facebookAPIs.js`);
-    const facebook = new FacebookAPIs();
-
-    await facebook.dailyCampaign(this.MONGOLOCALC, 3);
 
 
 
