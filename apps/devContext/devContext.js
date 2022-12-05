@@ -136,11 +136,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
-
-
     /*
 
     const getMatrix = (clients, projects, histories, requests, year, month) => {
@@ -3451,9 +3446,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "최정희",
-    //     designer: "이정아",
-    //     link: "https://drive.google.com/drive/folders/1ItA7zcK8RNrw_hnUbcd-5HXbi7KvPH3p",
+    //     client: "이지현",
+    //     designer: "박정훈",
+    //     link: "https://drive.google.com/drive/folders/1gwzh_DSCFIDmdPvCeIX17mNTicBRsUH3",
     //     pay: true
     //   },
     // ]);
@@ -3471,12 +3466,11 @@ DevContext.prototype.launching = async function () {
     // let clientName, designerName;
     //
     //
-    // clientName = "박희상";
-    // designerName = "박미연";
+    // clientName = "이지현";
+    // designerName = "박정훈";
     //
-    // shareGoogleIdClient = "1ArLBJJnPiOJLrOQWqQTkY24akgmudkPr";
-    // shareGoogleIdDesigner = "1PJczF03e1yGO5bfV27deHj7MpgT9040L";
-    //
+    // shareGoogleIdClient = "1VcZdeuT_FRgVg7lCCqZ8MqfCZgjEvZng";
+    // shareGoogleIdDesigner = "1LBW_ZcN4axZg5LSTDNmSxEtx7IFstokP";
     //
     // projects = await back.getProjectsByNames([ clientName, designerName ]);
     // if (projects.length > 0) {
