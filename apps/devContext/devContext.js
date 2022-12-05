@@ -131,7 +131,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-
+    await requestSystem("https://" + address.pythoninfo.host + ":" + String(3000) + "/taxBill", { count: 64 }, { headers: { "Content-Type": "application/json" } });
 
 
     // const human = new HumanPacket();

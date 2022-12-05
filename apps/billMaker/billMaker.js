@@ -6191,6 +6191,8 @@ BillMaker.prototype.taxBill = async function (indexArr) {
       resultObj.sum.supply = supplySum;
       resultObj.sum.vat = vatSum;
 
+      console.log(resultObj);
+
       finalRows = await back.mongoRead(collection, { id: resultObj.id }, { selfMongo });
       if (finalRows.length === 0) {
         await back.mongoCreate(collection, resultObj, { selfMongo });
