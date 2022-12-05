@@ -408,7 +408,6 @@ Robot.prototype.tellVoice = async function () {
     });
 
     num = 0;
-    await fileSystem(`write`, [ standardFile, "" ]);
     setInterval(async () => {
       try {
         const client = await human.homeliaisonLogin(id, pwd);
@@ -416,6 +415,7 @@ Robot.prototype.tellVoice = async function () {
         let pastString;
         let count;
         let newMail;
+        let length;
 
         const { data } = await client.list();
         const arr = data.split("\r\n").map((str) => { return str.trim() }).filter((str) => { return str !== '' });
@@ -424,10 +424,13 @@ Robot.prototype.tellVoice = async function () {
           pastString = await fileSystem(`readString`, [ standardFile ]);
           if (standardString !== pastString) {
             ({ count } = await client.list());
-            [ newMail ] = await human.getMails(id, pwd, [ count ]);
-            await messageSend({ text: newMail.from + " 으로부터 새로운 메일이 도착했습니다! : " + Buffer.from(newMail.subject, "base64").toString("utf8"), channel: "#general" });
-            if ((new RegExp(targetEmail, "gi")).test(newMail.from)) {
-              await requestSystem("https://" + address.pythoninfo.host + ":" + String(3000) + "/taxBill", { count }, { headers: { "Content-Type": "application/json" } });
+            length = count - JSON.parse(pastString).length
+            for (let i = 0; i < length; i++) {
+              [ newMail ] = await human.getMails(id, pwd, [ count - i ]);
+              await messageSend({ text: newMail.from + " 으로부터 새로운 메일이 도착했습니다! : " + Buffer.from(newMail.subject, "base64").toString("utf8"), channel: "#general" });
+              if ((new RegExp(targetEmail, "gi")).test(newMail.from)) {
+                await requestSystem("https://" + address.pythoninfo.host + ":" + String(3000) + "/taxBill", { count: count - i }, { headers: { "Content-Type": "application/json" } });
+              }
             }
           }
         }
@@ -439,7 +442,7 @@ Robot.prototype.tellVoice = async function () {
       } catch (e) {
         console.log(e);
       }
-    }, 1000 * 5);
+    }, 1000 * 10);
 
 
     pems = {};
