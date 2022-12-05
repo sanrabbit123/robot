@@ -4,7 +4,7 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
   const instance = this;
   const { ea, photoActionList, resetWidthEvent } = this;
   const { createNode, createNodes, colorChip, withOut, isMac, dateToString, autoComma, equalJson } = GeneralJs;
-  const { address, contents: { photo, raw, share, sns }, history } = project;
+  const { desid, name, address, contents: { photo, raw, share, sns }, history } = project;
   const { boo, date, info: { interviewer, photographer }, status } = photo;
   const { portfolio: { status: portfolioStatus, link: portfolioLink }, interview: { status: interviewStatus, link: interviewLink }, photo: { status: photoStatus, link: photoLink } } = raw;
   const { client: { photo: photoClient, contents: contentsClient }, designer: { photo: photoDesigner, contents: contentsDesigner } } = share;
@@ -28,6 +28,10 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
   }
   const emptyDate = new Date(1800, 0, 1);
   const emptyValue = "해당 없음";
+  const foreContents = this.foreContents.find((obj) => {
+    return obj.client === name.trim() && obj.desid === desid;
+  })
+  const foreContentsBoo = foreContents === undefined ? ((longInterview.valueOf() <= (new Date()).valueOf() && longInterview.valueOf() > (new Date(2000, 0, 1)).valueOf()) ? "사진 발행" : "사진 없음") : "사진 대기";
   let height, margin;
   let whiteBlock;
   let top, left, size;
@@ -1203,6 +1207,12 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
         values: [ '예정', '해당 없음' ],
         chain: null
       },
+      rawPhoto: {
+        title: "촬영 사진",
+        position: null,
+        values: [],
+        chain: null
+      },
       portfolioLong: {
         title: "블로그 포폴",
         position: "contents.sns.portfolio.long",
@@ -1231,6 +1241,12 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
         title: "웹",
         position: "",
         values: [],
+        chain: null
+      },
+      interviewer: {
+        title: "담당",
+        position: "contents.photo.info.interviewer",
+        values: [ '미정', '정재은', '강해진', '임혜령', '임지민', '이큰별', '배창규', '박혜연', '김지은' ],
         chain: null
       },
     };
@@ -1382,6 +1398,88 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
         updateEvent.call(this, e);
       });
       calendarTong.appendChild(calendar.calendarBase);
+    });
+    stringArr.push(textMaker(map["rawPhoto"].title, foreContentsBoo, (/없음/gi.test(foreContentsBoo) ? "red" : (/발행/gi.test(foreContentsBoo) ? "green" : "black")), "rawPhoto"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+
+    });
+    stringArr.push(textMaker(map["interviewer"].title, interviewer, (interviewer === "미정" ? "red" : "black"), "interviewer"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "interviewer";
+      let startLeft, width, margin, background;
+      let values, updateEvent;
+      let nodeArr;
+      let position;
+      let whereQuery, updateQuery, chainQuery;
+
+      updateQuery = {};
+      whereQuery = { proid: project.proid };
+      position = map[column].position;
+      values = map[column].values;
+      chainQuery = map[column].chain;
+      startLeft = 0;
+      width = 70;
+      margin = 4;
+
+      background = colorChip.gradientGreen4;
+      updateEvent = async function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        try {
+          const value = this.getAttribute("value");
+          const removeTargets = mother.querySelectorAll("aside");
+          updateQuery[position] = value;
+          if (value === "미정") {
+            valueDom.style.color = colorChip.red;
+          } else {
+            valueDom.style.color = colorChip.black;
+          }
+          await instance.contentsUpdate(whereQuery, updateQuery, chainQuery, value);
+          valueDom.textContent = value;
+          calendarEvent(thisCase);
+          for (let dom of removeTargets) {
+            mother.removeChild(dom);
+          }
+
+          resetWidthEvent();
+        } catch (e) {
+          console.log(e);
+        }
+      }
+
+      nodeArr = [];
+      for (let i = 0; i < values.length; i++) {
+        nodeArr.push({
+          mother: this,
+          mode: "aside",
+          attribute: [ { value: values[i] } ],
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top + ((margin + height) * i)) + ea,
+            left: String(startLeft) + ea,
+            width: String(width) + ea,
+            height: String(height) + ea,
+            background, zIndex, boxShadow, borderRadius, animation,
+          }
+        });
+        nodeArr.push({
+          mother: -1,
+          text: values[i],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.whiteBlack,
+          }
+        });
+      }
+      createNodes(nodeArr);
     });
     stringArr.push(textMaker(map["interviewLong"].title, tempString1, dateToColor(longInterview, false), "interviewLong"));
     updateArr.push(function (e, option, cancelBox, parent) {
@@ -4249,6 +4347,12 @@ DesignerJs.prototype.contentsView = async function () {
       p.history = projectHistory[p.proid];
     }
 
+    this.foreContents = await ajaxJson({
+      mode: "read",
+      collection: "foreContents",
+      db: "console",
+      whereQuery: {},
+    }, BACKHOST + "/generalMongo", { equal: true });
     this.projects = projects;
     this.designers = new Designers(designers);
     this.designers.setProjects(projects);
