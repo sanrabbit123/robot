@@ -372,18 +372,24 @@ Robot.prototype.taxBill = async function () {
 Robot.prototype.tellVoice = async function () {
   const instance = this;
   const address = this.address;
-  const { shellExec, fileSystem } = this.mother;
+  const { shellExec, fileSystem, messageSend, requestSystem } = this.mother;
   try {
     const PlayAudio = require(`${process.cwd()}/apps/playAudio/playAudio.js`);
+    const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
     const voice = new PlayAudio();
+    const human = new HumanPacket();
     const https = require("https");
     const express = require("express");
     const app = express();
+    const id = "help";
+    const pwd = "hlofwis83!";
+    const targetEmail = "hometaxadmin@hometax.go.kr";
     let pems;
     let pemsLink;
     let certDir;
     let keyDir;
     let caDir;
+    let num;
 
     app.use(express.json({ limit: "50mb" }));
     app.use(express.urlencoded({ limit: "50mb", extended: true }));
@@ -393,12 +399,44 @@ Robot.prototype.tellVoice = async function () {
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ message: "invaild post" }));
       } else {
-        // voice.textToVoice(String(req.body.text));
         shellExec("say", [ req.body.text.replace(/[a-zA-Z\:\=\&\/]/gi, '') ]).catch((err) => { console.log(err); });
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ message: "will do" }));
       }
     });
+
+    num = 0;
+    setInterval(async () => {
+      try {
+        const client = await human.homeliaisonLogin(id, pwd);
+        let standardString, num;
+        let pastString;
+        let count;
+        let newMail;
+
+        const { data } = await client.list();
+        const arr = data.split("\r\n").map((str) => { return str.trim() }).filter((str) => { return str !== '' });
+        standardString = JSON.stringify(arr);
+        if (num !== 0) {
+          pastString = await fileSystem(`readString`, [ standardFile ]);
+          if (standardString !== pastString) {
+            ({ count } = await client.list());
+            [ newMail ] = await human.getMails(id, pwd, [ count ]);
+            await messageSend({ text: newMail.from + "으로부터 새로운 메일이 도착했습니다! (help@home-liaison.com) : " + newMail.subject, channel: "#general" });
+            if ((new RegExp(targetEmail, "gi")).test(newMail.from)) {
+              await requestSystem("https://" + address.pythoninfo.host + ":" + String(3000) + "/taxBill", { count }, { headers: { "Content-Type": "application/json" } });
+            }
+          }
+        }
+        await fileSystem(`write`, [ standardFile, standardString ]);
+
+        await client.quit();
+
+        num++;
+      } catch (e) {
+        console.log(e);
+      }
+    }, 1000 * 30);
 
     pems = {};
     pemsLink = process.cwd() + "/pems/" + address.officeinfo.ghost.host;
