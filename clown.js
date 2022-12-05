@@ -406,6 +406,7 @@ Clown.prototype.tellVoice = async function () {
       }
     });
 
+    num = 0;
     intervalFunc = async () => {
       try {
         const client = await human.homeliaisonLogin(id, pwd);
@@ -439,7 +440,6 @@ Clown.prototype.tellVoice = async function () {
     }
 
     await intervalFunc();
-    num = 0;
     setInterval(intervalFunc, 1000 * 5);
 
     pems = {};

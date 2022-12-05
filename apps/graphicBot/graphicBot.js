@@ -323,7 +323,7 @@ GraphicBot.prototype.chromeOpen = async function (url) {
         exec(`/Applications/'Google Chrome.app'/Contents/MacOS/'Google Chrome' --start-maximized ${url}`);
         setTimeout(function () {
           resolve(stdout);
-        }, 3000);
+        }, 30000);
       });
     });
 
