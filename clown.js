@@ -389,6 +389,7 @@ Clown.prototype.tellVoice = async function () {
     let keyDir;
     let caDir;
     let num;
+    let intervalFunc;
 
     app.use(express.json({ limit: "50mb" }));
     app.use(express.urlencoded({ limit: "50mb", extended: true }));
@@ -404,8 +405,7 @@ Clown.prototype.tellVoice = async function () {
       }
     });
 
-    num = 0;
-    setInterval(async () => {
+    intervalFunc = async () => {
       try {
         const client = await human.homeliaisonLogin(id, pwd);
         let standardString, num;
@@ -435,7 +435,11 @@ Clown.prototype.tellVoice = async function () {
       } catch (e) {
         console.log(e);
       }
-    }, 1000 * 30);
+    }
+
+    await intervalFunc();
+    num = 0;
+    setInterval(intervalFunc, 1000 * 10);
 
     pems = {};
     pemsLink = process.cwd() + "/pems/" + address.officeinfo.ghost.host;
