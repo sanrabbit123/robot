@@ -41,7 +41,7 @@ const ServiceDetailJs = function () {
   this.mother = new GeneralJs();
 }
 
-ServiceDetailJs.binaryPath = "/middle/detail";
+ServiceDetailJs.binaryPath = FRONTHOST + "/middle/detail";
 
 ServiceDetailJs.prototype.insertInitBox = function () {
   const instance = this;

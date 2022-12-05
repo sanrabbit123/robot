@@ -136,6 +136,69 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
+    // designer career
+
+    // const selfMongo = this.MONGOC;
+    // const designers = (await back.getDesignersByQuery({}, { selfMongo })).toNormal();
+    // const sheetsId = "1jedA_xAZ_J4CzVLL3O1WkqWD3jFObWtUl7ncCYoCHMs";
+    // const raw = await sheets.get_value_inPython(sheetsId, "A1:C22");
+    // let arr0, arr1;
+    // let year0, month0
+    // let year1, month1;
+    // let stylingMonth;
+    // let start;
+    // let startYear, startMonth;
+    // let desid;
+    // let whereQuery, updateQuery;
+    //
+    //
+    // now = new Date();
+    //
+    // for (let [ designer, raw0, raw1 ] of raw) {
+    //
+    //   desid = designers.find((d) => { return d.designer === designer }).desid;
+    //
+    //   arr0 = raw0.split("년").map((str) => { return Number(str.trim().replace(/[^0-9]/gi, '')) });
+    //   arr1 = raw1.split("년").map((str) => { return Number(str.trim().replace(/[^0-9]/gi, '')) });
+    //
+    //   [ year0, month0 ] = arr0;
+    //   [ year1, month1 ] = arr1;
+    //
+    //   stylingMonth = ((year1 * 12) + month1) - ((year0 * 12) + month0)
+    //
+    //   start = new Date();
+    //   start.setMonth(start.getMonth() - stylingMonth);
+    //
+    //   startYear = start.getFullYear();
+    //   startMonth = start.getMonth() + 1;
+    //
+    //   whereQuery = { desid };
+    //   updateQuery = {};
+    //
+    //   updateQuery["information.business.career.startY"] = startYear;
+    //   updateQuery["information.business.career.startM"] = startMonth;
+    //   updateQuery["information.business.career.relatedY"] = year0;
+    //   updateQuery["information.business.career.relatedM"] = month0;
+    //
+    //   await back.updateDesigner([ whereQuery, updateQuery ], { selfMongo });
+    //
+    //   console.log(whereQuery, updateQuery);
+    //
+    // }
+
+
+
+
+
+
+
+
+
+
+
+
     /*
 
     const getMatrix = (clients, projects, histories, requests, year, month) => {
