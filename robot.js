@@ -425,7 +425,7 @@ Robot.prototype.tellVoice = async function () {
           if (standardString !== pastString) {
             ({ count } = await client.list());
             [ newMail ] = await human.getMails(id, pwd, [ count ]);
-            await messageSend({ text: newMail.from + "으로부터 새로운 메일이 도착했습니다! (help@home-liaison.com) : " + newMail.subject, channel: "#general" });
+            await messageSend({ text: newMail.from + " 으로부터 새로운 메일이 도착했습니다! : " + Buffer.from(newMail.subject, "base54").toString("utf8"), channel: "#general" });
             if ((new RegExp(targetEmail, "gi")).test(newMail.from)) {
               await requestSystem("https://" + address.pythoninfo.host + ":" + String(3000) + "/taxBill", { count }, { headers: { "Content-Type": "application/json" } });
             }
