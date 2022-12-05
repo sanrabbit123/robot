@@ -2261,6 +2261,817 @@ ServiceDetailJs.prototype.insertToneBox = function (pastBaseTong, baseTong) {
   return [ newBaseTong, baseTong ];
 }
 
+ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong) {
+  const instance = this;
+  const { ea, media, standardWidth } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1]);
+  const small = !big;
+  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
+  const newBaseTong = pastBaseTong.cloneNode(false);
+  let topMargin;
+  let bottomMargin;
+  let margin;
+  let middleTongPaddingBottom;
+  let middleTitleMarginBottom;
+  let middleTitleLineTop;
+  let middleTitleSize;
+  let middleTitleWeight;
+  let middleTitlePadding;
+  let middleTitleTextTop;
+  let middleAreaPaddingTop;
+  let middleInfoSize;
+  let contents;
+  let middleTong;
+  let whiteTongMarginTop;
+  let whiteBlock0, whiteBlock1, whiteBlock2;
+  let whiteBetween;
+  let leftBlockWidth, leftBlockMarginRight;
+  let titleSize, titleWeight;
+  let descriptionSize, descriptionWeight, descriptionLineHeight;
+  let descriptionMarginTop;
+  let blockBetween;
+  let imageMarginBottom;
+  let grayBoxHeight;
+  let innerTitleSize, innerTitleWeight, innerTitleLineHeight;
+  let innerDescriptionSize, innerDescriptionWeight, innerDescriptionLineHeight;
+  let innerDescriptionMarginTop, innerDescriptionTextVisual;
+  let freeWidth, freeHeight;
+  let freeTextTop;
+  let linesTongHeight;
+  let linesWidth;
+  let blackTongHeight;
+  let blackGrayPaddingTop, blackGrayPaddingLeft;
+  let blackGrayFactorBetween;
+  let blackGrayFactorWhiteHeight, blackGrayFactorGreenHeight;
+  let tagBoxHeight;
+  let tagDefaultSize, tagDefaultWeight, tagDefaultTextTop;
+
+  topMargin = <%% 160, 160, 160, 120, 50 %%>;
+  bottomMargin = <%% 180, 180, 180, 180, 50 %%>;
+  margin = <%% 52, 50, 40, 32, 52 %%>;
+  marginTop = <%% 56, 56, 56, 56, 56 %%>;
+
+  middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
+  middleTitleMarginBottom = <%% 60, 60, 60, 60, 60 %%>;
+
+  middleTitleLineTop = <%% 68, 68, 68, 68, 68 %%>;
+
+  middleTitleSize = <%% 23, 23, 21, 18, 4.2 %%>;
+  middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  middleTitlePadding = <%% 16, 16, 12, 10, 2 %%>;
+  middleTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
+
+  middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
+  middleInfoSize = <%% 14, 14, 14, 13, 3 %%>;
+
+  whiteTongMarginTop = <%% 48, 48, 48, 48, 48 %%>;
+
+  whiteBetween = <%% 12, 12, 12, 12, 12 %%>;
+
+  leftBlockWidth = <%% 302, 302, 302, 302, 302 %%>;
+  leftBlockMarginRight = <%% 12, 12, 12, 12, 12 %%>;
+
+  titleSize = <%% 14, 14, 14, 14, 14 %%>;
+  titleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  descriptionSize = <%% 14, 14, 14, 14, 14 %%>;
+  descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+  descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+  descriptionMarginTop = <%% 6, 6, 6, 6, 6 %%>;
+
+  blockBetween = <%% 12, 12, 12, 12, 12 %%>;
+  imageMarginBottom = <%% 20, 20, 20, 20, 20 %%>;
+  grayBoxHeight = <%% 120, 120, 120, 120, 120 %%>;
+
+  innerTitleSize = <%% 15, 15, 15, 15, 15 %%>;
+  innerTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  innerTitleLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+  innerDescriptionSize = <%% 13, 13, 13, 13, 13 %%>;
+  innerDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+  innerDescriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+  innerDescriptionMarginTop = <%% 4, 4, 4, 4, 4 %%>;
+  innerDescriptionTextVisual = <%% 2, 2, 2, 2, 2 %%>;
+
+  freeWidth = <%% 180, 180, 180, 180, 180 %%>;
+  freeHeight = <%% 42, 42, 42, 42, 42 %%>;
+  freeTextTop = <%% -2, -2, -2, -2, -2 %%>;
+
+  linesTongHeight = <%% 48, 48, 48, 48, 48 %%>;
+  linesWidth = <%% 660, 660, 660, 660, 660 %%>;
+
+  blackTongHeight = <%% 52, 52, 52, 52, 52 %%>;
+
+  blackGrayPaddingTop = <%% 20, 20, 20, 20, 20 %%>;
+  blackGrayPaddingLeft = <%% 25, 25, 25, 25, 25 %%>;
+
+  blackGrayFactorBetween = <%% 4, 4, 4, 4, 4 %%>;
+
+  blackGrayFactorWhiteHeight = <%% 12, 12, 12, 12, 12 %%>;
+  blackGrayFactorGreenHeight = <%% 12, 12, 12, 12, 12 %%>;
+
+  tagBoxHeight = <%% 140, 140, 140, 140, 140 %%>;
+  tagDefaultSize = <%% 24, 24, 24, 24, 24 %%>;
+  tagDefaultWeight = <%% 200, 200, 200, 200, 200 %%>;
+  tagDefaultTextTop = <%% -2, -2, -2, -2, -2 %%>;
+
+  pastBaseTong.parentNode.insertBefore(newBaseTong, pastBaseTong.nextElementSibling);
+  newBaseTong.style.left = String(0);
+  newBaseTong.style.width = withOut(0, ea);
+  newBaseTong.style.background = colorChip.gray3;
+  newBaseTong.style.paddingTop = String(topMargin) + ea;
+
+  contents = {
+    title: "신뢰할 수 있는 시공사",
+    description: [
+      "믿을 수 있는 홈리에종 시공사와 함께",
+      "편안하고 안정적인 전체 시공을 경험해보세요!",
+    ],
+    white0: {
+      title: "이제 시공 걱정하지 마세요!",
+      description: [
+        "이제 시공 걱정하실 필요 없습니다.",
+        "고객과의 편리하고 적극적인 소통,",
+        "안심 AS, 안정적인 결제 프로세스를",
+        "갖춘 홈리에종 시공사와 안심 시공하세요. ",
+      ],
+      factors: [
+        {
+          image: ServiceDetailJs.binaryPath + "/constructure0.png",
+          title: "적극적인 소통",
+          description: [
+            "홈리에종과 직영 시공사, 디자이너가 모두",
+            "참여된 단톡방을 만들어 체크합니다.",
+          ]
+        },
+        {
+          image: ServiceDetailJs.binaryPath + "/constructure1.png",
+          title: "안심 AS",
+          description: [
+            "홈리에종 시공사는 1년 무상 책임 AS과",
+            "확실한 사후 처리를 해드립니다.",
+          ]
+        },
+        {
+          image: ServiceDetailJs.binaryPath + "/constructure2.png",
+          title: "안정적인 결제",
+          description: [
+            "홈리에종을 거쳐 프로젝트 완료 확인 시",
+            "시스템을 통한 안정적 결제가 이루어집니다.",
+          ]
+        },
+      ]
+    },
+    white1: {
+      title: "인테리어 프로세스 경험",
+      description: [
+        "고객님에게는 시공사 선택의 자유가",
+        "있습니다. 디자이너 시공사, 또는 직접",
+        "컨택한 시공사와 진행하실 수 있으며",
+        "믿을 수 있는 홈리에종의 시공사와의",
+        "확실한 인테리어를 경험하세요.",
+      ],
+      diagram: {
+        title: "시공사 선택의 자유",
+        properties: [
+          "시공사 신뢰도",
+          "디자이너 참여",
+          "홈리에종 케어",
+          "시공 견적",
+        ],
+        factors: [
+          { title: "홈리에종 시공사", values: [ 0.95, 0.95, 0.95, 0.95 ] },
+          { title: "디자이너 시공사", values: [ 0.95, 0.95, 0.35, 0.8 ] },
+          { title: "기타 외부 시공사", values: [ 0.5, 0.2, 0.1, 0.2 ] },
+        ]
+      }
+    },
+    white2: {
+      title: "서비스별 시공 정도",
+      description: [
+        "홈리에종의 스타일링 서비스 유형은 3가지로",
+        "나뉘어집니다. 각 유형 별 구분은 시공의",
+        "정도와 범위에 따라 구분되며, 서비스 별",
+        "발생하는 비용에 차이가 있습니다. ",
+        "우리 집에 필요한 시공은 어느정도일까요? ",
+      ],
+      factors: [
+        {
+          title: "홈퍼니싱"
+        },
+        {
+          title: "홈스타일링"
+        },
+        {
+          title: "토탈 스타일링"
+        },
+      ],
+      default: "서비스명을 클릭해주세요!",
+    }
+  };
+
+  baseTong = createNode({
+    mother: newBaseTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(standardWidth) + ea,
+      left: withOut(50, standardWidth / 2, ea),
+      paddingBottom: String(bottomMargin) + ea,
+    }
+  });
+
+  middleTong = createNode({
+    mother: baseTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: withOut(0 * 2, ea),
+    }
+  });
+
+  createNode({
+    mother: middleTong,
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      position: "relative",
+      width: String(100) + '%',
+      textAlign: "center",
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: "absolute",
+          width: String(100) + '%',
+          height: String(middleTitleLineTop) + ea,
+          top: String(0),
+          left: String(0),
+          borderBottom: "1px solid " + colorChip.gray4,
+        }
+      },
+      {
+        text: contents.title,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(middleTitleSize) + ea,
+          fontWeight: String(middleTitleWeight),
+          color: colorChip.black,
+          textAlign: "center",
+          paddingLeft: String(middleTitlePadding) + ea,
+          paddingRight: String(middleTitlePadding) + ea,
+          top: String(middleTitleTextTop) + ea,
+          background: colorChip.gray3,
+        }
+      },
+      {
+        text: contents.description.join("\n"),
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(middleInfoSize) + ea,
+          fontWeight: String(400),
+          lineHeight: String(1.6),
+          color: colorChip.black,
+          textAlign: "center",
+          paddingTop: String(middleTitlePadding) + ea,
+          paddingLeft: String(middleTitlePadding * 1.5) + ea,
+          paddingRight: String(middleTitlePadding * 1.5) + ea,
+          background: colorChip.gray3,
+        },
+        bold: {
+          fontSize: String(middleInfoSize) + ea,
+          fontWeight: String(700),
+          lineHeight: String(1.6),
+          color: colorChip.black,
+        }
+      }
+    ]
+  });
+
+  // 1
+
+  whiteBlock0 = createNode({
+    mother: baseTong,
+    style: {
+      display: "flex",
+      flexDirection: "row",
+      marginTop: String(whiteTongMarginTop) + ea,
+      width: withOut(margin * 2, ea),
+      paddingLeft: String(margin) + ea,
+      paddingRight: String(margin) + ea,
+      paddingTop: String(marginTop) + ea,
+      paddingBottom: String(marginTop) + ea,
+      background: colorChip.white,
+      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      borderRadius: String(8) + "px",
+    }
+  });
+  createNode({
+    mother: whiteBlock0,
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      flexDirection: "column",
+      width: String(leftBlockWidth) + ea,
+      marginRight: String(leftBlockMarginRight) + ea,
+      alignItems: "start",
+      justifyContent: "end",
+    },
+    children: [
+      {
+        text: contents.white0.title,
+        style: {
+          display: "block",
+          position: "relative",
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(titleWeight),
+          color: colorChip.black,
+          lineHeight: String(descriptionLineHeight),
+        }
+      },
+      {
+        text: contents.white0.description.join("\n"),
+        style: {
+          display: "block",
+          position: "relative",
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(descriptionWeight),
+          color: colorChip.black,
+          lineHeight: String(descriptionLineHeight),
+          marginTop: String(descriptionMarginTop) + ea,
+        }
+      },
+    ]
+  });
+  createNode({
+    mother: whiteBlock0,
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      flexDirection: "row",
+      width: withOut(leftBlockWidth + leftBlockMarginRight, ea),
+    },
+    children: contents.white0.factors.map(({ image, title, description }, index) => {
+      return {
+        style: {
+          display: "flex",
+          position: "relative",
+          flexDirection: "column",
+          width: "calc(calc(100% - " + String(blockBetween * (contents.white0.factors.length - 1)) + ea + ") / " + String(contents.white0.factors.length) + ")",
+          marginRight: String(index === contents.white0.factors.length - 1 ? 0 : blockBetween) + ea,
+        },
+        children: [
+          {
+            mode: "img",
+            attribute: { src: image },
+            style: {
+              display: "block",
+              position: "relative",
+              width: withOut(0, ea),
+              marginBottom: String(imageMarginBottom) + ea,
+            }
+          },
+          {
+            style: {
+              display: "flex",
+              flexDirection: "column",
+              borderRadius: String(8) + "px",
+              background: colorChip.gray1,
+              width: withOut(0, ea),
+              height: String(grayBoxHeight) + ea,
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+            },
+            children: [
+              {
+                text: title,
+                style: {
+                  fontSize: String(innerTitleSize) + ea,
+                  fontWeight: String(innerTitleWeight),
+                  lineHeight: String(innerTitleLineHeight),
+                  color: colorChip.black,
+                  position: "relative",
+                  display: "block",
+                }
+              },
+              {
+                text: description.join("\n"),
+                style: {
+                  position: "relative",
+                  display: "block",
+                  fontSize: String(innerDescriptionSize) + ea,
+                  fontWeight: String(innerDescriptionWeight),
+                  lineHeight: String(innerDescriptionLineHeight),
+                  color: colorChip.black,
+                  marginTop: String(innerDescriptionMarginTop) + ea,
+                  marginBottom: String(innerDescriptionTextVisual) + ea,
+                }
+              }
+            ]
+          }
+        ]
+      };
+    }),
+  });
+
+
+
+  // 2
+
+  whiteBlock1 = createNode({
+    mother: baseTong,
+    style: {
+      display: "flex",
+      flexDirection: "row",
+      marginTop: String(whiteBetween) + ea,
+      width: withOut(margin * 2, ea),
+      paddingLeft: String(margin) + ea,
+      paddingRight: String(margin) + ea,
+      paddingTop: String(marginTop) + ea,
+      paddingBottom: String(marginTop) + ea,
+      background: colorChip.white,
+      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      borderRadius: String(8) + "px",
+    }
+  });
+  createNode({
+    mother: whiteBlock1,
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      flexDirection: "column",
+      width: String(leftBlockWidth) + ea,
+      marginRight: String(leftBlockMarginRight) + ea,
+      alignItems: "start",
+      justifyContent: "end",
+    },
+    children: [
+      {
+        text: contents.white1.title,
+        style: {
+          display: "block",
+          position: "relative",
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(titleWeight),
+          color: colorChip.black,
+          lineHeight: String(descriptionLineHeight),
+        }
+      },
+      {
+        text: contents.white1.description.join("\n"),
+        style: {
+          display: "block",
+          position: "relative",
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(descriptionWeight),
+          color: colorChip.black,
+          lineHeight: String(descriptionLineHeight),
+          marginTop: String(descriptionMarginTop) + ea,
+        }
+      },
+    ]
+  })
+  createNode({
+    mother: whiteBlock1,
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      flexDirection: "column",
+      width: withOut(leftBlockWidth + leftBlockMarginRight, ea),
+    },
+    children: [
+      {
+        style: {
+          display: "flex",
+          width: withOut(0, ea),
+          position: "relative",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        },
+        child: {
+          style: {
+            width: String(freeWidth) + ea,
+            height: String(freeHeight) + ea,
+            background: colorChip.gradientGreen,
+            borderRadius: String(freeHeight) + ea,
+            display: "inline-flex",
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+          },
+          child: {
+            text: contents.white1.diagram.title,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(freeTextTop) + ea,
+              fontSize: String(innerTitleSize) + ea,
+              fontWeight: String(innerTitleWeight),
+              color: colorChip.white,
+            }
+          }
+        }
+      },
+      {
+        style: {
+          display: "flex",
+          width: withOut(0, ea),
+          height: String(linesTongHeight) + ea,
+          position: "relative",
+          flexDirection: "column",
+          justifyContent: "end",
+          alignItems: "center",
+        },
+        children: [
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(linesWidth) + ea,
+              height: withOut(50, 0, ea),
+              borderTop: "1px solid " + colorChip.gray4,
+              borderRight: "1px solid " + colorChip.gray4,
+              borderLeft: "1px solid " + colorChip.gray4,
+              borderTopLeftRadius: String(8) + "px",
+              borderTopRightRadius: String(8) + "px",
+            }
+          },
+          {
+            style: {
+              position: "absolute",
+              height: withOut(0, ea),
+              width: String(0),
+              left: withOut(50, 0, ea),
+              top: String(0),
+              borderRight: "1px solid " + colorChip.gray4,
+            }
+          }
+        ]
+      },
+      {
+        style: {
+          display: "flex",
+          flexDirection: "row",
+          width: withOut(0, ea),
+          position: "relative",
+        },
+        children: contents.white1.diagram.factors.map(({ title, values }, index) => {
+          return {
+            style: {
+              display: "flex",
+              position: "relative",
+              flexDirection: "column",
+              width: "calc(calc(100% - " + String(blockBetween * (contents.white1.diagram.factors.length - 1)) + ea + ") / " + String(contents.white1.diagram.factors.length) + ")",
+              marginRight: String(index === contents.white1.diagram.factors.length - 1 ? 0 : blockBetween) + ea,
+            },
+            children: [
+              {
+                style: {
+                  display: "flex",
+                  flexDirection: "column",
+                  borderTopLeftRadius: String(8) + "px",
+                  borderTopRightRadius: String(8) + "px",
+                  background: colorChip.black,
+                  width: withOut(0, ea),
+                  height: String(blackTongHeight) + ea,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  textAlign: "center",
+                },
+                children: [
+                  {
+                    text: title,
+                    style: {
+                      fontSize: String(innerTitleSize) + ea,
+                      fontWeight: String(innerTitleWeight),
+                      lineHeight: String(innerTitleLineHeight),
+                      color: colorChip.white,
+                      position: "relative",
+                      display: "block",
+                      top: String(freeTextTop) + ea,
+                    }
+                  },
+                ]
+              },
+              {
+                style: {
+                  display: "flex",
+                  flexDirection: "column",
+                  paddingTop: String(blackGrayPaddingTop) + ea,
+                  paddingBottom: String(blackGrayPaddingTop - blackGrayFactorBetween) + ea,
+                  width: withOut(blackGrayPaddingLeft * 2, ea),
+                  borderBottomLeftRadius: String(8) + "px",
+                  borderBottomRightRadius: String(8) + "px",
+                  paddingLeft: String(blackGrayPaddingLeft) + ea,
+                  paddingRight: String(blackGrayPaddingLeft) + ea,
+                  background: colorChip.gray1,
+                },
+                children: values.map((number, index) => {
+                  const property = contents.white1.diagram.properties[index];
+                  return {
+                    style: {
+                      display: "flex",
+                      flexDirection: "row",
+                      position: "relative",
+                      width: withOut(0, ea),
+                      justifyContent: "center",
+                      alignItems: "center",
+                      marginBottom: String(blackGrayFactorBetween) + ea,
+                    },
+                    children: [
+                      {
+                        text: property,
+                        style: {
+                          display: "inline-block",
+                          position: "relative",
+                          fontSize: String(innerDescriptionSize) + ea,
+                          fontWeight: String(700),
+                          color: colorChip.black,
+                          width: String(100) + ea,
+                        }
+                      },
+                      {
+                        style: {
+                          display: "inline-block",
+                          position: "relative",
+                          width: withOut(100, ea),
+                          height: String(blackGrayFactorWhiteHeight) + ea,
+                          background: colorChip.white,
+                          borderRadius: String(blackGrayFactorWhiteHeight) + ea,
+                          overflow: "hidden",
+                        },
+                        child: {
+                          position: "absolute",
+                          left: String(0),
+                          top: String((blackGrayFactorWhiteHeight - blackGrayFactorGreenHeight) / 2) + ea,
+                          height: String(blackGrayFactorGreenHeight) + ea,
+                          width: String(100 * number) + '%',
+                          borderRadius: String(blackGrayFactorGreenHeight) + ea,
+                          background: colorChip.gradientGreen,
+                        }
+                      }
+                    ]
+                  };
+                })
+              }
+            ]
+          };
+        }),
+      }
+    ]
+  });
+
+
+
+  // 3
+
+  whiteBlock2 = createNode({
+    mother: baseTong,
+    style: {
+      display: "flex",
+      flexDirection: "row",
+      marginTop: String(whiteBetween) + ea,
+      width: withOut(margin * 2, ea),
+      paddingLeft: String(margin) + ea,
+      paddingRight: String(margin) + ea,
+      paddingTop: String(marginTop) + ea,
+      paddingBottom: String(marginTop) + ea,
+      background: colorChip.white,
+      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      borderRadius: String(8) + "px",
+    }
+  });
+  createNode({
+    mother: whiteBlock2,
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      flexDirection: "column",
+      width: String(leftBlockWidth) + ea,
+      marginRight: String(leftBlockMarginRight) + ea,
+      alignItems: "start",
+      justifyContent: "end",
+    },
+    children: [
+      {
+        text: contents.white2.title,
+        style: {
+          display: "block",
+          position: "relative",
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(titleWeight),
+          color: colorChip.black,
+          lineHeight: String(descriptionLineHeight),
+        }
+      },
+      {
+        text: contents.white2.description.join("\n"),
+        style: {
+          display: "block",
+          position: "relative",
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(descriptionWeight),
+          color: colorChip.black,
+          lineHeight: String(descriptionLineHeight),
+          marginTop: String(descriptionMarginTop) + ea,
+        }
+      },
+    ]
+  })
+  createNode({
+    mother: whiteBlock2,
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      flexDirection: "column",
+      width: withOut(leftBlockWidth + leftBlockMarginRight, ea),
+    },
+    children: [
+      {
+        style: {
+          display: "flex",
+          position: "relative",
+          flexDirection: "row",
+          width: withOut(0, ea),
+          marginBottom: String(blockBetween) + ea,
+        },
+        children: contents.white2.factors.map(({ title }, index) => {
+          return {
+            style: {
+              display: "flex",
+              position: "relative",
+              flexDirection: "column",
+              width: "calc(calc(100% - " + String(blockBetween * (contents.white0.factors.length - 1)) + ea + ") / " + String(contents.white0.factors.length) + ")",
+              marginRight: String(index === contents.white0.factors.length - 1 ? 0 : blockBetween) + ea,
+            },
+            children: [
+              {
+                style: {
+                  display: "flex",
+                  flexDirection: "column",
+                  borderRadius: String(8) + "px",
+                  background: colorChip.black,
+                  width: withOut(0, ea),
+                  height: String(blackTongHeight) + ea,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  textAlign: "center",
+                },
+                children: [
+                  {
+                    text: title,
+                    style: {
+                      position: "relative",
+                      top: String(freeTextTop) + ea,
+                      fontSize: String(innerTitleSize) + ea,
+                      fontWeight: String(innerTitleWeight),
+                      lineHeight: String(innerTitleLineHeight),
+                      color: colorChip.white,
+                      position: "relative",
+                      display: "block",
+                    }
+                  },
+                ]
+              }
+            ]
+          };
+        }),
+      },
+      {
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          height: String(tagBoxHeight) + ea,
+          borderRadius: String(8) + "px",
+          background: colorChip.gray1,
+          justifyContent: "center",
+          alignItems: "center",
+        },
+        child: {
+          text: contents.white2.default,
+          style: {
+            fontSize: String(tagDefaultSize) + ea,
+            fontWeight: String(tagDefaultWeight),
+            color: colorChip.deactive,
+            position: "relative",
+            top: String(tagDefaultTextTop) + ea,
+          }
+        }
+      }
+    ]
+  })
+
+
+  return [ newBaseTong, baseTong ];
+}
+
 ServiceDetailJs.prototype.insertCareBox = function (pastBaseTong, baseTong) {
   const instance = this;
   const { ea, media, standardWidth } = this;
@@ -3259,6 +4070,7 @@ ServiceDetailJs.prototype.launching = async function (loading) {
           instance.insertReviewBox(newBaseTong, baseTong);
 
           [ newBaseTong, baseTong ] = instance.insertToneBox(newBaseTong, baseTong);
+          [ newBaseTong, baseTong ] = instance.insertConstructBox(newBaseTong, baseTong);
           [ newBaseTong, baseTong ] = instance.insertCareBox(newBaseTong, baseTong);
           instance.insertWithBox(newBaseTong, baseTong);
 
