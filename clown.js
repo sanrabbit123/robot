@@ -383,6 +383,7 @@ Clown.prototype.tellVoice = async function () {
     const id = "help";
     const pwd = "hlofwis83!";
     const targetEmail = "hometaxadmin@hometax.go.kr";
+    const standardFile = process.cwd() + "/temp/mailStandard.json";
     let pems;
     let pemsLink;
     let certDir;
@@ -439,7 +440,7 @@ Clown.prototype.tellVoice = async function () {
 
     await intervalFunc();
     num = 0;
-    setInterval(intervalFunc, 1000 * 10);
+    setInterval(intervalFunc, 1000 * 5);
 
     pems = {};
     pemsLink = process.cwd() + "/pems/" + address.officeinfo.ghost.host;
