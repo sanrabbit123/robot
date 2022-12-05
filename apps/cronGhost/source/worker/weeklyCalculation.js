@@ -1,6 +1,5 @@
 const dayId = [
   "d125",
-  "d180",
 ];
 
 const hourId = [];
