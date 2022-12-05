@@ -407,7 +407,8 @@ Clown.prototype.tellVoice = async function () {
     });
 
     num = 0;
-    intervalFunc = async () => {
+    await fileSystem(`write`, [ standardFile, "" ]);
+    setInterval(async () => {
       try {
         const client = await human.homeliaisonLogin(id, pwd);
         let standardString, num;
@@ -437,10 +438,8 @@ Clown.prototype.tellVoice = async function () {
       } catch (e) {
         console.log(e);
       }
-    }
+    }, 1000 * 5);
 
-    await intervalFunc();
-    setInterval(intervalFunc, 1000 * 5);
 
     pems = {};
     pemsLink = process.cwd() + "/pems/" + address.officeinfo.ghost.host;
