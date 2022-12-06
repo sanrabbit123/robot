@@ -131,8 +131,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    console.log(this.MONGOLOCALC);
-
 
 
 

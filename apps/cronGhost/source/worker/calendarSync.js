@@ -18,7 +18,7 @@ const worker = async function (package) {
   const { messageLog, errorLog } = mother;
   try {
 
-    const selfMongo = mongolocal;
+    const selfMongo = mongo;
     const today = new Date();
     const standardDay = new Date();
     const pastConst = 3;
