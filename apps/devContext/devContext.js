@@ -131,7 +131,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    console.log("this");
+    console.log(this.MONGOLOCALC);
 
 
 
