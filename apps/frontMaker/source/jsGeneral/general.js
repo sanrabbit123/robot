@@ -4269,41 +4269,44 @@ GeneralJs.prompt = function (message, preValue = '') {
 
     whiteTongBase.addEventListener("click", function (e) {
       e.stopPropagation();
-      if (document.querySelector('.' + promptAsideClassName) !== null) {
-        document.querySelector('.' + promptAsideClassName).remove();
+      const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+      for (let z = 0; z < targets.length; z++) {
+        try {
+          targets[z].remove();
+        } catch {}
       }
       resolve(null);
     });
 
-    input.addEventListener("keypress", function (e) {
+    input.addEventListener("keyup", function (e) {
       if (e.key === "Enter") {
         const finalValue = this.value.trim();
-        const topLevelTargets = [ ...document.body.children ];
-        const asideTargets = topLevelTargets.filter((dom) => { return /ASIDE/gi.test(dom.nodeName) }).filter((dom) => { return [ ...dom.children ].length > 0 });
         this.parentNode.style.animation = "fadedownlite 0.2s ease forwards";
         setTimeout(() => {
-          if (document.querySelector('.' + promptAsideClassName) !== null) {
-            document.body.removeChild(asideTargets[asideTargets.length - 1]);
+          const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+          for (let z = 0; z < targets.length; z++) {
+            try {
+              targets[z].remove();
+            } catch {}
           }
-          resolve(finalValue);
         }, 201);
+        resolve(finalValue);
       }
     });
 
     input.addEventListener("blur", function (e) {
       if (document.querySelector('.' + promptAsideClassName) !== null) {
         const finalValue = this.value.trim();
-        const topLevelTargets = [ ...document.body.children ];
-        const asideTargets = topLevelTargets.filter((dom) => { return /ASIDE/gi.test(dom.nodeName) }).filter((dom) => { return [ ...dom.children ].length > 0 });
         this.parentNode.style.animation = "fadedownlite 0.2s ease forwards";
         setTimeout(() => {
-          if (document.querySelector('.' + promptAsideClassName) !== null) {
+          const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+          for (let z = 0; z < targets.length; z++) {
             try {
-              document.body.removeChild(asideTargets[asideTargets.length - 1]);
-              resolve(finalValue);
+              targets[z].remove();
             } catch {}
           }
         }, 201);
+        resolve(finalValue);
       }
     });
 

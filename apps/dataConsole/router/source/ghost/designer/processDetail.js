@@ -750,7 +750,7 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
         dragleave: function (e) {
           e.preventDefault();
           e.stopPropagation();
-          this.style.background = colorChip.gray0;
+          this.style.background = colorChip.gray1;
         },
       },
       style: {
@@ -1558,9 +1558,11 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
                     }
 
                     newString = null;
-                    do {
-                      newString = await GeneralJs.prompt("파일에 대한 간단한 이름 또는 메모를 적어주세요! (예) 주방_시공의뢰서_1", string);
-                    } while (typeof newString !== "string" || newString.trim() === '');
+                    newString = await GeneralJs.prompt("파일에 대한 간단한 이름 또는 메모를 적어주세요! (예) 주방_시공의뢰서_1", string);
+                    if (typeof newString !== "string" || newString.trim() === '') {
+                      newString = "메모 없음";
+                    }
+
                     newString = newString.replace(/[\=\/\\\(\)\?\+\&]/gi, '').replace(/ /gi, '_');
                     ({ hash } = await ajaxJson({ mode: "crypto", string: newString }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
 
@@ -3487,9 +3489,10 @@ ProcessDetailJs.prototype.returnButtonList = function () {
               }
 
               newString = null;
-              do {
-                newString = await GeneralJs.prompt("파일에 대한 간단한 이름 또는 메모를 적어주세요! (예) 주방_시공의뢰서_1", string);
-              } while (typeof newString !== "string" || newString.trim() === '');
+              newString = await GeneralJs.prompt("파일에 대한 간단한 이름 또는 메모를 적어주세요! (예) 주방_시공의뢰서_1", string);
+              if (typeof newString !== "string" || newString.trim() === '') {
+                newString = "메모 없음";
+              }
               newString = newString.replace(/[\=\/\\\(\)\?\+\&]/gi, '').replace(/ /gi, '_');
               ({ hash } = await ajaxJson({ mode: "crypto", string: newString }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
 
@@ -4176,9 +4179,10 @@ ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
                   formData.append("file_" + thisKey + "_" + String(0), thisFiles[0]);
 
                   rawResponse = null;
-                  do {
-                    rawResponse = await GeneralJs.prompt("파일에 대한 간단한 이름 또는 메모를 적어주세요! (예) 주방_시공의뢰서_1");
-                  } while (typeof rawResponse !== "string" || rawResponse.trim() === '');
+                  rawResponse = await GeneralJs.prompt("파일에 대한 간단한 이름 또는 메모를 적어주세요! (예) 주방_시공의뢰서_1");
+                  if (typeof rawResponse !== "string" || rawResponse.trim() === '') {
+                    rawResponse = "메모 없음";
+                  }
                   rawResponse = rawResponse.replace(/[\=\/\\\(\)\?\+\&]/gi, '').replace(/ /gi, '_');
 
                   loading = instance.mother.grayLoading();
@@ -4347,7 +4351,7 @@ ProcessDetailJs.prototype.dropFiles = function (thisStatusNumber, photoBoo) {
         });
         input.files = e.dataTransfer.files;
         changeEvent.call(input, e);
-        this.style.background = colorChip.gray0;
+        this.style.background = colorChip.gray1;
 
       } catch (e) {
         console.log(e);
@@ -4396,9 +4400,10 @@ ProcessDetailJs.prototype.dropFiles = function (thisStatusNumber, photoBoo) {
               formData.append("file_" + thisKey + "_" + String(0), thisFiles[0]);
 
               rawResponse = null;
-              do {
-                rawResponse = await GeneralJs.prompt("파일에 대한 간단한 이름 또는 메모를 적어주세요! (예) 주방_시공의뢰서_1");
-              } while (typeof rawResponse !== "string" || rawResponse.trim() === '');
+              rawResponse = await GeneralJs.prompt("파일에 대한 간단한 이름 또는 메모를 적어주세요! (예) 주방_시공의뢰서_1");
+              if (typeof rawResponse !== "string" || rawResponse.trim() === '') {
+                rawResponse = "메모 없음";
+              }
               rawResponse = rawResponse.replace(/[\=\/\\\(\)\?\+\&]/gi, '').replace(/ /gi, '_');
 
               loading = instance.mother.grayLoading();
@@ -4451,7 +4456,7 @@ ProcessDetailJs.prototype.dropFiles = function (thisStatusNumber, photoBoo) {
         });
         input.files = e.dataTransfer.files;
         changeEvent.call(input, e);
-        this.style.background = colorChip.gray0;
+        this.style.background = colorChip.gray1;
 
       } catch (e) {
         console.log(e);
@@ -4499,12 +4504,10 @@ ProcessDetailJs.prototype.uploadLink = function (thisStatusNumber) {
       } while (typeof link !== "string" || !/^http/.test(link));
 
       if (link !== cancelKeyword) {
-        do {
-          memo = await GeneralJs.prompt("링크에 대한 간단한 이름과 타입 등을 적어주세요! (예) 침실협탁_아이보리");
-          if (memo === null) {
-            memo = '';
-          }
-        } while (typeof memo !== "string");
+        memo = await GeneralJs.prompt("링크에 대한 간단한 이름과 타입 등을 적어주세요! (예) 침실협탁_아이보리");
+        if (typeof memo !== "string" || memo.trim() === '') {
+          memo = "메모 없음";
+        }
 
         loading = instance.mother.grayLoading();
         await ajaxJson({ proid, desid, key, link: window.encodeURIComponent(link.trim()), memo: memo.trim() }, BRIDGEHOST + "/middleLinkSave");
