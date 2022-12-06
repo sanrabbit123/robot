@@ -41,12 +41,12 @@ const ServiceDetailJs = function () {
   this.mother = new GeneralJs();
 }
 
-ServiceDetailJs.binaryPath = FRONTHOST + "/middle/detail";
+ServiceDetailJs.binaryPath = "/middle/detail";
 
 ServiceDetailJs.prototype.insertInitBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media } = this;
+  const { ea, media, mode } = this;
   const mobile = media[4];
   const desktop = !mobile;
   let whiteBlock;
@@ -129,8 +129,16 @@ ServiceDetailJs.prototype.insertInitBox = function () {
   tagTongBottom = <%% 3, 3, 1, 1, 0 %%>;
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
-  titleWording = "홈리에종 서비스";
-  subTitleContents = "홈리에종 서비스에 대한 상세한 안내";
+  if (mode === "furnishing") {
+    titleWording = "홈리에종 홈퍼니싱";
+    subTitleContents = "우리집 무드 체인지, 홈퍼니싱";
+  } else if (mode === "styling") {
+    titleWording = "홈리에종 홈스타일링";
+    subTitleContents = "부분 시공과 스타일링의 조합";
+  } else if (mode === "total") {
+    titleWording = "시그니처 스타일링";
+    subTitleContents = "전체 시공부터 전체 스타일링까지";
+  }
 
   mobileBlockTop = 4.5;
 
@@ -226,7 +234,7 @@ ServiceDetailJs.prototype.insertInitBox = function () {
 ServiceDetailJs.prototype.insertStartBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
-  const { ea, media, baseTong } = this;
+  const { ea, media, baseTong, mode } = this;
   const mobile = media[4];
   const desktop = !mobile;
   let whiteBlock;
@@ -264,21 +272,56 @@ ServiceDetailJs.prototype.insertStartBox = function () {
   subWeight = <%% 400, 400, 400, 400, 400 %%>;
   subLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
-  rightImagePosition = <%% 80, 80, 80, 80, 80 %%>;
-
-  contents = {
-    left: {
-      title: [
-        "<b%인테리어 시공 없이 가구, 패브릭, 소품만으로%b>",
-        "우리집 무드를 변화시켜주는 스타일링",
-      ],
-      sub: [
-        "홈퍼니싱은 시공 없이 스타일링만으로 완성하는 인테리어 서비스입니다.",
-        "내 집의 컨디션에 적합한 스타일링 서비스를 경험해보세요.",
-      ]
-    },
-    right: {
-      image: ServiceDetailJs.binaryPath + "/startf0.jpg",
+  if (mode === "furnishing") {
+    rightImagePosition = <%% 80, 80, 80, 80, 80 %%>;
+    contents = {
+      left: {
+        title: [
+          "<b%인테리어 시공 없이 가구, 패브릭, 소품만으로%b>",
+          "우리집 무드를 변화시켜주는 스타일링",
+        ],
+        sub: [
+          "홈퍼니싱은 시공 없이 스타일링만으로 완성하는 인테리어 서비스입니다.",
+          "내 집의 컨디션에 적합한 스타일링 서비스를 경험해보세요.",
+        ]
+      },
+      right: {
+        image: ServiceDetailJs.binaryPath + "/startf0.jpg",
+      }
+    }
+  } else if (mode === "styling") {
+    rightImagePosition = <%% 80, 80, 80, 80, 80 %%>;
+    contents = {
+      left: {
+        title: [
+          "<b%우리집과 예산에 맞는 범위의 시공을 진행하여%b>",
+          "원하던 컨셉에 맞게 변화시켜주는 스타일링",
+        ],
+        sub: [
+          "홈스타일링을 기반으로 컨셉과 니즈에 맞게, 효율적인 부분 시공으로",
+          "공간을 효과적으로 변화시키는 홈스타일링을 경험해보세요.",
+        ]
+      },
+      right: {
+        image: ServiceDetailJs.binaryPath + "/starts0.jpg",
+      }
+    }
+  } else if (mode === "total") {
+    rightImagePosition = <%% 57, 57, 57, 57, 57 %%>;
+    contents = {
+      left: {
+        title: [
+          "<b%원하는 스타일과 라이프 패턴에 맞게 기획된%b>",
+          "디자인의 구조로 변경하는 스타일링 서비스",
+        ],
+        sub: [
+          "시공부터 스타일링까지 완성하는 토탈 스타일링을 소개해드립니다.",
+          "기획부터 시공, 스타일링까지 풀 프로세스를 경험할 수 있어요.",
+        ]
+      },
+      right: {
+        image: ServiceDetailJs.binaryPath + "/startt0.jpg",
+      }
     }
   }
 
@@ -4043,6 +4086,15 @@ ServiceDetailJs.prototype.launching = async function (loading) {
     const { returnGet, ajaxJson, requestPromise, setDebounce, colorChip } = GeneralJs;
     const getObj = returnGet();
     let newBaseTong, baseTong;
+    let mode;
+
+    mode = "furnishing";
+    if (getObj.mode === "styling") {
+      mode = "styling";
+    } else if (getObj.mode === "total") {
+      mode = "total";
+    }
+    this.mode = mode;
 
     await this.mother.ghostClientLaunching({
       mode: "front",
@@ -4061,6 +4113,15 @@ ServiceDetailJs.prototype.launching = async function (loading) {
       },
       local: async () => {
         try {
+
+          if (instance.mode === "furnishing") {
+            instance.mother.backgroundImageBox.style.backgroundImage = "url('" + ServiceDetailJs.binaryPath + "/back0.jpg" + "')";
+          } else if (instance.mode === "styling") {
+            instance.mother.backgroundImageBox.style.backgroundImage = "url('" + ServiceDetailJs.binaryPath + "/back1.jpg" + "')";
+          } else if (instance.mode === "total") {
+            instance.mother.backgroundImageBox.style.backgroundImage = "url('" + ServiceDetailJs.binaryPath + "/back2.jpg" + "')";
+          }
+
           instance.insertInitBox();
           instance.insertStartBox();
           instance.insertThreeBox();
@@ -4070,7 +4131,9 @@ ServiceDetailJs.prototype.launching = async function (loading) {
           instance.insertReviewBox(newBaseTong, baseTong);
 
           [ newBaseTong, baseTong ] = instance.insertToneBox(newBaseTong, baseTong);
-          [ newBaseTong, baseTong ] = instance.insertConstructBox(newBaseTong, baseTong);
+          if (instance.mode !== "furnishing") {
+            [ newBaseTong, baseTong ] = instance.insertConstructBox(newBaseTong, baseTong);
+          }
           [ newBaseTong, baseTong ] = instance.insertCareBox(newBaseTong, baseTong);
           instance.insertWithBox(newBaseTong, baseTong);
 
