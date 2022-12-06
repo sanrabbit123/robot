@@ -428,7 +428,7 @@ ServiceDetailJs.prototype.insertStartBox = function () {
 
 ServiceDetailJs.prototype.insertThreeBox = function () {
   const instance = this;
-  const { ea, media } = this;
+  const { ea, media, mode } = this;
   const baseTong = this.baseTong;
   const mobile = media[4];
   const desktop = !mobile;
@@ -499,12 +499,69 @@ ServiceDetailJs.prototype.insertThreeBox = function () {
   subBetween = <%% 6, 6, 6, 6, 6 %%>;
   subTop = <%% 3, 3, 3, 3, 3 %%>;
 
-  contents = {
-    title: "디자이너가 이끄는 무드 체인지 효과",
-    description: [
-      "디자이너의 기획이 담긴 디자인 컨셉에 맞게,",
-      "제안된 스타일링으로 조화로운 완성을 이끌어 냅니다.",
-    ],
+  if (mode === "furnishing") {
+    contents = {
+      title: "디자이너가 이끄는 무드 체인지 효과",
+      description: [
+        "디자이너의 기획이 담긴 디자인 컨셉에 맞게,",
+        "제안된 스타일링으로 조화로운 완성을 이끌어 냅니다.",
+      ],
+      three: {
+        first: {
+          up: "빈 집을 취향대로 꾸미고 싶다면",
+          upSub: "(새입주)",
+          down: "가구 일부를 바꿔 분위기 변화를 주고 싶다면",
+          downSub: "(거주중)",
+        },
+        second: {
+          up: "디자이너의 기획이 담긴 디자인 컨셉",
+          down: "( 가구 + 디자인 조명 + 소품 + 패브릭 + 액자 )",
+        },
+        third: "맞춤형 인테리어 완성",
+      },
+    }
+  } else if (mode === "styling") {
+    contents = {
+      title: "디자이너가 이끄는 홈스타일링",
+      description: [
+        "예산에 맞는 적합한 시공과 스타일링의",
+        "밸런스를 조율하여 인테리어의 완성도를 높입니다.",
+      ],
+      three: {
+        first: {
+          up: "전체를 변경하기엔 부담스럽고",
+          upSub: "(새입주)",
+          down: "간단한 마감재 변경이 필요한 집",
+          downSub: "(거주중)",
+        },
+        second: {
+          up: "디자이너의 밸런스 있는 예산 기획",
+          down: "( 시공과 스타일링의 밸런스 )",
+        },
+        third: "컨셉, 예산에 맞게 완성",
+      },
+    }
+  } else if (mode === "total") {
+    contents = {
+      title: "라이프 스타일에 맞게 기획된 인테리어",
+      description: [
+        "라이프 스타일이 녹아 있는 집을 기획하고 제안합니다.",
+        "내게 맞춘 집을 기획해보세요. 홈리에종 시공팀이 함께 합니다.",
+      ],
+      three: {
+        first: {
+          up: "내게 맞춘 디자인이 필요한 공간",
+          upSub: "(새입주)",
+          down: "( 전체적인 변경이 필요한 공간 )",
+          downSub: "(거주중)",
+        },
+        second: {
+          up: "디자이너의 기획이 담긴 디자인 컨셉",
+          down: "( 시공과 스타일링의 구체적인 계획 )",
+        },
+        third: "라이프 스타일에 맞게 완성",
+      },
+    }
   }
 
   middleTong = createNode({
@@ -622,7 +679,7 @@ ServiceDetailJs.prototype.insertThreeBox = function () {
             },
             children: [
               {
-                text: "빈 집을 취향대로 꾸미고 싶다면",
+                text: contents.three.first.up,
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -632,9 +689,9 @@ ServiceDetailJs.prototype.insertThreeBox = function () {
                 }
               },
               {
-                text: "(새입주)",
+                text: contents.three.first.upSub,
                 style: {
-                  display: "inline-block",
+                  display: mode === "furnishing" ? "inline-block" : "none",
                   position: "relative",
                   fontSize: String(threeSmallSize) + ea,
                   fontWeight: String(threeWeight),
@@ -656,7 +713,7 @@ ServiceDetailJs.prototype.insertThreeBox = function () {
             },
             children: [
               {
-                text: "가구 일부를 바꿔 분위기 변화를 주고 싶다면",
+                text: contents.three.first.down,
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -666,9 +723,9 @@ ServiceDetailJs.prototype.insertThreeBox = function () {
                 }
               },
               {
-                text: "(거주중)",
+                text: contents.three.first.downSub,
                 style: {
-                  display: "inline-block",
+                  display: mode === "furnishing" ? "inline-block" : "none",
                   position: "relative",
                   fontSize: String(threeSmallSize) + ea,
                   fontWeight: String(threeWeight),
@@ -720,7 +777,7 @@ ServiceDetailJs.prototype.insertThreeBox = function () {
             },
             children: [
               {
-                text: "디자이너의 기획이 담긴 디자인 컨셉",
+                text: contents.three.second.up,
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -742,7 +799,7 @@ ServiceDetailJs.prototype.insertThreeBox = function () {
             },
             children: [
               {
-                text: "( 가구 + 디자인 조명 + 소품 + 패브릭 + 액자 )",
+                text: contents.three.second.down,
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -816,7 +873,7 @@ ServiceDetailJs.prototype.insertThreeBox = function () {
             },
             children: [
               {
-                text: "맞춤형 인테리어 완성",
+                text: contents.three.third,
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -854,8 +911,6 @@ ServiceDetailJs.prototype.insertThreeBox = function () {
       },
     ]
   })
-
-
 
 }
 
@@ -1184,6 +1239,480 @@ ServiceDetailJs.prototype.insertSlideBox = function () {
       flexDirection: "column",
       position: "relative",
       marginTop: String(feeTongMarginTop) + ea,
+      paddingLeft: String(margin) + ea,
+      paddingRight: String(margin) + ea,
+      paddingBottom: String(finalMarginBottom) + ea,
+      width: withOut(margin * 2, ea),
+    }
+  });
+  createNode({
+    mother: feeTong,
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      position: "relative",
+      height: String(feeTitleTongHeight) + ea,
+      width: withOut(0, ea),
+      alignItems: "center",
+      justifyContent: "center",
+      textAlign: "center",
+    },
+    child: {
+      text: "비용의 구성",
+      style: {
+        position: "relative",
+        top: String(feeTitleTextTop) + ea,
+        fontSize: String(feeTitleSize) + ea,
+        fontWeight: String(feeTitleWeight),
+        color: colorChip.black,
+      }
+    }
+  });
+  createNode({
+    mother: feeTong,
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      position: "relative",
+      width: withOut(0, ea),
+      height: String(feeDescriptionTongHeight) + ea,
+      alignItems: "center",
+      justifyContent: "start",
+    },
+    children: [
+      {
+        style: {
+          position: "absolute",
+          bottom: String(0),
+          left: String(0),
+          width: withOut(0, ea),
+          height: String(feeDescriptionTongHeight - feeDescriptionLineTop) + ea,
+          border: "1px solid " + colorChip.gray3,
+          borderTopLeftRadius: String(5) + "px",
+          borderTopRightRadius: String(5) + "px",
+          borderBottom: String(0),
+          boxSizing: "border-box",
+        }
+      },
+      {
+        text: [
+          "홈퍼니싱 서비스는 디자인비와 제품 구매비로 구성됩니다."
+        ].join("\n"),
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(feeDescriptionSize) + ea,
+          fontWeight: String(feeDescriptionWeight),
+          color: colorChip.black,
+          background: colorChip.white,
+          paddingLeft: String(feeDescriptionPadding) + ea,
+          paddingRight: String(feeDescriptionPadding) + ea,
+        }
+      }
+    ]
+  });
+  createNode({
+    mother: feeTong,
+    style: {
+      display: "flex",
+      flexDirection: "row",
+      position: "relative",
+      width: withOut(0, ea),
+      height: String(feeBarTongHeight) + ea,
+      alignItems: "end",
+      justifyContent: "start",
+    },
+    children: [
+      {
+        style: {
+          display: "inline-flex",
+          flexDirection: "column",
+          position: "relative",
+          width: String(barWidth0) + ea,
+          marginRight: String(barBetween) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: "block",
+              position: "relative",
+              width: withOut(0, ea),
+              height: String(barHeight) + ea,
+              borderRadius: String(5) + "px",
+              background: colorChip.green,
+              marginBottom: String(barMarginBottom) + ea,
+            }
+          },
+          {
+            style: {
+              display: "flex",
+              flexDirection: "column",
+              position: "relative",
+              alignItems: "center",
+              justifyContent: "center",
+              textAlign: "center",
+            },
+            child: {
+              text: "디자인 비용",
+              style: {
+                position: "relative",
+                fontSize: String(feeDescriptionSize) + ea,
+                fontWeight: String(feeDescriptionWeightBold),
+                color: colorChip.green,
+              }
+            }
+          }
+        ]
+      },
+      {
+        style: {
+          display: "inline-flex",
+          flexDirection: "column",
+          position: "relative",
+          width: withOut(barWidth0 + barBetween, ea),
+        },
+        children: [
+          {
+            style: {
+              display: "block",
+              position: "relative",
+              width: withOut(0, ea),
+              height: String(barHeight) + ea,
+              borderRadius: String(5) + "px",
+              background: colorChip.gray4,
+              marginBottom: String(barMarginBottom) + ea,
+            }
+          },
+          {
+            style: {
+              display: "flex",
+              flexDirection: "column",
+              position: "relative",
+              alignItems: "center",
+              justifyContent: "center",
+              textAlign: "center",
+            },
+            child: {
+              text: "가구 및 제안 제품 구매 비용",
+              style: {
+                position: "relative",
+                fontSize: String(feeDescriptionSize) + ea,
+                fontWeight: String(feeDescriptionWeightBold),
+                color: colorChip.black,
+              }
+            }
+          }
+        ]
+      },
+    ]
+  });
+
+}
+
+ServiceDetailJs.prototype.insertDiagramBox = function () {
+  const instance = this;
+  const { ea, media } = this;
+  const baseTong = this.baseTong;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1]);
+  const small = !big;
+  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
+  let whiteBlock;
+  let bottomMargin;
+  let slideTong;
+  let slideTongHeight;
+  let blockWidth;
+  let blockBetween;
+  let walk;
+  let nextWalk;
+  let length;
+  let images;
+  let pastWalk;
+  let margin;
+  let interval;
+  let contents;
+  let descriptionTong;
+  let slideLeft;
+  let slideWidth;
+  let whitePaddingTop;
+  let arrowWidth;
+  let arrowHeight;
+  let arrowMargin;
+  let arrowTop;
+  let descriptionSize, descriptionWeight, descriptionLineHeight, descriptionBoldWeight;
+  let circleWidth, circleBetween;
+  let circleBoxMarginTop, circleBoxPaddingLeft;
+  let feeTong;
+  let feeTongMarginTop;
+  let finalMarginBottom;
+  let feeTitleTongHeight;
+  let feeTitleSize, feeTitleWeight, feeTitleTextTop;
+  let feeDescriptionTongHeight;
+  let feeDescriptionLineTop;
+  let feeDescriptionSize;
+  let feeDescriptionWeight, feeDescriptionWeightBold;
+  let feeDescriptionPadding;
+  let barWidth0, barBetween;
+  let barHeight, barMarginBottom;
+  let feeBarTongHeight;
+  let diagramTong;
+
+  bottomMargin = <%% 180, 180, 180, 180, 180 %%>;
+  slideTongHeight = <%% 340, 340, 340, 340, 340 %%>;
+  blockWidth = <%% 240, 240, 240, 240, 240 %%>;
+  blockBetween = <%% 12, 12, 12, 12, 12 %%>;
+
+  margin = <%% 52, 50, 40, 32, 52 %%>;
+  finalMarginBottom = <%% 72, 72, 72, 72, 72 %%>;
+
+  whitePaddingTop = <%% 68, 68, 68, 68, 68 %%>;
+
+  slideLeft = <%% -680, -680, -680, -680, -680 %%>;
+  slideWidth = <%% 8000, 8000, 8000, 8000, 8000 %%>;
+
+  arrowWidth = <%% 762, 762, 762, 762, 762 %%>;
+  arrowHeight = <%% 10, 10, 10, 10, 10 %%>;
+
+  arrowMargin = <%% 18, 18, 18, 18, 18 %%>;
+  arrowTop = <%% 6, 6, 6, 6, 6 %%>;
+
+  descriptionSize = <%% 15, 15, 15, 15, 15 %%>;
+  descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+  descriptionLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
+  descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+  circleWidth = <%% 6, 6, 6, 6, 6 %%>;
+  circleBetween = <%% 4, 4, 4, 4, 4 %%>;
+
+  circleBoxMarginTop = <%% 16, 16, 16, 16, 16 %%>;
+  circleBoxPaddingLeft = <%% 1, 1, 1, 1, 1 %%>;
+
+  feeTongMarginTop = <%% 100, 100, 100, 100, 100 %%>;
+  feeTitleTongHeight = <%% 50, 50, 50, 50, 50 %%>;
+
+  feeTitleSize = <%% 20, 20, 20, 20, 20 %%>;
+  feeTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  feeTitleTextTop = <%% -1, -1, -1, -1, -1 %%>;
+
+  feeDescriptionTongHeight = <%% 60, 60, 60, 60, 60 %%>;
+  feeDescriptionLineTop = <%% 9, 9, 9, 9, 9 %%>;
+  feeDescriptionSize = <%% 15, 15, 15, 15, 15 %%>;
+  feeDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+  feeDescriptionWeightBold = <%% 600, 600, 600, 600, 600 %%>;
+  feeDescriptionPadding = <%% 20, 20, 20, 20, 20 %%>;
+
+  barWidth0 = <%% 360, 360, 360, 360, 360 %%>;
+  barBetween = <%% 5, 5, 5, 5, 5 %%>;
+
+  barHeight = <%% 20, 20, 20, 20, 20 %%>;
+  barMarginBottom = <%% 8, 8, 8, 8, 8 %%>;
+
+  feeBarTongHeight = <%% 60, 60, 60, 60, 60 %%>;
+
+  contents = {
+    description: [
+      "가구와 패브릭, 소품 만으로도 확실하게 분위기가 바뀌는 무드체인지를 되는 경험해보세요!",
+      "<b%내 집의 컨디션에 맞는 디자인 컨셉을 디자이너가 대신 고민해줄거예요.%b>",
+    ],
+    diagram: {
+      image: ServiceDetailJs.binaryPath + "/styling_diagram.png",
+    }
+  };
+
+  // base
+  whiteBlock = createNode({
+    mother: baseTong,
+    style: {
+      position: "relative",
+      borderRadius: String(5) + "px",
+      width: String(100) + '%',
+      paddingTop: String(whitePaddingTop) + ea,
+      background: colorChip.white,
+      marginBottom: String(bottomMargin) + ea,
+      boxShadow: "0px 5px 15px -10px " + colorChip.gray5,
+      overflow: "hidden",
+    }
+  });
+
+  // diagramTong
+  diagramTong = createNode({
+    mother: whiteBlock,
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      position: "relative",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    child: {
+      mode: "img",
+      attribute: {
+        src: contents.diagram.image,
+      },
+      style: {
+        display: "inline-block",
+        position: "relative",
+        height: String(710) + ea,
+      }
+    }
+  });
+
+  createNode({
+    mother: diagramTong,
+    style: {
+      position: "absolute",
+      top: String(376) + ea,
+      left: String(86) + ea,
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      textAlign: "center",
+    },
+    children: [
+      {
+        text: "Design",
+        style: {
+          fontSize: String(28) + ea,
+          fontWeight: String(500),
+          fontFamily: "graphik",
+          fontStyle: "italic",
+          color: colorChip.green,
+        }
+      },
+      {
+        text: "디자인 기획",
+        style: {
+          fontSize: String(17) + ea,
+          fontWeight: String(800),
+          color: colorChip.black,
+          marginTop: String(9) + ea,
+          marginBottom: String(4) + ea,
+          lineHeight: String(1.5),
+        }
+      },
+      {
+        text: [
+          "디자인을 먼저 진행하여",
+          "시공 범위를 조절",
+        ].join("\n"),
+        style: {
+          fontSize: String(14) + ea,
+          fontWeight: String(400),
+          color: colorChip.black,
+          lineHeight: String(1.5),
+        }
+      }
+    ]
+  })
+
+  createNode({
+    mother: diagramTong,
+    style: {
+      position: "absolute",
+      top: String(110) + ea,
+      right: String(160) + ea,
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "start",
+      textAlign: "left",
+    },
+    children: [
+      {
+        text: "Construction",
+        style: {
+          fontSize: String(28) + ea,
+          fontWeight: String(500),
+          fontFamily: "graphik",
+          fontStyle: "italic",
+          color: colorChip.gray4,
+        }
+      },
+      {
+        text: "톤보정 시공",
+        style: {
+          fontSize: String(17) + ea,
+          fontWeight: String(800),
+          color: colorChip.black,
+          marginTop: String(9) + ea,
+          marginBottom: String(4) + ea,
+          lineHeight: String(1.5),
+        }
+      },
+      {
+        text: [
+          "시공 범위와 자재, 디자인",
+          "시공사에 따라 변동",
+        ].join("\n"),
+        style: {
+          fontSize: String(14) + ea,
+          fontWeight: String(400),
+          color: colorChip.black,
+          lineHeight: String(1.5),
+        }
+      }
+    ]
+  })
+
+  createNode({
+    mother: diagramTong,
+    style: {
+      position: "absolute",
+      top: String(562) + ea,
+      right: String(85) + ea,
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "start",
+      textAlign: "left",
+    },
+    children: [
+      {
+        text: "Styling",
+        style: {
+          fontSize: String(28) + ea,
+          fontWeight: String(500),
+          fontFamily: "graphik",
+          fontStyle: "italic",
+          color: colorChip.gray4,
+        }
+      },
+      {
+        text: "스타일링",
+        style: {
+          fontSize: String(17) + ea,
+          fontWeight: String(800),
+          color: colorChip.black,
+          marginTop: String(9) + ea,
+          marginBottom: String(4) + ea,
+          lineHeight: String(1.5),
+        }
+      },
+      {
+        text: [
+          "스타일링 중심의 인테리어로",
+          "효과와 완성도를 높임",
+        ].join("\n"),
+        style: {
+          fontSize: String(14) + ea,
+          fontWeight: String(400),
+          color: colorChip.black,
+          lineHeight: String(1.5),
+        }
+      }
+    ]
+  })
+
+  // fee
+  feeTong = createNode({
+    mother: whiteBlock,
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      position: "relative",
+      marginTop: String(finalMarginBottom) + ea,
       paddingLeft: String(margin) + ea,
       paddingRight: String(margin) + ea,
       paddingBottom: String(finalMarginBottom) + ea,
@@ -4125,12 +4654,19 @@ ServiceDetailJs.prototype.launching = async function (loading) {
           instance.insertInitBox();
           instance.insertStartBox();
           instance.insertThreeBox();
-          instance.insertSlideBox();
+
+          if (instance.mode === "furnishing") {
+            instance.insertSlideBox();
+          } else if (instance.mode === "styling") {
+            instance.insertDiagramBox();
+          } else if (instance.mode === "total") {
+            instance.insertDiagramBox();
+          }
 
           [ newBaseTong, baseTong ] = instance.insertPeopleBox();
           instance.insertReviewBox(newBaseTong, baseTong);
-
           [ newBaseTong, baseTong ] = instance.insertToneBox(newBaseTong, baseTong);
+
           if (instance.mode !== "furnishing") {
             [ newBaseTong, baseTong ] = instance.insertConstructBox(newBaseTong, baseTong);
           }
