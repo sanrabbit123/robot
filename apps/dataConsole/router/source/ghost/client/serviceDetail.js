@@ -1522,7 +1522,7 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
 
   diagramImageHeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  diagramEnglishSize = <%% 28, 28, 28, 28, 28 %%>;
+  diagramEnglishSize = <%% 27, 27, 27, 27, 27 %%>;
   diagramEnglishWeight = <%% 500, 500, 500, 500, 500 %%>;
   diagramTitleSize = <%% 17, 17, 17, 17, 17 %%>;
   diagramTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -1531,7 +1531,7 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
   diagramTitleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
   diagramDescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  diagramTitleMarginTop = <%% 9, 9, 9, 9, 9 %%>;
+  diagramTitleMarginTop = <%% 8, 8, 8, 8, 8 %%>;
   diagramTitleMarginBottom = <%% 4, 4, 4, 4, 4 %%>;
 
   diagramFirstTop = <%% 370, 370, 370, 370, 370 %%>;
