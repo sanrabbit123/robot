@@ -1537,7 +1537,7 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
   diagramFirstTop = <%% 370, 370, 370, 370, 370 %%>;
   diagramFirstLeft = <%% 90, 90, 90, 90, 90 %%>;
   diagramSecondTop = <%% 110, 110, 110, 110, 110 %%>;
-  diagramSecondLeft = <%% 160, 160, 160, 160, 160 %%>;
+  diagramSecondLeft = <%% 170, 170, 170, 170, 170 %%>;
   diagramThirdTop = <%% 560, 560, 560, 560, 560 %%>;
   diagramThirdLeft = <%% 85, 85, 85, 85, 85 %%>;
 
