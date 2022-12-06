@@ -5346,7 +5346,8 @@ DataRouter.prototype.rou_post_calendarSync = function () {
   const instance = this;
   const back = this.back;
   const calendar = this.calendar;
-  const { errorLog } = this.mother;
+  const address = this.address;
+  const { errorLog, sleep } = this.mother;
   const calendarSyncFunc = async (MONGOC) => {
     try {
       const selfMongo = MONGOC;
@@ -5459,7 +5460,8 @@ DataRouter.prototype.rou_post_firstMeetingAlarm = function () {
   const instance = this;
   const back = this.back;
   const kakao = this.kakao;
-  const { errorLog, messageSend, dateToString, stringToDate } = this.mother;
+  const address = this.address;
+  const { errorLog, messageSend, dateToString, stringToDate, sleep } = this.mother;
   const firstMeetingAlarmFunc = async (MONGOC) => {
     try {
       const selfMongo = MONGOC;
@@ -5556,6 +5558,71 @@ DataRouter.prototype.rou_post_firstMeetingAlarm = function () {
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
       await errorLog("Console 서버 문제 생김 (rou_post_firstMeetingAlarm): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_pushClient = function () {
+  const instance = this;
+  const back = this.back;
+  const kakao = this.kakao;
+  const address = this.address;
+  const { errorLog, messageSend, dateToString, stringToDate, sleep } = this.mother;
+  const pushClientFunc = async (MONGOC) => {
+    try {
+      const selfMongo = MONGOC;
+      const clients = await back.getClientsByQuery({}, { selfMongo, withTools: true });
+      let today, ago;
+      let requests;
+
+      today = new Date();
+      today.setHours(today.getHours() - 1);
+
+      ago = new Date();
+      ago.setDate(ago.getDate() - 2);
+
+      requests = clients.getRequestsTong().filter((request) => {
+        return request.analytics.response.status.value === "응대중" && request.analytics.response.action.value === "1차 응대 예정";
+      }).filter((request) => {
+        return request.request.timeline.valueOf() < today.valueOf() && request.request.timeline.valueOf() >= ago.valueOf();
+      })
+
+      for (let request of requests) {
+        await kakao.sendTalk("pushClient", request.name, request.phone, {
+          client: request.name,
+          host: address.frontinfo.host,
+          path: "curation",
+          cliid: request.cliid,
+        });
+        await messageSend({ text: request.name + " 고객님께 신청 완료하라고 독촉했어요.", channel: "#404_curation", voice: true });
+        await sleep(1000);
+      }
+
+      await errorLog("push client done");
+
+
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_firstMeetingAlarm): " + e.message);
+    }
+  }
+  let obj = {};
+  obj.link = [ "/pushClient" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      pushClientFunc(instance.mongo).catch((err) => {
+        errorLog("Console 서버 문제 생김 (rou_post_pushClient): " + e.message).catch((err) => { console.log(err) });
+      });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_pushClient): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
   }
