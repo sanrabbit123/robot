@@ -1453,10 +1453,19 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
   let feeDescriptionSize;
   let feeDescriptionWeight, feeDescriptionWeightBold;
   let feeDescriptionPadding;
-  let barWidth0, barBetween;
+  let barWidth0, barBetween, barWidth1;
   let barHeight, barMarginBottom;
   let feeBarTongHeight;
   let diagramTong;
+  let diagramImageHeight;
+  let diagramEnglishSize, diagramEnglishWeight;
+  let diagramTitleSize, diagramTitleWeight;
+  let diagramDescriptionSize, diagramDescriptionWeight;
+  let diagramTitleLineHeight, diagramDescriptionLineHeight;
+  let diagramTitleMarginTop, diagramTitleMarginBottom;
+  let diagramFirstTop, diagramFirstLeft;
+  let diagramSecondTop, diagramSecondLeft;
+  let diagramThirdTop, diagramThirdLeft;
 
   bottomMargin = <%% 180, 180, 180, 180, 180 %%>;
   slideTongHeight = <%% 340, 340, 340, 340, 340 %%>;
@@ -1502,13 +1511,35 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
   feeDescriptionWeightBold = <%% 600, 600, 600, 600, 600 %%>;
   feeDescriptionPadding = <%% 20, 20, 20, 20, 20 %%>;
 
-  barWidth0 = <%% 360, 360, 360, 360, 360 %%>;
+  barWidth0 = <%% 200, 200, 200, 200, 200 %%>;
+  barWidth1 = <%% 400, 400, 400, 400, 400 %%>;
   barBetween = <%% 5, 5, 5, 5, 5 %%>;
 
   barHeight = <%% 20, 20, 20, 20, 20 %%>;
   barMarginBottom = <%% 8, 8, 8, 8, 8 %%>;
 
   feeBarTongHeight = <%% 60, 60, 60, 60, 60 %%>;
+
+  diagramImageHeight = <%% 700, 700, 700, 700, 700 %%>;
+
+  diagramEnglishSize = <%% 28, 28, 28, 28, 28 %%>;
+  diagramEnglishWeight = <%% 500, 500, 500, 500, 500 %%>;
+  diagramTitleSize = <%% 17, 17, 17, 17, 17 %%>;
+  diagramTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  diagramDescriptionSize = <%% 14, 14, 14, 14, 14 %%>;
+  diagramDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+  diagramTitleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+  diagramDescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+
+  diagramTitleMarginTop = <%% 9, 9, 9, 9, 9 %%>;
+  diagramTitleMarginBottom = <%% 4, 4, 4, 4, 4 %%>;
+
+  diagramFirstTop = <%% 370, 370, 370, 370, 370 %%>;
+  diagramFirstLeft = <%% 90, 90, 90, 90, 90 %%>;
+  diagramSecondTop = <%% 110, 110, 110, 110, 110 %%>;
+  diagramSecondLeft = <%% 160, 160, 160, 160, 160 %%>;
+  diagramThirdTop = <%% 560, 560, 560, 560, 560 %%>;
+  diagramThirdLeft = <%% 85, 85, 85, 85, 85 %%>;
 
   contents = {
     description: [
@@ -1517,6 +1548,30 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
     ],
     diagram: {
       image: ServiceDetailJs.binaryPath + "/styling_diagram.png",
+      first: {
+        english: "Design",
+        title: "디자인 기획",
+        description: [
+          "디자인을 먼저 진행하여",
+          "시공 범위를 조절",
+        ]
+      },
+      second: {
+        english: "Construction",
+        title: "톤보정 시공",
+        description: [
+          "시공 범위와 자재, 디자인",
+          "시공사에 따라 변동",
+        ]
+      },
+      third: {
+        english: "Styling",
+        title: "스타일링",
+        description: [
+          "스타일링 중심의 인테리어로",
+          "효과와 완성도를 높임",
+        ]
+      },
     }
   };
 
@@ -1553,17 +1608,16 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
       style: {
         display: "inline-block",
         position: "relative",
-        height: String(710) + ea,
+        height: String(diagramImageHeight) + ea,
       }
     }
   });
-
   createNode({
     mother: diagramTong,
     style: {
       position: "absolute",
-      top: String(376) + ea,
-      left: String(86) + ea,
+      top: String(diagramFirstTop) + ea,
+      left: String(diagramFirstLeft) + ea,
       display: "flex",
       flexDirection: "column",
       justifyContent: "center",
@@ -1572,47 +1626,43 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
     },
     children: [
       {
-        text: "Design",
+        text: contents.diagram.first.english,
         style: {
-          fontSize: String(28) + ea,
-          fontWeight: String(500),
+          fontSize: String(diagramEnglishSize) + ea,
+          fontWeight: String(diagramEnglishWeight),
           fontFamily: "graphik",
           fontStyle: "italic",
           color: colorChip.green,
         }
       },
       {
-        text: "디자인 기획",
+        text: contents.diagram.first.title,
         style: {
-          fontSize: String(17) + ea,
-          fontWeight: String(800),
+          fontSize: String(diagramTitleSize) + ea,
+          fontWeight: String(diagramTitleWeight),
           color: colorChip.black,
-          marginTop: String(9) + ea,
-          marginBottom: String(4) + ea,
-          lineHeight: String(1.5),
+          marginTop: String(diagramTitleMarginTop) + ea,
+          marginBottom: String(diagramTitleMarginBottom) + ea,
+          lineHeight: String(diagramTitleLineHeight),
         }
       },
       {
-        text: [
-          "디자인을 먼저 진행하여",
-          "시공 범위를 조절",
-        ].join("\n"),
+        text: contents.diagram.first.description.join("\n"),
         style: {
-          fontSize: String(14) + ea,
-          fontWeight: String(400),
+          fontSize: String(diagramDescriptionSize) + ea,
+          fontWeight: String(diagramDescriptionWeight),
           color: colorChip.black,
-          lineHeight: String(1.5),
+          lineHeight: String(diagramDescriptionLineHeight),
         }
       }
     ]
-  })
-
+  });
   createNode({
     mother: diagramTong,
     style: {
       position: "absolute",
-      top: String(110) + ea,
-      right: String(160) + ea,
+      top: String(diagramSecondTop) + ea,
+      right: String(diagramSecondLeft) + ea,
       display: "flex",
       flexDirection: "column",
       justifyContent: "center",
@@ -1621,47 +1671,43 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
     },
     children: [
       {
-        text: "Construction",
+        text: contents.diagram.second.english,
         style: {
-          fontSize: String(28) + ea,
-          fontWeight: String(500),
+          fontSize: String(diagramEnglishSize) + ea,
+          fontWeight: String(diagramEnglishWeight),
           fontFamily: "graphik",
           fontStyle: "italic",
           color: colorChip.gray4,
         }
       },
       {
-        text: "톤보정 시공",
+        text: contents.diagram.second.title,
         style: {
-          fontSize: String(17) + ea,
-          fontWeight: String(800),
+          fontSize: String(diagramTitleSize) + ea,
+          fontWeight: String(diagramTitleWeight),
           color: colorChip.black,
-          marginTop: String(9) + ea,
-          marginBottom: String(4) + ea,
-          lineHeight: String(1.5),
+          marginTop: String(diagramTitleMarginTop) + ea,
+          marginBottom: String(diagramTitleMarginBottom) + ea,
+          lineHeight: String(diagramTitleLineHeight),
         }
       },
       {
-        text: [
-          "시공 범위와 자재, 디자인",
-          "시공사에 따라 변동",
-        ].join("\n"),
+        text: contents.diagram.second.description.join("\n"),
         style: {
-          fontSize: String(14) + ea,
-          fontWeight: String(400),
+          fontSize: String(diagramDescriptionSize) + ea,
+          fontWeight: String(diagramDescriptionWeight),
           color: colorChip.black,
-          lineHeight: String(1.5),
+          lineHeight: String(diagramDescriptionLineHeight),
         }
       }
     ]
-  })
-
+  });
   createNode({
     mother: diagramTong,
     style: {
       position: "absolute",
-      top: String(562) + ea,
-      right: String(85) + ea,
+      top: String(diagramThirdTop) + ea,
+      right: String(diagramThirdLeft) + ea,
       display: "flex",
       flexDirection: "column",
       justifyContent: "center",
@@ -1670,40 +1716,37 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
     },
     children: [
       {
-        text: "Styling",
+        text: contents.diagram.third.english,
         style: {
-          fontSize: String(28) + ea,
-          fontWeight: String(500),
+          fontSize: String(diagramEnglishSize) + ea,
+          fontWeight: String(diagramEnglishWeight),
           fontFamily: "graphik",
           fontStyle: "italic",
           color: colorChip.gray4,
         }
       },
       {
-        text: "스타일링",
+        text: contents.diagram.third.title,
         style: {
-          fontSize: String(17) + ea,
-          fontWeight: String(800),
+          fontSize: String(diagramTitleSize) + ea,
+          fontWeight: String(diagramTitleWeight),
           color: colorChip.black,
-          marginTop: String(9) + ea,
-          marginBottom: String(4) + ea,
-          lineHeight: String(1.5),
+          marginTop: String(diagramTitleMarginTop) + ea,
+          marginBottom: String(diagramTitleMarginBottom) + ea,
+          lineHeight: String(diagramTitleLineHeight),
         }
       },
       {
-        text: [
-          "스타일링 중심의 인테리어로",
-          "효과와 완성도를 높임",
-        ].join("\n"),
+        text: contents.diagram.third.description.join("\n"),
         style: {
-          fontSize: String(14) + ea,
-          fontWeight: String(400),
+          fontSize: String(diagramDescriptionSize) + ea,
+          fontWeight: String(diagramDescriptionWeight),
           color: colorChip.black,
-          lineHeight: String(1.5),
+          lineHeight: String(diagramDescriptionLineHeight),
         }
       }
     ]
-  })
+  });
 
   // fee
   feeTong = createNode({
@@ -1770,7 +1813,7 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
       },
       {
         text: [
-          "홈퍼니싱 서비스는 디자인비와 제품 구매비로 구성됩니다."
+          "홈스타일링 서비스는 디자인비와 제품 구매비, 그리고 시공비로 구성됩니다."
         ].join("\n"),
         style: {
           display: "inline-block",
@@ -1843,7 +1886,8 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
           display: "inline-flex",
           flexDirection: "column",
           position: "relative",
-          width: withOut(barWidth0 + barBetween, ea),
+          width: String(barWidth1) + ea,
+          marginRight: String(barBetween) + ea,
         },
         children: [
           {
@@ -1867,7 +1911,47 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
               textAlign: "center",
             },
             child: {
-              text: "가구 및 제안 제품 구매 비용",
+              text: "시공 비용",
+              style: {
+                position: "relative",
+                fontSize: String(feeDescriptionSize) + ea,
+                fontWeight: String(feeDescriptionWeightBold),
+                color: colorChip.black,
+              }
+            }
+          }
+        ]
+      },
+      {
+        style: {
+          display: "inline-flex",
+          flexDirection: "column",
+          position: "relative",
+          width: withOut(barWidth0 + barBetween + barWidth1 + barBetween, ea),
+        },
+        children: [
+          {
+            style: {
+              display: "block",
+              position: "relative",
+              width: withOut(0, ea),
+              height: String(barHeight) + ea,
+              borderRadius: String(5) + "px",
+              background: colorChip.gray2,
+              marginBottom: String(barMarginBottom) + ea,
+            }
+          },
+          {
+            style: {
+              display: "flex",
+              flexDirection: "column",
+              position: "relative",
+              alignItems: "center",
+              justifyContent: "center",
+              textAlign: "center",
+            },
+            child: {
+              text: "제품 구매 비용",
               style: {
                 position: "relative",
                 fontSize: String(feeDescriptionSize) + ea,
@@ -1885,7 +1969,7 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
 
 ServiceDetailJs.prototype.insertPeopleBox = function () {
   const instance = this;
-  const { ea, media, standardWidth } = this;
+  const { ea, media, standardWidth, mode } = this;
   const pastBaseTong = this.baseTong;
   const mobile = media[4];
   const desktop = !mobile;
@@ -1944,23 +2028,64 @@ ServiceDetailJs.prototype.insertPeopleBox = function () {
   newBaseTong.style.background = colorChip.white;
   newBaseTong.style.paddingTop = String(topMargin) + ea;
 
-  contents = {
-    title: "바쁜 1, 2인 가구가 선택한 홈퍼니싱",
-    description: [
-      "시간은 없고, 선택할 것은 많잖아요.",
-      "<b%디자이너가 함께하면 시간은 줄이고 확실한 변화를 느낄 수 있어요.%b>",
-    ],
-    people: {
-      title: "디자이너와 함께 할 때 효과",
+  if (mode === "furnishing") {
+    contents = {
+      title: "바쁜 1, 2인 가구가 선택한 홈퍼니싱",
+      image: ServiceDetailJs.binaryPath + "/people_f.svg",
       description: [
-        "선택의 연속, 인테리어 프로세스,",
-        "모두 시간과 비용의 부담이죠.",
-        "이렇게 혼자하기 부담스러운 과정을",
-        "디자이너가 함께하면 효율적이고",
-        "합리적인 결과를 낼 수 있습니다.",
-      ]
-    }
-  };
+        "시간은 없고, 선택할 것은 많잖아요.",
+        "<b%디자이너가 함께하면 시간은 줄이고 확실한 변화를 느낄 수 있어요.%b>",
+      ],
+      people: {
+        title: "디자이너와 함께 할 때 효과",
+        description: [
+          "선택의 연속, 인테리어 프로세스,",
+          "모두 시간과 비용의 부담이죠.",
+          "이렇게 혼자하기 부담스러운 과정을",
+          "디자이너가 함께하면 효율적이고",
+          "합리적인 결과를 낼 수 있습니다.",
+        ]
+      }
+    };
+  } else if (mode === "styling") {
+    contents = {
+      title: "필요한 시공만, 부분 시공 + 스타일링",
+      image: ServiceDetailJs.binaryPath + "/people_s.svg",
+      description: [
+        "전체 시공은 부담스럽고, 적은 시공이라 개별로 맡기기는 어렵잖아요.",
+        "<b%디자이너를 통해 시공 범위 조정을 먼저 진행해보세요!%b>",
+      ],
+      people: {
+        title: "나와 내 집 컨디션에 맞게",
+        description: [
+          "한정적인 예산 내에서 시공 비중을",
+          "과하게 높이게 되면 완성도 높은 현장을",
+          "만들 수 없어요. 나와 내 집이 컨디션에",
+          "맞게 스타일링에 집중된 효과적인",
+          "인테리어를 경험해보세요.",
+        ]
+      }
+    };
+  } else if (mode === "total") {
+    contents = {
+      title: "바쁜 1, 2인 가구가 선택한 홈퍼니싱",
+      image: ServiceDetailJs.binaryPath + "/people_f.svg",
+      description: [
+        "시간은 없고, 선택할 것은 많잖아요.",
+        "<b%디자이너가 함께하면 시간은 줄이고 확실한 변화를 느낄 수 있어요.%b>",
+      ],
+      people: {
+        title: "디자이너와 함께 할 때 효과",
+        description: [
+          "선택의 연속, 인테리어 프로세스,",
+          "모두 시간과 비용의 부담이죠.",
+          "이렇게 혼자하기 부담스러운 과정을",
+          "디자이너가 함께하면 효율적이고",
+          "합리적인 결과를 낼 수 있습니다.",
+        ]
+      }
+    };
+  }
 
   baseTong = createNode({
     mother: newBaseTong,
@@ -2057,7 +2182,7 @@ ServiceDetailJs.prototype.insertPeopleBox = function () {
       {
         mode: "img",
         attribute: {
-          src: ServiceDetailJs.binaryPath + "/people_f.svg",
+          src: contents.image,
         },
         style: {
           display: "block",
@@ -2155,12 +2280,12 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
   lineTop = <%% 20, 20, 20, 20, 20 %%>;
   lineBottom = <%% 22, 22, 22, 22, 22 %%>;
 
-  tagTongHeight = <%% 30, 30, 30, 30, 30 %%>;
+  tagTongHeight = <%% 26, 26, 26, 26, 26 %%>;
 
   tagBetween = <%% 4, 4, 4, 4, 4 %%>;
 
   tagTextTop = <%% -1, -1, -1, -1, -1 %%>;
-  tagSize = <%% 12, 12, 12, 12, 12 %%>;
+  tagSize = <%% 11, 11, 11, 11, 11 %%>;
   tagWeight = <%% 600, 600, 600, 600, 600 %%>;
   tagPaddingLeft = <%% 12, 12, 12, 12, 12 %%>;
 
@@ -2829,6 +2954,560 @@ ServiceDetailJs.prototype.insertToneBox = function (pastBaseTong, baseTong) {
 
   contents.tone.forEach(setToneSetting);
   whiteBlock.removeChild(whiteBlock.lastChild);
+
+  return [ newBaseTong, baseTong ];
+}
+
+ServiceDetailJs.prototype.insertAfterBox = function (pastBaseTong, baseTong) {
+  const instance = this;
+  const { ea, media, standardWidth } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1]);
+  const small = !big;
+  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
+  const newBaseTong = pastBaseTong.cloneNode(false);
+  let topMargin;
+  let bottomMargin;
+  let margin;
+  let middleTongPaddingBottom;
+  let middleTitleMarginBottom;
+  let middleTitleLineTop;
+  let middleTitleSize;
+  let middleTitleWeight;
+  let middleTitlePadding;
+  let middleTitleTextTop;
+  let middleAreaPaddingTop;
+  let middleInfoSize;
+  let contents;
+  let middleTong;
+  let whiteTongMarginTop;
+  let whiteBlock;
+  let setToneSetting;
+  let imageWidth, imageHeight;
+  let imageBetween;
+  let marginTop;
+  let titleSize, titleWeight, descriptionWeight;
+  let descriptionLineHeight;
+  let titleMarginBottom;
+  let factorTextTop, factorSize, factorWeight;
+  let factorTongHeight, factorTongWidth;
+  let lineStart;
+  let lineWidth, lineHeight;
+  let lineEnd;
+  let boxWidth, boxHeight;
+  let singleImageWidth;
+  let markTop, markLeft, markWidth, markHeight;
+  let markSize, makrWeight, markTextTop;
+  let centerCircleWidth;
+  let arrowWidth, arrowHeight;
+  let subBoxMargin;
+  let subTitleSize, subTitleWeight;
+  let subTitleMarginBottom;
+  let subDescriptionSize, subDescriptionWeight;
+  let subDescriptionBottom;
+  let toneBoxPaddingLeft, toneBoxPaddingTop;
+  let toneTitleSize, toneDescriptionSize;
+
+  topMargin = <%% 160, 160, 160, 120, 50 %%>;
+  bottomMargin = <%% 180, 180, 180, 180, 50 %%>;
+  margin = <%% 52, 50, 40, 32, 52 %%>;
+  marginTop = <%% 56, 56, 56, 56, 56 %%>;
+
+  middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
+  middleTitleMarginBottom = <%% 60, 60, 60, 60, 60 %%>;
+
+  middleTitleLineTop = <%% 68, 68, 68, 68, 68 %%>;
+
+  middleTitleSize = <%% 23, 23, 21, 18, 4.2 %%>;
+  middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  middleTitlePadding = <%% 16, 16, 12, 10, 2 %%>;
+  middleTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
+
+  middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
+  middleInfoSize = <%% 14, 14, 14, 13, 3 %%>;
+
+  whiteTongMarginTop = <%% 48, 48, 48, 48, 48 %%>;
+
+  imageWidth = <%% 960, 960, 960, 960, 960 %%>;
+  imageHeight = <%% 540, 540, 540, 540, 540 %%>;
+  imageBetween = <%% 12, 12, 12, 12, 12 %%>;
+
+  titleSize = <%% 14, 14, 14, 14, 14 %%>;
+  titleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+  descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+
+  titleMarginBottom = <%% 6, 6, 6, 6, 6 %%>;
+
+  factorTextTop = <%% -1, -1, -1, -1, -1 %%>;
+  factorSize = <%% 13, 13, 13, 13, 13 %%>;
+  factorWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+  factorTongHeight = <%% 36, 36, 36, 36, 36 %%>;
+  factorTongWidth = <%% 96, 96, 96, 96, 96 %%>;
+
+  lineStart = <%% 20, 20, 20, 20, 20 %%>;
+  lineWidth = <%% 74, 74, 74, 74, 74 %%>;
+  lineHeight = <%% 94, 94, 94, 94, 94 %%>;
+  lineEnd = <%% 2, 2, 2, 2, 2 %%>;
+
+  boxWidth = <%% 150, 150, 150, 150, 150 %%>;
+  boxHeight = <%% 80, 80, 80, 80, 80 %%>;
+
+  singleImageWidth = <%% 390, 390, 390, 390, 390 %%>;
+
+  markTop = <%% 16, 16, 16, 16, 16 %%>;
+  markLeft = <%% 16, 16, 16, 16, 16 %%>;
+  markWidth = <%% 70, 70, 70, 70, 70 %%>;
+  markHeight = <%% 32, 32, 32, 32, 32 %%>;
+  markSize = <%% 14, 14, 14, 14, 14 %%>;
+  makrWeight = <%% 500, 500, 500, 500, 500 %%>;
+  markTextTop = <%% -1, -1, -1, -1, -1 %%>;
+
+  centerCircleWidth = <%% 60, 60, 60, 60, 60 %%>;
+
+  arrowWidth = <%% 38, 38, 38, 38, 38 %%>;
+  arrowHeight = <%% 12, 12, 12, 12, 12 %%>;
+
+  subBoxMargin = <%% 24, 24, 24, 24, 24 %%>;
+
+  subTitleSize = <%% 13, 13, 13, 13, 13 %%>;
+  subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  subTitleMarginBottom = <%% 3, 3, 3, 3, 3 %%>;
+  subDescriptionSize = <%% 13, 13, 13, 13, 13 %%>;
+  subDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+  subDescriptionBottom = <%% 16, 16, 16, 16, 16 %%>;
+
+  toneBoxPaddingLeft = <%% 20, 20, 20, 20, 20 %%>;
+  toneBoxPaddingTop = <%% 18, 18, 18, 18, 18 %%>;
+
+  toneTitleSize = <%% 13, 13, 13, 13, 13 %%>;
+  toneDescriptionSize = <%% 12, 12, 12, 12, 12 %%>;
+
+  pastBaseTong.parentNode.insertBefore(newBaseTong, pastBaseTong.nextElementSibling);
+  newBaseTong.style.left = String(0);
+  newBaseTong.style.width = withOut(0, ea);
+  newBaseTong.style.background = colorChip.gray2;
+  newBaseTong.style.paddingTop = String(topMargin) + ea;
+
+  contents = {
+    title: "톤보정의 중요성",
+    description: [
+      "톤보정은 기존 자재의 거슬리는 컬러, 톤, 무늬 등을 새로운 자재로",
+      "드레스업하여 배경을 새로 만들어내는 간단한 부분 시공 서비스입니다.",
+    ],
+    white: {
+      basic: {
+        title: "주방 비포 에프터",
+        description: [
+          "기존의 튀고 오래된 듯한 마감재의 컬러 정도를",
+          "바꾸어 주기 위해 필름 시공과 상판 교체만으로",
+          "다른 공간처럼 변화한 사례입니다. 뿐만 아니라",
+          "바뀐 배경에 맞게 고객이 원했던 컨셉을",
+          "확실히 살려주는 스타일링이 가장 중요합니다.",
+        ]
+      },
+      images: {
+        before: ServiceDetailJs.binaryPath + "/styling_before.jpg",
+        after: ServiceDetailJs.binaryPath + "/styling_after.jpg",
+      },
+    },
+    tone: {
+      title: "*톤 보정 시공이란?",
+      description: [
+        "디자이너와 함께 원하는 스타일링에 맞추어",
+        "큰 구조의 변경아니 전체 시공 없이 기존 자재의",
+        "거슬리는 컬러, 톤, 무늬 등을 새로운 자재로",
+        "드레스업하여 배경을 새로 만들어내는 비교적",
+        "간단한 부분 시공 서비스",
+      ]
+    }
+  };
+
+  baseTong = createNode({
+    mother: newBaseTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(standardWidth) + ea,
+      left: withOut(50, standardWidth / 2, ea),
+      paddingBottom: String(bottomMargin) + ea,
+    }
+  });
+
+  middleTong = createNode({
+    mother: baseTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: withOut(0 * 2, ea),
+    }
+  });
+
+  createNode({
+    mother: middleTong,
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      position: "relative",
+      width: String(100) + '%',
+      textAlign: "center",
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: "absolute",
+          width: String(100) + '%',
+          height: String(middleTitleLineTop) + ea,
+          top: String(0),
+          left: String(0),
+          borderBottom: "1px solid " + colorChip.gray4,
+        }
+      },
+      {
+        text: contents.title,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(middleTitleSize) + ea,
+          fontWeight: String(middleTitleWeight),
+          color: colorChip.black,
+          textAlign: "center",
+          paddingLeft: String(middleTitlePadding) + ea,
+          paddingRight: String(middleTitlePadding) + ea,
+          top: String(middleTitleTextTop) + ea,
+          background: colorChip.gray2,
+        }
+      },
+      {
+        text: contents.description.join("\n"),
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(middleInfoSize) + ea,
+          fontWeight: String(400),
+          lineHeight: String(1.6),
+          color: colorChip.black,
+          textAlign: "center",
+          paddingTop: String(middleTitlePadding) + ea,
+          paddingLeft: String(middleTitlePadding * 1.5) + ea,
+          paddingRight: String(middleTitlePadding * 1.5) + ea,
+          background: colorChip.gray2,
+        },
+        bold: {
+          fontSize: String(middleInfoSize) + ea,
+          fontWeight: String(700),
+          lineHeight: String(1.6),
+          color: colorChip.black,
+        }
+      }
+    ]
+  });
+
+  whiteBlock = createNode({
+    mother: baseTong,
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      marginTop: String(whiteTongMarginTop) + ea,
+      width: withOut(margin * 2, ea),
+      paddingLeft: String(margin) + ea,
+      paddingRight: String(margin) + ea,
+      paddingTop: String(marginTop) + ea,
+      paddingBottom: String(marginTop) + ea,
+      background: colorChip.white,
+      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      borderRadius: String(8) + "px",
+    }
+  });
+
+  createNode({
+    mother: whiteBlock,
+    style: {
+      display: "flex",
+      flexDirection: "row",
+      width: withOut(0),
+      position: "relative",
+    },
+    children: [
+      {
+        style: {
+          display: "inline-flex",
+          flexDirection: "column",
+          position: "relative",
+          marginRight: String(imageBetween) + ea,
+          width: withOut(imageWidth + imageBetween, ea),
+          height: String(imageHeight) + ea,
+          alignItems: "start",
+          justifyContent: "end",
+        },
+        children: [
+          {
+            text: contents.white.basic.title,
+            style: {
+              display: "block",
+              position: "relative",
+              fontSize: String(titleSize) + ea,
+              fontWeight: String(titleWeight),
+              color: colorChip.black,
+              lineHeight: String(descriptionLineHeight),
+              marginBottom: String(titleMarginBottom) + ea,
+            }
+          },
+          {
+            text: contents.white.basic.description.join("\n"),
+            style: {
+              display: "block",
+              position: "relative",
+              fontSize: String(titleSize) + ea,
+              fontWeight: String(descriptionWeight),
+              color: colorChip.black,
+              lineHeight: String(descriptionLineHeight),
+            }
+          },
+        ]
+      },
+      {
+        style: {
+          display: "inline-flex",
+          flexDirection: "row",
+          position: "relative",
+          width: String(imageWidth) + ea,
+          height: String(imageHeight) + ea,
+          alignItems: "center",
+          justifyContent: "center",
+          background: colorChip.gray1,
+        },
+        children: [
+          {
+            style: {
+              display: "inline-block",
+              height: String(imageHeight) + ea,
+              width: String(singleImageWidth) + ea,
+              position: "relative",
+              borderRadius: String(8) + "px",
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+              backgroundSize: "auto 100%",
+              backgroundPosition: "50% 50%",
+              backgroundImage: "url('" + contents.white.images.before + "')",
+            },
+            child: {
+              style: {
+                top: String(markTop) + ea,
+                left: String(markLeft) + ea,
+                width: String(markWidth) + ea,
+                height: String(markHeight) + ea,
+                display: "inline-flex",
+                position: "absolute",
+                borderRadius: String(8) + "px",
+                alignItems: "center",
+                justifyContent: "center",
+                background: colorChip.gradientGray,
+              },
+              child: {
+                text: "before",
+                style: {
+                  fontSize: String(markSize) + ea,
+                  fontWeight: String(makrWeight),
+                  color: colorChip.white,
+                  fontFamily: "graphik",
+                  fontStyle: "italic",
+                  position: "relative",
+                  top: String(markTextTop) + ea,
+                }
+              }
+            }
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              height: String(imageHeight) + ea,
+              width: withOut(singleImageWidth * 2, ea),
+              justifyContent: "center",
+              alignItems: "center",
+            },
+            child: {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: String(centerCircleWidth) + ea,
+                height: String(centerCircleWidth) + ea,
+                borderRadius: String(centerCircleWidth) + ea,
+                background: colorChip.gradientGreen,
+                justifyContent: "center",
+                alignItems: "center",
+              },
+              child: {
+                mode: "svg",
+                source: svgMaker.horizontalArrow(arrowWidth, arrowHeight, colorChip.white),
+                style: {
+                  width: String(arrowWidth) + ea,
+                  height: String(arrowHeight) + ea,
+                  display: "inline-flex",
+                  position: "relative",
+                }
+              },
+              next: {
+                style: {
+                  display: "inline-flex",
+                  flexDirection: "column",
+                  position: "absolute",
+                  bottom: String(subBoxMargin) + ea,
+                  right: String(subBoxMargin) + ea,
+                  textAlign: "right",
+                },
+                children: [
+                  {
+                    text: "주방 가구",
+                    style: {
+                      fontSize: String(subTitleSize) + ea,
+                      fontWeight: String(subTitleWeight),
+                      color: colorChip.black,
+                      position: "relative",
+                      marginBottom: String(subTitleMarginBottom) + ea,
+                    }
+                  },
+                  {
+                    text: "화이트 필름 시공",
+                    style: {
+                      fontSize: String(subDescriptionSize) + ea,
+                      fontWeight: String(subDescriptionWeight),
+                      color: colorChip.black,
+                      position: "relative",
+                      marginBottom: String(subDescriptionBottom) + ea,
+                    }
+                  },
+                  {
+                    text: "주방 상판",
+                    style: {
+                      fontSize: String(subTitleSize) + ea,
+                      fontWeight: String(subTitleWeight),
+                      color: colorChip.black,
+                      position: "relative",
+                      marginBottom: String(subTitleMarginBottom) + ea,
+                    }
+                  },
+                  {
+                    text: "밝은 대리석으로 교체",
+                    style: {
+                      fontSize: String(subDescriptionSize) + ea,
+                      fontWeight: String(subDescriptionWeight),
+                      color: colorChip.black,
+                      position: "relative",
+                      marginBottom: String(subDescriptionBottom) + ea,
+                    }
+                  },
+                  {
+                    text: "기타 가구 및 소품",
+                    style: {
+                      fontSize: String(subTitleSize) + ea,
+                      fontWeight: String(subTitleWeight),
+                      color: colorChip.black,
+                      position: "relative",
+                      marginBottom: String(subTitleMarginBottom) + ea,
+                    }
+                  },
+                  {
+                    text: "디자이너의 스타일링",
+                    style: {
+                      fontSize: String(subDescriptionSize) + ea,
+                      fontWeight: String(subDescriptionWeight),
+                      color: colorChip.black,
+                      position: "relative",
+                    }
+                  },
+                ]
+              }
+            }
+          },
+          {
+            style: {
+              display: "inline-block",
+              height: String(imageHeight) + ea,
+              width: String(singleImageWidth) + ea,
+              position: "relative",
+              borderRadius: String(8) + "px",
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+              backgroundSize: "100% auto",
+              backgroundPosition: "50% 50%",
+              backgroundImage: "url('" + contents.white.images.after + "')",
+            },
+            child: {
+              style: {
+                top: String(markTop) + ea,
+                left: String(markLeft) + ea,
+                width: String(markWidth) + ea,
+                height: String(markHeight) + ea,
+                display: "inline-flex",
+                position: "absolute",
+                borderRadius: String(8) + "px",
+                alignItems: "center",
+                justifyContent: "center",
+                background: colorChip.gradientGreen,
+              },
+              child: {
+                text: "after",
+                style: {
+                  fontSize: String(markSize) + ea,
+                  fontWeight: String(makrWeight),
+                  color: colorChip.white,
+                  fontFamily: "graphik",
+                  fontStyle: "italic",
+                  position: "relative",
+                  top: String(markTextTop) + ea,
+                }
+              }
+            }
+          },
+        ]
+      },
+      {
+        style: {
+          display: "inline-flex",
+          flexDirection: "column",
+          position: "absolute",
+          top: String(0),
+          left: String(0),
+          padding: String(toneBoxPaddingLeft) + ea,
+          paddingTop: String(toneBoxPaddingTop) + ea,
+          paddingBottom: String(toneBoxPaddingTop) + ea,
+          alignItems: "start",
+          justifyContent: "end",
+          background: colorChip.gradientGray,
+          borderRadius: String(8) + "px",
+        },
+        children: [
+          {
+            text: contents.tone.title,
+            style: {
+              display: "block",
+              position: "relative",
+              fontSize: String(toneTitleSize) + ea,
+              fontWeight: String(titleWeight),
+              color: colorChip.white,
+              lineHeight: String(descriptionLineHeight),
+              marginBottom: String(titleMarginBottom) + ea,
+            }
+          },
+          {
+            text: contents.tone.description.join("\n"),
+            style: {
+              display: "block",
+              position: "relative",
+              fontSize: String(toneDescriptionSize) + ea,
+              fontWeight: String(descriptionWeight),
+              color: colorChip.white,
+              lineHeight: String(descriptionLineHeight),
+            }
+          },
+        ]
+      },
+    ]
+  });
 
   return [ newBaseTong, baseTong ];
 }
@@ -4665,7 +5344,14 @@ ServiceDetailJs.prototype.launching = async function (loading) {
 
           [ newBaseTong, baseTong ] = instance.insertPeopleBox();
           instance.insertReviewBox(newBaseTong, baseTong);
-          [ newBaseTong, baseTong ] = instance.insertToneBox(newBaseTong, baseTong);
+
+          if (instance.mode === "furnishing") {
+            [ newBaseTong, baseTong ] = instance.insertToneBox(newBaseTong, baseTong);
+          } else if (instance.mode === "styling") {
+            [ newBaseTong, baseTong ] = instance.insertAfterBox(newBaseTong, baseTong);
+          } else if (instance.mode === "total") {
+            [ newBaseTong, baseTong ] = instance.insertToneBox(newBaseTong, baseTong);
+          }
 
           if (instance.mode !== "furnishing") {
             [ newBaseTong, baseTong ] = instance.insertConstructBox(newBaseTong, baseTong);
