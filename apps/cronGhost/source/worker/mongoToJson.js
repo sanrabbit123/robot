@@ -5,14 +5,7 @@ const dayId = [
 const hourId = [];
 
 const worker = async function (package) {
-  const {
-    mother, address,
-    back, work, report,
-    kakao, human,
-    bill,
-    analytics, sheets, drive, calendar, docs,
-    mongo, mongoconsole, mongolocal,
-  } = package;
+  const { mother, address, back, work, mongo, mongoconsole, mongolocal } = package;
   const { messageLog, errorLog, fileSystem, shellExec, shellLink } = mother;
   try {
     const today = new Date();
@@ -50,7 +43,7 @@ const worker = async function (package) {
 
     await shellExec(`cd ${shellLink(backDir)};zip -r ./${timeString}.zip ./${timeString};rm -rf ${shellLink(backDir)}/${timeString}`);
 
-    await messageLog("mongo to json done");
+    await errorLog("mongo to json done");
     return true;
   } catch (e) {
     await errorLog("mongo to json error : " + e.message);

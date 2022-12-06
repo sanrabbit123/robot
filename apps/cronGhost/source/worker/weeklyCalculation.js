@@ -5,20 +5,13 @@ const dayId = [
 const hourId = [];
 
 const worker = async function (package) {
-  const {
-    mother, address,
-    back, work, report,
-    kakao, human,
-    bill,
-    analytics, sheets, drive, calendar, docs,
-    mongo, mongoconsole, mongolocal,
-  } = package;
+  const { mother, address, back, work, mongo, mongoconsole, mongolocal } = package;
   const { requestSystem, messageLog, errorLog } = mother;
   try {
     const today = new Date();
     if (today.getDay() === 1 || today.getDay() === 5) {
       await requestSystem("https://" + address.pythoninfo.host + ":" + String(3000) + "/weeklyCalculation", { data: null }, { headers: { "Content-Type": "application/json" } });
-      await messageLog("weekly calculation done");
+      await errorLog("weekly calculation done");
     }
     return true;
   } catch (e) {

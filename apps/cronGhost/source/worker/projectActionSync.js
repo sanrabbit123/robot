@@ -11,18 +11,11 @@ const dayId = [
 const hourId = [];
 
 const worker = async function (package) {
-  const {
-    mother, address,
-    back, work, report,
-    kakao, human,
-    bill,
-    analytics, sheets, drive, calendar, docs,
-    mongo, mongoconsole, mongolocal,
-  } = package;
+  const { mother, address, back, work, mongo, mongoconsole, mongolocal } = package;
   const { messageLog, errorLog } = mother;
   try {
     await work.projectActionSync({ selfMongo: mongo, selfConsoleMongo: mongoconsole, updateMongo: mongo });
-    await messageLog("project action sync done");
+    await errorLog("project action sync done");
     return true;
   } catch (e) {
     await errorLog("project action sync error : " + e.message);

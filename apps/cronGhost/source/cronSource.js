@@ -1,20 +1,10 @@
-const CronSource = function (mother, back, address, kakaoInstance, humanInstance, work, report, bill, analytics, sheets, drive, calendar, docs, MONGOC, MONGOCONSOLEC, MONGOPYTHONC, MONGOLOCALC) {
+const CronSource = function (mother, back, address, work, MONGOC, MONGOCONSOLEC, MONGOLOCALC) {
   this.mother = mother;
   this.back = back;
   this.address = address;
-  this.kakao = kakaoInstance;
-  this.human = humanInstance;
   this.work = work;
-  this.report = report;
-  this.bill = bill;
-  this.analytics = analytics;
-  this.sheets = sheets;
-  this.drive = drive;
-  this.calendar = calendar;
-  this.docs = docs;
   this.mongo = MONGOC;
   this.mongoconsole = MONGOCONSOLEC;
-  this.mongopython = MONGOPYTHONC;
   this.mongolocal = MONGOLOCALC;
   this.dir = process.cwd() + "/apps/cronGhost/source";
   this.sourceMap = null;
@@ -88,19 +78,9 @@ CronSource.prototype.targetLauching = async function (cronId) {
     mother: this.mother,
     back: this.back,
     address: this.address,
-    kakao: this.kakao,
-    human: this.human,
     work: this.work,
-    report: this.report,
-    bill: this.bill,
-    analytics: this.analytics,
-    sheets: this.sheets,
-    drive: this.drive,
-    calendar: this.calendar,
-    docs: this.docs,
     mongo: this.mongo,
     mongoconsole: this.mongoconsole,
-    mongopython: this.mongopython,
     mongolocal: this.mongolocal,
   };
   try {
@@ -138,6 +118,5 @@ CronSource.prototype.targetLauching = async function (cronId) {
     console.log(e);
   }
 }
-
 
 module.exports = CronSource;

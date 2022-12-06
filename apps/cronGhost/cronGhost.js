@@ -116,30 +116,10 @@ CronGhost.prototype.diskTest = async function () {
   }
 }
 
-CronGhost.prototype.cronRouter = async function () {
-  const instance = this;
-  const { pureServer, shellExec, shellLink, fileSystem, dateToString } = this.mother;
-  try {
-    const PureServer = pureServer("class");
-    const app = new PureServer();
-
-    app.get("/id", async (req, res) => {
-      try {
-        res.send(JSON.stringify({ cronId: instance.cronId }));
-      } catch (e) {
-        res.send(JSON.stringify({ message: "error" }));
-      }
-    });
-
-    return app;
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 CronGhost.prototype.cronServer = async function () {
   const instance = this;
-  const { pureServer, dateToString, mongo, mongolocalinfo, mongoinfo, mongoconsoleinfo, mongopythoninfo, errorLog } = this.mother;
+  const address = this.address;
+  const { shellExec, fileSystem, messageSend, requestSystem, pureServer, dateToString, mongo, mongolocalinfo, mongoinfo, mongoconsoleinfo, errorLog } = this.mother;
   const port = 53001;
   const interval = (10 * 60 * 1000);
   const dateCopy = (dateObj) => { return new Date(JSON.stringify(dateObj).slice(1, -1)); }
@@ -148,19 +128,32 @@ CronGhost.prototype.cronServer = async function () {
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
   const MONGOCONSOLEC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
-  const MONGOPYTHONC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
-  const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
-  const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
   const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`);
-  const BackReport = require(`${process.cwd()}/apps/backMaker/backReport.js`);
-  const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
-  const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
-  const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
-  const GoogleCalendar = require(`${process.cwd()}/apps/googleAPIs/googleCalendar.js`);
-  const GoogleDocs = require(`${process.cwd()}/apps/googleAPIs/googleDocs.js`);
-  const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
+  const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
   try {
-    const app = await this.cronRouter();
+    const human = new HumanPacket();
+    const work = new BackWorker();
+    const https = require("https");
+    const express = require("express");
+    const app = express();
+    const id = "help";
+    const pwd = "hlofwis83!";
+    const targetEmail = "hometaxadmin@hometax.go.kr";
+    const standardFile = process.cwd() + "/temp/mailStandard.json";
+    let pems;
+    let pemsLink;
+    let certDir;
+    let keyDir;
+    let caDir;
+    let intervalFunc, startTime, today;
+    let intervalFunc0, intervalFunc1;
+
+    app.use(express.json({ limit: "50mb" }));
+    app.use(express.urlencoded({ limit: "50mb", extended: true }));
+
+    await MONGOC.connect();
+    await MONGOLOCALC.connect();
+    await MONGOCONSOLEC.connect();
 
     this.time = new Date();
     this.cronId = {
@@ -169,49 +162,30 @@ CronGhost.prototype.cronServer = async function () {
       day: "",
       hour: "",
     };
-
-    await MONGOC.connect();
-    await MONGOLOCALC.connect();
-    await MONGOCONSOLEC.connect();
-    await MONGOPYTHONC.connect();
-
-    const work = new BackWorker();
-    const report = new BackReport();
-    const bill = new BillMaker();
-
-    const analytics = new GoogleAnalytics();
-    const sheets = new GoogleSheet();
-    const drive = new GoogleDrive();
-    const calendar = new GoogleCalendar();
-    const docs = new GoogleDocs();
-
-    const humanInstance = new HumanPacket();
-    const kakaoInstance = new KakaoTalk();
-    await kakaoInstance.ready();
-
-    let intervalFunc, startTime, today;
-    let intervalFunc0, intervalFunc1;
-
     this.source = new CronSource(
       this.mother,
       this.back,
       this.address,
-      kakaoInstance,
-      humanInstance,
       work,
-      report,
-      bill,
-      analytics,
-      sheets,
-      drive,
-      calendar,
-      docs,
       MONGOC,
       MONGOCONSOLEC,
-      MONGOPYTHONC,
       MONGOLOCALC
     );
     await this.source.sourceLoad();
+
+    app.post("/voice", async (req, res) => {
+      res.set("Content-Type", "application/json");
+      try {
+        if (req.body.text === undefined) {
+          res.send(JSON.stringify({ message: "invaild post" }));
+        } else {
+          shellExec("say", [ req.body.text.replace(/[a-zA-Z\:\=\&\/]/gi, '') ]).catch((err) => { console.log(err); });
+          res.send(JSON.stringify({ message: "will do" }));
+        }
+      } catch (e) {
+        res.send(JSON.stringify({ error: e.message }));
+      }
+    });
 
     intervalFunc = async () => {
       try {
@@ -273,8 +247,6 @@ CronGhost.prototype.cronServer = async function () {
     }
     startTime = (10 - startTime) * (60 * 1000);
 
-    console.log(startTime)
-
     setTimeout(() => {
       intervalFunc().catch((err) => { console.log(err); });
       intervalFunc0().catch((err) => { console.log(err); });
@@ -283,7 +255,71 @@ CronGhost.prototype.cronServer = async function () {
       setInterval(intervalFunc1, 1 * 30 * 60 * 1000);
     }, startTime);
 
-    pureServer("listen", app, port);
+    setInterval(async () => {
+      try {
+        const client = await human.homeliaisonLogin(id, pwd);
+        let standardString;
+        let pastString;
+        let count;
+        let newMail;
+        let length;
+
+        const { data } = await client.list();
+        const arr = data.split("\r\n").map((str) => { return str.trim() }).filter((str) => { return str !== '' });
+        standardString = JSON.stringify(arr);
+        try {
+          pastString = await fileSystem(`readString`, [ standardFile ]);
+        } catch (e) {
+          await fileSystem(`write`, [ standardFile, "" ]);
+          pastString = await fileSystem(`readString`, [ standardFile ]);
+        }
+        if (standardString !== pastString) {
+          ({ count } = await client.list());
+          length = count - JSON.parse(pastString).length
+          for (let i = 0; i < length; i++) {
+            [ newMail ] = await human.getMails(id, pwd, [ count - i ]);
+            await messageSend({ text: newMail.from + " 으로부터 새로운 메일이 도착했습니다! : " + Buffer.from(newMail.subject, "base64").toString("utf8"), channel: "#general" });
+            if ((new RegExp(targetEmail, "gi")).test(newMail.from)) {
+              await requestSystem("https://" + address.pythoninfo.host + ":" + String(3000) + "/taxBill", { count: count - i }, { headers: { "Content-Type": "application/json" } });
+            }
+          }
+        }
+        await fileSystem(`write`, [ standardFile, standardString ]);
+
+        await client.quit();
+      } catch (e) {
+        console.log(e);
+      }
+    }, 1000 * 10);
+
+    pems = {};
+    pemsLink = process.cwd() + "/pems/" + address.officeinfo.ghost.host;
+    certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
+    keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
+    caDir = await fileSystem(`readDir`, [ `${pemsLink}/ca` ]);
+    for (let i of certDir) {
+      if (i !== `.DS_Store`) {
+        pems.cert = await fileSystem(`read`, [ `${pemsLink}/cert/${i}` ]);
+      }
+    }
+    for (let i of keyDir) {
+      if (i !== `.DS_Store`) {
+        pems.key = await fileSystem(`read`, [ `${pemsLink}/key/${i}` ]);
+      }
+    }
+    pems.ca = [];
+    for (let i of caDir) {
+      if (i !== `.DS_Store`) {
+        pems.ca.push(await fileSystem(`read`, [ `${pemsLink}/ca/${i}` ]));
+      }
+    }
+    pems.allowHTTP1 = true;
+
+    https.createServer(pems, app).listen(address.officeinfo.voice.port, () => {
+      console.log(``);
+      console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
+      console.log(``);
+    });
 
   } catch (e) {
     console.log(e);

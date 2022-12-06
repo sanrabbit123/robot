@@ -368,117 +368,6 @@ Clown.prototype.taxBill = async function () {
   }
 }
 
-Clown.prototype.tellVoice = async function () {
-  const instance = this;
-  const address = this.address;
-  const { shellExec, fileSystem, messageSend, requestSystem } = this.mother;
-  try {
-    const PlayAudio = require(`${process.cwd()}/apps/playAudio/playAudio.js`);
-    const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
-    const voice = new PlayAudio();
-    const human = new HumanPacket();
-    const https = require("https");
-    const express = require("express");
-    const app = express();
-    const id = "help";
-    const pwd = "hlofwis83!";
-    const targetEmail = "hometaxadmin@hometax.go.kr";
-    const standardFile = process.cwd() + "/temp/mailStandard.json";
-    let pems;
-    let pemsLink;
-    let certDir;
-    let keyDir;
-    let caDir;
-    let num;
-    let intervalFunc;
-
-    app.use(express.json({ limit: "50mb" }));
-    app.use(express.urlencoded({ limit: "50mb", extended: true }));
-
-    app.post("/voice", async (req, res) => {
-      if (req.body.text === undefined) {
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ message: "invaild post" }));
-      } else {
-        shellExec("say", [ req.body.text.replace(/[a-zA-Z\:\=\&\/]/gi, '') ]).catch((err) => { console.log(err); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ message: "will do" }));
-      }
-    });
-
-    num = 0;
-    setInterval(async () => {
-      try {
-        const client = await human.homeliaisonLogin(id, pwd);
-        let standardString, num;
-        let pastString;
-        let count;
-        let newMail;
-        let length;
-
-        const { data } = await client.list();
-        const arr = data.split("\r\n").map((str) => { return str.trim() }).filter((str) => { return str !== '' });
-        standardString = JSON.stringify(arr);
-        if (num !== 0) {
-          pastString = await fileSystem(`readString`, [ standardFile ]);
-          if (standardString !== pastString) {
-            ({ count } = await client.list());
-            length = count - JSON.parse(pastString).length
-            for (let i = 0; i < length; i++) {
-              [ newMail ] = await human.getMails(id, pwd, [ count - i ]);
-              await messageSend({ text: newMail.from + " 으로부터 새로운 메일이 도착했습니다! : " + Buffer.from(newMail.subject, "base64").toString("utf8"), channel: "#general" });
-              if ((new RegExp(targetEmail, "gi")).test(newMail.from)) {
-                await requestSystem("https://" + address.pythoninfo.host + ":" + String(3000) + "/taxBill", { count: count - i }, { headers: { "Content-Type": "application/json" } });
-              }
-            }
-          }
-        }
-        await fileSystem(`write`, [ standardFile, standardString ]);
-
-        await client.quit();
-
-        num++;
-      } catch (e) {
-        console.log(e);
-      }
-    }, 1000 * 10);
-
-
-    pems = {};
-    pemsLink = process.cwd() + "/pems/" + address.officeinfo.ghost.host;
-    certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
-    keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
-    caDir = await fileSystem(`readDir`, [ `${pemsLink}/ca` ]);
-    for (let i of certDir) {
-      if (i !== `.DS_Store`) {
-        pems.cert = await fileSystem(`read`, [ `${pemsLink}/cert/${i}` ]);
-      }
-    }
-    for (let i of keyDir) {
-      if (i !== `.DS_Store`) {
-        pems.key = await fileSystem(`read`, [ `${pemsLink}/key/${i}` ]);
-      }
-    }
-    pems.ca = [];
-    for (let i of caDir) {
-      if (i !== `.DS_Store`) {
-        pems.ca.push(await fileSystem(`read`, [ `${pemsLink}/ca/${i}` ]));
-      }
-    }
-    pems.allowHTTP1 = true;
-
-
-    https.createServer(pems, app).listen(address.officeinfo.voice.port, () => {
-      console.log(``);
-      console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
-      console.log(``);
-    });
-
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 Clown.prototype.kakaoTokenGenerate = async function () {
   try {
     const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
@@ -1021,13 +910,6 @@ const MENU = {
   analyticsParsing: async function () {
     try {
       await robot.analyticsParsing();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  tellVoice: async function () {
-    try {
-      await robot.tellVoice();
     } catch (e) {
       console.log(e);
     }
