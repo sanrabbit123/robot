@@ -96,7 +96,7 @@ const worker = async function (package) {
 
     }
 
-    await messageLog("calendar sync done");
+    errorLog("calendar sync success : " + JSON.stringify(new Date())).catch((err) => { console.log(err) });
 
     return true;
   } catch (e) {

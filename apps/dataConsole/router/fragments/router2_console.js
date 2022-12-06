@@ -5341,3 +5341,116 @@ DataRouter.prototype.rou_post_callHistory = function () {
   }
   return obj;
 }
+
+DataRouter.prototype.rou_post_calendarSync = function () {
+  const instance = this;
+  const back = this.back;
+  const calendar = this.calendar;
+  const { errorLog } = this.mother;
+  const calendarSyncFunc = async (MONGOC) => {
+    try {
+      const selfMongo = MONGOC;
+      const today = new Date();
+      const standardDay = new Date();
+      const pastConst = 3;
+      standardDay.setDate(standardDay.getDate() - pastConst);
+      let projects, from;
+      let clients, designers;
+      let client, designer;
+      let title, list;
+
+      from = "photographing";
+      projects = await back.getProjectsByQuery({
+        $and: [
+          { "desid": { $regex: "^d" } },
+          { "contents.photo.date": { $gt: standardDay } },
+          { "contents.photo.date": { $lt: new Date(3000, 0, 1) } },
+        ]
+      }, { selfMongo });
+
+      if (projects.length > 0) {
+        clients = await back.getClientsByQuery({
+          $or: [ ...new Set(projects.toNormal().map((pr) => { return pr.cliid; })) ].map((c) => { return { cliid: c } }),
+        }, { selfMongo });
+        designers = await back.getDesignersByQuery({
+          $or: [ ...new Set(projects.toNormal().map((pr) => { return pr.desid; })) ].map((c) => { return { desid: c } }),
+        }, { selfMongo });
+
+        for (let project of projects) {
+          if (!/디자이너/gi.test(project.contents.photo.info.photographer) && !/고객/gi.test(project.contents.photo.info.photographer)) {
+            client = clients.toNormal().find((obj) => { return obj.cliid === project.cliid });
+            designer = designers.toNormal().find((obj) => { return obj.desid === project.desid });
+            title = `촬영 W ${client.name}C ${designer.designer}D ${project.contents.photo.info.photographer}P ${project.contents.photo.info.interviewer}I ${project.proid}`;
+            list = await calendar.listEvents(from, project.proid);
+            if (list.length > 0) {
+              await calendar.updateSchedule(from, list[0].eventId, { start: project.contents.photo.date.toNormal(), title });
+              console.log(`${project.proid} photo schedule update : ${title}`);
+            } else {
+              await calendar.makeSchedule(from, title, '', project.contents.photo.date.toNormal());
+              console.log(`${project.proid} photo schedule create : ${title}`);
+            }
+          }
+        }
+      }
+
+      from = "designerMeeting";
+      projects = await back.getProjectsByQuery({
+        $and: [
+          { "desid": { $regex: "^d" } },
+          { "process.contract.meeting.date": { $gt: standardDay } },
+          { "process.contract.meeting.date": { $lt: new Date(3000, 0, 1) } },
+        ]
+      }, { selfMongo });
+
+      if (projects.length > 0) {
+
+        clients = await back.getClientsByQuery({
+          $or: [ ...new Set(projects.toNormal().map((pr) => { return pr.cliid; })) ].map((c) => { return { cliid: c } }),
+        }, { selfMongo });
+        designers = await back.getDesignersByQuery({
+          $or: [ ...new Set(projects.toNormal().map((pr) => { return pr.desid; })) ].map((c) => { return { desid: c } }),
+        }, { selfMongo });
+
+        for (let project of projects) {
+          client = clients.toNormal().find((obj) => { return obj.cliid === project.cliid });
+          designer = designers.toNormal().find((obj) => { return obj.desid === project.desid });
+          title = `현장 미팅 W ${client.name}C ${designer.designer}D ${project.proid}`;
+          list = await calendar.listEvents(from, project.proid);
+          if (list.length > 0) {
+            await calendar.updateSchedule(from, list[0].eventId, { start: project.process.contract.meeting.date.toNormal(), title });
+            console.log(`${project.proid} meeting schedule update : ${title}`);
+          } else {
+            await calendar.makeSchedule(from, title, '', project.process.contract.meeting.date.toNormal());
+            console.log(`${project.proid} meeting schedule create : ${title}`);
+          }
+        }
+
+      }
+
+      errorLog("calendar sync success : " + JSON.stringify(new Date())).catch((err) => { console.log(err) });
+
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_calendarSync): " + e.message);
+    }
+  }
+  let obj = {};
+  obj.link = [ "/calendarSync" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      calendarSyncFunc(instance.mongo).catch((err) => {
+        errorLog("Console 서버 문제 생김 (rou_post_calendarSync): " + e.message).catch((err) => { console.log(err) });
+      });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_calendarSync): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
