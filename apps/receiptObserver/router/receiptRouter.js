@@ -2892,6 +2892,13 @@ ReceiptRouter.prototype.rou_post_basicCron = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
+
+
+      
+
+
+
+
       bill.parsingCashReceipt().then(() => {
         return requestSystem("https://" + address.pythoninfo.host + ":" + String(generalPort) + "/stylingFormSync", { data: null }, { headers: { "Content-Type": "application/json" } });
       }).then(() => {

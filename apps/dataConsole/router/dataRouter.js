@@ -2476,19 +2476,21 @@ DataRouter.prototype.rou_post_sendSheets = function () {
 DataRouter.prototype.rou_post_createAiDocument = function () {
   const instance = this;
   const back = this.back;
-  const { shell, shellLink, requestSystem, ghostRequest } = this.mother;
-  const coreRequest = ghostRequest().bind("core");
-  const ADDRESS = require(process.cwd() + "/apps/infoObj.js");
+  const address = this.address;
+  const { shellExec, shellLink, requestSystem, errorLog } = this.mother;
   let obj = {};
   obj.link = [ "/createProposalDocument" ];
   obj.func = async function (req, res) {
+    res.set("Content-Type", "application/json");
     try {
 
       const { proid } = req.body;
-      const proposalLink = "https://" + ADDRESS.frontinfo.host + "/proposal.php?proid=" + proid + "&mode=test";
+      const proposalLink = "https://" + address.frontinfo.host + "/proposal.php?proid=" + proid + "&mode=test";
       const thisProject = await back.getProjectById(proid, { selfMongo: instance.mongo });
       const cliid = thisProject.cliid;
       let page, cookies, dummy, historyObj;
+      let future, now, delta;
+      let year, month, date, hour, minute, second;
 
       if (req.body.retryProposal === undefined) {
         await back.updateProject([ { proid }, { "proposal.date": new Date() } ], { selfMongo: instance.mongo });
@@ -2518,33 +2520,40 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
       await back.updateHistory("client", [ { cliid }, { "curation.analytics.send": historyObj.curation.analytics.send } ], { selfMongo: instance.mongolocal });
 
       if (req.body.year !== undefined && req.body.month !== undefined && req.body.date !== undefined && req.body.hour !== undefined && req.body.minute !== undefined && req.body.second !== undefined) {
-        const { year, month, date, hour, minute, second } = req.body;
-        let message, command, time;
-        time = {
-          year: Number(year),
-          month: Number(month),
-          date: Number(date),
-          hour: Number(hour),
-          minute: Number(minute),
-          second: Number(second),
-        };
-        command = [ "webProposal", proid ];
-        message = await coreRequest("timer", { command, time });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ link: proposalLink }));
+
+        year = Number(req.body.year);
+        month = Number(req.body.month);
+        date = Number(req.body.date);
+        hour = Number(req.body.hour);
+        minute = Number(req.body.minute);
+        second = Number(req.body.second);
+        future = new Date(year, month - 1, date, hour, minute, second);
+        now = new Date();
+        delta = future.valueOf() - now.valueOf();
+        setTimeout(async () => {
+          try {
+            await shellExec("node", [ `${process.cwd()}/robot.js`, `webProposal`, proid ]);
+          } catch (e) {
+            console.log(e);
+          }
+        }, delta);
+
       } else if (req.body.instant !== undefined) {
-        let message, command;
-        command = [ "webProposal", proid ];
-        message = await coreRequest("robot", { command });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ link: proposalLink }));
+
+        shellExec("node", [ `${process.cwd()}/robot.js`, `webProposal`, proid ]).catch((err) => { console.log(err); });
+
       } else {
-        throw new Error("invaild post")
+
+        throw new Error("invaild post");
+
       }
 
+      res.send(JSON.stringify({ link: proposalLink }));
+
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_createAiDocument): " + e.message).catch((e) => { console.log(e); });
+      errorLog("Console 서버 문제 생김 (rou_post_createAiDocument): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -2553,7 +2562,7 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
 DataRouter.prototype.rou_post_proposalLog = function () {
   const instance = this;
   const back = this.back;
-  const { shell, shellLink, requestSystem, ghostRequest } = this.mother;
+  const { shell, shellLink, requestSystem } = this.mother;
   let obj = {};
   obj.link = [ "/proposalLog" ];
   obj.func = async function (req, res) {
@@ -3025,7 +3034,7 @@ DataRouter.prototype.rou_post_sendCertification = function () {
 DataRouter.prototype.rou_post_clientSubmit = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, stringToDate, errorLog, messageSend, messageLog, ghostRequest, requestSystem } = this.mother;
+  const { equalJson, stringToDate, errorLog, messageSend, messageLog, requestSystem } = this.mother;
   let obj = {};
   obj.link = [ "/clientSubmit" ];
   obj.func = async function (req, res) {
