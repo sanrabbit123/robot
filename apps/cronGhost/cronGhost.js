@@ -20,6 +20,8 @@ CronGhost.prototype.aliveTest = async function () {
   const generalPort = 3000;
   const ghostPort = 8080;
   const controlPath = "/ssl";
+  const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
+  const bill = new BillMaker();
   let res, targets, targetNumber, successNum, failNum, message;
   try {
 
@@ -36,8 +38,6 @@ CronGhost.prototype.aliveTest = async function () {
     successNum = 0;
     failNum = 0;
     message = '';
-
-    await requestSystem("https://" + address.pythoninfo.host + ":" + String(generalPort) + "/basicCron", { data: null }, { headers: { "Content-Type": "application/json" } });
 
     for (let { name, protocol, host, port } of targets) {
 
@@ -82,6 +82,14 @@ CronGhost.prototype.aliveTest = async function () {
       }
 
     }
+
+    bill.parsingCashReceipt().then(() => {
+      return requestSystem("https://" + address.pythoninfo.host + ":" + String(generalPort) + "/stylingFormSync", { data: null }, { headers: { "Content-Type": "application/json" } });
+    }).then(() => {
+      return requestSystem("https://" + address.backinfo.host + ":" + String(generalPort) + "/callHistory", { data: null }, { headers: { "Content-Type": "application/json" } });
+    }).catch((e) => {
+      throw new Error(e);
+    });
 
   } catch (e) {
     await instance.slack_bot.chat.postMessage({ text: "alive test error : " + e.message, channel: "#error_log" });

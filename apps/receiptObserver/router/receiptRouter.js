@@ -2876,46 +2876,6 @@ ReceiptRouter.prototype.rou_post_taxBill = function () {
   return obj;
 }
 
-ReceiptRouter.prototype.rou_post_basicCron = function () {
-  const instance = this;
-  const bill = this.bill;
-  const address = this.address;
-  const { equalJson, requestSystem } = this.mother;
-  const generalPort = 3000;
-  let obj = {};
-  obj.link = "/basicCron";
-  obj.func = async function (req, res) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-
-
-      
-
-
-
-
-      bill.parsingCashReceipt().then(() => {
-        return requestSystem("https://" + address.pythoninfo.host + ":" + String(generalPort) + "/stylingFormSync", { data: null }, { headers: { "Content-Type": "application/json" } });
-      }).then(() => {
-        return requestSystem("https://" + address.backinfo.host + ":" + String(generalPort) + "/callHistory", { data: null }, { headers: { "Content-Type": "application/json" } });
-      }).catch((e) => {
-        throw new Error(e);
-      });
-      res.send(JSON.stringify({ message: "will do" }));
-    } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_basicCron): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "error" }));
-      console.log(e);
-    }
-  }
-  return obj;
-}
-
 ReceiptRouter.prototype.rou_post_weeklyCalculation = function () {
   const instance = this;
   const work = this.work;
