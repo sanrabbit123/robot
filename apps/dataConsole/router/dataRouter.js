@@ -2391,45 +2391,83 @@ DataRouter.prototype.rou_post_sendSheets = function () {
   const back = this.back;
   const sheets = this.sheets;
   const drive = this.drive;
-  const { ghostRequest, equalJson } = this.mother;
+  const { equalJson, errorLog, messageSend } = this.mother;
+  const asyncFunc = async (sheetName, parentId, values, tapName) => {
+    let sheetsId, result;
+    try {
+      sheetsId = await sheets.create_newSheets_inPython(sheetName, parentId);
+      if (tapName !== undefined) {
+        await sheets.update_defaultSheetName_inPython(sheetsId, tapName);
+      }
+      values = equalJson(values);
+      await sheets.update_value_inPython(sheetsId, (tapName !== undefined ? tapName : ''), values, [ 0, 0 ]);
+      await sheets.setting_cleanView_inPython(sheetsId);
+      result = await drive.read_webView_inPython(sheetsId);
+      return result;
+    } catch (e) {
+      result = "error";
+      return result;
+    }
+  }
   let obj = {};
   obj.link = "/sendSheets";
   obj.func = async function (req, res) {
+    res.set("Content-Type", "application/json");
     try {
       if (req.body.sheetName === undefined || req.body.parentId === undefined || req.body.values === undefined) {
         throw new Error("must be sheetName, parentId");
       }
       let sheetsId, response, values, sheetsTargets, tempArr, async;
+      let asyncFunc;
 
-      async = false;
-      if (req.body.async !== undefined || req.body.multiple !== undefined) {
-        async = true;
-      }
-
-      if (!async) {
-
-        if (req.body.newMake !== undefined) {
-          sheetsId = await sheets.create_newSheets_inPython(req.body.sheetName, req.body.parentId);
-          if (req.body.tapName !== undefined) {
-            await sheets.update_defaultSheetName_inPython(sheetsId, req.body.tapName);
-          }
-          values = equalJson(req.body.values);
-          await sheets.update_value_inPython(sheetsId, (req.body.tapName !== undefined ? req.body.tapName : ''), values, [ 0, 0 ]);
-          await sheets.setting_cleanView_inPython(sheetsId);
-          response = await drive.read_webView_inPython(sheetsId);
+      if (req.body.multiple === undefined) {
+        async = false;
+        if (req.body.async !== undefined) {
+          async = true;
         }
 
+        if (!async) {
+          response = await asyncFunc(req.body.sheetName, req.body.parentId, req.body.values, req.body.tapName);
+        } else {
+          asyncFunc(req.body.sheetName, req.body.parentId, req.body.values, req.body.tapName).then((link) => {
+            return messageSend({ text: req.body.sheetName + " => " + link, channel: (req.body.channel === undefined) ? "#general" : req.body.channel });
+          }).catch((err) => {
+            console.log(err);
+          });
+          response = "will do";
+        }
       } else {
-
-        ghostRequest("/sendSheets", req.body).then((res) => { console.log(res); }).catch((err) => { throw new Error("send sheets error"); });
+        sheetsTargets = JSON.parse(req.body.values);
+        sheetsId = "";
         response = "will do";
-
+        tempArr = [];
+        sheets.create_newSheets_inPython(req.body.sheetName, req.body.parentId).then((id) => {
+          sheetsId = id;
+          for (let i = 0; i < sheetsTargets.length; i++) {
+            if (i !== 0) {
+              tempArr.push(sheetsTargets[i].sheets);
+            }
+          }
+          return sheets.update_defaultSheetName_inPython(sheetsId, sheetsTargets[0].sheets);
+        }).then(() => {
+          return sheets.add_newSheet_inPython(sheetsId, tempArr);
+        }).then(() => {
+          return sheets.update_values_inPython(sheetsId, sheetsTargets, [ 0, 0 ]);
+        }).then((arr) => {
+          return sheets.setting_cleanView_inPython(sheetsId);
+        }).then(() => {
+          return drive.read_webView_inPython(sheetsId);
+        }).then((link) => {
+          return messageSend({ text: req.body.sheetName + " => " + link, channel: (req.body.channel === undefined) ? "#general" : req.body.channel });
+        }).catch((err) => {
+          console.log(err);
+        });
       }
-      res.set("Content-Type", "application/json");
+
       res.send(JSON.stringify({ link: response }));
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_sendSheets): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
+      errorLog("Console 서버 문제 생김 (rou_post_sendSheets): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -2442,75 +2480,66 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
   const coreRequest = ghostRequest().bind("core");
   const ADDRESS = require(process.cwd() + "/apps/infoObj.js");
   let obj = {};
-  obj.link = [ "/createRequestDocument", "/createProposalDocument" ];
+  obj.link = [ "/createProposalDocument" ];
   obj.func = async function (req, res) {
     try {
 
-      if (req.url === "/createRequestDocument") {
+      const { proid } = req.body;
+      const proposalLink = "https://" + ADDRESS.frontinfo.host + "/proposal.php?proid=" + proid + "&mode=test";
+      const thisProject = await back.getProjectById(proid, { selfMongo: instance.mongo });
+      const cliid = thisProject.cliid;
+      let page, cookies, dummy, historyObj;
 
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({}));
+      if (req.body.retryProposal === undefined) {
+        await back.updateProject([ { proid }, { "proposal.date": new Date() } ], { selfMongo: instance.mongo });
+      }
 
-      } else if (req.url === "/createProposalDocument") {
-
-        const { proid } = req.body;
-        const proposalLink = "https://" + ADDRESS.frontinfo.host + "/proposal.php?proid=" + proid + "&mode=test";
-        const thisProject = await back.getProjectById(proid, { selfMongo: instance.mongo });
-        const cliid = thisProject.cliid;
-        let page, cookies, dummy, historyObj;
-
-        if (req.body.retryProposal === undefined) {
-          await back.updateProject([ { proid }, { "proposal.date": new Date() } ], { selfMongo: instance.mongo });
-        }
-
+      historyObj = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
+      if (historyObj === null) {
+        await back.createHistory("client", { cliid }, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
         historyObj = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
-        if (historyObj === null) {
-          await back.createHistory("client", { cliid }, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
-          historyObj = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
+      }
+      page = "designerProposal";
+      cookies = DataRouter.cookieParsing(req);
+      dummy = {
+        page,
+        date: new Date(),
+        mode: null,
+        who: {
+          name: cookies.homeliaisonConsoleLoginedName,
+          email: cookies.homeliaisonConsoleLoginedEmail
         }
-        page = "designerProposal";
-        cookies = DataRouter.cookieParsing(req);
-        dummy = {
-          page,
-          date: new Date(),
-          mode: null,
-          who: {
-            name: cookies.homeliaisonConsoleLoginedName,
-            email: cookies.homeliaisonConsoleLoginedEmail
-          }
+      };
+      if (Array.isArray(historyObj.curation.analytics.send)) {
+        historyObj.curation.analytics.send.push(dummy);
+      } else {
+        historyObj.curation.analytics.send = [ dummy ];
+      }
+      await back.updateHistory("client", [ { cliid }, { "curation.analytics.send": historyObj.curation.analytics.send } ], { selfMongo: instance.mongolocal });
+
+      if (req.body.year !== undefined && req.body.month !== undefined && req.body.date !== undefined && req.body.hour !== undefined && req.body.minute !== undefined && req.body.second !== undefined) {
+        const { year, month, date, hour, minute, second } = req.body;
+        let message, command, time;
+        time = {
+          year: Number(year),
+          month: Number(month),
+          date: Number(date),
+          hour: Number(hour),
+          minute: Number(minute),
+          second: Number(second),
         };
-        if (Array.isArray(historyObj.curation.analytics.send)) {
-          historyObj.curation.analytics.send.push(dummy);
-        } else {
-          historyObj.curation.analytics.send = [ dummy ];
-        }
-        await back.updateHistory("client", [ { cliid }, { "curation.analytics.send": historyObj.curation.analytics.send } ], { selfMongo: instance.mongolocal });
-
-        if (req.body.year !== undefined && req.body.month !== undefined && req.body.date !== undefined && req.body.hour !== undefined && req.body.minute !== undefined && req.body.second !== undefined) {
-          const { year, month, date, hour, minute, second } = req.body;
-          let message, command, time;
-          time = {
-            year: Number(year),
-            month: Number(month),
-            date: Number(date),
-            hour: Number(hour),
-            minute: Number(minute),
-            second: Number(second),
-          };
-          command = [ "webProposal", proid ];
-          message = await coreRequest("timer", { command, time });
-          res.set("Content-Type", "application/json");
-          res.send(JSON.stringify({ link: proposalLink }));
-        } else if (req.body.instant !== undefined) {
-          let message, command;
-          command = [ "webProposal", proid ];
-          message = await coreRequest("robot", { command });
-          res.set("Content-Type", "application/json");
-          res.send(JSON.stringify({ link: proposalLink }));
-        } else {
-          throw new Error("invaild post")
-        }
-
+        command = [ "webProposal", proid ];
+        message = await coreRequest("timer", { command, time });
+        res.set("Content-Type", "application/json");
+        res.send(JSON.stringify({ link: proposalLink }));
+      } else if (req.body.instant !== undefined) {
+        let message, command;
+        command = [ "webProposal", proid ];
+        message = await coreRequest("robot", { command });
+        res.set("Content-Type", "application/json");
+        res.send(JSON.stringify({ link: proposalLink }));
+      } else {
+        throw new Error("invaild post")
       }
 
     } catch (e) {
@@ -4612,7 +4641,7 @@ DataRouter.prototype.rou_post_callTo = function () {
   const instance = this;
   const back = this.back;
   const address = this.address;
-  const { requestSystem, equalJson, errorLog, ghostRequest } = this.mother;
+  const { requestSystem, equalJson, errorLog } = this.mother;
   let obj = {};
   obj.link = [ "/callTo" ];
   obj.func = async function (req, res) {

@@ -179,7 +179,7 @@ CronGhost.prototype.cronServer = async function () {
         if (req.body.text === undefined) {
           res.send(JSON.stringify({ message: "invaild post" }));
         } else {
-          shellExec("say", [ req.body.text.replace(/[a-zA-Z\:\=\&\/]/gi, '') ]).catch((err) => { console.log(err); });
+          shellExec("say", [ req.body.text.replace(/[a-zA-Z\:\=\&\/\-\?]/gi, '').replace(/[0-9]/gi, '') ]).catch((err) => { console.log(err); });
           res.send(JSON.stringify({ message: "will do" }));
         }
       } catch (e) {

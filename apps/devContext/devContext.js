@@ -132,7 +132,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await requestSystem("https://" + address.backinfo.host + ":3000/calendarSync", { data: null }, { headers: { "Content-Type": "application/json" } });
+    await findCode("coreRequest");
 
 
 
