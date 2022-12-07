@@ -458,6 +458,9 @@ ServiceDetailJs.prototype.insertThreeBox = function () {
   let arrowWidth, arrowHeight;
   let numberTop, numberLeft, numberSize, numberWeight;
   let mainBetween, subBetween, subTop;
+  let total;
+
+  total = (mode === "total");
 
   middleTongPaddinngTop = <%% 108, 84, 72, 52, 10 %%>;
   middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
@@ -478,12 +481,17 @@ ServiceDetailJs.prototype.insertThreeBox = function () {
   threeVisualPaddingBottom = <%% 2, 2, 2, 2, 2 %%>;
   threeBlockMarginTop = <%% 48, 48, 48, 48, 48 %%>;
 
-  threeWidth0 = <%% 540, 540, 540, 540, 540 %%>;
-  threeWidth1 = <%% 340, 340, 340, 340, 340 %%>;
+  if (total) {
+    threeWidth0 = <%% 600, 600, 600, 600, 600 %%>;
+    threeWidth1 = <%% 390, 390, 390, 390, 390 %%>;
+  } else {
+    threeWidth0 = <%% 525, 525, 525, 525, 525 %%>;
+    threeWidth1 = <%% 330, 330, 330, 330, 330 %%>;
+  }
 
   threeSize = <%% 20, 20, 20, 20, 20 %%>;
   threeWeight = <%% 800, 800, 800, 800, 800 %%>;
-  threeSmallSize = <%% 12, 12, 12, 12, 12 %%>;
+  threeSmallSize = <%% 13, 13, 13, 13, 13 %%>;
 
   blackCircleWidth = <%% 40, 40, 40, 40, 40 %%>;
 
@@ -645,7 +653,7 @@ ServiceDetailJs.prototype.insertThreeBox = function () {
           display: "inline-flex",
           position: "relative",
           flexDirection: "column",
-          width: String(threeWidth0) + ea,
+          width: String(total ? threeWidth1 : threeWidth0) + ea,
           height: String(threeHeight) + ea,
           borderRadius: String(5) + "px",
           background: colorChip.white,
@@ -717,9 +725,9 @@ ServiceDetailJs.prototype.insertThreeBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(threeSize) + ea,
+                  fontSize: String(total ? threeSmallSize : threeSize) + ea,
                   fontWeight: String(threeWeight),
-                  color: colorChip.black,
+                  color: total ? colorChip.deactive : colorChip.black,
                 }
               },
               {
@@ -1411,7 +1419,7 @@ ServiceDetailJs.prototype.insertSlideBox = function () {
 
 ServiceDetailJs.prototype.insertDiagramBox = function () {
   const instance = this;
-  const { ea, media } = this;
+  const { ea, media, mode } = this;
   const baseTong = this.baseTong;
   const mobile = media[4];
   const desktop = !mobile;
@@ -1466,6 +1474,9 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
   let diagramFirstTop, diagramFirstLeft;
   let diagramSecondTop, diagramSecondLeft;
   let diagramThirdTop, diagramThirdLeft;
+  let styling;
+
+  styling = (mode === "styling");
 
   bottomMargin = <%% 180, 180, 180, 180, 180 %%>;
   slideTongHeight = <%% 340, 340, 340, 340, 340 %%>;
@@ -1511,8 +1522,13 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
   feeDescriptionWeightBold = <%% 600, 600, 600, 600, 600 %%>;
   feeDescriptionPadding = <%% 20, 20, 20, 20, 20 %%>;
 
-  barWidth0 = <%% 200, 200, 200, 200, 200 %%>;
-  barWidth1 = <%% 400, 400, 400, 400, 400 %%>;
+  if (styling) {
+    barWidth0 = <%% 200, 200, 200, 200, 200 %%>;
+    barWidth1 = <%% 400, 400, 400, 400, 400 %%>;
+  } else {
+    barWidth0 = <%% 160, 160, 160, 160, 160 %%>;
+    barWidth1 = <%% 640, 640, 640, 640, 640 %%>;
+  }
   barBetween = <%% 5, 5, 5, 5, 5 %%>;
 
   barHeight = <%% 20, 20, 20, 20, 20 %%>;
@@ -1520,7 +1536,11 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
 
   feeBarTongHeight = <%% 60, 60, 60, 60, 60 %%>;
 
-  diagramImageHeight = <%% 700, 700, 700, 700, 700 %%>;
+  if (styling) {
+    diagramImageHeight = <%% 680, 680, 680, 680, 680 %%>;
+  } else {
+    diagramImageHeight = <%% 520, 520, 520, 520, 520 %%>;
+  }
 
   diagramEnglishSize = <%% 27, 27, 27, 27, 27 %%>;
   diagramEnglishWeight = <%% 500, 500, 500, 500, 500 %%>;
@@ -1534,12 +1554,19 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
   diagramTitleMarginTop = <%% 8, 8, 8, 8, 8 %%>;
   diagramTitleMarginBottom = <%% 4, 4, 4, 4, 4 %%>;
 
-  diagramFirstTop = <%% 370, 370, 370, 370, 370 %%>;
-  diagramFirstLeft = <%% 90, 90, 90, 90, 90 %%>;
-  diagramSecondTop = <%% 110, 110, 110, 110, 110 %%>;
-  diagramSecondLeft = <%% 170, 170, 170, 170, 170 %%>;
-  diagramThirdTop = <%% 560, 560, 560, 560, 560 %%>;
-  diagramThirdLeft = <%% 85, 85, 85, 85, 85 %%>;
+  diagramFirstTop = <%% 360, 360, 360, 360, 360 %%>;
+  diagramFirstLeft = <%% 98, 98, 98, 98, 98 %%>;
+  if (styling) {
+    diagramSecondTop = <%% 110, 110, 110, 110, 110 %%>;
+    diagramSecondLeft = <%% 180, 180, 180, 180, 180 %%>;
+    diagramThirdTop = <%% 532, 532, 532, 532, 532 %%>;
+    diagramThirdLeft = <%% 100, 100, 100, 100, 100 %%>;
+  } else {
+    diagramSecondTop = <%% 229, 229, 229, 229, 229 %%>;
+    diagramSecondLeft = <%% 110, 110, 110, 110, 110 %%>;
+    diagramThirdTop = <%% 229, 229, 229, 229, 229 %%>;
+    diagramThirdLeft = <%% 100, 100, 100, 100, 100 %%>;
+  }
 
   contents = {
     description: [
@@ -1547,7 +1574,7 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
       "<b%내 집의 컨디션에 맞는 디자인 컨셉을 디자이너가 대신 고민해줄거예요.%b>",
     ],
     diagram: {
-      image: ServiceDetailJs.binaryPath + "/styling_diagram.png",
+      image: ServiceDetailJs.binaryPath + (styling ? "/styling_diagram.png" : "/total_diagram.png"),
       first: {
         english: "Design",
         title: "디자인 기획",
@@ -1557,19 +1584,19 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
         ]
       },
       second: {
-        english: "Construction",
-        title: "톤보정 시공",
+        english: styling ? "Construction" : "Design",
+        title: styling ? "톤보정 시공" : "공간 기획",
         description: [
-          "시공 범위와 자재, 디자인",
-          "시공사에 따라 변동",
+          styling ? "시공 범위와 자재, 디자인" : "라이프 스타일을 기반",
+          styling ? "시공사에 따라 변동" : "공간을 먼저 기획",
         ]
       },
       third: {
         english: "Styling",
         title: "스타일링",
         description: [
-          "스타일링 중심의 인테리어로",
-          "효과와 완성도를 높임",
+          styling ? "스타일링 중심의 인테리어로" : "스타일링까지 진행하는",
+          styling ? "효과와 완성도를 높임" : "완벽한 마무리",
         ]
       },
     }
@@ -1612,62 +1639,65 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
       }
     }
   });
-  createNode({
-    mother: diagramTong,
-    style: {
-      position: "absolute",
-      top: String(diagramFirstTop) + ea,
-      left: String(diagramFirstLeft) + ea,
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "center",
-      alignItems: "center",
-      textAlign: "center",
-    },
-    children: [
-      {
-        text: contents.diagram.first.english,
-        style: {
-          fontSize: String(diagramEnglishSize) + ea,
-          fontWeight: String(diagramEnglishWeight),
-          fontFamily: "graphik",
-          fontStyle: "italic",
-          color: colorChip.green,
-        }
+  if (styling) {
+    createNode({
+      mother: diagramTong,
+      style: {
+        position: "absolute",
+        top: String(diagramFirstTop) + ea,
+        left: String(diagramFirstLeft) + ea,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        textAlign: "center",
       },
-      {
-        text: contents.diagram.first.title,
-        style: {
-          fontSize: String(diagramTitleSize) + ea,
-          fontWeight: String(diagramTitleWeight),
-          color: colorChip.black,
-          marginTop: String(diagramTitleMarginTop) + ea,
-          marginBottom: String(diagramTitleMarginBottom) + ea,
-          lineHeight: String(diagramTitleLineHeight),
+      children: [
+        {
+          text: contents.diagram.first.english,
+          style: {
+            fontSize: String(diagramEnglishSize) + ea,
+            fontWeight: String(diagramEnglishWeight),
+            fontFamily: "graphik",
+            fontStyle: "italic",
+            color: colorChip.green,
+          }
+        },
+        {
+          text: contents.diagram.first.title,
+          style: {
+            fontSize: String(diagramTitleSize) + ea,
+            fontWeight: String(diagramTitleWeight),
+            color: colorChip.black,
+            marginTop: String(diagramTitleMarginTop) + ea,
+            marginBottom: String(diagramTitleMarginBottom) + ea,
+            lineHeight: String(diagramTitleLineHeight),
+          }
+        },
+        {
+          text: contents.diagram.first.description.join("\n"),
+          style: {
+            fontSize: String(diagramDescriptionSize) + ea,
+            fontWeight: String(diagramDescriptionWeight),
+            color: colorChip.black,
+            lineHeight: String(diagramDescriptionLineHeight),
+          }
         }
-      },
-      {
-        text: contents.diagram.first.description.join("\n"),
-        style: {
-          fontSize: String(diagramDescriptionSize) + ea,
-          fontWeight: String(diagramDescriptionWeight),
-          color: colorChip.black,
-          lineHeight: String(diagramDescriptionLineHeight),
-        }
-      }
-    ]
-  });
+      ]
+    });
+  }
   createNode({
     mother: diagramTong,
     style: {
       position: "absolute",
       top: String(diagramSecondTop) + ea,
-      right: String(diagramSecondLeft) + ea,
+      left: styling ? "" : String(diagramSecondLeft) + ea,
+      right: styling ? String(diagramSecondLeft) + ea : "",
       display: "flex",
       flexDirection: "column",
       justifyContent: "center",
-      alignItems: "start",
-      textAlign: "left",
+      alignItems: styling ? "start" : "end",
+      textAlign: styling ? "left" : "right",
     },
     children: [
       {
@@ -1813,7 +1843,7 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
       },
       {
         text: [
-          "홈스타일링 서비스는 디자인비와 제품 구매비, 그리고 시공비로 구성됩니다."
+          styling ? "홈스타일링 서비스는 디자인비와 제품 구매비, 그리고 시공비로 구성됩니다." : "토탈 스타일링 서비스는 디자인비와 제품 구매비, 그리고 시공비로 구성됩니다."
         ].join("\n"),
         style: {
           display: "inline-block",
@@ -2068,20 +2098,20 @@ ServiceDetailJs.prototype.insertPeopleBox = function () {
     };
   } else if (mode === "total") {
     contents = {
-      title: "바쁜 1, 2인 가구가 선택한 홈퍼니싱",
-      image: ServiceDetailJs.binaryPath + "/people_f.svg",
+      title: "디자이너의 시그니처 스타일링",
+      image: ServiceDetailJs.binaryPath + "/people_t.svg",
       description: [
-        "시간은 없고, 선택할 것은 많잖아요.",
-        "<b%디자이너가 함께하면 시간은 줄이고 확실한 변화를 느낄 수 있어요.%b>",
+        "인테리어에 대한 전체적인 도움이 필요하신가요?",
+        "<b%디자이너와 처음부터 끝까지 한번에 진행해보세요!%b>",
       ],
       people: {
         title: "디자이너와 함께 할 때 효과",
         description: [
-          "선택의 연속, 인테리어 프로세스,",
-          "모두 시간과 비용의 부담이죠.",
-          "이렇게 혼자하기 부담스러운 과정을",
-          "디자이너가 함께하면 효율적이고",
-          "합리적인 결과를 낼 수 있습니다.",
+          "나를 잘 아는 디자이너와 함께",
+          "우리집을 맞춤 설계 한다면?",
+          "전문가와 함께 기획 단계부터",
+          "시작하여 스타일링까지 완벽한",
+          "인테리어로 공간을 바꿔보세요!",
         ]
       }
     };
@@ -2269,7 +2299,7 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   textLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
-  quoteWidth = <%% 14, 14, 14, 14, 14 %%>;
+  quoteWidth = <%% 13, 13, 13, 13, 13 %%>;
   quoteMarginTop = <%% 14, 14, 14, 14, 14 %%>;
   quoteMarginBottom = <%% 8, 8, 8, 8, 8 %%>;
   quoteVisual = <%% 1, 1, 1, 1, 1 %%>;
@@ -2512,7 +2542,7 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
 
 ServiceDetailJs.prototype.insertToneBox = function (pastBaseTong, baseTong) {
   const instance = this;
-  const { ea, media, standardWidth } = this;
+  const { ea, media, standardWidth, mode } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1]);
@@ -2549,6 +2579,9 @@ ServiceDetailJs.prototype.insertToneBox = function (pastBaseTong, baseTong) {
   let lineEnd;
   let arrowWidth;
   let boxWidth, boxHeight;
+  let total;
+
+  total = (mode === "total");
 
   topMargin = <%% 160, 160, 160, 120, 50 %%>;
   bottomMargin = <%% 180, 180, 180, 180, 50 %%>;
@@ -2604,47 +2637,77 @@ ServiceDetailJs.prototype.insertToneBox = function (pastBaseTong, baseTong) {
   newBaseTong.style.background = colorChip.gray2;
   newBaseTong.style.paddingTop = String(topMargin) + ea;
 
-  contents = {
-    title: "확실한 무드 체인지",
-    description: [
-      "홈퍼니싱 서비스를 이용한 실제 고객님들의 비포 앤 에프터",
-      "사진을 통해 확실한 무드 체인지를 느껴보세요!",
-    ],
-    tone: [
-      {
-        title: "거실 비포 에프터",
-        description: [
-          "시공 없이 스타일링 서비스만",
-          "진행한 현장으로 가구와 패브릭,",
-          "소품의 변화만으로 완전히 다른",
-          "분위기의 공간으로 변화한",
-          "고객님의 현장 사례입니다.",
-        ],
-        factors: [
-          "소품 배치",
-          "가구 배치",
-          "패브릭 설치",
-        ],
-        before: ServiceDetailJs.binaryPath + "/tone_before0_f.jpg",
-        after: ServiceDetailJs.binaryPath + "/tone_after0_f.jpg",
-      },
-      {
-        title: "아이방 비포 에프터",
-        description: [
-          "사용하던 기존 가구의 변화된",
-          "배치만으로 공간의 무드를",
-          "확실하게 바꾸어 준 사례입니다.",
-        ],
-        factors: [
-          "소품 배치",
-          "가구 배치",
-          "패브릭 설치",
-        ],
-        before: ServiceDetailJs.binaryPath + "/tone_before1_f.jpg",
-        after: ServiceDetailJs.binaryPath + "/tone_after1_f.jpg",
-      },
-    ]
-  };
+  if (total) {
+    contents = {
+      title: "스타일링까지 조화롭게",
+      description: [
+        "마지막 스타일링까지 완성해야 인테리어의 정점을 찍어요.",
+        "기획 단계부터 스타일링 마무리까지 홈스타일링의 풀 프로세스를 경험해보세요!",
+      ],
+      tone: [
+        {
+          title: "토탈 비포 에프터",
+          description: [
+            "고객의 라이프 스타일에 맞게 설계된",
+            "구조 변경, 모든 자재 선택, 제작 가구 등",
+            "모두가 사용하기에 일반적인 집의 형태",
+            "대신 나에게 맞는 공간으로 확실하게",
+            "달라진 사례입니다.",
+          ],
+          factors: [
+            "전체 시공",
+            "제작 가구",
+            "스타일링",
+          ],
+          before: ServiceDetailJs.binaryPath + "/tone_before0_t.jpg",
+          after: ServiceDetailJs.binaryPath + "/tone_after0_t.jpg",
+        }
+      ]
+    };
+  } else {
+    contents = {
+      title: "확실한 무드 체인지",
+      description: [
+        "홈퍼니싱 서비스를 이용한 실제 고객님들의 비포 앤 에프터",
+        "사진을 통해 확실한 무드 체인지를 느껴보세요!",
+      ],
+      tone: [
+        {
+          title: "거실 비포 에프터",
+          description: [
+            "시공 없이 스타일링 서비스만",
+            "진행한 현장으로 가구와 패브릭,",
+            "소품의 변화만으로 완전히 다른",
+            "분위기의 공간으로 변화한",
+            "고객님의 현장 사례입니다.",
+          ],
+          factors: [
+            "소품 배치",
+            "가구 배치",
+            "패브릭 설치",
+          ],
+          before: ServiceDetailJs.binaryPath + "/tone_before0_f.jpg",
+          after: ServiceDetailJs.binaryPath + "/tone_after0_f.jpg",
+        },
+        {
+          title: "아이방 비포 에프터",
+          description: [
+            "사용하던 기존 가구의 변화된",
+            "배치만으로 공간의 무드를",
+            "확실하게 바꾸어 준 사례입니다.",
+          ],
+          factors: [
+            "소품 배치",
+            "가구 배치",
+            "패브릭 설치",
+          ],
+          before: ServiceDetailJs.binaryPath + "/tone_before1_f.jpg",
+          after: ServiceDetailJs.binaryPath + "/tone_after1_f.jpg",
+        },
+      ]
+    };
+  }
+
 
   baseTong = createNode({
     mother: newBaseTong,

@@ -278,7 +278,7 @@ CronGhost.prototype.cronServer = async function () {
           length = count - JSON.parse(pastString).length
           for (let i = 0; i < length; i++) {
             [ newMail ] = await human.getMails(id, pwd, [ count - i ]);
-            await messageSend({ text: newMail.from + " 으로부터 새로운 메일이 도착했습니다! : " + Buffer.from(newMail.subject, "base64").toString("utf8"), channel: "#general" });
+            await messageSend({ text: newMail.from + " 으로부터 새로운 메일이 도착했습니다! : " + Buffer.from(newMail.subject, "base64").toString("utf8"), channel: "#702_mail" });
             if ((new RegExp(targetEmail, "gi")).test(newMail.from)) {
               await requestSystem("https://" + address.pythoninfo.host + ":" + String(3000) + "/taxBill", { count: count - i }, { headers: { "Content-Type": "application/json" } });
             }

@@ -6,7 +6,7 @@ const hourId = [];
 
 const worker = async function (package) {
   const { mother, address, back, work, mongo, mongoconsole, mongolocal } = package;
-  const { messageLog, errorLog, messageSend, sleep } = mother;
+  const { messageLog, errorLog, messageSend, sleep, requestSystem } = mother;
   try {
     await requestSystem("https://" + address.backinfo.host + ":3000/pushClient", { data: null }, { headers: { "Content-Type": "application/json" } });
     return true;
