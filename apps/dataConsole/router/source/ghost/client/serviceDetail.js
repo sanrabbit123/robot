@@ -3902,7 +3902,7 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
   let titleSize, titleWeight;
   let descriptionSize, descriptionWeight, descriptionLineHeight;
   let descriptionMarginTop;
-  let blockBetween;
+  let blockBetween, blockBetweenBottom;
   let imageMarginBottom;
   let grayBoxHeight;
   let innerTitleSize, innerTitleWeight, innerTitleLineHeight;
@@ -3912,12 +3912,13 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
   let freeTextTop;
   let linesTongHeight;
   let linesWidth;
-  let blackTongHeight;
+  let blackTongHeight, blackTongHeight2;
   let blackGrayPaddingTop, blackGrayPaddingLeft;
   let blackGrayFactorBetween;
   let blackGrayFactorWhiteHeight, blackGrayFactorGreenHeight;
   let tagBoxHeight;
   let tagDefaultSize, tagDefaultWeight, tagDefaultTextTop;
+  let white2StandardPercentage;
 
   topMargin = <%% 160, 160, 160, 120, 50 %%>;
   bottomMargin = <%% 180, 180, 180, 180, 50 %%>;
@@ -3952,6 +3953,7 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
   descriptionMarginTop = <%% 6, 6, 6, 6, 6 %%>;
 
   blockBetween = <%% 12, 12, 12, 12, 12 %%>;
+  blockBetweenBottom = <%% 3, 3, 3, 3, 3 %%>;
   imageMarginBottom = <%% 20, 20, 20, 20, 20 %%>;
   grayBoxHeight = <%% 120, 120, 120, 120, 120 %%>;
 
@@ -3972,6 +3974,7 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
   linesWidth = <%% 660, 660, 660, 660, 660 %%>;
 
   blackTongHeight = <%% 52, 52, 52, 52, 52 %%>;
+  blackTongHeight2 = <%% 42, 42, 42, 42, 42 %%>;
 
   blackGrayPaddingTop = <%% 20, 20, 20, 20, 20 %%>;
   blackGrayPaddingLeft = <%% 25, 25, 25, 25, 25 %%>;
@@ -3985,6 +3988,8 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
   tagDefaultSize = <%% 24, 24, 24, 24, 24 %%>;
   tagDefaultWeight = <%% 200, 200, 200, 200, 200 %%>;
   tagDefaultTextTop = <%% -2, -2, -2, -2, -2 %%>;
+
+  white2StandardPercentage = <%% 11, 11, 11, 11, 11 %%>;
 
   pastBaseTong.parentNode.insertBefore(newBaseTong, pastBaseTong.nextElementSibling);
   newBaseTong.style.left = String(0);
@@ -4066,15 +4071,79 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
         "발생하는 비용에 차이가 있습니다. ",
         "우리 집에 필요한 시공은 어느정도일까요? ",
       ],
+      standard: [
+        "철거",
+        "보양",
+        "목공",
+        "전기",
+        "타일",
+        "바닥",
+        "욕실",
+        "주방",
+        "필름",
+        "도배",
+        "중문",
+        "가구",
+        "발코니",
+        "기타"
+      ],
       factors: [
         {
-          title: "홈퍼니싱"
+          title: "홈퍼니싱",
+          service: [
+            "제공 없음",
+            "제공 없음",
+            "제공 없음",
+            "제공 없음",
+            "제공 없음",
+            "제공 없음",
+            "제공 없음",
+            "제공 없음",
+            "제공 없음",
+            "제공 없음",
+            "제공 없음",
+            "제공 없음",
+            "제공 없음",
+            "제공 없음",
+          ]
         },
         {
-          title: "홈스타일링"
+          title: "홈스타일링",
+          service: [
+            "부분 철거",
+            "해당 면적",
+            "걸레받이 / 몰딩 / 문짝",
+            "일부 배선 및 조명 교체",
+            "덧방 위주",
+            "마루 / 장판",
+            "악세사리 교체",
+            "악세사리 교체",
+            "전체 제공",
+            "전체 제공",
+            "중문 교체",
+            "붙박이장 / 냉장고장",
+            "제공 없음",
+            "제공 없음",
+          ]
         },
         {
-          title: "토탈 스타일링"
+          title: "토탈 스타일링",
+          service: [
+            "전체 철거",
+            "해당 면적",
+            "모든 종류의 목공",
+            "전체 배선 및 조명 교체",
+            "전체 철거 및 교체",
+            "마루 / 장판 / 타일",
+            "기본 철거 및 전체 공사",
+            "전체 철거 및 전체 공사",
+            "전체 제공",
+            "전체 제공",
+            "중문 교체",
+            "모든 종류의 제작 가구",
+            "발코니 확장",
+            "금속, 샤시 등"
+          ]
         },
       ],
       default: "서비스명을 클릭해주세요!",
@@ -4540,7 +4609,6 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
 
   // 3
 
-  /*
   whiteBlock2 = createNode({
     mother: baseTong,
     style: {
@@ -4609,16 +4677,14 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
           position: "relative",
           flexDirection: "row",
           width: withOut(0, ea),
-          marginBottom: String(blockBetween) + ea,
         },
-        children: contents.white2.factors.map(({ title }, index) => {
-          return {
+        children: [
+          {
             style: {
-              display: "flex",
+              display: "inline-flex",
               position: "relative",
               flexDirection: "column",
-              width: "calc(calc(100% - " + String(blockBetween * (contents.white0.factors.length - 1)) + ea + ") / " + String(contents.white0.factors.length) + ")",
-              marginRight: String(index === contents.white0.factors.length - 1 ? 0 : blockBetween) + ea,
+              width: String(white2StandardPercentage) + '%',
             },
             children: [
               {
@@ -4627,11 +4693,80 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
                   flexDirection: "column",
                   borderRadius: String(8) + "px",
                   background: colorChip.black,
-                  width: withOut(0, ea),
-                  height: String(blackTongHeight) + ea,
+                  width: withOut(blockBetweenBottom, ea),
+                  height: String(blackTongHeight2) + ea,
                   justifyContent: "center",
                   alignItems: "center",
                   textAlign: "center",
+                  marginBottom: String(blockBetweenBottom) + ea,
+                },
+                child: {
+                  text: "구분",
+                  style: {
+                    position: "relative",
+                    top: String(freeTextTop) + ea,
+                    fontSize: String(innerTitleSize) + ea,
+                    fontWeight: String(innerTitleWeight),
+                    lineHeight: String(innerTitleLineHeight),
+                    color: colorChip.white,
+                    position: "relative",
+                    display: "block",
+                  }
+                }
+              }
+            ].concat(contents.white2.standard.map((str) => {
+              return {
+                style: {
+                  display: "flex",
+                  flexDirection: "column",
+                  borderRadius: String(8) + "px",
+                  background: colorChip.darkShadow,
+                  width: withOut(blockBetweenBottom, ea),
+                  height: String(blackTongHeight2) + ea,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  textAlign: "center",
+                  marginBottom: String(blockBetweenBottom) + ea,
+                },
+                child: {
+                  text: str,
+                  style: {
+                    position: "relative",
+                    top: String(freeTextTop) + ea,
+                    fontSize: String(innerTitleSize) + ea,
+                    fontWeight: String(innerTitleWeight),
+                    lineHeight: String(innerTitleLineHeight),
+                    color: colorChip.white,
+                    position: "relative",
+                    display: "block",
+                  }
+                }
+              }
+            })),
+          }
+        ].concat(contents.white2.factors.map(({ title, service }, index) => {
+          const greenBoo = [ "furnishing", "styling", "total" ].findIndex((str) => { return str === instance.mode }) === index;
+          return {
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              flexDirection: "column",
+              width: "calc(calc(" + String(100 - white2StandardPercentage) + "% - " + String(blockBetweenBottom * (contents.white0.factors.length - 1)) + ea + ") / " + String(contents.white0.factors.length) + ")",
+              marginRight: String(index === contents.white0.factors.length - 1 ? 0 : blockBetweenBottom) + ea,
+            },
+            children: [
+              {
+                style: {
+                  display: "flex",
+                  flexDirection: "column",
+                  borderRadius: String(8) + "px",
+                  background: greenBoo ? colorChip.gradientGreen : colorChip.black,
+                  width: withOut(0, ea),
+                  height: String(blackTongHeight2) + ea,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  textAlign: "center",
+                  marginBottom: String(blockBetweenBottom) + ea,
                 },
                 children: [
                   {
@@ -4649,35 +4784,40 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
                   },
                 ]
               }
-            ]
+            ].concat(service.map((str) => {
+              return {
+                style: {
+                  display: "flex",
+                  flexDirection: "column",
+                  borderRadius: String(8) + "px",
+                  background: greenBoo ? colorChip.gray0 : colorChip.gray1,
+                  width: withOut(0, ea),
+                  height: String(blackTongHeight2) + ea,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  textAlign: "center",
+                  marginBottom: String(blockBetweenBottom) + ea,
+                },
+                child: {
+                  text: str,
+                  style: {
+                    position: "relative",
+                    top: String(freeTextTop) + ea,
+                    fontSize: String(innerTitleSize) + ea,
+                    fontWeight: String(500),
+                    lineHeight: String(innerTitleLineHeight),
+                    color: /없음/gi.test(str) ? colorChip.deactive : (greenBoo ? colorChip.green : colorChip.black),
+                    position: "relative",
+                    display: "block",
+                  }
+                }
+              }
+            }))
           };
-        }),
+        })),
       },
-      {
-        style: {
-          display: "flex",
-          position: "relative",
-          width: withOut(0, ea),
-          height: String(tagBoxHeight) + ea,
-          borderRadius: String(8) + "px",
-          background: colorChip.gray1,
-          justifyContent: "center",
-          alignItems: "center",
-        },
-        child: {
-          text: contents.white2.default,
-          style: {
-            fontSize: String(tagDefaultSize) + ea,
-            fontWeight: String(tagDefaultWeight),
-            color: colorChip.deactive,
-            position: "relative",
-            top: String(tagDefaultTextTop) + ea,
-          }
-        }
-      }
     ]
   })
-  */
 
   return [ newBaseTong, baseTong ];
 }

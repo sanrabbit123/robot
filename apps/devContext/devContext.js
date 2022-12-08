@@ -131,13 +131,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const res = await requestSystem("https://" + address.secondinfo.host + "/pageToPdf", {
-      url: global.encodeURIComponent("https://naver.com"),
-    }, {
-      headers: { "Content-Type": "application/json" }
-    })
 
-    console.log((res.data));
 
 
 

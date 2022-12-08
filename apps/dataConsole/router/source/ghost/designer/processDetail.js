@@ -2442,7 +2442,7 @@ ProcessDetailJs.prototype.insertInformationBox = function () {
             event: {
               click: function (e) {
                 const loading = instance.mother.grayLoading();
-                ajaxJson({ url: window.encodeURIComponent(FRONTHOST + "/designer/process.php?proid=" + instance.project.proid + "&mode=request&green=deactive") }, "/ghostPass_pageToPdf").then((res) => {
+                ajaxJson({ url: window.encodeURIComponent(FRONTHOST + "/designer/process.php?proid=" + instance.project.proid + "&mode=request&green=deactive") }, SECONDHOST + "/pageToPdf").then((res) => {
                   return downloadFile(window.decodeURIComponent(res.url));
                 }).then(() => {
                   loading.remove();

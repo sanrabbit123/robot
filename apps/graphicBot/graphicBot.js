@@ -1373,6 +1373,46 @@ GraphicBot.prototype.botRouter = function () {
     }
   };
 
+  funcObj.post_printText = {
+    link: [ "/printText" ],
+    func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      try {
+        const { spawn } = require("child_process");
+        const lpstat = spawn("lpstat", [ "-p" ]);
+        let printer;
+        let targetFile;
+
+        targetFile = process.cwd() + "/temp/printerTemp_" + uniqueValue("hex") + ".txt";
+
+        lpstat.stdout.on("data", (data) => {
+          const arr = String(data).split("\n").map((i) => { return i.trim(); });
+          const printerRaw = arr.find((i) => { return /HP/gi.test(i); });
+          printer = printerRaw.trim().split(' ')[0];
+          lpstat.kill();
+          fileSystem(`write`, [ targetFile, req.body.text ]).then(() => {
+            return shellExec(`lpr -P ${printer} -o orientation-requested=4 ${shellLink(targetFile)}`);
+          }).then(() => {
+            return shellExec("rm", [ "-rf", targetFile ]);
+          }).catch((err) => {
+            console.log(err);
+          });
+        });
+
+        res.send(JSON.stringify({ message: "will do" }));
+
+      } catch (e) {
+        console.log(e);
+        res.send(JSON.stringify({ error: e.message }));
+      }
+    }
+  };
+
   funcObj.post_pageToPdf = {
     link: [ "/pageToPdf" ],
     func: async function (req, res) {
