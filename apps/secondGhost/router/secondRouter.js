@@ -131,7 +131,7 @@ SecondRouter.prototype.rou_get_First = function () {
 SecondRouter.prototype.rou_post_messageLog = function () {
   const instance = this;
   const webHook = this.webHook;
-  const { requestSystem, ghostRequest } = this.mother;
+  const { requestSystem } = this.mother;
   let obj;
   obj = {};
   obj.link = [ "/messageLog" ];
@@ -147,11 +147,9 @@ SecondRouter.prototype.rou_post_messageLog = function () {
         throw new Error("invaild post, must be text, channel");
       }
       const { text, channel, collection } = req.body;
-      await requestSystem(webHook.url, webHook.message(text), { headers: webHook.headers });
-      if (channel !== "silent") {
-        await instance.slack_bot.chat.postMessage({ text, channel });
-      }
       let voice;
+
+      await instance.slack_bot.chat.postMessage({ text, channel });
 
       if (req.body.voice === true || req.body.voice === "true") {
         voice = true;

@@ -77,6 +77,7 @@ DevContext.prototype.launching = async function () {
     const chrome = new GoogleChrome();
     const findCode = this.findCode.bind(this);
     const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
+    const print = async (cliid) => { await requestSystem("https://" + address.secondinfo.host + "/printClient", { cliid }, { headers: { "Content-Type": "application/json" } }); }
 
     // in config { httpsAgent: agent }
     // console.log(await this.findCode("* 1.1)"));
@@ -130,9 +131,7 @@ DevContext.prototype.launching = async function () {
     // }
 
 
-
-
-
+    await findCode("ghostRequest");
 
 
 
