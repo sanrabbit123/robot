@@ -1377,7 +1377,7 @@ GraphicBot.prototype.botRouter = function () {
     link: [ "/pageToPdf" ],
     func: async function (req, res) {
       res.set({
-        "Content-Type": "application/pdf",
+        "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
         "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
@@ -1399,11 +1399,18 @@ GraphicBot.prototype.botRouter = function () {
 
         await chromeGhost.pdfPrint(`http://127.0.0.1/${htmlName}`, `${staticHomeFolder}/${pdfName}`, false);
 
-        fs.createReadStream(`${staticHomeFolder}/${pdfName}`).pipe(res);
-        
+        await shellExec(`scp ${shellLink(staticHomeFolder + "/" + pdfName)} ${address.officeinfo.ghost.user}@${address.officeinfo.ghost.host}:${shellLink(address.officeinfo.ghost.file.static)}`);
+        await shellExec(`rm`, [ `-rf`, `${staticHomeFolder}/${imageName}` ]);
+        await shellExec(`rm`, [ `-rf`, `${staticHomeFolder}/${htmlName}` ]);
+        await shellExec(`rm`, [ `-rf`, `${staticHomeFolder}/${pdfName}` ]);
+
+        res.send(JSON.stringify({
+          url: global.encodeURIComponent("https://" + address.officeinfo.ghost.host + "/" + pdfName);
+        }));
+
       } catch (e) {
         console.log(e);
-        res.send("error");
+        res.send(JSON.stringify({ error: e.message }));
       }
     }
   };
